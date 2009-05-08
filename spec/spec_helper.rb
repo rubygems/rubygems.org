@@ -3,9 +3,13 @@ $:.unshift File.join(File.dirname(__FILE__), '..')
 require 'rubygems'
 require 'spec'
 require 'gemcutter'
-require 'sinatra/test/rspec'
+require 'spec/interop/test'
+require 'sinatra/test'
 require 'rr'
 require 'webrat'
+
+set :environment, :test
+Test::Unit::TestCase.send :include, Sinatra::Test
 
 Spec::Runner.configure do |config|
   config.mock_with RR::Adapters::Rspec

@@ -1,3 +1,5 @@
 h1. gemcutter
 
-This branch will hold the code that runs the Gemcutter site.
+!http://www.gemstoneartist.com/images/ProcesTop.jpg!
+
+Kickass and simple rubygem hosting.

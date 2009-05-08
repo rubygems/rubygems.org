@@ -9,5 +9,4 @@ get '/' do
 end
 
 post '/gems' do
-  p params
 end
