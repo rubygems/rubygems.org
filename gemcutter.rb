@@ -7,3 +7,7 @@ set :app_file, __FILE__
 get '/' do
   haml :index
 end
+
+post '/gems' do
+  p params
+end
