@@ -7,7 +7,7 @@ require 'json'
 class Gemcutter
   class << self
     def server_path(*more)
-      File.join(File.dirname(__FILE__), 'server', *more)
+      File.join(File.dirname(__FILE__), '..', 'server', *more)
     end
 
     def indexer

@@ -1,4 +1,4 @@
-$:.unshift File.join(File.dirname(__FILE__), '..')
+$:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 `git clean -d -f -x #{File.join(File.dirname(__FILE__), "..", "server")}`
 
 require 'spec'
