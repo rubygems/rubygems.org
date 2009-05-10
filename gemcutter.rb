@@ -2,6 +2,7 @@ require 'rubygems'
 require 'rubygems/indexer'
 require 'rubygems/installer'
 require 'sinatra'
+require 'json'
 
 class Gemcutter
   class << self
@@ -20,6 +21,14 @@ end
 set :app_file, __FILE__
 Gem.configuration.verbose = false
 Gemcutter.indexer.generate_index
+
+get '/gems/:gem' do
+  gem = Gemcutter.server_path('specifications', params[:gem] + "*")
+  spec = Gem::Specification.load Dir[gem].first
+
+  content_type "application/json"
+  { :name => spec.name, :version => spec.version }.to_json
+end
 
 post '/gems' do
   name = request.body.original_filename
