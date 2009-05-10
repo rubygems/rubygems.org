@@ -1,8 +1,10 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
 describe "Gemcutter API" do
-  after do
-    system("git clean -d -f #{Gemcutter.server_path} >> /dev/null")
+  it "should create index on startup" do
+    %w[latest_specs.4.8 prerelease_specs.4.8 specs.4.8].each do |file|
+      File.exists?(Gemcutter.server_path(file)).should be_true
+    end
   end
 
   describe "on POST to /gems" do
@@ -29,8 +31,8 @@ describe "Gemcutter API" do
       last_response.status.should == 201
     end
 
-    it "should create index" do
-      File.exists?(Gemcutter.server_path("yaml")).should be_true
+    it "should update index" do
+      File.exists?(Gemcutter.server_path("quick", "Marshal.4.8", "#{@gem}spec.rz")).should be_true
     end
   end
 end

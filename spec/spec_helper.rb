@@ -1,4 +1,5 @@
 $:.unshift File.join(File.dirname(__FILE__), '..')
+`git clean -d -f -x #{File.join(File.dirname(__FILE__), "..", "server")}`
 
 require 'spec'
 require 'gemcutter'
