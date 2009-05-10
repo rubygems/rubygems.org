@@ -17,10 +17,6 @@ Spec::Runner.configure do |config|
   config.mock_with RR::Adapters::Rspec
 end
 
-def server_path(*more)
-  File.join(File.dirname(__FILE__), 'server', *more)
-end
-
 def gem_file(name)
   Rack::Test::UploadedFile.new(File.join(File.dirname(__FILE__), 'gems', name), 'application/octet-stream', :binary)
 end
