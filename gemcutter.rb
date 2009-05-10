@@ -21,9 +21,6 @@ post '/gems' do
     f.write installer.spec.to_ruby
   end
 
-  FileUtils.mkdir gem_path
-  installer.unpack gem_path
-
   content_type "text/plain"
   status(201)
   "#{name} registered."

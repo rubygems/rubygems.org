@@ -3,7 +3,6 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 describe "Gemcutter API" do
   after do
     FileUtils.rm_rf(Dir[Gemcutter.server_path("cache", "*.gem")])
-    FileUtils.rm_rf(Dir[Gemcutter.server_path("gems", "**", "*")])
     FileUtils.rm_rf(Dir[Gemcutter.server_path("specifications", "*.gemspec")])
   end
 
@@ -24,12 +23,6 @@ describe "Gemcutter API" do
     it "should save the gemspec" do
       spec_path = Gemcutter.server_path("specifications", @gem + "spec")
       File.exists?(spec_path).should be_true
-    end
-
-    it "should unpack gem into gems folder" do
-      gem_path = Gemcutter.server_path("gems", @gem.chomp(".gem"))
-      File.directory?(gem_path).should be_true
-      Dir[gem_path + "/**/*"].size.should_not be_zero
     end
 
     it "should alert user that gem was created" do
