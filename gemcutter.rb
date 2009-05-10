@@ -1,7 +1,7 @@
 require 'rubygems'
+require 'rubygems/indexer'
 require 'rubygems/installer'
 require 'sinatra'
-require 'haml'
 
 set :app_file, __FILE__
 
@@ -9,7 +9,6 @@ post '/gems' do
   name = request.body.original_filename
   cache_path = Gemcutter.server_path('cache', name)
   spec_path = Gemcutter.server_path('specifications', name + "spec")
-  gem_path = File.expand_path Gemcutter.server_path('gems', name.chomp(".gem"))
 
   File.open(cache_path, "wb") do |f|
     f.write request.env["rack.input"].open.read
@@ -20,6 +19,14 @@ post '/gems' do
   File.open(spec_path, "w") do |f|
     f.write installer.spec.to_ruby
   end
+
+  Gem.configuration.verbose = false
+  indexer = Gem::Indexer.new(Gemcutter.server_path)
+  class << indexer
+    def say(message = "")
+    end
+  end
+  indexer.generate_index
 
   content_type "text/plain"
   status(201)

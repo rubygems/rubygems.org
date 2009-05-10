@@ -2,8 +2,7 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 
 describe "Gemcutter API" do
   after do
-    FileUtils.rm_rf(Dir[Gemcutter.server_path("cache", "*.gem")])
-    FileUtils.rm_rf(Dir[Gemcutter.server_path("specifications", "*.gemspec")])
+    system("git clean -d -f #{Gemcutter.server_path} >> /dev/null")
   end
 
   describe "on POST to /gems" do
@@ -28,6 +27,10 @@ describe "Gemcutter API" do
     it "should alert user that gem was created" do
       last_response.body.should == "#{@gem} registered."
       last_response.status.should == 201
+    end
+
+    it "should create index" do
+      File.exists?(Gemcutter.server_path("yaml")).should be_true
     end
   end
 end
