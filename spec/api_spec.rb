@@ -1,12 +1,6 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
 describe "Gemcutter API" do
-  include Rack::Test::Methods
-
-  def app
-    Sinatra::Application.new
-  end
-
   after do
     FileUtils.rm_rf(Dir[Gemcutter.server_path("cache", "*.gem")])
     FileUtils.rm_rf(Dir[Gemcutter.server_path("gems", "**", "*")])
