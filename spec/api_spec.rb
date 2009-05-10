@@ -42,9 +42,16 @@ describe "Gemcutter API" do
           put '/gems/test', {}, {'rack.input' => @gem_up_file}
         end
 
-        it "should save gem into cache folder" do
-          #File.exists?(@cache_path).should be_true
-          #FileUtils.compare_file(@gem_up_file.path, @cache_path).should be_true
+        it "should save gem and update index" do
+          File.exists?(@cache_path).should be_true
+          File.exists?(@spec_path).should be_true
+          FileUtils.compare_file(@gem_up_file.path, @cache_path).should be_true
+          File.exists?(Gemcutter.server_path("quick", "Marshal.4.8", "#{@gem}spec.rz")).should be_true
+        end
+
+        it "should alert user that gem was updated" do
+          last_response.body.should == "Gem 'test' version 0.0.0 updated."
+          last_response.status.should == 200
         end
       end
     end
@@ -54,22 +61,16 @@ describe "Gemcutter API" do
         post '/gems', {}, {'rack.input' => @gem_file}
       end
 
-      it "should save gem into cache folder" do
+      it "should save gem and update index" do
         File.exists?(@cache_path).should be_true
-        FileUtils.compare_file(@gem_file.path, @cache_path).should be_true
-      end
-
-      it "should save the gemspec" do
         File.exists?(@spec_path).should be_true
+        FileUtils.compare_file(@gem_file.path, @cache_path).should be_true
+        File.exists?(Gemcutter.server_path("quick", "Marshal.4.8", "#{@gem}spec.rz")).should be_true
       end
 
       it "should alert user that gem was created" do
         last_response.body.should == "New gem 'test' registered."
         last_response.status.should == 201
-      end
-
-      it "should update index" do
-        File.exists?(Gemcutter.server_path("quick", "Marshal.4.8", "#{@gem}spec.rz")).should be_true
       end
     end
   end

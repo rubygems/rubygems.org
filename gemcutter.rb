@@ -24,9 +24,10 @@ class Gemcutter
 
       installer = Gem::Installer.new(temp.path, :unpack => true)
       spec = installer.spec
+      name = "#{spec.name}-#{spec.version}.gem"
 
-      cache_path = Gemcutter.server_path('cache', spec.name)
-      spec_path = Gemcutter.server_path('specifications', spec.name + "spec")
+      cache_path = Gemcutter.server_path('cache', name)
+      spec_path = Gemcutter.server_path('specifications', name + "spec")
 
       FileUtils.cp temp.path, cache_path
       File.open(spec_path, "w") do |f|
@@ -60,5 +61,8 @@ post '/gems' do
 end
 
 put '/gems/:gem' do
-  name = Gemcutter.save_gem(request.env["rack.input"])
+  spec = Gemcutter.save_gem(request.env["rack.input"])
+  content_type "text/plain"
+  status(200)
+  "Gem '#{spec.name}' version #{spec.version} updated."
 end
