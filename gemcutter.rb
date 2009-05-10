@@ -15,6 +15,27 @@ class Gemcutter
       def indexer.say(message) end
       indexer
     end
+
+    def save_gem(data)
+      temp = Tempfile.new(data.original_filename)
+      File.open(temp.path, 'wb') do |f|
+        f.write data.open.read
+      end
+
+      installer = Gem::Installer.new(temp.path, :unpack => true)
+      spec = installer.spec
+
+      cache_path = Gemcutter.server_path('cache', spec.name)
+      spec_path = Gemcutter.server_path('specifications', spec.name + "spec")
+
+      FileUtils.cp temp.path, cache_path
+      File.open(spec_path, "w") do |f|
+        f.write spec.to_ruby
+      end
+
+      Gemcutter.indexer.update_index
+      spec
+    end
   end
 end
 
@@ -31,23 +52,13 @@ get '/gems/:gem' do
 end
 
 post '/gems' do
-  name = request.body.original_filename
-  cache_path = Gemcutter.server_path('cache', name)
-  spec_path = Gemcutter.server_path('specifications', name + "spec")
-
-  File.open(cache_path, "wb") do |f|
-    f.write request.env["rack.input"].open.read
-  end
-
-  installer = Gem::Installer.new(cache_path, :unpack => true)
-  File.open(spec_path, "w") do |f|
-    f.write installer.spec.to_ruby
-  end
-
-  Gemcutter.indexer.update_index
+  spec = Gemcutter.save_gem(request.env["rack.input"])
 
   content_type "text/plain"
   status(201)
-  "#{name} registered."
+  "New gem '#{spec.name}' registered."
 end
 
+put '/gems/:gem' do
+  name = Gemcutter.save_gem(request.env["rack.input"])
+end
