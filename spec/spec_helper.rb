@@ -11,7 +11,6 @@ require 'rr'
 require 'webrat'
 
 set :environment, :test
-Test::Unit::TestCase.send :include, Sinatra::Test
 
 Spec::Runner.configure do |config|
   config.mock_with RR::Adapters::Rspec

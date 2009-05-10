@@ -6,5 +6,5 @@ desc 'Default: run the specs.'
 task :default => :spec
 
 Spec::Rake::SpecTask.new do |t|
-  t.spec_opts = ['--format', 'progress', '--color']
+  t.spec_opts = ['--format', 'progress', '--color', '--backtrace']
 end
