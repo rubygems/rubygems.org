@@ -23,5 +23,5 @@ def gem_file(name)
 end
 
 def app
-  Sinatra::Application.new
+  Gemcutter::App.new
 end

@@ -6,6 +6,6 @@ Feature: Uploading gems
   Scenario: Push new gems
     Given I have a gem "awesome"
     When I build the gem
-    And I push "awesome-0.0.0.gem"
-    And I go to "/gems/awesome"
+    And I push "pkg/awesome-0.0.0.gem"
+    And I go to "/gems"
     Then I should see "awesome (0.0.0)"

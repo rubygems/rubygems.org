@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 describe "Gemcutter API" do
   it "should create index on startup" do
     %w[latest_specs.4.8 prerelease_specs.4.8 specs.4.8].each do |file|
-      File.exists?(Gemcutter.server_path(file)).should be_true
+      File.exists?(Gemcutter::Helper.server_path(file)).should be_true
     end
   end
 
@@ -16,8 +16,8 @@ describe "Gemcutter API" do
     before do
       @gem = "test-0.0.0.gem"
       @gem_file = gem_file(@gem)
-      @cache_path = Gemcutter.server_path("cache", @gem)
-      @spec_path = Gemcutter.server_path("specifications", @gem + "spec")
+      @cache_path = Gemcutter::Helper.server_path("cache", @gem)
+      @spec_path = Gemcutter::Helper.server_path("specifications", @gem + "spec")
     end
 
     describe "with a saved gem" do
@@ -57,7 +57,7 @@ describe "Gemcutter API" do
           File.exists?(@cache_path).should be_true
           File.exists?(@spec_path).should be_true
           FileUtils.compare_file(@gem_up_file.path, @cache_path).should be_true
-          File.exists?(Gemcutter.server_path("quick", "Marshal.4.8", "#{@gem}spec.rz")).should be_true
+          File.exists?(Gemcutter::Helper.server_path("quick", "Marshal.4.8", "#{@gem}spec.rz")).should be_true
         end
 
         it "should alert user that gem was updated" do
@@ -76,7 +76,7 @@ describe "Gemcutter API" do
         File.exists?(@cache_path).should be_true
         File.exists?(@spec_path).should be_true
         FileUtils.compare_file(@gem_file.path, @cache_path).should be_true
-        File.exists?(Gemcutter.server_path("quick", "Marshal.4.8", "#{@gem}spec.rz")).should be_true
+        File.exists?(Gemcutter::Helper.server_path("quick", "Marshal.4.8", "#{@gem}spec.rz")).should be_true
       end
 
       it "should alert user that gem was created" do

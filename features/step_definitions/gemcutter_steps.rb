@@ -18,5 +18,5 @@ When /^I build the gem$/ do
 end
 
 When /^I push "([^\"]*)"$/ do |gem|
-  pending
+  Gem::GemRunner.new.run(["push", gem])
 end
