@@ -4,8 +4,7 @@ Feature: Uploading gems
   I want to be able to upload gems
 
   Scenario: Push new gems
-    Given I have a gem "awesome"
-    When I build the gem
-    And I push "pkg/awesome-0.0.0.gem"
-    And I go to "/gems"
+    Given I have a built gem "awesome"
+    When I push "awesome/pkg/awesome-0.0.0.gem"
+    And I go to /gems
     Then I should see "awesome (0.0.0)"

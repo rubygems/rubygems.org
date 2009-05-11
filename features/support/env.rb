@@ -1,31 +1,20 @@
 $:.unshift File.join(File.dirname(__FILE__), '..', '..', 'lib')
 
 require 'gemcutter'
-require 'rack/test'
+app_file = File.join(File.dirname(__FILE__), *%w[.. .. lib gemcutter app.rb])
+require app_file
+# Force the application name because polyglot breaks the auto-detection logic.
+Sinatra::Application.app_file = app_file
+
+# RSpec
 require 'spec/expectations'
-require 'webrat'
-require 'webrat/sinatra'
 require 'rubygems/gem_runner'
 
-TEST_DIR = File.join('/', 'tmp', 'gemcutter')
-Sinatra::Application.app_file = File.join(File.dirname(__FILE__), '..', '..', 'lib', 'gemcutter')
-require 'haml'
-
-Gemcutter::App.set :environment, :development
-
+# Webrat
+require 'webrat'
 Webrat.configure do |config|
   config.mode = :sinatra
 end
 
-World do
-  def app
-    @app = Rack::Builder.new do
-      run Gemcutter::App.new
-    end
-  end
-  include Rack::Test::Methods
-end
-World(Webrat::Methods)
-World(Webrat::Matchers)
-
-
+World{Webrat::SinatraSession.new}
+World(Webrat::Matchers, Webrat::HaveTagMatcher)

@@ -1,22 +1,19 @@
 Before do
-  FileUtils.mkdir(TEST_DIR)
-  Dir.chdir(TEST_DIR)
+  @cleanup = []
 end
 
 After do
-  Dir.chdir(TEST_DIR)
-  FileUtils.rm_rf(TEST_DIR)
+  @cleanup.each { |c| FileUtils.rm_rf(c) }
 end
 
-Given /^I have a gem "([^\"]*)"$/ do |name|
+Given /^I have a built gem "([^\"]*)"$/ do |name|
+  @cleanup << name
+  FileUtils.rm_rf(name)
   system("jeweler #{name} --summary test >> /dev/null")
-  Dir.chdir(name)
-end
-
-When /^I build the gem$/ do
-  system("rake version:write gemspec build >> /dev/null 2> /dev/null")
+  system("cd #{name}; rake version:write gemspec build >> /dev/null 2> /dev/null")
 end
 
 When /^I push "([^\"]*)"$/ do |gem|
-  Gem::GemRunner.new.run(["push", gem])
+  Gem::GemRunner.new.run(["help"])
+  #Gem::GemRunner.new.run(["push", gem])
 end

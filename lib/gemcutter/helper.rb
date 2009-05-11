@@ -1,6 +1,8 @@
 module Gemcutter
   class Helper
     class << self
+      attr_accessor :host
+
       def server_path(*more)
         File.join(File.dirname(__FILE__), '..', '..', 'server', *more)
       end

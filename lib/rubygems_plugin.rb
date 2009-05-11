@@ -22,7 +22,7 @@ class Gem::Commands::PushCommand < Gem::Command
     say "Pushing gem to Gemcutter..."
 
     gem = File.open(get_one_gem_name)
-    RestClient.post("http://gemcutter.org/gems", gem)
+    RestClient.post("#{Gemcutter::Helper.host}/gems", gem)
   end
 end
 
