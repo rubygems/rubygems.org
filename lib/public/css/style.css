@@ -1,0 +1,16 @@
+body {
+  text-align: center;
+  color: #fff;
+  background: #4D0101;
+}
+
+a {
+  display: block;
+  margin-top: 20px;
+  color: #fff;
+  font-size: 20px;
+}
+
+p {
+  font-size: 16px;
+}

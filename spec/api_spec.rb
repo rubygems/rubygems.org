@@ -7,6 +7,11 @@ describe "Gemcutter API" do
     end
   end
 
+  it "should have a homepage" do
+    get "/"
+    last_response.status.should == 200
+  end
+
   describe "with a valid gem" do
     before do
       @gem = "test-0.0.0.gem"
@@ -20,6 +25,12 @@ describe "Gemcutter API" do
         FileUtils.cp @gem_file.path, @cache_path
         spec = Gem::Installer.new(@cache_path, :unpack => true).spec.to_ruby
         File.open(@spec_path, "w") { |f| f.write spec }
+      end
+
+      it "should list installed gems" do
+        get "/gems"
+        last_response.status.should == 200
+        last_response.body.should =~ /test \(0.0.0\)/
       end
 
       describe "On GET to /gems/test" do

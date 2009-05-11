@@ -44,6 +44,19 @@ set :app_file, __FILE__
 Gem.configuration.verbose = false
 Gemcutter.indexer.generate_index
 
+get '/' do
+  haml :index
+end
+
+get '/gems' do
+  cache_path = Gemcutter.server_path('cache', "*.gem")
+  @gems = Dir[cache_path].map do |gem| 
+    gem = File.basename(gem).split("-")
+    "#{gem[0..-2]} (#{gem.last.chomp(".gem")})"
+  end
+  haml :gems
+end
+
 get '/gems/:gem' do
   gem = Gemcutter.server_path('specifications', params[:gem] + "*")
   spec = Gem::Specification.load Dir[gem].first
