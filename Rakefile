@@ -2,22 +2,11 @@ require 'rake'
 require 'rake/testtask'
 require 'spec/rake/spectask'
 
-desc 'Run the specs and features'
-task :default => [:spec, :features]
+desc 'Run the specs'
+task :default => :spec
 
 Spec::Rake::SpecTask.new do |t|
   t.spec_opts = ['--format', 'progress', '--color', '--backtrace']
-end
-
-begin
-  require 'cucumber/rake/task'
-  Cucumber::Rake::Task.new(:features) do |t|
-    t.cucumber_opts = "--format pretty"
-  end
-rescue LoadError
-  task :features do
-    abort "Cucumber is not available. In order to run features, you must: sudo gem install cucumber"
-  end
 end
 
 begin
