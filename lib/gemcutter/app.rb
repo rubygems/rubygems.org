@@ -1,40 +1,42 @@
-require 'sinatra'
-require File.join(File.dirname(__FILE__), 'helper')
+module Gemcutter
+  class App < Sinatra::Default
 
-set :app_file, __FILE__
+  set :app_file, __FILE__
 
-get '/' do
-  haml :index
-end
-
-get '/gems' do
-  cache_path = Gemcutter::Helper.server_path('cache', "*.gem")
-  @gems = Dir[cache_path].map do |gem| 
-    gem = File.basename(gem).split("-")
-    "#{gem[0..-2]} (#{gem.last.chomp(".gem")})"
+  get '/' do
+    haml :index
   end
-  haml :gems
-end
 
-get '/gems/:gem' do
-  gem = Gemcutter::Helper.server_path('specifications', params[:gem] + "*")
-  spec = Gem::Specification.load Dir[gem].first
+  get '/gems' do
+    cache_path = Gemcutter::Helper.server_path('cache', "*.gem")
+    @gems = Dir[cache_path].map do |gem| 
+      gem = File.basename(gem).split("-")
+      "#{gem[0..-2]} (#{gem.last.chomp(".gem")})"
+    end
+    haml :gems
+  end
 
-  content_type "application/json"
-  { :name => spec.name, :version => spec.version }.to_json
-end
+  get '/gems/:gem' do
+    gem = Gemcutter::Helper.server_path('specifications', params[:gem] + "*")
+    spec = Gem::Specification.load Dir[gem].first
 
-post '/gems' do
-  spec = Gemcutter::Helper.save_gem(request.body)
+    content_type "application/json"
+    { :name => spec.name, :version => spec.version }.to_json
+  end
 
-  content_type "text/plain"
-  status(201)
-  "New gem '#{spec.name}' registered."
-end
+  post '/gems' do
+    spec = Gemcutter::Helper.save_gem(request.body)
 
-put '/gems/:gem' do
-  spec = Gemcutter::Helper.save_gem(request.env["rack.input"])
+    content_type "text/plain"
+    status(201)
+    "New gem '#{spec.name}' registered."
+  end
 
-  content_type "text/plain"
-  "Gem '#{spec.name}' version #{spec.version} updated."
+  put '/gems/:gem' do
+    spec = Gemcutter::Helper.save_gem(request.env["rack.input"])
+
+    content_type "text/plain"
+    "Gem '#{spec.name}' version #{spec.version} updated."
+  end
+  end
 end

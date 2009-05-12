@@ -5,9 +5,11 @@ require 'sinatra'
 require 'json'
 require 'haml'
 
+require 'gemcutter/app'
 require 'gemcutter/helper'
-#require 'gemcutter/app'
+
+module Gemcutter
+end
 
 Gem.configuration.verbose = false
 Gemcutter::Helper.indexer.generate_index
-Gemcutter::Helper.host = "http://gemcutter.org"
