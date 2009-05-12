@@ -6,12 +6,10 @@ require app_file
 # Force the application name because polyglot breaks the auto-detection logic.
 Sinatra::Application.app_file = app_file
 
-# RSpec
 require 'spec/expectations'
-require 'rubygems/gem_runner'
-
-# Webrat
 require 'webrat'
+require 'rack/test'
+
 Webrat.configure do |config|
   config.mode = :sinatra
 end

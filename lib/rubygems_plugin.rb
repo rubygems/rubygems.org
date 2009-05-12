@@ -21,10 +21,9 @@ class Gem::Commands::PushCommand < Gem::Command
     require 'restclient'
     say "Pushing gem to Gemcutter..."
 
-    gem = File.open(get_one_gem_name)
-    RestClient.post("#{Gemcutter::Helper.host}/gems", gem)
+    path = get_one_gem_name
+    RestClient.post "http://gemcutter.org/gems", File.open(path)
   end
 end
 
 Gem::CommandManager.instance.register_command :push
-

@@ -25,7 +25,7 @@ get '/gems/:gem' do
 end
 
 post '/gems' do
-  spec = Gemcutter::Helper.save_gem(request.env["rack.input"])
+  spec = Gemcutter::Helper.save_gem(request.body)
 
   content_type "text/plain"
   status(201)
@@ -36,6 +36,5 @@ put '/gems/:gem' do
   spec = Gemcutter::Helper.save_gem(request.env["rack.input"])
 
   content_type "text/plain"
-  status(200)
   "Gem '#{spec.name}' version #{spec.version} updated."
 end

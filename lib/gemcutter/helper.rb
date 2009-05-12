@@ -14,9 +14,9 @@ module Gemcutter
       end
 
       def save_gem(data)
-        temp = Tempfile.new(data.original_filename)
+        temp = Tempfile.new("gem")
         File.open(temp.path, 'wb') do |f|
-          f.write data.open.read
+          f.write data.read
         end
 
         installer = Gem::Installer.new(temp.path, :unpack => true)

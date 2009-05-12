@@ -3,6 +3,7 @@ require 'rubygems/indexer'
 require 'rubygems/installer'
 require 'sinatra'
 require 'json'
+require 'haml'
 
 require 'gemcutter/helper'
 #require 'gemcutter/app'

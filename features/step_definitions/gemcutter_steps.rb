@@ -14,6 +14,6 @@ Given /^I have a built gem "([^\"]*)"$/ do |name|
 end
 
 When /^I push "([^\"]*)"$/ do |gem|
-  Gem::GemRunner.new.run(["help"])
-  #Gem::GemRunner.new.run(["push", gem])
+  gem = Rack::Test::UploadedFile.new(gem).open
+  post "/gems", {}, {"rack.input" => gem}
 end
