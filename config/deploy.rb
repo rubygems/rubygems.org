@@ -1,9 +1,9 @@
 set :application, "gemcutter"
-set :server_ip,   "gemcutter.org"
-set :root_path,   "/home/rails/gemcutter"
+set :server_ip, "gemcutter.org"
+set :deploy_to, "/home/rails/gemcutter"
 
-ssh_options[:port] = 1908
-set :port, 1908
+ssh_options[:port] = 1337
+set :port, 1337
 set :user, "rails"
 role :app, server_ip
 role :web, server_ip
