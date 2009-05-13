@@ -28,11 +28,9 @@ module Gemcutter
     end
 
     get '/gems/:gem' do
-      gem = Gemcutter::Helper.server_path('specifications', params[:gem] + "*")
-      spec = Gem::Specification.load Dir[gem].first
-
-      content_type "application/json"
-      { :name => spec.name, :version => spec.version }.to_json
+      path = Gemcutter::Helper.server_path('specifications', params[:gem] + "*")
+      @gem = Gem::Specification.load Dir[path].first
+      haml :gem
     end
 
     post '/gems' do

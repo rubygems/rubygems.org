@@ -37,10 +37,9 @@ describe "Gemcutter API" do
           get "/gems/test"
         end
 
-        it "should return json" do
-          last_response.body.should =~ /"name":"test"/
-          last_response.body.should =~ /"version":"0.0.0"/
-          last_response.content_type.should == "application/json"
+        it "should return information about the gem" do
+          last_response.body.should contain("test")
+          last_response.body.should contain("0.0.0")
           last_response.status.should == 200
         end
       end
