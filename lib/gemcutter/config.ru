@@ -1,6 +1,8 @@
+$:.unshift File.expand_path(File.join(File.dirname(__FILE__), '..'))
+
 require 'rubygems'
 require 'sinatra'
-require 'lib/gemcutter'
+require 'gemcutter'
 root_dir = File.join(File.dirname(__FILE__), 'lib', 'gemcutter')
 
 set :environment, :production
