@@ -1,10 +1,7 @@
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
-`git clean -d -f -x #{File.join(File.dirname(__FILE__), "..", "server")}`
 
-require 'gemcutter'
-app_file = File.join(File.dirname(__FILE__), *%w[.. lib gemcutter app.rb])
+app_file = File.join(File.dirname(__FILE__), *%w[.. app app.rb])
 require app_file
-# Force the application name because polyglot breaks the auto-detection logic.
 Sinatra::Application.app_file = app_file
 
 require 'spec'
@@ -30,3 +27,8 @@ end
 def app
   Gemcutter::App.new
 end
+
+`git clean -d -f -x #{File.join(File.dirname(__FILE__), "..", "server")}`
+Gemcutter::Helper.indexer.generate_index
+
+

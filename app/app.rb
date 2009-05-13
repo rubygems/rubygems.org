@@ -1,3 +1,15 @@
+$:.unshift File.expand_path(File.dirname(__FILE__))
+
+require 'rubygems'
+require 'rubygems/indexer'
+require 'rubygems/installer'
+require 'sinatra'
+require 'json'
+require 'haml'
+
+require 'helper'
+Gem.configuration.verbose = false
+
 module Gemcutter
   class App < Sinatra::Default
 

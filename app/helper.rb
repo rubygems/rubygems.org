@@ -4,7 +4,7 @@ module Gemcutter
       attr_accessor :host
 
       def server_path(*more)
-        File.join(File.dirname(__FILE__), '..', '..', 'server', *more)
+        File.join(File.dirname(__FILE__), '..', 'server', *more)
       end
 
       def indexer
