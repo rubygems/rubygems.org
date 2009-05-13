@@ -15,6 +15,7 @@ module Gemcutter
 
       def save_gem(data)
         temp = Tempfile.new("gem")
+
         File.open(temp.path, 'wb') do |f|
           f.write data.read
         end

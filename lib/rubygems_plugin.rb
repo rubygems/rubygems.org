@@ -1,3 +1,4 @@
+require 'net/http'
 require 'rubygems/command_manager'
 
 class Gem::Commands::PushCommand < Gem::Command
@@ -18,11 +19,17 @@ class Gem::Commands::PushCommand < Gem::Command
   end
 
   def execute
-    require 'restclient'
     say "Pushing gem to Gemcutter..."
 
-    path = get_one_gem_name
-    RestClient.post "http://gemcutter.org/gems", File.open(path)
+    gem = get_one_gem_name
+    url = URI.parse("http://gemcutter.org/gems")
+    request = Net::HTTP::Post.new(url.path)
+    request.body = File.open(gem).read
+    request.content_length = request.body.size
+    request.content_type = "application/octet-stream"
+
+    response = Net::HTTP.new(url.host, url.port).start { |http| http.request(request) }
+    say response.body
   end
 end
 

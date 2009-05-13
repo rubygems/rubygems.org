@@ -1,9 +1,12 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
+require 'rubygems_plugin'
 
 describe "Gemcutter Plugin" do
   before do
     @command = Gem::Commands::PushCommand.new
-    stub(@command).say
+    stub(@command).say("Pushing gem to Gemcutter...")
+    @response = "success"
+    FakeWeb.register_uri :post, "http://gemcutter.org/gems", :string => @response
   end
 
   it "should raise an error with no arguments" do
@@ -13,13 +16,13 @@ describe "Gemcutter Plugin" do
   end
 
   it "should push a gem" do
-    stub(@command).options { {:args => ["test"]} }
+    @gem = "test"
+    @io = "io"
+    stub(@command).options { {:args => [@gem]} }
+    stub(@io).read.stub!.size
+    stub(File).open(@gem) { @io }
 
-    @path = "path"
-    @gem = "gem"
-    mock(@command).get_one_gem_name { @path }
-    mock(File).open(@path) { @gem }
-    mock(RestClient).post("http://gemcutter.org/gems", @gem)
+    mock(@command).say(@response)
     @command.execute
   end
 end
