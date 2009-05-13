@@ -28,7 +28,3 @@ def app
   Gemcutter::App.new
 end
 
-`git clean -d -f -x #{File.join(File.dirname(__FILE__), "..", "server")}`
-Gemcutter::Helper.indexer.generate_index
-
-

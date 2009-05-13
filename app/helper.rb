@@ -27,13 +27,15 @@ module Gemcutter
         cache_path = Gemcutter::Helper.server_path('cache', name)
         spec_path = Gemcutter::Helper.server_path('specifications', name + "spec")
 
+        exists = File.exists?(spec_path)
+
         FileUtils.cp temp.path, cache_path
         File.open(spec_path, "w") do |f|
           f.write spec.to_ruby
         end
 
         Gemcutter::Helper.indexer.update_index
-        spec
+        [spec, exists]
       end
     end
   end

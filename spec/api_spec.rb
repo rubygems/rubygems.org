@@ -1,11 +1,10 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
 describe "Gemcutter API" do
-  #it "should create index on startup" do
-  #  %w[latest_specs.4.8 prerelease_specs.4.8 specs.4.8].each do |file|
-  #    File.exists?(Gemcutter::Helper.server_path(file)).should be_true
-  #  end
-  #end
+  before do
+    FileUtils.rm_rf Dir["server/cache/*", "server/*specs*", "server/quick", "server/specifications/*"]
+    Gemcutter::Helper.indexer.generate_index
+  end
 
   it "should have a homepage" do
     get "/"
@@ -46,11 +45,11 @@ describe "Gemcutter API" do
         end
       end
 
-      describe "on PUT to /gems/test" do
+      describe "on POST to /gems with existing gem" do
         before do
           @gem_up = "test-0.0.0.gem_up"
           @gem_up_file = gem_file(@gem_up)
-          put '/gems/test', {}, {'rack.input' => @gem_up_file}
+          post '/gems', {}, {'rack.input' => @gem_up_file}
         end
 
         it "should save gem and update index" do
