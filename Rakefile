@@ -11,8 +11,9 @@ namespace :import do
   desc 'Download all of the gems in rubygems.txt'
   task :download do
     require 'curb'
+    require 'active_support'
     url_queue = File.readlines("rubygems.txt").map { |g| g.strip }
-    url_queue = url_queue[1..10]
+    url_queue = url_queue[1..500]
     puts "Downloading #{url_queue.size} gems..."
 
     multi = Curl::Multi.new
@@ -21,13 +22,13 @@ namespace :import do
       easy = Curl::Easy.new(url) do |curl|
         curl.follow_location = true
         curl.on_success do |c|
-          puts "Success for #{File.basename(url)} in #{c.total_time}"
+          puts "Success for #{File.basename(url)} in #{c.total_time} seconds"
           File.open(File.join("server", "cache", File.basename(url)), "wb") do |file|
             file.write c.body_str
           end
         end
         curl.on_failure do |c|
-          puts "Failure: #{c.body_str}"
+          puts "Failure for #{File.basename(url)}: #{c.response_code}"
         end
       end
       multi.add(easy)
