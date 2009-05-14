@@ -5,6 +5,50 @@ require 'spec/rake/spectask'
 desc 'Run the specs'
 task :default => :spec
 
+
+namespace :import do
+
+  desc 'Download all of the gems in rubygems.txt'
+  task :download do
+    require 'curb'
+    url_queue = File.readlines("rubygems.txt").map { |g| g.strip }
+    url_queue = url_queue[1..10]
+    puts "Downloading #{url_queue.size} gems..."
+
+    multi = Curl::Multi.new
+    responses = {}
+    url_queue.each do |url|
+      easy = Curl::Easy.new(url) do |curl|
+        curl.follow_location = true
+        curl.on_success do |c|
+          puts "Success for #{File.basename(url)} in #{c.total_time}"
+          File.open(File.join("server", "cache", File.basename(url)), "wb") do |file|
+            file.write c.body_str
+          end
+        end
+        curl.on_failure do |c|
+          puts "Failure: #{c.body_str}"
+        end
+      end
+      multi.add(easy)
+    end
+
+    multi.perform
+  end
+
+  desc 'Parse out rubygems'
+  task :parse do
+    require 'hpricot'
+    doc = Hpricot(open("rubygems.html"))
+    File.open("rubygems.txt", "w") do |file|
+      (doc / "a")[1..-1].each do |gem|
+        puts gem['href']
+        file.write "http://gems.rubyforge.org/gems/#{gem['href']}\n"
+      end
+    end
+  end
+end
+
 Spec::Rake::SpecTask.new do |t|
   t.spec_opts = ['--format', 'progress', '--color', '--backtrace']
 end
