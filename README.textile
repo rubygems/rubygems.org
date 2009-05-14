@@ -10,23 +10,23 @@ h2. Purpose
 
 h2. Concerns
 
-*Q: How annoying will this be to upgrade?*<br />
-A: The plan is to use Gemcutter as your canonical gem repository. All of the same gems that were available on RubyForge will be ready for your consumption. The gemcutter gem will hopefully make this very easy to switch over.
+*How annoying will this be to upgrade?*<br />
+The plan is to use Gemcutter as your canonical gem repository. All of the same gems that were available on RubyForge will be ready for your consumption. The gemcutter gem will hopefully make this very easy to switch over.
 
-*Q: How can the process for publishing gems get any easier?*<br />
-A: Through one command- @gem push awesome-0.0.0.gem@.
+*How can the process for publishing gems get any easier?*<br />
+Through one command- @gem push awesome-0.0.0.gem@.
 
-*Q: Will the process change for consumers?*<br />
-A: No. In fact it will make their lives easier: easier to get to project pages with clearer information, and the same data they're used to.
+*Will the process change for consumers?*<br />
+No. In fact it will make their lives better: it will be easier to get to project pages with clearer information and the same data they're used to.
 
-*Q: Why is this better than GitHub gem hosting?*<br />
-A: GitHub's gem system is great, but it's not the canonical source by default. The nice part is that it takes the approval process out, but the namespacing on gems makes it hard for those new to the community to determine what is the right copy to use. Also, the goals here are much different and the site as a whole can be improved over time by the community.
+*Why is this better than GitHub gem hosting?*<br />
+GitHub's gem system is great, but it's not the canonical source by default. The nice part is that it takes the approval process out, but the namespacing on gems makes it hard for those new to the community to determine what is the right copy to use. Also, the goals here are much different and the site as a whole can be improved over time by the community.
 
-*Q: How can I gain access of my gem that was available through RubyForge?*<br />
-A: The plan currently is to provide a key to upload to your RubyForge account, and then Gemcutter will mark you as the owner based on that.
+*How can I gain access of my gem that was available through RubyForge?*<br />
+The plan currently is to provide a key to upload to your RubyForge account, and then Gemcutter will mark you as the owner based on that.
 
-*Q: How can I help?*<br />
-A: Fork away, and read the next section! Feel free to bug qrush via a message or on FreeNode if you're interested.
+*How can I help?*<br />
+Fork away, and read the next section! Feel free to bug qrush via a message or on FreeNode if you're interested.
 
 h2. Next up
 
