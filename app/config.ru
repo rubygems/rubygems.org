@@ -5,4 +5,5 @@ require 'sinatra'
 require 'app'
 
 set :environment, :production
+Gemcutter::Helper.indexer.generate_index
 run Gemcutter::App
