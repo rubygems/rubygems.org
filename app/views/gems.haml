@@ -1,2 +1,2 @@
 -@gems.each do |gem|
-  %p= gem
+  %a{:href => "/gems/#{gem.split.first}"}= gem

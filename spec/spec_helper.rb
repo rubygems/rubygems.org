@@ -13,7 +13,6 @@ require 'fakeweb'
 require 'rr'
 require 'webrat'
 
-
 set :environment, :test
 FakeWeb.allow_net_connect = false
 Test::Unit::TestCase.send :include, Rack::Test::Methods
