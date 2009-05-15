@@ -15,6 +15,20 @@ Rake::TestTask.new(:test_rubygems) do |t|
   t.verbose = false
 end
 
+namespace :indexer do
+  desc "Benchmark gemcutter's indexer vs rubygems"
+  task :bench do
+    require 'benchmark'
+    code = "Gem.configuration.verbose = false; i = Gem::Indexer.new('server', :build_legacy => false); def i.say(message) end; i.generate_index"
+    rb = "require 'rubygems/indexer';" + code
+    gc = "require './lib/rubygems/indexer';" + code
+    Benchmark.bm(9) do |b|
+      b.report("rubygems ") { system(%{ruby -rubygems -e "#{rb}"}) }
+      b.report("gemcutter") { system(%{ruby -rubygems -e "#{gc}"}) }
+    end
+  end
+end
+
 namespace :import do
 
   desc 'Download all of the gems in rubygems.txt'
@@ -22,28 +36,28 @@ namespace :import do
     require 'curb'
     require 'active_support'
     url_queue = File.readlines("rubygems.txt").map { |g| g.strip }
-    url_queue = url_queue[1..500]
     puts "Downloading #{url_queue.size} gems..."
 
-    multi = Curl::Multi.new
     responses = {}
-    url_queue.each do |url|
-      easy = Curl::Easy.new(url) do |curl|
-        curl.follow_location = true
-        curl.on_success do |c|
-          puts "Success for #{File.basename(url)} in #{c.total_time} seconds"
-          File.open(File.join("server", "cache", File.basename(url)), "wb") do |file|
-            file.write c.body_str
+    url_queue.in_groups_of(100).each do |group|
+      multi = Curl::Multi.new
+      group.each do |url|
+        easy = Curl::Easy.new(url) do |curl|
+          curl.follow_location = true
+          curl.on_success do |c|
+            puts "Success for #{File.basename(url)} in #{c.total_time} seconds"
+            File.open(File.join("server", "cache", File.basename(url)), "wb") do |file|
+              file.write c.body_str
+            end
+          end
+          curl.on_failure do |c|
+            puts "Failure for #{File.basename(url)}: #{c.response_code}"
           end
         end
-        curl.on_failure do |c|
-          puts "Failure for #{File.basename(url)}: #{c.response_code}"
-        end
+        multi.add(easy)
       end
-      multi.add(easy)
+      multi.perform
     end
-
-    multi.perform
   end
 
   desc 'Parse out rubygems'
