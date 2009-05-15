@@ -2,9 +2,18 @@ require 'rake'
 require 'rake/testtask'
 require 'spec/rake/spectask'
 
-desc 'Run the specs'
-task :default => :spec
+desc 'Run the specs and tests for rubygems'
+task :default => [:spec, :test_rubygems]
 
+Spec::Rake::SpecTask.new do |t|
+  t.spec_opts = ['--format', 'progress', '--color', '--backtrace']
+end
+
+Rake::TestTask.new(:test_rubygems) do |t|
+  t.libs << 'lib/rubygems'
+  t.pattern = 'spec/rubygems/test_*.rb'
+  t.verbose = false
+end
 
 namespace :import do
 
@@ -48,10 +57,6 @@ namespace :import do
       end
     end
   end
-end
-
-Spec::Rake::SpecTask.new do |t|
-  t.spec_opts = ['--format', 'progress', '--color', '--backtrace']
 end
 
 begin
