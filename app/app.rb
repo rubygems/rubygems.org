@@ -35,6 +35,7 @@ module Gemcutter
 
     post '/gems' do
       spec, exists = Gemcutter::Helper.save_gem(request.body)
+      Gemcutter::Helper.indexer.update_index
 
       content_type "text/plain"
 
