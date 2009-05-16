@@ -20,8 +20,14 @@ module Gemcutter
           f.write data.read
         end
 
-        installer = Gem::Installer.new(temp.path, :unpack => true)
-        spec = installer.spec
+        begin
+          spec = Gem::Format.from_file_by_path(temp.path).spec
+          ruby_spec = spec.to_ruby
+        rescue Exception => e
+          puts e
+          return
+        end
+
         name = "#{spec.name}-#{spec.version}.gem"
 
         cache_path = Gemcutter::Helper.server_path('cache', name)
@@ -31,10 +37,9 @@ module Gemcutter
 
         FileUtils.cp temp.path, cache_path
         File.open(spec_path, "w") do |f|
-          f.write spec.to_ruby
+          f.write ruby_spec
         end
 
-        Gemcutter::Helper.indexer.update_index
         [spec, exists]
       end
     end

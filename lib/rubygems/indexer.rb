@@ -124,9 +124,9 @@ class Gem::Indexer
   def build_indicies(index)
     # Marshal gemspecs are used by both modern and legacy RubyGems
     build_marshal_gemspecs index
-    #build_legacy_indicies index if @build_legacy
+    build_legacy_indicies index if @build_legacy
     build_modern_indicies index if @build_modern
-    #build_rss index
+    build_rss index
 
     compress_indicies
   end
@@ -263,7 +263,6 @@ class Gem::Indexer
           platform = Gem::Platform::RUBY if platform.nil? or platform.empty?
           [spec.name, spec.version, platform]
         end
-        p specs
 
         specs = compact_specs(specs)
         Marshal.dump(specs, io)
@@ -414,24 +413,22 @@ class Gem::Indexer
 
     Gem.time 'loaded' do
       gems.each do |gemfile|
-        # this check can be done at push time
-        #if File.size(gemfile.to_s) == 0 then
-          #alert_warning "Skipping zero-length gem: #{gemfile}"
-          #next
-        #end
+        if File.size(gemfile.to_s) == 0 then
+          alert_warning "Skipping zero-length gem: #{gemfile}"
+          next
+        end
 
         begin
           spec = Gem::Format.from_file_by_path(gemfile).spec
           spec.loaded_from = gemfile
 
-          # same with this one
-          #unless gemfile =~ /\/#{Regexp.escape spec.original_name}.*\.gem\z/i then
-            #expected_name = spec.full_name
-            #expected_name << " (#{spec.original_name})" if
-              #spec.original_name != spec.full_name
-            #alert_warning "Skipping misnamed gem: #{gemfile} should be named #{expected_name}"
-            #next
-          #end
+          unless gemfile =~ /\/#{Regexp.escape spec.original_name}.*\.gem\z/i then
+            expected_name = spec.full_name
+            expected_name << " (#{spec.original_name})" if
+              spec.original_name != spec.full_name
+            alert_warning "Skipping misnamed gem: #{gemfile} should be named #{expected_name}"
+            next
+          end
 
           abbreviate spec
           sanitize spec
