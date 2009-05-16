@@ -19,12 +19,39 @@ namespace :indexer do
   desc "Benchmark gemcutter's indexer vs rubygems"
   task :bench do
     require 'benchmark'
-    code = "Gem.configuration.verbose = false; i = Gem::Indexer.new('server', :build_legacy => false); def i.say(message) end; i.generate_index"
+    # Clean directory
+    # Copy 100 gems in
+    # Generate gem index
+    # Copy 100 more gems in
+    # Run update
+
+    commands = <<EOF
+git clean -dfxq server
+cp -r bench/old/*.gem server/cache
+gem generate_index -d server > /dev/null
+cp -r bench/new/*.gem server/cache
+EOF
+    commands = commands.split("\n").join(";")
+
+    code = <<EOF
+Gem.configuration.verbose = false
+i = Gem::Indexer.new('server', :build_legacy => false)
+def i.say(message) end
+i.update_index
+EOF
+    code = code.split("\n").join(";")
     rb = "require 'rubygems/indexer';" + code
     gc = "require './lib/rubygems/indexer';" + code
+
     Benchmark.bm(9) do |b|
-      b.report("rubygems ") { system(%{ruby -rubygems -e "#{rb}"}) }
-      b.report("gemcutter") { system(%{ruby -rubygems -e "#{gc}"}) }
+      b.report("rubygems ") do
+        system(commands)
+        system(%{ruby -rubygems -e "#{rb}"})
+      end
+      b.report("gemcutter") do
+        system(commands)
+        system(%{ruby -rubygems -e "#{gc}"})
+      end
     end
   end
 end
