@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
-describe "Gemcutter API" do
+describe Gem::App do
   before do
     FileUtils.rm_rf Dir["server/cache/*", "server/*specs*", "server/quick", "server/specifications/*"]
     Gem::Cutter.indexer.generate_index
