@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
-describe "Cutter class" do
+describe Gem::Cutter do
   before do
     @data = "data"
     @cutter = Gem::Cutter.new("data")
