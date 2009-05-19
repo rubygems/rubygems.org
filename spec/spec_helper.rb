@@ -26,6 +26,6 @@ def gem_file(name)
 end
 
 def app
-  Gemcutter::App.new
+  Gem::App.new
 end
 
