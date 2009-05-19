@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 describe "Gemcutter API" do
   before do
     FileUtils.rm_rf Dir["server/cache/*", "server/*specs*", "server/quick", "server/specifications/*"]
-    Gemcutter::Helper.indexer.generate_index
+    Gem::Cutter.indexer.generate_index
   end
 
   it "should have a homepage" do
@@ -15,8 +15,8 @@ describe "Gemcutter API" do
     before do
       @gem = "test-0.0.0.gem"
       @gem_file = gem_file(@gem)
-      @cache_path = Gemcutter::Helper.server_path("cache", @gem)
-      @spec_path = Gemcutter::Helper.server_path("specifications", @gem + "spec")
+      @cache_path = Gem::Cutter.server_path("cache", @gem)
+      @spec_path = Gem::Cutter.server_path("specifications", @gem + "spec")
     end
 
     describe "with a saved gem" do
@@ -55,7 +55,7 @@ describe "Gemcutter API" do
           File.exists?(@cache_path).should be_true
           File.exists?(@spec_path).should be_true
           FileUtils.compare_file(@gem_up_file.path, @cache_path).should be_true
-          File.exists?(Gemcutter::Helper.server_path("quick", "Marshal.4.8", "#{@gem}spec.rz")).should be_true
+          File.exists?(Gem::Cutter.server_path("quick", "Marshal.4.8", "#{@gem}spec.rz")).should be_true
         end
 
         it "should alert user that gem was updated" do
@@ -74,13 +74,24 @@ describe "Gemcutter API" do
         File.exists?(@cache_path).should be_true
         File.exists?(@spec_path).should be_true
         FileUtils.compare_file(@gem_file.path, @cache_path).should be_true
-        File.exists?(Gemcutter::Helper.server_path("quick", "Marshal.4.8", "#{@gem}spec.rz")).should be_true
+        File.exists?(Gem::Cutter.server_path("quick", "Marshal.4.8", "#{@gem}spec.rz")).should be_true
       end
 
       it "should alert user that gem was created" do
         last_response.body.should == "New gem 'test' registered."
         last_response.status.should == 201
       end
+    end
+
+    it "should not save an empty gem" do
+#      @temp_path = "temp path"
+#
+#      stub(Tempfile).new("gem").stub!.path { @temp_path }
+#      mock(File).size(@temp_path) { 0 }
+#
+#      post '/gems', {}, {'rack.input' => @gem_file}
+#      last_response.body.should == "Invalid gem file"
+#      last_response.status.should == 500
     end
   end
 end

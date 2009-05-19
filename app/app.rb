@@ -7,10 +7,10 @@ require 'sinatra'
 require 'json'
 require 'haml'
 
-require 'helper'
+require 'cutter'
 Gem.configuration.verbose = false
 
-module Gemcutter
+module Gem
   class App < Sinatra::Default
     set :app_file, __FILE__
 
@@ -19,7 +19,7 @@ module Gemcutter
     end
 
     get '/gems' do
-      cache_path = Gemcutter::Helper.server_path('cache', "*.gem")
+      cache_path = Cutter.server_path('cache', "*.gem")
       @gems = Dir[cache_path].map do |gem| 
         gem = File.basename(gem).split("-")
         "#{gem[0..-2]} (#{gem.last.chomp(".gem")})"
@@ -28,14 +28,14 @@ module Gemcutter
     end
 
     get '/gems/:gem' do
-      path = Gemcutter::Helper.server_path('specifications', params[:gem] + "*")
-      @gem = Gem::Specification.load Dir[path].first
+      path = Cutter.server_path('specifications', params[:gem] + "*")
+      @gem = Specification.load Dir[path].first
       haml :gem
     end
 
     post '/gems' do
-      spec, exists = Gemcutter::Helper.save_gem(request.body)
-      Gemcutter::Helper.indexer.update_index
+      spec, exists = Cutter.new(request.body).save_gem
+      Cutter.indexer.update_index
 
       content_type "text/plain"
 
