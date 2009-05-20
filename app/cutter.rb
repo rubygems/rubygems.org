@@ -61,6 +61,17 @@ module Gem
         f.write ruby_spec
       end
 
+      # Do the indexer's work for it.
+      Cutter.indexer.abbreviate spec
+      Cutter.indexer.sanitize spec
+
+      quick_path = Cutter.server_path("quick", "Marshal.#{Gem.marshal_version}", "#{spec.name}-#{spec.version}.gemspec.rz")
+
+      zipped = Gem.deflate(Marshal.dump(spec))
+      File.open(quick_path, "wb") do |f|
+        f.write zipped
+      end
+
       [spec, exists]
     end
   end
