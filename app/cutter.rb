@@ -1,6 +1,6 @@
 module Gem
   class Cutter
-    attr_accessor :data
+    attr_accessor :data, :error
 
     def initialize(data)
       self.data = data
@@ -36,7 +36,9 @@ module Gem
         f.write data.read
       end
 
-      if File.size(temp.path) == 0
+      if File.size(temp.path).zero?
+        self.error = "Empty gem cannot be processed."
+        return
       end
 
       begin

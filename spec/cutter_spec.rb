@@ -20,6 +20,18 @@ describe Gem::Cutter do
       @cutter.data.should == @gem_file
     end
 
+    it "should not save an empty gem" do
+      @temp_path = "temp path"
+      stub(Tempfile).new("gem").stub!.path { @temp_path }
+      mock(File).size(@temp_path) { 0 }
+
+      @cutter.save_gem
+
+      File.exists?(@cache_path).should be_false
+      File.exists?(@spec_path).should be_false
+      @cutter.error.should == "Empty gem cannot be processed."
+    end
+
     it "should save gem and update index" do
       @cutter.save_gem
       File.exists?(@cache_path).should be_true
