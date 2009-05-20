@@ -19,17 +19,17 @@ module Gem
     end
 
     get '/gems' do
-      @gems = Cutter.list_gems
+      @gems = Cutter.find_all
       haml :gems
     end
 
     get '/gems/:gem' do
-      @gem = Cutter.find_gem(params[:gem])
+      @gem = Cutter.find(params[:gem])
       haml :gem
     end
 
     post '/gems' do
-      spec, exists = Cutter.new(request.body).save_gem
+      spec, exists = Cutter.new(request.body).process
       Cutter.indexer.update_index
 
       content_type "text/plain"

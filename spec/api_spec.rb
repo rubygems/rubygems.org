@@ -18,7 +18,7 @@ describe Gem::App do
 
     describe "on POST to /gems" do
       before do
-        stub(Gem::Cutter).new.stub!.save_gem { @gem }
+        stub(Gem::Cutter).new.stub!.process { @gem }
         mock(Gem::Cutter).indexer.stub!.update_index
         post '/gems', {}, {'rack.input' => gem_file("test-0.0.0.gem") }
       end
@@ -29,41 +29,36 @@ describe Gem::App do
       end
     end
 
-    describe "with a saved gem" do
+    it "should list installed gems" do
+      mock(Gem::Cutter).find_all { ["test (0.0.0)"] }
+      get "/gems"
+      last_response.status.should == 200
+      last_response.body.should =~ /test \(0.0.0\)/
+    end
+
+    describe "On GET to /gems/test" do
       before do
-        stub(Gem::Cutter).find_gem("test") { @gem }
-        stub(Gem::Cutter).list_gems { ["test (0.0.0)"] }
+        mock(Gem::Cutter).find("test") { @gem }
+        get "/gems/test"
       end
 
-      it "should list installed gems" do
-        get "/gems"
+      it "should return information about the gem" do
+        last_response.body.should contain("test")
+        last_response.body.should contain("0.0.0")
         last_response.status.should == 200
-        last_response.body.should =~ /test \(0.0.0\)/
+      end
+    end
+
+    describe "on POST to /gems with existing gem" do
+      before do
+        stub(Gem::Cutter).new.stub!.process { [@gem, true] }
+        mock(Gem::Cutter).indexer.stub!.update_index
+        post '/gems', {}, {'rack.input' => gem_file("test-0.0.0.gem_up") }
       end
 
-      describe "On GET to /gems/test" do
-        before do
-          get "/gems/test"
-        end
-
-        it "should return information about the gem" do
-          last_response.body.should contain("test")
-          last_response.body.should contain("0.0.0")
-          last_response.status.should == 200
-        end
-      end
-
-      describe "on POST to /gems with existing gem" do
-        before do
-          stub(Gem::Cutter).new.stub!.save_gem { [@gem, true] }
-          mock(Gem::Cutter).indexer.stub!.update_index
-          post '/gems', {}, {'rack.input' => gem_file("test-0.0.0.gem_up") }
-        end
-
-        it "should alert user that gem was updated" do
-          last_response.body.should == "Gem 'test' version 0.0.0 updated."
-          last_response.status.should == 200
-        end
+      it "should alert user that gem was updated" do
+        last_response.body.should == "Gem 'test' version 0.0.0 updated."
+        last_response.status.should == 200
       end
     end
   end
