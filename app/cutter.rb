@@ -1,6 +1,6 @@
 module Gem
   class Cutter
-    attr_accessor :data, :error
+    attr_accessor :data, :error, :spec, :exists
 
     def initialize(data)
       self.data = data
@@ -16,7 +16,7 @@ module Gem
       indexer
     end
 
-    def self.list_gems
+    def self.find_all
       cache_path = Cutter.server_path('cache', "*.gem")
       Dir[cache_path].map do |gem| 
         gem = File.basename(gem).split("-")
@@ -24,55 +24,66 @@ module Gem
       end
     end
 
-    def self.find_gem(gem)
+    def self.find(gem)
       path = Cutter.server_path('specifications', gem + "*")
       Specification.load Dir[path].first
     end
 
-    def save_gem
+    def validate
       temp = Tempfile.new("gem")
 
       File.open(temp.path, 'wb') do |f|
-        f.write data.read
+        f.write self.data.read
       end
 
       if File.size(temp.path).zero?
         self.error = "Empty gem cannot be processed."
-        return
+        nil
+      else
+        temp
       end
+    end
 
+    def save(temp)
       begin
-        spec = Format.from_file_by_path(temp.path).spec
-        ruby_spec = spec.to_ruby
+        self.spec = Format.from_file_by_path(temp.path).spec
+        ruby_spec = self.spec.to_ruby
       rescue Exception => e
         puts e
         return
       end
 
-      name = "#{spec.name}-#{spec.version}.gem"
+      name = "#{self.spec.name}-#{self.spec.version}.gem"
 
       cache_path = Cutter.server_path('cache', name)
       spec_path = Cutter.server_path('specifications', name + "spec")
 
-      exists = File.exists?(spec_path)
+      self.exists = File.exists?(spec_path)
 
       FileUtils.cp temp.path, cache_path
       File.open(spec_path, "w") do |f|
         f.write ruby_spec
       end
+    end
 
-      # Do the indexer's work for it.
-      Cutter.indexer.abbreviate spec
-      Cutter.indexer.sanitize spec
+    def index
+      Cutter.indexer.abbreviate self.spec
+      Cutter.indexer.sanitize self.spec
 
-      quick_path = Cutter.server_path("quick", "Marshal.#{Gem.marshal_version}", "#{spec.name}-#{spec.version}.gemspec.rz")
+      quick_path = Cutter.server_path("quick", "Marshal.#{Gem.marshal_version}", "#{self.spec.name}-#{self.spec.version}.gemspec.rz")
 
-      zipped = Gem.deflate(Marshal.dump(spec))
+      zipped = Gem.deflate(Marshal.dump(self.spec))
       File.open(quick_path, "wb") do |f|
         f.write zipped
       end
+    end
 
-      [spec, exists]
+    def process
+      temp = validate
+      unless temp.nil?
+        save(temp)
+        index
+      end
     end
   end
 end

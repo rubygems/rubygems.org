@@ -27,7 +27,7 @@ describe Gem::Cutter do
     it "should not save an empty gem" do
       mock(File).size(@temp_path) { 0 }
 
-      @cutter.save_gem
+      @cutter.process
 
       File.exists?(@cache_path).should be_false
       File.exists?(@spec_path).should be_false
@@ -50,11 +50,10 @@ describe Gem::Cutter do
       marshal = "marshal"
       quick_path = Gem::Cutter.server_path("quick", "Marshal.#{Gem.marshal_version}", "#{spec.name}-#{spec.version}.gemspec.rz")
 
-      mock(Marshal).dump(spec) { marshal }
-      mock(Gem).deflate(marshal)
+      mock(Marshal).dump(spec) { mock(Gem).deflate(stub!) }
       mock(File).open(quick_path, 'wb')
 
-      @cutter.save_gem
+      @cutter.process
     end
 
     it "should save gem and update index" do
@@ -77,7 +76,7 @@ describe Gem::Cutter do
     end
 
     it "should save gem and update index" do
-      @cutter.save_gem
+      @cutter.process
       File.exists?(@cache_path).should be_true
       File.exists?(@spec_path).should be_true
       FileUtils.compare_file(@gem_up_file.path, @cache_path).should be_true
