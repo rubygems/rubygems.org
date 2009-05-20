@@ -66,16 +66,5 @@ describe Gem::App do
         end
       end
     end
-
-    it "should not save an empty gem" do
-#      @temp_path = "temp path"
-#
-#      stub(Tempfile).new("gem").stub!.path { @temp_path }
-#      mock(File).size(@temp_path) { 0 }
-#
-#      post '/gems', {}, {'rack.input' => @gem_file}
-#      last_response.body.should == "Invalid gem file"
-#      last_response.status.should == 500
-    end
   end
 end
