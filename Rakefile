@@ -101,14 +101,14 @@ namespace :import do
 
   desc 'Bring the gems through the gemcutter process'
   task :process do
-    require 'rubygems/installer'
-    require 'app/helper'
+    require 'rubygems/indexer'
+    require 'app/cutter'
 
     gems = Dir[File.join(ARGV[1], "*.gem")]
     puts "Processing #{gems.size} gems..."
     gems.each do |gem|
       puts gem
-      Gemcutter::Helper.save_gem(File.open(gem))
+      Gem::Cutter.new(File.open(gem)).process
     end
   end
 end
