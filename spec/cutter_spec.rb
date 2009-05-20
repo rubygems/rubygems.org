@@ -23,6 +23,7 @@ describe Gem::Cutter do
     it "should not save an empty gem" do
       @temp_path = "temp path"
       stub(Tempfile).new("gem").stub!.path { @temp_path }
+      stub(File).open(@temp_path, 'wb')
       mock(File).size(@temp_path) { 0 }
 
       @cutter.save_gem
