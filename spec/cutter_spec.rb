@@ -6,6 +6,9 @@ describe Gem::Cutter do
     @gem_file = gem_file(@gem)
     @cache_path = Gem::Cutter.server_path("cache", @gem)
     @spec_path = Gem::Cutter.server_path("specifications", @gem + "spec")
+
+    FileUtils.rm_rf Dir["server/cache/*", "server/*specs*", "server/quick", "server/specifications/*"]
+    Gem::Cutter.indexer.generate_index
   end
 
   describe "with a new gem" do
@@ -22,7 +25,6 @@ describe Gem::Cutter do
       File.exists?(@cache_path).should be_true
       File.exists?(@spec_path).should be_true
       FileUtils.compare_file(@gem_file.path, @cache_path).should be_true
-      File.exists?(Gem::Cutter.server_path("quick", "Marshal.4.8", "#{@gem}spec.rz")).should be_true
     end
   end
 
@@ -42,7 +44,6 @@ describe Gem::Cutter do
       File.exists?(@cache_path).should be_true
       File.exists?(@spec_path).should be_true
       FileUtils.compare_file(@gem_up_file.path, @cache_path).should be_true
-      File.exists?(Gem::Cutter.server_path("quick", "Marshal.4.8", "#{@gem}spec.rz")).should be_true
     end
   end
 end
