@@ -16,6 +16,19 @@ module Gem
       indexer
     end
 
+    def self.list_gems
+      cache_path = Cutter.server_path('cache', "*.gem")
+      Dir[cache_path].map do |gem| 
+        gem = File.basename(gem).split("-")
+        "#{gem[0..-2]} (#{gem.last.chomp(".gem")})"
+      end
+    end
+
+    def self.find_gem(gem)
+      path = Cutter.server_path('specifications', gem + "*")
+      Specification.load Dir[path].first
+    end
+
     def save_gem
       temp = Tempfile.new("gem")
 

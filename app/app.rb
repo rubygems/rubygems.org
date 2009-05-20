@@ -19,17 +19,12 @@ module Gem
     end
 
     get '/gems' do
-      cache_path = Cutter.server_path('cache', "*.gem")
-      @gems = Dir[cache_path].map do |gem| 
-        gem = File.basename(gem).split("-")
-        "#{gem[0..-2]} (#{gem.last.chomp(".gem")})"
-      end
+      @gems = Cutter.list_gems
       haml :gems
     end
 
     get '/gems/:gem' do
-      path = Cutter.server_path('specifications', params[:gem] + "*")
-      @gem = Specification.load Dir[path].first
+      @gem = Cutter.find_gem(params[:gem])
       haml :gem
     end
 
