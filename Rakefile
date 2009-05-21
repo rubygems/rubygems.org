@@ -5,6 +5,11 @@ require 'spec/rake/spectask'
 desc 'Run the specs and tests for rubygems'
 task :default => [:spec, :test_rubygems]
 
+desc "Clean out files that aren't needed."
+task :clean do
+  system("git clean -dfx server/")
+end
+
 Spec::Rake::SpecTask.new do |t|
   t.spec_opts = ['--format', 'progress', '--color', '--backtrace']
 end
@@ -16,6 +21,19 @@ Rake::TestTask.new(:test_rubygems) do |t|
 end
 
 namespace :indexer do
+
+  desc "Create the index"
+  task :create do
+    require './app/cutter'
+    Gem::Cutter.indexer.generate_index
+  end
+
+  desc "Update the index"
+  task :update do
+    require './app/cutter'
+    Gem::Cutter.indexer.update_index
+  end
+
   desc "Benchmark gemcutter's indexer vs rubygems"
   task :bench do
     require 'benchmark'

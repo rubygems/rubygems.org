@@ -648,9 +648,11 @@ class Gem::Indexer
       terminate_interaction 0
     end
 
-    index = collect_specs updated_gems
+    #index = collect_specs updated_gems
+    index = Marshal.load(File.open(File.join(@dest_directory, "source_index")))
 
-    files = build_marshal_gemspecs index
+    #files = build_marshal_gemspecs index
+    #files = Dir[File.join(@dest_directory, "quick", "Marshal.#{Gem.marshal_version}", "*")]
 
     Gem.time 'Updated indexes' do
       update_specs_index index, @dest_specs_index, @specs_index
@@ -665,6 +667,7 @@ class Gem::Indexer
 
     say "Updating production dir #{@dest_directory}" if verbose
 
+    files = []
     files << @specs_index
     files << "#{@specs_index}.gz"
     files << @latest_specs_index
