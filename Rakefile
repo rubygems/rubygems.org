@@ -91,8 +91,12 @@ namespace :import do
           curl.follow_location = true
           curl.on_success do |c|
             puts "Success for #{File.basename(url)} in #{c.total_time} seconds"
-            File.open(File.join("server", "cache", File.basename(url)), "wb") do |file|
-              file.write c.body_str
+            begin
+              File.open(File.join("server", "cache", File.basename(url)), "wb") do |file|
+                file.write c.body_str
+              end
+            rescue Exception => e
+              puts "Problem saving: #{e}"
             end
           end
           curl.on_failure do |c|
