@@ -26,17 +26,18 @@ module Gem
     end
 
     post '/gems' do
-      spec, exists = Cutter.new(request.body).process
+      cutter = Cutter.new(request.body)
+      cutter.process
       Cutter.indexer.update_index
 
       content_type "text/plain"
 
-      if exists
+      if cutter.exists
         status(200)
-        "Gem '#{spec.name}' version #{spec.version} updated."
+        "Gem '#{cutter.spec.name}' version #{cutter.spec.version} updated."
       else
         status(201)
-        "New gem '#{spec.name}' registered."
+        "New gem '#{cutter.spec.name}' registered."
       end
     end
   end
