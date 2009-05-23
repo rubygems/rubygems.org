@@ -1,16 +1,138 @@
 body {
-  text-align: center;
-  color: #fff;
-  background: #4D0101;
+  background: #EFEFEF;
+  color: #333333;
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
 }
 
 a {
-  display: block;
-  margin-top: 20px;
-  color: #fff;
-  font-size: 20px;
+  color: #9E2727;
+  font-size: 1.3em;
+  text-decoration: none;
+  padding: 4px;
 }
 
-p {
-  font-size: 16px;
+a:hover {
+  background-color: #9E2727;
+  color: #FFFFFF;
+}
+
+code, pre {
+  font-family: Monaco,Deja Vu Sans Mono,Inconsolata,Consolas,monospace
+}
+
+h1 {
+  padding-top: 20px;
+  font-size: 3em;
+  font-weight: bold;
+  margin-bottom: 0;
+  float: left;
+}
+
+h2 {
+  float: left;
+  font-size: 1em;
+  font-style: italic;
+  color: #9a9a9a;
+  margin-top: 49px;
+  margin-left: 10px;
+}
+
+h3 {
+  margin-top: 20px;
+}
+
+h4 {
+  text-align: center;
+  border: 3px solid #333333;
+  background: #c2c2c2;
+}
+
+ul { 
+  list-style-image: none;
+  list-style-position: outside;
+  list-style-type: none;
+}
+
+li {
+  margin-left: 0;
+}
+
+.header {
+  border-bottom: 2px solid #333333;
+  height: 80px;
+}
+
+.header .buttons {
+  float: right;
+}
+
+.header .buttons .account {
+  text-align: right;
+}
+
+.header .buttons .search {
+  margin-top: 12px;
+}
+
+.header .buttons .search input {
+  background: #9a9a9a;
+  border: none;
+  color: #333333;
+  font-size:1.3em;
+  padding:0.3em;
+  width:200px;
+}
+
+.started li {
+  border-top: 1px solid #C2C2C2;
+  font-size:2.0em;
+  padding:0.4em;
+}
+.started span {
+  display: inline-block;
+  width: 100px;
+}
+
+.started li.green {
+  background: #C8FFBF;
+}
+
+.started li.yellow {
+  background: #FFF9BF;
+}
+
+.started li.red {
+  background: #FFD1BF;
+}
+
+.latest li {
+  background:#9E2727;
+  border-top:1px solid #C2C2C2;
+  color:#FFFFFF;
+  font-size:1.3em;
+  font-weight:bold;
+  padding:0.3em;
+}
+
+.latest li:hover {
+  background:#600000;
+  cursor: pointer;
+}
+
+.count {
+  color: #9E2727;
+  font-family: Monaco,Deja Vu Sans Mono,Inconsolata,Consolas,monospace;
+  font-size: 10em;
+  margin: 20px 0 0;
+  text-align: center;
+  line-height: 1.2em;
+}
+
+.what {
+  text-align: center;
+  font-weight: bold;
+  text-align: center;
+  text-align: center;
+  font-size: 1.1em;
+  margin-bottom: 50px;
 }
