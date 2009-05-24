@@ -1,4 +1,24 @@
-%div
-  %img{:src => 'gemcutter.jpg'}
-%div
-  %a{:href => "/gems"} view gems
+.latest.grid_4
+  %h3 Latest Gems
+  %ul
+    %li jekyll (0.5.1)
+    %li haml (0.1.2)
+    %li roodi (1.2.3)
+    %li beardo (0.0.1)
+    %li jeweler (1.0.42)
+.started.grid_8
+  %h3 Get Started
+  %ul
+    %li.red
+      %span ready:
+      %code gem install gemcutter
+    %li.yellow
+      %span set:
+      %code gem upgrade
+    %li.green
+      %span go:
+      %code gem push yourgem-0.0.1.gem
+.clear
+.grid_12
+  .count 23,493
+  .what gems indexed since june 2009
