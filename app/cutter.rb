@@ -33,7 +33,7 @@ module Gem
 
     def self.find(gem)
       path = Cutter.server_path('specifications', gem + "*")
-      Specification.load Dir[path].first
+      Specification.load Dir[path].last
     end
 
     def self.count

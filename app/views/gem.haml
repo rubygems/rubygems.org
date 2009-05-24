@@ -1,6 +1,44 @@
 -@title = @gem.name
 -@subtitle = @gem.version
-.gem.grid_12
-  %p= @gem.date
-  %p= @gem.authors
-  %p= @gem.summary
+-@page_title = "#{@gem.name} &raquo; #{page_title}"
+.grid_8
+  .block.red
+    %h3 Description
+    %p= @gem.description || @gem.summary
+  .block.green
+    %h3 Install
+    %pre= "gem install #{@gem.name}"
+  .block.red.versions
+    %h3 Versions
+    %p
+      %a{:href => "/"}
+        %span.version 0.0.3
+        %span.date January 12, 2005
+      %a{:href => "/"}
+        %span.version 0.0.2
+        %span.date January 11, 2005
+      %a{:href => "/"}
+        %span.version 0.0.1
+        %span.date January 4, 2005
+.grid_4
+  .block.red
+    -if @gem.authors.size == 1
+      %h3 Author
+    -else
+      %h3 Authors
+    -@gem.authors.each do |author|
+      %p= author
+  .block.red
+    %h3 Downloads
+    %p 23,000
+  .block.red
+    %h3 Last Update
+    %p= @gem.date.strftime("%B %e, %Y")
+  .block.red.links
+    %h3 Links
+    %p
+      %a{:href => "/"} Homepage
+      %a{:href => "/"} Docs
+      %a{:href => "/"} Code
+      %a{:href => "/"} Mailing List
+      %a{:href => "/"} Bug Tracker

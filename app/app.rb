@@ -53,6 +53,10 @@ module Gem
         "kickass gem hosting"
       end
 
+      def page_title
+        "#{title}: #{subtitle}"
+      end
+
       # Thanks, ActionView!
       def number_with_delimiter(number, delimiter = ',', separator = ' ')
         begin
