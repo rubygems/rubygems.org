@@ -45,6 +45,14 @@ module Gem
     end
 
     helpers do
+      def title
+        "gemcutter"
+      end
+
+      def subtitle
+        "kickass gem hosting"
+      end
+
       # Thanks, ActionView!
       def number_with_delimiter(number, delimiter = ',', separator = ' ')
         begin

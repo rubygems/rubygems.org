@@ -36,10 +36,10 @@ describe Gem::App do
     end
 
     it "should list installed gems" do
-      mock(Gem::Cutter).find_all { ["test (0.0.0)"] }
+      mock(Gem::Cutter).find_all { [ ["test", Gem::Version.new("0.0.0"), "ruby"] ] }
       get "/gems"
       last_response.status.should == 200
-      last_response.body.should =~ /test \(0.0.0\)/
+      last_response.body.should =~ /test/
     end
 
     describe "On GET to /gems/test" do
