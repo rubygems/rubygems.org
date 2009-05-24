@@ -6,6 +6,7 @@ require 'json'
 require 'haml'
 
 require 'cutter'
+require 'indexer'
 Gem.configuration.verbose = false
 
 module Gem

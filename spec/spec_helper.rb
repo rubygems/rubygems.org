@@ -29,3 +29,7 @@ def app
   Gem::App.new
 end
 
+def regenerate_index
+  FileUtils.rm_rf Dir["server/cache/*", "server/*specs*", "server/quick", "server/specifications/*"]
+  Gem::Cutter.indexer.generate_index
+end

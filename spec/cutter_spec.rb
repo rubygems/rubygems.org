@@ -37,8 +37,7 @@ describe Gem::Cutter do
     @spec_path = Gem::Cutter.server_path("specifications", @gem + "spec")
     @temp_path = "temp path"
 
-    FileUtils.rm_rf Dir["server/cache/*", "server/*specs*", "server/quick", "server/specifications/*"]
-    Gem::Cutter.indexer.generate_index
+    regenerate_index
 
     stub(Tempfile).new("gem").stub!.path { @temp_path }
     stub(File).exists?(Gem::Cutter.server_path("source_index")) { false }
