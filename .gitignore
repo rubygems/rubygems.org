@@ -4,3 +4,4 @@
 server/
 pkg/
 bench/
+cache/

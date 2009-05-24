@@ -29,6 +29,10 @@ module Gem
       Specification.load Dir[path].first
     end
 
+    def self.count
+      Dir.entries(Cutter.server_path('cache')).size - 3
+    end
+
     def validate
       temp = Tempfile.new("gem")
 
