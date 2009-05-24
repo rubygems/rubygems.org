@@ -58,10 +58,18 @@ module Gem
     def save(temp)
       begin
         self.spec = Format.from_file_by_path(temp.path).spec
+
+        # Performing some more validation since rubygems won't do it
+        self.spec.dependencies.each do |dep|
+          if !dep.is_a?(Gem::Dependency)
+            self.error = "Invalid gem dependencies"
+            return false
+          end
+        end
         ruby_spec = self.spec.to_ruby
       rescue Exception => e
-        puts e
-        return
+        self.error = e
+        return false
       end
 
       name = "#{self.spec.name}-#{self.spec.version}.gem"
@@ -76,6 +84,8 @@ module Gem
       File.open(spec_path, "w") do |f|
         f.write ruby_spec
       end
+
+      true
     end
 
     def index
@@ -106,10 +116,7 @@ module Gem
 
     def process
       temp = validate
-      unless temp.nil?
-        save(temp)
-        index
-      end
+      save(temp) && index unless temp.nil?
     end
   end
 end

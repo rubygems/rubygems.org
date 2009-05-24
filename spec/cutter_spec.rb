@@ -8,6 +8,7 @@ describe Gem::Cutter do
     stub(@spec).to_ruby
     stub(@spec).name { "test" }
     stub(@spec).version { "0.0.0" }
+    stub(@spec).dependencies { [] }
 
     # Working around a horrible RR bug
     def @spec.original_name() end;
