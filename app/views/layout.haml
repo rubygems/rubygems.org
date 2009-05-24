@@ -2,7 +2,7 @@
 %html
   %head
     %link{:rel => "shortcut icon", :href => "/favicon.ico", :type => "image/x-icon"}
-    %title= "gemcutter: kickass gem hosting"
+    %title= @page_title || page_title
     %link{:rel => "stylesheet", :type => "text/css", :media => "all", :href => "/css/reset.css"}
     %link{:rel => "stylesheet", :type => "text/css", :media => "all", :href => "/css/960.css"}
     %link{:rel => "stylesheet", :type => "text/css", :media => "all", :href => "/css/text.css"}
@@ -26,7 +26,7 @@
               %a{:href => "/register"} register
         =yield
         .footer.grid_12
-          .links
+          .info
             %a.footer{:href => "http://twitter.com/rubygemcutter"} Status
             %a.footer{:href => "/api"} API
             %a.footer{:href => "/help"} Help
