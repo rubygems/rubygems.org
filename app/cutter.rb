@@ -61,6 +61,7 @@ module Gem
       self.exists = File.exists?(spec_path)
 
       FileUtils.cp temp.path, cache_path
+      File.chmod 0644, cache_path
       File.open(spec_path, "w") do |f|
         f.write ruby_spec
       end
