@@ -70,11 +70,15 @@ li {
 }
 
 .header .buttons {
+  margin-top: 45px;
   float: right;
 }
 
+.header .buttons .actions {
+  margin-right: 40px;
+}
+
 .header .buttons .account {
-  text-align: right;
 }
 
 .header .buttons .search {

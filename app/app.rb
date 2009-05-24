@@ -14,6 +14,7 @@ module Gem
     set :app_file, __FILE__
 
     get '/' do
+      @count = Cutter.count
       haml :index
     end
 
@@ -40,6 +41,19 @@ module Gem
       else
         status(201)
         "New gem '#{cutter.spec.name}' registered."
+      end
+    end
+
+    helpers do
+      # Thanks, ActionView!
+      def number_with_delimiter(number, delimiter = ',', separator = ' ')
+        begin
+          parts = number.to_s.split('.')
+          parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1#{delimiter}")
+          parts.join(separator)
+        rescue
+          number
+       end
       end
     end
   end

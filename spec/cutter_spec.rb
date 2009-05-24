@@ -100,4 +100,12 @@ describe Gem::Cutter do
       @cutter.error.should be_nil
     end
   end
+
+  describe "counting gems" do
+    it "should look up the entries in the cache dir" do
+      @count = 10
+      mock(Dir).entries(Gem::Cutter.server_path("cache")) { Array.new(@count) }
+      Gem::Cutter.count.should == @count - 3
+    end
+  end
 end

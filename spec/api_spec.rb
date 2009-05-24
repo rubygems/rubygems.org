@@ -2,8 +2,10 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 
 describe Gem::App do
   it "should have a homepage" do
+    mock(Gem::Cutter).count { 24_000 }
     get "/"
     last_response.status.should == 200
+    last_response.body.should =~ /24,000/
   end
 
   describe "with a valid gem" do

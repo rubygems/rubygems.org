@@ -89,6 +89,7 @@ namespace :import do
     require 'active_support'
     url_queue = File.readlines("rubygems.txt").map { |g| g.strip }
     puts "Downloading #{url_queue.size} gems..."
+    FileUtils.mkdir("cache")
 
     responses = {}
     url_queue.in_groups_of(100).each do |group|
@@ -99,7 +100,7 @@ namespace :import do
           curl.on_success do |c|
             puts "Success for #{File.basename(url)} in #{c.total_time} seconds"
             begin
-              File.open(File.join("server", "cache", File.basename(url)), "wb") do |file|
+              File.open(File.join("cache", File.basename(url)), "wb") do |file|
                 file.write c.body_str
               end
             rescue Exception => e

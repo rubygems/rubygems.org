@@ -11,14 +11,17 @@
     .container_12
       .wrap
         .header.grid_12
-          %h1 gemcutter
-          %h2 kickass gem hosting
+          %h1= @title || "gemcutter"
+          %h2= @subtitle || "kickass gem hosting"
           .buttons
-            .account
+            %span.actions
+              %a{:href => "/"} home
+              %a{:href => "/"} list
+              %a{:href => "/"} create
+              %a{:href => "/"} search
+            %span.account
               %a{:href => "/"} login
               %a{:href => "/"} register
-            .search
-              %input{:type => "text", :value => "search"}
         =yield
         .grid_3
           %a.footer{:href => "/"} Migrate
