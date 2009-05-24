@@ -7,24 +7,37 @@ task :default => [:spec]
 
 desc "Clean out files that aren't needed."
 task :clean do
-  system("git clean -dfx server/")
+  system("git clean -dfx server/; git checkout server/")
 end
 
 Spec::Rake::SpecTask.new do |t|
   t.spec_opts = ['--format', 'progress', '--color', '--backtrace']
 end
 
-namespace :indexer do
+desc "Get the gem server up and running"
+task :bootstrap do
+  Rake::Task["clean"].execute
+  ARGV[1] = "bench/old"
+  Rake::Task["import:process"].execute
+  Rake::Task["index:create"].execute
+  ARGV[1] = "bench/new"
+  Rake::Task["import:process"].execute
+  Rake::Task["index:update"].execute
+end
+
+namespace :index do
 
   desc "Create the index"
   task :create do
-    require './app/cutter'
+    require 'app/cutter'
+    require 'app/indexer'
     Gem::Cutter.indexer.generate_index
   end
 
   desc "Update the index"
   task :update do
-    require './app/cutter'
+    require 'app/cutter'
+    require 'app/indexer'
     Gem::Cutter.indexer.update_index
   end
 

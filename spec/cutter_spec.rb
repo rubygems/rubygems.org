@@ -16,6 +16,7 @@ describe Gem::Cutter do
 
   def mock_save_and_index
     mock(FileUtils).cp(@temp_path, @cache_path)
+    mock(File).chmod(0644, @cache_path)
     mock(File).open(@spec_path, 'w')
 
     index = "index"
