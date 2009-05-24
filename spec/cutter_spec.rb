@@ -3,11 +3,15 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 describe Gem::Cutter do
   def stub_spec
     @spec = "spec"
+
     stub(Gem::Format).from_file_by_path(@temp_path).stub!.spec { @spec }
     stub(@spec).to_ruby
     stub(@spec).name { "test" }
     stub(@spec).version { "0.0.0" }
-    stub(@spec).original_name { "test-0.0.0" }
+
+    # Working around a horrible RR bug
+    def @spec.original_name() end;
+    #stub(@spec).original_name { "test-0.0.0" }
   end
 
   def mock_save_and_index
