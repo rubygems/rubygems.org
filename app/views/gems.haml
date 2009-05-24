@@ -1,4 +1,5 @@
 -@title = "all gems"
 -@subtitle = "from alpha to zed"
--@gems.each do |gem|
-  %a{:href => "/gems/#{gem.split.first}"}= gem
+.gems.grid_12
+  -@gems.each do |gem|
+    %a{:href => "/gems/#{gem.split.first}"}= gem
