@@ -17,11 +17,18 @@ module Gem
     end
 
     def self.find_all
-      cache_path = Cutter.server_path('cache', "*.gem")
-      Dir[cache_path].map do |gem| 
-        gem = File.basename(gem).split("-")
-        "#{gem[0..-2]} (#{gem.last.chomp(".gem")})"
+      all_gems = Marshal.load(File.open(Cutter.server_path("latest_specs.4.8")))
+      unique_gems = {}
+
+      all_gems.each do |gem|
+        key = gem.first
+        version = gem[1].version
+        if !unique_gems[key] || (unique_gems[key] && version > unique_gems[key][1].version)
+          unique_gems[key] = gem
+        end
       end
+
+      unique_gems.values.sort { |a, b| a.first <=> b.first }
     end
 
     def self.find(gem)
@@ -30,7 +37,7 @@ module Gem
     end
 
     def self.count
-      Dir.entries(Cutter.server_path('cache')).size - 3
+      self.find_all.size
     end
 
     def validate

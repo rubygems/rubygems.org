@@ -52,11 +52,32 @@ h3 {
 }
 
 .footer {
+  margin-top: 20px;
   padding-top: 5px;
   border-top: 2px solid #333333;
+  height: 30px;
 }
 
-.footer a {
+.footer .watermark {
+  float: right;
+  margin-top: 3px;
+}
+
+.footer .watermark a {
+  font-weight: bold;
+  color: #300000;
+  font-size: 1.1em;
+}
+
+.footer .watermark abbr {
+  color: #9A9A9A;
+}
+
+.footer .links {
+  float: left;
+}
+
+.footer .links a {
   border: none;
   text-align: center;
   font-weight: normal;

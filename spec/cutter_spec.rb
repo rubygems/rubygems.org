@@ -101,11 +101,22 @@ describe Gem::Cutter do
     end
   end
 
-  describe "counting gems" do
-    it "should look up the entries in the cache dir" do
-      @count = 10
-      mock(Dir).entries(Gem::Cutter.server_path("cache")) { Array.new(@count) }
-      Gem::Cutter.count.should == @count - 3
+  describe "querying gems" do
+    before do
+      @rails1 = ["rails", Gem::Version.new("1.2.6"), "ruby"]
+      @rails2 = ["rails", Gem::Version.new("2.3.2"), "ruby"]
+      @rake   = ["rake", Gem::Version.new("0.3.7"), "ruby"]
+
+      data = "data"
+      mock(File).open(Gem::Cutter.server_path("latest_specs.4.8")) { data }
+      mock(Marshal).load(data) { [@rake, @rails1, @rails2] }
+    end
+    it "should find all unique gems" do
+      Gem::Cutter.find_all.should == [@rails2, @rake]
+    end
+
+    it "should count gems" do
+      Gem::Cutter.count.should == 2
     end
   end
 end
