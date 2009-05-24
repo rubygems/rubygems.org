@@ -1,5 +1,3 @@
-require './lib/rubygems/indexer'
-
 module Gem
   class Cutter
     attr_accessor :data, :error, :spec, :exists
