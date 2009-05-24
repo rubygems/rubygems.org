@@ -16,6 +16,7 @@ describe Gem::App do
       stub(@gem).date { Date.today }
       stub(@gem).authors { "Joe User" }
       stub(@gem).summary { "Awesome gem" }
+      stub(@gem).description { "This gem does stuff" }
     end
 
     describe "on POST to /gems" do
