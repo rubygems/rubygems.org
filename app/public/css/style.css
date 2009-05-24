@@ -5,19 +5,29 @@ body {
 }
 
 a {
-  color: #9E2727;
-  font-size: 1.3em;
   text-decoration: none;
-  padding: 4px;
+  color: #300000;
 }
 
 a:hover {
-  background-color: #9E2727;
-  color: #FFFFFF;
+}
+
+a:visited {
+  color: #300000;
 }
 
 code, pre {
   font-family: Monaco,Deja Vu Sans Mono,Inconsolata,Consolas,monospace
+}
+
+ul { 
+  list-style-image: none;
+  list-style-position: outside;
+  list-style-type: none;
+}
+
+li {
+  margin-left: 0;
 }
 
 h1 {
@@ -41,30 +51,26 @@ h3 {
   margin-top: 20px;
 }
 
-a.footer {
+.footer {
+  padding-top: 5px;
+  border-top: 2px solid #333333;
+}
+
+.footer a {
+  border: none;
   text-align: center;
-  border: 3px solid #333333;
-  background: #c2c2c2;
-  font-weight: bold;
-  display: block;
+  font-weight: normal;
   color: #333333;
+  font-size: 1.3em;
+  margin-right: 10px;
 }
 
-a.footer:hover {
-  background: #a2a2a2;
-}
-
-ul { 
-  list-style-image: none;
-  list-style-position: outside;
-  list-style-type: none;
-}
-
-li {
-  margin-left: 0;
+.footer a:hover {
+  text-decoration: underline;
 }
 
 .header {
+  margin-bottom: 20px;
   border-bottom: 2px solid #333333;
   height: 80px;
 }
@@ -72,6 +78,17 @@ li {
 .header .buttons {
   margin-top: 45px;
   float: right;
+}
+
+.header .buttons a {
+  color: #9E2727;
+  font-size: 1.3em;
+  padding: 4px;
+}
+
+.header .buttons a:hover {
+  background-color: #9E2727;
+  color: #FFFFFF;
 }
 
 .header .buttons .actions {
@@ -94,10 +111,14 @@ li {
   width:200px;
 }
 
+.started ul {
+  margin-bottom: 0;
+}
+
 .started li {
   border-top: 1px solid #C2C2C2;
   font-size:2.0em;
-  padding:0.4em;
+  padding: 0.4em;
 }
 .started span {
   display: inline-block;
@@ -133,8 +154,8 @@ li {
 .count {
   color: #9E2727;
   font-family: Monaco,Deja Vu Sans Mono,Inconsolata,Consolas,monospace;
-  font-size: 10em;
-  margin: 20px 0 0;
+  font-size: 5em;
+  margin: 40px 0 0;
   text-align: center;
   line-height: 1.2em;
 }
@@ -146,4 +167,19 @@ li {
   text-align: center;
   font-size: 1.1em;
   margin-bottom: 50px;
+}
+
+.gems a {
+  background:#9E2727;
+  border-top:1px solid #C2C2C2;
+  color:#FFFFFF;
+  font-size:1.3em;
+  font-weight:bold;
+  padding:0.3em;
+  display: block;
+}
+
+.gems a:hover {
+  background:#600000;
+  cursor: pointer;
 }

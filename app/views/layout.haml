@@ -11,23 +11,22 @@
     .container_12
       .wrap
         .header.grid_12
-          %h1= @title || "gemcutter"
+          %h1
+            %a{:href => ""}= @title || "gemcutter"
           %h2= @subtitle || "kickass gem hosting"
           .buttons
             %span.actions
               %a{:href => "/"} home
-              %a{:href => "/"} list
+              %a{:href => "/gems"} list
               %a{:href => "/"} create
+              %a{:href => "/"} migrate 
               %a{:href => "/"} search
             %span.account
               %a{:href => "/"} login
               %a{:href => "/"} register
         =yield
-        .grid_3
-          %a.footer{:href => "/"} Migrate
-        .grid_3
+        .footer.grid_12
+          %a.footer{:href => "/"} Status
           %a.footer{:href => "/"} API
-        .grid_3
           %a.footer{:href => "/"} Help
-        .grid_3
           %a.footer{:href => "/"} Contribute
