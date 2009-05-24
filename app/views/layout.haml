@@ -19,37 +19,12 @@
               %a{:href => "/"} register
             .search
               %input{:type => "text", :value => "search"}
-        .latest.grid_4
-          %h3 Latest Gems
-          %ul
-            %li jekyll (0.5.1)
-            %li haml (0.1.2)
-            %li roodi (1.2.3)
-            %li beardo (0.0.1)
-            %li jeweler (1.0.42)
-        .started.grid_8
-          %h3 Get Started
-          %ul
-            %li.red
-              %span ready:
-              %code gem install gemcutter
-            %li.yellow
-              %span set:
-              %code gem cut
-            %li.green
-              %span go:
-              %code gem push yourgem-0.0.1.gem
-        .clear
-        .grid_12
-          .count 23,493
-          .what gems indexed since june 2009
+        =yield
         .grid_3
-          %h4 Migrate
+          %a.footer{:href => "/"} Migrate
         .grid_3
-          %h4 API
+          %a.footer{:href => "/"} API
         .grid_3
-          %h4 FAQ
+          %a.footer{:href => "/"} Help
         .grid_3
-          %h4 Code
-        .footer.grid_12
-          FOOOOTER
+          %a.footer{:href => "/"} Contribute

@@ -18,7 +18,11 @@ describe Gem::App do
 
     describe "on POST to /gems" do
       before do
-        stub(Gem::Cutter).new.stub!.process { @gem }
+        cutter = "cutter"
+        stub(Gem::Cutter).new { cutter }
+        stub(cutter).spec { @gem }
+        stub(cutter).exists { false }
+        mock(cutter).process
         mock(Gem::Cutter).indexer.stub!.update_index
         post '/gems', {}, {'rack.input' => gem_file("test-0.0.0.gem") }
       end
@@ -51,7 +55,11 @@ describe Gem::App do
 
     describe "on POST to /gems with existing gem" do
       before do
-        stub(Gem::Cutter).new.stub!.process { [@gem, true] }
+        cutter = "cutter"
+        stub(Gem::Cutter).new { cutter }
+        stub(cutter).spec { @gem }
+        stub(cutter).exists { true }
+        mock(cutter).process
         mock(Gem::Cutter).indexer.stub!.update_index
         post '/gems', {}, {'rack.input' => gem_file("test-0.0.0.gem_up") }
       end

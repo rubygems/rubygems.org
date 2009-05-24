@@ -1,23 +1,57 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
 describe Gem::Cutter do
+  def stub_spec
+    @spec = "spec"
+    stub(Gem::Format).from_file_by_path(@temp_path).stub!.spec { @spec }
+    stub(@spec).to_ruby
+    stub(@spec).name { "test" }
+    stub(@spec).version { "0.0.0" }
+    stub(@spec).original_name { "test-0.0.0" }
+  end
+
+  def mock_save_and_index
+    mock(FileUtils).cp(@temp_path, @cache_path)
+    mock(File).open(@spec_path, 'w')
+
+    index = "index"
+    mock(Gem::SourceIndex).new { index }
+    mock(index).add_spec(@spec, @spec.original_name)
+
+    mock(Gem::Cutter).indexer.stub!.abbreviate(@spec)
+    mock(Gem::Cutter).indexer.stub!.sanitize(@spec)
+
+    marshal = "marshal"
+    quick_path = Gem::Cutter.server_path("quick", "Marshal.#{Gem.marshal_version}", "#{@spec.name}-#{@spec.version}.gemspec.rz")
+
+    mock(Marshal).dump(@spec) { mock(Gem).deflate(stub!) }
+    mock(File).open(quick_path, 'wb')
+  end
+
   before do
     @gem = "test-0.0.0.gem"
     @gem_file = gem_file(@gem)
+    @gem_up = "test-0.0.0.gem_up"
+    @gem_up_file = gem_file(@gem_up)
     @cache_path = Gem::Cutter.server_path("cache", @gem)
     @spec_path = Gem::Cutter.server_path("specifications", @gem + "spec")
+    @temp_path = "temp path"
 
     FileUtils.rm_rf Dir["server/cache/*", "server/*specs*", "server/quick", "server/specifications/*"]
     Gem::Cutter.indexer.generate_index
+
+    stub(Tempfile).new("gem").stub!.path { @temp_path }
+    stub(File).exists?(Gem::Cutter.server_path("source_index")) { false }
+    stub(File).exists?(@cache_path) { false }
+    stub(File).exists?(@spec_path) { false }
+    stub(File).open(@temp_path, 'wb')
+    stub(File).open(Gem::Cutter.server_path("source_index"), 'wb')
+    stub(File).size(@temp_path) { 42 }
   end
 
   describe "with a new gem" do
     before do
       @cutter = Gem::Cutter.new(@gem_file)
-      @temp_path = "temp path"
-      stub(Tempfile).new("gem").stub!.path { @temp_path }
-      stub(File).open(@temp_path, 'wb')
-      stub(File).size(@temp_path) { 42 }
     end
 
     it "should store data" do
@@ -25,61 +59,41 @@ describe Gem::Cutter do
     end
 
     it "should not save an empty gem" do
-      mock(File).size(@temp_path) { 0 }
+      stub(File).size(@temp_path) { 0 }
+      mock(@cutter).save.never
+      mock(@cutter).index.never
 
       @cutter.process
-
-      File.exists?(@cache_path).should be_false
-      File.exists?(@spec_path).should be_false
+      @cutter.spec.should be_nil
       @cutter.error.should == "Empty gem cannot be processed."
     end
 
     it "should create quick index file when saving" do
-      spec = "spec"
-      stub(Gem::Format).from_file_by_path(@temp_path).stub!.spec { spec }
-      stub(spec).to_ruby
-      stub(spec).name { "test" }
-      stub(spec).version { "0.0.0" }
-
-      mock(FileUtils).cp(@temp_path, @cache_path)
-      mock(File).open(@spec_path, 'w')
-
-      mock(Gem::Cutter).indexer.stub!.abbreviate(spec)
-      mock(Gem::Cutter).indexer.stub!.sanitize(spec)
-
-      marshal = "marshal"
-      quick_path = Gem::Cutter.server_path("quick", "Marshal.#{Gem.marshal_version}", "#{spec.name}-#{spec.version}.gemspec.rz")
-
-      mock(Marshal).dump(spec) { mock(Gem).deflate(stub!) }
-      mock(File).open(quick_path, 'wb')
+      stub_spec
+      mock_save_and_index
 
       @cutter.process
-    end
-
-    it "should save gem and update index" do
-      #@cutter.save_gem
-#      File.exists?(@cache_path).should be_true
-#      File.exists?(@spec_path).should be_true
-#      FileUtils.compare_file(@gem_file.path, @cache_path).should be_true
+      @cutter.spec.should == @spec
+      @cutter.exists.should be_false
+      @cutter.error.should be_nil
     end
   end
 
   describe "with an existing gem" do
     before do
-      @gem_up = "test-0.0.0.gem_up"
-      @gem_up_file = gem_file(@gem_up)
       @cutter = Gem::Cutter.new(@gem_up_file)
 
-      FileUtils.cp @gem_file.path, @cache_path
-      spec = Gem::Installer.new(@cache_path, :unpack => true).spec.to_ruby
-      File.open(@spec_path, "w") { |f| f.write spec }
+      stub(File).exists?(@cache_path) { true }
+      stub(File).exists?(@spec_path) { true }
     end
 
     it "should save gem and update index" do
+      stub_spec
+      mock_save_and_index
       @cutter.process
-      File.exists?(@cache_path).should be_true
-      File.exists?(@spec_path).should be_true
-      FileUtils.compare_file(@gem_up_file.path, @cache_path).should be_true
+      @cutter.spec.should == @spec
+      @cutter.exists.should be_true
+      @cutter.error.should be_nil
     end
   end
 end
