@@ -1,11 +1,9 @@
-$:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
+$:.unshift File.expand_path(File.join(File.dirname(__FILE__), "..", "lib"))
 
-app_file = File.join(File.dirname(__FILE__), *%w[.. app app.rb])
-require app_file
-Sinatra::Application.app_file = app_file
-
+require 'rubygems'
 require 'spec'
 require 'spec/interop/test'
+require 'sinatra'
 require 'sinatra/test'
 require 'rack/test'
 require 'fakeweb'
@@ -23,10 +21,6 @@ end
 
 def gem_file(name)
   Rack::Test::UploadedFile.new(File.join(File.dirname(__FILE__), 'gems', name), 'application/octet-stream', :binary)
-end
-
-def app
-  Gem::App.new
 end
 
 def regenerate_index

@@ -102,7 +102,7 @@ module Gem
       Cutter.indexer.abbreviate self.spec
       Cutter.indexer.sanitize self.spec
 
-      quick_path = Gemcutter.server_path("quick", "Marshal.#{Gem.marshal_version}", "#{self.spec.name}-#{self.spec.version}.gemspec.rz")
+      quick_path = Gemcutter.server_path("quick", "Marshal.#{Gem.marshal_version}", "#{self.spec.original_name}.gemspec.rz")
 
       zipped = Gem.deflate(Marshal.dump(self.spec))
       File.open(quick_path, "wb") do |f|

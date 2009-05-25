@@ -132,7 +132,7 @@ namespace :import do
   desc 'Bring the gems through the gemcutter process'
   task :process do
     require 'rubygems/indexer'
-    require 'app/cutter'
+    require 'app/app'
 
     gems = Dir[File.join(ARGV[1], "*.gem")]
     puts "Processing #{gems.size} gems..."
