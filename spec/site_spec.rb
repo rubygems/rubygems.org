@@ -1,9 +1,9 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
-require 'app/app'
+require 'apps/site/site'
 
-describe Gem::App do
+describe Gem::Site do
   def app
-    Gem::App.new
+    Gem::Site.new
   end
 
   it "should have a homepage" do

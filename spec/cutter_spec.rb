@@ -1,4 +1,5 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
+require 'apps/site/site'
 
 describe Gem::Cutter do
   def stub_spec

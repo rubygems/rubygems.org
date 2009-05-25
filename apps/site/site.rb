@@ -12,7 +12,7 @@ require 'indexer'
 Gem.configuration.verbose = false
 
 module Gem
-  class App < Sinatra::Default
+  class Site < Sinatra::Default
     set :app_file, __FILE__
 
     get '/' do
