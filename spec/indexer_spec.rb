@@ -11,7 +11,7 @@ describe Gem::Indexer do
   it "should index properly" do
     mock(Dir).tmpdir { @tmpdir }
 
-    mock.proxy(Gem::Indexer).new(Gem::Cutter.server_path, :build_legacy => false) do |indexer|
+    mock.proxy(Gem::Indexer).new(Gemcutter.server_path, :build_legacy => false) do |indexer|
       mock(indexer).make_temp_directories
       mock(indexer).gem_file_list { [@gem] }
       stub(indexer).update_specs_index
@@ -19,14 +19,14 @@ describe Gem::Indexer do
     end
 
     # Faking it out so there's a new gem to update
-    mock(File).mtime(Gem::Cutter.server_path("specs.4.8")) { Time.at 1 }
+    mock(File).mtime(Gemcutter.server_path("specs.4.8")) { Time.at 1 }
     mock(File).mtime(@gem) { @time }
 
     # Loading the cached source index
     source_index_data = "source index data"
     source_index = "source index"
     stub(source_index).prerelease_gems
-    mock(File).open(Gem::Cutter.server_path("source_index")) { source_index_data }
+    mock(File).open(Gemcutter.server_path("source_index")) { source_index_data }
     mock(Marshal).load(source_index_data) { source_index }
 
     # Moving the compressed specs into place
@@ -38,10 +38,10 @@ describe Gem::Indexer do
      "/prerelease_specs.4.8.gz"].each do |spec|
 
       mock(FileUtils).mv(File.join(@tmpdir, "gem_generate_index_#{$$}", spec),
-        Gem::Cutter.server_path + "/",
+        Gemcutter.server_path + "/",
         :force => true)
 
-      mock(File).utime(@time, @time, Gem::Cutter.server_path + "/")
+      mock(File).utime(@time, @time, Gemcutter.server_path + "/")
     end
 
 

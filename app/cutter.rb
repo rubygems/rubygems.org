@@ -6,18 +6,14 @@ module Gem
       self.data = data
     end
 
-    def self.server_path(*more)
-      File.join(File.dirname(__FILE__), '..', 'server', *more)
-    end
-
     def self.indexer
-      indexer = Indexer.new(server_path, :build_legacy => false)
+      indexer = Indexer.new(Gemcutter.server_path, :build_legacy => false)
       def indexer.say(message) end
       indexer
     end
 
     def self.find_all
-      all_gems = Marshal.load(File.open(Cutter.server_path("latest_specs.4.8")))
+      all_gems = Marshal.load(File.open(Gemcutter.server_path("latest_specs.4.8")))
       unique_gems = {}
 
       all_gems.each do |gem|
@@ -32,7 +28,7 @@ module Gem
     end
 
     def self.find(gem)
-      path = Cutter.server_path('specifications', gem + "*")
+      path = Gemcutter.server_path('specifications', gem + "*")
       Specification.load Dir[path].last
     end
 
@@ -74,8 +70,8 @@ module Gem
 
       name = "#{self.spec.name}-#{self.spec.version}.gem"
 
-      cache_path = Cutter.server_path('cache', name)
-      spec_path = Cutter.server_path('specifications', name + "spec")
+      cache_path = Gemcutter.server_path('cache', name)
+      spec_path = Gemcutter.server_path('specifications', name + "spec")
 
       self.exists = File.exists?(spec_path)
 
@@ -89,7 +85,7 @@ module Gem
     end
 
     def index
-      source_path = Cutter.server_path("source_index")
+      source_path = Gemcutter.server_path("source_index")
 
       if File.exists?(source_path)
         source_index = Marshal.load(File.open(source_path))
@@ -106,7 +102,7 @@ module Gem
       Cutter.indexer.abbreviate self.spec
       Cutter.indexer.sanitize self.spec
 
-      quick_path = Cutter.server_path("quick", "Marshal.#{Gem.marshal_version}", "#{self.spec.name}-#{self.spec.version}.gemspec.rz")
+      quick_path = Gemcutter.server_path("quick", "Marshal.#{Gem.marshal_version}", "#{self.spec.name}-#{self.spec.version}.gemspec.rz")
 
       zipped = Gem.deflate(Marshal.dump(self.spec))
       File.open(quick_path, "wb") do |f|
