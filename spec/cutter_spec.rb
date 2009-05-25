@@ -28,7 +28,7 @@ describe Gem::Cutter do
     mock(Gem::Cutter).indexer.stub!.sanitize(@spec)
 
     marshal = "marshal"
-    quick_path = Gem::Cutter.server_path("quick", "Marshal.#{Gem.marshal_version}", "#{@spec.name}-#{@spec.version}.gemspec.rz")
+    quick_path = Gemcutter.server_path("quick", "Marshal.#{Gem.marshal_version}", "#{@spec.name}-#{@spec.version}.gemspec.rz")
 
     mock(Marshal).dump(@spec) { mock(Gem).deflate(stub!) }
     mock(File).open(quick_path, 'wb')
@@ -39,18 +39,18 @@ describe Gem::Cutter do
     @gem_file = gem_file(@gem)
     @gem_up = "test-0.0.0.gem_up"
     @gem_up_file = gem_file(@gem_up)
-    @cache_path = Gem::Cutter.server_path("cache", @gem)
-    @spec_path = Gem::Cutter.server_path("specifications", @gem + "spec")
+    @cache_path = Gemcutter.server_path("cache", @gem)
+    @spec_path = Gemcutter.server_path("specifications", @gem + "spec")
     @temp_path = "temp path"
 
     regenerate_index
 
     stub(Tempfile).new("gem").stub!.path { @temp_path }
-    stub(File).exists?(Gem::Cutter.server_path("source_index")) { false }
+    stub(File).exists?(Gemcutter.server_path("source_index")) { false }
     stub(File).exists?(@cache_path) { false }
     stub(File).exists?(@spec_path) { false }
     stub(File).open(@temp_path, 'wb')
-    stub(File).open(Gem::Cutter.server_path("source_index"), 'wb')
+    stub(File).open(Gemcutter.server_path("source_index"), 'wb')
     stub(File).size(@temp_path) { 42 }
   end
 
@@ -109,7 +109,7 @@ describe Gem::Cutter do
       @rake   = ["rake", Gem::Version.new("0.3.7"), "ruby"]
 
       data = "data"
-      mock(File).open(Gem::Cutter.server_path("latest_specs.4.8")) { data }
+      mock(File).open(Gemcutter.server_path("latest_specs.4.8")) { data }
       mock(Marshal).load(data) { [@rake, @rails1, @rails2] }
     end
     it "should find all unique gems" do
