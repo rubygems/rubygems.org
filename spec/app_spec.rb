@@ -1,6 +1,11 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
+require 'app/app'
 
 describe Gem::App do
+  def app
+    Gem::App.new
+  end
+
   it "should have a homepage" do
     mock(Gem::Cutter).count { 24_000 }
     get "/"

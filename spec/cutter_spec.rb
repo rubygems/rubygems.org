@@ -28,7 +28,7 @@ describe Gem::Cutter do
     mock(Gem::Cutter).indexer.stub!.sanitize(@spec)
 
     marshal = "marshal"
-    quick_path = Gemcutter.server_path("quick", "Marshal.#{Gem.marshal_version}", "#{@spec.name}-#{@spec.version}.gemspec.rz")
+    quick_path = Gemcutter.server_path("quick", "Marshal.#{Gem.marshal_version}", "#{@spec.original_name}.gemspec.rz")
 
     mock(Marshal).dump(@spec) { mock(Gem).deflate(stub!) }
     mock(File).open(quick_path, 'wb')
