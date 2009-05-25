@@ -1,10 +1,10 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 require 'rubygems_plugin'
 
-describe "Gemcutter Plugin" do
+describe Gem::Commands::PushCommand do
   before do
     @command = Gem::Commands::PushCommand.new
-    stub(@command).say("Pushing gem to Gemcutter...")
+    mock(@command).say("Pushing gem to Gemcutter...")
     @response = "success"
     FakeWeb.register_uri :post, "http://gemcutter.org/gems", :string => @response
   end
@@ -23,6 +23,18 @@ describe "Gemcutter Plugin" do
     stub(File).open(@gem) { @io }
 
     mock(@command).say(@response)
+    @command.execute
+  end
+end
+
+describe Gem::Commands::UpgradeCommand do
+  before do
+    @command = Gem::Commands::UpgradeCommand.new
+    mock(@command).say("Upgrading your primary gem source to gemcutter.org")
+    stub(Gem).sources { ["http://gems.rubyforge.org"] }
+  end
+
+  it "should upgrade to gemcutter" do
     @command.execute
   end
 end
