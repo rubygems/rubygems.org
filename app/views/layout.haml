@@ -18,18 +18,18 @@
             %span.actions
               %a{:href => "/"} home
               %a{:href => "/gems"} list
-              %a{:href => "/create"} create
-              %a{:href => "/migrate"} migrate 
-              %a{:href => "/search"} search
+              %a create
+              %a migrate
+              %a search
             %span.account
-              %a{:href => "/login"} login
-              %a{:href => "/register"} register
+              %a login
+              %a register
         =yield
         .footer.grid_12
           .info
             %a.footer{:href => "http://twitter.com/rubygemcutter"} Status
-            %a.footer{:href => "/api"} API
-            %a.footer{:href => "/help"} Help
+            %a.footer API
+            %a.footer Help
             %a.footer{:href => "http://github.com/qrush/gemcutter"} Contribute
           -if @title
             .watermark
