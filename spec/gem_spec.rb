@@ -30,11 +30,27 @@ end
 describe Gem::Commands::UpgradeCommand do
   before do
     @command = Gem::Commands::UpgradeCommand.new
-    mock(@command).say("Upgrading your primary gem source to gemcutter.org")
-    stub(Gem).sources { ["http://gems.rubyforge.org"] }
+    mock(@command).say("Upgrading your primary gem source to gems.gemcutter.org")
+    mock(Gem).configuration.mock!.write
   end
 
   it "should upgrade to gemcutter" do
     @command.execute
+    Gem.sources.include?("http://gems.gemcutter.org").should be_true
+    Gem.sources.include?("http://gems.rubyforge.org").should be_false
+  end
+end
+
+describe Gem::Commands::DowngradeCommand do
+  before do
+    @command = Gem::Commands::DowngradeCommand.new
+    mock(@command).say("Your primary gem source is now gems.rubyforge.org")
+    mock(Gem).configuration.mock!.write
+  end
+
+  it "should return to using rubyforge" do
+    @command.execute
+    Gem.sources.include?("http://gems.rubyforge.org").should be_true
+    Gem.sources.include?("http://gems.gemcutter.org").should be_false
   end
 end
