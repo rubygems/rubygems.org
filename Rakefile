@@ -89,7 +89,7 @@ namespace :import do
     require 'active_support'
     url_queue = File.readlines("rubygems.txt").map { |g| g.strip }
     puts "Downloading #{url_queue.size} gems..."
-    FileUtils.mkdir("cache")
+    FileUtils.mkdir("cache") unless File.exist?("cache")
 
     responses = {}
     url_queue.in_groups_of(100).each do |group|

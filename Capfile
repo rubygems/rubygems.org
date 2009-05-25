@@ -26,4 +26,12 @@ namespace :deploy do
   task :restart, :roles => [:app] do
     run "touch #{current_path}/tmp/restart.txt" 
   end
+
+  task :setup do
+    run "rm -rf #{release_path}/server"
+    run "ln -s /home/rails/gems.gemcutter #{release_path}/server"
+    run "ln -s /home/rails/cache #{release_path}/cache"
+  end
 end
+
+after "deploy:finalize_update", "deploy:setup"
