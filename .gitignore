@@ -5,3 +5,6 @@ server/
 pkg/
 bench/
 cache/
+log/*
+tmp/*
+db/*.sqlite3
