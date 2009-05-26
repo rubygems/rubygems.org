@@ -1,23 +1,16 @@
-gem(name, author, email, current_version, description, created_at, updated_at, downloads, token, user_id)
+gem(name, created_at, updated_at, token, user_id)
 has_many :dependencies
 has_many :versions
-has_many :links
+hash_one :linkset
 belongs_to :user
 
 dependency(name, gem_id, requirement)
 has_one :gem
 belongs_to :gem
 
-version(number, created_at, gem_id)
+version(authors, description, downloads, number, created_at, gem_id)
 belongs_to :gem
 
-link(text, type, address, gem_id)
+linkset(gem_id, home, wiki, docs, mail, code, bugs)
 belongs_to :gem
 
-types:
-  Homepage
-  Wiki
-  Docs
-  Mailing List
-  SCM
-  Bug Tracker
