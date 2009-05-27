@@ -1,0 +1,74 @@
+.cucumber {
+  background: black;
+  color: white;
+  padding: 1em;
+}
+.cucumber .passed {
+  color: #008800;
+}
+.cucumber .undefined {
+  color: #888800;
+}
+.cucumber .pending {
+  color: #888800;
+}
+.cucumber .failed {
+  color: #880000;
+}
+.cucumber .skipped {
+  color: #008888;
+}
+.cucumber .outline {
+  color: #008888;
+}
+
+.cucumber .passed_param {
+  font-weight: bold;
+  color: #00ff00;
+}
+.cucumber .undefined_param {
+  font-weight: bold;
+  color: #ffff00;
+}
+.cucumber .pending_param {
+  font-weight: bold;
+  color: #ffff00;
+}
+.cucumber .failed_param {
+  font-weight: bold;
+  font-weight: bold;
+  color: #ff0000;
+}
+.cucumber .skipped_param {
+  font-weight: bold;
+  color: #00ffff;
+}
+.cucumber .outline_param {
+  font-weight: bold;
+  color: #00ffff;
+}
+
+.cucumber a {
+  text-decoration: none;
+  color: inherit;
+}
+.cucumber a:hover {
+  text-decoration: underline;
+}
+.cucumber a:visited {
+  font-weight: normal;
+}
+.cucumber ol {
+  list-style: none;
+}
+.cucumber .stats {
+  margin: 2em;
+}
+.cucumber .summary ul.features li {
+  display: inline;
+}
+.cucumber .backtrace {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 1em;
+}
