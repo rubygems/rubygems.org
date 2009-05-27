@@ -7,10 +7,10 @@ Rails::Initializer.run do |config|
 
   config.gem 'haml',
     :version => '2.1.0'
-  config.gem "thoughtbot-clearance", 
-    :lib     => 'clearance', 
-    :source  => 'http://gems.github.com', 
-    :version => '0.6.5'
+  config.gem "thoughtbot-clearance",
+    :lib     => 'clearance',
+    :source  => 'http://gems.github.com',
+    :version => '0.6.6'
 end
 
 DO_NOT_REPLY = "donotreply@gemcutter.org"
