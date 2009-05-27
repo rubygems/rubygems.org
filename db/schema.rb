@@ -9,7 +9,23 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090527120326) do
+ActiveRecord::Schema.define(:version => 20090527122658) do
+
+  create_table "dependencies", :force => true do |t|
+    t.string   "name"
+    t.integer  "rubygem_id"
+    t.string   "requirement"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "rubygems", :force => true do |t|
+    t.string   "name"
+    t.string   "token"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "users", :force => true do |t|
     t.string   "email"
@@ -23,5 +39,15 @@ ActiveRecord::Schema.define(:version => 20090527120326) do
   add_index "users", ["email"], :name => "index_users_on_email"
   add_index "users", ["id", "token"], :name => "index_users_on_id_and_token"
   add_index "users", ["token"], :name => "index_users_on_token"
+
+  create_table "versions", :force => true do |t|
+    t.string   "authors"
+    t.text     "description"
+    t.integer  "downloads"
+    t.string   "number"
+    t.integer  "rubygem_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end
