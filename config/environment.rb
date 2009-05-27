@@ -4,6 +4,11 @@ require File.join(File.dirname(__FILE__), 'boot')
 
 Rails::Initializer.run do |config|
   config.time_zone = 'UTC'
+
   config.gem 'haml',
-             :version => '~> 2.0.3'
+    :version => '2.1.0'
+  config.gem "thoughtbot-clearance", 
+    :lib     => 'clearance', 
+    :source  => 'http://gems.github.com', 
+    :version => '0.6.5'
 end
