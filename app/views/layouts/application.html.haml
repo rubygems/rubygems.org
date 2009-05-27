@@ -8,6 +8,10 @@
     %link{:rel => "stylesheet", :type => "text/css", :media => "all", :href => "/css/text.css"}
     %link{:rel => "stylesheet", :type => "text/css", :media => "all", :href => "/css/style.css"}
   %body
+    -unless flash.empty?
+      #flash
+      -flash.each do |key, value|
+        %div{:id => key}=h value
     .container_12
       .wrap
         .header.grid_12
