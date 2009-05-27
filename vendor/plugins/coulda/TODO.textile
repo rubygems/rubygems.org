@@ -1,0 +1,4 @@
+h1. To-do
+
+* Replace should_assign_to / :equals with a legitimate test.
+

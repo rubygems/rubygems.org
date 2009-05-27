@@ -1,0 +1,145 @@
+h1. Coulda generators
+
+A plugin that overrides Rails' model, controller, & helper generators. It also adds a view generator. It uses Shoulda & Factory Girl for tests.
+
+h2. Requirements
+
+* "Shoulda":http://github.com/thoughtbot/shoulda
+* "Factory Girl":http://github.com/thoughtbot/factory_girl
+
+h2. Installation
+
+    $ script/plugin install git://github.com/dancroak/coulda.git
+
+h2. Model generator
+
+    $ script/generate model User
+
+* factory (Factory Girl)
+* unit test (Shoulda)
+* migration
+* model
+
+h2. Controller generator
+
+    $ script/generate controller Users new
+
+* functional test (Shoulda & Factory Girl), only test RESTful new action
+* controller, only RESTful new action
+* no helper file
+
+h2. Helper generator
+
+    $ script/generate helper Navigation
+
+* empty helper test file
+* empty helper module
+
+h2. View generator
+
+    $ script/generate view Posts new
+
+* We're not sure we like this one yet. Let us know what you think.
+
+h2. Model generator: belongs_to
+
+    $ script/generate model post user:belongs_to
+
+* "add_index" in the migration
+* "belongs_to" in the model
+* "should_belong_to" in unit test
+* association in the factory
+
+<pre><code>class CreatePosts < ActiveRecord::Migration
+  def self.up
+    create_table :posts do |t|
+      t.belongs_to :user
+      t.timestamps
+    end
+
+    add_index :posts, :user_id
+  end
+
+  def self.down
+    remove_index :posts, :user_id
+    drop_table :posts
+  end
+end
+
+class Post < ActiveRecord::Base
+  belongs_to :user
+end
+
+class PostTest < ActiveSupport::TestCase
+  should_belong_to :user
+  should_have_index :user_id
+end
+
+Factory.define :post do |post|
+  post.association(:user)
+end</code></pre>
+
+h2. Model generator: paperclip
+
+    $ script/generate model design image:paperclip
+
+* all the necessary columns in the migration
+* "has_attached_file" in the model
+* "should_have_attached_file" in unit test
+
+<pre><code>class CreateDesigns < ActiveRecord::Migration
+  def self.up
+    create_table :designs do |t|
+      t.string :image_file_name
+      t.string :image_content_type
+      t.integer :image_file_size
+      t.datetime :image_updated_at
+      t.timestamps
+    end
+  end
+
+  def self.down
+    drop_table :designs
+  end
+end
+
+class Design < ActiveRecord::Base
+  has_attached_file :image
+end
+
+class DesignTest < ActiveSupport::TestCase
+  should "be valid with factory" do
+    assert_valid Factory.build(:design)
+  end
+  should_have_attached_file :image
+end</code></pre>
+
+h2. Attribution
+
+"Mike Breen":http://github.com/hardbap and "Dan Croak":http://github.com/dancroak
+
+Inspired by "shoulda_generator":http://github.com/technicalpickles/shoulda_generator, "model_generator_with_factories":http://github.com/vigetlabs/model_generator_with_factories, and "nifty_generators":http://github.com/ryanb/nifty-generators
+
+h2. License
+
+The MIT License
+
+Copyright (c) 2008, 2009 Mike Breen
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
