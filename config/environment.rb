@@ -12,3 +12,5 @@ Rails::Initializer.run do |config|
     :source  => 'http://gems.github.com', 
     :version => '0.6.5'
 end
+
+DO_NOT_REPLY = "donotreply@gemcutter.org"
