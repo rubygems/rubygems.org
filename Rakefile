@@ -7,8 +7,8 @@ require 'spec/rake/spectask'
 
 require 'tasks/rails'
 
-desc 'Run the specs'
-task :default => [:spec]
+desc "Run all tests and features"
+task :default => [:test, :features]
 
 desc "Clean out files that aren't needed."
 task :clean do
