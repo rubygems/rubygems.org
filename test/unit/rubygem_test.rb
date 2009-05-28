@@ -8,4 +8,5 @@ class RubygemTest < ActiveSupport::TestCase
   should "be valid with factory" do
     assert_valid Factory.build(:rubygem)
   end
+
 end

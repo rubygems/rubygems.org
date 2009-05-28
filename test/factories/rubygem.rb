@@ -1,5 +1,5 @@
 Factory.define :rubygem do |rubygem|
-  rubygem.name { 'string' }
-  rubygem.token { 'string' }
-  rubygem.user_id { 1 }
+  rubygem.name       { 'RGem' }
+  rubygem.token      { 'asdf' }
+  rubygem.association :user
 end
