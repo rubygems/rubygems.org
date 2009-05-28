@@ -31,14 +31,14 @@ config.gem 'thoughtbot-shoulda',
            :lib => 'shoulda',
            :source => 'http://gems.github.com',
            :version => '>= 2.10.1'
-config.gem 'thoughtbot-factory_girl',
-           :lib => 'factory_girl',
-           :source => 'http://gems.github.com',
+config.gem 'factory_girl',
            :version => '>= 1.2.1'
 config.gem 'webrat',
            :version => '>= 0.4.4'
 config.gem 'cucumber',
            :version => '>= 0.3.9'
+config.gem 'rr',
+           :version => '>= 0.7.1'
 
 require 'redgreen'
 

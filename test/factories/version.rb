@@ -1,7 +1,7 @@
 Factory.define :version do |version|
-  version.authors { 'string' }
-  version.description { 'text' }
-  version.downloads { 1 }
-  version.number { 'string' }
-  version.rubygem_id { 1 }
+  version.authors     { 'Joe User' }
+  version.description { 'Some awesome gem' }
+  version.downloads   { 1337 }
+  version.number      { '0.0.0' }
+  version.association :rubygem
 end

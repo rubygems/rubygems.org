@@ -1,9 +1,22 @@
 ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'test_help'
+require 'rack/test'
+require 'rr'
 
 class ActiveSupport::TestCase
+  include Rack::Test::Methods
+  include RR::Adapters::TestUnit
 
   self.use_transactional_fixtures = true
   self.use_instantiated_fixtures  = false
+end
+
+def gem_file(name)
+  ActionController::TestUploadedFile.new(File.join(File.dirname(__FILE__), 'gems', name), 'application/octet-stream', :binary)
+end
+
+def regenerate_index
+  FileUtils.rm_rf Dir["server/cache/*", "server/*specs*", "server/quick", "server/specifications/*"]
+  #Gem::Cutter.indexer.generate_index
 end
