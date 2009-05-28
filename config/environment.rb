@@ -14,3 +14,5 @@ Rails::Initializer.run do |config|
 end
 
 DO_NOT_REPLY = "donotreply@gemcutter.org"
+
+require 'rubygems/format'
