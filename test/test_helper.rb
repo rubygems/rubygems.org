@@ -5,11 +5,13 @@ require 'rack/test'
 require 'rr'
 
 class ActiveSupport::TestCase
-  include Rack::Test::Methods
-  include RR::Adapters::TestUnit
-
   self.use_transactional_fixtures = true
   self.use_instantiated_fixtures  = false
+end
+
+class Test::Unit::TestCase
+  include Rack::Test::Methods
+  include RR::Adapters::TestUnit unless include?(RR::Adapters::TestUnit)
 end
 
 def gem_file(name)
