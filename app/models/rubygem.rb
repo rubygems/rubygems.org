@@ -3,6 +3,8 @@ class Rubygem < ActiveRecord::Base
   has_many :versions
   has_many :dependencies
 
+  validates_presence_of :name
+
   attr_accessor :data, :spec
   before_validation :parse_spec
   after_save :update_index
