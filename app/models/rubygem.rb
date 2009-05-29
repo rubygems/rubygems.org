@@ -14,6 +14,10 @@ class Rubygem < ActiveRecord::Base
       cache = Gemcutter.server_path('gems', "#{spec.original_name}.gem")
       FileUtils.cp self.data.path, cache
       File.chmod 0644, cache
-    end
 
+      version = self.versions.build(
+        :authors     => spec.authors,
+        :description => spec.description,
+        :number      => spec.version)
+    end
 end
