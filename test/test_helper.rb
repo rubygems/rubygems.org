@@ -25,5 +25,5 @@ def regenerate_index
     "server/quick",
     "server/specifications/*",
     "server/source_index"]
-  Cutter.indexer.generate_index
+  Gemcutter.indexer.generate_index
 end
