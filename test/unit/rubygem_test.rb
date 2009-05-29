@@ -6,7 +6,7 @@ class RubygemTest < ActiveSupport::TestCase
   should_have_many :dependencies
 
   should "be valid with factory" do
-#    assert_valid Factory.build(:rubygem)
+    assert_valid Factory.build(:rubygem)
   end
 
   should "respond to data" do
@@ -21,21 +21,74 @@ class RubygemTest < ActiveSupport::TestCase
     setup do
       @gem = "test-0.0.0.gem"
       @gem_file = gem_file(@gem)
-      @cache_path = Gemcutter.server_path("gems", @gem)
       @spec = gem_spec
-
       stub(Gem::Format).from_file_by_path(anything).stub!.spec { @spec }
       regenerate_index
 
       @rubygem = Rubygem.create(:data => @gem_file)
     end
 
-    should "save the gem" do
+    context "updating a gem" do
+      setup do
+        @new_gem = "test-1.0.0.gem"
+        @new_gem_file = gem_file(@new_gem)
+        @new_spec = gem_spec(:version => "1.0.0")
+        stub(Gem::Format).from_file_by_path(anything).stub!.spec { @new_spec }
+
+        @rubygem.data = @new_gem_file
+        @rubygem.save
+      end
+
+      should "store the gem" do
+        cache_path = Gemcutter.server_path("gems", @new_gem)
+        assert_not_nil @rubygem.spec
+        assert_equal @new_spec.name, @rubygem.name
+        assert !@rubygem.new_record?
+        assert File.exists?(cache_path)
+        assert_equal 0100644, File.stat(cache_path).mode
+      end
+
+      should "create a new version" do
+        assert_equal 2, @rubygem.versions.size
+        version = @rubygem.versions.first
+        assert_not_nil version
+        assert_equal @spec.authors, version.authors
+        assert_equal @spec.description, version.description
+        assert_equal @spec.version, version.number
+        assert !version.new_record?
+      end
+
+      should "update the index" do
+        source_index = Gemcutter.server_path("source_index")
+        assert File.exists?(source_index)
+
+        source_index_data = File.open(source_index) { |f| Marshal.load f.read }
+        assert source_index_data.gems.has_key?(@spec.original_name)
+        assert source_index_data.gems.has_key?(@new_spec.original_name)
+
+        quick_gem = Gemcutter.server_path("quick", "Marshal.4.8", "#{@new_spec.original_name}.gemspec.rz")
+        assert File.exists?(quick_gem)
+
+        quick_gem_data = File.open(quick_gem, 'rb') { |f| Marshal.load(Gem.inflate(f.read)) }
+        assert_equal @rubygem.spec, quick_gem_data
+
+        latest_specs = Gemcutter.server_path("latest_specs.4.8")
+        assert File.exists?(latest_specs)
+
+        latest_specs_data = File.open(latest_specs) { |f| Marshal.load f.read }
+        assert_equal 2, latest_specs_data.size
+        assert_equal ["test", Gem::Version.new("0.0.0"), "ruby"], latest_specs_data.first
+        assert_equal ["test", Gem::Version.new("1.0.0"), "ruby"], latest_specs_data.last
+      end
+    end
+
+    should "store the gem" do
+      cache_path = Gemcutter.server_path("gems", @gem)
       assert_not_nil @rubygem.spec
       assert_equal @spec.name, @rubygem.name
       assert !@rubygem.new_record?
-      assert File.exists?(@cache_path)
-      assert_equal 0100644, File.stat(@cache_path).mode
+      assert File.exists?(cache_path)
+      assert_equal 0100644, File.stat(cache_path).mode
     end
 
     should "create a new version" do
