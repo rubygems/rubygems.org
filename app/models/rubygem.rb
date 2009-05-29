@@ -37,8 +37,8 @@ class Rubygem < ActiveRecord::Base
         f.write Marshal.dump(source_index)
       end
 
-      Cutter.indexer.abbreviate self.spec
-      Cutter.indexer.sanitize self.spec
+      Gemcutter.indexer.abbreviate self.spec
+      Gemcutter.indexer.sanitize self.spec
 
       quick_path = Gemcutter.server_path("quick", "Marshal.#{Gem.marshal_version}", "#{self.spec.original_name}.gemspec.rz")
 
@@ -47,6 +47,6 @@ class Rubygem < ActiveRecord::Base
         f.write zipped
       end
 
-      Cutter.indexer.update_index
+      Gemcutter.indexer.update_index
     end
 end

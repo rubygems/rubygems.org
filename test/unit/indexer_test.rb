@@ -45,7 +45,7 @@ class IndexerTest < ActiveSupport::TestCase
         mock(File).utime(@time, @time, Gemcutter.server_path + "/")
       end
 
-      Cutter.indexer.update_index
+      Gemcutter.indexer.update_index
     end
   end
 end
