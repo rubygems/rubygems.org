@@ -22,10 +22,10 @@ class RubygemTest < ActiveSupport::TestCase
       @gem = "test-0.0.0.gem"
       @gem_file = gem_file(@gem)
       @cache_path = Gemcutter.server_path("gems", @gem)
+      @spec = gem_spec
 
+      stub(Gem::Format).from_file_by_path(anything).stub!.spec { @spec }
       regenerate_index
-
-      @spec = Gem::Format.from_file_by_path(@gem_file.path).spec
 
       @rubygem = Rubygem.create(:data => @gem_file)
     end
@@ -42,7 +42,7 @@ class RubygemTest < ActiveSupport::TestCase
       version = @rubygem.versions.first
       assert_not_nil version
       assert_equal @spec.authors, version.authors
-      assert_equal @spec.summary, version.description
+      assert_equal @spec.description, version.description
       assert_equal @spec.version, version.number
       assert !version.new_record?
     end
