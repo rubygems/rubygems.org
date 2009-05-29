@@ -59,6 +59,13 @@ class RubygemTest < ActiveSupport::TestCase
 
       quick_gem_data = File.open(quick_gem, 'rb') { |f| Marshal.load(Gem.inflate(f.read)) }
       assert_equal @rubygem.spec, quick_gem_data
+
+      latest_specs = Gemcutter.server_path("latest_specs.4.8")
+      assert File.exists?(latest_specs)
+
+      latest_specs_data = File.open(latest_specs) { |f| Marshal.load f.read }
+      assert_equal 1, latest_specs_data.size
+      assert_equal ["test", Gem::Version.new("0.0.0"), "ruby"], latest_specs_data.first
     end
   end
 end
