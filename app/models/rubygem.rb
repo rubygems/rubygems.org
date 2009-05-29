@@ -3,12 +3,12 @@ class Rubygem < ActiveRecord::Base
   has_many :versions
   has_many :dependencies
 
-  attr_accessor :data
+  attr_accessor :data, :spec
   before_validation :parse
 
   protected
     def parse
-      spec = Gem::Format.from_file_by_path(self.data.path).spec
+      self.spec = Gem::Format.from_file_by_path(self.data.path).spec
       self.name = spec.name
 
       cache = Gemcutter.server_path('gems', "#{spec.original_name}.gem")
