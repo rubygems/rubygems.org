@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(:version => 20090527122658) do
   create_table "versions", :force => true do |t|
     t.string   "authors"
     t.text     "description"
-    t.integer  "downloads"
+    t.integer  "downloads",   :default => 0
     t.string   "number"
     t.integer  "rubygem_id"
     t.datetime "created_at"

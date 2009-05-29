@@ -46,7 +46,6 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal @spec.authors, version.authors
       assert_equal @spec.description, version.description
       assert_equal @spec.version, version.number
-      assert_equal 0, version.downloads
     end
   end
 
