@@ -17,6 +17,11 @@ def gem_file(name)
 end
 
 def regenerate_index
-  FileUtils.rm_rf Dir["server/cache/*", "server/*specs*", "server/quick", "server/specifications/*"]
-  #Gem::Cutter.indexer.generate_index
+  FileUtils.rm_rf Dir[
+    "server/cache/*",
+    "server/*specs*",
+    "server/quick",
+    "server/specifications/*",
+    "server/source_index"]
+  Cutter.indexer.generate_index
 end
