@@ -13,6 +13,10 @@ class RubygemTest < ActiveSupport::TestCase
     assert Rubygem.new.respond_to?(:data)
   end
 
+  should "respond to spec" do
+    assert Rubygem.new.respond_to?(:spec)
+  end
+
   context "saving a gem" do
     setup do
       @gem = "test-0.0.0.gem"
@@ -34,6 +38,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "save the gem" do
+      assert_equal @spec, @rubygem.spec
       assert_equal @spec.name, @rubygem.name
       assert !@rubygem.new_record?
       assert File.exists?(@cache_path)
@@ -46,7 +51,7 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal @spec.authors, version.authors
       assert_equal @spec.description, version.description
       assert_equal @spec.version, version.number
+      assert !version.new_record?
     end
   end
-
 end
