@@ -3,13 +3,13 @@ require(File.join(File.dirname(__FILE__), 'config', 'boot'))
 require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
-require 'spec/rake/spectask'
 
 require 'tasks/rails'
 
 desc "Run all tests and features"
 task :default => [:test, :features]
 
+=begin
 desc "Clean out files that aren't needed."
 task :clean do
   system("git clean -dfx server/; git checkout server/")
@@ -160,3 +160,4 @@ begin
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
+=end
