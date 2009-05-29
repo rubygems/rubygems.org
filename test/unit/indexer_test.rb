@@ -10,7 +10,6 @@ class IndexerTest < ActiveSupport::TestCase
     end
 
     should "index properly" do
-      return
       mock(Dir).tmpdir { @tmpdir }
 
       mock.proxy(Gem::Indexer).new(Gemcutter.server_path, :build_legacy => false) do |indexer|
