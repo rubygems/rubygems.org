@@ -23,22 +23,15 @@ class RubygemTest < ActiveSupport::TestCase
       @gem_file = gem_file(@gem)
       @cache_path = Gemcutter.server_path("gems", @gem)
 
-      #regenerate_index
-      @spec = "spec"
-      stub(@spec).to_ruby
-      stub(@spec).name { "test" }
-      stub(@spec).version { "0.0.0" }
-      stub(@spec).original_name { "test-0.0.0" }
-      stub(@spec).authors { ["Joe User"] }
-      stub(@spec).description { "Some awesome gem" }
-      stub(@spec).dependencies { [] }
-      stub(Gem::Format).from_file_by_path(@gem_file.path).stub!.spec { @spec }
+      regenerate_index
+
+      @spec = Gem::Format.from_file_by_path(@gem_file.path).spec
 
       @rubygem = Rubygem.create(:data => @gem_file)
     end
 
     should "save the gem" do
-      assert_equal @spec, @rubygem.spec
+      assert_not_nil @rubygem.spec
       assert_equal @spec.name, @rubygem.name
       assert !@rubygem.new_record?
       assert File.exists?(@cache_path)
@@ -49,9 +42,23 @@ class RubygemTest < ActiveSupport::TestCase
       version = @rubygem.versions.first
       assert_not_nil version
       assert_equal @spec.authors, version.authors
-      assert_equal @spec.description, version.description
+      assert_equal @spec.summary, version.description
       assert_equal @spec.version, version.number
       assert !version.new_record?
+    end
+
+    should "update the index" do
+      source_index = Gemcutter.server_path("source_index")
+      assert File.exists?(source_index)
+
+      source_index_data = File.open(source_index) { |f| Marshal.load f.read }
+      assert source_index_data.gems.has_key?(@spec.original_name)
+
+      quick_gem = Gemcutter.server_path("quick", "Marshal.4.8", "#{@spec.original_name}.gemspec.rz")
+      assert File.exists?(quick_gem)
+
+      quick_gem_data = File.open(quick_gem, 'rb') { |f| Marshal.load(Gem.inflate(f.read)) }
+      assert_equal @rubygem.spec, quick_gem_data
     end
   end
 end

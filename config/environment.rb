@@ -15,4 +15,9 @@ end
 
 DO_NOT_REPLY = "donotreply@gemcutter.org"
 
+require 'rubygems'
 require 'rubygems/format'
+require 'rubygems/indexer'
+require 'lib/indexer'
+
+Gem.configuration.verbose = false
