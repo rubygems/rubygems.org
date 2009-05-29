@@ -46,5 +46,7 @@ class Rubygem < ActiveRecord::Base
       File.open(quick_path, "wb") do |f|
         f.write zipped
       end
+
+      Cutter.indexer.update_index
     end
 end
