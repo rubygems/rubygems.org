@@ -31,7 +31,6 @@ task :bootstrap do
 end
 
 namespace :index do
-
   desc "Create the index"
   task :create do
     require 'app/cutter'
@@ -45,49 +44,9 @@ namespace :index do
     require 'app/indexer'
     Gem::Cutter.indexer.update_index
   end
-
-  desc "Benchmark gemcutter's indexer vs rubygems"
-  task :bench do
-    require 'benchmark'
-    # Clean directory
-    # Copy 100 gems in
-    # Generate gem index
-    # Copy 100 more gems in
-    # Run update
-
-    commands = <<EOF
-git clean -dfxq server
-cp -r bench/old/*.gem server/cache
-gem generate_index -d server > /dev/null
-cp -r bench/new/*.gem server/cache
-EOF
-    commands = commands.split("\n").join(";")
-
-    code = <<EOF
-Gem.configuration.verbose = false
-i = Gem::Indexer.new('server', :build_legacy => false)
-def i.say(message) end
-i.update_index
-EOF
-    code = code.split("\n").join(";")
-    rb = "require 'rubygems/indexer';" + code
-    gc = "require './lib/rubygems/indexer';" + code
-
-    Benchmark.bm(9) do |b|
-      b.report("rubygems ") do
-        system(commands)
-        system(%{ruby -rubygems -e "#{rb}"})
-      end
-      b.report("gemcutter") do
-        system(commands)
-        system(%{ruby -rubygems -e "#{gc}"})
-      end
-    end
-  end
 end
 
 namespace :import do
-
   desc 'Download all of the gems in rubygems.txt'
   task :download do
     require 'curb'
@@ -135,15 +94,12 @@ namespace :import do
   end
 
   desc 'Bring the gems through the gemcutter process'
-  task :process do
-    require 'rubygems/indexer'
-    require 'app/app'
-
+  task :process => :environment do
     gems = Dir[File.join(ARGV[1], "*.gem")]
     puts "Processing #{gems.size} gems..."
-    gems.each do |gem|
-      puts gem
-      Gem::Cutter.new(File.open(gem)).process
+    gems.each do |g|
+      puts g
+      Rubygem.create(:data => File.open(g))
     end
   end
 end

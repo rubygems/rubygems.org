@@ -1,16 +1,21 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class RubygemTest < ActiveSupport::TestCase
-  should_belong_to :user
-  should_have_many :versions
-  should_have_many :dependencies
+  context "with a rubygem" do
+    setup do
+      @rubygem = Factory(:rubygem)
+    end
 
-  should "be valid with factory" do
-    assert_valid Factory.build(:rubygem)
+    should_belong_to :user
+    should_have_many :versions
+    should_have_many :dependencies
+    should_validate_uniqueness_of :name
   end
 
-  should "respond to data" do
-    assert Rubygem.new.respond_to?(:data)
+  should "pull spec out of the given gem" do
+    spec = Rubygem.pull_spec(gem_file)
+    assert_not_nil spec
+    assert spec.is_a?(Gem::Specification)
   end
 
   should "respond to spec" do
@@ -25,7 +30,7 @@ class RubygemTest < ActiveSupport::TestCase
       stub(Gem::Format).from_file_by_path(anything).stub!.spec { @spec }
       regenerate_index
 
-      @rubygem = Rubygem.create(:data => @gem_file)
+      @rubygem = Rubygem.create(:spec => @spec, :path => @gem_file.path)
     end
 
     context "updating a gem" do
@@ -35,7 +40,8 @@ class RubygemTest < ActiveSupport::TestCase
         @new_spec = gem_spec(:version => "1.0.0")
         stub(Gem::Format).from_file_by_path(anything).stub!.spec { @new_spec }
 
-        @rubygem.data = @new_gem_file
+        @rubygem.path = @new_gem_file.path
+        @rubygem.spec = @new_spec
         @rubygem.save
       end
 
