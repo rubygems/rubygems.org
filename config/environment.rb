@@ -11,6 +11,10 @@ Rails::Initializer.run do |config|
     :lib     => 'clearance',
     :source  => 'http://gems.github.com',
     :version => '0.6.6'
+  config.gem "thoughtbot-pacecar",
+    :lib     => 'pacecar',
+    :source  => 'http://gems.github.com',
+    :version => '1.1.5'
 end
 
 DO_NOT_REPLY = "donotreply@gemcutter.org"

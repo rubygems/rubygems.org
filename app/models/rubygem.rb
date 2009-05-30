@@ -1,4 +1,6 @@
 class Rubygem < ActiveRecord::Base
+  include Pacecar
+
   belongs_to :user
   has_many :versions
   has_many :dependencies
