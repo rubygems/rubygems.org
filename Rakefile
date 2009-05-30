@@ -10,9 +10,10 @@ desc "Run all tests and features"
 task :default => [:test, :features]
 
 desc "Clean out files that aren't needed."
-task :clean do
+task :clean => :environment do
   system("git clean -dfx server/; git checkout server/")
-  Rake::Task["db:reset"].execute
+  Rubygem.delete_all
+  Version.delete_all
 end
 
 desc "Get the gem server up and running"
