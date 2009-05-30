@@ -1,5 +1,6 @@
 class Rubygem < ActiveRecord::Base
   include Pacecar
+  sluggable_finder :name
 
   belongs_to :user
   has_many :versions
@@ -20,9 +21,9 @@ class Rubygem < ActiveRecord::Base
     name
   end
 
-  def to_param
-    name.gsub(/[^\w_-]/, "")
-  end
+  #def to_param
+  #  name.gsub(/[^\w_-]/, "")
+  #end
 
   def current_version
     versions.first
