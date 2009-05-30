@@ -14,6 +14,18 @@ class RubygemTest < ActiveSupport::TestCase
     should "return name for #to_s" do
       assert_equal @rubygem.name, @rubygem.to_s
     end
+
+    should "return latest version for #current_version" do
+      assert_equal @rubygem.versions.first, @rubygem.current_version
+    end
+
+    should "return name with version for #with_version" do
+      assert_equal "#{@rubygem.name} (#{@rubygem.current_version})", @rubygem.with_version
+    end
+
+    should "return name with downloads for #with_downloads" do
+      assert_equal "#{@rubygem.name} (#{@rubygem.downloads})", @rubygem.with_downloads
+    end
   end
 
   should "pull spec out of the given gem" do

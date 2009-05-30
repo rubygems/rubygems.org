@@ -13,27 +13,18 @@
   .count= number_with_delimiter(@count)
   .what gems indexed since may 2009
 .clear
-  .list.grid_4
-    %h3 Updated Gems
-    %ul
-      %li jekyll (0.5.1)
-      %li haml (0.1.2)
-      %li roodi (1.2.3)
-      %li beardo (0.0.1)
-      %li jeweler (1.0.42)
-  .list.grid_4
-    %h3 New Gems
-    %ul
-      %li awesome (0.0.1)
-      %li rstuff (1.0.0)
-      %li dbhelper (4.1.8)
-      %li acts_as_fu (1.0.0)
-      %li RTrickery (0.0.0)
-  .list.grid_4
-    %h3 Most Downloads
-    %ul
-      %li rails (12,147)
-      %li instantrails (9,234)
-      %li rmagick (3,403)
-      %li rake (2,302)
-      %li net/ssh (2,128)
+.list.grid_4
+  %h3 Updated Gems
+  %ul
+    -@updated.each do |version|
+      %li= link_to "#{version.rubygem} (#{version})", version.rubygem
+.list.grid_4
+  %h3 New Gems
+  %ul
+    -@new.each do |gem|
+      %li= link_to gem.with_version, gem
+.list.grid_4
+  %h3 Most Downloads
+  %ul
+    -@downloaded.each do |gem|
+      %li= link_to gem.with_downloads, gem
