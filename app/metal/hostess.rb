@@ -15,11 +15,21 @@ class Hostess < Sinatra::Default
   end
 
   get "/gems/*.gem" do
-    content_type 'application/octet-stream'
-    send_file(current_path)
+    if File.exists?(current_path)
+      content_type 'application/octet-stream'
+      original_name = File.basename(current_path, ".gem").split('-')
+      name = original_name[0..-2].join('-')
+      version = original_name[-1]
+      rubygem = Rubygem.find_by_name(name)
+      version = rubygem.versions.find_by_number(version)
+      version.increment!(:downloads)
+      send_file(current_path)
+    else
+      halt 404
+    end
   end
 
   def current_path
-    Gemcutter.server_path(request.env["PATH_INFO"])
+    @current_path ||= Gemcutter.server_path(request.env["PATH_INFO"])
   end
 end
