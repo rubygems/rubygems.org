@@ -15,6 +15,9 @@ Rails::Initializer.run do |config|
     :lib     => 'pacecar',
     :source  => 'http://gems.github.com',
     :version => '1.1.5'
+  config.gem "ismasan-sluggable_finder",
+    :lib     => 'sluggable_finder',
+    :version => '2.0.6'
 end
 
 DO_NOT_REPLY = "donotreply@gemcutter.org"
