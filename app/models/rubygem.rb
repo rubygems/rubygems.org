@@ -21,9 +21,10 @@ class Rubygem < ActiveRecord::Base
       self.name = self.spec.name if self.name.blank?
 
       version = self.versions.build(
-        :authors     => self.spec.authors,
+        :authors     => self.spec.authors.join(", "),
         :description => self.spec.description || self.spec.summary,
-        :number      => self.spec.version)
+        :created_at  => self.spec.date,
+        :number      => self.spec.version.to_s)
     end
 
     def store

@@ -9,14 +9,9 @@ require 'tasks/rails'
 desc "Run all tests and features"
 task :default => [:test, :features]
 
-=begin
 desc "Clean out files that aren't needed."
 task :clean do
   system("git clean -dfx server/; git checkout server/")
-end
-
-Spec::Rake::SpecTask.new do |t|
-  t.spec_opts = ['--format', 'progress', '--color', '--backtrace']
 end
 
 desc "Get the gem server up and running"
@@ -99,7 +94,12 @@ namespace :import do
     puts "Processing #{gems.size} gems..."
     gems.each do |g|
       puts g
-      Rubygem.create(:data => File.open(g))
+      file = File.open(g)
+      spec = Rubygem.pull_spec(file)
+      rubygem = Rubygem.find_or_initialize_by_name(spec.name)
+      rubygem.spec = spec
+      rubygem.path = file.path
+      rubygem.save
     end
   end
 end
@@ -116,4 +116,3 @@ begin
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
-=end
