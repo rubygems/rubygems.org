@@ -5,10 +5,8 @@
     %title= @page_title || page_title
     =stylesheet_link_tag("reset", "960", "text", "application")
   %body
-    -unless flash.empty?
-      #flash
-      -flash.each do |key, value|
-        %div{:id => key}=h value
+    -flash.each do |name, msg|
+      %div{:id => "flash_#{name}"}= msg
     .container_12
       .wrap
         .header.grid_12
@@ -40,3 +38,4 @@
             .watermark
               %a{:href => "/"}= title
               %abbr= subtitle
+    =javascript_include_tag("jquery", "application")

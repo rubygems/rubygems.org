@@ -304,4 +304,28 @@ label, .form_links {
   float: left;
 }
 
+#flash_success, #flash_notice, #flash_error {
+  font-weight: bold;
+  left: 0;
+  top: 0;
+  padding: 5px 0;
+  position: fixed;
+  text-align: center;
+  width: 100%;
+  z-index: 100;
+  color: #333333;
+  display: none;
+  border-bottom: solid 2px #333333;
+}
 
+#flash_success {
+  background-color: #C8FFBF;
+}
+
+#flash_notice {
+  background-color: #FFF9BF;
+}
+
+#flash_error {
+  background-color: #FFD1BF;
+}
