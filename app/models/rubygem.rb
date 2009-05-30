@@ -20,6 +20,10 @@ class Rubygem < ActiveRecord::Base
     name
   end
 
+  def to_param
+    name.gsub(/[^\w_-]/, "")
+  end
+
   protected
     def build
       return unless self.spec
