@@ -170,6 +170,11 @@ h3 {
   padding:0.3em;
 }
 
+.list li a {
+  color: inherit;
+  display: block;
+}
+
 .list li:hover {
   background:#600000;
   cursor: pointer;

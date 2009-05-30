@@ -12,8 +12,6 @@ class Rubygem < ActiveRecord::Base
   before_validation :build
   after_save :store
 
-  default_scope :order => 'name ASC'
-
   def self.pull_spec(data)
     Gem::Format.from_file_by_path(data.path).spec
   end
@@ -24,6 +22,18 @@ class Rubygem < ActiveRecord::Base
 
   def to_param
     name.gsub(/[^\w_-]/, "")
+  end
+
+  def current_version
+    versions.first
+  end
+
+  def with_version
+    "#{name} (#{current_version})"
+  end
+
+  def with_downloads
+    "#{name} (#{downloads})"
   end
 
   protected
