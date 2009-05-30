@@ -38,6 +38,8 @@ class Rubygem < ActiveRecord::Base
     end
 
     def store
+      return unless self.spec
+
       cache = Gemcutter.server_path('gems', "#{self.spec.original_name}.gem")
       FileUtils.cp self.path, cache
       File.chmod 0644, cache

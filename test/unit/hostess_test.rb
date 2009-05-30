@@ -32,9 +32,12 @@ class HostessTest < ActiveSupport::TestCase
 
   should "return gem" do
     file = "/gems/test-0.0.0.gem"
-    touch file
+    rubygem = Factory(:rubygem, :name => "test")
+    rubygem.reload
+
     get file
     assert_equal 200, last_response.status
+    assert_equal 1, rubygem.versions.first.downloads
   end
 
   should "not be able to find non existant gemspec" do
