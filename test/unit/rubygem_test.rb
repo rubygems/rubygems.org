@@ -10,6 +10,10 @@ class RubygemTest < ActiveSupport::TestCase
     should_have_many :versions
     should_have_many :dependencies
     should_validate_uniqueness_of :name
+
+    should "return name for #to_s" do
+      assert_equal @rubygem.name, @rubygem.to_s
+    end
   end
 
   should "pull spec out of the given gem" do

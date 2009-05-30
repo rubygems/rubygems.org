@@ -15,8 +15,13 @@ class ActiveSupport::TestCase
 end
 
 class Test::Unit::TestCase
+  include Webrat::Matchers
   include Rack::Test::Methods
   include RR::Adapters::TestUnit unless include?(RR::Adapters::TestUnit)
+
+  def response_body
+    @response.body
+  end
 end
 
 def gem_file(name = "test-0.0.0.gem")
