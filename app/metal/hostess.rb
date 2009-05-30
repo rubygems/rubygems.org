@@ -21,8 +21,7 @@ class Hostess < Sinatra::Default
       name = original_name[0..-2].join('-')
       version = original_name[-1]
       rubygem = Rubygem.find_by_name(name)
-      version = rubygem.versions.find_by_number(version)
-      version.increment!(:downloads)
+      rubygem.increment!(:downloads)
       send_file(current_path)
     else
       halt 404

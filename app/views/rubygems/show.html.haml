@@ -16,7 +16,7 @@
     %p= @current_version.authors
   .block.red
     %h3 Downloads
-    %p= @current_version.downloads
+    %p= number_with_delimiter(@gem.downloads)
   .block.red
     %h3 Last Update
     %p= @current_version.created_at.to_date.to_formatted_s(:long)
