@@ -3,10 +3,7 @@
   %head
     %link{:rel => "shortcut icon", :href => "/favicon.ico", :type => "image/x-icon"}
     %title= @page_title || page_title
-    %link{:rel => "stylesheet", :type => "text/css", :media => "all", :href => "/css/reset.css"}
-    %link{:rel => "stylesheet", :type => "text/css", :media => "all", :href => "/css/960.css"}
-    %link{:rel => "stylesheet", :type => "text/css", :media => "all", :href => "/css/text.css"}
-    %link{:rel => "stylesheet", :type => "text/css", :media => "all", :href => "/css/style.css"}
+    =stylesheet_link_tag("reset", "960", "text", "application")
   %body
     -unless flash.empty?
       #flash
