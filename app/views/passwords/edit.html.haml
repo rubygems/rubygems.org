@@ -1,0 +1,12 @@
+-@title = "change password"
+-@subtitle = ""
+.grid_12
+  %p Your password has been reset. Choose a new password below.
+  -form_for(:user, :url => user_password_path(@user, :token => @user.token), :html => { :method => :put }) do |form|
+    .password_field
+      =form.label :password
+      =form.password_field :password
+    .password_field
+      =form.label :password_confirmation, "Confirm password"
+      =form.password_field :password_confirmation
+    =form.submit 'Save this password', :disable_with => 'Please wait...'

@@ -247,3 +247,61 @@ h3 {
 .block p a:hover {
   text-decoration: underline;
 }
+
+label, .form_links {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight: 100;
+  text-shadow: 0 0 4px #000000;
+  display: block;
+  font-size: 1.2em;
+}
+
+.form_links {
+  float: right;
+}
+
+.form_links a {
+  margin-left: 20px;
+}
+
+.form_links a:hover {
+  text-decoration: underline;
+}
+
+.text_field,
+.password_field {
+  margin: 0 0 2em 0;
+}
+
+.text_field input,
+.password_field input{
+  color: #FFFFFF;
+  width: 900px;
+  border: none;
+  padding: .3em;
+  font-size: 5em;
+  background: #400000;
+  border-bottom: .1em solid #c2c2c2;
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.password_field input{
+  font-weight: bold;
+}
+
+.form_bottom label {
+  display: inline;
+  vertical-align: middle;
+}
+
+.form_bottom input[type='submit'] {
+  margin-top: 10px;
+  display: block;
+}
+
+.form_bottom {
+  margin-bottom: 2em;
+  float: left;
+}
+
+
