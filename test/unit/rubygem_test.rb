@@ -58,9 +58,10 @@ class RubygemTest < ActiveSupport::TestCase
         assert_equal 2, @rubygem.versions.size
         version = @rubygem.versions.first
         assert_not_nil version
-        assert_equal @spec.authors, version.authors
+        assert_equal @spec.authors.join(", "), version.authors
         assert_equal @spec.description, version.description
-        assert_equal @spec.version, version.number
+        assert_equal @spec.version.to_s, version.number
+        assert_equal @spec.date, version.created_at
         assert !version.new_record?
       end
 
@@ -100,9 +101,10 @@ class RubygemTest < ActiveSupport::TestCase
     should "create a new version" do
       version = @rubygem.versions.first
       assert_not_nil version
-      assert_equal @spec.authors, version.authors
+      assert_equal @spec.authors.join(", "), version.authors
       assert_equal @spec.description, version.description
-      assert_equal @spec.version, version.number
+      assert_equal @spec.version.to_s, version.number
+      assert_equal @spec.date, version.created_at
       assert !version.new_record?
     end
 
