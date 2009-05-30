@@ -4,27 +4,33 @@ class Rubygem < ActiveRecord::Base
   has_many :dependencies
 
   validates_presence_of :name
+  validates_uniqueness_of :name
 
-  attr_accessor :data, :spec
-  before_validation :parse_spec
-  after_save :update_index
+  attr_accessor :spec, :path
+  before_validation :build
+  after_save :store
+
+  def self.pull_spec(data)
+    Gem::Format.from_file_by_path(data.path).spec
+  end
 
   protected
-    def parse_spec
-      self.spec = Gem::Format.from_file_by_path(self.data.path).spec
-      self.name = spec.name
+    def build
+      return unless self.spec
 
-      cache = Gemcutter.server_path('gems', "#{spec.original_name}.gem")
-      FileUtils.cp self.data.path, cache
-      File.chmod 0644, cache
+      self.name = self.spec.name if self.name.blank?
 
       version = self.versions.build(
-        :authors     => spec.authors,
-        :description => spec.description || spec.summary,
-        :number      => spec.version)
+        :authors     => self.spec.authors,
+        :description => self.spec.description || self.spec.summary,
+        :number      => self.spec.version)
     end
 
-    def update_index
+    def store
+      cache = Gemcutter.server_path('gems', "#{self.spec.original_name}.gem")
+      FileUtils.cp self.path, cache
+      File.chmod 0644, cache
+
       source_path = Gemcutter.server_path("source_index")
 
       if File.exists?(source_path)

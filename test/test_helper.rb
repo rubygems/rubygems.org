@@ -17,7 +17,7 @@ class Test::Unit::TestCase
   include RR::Adapters::TestUnit unless include?(RR::Adapters::TestUnit)
 end
 
-def gem_file(name)
+def gem_file(name = "test-0.0.0.gem")
   ActionController::TestUploadedFile.new(File.join(File.dirname(__FILE__), 'gems', name), 'application/octet-stream', :binary)
 end
 
