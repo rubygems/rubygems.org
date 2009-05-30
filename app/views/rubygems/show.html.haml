@@ -1,0 +1,36 @@
+-@title = @gem.name
+-@subtitle = @current_version.number
+-@page_title = "#{@gem} &raquo; #{page_title}"
+.grid_8
+  .block.red
+    %h3 Description
+    %p= @current_version.description
+  .block.green
+    %h3 Install
+    %pre= "gem install #{@gem}"
+  .block.red.versions
+    -if @gem.versions.size > 1
+      %h3 Versions
+      %p
+        -@gem.versions.each do |version|
+          %a{:href => "/"}
+            %span.version= version.number
+            %span.date= version.created_at.to_date.to_formatted_s(:long)
+.grid_4
+  .block.red
+    %h3 Authors
+    %p= @current_version.authors
+  .block.red
+    %h3 Downloads
+    %p= @current_version.downloads
+  .block.red
+    %h3 Last Update
+    %p= @current_version.created_at.to_date.to_formatted_s(:long)
+  .block.red.links
+    %h3 Links
+    %p
+      %a{:href => "/"} Homepage
+      %a{:href => "/"} Docs
+      %a{:href => "/"} Code
+      %a{:href => "/"} Mailing List
+      %a{:href => "/"} Bug Tracker
