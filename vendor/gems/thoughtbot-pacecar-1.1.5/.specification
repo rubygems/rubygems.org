@@ -1,0 +1,72 @@
+--- !ruby/object:Gem::Specification 
+name: thoughtbot-pacecar
+version: !ruby/object:Gem::Version 
+  version: 1.1.5
+platform: ruby
+authors: 
+- Matt Jankowski
+autorequire: 
+bindir: bin
+cert_chain: []
+
+date: 2009-04-17 00:00:00 -04:00
+default_executable: 
+dependencies: []
+
+description: Generated scopes for ActiveRecord classes.
+email: mjankowski@thoughtbot.com
+executables: []
+
+extensions: []
+
+extra_rdoc_files: 
+- README.rdoc
+files: 
+- init.rb
+- lib
+- lib/pacecar
+- lib/pacecar/associations.rb
+- lib/pacecar/boolean.rb
+- lib/pacecar/datetime.rb
+- lib/pacecar/duration.rb
+- lib/pacecar/helpers.rb
+- lib/pacecar/limit.rb
+- lib/pacecar/order.rb
+- lib/pacecar/polymorph.rb
+- lib/pacecar/presence.rb
+- lib/pacecar/ranking.rb
+- lib/pacecar/search.rb
+- lib/pacecar/state.rb
+- lib/pacecar.rb
+- MIT-LICENSE
+- README.rdoc
+has_rdoc: true
+homepage: http://github.com/thoughtbot/pacecar
+licenses: []
+
+post_install_message: 
+rdoc_options: []
+
+require_paths: 
+- lib
+required_ruby_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "0"
+  version: 
+required_rubygems_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "0"
+  version: 
+requirements: []
+
+rubyforge_project: 
+rubygems_version: 1.3.3
+signing_key: 
+specification_version: 2
+summary: Pacecar adds named_scope methods to ActiveRecord classes via database column introspection.
+test_files: []
+
