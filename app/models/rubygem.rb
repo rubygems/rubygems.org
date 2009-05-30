@@ -10,8 +10,14 @@ class Rubygem < ActiveRecord::Base
   before_validation :build
   after_save :store
 
+  default_scope :order => 'name ASC'
+
   def self.pull_spec(data)
     Gem::Format.from_file_by_path(data.path).spec
+  end
+
+  def to_s
+    name
   end
 
   protected
