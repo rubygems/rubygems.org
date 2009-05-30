@@ -12,32 +12,29 @@ task :default => [:test, :features]
 desc "Clean out files that aren't needed."
 task :clean do
   system("git clean -dfx server/; git checkout server/")
+  Rake::Task["db:reset"].execute
 end
 
 desc "Get the gem server up and running"
-task :bootstrap do
+task :bootstrap => :environment do
   Rake::Task["clean"].execute
+  Rake::Task["index:create"].execute
   ARGV[1] = "bench/old"
   Rake::Task["import:process"].execute
-  Rake::Task["index:create"].execute
   ARGV[1] = "bench/new"
   Rake::Task["import:process"].execute
-  Rake::Task["index:update"].execute
 end
 
 namespace :index do
   desc "Create the index"
-  task :create do
-    require 'app/cutter'
-    require 'app/indexer'
-    Gem::Cutter.indexer.generate_index
+  task :create => :environment do
+    Gemcutter.indexer.generate_index
   end
 
   desc "Update the index"
-  task :update do
-    require 'app/cutter'
-    require 'app/indexer'
-    Gem::Cutter.indexer.update_index
+  task :update => :environment do
+    require 'gemcutter'
+    Gemcutter.indexer.update_index
   end
 end
 
