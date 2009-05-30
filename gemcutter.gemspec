@@ -6,41 +6,22 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Quaranto"]
-  s.date = %q{2009-05-24}
+  s.date = %q{2009-05-30}
   s.email = %q{nick@quaran.to}
   s.extra_rdoc_files = [
     "README.textile"
   ]
   s.files = [
-    "README.textile",
-    "Rakefile",
-    "VERSION.yml",
     "lib/commands/downgrade.rb",
-    "lib/commands/push.rb",
-    "lib/commands/upgrade.rb",
-    "lib/gemcutter.rb",
-    "lib/rubygems_plugin.rb",
-    "spec/app_spec.rb",
-    "spec/cutter_spec.rb",
-    "spec/gem_spec.rb",
-    "spec/gems/test-0.0.0.gem",
-    "spec/gems/test-0.0.0.gem_up",
-    "spec/gems/test-1.0.0.gem",
-    "spec/indexer_spec.rb",
-    "spec/spec_helper.rb"
+     "lib/commands/push.rb",
+     "lib/commands/upgrade.rb",
+     "lib/rubygems_plugin.rb"
   ]
   s.homepage = %q{http://github.com/qrush/gemcutter}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.3}
-  s.summary = %q{Simple and kickass gem hosting}
-  s.test_files = [
-    "spec/app_spec.rb",
-    "spec/cutter_spec.rb",
-    "spec/gem_spec.rb",
-    "spec/indexer_spec.rb",
-    "spec/spec_helper.rb"
-  ]
+  s.summary = %q{Kickass gem hosting}
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
