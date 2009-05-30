@@ -17,23 +17,26 @@
           %h2= @subtitle || subtitle
           .buttons
             %span.actions
-              %a{:href => "/"} home
-              %a{:href => "/gems"} list
-              %a create
-              %a migrate
-              %a search
+              =link_to "home", root_url
+              =link_to "list", rubygems_url
+              =link_to "create", new_rubygem_url
+              =link_to "migrate", migrate_rubygems_url
+              =link_to "search", search_rubygems_url
             %span.account
-              %a login
-              %a register
+              -if signed_in?
+                =link_to "dashboard", ""
+                =link_to "logout", sign_out_path
+              -else
+                =link_to "login", sign_in_path
+                =link_to "register", sign_up_path
         =yield
         .footer.grid_12
           .info
             %a.footer{:href => "http://twitter.com/rubygemcutter"} Status
-            %a.footer API
-            %a.footer Help
+            %a.footer{:href => "http://wiki.github.com/qrush/gemcutter/api"} API
+            %a.footer{:href => "http://wiki.github.com/qrush/gemcutter/help"} Help
             %a.footer{:href => "http://github.com/qrush/gemcutter"} Contribute
           -if @title
             .watermark
               %a{:href => "/"}= title
               %abbr= subtitle
-
