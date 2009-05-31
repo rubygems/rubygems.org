@@ -31,6 +31,12 @@ class RubygemsController < ApplicationController
     temp.close
 
     spec = Rubygem.pull_spec(temp.path)
+
+    if spec.nil?
+      render :text => "Gemcutter cannot process this gem. Please try rebuilding it and installing it locally to make sure it's valid.", :status => 422
+      return
+    end
+
     rubygem = Rubygem.find_or_initialize_by_name(spec.name)
 
     if !rubygem.new_record? && rubygem.user != current_user

@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'sinatra'
-require 'gemcutter'
 
 class Hostess < Sinatra::Default
   set :app_file, __FILE__
