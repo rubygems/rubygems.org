@@ -52,6 +52,7 @@ namespace :import do
     url_queue.in_groups_of(25).each do |group|
       multi = Curl::Multi.new
       group.each do |url|
+        next unless url
         path = File.join("cache", File.basename(url))
         if File.exists?(path)
           puts "Skipping #{File.basename(url)}"
