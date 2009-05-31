@@ -22,7 +22,6 @@ class RubygemsController < ApplicationController
 
   def show
     @gem = Rubygem.find(params[:id])
-    @current_version = @gem.versions.first
   end
 
   def create
