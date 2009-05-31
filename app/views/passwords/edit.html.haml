@@ -2,6 +2,7 @@
 -@subtitle = ""
 .grid_12
   %p Your password has been reset. Choose a new password below.
+  =error_messages_for :user
   -form_for(:user, :url => user_password_path(@user, :token => @user.token), :html => { :method => :put }) do |form|
     .password_field
       =form.label :password
