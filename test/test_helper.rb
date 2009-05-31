@@ -25,7 +25,7 @@ class Test::Unit::TestCase
 end
 
 def gem_file(name = "test-0.0.0.gem")
-  ActionController::TestUploadedFile.new(File.join(File.dirname(__FILE__), 'gems', name), 'application/octet-stream', :binary)
+  File.open(File.join(File.dirname(__FILE__), 'gems', name))
 end
 
 def regenerate_index

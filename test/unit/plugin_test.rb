@@ -23,6 +23,11 @@ class PluginTest < ActiveSupport::TestCase
       stub(@io).read.stub!.size
       stub(File).open(@gem) { @io }
 
+      mock(YAML).load_file(File.expand_path("~/.gemrc")) { {
+        :gemcutter_email    => "email",
+        :gemcutter_password => "password"
+      } }
+
       mock(@command).say(@response)
       @command.execute
     end

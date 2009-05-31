@@ -1,4 +1,5 @@
 class RubygemsController < ApplicationController
+  skip_before_filter :verify_authenticity_token, :only => :create
   before_filter :authenticate, :only => :create
 
   def index
@@ -11,7 +12,18 @@ class RubygemsController < ApplicationController
   end
 
   def create
-    render :text => "Successfully registered new gem"
+    temp = Tempfile.new("gem")
+    temp.write request.body.read
+    temp.flush
+    temp.close
+
+    spec = Rubygem.pull_spec(temp.path)
+    rubygem = Rubygem.find_or_initialize_by_name(spec.name)
+    rubygem.spec = spec
+    rubygem.path = temp.path
+    rubygem.user = current_user
+    rubygem.save
+    render :text => "Successfully registered new gem '#{rubygem}'"
   end
 
   protected

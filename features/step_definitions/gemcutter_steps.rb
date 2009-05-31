@@ -20,7 +20,8 @@ When /^I push the gem "([^\"]*)" as "([^\"]*)"$/ do |name, creds|
 end
 
 When /^I visit the gem page for "([^\"]*)"$/ do |name|
-  pending
+  rubygem = Rubygem.find_by_name(name)
+  visit rubygem_path(rubygem)
 end
 
 Given /^I own a gem "([^\"]*)" with version "([^\"]*)"$/ do |name, version|

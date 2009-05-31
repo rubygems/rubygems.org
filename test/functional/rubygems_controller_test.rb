@@ -78,12 +78,15 @@ class RubygemsControllerTest < ActionController::TestCase
       @user = Factory(:email_confirmed_user)
       @request.env["HTTP_AUTHORIZATION"] = "Basic " + 
         Base64::encode64("#{@user.email}:#{@user.password}")
+      @request.env["RAW_POST_DATA"] = gem_file.read
       post :create
     end
     should_respond_with :success
     should_assign_to(:_current_user) { @user }
+    should_change "Rubygem.count", :by => 1
     should "register new gem" do
-      assert_equal "Successfully registered new gem", @response.body
+      assert_equal @user, Rubygem.last.user
+      assert_equal "Successfully registered new gem 'test'", @response.body
     end
   end
 end

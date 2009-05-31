@@ -13,9 +13,9 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     "lib/commands/downgrade.rb",
-     "lib/commands/push.rb",
-     "lib/commands/upgrade.rb",
-     "lib/rubygems_plugin.rb"
+    "lib/commands/push.rb",
+    "lib/commands/upgrade.rb",
+    "lib/rubygems_plugin.rb"
   ]
   s.homepage = %q{http://github.com/qrush/gemcutter}
   s.rdoc_options = ["--charset=UTF-8"]
