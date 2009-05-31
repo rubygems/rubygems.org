@@ -42,7 +42,7 @@ class PluginTest < ActiveSupport::TestCase
 
     should "upgrade to gemcutter" do
       @command.execute
-      assert Gem.sources.include?("http://gems.gemcutter.org")
+      assert Gem.sources.include?("http://gemcutter.org")
       assert !Gem.sources.include?("http://gems.rubyforge.org")
     end
   end
@@ -56,7 +56,7 @@ class PluginTest < ActiveSupport::TestCase
 
     should "return to using rubyforge" do
       @command.execute
-      assert !Gem.sources.include?("http://gems.gemcutter.org")
+      assert !Gem.sources.include?("http://gemcutter.org")
       assert Gem.sources.include?("http://gems.rubyforge.org")
     end
   end
