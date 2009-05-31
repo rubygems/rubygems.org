@@ -23,7 +23,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def current_version
-    versions.first
+    versions.last
   end
 
   def with_version

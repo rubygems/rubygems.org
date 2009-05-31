@@ -94,12 +94,12 @@ end
 
 When /^I request password reset link to be sent to "(.*)"$/ do |email|
   When %{I go to the password reset request page}
-  And %{I fill in "Email address" with "#{email}"}
+  And %{I fill in "Email" with "#{email}"}
   And %{I press "Reset password"}
 end
 
 When /^I update my password with "(.*)\/(.*)"$/ do |password, confirmation|
-  And %{I fill in "Choose password" with "#{password}"}
+  And %{I fill in "Password" with "#{password}"}
   And %{I fill in "Confirm password" with "#{confirmation}"}
   And %{I press "Save this password"}
 end

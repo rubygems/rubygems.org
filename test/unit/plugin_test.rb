@@ -7,7 +7,7 @@ class PluginTest < ActiveSupport::TestCase
       @command = Gem::Commands::PushCommand.new
       mock(@command).say("Pushing gem to Gemcutter...")
       @response = "success"
-      FakeWeb.register_uri :post, "http://gemcutter.org/gems", :string => @response
+      FakeWeb.register_uri :post, "http://email:password@gemcutter.org/gems", :string => @response
     end
 
     should "raise an error with no arguments" do

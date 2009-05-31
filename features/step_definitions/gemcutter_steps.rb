@@ -9,26 +9,13 @@ After do
 end
 
 Given /^I have a gem "([^\"]*)" with version "([^\"]*)"$/ do |name, version|
-  `jeweler #{name} --summary "Gemcutter"; cd #{name}; echo "#{version}" > VERSION; rake gemspec build 2>&1 /dev/null;`
-  Dir.chdir(File.join(TEST_DIR, name, "pkg"))
+  `jeweler #{name} --summary "Gemcutter";` unless File.exists?(name)
+  `cd #{name}; echo "#{version}" > VERSION; rake gemspec build 2>&1 /dev/null;`
 end
 
 When /^I push the gem "([^\"]*)" as "([^\"]*)"$/ do |name, creds|
+  path = File.join(TEST_DIR, name.split('-').first, "pkg", name)
   user, pass = creds.split('/')
   basic_auth(user, pass)
-  visit rubygems_path, :post, File.open(name).read
+  visit rubygems_path, :post, File.open(path).read
 end
-
-When /^I visit the gem page for "([^\"]*)"$/ do |name|
-  rubygem = Rubygem.find_by_name(name)
-  visit rubygem_path(rubygem)
-end
-
-Given /^I own a gem "([^\"]*)" with version "([^\"]*)"$/ do |name, version|
-  pending
-end
-
-Given /^the gem "([^\"]*)" exists with version "([^\"]*)"$/ do |name, version|
-  pending
-end
-
