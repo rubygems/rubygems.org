@@ -32,14 +32,14 @@ h2. Next up
 
 What's finished so far:
 
-* Simple API (list, push, update)
+* Simple site (list, push, update)
 * Releasing/updating gems via @gem push@
+* Project pages
+* Authentication/accounts
+* Gem server up and running
 
 What's coming:
 
-* Getting the gem server up and running with the index (and hopefully improving its speed)
-* Project pages
-* Authentication/accounts (moving to Rails to support this, probably)
 * RubyForge migration for gem projects
 * Fully fledged API documentation
 * Search via the API and site
