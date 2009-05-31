@@ -34,6 +34,11 @@ class RubygemTest < ActiveSupport::TestCase
     assert spec.is_a?(Gem::Specification)
   end
 
+  should "not be able to pull spec from a bad path" do
+    spec = Rubygem.pull_spec("bad path")
+    assert_nil spec
+  end
+
   should "respond to spec" do
     assert Rubygem.new.respond_to?(:spec)
   end

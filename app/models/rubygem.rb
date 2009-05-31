@@ -14,8 +14,13 @@ class Rubygem < ActiveRecord::Base
   after_save :store
 
   def self.pull_spec(path)
-    format = Gem::Format.from_file_by_path(path)
-    format.spec
+    begin
+      format = Gem::Format.from_file_by_path(path)
+      format.spec
+    rescue Exception => e
+      logger.info "Problem loading gem at #{path}: #{e}"
+      nil
+    end
   end
 
   def to_s

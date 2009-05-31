@@ -157,6 +157,19 @@ class RubygemsControllerTest < ActionController::TestCase
       end
     end
 
+    context "On POST to create with bad gem" do
+      setup do
+        stub(Rubygem).pull_spec(anything) { nil }
+        @request.env["RAW_POST_DATA"] = gem_file.read
+        post :create
+      end
+      should_respond_with 422
+      should_not_change "Rubygem.count"
+      should "not register gem" do
+        assert_equal "Gemcutter cannot process this gem. Please try rebuilding it and installing it locally to make sure it's valid.", @response.body
+      end
+    end
+
     context "On POST to create for someone else's gem" do
       setup do
         @other_user = Factory(:email_confirmed_user)
