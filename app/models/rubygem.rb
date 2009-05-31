@@ -13,17 +13,14 @@ class Rubygem < ActiveRecord::Base
   before_validation :build
   after_save :store
 
-  def self.pull_spec(data)
-    Gem::Format.from_file_by_path(data.path).spec
+  def self.pull_spec(path)
+    format = Gem::Format.from_file_by_path(path)
+    format.spec
   end
 
   def to_s
     name
   end
-
-  #def to_param
-  #  name.gsub(/[^\w_-]/, "")
-  #end
 
   def current_version
     versions.first
