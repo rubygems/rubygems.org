@@ -49,15 +49,21 @@ namespace :import do
     FileUtils.mkdir("cache") unless File.exist?("cache")
 
     responses = {}
-    url_queue.in_groups_of(100).each do |group|
+    url_queue.in_groups_of(25).each do |group|
       multi = Curl::Multi.new
       group.each do |url|
+        path = File.join("cache", File.basename(url))
+        if File.exists?(path)
+          puts "Skipping #{File.basename(url)}"
+          next
+        end
+
         easy = Curl::Easy.new(url) do |curl|
           curl.follow_location = true
           curl.on_success do |c|
             puts "Success for #{File.basename(url)} in #{c.total_time} seconds"
             begin
-              File.open(File.join("cache", File.basename(url)), "wb") do |file|
+              File.open(path, "wb") do |file|
                 file.write c.body_str
               end
             rescue Exception => e
