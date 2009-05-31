@@ -1,0 +1,93 @@
+--- !ruby/object:Gem::Specification 
+name: ismasan-sluggable_finder
+version: !ruby/object:Gem::Version 
+  version: 2.0.6
+platform: ruby
+authors: 
+- Ismael Celis
+autorequire: 
+bindir: bin
+cert_chain: []
+
+date: 2009-02-25 00:00:00 -05:00
+default_executable: 
+dependencies: 
+- !ruby/object:Gem::Dependency 
+  name: newgem
+  type: :development
+  version_requirement: 
+  version_requirements: !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        version: 1.2.3
+    version: 
+- !ruby/object:Gem::Dependency 
+  name: hoe
+  type: :development
+  version_requirement: 
+  version_requirements: !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        version: 1.8.0
+    version: 
+description: 
+email: 
+- ismaelct@gmail.com
+executables: []
+
+extensions: []
+
+extra_rdoc_files: 
+- History.txt
+- Manifest.txt
+- PostInstall.txt
+files: 
+- History.txt
+- Manifest.txt
+- PostInstall.txt
+- README.markdown
+- Rakefile
+- lib/sluggable_finder.rb
+- lib/sluggable_finder/finder.rb
+- lib/sluggable_finder/orm.rb
+- script/console
+- script/destroy
+- script/generate
+- spec/sluggable_finder_spec.rb
+- spec/spec.opts
+- spec/spec_helper.rb
+- tasks/rspec.rake
+- tasks/db.rake
+has_rdoc: true
+homepage: 
+licenses: []
+
+post_install_message: PostInstall.txt
+rdoc_options: 
+- --main
+- README.markdown
+require_paths: 
+- lib
+required_ruby_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "0"
+  version: 
+required_rubygems_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "0"
+  version: 
+requirements: []
+
+rubyforge_project: sluggable_finder
+rubygems_version: 1.3.3
+signing_key: 
+specification_version: 2
+summary: ""
+test_files: []
+

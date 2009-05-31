@@ -1,0 +1,4 @@
+
+For more information on sluggable_finder, see http://github.com/ismasan/sluggable-finder or the README file
+
+If you want to contribute don't forget to add your specs!
