@@ -2,6 +2,15 @@ class RubygemsController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => :create
   before_filter :authenticate, :only => :create
 
+  def new
+  end
+
+  def migrate
+  end
+
+  def search
+  end
+
   def index
     @gems = Rubygem.by_name(:asc)
   end
