@@ -62,5 +62,29 @@ class RubygemsControllerTest < ActionController::TestCase
       assert_contain @gem.versions.last.created_at.to_date.to_formatted_s(:long)
     end
   end
+
+  context "On POST to create with no user credentials" do
+    setup do
+      post :create
+    end
+    should "deny access" do
+      assert_response 401
+      assert_match "HTTP Basic: Access denied.", @response.body
+    end
+  end
+
+  context "On POST to create with valid user credentials" do
+    setup do
+      @user = Factory(:email_confirmed_user)
+      @request.env["HTTP_AUTHORIZATION"] = "Basic " + 
+        Base64::encode64("#{@user.email}:#{@user.password}")
+      post :create
+    end
+    should_respond_with :success
+    should_assign_to(:_current_user) { @user }
+    should "register new gem" do
+      assert_equal "Successfully registered new gem", @response.body
+    end
+  end
 end
 

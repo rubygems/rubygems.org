@@ -20,8 +20,5 @@ end
 require 'webrat/core/matchers'
 require 'webrat/core/matchers/have_tag'
 
-#class Test::Unit::TestCase
-#  include RR::Adapters::TestUnit
-#end
-
 HOST = "localhost"
+TEST_DIR = File.join('/', 'tmp', 'jekyll')
