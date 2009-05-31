@@ -73,6 +73,19 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  context "On POST to create with unconfirmed user" do
+    setup do
+      @user = Factory(:user)
+      @request.env["HTTP_AUTHORIZATION"] = "Basic " + 
+        Base64::encode64("#{@user.email}:#{@user.password}")
+      post :create
+    end
+    should "deny access" do
+      assert_response 401
+      assert_match "HTTP Basic: Access denied.", @response.body
+    end
+  end
+
   context "with a confirmed user authenticated" do
     setup do
       @user = Factory(:email_confirmed_user)
@@ -106,6 +119,22 @@ class RubygemsControllerTest < ActionController::TestCase
         assert_equal @user, Rubygem.last.user
         assert_equal 2, Rubygem.last.versions.size
         assert_equal "Successfully registered new gem: test (1.0.0)", @response.body
+      end
+    end
+
+    context "On POST to create for someone else's gem" do
+      setup do
+        @other_user = Factory(:email_confirmed_user)
+        @rubygem = Factory(:rubygem, :user => @other_user, :name => "test")
+        @request.env["RAW_POST_DATA"] = gem_file("test-1.0.0.gem").read
+        post :create
+      end
+      should_respond_with 403
+      should_assign_to(:_current_user) { @user }
+      should "not allow new version to be saved" do
+        assert_equal @other_user, Rubygem.last.user
+        assert_equal 1, Rubygem.last.versions.size
+        assert_equal "You do not have permission to push to this gem.", @response.body
       end
     end
   end

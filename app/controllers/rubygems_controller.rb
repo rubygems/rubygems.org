@@ -19,6 +19,12 @@ class RubygemsController < ApplicationController
 
     spec = Rubygem.pull_spec(temp.path)
     rubygem = Rubygem.find_or_initialize_by_name(spec.name)
+
+    if !rubygem.new_record? && rubygem.user != current_user
+      render :text => "You do not have permission to push to this gem.", :status => 403
+      return
+    end
+
     rubygem.spec = spec
     rubygem.path = temp.path
     rubygem.user = current_user
@@ -30,6 +36,7 @@ class RubygemsController < ApplicationController
     def authenticate
       authenticate_or_request_with_http_basic do |username, password|
         @_current_user = User.authenticate(username, password)
+        current_user.email_confirmed
       end
     end
 end
