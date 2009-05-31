@@ -22,7 +22,7 @@
               =link_to "search", search_rubygems_url
             %span.account
               -if signed_in?
-                =link_to "dashboard", ""
+                =link_to "my gems", mine_rubygems_url
                 =link_to "logout", sign_out_path
               -else
                 =link_to "login", sign_in_path
