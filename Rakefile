@@ -90,13 +90,12 @@ namespace :import do
   task :process => :environment do
     gems = Dir[File.join(ARGV[1], "*.gem")]
     puts "Processing #{gems.size} gems..."
-    gems.each do |g|
-      puts g
-      file = File.open(g)
-      spec = Rubygem.pull_spec(file)
+    gems.each do |path|
+      puts path
+      spec = Rubygem.pull_spec(path)
       rubygem = Rubygem.find_or_initialize_by_name(spec.name)
       rubygem.spec = spec
-      rubygem.path = file.path
+      rubygem.path = path
       rubygem.save
     end
   end
