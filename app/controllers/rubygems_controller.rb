@@ -1,6 +1,7 @@
 class RubygemsController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => :create
   before_filter :authenticate, :only => :create
+  before_filter :redirect_to_root, :only => [:mine], :unless => :signed_in?
 
   def new
   end
@@ -9,6 +10,10 @@ class RubygemsController < ApplicationController
   end
 
   def search
+  end
+
+  def mine
+    @gems = current_user.rubygems.by_name(:asc)
   end
 
   def index

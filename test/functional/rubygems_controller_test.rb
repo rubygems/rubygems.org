@@ -12,6 +12,34 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  context "On GET to mine without being signed in" do
+    setup do
+      get :mine
+    end
+    should_respond_with :redirect
+    should_redirect_to('the homepage') { root_url }
+  end
+
+  context "On GET to mine with being signed in" do
+    setup do
+      @user = Factory(:email_confirmed_user)
+      sign_in_as(@user)
+      3.times { Factory(:rubygem) }
+      @gems = (1..3).map { Factory(:rubygem, :user => @user) }
+      get :mine
+    end
+
+    should_respond_with :success
+    should_render_template :mine
+    should_assign_to(:gems) { @gems }
+    should "render links" do
+      @gems.each do |g|
+        assert_contain g.name
+        assert_have_selector "a[href='#{rubygem_path(g)}']"
+      end
+    end
+  end
+
   context "On GET to index" do
     setup do
       @gems = (1..3).map { Factory(:rubygem) }
@@ -20,7 +48,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     should_respond_with :success
     should_render_template :index
-    should_assign_to :gems
+    should_assign_to(:gems) { @gems }
     should "render links" do
       @gems.each do |g|
         assert_contain g.name
