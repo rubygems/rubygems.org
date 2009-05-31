@@ -1,6 +1,17 @@
 require 'test_helper'
 
 class RubygemsControllerTest < ActionController::TestCase
+
+  [:new, :migrate, :search].each do |page|
+    context "On GET to #{page}" do
+      setup do
+        get page
+      end
+      should_respond_with :success
+      should_render_template page
+    end
+  end
+
   context "On GET to index" do
     setup do
       @gems = (1..3).map { Factory(:rubygem) }
