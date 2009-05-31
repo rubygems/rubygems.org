@@ -7,8 +7,8 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should_belong_to :user
-    should_have_many :versions
-    should_have_many :dependencies
+    should_have_many :versions, :dependent => :destroy
+    should_have_many :dependencies, :dependent => :destroy
     should_validate_uniqueness_of :name
 
     should "return name for #to_s" do

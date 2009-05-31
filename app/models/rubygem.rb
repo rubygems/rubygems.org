@@ -3,8 +3,8 @@ class Rubygem < ActiveRecord::Base
   sluggable_finder :name
 
   belongs_to :user
-  has_many :versions
-  has_many :dependencies
+  has_many :versions, :dependent => :destroy
+  has_many :dependencies, :dependent => :destroy
 
   validates_presence_of :name
   validates_uniqueness_of :name
