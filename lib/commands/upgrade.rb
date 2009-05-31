@@ -12,7 +12,7 @@ class Gem::Commands::UpgradeCommand < Gem::Command
   def execute
     say "Upgrading your primary gem source to gems.gemcutter.org"
     Gem.sources.delete "http://gems.rubyforge.org"
-    Gem.sources << "http://gems.gemcutter.org"
+    Gem.sources << "http://gemcutter.org"
     Gem.configuration.write
   end
 end
