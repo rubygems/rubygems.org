@@ -29,7 +29,7 @@ class RubygemTest < ActiveSupport::TestCase
   end
 
   should "pull spec out of the given gem" do
-    spec = Rubygem.pull_spec(gem_file)
+    spec = Rubygem.pull_spec(gem_file.path)
     assert_not_nil spec
     assert spec.is_a?(Gem::Specification)
   end
