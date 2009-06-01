@@ -2,7 +2,7 @@
 %html
   %head
     %link{:rel => "shortcut icon", :href => "/favicon.ico", :type => "image/x-icon"}
-    %title= @page_title || page_title
+    %title= page_title
     =stylesheet_link_tag("reset", "960", "text", "application")
   %body
     -flash.each do |name, msg|
