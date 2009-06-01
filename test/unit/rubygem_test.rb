@@ -8,6 +8,7 @@ class RubygemTest < ActiveSupport::TestCase
 
     should_belong_to :user
     should_have_many :versions, :dependent => :destroy
+    should_have_one :linkset, :dependent => :destroy
     should_validate_uniqueness_of :name
 
     should "return name for #to_s" do
@@ -51,6 +52,26 @@ class RubygemTest < ActiveSupport::TestCase
       version = @rubygem.current_version
       assert_not_nil version
       assert_equal "0.0.0-mswin", version.number
+    end
+
+    should "create linkset with valid homepage" do
+      spec = Rubygem.pull_spec(gem_file.path)
+      spec.homepage = "http://something.com"
+      @rubygem.spec = spec
+      @rubygem.build
+
+      assert_not_nil @rubygem.linkset
+      assert_equal spec.homepage, @rubygem.linkset.home
+    end
+
+    should "create linkset without homepage" do
+      spec = Rubygem.pull_spec(gem_file.path)
+      spec.homepage = nil
+      @rubygem.spec = spec
+      @rubygem.build
+
+      assert_not_nil @rubygem.linkset
+      assert_nil @rubygem.linkset.home
     end
   end
 

@@ -4,6 +4,7 @@ class Rubygem < ActiveRecord::Base
 
   belongs_to :user
   has_many :versions, :dependent => :destroy
+  has_one :linkset, :dependent => :destroy
 
   validates_presence_of :name
   validates_uniqueness_of :name
@@ -58,6 +59,8 @@ class Rubygem < ActiveRecord::Base
         :name        => dependency.name,
         :requirement => dependency.requirements_list.to_s)
     end
+
+    self.build_linkset(:home => self.spec.homepage)
   end
 
   def store
