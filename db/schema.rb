@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090601003056) do
+ActiveRecord::Schema.define(:version => 20090601115133) do
 
   create_table "dependencies", :force => true do |t|
     t.string   "name"
@@ -17,6 +17,18 @@ ActiveRecord::Schema.define(:version => 20090601003056) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "version_id"
+  end
+
+  create_table "linksets", :force => true do |t|
+    t.integer  "rubygem_id"
+    t.string   "home"
+    t.string   "wiki"
+    t.string   "docs"
+    t.string   "mail"
+    t.string   "code"
+    t.string   "bugs"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "rubygems", :force => true do |t|
