@@ -100,6 +100,12 @@ namespace :import do
     gems.each do |path|
       puts path
       spec = Rubygem.pull_spec(path)
+
+      if spec.nil?
+        puts "Bad gem: #{path}"
+        next
+      end
+
       rubygem = Rubygem.find_or_initialize_by_name(spec.name)
       rubygem.spec = spec
       rubygem.path = path
