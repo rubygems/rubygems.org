@@ -9,6 +9,11 @@ module ApplicationHelper
   end
 
   def page_title
-    "#{title}: #{subtitle}"
+    combo = "#{title} | #{subtitle}"
+    if @title
+      "#{@title} | #{combo}"
+    else
+      combo
+    end
   end
 end
