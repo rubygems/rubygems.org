@@ -54,7 +54,7 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal "0.0.0-mswin", version.number
     end
 
-    should "create linkset with valid homepage" do
+    should "build linkset with valid homepage" do
       spec = Rubygem.pull_spec(gem_file.path)
       spec.homepage = "http://something.com"
       @rubygem.spec = spec
@@ -64,7 +64,7 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal spec.homepage, @rubygem.linkset.home
     end
 
-    should "create linkset without homepage" do
+    should "build linkset without homepage" do
       spec = Rubygem.pull_spec(gem_file.path)
       spec.homepage = nil
       @rubygem.spec = spec
