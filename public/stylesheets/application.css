@@ -235,13 +235,12 @@ h3 {
   text-align: left;
 }
 
-.block p a .version {
-  font-size: 2em;
+.block p a .big {
 }
 
-.block p a .date {
-  font-size: 1.2em;
-  color: #999999;
+.block p a .small {
+  font-weight: normal;
+  color: #666666;
 }
 
 .block p a:hover {
