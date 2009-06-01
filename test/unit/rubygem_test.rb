@@ -8,7 +8,6 @@ class RubygemTest < ActiveSupport::TestCase
 
     should_belong_to :user
     should_have_many :versions, :dependent => :destroy
-    should_have_many :dependencies, :dependent => :destroy
     should_validate_uniqueness_of :name
 
     should "return name for #to_s" do
@@ -34,13 +33,13 @@ class RubygemTest < ActiveSupport::TestCase
       @rubygem.spec = spec
       @rubygem.build
 
-      assert_equal 2, @rubygem.dependencies.size
+      assert_equal 2, @rubygem.current_dependencies.size
 
-      assert_equal "liquid", @rubygem.dependencies.first.name
-      assert_equal ">= 1.9.0", @rubygem.dependencies.first.requirement
+      assert_equal "liquid", @rubygem.current_dependencies.first.name
+      assert_equal ">= 1.9.0", @rubygem.current_dependencies.first.requirement
 
-      assert_equal "open4", @rubygem.dependencies.last.name
-      assert_equal "= 0.9.6", @rubygem.dependencies.last.requirement
+      assert_equal "open4", @rubygem.current_dependencies.last.name
+      assert_equal "= 0.9.6", @rubygem.current_dependencies.last.requirement
     end
 
     should "include platform when saving version" do

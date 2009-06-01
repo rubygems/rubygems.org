@@ -4,7 +4,6 @@ class Rubygem < ActiveRecord::Base
 
   belongs_to :user
   has_many :versions, :dependent => :destroy
-  has_many :dependencies, :dependent => :destroy
 
   validates_presence_of :name
   validates_uniqueness_of :name
@@ -31,6 +30,10 @@ class Rubygem < ActiveRecord::Base
     versions.last
   end
 
+  def current_dependencies
+    current_version.dependencies
+  end
+
   def with_version
     "#{name} (#{current_version})"
   end
@@ -51,7 +54,7 @@ class Rubygem < ActiveRecord::Base
       :number      => self.spec.original_name.gsub("#{self.spec.name}-", ''))
 
     self.spec.dependencies.each do |dependency|
-      self.dependencies.build(
+      version.dependencies.build(
         :name        => dependency.name,
         :requirement => dependency.requirements_list.to_s)
     end
