@@ -7,7 +7,7 @@
     %p= @gem.current_version.description
   .block.green
     %h3 Install
-    %pre= "gem install #{@gem}"
+    %pre= "gem install #{@gem.name}"
   -if @gem.versions.size > 1
     .block.red.versions
       %h3 Versions

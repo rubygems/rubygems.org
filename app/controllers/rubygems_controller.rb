@@ -48,7 +48,7 @@ class RubygemsController < ApplicationController
     rubygem.path = temp.path
     rubygem.user = current_user
     rubygem.save
-    render :text => "Successfully registered new gem: #{rubygem.with_version}"
+    render :text => "Successfully registered new gem: #{rubygem}"
   end
 
   protected
