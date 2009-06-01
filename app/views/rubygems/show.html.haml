@@ -8,8 +8,14 @@
   .block.green
     %h3 Install
     %pre= "gem install #{@gem}"
-  .block.red
-    %h3 Dependencies
+  -if @gem.versions.size > 1
+    .block.red.versions
+      %h3 Versions
+      %p
+        -@gem.versions.reverse.each do |version|
+          %a{:href => "/"}
+            %span.version= version.number
+            %span.date= version.created_at.to_date.to_formatted_s(:long)
 .grid_4
   .block.red
     %h3 Authors
@@ -28,11 +34,11 @@
       %a{:href => "/"} Code
       %a{:href => "/"} Mailing List
       %a{:href => "/"} Bug Tracker
-  .block.red.versions
-    -if @gem.versions.size > 1
-      %h3 Versions
+  -unless @gem.current_dependencies.empty?
+    .block.red
+      %h3 Dependencies
       %p
-        -@gem.versions.reverse.each do |version|
+        -@gem.current_dependencies.each do |dependency|
           %a{:href => "/"}
-            %span.version= version.number
-            %span.date= version.created_at.to_date.to_formatted_s(:long)
+            %span.version= dependency.name
+            %span.version= dependency.requirement
