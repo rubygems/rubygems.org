@@ -17,6 +17,9 @@
             %span.big= version.number
             %span.small= version.created_at.to_date.to_formatted_s(:long)
 .grid_4
+  .block
+    -if current_user == @gem.user
+      =link_to "Edit Gem", edit_rubygem_path(@gem)
   .block.red
     %h3 Authors
     %p= @gem.current_version.authors
