@@ -39,50 +39,55 @@ class Rubygem < ActiveRecord::Base
     "#{name} (#{downloads})"
   end
 
-  protected
-    def build
-      return unless self.spec
+  def build
+    return unless self.spec
 
-      self.name = self.spec.name if self.name.blank?
+    self.name = self.spec.name if self.name.blank?
 
-      version = self.versions.build(
-        :authors     => self.spec.authors.join(", "),
-        :description => self.spec.description || self.spec.summary,
-        :created_at  => self.spec.date,
-        :number      => self.spec.version.to_s)
+    version = self.versions.build(
+      :authors     => self.spec.authors.join(", "),
+      :description => self.spec.description || self.spec.summary,
+      :created_at  => self.spec.date,
+      :number      => self.spec.original_name.gsub("#{self.spec.name}-", ''))
+
+    self.spec.dependencies.each do |dependency|
+      self.dependencies.build(
+        :name        => dependency.name,
+        :requirement => dependency.requirements_list.to_s)
+    end
+  end
+
+  def store
+    return unless self.spec
+
+    cache = Gemcutter.server_path('gems', "#{self.spec.original_name}.gem")
+    FileUtils.cp self.path, cache
+    File.chmod 0644, cache
+
+    source_path = Gemcutter.server_path("source_index")
+
+    if File.exists?(source_path)
+      source_index = Marshal.load(File.open(source_path))
+    else
+      source_index = Gem::SourceIndex.new
     end
 
-    def store
-      return unless self.spec
+    source_index.add_spec self.spec, self.spec.original_name
 
-      cache = Gemcutter.server_path('gems', "#{self.spec.original_name}.gem")
-      FileUtils.cp self.path, cache
-      File.chmod 0644, cache
-
-      source_path = Gemcutter.server_path("source_index")
-
-      if File.exists?(source_path)
-        source_index = Marshal.load(File.open(source_path))
-      else
-        source_index = Gem::SourceIndex.new
-      end
-
-      source_index.add_spec self.spec, self.spec.original_name
-
-      File.open(source_path, "wb") do |f|
-        f.write Marshal.dump(source_index)
-      end
-
-      Gemcutter.indexer.abbreviate self.spec
-      Gemcutter.indexer.sanitize self.spec
-
-      quick_path = Gemcutter.server_path("quick", "Marshal.#{Gem.marshal_version}", "#{self.spec.original_name}.gemspec.rz")
-
-      zipped = Gem.deflate(Marshal.dump(self.spec))
-      File.open(quick_path, "wb") do |f|
-        f.write zipped
-      end
-
-      Gemcutter.indexer.update_index
+    File.open(source_path, "wb") do |f|
+      f.write Marshal.dump(source_index)
     end
+
+    Gemcutter.indexer.abbreviate self.spec
+    Gemcutter.indexer.sanitize self.spec
+
+    quick_path = Gemcutter.server_path("quick", "Marshal.#{Gem.marshal_version}", "#{self.spec.original_name}.gemspec.rz")
+
+    zipped = Gem.deflate(Marshal.dump(self.spec))
+    File.open(quick_path, "wb") do |f|
+      f.write zipped
+    end
+
+    Gemcutter.indexer.update_index
+  end
 end

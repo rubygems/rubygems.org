@@ -26,6 +26,33 @@ class RubygemTest < ActiveSupport::TestCase
     should "return name with downloads for #with_downloads" do
       assert_equal "#{@rubygem.name} (#{@rubygem.downloads})", @rubygem.with_downloads
     end
+
+    should "save dependencies" do
+      spec = Rubygem.pull_spec(gem_file.path)
+      spec.add_dependency("liquid", ">= 1.9.0")
+      spec.add_dependency("open4", "= 0.9.6")
+      @rubygem.spec = spec
+      @rubygem.build
+
+      assert_equal 2, @rubygem.dependencies.size
+
+      assert_equal "liquid", @rubygem.dependencies.first.name
+      assert_equal ">= 1.9.0", @rubygem.dependencies.first.requirement
+
+      assert_equal "open4", @rubygem.dependencies.last.name
+      assert_equal "= 0.9.6", @rubygem.dependencies.last.requirement
+    end
+
+    should "include platform when saving version" do
+      spec = Rubygem.pull_spec(gem_file.path)
+      spec.platform = "mswin"
+      @rubygem.spec = spec
+      @rubygem.build
+
+      version = @rubygem.current_version
+      assert_not_nil version
+      assert_equal "0.0.0-mswin", version.number
+    end
   end
 
   should "pull spec out of the given gem" do
