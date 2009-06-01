@@ -14,8 +14,8 @@
       %p
         -@gem.versions.reverse.each do |version|
           %a{:href => "/"}
-            %span.version= version.number
-            %span.date= version.created_at.to_date.to_formatted_s(:long)
+            %span.big= version.number
+            %span.small= version.created_at.to_date.to_formatted_s(:long)
 .grid_4
   .block.red
     %h3 Authors
@@ -29,16 +29,17 @@
   .block.red.links
     %h3 Links
     %p
-      %a{:href => "/"} Homepage
-      %a{:href => "/"} Docs
-      %a{:href => "/"} Code
-      %a{:href => "/"} Mailing List
-      %a{:href => "/"} Bug Tracker
+      =link_to_page "Homepage", @gem.linkset.home
+      =link_to_page "Source Code", @gem.linkset.code
+      =link_to_page "Documentation", @gem.linkset.docs
+      =link_to_page "Wiki", @gem.linkset.wiki
+      =link_to_page "Mailing List", @gem.linkset.mail
+      =link_to_page "Bug Tracker", @gem.linkset.bugs
   -unless @gem.current_dependencies.empty?
     .block.red
       %h3 Dependencies
       %p
         -@gem.current_dependencies.each do |dependency|
           %a{:href => "/"}
-            %span.version= dependency.name
-            %span.version= dependency.requirement
+            %span.big= dependency.name
+            %span.small= dependency.requirement
