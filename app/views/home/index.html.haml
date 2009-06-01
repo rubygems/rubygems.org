@@ -17,12 +17,12 @@
   %h3 Updated Gems
   %ul
     -@updated.each do |version|
-      %li= link_to "#{version.rubygem} (#{version})", version.rubygem
+      %li= link_to "#{version.rubygem.name} (#{version})", version.rubygem
 .list.grid_4
   %h3 New Gems
   %ul
     -@new.each do |gem|
-      %li= link_to gem.with_version, gem
+      %li= link_to gem, gem
 .list.grid_4
   %h3 Most Downloads
   %ul

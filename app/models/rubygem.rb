@@ -24,7 +24,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def to_s
-    name
+    "#{name} (#{current_version})"
   end
 
   def current_version
@@ -33,10 +33,6 @@ class Rubygem < ActiveRecord::Base
 
   def current_dependencies
     current_version.dependencies
-  end
-
-  def with_version
-    "#{name} (#{current_version})"
   end
 
   def with_downloads

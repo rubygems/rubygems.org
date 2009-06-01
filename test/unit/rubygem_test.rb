@@ -11,16 +11,12 @@ class RubygemTest < ActiveSupport::TestCase
     should_have_one :linkset, :dependent => :destroy
     should_validate_uniqueness_of :name
 
-    should "return name for #to_s" do
-      assert_equal @rubygem.name, @rubygem.to_s
-    end
-
     should "return latest version for #current_version" do
       assert_equal @rubygem.versions.first, @rubygem.current_version
     end
 
-    should "return name with version for #with_version" do
-      assert_equal "#{@rubygem.name} (#{@rubygem.current_version})", @rubygem.with_version
+    should "return name with version for #to_s" do
+      assert_equal "#{@rubygem.name} (#{@rubygem.current_version})", @rubygem.to_s
     end
 
     should "return name with downloads for #with_downloads" do
