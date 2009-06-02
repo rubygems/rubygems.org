@@ -41,7 +41,7 @@ class RubygemsControllerTest < ActionController::TestCase
       end
     end
 
-    context "On GET to show for my own gem" do
+    context "On GET to show for this user's gem" do
       setup do
         @gem = Factory(:rubygem, :user => @user)
         get :show, :id => @gem.to_param
@@ -54,6 +54,37 @@ class RubygemsControllerTest < ActionController::TestCase
         assert_contain "Edit Gem"
         assert_have_selector "a[href='#{edit_rubygem_path(@gem)}']"
       end
+    end
+
+    context "On GET to edit for this user's gem" do
+      setup do
+        @gem = Factory(:rubygem, :user => @user)
+        get :edit, :id => @gem.to_param
+      end
+
+      should_respond_with :success
+      should_render_template :edit
+      should_assign_to :gem
+      should "render form" do
+        assert_have_selector "form"
+        assert_have_selector "input#linkset_code"
+        assert_have_selector "input#linkset_docs"
+        assert_have_selector "input#linkset_wiki"
+        assert_have_selector "input#linkset_mail"
+        assert_have_selector "input#linkset_bugs"
+        assert_have_selector "input[type='submit']"
+      end
+    end
+
+    context "On GET to edit for another user's gem" do
+      setup do
+        @other_user = Factory(:email_confirmed_user)
+        @gem = Factory(:rubygem, :user => @other_user)
+        get :edit, :id => @gem.to_param
+      end
+      should_respond_with :redirect
+      should_redirect_to('the homepage') { root_url }
+      should_set_the_flash_to "You do not have permission to edit this gem."
     end
   end
 
@@ -68,8 +99,15 @@ class RubygemsControllerTest < ActionController::TestCase
   end
 
   context "On GET to mine without being signed in" do
+    setup { get :mine }
+    should_respond_with :redirect
+    should_redirect_to('the homepage') { root_url }
+  end
+
+  context "On GET to edit without being signed in" do
     setup do
-      get :mine
+      @rubygem = Factory(:rubygem)
+      get :edit, :id => @rubygem.to_param
     end
     should_respond_with :redirect
     should_redirect_to('the homepage') { root_url }
