@@ -2,7 +2,7 @@
 -@subtitle = @gem.to_s
 .grid_12
   %p All other fields can only be edited by pushing an updated version of your gem.
-  =error_messages_for :linkset
+  =error_messages_for :linkset, :object_name => "gem"
   -form_for @gem.linkset, :url => rubygem_url(@gem), :method => :put do |form|
     .url_field
       =form.label :code, "Source Code URL"

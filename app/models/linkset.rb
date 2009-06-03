@@ -3,6 +3,6 @@ class Linkset < ActiveRecord::Base
   attr_protected :rubygem_id
 
   %w(home wiki docs mail code bugs).each do |url|
-    validates_url_format_of url, :allow_nil => true
+    validates_url_format_of url, :allow_nil => true, :allow_blank => true
   end
 end
