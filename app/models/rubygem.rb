@@ -9,7 +9,8 @@ class Rubygem < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
 
-  attr_accessor :spec, :path
+  cattr_accessor :source_index
+  attr_accessor :spec, :path, :processing
   before_validation :build
   after_save :store
 
@@ -69,15 +70,17 @@ class Rubygem < ActiveRecord::Base
     source_path = Gemcutter.server_path("source_index")
 
     if File.exists?(source_path)
-      source_index = Marshal.load(File.open(source_path))
+      Rubygem.source_index ||= Marshal.load(File.open(source_path))
     else
-      source_index = Gem::SourceIndex.new
+      Rubygem.source_index ||= Gem::SourceIndex.new
     end
 
-    source_index.add_spec self.spec, self.spec.original_name
+    Rubygem.source_index.add_spec self.spec, self.spec.original_name
 
-    File.open(source_path, "wb") do |f|
-      f.write Marshal.dump(source_index)
+    unless self.processing
+      File.open(source_path, "wb") do |f|
+        f.write Marshal.dump(Rubygem.source_index)
+      end
     end
 
     Gemcutter.indexer.abbreviate self.spec
