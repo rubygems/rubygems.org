@@ -8,9 +8,13 @@ class Gem::Commands::UpgradeCommand < Gem::Command
   end
 
   def execute
-    say "Upgrading your primary gem source to gemcutter.org"
-    Gem.sources.unshift "http://gemcutter.org"
-    Gem.configuration.write
+    if Gem.sources.include?(URL)
+      say("Gemcutter is already your primary gem source. Please use `gem downgrade` if you wish to no longer use Gemcutter.")
+    else
+      say "Upgrading your primary gem source to gemcutter.org"
+      Gem.sources.unshift URL
+      Gem.configuration.write
+    end
   end
 end
 

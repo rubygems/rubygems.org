@@ -9,7 +9,7 @@ class Gem::Commands::DowngradeCommand < Gem::Command
 
   def execute
     say "Your primary gem source is now gems.rubyforge.org"
-    Gem.sources.delete "http://gemcutter.org"
+    Gem.sources.delete URL
     Gem.configuration.write
   end
 end
