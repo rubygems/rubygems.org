@@ -19,7 +19,7 @@ module Gem
         terminate_interaction 0
       end
 
-      index = Marshal.load(File.open(File.join(@dest_directory, "source_index")))
+      index = Rubygem.source_index || Marshal.load(File.open(File.join(@dest_directory, "source_index")))
 
       Gem.time 'Updated indexes' do
         update_specs_index index, @dest_specs_index, @specs_index

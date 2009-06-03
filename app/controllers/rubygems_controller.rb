@@ -1,7 +1,8 @@
 class RubygemsController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => :create
   before_filter :authenticate, :only => :create
-  before_filter :redirect_to_root, :only => [:edit, :mine], :unless => :signed_in?
+  before_filter :redirect_to_root, :only => [:mine, :edit, :update], :unless => :signed_in?
+  before_filter :load_gem, :only => [:edit, :update]
 
   def new
   end
@@ -25,11 +26,14 @@ class RubygemsController < ApplicationController
   end
 
   def edit
-    @gem = Rubygem.find(params[:id])
+  end
 
-    if @gem.user != current_user
-      flash[:warning] = "You do not have permission to edit this gem."
-      redirect_to root_url
+  def update
+    if @linkset.update_attributes(params[:linkset])
+      redirect_to rubygem_path(@gem)
+      flash[:success] = "Gem links updated."
+    else
+      render :edit
     end
   end
 
@@ -66,5 +70,16 @@ class RubygemsController < ApplicationController
         @_current_user = User.authenticate(username, password)
         current_user.email_confirmed
       end
+    end
+
+    def load_gem
+      @gem = Rubygem.find(params[:id])
+
+      if @gem.user != current_user
+        flash[:warning] = "You do not have permission to edit this gem."
+        redirect_to root_url
+      end
+
+      @linkset = @gem.linkset
     end
 end
