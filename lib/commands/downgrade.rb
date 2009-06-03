@@ -1,18 +1,15 @@
 class Gem::Commands::DowngradeCommand < Gem::Command
-  DESCRIPTION = 'Return to using RubyForge as your primary gem source'
-
   def description
-    DESCRIPTION
+    'Return to using RubyForge as your primary gem source'
   end
 
   def initialize
-    super 'downgrade', DESCRIPTION
+    super 'downgrade', description
   end
 
   def execute
     say "Your primary gem source is now gems.rubyforge.org"
     Gem.sources.delete "http://gemcutter.org"
-    Gem.sources << "http://gems.rubyforge.org"
     Gem.configuration.write
   end
 end

@@ -36,7 +36,6 @@ namespace :index do
 
   desc "Update the index"
   task :update => :environment do
-    require 'gemcutter'
     Gemcutter.indexer.update_index
   end
 end
