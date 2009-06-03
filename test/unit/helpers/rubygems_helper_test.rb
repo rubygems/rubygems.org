@@ -5,6 +5,7 @@ class RubygemsHelperTest < ActionView::TestCase
     setup do
       @linkset = Factory.build(:linkset)
       @linkset.wiki = nil
+      @linkset.code = ""
     end
 
     should "create link for homepage" do
@@ -14,6 +15,10 @@ class RubygemsHelperTest < ActionView::TestCase
 
     should "not create link for wiki" do
       assert_nil link_to_page("Wiki", @linkset.wiki)
+    end
+
+    should "not create link for code" do
+      assert_nil link_to_page("Code", @linkset.code)
     end
   end
 end
