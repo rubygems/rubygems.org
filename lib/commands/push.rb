@@ -2,10 +2,9 @@ require 'yaml'
 require 'net/http'
 
 class Gem::Commands::PushCommand < Gem::Command
-  DESCRIPTION = 'Push a gem up to Gemcutter'
 
   def description
-    DESCRIPTION
+    'Push a gem up to Gemcutter'
   end
 
   def arguments
@@ -17,7 +16,7 @@ class Gem::Commands::PushCommand < Gem::Command
   end
 
   def initialize
-    super 'push', DESCRIPTION
+    super 'push', description
   end
 
   def execute
