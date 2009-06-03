@@ -334,3 +334,44 @@ label, .form_links {
 #flash_error {
   background-color: #FFD1BF;
 }
+
+#errorExplanation {
+  border: 2px solid #CC6666;
+  padding: 0px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+  width: 906px;
+}
+
+#errorExplanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: 0px;
+  background-color: #CC6666;
+  color: white;
+  float: none;
+}
+
+#errorExplanation p {
+  color: #333;
+  margin-bottom: 0;
+  padding: 8px;
+  text-align: left;
+}
+
+#errorExplanation ul {
+  margin: 2px 24px;
+}
+
+#errorExplanation ul li {
+  font-size: 12px;
+  list-style: disc;
+  padding: 3px;
+}
+
+.fieldWithErrors input, .fieldWithErrors textarea {
+  background: #cc6666;
+}
