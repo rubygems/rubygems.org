@@ -40,6 +40,11 @@ class PluginTest < ActiveSupport::TestCase
   context "upgrading" do
     setup do
       @command = Gem::Commands::UpgradeCommand.new
+      @email = "joeuser@gemcutter.org"
+      @password = "secret"
+      mock(@command).say("Enter your Gemcutter credentials. Don't have an account yet? Create one at #{URL}/sign_up")
+      mock(@command).ask("Email: ") { @email }
+      mock(@command).ask_for_password("Password: ") { @password }
     end
 
     should "add gemcutter as first source" do
