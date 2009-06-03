@@ -1,18 +1,15 @@
 class Gem::Commands::UpgradeCommand < Gem::Command
-  DESCRIPTION = 'Upgrade your gem source to Gemcutter'
-
   def description
-    DESCRIPTION
+    'Upgrade your gem source to Gemcutter'
   end
 
   def initialize
-    super 'upgrade', DESCRIPTION
+    super 'upgrade', description
   end
 
   def execute
-    say "Upgrading your primary gem source to gems.gemcutter.org"
-    Gem.sources.delete "http://gems.rubyforge.org"
-    Gem.sources << "http://gemcutter.org"
+    say "Upgrading your primary gem source to gemcutter.org"
+    Gem.sources.unshift "http://gemcutter.org"
     Gem.configuration.write
   end
 end

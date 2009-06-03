@@ -1,5 +1,8 @@
 require 'test_helper'
-require 'rubygems_plugin'
+
+%w(push upgrade downgrade).each do |command|
+  require "#{RAILS_ROOT}/lib/commands/#{command}"
+end
 
 class PluginTest < ActiveSupport::TestCase
   context "pushing" do
@@ -36,14 +39,14 @@ class PluginTest < ActiveSupport::TestCase
   context "upgrading" do
     setup do
       @command = Gem::Commands::UpgradeCommand.new
-      mock(@command).say("Upgrading your primary gem source to gems.gemcutter.org")
+      mock(@command).say("Upgrading your primary gem source to gemcutter.org")
       mock(Gem).configuration.mock!.write
     end
 
-    should "upgrade to gemcutter" do
+    should "add gemcutter as first source" do
       @command.execute
-      assert Gem.sources.include?("http://gemcutter.org")
-      assert !Gem.sources.include?("http://gems.rubyforge.org")
+      assert_equal "http://gemcutter.org", Gem.sources.first
+      assert Gem.sources.include?("http://gems.rubyforge.org")
     end
   end
 
