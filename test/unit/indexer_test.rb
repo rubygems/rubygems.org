@@ -28,6 +28,7 @@ class IndexerTest < ActiveSupport::TestCase
       source_index = "source index"
       stub(source_index).prerelease_gems
       mock(File).open(Gemcutter.server_path("source_index")) { source_index_data }
+      mock(Rubygem).source_index { nil }
       mock(Marshal).load(source_index_data) { source_index }
 
       # Moving the compressed specs into place

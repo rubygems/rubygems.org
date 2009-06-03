@@ -83,8 +83,41 @@ class RubygemsControllerTest < ActionController::TestCase
         get :edit, :id => @gem.to_param
       end
       should_respond_with :redirect
+      should_assign_to(:linkset) { @linkset }
       should_redirect_to('the homepage') { root_url }
       should_set_the_flash_to "You do not have permission to edit this gem."
+    end
+
+    context "On PUT to update for this user's gem that is successful" do
+      setup do
+        @gem = Factory(:rubygem, :user => @user)
+        @url = "http://github.com/qrush/gemcutter"
+        put :update, :id => @gem.to_param, :linkset => {:code => @url}
+      end
+      should_respond_with :redirect
+      should_redirect_to('the gem') { rubygem_path(@gem) }
+      should_set_the_flash_to "Gem links updated."
+      should_assign_to(:linkset) { @linkset }
+      should "update linkset" do
+        assert_equal @url, Rubygem.find(@gem.to_param).linkset.code
+      end
+    end
+
+    context "On PUT to update for this user's gem that fails" do
+      setup do
+        @gem = Factory(:rubygem, :user => @user)
+        @url = "totally not a url"
+        put :update, :id => @gem.to_param, :linkset => {:code => @url}
+      end
+      should_respond_with :success
+      should_render_template :edit
+      should_assign_to(:linkset) { @linkset }
+      should "not update linkset" do
+        assert_not_equal @url, Rubygem.find(@gem.to_param).linkset.code
+      end
+      should "render error messages" do
+        assert_contain /error(s)? prohibited/m
+      end
     end
   end
 
@@ -108,6 +141,15 @@ class RubygemsControllerTest < ActionController::TestCase
     setup do
       @rubygem = Factory(:rubygem)
       get :edit, :id => @rubygem.to_param
+    end
+    should_respond_with :redirect
+    should_redirect_to('the homepage') { root_url }
+  end
+
+  context "On PUT to update without being signed in" do
+    setup do
+      @rubygem = Factory(:rubygem)
+      put :update, :id => @rubygem.to_param, :linkset => {}
     end
     should_respond_with :redirect
     should_redirect_to('the homepage') { root_url }

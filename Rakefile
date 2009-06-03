@@ -14,7 +14,9 @@ task :clean => :environment do
   system("git clean -dfx server/; git checkout server/")
   Rubygem.delete_all
   Version.delete_all
+  Rake::Task["index:create"].execute
 end
+
 
 desc "Get the gem server up and running"
 task :bootstrap => :environment do
@@ -106,10 +108,16 @@ namespace :import do
         next
       end
 
-      rubygem = Rubygem.find_or_initialize_by_name(spec.name)
-      rubygem.spec = spec
-      rubygem.path = path
-      rubygem.save
+      @rubygem = Rubygem.find_or_initialize_by_name(spec.name)
+      @rubygem.spec = spec
+      @rubygem.path = path
+      @rubygem.processing = true
+      @rubygem.save
+    end
+
+    source_path = Gemcutter.server_path("source_index")
+    File.open(source_path, "wb") do |f|
+      f.write Marshal.dump(Rubygem.source_index)
     end
   end
 end
@@ -124,7 +132,10 @@ begin
     gem.authors = ["Nick Quaranto"]
     gem.files = FileList["lib/rubygems_plugin.rb", "lib/commands/*"]
     gem.test_files = []
+    gem.rubyforge_project = "gemcutter"
   end
+  Jeweler::RubyforgeTasks.new
+
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end

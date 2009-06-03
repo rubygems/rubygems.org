@@ -36,6 +36,7 @@ def regenerate_index
     "server/specifications/*",
     "server/source_index"]
   Gemcutter.indexer.generate_index
+  Rubygem.source_index = nil
 end
 
 def gem_spec(opts = {})
