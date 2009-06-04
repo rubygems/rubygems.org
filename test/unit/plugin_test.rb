@@ -1,11 +1,20 @@
-require 'test_helper'
+require 'rubygems'
+require 'test/unit'
+require 'shoulda'
+require 'redgreen'
+require 'fakeweb'
+require 'rr'
 
-require "#{RAILS_ROOT}/lib/rubygems_plugin"
+FakeWeb.allow_net_connect = false
+
+require "lib/rubygems_plugin"
 %w(push upgrade downgrade).each do |command|
-  require "#{RAILS_ROOT}/lib/commands/#{command}"
+  require "lib/commands/#{command}"
 end
 
-class PluginTest < ActiveSupport::TestCase
+class PluginTest < Test::Unit::TestCase
+  include RR::Adapters::TestUnit unless include?(RR::Adapters::TestUnit)
+
   context "pushing" do
     setup do
       @command = Gem::Commands::PushCommand.new
@@ -40,22 +49,29 @@ class PluginTest < ActiveSupport::TestCase
   context "upgrading" do
     setup do
       @command = Gem::Commands::UpgradeCommand.new
-      @email = "joeuser@gemcutter.org"
-      @password = "secret"
+      @email = "email"
+      @password = "password"
+      @key = "key"
       mock(@command).say("Enter your Gemcutter credentials. Don't have an account yet? Create one at #{URL}/sign_up")
       mock(@command).ask("Email: ") { @email }
       mock(@command).ask_for_password("Password: ") { @password }
+      FakeWeb.register_uri :get, "http://#{@email}:#{@password}@gemcutter.org/token", :string => @key
+
+      @config = Object.new
+      stub(Gem).configuration { @config }
+      mock(@config)[:gemcutter_key] = @key
     end
 
     should "add gemcutter as first source" do
+      mock(@config).write.times(2)
       mock(@command).say("Upgrading your primary gem source to gemcutter.org")
-      mock(Gem).configuration.mock!.write
       @command.execute
       assert_equal "http://gemcutter.org", Gem.sources.first
       assert Gem.sources.include?("http://gems.rubyforge.org")
     end
 
     should "only add gemcutter once" do
+      mock(@config).write
       mock(@command).say("Gemcutter is already your primary gem source. Please use `gem downgrade` if you wish to no longer use Gemcutter.")
       @command.execute
       assert_equal "http://gemcutter.org", Gem.sources.first
