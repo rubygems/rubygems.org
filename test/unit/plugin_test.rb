@@ -20,7 +20,7 @@ class PluginTest < Test::Unit::TestCase
       @command = Gem::Commands::PushCommand.new
       mock(@command).say("Pushing gem to Gemcutter...")
       @response = "success"
-      FakeWeb.register_uri :post, "http://email:password@gemcutter.org/gems", :string => @response
+      FakeWeb.register_uri :post, "http://gemcutter.org/gems", :string => @response
     end
 
     should "raise an error with no arguments" do
@@ -32,14 +32,13 @@ class PluginTest < Test::Unit::TestCase
     should "push a gem" do
       @gem = "test"
       @io = "io"
-      stub(@command).options { {:args => [@gem]} }
-      stub(@io).read.stub!.size
-      stub(File).open(@gem) { @io }
+      @config = { :gemcutter_key => "key" }
 
-      mock(YAML).load_file(File.expand_path("~/.gemrc")) { {
-        :gemcutter_email    => "email",
-        :gemcutter_password => "password"
-      } }
+      stub(File).open(@gem) { @io }
+      stub(@io).read.stub!.size
+
+      stub(@command).options { {:args => [@gem]} }
+      stub(Gem).configuration { @config }
 
       mock(@command).say(@response)
       @command.execute
