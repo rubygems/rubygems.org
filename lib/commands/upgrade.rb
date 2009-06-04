@@ -38,8 +38,18 @@ class Gem::Commands::UpgradeCommand < Gem::Command
   def sign_in
     say "Enter your Gemcutter credentials. Don't have an account yet? Create one at #{URL}/sign_up"
 
-    user = ask("Email: ")
+    email = ask("Email: ")
     password = ask_for_password("Password: ")
+
+    site = ENV['TEST'] ? "local" : "org"
+    url = URI.parse("http://gemcutter.#{site}/token")
+
+    request = Net::HTTP::Get.new(url.path)
+    request.basic_auth email, password
+    response = Net::HTTP.new(url.host, url.port).start { |http| http.request(request) }
+
+    Gem.configuration[:gemcutter_key] = response.body
+    Gem.configuration.write
   end
 
 end
