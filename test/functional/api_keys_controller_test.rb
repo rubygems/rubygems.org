@@ -25,5 +25,15 @@ class ApiKeysControllerTest < ActionController::TestCase
   end
 
   context "on GET to show with confirmed user" do
+    setup do
+      @user = Factory(:email_confirmed_user)
+      @request.env["HTTP_AUTHORIZATION"] = "Basic " + 
+        Base64::encode64("#{@user.email}:#{@user.password}")
+      get :show
+    end
+    should "render api key" do
+      assert_response 200
+      assert_equal @user.api_key, @response.body
+    end
   end
 end
