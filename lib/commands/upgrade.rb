@@ -42,7 +42,7 @@ class Gem::Commands::UpgradeCommand < Gem::Command
     password = ask_for_password("Password: ")
 
     site = ENV['TEST'] ? "local" : "org"
-    url = URI.parse("http://gemcutter.#{site}/token")
+    url = URI.parse("http://gemcutter.#{site}/api_key")
 
     request = Net::HTTP::Get.new(url.path)
     request.basic_auth email, password

@@ -54,7 +54,7 @@ class PluginTest < Test::Unit::TestCase
       mock(@command).say("Enter your Gemcutter credentials. Don't have an account yet? Create one at #{URL}/sign_up")
       mock(@command).ask("Email: ") { @email }
       mock(@command).ask_for_password("Password: ") { @password }
-      FakeWeb.register_uri :get, "http://#{@email}:#{@password}@gemcutter.org/token", :string => @key
+      FakeWeb.register_uri :get, "http://#{@email}:#{@password}@gemcutter.org/api_key", :string => @key
 
       @config = Object.new
       stub(Gem).configuration { @config }
