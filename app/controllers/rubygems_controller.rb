@@ -66,9 +66,11 @@ class RubygemsController < ApplicationController
 
   protected
     def authenticate
-      authenticate_or_request_with_http_basic do |username, password|
-        @_current_user = User.authenticate(username, password)
-        current_user.email_confirmed
+      @_current_user = User.find_by_api_key(request.headers["HTTP_AUTHORIZATION"])
+      if current_user.nil?
+        render :text => "Access Denied. Please sign up for an account at http://gemcutter.org", :status => 401
+      elsif !current_user.email_confirmed
+        render :text => "Access Denied. Please confirm your Gemcutter account.", :status => 403
       end
     end
 
