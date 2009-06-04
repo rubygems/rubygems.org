@@ -219,28 +219,26 @@ class RubygemsControllerTest < ActionController::TestCase
     end
     should "deny access" do
       assert_response 401
-      assert_match "HTTP Basic: Access denied.", @response.body
+      assert_match "Access Denied. Please sign up for an account at http://gemcutter.org", @response.body
     end
   end
 
   context "On POST to create with unconfirmed user" do
     setup do
       @user = Factory(:user)
-      @request.env["HTTP_AUTHORIZATION"] = "Basic " + 
-        Base64::encode64("#{@user.email}:#{@user.password}")
+      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
       post :create
     end
     should "deny access" do
-      assert_response 401
-      assert_match "HTTP Basic: Access denied.", @response.body
+      assert_response 403
+      assert_match "Access Denied. Please confirm your Gemcutter account.", @response.body
     end
   end
 
   context "with a confirmed user authenticated" do
     setup do
       @user = Factory(:email_confirmed_user)
-      @request.env["HTTP_AUTHORIZATION"] = "Basic " + 
-        Base64::encode64("#{@user.email}:#{@user.password}")
+      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
     end
 
     context "On POST to create for new gem" do
