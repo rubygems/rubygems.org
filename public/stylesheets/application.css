@@ -309,7 +309,7 @@ label, .form_links {
   float: left;
 }
 
-#flash_success, #flash_notice, #flash_error {
+#flash_success, #flash_notice, #flash_failure {
   font-weight: bold;
   left: 0;
   top: 0;
@@ -331,7 +331,7 @@ label, .form_links {
   background-color: #FFF9BF;
 }
 
-#flash_error {
+#flash_failure {
   background-color: #FFD1BF;
 }
 
