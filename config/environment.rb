@@ -26,5 +26,6 @@ require 'rubygems'
 require 'rubygems/format'
 require 'rubygems/indexer'
 require 'lib/indexer'
+require 'lib/core_ext/string'
 
 Gem.configuration.verbose = false
