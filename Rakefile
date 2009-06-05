@@ -41,11 +41,11 @@ namespace :index do
 end
 
 namespace :import do
-  desc 'Download all of the gems in rubygems.txt'
+  desc 'Download all of the gems in server/rubygems.txt'
   task :download do
     require 'curb'
     require 'active_support'
-    url_queue = File.readlines("rubygems.txt").map { |g| g.strip }
+    url_queue = File.readlines("server/rubygems.txt").map { |g| g.strip }
     puts "Downloading #{url_queue.size} gems..."
     FileUtils.mkdir("cache") unless File.exist?("cache")
 
@@ -85,8 +85,8 @@ namespace :import do
   desc 'Parse out rubygems'
   task :parse do
     require 'hpricot'
-    doc = Hpricot(open("rubygems.html"))
-    File.open("rubygems.txt", "w") do |file|
+    doc = Hpricot(open("server/rubygems.html"))
+    File.open("server/rubygems.txt", "w") do |file|
       (doc / "a")[1..-1].each do |gem|
         puts gem['href']
         file.write "http://gems.rubyforge.org/gems/#{gem['href']}\n"
