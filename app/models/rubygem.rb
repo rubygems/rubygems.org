@@ -11,7 +11,9 @@ class Rubygem < ActiveRecord::Base
 
   cattr_accessor :source_index
   attr_accessor :spec, :path, :processing
+
   before_validation :build
+  before_create :generate_token
   after_save :store
 
   def self.pull_spec(path)
@@ -95,4 +97,10 @@ class Rubygem < ActiveRecord::Base
 
     Gemcutter.indexer.update_index
   end
+
+  protected
+
+    def generate_token
+      self.token = "#{name}-#{Time.now.to_f}".to_md5
+    end
 end
