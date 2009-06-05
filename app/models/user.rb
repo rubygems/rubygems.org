@@ -7,6 +7,6 @@ class User < ActiveRecord::Base
   protected
 
     def generate_api_key
-      self.api_key = Digest::MD5.hexdigest("#{email}-#{Time.now.to_f}")
+      self.api_key = "#{email}-#{Time.now.to_f}".to_md5
     end
 end
