@@ -8,7 +8,19 @@ class RubygemsControllerTest < ActionController::TestCase
       sign_in_as(@user)
     end
 
-    context "On GET to mine with being signed in" do
+    context "On GET to token" do
+      setup do
+        @gem = Factory(:rubygem)
+        get :token, :id => @gem.to_param
+      end
+      should_respond_with :success
+      should "render token" do
+        assert_equal @gem.token, @response.body
+        assert_equal "text/plain", @response.content_type
+      end
+    end
+
+    context "On GET to mine" do
       setup do
         3.times { Factory(:rubygem) }
         @gems = (1..3).map { Factory(:rubygem, :user => @user) }
@@ -133,6 +145,15 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to mine without being signed in" do
     setup { get :mine }
+    should_respond_with :redirect
+    should_redirect_to('the homepage') { root_url }
+  end
+
+  context "On GET to token without being signed in" do
+    setup do
+      @rubygem = Factory(:rubygem)
+      get :token, :id => @rubygem.to_param
+    end
     should_respond_with :redirect
     should_redirect_to('the homepage') { root_url }
   end
