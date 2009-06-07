@@ -6,10 +6,42 @@ class RubygemTest < ActiveSupport::TestCase
       @rubygem = Factory(:rubygem)
     end
 
-    should_belong_to :user
+    should_have_many :owners, :through => :ownerships
+    should_have_many :ownerships
     should_have_many :versions, :dependent => :destroy
     should_have_one :linkset, :dependent => :destroy
     should_validate_uniqueness_of :name
+
+    context "with a user" do
+      setup do
+        @user = Factory(:user)
+      end
+
+      should "be owned by a user in approved ownership" do
+        ownership = Factory(:ownership, :user => @user, :rubygem => @rubygem, :approved => true)
+        assert @rubygem.owned_by?(@user)
+      end
+
+      should "be not owned by a user in unapproved ownership" do
+        ownership = Factory(:ownership, :user => @user, :rubygem => @rubygem)
+        assert !@rubygem.owned_by?(@user)
+      end
+
+      should "be not owned by a user without ownership" do
+        other_user = Factory(:user)
+        ownership = Factory(:ownership, :user => other_user, :rubygem => @rubygem)
+        assert !@rubygem.owned_by?(@user)
+      end
+
+      should "be not owned if no ownerships" do
+        assert @rubygem.ownerships.empty?
+        assert !@rubygem.owned_by?(@user)
+      end
+
+      should "be not owned if no user" do
+        assert !@rubygem.owned_by?(nil)
+      end
+    end
 
     should "create token" do
       assert_not_nil @rubygem.token

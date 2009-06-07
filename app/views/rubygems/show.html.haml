@@ -17,7 +17,7 @@
             %span.big= version.number
             %span.small= version.created_at.to_date.to_formatted_s(:long)
 .grid_4
-  -if current_user == @gem.user
+  -if @gem.owned_by?(current_user)
     .block.red
       %h3 Administration
       %p

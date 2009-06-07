@@ -3,6 +3,8 @@ class Rubygem < ActiveRecord::Base
   sluggable_finder :name
 
   belongs_to :user
+  has_many :owners, :through => :ownerships, :source => :user
+  has_many :ownerships
   has_many :versions, :dependent => :destroy
   has_one :linkset, :dependent => :destroy
 
@@ -24,6 +26,10 @@ class Rubygem < ActiveRecord::Base
       logger.info "Problem loading gem at #{path}: #{e}"
       nil
     end
+  end
+
+  def owned_by?(user)
+    ownerships.find_by_user_id(user.id).try(:approved) if user
   end
 
   def to_s

@@ -2,6 +2,11 @@ require 'test_helper'
 
 class RubygemsControllerTest < ActionController::TestCase
 
+  def create_gem(owner)
+    @gem = Factory(:rubygem)
+    @gem.ownerships << Factory(:ownership, :user => owner, :rubygem => @gem, :approved => true)
+  end
+
   context "When logged in" do
     setup do
       @user = Factory(:email_confirmed_user)
@@ -23,7 +28,11 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On GET to mine" do
       setup do
         3.times { Factory(:rubygem) }
-        @gems = (1..3).map { Factory(:rubygem, :user => @user) }
+        @gems = (1..3).map do
+          rubygem = Factory(:rubygem)
+          rubygem.ownerships << Factory(:ownership, :user => @user, :rubygem => rubygem)
+          rubygem
+        end
         get :mine
       end
 
@@ -55,7 +64,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to show for this user's gem" do
       setup do
-        @gem = Factory(:rubygem, :user => @user)
+        create_gem(@user)
         get :show, :id => @gem.to_param
       end
 
@@ -70,7 +79,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to edit for this user's gem" do
       setup do
-        @gem = Factory(:rubygem, :user => @user)
+        create_gem(@user)
         get :edit, :id => @gem.to_param
       end
 
@@ -91,7 +100,7 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On GET to edit for another user's gem" do
       setup do
         @other_user = Factory(:email_confirmed_user)
-        @gem = Factory(:rubygem, :user => @other_user)
+        create_gem(@other_user)
         get :edit, :id => @gem.to_param
       end
       should_respond_with :redirect
@@ -102,8 +111,8 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On PUT to update for this user's gem that is successful" do
       setup do
-        @gem = Factory(:rubygem, :user => @user)
         @url = "http://github.com/qrush/gemcutter"
+        create_gem(@user)
         put :update, :id => @gem.to_param, :linkset => {:code => @url}
       end
       should_respond_with :redirect
@@ -117,7 +126,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On PUT to update for this user's gem that fails" do
       setup do
-        @gem = Factory(:rubygem, :user => @user)
+        create_gem(@user)
         @url = "totally not a url"
         put :update, :id => @gem.to_param, :linkset => {:code => @url}
       end
@@ -271,21 +280,22 @@ class RubygemsControllerTest < ActionController::TestCase
       should_assign_to(:_current_user) { @user }
       should_change "Rubygem.count", :by => 1
       should "register new gem" do
-        assert_equal @user, Rubygem.last.user
+        assert_equal @user, Rubygem.last.ownerships.first.user
         assert_equal "Successfully registered new gem: test (0.0.0)", @response.body
       end
     end
 
     context "On POST to create for existing gem" do
       setup do
-        @rubygem = Factory(:rubygem, :user => @user, :name => "test")
+        rubygem = Factory(:rubygem, :name => "test")
+        rubygem.ownerships << Factory(:ownership, :user => @user, :rubygem => rubygem, :approved => true)
         @request.env["RAW_POST_DATA"] = gem_file("test-1.0.0.gem").read
         post :create
       end
       should_respond_with :success
       should_assign_to(:_current_user) { @user }
       should "register new version" do
-        assert_equal @user, Rubygem.last.user
+        assert_equal @user, Rubygem.last.ownerships.first.user
         assert_equal 2, Rubygem.last.versions.size
         assert_equal "Successfully registered new gem: test (1.0.0)", @response.body
       end
@@ -307,15 +317,18 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On POST to create for someone else's gem" do
       setup do
         @other_user = Factory(:email_confirmed_user)
-        @rubygem = Factory(:rubygem, :user => @other_user, :name => "test")
+        create_gem(@other_user)
+        stub(Rubygem).find { @gem }
+
         @request.env["RAW_POST_DATA"] = gem_file("test-1.0.0.gem").read
         post :create
       end
       should_respond_with 403
       should_assign_to(:_current_user) { @user }
       should "not allow new version to be saved" do
-        assert_equal @other_user, Rubygem.last.user
-        assert_equal 1, Rubygem.last.versions.size
+        other_gem = Rubygem.find(@gem.id)
+        assert_equal @other_user, other_gem.ownerships.first.user
+        assert_equal 1, other_gem.versions.size
         assert_equal "You do not have permission to push to this gem.", @response.body
       end
     end
