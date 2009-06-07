@@ -14,7 +14,7 @@ class RubygemsController < ApplicationController
   end
 
   def mine
-    @gems = current_user.rubygems.by_name(:asc)
+    @gems = current_user.rubygems
   end
 
   def index
@@ -58,14 +58,14 @@ class RubygemsController < ApplicationController
 
     rubygem = Rubygem.find_or_initialize_by_name(spec.name)
 
-    if !rubygem.new_record? && rubygem.user != current_user
+    if !rubygem.new_record? && !rubygem.owned_by?(current_user)
       render :text => "You do not have permission to push to this gem.", :status => 403
       return
     end
 
     rubygem.spec = spec
     rubygem.path = temp.path
-    rubygem.user = current_user
+    rubygem.ownerships.build(:user => current_user, :approved => true)
     rubygem.save
     render :text => "Successfully registered new gem: #{rubygem}"
   end
@@ -83,7 +83,7 @@ class RubygemsController < ApplicationController
     def load_gem
       @gem = Rubygem.find(params[:id])
 
-      if @gem.user != current_user
+      if !@gem.owned_by?(current_user)
         flash[:warning] = "You do not have permission to edit this gem."
         redirect_to root_url
       end
