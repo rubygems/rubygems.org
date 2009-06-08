@@ -43,10 +43,6 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
-    should "create token" do
-      assert_not_nil @rubygem.token
-    end
-
     should "return latest version for #current_version" do
       assert_equal @rubygem.versions.first, @rubygem.current_version
     end
