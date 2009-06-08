@@ -1,5 +1,12 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :rubygems, :as => "gems", :collection => { :search => :get, :migrate => :get, :mine => :get }, :member => { :token => :get }
+  map.resources :rubygems,
+    :as => "gems",
+    :collection => { :search => :get, :mine => :get },
+    :member => { :migrate => :get } do |rubygems|
+
+    rubygems.resources :ownerships
+  end
+
   map.resource :api_key, :only => :show
 
   map.sign_up  'sign_up', :controller => 'clearance/users',    :action => 'new'
