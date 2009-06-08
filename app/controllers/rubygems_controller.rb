@@ -1,17 +1,8 @@
 class RubygemsController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => :create
   before_filter :authenticate, :only => :create
-  before_filter :redirect_to_root, :only => [:token, :mine, :edit, :update], :unless => :signed_in?
+  before_filter :redirect_to_root, :only => [:mine, :edit, :update], :unless => :signed_in?
   before_filter :load_gem, :only => [:edit, :update]
-
-  def new
-  end
-
-  def migrate
-  end
-
-  def search
-  end
 
   def mine
     @gems = current_user.rubygems
@@ -26,12 +17,6 @@ class RubygemsController < ApplicationController
   end
 
   def edit
-  end
-
-  def token
-    @gem = Rubygem.find(params[:id])
-    response.content_type = "text/plain"
-    render :text => @gem.token
   end
 
   def update
