@@ -17,11 +17,17 @@
             %span.big= version.number
             %span.small= version.created_at.to_date.to_formatted_s(:long)
 .grid_4
-  -if @gem.owned_by?(current_user)
-    .block.red
-      %h3 Administration
-      %p
-        =link_to "Edit Gem", edit_rubygem_path(@gem)
+  -if signed_in?
+    -if @gem.unowned?
+      .block.red
+        %h3 Migrate from RubyForge
+        %p
+          =link_to "Begin Migration", migrate_rubygem_path(@gem)
+    -if @gem.owned_by?(current_user)
+      .block.red
+        %h3 Administration
+        %p
+          =link_to "Edit Gem", edit_rubygem_path(@gem)
   .block.red
     %h3 Authors
     %p= @gem.current_version.authors

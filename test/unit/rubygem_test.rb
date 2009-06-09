@@ -20,26 +20,31 @@ class RubygemTest < ActiveSupport::TestCase
       should "be owned by a user in approved ownership" do
         ownership = Factory(:ownership, :user => @user, :rubygem => @rubygem, :approved => true)
         assert @rubygem.owned_by?(@user)
+        assert !@rubygem.unowned?
       end
 
       should "be not owned by a user in unapproved ownership" do
         ownership = Factory(:ownership, :user => @user, :rubygem => @rubygem)
         assert !@rubygem.owned_by?(@user)
+        assert @rubygem.unowned?
       end
 
       should "be not owned by a user without ownership" do
         other_user = Factory(:user)
         ownership = Factory(:ownership, :user => other_user, :rubygem => @rubygem)
         assert !@rubygem.owned_by?(@user)
+        assert @rubygem.unowned?
       end
 
       should "be not owned if no ownerships" do
         assert @rubygem.ownerships.empty?
         assert !@rubygem.owned_by?(@user)
+        assert @rubygem.unowned?
       end
 
       should "be not owned if no user" do
         assert !@rubygem.owned_by?(nil)
+        assert @rubygem.unowned?
       end
     end
 
