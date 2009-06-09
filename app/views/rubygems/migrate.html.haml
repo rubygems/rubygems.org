@@ -1,4 +1,12 @@
 -@title = "migrate from rubyforge"
 -@subtitle = ""
 .grid_12
-  =render 'migrate'
+  %h3 Instructions
+  %ul
+    %li Log into your RubyForge Account.
+    %li Go to your project, and click "Files"
+    %li Click Admin
+    %li Click "Quick-Release a File"
+    %li Upload this text file:
+    %li= link_to "Gemcutter Key", rubygem_ownership_url(@gem, @ownership, :format => :txt)
+    %li And that's it! Gemcutter will look for this key to certify that you are the owner of this gem. You will receive an email once the process is complete.

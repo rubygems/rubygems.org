@@ -27,6 +27,10 @@ class Rubygem < ActiveRecord::Base
     end
   end
 
+  def unowned?
+    ownerships.find_by_approved(true).blank?
+  end
+
   def owned_by?(user)
     ownerships.find_by_user_id(user.id).try(:approved) if user
   end

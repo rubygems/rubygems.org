@@ -13,6 +13,51 @@ class RubygemsControllerTest < ActionController::TestCase
       sign_in_as(@user)
     end
 
+    context "On GET to migrate with no ownership" do
+      setup do
+        @gem = Factory(:rubygem)
+        get :migrate, :id => @gem.to_param
+      end
+      should_respond_with :success
+      should_render_template :migrate
+      should_assign_to(:gem) { @gem }
+      should_assign_to(:ownership)
+      should "create unapproved ownership" do
+        ownership = Ownership.find_by_user_id_and_rubygem_id(@user.id, @gem.id)
+        assert_not_nil ownership
+        assert !ownership.approved
+      end
+    end
+
+    context "On GET to migrate with existing unapproved ownership" do
+      setup do
+        @gem = Factory(:rubygem)
+        @ownership = Factory(:ownership, :rubygem => @gem, :user => @user)
+        get :migrate, :id => @gem.to_param
+      end
+      should_respond_with :success
+      should_render_template :migrate
+      should_assign_to(:gem) { @gem }
+      should_assign_to(:ownership) { @ownership }
+    end
+
+    context "On GET to migrate with existing approved ownership" do
+      setup do
+        @gem = Factory(:rubygem)
+        @other_user = Factory(:email_confirmed_user)
+        @ownership = Factory(:ownership, :rubygem => @gem, :user => @other_user, :approved => true)
+        get :migrate, :id => @gem.to_param
+      end
+      should_respond_with :redirect
+      should_redirect_to("the rubygem page") { rubygem_url(@gem) }
+      should_set_the_flash_to "This gem has already been migrated."
+    end
+
+    context "On GET to migrate for a gem that doesn't exist" do
+      setup do
+      end
+    end
+
     context "On GET to mine" do
       setup do
         3.times { Factory(:rubygem) }
@@ -132,6 +177,15 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to mine without being signed in" do
     setup { get :mine }
+    should_respond_with :redirect
+    should_redirect_to('the homepage') { root_url }
+  end
+
+  context "On GET to migrate without being signed in" do
+    setup do
+      @rubygem = Factory(:rubygem)
+      get :migrate, :id => @rubygem.to_param
+    end
     should_respond_with :redirect
     should_redirect_to('the homepage') { root_url }
   end
