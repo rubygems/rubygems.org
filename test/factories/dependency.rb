@@ -1,4 +1,3 @@
 Factory.define :dependency do |dependency|
-  dependency.name { 'string' }
-  dependency.requirement { 'string' }
+  dependency.name { '0.0.0' }
 end

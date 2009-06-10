@@ -64,8 +64,8 @@ class Rubygem < ActiveRecord::Base
 
     self.spec.dependencies.each do |dependency|
       version.dependencies.build(
-        :name        => dependency.name,
-        :requirement => dependency.requirements_list.to_s)
+        :rubygem_name => dependency.name,
+        :name         => dependency.requirements_list.to_s)
     end
 
     self.build_linkset(:home => self.spec.homepage)

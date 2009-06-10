@@ -9,14 +9,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090608111256) do
+ActiveRecord::Schema.define(:version => 20090610121428) do
 
   create_table "dependencies", :force => true do |t|
     t.string   "name"
-    t.string   "requirement"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "version_id"
+    t.integer  "rubygem_id"
   end
 
   create_table "linksets", :force => true do |t|
@@ -43,9 +42,13 @@ ActiveRecord::Schema.define(:version => 20090608111256) do
   add_index "ownerships", ["rubygem_id"], :name => "index_ownerships_on_rubygem_id"
   add_index "ownerships", ["user_id"], :name => "index_ownerships_on_user_id"
 
+  create_table "requirements", :force => true do |t|
+    t.integer "version_id"
+    t.integer "dependency_id"
+  end
+
   create_table "rubygems", :force => true do |t|
     t.string   "name"
-    t.string   "token"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "downloads",  :default => 0
