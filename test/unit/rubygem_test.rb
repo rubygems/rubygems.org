@@ -65,15 +65,16 @@ class RubygemTest < ActiveSupport::TestCase
       spec.add_dependency("liquid", ">= 1.9.0")
       spec.add_dependency("open4", "= 0.9.6")
       @rubygem.spec = spec
-      @rubygem.build
+      @rubygem.save
 
+      assert_equal 2, @rubygem.current_version.requirements.size
       assert_equal 2, @rubygem.current_dependencies.size
 
-      assert_equal "liquid", @rubygem.current_dependencies.first.name
-      assert_equal ">= 1.9.0", @rubygem.current_dependencies.first.requirement
+      assert_equal "liquid", @rubygem.current_dependencies.first.rubygem.name
+      assert_equal ">= 1.9.0", @rubygem.current_dependencies.first.name
 
-      assert_equal "open4", @rubygem.current_dependencies.last.name
-      assert_equal "= 0.9.6", @rubygem.current_dependencies.last.requirement
+      assert_equal "open4", @rubygem.current_dependencies.last.rubygem.name
+      assert_equal "= 0.9.6", @rubygem.current_dependencies.last.name
     end
 
     should "include platform when saving version" do
