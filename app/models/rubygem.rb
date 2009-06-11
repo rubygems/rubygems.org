@@ -36,7 +36,11 @@ class Rubygem < ActiveRecord::Base
   end
 
   def to_s
-    "#{name} (#{current_version})"
+    if current_version
+      "#{name} (#{current_version})"
+    else
+      name
+    end
   end
 
   def current_version
