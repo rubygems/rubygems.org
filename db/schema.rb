@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090610121428) do
+ActiveRecord::Schema.define(:version => 20090611123606) do
 
   create_table "dependencies", :force => true do |t|
     t.string   "name"
@@ -51,8 +51,9 @@ ActiveRecord::Schema.define(:version => 20090610121428) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "downloads",  :default => 0
+    t.integer  "downloads",      :default => 0
     t.string   "slug"
+    t.integer  "versions_count", :default => 0
   end
 
   create_table "users", :force => true do |t|

@@ -17,6 +17,8 @@ class Rubygem < ActiveRecord::Base
   before_validation :build
   after_save :store
 
+  named_scope :with_versions, :conditions => ["versions_count > 0"]
+
   def self.pull_spec(path)
     begin
       format = Gem::Format.from_file_by_path(path)

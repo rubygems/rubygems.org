@@ -236,4 +236,17 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal ["test", Gem::Version.new("0.0.0"), "ruby"], latest_specs_data.first
     end
   end
+
+  context "with some rubygems" do
+    setup do
+      @rubygem_without_version = Factory(:rubygem, :spec => nil)
+      @rubygem_with_version = Factory(:rubygem)
+      Factory(:version, :rubygem => @rubygem_with_version)
+    end
+    should "return only gems with versions for #with_versions" do
+      assert Rubygem.with_versions.include?(@rubygem_with_version)
+      assert !Rubygem.with_versions.include?(@rubygem_without_version)
+    end
+  end
+
 end
