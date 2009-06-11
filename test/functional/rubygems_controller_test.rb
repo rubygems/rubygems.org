@@ -266,6 +266,19 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  context "On GET to show for a gem with no versions" do
+    setup do
+      @gem = Factory(:rubygem, :spec => nil)
+      get :show, :id => @gem.to_param
+    end
+    should_respond_with :success
+    should_render_template :show
+    should_assign_to :gem
+    should "render info about the gem" do
+      assert_contain "This gem is not currently hosted on Gemcutter."
+    end
+  end
+
   context "On POST to create with no user credentials" do
     setup do
       post :create

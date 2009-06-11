@@ -56,6 +56,11 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal "#{@rubygem.name} (#{@rubygem.current_version})", @rubygem.to_s
     end
 
+    should "return name for #to_s if current_version doesn't exist" do
+      stub(@rubygem).current_version { nil }
+      assert_equal @rubygem.name, @rubygem.to_s
+    end
+
     should "return name with downloads for #with_downloads" do
       assert_equal "#{@rubygem.name} (#{@rubygem.downloads})", @rubygem.with_downloads
     end
