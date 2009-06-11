@@ -22,6 +22,13 @@ class HostessTest < ActiveSupport::TestCase
     assert_equal 200, last_response.status
   end
 
+  should "return specs" do
+    file = "/specs.4.8.gz"
+    touch file
+    get file
+    assert_equal 200, last_response.status
+  end
+
   should "return quick gemspec" do
     file = "/quick/Marshal.4.8/test-0.0.0.gemspec.rz"
     touch file
