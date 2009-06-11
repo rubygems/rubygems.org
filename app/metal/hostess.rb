@@ -4,6 +4,10 @@ require 'sinatra'
 class Hostess < Sinatra::Default
   set :app_file, __FILE__
 
+  get "/specs.#{Gem.marshal_version}.gz" do
+    send_file(current_path)
+  end
+
   get "/latest_specs.#{Gem.marshal_version}.gz" do
     send_file(current_path)
   end
