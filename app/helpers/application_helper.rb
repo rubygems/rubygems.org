@@ -5,7 +5,7 @@ module ApplicationHelper
   end
 
   def subtitle
-    "kickass gem hosting"
+    "awesome gem hosting"
   end
 
   def page_title
