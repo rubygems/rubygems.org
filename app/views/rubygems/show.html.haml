@@ -1,11 +1,11 @@
 -@title = @gem.name
--@subtitle = @gem.current_version ? @gem.current_version.number : ''
+-@subtitle = @current_version
 -@page_title = "#{@gem} &raquo; #{page_title}"
--if @gem.current_version
+-if @current_version
   .grid_8
     .block.red
       %h3 Description
-      %p= @gem.current_version.description
+      %p= @current_version.description
     .block.green
       %h3 Install
       %pre= "gem install #{@gem.name}"
@@ -29,16 +29,16 @@
           %h3 Administration
           %p
             =link_to "Edit Gem", edit_rubygem_path(@gem)
-    -unless @gem.current_version.authors.empty?
+    -unless @current_version.authors.empty?
       .block.red
         %h3 Authors
-        %p= @gem.current_version.authors
+        %p= @current_version.authors
     .block.red
       %h3 Downloads
       %p= number_with_delimiter(@gem.downloads)
     .block.red
       %h3 Last Update
-      %p= @gem.current_version.created_at.to_date.to_formatted_s(:long)
+      %p= @current_version.created_at.to_date.to_formatted_s(:long)
     -unless @gem.linkset.empty?
       .block.red.links
         %h3 Links
@@ -49,11 +49,11 @@
           =link_to_page "Wiki", @gem.linkset.wiki
           =link_to_page "Mailing List", @gem.linkset.mail
           =link_to_page "Bug Tracker", @gem.linkset.bugs
-    -unless @gem.current_dependencies.empty?
+    -unless @current_dependencies.empty?
       .block.red
         %h3 Dependencies
         %p
-          -@gem.current_dependencies.each do |dependency|
+          -@current_dependencies.each do |dependency|
             %a{:href => rubygem_url(dependency.rubygem)}
               %span.big= dependency.rubygem.name
               %span.small= dependency.name

@@ -54,17 +54,16 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
-    should "return latest version for #current_version" do
-      assert_equal @rubygem.versions.first, @rubygem.current_version
+    should "return current version" do
+      assert_equal @rubygem.versions.first, @rubygem.versions.current
     end
 
     should "return name with version for #to_s" do
       @rubygem.save
-      assert_equal "#{@rubygem.name} (#{@rubygem.current_version})", @rubygem.to_s
+      assert_equal "#{@rubygem.name} (#{@rubygem.versions.current})", @rubygem.to_s
     end
 
-    should "return name for #to_s if current_version doesn't exist" do
-      stub(@rubygem).current_version { nil }
+    should "return name for #to_s if current version doesn't exist" do
       assert_equal @rubygem.name, @rubygem.to_s
     end
 
@@ -79,14 +78,15 @@ class RubygemTest < ActiveSupport::TestCase
       @rubygem.spec = spec
       @rubygem.save
 
-      assert_equal 2, @rubygem.current_version.requirements.size
-      assert_equal 2, @rubygem.current_dependencies.size
+      assert_equal 2, @rubygem.versions.current.requirements.size
+      current_dependencies = @rubygem.versions.current.dependencies
+      assert_equal 2, current_dependencies.size
 
-      assert_equal "liquid", @rubygem.current_dependencies.first.rubygem.name
-      assert_equal ">= 1.9.0", @rubygem.current_dependencies.first.name
+      assert_equal "liquid", current_dependencies.first.rubygem.name
+      assert_equal ">= 1.9.0", current_dependencies.first.name
 
-      assert_equal "open4", @rubygem.current_dependencies.last.rubygem.name
-      assert_equal "= 0.9.6", @rubygem.current_dependencies.last.name
+      assert_equal "open4", current_dependencies.last.rubygem.name
+      assert_equal "= 0.9.6", current_dependencies.last.name
     end
 
     should "include platform when saving version" do
@@ -97,7 +97,7 @@ class RubygemTest < ActiveSupport::TestCase
       @rubygem.spec = spec
       @rubygem.save
 
-      version = @rubygem.current_version
+      version = @rubygem.versions.current
       assert_not_nil version
       assert_equal "0.0.0-mswin", version.number
     end
