@@ -375,3 +375,7 @@ label, .form_links {
 .fieldWithErrors input, .fieldWithErrors textarea {
   background: #cc6666;
 }
+
+.pagination {
+  text-align: right;
+}
