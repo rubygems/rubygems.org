@@ -13,7 +13,7 @@
       .block.red.versions
         %h3 Versions
         %p
-          -@gem.versions.reverse.each do |version|
+          -@gem.versions.each do |version|
             %a{:href => "/"}
               %span.big= version.number
               %span.small= version.created_at.to_date.to_formatted_s(:long)
@@ -39,15 +39,16 @@
     .block.red
       %h3 Last Update
       %p= @gem.current_version.created_at.to_date.to_formatted_s(:long)
-    .block.red.links
-      %h3 Links
-      %p
-        =link_to_page "Homepage", @gem.linkset.home
-        =link_to_page "Source Code", @gem.linkset.code
-        =link_to_page "Documentation", @gem.linkset.docs
-        =link_to_page "Wiki", @gem.linkset.wiki
-        =link_to_page "Mailing List", @gem.linkset.mail
-        =link_to_page "Bug Tracker", @gem.linkset.bugs
+    -unless @gem.linkset.empty?
+      .block.red.links
+        %h3 Links
+        %p
+          =link_to_page "Homepage", @gem.linkset.home
+          =link_to_page "Source Code", @gem.linkset.code
+          =link_to_page "Documentation", @gem.linkset.docs
+          =link_to_page "Wiki", @gem.linkset.wiki
+          =link_to_page "Mailing List", @gem.linkset.mail
+          =link_to_page "Bug Tracker", @gem.linkset.bugs
     -unless @gem.current_dependencies.empty?
       .block.red
         %h3 Dependencies
