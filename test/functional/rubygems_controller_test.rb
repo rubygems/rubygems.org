@@ -320,7 +320,7 @@ class RubygemsControllerTest < ActionController::TestCase
       should_change "Rubygem.count", :by => 1
       should "register new gem" do
         assert_equal @user, Rubygem.last.ownerships.first.user
-        assert_equal "Successfully registered new gem: test (0.0.0)", @response.body
+        assert_equal "Successfully registered gem: test (0.0.0)", @response.body
       end
     end
 
@@ -335,8 +335,9 @@ class RubygemsControllerTest < ActionController::TestCase
       should_assign_to(:_current_user) { @user }
       should "register new version" do
         assert_equal @user, Rubygem.last.ownerships.first.user
+        assert_equal 1, Rubygem.last.ownerships.size
         assert_equal 2, Rubygem.last.versions.size
-        assert_equal "Successfully registered new gem: test (1.0.0)", @response.body
+        assert_equal "Successfully registered gem: test (1.0.0)", @response.body
       end
     end
 

@@ -63,9 +63,9 @@ class RubygemsController < ApplicationController
 
     rubygem.spec = spec
     rubygem.path = temp.path
-    rubygem.ownerships.build(:user => current_user, :approved => true)
+    rubygem.ownerships.build(:user => current_user, :approved => true) if rubygem.new_record?
     rubygem.save
-    render :text => "Successfully registered new gem: #{rubygem.name} (#{rubygem.versions.latest})"
+    render :text => "Successfully registered gem: #{rubygem.name} (#{rubygem.versions.latest})"
   end
 
   protected
