@@ -228,13 +228,16 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to show" do
     setup do
       @gem = Factory(:rubygem)
-      @current_version = @gem.current_version
+      @current_version = @gem.versions.current
+      @current_dependencies = @current_version.dependencies
       get :show, :id => @gem.to_param
     end
 
     should_respond_with :success
     should_render_template :show
     should_assign_to :gem
+    should_assign_to(:current_version) { @current_version }
+    should_assign_to(:current_dependencies) { @current_dependencies }
     should "render info about the gem" do
       assert_contain @gem.name
       assert_contain @current_version.number
@@ -248,7 +251,7 @@ class RubygemsControllerTest < ActionController::TestCase
       @gem = Factory(:rubygem)
       @version = Factory(:version, :number => "1.0.0", :rubygem => @gem)
       @gem.reload
-      @current_version = @gem.current_version
+      @current_version = @gem.versions.current
       get :show, :id => @gem.to_param
     end
 

@@ -14,6 +14,8 @@ class RubygemsController < ApplicationController
 
   def show
     @gem = Rubygem.find(params[:id])
+    @current_version = @gem.versions.current
+    @current_dependencies = @current_version.dependencies if @current_version
   end
 
   def edit
@@ -63,7 +65,7 @@ class RubygemsController < ApplicationController
     rubygem.path = temp.path
     rubygem.ownerships.build(:user => current_user, :approved => true)
     rubygem.save
-    render :text => "Successfully registered new gem: #{rubygem}"
+    render :text => "Successfully registered new gem: #{rubygem.name} (#{rubygem.versions.latest})"
   end
 
   protected
