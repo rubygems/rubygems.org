@@ -5,7 +5,7 @@ class Rubygem < ActiveRecord::Base
   belongs_to :user
   has_many :owners, :through => :ownerships, :source => :user
   has_many :ownerships
-  has_many :versions, :dependent => :destroy
+  has_many :versions, :dependent => :destroy, :order => "created_at desc, number desc"
   has_one :linkset, :dependent => :destroy
 
   validates_presence_of :name
@@ -46,7 +46,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def current_version
-    versions.find(:first, :order => "created_at desc, number desc")
+    versions.find(:first)
   end
 
   def current_dependencies
