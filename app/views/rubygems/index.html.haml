@@ -1,5 +1,8 @@
 -@title = "all gems"
 -@subtitle = ""
-.gems.grid_12
-  -@gems.each do |gem|
-    =link_to gem, rubygem_path(gem)
+.grid_12
+  =will_paginate @gems
+  .gems
+    -@gems.each do |gem|
+      =link_to gem, rubygem_path(gem)
+  =will_paginate @gems
