@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090611123606) do
+ActiveRecord::Schema.define(:version => 20090612020811) do
 
   create_table "dependencies", :force => true do |t|
     t.string   "name"
@@ -17,6 +17,8 @@ ActiveRecord::Schema.define(:version => 20090611123606) do
     t.datetime "updated_at"
     t.integer  "rubygem_id"
   end
+
+  add_index "dependencies", ["rubygem_id"], :name => "index_dependencies_on_rubygem_id"
 
   create_table "linksets", :force => true do |t|
     t.integer  "rubygem_id"
@@ -29,6 +31,8 @@ ActiveRecord::Schema.define(:version => 20090611123606) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "linksets", ["rubygem_id"], :name => "index_linksets_on_rubygem_id"
 
   create_table "ownerships", :force => true do |t|
     t.integer  "rubygem_id"
@@ -47,6 +51,9 @@ ActiveRecord::Schema.define(:version => 20090611123606) do
     t.integer "dependency_id"
   end
 
+  add_index "requirements", ["dependency_id"], :name => "index_requirements_on_dependency_id"
+  add_index "requirements", ["version_id"], :name => "index_requirements_on_version_id"
+
   create_table "rubygems", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -55,6 +62,8 @@ ActiveRecord::Schema.define(:version => 20090611123606) do
     t.string   "slug"
     t.integer  "versions_count", :default => 0
   end
+
+  add_index "rubygems", ["name"], :name => "index_rubygems_on_name"
 
   create_table "users", :force => true do |t|
     t.string   "email"
@@ -78,5 +87,7 @@ ActiveRecord::Schema.define(:version => 20090611123606) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "versions", ["rubygem_id"], :name => "index_versions_on_rubygem_id"
 
 end
