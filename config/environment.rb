@@ -18,6 +18,10 @@ Rails::Initializer.run do |config|
   config.gem "ismasan-sluggable_finder",
     :lib     => 'sluggable_finder',
     :version => '2.0.6'
+  config.gem 'mislav-will_paginate',
+    :version => '~> 2.3.11',
+    :lib => 'will_paginate',
+    :source => 'http://gems.github.com'
 end
 
 DO_NOT_REPLY = "donotreply@gemcutter.org"
