@@ -29,9 +29,10 @@
           %h3 Administration
           %p
             =link_to "Edit Gem", edit_rubygem_path(@gem)
-    .block.red
-      %h3 Authors
-      %p= @gem.current_version.authors
+    -unless @gem.current_version.authors.empty?
+      .block.red
+        %h3 Authors
+        %p= @gem.current_version.authors
     .block.red
       %h3 Downloads
       %p= number_with_delimiter(@gem.downloads)
@@ -47,7 +48,7 @@
         =link_to_page "Wiki", @gem.linkset.wiki
         =link_to_page "Mailing List", @gem.linkset.mail
         =link_to_page "Bug Tracker", @gem.linkset.bugs
-    -if @gem.current_dependencies
+    -unless @gem.current_dependencies.empty?
       .block.red
         %h3 Dependencies
         %p
