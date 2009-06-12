@@ -5,7 +5,15 @@ class Rubygem < ActiveRecord::Base
   belongs_to :user
   has_many :owners, :through => :ownerships, :source => :user
   has_many :ownerships
-  has_many :versions, :dependent => :destroy, :order => "created_at desc, number desc"
+  has_many :versions, :dependent => :destroy, :order => "created_at desc, number desc" do
+    def latest
+      self.find(:first, :order => "updated_at desc")
+    end
+
+    def current
+      self.find(:first)
+    end
+  end
   has_one :linkset, :dependent => :destroy
 
   validates_presence_of :name
@@ -38,19 +46,11 @@ class Rubygem < ActiveRecord::Base
   end
 
   def to_s
-    if current_version
-      "#{name} (#{current_version})"
+    if versions.current
+      "#{name} (#{versions.current})"
     else
       name
     end
-  end
-
-  def current_version
-    versions.find(:first)
-  end
-
-  def current_dependencies
-    current_version.dependencies
   end
 
   def with_downloads
