@@ -179,6 +179,7 @@ class RubygemTest < ActiveSupport::TestCase
         assert_equal @spec.version.to_s, version.number
         assert_equal @spec.date, version.created_at
         assert !version.new_record?
+        assert_equal 1, Linkset.find_all_by_rubygem_id(@rubygem.id).size
       end
 
       should "update the index" do

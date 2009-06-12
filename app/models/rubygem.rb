@@ -62,11 +62,14 @@ class Rubygem < ActiveRecord::Base
 
     self.name = self.spec.name if self.name.blank?
 
+    number = self.spec.original_name.gsub("#{self.spec.name}-", '')
+
+    Version.destroy_all(:number => number, :rubygem_id => self.id)
     version = self.versions.build(
       :authors     => self.spec.authors.join(", "),
       :description => self.spec.description || self.spec.summary,
       :created_at  => self.spec.date,
-      :number      => self.spec.original_name.gsub("#{self.spec.name}-", ''))
+      :number      => number)
 
     self.spec.dependencies.each do |dependency|
       version.dependencies.build(
@@ -74,7 +77,7 @@ class Rubygem < ActiveRecord::Base
         :name         => dependency.requirements_list.to_s)
     end
 
-    self.build_linkset(:home => self.spec.homepage)
+    self.build_linkset(:home => self.spec.homepage) if new_record?
   end
 
   def store
