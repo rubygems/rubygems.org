@@ -70,7 +70,7 @@ class Rubygem < ActiveRecord::Base
 
     self.spec.dependencies.each do |dependency|
       version.dependencies.build(
-        :rubygem_name => dependency.name,
+        :rubygem_name => dependency.name.to_s,
         :name         => dependency.requirements_list.to_s)
     end
 
