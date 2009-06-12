@@ -46,7 +46,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def current_version
-    versions.last
+    versions.find(:first, :order => "created_at desc, number desc")
   end
 
   def current_dependencies

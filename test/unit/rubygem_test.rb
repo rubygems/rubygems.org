@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class RubygemTest < ActiveSupport::TestCase
-  context "with a rubygem" do
+  context "with a saved rubygem" do
     setup do
       @rubygem = Factory(:rubygem)
     end
@@ -11,6 +11,12 @@ class RubygemTest < ActiveSupport::TestCase
     should_have_many :versions, :dependent => :destroy
     should_have_one :linkset, :dependent => :destroy
     should_validate_uniqueness_of :name
+  end
+
+  context "with a rubygem" do
+    setup do
+      @rubygem = Factory.build(:rubygem)
+    end
 
     context "with a user" do
       setup do
@@ -53,6 +59,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "return name with version for #to_s" do
+      @rubygem.save
       assert_equal "#{@rubygem.name} (#{@rubygem.current_version})", @rubygem.to_s
     end
 
@@ -85,8 +92,10 @@ class RubygemTest < ActiveSupport::TestCase
     should "include platform when saving version" do
       spec = Rubygem.pull_spec(gem_file.path)
       spec.platform = "mswin"
+      spec.date = Date.today
+
       @rubygem.spec = spec
-      @rubygem.build
+      @rubygem.save
 
       version = @rubygem.current_version
       assert_not_nil version
