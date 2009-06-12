@@ -2,10 +2,7 @@
 -@subtitle = ""
 .gems.grid_12
   -if @gems.empty?
-    %h3 Create
-    =render 'new'
-    %h3 Migrate
-    =render 'migrate'
+    You're not hosting any gems on Gemcutter yet.
   -else
     -@gems.each do |gem|
       =link_to gem, rubygem_path(gem)
