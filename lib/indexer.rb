@@ -2,6 +2,22 @@ require 'rubygems/indexer'
 
 module Gem
   class Indexer
+    def update_specs_index(index, source, dest)
+      specs_index = Marshal.load Gem.read_binary(source)
+
+      index.each do |_, spec|
+        platform = spec.original_platform
+        platform = Gem::Platform::RUBY if platform.nil? or platform.empty?
+        specs_index << [spec.name, spec.version, platform]
+      end
+
+      specs_index = compact_specs specs_index.uniq
+
+      open dest, 'wb' do |io|
+        Marshal.dump specs_index, io
+      end
+    end
+
     def update_index
       make_temp_directories
 
@@ -52,4 +68,3 @@ module Gem
     end
   end
 end
-
