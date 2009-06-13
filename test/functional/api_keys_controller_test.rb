@@ -24,6 +24,19 @@ class ApiKeysControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to show with bad credentials" do
+    setup do
+      @user = Factory(:user)
+      @request.env["HTTP_AUTHORIZATION"] = "Basic " + 
+        Base64::encode64("bad:creds")
+      get :show
+    end
+    should "deny access" do
+      assert_response 401
+      assert_match "HTTP Basic: Access denied.", @response.body
+    end
+  end
+
   context "on GET to show with confirmed user" do
     setup do
       @user = Factory(:email_confirmed_user)
