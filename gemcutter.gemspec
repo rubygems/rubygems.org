@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gemcutter}
-  s.version = "0.0.2"
+  s.version = "0.0.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Quaranto"]
-  s.date = %q{2009-06-09}
+  s.date = %q{2009-06-13}
   s.email = %q{nick@quaran.to}
   s.extra_rdoc_files = [
     "README.textile"
@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{gemcutter}
-  s.rubygems_version = %q{1.3.3}
+  s.rubygems_version = %q{1.3.4}
   s.summary = %q{Kickass gem hosting}
 
   if s.respond_to? :specification_version then

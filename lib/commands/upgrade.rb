@@ -48,8 +48,13 @@ class Gem::Commands::UpgradeCommand < Gem::Command
     request.basic_auth email, password
     response = Net::HTTP.new(url.host, url.port).start { |http| http.request(request) }
 
-    Gem.configuration[:gemcutter_key] = response.body
-    Gem.configuration.write
+    case response
+    when Net::HTTPSuccess
+      Gem.configuration[:gemcutter_key] = response.body
+      Gem.configuration.write
+    else
+      say response.body
+    end
   end
 
 end

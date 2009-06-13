@@ -47,6 +47,9 @@ class PluginTest < Test::Unit::TestCase
 
   context "upgrading" do
     setup do
+      @sources = ["http://rubyforge.org"]
+      stub(Gem).sources { @sources }
+
       @command = Gem::Commands::UpgradeCommand.new
       @email = "email"
       @password = "password"
@@ -58,37 +61,45 @@ class PluginTest < Test::Unit::TestCase
 
       @config = Object.new
       stub(Gem).configuration { @config }
-      mock(@config)[:gemcutter_key] = @key
+      stub(@config)[:gemcutter_key] = @key
+      stub(@config).write
+    end
+
+    should "let the user know if there was a problem" do
+      @problem = "Access Denied"
+      mock(@command).say("Upgrading your primary gem source to gemcutter.org")
+      mock(@command).say(@problem)
+      mock(@config).write.never
+
+      FakeWeb.register_uri :get, "http://#{@email}:#{@password}@gemcutter.org/api_key", :string => @problem, :status => 401
+      @command.execute
     end
 
     should "add gemcutter as first source" do
-      mock(@config).write.times(2)
       mock(@command).say("Upgrading your primary gem source to gemcutter.org")
+      mock(@sources).unshift(URL)
+      mock(@config).write
       @command.execute
-      assert_equal "http://gemcutter.org", Gem.sources.first
-      assert Gem.sources.include?("http://gems.rubyforge.org")
     end
 
     should "only add gemcutter once" do
-      mock(@config).write
+      mock(@sources).include?(URL) { true }
       mock(@command).say("Gemcutter is already your primary gem source. Please use `gem downgrade` if you wish to no longer use Gemcutter.")
+      mock(@config).write.never
       @command.execute
-      assert_equal "http://gemcutter.org", Gem.sources.first
-      assert !Gem.sources[1..-1].include?("http://gemcutter.org")
     end
   end
 
   context "downgrading" do
     setup do
       @command = Gem::Commands::DowngradeCommand.new
-      mock(@command).say("Your primary gem source is now gems.rubyforge.org")
-      mock(Gem).configuration.mock!.write
     end
 
     should "return to using rubyforge" do
+      mock(@command).say("Your primary gem source is now gems.rubyforge.org")
+      mock(Gem).configuration.mock!.write
+      mock(Gem).sources.mock!.delete(URL)
       @command.execute
-      assert !Gem.sources.include?("http://gemcutter.org")
-      assert Gem.sources.include?("http://gems.rubyforge.org")
     end
   end
 end
