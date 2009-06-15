@@ -27,6 +27,31 @@ class Rubygem < ActiveRecord::Base
 
   named_scope :with_versions, :conditions => ["versions_count > 0"]
 
+  def self.process(data, user)
+    temp = Tempfile.new("gem")
+    temp.write data
+    temp.flush
+    temp.close
+
+    spec = pull_spec(temp.path)
+
+    if spec.nil?
+      return ["Gemcutter cannot process this gem. Please try rebuilding it and installing it locally to make sure it's valid.", 422]
+    end
+
+    rubygem = Rubygem.find_or_initialize_by_name(spec.name)
+
+    if !rubygem.new_record? && !rubygem.owned_by?(user)
+      return ["You do not have permission to push to this gem.", 403]
+    end
+
+    rubygem.spec = spec
+    rubygem.path = temp.path
+    rubygem.ownerships.build(:user => user, :approved => true) if rubygem.new_record?
+    rubygem.save
+    ["Successfully registered gem: #{rubygem.name} (#{rubygem.versions.latest})", 200]
+  end
+
   def self.pull_spec(path)
     begin
       format = Gem::Format.from_file_by_path(path)

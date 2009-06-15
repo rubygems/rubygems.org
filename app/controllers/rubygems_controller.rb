@@ -42,30 +42,8 @@ class RubygemsController < ApplicationController
   end
 
   def create
-    temp = Tempfile.new("gem")
-    temp.write request.body.read
-    temp.flush
-    temp.close
-
-    spec = Rubygem.pull_spec(temp.path)
-
-    if spec.nil?
-      render :text => "Gemcutter cannot process this gem. Please try rebuilding it and installing it locally to make sure it's valid.", :status => 422
-      return
-    end
-
-    rubygem = Rubygem.find_or_initialize_by_name(spec.name)
-
-    if !rubygem.new_record? && !rubygem.owned_by?(current_user)
-      render :text => "You do not have permission to push to this gem.", :status => 403
-      return
-    end
-
-    rubygem.spec = spec
-    rubygem.path = temp.path
-    rubygem.ownerships.build(:user => current_user, :approved => true) if rubygem.new_record?
-    rubygem.save
-    render :text => "Successfully registered gem: #{rubygem.name} (#{rubygem.versions.latest})"
+    message, code = Rubygem.process(request.body.read, current_user)
+    render :text => message, :status => code
   end
 
   protected
