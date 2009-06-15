@@ -13,5 +13,3 @@ class Gem::Commands::DowngradeCommand < Gem::Command
     Gem.configuration.write
   end
 end
-
-Gem::CommandManager.instance.register_command :downgrade
