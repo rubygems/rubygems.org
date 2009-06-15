@@ -2,8 +2,7 @@ namespace :gemcutter do
   desc "Clean out files that aren't needed."
   task :clean => :environment do
     system("git clean -dfx server/; git checkout server/")
-    Rubygem.delete_all
-    Version.delete_all
+    [Rubygem, Version, Dependency, Requirement, Linkset].each { |c| c.delete_all }
     Rake::Task["gemcutter:index:create"].execute
   end
 
@@ -27,6 +26,16 @@ namespace :gemcutter do
     desc "Update the index"
     task :update => :environment do
       Gemcutter.indexer.update_index
+    end
+  end
+
+  desc "Look for migrations and try to match the key"
+  task :migrate => :environment do
+    require 'webrat'
+    require 'webrat/mechanize'
+    Ownership.find_all_by_approved(false).each do |ownership|
+      rubygem = ownership.rubygem
+      session.visit("http://rubyforge.org/projects/")
     end
   end
 
