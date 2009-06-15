@@ -23,7 +23,9 @@ class Gem::Commands::PushCommand < Gem::Command
   end
 
   def ask_for_password(message)
-    ui.ask_for_password(message)
+    password = ui.ask_for_password(message)
+    ui.say("\n")
+    password
   end
 
   def api_key
