@@ -2,7 +2,7 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "gemcutter"
-    gem.summary = "Kickass gem hosting"
+    gem.summary = "Awesome gem hosting"
     gem.email = "nick@quaran.to"
     gem.homepage = "http://github.com/qrush/gemcutter"
     gem.authors = ["Nick Quaranto"]
