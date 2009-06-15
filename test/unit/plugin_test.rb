@@ -52,6 +52,7 @@ class PluginTest < Test::Unit::TestCase
         FakeWeb.register_uri :get, "http://#{@email}:#{@password}@gemcutter.org/api_key", :string => @key
 
         @config = Object.new
+        stub(Gem).configuration { @config }
         stub(@config)[:gemcutter_key] = @key
         stub(@config).write
       end
