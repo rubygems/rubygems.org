@@ -7,9 +7,9 @@ require 'rr'
 
 FakeWeb.allow_net_connect = false
 
-require "lib/rubygems_plugin"
+require File.join("lib", "rubygems_plugin")
 %w(push upgrade downgrade).each do |command|
-  require "lib/commands/#{command}"
+  require File.join("lib", "commands", command)
 end
 
 class PluginTest < Test::Unit::TestCase
@@ -18,18 +18,65 @@ class PluginTest < Test::Unit::TestCase
   context "pushing" do
     setup do
       @command = Gem::Commands::PushCommand.new
-      mock(@command).say("Pushing gem to Gemcutter...")
-      @response = "success"
-      FakeWeb.register_uri :post, "http://gemcutter.org/gems", :string => @response
+      stub(@command).say
+    end
+
+    should "sign in then push if no api key" do
+      stub(Gem).configuration { {:gemcutter_key => nil} }
+      mock(@command).sign_in
+      mock(@command).send_gem
+      @command.execute
+    end
+
+    should "not sign in if api key exists" do
+      stub(Gem).configuration { {:gemcutter_key => "1234567890"} }
+      mock(@command).sign_in.never
+      mock(@command).send_gem
+      @command.execute
     end
 
     should "raise an error with no arguments" do
       assert_raise Gem::CommandLineError do
-        @command.execute
+        @command.send_gem
+      end
+    end
+
+    context "signing in" do
+      setup do
+        @email = "email"
+        @password = "password"
+        @key = "key"
+        mock(@command).say("Enter your Gemcutter credentials. Don't have an account yet? Create one at #{URL}/sign_up")
+        mock(@command).ask("Email: ") { @email }
+        mock(@command).ask_for_password("Password: ") { @password }
+        FakeWeb.register_uri :get, "http://#{@email}:#{@password}@gemcutter.org/api_key", :string => @key
+
+        @config = Object.new
+        stub(@config)[:gemcutter_key] = @key
+        stub(@config).write
+      end
+
+      should "sign in" do
+        mock(@command).say("Signed in. Your api key has been stored in ~/.gemrc")
+        @command.sign_in
+      end
+
+      should "let the user know if there was a problem" do
+        @problem = "Access Denied"
+        mock(@command).say(@problem)
+        mock(@command).terminate_interaction
+        mock(@config).write.never
+
+        FakeWeb.register_uri :get, "http://#{@email}:#{@password}@gemcutter.org/api_key", :string => @problem, :status => 401
+        @command.sign_in
       end
     end
 
     should "push a gem" do
+      mock(@command).say("Pushing gem to Gemcutter...")
+      @response = "success"
+      FakeWeb.register_uri :post, "http://gemcutter.org/gems", :string => @response
+
       @gem = "test"
       @io = "io"
       @config = { :gemcutter_key => "key" }
@@ -41,7 +88,7 @@ class PluginTest < Test::Unit::TestCase
       stub(Gem).configuration { @config }
 
       mock(@command).say(@response)
-      @command.execute
+      @command.send_gem
     end
   end
 
@@ -49,34 +96,14 @@ class PluginTest < Test::Unit::TestCase
     setup do
       @sources = ["http://rubyforge.org"]
       stub(Gem).sources { @sources }
-
-      @command = Gem::Commands::UpgradeCommand.new
-      @email = "email"
-      @password = "password"
-      @key = "key"
-      mock(@command).say("Enter your Gemcutter credentials. Don't have an account yet? Create one at #{URL}/sign_up")
-      mock(@command).ask("Email: ") { @email }
-      mock(@command).ask_for_password("Password: ") { @password }
-      FakeWeb.register_uri :get, "http://#{@email}:#{@password}@gemcutter.org/api_key", :string => @key
-
       @config = Object.new
       stub(Gem).configuration { @config }
-      stub(@config)[:gemcutter_key] = @key
-      stub(@config).write
-    end
 
-    should "let the user know if there was a problem" do
-      @problem = "Access Denied"
-      mock(@command).say("Upgrading your primary gem source to gemcutter.org")
-      mock(@command).say(@problem)
-      mock(@config).write.never
-
-      FakeWeb.register_uri :get, "http://#{@email}:#{@password}@gemcutter.org/api_key", :string => @problem, :status => 401
-      @command.execute
+      @command = Gem::Commands::UpgradeCommand.new
     end
 
     should "add gemcutter as first source" do
-      mock(@command).say("Upgrading your primary gem source to gemcutter.org")
+      mock(@command).say("Your primary gem source is now gemcutter.org")
       mock(@sources).unshift(URL)
       mock(@config).write
       @command.execute
