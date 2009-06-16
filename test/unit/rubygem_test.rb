@@ -87,71 +87,88 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal "#{@rubygem.name} (#{@rubygem.downloads})", @rubygem.with_downloads
     end
 
-    should "save dependencies" do
-      spec = Rubygem.pull_spec(gem_file.path)
-      spec.add_dependency("liquid", ">= 1.9.0")
-      spec.add_dependency("open4", "= 0.9.6")
-      @rubygem.spec = spec
-      @rubygem.save
+    context "processing spec" do
+      setup do
+        @spec = Rubygem.pull_spec(gem_file.path)
+        @rubygem.spec = @spec
+      end
 
-      assert_equal 2, @rubygem.versions.current.requirements.size
-      current_dependencies = @rubygem.versions.current.dependencies
-      assert_equal 2, current_dependencies.size
+      should "save dependencies" do
+        @spec.add_dependency("liquid", ">= 1.9.0")
+        @spec.add_dependency("open4", "= 0.9.6")
+        @rubygem.save
 
-      assert_equal "liquid", current_dependencies.first.rubygem.name
-      assert_equal ">= 1.9.0", current_dependencies.first.name
+        assert_equal 2, @rubygem.versions.current.requirements.size
+        current_dependencies = @rubygem.versions.current.dependencies
+        assert_equal 2, current_dependencies.size
 
-      assert_equal "open4", current_dependencies.last.rubygem.name
-      assert_equal "= 0.9.6", current_dependencies.last.name
+        assert_equal "liquid", current_dependencies.first.rubygem.name
+        assert_equal ">= 1.9.0", current_dependencies.first.name
+
+        assert_equal "open4", current_dependencies.last.rubygem.name
+        assert_equal "= 0.9.6", current_dependencies.last.name
+      end
+
+      should "include platform when saving version" do
+        @spec.platform = "mswin"
+        @spec.date = Date.today
+        @rubygem.save
+
+        version = @rubygem.versions.current
+        assert_not_nil version
+        assert_equal "0.0.0-mswin", version.number
+      end
+
+      should "build linkset with valid homepage" do
+        @spec.homepage = "http://something.com"
+        @rubygem.build
+
+        assert_not_nil @rubygem.linkset
+        assert_equal @spec.homepage, @rubygem.linkset.home
+      end
+
+      should "build linkset without homepage" do
+        @spec.homepage = nil
+        @rubygem.build
+
+        assert_not_nil @rubygem.linkset
+        assert_nil @rubygem.linkset.home
+      end
+
+      should "save summary, description and rubyforge project" do
+        @summary = "My gem."
+        @description = "My gem is awesome."
+        @rubyforge_project = "awesome"
+
+        @spec.summary = @summary
+        @spec.description = @description
+        @spec.rubyforge_project = @rubyforge_project
+        @rubygem.save
+        @version = @rubygem.versions.latest
+
+        assert_equal @summary, @version.summary
+        assert_equal @description, @version.description
+        assert_equal @rubyforge_project, @version.rubyforge_project
+      end
     end
 
-    should "include platform when saving version" do
-      spec = Rubygem.pull_spec(gem_file.path)
-      spec.platform = "mswin"
-      spec.date = Date.today
-
-      @rubygem.spec = spec
-      @rubygem.save
-
-      version = @rubygem.versions.current
-      assert_not_nil version
-      assert_equal "0.0.0-mswin", version.number
-    end
-
-    should "build linkset with valid homepage" do
-      spec = Rubygem.pull_spec(gem_file.path)
-      spec.homepage = "http://something.com"
-      @rubygem.spec = spec
-      @rubygem.build
-
-      assert_not_nil @rubygem.linkset
-      assert_equal spec.homepage, @rubygem.linkset.home
-    end
-
-    should "build linkset without homepage" do
-      spec = Rubygem.pull_spec(gem_file.path)
-      spec.homepage = nil
-      @rubygem.spec = spec
-      @rubygem.build
-
-      assert_not_nil @rubygem.linkset
-      assert_nil @rubygem.linkset.home
-    end
   end
 
-  should "pull spec out of the given gem" do
-    spec = Rubygem.pull_spec(gem_file.path)
-    assert_not_nil spec
-    assert spec.is_a?(Gem::Specification)
-  end
+  context "pulling the spec " do
+    should "pull spec out of the given gem" do
+      spec = Rubygem.pull_spec(gem_file.path)
+      assert_not_nil spec
+      assert spec.is_a?(Gem::Specification)
+    end
 
-  should "not be able to pull spec from a bad path" do
-    spec = Rubygem.pull_spec("bad path")
-    assert_nil spec
-  end
+    should "not be able to pull spec from a bad path" do
+      spec = Rubygem.pull_spec("bad path")
+      assert_nil spec
+    end
 
-  should "respond to spec" do
-    assert Rubygem.new.respond_to?(:spec)
+    should "respond to spec" do
+      assert Rubygem.new.respond_to?(:spec)
+    end
   end
 
   context "saving a gem" do

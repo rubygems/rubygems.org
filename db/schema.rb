@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090612020811) do
+ActiveRecord::Schema.define(:version => 20090616121836) do
 
   create_table "dependencies", :force => true do |t|
     t.string   "name"
@@ -86,6 +86,8 @@ ActiveRecord::Schema.define(:version => 20090612020811) do
     t.integer  "rubygem_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "summary"
+    t.string   "rubyforge_project"
   end
 
   add_index "versions", ["rubygem_id"], :name => "index_versions_on_rubygem_id"
