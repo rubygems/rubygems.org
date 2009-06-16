@@ -18,6 +18,22 @@ class RubygemTest < ActiveSupport::TestCase
       @rubygem = Factory.build(:rubygem)
     end
 
+    context "numbers in rubygem name" do
+      should "not be valid if name consists solely of numbers" do
+        @rubygem.name = "123456"
+        assert !@rubygem.valid?
+        assert_equal "must include at least one letter.", @rubygem.errors.on(:name)
+      end
+      should "be valid if name has numbers in it" do
+        @rubygem.name = "123test123"
+        assert @rubygem.valid?
+      end
+      should "be valid if name has no numbers in it" do
+        @rubygem.name = "test"
+        assert @rubygem.valid?
+      end
+    end
+
     context "with a user" do
       setup do
         @user = Factory(:user)
