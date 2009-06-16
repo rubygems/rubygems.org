@@ -18,6 +18,7 @@ class Rubygem < ActiveRecord::Base
 
   validates_presence_of :name
   validates_uniqueness_of :name
+  validates_format_of :name, :with => /(?=[^0-9]+)/, :message => "must include at least one letter."
 
   cattr_accessor :source_index
   attr_accessor :spec, :path, :processing
