@@ -92,10 +92,12 @@ class Rubygem < ActiveRecord::Base
 
     Version.destroy_all(:number => number, :rubygem_id => self.id)
     version = self.versions.build(
-      :authors     => self.spec.authors.join(", "),
-      :description => self.spec.description || self.spec.summary,
-      :created_at  => self.spec.date,
-      :number      => number)
+      :authors           => self.spec.authors.join(", "),
+      :description       => self.spec.description,
+      :summary           => self.spec.summary,
+      :rubyforge_project => self.spec.rubyforge_project,
+      :created_at        => self.spec.date,
+      :number            => number)
 
     self.spec.dependencies.each do |dependency|
       version.dependencies.build(
