@@ -58,7 +58,6 @@ class GemcutterTest < ActiveSupport::TestCase
       end
     end
 
-
     context "pulling the spec " do
       should "pull spec out of the given gem" do
         @cutter.pull_spec
