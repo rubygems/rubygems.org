@@ -71,6 +71,10 @@ class Rubygem < ActiveRecord::Base
     ownerships.find_by_user_id(user.id).try(:approved) if user
   end
 
+  def allow_push_from?(user)
+    new_record? || owned_by?(user)
+  end
+
   def to_s
     if versions.current
       "#{name} (#{versions.current})"
