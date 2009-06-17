@@ -1,6 +1,6 @@
 class Gemcutter
   def self.server_path(*more)
-    File.join(File.dirname(__FILE__), '..', 'server', *more)
+    File.expand_path(File.join(File.dirname(__FILE__), '..', 'server', *more))
   end
 
   def self.indexer
