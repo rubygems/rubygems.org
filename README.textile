@@ -1,6 +1,6 @@
 h1. gemcutter
 
-Kickass and simple RubyGem hosting.
+Awesome RubyGem hosting.
 
 h2. Purpose
 
