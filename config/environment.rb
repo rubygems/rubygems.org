@@ -33,3 +33,9 @@ require 'lib/indexer'
 require 'lib/core_ext/string'
 
 Gem.configuration.verbose = false
+
+require 'vendor/gems/thoughtbot-clearance-0.6.6/app/controllers/clearance/sessions_controller'
+require 'vendor/gems/thoughtbot-clearance-0.6.6/app/controllers/clearance/passwords_controller'
+require 'vendor/gems/thoughtbot-clearance-0.6.6/app/controllers/clearance/confirmations_controller'
+require 'vendor/gems/thoughtbot-clearance-0.6.6/app/controllers/clearance/users_controller'
+
