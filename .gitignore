@@ -4,7 +4,7 @@
 server/
 pkg/
 bench/
-cache/
+*cache*/
 log/*
 tmp/*
 db/*.sqlite3
