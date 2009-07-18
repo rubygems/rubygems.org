@@ -9,7 +9,7 @@ class RubygemsController < ApplicationController
   end
 
   def index
-    @gems = Rubygem.paginate :page => params[:page], :order => "name asc"
+    @gems = Rubygem.paginate :page => params[:page], :order => "name asc", :conditions => "name <> ''"
   end
 
   def show
