@@ -21,4 +21,4 @@ require 'webrat/core/matchers'
 require 'webrat/core/matchers/have_tag'
 
 HOST = "localhost"
-TEST_DIR = File.join('/', 'tmp', 'jekyll')
+TEST_DIR = File.join('/', 'tmp', 'gemcutter')
