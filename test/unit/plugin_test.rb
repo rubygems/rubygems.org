@@ -2,6 +2,7 @@ require 'rubygems'
 require 'test/unit'
 require 'shoulda'
 require 'redgreen'
+gem 'fakeweb', '>= 1.2.5'
 require 'fakeweb'
 require 'rr'
 
