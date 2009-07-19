@@ -22,10 +22,6 @@ class Test::Unit::TestCase
   end
 end
 
-def gem_file(name = "test-0.0.0.gem")
-  File.open(File.join(File.dirname(__FILE__), 'gems', name))
-end
-
 def regenerate_index
   FileUtils.rm_rf(
     %w[server/cache/*
@@ -35,25 +31,4 @@ def regenerate_index
     server/source_index].map { |d| Dir[d] })
   Gemcutter.indexer.generate_index
   Rubygem.source_index = nil
-end
-
-def gem_spec(opts = {})
-  Gem::Specification.new do |s|
-    s.name = %q{test}
-    s.version = opts[:version] || "0.0.0"
-
-    s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-    s.authors = ["Joe User"]
-    s.date = %q{2009-05-22}
-    s.description = %q{This is my awesome gem.}
-    s.email = %q{joe@user.com}
-    s.files = [
-      "README.textile",
-      "Rakefile",
-      "VERSION.yml",
-      "lib/test.rb",
-      "test/test_test.rb"
-    ]
-    s.homepage = %q{http://user.com/test}
-  end
 end
