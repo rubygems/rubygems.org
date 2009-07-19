@@ -95,7 +95,7 @@ namespace :gemcutter do
 
     desc 'Bring the gems through the gemcutter process'
     task :process => :environment do
-      gems = Dir[File.join(ARGV[1], "*.gem")]
+      gems = Dir[File.join(ARGV[1], "*.gem")].sort.reverse
       puts "Processing #{gems.size} gems..."
       gems.each do |path|
         puts path
@@ -111,6 +111,15 @@ namespace :gemcutter do
         @rubygem.path = path
         @rubygem.processing = true
         @rubygem.save
+        @rubygem.versions.reload
+
+        if @rubygem.new_record? || @rubygem.slug.blank? ||
+           @rubygem.name.blank? || @rubygem.versions.empty?
+          puts "Really bad gem: #{path}"
+          p spec
+          p @rubygem
+          exit
+        end
       end
 
       source_path = Gemcutter.server_path("source_index")
