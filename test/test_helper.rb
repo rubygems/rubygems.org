@@ -27,12 +27,12 @@ def gem_file(name = "test-0.0.0.gem")
 end
 
 def regenerate_index
-  FileUtils.rm_rf Dir[
-    "server/cache/*",
-    "server/*specs*",
-    "server/quick",
-    "server/specifications/*",
-    "server/source_index"]
+  FileUtils.rm_rf(
+    %w[server/cache/*
+    server/*specs*
+    server/quick
+    server/specifications
+    server/source_index].map { |d| Dir[d] })
   Gemcutter.indexer.generate_index
   Rubygem.source_index = nil
 end
