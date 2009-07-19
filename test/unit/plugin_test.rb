@@ -49,7 +49,7 @@ class PluginTest < Test::Unit::TestCase
         mock(@command).say("Enter your Gemcutter credentials. Don't have an account yet? Create one at #{URL}/sign_up")
         mock(@command).ask("Email: ") { @email }
         mock(@command).ask_for_password("Password: ") { @password }
-        FakeWeb.register_uri :get, "http://#{@email}:#{@password}@gemcutter.org/api_key", :string => @key
+        FakeWeb.register_uri :get, "http://#{@email}:#{@password}@gemcutter.org/api_key", :body => @key
 
         @config = Object.new
         stub(Gem).configuration { @config }
@@ -68,7 +68,7 @@ class PluginTest < Test::Unit::TestCase
         mock(@command).terminate_interaction
         mock(@config).write.never
 
-        FakeWeb.register_uri :get, "http://#{@email}:#{@password}@gemcutter.org/api_key", :string => @problem, :status => 401
+        FakeWeb.register_uri :get, "http://#{@email}:#{@password}@gemcutter.org/api_key", :body => @problem, :status => 401
         @command.sign_in
       end
     end
@@ -76,7 +76,7 @@ class PluginTest < Test::Unit::TestCase
     should "push a gem" do
       mock(@command).say("Pushing gem to Gemcutter...")
       @response = "success"
-      FakeWeb.register_uri :post, "http://gemcutter.org/gems", :string => @response
+      FakeWeb.register_uri :post, "http://gemcutter.org/gems", :body => @response
 
       @gem = "test"
       @io = "io"
