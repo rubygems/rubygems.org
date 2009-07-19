@@ -113,11 +113,13 @@ class RubygemTest < ActiveSupport::TestCase
         current_dependencies = @rubygem.versions.current.dependencies
         assert_equal 2, current_dependencies.size
 
-        assert_equal "liquid", current_dependencies.first.rubygem.name
-        assert_equal ">= 1.9.0", current_dependencies.first.name
+        liquid = current_dependencies.select { |d| d.rubygem.name == "liquid" }.first
+        assert_not_nil liquid
+        assert_equal ">= 1.9.0", liquid.name
 
-        assert_equal "open4", current_dependencies.last.rubygem.name
-        assert_equal "= 0.9.6", current_dependencies.last.name
+        open4 = current_dependencies.select { |d| d.rubygem.name == "open4" }.first
+        assert_not_nil open4
+        assert_equal "= 0.9.6", open4.name
       end
 
       should "include platform when saving version" do
