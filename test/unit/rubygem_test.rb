@@ -305,4 +305,29 @@ class RubygemTest < ActiveSupport::TestCase
     end
   end
 
+  context "when some gems exist with titles and versions that have descriptions" do
+    setup do
+      @apple_pie = Factory(:rubygem, :name => 'apple')
+      Factory(:version, :description => 'pie', :rubygem => @apple_pie)
+
+      @orange_julius = Factory(:rubygem, :name => 'orange')
+      Factory(:version, :description => 'julius', :rubygem => @orange_julius)
+    end
+
+    should "find rubygems by name on #search" do
+      assert Rubygem.search('apple').include?(@apple_pie)
+      assert Rubygem.search('orange').include?(@orange_julius)
+
+      assert ! Rubygem.search('apple').include?(@orange_julius)
+      assert ! Rubygem.search('orange').include?(@apple_pie)
+    end
+
+    should "find rubygems by description on #search" do
+      assert Rubygem.search('pie').include?(@apple_pie)
+      assert Rubygem.search('julius').include?(@orange_julius)
+
+      assert ! Rubygem.search('pie').include?(@orange_julius)
+      assert ! Rubygem.search('julius').include?(@apple_pie)
+    end
+  end
 end

@@ -3,3 +3,9 @@ Factory.factories.each do |name, factory|
     Factory(name, attr.gsub(' ', '_') => value)
   end
 end
+
+Given /^a version exists for the "([^\"]*)" rubygem with a description of "([^\"]*)"$/ do
+  |rubygem_name, version_description|
+  rubygem = Rubygem.find_by_name!(rubygem_name)
+  Factory(:version, :rubygem => rubygem, :description => version_description)
+end
