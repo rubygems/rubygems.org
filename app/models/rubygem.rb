@@ -27,6 +27,11 @@ class Rubygem < ActiveRecord::Base
   after_save :store
 
   named_scope :with_versions, :conditions => ["versions_count > 0"]
+  named_scope :search, lambda { |query| {
+    :conditions => ["name like :query or versions.description like :query", 
+      {:query => "%#{query}%"}],
+    :include => [:versions] }
+  }
 
   def self.process(data, user)
     temp = Tempfile.new("gem")
