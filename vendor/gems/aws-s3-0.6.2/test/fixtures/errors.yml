@@ -1,0 +1,34 @@
+not_implemented: >
+  <Error>
+    <Code>NotImplemented</Code>
+    <Message>A header you provided implies functionality that is not implemented</Message>
+    <RequestId>D1D13A09AC92427F</RequestId>
+    <Header>Host</Header>
+    <HostId>oNZgzTTmWiovwGGwHXAzz+1vRmAJVAplS9TF7B0cuOGfEwoi7DYSTa/1Qhv90CfW</HostId>
+  </Error>
+  
+access_denied: >
+  <Error>
+    <Code>AccessDenied</Code>
+    <Message>Access Denied</Message>
+    <RequestId>F99F6D58B96C98E0</RequestId>
+    <HostId>XwCF7k3llrcEwtoHR7MusZ6ilCdF5DKDmwYpglvjKNjvwo24INCeXlEpo1M03Wxm</HostId>
+  </Error>
+  
+internal_error: >
+  <Error>
+    <Code>InternalError</Code>
+    <Message>Internal Error</Message>
+    <RequestId>F99F6D223B96C98E0</RequestId>
+    <HostId>XwCF7k3llrcEwtoHR7MusZ6ilCdF5DKDmwYpglvjKNjvwo24INCeXlEpo1M03Wxm</HostId>
+  </Error>
+  
+error_with_no_message: >
+  <Error>
+    <Code>InvalidArgument</Code>
+    <Message></Message>
+    <ArgumentValue>READ</ArgumentValue>
+    <RequestId>74A377B1C0FA2BCF</RequestId>
+    <HostId>cP4rqsAEtHpN6Ckv08Hr3LXjLzx15/YgyoSqzs779vMR8MrAFSodxZp96wtuMQuI</HostId>
+    <ArgumentName>x-amz-acl</ArgumentName>
+  </Error>

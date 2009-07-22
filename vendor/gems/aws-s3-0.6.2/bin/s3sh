@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+s3_lib   = File.dirname(__FILE__) + '/../lib/aws/s3'
+setup    = File.dirname(__FILE__) + '/setup'
+irb_name = RUBY_PLATFORM =~ /mswin32/ ? 'irb.bat' : 'irb'
+
+exec "#{irb_name} -r #{s3_lib} -r #{setup} --simple-prompt"

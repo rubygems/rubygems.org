@@ -1,0 +1,545 @@
+= AWS::S3
+
+AWS::S3 is a Ruby library for Amazon's Simple Storage Service's REST API (http://aws.amazon.com/s3).
+Full documentation of the currently supported API can be found at http://docs.amazonwebservices.com/AmazonS3/2006-03-01.
+
+== Getting started
+
+To get started you need to require 'aws/s3':
+
+  % irb -rubygems
+  irb(main):001:0> require 'aws/s3'
+  # => true
+
+The AWS::S3 library ships with an interactive shell called <tt>s3sh</tt>. From within it, you have access to all the operations the library exposes from the command line.
+
+  % s3sh
+  >> Version
+
+Before you can do anything, you must establish a connection using Base.establish_connection!.  A basic connection would look something like this:
+
+  AWS::S3::Base.establish_connection!(
+    :access_key_id     => 'abc', 
+    :secret_access_key => '123'
+  )
+
+The minimum connection options that you must specify are your access key id and your secret access key.
+
+(If you don't already have your access keys, all you need to sign up for the S3 service is an account at Amazon. You can sign up for S3 and get access keys by visiting http://aws.amazon.com/s3.)
+
+For convenience, if you set two special environment variables with the value of your access keys, the console will automatically create a default connection for you. For example:
+
+  % cat .amazon_keys
+  export AMAZON_ACCESS_KEY_ID='abcdefghijklmnop'
+  export AMAZON_SECRET_ACCESS_KEY='1234567891012345'
+
+Then load it in your shell's rc file.
+
+  % cat .zshrc
+  if [[ -f "$HOME/.amazon_keys" ]]; then
+    source "$HOME/.amazon_keys";
+  fi
+
+See more connection details at AWS::S3::Connection::Management::ClassMethods.
+
+
+== AWS::S3 Basics
+=== The service, buckets and objects
+
+The three main concepts of S3 are the service, buckets and objects. 
+
+==== The service
+
+The service lets you find out general information about your account, like what buckets you have. 
+
+  Service.buckets
+  # => []
+
+ 
+==== Buckets
+
+Buckets are containers for objects (the files you store on S3). To create a new bucket you just specify its name.
+
+  # Pick a unique name, or else you'll get an error 
+  # if the name is already taken.
+  Bucket.create('jukebox')
+
+Bucket names must be unique across the entire S3 system, sort of like domain names across the internet. If you try
+to create a bucket with a name that is already taken, you will get an error.
+
+Assuming the name you chose isn't already taken, your new bucket will now appear in the bucket list:
+
+  Service.buckets
+  # => [#<AWS::S3::Bucket @attributes={"name"=>"jukebox"}>]
+
+Once you have succesfully created a bucket you can you can fetch it by name using Bucket.find.
+
+  music_bucket = Bucket.find('jukebox')
+
+The bucket that is returned will contain a listing of all the objects in the bucket.
+
+  music_bucket.objects.size
+  # => 0
+
+If all you are interested in is the objects of the bucket, you can get to them directly using Bucket.objects.
+
+  Bucket.objects('jukebox').size
+  # => 0
+
+By default all objects will be returned, though there are several options you can use to limit what is returned, such as
+specifying that only objects whose name is after a certain place in the alphabet be returned, and etc. Details about these options can
+be found in the documentation for Bucket.find.
+
+To add an object to a bucket you specify the name of the object, its value, and the bucket to put it in.
+
+  file = 'black-flowers.mp3'
+  S3Object.store(file, open(file), 'jukebox')
+
+You'll see your file has been added to it:
+
+  music_bucket.objects
+  # => [#<AWS::S3::S3Object '/jukebox/black-flowers.mp3'>]
+
+You can treat your bucket like a hash and access objects by name:
+
+  jukebox['black-flowers.mp3']
+  # => #<AWS::S3::S3Object '/jukebox/black-flowers.mp3'>
+
+In the event that you want to delete a bucket, you can use Bucket.delete.
+
+  Bucket.delete('jukebox')
+
+Keep in mind, like unix directories, you can not delete a bucket unless it is empty. Trying to delete a bucket
+that contains objects will raise a BucketNotEmpty exception.
+
+Passing the :force => true option to delete will take care of deleting all the bucket's objects for you.
+
+  Bucket.delete('photos', :force => true)
+  # => true
+
+
+==== Objects
+
+S3Objects represent the data you store on S3. They have a key (their name) and a value (their data). All objects belong to a
+bucket.
+
+You can store an object on S3 by specifying a key, its data and the name of the bucket you want to put it in:
+
+  S3Object.store('me.jpg', open('headshot.jpg'), 'photos')
+
+The content type of the object will be inferred by its extension. If the appropriate content type can not be inferred, S3 defaults
+to <tt>binary/octet-stream</tt>.
+
+If you want to override this, you can explicitly indicate what content type the object should have with the <tt>:content_type</tt> option:
+
+  file = 'black-flowers.m4a'
+  S3Object.store(
+    file,
+    open(file),
+    'jukebox',
+    :content_type => 'audio/mp4a-latm'
+  )
+
+You can read more about storing files on S3 in the documentation for S3Object.store.
+
+If you just want to fetch an object you've stored on S3, you just specify its name and its bucket:
+
+  picture = S3Object.find 'headshot.jpg', 'photos'
+
+N.B. The actual data for the file is not downloaded in both the example where the file appeared in the bucket and when fetched directly. 
+You get the data for the file like this:
+
+  picture.value
+
+You can fetch just the object's data directly:
+
+  S3Object.value 'headshot.jpg', 'photos'
+
+Or stream it by passing a block to <tt>stream</tt>:
+
+  open('song.mp3', 'w') do |file|
+    S3Object.stream('song.mp3', 'jukebox') do |chunk|
+      file.write chunk
+    end
+  end
+
+The data of the file, once download, is cached, so subsequent calls to <tt>value</tt> won't redownload the file unless you 
+tell the object to reload its <tt>value</tt>:
+
+  # Redownloads the file's data
+  song.value(:reload) 
+
+Other functionality includes:
+
+  # Check if an object exists?
+  S3Object.exists? 'headshot.jpg', 'photos'
+
+  # Copying an object
+  S3Object.copy 'headshot.jpg', 'headshot2.jpg', 'photos'
+
+  # Renaming an object
+  S3Object.rename 'headshot.jpg', 'portrait.jpg', 'photos'
+
+  # Deleting an object
+  S3Object.delete 'headshot.jpg', 'photos'
+
+==== More about objects and their metadata
+
+You can find out the content type of your object with the <tt>content_type</tt> method:
+
+  song.content_type
+  # => "audio/mpeg"
+
+You can change the content type as well if you like:
+
+  song.content_type = 'application/pdf'
+  song.store
+
+(Keep in mind that due to limitiations in S3's exposed API, the only way to change things like the content_type
+is to PUT the object onto S3 again. In the case of large files, this will result in fully re-uploading the file.)
+
+A bevie of information about an object can be had using the <tt>about</tt> method:
+
+  pp song.about
+  {"last-modified"    => "Sat, 28 Oct 2006 21:29:26 GMT",
+   "content-type"     => "binary/octet-stream",
+   "etag"             => "\"dc629038ffc674bee6f62eb64ff3a\"",
+   "date"             => "Sat, 28 Oct 2006 21:30:41 GMT",
+   "x-amz-request-id" => "B7BC68F55495B1C8",
+   "server"           => "AmazonS3",
+   "content-length"   => "3418766"}
+
+You can get and set metadata for an object:
+
+  song.metadata
+  # => {}
+  song.metadata[:album] = "A River Ain't Too Much To Love"
+  # => "A River Ain't Too Much To Love"
+  song.metadata[:released] = 2005
+  pp song.metadata
+  {"x-amz-meta-released" => 2005, 
+    "x-amz-meta-album"   => "A River Ain't Too Much To Love"}
+  song.store
+
+That metadata will be saved in S3 and is hence forth available from that object:
+
+  song = S3Object.find('black-flowers.mp3', 'jukebox')
+  pp song.metadata
+  {"x-amz-meta-released" => "2005", 
+    "x-amz-meta-album"   => "A River Ain't Too Much To Love"}
+  song.metadata[:released]
+  # => "2005"
+  song.metadata[:released] = 2006
+  pp song.metadata
+  {"x-amz-meta-released" => 2006, 
+   "x-amz-meta-album"    => "A River Ain't Too Much To Love"}
+
+
+==== Streaming uploads
+
+When storing an object on the S3 servers using S3Object.store, the <tt>data</tt> argument can be a string or an I/O stream. 
+If <tt>data</tt> is an I/O stream it will be read in segments and written to the socket incrementally. This approach 
+may be desirable for very large files so they are not read into memory all at once.
+
+  # Non streamed upload
+  S3Object.store('greeting.txt', 'hello world!', 'marcel')
+
+  # Streamed upload
+  S3Object.store('roots.mpeg', open('roots.mpeg'), 'marcel')
+
+
+== Setting the current bucket
+==== Scoping operations to a specific bucket
+
+If you plan on always using a specific bucket for certain files, you can skip always having to specify the bucket by creating 
+a subclass of Bucket or S3Object and telling it what bucket to use:
+
+  class JukeBoxSong < AWS::S3::S3Object
+    set_current_bucket_to 'jukebox'
+  end
+
+For all methods that take a bucket name as an argument, the current bucket will be used if the bucket name argument is omitted.
+
+  other_song = 'baby-please-come-home.mp3'
+  JukeBoxSong.store(other_song, open(other_song))
+
+This time we didn't have to explicitly pass in the bucket name, as the JukeBoxSong class knows that it will
+always use the 'jukebox' bucket. 
+
+"Astute readers", as they say, may have noticed that we used the third parameter to pass in the content type,
+rather than the fourth parameter as we had the last time we created an object. If the bucket can be inferred, or
+is explicitly set, as we've done in the JukeBoxSong class, then the third argument can be used to pass in
+options.
+
+Now all operations that would have required a bucket name no longer do.
+
+  other_song = JukeBoxSong.find('baby-please-come-home.mp3')
+
+
+== BitTorrent
+==== Another way to download large files
+
+Objects on S3 can be distributed via the BitTorrent file sharing protocol. 
+
+You can get a torrent file for an object by calling <tt>torrent_for</tt>:
+
+  S3Object.torrent_for 'kiss.jpg', 'marcel'
+
+Or just call the <tt>torrent</tt> method if you already have the object:
+
+  song = S3Object.find 'kiss.jpg', 'marcel'
+  song.torrent
+
+Calling <tt>grant_torrent_access_to</tt> on a object will allow anyone to anonymously
+fetch the torrent file for that object:
+
+  S3Object.grant_torrent_access_to 'kiss.jpg', 'marcel'
+
+Anonymous requests to
+
+  http://s3.amazonaws.com/marcel/kiss.jpg?torrent
+
+will serve up the torrent file for that object.
+
+
+== Access control
+==== Using canned access control policies
+
+By default buckets are private. This means that only the owner has access rights to the bucket and its objects. 
+Objects in that bucket inherit the permission of the bucket unless otherwise specified. When an object is private, the owner can 
+generate a signed url that exposes the object to anyone who has that url. Alternatively, buckets and objects can be given other 
+access levels. Several canned access levels are defined:
+
+* <tt>:private</tt> - Owner gets FULL_CONTROL. No one else has any access rights. This is the default.
+* <tt>:public_read</tt> - Owner gets FULL_CONTROL and the anonymous principal is granted READ access. If this policy is used on an object, it can be read from a browser with no authentication.
+* <tt>:public_read_write</tt> - Owner gets FULL_CONTROL, the anonymous principal is granted READ and WRITE access. This is a useful policy to apply to a bucket, if you intend for any anonymous user to PUT objects into the bucket.
+* <tt>:authenticated_read</tt> - Owner gets FULL_CONTROL, and any principal authenticated as a registered Amazon S3 user is granted READ access.
+
+You can set a canned access level when you create a bucket or an object by using the <tt>:access</tt> option:
+
+  S3Object.store(
+    'kiss.jpg', 
+    data, 
+    'marcel', 
+    :access => :public_read
+  )
+
+Since the image we created is publicly readable, we can access it directly from a browser by going to the corresponding bucket name 
+and specifying the object's key without a special authenticated url:
+
+ http://s3.amazonaws.com/marcel/kiss.jpg
+
+==== Building custum access policies
+
+For both buckets and objects, you can use the <tt>acl</tt> method to see its access control policy:
+
+  policy = S3Object.acl('kiss.jpg', 'marcel')
+  pp policy.grants
+  [#<AWS::S3::ACL::Grant FULL_CONTROL to noradio>,
+   #<AWS::S3::ACL::Grant READ to AllUsers Group>]
+
+Policies are made up of one or more grants which grant a specific permission to some grantee. Here we see the default FULL_CONTROL grant 
+to the owner of this object. There is also READ permission granted to the Allusers Group, which means anyone has read access for the object.
+
+Say we wanted to grant access to anyone to read the access policy of this object. The current READ permission only grants them permission to read 
+the object itself (for example, from a browser) but it does not allow them to read the access policy. For that we will need to grant the AllUsers group the READ_ACP permission.
+
+First we'll create a new grant object:
+
+  grant = ACL::Grant.new
+  # => #<AWS::S3::ACL::Grant (permission) to (grantee)>
+  grant.permission = 'READ_ACP'
+
+Now we need to indicate who this grant is for. In other words, who the grantee is:
+
+  grantee = ACL::Grantee.new
+  # => #<AWS::S3::ACL::Grantee (xsi not set yet)>
+
+There are three ways to specify a grantee: 1) by their internal amazon id, such as the one returned with an object's Owner, 
+2) by their Amazon account email address or 3) by specifying a group. As of this writing you can not create custom groups, but 
+Amazon does provide three already: AllUsers, Authenticated and LogDelivery. In this case we want to provide the grant to all users. 
+This effectively means "anyone".
+
+  grantee.group = 'AllUsers'
+
+Now that our grantee is setup, we'll associate it with the grant:
+
+  grant.grantee = grantee
+  grant
+  # => #<AWS::S3::ACL::Grant READ_ACP to AllUsers Group>
+
+Are grant has all the information we need. Now that it's ready, we'll add it on to the object's access control policy's list of grants:
+
+  policy.grants << grant
+  pp policy.grants
+  [#<AWS::S3::ACL::Grant FULL_CONTROL to noradio>,
+   #<AWS::S3::ACL::Grant READ to AllUsers Group>,
+   #<AWS::S3::ACL::Grant READ_ACP to AllUsers Group>]
+
+Now that the policy has the new grant, we reuse the <tt>acl</tt> method to persist the policy change:
+
+  S3Object.acl('kiss.jpg', 'marcel', policy)
+
+If we fetch the object's policy again, we see that the grant has been added:
+
+  pp S3Object.acl('kiss.jpg', 'marcel').grants
+  [#<AWS::S3::ACL::Grant FULL_CONTROL to noradio>,
+   #<AWS::S3::ACL::Grant READ to AllUsers Group>,
+   #<AWS::S3::ACL::Grant READ_ACP to AllUsers Group>]
+
+If we were to access this object's acl url from a browser: 
+
+  http://s3.amazonaws.com/marcel/kiss.jpg?acl
+
+we would be shown its access control policy.
+
+==== Pre-prepared grants
+
+Alternatively, the ACL::Grant class defines a set of stock grant policies that you can fetch by name. In most cases, you can 
+just use one of these pre-prepared grants rather than building grants by hand. Two of these stock policies are <tt>:public_read</tt> 
+and <tt>:public_read_acp</tt>, which happen to be the two grants that we built by hand above. In this case we could have simply written:
+
+  policy.grants << ACL::Grant.grant(:public_read)
+  policy.grants << ACL::Grant.grant(:public_read_acp)
+  S3Object.acl('kiss.jpg', 'marcel', policy)
+
+The full details can be found in ACL::Policy, ACL::Grant and ACL::Grantee.
+
+
+==== Accessing private objects from a browser
+
+All private objects are accessible via an authenticated GET request to the S3 servers. You can generate an 
+authenticated url for an object like this:
+
+  S3Object.url_for('beluga_baby.jpg', 'marcel_molina')
+
+By default authenticated urls expire 5 minutes after they were generated.
+
+Expiration options can be specified either with an absolute time since the epoch with the <tt>:expires</tt> options,
+or with a number of seconds relative to now with the <tt>:expires_in</tt> options:
+
+  # Absolute expiration date 
+  # (Expires January 18th, 2038)
+  doomsday = Time.mktime(2038, 1, 18).to_i
+  S3Object.url_for('beluga_baby.jpg', 
+                   'marcel', 
+                   :expires => doomsday)
+  
+  # Expiration relative to now specified in seconds 
+  # (Expires in 3 hours)
+  S3Object.url_for('beluga_baby.jpg', 
+                   'marcel', 
+                   :expires_in => 60 * 60 * 3)
+
+You can specify whether the url should go over SSL with the <tt>:use_ssl</tt> option:
+
+  # Url will use https protocol
+  S3Object.url_for('beluga_baby.jpg', 
+                   'marcel', 
+                   :use_ssl => true)
+
+By default, the ssl settings for the current connection will be used.
+
+If you have an object handy, you can use its <tt>url</tt> method with the same objects:
+
+  song.url(:expires_in => 30)
+
+To get an unauthenticated url for the object, such as in the case
+when the object is publicly readable, pass the
+<tt>:authenticated</tt> option with a value of <tt>false</tt>.
+
+  S3Object.url_for('beluga_baby.jpg',
+                   'marcel',
+                   :authenticated => false)
+  # => http://s3.amazonaws.com/marcel/beluga_baby.jpg
+
+
+== Logging
+==== Tracking requests made on a bucket
+
+A bucket can be set to log the requests made on it. By default logging is turned off. You can check if a bucket has logging enabled:
+
+  Bucket.logging_enabled_for? 'jukebox'
+  # => false
+
+Enabling it is easy:
+
+  Bucket.enable_logging_for('jukebox')
+
+Unless you specify otherwise, logs will be written to the bucket you want to log. The logs are just like any other object. By default they will start with the prefix 'log-'. You can customize what bucket you want the logs to be delivered to, as well as customize what the log objects' key is prefixed with by setting the <tt>target_bucket</tt> and <tt>target_prefix</tt> option:
+
+  Bucket.enable_logging_for(
+    'jukebox', 'target_bucket' => 'jukebox-logs'
+  )
+
+Now instead of logging right into the jukebox bucket, the logs will go into the bucket called jukebox-logs.
+
+Once logs have accumulated, you can access them using the <tt>logs</tt> method:
+
+  pp Bucket.logs('jukebox')
+  [#<AWS::S3::Logging::Log '/jukebox-logs/log-2006-11-14-07-15-24-2061C35880A310A1'>,
+   #<AWS::S3::Logging::Log '/jukebox-logs/log-2006-11-14-08-15-27-D8EEF536EC09E6B3'>,
+   #<AWS::S3::Logging::Log '/jukebox-logs/log-2006-11-14-08-15-29-355812B2B15BD789'>]
+
+Each log has a <tt>lines</tt> method that gives you information about each request in that log. All the fields are available 
+as named methods. More information is available in Logging::Log::Line.
+
+  logs = Bucket.logs('jukebox')
+  log  = logs.first
+  line = log.lines.first
+  line.operation
+  # => 'REST.GET.LOGGING_STATUS'
+  line.request_uri
+  # => 'GET /jukebox?logging HTTP/1.1'
+  line.remote_ip
+  # => "67.165.183.125"
+
+Disabling logging is just as simple as enabling it:
+
+ Bucket.disable_logging_for('jukebox')
+
+
+== Errors
+==== When things go wrong
+
+Anything you do that makes a request to S3 could result in an error. If it does, the AWS::S3 library will raise an exception 
+specific to the error. All exception that are raised as a result of a request returning an error response inherit from the 
+ResponseError exception. So should you choose to rescue any such exception, you can simple rescue ResponseError. 
+
+Say you go to delete a bucket, but the bucket turns out to not be empty. This results in a BucketNotEmpty error (one of the many 
+errors listed at http://docs.amazonwebservices.com/AmazonS3/2006-03-01/ErrorCodeList.html):
+
+  begin
+    Bucket.delete('jukebox')
+  rescue ResponseError => error
+    # ...
+  end
+
+Once you've captured the exception, you can extract the error message from S3, as well as the full error response, which includes 
+things like the HTTP response code:
+
+  error
+  # => #<AWS::S3::BucketNotEmpty The bucket you tried to delete is not empty>
+  error.message
+  # => "The bucket you tried to delete is not empty"
+  error.response.code
+  # => 409
+
+You could use this information to redisplay the error in a way you see fit, or just to log the error and continue on.
+
+
+==== Accessing the last request's response
+
+Sometimes methods that make requests to the S3 servers return some object, like a Bucket or an S3Object. 
+Othertimes they return just <tt>true</tt>. Other times they raise an exception that you may want to rescue. Despite all these 
+possible outcomes, every method that makes a request stores its response object for you in Service.response. You can always 
+get to the last request's response via Service.response.
+
+  objects = Bucket.objects('jukebox')
+  Service.response.success?
+  # => true
+
+This is also useful when an error exception is raised in the console which you weren't expecting. You can 
+root around in the response to get more details of what might have gone wrong.
+
+  

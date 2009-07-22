@@ -1,0 +1,16 @@
+policy_with_one_grant: >
+  <AccessControlPolicy>
+    <Owner>
+      <ID>bb2041a25975c3d4ce9775fe9e93e5b77a6a9fad97dc7e00686191f3790b13f1</ID>
+      <DisplayName>mmolina@onramp.net</DisplayName>
+    </Owner>
+    <AccessControlList>
+      <Grant>
+        <Grantee xsi:type="CanonicalUser" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <ID>bb2041a25975c3d4ce9775fe9e93e5b77a6a9fad97dc7e00686191f3790b13f1</ID>
+          <DisplayName>mmolina@onramp.net</DisplayName>
+        </Grantee>
+        <Permission>FULL_CONTROL</Permission>
+      </Grant>
+    </AccessControlList>
+  </AccessControlPolicy>

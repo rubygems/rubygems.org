@@ -20,8 +20,11 @@ Rails::Initializer.run do |config|
     :version => '2.0.6'
   config.gem 'mislav-will_paginate',
     :version => '~> 2.3.11',
-    :lib => 'will_paginate',
-    :source => 'http://gems.github.com'
+    :lib     => 'will_paginate',
+    :source  => 'http://gems.github.com'
+  config.gem 'aws-s3',
+    :version => '0.6.2',
+    :lib     => 'aws/s3'
 end
 
 DO_NOT_REPLY = "donotreply@gemcutter.org"
