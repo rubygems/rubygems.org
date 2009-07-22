@@ -7,12 +7,17 @@ class Gemcutter
   end
 
   def process
-    pull_spec
-    find if spec
-    save if allowed?
+    pull_spec and find and authorize and save
   end
 
-  def allowed?
+  def authorize
+    if rubygem.new_record? || rubygem.owned_by?(@user)
+      true
+    else
+      @error_message = "You do not have permission to push to this gem."
+      @error_code    = 403
+      false
+    end
   end
 
   def save
@@ -25,6 +30,7 @@ class Gemcutter
     rescue Exception => e
       @error_message = "Gemcutter cannot process this gem. Please try rebuilding it and installing it locally to make sure it's valid."
       @error_code = 422
+      false
     end
   end
 

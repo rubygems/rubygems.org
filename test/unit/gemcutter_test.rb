@@ -44,29 +44,35 @@ class GemcutterTest < ActiveSupport::TestCase
 
     context "processing incoming gems" do
       should "work normally when things go well" do
-        mock(@cutter).pull_spec
-        stub(@cutter).spec { "ruby gem spec" }
-        mock(@cutter).find
-        stub(@cutter).rubygem { "rubygem" }
-        mock(@cutter).allowed? { true }
+        mock(@cutter).pull_spec { true }
+        mock(@cutter).find { true }
+        stub(@cutter).authorize { true }
         mock(@cutter).save
 
         @cutter.process
       end
 
-      should "not attempt to find rubygem if there's no spec" do
-        mock(@cutter).pull_spec
-        stub(@cutter).spec { nil }
+      should "not attempt to find rubygem if spec can't be pulled" do
+        mock(@cutter).pull_spec { false }
         mock(@cutter).find.never
+        mock(@cutter).authorize.never
+        mock(@cutter).save.never
         @cutter.process
       end
 
-      should "not attempt to save if not allowed" do
-        mock(@cutter).pull_spec
-        stub(@cutter).spec { "ruby gem spec" }
-        mock(@cutter).find
-        stub(@cutter).rubygem { "rubygem" }
-        mock(@cutter).allowed? { false }
+      should "not attempt to authorize if not found" do
+        mock(@cutter).pull_spec { true }
+        mock(@cutter).find { nil }
+        mock(@cutter).authorize.never
+        mock(@cutter).save.never
+
+        @cutter.process
+      end
+
+      should "not attempt to save if not authorized" do
+        mock(@cutter).pull_spec { true }
+        mock(@cutter).find { true }
+        mock(@cutter).authorize { false }
         mock(@cutter).save.never
 
         @cutter.process
@@ -84,7 +90,7 @@ class GemcutterTest < ActiveSupport::TestCase
         stub(@cutter).data { "bad data" }
         @cutter.pull_spec
         assert_nil @cutter.spec
-        assert_equal @cutter.error_message, "Gemcutter cannot process this gem. Please try rebuilding it and installing it locally to make sure it's valid."
+        assert_match %r{Gemcutter cannot process this gem}, @cutter.error_message
         assert_equal @cutter.error_code, 422
       end
     end
@@ -103,6 +109,38 @@ class GemcutterTest < ActiveSupport::TestCase
 
         @cutter.find
         assert_equal @rubygem, @cutter.rubygem
+      end
+    end
+
+    context "checking if the rubygem can be pushed to" do
+      should "be true if rubygem is new" do
+        stub(@cutter).rubygem { Rubygem.new }
+        assert @cutter.authorize
+      end
+
+      context "with a existing rubygem" do
+        setup do
+          @rubygem = Factory(:rubygem)
+          stub(@cutter).rubygem { @rubygem }
+        end
+
+        should "be true if owned by the user" do
+          @rubygem.ownerships.create(:user => @user, :approved => true)
+          assert @cutter.authorize
+        end
+
+        should "be false if not owned by user" do
+          assert ! @cutter.authorize
+          assert_equal "You do not have permission to push to this gem.", @cutter.error_message
+          assert_equal 403, @cutter.error_code
+        end
+
+        should "be false if rubygem exists and is owned by unapproved user" do
+          @rubygem.ownerships.create(:user => @user, :approved => false)
+          assert ! @cutter.authorize
+          assert_equal "You do not have permission to push to this gem.", @cutter.error_message
+          assert_equal 403, @cutter.error_code
+        end
       end
     end
   end
