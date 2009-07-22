@@ -46,14 +46,29 @@ class GemcutterTest < ActiveSupport::TestCase
       should "work normally when things go well" do
         mock(@cutter).pull_spec
         stub(@cutter).spec { "ruby gem spec" }
-        mock(@cutter).find_rubygem
+        mock(@cutter).find
+        stub(@cutter).rubygem { "rubygem" }
+        mock(@cutter).allowed? { true }
+        mock(@cutter).save
+
         @cutter.process
       end
 
       should "not attempt to find rubygem if there's no spec" do
         mock(@cutter).pull_spec
         stub(@cutter).spec { nil }
-        mock(@cutter).find_rubygem.never
+        mock(@cutter).find.never
+        @cutter.process
+      end
+
+      should "not attempt to save if not allowed" do
+        mock(@cutter).pull_spec
+        stub(@cutter).spec { "ruby gem spec" }
+        mock(@cutter).find
+        stub(@cutter).rubygem { "rubygem" }
+        mock(@cutter).allowed? { false }
+        mock(@cutter).save.never
+
         @cutter.process
       end
     end
@@ -77,7 +92,7 @@ class GemcutterTest < ActiveSupport::TestCase
     context "finding rubygem" do
       should "initialize new gem if one does not exist" do
         @cutter.pull_spec
-        @cutter.find_rubygem
+        @cutter.find
         assert_not_nil @cutter.rubygem
         assert @cutter.rubygem.new_record?
       end
@@ -86,7 +101,7 @@ class GemcutterTest < ActiveSupport::TestCase
         @cutter.pull_spec
         @rubygem = Factory(:rubygem, :spec => @cutter.spec, :name => @cutter.spec.name)
 
-        @cutter.find_rubygem
+        @cutter.find
         assert_equal @rubygem, @cutter.rubygem
       end
     end
