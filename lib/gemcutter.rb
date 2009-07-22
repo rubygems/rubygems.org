@@ -8,7 +8,14 @@ class Gemcutter
 
   def process
     pull_spec
-    find_rubygem if self.spec
+    find if spec
+    save if allowed?
+  end
+
+  def allowed?
+  end
+
+  def save
   end
 
   def pull_spec
@@ -21,7 +28,7 @@ class Gemcutter
     end
   end
 
-  def find_rubygem
+  def find
     @rubygem = Rubygem.find_or_initialize_by_name(@spec.name)
   end
 
