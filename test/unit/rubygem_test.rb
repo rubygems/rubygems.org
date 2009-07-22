@@ -98,6 +98,49 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal "#{@rubygem.name} (#{@rubygem.downloads})", @rubygem.with_downloads
     end
 
+    context "building the gem" do
+      setup do
+        @spec = Rubygem.pull_spec(gem_file.path)
+        @name = "awesome gem"
+      end
+
+      context "with some versions" do
+        setup do
+          @version_hash = {:number => "0.0.0"}
+          @versions = "version"
+          stub(@rubygem).versions { @versions }
+          stub(@versions).destroy_all
+          stub(@versions).build
+        end
+
+        context "creating a new set of versions" do
+          before_should "destroy versions with the given number and id" do
+            mock(@versions).destroy_all(:number => @version_hash[:number])
+          end
+
+          setup do
+            @rubygem.build_version(@version_hash)
+          end
+        end
+      end
+
+      context "setting the name" do
+        before_should "set name only if name is blank" do
+          stub(@rubygem).name { "" }
+          mock(@rubygem).name = @name
+        end
+
+        should "not set name if name has changed" do
+          stub(@rubygem).name { @name }
+          dont_allow(@rubygem).name = @name
+        end
+
+        setup do
+          @rubygem.spec_name = @name
+        end
+      end
+    end
+
     context "processing spec" do
       setup do
         @spec = Rubygem.pull_spec(gem_file.path)
