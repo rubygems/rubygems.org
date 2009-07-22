@@ -91,6 +91,15 @@ class Rubygem < ActiveRecord::Base
     "#{name} (#{downloads})"
   end
 
+  def spec_name=(name)
+    self.name = name if self.name.blank?
+  end
+
+  def build_version(data)
+    self.versions.destroy_all(:number => data[:number])
+
+  end
+
   def build
     return unless self.spec
 
