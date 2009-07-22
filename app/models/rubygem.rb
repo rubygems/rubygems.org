@@ -2,7 +2,6 @@ class Rubygem < ActiveRecord::Base
   include Pacecar
   sluggable_finder :name
 
-  belongs_to :user
   has_many :owners, :through => :ownerships, :source => :user
   has_many :ownerships
   has_many :versions, :dependent => :destroy, :order => "created_at desc, number desc" do
