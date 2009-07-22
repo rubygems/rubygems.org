@@ -104,21 +104,63 @@ class RubygemTest < ActiveSupport::TestCase
         @name = "awesome gem"
       end
 
+      context "saving the homepage" do
+        setup do
+          @homepage = "http://gemcutter.org"
+        end
+
+        should "build linkset if it doesn't exist" do
+          stub(@rubygem).linkset { nil }
+          mock(@rubygem).build_linkset(:homepage => @homepage)
+          @rubygem.build_links(@homepage)
+        end
+
+        should "not build linkset if it exists but still set the home page" do
+          linkset = "linkset"
+          stub(@rubygem).linkset { linkset }
+          mock(linkset).homepage = @homepage
+          @rubygem.build_links(@homepage)
+        end
+      end
+
       context "with some versions" do
         setup do
           @version_hash = {:number => "0.0.0"}
           @versions = "version"
+
           stub(@rubygem).versions { @versions }
           stub(@versions).destroy_all
           stub(@versions).build
         end
 
-        context "creating a new set of versions" do
+        context "building a new set of dependencies" do
+          setup do
+            @version = "version"
+            @dependencies = [@dep]
+            stub(@version).dependencies { @dependencies }
+            stub(@versions).last { @version }
+            stub(@dep).name { "dependency" }
+            stub(@dep).requirements_list { Gem::Requirement.new("= 1.0.0") }
+          end
+
+          should "build a dependency" do
+            mock(@dependencies).build(:rubygem_name => @dep.name, :name => @dep.requirements_list.to_s)
+            @rubygem.build_dependencies(@dependencies)
+          end
+        end
+
+        context "building a new set of versions" do
           before_should "destroy versions with the given number and id" do
             mock(@versions).destroy_all(:number => @version_hash[:number])
           end
 
+          before_should "create a new version with the given hash" do
+            mock(@versions).build(@version_hash)
+          end
+
           setup do
+            stub(@versions).destroy_all
+            stub(@versions).build
             @rubygem.build_version(@version_hash)
           end
         end
@@ -136,7 +178,7 @@ class RubygemTest < ActiveSupport::TestCase
         end
 
         setup do
-          @rubygem.spec_name = @name
+          @rubygem.build_name(@name)
         end
       end
     end
