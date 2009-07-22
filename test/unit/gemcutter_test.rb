@@ -147,8 +147,34 @@ class GemcutterTest < ActiveSupport::TestCase
     context "with a rubygem" do
       setup do
         @rubygem = "rubygem"
+        @version = "1.0.0"
+        @spec = gem_spec(:version => @version)
+
         stub(@rubygem).save
         stub(@cutter).rubygem { @rubygem }
+        stub(@cutter).spec { @spec }
+      end
+
+      context "building the gem" do
+        before_should "build the name" do
+          mock(@rubygem).build_name(@spec.name)
+        end
+
+        before_should "build the version" do
+          mock(@rubygem).build_version(
+            :authors           => @spec.authors.join(", "),
+            :description       => @spec.description,
+            :summary           => @spec.summary,
+            :rubyforge_project => @spec.rubyforge_project,
+            :created_at        => @spec.date,
+            :number            => @version)
+        end
+
+        setup do
+          stub(@rubygem).build_name
+          stub(@rubygem).build_version
+          @cutter.build
+        end
       end
 
       context "saving the rubygem" do
