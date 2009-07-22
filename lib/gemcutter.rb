@@ -29,6 +29,14 @@ class Gemcutter
   end
 
   def build
+    rubygem.build_name(spec.name)
+    rubygem.build_version(
+      :authors           => spec.authors.join(", "),
+      :description       => spec.description,
+      :summary           => spec.summary,
+      :rubyforge_project => spec.rubyforge_project,
+      :created_at        => spec.date,
+      :number            => spec.version.to_s)
   end
 
   def store
