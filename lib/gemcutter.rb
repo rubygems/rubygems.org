@@ -21,6 +21,17 @@ class Gemcutter
   end
 
   def save
+    build
+    if rubygem.save
+      store
+    else
+    end
+  end
+
+  def build
+  end
+
+  def store
   end
 
   def pull_spec

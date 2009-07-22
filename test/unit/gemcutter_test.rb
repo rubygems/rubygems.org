@@ -143,5 +143,31 @@ class GemcutterTest < ActiveSupport::TestCase
         end
       end
     end
+
+    context "with a rubygem" do
+      setup do
+        @rubygem = "rubygem"
+        stub(@rubygem).save
+        stub(@cutter).rubygem { @rubygem }
+      end
+
+      context "saving the rubygem" do
+        before_should "process if succesfully saved" do
+          mock(@cutter).build
+          mock(@rubygem).save { true }
+          mock(@cutter).store
+        end
+
+        before_should "not process if succesfully saved" do
+          mock(@cutter).build
+          mock(@rubygem).save { false }
+          mock(@cutter).store.never
+        end
+
+        setup do
+          @cutter.save
+        end
+      end
+    end
   end
 end
