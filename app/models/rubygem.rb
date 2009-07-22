@@ -91,13 +91,29 @@ class Rubygem < ActiveRecord::Base
     "#{name} (#{downloads})"
   end
 
-  def spec_name=(name)
+  def build_name(name)
     self.name = name if self.name.blank?
   end
 
-  def build_version(data)
-    self.versions.destroy_all(:number => data[:number])
+  def build_dependencies(deps)
+    deps.each do |dep|
+      versions.last.dependencies.build(
+        :rubygem_name => dep.name.to_s,
+        :name         => dep.requirements_list.to_s)
+    end
+  end
 
+  def build_version(data)
+    versions.destroy_all(:number => data[:number])
+    versions.build(data)
+  end
+
+  def build_links(homepage)
+    if linkset
+      linkset.homepage = homepage
+    else
+      build_linkset(:homepage => homepage)
+    end
   end
 
   def build
