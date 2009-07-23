@@ -1,4 +1,5 @@
 class Gemcutter
+  include Vault::FS
   attr_reader :user, :data, :spec, :message, :code, :rubygem
 
   def initialize(user, data)
@@ -47,9 +48,6 @@ class Gemcutter
     rubygem.build_dependencies(spec.dependencies)
     rubygem.build_links(spec.homepage)
     rubygem.build_ownership(user)
-  end
-
-  def store
   end
 
   def pull_spec

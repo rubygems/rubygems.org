@@ -18,24 +18,25 @@ module Gem
       end
     end
 
-    def update_index
+    def update_index(source_index = nil)
       make_temp_directories
 
-      specs_mtime = File.mtime(@dest_specs_index)
-      newest_mtime = Time.at 0
+      #specs_mtime = File.mtime(@dest_specs_index)
+      #newest_mtime = Time.at 0
 
-      updated_gems = gem_file_list.select do |gem|
-        gem_mtime = File.mtime(gem)
-        newest_mtime = gem_mtime if gem_mtime > newest_mtime
-        gem_mtime >= specs_mtime
-      end
+      #updated_gems = gem_file_list.select do |gem|
+        #gem_mtime = File.mtime(gem)
+        #newest_mtime = gem_mtime if gem_mtime > newest_mtime
+        #gem_mtime >= specs_mtime
+      #end
 
-      if updated_gems.empty? then
-        say 'No new gems'
-        terminate_interaction 0
-      end
+      #if updated_gems.empty? then
+        #say 'No new gems'
+        #terminate_interaction 0
+      #end
 
-      index = Rubygem.source_index || Marshal.load(File.open(File.join(@dest_directory, "source_index")))
+      newest_mtime = Time.now
+      index = source_index || Marshal.load(File.open(File.join(@dest_directory, "source_index")))
 
       Gem.time 'Updated indexes' do
         update_specs_index index, @dest_specs_index, @specs_index

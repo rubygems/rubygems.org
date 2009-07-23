@@ -14,21 +14,16 @@ class IndexerTest < ActiveSupport::TestCase
 
       mock.proxy(Gem::Indexer).new(Gemcutter.server_path, :build_legacy => false) do |indexer|
         mock(indexer).make_temp_directories
-        mock(indexer).gem_file_list { [@gem] }
+        #mock(indexer).gem_file_list { [@gem] }
         stub(indexer).update_specs_index
         mock(indexer).compress_indicies
       end
-
-      # Faking it out so there's a new gem to update
-      mock(File).mtime(Gemcutter.server_path("specs.4.8")) { Time.at 1 }
-      mock(File).mtime(@gem) { @time }
 
       # Loading the cached source index
       source_index_data = "source index data"
       source_index = "source index"
       stub(source_index).prerelease_gems
       mock(File).open(Gemcutter.server_path("source_index")) { source_index_data }
-      mock(Rubygem).source_index { nil }
       mock(Marshal).load(source_index_data) { source_index }
 
       # Moving the compressed specs into place
@@ -43,7 +38,8 @@ class IndexerTest < ActiveSupport::TestCase
           Gemcutter.server_path + "/",
           :force => true)
 
-        mock(File).utime(@time, @time, Gemcutter.server_path + "/")
+        # TODO: we need to bring in TIMECOP for this
+        mock(File).utime(anything, anything, Gemcutter.server_path + "/")
       end
 
       Gemcutter.indexer.update_index
