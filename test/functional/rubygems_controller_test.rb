@@ -2,9 +2,10 @@ require 'test_helper'
 
 class RubygemsControllerTest < ActionController::TestCase
 
-  def create_gem(owner)
-    @gem = Factory(:rubygem)
-    @gem.ownerships << Factory(:ownership, :user => owner, :rubygem => @gem, :approved => true)
+  def create_gem(owner, opts = {})
+    @gem = Factory(:rubygem, :name => opts[:name] || Factory.next(:name))
+    Factory(:version, :rubygem => @gem)
+    @gem.ownerships.create(:user => owner, :approved => true)
   end
 
   context "When logged in" do
@@ -227,9 +228,9 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to show" do
     setup do
-      @gem = Factory(:rubygem)
-      @current_version = @gem.versions.current
+      @current_version = Factory(:version)
       @current_dependencies = @current_version.dependencies
+      @gem = @current_version.rubygem
       get :show, :id => @gem.to_param
     end
 
@@ -249,9 +250,8 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to show with a gem that has multiple versions" do
     setup do
       @gem = Factory(:rubygem)
-      @version = Factory(:version, :number => "1.0.0", :rubygem => @gem)
-      @gem.reload
-      @current_version = @gem.versions.current
+      @older_version = Factory(:version, :number => "1.0.0", :rubygem => @gem)
+      @current_version = Factory(:version, :number => "2.0.0", :rubygem => @gem)
       get :show, :id => @gem.to_param
     end
 
@@ -271,7 +271,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to show for a gem with no versions" do
     setup do
-      @gem = Factory(:rubygem, :spec => nil)
+      @gem = Factory(:rubygem)
       get :show, :id => @gem.to_param
     end
     should_respond_with :success
@@ -327,7 +327,8 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On POST to create for existing gem" do
       setup do
         rubygem = Factory(:rubygem, :name => "test")
-        rubygem.ownerships << Factory(:ownership, :user => @user, :rubygem => rubygem, :approved => true)
+        rubygem.ownerships.create(:user => @user, :approved => true)
+        rubygem.versions.create(:number => "0.0.0", :updated_at => 1.year.ago, :created_at => 1.year.ago)
         @request.env["RAW_POST_DATA"] = gem_file("test-1.0.0.gem").read
         post :create
       end
@@ -343,8 +344,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On POST to create with bad gem" do
       setup do
-        #stub(Rubygem).pull_spec(anything) { nil }
-        @request.env["RAW_POST_DATA"] = "really bad gem"#gem_file.read
+        @request.env["RAW_POST_DATA"] = "really bad gem"
         post :create
       end
       should_respond_with 422
@@ -357,8 +357,9 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On POST to create for someone else's gem" do
       setup do
         @other_user = Factory(:email_confirmed_user)
-        create_gem(@other_user)
-        stub(Rubygem).find { @gem }
+        create_gem(@other_user, :name => "test")
+        @gem.reload
+        #stub(Rubygem).find { @gem }
 
         @request.env["RAW_POST_DATA"] = gem_file("test-1.0.0.gem").read
         post :create
@@ -366,9 +367,9 @@ class RubygemsControllerTest < ActionController::TestCase
       should_respond_with 403
       should_assign_to(:_current_user) { @user }
       should "not allow new version to be saved" do
-        other_gem = Rubygem.find(@gem.id)
-        assert_equal @other_user, other_gem.ownerships.first.user
-        assert_equal 1, other_gem.versions.size
+        assert_equal 1, @gem.ownerships.size
+        assert_equal @other_user, @gem.ownerships.first.user
+        assert_equal 1, @gem.versions.size
         assert_equal "You do not have permission to push to this gem.", @response.body
       end
     end
