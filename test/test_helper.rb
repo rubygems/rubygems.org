@@ -30,5 +30,4 @@ def regenerate_index
     server/specifications
     server/source_index].map { |d| Dir[d] })
   Gemcutter.indexer.generate_index
-  Rubygem.source_index = nil
 end

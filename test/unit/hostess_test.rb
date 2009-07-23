@@ -39,7 +39,9 @@ class HostessTest < ActiveSupport::TestCase
 
   should "return gem" do
     file = "/gems/test-0.0.0.gem"
+    FileUtils.cp gem_file.path, Gemcutter.server_path("gems")
     rubygem = Factory(:rubygem, :name => "test")
+    Factory(:version, :rubygem => rubygem, :number => "0.0.0")
     get file
     rubygem.reload
 
