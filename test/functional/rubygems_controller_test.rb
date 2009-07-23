@@ -343,8 +343,8 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On POST to create with bad gem" do
       setup do
-        stub(Rubygem).pull_spec(anything) { nil }
-        @request.env["RAW_POST_DATA"] = gem_file.read
+        #stub(Rubygem).pull_spec(anything) { nil }
+        @request.env["RAW_POST_DATA"] = "really bad gem"#gem_file.read
         post :create
       end
       should_respond_with 422

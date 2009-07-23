@@ -111,14 +111,14 @@ class RubygemTest < ActiveSupport::TestCase
 
         should "build linkset if it doesn't exist" do
           stub(@rubygem).linkset { nil }
-          mock(@rubygem).build_linkset(:homepage => @homepage)
+          mock(@rubygem).build_linkset(:home => @homepage)
           @rubygem.build_links(@homepage)
         end
 
         should "not build linkset if it exists but still set the home page" do
           linkset = "linkset"
           stub(@rubygem).linkset { linkset }
-          mock(linkset).homepage = @homepage
+          mock(linkset).home = @homepage
           @rubygem.build_links(@homepage)
         end
       end
@@ -129,7 +129,7 @@ class RubygemTest < ActiveSupport::TestCase
           @versions = "version"
 
           stub(@rubygem).versions { @versions }
-          stub(@versions).destroy_all
+          stub(Version).destroy_all
           stub(@versions).build
         end
 
@@ -151,7 +151,8 @@ class RubygemTest < ActiveSupport::TestCase
 
         context "building a new set of versions" do
           before_should "destroy versions with the given number and id" do
-            mock(@versions).destroy_all(:number => @version_hash[:number])
+            stub(@rubygem).id { 42 }
+            mock(Version).destroy_all(:number => @version_hash[:number], :rubygem_id => @rubygem.id)
           end
 
           before_should "create a new version with the given hash" do
@@ -159,7 +160,7 @@ class RubygemTest < ActiveSupport::TestCase
           end
 
           setup do
-            stub(@versions).destroy_all
+            stub(Version).destroy_all
             stub(@versions).build
             @rubygem.build_version(@version_hash)
           end
@@ -179,6 +180,28 @@ class RubygemTest < ActiveSupport::TestCase
 
         setup do
           @rubygem.build_name(@name)
+        end
+      end
+
+      context "with a user" do
+        setup do
+          @user = Factory(:user)
+        end
+
+        context "building ownership" do
+          before_should "set user as owner if new record" do
+            stub(@rubygem).new_record? { true }
+            mock(@rubygem).ownerships.mock!.build(:user => @user, :approved => true)
+          end
+
+          before_should "not set user as owner if new record" do
+            stub(@rubygem).new_record? { false }
+            stub(@rubygem).ownerships.mock!.build.never
+          end
+
+          setup do
+            @rubygem.build_ownership(@user)
+          end
         end
       end
     end
