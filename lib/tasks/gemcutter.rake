@@ -98,33 +98,12 @@ namespace :gemcutter do
       gems = Dir[File.join(ARGV[1], "*.gem")].sort.reverse
       puts "Processing #{gems.size} gems..."
       gems.each do |path|
-        puts path
-        spec = Rubygem.pull_spec(path)
+        puts "Processing #{path}"
+        cutter = Gemcutter.new(nil, File.open(path))
 
-        if spec.nil?
-          puts "Bad gem: #{path}"
-          next
-        end
-
-        @rubygem = Rubygem.find_or_initialize_by_name(spec.name)
-        @rubygem.spec = spec
-        @rubygem.path = path
-        @rubygem.processing = true
-        @rubygem.save
-        @rubygem.versions.reload
-
-        if @rubygem.new_record? || @rubygem.slug.blank? ||
-           @rubygem.name.blank? || @rubygem.versions.empty?
-          puts "Really bad gem: #{path}"
-          p spec
-          p @rubygem
-          exit
-        end
-      end
-
-      source_path = Gemcutter.server_path("source_index")
-      File.open(source_path, "wb") do |f|
-        f.write Marshal.dump(Rubygem.source_index)
+        cutter.pull_spec
+        cutter.find
+        cutter.save
       end
     end
   end
