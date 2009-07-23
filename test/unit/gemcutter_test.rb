@@ -105,7 +105,7 @@ class GemcutterTest < ActiveSupport::TestCase
 
       should "bring up existing gem with matching spec" do
         @cutter.pull_spec
-        @rubygem = Factory(:rubygem, :spec => @cutter.spec, :name => @cutter.spec.name)
+        @rubygem = Factory(:rubygem, :name => @cutter.spec.name)
 
         @cutter.find
         assert_equal @rubygem, @cutter.rubygem
