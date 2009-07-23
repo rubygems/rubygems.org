@@ -44,7 +44,7 @@ class Gemcutter
       :summary           => spec.summary,
       :rubyforge_project => spec.rubyforge_project,
       :created_at        => spec.date,
-      :number            => spec.version.to_s)
+      :number            => spec.original_name.gsub(/^#{spec.name}-/, ""))
     rubygem.build_dependencies(spec.dependencies)
     rubygem.build_links(spec.homepage)
     rubygem.build_ownership(user) if user

@@ -162,6 +162,17 @@ class GemcutterTest < ActiveSupport::TestCase
           mock(@rubygem).build_name(@spec.name)
         end
 
+        before_should "build version with platform" do
+          stub(@spec).original_name { "#{@spec.name}-#{@spec.version}-mswin" }
+          mock(@rubygem).build_version(
+            :authors           => @spec.authors.join(", "),
+            :description       => @spec.description,
+            :summary           => @spec.summary,
+            :rubyforge_project => @spec.rubyforge_project,
+            :created_at        => @spec.date,
+            :number            => "#{@version}-mswin")
+        end
+
         before_should "build the version" do
           mock(@rubygem).build_version(
             :authors           => @spec.authors.join(", "),
