@@ -170,9 +170,19 @@ class GemcutterTest < ActiveSupport::TestCase
             :number            => @version)
         end
 
+        before_should "build the dependencies" do
+          mock(@rubygem).build_dependencies(@spec.dependencies)
+        end
+
+        before_should "build the links" do
+          mock(@rubygem).build_links(@spec.homepage)
+        end
+
         setup do
           stub(@rubygem).build_name
           stub(@rubygem).build_version
+          stub(@rubygem).build_dependencies
+          stub(@rubygem).build_links
           @cutter.build
         end
       end
