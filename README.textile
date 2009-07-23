@@ -43,3 +43,7 @@ What's coming:
 * RubyForge migration for gem projects
 * Fully fledged API documentation
 * Search via the API and site
+
+h2. Testing
+
+Make sure you run `rake gemcutter:index:create` before running the test suite, otherwise it might complain. Better solutions to this are more than welcome.
