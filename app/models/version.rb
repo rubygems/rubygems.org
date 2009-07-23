@@ -8,4 +8,8 @@ class Version < ActiveRecord::Base
   def to_s
     number
   end
+
+  def info
+    description || summary || "This rubygem does not have a description or summary."
+  end
 end
