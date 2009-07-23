@@ -1,5 +1,5 @@
 class Gemcutter
-  attr_reader :user, :data, :spec, :error_message, :error_code, :rubygem
+  attr_reader :user, :data, :spec, :message, :code, :rubygem
 
   def initialize(user, data)
     @user = user
@@ -14,8 +14,8 @@ class Gemcutter
     if rubygem.new_record? || rubygem.owned_by?(@user)
       true
     else
-      @error_message = "You do not have permission to push to this gem."
-      @error_code    = 403
+      @message = "You do not have permission to push to this gem."
+      @code    = 403
       false
     end
   end
@@ -24,8 +24,15 @@ class Gemcutter
     build
     if rubygem.save
       store
+      notify("Successfully registered gem: #{rubygem}", 200)
     else
+      notify("Gemcutter cannot process this gem. Please try rebuilding it and installing it locally to make sure it's valid.", 403)
     end
+  end
+
+  def notify(message, code)
+    @message = message
+    @code    = code
   end
 
   def build
@@ -39,6 +46,7 @@ class Gemcutter
       :number            => spec.version.to_s)
     rubygem.build_dependencies(spec.dependencies)
     rubygem.build_links(spec.homepage)
+    rubygem.build_ownership(user)
   end
 
   def store
@@ -49,8 +57,8 @@ class Gemcutter
       format = Gem::Format.from_io(data)
       @spec = format.spec
     rescue Exception => e
-      @error_message = "Gemcutter cannot process this gem. Please try rebuilding it and installing it locally to make sure it's valid."
-      @error_code = 422
+      @message = "Gemcutter cannot process this gem. Please try rebuilding it and installing it locally to make sure it's valid."
+      @code = 422
       false
     end
   end

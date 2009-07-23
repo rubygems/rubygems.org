@@ -104,16 +104,20 @@ class Rubygem < ActiveRecord::Base
   end
 
   def build_version(data)
-    versions.destroy_all(:number => data[:number])
+    Version.destroy_all(:number => data[:number], :rubygem_id => self.id)
     versions.build(data)
   end
 
   def build_links(homepage)
     if linkset
-      linkset.homepage = homepage
+      linkset.home = homepage
     else
-      build_linkset(:homepage => homepage)
+      build_linkset(:home => homepage)
     end
+  end
+
+  def build_ownership(user)
+    ownerships.build(:user => user, :approved => true) if new_record?
   end
 
   def build

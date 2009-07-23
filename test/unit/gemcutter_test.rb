@@ -34,8 +34,8 @@ class GemcutterTest < ActiveSupport::TestCase
       assert @cutter.respond_to?(:user)
       assert @cutter.respond_to?(:data)
       assert @cutter.respond_to?(:spec)
-      assert @cutter.respond_to?(:error_message)
-      assert @cutter.respond_to?(:error_code)
+      assert @cutter.respond_to?(:message)
+      assert @cutter.respond_to?(:code)
       assert @cutter.respond_to?(:rubygem)
 
       assert_equal @user, @cutter.user
@@ -90,8 +90,8 @@ class GemcutterTest < ActiveSupport::TestCase
         stub(@cutter).data { "bad data" }
         @cutter.pull_spec
         assert_nil @cutter.spec
-        assert_match %r{Gemcutter cannot process this gem}, @cutter.error_message
-        assert_equal @cutter.error_code, 422
+        assert_match %r{Gemcutter cannot process this gem}, @cutter.message
+        assert_equal @cutter.code, 422
       end
     end
 
@@ -131,15 +131,15 @@ class GemcutterTest < ActiveSupport::TestCase
 
         should "be false if not owned by user" do
           assert ! @cutter.authorize
-          assert_equal "You do not have permission to push to this gem.", @cutter.error_message
-          assert_equal 403, @cutter.error_code
+          assert_equal "You do not have permission to push to this gem.", @cutter.message
+          assert_equal 403, @cutter.code
         end
 
         should "be false if rubygem exists and is owned by unapproved user" do
           @rubygem.ownerships.create(:user => @user, :approved => false)
           assert ! @cutter.authorize
-          assert_equal "You do not have permission to push to this gem.", @cutter.error_message
-          assert_equal 403, @cutter.error_code
+          assert_equal "You do not have permission to push to this gem.", @cutter.message
+          assert_equal 403, @cutter.code
         end
       end
     end
@@ -149,8 +149,10 @@ class GemcutterTest < ActiveSupport::TestCase
         @rubygem = "rubygem"
         @version = "1.0.0"
         @spec = gem_spec(:version => @version)
+        @ownerships = "ownerships"
 
         stub(@rubygem).save
+        stub(@rubygem).ownerships { @ownerships }
         stub(@cutter).rubygem { @rubygem }
         stub(@cutter).spec { @spec }
       end
@@ -178,11 +180,16 @@ class GemcutterTest < ActiveSupport::TestCase
           mock(@rubygem).build_links(@spec.homepage)
         end
 
+        before_should "build ownership with user" do
+          mock(@rubygem).build_ownership(@user)
+        end
+
         setup do
           stub(@rubygem).build_name
           stub(@rubygem).build_version
           stub(@rubygem).build_dependencies
           stub(@rubygem).build_links
+          stub(@rubygem).build_ownership
           @cutter.build
         end
       end
@@ -192,12 +199,14 @@ class GemcutterTest < ActiveSupport::TestCase
           mock(@cutter).build
           mock(@rubygem).save { true }
           mock(@cutter).store
+          mock(@cutter).notify("Successfully registered gem: #{@rubygem}", 200)
         end
 
         before_should "not process if succesfully saved" do
           mock(@cutter).build
           mock(@rubygem).save { false }
           mock(@cutter).store.never
+          mock(@cutter).notify("Gemcutter cannot process this gem. Please try rebuilding it and installing it locally to make sure it's valid.", 403)
         end
 
         setup do

@@ -42,8 +42,9 @@ class RubygemsController < ApplicationController
   end
 
   def create
-    message, code = Rubygem.process(request.body.read, current_user)
-    render :text => message, :status => code
+    gemcutter = Gemcutter.new(current_user, request.body)
+    gemcutter.process
+    render :text => gemcutter.message, :status => gemcutter.code
   end
 
   protected
