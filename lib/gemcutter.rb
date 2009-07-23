@@ -47,7 +47,7 @@ class Gemcutter
       :number            => spec.version.to_s)
     rubygem.build_dependencies(spec.dependencies)
     rubygem.build_links(spec.homepage)
-    rubygem.build_ownership(user)
+    rubygem.build_ownership(user) if user
   end
 
   def pull_spec
