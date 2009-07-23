@@ -37,6 +37,8 @@ class Gemcutter
       :rubyforge_project => spec.rubyforge_project,
       :created_at        => spec.date,
       :number            => spec.version.to_s)
+    rubygem.build_dependencies(spec.dependencies)
+    rubygem.build_links(spec.homepage)
   end
 
   def store
