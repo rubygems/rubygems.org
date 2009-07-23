@@ -1,5 +1,10 @@
 class Gemcutter
-  include Vault::FS
+  if Rails.env.production?
+    include Vault::S3
+  else
+    include Vault::FS
+  end
+
   attr_reader :user, :data, :spec, :message, :code, :rubygem
 
   def initialize(user, data)
@@ -52,7 +57,7 @@ class Gemcutter
 
   def pull_spec
     begin
-      format = Gem::Format.from_io(data)
+      format = Gem::Format.from_io(data.dup)
       @spec = format.spec
     rescue Exception => e
       @message = "Gemcutter cannot process this gem. Please try rebuilding it and installing it locally to make sure it's valid."
