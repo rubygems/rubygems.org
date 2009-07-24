@@ -81,13 +81,23 @@ class GemcutterTest < ActiveSupport::TestCase
 
     context "pulling the spec " do
       should "pull spec out of the given gem" do
+        data = "data"
+        format = "format"
+        io = "io"
+        spec = "spec"
+
+        mock(@cutter).data { data }
+        mock(data).string { "test" }
+        mock(StringIO).new("test") { io }
+        mock(Gem::Format).from_io(io) { format }
+        mock(format).spec { spec }
+
         @cutter.pull_spec
-        assert_not_nil @cutter.spec
-        assert @cutter.spec.is_a?(Gem::Specification)
+        assert_equal spec, @cutter.spec
       end
 
       should "not be able to pull spec from a bad path" do
-        stub(@cutter).data { "bad data" }
+        stub(@cutter).data.stub!.string { raise "problem!" }
         @cutter.pull_spec
         assert_nil @cutter.spec
         assert_match %r{Gemcutter cannot process this gem}, @cutter.message
@@ -97,17 +107,18 @@ class GemcutterTest < ActiveSupport::TestCase
 
     context "finding rubygem" do
       should "initialize new gem if one does not exist" do
-        @cutter.pull_spec
+        stub(@cutter).spec.stub!.name { "some name" }
         @cutter.find
+
         assert_not_nil @cutter.rubygem
         assert @cutter.rubygem.new_record?
       end
 
       should "bring up existing gem with matching spec" do
-        @cutter.pull_spec
-        @rubygem = Factory(:rubygem, :name => @cutter.spec.name)
-
+        @rubygem = Factory(:rubygem)
+        stub(@cutter).spec.stub!.name { @rubygem.name }
         @cutter.find
+
         assert_equal @rubygem, @cutter.rubygem
       end
     end
