@@ -14,7 +14,7 @@ module Vault
 
     def source_index
       if VaultObject.exists?(source_path)
-        @source_index ||= VaultObject.value(source_path)
+        @source_index ||= VaultObject.value(Marshal.load(source_path))
       else
         @source_index ||= Gem::SourceIndex.new
       end
@@ -33,7 +33,29 @@ module Vault
 
     def update
       source_index.add_spec spec, spec.original_name
-      VaultObject.store(source_path, source_index)
+      VaultObject.store(source_path, Marshal.dump(source_index))
+
+      specs_index = "specs.#{Gem.marshal_version}.gz"
+      latest_specs_index = "lastest_specs.#{Gem.marshal_version}.gz"
+
+      [specs_index, latest_specs_index].each do |index|
+        if VaultObject.exists?(index)
+          binary = VaultObject.value(index)
+          loaded_index = Marshal.load(Gem.inflate(binary))
+        else
+          loaded_index = []
+        end
+
+        source_index.each do |_, spec|
+          platform = spec.original_platform
+          platform = Gem::Platform::RUBY if platform.nil? or platform.empty?
+          loaded_index << [spec.name, spec.version, platform]
+        end
+
+        loaded_index = Gemcutter.indexer.compact_specs(loaded_index)
+
+        VaultObject.store(index, Gem.deflate(Marshal.dump(loaded_index)))
+      end
     end
 
   end
