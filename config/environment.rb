@@ -25,6 +25,12 @@ Rails::Initializer.run do |config|
   config.gem 'aws-s3',
     :version => '0.6.2',
     :lib     => 'aws/s3'
+  config.gem "ambethia-smtp-tls",
+    :lib => "smtp-tls",
+    :version => "1.1.2",
+    :source => "http://gems.github.com"
+
+  config.action_mailer.delivery_method = :smtp
 end
 
 DO_NOT_REPLY = "donotreply@gemcutter.org"
