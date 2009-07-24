@@ -99,7 +99,7 @@ namespace :gemcutter do
       puts "Processing #{gems.size} gems..."
       gems.each do |path|
         puts "Processing #{path}"
-        cutter = Gemcutter.new(nil, File.open(path))
+        cutter = Gemcutter.new(nil, StringIO.new(File.open(path).read))
 
         cutter.pull_spec
         cutter.find
