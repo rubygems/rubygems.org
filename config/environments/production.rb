@@ -28,3 +28,14 @@ config.action_view.cache_template_loading            = true
 # config.threadsafe!
 
 HOST = "gemcutter.org"
+config.action_mailer.delivery_method = :smtp
+
+ActionMailer::Base.smtp_settings = {
+  :tls => true,
+  :address => "smtp.gmail.com",
+  :port => "587",
+  :domain => ENV['MAIL_DOMAIN'],
+  :authentication => :plain,
+  :user_name => ENV['MAIL_USERNAME'],
+  :password => ENV['MAIL_PASSWORD']
+}
