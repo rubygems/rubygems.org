@@ -4,28 +4,30 @@ require 'sinatra'
 class Hostess < Sinatra::Default
   set :app_file, __FILE__
 
-  def serve(path, type = nil)
+  def serve(path, redirect = false)
     if Rails.env.production?
-      if type
+      if redirect
         redirect File.join("http://s3.amazonaws.com", VaultObject.current_bucket, request.path)
       else
         VaultObject.value(request.path)
       end
     else
-      content_type type if type
       send_file(path)
     end
   end
 
   get "/specs.#{Gem.marshal_version}.gz" do
+    content_type('application/x-gzip')
     serve(current_path)
   end
 
   get "/latest_specs.#{Gem.marshal_version}.gz" do
+    content_type('application/x-gzip')
     serve(current_path)
   end
 
   get "/quick/Marshal.#{Gem.marshal_version}/*.gemspec.rz" do
+    content_type('application/x-deflate')
     serve(current_path)
   end
 
@@ -37,7 +39,8 @@ class Hostess < Sinatra::Default
 
     if rubygem
       rubygem.increment!(:downloads)
-      serve(current_path, 'application/octet-stream')
+      content_type('application/octet-stream')
+      serve(current_path, true)
     else
       halt 404
     end

@@ -39,6 +39,7 @@ class Gemcutter
   def notify(message, code)
     @message = message
     @code    = code
+    false
   end
 
   def build
@@ -57,17 +58,15 @@ class Gemcutter
 
   def pull_spec
     begin
-      format = Gem::Format.from_io(data.dup)
+      format = Gem::Format.from_io(StringIO.new(data.string))
       @spec = format.spec
     rescue Exception => e
-      @message = "Gemcutter cannot process this gem. Please try rebuilding it and installing it locally to make sure it's valid."
-      @code = 422
-      false
+      notify("Gemcutter cannot process this gem. Please try rebuilding it and installing it locally to make sure it's valid.", 422)
     end
   end
 
   def find
-    @rubygem = Rubygem.find_or_initialize_by_name(@spec.name)
+    @rubygem = Rubygem.find_or_initialize_by_name(self.spec.name)
   end
 
   def self.server_path(*more)
