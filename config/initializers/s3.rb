@@ -4,5 +4,5 @@ AWS::S3::Base.establish_connection!(
 )
 
 class VaultObject < AWS::S3::S3Object
-  set_current_bucket_to "gemcutter_test"
+  set_current_bucket_to "gemcutter_production"
 end
