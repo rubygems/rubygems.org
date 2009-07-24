@@ -2,6 +2,7 @@ http://gems.rubyforge.org/gems/ANTFARM-0.2.0.gem
 http://gems.rubyforge.org/gems/ARFParser-0.1.3.gem
 http://gems.rubyforge.org/gems/ARFParser-0.1.4.gem
 http://gems.rubyforge.org/gems/AbsoluteRenamer-0.9.0.1.gem
+http://gems.rubyforge.org/gems/AbsoluteRenamer-0.9.0.2.gem
 http://gems.rubyforge.org/gems/AbsoluteRenamer-0.9.0.gem
 http://gems.rubyforge.org/gems/Abundance-1.0.0.gem
 http://gems.rubyforge.org/gems/ActionPool-0.0.1.gem
@@ -136,6 +137,8 @@ http://gems.rubyforge.org/gems/Capcode-0.2.0.gem
 http://gems.rubyforge.org/gems/Capcode-0.3.0.gem
 http://gems.rubyforge.org/gems/Capcode-0.4.0.gem
 http://gems.rubyforge.org/gems/Capcode-0.5.0.gem
+http://gems.rubyforge.org/gems/Capcode-0.6.0.gem
+http://gems.rubyforge.org/gems/Capcode-0.6.1.gem
 http://gems.rubyforge.org/gems/CapistranoTrac-0.5.0.gem
 http://gems.rubyforge.org/gems/Carpark-18.gem
 http://gems.rubyforge.org/gems/Carpark-26.gem
@@ -170,6 +173,7 @@ http://gems.rubyforge.org/gems/CurrencyString-0.0.1.gem
 http://gems.rubyforge.org/gems/CurrencyString-0.0.2.gem
 http://gems.rubyforge.org/gems/DBrb-0.1.0.gem
 http://gems.rubyforge.org/gems/DBrb-0.1.1.gem
+http://gems.rubyforge.org/gems/DCGOV-0.0.1.gem
 http://gems.rubyforge.org/gems/DTAUS-0.1.0.gem
 http://gems.rubyforge.org/gems/DTAUS-0.1.1.gem
 http://gems.rubyforge.org/gems/DTR-0.0.1.gem
@@ -362,6 +366,7 @@ http://gems.rubyforge.org/gems/Nephila-0.6.0.gem
 http://gems.rubyforge.org/gems/Nilsimsa-1.0.0.gem
 http://gems.rubyforge.org/gems/ObjectGraph-1.0.1.gem
 http://gems.rubyforge.org/gems/ObjectGraph-1.0.gem
+http://gems.rubyforge.org/gems/ObjectModel-0.3.0.gem
 http://gems.rubyforge.org/gems/ObjectProxy-1.0.1.gem
 http://gems.rubyforge.org/gems/Onion-0.0.1.gem
 http://gems.rubyforge.org/gems/Onion-0.0.2.gem
@@ -530,6 +535,9 @@ http://gems.rubyforge.org/gems/RedCloth-4.1.1.gem
 http://gems.rubyforge.org/gems/RedCloth-4.1.9-universal-java.gem
 http://gems.rubyforge.org/gems/RedCloth-4.1.9-x86-mswin32-60.gem
 http://gems.rubyforge.org/gems/RedCloth-4.1.9.gem
+http://gems.rubyforge.org/gems/RedCloth-4.2.0-universal-java.gem
+http://gems.rubyforge.org/gems/RedCloth-4.2.0-x86-mswin32-60.gem
+http://gems.rubyforge.org/gems/RedCloth-4.2.0.gem
 http://gems.rubyforge.org/gems/RedGreen-1.0.gem
 http://gems.rubyforge.org/gems/RedNails-1.0.0.gem
 http://gems.rubyforge.org/gems/RegexpBench-0.5.0.gem
@@ -593,6 +601,9 @@ http://gems.rubyforge.org/gems/Ruby-ODE-SWIG-0.0.2.gem
 http://gems.rubyforge.org/gems/Ruby4Skype-0.2.1.gem
 http://gems.rubyforge.org/gems/Ruby4Skype-0.2.2.gem
 http://gems.rubyforge.org/gems/Ruby4Skype-0.2.3.gem
+http://gems.rubyforge.org/gems/RubyExt-0.1.0.gem
+http://gems.rubyforge.org/gems/RubyExt-0.1.1.gem
+http://gems.rubyforge.org/gems/RubyExt-0.1.2.gem
 http://gems.rubyforge.org/gems/RubyInline-3.1.0.gem
 http://gems.rubyforge.org/gems/RubyInline-3.2.0.gem
 http://gems.rubyforge.org/gems/RubyInline-3.2.1.gem
@@ -846,6 +857,8 @@ http://gems.rubyforge.org/gems/ZenTest-3.9.1.gem
 http://gems.rubyforge.org/gems/ZenTest-3.9.2.gem
 http://gems.rubyforge.org/gems/ZenTest-3.9.3.gem
 http://gems.rubyforge.org/gems/ZenTest-4.0.0.gem
+http://gems.rubyforge.org/gems/ZenTest-4.1.0.gem
+http://gems.rubyforge.org/gems/ZenTest-4.1.1.gem
 http://gems.rubyforge.org/gems/Zenity.rb-0.1.0.gem
 http://gems.rubyforge.org/gems/Zliby-0.0.5.gem
 http://gems.rubyforge.org/gems/aalib-ruby-0.7.1.gem
@@ -1069,11 +1082,13 @@ http://gems.rubyforge.org/gems/activefacts-0.7.1.gem
 http://gems.rubyforge.org/gems/activefacts-0.7.2.gem
 http://gems.rubyforge.org/gems/activefacts-0.7.3.gem
 http://gems.rubyforge.org/gems/activegroonga-0.0.1.gem
+http://gems.rubyforge.org/gems/activegroonga-0.0.2.gem
 http://gems.rubyforge.org/gems/activeldap-0.10.0.gem
 http://gems.rubyforge.org/gems/activeldap-0.9.0.gem
 http://gems.rubyforge.org/gems/activeldap-1.0.0.gem
 http://gems.rubyforge.org/gems/activeldap-1.0.1.gem
 http://gems.rubyforge.org/gems/activeldap-1.0.2.gem
+http://gems.rubyforge.org/gems/activeldap-1.0.9.gem
 http://gems.rubyforge.org/gems/activemdb-0.1.0.gem
 http://gems.rubyforge.org/gems/activemdb-0.2.0.gem
 http://gems.rubyforge.org/gems/activemdb-0.2.1.gem
@@ -1091,6 +1106,8 @@ http://gems.rubyforge.org/gems/activemerchant-1.3.2.gem
 http://gems.rubyforge.org/gems/activemerchant-1.4.0.gem
 http://gems.rubyforge.org/gems/activemerchant-1.4.1.gem
 http://gems.rubyforge.org/gems/activemerchant-1.4.2.gem
+http://gems.rubyforge.org/gems/activemessaging-0.6.0.gem
+http://gems.rubyforge.org/gems/activemessaging-0.6.1.gem
 http://gems.rubyforge.org/gems/activerdf-1.0.gem
 http://gems.rubyforge.org/gems/activerdf-1.1.gem
 http://gems.rubyforge.org/gems/activerdf-1.2.1.gem
@@ -1282,9 +1299,11 @@ http://gems.rubyforge.org/gems/activerecord-oracle_enhanced-adapter-1.1.7.gem
 http://gems.rubyforge.org/gems/activerecord-oracle_enhanced-adapter-1.1.8.gem
 http://gems.rubyforge.org/gems/activerecord-oracle_enhanced-adapter-1.1.9.gem
 http://gems.rubyforge.org/gems/activerecord-oracle_enhanced-adapter-1.2.0.gem
+http://gems.rubyforge.org/gems/activerecord-oracle_enhanced-adapter-1.2.1.gem
 http://gems.rubyforge.org/gems/activerecord-sqlanywhere-adapter-0.1.0.gem
 http://gems.rubyforge.org/gems/activerecord-sqlanywhere-adapter-0.1.1.gem
 http://gems.rubyforge.org/gems/activerecord-sqlanywhere-adapter-0.1.2.gem
+http://gems.rubyforge.org/gems/activerecord-sqlserver-adapter-2.2.18.gem
 http://gems.rubyforge.org/gems/activerecord-tableless-0.1.0.gem
 http://gems.rubyforge.org/gems/activerecord_authorails-1.0.0.gem
 http://gems.rubyforge.org/gems/activeresource-2.0.1.gem
@@ -1505,6 +1524,7 @@ http://gems.rubyforge.org/gems/acts_as_markup-1.2.1.gem
 http://gems.rubyforge.org/gems/acts_as_markup-1.3.0.gem
 http://gems.rubyforge.org/gems/acts_as_markup-1.3.1.gem
 http://gems.rubyforge.org/gems/acts_as_markup-1.3.2.gem
+http://gems.rubyforge.org/gems/acts_as_markup-1.3.3.gem
 http://gems.rubyforge.org/gems/acts_as_nice_url-1.0.0.gem
 http://gems.rubyforge.org/gems/acts_as_nice_url-2.0.0.gem
 http://gems.rubyforge.org/gems/acts_as_nice_url-2.0.1.gem
@@ -1541,6 +1561,8 @@ http://gems.rubyforge.org/gems/acts_as_searchable-0.1.0.gem
 http://gems.rubyforge.org/gems/acts_as_secure-0.0.1.gem
 http://gems.rubyforge.org/gems/acts_as_secure-0.0.2.gem
 http://gems.rubyforge.org/gems/acts_as_secure-0.0.3.gem
+http://gems.rubyforge.org/gems/acts_as_serializable-0.1.2.gem
+http://gems.rubyforge.org/gems/acts_as_serializable-0.1.5.gem
 http://gems.rubyforge.org/gems/acts_as_shellable-0.1.0.gem
 http://gems.rubyforge.org/gems/acts_as_shellable-0.2.0.gem
 http://gems.rubyforge.org/gems/acts_as_singleton-0.0.1.gem
@@ -1647,11 +1669,13 @@ http://gems.rubyforge.org/gems/adwords4r-12.1.0.gem
 http://gems.rubyforge.org/gems/adwords4r-13.0.0.gem
 http://gems.rubyforge.org/gems/adwords4r-13.0.1.gem
 http://gems.rubyforge.org/gems/adwords4r-15.0.1.gem
+http://gems.rubyforge.org/gems/adwords4r-15.1.0.gem
 http://gems.rubyforge.org/gems/aetherical_utils-0.0.1.gem
 http://gems.rubyforge.org/gems/aetherical_utils-0.0.2.gem
 http://gems.rubyforge.org/gems/aetherical_utils-0.0.5.gem
 http://gems.rubyforge.org/gems/af_solr_generator-0.0.2.gem
 http://gems.rubyforge.org/gems/affine-0.2.1.gem
+http://gems.rubyforge.org/gems/affine-0.2.2.gem
 http://gems.rubyforge.org/gems/agentdispatcher-0.7.0.gem
 http://gems.rubyforge.org/gems/agilelamp-driver-0.1.0.gem
 http://gems.rubyforge.org/gems/agilelamp-driver-0.1.1.gem
@@ -1668,6 +1692,7 @@ http://gems.rubyforge.org/gems/ai4r-1.5.gem
 http://gems.rubyforge.org/gems/ai4r-1.6.1.gem
 http://gems.rubyforge.org/gems/ai4r-1.6.gem
 http://gems.rubyforge.org/gems/ai4r-1.7.gem
+http://gems.rubyforge.org/gems/ai4r-1.8.gem
 http://gems.rubyforge.org/gems/airake-0.1.10.gem
 http://gems.rubyforge.org/gems/airake-0.1.11.gem
 http://gems.rubyforge.org/gems/airake-0.1.12.gem
@@ -1846,6 +1871,12 @@ http://gems.rubyforge.org/gems/amazon-ec2-0.3.2.gem
 http://gems.rubyforge.org/gems/amazon-ec2-0.3.4.gem
 http://gems.rubyforge.org/gems/amazon-ec2-0.3.6.gem
 http://gems.rubyforge.org/gems/amazon-ec2-0.3.8.gem
+http://gems.rubyforge.org/gems/amazon-ec2-0.4.0.gem
+http://gems.rubyforge.org/gems/amazon-ec2-0.4.1.gem
+http://gems.rubyforge.org/gems/amazon-ec2-0.4.2.gem
+http://gems.rubyforge.org/gems/amazon-ec2-0.4.3.gem
+http://gems.rubyforge.org/gems/amazon-ec2-0.4.4.gem
+http://gems.rubyforge.org/gems/amazon-ec2-0.4.5.gem
 http://gems.rubyforge.org/gems/amazon-ecs-0.5.0.gem
 http://gems.rubyforge.org/gems/amazon-ecs-0.5.1.gem
 http://gems.rubyforge.org/gems/amazon-ecs-0.5.2.gem
@@ -1908,6 +1939,8 @@ http://gems.rubyforge.org/gems/andand-1.3.0.gem
 http://gems.rubyforge.org/gems/andand-1.3.1.gem
 http://gems.rubyforge.org/gems/anemone-0.0.1.gem
 http://gems.rubyforge.org/gems/anemone-0.0.2.gem
+http://gems.rubyforge.org/gems/anemone-0.0.3.gem
+http://gems.rubyforge.org/gems/anemone-0.0.4.gem
 http://gems.rubyforge.org/gems/anise-0.1.1.gem
 http://gems.rubyforge.org/gems/anise-0.2.0.gem
 http://gems.rubyforge.org/gems/anise-0.2.1.gem
@@ -1929,6 +1962,8 @@ http://gems.rubyforge.org/gems/annotate-models-1.0.3.gem
 http://gems.rubyforge.org/gems/annotate-models-1.0.4.gem
 http://gems.rubyforge.org/gems/annotations-2.0.0.gem
 http://gems.rubyforge.org/gems/annoy-0.5.0.gem
+http://gems.rubyforge.org/gems/annoy-0.5.1.gem
+http://gems.rubyforge.org/gems/annoy-0.5.2.gem
 http://gems.rubyforge.org/gems/annoy-0.5.gem
 http://gems.rubyforge.org/gems/another-0.0.3.gem
 http://gems.rubyforge.org/gems/another-0.0.4.gem
@@ -1947,6 +1982,8 @@ http://gems.rubyforge.org/gems/ansi-sys-0.8.2.gem
 http://gems.rubyforge.org/gems/ansi-sys-0.8.3.gem
 http://gems.rubyforge.org/gems/antfarm-0.3.0.gem
 http://gems.rubyforge.org/gems/antfarm-0.4.0.gem
+http://gems.rubyforge.org/gems/anthill-0.5.0.gem
+http://gems.rubyforge.org/gems/anthill_smpp-0.5.0.gem
 http://gems.rubyforge.org/gems/anvil-0.0.1.gem
 http://gems.rubyforge.org/gems/any_data-0.1.0.gem
 http://gems.rubyforge.org/gems/any_data-0.1.1.gem
@@ -2067,6 +2104,7 @@ http://gems.rubyforge.org/gems/ar_mailer-1.1.0.gem
 http://gems.rubyforge.org/gems/ar_mailer-1.2.0.gem
 http://gems.rubyforge.org/gems/ar_mailer-1.3.1.gem
 http://gems.rubyforge.org/gems/ar_mailer-1.3.2.gem
+http://gems.rubyforge.org/gems/ar_mailer-1.3.3.gem
 http://gems.rubyforge.org/gems/ar_mailer_generator-1.0.0.gem
 http://gems.rubyforge.org/gems/ar_mailer_service-0.1.0.gem
 http://gems.rubyforge.org/gems/ar_mailer_service-0.1.1.gem
@@ -2149,6 +2187,7 @@ http://gems.rubyforge.org/gems/arrayfields-4.7.0.gem
 http://gems.rubyforge.org/gems/arrayfields-4.7.1.gem
 http://gems.rubyforge.org/gems/arrayfields-4.7.2.gem
 http://gems.rubyforge.org/gems/arrayfields-4.7.3.gem
+http://gems.rubyforge.org/gems/arrayfields-4.7.4.gem
 http://gems.rubyforge.org/gems/arrayio-0.1.0.gem
 http://gems.rubyforge.org/gems/arraysugar-0.1.0.gem
 http://gems.rubyforge.org/gems/arraysugar-0.2.0.gem
@@ -2384,6 +2423,7 @@ http://gems.rubyforge.org/gems/authlogic-2.0.1.gem
 http://gems.rubyforge.org/gems/authlogic-2.0.11.gem
 http://gems.rubyforge.org/gems/authlogic-2.0.12.gem
 http://gems.rubyforge.org/gems/authlogic-2.0.13.gem
+http://gems.rubyforge.org/gems/authlogic-2.0.14.gem
 http://gems.rubyforge.org/gems/authlogic-2.0.2.gem
 http://gems.rubyforge.org/gems/authlogic-2.0.3.gem
 http://gems.rubyforge.org/gems/authlogic-2.0.4.gem
@@ -2392,10 +2432,13 @@ http://gems.rubyforge.org/gems/authlogic-2.0.6.gem
 http://gems.rubyforge.org/gems/authlogic-2.0.7.gem
 http://gems.rubyforge.org/gems/authlogic-2.0.8.gem
 http://gems.rubyforge.org/gems/authlogic-2.0.9.gem
+http://gems.rubyforge.org/gems/authlogic-oauth-1.0.0.gem
+http://gems.rubyforge.org/gems/authlogic-oauth-1.0.1.gem
 http://gems.rubyforge.org/gems/authlogic-oid-1.0.0.gem
 http://gems.rubyforge.org/gems/authlogic-oid-1.0.1.gem
 http://gems.rubyforge.org/gems/authlogic-oid-1.0.2.gem
 http://gems.rubyforge.org/gems/authlogic-oid-1.0.3.gem
+http://gems.rubyforge.org/gems/authlogic-oid-1.0.4.gem
 http://gems.rubyforge.org/gems/authorails-1.0.0.gem
 http://gems.rubyforge.org/gems/autobuild-0.1.gem
 http://gems.rubyforge.org/gems/autobuild-0.2.gem
@@ -2418,6 +2461,7 @@ http://gems.rubyforge.org/gems/autobuild-1.2.10.gem
 http://gems.rubyforge.org/gems/autobuild-1.2.11.gem
 http://gems.rubyforge.org/gems/autobuild-1.2.12.gem
 http://gems.rubyforge.org/gems/autobuild-1.2.13.gem
+http://gems.rubyforge.org/gems/autobuild-1.2.14.gem
 http://gems.rubyforge.org/gems/autobuild-1.2.2.gem
 http://gems.rubyforge.org/gems/autobuild-1.2.3.gem
 http://gems.rubyforge.org/gems/autobuild-1.2.4.gem
@@ -2486,11 +2530,15 @@ http://gems.rubyforge.org/gems/autoreload-0.0.1.gem
 http://gems.rubyforge.org/gems/autorequire-0.0.0.gem
 http://gems.rubyforge.org/gems/autotask-0.1.1.gem
 http://gems.rubyforge.org/gems/autotest-fsevent-0.1.0.gem
+http://gems.rubyforge.org/gems/autotest-fsevent-0.1.1.gem
 http://gems.rubyforge.org/gems/autotest-growl-0.1.0.gem
+http://gems.rubyforge.org/gems/autotest-growl-0.1.1.gem
+http://gems.rubyforge.org/gems/autotest-growl-0.1.2.gem
 http://gems.rubyforge.org/gems/autotest-mac-0.1.0.gem
 http://gems.rubyforge.org/gems/autotest-mac-0.1.1.gem
 http://gems.rubyforge.org/gems/autotest-mac-0.1.2.gem
 http://gems.rubyforge.org/gems/autotest-mac-0.1.3.gem
+http://gems.rubyforge.org/gems/autotest-rails-4.1.0.gem
 http://gems.rubyforge.org/gems/autotest_screen-4.0.0.gem
 http://gems.rubyforge.org/gems/autumn-3.1.10.gem
 http://gems.rubyforge.org/gems/autumn-3.1.11.gem
@@ -2520,6 +2568,11 @@ http://gems.rubyforge.org/gems/aws-1.11.1.gem
 http://gems.rubyforge.org/gems/aws-1.11.2.gem
 http://gems.rubyforge.org/gems/aws-1.11.3.gem
 http://gems.rubyforge.org/gems/aws-1.11.4.gem
+http://gems.rubyforge.org/gems/aws-1.11.5.gem
+http://gems.rubyforge.org/gems/aws-1.11.6.gem
+http://gems.rubyforge.org/gems/aws-1.11.7.gem
+http://gems.rubyforge.org/gems/aws-1.11.8.gem
+http://gems.rubyforge.org/gems/aws-1.11.9.gem
 http://gems.rubyforge.org/gems/aws-s3-0.1.0.gem
 http://gems.rubyforge.org/gems/aws-s3-0.1.1.gem
 http://gems.rubyforge.org/gems/aws-s3-0.1.2.gem
@@ -2705,6 +2758,7 @@ http://gems.rubyforge.org/gems/backports-1.6.4.gem
 http://gems.rubyforge.org/gems/backports-1.6.6.gem
 http://gems.rubyforge.org/gems/backports-1.6.7.gem
 http://gems.rubyforge.org/gems/backports-1.6.8.gem
+http://gems.rubyforge.org/gems/backports-1.7.0.gem
 http://gems.rubyforge.org/gems/backup_manager-0.0.2.gem
 http://gems.rubyforge.org/gems/backupgem-0.0.11.gem
 http://gems.rubyforge.org/gems/backupgem-0.0.2.gem
@@ -2734,6 +2788,7 @@ http://gems.rubyforge.org/gems/bamboo_rails-1.0.0.gem
 http://gems.rubyforge.org/gems/bamboo_rails-1.0.1.gem
 http://gems.rubyforge.org/gems/bamboo_rails-1.0.2.gem
 http://gems.rubyforge.org/gems/bamboo_rails-1.0.3.gem
+http://gems.rubyforge.org/gems/bamboo_rails-1.0.4.gem
 http://gems.rubyforge.org/gems/bangkok-0.1.0.gem
 http://gems.rubyforge.org/gems/bangkok-0.1.1.gem
 http://gems.rubyforge.org/gems/bangkok-0.1.2.gem
@@ -2774,12 +2829,18 @@ http://gems.rubyforge.org/gems/bat-1.0.0.gem
 http://gems.rubyforge.org/gems/bat-1.0.1.gem
 http://gems.rubyforge.org/gems/battleship_tournament-1.0.gem
 http://gems.rubyforge.org/gems/battleship_tournament-1.1.gem
+http://gems.rubyforge.org/gems/bayon-0.1.0-mswin32.gem
+http://gems.rubyforge.org/gems/bayon-0.1.0-x86-mswin32.gem
+http://gems.rubyforge.org/gems/bayon-0.1.0.gem
+http://gems.rubyforge.org/gems/bayon1.9-0.1.0-x86-mswin32.gem
 http://gems.rubyforge.org/gems/bayuploader-1.0.0.gem
 http://gems.rubyforge.org/gems/bayuploader-1.0.1.gem
 http://gems.rubyforge.org/gems/bb-ruby-0.8.2.gem
 http://gems.rubyforge.org/gems/bb-ruby-0.8.3.gem
 http://gems.rubyforge.org/gems/bb-ruby-0.8.4.gem
 http://gems.rubyforge.org/gems/bb-ruby-0.8.5.gem
+http://gems.rubyforge.org/gems/bb-ruby-0.9.2.gem
+http://gems.rubyforge.org/gems/bb-ruby-0.9.3.gem
 http://gems.rubyforge.org/gems/bb-ruby-0.9.gem
 http://gems.rubyforge.org/gems/bbcode-0.0.1.gem
 http://gems.rubyforge.org/gems/bbcode-0.0.2.gem
@@ -2868,6 +2929,7 @@ http://gems.rubyforge.org/gems/binaryparse-0.2.5.gem
 http://gems.rubyforge.org/gems/binaryparse-0.2.6.gem
 http://gems.rubyforge.org/gems/binaryparse-0.2.7.gem
 http://gems.rubyforge.org/gems/binaryparse-0.3.3.gem
+http://gems.rubyforge.org/gems/binaryparse-1.0.0.gem
 http://gems.rubyforge.org/gems/binarysearch-0.0.1.gem
 http://gems.rubyforge.org/gems/binarysearch-0.0.2.gem
 http://gems.rubyforge.org/gems/bindata-0.10.0.gem
@@ -2905,6 +2967,7 @@ http://gems.rubyforge.org/gems/bisac-0.9.gem
 http://gems.rubyforge.org/gems/bishop-0.3.0.gem
 http://gems.rubyforge.org/gems/bitescript-0.0.1.gem
 http://gems.rubyforge.org/gems/bitescript-0.0.2.gem
+http://gems.rubyforge.org/gems/bitescript-0.0.3.gem
 http://gems.rubyforge.org/gems/bitly4r-0.1.0.gem
 http://gems.rubyforge.org/gems/bitpack-0.1.gem
 http://gems.rubyforge.org/gems/bits-0.1.1-mswin32.gem
@@ -2979,6 +3042,9 @@ http://gems.rubyforge.org/gems/blather-0.3.1.gem
 http://gems.rubyforge.org/gems/blather-0.3.2.gem
 http://gems.rubyforge.org/gems/blather-0.3.3.gem
 http://gems.rubyforge.org/gems/blather-0.3.4.gem
+http://gems.rubyforge.org/gems/blather-0.4.0.gem
+http://gems.rubyforge.org/gems/blather-0.4.1.gem
+http://gems.rubyforge.org/gems/blather-0.4.2.gem
 http://gems.rubyforge.org/gems/bleak_house-3.0.1.gem
 http://gems.rubyforge.org/gems/bleak_house-3.1.gem
 http://gems.rubyforge.org/gems/bleak_house-3.2.gem
@@ -3008,6 +3074,7 @@ http://gems.rubyforge.org/gems/blinkenlights-0.0.1.gem
 http://gems.rubyforge.org/gems/blinkenlights-0.0.2.gem
 http://gems.rubyforge.org/gems/blinkenlights-0.0.3.gem
 http://gems.rubyforge.org/gems/blinkenlights-0.0.4.gem
+http://gems.rubyforge.org/gems/blipfm-0.1.0.gem
 http://gems.rubyforge.org/gems/block-chainable-0.0.1.gem
 http://gems.rubyforge.org/gems/block-chainable-0.0.2.gem
 http://gems.rubyforge.org/gems/block-chainable-0.0.3.gem
@@ -3025,6 +3092,7 @@ http://gems.rubyforge.org/gems/blockenspiel-0.2.0.1.gem
 http://gems.rubyforge.org/gems/blockenspiel-0.2.0.gem
 http://gems.rubyforge.org/gems/blockenspiel-0.2.1-java.gem
 http://gems.rubyforge.org/gems/blockenspiel-0.2.1.gem
+http://gems.rubyforge.org/gems/blogeen-0.0.1.gem
 http://gems.rubyforge.org/gems/blogfun-0.0.1.gem
 http://gems.rubyforge.org/gems/blogger-0.5.0.gem
 http://gems.rubyforge.org/gems/blogger-0.5.1.gem
@@ -3044,10 +3112,12 @@ http://gems.rubyforge.org/gems/bludgeon-0.0.2.gem
 http://gems.rubyforge.org/gems/bluecloth-2.0.0.gem
 http://gems.rubyforge.org/gems/bluecloth-2.0.1.gem
 http://gems.rubyforge.org/gems/bluecloth-2.0.2.gem
+http://gems.rubyforge.org/gems/bluecloth-2.0.3.gem
 http://gems.rubyforge.org/gems/bluefeather-0.10.gem
 http://gems.rubyforge.org/gems/bluefeather-0.11.gem
 http://gems.rubyforge.org/gems/bluefeather-0.20.gem
 http://gems.rubyforge.org/gems/bluefeather-0.21.gem
+http://gems.rubyforge.org/gems/bluefeather-0.22.gem
 http://gems.rubyforge.org/gems/bluepay-1.0.1.gem
 http://gems.rubyforge.org/gems/bn4r-0.1.0.gem
 http://gems.rubyforge.org/gems/bn4r-0.1.2.gem
@@ -3344,6 +3414,7 @@ http://gems.rubyforge.org/gems/brnumeros-2.1.7.gem
 http://gems.rubyforge.org/gems/brnumeros-2.1.8.gem
 http://gems.rubyforge.org/gems/broccoli-1.3.0.gem
 http://gems.rubyforge.org/gems/broccoli-1.4.0.gem
+http://gems.rubyforge.org/gems/browsercms-3.0.0.gem
 http://gems.rubyforge.org/gems/brstring-2.0.10.gem
 http://gems.rubyforge.org/gems/brstring-2.0.11.gem
 http://gems.rubyforge.org/gems/brstring-2.0.12.gem
@@ -3387,6 +3458,8 @@ http://gems.rubyforge.org/gems/bufferaffects-0.2.0.gem
 http://gems.rubyforge.org/gems/buftok-0.1.gem
 http://gems.rubyforge.org/gems/buggy-0.1.gem
 http://gems.rubyforge.org/gems/buggy-0.4.gem
+http://gems.rubyforge.org/gems/build-tool-0.0.1.gem
+http://gems.rubyforge.org/gems/build-tool-0.0.2.gem
 http://gems.rubyforge.org/gems/builder-0.1.0.gem
 http://gems.rubyforge.org/gems/builder-0.1.1.gem
 http://gems.rubyforge.org/gems/builder-1.0.0.gem
@@ -3450,6 +3523,7 @@ http://gems.rubyforge.org/gems/bunny-0.3.1.gem
 http://gems.rubyforge.org/gems/bunny-0.4.0.gem
 http://gems.rubyforge.org/gems/bunny-0.4.1.gem
 http://gems.rubyforge.org/gems/bunny-0.4.2.gem
+http://gems.rubyforge.org/gems/bunny-0.4.3.gem
 http://gems.rubyforge.org/gems/bunraku-3.0.0.gem
 http://gems.rubyforge.org/gems/bus-scheme-0.6.gem
 http://gems.rubyforge.org/gems/bus-scheme-0.7.1.gem
@@ -3504,6 +3578,8 @@ http://gems.rubyforge.org/gems/cachetastic-2.1.1.gem
 http://gems.rubyforge.org/gems/cachetastic-2.1.2.gem
 http://gems.rubyforge.org/gems/cachetastic-2.1.3.gem
 http://gems.rubyforge.org/gems/cachetastic-2.1.4.gem
+http://gems.rubyforge.org/gems/cachetastic-3.0.0.gem
+http://gems.rubyforge.org/gems/cachetastic-three-3.0.0.gem
 http://gems.rubyforge.org/gems/caesars-0.3.2.gem
 http://gems.rubyforge.org/gems/caesars-0.4.0.gem
 http://gems.rubyforge.org/gems/caesars-0.4.1.gem
@@ -3522,6 +3598,10 @@ http://gems.rubyforge.org/gems/caesars-0.6.4.gem
 http://gems.rubyforge.org/gems/caesars-0.6.5.gem
 http://gems.rubyforge.org/gems/caesars-0.6.6.gem
 http://gems.rubyforge.org/gems/caesars-0.6.7.gem
+http://gems.rubyforge.org/gems/caesars-0.6.8.gem
+http://gems.rubyforge.org/gems/caesars-0.7.0.gem
+http://gems.rubyforge.org/gems/caesars-0.7.1.gem
+http://gems.rubyforge.org/gems/caesars-0.7.2.gem
 http://gems.rubyforge.org/gems/cafepress-alpha-0.0.1.gem
 http://gems.rubyforge.org/gems/caffeine-0.0.2.gem
 http://gems.rubyforge.org/gems/cairo-1.4.1.gem
@@ -3544,6 +3624,7 @@ http://gems.rubyforge.org/gems/calais-0.0.2.gem
 http://gems.rubyforge.org/gems/calais-0.0.3.gem
 http://gems.rubyforge.org/gems/calais-0.0.5.gem
 http://gems.rubyforge.org/gems/calais-0.0.6.gem
+http://gems.rubyforge.org/gems/calais-0.0.7.gem
 http://gems.rubyforge.org/gems/calendar-1.11.4.gem
 http://gems.rubyforge.org/gems/calendar_date_select-1.11.1.gem
 http://gems.rubyforge.org/gems/calendar_date_select-1.12.gem
@@ -3656,6 +3737,7 @@ http://gems.rubyforge.org/gems/camping-1.2.gem
 http://gems.rubyforge.org/gems/camping-1.3.gem
 http://gems.rubyforge.org/gems/camping-1.4.2.gem
 http://gems.rubyforge.org/gems/camping-1.4.gem
+http://gems.rubyforge.org/gems/camping-1.5.180.gem
 http://gems.rubyforge.org/gems/camping-1.5.gem
 http://gems.rubyforge.org/gems/camping_generator-0.1.0.gem
 http://gems.rubyforge.org/gems/camping_generator-0.2.0.gem
@@ -3758,6 +3840,9 @@ http://gems.rubyforge.org/gems/cappy-monit-0.1.0.gem
 http://gems.rubyforge.org/gems/capsaicin-0.1.2.gem
 http://gems.rubyforge.org/gems/capsaicin-0.1.3.gem
 http://gems.rubyforge.org/gems/capsaicin-0.1.4.gem
+http://gems.rubyforge.org/gems/capsaicin-0.1.5.gem
+http://gems.rubyforge.org/gems/capsaicin-0.1.6.gem
+http://gems.rubyforge.org/gems/capsaicin-0.1.7.gem
 http://gems.rubyforge.org/gems/capserverext-0.0.1.gem
 http://gems.rubyforge.org/gems/capserverext-0.0.2.gem
 http://gems.rubyforge.org/gems/capserverext-0.0.3.gem
@@ -3792,6 +3877,7 @@ http://gems.rubyforge.org/gems/carrierwave-0.1.gem
 http://gems.rubyforge.org/gems/carrierwave-0.2.0.gem
 http://gems.rubyforge.org/gems/carrierwave-0.2.1.gem
 http://gems.rubyforge.org/gems/carrierwave-0.2.3.gem
+http://gems.rubyforge.org/gems/carrierwave-0.2.4.gem
 http://gems.rubyforge.org/gems/casablanca-0.0.2.gem
 http://gems.rubyforge.org/gems/casablanca-0.0.3.gem
 http://gems.rubyforge.org/gems/casablanca-0.1.0.gem
@@ -3940,6 +4026,7 @@ http://gems.rubyforge.org/gems/chikkenbukket-0.9.1.gem
 http://gems.rubyforge.org/gems/chirp-0.1.0.gem
 http://gems.rubyforge.org/gems/chirp-0.2.0.gem
 http://gems.rubyforge.org/gems/chirp-0.3.gem
+http://gems.rubyforge.org/gems/choctop-0.10.0.gem
 http://gems.rubyforge.org/gems/choctop-0.9.0.gem
 http://gems.rubyforge.org/gems/choctop-0.9.1.gem
 http://gems.rubyforge.org/gems/choctop-0.9.2.gem
@@ -4106,6 +4193,7 @@ http://gems.rubyforge.org/gems/cloudkit-0.11.1.gem
 http://gems.rubyforge.org/gems/cloudkit-0.11.2.gem
 http://gems.rubyforge.org/gems/cloudkit-0.9.0.gem
 http://gems.rubyforge.org/gems/cloudkit-0.9.1.gem
+http://gems.rubyforge.org/gems/clown-0.0.8.gem
 http://gems.rubyforge.org/gems/clusterer-0.1.0.gem
 http://gems.rubyforge.org/gems/clusterer-0.1.9.gem
 http://gems.rubyforge.org/gems/cmd-0.7.0.gem
@@ -4139,6 +4227,7 @@ http://gems.rubyforge.org/gems/cmess-0.2.0.gem
 http://gems.rubyforge.org/gems/cms-lite-0.2.7.gem
 http://gems.rubyforge.org/gems/cms-lite-0.3.1.gem
 http://gems.rubyforge.org/gems/cms-lite-0.3.2.gem
+http://gems.rubyforge.org/gems/cms-lite-0.3.3.gem
 http://gems.rubyforge.org/gems/cnuconfig-1.0.0.gem
 http://gems.rubyforge.org/gems/cnuregexp-1.0.0.gem
 http://gems.rubyforge.org/gems/cobra-1.0.gem
@@ -4295,6 +4384,7 @@ http://gems.rubyforge.org/gems/condor-2.0.0.gem
 http://gems.rubyforge.org/gems/coneco-0.0.1.gem
 http://gems.rubyforge.org/gems/coneco-0.0.2.gem
 http://gems.rubyforge.org/gems/coneco-1.7.1.gem
+http://gems.rubyforge.org/gems/config-0.0.1.gem
 http://gems.rubyforge.org/gems/config_loader-1.0.0.gem
 http://gems.rubyforge.org/gems/config_reader-0.0.1.gem
 http://gems.rubyforge.org/gems/config_reader-0.0.2.gem
@@ -4335,6 +4425,7 @@ http://gems.rubyforge.org/gems/configtoolkit-1.2.0.gem
 http://gems.rubyforge.org/gems/configtoolkit-2.0.0.gem
 http://gems.rubyforge.org/gems/configtoolkit-2.1.0.gem
 http://gems.rubyforge.org/gems/configtoolkit-2.2.0.gem
+http://gems.rubyforge.org/gems/configtoolkit-2.3.0.gem
 http://gems.rubyforge.org/gems/configurable-0.1.0.gem
 http://gems.rubyforge.org/gems/configurable-0.3.0.gem
 http://gems.rubyforge.org/gems/configurable-0.4.0.gem
@@ -4357,6 +4448,8 @@ http://gems.rubyforge.org/gems/conflict-0.2.0.gem
 http://gems.rubyforge.org/gems/conflict-1.0.0.gem
 http://gems.rubyforge.org/gems/consistent_hashing-0.1.0.gem
 http://gems.rubyforge.org/gems/consistent_hashing-0.1.1.gem
+http://gems.rubyforge.org/gems/consoleappsupport-0.5.0.gem
+http://gems.rubyforge.org/gems/consoleappsupport-0.5.1.gem
 http://gems.rubyforge.org/gems/constant_cache-0.0.1.gem
 http://gems.rubyforge.org/gems/constant_cache-0.0.2.gem
 http://gems.rubyforge.org/gems/constantrecord-0.0.1.gem
@@ -4474,6 +4567,7 @@ http://gems.rubyforge.org/gems/cortex-reaver-0.0.6.gem
 http://gems.rubyforge.org/gems/cortex-reaver-0.0.7.gem
 http://gems.rubyforge.org/gems/cortex-reaver-0.0.8.gem
 http://gems.rubyforge.org/gems/cortex-reaver-0.0.9.gem
+http://gems.rubyforge.org/gems/cortex-reaver-0.1.0.gem
 http://gems.rubyforge.org/gems/couchapp-0.1.4.gem
 http://gems.rubyforge.org/gems/couchapp-0.1.6.gem
 http://gems.rubyforge.org/gems/couchapp-0.1.7.gem
@@ -4552,6 +4646,7 @@ http://gems.rubyforge.org/gems/crypt-rot13-1.0.2.gem
 http://gems.rubyforge.org/gems/crypt-tea-1.0.0.gem
 http://gems.rubyforge.org/gems/crypt-tea-1.1.0.gem
 http://gems.rubyforge.org/gems/crypt-tea-1.2.0.gem
+http://gems.rubyforge.org/gems/crypt-tea-1.3.0.gem
 http://gems.rubyforge.org/gems/csbattery-0.1.1.gem
 http://gems.rubyforge.org/gems/csbattery-0.2.1.gem
 http://gems.rubyforge.org/gems/csbattery-0.2.2.gem
@@ -4637,6 +4732,8 @@ http://gems.rubyforge.org/gems/cucumber-0.2.2.gem
 http://gems.rubyforge.org/gems/cucumber-0.2.3.gem
 http://gems.rubyforge.org/gems/cucumber-0.3.0.gem
 http://gems.rubyforge.org/gems/cucumber-0.3.1.gem
+http://gems.rubyforge.org/gems/cucumber-0.3.10.gem
+http://gems.rubyforge.org/gems/cucumber-0.3.11.gem
 http://gems.rubyforge.org/gems/cucumber-0.3.2.gem
 http://gems.rubyforge.org/gems/cucumber-0.3.3.gem
 http://gems.rubyforge.org/gems/cucumber-0.3.4.gem
@@ -4649,6 +4746,7 @@ http://gems.rubyforge.org/gems/cucumber-java-0.0.1.gem
 http://gems.rubyforge.org/gems/cucumber-java-0.0.2.gem
 http://gems.rubyforge.org/gems/cuecat-1.0.0.gem
 http://gems.rubyforge.org/gems/cuecat-1.1.0.gem
+http://gems.rubyforge.org/gems/cuit-0.0.1.gem
 http://gems.rubyforge.org/gems/cups-0.0.5.gem
 http://gems.rubyforge.org/gems/curb-0.1.0.gem
 http://gems.rubyforge.org/gems/curb-0.1.2.gem
@@ -4657,6 +4755,7 @@ http://gems.rubyforge.org/gems/curb-0.3.1.gem
 http://gems.rubyforge.org/gems/curb-0.3.2.gem
 http://gems.rubyforge.org/gems/curb-0.3.3.gem
 http://gems.rubyforge.org/gems/curb-0.3.4.gem
+http://gems.rubyforge.org/gems/curb-0.3.5.gem
 http://gems.rubyforge.org/gems/curl-multi-0.1.gem
 http://gems.rubyforge.org/gems/curl-multi-0.2.gem
 http://gems.rubyforge.org/gems/currency-0.1.0.gem
@@ -4718,6 +4817,8 @@ http://gems.rubyforge.org/gems/daedalus-2.0.1.gem
 http://gems.rubyforge.org/gems/daemon-kit-0.1.3.gem
 http://gems.rubyforge.org/gems/daemon-kit-0.1.5.1.gem
 http://gems.rubyforge.org/gems/daemon-kit-0.1.6.gem
+http://gems.rubyforge.org/gems/daemon-kit-0.1.7.4.gem
+http://gems.rubyforge.org/gems/daemon-kit-0.1.7.5.gem
 http://gems.rubyforge.org/gems/daemon-kit-0.1.7.gem
 http://gems.rubyforge.org/gems/daemons-0.0.1.gem
 http://gems.rubyforge.org/gems/daemons-0.2.0.gem
@@ -4874,6 +4975,8 @@ http://gems.rubyforge.org/gems/databrowser-0.8.gem
 http://gems.rubyforge.org/gems/databrowser-0.9.gem
 http://gems.rubyforge.org/gems/databrowser-1.0.1.gem
 http://gems.rubyforge.org/gems/databrowser-1.0.gem
+http://gems.rubyforge.org/gems/dataflow-0.1.0.gem
+http://gems.rubyforge.org/gems/dataflow-0.1.1.gem
 http://gems.rubyforge.org/gems/datamapper-0.1.0.gem
 http://gems.rubyforge.org/gems/datamapper-0.1.1.gem
 http://gems.rubyforge.org/gems/datamapper-0.2.0.gem
@@ -5069,6 +5172,10 @@ http://gems.rubyforge.org/gems/delish-0.7.7.gem
 http://gems.rubyforge.org/gems/delish-1.0.0.gem
 http://gems.rubyforge.org/gems/delsolr-0.0.1.gem
 http://gems.rubyforge.org/gems/delsolr-0.0.2.gem
+http://gems.rubyforge.org/gems/demolisher-0.3.0.gem
+http://gems.rubyforge.org/gems/demolisher-0.3.1.gem
+http://gems.rubyforge.org/gems/demolisher-0.3.2.gem
+http://gems.rubyforge.org/gems/demolisher-0.3.3.gem
 http://gems.rubyforge.org/gems/depager-0.1.9.gem
 http://gems.rubyforge.org/gems/depager-0.2.0.gem
 http://gems.rubyforge.org/gems/depager-0.2.2.gem
@@ -5108,6 +5215,7 @@ http://gems.rubyforge.org/gems/deprec-1.9.2.gem
 http://gems.rubyforge.org/gems/deprec-1.9.3.gem
 http://gems.rubyforge.org/gems/deprec-2.0.0.gem
 http://gems.rubyforge.org/gems/deprec-2.0.1.gem
+http://gems.rubyforge.org/gems/deprec-2.0.10.gem
 http://gems.rubyforge.org/gems/deprec-2.0.2.gem
 http://gems.rubyforge.org/gems/deprec-2.0.3.gem
 http://gems.rubyforge.org/gems/deprec-2.0.4.gem
@@ -5193,6 +5301,7 @@ http://gems.rubyforge.org/gems/diakonos-0.8.5.gem
 http://gems.rubyforge.org/gems/diakonos-0.8.6.gem
 http://gems.rubyforge.org/gems/diakonos-0.8.7.gem
 http://gems.rubyforge.org/gems/diakonos-0.8.8.gem
+http://gems.rubyforge.org/gems/diakonos-0.8.9.gem
 http://gems.rubyforge.org/gems/dialog-0.1.0.gem
 http://gems.rubyforge.org/gems/dialog-0.1.1.gem
 http://gems.rubyforge.org/gems/dialog-0.1.2.gem
@@ -5221,6 +5330,7 @@ http://gems.rubyforge.org/gems/difflcs-0.6.1.gem
 http://gems.rubyforge.org/gems/difflcs-0.6.2.gem
 http://gems.rubyforge.org/gems/difflcs-0.6.4.gem
 http://gems.rubyforge.org/gems/difflcs-0.6.5.gem
+http://gems.rubyforge.org/gems/difflcs-0.6.6.gem
 http://gems.rubyforge.org/gems/digest-bubblebabble-1.1.0.gem
 http://gems.rubyforge.org/gems/digest-m4p-0.0.2.gem
 http://gems.rubyforge.org/gems/digestr-0.0.2.gem
@@ -5253,6 +5363,9 @@ http://gems.rubyforge.org/gems/discount-1.2.6.1.gem
 http://gems.rubyforge.org/gems/discount-1.2.6.gem
 http://gems.rubyforge.org/gems/disguise-0.1.1.gem
 http://gems.rubyforge.org/gems/disguise-0.1.2.gem
+http://gems.rubyforge.org/gems/disguise-0.1.3.gem
+http://gems.rubyforge.org/gems/disguise-0.2.0.gem
+http://gems.rubyforge.org/gems/disguise-0.3.0.gem
 http://gems.rubyforge.org/gems/dispatcher-0.0.1.gem
 http://gems.rubyforge.org/gems/disqus-0.1.0.gem
 http://gems.rubyforge.org/gems/disqus-0.1.1.gem
@@ -5356,6 +5469,8 @@ http://gems.rubyforge.org/gems/dm-counter-cache-0.9.8.gem
 http://gems.rubyforge.org/gems/dm-datastore-adapter-0.1.0.gem
 http://gems.rubyforge.org/gems/dm-datastore-adapter-0.2.1.gem
 http://gems.rubyforge.org/gems/dm-datastore-adapter-0.2.2.gem
+http://gems.rubyforge.org/gems/dm-datastore-adapter-0.2.3.gem
+http://gems.rubyforge.org/gems/dm-datastore-adapter-0.2.4.gem
 http://gems.rubyforge.org/gems/dm-fasten-the-seat-belt-0.9.11.gem
 http://gems.rubyforge.org/gems/dm-fasten-the-seat-belt-0.9.9.gem
 http://gems.rubyforge.org/gems/dm-ferret-adapter-0.9.10.gem
@@ -5429,6 +5544,7 @@ http://gems.rubyforge.org/gems/dm-is-viewable-0.9.8.gem
 http://gems.rubyforge.org/gems/dm-is-viewable-0.9.9.gem
 http://gems.rubyforge.org/gems/dm-last-0.0.1.gem
 http://gems.rubyforge.org/gems/dm-ldap-adapter-0.2.0.gem
+http://gems.rubyforge.org/gems/dm-ldap-adapter-0.3.0.gem
 http://gems.rubyforge.org/gems/dm-mapping-0.2.0.gem
 http://gems.rubyforge.org/gems/dm-mapping-0.2.1.gem
 http://gems.rubyforge.org/gems/dm-mapping-0.3.0.gem
@@ -5506,6 +5622,7 @@ http://gems.rubyforge.org/gems/dm-rest-adapter-0.9.7.gem
 http://gems.rubyforge.org/gems/dm-rest-adapter-0.9.8.gem
 http://gems.rubyforge.org/gems/dm-rest-adapter-0.9.9.gem
 http://gems.rubyforge.org/gems/dm-revisioned-0.1.0.gem
+http://gems.rubyforge.org/gems/dm-sanitizer-0.1.1.gem
 http://gems.rubyforge.org/gems/dm-serializer-0.9.10.gem
 http://gems.rubyforge.org/gems/dm-serializer-0.9.11.gem
 http://gems.rubyforge.org/gems/dm-serializer-0.9.2.gem
@@ -5590,6 +5707,8 @@ http://gems.rubyforge.org/gems/dnsruby-1.23.gem
 http://gems.rubyforge.org/gems/dnsruby-1.24.gem
 http://gems.rubyforge.org/gems/dnsruby-1.26.gem
 http://gems.rubyforge.org/gems/dnsruby-1.30.gem
+http://gems.rubyforge.org/gems/dnsruby-1.31.gem
+http://gems.rubyforge.org/gems/dnsruby-1.32.gem
 http://gems.rubyforge.org/gems/dnssd-0.6.0.gem
 http://gems.rubyforge.org/gems/dnssd-0.7.0.gem
 http://gems.rubyforge.org/gems/dnssd-0.7.1.gem
@@ -5814,6 +5933,7 @@ http://gems.rubyforge.org/gems/drake-0.8.5.0.2.2.gem
 http://gems.rubyforge.org/gems/drake-0.8.7.0.2.3.gem
 http://gems.rubyforge.org/gems/dramatis-0.0.1.gem
 http://gems.rubyforge.org/gems/dramatis-0.1.1.gem
+http://gems.rubyforge.org/gems/drawer-0.0.7.gem
 http://gems.rubyforge.org/gems/drawr-1.0.0.gem
 http://gems.rubyforge.org/gems/drawr-1.0.1.gem
 http://gems.rubyforge.org/gems/drmap-0.0.1.gem
@@ -5967,6 +6087,7 @@ http://gems.rubyforge.org/gems/easyprompt-0.1.3.gem
 http://gems.rubyforge.org/gems/easysft-1.0.gem
 http://gems.rubyforge.org/gems/eb_nested_set-0.3.3.gem
 http://gems.rubyforge.org/gems/eb_nested_set-0.3.5.gem
+http://gems.rubyforge.org/gems/eb_nested_set-0.3.7.gem
 http://gems.rubyforge.org/gems/ebay-0.5.0.gem
 http://gems.rubyforge.org/gems/ebay-0.5.1.gem
 http://gems.rubyforge.org/gems/ebay-0.5.2.gem
@@ -6069,6 +6190,7 @@ http://gems.rubyforge.org/gems/editorkicker-0.1.0.gem
 http://gems.rubyforge.org/gems/editorkicker-0.2.0.gem
 http://gems.rubyforge.org/gems/editx-0.1.0.gem
 http://gems.rubyforge.org/gems/editx-0.1.1.gem
+http://gems.rubyforge.org/gems/editx-0.1.2.gem
 http://gems.rubyforge.org/gems/edl-0.0.1.gem
 http://gems.rubyforge.org/gems/edl-0.0.2.gem
 http://gems.rubyforge.org/gems/edl-0.0.3.gem
@@ -6108,6 +6230,7 @@ http://gems.rubyforge.org/gems/email-veracity-0.3.0.gem
 http://gems.rubyforge.org/gems/email_form_generator-1.0.0.gem
 http://gems.rubyforge.org/gems/email_form_generator-1.0.1.gem
 http://gems.rubyforge.org/gems/email_form_generator-1.0.3.gem
+http://gems.rubyforge.org/gems/email_spec-0.2.0.gem
 http://gems.rubyforge.org/gems/ember-0.0.0.gem
 http://gems.rubyforge.org/gems/emdrb-0.1.0.gem
 http://gems.rubyforge.org/gems/emdrb-0.1.1.gem
@@ -6153,6 +6276,7 @@ http://gems.rubyforge.org/gems/english-0.1.gem
 http://gems.rubyforge.org/gems/english-0.2.0.gem
 http://gems.rubyforge.org/gems/english-0.3.0.gem
 http://gems.rubyforge.org/gems/english-0.3.1.gem
+http://gems.rubyforge.org/gems/english-0.4.0.gem
 http://gems.rubyforge.org/gems/englishext-0.1.0.gem
 http://gems.rubyforge.org/gems/englishext-0.1.1.gem
 http://gems.rubyforge.org/gems/englishext-0.1.2.gem
@@ -6170,6 +6294,7 @@ http://gems.rubyforge.org/gems/enumerable_mapper-1.0.0.gem
 http://gems.rubyforge.org/gems/enumerate_by-0.4.0.gem
 http://gems.rubyforge.org/gems/enumerate_by-0.4.1.gem
 http://gems.rubyforge.org/gems/enumerate_by-0.4.2.gem
+http://gems.rubyforge.org/gems/enumerate_by-0.4.3.gem
 http://gems.rubyforge.org/gems/environmentalist-0.1.0.gem
 http://gems.rubyforge.org/gems/environmentalist-0.2.1.gem
 http://gems.rubyforge.org/gems/environmentalist-0.2.2.gem
@@ -6331,6 +6456,7 @@ http://gems.rubyforge.org/gems/exact4r-0.5.2.gem
 http://gems.rubyforge.org/gems/exact4r-0.5.gem
 http://gems.rubyforge.org/gems/exact4r-0.6.gem
 http://gems.rubyforge.org/gems/exact4r-0.7.gem
+http://gems.rubyforge.org/gems/exact4r-0.8.gem
 http://gems.rubyforge.org/gems/exacto-0.3.gem
 http://gems.rubyforge.org/gems/exacto-0.4.gem
 http://gems.rubyforge.org/gems/exacto-0.5.gem
@@ -6479,6 +6605,7 @@ http://gems.rubyforge.org/gems/eymiha_util-1.0.1.gem
 http://gems.rubyforge.org/gems/eymiha_util-1.0.2.gem
 http://gems.rubyforge.org/gems/eymiha_util-1.0.3.gem
 http://gems.rubyforge.org/gems/ez-email-0.1.0.gem
+http://gems.rubyforge.org/gems/ezamar-2009.06.gem
 http://gems.rubyforge.org/gems/ezcrypto-0.1.1.gem
 http://gems.rubyforge.org/gems/ezcrypto-0.1.gem
 http://gems.rubyforge.org/gems/ezcrypto-0.2.1.gem
@@ -6589,6 +6716,7 @@ http://gems.rubyforge.org/gems/facter-1.5.2.gem
 http://gems.rubyforge.org/gems/facter-1.5.3.gem
 http://gems.rubyforge.org/gems/facter-1.5.4.gem
 http://gems.rubyforge.org/gems/facter-1.5.5.gem
+http://gems.rubyforge.org/gems/facter-1.5.6.gem
 http://gems.rubyforge.org/gems/facter-1.5.gem
 http://gems.rubyforge.org/gems/factory_loader-0.1.0.gem
 http://gems.rubyforge.org/gems/factory_loader-0.1.1.gem
@@ -6609,6 +6737,7 @@ http://gems.rubyforge.org/gems/fakeweb-1.1.2.gem
 http://gems.rubyforge.org/gems/fakeweb-1.2.0.gem
 http://gems.rubyforge.org/gems/fakeweb-1.2.1.gem
 http://gems.rubyforge.org/gems/fakeweb-1.2.2.gem
+http://gems.rubyforge.org/gems/fakeweb-1.2.3.gem
 http://gems.rubyforge.org/gems/fam-ruby-0.1.4.gem
 http://gems.rubyforge.org/gems/fam-ruby-0.2.0.gem
 http://gems.rubyforge.org/gems/fancypath-0.1.0.gem
@@ -6641,6 +6770,7 @@ http://gems.rubyforge.org/gems/fastercsv-1.2.1.gem
 http://gems.rubyforge.org/gems/fastercsv-1.2.2.gem
 http://gems.rubyforge.org/gems/fastercsv-1.2.3.gem
 http://gems.rubyforge.org/gems/fastercsv-1.4.0.gem
+http://gems.rubyforge.org/gems/fastercsv-1.5.0.gem
 http://gems.rubyforge.org/gems/fastreader-1.0.0.gem
 http://gems.rubyforge.org/gems/fastreader-1.0.1.gem
 http://gems.rubyforge.org/gems/fastreader-1.0.2.gem
@@ -6707,6 +6837,7 @@ http://gems.rubyforge.org/gems/featherdust-0.0.1.gem
 http://gems.rubyforge.org/gems/featherdust-0.0.2.gem
 http://gems.rubyforge.org/gems/featherdust-0.0.3.gem
 http://gems.rubyforge.org/gems/features2cards-0.1.1.gem
+http://gems.rubyforge.org/gems/features2cards-0.3.1.gem
 http://gems.rubyforge.org/gems/features_report-0.1.0.gem
 http://gems.rubyforge.org/gems/fedora_generator-0.0.1.gem
 http://gems.rubyforge.org/gems/fedorash-1.0.0.gem
@@ -6850,6 +6981,7 @@ http://gems.rubyforge.org/gems/ffi-ncurses-0.3.1.gem
 http://gems.rubyforge.org/gems/ffi-ncurses-0.3.2.gem
 http://gems.rubyforge.org/gems/ffi-swig-generator-0.2.1.gem
 http://gems.rubyforge.org/gems/ffi-swig-generator-0.3.0.gem
+http://gems.rubyforge.org/gems/ffi-swig-generator-0.3.1.gem
 http://gems.rubyforge.org/gems/ffi-zlib-0.1.0.gem
 http://gems.rubyforge.org/gems/ffruby-0.0.1.gem
 http://gems.rubyforge.org/gems/fhlow-1.91.0.gem
@@ -7176,6 +7308,7 @@ http://gems.rubyforge.org/gems/flickraw-0.4.5.gem
 http://gems.rubyforge.org/gems/flickraw-0.4.gem
 http://gems.rubyforge.org/gems/flickraw-0.5.1.gem
 http://gems.rubyforge.org/gems/flickraw-0.5.gem
+http://gems.rubyforge.org/gems/flickraw-0.6.gem
 http://gems.rubyforge.org/gems/flite4r-1.0.0.gem
 http://gems.rubyforge.org/gems/flite4r-1.0.1.gem
 http://gems.rubyforge.org/gems/float-formats-0.1.0.gem
@@ -7276,7 +7409,10 @@ http://gems.rubyforge.org/gems/freeswitcher-0.1.3.gem
 http://gems.rubyforge.org/gems/freeswitcher-0.1.4.gem
 http://gems.rubyforge.org/gems/freeswitcher-0.3.0.gem
 http://gems.rubyforge.org/gems/freeswitcher-0.3.1.gem
+http://gems.rubyforge.org/gems/freeswitcher-0.4.0.gem
+http://gems.rubyforge.org/gems/freeswitcher-0.4.1.gem
 http://gems.rubyforge.org/gems/freeze-ray-0.0.1.gem
+http://gems.rubyforge.org/gems/freeze-ray-0.0.2.gem
 http://gems.rubyforge.org/gems/fresh_cookies-1.0.0.gem
 http://gems.rubyforge.org/gems/freshbooks-1.0.0.gem
 http://gems.rubyforge.org/gems/freshbooks-2.1.gem
@@ -7291,6 +7427,7 @@ http://gems.rubyforge.org/gems/freshtrack-0.4.0.gem
 http://gems.rubyforge.org/gems/friend-feed-0.1.0.gem
 http://gems.rubyforge.org/gems/friend-feed-0.1.1.gem
 http://gems.rubyforge.org/gems/friendfeed-0.1.3.gem
+http://gems.rubyforge.org/gems/friendfeed-0.1.4.gem
 http://gems.rubyforge.org/gems/friendly_format-0.5.1.gem
 http://gems.rubyforge.org/gems/friendly_format-0.6.1.gem
 http://gems.rubyforge.org/gems/friendly_id-1.9.9.gem
@@ -7302,6 +7439,7 @@ http://gems.rubyforge.org/gems/friendly_id-2.0.4.gem
 http://gems.rubyforge.org/gems/friendly_id-2.1.0.gem
 http://gems.rubyforge.org/gems/friendly_id-2.1.1.gem
 http://gems.rubyforge.org/gems/friendly_id-2.1.2.gem
+http://gems.rubyforge.org/gems/friendly_id-2.1.3.gem
 http://gems.rubyforge.org/gems/from-here-0.1.0.gem
 http://gems.rubyforge.org/gems/frozen_gems_generator-0.4.0.gem
 http://gems.rubyforge.org/gems/frozen_gems_generator-0.4.1.gem
@@ -7462,7 +7600,10 @@ http://gems.rubyforge.org/gems/gbarcode-0.98.gem
 http://gems.rubyforge.org/gems/gbip-0.7.1.gem
 http://gems.rubyforge.org/gems/gbip-0.7.gem
 http://gems.rubyforge.org/gems/gbip-0.8.0.gem
+http://gems.rubyforge.org/gems/gbip-0.8.1.gem
 http://gems.rubyforge.org/gems/gbs-signal-slot-1.0.0.gem
+http://gems.rubyforge.org/gems/gcal4ruby-0.1.0.gem
+http://gems.rubyforge.org/gems/gcal4ruby-0.1.1.gem
 http://gems.rubyforge.org/gems/gcalapi-0.0.3.gem
 http://gems.rubyforge.org/gems/gcalapi-0.0.4.gem
 http://gems.rubyforge.org/gems/gcalapi-0.1.0.gem
@@ -7542,6 +7683,7 @@ http://gems.rubyforge.org/gems/gecoder-with-gecode-0.9.1.gem
 http://gems.rubyforge.org/gems/gecoder-with-gecode-1.0.0-x86-mswin32-60.gem
 http://gems.rubyforge.org/gems/gecoder-with-gecode-1.0.0.gem
 http://gems.rubyforge.org/gems/gedcom-0.9.0.gem
+http://gems.rubyforge.org/gems/gem-sane-binary-0.1.0.gem
 http://gems.rubyforge.org/gems/gem-this-0.1.3.gem
 http://gems.rubyforge.org/gems/gem-this-0.1.4.gem
 http://gems.rubyforge.org/gems/gem-this-0.1.5.gem
@@ -7581,6 +7723,10 @@ http://gems.rubyforge.org/gems/gembox-0.1.5.gem
 http://gems.rubyforge.org/gems/gembuilder-1.1.0.gem
 http://gems.rubyforge.org/gems/gembuilder-1.1.1.gem
 http://gems.rubyforge.org/gems/gembuilder-1.1.3.gem
+http://gems.rubyforge.org/gems/gemcutter-0.0.1.gem
+http://gems.rubyforge.org/gems/gemcutter-0.0.2.gem
+http://gems.rubyforge.org/gems/gemcutter-0.0.3.gem
+http://gems.rubyforge.org/gems/gemcutter-0.0.4.gem
 http://gems.rubyforge.org/gems/gemdev-0.1.0.gem
 http://gems.rubyforge.org/gems/gemdev-0.1.1.gem
 http://gems.rubyforge.org/gems/gemdev-0.1.2.gem
@@ -7638,6 +7784,8 @@ http://gems.rubyforge.org/gems/gemstub-1.2.0.gem
 http://gems.rubyforge.org/gems/gemstub-1.2.1.gem
 http://gems.rubyforge.org/gems/gemstub-1.2.2.gem
 http://gems.rubyforge.org/gems/gemstub-1.2.3.gem
+http://gems.rubyforge.org/gems/gemstub-1.2.5.gem
+http://gems.rubyforge.org/gems/gemstub-1.2.6.gem
 http://gems.rubyforge.org/gems/gemviz-0.1.0.gem
 http://gems.rubyforge.org/gems/gemviz-0.1.1.gem
 http://gems.rubyforge.org/gems/gemviz-0.1.2.gem
@@ -7697,6 +7845,7 @@ http://gems.rubyforge.org/gems/geoip-0.6.0.gem
 http://gems.rubyforge.org/gems/geoip-0.6.1.gem
 http://gems.rubyforge.org/gems/geoip-0.7.0.gem
 http://gems.rubyforge.org/gems/geoip-0.8.0.gem
+http://gems.rubyforge.org/gems/geoip-0.8.1.gem
 http://gems.rubyforge.org/gems/geoip_city-0.1.2.gem
 http://gems.rubyforge.org/gems/geoip_city-0.1.gem
 http://gems.rubyforge.org/gems/geoip_city-0.2.0.gem
@@ -7705,6 +7854,8 @@ http://gems.rubyforge.org/gems/geokit-1.2.6.gem
 http://gems.rubyforge.org/gems/geokit-1.3.0.gem
 http://gems.rubyforge.org/gems/geokit-1.3.1.gem
 http://gems.rubyforge.org/gems/geokit-1.3.2.gem
+http://gems.rubyforge.org/gems/geokit-1.4.0.gem
+http://gems.rubyforge.org/gems/geokit-1.4.1.gem
 http://gems.rubyforge.org/gems/geonames-0.1.0.gem
 http://gems.rubyforge.org/gems/geonames-0.2.0.gem
 http://gems.rubyforge.org/gems/geonames-0.2.1.gem
@@ -7722,6 +7873,8 @@ http://gems.rubyforge.org/gems/gerbil-3.0.1.gem
 http://gems.rubyforge.org/gems/gerbil-3.0.2.gem
 http://gems.rubyforge.org/gems/gerbil-3.1.0.gem
 http://gems.rubyforge.org/gems/gerbilcharts-0.0.3.gem
+http://gems.rubyforge.org/gems/gerbilcharts-0.1.4.gem
+http://gems.rubyforge.org/gems/gerbilcharts-0.1.6.gem
 http://gems.rubyforge.org/gems/getopt-1.0.0.gem
 http://gems.rubyforge.org/gems/getopt-1.1.0.gem
 http://gems.rubyforge.org/gems/getopt-1.2.0.gem
@@ -7878,6 +8031,8 @@ http://gems.rubyforge.org/gems/glassfish-0.9.0-universal-java.gem
 http://gems.rubyforge.org/gems/glassfish-0.9.1-universal-java.gem
 http://gems.rubyforge.org/gems/glassfish-0.9.2-universal-java.gem
 http://gems.rubyforge.org/gems/glassfish-0.9.3-universal-java.gem
+http://gems.rubyforge.org/gems/glassfish-0.9.4-universal-java.gem
+http://gems.rubyforge.org/gems/glassfish-0.9.5-universal-java.gem
 http://gems.rubyforge.org/gems/gli-0.1.6.gem
 http://gems.rubyforge.org/gems/glimmer-0.1.0.0.gem
 http://gems.rubyforge.org/gems/glimr-0.1.0.gem
@@ -7953,6 +8108,8 @@ http://gems.rubyforge.org/gems/gnetvibes-0.4.gem
 http://gems.rubyforge.org/gems/gnetvibes-0.5.gem
 http://gems.rubyforge.org/gems/gnip-0.4.2.gem
 http://gems.rubyforge.org/gems/gnip-1.0.0.gem
+http://gems.rubyforge.org/gems/gnip-1.1.1.gem
+http://gems.rubyforge.org/gems/gnip-1.1.2.gem
 http://gems.rubyforge.org/gems/gnuplot-1.0.gem
 http://gems.rubyforge.org/gems/gnuplot-2.0.gem
 http://gems.rubyforge.org/gems/gnuplot-2.1.gem
@@ -8150,6 +8307,8 @@ http://gems.rubyforge.org/gems/gphoto4ruby-0.2.8.gem
 http://gems.rubyforge.org/gems/gphoto4ruby-0.2.9.gem
 http://gems.rubyforge.org/gems/gphoto4ruby-0.3.0.gem
 http://gems.rubyforge.org/gems/gphoto4ruby-0.3.1.gem
+http://gems.rubyforge.org/gems/gphoto4ruby-0.3.2.gem
+http://gems.rubyforge.org/gems/gphoto4ruby-0.3.3.gem
 http://gems.rubyforge.org/gems/gps-0.0.1.gem
 http://gems.rubyforge.org/gems/gpx-0.1.gem
 http://gems.rubyforge.org/gems/gpx-0.2.gem
@@ -8194,6 +8353,7 @@ http://gems.rubyforge.org/gems/gravtastic-1.7.0.gem
 http://gems.rubyforge.org/gems/gravtastic-1.7.1.gem
 http://gems.rubyforge.org/gems/gravtastic-2.0.0.gem
 http://gems.rubyforge.org/gems/gravtastic-2.1.0.gem
+http://gems.rubyforge.org/gems/gravtastic-2.1.1.gem
 http://gems.rubyforge.org/gems/gray-0.9.gem
 http://gems.rubyforge.org/gems/greenbar-0.1.1.gem
 http://gems.rubyforge.org/gems/greenbar-0.2.1.gem
@@ -8212,6 +8372,7 @@ http://gems.rubyforge.org/gems/grit-1.1.1.gem
 http://gems.rubyforge.org/gems/grizzly-1.6.0-java.gem
 http://gems.rubyforge.org/gems/grok-itunes-0.1.2.gem
 http://gems.rubyforge.org/gems/groonga-0.0.1.gem
+http://gems.rubyforge.org/gems/groonga-0.0.2.gem
 http://gems.rubyforge.org/gems/group_open_id-0.1.1.gem
 http://gems.rubyforge.org/gems/group_open_id-0.1.2.gem
 http://gems.rubyforge.org/gems/group_open_id-0.1.gem
@@ -8276,9 +8437,11 @@ http://gems.rubyforge.org/gems/gtdfiles-0.8.1.gem
 http://gems.rubyforge.org/gems/gtdfiles-0.8.2.gem
 http://gems.rubyforge.org/gems/gtk2alertapp-0.0.1.gem
 http://gems.rubyforge.org/gems/gtk2alertapp-0.0.2.gem
+http://gems.rubyforge.org/gems/gtk2alertapp-0.0.3.gem
 http://gems.rubyforge.org/gems/gtk2applib-0.0.0.gem
 http://gems.rubyforge.org/gems/gtk2applib-1.0.0.gem
 http://gems.rubyforge.org/gems/gtk2applib-1.0.1.gem
+http://gems.rubyforge.org/gems/gtk2applib-2.0.0.gem
 http://gems.rubyforge.org/gems/gtk2blackjack-0.0.0.gem
 http://gems.rubyforge.org/gems/gtk2blackjack-1.0.0.gem
 http://gems.rubyforge.org/gems/gtk2bookmarks-0.0.1.gem
@@ -8286,6 +8449,7 @@ http://gems.rubyforge.org/gems/gtk2bookmarks-0.0.2.gem
 http://gems.rubyforge.org/gems/gtk2bookmarks-0.0.3.gem
 http://gems.rubyforge.org/gems/gtk2bookmarks-0.0.4.gem
 http://gems.rubyforge.org/gems/gtk2bookmarks-0.1.0.gem
+http://gems.rubyforge.org/gems/gtk2checkboxes-1.0.0.gem
 http://gems.rubyforge.org/gems/gtk2diaryapp-0.0.1.gem
 http://gems.rubyforge.org/gems/gtk2diaryapp-1.0.0.gem
 http://gems.rubyforge.org/gems/gtk2diaryapp-1.0.1.gem
@@ -8389,7 +8553,15 @@ http://gems.rubyforge.org/gems/haml-edge-2.1.13.gem
 http://gems.rubyforge.org/gems/haml-edge-2.1.14.gem
 http://gems.rubyforge.org/gems/haml-edge-2.1.15.gem
 http://gems.rubyforge.org/gems/haml-edge-2.1.16.gem
+http://gems.rubyforge.org/gems/haml-edge-2.1.17.gem
+http://gems.rubyforge.org/gems/haml-edge-2.1.18.gem
+http://gems.rubyforge.org/gems/haml-edge-2.1.19.gem
 http://gems.rubyforge.org/gems/haml-edge-2.1.2.gem
+http://gems.rubyforge.org/gems/haml-edge-2.1.20.gem
+http://gems.rubyforge.org/gems/haml-edge-2.1.21.gem
+http://gems.rubyforge.org/gems/haml-edge-2.1.22.gem
+http://gems.rubyforge.org/gems/haml-edge-2.1.23.gem
+http://gems.rubyforge.org/gems/haml-edge-2.1.24.gem
 http://gems.rubyforge.org/gems/haml-edge-2.1.3.gem
 http://gems.rubyforge.org/gems/haml-edge-2.1.4.gem
 http://gems.rubyforge.org/gems/haml-edge-2.1.5.gem
@@ -8421,6 +8593,10 @@ http://gems.rubyforge.org/gems/hammock-0.3.0.gem
 http://gems.rubyforge.org/gems/hammock-0.3.1.gem
 http://gems.rubyforge.org/gems/hammock-0.3.2.gem
 http://gems.rubyforge.org/gems/hammock-0.3.3.gem
+http://gems.rubyforge.org/gems/hammock-0.3.5.gem
+http://gems.rubyforge.org/gems/hammock-0.3.6.gem
+http://gems.rubyforge.org/gems/hammock-0.3.7.gem
+http://gems.rubyforge.org/gems/hammock-0.3.8.gem
 http://gems.rubyforge.org/gems/han-converter-0.1.1.gem
 http://gems.rubyforge.org/gems/han-converter-0.5.0.gem
 http://gems.rubyforge.org/gems/hancock-0.0.2.gem
@@ -8428,11 +8604,13 @@ http://gems.rubyforge.org/gems/hancock-0.0.3.gem
 http://gems.rubyforge.org/gems/hancock-0.0.4.gem
 http://gems.rubyforge.org/gems/hancock-0.0.5.gem
 http://gems.rubyforge.org/gems/hancock-0.0.6.gem
+http://gems.rubyforge.org/gems/hancock-0.0.7.gem
 http://gems.rubyforge.org/gems/hancock-client-0.0.2.gem
 http://gems.rubyforge.org/gems/hancock-client-0.0.3.gem
 http://gems.rubyforge.org/gems/hancock-client-0.0.4.gem
 http://gems.rubyforge.org/gems/hancock-client-0.0.5.gem
 http://gems.rubyforge.org/gems/hancock-client-0.0.6.gem
+http://gems.rubyforge.org/gems/hancock-client-0.0.7.gem
 http://gems.rubyforge.org/gems/handoff-0.0.1.gem
 http://gems.rubyforge.org/gems/handoff-0.1.0.gem
 http://gems.rubyforge.org/gems/handoff-0.2.0.gem
@@ -8601,6 +8779,7 @@ http://gems.rubyforge.org/gems/hatenabm-0.1.1.gem
 http://gems.rubyforge.org/gems/hatenabm-0.1.2.gem
 http://gems.rubyforge.org/gems/hatenagraphup-1.2.2.gem
 http://gems.rubyforge.org/gems/have-code-0.1.2.gem
+http://gems.rubyforge.org/gems/have-code-0.1.3.gem
 http://gems.rubyforge.org/gems/hc-httpclient-3.1.1.gem
 http://gems.rubyforge.org/gems/hc-httpclient-3.1.2.gem
 http://gems.rubyforge.org/gems/header-inserter-1.0.1.gem
@@ -8677,6 +8856,7 @@ http://gems.rubyforge.org/gems/heroku-0.8.gem
 http://gems.rubyforge.org/gems/heroku-0.9.1.gem
 http://gems.rubyforge.org/gems/heroku-0.9.2.gem
 http://gems.rubyforge.org/gems/heroku-0.9.gem
+http://gems.rubyforge.org/gems/heroku-1.0.gem
 http://gems.rubyforge.org/gems/herokugarden-0.4.2.gem
 http://gems.rubyforge.org/gems/hessian-0.5.0.gem
 http://gems.rubyforge.org/gems/hessian-0.5.1.gem
@@ -8746,6 +8926,10 @@ http://gems.rubyforge.org/gems/hitimes-0.4.0-x86-mswin32-60.gem
 http://gems.rubyforge.org/gems/hitimes-0.4.0.gem
 http://gems.rubyforge.org/gems/hitimes-0.4.1-x86-mswin32-60.gem
 http://gems.rubyforge.org/gems/hitimes-0.4.1.gem
+http://gems.rubyforge.org/gems/hitimes-1.0.0-x86-mswin32-60.gem
+http://gems.rubyforge.org/gems/hitimes-1.0.0.gem
+http://gems.rubyforge.org/gems/hitimes-1.0.1-x86-mswin32-60.gem
+http://gems.rubyforge.org/gems/hitimes-1.0.1.gem
 http://gems.rubyforge.org/gems/hobo-0.5.3.gem
 http://gems.rubyforge.org/gems/hobo-0.6.1.gem
 http://gems.rubyforge.org/gems/hobo-0.6.2.gem
@@ -8824,6 +9008,9 @@ http://gems.rubyforge.org/gems/hoe-1.8.1.gem
 http://gems.rubyforge.org/gems/hoe-1.8.2.gem
 http://gems.rubyforge.org/gems/hoe-1.8.3.gem
 http://gems.rubyforge.org/gems/hoe-1.9.0.gem
+http://gems.rubyforge.org/gems/hoe-2.0.0.gem
+http://gems.rubyforge.org/gems/hoe-2.1.0.gem
+http://gems.rubyforge.org/gems/hoe-seattlerb-1.0.0.gem
 http://gems.rubyforge.org/gems/holidays-0.9.0.gem
 http://gems.rubyforge.org/gems/holidays-0.9.1.gem
 http://gems.rubyforge.org/gems/holidays-0.9.2.gem
@@ -8859,6 +9046,7 @@ http://gems.rubyforge.org/gems/hoshi-0.0.186.gem
 http://gems.rubyforge.org/gems/hoshi-0.1.3.gem
 http://gems.rubyforge.org/gems/hoshi-0.1.4.gem
 http://gems.rubyforge.org/gems/hoshi-0.2.1.gem
+http://gems.rubyforge.org/gems/hostess-0.1.1.gem
 http://gems.rubyforge.org/gems/hostipinfo-0.1.0.gem
 http://gems.rubyforge.org/gems/hostnet-0.1.1.gem
 http://gems.rubyforge.org/gems/hotmailer-1.0.0.gem
@@ -8951,6 +9139,7 @@ http://gems.rubyforge.org/gems/http_configuration-1.0.2.gem
 http://gems.rubyforge.org/gems/http_request.rb-1.0.1.gem
 http://gems.rubyforge.org/gems/http_request.rb-1.0.2.gem
 http://gems.rubyforge.org/gems/http_request.rb-1.0.3.gem
+http://gems.rubyforge.org/gems/http_request.rb-1.0.4.gem
 http://gems.rubyforge.org/gems/httparty-0.1.0.gem
 http://gems.rubyforge.org/gems/httparty-0.1.1.gem
 http://gems.rubyforge.org/gems/httparty-0.1.2.gem
@@ -8985,6 +9174,7 @@ http://gems.rubyforge.org/gems/httpclient-2.1.2.gem
 http://gems.rubyforge.org/gems/httpclient-2.1.3.1.gem
 http://gems.rubyforge.org/gems/httpclient-2.1.3.gem
 http://gems.rubyforge.org/gems/httpclient-2.1.4.gem
+http://gems.rubyforge.org/gems/httpclient-2.1.5.gem
 http://gems.rubyforge.org/gems/hunspell-0.1.1.gem
 http://gems.rubyforge.org/gems/hunspell-0.1.gem
 http://gems.rubyforge.org/gems/hurl-0.0.2.gem
@@ -9227,6 +9417,13 @@ http://gems.rubyforge.org/gems/imapget-0.0.4.gem
 http://gems.rubyforge.org/gems/imapget-0.0.5.gem
 http://gems.rubyforge.org/gems/imapstore-0.4.4.gem
 http://gems.rubyforge.org/gems/imapstore-0.5.2.gem
+http://gems.rubyforge.org/gems/imdb-0.0.1.gem
+http://gems.rubyforge.org/gems/imdb-0.1.0.gem
+http://gems.rubyforge.org/gems/imdb-0.2.0.gem
+http://gems.rubyforge.org/gems/imdb-0.3.0.gem
+http://gems.rubyforge.org/gems/imdb-0.4.0.gem
+http://gems.rubyforge.org/gems/imdb-0.4.1.gem
+http://gems.rubyforge.org/gems/imdb-0.4.2.gem
 http://gems.rubyforge.org/gems/imine-0.1.2.gem
 http://gems.rubyforge.org/gems/imine-0.1.3.gem
 http://gems.rubyforge.org/gems/imlib2-ruby-0.4.3.gem
@@ -9252,6 +9449,8 @@ http://gems.rubyforge.org/gems/inline_attachment-0.4.0.gem
 http://gems.rubyforge.org/gems/innate-2009.04.12.gem
 http://gems.rubyforge.org/gems/innate-2009.04.gem
 http://gems.rubyforge.org/gems/innate-2009.05.gem
+http://gems.rubyforge.org/gems/innate-2009.06.12.gem
+http://gems.rubyforge.org/gems/innate-2009.06.gem
 http://gems.rubyforge.org/gems/inochi-0.0.0.gem
 http://gems.rubyforge.org/gems/inochi-0.0.1.gem
 http://gems.rubyforge.org/gems/inochi-0.1.0.gem
@@ -9295,6 +9494,7 @@ http://gems.rubyforge.org/gems/integrity-0.1.9.gem
 http://gems.rubyforge.org/gems/integrity-campfire-1.2.0.gem
 http://gems.rubyforge.org/gems/integrity-email-1.0.2.gem
 http://gems.rubyforge.org/gems/integrity-email-1.0.3.gem
+http://gems.rubyforge.org/gems/integrity-email-1.0.4.gem
 http://gems.rubyforge.org/gems/integrity-irc-0.0.6.gem
 http://gems.rubyforge.org/gems/integrity-irc-0.0.7.gem
 http://gems.rubyforge.org/gems/intercession-1.0.0.gem
@@ -9348,6 +9548,9 @@ http://gems.rubyforge.org/gems/ip-0.2.2.gem
 http://gems.rubyforge.org/gems/ip2country-0.0.1.gem
 http://gems.rubyforge.org/gems/ip2country-0.0.2.gem
 http://gems.rubyforge.org/gems/ip_address_simple-1.0.0.gem
+http://gems.rubyforge.org/gems/ipaccess-0.0.2.gem
+http://gems.rubyforge.org/gems/ipaccess-0.0.3.gem
+http://gems.rubyforge.org/gems/ipaccess-0.0.4.gem
 http://gems.rubyforge.org/gems/ipaddr_list-0.0.1.gem
 http://gems.rubyforge.org/gems/ipaddr_list-0.0.2.gem
 http://gems.rubyforge.org/gems/ipadmin-0.1.0.gem
@@ -9536,6 +9739,7 @@ http://gems.rubyforge.org/gems/jmx4r-0.0.4.gem
 http://gems.rubyforge.org/gems/jmx4r-0.0.5.gem
 http://gems.rubyforge.org/gems/jmx4r-0.0.6.gem
 http://gems.rubyforge.org/gems/jmx4r-0.0.7.gem
+http://gems.rubyforge.org/gems/jmx4r-0.0.8.gem
 http://gems.rubyforge.org/gems/jnlp-0.0.3.gem
 http://gems.rubyforge.org/gems/jnlp-0.0.4.gem
 http://gems.rubyforge.org/gems/jnlp-0.0.5.gem
@@ -9551,7 +9755,9 @@ http://gems.rubyforge.org/gems/jobby-0.3.3.gem
 http://gems.rubyforge.org/gems/jobby-0.3.4.gem
 http://gems.rubyforge.org/gems/jobmanager-1.0.0.gem
 http://gems.rubyforge.org/gems/jobmanager-1.0.1.gem
+http://gems.rubyforge.org/gems/jobmanager-1.1.0.gem
 http://gems.rubyforge.org/gems/jobserver-0.1.4.gem
+http://gems.rubyforge.org/gems/joe-0.0.1.gem
 http://gems.rubyforge.org/gems/joggle-0.1.0.gem
 http://gems.rubyforge.org/gems/joggle-0.1.1.gem
 http://gems.rubyforge.org/gems/johnson-1.1.0.gem
@@ -9583,6 +9789,16 @@ http://gems.rubyforge.org/gems/jquery-cheat-0.1.1.gem
 http://gems.rubyforge.org/gems/jquery-cheat-0.1.2.gem
 http://gems.rubyforge.org/gems/jquery-cheat-0.2.0.gem
 http://gems.rubyforge.org/gems/jquery-cheat-0.2.1.gem
+http://gems.rubyforge.org/gems/jqueryplugingen-0.1.1.gem
+http://gems.rubyforge.org/gems/jqueryplugingen-0.1.2.gem
+http://gems.rubyforge.org/gems/jqueryplugingen-0.1.3.gem
+http://gems.rubyforge.org/gems/jqueryplugingen-0.1.4.gem
+http://gems.rubyforge.org/gems/jqueryplugingen-0.2.0.gem
+http://gems.rubyforge.org/gems/jqueryplugingen-0.2.1.gem
+http://gems.rubyforge.org/gems/jqueryplugingen-0.2.2.gem
+http://gems.rubyforge.org/gems/jqueryplugingen-0.2.3.gem
+http://gems.rubyforge.org/gems/jqueryplugingen-0.2.4.gem
+http://gems.rubyforge.org/gems/jqueryplugingen-0.2.5.gem
 http://gems.rubyforge.org/gems/jrexml-0.5.1.gem
 http://gems.rubyforge.org/gems/jrexml-0.5.2.gem
 http://gems.rubyforge.org/gems/jrexml-0.5.3.gem
@@ -9602,6 +9818,7 @@ http://gems.rubyforge.org/gems/jruby-openssl-0.2.3.gem
 http://gems.rubyforge.org/gems/jruby-openssl-0.2.gem
 http://gems.rubyforge.org/gems/jruby-openssl-0.3.gem
 http://gems.rubyforge.org/gems/jruby-openssl-0.4.gem
+http://gems.rubyforge.org/gems/jruby-openssl-0.5.1.gem
 http://gems.rubyforge.org/gems/jruby-openssl-0.5.gem
 http://gems.rubyforge.org/gems/jruby-owl-0.1-java.gem
 http://gems.rubyforge.org/gems/js_spec-0.0.1.gem
@@ -9663,8 +9880,18 @@ http://gems.rubyforge.org/gems/json_pure-1.1.3.gem
 http://gems.rubyforge.org/gems/json_pure-1.1.4.gem
 http://gems.rubyforge.org/gems/json_pure-1.1.5.gem
 http://gems.rubyforge.org/gems/json_pure-1.1.6.gem
+http://gems.rubyforge.org/gems/jsonbuilder-0.0.1.gem
+http://gems.rubyforge.org/gems/jsonbuilder-0.0.2.gem
+http://gems.rubyforge.org/gems/jsonbuilder-0.0.3.gem
+http://gems.rubyforge.org/gems/jsonbuilder-0.0.4.gem
+http://gems.rubyforge.org/gems/jsonbuilder-0.0.5.gem
+http://gems.rubyforge.org/gems/jsonbuilder-0.0.6.gem
+http://gems.rubyforge.org/gems/jsonbuilder-0.0.7.gem
 http://gems.rubyforge.org/gems/jsonpath-0.0.1.gem
 http://gems.rubyforge.org/gems/jsonpretty-1.0.0.gem
+http://gems.rubyforge.org/gems/jsonrpc-0.9.0.gem
+http://gems.rubyforge.org/gems/jsonrpc-0.9.1.gem
+http://gems.rubyforge.org/gems/jsonrpc-0.9.2.gem
 http://gems.rubyforge.org/gems/jsont-0.1.0.gem
 http://gems.rubyforge.org/gems/jsont-0.1.1.gem
 http://gems.rubyforge.org/gems/jsont-0.1.2.gem
@@ -10035,6 +10262,8 @@ http://gems.rubyforge.org/gems/less-0.8.1.gem
 http://gems.rubyforge.org/gems/less-0.8.2.gem
 http://gems.rubyforge.org/gems/less-0.8.3.gem
 http://gems.rubyforge.org/gems/less-0.8.4.gem
+http://gems.rubyforge.org/gems/less-0.8.6.gem
+http://gems.rubyforge.org/gems/less-0.8.7.gem
 http://gems.rubyforge.org/gems/lesstile-0.1.1.gem
 http://gems.rubyforge.org/gems/lesstile-0.1.gem
 http://gems.rubyforge.org/gems/lesstile-0.2.gem
@@ -10051,6 +10280,7 @@ http://gems.rubyforge.org/gems/libastag-0.0.1.gem
 http://gems.rubyforge.org/gems/libastag-0.0.2.gem
 http://gems.rubyforge.org/gems/libbz2-0.4.gem
 http://gems.rubyforge.org/gems/libcraigscrape-0.5.gem
+http://gems.rubyforge.org/gems/libcraigscrape-0.6.5.gem
 http://gems.rubyforge.org/gems/libcraigscrape-0.6.gem
 http://gems.rubyforge.org/gems/libgnucap-ruby-0.1.gem
 http://gems.rubyforge.org/gems/libinject-0.1.0.gem
@@ -10163,6 +10393,7 @@ http://gems.rubyforge.org/gems/linecache-0.42-mswin32.gem
 http://gems.rubyforge.org/gems/linecache-0.42.gem
 http://gems.rubyforge.org/gems/linecache-0.43-mswin32.gem
 http://gems.rubyforge.org/gems/linecache-0.43.gem
+http://gems.rubyforge.org/gems/linefit-0.1.0.gem
 http://gems.rubyforge.org/gems/linen-0.2.0.gem
 http://gems.rubyforge.org/gems/linen-0.3.0.gem
 http://gems.rubyforge.org/gems/linen-0.3.1.gem
@@ -10182,6 +10413,7 @@ http://gems.rubyforge.org/gems/linen-0.8.3.gem
 http://gems.rubyforge.org/gems/linked_list-1.0.0.gem
 http://gems.rubyforge.org/gems/linkize-0.0.1.gem
 http://gems.rubyforge.org/gems/linkparser-1.0.3.gem
+http://gems.rubyforge.org/gems/linkparser-1.0.4.gem
 http://gems.rubyforge.org/gems/linkterm-0.0.1.gem
 http://gems.rubyforge.org/gems/linkterm-0.0.2.gem
 http://gems.rubyforge.org/gems/linkterm-0.0.3.gem
@@ -10203,6 +10435,10 @@ http://gems.rubyforge.org/gems/lipsiadmin-4.1.0.gem
 http://gems.rubyforge.org/gems/lipsiadmin-4.1.1.gem
 http://gems.rubyforge.org/gems/lipsiadmin-4.1.2.gem
 http://gems.rubyforge.org/gems/lipsiadmin-4.1.3.gem
+http://gems.rubyforge.org/gems/lipsiadmin-4.1.4.gem
+http://gems.rubyforge.org/gems/lipsiadmin-4.1.5.gem
+http://gems.rubyforge.org/gems/lipsiadmin-4.1.6.gem
+http://gems.rubyforge.org/gems/lipsiadmin-4.1.7.gem
 http://gems.rubyforge.org/gems/lipsiahosting-1.0.1.gem
 http://gems.rubyforge.org/gems/lipsiahosting-1.0.2.gem
 http://gems.rubyforge.org/gems/liquid-1.7.0.gem
@@ -10231,6 +10467,9 @@ http://gems.rubyforge.org/gems/livejournal-0.3.1.gem
 http://gems.rubyforge.org/gems/livelydocs-0.1.gem
 http://gems.rubyforge.org/gems/llip-0.1.0.gem
 http://gems.rubyforge.org/gems/llip-0.2.0.gem
+http://gems.rubyforge.org/gems/llremote-0.6.0.gem
+http://gems.rubyforge.org/gems/load_glob-1.0.0.gem
+http://gems.rubyforge.org/gems/load_glob-1.0.1.gem
 http://gems.rubyforge.org/gems/loaded_plugins-0.0.2.gem
 http://gems.rubyforge.org/gems/loaded_plugins-0.0.3.gem
 http://gems.rubyforge.org/gems/loaded_plugins-0.0.4.gem
@@ -10269,6 +10508,7 @@ http://gems.rubyforge.org/gems/localmemcache-0.2.1.gem
 http://gems.rubyforge.org/gems/localmemcache-0.2.2.gem
 http://gems.rubyforge.org/gems/localmemcache-0.3.0.gem
 http://gems.rubyforge.org/gems/localmemcache-0.4.0.gem
+http://gems.rubyforge.org/gems/localmemcache-0.4.1.gem
 http://gems.rubyforge.org/gems/locapoint-0.0.1.gem
 http://gems.rubyforge.org/gems/locapoint-0.0.2.gem
 http://gems.rubyforge.org/gems/lockdown-0.1.0.gem
@@ -10334,6 +10574,8 @@ http://gems.rubyforge.org/gems/lockdown-0.9.1.gem
 http://gems.rubyforge.org/gems/lockdown-0.9.2.gem
 http://gems.rubyforge.org/gems/lockdown-0.9.3.gem
 http://gems.rubyforge.org/gems/lockdown-0.9.5.gem
+http://gems.rubyforge.org/gems/lockdown-0.9.7.gem
+http://gems.rubyforge.org/gems/lockdown-0.9.8.gem
 http://gems.rubyforge.org/gems/lockfile-1.1.0.gem
 http://gems.rubyforge.org/gems/lockfile-1.3.0.gem
 http://gems.rubyforge.org/gems/lockfile-1.4.0.gem
@@ -10406,6 +10648,7 @@ http://gems.rubyforge.org/gems/logtwuncator-0.1.0.gem
 http://gems.rubyforge.org/gems/logtwuncator-0.1.1.gem
 http://gems.rubyforge.org/gems/logtwuncator-0.1.2.gem
 http://gems.rubyforge.org/gems/lolspeak-1.0.0.gem
+http://gems.rubyforge.org/gems/lomo-0.1.1.gem
 http://gems.rubyforge.org/gems/long-decimal-0.00.06.gem
 http://gems.rubyforge.org/gems/long-decimal-0.00.07.gem
 http://gems.rubyforge.org/gems/long-decimal-0.00.08.gem
@@ -10436,6 +10679,8 @@ http://gems.rubyforge.org/gems/longurl-0.1.0.gem
 http://gems.rubyforge.org/gems/longurl-0.1.1.gem
 http://gems.rubyforge.org/gems/longurl-0.1.2.gem
 http://gems.rubyforge.org/gems/longurl-0.1.3.gem
+http://gems.rubyforge.org/gems/longurl-0.1.4.gem
+http://gems.rubyforge.org/gems/longurl-0.1.5.gem
 http://gems.rubyforge.org/gems/loquacious-1.0.0.gem
 http://gems.rubyforge.org/gems/loquacious-1.1.0.gem
 http://gems.rubyforge.org/gems/loquacious-1.1.1.gem
@@ -10873,6 +11118,7 @@ http://gems.rubyforge.org/gems/magic_model_generator-0.4.1.gem
 http://gems.rubyforge.org/gems/magic_model_generator-0.4.2.gem
 http://gems.rubyforge.org/gems/magic_multi_connections-1.0.0.gem
 http://gems.rubyforge.org/gems/magic_multi_connections-1.2.1.gem
+http://gems.rubyforge.org/gems/magickwand-0.1.0.gem
 http://gems.rubyforge.org/gems/magnetic-0.0.1.gem
 http://gems.rubyforge.org/gems/magnolia-1.1.0.gem
 http://gems.rubyforge.org/gems/magnolia-1.1.1.gem
@@ -10938,6 +11184,7 @@ http://gems.rubyforge.org/gems/make_index.rb
 http://gems.rubyforge.org/gems/makers-mark-0.0.4.gem
 http://gems.rubyforge.org/gems/makura-2009.05.27.gem
 http://gems.rubyforge.org/gems/malice-13.gem
+http://gems.rubyforge.org/gems/mall-0.0.1.gem
 http://gems.rubyforge.org/gems/malline-1.0.2.gem
 http://gems.rubyforge.org/gems/malline-1.1.0.gem
 http://gems.rubyforge.org/gems/mandown-0.0.10.gem
@@ -10947,6 +11194,7 @@ http://gems.rubyforge.org/gems/mandown-0.0.9.gem
 http://gems.rubyforge.org/gems/manifest-0.0.1.gem
 http://gems.rubyforge.org/gems/manifest-0.0.2.gem
 http://gems.rubyforge.org/gems/manifest-0.0.3.gem
+http://gems.rubyforge.org/gems/map-fields-1.0.0.gem
 http://gems.rubyforge.org/gems/map_by_method-0.1.0.gem
 http://gems.rubyforge.org/gems/map_by_method-0.4.0.gem
 http://gems.rubyforge.org/gems/map_by_method-0.4.1.gem
@@ -10986,6 +11234,7 @@ http://gems.rubyforge.org/gems/markaby-0.3.gem
 http://gems.rubyforge.org/gems/markaby-0.4.gem
 http://gems.rubyforge.org/gems/markaby-0.5.gem
 http://gems.rubyforge.org/gems/markov-0.0.1.gem
+http://gems.rubyforge.org/gems/markup_validity-1.0.0.gem
 http://gems.rubyforge.org/gems/maruku-0.2.1.gem
 http://gems.rubyforge.org/gems/maruku-0.2.10.gem
 http://gems.rubyforge.org/gems/maruku-0.2.11.gem
@@ -11169,6 +11418,7 @@ http://gems.rubyforge.org/gems/mb-ruby-0.1.0.gem
 http://gems.rubyforge.org/gems/mb-ruby-0.2.1.gem
 http://gems.rubyforge.org/gems/mb-ruby-0.3.0.gem
 http://gems.rubyforge.org/gems/measure-0.1.0.gem
+http://gems.rubyforge.org/gems/measure-0.2.0.gem
 http://gems.rubyforge.org/gems/mechanize-0.1.0.gem
 http://gems.rubyforge.org/gems/mechanize-0.1.1.gem
 http://gems.rubyforge.org/gems/mechanize-0.1.2.gem
@@ -11222,6 +11472,7 @@ http://gems.rubyforge.org/gems/mechanize-0.8.5.gem
 http://gems.rubyforge.org/gems/mechanize-0.9.0.gem
 http://gems.rubyforge.org/gems/mechanize-0.9.1.gem
 http://gems.rubyforge.org/gems/mechanize-0.9.2.gem
+http://gems.rubyforge.org/gems/mechanize-0.9.3.gem
 http://gems.rubyforge.org/gems/mediacloth-0.0.1.gem
 http://gems.rubyforge.org/gems/mediacloth-0.0.2.gem
 http://gems.rubyforge.org/gems/mediacloth-0.0.3.gem
@@ -11249,6 +11500,8 @@ http://gems.rubyforge.org/gems/memcache-client-1.6.5.gem
 http://gems.rubyforge.org/gems/memcache-client-1.7.0.gem
 http://gems.rubyforge.org/gems/memcache-client-1.7.1.gem
 http://gems.rubyforge.org/gems/memcache-client-1.7.2.gem
+http://gems.rubyforge.org/gems/memcache-client-1.7.3.gem
+http://gems.rubyforge.org/gems/memcache-client-1.7.4.gem
 http://gems.rubyforge.org/gems/memcache-client-stats-1.0.0.gem
 http://gems.rubyforge.org/gems/memcache-client-stats-1.1.0.gem
 http://gems.rubyforge.org/gems/memcache-client_extensions-0.0.1.gem
@@ -12087,6 +12340,8 @@ http://gems.rubyforge.org/gems/methodfinalizer-0.6.0.gem
 http://gems.rubyforge.org/gems/methodfinalizer-0.7.0.gem
 http://gems.rubyforge.org/gems/methodphitamine-1.0.0.gem
 http://gems.rubyforge.org/gems/methopara-0.3.0.gem
+http://gems.rubyforge.org/gems/methopara-0.3.1.gem
+http://gems.rubyforge.org/gems/methopara-0.3.2.gem
 http://gems.rubyforge.org/gems/metrics-0.0.1.gem
 http://gems.rubyforge.org/gems/metrics-0.0.2.gem
 http://gems.rubyforge.org/gems/metrics-0.0.3.gem
@@ -12116,6 +12371,8 @@ http://gems.rubyforge.org/gems/microengine-0.2.2.gem
 http://gems.rubyforge.org/gems/microfiche-1.0.0.gem
 http://gems.rubyforge.org/gems/microformat_generator-0.0.1.gem
 http://gems.rubyforge.org/gems/microid-0.0.1.gem
+http://gems.rubyforge.org/gems/micromachine-0.0.6.gem
+http://gems.rubyforge.org/gems/micromachine-0.0.7.gem
 http://gems.rubyforge.org/gems/micronaut-0.2.9.gem
 http://gems.rubyforge.org/gems/microparser-0.0.1.gem
 http://gems.rubyforge.org/gems/midiator-0.1.0.gem
@@ -12147,6 +12404,9 @@ http://gems.rubyforge.org/gems/migration_test_helper-1.3.1.gem
 http://gems.rubyforge.org/gems/migration_test_helper-1.3.2.gem
 http://gems.rubyforge.org/gems/milk-0.0.1.gem
 http://gems.rubyforge.org/gems/milk-0.0.2.gem
+http://gems.rubyforge.org/gems/milk-0.0.3.gem
+http://gems.rubyforge.org/gems/milk-0.0.4.gem
+http://gems.rubyforge.org/gems/milton-1.0.0.gem
 http://gems.rubyforge.org/gems/mime-0.1.gem
 http://gems.rubyforge.org/gems/mime-types-1.13.1.gem
 http://gems.rubyforge.org/gems/mime-types-1.15.gem
@@ -12237,6 +12497,7 @@ http://gems.rubyforge.org/gems/mkrf-0.2.2.gem
 http://gems.rubyforge.org/gems/mkrf-0.2.3.gem
 http://gems.rubyforge.org/gems/mktemp-0.0.1.gem
 http://gems.rubyforge.org/gems/ml-ruby-0.0.1.gem
+http://gems.rubyforge.org/gems/mmmail-1.0.0.gem
 http://gems.rubyforge.org/gems/mmmultiworks-0.1.0.gem
 http://gems.rubyforge.org/gems/mmmultiworks-0.2.0.gem
 http://gems.rubyforge.org/gems/mms2r-1.0.0.gem
@@ -12329,6 +12590,8 @@ http://gems.rubyforge.org/gems/modelfactory-0.7.0.gem
 http://gems.rubyforge.org/gems/modelfactory-0.8.0.gem
 http://gems.rubyforge.org/gems/modelfactory-0.8.1.gem
 http://gems.rubyforge.org/gems/modelfactory-0.8.9.gem
+http://gems.rubyforge.org/gems/modelfactory-0.9.0.gem
+http://gems.rubyforge.org/gems/modelfactory-0.9.1.gem
 http://gems.rubyforge.org/gems/modelizer-1.0.0.gem
 http://gems.rubyforge.org/gems/modelizer-1.1.0.gem
 http://gems.rubyforge.org/gems/modelizer-1.1.1.gem
@@ -12594,6 +12857,7 @@ http://gems.rubyforge.org/gems/monkeybars-0.6.1.gem
 http://gems.rubyforge.org/gems/monkeybars-0.6.2.gem
 http://gems.rubyforge.org/gems/monkeybars-1.0.0.gem
 http://gems.rubyforge.org/gems/monkeybars-1.0.1.gem
+http://gems.rubyforge.org/gems/monkeybars-1.0.2.gem
 http://gems.rubyforge.org/gems/monkeytest-0.1-mswin32.gem
 http://gems.rubyforge.org/gems/monkeytest-0.1.1-mswin32.gem
 http://gems.rubyforge.org/gems/monkeytest-0.1.1.gem
@@ -12622,6 +12886,7 @@ http://gems.rubyforge.org/gems/more_money-0.0.7.gem
 http://gems.rubyforge.org/gems/more_money-0.0.8.gem
 http://gems.rubyforge.org/gems/more_money-0.0.9.gem
 http://gems.rubyforge.org/gems/more_money-0.1.1.gem
+http://gems.rubyforge.org/gems/moron-0.5.0.gem
 http://gems.rubyforge.org/gems/morph-0.1.0.gem
 http://gems.rubyforge.org/gems/morph-0.1.1.gem
 http://gems.rubyforge.org/gems/morph-0.1.2.gem
@@ -12707,6 +12972,7 @@ http://gems.rubyforge.org/gems/mspec-1.5.0.gem
 http://gems.rubyforge.org/gems/mspec-1.5.1.gem
 http://gems.rubyforge.org/gems/mspec-1.5.10.gem
 http://gems.rubyforge.org/gems/mspec-1.5.11.gem
+http://gems.rubyforge.org/gems/mspec-1.5.12.gem
 http://gems.rubyforge.org/gems/mspec-1.5.2.gem
 http://gems.rubyforge.org/gems/mspec-1.5.3.gem
 http://gems.rubyforge.org/gems/mspec-1.5.4.gem
@@ -12748,6 +13014,25 @@ http://gems.rubyforge.org/gems/muby-0.7.6.gem
 http://gems.rubyforge.org/gems/muby-0.7.7.gem
 http://gems.rubyforge.org/gems/muby-0.7.8.gem
 http://gems.rubyforge.org/gems/muby-0.7.9.gem
+http://gems.rubyforge.org/gems/muck-activities-0.1.7.gem
+http://gems.rubyforge.org/gems/muck-activity-0.1.1.gem
+http://gems.rubyforge.org/gems/muck-activity-0.1.2.gem
+http://gems.rubyforge.org/gems/muck-activity-0.1.3.gem
+http://gems.rubyforge.org/gems/muck-activity-0.1.4.gem
+http://gems.rubyforge.org/gems/muck-activity-0.1.5.gem
+http://gems.rubyforge.org/gems/muck-activity-0.1.6.gem
+http://gems.rubyforge.org/gems/muck-comments-0.1.0.gem
+http://gems.rubyforge.org/gems/muck-engine-0.1.0.gem
+http://gems.rubyforge.org/gems/muck-engine-0.1.1.gem
+http://gems.rubyforge.org/gems/muck-engine-0.1.2.gem
+http://gems.rubyforge.org/gems/muck-engine-0.1.4.gem
+http://gems.rubyforge.org/gems/muck-engine-0.1.5.gem
+http://gems.rubyforge.org/gems/muck-raker-0.1.0.gem
+http://gems.rubyforge.org/gems/muck-solr-0.4.0.gem
+http://gems.rubyforge.org/gems/muck-users-0.1.0.gem
+http://gems.rubyforge.org/gems/muck-users-0.1.1.gem
+http://gems.rubyforge.org/gems/muck-users-0.1.2.gem
+http://gems.rubyforge.org/gems/muck-users-0.1.3.gem
 http://gems.rubyforge.org/gems/muding-0.1.0.gem
 http://gems.rubyforge.org/gems/muding-0.1.1.gem
 http://gems.rubyforge.org/gems/muding-0.2.0.gem
@@ -12876,6 +13161,8 @@ http://gems.rubyforge.org/gems/nanoc-2.1.gem
 http://gems.rubyforge.org/gems/nanoc-2.2.1.gem
 http://gems.rubyforge.org/gems/nanoc-2.2.2.gem
 http://gems.rubyforge.org/gems/nanoc-2.2.gem
+http://gems.rubyforge.org/gems/nanowrimo-0.7.5.gem
+http://gems.rubyforge.org/gems/nanowrimo-0.7.7.gem
 http://gems.rubyforge.org/gems/nanowrimo-0.7.gem
 http://gems.rubyforge.org/gems/nap-0.1.gem
 http://gems.rubyforge.org/gems/nap-0.2.gem
@@ -12952,6 +13239,9 @@ http://gems.rubyforge.org/gems/net-dns-0.2.5.gem
 http://gems.rubyforge.org/gems/net-dns-0.2.gem
 http://gems.rubyforge.org/gems/net-dns-0.3.gem
 http://gems.rubyforge.org/gems/net-dns-0.4.gem
+http://gems.rubyforge.org/gems/net-dns-0.5.0.gem
+http://gems.rubyforge.org/gems/net-dns-0.5.1.gem
+http://gems.rubyforge.org/gems/net-dns-0.5.2.gem
 http://gems.rubyforge.org/gems/net-flickr-0.0.1.gem
 http://gems.rubyforge.org/gems/net-fs-gmail-0.0.1.gem
 http://gems.rubyforge.org/gems/net-fs-gmail-0.0.2.gem
@@ -13235,6 +13525,7 @@ http://gems.rubyforge.org/gems/newrelic_rpm-2.8.7.gem
 http://gems.rubyforge.org/gems/newrelic_rpm-2.8.8.gem
 http://gems.rubyforge.org/gems/newrelic_rpm-2.8.9.gem
 http://gems.rubyforge.org/gems/newsfire_export-1.1.0-powerpc-darwin.gem
+http://gems.rubyforge.org/gems/nfc-1.0.0.gem
 http://gems.rubyforge.org/gems/nginx_config_generator-1.0.gem
 http://gems.rubyforge.org/gems/nginx_config_generator-1.1.gem
 http://gems.rubyforge.org/gems/nginx_config_generator-1.2.gem
@@ -13371,7 +13662,12 @@ http://gems.rubyforge.org/gems/nokogiri-1.2.3-x86-mswin32-60.gem
 http://gems.rubyforge.org/gems/nokogiri-1.2.3.gem
 http://gems.rubyforge.org/gems/nokogiri-1.3.0-java.gem
 http://gems.rubyforge.org/gems/nokogiri-1.3.0-x86-mingw32.gem
+http://gems.rubyforge.org/gems/nokogiri-1.3.0-x86-mswin32.gem
 http://gems.rubyforge.org/gems/nokogiri-1.3.0.gem
+http://gems.rubyforge.org/gems/nokogiri-1.3.1-java.gem
+http://gems.rubyforge.org/gems/nokogiri-1.3.1-x86-mingw32.gem
+http://gems.rubyforge.org/gems/nokogiri-1.3.1-x86-mswin32.gem
+http://gems.rubyforge.org/gems/nokogiri-1.3.1.gem
 http://gems.rubyforge.org/gems/nokogirl-1.0.gem
 http://gems.rubyforge.org/gems/nondeterminism-0.1.0.gem
 http://gems.rubyforge.org/gems/nondeterminism-0.2.1.gem
@@ -13399,6 +13695,7 @@ http://gems.rubyforge.org/gems/nserver-1.1.4.gem
 http://gems.rubyforge.org/gems/ntimeline-0.1.0.gem
 http://gems.rubyforge.org/gems/ntp-1.0.0.gem
 http://gems.rubyforge.org/gems/numerouno-0.0.1.gem
+http://gems.rubyforge.org/gems/numerouno-0.1.0.gem
 http://gems.rubyforge.org/gems/nutime-0.0.4.gem
 http://gems.rubyforge.org/gems/nvtristrip-ruby-0.5.0.gem
 http://gems.rubyforge.org/gems/nvx-sds-0.0.1.gem
@@ -13408,6 +13705,7 @@ http://gems.rubyforge.org/gems/nvx-sds-1.1.0.gem
 http://gems.rubyforge.org/gems/nvx-sds-1.2.0.gem
 http://gems.rubyforge.org/gems/nvx-sds-1.2.1.gem
 http://gems.rubyforge.org/gems/nvx-sds-1.3.0.gem
+http://gems.rubyforge.org/gems/nvx-sds-1.3.1.gem
 http://gems.rubyforge.org/gems/nwn-lib-0.1.gem
 http://gems.rubyforge.org/gems/nwn-lib-0.2.1.gem
 http://gems.rubyforge.org/gems/nwn-lib-0.2.2.gem
@@ -13454,6 +13752,7 @@ http://gems.rubyforge.org/gems/oauth-0.3.1.gem
 http://gems.rubyforge.org/gems/oauth-0.3.2.gem
 http://gems.rubyforge.org/gems/oauth-0.3.3.gem
 http://gems.rubyforge.org/gems/oauth-0.3.4.gem
+http://gems.rubyforge.org/gems/oauth-0.3.5.gem
 http://gems.rubyforge.org/gems/oauth-simple-0.0.1.gem
 http://gems.rubyforge.org/gems/oauth-simple-0.0.2.gem
 http://gems.rubyforge.org/gems/object-stash-1.0.1.gem
@@ -13485,6 +13784,7 @@ http://gems.rubyforge.org/gems/ocra-1.0.1.gem
 http://gems.rubyforge.org/gems/ocra-1.0.2.gem
 http://gems.rubyforge.org/gems/ocra-1.0.3.gem
 http://gems.rubyforge.org/gems/ocra-1.1.0.gem
+http://gems.rubyforge.org/gems/ocra-1.1.1.gem
 http://gems.rubyforge.org/gems/octave-ruby-1.0.0.gem
 http://gems.rubyforge.org/gems/octave-ruby-1.0.1.gem
 http://gems.rubyforge.org/gems/octave-ruby-1.0.2.gem
@@ -13586,6 +13886,7 @@ http://gems.rubyforge.org/gems/one_inch_punch-0.2.3.gem
 http://gems.rubyforge.org/gems/one_inch_punch-0.2.4.gem
 http://gems.rubyforge.org/gems/one_inch_punch-0.3.0.gem
 http://gems.rubyforge.org/gems/one_inch_punch-0.3.1.gem
+http://gems.rubyforge.org/gems/one_inch_punch-0.3.2.gem
 http://gems.rubyforge.org/gems/onebody-0.1.0.gem
 http://gems.rubyforge.org/gems/onebody-0.1.1.gem
 http://gems.rubyforge.org/gems/onebody-0.1.2.gem
@@ -13685,7 +13986,10 @@ http://gems.rubyforge.org/gems/open4-0.9.3.gem
 http://gems.rubyforge.org/gems/open4-0.9.4.gem
 http://gems.rubyforge.org/gems/open4-0.9.5.gem
 http://gems.rubyforge.org/gems/open4-0.9.6.gem
+http://gems.rubyforge.org/gems/open4-1.0.0.gem
 http://gems.rubyforge.org/gems/open_gem-1.2.0.gem
+http://gems.rubyforge.org/gems/open_gem-1.3.0.gem
+http://gems.rubyforge.org/gems/open_gem-1.3.1.gem
 http://gems.rubyforge.org/gems/openbase-0.8.1.gem
 http://gems.rubyforge.org/gems/openbase-0.8.2.gem
 http://gems.rubyforge.org/gems/openbase-0.8.3.gem
@@ -13696,6 +14000,7 @@ http://gems.rubyforge.org/gems/openbill-0.1.3.gem
 http://gems.rubyforge.org/gems/openbill-0.1.4.gem
 http://gems.rubyforge.org/gems/openbill-0.1.5.gem
 http://gems.rubyforge.org/gems/openbill-0.1.6.gem
+http://gems.rubyforge.org/gems/openbill-0.1.7.gem
 http://gems.rubyforge.org/gems/opencv-0.0.6.gem
 http://gems.rubyforge.org/gems/opencv-0.0.7.gem
 http://gems.rubyforge.org/gems/openid-0.0.1.gem
@@ -13777,6 +14082,8 @@ http://gems.rubyforge.org/gems/optimus-ep-0.6.0.gem
 http://gems.rubyforge.org/gems/optimus-ep-0.6.5.gem
 http://gems.rubyforge.org/gems/optimus-ep-0.6.9.gem
 http://gems.rubyforge.org/gems/optimus-ep-0.6.91.gem
+http://gems.rubyforge.org/gems/options-1.0.0.gem
+http://gems.rubyforge.org/gems/options-2.0.0.gem
 http://gems.rubyforge.org/gems/orangutan-0.0.1.gem
 http://gems.rubyforge.org/gems/orangutan-0.0.2.gem
 http://gems.rubyforge.org/gems/orangutan-0.0.3.gem
@@ -13868,6 +14175,11 @@ http://gems.rubyforge.org/gems/packr-1.0.2.gem
 http://gems.rubyforge.org/gems/packr-3.1.0.gem
 http://gems.rubyforge.org/gems/packrat-0.1.0.gem
 http://gems.rubyforge.org/gems/pacstream-0.9.gem
+http://gems.rubyforge.org/gems/page_glimpse-0.0.1.gem
+http://gems.rubyforge.org/gems/page_glimpse-0.0.2.gem
+http://gems.rubyforge.org/gems/page_glimpse-0.0.3.gem
+http://gems.rubyforge.org/gems/page_glimpse-0.0.4.gem
+http://gems.rubyforge.org/gems/page_glimpse-0.0.5.gem
 http://gems.rubyforge.org/gems/pagination_scope-0.0.8.gem
 http://gems.rubyforge.org/gems/pagination_scope-0.1.0.gem
 http://gems.rubyforge.org/gems/pagination_scope-0.1.1.gem
@@ -14125,6 +14437,8 @@ http://gems.rubyforge.org/gems/perforce-0.5.0.gem
 http://gems.rubyforge.org/gems/perforce-1.0.0.gem
 http://gems.rubyforge.org/gems/perforce-1.0.1.gem
 http://gems.rubyforge.org/gems/perforce-1.0.2.gem
+http://gems.rubyforge.org/gems/perftools.rb-0.1.6.gem
+http://gems.rubyforge.org/gems/perftools.rb-0.1.8.gem
 http://gems.rubyforge.org/gems/permutation-0.1.1.gem
 http://gems.rubyforge.org/gems/permutation-0.1.2.gem
 http://gems.rubyforge.org/gems/permutation-0.1.3.gem
@@ -14160,6 +14474,7 @@ http://gems.rubyforge.org/gems/pho-0.2.gem
 http://gems.rubyforge.org/gems/pho-0.3.gem
 http://gems.rubyforge.org/gems/pho-0.4.1.gem
 http://gems.rubyforge.org/gems/pho-0.4.gem
+http://gems.rubyforge.org/gems/pho-0.5.gem
 http://gems.rubyforge.org/gems/photoviewer-1.1.0.gem
 http://gems.rubyforge.org/gems/photoviewer-1.1.1.gem
 http://gems.rubyforge.org/gems/photoviewer-1.1.2.gem
@@ -14198,6 +14513,7 @@ http://gems.rubyforge.org/gems/picolena-0.2.0.gem
 http://gems.rubyforge.org/gems/picolena-0.2.2.gem
 http://gems.rubyforge.org/gems/pictrails-0.5.0.gem
 http://gems.rubyforge.org/gems/picturepath-0.5.0.gem
+http://gems.rubyforge.org/gems/pidgin2adium-0.0.1.gem
 http://gems.rubyforge.org/gems/pidify-0.1.0-i386-linux.gem
 http://gems.rubyforge.org/gems/pidify-0.1.1-i386-linux.gem
 http://gems.rubyforge.org/gems/pidify-0.1.2-i686-linux.gem
@@ -14223,6 +14539,7 @@ http://gems.rubyforge.org/gems/pikl-0.2.8-x86-mswin32.gem
 http://gems.rubyforge.org/gems/pikl-0.2.8.gem
 http://gems.rubyforge.org/gems/pingfm-1.0.0.gem
 http://gems.rubyforge.org/gems/pingfm-1.0.1.gem
+http://gems.rubyforge.org/gems/pingfm-1.0.2.gem
 http://gems.rubyforge.org/gems/pinyin-0.0.1.gem
 http://gems.rubyforge.org/gems/pinyin-0.1.4.gem
 http://gems.rubyforge.org/gems/pippin-0.1b.gem
@@ -14393,6 +14710,7 @@ http://gems.rubyforge.org/gems/positionrange-0.6.2.gem
 http://gems.rubyforge.org/gems/positionrange-0.6.4.gem
 http://gems.rubyforge.org/gems/positionrange-0.6.5.gem
 http://gems.rubyforge.org/gems/positionrange-0.6.6.gem
+http://gems.rubyforge.org/gems/positionrange-0.6.7.gem
 http://gems.rubyforge.org/gems/posixlock-0.0.1.gem
 http://gems.rubyforge.org/gems/posixtimer-0.1.gem
 http://gems.rubyforge.org/gems/posixtimer-0.2.gem
@@ -14401,6 +14719,10 @@ http://gems.rubyforge.org/gems/postalmethods-1.0.1.gem
 http://gems.rubyforge.org/gems/postalmethods-1.1.0.gem
 http://gems.rubyforge.org/gems/postalmethods-1.1.1.gem
 http://gems.rubyforge.org/gems/posterous-0.1.2.gem
+http://gems.rubyforge.org/gems/posterous-0.1.3.gem
+http://gems.rubyforge.org/gems/posterous-0.1.4.gem
+http://gems.rubyforge.org/gems/posterous-0.1.5.gem
+http://gems.rubyforge.org/gems/posterous-0.1.6.gem
 http://gems.rubyforge.org/gems/postful-0.1.0.gem
 http://gems.rubyforge.org/gems/postful-0.1.1.gem
 http://gems.rubyforge.org/gems/postful-0.2.0.gem
@@ -14446,6 +14768,7 @@ http://gems.rubyforge.org/gems/postini-0.0.1.gem
 http://gems.rubyforge.org/gems/postini-0.0.2.gem
 http://gems.rubyforge.org/gems/postini-0.0.3.gem
 http://gems.rubyforge.org/gems/postini-0.0.6.gem
+http://gems.rubyforge.org/gems/postini-0.1.0.gem
 http://gems.rubyforge.org/gems/pottery-0.1.0.gem
 http://gems.rubyforge.org/gems/pottery-0.1.1.gem
 http://gems.rubyforge.org/gems/pottery-0.1.2.gem
@@ -14461,6 +14784,7 @@ http://gems.rubyforge.org/gems/pqa-0.5.gem
 http://gems.rubyforge.org/gems/pqa-0.6.gem
 http://gems.rubyforge.org/gems/pqa-0.7.gem
 http://gems.rubyforge.org/gems/pqa-1.6.gem
+http://gems.rubyforge.org/gems/pr-zlib-1.0.0.gem
 http://gems.rubyforge.org/gems/prawn-0.1.0.gem
 http://gems.rubyforge.org/gems/prawn-0.1.1.gem
 http://gems.rubyforge.org/gems/prawn-0.1.2.gem
@@ -14578,6 +14902,7 @@ http://gems.rubyforge.org/gems/provisional-2.1.3.gem
 http://gems.rubyforge.org/gems/provisional-2.1.4.gem
 http://gems.rubyforge.org/gems/provisional-2.1.5.gem
 http://gems.rubyforge.org/gems/provisional-2.1.6.gem
+http://gems.rubyforge.org/gems/provisional-2.1.7.gem
 http://gems.rubyforge.org/gems/provisional-repoman-2.1.2.gem
 http://gems.rubyforge.org/gems/provisional-repoman-2.1.3.gem
 http://gems.rubyforge.org/gems/pseudoxml-0.1.0.gem
@@ -14714,6 +15039,7 @@ http://gems.rubyforge.org/gems/querybuilder-0.5.0.gem
 http://gems.rubyforge.org/gems/querybuilder-0.5.2.gem
 http://gems.rubyforge.org/gems/querybuilder-0.5.3.gem
 http://gems.rubyforge.org/gems/querybuilder-0.5.4.gem
+http://gems.rubyforge.org/gems/querybuilder-0.5.5.gem
 http://gems.rubyforge.org/gems/queryparser-1.0.0.gem
 http://gems.rubyforge.org/gems/queryparser-1.0.1.gem
 http://gems.rubyforge.org/gems/queuehash-0.1.0.gem
@@ -14818,6 +15144,7 @@ http://gems.rubyforge.org/gems/rack-cache-0.2.0.gem
 http://gems.rubyforge.org/gems/rack-cache-0.3.0.gem
 http://gems.rubyforge.org/gems/rack-cache-0.4.gem
 http://gems.rubyforge.org/gems/rack-cache-0.5.gem
+http://gems.rubyforge.org/gems/rack-client-0.1.0.gem
 http://gems.rubyforge.org/gems/rack-config-0.9.0.gem
 http://gems.rubyforge.org/gems/rack-contrib-0.9.0.gem
 http://gems.rubyforge.org/gems/rack-contrib-0.9.2.gem
@@ -14862,6 +15189,7 @@ http://gems.rubyforge.org/gems/radiant-0.6.8.gem
 http://gems.rubyforge.org/gems/radiant-0.6.9.gem
 http://gems.rubyforge.org/gems/radiant-0.7.0.gem
 http://gems.rubyforge.org/gems/radiant-0.7.1.gem
+http://gems.rubyforge.org/gems/radiant-0.8.0.gem
 http://gems.rubyforge.org/gems/radiant_helper-1.0.3.gem
 http://gems.rubyforge.org/gems/radiant_helper-1.0.4.gem
 http://gems.rubyforge.org/gems/radiant_helper-1.0.5.gem
@@ -14968,11 +15296,13 @@ http://gems.rubyforge.org/gems/rails_analyzer_tools-1.4.0.gem
 http://gems.rubyforge.org/gems/rails_backup-1.0.0.gem
 http://gems.rubyforge.org/gems/rails_config_model_generator-1.1.0.gem
 http://gems.rubyforge.org/gems/rails_config_model_generator-1.2.1.gem
+http://gems.rubyforge.org/gems/rails_config_model_generator-1.2.2.gem
 http://gems.rubyforge.org/gems/rails_creator-0.5.2.gem
 http://gems.rubyforge.org/gems/rails_creator-0.6.2.gem
 http://gems.rubyforge.org/gems/rails_currency-1.0.gem
 http://gems.rubyforge.org/gems/rails_currency-1.1.gem
 http://gems.rubyforge.org/gems/rails_currency-1.2.gem
+http://gems.rubyforge.org/gems/rails_datamapper-0.9.11.gem
 http://gems.rubyforge.org/gems/rails_env-0.1.0.gem
 http://gems.rubyforge.org/gems/rails_extensions-1.0.0.gem
 http://gems.rubyforge.org/gems/rails_extensions-1.0.1.gem
@@ -15056,6 +15386,7 @@ http://gems.rubyforge.org/gems/rails_pwnerer-0.6.43.gem
 http://gems.rubyforge.org/gems/rails_pwnerer-0.6.44.gem
 http://gems.rubyforge.org/gems/rails_pwnerer-0.6.45.gem
 http://gems.rubyforge.org/gems/rails_pwnerer-0.6.46.gem
+http://gems.rubyforge.org/gems/rails_pwnerer-0.6.47.gem
 http://gems.rubyforge.org/gems/rails_pwnerer-0.6.5.gem
 http://gems.rubyforge.org/gems/rails_pwnerer-0.6.6.gem
 http://gems.rubyforge.org/gems/rails_pwnerer-0.6.7.gem
@@ -15070,6 +15401,7 @@ http://gems.rubyforge.org/gems/rails_sql_views-0.5.0.gem
 http://gems.rubyforge.org/gems/rails_sql_views-0.5.1.gem
 http://gems.rubyforge.org/gems/rails_sql_views-0.6.0.gem
 http://gems.rubyforge.org/gems/rails_sql_views-0.6.1.gem
+http://gems.rubyforge.org/gems/rails_warden-0.1.1.gem
 http://gems.rubyforge.org/gems/railsbench-0.8.4.gem
 http://gems.rubyforge.org/gems/railsbench-0.9.0.gem
 http://gems.rubyforge.org/gems/railsbench-0.9.1.gem
@@ -15157,6 +15489,7 @@ http://gems.rubyforge.org/gems/rake-dotnet-0.0.8.gem
 http://gems.rubyforge.org/gems/rake-dotnet-0.0.9.gem
 http://gems.rubyforge.org/gems/rake-dotnet-0.1.0.gem
 http://gems.rubyforge.org/gems/rake-dotnet-0.1.1.gem
+http://gems.rubyforge.org/gems/rake-dotnet-0.1.2.gem
 http://gems.rubyforge.org/gems/rake-tasks-0.1.gem
 http://gems.rubyforge.org/gems/rake-tasks-0.2.gem
 http://gems.rubyforge.org/gems/rake_dmg-0.0.2.gem
@@ -15171,6 +15504,8 @@ http://gems.rubyforge.org/gems/rakegen-0.6.6.gem
 http://gems.rubyforge.org/gems/rakepp-0.0.1.gem
 http://gems.rubyforge.org/gems/ralbum-0.0.0.gem
 http://gems.rubyforge.org/gems/ralbum-0.0.2.gem
+http://gems.rubyforge.org/gems/ralbum-0.0.4.gem
+http://gems.rubyforge.org/gems/ralbum-0.0.5.gem
 http://gems.rubyforge.org/gems/rally_rest_api-0.5.5.gem
 http://gems.rubyforge.org/gems/rally_rest_api-0.5.6.gem
 http://gems.rubyforge.org/gems/rally_rest_api-0.5.7.gem
@@ -15222,6 +15557,9 @@ http://gems.rubyforge.org/gems/ramaze-2009.02.gem
 http://gems.rubyforge.org/gems/ramaze-2009.03.gem
 http://gems.rubyforge.org/gems/ramaze-2009.04.gem
 http://gems.rubyforge.org/gems/ramaze-2009.05.gem
+http://gems.rubyforge.org/gems/ramaze-2009.06.04.gem
+http://gems.rubyforge.org/gems/ramaze-2009.06.12.gem
+http://gems.rubyforge.org/gems/ramaze-2009.06.gem
 http://gems.rubyforge.org/gems/ramen-0.4.0.gem
 http://gems.rubyforge.org/gems/ramen-0.4.1.gem
 http://gems.rubyforge.org/gems/ramen-0.4.2.gem
@@ -15255,9 +15593,11 @@ http://gems.rubyforge.org/gems/random_text-0.0.5.gem
 http://gems.rubyforge.org/gems/random_text-0.0.6.1.gem
 http://gems.rubyforge.org/gems/random_text-0.0.6.2.gem
 http://gems.rubyforge.org/gems/random_text-0.0.6.3.gem
+http://gems.rubyforge.org/gems/random_text-0.0.6.4.gem
 http://gems.rubyforge.org/gems/random_text-0.0.6.gem
 http://gems.rubyforge.org/gems/randomr-0.1.1.gem
 http://gems.rubyforge.org/gems/range_slice-0.1.0.gem
+http://gems.rubyforge.org/gems/rango-0.0.3.gem
 http://gems.rubyforge.org/gems/rankles-0.0.2.gem
 http://gems.rubyforge.org/gems/rannel-0.4.0.gem
 http://gems.rubyforge.org/gems/rannel-0.4.1.gem
@@ -15283,6 +15623,7 @@ http://gems.rubyforge.org/gems/rap-0.12.1.gem
 http://gems.rubyforge.org/gems/rap-0.12.2.gem
 http://gems.rubyforge.org/gems/rap-0.12.3.gem
 http://gems.rubyforge.org/gems/rap-0.13.0.gem
+http://gems.rubyforge.org/gems/rap-0.13.1.gem
 http://gems.rubyforge.org/gems/rap_enum-0.0.1.gem
 http://gems.rubyforge.org/gems/rap_enum-0.0.2.gem
 http://gems.rubyforge.org/gems/rap_enumerable-0.0.1.gem
@@ -15379,6 +15720,7 @@ http://gems.rubyforge.org/gems/rawr-1.2.gem
 http://gems.rubyforge.org/gems/rawr-1.3.2.gem
 http://gems.rubyforge.org/gems/rawr-1.3.3.gem
 http://gems.rubyforge.org/gems/rawr-1.3.4.gem
+http://gems.rubyforge.org/gems/rawr-1.3.5.gem
 http://gems.rubyforge.org/gems/raxb-0.1.gem
 http://gems.rubyforge.org/gems/raxb-0.2.gem
 http://gems.rubyforge.org/gems/rb-appscript-0.2.0.gem
@@ -15454,6 +15796,7 @@ http://gems.rubyforge.org/gems/rbmediawiki-0.2.2.gem
 http://gems.rubyforge.org/gems/rbmediawiki-0.2.4.gem
 http://gems.rubyforge.org/gems/rbmediawiki-0.2.5.gem
 http://gems.rubyforge.org/gems/rbmediawiki-0.2.6.1.gem
+http://gems.rubyforge.org/gems/rbmediawiki-0.2.6.2.gem
 http://gems.rubyforge.org/gems/rbmediawiki-0.2.6.gem
 http://gems.rubyforge.org/gems/rbmediawiki-0.2.gem
 http://gems.rubyforge.org/gems/rbml-0.0.1.gem
@@ -15518,6 +15861,7 @@ http://gems.rubyforge.org/gems/rbrainz-0.3.0.gem
 http://gems.rubyforge.org/gems/rbrainz-0.4.0.gem
 http://gems.rubyforge.org/gems/rbrainz-0.4.1.gem
 http://gems.rubyforge.org/gems/rbrainz-0.4.2.gem
+http://gems.rubyforge.org/gems/rbrainz-0.5.0.gem
 http://gems.rubyforge.org/gems/rbridge-0.1.2.gem
 http://gems.rubyforge.org/gems/rbridge-0.1.gem
 http://gems.rubyforge.org/gems/rbridge-0.2.0.gem
@@ -15804,6 +16148,7 @@ http://gems.rubyforge.org/gems/redirect-0.0.4.gem
 http://gems.rubyforge.org/gems/redirect-0.1.0.gem
 http://gems.rubyforge.org/gems/redirect-0.3.0.gem
 http://gems.rubyforge.org/gems/redirect-0.3.2.gem
+http://gems.rubyforge.org/gems/redis-0.0.1.gem
 http://gems.rubyforge.org/gems/redparse-0.8.0.gem
 http://gems.rubyforge.org/gems/redparse-0.8.1.gem
 http://gems.rubyforge.org/gems/redparse-0.8.2.gem
@@ -15831,6 +16176,8 @@ http://gems.rubyforge.org/gems/refe-0.8.0.1.gem
 http://gems.rubyforge.org/gems/refe-0.8.0.2.gem
 http://gems.rubyforge.org/gems/refe-0.8.0.3.gem
 http://gems.rubyforge.org/gems/reference-0.5.gem
+http://gems.rubyforge.org/gems/refinery-0.9.0.gem
+http://gems.rubyforge.org/gems/refinery-0.9.2.gem
 http://gems.rubyforge.org/gems/reg-0.4.6.gem
 http://gems.rubyforge.org/gems/reg-0.4.7.gem
 http://gems.rubyforge.org/gems/regex_replace-1.0.0.gem
@@ -15851,6 +16198,7 @@ http://gems.rubyforge.org/gems/relax-0.0.5.gem
 http://gems.rubyforge.org/gems/relax-0.0.6.gem
 http://gems.rubyforge.org/gems/relax-0.0.7.gem
 http://gems.rubyforge.org/gems/relax-0.1.0.gem
+http://gems.rubyforge.org/gems/relax-0.1.1.gem
 http://gems.rubyforge.org/gems/reliable-msg-1.0.0.gem
 http://gems.rubyforge.org/gems/reliable-msg-1.0.1.gem
 http://gems.rubyforge.org/gems/reliable-msg-1.1.0.gem
@@ -15876,6 +16224,8 @@ http://gems.rubyforge.org/gems/remarkable-3.1.1.gem
 http://gems.rubyforge.org/gems/remarkable-3.1.2.gem
 http://gems.rubyforge.org/gems/remarkable-3.1.3.gem
 http://gems.rubyforge.org/gems/remarkable-3.1.4.gem
+http://gems.rubyforge.org/gems/remarkable-3.1.5.gem
+http://gems.rubyforge.org/gems/remarkable-3.1.6.gem
 http://gems.rubyforge.org/gems/remarkable_activerecord-3.0.0.gem
 http://gems.rubyforge.org/gems/remarkable_activerecord-3.0.1.gem
 http://gems.rubyforge.org/gems/remarkable_activerecord-3.0.10.gem
@@ -15891,6 +16241,9 @@ http://gems.rubyforge.org/gems/remarkable_activerecord-3.1.0.gem
 http://gems.rubyforge.org/gems/remarkable_activerecord-3.1.1.gem
 http://gems.rubyforge.org/gems/remarkable_activerecord-3.1.2.gem
 http://gems.rubyforge.org/gems/remarkable_activerecord-3.1.3.gem
+http://gems.rubyforge.org/gems/remarkable_activerecord-3.1.4.gem
+http://gems.rubyforge.org/gems/remarkable_activerecord-3.1.5.gem
+http://gems.rubyforge.org/gems/remarkable_activerecord-3.1.6.gem
 http://gems.rubyforge.org/gems/remarkable_rails-3.0.0.gem
 http://gems.rubyforge.org/gems/remarkable_rails-3.0.1.gem
 http://gems.rubyforge.org/gems/remarkable_rails-3.0.10.gem
@@ -15906,6 +16259,9 @@ http://gems.rubyforge.org/gems/remarkable_rails-3.1.0.gem
 http://gems.rubyforge.org/gems/remarkable_rails-3.1.1.gem
 http://gems.rubyforge.org/gems/remarkable_rails-3.1.2.gem
 http://gems.rubyforge.org/gems/remarkable_rails-3.1.3.gem
+http://gems.rubyforge.org/gems/remarkable_rails-3.1.4.gem
+http://gems.rubyforge.org/gems/remarkable_rails-3.1.5.gem
+http://gems.rubyforge.org/gems/remarkable_rails-3.1.6.gem
 http://gems.rubyforge.org/gems/remit-0.0.1.gem
 http://gems.rubyforge.org/gems/remit-0.0.2.gem
 http://gems.rubyforge.org/gems/remit-0.0.3.gem
@@ -15951,6 +16307,7 @@ http://gems.rubyforge.org/gems/rept-0.1.0.gem
 http://gems.rubyforge.org/gems/rept-0.1.1.gem
 http://gems.rubyforge.org/gems/rept-0.1.2.gem
 http://gems.rubyforge.org/gems/rept-0.1.3.gem
+http://gems.rubyforge.org/gems/rept-0.1.4.gem
 http://gems.rubyforge.org/gems/request-log-analyzer-1.0.2.gem
 http://gems.rubyforge.org/gems/request-log-analyzer-1.0.3.gem
 http://gems.rubyforge.org/gems/request-log-analyzer-1.0.4.gem
@@ -15961,6 +16318,11 @@ http://gems.rubyforge.org/gems/request-log-analyzer-1.1.3.gem
 http://gems.rubyforge.org/gems/request-log-analyzer-1.1.4.gem
 http://gems.rubyforge.org/gems/request-log-analyzer-1.1.5.1.gem
 http://gems.rubyforge.org/gems/request-log-analyzer-1.1.6.gem
+http://gems.rubyforge.org/gems/request-log-analyzer-1.2.0.gem
+http://gems.rubyforge.org/gems/require_all-1.0.0.gem
+http://gems.rubyforge.org/gems/require_all-1.0.1.gem
+http://gems.rubyforge.org/gems/rerun-0.1.gem
+http://gems.rubyforge.org/gems/rerun-0.2.gem
 http://gems.rubyforge.org/gems/resh-0.0.1.gem
 http://gems.rubyforge.org/gems/resh-0.0.2.gem
 http://gems.rubyforge.org/gems/resh-0.0.3.gem
@@ -15974,6 +16336,8 @@ http://gems.rubyforge.org/gems/resourceful-0.2.1.gem
 http://gems.rubyforge.org/gems/resourceful-0.2.gem
 http://gems.rubyforge.org/gems/resourceful-0.3.0.gem
 http://gems.rubyforge.org/gems/resourceful-0.3.1.gem
+http://gems.rubyforge.org/gems/resourcelogic-0.10.0.gem
+http://gems.rubyforge.org/gems/resourcelogic-0.11.0.gem
 http://gems.rubyforge.org/gems/resourcelogic-0.9.0.gem
 http://gems.rubyforge.org/gems/ressbo-1.0.0.gem
 http://gems.rubyforge.org/gems/rest-client-0.1.gem
@@ -15991,6 +16355,7 @@ http://gems.rubyforge.org/gems/rest-client-0.8.2.gem
 http://gems.rubyforge.org/gems/rest-client-0.8.gem
 http://gems.rubyforge.org/gems/rest-client-0.9.2.gem
 http://gems.rubyforge.org/gems/rest-client-0.9.gem
+http://gems.rubyforge.org/gems/rest-client-1.0.1.gem
 http://gems.rubyforge.org/gems/rest-client-1.0.gem
 http://gems.rubyforge.org/gems/rest-open-uri-1.0.0.gem
 http://gems.rubyforge.org/gems/restarts-1.0.2.gem
@@ -16108,6 +16473,7 @@ http://gems.rubyforge.org/gems/rexchange-0.3.1.gem
 http://gems.rubyforge.org/gems/rexchange-0.3.2.gem
 http://gems.rubyforge.org/gems/rexchange-0.3.3.gem
 http://gems.rubyforge.org/gems/rexchange-0.3.4.gem
+http://gems.rubyforge.org/gems/rexical-1.0.3.gem
 http://gems.rubyforge.org/gems/rexml-expansion-fix-1.0.0.gem
 http://gems.rubyforge.org/gems/rexml-expansion-fix-1.0.1.gem
 http://gems.rubyforge.org/gems/rextra-2.0.1.gem
@@ -16256,6 +16622,7 @@ http://gems.rubyforge.org/gems/rgen-0.4.3.gem
 http://gems.rubyforge.org/gems/rgen-0.4.4.gem
 http://gems.rubyforge.org/gems/rgen-0.4.5.gem
 http://gems.rubyforge.org/gems/rgen-0.4.6.gem
+http://gems.rubyforge.org/gems/rgen-0.5.0.gem
 http://gems.rubyforge.org/gems/rghost-0.6.5.gem
 http://gems.rubyforge.org/gems/rghost-0.6.6.gem
 http://gems.rubyforge.org/gems/rghost-0.7.0.gem
@@ -16273,6 +16640,7 @@ http://gems.rubyforge.org/gems/rghost-0.8.6.4.gem
 http://gems.rubyforge.org/gems/rghost-0.8.6.5.gem
 http://gems.rubyforge.org/gems/rghost-0.8.6.gem
 http://gems.rubyforge.org/gems/rghost-0.8.7.1.gem
+http://gems.rubyforge.org/gems/rghost-0.8.7.2.gem
 http://gems.rubyforge.org/gems/rghost-0.8.7.gem
 http://gems.rubyforge.org/gems/rghost-0.8.gem
 http://gems.rubyforge.org/gems/rghost_barcode-0.8.gem
@@ -16289,6 +16657,7 @@ http://gems.rubyforge.org/gems/rglpk-0.1.gem
 http://gems.rubyforge.org/gems/rhaiker-0.0.1.gem
 http://gems.rubyforge.org/gems/rhaiker-0.1.0.gem
 http://gems.rubyforge.org/gems/rhaiker-0.1.1.gem
+http://gems.rubyforge.org/gems/rhaiker-0.1.2.gem
 http://gems.rubyforge.org/gems/rhcp-0.1.2.gem
 http://gems.rubyforge.org/gems/rhcp-0.1.3.gem
 http://gems.rubyforge.org/gems/rhcp-0.1.4.gem
@@ -16333,6 +16702,7 @@ http://gems.rubyforge.org/gems/rhodes-1.0.7.gem
 http://gems.rubyforge.org/gems/rhodes-1.0.8.gem
 http://gems.rubyforge.org/gems/rhodes-1.0.9.gem
 http://gems.rubyforge.org/gems/rhodes-1.1.0.gem
+http://gems.rubyforge.org/gems/rhodes-1.1.1.gem
 http://gems.rubyforge.org/gems/rhodes-build-1.0.0.gem
 http://gems.rubyforge.org/gems/rhodes-build-1.0.1.gem
 http://gems.rubyforge.org/gems/rhodes-build-1.0.10.gem
@@ -16345,6 +16715,7 @@ http://gems.rubyforge.org/gems/rhodes-build-1.0.7.gem
 http://gems.rubyforge.org/gems/rhodes-build-1.0.8.gem
 http://gems.rubyforge.org/gems/rhodes-build-1.0.9.gem
 http://gems.rubyforge.org/gems/rhodes-build-1.1.0.gem
+http://gems.rubyforge.org/gems/rhodes-build-1.1.1.gem
 http://gems.rubyforge.org/gems/rhodes-framework-1.0.0.gem
 http://gems.rubyforge.org/gems/rhodes-framework-1.0.1.gem
 http://gems.rubyforge.org/gems/rhodes-framework-1.0.10.gem
@@ -16357,6 +16728,7 @@ http://gems.rubyforge.org/gems/rhodes-framework-1.0.7.gem
 http://gems.rubyforge.org/gems/rhodes-framework-1.0.8.gem
 http://gems.rubyforge.org/gems/rhodes-framework-1.0.9.gem
 http://gems.rubyforge.org/gems/rhodes-framework-1.1.0.gem
+http://gems.rubyforge.org/gems/rhodes-framework-1.1.1.gem
 http://gems.rubyforge.org/gems/rhodes-generator-1.0.0.gem
 http://gems.rubyforge.org/gems/rhodes-generator-1.0.1.gem
 http://gems.rubyforge.org/gems/rhodes-generator-1.0.10.gem
@@ -16369,6 +16741,7 @@ http://gems.rubyforge.org/gems/rhodes-generator-1.0.7.gem
 http://gems.rubyforge.org/gems/rhodes-generator-1.0.8.gem
 http://gems.rubyforge.org/gems/rhodes-generator-1.0.9.gem
 http://gems.rubyforge.org/gems/rhodes-generator-1.1.0.gem
+http://gems.rubyforge.org/gems/rhodes-generator-1.1.1.gem
 http://gems.rubyforge.org/gems/rholdem-0.0.1.gem
 http://gems.rubyforge.org/gems/rholdem-0.1.0.gem
 http://gems.rubyforge.org/gems/rhtml2pdf-0.0.1.gem
@@ -16388,6 +16761,11 @@ http://gems.rubyforge.org/gems/ri18n-0.0.3.gem
 http://gems.rubyforge.org/gems/ri_cal-0.5.0.gem
 http://gems.rubyforge.org/gems/ri_cal-0.5.1.gem
 http://gems.rubyforge.org/gems/ri_cal-0.5.2.gem
+http://gems.rubyforge.org/gems/ri_cal-0.5.3.gem
+http://gems.rubyforge.org/gems/ri_cal-0.6.0.gem
+http://gems.rubyforge.org/gems/ri_cal-0.6.1.gem
+http://gems.rubyforge.org/gems/ri_cal-0.6.2.gem
+http://gems.rubyforge.org/gems/ri_cal-0.6.3.gem
 http://gems.rubyforge.org/gems/ribit-0.3.0.gem
 http://gems.rubyforge.org/gems/ribs-0.0.1.gem
 http://gems.rubyforge.org/gems/ribs-0.0.2.gem
@@ -16395,6 +16773,7 @@ http://gems.rubyforge.org/gems/rice-1.0.0.gem
 http://gems.rubyforge.org/gems/rice-1.0.1.gem
 http://gems.rubyforge.org/gems/rice-1.0.2.gem
 http://gems.rubyforge.org/gems/rice-1.1.0.gem
+http://gems.rubyforge.org/gems/ricepaper-0.0.1.gem
 http://gems.rubyforge.org/gems/rich_text_editor-0.0.1.gem
 http://gems.rubyforge.org/gems/rich_units-0.1.0.gem
 http://gems.rubyforge.org/gems/rich_units-0.2.0.gem
@@ -16474,6 +16853,7 @@ http://gems.rubyforge.org/gems/rio-0.3.9.gem
 http://gems.rubyforge.org/gems/rio-0.4.0.gem
 http://gems.rubyforge.org/gems/rio-0.4.1.gem
 http://gems.rubyforge.org/gems/rio-0.4.2.gem
+http://gems.rubyforge.org/gems/rip-0.0.1.gem
 http://gems.rubyforge.org/gems/ripxplore-0.0.1.gem
 http://gems.rubyforge.org/gems/ripxplore-0.0.2.gem
 http://gems.rubyforge.org/gems/ripxplore-0.4.0.gem
@@ -16491,6 +16871,7 @@ http://gems.rubyforge.org/gems/riscos-0.1.1.gem
 http://gems.rubyforge.org/gems/riscos-0.1.2.gem
 http://gems.rubyforge.org/gems/riscos-0.1.3.gem
 http://gems.rubyforge.org/gems/riscos-0.1.4.gem
+http://gems.rubyforge.org/gems/riscos-0.1.5.gem
 http://gems.rubyforge.org/gems/rison-1.0.0.gem
 http://gems.rubyforge.org/gems/rison-1.1.0.gem
 http://gems.rubyforge.org/gems/rison-1.2.0.gem
@@ -16532,6 +16913,7 @@ http://gems.rubyforge.org/gems/rjb-1.1.6-x86-mswin32-60.gem
 http://gems.rubyforge.org/gems/rjb-1.1.6.gem
 http://gems.rubyforge.org/gems/rjb-1.1.7.gem
 http://gems.rubyforge.org/gems/rkelly-1.0.0.gem
+http://gems.rubyforge.org/gems/rkelly-1.0.1.gem
 http://gems.rubyforge.org/gems/rkeychain-0.1.0.gem
 http://gems.rubyforge.org/gems/rkeychain-0.2.0.gem
 http://gems.rubyforge.org/gems/rkid-0.1.1.gem
@@ -16701,6 +17083,11 @@ http://gems.rubyforge.org/gems/rmx-0.2-i586-linux.gem
 http://gems.rubyforge.org/gems/rmx-0.2.1-i586-linux.gem
 http://gems.rubyforge.org/gems/roastbeef-0.0.3.gem
 http://gems.rubyforge.org/gems/roastbeef-0.0.4.gem
+http://gems.rubyforge.org/gems/robustthread-0.1.gem
+http://gems.rubyforge.org/gems/robustthread-0.2.gem
+http://gems.rubyforge.org/gems/robustthread-0.3.gem
+http://gems.rubyforge.org/gems/robustthread-0.4.1.gem
+http://gems.rubyforge.org/gems/robustthread-0.4.gem
 http://gems.rubyforge.org/gems/roby-0.7.1.gem
 http://gems.rubyforge.org/gems/roby-0.7.2.gem
 http://gems.rubyforge.org/gems/roby-0.7.3.gem
@@ -16810,6 +17197,7 @@ http://gems.rubyforge.org/gems/roo-1.2.0.gem
 http://gems.rubyforge.org/gems/roo-1.2.1.gem
 http://gems.rubyforge.org/gems/roo-1.2.2.gem
 http://gems.rubyforge.org/gems/roo-1.2.3.gem
+http://gems.rubyforge.org/gems/roo-1.3.5.gem
 http://gems.rubyforge.org/gems/roodi-0.5.gem
 http://gems.rubyforge.org/gems/roodi-1.0.0.gem
 http://gems.rubyforge.org/gems/roodi-1.1.0.gem
@@ -16945,6 +17333,7 @@ http://gems.rubyforge.org/gems/rr-0.1.6.gem
 http://gems.rubyforge.org/gems/rr-0.1.7.gem
 http://gems.rubyforge.org/gems/rr-0.1.8.gem
 http://gems.rubyforge.org/gems/rr-0.1.9.gem
+http://gems.rubyforge.org/gems/rr-0.10.0.gem
 http://gems.rubyforge.org/gems/rr-0.2.1.gem
 http://gems.rubyforge.org/gems/rr-0.2.2.gem
 http://gems.rubyforge.org/gems/rr-0.2.3.gem
@@ -17186,6 +17575,7 @@ http://gems.rubyforge.org/gems/rstyx-0.4.1.gem
 http://gems.rubyforge.org/gems/rstyx-0.4.2.gem
 http://gems.rubyforge.org/gems/rsyncmanager-1.1.gem
 http://gems.rubyforge.org/gems/rt-client-0.2.1.gem
+http://gems.rubyforge.org/gems/rt-client-0.2.2.gem
 http://gems.rubyforge.org/gems/rt-client-0.2.gem
 http://gems.rubyforge.org/gems/rtaglib-0.1.0.gem
 http://gems.rubyforge.org/gems/rtaglib-0.1.1.gem
@@ -17434,6 +17824,7 @@ http://gems.rubyforge.org/gems/ruby-aaws-0.4.4.gem
 http://gems.rubyforge.org/gems/ruby-aaws-0.5.0.gem
 http://gems.rubyforge.org/gems/ruby-aaws-0.5.1.gem
 http://gems.rubyforge.org/gems/ruby-aaws-0.6.0.gem
+http://gems.rubyforge.org/gems/ruby-aaws-0.7.0.gem
 http://gems.rubyforge.org/gems/ruby-activeldap-0.4.1.gem
 http://gems.rubyforge.org/gems/ruby-activeldap-0.4.2.gem
 http://gems.rubyforge.org/gems/ruby-activeldap-0.4.3.gem
@@ -17626,6 +18017,7 @@ http://gems.rubyforge.org/gems/ruby-debug-ide-0.4.3.gem
 http://gems.rubyforge.org/gems/ruby-debug-ide-0.4.4.gem
 http://gems.rubyforge.org/gems/ruby-debug-ide-0.4.5.gem
 http://gems.rubyforge.org/gems/ruby-debug-ide-0.4.6.gem
+http://gems.rubyforge.org/gems/ruby-dice-1.0.0.gem
 http://gems.rubyforge.org/gems/ruby-djbdns-0.0.1.gem
 http://gems.rubyforge.org/gems/ruby-djbdns-0.0.2.gem
 http://gems.rubyforge.org/gems/ruby-doom-0.8.gem
@@ -17692,6 +18084,7 @@ http://gems.rubyforge.org/gems/ruby-gpgme-1.0.2.gem
 http://gems.rubyforge.org/gems/ruby-gpgme-1.0.3.gem
 http://gems.rubyforge.org/gems/ruby-gpgme-1.0.4.gem
 http://gems.rubyforge.org/gems/ruby-gpgme-1.0.5.gem
+http://gems.rubyforge.org/gems/ruby-gpgme-1.0.6.gem
 http://gems.rubyforge.org/gems/ruby-graphviz-0.7.0.gem
 http://gems.rubyforge.org/gems/ruby-graphviz-0.8.0.gem
 http://gems.rubyforge.org/gems/ruby-graphviz-0.8.1.gem
@@ -17729,6 +18122,7 @@ http://gems.rubyforge.org/gems/ruby-ivy-0.1.0.gem
 http://gems.rubyforge.org/gems/ruby-iwlist-0.1.gem
 http://gems.rubyforge.org/gems/ruby-json-1.1.1.gem
 http://gems.rubyforge.org/gems/ruby-json-1.1.2.gem
+http://gems.rubyforge.org/gems/ruby-ldap-0.9.9.gem
 http://gems.rubyforge.org/gems/ruby-ldapserver-0.3.1.gem
 http://gems.rubyforge.org/gems/ruby-libgtop2-0.1.0.gem
 http://gems.rubyforge.org/gems/ruby-libgtop2-0.1.1.gem
@@ -17962,6 +18356,7 @@ http://gems.rubyforge.org/gems/ruby-plsql-0.2.2.gem
 http://gems.rubyforge.org/gems/ruby-plsql-0.2.3.gem
 http://gems.rubyforge.org/gems/ruby-plsql-0.2.4.gem
 http://gems.rubyforge.org/gems/ruby-plsql-0.3.0.gem
+http://gems.rubyforge.org/gems/ruby-plsql-0.3.1.gem
 http://gems.rubyforge.org/gems/ruby-poker-0.1.1.gem
 http://gems.rubyforge.org/gems/ruby-poker-0.1.2.gem
 http://gems.rubyforge.org/gems/ruby-poker-0.2.0.gem
@@ -18184,6 +18579,8 @@ http://gems.rubyforge.org/gems/ruby-yadis-0.3.gem
 http://gems.rubyforge.org/gems/ruby-yui-0.0.3.gem
 http://gems.rubyforge.org/gems/ruby-yui-0.0.4.gem
 http://gems.rubyforge.org/gems/ruby-yui-0.0.5.gem
+http://gems.rubyforge.org/gems/ruby-yui-0.0.6.gem
+http://gems.rubyforge.org/gems/ruby-yui-0.0.7.gem
 http://gems.rubyforge.org/gems/ruby2cext-0.2.0.gem
 http://gems.rubyforge.org/gems/ruby2jar-0.1.gem
 http://gems.rubyforge.org/gems/ruby2java-0.0.1.gem
@@ -18348,6 +18745,8 @@ http://gems.rubyforge.org/gems/rubyipq-0.1.0-i686-linux.gem
 http://gems.rubyforge.org/gems/rubyjs-0.7.0.gem
 http://gems.rubyforge.org/gems/rubyjs-0.7.1.gem
 http://gems.rubyforge.org/gems/rubyjs-0.8.0.gem
+http://gems.rubyforge.org/gems/rubyless-0.1.0.gem
+http://gems.rubyforge.org/gems/rubyless-0.2.0.gem
 http://gems.rubyforge.org/gems/rubylexer-0.6.2.gem
 http://gems.rubyforge.org/gems/rubylexer-0.7.0.gem
 http://gems.rubyforge.org/gems/rubylexer-0.7.1.gem
@@ -18409,6 +18808,7 @@ http://gems.rubyforge.org/gems/rubyrdf-0.0.1.gem
 http://gems.rubyforge.org/gems/rubyrdf-sesame-0.0.1.gem
 http://gems.rubyforge.org/gems/rubyrep-1.0.0.gem
 http://gems.rubyforge.org/gems/rubyrep-1.0.1.gem
+http://gems.rubyforge.org/gems/rubyrep-1.0.2.gem
 http://gems.rubyforge.org/gems/rubyrest-0.0.1.gem
 http://gems.rubyforge.org/gems/rubyrest-0.0.2.gem
 http://gems.rubyforge.org/gems/rubyrest-0.0.3.gem
@@ -18540,6 +18940,7 @@ http://gems.rubyforge.org/gems/rubytter-0.6.3.gem
 http://gems.rubyforge.org/gems/rubytter-0.6.4.gem
 http://gems.rubyforge.org/gems/rubytter-0.6.5.gem
 http://gems.rubyforge.org/gems/rubytter-0.7.0.gem
+http://gems.rubyforge.org/gems/rubytter-0.8.0.gem
 http://gems.rubyforge.org/gems/rubyw_helper-0.1.1.gem
 http://gems.rubyforge.org/gems/rubyw_helper-0.1.2.gem
 http://gems.rubyforge.org/gems/rubyw_helper-0.1.3.gem
@@ -18603,6 +19004,10 @@ http://gems.rubyforge.org/gems/rudy-0.7.4.gem
 http://gems.rubyforge.org/gems/rudy-0.7.6.gem
 http://gems.rubyforge.org/gems/rudy-0.8.0.gem
 http://gems.rubyforge.org/gems/rudy-0.8.1.gem
+http://gems.rubyforge.org/gems/rudy-0.8.2.gem
+http://gems.rubyforge.org/gems/rudy-0.8.3.gem
+http://gems.rubyforge.org/gems/rudy-0.8.4.gem
+http://gems.rubyforge.org/gems/rudy-0.8.5.gem
 http://gems.rubyforge.org/gems/rufus-decision-0.9.gem
 http://gems.rubyforge.org/gems/rufus-decision-1.0.gem
 http://gems.rubyforge.org/gems/rufus-decision-1.1.0.gem
@@ -18648,6 +19053,7 @@ http://gems.rubyforge.org/gems/rufus-tokyo-0.1.1.gem
 http://gems.rubyforge.org/gems/rufus-tokyo-0.1.10.gem
 http://gems.rubyforge.org/gems/rufus-tokyo-0.1.11.gem
 http://gems.rubyforge.org/gems/rufus-tokyo-0.1.12.gem
+http://gems.rubyforge.org/gems/rufus-tokyo-0.1.13.gem
 http://gems.rubyforge.org/gems/rufus-tokyo-0.1.2.gem
 http://gems.rubyforge.org/gems/rufus-tokyo-0.1.3.gem
 http://gems.rubyforge.org/gems/rufus-tokyo-0.1.4.gem
@@ -19159,6 +19565,7 @@ http://gems.rubyforge.org/gems/rwebunit-0.7.2.gem
 http://gems.rubyforge.org/gems/rwebunit-0.8.9.gem
 http://gems.rubyforge.org/gems/rwebunit-0.9.4.gem
 http://gems.rubyforge.org/gems/rwebunit-1.0.3.gem
+http://gems.rubyforge.org/gems/rwebunit-1.3.0.gem
 http://gems.rubyforge.org/gems/rwikibot-1.0.0.gem
 http://gems.rubyforge.org/gems/rwikibot-1.0.1.gem
 http://gems.rubyforge.org/gems/rwikibot-1.0.10.gem
@@ -19189,6 +19596,11 @@ http://gems.rubyforge.org/gems/rye-0.6.4.gem
 http://gems.rubyforge.org/gems/rye-0.6.5.gem
 http://gems.rubyforge.org/gems/rye-0.6.6.gem
 http://gems.rubyforge.org/gems/rye-0.7.0.gem
+http://gems.rubyforge.org/gems/rye-0.7.1.gem
+http://gems.rubyforge.org/gems/rye-0.7.2.gem
+http://gems.rubyforge.org/gems/rye-0.7.3.gem
+http://gems.rubyforge.org/gems/rye-0.7.4.gem
+http://gems.rubyforge.org/gems/rye-0.7.5.gem
 http://gems.rubyforge.org/gems/rzero-0.0.1.gem
 http://gems.rubyforge.org/gems/s2container-0.8.0.gem
 http://gems.rubyforge.org/gems/s2container-0.9.0.gem
@@ -19331,6 +19743,7 @@ http://gems.rubyforge.org/gems/scaffolding_extensions-1.3.4.gem
 http://gems.rubyforge.org/gems/scaffolding_extensions-1.3.5.gem
 http://gems.rubyforge.org/gems/scaffolding_extensions-1.3.6.gem
 http://gems.rubyforge.org/gems/scaffolding_extensions-1.3.7.gem
+http://gems.rubyforge.org/gems/scaffolding_extensions-1.3.8.gem
 http://gems.rubyforge.org/gems/scandb-0.0.9.gem
 http://gems.rubyforge.org/gems/scandb-0.1.0.gem
 http://gems.rubyforge.org/gems/scandb-0.1.1.gem
@@ -19392,6 +19805,9 @@ http://gems.rubyforge.org/gems/scout_agent-3.1.9.gem
 http://gems.rubyforge.org/gems/scout_agent-3.2.0.gem
 http://gems.rubyforge.org/gems/scout_agent-3.2.1.gem
 http://gems.rubyforge.org/gems/scout_agent-3.2.2.gem
+http://gems.rubyforge.org/gems/scout_agent-3.2.3.gem
+http://gems.rubyforge.org/gems/scout_agent-3.2.4.gem
+http://gems.rubyforge.org/gems/scout_agent-3.2.5.gem
 http://gems.rubyforge.org/gems/scrabbler-0.1.2.gem
 http://gems.rubyforge.org/gems/scrabbler-0.1.3.gem
 http://gems.rubyforge.org/gems/scrapes-0.2.0.gem
@@ -19399,7 +19815,10 @@ http://gems.rubyforge.org/gems/scrapi-1.1.2.gem
 http://gems.rubyforge.org/gems/scrapi-1.2.0.gem
 http://gems.rubyforge.org/gems/screw-unit-0.3.1.gem
 http://gems.rubyforge.org/gems/screw-unit-0.3.3.gem
+http://gems.rubyforge.org/gems/screw-unit-0.5.1.gem
+http://gems.rubyforge.org/gems/screw-unit-0.5.2.gem
 http://gems.rubyforge.org/gems/screw-unit-server-0.3.0.gem
+http://gems.rubyforge.org/gems/screw-unit-server-0.5.3.gem
 http://gems.rubyforge.org/gems/scriptaculous_slider-1.0.0.gem
 http://gems.rubyforge.org/gems/scriptlandia-0.2.0.gem
 http://gems.rubyforge.org/gems/scriptlandia-0.3.0.gem
@@ -19605,6 +20024,7 @@ http://gems.rubyforge.org/gems/sentry-0.2.8.gem
 http://gems.rubyforge.org/gems/sentry-0.2.9.gem
 http://gems.rubyforge.org/gems/sentry-0.3.1.gem
 http://gems.rubyforge.org/gems/sentry-0.3.gem
+http://gems.rubyforge.org/gems/seotoolbox-0.9.1.gem
 http://gems.rubyforge.org/gems/seotools-0.1.0.gem
 http://gems.rubyforge.org/gems/sequel-0.0.1.gem
 http://gems.rubyforge.org/gems/sequel-0.0.10.gem
@@ -19718,6 +20138,7 @@ http://gems.rubyforge.org/gems/sequel-2.7.1.gem
 http://gems.rubyforge.org/gems/sequel-2.8.0.gem
 http://gems.rubyforge.org/gems/sequel-2.9.0.gem
 http://gems.rubyforge.org/gems/sequel-3.0.0.gem
+http://gems.rubyforge.org/gems/sequel-3.1.0.gem
 http://gems.rubyforge.org/gems/sequel_core-1.0.0.1.gem
 http://gems.rubyforge.org/gems/sequel_core-1.0.1.gem
 http://gems.rubyforge.org/gems/sequel_core-1.0.10.gem
@@ -19803,6 +20224,7 @@ http://gems.rubyforge.org/gems/session_dump-0.0.2.gem
 http://gems.rubyforge.org/gems/set_or_append-0.0.1.gem
 http://gems.rubyforge.org/gems/set_or_append-0.0.2.gem
 http://gems.rubyforge.org/gems/set_or_append-0.0.3.gem
+http://gems.rubyforge.org/gems/settings-0.0.3.gem
 http://gems.rubyforge.org/gems/settingslogic-0.9.0.gem
 http://gems.rubyforge.org/gems/settingslogic-1.0.0.gem
 http://gems.rubyforge.org/gems/settingslogic-1.0.1.gem
@@ -19853,6 +20275,8 @@ http://gems.rubyforge.org/gems/shadow_puppet-0.1.8.gem
 http://gems.rubyforge.org/gems/shadow_puppet-0.1.9.gem
 http://gems.rubyforge.org/gems/shadow_puppet-0.3.0.gem
 http://gems.rubyforge.org/gems/shadow_puppet-0.3.1.gem
+http://gems.rubyforge.org/gems/sham_rack-1.1.1.gem
+http://gems.rubyforge.org/gems/sham_rack-1.1.2.gem
 http://gems.rubyforge.org/gems/shared-0.4.2.gem
 http://gems.rubyforge.org/gems/shared-0.4.3.gem
 http://gems.rubyforge.org/gems/shared-0.4.4.gem
@@ -19901,6 +20325,7 @@ http://gems.rubyforge.org/gems/shattered_view-0.3.1.gem
 http://gems.rubyforge.org/gems/shattered_view-0.3.2.gem
 http://gems.rubyforge.org/gems/shattered_view-0.3.gem
 http://gems.rubyforge.org/gems/shell-executer-1.0.0.gem
+http://gems.rubyforge.org/gems/shenandoah-0.0.0.gem
 http://gems.rubyforge.org/gems/shinmun-0.1.gem
 http://gems.rubyforge.org/gems/shinmun-0.2.gem
 http://gems.rubyforge.org/gems/shipit-0.0.0.gem
@@ -19946,6 +20371,7 @@ http://gems.rubyforge.org/gems/shooting_star-3.2.4.gem
 http://gems.rubyforge.org/gems/shooting_star-3.2.5.gem
 http://gems.rubyforge.org/gems/shooting_star-3.2.6.gem
 http://gems.rubyforge.org/gems/shooting_star-3.2.7.gem
+http://gems.rubyforge.org/gems/shopify_api-1.0.0.gem
 http://gems.rubyforge.org/gems/shorturl-0.0.1.gem
 http://gems.rubyforge.org/gems/shorturl-0.1.0.gem
 http://gems.rubyforge.org/gems/shorturl-0.2.0.gem
@@ -19960,6 +20386,7 @@ http://gems.rubyforge.org/gems/shorturl-0.8.1.gem
 http://gems.rubyforge.org/gems/shorturl-0.8.2.gem
 http://gems.rubyforge.org/gems/shorturl-0.8.3.gem
 http://gems.rubyforge.org/gems/shorturl-0.8.4.gem
+http://gems.rubyforge.org/gems/shortwave-0.0.1.gem
 http://gems.rubyforge.org/gems/shotgun-0.1.gem
 http://gems.rubyforge.org/gems/shotgun-0.2.gem
 http://gems.rubyforge.org/gems/shotgun-0.3.gem
@@ -20000,10 +20427,15 @@ http://gems.rubyforge.org/gems/simple_descriptor-0.2.3.gem
 http://gems.rubyforge.org/gems/simple_memoize-1.0.0.gem
 http://gems.rubyforge.org/gems/simple_record-1.0.0.gem
 http://gems.rubyforge.org/gems/simple_record-1.0.1.gem
+http://gems.rubyforge.org/gems/simple_record-1.0.10.gem
 http://gems.rubyforge.org/gems/simple_record-1.0.2.gem
 http://gems.rubyforge.org/gems/simple_record-1.0.3.gem
 http://gems.rubyforge.org/gems/simple_record-1.0.4.gem
 http://gems.rubyforge.org/gems/simple_record-1.0.5.gem
+http://gems.rubyforge.org/gems/simple_record-1.0.6.gem
+http://gems.rubyforge.org/gems/simple_record-1.0.7.gem
+http://gems.rubyforge.org/gems/simple_record-1.0.8.gem
+http://gems.rubyforge.org/gems/simple_record-1.0.9.gem
 http://gems.rubyforge.org/gems/simple_workflow-0.0.1.gem
 http://gems.rubyforge.org/gems/simple_workflow-0.0.2.gem
 http://gems.rubyforge.org/gems/simpleconfig-0.1.0.gem
@@ -20037,12 +20469,14 @@ http://gems.rubyforge.org/gems/simplemapper-0.0.2.gem
 http://gems.rubyforge.org/gems/simplemapper-0.0.4.gem
 http://gems.rubyforge.org/gems/simplemapper-0.0.5.gem
 http://gems.rubyforge.org/gems/simplemapper-0.0.6.gem
+http://gems.rubyforge.org/gems/simplemapper-0.1.2.gem
 http://gems.rubyforge.org/gems/simplepass-1.0.0.gem
 http://gems.rubyforge.org/gems/simplepass-1.0.1.gem
 http://gems.rubyforge.org/gems/simplepay-0.1.0.gem
 http://gems.rubyforge.org/gems/simplepay-0.1.1.gem
 http://gems.rubyforge.org/gems/simplepay-0.2.0.gem
 http://gems.rubyforge.org/gems/simplepay-0.2.1.gem
+http://gems.rubyforge.org/gems/simplepay-0.2.2.gem
 http://gems.rubyforge.org/gems/simplerdb-0.1.gem
 http://gems.rubyforge.org/gems/simplerdb-0.2.gem
 http://gems.rubyforge.org/gems/simplest_auth-0.1.1.gem
@@ -20094,6 +20528,7 @@ http://gems.rubyforge.org/gems/sinatra-gen-0.3.0.gem
 http://gems.rubyforge.org/gems/sinatra-haml-0.1.0.gem
 http://gems.rubyforge.org/gems/sinatra-haml-0.1.1.gem
 http://gems.rubyforge.org/gems/sinatra-r18n-0.2.1.gem
+http://gems.rubyforge.org/gems/sinatra-sammy-0.0.1.gem
 http://gems.rubyforge.org/gems/sinatras-hat-0.0.2.gem
 http://gems.rubyforge.org/gems/sinatras-hat-0.0.3.gem
 http://gems.rubyforge.org/gems/sinatras-hat-0.1.1.gem
@@ -20219,6 +20654,8 @@ http://gems.rubyforge.org/gems/smartcard-0.2.3-mswin32.gem
 http://gems.rubyforge.org/gems/smartcard-0.2.3.gem
 http://gems.rubyforge.org/gems/smartcard-0.3.1-x86-mswin32-60.gem
 http://gems.rubyforge.org/gems/smartcard-0.3.1.gem
+http://gems.rubyforge.org/gems/smartcard-0.3.2-x86-mswin32-60.gem
+http://gems.rubyforge.org/gems/smartcard-0.3.2.gem
 http://gems.rubyforge.org/gems/smartfm-0.3.0.gem
 http://gems.rubyforge.org/gems/smartfm-0.3.1.gem
 http://gems.rubyforge.org/gems/smartfm-0.4.0.gem
@@ -20228,6 +20665,7 @@ http://gems.rubyforge.org/gems/smartfm-1.0.2.gem
 http://gems.rubyforge.org/gems/sme-configdb-0.1.gem
 http://gems.rubyforge.org/gems/smf-0.15.12.gem
 http://gems.rubyforge.org/gems/smile-0.1.1.gem
+http://gems.rubyforge.org/gems/smile-0.1.3.gem
 http://gems.rubyforge.org/gems/smoke-0.0.1.gem
 http://gems.rubyforge.org/gems/smoke-0.0.3.gem
 http://gems.rubyforge.org/gems/smoke-0.0.4.gem
@@ -20296,6 +20734,7 @@ http://gems.rubyforge.org/gems/soap4r-1.5.7.gem
 http://gems.rubyforge.org/gems/soap4r-1.5.8.gem
 http://gems.rubyforge.org/gems/soapex-0.1.gem
 http://gems.rubyforge.org/gems/social_graph-0.0.1.gem
+http://gems.rubyforge.org/gems/socialmod-0.1.0.gem
 http://gems.rubyforge.org/gems/socket_accept_filter-1.0.0.gem
 http://gems.rubyforge.org/gems/socket_sendfile-1.1.0.gem
 http://gems.rubyforge.org/gems/socksify-1.0.1.gem
@@ -20390,6 +20829,10 @@ http://gems.rubyforge.org/gems/sparsehash-0.1.1-x86-mswin32.gem
 http://gems.rubyforge.org/gems/sparsehash-0.1.1.gem
 http://gems.rubyforge.org/gems/sparsehash1.9-0.1.0-x86-mswin32.gem
 http://gems.rubyforge.org/gems/sparsehash1.9-0.1.1-x86-mswin32.gem
+http://gems.rubyforge.org/gems/spawn-0.0.8.gem
+http://gems.rubyforge.org/gems/spawn-0.0.9.gem
+http://gems.rubyforge.org/gems/spawn-0.1.0.gem
+http://gems.rubyforge.org/gems/spawn-0.1.1.gem
 http://gems.rubyforge.org/gems/spawner-1.0.0.gem
 http://gems.rubyforge.org/gems/spawner-1.0.1.gem
 http://gems.rubyforge.org/gems/spawner-1.0.2.gem
@@ -20449,6 +20892,7 @@ http://gems.rubyforge.org/gems/spidr-0.1.5.gem
 http://gems.rubyforge.org/gems/spidr-0.1.6.gem
 http://gems.rubyforge.org/gems/spidr-0.1.7.gem
 http://gems.rubyforge.org/gems/spidr-0.1.8.gem
+http://gems.rubyforge.org/gems/spidr-0.1.9.gem
 http://gems.rubyforge.org/gems/spockets-0.0.2.gem
 http://gems.rubyforge.org/gems/spockets-0.0.3.gem
 http://gems.rubyforge.org/gems/spockets-0.0.4.gem
@@ -20456,6 +20900,13 @@ http://gems.rubyforge.org/gems/spockets-0.0.5.gem
 http://gems.rubyforge.org/gems/spork-0.4.0.gem
 http://gems.rubyforge.org/gems/spork-0.4.1.gem
 http://gems.rubyforge.org/gems/spork-0.4.2.gem
+http://gems.rubyforge.org/gems/spork-0.4.4.gem
+http://gems.rubyforge.org/gems/spork-0.5.1.gem
+http://gems.rubyforge.org/gems/spork-0.5.2.gem
+http://gems.rubyforge.org/gems/spork-0.5.3.gem
+http://gems.rubyforge.org/gems/spork-0.5.4.gem
+http://gems.rubyforge.org/gems/spork-0.5.5.gem
+http://gems.rubyforge.org/gems/spork-0.5.6.gem
 http://gems.rubyforge.org/gems/spreadsheet-0.6.0.gem
 http://gems.rubyforge.org/gems/spreadsheet-0.6.1.1.gem
 http://gems.rubyforge.org/gems/spreadsheet-0.6.1.2.gem
@@ -20497,6 +20948,7 @@ http://gems.rubyforge.org/gems/spreedly-1.1.0.gem
 http://gems.rubyforge.org/gems/spreedly-1.2.0.gem
 http://gems.rubyforge.org/gems/spreedly-1.2.1.gem
 http://gems.rubyforge.org/gems/spreedly-1.2.2.gem
+http://gems.rubyforge.org/gems/spreedly-1.3.0.gem
 http://gems.rubyforge.org/gems/springnote_client-0.0.2.gem
 http://gems.rubyforge.org/gems/springnote_client-0.0.3.gem
 http://gems.rubyforge.org/gems/springnote_client-0.0.4.gem
@@ -20886,6 +21338,7 @@ http://gems.rubyforge.org/gems/sru-0.0.5.gem
 http://gems.rubyforge.org/gems/srvany_manager-0.1.0.gem
 http://gems.rubyforge.org/gems/srvany_manager-0.1.1.gem
 http://gems.rubyforge.org/gems/srvany_manager-0.1.3.gem
+http://gems.rubyforge.org/gems/ssc-0.1.gem
 http://gems.rubyforge.org/gems/sshexpect-0.0.2.gem
 http://gems.rubyforge.org/gems/sshotgun-1.0.4.gem
 http://gems.rubyforge.org/gems/sshotgun-1.0.5.gem
@@ -20949,6 +21402,9 @@ http://gems.rubyforge.org/gems/state_machine-0.7.2.gem
 http://gems.rubyforge.org/gems/state_machine-0.7.3.gem
 http://gems.rubyforge.org/gems/state_machine-0.7.4.gem
 http://gems.rubyforge.org/gems/state_machine-0.7.5.gem
+http://gems.rubyforge.org/gems/state_pattern-1.0.1.gem
+http://gems.rubyforge.org/gems/state_pattern-1.0.2.gem
+http://gems.rubyforge.org/gems/state_pattern-1.1.0.gem
 http://gems.rubyforge.org/gems/statefulobject-0.0.1.gem
 http://gems.rubyforge.org/gems/statemachine-0.0.0.gem
 http://gems.rubyforge.org/gems/statemachine-0.0.1.gem
@@ -20964,6 +21420,8 @@ http://gems.rubyforge.org/gems/stateology-0.1.2.gem
 http://gems.rubyforge.org/gems/stateology-0.1.3.gem
 http://gems.rubyforge.org/gems/stateology-0.1.6.gem
 http://gems.rubyforge.org/gems/stateology-0.1.8.gem
+http://gems.rubyforge.org/gems/stateology-0.2.0.gem
+http://gems.rubyforge.org/gems/stateology-0.2.1.gem
 http://gems.rubyforge.org/gems/statgrab-0.1.gem
 http://gems.rubyforge.org/gems/static-0.0.1.gem
 http://gems.rubyforge.org/gems/static-0.1.0.gem
@@ -21061,6 +21519,9 @@ http://gems.rubyforge.org/gems/storable-0.5.2.gem
 http://gems.rubyforge.org/gems/storable-0.5.3.gem
 http://gems.rubyforge.org/gems/storable-0.5.gem
 http://gems.rubyforge.org/gems/stories-0.0.5.gem
+http://gems.rubyforge.org/gems/stories-0.0.7.gem
+http://gems.rubyforge.org/gems/stories-0.0.8.gem
+http://gems.rubyforge.org/gems/stories-0.0.9.gem
 http://gems.rubyforge.org/gems/story-helper-0.1.0.gem
 http://gems.rubyforge.org/gems/story-helper-0.2.0.gem
 http://gems.rubyforge.org/gems/stream-0.5.gem
@@ -21156,6 +21617,7 @@ http://gems.rubyforge.org/gems/sup-0.4.gem
 http://gems.rubyforge.org/gems/sup-0.5.gem
 http://gems.rubyforge.org/gems/sup-0.6.gem
 http://gems.rubyforge.org/gems/sup-0.7.gem
+http://gems.rubyforge.org/gems/sup-0.8.gem
 http://gems.rubyforge.org/gems/superators-0.9.0.gem
 http://gems.rubyforge.org/gems/superators-0.9.1.gem
 http://gems.rubyforge.org/gems/support-0.1.gem
@@ -21433,6 +21895,7 @@ http://gems.rubyforge.org/gems/sys-uptime-0.5.3.gem
 http://gems.rubyforge.org/gems/sysinfo-0.5.0.gem
 http://gems.rubyforge.org/gems/sysinfo-0.5.1.gem
 http://gems.rubyforge.org/gems/sysinfo-0.5.gem
+http://gems.rubyforge.org/gems/sysinfo-0.6.0.gem
 http://gems.rubyforge.org/gems/system_timer-1.0.gem
 http://gems.rubyforge.org/gems/systemu-1.0.0.gem
 http://gems.rubyforge.org/gems/systemu-1.1.0.gem
@@ -21461,6 +21924,7 @@ http://gems.rubyforge.org/gems/tacacs_plus-0.0.3.gem
 http://gems.rubyforge.org/gems/tacacs_plus-1.0.0.gem
 http://gems.rubyforge.org/gems/tadpole-0.1.0.gem
 http://gems.rubyforge.org/gems/tagalus-0.5.0.gem
+http://gems.rubyforge.org/gems/tagcrumbs-0.3.1.gem
 http://gems.rubyforge.org/gems/taglob-0.0.1.gem
 http://gems.rubyforge.org/gems/taglob-1.0.0.gem
 http://gems.rubyforge.org/gems/taglob-1.0.2.gem
@@ -21505,12 +21969,15 @@ http://gems.rubyforge.org/gems/tap-0.12.2.gem
 http://gems.rubyforge.org/gems/tap-0.12.3.gem
 http://gems.rubyforge.org/gems/tap-0.12.4.gem
 http://gems.rubyforge.org/gems/tap-0.17.0.gem
+http://gems.rubyforge.org/gems/tap-0.17.1.gem
 http://gems.rubyforge.org/gems/tap-0.7.9.gem
 http://gems.rubyforge.org/gems/tap-0.8.0.gem
 http://gems.rubyforge.org/gems/tap-0.9.0.gem
 http://gems.rubyforge.org/gems/tap-0.9.1.gem
 http://gems.rubyforge.org/gems/tap-gen-0.1.0.gem
 http://gems.rubyforge.org/gems/tap-gen-0.1.1.gem
+http://gems.rubyforge.org/gems/tap-gen-0.1.2.gem
+http://gems.rubyforge.org/gems/tap-gen-0.1.3.gem
 http://gems.rubyforge.org/gems/tap-http-0.0.1.gem
 http://gems.rubyforge.org/gems/tap-http-0.1.0.gem
 http://gems.rubyforge.org/gems/tap-http-0.2.0.gem
@@ -21625,6 +22092,13 @@ http://gems.rubyforge.org/gems/teius-0.5-mswin32.gem
 http://gems.rubyforge.org/gems/teius-0.5.gem
 http://gems.rubyforge.org/gems/tellme-1.0.0.gem
 http://gems.rubyforge.org/gems/tem_drm-0.0.1.gem
+http://gems.rubyforge.org/gems/tem_mr_search-0.1.gem
+http://gems.rubyforge.org/gems/tem_mr_search-0.2.1.gem
+http://gems.rubyforge.org/gems/tem_mr_search-0.2.gem
+http://gems.rubyforge.org/gems/tem_multi_proxy-0.1.gem
+http://gems.rubyforge.org/gems/tem_multi_proxy-0.2.1.gem
+http://gems.rubyforge.org/gems/tem_multi_proxy-0.2.2.gem
+http://gems.rubyforge.org/gems/tem_multi_proxy-0.2.gem
 http://gems.rubyforge.org/gems/tem_openssl-0.3.2.gem
 http://gems.rubyforge.org/gems/tem_openssl-0.3.3.gem
 http://gems.rubyforge.org/gems/tem_openssl-0.3.4.gem
@@ -21633,6 +22107,11 @@ http://gems.rubyforge.org/gems/tem_openssl-0.3.6.gem
 http://gems.rubyforge.org/gems/tem_ruby-0.10.0.gem
 http://gems.rubyforge.org/gems/tem_ruby-0.10.1.gem
 http://gems.rubyforge.org/gems/tem_ruby-0.10.2.gem
+http://gems.rubyforge.org/gems/tem_ruby-0.10.3.gem
+http://gems.rubyforge.org/gems/tem_ruby-0.11.1.gem
+http://gems.rubyforge.org/gems/tem_ruby-0.11.2.gem
+http://gems.rubyforge.org/gems/tem_ruby-0.11.3.gem
+http://gems.rubyforge.org/gems/tem_ruby-0.11.gem
 http://gems.rubyforge.org/gems/tem_ruby-0.9.0.gem
 http://gems.rubyforge.org/gems/tem_ruby-0.9.2.gem
 http://gems.rubyforge.org/gems/tempdir-0.0.1.gem
@@ -21785,6 +22264,8 @@ http://gems.rubyforge.org/gems/textmagic-0.2.1.gem
 http://gems.rubyforge.org/gems/textmagic-0.2.2.gem
 http://gems.rubyforge.org/gems/textmagic-0.3.0.gem
 http://gems.rubyforge.org/gems/textmagic-0.3.1.gem
+http://gems.rubyforge.org/gems/textmagic-0.3.2.gem
+http://gems.rubyforge.org/gems/textmagic-0.3.3.gem
 http://gems.rubyforge.org/gems/textmate-0.9.0.gem
 http://gems.rubyforge.org/gems/textmate-0.9.2.gem
 http://gems.rubyforge.org/gems/textpow-0.10.0.gem
@@ -21794,6 +22275,7 @@ http://gems.rubyforge.org/gems/textpow-0.9.1.gem
 http://gems.rubyforge.org/gems/textweaver-0.6.0.gem
 http://gems.rubyforge.org/gems/textweaver-0.6.1.gem
 http://gems.rubyforge.org/gems/textweaver-0.6.2.gem
+http://gems.rubyforge.org/gems/textweaver-0.6.4.gem
 http://gems.rubyforge.org/gems/textwrap-0.1.0.gem
 http://gems.rubyforge.org/gems/textwrap-0.1.1.gem
 http://gems.rubyforge.org/gems/textwrap-0.1.2.gem
@@ -21851,8 +22333,10 @@ http://gems.rubyforge.org/gems/thin-1.2.1.gem
 http://gems.rubyforge.org/gems/thin-1.2.2.gem
 http://gems.rubyforge.org/gems/thin_http-0.1.0.gem
 http://gems.rubyforge.org/gems/thin_http-0.1.1.gem
+http://gems.rubyforge.org/gems/things-0.1.0-x86-darwin-9.gem
 http://gems.rubyforge.org/gems/third_base-1.0.0.gem
 http://gems.rubyforge.org/gems/third_base-1.0.1.gem
+http://gems.rubyforge.org/gems/third_base-1.1.0.gem
 http://gems.rubyforge.org/gems/thistle-0.0.1.3.gem
 http://gems.rubyforge.org/gems/thomas-0.1.0.gem
 http://gems.rubyforge.org/gems/thomas-0.1.1.gem
@@ -21906,6 +22390,9 @@ http://gems.rubyforge.org/gems/thread-dump-0.0.3.gem
 http://gems.rubyforge.org/gems/thread-dump-0.0.5.gem
 http://gems.rubyforge.org/gems/threadify-0.0.2.gem
 http://gems.rubyforge.org/gems/threadify-0.0.3.gem
+http://gems.rubyforge.org/gems/threadify-1.0.0.gem
+http://gems.rubyforge.org/gems/threadify-1.1.0.gem
+http://gems.rubyforge.org/gems/threadify-1.2.0.gem
 http://gems.rubyforge.org/gems/threadlimiter-0.1.0.gem
 http://gems.rubyforge.org/gems/threadlimiter-0.1.1.gem
 http://gems.rubyforge.org/gems/threadlimiter-0.1.2.gem
@@ -21941,12 +22428,14 @@ http://gems.rubyforge.org/gems/tidy_ffi-0.0.2.gem
 http://gems.rubyforge.org/gems/tidy_ffi-0.0.3.gem
 http://gems.rubyforge.org/gems/tidy_ffi-0.0.4.gem
 http://gems.rubyforge.org/gems/tidy_ffi-0.1.0.gem
+http://gems.rubyforge.org/gems/tidy_ffi-0.1.1.gem
 http://gems.rubyforge.org/gems/tidy_table-0.0.1.gem
 http://gems.rubyforge.org/gems/tidy_table-0.0.2.gem
 http://gems.rubyforge.org/gems/tidy_table-0.0.3.gem
 http://gems.rubyforge.org/gems/tidy_table-0.0.4.gem
 http://gems.rubyforge.org/gems/tidy_table-0.0.5.gem
 http://gems.rubyforge.org/gems/tie-0.1.gem
+http://gems.rubyforge.org/gems/tilt-0.2.gem
 http://gems.rubyforge.org/gems/time-tracker-1.0.0.gem
 http://gems.rubyforge.org/gems/time-tracker-1.0.1.gem
 http://gems.rubyforge.org/gems/timecode-0.1.0.gem
@@ -22014,6 +22503,7 @@ http://gems.rubyforge.org/gems/titlepage-0.9.5.gem
 http://gems.rubyforge.org/gems/titlepage-0.9.6.gem
 http://gems.rubyforge.org/gems/titlepage-1.0.0.gem
 http://gems.rubyforge.org/gems/titlepage-1.1.0.gem
+http://gems.rubyforge.org/gems/titlepage-1.1.1.gem
 http://gems.rubyforge.org/gems/tkregreplace-0.1.0.gem
 http://gems.rubyforge.org/gems/tkregreplace-0.1.1.gem
 http://gems.rubyforge.org/gems/tkri-0.9.0.gem
@@ -22111,9 +22601,20 @@ http://gems.rubyforge.org/gems/treetop-1.2.2.gem
 http://gems.rubyforge.org/gems/treetop-1.2.3.gem
 http://gems.rubyforge.org/gems/treetop-1.2.4.gem
 http://gems.rubyforge.org/gems/treetop-1.2.5.gem
+http://gems.rubyforge.org/gems/treetop-1.2.6.gem
+http://gems.rubyforge.org/gems/treevisitor-0.0.10.gem
+http://gems.rubyforge.org/gems/treevisitor-0.0.11.gem
+http://gems.rubyforge.org/gems/treevisitor-0.0.13.gem
+http://gems.rubyforge.org/gems/treevisitor-0.0.14.gem
+http://gems.rubyforge.org/gems/treevisitor-0.0.15.gem
+http://gems.rubyforge.org/gems/treevisitor-0.0.16.gem
+http://gems.rubyforge.org/gems/treevisitor-0.0.17.gem
+http://gems.rubyforge.org/gems/treevisitor-0.0.18.gem
+http://gems.rubyforge.org/gems/treevisitor-0.0.19.gem
 http://gems.rubyforge.org/gems/treevisitor-0.0.6.gem
 http://gems.rubyforge.org/gems/treevisitor-0.0.7.gem
 http://gems.rubyforge.org/gems/treevisitor-0.0.8.gem
+http://gems.rubyforge.org/gems/treevisitor-0.0.9.gem
 http://gems.rubyforge.org/gems/trestle_generator-1.0.0.gem
 http://gems.rubyforge.org/gems/trestle_generator-1.0.1.gem
 http://gems.rubyforge.org/gems/trestle_generator-1.0.2.gem
@@ -22158,6 +22659,10 @@ http://gems.rubyforge.org/gems/trustcommerce-0.5.2.gem
 http://gems.rubyforge.org/gems/trustcommerce-0.5.3.gem
 http://gems.rubyforge.org/gems/truthy-1.0.0.gem
 http://gems.rubyforge.org/gems/trydefault-0.1.0.gem
+http://gems.rubyforge.org/gems/tryouts-0.4.0.gem
+http://gems.rubyforge.org/gems/tryouts-0.4.1.gem
+http://gems.rubyforge.org/gems/tryouts-0.5.0.gem
+http://gems.rubyforge.org/gems/tryouts-0.5.1.gem
 http://gems.rubyforge.org/gems/tserver-0.2.0.gem
 http://gems.rubyforge.org/gems/tsm-0.9.gem
 http://gems.rubyforge.org/gems/tsm-command-1.2.gem
@@ -22211,6 +22716,7 @@ http://gems.rubyforge.org/gems/turn-0.2.0.gem
 http://gems.rubyforge.org/gems/turn-0.3.0.gem
 http://gems.rubyforge.org/gems/turn-0.4.0.gem
 http://gems.rubyforge.org/gems/turn-0.5.1.gem
+http://gems.rubyforge.org/gems/turn-0.6.0.gem
 http://gems.rubyforge.org/gems/tuxdroid-0.1.0.gem
 http://gems.rubyforge.org/gems/tv-dot-com-0.3.gem
 http://gems.rubyforge.org/gems/tweet-0.6.gem
@@ -22225,6 +22731,7 @@ http://gems.rubyforge.org/gems/twibot-0.1.3.gem
 http://gems.rubyforge.org/gems/twibot-0.1.4.gem
 http://gems.rubyforge.org/gems/twibot-0.1.5.gem
 http://gems.rubyforge.org/gems/twibot-0.1.6.gem
+http://gems.rubyforge.org/gems/twibot-0.1.7.gem
 http://gems.rubyforge.org/gems/twist-0.gem
 http://gems.rubyforge.org/gems/twitter-0.0.1.gem
 http://gems.rubyforge.org/gems/twitter-0.0.2.gem
@@ -22495,9 +23002,15 @@ http://gems.rubyforge.org/gems/unroller-0.1.3.gem
 http://gems.rubyforge.org/gems/upc-1.0.0.gem
 http://gems.rubyforge.org/gems/upcoming-api-0.1.gem
 http://gems.rubyforge.org/gems/upcoming-api-0.2.gem
+http://gems.rubyforge.org/gems/uploader-0.1.10.gem
+http://gems.rubyforge.org/gems/uploader-0.1.12.gem
+http://gems.rubyforge.org/gems/uploader-0.1.13.gem
+http://gems.rubyforge.org/gems/uploader-0.1.14.gem
+http://gems.rubyforge.org/gems/uploader-0.1.15.gem
 http://gems.rubyforge.org/gems/uploader-0.1.3.gem
 http://gems.rubyforge.org/gems/uploader-0.1.7.gem
 http://gems.rubyforge.org/gems/uploader-0.1.8.gem
+http://gems.rubyforge.org/gems/uploader-0.1.9.gem
 http://gems.rubyforge.org/gems/uri-templates-0.1.0.gem
 http://gems.rubyforge.org/gems/uri-templates-0.1.1.gem
 http://gems.rubyforge.org/gems/uri-templates-0.2.0.gem
@@ -22566,6 +23079,7 @@ http://gems.rubyforge.org/gems/uuid-1.0.3.gem
 http://gems.rubyforge.org/gems/uuid-1.0.4.gem
 http://gems.rubyforge.org/gems/uuid-2.0.0.gem
 http://gems.rubyforge.org/gems/uuid-2.0.1.gem
+http://gems.rubyforge.org/gems/uuid-2.0.2.gem
 http://gems.rubyforge.org/gems/uuid4r-0.1.gem
 http://gems.rubyforge.org/gems/uuidtools-0.1.0.gem
 http://gems.rubyforge.org/gems/uuidtools-0.1.1.gem
@@ -22580,6 +23094,7 @@ http://gems.rubyforge.org/gems/uuidtools-1.0.4.gem
 http://gems.rubyforge.org/gems/uuidtools-1.0.5.gem
 http://gems.rubyforge.org/gems/uuidtools-1.0.6.gem
 http://gems.rubyforge.org/gems/uuidtools-1.0.7.gem
+http://gems.rubyforge.org/gems/uuidtools-2.0.0.gem
 http://gems.rubyforge.org/gems/uwa-0.1.gem
 http://gems.rubyforge.org/gems/uwa-0.2.gem
 http://gems.rubyforge.org/gems/uwa-0.3.gem
@@ -22665,7 +23180,10 @@ http://gems.rubyforge.org/gems/versionomy-0.0.3.gem
 http://gems.rubyforge.org/gems/versionomy-0.0.4.gem
 http://gems.rubyforge.org/gems/vi_api_lib-0.1.0.gem
 http://gems.rubyforge.org/gems/vi_api_lib-0.1.1.gem
+http://gems.rubyforge.org/gems/vi_api_lib-0.1.2.gem
 http://gems.rubyforge.org/gems/vi_cli-0.1.0.gem
+http://gems.rubyforge.org/gems/vi_cli-0.1.1.gem
+http://gems.rubyforge.org/gems/vi_cli-0.1.2.gem
 http://gems.rubyforge.org/gems/viddler-0.1.0.gem
 http://gems.rubyforge.org/gems/viddler-0.2.0.gem
 http://gems.rubyforge.org/gems/viddler-0.2.1.gem
@@ -22698,6 +23216,7 @@ http://gems.rubyforge.org/gems/virtuozzo-0.6.0.gem
 http://gems.rubyforge.org/gems/virtuozzo-0.6.1.gem
 http://gems.rubyforge.org/gems/virtuozzo-0.7.0.gem
 http://gems.rubyforge.org/gems/visilibity-0.0.1.gem
+http://gems.rubyforge.org/gems/vizir-0.2.2.gem
 http://gems.rubyforge.org/gems/vlaah-0.9.0.gem
 http://gems.rubyforge.org/gems/vlad-1.0.0.gem
 http://gems.rubyforge.org/gems/vlad-1.1.0.gem
@@ -22824,6 +23343,11 @@ http://gems.rubyforge.org/gems/wddx-0.3.2.gem
 http://gems.rubyforge.org/gems/wddx-0.3.3.gem
 http://gems.rubyforge.org/gems/wddx-0.4.0.gem
 http://gems.rubyforge.org/gems/wddx-0.4.1.gem
+http://gems.rubyforge.org/gems/weary-0.1.0.gem
+http://gems.rubyforge.org/gems/weary-0.1.2.gem
+http://gems.rubyforge.org/gems/weary-0.2.0.gem
+http://gems.rubyforge.org/gems/weary-0.2.1.gem
+http://gems.rubyforge.org/gems/weary-0.2.3.gem
 http://gems.rubyforge.org/gems/weather_report-0.0.1.gem
 http://gems.rubyforge.org/gems/weatherfinder-0.1.gem
 http://gems.rubyforge.org/gems/weatherfinder-0.2.gem
@@ -22993,6 +23517,8 @@ http://gems.rubyforge.org/gems/will_paginate-2.2.2.gem
 http://gems.rubyforge.org/gems/wilson-1.0.0.gem
 http://gems.rubyforge.org/gems/wilson-1.0.1.gem
 http://gems.rubyforge.org/gems/wilson-1.1.0.gem
+http://gems.rubyforge.org/gems/win-user32-ruby-0.1.0.gem
+http://gems.rubyforge.org/gems/win-user32-ruby-0.1.1.gem
 http://gems.rubyforge.org/gems/win32-api-1.0.0-mswin32.gem
 http://gems.rubyforge.org/gems/win32-api-1.0.0.gem
 http://gems.rubyforge.org/gems/win32-api-1.0.1-mswin32.gem
@@ -23022,6 +23548,8 @@ http://gems.rubyforge.org/gems/win32-api-1.4.0-x86-mswin32-80.gem
 http://gems.rubyforge.org/gems/win32-api-1.4.0.gem
 http://gems.rubyforge.org/gems/win32-api-1.4.1-x86-mswin32-60.gem
 http://gems.rubyforge.org/gems/win32-api-1.4.1.gem
+http://gems.rubyforge.org/gems/win32-api-1.4.2-x86-mswin32-60.gem
+http://gems.rubyforge.org/gems/win32-api-1.4.2.gem
 http://gems.rubyforge.org/gems/win32-captureie-0.1.0.gem
 http://gems.rubyforge.org/gems/win32-captureie-0.2.0.gem
 http://gems.rubyforge.org/gems/win32-changejournal-0.3.2.gem
@@ -23141,6 +23669,9 @@ http://gems.rubyforge.org/gems/win32rc-0.1.0.gem
 http://gems.rubyforge.org/gems/win32screenshot-0.0.1.gem
 http://gems.rubyforge.org/gems/win32screenshot-0.0.2.gem
 http://gems.rubyforge.org/gems/win32screenshot-0.0.3.gem
+http://gems.rubyforge.org/gems/win_user32_ruby-0.1.0.gem
+http://gems.rubyforge.org/gems/windmill-0.9.0.gem
+http://gems.rubyforge.org/gems/windmill-0.9.1.gem
 http://gems.rubyforge.org/gems/windows-api-0.1.0.gem
 http://gems.rubyforge.org/gems/windows-api-0.1.1.gem
 http://gems.rubyforge.org/gems/windows-api-0.2.0.gem
@@ -23202,13 +23733,18 @@ http://gems.rubyforge.org/gems/wiretap-0.11.gem
 http://gems.rubyforge.org/gems/wmainfo-rb-0.3.gem
 http://gems.rubyforge.org/gems/wmainfo-rb-0.4.gem
 http://gems.rubyforge.org/gems/wmainfo-rb-0.5.gem
+http://gems.rubyforge.org/gems/wmainfo-rb-0.6.gem
 http://gems.rubyforge.org/gems/wolfe-0.1.0-jruby.gem
 http://gems.rubyforge.org/gems/wolfe-0.1.1-jruby.gem
 http://gems.rubyforge.org/gems/wolfe-0.1.2-jruby.gem
 http://gems.rubyforge.org/gems/wopen3-0.1.gem
 http://gems.rubyforge.org/gems/wordcount-1.0.0.gem
 http://gems.rubyforge.org/gems/wordnet-0.0.5.gem
+http://gems.rubyforge.org/gems/wordpress-0.1.4.gem
+http://gems.rubyforge.org/gems/wordpress-0.1.5.gem
+http://gems.rubyforge.org/gems/wordpress-0.1.7.gem
 http://gems.rubyforge.org/gems/worked-0.1.0.gem
+http://gems.rubyforge.org/gems/worked-0.2.0.gem
 http://gems.rubyforge.org/gems/workflow-0.1.0.gem
 http://gems.rubyforge.org/gems/workflow-0.1.1.gem
 http://gems.rubyforge.org/gems/workflow-0.1.gem
@@ -23247,6 +23783,8 @@ http://gems.rubyforge.org/gems/wss4r-0.5.gem
 http://gems.rubyforge.org/gems/wsse-0.0.1.gem
 http://gems.rubyforge.org/gems/wsse-0.0.2.gem
 http://gems.rubyforge.org/gems/wufoo-0.2.0.gem
+http://gems.rubyforge.org/gems/wurfl-1.0.2.gem
+http://gems.rubyforge.org/gems/wurfl-1.1.0.gem
 http://gems.rubyforge.org/gems/www-delicious-0.1.0.gem
 http://gems.rubyforge.org/gems/www-delicious-0.2.0.gem
 http://gems.rubyforge.org/gems/www-delicious-0.3.0.gem
@@ -23367,6 +23905,8 @@ http://gems.rubyforge.org/gems/xampl-generator-0.1.0.gem
 http://gems.rubyforge.org/gems/xamplr-1.2.0.gem
 http://gems.rubyforge.org/gems/xamplr-pp-1.0.0.gem
 http://gems.rubyforge.org/gems/xapit-0.1.0.gem
+http://gems.rubyforge.org/gems/xapit-0.2.0.gem
+http://gems.rubyforge.org/gems/xapit-0.2.1.gem
 http://gems.rubyforge.org/gems/xargs-0.0.1.gem
 http://gems.rubyforge.org/gems/xattr-0.1.gem
 http://gems.rubyforge.org/gems/xbm_ruby-1.0.0.gem
@@ -23558,6 +24098,8 @@ http://gems.rubyforge.org/gems/yahoo-weather-1.0.0.gem
 http://gems.rubyforge.org/gems/yahoo_jp_transit-0.1.0.gem
 http://gems.rubyforge.org/gems/yahoo_jp_transit-0.1.1.gem
 http://gems.rubyforge.org/gems/yahoo_jp_transit-0.1.2.gem
+http://gems.rubyforge.org/gems/yahoo_site_explorer-0.0.1.gem
+http://gems.rubyforge.org/gems/yahoo_site_explorer-0.0.2.gem
 http://gems.rubyforge.org/gems/yahoo_term_extraction-0.2.3.gem
 http://gems.rubyforge.org/gems/yahoofinance-1.2.0.gem
 http://gems.rubyforge.org/gems/yahoofinance-1.2.1.gem
@@ -23603,6 +24145,7 @@ http://gems.rubyforge.org/gems/yapra-0.1.2.gem
 http://gems.rubyforge.org/gems/yard-0.2.0.gem
 http://gems.rubyforge.org/gems/yard-0.2.1.gem
 http://gems.rubyforge.org/gems/yard-0.2.2.gem
+http://gems.rubyforge.org/gems/yard-0.2.3.gem
 http://gems.rubyforge.org/gems/yargi-0.1.0.gem
 http://gems.rubyforge.org/gems/yargi-0.1.1.gem
 http://gems.rubyforge.org/gems/yax-0.1.gem
@@ -23670,6 +24213,8 @@ http://gems.rubyforge.org/gems/ysm4r-0.1.gem
 http://gems.rubyforge.org/gems/ytag-0.0.1.gem
 http://gems.rubyforge.org/gems/yubikey-1.0.0.gem
 http://gems.rubyforge.org/gems/yubikey-1.0.2.gem
+http://gems.rubyforge.org/gems/yubikey-1.1.0.gem
+http://gems.rubyforge.org/gems/yubikey-1.1.1.gem
 http://gems.rubyforge.org/gems/yummy-0.0.1.gem
 http://gems.rubyforge.org/gems/yummy-0.0.2.gem
 http://gems.rubyforge.org/gems/zcc-0.0.1.gem
@@ -23690,6 +24235,7 @@ http://gems.rubyforge.org/gems/zerg_support-0.0.4.gem
 http://gems.rubyforge.org/gems/zerg_support-0.0.5.gem
 http://gems.rubyforge.org/gems/zerg_support-0.0.8.gem
 http://gems.rubyforge.org/gems/zerg_support-0.0.9.gem
+http://gems.rubyforge.org/gems/zerg_support-0.1.gem
 http://gems.rubyforge.org/gems/zerg_xcode-0.1.gem
 http://gems.rubyforge.org/gems/zerg_xcode-0.2.1.gem
 http://gems.rubyforge.org/gems/zerg_xcode-0.2.gem
@@ -23697,6 +24243,8 @@ http://gems.rubyforge.org/gems/zerg_xcode-0.3.1.gem
 http://gems.rubyforge.org/gems/zerg_xcode-0.3.2.gem
 http://gems.rubyforge.org/gems/zerg_xcode-0.3.gem
 http://gems.rubyforge.org/gems/zergling-0.0.1.gem
+http://gems.rubyforge.org/gems/zfs-snapshot-1.0.1.gem
+http://gems.rubyforge.org/gems/zfs-snapshot-1.0.2.gem
 http://gems.rubyforge.org/gems/ziplookup-1.0.0.gem
 http://gems.rubyforge.org/gems/zipruby-0.1.0-mswin32.gem
 http://gems.rubyforge.org/gems/zipruby-0.1.0-x86-mswin32.gem
@@ -23740,8 +24288,12 @@ http://gems.rubyforge.org/gems/zipruby-0.3.0.gem
 http://gems.rubyforge.org/gems/zipruby-0.3.1-mswin32.gem
 http://gems.rubyforge.org/gems/zipruby-0.3.1-x86-mswin32.gem
 http://gems.rubyforge.org/gems/zipruby-0.3.1.gem
+http://gems.rubyforge.org/gems/zipruby-0.3.2-mswin32.gem
+http://gems.rubyforge.org/gems/zipruby-0.3.2-x86-mswin32.gem
+http://gems.rubyforge.org/gems/zipruby-0.3.2.gem
 http://gems.rubyforge.org/gems/zipruby1.9-0.3.0-x86-mswin32.gem
 http://gems.rubyforge.org/gems/zipruby1.9-0.3.1-x86-mswin32.gem
+http://gems.rubyforge.org/gems/zipruby1.9-0.3.2-x86-mswin32.gem
 http://gems.rubyforge.org/gems/ziya-1.0.0.gem
 http://gems.rubyforge.org/gems/ziya-2.0.0.gem
 http://gems.rubyforge.org/gems/ziya-2.0.1.gem
