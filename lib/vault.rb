@@ -7,8 +7,6 @@ module Vault
       update
     end
 
-    protected
-
     def source_path
       "source_index"
     end
@@ -23,8 +21,7 @@ module Vault
 
     def write
       cache_path = "gems/#{spec.original_name}.gem"
-      data.rewind
-      VaultObject.store(cache_path, data, OPTIONS)
+      VaultObject.store(cache_path, data.string, OPTIONS)
 
       quick_path = "quick/Marshal.#{Gem.marshal_version}/#{spec.original_name}.gemspec.rz"
       Gemcutter.indexer.abbreviate spec
@@ -56,12 +53,12 @@ module Vault
 
         loaded_index = Gemcutter.indexer.compact_specs(loaded_index)
 
-        data = StringIO.new
-        gzip = Zlib::GzipWriter.new(data)
+        final_index = StringIO.new
+        gzip = Zlib::GzipWriter.new(final_index)
         gzip.write(Marshal.dump(loaded_index))
         gzip.close
 
-        VaultObject.store(index, data.string, OPTIONS)
+        VaultObject.store(index, final_index.string, OPTIONS)
       end
     end
 
@@ -72,8 +69,6 @@ module Vault
       write
       update
     end
-
-    protected
 
     def source_path
       Gemcutter.server_path("source_index")
@@ -90,7 +85,7 @@ module Vault
     def write
       cache_path = Gemcutter.server_path('gems', "#{spec.original_name}.gem")
       File.open(cache_path, "wb") do |f|
-        f.write data.read
+        f.write data.string
       end
       File.chmod 0644, cache_path
 
