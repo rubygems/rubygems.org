@@ -7,9 +7,9 @@ class Hostess < Sinatra::Default
   def serve(path, redirect = false)
     if Rails.env.production?
       if redirect
-        redirect File.join("http://s3.amazonaws.com", VaultObject.current_bucket, request.path)
+        redirect File.join("http://s3.amazonaws.com", VaultObject.current_bucket, request.path_info)
       else
-        VaultObject.value(request.path)
+        VaultObject.value(request.path_info)
       end
     else
       send_file(path)
