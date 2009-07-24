@@ -51,7 +51,7 @@ module Vault
           loaded_index << [spec.name, spec.version, platform]
         end
 
-        loaded_index = Gemcutter.indexer.compact_specs(loaded_index)
+        loaded_index = Gemcutter.indexer.compact_specs(loaded_index).uniq
 
         final_index = StringIO.new
         gzip = Zlib::GzipWriter.new(final_index)
