@@ -4,28 +4,40 @@ require 'sinatra'
 class Hostess < Sinatra::Default
   set :app_file, __FILE__
 
+  def serve(path, type = nil)
+    if Rails.env.production?
+      if type
+        redirect File.join("http://s3.amazonaws.com", VaultObject.current_bucket, request.path)
+      else
+        VaultObject.value(request.path)
+      end
+    else
+      content_type type if type
+      send_file(path)
+    end
+  end
+
   get "/specs.#{Gem.marshal_version}.gz" do
-    send_file(current_path)
+    serve(current_path)
   end
 
   get "/latest_specs.#{Gem.marshal_version}.gz" do
-    send_file(current_path)
+    serve(current_path)
   end
 
   get "/quick/Marshal.#{Gem.marshal_version}/*.gemspec.rz" do
-    content_type 'application/x-deflate'
-    send_file(current_path)
+    serve(current_path)
   end
 
   get "/gems/*.gem" do
-    if File.exists?(current_path)
-      content_type 'application/octet-stream'
-      original_name = File.basename(current_path, ".gem").split('-')
-      name = original_name[0..-2].join('-')
-      version = original_name[-1]
-      rubygem = Rubygem.find_by_name(name)
+    original_name = File.basename(current_path, ".gem").split('-')
+    name = original_name[0..-2].join('-')
+    version = original_name[-1]
+    rubygem = Rubygem.find_by_name(name)
+
+    if rubygem
       rubygem.increment!(:downloads)
-      send_file(current_path)
+      serve(current_path, 'application/octet-stream')
     else
       halt 404
     end
