@@ -101,9 +101,7 @@ namespace :gemcutter do
         puts "Processing #{path}"
         cutter = Gemcutter.new(nil, StringIO.new(File.open(path).read))
 
-        cutter.pull_spec
-        cutter.find
-        cutter.save
+        cutter.pull_spec and cutter.find and cutter.save
       end
     end
   end
