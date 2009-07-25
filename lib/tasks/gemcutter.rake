@@ -104,5 +104,33 @@ namespace :gemcutter do
         cutter.pull_spec and cutter.find and cutter.save
       end
     end
+
+    desc 'Just create the index and save the gems in the db'
+    task :indexify => :environment do
+      gems = Dir[File.join(ARGV[1], "*.gem")].sort.reverse
+      puts "Processing #{gems.size} gems..."
+      source_index = Gem::SourceIndex.new
+
+      gems.each do |path|
+        puts "Processing #{path}"
+        cutter = Gemcutter.new(nil, StringIO.new(File.open(path).read))
+
+        begin
+          cutter.pull_spec and cutter.find and cutter.build and cutter.rubygem.save
+          spec = cutter.spec
+          Gemcutter.indexer.abbreviate spec
+          Gemcutter.indexer.sanitize spec
+          source_index.add_spec(spec, spec.original_name)
+        rescue Exception => e
+          puts "Bad gem: #{e}"
+        end
+      end
+
+      File.open(Gemcutter.server_path("source_index"), "wb") do |f|
+        f.write Gem.deflate(Marshal.dump(source_index))
+      end
+
+      Gemcutter.indexer.update_index(source_index)
+    end
   end
 end

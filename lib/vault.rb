@@ -13,7 +13,7 @@ module Vault
 
     def source_index
       if VaultObject.exists?(source_path)
-        @source_index ||= Marshal.load(VaultObject.value(source_path))
+        @source_index ||= Marshal.load(Gem.inflate(VaultObject.value(source_path)))
       else
         @source_index ||= Gem::SourceIndex.new
       end
@@ -31,7 +31,7 @@ module Vault
 
     def update
       source_index.add_spec spec, spec.original_name
-      VaultObject.store(source_path, Marshal.dump(source_index), OPTIONS)
+      VaultObject.store(source_path, Gem.deflate(Marshal.dump(source_index)), OPTIONS)
 
       specs_index = "specs.#{Gem.marshal_version}.gz"
       latest_specs_index = "latest_specs.#{Gem.marshal_version}.gz"
