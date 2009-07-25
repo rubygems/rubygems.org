@@ -54,6 +54,7 @@ class Gemcutter
     rubygem.build_dependencies(spec.dependencies)
     rubygem.build_links(spec.homepage)
     rubygem.build_ownership(user) if user
+    true
   end
 
   def pull_spec
