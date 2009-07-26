@@ -48,11 +48,12 @@ class Gem::Commands::PushCommand < Gem::Command
     url = URI.parse("#{push_url}/gems")
 
     http = Net::HTTP.new(url.host, url.port)
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     http.use_ssl = (url.scheme == 'https')
     request = Net::HTTP::Post.new(url.path)
     request.body = File.open(name).read
-    request.content_length = request.body.size
-    request.initialize_http_header("HTTP_AUTHORIZATION" => api_key)
+    request.add_field("Content-Length", request.body.size)
+    request.add_field("Authorization", api_key)
 
     response = http.request(request)
 
@@ -68,6 +69,7 @@ class Gem::Commands::PushCommand < Gem::Command
     url = URI.parse("#{push_url}/api_key")
 
     http = Net::HTTP.new(url.host, url.port)
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     http.use_ssl = (url.scheme == 'https')
     request = Net::HTTP::Get.new(url.path)
     request.basic_auth email, password
