@@ -29,9 +29,12 @@ class VaultTest < ActiveSupport::TestCase
       should "load up the source index from the file system" do
         stub(File).exists?(@path) { true }
 
-        binary = "binary"
-        mock(File).open(@path) { binary }
-        mock(Marshal).load(binary) { @source_index }
+        zipped = "zipped"
+        marshalled = "marshalled"
+
+        mock(File).read(@path) { zipped }
+        mock(Gem).inflate(zipped) { marshalled }
+        mock(Marshal).load(marshalled) { @source_index }
 
         assert_equal @source_index, @vault.source_index
       end
@@ -67,7 +70,7 @@ class VaultTest < ActiveSupport::TestCase
       source_index = Gemcutter.server_path("source_index")
       assert File.exists?(source_index)
 
-      source_index_data = File.open(source_index) { |f| Marshal.load f.read }
+      source_index_data = File.open(source_index) { |f| Marshal.load(Gem.inflate(f.read)) }
       assert source_index_data.gems.has_key?(@spec.original_name)
 
       latest_specs = Gemcutter.server_path("latest_specs.4.8")
