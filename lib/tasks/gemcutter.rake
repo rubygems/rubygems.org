@@ -81,6 +81,26 @@ namespace :gemcutter do
       end
     end
 
+    desc 'Upload gems to s3 like a boss'
+    task :upload => :environment do
+      return unless Rails.env.production?
+      Version.all.each do |version|
+        local_path = File.join(ARGV[1], "#{version.rubygem.name}-#{version.number}.gem")
+        if File.exists?(local_path)
+          puts "Processing #{local_path}"
+          begin
+            cutter = Gemcutter.new(nil, StringIO.new(File.open(local_path).read))
+            cutter.pull_spec
+            cutter.write
+          rescue Exception => e
+            puts "Problem uploading #{local_path}: #{e}"
+          end
+        else
+          puts "Couldn't find #{local_path}"
+        end
+      end
+    end
+
     desc 'Parse out rubygems'
     task :parse do
       require 'hpricot'
@@ -116,11 +136,18 @@ namespace :gemcutter do
         cutter = Gemcutter.new(nil, StringIO.new(File.open(path).read))
 
         begin
-          cutter.pull_spec and cutter.find and cutter.build and cutter.rubygem.save
-          spec = cutter.spec
-          Gemcutter.indexer.abbreviate spec
-          Gemcutter.indexer.sanitize spec
-          source_index.add_spec(spec, spec.original_name)
+          cutter.pull_spec and cutter.find and cutter.build
+          spec_path = File.join(ARGV[1], "#{cutter.rubygem.name}-#{cutter.rubygem.versions.last.to_s}.gem")
+
+          if path == spec_path
+            cutter.rubygem.save
+            spec = cutter.spec
+            Gemcutter.indexer.abbreviate spec
+            Gemcutter.indexer.sanitize spec
+            source_index.add_spec(spec, spec.original_name)
+          else
+            puts "Processed path (#{spec_path}) did not match: #{path}"
+          end
         rescue Exception => e
           puts "Bad gem: #{e}"
         end
