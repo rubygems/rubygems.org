@@ -1,4 +1,5 @@
 require 'net/http'
+require 'net/https'
 
 class Gem::Commands::PushCommand < Gem::Command
   def description
@@ -32,19 +33,29 @@ class Gem::Commands::PushCommand < Gem::Command
     Gem.configuration[:gemcutter_key]
   end
 
+  def push_url
+    if ENV['test']
+      "http://gemcutter.local"
+    else
+      "https://gemcutter.heroku.com"
+    end
+  end
+
   def send_gem
     say "Pushing gem to Gemcutter..."
 
     name = get_one_gem_name
-    site = ENV['TEST'] ? "local" : "org"
-    url = URI.parse("http://gemcutter.#{site}/gems")
+    url = URI.parse("#{push_url}/gems")
 
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = (url.scheme == 'https')
     request = Net::HTTP::Post.new(url.path)
     request.body = File.open(name).read
     request.content_length = request.body.size
     request.initialize_http_header("HTTP_AUTHORIZATION" => api_key)
 
-    response = Net::HTTP.new(url.host, url.port).start { |http| http.request(request) }
+    response = http.request(request)
+
     say response.body
   end
 
@@ -54,12 +65,13 @@ class Gem::Commands::PushCommand < Gem::Command
     email = ask("Email: ")
     password = ask_for_password("Password: ")
 
-    site = ENV['TEST'] ? "local" : "org"
-    url = URI.parse("http://gemcutter.#{site}/api_key")
+    url = URI.parse("#{push_url}/api_key")
 
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = (url.scheme == 'https')
     request = Net::HTTP::Get.new(url.path)
     request.basic_auth email, password
-    response = Net::HTTP.new(url.host, url.port).start { |http| http.request(request) }
+    response = http.request(request)
 
     case response
     when Net::HTTPSuccess
