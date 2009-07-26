@@ -76,7 +76,7 @@ module Vault
 
     def source_index
       if File.exists?(source_path)
-        @source_index ||= Marshal.load(File.open(source_path))
+        @source_index ||= Marshal.load(Gem.inflate(File.read(source_path)))
       else
         @source_index ||= Gem::SourceIndex.new
       end
@@ -103,7 +103,7 @@ module Vault
     def update
       source_index.add_spec spec, spec.original_name
       File.open(source_path, "wb") do |f|
-        f.write Marshal.dump(source_index)
+        f.write Gem.deflate(Marshal.dump(source_index))
       end
 
       Gemcutter.indexer.update_index(source_index)
