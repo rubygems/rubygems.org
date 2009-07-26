@@ -35,9 +35,9 @@ end
 
 DO_NOT_REPLY = "donotreply@gemcutter.org"
 
-require 'rubygems'
-require 'rubygems/format'
-require 'rubygems/indexer'
+require 'lib/rubygems'
+require 'lib/rubygems/format'
+require 'lib/rubygems/indexer'
 require 'lib/indexer'
 require 'lib/core_ext/string'
 
