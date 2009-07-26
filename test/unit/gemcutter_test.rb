@@ -174,7 +174,9 @@ class GemcutterTest < ActiveSupport::TestCase
         end
 
         before_should "build version with platform" do
-          stub(@spec).original_name { "#{@spec.name}-#{@spec.version}-mswin" }
+          stub(@spec).platform { "mswin" }
+          stub(@spec).rubyforge_project { "project" }
+          stub(@spec).rubyforge_project { "summary" }
           mock(@rubygem).build_version(
             :authors           => @spec.authors.join(", "),
             :description       => @spec.description,
