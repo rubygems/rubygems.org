@@ -19,6 +19,7 @@ class HostessTest < ActiveSupport::TestCase
     file = "/latest_specs.4.8.gz"
     touch file
     get file
+    assert_not_nil last_response.headers["Cache-Control"]
     assert_equal 200, last_response.status
   end
 
@@ -26,6 +27,7 @@ class HostessTest < ActiveSupport::TestCase
     file = "/specs.4.8.gz"
     touch file
     get file
+    assert_not_nil last_response.headers["Cache-Control"]
     assert_equal 200, last_response.status
   end
 
@@ -33,6 +35,7 @@ class HostessTest < ActiveSupport::TestCase
     file = "/quick/Marshal.4.8/test-0.0.0.gemspec.rz"
     touch file
     get file
+    assert_not_nil last_response.headers["Cache-Control"]
     assert_equal 200, last_response.status
     assert_equal "application/x-deflate", last_response.content_type
   end
@@ -45,6 +48,7 @@ class HostessTest < ActiveSupport::TestCase
     get file
     rubygem.reload
 
+    assert_not_nil last_response.headers["Cache-Control"]
     assert_equal 200, last_response.status
     assert_equal 1, rubygem.downloads
   end
