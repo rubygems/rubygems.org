@@ -49,7 +49,7 @@ class RubygemsController < ApplicationController
 
   protected
     def authenticate
-      logger.info request.headers
+      logger.info request.headers.inspect
       @_current_user = User.find_by_api_key(request.headers["HTTP_AUTHORIZATION"])
       if current_user.nil?
         render :text => "Access Denied. Please sign up for an account at http://gemcutter.org", :status => 401
