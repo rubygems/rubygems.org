@@ -81,6 +81,19 @@ namespace :gemcutter do
       end
     end
 
+    desc 'Make sure all of the gems are on S3'
+    task :verify => :environment do
+      return unless Rails.env.production?
+      Version.all.each do |version|
+        path = "#{version.rubygem.name}-#{version.number}.gem"
+        gem_path = "gems/#{path}"
+        spec_path = "quick/Marshal.4.8/#{path}spec.rz"
+
+        puts gem_path unless VaultObject.exists?(gem_path)
+        puts spec_path unless VaultObject.exists?(spec_path)
+      end
+    end
+
     desc 'Upload gems to s3 like a boss'
     task :upload => :environment do
       return unless Rails.env.production?
