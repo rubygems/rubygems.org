@@ -9,7 +9,7 @@ require 'rr'
 FakeWeb.allow_net_connect = false
 
 require File.join("lib", "rubygems_plugin")
-%w(push upgrade downgrade).each do |command|
+%w(push tumble).each do |command|
   require File.join("lib", "commands", command)
 end
 
@@ -94,40 +94,57 @@ class PluginTest < Test::Unit::TestCase
     end
   end
 
-  context "upgrading" do
+  context "with a tumbler and some sources" do
+    setup do
+      @sources = ["gems.rubyforge.org", URL]
+      stub(Gem).sources { @sources }
+      @command = Gem::Commands::TumbleCommand.new
+    end
+
+    should "show sources" do
+      mock(@command).puts("Your gem sources are now:")
+      mock(@command).puts("- #{@sources.first}")
+      mock(@command).puts("- #{URL}")
+      @command.show_sources
+    end
+  end
+
+  context "tumbling the gem sources" do
     setup do
       @sources = ["http://rubyforge.org"]
       stub(Gem).sources { @sources }
       @config = Object.new
       stub(Gem).configuration { @config }
 
-      @command = Gem::Commands::UpgradeCommand.new
+      @command = Gem::Commands::TumbleCommand.new
     end
 
     should "add gemcutter as first source" do
-      mock(@command).say("Your primary gem source is now gemcutter.org")
       mock(@sources).unshift(URL)
       mock(@config).write
-      @command.execute
+
+      @command.tumble
     end
 
-    should "only add gemcutter once" do
+    should "remove gemcutter if it's in the sources" do
       mock(@sources).include?(URL) { true }
-      mock(@command).say("Gemcutter is already your primary gem source. Please use `gem downgrade` if you wish to no longer use Gemcutter.")
-      mock(@config).write.never
-      @command.execute
+      mock(@config).write
+      mock(@sources).delete(URL)
+
+      @command.tumble
     end
   end
 
-  context "downgrading" do
+  context "executing the tumbler" do
     setup do
-      @command = Gem::Commands::DowngradeCommand.new
+      @command = Gem::Commands::TumbleCommand.new
     end
 
-    should "return to using rubyforge" do
-      mock(@command).say("Your primary gem source is now gems.rubyforge.org")
-      mock(Gem).configuration.mock!.write
-      mock(Gem).sources.mock!.delete(URL)
+    should "say thanks, tumble and show the sources" do
+      mock(@command).say(anything)
+      mock(@command).tumble
+      mock(@command).show_sources
+
       @command.execute
     end
   end
