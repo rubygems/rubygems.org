@@ -2,26 +2,31 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gemcutter}
-  s.version = "0.0.5"
+  s.version = "0.0.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Quaranto"]
-  s.date = %q{2009-07-25}
+  s.date = %q{2009-07-28}
   s.email = %q{nick@quaran.to}
   s.extra_rdoc_files = [
     "README.textile"
   ]
   s.files = [
-    "lib/commands/downgrade.rb",
-     "lib/commands/push.rb",
-     "lib/commands/upgrade.rb",
+    "lib/commands/push.rb",
+     "lib/commands/tumble.rb",
      "lib/rubygems_plugin.rb"
   ]
   s.homepage = %q{http://github.com/qrush/gemcutter}
+  s.post_install_message = %q{
+=======================================================================
+Thanks for installing Gemcutter! To get started, please run: gem tumble
+=======================================================================
+
+}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{gemcutter}
-  s.rubygems_version = %q{1.3.4}
+  s.rubygems_version = %q{1.3.3}
   s.summary = %q{Awesome gem hosting}
 
   if s.respond_to? :specification_version then

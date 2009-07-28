@@ -9,6 +9,13 @@ begin
     gem.files = FileList["lib/rubygems_plugin.rb", "lib/commands/*"]
     gem.test_files = []
     gem.rubyforge_project = "gemcutter"
+    gem.post_install_message = <<MESSAGE
+
+=======================================================================
+Thanks for installing Gemcutter! To get started, please run: gem tumble
+=======================================================================
+
+MESSAGE
   end
   Jeweler::RubyforgeTasks.new
 
