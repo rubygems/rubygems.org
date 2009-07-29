@@ -209,9 +209,10 @@ class RubygemsControllerTest < ActionController::TestCase
     should_redirect_to('the homepage') { root_url }
   end
 
-  context "On GET to index" do
+  context "On GET to index with no parameters" do
     setup do
-      @gems = (1..3).map { Factory(:rubygem) }
+      @gems = (1..3).map { |n| Factory(:rubygem, :name => "agem#{n}") }
+      Factory(:rubygem, :name => "zeta")
       get :index
     end
 
@@ -223,6 +224,21 @@ class RubygemsControllerTest < ActionController::TestCase
         assert_contain g.name
         assert_have_selector "a[href='#{rubygem_path(g)}']"
       end
+    end
+  end
+
+  context "On GET to index with a letter" do
+    setup do
+      @gems = (1..3).map { |n| Factory(:rubygem, :name => "agem#{n}") }
+      @zgem = Factory(:rubygem, :name => "zeta")
+      get :index, :letter => "z"
+    end
+    should_respond_with :success
+    should_render_template :index
+    should_assign_to(:gems) { [@zgem] }
+    should "render links" do
+      assert_contain @zgem.name
+      assert_have_selector "a[href='#{rubygem_path(@zgem)}']"
     end
   end
 
