@@ -219,6 +219,33 @@ class RubygemTest < ActiveSupport::TestCase
     end
   end
 
+  context "with some gems and some that don't have versions" do
+    setup do
+      @thin = Factory(:rubygem, :name => 'thin', :created_at => 1.year.ago,  :downloads => 20)
+      @rake = Factory(:rubygem, :name => 'rake', :created_at => 1.month.ago, :downloads => 10)
+      @json = Factory(:rubygem, :name => 'json', :created_at => 1.week.ago,  :downloads => 5)
+      @thor = Factory(:rubygem, :name => 'thor', :created_at => 2.days.ago,  :downloads => 3)
+      @rack = Factory(:rubygem, :name => 'rack', :created_at => 1.day.ago,   :downloads => 2)
+      @dust = Factory(:rubygem, :name => 'dust', :created_at => 3.days.ago,  :downloads => 1)
+      @haml = Factory(:rubygem, :name => 'haml')
+
+      @gems = [@thin, @rake, @json, @thor, @rack, @dust]
+      @gems.each { |g| Factory(:version, :rubygem => g) }
+    end
+
+    should "give a count of only rubygems with versions" do
+      assert_equal 6, Rubygem.total_count
+    end
+
+    should "only return the latest gems with versions" do
+      assert_equal [@rack, @thor, @dust, @json, @rake], Rubygem.latest
+    end
+
+    should "only latest downloaded versions" do
+      assert_equal [@thin, @rake, @json, @thor, @rack], Rubygem.downloaded
+    end
+  end
+
   context "when some gems exist with titles and versions that have descriptions" do
     setup do
       @apple_pie = Factory(:rubygem, :name => 'apple')

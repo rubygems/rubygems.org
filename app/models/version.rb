@@ -5,6 +5,10 @@ class Version < ActiveRecord::Base
   has_many :dependencies, :through => :requirements, :dependent => :destroy
   validates_format_of :number, :with => /^[\w\.\-_]+$/
 
+  def self.published
+    created_at_before(DateTime.now.utc).by_created_at(:desc).limited(5)
+  end
+
   def to_s
     number
   end
@@ -12,4 +16,5 @@ class Version < ActiveRecord::Base
   def info
     description || summary || "This rubygem does not have a description or summary."
   end
+
 end

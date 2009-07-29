@@ -26,6 +26,18 @@ class Rubygem < ActiveRecord::Base
     :include => [:versions] }
   }
 
+  def self.total_count
+    with_versions.count
+  end
+
+  def self.latest
+    with_versions.by_created_at(:desc).limited(5)
+  end
+
+  def self.downloaded
+    with_versions.by_downloads(:desc).limited(5)
+  end
+
   def unowned?
     ownerships.find_by_approved(true).blank?
   end
