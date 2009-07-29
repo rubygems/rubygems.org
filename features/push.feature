@@ -10,6 +10,7 @@ Feature: Push Gems
       When I push the gem "RGem-1.2.3.gem" with my api key
       And I go to the homepage
       And I follow "list"
+      And I follow "R"
       And I follow "RGem (1.2.3)"
       Then I should see "RGem"
       And I should see "1.2.3"
@@ -23,6 +24,7 @@ Feature: Push Gems
       When I push the gem "BGem-3.0.0.gem" with my api key
       And I go to the homepage
       And I follow "list"
+      And I follow "B"
       And I follow "BGem (3.0.0)"
       Then I should see "BGem"
       And I should see "2.0.0"
