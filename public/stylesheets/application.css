@@ -192,10 +192,26 @@ h3 {
 .what {
   text-align: center;
   font-weight: bold;
-  text-align: center;
-  text-align: center;
   font-size: 1.1em;
   margin-bottom: 50px;
+}
+
+.directory {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.directory a {
+  font-weight: bold;
+  font-size: 1.8em;
+  padding: 10px;
+  color: #ffffff;
+  background:#900000;
+}
+
+.directory a:hover {
+  background:#600000;
+  cursor: pointer;
 }
 
 .gems a {

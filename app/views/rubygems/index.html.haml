@@ -1,6 +1,8 @@
 -@title = "all gems"
 -@subtitle = ""
 .grid_12
+  .directory
+    =link_to_directory
   =will_paginate @gems
   .gems
     -@gems.each do |gem|
