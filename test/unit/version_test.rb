@@ -35,4 +35,20 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal "This rubygem does not have a description or summary.", @version.info
     end
   end
+
+  context "with a few versions" do
+    setup do
+      @thin = Factory(:version, :authors => "thin", :created_at => 1.year.ago)
+      @rake = Factory(:version, :authors => "rake", :created_at => 1.month.ago)
+      @json = Factory(:version, :authors => "json", :created_at => 1.week.ago)
+      @thor = Factory(:version, :authors => "thor", :created_at => 2.days.ago)
+      @rack = Factory(:version, :authors => "rack", :created_at => 1.day.ago)
+      @haml = Factory(:version, :authors => "haml", :created_at => 1.hour.ago)
+      @dust = Factory(:version, :authors => "dust", :created_at => 1.day.from_now)
+    end
+
+    should "get the latest versions up to today" do
+      assert_equal [@haml, @rack, @thor, @json, @rake].map(&:authors), Version.published.map(&:authors)
+    end
+  end
 end
