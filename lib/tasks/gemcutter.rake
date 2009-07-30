@@ -6,7 +6,6 @@ namespace :gemcutter do
     Rake::Task["gemcutter:index:create"].execute
   end
 
-
   desc "Get the gem server up and running"
   task :bootstrap => :environment do
     Rake::Task["clean"].execute
@@ -33,9 +32,23 @@ namespace :gemcutter do
   task :migrate => :environment do
     require 'webrat'
     require 'webrat/mechanize'
+
     Ownership.find_all_by_approved(false).each do |ownership|
       rubygem = ownership.rubygem
-      session.visit("http://rubyforge.org/projects/")
+      begin
+        session = Webrat::MechanizeSession.new
+        session.visit("http://rubyforge.org/projects/#{rubygem.versions.current.rubyforge_project}")
+        session.click_link("[News archive]")
+
+        (session.current_dom / "#content a").each do |link|
+          content = link.content.gsub(/[^a-z0-9]/, "")
+          if content == ownership.token
+            ownership.update_attribute(:approved, true)
+          end
+        end
+      rescue Exception => e
+        HoptoadNotifier.notify(:error_class => e.class, :error_message => e.message)
+      end
     end
   end
 

@@ -2,11 +2,14 @@
 -@subtitle = ""
 .grid_12
   %h3 Instructions
-  %ul
+  %p.note
+    In order for this to work your rubygem *must* have a rubyforge_project set in the gemspec. If it does not, please send an email to gems@gemcutter.org.
+  %ol
     %li Log into your RubyForge Account.
-    %li Go to your project, and click "Files"
-    %li Click Admin
-    %li Click "Quick-Release a File"
-    %li Upload this text file:
-    %li= link_to "Gemcutter Key", rubygem_ownership_url(@gem, @ownership, :format => :txt)
-    %li And that's it! Gemcutter will look for this key to certify that you are the owner of this gem. You will receive an email once the process is complete.
+    %li Go to your project, and click "News"
+    %li Click Submit
+    %li
+      %p Fill in the Subject with this key:
+      %p= @ownership.token
+      %p The Details box isn't checked, but it requires at least 10 characters.
+    %li And that's it! You can kick the process off by clicking here, or you can wait until it's done on a nightly basis.
