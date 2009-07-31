@@ -35,14 +35,20 @@ namespace :gemcutter do
 
     Ownership.find_all_by_approved(false).each do |ownership|
       rubygem = ownership.rubygem
+      project = rubygem.versions.current.rubyforge_project
+      next if project.blank?
+
+      puts ">> Checking ownership for #{ownership.user} under #{project}"
+
       begin
         session = Webrat::MechanizeSession.new
-        session.visit("http://rubyforge.org/projects/#{rubygem.versions.current.rubyforge_project}")
+        session.visit("http://rubyforge.org/projects/#{project}")
         session.click_link("[News archive]")
 
         (session.current_dom / "#content a").each do |link|
           content = link.content.gsub(/[^a-z0-9]/, "")
           if content == ownership.token
+            puts ">>> Success!"
             ownership.update_attribute(:approved, true)
           end
         end
