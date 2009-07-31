@@ -1,7 +1,11 @@
 require 'net/http'
 require 'net/https'
+require 'rubygems/local_remote_options'
 
 class Gem::Commands::PushCommand < Gem::Command
+  
+  include Gem::LocalRemoteOptions
+  
   def description
     'Push a gem up to Gemcutter'
   end
@@ -16,9 +20,11 @@ class Gem::Commands::PushCommand < Gem::Command
 
   def initialize
     super 'push', description
+    add_proxy_option
   end
 
   def execute
+    use_proxy! if http_proxy
     sign_in unless api_key
     send_gem
   end
@@ -27,6 +33,13 @@ class Gem::Commands::PushCommand < Gem::Command
     password = ui.ask_for_password(message)
     ui.say("\n")
     password
+  end
+  
+  # @return [URI, nil] the HTTP-proxy as a URI if set; +nil+ otherwise
+  def http_proxy
+    proxy = Gem.configuration[:http_proxy]
+    return nil if proxy.nil? || proxy == :no_proxy
+    URI.parse(proxy)
   end
 
   def api_key
@@ -85,6 +98,14 @@ class Gem::Commands::PushCommand < Gem::Command
       terminate_interaction
     end
   end
+  
+  def use_proxy!
+    proxy_uri = http_proxy
+    proxy_class = Net::HTTP::Proxy(proxy_uri.host, proxy_uri.port, proxy_uri.user, proxy_uri.password)
+    Net.send :remove_const, :HTTP
+    Net.send :const_set, :HTTP, proxy_class
+  end
+  
 end
 
 class Gem::StreamUI
