@@ -8,12 +8,16 @@ module Vault
     end
 
     def source_path
-      "source_index"
+      "specs.#{Gem.marshal_version}.gz"
     end
 
     def source_index
       if VaultObject.exists?(source_path)
-        @source_index ||= Marshal.load(Gem.inflate(VaultObject.value(source_path)))
+        @source_index ||= begin
+          binary = VaultObject.value(source_path)
+          marshalled = Zlib::GzipReader.new(StringIO.new(binary)).read
+          Marshal.load(marshalled)
+        end
       else
         @source_index ||= Gem::SourceIndex.new
       end
@@ -30,36 +34,19 @@ module Vault
     end
 
     def update
-      source_index.add_spec spec, spec.original_name
-      VaultObject.store(source_path, Gem.deflate(Marshal.dump(source_index)), OPTIONS)
+      platform = spec.original_platform
+      platform = Gem::Platform::RUBY if platform.nil? or platform.empty?
 
-      specs_index = "specs.#{Gem.marshal_version}.gz"
-      latest_specs_index = "latest_specs.#{Gem.marshal_version}.gz"
+      source_index << [spec.name, spec.version, platform]
+      source_index.uniq!
 
-      [specs_index, latest_specs_index].each do |index|
-        if VaultObject.exists?(index)
-          binary = VaultObject.value(index)
-          marshalled = Zlib::GzipReader.new(StringIO.new(binary)).read
-          loaded_index = Marshal.load(marshalled)
-        else
-          loaded_index = []
-        end
+      final_index = StringIO.new
+      gzip = Zlib::GzipWriter.new(final_index)
+      gzip.write(Marshal.dump(source_index))
+      gzip.close
 
-        source_index.each do |_, spec|
-          platform = spec.original_platform
-          platform = Gem::Platform::RUBY if platform.nil? or platform.empty?
-          loaded_index << [spec.name, spec.version, platform]
-        end
-
-        loaded_index = Gemcutter.indexer.compact_specs(loaded_index).uniq
-
-        final_index = StringIO.new
-        gzip = Zlib::GzipWriter.new(final_index)
-        gzip.write(Marshal.dump(loaded_index))
-        gzip.close
-
-        VaultObject.store(index, final_index.string, OPTIONS)
-      end
+      VaultObject.store(source_path, final_index.string, OPTIONS)
+      VaultObject.copy(source_path, "latest_specs.#{Gem.marshal_version}.gz")
     end
 
   end
