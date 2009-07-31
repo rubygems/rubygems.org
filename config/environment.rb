@@ -35,16 +35,16 @@ end
 
 DO_NOT_REPLY = "donotreply@gemcutter.org"
 
-silence_warnings do
-  require 'lib/rubygems'
-  require 'lib/rubygems/format'
-  require 'lib/rubygems/indexer'
-  require 'lib/rubygems/platform'
-  require 'lib/rubygems/source_index'
-  require 'lib/rubygems/version'
+#silence_warnings do
+#  require 'lib/rubygems'
+#  require 'lib/rubygems/format'
+#  require 'lib/rubygems/indexer'
+#  require 'lib/rubygems/platform'
+#  require 'lib/rubygems/source_index'
+#  require 'lib/rubygems/version'
   require 'lib/indexer'
   require 'lib/core_ext/string'
-end
+#end
 
 Gem.configuration.verbose = false
 
