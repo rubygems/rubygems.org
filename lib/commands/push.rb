@@ -11,7 +11,7 @@ class Gem::Commands::PushCommand < Gem::Command
   end
 
   def usage
-    "#{programe_name} GEM"
+    "#{program_name} GEM"
   end
 
   def initialize
