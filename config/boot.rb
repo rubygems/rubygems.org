@@ -1,6 +1,9 @@
 # Don't change this file!
 # Configure your app in config/environment.rb and config/environments/*.rb
 
+# Massive loadpath hack to make sure the rubygems in lib/ gets loaded
+$:.unshift(File.expand_path(File.join(File.dirname(__FILE__), "..", "lib")))
+
 RAILS_ROOT = "#{File.dirname(__FILE__)}/.." unless defined?(RAILS_ROOT)
 
 module Rails
