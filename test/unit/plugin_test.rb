@@ -21,6 +21,22 @@ class PluginTest < Test::Unit::TestCase
       @command = Gem::Commands::PushCommand.new
       stub(@command).say
     end
+    
+    should "use a proxy if specified" do
+      stub(Gem).configuration { { :http_proxy => 'http://some.proxy' } }
+      mock(@command).use_proxy!
+      mock(@command).sign_in
+      mock(@command).send_gem
+      @command.execute
+    end
+    
+    should "not use a proxy if unspecified" do
+      stub(Gem).configuration { { :http_proxy => nil } }
+      mock(@command).use_proxy!.never
+      mock(@command).sign_in
+      mock(@command).send_gem
+      @command.execute
+    end
 
     should "sign in then push if no api key" do
       stub(Gem).configuration { {:gemcutter_key => nil} }
@@ -39,6 +55,39 @@ class PluginTest < Test::Unit::TestCase
     should "raise an error with no arguments" do
       assert_raise Gem::CommandLineError do
         @command.send_gem
+      end
+    end
+    
+    context "parsing the proxy" do
+      
+      should "return nil if no proxy is set" do
+        stub(Gem).configuration { { :http_proxy => nil } }
+        assert_equal nil, @command.http_proxy
+      end
+      
+      should "return nil if the proxy is set to :no_proxy" do
+        stub(Gem).configuration { { :http_proxy => :no_proxy } }
+        assert_equal nil, @command.http_proxy
+      end
+      
+      should "return a proxy as a URI if set" do
+        stub(Gem).configuration { { :http_proxy => 'http://proxy.example.org:9192' } }
+        assert_equal 'proxy.example.org', @command.http_proxy.host
+        assert_equal 9192, @command.http_proxy.port
+      end
+      
+    end
+    
+    context "using the proxy" do
+      setup do
+        stub(Gem).configuration { { :http_proxy => "http://gilbert:sekret@proxy.example.org:8081" } }
+        @proxy_class = Object.new
+        mock(Net::HTTP).Proxy('proxy.example.org', 8081, 'gilbert', 'sekret') { @proxy_class }
+        @command.use_proxy!
+      end
+      
+      should "replace Net::HTTP with a proxy version" do
+        assert_equal @proxy_class, Net::HTTP
       end
     end
 
