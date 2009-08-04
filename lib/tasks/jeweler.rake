@@ -1,3 +1,4 @@
+if Rails.env.development?
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
@@ -18,7 +19,7 @@ Thanks for installing Gemcutter! To get started, please run: gem tumble
 MESSAGE
   end
   Jeweler::RubyforgeTasks.new
-
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
+end
 end
