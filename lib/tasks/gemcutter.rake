@@ -8,7 +8,7 @@ namespace :gemcutter do
 
   desc "Get the gem server up and running"
   task :bootstrap => :environment do
-    Rake::Task["clean"].execute
+    Rake::Task["gemcutter:clean"].execute
     Rake::Task["gemcutter:index:create"].execute
     ARGV[1] = "bench/old"
     Rake::Task["gemcutter:import:process"].execute
