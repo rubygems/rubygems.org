@@ -210,6 +210,7 @@ namespace :gemcutter do
     downloads = []
     list.each do |line|
       name, *versions = line.gsub(/[\(\),]/, "").split
+      puts ">> Updating #{name}..."
 
       rubygem = Rubygem.find_by_name(name)
       if rubygem
