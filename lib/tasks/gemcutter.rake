@@ -224,10 +224,9 @@ namespace :gemcutter do
           downloads << "#{name}-#{version}.gem"
         end
       end
-      print downloads
       puts downloads.size
+      downloads.each { |d| puts d }
       #  cutter = Gemcutter.new(nil, StringIO.new(File.open(path).read))
-
       #  cutter.pull_spec and cutter.find and cutter.save
     end
   end
