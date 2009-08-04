@@ -224,8 +224,8 @@ namespace :gemcutter do
           downloads << "#{name}-#{version}.gem"
         end
       end
-      p downloads
-      p downloads.size
+      print downloads
+      puts downloads.size
       #  cutter = Gemcutter.new(nil, StringIO.new(File.open(path).read))
 
       #  cutter.pull_spec and cutter.find and cutter.save
