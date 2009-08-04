@@ -192,4 +192,42 @@ namespace :gemcutter do
       Gemcutter.indexer.update_index(source_index)
     end
   end
+
+  desc 'Get the latest gems from rubyforge and index them here'
+  task :update => :environment do
+    require 'rubygems/commands/list_command'
+    ins = StringIO.new
+    outs = StringIO.new
+    Gem::DefaultUserInteraction.ui = Gem::StreamUI.new(ins, outs)
+    Gem.sources = ["http://gems.rubyforge.org"]
+
+    command = Gem::Commands::ListCommand.new
+    command.options[:domain] = :remote
+    command.options[:all] = true
+    command.execute
+
+    list = outs.string.split("\n")
+    downloads = []
+    list.each do |line|
+      name, *versions = line.gsub(/[\(\),]/, "").split
+
+      rubygem = Rubygem.find_by_name(name)
+      if rubygem
+        versions.each do |number|
+          unless Version.exists?(:rubygem_id => rubygem.id, :number => number)
+            downloads << "#{name}-#{number}.gem"
+          end
+        end
+      else
+        versions.each do |version|
+          downloads << "#{name}-#{version}.gem"
+        end
+      end
+      p downloads
+      p downloads.size
+      #  cutter = Gemcutter.new(nil, StringIO.new(File.open(path).read))
+
+      #  cutter.pull_spec and cutter.find and cutter.save
+    end
+  end
 end
