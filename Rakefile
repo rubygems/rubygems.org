@@ -8,3 +8,5 @@ require 'tasks/rails'
 
 desc "Run all tests and features"
 task :default => ['gemcutter:index:create', :test, :features]
+
+task :cron => ['gemcutter:update']
