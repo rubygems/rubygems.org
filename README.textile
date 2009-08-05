@@ -23,27 +23,21 @@ No. In fact it will make their lives better: it will be easier to get to project
 GitHub's gem system is great, but it's not the canonical source by default. The nice part is that it takes the approval process out, but the namespacing on gems makes it hard for those new to the community to determine what is the right copy to use. Also, the goals here are much different and the site as a whole can be improved over time by the community.
 
 *How can I gain access of my gem that was available through RubyForge?*<br />
-The plan currently is to provide a key to upload to your RubyForge account, and then Gemcutter will mark you as the owner based on that.
+The full process is coming soon!
 
 *How can I help?*<br />
 Fork away, and read the next section! Feel free to bug qrush via a message or on FreeNode if you're interested.
 
-h2. Next up
+h2. Contributions
 
-What's finished so far:
+Gemcutter has a 'commit-bit' policy, much like the Rubinius project. Submit a patch that is accepted, and you'll get full commit access to the project. Please check the wiki for more information.
 
-* Simple site (list, push, update)
-* Releasing/updating gems via @gem push@
-* Project pages
-* Authentication/accounts
-* Gem server up and running
-
-What's coming:
-
-* RubyForge migration for gem projects
-* Fully fledged API documentation
-* Search via the API and site
+If you're looking for things to hack on, please check GitHub Issues. If you've found bugs or have feature ideas don't be afraid to pipe up and ask the mailing list about them.
 
 h2. Testing
 
-Make sure you run `rake gemcutter:index:create` before running the test suite, otherwise it might complain. Better solutions to this are more than welcome.
+Make sure you run @rake gemcutter:index:create@ before running the test suite, otherwise it might complain. Better solutions to this are more than welcome.
+
+h2. License
+
+Gemcutter uses the MIT license. Please check the LICENSE file for more details.
