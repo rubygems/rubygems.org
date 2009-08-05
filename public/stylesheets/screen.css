@@ -1,99 +1,52 @@
-/* v1.0 | 20080212 */
-
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, font, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	outline: 0;
-	font-size: 100%;
-	vertical-align: baseline;
-	background: transparent;
-}
 body {
-	line-height: 1;
+  line-height: 1;
 }
 ol, ul {
-	list-style: none;
+  list-style: none;
 }
 blockquote, q {
-	quotes: none;
+  quotes: none;
 }
 blockquote:before, blockquote:after,
 q:before, q:after {
-	content: '';
-	content: none;
+  content: '';
+  content: none;
 }
 
 /* remember to define focus styles! */
 :focus {
-	outline: 0;
+  outline: 0;
 }
 
 /* remember to highlight inserts somehow! */
 ins {
-	text-decoration: none;
+  text-decoration: none;
 }
 del {
-	text-decoration: line-through;
+  text-decoration: line-through;
 }
 
 /* tables still need 'cellspacing="0"' in the markup */
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
 body {
   font-size: .625em;
-  background: #340505;
-	font-family: Arial, sans-serif;
-}
-
-.header {
-	padding: 2.4em;
-	background: url(/images/header.png) 0 100% repeat-x;
+  background: #340505 url(/images/top.png) repeat-x;
+  font-family: Arial, sans-serif;
 }
 
 .header h1 {
+  padding: 1em 0;
   color: #EEE;
-	font-size: 3.6em;
-	font-weight: 100;
-	font-family: Myriad Pro;
-	text-shadow: 0 0 10px #000;
-	display: inline-block;
+  font-size: 3.6em;
+  font-weight: 100;
+  font-family: Myriad Pro, Lucida Grande;
+  text-shadow: 0 0 10px #000;
+  display: inline-block;
   vertical-align: middle;
-}
-
-.header ul {
-	display: inline-block;
-  vertical-align: middle;
-  margin: 0 5em;
-}
-
-.header ul li {
-	font-size: 1.8em;
-	font-weight: 900;
-  display: inline;
-}
-
-.header ul li a {
-	color: #EEE;
-  padding: 2em 1em;
-  text-decoration: none;
-	text-shadow: 0 0 10px #000;
-}
-
-.header ul li a:hover {
-  text-decoration: underline;
-  background: rgba(0,0,0,.3);
 }
 
 .header h1 a {
@@ -101,19 +54,48 @@ body {
   text-decoration: none;
 }
 
-.header form {
-  float: right;
-  margin: 5px 0 0 0;
-	text-align: right;
-	display: inline-block;
+.nav {
+  text-align: right;
+  padding-top: 4.5em;
+}
+
+.nav ul {
+  display: inline-block;
+  vertical-align: middle;
+  /*margin-left: 10em;*/
+}
+
+.nav ul li {
+  font-size: 1.8em;
+  font-weight: 900;
+  display: inline;
+}
+
+.nav ul li a {
+  color: #EEE;
+  padding: 2.6em 0.6em;
+  text-decoration: none;
+  text-shadow: 0 0 10px #000;
+}
+
+.nav ul li a:hover {
+  text-decoration: underline;
+  background: rgba(0,0,0,.3);
+}
+
+.nav form {
+  /* float: right; */
+  margin-left: 2em;
+  text-align: right;
+  display: inline-block;
   vertical-align: middle;
 }
 
-.header form div {
-	display: inline;
+.nav form div {
+  display: inline;
 }
 
-.header form .text_field input {
+.nav form .text_field input {
   width: 180px;
   background: #e9e4d1;
   border: none;
@@ -122,14 +104,39 @@ body {
 }
 
 .section {
-	background: url(/images/section.png) 0 0 repeat-x;
-	padding: 2.4em;
+ /* background: url(/images/section.png) 0 0 repeat-x;*/
+  padding: 2.4em;
+  color: #EEE;
+}
+
+.section .seller {
+  height: 70px;
+}
+
+.section .seller .count {
+  float: left;
+  width: 30%;
+  font-size: 1.3em;
+  padding-top: 0.4em;
+}
+
+.section .seller .count strong {
+  font-size: 2em;
+  display: block;
+}
+
+.section .seller .blurb {
+  float: right;
+  font-size: 1.6em;
+  line-height: 1.5;
+  margin: 0 0 1.5em 0;
+  width: 70%;
 }
 
 .section p,
-.section ol {
-	color: #EEE;
-	font-size: 1.6em;
+.section ol,
+.section .seller .blurb {
+  font-size: 1.6em;
   line-height: 1.5;
   margin: 0 0 1.5em 0;
 }
@@ -142,11 +149,11 @@ body {
 }
 
 .section .info ol.instructions {
-	border: 1px solid #b4ac99;
-	margin: 36px;
-	font-size: 2.4em;
-	text-shadow: 1px 1px 1px rgba(255,255,255,0.2);
-	background: #FFF;
+  border: 1px solid #b4ac99;
+  margin: 36px;
+  font-size: 2.4em;
+  text-shadow: 1px 1px 1px rgba(255,255,255,0.2);
+  background: #FFF;
 }
 
 .section .info ol.instructions li {
@@ -175,15 +182,15 @@ body {
   width: 100px;
   display: inline-block;
   text-align: right;
-	margin:  0 1em 0 0;
+  margin:  0 1em 0 0;
 }
 
 .section .info ol.instructions li span {
-	font-family: Monaco, Courier, monospace;
-	margin: 0 0 0 1em;
+  font-family: Monaco, Courier, monospace;
+  margin: 0 0 0 1em;
 }
 
 .section .info p {
   color: #5e543e;
-	margin: 0 36px 1.5em 36px;
+  margin: 1.5em 36px;
 }
