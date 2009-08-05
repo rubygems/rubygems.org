@@ -13,6 +13,18 @@ q:before, q:after {
   content: none;
 }
 
+a {
+  text-decoration: none;
+  color: #300000;
+}
+
+a:hover {
+}
+
+a:visited {
+  color: #300000;
+}
+
 /* remember to define focus styles! */
 :focus {
   outline: 0;
@@ -39,34 +51,34 @@ body {
 }
 
 .header h1 {
-  padding: 1em 0;
-  color: #EEE;
-  font-size: 3.6em;
-  font-weight: 100;
-  font-family: Myriad Pro, Lucida Grande;
-  text-shadow: 0 0 10px #000;
   display: inline-block;
   vertical-align: middle;
+  padding-top: 3em;
 }
 
 .header h1 a {
-  color: #EEE;
+  display: block;
+  width: 214px;
+  height: 50px;
+  text-indent: -9999px;
   text-decoration: none;
+  background: url(/images/logo.png)
+
 }
 
 .nav {
   text-align: right;
-  padding-top: 4.5em;
+  padding-top: 2.0em;
 }
 
 .nav ul {
-  display: inline-block;
+  display: block;
   vertical-align: middle;
-  /*margin-left: 10em;*/
+  margin-bottom: 10px;
 }
 
 .nav ul li {
-  font-size: 1.8em;
+  font-size: 1.5em;
   font-weight: 900;
   display: inline;
 }
@@ -84,11 +96,6 @@ body {
 }
 
 .nav form {
-  /* float: right; */
-  margin-left: 2em;
-  text-align: right;
-  display: inline-block;
-  vertical-align: middle;
 }
 
 .nav form div {
@@ -96,17 +103,20 @@ body {
 }
 
 .nav form .text_field input {
-  width: 180px;
-  background: #e9e4d1;
-  border: none;
-  padding: .5em;
   color: #28221e;
+  width: 300px;
+  border: none;
+  padding: .4em;
+  font-size: 2em;
+  background: #e9e4d1;
+  font-family: "Myriad Pro", "Lucida Grande", Tahoma, sans-serif;
 }
 
 .section {
  /* background: url(/images/section.png) 0 0 repeat-x;*/
   padding: 2.4em;
   color: #EEE;
+  margin-top: 30px;
 }
 
 .section .seller {
@@ -117,15 +127,17 @@ body {
   float: left;
   width: 30%;
   font-size: 1.3em;
-  padding-top: 0.4em;
+  padding-top: 0.2em;
 }
 
 .section .seller .count strong {
   font-size: 2em;
+  padding-bottom: 5px;
   display: block;
 }
 
 .section .seller .blurb {
+  text-align: right;
   float: right;
   font-size: 1.6em;
   line-height: 1.5;
@@ -193,4 +205,24 @@ body {
 .section .info p {
   color: #5e543e;
   margin: 1.5em 36px;
+}
+
+.footer .links {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px solid #E9E4D1;
+  height: 30px;
+}
+
+.footer .links a {
+  border: none;
+  text-align: center;
+  font-weight: normal;
+  color: #E9E4D1;
+  font-size: 1.5em;
+  margin-right: 10px;
+}
+
+.footer a:hover {
+  text-decoration: underline;
 }
