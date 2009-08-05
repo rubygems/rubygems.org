@@ -195,7 +195,11 @@ namespace :gemcutter do
 
   desc 'Get the latest gems from rubyforge and index them here'
   task :update => :environment do
+    return unless Rails.env.production?
+
+    require 'open-uri'
     require 'rubygems/commands/list_command'
+
     ins = StringIO.new
     outs = StringIO.new
     Gem::DefaultUserInteraction.ui = Gem::StreamUI.new(ins, outs)
@@ -224,10 +228,17 @@ namespace :gemcutter do
           downloads << "#{name}-#{version}.gem"
         end
       end
-      puts downloads.size
-      downloads.each { |d| puts d }
-      #  cutter = Gemcutter.new(nil, StringIO.new(File.open(path).read))
-      #  cutter.pull_spec and cutter.find and cutter.save
+
+    end
+
+    downloads.each do |download|
+      puts "Downloading #{download}..."
+      begin
+        cutter = Gemcutter.new(nil, StringIO.new(open("http://gems.rubyforge.org/gems/#{download}").read))
+        cutter.pull_spec and cutter.find and cutter.build and cutter.save
+      rescue Exception => e
+        puts e.message
+      end
     end
   end
 end
