@@ -8,10 +8,29 @@ After do
   FileUtils.rm_rf(TEST_DIR)
 end
 
-Given /^I have a gem "([^\"]*)" with version "([^\"]*)"$/ do |name, version|
-  `jeweler #{name} --summary "Gemcutter";` unless File.exists?(name)
+def build_gem(name, version, summary = "Gemcutter")
+  FileUtils.rm_rf(name) if File.exists?(name)
+  `jeweler #{name} --summary "#{summary}";`
   `cd #{name}; echo "#{version}" > VERSION; rake gemspec build 2>&1 /dev/null;`
 end
+
+Given /^I have a gem "([^\"]*)" with version "([^\"]*)"$/ do |name, version|
+  build_gem(name, version)
+end
+
+Given /^I have a gem "([^\"]*)" with version "([^\"]*)" and summary "([^\"]*)"$/ do |name, version, summary|
+  build_gem(name, version, summary)
+end
+
+When /^I visit the gem page for "([^\"]*)"$/ do |gem_name|
+  When %{I go to the homepage}
+  When %{I follow "list"}
+  When %{I follow "#{gem_name.first}"}
+  When %{I follow "#{gem_name}"}
+end
+
+
+
 
 When /^I push the gem "([^\"]*)" as "([^\"]*)"$/ do |name, creds|
   user, pass = creds.split('/')
