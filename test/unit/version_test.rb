@@ -5,6 +5,20 @@ class VersionTest < ActiveSupport::TestCase
   should_have_many :requirements, :dependent => :destroy
   should_have_many :dependencies, :through => :requirements
 
+  context "with a rubygem" do
+    setup do
+      @rubygem = Factory(:rubygem)
+    end
+
+    should "not allow duplicate versions" do
+      @version = Factory.build(:version, :rubygem => @rubygem, :number => "1.0.0")
+      @version_dup = @version.dup
+
+      assert @version.save
+      assert ! @version_dup.valid?
+    end
+  end
+
   context "with a version" do
     setup do
       @version = Factory(:version)
@@ -15,7 +29,7 @@ class VersionTest < ActiveSupport::TestCase
     should_not_allow_values_for :number, "#YAML<CEREALIZATION-FAIL>",
                                          "1.2.3-\"[javalol]\"",
                                          "0.8.45::Gem::PLATFORM::FAILBOAT"
-    should_validate_uniqueness_of :number
+
 
     should "give number for #to_s" do
       assert_equal @version.number, @version.to_s
