@@ -29,9 +29,6 @@ When /^I visit the gem page for "([^\"]*)"$/ do |gem_name|
   When %{I follow "#{gem_name}"}
 end
 
-
-
-
 When /^I push the gem "([^\"]*)" as "([^\"]*)"$/ do |name, creds|
   user, pass = creds.split('/')
   basic_auth(user, pass)

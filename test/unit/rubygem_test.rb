@@ -121,11 +121,28 @@ class RubygemTest < ActiveSupport::TestCase
     context "with some versions" do
       setup do
         @version_hash = {:number => "0.0.0"}
-        @versions = "version"
+        @versions = "versions"
 
         stub(@rubygem).versions { @versions }
-        stub(Version).destroy_all
-        stub(@versions).build
+      end
+
+      context "building a version" do
+        should "build new version if none exists" do
+          mock(@versions).find_by_number(@version_hash[:number]) { nil }
+          mock(@versions).build(@version_hash)
+          @rubygem.build_version(@version_hash)
+        end
+
+        should "set attributes of existing version if one exists" do
+          existing_version = "existing version"
+          mock(existing_version).attributes = @version_hash
+          mock(@versions).find_by_number(@version_hash[:number]) { existing_version }
+          mock(@versions).build.never
+          @rubygem.build_version(@version_hash)
+
+          mock(existing_version).save
+          @rubygem.save
+        end
       end
 
       context "building a new set of dependencies" do
@@ -141,23 +158,6 @@ class RubygemTest < ActiveSupport::TestCase
         should "build a dependency" do
           mock(@dependencies).build(:rubygem_name => @dep.name, :name => @dep.requirements_list.to_s)
           @rubygem.build_dependencies(@dependencies)
-        end
-      end
-
-      context "building a new set of versions" do
-        before_should "destroy versions with the given number and id" do
-          stub(@rubygem).id { 42 }
-          mock(Version).destroy_all(:number => @version_hash[:number], :rubygem_id => @rubygem.id)
-        end
-
-        before_should "create a new version with the given hash" do
-          mock(@versions).build(@version_hash)
-        end
-
-        setup do
-          stub(Version).destroy_all
-          stub(@versions).build
-          @rubygem.build_version(@version_hash)
         end
       end
     end

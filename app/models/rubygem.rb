@@ -26,6 +26,8 @@ class Rubygem < ActiveRecord::Base
     :include => [:versions] }
   }
 
+  before_save :save_updated_version
+
   def self.total_count
     with_versions.count
   end
@@ -75,8 +77,13 @@ class Rubygem < ActiveRecord::Base
   end
 
   def build_version(data)
-    Version.destroy_all(:number => data[:number], :rubygem_id => self.id)
-    versions.build(data)
+    version = versions.find_by_number(data[:number])
+    if version
+      version.attributes = data
+      @updated_version = version
+    else
+      versions.build(data)
+    end
   end
 
   def build_links(homepage)
@@ -89,5 +96,9 @@ class Rubygem < ActiveRecord::Base
 
   def build_ownership(user)
     ownerships.build(:user => user, :approved => true) if new_record?
+  end
+
+  def save_updated_version
+    @updated_version.save if @updated_version
   end
 end
