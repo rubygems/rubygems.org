@@ -8,7 +8,7 @@ class Version < ActiveRecord::Base
   validates_format_of :number, :with => /^[\w\.\-_]+$/
 
   def validate
-    if Version.exists?(:rubygem_id => self.rubygem_id, :number => number)
+    if new_record? && Version.exists?(:rubygem_id => rubygem_id, :number => number)
       errors.add_to_base("A version already exists with this number.")
     end
   end
