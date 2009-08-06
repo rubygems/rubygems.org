@@ -4,6 +4,7 @@ class Version < ActiveRecord::Base
   has_many :requirements, :dependent => :destroy
   has_many :dependencies, :through => :requirements, :dependent => :destroy
   validates_format_of :number, :with => /^[\w\.\-_]+$/
+  validates_uniqueness_of :number, :scoped => :rubygem_id
 
   def self.published
     created_at_before(DateTime.now.utc).by_created_at(:desc).limited(5)
