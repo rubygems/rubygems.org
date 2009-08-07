@@ -1,6 +1,6 @@
 class RubygemsController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => :create
-  before_filter :authenticate, :only => :create
+  before_filter :authenticate_with_api_key, :only => :create
   before_filter :redirect_to_root, :only => [:migrate, :mine, :edit, :update], :unless => :signed_in?
   before_filter :load_gem, :only => [:edit, :update]
 
@@ -49,14 +49,6 @@ class RubygemsController < ApplicationController
   end
 
   protected
-    def authenticate
-      @_current_user = User.find_by_api_key(request.headers["Authorization"])
-      if current_user.nil?
-        render :text => "Access Denied. Please sign up for an account at http://gemcutter.org", :status => 401
-      elsif !current_user.email_confirmed
-        render :text => "Access Denied. Please confirm your Gemcutter account.", :status => 403
-      end
-    end
 
     def load_gem
       @gem = Rubygem.find(params[:id])

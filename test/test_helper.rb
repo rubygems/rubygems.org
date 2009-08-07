@@ -31,3 +31,9 @@ def regenerate_index
     server/source_index].map { |d| Dir[d] })
   Gemcutter.indexer.generate_index
 end
+
+def create_gem(owner, opts = {})
+  @gem = Factory(:rubygem, :name => opts[:name] || Factory.next(:name))
+  Factory(:version, :rubygem => @gem)
+  @gem.ownerships.create(:user => owner, :approved => true)
+end

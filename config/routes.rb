@@ -2,7 +2,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :rubygems,
                 :as         => "gems",
                 :collection => { :mine => :get } do |rubygems|
-    rubygems.resource :migrate, :only => [:create, :show]
+    rubygems.resource :migrate, :only => [:create, :show], :controller => "migrations"
     rubygems.resources :ownerships
   end
 
