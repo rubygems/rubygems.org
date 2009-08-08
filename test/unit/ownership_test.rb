@@ -14,16 +14,21 @@ class OwnershipTest < ActiveSupport::TestCase
   context "with ownership" do
     setup do
       @ownership = Factory(:ownership)
+      Factory(:version, :rubygem => @ownership.rubygem)
+      name = @ownership.rubygem.name
+      subdomain = @ownership.rubygem.rubyforge_project
+      @url = "http://#{subdomain}.rubyforge.org/migrate-#{name}.html"
+    end
+
+    should "not blow up if checking for upload dies" do
+      FakeWeb.register_uri(:get, @url, :body   => "Nothing to be found 'round here",
+                                       :status => ["404", "Not Found"])
+      @ownership.check_for_upload
+      assert ! @ownership.approved
     end
 
     should "check for upload" do
-      name = @ownership.rubygem.name
-      Factory(:version, :rubygem => @ownership.rubygem)
-      subdomain = @ownership.rubygem.rubyforge_project
-
-      FakeWeb.register_uri(:get,
-                           "http://#{subdomain}.rubyforge.org/migrate-#{name}.html",
-                           :body => @ownership.token)
+      FakeWeb.register_uri(:get, @url, :body => @ownership.token)
 
       @ownership.check_for_upload
       assert @ownership.approved
