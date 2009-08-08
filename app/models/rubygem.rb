@@ -40,6 +40,10 @@ class Rubygem < ActiveRecord::Base
     with_versions.by_downloads(:desc).limited(5)
   end
 
+  def rubyforge_project
+    versions.current ? versions.current.rubyforge_project : ""
+  end
+
   def unowned?
     ownerships.find_by_approved(true).blank?
   end
