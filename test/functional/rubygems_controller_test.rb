@@ -14,7 +14,7 @@ class RubygemsControllerTest < ActionController::TestCase
         3.times { Factory(:rubygem) }
         @gems = (1..3).map do
           rubygem = Factory(:rubygem)
-          rubygem.ownerships << Factory(:ownership, :user => @user, :rubygem => rubygem)
+          rubygem.ownerships.create(:user => @user, :approved => true)
           rubygem
         end
         get :mine
