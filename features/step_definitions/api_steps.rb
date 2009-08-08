@@ -14,9 +14,12 @@ end
 When /^I migrate the gem "([^\"]*)" with my api key$/ do |name|
   header("HTTP_AUTHORIZATION", @api_key)
   visit rubygem_migrate_path(name), :post
-end
+  token = response.body
 
-When /^I upload the token to my "([^\"]*)" rubyforge project$/ do |name|
-  pending
-end
+  rubygem = Rubygem.find_by_name!(name)
+  subdomain = rubygem.versions.current.rubyforge_project
 
+  FakeWeb.register_uri(:get,
+                       "http://#{subdomain}.rubyforge.org/migrate-#{name}.html",
+                       :body => token)
+end
