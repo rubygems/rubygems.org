@@ -9,6 +9,7 @@ class MigrationsController < ApplicationController
 
     if @rubygem.unowned?
       ownership = @rubygem.ownerships.create(:user => current_user)
+      ownership.send_later(:check_for_upload)
       render :text => ownership.token
     else
       render :text => "This gem has already been migrated by another user.", :status => :forbidden

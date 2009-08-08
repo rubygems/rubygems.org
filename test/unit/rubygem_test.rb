@@ -213,9 +213,19 @@ class RubygemTest < ActiveSupport::TestCase
       @rubygem_with_version = Factory(:rubygem)
       Factory(:version, :rubygem => @rubygem_with_version)
     end
+
     should "return only gems with versions for #with_versions" do
       assert Rubygem.with_versions.include?(@rubygem_with_version)
       assert !Rubygem.with_versions.include?(@rubygem_without_version)
+    end
+
+    should "return a blank rubyforge project without any versions" do
+      assert_equal "", @rubygem_without_version.rubyforge_project
+    end
+
+    should "return the current rubyforge project with a version" do
+      assert_equal @rubygem_with_version.versions.current.rubyforge_project,
+                   @rubygem_with_version.rubyforge_project
     end
   end
 
