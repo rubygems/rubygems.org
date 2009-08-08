@@ -4,6 +4,9 @@ require 'test_help'
 require 'rack/test'
 require 'sinatra'
 require 'rr'
+require 'fakeweb'
+
+FakeWeb.allow_net_connect = false
 
 set :environment, :test
 
