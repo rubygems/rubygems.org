@@ -6,10 +6,14 @@ class Ownership < ActiveRecord::Base
   after_update :remove_unapproveds
 
   def check_for_upload
-    upload = open("http://#{rubygem.rubyforge_project}.rubyforge.org/migrate-#{rubygem.name}.html")
-
-    if upload.string == token
-      update_attribute(:approved, true)
+    begin
+      url = "http://#{rubygem.rubyforge_project}.rubyforge.org/migrate-#{rubygem.name}.html"
+      upload = open(url)
+      if upload.string == token
+        update_attribute(:approved, true)
+      end
+    rescue *HTTP_ERRORS => ex
+      logger.info "Problem when opening #{url}: #{ex}"
     end
   end
 
