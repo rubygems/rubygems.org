@@ -18,7 +18,7 @@ class MigrationsController < ApplicationController
     ownership = @rubygem.ownerships.find_by_user_id(current_user.id)
     if ownership
       if ownership.migrated?
-        render :text => "Your gem has been migrated! You can now push new versions with gem push #{@rubygem.name}", :status => :created
+        render :text => "Your gem has been migrated! You can now push new versions with: `gem push #{@rubygem.name}`", :status => :created
       else
         render :text => "Gemcutter is still looking for your migration token.", :status => :accepted
       end
