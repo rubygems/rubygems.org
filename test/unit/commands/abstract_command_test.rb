@@ -38,6 +38,32 @@ class AbstractCommandTest < CommandTest
       end
     end
 
+    should "use a proxy if specified" do
+      stub(@command).http_proxy { 'http://some.proxy' }
+      mock(@command).use_proxy!
+      mock(@command).sign_in
+      @command.setup
+    end
+
+    should "not use a proxy if unspecified" do
+      stub(@command).http_proxy { nil }
+      mock(@command).use_proxy!.never
+      mock(@command).sign_in
+      @command.setup
+    end
+
+    should "sign in if no api key" do
+      stub(Gem).configuration { {:gemcutter_key => nil} }
+      mock(@command).sign_in
+      @command.setup
+    end
+
+    should "not sign in if api key exists" do
+      stub(Gem).configuration { {:gemcutter_key => "1234567890"} }
+      mock(@command).sign_in.never
+      @command.setup
+    end
+
     context "using the proxy" do
       setup do
         stub(Gem).configuration { { :http_proxy => "http://gilbert:sekret@proxy.example.org:8081" } }
