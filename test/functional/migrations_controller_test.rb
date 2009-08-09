@@ -6,6 +6,7 @@ class MigrationsControllerTest < ActionController::TestCase
       @rubygem = Factory(:rubygem)
     end
     should_forbid_access_when("starting the migration") { post :create, :rubygem_id => @rubygem }
+    should_forbid_access_when("checking the migration") { put :update, :rubygem_id => @rubygem }
   end
 
   context "with a confirmed user authenticated" do
@@ -27,20 +28,48 @@ class MigrationsControllerTest < ActionController::TestCase
       assert_response :forbidden
     end
 
-    should "render the ownership token if the migration has not been completed" do
-      rubygem = Factory(:rubygem)
-      post :create, :rubygem_id => rubygem.id
-      assert_response :success
-      assert_equal Ownership.last.token, @response.body
-    end
+    context "with a rubygem" do
+      setup do
+        @rubygem = Factory(:rubygem)
+      end
 
-    should "not create another ownership if migration is started again" do
-      rubygem = Factory(:rubygem)
-      ownership = rubygem.ownerships.create(:user => @user)
+      should "render the ownership token if the migration has not been completed" do
+        post :create, :rubygem_id => @rubygem.id
+        assert_response :success
+        assert_equal Ownership.last.token, @response.body
+      end
 
-      post :create, :rubygem_id => rubygem.id
-      assert_response :success
-      assert_equal ownership.token, @response.body
+      should "not create another ownership if migration is started again" do
+        ownership = @rubygem.ownerships.create(:user => @user)
+
+        post :create, :rubygem_id => @rubygem.id
+        assert_response :success
+        assert_equal ownership.token, @response.body
+      end
+
+      context "with an ownership" do
+        setup do
+          @ownership = @rubygem.ownerships.create(:user => @user)
+          stub(Rubygem).find { @rubygem }
+          stub(@rubygem).ownerships.stub!.find_by_user_id { @ownership }
+        end
+
+        should "respond with created if the token has been found" do
+          stub(@ownership).migrated? { true }
+
+          put :update, :rubygem_id => @rubygem.id
+          assert_response :created
+          assert_match /has been migrated/, @response.body
+        end
+
+        should "respond with accepted if the token hasn't been found" do
+          stub(@ownership).migrated? { false }
+
+          put :update, :rubygem_id => @rubygem.id
+          assert_response :accepted
+          assert_match /still looking/, @response.body
+        end
+      end
     end
   end
 end
