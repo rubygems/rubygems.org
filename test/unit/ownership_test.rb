@@ -23,14 +23,14 @@ class OwnershipTest < ActiveSupport::TestCase
     should "not blow up if checking for upload dies" do
       FakeWeb.register_uri(:get, @url, :body   => "Nothing to be found 'round here",
                                        :status => ["404", "Not Found"])
-      @ownership.check_for_upload
+      assert ! @ownership.migrated?
       assert ! @ownership.approved
     end
 
     should "check for upload" do
       FakeWeb.register_uri(:get, @url, :body => @ownership.token)
 
-      @ownership.check_for_upload
+      assert @ownership.migrated?
       assert @ownership.approved
     end
 
