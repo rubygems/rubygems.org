@@ -1,5 +1,5 @@
 --- !ruby/object:Gem::Specification 
-name: thoughtbot-clearance
+name: qrush-clearance
 version: !ruby/object:Gem::Version 
   version: 0.7.0
 platform: ruby

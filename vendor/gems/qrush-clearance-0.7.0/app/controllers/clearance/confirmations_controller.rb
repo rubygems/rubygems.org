@@ -1,5 +1,4 @@
 class Clearance::ConfirmationsController < ApplicationController
-  unloadable
 
   before_filter :redirect_signed_in_confirmed_user,  :only => [:new, :create]
   before_filter :redirect_signed_out_confirmed_user, :only => [:new, :create]
