@@ -2,8 +2,10 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :rubygems,
                 :as         => "gems",
                 :collection => { :mine => :get } do |rubygems|
-    rubygems.resource :migrate, :only => [:create, :update], :controller => "migrations"
-    rubygems.resources :ownerships
+
+    rubygems.resource :migrate,
+                      :only       => [:create, :update],
+                      :controller => "migrations"
   end
 
   map.search "/search", :controller => "searches", :action => "new"

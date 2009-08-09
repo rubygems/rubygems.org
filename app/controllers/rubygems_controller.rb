@@ -1,7 +1,7 @@
 class RubygemsController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => :create
   before_filter :authenticate_with_api_key, :only => :create
-  before_filter :redirect_to_root, :only => [:migrate, :mine, :edit, :update], :unless => :signed_in?
+  before_filter :redirect_to_root, :only => [:mine, :edit, :update], :unless => :signed_in?
   before_filter :load_gem, :only => [:edit, :update]
 
   def mine
@@ -20,17 +20,6 @@ class RubygemsController < ApplicationController
   end
 
   def edit
-  end
-
-  def migrate
-    @gem = Rubygem.find(params[:id])
-
-    if @gem.unowned?
-      @ownership = Ownership.find_or_create_by_user_id_and_rubygem_id(current_user.id, @gem.id)
-    else
-      flash[:failure] = "This gem has already been migrated."
-      redirect_to rubygem_path(@gem)
-    end
   end
 
   def update
