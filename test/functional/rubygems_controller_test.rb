@@ -285,7 +285,7 @@ class RubygemsControllerTest < ActionController::TestCase
       should_respond_with 422
       should_not_change "Rubygem.count"
       should "not register gem" do
-        assert_equal "Gemcutter cannot process this gem. Please try rebuilding it and installing it locally to make sure it's valid.", @response.body
+        assert_match /Gemcutter cannot process this gem/, @response.body
       end
     end
 

@@ -1,8 +1,6 @@
 When /^I visit the gem page for "([^\"]*)"$/ do |gem_name|
-  When %{I go to the homepage}
-  When %{I follow "list"}
-  When %{I follow "#{gem_name.first}"}
-  When %{I follow "#{gem_name}"}
+  rubygem = Rubygem.find_by_name!(gem_name)
+  visit(rubygem_path(rubygem.name))
 end
 
 And /^I save and open the page$/ do
