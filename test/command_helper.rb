@@ -10,10 +10,9 @@ require 'rr'
 
 FakeWeb.allow_net_connect = false
 
-require File.join("lib", "rubygems_plugin")
-%w(push tumble).each do |command|
-  require File.join("lib", "commands", command)
-end
+$:.unshift File.expand_path(File.join(File.dirname(__FILE__), "..", "lib"))
+
+require "rubygems_plugin"
 
 class CommandTest < ActiveSupport::TestCase
   include RR::Adapters::TestUnit unless include?(RR::Adapters::TestUnit)
