@@ -5,7 +5,7 @@ class Ownership < ActiveRecord::Base
   before_create :generate_token
   after_update :remove_unapproveds
 
-  def check_for_upload
+  def migrated?
     begin
       url = "http://#{rubygem.rubyforge_project}.rubyforge.org/migrate-#{rubygem.name}.html"
       upload = open(url)
@@ -14,6 +14,7 @@ class Ownership < ActiveRecord::Base
       end
     rescue *HTTP_ERRORS => ex
       logger.info "Problem when opening #{url}: #{ex}"
+      false
     end
   end
 
