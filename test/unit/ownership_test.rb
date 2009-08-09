@@ -27,12 +27,20 @@ class OwnershipTest < ActiveSupport::TestCase
       assert ! @ownership.approved
     end
 
-    should "check for upload" do
+    should "approve upload" do
       FakeWeb.register_uri(:get, @url, :body => @ownership.token)
 
       assert @ownership.migrated?
       assert @ownership.approved
     end
+
+    should "approve upload if token ends with a newline" do
+      FakeWeb.register_uri(:get, @url, :body => @ownership.token + "\n")
+
+      assert @ownership.migrated?
+      assert @ownership.approved
+    end
+
 
     should "delete other ownerships once approved" do
       rubygem = @ownership.rubygem

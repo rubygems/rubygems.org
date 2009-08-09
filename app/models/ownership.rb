@@ -9,7 +9,7 @@ class Ownership < ActiveRecord::Base
     begin
       url = "http://#{rubygem.rubyforge_project}.rubyforge.org/migrate-#{rubygem.name}.html"
       upload = open(url)
-      if upload.string == token
+      if upload.string.strip == token
         update_attribute(:approved, true)
       end
     rescue *HTTP_ERRORS => ex
