@@ -1,4 +1,4 @@
-class Gem::Commands::TumbleCommand < Gem::Command
+class Gem::Commands::TumbleCommand < Gem::AbstractCommand
   def description
     'Enable or disable Gemcutter as your primary gem source.'
   end

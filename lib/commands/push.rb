@@ -2,7 +2,7 @@ require 'net/http'
 require 'net/https'
 require 'rubygems/local_remote_options'
 
-class Gem::Commands::PushCommand < Gem::Command
+class Gem::Commands::PushCommand < Gem::AbstractCommand
 
   include Gem::LocalRemoteOptions
 
@@ -35,10 +35,10 @@ class Gem::Commands::PushCommand < Gem::Command
     name = get_one_gem_name
     url = URI.parse("#{gemcutter_url}/gems")
 
-    http = Net::HTTP.new(url.host, url.port)
+    http = proxy_class.new(url.host, url.port)
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     http.use_ssl = (url.scheme == 'https')
-    request = Net::HTTP::Post.new(url.path)
+    request = proxy_class::Post.new(url.path)
     request.body = File.open(name).read
     request.add_field("Content-Length", request.body.size)
     request.add_field("Authorization", api_key)
