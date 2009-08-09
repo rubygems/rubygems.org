@@ -9,6 +9,7 @@ When /^I push the gem "([^\"]*)" with my api key$/ do |name|
   path = File.join(TEST_DIR, name.split('-').first, "pkg", name)
   header("HTTP_AUTHORIZATION", @api_key)
   visit rubygems_path, :post, File.open(path).read
+  assert_match /Successfully registered/, response.body
 end
 
 When /^I migrate the gem "([^\"]*)" with my api key$/ do |name|

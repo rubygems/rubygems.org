@@ -39,7 +39,7 @@ class GemcutterTest < ActiveSupport::TestCase
       assert @cutter.respond_to?(:rubygem)
 
       assert_equal @user, @cutter.user
-      assert_equal @gem, @cutter.data
+      assert @cutter.data.is_a?(StringIO)
     end
 
     context "processing incoming gems" do
@@ -87,9 +87,7 @@ class GemcutterTest < ActiveSupport::TestCase
         spec = "spec"
 
         mock(@cutter).data { data }
-        mock(data).string { "test" }
-        mock(StringIO).new("test") { io }
-        mock(Gem::Format).from_io(io) { format }
+        mock(Gem::Format).from_io(data) { format }
         mock(format).spec { spec }
 
         @cutter.pull_spec
@@ -162,6 +160,7 @@ class GemcutterTest < ActiveSupport::TestCase
         @spec = gem_spec(:version => @version)
         @ownerships = "ownerships"
 
+        stub(@rubygem).errors.stub!.full_messages
         stub(@rubygem).save
         stub(@rubygem).ownerships { @ownerships }
         stub(@cutter).rubygem { @rubygem }
@@ -226,11 +225,10 @@ class GemcutterTest < ActiveSupport::TestCase
           mock(@cutter).notify("Successfully registered gem: #{@rubygem}", 200)
         end
 
-        before_should "not process if succesfully saved" do
+        before_should "not process if successfully saved" do
           mock(@cutter).build
           mock(@rubygem).save { false }
           mock(@cutter).store.never
-          mock(@cutter).notify("Gemcutter cannot process this gem. Please try rebuilding it and installing it locally to make sure it's valid.", 403)
         end
 
         setup do
