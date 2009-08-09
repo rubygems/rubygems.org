@@ -1,27 +1,12 @@
-require 'rubygems'
-require 'test/unit'
-require 'shoulda'
-require 'redgreen'
-gem 'fakeweb', '>= 1.2.5'
-require 'fakeweb'
-require 'rr'
+require File.dirname(__FILE__) + '/../../command_helper'
 
-FakeWeb.allow_net_connect = false
-
-require File.join("lib", "rubygems_plugin")
-%w(push tumble).each do |command|
-  require File.join("lib", "commands", command)
-end
-
-class PluginTest < Test::Unit::TestCase
-  include RR::Adapters::TestUnit unless include?(RR::Adapters::TestUnit)
-
+class PushCommandTest < CommandTest
   context "pushing" do
     setup do
       @command = Gem::Commands::PushCommand.new
       stub(@command).say
     end
-    
+
     should "use a proxy if specified" do
       stub(Gem).configuration { { :http_proxy => 'http://some.proxy' } }
       mock(@command).use_proxy!
@@ -29,7 +14,7 @@ class PluginTest < Test::Unit::TestCase
       mock(@command).send_gem
       @command.execute
     end
-    
+
     should "not use a proxy if unspecified" do
       stub(Gem).configuration { { :http_proxy => nil } }
       mock(@command).use_proxy!.never
@@ -57,27 +42,27 @@ class PluginTest < Test::Unit::TestCase
         @command.send_gem
       end
     end
-    
+
     context "parsing the proxy" do
-      
+
       should "return nil if no proxy is set" do
         stub(Gem).configuration { { :http_proxy => nil } }
         assert_equal nil, @command.http_proxy
       end
-      
+
       should "return nil if the proxy is set to :no_proxy" do
         stub(Gem).configuration { { :http_proxy => :no_proxy } }
         assert_equal nil, @command.http_proxy
       end
-      
+
       should "return a proxy as a URI if set" do
         stub(Gem).configuration { { :http_proxy => 'http://proxy.example.org:9192' } }
         assert_equal 'proxy.example.org', @command.http_proxy.host
         assert_equal 9192, @command.http_proxy.port
       end
-      
+
     end
-    
+
     context "using the proxy" do
       setup do
         stub(Gem).configuration { { :http_proxy => "http://gilbert:sekret@proxy.example.org:8081" } }
@@ -85,7 +70,7 @@ class PluginTest < Test::Unit::TestCase
         mock(Net::HTTP).Proxy('proxy.example.org', 8081, 'gilbert', 'sekret') { @proxy_class }
         @command.use_proxy!
       end
-      
+
       should "replace Net::HTTP with a proxy version" do
         assert_equal @proxy_class, Net::HTTP
       end
@@ -140,61 +125,6 @@ class PluginTest < Test::Unit::TestCase
 
       mock(@command).say(@response)
       @command.send_gem
-    end
-  end
-
-  context "with a tumbler and some sources" do
-    setup do
-      @sources = ["gems.rubyforge.org", URL]
-      stub(Gem).sources { @sources }
-      @command = Gem::Commands::TumbleCommand.new
-    end
-
-    should "show sources" do
-      mock(@command).puts("Your gem sources are now:")
-      mock(@command).puts("- #{@sources.first}")
-      mock(@command).puts("- #{URL}")
-      @command.show_sources
-    end
-  end
-
-  context "tumbling the gem sources" do
-    setup do
-      @sources = ["http://rubyforge.org"]
-      stub(Gem).sources { @sources }
-      @config = Object.new
-      stub(Gem).configuration { @config }
-
-      @command = Gem::Commands::TumbleCommand.new
-    end
-
-    should "add gemcutter as first source" do
-      mock(@sources).unshift(URL)
-      mock(@config).write
-
-      @command.tumble
-    end
-
-    should "remove gemcutter if it's in the sources" do
-      mock(@sources).include?(URL) { true }
-      mock(@config).write
-      mock(@sources).delete(URL)
-
-      @command.tumble
-    end
-  end
-
-  context "executing the tumbler" do
-    setup do
-      @command = Gem::Commands::TumbleCommand.new
-    end
-
-    should "say thanks, tumble and show the sources" do
-      mock(@command).say(anything)
-      mock(@command).tumble
-      mock(@command).show_sources
-
-      @command.execute
     end
   end
 end
