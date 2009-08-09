@@ -7,35 +7,12 @@ class PushCommandTest < CommandTest
       stub(@command).say
     end
 
-    should "use a proxy if specified" do
-      stub(Gem).configuration { { :http_proxy => 'http://some.proxy' } }
-      mock(@command).use_proxy!
-      mock(@command).sign_in
+    should "setup and send the gem" do
+      mock(@command).setup
       mock(@command).send_gem
       @command.execute
     end
 
-    should "not use a proxy if unspecified" do
-      stub(Gem).configuration { { :http_proxy => nil } }
-      mock(@command).use_proxy!.never
-      mock(@command).sign_in
-      mock(@command).send_gem
-      @command.execute
-    end
-
-    should "sign in then push if no api key" do
-      stub(Gem).configuration { {:gemcutter_key => nil} }
-      mock(@command).sign_in
-      mock(@command).send_gem
-      @command.execute
-    end
-
-    should "not sign in if api key exists" do
-      stub(Gem).configuration { {:gemcutter_key => "1234567890"} }
-      mock(@command).sign_in.never
-      mock(@command).send_gem
-      @command.execute
-    end
 
     should "raise an error with no arguments" do
       assert_raise Gem::CommandLineError do

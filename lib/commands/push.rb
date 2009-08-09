@@ -24,8 +24,7 @@ class Gem::Commands::PushCommand < Gem::AbstractCommand
   end
 
   def execute
-    use_proxy! if http_proxy
-    sign_in unless api_key
+    setup
     send_gem
   end
 
