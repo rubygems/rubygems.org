@@ -1,15 +1,22 @@
 require File.dirname(__FILE__) + '/../../command_helper'
 
-class Gem::Commands::AbstractCommand < Gem::Command
+class Gem::Commands::FakeCommand < Gem::AbstractCommand
+  def description
+    'fake command'
+  end
+
   def initialize
-    super 'abstract'
+    super 'fake', description
+  end
+
+  def execute
   end
 end
 
 class AbstractCommandTest < CommandTest
-  context "pushing" do
+  context "with an fake command" do
     setup do
-      @command = Gem::Commands::AbstractCommand.new
+      @command = Gem::Commands::FakeCommand.new
       stub(@command).say
     end
 
@@ -31,7 +38,6 @@ class AbstractCommandTest < CommandTest
       end
     end
 
-
     context "using the proxy" do
       setup do
         stub(Gem).configuration { { :http_proxy => "http://gilbert:sekret@proxy.example.org:8081" } }
@@ -41,10 +47,9 @@ class AbstractCommandTest < CommandTest
       end
 
       should "replace Net::HTTP with a proxy version" do
-        assert_equal @proxy_class, Net::HTTP
+        assert_equal @proxy_class, @command.proxy_class
       end
     end
-
 
     context "signing in" do
       setup do
