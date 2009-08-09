@@ -33,6 +33,15 @@ class MigrationsControllerTest < ActionController::TestCase
       assert_response :success
       assert_equal Ownership.last.token, @response.body
     end
+
+    should "not create another ownership if migration is started again" do
+      rubygem = Factory(:rubygem)
+      ownership = rubygem.ownerships.create(:user => @user)
+
+      post :create, :rubygem_id => rubygem.id
+      assert_response :success
+      assert_equal ownership.token, @response.body
+    end
   end
 end
 

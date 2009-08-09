@@ -8,8 +8,7 @@ class MigrationsController < ApplicationController
     @rubygem = Rubygem.find(params[:rubygem_id])
 
     if @rubygem.unowned?
-      ownership = @rubygem.ownerships.create(:user => current_user)
-      ownership.send_later(:check_for_upload)
+      ownership = @rubygem.ownerships.find_or_create_by_user_id(current_user.id)
       render :text => ownership.token
     else
       render :text => "This gem has already been migrated by another user.", :status => :forbidden
