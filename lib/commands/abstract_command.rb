@@ -11,6 +11,11 @@ class Gem::AbstractCommand < Gem::Command
     end
   end
 
+  def setup
+    use_proxy! if http_proxy
+    sign_in unless api_key
+  end
+
   def sign_in
     say "Enter your Gemcutter credentials. Don't have an account yet? Create one at #{URL}/sign_up"
 
