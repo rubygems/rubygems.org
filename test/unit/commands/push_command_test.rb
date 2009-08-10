@@ -13,7 +13,6 @@ class PushCommandTest < CommandTest
       @command.execute
     end
 
-
     should "raise an error with no arguments" do
       assert_raise Gem::CommandLineError do
         @command.send_gem
