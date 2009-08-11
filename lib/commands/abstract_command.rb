@@ -1,4 +1,8 @@
+require 'rubygems/local_remote_options'
+
 class Gem::AbstractCommand < Gem::Command
+  include Gem::LocalRemoteOptions
+
   def api_key
     Gem.configuration[:gemcutter_key]
   end
