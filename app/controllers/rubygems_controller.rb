@@ -14,9 +14,21 @@ class RubygemsController < ApplicationController
   end
 
   def show
-    @gem = Rubygem.find(params[:id])
-    @current_version = @gem.versions.current
-    @current_dependencies = @current_version.dependencies if @current_version
+    respond_to do |format|
+      format.html do
+        @gem = Rubygem.find(params[:id])
+        @current_version = @gem.versions.current
+        @current_dependencies = @current_version.dependencies if @current_version
+      end
+      format.json do
+        @gem = Rubygem.super_find(params[:id])
+        if @gem.hosted?
+          render :json => @gem.to_json
+        else
+          render :json => "Not hosted here.", :status => :not_found
+        end
+      end
+    end
   end
 
   def edit

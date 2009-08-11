@@ -48,6 +48,7 @@ require 'lib/core_ext/string'
 #end
 
 Gem.configuration.verbose = false
+ActiveRecord::Base.include_root_in_json = false
 
 require 'clearance/passwords_controller'
 require 'clearance/confirmations_controller'
