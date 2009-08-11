@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../command_helper'
+require File.dirname(__FILE__) + '/../command_helper'
 
 class PushCommandTest < CommandTest
   context "pushing" do

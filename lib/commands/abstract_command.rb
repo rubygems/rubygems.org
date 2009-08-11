@@ -26,14 +26,9 @@ class Gem::AbstractCommand < Gem::Command
     email = ask("Email: ")
     password = ask_for_password("Password: ")
 
-    url = URI.parse("#{gemcutter_url}/api_key")
-
-    http = Net::HTTP.new(url.host, url.port)
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    http.use_ssl = (url.scheme == 'https')
-    request = Net::HTTP::Get.new(url.path)
-    request.basic_auth email, password
-    response = http.request(request)
+    response = make_request(:get, "api_key") do |request|
+      request.basic_auth email, password
+    end
 
     case response
     when Net::HTTPSuccess
@@ -44,6 +39,36 @@ class Gem::AbstractCommand < Gem::Command
       say response.body
       terminate_interaction
     end
+  end
+
+  def make_request(method, path)
+    require 'net/http'
+    require 'net/https'
+
+    url = URI.parse("#{gemcutter_url}/#{path}")
+
+    http = proxy_class.new(url.host, url.port)
+
+    if url.scheme == 'https'
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      http.use_ssl = true
+    end
+
+    request_method =
+      case method
+      when :get
+        proxy_class::Get
+      when :post
+        proxy_class::Post
+      when :put
+        proxy_class::Put
+      else
+        raise ArgumentError
+      end
+
+    request = request_method.new(url.path)
+    yield request if block_given?
+    http.request(request)
   end
 
   def use_proxy!
