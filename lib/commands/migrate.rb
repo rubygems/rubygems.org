@@ -10,11 +10,6 @@ class Gem::Commands::MigrateCommand < Gem::AbstractCommand
   end
 
   def execute
-    require 'open-uri'
-    require 'net/scp'
-    require 'json'
-    require 'tempfile'
-
     setup
     migrate
   end
@@ -27,14 +22,20 @@ class Gem::Commands::MigrateCommand < Gem::AbstractCommand
   end
 
   def find(name)
-    begin
-      data = open("#{gemcutter_url}/gems/#{name}.json")
-      @rubygem = JSON.parse(data.string)
-    rescue OpenURI::HTTPError
+    require 'json'
+
+    response = make_request(:get, "gems/#{name}.json")
+
+    case response
+    when Net::HTTPSuccess
+      begin
+        @rubygem = JSON.parse(response.body)
+      rescue JSON::ParserError => json_error
+        say "There was a problem parsing the data: #{json_error}"
+        terminate_interaction
+      end
+    else
       say "This gem is currently not hosted on Gemcutter."
-      terminate_interaction
-    rescue JSON::ParserError => json_error
-      say "There was a problem parsing the data: #{json_error}"
       terminate_interaction
     end
   end
@@ -42,15 +43,10 @@ class Gem::Commands::MigrateCommand < Gem::AbstractCommand
   def get_token
     say "Starting migration of #{rubygem["name"]} from RubyForge..."
 
-    url = URI.parse("#{gemcutter_url}/gems/#{rubygem["slug"]}/migrate")
-
-    http = proxy_class.new(url.host, url.port)
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    http.use_ssl = (url.scheme == 'https')
-    request = proxy_class::Post.new(url.path)
-    request.add_field("Content-Length", 0)
-    request.add_field("Authorization", api_key)
-    response = http.request(request)
+    response = make_request(:post, "gems/#{rubygem["slug"]}/migrate") do |request|
+      request.add_field("Content-Length", 0)
+      request.add_field("Authorization", api_key)
+    end
 
     case response
     when Net::HTTPSuccess
@@ -63,6 +59,9 @@ class Gem::Commands::MigrateCommand < Gem::AbstractCommand
   end
 
   def upload_token(token)
+    require 'tempfile'
+    require 'net/scp'
+
     url = "#{self.rubygem['rubyforge_project']}.rubyforge.org"
     say "Uploading the migration token to #{url}. Please enter your RubyForge login:"
     login = ask("Login: ")
@@ -84,15 +83,11 @@ class Gem::Commands::MigrateCommand < Gem::AbstractCommand
 
   def check_for_approved
     say "Asking Gemcutter to verify the upload..."
-    url = URI.parse("#{gemcutter_url}/gems/#{rubygem["slug"]}/migrate")
 
-    http = proxy_class.new(url.host, url.port)
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    http.use_ssl = (url.scheme == 'https')
-    request = proxy_class::Put.new(url.path)
-    request.add_field("Content-Length", 0)
-    request.add_field("Authorization", api_key)
-    response = http.request(request)
+    response = make_request(:put, "gems/#{rubygem["slug"]}/migrate") do |request|
+      request.add_field("Content-Length", 0)
+      request.add_field("Authorization", api_key)
+    end
 
     say response.body
   end

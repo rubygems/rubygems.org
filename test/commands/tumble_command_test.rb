@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../command_helper'
+require File.dirname(__FILE__) + '/../command_helper'
 
 class TumbleCommandTest < CommandTest
   context "with a tumbler and some sources" do

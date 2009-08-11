@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../command_helper'
+require File.dirname(__FILE__) + '/../command_helper'
 
 class Gem::Commands::FakeCommand < Gem::AbstractCommand
   def description

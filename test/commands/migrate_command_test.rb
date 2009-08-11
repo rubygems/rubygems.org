@@ -1,4 +1,5 @@
-require File.dirname(__FILE__) + '/../../command_helper'
+require File.dirname(__FILE__) + '/../command_helper'
+require 'net/scp'
 
 class MigrateCommandTest < CommandTest
   context "executing the command" do

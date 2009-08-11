@@ -18,9 +18,6 @@ class Gem::Commands::PushCommand < Gem::AbstractCommand
   end
 
   def execute
-    require 'net/http'
-    require 'net/https'
-
     setup
     send_gem
   end
@@ -29,17 +26,11 @@ class Gem::Commands::PushCommand < Gem::AbstractCommand
     say "Pushing gem to Gemcutter..."
 
     name = get_one_gem_name
-    url = URI.parse("#{gemcutter_url}/gems")
-
-    http = proxy_class.new(url.host, url.port)
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    http.use_ssl = (url.scheme == 'https')
-    request = proxy_class::Post.new(url.path)
-    request.body = File.open(name).read
-    request.add_field("Content-Length", request.body.size)
-    request.add_field("Authorization", api_key)
-
-    response = http.request(request)
+    response = make_request(:post, "gems") do |request|
+      request.body = File.open(name).read
+      request.add_field("Content-Length", request.body.size)
+      request.add_field("Authorization", api_key)
+    end
 
     say response.body
   end
