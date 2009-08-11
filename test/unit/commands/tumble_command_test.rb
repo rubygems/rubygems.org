@@ -9,9 +9,9 @@ class TumbleCommandTest < CommandTest
     end
 
     should "show sources" do
-      mock(@command).puts("Your gem sources are now:")
-      mock(@command).puts("- #{@sources.first}")
-      mock(@command).puts("- #{URL}")
+      mock(@command).say("Your gem sources are now:")
+      mock(@command).say("- #{@sources.first}")
+      mock(@command).say("- #{URL}")
       @command.show_sources
     end
   end
