@@ -1,10 +1,4 @@
-require 'net/http'
-require 'net/https'
-require 'rubygems/local_remote_options'
-
 class Gem::Commands::PushCommand < Gem::AbstractCommand
-
-  include Gem::LocalRemoteOptions
 
   def description
     'Push a gem up to Gemcutter'
@@ -24,6 +18,9 @@ class Gem::Commands::PushCommand < Gem::AbstractCommand
   end
 
   def execute
+    require 'net/http'
+    require 'net/https'
+
     setup
     send_gem
   end
