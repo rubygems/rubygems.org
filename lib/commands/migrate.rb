@@ -1,4 +1,9 @@
+require 'open-uri'
+require 'json'
+
 class Gem::Commands::MigrateCommand < Gem::AbstractCommand
+  attr_reader :rubygem
+
   def description
     'Migrate a gem your own from Rubyforge to Gemcutter.'
   end
@@ -13,16 +18,29 @@ class Gem::Commands::MigrateCommand < Gem::AbstractCommand
   end
 
   def migrate
-    name = get_one_gem_name
-    say "Starting migration of #{name} from RubyForge..."
-    token = get_token(name)
+    find(get_one_gem_name)
+    get_token
     #upload_token(token)
     #check_for_approval(name)
   end
 
+  def find(name)
+    begin
+      data = open("#{gemcutter_url}/gems/#{name}.json")
+      @rubygem = JSON.parse(data.string)
+    rescue OpenURI::HTTPError
+      say "This gem is currently not hosted on Gemcutter."
+      terminate_interaction
+    rescue JSON::ParserError => json_error
+      say "There was a problem parsing the data: #{json_error}"
+      terminate_interaction
+    end
+  end
 
-  def get_token(name)
-    url = URI.parse("#{gemcutter_url}/gems/#{name}/migrate")
+  def get_token
+    say "Starting migration of #{rubygem["name"]} from RubyForge..."
+
+    url = URI.parse("#{gemcutter_url}/gems/#{rubygem["slug"]}/migrate")
 
     http = proxy_class.new(url.host, url.port)
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
