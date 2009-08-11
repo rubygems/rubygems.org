@@ -46,6 +46,46 @@ class RubygemsControllerTest < ActionController::TestCase
       end
     end
 
+    context "On GET to show for a gem that's hosted" do
+      setup do
+        @gem = Factory(:rubygem)
+        Factory(:version, :rubygem => @gem)
+        get :show, :id => @gem.to_param, :format => "json"
+      end
+
+      should_assign_to(:gem) { @gem }
+      should_respond_with :success
+      should "return a json hash" do
+        assert_not_nil JSON.parse(@response.body)
+      end
+    end
+
+    context "On GET to show for a gem that doesn't match the slug" do
+      setup do
+        @gem = Factory(:rubygem, :name => "ZenTest", :slug => "zentest")
+        Factory(:version, :rubygem => @gem)
+        get :show, :id => "ZenTest", :format => "json"
+      end
+
+      should_assign_to(:gem) { @gem }
+      should_respond_with :success
+      should "return a json hash" do
+        assert_not_nil JSON.parse(@response.body)
+      end
+    end
+
+
+    context "On GET to show for a gem that not hosted" do
+      setup do
+        @gem = Factory(:rubygem)
+        assert 0, @gem.versions.count
+        get :show, :id => @gem.to_param, :format => "json"
+      end
+
+      should_assign_to(:gem) { @gem }
+      should_respond_with :not_found
+    end
+
     context "On GET to show for this user's gem" do
       setup do
         create_gem(@user)

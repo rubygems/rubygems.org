@@ -3,14 +3,20 @@ require File.dirname(__FILE__) + '/../test_helper'
 class RubygemTest < ActiveSupport::TestCase
   context "with a saved rubygem" do
     setup do
-      @rubygem = Factory(:rubygem)
+      @rubygem = Factory(:rubygem, :name => "SomeGem")
     end
+    subject { @rubygem }
 
     should_have_many :owners, :through => :ownerships
     should_have_many :ownerships
     should_have_many :versions, :dependent => :destroy
     should_have_one :linkset, :dependent => :destroy
     should_validate_uniqueness_of :name
+
+    should "find by slug or name" do
+      assert_equal @rubygem, Rubygem.super_find("SomeGem")
+      assert_equal @rubygem, Rubygem.super_find("somegem")
+    end
   end
 
   context "with a rubygem" do
@@ -97,6 +103,17 @@ class RubygemTest < ActiveSupport::TestCase
 
     should "return name with downloads for #with_downloads" do
       assert_equal "#{@rubygem.name} (#{@rubygem.downloads})", @rubygem.with_downloads
+    end
+
+    should "return a bunch of json" do
+      Factory(:version, :rubygem => @rubygem)
+      hash = JSON.parse(@rubygem.to_json)
+      assert_equal @rubygem.name, hash["name"]
+      assert_equal @rubygem.downloads, hash["downloads"]
+      assert_equal @rubygem.versions.current.number, hash["version"]
+      assert_equal @rubygem.versions.current.authors, hash["authors"]
+      assert_equal @rubygem.versions.current.info, hash["info"]
+      assert_equal @rubygem.versions.current.rubyforge_project, hash["rubyforge_project"]
     end
 
     context "saving the homepage" do
@@ -217,6 +234,11 @@ class RubygemTest < ActiveSupport::TestCase
     should "return only gems with versions for #with_versions" do
       assert Rubygem.with_versions.include?(@rubygem_with_version)
       assert !Rubygem.with_versions.include?(@rubygem_without_version)
+    end
+
+    should "be hosted or not" do
+      assert ! @rubygem_without_version.hosted?
+      assert @rubygem_with_version.hosted?
     end
 
     should "return a blank rubyforge project without any versions" do
