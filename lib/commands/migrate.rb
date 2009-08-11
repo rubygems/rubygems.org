@@ -1,8 +1,3 @@
-require 'open-uri'
-require 'net/scp'
-require 'json'
-require 'tempfile'
-
 class Gem::Commands::MigrateCommand < Gem::AbstractCommand
   attr_reader :rubygem
 
@@ -15,6 +10,11 @@ class Gem::Commands::MigrateCommand < Gem::AbstractCommand
   end
 
   def execute
+    require 'open-uri'
+    require 'net/scp'
+    require 'json'
+    require 'tempfile'
+
     setup
     migrate
   end
