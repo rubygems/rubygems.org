@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gemcutter}
-  s.version = "0.0.7"
+  s.version = "0.0.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Quaranto"]
-  s.date = %q{2009-08-10}
+  s.date = %q{2009-08-11}
   s.email = %q{nick@quaran.to}
   s.extra_rdoc_files = [
     "README.textile"
@@ -37,10 +37,10 @@ Gem::Specification.new do |s|
   s.summary = %q{Awesome gem hosting}
   s.test_files = [
     "test/command_helper.rb",
-     "test/unit/commands/migrate_command_test.rb",
-     "test/unit/commands/tumble_command_test.rb",
-     "test/unit/commands/push_command_test.rb",
-     "test/unit/commands/abstract_command_test.rb"
+     "test/commands/migrate_command_test.rb",
+     "test/commands/tumble_command_test.rb",
+     "test/commands/push_command_test.rb",
+     "test/commands/abstract_command_test.rb"
   ]
 
   if s.respond_to? :specification_version then
@@ -49,10 +49,13 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<json>, [">= 0"])
+      s.add_runtime_dependency(%q<net-scp>, [">= 0"])
     else
       s.add_dependency(%q<json>, [">= 0"])
+      s.add_dependency(%q<net-scp>, [">= 0"])
     end
   else
     s.add_dependency(%q<json>, [">= 0"])
+    s.add_dependency(%q<net-scp>, [">= 0"])
   end
 end
