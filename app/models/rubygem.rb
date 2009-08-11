@@ -74,6 +74,7 @@ class Rubygem < ActiveRecord::Base
 
   def to_json
     {:name              => name,
+     :slug              => slug,
      :downloads         => downloads,
      :version           => versions.current.number,
      :authors           => versions.current.authors,

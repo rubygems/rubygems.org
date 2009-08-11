@@ -109,6 +109,7 @@ class RubygemTest < ActiveSupport::TestCase
       Factory(:version, :rubygem => @rubygem)
       hash = JSON.parse(@rubygem.to_json)
       assert_equal @rubygem.name, hash["name"]
+      assert_equal @rubygem.slug, hash["slug"]
       assert_equal @rubygem.downloads, hash["downloads"]
       assert_equal @rubygem.versions.current.number, hash["version"]
       assert_equal @rubygem.versions.current.authors, hash["authors"]
