@@ -18,9 +18,11 @@ class MigrateCommandTest < CommandTest
   context "migrating" do
     setup do
       @command = Gem::Commands::MigrateCommand.new
+      @token = "deadbeef"
       stub(@command).say
       stub(@command).find
-      stub(@command).get_token
+      stub(@command).get_token { @token }
+      stub(@command).upload_token
     end
 
     should "raise an error with no arguments" do
@@ -34,6 +36,7 @@ class MigrateCommandTest < CommandTest
       @command.migrate
       assert_received(@command) { |subject| subject.find("mygem") }
       assert_received(@command) { |subject| subject.get_token }
+      assert_received(@command) { |subject| subject.upload_token(@token) }
     end
   end
 
@@ -66,7 +69,6 @@ class MigrateCommandTest < CommandTest
       assert_received(@command) { |subject| subject.say(anything) }
       assert_received(@command) { |subject| subject.terminate_interaction }
     end
-
   end
 
   context "getting the token" do
@@ -97,6 +99,41 @@ class MigrateCommandTest < CommandTest
       @command.get_token
       assert_received(@command) { |subject| subject.say("already migrated") }
       assert_received(@command) { |subject| subject.terminate_interaction }
+    end
+  end
+
+  context "uploading the token" do
+    setup do
+      @command = Gem::Commands::MigrateCommand.new
+      @token = "deadbeef"
+      stub(@command).say
+      stub(@command).rubygem { { "rubyforge_project" => "bostonrb" } }
+      stub(Net::SCP).start
+    end
+
+    should "connect to rubyforge and upload away" do
+      stub(@command).ask { "user" }
+      stub(@command).ask_for_password { "secret" }
+      @command.upload_token(@token)
+
+      # TODO: figure out how to test the upload! in the block
+      assert_received(Net::SCP) { |subject| subject.start("bostonrb.rubyforge.org", "user", :password => "secret") }
+    end
+  end
+
+  context "checking if the rubygem was approved" do
+    setup do
+      @command = Gem::Commands::MigrateCommand.new
+      @slug = "rails"
+
+      stub(@command).say
+      stub(@command).rubygem { { "slug" => @slug } }
+    end
+
+    should "let the server decide the status" do
+      FakeWeb.register_uri :put, "https://gemcutter.heroku.com/gems/#{@slug}/migrate", :body => "Success!", :status => 400
+      @command.check_for_approved
+      assert_received(@command) { |subject| subject.say("Success!") }
     end
   end
 end
