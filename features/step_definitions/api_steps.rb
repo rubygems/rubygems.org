@@ -13,16 +13,17 @@ When /^I push the gem "([^\"]*)" with my api key$/ do |name|
 end
 
 When /^I migrate the gem "([^\"]*)" with my api key$/ do |name|
+  rubygem = Rubygem.find_by_name!(name)
+
   header("HTTP_AUTHORIZATION", @api_key)
-  visit rubygem_migrate_path(name), :post
+  visit rubygem_migrate_path(rubygem), :post
   token = response.body
 
-  rubygem = Rubygem.find_by_name!(name)
   subdomain = rubygem.versions.current.rubyforge_project
 
   FakeWeb.register_uri(:get,
                        "http://#{subdomain}.rubyforge.org/migrate-#{name}.html",
                        :body => token)
 
-  visit rubygem_migrate_path(name), :put
+  visit rubygem_migrate_path(rubygem), :put
 end
