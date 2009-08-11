@@ -1,4 +1,5 @@
 require 'open-uri'
+require 'net/scp'
 require 'json'
 
 class Gem::Commands::MigrateCommand < Gem::AbstractCommand
@@ -19,9 +20,8 @@ class Gem::Commands::MigrateCommand < Gem::AbstractCommand
 
   def migrate
     find(get_one_gem_name)
-    get_token
-    #upload_token(token)
-    #check_for_approval(name)
+    token = get_token
+    upload_token(token)
   end
 
   def find(name)
@@ -46,15 +46,46 @@ class Gem::Commands::MigrateCommand < Gem::AbstractCommand
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     http.use_ssl = (url.scheme == 'https')
     request = proxy_class::Post.new(url.path)
+    request.add_field("Content-Length", 0)
     request.add_field("Authorization", api_key)
     response = http.request(request)
 
     case response
     when Net::HTTPSuccess
+      say "A migration token has been created."
       response.body
     else
       say response.body
       terminate_interaction
     end
+  end
+
+  def upload_token(token)
+    url = "#{self.rubygem['rubyforge_project']}.rubyforge.org"
+    say "Uploading the migration token to #{url}. Please enter your RubyForge login:"
+    login = ask("Login: ")
+    password = ask_for_password("Password: ")
+
+    begin
+      Net::SCP.start(url, login, :password => password) do |scp|
+        scp.upload! StringIO.new(token), "/var/www/gforge-projects/#{rubygem['rubyforge_project']}/migrate-#{rubygem['name']}.html"
+      end
+    rescue Exception => e
+      say("There was a problem uploading your token: #{e}")
+    end
+  end
+
+  def check_for_approved
+    url = URI.parse("#{gemcutter_url}/gems/#{rubygem["slug"]}/migrate")
+
+    http = proxy_class.new(url.host, url.port)
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    http.use_ssl = (url.scheme == 'https')
+    request = proxy_class::Put.new(url.path)
+    request.add_field("Content-Length", 0)
+    request.add_field("Authorization", api_key)
+    response = http.request(request)
+
+    say response.body
   end
 end
