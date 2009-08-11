@@ -20,9 +20,8 @@ class Gem::Commands::MigrateCommand < Gem::AbstractCommand
     #check_for_approval(name)
   end
 
-  def get_token(name)
 
-    #rubygem_migrate PUT    /gems/:rubygem_id/migrate(.:format)        {:controller=>"migrations", :action=>"update"}
+  def get_token(name)
     url = URI.parse("#{gemcutter_url}/gems/#{name}/migrate")
 
     http = proxy_class.new(url.host, url.port)
