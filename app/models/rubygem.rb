@@ -28,6 +28,10 @@ class Rubygem < ActiveRecord::Base
 
   before_save :save_updated_version
 
+  def self.super_find(id)
+    find(:first, :conditions => ["name = :id or slug = :id", {:id => id}])
+  end
+
   def self.total_count
     with_versions.count
   end
@@ -38,6 +42,10 @@ class Rubygem < ActiveRecord::Base
 
   def self.downloaded
     with_versions.by_downloads(:desc).limited(5)
+  end
+
+  def hosted?
+    !versions.count.zero?
   end
 
   def rubyforge_project
@@ -62,6 +70,15 @@ class Rubygem < ActiveRecord::Base
     else
       name
     end
+  end
+
+  def to_json
+    {:name              => name,
+     :downloads         => downloads,
+     :version           => versions.current.number,
+     :authors           => versions.current.authors,
+     :info              => versions.current.info,
+     :rubyforge_project => rubyforge_project}.to_json
   end
 
   def with_downloads
