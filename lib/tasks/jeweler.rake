@@ -8,13 +8,19 @@ begin
     gem.homepage = "http://github.com/qrush/gemcutter"
     gem.authors = ["Nick Quaranto"]
     gem.files = FileList["lib/rubygems_plugin.rb", "lib/commands/*"]
-    gem.test_files = []
+    gem.test_files = FileList["test/command_helper.rb", "test/unit/commands/*"]
     gem.rubyforge_project = "gemcutter"
+    gem.add_dependency('json')
     gem.post_install_message = <<MESSAGE
 
-=======================================================================
-Thanks for installing Gemcutter! To get started, please run: gem tumble
-=======================================================================
+========================================================================
+           Thanks for installing Gemcutter! You can now run:
+
+    gem tumble        use Gemcutter as your primary RubyGem source
+    gem push          publish your gems for the world to use and enjoy
+    gem migrate       take over your gem from RubyForge on Gemcutter
+
+========================================================================
 
 MESSAGE
   end

@@ -24,9 +24,9 @@ class Gem::Commands::TumbleCommand < Gem::AbstractCommand
   end
 
   def show_sources
-    puts "Your gem sources are now:"
+    say "Your gem sources are now:"
     Gem.sources.each do |source|
-      puts "- #{source}"
+      say "- #{source}"
     end
   end
 end
