@@ -23,6 +23,7 @@ class MigrateCommandTest < CommandTest
       stub(@command).find
       stub(@command).get_token { @token }
       stub(@command).upload_token
+      stub(@command).check_for_approved
     end
 
     should "raise an error with no arguments" do
@@ -37,6 +38,7 @@ class MigrateCommandTest < CommandTest
       assert_received(@command) { |subject| subject.find("mygem") }
       assert_received(@command) { |subject| subject.get_token }
       assert_received(@command) { |subject| subject.upload_token(@token) }
+      assert_received(@command) { |subject| subject.check_for_approved }
     end
   end
 

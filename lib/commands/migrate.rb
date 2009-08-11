@@ -1,6 +1,7 @@
 require 'open-uri'
 require 'net/scp'
 require 'json'
+require 'tempfile'
 
 class Gem::Commands::MigrateCommand < Gem::AbstractCommand
   attr_reader :rubygem
@@ -22,6 +23,7 @@ class Gem::Commands::MigrateCommand < Gem::AbstractCommand
     find(get_one_gem_name)
     token = get_token
     upload_token(token)
+    check_for_approved
   end
 
   def find(name)
@@ -68,14 +70,20 @@ class Gem::Commands::MigrateCommand < Gem::AbstractCommand
 
     begin
       Net::SCP.start(url, login, :password => password) do |scp|
-        scp.upload! StringIO.new(token), "/var/www/gforge-projects/#{rubygem['rubyforge_project']}/migrate-#{rubygem['name']}.html"
+        temp_token = Tempfile.new("token")
+        temp_token.chmod 0644
+        temp_token.write(token)
+        temp_token.close
+        scp.upload! temp_token.path, "/var/www/gforge-projects/#{rubygem['rubyforge_project']}/migrate-#{rubygem['name']}.html"
       end
+      say "Successfully uploaded your token."
     rescue Exception => e
-      say("There was a problem uploading your token: #{e}")
+      say "There was a problem uploading your token: #{e}"
     end
   end
 
   def check_for_approved
+    say "Asking Gemcutter to verify the upload..."
     url = URI.parse("#{gemcutter_url}/gems/#{rubygem["slug"]}/migrate")
 
     http = proxy_class.new(url.host, url.port)
