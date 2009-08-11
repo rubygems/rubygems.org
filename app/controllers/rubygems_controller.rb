@@ -22,7 +22,7 @@ class RubygemsController < ApplicationController
       end
       format.json do
         @gem = Rubygem.super_find(params[:id])
-        if @gem.hosted?
+        if @gem.try(:hosted?)
           render :json => @gem.to_json
         else
           render :json => "Not hosted here.", :status => :not_found

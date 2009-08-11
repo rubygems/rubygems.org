@@ -86,6 +86,16 @@ class RubygemsControllerTest < ActionController::TestCase
       should_respond_with :not_found
     end
 
+    context "On GET to show for a gem that doesn't exist" do
+      setup do
+        @name = "somegem"
+        Rubygem.delete_all(["name = ?", @name])
+        get :show, :id => @name, :format => "json"
+      end
+
+      should_respond_with :not_found
+    end
+
     context "On GET to show for this user's gem" do
       setup do
         create_gem(@user)
