@@ -1,6 +1,6 @@
 def build_gem(name, version, summary = "Gemcutter")
   FileUtils.rm_rf(name) if File.exists?(name)
-  `jeweler #{name} --summary "#{summary}";`
+  `jeweler #{name} --summary "#{summary}" --description "#{summary}";`
   `cd #{name}; echo "#{version}" > VERSION; rake gemspec build 2>&1 /dev/null;`
 end
 
