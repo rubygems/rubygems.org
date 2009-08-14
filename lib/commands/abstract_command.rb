@@ -8,11 +8,7 @@ class Gem::AbstractCommand < Gem::Command
   end
 
   def gemcutter_url
-    if ENV['test']
-      "http://gemcutter.local"
-    else
-      "https://gemcutter.heroku.com"
-    end
+    ENV['GEMCUTTER_URL'] || 'https://gemcutter.heroku.com'
   end
 
   def setup
