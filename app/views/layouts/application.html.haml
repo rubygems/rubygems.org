@@ -18,8 +18,8 @@
               =link_to "home", root_url
               =link_to "list", rubygems_url
               =link_to "search", search_url
-              =link_to "create", "http://wiki.github.com/qrush/gemcutter/create"
-              =link_to "migrate", "http://wiki.github.com/qrush/gemcutter/migrate"
+              =link_to "create", page_url("create")
+              =link_to "migrate", page_url("migrate")
             %span.account
               -if signed_in?
                 =link_to "my gems", mine_rubygems_url
