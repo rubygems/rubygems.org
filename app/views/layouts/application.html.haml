@@ -33,7 +33,8 @@
             %a.footer{:href => "http://groups.google.com/group/gemcutter"} Discuss
             %a.footer{:href => "http://github.com/qrush/gemcutter"} Code
             %a.footer{:href => "http://twitter.com/rubygemcutter"} Status
-            %a.footer{:href => "http://wiki.github.com/qrush/gemcutter/api"} API
+            =link_to "FAQ", page_url("faq"), :class => "footer"
+            =link_to "API", page_url("api"), :class => "footer"
           -if @title
             .watermark
               %a{:href => "/"}= title

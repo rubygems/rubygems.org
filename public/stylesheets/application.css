@@ -26,6 +26,11 @@ ul {
   list-style-type: none;
 }
 
+ol {
+  list-style-image: none;
+  list-style-position: inside;
+}
+
 li {
   margin-left: 0;
 }

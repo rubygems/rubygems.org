@@ -1,0 +1,38 @@
+<% @title = "FAQ" %>
+<% @subtitle = "don't worry, be happy" %>
+<div class="grid_12">
+  <p>
+    <b>How annoying will this be to upgrade?</b><br />
+    The plan is to use Gemcutter as your canonical gem repository. All of the same gems that were available on RubyForge are ready for your consumption. Install the gemcutter gem and run <code>gem tumble</code> to use it as your primary source.
+  </p>
+
+  <p>
+    <b>How can the process for publishing gems get any easier?</b><br />
+    Through one command- <code>gem push awesome-0.0.0.gem</code>.
+  </p>
+
+  <p>
+    <b>Can anyone push to any gem?</b><br />
+    No. For new gems, once you push them you automatically gain control over it. For existing gems, you need permission to push to them. This permission can be granted by the gem owner (soon!), or if the gem was brought over from RubyForge you can use the migration process.
+  </p>
+
+  <p>
+    <b>How can I gain access of my gem that was available through RubyForge?</b><br />
+    Run <code>gem migrate</code> with the name of your gem, and that's it! Given you have the proper access to your RubyForge account, the Gemcutter gem will upload a secret key to your project's web space on RubyForge then verify its existence to give you full access to your account.
+  </p>
+
+  <p>
+    <b>Will the installation process change for consumers?</b><br />
+    No. In fact it will make their lives better: it will be easier to get to project pages with clearer information and the same data they're used to.
+  </p>
+
+  <p>
+    <b>Why is this better than GitHub gem hosting?</b><br />
+    GitHub's gem system is great, but it's not the canonical source by default. The nice part is that it takes the approval process out, but the namespacing on gems makes it hard for those new to the community to determine what is the right copy to use. Also, the goals here are much different and the site as a whole can be improved over time by the community.
+  </p>
+
+  <p>
+    <b>How can I help?</b><br />
+    Fork away on <a href="http://github.com/qrush/gemcutter">GitHub</a> and make your changes! Gemcutter is run on a 'commit bit' policy, so once you've submitted a patch that is accepted you'll gain access to the main repository.
+  </p>
+</div>
