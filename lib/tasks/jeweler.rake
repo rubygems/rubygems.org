@@ -3,7 +3,8 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "gemcutter"
-    gem.summary = "Awesome gem hosting"
+    gem.summary = "Commands to interact with gemcutter.org"
+    gem.description = "Adds several commands for using gemcutter.org, such as pushing new gems, migrating gems from RubyForge, and more."
     gem.email = "nick@quaran.to"
     gem.homepage = "http://github.com/qrush/gemcutter"
     gem.authors = ["Nick Quaranto"]
