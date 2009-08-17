@@ -17,7 +17,18 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :rubygems,
                 :as           => "gems",
                 :collection   => { :mine => :get },
-                :requirements => { :id => RUBYGEM_NAME_MATCHER }
+                :requirements => { :id => /.*/ } do |rubygems|
+
+    rubygems.resource :owners, :only => [:show, :create, :destroy]
+
+  end
+
+    rubygems.resource :owners, :only => [:show, :create, :destroy]
+
+    rubygems.resource :migrate,
+                      :only       => [:create, :update],
+                      :controller => "migrations"
+  end
 
   map.search "/search", :controller => "searches", :action => "new"
   map.resource :api_key, :only => :show

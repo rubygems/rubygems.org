@@ -27,3 +27,18 @@ When /^I migrate the gem "([^\"]*)" with my api key$/ do |name|
 
   visit migrate_path(:rubygem_id => rubygem.to_param), :put
 end
+
+When /^I list the owners of gem "([^\"]*)" with my api key$/ do |name|
+  header("HTTP_AUTHORIZATION", @api_key)
+  visit rubygem_owners_path(:rubygem_id => name), :get
+end
+
+When /^I add the owner "([^\"]*)" to the rubygem "([^\"]*)" with my api key$/ do |owner_email, rubygem_name|
+  header("HTTP_AUTHORIZATION", @api_key)
+  visit rubygem_owners_path(:rubygem_id => rubygem_name), :post, :email => owner_email
+end
+
+When /^I remove the owner "([^\"]*)" from the rubygem "([^\"]*)" with my api key$/ do |owner_email, rubygem_name|
+  header("HTTP_AUTHORIZATION", @api_key)
+  visit rubygem_owners_path(:rubygem_id => rubygem_name), :delete, :email => owner_email
+end
