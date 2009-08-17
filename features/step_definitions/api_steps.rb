@@ -16,7 +16,7 @@ When /^I migrate the gem "([^\"]*)" with my api key$/ do |name|
   rubygem = Rubygem.find_by_name!(name)
 
   header("HTTP_AUTHORIZATION", @api_key)
-  visit rubygem_migrate_path(rubygem), :post
+  visit migrate_path(:rubygem_id => rubygem.to_param), :post
   token = response.body
 
   subdomain = rubygem.versions.current.rubyforge_project
@@ -25,5 +25,5 @@ When /^I migrate the gem "([^\"]*)" with my api key$/ do |name|
                        "http://#{subdomain}.rubyforge.org/migrate-#{name}.html",
                        :body => token)
 
-  visit rubygem_migrate_path(rubygem), :put
+  visit migrate_path(:rubygem_id => rubygem.to_param), :put
 end
