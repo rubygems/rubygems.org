@@ -1,21 +1,23 @@
+RUBYGEM_NAME_MATCHER = /[A-Za-z0-9\-\_\.]+/
+
 ActionController::Routing::Routes.draw do |map|
 
   map.json_gem "/gems/:id.json",
     :controller   => "rubygems",
     :action       => "show",
     :format       => "json",
-    :requirements => { :id => /.*/ }
+    :requirements => { :id => RUBYGEM_NAME_MATCHER }
 
   map.resource :migrate,
                :only         => [:create, :update],
                :controller   => "migrations",
                :path_prefix  => "/gems/:rubygem_id",
-               :requirements => { :rubygem_id => /.*/ }
+               :requirements => { :rubygem_id => RUBYGEM_NAME_MATCHER }
 
   map.resources :rubygems,
                 :as           => "gems",
                 :collection   => { :mine => :get },
-                :requirements => { :id => /.*/ }
+                :requirements => { :id => RUBYGEM_NAME_MATCHER }
 
   map.search "/search", :controller => "searches", :action => "new"
   map.resource :api_key, :only => :show

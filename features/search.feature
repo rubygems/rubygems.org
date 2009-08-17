@@ -16,12 +16,12 @@ Feature: Search
     Scenario: Search Description
       Given a rubygem exists with a name of "LDAP"
       And a rubygem exists with a name of "twitter"
-      And a rubygem exists with a name of "beer laser"
+      And a rubygem exists with a name of "beer_laser"
       And a version exists for the "LDAP" rubygem with a description of "mail stuff"
       And a version exists for the "twitter" rubygem with a description of "social junk"
-      And a version exists for the "beer laser" rubygem with a description of "amazing beer"
+      And a version exists for the "beer_laser" rubygem with a description of "amazing beer"
       When I go to the homepage
       And I follow "search"
       And I fill in "query" with "beer" 
       And I press "Search"
-      Then I should see "beer laser"
+      Then I should see "beer_laser"
