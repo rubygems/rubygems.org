@@ -2,6 +2,7 @@ class RubygemsController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => :create
   before_filter :authenticate_with_api_key, :only => :create
   before_filter :redirect_to_root, :only => [:mine, :edit, :update], :unless => :signed_in?
+  before_filter :find_gem, :only => [:edit, :update, :show]
   before_filter :load_gem, :only => [:edit, :update]
 
   def mine
@@ -16,12 +17,10 @@ class RubygemsController < ApplicationController
   def show
     respond_to do |format|
       format.html do
-        @gem = Rubygem.find(params[:id])
         @current_version = @gem.versions.current
         @current_dependencies = @current_version.dependencies if @current_version
       end
       format.json do
-        @gem = Rubygem.super_find(params[:id])
         if @gem.try(:hosted?)
           render :json => @gem.to_json
         else
@@ -50,10 +49,21 @@ class RubygemsController < ApplicationController
   end
 
   protected
+    def find_gem
+      @gem = Rubygem.find_by_name(params[:id])
+      if @gem.blank?
+        respond_to do |format|
+          format.html do
+            render :file => 'public/404.html'
+          end
+          format.json do
+            render :text => "This rubygem could not be found.", :status => :not_found
+          end
+        end
+      end
+    end
 
     def load_gem
-      @gem = Rubygem.find(params[:id])
-
       if !@gem.owned_by?(current_user)
         flash[:warning] = "You do not have permission to edit this gem."
         redirect_to root_url

@@ -15,9 +15,6 @@ Rails::Initializer.run do |config|
     :lib     => 'pacecar',
     :source  => 'http://gems.github.com',
     :version => '1.1.5'
-  config.gem "ismasan-sluggable_finder",
-    :lib     => 'sluggable_finder',
-    :version => '2.0.6'
   config.gem 'mislav-will_paginate',
     :version => '~> 2.3.11',
     :lib     => 'will_paginate',
@@ -35,17 +32,8 @@ end
 
 DO_NOT_REPLY = "donotreply@gemcutter.org"
 
-#silence_warnings do
-#  require 'lib/rubygems'
-#  require 'lib/rubygems/format'
-#  require 'lib/rubygems/indexer'
-#  require 'lib/rubygems/platform'
-#  require 'lib/rubygems/source_index'
-#  require 'lib/rubygems/version'
 require 'lib/indexer'
 require 'lib/core_ext/string'
-
-#end
 
 Gem.configuration.verbose = false
 ActiveRecord::Base.include_root_in_json = false

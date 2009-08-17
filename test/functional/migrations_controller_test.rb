@@ -16,15 +16,16 @@ class MigrationsControllerTest < ActionController::TestCase
     end
 
     should "respond with 404 if no rubygem is found" do
-      Rubygem.delete(1)
-      post :create, :rubygem_id => 1
+      name = Factory.next(:name)
+      assert ! Rubygem.exists?(:name => name)
+      post :create, :rubygem_id => name
       assert_response :not_found
     end
 
     should "respond with a 403 if the gem is already owned" do
       other_user = Factory(:email_confirmed_user)
       create_gem(other_user)
-      post :create, :rubygem_id => @gem.id
+      post :create, :rubygem_id => @gem.to_param
       assert_response :forbidden
     end
 
@@ -34,7 +35,7 @@ class MigrationsControllerTest < ActionController::TestCase
       end
 
       should "render the ownership token if the migration has not been completed" do
-        post :create, :rubygem_id => @rubygem.id
+        post :create, :rubygem_id => @rubygem.to_param
         assert_response :success
         assert_equal Ownership.last.token, @response.body
       end
@@ -42,7 +43,7 @@ class MigrationsControllerTest < ActionController::TestCase
       should "not create another ownership if migration is started again" do
         ownership = @rubygem.ownerships.create(:user => @user)
 
-        post :create, :rubygem_id => @rubygem.id
+        post :create, :rubygem_id => @rubygem.to_param
         assert_response :success
         assert_equal ownership.token, @response.body
       end
@@ -57,7 +58,7 @@ class MigrationsControllerTest < ActionController::TestCase
         should "respond with created if the token has been found" do
           stub(@ownership).migrated? { true }
 
-          put :update, :rubygem_id => @rubygem.id
+          put :update, :rubygem_id => @rubygem.to_param
           assert_response :created
           assert_match /has been migrated/, @response.body
         end
@@ -65,7 +66,7 @@ class MigrationsControllerTest < ActionController::TestCase
         should "respond with accepted if the token hasn't been found" do
           stub(@ownership).migrated? { false }
 
-          put :update, :rubygem_id => @rubygem.id
+          put :update, :rubygem_id => @rubygem.to_param
           assert_response :accepted
           assert_match /still looking/, @response.body
         end
