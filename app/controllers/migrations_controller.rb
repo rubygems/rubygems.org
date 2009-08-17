@@ -31,6 +31,6 @@ class MigrationsController < ApplicationController
 
   protected
     def find_rubygem
-      @rubygem = Rubygem.find(params[:rubygem_id])
+      @rubygem = Rubygem.find_by_name!(params[:rubygem_id])
     end
 end

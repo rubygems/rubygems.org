@@ -88,12 +88,15 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to show for a gem that doesn't exist" do
       setup do
-        @name = "somegem"
-        Rubygem.delete_all(["name = ?", @name])
+        @name = Factory.next(:name)
+        assert ! Rubygem.exists?(:name => @name)
         get :show, :id => @name, :format => "json"
       end
 
       should_respond_with :not_found
+      should "say the rubygem was not found" do
+        assert_match /not be found/, @response.body
+      end
     end
 
     context "On GET to show for this user's gem" do
@@ -154,7 +157,7 @@ class RubygemsControllerTest < ActionController::TestCase
       should_set_the_flash_to "Gem links updated."
       should_assign_to(:linkset) { @linkset }
       should "update linkset" do
-        assert_equal @url, Rubygem.find(@gem.to_param).linkset.code
+        assert_equal @url, Rubygem.last.linkset.code
       end
     end
 
@@ -168,7 +171,7 @@ class RubygemsControllerTest < ActionController::TestCase
       should_render_template :edit
       should_assign_to(:linkset) { @linkset }
       should "not update linkset" do
-        assert_not_equal @url, Rubygem.find(@gem.to_param).linkset.code
+        assert_not_equal @url, Rubygem.last.linkset.code
       end
       should "render error messages" do
         assert_contain /error(s)? prohibited/m
@@ -302,7 +305,7 @@ class RubygemsControllerTest < ActionController::TestCase
       end
       should_respond_with :success
       should_assign_to(:_current_user) { @user }
-      should_change "Rubygem.count", :by => 1
+      should_change("the rubygem count") { Rubygem.count }
       should "register new gem" do
         assert_equal @user, Rubygem.last.ownerships.first.user
         assert_equal "Successfully registered gem: test (0.0.0)", @response.body
@@ -332,8 +335,8 @@ class RubygemsControllerTest < ActionController::TestCase
         @request.env["RAW_POST_DATA"] = "really bad gem"
         post :create
       end
-      should_respond_with 422
-      should_not_change "Rubygem.count"
+      should_respond_with :unprocessable_entity
+      should_not_change("the rubygem count") { Rubygem.count }
       should "not register gem" do
         assert_match /Gemcutter cannot process this gem/, @response.body
       end
