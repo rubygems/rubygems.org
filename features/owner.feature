@@ -91,7 +91,7 @@ Feature: Manage owners
       When I remove the owner "original@owner.org" from the rubygem "OGem" with my api key
       Then I should see "Owner removed successfully."
 
-    Scenario: Gem owner removes himself when he is not the last owner
+    Scenario: Gem owner removes himself when he is the last owner
       Given I am signed up and confirmed as "original@owner.org/password"
       And I have an api key for "original@owner.org/password"
       And a rubygem exists with a name of "OGem"
