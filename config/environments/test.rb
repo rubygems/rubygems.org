@@ -41,6 +41,9 @@ config.gem 'cucumber',
            :version => '>= 0.3.9'
 config.gem 'rr',
            :version => '>= 0.7.1'
+config.gem 'rack-test',
+           :lib => 'rack/test',
+           :version => '>= 0.4.1'
 
 require 'redgreen'
 
