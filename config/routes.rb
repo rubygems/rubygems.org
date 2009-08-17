@@ -1,7 +1,16 @@
 ActionController::Routing::Routes.draw do |map|
+
+  # really bad routing hack so json works
+  map.json_gem "/gems/:id.json",
+    :controller   => "rubygems",
+    :action       => "show",
+    :format       => "json",
+    :requirements => { :id => /.*/ }
+
   map.resources :rubygems,
-                :as         => "gems",
-                :collection => { :mine => :get } do |rubygems|
+                :as           => "gems",
+                :collection   => { :mine => :get },
+                :requirements => { :id => /.*/ } do |rubygems|
 
     rubygems.resource :migrate,
                       :only       => [:create, :update],
