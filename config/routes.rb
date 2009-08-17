@@ -17,17 +17,10 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :rubygems,
                 :as           => "gems",
                 :collection   => { :mine => :get },
-                :requirements => { :id => /.*/ } do |rubygems|
+                :requirements => { :id => RUBYGEM_NAME_MATCHER } do |rubygems|
 
     rubygems.resource :owners, :only => [:show, :create, :destroy]
 
-  end
-
-    rubygems.resource :owners, :only => [:show, :create, :destroy]
-
-    rubygems.resource :migrate,
-                      :only       => [:create, :update],
-                      :controller => "migrations"
   end
 
   map.search "/search", :controller => "searches", :action => "new"
