@@ -20,6 +20,10 @@ class OwnershipTest < ActiveSupport::TestCase
       @url = "http://#{subdomain}.rubyforge.org/migrate-#{name}.html"
     end
 
+    subject { @ownership }
+
+    should_validate_uniqueness_of :user_id, :scoped_to => :rubygem_id
+
     should "not blow up if checking for upload dies" do
       FakeWeb.register_uri(:get, @url, :body   => "Nothing to be found 'round here",
                                        :status => ["404", "Not Found"])
