@@ -43,7 +43,7 @@ class Gem::Commands::MigrateCommand < Gem::AbstractCommand
   def get_token
     say "Starting migration of #{rubygem["name"]} from RubyForge..."
 
-    response = make_request(:post, "gems/#{rubygem["slug"]}/migrate") do |request|
+    response = make_request(:post, "gems/#{rubygem["name"]}/migrate") do |request|
       request.add_field("Content-Length", 0)
       request.add_field("Authorization", api_key)
     end
@@ -84,7 +84,7 @@ class Gem::Commands::MigrateCommand < Gem::AbstractCommand
   def check_for_approved
     say "Asking Gemcutter to verify the upload..."
 
-    response = make_request(:put, "gems/#{rubygem["slug"]}/migrate") do |request|
+    response = make_request(:put, "gems/#{rubygem["name"]}/migrate") do |request|
       request.add_field("Content-Length", 0)
       request.add_field("Authorization", api_key)
     end
