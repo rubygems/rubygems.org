@@ -27,10 +27,6 @@ class Rubygem < ActiveRecord::Base
 
   before_save :save_updated_version
 
-  def self.super_find(id)
-    find(:first, :conditions => ["name = :id or slug = :id", {:id => id}])
-  end
-
   def self.total_count
     with_versions.count
   end
@@ -73,7 +69,6 @@ class Rubygem < ActiveRecord::Base
 
   def to_json
     {:name              => name,
-     :slug              => slug,
      :downloads         => downloads,
      :version           => versions.current.number,
      :authors           => versions.current.authors,

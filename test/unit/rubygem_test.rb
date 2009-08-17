@@ -12,11 +12,6 @@ class RubygemTest < ActiveSupport::TestCase
     should_have_many :versions, :dependent => :destroy
     should_have_one :linkset, :dependent => :destroy
     should_validate_uniqueness_of :name
-
-    should "find by slug or name" do
-      assert_equal @rubygem, Rubygem.super_find("SomeGem")
-      assert_equal @rubygem, Rubygem.super_find("somegem")
-    end
   end
 
   context "with a rubygem" do
