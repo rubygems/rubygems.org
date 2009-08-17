@@ -1,6 +1,5 @@
 class Rubygem < ActiveRecord::Base
   include Pacecar
-  sluggable_finder :name
 
   has_many :owners, :through => :ownerships, :source => :user
   has_many :ownerships
@@ -80,6 +79,10 @@ class Rubygem < ActiveRecord::Base
      :authors           => versions.current.authors,
      :info              => versions.current.info,
      :rubyforge_project => rubyforge_project}.to_json
+  end
+
+  def to_param
+    name
   end
 
   def with_downloads
