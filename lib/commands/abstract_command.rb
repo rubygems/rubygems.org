@@ -58,6 +58,8 @@ class Gem::AbstractCommand < Gem::Command
         proxy_class::Post
       when :put
         proxy_class::Put
+      when :delete
+        proxy_class::Delete
       else
         raise ArgumentError
       end
