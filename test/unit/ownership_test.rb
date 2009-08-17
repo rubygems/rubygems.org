@@ -59,4 +59,25 @@ class OwnershipTest < ActiveSupport::TestCase
       assert_not_nil @ownership.token
     end
   end
+
+  context "with multiple ownerships on the same rubygem" do
+    setup do
+      @rubygem       = Factory(:rubygem)
+      @ownership_one = Factory(:ownership, :rubygem => @rubygem)
+      @ownership_two = Factory(:ownership, :rubygem => @rubygem)
+    end
+
+    should "allow deletion of one ownership" do
+      @ownership_one.destroy
+      assert_equal 1, @rubygem.owners.length
+    end
+
+    should "not allow deletion of both ownerships" do
+      @ownership_one.destroy
+      @ownership_two.destroy
+      assert_equal 1, @rubygem.owners.length
+      assert_equal "Can't delete last owner of a gem.", @ownership_two.errors.on(:base)
+    end
+  end
+
 end

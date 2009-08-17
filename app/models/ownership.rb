@@ -6,6 +6,7 @@ class Ownership < ActiveRecord::Base
 
   before_create :generate_token
   after_update :remove_unapproveds
+  before_destroy :keep_last_owner
 
   def migrated?
     begin
@@ -29,4 +30,14 @@ class Ownership < ActiveRecord::Base
     def remove_unapproveds
       self.class.destroy_all(:rubygem_id => rubygem_id, :approved => false) if approved
     end
+
+    def keep_last_owner
+      if rubygem.owners.count == 1
+        errors.add_to_base("Can't delete last owner of a gem.")
+        false
+      else
+        true
+      end
+    end
+
 end
