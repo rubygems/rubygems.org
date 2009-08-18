@@ -9,7 +9,7 @@ class Gemcutter
 
   def initialize(user, data)
     @user = user
-    @data = data
+    @data = StringIO.new(data.read)
   end
 
   def process
@@ -32,7 +32,7 @@ class Gemcutter
       store
       notify("Successfully registered gem: #{rubygem}", 200)
     else
-      notify("Gemcutter cannot process this gem. Please try rebuilding it and installing it locally to make sure it's valid.", 403)
+      notify("There was a problem saving your gem: #{rubygem.errors.full_messages}", 403)
     end
   end
 
@@ -65,10 +65,12 @@ class Gemcutter
 
   def pull_spec
     begin
-      format = Gem::Format.from_io(StringIO.new(data.string))
+      format = Gem::Format.from_io(self.data)
       @spec = format.spec
     rescue Exception => e
-      notify("Gemcutter cannot process this gem. Please try rebuilding it and installing it locally to make sure it's valid.", 422)
+      notify("Gemcutter cannot process this gem.\n" + 
+             "Please try rebuilding it and installing it locally to make sure it's valid.\n" +
+             "Error:\n#{e.message}", 422)
     end
   end
 

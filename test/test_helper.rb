@@ -4,6 +4,9 @@ require 'test_help'
 require 'rack/test'
 require 'sinatra'
 require 'rr'
+require 'fakeweb'
+
+FakeWeb.allow_net_connect = false
 
 set :environment, :test
 
@@ -30,4 +33,10 @@ def regenerate_index
     server/specifications
     server/source_index].map { |d| Dir[d] })
   Gemcutter.indexer.generate_index
+end
+
+def create_gem(owner, opts = {})
+  @gem = Factory(:rubygem, :name => opts[:name] || Factory.next(:name))
+  Factory(:version, :rubygem => @gem)
+  @gem.ownerships.create(:user => owner, :approved => true)
 end

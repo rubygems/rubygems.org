@@ -1,12 +1,7 @@
 require 'test_helper'
 
 class RubygemsControllerTest < ActionController::TestCase
-
-  def create_gem(owner, opts = {})
-    @gem = Factory(:rubygem, :name => opts[:name] || Factory.next(:name))
-    Factory(:version, :rubygem => @gem)
-    @gem.ownerships.create(:user => owner, :approved => true)
-  end
+  should_forbid_access_when("pushing a gem") { post :create }
 
   context "When logged in" do
     setup do
@@ -14,57 +9,12 @@ class RubygemsControllerTest < ActionController::TestCase
       sign_in_as(@user)
     end
 
-    context "On GET to migrate with no ownership" do
-      setup do
-        @gem = Factory(:rubygem)
-        get :migrate, :id => @gem.to_param
-      end
-      should_respond_with :success
-      should_render_template :migrate
-      should_assign_to(:gem) { @gem }
-      should_assign_to(:ownership)
-      should "create unapproved ownership" do
-        ownership = Ownership.find_by_user_id_and_rubygem_id(@user.id, @gem.id)
-        assert_not_nil ownership
-        assert !ownership.approved
-      end
-    end
-
-    context "On GET to migrate with existing unapproved ownership" do
-      setup do
-        @gem = Factory(:rubygem)
-        @ownership = Factory(:ownership, :rubygem => @gem, :user => @user)
-        get :migrate, :id => @gem.to_param
-      end
-      should_respond_with :success
-      should_render_template :migrate
-      should_assign_to(:gem) { @gem }
-      should_assign_to(:ownership) { @ownership }
-    end
-
-    context "On GET to migrate with existing approved ownership" do
-      setup do
-        @gem = Factory(:rubygem)
-        @other_user = Factory(:email_confirmed_user)
-        @ownership = Factory(:ownership, :rubygem => @gem, :user => @other_user, :approved => true)
-        get :migrate, :id => @gem.to_param
-      end
-      should_respond_with :redirect
-      should_redirect_to("the rubygem page") { rubygem_url(@gem) }
-      should_set_the_flash_to "This gem has already been migrated."
-    end
-
-    context "On GET to migrate for a gem that doesn't exist" do
-      setup do
-      end
-    end
-
     context "On GET to mine" do
       setup do
         3.times { Factory(:rubygem) }
         @gems = (1..3).map do
           rubygem = Factory(:rubygem)
-          rubygem.ownerships << Factory(:ownership, :user => @user, :rubygem => rubygem)
+          rubygem.ownerships.create(:user => @user, :approved => true)
           rubygem
         end
         get :mine
@@ -93,6 +43,59 @@ class RubygemsControllerTest < ActionController::TestCase
       should "not render edit link" do
         assert_not_contain "Edit Gem"
         assert_have_no_selector "a[href='#{edit_rubygem_path(@gem)}']"
+      end
+    end
+
+    context "On GET to show for a gem that's hosted" do
+      setup do
+        @gem = Factory(:rubygem)
+        Factory(:version, :rubygem => @gem)
+        get :show, :id => @gem.to_param, :format => "json"
+      end
+
+      should_assign_to(:gem) { @gem }
+      should_respond_with :success
+      should "return a json hash" do
+        assert_not_nil JSON.parse(@response.body)
+      end
+    end
+
+    context "On GET to show for a gem that doesn't match the slug" do
+      setup do
+        @gem = Factory(:rubygem, :name => "ZenTest", :slug => "zentest")
+        Factory(:version, :rubygem => @gem)
+        get :show, :id => "ZenTest", :format => "json"
+      end
+
+      should_assign_to(:gem) { @gem }
+      should_respond_with :success
+      should "return a json hash" do
+        assert_not_nil JSON.parse(@response.body)
+      end
+    end
+
+
+    context "On GET to show for a gem that not hosted" do
+      setup do
+        @gem = Factory(:rubygem)
+        assert 0, @gem.versions.count
+        get :show, :id => @gem.to_param, :format => "json"
+      end
+
+      should_assign_to(:gem) { @gem }
+      should_respond_with :not_found
+    end
+
+    context "On GET to show for a gem that doesn't exist" do
+      setup do
+        @name = Factory.next(:name)
+        assert ! Rubygem.exists?(:name => @name)
+        get :show, :id => @name, :format => "json"
+      end
+
+      should_respond_with :not_found
+      should "say the rubygem was not found" do
+        assert_match /not be found/, @response.body
       end
     end
 
@@ -154,7 +157,7 @@ class RubygemsControllerTest < ActionController::TestCase
       should_set_the_flash_to "Gem links updated."
       should_assign_to(:linkset) { @linkset }
       should "update linkset" do
-        assert_equal @url, Rubygem.find(@gem.to_param).linkset.code
+        assert_equal @url, Rubygem.last.linkset.code
       end
     end
 
@@ -168,7 +171,7 @@ class RubygemsControllerTest < ActionController::TestCase
       should_render_template :edit
       should_assign_to(:linkset) { @linkset }
       should "not update linkset" do
-        assert_not_equal @url, Rubygem.find(@gem.to_param).linkset.code
+        assert_not_equal @url, Rubygem.last.linkset.code
       end
       should "render error messages" do
         assert_contain /error(s)? prohibited/m
@@ -178,15 +181,6 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to mine without being signed in" do
     setup { get :mine }
-    should_respond_with :redirect
-    should_redirect_to('the homepage') { root_url }
-  end
-
-  context "On GET to migrate without being signed in" do
-    setup do
-      @rubygem = Factory(:rubygem)
-      get :migrate, :id => @rubygem.to_param
-    end
     should_respond_with :redirect
     should_redirect_to('the homepage') { root_url }
   end
@@ -298,28 +292,6 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
-  context "On POST to create with no user credentials" do
-    setup do
-      post :create
-    end
-    should "deny access" do
-      assert_response 401
-      assert_match "Access Denied. Please sign up for an account at http://gemcutter.org", @response.body
-    end
-  end
-
-  context "On POST to create with unconfirmed user" do
-    setup do
-      @user = Factory(:user)
-      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
-      post :create
-    end
-    should "deny access" do
-      assert_response 403
-      assert_match "Access Denied. Please confirm your Gemcutter account.", @response.body
-    end
-  end
-
   context "with a confirmed user authenticated" do
     setup do
       @user = Factory(:email_confirmed_user)
@@ -333,7 +305,7 @@ class RubygemsControllerTest < ActionController::TestCase
       end
       should_respond_with :success
       should_assign_to(:_current_user) { @user }
-      should_change "Rubygem.count", :by => 1
+      should_change("the rubygem count") { Rubygem.count }
       should "register new gem" do
         assert_equal @user, Rubygem.last.ownerships.first.user
         assert_equal "Successfully registered gem: test (0.0.0)", @response.body
@@ -363,10 +335,10 @@ class RubygemsControllerTest < ActionController::TestCase
         @request.env["RAW_POST_DATA"] = "really bad gem"
         post :create
       end
-      should_respond_with 422
-      should_not_change "Rubygem.count"
+      should_respond_with :unprocessable_entity
+      should_not_change("the rubygem count") { Rubygem.count }
       should "not register gem" do
-        assert_equal "Gemcutter cannot process this gem. Please try rebuilding it and installing it locally to make sure it's valid.", @response.body
+        assert_match /Gemcutter cannot process this gem/, @response.body
       end
     end
 
@@ -375,7 +347,6 @@ class RubygemsControllerTest < ActionController::TestCase
         @other_user = Factory(:email_confirmed_user)
         create_gem(@other_user, :name => "test")
         @gem.reload
-        #stub(Rubygem).find { @gem }
 
         @request.env["RAW_POST_DATA"] = gem_file("test-1.0.0.gem").read
         post :create
