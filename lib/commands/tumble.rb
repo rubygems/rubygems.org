@@ -1,4 +1,4 @@
-class Gem::Commands::TumbleCommand < Gem::Command
+class Gem::Commands::TumbleCommand < Gem::AbstractCommand
   def description
     'Enable or disable Gemcutter as your primary gem source.'
   end
@@ -24,9 +24,9 @@ class Gem::Commands::TumbleCommand < Gem::Command
   end
 
   def show_sources
-    puts "Your gem sources are now:"
+    say "Your gem sources are now:"
     Gem.sources.each do |source|
-      puts "- #{source}"
+      say "- #{source}"
     end
   end
 end
