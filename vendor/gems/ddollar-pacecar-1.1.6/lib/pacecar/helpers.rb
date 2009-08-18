@@ -38,7 +38,7 @@ module Pacecar
       end
 
       def datetime_column_names
-        column_names_for_type :datetime
+        column_names_for_type :datetime, :date
       end
 
       def text_and_string_column_names

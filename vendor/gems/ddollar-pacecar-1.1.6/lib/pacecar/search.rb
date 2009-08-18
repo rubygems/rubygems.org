@@ -15,13 +15,13 @@ module Pacecar
       def define_search_scopes
         text_and_string_column_names.each do |name|
           named_scope "#{name}_matches".to_sym, lambda { |query|
-            { :conditions => ["#{quoted_table_name}.#{name} like :query", { :query => "%#{query}%" }] }
+            { :conditions => ["upper(#{quoted_table_name}.#{name}) like upper(:query)", { :query => "%#{query}%" }] }
           }
           named_scope "#{name}_starts_with".to_sym, lambda { |query|
-            { :conditions => ["#{quoted_table_name}.#{name} like :query", { :query => "#{query}%" }] }
+            { :conditions => ["upper(#{quoted_table_name}.#{name}) like upper(:query)", { :query => "#{query}%" }] }
           }
           named_scope "#{name}_ends_with".to_sym, lambda { |query|
-            { :conditions => ["#{quoted_table_name}.#{name} like :query", { :query => "%#{query}" }] }
+            { :conditions => ["upper(#{quoted_table_name}.#{name}) like upper(:query)", { :query => "%#{query}" }] }
           }
         end
       end
@@ -32,7 +32,7 @@ module Pacecar
           query = args.flatten.first
           columns = opts[:on] || non_state_text_and_string_columns
           joiner = opts[:require].eql?(:all) ? 'and' : 'or'
-          match = columns.collect { |name| "#{quoted_table_name}.#{name} like :query" }.join(" #{joiner} ")
+          match = columns.collect { |name| "upper(#{quoted_table_name}.#{name}) like upper(:query)" }.join(" #{joiner} ")
           { :conditions => [match, { :query => "%#{query}%" } ] }
         }
       end
