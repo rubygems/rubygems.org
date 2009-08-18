@@ -44,7 +44,9 @@ config.gem 'rr',
 config.gem 'rack-test',
            :lib => 'rack/test',
            :version => '>= 0.4.1'
-
-require 'redgreen'
+config.gem 'redgreen',
+           :version => '>= 1.2.2'
+config.gem 'fakeweb',
+           :version => '>= 1.2.5'
 
 HOST = "localhost"
