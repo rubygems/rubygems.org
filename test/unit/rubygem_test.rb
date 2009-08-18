@@ -298,5 +298,10 @@ class RubygemTest < ActiveSupport::TestCase
       assert ! Rubygem.search('pie').include?(@orange_julius)
       assert ! Rubygem.search('julius').include?(@apple_pie)
     end
+
+    should "find rubygems case insensitively on #search" do
+      assert Rubygem.search('APPLE').include?(@apple_pie)
+      assert Rubygem.search('PIE').include?(@apple_pie)
+    end
   end
 end
