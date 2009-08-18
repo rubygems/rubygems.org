@@ -1,6 +1,5 @@
 class Rubygem < ActiveRecord::Base
   include Pacecar
-  sluggable_finder :name
 
   has_many :owners, :through => :ownerships, :source => :user
   has_many :ownerships
@@ -26,6 +25,8 @@ class Rubygem < ActiveRecord::Base
     :include => [:versions] }
   }
 
+  before_save :save_updated_version
+
   def self.total_count
     with_versions.count
   end
@@ -36,6 +37,14 @@ class Rubygem < ActiveRecord::Base
 
   def self.downloaded
     with_versions.by_downloads(:desc).limited(5)
+  end
+
+  def hosted?
+    !versions.count.zero?
+  end
+
+  def rubyforge_project
+    versions.current ? versions.current.rubyforge_project : ""
   end
 
   def unowned?
@@ -58,6 +67,19 @@ class Rubygem < ActiveRecord::Base
     end
   end
 
+  def to_json
+    {:name              => name,
+     :downloads         => downloads,
+     :version           => versions.current.number,
+     :authors           => versions.current.authors,
+     :info              => versions.current.info,
+     :rubyforge_project => rubyforge_project}.to_json
+  end
+
+  def to_param
+    name
+  end
+
   def with_downloads
     "#{name} (#{downloads})"
   end
@@ -75,8 +97,13 @@ class Rubygem < ActiveRecord::Base
   end
 
   def build_version(data)
-    Version.destroy_all(:number => data[:number], :rubygem_id => self.id)
-    versions.build(data)
+    version = versions.find_by_number(data[:number])
+    if version
+      version.attributes = data
+      @updated_version = version
+    else
+      versions.build(data)
+    end
   end
 
   def build_links(homepage)
@@ -89,5 +116,9 @@ class Rubygem < ActiveRecord::Base
 
   def build_ownership(user)
     ownerships.build(:user => user, :approved => true) if new_record?
+  end
+
+  def save_updated_version
+    @updated_version.save if @updated_version
   end
 end

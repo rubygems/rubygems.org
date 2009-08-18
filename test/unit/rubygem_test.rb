@@ -3,8 +3,9 @@ require File.dirname(__FILE__) + '/../test_helper'
 class RubygemTest < ActiveSupport::TestCase
   context "with a saved rubygem" do
     setup do
-      @rubygem = Factory(:rubygem)
+      @rubygem = Factory(:rubygem, :name => "SomeGem")
     end
+    subject { @rubygem }
 
     should_have_many :owners, :through => :ownerships
     should_have_many :ownerships
@@ -99,6 +100,18 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal "#{@rubygem.name} (#{@rubygem.downloads})", @rubygem.with_downloads
     end
 
+    should "return a bunch of json" do
+      Factory(:version, :rubygem => @rubygem)
+      hash = JSON.parse(@rubygem.to_json)
+      assert_equal @rubygem.name, hash["name"]
+      assert_equal @rubygem.slug, hash["slug"]
+      assert_equal @rubygem.downloads, hash["downloads"]
+      assert_equal @rubygem.versions.current.number, hash["version"]
+      assert_equal @rubygem.versions.current.authors, hash["authors"]
+      assert_equal @rubygem.versions.current.info, hash["info"]
+      assert_equal @rubygem.versions.current.rubyforge_project, hash["rubyforge_project"]
+    end
+
     context "saving the homepage" do
       setup do
         @homepage = "http://gemcutter.org"
@@ -121,11 +134,28 @@ class RubygemTest < ActiveSupport::TestCase
     context "with some versions" do
       setup do
         @version_hash = {:number => "0.0.0"}
-        @versions = "version"
+        @versions = "versions"
 
         stub(@rubygem).versions { @versions }
-        stub(Version).destroy_all
-        stub(@versions).build
+      end
+
+      context "building a version" do
+        should "build new version if none exists" do
+          mock(@versions).find_by_number(@version_hash[:number]) { nil }
+          mock(@versions).build(@version_hash)
+          @rubygem.build_version(@version_hash)
+        end
+
+        should "set attributes of existing version if one exists" do
+          existing_version = "existing version"
+          mock(existing_version).attributes = @version_hash
+          mock(@versions).find_by_number(@version_hash[:number]) { existing_version }
+          mock(@versions).build.never
+          @rubygem.build_version(@version_hash)
+
+          mock(existing_version).save
+          @rubygem.save
+        end
       end
 
       context "building a new set of dependencies" do
@@ -141,23 +171,6 @@ class RubygemTest < ActiveSupport::TestCase
         should "build a dependency" do
           mock(@dependencies).build(:rubygem_name => @dep.name, :name => @dep.requirements_list.to_s)
           @rubygem.build_dependencies(@dependencies)
-        end
-      end
-
-      context "building a new set of versions" do
-        before_should "destroy versions with the given number and id" do
-          stub(@rubygem).id { 42 }
-          mock(Version).destroy_all(:number => @version_hash[:number], :rubygem_id => @rubygem.id)
-        end
-
-        before_should "create a new version with the given hash" do
-          mock(@versions).build(@version_hash)
-        end
-
-        setup do
-          stub(Version).destroy_all
-          stub(@versions).build
-          @rubygem.build_version(@version_hash)
         end
       end
     end
@@ -213,9 +226,24 @@ class RubygemTest < ActiveSupport::TestCase
       @rubygem_with_version = Factory(:rubygem)
       Factory(:version, :rubygem => @rubygem_with_version)
     end
+
     should "return only gems with versions for #with_versions" do
       assert Rubygem.with_versions.include?(@rubygem_with_version)
       assert !Rubygem.with_versions.include?(@rubygem_without_version)
+    end
+
+    should "be hosted or not" do
+      assert ! @rubygem_without_version.hosted?
+      assert @rubygem_with_version.hosted?
+    end
+
+    should "return a blank rubyforge project without any versions" do
+      assert_equal "", @rubygem_without_version.rubyforge_project
+    end
+
+    should "return the current rubyforge project with a version" do
+      assert_equal @rubygem_with_version.versions.current.rubyforge_project,
+                   @rubygem_with_version.rubyforge_project
     end
   end
 
