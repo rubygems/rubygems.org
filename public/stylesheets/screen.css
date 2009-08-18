@@ -85,14 +85,17 @@ body {
 
 .nav ul li a {
   color: #EEE;
-  padding: 2.6em 0.6em;
+  padding: 7px;
   text-decoration: none;
   text-shadow: 0 0 10px #000;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  margin-top: 5px;
 }
 
 .nav ul li a:hover {
-  text-decoration: underline;
-  background: rgba(0,0,0,.3);
+  text-decoration: none;
+  background: rgba(0,0,0,.2);
 }
 
 .nav form {
@@ -106,17 +109,21 @@ body {
   color: #28221e;
   width: 300px;
   border: none;
-  padding: .4em;
-  font-size: 2em;
-  background: #e9e4d1;
-  font-family: "Myriad Pro", "Lucida Grande", Tahoma, sans-serif;
+  padding: 0.5em;
+  font-size: 1.5em;
+  font-weight: bold;
+  font-family: "Myriad Pro", "Lucida Grande", Helvetica, Tahoma, sans-serif;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 10px;
+  background: #e9e4d1 url(/images/instructions.png) repeat-x scroll 0 -2px;
+  margin-top: 7px;
 }
 
 .section {
  /* background: url(/images/section.png) 0 0 repeat-x;*/
   padding: 2.4em;
   color: #EEE;
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .section .seller {
@@ -197,9 +204,14 @@ body {
   margin:  0 1em 0 0;
 }
 
-.section .info ol.instructions li span {
+.section .info ol.instructions li span + span {
   font-family: Monaco, Courier, monospace;
   margin: 0 0 0 1em;
+  display: inline;
+}
+
+.section .info ol.instructions li span {
+  display: inline-block;
 }
 
 .section .info p {
