@@ -14,7 +14,7 @@ class OwnersController < ApplicationController
 
   def create
     if owner = User.find_by_email(params[:email])
-      @rubygem.ownerships.create!(:user => owner, :approved => 'sdfsdfsdfsd')
+      @rubygem.ownerships.create(:user => owner, :approved => true)
       render :json => 'Owner added successfully.'
     else
       render :json => 'Owner could not be found.', :status => :not_found
