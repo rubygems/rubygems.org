@@ -33,8 +33,15 @@
           </div>
         </form>
       </div>
-      <div class="prefix_1 grid_10 suffix_1 section">
-        <%= yield %>
+      <div class="prefix_1 grid_10 suffix_1 main">
+        <% if content_for?(:fold) %>
+          <div class="fold">
+            <%= yield :fold %>
+          </div>
+        <% end %>
+        <div class="info">
+          <%= yield %>
+        </div>
       </div>
       <div class="prefix_1 grid_10 suffix_1 footer">
         <div class="links">
