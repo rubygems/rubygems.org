@@ -256,15 +256,20 @@ body {
   padding: 5px;
 }
 
+.section .info .leaderboards ol li:last-child {
+  border-bottom: 1px solid #B4AC99;
+}
+
 .section .info .leaderboards ol li a {
   background: #ECE5D6;
   padding: 3px;
   font-size: 0.9em;
+  color: rgba(0, 0, 0, 0.8);
   display: block;
 }
 
 .section .info .leaderboards ol li a:hover {
-  background: #340505;
+  background: #DD4444;
   color: #fff;
 }
 
