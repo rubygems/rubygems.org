@@ -354,3 +354,138 @@ body {
 .footer a:hover {
   text-decoration: underline;
 }
+
+/* Forms */
+
+.main .info form {
+  margin: 1.5em 36px;
+  color: #5e543e;
+}
+
+label, .form_links {
+  font-weight: 100;
+  display: block;
+  font-size: 1.7em;
+}
+
+.form_links {
+  display: inline-block;
+  width: 74%;
+  text-align: right;
+}
+
+.form_links a {
+  margin-left: 20px;
+}
+
+.form_links a:hover {
+  text-decoration: underline;
+}
+
+.text_field,
+.password_field,
+.url_field {
+  margin: 0 0 2em 0;
+}
+
+.text_field input,
+.password_field input,
+.url_field input {
+  color: #FFFFFF;
+  width: 665px;
+  border: none;
+  padding: .3em;
+  font-size: 5em;
+  background: #90856C;
+  border-bottom: .1em solid #BCB29A;
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.url_field input  {
+  font-size: 1.5em;
+}
+
+.password_field input{
+  font-weight: bold;
+}
+
+.form_bottom label {
+  display: inline;
+  vertical-align: middle;
+}
+
+.form_bottom input[type='submit'] {
+  margin-top: 10px;
+  display: block;
+}
+
+/* Rails Flash, Forms, Etc */
+
+#flash_success, #flash_notice, #flash_failure {
+  font-weight: bold;
+  left: 0;
+  top: 0;
+  padding: 5px 0;
+  position: fixed;
+  text-align: center;
+  width: 100%;
+  z-index: 100;
+  color: #333333;
+  display: none;
+  border-bottom: solid 2px #333333;
+  font-size: 1.3em;
+}
+
+#flash_success {
+  background-color: #C8FFBF;
+}
+
+#flash_notice {
+  background-color: #FFF9BF;
+}
+
+#flash_failure {
+  background-color: #FFD1BF;
+}
+
+#errorExplanation {
+  border: 2px solid #CC6666;
+  padding: 0px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+#errorExplanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: 0px;
+  background-color: #CC6666;
+  color: white;
+  float: none;
+  margin-bottom: 10px;
+}
+
+#errorExplanation p {
+  display: none;
+}
+
+#errorExplanation ul {
+  margin: 2px 24px;
+}
+
+#errorExplanation ul li {
+  font-size: 12px;
+  list-style: disc;
+  padding: 3px;
+}
+
+.fieldWithErrors input, .fieldWithErrors textarea {
+  background: #cc6666;
+}
+
+.pagination {
+  text-align: right;
+}
