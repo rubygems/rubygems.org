@@ -72,7 +72,7 @@ table {
 body {
   font-size: .625em;
   background: #340505 url(/images/top.png) repeat-x;
-  font-family: Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .header h1 {
@@ -291,7 +291,7 @@ body {
 
 .main .info .leaderboards strong {
   font-weight: 900;
-  font-size: 1.8em;
+  font-size: 1.6em;
   color: #000;
   margin-bottom: 10px;
   display: block;
@@ -315,7 +315,7 @@ body {
   border-right: 1px solid #B4AC99;
   border-left: 1px solid #B4AC99;
   background: #FDF5E4;
-  padding: 5px;
+  padding: 4px;
 }
 
 .main .info .leaderboards ol li:last-child {
@@ -323,16 +323,16 @@ body {
 }
 
 .main .info .leaderboards ol li a {
-  background: #ECE5D6;
-  padding: 3px;
-  font-size: 0.9em;
+  background: #ECE5D6 url('/images/leaderboard.png') repeat-x;
+  padding: 7px;
+  font-size: 0.8em;
+  font-weight: 900;
   color: rgba(0, 0, 0, 0.8);
   display: block;
 }
 
 .main .info .leaderboards ol li a:hover {
-  background: #DD4444;
-  color: #fff;
+  background: #fff;
 }
 
 .main .info .meta {
