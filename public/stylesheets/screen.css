@@ -122,31 +122,30 @@ body {
   margin-top: 7px;
 }
 
-.section {
- /* background: url(/images/section.png) 0 0 repeat-x;*/
+.main {
   padding: 2.4em;
   color: #EEE;
   margin-top: 20px;
 }
 
-.section .seller {
+.main .fold {
   height: 70px;
 }
 
-.section .seller .count {
+.main .fold .count {
   float: left;
   width: 30%;
   font-size: 1.3em;
   padding-top: 0.2em;
 }
 
-.section .seller .count strong {
+.main .fold .count strong {
   font-size: 2em;
   padding-bottom: 5px;
   display: block;
 }
 
-.section .seller .blurb {
+.main .fold .blurb {
   text-align: right;
   float: right;
   font-size: 1.6em;
@@ -155,21 +154,21 @@ body {
   width: 70%;
 }
 
-.section p,
-.section ol,
-.section .seller .blurb {
+.main p,
+.main ol,
+.main .fold .blurb {
   font-size: 1.6em;
   line-height: 1.5;
 }
 
-.section .info {
+.main .info {
   background: #ebe3d1;
   border: 5px solid #cbc2ae;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
 }
 
-.section .info ol.instructions {
+.main .info ol.instructions {
   border: 1px solid #b4ac99;
   margin-top: 36px;
   margin-left: 36px;
@@ -179,7 +178,7 @@ body {
   background: #FFF;
 }
 
-.section .info ol.instructions li {
+.main .info ol.instructions li {
   background: #FD6;
   background-image: url(/images/instructions.png);
   background-repeat: repeat-x;
@@ -191,15 +190,15 @@ body {
   height: 4em;
 }
 
-.section .info ol.instructions li:first-child {
+.main .info ol.instructions li:first-child {
   background-color: #D44;
 }
 
-.section .info ol.instructions li:last-child {
+.main .info ol.instructions li:last-child {
   background-color: #AD4;
 }
 
-.section .info ol.instructions li strong {
+.main .info ol.instructions li strong {
   text-transform: lowercase;
   font-variant: small-caps;
   font-weight: bold;
@@ -210,13 +209,13 @@ body {
   line-height: 4.2em;
 }
 
-.section .info ol.instructions li span {
+.main .info ol.instructions li span {
   float: left;
   font-size: 1.5em;
   line-height: 2.7em;
 }
 
-.section .info ol.instructions li span + span {
+.main .info ol.instructions li span + span {
   font-family: Monaco, Courier, monospace;
   margin: 0 0 0 1em;
   float: left;
@@ -224,16 +223,16 @@ body {
   line-height: 4.2em;
 }
 
-.section .info p {
+.main .info p {
   color: #5e543e;
   margin: 1.5em 36px;
 }
 
-.section .info .pitch {
+.main .info .pitch {
   font-size: 1.4em;
 }
 
-.section .info .leaderboards {
+.main .info .leaderboards {
   border-top: 2px solid #BCB29A;
   padding-top: 24px;
   margin-top: 24px;
@@ -242,26 +241,26 @@ body {
   height: 250px;
 }
 
-.section .info .leaderboards h4 {
+.main .info .leaderboards h4 {
   font-weight: 900;
   font-size: 1.8em;
   color: #000;
   padding-bottom: 10px;
 }
 
-.section .info .leaderboards ol {
+.main .info .leaderboards ol {
 }
 
-.section .info .leaderboards .grid_3:first-child,
-.section .info .leaderboards .grid_3:last-child {
+.main .info .leaderboards .grid_3:first-child,
+.main .info .leaderboards .grid_3:last-child {
   margin: 0;
 }
 
-.section .info .leaderboards .grid_3 {
+.main .info .leaderboards .grid_3 {
   margin: 0 15px;
 }
 
-.section .info .leaderboards ol li {
+.main .info .leaderboards ol li {
   border-top: 1px solid #B4AC99;
   border-right: 1px solid #B4AC99;
   border-left: 1px solid #B4AC99;
@@ -269,11 +268,11 @@ body {
   padding: 5px;
 }
 
-.section .info .leaderboards ol li:last-child {
+.main .info .leaderboards ol li:last-child {
   border-bottom: 1px solid #B4AC99;
 }
 
-.section .info .leaderboards ol li a {
+.main .info .leaderboards ol li a {
   background: #ECE5D6;
   padding: 3px;
   font-size: 0.9em;
@@ -281,7 +280,7 @@ body {
   display: block;
 }
 
-.section .info .leaderboards ol li a:hover {
+.main .info .leaderboards ol li a:hover {
   background: #DD4444;
   color: #fff;
 }
