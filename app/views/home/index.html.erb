@@ -14,4 +14,24 @@
     <li><strong>Set</strong><span>&raquo;</span><span>gem tumble</span></li>
     <li><strong>Go</strong><span>&raquo;</span><span>gem push yourgem-0.0.1.gem</span></li>
   </ol>
+  <div class="leaderboards">
+    <div class="grid_3">
+      <h4>Updated Gems</h4>
+      <ol>
+        <%= render :partial => "version", :collection => @updated %>
+      </ol>
+    </div>
+    <div class="grid_3">
+      <h4>New Gems</h4>
+      <ol>
+        <%= render :partial => "rubygem", :collection => @latest %>
+      </ol>
+    </div>
+    <div class="grid_3">
+      <h4>Most Downloaded</h4>
+      <ol>
+        <%= render :partial => "rubygem", :collection => @downloaded %>
+      </ol>
+    </div>
+  </div>
 </div>
