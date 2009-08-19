@@ -187,6 +187,7 @@ body {
   margin: .75em;
   border: 1px solid rgba(0,0,0,.2);
   border-top: none;
+  height: 4em;
 }
 
 .section .info ol.instructions li:first-child {
@@ -202,19 +203,24 @@ body {
   font-variant: small-caps;
   font-weight: bold;
   width: 100px;
-  display: inline-block;
   text-align: right;
   margin:  0 1em 0 0;
+  float: left;
+  line-height: 4.2em;
+}
+
+.section .info ol.instructions li span {
+  float: left;
+  font-size: 2em;
+  line-height: 2em;
 }
 
 .section .info ol.instructions li span + span {
   font-family: Monaco, Courier, monospace;
   margin: 0 0 0 1em;
-  display: inline;
-}
-
-.section .info ol.instructions li span {
-  display: inline-block;
+  float: left;
+  font-size: 1em;
+  line-height: 4.2em;
 }
 
 .section .info p {
