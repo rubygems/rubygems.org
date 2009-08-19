@@ -14,7 +14,7 @@
     <% end %>
     <div class="container_12">
       <div class="prefix_1 grid_2 header">
-        <h1><%= link_to "Gemcutter", root_url %></h1>
+        <h1><%= link_to "Gemcutter", root_url, :title => "Home" %></h1>
       </div>
       <div class="grid_8 suffix_1 nav">
         <ul>
@@ -43,7 +43,7 @@
           <%= link_to "Status", "http://twitter.com/rubygemcutter" %>
           <%= link_to "FAQ", page_url("faq") %>
           <%= link_to "API", page_url("api") %>
-r       </div>
+        </div>
       </div>
     </div>
     <%= javascript_include_tag("jquery", "application") %>
