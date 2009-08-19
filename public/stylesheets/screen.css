@@ -245,26 +245,83 @@ body {
   text-transform: lowercase;
   font-variant: small-caps;
   font-weight: bold;
+  font-size: 1.1em;
   width: 100px;
   text-align: right;
-  margin:  0 1em 0 0;
+  padding-left: 10px;
+  padding-right: 50px;
   float: left;
-  line-height: 4.2em;
+  background: url('/images/arrow.png') no-repeat 85% 52%;
 }
 
 .main .info ol.instructions li span {
-  float: left;
-  font-size: 1.5em;
-  line-height: 2.7em;
-}
-
-.main .info ol.instructions li span + span {
   font-family: Monaco, Courier, monospace;
-  margin: 0 0 0 1em;
+  margin-left: 0.5em;
   float: left;
   font-size: 1em;
   line-height: 4.2em;
 }
+
+.main .info .install {
+  border: 1px solid #b4ac99;
+  margin-top: 36px;
+  margin-left: 36px;
+  margin-right: 36px;
+  font-size: 2.4em;
+  text-shadow: 1px 1px 1px rgba(255,255,255,0.2);
+  background: #FFF;
+  padding: 3px;
+}
+
+.main .info .install .border {
+  background: #ECE5D6 url('/images/install.png') repeat-x;
+  padding: 12px;
+}
+
+.main .info .install .instructions {
+  background-repeat: repeat-x;
+  background-color: #AD4;
+  color: rgba(0,0,0,.8);
+  height: 90px;
+}
+
+.main .info .install .instructions strong {
+  text-transform: lowercase;
+  font-variant: small-caps;
+  font-weight: bold;
+  font-size: 1.1em;
+  width: 100px;
+  text-align: right;
+  padding-left: 10px;
+  padding-right: 50px;
+  float: left;
+  background: url('/images/arrow.png') no-repeat 85% 52%;
+  line-height: 90px;
+}
+
+.main .info .install .instructions span {
+  font-family: Monaco, Courier, monospace;
+  margin-left: 0.5em;
+  float: left;
+  font-size: 1em;
+  line-height: 89px;
+}
+
+.main .info .install a {
+  display: block;
+  margin-left: 663px;
+  margin-top: 40px;
+  position: absolute;
+  height: 35px;
+  width: 28px;
+  background: url('/images/paste.png') no-repeat;
+}
+
+.main .info .install a span {
+  visibility: hidden;
+}
+
+
 
 .main .info ol {
   color: #5e543e;
