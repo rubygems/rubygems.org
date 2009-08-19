@@ -28,6 +28,28 @@ a:visited {
   color: #300000;
 }
 
+pre {
+  background: #000;
+  font-family: Monaco, Courier, monospace;
+  padding: 1em;
+  font-size: 1.7em;
+  overflow: auto;
+  margin: 1.5em 36px;
+  color: #fff;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+}
+
+code {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background: #000;
+  font-family: Monaco, Courier, monospace;
+  padding: 3px;
+  font-size: 0.7em;
+  color: #fff
+}
+
 /* remember to define focus styles! */
 :focus {
   outline: 0;
@@ -66,7 +88,6 @@ body {
   text-indent: -9999px;
   text-decoration: none;
   background: url(/images/logo.png)
-
 }
 
 .nav {
@@ -126,6 +147,28 @@ body {
   padding: 2.4em;
   color: #EEE;
   margin-top: 20px;
+}
+
+.main h2 {
+  display: inline-block;
+  color: #340505;
+  font-size: 4em;
+  margin-left: 36px;
+  margin-top: 20px;
+}
+
+.main h3 {
+  display: inline-block;
+  color: #90856C;
+  font-size: 1.7em;
+  margin-left: 10px;
+}
+
+.main h4 {
+  font-weight: 900;
+  font-size: 1.5em;
+  color: #5E543E;
+  margin-left: 36px;
 }
 
 .main .fold {
@@ -223,6 +266,11 @@ body {
   line-height: 4.2em;
 }
 
+.main .info ol {
+  color: #5e543e;
+  margin: 1.5em 36px;
+}
+
 .main .info p {
   color: #5e543e;
   margin: 1.5em 36px;
@@ -241,14 +289,16 @@ body {
   height: 250px;
 }
 
-.main .info .leaderboards h4 {
+.main .info .leaderboards strong {
   font-weight: 900;
   font-size: 1.8em;
   color: #000;
-  padding-bottom: 10px;
+  margin-bottom: 10px;
+  display: block;
 }
 
 .main .info .leaderboards ol {
+  margin: 0;
 }
 
 .main .info .leaderboards .grid_3:first-child,
