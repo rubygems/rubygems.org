@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gemcutter}
-  s.version = "0.1.0"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Quaranto"]
@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
     gem tumble        use Gemcutter as your primary RubyGem source
     gem push          publish your gems for the world to use and enjoy
     gem migrate       take over your gem from RubyForge on Gemcutter
+    gem owner         allow/disallow others to push to your gems
 
 ========================================================================
 
