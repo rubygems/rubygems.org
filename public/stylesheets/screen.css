@@ -160,7 +160,6 @@ body {
 .section .seller .blurb {
   font-size: 1.6em;
   line-height: 1.5;
-  margin: 0 0 1.5em 0;
 }
 
 .section .info {
@@ -172,7 +171,9 @@ body {
 
 .section .info ol.instructions {
   border: 1px solid #b4ac99;
-  margin: 36px;
+  margin-top: 36px;
+  margin-left: 36px;
+  margin-right: 36px;
   font-size: 2.4em;
   text-shadow: 1px 1px 1px rgba(255,255,255,0.2);
   background: #FFF;
@@ -211,8 +212,8 @@ body {
 
 .section .info ol.instructions li span {
   float: left;
-  font-size: 2em;
-  line-height: 2em;
+  font-size: 1.5em;
+  line-height: 2.7em;
 }
 
 .section .info ol.instructions li span + span {
@@ -228,11 +229,17 @@ body {
   margin: 1.5em 36px;
 }
 
+.section .info .pitch {
+  font-size: 1.4em;
+}
+
 .section .info .leaderboards {
   border-top: 2px solid #BCB29A;
-  padding-top: 25px;
-  margin: 36px;
-  height: 200px;
+  padding-top: 24px;
+  margin-top: 24px;
+  margin-left: 36px;
+  margin-right: 36px;
+  height: 250px;
 }
 
 .section .info .leaderboards h4 {
@@ -282,7 +289,7 @@ body {
 .footer .links {
   margin-top: 10px;
   padding-top: 10px;
-  border-top: 2px solid #E9E4D1;
+  border-top: 1px solid #9E8686;
   height: 30px;
 }
 
@@ -290,7 +297,7 @@ body {
   border: none;
   text-align: center;
   font-weight: normal;
-  color: #E9E4D1;
+  color: #9E8686;
   font-size: 1.5em;
   margin-right: 10px;
 }

@@ -14,23 +14,41 @@
     <li><strong>Set</strong><span>&raquo;</span><span>gem tumble</span></li>
     <li><strong>Go</strong><span>&raquo;</span><span>gem push yourgem-0.0.1.gem</span></li>
   </ol>
+  <p class="pitch">
+    Gemcutter is <strong>next generation</strong> of gem hosting for the Ruby community.
+    <strong>Instantly publish</strong> your gems and install them.
+    <strong>Use the API</strong> to interact and find out more information about available gems.
+    <strong>Become a contributor</strong> and enhance the site with your own changes.
+  </p>
   <div class="leaderboards">
-    <div class="grid_3">
-      <h4>Updated Gems</h4>
-      <ol>
-        <%= render :partial => "version", :collection => @updated %>
-      </ol>
-    </div>
     <div class="grid_3">
       <h4>New Gems</h4>
       <ol>
-        <%= render :partial => "rubygem", :collection => @latest %>
+        <% @latest.each do |rubygem| %>
+          <li>
+            <%= link_to rubygem, rubygem %>
+          </li>
+        <% end %>
       </ol>
     </div>
     <div class="grid_3">
       <h4>Most Downloaded</h4>
       <ol>
-        <%= render :partial => "rubygem", :collection => @downloaded %>
+        <% @downloaded.each do |rubygem| %>
+          <li>
+            <%= link_to "#{rubygem.name} (#{rubygem.downloads})", rubygem %>
+          </li>
+        <% end %>
+      </ol>
+    </div>
+    <div class="grid_3">
+      <h4>Just Updated</h4>
+      <ol>
+        <% @updated.each do |version| %>
+          <li>
+            <%= link_to version.rubygem, version.rubygem %>
+          </li>
+        <% end %>
       </ol>
     </div>
   </div>
