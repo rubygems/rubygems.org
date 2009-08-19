@@ -10,9 +10,12 @@
     <%=h @current_version.info %>
   </p>
 
-  <ol class="instructions">
-    <li><strong>Install</strong><span>&raquo;</span><span>gem install <%= @gem.name %></span></li>
-  </ol>
+  <div class="install">
+    <a href="/"><span>Paste</span></a>
+    <div class="border">
+      <div class="instructions"><strong>Install</strong><span>gem install <%= @gem.name %></span></div>
+    </div>
+  </div>
 
   <div class="meta">
     <div class="top">
