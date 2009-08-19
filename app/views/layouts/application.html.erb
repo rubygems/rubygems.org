@@ -40,6 +40,12 @@
           </div>
         <% end %>
         <div class="info">
+          <% if @title %>
+            <h2><%= link_to @title, "/" %></h2>
+          <% end %>
+          <% if @subtitle %>
+            <h3><%= @subtitle %></h3>
+          <% end %>
           <%= yield %>
         </div>
       </div>
