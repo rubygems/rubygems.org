@@ -1,0 +1,60 @@
+<% @title = @gem.name %>
+<% @subtitle = @current_version %>
+
+<% if @gem.versions_count.zero? %>
+  <p>
+    This gem is not currently hosted on Gemcutter.
+  </p>
+<% else %>
+  <p>
+    <%=h @current_version.info %>
+  </p>
+
+  <ol class="instructions">
+    <li><strong>Install</strong><span>&raquo;</span><span>gem install <%= @gem.name %></span></li>
+  </ol>
+
+  <div class="meta">
+    <div class="top">
+      <% if @current_version.authors.present? %>
+        <div class="authors">
+          <h5>Authors</h5>
+          <p><%= @current_version.authors %></p>
+        </div>
+      <% end %>
+
+      <div class="downloads">
+        <strong><%= number_with_delimiter(@gem.downloads) %></strong> downloads
+      </div>
+    </div>
+
+    <% unless @gem.linkset.empty? %>
+      <div class="links">
+        <h5>Links</h5>
+        <%= link_to_page "Homepage", @gem.linkset.home %>
+        <%= link_to_page "Source Code", @gem.linkset.code %>
+        <%= link_to_page "Documentation", @gem.linkset.docs %>
+        <%= link_to_page "Wiki", @gem.linkset.wiki %>
+        <%= link_to_page "Mailing List", @gem.linkset.mail %>
+        <%= link_to_page "Bug Tracker", @gem.linkset.bugs %>
+      </div>
+    <% end %>
+
+    <div class="versions">
+      <h5>Versions</h5>
+      <% @gem.versions.each do |version| %>
+        <%= link_to version.number, "/" %>
+        <small><%= version.created_at.to_date.to_formatted_s(:long) %></small>
+      <% end %>
+    </div>
+
+    <% if @current_dependencies.present? %>
+      <div class="dependencies">
+        <h5>Dependencies</h5>
+        <% @current_dependencies.each do |dependency| %>
+          <%= link_to "<strong>#{dependency.rubygem.name}</strong> #{dependency.name}", dependency.rubygem %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
