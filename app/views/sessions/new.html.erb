@@ -1,0 +1,19 @@
+<% @title = "sign in" %>
+  <div class="form_links">
+    <%= link_to "Forgot Password?", new_password_url %>
+  </div>
+<% form_for :session, :url => session_path do |form| %>
+  <div class="text_field">
+    <%= form.label :email %>
+    <%= form.text_field :email %>
+  </div>
+  <div class="password_field">
+    <%= form.label :password %>
+    <%= form.password_field :password %>
+  </div>
+  <div class="form_bottom">
+    <%= form.check_box :remember_me %>
+    <%= form.label :remember_me %>
+    <%= form.submit "Sign in", :disable_with => "Please wait..." %>
+  </div>
+<% end %>
