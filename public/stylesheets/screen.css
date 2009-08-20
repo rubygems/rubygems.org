@@ -262,20 +262,20 @@ body {
   line-height: 4.2em;
 }
 
-.main .info .install {
+.main .info .border {
   border: 1px solid #b4ac99;
-  margin-top: 36px;
   margin-left: 36px;
   margin-right: 36px;
-  font-size: 2.4em;
+  margin-bottom: 24px;
   text-shadow: 1px 1px 1px rgba(255,255,255,0.2);
   background: #FFF;
   padding: 3px;
 }
 
-.main .info .install .border {
+.main .info .border .install {
   background: #ECE5D6 url('/images/install.png') repeat-x;
   padding: 12px;
+  font-size: 2.4em;
 }
 
 .main .info .install .instructions {
@@ -307,7 +307,7 @@ body {
   line-height: 89px;
 }
 
-.main .info .install a {
+.main .info .border .paste {
   display: block;
   margin-left: 663px;
   margin-top: 40px;
@@ -317,11 +317,9 @@ body {
   background: url('/images/paste.png') no-repeat;
 }
 
-.main .info .install a span {
+.main .info .border .paste span {
   visibility: hidden;
 }
-
-
 
 .main .info ol {
   color: #5e543e;
@@ -393,37 +391,32 @@ body {
 }
 
 .main .info .meta {
-  margin: 1.5em 36px;
-  border: 1px solid #B4AC99;
-  background: #FDF5E4;
-  padding: 5px;
-}
-
-.main .info .meta div {
   background: #ECE5D6;
   color: #000;
-  padding: 1em;
+  padding: 3em;
 }
 
 .main .info .meta h5 {
   color: #000;
-  font-size: 1.8em;
+  font-size: 1.5em;
   font-weight: 900;
-  padding-bottom: 0.5em;
 }
 
 .main .info .meta p {
   margin: 0;
+  font-size: 1.3em;
+  padding-top: 0.5em;
 }
 
 .main .info .meta .top {
-  height: 71px;
-  padding: 0;
+  height: 5em;
+  padding-bottom: 1em;
+  border-bottom: 1px solid #B4AC99;
 }
 
 .main .info .meta .authors {
   float: left;
-  width: 63%;
+  width: 70%;
 }
 
 .main .info .meta .downloads {
@@ -442,6 +435,9 @@ body {
 }
 
 .main .info .meta .links {
+  padding-top: 2em;
+  padding-bottom: 2em;
+  border-bottom: 1px solid #B4AC99;
 }
 
 .main .info .meta .links h5 {
@@ -451,11 +447,53 @@ body {
 
 .main .info .meta .links a {
   display: inline-block;
-  font-size: 1.5em;
+  font-size: 1.3em;
   margin: 0 0.7em;
   font-weight: 900;
   color: #5B7B9C;
   text-decoration: underline;
+}
+
+.main .info .meta .versions {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 8em;
+  padding-top: 2em;
+}
+
+.main .info .meta .versions ol li a {
+  font-weight: 900;
+}
+
+.main .info .meta .versions ol li a:hover {
+  text-decoration: underline;
+}
+
+.main .info .meta .versions .more {
+  margin-top: 1em;
+  display: inline-block;
+  font-weight: 900;
+  color: #5B7B9C;
+  text-decoration: underline;
+}
+
+.main .info .meta .versions small {
+  color: #90856C;
+}
+
+.main .info .meta .dependencies {
+  display: inline-block;
+  vertical-align: top;
+  padding-top: 2em;
+}
+
+.main .info .meta .dependencies ol li a:hover {
+  text-decoration: underline;
+}
+
+.main .info .meta ol {
+  font-size: 1.3em;
+  margin: 1em 0 0;
 }
 
 .footer .links {

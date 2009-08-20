@@ -10,54 +10,67 @@
     <%=h @current_version.info %>
   </p>
 
-  <div class="install">
-    <a href="/"><span>Paste</span></a>
-    <div class="border">
+  <div class="border">
+    <a href="/" class="paste"><span>Paste</span></a>
+    <div class="install">
       <div class="instructions"><strong>Install</strong><span>gem install <%= @gem.name %></span></div>
     </div>
   </div>
 
-  <div class="meta">
-    <div class="top">
-      <% if @current_version.authors.present? %>
-        <div class="authors">
-          <h5>Authors</h5>
-          <p><%= @current_version.authors %></p>
+  <div class="border">
+    <div class="meta">
+      <div class="top">
+        <% if @current_version.authors.present? %>
+          <div class="authors">
+            <h5>Authors</h5>
+            <p><%= @current_version.authors %></p>
+          </div>
+        <% end %>
+
+        <div class="downloads">
+          <strong><%= number_with_delimiter(@gem.downloads) %></strong> downloads
+        </div>
+      </div>
+
+      <% unless @gem.linkset.empty? %>
+        <div class="links">
+          <h5>Links</h5>
+          <%= link_to_page "Homepage", @gem.linkset.home %>
+          <%= link_to_page "Source Code", @gem.linkset.code %>
+          <%= link_to_page "Documentation", @gem.linkset.docs %>
+          <%= link_to_page "Wiki", @gem.linkset.wiki %>
+          <%= link_to_page "Mailing List", @gem.linkset.mail %>
+          <%= link_to_page "Bug Tracker", @gem.linkset.bugs %>
         </div>
       <% end %>
 
-      <div class="downloads">
-        <strong><%= number_with_delimiter(@gem.downloads) %></strong> downloads
+      <div class="versions">
+        <h5>Versions</h5>
+        <ol>
+        <% @gem.versions.limited(5).each do |version| %>
+          <li>
+            <%= link_to version.number, "/" %>
+            <small><%= version.created_at.to_date.to_formatted_s(:long) %></small>
+          </li>
+        <% end %>
+        <% if @gem.versions_count > 5 %>
+          <%= link_to "Show all versions (#{@gem.versions_count} total)", "/", :class => "more" %>
+        <% end %>
+        </ol>
       </div>
-    </div>
 
-    <% unless @gem.linkset.empty? %>
-      <div class="links">
-        <h5>Links</h5>
-        <%= link_to_page "Homepage", @gem.linkset.home %>
-        <%= link_to_page "Source Code", @gem.linkset.code %>
-        <%= link_to_page "Documentation", @gem.linkset.docs %>
-        <%= link_to_page "Wiki", @gem.linkset.wiki %>
-        <%= link_to_page "Mailing List", @gem.linkset.mail %>
-        <%= link_to_page "Bug Tracker", @gem.linkset.bugs %>
-      </div>
-    <% end %>
-
-    <div class="versions">
-      <h5>Versions</h5>
-      <% @gem.versions.each do |version| %>
-        <%= link_to version.number, "/" %>
-        <small><%= version.created_at.to_date.to_formatted_s(:long) %></small>
+      <% if @current_dependencies.present? %>
+        <div class="dependencies">
+          <h5>Dependencies</h5>
+          <ol>
+          <% @current_dependencies.each do |dependency| %>
+            <li>
+              <%= link_to "<strong>#{dependency.rubygem.name}</strong> #{dependency.name}", dependency.rubygem %>
+            </li>
+          <% end %>
+          </ol>
+        </div>
       <% end %>
     </div>
-
-    <% if @current_dependencies.present? %>
-      <div class="dependencies">
-        <h5>Dependencies</h5>
-        <% @current_dependencies.each do |dependency| %>
-          <%= link_to "<strong>#{dependency.rubygem.name}</strong> #{dependency.name}", dependency.rubygem %>
-        <% end %>
-      </div>
-    <% end %>
   </div>
 <% end %>
