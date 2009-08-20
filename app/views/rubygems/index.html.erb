@@ -1,0 +1,16 @@
+<% @title = "all gems" %>
+<% @subtitle = "starting with #{params[:letter]}" %>
+<div class="directory border">
+  <ol>
+    <% ("A".."Z").each do |letter| %>
+      <li><%= link_to(letter, rubygems_path(:letter => letter)) %></li>
+    <% end %>
+  </ol>
+</div>
+<%= will_paginate @gems %>
+<div class="gems">
+  <% @gems.each do |gem| %>
+    <%= link_to gem, rubygem_path(gem) %>
+  <% end %>
+</div>
+<%= will_paginate @gems %>
