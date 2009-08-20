@@ -29,6 +29,7 @@ class Gem::Commands::PushCommand < Gem::AbstractCommand
     response = make_request(:post, "gems") do |request|
       request.body = File.open(name).read
       request.add_field("Content-Length", request.body.size)
+      request.add_field("Content-Type", "application/octet-stream")
       request.add_field("Authorization", api_key)
     end
 
