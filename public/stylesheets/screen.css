@@ -496,6 +496,30 @@ body {
   margin: 1em 0 0;
 }
 
+.main .info .directory {
+  margin-top: 2em;
+}
+
+.main .info .directory ol {
+  background: url('/images/directory.png') repeat-x;
+  padding: 18px;
+  margin: 0;
+  text-align: center;
+}
+
+.main .info .directory li {
+  display: inline-block;
+}
+
+.main .info .directory li a {
+  font-weight: 900;
+  padding: 20px 5px 20px;
+}
+
+.main .info .directory li a:hover {
+  background: #ABA69D;
+}
+
 .footer .links {
   margin-top: 10px;
   padding-top: 10px;
