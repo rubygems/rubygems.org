@@ -17,7 +17,7 @@ class Gem::AbstractCommand < Gem::Command
   end
 
   def sign_in
-    say "Enter your Gemcutter credentials. Don't have an account yet? Create one at #{URL}/sign_up"
+    say "Enter your Gemcutter credentials. Don't have an account yet? Create one at #{GemCutter::URL}/sign_up"
 
     email = ask("Email: ")
     password = ask_for_password("Password: ")
