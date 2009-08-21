@@ -14,11 +14,11 @@ class Gem::Commands::TumbleCommand < Gem::AbstractCommand
   end
 
   def tumble
-    if Gem.sources.include?(GemCutter::URL)
-      Gem.sources.delete GemCutter::URL
+    if Gem.sources.include?(URL)
+      Gem.sources.delete URL
       Gem.configuration.write
     else
-      Gem.sources.unshift GemCutter::URL
+      Gem.sources.unshift URL
       Gem.configuration.write
     end
   end
