@@ -7,16 +7,3 @@ require 'commands/abstract_command'
   require "commands/#{command}"
   Gem::CommandManager.instance.register_command command.to_sym
 end
-
-class GemCutter
-  URL = "http://gemcutter.org" unless const_defined?(:URL)
-end
-
-class Gem::StreamUI
-  def ask_for_password(message)
-    system "stty -echo"
-    password = ask(message)
-    system "stty echo"
-    password
-  end
-end
