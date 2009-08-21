@@ -72,6 +72,16 @@ class MigrateCommandTest < CommandTest
       assert_received(@command) { |subject| subject.say(anything) }
       assert_received(@command) { |subject| subject.terminate_interaction }
     end
+    
+    should "know the project name if it exists in the gem" do
+      stub(@command).rubygem.with() { {'rubyforge_project' => 'rails'} }
+      assert_equal 'rails', @command.project_name
+    end
+    
+    should "fall back to the gem name when trying to find the rubyforge project" do
+      stub(@command).rubygem.with() { {'name' => 'rails'} }
+      assert_equal 'rails', @command.project_name
+    end
   end
 
   context "getting the token" do
