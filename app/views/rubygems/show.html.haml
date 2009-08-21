@@ -51,7 +51,7 @@
           -@current_dependencies.each do |dependency|
             %a{:href => rubygem_url(dependency.rubygem)}
               %span.big= dependency.rubygem.name
-              %span.small= dependency.name
+              %span.small= dependency.requirements
 -else
   .grid_12
     %p This gem is not currently hosted on Gemcutter.
