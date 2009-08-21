@@ -37,6 +37,47 @@ class RubygemTest < ActiveSupport::TestCase
 
     context "with a user" do
       setup do
+        @user = Factory(:user)
+      end
+
+      context "before being saved" do
+        should "be able to assign ownership" do
+          @rubygem.build_ownership(@user)
+          @rubygem.save
+          assert_contains @rubygem.owners, @user
+        end
+      end
+
+      context "after being saved" do
+        setup do
+          @new_user = Factory(:user)
+          @rubygem.save
+        end
+
+        should "be able to assign ownership" do
+          @rubygem.build_ownership(@new_user)
+          @rubygem.save
+          assert_contains @rubygem.owners, @new_user
+        end
+      end
+
+      context "after being saved with a version" do
+        setup do
+          @new_user = Factory(:user)
+          @rubygem.save
+          @rubygem.update_attributes(:versions_count => 1)
+        end
+
+        should "not be able to assign ownership" do
+          @rubygem.build_ownership(@new_user)
+          @rubygem.save
+          assert_does_not_contain @rubygem.owners, @new_user
+        end
+      end
+    end
+
+    context "with a user" do
+      setup do
         @rubygem.save
         @user = Factory(:user)
       end
@@ -110,113 +151,6 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal @rubygem.versions.current.authors, hash["authors"]
       assert_equal @rubygem.versions.current.info, hash["info"]
       assert_equal @rubygem.versions.current.rubyforge_project, hash["rubyforge_project"]
-    end
-
-    context "saving the homepage" do
-      setup do
-        @homepage = "http://gemcutter.org"
-      end
-
-      should "build linkset if it doesn't exist" do
-        stub(@rubygem).linkset { nil }
-        mock(@rubygem).build_linkset(:home => @homepage)
-        @rubygem.build_links(@homepage)
-      end
-
-      should "not build linkset if it exists but still set the home page" do
-        linkset = "linkset"
-        stub(@rubygem).linkset { linkset }
-        mock(linkset).home = @homepage
-        @rubygem.build_links(@homepage)
-      end
-    end
-
-    context "with some versions" do
-      setup do
-        @version_hash = {:number => "0.0.0"}
-        @versions = "versions"
-
-        stub(@rubygem).versions { @versions }
-      end
-
-      context "building a version" do
-        should "build new version if none exists" do
-          mock(@versions).find_by_number(@version_hash[:number]) { nil }
-          mock(@versions).build(@version_hash)
-          @rubygem.build_version(@version_hash)
-        end
-
-        should "set attributes of existing version if one exists" do
-          existing_version = "existing version"
-          mock(existing_version).attributes = @version_hash
-          mock(@versions).find_by_number(@version_hash[:number]) { existing_version }
-          mock(@versions).build.never
-          @rubygem.build_version(@version_hash)
-
-          mock(existing_version).save
-          @rubygem.save
-        end
-      end
-
-      context "building a new set of dependencies" do
-        setup do
-          @version = "version"
-          @dependencies = [@dep]
-          stub(@version).dependencies { @dependencies }
-          stub(@versions).last { @version }
-          stub(@dep).name { "dependency" }
-          stub(@dep).requirements_list { Gem::Requirement.new("= 1.0.0") }
-        end
-
-        should "build a dependency" do
-          mock(@dependencies).build(:rubygem_name => @dep.name, :name => @dep.requirements_list.to_s)
-          @rubygem.build_dependencies(@dependencies)
-        end
-      end
-    end
-
-    context "building the gem" do
-      setup do
-        @name = "awesome gem"
-      end
-
-      context "setting the name" do
-        before_should "set name only if name is blank" do
-          stub(@rubygem).name { "" }
-          mock(@rubygem).name = @name
-        end
-
-        should "not set name if name has changed" do
-          stub(@rubygem).name { @name }
-          dont_allow(@rubygem).name = @name
-        end
-
-        setup do
-          @rubygem.build_name(@name)
-        end
-      end
-    end
-
-    context "with a user" do
-      setup do
-        @user = Factory(:user)
-      end
-
-      context "building ownership" do
-        before_should "set user as owner if gem is pushable" do
-          stub(@rubygem).pushable? { true }
-          mock(@rubygem).ownerships.mock!.build(:user => @user, :approved => true)
-        end
-
-        before_should "not set user as owner if gem is pushable" do
-          stub(@rubygem).pushable? { false }
-          stub(@rubygem).ownerships.mock!.build.never
-        end
-
-        setup do
-          @rubygem.build_ownership(@user)
-        end
-      end
     end
   end
 
@@ -315,6 +249,102 @@ class RubygemTest < ActiveSupport::TestCase
     should "find rubygems case insensitively on #search" do
       assert Rubygem.search('APPLE').include?(@apple_pie)
       assert Rubygem.search('PIE').include?(@apple_pie)
+    end
+  end
+
+  context "building a new Rubygem" do
+    context "from a Gem::Specification with no dependencies" do
+      setup do
+        @specification = gem_specification_from_gem_fixture('test-0.0.0')
+        @rubygem       = Rubygem.create(:name => @specification.name)
+        @rubygem.update_attributes_from_gem_specification!(@specification)
+      end
+
+      should_change("total number of Rubygems", :by => 1) { Rubygem.count }
+      should_change("total number of Versions", :by => 1) { Version.count }
+      should_not_change("total number of Dependencies")   { Dependency.count }
+
+      should "have the homepage set properly" do
+        assert_equal @specification.homepage, @rubygem.linkset.home
+      end
+    end
+
+    context "from a Gem::Specification with dependencies" do
+      setup do
+        @specification = gem_specification_from_gem_fixture('with_dependencies-0.0.0')
+        @rubygem       = Rubygem.create(:name => @specification.name)
+        @rubygem.update_attributes_from_gem_specification!(@specification)
+      end
+
+      should_change("total number of Rubygems",     :by => 3) { Rubygem.count }
+      should_change("total number of Versions",     :by => 1) { Version.count }
+      should_change("total number of Dependencies", :by => 2) { Dependency.count }
+
+      should "create Rubygem instances for the dependencies" do
+        assert_not_nil Rubygem.find_by_name('thoughtbot-shoulda')
+        assert_not_nil Rubygem.find_by_name('rake')
+      end
+    end
+  end
+
+  context "updating an existing Rubygem" do
+    setup do
+      @specification = gem_specification_from_gem_fixture('with_dependencies-0.0.0')
+      @rubygem       = Rubygem.create(:name => @specification.name)
+      @rubygem.update_attributes_from_gem_specification!(@specification)
+    end
+
+    context "from a Gem::Specification" do
+      setup do
+        @rubygem = Rubygem.find_by_name(@specification.name)
+        @rubygem.update_attributes_from_gem_specification!(@specification)
+      end
+
+      should_not_change("total number of Rubygems") { Rubygem.count }
+      should_not_change("number of Versions")       { @rubygem.versions.count }
+      should_not_change("number of Dependencies")   { @rubygem.versions.last.dependencies.count }
+
+      should "have the homepage set properly" do
+        assert_equal @specification.homepage, @rubygem.linkset.home
+      end
+    end
+
+    context "from a Gem::Specification with new details" do
+      setup do
+        @homepage = 'http://new.example.org'
+        @specification.homepage = @homepage
+        @rubygem = Rubygem.find_by_name(@specification.name)
+        @rubygem.update_attributes_from_gem_specification!(@specification)
+      end
+
+      should_not_change("total number of Rubygems") { Rubygem.count }
+      should_not_change("number of Versions")       { @rubygem.versions.count }
+      should_not_change("number of Dependencies")   { @rubygem.versions.last.dependencies.count }
+      should_change("homepage", :to => @homepage)   { @rubygem.linkset.home }
+    end
+
+    context "from a Gem::Specification with a new dependency" do
+      setup do
+        @specification.add_dependency('new-dependency')
+        @rubygem = Rubygem.find_by_name(@specification.name)
+        @rubygem.update_attributes_from_gem_specification!(@specification)
+      end
+
+      should_change("total number of Rubygems", :by => 1) { Rubygem.count }
+      should_not_change("number of Versions")             { @rubygem.versions.count }
+      should_change("number of Dependencies",   :by => 1) { @rubygem.versions.last.dependencies.count }
+    end
+
+    context "from a Gem::Specification with a new version" do
+      setup do
+        @specification.version = '0.0.1'
+        @rubygem = Rubygem.find_by_name(@specification.name)
+        @rubygem.update_attributes_from_gem_specification!(@specification)
+      end
+
+      should_not_change("total number of Rubygems")           { Rubygem.count }
+      should_change("number of Versions",           :by => 1) { @rubygem.versions.count }
+      should_change("total number of Dependencies", :by => 2) { Dependency.count }
     end
   end
 end

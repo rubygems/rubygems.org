@@ -109,7 +109,6 @@ class GemcutterTest < ActiveSupport::TestCase
         @cutter.find
 
         assert_not_nil @cutter.rubygem
-        assert @cutter.rubygem.new_record?
       end
 
       should "bring up existing gem with matching spec" do
@@ -172,67 +171,15 @@ class GemcutterTest < ActiveSupport::TestCase
         stub(@cutter).spec { @spec }
       end
 
-      context "building the gem" do
-        before_should "build the name" do
-          mock(@rubygem).build_name(@spec.name)
-        end
-
-        before_should "build version with platform" do
-          stub(@spec).platform { "mswin" }
-          stub(@spec).rubyforge_project { "project" }
-          stub(@spec).rubyforge_project { "summary" }
-          mock(@rubygem).build_version(
-            :authors           => @spec.authors.join(", "),
-            :description       => @spec.description,
-            :summary           => @spec.summary,
-            :rubyforge_project => @spec.rubyforge_project,
-            :created_at        => @spec.date,
-            :number            => "#{@version}-mswin")
-        end
-
-        before_should "build the version" do
-          mock(@rubygem).build_version(
-            :authors           => @spec.authors.join(", "),
-            :description       => @spec.description,
-            :summary           => @spec.summary,
-            :rubyforge_project => @spec.rubyforge_project,
-            :created_at        => @spec.date,
-            :number            => @version)
-        end
-
-        before_should "build the dependencies" do
-          mock(@rubygem).build_dependencies(@spec.dependencies)
-        end
-
-        before_should "build the links" do
-          mock(@rubygem).build_links(@spec.homepage)
-        end
-
-        before_should "build ownership with user" do
-          mock(@rubygem).build_ownership(@user)
-        end
-
-        setup do
-          stub(@rubygem).build_name
-          stub(@rubygem).build_version
-          stub(@rubygem).build_dependencies
-          stub(@rubygem).build_links
-          stub(@rubygem).build_ownership
-          @cutter.build
-        end
-      end
-
       context "saving the rubygem" do
         before_should "process if succesfully saved" do
-          mock(@cutter).build
-          mock(@rubygem).save { true }
+          mock(@cutter).update { true }
           mock(@cutter).store
           mock(@cutter).notify("Successfully registered gem: #{@rubygem}", 200)
         end
 
-        before_should "not process if successfully saved" do
-          mock(@cutter).build
-          mock(@rubygem).save { false }
+        before_should "not process if not successfully saved" do
+          mock(@cutter).update { false }
           mock(@cutter).store.never
         end
 

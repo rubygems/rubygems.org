@@ -25,4 +25,14 @@ class Version < ActiveRecord::Base
     [ description, summary, "This rubygem does not have a description or summary." ].detect(&:present?)
   end
 
+  def update_attributes_from_gem_specification!(spec)
+    self.update_attributes!(
+      :authors           => spec.authors.join(', '),
+      :description       => spec.description,
+      :summary           => spec.summary,
+      :rubyforge_project => spec.rubyforge_project,
+      :created_at        => spec.date
+    )
+  end
+
 end
