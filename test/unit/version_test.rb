@@ -46,6 +46,12 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @info, @version.info
     end
 
+    should "have summary for info if description is blank" do
+      @version.description = ""
+      @version.summary = @info
+      assert_equal @info, @version.info
+    end
+
     should "have some text for info if neither summary or description exist" do
       @version.description = nil
       @version.summary = nil
