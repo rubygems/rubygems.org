@@ -49,5 +49,6 @@ def gem_dependency_stub(name, requirements = ">= 1.0")
   returning(Object.new) do |dependency|
     stub(dependency).name              { name }
     stub(dependency).requirements_list { requirements }
+    stub(dependency).type              { 'runtime' }
   end
 end
