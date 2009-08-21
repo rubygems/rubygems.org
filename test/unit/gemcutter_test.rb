@@ -129,12 +129,17 @@ class GemcutterTest < ActiveSupport::TestCase
 
       context "with a existing rubygem" do
         setup do
-          @rubygem = Factory(:rubygem)
+          @rubygem = Factory(:rubygem, :versions_count => 1)
           stub(@cutter).rubygem { @rubygem }
         end
 
         should "be true if owned by the user" do
           @rubygem.ownerships.create(:user => @user, :approved => true)
+          assert @cutter.authorize
+        end
+
+        should "be true if no versions exist since it's a dependency" do
+          @rubygem.update_attribute(:versions_count, 0)
           assert @cutter.authorize
         end
 
