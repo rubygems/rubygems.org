@@ -22,7 +22,7 @@ class Version < ActiveRecord::Base
   end
 
   def info
-    description || summary || "This rubygem does not have a description or summary."
+    [ description, summary, "This rubygem does not have a description or summary." ].detect(&:present?)
   end
 
 end
