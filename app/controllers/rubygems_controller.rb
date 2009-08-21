@@ -18,7 +18,7 @@ class RubygemsController < ApplicationController
     respond_to do |format|
       format.html do
         @current_version = @gem.versions.current
-        @current_dependencies = @current_version.dependencies if @current_version
+        @current_dependencies = @current_version.dependencies.runtime if @current_version
       end
       format.json do
         if @gem.try(:hosted?)

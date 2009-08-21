@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090820185410) do
+ActiveRecord::Schema.define(:version => 20090821044418) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(:version => 20090820185410) do
     t.datetime "updated_at"
     t.integer  "rubygem_id"
     t.integer  "version_id"
+    t.string   "scope"
   end
 
   add_index "dependencies", ["rubygem_id"], :name => "index_dependencies_on_rubygem_id"
