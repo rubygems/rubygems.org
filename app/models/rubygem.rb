@@ -88,6 +88,10 @@ class Rubygem < ActiveRecord::Base
     self.name = name if self.name.blank?
   end
 
+  def pushable?
+    new_record? || versions_count.zero?
+  end
+
   def build_dependencies(deps)
     deps.each do |dep|
       versions.last.dependencies.build(
@@ -115,7 +119,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def build_ownership(user)
-    ownerships.build(:user => user, :approved => true) if new_record?
+    ownerships.build(:user => user, :approved => true) if pushable?
   end
 
   def save_updated_version
