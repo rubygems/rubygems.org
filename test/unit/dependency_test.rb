@@ -2,7 +2,8 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class DependencyTest < ActiveSupport::TestCase
   should_belong_to :rubygem
-  should_validate_presence_of :name
+  should_belong_to :version
+  should_validate_presence_of :requirements
 
   context "with a dependency" do
     setup do

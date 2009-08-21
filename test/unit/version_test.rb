@@ -2,8 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class VersionTest < ActiveSupport::TestCase
   should_belong_to :rubygem
-  should_have_many :requirements, :dependent => :destroy
-  should_have_many :dependencies, :through => :requirements
+  should_have_many :dependencies
 
   context "with a rubygem" do
     setup do
