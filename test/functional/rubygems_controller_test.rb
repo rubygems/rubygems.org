@@ -239,7 +239,7 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to show" do
     setup do
       @current_version = Factory(:version)
-      @current_dependencies = @current_version.dependencies
+      @current_dependencies = @current_version.dependencies.runtime
       @gem = @current_version.rubygem
       get :show, :id => @gem.to_param
     end
@@ -289,6 +289,26 @@ class RubygemsControllerTest < ActionController::TestCase
     should_assign_to :gem
     should "render info about the gem" do
       assert_contain "This gem is not currently hosted on Gemcutter."
+    end
+  end
+
+  context "On GET to show for a gem with both runtime and development dependencies" do
+    setup do
+      @version = Factory(:version)
+
+      @development = Factory(:development_dependency, :version => @version)
+      @runtime     = Factory(:runtime_dependency,     :version => @version)
+      @current_dependencies = @version.dependencies.runtime
+
+      get :show, :id => @version.rubygem.to_param
+    end
+
+    should_respond_with :success
+    should_render_template :show
+    should_assign_to(:current_dependencies) { @current_dependencies }
+    should "show runtime dependencies but not development dependencies" do
+      assert_contain     @runtime.rubygem.name
+      assert_not_contain @development.rubygem.name
     end
   end
 
