@@ -73,4 +73,20 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal [@haml, @rack, @thor, @json, @rake].map(&:authors), Version.published.map(&:authors)
     end
   end
+
+  context "with a Gem::Specification" do
+    setup do
+      @spec    = gem_specification_from_gem_fixture('test-0.0.0')
+      @version = Factory(:version)
+      @version.update_attributes_from_gem_specification!(@spec)
+    end
+
+    should "have attributes set properly from the specification" do
+      assert_equal @spec.authors.join(', '), @version.authors
+      assert_equal @spec.description,        @version.description
+      assert_equal @spec.summary,            @version.summary
+      assert_equal @spec.rubyforge_project,  @version.rubyforge_project
+      assert_equal @spec.date,               @version.created_at
+    end
+  end
 end
