@@ -203,13 +203,13 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       context "building ownership" do
-        before_should "set user as owner if new record" do
-          stub(@rubygem).new_record? { true }
+        before_should "set user as owner if gem is pushable" do
+          stub(@rubygem).pushable? { true }
           mock(@rubygem).ownerships.mock!.build(:user => @user, :approved => true)
         end
 
-        before_should "not set user as owner if new record" do
-          stub(@rubygem).new_record? { false }
+        before_should "not set user as owner if gem is pushable" do
+          stub(@rubygem).pushable? { false }
           stub(@rubygem).ownerships.mock!.build.never
         end
 
@@ -256,9 +256,22 @@ class RubygemTest < ActiveSupport::TestCase
       @rack = Factory(:rubygem, :name => 'rack', :created_at => 1.day.ago,   :downloads => 2)
       @dust = Factory(:rubygem, :name => 'dust', :created_at => 3.days.ago,  :downloads => 1)
       @haml = Factory(:rubygem, :name => 'haml')
+      @new = Factory.build(:rubygem)
 
       @gems = [@thin, @rake, @json, @thor, @rack, @dust]
-      @gems.each { |g| Factory(:version, :rubygem => g) }
+      @gems.each { |g| Factory(:version, :rubygem => g); g.increment!(:versions_count) }
+    end
+
+    should "be pushable if gem is a new record" do
+      assert @new.pushable?
+    end
+
+    should "be pushable if gem has no versions" do
+      assert @haml.pushable?
+    end
+
+    should "not be pushable if it has versions" do
+      assert ! @thin.pushable?
     end
 
     should "give a count of only rubygems with versions" do

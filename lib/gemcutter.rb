@@ -17,7 +17,7 @@ class Gemcutter
   end
 
   def authorize
-    if rubygem.new_record? || rubygem.versions_count.zero? || rubygem.owned_by?(@user)
+    if rubygem.pushable? || rubygem.owned_by?(@user)
       true
     else
       @message = "You do not have permission to push to this gem."
