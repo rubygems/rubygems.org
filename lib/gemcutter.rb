@@ -27,8 +27,7 @@ class Gemcutter
   end
 
   def save
-    build
-    if rubygem.save
+    if update
       store
       notify("Successfully registered gem: #{rubygem}", 200)
     else
@@ -42,25 +41,15 @@ class Gemcutter
     false
   end
 
-  def build
-    rubygem.build_name(spec.name)
-    if spec.platform.to_s == "ruby"
-      number = spec.version.to_s
-    else
-      number = "#{spec.version}-#{spec.platform}"
+  def update
+    Rubygem.transaction do
+      rubygem.build_ownership(user) if user
+      rubygem.save!
+      rubygem.update_attributes_from_gem_specification!(spec)
     end
-
-    rubygem.build_version(
-      :authors           => spec.authors.join(", "),
-      :description       => spec.description,
-      :summary           => spec.summary,
-      :rubyforge_project => spec.rubyforge_project,
-      :created_at        => spec.date,
-      :number            => number)
-    rubygem.build_dependencies(spec.dependencies)
-    rubygem.build_links(spec.homepage)
-    rubygem.build_ownership(user) if user
     true
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback
+    false
   end
 
   def pull_spec

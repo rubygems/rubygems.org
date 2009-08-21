@@ -25,8 +25,6 @@ class Rubygem < ActiveRecord::Base
     :include => [:versions] }
   }
 
-  before_save :save_updated_version
-
   def self.total_count
     with_versions.count
   end
@@ -84,45 +82,50 @@ class Rubygem < ActiveRecord::Base
     "#{name} (#{downloads})"
   end
 
-  def build_name(name)
-    self.name = name if self.name.blank?
-  end
-
   def pushable?
     new_record? || versions_count.zero?
-  end
-
-  def build_dependencies(deps)
-    deps.each do |dep|
-      versions.last.dependencies.build(
-        :rubygem_name => dep.name.to_s,
-        :name         => dep.requirements_list.to_s)
-    end
-  end
-
-  def build_version(data)
-    version = versions.find_by_number(data[:number])
-    if version
-      version.attributes = data
-      @updated_version = version
-    else
-      versions.build(data)
-    end
-  end
-
-  def build_links(homepage)
-    if linkset
-      linkset.home = homepage
-    else
-      build_linkset(:home => homepage)
-    end
   end
 
   def build_ownership(user)
     ownerships.build(:user => user, :approved => true) if pushable?
   end
 
-  def save_updated_version
-    @updated_version.save if @updated_version
+  def update_versions!(spec)
+    version_number = version_number_from_spec(spec)
+    version = self.versions.find_or_initialize_by_number(version_number)
+    version.update_attributes_from_gem_specification!(spec)
   end
+
+  def update_dependencies!(spec)
+    version_number = version_number_from_spec(spec)
+    version = self.versions.find_or_initialize_by_number(version_number)
+    version.dependencies.delete_all
+    spec.dependencies.each do |dependency|
+      version.dependencies.create_from_gem_dependency!(dependency)
+    end
+  end
+
+  def update_linkset!(spec)
+    self.linkset ||= Linkset.new
+    self.linkset.update_attributes_from_gem_specification!(spec)
+    self.linkset.save!
+  end
+
+  def update_attributes_from_gem_specification!(spec)
+    update_versions!     spec
+    update_dependencies! spec
+    update_linkset!      spec
+
+    self.save!
+  end
+
+  private
+
+    def version_number_from_spec(spec)
+      case spec.platform.to_s
+        when 'ruby' then spec.version.to_s
+        else "#{spec.version}-#{spec.platform}"
+      end
+    end
+
 end

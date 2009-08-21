@@ -24,4 +24,16 @@ class LinksetTest < ActiveSupport::TestCase
       assert @linkset.empty?
     end
   end
+
+  context "with a Gem::Specification" do
+    setup do
+      @spec    = gem_specification_from_gem_fixture('test-0.0.0')
+      @linkset = Factory(:linkset)
+      @linkset.update_attributes_from_gem_specification!(@spec)
+    end
+
+    should "have linkset home be set to the specificaton's homepage" do
+      assert_equal @spec.homepage, @linkset.home
+    end
+  end
 end
