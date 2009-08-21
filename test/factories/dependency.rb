@@ -1,3 +1,5 @@
 Factory.define :dependency do |dependency|
-  dependency.name { '0.0.0' }
+  dependency.association :rubygem
+  dependency.association :version
+  dependency.requirements { '>= 1.0' }
 end
