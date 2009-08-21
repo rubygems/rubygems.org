@@ -83,7 +83,7 @@ class AbstractCommandTest < CommandTest
         @email = "email"
         @password = "password"
         @key = "key"
-        mock(@command).say("Enter your Gemcutter credentials. Don't have an account yet? Create one at #{URL}/sign_up")
+        mock(@command).say("Enter your Gemcutter credentials. Don't have an account yet? Create one at #{GemCutter::URL}/sign_up")
         mock(@command).ask("Email: ") { @email }
         mock(@command).ask_for_password("Password: ") { @password }
         FakeWeb.register_uri :get, "https://#{@email}:#{@password}@gemcutter.heroku.com/api_key", :body => @key

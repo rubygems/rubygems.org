@@ -8,7 +8,9 @@ require 'commands/abstract_command'
   Gem::CommandManager.instance.register_command command.to_sym
 end
 
-URL = "http://gemcutter.org" unless defined?(URL)
+class GemCutter
+  URL = "http://gemcutter.org" unless const_defined?(:URL)
+end
 
 class Gem::StreamUI
   def ask_for_password(message)
