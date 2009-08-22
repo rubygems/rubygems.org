@@ -5,16 +5,13 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gemcutter}
-  s.version = "0.1.2"
+  s.version = "0.1.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Quaranto"]
-  s.date = %q{2009-08-19}
+  s.date = %q{2009-08-21}
   s.description = %q{Adds several commands for using gemcutter.org, such as pushing new gems, migrating gems from RubyForge, and more.}
   s.email = %q{nick@quaran.to}
-  s.extra_rdoc_files = [
-    "README.textile"
-  ]
   s.files = [
     "lib/commands/abstract_command.rb",
      "lib/commands/migrate.rb",
@@ -26,6 +23,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/qrush/gemcutter}
   s.post_install_message = %q{
 ========================================================================
+
            Thanks for installing Gemcutter! You can now run:
 
     gem tumble        use Gemcutter as your primary RubyGem source
@@ -42,11 +40,7 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.3}
   s.summary = %q{Commands to interact with gemcutter.org}
   s.test_files = [
-    "test/command_helper.rb",
-     "test/commands/migrate_command_test.rb",
-     "test/commands/tumble_command_test.rb",
-     "test/commands/push_command_test.rb",
-     "test/commands/abstract_command_test.rb"
+    "test/command_helper.rb"
   ]
 
   if s.respond_to? :specification_version then
