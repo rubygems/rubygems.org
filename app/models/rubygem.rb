@@ -80,6 +80,10 @@ class Rubygem < ActiveRecord::Base
     name
   end
 
+  def to_install
+    "gem install #{name}"
+  end
+
   def with_downloads
     "#{name} (#{downloads})"
   end

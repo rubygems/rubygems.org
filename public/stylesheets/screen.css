@@ -302,19 +302,18 @@ body {
 .main .info .install .instructions span {
   font-family: Monaco, Courier, monospace;
   margin-left: 0.5em;
-  float: left;
+  display: table-cell;
+  vertical-align: middle;
   font-size: 1em;
-  line-height: 89px;
+  height: 90px;
+  width: 400px;
 }
 
-.main .info .border .paste {
+.main .info .border #clippy {
   display: block;
-  margin-left: 663px;
-  margin-top: 40px;
+  margin-left: 582px;
+  margin-top: 42px;
   position: absolute;
-  height: 35px;
-  width: 28px;
-  background: url('/images/paste.png') no-repeat;
 }
 
 .main .info .border .paste span {
