@@ -11,9 +11,9 @@
   </p>
 
   <div class="border">
-    <a href="/" class="paste"><span>Paste</span></a>
+    <%= clippy(@gem.to_install) %>
     <div class="install">
-      <div class="instructions"><strong>Install</strong><span>gem install <%= @gem.name %></span></div>
+      <div class="instructions"><strong>Install</strong><span><%= @gem.to_install %></span></div>
     </div>
   </div>
 
