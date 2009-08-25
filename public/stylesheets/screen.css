@@ -497,6 +497,7 @@ body {
 
 .main .info .directory {
   margin-top: 2em;
+  margin-bottom: 0;
 }
 
 .main .info .directory ol {
@@ -512,11 +513,53 @@ body {
 
 .main .info .directory li a {
   font-weight: 900;
-  padding: 20px 5px 20px;
+  padding: 20px 7px 20px;
 }
 
 .main .info .directory li a:hover {
   background: #ABA69D;
+}
+
+.main .info .gems {
+  margin-bottom: 0;
+}
+
+.main .info .gems ol {
+  background: #F5F1E7;
+  margin: 0;
+  padding: 1em 2.5em;
+}
+
+.main .info .gems ol li {
+  padding-left: 1em;
+  border-bottom: 1px solid #B4AC99;
+  background: url('/images/bullet-normal.png') no-repeat 10px 14px;
+}
+
+.main .info .gems ol li:last-child {
+  border: none;
+}
+
+.main .info .gems ol li:hover {
+  background: #fff url('/images/bullet-hover.png') no-repeat 10px 14px;
+}
+
+.main .info .gems ol li a {
+  padding: 8px;
+  display: inline-block;
+  vertical-align: top;
+  font-size: 0.8em;
+  color: #90856C;
+  width: 100%;
+}
+
+.main .info .gems ol li a strong {
+  display: block;
+  color: #000;
+}
+
+.main .info .gems ol li a:hover strong {
+  color: #8F0B0B;
 }
 
 .footer .links {
@@ -671,5 +714,24 @@ label, .form_links {
 }
 
 .pagination {
-  text-align: right;
+  padding: 2em;
+  text-align: center;
+}
+
+.pagination * {
+  font-size: 1.8em;
+  padding: 0.3em;
+  color: #120606;
+}
+
+.pagination .disabled, .pagination .current {
+  color: #777;
+}
+
+.pagination a:hover {
+  background: #777;
+  color: #FFF;
+}
+
+.entries {
 }

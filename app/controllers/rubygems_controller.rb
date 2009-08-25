@@ -10,8 +10,8 @@ class RubygemsController < ApplicationController
   end
 
   def index
-    params[:letter] = "a" unless params[:letter]
-    @gems = Rubygem.name_starts_with(params[:letter]).paginate(:page => params[:page])
+    params[:letter] = "A" unless params[:letter]
+    @gems = Rubygem.name_starts_with(params[:letter]).with_versions.paginate(:page => params[:page])
   end
 
   def show
