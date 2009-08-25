@@ -3,6 +3,8 @@ class Rubygem < ActiveRecord::Base
 
   has_many :owners, :through => :ownerships, :source => :user
   has_many :ownerships
+  has_many :subscribers, :through => :subscriptions, :source => :user
+  has_many :subscriptions
   has_many :versions, :dependent => :destroy, :order => "created_at desc, number desc" do
     def latest
       self.find(:first, :order => "updated_at desc")
