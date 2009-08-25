@@ -34,6 +34,10 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.number, @version.to_s
     end
 
+    should "give title for #to_title" do
+      assert_equal "#{@version.rubygem.name} (#{@version.to_s})", @version.to_title
+    end
+
     should "have description for info" do
       @version.description = @info
       assert_equal @info, @version.info
@@ -70,7 +74,8 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "get the latest versions up to today" do
-      assert_equal [@haml, @rack, @thor, @json, @rake].map(&:authors), Version.published.map(&:authors)
+      assert_equal [@haml, @rack, @thor, @json, @rake].map(&:authors),        Version.published.map(&:authors)
+      assert_equal [@haml, @rack, @thor, @json, @rake, @thin].map(&:authors), Version.published(6).map(&:authors)
     end
   end
 

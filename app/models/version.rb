@@ -13,12 +13,16 @@ class Version < ActiveRecord::Base
     end
   end
 
-  def self.published
-    created_at_before(DateTime.now.utc).by_created_at(:desc).limited(5)
+  def self.published(limit=5)
+    created_at_before(DateTime.now.utc).by_created_at(:desc).limited(limit)
   end
 
   def to_s
     number
+  end
+
+  def to_title
+    "#{rubygem.name} (#{to_s})"
   end
 
   def info
