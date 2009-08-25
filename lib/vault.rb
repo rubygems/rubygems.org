@@ -3,8 +3,8 @@ module Vault
     OPTIONS = {:authenticated => false, :access => :public_read}
 
     def store
-      write
-      update
+      write_gem
+      update_index
     end
 
     def source_path
@@ -23,7 +23,7 @@ module Vault
       end
     end
 
-    def write
+    def write_gem
       cache_path = "gems/#{spec.original_name}.gem"
       VaultObject.store(cache_path, data.string, OPTIONS)
 
@@ -33,7 +33,7 @@ module Vault
       VaultObject.store(quick_path, Gem.deflate(Marshal.dump(spec)), OPTIONS)
     end
 
-    def update
+    def update_index
       platform = spec.original_platform
       platform = Gem::Platform::RUBY if platform.nil? or platform.empty?
 
@@ -53,8 +53,8 @@ module Vault
 
   module FS
     def store
-      write
-      update
+      write_gem
+      update_index
     end
 
     def source_path
@@ -69,7 +69,7 @@ module Vault
       end
     end
 
-    def write
+    def write_gem
       cache_path = Gemcutter.server_path('gems', "#{spec.original_name}.gem")
       File.open(cache_path, "wb") do |f|
         f.write data.string
@@ -87,7 +87,7 @@ module Vault
       File.chmod 0644, quick_path
     end
 
-    def update
+    def update_index
       source_index.add_spec spec, spec.original_name
       File.open(source_path, "wb") do |f|
         f.write Gem.deflate(Marshal.dump(source_index))
