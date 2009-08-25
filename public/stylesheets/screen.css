@@ -129,18 +129,25 @@ body {
   display: inline;
 }
 
-.nav form .text_field input {
-  color: #28221e;
-  width: 300px;
-  border: none;
-  padding: 0.5em;
-  font-size: 1.5em;
-  font-weight: bold;
-  font-family: "Myriad Pro", "Lucida Grande", Helvetica, Tahoma, sans-serif;
+.nav form .text_field {
+  display: inline-block;
+  padding: 0.0em 0.4em;
   -moz-border-radius: 8px;
   -webkit-border-radius: 10px;
   background: #e9e4d1 url(/images/instructions.png) repeat-x scroll 0 -2px;
   margin-top: 7px;
+}
+
+.nav form .text_field input {
+  color: #28221e;
+  margin-top: 6px;
+  width: 300px;
+  border: none;
+  font-size: 1.7em;
+  line-height: 1.2em;
+  font-weight: bold;
+  font-family: "Myriad Pro", "Lucida Grande", Helvetica, Tahoma, sans-serif;
+  background: transparent;
 }
 
 .main {
