@@ -8,7 +8,7 @@ module Vault
     end
 
     def source_path
-      "specs.#{Gem.marshal_version}.gz"
+      "source_index"
     end
 
     def source_index
