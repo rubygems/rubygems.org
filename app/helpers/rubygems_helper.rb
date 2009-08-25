@@ -15,7 +15,7 @@ module RubygemsHelper
       :class  => :toggler,
       :html   => {
         :class  => :toggler,
-        :style  => gem.subscribers.find(:first, current_user) ? 'display:none' : 'display:block'
+        :style  => gem.subscribers.find_by_id(current_user.try(:id)) ? 'display:none' : 'display:block'
       }
   end
 
@@ -25,7 +25,7 @@ module RubygemsHelper
       :method => :delete,
       :html   => {
         :class  => :toggler,
-        :style  => gem.subscribers.find(:first, current_user) ? 'display:block' : 'display:none'
+        :style  => gem.subscribers.find_by_id(current_user.try(:id)) ? 'display:block' : 'display:none'
       }
   end
 end
