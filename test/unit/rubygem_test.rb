@@ -123,6 +123,19 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
+    context "with subscribed users" do
+      setup do
+        @subscribed_user   = Factory(:user)
+        @unsubscribed_user = Factory(:user)
+        Factory(:subscription, :rubygem => @rubygem, :user => @subscribed_user)
+      end
+
+      should "only fetch the subscribed users with #subscribers" do
+        assert_contains         @rubygem.subscribers, @subscribed_user
+        assert_does_not_contain @rubygem.subscribers, @unsubscribed_user
+      end
+    end
+
     should "return current version" do
       assert_equal @rubygem.versions.first, @rubygem.versions.current
     end
