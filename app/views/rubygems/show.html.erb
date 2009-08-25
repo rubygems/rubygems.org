@@ -6,9 +6,10 @@
     This gem is not currently hosted on Gemcutter.
   </p>
 <% else %>
-  <p>
-    <%=h @current_version.info %>
-  </p>
+
+  <div id="markup">
+    <%= simple_markup(@current_version.info) %>
+  </div>
 
   <div class="border">
     <%= clippy(@gem.to_install) %>
