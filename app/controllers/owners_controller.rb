@@ -3,6 +3,7 @@ class OwnersController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => [:create, :destroy]
 
   before_filter :authenticate_with_api_key
+  before_filter :verify_authenticated_user
   before_filter :find_rubygem
   before_filter :verify_gem_ownership
 
