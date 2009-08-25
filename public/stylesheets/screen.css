@@ -514,10 +514,11 @@ body {
 .main .info .directory li a {
   font-weight: 900;
   padding: 20px 7px 20px;
+  text-shadow: 0 0 3px #FFFFFF;
 }
 
 .main .info .directory li a:hover {
-  background: #ABA69D;
+  background: url('/images/letter.png') repeat-x 0 16px;
 }
 
 .main .info .gems ol {
@@ -529,7 +530,7 @@ body {
 .main .info .gems ol li {
   padding-left: 1em;
   border-bottom: 1px solid #B4AC99;
-  background: url('/images/bullet-normal.png') no-repeat 10px 14px;
+  background: url('/images/bullet-directory.png') no-repeat 10px 14px;
 }
 
 .main .info .gems ol li:last-child {
@@ -537,7 +538,7 @@ body {
 }
 
 .main .info .gems ol li:hover {
-  background: #fff url('/images/bullet-hover.png') no-repeat 10px 14px;
+  background: #fff url('/images/bullet-directory.png') no-repeat 10px 14px;
 }
 
 .main .info .gems ol li a {
@@ -710,13 +711,15 @@ label, .form_links {
 }
 
 .pagination {
-  padding: 2em;
+  padding: 0 2em 2em;
   text-align: center;
 }
 
 .pagination * {
-  font-size: 1.8em;
-  padding: 0.3em;
+  font-size: 1.5em;
+  padding: 5px;
+  font-weight: 900;
+  text-align: center;
   color: #120606;
 }
 
@@ -725,8 +728,9 @@ label, .form_links {
 }
 
 .pagination a:hover {
-  background: #777;
+  background: url(/images/pager.png) repeat-x scroll 0 1px;
   color: #FFF;
+  text-shadow: 0 0 3px #000000;
 }
 
 .entries {
