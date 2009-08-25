@@ -47,7 +47,7 @@ class VaultTest < ActiveSupport::TestCase
     end
 
     should "write the gem" do
-      @vault.write
+      @vault.write_gem
 
       cache_path = Gemcutter.server_path("gems", "#{@spec.original_name}.gem")
       assert File.exists?(cache_path)
@@ -65,7 +65,7 @@ class VaultTest < ActiveSupport::TestCase
     end
 
     should "update the index" do
-      @vault.update
+      @vault.update_index
 
       source_index = Gemcutter.server_path("source_index")
       assert File.exists?(source_index)
