@@ -1,7 +1,7 @@
 module RubygemsHelper
 
   def link_to_page(text, url)
-    link_to text, url unless url.blank?
+    link_to(text, url, :rel => 'nofollow') unless url.blank?
   end
 
   def simple_markup(text)
