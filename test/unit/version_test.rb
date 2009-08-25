@@ -79,6 +79,48 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
+  context "with a few versions some owned by a user" do
+    setup do
+      @user      = Factory(:user)
+      @gem       = Factory(:rubygem)
+      @owned_one = Factory(:version, :rubygem => @gem)
+      @owned_two = Factory(:version, :rubygem => @gem)
+      @unowned   = Factory(:version)
+
+      Factory(:ownership, :rubygem => @gem, :user => @user, :approved => true)
+    end
+
+    should "return the owned gems from #owned_by" do
+      assert_contains Version.owned_by(@user), @owned_one
+      assert_contains Version.owned_by(@user), @owned_two
+    end
+
+    should "not return the unowned versions from #owned_by" do
+      assert_does_not_contain Version.owned_by(@user), @unowned
+    end
+  end
+
+  context "with a few versions some subscribed to by a user" do
+    setup do
+      @user           = Factory(:user)
+      @gem            = Factory(:rubygem)
+      @subscribed_one = Factory(:version, :rubygem => @gem)
+      @subscribed_two = Factory(:version, :rubygem => @gem)
+      @unsubscribed   = Factory(:version)
+
+      Factory(:subscription, :rubygem => @gem, :user => @user)
+    end
+
+    should "return the owned gems from #owned_by" do
+      assert_contains Version.subscribed_to_by(@user), @subscribed_one
+      assert_contains Version.subscribed_to_by(@user), @subscribed_two
+    end
+
+    should "not return the unowned versions from #owned_by" do
+      assert_does_not_contain Version.subscribed_to_by(@user), @unsubscribed
+    end
+  end
+
   context "with a Gem::Specification" do
     setup do
       @spec    = gem_specification_from_gem_fixture('test-0.0.0')
