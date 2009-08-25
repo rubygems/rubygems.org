@@ -14,7 +14,7 @@
     <li>
       <a href="<%= rubygem_url(gem) %>">
         <strong><%= gem %></strong>
-        <%= truncate(gem.versions.current.info, :length => 100) %>
+        <%=h truncate(gem.versions.current.info, :length => 100) %>
       </a>
     </li>
     <% end %>
