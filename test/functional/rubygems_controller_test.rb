@@ -223,7 +223,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to index as an atom feed" do
     setup do
-      @versions = (1..3).map { |n| Factory(:version, :created_at => 1.hour.ago) }
+      @versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
       get :index, :format => "atom"
     end
 
