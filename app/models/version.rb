@@ -7,6 +7,14 @@ class Version < ActiveRecord::Base
 
   validates_format_of :number, :with => /^[\w\.\-_]+$/
 
+  named_scope :owned_by, lambda { |user|
+    { :conditions => { :rubygem_id => user.rubygem_ids } }
+  }
+
+  named_scope :subscribed_to_by, lambda { |user|
+    { :conditions => { :rubygem_id => user.subscribed_gem_ids } }
+  }
+
   def validate
     if new_record? && Version.exists?(:rubygem_id => rubygem_id, :number => number)
       errors.add_to_base("A version already exists with this number.")
