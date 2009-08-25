@@ -4,6 +4,10 @@ module RubygemsHelper
     link_to text, url unless url.blank?
   end
 
+  def simple_markup(text)
+     SM::SimpleMarkup.new.convert(text, SM::ToHtml.new)
+  end
+
   def clippy(text, bgcolor='#AADD44')
     html = <<-EOF
             <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
