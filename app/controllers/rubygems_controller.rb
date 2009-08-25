@@ -14,6 +14,7 @@ class RubygemsController < ApplicationController
       end
       format.atom do
         @versions = Version.published(20)
+        render 'versions/feed'
       end
     end
   end
