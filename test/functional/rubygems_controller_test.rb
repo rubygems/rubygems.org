@@ -221,6 +221,22 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  context "On GET to index as an atom feed" do
+    setup do
+      @versions = (1..3).map { |n| Factory(:version, :created_at => 1.hour.ago) }
+      get :index, :format => "atom"
+    end
+
+    should_respond_with :success
+    should_assign_to(:versions) { @versions }
+    should "render posts with titles and links" do
+      @versions.each do |v|
+        assert_contain v.to_title
+        assert_have_selector "link[href='#{rubygem_url(v.rubygem)}']"
+      end
+    end
+  end
+
   context "On GET to index with a letter" do
     setup do
       @gems = (1..3).map { |n| Factory(:rubygem, :name => "agem#{n}") }

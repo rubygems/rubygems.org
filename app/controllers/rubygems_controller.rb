@@ -10,8 +10,15 @@ class RubygemsController < ApplicationController
   end
 
   def index
-    params[:letter] = "a" unless params[:letter]
-    @gems = Rubygem.name_starts_with(params[:letter]).paginate(:page => params[:page])
+    respond_to do |format|
+      format.html do
+        params[:letter] = "a" unless params[:letter]
+        @gems = Rubygem.name_starts_with(params[:letter]).paginate(:page => params[:page])
+      end
+      format.atom do
+        @versions = Version.published(20)
+      end
+    end
   end
 
   def show

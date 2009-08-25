@@ -29,12 +29,12 @@ class Rubygem < ActiveRecord::Base
     with_versions.count
   end
 
-  def self.latest
-    with_versions.by_created_at(:desc).limited(5)
+  def self.latest(limit=5)
+    with_versions.by_created_at(:desc).limited(limit)
   end
 
-  def self.downloaded
-    with_versions.by_downloads(:desc).limited(5)
+  def self.downloaded(limit=5)
+    with_versions.by_downloads(:desc).limited(limit)
   end
 
   def hosted?
@@ -58,11 +58,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def to_s
-    if versions.current
-      "#{name} (#{versions.current})"
-    else
-      name
-    end
+    versions.current.try(:to_title) || name
   end
 
   def to_json

@@ -213,11 +213,13 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "only return the latest gems with versions" do
-      assert_equal [@rack, @thor, @dust, @json, @rake], Rubygem.latest
+      assert_equal [@rack, @thor, @dust, @json, @rake],        Rubygem.latest
+      assert_equal [@rack, @thor, @dust, @json, @rake, @thin], Rubygem.latest(6)
     end
 
     should "only latest downloaded versions" do
-      assert_equal [@thin, @rake, @json, @thor, @rack], Rubygem.downloaded
+      assert_equal [@thin, @rake, @json, @thor, @rack],        Rubygem.downloaded
+      assert_equal [@thin, @rake, @json, @thor, @rack, @dust], Rubygem.downloaded(6)
     end
   end
 
