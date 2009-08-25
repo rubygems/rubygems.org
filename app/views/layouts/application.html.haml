@@ -23,7 +23,8 @@
               =link_to "migrate", page_url("migrate")
             %span.account
               -if signed_in?
-                =link_to "my gems", mine_rubygems_url
+                =link_to "my gems", mine_dashboard_url
+                =link_to "subscribed", subscribed_dashboard_url
                 =link_to "logout", sign_out_path
               -else
                 =link_to "login", sign_in_path

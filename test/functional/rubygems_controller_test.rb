@@ -9,28 +9,6 @@ class RubygemsControllerTest < ActionController::TestCase
       sign_in_as(@user)
     end
 
-    context "On GET to mine" do
-      setup do
-        3.times { Factory(:rubygem) }
-        @gems = (1..3).map do
-          rubygem = Factory(:rubygem)
-          rubygem.ownerships.create(:user => @user, :approved => true)
-          rubygem
-        end
-        get :mine
-      end
-
-      should_respond_with :success
-      should_render_template :mine
-      should_assign_to(:gems) { @gems }
-      should "render links" do
-        @gems.each do |g|
-          assert_contain g.name
-          assert_have_selector "a[href='#{rubygem_path(g)}']"
-        end
-      end
-    end
-
     context "On GET to show for another user's gem" do
       setup do
         @gem = Factory(:rubygem)
@@ -212,12 +190,6 @@ class RubygemsControllerTest < ActionController::TestCase
         assert_contain /error(s)? prohibited/m
       end
     end
-  end
-
-  context "On GET to mine without being signed in" do
-    setup { get :mine }
-    should_respond_with :redirect
-    should_redirect_to('the homepage') { root_url }
   end
 
   context "On GET to edit without being signed in" do
