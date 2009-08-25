@@ -28,7 +28,7 @@ class PushCommandTest < CommandTest
       @io = "io"
       @config = { :gemcutter_key => "key" }
 
-      stub(File).open(@gem) { @io }
+      stub(File).open(@gem, "rb") { @io }
       stub(@io).read.stub!.size
 
       stub(@command).options { {:args => [@gem]} }
