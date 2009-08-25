@@ -1,0 +1,6 @@
+<li>
+  <a href="<%= rubygem_url(rubygem) %>">
+    <strong><%= rubygem %></strong>
+    <%=h truncate(rubygem.versions.current.info, :length => 100) %>
+  </a>
+</li>

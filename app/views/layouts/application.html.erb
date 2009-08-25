@@ -27,11 +27,11 @@
             <li><%=link_to "sign up", sign_up_path %></li>
           <% end %>
         </ul>
-        <form action="design.html">
+        <% form_tag search_url, :method => :get do %>
           <div class="text_field">
-            <input type="text" name="search" value="Search gems&hellip;" />
+            <%= text_field_tag :query, params[:query] ? h(params[:query]) : "Search gems&hellip;" %>
           </div>
-        </form>
+        <% end %>
       </div>
       <div class="prefix_1 grid_10 suffix_1 main">
         <% if content_for?(:fold) %>
