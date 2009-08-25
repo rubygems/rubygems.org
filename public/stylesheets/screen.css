@@ -313,6 +313,7 @@ body {
   font-size: 1em;
   height: 90px;
   width: 400px;
+  line-height: 1.2em;
 }
 
 .main .info .border #clippy {
@@ -332,15 +333,20 @@ body {
 }
 
 .main .info #markup {
-  margin: 1em 0;
+  margin: 20px 0;
 }
 
-.main .info #markup {
-  font-size: 1.2em;
+.main .info #markup h2 {
+  font-size: 1.5em;
+  margin: 0 36px;
 }
 
-.main .info #markup p {
-  font-size: 1.2em;
+.main .info #markup p, .main .info #markup ul {
+  font-size: 1.4em;
+}
+
+.main .info #markup ul ul {
+  font-size: 1em;
 }
 
 .main .info #markup ul {
