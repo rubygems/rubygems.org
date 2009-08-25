@@ -24,6 +24,11 @@
           %h3 Administration
           %p
             =link_to "Edit Gem", edit_rubygem_path(@gem)
+      .block.red
+        %h3 Subscription
+        %p
+          = subscribe_link(@gem)
+          = unsubscribe_link(@gem)
     -unless @current_version.authors.empty?
       .block.red
         %h3 Authors

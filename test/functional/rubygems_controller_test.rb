@@ -114,6 +114,41 @@ class RubygemsControllerTest < ActionController::TestCase
       end
     end
 
+    context "On GET to show for a gem that the user is subscribed to" do
+      setup do
+        @gem = Factory(:rubygem)
+        Factory(:version, :rubygem => @gem)
+        Factory(:subscription, :rubygem => @gem, :user => @user)
+        get :show, :id => @gem.to_param
+      end
+
+      should_assign_to(:gem) { @gem }
+      should_respond_with :success
+      should "have an invisible subscribe link" do
+        assert_match /<a[^>]*style="display:none"[^>]*>Subscribe<\/a>/, @response.body
+      end
+      should "have a visible unsubscribe link" do
+        assert_match /<a[^>]*style="display:block"[^>]*>Unsubscribe<\/a>/, @response.body
+      end
+    end
+
+    context "On GET to show for a gem that the user is not subscribed to" do
+      setup do
+        @gem = Factory(:rubygem)
+        Factory(:version, :rubygem => @gem)
+        get :show, :id => @gem.to_param
+      end
+
+      should_assign_to(:gem) { @gem }
+      should_respond_with :success
+      should "have a visible subscribe link" do
+        assert_match /<a[^>]*style="display:block"[^>]*>Subscribe<\/a>/, @response.body
+      end
+      should "have an invisible unsubscribe link" do
+        assert_match /<a[^>]*style="display:none"[^>]*>Unsubscribe<\/a>/, @response.body
+      end
+    end
+
     context "On GET to edit for this user's gem" do
       setup do
         create_gem(@user)
