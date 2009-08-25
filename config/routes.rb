@@ -8,6 +8,10 @@ ActionController::Routing::Routes.draw do |map|
     :format       => "json",
     :requirements => { :id => RUBYGEM_NAME_MATCHER }
 
+  map.resource :dashboard,
+               :only   => [],
+               :member => { :mine => :get, :subscribed => :get }
+
   map.resource :migrate,
                :only         => [:create, :update],
                :controller   => "migrations",
@@ -16,7 +20,6 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :rubygems,
                 :as           => "gems",
-                :collection   => { :mine => :get },
                 :requirements => { :id => RUBYGEM_NAME_MATCHER } do |rubygems|
 
     rubygems.resource :owners, :only => [:show, :create, :destroy]
