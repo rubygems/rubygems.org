@@ -21,6 +21,7 @@ ActionController::Routing::Routes.draw do |map|
 
     rubygems.resource :owners, :only => [:show, :create, :destroy]
 
+    rubygems.resource :subscription, :only => [:create, :destroy]
   end
 
   map.search "/search", :controller => "searches", :action => "new"
