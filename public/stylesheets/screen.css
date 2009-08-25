@@ -502,7 +502,7 @@ body {
 
 .main .info .directory ol {
   background: url('/images/directory.png') repeat-x;
-  padding: 18px;
+  padding: 18px 0;
   margin: 0;
   text-align: center;
 }
