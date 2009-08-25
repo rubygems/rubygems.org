@@ -546,7 +546,7 @@ body {
 
 .main .info .gems ol li a {
   padding: 8px;
-  display: inline-block;
+  display: block;
   vertical-align: top;
   font-size: 0.8em;
   color: #90856C;
