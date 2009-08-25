@@ -29,6 +29,29 @@ class DashboardsControllerTest < ActionController::TestCase
       end
     end
 
+    context "On GET to mine as an atom feed" do
+      setup do
+        @owned_versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
+        @owned_versions.each { |v| Factory(:ownership, :rubygem => v.rubygem, :user => @user, :approved => true)}
+        @unowned_versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
+        get :mine, :format => "atom"
+      end
+
+      should_respond_with :success
+      should_assign_to(:versions) { @versions }
+      should "render posts with titles and links of all owned versions" do
+        @owned_versions.each do |v|
+          assert_contain v.to_title
+          assert_have_selector "link[href='#{rubygem_url(v.rubygem)}']"
+        end
+      end
+      should "not render posts for versions the user doesn't own" do
+        @unowned_versions.each do |v|
+          assert_does_not_contain @response.body, v.to_title
+        end
+      end
+    end
+
     context "On GET to subscribed" do
       setup do
         3.times { Factory(:rubygem) }
@@ -47,6 +70,29 @@ class DashboardsControllerTest < ActionController::TestCase
         @gems.each do |g|
           assert_contain g.name
           assert_have_selector "a[href='#{rubygem_path(g)}']"
+        end
+      end
+    end
+
+    context "On GET to subscribed as an atom feed" do
+      setup do
+        @subscribed_versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
+        @subscribed_versions.each { |v| Factory(:subscription, :rubygem => v.rubygem, :user => @user)}
+        @unsubscribed_versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
+        get :subscribed, :format => "atom"
+      end
+
+      should_respond_with :success
+      should_assign_to(:versions) { @versions }
+      should "render posts with titles and links of all subscribed versions" do
+        @subscribed_versions.each do |v|
+          assert_contain v.to_title
+          assert_have_selector "link[href='#{rubygem_url(v.rubygem)}']"
+        end
+      end
+      should "not render posts for versions the user isn't subscribed to" do
+        @unsubscribed_versions.each do |v|
+          assert_does_not_contain @response.body, v.to_title
         end
       end
     end
