@@ -100,8 +100,9 @@ ActiveRecord::Schema.define(:version => 20090825173917) do
     t.integer  "rubygem_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "summary"
     t.string   "rubyforge_project"
+    t.text     "summary"
+    t.string   "platform"
   end
 
   add_index "versions", ["rubygem_id"], :name => "index_versions_on_rubygem_id"
