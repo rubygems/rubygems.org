@@ -1,6 +1,7 @@
 class RubygemsController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => :create
   before_filter :authenticate_with_api_key, :only => :create
+  before_filter :verify_authenticated_user, :only => :create
   before_filter :redirect_to_root, :only => [:edit, :update], :unless => :signed_in?
   before_filter :find_gem, :only => [:edit, :update, :show]
   before_filter :load_gem, :only => [:edit, :update]
