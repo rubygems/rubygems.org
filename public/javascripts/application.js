@@ -5,4 +5,11 @@ $(document).ready(function() {
     $(divs).slideUp();
     }, 10000);
   });
+
+  if(window.location.href.search(/query=/) == -1) {
+    $("#query").click(function() {
+      $(this).val("");
+      $(this).unbind("click");
+    });
+  }
 });

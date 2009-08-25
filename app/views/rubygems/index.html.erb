@@ -10,14 +10,7 @@
 </p>
 <div class="gems border">
   <ol>
-    <% @gems.each do |gem| %>
-    <li>
-      <a href="<%= rubygem_url(gem) %>">
-        <strong><%= gem %></strong>
-        <%=h truncate(gem.versions.current.info, :length => 100) %>
-      </a>
-    </li>
-    <% end %>
+    <%= render @gems %>
   </ol>
 </div>
 <%= will_paginate @gems %>
