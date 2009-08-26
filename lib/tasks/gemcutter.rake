@@ -29,9 +29,7 @@ namespace :gemcutter do
 
     desc "fix the index"
     task :reprocess => :environment do
-      specs = []
-      latest_specs = []
-      Rubygem.all.each do |rubygem|
+      Rubygem.with_versions.each do |rubygem|
         rubygem.versions.each do |version|
 
           install = "#{rubygem.name}-#{version.number}"
@@ -50,16 +48,25 @@ namespace :gemcutter do
             version.save
 
             spec.development_dependencies.each { |dep| version.dependencies.create_from_gem_dependency!(dep) }
-
-            latest_specs << version.to_index
-            specs << version.to_index
           else
             puts ">> BAD GEM: #{install}"
+            version.update_attribute(:indexed, false)
           end
+        end
+      end
 
-          p latest_specs
-          puts ">>> latest: #{latest_specs.size}"
-          puts ">>> all:    #{specs.size}"
+      specs = []
+      latest_specs = []
+
+      Rubygem.with_versions.each do |rubygem|
+        current_version_number = rubygem.versions.current.number
+
+        rubygem.versions.indexed.each do |version|
+          latest_specs << version.to_index if version.number == current_version_number
+          specs << version.to_index
+
+          puts ">> latest specs: #{latest_specs.size}"
+          puts ">>        specs: #{specs.size}"
         end
       end
 
