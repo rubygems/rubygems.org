@@ -1,0 +1,12 @@
+log/*
+tmp/**/*
+db/schema.rb
+db/*.sqlite3
+public/system
+*.swp
+*.DS_Store
+coverage/*
+rdoc/
+tags
+.yardoc
+doc
