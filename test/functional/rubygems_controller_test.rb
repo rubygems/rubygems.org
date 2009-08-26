@@ -404,5 +404,21 @@ class RubygemsControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "When not logged in" do
+    context "On GET to show for a gem" do
+      setup do
+        @gem = Factory(:rubygem)
+        Factory(:version, :rubygem => @gem)
+        get :show, :id => @gem.to_param
+      end
+
+      should_assign_to(:gem) { @gem }
+      should_respond_with :success
+      should "have an subscribe link that goes to the sign in page" do
+        assert_have_selector "a[href='#{sign_in_path}']", :content => 'Subscribe'
+      end
+    end
+  end
 end
 

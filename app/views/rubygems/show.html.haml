@@ -29,6 +29,11 @@
         %p
           = subscribe_link(@gem)
           = unsubscribe_link(@gem)
+    -else
+      .block.red
+        %h3 Subscription
+        %p
+          = link_to 'Subscribe', sign_in_path
     -unless @current_version.authors.empty?
       .block.red
         %h3 Authors
