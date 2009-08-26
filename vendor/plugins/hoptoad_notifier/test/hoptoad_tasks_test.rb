@@ -50,7 +50,7 @@ class HoptoadTasksTest < Test::Unit::TestCase
 
           before_should "use the project api key" do
             Net::HTTP.expects(:post_form).
-              with(kind_of(URI), has_entries('api_key' => "1234123412341234")).
+              with(kind_of(URI), has_entries(:api_key => "1234123412341234")).
               returns(successful_response)
           end
 

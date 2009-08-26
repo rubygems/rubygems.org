@@ -1,10 +1,8 @@
 require 'test/unit'
 require 'rubygems'
-
-gem 'jferris-mocha', '0.9.5.0.1241126838'
-
-require 'shoulda'
 require 'mocha'
+gem 'thoughtbot-shoulda', ">= 2.0.0"
+require 'shoulda'
 
 $LOAD_PATH << File.join(File.dirname(__FILE__), *%w[.. vendor ginger lib])
 require 'ginger'
@@ -14,9 +12,11 @@ require 'action_controller/test_process'
 require 'active_record'
 require 'active_record/base'
 require 'active_support'
-require 'nokogiri'
 
 require File.join(File.dirname(__FILE__), "..", "lib", "hoptoad_notifier")
+
+RAILS_ROOT = File.join( File.dirname(__FILE__), "rails_root" )
+RAILS_ENV  = "test"
 
 begin require 'redgreen'; rescue LoadError; end
 
@@ -91,106 +91,6 @@ class Test::Unit::TestCase
   def assert_no_difference(expression, message = nil, &block)
     assert_difference expression, 0, message, &block
   end
-
-  def stub_sender
-    stub('sender', :send_to_hoptoad => nil)
-  end
-
-  def stub_sender!
-    HoptoadNotifier.sender = stub_sender
-  end
-
-  def stub_notice
-    stub('notice', :to_xml => 'some yaml', :ignore? => false)
-  end
-
-  def stub_notice!
-    returning stub_notice do |notice|
-      HoptoadNotifier::Notice.stubs(:new => notice)
-    end
-  end
-
-  def create_dummy
-    HoptoadNotifier::DummySender.new
-  end
-
-  def reset_config
-    HoptoadNotifier.configuration = nil
-    HoptoadNotifier.configure do |config|
-      config.api_key = 'abc123'
-    end
-  end
-
-  def clear_backtrace_filters
-    HoptoadNotifier.configuration.backtrace_filters.clear
-  end
-
-  def build_exception
-    raise
-  rescue => caught_exception
-    caught_exception
-  end
-
-  def build_notice_data(exception = nil)
-    exception ||= build_exception
-    {
-      :api_key       => 'abc123',
-      :error_class   => exception.class.name,
-      :error_message => "#{exception.class.name}: #{exception.message}",
-      :backtrace     => exception.backtrace,
-      :environment   => { 'PATH' => '/bin', 'REQUEST_URI' => '/users/1' },
-      :request       => {
-        :params     => { 'controller' => 'users', 'action' => 'show', 'id' => '1' },
-        :rails_root => '/path/to/application',
-        :url        => "http://test.host/users/1"
-      },
-      :session       => {
-        :key  => '123abc',
-        :data => { 'user_id' => '5', 'flash' => { 'notice' => 'Logged in successfully' } }
-      }
-    }
-  end
-
-  def assert_caught_and_sent
-    assert !HoptoadNotifier.sender.collected.empty?
-  end
-
-  def assert_caught_and_not_sent
-    assert HoptoadNotifier.sender.collected.empty?
-  end
-
-  def assert_array_starts_with(expected, actual)
-    assert_respond_to actual, :to_ary
-    array = actual.to_ary.reverse
-    expected.reverse.each_with_index do |value, i|
-      assert_equal value, array[i]
-    end
-  end
-
-  def assert_valid_node(document, xpath, content)
-    nodes = document.xpath(xpath)
-    assert nodes.any?{|node| node.content == content },
-           "Expected xpath #{xpath} to have content #{content}, " +
-           "but found #{nodes.map { |n| n.content }} in #{nodes.size} matching nodes." +
-           "Document:\n#{document.to_s}"
-  end
-end
-
-module DefinesConstants
-  def setup
-    @defined_constants = []
-  end
-
-  def teardown
-    @defined_constants.each do |constant|
-      Object.__send__(:remove_const, constant)
-    end
-  end
-
-  def define_constant(name, value)
-    Object.const_set(name, value)
-    @defined_constants << name
-  end
 end
 
 # Also stolen from AS 2.3.2
@@ -211,28 +111,4 @@ class Array
       end
     end
   end
-
 end
-
-class CollectingSender
-  attr_reader :collected
-
-  def initialize
-    @collected = []
-  end
-
-  def send_to_hoptoad(data)
-    @collected << data
-  end
-end
-
-class FakeLogger
-  def info(*args);  end
-  def debug(*args); end
-  def warn(*args);  end
-  def error(*args); end
-  def fatal(*args); end
-end
-
-RAILS_DEFAULT_LOGGER = FakeLogger.new
-
