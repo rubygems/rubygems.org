@@ -31,7 +31,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
     end
 
     should_assign_to(:gem) { @gem }
-    should_respond_with 500
+    should_respond_with :forbidden
   end
 
   context "On DELETE to destroy for a gem that the user is not subscribed to" do
@@ -42,7 +42,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
     end
 
     should_assign_to(:gem) { @gem }
-    should_respond_with 500
+    should_respond_with :forbidden
   end
 
   context "On DELETE to destroy for a gem that the user is subscribed to" do
