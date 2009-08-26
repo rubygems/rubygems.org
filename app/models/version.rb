@@ -16,8 +16,8 @@ class Version < ActiveRecord::Base
   }
 
   def validate
-    if new_record? && Version.exists?(:rubygem_id => rubygem_id, :number => number)
-      errors.add_to_base("A version already exists with this number.")
+    if new_record? && Version.exists?(:rubygem_id => rubygem_id, :number => number, :platform => platform)
+      errors.add_to_base("A version already exists with this number or platform.")
     end
   end
 
