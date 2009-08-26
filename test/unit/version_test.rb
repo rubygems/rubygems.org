@@ -10,11 +10,15 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "not allow duplicate versions" do
-      @version = Factory.build(:version, :rubygem => @rubygem, :number => "1.0.0")
-      @version_dup = @version.dup
+      @version = Factory.build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
+      @dup_version = @version.dup
+      @number_version = Factory.build(:version, :rubygem => @rubygem, :number => "2.0.0", :platform => "ruby")
+      @platform_version = Factory.build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "mswin32")
 
       assert @version.save
-      assert ! @version_dup.valid?
+      assert @number_version.save
+      assert @platform_version.save
+      assert ! @dup_version.valid?
     end
   end
 
