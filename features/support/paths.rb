@@ -10,7 +10,7 @@ module NavigationHelpers
     when /the password reset request page/
       new_password_path
     when /my gems page/
-      mine_rubygems_path
+      mine_dashboard_path
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end
