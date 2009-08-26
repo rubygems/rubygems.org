@@ -89,14 +89,12 @@ class Rubygem < ActiveRecord::Base
   end
 
   def update_versions!(spec)
-    version_number = version_number_from_spec(spec)
-    version = self.versions.find_or_initialize_by_number(version_number)
+    version = find_or_initialize_version_from_spec(spec)
     version.update_attributes_from_gem_specification!(spec)
   end
 
   def update_dependencies!(spec)
-    version_number = version_number_from_spec(spec)
-    version = self.versions.find_or_initialize_by_number(version_number)
+    version = find_or_initialize_version_from_spec(spec)
     version.dependencies.delete_all
     spec.dependencies.each do |dependency|
       version.dependencies.create_from_gem_dependency!(dependency)
@@ -119,11 +117,8 @@ class Rubygem < ActiveRecord::Base
 
   private
 
-    def version_number_from_spec(spec)
-      case spec.platform.to_s
-        when 'ruby' then spec.version.to_s
-        else "#{spec.version}-#{spec.platform}"
-      end
+    def find_or_initialize_version_from_spec(spec)
+      self.versions.find_or_initialize_by_number_and_platform(spec.version.to_s, spec.original_platform.to_s)
     end
 
 end
