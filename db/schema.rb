@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090825173917) do
+ActiveRecord::Schema.define(:version => 20090826035230) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -98,11 +98,12 @@ ActiveRecord::Schema.define(:version => 20090825173917) do
     t.text     "description"
     t.string   "number"
     t.integer  "rubygem_id"
-    t.datetime "created_at"
+    t.datetime "built_at"
     t.datetime "updated_at"
     t.string   "rubyforge_project"
     t.text     "summary"
     t.string   "platform"
+    t.datetime "created_at"
   end
 
   add_index "versions", ["rubygem_id"], :name => "index_versions_on_rubygem_id"
