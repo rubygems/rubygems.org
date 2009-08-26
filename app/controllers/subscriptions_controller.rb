@@ -22,7 +22,7 @@ class SubscriptionsController < ApplicationController
       if success
         render(:update) { |page| page['.toggler'].toggle }
       else
-        render :text => '', :status => :unacceptable
+        render :text => '', :status => :forbidden
       end
     end
 
