@@ -103,10 +103,10 @@ class RubygemsControllerTest < ActionController::TestCase
       should_assign_to(:gem) { @gem }
       should_respond_with :success
       should "have an invisible subscribe link" do
-        assert_match /<a[^>]*style="display:none"[^>]*>Subscribe<\/a>/, @response.body
+        assert_have_selector "a[style='display:none']", :content => 'Subscribe'
       end
       should "have a visible unsubscribe link" do
-        assert_match /<a[^>]*style="display:block"[^>]*>Unsubscribe<\/a>/, @response.body
+        assert_have_selector "a[style='display:block']", :content => 'Unsubscribe'
       end
     end
 
@@ -120,10 +120,10 @@ class RubygemsControllerTest < ActionController::TestCase
       should_assign_to(:gem) { @gem }
       should_respond_with :success
       should "have a visible subscribe link" do
-        assert_match /<a[^>]*style="display:block"[^>]*>Subscribe<\/a>/, @response.body
+        assert_have_selector "a[style='display:block']", :content => 'Subscribe'
       end
       should "have an invisible unsubscribe link" do
-        assert_match /<a[^>]*style="display:none"[^>]*>Unsubscribe<\/a>/, @response.body
+        assert_have_selector "a[style='display:none']", :content => 'Unsubscribe'
       end
     end
 
