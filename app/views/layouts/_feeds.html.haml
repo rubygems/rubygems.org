@@ -1,7 +1,7 @@
 - if signed_in?
 
-  = atom_feed_link 'Gemcutter | Subscribed Gems', subscribed_dashboard_url(:format => :atom)
-  = atom_feed_link 'Gemcutter | My Gems',         mine_dashboard_url(:format => :atom)
+  = atom_feed_link 'Gemcutter | Subscribed Gems', subscribed_dashboard_url(:api_key => current_user.api_key, :format => :atom)
+  = atom_feed_link 'Gemcutter | My Gems',         mine_dashboard_url(:api_key => current_user.api_key, :format => :atom)
 
 = atom_feed_link 'Gemcutter | Latest Gems', 'http://feeds.feedburner.com/gemcutter-latest'
 
