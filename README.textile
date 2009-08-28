@@ -33,6 +33,13 @@ Gemcutter consists of a few major parts:
 * Rubygem: The gemcutter client gem that interacts with the site, lives in @gem/@.
 * Gem processor: Handles incoming gems and storing them in S3 (production) or on the filesystem in @server/@ (development). Lives in @lib/gemcutter.rb@, @lib/indexer.rb@, @lib/vault.rb@.
 
+h2. Dependencies
+
+Some things you'll need to do in order to get this project up and running:
+
+* Tell git about your github.user. (For example: @git config --global github.user defunkt@)
+* Install sinatra. (@sudo gem install sinatra@)
+
 h2. Testing
 
 Make sure you run @rake gemcutter:index:create@ before running the test suite, otherwise it might complain. Better solutions to this are more than welcome.
