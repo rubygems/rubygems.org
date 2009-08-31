@@ -8,18 +8,20 @@ module Vault
     end
 
     def source_path
-      "source_index"
+      "index"
     end
 
     def source_index
-      if VaultObject.exists?(source_path)
-        @source_index ||= begin
+      @source_index ||= Rails.cache.fetch(source_path) do
+        if VaultObject.exists?(source_path)
           binary = VaultObject.value(source_path)
           marshalled = Zlib::GzipReader.new(StringIO.new(binary)).read
-          Marshal.load(marshalled)
+          source_index = Marshal.load(marshalled)
+          Rails.cache.write(source_path, source_index)
+          source_index
+        else
+          raise "Missing source index, we're in trouble."
         end
-      else
-        @source_index ||= Gem::SourceIndex.new
       end
     end
 
@@ -34,19 +36,31 @@ module Vault
     end
 
     def update_index
-      platform = spec.original_platform
-      platform = Gem::Platform::RUBY if platform.nil? or platform.empty?
+      source_index.add_spec(spec)
 
-      source_index << [spec.name, spec.version, platform]
-      source_index.uniq!
+      # do this in a rake task!
+      # upload(source_path, source_index)
+      indexify("specs.#{Gem.marshal_version}.gz", source_index.gems)
+      indexify("latest_specs.#{Gem.marshal_version}.gz", source_index.latest_specs)
+    end
 
-      final_index = StringIO.new
-      gzip = Zlib::GzipWriter.new(final_index)
-      gzip.write(Marshal.dump(source_index))
+    def indexify(key, specs)
+      upload key, specs.map do |*raw_spec|
+        spec = raw_spec.flatten.last
+        platform = spec.original_platform
+        platform = Gem::Platform::RUBY if platform.nil? or platform.empty?
+        [spec.name, spec.version, platform]
+      end
+    end
+
+    def upload(key, data)
+      final = StringIO.new
+      gzip = Zlib::GzipWriter.new(final)
+      gzip.write(Marshal.dump(data))
       gzip.close
 
-      VaultObject.store(source_path, final_index.string, OPTIONS)
-      VaultObject.copy(source_path, "latest_specs.#{Gem.marshal_version}.gz")
+      # For the life of me, I can't figure out how to pass a stream in here from a closed StringIO
+      VaultObject.store(key, final.string, OPTIONS)
     end
 
   end
