@@ -38,19 +38,19 @@ module Vault
     def update_index
       source_index.add_spec(spec)
 
-      # do this in a rake task!
+      # TODO: throw this in a rake task and cron it
       # upload(source_path, source_index)
       indexify("specs.#{Gem.marshal_version}.gz", source_index.gems)
       indexify("latest_specs.#{Gem.marshal_version}.gz", source_index.latest_specs)
     end
 
     def indexify(key, specs)
-      upload key, specs.map do |*raw_spec|
+      upload(key, specs.map { |*raw_spec|
         spec = raw_spec.flatten.last
         platform = spec.original_platform
         platform = Gem::Platform::RUBY if platform.nil? or platform.empty?
         [spec.name, spec.version, platform]
-      end
+      })
     end
 
     def upload(key, data)
