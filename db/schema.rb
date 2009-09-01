@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090826043208) do
+ActiveRecord::Schema.define(:version => 20090901141418) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(:version => 20090826043208) do
   end
 
   add_index "dependencies", ["rubygem_id"], :name => "index_dependencies_on_rubygem_id"
+  add_index "dependencies", ["version_id"], :name => "index_dependencies_on_version_id"
 
   create_table "linksets", :force => true do |t|
     t.integer  "rubygem_id"
@@ -78,6 +79,9 @@ ActiveRecord::Schema.define(:version => 20090826043208) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "subscriptions", ["rubygem_id"], :name => "index_subscriptions_on_rubygem_id"
+  add_index "subscriptions", ["user_id"], :name => "index_subscriptions_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "email"
