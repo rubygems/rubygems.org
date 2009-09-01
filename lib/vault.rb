@@ -2,7 +2,7 @@ module Vault
   module S3
     OPTIONS = {:authenticated => false, :access => :public_read}
 
-    def store
+    def perform
       write_gem
       update_index
     end
@@ -27,7 +27,7 @@ module Vault
 
     def write_gem
       cache_path = "gems/#{spec.original_name}.gem"
-      VaultObject.store(cache_path, data.string, OPTIONS)
+      VaultObject.store(cache_path, self.raw_data, OPTIONS)
 
       quick_path = "quick/Marshal.#{Gem.marshal_version}/#{spec.original_name}.gemspec.rz"
       Gemcutter.indexer.abbreviate spec
@@ -53,20 +53,19 @@ module Vault
       })
     end
 
-    def upload(key, data)
+    def upload(key, value)
       final = StringIO.new
       gzip = Zlib::GzipWriter.new(final)
-      gzip.write(Marshal.dump(data))
+      gzip.write(Marshal.dump(value))
       gzip.close
 
       # For the life of me, I can't figure out how to pass a stream in here from a closed StringIO
       VaultObject.store(key, final.string, OPTIONS)
     end
-
   end
 
   module FS
-    def store
+    def perform
       write_gem
       update_index
     end
@@ -86,7 +85,7 @@ module Vault
     def write_gem
       cache_path = Gemcutter.server_path('gems', "#{spec.original_name}.gem")
       File.open(cache_path, "wb") do |f|
-        f.write data.string
+        f.write self.raw_data
       end
       File.chmod 0644, cache_path
 
