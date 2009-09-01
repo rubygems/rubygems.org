@@ -137,7 +137,7 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @spec.description,        @version.description
       assert_equal @spec.summary,            @version.summary
       assert_equal @spec.rubyforge_project,  @version.rubyforge_project
-      assert_equal @spec.date,               @version.created_at
+      assert_equal @spec.date,               @version.built_at
     end
   end
 end
