@@ -32,14 +32,14 @@ class GemcutterTest < ActiveSupport::TestCase
 
     should "have some state" do
       assert @cutter.respond_to?(:user)
-      assert @cutter.respond_to?(:data)
+      assert @cutter.respond_to?(:raw_data)
       assert @cutter.respond_to?(:spec)
       assert @cutter.respond_to?(:message)
       assert @cutter.respond_to?(:code)
       assert @cutter.respond_to?(:rubygem)
+      assert @cutter.respond_to?(:body)
 
       assert_equal @user, @cutter.user
-      assert @cutter.data.is_a?(StringIO)
     end
 
     context "processing incoming gems" do
@@ -81,13 +81,15 @@ class GemcutterTest < ActiveSupport::TestCase
 
     context "pulling the spec " do
       should "pull spec out of the given gem" do
-        data = "data"
+        raw_data = "raw data"
         format = "format"
         io = "io"
         spec = "spec"
+        stream = "stream"
 
-        mock(@cutter).data { data }
-        mock(Gem::Format).from_io(data) { format }
+        mock(@cutter).raw_data { raw_data }
+        mock(StringIO).new(raw_data) { stream }
+        mock(Gem::Format).from_io(stream) { format }
         mock(format).spec { spec }
 
         @cutter.pull_spec
@@ -95,7 +97,7 @@ class GemcutterTest < ActiveSupport::TestCase
       end
 
       should "not be able to pull spec from a bad path" do
-        stub(@cutter).data.stub!.string { raise "problem!" }
+        stub(@cutter).body.stub!.read { nil }
         @cutter.pull_spec
         assert_nil @cutter.spec
         assert_match %r{Gemcutter cannot process this gem}, @cutter.message
@@ -167,6 +169,7 @@ class GemcutterTest < ActiveSupport::TestCase
         stub(@rubygem).errors.stub!.full_messages
         stub(@rubygem).save
         stub(@rubygem).ownerships { @ownerships }
+        stub(@rubygem).versions.stub!.latest.stub!.to_title { "latest version" }
         stub(@cutter).rubygem { @rubygem }
         stub(@cutter).spec { @spec }
       end
@@ -174,8 +177,7 @@ class GemcutterTest < ActiveSupport::TestCase
       context "saving the rubygem" do
         before_should "process if succesfully saved" do
           mock(@cutter).update { true }
-          mock(@cutter).store
-          mock(@cutter).notify("Successfully registered gem: #{@rubygem}", 200)
+          mock(@cutter).notify("Successfully registered gem: latest version", 200)
         end
 
         before_should "not process if not successfully saved" do
