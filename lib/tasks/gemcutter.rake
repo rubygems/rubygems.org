@@ -39,7 +39,13 @@ namespace :gemcutter do
 
           if VaultObject.exists?(quick_path)
             puts ">> Processing #{install}"
-            spec = Marshal.load(Gem.inflate(VaultObject.value(quick_path)))
+            begin
+              spec = Marshal.load(Gem.inflate(VaultObject.value(quick_path)))
+            rescue Exception => e
+              puts ">> EXCEPTION: #{e}"
+              version.update_attribute(:indexed, false)
+            end
+
             version.description = spec.description
             version.summary = spec.summary
             version.number = spec.version.to_s
