@@ -21,6 +21,10 @@ class Version < ActiveRecord::Base
     end
   end
 
+  def self.with_indexed
+    all(:conditions => {:indexed => true}, :include => :rubygem, :order => "rubygems.name asc")
+  end
+
   def self.published(limit=5)
     created_at_before(DateTime.now.utc).by_created_at(:desc).limited(limit)
   end
@@ -48,7 +52,7 @@ class Version < ActiveRecord::Base
   end
 
   def to_index
-    [rubygem.name, number, platform]
+    [rubygem.name, Gem::Version.new(number), platform]
   end
 
 end
