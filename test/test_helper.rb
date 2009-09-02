@@ -10,6 +10,8 @@ FakeWeb.allow_net_connect = false
 
 set :environment, :test
 
+Gemcutter.indexer.generate_index
+
 class ActiveSupport::TestCase
   self.use_transactional_fixtures = true
   self.use_instantiated_fixtures  = false
