@@ -7,22 +7,16 @@ module Vault
       update_index
     end
 
-    def source_path
-      "index"
+    def specs_index
+      Version.with_indexed.map(&:to_index)
     end
 
-    def source_index
-      @source_index ||= Rails.cache.fetch(source_path) do
-        if VaultObject.exists?(source_path)
-          binary = VaultObject.value(source_path)
-          marshalled = Zlib::GzipReader.new(StringIO.new(binary)).read
-          source_index = Marshal.load(marshalled)
-          Rails.cache.write(source_path, source_index)
-          source_index
-        else
-          raise "Missing source index, we're in trouble."
-        end
-      end
+    def latest_index
+      Version.with_indexed.inject({}) { |memo, version|
+        key = "#{version.rubygem_id}-#{version.platform}"
+        memo[key] = version if memo[key].blank? || memo[key].built_at < version.built_at
+        memo
+      }.values.map(&:to_index)
     end
 
     def write_gem
@@ -38,19 +32,8 @@ module Vault
     def update_index
       source_index.add_spec(spec)
 
-      # TODO: throw this in a rake task and cron it
-      # upload(source_path, source_index)
-      indexify("specs.#{Gem.marshal_version}.gz", source_index.gems)
-      indexify("latest_specs.#{Gem.marshal_version}.gz", source_index.latest_specs)
-    end
-
-    def indexify(key, specs)
-      upload(key, specs.map { |*raw_spec|
-        spec = raw_spec.flatten.last
-        platform = spec.original_platform
-        platform = Gem::Platform::RUBY if platform.nil? or platform.empty?
-        [spec.name, spec.version, platform]
-      })
+      indexify("specs.#{Gem.marshal_version}.gz", specs_index)
+      indexify("latest_specs.#{Gem.marshal_version}.gz", latest_index)
     end
 
     def upload(key, value)
