@@ -5,7 +5,7 @@ class Version < ActiveRecord::Base
   has_many :requirements, :dependent => :destroy
   has_many :dependencies, :dependent => :destroy
 
-  validates_format_of :number, :with => /^[\w\.\-_]+$/
+  validates_format_of :number, :with => /^#{Gem::Version::VERSION_PATTERN}$/
 
   named_scope :owned_by, lambda { |user|
     { :conditions => { :rubygem_id => user.rubygem_ids } }
