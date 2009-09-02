@@ -30,8 +30,8 @@ module Vault
     end
 
     def update_index
-      indexify("specs.#{Gem.marshal_version}.gz", specs_index)
-      indexify("latest_specs.#{Gem.marshal_version}.gz", latest_index)
+      upload("specs.#{Gem.marshal_version}.gz", specs_index)
+      upload("latest_specs.#{Gem.marshal_version}.gz", latest_index)
     end
 
     def upload(key, value)
