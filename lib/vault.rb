@@ -30,8 +30,6 @@ module Vault
     end
 
     def update_index
-      source_index.add_spec(spec)
-
       indexify("specs.#{Gem.marshal_version}.gz", specs_index)
       indexify("latest_specs.#{Gem.marshal_version}.gz", latest_index)
     end
