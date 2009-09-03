@@ -48,15 +48,21 @@ class MigrationsControllerTest < ActionController::TestCase
         assert_equal ownership.token, @response.body
       end
 
+      context "without an ownership" do
+        should "respond with forbidden" do
+          put :update, :rubygem_id => @rubygem.to_param
+          assert_response :forbidden
+          assert_match /create a migration token first/, @response.body
+        end
+      end
+
       context "with an ownership" do
         setup do
           @ownership = @rubygem.ownerships.create(:user => @user)
-          stub(Rubygem).find { @rubygem }
-          stub(@rubygem).ownerships.stub!.find_by_user_id { @ownership }
         end
 
         should "respond with created if the token has been found" do
-          stub(@ownership).migrated? { true }
+          stub_uploaded_token(@rubygem.name, @ownership.token)
 
           put :update, :rubygem_id => @rubygem.to_param
           assert_response :created
@@ -64,7 +70,7 @@ class MigrationsControllerTest < ActionController::TestCase
         end
 
         should "respond with accepted if the token hasn't been found" do
-          stub(@ownership).migrated? { false }
+          stub_uploaded_token(@rubygem.name, "", [404, "Not Found"])
 
           put :update, :rubygem_id => @rubygem.to_param
           assert_response :accepted

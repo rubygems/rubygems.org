@@ -54,3 +54,7 @@ def gem_dependency_stub(name, requirements = ">= 1.0")
     stub(dependency).type              { 'runtime' }
   end
 end
+
+def stub_uploaded_token(gem_name, token, status = [200, "Success"])
+  FakeWeb.register_uri(:get, "http://#{gem_name}.rubyforge.org/migrate-#{gem_name}.html", :body => token + "\n", :status => status)
+end
