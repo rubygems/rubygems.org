@@ -3,6 +3,7 @@ class OwnersController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => [:create, :destroy]
 
   before_filter :authenticate_with_api_key
+  before_filter :verify_authenticated_user
   before_filter :find_rubygem
   before_filter :verify_gem_ownership
 
@@ -14,7 +15,7 @@ class OwnersController < ApplicationController
 
   def create
     if owner = User.find_by_email(params[:email])
-      @rubygem.ownerships.create!(:user => owner, :approved => 'sdfsdfsdfsd')
+      @rubygem.ownerships.create(:user => owner, :approved => true)
       render :json => 'Owner added successfully.'
     else
       render :json => 'Owner could not be found.', :status => :not_found

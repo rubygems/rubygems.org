@@ -2,30 +2,26 @@ module Vault
   module S3
     OPTIONS = {:authenticated => false, :access => :public_read}
 
-    def store
-      write
-      update
+    def perform
+      write_gem
+      update_index
     end
 
-    def source_path
-      "specs.#{Gem.marshal_version}.gz"
+    def specs_index
+      Version.with_indexed.map(&:to_index)
     end
 
-    def source_index
-      if VaultObject.exists?(source_path)
-        @source_index ||= begin
-          binary = VaultObject.value(source_path)
-          marshalled = Zlib::GzipReader.new(StringIO.new(binary)).read
-          Marshal.load(marshalled)
-        end
-      else
-        @source_index ||= Gem::SourceIndex.new
-      end
+    def latest_index
+      Version.with_indexed.inject({}) { |memo, version|
+        key = "#{version.rubygem_id}-#{version.platform}"
+        memo[key] = version if memo[key].blank? || memo[key].built_at < version.built_at
+        memo
+      }.values.map(&:to_index)
     end
 
-    def write
+    def write_gem
       cache_path = "gems/#{spec.original_name}.gem"
-      VaultObject.store(cache_path, data.string, OPTIONS)
+      VaultObject.store(cache_path, self.raw_data, OPTIONS)
 
       quick_path = "quick/Marshal.#{Gem.marshal_version}/#{spec.original_name}.gemspec.rz"
       Gemcutter.indexer.abbreviate spec
@@ -33,28 +29,26 @@ module Vault
       VaultObject.store(quick_path, Gem.deflate(Marshal.dump(spec)), OPTIONS)
     end
 
-    def update
-      platform = spec.original_platform
-      platform = Gem::Platform::RUBY if platform.nil? or platform.empty?
-
-      source_index << [spec.name, spec.version, platform]
-      source_index.uniq!
-
-      final_index = StringIO.new
-      gzip = Zlib::GzipWriter.new(final_index)
-      gzip.write(Marshal.dump(source_index))
-      gzip.close
-
-      VaultObject.store(source_path, final_index.string, OPTIONS)
-      VaultObject.copy(source_path, "latest_specs.#{Gem.marshal_version}.gz")
+    def update_index
+      upload("specs.#{Gem.marshal_version}.gz", specs_index)
+      upload("latest_specs.#{Gem.marshal_version}.gz", latest_index)
     end
 
+    def upload(key, value)
+      final = StringIO.new
+      gzip = Zlib::GzipWriter.new(final)
+      gzip.write(Marshal.dump(value))
+      gzip.close
+
+      # For the life of me, I can't figure out how to pass a stream in here from a closed StringIO
+      VaultObject.store(key, final.string, OPTIONS)
+    end
   end
 
   module FS
-    def store
-      write
-      update
+    def perform
+      write_gem
+      update_index
     end
 
     def source_path
@@ -69,10 +63,10 @@ module Vault
       end
     end
 
-    def write
+    def write_gem
       cache_path = Gemcutter.server_path('gems', "#{spec.original_name}.gem")
       File.open(cache_path, "wb") do |f|
-        f.write data.string
+        f.write self.raw_data
       end
       File.chmod 0644, cache_path
 
@@ -87,7 +81,7 @@ module Vault
       File.chmod 0644, quick_path
     end
 
-    def update
+    def update_index
       source_index.add_spec spec, spec.original_name
       File.open(source_path, "wb") do |f|
         f.write Gem.deflate(Marshal.dump(source_index))

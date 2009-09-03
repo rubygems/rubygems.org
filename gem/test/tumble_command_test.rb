@@ -1,9 +1,9 @@
-require File.dirname(__FILE__) + '/../command_helper'
+require 'command_helper'
 
 class TumbleCommandTest < CommandTest
   context "with a tumbler and some sources" do
     setup do
-      @sources = ["gems.rubyforge.org", URL]
+      @sources = ["gems.rubyforge.org", Gem::AbstractCommand::URL]
       stub(Gem).sources { @sources }
       @command = Gem::Commands::TumbleCommand.new
     end
@@ -11,7 +11,7 @@ class TumbleCommandTest < CommandTest
     should "show sources" do
       mock(@command).say("Your gem sources are now:")
       mock(@command).say("- #{@sources.first}")
-      mock(@command).say("- #{URL}")
+      mock(@command).say("- #{Gem::AbstractCommand::URL}")
       @command.show_sources
     end
   end
@@ -27,16 +27,16 @@ class TumbleCommandTest < CommandTest
     end
 
     should "add gemcutter as first source" do
-      mock(@sources).unshift(URL)
+      mock(@sources).unshift(Gem::AbstractCommand::URL)
       mock(@config).write
 
       @command.tumble
     end
 
     should "remove gemcutter if it's in the sources" do
-      mock(@sources).include?(URL) { true }
+      mock(@sources).include?(Gem::AbstractCommand::URL) { true }
       mock(@config).write
-      mock(@sources).delete(URL)
+      mock(@sources).delete(Gem::AbstractCommand::URL)
 
       @command.tumble
     end

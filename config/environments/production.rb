@@ -35,8 +35,14 @@ config.after_initialize do
     :access_key_id     => ENV['S3_KEY'],
     :secret_access_key => ENV['S3_SECRET']
   )
+
+  class ::VaultObject < AWS::S3::S3Object
+    set_current_bucket_to "gemcutter_production"
+  end
 end
 
-class ::VaultObject < AWS::S3::S3Object
-  set_current_bucket_to "gemcutter_production"
+if ENV['MEMCACHE_SERVERS']
+  memcache_config = ENV['MEMCACHE_SERVERS'].split(',')
+  memcache_config << {:namespace => ENV['MEMCACHE_NAMESPACE']}
+  config.cache_store = :mem_cache_store, memcache_config
 end

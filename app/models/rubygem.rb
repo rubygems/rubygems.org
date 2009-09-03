@@ -3,7 +3,9 @@ class Rubygem < ActiveRecord::Base
 
   has_many :owners, :through => :ownerships, :source => :user
   has_many :ownerships
-  has_many :versions, :dependent => :destroy, :order => "created_at desc, number desc" do
+  has_many :subscribers, :through => :subscriptions, :source => :user
+  has_many :subscriptions
+  has_many :versions, :dependent => :destroy, :order => "built_at desc, number desc" do
     def latest
       self.find(:first, :order => "updated_at desc")
     end
@@ -20,23 +22,21 @@ class Rubygem < ActiveRecord::Base
 
   named_scope :with_versions, :conditions => ["versions_count > 0"]
   named_scope :search, lambda { |query| {
-    :conditions => ["name like :query or versions.description like :query", 
+    :conditions => ["upper(name) like upper(:query) or upper(versions.description) like upper(:query)", 
       {:query => "%#{query}%"}],
     :include => [:versions] }
   }
-
-  before_save :save_updated_version
 
   def self.total_count
     with_versions.count
   end
 
-  def self.latest
-    with_versions.by_created_at(:desc).limited(5)
+  def self.latest(limit=5)
+    with_versions.by_created_at(:desc).limited(limit)
   end
 
-  def self.downloaded
-    with_versions.by_downloads(:desc).limited(5)
+  def self.downloaded(limit=5)
+    with_versions.by_downloads(:desc).limited(limit)
   end
 
   def hosted?
@@ -44,7 +44,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def rubyforge_project
-    versions.current ? versions.current.rubyforge_project : ""
+    versions.current.try(:rubyforge_project)
   end
 
   def unowned?
@@ -60,11 +60,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def to_s
-    if versions.current
-      "#{name} (#{versions.current})"
-    else
-      name
-    end
+    versions.current.try(:to_title) || name
   end
 
   def to_json
@@ -88,41 +84,45 @@ class Rubygem < ActiveRecord::Base
     "#{name} (#{downloads})"
   end
 
-  def build_name(name)
-    self.name = name if self.name.blank?
-  end
-
-  def build_dependencies(deps)
-    deps.each do |dep|
-      versions.last.dependencies.build(
-        :rubygem_name => dep.name.to_s,
-        :name         => dep.requirements_list.to_s)
-    end
-  end
-
-  def build_version(data)
-    version = versions.find_by_number(data[:number])
-    if version
-      version.attributes = data
-      @updated_version = version
-    else
-      versions.build(data)
-    end
-  end
-
-  def build_links(homepage)
-    if linkset
-      linkset.home = homepage
-    else
-      build_linkset(:home => homepage)
-    end
+  def pushable?
+    new_record? || versions_count.zero?
   end
 
   def build_ownership(user)
-    ownerships.build(:user => user, :approved => true) if new_record?
+    ownerships.build(:user => user, :approved => true) if pushable?
   end
 
-  def save_updated_version
-    @updated_version.save if @updated_version
+  def update_versions!(spec)
+    version = find_or_initialize_version_from_spec(spec)
+    version.update_attributes_from_gem_specification!(spec)
   end
+
+  def update_dependencies!(spec)
+    version = find_or_initialize_version_from_spec(spec)
+    version.dependencies.delete_all
+    spec.dependencies.each do |dependency|
+      version.dependencies.create_from_gem_dependency!(dependency)
+    end
+  end
+
+  def update_linkset!(spec)
+    self.linkset ||= Linkset.new
+    self.linkset.update_attributes_from_gem_specification!(spec)
+    self.linkset.save!
+  end
+
+  def update_attributes_from_gem_specification!(spec)
+    update_versions!     spec
+    update_dependencies! spec
+    update_linkset!      spec
+
+    self.save!
+  end
+
+  private
+
+    def find_or_initialize_version_from_spec(spec)
+      self.versions.find_or_initialize_by_number_and_platform(spec.version.to_s, spec.original_platform.to_s)
+    end
+
 end

@@ -9,28 +9,6 @@ class RubygemsControllerTest < ActionController::TestCase
       sign_in_as(@user)
     end
 
-    context "On GET to mine" do
-      setup do
-        3.times { Factory(:rubygem) }
-        @gems = (1..3).map do
-          rubygem = Factory(:rubygem)
-          rubygem.ownerships.create(:user => @user, :approved => true)
-          rubygem
-        end
-        get :mine
-      end
-
-      should_respond_with :success
-      should_render_template :mine
-      should_assign_to(:gems) { @gems }
-      should "render links" do
-        @gems.each do |g|
-          assert_contain g.name
-          assert_have_selector "a[href='#{rubygem_path(g)}']"
-        end
-      end
-    end
-
     context "On GET to show for another user's gem" do
       setup do
         @gem = Factory(:rubygem)
@@ -114,6 +92,41 @@ class RubygemsControllerTest < ActionController::TestCase
       end
     end
 
+    context "On GET to show for a gem that the user is subscribed to" do
+      setup do
+        @gem = Factory(:rubygem)
+        Factory(:version, :rubygem => @gem)
+        Factory(:subscription, :rubygem => @gem, :user => @user)
+        get :show, :id => @gem.to_param
+      end
+
+      should_assign_to(:gem) { @gem }
+      should_respond_with :success
+      should "have an invisible subscribe link" do
+        assert_have_selector "a[style='display:none']", :content => 'Subscribe'
+      end
+      should "have a visible unsubscribe link" do
+        assert_have_selector "a[style='display:block']", :content => 'Unsubscribe'
+      end
+    end
+
+    context "On GET to show for a gem that the user is not subscribed to" do
+      setup do
+        @gem = Factory(:rubygem)
+        Factory(:version, :rubygem => @gem)
+        get :show, :id => @gem.to_param
+      end
+
+      should_assign_to(:gem) { @gem }
+      should_respond_with :success
+      should "have a visible subscribe link" do
+        assert_have_selector "a[style='display:block']", :content => 'Subscribe'
+      end
+      should "have an invisible unsubscribe link" do
+        assert_have_selector "a[style='display:none']", :content => 'Unsubscribe'
+      end
+    end
+
     context "On GET to edit for this user's gem" do
       setup do
         create_gem(@user)
@@ -179,12 +192,6 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
-  context "On GET to mine without being signed in" do
-    setup { get :mine }
-    should_respond_with :redirect
-    should_redirect_to('the homepage') { root_url }
-  end
-
   context "On GET to edit without being signed in" do
     setup do
       @rubygem = Factory(:rubygem)
@@ -221,6 +228,22 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  context "On GET to index as an atom feed" do
+    setup do
+      @versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
+      get :index, :format => "atom"
+    end
+
+    should_respond_with :success
+    should_assign_to(:versions) { @versions }
+    should "render posts with titles and links" do
+      @versions.each do |v|
+        assert_contain v.to_title
+        assert_have_selector "link[href='#{rubygem_url(v.rubygem)}']"
+      end
+    end
+  end
+
   context "On GET to index with a letter" do
     setup do
       @gems = (1..3).map { |n| Factory(:rubygem, :name => "agem#{n}") }
@@ -239,7 +262,7 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to show" do
     setup do
       @current_version = Factory(:version)
-      @current_dependencies = @current_version.dependencies
+      @current_dependencies = @current_version.dependencies.runtime
       @gem = @current_version.rubygem
       get :show, :id => @gem.to_param
     end
@@ -289,6 +312,26 @@ class RubygemsControllerTest < ActionController::TestCase
     should_assign_to :gem
     should "render info about the gem" do
       assert_contain "This gem is not currently hosted on Gemcutter."
+    end
+  end
+
+  context "On GET to show for a gem with both runtime and development dependencies" do
+    setup do
+      @version = Factory(:version)
+
+      @development = Factory(:development_dependency, :version => @version)
+      @runtime     = Factory(:runtime_dependency,     :version => @version)
+      @current_dependencies = @version.dependencies.runtime
+
+      get :show, :id => @version.rubygem.to_param
+    end
+
+    should_respond_with :success
+    should_render_template :show
+    should_assign_to(:current_dependencies) { @current_dependencies }
+    should "show runtime dependencies but not development dependencies" do
+      assert_contain     @runtime.rubygem.name
+      assert_not_contain @development.rubygem.name
     end
   end
 
@@ -358,6 +401,22 @@ class RubygemsControllerTest < ActionController::TestCase
         assert_equal @other_user, @gem.ownerships.first.user
         assert_equal 1, @gem.versions.size
         assert_equal "You do not have permission to push to this gem.", @response.body
+      end
+    end
+  end
+
+  context "When not logged in" do
+    context "On GET to show for a gem" do
+      setup do
+        @gem = Factory(:rubygem)
+        Factory(:version, :rubygem => @gem)
+        get :show, :id => @gem.to_param
+      end
+
+      should_assign_to(:gem) { @gem }
+      should_respond_with :success
+      should "have an subscribe link that goes to the sign in page" do
+        assert_have_selector "a[href='#{sign_in_path}']", :content => 'Subscribe'
       end
     end
   end

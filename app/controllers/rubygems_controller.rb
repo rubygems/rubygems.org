@@ -1,24 +1,29 @@
 class RubygemsController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => :create
   before_filter :authenticate_with_api_key, :only => :create
-  before_filter :redirect_to_root, :only => [:mine, :edit, :update], :unless => :signed_in?
+  before_filter :verify_authenticated_user, :only => :create
+  before_filter :redirect_to_root, :only => [:edit, :update], :unless => :signed_in?
   before_filter :find_gem, :only => [:edit, :update, :show]
   before_filter :load_gem, :only => [:edit, :update]
 
-  def mine
-    @gems = current_user.rubygems
-  end
-
   def index
-    params[:letter] = "A" unless params[:letter]
-    @gems = Rubygem.name_starts_with(params[:letter]).with_versions.paginate(:page => params[:page])
+    respond_to do |format|
+      format.html do
+        params[:letter] = "a" unless params[:letter]
+        @gems = Rubygem.name_starts_with(params[:letter]).paginate(:page => params[:page])
+      end
+      format.atom do
+        @versions = Version.published(20)
+        render 'versions/feed'
+      end
+    end
   end
 
   def show
     respond_to do |format|
       format.html do
         @current_version = @gem.versions.current
-        @current_dependencies = @current_version.dependencies if @current_version
+        @current_dependencies = @current_version.dependencies.runtime if @current_version
       end
       format.json do
         if @gem.try(:hosted?)

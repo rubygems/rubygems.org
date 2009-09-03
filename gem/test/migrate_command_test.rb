@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../command_helper'
+require 'command_helper'
 require 'net/scp'
 
 class MigrateCommandTest < CommandTest
@@ -71,6 +71,16 @@ class MigrateCommandTest < CommandTest
       @command.find(@name)
       assert_received(@command) { |subject| subject.say(anything) }
       assert_received(@command) { |subject| subject.terminate_interaction }
+    end
+
+    should "know the project name if it exists in the gem" do
+      stub(@command).rubygem.with() { {'rubyforge_project' => 'rails'} }
+      assert_equal 'rails', @command.project_name
+    end
+
+    should "fall back to the gem name when trying to find the rubyforge project" do
+      stub(@command).rubygem.with() { {'name' => 'rails'} }
+      assert_equal 'rails', @command.project_name
     end
   end
 

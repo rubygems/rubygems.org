@@ -26,6 +26,48 @@ namespace :gemcutter do
     task :update => :environment do
       Gemcutter.indexer.update_index
     end
+
+    desc "fix the index"
+    task :reprocess => :environment do
+      index = Gem::SourceIndex.new
+
+      Rubygem.with_versions.each do |rubygem|
+        rubygem.versions.each do |version|
+
+          install = "#{rubygem.name}-#{version.number}"
+          quick_path = "quick/Marshal.#{Gem.marshal_version}/#{install}.gemspec.rz"
+
+          if VaultObject.exists?(quick_path)
+            puts ">> Processing #{install}"
+            begin
+              spec = Marshal.load(Gem.inflate(VaultObject.value(quick_path)))
+            rescue Exception => e
+              puts ">> EXCEPTION: #{e}"
+              version.update_attribute(:indexed, false)
+            end
+
+            version.description = spec.description
+            version.summary = spec.summary
+            version.number = spec.version.to_s
+
+            platform = spec.original_platform
+            platform = Gem::Platform::RUBY if platform.nil? or platform.empty?
+            version.platform = platform
+            version.save
+
+            spec.development_dependencies.each { |dep| version.dependencies.create_from_gem_dependency!(dep) }
+
+            index.add_spec(spec)
+          else
+            puts ">> BAD GEM: #{install}"
+            version.update_attribute(:indexed, false)
+          end
+        end
+      end
+
+      puts ">> ding, gems are done!"
+      File.open("/tmp/index", "wb") { |f| f.write Marshal.dump(index) }
+    end
   end
 
   desc "Look for migrations and try to match the key"
