@@ -21,6 +21,10 @@ class Gem::Commands::MigrateCommand < Gem::AbstractCommand
     check_for_approved
   end
 
+  def project_name
+    rubygem['rubyforge_project'] || rubygem['name']
+  end
+
   def find(name)
     require 'json'
 
@@ -62,7 +66,7 @@ class Gem::Commands::MigrateCommand < Gem::AbstractCommand
     require 'tempfile'
     require 'net/scp'
 
-    url = "#{self.rubygem['rubyforge_project']}.rubyforge.org"
+    url = "#{project_name}.rubyforge.org"
     say "Uploading the migration token to #{url}. Please enter your RubyForge login:"
     login = ask("Login: ")
     password = ask_for_password("Password: ")
@@ -73,7 +77,7 @@ class Gem::Commands::MigrateCommand < Gem::AbstractCommand
         temp_token.chmod 0644
         temp_token.write(token)
         temp_token.close
-        scp.upload! temp_token.path, "/var/www/gforge-projects/#{rubygem['rubyforge_project']}/migrate-#{rubygem['name']}.html"
+        scp.upload! temp_token.path, "/var/www/gforge-projects/#{project_name}/migrate-#{rubygem['name']}.html"
       end
       say "Successfully uploaded your token."
     rescue Exception => e

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090808034224) do
+ActiveRecord::Schema.define(:version => 20090901141418) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -25,13 +25,16 @@ ActiveRecord::Schema.define(:version => 20090808034224) do
   end
 
   create_table "dependencies", :force => true do |t|
-    t.string   "name"
+    t.string   "requirements"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "rubygem_id"
+    t.integer  "version_id"
+    t.string   "scope"
   end
 
   add_index "dependencies", ["rubygem_id"], :name => "index_dependencies_on_rubygem_id"
+  add_index "dependencies", ["version_id"], :name => "index_dependencies_on_version_id"
 
   create_table "linksets", :force => true do |t|
     t.integer  "rubygem_id"
@@ -59,14 +62,6 @@ ActiveRecord::Schema.define(:version => 20090808034224) do
   add_index "ownerships", ["rubygem_id"], :name => "index_ownerships_on_rubygem_id"
   add_index "ownerships", ["user_id"], :name => "index_ownerships_on_user_id"
 
-  create_table "requirements", :force => true do |t|
-    t.integer "version_id"
-    t.integer "dependency_id"
-  end
-
-  add_index "requirements", ["dependency_id"], :name => "index_requirements_on_dependency_id"
-  add_index "requirements", ["version_id"], :name => "index_requirements_on_version_id"
-
   create_table "rubygems", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -77,6 +72,16 @@ ActiveRecord::Schema.define(:version => 20090808034224) do
   end
 
   add_index "rubygems", ["name"], :name => "index_rubygems_on_name"
+
+  create_table "subscriptions", :force => true do |t|
+    t.integer  "rubygem_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "subscriptions", ["rubygem_id"], :name => "index_subscriptions_on_rubygem_id"
+  add_index "subscriptions", ["user_id"], :name => "index_subscriptions_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "email"
@@ -97,10 +102,13 @@ ActiveRecord::Schema.define(:version => 20090808034224) do
     t.text     "description"
     t.string   "number"
     t.integer  "rubygem_id"
-    t.datetime "created_at"
+    t.datetime "built_at"
     t.datetime "updated_at"
-    t.string   "summary"
     t.string   "rubyforge_project"
+    t.text     "summary"
+    t.string   "platform"
+    t.datetime "created_at"
+    t.boolean  "indexed",           :default => true
   end
 
   add_index "versions", ["rubygem_id"], :name => "index_versions_on_rubygem_id"

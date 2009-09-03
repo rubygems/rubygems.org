@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../command_helper'
+require 'command_helper'
 
 class PushCommandTest < CommandTest
   context "pushing" do
@@ -28,7 +28,7 @@ class PushCommandTest < CommandTest
       @io = "io"
       @config = { :gemcutter_key => "key" }
 
-      stub(File).open(@gem) { @io }
+      stub(File).open(@gem, "rb") { @io }
       stub(@io).read.stub!.size
 
       stub(@command).options { {:args => [@gem]} }

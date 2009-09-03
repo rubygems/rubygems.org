@@ -11,4 +11,8 @@ class Linkset < ActiveRecord::Base
   def empty?
     LINKS.map { |link| attributes[link] }.all?(&:blank?)
   end
+
+  def update_attributes_from_gem_specification!(spec)
+    self.update_attributes!(:home => spec.homepage)
+  end
 end

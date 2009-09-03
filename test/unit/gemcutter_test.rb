@@ -32,14 +32,14 @@ class GemcutterTest < ActiveSupport::TestCase
 
     should "have some state" do
       assert @cutter.respond_to?(:user)
-      assert @cutter.respond_to?(:data)
+      assert @cutter.respond_to?(:raw_data)
       assert @cutter.respond_to?(:spec)
       assert @cutter.respond_to?(:message)
       assert @cutter.respond_to?(:code)
       assert @cutter.respond_to?(:rubygem)
+      assert @cutter.respond_to?(:body)
 
       assert_equal @user, @cutter.user
-      assert @cutter.data.is_a?(StringIO)
     end
 
     context "processing incoming gems" do
@@ -81,13 +81,15 @@ class GemcutterTest < ActiveSupport::TestCase
 
     context "pulling the spec " do
       should "pull spec out of the given gem" do
-        data = "data"
+        raw_data = "raw data"
         format = "format"
         io = "io"
         spec = "spec"
+        stream = "stream"
 
-        mock(@cutter).data { data }
-        mock(Gem::Format).from_io(data) { format }
+        mock(@cutter).raw_data { raw_data }
+        mock(StringIO).new(raw_data) { stream }
+        mock(Gem::Format).from_io(stream) { format }
         mock(format).spec { spec }
 
         @cutter.pull_spec
@@ -95,7 +97,7 @@ class GemcutterTest < ActiveSupport::TestCase
       end
 
       should "not be able to pull spec from a bad path" do
-        stub(@cutter).data.stub!.string { raise "problem!" }
+        stub(@cutter).body.stub!.read { nil }
         @cutter.pull_spec
         assert_nil @cutter.spec
         assert_match %r{Gemcutter cannot process this gem}, @cutter.message
@@ -109,7 +111,6 @@ class GemcutterTest < ActiveSupport::TestCase
         @cutter.find
 
         assert_not_nil @cutter.rubygem
-        assert @cutter.rubygem.new_record?
       end
 
       should "bring up existing gem with matching spec" do
@@ -129,12 +130,17 @@ class GemcutterTest < ActiveSupport::TestCase
 
       context "with a existing rubygem" do
         setup do
-          @rubygem = Factory(:rubygem)
+          @rubygem = Factory(:rubygem, :versions_count => 1)
           stub(@cutter).rubygem { @rubygem }
         end
 
         should "be true if owned by the user" do
           @rubygem.ownerships.create(:user => @user, :approved => true)
+          assert @cutter.authorize
+        end
+
+        should "be true if no versions exist since it's a dependency" do
+          @rubygem.update_attribute(:versions_count, 0)
           assert @cutter.authorize
         end
 
@@ -163,71 +169,19 @@ class GemcutterTest < ActiveSupport::TestCase
         stub(@rubygem).errors.stub!.full_messages
         stub(@rubygem).save
         stub(@rubygem).ownerships { @ownerships }
+        stub(@rubygem).versions.stub!.latest.stub!.to_title { "latest version" }
         stub(@cutter).rubygem { @rubygem }
         stub(@cutter).spec { @spec }
       end
 
-      context "building the gem" do
-        before_should "build the name" do
-          mock(@rubygem).build_name(@spec.name)
-        end
-
-        before_should "build version with platform" do
-          stub(@spec).platform { "mswin" }
-          stub(@spec).rubyforge_project { "project" }
-          stub(@spec).rubyforge_project { "summary" }
-          mock(@rubygem).build_version(
-            :authors           => @spec.authors.join(", "),
-            :description       => @spec.description,
-            :summary           => @spec.summary,
-            :rubyforge_project => @spec.rubyforge_project,
-            :created_at        => @spec.date,
-            :number            => "#{@version}-mswin")
-        end
-
-        before_should "build the version" do
-          mock(@rubygem).build_version(
-            :authors           => @spec.authors.join(", "),
-            :description       => @spec.description,
-            :summary           => @spec.summary,
-            :rubyforge_project => @spec.rubyforge_project,
-            :created_at        => @spec.date,
-            :number            => @version)
-        end
-
-        before_should "build the dependencies" do
-          mock(@rubygem).build_dependencies(@spec.dependencies)
-        end
-
-        before_should "build the links" do
-          mock(@rubygem).build_links(@spec.homepage)
-        end
-
-        before_should "build ownership with user" do
-          mock(@rubygem).build_ownership(@user)
-        end
-
-        setup do
-          stub(@rubygem).build_name
-          stub(@rubygem).build_version
-          stub(@rubygem).build_dependencies
-          stub(@rubygem).build_links
-          stub(@rubygem).build_ownership
-          @cutter.build
-        end
-      end
-
       context "saving the rubygem" do
         before_should "process if succesfully saved" do
-          mock(@cutter).build
-          mock(@rubygem).save { true }
-          mock(@cutter).store
-          mock(@cutter).notify("Successfully registered gem: #{@rubygem}", 200)
+          mock(@cutter).update { true }
+          mock(@cutter).notify("Successfully registered gem: latest version", 200)
         end
 
-        before_should "not process if successfully saved" do
-          mock(@cutter).build
-          mock(@rubygem).save { false }
+        before_should "not process if not successfully saved" do
+          mock(@cutter).update { false }
           mock(@cutter).store.never
         end
 

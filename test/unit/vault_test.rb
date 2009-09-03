@@ -17,7 +17,7 @@ class VaultTest < ActiveSupport::TestCase
       @vault = TestFS.new
       stub(@vault).rubygem { @rubygem }
       stub(@vault).spec { @spec }
-      stub(@vault).data { StringIO.new("lots of data") }
+      stub(@vault).raw_data { "lots of data" }
     end
 
     context "loading source index" do
@@ -47,12 +47,12 @@ class VaultTest < ActiveSupport::TestCase
     end
 
     should "write the gem" do
-      @vault.write
+      @vault.write_gem
 
       cache_path = Gemcutter.server_path("gems", "#{@spec.original_name}.gem")
       assert File.exists?(cache_path)
       assert_equal 0100644, File.stat(cache_path).mode
-      assert_equal @vault.data.string, File.read(cache_path)
+      assert_equal @vault.raw_data, File.read(cache_path)
 
       quick_path = Gemcutter.server_path("quick", "Marshal.#{Gem.marshal_version}", "#{@spec.original_name}.gemspec.rz")
       assert File.exists?(quick_path)
@@ -65,7 +65,7 @@ class VaultTest < ActiveSupport::TestCase
     end
 
     should "update the index" do
-      @vault.update
+      @vault.update_index
 
       source_index = Gemcutter.server_path("source_index")
       assert File.exists?(source_index)

@@ -7,14 +7,14 @@ class Hostess < Sinatra::Default
   def serve(path, redirect = false)
     headers "Cache-Control" => "public, max-age=60"
 
-    if Rails.env.production?
+    if Rails.env.development? || Rails.env.test?
+      send_file(path)
+    else
       if redirect
         redirect File.join("http://s3.amazonaws.com", VaultObject.current_bucket, request.path_info)
       else
         VaultObject.value(request.path_info)
       end
-    else
-      send_file(path)
     end
   end
 

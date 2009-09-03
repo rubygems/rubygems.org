@@ -38,6 +38,16 @@ class OwnershipTest < ActiveSupport::TestCase
       assert @ownership.approved
     end
 
+    should "use gem name if rubyforge project doesn't exist" do
+      @ownership.rubygem.versions.current.update_attribute(:rubyforge_project, nil)
+
+      gem_name = @ownership.rubygem.name
+      FakeWeb.register_uri(:get, "http://#{gem_name}.rubyforge.org/migrate-#{gem_name}.html", :body => @ownership.token + "\n")
+
+      assert @ownership.migrated?
+      assert @ownership.approved
+    end
+
     should "approve upload if token ends with a newline" do
       FakeWeb.register_uri(:get, @url, :body => @ownership.token + "\n")
 

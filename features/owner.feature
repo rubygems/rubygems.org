@@ -12,7 +12,7 @@ Feature: Manage owners
       When I list the owners of gem "OGem" with my api key
       Then I should see "original@owner.org"
       And I should not see "new@owner.org"
-      
+
     Scenario: User who is not an owner of the gem lists gem owners
       Given I am signed up and confirmed as "non@owner.org/password"
       And a user exists with an email of "original@owner.org"
@@ -21,7 +21,7 @@ Feature: Manage owners
       When the "OGem" rubygem is owned by "original@owner.org"
       And I list the owners of gem "OGem" with my api key
       Then I should see "You do not have permission to manage this gem."
-    
+
     Scenario: Gem owner adds another owner
       Given I am signed up and confirmed as "original@owner.org/password"
       And a user exists with an email of "new@owner.org"
