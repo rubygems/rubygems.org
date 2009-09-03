@@ -41,9 +41,9 @@ Some things you'll need to do in order to get this project up and running:
 * Install sinatra. (@sudo gem install sinatra@)
 * Install the test gems (@sudo rake gems:install RAILS_ENV=test@)
 
-For testing/developing the gem, cd into the @gem@ directory. Please keep the code for the gem in there, don't let it leak out into the Rails app's gem.
+For testing/developing the gem, cd into the @gem@ directory. Please keep the code for the gem in there, don't let it leak out into the Rails app.
 
-Make sure you run @rake gemcutter:index:create@ before running the app on your own machine, this primes the filesystem gem index for local testing.
+Make sure you run @rake gemcutter:index:create@ before running the app on your own machine, this primes the filesystem gem index for local use.
 
 h2. License
 
