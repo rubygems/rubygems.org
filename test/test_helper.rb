@@ -10,6 +10,8 @@ FakeWeb.allow_net_connect = false
 
 set :environment, :test
 
+Gemcutter.indexer.generate_index
+
 class ActiveSupport::TestCase
   self.use_transactional_fixtures = true
   self.use_instantiated_fixtures  = false
@@ -39,4 +41,20 @@ def create_gem(owner, opts = {})
   @gem = Factory(:rubygem, :name => opts[:name] || Factory.next(:name))
   Factory(:version, :rubygem => @gem)
   @gem.ownerships.create(:user => owner, :approved => true)
+end
+
+def gem_specification_from_gem_fixture(name)
+  Gem::Format.from_file_by_path(File.join('test', 'gems', "#{name}.gem")).spec
+end
+
+def gem_dependency_stub(name, requirements = ">= 1.0")
+  returning(Object.new) do |dependency|
+    stub(dependency).name              { name }
+    stub(dependency).requirements_list { requirements }
+    stub(dependency).type              { 'runtime' }
+  end
+end
+
+def stub_uploaded_token(gem_name, token, status = [200, "Success"])
+  FakeWeb.register_uri(:get, "http://#{gem_name}.rubyforge.org/migrate-#{gem_name}.html", :body => token + "\n", :status => status)
 end

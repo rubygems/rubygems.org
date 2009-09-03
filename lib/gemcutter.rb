@@ -1,15 +1,15 @@
 class Gemcutter
-  if Rails.env.production?
-    include Vault::S3
-  else
+  if Rails.env.development? || Rails.env.test?
     include Vault::FS
+  else
+    include Vault::S3
   end
 
-  attr_reader :user, :data, :spec, :message, :code, :rubygem
+  attr_reader :user, :spec, :message, :code, :rubygem, :raw_data, :body
 
-  def initialize(user, data)
+  def initialize(user, body)
     @user = user
-    @data = StringIO.new(data.read)
+    @body = body
   end
 
   def process
@@ -17,7 +17,7 @@ class Gemcutter
   end
 
   def authorize
-    if rubygem.new_record? || rubygem.owned_by?(@user)
+    if rubygem.pushable? || rubygem.owned_by?(@user)
       true
     else
       @message = "You do not have permission to push to this gem."
@@ -27,10 +27,9 @@ class Gemcutter
   end
 
   def save
-    build
-    if rubygem.save
-      store
-      notify("Successfully registered gem: #{rubygem}", 200)
+    if update
+      Delayed::Job.enqueue self
+      notify("Successfully registered gem: #{rubygem.versions.latest.to_title}", 200)
     else
       notify("There was a problem saving your gem: #{rubygem.errors.full_messages}", 403)
     end
@@ -42,30 +41,21 @@ class Gemcutter
     false
   end
 
-  def build
-    rubygem.build_name(spec.name)
-    if spec.platform.to_s == "ruby"
-      number = spec.version.to_s
-    else
-      number = "#{spec.version}-#{spec.platform}"
+  def update
+    Rubygem.transaction do
+      rubygem.build_ownership(user) if user
+      rubygem.save!
+      rubygem.update_attributes_from_gem_specification!(spec)
     end
-
-    rubygem.build_version(
-      :authors           => spec.authors.join(", "),
-      :description       => spec.description,
-      :summary           => spec.summary,
-      :rubyforge_project => spec.rubyforge_project,
-      :created_at        => spec.date,
-      :number            => number)
-    rubygem.build_dependencies(spec.dependencies)
-    rubygem.build_links(spec.homepage)
-    rubygem.build_ownership(user) if user
     true
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback
+    false
   end
 
   def pull_spec
     begin
-      format = Gem::Format.from_io(self.data)
+      @raw_data = body.read
+      format = Gem::Format.from_io(StringIO.new(self.raw_data))
       @spec = format.spec
     rescue Exception => e
       notify("Gemcutter cannot process this gem.\n" + 

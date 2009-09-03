@@ -1,6 +1,7 @@
 class MigrationsController < ApplicationController
   skip_before_filter :verify_authenticity_token
   before_filter :authenticate_with_api_key
+  before_filter :verify_authenticated_user
   before_filter :find_rubygem
   rescue_from ActiveRecord::RecordNotFound, :with => lambda {
     render :text => "This gem could not be found.", :status => :not_found

@@ -11,10 +11,10 @@ Rails::Initializer.run do |config|
     :lib     => 'clearance',
     :source  => 'http://gems.github.com',
     :version => '0.7.0'
-  config.gem "thoughtbot-pacecar",
+  config.gem "ddollar-pacecar",
     :lib     => 'pacecar',
     :source  => 'http://gems.github.com',
-    :version => '1.1.5'
+    :version => '1.1.6'
   config.gem 'mislav-will_paginate',
     :version => '~> 2.3.11',
     :lib     => 'will_paginate',

@@ -4,7 +4,11 @@ class User < ActiveRecord::Base
   has_many :rubygems, :through    => :ownerships,
                       :order      => "name ASC",
                       :conditions => { 'ownerships.approved' => true }
+  has_many :subscribed_gems, :through => :subscriptions,
+                             :source  => :rubygem,
+                             :order   => "name ASC"
   has_many :ownerships
+  has_many :subscriptions
   before_create :generate_api_key
 
   protected

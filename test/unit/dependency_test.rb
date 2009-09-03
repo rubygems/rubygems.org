@@ -2,37 +2,43 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class DependencyTest < ActiveSupport::TestCase
   should_belong_to :rubygem
-  should_validate_presence_of :name
+  should_belong_to :version
+  should_validate_presence_of :requirements
 
-  context "with a dependency" do
+  context "with dependency" do
     setup do
       @dependency = Factory.build(:dependency)
     end
 
-    should "have a rubygem name so it can be linked" do
-      assert @dependency.respond_to?(:rubygem_name)
+    should "be valid with factory" do
+      assert_valid @dependency
+    end
+  end
+
+  context "with a Gem::Dependency" do
+    context "that refers to a Rubygem that exists" do
+      setup do
+        @rubygem        = Factory(:rubygem)
+        @requirements   = '>= 0.0.0'
+        @gem_dependency = gem_dependency_stub(@rubygem.name, @requirements)
+        @dependency     = Dependency.create_from_gem_dependency!(@gem_dependency)
+      end
+
+      should "create a Dependency referring to the existing Rubygem" do
+        assert_equal @rubygem,      @dependency.rubygem
+        assert_equal @requirements, @dependency.requirements
+      end
     end
 
-    context "linking new rubygem" do
+    context "that refers to a Rubygem that does not exist" do
       setup do
-        @name = "something"
-        @dependency.rubygem_name = @name
-        @dependency.save
+        @rubygem_name   = 'other-name'
+        @gem_dependency = gem_dependency_stub(@rubygem_name)
+        @dependency     = Dependency.create_from_gem_dependency!(@gem_dependency)
       end
-      should_change "Rubygem.count"
-      should "link rubygem" do
-        assert_equal @name, @dependency.rubygem.name
-      end
-    end
 
-    context "linking existing rubygem" do
-      setup do
-        @rubygem = Factory(:rubygem)
-        @dependency.rubygem_name = @rubygem.name
-        @dependency.save
-      end
-      should "link rubygem" do
-        assert_equal @rubygem, @dependency.rubygem
+      should_change("the existence of the rubygem", :from => false, :to => true) do
+        Rubygem.find_by_name(@rubygem_name).present?
       end
     end
   end

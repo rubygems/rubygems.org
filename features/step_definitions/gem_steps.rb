@@ -1,9 +1,3 @@
-def build_gem(name, version, summary = "Gemcutter")
-  FileUtils.rm_rf(name) if File.exists?(name)
-  `jeweler #{name} --summary "#{summary}" --description "#{summary}";`
-  `cd #{name}; echo "#{version}" > VERSION; rake gemspec build 2>&1 /dev/null;`
-end
-
 Given /^I have a gem "([^\"]*)" with version "([^\"]*)"$/ do |name, version|
   build_gem(name, version)
 end
@@ -17,3 +11,26 @@ Given /^a rubygem exists with name "([^\"]*)" and rubyforge project "([^\"]*)"$/
   Factory(:version, :rubygem => rubygem, :rubyforge_project => rubyforge_project)
 end
 
+def build_gem(name, version, summary = "Gemcutter")
+  builder = Gem::Builder.new(build_gemspec(name, version, summary))
+  builder.ui = Gem::SilentUI.new
+  builder.build
+end
+
+def build_gemspec(name, version, summary)
+  Gem::Specification.new do |s|
+    s.name = "#{name}"
+    s.version = "#{version}"
+    s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+    s.authors = ["John Doe"]
+    s.date = "#{Time.now.strftime('%Y-%m-%d')}"
+    s.description = "#{summary}"
+    s.email = "john.doe@example.org"
+    s.files = []
+    s.homepage = "http://example.org/#{name}"
+    s.require_paths = ["lib"]
+    s.rubygems_version = %q{1.3.5}
+    s.summary = "#{summary}"
+    s.test_files = []
+  end
+end
