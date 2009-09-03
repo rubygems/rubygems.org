@@ -44,7 +44,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def rubyforge_project
-    versions.current ? versions.current.rubyforge_project : ""
+    versions.current.try(:rubyforge_project)
   end
 
   def unowned?

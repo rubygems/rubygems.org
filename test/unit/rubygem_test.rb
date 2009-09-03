@@ -184,8 +184,8 @@ class RubygemTest < ActiveSupport::TestCase
       assert @rubygem_with_version.hosted?
     end
 
-    should "return a blank rubyforge project without any versions" do
-      assert_equal "", @rubygem_without_version.rubyforge_project
+    should "return a nil rubyforge project without any versions" do
+      assert_nil @rubygem_without_version.rubyforge_project
     end
 
     should "return the current rubyforge project with a version" do
