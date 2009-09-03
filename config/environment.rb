@@ -26,8 +26,6 @@ Rails::Initializer.run do |config|
     :lib => "smtp-tls",
     :version => "1.1.2",
     :source => "http://gems.github.com"
-  config.gem 'jeweler',
-    :version => '1.2.1'
 
   config.action_mailer.delivery_method = :smtp
 end
