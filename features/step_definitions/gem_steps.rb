@@ -12,9 +12,6 @@ Given /^a rubygem exists with name "([^\"]*)" and rubyforge project "([^\"]*)"$/
 end
 
 def build_gem(name, version, summary = "Gemcutter")
-  FileUtils.rm_rf(name) if File.exists?(name)
-  FileUtils.mkdir_p(name)
-
   builder = Gem::Builder.new(build_gemspec(name, version, summary))
   builder.ui = Gem::SilentUI.new
   builder.build
