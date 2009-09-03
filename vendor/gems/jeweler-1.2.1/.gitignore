@@ -1,9 +1,0 @@
-coverage
-pkg
-doc
-rdoc
-tags
-test/tmp
-test/version_tmp
-tmp
-.yardoc
