@@ -235,52 +235,23 @@ namespace :gemcutter do
     end
   end
 
-  desc 'Get the latest gems from rubyforge and index them here'
-  task :update => :environment do
-    return unless Rails.env.production?
-
+  task :fetch_from_rubyforge => :environment do
     require 'open-uri'
-    require 'rubygems/commands/list_command'
+    rubyforge_gems = Marshal.load(Gem.gunzip(open("http://gems.rubyforge.org/specs.4.8.gz").read))
+    gemcutter_gems = Marshal.load(Gem.gunzip(open("http://gemcutter.org/specs.4.8.gz").read))
+    (rubyforge_gems - gemcutter_gems).each do |index|
+      index.pop if index.last == "ruby"
+      gem_name = "http://gems.rubyforge.org/gems/#{index.join('-')}.gem"
+      puts ">> Fetching #{gem_name}"
 
-    ins = StringIO.new
-    outs = StringIO.new
-    Gem::DefaultUserInteraction.ui = Gem::StreamUI.new(ins, outs)
-    Gem.sources = ["http://gems.rubyforge.org"]
-
-    command = Gem::Commands::ListCommand.new
-    command.options[:domain] = :remote
-    command.options[:all] = true
-    command.execute
-
-    list = outs.string.split("\n")
-    downloads = []
-    list.each do |line|
-      name, *versions = line.gsub(/[\(\),]/, "").split
-      puts ">> Updating #{name}..."
-
-      rubygem = Rubygem.find_by_name(name)
-      if rubygem
-        versions.each do |number|
-          unless Version.exists?(:rubygem_id => rubygem.id, :number => number)
-            downloads << "#{name}-#{number}.gem"
-          end
-        end
-      else
-        versions.each do |version|
-          downloads << "#{name}-#{version}.gem"
-        end
-      end
-
-    end
-
-    downloads.each do |download|
-      puts "Downloading #{download}..."
       begin
-        cutter = Gemcutter.new(nil, StringIO.new(open("http://gems.rubyforge.org/gems/#{download}").read))
-        cutter.pull_spec and cutter.find and cutter.build and cutter.save
-      rescue Exception => e
-        puts e.message
+        cutter = Gemcutter.new(nil, open(gem_name))
+        cutter.pull_spec and cutter.find and cutter.save
+        puts ">> #{cutter.message}"
+      rescue *HTTP_ERRORS => e
+        puts ">> #{e.message}"
       end
     end
+
   end
 end

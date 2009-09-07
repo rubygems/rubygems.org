@@ -72,6 +72,12 @@ class Gemcutter
     File.expand_path(File.join(File.dirname(__FILE__), '..', 'server', *more))
   end
 
+  # Overridden so we don't get megabytes of the raw data printing out
+  def inspect
+    attrs = [:@rubygem, :@user, :@message, :@code].map { |attr| "#{attr}=#{instance_variable_get(attr) || 'nil'}" }
+    "<Gemcutter #{attrs.join(' ')}>"
+  end
+
   def self.indexer
     indexer = Gem::Indexer.new(Gemcutter.server_path, :build_legacy => false)
     def indexer.say(message) end
