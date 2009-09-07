@@ -9,6 +9,8 @@ class Dependency < ActiveRecord::Base
   named_scope :runtime,     { :conditions => { :scope => 'runtime'     }}
 
   def self.create_from_gem_dependency!(dependency)
+    return unless dependency.respond_to?(:name)
+
     rubygem = Rubygem.find_or_create_by_name(dependency.name)
 
     self.create!(

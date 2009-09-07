@@ -42,4 +42,12 @@ class DependencyTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "with a bad gem dependency" do
+    should "not fail" do
+      assert_nothing_raised do
+        Dependency.create_from_gem_dependency!(["ruby-ajp", ">= 0.2.0"])
+      end
+    end
+  end
 end
