@@ -9,4 +9,4 @@ require 'tasks/rails'
 desc "Run all tests and features"
 task :default => [:test, :features]
 
-task :cron => ['gemcutter:update']
+task :cron => ['gemcutter:fetch_from_rubyforge']
