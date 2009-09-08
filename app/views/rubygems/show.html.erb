@@ -62,11 +62,11 @@
 
       <% if @current_dependencies.present? %>
         <div class="dependencies">
-          <h5>Dependencies</h5>
+          <h5>Runtime Dependencies</h5>
           <ol>
           <% @current_dependencies.each do |dependency| %>
             <li>
-              <%= link_to "<strong>#{dependency.rubygem.name}</strong> #{dependency.name}", dependency.rubygem %>
+              <%= link_to "<strong>#{dependency.rubygem.name}</strong> #{dependency.requirements}", dependency.rubygem %>
             </li>
           <% end %>
           </ol>
