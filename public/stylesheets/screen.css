@@ -394,6 +394,10 @@ body {
   margin: 1.5em 36px;
 }
 
+.main .info p a:hover {
+  text-decoration: underline;
+}
+
 .main .info .pitch {
   font-size: 1.4em;
 }
@@ -624,8 +628,78 @@ body {
   color: #000;
 }
 
+.main .info .gems ol li a .top {
+  font-weight: 900;
+}
+
+.main .info .gems ol li a .top strong {
+  display: inline-block;
+  margin-right: 5px;
+}
+
 .main .info .gems ol li a:hover strong {
   color: #8F0B0B;
+}
+
+.main .info .subscribed {
+  float: left;
+  width: 60%;
+  margin-left: 35px;
+}
+
+.main .info .subscribed #feed {
+  margin-left: 1em;
+}
+
+.main .info .subscribed .gems ol {
+  padding: 15px;
+}
+
+.main .info .mine .gems ol {
+  padding: 0;
+}
+
+.main .info .mine .gems li {
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.main .info .mine .gems li:hover {
+  background-image: none;
+}
+
+.main .info .mine .gems li a {
+  font-size: 0.9em;
+  font-weight: normal;
+  list-style: none;
+  color: #000;
+}
+
+.main .info .mine .gems li a:hover {
+  text-decoration: underline;
+}
+
+.main .info .subscribed .gems,
+.main .info .mine .gems {
+  margin-bottom: 2em;
+}
+
+.main .info .subscribed h3,
+.main .info .mine h3 {
+  margin-left: 0;
+  margin-bottom: 1em;
+}
+
+.main .info .subscribed p,
+.main .info .mine p {
+  margin: 0;
+}
+
+.main .info .mine {
+  float: right;
+  width: 28%;
+  margin-right: 35px;
 }
 
 .footer .links {
@@ -811,4 +885,3 @@ label, .form_links {
 
 .entries {
 }
-
