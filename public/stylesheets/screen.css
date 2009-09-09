@@ -291,6 +291,7 @@ body {
 .main .info .install .instructions {
   background-repeat: repeat-x;
   background-color: #AD4;
+  background-image: url('/images/go.png');
   color: rgba(0,0,0,.8);
   height: 90px;
 }
