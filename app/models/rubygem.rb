@@ -24,7 +24,8 @@ class Rubygem < ActiveRecord::Base
   named_scope :search, lambda { |query| {
     :conditions => ["upper(name) like upper(:query) or upper(versions.description) like upper(:query)", 
       {:query => "%#{query}%"}],
-    :include => [:versions] }
+    :include    => [:versions],
+    :order      => "name asc" }
   }
 
   def self.total_count
