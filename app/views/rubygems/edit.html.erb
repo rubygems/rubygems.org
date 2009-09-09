@@ -1,0 +1,29 @@
+<% @title = "edit gem" %>
+<% @subtitle = @gem.to_s %>
+<p>
+All other fields can only be edited by pushing an updated version of your gem.
+</p>
+<%= error_messages_for :linkset, :object_name => "gem" %>
+<%- form_for @gem.linkset, :url => rubygem_url(@gem), :method => :put do |form| %>
+  <div class="url_field">
+    <%= form.label :code, "Source Code URL" %>
+    <%= form.text_field :code %>
+  </div>
+  <div class="url_field">
+    <%= form.label :docs, "Documentation URL" %>
+    <%= form.text_field :docs %>
+  </div>
+  <div class="url_field">
+    <%= form.label :wiki, "Wiki URL" %>
+    <%= form.text_field :wiki %>
+  </div>
+  <div class="url_field">
+    <%= form.label :mail, "Mailing List URL" %>
+    <%= form.text_field :mail %>
+  </div>
+  <div class="url_field">
+    <%= form.label :bugs, "Bug Tracker URL" %>
+    <%= form.text_field :bugs %>
+  </div>
+    <%= form.submit 'Update', :disable_with => 'Please wait...' %>
+<% end %>
