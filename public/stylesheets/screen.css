@@ -341,6 +341,36 @@ body {
   margin: 20px 0;
 }
 
+.main .info #admin {
+  float: right;
+  margin-right: 35px;
+}
+
+.main .info #admin a {
+  font-size: 1.4em;
+  padding-left: 22px;
+  padding-top: 2px;
+  margin-left: 10px;
+  display: inline-block;
+  height: 16px;
+}
+
+.main .info #admin a:hover {
+  text-decoration: underline;
+}
+
+.main .info #admin #edit {
+  background: url('/images/edit.png') no-repeat;
+}
+
+.main .info #admin #subscribe {
+  background: url('/images/subscribe.png') no-repeat;
+}
+
+.main .info #admin #unsubscribe {
+  background: url('/images/unsubscribe.png') no-repeat;
+}
+
 .main .info #markup h2 {
   font-size: 1.5em;
   margin: 0 36px;

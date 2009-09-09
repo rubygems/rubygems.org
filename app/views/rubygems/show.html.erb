@@ -7,6 +7,12 @@
   </p>
 <% else %>
 
+  <div id="admin">
+    <%= link_to "Edit", edit_rubygem_url(@gem), :id => "edit" if @gem.owned_by?(@user) %>
+    <%= subscribe_link(@gem) %>
+    <%= unsubscribe_link(@gem) %>
+  </div>
+
   <div id="markup">
     <%= simple_markup(@current_version.info) %>
   </div>
