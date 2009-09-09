@@ -10,7 +10,7 @@ class RubygemsController < ApplicationController
     respond_to do |format|
       format.html do
         params[:letter] = "a" unless params[:letter]
-        @gems = Rubygem.name_starts_with(params[:letter]).paginate(:page => params[:page])
+        @gems = Rubygem.name_starts_with(params[:letter]).with_versions.paginate(:page => params[:page])
       end
       format.atom do
         @versions = Version.published(20)
@@ -23,7 +23,6 @@ class RubygemsController < ApplicationController
     respond_to do |format|
       format.html do
         @current_version = @gem.versions.current
-        @current_dependencies = @current_version.dependencies.runtime if @current_version
       end
       format.json do
         if @gem.try(:hosted?)

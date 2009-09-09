@@ -490,7 +490,7 @@ body {
 .main .info .meta .versions {
   display: inline-block;
   vertical-align: top;
-  margin-right: 8em;
+  margin-right: 4em;
   padding-top: 2em;
 }
 
@@ -518,6 +518,11 @@ body {
   display: inline-block;
   vertical-align: top;
   padding-top: 2em;
+  margin-right: 4em;
+}
+
+.main .info .meta .dependencies:last-child { 
+  margin-right: 0;
 }
 
 .main .info .meta .dependencies ol li a:hover {
