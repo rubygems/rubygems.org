@@ -826,6 +826,8 @@ label, .form_links {
   border: 2px solid #CC6666;
   padding: 0px;
   padding-bottom: 12px;
+  margin-left: 35px;
+  margin-right: 55px;
   margin-bottom: 20px;
   background-color: #f0f0f0;
 }
