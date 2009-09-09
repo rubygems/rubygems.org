@@ -19,7 +19,7 @@ module RubygemsHelper
             <param name="quality" value="high" />
             <param name="scale" value="noscale" />
             <param NAME="FlashVars" value="text=#{text}">
-            <param name="bgcolor" value="#{bgcolor}">
+            <param name="wmode" value="transparent">
             <embed src="/clippy.swf"
                    width="110"
                    height="32"
@@ -29,7 +29,7 @@ module RubygemsHelper
                    type="application/x-shockwave-flash"
                    pluginspage="http://www.macromedia.com/go/getflashplayer"
                    FlashVars="text=#{text}"
-                   bgcolor="#{bgcolor}"
+                   wmode="transparent"
             />
             </object>
           EOF
