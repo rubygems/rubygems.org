@@ -248,7 +248,7 @@ namespace :gemcutter do
         cutter = Gemcutter.new(nil, open(gem_name))
         cutter.pull_spec and cutter.find and cutter.save
         puts ">> #{cutter.message}"
-      rescue *HTTP_ERRORS => e
+      rescue Exception => e
         puts ">> #{e.message}"
       end
     end
