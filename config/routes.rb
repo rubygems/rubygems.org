@@ -9,8 +9,8 @@ ActionController::Routing::Routes.draw do |map|
     :requirements => { :id => RUBYGEM_NAME_MATCHER }
 
   map.resource :dashboard,
-               :only   => [],
-               :member => { :mine => :get, :subscribed => :get }
+               :only   => [:show],
+               :member => { :subscribed => :get }
 
   map.resource :migrate,
                :only         => [:create, :update],
