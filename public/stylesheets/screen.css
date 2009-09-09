@@ -599,9 +599,6 @@ body {
 }
 
 .footer .links {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid #9E8686;
   height: 30px;
 }
 
@@ -612,6 +609,16 @@ body {
   color: #9E8686;
   font-size: 1.5em;
   margin-right: 10px;
+}
+
+.footer .links #thoughtbot {
+  float: right;
+}
+
+.footer .links #heroku {
+  float: right;
+  margin-right: 25px;
+  margin-bottom: 20px;
 }
 
 .footer a:hover {
