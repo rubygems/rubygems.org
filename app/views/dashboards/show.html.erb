@@ -10,7 +10,7 @@
         <% @latest_updates.each do |version| %>
         <li>
           <a href="<%= rubygem_url(version.rubygem) %>">
-            <div class="top"><strong><%= version.to_title %></strong><%= time_ago_in_words(version.built_at) %> ago</div>
+            <div class="top"><strong><%= version.to_title %></strong><%= time_ago_in_words(version.created_at) %> ago</div>
             <%=h truncate(version.rubygem.versions.current.info, :length => 100) %>
           </a>
         </li>
