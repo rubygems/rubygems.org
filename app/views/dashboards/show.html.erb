@@ -1,5 +1,5 @@
 <div class="subscribed">
-  <h3>Latest Updates</h3><%= link_to image_tag("feed.png"), subscribed_dashboard_url(:api_key => current_user.api_key, :format => :atom), :id => "feed", :title => "Latest Updates RSS Feed" %>
+  <h3>Latest Updates</h3><%= link_to image_tag("feed.png"), dashboard_url(:api_key => current_user.api_key, :format => :atom), :id => "feed", :title => "Latest Updates RSS Feed" %>
   <div class="gems">
     <% if @latest_updates.empty? %>
       <p>
