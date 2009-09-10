@@ -39,6 +39,11 @@ When /^session is cleared$/ do
   controller.instance_variable_set(:@_current_user, nil)
 end
 
+Given /^I have signed in with "(.*)\/(.*)"$/ do |email, password|
+  Given %{I am signed up and confirmed as "#{email}/#{password}"}
+  And %{I sign in as "#{email}/#{password}"}
+end
+
 # Emails
 
 Then /^a confirmation message should be sent to "(.*)"$/ do |email|
@@ -46,13 +51,14 @@ Then /^a confirmation message should be sent to "(.*)"$/ do |email|
   sent = ActionMailer::Base.deliveries.first
   assert_equal [user.email], sent.to
   assert_match /confirm/i, sent.subject
-  assert !user.token.blank?
-  assert_match /#{user.token}/, sent.body
+  assert !user.confirmation_token.blank?
+  assert_match /#{user.confirmation_token}/, sent.body
 end
 
 When /^I follow the confirmation link sent to "(.*)"$/ do |email|
   user = User.find_by_email(email)
-  visit new_user_confirmation_path(:user_id => user, :token => user.token)
+  visit new_user_confirmation_path(:user_id => user,
+                                   :token   => user.confirmation_token)
 end
 
 Then /^a password reset message should be sent to "(.*)"$/ do |email|
@@ -60,13 +66,14 @@ Then /^a password reset message should be sent to "(.*)"$/ do |email|
   sent = ActionMailer::Base.deliveries.first
   assert_equal [user.email], sent.to
   assert_match /password/i, sent.subject
-  assert !user.token.blank?
-  assert_match /#{user.token}/, sent.body
+  assert !user.confirmation_token.blank?
+  assert_match /#{user.confirmation_token}/, sent.body
 end
 
 When /^I follow the password reset link sent to "(.*)"$/ do |email|
   user = User.find_by_email(email)
-  visit edit_user_password_path(:user_id => user, :token => user.token)
+  visit edit_user_password_path(:user_id => user,
+                                :token   => user.confirmation_token)
 end
 
 When /^I try to change the password of "(.*)" without token$/ do |email|
@@ -80,11 +87,10 @@ end
 
 # Actions
 
-When /^I sign in( with "remember me")? as "(.*)\/(.*)"$/ do |remember, email, password|
+When /^I sign in as "(.*)\/(.*)"$/ do |email, password|
   When %{I go to the sign in page}
   And %{I fill in "Email" with "#{email}"}
   And %{I fill in "Password" with "#{password}"}
-  And %{I check "Remember me"} if remember
   And %{I press "Sign In"}
 end
 
@@ -94,12 +100,12 @@ end
 
 When /^I request password reset link to be sent to "(.*)"$/ do |email|
   When %{I go to the password reset request page}
-  And %{I fill in "Email" with "#{email}"}
+  And %{I fill in "Email address" with "#{email}"}
   And %{I press "Reset password"}
 end
 
 When /^I update my password with "(.*)\/(.*)"$/ do |password, confirmation|
-  And %{I fill in "Password" with "#{password}"}
+  And %{I fill in "Choose password" with "#{password}"}
   And %{I fill in "Confirm password" with "#{confirmation}"}
   And %{I press "Save this password"}
 end
