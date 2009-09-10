@@ -1,9 +1,0 @@
--@title = "forgot password?"
--@subtitle = ""
-.grid_12
-  %p We will email you a link to reset your password.
-  -form_for :password, :url => passwords_url do |form|
-    .text_field
-      =form.label :email
-      =form.text_field :email
-    =form.submit 'Reset password', :disable_with => 'Please wait...'
