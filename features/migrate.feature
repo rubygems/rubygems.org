@@ -9,7 +9,7 @@ Feature: Migrate Gems
     And I have an api key for "email@person.com/password"
     When I migrate the gem "MGem" with my api key
     And I sign in as "email@person.com/password"
-    And I go to my gems page
+    And I go to the dashboard
     Then I should see "MGem"
 
   Scenario: Migrating an unknown gem
