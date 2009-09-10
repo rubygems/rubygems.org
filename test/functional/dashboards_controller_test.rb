@@ -38,7 +38,7 @@ class DashboardsControllerTest < ActionController::TestCase
       end
 
       should_respond_with :success
-      should_render_template :show
+      should_render_template 'versions/feed'
       should_assign_to(:versions) { @versions }
       should "render posts with titles and links of all subscribed versions" do
         @subscribed_versions.each do |v|
