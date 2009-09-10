@@ -7,8 +7,10 @@ Feature: Search
       Given a rubygem exists with a name of "sinatra"
       And a rubygem exists with a name of "mongrel"
       And a rubygem exists with a name of "thin"
+      And a version exists for the "sinatra" rubygem with a description of "web framework"
+      And a version exists for the "mongrel" rubygem with a description of "web server"
+      And a version exists for the "thin" rubygem with a description of "web server"
       When I go to the homepage
-      And I follow "search"
       And I fill in "query" with "mon" 
       And I press "Search"
       Then I should see "mongrel"
@@ -21,7 +23,6 @@ Feature: Search
       And a version exists for the "twitter" rubygem with a description of "social junk"
       And a version exists for the "beer_laser" rubygem with a description of "amazing beer"
       When I go to the homepage
-      And I follow "search"
       And I fill in "query" with "beer" 
       And I press "Search"
       Then I should see "beer_laser"
@@ -34,7 +35,6 @@ Feature: Search
       And a version exists for the "twitter" rubygem with a description of "social junk"
       And a version exists for the "beer_laser" rubygem with a description of "amazing beer"
       When I go to the homepage
-      And I follow "search"
       And I fill in "query" with "ldap"
       And I press "Search"
       Then I should see "LDAP"

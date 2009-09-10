@@ -151,6 +151,10 @@ body {
   background: transparent;
 }
 
+.nav form #search_submit {
+  display: none;
+}
+
 .main {
   padding: 2.4em;
   color: #EEE;
