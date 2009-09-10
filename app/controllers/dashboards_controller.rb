@@ -12,6 +12,7 @@ class DashboardsController < ApplicationController
       end
       format.atom do
         @versions = Version.subscribed_to_by(current_user).published(20)
+        render 'versions/feed'
       end
     end
   end
