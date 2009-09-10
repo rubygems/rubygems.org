@@ -4,6 +4,10 @@ module RubygemsHelper
     link_to(text, url, :rel => 'nofollow') unless url.blank?
   end
 
+  def link_to_directory
+    ("A".."Z").map { |letter| link_to(letter, rubygems_path(:letter => letter)) }.join
+  end
+
   def simple_markup(text)
      SM::SimpleMarkup.new.convert(text, SM::ToHtml.new)
   end
