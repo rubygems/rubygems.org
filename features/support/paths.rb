@@ -9,8 +9,8 @@ module NavigationHelpers
       new_session_path
     when /the password reset request page/
       new_password_path
-    when /my gems page/
-      mine_dashboard_path
+    when /the dashboard/
+      dashboard_path
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end
