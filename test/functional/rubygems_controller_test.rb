@@ -19,7 +19,6 @@ class RubygemsControllerTest < ActionController::TestCase
       should_render_template :show
       should_assign_to :gem
       should "not render edit link" do
-        assert_not_contain "Edit Gem"
         assert_have_no_selector "a[href='#{edit_rubygem_path(@gem)}']"
       end
     end
@@ -87,7 +86,6 @@ class RubygemsControllerTest < ActionController::TestCase
       should_render_template :show
       should_assign_to :gem
       should "render edit link" do
-        assert_contain "Edit Gem"
         assert_have_selector "a[href='#{edit_rubygem_path(@gem)}']"
       end
     end
@@ -212,7 +210,11 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to index with no parameters" do
     setup do
-      @gems = (1..3).map { |n| Factory(:rubygem, :name => "agem#{n}") }
+      @gems = (1..3).map do |n|
+        gem = Factory(:rubygem, :name => "agem#{n}")
+        Factory(:version, :rubygem => gem)
+        gem
+      end
       Factory(:rubygem, :name => "zeta")
       get :index
     end
@@ -248,6 +250,7 @@ class RubygemsControllerTest < ActionController::TestCase
     setup do
       @gems = (1..3).map { |n| Factory(:rubygem, :name => "agem#{n}") }
       @zgem = Factory(:rubygem, :name => "zeta")
+      Factory(:version, :rubygem => @zgem)
       get :index, :letter => "z"
     end
     should_respond_with :success
@@ -262,7 +265,6 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to show" do
     setup do
       @current_version = Factory(:version)
-      @current_dependencies = @current_version.dependencies.runtime
       @gem = @current_version.rubygem
       get :show, :id => @gem.to_param
     end
@@ -271,12 +273,10 @@ class RubygemsControllerTest < ActionController::TestCase
     should_render_template :show
     should_assign_to :gem
     should_assign_to(:current_version) { @current_version }
-    should_assign_to(:current_dependencies) { @current_dependencies }
     should "render info about the gem" do
       assert_contain @gem.name
       assert_contain @current_version.number
       assert_contain @current_version.created_at.to_date.to_formatted_s(:long)
-      assert_not_contain "Versions"
     end
   end
 
@@ -321,17 +321,16 @@ class RubygemsControllerTest < ActionController::TestCase
 
       @development = Factory(:development_dependency, :version => @version)
       @runtime     = Factory(:runtime_dependency,     :version => @version)
-      @current_dependencies = @version.dependencies.runtime
 
       get :show, :id => @version.rubygem.to_param
     end
 
     should_respond_with :success
     should_render_template :show
-    should_assign_to(:current_dependencies) { @current_dependencies }
-    should "show runtime dependencies but not development dependencies" do
-      assert_contain     @runtime.rubygem.name
-      assert_not_contain @development.rubygem.name
+    should_assign_to(:current_version) { @version }
+    should "show runtime dependencies and development dependencies" do
+      assert_contain @runtime.rubygem.name
+      assert_contain @development.rubygem.name
     end
   end
 
@@ -416,9 +415,8 @@ class RubygemsControllerTest < ActionController::TestCase
       should_assign_to(:gem) { @gem }
       should_respond_with :success
       should "have an subscribe link that goes to the sign in page" do
-        assert_have_selector "a[href='#{sign_in_path}']", :content => 'Subscribe'
+        assert_have_selector "a[href='#{sign_in_path}']"
       end
     end
   end
 end
-
