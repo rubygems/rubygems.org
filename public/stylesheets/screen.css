@@ -38,6 +38,7 @@ pre {
   color: #fff;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
+  line-height: 1em;
 }
 
 code {
