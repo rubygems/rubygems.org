@@ -34,6 +34,7 @@ class DashboardsControllerTest < ActionController::TestCase
         @owned_versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
         @owned_versions.each { |v| Factory(:ownership, :rubygem => v.rubygem, :user => @user, :approved => true)}
         @unowned_versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
+        @request.env["Authorization"] = @user.api_key
         get :mine, :format => "atom"
       end
 
@@ -79,6 +80,7 @@ class DashboardsControllerTest < ActionController::TestCase
         @subscribed_versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
         @subscribed_versions.each { |v| Factory(:subscription, :rubygem => v.rubygem, :user => @user)}
         @unsubscribed_versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
+        @request.env["Authorization"] = @user.api_key
         get :subscribed, :format => "atom"
       end
 

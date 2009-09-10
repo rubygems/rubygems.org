@@ -12,7 +12,7 @@ class MigrationsControllerTest < ActionController::TestCase
   context "with a confirmed user authenticated" do
     setup do
       @user = Factory(:email_confirmed_user)
-      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
+      @request.env["Authorization"] = @user.api_key
     end
 
     should "respond with 404 if no rubygem is found" do
