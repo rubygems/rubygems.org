@@ -16,6 +16,8 @@ class SearchesControllerTest < ActionController::TestCase
     setup do
       @sinatra = Factory(:rubygem, :name => "sinatra")
       @brando  = Factory(:rubygem, :name => "brando")
+      Factory(:version, :rubygem => @sinatra)
+      Factory(:version, :rubygem => @brando)
       get :new, :query => "sinatra"
     end
     
@@ -23,9 +25,12 @@ class SearchesControllerTest < ActionController::TestCase
     should_render_template :new
     should_assign_to(:gems) { [@sinatra] }
     should "see sinatra on the page in the results" do
-      assert_contain "Results"
-      assert_contain "sinatra"
+      assert_contain @sinatra.name
       assert_have_selector "a[href='#{rubygem_path(@sinatra)}']"
+    end
+    should "not see brando on the page in the results" do
+      assert_not_contain @brando.name
+      assert_have_no_selector "a[href='#{rubygem_path(@brando)}']"
     end
   end
 
