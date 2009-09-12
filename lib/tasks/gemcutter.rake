@@ -244,6 +244,9 @@ namespace :gemcutter do
       gem_name = "http://gems.rubyforge.org/gems/#{index.join('-')}.gem"
       puts ">> Fetching #{gem_name}"
 
+      # Skipping some bad gems.
+      next if gem_name =~ "appengine-sdk-1.2.5"
+
       begin
         cutter = Gemcutter.new(nil, open(gem_name))
         cutter.pull_spec and cutter.find and cutter.save
