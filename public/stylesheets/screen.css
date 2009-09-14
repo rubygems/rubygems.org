@@ -535,16 +535,17 @@ body {
   padding-top: 2em;
 }
 
-.main .info .meta .versions ol li a {
+.main .info .versions ol li a {
   font-weight: 900;
 }
 
-.main .info .meta .versions ol li a:hover {
+.main .info .versions ol li a:hover {
   text-decoration: underline;
 }
 
 .main .info .meta .versions .more {
   margin-top: 1em;
+  font-size: 1.2em;
   display: inline-block;
   font-weight: 900;
   color: #5B7B9C;

@@ -23,6 +23,10 @@ ActionController::Routing::Routes.draw do |map|
     rubygems.resource :owners, :only => [:show, :create, :destroy]
 
     rubygems.resource :subscription, :only => [:create, :destroy]
+
+    rubygems.resources :versions,
+      :only         => [:index, :show],
+      :requirements => { :rubygem_id => RUBYGEM_NAME_MATCHER, :id => Gem::Version::VERSION_PATTERN }
   end
 
   map.search "/search", :controller => "searches", :action => "new"

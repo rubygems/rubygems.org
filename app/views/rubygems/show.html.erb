@@ -54,16 +54,11 @@
       <div class="versions">
         <h5>Versions</h5>
         <ol>
-        <% @gem.versions.limited(5).each do |version| %>
-          <li>
-            <%= link_to version.number, "/" %>
-            <small><%= version.built_at.to_date.to_formatted_s(:long) %></small>
-          </li>
-        <% end %>
-        <% if @gem.versions_count > 5 %>
-          <%= link_to "Show all versions (#{@gem.versions_count} total)", "/", :class => "more" %>
-        <% end %>
+          <%= render @gem.versions.limited(5) %>
         </ol>
+        <% if @gem.versions_count > 5 %>
+          <%= link_to "Show all versions (#{@gem.versions_count} total)", rubygem_versions_url(@gem), :class => "more" %>
+        <% end %>
       </div>
 
       <%= render :partial => "dependencies", :locals => { :dependencies => @current_version.dependencies.runtime } %>
