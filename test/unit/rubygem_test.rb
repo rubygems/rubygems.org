@@ -194,6 +194,19 @@ class RubygemTest < ActiveSupport::TestCase
     end
   end
 
+  context "with a rubygem that has a version with a nil rubyforge_project" do
+    setup do
+      @rubygem = Factory(:rubygem)
+      @rubyforge_project = 'test_project'
+      Factory(:version, :rubygem => @rubygem, :rubyforge_project => nil)
+      Factory(:version, :rubygem => @rubygem, :rubyforge_project => @rubyforge_project)
+    end
+
+    should "return the first non-nil rubyforge_project" do
+      assert_equal @rubyforge_project, @rubygem.rubyforge_project
+    end
+  end
+
   context "with some gems and some that don't have versions" do
     setup do
       @thin = Factory(:rubygem, :name => 'thin', :created_at => 1.year.ago,  :downloads => 20)

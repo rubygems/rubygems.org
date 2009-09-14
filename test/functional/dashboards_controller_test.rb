@@ -34,18 +34,20 @@ class DashboardsControllerTest < ActionController::TestCase
         @subscribed_versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
         @subscribed_versions.each { |v| Factory(:subscription, :rubygem => v.rubygem, :user => @user)}
         @unsubscribed_versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
+
+        @request.env["Authorization"] = @user.api_key
         get :show, :format => "atom"
       end
 
       should_respond_with :success
       should_render_template 'versions/feed'
-      should_assign_to(:versions) { @versions }
       should "render posts with titles and links of all subscribed versions" do
         @subscribed_versions.each do |v|
           assert_contain v.to_title
           assert_have_selector "link[href='#{rubygem_url(v.rubygem)}']"
         end
       end
+
       should "not render posts for versions the user isn't subscribed to" do
         @unsubscribed_versions.each do |v|
           assert_does_not_contain @response.body, v.to_title
