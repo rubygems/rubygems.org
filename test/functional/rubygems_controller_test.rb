@@ -276,7 +276,7 @@ class RubygemsControllerTest < ActionController::TestCase
     should "render info about the gem" do
       assert_contain @gem.name
       assert_contain @current_version.number
-      assert_contain @current_version.created_at.to_date.to_formatted_s(:long)
+      assert_contain @current_version.built_at.to_date.to_formatted_s(:long)
     end
   end
 
@@ -294,11 +294,11 @@ class RubygemsControllerTest < ActionController::TestCase
     should "render info about the gem" do
       assert_contain @gem.name
       assert_contain @current_version.number
-      assert_contain @current_version.created_at.to_date.to_formatted_s(:long)
+      assert_contain @current_version.built_at.to_date.to_formatted_s(:long)
 
       assert_contain "Versions"
       assert_contain @gem.versions.last.number
-      assert_contain @gem.versions.last.created_at.to_date.to_formatted_s(:long)
+      assert_contain @gem.versions.last.built_at.to_date.to_formatted_s(:long)
     end
   end
 
