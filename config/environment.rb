@@ -7,10 +7,10 @@ Rails::Initializer.run do |config|
 
   config.gem 'haml',
     :version => '2.1.0'
-  config.gem "qrush-clearance",
+  config.gem "thoughtbot-clearance",
     :lib     => 'clearance',
     :source  => 'http://gems.github.com',
-    :version => '0.7.0'
+    :version => '0.8.2'
   config.gem "ddollar-pacecar",
     :lib     => 'pacecar',
     :source  => 'http://gems.github.com',
