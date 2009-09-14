@@ -49,7 +49,7 @@
     <ol>
       <% @updated.each do |version| %>
         <li>
-          <%= link_to version.rubygem, version.rubygem %>
+          <%= link_to version.to_title, version.rubygem %>
         </li>
       <% end %>
     </ol>
