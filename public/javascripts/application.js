@@ -1,9 +1,8 @@
 $(document).ready(function() {
   divs = "#flash_success, #flash_notice, #flash_error"
-  $(divs).slideDown(function() {
-    timeout = setTimeout(function() {
-    $(divs).slideUp();
-    }, 10000);
+  $(divs).each(function() {
+    humanMsg.displayMsg($(this).text());
+    return false;
   });
 
   if(window.location.href.search(/query=/) == -1) {
