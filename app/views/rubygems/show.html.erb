@@ -57,7 +57,7 @@
         <% @gem.versions.limited(5).each do |version| %>
           <li>
             <%= link_to version.number, "/" %>
-            <small><%= version.created_at.to_date.to_formatted_s(:long) %></small>
+            <small><%= version.built_at.to_date.to_formatted_s(:long) %></small>
           </li>
         <% end %>
         <% if @gem.versions_count > 5 %>

@@ -1,5 +1,5 @@
 <% if dependencies.present? %>
-  <div class="dependencies">
+  <div class="dependencies" id="<%= dependencies.first.scope %>_dependencies">
     <h5><%= dependencies.first.scope.titleize %> Dependencies</h5>
     <ol>
     <% dependencies.each do |dependency| %>
