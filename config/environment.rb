@@ -38,10 +38,5 @@ require 'lib/core_ext/string'
 Gem.configuration.verbose = false
 ActiveRecord::Base.include_root_in_json = false
 
-require 'clearance/passwords_controller'
-require 'clearance/confirmations_controller'
-require 'clearance/users_controller'
-require 'clearance/sessions_controller'
-
 require 'rdoc/markup/simple_markup'
 require 'rdoc/markup/simple_markup/to_html'
