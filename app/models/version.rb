@@ -55,4 +55,8 @@ class Version < ActiveRecord::Base
     [rubygem.name, Gem::Version.new(number), platform]
   end
 
+  def built_at_date
+    built_at.to_date.to_formatted_s(:long)
+  end
+
 end
