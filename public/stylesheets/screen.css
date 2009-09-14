@@ -30,7 +30,7 @@ a:visited {
 
 pre {
   background: #000;
-  font-family: Monaco, Courier, monospace;
+  font-family: Monaco, Consolas, Courier, monospace;
   padding: 1em;
   font-size: 1.7em;
   overflow: auto;
@@ -45,7 +45,7 @@ code {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   background: #000;
-  font-family: Monaco, Courier, monospace;
+  font-family: Monaco, Consolas, Courier, monospace;
   padding: 3px;
   font-size: 0.7em;
   color: #fff
@@ -226,6 +226,7 @@ body {
 .main .info ol.instructions {
   margin: 0;
   font-size: 2.4em;
+  color: #000;
   text-shadow: 1px 1px 1px rgba(255,255,255,0.2);
   background: url('/images/instructions.png');
   padding-top: 12px;
@@ -271,7 +272,7 @@ body {
 }
 
 .main .info ol.instructions li span {
-  font-family: Monaco, Courier, monospace;
+  font-family: Monaco, Consolas, Courier, monospace;
   margin-left: 0.5em;
   float: left;
   font-size: 1em;
@@ -291,6 +292,7 @@ body {
   background: #ECE5D6 url('/images/install.png') repeat-x;
   padding: 12px;
   font-size: 2.4em;
+  color: #000;
 }
 
 .main .info .install .instructions {
@@ -316,7 +318,7 @@ body {
 }
 
 .main .info .install .instructions span {
-  font-family: Monaco, Courier, monospace;
+  font-family: Monaco, Consolas, Courier, monospace;
   margin-left: 0.5em;
   display: table-cell;
   vertical-align: middle;
@@ -428,8 +430,8 @@ body {
   margin: 0;
 }
 
-.main .info .leaderboards .grid_3:first-child,
-.main .info .leaderboards .grid_3:last-child {
+.main .info .leaderboards #new_gems,
+.main .info .leaderboards #just_updated {
   margin: 0;
 }
 
@@ -437,15 +439,15 @@ body {
   margin: 0 15px;
 }
 
-.main .info .leaderboards ol li {
+.main .info .leaderboards ol li:first-child {
   border-top: 1px solid #B4AC99;
+}
+
+.main .info .leaderboards ol li {
   border-right: 1px solid #B4AC99;
   border-left: 1px solid #B4AC99;
   background: #FDF5E4;
   padding: 4px;
-}
-
-.main .info .leaderboards ol li:last-child {
   border-bottom: 1px solid #B4AC99;
 }
 
@@ -560,7 +562,7 @@ body {
   margin-right: 4em;
 }
 
-.main .info .meta .dependencies:last-child { 
+.main .info .meta #development_dependencies {
   margin-right: 0;
 }
 
@@ -607,11 +609,11 @@ body {
 
 .main .info .gems ol li {
   padding-left: 1em;
-  border-bottom: 1px solid #B4AC99;
+  border-top: 1px solid #B4AC99;
   background: url('/images/bullet-directory.png') no-repeat 10px 14px;
 }
 
-.main .info .gems ol li:last-child {
+.main .info .gems ol li:first-child {
   border: none;
 }
 

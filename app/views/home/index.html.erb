@@ -24,7 +24,7 @@
   <strong>Become a contributor</strong> and enhance the site with your own changes.
 </p>
 <div class="leaderboards">
-  <div class="grid_3">
+  <div class="grid_3" id="new_gems">
     <strong>New Gems</strong>
     <ol>
       <% @latest.each do |rubygem| %>
@@ -34,7 +34,7 @@
       <% end %>
     </ol>
   </div>
-  <div class="grid_3">
+  <div class="grid_3" id="most_downloaded">
     <strong>Most Downloaded</strong>
     <ol>
       <% @downloaded.each do |rubygem| %>
@@ -44,7 +44,7 @@
       <% end %>
     </ol>
   </div>
-  <div class="grid_3">
+  <div class="grid_3" id="just_updated">
     <strong>Just Updated</strong>
     <ol>
       <% @updated.each do |version| %>
