@@ -1,4 +1,6 @@
 require 'rubygems/local_remote_options'
+require 'net/http'
+require 'net/https'
 
 class Gem::AbstractCommand < Gem::Command
   include Gem::LocalRemoteOptions
@@ -40,9 +42,6 @@ class Gem::AbstractCommand < Gem::Command
   end
 
   def make_request(method, path)
-    require 'net/http'
-    require 'net/https'
-
     url = URI.parse("#{gemcutter_url}/#{path}")
 
     http = proxy_class.new(url.host, url.port)
@@ -82,7 +81,7 @@ class Gem::AbstractCommand < Gem::Command
 
   # @return [URI, nil] the HTTP-proxy as a URI if set; +nil+ otherwise
   def http_proxy
-    proxy = Gem.configuration[:http_proxy]
+    proxy = Gem.configuration[:http_proxy] || ENV['http_proxy'] || ENV['HTTP_PROXY']
     return nil if proxy.nil? || proxy == :no_proxy
     URI.parse(proxy)
   end
