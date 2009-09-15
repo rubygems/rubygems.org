@@ -24,16 +24,23 @@ class VersionsControllerTest < ActionController::TestCase
     end
   end
 
-  #context 'GET to show for existing version' do
-  #  setup do
-  #    @version = Factory(:version)
-  #    get :show, :id => @version.to_param
-  #  end
+  context "On GET to show" do
+    setup do
+      @current_version = Factory(:version)
+      @rubygem = @current_version.rubygem
+      get :show, :rubygem_id => @rubygem.name, :id => @current_version.number
+    end
 
-  #  should_respond_with :success
-  #  should_render_template :show
-  #  should_assign_to :version, :equals => '@version'
-  #end
+    should_respond_with :success
+    should_render_template "rubygems/show"
+    should_assign_to :rubygem
+    should_assign_to(:current_version) { @current_version }
+    should "render info about the gem" do
+      assert_contain @rubygem.name
+      assert_contain @current_version.number
+      assert_contain @current_version.built_at.to_date.to_formatted_s(:long)
+    end
+  end
 
 end
 

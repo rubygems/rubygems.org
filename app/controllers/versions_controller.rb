@@ -5,14 +5,15 @@ class VersionsController < ApplicationController
     @versions = @rubygem.versions
   end
 
+  def show
+    @current_version = @rubygem.versions.find_by_number(params[:id])
+    render "rubygems/show"
+  end
+
   protected
 
   def find_rubygem
     @rubygem = Rubygem.find_by_name(params[:rubygem_id])
   end
-
-  #def show
-  #  @version = Version.find(params[:id])
-  #end
 
 end
