@@ -30,7 +30,7 @@ a:visited {
 
 pre {
   background: #000;
-  font-family: Monaco, Consolas, Courier, monospace;
+  font-family: Monaco, Consolas, "Courier New", monospace;
   padding: 1em;
   font-size: 1.7em;
   overflow: auto;
@@ -45,7 +45,7 @@ code {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   background: #000;
-  font-family: Monaco, Consolas, Courier, monospace;
+  font-family: Monaco, Consolas, "Courier New", monospace;
   padding: 3px;
   font-size: 0.7em;
   color: #fff
@@ -162,6 +162,7 @@ body {
 }
 
 .main h2 {
+  line-height: 44px;
   display: inline-block;
   color: #340505;
   font-size: 4em;
@@ -272,7 +273,7 @@ body {
 }
 
 .main .info ol.instructions li span {
-  font-family: Monaco, Consolas, Courier, monospace;
+  font-family: Monaco, Consolas, "Courier New", monospace;
   margin-left: 0.5em;
   float: left;
   font-size: 1em;
@@ -318,7 +319,7 @@ body {
 }
 
 .main .info .install .instructions span {
-  font-family: Monaco, Consolas, Courier, monospace;
+  font-family: Monaco, Consolas, "Courier New", monospace;
   margin-left: 0.5em;
   display: table-cell;
   vertical-align: middle;
@@ -351,6 +352,7 @@ body {
 .main .info #admin {
   float: right;
   margin-right: 35px;
+  margin-top: -50px;
 }
 
 .main .info #admin a {
@@ -721,6 +723,7 @@ body {
   color: #9E8686;
   font-size: 1.5em;
   margin-right: 10px;
+  margin-top: -15px;
 }
 
 .footer .links #thoughtbot {
