@@ -4,6 +4,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <%= stylesheet_link_tag "reset", "960", "screen", "humanmsg", :cache => true %>
+    <!--[if IE 7]>
+      <%= stylesheet_link_tag "ie7" %>
+    <![endif]-->
     <%= render "layouts/feeds" %>
     <title><%= page_title %></title>
   </head>
@@ -63,6 +66,6 @@
         </div>
       </div>
     </div>
-    <%= javascript_include_tag("jquery", "jquery.easing.1.3", "humanmsg", "application") %>
+    <%= javascript_include_tag "jquery", "jquery.easing.1.3", "humanmsg", "application", :cache => true %>
   </body>
 </html>
