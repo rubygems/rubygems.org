@@ -66,6 +66,34 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
+  context "when indexing" do
+    setup do
+      @rubygem = Factory(:rubygem)
+      @first_version  = Factory(:version, :rubygem => @rubygem, :number => "0.0.1", :built_at => 7.days.ago)
+      @second_version = Factory(:version, :rubygem => @rubygem, :number => "0.0.2", :built_at => 6.days.ago)
+      @third_version  = Factory(:version, :rubygem => @rubygem, :number => "0.0.3", :built_at => 5.days.ago)
+      @fourth_version = Factory(:version, :rubygem => @rubygem, :number => "0.0.4", :built_at => 5.days.ago)
+    end
+
+    should "always sort properly" do
+      assert_equal -1, (@first_version <=> @second_version)
+      assert_equal -1, (@first_version <=> @third_version)
+      assert_equal -1, (@first_version <=> @fourth_version)
+
+      assert_equal 1,  (@second_version <=> @first_version)
+      assert_equal -1, (@second_version <=> @third_version)
+      assert_equal -1, (@second_version <=> @fourth_version)
+
+      assert_equal 1,  (@third_version <=> @first_version)
+      assert_equal 1,  (@third_version <=> @second_version)
+      assert_equal -1, (@third_version <=> @fourth_version)
+
+      assert_equal 1,  (@fourth_version <=> @first_version)
+      assert_equal 1,  (@fourth_version <=> @second_version)
+      assert_equal 1,  (@fourth_version <=> @third_version)
+    end
+  end
+
   context "with a few versions" do
     setup do
       @thin = Factory(:version, :authors => "thin", :created_at => 1.year.ago)
