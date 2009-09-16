@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  divs = "#flash_success, #flash_notice, #flash_error"
+  var divs = "#flash_success, #flash_notice, #flash_error";
   $(divs).each(function() {
     humanMsg.displayMsg($(this).text());
     return false;
