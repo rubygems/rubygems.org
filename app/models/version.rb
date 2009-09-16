@@ -55,4 +55,14 @@ class Version < ActiveRecord::Base
     [rubygem.name, Gem::Version.new(number), platform]
   end
 
+  def <=>(other)
+    if self.built_at > other.built_at
+      1
+    elsif self.built_at < other.built_at
+      -1
+    else self.built_at == other.built_at
+      self.created_at <=> other.created_at
+    end
+  end
+
 end
