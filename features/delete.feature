@@ -3,6 +3,7 @@ Feature: Delete Gems
   As a rubygem developer
   I want to delete gems from Gemcutter
   
+@wip
   Scenario: User deletes gem
     Given I am signed up and confirmed as "email@person.com/password"
     And I have a gem "RGem" with version "1.2.3"
