@@ -15,6 +15,11 @@ class Version < ActiveRecord::Base
     { :conditions => { :rubygem_id => user.subscribed_gem_ids } }
   }
 
+  named_scope :prerelease, { :conditions => { :prerelease => true  }}
+  named_scope :release,    { :conditions => { :prerelease => false }}
+
+  before_save :update_prerelease
+
   def validate
     if new_record? && Version.exists?(:rubygem_id => rubygem_id, :number => number, :platform => platform)
       errors.add_to_base("A version already exists with this number or platform.")
@@ -37,6 +42,15 @@ class Version < ActiveRecord::Base
     "#{rubygem.name} (#{to_s})"
   end
 
+  def update_prerelease
+    self[:prerelease] = to_gem_version.prerelease?
+    true
+  end
+
+  def to_gem_version
+    Gem::Version.new(number)
+  end
+
   def info
     [ description, summary, "This rubygem does not have a description or summary." ].detect(&:present?)
   end
@@ -52,7 +66,17 @@ class Version < ActiveRecord::Base
   end
 
   def to_index
-    [rubygem.name, Gem::Version.new(number), platform]
+    [rubygem.name, to_gem_version, platform]
+  end
+
+  def <=>(other)
+    if self.built_at > other.built_at
+      1
+    elsif self.built_at < other.built_at
+      -1
+    else self.built_at == other.built_at
+      self.created_at <=> other.created_at
+    end
   end
 
   def <=>(other)
