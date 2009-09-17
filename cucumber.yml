@@ -1,0 +1,3 @@
+default: features -t ~wip
+wip: features -t wip
+all: features
