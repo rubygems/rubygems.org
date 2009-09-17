@@ -15,6 +15,14 @@ class HostessTest < ActiveSupport::TestCase
     FileUtils.rm(path) if File.exists?(path)
   end
 
+  should "return prerelease specs" do
+    file = "/prerelease_specs.4.8.gz"
+    touch file
+    get file
+    assert_not_nil last_response.headers["Cache-Control"]
+    assert_equal 200, last_response.status
+  end
+
   should "return latest specs" do
     file = "/latest_specs.4.8.gz"
     touch file
