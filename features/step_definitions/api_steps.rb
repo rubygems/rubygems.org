@@ -5,11 +5,19 @@ Given /^I have an api key for "([^\"]*)"$/ do |creds|
   @api_key = response.body
 end
 
+Given /^I've already pushed the gem "([^\"]*)" with my api key$/ do |name|
+  When %Q[I push the gem "#{name}" with my api key]
+end
+
 When /^I push the gem "([^\"]*)" with my api key$/ do |name|
   path = File.join(TEST_DIR, name)
   header("HTTP_AUTHORIZATION", @api_key)
   visit rubygems_path, :post, File.open(path).read
   assert_match /Successfully registered/, response.body
+end
+
+When /^I delete the gem "([^\"]*)" with my api key$/ do |arg1|
+  pending
 end
 
 When /^I migrate the gem "([^\"]*)" with my api key$/ do |name|
