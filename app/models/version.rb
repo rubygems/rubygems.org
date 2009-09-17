@@ -2,7 +2,6 @@ class Version < ActiveRecord::Base
   include Pacecar
 
   belongs_to :rubygem, :counter_cache => true
-  has_many :requirements, :dependent => :destroy
   has_many :dependencies, :dependent => :destroy
 
   validates_format_of :number, :with => /^#{Gem::Version::VERSION_PATTERN}$/
