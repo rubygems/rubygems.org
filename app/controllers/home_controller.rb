@@ -4,6 +4,6 @@ class HomeController < ApplicationController
     @latest = Rubygem.latest
     @downloaded = Rubygem.downloaded
 
-    @updated = Version.published
+    @updated = Version.release.published
   end
 end

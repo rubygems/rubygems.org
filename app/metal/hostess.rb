@@ -28,6 +28,11 @@ class Hostess < Sinatra::Default
     serve(current_path)
   end
 
+  get "/prerelease_specs.#{Gem.marshal_version}.gz" do
+    content_type('application/x-gzip')
+    serve(current_path)
+  end
+
   get "/quick/Marshal.#{Gem.marshal_version}/*.gemspec.rz" do
     content_type('application/x-deflate')
     serve(current_path)
