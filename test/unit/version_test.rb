@@ -94,6 +94,23 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
+  context "with mixed release and prerelease versions" do
+    setup do
+      @prerelease = Factory(:version, :number => '1.0.rc1')
+      @release    = Factory(:version, :number => '1.0')
+    end
+
+    should "know if it is a prelease version" do
+      assert  @prerelease.prerelease?
+      assert !@release.prerelease?
+    end
+
+    should "return prerelease gems from the prerelease named scope" do
+      assert_equal [@prerelease], Version.prerelease
+      assert_equal [@release],    Version.release
+    end
+  end
+
   context "with a few versions" do
     setup do
       @thin = Factory(:version, :authors => "thin", :created_at => 1.year.ago)
