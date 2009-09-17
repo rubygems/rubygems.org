@@ -12,11 +12,15 @@ module Vault
     end
 
     def latest_index
-      Version.with_indexed.inject({}) { |memo, version|
+      Version.release.with_indexed.inject({}) { |memo, version|
         key = "#{version.rubygem_id}-#{version.platform}"
-        memo[key] = version if memo[key].blank? || memo[key].built_at < version.built_at
+        memo[key] = version if memo[key].blank? || (version <=> memo[key]) == 1
         memo
       }.values.map(&:to_index)
+    end
+
+    def prerelease_index
+      Version.prerelease.map(&:to_index)
     end
 
     def write_gem
@@ -32,6 +36,7 @@ module Vault
     def update_index
       upload("specs.#{Gem.marshal_version}.gz", specs_index)
       upload("latest_specs.#{Gem.marshal_version}.gz", latest_index)
+      upload("prerelease_specs.#{Gem.marshal_version}.gz", prerelease_index)
     end
 
     def upload(key, value)
