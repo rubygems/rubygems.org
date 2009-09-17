@@ -7,6 +7,6 @@ require 'rake/rdoctask'
 require 'tasks/rails'
 
 desc "Run all tests and features"
-task :default => [:test, :features]
+task :default => [:test, :cucumber]
 
 task :cron => ['gemcutter:fetch_from_rubyforge']
