@@ -26,7 +26,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.with_indexed
-    all(:conditions => {:indexed => true}, :include => :rubygem, :order => "rubygems.name asc")
+    all(:conditions => {:indexed => true}, :include => :rubygem, :order => "rubygems.name asc, built_at desc, number desc")
   end
 
   def self.published(limit=5)
