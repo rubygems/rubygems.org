@@ -13,7 +13,20 @@ class Hostess < Sinatra::Default
       if redirect
         redirect File.join("http://s3.amazonaws.com", VaultObject.current_bucket, request.path_info)
       else
-        VaultObject.value(request.path_info)
+        # Query S3
+        result = VaultObject.value(request.path_info,
+                                    :if_modified_since => env['HTTP_IF_MODIFIED_SINCE'],
+                                    :if_none_match => env['HTTP_IF_NONE_MATCH'])
+
+        # These should raise a 304 if either of them match
+        last_modified(result.response['last-modified']) if result.response['last-modified']
+        etag(result.response['etag'])                   if result.response['etag']
+
+        # If we got a 304 back, let's give it back to the client
+        halt 304 if result.response.code == 304
+
+        # Otherwise return the result back
+        result
       end
     end
   end
