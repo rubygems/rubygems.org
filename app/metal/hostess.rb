@@ -19,8 +19,19 @@ class Hostess < Sinatra::Default
                                     :if_none_match => env['HTTP_IF_NONE_MATCH'])
 
         # These should raise a 304 if either of them match
-        last_modified(result.response['last-modified']) if result.response['last-modified']
-        etag(result.response['etag'])                   if result.response['etag']
+        if result.response['last-modified']
+          last_modified(result.response['last-modified'])
+        end
+
+        if value = result.response['etag']
+          response['ETag'] = value
+
+          # Conditional GET check
+          if etags = env['HTTP_IF_NONE_MATCH']
+            etags = etags.split(/\s*,\s*/)
+            halt 304 if etags.include?(value) || etags.include?('*')
+          end
+        end
 
         # If we got a 304 back, let's give it back to the client
         halt 304 if result.response.code == 304
