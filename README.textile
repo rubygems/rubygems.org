@@ -12,7 +12,7 @@ Please check out the "FAQ":http://gemcutter.org/pages/faq for more information.
 
 h2. Contributions
 
-Gemcutter has a 'commit-bit' policy, much like the Rubinius project. Submit a patch that is accepted, and you'll get full commit access to the project. All you have to do is ask us on #gemcutter on Freenode or bug qrush in a message and he'll add you as a collaborator on the main repository. Feel free to fork the project though and have fun in your own sandbox.
+Gemcutter has a 'commit-bit' policy, much like the Rubinius project. Submit a patch that is accepted, and you can get full commit access to the project. All you have to do is ask us on #gemcutter on Freenode or bug qrush in a message and he'll add you as a collaborator on the main repository. Feel free to fork the project though and have fun in your own sandbox.
 
 How to contribute:
 
@@ -28,20 +28,19 @@ h2. Organization
 
 Gemcutter consists of a few major parts:
 
-* Rails application: To manage users and allow others to view gems, etc.
+* Rails app: To manage users and allow others to view gems, etc.
 * Sinatra app (Hostess): the gem server, lives in @app/metal/hostess.rb@.
-* Rubygem: The gemcutter client gem that interacts with the site, lives in @gem/@.
+* RubyGem: The gemcutter client gem that interacts with the site, lives in @gem/@.
 * Gem processor: Handles incoming gems and storing them in S3 (production) or on the filesystem in @server/@ (development). Lives in @lib/gemcutter.rb@, @lib/indexer.rb@, @lib/vault.rb@.
 
 h2. Development
 
 Some things you'll need to do in order to get this project up and running:
 
-* Tell git about your github.user. (For example: @git config --global github.user defunkt@)
 * Install sinatra. (@sudo gem install sinatra@)
 * Install the test gems (@sudo rake gems:install RAILS_ENV=test@)
 
-For testing/developing the gem, cd into the @gem@ directory. Please keep the code for the gem in there, don't let it leak out into the Rails app.
+For testing/developing the gem, @cd@ into the @gem@ directory. Please keep the code for the gem in there, don't let it leak out into the Rails app.
 
 Make sure you run @rake gemcutter:index:create@ before running the app on your own machine, this primes the filesystem gem index for local use.
 

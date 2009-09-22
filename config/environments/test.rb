@@ -38,7 +38,7 @@ config.gem 'thoughtbot-factory_girl',
 config.gem 'webrat',
            :version => '>= 0.4.4'
 config.gem 'cucumber',
-           :version => '>= 0.3.9'
+           :version => '>= 0.3.101'
 config.gem 'rr',
            :version => '>= 0.7.1'
 config.gem 'rack-test',

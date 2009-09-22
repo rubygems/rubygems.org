@@ -18,6 +18,8 @@ class AbstractCommandTest < CommandTest
     setup do
       @command = Gem::Commands::FakeCommand.new
       stub(@command).say
+      ENV['http_proxy'] = nil
+      ENV['HTTP_PROXY'] = nil
     end
 
     context "parsing the proxy" do
@@ -35,6 +37,14 @@ class AbstractCommandTest < CommandTest
         stub(Gem).configuration { { :http_proxy => 'http://proxy.example.org:9192' } }
         assert_equal 'proxy.example.org', @command.http_proxy.host
         assert_equal 9192, @command.http_proxy.port
+      end
+
+      should "return a proxy as a URI if set by environment variable" do
+        ENV['http_proxy'] = "http://jack:duck@192.168.1.100:9092"
+        assert_equal "192.168.1.100", @command.http_proxy.host
+        assert_equal 9092, @command.http_proxy.port
+        assert_equal "jack", @command.http_proxy.user
+        assert_equal "duck", @command.http_proxy.password
       end
     end
 
