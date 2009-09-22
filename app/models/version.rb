@@ -2,7 +2,6 @@ class Version < ActiveRecord::Base
   include Pacecar
 
   belongs_to :rubygem, :counter_cache => true
-  has_many :requirements, :dependent => :destroy
   has_many :dependencies, :dependent => :destroy
 
   validates_format_of :number, :with => /^#{Gem::Version::VERSION_PATTERN}$/
@@ -27,7 +26,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.with_indexed
-    all(:conditions => {:indexed => true}, :include => :rubygem, :order => "rubygems.name asc")
+    all(:conditions => {:indexed => true}, :include => :rubygem, :order => "rubygems.name asc, built_at asc, number asc")
   end
 
   def self.published(limit=5)
