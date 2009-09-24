@@ -3,7 +3,6 @@ module Vault
     OPTIONS = {:authenticated => false, :access => :public_read}
 
     def perform
-      write_gem
       update_index
     end
 
@@ -25,7 +24,7 @@ module Vault
 
     def write_gem
       cache_path = "gems/#{spec.original_name}.gem"
-      VaultObject.store(cache_path, self.raw_data, OPTIONS)
+      VaultObject.store(cache_path, body.string, OPTIONS)
 
       quick_path = "quick/Marshal.#{Gem.marshal_version}/#{spec.original_name}.gemspec.rz"
       Gemcutter.indexer.abbreviate spec
