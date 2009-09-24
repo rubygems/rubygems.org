@@ -40,15 +40,19 @@ module RubygemsHelper
   end
 
   def subscribe_link(gem)
-    subscribe = link_to_remote 'Subscribe',
-      :url     => rubygem_subscription_path(gem),
-      :method  => :post,
-      :class   => :toggler,
-      :html    => {
-        :id    => 'subscribe',
-        :class => :toggler,
-        :style => gem.subscribers.find_by_id(current_user.try(:id)) ? 'display:none' : 'display:block'
-      }
+    if signed_in?
+      subscribe = link_to_remote 'Subscribe',
+        :url     => rubygem_subscription_path(gem),
+        :method  => :post,
+        :class   => :toggler,
+        :html    => {
+          :id    => 'subscribe',
+          :class => :toggler,
+          :style => gem.subscribers.find_by_id(current_user.try(:id)) ? 'display:none' : 'display:block'
+        }
+    else
+      link_to 'Subscribe', sign_up_path, :class => :toggler
+    end
   end
 
   def unsubscribe_link(gem)
