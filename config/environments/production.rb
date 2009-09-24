@@ -50,10 +50,10 @@ config.after_initialize do
   #  CACHE = ::MemCache.new(ENV['MEMCACHE_SERVERS'].split(','), :namespace => ENV['MEMCACHE_NAMESPACE'])
   #end
 
-  if ENV['MEMCACHE_SERVERS']
-    memcache_config = ENV['MEMCACHE_SERVERS'].split(',')
-    memcache_config << {:namespace => ENV['MEMCACHE_NAMESPACE']}
-    config.cache_store = :mem_cache_store, memcache_config
-  end
+  #if ENV['MEMCACHE_SERVERS']
+  #  memcache_config = ENV['MEMCACHE_SERVERS'].split(',')
+  #  memcache_config << {:namespace => ENV['MEMCACHE_NAMESPACE']}
+  #  config.cache_store = :mem_cache_store, memcache_config
+  #end
 
 end
