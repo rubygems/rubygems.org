@@ -44,6 +44,12 @@ config.after_initialize do
     #:verbose     => true,
     #:metastore   => ::CACHE,
     #:entitystore => ::CACHE) if defined?(::CACHE)
+  #if ENV['MEMCACHE_SERVERS']
+  #  require 'memcache'
+  #  require 'rack/cache'
+  #  CACHE = ::MemCache.new(ENV['MEMCACHE_SERVERS'].split(','), :namespace => ENV['MEMCACHE_NAMESPACE'])
+  #end
+
   if ENV['MEMCACHE_SERVERS']
     memcache_config = ENV['MEMCACHE_SERVERS'].split(',')
     memcache_config << {:namespace => ENV['MEMCACHE_NAMESPACE']}
