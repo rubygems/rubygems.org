@@ -218,6 +218,7 @@ body {
 
 .main .info {
   padding-top: 20px;
+  padding-bottom: 20px;
   background: #ebe3d1;
   border: 5px solid #cbc2ae;
   -moz-border-radius: 10px;
