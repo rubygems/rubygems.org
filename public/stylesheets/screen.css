@@ -459,6 +459,9 @@ body {
   font-weight: 900;
   color: rgba(0, 0, 0, 0.8);
   display: block;
+  overflow: hidden;
+  height: 21px;
+  line-height: 22px;
 }
 
 .main .info .leaderboards ol li a:hover {
@@ -720,6 +723,7 @@ body {
 
 .footer .links {
   height: 30px;
+  margin-top: 15px;
 }
 
 .footer .links a {
