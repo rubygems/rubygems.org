@@ -113,6 +113,9 @@ class Rubygem < ActiveRecord::Base
     update_linkset!      spec
 
     self.save!
+
+    # TODO: Refactor all of this like crazy
+    find_or_initialize_version_from_spec(spec)
   end
 
   private

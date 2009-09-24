@@ -60,7 +60,8 @@ class Version < ActiveRecord::Base
       :description       => spec.description,
       :summary           => spec.summary,
       :rubyforge_project => spec.rubyforge_project,
-      :built_at          => spec.date
+      :built_at          => spec.date,
+      :indexed           => false
     )
   end
 
