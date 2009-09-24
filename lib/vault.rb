@@ -3,6 +3,7 @@ module Vault
     OPTIONS = {:authenticated => false, :access => :public_read}
 
     def perform
+      self.version.update_attribute(:indexed, true)
       update_index
     end
 
