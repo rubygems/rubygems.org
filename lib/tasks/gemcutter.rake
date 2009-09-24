@@ -245,7 +245,7 @@ namespace :gemcutter do
       puts ">> Fetching #{gem_name}"
 
       # Skipping some bad gems...
-      next if gem_name.include?("appengine-sdk-1.2.5")
+      next if gem_name.include?("appengine-sdk-1.2.5") || gem_name.include?("BlueCloth-1.0.0")
 
       begin
         gem_io = open(gem_name)
