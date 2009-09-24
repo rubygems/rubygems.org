@@ -41,7 +41,9 @@ config.after_initialize do
   end
 
   if ENV['MEMCACHE_SERVERS']
-    memcache = MemCache.new(ENV['MEMCACHE_SERVERS'].split)
+    require 'memcache'
+    require 'rack/cache'
+    memcache = ::MemCache.new(ENV['MEMCACHE_SERVERS'].split, :namespace => ENV['MEMCACHE_NAMESPACE'])
 
     config.middleware.use(::Rack::Cache,
       :verbose     => true,
