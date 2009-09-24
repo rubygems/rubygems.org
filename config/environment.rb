@@ -25,7 +25,13 @@ Rails::Initializer.run do |config|
   config.gem "ambethia-smtp-tls",
     :lib => "smtp-tls",
     :version => "1.1.2",
-    :source => "http://gems.github.com"
+    :source  => "http://gems.github.com"
+  config.gem "memcache-client",
+    :lib     => "memcache",
+    :version => "1.7.2"
+  config.gem "rack-cache",
+    :lib     => "rack/cache",
+    :version => "0.5"
 
   config.action_mailer.delivery_method = :smtp
 end
