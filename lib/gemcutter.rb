@@ -43,7 +43,7 @@ class Gemcutter
     Rubygem.transaction do
       rubygem.build_ownership(user) if user
       rubygem.save!
-      self.version = rubygem.update_attributes_from_gem_specification!(spec)
+      @version = rubygem.update_attributes_from_gem_specification!(spec)
     end
     true
   rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback
