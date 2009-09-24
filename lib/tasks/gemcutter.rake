@@ -249,15 +249,13 @@ namespace :gemcutter do
 
       begin
         gem_io = open(gem_name)
+        cutter = Gemcutter.new(nil, gem_io)
+        cutter.pull_spec and cutter.find and cutter.save
+        puts ">> #{cutter.message}"
       rescue Exception => e
-        puts ">> Problem fetching the gem: #{e}"
-        next
+        puts ">> Problem fetching the gem: #{e.message}"
+        puts e.backtrace
       end
-
-      cutter = Gemcutter.new(nil, gem_io)
-      cutter.pull_spec and cutter.find and cutter.save
-      puts ">> #{cutter.message}"
     end
-
   end
 end
