@@ -51,7 +51,7 @@ module RubygemsHelper
           :style => gem.subscribers.find_by_id(current_user.try(:id)) ? 'display:none' : 'display:block'
         }
     else
-      link_to 'Subscribe', sign_up_path, :class => :toggler
+      link_to 'Subscribe', sign_up_path, :id => :subscribe, :class => :toggler
     end
   end
 
