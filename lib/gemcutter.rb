@@ -5,7 +5,7 @@ class Gemcutter
     include Vault::S3
   end
 
-  attr_reader :user, :spec, :message, :code, :rubygem, :raw_data, :body, :version
+  attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id
 
   def initialize(user, body)
     @user = user
@@ -25,6 +25,7 @@ class Gemcutter
   def save
     if update
       write_gem
+      @version_id = self.version.id
       Delayed::Job.enqueue self
       notify("Successfully registered gem: #{self.version.to_title}", 200)
     else
@@ -42,7 +43,7 @@ class Gemcutter
     Rubygem.transaction do
       rubygem.build_ownership(user) if user
       rubygem.save!
-      @version = rubygem.update_attributes_from_gem_specification!(spec)
+      self.version = rubygem.update_attributes_from_gem_specification!(spec)
     end
     true
   rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback
