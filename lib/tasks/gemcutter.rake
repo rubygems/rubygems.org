@@ -247,13 +247,9 @@ namespace :gemcutter do
       # Skipping some bad gems...
       next if gem_name.include?("appengine-sdk-1.2.5")
 
-      begin
-        cutter = Gemcutter.new(nil, open(gem_name))
-        cutter.pull_spec and cutter.find and cutter.save
-        puts ">> #{cutter.message}"
-      rescue Exception => e
-        puts ">> #{e.message}"
-      end
+      cutter = Gemcutter.new(nil, open(gem_name))
+      cutter.pull_spec and cutter.find and cutter.save
+      puts ">> #{cutter.message}"
     end
 
   end
