@@ -29,9 +29,9 @@ Rails::Initializer.run do |config|
   config.gem "memcache-client",
     :lib     => "memcache",
     :version => "1.7.2"
-  config.gem "rack-cache",
+  config.gem "rtomayko-rack-cache",
     :lib     => "rack/cache",
-    :version => "0.5"
+    :version => "0.5.1"
 
   config.action_mailer.delivery_method = :smtp
 end

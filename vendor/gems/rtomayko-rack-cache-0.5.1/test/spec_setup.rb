@@ -13,7 +13,7 @@ end
 
 # Set the MEMCACHED environment variable as follows to enable testing
 # of the MemCached meta and entity stores.
-ENV['MEMCACHED'] ||= 'localhost:11215'
+ENV['MEMCACHED'] ||= 'localhost:11211'
 $memcached = nil
 $memcache = nil
 
@@ -70,7 +70,6 @@ def need_memcache(forwhat)
 end
 
 def need_java(forwhat)
-  
   if RUBY_PLATFORM =~ /java/
     yield
   else

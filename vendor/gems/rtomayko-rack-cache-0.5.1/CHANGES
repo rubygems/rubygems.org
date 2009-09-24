@@ -1,3 +1,18 @@
+## 0.6.0 / Unreleased
+
+  * Added support for memcached clusters and other advanced
+    configuration provided by the memcache-client and memcached
+    libraries. The "metastore" and "entitystore" options can now be
+    set to a MemCache object or Memcached object:
+
+    memcache = MemCache.new(['127.1.1.1', '127.1.1.2'], :namespace => "/foo")
+    use Rack::Cache,
+      :metastore => memcache,
+      :entitystore => memcache
+
+  * Fix "memcached://" metastore URL handling. The "memcached" variation
+    blew up, the "memcache" version was fine.
+
 ## 0.5.0 / May 2009
 
   * Added meta and entity store implementations based on the

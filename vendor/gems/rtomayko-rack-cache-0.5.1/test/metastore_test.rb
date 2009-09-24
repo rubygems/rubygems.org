@@ -272,7 +272,7 @@ describe 'Rack::Cache::MetaStore' do
       end
     end
   end
-  
+
   need_java 'entity store testing' do
     module Rack::Cache::AppEngine
       module MC
@@ -282,12 +282,12 @@ describe 'Rack::Cache::MetaStore' do
           def get(key); self[key]; end;
           def put(key, value, ttl = nil)
             self[key] = value
-          end  
+          end
 
         end
       end
     end
-  
+
     describe 'GAEStore' do
       it_should_behave_like 'A Rack::Cache::MetaStore Implementation'
       before :each do
@@ -296,7 +296,7 @@ describe 'Rack::Cache::MetaStore' do
         @entity_store = Rack::Cache::EntityStore::Heap.new
       end
     end
-  
+
   end
 
 end

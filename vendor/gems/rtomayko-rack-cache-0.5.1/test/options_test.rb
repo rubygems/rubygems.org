@@ -74,5 +74,4 @@ describe 'Rack::Cache::Options' do
     @options.should.respond_to :verbose?
     @options.verbose.should.not.be.nil
   end
-
 end
