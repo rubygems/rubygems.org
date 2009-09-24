@@ -40,14 +40,8 @@ config.after_initialize do
     set_current_bucket_to "gemcutter_production"
   end
 
-  if ENV['MEMCACHE_SERVERS']
-    require 'memcache'
-    require 'rack/cache'
-    memcache = ::MemCache.new(ENV['MEMCACHE_SERVERS'].split(','), :namespace => ENV['MEMCACHE_NAMESPACE'])
-
-    config.middleware.use(::Rack::Cache,
-      :verbose     => true,
-      :metastore   => memcache,
-      :entitystore => memcache)
-  end
+  config.middleware.use(::Rack::Cache,
+    :verbose     => true,
+    :metastore   => ::CACHE,
+    :entitystore => ::CACHE) if defined?(::CACHE)
 end
