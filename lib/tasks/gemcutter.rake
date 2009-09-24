@@ -251,6 +251,7 @@ namespace :gemcutter do
         gem_io = open(gem_name)
       rescue Exception => e
         puts ">> Problem fetching the gem: #{e}"
+        next
       end
 
       cutter = Gemcutter.new(nil, gem_io)
