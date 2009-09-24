@@ -1,0 +1,24 @@
+= Memcache-client FAQ
+
+== Does memcache-client work with Ruby 1.9?
+
+Yes, Ruby 1.9 is supported.  The test suite should pass completely on 1.8.6 and 1.9.1.
+
+
+== I'm seeing "execution expired" or "time's up!" errors, what's that all about?
+
+memcache-client 1.6.x+ now has socket operations timed out by default.  This is to prevent
+the Ruby process from hanging if memcached or starling get into a bad state, which has been
+seen in production by both 37signals and FiveRuns.  The default timeout is 0.5 seconds, which
+should be more than enough time under normal circumstances.  It's possible to hit a storm of
+concurrent events which cause this timer to expire: a large Ruby VM can cause the GC to take
+a while, while also storing a large (500k-1MB value), for example.
+
+You can increase the timeout or disable them completely with the following configuration:
+
+  Rails:
+  config.cache_store = :mem_cache_store, 'server1', 'server2', { :timeout => nil } # no timeout
+
+  native:
+  MemCache.new ['server1', 'server2'], { :timeout => 1.0 } # 1 second timeout
+

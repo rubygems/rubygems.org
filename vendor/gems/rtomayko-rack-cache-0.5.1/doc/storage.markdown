@@ -62,10 +62,9 @@ deployments so explicit configuration is advised.
 The default metastore and entitystore values can be specified when the
 __Rack::Cache__ object is added to the Rack middleware pipeline as follows:
 
-    use Rack::Cache do
-      set :metastore, 'file:/var/cache/rack/meta'
-      set :entitystore, 'file:/var/cache/rack/body'
-    end
+    use Rack::Cache,
+      :metastore => 'file:/var/cache/rack/meta',
+      :entitystore => 'file:/var/cache/rack/body'
 
 Alternatively, the `rack-cache.metastore` and `rack-cache.entitystore`
 variables may be set in the Rack environment by an upstream component.
@@ -82,8 +81,9 @@ use a specific storage implementation as well as pros and cons of each.
 
 Uses local process memory to store cached entries.
 
-    set :metastore,   'heap:/'
-    set :entitystore, 'heap:/'
+    use Rack::Cache,
+      :metastore   => 'heap:/',
+      :entitystore => 'heap:/'
 
 The heap storage backend is simple, fast, and mostly useless. All cache
 information is stored in each backend application's local process memory (using
@@ -102,8 +102,9 @@ is small and well understood.
 
 Stores cached entries on the filesystem.
 
-    set :metastore,   'file:/var/cache/rack/meta'
-    set :entitystore, 'file:/var/cache/rack/body'
+    use Rack::Cache,
+      :metastore   => 'file:/var/cache/rack/meta',
+      :entitystore => 'file:/var/cache/rack/body'
 
 The URI may specify an absolute, relative, or home-rooted path:
 
@@ -132,18 +133,19 @@ collision.
 Stores cached entries in a remote [memcached](http://www.danga.com/memcached/)
 instance.
 
-    set :metastore,   'memcached://localhost:11211/meta'
-    set :entitystore, 'memcached://localhost:11211/body'
+    use Rack::Cache,
+      :metastore   => 'memcached://localhost:11211/meta',
+      :entitystore => 'memcached://localhost:11211/body'
 
 The URI must specify the host and port of a remote memcached daemon. The path
 portion is an optional (but recommended) namespace that is prepended to each
 cache key.
 
-The memcached storage backend requires [Evan Weaver's memcached client library][e].
-This is a [fast][f] client implementation built on the SWIG/[libmemcached][l] C
-library. The library may be installed from Gem as follows:
+The memcached storage backend requires either the `memcache-client` or
+`memcached` libraries. By default, the `memcache-client` library is used;
+require the `memcached` library explicitly to use it instead.
 
-    sudo gem install memcached --no-rdoc --no-ri
+    gem install memcache-client
 
 Memcached storage is reasonably fast and allows multiple backends to share a
 single cache. It is also the only storage implementation that allows the cache

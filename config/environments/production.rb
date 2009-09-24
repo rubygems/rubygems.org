@@ -39,15 +39,16 @@ config.after_initialize do
   class ::VaultObject < AWS::S3::S3Object
     set_current_bucket_to "gemcutter_production"
   end
-
-  if ENV['MEMCACHE_SERVERS']
-    require 'memcache'
-    require 'rack/cache'
-    memcache = ::MemCache.new(ENV['MEMCACHE_SERVERS'].split, :namespace => ENV['MEMCACHE_NAMESPACE'])
-
-    config.middleware.use(::Rack::Cache,
-      :verbose     => true,
-      :metastore   => memcache,
-      :entitystore => memcache)
-  end
 end
+
+if ENV['MEMCACHE_SERVERS']
+  memcache_config = ENV['MEMCACHE_SERVERS'].split(',')
+  memcache_config << {:namespace => ENV['MEMCACHE_NAMESPACE']}
+  config.cache_store = :mem_cache_store, memcache_config
+
+  config.middleware.insert_after(::Rack::Lock, ::Rack::Cache,
+    :verbose     => true,
+    :metastore   => config.cache_store,
+    :entitystore => config.cache_store)
+end
+

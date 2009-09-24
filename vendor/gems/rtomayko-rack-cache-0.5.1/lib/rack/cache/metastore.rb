@@ -274,19 +274,27 @@ module Rack::Cache
       # Query parameter names and values are documented with the memcached
       # library: http://tinyurl.com/4upqnd
       def self.resolve(uri)
-        server = "#{uri.host}:#{uri.port || '11211'}"
-        options = parse_query(uri.query)
-        options.keys.each do |key|
-          value =
-            case value = options.delete(key)
-            when 'true' ; true
-            when 'false' ; false
-            else value.to_sym
-            end
-          options[k.to_sym] = value
+        if uri.respond_to?(:scheme)
+          server = "#{uri.host}:#{uri.port || '11211'}"
+          options = parse_query(uri.query)
+          options.keys.each do |key|
+            value =
+              case value = options.delete(key)
+              when 'true' ; true
+              when 'false' ; false
+              else value.to_sym
+              end
+            options[k.to_sym] = value
+          end
+
+          options[:namespace] = uri.path.to_s.sub(/^\//, '')
+
+          new server, options
+        else
+          # if the object provided is not a URI, pass it straight through
+          # to the underlying implementation.
+          new uri
         end
-        options[:namespace] = uri.path.sub(/^\//, '')
-        new server, options
       end
     end
 
@@ -359,7 +367,7 @@ module Rack::Cache
       else
         MemCache
       end
-    MEMCACHED = MemCache
+    MEMCACHED = MEMCACHE
 
     class GAEStore < MetaStore
       attr_reader :cache
