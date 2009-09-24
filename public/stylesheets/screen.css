@@ -38,7 +38,7 @@ pre {
   color: #fff;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
-  line-height: 1em;
+  line-height: 1.2em;
 }
 
 code {
@@ -47,7 +47,7 @@ code {
   background: #000;
   font-family: Monaco, Consolas, "Courier New", monospace;
   padding: 3px;
-  font-size: 0.7em;
+  font-size: 0.9em;
   color: #fff
 }
 
