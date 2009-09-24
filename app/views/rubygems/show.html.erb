@@ -27,12 +27,14 @@
   <div class="border">
     <div class="meta">
       <div class="top">
-        <% if @current_version.authors.present? %>
-          <div class="authors">
-            <h5>Authors</h5>
+        <div class="authors">
+          <h5>Authors</h5>
+          <% if @current_version.authors.present? %>
             <p><%= @current_version.authors %></p>
-          </div>
-        <% end %>
+          <% else %>
+            <p>N/A</p>
+          <% end %>
+        </div>
 
         <div class="downloads">
           <strong><%= number_with_delimiter(@rubygem.downloads) %></strong> downloads
