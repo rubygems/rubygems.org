@@ -25,7 +25,7 @@ module Vault
 
     def write_gem
       cache_path = "gems/#{spec.original_name}.gem"
-      VaultObject.store(cache_path, body.string, OPTIONS)
+      VaultObject.store(cache_path, StringIO.new(body), OPTIONS)
 
       quick_path = "quick/Marshal.#{Gem.marshal_version}/#{spec.original_name}.gemspec.rz"
       Gemcutter.indexer.abbreviate spec
