@@ -28,6 +28,7 @@ class Gemcutter
 
   def save
     if update
+      write_gem
       Delayed::Job.enqueue self
       notify("Successfully registered gem: #{rubygem.versions.latest.to_title}", 200)
     else
@@ -54,13 +55,12 @@ class Gemcutter
 
   def pull_spec
     begin
-      @raw_data = body.read
-      format = Gem::Format.from_io(StringIO.new(self.raw_data))
+      format = Gem::Format.from_io(body)
       @spec = format.spec
     rescue Exception => e
       notify("Gemcutter cannot process this gem.\n" + 
              "Please try rebuilding it and installing it locally to make sure it's valid.\n" +
-             "Error:\n#{e.message}", 422)
+             "Error:\n#{e.message}\n#{e.backtrace.join("\n")}", 422)
     end
   end
 
