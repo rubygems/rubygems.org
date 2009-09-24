@@ -553,8 +553,15 @@ body {
   text-decoration: underline;
 }
 
+.main .info .meta .versions .platform {
+  color: #B0A58C;
+  font-size: 0.85em;
+  margin-left: 4px;
+}
+
 .main .info .meta .versions small {
   color: #90856C;
+  margin-left: 4px;
 }
 
 .main .info .meta .dependencies {
