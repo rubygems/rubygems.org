@@ -17,7 +17,9 @@ class Gemcutter
   end
 
   def authorize
-    rubygem.pushable? || rubygem.owned_by?(@user) || notify("You do not have permission to push to this gem.", 403)
+    rubygem.pushable? or
+    rubygem.owned_by?(@user) or
+    notify("You do not have permission to push to this gem.", 403)
   end
 
   def save
