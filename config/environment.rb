@@ -44,5 +44,7 @@ require 'lib/core_ext/string'
 Gem.configuration.verbose = false
 ActiveRecord::Base.include_root_in_json = false
 
+require 'clearance/sessions_controller'
+
 require 'rdoc/markup/simple_markup'
 require 'rdoc/markup/simple_markup/to_html'
