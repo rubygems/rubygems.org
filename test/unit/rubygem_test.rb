@@ -285,7 +285,7 @@ class RubygemTest < ActiveSupport::TestCase
       setup do
         @specification = gem_specification_from_gem_fixture('test-0.0.0')
         @rubygem       = Rubygem.create(:name => @specification.name)
-        @rubygem.update_attributes_from_gem_specification!(@specification)
+        @version = @rubygem.update_attributes_from_gem_specification!(@specification)
       end
 
       should_change("total number of Rubygems", :by => 1) { Rubygem.count }
@@ -293,6 +293,7 @@ class RubygemTest < ActiveSupport::TestCase
       should_not_change("total number of Dependencies")   { Dependency.count }
 
       should "have the homepage set properly" do
+        assert_equal @version, Version.last
         assert_equal @specification.homepage, @rubygem.linkset.home
       end
     end

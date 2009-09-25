@@ -5,7 +5,7 @@ class Hostess < Sinatra::Default
   set :app_file, __FILE__
 
   def serve(path, redirect = false)
-    headers "Cache-Control" => "public, max-age=60"
+    headers "Cache-Control" => "public, max-age=3"
 
     if Rails.env.development? || Rails.env.test?
       send_file(path)
