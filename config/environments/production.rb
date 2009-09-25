@@ -42,13 +42,15 @@ config.after_initialize do
 end
 
 if ENV['MEMCACHE_SERVERS']
-  memcache_config = ENV['MEMCACHE_SERVERS'].split(',')
-  memcache_config << {:namespace => ENV['MEMCACHE_NAMESPACE']}
-  config.cache_store = :mem_cache_store, memcache_config
+  require 'memcache'
+  require 'rack/cache'
+
+  memcache_store = MemCache.new(ENV['MEMCACHE_SERVERS'].split(','),
+    {:namespace => ENV['MEMCACHE_NAMESPACE']})
 
   config.middleware.insert_after(::Rack::Lock, ::Rack::Cache,
     :verbose     => true,
-    :metastore   => config.cache_store,
-    :entitystore => config.cache_store)
+    :metastore   => memcache_store,
+    :entitystore => memcache_store)
 end
 
