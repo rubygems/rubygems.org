@@ -32,7 +32,8 @@ class GemcutterTest < ActiveSupport::TestCase
 
     should "have some state" do
       assert @cutter.respond_to?(:user)
-      assert @cutter.respond_to?(:raw_data)
+      assert @cutter.respond_to?(:version)
+      assert @cutter.respond_to?(:version_id)
       assert @cutter.respond_to?(:spec)
       assert @cutter.respond_to?(:message)
       assert @cutter.respond_to?(:code)
@@ -167,7 +168,9 @@ class GemcutterTest < ActiveSupport::TestCase
         stub(@rubygem).errors.stub!.full_messages
         stub(@rubygem).save
         stub(@rubygem).ownerships { @ownerships }
-        stub(@cutter).version.stub!.to_title { "latest version" }
+        stub(@cutter).version { @version }
+        stub(@version).to_title { "latest version" }
+        stub(@version).id { 1337 }
         stub(@cutter).rubygem { @rubygem }
         stub(@cutter).spec { @spec }
       end
