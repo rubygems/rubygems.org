@@ -40,4 +40,3 @@ config.after_initialize do
     set_current_bucket_to "gemcutter_staging"
   end
 end
-

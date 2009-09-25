@@ -8,9 +8,7 @@ ActionController::Routing::Routes.draw do |map|
     :format       => "json",
     :requirements => { :id => RUBYGEM_NAME_MATCHER }
 
-  map.resource :dashboard,
-               :only   => [],
-               :member => { :mine => :get, :subscribed => :get }
+  map.resource :dashboard, :only => :show
 
   map.resource :migrate,
                :only         => [:create, :update],
@@ -25,6 +23,10 @@ ActionController::Routing::Routes.draw do |map|
     rubygems.resource :owners, :only => [:show, :create, :destroy]
 
     rubygems.resource :subscription, :only => [:create, :destroy]
+
+    rubygems.resources :versions,
+      :only         => [:index, :show],
+      :requirements => { :rubygem_id => RUBYGEM_NAME_MATCHER, :id => /#{Gem::Version::VERSION_PATTERN}/ }
   end
 
   map.search "/search", :controller => "searches", :action => "new"
@@ -36,6 +38,8 @@ ActionController::Routing::Routes.draw do |map|
     :controller => 'clearance/sessions',
     :action     => 'destroy',
     :method     => :delete
+
+  map.resource :session, :only => [:new, :create, :destroy]
 
   map.root :controller => "home", :action => "index"
 end

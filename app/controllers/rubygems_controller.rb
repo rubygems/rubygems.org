@@ -10,7 +10,7 @@ class RubygemsController < ApplicationController
     respond_to do |format|
       format.html do
         params[:letter] = "a" unless params[:letter]
-        @gems = Rubygem.name_starts_with(params[:letter]).paginate(:page => params[:page])
+        @gems = Rubygem.name_starts_with(params[:letter]).with_versions.paginate(:page => params[:page])
       end
       format.atom do
         @versions = Version.published(20)
@@ -22,12 +22,11 @@ class RubygemsController < ApplicationController
   def show
     respond_to do |format|
       format.html do
-        @current_version = @gem.versions.current
-        @current_dependencies = @current_version.dependencies.runtime if @current_version
+        @current_version = @rubygem.versions.current
       end
       format.json do
-        if @gem.try(:hosted?)
-          render :json => @gem.to_json
+        if @rubygem.try(:hosted?)
+          render :json => @rubygem.to_json
         else
           render :json => "Not hosted here.", :status => :not_found
         end
@@ -40,7 +39,7 @@ class RubygemsController < ApplicationController
 
   def update
     if @linkset.update_attributes(params[:linkset])
-      redirect_to rubygem_path(@gem)
+      redirect_to rubygem_path(@rubygem)
       flash[:success] = "Gem links updated."
     else
       render :edit
@@ -55,8 +54,8 @@ class RubygemsController < ApplicationController
 
   protected
     def find_gem
-      @gem = Rubygem.find_by_name(params[:id])
-      if @gem.blank?
+      @rubygem = Rubygem.find_by_name(params[:id])
+      if @rubygem.blank?
         respond_to do |format|
           format.html do
             render :file => 'public/404.html'
@@ -69,11 +68,11 @@ class RubygemsController < ApplicationController
     end
 
     def load_gem
-      if !@gem.owned_by?(current_user)
+      if !@rubygem.owned_by?(current_user)
         flash[:warning] = "You do not have permission to edit this gem."
         redirect_to root_url
       end
 
-      @linkset = @gem.linkset
+      @linkset = @rubygem.linkset
     end
 end

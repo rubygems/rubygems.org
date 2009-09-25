@@ -1,0 +1,57 @@
+<% content_for :fold do %>
+  <div class="count">
+    <strong><%= number_with_delimiter(@count) %> gems</strong>
+    cut since july 2009
+  </div>
+  <div class="blurb">
+    <strong>Welcome to the next generation of RubyGem hosts.</strong>
+    <br />Find your gems easier, publish them faster, and have fun doing it.
+  </div>
+<% end %>
+
+<div class="border">
+  <ol class="instructions">
+    <li id="ready"><strong>ready</strong><span>gem install gemcutter</span></li>
+    <li id="set"><strong>set</strong><span>gem tumble</span></li>
+    <li id="go"><strong>go</strong><span>gem push yourgem-0.0.1.gem</span></li>
+  </ol>
+</div>
+
+<p class="pitch">
+  Gemcutter is <strong>next generation</strong> of gem hosting for the Ruby community.
+  <strong>Instantly publish</strong> your gems and install them.
+  <strong>Use the API</strong> to interact and find out more information about available gems.
+  <strong>Become a contributor</strong> and enhance the site with your own changes.
+</p>
+<div class="leaderboards">
+  <div class="grid_3" id="new_gems">
+    <strong>New Gems</strong>
+    <ol>
+      <% @latest.each do |rubygem| %>
+        <li>
+          <%= link_to rubygem, rubygem %>
+        </li>
+      <% end %>
+    </ol>
+  </div>
+  <div class="grid_3" id="most_downloaded">
+    <strong>Most Downloaded</strong>
+    <ol>
+      <% @downloaded.each do |rubygem| %>
+        <li>
+          <%= link_to "#{rubygem.name} (#{rubygem.downloads})", rubygem %>
+        </li>
+      <% end %>
+    </ol>
+  </div>
+  <div class="grid_3" id="just_updated">
+    <strong>Just Updated</strong>
+    <ol>
+      <% @updated.each do |version| %>
+        <li>
+          <%= link_to version.to_title, version.rubygem %>
+        </li>
+      <% end %>
+    </ol>
+  </div>
+</div>

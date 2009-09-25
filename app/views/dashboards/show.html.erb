@@ -1,0 +1,52 @@
+<div class="subscribed">
+  <h3>Latest Updates</h3><%= link_to image_tag("feed.png"), dashboard_url(:api_key => current_user.api_key, :format => :atom), :id => "feed", :title => "Latest Updates RSS Feed" %>
+  <div class="gems">
+    <% if @latest_updates.empty? %>
+      <p>
+        You're not subscribed to any gems yet. Visit a <%= link_to "gem page", rubygem_path("gemcutter") %> to subscribe to one!
+      </p>
+    <% else %>
+      <ol>
+        <% @latest_updates.each do |version| %>
+        <li>
+          <a href="<%= rubygem_url(version.rubygem) %>">
+            <div class="top"><strong><%= version.to_title %></strong><%= time_ago_in_words(version.created_at) %> ago</div>
+            <%=h truncate(version.rubygem.versions.current.info, :length => 100) %>
+          </a>
+        </li>
+        <% end %>
+      </ol>
+    <% end %>
+  </div>
+</div>
+
+<div class="mine">
+  <h3>My Gems</h3>
+  <div class="gems">
+    <% if @my_gems.empty? %>
+      <p>
+      You haven't pushed any gems yet. Perhaps check out the guides on <%= link_to "creating", page_url("create") %> a gem or <%= link_to "migrating", page_url("migrate") %> a gem from RubyForge.
+      </p>
+    <% else %>
+      <ol>
+      <% @my_gems.each do |gem| %>
+        <li><%= link_to gem, gem %></li>
+      <% end %>
+      </ol>
+    <% end %>
+  </div>
+
+  <% unless @subscribed_gems.empty? %>
+    <h3>My Subscriptions</h3>
+    <div class="gems">
+      <ol>
+      <% current_user.subscribed_gems.each do |gem| %>
+        <li><%= link_to gem, gem %></li>
+      <% end %>
+      </ol>
+    </div>
+  <% end %>
+</div>
+
+<div class="clear">
+</div>
