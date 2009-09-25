@@ -185,6 +185,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "have attributes set properly from the specification" do
+      assert ! @version.indexed
       assert_equal @spec.authors.join(', '), @version.authors
       assert_equal @spec.description,        @version.description
       assert_equal @spec.summary,            @version.summary
