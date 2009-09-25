@@ -38,6 +38,13 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.number, @version.to_s
     end
 
+    should "give no version flag for the latest version" do
+      new_version = Factory(:version, :rubygem => @version.rubygem, :built_at => 1.day.from_now)
+
+      assert_equal "gem install #{@version.rubygem.name} -v #{@version.number}", @version.to_install
+      assert_equal "gem install #{new_version.rubygem.name}", new_version.to_install
+    end
+
     should "give title for #to_title" do
       assert_equal "#{@version.rubygem.name} (#{@version.to_s})", @version.to_title
     end

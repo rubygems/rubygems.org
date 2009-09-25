@@ -16,8 +16,11 @@ class RubygemsHelperTest < ActionView::TestCase
     end
 
     should "create link for homepage" do
-      assert_equal link_to_page("Homepage", @linkset.home),
-        %{<a href="#{@linkset.home}">Homepage</a>}
+      assert_match @linkset.home, link_to_page("Homepage", @linkset.home)
+    end
+
+    should "be a nofollow link" do
+      assert_match 'rel="nofollow"', link_to_page("Homepage", @linkset.home)
     end
 
     should "not create link for wiki" do
