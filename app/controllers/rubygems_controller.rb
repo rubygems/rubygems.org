@@ -10,7 +10,7 @@ class RubygemsController < ApplicationController
     respond_to do |format|
       format.html do
         params[:letter] = "a" unless params[:letter]
-        @gems = Rubygem.name_starts_with(params[:letter]).with_versions.paginate(:page => params[:page])
+        @gems = Rubygem.name_starts_with(params[:letter]).by_name(:asc).with_versions.paginate(:page => params[:page])
       end
       format.atom do
         @versions = Version.published(20)
