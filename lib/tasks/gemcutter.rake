@@ -245,16 +245,17 @@ namespace :gemcutter do
       puts ">> Fetching #{gem_name}"
 
       # Skipping some bad gems...
-      next if gem_name.include?("appengine-sdk-1.2.5")
+      next if gem_name.include?("appengine-sdk-1.2.5") || gem_name.include?("BlueCloth")
 
       begin
-        cutter = Gemcutter.new(nil, open(gem_name))
+        gem_io = open(gem_name)
+        cutter = Gemcutter.new(nil, gem_io)
         cutter.pull_spec and cutter.find and cutter.save
         puts ">> #{cutter.message}"
       rescue Exception => e
-        puts ">> #{e.message}"
+        puts ">> Problem fetching the gem: #{e.message}"
+        puts e.backtrace
       end
     end
-
   end
 end
