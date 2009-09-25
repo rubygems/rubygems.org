@@ -54,6 +54,7 @@
       </div>
       <div class="prefix_1 grid_10 suffix_1 footer">
         <div class="links">
+          <%= link_to "Blog", "http://update.gemcutter.org" %>
           <%= link_to "FAQ", page_url("faq") %>
           <%= link_to "Discuss", "http://groups.google.com/group/gemcutter" %>
           <%= link_to "Code", "http://github.com/qrush/gemcutter" %>
@@ -67,5 +68,14 @@
       </div>
     </div>
     <%= javascript_include_tag "jquery", "jquery.easing.1.3", "humanmsg", "application", :cache => true %>
+    <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+    try {
+    var pageTracker = _gat._getTracker("UA-10315684-1");
+    pageTracker._trackPageview();
+    } catch(err) {}</script>
   </body>
 </html>
