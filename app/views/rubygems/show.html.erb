@@ -1,0 +1,70 @@
+<% @title = @rubygem.name %>
+<% @subtitle = @current_version %>
+
+<% if @rubygem.versions_count.zero? %>
+  <p>
+    This gem is not currently hosted on Gemcutter.
+  </p>
+<% else %>
+
+  <div id="admin">
+    <%= link_to "Edit", edit_rubygem_path(@rubygem), :id => "edit" if @rubygem.owned_by?(current_user) %>
+    <%= subscribe_link(@rubygem) %>
+    <%= unsubscribe_link(@rubygem) %>
+  </div>
+
+  <div id="markup">
+    <%= simple_markup(@current_version.info) %>
+  </div>
+
+  <div class="border">
+    <%= clippy(@current_version.to_install) %>
+    <div class="install">
+      <div class="instructions"><strong>install</strong><span><%= @current_version.to_install %></span></div>
+    </div>
+  </div>
+
+  <div class="border">
+    <div class="meta">
+      <div class="top">
+        <div class="authors">
+          <h5>Authors</h5>
+          <% if @current_version.authors.present? %>
+            <p><%= @current_version.authors %></p>
+          <% else %>
+            <p>N/A</p>
+          <% end %>
+        </div>
+
+        <div class="downloads">
+          <strong><%= number_with_delimiter(@rubygem.downloads) %></strong> downloads
+        </div>
+      </div>
+
+      <% unless @rubygem.linkset.empty? %>
+        <div class="links">
+          <h5>Links</h5>
+          <%= link_to_page "Homepage", @rubygem.linkset.home %>
+          <%= link_to_page "Source Code", @rubygem.linkset.code %>
+          <%= link_to_page "Documentation", @rubygem.linkset.docs %>
+          <%= link_to_page "Wiki", @rubygem.linkset.wiki %>
+          <%= link_to_page "Mailing List", @rubygem.linkset.mail %>
+          <%= link_to_page "Bug Tracker", @rubygem.linkset.bugs %>
+        </div>
+      <% end %>
+
+      <div class="versions">
+        <h5>Versions</h5>
+        <ol>
+          <%= render @rubygem.versions.limited(5) %>
+        </ol>
+        <% if @rubygem.versions_count > 5 %>
+          <%= link_to "Show all versions (#{@rubygem.versions_count} total)", rubygem_versions_url(@rubygem), :class => "more" %>
+        <% end %>
+      </div>
+
+      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @current_version.dependencies.runtime } %>
+      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @current_version.dependencies.development } %>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,15 @@
+<% @title = "search" %>
+<% if @gems %>
+  <% @subtitle = "for #{h(params[:query])}" %>
+  <p class="entries">
+    <%= page_entries_info @gems, :entry_name => 'gem' %>
+  </p>
+  <% if @gems.present? %>
+    <div class="gems border">
+      <ol>
+        <%= render @gems %>
+      </ol>
+    </div>
+    <%= will_paginate @gems %>
+  <% end %>
+<% end %>

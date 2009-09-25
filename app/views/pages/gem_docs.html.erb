@@ -1,0 +1,68 @@
+<% @title = "Gem Docs" %>
+<% @subtitle = "how to use gemcutter" %>
+<p>
+For gem publishers, you'll want to install the gemcutter gem to get started: <code>gem install gemcutter</code> Once the gem is installed, several new <code>gem</code> commands are available to you, and they are explained in detail below.
+</p>
+
+<h4 id="tumble">gem tumble</h4>
+<p>
+This command uses Gemcutter as your primary RubyGem source. If you run this command a second time, it will remove Gemcutter as your primary source if you need to go back for some reason.
+<pre><code>$ gem tumble
+Thanks for using Gemcutter!
+Your gem sources are now:
+- http://gemcutter.org
+- http://gems.rubyforge.org
+- http://gems.github.com
+
+$ gem tumble
+Thanks for using Gemcutter!
+Your gem sources are now:
+- http://gems.rubyforge.org
+- http://gems.github.com</code></pre>
+</p>
+
+<h4 id="push">gem push</h4>
+<p>
+Publish your gems to the world with one command. All that's required is your very own Gemcutter account. The first time you push, you'll be asked to log in, and then Gemcutter will save your API key to <code>~/.gemrc</code>. Once your gem is pushed, it is processed, indexed, and uploaded to Amazon S3 behind the scenes and should be available for download within moments.
+<pre><code>$ gem push pkg/gemcutter-0.1.3.gem
+Enter your Gemcutter credentials. Don't have an account yet? Create one at http://gemcutter.org/sign_up
+Email:   nick@quaran.to
+Password:
+Signed in. Your api key has been stored in ~/.gemrc
+Pushing gem to Gemcutter...
+Successfully registered gem: gemcutter (0.1.3)</code></pre>
+</p>
+
+<h4 id="migrate">gem migrate</h4>
+<p>
+If you've got a project on RubyForge, this is how you can take over the keys for pushing to Gemcutter. It works by looking at the <code>rubyforge_project</code> from your gemspec, and then uploads a secret key to your project's web space on rubyforge.org. If you've having trouble with the migration process, feel free to post on the list or bug us in IRC (#gemcutter on Freenode) and we'll get it figured out.
+<pre><code>$ gem migrate jekyll
+Starting migration of jekyll from RubyForge...
+A migration token has been created.
+Uploading the migration token to jekyll.rubyforge.org. Please enter your RubyForge login:
+Login: qrush
+Password:
+Successfully uploaded your token.
+Asking Gemcutter to verify the upload...
+Your gem has been migrated! You can now push new versions with: `gem push jekyll`</code></pre>
+</p>
+
+<h4 id="owner">gem owner</h4>
+<p>
+This command is used to give access to other users to push gems. They will also be able to edit the links through Gemcutter's web interface. You'll need to know the user's email address and they'll need a confirmed account.
+<pre><code>$ gem owner gemcutter
+Owners for gem: gemcutter
+- josh@technicalpickles.com
+- nick@quaran.to
+
+$ gem owner gemcutter --remove josh@technicalpickles.com
+Removed owner: josh@technicalpickles.com
+Owners for gem: gemcutter
+- nick@quaran.to
+
+$ gem owner gemcutter --add josh@technicalpickles.com
+Added owner: josh@technicalpickles.com
+Owners for gem: gemcutter
+- josh@technicalpickles.com
+- nick@quaran.to</code></pre>
+</p>

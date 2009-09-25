@@ -1,8 +1,0 @@
--@title = "subscribed gems"
--@subtitle = ""
-.gems.grid_12
-  -if @gems.empty?
-    You're not subscribed to any gems on Gemcutter yet.
-  -else
-    -@gems.each do |gem|
-      =link_to gem, rubygem_path(gem)

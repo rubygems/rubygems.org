@@ -38,9 +38,9 @@ def regenerate_index
 end
 
 def create_gem(owner, opts = {})
-  @gem = Factory(:rubygem, :name => opts[:name] || Factory.next(:name))
-  Factory(:version, :rubygem => @gem)
-  @gem.ownerships.create(:user => owner, :approved => true)
+  @rubygem = Factory(:rubygem, :name => opts[:name] || Factory.next(:name))
+  Factory(:version, :rubygem => @rubygem)
+  @rubygem.ownerships.create(:user => owner, :approved => true)
 end
 
 def gem_specification_from_gem_fixture(name)

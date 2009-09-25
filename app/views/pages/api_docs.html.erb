@@ -1,0 +1,20 @@
+<% @title = "API Docs" %>
+<% @subtitle = "get your code on" %>
+<p>
+The API is a work in progress, and <%= link_to "can use your help!", "http://github.com/qrush/gemcutter" %>. The <%= link_to "gemcutter gem", rubygem_url("gemcutter") %> uses the API to push gems, add owners, and more. Check out all of the gem commands <%= link_to "here", page_url("gem_docs") %>.
+</p>
+<h4>/gems/[name].json</h4>
+<p>
+  Returns some basic information about the given gem. For example, here's Rails:
+  <pre><code>$ curl http://gemcutter.org/gems/rails.json | prettify_json
+{
+"name": "rails",
+"downloads": 10,
+"info": "Rails is a framework for building web-application using CGI, FCGI, mod_ruby,
+         or WEBrick on top of either MySQL, PostgreSQL, SQLite, DB2, SQL Server, or 
+         Oracle with eRuby- or Builder-based templates.",
+"version": "2.3.3",
+"authors": "David Heinemeier Hansson",
+"rubyforge_project": "rails"
+}</code></pre>
+</p>

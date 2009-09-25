@@ -25,7 +25,7 @@ class MigrationsControllerTest < ActionController::TestCase
     should "respond with a 403 if the gem is already owned" do
       other_user = Factory(:email_confirmed_user)
       create_gem(other_user)
-      post :create, :rubygem_id => @gem.to_param
+      post :create, :rubygem_id => @rubygem.to_param
       assert_response :forbidden
     end
 
