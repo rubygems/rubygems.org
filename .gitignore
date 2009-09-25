@@ -10,3 +10,4 @@ tmp/*
 db/*.sqlite3
 config/database.yml
 *.sql
+_site/
