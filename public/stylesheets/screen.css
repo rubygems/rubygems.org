@@ -739,12 +739,24 @@ body {
 
 .footer .links #thoughtbot {
   float: right;
+  font-size: 0.9em;
+  text-align: right;
+  margin-top: -25px;
 }
 
 .footer .links #heroku {
+  text-align: right;
+  margin-top: -25px;
+  font-size: 1em;
   float: right;
   margin-right: 25px;
   margin-bottom: 20px;
+}
+
+.footer .links #thoughtbot img,
+.footer .links #heroku img {
+  padding-top: 5px;
+  display: block;
 }
 
 .footer a:hover {
