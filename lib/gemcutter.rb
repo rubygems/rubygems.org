@@ -17,8 +17,9 @@ class Gemcutter
   end
 
   def authorize
+    user.rubyforge_importer? or
     rubygem.pushable? or
-    rubygem.owned_by?(@user) or
+    rubygem.owned_by?(user) or
     notify("You do not have permission to push to this gem.", 403)
   end
 
@@ -41,7 +42,7 @@ class Gemcutter
 
   def update
     Rubygem.transaction do
-      rubygem.build_ownership(user) if user
+      rubygem.build_ownership(user) unless user.try(:rubyforge_importer?)
       rubygem.save!
       @version = rubygem.update_attributes_from_gem_specification!(spec)
     end

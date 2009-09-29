@@ -122,7 +122,13 @@ class GemcutterTest < ActiveSupport::TestCase
     end
 
     context "checking if the rubygem can be pushed to" do
+      should "be true if rubyforge user is pushing to us" do
+        stub(@user).rubyforge_importer? { true }
+        assert @cutter.authorize
+      end
+
       should "be true if rubygem is new" do
+        stub(@user).rubyforge_importer? { false }
         stub(@cutter).rubygem { Rubygem.new }
         assert @cutter.authorize
       end
