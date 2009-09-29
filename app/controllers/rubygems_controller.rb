@@ -9,7 +9,8 @@ class RubygemsController < ApplicationController
   def index
     respond_to do |format|
       format.html do
-        params[:letter] = "a" unless params[:letter]
+        params[:letter] = 'A' unless params[:letter]
+        params[:letter].upcase! if params[:letter].size == 1
         @gems = Rubygem.name_starts_with(params[:letter]).by_name(:asc).with_versions.paginate(:page => params[:page])
       end
       format.atom do
