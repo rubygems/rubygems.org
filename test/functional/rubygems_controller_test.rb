@@ -228,6 +228,9 @@ class RubygemsControllerTest < ActionController::TestCase
         assert_have_selector "a[href='#{rubygem_path(g)}']"
       end
     end
+    should "display uppercase A" do
+      assert_contain "starting with A"
+    end
   end
 
   context "On GET to index as an atom feed" do
@@ -259,6 +262,9 @@ class RubygemsControllerTest < ActionController::TestCase
     should "render links" do
       assert_contain @zgem.name
       assert_have_selector "a[href='#{rubygem_path(@zgem)}']"
+    end
+    should "display uppercase letter" do
+      assert_contain "starting with Z"
     end
   end
 
