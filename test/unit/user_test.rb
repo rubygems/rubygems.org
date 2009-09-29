@@ -36,5 +36,24 @@ class UserTest < ActiveSupport::TestCase
         assert_does_not_contain @user.subscribed_gems, @unsubscribed_gem
       end
     end
+
+    context "with the rubyforge user set up" do
+      setup do
+        ENV["RUBYFORGE_IMPORTER"] = "42"
+      end
+
+      should "be true if rubyforge user is pushing to us" do
+        stub(@user).id { ENV["RUBYFORGE_IMPORTER"] }
+        assert @user.rubyforge_importer?
+      end
+
+      should "be false if it's not the rubyforge user" do
+        assert ! @user.rubyforge_importer?
+      end
+
+      teardown do
+        ENV["RUBYFORGE_USER"] = nil
+      end
+    end
   end
 end
