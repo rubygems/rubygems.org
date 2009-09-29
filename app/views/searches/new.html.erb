@@ -1,6 +1,6 @@
 <% @title = "search" %>
 <% if @gems %>
-  <% @subtitle = "for #{h(params[:query])}" %>
+  <% @subtitle = "for <em>#{h(params[:query])}</em>" %>
   <p class="entries">
     <%= page_entries_info @gems, :entry_name => 'gem' %>
   </p>
