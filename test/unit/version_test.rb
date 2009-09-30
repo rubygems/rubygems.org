@@ -118,6 +118,20 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
+  context "with versions created out of order" do
+    setup do
+      @gem = Factory(:rubygem)
+      Factory.create(:version, :rubygem => @gem, :number => '0.5')
+      Factory.create(:version, :rubygem => @gem, :number => '0.3')
+      Factory.create(:version, :rubygem => @gem, :number => '0.7')
+      Factory.create(:version, :rubygem => @gem, :number => '0.2')
+    end
+
+    should "be in the proper order" do
+      assert_equal ['0.7', '0.5', '0.3', '0.2'], @gem.reload.versions.map(&:number)
+    end
+  end
+
   context "with a few versions" do
     setup do
       @thin = Factory(:version, :authors => "thin", :created_at => 1.year.ago)

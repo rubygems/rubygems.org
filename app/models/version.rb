@@ -1,6 +1,8 @@
 class Version < ActiveRecord::Base
   include Pacecar
 
+  default_scope :order => 'position'
+
   belongs_to :rubygem, :counter_cache => true
   has_many :dependencies, :dependent => :destroy
 
@@ -18,6 +20,7 @@ class Version < ActiveRecord::Base
   named_scope :release,    { :conditions => { :prerelease => false }}
 
   before_save :update_prerelease
+  after_save  :reorder_versions
 
   def validate
     if new_record? && Version.exists?(:rubygem_id => rubygem_id, :number => number, :platform => platform)
@@ -44,6 +47,10 @@ class Version < ActiveRecord::Base
   def update_prerelease
     self[:prerelease] = to_gem_version.prerelease?
     true
+  end
+
+  def reorder_versions
+    rubygem.reorder_versions
   end
 
   def to_gem_version
