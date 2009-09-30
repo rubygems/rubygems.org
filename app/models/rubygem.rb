@@ -5,7 +5,7 @@ class Rubygem < ActiveRecord::Base
   has_many :ownerships
   has_many :subscribers, :through => :subscriptions, :source => :user
   has_many :subscriptions
-  has_many :versions, :dependent => :destroy, :order => "number desc, built_at desc" do
+  has_many :versions, :dependent => :destroy do
     def latest
       self.find(:first, :order => "updated_at desc")
     end
@@ -22,7 +22,7 @@ class Rubygem < ActiveRecord::Base
 
   named_scope :with_versions, :conditions => ["versions_count > 0"]
   named_scope :search, lambda { |query| {
-    :conditions => ["upper(name) like upper(:query) or upper(versions.description) like upper(:query)", 
+    :conditions => ["upper(name) like upper(:query) or upper(versions.description) like upper(:query)",
       {:query => "%#{query}%"}],
     :include    => [:versions],
     :order      => "name asc" }
@@ -117,6 +117,14 @@ class Rubygem < ActiveRecord::Base
 
     # TODO: Refactor all of this like crazy
     find_or_initialize_version_from_spec(spec)
+  end
+
+  def reorder_versions
+    reload.versions.sort.reverse.each_with_index do |version, index|
+      Version.without_callbacks(:reorder_versions) do
+        version.update_attribute(:position, index)
+      end
+    end
   end
 
   private
