@@ -15,7 +15,7 @@ class VersionsControllerTest < ActionController::TestCase
     should_respond_with :success
     should_render_template :index
     should_assign_to(:rubygem) { @rubygem }
-    should_assign_to(:versions) { @rubygem.versions }
+    should_assign_to(:versions) { @rubygem.reload.versions }
 
     should "show all related versions" do
       @versions.each do |version|
