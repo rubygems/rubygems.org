@@ -125,10 +125,34 @@ class VersionTest < ActiveSupport::TestCase
       Factory.create(:version, :rubygem => @gem, :number => '0.3')
       Factory.create(:version, :rubygem => @gem, :number => '0.7')
       Factory.create(:version, :rubygem => @gem, :number => '0.2')
+      @gem.reload # make sure to reload the versions just created
     end
 
     should "be in the proper order" do
-      assert_equal ['0.7', '0.5', '0.3', '0.2'], @gem.reload.versions.map(&:number)
+      assert_equal ['0.7', '0.5', '0.3', '0.2'], @gem.versions.map(&:number)
+    end
+
+    should "know its latest version" do
+      assert_equal '0.7', @gem.versions.latest.number
+    end
+  end
+
+  context "with multiple rubygems and versions created out of order" do
+    setup do
+      @gem_one = Factory(:rubygem)
+      @gem_two = Factory(:rubygem)
+      @version_one_latest  = Factory.create(:version, :rubygem => @gem_one, :number => '0.2')
+      @version_one_earlier = Factory.create(:version, :rubygem => @gem_one, :number => '0.1')
+      @version_two_latest  = Factory.create(:version, :rubygem => @gem_two, :number => '1.0')
+      @version_two_earlier = Factory.create(:version, :rubygem => @gem_two, :number => '0.5')
+    end
+
+    should "be able to fetch the latest versions" do
+      assert_contains Version.latest, @version_one_latest
+      assert_contains Version.latest, @version_two_latest
+
+      assert_does_not_contain Version.latest, @version_one_earlier
+      assert_does_not_contain Version.latest, @version_two_earlier
     end
   end
 
