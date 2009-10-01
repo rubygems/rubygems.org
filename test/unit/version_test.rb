@@ -125,14 +125,15 @@ class VersionTest < ActiveSupport::TestCase
       Factory.create(:version, :rubygem => @gem, :number => '0.3')
       Factory.create(:version, :rubygem => @gem, :number => '0.7')
       Factory.create(:version, :rubygem => @gem, :number => '0.2')
+      @gem.reload # make sure to reload the versions just created
     end
 
     should "be in the proper order" do
-      assert_equal ['0.7', '0.5', '0.3', '0.2'], @gem.reload.versions.map(&:number)
+      assert_equal ['0.7', '0.5', '0.3', '0.2'], @gem.versions.map(&:number)
     end
 
     should "know its latest version" do
-      assert_equal '0.7', @gem.reload.versions.latest.number
+      assert_equal '0.7', @gem.versions.latest.number
     end
   end
 
