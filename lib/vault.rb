@@ -12,11 +12,7 @@ module Vault
     end
 
     def latest_index
-      Version.release.with_indexed.inject({}) { |memo, version|
-        key = "#{version.rubygem_id}-#{version.platform}"
-        memo[key] = version if memo[key].blank? || (version <=> memo[key]) == 1
-        memo
-      }.values.map(&:to_index)
+      Version.latest.map(&:to_index)
     end
 
     def prerelease_index
