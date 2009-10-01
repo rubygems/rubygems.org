@@ -7,10 +7,6 @@ class Rubygem < ActiveRecord::Base
   has_many :subscriptions
   has_many :versions, :dependent => :destroy do
     def latest
-      self.find(:first, :order => "updated_at desc")
-    end
-
-    def current
       self.find(:first)
     end
   end
@@ -61,15 +57,15 @@ class Rubygem < ActiveRecord::Base
   end
 
   def to_s
-    versions.current.try(:to_title) || name
+    versions.latest.try(:to_title) || name
   end
 
   def to_json
     {:name              => name,
      :downloads         => downloads,
-     :version           => versions.current.number,
-     :authors           => versions.current.authors,
-     :info              => versions.current.info,
+     :version           => versions.latest.number,
+     :authors           => versions.latest.authors,
+     :info              => versions.latest.info,
      :rubyforge_project => rubyforge_project}.to_json
   end
 

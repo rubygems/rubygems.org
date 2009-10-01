@@ -87,7 +87,7 @@ class Version < ActiveRecord::Base
 
   def to_install
     command = "gem install #{rubygem.name}"
-    command << " -v #{number}" if rubygem.versions.current != self
+    command << " -v #{number}" if rubygem.versions.latest != self
     command
   end
 end

@@ -264,19 +264,19 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to show" do
     setup do
-      @current_version = Factory(:version)
-      @rubygem = @current_version.rubygem
+      @latest_version = Factory(:version)
+      @rubygem = @latest_version.rubygem
       get :show, :id => @rubygem.to_param
     end
 
     should_respond_with :success
     should_render_template :show
     should_assign_to :rubygem
-    should_assign_to(:current_version) { @current_version }
+    should_assign_to(:latest_version) { @latest_version }
     should "render info about the gem" do
       assert_contain @rubygem.name
-      assert_contain @current_version.number
-      assert_contain @current_version.built_at.to_date.to_formatted_s(:long)
+      assert_contain @latest_version.number
+      assert_contain @latest_version.built_at.to_date.to_formatted_s(:long)
     end
   end
 
@@ -284,7 +284,7 @@ class RubygemsControllerTest < ActionController::TestCase
     setup do
       @rubygem = Factory(:rubygem)
       @older_version = Factory(:version, :number => "1.0.0", :rubygem => @rubygem)
-      @current_version = Factory(:version, :number => "2.0.0", :rubygem => @rubygem)
+      @latest_version = Factory(:version, :number => "2.0.0", :rubygem => @rubygem)
       get :show, :id => @rubygem.to_param
     end
 
@@ -293,8 +293,8 @@ class RubygemsControllerTest < ActionController::TestCase
     should_assign_to :rubygem
     should "render info about the gem" do
       assert_contain @rubygem.name
-      assert_contain @current_version.number
-      assert_contain @current_version.built_at.to_date.to_formatted_s(:long)
+      assert_contain @latest_version.number
+      assert_contain @latest_version.built_at.to_date.to_formatted_s(:long)
 
       assert_contain "Versions"
       assert_contain @rubygem.versions.last.number
@@ -327,7 +327,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     should_respond_with :success
     should_render_template :show
-    should_assign_to(:current_version) { @version }
+    should_assign_to(:latest_version) { @version }
     should "show runtime dependencies and development dependencies" do
       assert_contain @runtime.rubygem.name
       assert_contain @development.rubygem.name
