@@ -22,7 +22,7 @@ class RubygemsController < ApplicationController
   def show
     respond_to do |format|
       format.html do
-        @current_version = @rubygem.versions.current
+        @latest_version = @rubygem.versions.latest
       end
       format.json do
         if @rubygem.try(:hosted?)

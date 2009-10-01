@@ -1,5 +1,5 @@
 <% @title = @rubygem.name %>
-<% @subtitle = @current_version %>
+<% @subtitle = @latest_version %>
 
 <% if @rubygem.versions_count.zero? %>
   <p>
@@ -14,13 +14,13 @@
   </div>
 
   <div id="markup">
-    <%= simple_markup(@current_version.info) %>
+    <%= simple_markup(@latest_version.info) %>
   </div>
 
   <div class="border">
-    <%= clippy(@current_version.to_install) %>
+    <%= clippy(@latest_version.to_install) %>
     <div class="install">
-      <div class="instructions"><strong>install</strong><span><%= @current_version.to_install %></span></div>
+      <div class="instructions"><strong>install</strong><span><%= @latest_version.to_install %></span></div>
     </div>
   </div>
 
@@ -29,8 +29,8 @@
       <div class="top">
         <div class="authors">
           <h5>Authors</h5>
-          <% if @current_version.authors.present? %>
-            <p><%= @current_version.authors %></p>
+          <% if @latest_version.authors.present? %>
+            <p><%= @latest_version.authors %></p>
           <% else %>
             <p>N/A</p>
           <% end %>
@@ -63,8 +63,8 @@
         <% end %>
       </div>
 
-      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @current_version.dependencies.runtime } %>
-      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @current_version.dependencies.development } %>
+      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.runtime } %>
+      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.development } %>
     </div>
   </div>
 <% end %>
