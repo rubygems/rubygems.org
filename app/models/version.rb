@@ -16,6 +16,7 @@ class Version < ActiveRecord::Base
     { :conditions => { :rubygem_id => user.subscribed_gem_ids } }
   }
 
+  named_scope :latest,     { :conditions => { :position   => 0     }}
   named_scope :prerelease, { :conditions => { :prerelease => true  }}
   named_scope :release,    { :conditions => { :prerelease => false }}
 
