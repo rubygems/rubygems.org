@@ -39,7 +39,7 @@ class OwnershipTest < ActiveSupport::TestCase
     end
 
     should "use gem name if rubyforge project doesn't exist" do
-      @ownership.rubygem.versions.current.update_attribute(:rubyforge_project, nil)
+      @ownership.rubygem.versions.latest.update_attribute(:rubyforge_project, nil)
 
       gem_name = @ownership.rubygem.name
       FakeWeb.register_uri(:get, "http://#{gem_name}.rubyforge.org/migrate-#{gem_name}.html", :body => @ownership.token + "\n")

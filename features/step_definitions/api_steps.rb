@@ -27,7 +27,7 @@ When /^I migrate the gem "([^\"]*)" with my api key$/ do |name|
   visit migrate_path(:rubygem_id => rubygem.to_param), :post
   token = response.body
 
-  subdomain = rubygem.versions.current.rubyforge_project
+  subdomain = rubygem.versions.latest.rubyforge_project
 
   FakeWeb.register_uri(:get,
                        "http://#{subdomain}.rubyforge.org/migrate-#{name}.html",

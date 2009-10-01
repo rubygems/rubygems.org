@@ -137,13 +137,13 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "return current version" do
-      assert_equal @rubygem.versions.first, @rubygem.versions.current
+      assert_equal @rubygem.versions.first, @rubygem.versions.latest
     end
 
     should "return name with version for #to_s" do
       @rubygem.save
       @rubygem.versions.create(:number => "0.0.0")
-      assert_equal "#{@rubygem.name} (#{@rubygem.versions.current})", @rubygem.to_s
+      assert_equal "#{@rubygem.name} (#{@rubygem.versions.latest})", @rubygem.to_s
     end
 
     should "return name for #to_s if current version doesn't exist" do
@@ -160,10 +160,10 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal @rubygem.name, hash["name"]
       assert_equal @rubygem.slug, hash["slug"]
       assert_equal @rubygem.downloads, hash["downloads"]
-      assert_equal @rubygem.versions.current.number, hash["version"]
-      assert_equal @rubygem.versions.current.authors, hash["authors"]
-      assert_equal @rubygem.versions.current.info, hash["info"]
-      assert_equal @rubygem.versions.current.rubyforge_project, hash["rubyforge_project"]
+      assert_equal @rubygem.versions.latest.number, hash["version"]
+      assert_equal @rubygem.versions.latest.authors, hash["authors"]
+      assert_equal @rubygem.versions.latest.info, hash["info"]
+      assert_equal @rubygem.versions.latest.rubyforge_project, hash["rubyforge_project"]
     end
   end
 
@@ -189,7 +189,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "return the current rubyforge project with a version" do
-      assert_equal @rubygem_with_version.versions.current.rubyforge_project,
+      assert_equal @rubygem_with_version.versions.latest.rubyforge_project,
                    @rubygem_with_version.rubyforge_project
     end
   end
