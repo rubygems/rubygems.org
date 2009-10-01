@@ -62,6 +62,14 @@ ActiveRecord::Schema.define(:version => 20091001153907) do
   add_index "ownerships", ["rubygem_id"], :name => "index_ownerships_on_rubygem_id"
   add_index "ownerships", ["user_id"], :name => "index_ownerships_on_user_id"
 
+  create_table "requirements", :force => true do |t|
+    t.integer "version_id"
+    t.integer "dependency_id"
+  end
+
+  add_index "requirements", ["dependency_id"], :name => "index_requirements_on_dependency_id"
+  add_index "requirements", ["version_id"], :name => "index_requirements_on_version_id"
+
   create_table "rubygems", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -95,8 +103,8 @@ ActiveRecord::Schema.define(:version => 20091001153907) do
     t.string   "remember_token",     :limit => 128
   end
 
+  add_index "users", ["confirmation_token", "id"], :name => "index_users_on_id_and_confirmation_token"
   add_index "users", ["email"], :name => "index_users_on_email"
-  add_index "users", ["id", "confirmation_token"], :name => "index_users_on_id_and_confirmation_token"
   add_index "users", ["id", "token"], :name => "index_users_on_id_and_token"
   add_index "users", ["remember_token"], :name => "index_users_on_remember_token"
   add_index "users", ["token"], :name => "index_users_on_token"
@@ -117,7 +125,12 @@ ActiveRecord::Schema.define(:version => 20091001153907) do
     t.integer  "position"
   end
 
+  add_index "versions", ["built_at"], :name => "index_versions_on_built_at"
+  add_index "versions", ["created_at"], :name => "index_versions_on_created_at"
+  add_index "versions", ["indexed"], :name => "index_versions_on_indexed"
+  add_index "versions", ["number"], :name => "index_versions_on_number"
   add_index "versions", ["position"], :name => "index_versions_on_position"
+  add_index "versions", ["prerelease"], :name => "index_versions_on_prerelease"
   add_index "versions", ["rubygem_id"], :name => "index_versions_on_rubygem_id"
 
 end
