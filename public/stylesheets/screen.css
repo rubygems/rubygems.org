@@ -341,6 +341,10 @@ body {
   visibility: hidden;
 }
 
+.main .info h3 em {
+  color: #53543e;
+}
+
 .main .info ol, .main .info ul {
   color: #5e543e;
   margin: 1.5em 36px;
