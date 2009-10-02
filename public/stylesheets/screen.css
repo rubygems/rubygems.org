@@ -492,23 +492,22 @@ body {
 }
 
 .main .info .meta .top {
-  height: 5em;
   padding-bottom: 1em;
   border-bottom: 1px solid #B4AC99;
 }
 
 .main .info .meta .authors {
-  float: left;
-  width: 70%;
+  width: 435px;
+  display: inline-block;
 }
 
 .main .info .meta .downloads {
-  float: left;
   width: 30%;
   text-align: right;
   font-size: 1.3em;
   color: #ABA28D;
   display: inline-block;
+  vertical-align: top;
 }
 
 .main .info .meta .downloads strong {
