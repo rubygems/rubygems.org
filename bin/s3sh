@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+require File.join(File.dirname(__FILE__), "../vendor/bundler_gems/environment")
+load File.join(File.dirname(__FILE__), "../vendor/bundler_gems/gems/aws-s3-0.6.2/bin/s3sh")
