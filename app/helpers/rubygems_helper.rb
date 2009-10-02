@@ -9,7 +9,11 @@ module RubygemsHelper
   end
 
   def simple_markup(text)
-     SM::SimpleMarkup.new.convert(text, SM::ToHtml.new)
+    if text =~ /^==+ [A-Z]/
+      SM::SimpleMarkup.new.convert(text, SM::ToHtml.new)
+    else
+      content_tag :p, text
+    end
   end
 
   def clippy(text, bgcolor='#AADD44')
