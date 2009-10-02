@@ -1,0 +1,18 @@
+h1. Using Cucumber with Java
+
+This directory contains code to demonstrate how Cucumber can be used to develop Java code.
+
+h2. Installing required gems
+
+jruby -S gem install cucumber
+jruby -S gem install diff-lcs
+
+h2. Running the scenarios
+
+Open a shell in this directory (java) and execute the following command:
+
+<pre><code>
+ant
+</code></pre>
+
+There is a deliberate error. See if you can fix it!
