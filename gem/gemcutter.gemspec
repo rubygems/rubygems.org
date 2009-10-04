@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gemcutter}
-  s.version = "0.1.3"
+  s.version = "0.1.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Quaranto"]
-  s.date = %q{2009-08-21}
+  s.date = %q{2009-10-03}
   s.description = %q{Adds several commands for using gemcutter.org, such as pushing new gems, migrating gems from RubyForge, and more.}
   s.email = %q{nick@quaran.to}
   s.files = [
@@ -31,13 +31,15 @@ Gem::Specification.new do |s|
     gem migrate       take over your gem from RubyForge on Gemcutter
     gem owner         allow/disallow others to push to your gems
 
+ Make sure you're running at least RubyGems 1.3.3 to use these plugins.
+
 ========================================================================
 
 }
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{gemcutter}
-  s.rubygems_version = %q{1.3.3}
+  s.rubygems_version = %q{1.3.5}
   s.summary = %q{Commands to interact with gemcutter.org}
   s.test_files = [
     "test/command_helper.rb"

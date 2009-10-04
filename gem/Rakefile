@@ -34,6 +34,8 @@ begin
     gem migrate       take over your gem from RubyForge on Gemcutter
     gem owner         allow/disallow others to push to your gems
 
+ Make sure you're running at least RubyGems 1.3.3 to use these plugins.
+
 ========================================================================
 
 MESSAGE
