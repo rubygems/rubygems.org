@@ -135,7 +135,7 @@ class MigrateCommandTest < CommandTest
 
     should "not ask for a username and password if it can be loaded from the user home" do
       stub(File).exists? { true }
-      stub(YAML).load_file { { 'username' => "user", 'password' => "password" } }
+      stub(YAML).load_file { { 'username' => "user", 'password' => "secret" } }
       @command.upload_token(@token)
 
       # TODO: figure out how to test the upload! in the block
