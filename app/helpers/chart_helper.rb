@@ -1,6 +1,6 @@
 module ChartHelper
   def most_downloaded_chart(rubygems)
-    chart = GoogleChart::BarChart.new('680x360', "Most Downloads", :horizontal, false) do |bc|
+    chart = GoogleChart::BarChart.new('530x360', "Most Downloads", :horizontal, false) do |bc|
       downloads = rubygems.map(&:downloads)
 
       bc.axis :y, :labels    => rubygems.map { |rubygem| "#{rubygem.name} (#{rubygem.downloads})" }.reverse,

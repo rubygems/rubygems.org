@@ -311,6 +311,10 @@ body {
   width: 678px;
 }
 
+.main .info .statistics .chart img {
+  margin-left: -105px;
+}
+
 .main .info .statistics span {
   color: #340505;
   font-size: 1.2em;
