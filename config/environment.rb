@@ -5,8 +5,6 @@ require File.join(File.dirname(__FILE__), 'boot')
 Rails::Initializer.run do |config|
   config.time_zone = 'UTC'
 
-  config.gem 'haml',
-    :version => '2.1.0'
   config.gem "thoughtbot-clearance",
     :lib     => 'clearance',
     :source  => 'http://gems.github.com',
@@ -32,6 +30,8 @@ Rails::Initializer.run do |config|
   config.gem "rtomayko-rack-cache",
     :lib     => "rack/cache",
     :version => "0.5.1"
+  config.gem "gchartrb",
+    :lib     => "google_chart"
 
   config.action_mailer.delivery_method = :smtp
 end

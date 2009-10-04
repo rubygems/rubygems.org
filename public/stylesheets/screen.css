@@ -307,6 +307,10 @@ body {
   float: left;
 }
 
+.main .info .statistics .chart {
+  width: 678px;
+}
+
 .main .info .statistics span {
   color: #340505;
   font-size: 1.2em;

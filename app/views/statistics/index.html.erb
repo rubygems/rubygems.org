@@ -13,4 +13,8 @@
   <div class="border">
     <span><%= number_with_delimiter @number_of_users %></span> users
   </div>
+
+  <div class="border chart">
+    <%= most_downloaded_chart(@most_downloaded) %>
+  </div>
 </div>
