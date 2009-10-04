@@ -297,6 +297,23 @@ body {
   color: #000;
 }
 
+.main .info .statistics .border {
+  color: #5E543E;
+  width: 190px;
+  margin: 24px 0 0 36px;
+  padding: 8px;
+  font-size: 2em;
+  text-align: center;
+  float: left;
+}
+
+.main .info .statistics span {
+  color: #340505;
+  font-size: 1.2em;
+  font-weight: bold;
+  display: block;
+}
+
 .main .info .install .instructions {
   background-repeat: repeat-x;
   background-color: #AD4;
