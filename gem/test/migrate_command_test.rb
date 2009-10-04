@@ -123,9 +123,19 @@ class MigrateCommandTest < CommandTest
       stub(Net::SCP).start
     end
 
-    should "connect to rubyforge and upload away" do
+    should "ask for username and password then connect to rubyforge and upload away" do
+      stub(File).exists? { false }
       stub(@command).ask { "user" }
       stub(@command).ask_for_password { "secret" }
+      @command.upload_token(@token)
+
+      # TODO: figure out how to test the upload! in the block
+      assert_received(Net::SCP) { |subject| subject.start("bostonrb.rubyforge.org", "user", :password => "secret") }
+    end
+
+    should "not ask for a username and password if it can be loaded from the user home" do
+      stub(File).exists? { true }
+      stub(YAML).load_file { { 'username' => "user", 'password' => "password" } }
       @command.upload_token(@token)
 
       # TODO: figure out how to test the upload! in the block

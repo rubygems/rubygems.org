@@ -67,9 +67,17 @@ class Gem::Commands::MigrateCommand < Gem::AbstractCommand
     require 'net/scp'
 
     url = "#{project_name}.rubyforge.org"
-    say "Uploading the migration token to #{url}. Please enter your RubyForge login:"
-    login = ask("Login: ")
-    password = ask_for_password("Password: ")
+    say "Uploading the migration token to #{url}."
+
+    rf_cfg_path = "#{Gem.user_home}/.rubyforge/user-config.yml"
+
+    login, password = if File.exists?(rf_cfg_path)
+      rcfg = YAML.load_file(rf_cfg_path)
+      rcfg.values_at('username', 'password')
+    else
+      say "Please enter your RubyForge login:"
+      [ask("Login: "), ask_for_password("Password: ")]
+    end
 
     begin
       Net::SCP.start(url, login, :password => password) do |scp|
