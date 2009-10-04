@@ -1,0 +1,16 @@
+<% @title = "statistics" %>
+<% @subtitle = "since 2009" %>
+
+<div class="statistics clearfix">
+  <div class="border">
+    <span><%= number_with_delimiter @number_of_gems %></span> gems
+  </div>
+
+  <div class="border">
+    <span><%= number_with_delimiter @number_of_downloads %></span> downloads
+  </div>
+
+  <div class="border">
+    <span><%= number_with_delimiter @number_of_users %></span> users
+  </div>
+</div>

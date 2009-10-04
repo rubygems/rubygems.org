@@ -8,7 +8,8 @@ ActionController::Routing::Routes.draw do |map|
     :format       => "json",
     :requirements => { :id => RUBYGEM_NAME_MATCHER }
 
-  map.resource :dashboard, :only => :show
+  map.resource  :dashboard,  :only => :show
+  map.resources :statistics, :only => :index
 
   map.resource :migrate,
                :only         => [:create, :update],
