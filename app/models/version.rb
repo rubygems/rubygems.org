@@ -16,9 +16,10 @@ class Version < ActiveRecord::Base
     { :conditions => { :rubygem_id => user.subscribed_gem_ids } }
   }
 
-  named_scope :latest,     { :conditions => { :position   => 0     }}
-  named_scope :prerelease, { :conditions => { :prerelease => true  }}
-  named_scope :release,    { :conditions => { :prerelease => false }}
+  named_scope :with_associated, { :conditions => ["rubygems.versions_count > 1"], :include => :rubygem, :order => "versions.built_at desc" }
+  named_scope :latest,          { :conditions => { :position   => 0     }}
+  named_scope :prerelease,      { :conditions => { :prerelease => true  }}
+  named_scope :release,         { :conditions => { :prerelease => false }}
 
   before_save :update_prerelease
   after_save  :reorder_versions
@@ -31,6 +32,10 @@ class Version < ActiveRecord::Base
 
   def self.with_indexed
     all(:conditions => {:indexed => true}, :include => :rubygem, :order => "rubygems.name asc, number asc, built_at asc")
+  end
+
+  def self.updated(limit=5)
+    built_at_before(DateTime.now.utc).with_associated.limited(limit)
   end
 
   def self.published(limit=5)
