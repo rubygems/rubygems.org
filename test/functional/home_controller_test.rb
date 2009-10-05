@@ -7,7 +7,7 @@ class HomeControllerTest < ActionController::TestCase
       stub(Rubygem).total_count { @count }
       stub(Rubygem).latest { [] }
       stub(Rubygem).downloaded { [] }
-      stub(Version).published { [] }
+      stub(Version).updated { [] }
       get :index
     end
 
@@ -26,7 +26,7 @@ class HomeControllerTest < ActionController::TestCase
       assert_received(Rubygem) { |subject| subject.total_count }
       assert_received(Rubygem) { |subject| subject.latest }
       assert_received(Rubygem) { |subject| subject.downloaded }
-      assert_received(Version) { |subject| subject.published }
+      assert_received(Version) { |subject| subject.updated }
     end
   end
 end
