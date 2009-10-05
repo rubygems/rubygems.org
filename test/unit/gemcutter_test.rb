@@ -106,18 +106,28 @@ class GemcutterTest < ActiveSupport::TestCase
 
     context "finding rubygem" do
       should "initialize new gem if one does not exist" do
-        stub(@cutter).spec.stub!.name { "some name" }
+        spec = "spec"
+        stub(spec).name { "some name" }
+        stub(spec).version { "1.3.3.7" }
+        stub(spec).original_platform { "ruby" }
+        stub(@cutter).spec { spec }
         @cutter.find
 
         assert_not_nil @cutter.rubygem
+        assert_not_nil @cutter.version
       end
 
       should "bring up existing gem with matching spec" do
         @rubygem = Factory(:rubygem)
-        stub(@cutter).spec.stub!.name { @rubygem.name }
+        spec = "spec"
+        stub(spec).name { @rubygem.name }
+        stub(spec).version { "1.3.3.7" }
+        stub(spec).original_platform { "ruby" }
+        stub(@cutter).spec { spec }
         @cutter.find
 
         assert_equal @rubygem, @cutter.rubygem
+        assert_not_nil @cutter.version
       end
     end
 

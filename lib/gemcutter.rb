@@ -43,8 +43,7 @@ class Gemcutter
   def update
     Rubygem.transaction do
       rubygem.build_ownership(user) unless user.try(:rubyforge_importer?)
-      rubygem.save!
-      @version = rubygem.update_attributes_from_gem_specification!(spec)
+      rubygem.update_attributes_from_gem_specification!(version, spec)
     end
     true
   rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback
@@ -64,6 +63,7 @@ class Gemcutter
 
   def find
     @rubygem = Rubygem.find_or_initialize_by_name(self.spec.name)
+    @version = @rubygem.find_or_initialize_version_from_spec(spec)
   end
 
   def self.server_path(*more)
