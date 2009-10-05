@@ -82,23 +82,16 @@ class RubygemTest < ActiveSupport::TestCase
         @user = Factory(:user)
       end
 
-      should "always allow push when rubygem is new" do
-        stub(@rubygem).new_record? { true }
-        assert @rubygem.allow_push_from?(@user)
-      end
-
       should "be owned by a user in approved ownership" do
         ownership = Factory(:ownership, :user => @user, :rubygem => @rubygem, :approved => true)
         assert @rubygem.owned_by?(@user)
         assert !@rubygem.unowned?
-        assert @rubygem.allow_push_from?(@user)
       end
 
       should "be not owned by a user in unapproved ownership" do
         ownership = Factory(:ownership, :user => @user, :rubygem => @rubygem)
         assert !@rubygem.owned_by?(@user)
         assert @rubygem.unowned?
-        assert !@rubygem.allow_push_from?(@user)
       end
 
       should "be not owned by a user without ownership" do
@@ -106,20 +99,17 @@ class RubygemTest < ActiveSupport::TestCase
         ownership = Factory(:ownership, :user => other_user, :rubygem => @rubygem)
         assert !@rubygem.owned_by?(@user)
         assert @rubygem.unowned?
-        assert !@rubygem.allow_push_from?(@user)
       end
 
       should "be not owned if no ownerships" do
         assert @rubygem.ownerships.empty?
         assert !@rubygem.owned_by?(@user)
         assert @rubygem.unowned?
-        assert !@rubygem.allow_push_from?(@user)
       end
 
       should "be not owned if no user" do
         assert !@rubygem.owned_by?(nil)
         assert @rubygem.unowned?
-        assert !@rubygem.allow_push_from?(@user)
       end
     end
 
