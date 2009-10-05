@@ -81,13 +81,11 @@ class Rubygem < ActiveRecord::Base
     ownerships.build(:user => user, :approved => true) if pushable?
   end
 
-  def update_versions!(spec)
-    version = find_or_initialize_version_from_spec(spec)
+  def update_versions!(version, spec)
     version.update_attributes_from_gem_specification!(spec)
   end
 
-  def update_dependencies!(spec)
-    version = find_or_initialize_version_from_spec(spec)
+  def update_dependencies!(version, spec)
     version.dependencies.delete_all
     spec.dependencies.each do |dependency|
       version.dependencies.create_from_gem_dependency!(dependency)
@@ -100,15 +98,11 @@ class Rubygem < ActiveRecord::Base
     self.linkset.save!
   end
 
-  def update_attributes_from_gem_specification!(spec)
-    update_versions!     spec
-    update_dependencies! spec
-    update_linkset!      spec
-
+  def update_attributes_from_gem_specification!(version, spec)
     self.save!
-
-    # TODO: Refactor all of this like crazy
-    find_or_initialize_version_from_spec(spec)
+    update_versions!     version, spec
+    update_dependencies! version, spec
+    update_linkset!      spec
   end
 
   def reorder_versions
@@ -119,10 +113,10 @@ class Rubygem < ActiveRecord::Base
     end
   end
 
-  private
-
-    def find_or_initialize_version_from_spec(spec)
-      self.versions.find_or_initialize_by_number_and_platform(spec.version.to_s, spec.original_platform.to_s)
-    end
+  def find_or_initialize_version_from_spec(spec)
+    version = self.versions.find_or_initialize_by_number_and_platform(spec.version.to_s, spec.original_platform.to_s)
+    version.rubygem = self
+    version
+  end
 
 end
