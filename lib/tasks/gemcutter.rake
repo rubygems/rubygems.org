@@ -263,6 +263,7 @@ namespace :gemcutter do
     require 'open-uri'
     gemcutter_gems = Marshal.load(Gem.gunzip(open("http://gemcutter.org/specs.4.8.gz").read))
     gemcutter_gems.each do |index|
+      index.pop if index.last == "ruby"
       gem_name = "#{index.join('-')}.gem"
       gem_path = File.join("cache", gem_name)
       gem_uri = "http://gemcutter.org/gems/#{gem_name}"
