@@ -271,7 +271,7 @@ namespace :gemcutter do
         begin
           puts ">> Downloading #{gem_name}"
           File.open(gem_path, "wb") do |f|
-            f.write open(gem_uri)
+            f.write open(gem_uri).read
           end
         rescue Exception => e
           puts ">> Problem fetching the gem: #{e.message}"
