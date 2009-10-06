@@ -258,4 +258,26 @@ namespace :gemcutter do
       end
     end
   end
+
+  task :backup do
+    require 'open-uri'
+    gemcutter_gems = Marshal.load(Gem.gunzip(open("http://gemcutter.org/specs.4.8.gz").read))
+    gemcutter_gems.each do |index|
+      gem_name = "#{index.join('-')}.gem"
+      gem_path = File.join("cache", gem_name)
+      gem_uri = "http://gemcutter.org/gems/#{gem_name}"
+
+      unless File.exists?(gem_path)
+        begin
+          puts ">> Downloading #{gem_name}"
+          File.open(gem_path, "wb") do |f|
+            f.write open(gem_uri)
+          end
+        rescue Exception => e
+          puts ">> Problem fetching the gem: #{e.message}"
+          puts e.backtrace
+        end
+      end
+    end
+  end
 end
