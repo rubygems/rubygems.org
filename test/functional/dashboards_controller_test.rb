@@ -13,6 +13,7 @@ class DashboardsControllerTest < ActionController::TestCase
         @gems = (1..3).map do
           rubygem = Factory(:rubygem)
           rubygem.ownerships.create(:user => @user, :approved => true)
+          Factory(:version, :rubygem => rubygem, :summary => "summary of #{rubygem.name}")
           rubygem
         end
         get :show
@@ -24,7 +25,7 @@ class DashboardsControllerTest < ActionController::TestCase
       should "render links" do
         @gems.each do |g|
           assert_contain g.name
-          assert_have_selector "a[href='#{rubygem_path(g)}']"
+          assert_have_selector "a[href='#{rubygem_path(g)}'][title='summary of #{g.name}']"
         end
       end
     end
