@@ -13,14 +13,18 @@ class Gemcutter
   end
 
   def process
-    pull_spec and find and authorize and save
+    pull_spec && find && authorize && save
   end
 
   def authorize
-    user.rubyforge_importer? or
-    rubygem.pushable? or
-    rubygem.owned_by?(user) or
+    import? ||
+    rubygem.pushable? ||
+    rubygem.owned_by?(user) ||
     notify("You do not have permission to push to this gem.", 403)
+  end
+
+  def import?
+    user.rubyforge_importer? && version.new_record?
   end
 
   def save
