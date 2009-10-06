@@ -17,6 +17,8 @@ class Rubygem < ActiveRecord::Base
   validates_format_of :name, :with => /(?=[^0-9]+)/, :message => "must include at least one letter."
 
   named_scope :with_versions, :conditions => ["versions_count > 0"]
+  named_scope :with_one_version, :conditions => ["versions_count = 1"]
+
   named_scope :search, lambda { |query| {
     :conditions => ["upper(name) like upper(:query) or upper(versions.description) like upper(:query)",
       {:query => "%#{query}%"}],
@@ -29,7 +31,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.latest(limit=5)
-    with_versions.by_created_at(:desc).limited(limit)
+    with_one_version.by_created_at(:desc).limited(limit)
   end
 
   def self.downloaded(limit=5)
