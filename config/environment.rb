@@ -32,6 +32,7 @@ Rails::Initializer.run do |config|
     :version => "0.5.1"
   config.gem "gchartrb",
     :lib     => "google_chart"
+  config.gem "sinatra"
 
   config.action_mailer.delivery_method = :smtp
 end

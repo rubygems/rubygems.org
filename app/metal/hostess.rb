@@ -1,6 +1,3 @@
-require 'rubygems'
-require 'sinatra'
-
 class Hostess < Sinatra::Default
   set :app_file, __FILE__
 
