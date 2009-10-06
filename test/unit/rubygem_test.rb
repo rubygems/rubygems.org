@@ -171,12 +171,22 @@ class RubygemTest < ActiveSupport::TestCase
     setup do
       @rubygem_without_version = Factory(:rubygem)
       @rubygem_with_version = Factory(:rubygem)
+      @rubygem_with_versions = Factory(:rubygem)
+
       Factory(:version, :rubygem => @rubygem_with_version)
+      3.times { Factory(:version, :rubygem => @rubygem_with_versions) }
+    end
+
+    should "return only gems with one version" do
+      assert ! Rubygem.with_one_version.include?(@rubygem_without_version)
+      assert Rubygem.with_one_version.include?(@rubygem_with_version)
+      assert ! Rubygem.with_one_version.include?(@rubygem_with_versions)
     end
 
     should "return only gems with versions for #with_versions" do
+      assert ! Rubygem.with_versions.include?(@rubygem_without_version)
       assert Rubygem.with_versions.include?(@rubygem_with_version)
-      assert !Rubygem.with_versions.include?(@rubygem_without_version)
+      assert Rubygem.with_versions.include?(@rubygem_with_versions)
     end
 
     should "be hosted or not" do
