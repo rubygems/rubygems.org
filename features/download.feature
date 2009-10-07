@@ -45,7 +45,6 @@ Feature: Download Gems
     When I download the rubygem "crysknife" version "1.0.0" 3 times
     And the system processes jobs
     And I visit the gem page for "crysknife" version "1.0.0"
-    And I save and open the page
     Then I should see "3 total downloads"
     And I should see "3 version downloads"
 
