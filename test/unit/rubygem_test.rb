@@ -12,6 +12,7 @@ class RubygemTest < ActiveSupport::TestCase
     should_have_many :versions, :dependent => :destroy
     should_have_one :linkset, :dependent => :destroy
     should_validate_uniqueness_of :name
+    should_allow_values_for :name, "rails", "awesome42", "factory_girl", "rack-test"
   end
 
   context "with a rubygem" do
@@ -19,19 +20,10 @@ class RubygemTest < ActiveSupport::TestCase
       @rubygem = Factory.build(:rubygem)
     end
 
-    context "numbers in rubygem name" do
-      should "not be valid if name consists solely of numbers" do
-        @rubygem.name = "123456"
-        assert !@rubygem.valid?
-        assert_equal "must include at least one letter.", @rubygem.errors.on(:name)
-      end
-      should "be valid if name has numbers in it" do
-        @rubygem.name = "123test123"
-        assert @rubygem.valid?
-      end
-      should "be valid if name has no numbers in it" do
-        @rubygem.name = "test"
-        assert @rubygem.valid?
+    %w[1337 Snakes!].each do |bad_name|
+      should "not accept #{bad_name} as a name" do
+        @rubygem.name = bad_name
+        assert ! @rubygem.valid?
       end
     end
 
