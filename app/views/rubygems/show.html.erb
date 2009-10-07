@@ -1,5 +1,5 @@
 <% @title = @rubygem.name %>
-<% @subtitle = @latest_version %>
+<% @subtitle = @latest_version.try(:to_slug) %>
 
 <% if @rubygem.versions_count.zero? %>
   <p>
@@ -37,7 +37,10 @@
         </div>
 
         <div class="downloads">
-          <strong><%= number_with_delimiter(@rubygem.downloads) %></strong> downloads
+          <strong><%= number_with_delimiter(@rubygem.downloads) %></strong> total downloads
+        </div>
+        <div class="downloads">
+          <strong><%= number_with_delimiter(@latest_version.downloads_count) %></strong> version downloads
         </div>
       </div>
 
