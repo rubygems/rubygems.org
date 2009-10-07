@@ -39,6 +39,29 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.number, @version.to_s
     end
 
+    should "return just number for to_slug if platform is ruby" do
+      assert ! @version.platformed?
+      assert_equal @version.number, @version.to_slug
+      assert_equal @version, Version.find_from_slug!(@version.rubygem_id, @version.number)
+    end
+
+    should "raise an ActiveRecord::RecordNotFound if an invalid slug is given" do
+      assert_raise ActiveRecord::RecordNotFound do
+        Version.find_from_slug!(@version.rubygem_id, "some stupid version 399")
+      end
+    end
+
+    %w[x86_64-linux java mswin x86-mswin32-60].each do |platform|
+      should "be able to deal with platform of #{platform}" do
+        @version.update_attribute(:platform, platform)
+        slug = "#{@version.number}-#{platform}"
+
+        assert @version.platformed?
+        assert_equal slug, @version.to_slug
+        assert_equal @version, Version.find_from_slug!(@version.rubygem_id, slug)
+      end
+    end
+
     should "have a default download count" do
       assert @version.downloads_count.zero?
     end

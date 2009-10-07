@@ -11,10 +11,27 @@ class DownloadTest < ActiveSupport::TestCase
     rubygem = Factory(:rubygem)
     version = Factory(:version, :rubygem => rubygem)
 
-    raw_download = Download.new(:raw => "#{rubygem.name}-#{version.number}")
+    3.times do
+      raw_download = Download.new(:raw => "#{rubygem.name}-#{version.number}")
+      raw_download.perform
+      assert_equal raw_download.reload.version, version
+    end
+
+    assert_equal 3, version.reload.downloads_count
+    assert_equal 3, rubygem.reload.downloads
+  end
+
+  should "track platform gem downloads correctly" do
+    rubygem = Factory(:rubygem)
+    version = Factory(:version, :rubygem => rubygem, :platform => "java")
+    other_platform_version = Factory(:version, :rubygem => rubygem, :platform => "mswin32")
+
+    raw_download = Download.new(:raw => "#{rubygem.name}-#{version.number}-java")
     raw_download.perform
 
     assert_equal raw_download.reload.version, version
     assert_equal 1, version.reload.downloads_count
+    assert_equal 1, rubygem.reload.downloads
+    assert_equal 0, other_platform_version.reload.downloads_count
   end
 end
