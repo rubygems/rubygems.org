@@ -2,7 +2,7 @@ class Rubygem < ActiveRecord::Base
   include Pacecar
 
   has_many :owners, :through => :ownerships, :source => :user
-  has_many :ownerships
+  has_many :ownerships, :dependent => :destroy
   has_many :subscribers, :through => :subscriptions, :source => :user
   has_many :subscriptions
   has_many :versions, :dependent => :destroy do
@@ -14,7 +14,6 @@ class Rubygem < ActiveRecord::Base
 
   validates_presence_of :name
   validates_uniqueness_of :name
-  validates_format_of :name, :with => /(?=[^0-9]+)/, :message => "must include at least one letter."
 
   named_scope :with_versions, :conditions => ["versions_count > 0"]
   named_scope :with_one_version, :conditions => ["versions_count = 1"]
@@ -25,6 +24,14 @@ class Rubygem < ActiveRecord::Base
     :include    => [:versions],
     :order      => "name asc" }
   }
+
+  def validate
+    if name =~ /^[\d]+$/
+      errors.add "Name must include at least one letter."
+    elsif name =~ /[^\d\w_-]/
+      errors.add "Name can only include letters, numbers, dashes, and underscores."
+    end
+  end
 
   def self.total_count
     with_versions.count

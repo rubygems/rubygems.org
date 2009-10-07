@@ -12,7 +12,7 @@ module Vault
     end
 
     def latest_index
-      Version.latest.map(&:to_index)
+      Version.latest.release.map(&:to_index)
     end
 
     def prerelease_index
