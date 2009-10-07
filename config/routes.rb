@@ -27,7 +27,7 @@ ActionController::Routing::Routes.draw do |map|
 
     rubygems.resources :versions,
       :only         => [:index, :show],
-      :requirements => { :rubygem_id => RUBYGEM_NAME_MATCHER, :id => /#{Gem::Version::VERSION_PATTERN}/ }
+      :requirements => { :rubygem_id => RUBYGEM_NAME_MATCHER, :id => RUBYGEM_NAME_MATCHER }
   end
 
   map.search "/search", :controller => "searches", :action => "new"

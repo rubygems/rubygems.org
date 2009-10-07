@@ -60,18 +60,8 @@ class Hostess < Sinatra::Default
   end
 
   get "/gems/*.gem" do
-    original_name = File.basename(current_path, ".gem").split('-')
-    name = original_name[0..-2].join('-')
-    version = original_name[-1]
-    rubygem = Rubygem.find_by_name(name)
-
-    if rubygem
-      rubygem.increment!(:downloads)
-      content_type('application/octet-stream')
-      serve(current_path, true)
-    else
-      halt 404
-    end
+    Delayed::Job.enqueue Download.new(:raw => params[:splat].to_s, :created_at => Time.zone.now)
+    serve(current_path, true)
   end
 
   def current_path

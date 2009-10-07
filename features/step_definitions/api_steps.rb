@@ -50,3 +50,9 @@ When /^I remove the owner "([^\"]*)" from the rubygem "([^\"]*)" with my api key
   header("HTTP_AUTHORIZATION", @api_key)
   visit rubygem_owners_path(:rubygem_id => rubygem_name), :delete, :email => owner_email
 end
+
+When /^I download the rubygem "([^\"]*)" version "([^\"]*)" (\d+) times$/ do |rubygem_name, version_number, count|
+  count.to_i.times do
+    visit "/gems/#{rubygem_name}-#{version_number}.gem", :get
+  end
+end
