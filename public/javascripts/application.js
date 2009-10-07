@@ -11,7 +11,4 @@ $(document).ready(function() {
       $(this).unbind("click");
     });
   }
-  
-  // give focus to the search input if it exists:
-  $("input#query").focus();
 });
