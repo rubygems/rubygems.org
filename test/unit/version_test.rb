@@ -3,6 +3,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 class VersionTest < ActiveSupport::TestCase
   should_belong_to :rubygem
   should_have_many :dependencies
+  should_have_many :downloads, :dependent => :destroy
 
   context "with a rubygem" do
     setup do
@@ -36,6 +37,10 @@ class VersionTest < ActiveSupport::TestCase
 
     should "give number for #to_s" do
       assert_equal @version.number, @version.to_s
+    end
+
+    should "have a default download count" do
+      assert @version.downloads_count.zero?
     end
 
     should "give no version flag for the latest version" do
