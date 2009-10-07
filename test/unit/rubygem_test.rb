@@ -82,23 +82,16 @@ class RubygemTest < ActiveSupport::TestCase
         @user = Factory(:user)
       end
 
-      should "always allow push when rubygem is new" do
-        stub(@rubygem).new_record? { true }
-        assert @rubygem.allow_push_from?(@user)
-      end
-
       should "be owned by a user in approved ownership" do
         ownership = Factory(:ownership, :user => @user, :rubygem => @rubygem, :approved => true)
         assert @rubygem.owned_by?(@user)
         assert !@rubygem.unowned?
-        assert @rubygem.allow_push_from?(@user)
       end
 
       should "be not owned by a user in unapproved ownership" do
         ownership = Factory(:ownership, :user => @user, :rubygem => @rubygem)
         assert !@rubygem.owned_by?(@user)
         assert @rubygem.unowned?
-        assert !@rubygem.allow_push_from?(@user)
       end
 
       should "be not owned by a user without ownership" do
@@ -106,20 +99,17 @@ class RubygemTest < ActiveSupport::TestCase
         ownership = Factory(:ownership, :user => other_user, :rubygem => @rubygem)
         assert !@rubygem.owned_by?(@user)
         assert @rubygem.unowned?
-        assert !@rubygem.allow_push_from?(@user)
       end
 
       should "be not owned if no ownerships" do
         assert @rubygem.ownerships.empty?
         assert !@rubygem.owned_by?(@user)
         assert @rubygem.unowned?
-        assert !@rubygem.allow_push_from?(@user)
       end
 
       should "be not owned if no user" do
         assert !@rubygem.owned_by?(nil)
         assert @rubygem.unowned?
-        assert !@rubygem.allow_push_from?(@user)
       end
     end
 
@@ -295,7 +285,8 @@ class RubygemTest < ActiveSupport::TestCase
       setup do
         @specification = gem_specification_from_gem_fixture('test-0.0.0')
         @rubygem       = Rubygem.create(:name => @specification.name)
-        @version = @rubygem.update_attributes_from_gem_specification!(@specification)
+        @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
+        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
       end
 
       should_change("total number of Rubygems", :by => 1) { Rubygem.count }
@@ -303,7 +294,6 @@ class RubygemTest < ActiveSupport::TestCase
       should_not_change("total number of Dependencies")   { Dependency.count }
 
       should "have the homepage set properly" do
-        assert_equal @version, Version.last
         assert_equal @specification.homepage, @rubygem.linkset.home
       end
     end
@@ -312,7 +302,8 @@ class RubygemTest < ActiveSupport::TestCase
       setup do
         @specification = gem_specification_from_gem_fixture('with_dependencies-0.0.0')
         @rubygem       = Rubygem.create(:name => @specification.name)
-        @rubygem.update_attributes_from_gem_specification!(@specification)
+        @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
+        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
       end
 
       should_change("total number of Rubygems",     :by => 3) { Rubygem.count }
@@ -330,13 +321,15 @@ class RubygemTest < ActiveSupport::TestCase
     setup do
       @specification = gem_specification_from_gem_fixture('with_dependencies-0.0.0')
       @rubygem       = Rubygem.create(:name => @specification.name)
-      @rubygem.update_attributes_from_gem_specification!(@specification)
+      @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
+      @rubygem.update_attributes_from_gem_specification!(@version, @specification)
     end
 
     context "from a Gem::Specification" do
       setup do
         @rubygem = Rubygem.find_by_name(@specification.name)
-        @rubygem.update_attributes_from_gem_specification!(@specification)
+        @version = @rubygem.find_or_initialize_version_from_spec(@specification)
+        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
       end
 
       should_not_change("total number of Rubygems") { Rubygem.count }
@@ -353,7 +346,8 @@ class RubygemTest < ActiveSupport::TestCase
         @homepage = 'http://new.example.org'
         @specification.homepage = @homepage
         @rubygem = Rubygem.find_by_name(@specification.name)
-        @rubygem.update_attributes_from_gem_specification!(@specification)
+        @version = @rubygem.find_or_initialize_version_from_spec(@specification)
+        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
       end
 
       should_not_change("total number of Rubygems") { Rubygem.count }
@@ -366,7 +360,8 @@ class RubygemTest < ActiveSupport::TestCase
       setup do
         @specification.add_dependency('new-dependency')
         @rubygem = Rubygem.find_by_name(@specification.name)
-        @rubygem.update_attributes_from_gem_specification!(@specification)
+        @version = @rubygem.find_or_initialize_version_from_spec(@specification)
+        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
       end
 
       should_change("total number of Rubygems", :by => 1) { Rubygem.count }
@@ -378,7 +373,8 @@ class RubygemTest < ActiveSupport::TestCase
       setup do
         @specification.version = '0.0.1'
         @rubygem = Rubygem.find_by_name(@specification.name)
-        @rubygem.update_attributes_from_gem_specification!(@specification)
+        @version = @rubygem.find_or_initialize_version_from_spec(@specification)
+        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
       end
 
       should_not_change("total number of Rubygems")           { Rubygem.count }

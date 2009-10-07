@@ -106,29 +106,59 @@ class GemcutterTest < ActiveSupport::TestCase
 
     context "finding rubygem" do
       should "initialize new gem if one does not exist" do
-        stub(@cutter).spec.stub!.name { "some name" }
+        spec = "spec"
+        stub(spec).name { "some name" }
+        stub(spec).version { "1.3.3.7" }
+        stub(spec).original_platform { "ruby" }
+        stub(@cutter).spec { spec }
         @cutter.find
 
         assert_not_nil @cutter.rubygem
+        assert_not_nil @cutter.version
       end
 
       should "bring up existing gem with matching spec" do
         @rubygem = Factory(:rubygem)
-        stub(@cutter).spec.stub!.name { @rubygem.name }
+        spec = "spec"
+        stub(spec).name { @rubygem.name }
+        stub(spec).version { "1.3.3.7" }
+        stub(spec).original_platform { "ruby" }
+        stub(@cutter).spec { spec }
         @cutter.find
 
         assert_equal @rubygem, @cutter.rubygem
+        assert_not_nil @cutter.version
+      end
+    end
+
+    context "importing a gem" do
+      should "be true if the user is from rubyforge and we're not overwriting the version" do
+        stub(@user).rubyforge_importer? { true }
+        stub(@version).new_record? { true }
+        assert @cutter.import?
+      end
+
+      should "be false if the user is not from rubyforge" do
+        stub(@user).rubyforge_importer? { false }
+        stub(@version).new_record? { true }
+        assert ! @cutter.import?
+      end
+
+      should "be false if the version exists" do
+        stub(@user).rubyforge_importer? { true }
+        stub(@version).new_record? { false }
+        assert ! @cutter.import?
       end
     end
 
     context "checking if the rubygem can be pushed to" do
-      should "be true if rubyforge user is pushing to us" do
-        stub(@user).rubyforge_importer? { true }
+      should "be true if it's a an import" do
+        stub(@cutter).import? { true }
         assert @cutter.authorize
       end
 
       should "be true if rubygem is new" do
-        stub(@user).rubyforge_importer? { false }
+        stub(@user).import? { false }
         stub(@cutter).rubygem { Rubygem.new }
         assert @cutter.authorize
       end
