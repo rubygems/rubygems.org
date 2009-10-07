@@ -2,7 +2,7 @@ class Rubygem < ActiveRecord::Base
   include Pacecar
 
   has_many :owners, :through => :ownerships, :source => :user
-  has_many :ownerships
+  has_many :ownerships, :dependent => :destroy
   has_many :subscribers, :through => :subscriptions, :source => :user
   has_many :subscriptions
   has_many :versions, :dependent => :destroy do
