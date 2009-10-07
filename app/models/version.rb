@@ -43,12 +43,29 @@ class Version < ActiveRecord::Base
     created_at_before(DateTime.now.utc).by_created_at(:desc).limited(limit)
   end
 
+  def self.find_from_slug!(rubygem_id, slug)
+    number, *raw_platform = slug.split('-')
+    platform = raw_platform.blank? ? "ruby" : raw_platform.join('-')
+
+    find_by_rubygem_id_and_number_and_platform!(rubygem_id, number, platform)
+  end
+
   def to_s
     number
   end
 
   def to_title
     "#{rubygem.name} (#{to_s})"
+  end
+
+  def to_slug
+    param = number.dup
+    param << "-#{platform}" if platformed?
+    param
+  end
+
+  def platformed?
+    platform != "ruby"
   end
 
   def update_prerelease

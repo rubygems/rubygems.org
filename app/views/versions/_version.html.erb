@@ -1,5 +1,5 @@
 <li>
-  <%= link_to version.number, rubygem_version_url(version.rubygem, version.number) %>
+  <%= link_to version.number, rubygem_version_url(version.rubygem, version.to_slug) %>
   <small><%= version.built_at_date %></small>
   <% if version.platform != 'ruby' %>
     <span class="platform"><%= version.platform %></span>
