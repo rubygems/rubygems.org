@@ -10,7 +10,6 @@ class RedirectorTest < ActiveSupport::TestCase
      /chapter/58
      /read/book/2
      /export
-     /page/500
      /shelf/9000
      /syndicate.xml].each do |uri|
     should "redirect to docs.rubygems.org when #{uri} is hit" do
