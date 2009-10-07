@@ -30,7 +30,7 @@
     <% else %>
       <ol>
       <% @my_gems.each do |gem| %>
-        <li><%= link_to gem, gem, :title => gem.versions.latest.summary %></li>
+        <li><%= link_to gem, gem, :title => gem.versions.latest.try(:summary) %></li>
       <% end %>
       </ol>
     <% end %>
