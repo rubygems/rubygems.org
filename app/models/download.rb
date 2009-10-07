@@ -4,10 +4,11 @@ class Download < ActiveRecord::Base
   belongs_to :version, :counter_cache => true
 
   def perform
-    rubygem_name, version_number, platform = self.raw.split('-')
+    logger.info "[DOWNLOAD] #{self.raw}"
+    rubygem_name = self.raw.split('-').first
 
-    rubygem = Rubygem.find_by_name(rubygem_name)
-    version = rubygem.versions.find_by_number_and_platform(version_number, platform || "ruby")
+    rubygem = Rubygem.find_by_name!(rubygem_name)
+    version = Version.find_from_slug!(rubygem.id, self.raw.gsub("#{rubygem_name}-", ""))
 
     Download.transaction do
       self.version = version
