@@ -5,6 +5,7 @@ class Version < ActiveRecord::Base
 
   belongs_to :rubygem, :counter_cache => true
   has_many :dependencies, :dependent => :destroy
+  has_many :downloads, :dependent => :destroy
 
   validates_format_of :number, :with => /^#{Gem::Version::VERSION_PATTERN}$/
 

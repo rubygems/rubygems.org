@@ -27,7 +27,7 @@ class Gemcutter
     if update
       write_gem
       @version_id = self.version.id
-      Delayed::Job.enqueue self
+      Delayed::Job.enqueue self, 1
       notify("Successfully registered gem: #{self.version.to_title}", 200)
     else
       notify("There was a problem saving your gem: #{rubygem.errors.full_messages}", 403)

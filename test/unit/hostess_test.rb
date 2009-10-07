@@ -15,28 +15,13 @@ class HostessTest < ActiveSupport::TestCase
     FileUtils.rm(path) if File.exists?(path)
   end
 
-  should "return prerelease specs" do
-    file = "/prerelease_specs.4.8.gz"
-    touch file
-    get file
-    assert_not_nil last_response.headers["Cache-Control"]
-    assert_equal 200, last_response.status
-  end
-
-  should "return latest specs" do
-    file = "/latest_specs.4.8.gz"
-    touch file
-    get file
-    assert_not_nil last_response.headers["Cache-Control"]
-    assert_equal 200, last_response.status
-  end
-
-  should "return specs" do
-    file = "/specs.4.8.gz"
-    touch file
-    get file
-    assert_not_nil last_response.headers["Cache-Control"]
-    assert_equal 200, last_response.status
+  ["/prerelease_specs.4.8.gz", "/latest_specs.4.8.gz", "/specs.4.8.gz"].each do |index|
+    should "serve up #{index}" do
+      touch index
+      get index
+      assert_not_nil last_response.headers["Cache-Control"]
+      assert_equal 200, last_response.status
+    end
   end
 
   should "return quick gemspec" do
@@ -48,17 +33,20 @@ class HostessTest < ActiveSupport::TestCase
     assert_equal "application/x-deflate", last_response.content_type
   end
 
-  should "return gem" do
+  should "serve up gem" do
+    download_count = Download.count
     file = "/gems/test-0.0.0.gem"
     FileUtils.cp gem_file.path, Gemcutter.server_path("gems")
     rubygem = Factory(:rubygem, :name => "test")
-    Factory(:version, :rubygem => rubygem, :number => "0.0.0")
-    get file
-    rubygem.reload
+    version = Factory(:version, :rubygem => rubygem, :number => "0.0.0")
 
-    assert_not_nil last_response.headers["Cache-Control"]
+    get file
+    Delayed::Job.work_off
+
     assert_equal 200, last_response.status
-    assert_equal 1, rubygem.downloads
+    assert_equal download_count + 1, Download.count
+    assert_equal 1, rubygem.reload.downloads
+    assert_equal 1, version.reload.downloads_count
   end
 
   should "not be able to find non existant gemspec" do
