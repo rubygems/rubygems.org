@@ -38,7 +38,9 @@
 
         <div class="downloads">
           <strong><%= number_with_delimiter(@rubygem.downloads) %></strong> total downloads
-          <strong><%= number_with_delimiter(@latest_version.downloads_count) %></strong> downloads of this version
+        </div>
+        <div class="downloads">
+          <strong><%= number_with_delimiter(@latest_version.downloads_count) %></strong> version downloads
         </div>
       </div>
 

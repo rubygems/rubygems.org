@@ -522,13 +522,13 @@ body {
 }
 
 .main .info .meta .authors {
-  width: 435px;
+  width: 390px;
   display: inline-block;
 }
 
 .main .info .meta .downloads {
-  width: 30%;
   text-align: right;
+  margin-left: 15px;
   font-size: 1.3em;
   color: #ABA28D;
   display: inline-block;

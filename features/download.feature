@@ -20,13 +20,13 @@ Feature: Download Gems
     And I go to the homepage
     And I visit the gem page for "sandworm"
     Then I should see "3 total downloads"
-    And I should see "3 downloads of this version"
+    And I should see "3 version downloads"
 
     When I download the rubygem "sandworm" version "1.0.0" 2 times
     And the system processes jobs
     And I visit the gem page for "sandworm"
     Then I should see "5 total downloads"
-    And I should see "3 downloads of this version"
+    And I should see "3 version downloads"
     When I follow "1.0.0"
     Then I should see "5 total downloads"
-    And I should see "2 downloads of this version"
+    And I should see "2 version downloads"
