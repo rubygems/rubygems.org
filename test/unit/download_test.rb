@@ -23,10 +23,10 @@ class DownloadTest < ActiveSupport::TestCase
 
   should "track platform gem downloads correctly" do
     rubygem = Factory(:rubygem)
-    version = Factory(:version, :rubygem => rubygem, :platform => "java")
+    version = Factory(:version, :rubygem => rubygem, :platform => "mswin32-60")
     other_platform_version = Factory(:version, :rubygem => rubygem, :platform => "mswin32")
 
-    raw_download = Download.new(:raw => "#{rubygem.name}-#{version.number}-java")
+    raw_download = Download.new(:raw => "#{rubygem.name}-#{version.number}-mswin32-60")
     raw_download.perform
 
     assert_equal raw_download.reload.version, version
