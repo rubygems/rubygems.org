@@ -57,7 +57,7 @@ class Gem::Commands::OwnerCommand < Gem::AbstractCommand
     end  end
 
   def show_owners(name)
-    require 'json'
+    require 'json/pure'
     response = make_request(:get, "gems/#{name}/owners.json") do |request|
       request.add_field("Authorization", api_key)
     end

@@ -26,7 +26,7 @@ class Gem::Commands::MigrateCommand < Gem::AbstractCommand
   end
 
   def find(name)
-    require 'json'
+    require 'json/pure'
 
     response = make_request(:get, "gems/#{name}.json")
 
