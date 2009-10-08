@@ -8,7 +8,7 @@ class DownloadTest < ActiveSupport::TestCase
   should_have_db_index :version_id
 
   should "load up all downloads with just raw strings and process them" do
-    rubygem = Factory(:rubygem, :name => "some-stupid-gem-name9000")
+    rubygem = Factory(:rubygem, :name => "some-stupid13-gem42-name9000")
     version = Factory(:version, :rubygem => rubygem)
 
     3.times do
