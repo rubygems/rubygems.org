@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091007183410) do
+ActiveRecord::Schema.define(:version => 20091008132519) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -109,6 +109,8 @@ ActiveRecord::Schema.define(:version => 20091007183410) do
     t.string   "api_key"
     t.string   "confirmation_token", :limit => 128
     t.string   "remember_token",     :limit => 128
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "users", ["confirmation_token", "id"], :name => "index_users_on_id_and_confirmation_token"
