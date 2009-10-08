@@ -21,7 +21,7 @@ begin
     gem.files = FileList["lib/rubygems_plugin.rb", "lib/commands/*"]
     gem.test_files = FileList["test/command_helper.rb", "test/commands/*"]
     gem.rubyforge_project = "gemcutter"
-    gem.add_dependency('json')
+    gem.add_dependency('json_pure')
     gem.add_dependency('net-scp')
     gem.post_install_message = <<MESSAGE
 
