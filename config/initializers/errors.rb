@@ -1,3 +1,4 @@
+require 'net/http'
 require 'net/smtp'
 require 'open-uri'
 # Example:
