@@ -18,7 +18,7 @@ class Version < ActiveRecord::Base
   }
 
   named_scope :with_associated, { :conditions => ["rubygems.versions_count > 1"], :include => :rubygem, :order => "versions.built_at desc" }
-  named_scope :latest,          { :conditions => { :position   => 0     }}
+  named_scope :latest,          { :conditions => { :position   => 0     }, :include => :rubygem }
   named_scope :prerelease,      { :conditions => { :prerelease => true  }}
   named_scope :release,         { :conditions => { :prerelease => false }}
 

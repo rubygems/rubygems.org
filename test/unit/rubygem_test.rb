@@ -13,6 +13,24 @@ class RubygemTest < ActiveSupport::TestCase
     should_have_one :linkset, :dependent => :destroy
     should_validate_uniqueness_of :name
     should_allow_values_for :name, "rails", "awesome42", "factory_girl", "rack-test"
+
+    should "reorder versions with platforms properly" do
+      version3_ruby  = Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "ruby")
+      version3_mswin = Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "mswin")
+      version2_ruby  = Factory(:version, :rubygem => @rubygem, :number => "2.0.0", :platform => "ruby")
+      version1_linux = Factory(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "linux")
+
+      @rubygem.reorder_versions
+
+      assert_equal 0, version3_ruby.reload.position
+      assert_equal 0, version3_mswin.reload.position
+      assert_equal 1, version2_ruby.reload.position
+      assert_equal 2, version1_linux.reload.position
+
+      latest_versions = Version.latest
+      assert latest_versions.include?(version3_ruby)
+      assert latest_versions.include?(version3_mswin)
+    end
   end
 
   context "with a rubygem" do
