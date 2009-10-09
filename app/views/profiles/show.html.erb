@@ -1,5 +1,9 @@
 <h3>Your Profile</h3>
 
-<p>Your API key is <strong><%= @user.api_key %></strong>.</p>
+<p>Your API key is <strong><%= @user.api_key %></strong>. <br />
+   The following line should be added to your <code>~/.gemrc</code> file if isn't there already.</p>
 
-<p><%= button_to "Reset my API key", reset_api_key_path, :method => :put %></p>
+<pre><code>gemcutter_key: <%= @user.api_key %></code></pre>
+
+<p><%= button_to "Reset my API key", reset_api_key_path, 
+        :method => :put, :confirm => "Are you sure? This cannot be undone." %></p>

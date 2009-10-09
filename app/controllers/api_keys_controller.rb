@@ -14,6 +14,7 @@ class ApiKeysController < ApplicationController
   
   def reset
     current_user.reset_api_key!
+    flash[:notice] = "Your API key has been reset. Don't forget to update your .gemrc file!"
     redirect_to profile_path
   end
 end
