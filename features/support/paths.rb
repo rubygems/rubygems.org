@@ -11,6 +11,8 @@ module NavigationHelpers
       new_password_path
     when /the dashboard/
       dashboard_path
+    when /my profile page/
+      profile_path
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end
