@@ -1,3 +1,4 @@
+@wip
 Feature: API key reset
   In order to protect my account if my API key becomes known
   A user
@@ -8,7 +9,3 @@ Feature: API key reset
       And I am on my profile page
       Then I should see my API key
     
-    
-    
-
-  

@@ -9,6 +9,7 @@ ActionController::Routing::Routes.draw do |map|
     :requirements => { :id => RUBYGEM_NAME_MATCHER }
 
   map.resource  :dashboard,  :only => :show
+  map.resource  :profile
   map.resources :statistics, :only => :index, :as => "stats"
 
   map.resource :migrate,
