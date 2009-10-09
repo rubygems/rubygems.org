@@ -32,7 +32,7 @@ ActionController::Routing::Routes.draw do |map|
   end
 
   map.search "/search", :controller => "searches", :action => "new"
-  map.resource :api_key, :only => :show
+  map.resource :api_key, :only => [:show, :reset], :member => {:reset => :put}
 
   map.sign_up  'sign_up', :controller => 'clearance/users',    :action => 'new'
   map.sign_in  'sign_in', :controller => 'clearance/sessions', :action => 'new'

@@ -49,4 +49,21 @@ class ApiKeysControllerTest < ActionController::TestCase
       assert_equal @user.api_key, @response.body
     end
   end
+  
+  context "on PUT to reset with signed in user" do
+    setup do
+      @user = Factory(:email_confirmed_user)
+      sign_in_as(@user)
+    end
+    should "reset the user's api key" do
+      assert_changed(@user, :api_key) do
+        put :reset
+      end
+    end
+    should "redirect to the profile page" do
+      put :reset
+      assert_redirected_to profile_path
+    end
+  end
+  
 end
