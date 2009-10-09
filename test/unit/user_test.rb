@@ -16,9 +16,9 @@ class UserTest < ActiveSupport::TestCase
     end
     
     should "reset api key" do
-      original_api_key = @user.api_key
-      @user.reset_api_key!
-      assert_not_equal original_api_key, @user.reload.api_key
+      assert_changed(@user, :api_key) do
+        @user.reset_api_key!
+      end
     end
 
     should "only return approved rubygems" do
