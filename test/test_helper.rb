@@ -25,6 +25,14 @@ class Test::Unit::TestCase
   def response_body
     @response.body
   end
+  
+  def assert_changed(object, attribute, &block)
+    original = object.send(attribute)
+    yield
+    latest = object.reload.send(attribute)
+    assert_not_equal original, latest,
+      "Expected #{object.class} #{attribute} to change but still #{latest}"
+  end
 end
 
 def regenerate_index

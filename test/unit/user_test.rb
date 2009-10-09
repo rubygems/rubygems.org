@@ -14,6 +14,12 @@ class UserTest < ActiveSupport::TestCase
     should "create api key" do
       assert_not_nil @user.api_key
     end
+    
+    should "reset api key" do
+      assert_changed(@user, :api_key) do
+        @user.reset_api_key!
+      end
+    end
 
     should "only return approved rubygems" do
       my_rubygem = Factory(:rubygem)
