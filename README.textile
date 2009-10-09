@@ -12,8 +12,6 @@ Please check out the "FAQ":http://gemcutter.org/pages/faq for more information.
 
 h2. Contributions
 
-*If you're making UI changes (CSS, html, anything!) please do it on the design branch until the redesign is merged back into master. Thanks!*
-
 Gemcutter has a 'commit-bit' policy, much like the Rubinius project. Submit a patch that is accepted, and you can get full commit access to the project. All you have to do is ask us on #gemcutter on Freenode or bug qrush in a message and he'll add you as a collaborator on the main repository. Feel free to fork the project though and have fun in your own sandbox.
 
 How to contribute:
