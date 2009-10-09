@@ -1,3 +1,5 @@
 <h3>Your Profile</h3>
 
 <p>Your API key is <strong><%= @user.api_key %></strong>.</p>
+
+<p><%= button_to "Reset my API key", reset_api_key_path, :method => :put %></p>
