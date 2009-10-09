@@ -115,9 +115,11 @@ class Rubygem < ActiveRecord::Base
   end
 
   def reorder_versions
-    reload.versions.sort.reverse.each_with_index do |version, index|
+    numbers = self.reload.versions.sort.reverse.map(&:number).uniq
+
+    self.versions.each do |version|
       Version.without_callbacks(:reorder_versions) do
-        version.update_attribute(:position, index)
+        version.update_attribute(:position, numbers.index(version.number))
       end
     end
   end
