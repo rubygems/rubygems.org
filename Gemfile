@@ -4,9 +4,18 @@ bundle_path "vendor/bundler_gems"
 source "http://gemcutter.org"
 source "http://gems.github.com"
 
-gem "rails", "2.3.4", :only => :bundle
+gem "rails",          "2.3.4"
+gem "activesupport",  "2.3.4"
+gem "activerecord",   "2.3.4"
+gem "actionpack",     "2.3.4"
+gem "activeresource", "2.3.4"
+gem "actionmailer",   "2.3.4"
+
 gem "clearance"
 gem "will_paginate"
+gem "gchartrb"
+gem "sinatra"
+gem "xml-simple"
 gem "ddollar-pacecar", "1.1.6", :require_as => "pacecar"
 
 gem "shoulda",             :only => :test
