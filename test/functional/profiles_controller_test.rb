@@ -8,19 +8,19 @@ class ProfilesControllerTest < ActionController::TestCase
       sign_in_as(@user)
     end
 
-    context "on GET to show" do
+    context "on GET to edit" do
       setup do
-        get :show
+        get :edit
       end
 
       should_respond_with :success
-      should_render_template :show
+      should_render_template :edit
       should_assign_to(:user) { @user }
     end
   end  
   
-  context "On GET to show without being signed in" do
-    setup { get :show }
+  context "On GET to edit without being signed in" do
+    setup { get :edit }
     should_respond_with :redirect
     should_redirect_to('the homepage') { root_url }
   end
