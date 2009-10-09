@@ -1,4 +1,3 @@
-@wip
 Feature: API key reset
   In order to protect my account if my API key becomes known
   A user
