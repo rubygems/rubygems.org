@@ -13,9 +13,9 @@ gem "actionmailer",   "2.3.4"
 
 gem "clearance"
 gem "will_paginate"
-gem "gchartrb"
 gem "sinatra"
 gem "xml-simple"
+gem "gchartrb", :require_as => "google_chart"
 gem "ddollar-pacecar", "1.1.6", :require_as => "pacecar"
 
 gem "shoulda",             :only => :test
