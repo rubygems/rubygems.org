@@ -1,13 +1,9 @@
 ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'test_help'
-require 'rack/test'
-require 'sinatra'
-require 'rr'
-require 'fakeweb'
+Bundler.require_env("test")
 
 FakeWeb.allow_net_connect = false
-
 set :environment, :test
 
 Gemcutter.indexer.generate_index
