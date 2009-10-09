@@ -66,4 +66,12 @@ class ApiKeysControllerTest < ActionController::TestCase
     end
   end
   
+  context "on PUT to reset with no signed in user" do
+    setup do
+      put :reset
+    end
+    should "redirect" do
+      assert_response :redirect
+    end
+  end
 end
