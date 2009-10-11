@@ -12,7 +12,7 @@ class RubygemTest < ActiveSupport::TestCase
     should_have_many :versions, :dependent => :destroy
     should_have_one :linkset, :dependent => :destroy
     should_validate_uniqueness_of :name
-    should_allow_values_for :name, "rails", "awesome42", "factory_girl", "rack-test"
+    should_allow_values_for :name, "rails", "awesome42", "factory_girl", "rack-test", "perftools.rb"
 
     should "reorder versions with platforms properly" do
       version3_ruby  = Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "ruby")

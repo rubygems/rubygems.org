@@ -28,7 +28,7 @@ class Rubygem < ActiveRecord::Base
   def validate
     if name =~ /^[\d]+$/
       errors.add "Name must include at least one letter."
-    elsif name =~ /[^\d\w_-]/
+    elsif name =~ /[^\d\w_\-\.]/
       errors.add "Name can only include letters, numbers, dashes, and underscores."
     end
   end
