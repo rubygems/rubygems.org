@@ -7,6 +7,8 @@ set :environment, :test
 
 Gemcutter.indexer.generate_index
 
+Shoulda.autoload_macros(Rails.root, "vendor/bundler_gems/gems/*")
+
 class ActiveSupport::TestCase
   self.use_transactional_fixtures = true
   self.use_instantiated_fixtures  = false
