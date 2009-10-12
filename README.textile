@@ -8,21 +8,17 @@ h2. Purpose
 * Create more transparent and accessible project pages
 * Enable the community to improve and enhance the site
 
-Please check out the "FAQ":http://gemcutter.org/pages/faq for more information.
+h2. Links
+
+"Mailing List":http://groups.google.com/group/gemcutter
+"FAQ":http://gemcutter.org/pages/faq
+IRC: #gemcutter on irc.freenode.net
 
 h2. Contributions
 
 Gemcutter has a 'commit-bit' policy, much like the Rubinius project. Submit a patch that is accepted, and you can get full commit access to the project. All you have to do is ask us on #gemcutter on Freenode or bug qrush in a message and he'll add you as a collaborator on the main repository. Feel free to fork the project though and have fun in your own sandbox.
 
-How to contribute:
-
-* Fork the project
-* Create a topic branch for what you're working on (@git checkout -b awesome_feature@)
-* Commit away, push that up (@git push your_remote awesome_feature@)
-* Create a new GitHub Issue with the commit, asking for review.
-* Once it's accepted, if you want access to the core repository feel free to ask! Otherwise, you can continue to hack away in your own fork.
-
-If you're looking for things to hack on, please check "GitHub Issues":http://github.com/qrush/gemcutter/issues. If you've found bugs or have feature ideas don't be afraid to pipe up and ask the mailing list or IRC channel about them.
+Please read up on the "GitHub Wiki":http://wiki.github.com/qrush/gemcutter/contribution-guidelines for the latest contribution guidelines.
 
 h2. Organization
 
@@ -32,17 +28,6 @@ Gemcutter consists of a few major parts:
 * Sinatra app (Hostess): the gem server, lives in @app/metal/hostess.rb@.
 * RubyGem: The gemcutter client gem that interacts with the site, lives in @gem/@.
 * Gem processor: Handles incoming gems and storing them in S3 (production) or on the filesystem in @server/@ (development). Lives in @lib/gemcutter.rb@, @lib/indexer.rb@, @lib/vault.rb@.
-
-h2. Development
-
-Some things you'll need to do in order to get this project up and running:
-
-* Install sinatra. (@sudo gem install sinatra@)
-* Install the test gems (@sudo rake gems:install RAILS_ENV=test@)
-
-For testing/developing the gem, @cd@ into the @gem@ directory. Please keep the code for the gem in there, don't let it leak out into the Rails app.
-
-Make sure you run @rake gemcutter:index:create@ before running the app on your own machine, this primes the filesystem gem index for local use.
 
 h2. License
 
