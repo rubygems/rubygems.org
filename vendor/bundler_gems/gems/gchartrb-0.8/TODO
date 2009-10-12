@@ -1,0 +1,23 @@
+TODO List (Features)
+====================
+* Line Styles DONE
+* Customisable Width for bar charts DONE
+* Fill Area DONE
+* Download Image
+
+* Friendly Color Values
+* Easy calculations for Stuff that is needed
+
+TODO List (Other)
+=================
+* Create an alternate git repository
+
+Code Level Improvements
+=======================
+* Automate upload to google code
+* Write tests that render different kinds of graphs
+* Use splats instead of attribute accessors to provide a neater API (?)
+* Clean up encoding, especially the handling of 'missing' values
+* Improved error handling and reporting for things
+  * Number of labels and number of postions in axis must be the same (?)
+  * Axis styles need to be specified in a certain way

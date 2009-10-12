@@ -1,0 +1,232 @@
+= 1.7.5 (2009-09-09)
+
+* Fix ruby warnings (josh)
+* Make megabyte value size limit optional since Tokyo Tyrant can accept values larger than 1MB.
+  Use :check_size => false to disable the size check. (jsl)
+* Ruby 1.9 support for recent I/O changes.
+* Fix duplicate value marshalling on server error. (rajiv)
+* Added option :autofix_keys (disabled by default) to replace long keys with md5 hashes (sd)
+
+= 1.7.4 (2009-06-09)
+
+* Fix issue with raising timeout errors.
+
+= 1.7.3 (2009-06-06)
+
+* Remove SystemTimer support, refactor I/O to use nonblocking operations.  Speeds up
+  performance approx 100%. Timeouts basically have no overhead now!  (tenderlove)
+* Update load logic to support SystemTimer running in Ruby Enterprise Edition.  Thanks
+  to splattael on github for the comment.
+
+= 1.7.2 (2009-04-12)
+
+* Rollback socket timeout optimization.  It does not work on all operating systems
+  and was a support headache.
+
+= 1.7.1 (2009-03-28)
+
+* Performance optimizations: 
+  * Rely on higher performance operating system socket timeouts for low-level socket 
+    read/writes where possible, instead of the (slower) SystemTimer or (slowest,
+    unreliable) Timeout libraries.
+  * the native binary search is back!  The recent performance tuning made the binary search 
+    a bottleneck again so it had to return.  It uses RubyInline to compile the native extension and 
+    silently falls back to pure Ruby if anything fails.  Make sure you run:
+    `gem install RubyInline` if you want ultimate performance.
+  * the changes make memcache-client 100% faster than 1.7.0 in my performance test on Ruby 1.8.6: 
+    15 sec -> 8 sec.
+* Fix several logging issues.
+
+= 1.7.0 (2009-03-08)
+
+* Go through the memcached protocol document and implement any commands not already implemented:
+  - cas
+  - append
+  - prepend
+  - replace
+  
+  Append and prepend only work with raw data since it makes no sense to concatenate two Marshalled
+  values together.  The cas functionality should be considered a prototype.  Since I don't have an
+  application which uses +cas+, I'm not sure what semantic sugar the API should provide.  Should it
+  retry if the value was changed?  Should it massage the returned string into true/false?  Feedback
+  would be appreciated.
+
+* Add fetch method which provides a method very similar to ActiveSupport::Cache::Store#fetch,
+  basically a wrapper around get and add. (djanowski)
+
+* Implement the flush_all delay parameter, to allow a large memcached farm to be flushed gradually.
+
+* Implement the noreply flag, which tells memcached not to reply in operations which don't
+  need a reply, i.e. set/add/delete/flush_all.
+
+* The only known functionality not implemented anymore is the <flags> parameter to the storage
+  commands.  This would require modification of the API method signatures.  If someone can come
+  up with a clean way to implement it, I would be happy to consider including it.
+
+= 1.6.5 (2009-02-27)
+
+* Change memcache-client to multithreaded by default.  The mutex does not add significant
+  overhead and it is far too easy, now that Sinatra, Rails and Merb are all thread-safe, to
+  use memcache-client in a thread-unsafe manner.  Remove some unnecessary mutexing and add
+  a test to verify heavily multithreaded usage does not act unexpectedly.
+
+* Add optional support for the SystemTimer gem when running on Ruby 1.8.x.  This gem is
+  highly recommended - it ensures timeouts actually work and halves the overhead of using
+  timeouts.  Using this gem, Ruby 1.8.x is actually faster in my performance tests
+  than Ruby 1.9.x.  Just "gem install SystemTimer" and it should be picked up automatically.
+
+= 1.6.4 (2009-02-19)
+
+* Remove native code altogether.  The speedup was only 10% on Ruby 1.8.6 and did not work
+  on Ruby 1.9.1.
+
+* Removed memcache_util.rb from the distribution.  If you are using it, please copy the code
+  into your own project.  The file will live in the github repository for a few more months
+  for this purposes. http://github.com/mperham/memcache-client/raw/7a276089aa3c914e47e3960f9740ac7377204970/lib/memcache_util.rb
+
+* Roll continuum.rb into memcache.rb.  The project is again a single Ruby file, with no dependencies.
+
+= 1.6.3 (2009-02-14)
+
+* Remove gem native extension in preference to RubyInline.  This allows the gem to install
+and work on JRuby and Ruby 1.8.5 when the native code fails to compile.
+
+= 1.6.2 (2009-02-04)
+
+* Validate that values are less than one megabyte in size.
+
+* Refactor error handling in get_multi to handle server failures and return what values
+  we could successfully retrieve.
+
+* Add optional logging parameter for debugging and tracing.
+
+* First official release since 1.5.0.  Thanks to Eric Hodel for turning over the project to me!
+  New project home page: http://github.com/mperham/memcache-client
+
+= 1.6.1 (2009-01-28)
+
+* Add option to disable socket timeout support.  Socket timeout has a significant performance 
+  penalty (approx 3x slower than without in Ruby 1.8.6).  You can turn off the timeouts if you 
+  need absolute performance, but by default timeouts are enabled. The performance
+  penalty is much lower in Ruby 1.8.7, 1.9 and JRuby.  (mperham)
+
+* Add option to disable server failover.  Failover can lead to "split-brain" caches that 
+  return stale data. (mperham)
+
+* Implement continuum binary search in native code for performance reasons.  Pure ruby
+  is available for platforms like JRuby or Rubinius which can't use C extensions. (mperham)
+  
+* Fix #add with raw=true (iamaleksey)
+
+= 1.6.0
+
+* Implement a consistent hashing algorithm, as described in libketama.
+  This dramatically reduces the cost of adding or removing servers dynamically
+  as keys are much more likely to map to the same server.
+
+  Take a scenario where we add a fourth server.  With a naive modulo algorithm, about
+  25% of the keys will map to the same server.  In other words, 75% of your memcached
+  content suddenly becomes invalid.  With a consistent algorithm, 75% of the keys
+  will map to the same server as before - only 25% will be invalidated. (mperham)
+
+* Implement socket timeouts, should fix rare cases of very bad things happening
+  in production at 37signals and FiveRuns.  (jseirles)
+
+= 1.5.0.5
+
+* Remove native C CRC32_ITU_T extension in favor of Zlib's crc32 method.
+  memcache-client is now pure Ruby again and will work with JRuby and Rubinius.
+
+= 1.5.0.4
+
+* Get test suite working again (packagethief)
+* Ruby 1.9 compatiblity fixes (packagethief, mperham)
+* Consistently return server responses and check for errors (packagethief)
+* Properly calculate CRC in Ruby 1.9 strings (mperham)
+* Drop rspec in favor of test/unit, for 1.9 compat (mperham)
+
+= 1.5.0.3 (FiveRuns fork)
+
+* Integrated ITU-T CRC32 operation in native C extension for speed.  Thanks to Justin Balthrop!
+
+= 1.5.0.2 (FiveRuns fork)
+
+* Add support for seamless failover between servers.  If one server connection dies,
+the client will retry the operation on another server before giving up.
+
+* Merge Will Bryant's socket retry patch.
+http://willbryant.net/software/2007/12/21/ruby-memcache-client-reconnect-and-retry
+
+= 1.5.0.1 (FiveRuns fork)
+
+* Fix set not handling client disconnects.
+http://dev.twitter.com/2008/02/solving-case-of-missing-updates.html
+
+= 1.5.0
+
+* Add MemCache#flush_all command.  Patch #13019 and bug #10503.  Patches
+  submitted by Sebastian Delmont and Rick Olson.
+* Type-cast data returned by MemCache#stats.  Patch #10505 submitted by
+  Sebastian Delmont.
+
+= 1.4.0
+
+* Fix bug #10371, #set does not check response for server errors.
+  Submitted by Ben VandenBos.
+* Fix bug #12450, set TCP_NODELAY socket option.  Patch by Chris
+  McGrath.
+* Fix bug #10704, missing #add method.  Patch by Jamie Macey.
+* Fix bug #10371, handle socket EOF in cache_get.  Submitted by Ben
+  VandenBos.
+
+= 1.3.0
+
+* Apply patch #6507, add stats command.  Submitted by Tyler Kovacs.
+* Apply patch #6509, parallel implementation of #get_multi.  Submitted
+  by Tyler Kovacs.
+* Validate keys.  Disallow spaces in keys or keys that are too long.
+* Perform more validation of server responses.  MemCache now reports
+  errors if the socket was not in an expected state.  (Please file
+  bugs if you find some.)
+* Add #incr and #decr.
+* Add raw argument to #set and #get to retrieve #incr and #decr
+  values.
+* Also put on MemCacheError when using Cache::get with block.
+* memcache.rb no longer sets $TESTING to a true value if it was
+  previously defined.  Bug #8213 by Matijs van Zuijlen.
+
+= 1.2.1
+
+* Fix bug #7048, MemCache#servers= referenced changed local variable.
+  Submitted by Justin Dossey.
+* Fix bug #7049, MemCache#initialize resets @buckets.  Submitted by
+  Justin Dossey.
+* Fix bug #6232, Make Cache::Get work with a block only when nil is
+  returned.  Submitted by Jon Evans.
+* Moved to the seattlerb project.
+
+= 1.2.0
+
+NOTE: This version will store keys in different places than previous
+versions!  Be prepared for some thrashing while memcached sorts itself
+out!
+
+* Fixed multithreaded operations, bug 5994 and 5989.
+  Thanks to Blaine Cook, Erik Hetzner, Elliot Smith, Dave Myron (and
+  possibly others I have forgotten).
+* Made memcached interoperable with other memcached libraries, bug
+  4509.  Thanks to anonymous.
+* Added get_multi to match Perl/etc APIs
+
+= 1.1.0
+
+* Added some tests
+* Sped up non-multithreaded and multithreaded operation
+* More Ruby-memcache compatibility
+* More RDoc
+* Switched to Hoe
+
+= 1.0.0
+
+Birthday!
+

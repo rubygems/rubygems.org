@@ -1,0 +1,15 @@
+logging_enabled: >
+  <BucketLoggingStatus xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+    <LoggingEnabled>
+      <TargetBucket>mylogs</TargetBucket>
+      <TargetPrefix>access_log-</TargetPrefix>
+    </LoggingEnabled>
+  </BucketLoggingStatus>
+  
+logging_disabled: >
+  <BucketLoggingStatus xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+    <!--<LoggingEnabled>
+      <TargetBucket>myLogsBucket</TargetBucket>
+      <TargetPrefix>add/this/prefix/to/my/log/files/access_log-</TargetPrefix>
+    </LoggingEnabled>-->
+  </BucketLoggingStatus>

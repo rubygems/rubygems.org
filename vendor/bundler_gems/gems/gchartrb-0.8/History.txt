@@ -1,0 +1,69 @@
+== 0.8 / 2008-03-20
+
+* Fixed Rakefile to process URL correctly (Thanks Aaron Blohowiak)
+* Fixed Axis error due to typo in base.rb (Thanks Jack Nutting)
+
+== 0.7 / 2008-02-04
+
+* Added fill area feature
+* Added to_escaped_url method for encoding the URLs properly
+* Fixed bug where wrong variable name was being used in method
+
+== 0.6 / 2008-01-27
+
+* Added experimental support for undocumented Financial Line Chart (lfi)
+* Added line style support (thanks diomedes)
+* Added support for customisable width and spacing in bar charts
+
+== 0.5.5 / 2008-01-23
+
+* Fixed a bug related to multiple datasets using extended encoding
+
+== 0.5.4 / 2008-01-07
+
+* Fixed a bug related to data encoding in Stacked Charts
+* Fixed a bug in which title font and title font size values were being ignored
+* Fixed a bug where shape markers and range markers were overriding each other
+
+== 0.5.3 / 2007-12-19
+
+* Added support for shape markers
+* Added support for block based idiomatic ruby syntax
+
+== 0.5.2 / 2007-12-14
+
+* Added support for title color via title_color attribute
+* Added support for vertical and horizontal range markers using the range_marker method
+* Removed show_labels from base.rb and added it only for pie charts
+
+== 0.5.1 / 2007-12-12
+
+* Added support for max_value method to specify maximum values to plot against
+
+== 0.5 / 2007-12-12
+
+* Added Scatter Chart Support
+* Documentation Updates
+
+== 0.4.1 / 2007-12-12
+
+* Removed some spurious debug statements
+
+== 0.4 / 2007-12-12
+
+* Fixed issue when all data points are 0 in Line XY Chart (Thanks Cedric)
+* Proper calculation of max values for Line XY chart (Thanks Bryan Donovan)
+
+== 0.3 / 2007-12-11
+
+* Google changed Pie chart implementation to disable legends. Fixed in API.
+
+== 0.2 / 2007-12-11
+
+* Removed hoe dependency 
+* Doc fixes
+
+== 0.1 / 2007-12-11
+
+* Initial Release
+* RDoc documentation

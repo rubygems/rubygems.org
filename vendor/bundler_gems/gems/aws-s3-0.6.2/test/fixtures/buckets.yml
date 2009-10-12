@@ -1,0 +1,133 @@
+empty_bucket_list: >
+  <ListAllMyBucketsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+    <Owner>
+      <ID>ab00c3106e091f8fe23154c85678cda66628adb330bc00f02cf4a1c36d76bc48</ID>
+      <DisplayName>amazon</DisplayName>
+    </Owner>
+    <Buckets/>
+  </ListAllMyBucketsResult>
+
+
+bucket_list_with_one_bucket: > 
+  <ListAllMyBucketsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+    <Owner>
+      <ID>ab00c3106e091f8fe23154c85678cda66628adb330bc00f02cf4a1c36d76bc48</ID>
+      <DisplayName>amazon</DisplayName>
+    </Owner>
+    <Buckets>
+      <Bucket>
+        <Name>marcel_molina</Name>
+        <CreationDate>2006-10-04T15:58:38.000Z</CreationDate>
+      </Bucket>
+    </Buckets>
+  </ListAllMyBucketsResult>
+
+
+bucket_list_with_more_than_one_bucket: >
+  <ListAllMyBucketsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+    <Owner>
+      <ID>ab00c3106e091f8fe23154c85678cda66628adb330bc00f02cf4a1c36d76bc48</ID>
+      <DisplayName>amazon</DisplayName>
+    </Owner>
+    <Buckets>
+      <Bucket>
+        <Name>marcel_molina</Name>
+        <CreationDate>2006-10-04T15:58:38.000Z</CreationDate>
+      </Bucket>
+      <Bucket>
+        <Name>marcel_molina_jr</Name>
+        <CreationDate>2006-10-04T16:01:30.000Z</CreationDate>
+      </Bucket>
+    </Buckets>
+  </ListAllMyBucketsResult>
+  
+empty_bucket: >
+  <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+    <Name>marcel_molina</Name>
+    <Prefix></Prefix>
+    <Marker></Marker>
+    <MaxKeys>1000</MaxKeys>
+    <IsTruncated>false</IsTruncated>
+  </ListBucketResult>
+  
+bucket_with_one_key: >
+  <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+    <Name>marcel_molina</Name>
+    <Prefix></Prefix>
+    <Marker></Marker>
+    <MaxKeys>1000</MaxKeys>
+    <IsTruncated>false</IsTruncated>
+    <Contents>
+      <Key>tongue_overload.jpg</Key>
+      <LastModified>2006-10-05T02:42:22.000Z</LastModified>
+      <ETag>&quot;f21f7c4e8ea6e34b268887b07d6da745&quot;</ETag>
+      <Size>60673</Size>
+      <Owner>
+        <ID>bb2041a25975c3d4ce9775fe9e93e5b77a6a9fad97dc7e00686191f3790b13f1</ID>
+        <DisplayName>mmolina@onramp.net</DisplayName>
+      </Owner>
+      <StorageClass>STANDARD</StorageClass>
+    </Contents>
+  </ListBucketResult>
+  
+bucket_with_more_than_one_key: >
+  <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+    <Name>marcel_molina</Name>
+    <Prefix></Prefix>
+    <Marker></Marker>
+    <MaxKeys>1000</MaxKeys>
+    <IsTruncated>false</IsTruncated>
+    <Contents>
+      <Key>beluga_baby.jpg</Key>
+      <LastModified>2006-10-05T02:55:10.000Z</LastModified>
+      <ETag>&quot;b2453d4a39a7387674a8c505112a2f0b&quot;</ETag>
+      <Size>35807</Size>
+      <Owner>
+        <ID>bb2041a25975c3d4ce9775fe9e93e5b77a6a9fad97dc7e00686191f3790b13f1</ID>
+        <DisplayName>mmolina@onramp.net</DisplayName>
+      </Owner>
+      <StorageClass>STANDARD</StorageClass>
+    </Contents>
+    <Contents>
+      <Key>tongue_overload.jpg</Key>
+      <LastModified>2006-10-05T02:42:22.000Z</LastModified>
+      <ETag>&quot;f21f7c4e8ea6e34b268887b07d6da745&quot;</ETag>
+      <Size>60673</Size>
+      <Owner>
+        <ID>bb2041a25975c3d4ce9775fe9e93e5b77a6a9fad97dc7e00686191f3790b13f1</ID>
+        <DisplayName>mmolina@onramp.net</DisplayName>
+      </Owner>
+      <StorageClass>STANDARD</StorageClass>
+    </Contents>
+  </ListBucketResult>
+  
+truncated_bucket_with_more_than_one_key: >
+  <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+    <Name>marcel_molina</Name>
+    <Prefix></Prefix>
+    <Marker></Marker>
+    <MaxKeys>2</MaxKeys>
+    <IsTruncated>true</IsTruncated>
+    <Contents>
+      <Key>beluga_baby.jpg</Key>
+      <LastModified>2006-10-05T02:55:10.000Z</LastModified>
+      <ETag>&quot;b2453d4a39a7387674a8c505112a2f0b&quot;</ETag>
+      <Size>35807</Size>
+      <Owner>
+        <ID>bb2041a25975c3d4ce9775fe9e93e5b77a6a9fad97dc7e00686191f3790b13f1</ID>
+        <DisplayName>mmolina@onramp.net</DisplayName>
+      </Owner>
+      <StorageClass>STANDARD</StorageClass>
+    </Contents>
+    <Contents>
+      <Key>tongue_overload.jpg</Key>
+      <LastModified>2006-10-05T02:42:22.000Z</LastModified>
+      <ETag>&quot;f21f7c4e8ea6e34b268887b07d6da745&quot;</ETag>
+      <Size>60673</Size>
+      <Owner>
+        <ID>bb2041a25975c3d4ce9775fe9e93e5b77a6a9fad97dc7e00686191f3790b13f1</ID>
+        <DisplayName>mmolina@onramp.net</DisplayName>
+      </Owner>
+      <StorageClass>STANDARD</StorageClass>
+    </Contents>
+  </ListBucketResult>

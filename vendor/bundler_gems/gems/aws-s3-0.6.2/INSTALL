@@ -1,0 +1,55 @@
+== Rubygems
+
+The easiest way to install aws/s3 is with Rubygems:
+
+  % sudo gem i aws-s3 -ry
+ 
+== Directly from svn
+
+ % svn co svn://rubyforge.org/var/svn/amazon/s3/trunk aws
+
+== As a Rails plugin
+
+If you want to use aws/s3 with a Rails application, you can export the repository
+into your plugins directory and then check it in: 
+
+  % cd my-rails-application/vendor/plugins
+  % svn export svn://rubyforge.org/var/svn/amazon/s3/trunk aws
+  % svn add aws
+  
+Or you could pull it down with an svn:externals:
+
+  % cd my-rails-application/vendor/plugins
+  % svn propedit svn:externals .
+  
+Then add the following line, save and exit:
+
+  aws svn://rubyforge.org/var/svn/amazon/s3/trunk
+  
+If you go the svn route, be sure that you have all the dependencies installed. The list of dependencies follow.
+  
+== Dependencies
+
+AWS::S3 requires Ruby 1.8.4 or greater. 
+
+It also has the following dependencies:
+
+  sudo gem i xml-simple -ry
+  sudo gem i builder    -ry
+  sudo gem i mime-types -ry
+
+=== XML parsing (xml-simple)
+
+AWS::S3 depends on XmlSimple (http://xml-simple.rubyforge.org/). When installing aws/s3 with
+Rubygems, this dependency will be taken care of for you. Otherwise, installation instructions are listed on the xml-simple
+site.
+
+If your system has the Ruby libxml bindings installed (http://libxml.rubyforge.org/) they will be used instead of REXML (which is what XmlSimple uses). For those concerned with speed and efficiency, it would behoove you to install libxml (instructions here: http://libxml.rubyforge.org/install.html) as it is considerably faster and less expensive than REXML.
+
+=== XML generation (builder)
+
+AWS::S3 also depends on the Builder library (http://builder.rubyforge.org/ and http://rubyforge.org/projects/builder/). This will also automatically be installed for you when using Rubygems.
+
+=== Content type inference (mime-types)
+
+AWS::S3 depends on the MIME::Types library (http://mime-types.rubyforge.org/) to infer the content type of an object that does not explicitly specify it. This library will automatically be installed for you when using Rubygems.

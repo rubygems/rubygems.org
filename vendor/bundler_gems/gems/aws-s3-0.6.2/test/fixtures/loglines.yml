@@ -1,0 +1,5 @@
+bucket_get:
+  "bb2041a25975c3d4ce9775fe9e93e5b77a6a9fad97dc7e00686191f3790b13f1 marcel [14/Nov/2006:06:36:48 +0000] 67.165.183.125 bb2041a25975c3d4ce9775fe9e93e5b77a6a9fad97dc7e00686191f3790b13f1 8B5297D428A05432 REST.GET.BUCKET - \"GET /marcel HTTP/1.1\" 200 - 4534 - 398 395 \"-\" \"-\"\n"
+  
+browser_get:
+  "bb2041a25975c3d4ce9775fe9e93e5b77a6a9fad97dc7e00686191f3790b13f1 marcel [25/Nov/2006:06:26:23 +0000] 67.165.183.125 65a011a29cdf8ec533ec3d1ccaae921c 41521D07CA012312 REST.GET.OBJECT kiss.jpg \"GET /marcel/kiss.jpg HTTP/1.1\" 200 - 67748 67748 259 104 \"-\" \"Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1) Gecko/20061010 Firefox/2.0\"\n"
