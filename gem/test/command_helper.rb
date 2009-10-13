@@ -4,7 +4,10 @@ require 'test/unit'
 require "#{File.dirname(__FILE__)}/../../vendor/bundler_gems/environment"
 
 require 'shoulda'
-require 'redgreen'
+begin
+  require 'redgreen'
+rescue LoadError
+end
 require 'active_support'
 require 'active_support/test_case'
 gem 'fakeweb', '>= 1.2.5'
