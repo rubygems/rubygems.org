@@ -10,7 +10,6 @@ rescue LoadError
 end
 require 'active_support'
 require 'active_support/test_case'
-gem 'fakeweb', '>= 1.2.5'
 require 'fakeweb'
 require 'rr'
 
