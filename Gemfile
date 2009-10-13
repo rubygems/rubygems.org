@@ -12,6 +12,7 @@ gem "sinatra"
 gem "xml-simple"
 gem "gchartrb", :require_as => "google_chart"
 gem "ddollar-pacecar", "1.1.6", :require_as => "pacecar"
+gem "net-scp"
 
 only :test do
   gem "shoulda"

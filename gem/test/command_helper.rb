@@ -1,5 +1,8 @@
 require 'rubygems'
 require 'test/unit'
+
+require "#{File.dirname(__FILE__)}/../../vendor/bundler_gems/environment"
+
 require 'shoulda'
 require 'redgreen'
 require 'active_support'
