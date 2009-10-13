@@ -23,6 +23,7 @@ begin
     gem.rubyforge_project = "gemcutter"
     gem.add_dependency('json_pure')
     gem.add_dependency('net-scp')
+    gem.required_rubygems_version = Gem::Requirement.new(">= 1.3.5") if gem.respond_to? :required_rubygems_version=
     gem.post_install_message = <<MESSAGE
 
 ========================================================================
@@ -33,8 +34,6 @@ begin
     gem push          publish your gems for the world to use and enjoy
     gem migrate       take over your gem from RubyForge on Gemcutter
     gem owner         allow/disallow others to push to your gems
-
- Make sure you're running at least RubyGems 1.3.3 to use these plugins.
 
 ========================================================================
 
