@@ -39,22 +39,22 @@ class Hostess < Sinatra::Default
     end
   end
 
-  get "/specs.#{Gem.marshal_version}.gz" do
+  get "/specs.4.8.gz" do
     content_type('application/x-gzip')
     serve(current_path)
   end
 
-  get "/latest_specs.#{Gem.marshal_version}.gz" do
+  get "/latest_specs.4.8.gz" do
     content_type('application/x-gzip')
     serve(current_path)
   end
 
-  get "/prerelease_specs.#{Gem.marshal_version}.gz" do
+  get "/prerelease_specs.4.8.gz" do
     content_type('application/x-gzip')
     serve(current_path)
   end
 
-  get "/quick/Marshal.#{Gem.marshal_version}/*.gemspec.rz" do
+  get "/quick/Marshal.4.8/*.gemspec.rz" do
     content_type('application/x-deflate')
     serve(current_path)
   end
@@ -62,6 +62,12 @@ class Hostess < Sinatra::Default
   get "/gems/*.gem" do
     Delayed::Job.enqueue Download.new(:raw => params[:splat].to_s, :created_at => Time.zone.now)
     serve(current_path, true)
+  end
+
+  ["/yaml", "/Marshal.4.8"].each do |old_index|
+    get old_index do
+      halt 404, "Please update your RubyGems. Run: gem update --system"
+    end
   end
 
   def current_path
