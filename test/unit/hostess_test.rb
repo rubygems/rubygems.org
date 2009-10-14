@@ -24,6 +24,14 @@ class HostessTest < ActiveSupport::TestCase
     end
   end
 
+  ["/yaml", "/Marshal.4.8"].each do |old_index|
+    should "not serve up #{old_index}" do
+      get old_index
+      assert_equal 404, last_response.status
+      assert_match /gem update --system/, last_response.body
+    end
+  end
+
   should "return quick gemspec" do
     file = "/quick/Marshal.4.8/test-0.0.0.gemspec.rz"
     touch file
