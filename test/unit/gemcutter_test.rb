@@ -15,14 +15,6 @@ class GemcutterTest < ActiveSupport::TestCase
     end
   end
 
-  should "generate a new indexer" do
-    @indexer = "indexer"
-    mock(Gem::Indexer).new(Gemcutter.server_path, :build_legacy => false) { @indexer }
-    assert_equal @indexer, Gemcutter.indexer
-    assert @indexer.respond_to?(:say)
-    assert_nil @indexer.say("Should be quiet")
-  end
-
   context "creating a new gemcutter" do
     setup do
       @user = Factory(:email_confirmed_user)
