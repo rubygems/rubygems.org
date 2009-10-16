@@ -5,8 +5,6 @@ require 'test_help'
 FakeWeb.allow_net_connect = false
 set :environment, :test
 
-Gemcutter.indexer.generate_index
-
 Shoulda.autoload_macros(Rails.root, "vendor/bundler_gems/gems/*")
 
 class ActiveSupport::TestCase
@@ -39,7 +37,6 @@ def regenerate_index
     server/quick
     server/specifications
     server/source_index].map { |d| Dir[d] })
-  Gemcutter.indexer.generate_index
 end
 
 def create_gem(owner, opts = {})
