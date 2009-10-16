@@ -48,41 +48,19 @@ class RubygemTest < ActiveSupport::TestCase
     context "with a user" do
       setup do
         @user = Factory(:user)
+        @rubygem.save
       end
 
-      context "before being saved" do
-        should "be able to assign ownership" do
-          @rubygem.build_ownership(@user)
-          @rubygem.save
-          assert_contains @rubygem.owners, @user
-        end
+      should "be able to assign ownership when no owners exist" do
+        @rubygem.create_ownership(@user)
+        assert_equal @rubygem.reload.owners, [@user]
       end
 
-      context "after being saved" do
-        setup do
-          @new_user = Factory(:user)
-          @rubygem.save
-        end
-
-        should "be able to assign ownership" do
-          @rubygem.build_ownership(@new_user)
-          @rubygem.save
-          assert_contains @rubygem.owners, @new_user
-        end
-      end
-
-      context "after being saved with a version" do
-        setup do
-          @new_user = Factory(:user)
-          @rubygem.save
-          @rubygem.update_attributes(:versions_count => 1)
-        end
-
-        should "not be able to assign ownership" do
-          @rubygem.build_ownership(@new_user)
-          @rubygem.save
-          assert_does_not_contain @rubygem.owners, @new_user
-        end
+      should "not be able to assign ownership when owners exist" do
+        @new_user = Factory(:user)
+        @rubygem.ownerships.create(:user => @new_user, :approved => true)
+        @rubygem.create_ownership(@user)
+        assert_equal @rubygem.reload.owners, [@new_user]
       end
     end
 
