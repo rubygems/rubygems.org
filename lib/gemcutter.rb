@@ -46,8 +46,8 @@ class Gemcutter
 
   def update
     Rubygem.transaction do
-      rubygem.build_ownership(user) unless user.try(:rubyforge_importer?)
       rubygem.update_attributes_from_gem_specification!(version, spec)
+      rubygem.create_ownership(user)
     end
     true
   rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback

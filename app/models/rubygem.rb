@@ -86,8 +86,10 @@ class Rubygem < ActiveRecord::Base
     new_record? || versions_count.zero?
   end
 
-  def build_ownership(user)
-    ownerships.build(:user => user, :approved => true) if pushable?
+  def create_ownership(user)
+    if unowned? && !user.try(:rubyforge_importer?)
+      ownerships.create(:user => user, :approved => true)
+    end
   end
 
   def update_versions!(version, spec)
