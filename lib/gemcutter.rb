@@ -81,8 +81,34 @@ class Gemcutter
   end
 
   def self.indexer
-    indexer = Gem::Indexer.new(Gemcutter.server_path, :build_legacy => false)
-    def indexer.say(message) end
-    indexer
+    @indexer ||= 
+      begin
+        indexer = Gem::Indexer.new(Gemcutter.server_path, :build_legacy => false)
+        def indexer.say(message) end
+        indexer
+      end
+  end
+
+  def specs_index
+    Version.with_indexed.map(&:to_index)
+  end
+
+  def latest_index
+    Version.latest.release.map(&:to_index)
+  end
+
+  def prerelease_index
+    Version.prerelease.map(&:to_index)
+  end
+
+  def perform
+    Version.update_all({:indexed => true}, {:id => self.version_id})
+    update_index
+  end
+
+  def update_index
+    upload("specs.4.8.gz", specs_index)
+    upload("latest_specs.4.8.gz", latest_index)
+    upload("prerelease_specs.4.8.gz", prerelease_index)
   end
 end

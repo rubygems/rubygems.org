@@ -41,7 +41,5 @@ ActionController::Routing::Routes.draw do |map|
     :action     => 'destroy',
     :method     => :delete
 
-  map.resource :session, :only => [:new, :create, :destroy]
-
   map.root :controller => "home", :action => "index"
 end
