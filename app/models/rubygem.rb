@@ -7,7 +7,7 @@ class Rubygem < ActiveRecord::Base
   has_many :subscriptions
   has_many :versions, :dependent => :destroy do
     def latest
-      self.find(:first)
+      find_by_platform("ruby") || first
     end
   end
   has_one :linkset, :dependent => :destroy
