@@ -30,6 +30,20 @@ class RubygemTest < ActiveSupport::TestCase
       latest_versions = Version.latest
       assert latest_versions.include?(version3_ruby)
       assert latest_versions.include?(version3_mswin)
+
+      assert_equal version3_ruby, @rubygem.versions.latest
+    end
+
+    should "not have a latest version if no versions exist" do
+      assert_equal 0, @rubygem.versions_count
+      assert_nil @rubygem.versions.latest
+    end
+
+    should "have a latest version if only a platform version exists" do
+      version1 = Factory(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "linux")
+
+      assert_equal 1,        @rubygem.reload.versions_count
+      assert_equal version1, @rubygem.reload.versions.latest
     end
   end
 
