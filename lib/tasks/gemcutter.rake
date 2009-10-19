@@ -265,6 +265,7 @@ namespace :gemcutter do
     gemcutter_gems.each do |index|
       index.pop if index.last == "ruby"
       gem_name = "#{index.join('-')}.gem"
+      FileUtils.mkdir("cache") unless File.exist?("cache")
       gem_path = File.join("cache", gem_name)
       gem_uri = "http://gemcutter.org/gems/#{gem_name}"
 
