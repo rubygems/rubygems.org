@@ -14,7 +14,6 @@ Gem::Specification.new do |s|
   s.email = ["chris@ozmm.org", "pat.eyler@gmail.com"]
   s.executables = ["rg"]
   s.files = ["README", "bin/rg", "lib/redgreen", "lib/redgreen.rb", "lib/redgreen/autotest.rb", "test/test_fake.rb"]
-  s.has_rdoc = false
   s.homepage = %q{http://errtheblog.com/post/15, http://on-ruby.blogspot.com/}
   s.require_paths = ["lib"]
   s.required_ruby_version = Gem::Requirement.new("> 0.0.0")
