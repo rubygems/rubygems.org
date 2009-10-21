@@ -51,7 +51,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.platforms
-    find(:all, :select => 'DISTINCT platform').map(&:platform)
+    find(:all, :select => 'platform').map(&:platform).uniq
   end
 
   def to_s
