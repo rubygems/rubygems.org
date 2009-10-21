@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091009213456) do
+ActiveRecord::Schema.define(:version => 20091021203534) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -134,6 +134,7 @@ ActiveRecord::Schema.define(:version => 20091009213456) do
     t.boolean  "prerelease"
     t.integer  "position"
     t.integer  "downloads_count",   :default => 0
+    t.boolean  "latest"
   end
 
   add_index "versions", ["built_at"], :name => "index_versions_on_built_at"

@@ -119,9 +119,15 @@ class Rubygem < ActiveRecord::Base
   def reorder_versions
     numbers = self.reload.versions.sort.reverse.map(&:number).uniq
 
-    self.versions.each do |version|
-      Version.without_callbacks(:reorder_versions) do
+    Version.without_callbacks(:reorder_versions) do
+      self.versions.each do |version|
         version.update_attribute(:position, numbers.index(version.number))
+      end
+
+      self.versions.update_all(:latest => false)
+
+      versions.release.platforms.each do |platform|
+        versions.release.find_by_platform(platform).update_attributes(:latest => true)
       end
     end
   end
