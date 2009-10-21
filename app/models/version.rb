@@ -18,10 +18,9 @@ class Version < ActiveRecord::Base
   }
 
   named_scope :with_associated, { :conditions => ["rubygems.versions_count > 1"], :include => :rubygem, :order => "versions.built_at desc" }
+  named_scope :latest,          { :conditions => { :position   => 0     }, :include => :rubygem }
   named_scope :prerelease,      { :conditions => { :prerelease => true  }}
   named_scope :release,         { :conditions => { :prerelease => false }}
-
-  named_scope :latest, { :group => 'rubygem_id, platform', :having => 'position = MIN(position)', :include => :rubygem }
 
   before_save :update_prerelease
   after_save  :reorder_versions
