@@ -18,7 +18,7 @@ class Version < ActiveRecord::Base
   }
 
   named_scope :with_associated, { :conditions => ["rubygems.versions_count > 1"], :include => :rubygem, :order => "versions.built_at desc" }
-  named_scope :latest,          { :conditions => { :position   => 0     }, :include => :rubygem }
+  named_scope :latest,          { :conditions => { :latest     => true  }}
   named_scope :prerelease,      { :conditions => { :prerelease => true  }}
   named_scope :release,         { :conditions => { :prerelease => false }}
 
@@ -32,7 +32,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.with_indexed
-    all(:conditions => {:indexed => true}, :include => :rubygem, :order => "rubygems.name asc, number asc, built_at asc")
+    all(:conditions => {:indexed => true}, :include => :rubygem, :order => "rubygems.name asc, position asc")
   end
 
   def self.updated(limit=5)
@@ -48,6 +48,10 @@ class Version < ActiveRecord::Base
     platform = raw_platform.blank? ? "ruby" : raw_platform.join('-')
 
     find_by_rubygem_id_and_number_and_platform!(rubygem_id, number, platform)
+  end
+
+  def self.platforms
+    find(:all, :select => 'DISTINCT platform').map(&:platform)
   end
 
   def to_s

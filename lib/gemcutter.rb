@@ -94,11 +94,11 @@ class Gemcutter
   end
 
   def latest_index
-    Version.latest.release.map(&:to_index)
+    Version.latest.with_indexed.map(&:to_index)
   end
 
   def prerelease_index
-    Version.prerelease.map(&:to_index)
+    Version.prerelease.with_indexed.map(&:to_index)
   end
 
   def perform
