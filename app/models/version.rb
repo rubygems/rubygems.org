@@ -23,7 +23,6 @@ class Version < ActiveRecord::Base
   named_scope :latest,          { :conditions => { :latest     => true  }}
   named_scope :prerelease,      { :conditions => { :prerelease => true  }}
   named_scope :release,         { :conditions => { :prerelease => false }}
-  named_scope :reverse,         { :order      => "position desc" }
 
   before_save :update_prerelease
   after_save  :reorder_versions
@@ -34,8 +33,13 @@ class Version < ActiveRecord::Base
     end
   end
 
-  def self.with_indexed
-    all(:conditions => {:indexed => true}, :include => :rubygem, :order => "rubygems.name asc, position asc")
+  def self.with_indexed(reverse = false)
+    order =  "rubygems.name asc"
+    order << ", position desc" if reverse
+
+    all :conditions => {:indexed => true},
+        :include    => :rubygem,
+        :order      => order
   end
 
   def self.updated(limit=5)
