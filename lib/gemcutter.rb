@@ -90,7 +90,7 @@ class Gemcutter
   end
 
   def specs_index
-    Version.with_indexed.map(&:to_index)
+    Version.reverse.with_indexed.map(&:to_index)
   end
 
   def latest_index
