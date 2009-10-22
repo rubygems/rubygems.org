@@ -17,10 +17,13 @@ class Version < ActiveRecord::Base
     { :conditions => { :rubygem_id => user.subscribed_gem_ids } }
   }
 
-  named_scope :with_associated, { :conditions => ["rubygems.versions_count > 1"], :include => :rubygem, :order => "versions.built_at desc" }
+  named_scope :with_associated, { :conditions => ["rubygems.versions_count > 1"],
+                                  :include    => :rubygem,
+                                  :order      => "versions.built_at desc" }
   named_scope :latest,          { :conditions => { :latest     => true  }}
   named_scope :prerelease,      { :conditions => { :prerelease => true  }}
   named_scope :release,         { :conditions => { :prerelease => false }}
+  named_scope :reverse,         { :order      => "position desc" }
 
   before_save :update_prerelease
   after_save  :reorder_versions
