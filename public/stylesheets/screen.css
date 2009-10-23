@@ -650,6 +650,7 @@ body {
 
 .main .info .gems ol li {
   padding: 8px;
+  padding-left: 1.8em;
   border-top: 1px solid #B4AC99;
   background: url('/images/bullet-directory.png') no-repeat 10px 14px;
 }
@@ -702,10 +703,6 @@ body {
   padding: 15px;
 }
 
-.main .info .subscribed .gems li {
-  padding-left: 1.8em;
-}
-
 .main .info .mine .gems ol {
   padding: 0;
 }
@@ -713,6 +710,7 @@ body {
 .main .info .mine .gems li {
   border: none;
   background: none;
+  padding: 8px;
 }
 
 .main .info .mine .gems li:hover {
