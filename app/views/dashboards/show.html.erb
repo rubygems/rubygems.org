@@ -30,7 +30,12 @@
     <% else %>
       <ol>
       <% @my_gems.each do |gem| %>
-        <li><%= link_to gem, gem, :title => gem.versions.latest.try(:summary) %></li>
+        <li>
+          <div class="downloads">
+            <strong><%= gem.downloads %></strong> downloads
+          </div>
+          <%= link_to gem, gem, :title => gem.versions.latest.try(:summary) %>
+        </li>
       <% end %>
       </ol>
     <% end %>
@@ -41,7 +46,12 @@
     <div class="gems">
       <ol>
       <% current_user.subscribed_gems.each do |gem| %>
-        <li><%= link_to gem, gem, :title => gem.versions.latest.try(:summary) %></li>
+        <li>
+          <div class="downloads">
+            <strong><%= gem.downloads %></strong> downloads
+          </div>
+          <%= link_to gem, gem, :title => gem.versions.latest.try(:summary) %>
+        </li>
       <% end %>
       </ol>
     </div>
