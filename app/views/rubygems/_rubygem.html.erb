@@ -1,4 +1,8 @@
 <li>
+  <div class="downloads">
+    <strong><%= rubygem.downloads %></strong>
+    downloads
+  </div>
   <a href="<%= rubygem_path(rubygem) %>">
     <strong><%= rubygem %></strong>
     <%=h truncate(rubygem.versions.latest.info, :length => 100) %>
