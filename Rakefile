@@ -10,5 +10,3 @@ desc "Run all tests and features"
 task :default => [:test, :cucumber]
 
 task :cron => ['gemcutter:fetch_from_rubyforge']
-
-# test for getting a commit in
