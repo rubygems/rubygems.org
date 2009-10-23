@@ -649,7 +649,7 @@ body {
 }
 
 .main .info .gems ol li {
-  padding-left: 1em;
+  padding: 8px;
   border-top: 1px solid #B4AC99;
   background: url('/images/bullet-directory.png') no-repeat 10px 14px;
 }
@@ -663,7 +663,6 @@ body {
 }
 
 .main .info .gems ol li a {
-  padding: 8px;
   display: block;
   vertical-align: top;
   font-size: 0.8em;
@@ -703,12 +702,15 @@ body {
   padding: 15px;
 }
 
+.main .info .subscribed .gems li {
+  padding-left: 1.8em;
+}
+
 .main .info .mine .gems ol {
   padding: 0;
 }
 
 .main .info .mine .gems li {
-  padding: 0;
   border: none;
   background: none;
 }
@@ -726,6 +728,12 @@ body {
 
 .main .info .mine .gems li a:hover {
   text-decoration: underline;
+}
+
+.main .info .mine .gems li .downloads {
+  margin-top: 3px;
+  font-size: 0.5em;
+  float: right;
 }
 
 .main .info .subscribed .gems,
