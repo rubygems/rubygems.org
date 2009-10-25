@@ -48,6 +48,15 @@ class RubygemTest < ActiveSupport::TestCase
       assert_nil @rubygem.versions.latest
     end
 
+    should "return the ruby version for latest if one exists" do
+      version3_mswin = Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "mswin", :built_at => 1.year.from_now)
+      version3_ruby  = Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "ruby")
+
+      @rubygem.reorder_versions
+
+      assert_equal version3_ruby, @rubygem.versions.latest
+    end
+
     should "have a latest version if only a platform version exists" do
       version1 = Factory(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "linux")
 
