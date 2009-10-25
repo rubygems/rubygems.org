@@ -119,8 +119,8 @@ class Version < ActiveRecord::Base
 
   def platform_as_number
     case self.platform
-      when 'ruby' then 0
-      else             1
+      when 'ruby' then 1
+      else             0
     end
   end
 
