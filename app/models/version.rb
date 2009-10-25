@@ -55,6 +55,12 @@ class Version < ActiveRecord::Base
     platform = raw_platform.blank? ? "ruby" : raw_platform.join('-')
 
     find_by_rubygem_id_and_number_and_platform!(rubygem_id, number, platform)
+  rescue ActiveRecord::RecordNotFound => ex
+    if raw_platform.blank?
+      find_by_rubygem_id_and_number!(rubygem_id, number)
+    else
+      raise ex
+    end
   end
 
   def self.platforms
@@ -111,8 +117,22 @@ class Version < ActiveRecord::Base
     [rubygem.name, to_gem_version, platform]
   end
 
+  def platform_as_number
+    case self.platform
+      when 'ruby' then 0
+      else             1
+    end
+  end
+
   def <=>(other)
-    self.to_gem_version <=> other.to_gem_version
+    self_version  = self.to_gem_version
+    other_version = other.to_gem_version
+
+    if self_version == other_version
+      self.platform_as_number <=> other.platform_as_number
+    else
+      self_version <=> other_version
+    end
   end
 
   def built_at_date
