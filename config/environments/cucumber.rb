@@ -1,4 +1,3 @@
-Bundler.require_env RAILS_ENV
 config.cache_classes = true # This must be true for Cucumber to operate correctly!
 
 # Log error messages when you accidentally call methods on nil.
