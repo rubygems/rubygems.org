@@ -115,6 +115,37 @@ class VersionTest < ActiveSupport::TestCase
       @version.summary = nil
       assert_equal "This rubygem does not have a description or summary.", @version.info
     end
+
+    should "create a gem spec" do
+      spec = @version.to_spec
+      assert spec.is_a?(Gem::Specification)
+      assert_equal @version.rubygem.name, spec.name
+      assert_equal @version.number, spec.version.to_s
+      assert_equal [@version.authors], spec.authors
+      assert_equal @version.description, spec.description
+      assert_equal @version.summary, spec.summary
+
+      date = @version.built_at
+      assert_equal Time.local(date.year, date.month, date.day), spec.date
+    end
+
+    should "join multiple authors on gemspecs" do
+      @version.authors = "Geddy Lee, Neil Peart, Alex Lifeson"
+      assert_equal ["Geddy Lee", "Neil Peart", "Alex Lifeson"], @version.to_spec.authors
+    end
+
+    should "create gemspec with some dependencies" do
+      @dep_one = Factory(:dependency, :version => @version, :requirements => ">= 1.2.3")
+      @dep_two = Factory(:dependency, :version => @version, :requirements => "= 3.0.0")
+      spec = @version.to_spec
+
+      assert_equal 2, spec.dependencies.size
+      assert_equal @dep_one.rubygem.name, spec.dependencies.last.name
+      assert_equal [@dep_one.requirements], spec.dependencies.last.requirements_list
+
+      assert_equal @dep_two.rubygem.name, spec.dependencies.first.name
+      assert_equal [@dep_two.requirements], spec.dependencies.first.requirements_list
+    end
   end
 
   context "when indexing" do
