@@ -16,6 +16,21 @@ namespace :gemcutter do
     Rake::Task["gemcutter:import:process"].execute
   end
 
+  desc "Fix dependencies"
+  task :fix_deps => :environment do
+    Dependency.all.each do |dep|
+      reqs = dep.requirements
+      begin
+        Gem::Requirement.new(reqs)
+      rescue ArgumentError => ex
+        list = reqs.split(/(>=)|(<=)|(~>)|(>)|(<)|(=)/).reject(&:empty?)
+        fixed = list[0] + list[1] + ", " + list[2] + list[3]
+
+        dep.update_attribute(:requirements, fixed)
+      end
+    end
+  end
+
   namespace :index do
     desc "Create the index"
     task :create => :environment do
@@ -259,6 +274,7 @@ namespace :gemcutter do
     end
   end
 
+  desc "Backup all .gem files"
   task :backup do
     require 'open-uri'
     gemcutter_gems = Marshal.load(Gem.gunzip(open("http://gemcutter.org/specs.4.8.gz").read))
