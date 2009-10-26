@@ -22,6 +22,6 @@ class User < ActiveRecord::Base
   protected
 
     def generate_api_key
-      self.api_key = "#{email}-#{Time.now.to_f}".to_md5
+      self.api_key = ActiveSupport::SecureRandom.hex(16) rescue "#{email}-#{Time.now.to_f}".to_md5
     end
 end
