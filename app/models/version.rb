@@ -67,20 +67,6 @@ class Version < ActiveRecord::Base
     find(:all, :select => 'platform').map(&:platform).uniq
   end
 
-  def to_s
-    number
-  end
-
-  def to_title
-    "#{rubygem.name} (#{to_s})"
-  end
-
-  def to_slug
-    param = number.dup
-    param << "-#{platform}" if platformed?
-    param
-  end
-
   def platformed?
     platform != "ruby"
   end
@@ -92,10 +78,6 @@ class Version < ActiveRecord::Base
 
   def reorder_versions
     rubygem.reorder_versions
-  end
-
-  def to_gem_version
-    Gem::Version.new(number)
   end
 
   def info
@@ -111,10 +93,6 @@ class Version < ActiveRecord::Base
       :built_at          => spec.date,
       :indexed           => false
     )
-  end
-
-  def to_index
-    [rubygem.name, to_gem_version, platform]
   end
 
   def platform_as_number
@@ -139,10 +117,51 @@ class Version < ActiveRecord::Base
     built_at.to_date.to_formatted_s(:long)
   end
 
+  def to_s
+    number
+  end
+
+  def to_title
+    "#{rubygem.name} (#{to_s})"
+  end
+
+  def to_slug
+    param = number.dup
+    param << "-#{platform}" if platformed?
+    param
+  end
+
+  def to_index
+    [rubygem.name, to_gem_version, platform]
+  end
+
+  def to_gem_version
+    Gem::Version.new(number)
+  end
+
+  def to_index
+    [rubygem.name, to_gem_version, platform]
+  end
+
   def to_install
     command = "gem install #{rubygem.name}"
     command << " -v #{number}" if rubygem.versions.latest != self
     command << " --pre" if prerelease
     command
+  end
+
+  def to_spec
+    Gem::Specification.new do |spec|
+      spec.name        = rubygem.name
+      spec.version     = to_gem_version
+      spec.authors     = authors.split(', ')
+      spec.date        = built_at
+      spec.description = description
+      spec.summary     = summary
+
+      dependencies.each do |dep|
+        spec.add_dependency(dep.rubygem.name, dep.requirements)
+      end
+    end
   end
 end
