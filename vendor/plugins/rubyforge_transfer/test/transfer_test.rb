@@ -7,27 +7,31 @@ class TransferTest < ActiveSupport::TestCase
     @md5 = Digest::MD5.hexdigest(@password)
   end
 
+  def create_rf_user
+    @rf_user = Rubyforger.create(:email => @email, :encrypted_password => @md5)
+  end
+
   def test_authenticness
-    r = Rubyforger.create(:email => @email, :encrypted_password => @md5)
-    r.password = @password
-    assert(r.authentic?)
+    create_rf_user
+    @rf_user.password = @password
+    assert(@rf_user.authentic?)
   end
 
   def test_inauthenticness_due_to_missing_password
-    r = Rubyforger.create(:email => @email, :encrypted_password => @md5)
-    assert(!r.authentic?)
+    create_rf_user
+    assert(!@rf_user.authentic?)
   end
     
   def test_transferee
-    r = Rubyforger.create(:email => @email, :encrypted_password => @md5)
+    create_rf_user
     assert(RubyforgeTransfer.transferee(@email, @password))
   end 
 
   def test_transfer
+    create_rf_user
     assert(!User.authenticate(@email, @password))
-    r = Rubyforger.create(:email => @email, :encrypted_password => @md5)
-    r.password = @password
-    assert(r.transfer_to_gemcutter)
+    @rf_user.password = @password
+    assert(@rf_user.transfer_to_gemcutter)
     assert(User.authenticate(@email, @password))
   end
 end
