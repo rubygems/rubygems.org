@@ -1,8 +1,5 @@
 class ApplicationController < ActionController::Base
 
-
-
-
   include Clearance::Authentication
   helper :all
   protect_from_forgery :only => [:create, :update, :destroy]
@@ -23,6 +20,8 @@ class ApplicationController < ActionController::Base
 end
 
 class Clearance::SessionsController < ApplicationController
-  include Rf_Check::Checker
+
+  include RubyforgeTransfer
+
   before_filter :rf_check, :only => "create"
 end
