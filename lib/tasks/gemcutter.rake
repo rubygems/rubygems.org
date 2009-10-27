@@ -1,19 +1,18 @@
 namespace :gemcutter do
-  desc "Clean out files that aren't needed."
-  task :clean => :environment do
-    system("git clean -dfx server/; git checkout server/")
-    [Rubygem, Version, Dependency, Requirement, Linkset].each { |c| c.delete_all }
-    Rake::Task["gemcutter:index:create"].execute
-  end
+  desc "Store legacy index"
+  task :store_legacy_index => :environment do
+    puts "Loading up versions..."
+    versions = Version.with_deps.with_indexed
 
-  desc "Get the gem server up and running"
-  task :bootstrap => :environment do
-    Rake::Task["gemcutter:clean"].execute
-    Rake::Task["gemcutter:index:create"].execute
-    ARGV[1] = "bench/old"
-    Rake::Task["gemcutter:import:process"].execute
-    ARGV[1] = "bench/new"
-    Rake::Task["gemcutter:import:process"].execute
+    puts "Mapping specs..."
+    index = versions.map do |version|
+      [version.rubygem.name, version.to_spec]
+    end
+
+    puts "Uploading to S3..."
+    VaultObject.store("Marshal.4.8.Z", Gem.deflate(Marshal.dump(index)), Vault::S3::OPTIONS)
+
+    puts "Ding, legacy index is done!"
   end
 
   namespace :index do
@@ -70,78 +69,7 @@ namespace :gemcutter do
     end
   end
 
-  desc "Look for migrations and try to match the key"
-  task :migrate => :environment do
-    require 'webrat'
-    require 'webrat/mechanize'
-
-    Ownership.find_all_by_approved(false).each do |ownership|
-      rubygem = ownership.rubygem
-      project = rubygem.versions.current.rubyforge_project
-      next if project.blank?
-
-      puts ">> Checking ownership for #{ownership.user} under #{project}"
-
-      begin
-        session = Webrat::MechanizeSession.new
-        session.visit("http://rubyforge.org/projects/#{project}")
-        session.click_link("[News archive]")
-
-        (session.current_dom / "#content a").each do |link|
-          content = link.content.gsub(/[^a-z0-9]/, "")
-          if content == ownership.token
-            puts ">>> Success!"
-            ownership.update_attribute(:approved, true)
-          end
-        end
-      rescue Exception => e
-        HoptoadNotifier.notify(:error_class => e.class, :error_message => e.message)
-      end
-    end
-  end
-
   namespace :import do
-    desc 'Download all of the gems in server/rubygems.txt'
-    task :download do
-      require 'curb'
-      require 'active_support'
-      url_queue = File.readlines("server/rubygems.txt").map { |g| g.strip }
-      puts "Downloading #{url_queue.size} gems..."
-      FileUtils.mkdir("cache") unless File.exist?("cache")
-
-      responses = {}
-      url_queue.in_groups_of(25).each do |group|
-        multi = Curl::Multi.new
-        group.each do |url|
-          next unless url
-          path = File.join("cache", File.basename(url))
-          if File.exists?(path)
-            puts "Skipping #{File.basename(url)}"
-            next
-          end
-
-          easy = Curl::Easy.new(url) do |curl|
-            curl.follow_location = true
-            curl.on_success do |c|
-              puts "Success for #{File.basename(url)} in #{c.total_time} seconds"
-              begin
-                File.open(path, "wb") do |file|
-                  file.write c.body_str
-                end
-              rescue Exception => e
-                puts "Problem saving: #{e}"
-              end
-            end
-            curl.on_failure do |c|
-              puts "Failure for #{File.basename(url)}: #{c.response_code}"
-            end
-          end
-          multi.add(easy)
-        end
-        multi.perform
-      end
-    end
-
     desc 'Make sure all of the gems are on S3'
     task :verify => :environment do
       return unless Rails.env.production?
@@ -171,18 +99,6 @@ namespace :gemcutter do
           end
         else
           puts "Couldn't find #{local_path}"
-        end
-      end
-    end
-
-    desc 'Parse out rubygems'
-    task :parse do
-      require 'hpricot'
-      doc = Hpricot(open("server/rubygems.html"))
-      File.open("server/rubygems.txt", "w") do |file|
-        (doc / "a")[1..-1].each do |gem|
-          puts gem['href']
-          file.write "http://gems.rubyforge.org/gems/#{gem['href']}\n"
         end
       end
     end
@@ -232,30 +148,6 @@ namespace :gemcutter do
       end
 
       Gemcutter.indexer.update_index(source_index)
-    end
-  end
-
-  task :fetch_from_rubyforge => :environment do
-    require 'open-uri'
-    rubyforge_gems = Marshal.load(Gem.gunzip(open("http://gems.rubyforge.org/specs.4.8.gz").read))
-    gemcutter_gems = Marshal.load(Gem.gunzip(open("http://gemcutter.org/specs.4.8.gz").read))
-    (rubyforge_gems - gemcutter_gems).each do |index|
-      index.pop if index.last == "ruby"
-      gem_name = "http://gems.rubyforge.org/gems/#{index.join('-')}.gem"
-      puts ">> Fetching #{gem_name}"
-
-      # Skipping some bad gems...
-      next if gem_name.include?("appengine-sdk-1.2.5") || gem_name.include?("BlueCloth")
-
-      begin
-        gem_io = open(gem_name)
-        cutter = Gemcutter.new(nil, gem_io)
-        cutter.pull_spec and cutter.find and cutter.save
-        puts ">> #{cutter.message}"
-      rescue Exception => e
-        puts ">> Problem fetching the gem: #{e.message}"
-        puts e.backtrace
-      end
     end
   end
 
