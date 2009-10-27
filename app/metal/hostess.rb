@@ -59,6 +59,11 @@ class Hostess < Sinatra::Default
     serve(current_path)
   end
 
+  get "/Marshal.4.8.Z" do
+    content_type('application/x-deflate')
+    serve(current_path)
+  end
+
   get "/gems/*.gem" do
     Delayed::Job.enqueue Download.new(:raw => params[:splat].to_s, :created_at => Time.zone.now)
     serve(current_path, true)

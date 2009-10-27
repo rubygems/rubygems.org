@@ -15,7 +15,7 @@ class HostessTest < ActiveSupport::TestCase
     FileUtils.rm(path) if File.exists?(path)
   end
 
-  ["/prerelease_specs.4.8.gz", "/latest_specs.4.8.gz", "/specs.4.8.gz"].each do |index|
+  ["/prerelease_specs.4.8.gz", "/latest_specs.4.8.gz", "/specs.4.8.gz", "/Marshal.4.8.Z"].each do |index|
     should "serve up #{index}" do
       touch index
       get index
