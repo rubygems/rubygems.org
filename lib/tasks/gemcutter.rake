@@ -6,7 +6,7 @@ namespace :gemcutter do
 
     puts "Mapping specs..."
     index = versions.map do |version|
-      [version.rubygem.name, version.to_spec]
+      ["#{version.rubygem.name}-#{version}", version.to_spec]
     end
 
     puts "Uploading to S3..."
