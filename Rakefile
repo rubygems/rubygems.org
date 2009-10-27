@@ -9,4 +9,4 @@ require 'tasks/rails'
 desc "Run all tests and features"
 task :default => [:test, :cucumber]
 
-task :cron => ['gemcutter:fetch_from_rubyforge']
+task :cron => ['gemcutter:store_legacy_index']
