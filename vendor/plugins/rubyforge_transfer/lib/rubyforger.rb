@@ -13,4 +13,12 @@ class Rubyforger < ActiveRecord::Base
     user.save!
     self.delete
   end
+
+  def self.transferee(email, password)
+    return false if ::User.find_by_email(email)
+    return false unless rf_user = Rubyforger.find_by_email(email)
+    rf_user.password = password
+    return false unless rf_user.authentic?
+    rf_user
+  end
 end

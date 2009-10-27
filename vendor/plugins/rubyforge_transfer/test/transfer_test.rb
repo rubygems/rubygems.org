@@ -24,7 +24,7 @@ class TransferTest < ActiveSupport::TestCase
     
   def test_transferee
     create_rf_user
-    assert(RubyforgeTransfer.transferee(@email, @password))
+    assert(Rubyforger.transferee(@email, @password))
   end 
 
   def test_transfer
