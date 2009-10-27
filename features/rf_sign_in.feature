@@ -13,11 +13,11 @@ Feature: RubyForge legacy sign in
       And a confirmed user with an email of "email@person.com" exists
       And no RubyForge user exists with an email of "email@person.com"
 
-#   Scenario: RubyForge user logs on with wrong password
-#      Given no user exists with an email of "email@person.com"
-#      And a RubyForge user exists with an email of "email@person.com"
-#      When I go to the sign in page
-#      And I sign in as "email@person.com/badpassword"
-#      Then I should see "Bad email or password"
-#      And I should be signed out
-#      And no user exists with an email of "email@person.com"
+    Scenario: RubyForge user logs on with wrong password
+      Given no user exists with an email of "email@person.com"
+      And I am a RubyForge user with an email of "email@person.com"
+      When I go to the sign in page
+      And I sign in as "email@person.com/badpassword"
+      Then I should see "Bad email or password"
+      And I should be signed out
+      And no user exists with an email of "email@person.com"
