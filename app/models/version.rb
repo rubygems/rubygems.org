@@ -21,6 +21,7 @@ class Version < ActiveRecord::Base
                                   :include    => :rubygem,
                                   :order      => "versions.built_at desc" }
   named_scope :latest,          { :conditions => { :latest     => true  }}
+  named_scope :with_deps,       { :include => {:dependencies => :rubygem} }
   named_scope :prerelease,      { :conditions => { :prerelease => true  }}
   named_scope :release,         { :conditions => { :prerelease => false }}
 
@@ -160,7 +161,7 @@ class Version < ActiveRecord::Base
       spec.summary     = summary
 
       dependencies.each do |dep|
-        spec.add_dependency(dep.rubygem.name, dep.requirements)
+        spec.add_dependency(dep.rubygem.name, dep.requirements.split(', '))
       end
     end
   end
