@@ -6,7 +6,7 @@ Feature: RubyForge legacy sign in
 
     Scenario: RubyForge user has never logged on to GemCutter
       Given no user exists with an email of "email@person.com"
-      And no RubyForge user exists with an email of "email@person.com"
+      And a RubyForge user exists with an email of "email@person.com"
       And a RubyForge user signs in with "email@person.com/password"
       Then I should see "Signed in"
       And I should be signed in
