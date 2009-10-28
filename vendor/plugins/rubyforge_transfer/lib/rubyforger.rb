@@ -1,4 +1,8 @@
 class Rubyforger < ActiveRecord::Base
+
+  class NoMatchingUser < RuntimeError
+  end
+
   attr_accessor :password
 
   def authentic?
@@ -7,18 +11,12 @@ class Rubyforger < ActiveRecord::Base
   end
 
   def transfer_to_gemcutter
-    user = ::User.new(:email => email, :password => password)
-    user.email_confirmed = true
-    user.password = password
-    user.save!
+    return false unless authentic?
+    gc_user = User.find_by_email(self.email)
+    raise NoMatchingUser unless gc_user
+    gc_user.password = self.password
+    gc_user.email_confirmed = true
+    gc_user.save!
     self.delete
-  end
-
-  def self.transferee(email, password)
-    return false if ::User.find_by_email(email)
-    return false unless rf_user = Rubyforger.find_by_email(email)
-    rf_user.password = password
-    return false unless rf_user.authentic?
-    rf_user
   end
 end
