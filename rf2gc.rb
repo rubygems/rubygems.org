@@ -30,7 +30,7 @@ module RF2GC
   RFFILE    = "rfdata.txt"
   LOGFILE   = "rf2gclog.txt"
 
-  EMAIL_RE  = /[^@|]+@[^@.|]+\.\w+/
+  EMAIL_RE  = /[^@|]+@[^@.|]+(\.\w+)+/
   PW_RE     = /\w{32}/
   RECORD_RE = /\A#{EMAIL_RE}\|#{PW_RE}\Z/
   IGNORE_RE = /^\s*(#.*?)?\Z/
@@ -72,6 +72,7 @@ module RF2GC
         end
       end
     end
+    @log.close
   end
 
   def self.well_formed?(record)
@@ -91,12 +92,12 @@ module RF2GC
   end
 
   def self.either_exists?(rfer, gcer)
-    log("Rubyforger exists: #{rfer}") if rfer
-    log("Gemcutter account exists: #{gcer}") if gcer
+    log("Rubyforger exists: #{rfer.email}") if rfer
+    log("Gemcutter account exists: #{gcer.email}") if gcer
     return rfer || gcer
   end
 
   def self.show_progress(i)
-    print "\r#{i}" if 1000 % (i+1) == 0
+    print "\r#{i+1}" if (i+1) % 10 == 0
   end
 end
