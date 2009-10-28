@@ -6,6 +6,6 @@ module RubyforgeTransfer
     return unless rf_user = Rubyforger.find_by_email(creds[:email])
 
     rf_user.password = creds[:password]
-    rf_user.transfer_to_gem_cutter
+    rf_user.transfer_to_gemcutter
   end
 end
