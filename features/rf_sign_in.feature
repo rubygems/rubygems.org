@@ -5,17 +5,17 @@ Feature: RubyForge legacy sign in
   And automatically be given an account
 
     Scenario: RubyForge user has never logged on to GemCutter
-      Given no user exists with an email of "email@person.com"
-      And a RubyForge user exists with an email of "email@person.com"
-      And a RubyForge user signs in with "email@person.com/password"
+      Given I am a legacy user with "email@person.com/randompw"
+      And I have a RubyForge account with "email@person.com/rfpassword"
+      And a RubyForge user signs in with "email@person.com/rfpassword"
       Then I should see "Signed in"
       And I should be signed in
-      And a confirmed user with an email of "email@person.com" exists
+      And my GemCutter password should be "rfpassword"
       And no RubyForge user exists with an email of "email@person.com"
 
     Scenario: RubyForge user logs on with wrong password
       Given no user exists with an email of "email@person.com"
-      And I am a RubyForge user with an email of "email@person.com"
+      And I have a RubyForge account with "email@person.com/rfpassword"
       When I go to the sign in page
       And I sign in as "email@person.com/badpassword"
       Then I should see "Bad email or password"
