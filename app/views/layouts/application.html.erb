@@ -36,7 +36,7 @@
           <div class="text_field">
             <%= text_field_tag :query, params[:query] ? h(params[:query]) : "Search gems&hellip;" %>
           </div>
-          <%= submit_tag 'Search', :id => 'search_submit' %>
+          <%= submit_tag 'Search', :id => 'search_submit', :name => nil %>
         <% end %>
       </div>
       <div class="prefix_1 grid_10 suffix_1 main">
