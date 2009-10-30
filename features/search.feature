@@ -38,3 +38,27 @@ Feature: Search
       And I fill in "query" with "ldap"
       And I press "Search"
       Then I should see "LDAP"
+
+    Scenario: Exact match found
+      Given a rubygem exists with a name of "paperclip"
+      And a rubygem exists with a name of "foos-paperclip"
+      And a rubygem exists with a name of "bars-paperclip"
+      And a version exists for the "paperclip" rubygem with a description of "Official paperclip"
+      And a version exists for the "foos-paperclip" rubygem with a description of "foo something else"
+      And a version exists for the "bars-paperclip" rubygem with a description of "bar something else"
+      When I go to the homepage
+      And I fill in "query" with "paperclip"
+      And I press "Search"
+      Then I should see "Exact match"
+ 
+    Scenario: Exact match not found
+      Given a rubygem exists with a name of "foos-paperclip"
+      And a rubygem exists with a name of "bars-paperclip"
+      And a rubygem exists with a name of "bazs-paperclip"
+      And a version exists for the "foos-paperclip" rubygem with a description of "foo something else"
+      And a version exists for the "bars-paperclip" rubygem with a description of "bar something else"
+      And a version exists for the "bazs-paperclip" rubygem with a description of "Official paperclip"
+      When I go to the homepage
+      And I fill in "query" with "paperclip"
+      And I press "Search"
+      Then I should not see "Exact match"

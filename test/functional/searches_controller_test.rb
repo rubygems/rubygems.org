@@ -15,15 +15,18 @@ class SearchesControllerTest < ActionController::TestCase
   context 'on GET to new with search parameters' do
     setup do
       @sinatra = Factory(:rubygem, :name => "sinatra")
+      @sinatra_redux = Factory(:rubygem, :name => "sinatra-redux")
       @brando  = Factory(:rubygem, :name => "brando")
       Factory(:version, :rubygem => @sinatra)
+      Factory(:version, :rubygem => @sinatra_redux)
       Factory(:version, :rubygem => @brando)
       get :new, :query => "sinatra"
     end
     
     should_respond_with :success
     should_render_template :new
-    should_assign_to(:gems) { [@sinatra] }
+    should_assign_to(:gems) { [@sinatra, @sinatra_redux] }
+    should_assign_to(:exact_match) { @sinatra }
     should "see sinatra on the page in the results" do
       assert_contain @sinatra.name
       assert_have_selector "a[href='#{rubygem_path(@sinatra)}']"
@@ -35,4 +38,3 @@ class SearchesControllerTest < ActionController::TestCase
   end
 
 end
-
