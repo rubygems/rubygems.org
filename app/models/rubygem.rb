@@ -23,7 +23,7 @@ class Rubygem < ActiveRecord::Base
     :conditions => ["upper(name) like upper(:query) or upper(versions.description) like upper(:query)",
       {:query => "%#{query}%"}],
     :include    => [:versions],
-    :order      => "name asc" }
+    :order      => "rubygems.downloads desc" }
   }
 
   def validate
