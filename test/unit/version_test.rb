@@ -139,12 +139,15 @@ class VersionTest < ActiveSupport::TestCase
       @dep_two = Factory(:dependency, :version => @version, :requirements => "= 3.0.0")
       spec = @version.to_spec
 
-      assert_equal 2, spec.dependencies.size
-      assert_equal @dep_one.rubygem.name, spec.dependencies.last.name
-      assert_equal @dep_one.requirements.split(", "), spec.dependencies.last.requirements_list
+      @spec_dep_one = spec.dependencies.detect { |d| d.name == @dep_one.rubygem.name }
+      @spec_dep_two = spec.dependencies.detect { |d| d.name == @dep_two.rubygem.name }
 
-      assert_equal @dep_two.rubygem.name, spec.dependencies.first.name
-      assert_equal [@dep_two.requirements], spec.dependencies.first.requirements_list
+      assert_equal 2, spec.dependencies.size
+      assert @spec_dep_one
+      assert @spec_dep_two
+
+      assert_equal @dep_one.requirements.split(", "), @spec_dep_one.requirements_list
+      assert_equal @dep_two.requirements.split(", "), @spec_dep_two.requirements_list
     end
   end
 
