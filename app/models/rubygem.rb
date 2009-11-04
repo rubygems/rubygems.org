@@ -71,6 +71,11 @@ class Rubygem < ActiveRecord::Base
     ownerships.find_by_user_id(user.id).try(:approved) if user
   end
 
+  def metrics_link(project_path)
+    project_url = CGI.escape(project_path)
+    "http://devver.net/caliper/project?repo=#{project_url}"
+  end
+
   def to_s
     versions.latest.try(:to_title) || name
   end
