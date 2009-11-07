@@ -30,7 +30,7 @@
         <div class="authors">
           <h5>Authors</h5>
           <% if @latest_version.authors.present? %>
-            <p><%= @latest_version.authors %></p>
+            <p><%=h @latest_version.authors %></p>
           <% else %>
             <p>N/A</p>
           <% end %>
