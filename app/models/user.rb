@@ -19,6 +19,10 @@ class User < ActiveRecord::Base
     generate_api_key && save!
   end
 
+  def to_json(options = {})
+    super(options.merge(:only => :email))
+  end
+
   protected
 
     def generate_api_key
