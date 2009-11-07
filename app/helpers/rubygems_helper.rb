@@ -12,7 +12,7 @@ module RubygemsHelper
     if text =~ /^==+ [A-Z]/
       SM::SimpleMarkup.new.convert(text, SM::ToHtml.new)
     else
-      content_tag :p, text
+      content_tag :p, h(text)
     end
   end
 
