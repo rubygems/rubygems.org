@@ -268,6 +268,33 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  context "On GET to index with a bad letter" do
+    setup do
+      @gems = (1..3).map do |n|
+        gem = Factory(:rubygem, :name => "agem#{n}")
+        Factory(:version, :rubygem => gem)
+        gem
+      end
+      Factory(:rubygem, :name => "zeta")
+      get :index, :letter => "asdf"
+    end
+
+    should_respond_with :success
+    should_render_template :index
+    should_assign_to(:gems) { @gems }
+    should "render links" do
+      @gems.each do |g|
+        assert_contain g.name
+        assert_have_selector "a[href='#{rubygem_path(g)}']"
+      end
+    end
+    should "display uppercase A" do
+      assert_contain "starting with A"
+      assert_not_contain "asdf"
+      assert_not_contain "ASDF"
+    end
+  end
+
   context "On GET to show" do
     setup do
       @latest_version = Factory(:version)
