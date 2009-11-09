@@ -39,10 +39,8 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.number, @version.to_s
     end
 
-    should "return just number for to_slug if platform is ruby" do
+    should "not be platformed" do
       assert ! @version.platformed?
-      assert_equal @version.number, @version.to_slug
-      assert_equal @version, Version.find_from_slug!(@version.rubygem_id, @version.number)
     end
 
     should "raise an ActiveRecord::RecordNotFound if an invalid slug is given" do
@@ -57,7 +55,6 @@ class VersionTest < ActiveSupport::TestCase
         slug = "#{@version.number}-#{platform}"
 
         assert @version.platformed?
-        assert_equal slug, @version.to_slug
         assert_equal @version, Version.find_from_slug!(@version.rubygem_id, slug)
       end
     end
