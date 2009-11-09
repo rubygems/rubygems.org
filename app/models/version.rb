@@ -126,12 +126,6 @@ class Version < ActiveRecord::Base
     "#{rubygem.name} (#{to_s})"
   end
 
-  def to_slug
-    param = number.dup
-    param << "-#{platform}" if platformed?
-    param
-  end
-
   def to_gem_version
     Gem::Version.new(number)
   end
