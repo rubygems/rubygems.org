@@ -27,6 +27,7 @@ class Version < ActiveRecord::Base
 
   before_save :update_prerelease
   after_save  :reorder_versions
+  after_save  :full_nameify!
 
   def validate
     if new_record? && Version.exists?(:rubygem_id => rubygem_id, :number => number, :platform => platform)
@@ -52,16 +53,8 @@ class Version < ActiveRecord::Base
   end
 
   def self.find_from_slug!(rubygem_id, slug)
-    number, *raw_platform = slug.split('-')
-    platform = raw_platform.blank? ? "ruby" : raw_platform.join('-')
-
-    find_by_rubygem_id_and_number_and_platform!(rubygem_id, number, platform)
-  rescue ActiveRecord::RecordNotFound => ex
-    if raw_platform.blank?
-      find_by_rubygem_id_and_number!(rubygem_id, number)
-    else
-      raise ex
-    end
+    rubygem = Rubygem.find(rubygem_id)
+    find_by_full_name!("#{rubygem.name}-#{slug}")
   end
 
   def self.platforms
@@ -116,6 +109,19 @@ class Version < ActiveRecord::Base
 
   def built_at_date
     built_at.to_date.to_formatted_s(:long)
+  end
+
+  def full_nameify!
+    full_name = "#{rubygem.name}-#{number}"
+    full_name << "-#{platform}" if platformed?
+
+    Version.without_callbacks do
+      update_attribute(:full_name, full_name)
+    end
+  end
+
+  def slug
+    full_name.gsub(/^#{rubygem.name}-/, '')
   end
 
   def to_s
