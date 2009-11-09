@@ -34,13 +34,17 @@ class VersionTest < ActiveSupport::TestCase
                                          "1.2.3-\"[javalol]\"",
                                          "0.8.45::Gem::PLATFORM::FAILBOAT"
 
-
     should "give number for #to_s" do
       assert_equal @version.number, @version.to_s
     end
 
     should "not be platformed" do
       assert ! @version.platformed?
+    end
+
+    should "save full name" do
+      assert_equal "#{@version.rubygem.name}-#{@version.number}", @version.full_name
+      assert_equal @version.number, @version.slug
     end
 
     should "raise an ActiveRecord::RecordNotFound if an invalid slug is given" do
@@ -56,6 +60,7 @@ class VersionTest < ActiveSupport::TestCase
 
         assert @version.platformed?
         assert_equal @version, Version.find_from_slug!(@version.rubygem_id, slug)
+        assert_equal slug, @version.slug
       end
     end
 
