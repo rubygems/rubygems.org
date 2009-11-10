@@ -3,6 +3,7 @@ if ENV['MAINTENANCE_MODE']
   require 'aws/s3'
   require 'app/metal/hostess'
   require 'lib/vault_object'
+  require 'lib/gemcutter'
 
   get '/' do
     send_file("public/maintenance/index.html")
