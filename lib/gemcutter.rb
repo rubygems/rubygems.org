@@ -102,4 +102,13 @@ class Gemcutter
     upload("latest_specs.4.8.gz", latest_index)
     upload("prerelease_specs.4.8.gz", prerelease_index)
   end
+
+   def self.indexer
+     @indexer ||= 
+       begin
+         indexer = Gem::Indexer.new(Gemcutter.server_path, :build_legacy => false)
+         def indexer.say(message) end
+         indexer
+       end
+   end
 end
