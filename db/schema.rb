@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091109203935) do
+ActiveRecord::Schema.define(:version => 20091021203534) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -78,6 +78,11 @@ ActiveRecord::Schema.define(:version => 20091109203935) do
   add_index "requirements", ["dependency_id"], :name => "index_requirements_on_dependency_id"
   add_index "requirements", ["version_id"], :name => "index_requirements_on_version_id"
 
+  create_table "rubyforgers", :force => true do |t|
+    t.string "email"
+    t.string "encrypted_password", :limit => 40
+  end
+
   create_table "rubygems", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -135,12 +140,10 @@ ActiveRecord::Schema.define(:version => 20091109203935) do
     t.integer  "position"
     t.integer  "downloads_count",   :default => 0
     t.boolean  "latest"
-    t.string   "full_name"
   end
 
   add_index "versions", ["built_at"], :name => "index_versions_on_built_at"
   add_index "versions", ["created_at"], :name => "index_versions_on_created_at"
-  add_index "versions", ["full_name"], :name => "index_versions_on_full_name"
   add_index "versions", ["indexed"], :name => "index_versions_on_indexed"
   add_index "versions", ["number"], :name => "index_versions_on_number"
   add_index "versions", ["position"], :name => "index_versions_on_position"
