@@ -1,6 +1,6 @@
 if ENV['MAINTENANCE_MODE']
-  require "#{File.dirname(__FILE__)}/vendor/bundler_gems/environment"
-  require 'config/environment'
+  require File.join('vendor', 'bundler_gems', 'environment')
+  require File.join('config', 'environment')
 
   use Rack::Static, :urls => ["/index.html", "/favicon.ico", "/images", "/stylesheets"], :root => "public/maintenance"
   use Hostess
@@ -8,7 +8,7 @@ if ENV['MAINTENANCE_MODE']
   run Sinatra::Application
 else
   require 'thin'
-  require 'rack/adapter/rails'
+
   run Rack::Adapter::Rails.new(:environment => ENV['RAILS_ENV'])
 end
 
