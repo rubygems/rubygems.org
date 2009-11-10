@@ -2,7 +2,7 @@ class AddFullNameToVersions < ActiveRecord::Migration
   def self.up
     add_column :versions, :full_name, :string
 
-    Version.without_callbacks do
+    Version.without_any_callbacks do
       Version.all(:include => :rubygem).each do |version|
         version.full_nameify!
       end
