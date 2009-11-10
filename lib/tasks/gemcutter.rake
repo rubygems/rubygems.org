@@ -15,6 +15,16 @@ namespace :gemcutter do
     puts "Ding, legacy index is done!"
   end
 
+  desc "fix full names"
+  task :fix_full_names => :environment do
+    Version.without_any_callbacks do
+      def Version.run_callbacks; "no idea why this is necessary"; end
+      Version.all(:include => :rubygem).each do |version|
+        version.full_nameify!
+      end
+    end
+  end
+
   namespace :index do
     desc "Create the index"
     task :create => :environment do
@@ -148,31 +158,6 @@ namespace :gemcutter do
       end
 
       Gemcutter.indexer.update_index(source_index)
-    end
-  end
-
-  desc "Backup all .gem files"
-  task :backup do
-    require 'open-uri'
-    gemcutter_gems = Marshal.load(Gem.gunzip(open("http://gemcutter.org/specs.4.8.gz").read))
-    gemcutter_gems.each do |index|
-      index.pop if index.last == "ruby"
-      gem_name = "#{index.join('-')}.gem"
-      FileUtils.mkdir("cache") unless File.exist?("cache")
-      gem_path = File.join("cache", gem_name)
-      gem_uri = "http://gemcutter.org/gems/#{gem_name}"
-
-      unless File.exists?(gem_path)
-        begin
-          puts ">> Downloading #{gem_name}"
-          File.open(gem_path, "wb") do |f|
-            f.write open(gem_uri).read
-          end
-        rescue Exception => e
-          puts ">> Problem fetching the gem: #{e.message}"
-          puts e.backtrace
-        end
-      end
     end
   end
 end
