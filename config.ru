@@ -1,9 +1,6 @@
 if ENV['MAINTENANCE_MODE']
-  require 'sinatra'
-  require 'aws/s3'
-  require 'app/metal/hostess'
-  require 'lib/vault_object'
-  require 'lib/gemcutter'
+  require "#{File.dirname(__FILE__)}/vendor/bundler_gems/environment"
+  require 'config/environment'
 
   get '/' do
     send_file("public/maintenance/index.html")

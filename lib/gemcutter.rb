@@ -80,15 +80,6 @@ class Gemcutter
     "<Gemcutter #{attrs.join(' ')}>"
   end
 
-  def self.indexer
-    @indexer ||= 
-      begin
-        indexer = Gem::Indexer.new(Gemcutter.server_path, :build_legacy => false)
-        def indexer.say(message) end
-        indexer
-      end
-  end
-
   def specs_index
     Version.with_indexed(true).map(&:to_index)
   end
