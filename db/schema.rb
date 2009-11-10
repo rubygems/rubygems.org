@@ -78,11 +78,6 @@ ActiveRecord::Schema.define(:version => 20091109203935) do
   add_index "requirements", ["dependency_id"], :name => "index_requirements_on_dependency_id"
   add_index "requirements", ["version_id"], :name => "index_requirements_on_version_id"
 
-  create_table "rubyforgers", :force => true do |t|
-    t.string "email"
-    t.string "encrypted_password", :limit => 40
-  end
-
   create_table "rubygems", :force => true do |t|
     t.string   "name"
     t.datetime "created_at"
