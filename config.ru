@@ -1,8 +1,7 @@
 if ENV['MAINTENANCE_MODE']
   require 'sinatra'
-  require 'app/metal/hostess'
-  require 'rack/maintenance'
   require 'aws/s3'
+  require 'app/metal/hostess'
   require 'lib/vault_object'
 
   get '/' do
