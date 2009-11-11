@@ -23,6 +23,10 @@ class User < ActiveRecord::Base
     super(options.merge(:only => :email))
   end
 
+  def to_yaml(*args)
+    { :email => email }.to_yaml(*args)
+  end
+
   protected
 
     def generate_api_key
