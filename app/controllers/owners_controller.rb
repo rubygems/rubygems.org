@@ -10,6 +10,7 @@ class OwnersController < ApplicationController
   def show
     respond_to do |format|
       format.json { render :json => @rubygem.owners }
+      format.yaml { render :text => @rubygem.owners.to_yaml }
     end
   end
 
