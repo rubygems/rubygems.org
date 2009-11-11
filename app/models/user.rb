@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
   end
 
   def to_yaml(*args)
-    { :email => email }.to_yaml(*args)
+    { 'email' => email }.to_yaml(*args)
   end
 
   protected
