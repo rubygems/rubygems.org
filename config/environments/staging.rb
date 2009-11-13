@@ -27,9 +27,25 @@ config.action_view.cache_template_loading            = true
 # Enable threaded mode
 # config.threadsafe!
 
+require "#{RAILS_ROOT}/config/secret" if File.exists?("#{RAILS_ROOT}/config/secret.rb")
+
 HOST = "gemcutter.org"
 
 config.after_initialize do
   require 'aws/s3'
   require 'lib/vault_object'
 end
+
+if ENV['MEMCACHE_SERVERS']
+  require 'memcache'
+  require 'rack/cache'
+
+  memcache_store = MemCache.new(ENV['MEMCACHE_SERVERS'].split(','),
+    {:namespace => ENV['MEMCACHE_NAMESPACE']})
+
+  config.middleware.insert_after(::Rack::Lock, ::Rack::Cache,
+    :verbose     => true,
+    :metastore   => memcache_store,
+    :entitystore => memcache_store)
+end
+

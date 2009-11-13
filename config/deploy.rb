@@ -47,7 +47,7 @@ namespace :deploy do
   # Surely there's a better way to do this.  But it's eluding me at the moment.
   desc "Move in secret settings for this environment"
   task :move_in_secret_settings, :roles => :app do
-    run "cat #{deploy_to}/shared/system/secret.rb >> #{current_path}/config/environments/#{rails_env}.rb"
+    run "cp #{deploy_to}/shared/system/secret.rb #{current_path}/config/secret.rb"
   end
 
 end
