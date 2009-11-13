@@ -1,4 +1,4 @@
-if ENV['MAINTENANCE_MODE']
+if File.exists?("tmp/maintenance_mode")
   require File.join('vendor', 'bundler_gems', 'environment')
   require File.join('config', 'environment')
 
