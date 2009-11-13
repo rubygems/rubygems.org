@@ -4,4 +4,4 @@
 RAILS_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..'))
 
 require File.join(File.dirname(__FILE__), *%w(.. vendor plugins delayed_job lib delayed command))
-Delayed::Command.new(ARGV).daemonize
+Delayed::Command.new(ARGV << :log_output).daemonize
