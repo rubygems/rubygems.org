@@ -49,7 +49,19 @@ namespace :deploy do
   task :move_in_secret_settings, :roles => :app do
     run "cp #{deploy_to}/shared/system/secret.rb #{current_path}/config/secret.rb"
   end
+end
 
+namespace :maintenance do
+  desc "Go to maintenance mode"
+  task :on, :roles => :app do
+    run "touch #{current_path}/tmp/maintenance_mode"
+    deploy.restart
+  end
+  desc "Back to normal non-maintenance mode"
+  task :off, :roles => :app do
+    run "rm -f #{current_path}/tmp/maintenance_mode"
+    deploy.restart
+  end
 end
 
 namespace :delayed_job do
