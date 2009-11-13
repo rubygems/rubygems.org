@@ -36,16 +36,11 @@ config.after_initialize do
   require 'lib/vault_object'
 end
 
-if ENV['MEMCACHE_SERVERS']
-  require 'memcache'
-  require 'rack/cache'
-
-  memcache_store = MemCache.new(ENV['MEMCACHE_SERVERS'].split(','),
-    {:namespace => ENV['MEMCACHE_NAMESPACE']})
-
-  config.middleware.insert_after(::Rack::Lock, ::Rack::Cache,
-    :verbose     => true,
-    :metastore   => memcache_store,
-    :entitystore => memcache_store)
-end
+require 'memcache'
+require 'rack/cache'
+memcache_store = MemCache.new("localhost:11211", {:namespace => "_gemcutter_production"})
+config.middleware.insert_after(::Rack::Lock, ::Rack::Cache,
+  :verbose     => true,
+  :metastore   => memcache_store,
+  :entitystore => memcache_store)
 
