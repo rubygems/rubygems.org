@@ -43,8 +43,31 @@ namespace :deploy do
   task :move_in_database_yml, :roles => :app do
     run "cp #{deploy_to}/shared/system/database.yml #{current_path}/config/"
   end
+
 end
+
+namespace :delayed_job do
+  desc "Start delayed_job process" 
+  task :start, :roles => :app do
+    run "cd #{current_path}; script/delayed_job start #{rails_env}" 
+  end
+
+  desc "Stop delayed_job process" 
+  task :stop, :roles => :app do
+    run "cd #{current_path}; script/delayed_job stop #{rails_env}" 
+  end
+
+  desc "Restart delayed_job process" 
+  task :restart, :roles => :app do
+    run "cd #{current_path}; script/delayed_job restart #{rails_env}" 
+  end
+end
+
+after "deploy:start", "delayed_job:start" 
+after "deploy:stop", "delayed_job:stop" 
+after "deploy:restart", "delayed_job:restart"
 
 after "deploy", "deploy:migrate"
 after "deploy", "deploy:cleanup"
 after "deploy:symlink", "deploy:move_in_database_yml"
+
