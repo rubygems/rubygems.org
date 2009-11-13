@@ -18,7 +18,7 @@ role :db,  "rubycentral.org", :primary => true
 # add your private key to the ssh agent.  If that's not good for you, just uncomment the 
 # "set :deploy_via, :copy" and comment "set :deploy_via, :remote_cache"
 set :scm, :git
-set :repository,  "git@github.com:tcopeland/gemcutter.git"
+set :repository,  "git@github.com:qrush/gemcutter.git"
 set :repository_cache, "git_cache"
 set :git_enable_submodules, 1
 set :deploy_via, :remote_cache
