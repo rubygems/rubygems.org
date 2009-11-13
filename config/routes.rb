@@ -2,21 +2,13 @@ RUBYGEM_NAME_MATCHER = /[A-Za-z0-9\-\_\.]+/
 
 ActionController::Routing::Routes.draw do |map|
 
-  map.json_gem "/gems/:id.json",
-    :controller   => "rubygems",
-    :action       => "show",
-    :format       => "json",
-    :requirements => { :id => RUBYGEM_NAME_MATCHER }
-
+  ################################################################################
+  # UI
+ 
+  map.search "/search", :controller => "searches", :action => "new"
   map.resource  :dashboard,  :only => :show
   map.resource  :profile
   map.resources :statistics, :only => :index, :as => "stats"
-
-  map.resource :migrate,
-               :only         => [:create, :update],
-               :controller   => "migrations",
-               :path_prefix  => "/gems/:rubygem_id",
-               :requirements => { :rubygem_id => RUBYGEM_NAME_MATCHER }
 
   map.resources :rubygems,
                 :as           => "gems",
@@ -31,8 +23,37 @@ ActionController::Routing::Routes.draw do |map|
       :requirements => { :rubygem_id => RUBYGEM_NAME_MATCHER, :id => RUBYGEM_NAME_MATCHER }
   end
 
-  map.search "/search", :controller => "searches", :action => "new"
-  map.resource :api_key, :only => [:show, :reset], :member => {:reset => :put}
+  ################################################################################
+  # API v0
+
+  map.json_gem "/gems/:id.json",
+               :controller   => "rubygems",
+               :action       => "show",
+               :format       => "json",
+               :requirements => { :id => RUBYGEM_NAME_MATCHER }
+  map.resource :api_key,
+               :only         => [:show, :reset],
+               :member       => {:reset => :put},
+               :controller   => "api::v1::api_keys"
+  map.resource :migrate,
+               :only         => [:create, :update],
+               :controller   => "migrations",
+               :path_prefix  => "/gems/:rubygem_id",
+               :requirements => { :rubygem_id => RUBYGEM_NAME_MATCHER }
+
+  ################################################################################
+  # API v1
+ 
+  map.namespace :api do |api|
+    api.namespace :v1 do |v1|
+      v1.resource :api_key,
+                  :only         => [:show, :reset],
+                  :member       => {:reset => :put}
+    end
+  end
+
+  ################################################################################
+  # Clearance
 
   map.sign_up  'sign_up', :controller => 'clearance/users',    :action => 'new'
   map.sign_in  'sign_in', :controller => 'clearance/sessions', :action => 'new'
@@ -41,5 +62,9 @@ ActionController::Routing::Routes.draw do |map|
     :action     => 'destroy',
     :method     => :delete
 
+  ################################################################################
+  # Root
+
   map.root :controller => "home", :action => "index"
+
 end

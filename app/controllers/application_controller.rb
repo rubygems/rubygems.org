@@ -17,3 +17,7 @@ class ApplicationController < ActionController::Base
     end
   end
 end
+
+# Make the namespaced controllers happy.
+module Api; end
+module Api::V1; end

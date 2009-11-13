@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ApiKeysControllerTest < ActionController::TestCase
+class Api::V1::ApiKeysControllerTest < ActionController::TestCase
   context "on GET to show with no credentials" do
     setup do
       get :show
