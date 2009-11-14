@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/local/bin/ruby
 
 # Daemons sets pwd to /, so we have to explicitly set RAILS_ROOT
 RAILS_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..'))
