@@ -774,12 +774,10 @@ body {
 .footer .links #thoughtbot {
   float: right;
   font-size: 0.9em;
-  text-align: right;
   margin-top: -25px;
 }
 
-.footer .links #heroku {
-  text-align: right;
+.footer .links #rubycentral {
   margin-top: -25px;
   font-size: 1em;
   float: right;
@@ -788,7 +786,7 @@ body {
 }
 
 .footer .links #thoughtbot img,
-.footer .links #heroku img {
+.footer .links #rubycentral img {
   padding-top: 5px;
   display: block;
 }
