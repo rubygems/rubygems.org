@@ -26,7 +26,7 @@ set :git_shallow_clone, 1
 set :use_sudo, false
 
 set :group, "rubycentral"
-set :user, "tom"
+set :user, "rubycentral"
 
 namespace :deploy do
   desc "Restarting mod_rails with restart.txt"
