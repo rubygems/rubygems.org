@@ -77,7 +77,9 @@ namespace :delayed_job do
 
   desc "Restart delayed_job process" 
   task :restart, :roles => :app do
-    run "sudo monit restart delayed_job_#{rails_env}" 
+    run "sudo monit stop delayed_job_#{rails_env}" 
+    sleep 5
+    run "sudo monit start delayed_job_#{rails_env}" 
   end
 end
 
