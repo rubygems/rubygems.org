@@ -8,8 +8,15 @@ namespace :hoptoad do
                         :local_username => ENV['USER'])
   end
 
+  task :log_stdout do
+    require 'logger'
+    RAILS_DEFAULT_LOGGER = Logger.new(STDOUT)
+  end
+
   desc "Verify your plugin installation by sending a test exception to the hoptoad service"
-  task :test => :environment do
+  task :test => ['hoptoad:log_stdout', :environment] do
+    RAILS_DEFAULT_LOGGER.level = Logger::DEBUG
+
     require 'action_controller/test_process'
     require 'app/controllers/application' if File.exists?('app/controllers/application.rb')
 
@@ -18,16 +25,23 @@ namespace :hoptoad do
 
     class HoptoadTestingException < RuntimeError; end
 
-    unless HoptoadNotifier.api_key
+    unless HoptoadNotifier.configuration.api_key
       puts "Hoptoad needs an API key configured! Check the README to see how to add it."
       exit
     end
+
+    HoptoadNotifier.configuration.development_environments = []
 
     in_controller = ApplicationController.included_modules.include? HoptoadNotifier::Catcher
     in_base = ActionController::Base.included_modules.include? HoptoadNotifier::Catcher
     if !in_controller || !in_base
       puts "HoptoadNotifier::Catcher must be included inside your ApplicationController class."
       exit
+    end
+
+    puts "Configuration:"
+    HoptoadNotifier.configuration.to_hash.each do |key, value|
+      puts sprintf("%25s: %s", key.to_s, value.inspect.slice(0, 55))
     end
 
     puts 'Setting up the Controller.'
@@ -43,12 +57,16 @@ namespace :hoptoad do
         rescue_action_in_public exception
       end
 
-      def public_environment?
-        true
-      end
-
       # Ensure we actually have an action to go to.
       def verify; end
+
+      def consider_all_requests_local
+        false
+      end
+
+      def local_request?
+        false
+      end
 
       def exception_class
         exception_name = ENV['EXCEPTION'] || "HoptoadTestingException"

@@ -1,186 +1,186 @@
 require File.dirname(__FILE__) + '/helper'
 
 class NotifierTest < Test::Unit::TestCase
-  context "Sending a notice" do
-    should "not fail without rails environment" do
-      assert_nothing_raised do
-        HoptoadNotifier.environment_info
-      end
+
+  include DefinesConstants
+
+  def setup
+    super
+    reset_config
+  end
+
+  def assert_sent(notice, notice_args)
+    assert_received(HoptoadNotifier::Notice, :new) {|expect| expect.with(has_entries(notice_args)) }
+    assert_received(notice, :to_xml)
+    assert_received(HoptoadNotifier.sender, :send_to_hoptoad) {|expect| expect.with(notice.to_xml) }
+  end
+
+  def set_public_env
+    HoptoadNotifier.configure { |config| config.environment_name = 'production' }
+  end
+
+  def set_development_env
+    HoptoadNotifier.configure { |config| config.environment_name = 'development' }
+  end
+
+  should "yield and save a configuration when configuring" do
+    yielded_configuration = nil
+    HoptoadNotifier.configure do |config|
+      yielded_configuration = config
     end
 
-    context "with an exception" do
-      setup do
-        @sender    = HoptoadNotifier::Sender.new
-        @backtrace = caller
-        @exception = begin
-          raise
-        rescue => caught_exception
-          caught_exception
-        end
-        @options   = {:error_message => "123",
-                      :backtrace => @backtrace}
-        HoptoadNotifier.instance_variable_set("@backtrace_filters", [])
-        HoptoadNotifier::Sender.expects(:new).returns(@sender)
-        @sender.stubs(:public_environment?).returns(true)
-        HoptoadNotifier.stubs(:environment_info)
-      end
+    assert_kind_of HoptoadNotifier::Configuration, yielded_configuration
+    assert_equal yielded_configuration, HoptoadNotifier.configuration
+  end
 
-      context "when using an HTTP Proxy" do
-        setup do
-          @body = 'body'
-          @response = stub(:body => @body)
-          @http = stub(:post => @response, :read_timeout= => nil, :open_timeout= => nil, :use_ssl= => nil)
-          @sender.stubs(:logger).returns(stub(:error => nil, :info => nil))
-          @proxy = stub
-          @proxy.stubs(:new).returns(@http)
+  should "not remove existing config options when configuring twice" do
+    first_config = nil
+    HoptoadNotifier.configure do |config|
+      first_config = config
+    end
+    HoptoadNotifier.configure do |config|
+      assert_equal first_config, config
+    end
+  end
 
-          HoptoadNotifier.port = nil
-          HoptoadNotifier.host = nil
-          HoptoadNotifier.secure = false
+  should "configure the sender" do
+    sender = stub_sender
+    HoptoadNotifier::Sender.stubs(:new => sender)
+    configuration = nil
 
-          Net::HTTP.expects(:Proxy).with(
-            HoptoadNotifier.proxy_host,
-            HoptoadNotifier.proxy_port,
-            HoptoadNotifier.proxy_user,
-            HoptoadNotifier.proxy_pass
-          ).returns(@proxy)
-        end
+    HoptoadNotifier.configure { |yielded_config| configuration = yielded_config }
 
-        context "on notify" do
-          setup { HoptoadNotifier.notify(@exception) }
+    assert_received(HoptoadNotifier::Sender, :new) { |expect| expect.with(configuration) }
+    assert_equal sender, HoptoadNotifier.sender
+  end
 
-          before_should "post to Hoptoad" do
-            url = "http://hoptoadapp.com:80/notices/"
-            uri = URI.parse(url)
-            URI.expects(:parse).with(url).returns(uri)
-            @http.expects(:post).with(uri.path, anything, anything).returns(@response)
-          end
-        end
-      end
+  should "create and send a notice for an exception" do
+    set_public_env
+    exception = build_exception
+    stub_sender!
+    notice = stub_notice!
 
-      context "when stubbing out Net::HTTP" do
-        setup do
-          @body = 'body'
-          @response = stub(:body => @body)
-          @http = stub(:post => @response, :read_timeout= => nil, :open_timeout= => nil, :use_ssl= => nil)
-          @sender.stubs(:logger).returns(stub(:error => nil, :info => nil))
-          Net::HTTP.stubs(:new).returns(@http)
-          HoptoadNotifier.port = nil
-          HoptoadNotifier.host = nil
-          HoptoadNotifier.proxy_host = nil
-        end
+    HoptoadNotifier.notify(exception)
 
-        context "on notify" do
-          setup { HoptoadNotifier.notify(@exception) }
+    assert_sent notice, :exception => exception
+  end
 
-          before_should "post to the right url for non-ssl" do
-            HoptoadNotifier.secure = false
-            url = "http://hoptoadapp.com:80/notices/"
-            uri = URI.parse(url)
-            URI.expects(:parse).with(url).returns(uri)
-            @http.expects(:post).with(uri.path, anything, anything).returns(@response)
-          end
+  should "create and send a notice for a hash" do
+    set_public_env
+    notice = stub_notice!
+    notice_args = { :error_message => 'uh oh' }
+    stub_sender!
 
-          before_should "post to the right path" do
-            @http.expects(:post).with("/notices/", anything, anything).returns(@response)
-          end
+    HoptoadNotifier.notify(notice_args)
 
-          before_should "call send_to_hoptoad" do
-            @sender.expects(:send_to_hoptoad)
-          end
+    assert_sent(notice, notice_args)
+  end
 
-          before_should "default the open timeout to 2 seconds" do
-            HoptoadNotifier.http_open_timeout = nil
-            @http.expects(:open_timeout=).with(2)
-          end
+  should "create and sent a notice for an exception and hash" do
+    set_public_env
+    exception = build_exception
+    notice = stub_notice!
+    notice_args = { :error_message => 'uh oh' }
+    stub_sender!
 
-          before_should "default the read timeout to 5 seconds" do
-            HoptoadNotifier.http_read_timeout = nil
-            @http.expects(:read_timeout=).with(5)
-          end
+    HoptoadNotifier.notify(exception, notice_args)
 
-          before_should "allow override of the open timeout" do
-            HoptoadNotifier.http_open_timeout = 4
-            @http.expects(:open_timeout=).with(4)
-          end
+    assert_sent(notice, notice_args.merge(:exception => exception))
+  end
 
-          before_should "allow override of the read timeout" do
-            HoptoadNotifier.http_read_timeout = 10
-            @http.expects(:read_timeout=).with(10)
-          end
+  should "not create a notice in a development environment" do
+    set_development_env
+    sender = stub_sender!
 
-          before_should "connect to the right port for ssl" do
-            HoptoadNotifier.secure = true
-            Net::HTTP.expects(:new).with("hoptoadapp.com", 443).returns(@http)
-          end
+    HoptoadNotifier.notify(build_exception)
+    HoptoadNotifier.notify_or_ignore(build_exception)
 
-          before_should "connect to the right port for non-ssl" do
-            HoptoadNotifier.secure = false
-            Net::HTTP.expects(:new).with("hoptoadapp.com", 80).returns(@http)
-          end
+    assert_received(sender, :send_to_hoptoad) {|expect| expect.never }
+  end
 
-          before_should "use ssl if secure" do
-            HoptoadNotifier.secure = true
-            HoptoadNotifier.host = 'example.org'
-            Net::HTTP.expects(:new).with('example.org', 443).returns(@http)
-          end
+  should "not deliver an ignored exception when notifying implicitly" do
+    set_public_env
+    exception = build_exception
+    sender = stub_sender!
+    notice = stub_notice!
+    notice.stubs(:ignore? => true)
 
-          before_should "not use ssl if not secure" do
-            HoptoadNotifier.secure = nil
-            HoptoadNotifier.host = 'example.org'
-            Net::HTTP.expects(:new).with('example.org', 80).returns(@http)
-          end
-        end
-      end
+    HoptoadNotifier.notify_or_ignore(exception)
 
-      should "send as if it were a normally caught exception" do
-        @sender.expects(:notify_hoptoad).with(@exception)
-        HoptoadNotifier.notify(@exception)
-      end
+    assert_received(sender, :send_to_hoptoad) {|expect| expect.never }
+  end
 
-      should "make sure the exception is munged into a hash" do
-        options = HoptoadNotifier.default_notice_options.merge({
-          :backtrace     => @exception.backtrace,
-          :environment   => ENV.to_hash,
-          :error_class   => @exception.class.name,
-          :error_message => "#{@exception.class.name}: #{@exception.message}",
-          :api_key       => HoptoadNotifier.api_key,
-        })
-        @sender.expects(:send_to_hoptoad).with(:notice => options)
-        HoptoadNotifier.notify(@exception)
-      end
+  should "deliver an ignored exception when notifying manually" do
+    set_public_env
+    exception = build_exception
+    sender = stub_sender!
+    notice = stub_notice!
+    notice.stubs(:ignore? => true)
 
-      should "parse massive one-line exceptions into multiple lines" do
-        @original_backtrace = "one big line\n   separated\n      by new lines\nand some spaces"
-        @expected_backtrace = ["one big line", "separated", "by new lines", "and some spaces"]
-        @exception.set_backtrace [@original_backtrace]
+    HoptoadNotifier.notify(exception)
 
-        options = HoptoadNotifier.default_notice_options.merge({
-          :backtrace     => @expected_backtrace,
-          :environment   => ENV.to_hash,
-          :error_class   => @exception.class.name,
-          :error_message => "#{@exception.class.name}: #{@exception.message}",
-          :api_key       => HoptoadNotifier.api_key,
-        })
+    assert_sent(notice, :exception => exception)
+  end
 
-        @sender.expects(:send_to_hoptoad).with(:notice => options)
-        HoptoadNotifier.notify(@exception)
-      end
+  should "pass config to created notices" do
+    exception = build_exception
+    config_opts = { 'one' => 'two', 'three' => 'four' }
+    notice = stub_notice!
+    stub_sender!
+    HoptoadNotifier.configuration = stub('config', :merge => config_opts, :public? => true)
+
+    HoptoadNotifier.notify(exception)
+
+    assert_received(HoptoadNotifier::Notice, :new) do |expect|
+      expect.with(has_entries(config_opts))
+    end
+  end
+
+  context "building notice JSON for an exception" do
+    setup do
+      @params    = { :controller => "users", :action => "create" }
+      @exception = build_exception
+      @hash      = HoptoadNotifier.build_lookup_hash_for(@exception, @params)
     end
 
-    context "without an exception" do
-      setup do
-        @sender    = HoptoadNotifier::Sender.new
-        @backtrace = caller
-        @options   = {:error_message => "123",
-                      :backtrace => @backtrace}
-        HoptoadNotifier::Sender.expects(:new).returns(@sender)
-      end
+    should "set action" do
+      assert_equal @params[:action], @hash[:action]
+    end
 
-      should "send sensible defaults" do
-        @sender.expects(:notify_hoptoad).with(@options)
-        HoptoadNotifier.notify(:error_message => "123", :backtrace => @backtrace)
-      end
+    should "set controller" do
+      assert_equal @params[:controller], @hash[:component]
+    end
+
+    should "set line number" do
+      assert @hash[:line_number] =~ /\d+/
+    end
+
+    should "set file" do
+      assert_match /\/test\/helper\.rb$/, @hash[:file]
+    end
+
+    should "set rails_env to production" do
+      assert_equal 'production', @hash[:environment_name]
+    end
+
+    should "set error class" do
+      assert_equal 'RuntimeError', @hash[:error_class]
+    end
+
+    should "not set file or line number with no backtrace" do
+      @exception.stubs(:backtrace).returns([])
+
+      @hash = HoptoadNotifier.build_lookup_hash_for(@exception)
+
+      assert_nil @hash[:line_number]
+      assert_nil @hash[:file]
+    end
+
+    should "not set action or controller when not provided" do
+      @hash = HoptoadNotifier.build_lookup_hash_for(@exception)
+
+      assert_nil @hash[:action]
+      assert_nil @hash[:controller]
     end
   end
 end
