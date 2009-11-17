@@ -10,7 +10,7 @@ class Gem::AbstractCommand < Gem::Command
   end
 
   def gemcutter_url
-    ENV['GEMCUTTER_URL'] || 'https://gemcutter.heroku.com'
+    ENV['GEMCUTTER_URL'] || 'https://gemcutter.org'
   end
 
   def setup
