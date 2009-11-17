@@ -1,5 +1,5 @@
 <% @title = @rubygem.name %>
-<% @subtitle = @latest_version.try(:full_name) %>
+<% @subtitle = @latest_version.try(:slug) %>
 
 <% if @rubygem.versions_count.zero? %>
   <p>
