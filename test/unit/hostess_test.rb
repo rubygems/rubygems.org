@@ -7,6 +7,7 @@ class HostessTest < ActiveSupport::TestCase
 
   def touch(path)
     path = Gemcutter.server_path(path)
+    FileUtils.mkdir_p(File.dirname(path))
     FileUtils.touch(path)
   end
 
@@ -15,7 +16,10 @@ class HostessTest < ActiveSupport::TestCase
     FileUtils.rm(path) if File.exists?(path)
   end
 
-  ["/prerelease_specs.4.8.gz", "/latest_specs.4.8.gz", "/specs.4.8.gz", "/Marshal.4.8.Z"].each do |index|
+  ["/prerelease_specs.4.8.gz",
+   "/latest_specs.4.8.gz",
+   "/specs.4.8.gz",
+   "/Marshal.4.8.Z"].each do |index|
     should "serve up #{index}" do
       touch index
       get index
@@ -24,7 +28,10 @@ class HostessTest < ActiveSupport::TestCase
     end
   end
 
-  ["/yaml", "/Marshal.4.8"].each do |old_index|
+  ["/yaml",
+   "/Marshal.4.8",
+   "/specs.4.8",
+   "/latest_specs.4.8"].each do |old_index|
     should "not serve up #{old_index}" do
       get old_index
       assert_equal 403, last_response.status
