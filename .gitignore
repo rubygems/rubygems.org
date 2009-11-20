@@ -11,6 +11,6 @@ db/*.sqlite3
 config/database.yml
 *.sql
 _site/
-vendor/bundler_gems/
+vendor/bundler_gems/*
 !vendor/bundler_gems/cache/
 bin/
