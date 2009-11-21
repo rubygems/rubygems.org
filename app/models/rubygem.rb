@@ -20,7 +20,7 @@ class Rubygem < ActiveRecord::Base
   named_scope :with_one_version, :conditions => ["versions_count = 1"]
 
   named_scope :search, lambda { |query| {
-    :conditions => ["upper(name) like upper(:query) or upper(versions.description) like upper(:query)",
+    :conditions => ["name ilike :query or versions.description ilike :query",
       {:query => "%#{query}%"}],
     :include    => [:versions],
     :order      => "name asc" }
