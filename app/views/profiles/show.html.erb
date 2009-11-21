@@ -5,5 +5,5 @@
 
 <pre><code>gemcutter_key: <%= @user.api_key %></code></pre>
 
-<p><%= button_to "Reset my API key", reset_api_key_path, 
+<p><%= button_to "Reset my API key", reset_api_v1_api_key_path, 
         :method => :put, :confirm => "Are you sure? This cannot be undone." %></p>
