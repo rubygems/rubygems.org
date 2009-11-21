@@ -7,14 +7,17 @@ ActionController::Routing::Routes.draw do |map|
 
   map.namespace :api do |api|
     api.namespace :v1 do |v1|
-      v1.resource :api_key,
-                  :only         => [:show, :reset],
-                  :member       => {:reset => :put}
-      v1.json_gem "/gems/:id.json",
-                  :controller   => "rubygems",
-                  :action       => "show",
-                  :format       => "json",
-                  :requirements => { :id => RUBYGEM_NAME_MATCHER }
+      v1.resource  :api_key,
+                   :only         => [:show, :reset],
+                   :member       => {:reset => :put}
+      v1.json_gem  "/gems/:id.json",
+                   :controller   => "rubygems",
+                   :action       => "show",
+                   :format       => "json",
+                   :requirements => { :id => RUBYGEM_NAME_MATCHER }
+      v1.resources :rubygems,
+                   :as           => "gems",
+                   :only         => [:create]
     end
   end
 
@@ -46,6 +49,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :rubygems,
                 :as           => "gems",
+                :except       => [:create],
                 :requirements => { :id => RUBYGEM_NAME_MATCHER } do |rubygems|
 
     rubygems.resource :owners, :only => [:show, :create, :destroy]
@@ -56,6 +60,12 @@ ActionController::Routing::Routes.draw do |map|
       :only         => [:index, :show],
       :requirements => { :rubygem_id => RUBYGEM_NAME_MATCHER, :id => RUBYGEM_NAME_MATCHER }
   end
+
+  map.resources :rubygems,
+                :as         => "gems",
+                :controller => "api/v1/rubygems",
+                :only       => [:create]
+
   ################################################################################
   # Clearance
 
