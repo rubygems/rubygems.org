@@ -1,7 +1,7 @@
 Given /^I have an api key for "([^\"]*)"$/ do |creds|
   user, pass = creds.split('/')
   basic_auth(user, pass)
-  visit api_key_path, :get
+  visit api_v1_api_key_path, :get
   @api_key = response.body
 end
 
