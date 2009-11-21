@@ -1,4 +1,4 @@
-class OwnersController < ApplicationController
+class Api::V1::OwnersController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, :only => [:create, :destroy]
 

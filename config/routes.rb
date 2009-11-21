@@ -17,7 +17,11 @@ ActionController::Routing::Routes.draw do |map|
                    :requirements => { :id => RUBYGEM_NAME_MATCHER }
       v1.resources :rubygems,
                    :as           => "gems",
-                   :only         => [:create]
+                   :only         => [:create] do |rubygems|
+
+        rubygems.resource :owners,
+          :only       => [:show, :create, :destroy]
+      end
     end
   end
 
@@ -52,7 +56,9 @@ ActionController::Routing::Routes.draw do |map|
                 :except       => [:create],
                 :requirements => { :id => RUBYGEM_NAME_MATCHER } do |rubygems|
 
-    rubygems.resource :owners, :only => [:show, :create, :destroy]
+    rubygems.resource :owners,
+      :only       => [:show, :create, :destroy],
+      :controller => 'api/v1/owners'
 
     rubygems.resource :subscription, :only => [:create, :destroy]
 
