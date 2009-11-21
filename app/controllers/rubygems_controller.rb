@@ -21,18 +21,7 @@ class RubygemsController < ApplicationController
   end
 
   def show
-    respond_to do |format|
-      format.html do
-        @latest_version = @rubygem.versions.latest
-      end
-      format.json do
-        if @rubygem.try(:hosted?)
-          render :json => @rubygem.to_json
-        else
-          render :json => "Not hosted here.", :status => :not_found
-        end
-      end
-    end
+    @latest_version = @rubygem.versions.latest
   end
 
   def edit
@@ -54,20 +43,6 @@ class RubygemsController < ApplicationController
   end
 
   protected
-    def find_gem
-      @rubygem = Rubygem.find_by_name(params[:id])
-      if @rubygem.blank?
-        respond_to do |format|
-          format.html do
-            render :file => 'public/404.html'
-          end
-          format.json do
-            render :text => "This rubygem could not be found.", :status => :not_found
-          end
-        end
-      end
-    end
-
     def load_gem
       if !@rubygem.owned_by?(current_user)
         flash[:warning] = "You do not have permission to edit this gem."
