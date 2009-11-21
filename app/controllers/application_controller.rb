@@ -16,6 +16,20 @@ class ApplicationController < ActionController::Base
       render :text => "Access Denied. Please confirm your Gemcutter account.", :status => 403
     end
   end
+
+  def find_gem
+    @rubygem = Rubygem.find_by_name(params[:id])
+    if @rubygem.blank?
+      respond_to do |format|
+        format.html do
+          render :file => 'public/404.html'
+        end
+        format.json do
+          render :text => "This rubygem could not be found.", :status => :not_found
+        end
+      end
+    end
+  end
 end
 
 # Make the namespaced controllers happy.
