@@ -28,7 +28,7 @@ class Gem::Commands::OwnerCommand < Gem::AbstractCommand
   def add_owners(name, owners)
     owners.each do |owner|
       response = make_request(:post, "gems/#{name}/owners.json") do |request|
-        request.set_form_data(:email => owner)
+        request.set_form_data("email" => owner)
         request.add_field("Authorization", api_key)
       end
       
