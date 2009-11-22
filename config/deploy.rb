@@ -46,7 +46,7 @@ namespace :deploy do
 
   desc "Run gem bundle"
   task :bundle, :roles => :app do
-    run "cd #{release_path} && gem bundle --cached --only production"
+    run "cd #{release_path} && gem bundle --cached"
   end
 
   # Surely there's a better way to do this.  But it's eluding me at the moment.
