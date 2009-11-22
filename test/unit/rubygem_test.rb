@@ -271,8 +271,11 @@ class RubygemTest < ActiveSupport::TestCase
 
   context "when some gems exist with titles and versions that have descriptions" do
     setup do
-      @apple_pie = Factory(:rubygem, :name => 'apple')
+      @apple_pie = Factory(:rubygem, :name => 'apple', :downloads => 1)
       Factory(:version, :description => 'pie', :rubygem => @apple_pie)
+
+      @apple_crisp = Factory(:rubygem, :name => 'apple_crisp', :downloads => 10)
+      Factory(:version, :description => 'pie', :rubygem => @apple_crisp)
 
       @orange_julius = Factory(:rubygem, :name => 'orange')
       Factory(:version, :description => 'julius', :rubygem => @orange_julius)
@@ -297,6 +300,10 @@ class RubygemTest < ActiveSupport::TestCase
     should "find rubygems case insensitively on #search" do
       assert Rubygem.search('APPLE').include?(@apple_pie)
       assert Rubygem.search('PIE').include?(@apple_pie)
+    end
+
+    should "sort results by number of downloads, descending" do
+      assert_equal [@apple_crisp, @apple_pie], Rubygem.search('apple')
     end
   end
 
