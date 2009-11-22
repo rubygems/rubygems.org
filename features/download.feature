@@ -19,16 +19,16 @@ Feature: Download Gems
     And the system processes jobs
     And I visit the gem page for "sandworm"
     Then I should see "3 total downloads"
-    And I should see "3 version downloads"
+    And I should see "3 for this version"
 
     When I download the rubygem "sandworm" version "1.0.0" 2 times
     And the system processes jobs
     And I visit the gem page for "sandworm"
     Then I should see "5 total downloads"
-    And I should see "3 version downloads"
+    And I should see "3 for this version"
     When I follow "1.0.0"
     Then I should see "5 total downloads"
-    And I should see "2 version downloads"
+    And I should see "2 for this version"
 
   Scenario: Download a platform gem
     Given I am signed up and confirmed as "email@person.com/password"
@@ -46,10 +46,10 @@ Feature: Download Gems
     And the system processes jobs
     And I visit the gem page for "crysknife" version "1.0.0"
     Then I should see "3 total downloads"
-    And I should see "3 version downloads"
+    And I should see "3 for this version"
 
     When I download the rubygem "crysknife" version "1.0.0-java" 2 times
     And the system processes jobs
     And I visit the gem page for "crysknife" version "1.0.0-java"
     Then I should see "5 total downloads"
-    And I should see "2 version downloads"
+    And I should see "2 for this version"
