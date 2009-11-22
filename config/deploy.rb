@@ -44,6 +44,11 @@ namespace :deploy do
     run "cp #{deploy_to}/shared/system/database.yml #{current_path}/config/"
   end
 
+  desc "Run gem bundle"
+  task :bundle, :roles => :app do
+    run "gem bundle --cached"
+  end
+
   # Surely there's a better way to do this.  But it's eluding me at the moment.
   desc "Move in secret settings for this environment"
   task :move_in_secret_settings, :roles => :app do
@@ -87,6 +92,7 @@ after "deploy:start", "delayed_job:start"
 after "deploy:stop", "delayed_job:stop" 
 after "deploy:restart", "delayed_job:restart"
 
+after "deploy:update_code", "deploy:bundle"
 after "deploy", "deploy:migrate"
 after "deploy", "deploy:cleanup"
 after "deploy:symlink", "deploy:move_in_database_yml", "deploy:move_in_secret_settings"
