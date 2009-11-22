@@ -1,3 +1,0 @@
-headers_including_one_piece_of_metadata:
-  x-amz-meta-test: foo
-  content_type: text/plain
