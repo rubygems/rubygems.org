@@ -10,7 +10,10 @@ class Api::V1::WebHooksController < ApplicationController
   ## HACK
   
   def create
+    unless Rubygem.find_by_name(params[:web_hook][:gem_name])
+      return render(:text => "Gem Not Found", :status => 404)
+    end
     @web_hook = WebHook.create(params[:web_hook])
-    head :created
+    render :text => 'success', :status => :created
   end
 end
