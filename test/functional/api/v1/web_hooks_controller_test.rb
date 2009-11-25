@@ -1,10 +1,12 @@
 require 'test_helper'
 
 class Api::V1::WebHooksControllerTest < ActionController::TestCase
+  should_forbid_access_when("creating a web hook") { post :create }
+  
   context "When logged in" do
      setup do
        @user = Factory(:email_confirmed_user)
-       sign_in_as(@user)
+       @request.env["HTTP_AUTHORIZATION"] = @user.api_key
      end
 
      context "On POST to create hook for a gem that's hosted" do

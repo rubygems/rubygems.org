@@ -1,11 +1,14 @@
 class Api::V1::WebHooksController < ApplicationController
-  # before_filter :authenticate_with_api_key, :only => :create
-  # before_filter :verify_authenticated_user, :only => :create
+  before_filter :authenticate_with_api_key, :only => :create
+  before_filter :verify_authenticated_user, :only => :create
+  ## HACK
   class WebHook
     def self.create(*args)
      "not nil" 
     end
   end
+  ## HACK
+  
   def create
     @web_hook = WebHook.create(params[:web_hook])
     head :created
