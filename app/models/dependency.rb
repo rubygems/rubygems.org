@@ -15,7 +15,7 @@ class Dependency < ActiveRecord::Base
 
     self.create!(
       :rubygem      => rubygem,
-      :requirements => dependency.requirements_list.to_s,
+      :requirements => dependency.requirements_list.join(', '),
       :scope        => dependency.type.to_s
     )
   end

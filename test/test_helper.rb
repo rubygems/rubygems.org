@@ -49,7 +49,7 @@ def gem_specification_from_gem_fixture(name)
   Gem::Format.from_file_by_path(File.join('test', 'gems', "#{name}.gem")).spec
 end
 
-def gem_dependency_stub(name, requirements = ">= 1.0")
+def gem_dependency_stub(name, requirements = [">= 1.0"])
   returning(Object.new) do |dependency|
     stub(dependency).name              { name }
     stub(dependency).requirements_list { requirements }
