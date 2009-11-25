@@ -54,20 +54,20 @@ class MigrateCommandTest < CommandTest
     end
 
     should "find gem info if it exists" do
-      FakeWeb.register_uri :get, "https://gemcutter.heroku.com/gems/#{@name}.json", :body => @json
+      FakeWeb.register_uri :get, "https://gemcutter.org/gems/#{@name}.json", :body => @json
       @command.find(@name)
       assert_equal JSON.parse(@json), @command.rubygem
     end
 
     should "dump out if the gem couldn't be found" do
-      FakeWeb.register_uri :get, "https://gemcutter.heroku.com/gems/#{@name}.json", :body => "Not hosted here.", :status => 404
+      FakeWeb.register_uri :get, "https://gemcutter.org/gems/#{@name}.json", :body => "Not hosted here.", :status => 404
       @command.find(@name)
       assert_received(@command) { |subject| subject.say(anything) }
       assert_received(@command) { |subject| subject.terminate_interaction }
     end
 
     should "dump out if bad json is returned" do
-      FakeWeb.register_uri :get, "https://gemcutter.heroku.com/gems/#{@name}.json", :body => "bad data is bad"
+      FakeWeb.register_uri :get, "https://gemcutter.org/gems/#{@name}.json", :body => "bad data is bad"
       @command.find(@name)
       assert_received(@command) { |subject| subject.say(anything) }
       assert_received(@command) { |subject| subject.terminate_interaction }
@@ -95,19 +95,19 @@ class MigrateCommandTest < CommandTest
 
     should "ask gemcutter to start the migration" do
       token = "SECRET TOKEN"
-      FakeWeb.register_uri :post, "https://gemcutter.heroku.com/gems/#{@name}/migrate", :body => token
+      FakeWeb.register_uri :post, "https://gemcutter.org/gems/#{@name}/migrate", :body => token
       assert_equal token, @command.get_token
     end
 
     should "dump out if gem could not be found" do
-      FakeWeb.register_uri :post, "https://gemcutter.heroku.com/gems/#{@name}/migrate", :status => 404, :body => "not found"
+      FakeWeb.register_uri :post, "https://gemcutter.org/gems/#{@name}/migrate", :status => 404, :body => "not found"
       @command.get_token
       assert_received(@command) { |subject| subject.say("not found") }
       assert_received(@command) { |subject| subject.terminate_interaction }
     end
 
     should "dump out if migration has already been completed" do
-      FakeWeb.register_uri :post, "https://gemcutter.heroku.com/gems/#{@name}/migrate", :status => 403, :body => "already migrated"
+      FakeWeb.register_uri :post, "https://gemcutter.org/gems/#{@name}/migrate", :status => 403, :body => "already migrated"
       @command.get_token
       assert_received(@command) { |subject| subject.say("already migrated") }
       assert_received(@command) { |subject| subject.terminate_interaction }
@@ -153,7 +153,7 @@ class MigrateCommandTest < CommandTest
     end
 
     should "let the server decide the status" do
-      FakeWeb.register_uri :put, "https://gemcutter.heroku.com/gems/#{@name}/migrate", :body => "Success!", :status => 400
+      FakeWeb.register_uri :put, "https://gemcutter.org/gems/#{@name}/migrate", :body => "Success!", :status => 400
       @command.check_for_approved
       assert_received(@command) { |subject| subject.say("Success!") }
     end
