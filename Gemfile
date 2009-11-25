@@ -23,7 +23,7 @@ only :test do
   gem "cucumber",     "0.3.101"
   gem "rr",           "0.10.4"
   gem "redgreen",     "1.2.2"
-  gem "fakeweb",      "1.2.6"
+  gem "webmock",      "0.7.3"
   gem "rack-test",    "0.5.0", :require_as => "rack/test"
 end
 
