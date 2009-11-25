@@ -5,7 +5,7 @@ Given /^I have an api key for "([^\"]*)"$/ do |creds|
   @api_key = response.body
 end
 
-Given /^I've already pushed the gem "([^\"]*)" with my api key$/ do |name|
+Given /^I've already pushed the gem "([^\"]*)" with my api key$/ do |name| # '
   When %Q[I push the gem "#{name}" with my api key]
 end
 
@@ -29,9 +29,9 @@ When /^I migrate the gem "([^\"]*)" with my api key$/ do |name|
 
   subdomain = rubygem.versions.latest.rubyforge_project
 
-  FakeWeb.register_uri(:get,
-                       "http://#{subdomain}.rubyforge.org/migrate-#{name}.html",
-                       :body => token)
+  WebMock.stub_request(:get,
+                       "http://#{subdomain}.rubyforge.org/migrate-#{name}.html").
+    to_return(:body => token)
 
   visit migrate_path(:rubygem_id => rubygem.to_param), :put
 end
