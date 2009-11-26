@@ -196,11 +196,13 @@ class GemcutterTest < ActiveSupport::TestCase
         stub(@rubygem).errors.stub!.full_messages
         stub(@rubygem).save
         stub(@rubygem).ownerships { @ownerships }
+        stub(@rubygem).web_hook_jobs{[]}
         stub(@cutter).version { @version }
         stub(@version).to_title { "latest version" }
         stub(@version).id { 1337 }
         stub(@cutter).rubygem { @rubygem }
         stub(@cutter).spec { @spec }
+        stub(Delayed::Job).enqueue
       end
 
       context "saving the rubygem" do
@@ -212,6 +214,20 @@ class GemcutterTest < ActiveSupport::TestCase
         before_should "not process if not successfully saved" do
           mock(@cutter).update { false }
           mock(@cutter).store.never
+        end
+
+        before_should "enqueue web hook job if successfully saved" do
+          mock(@cutter).update { true }
+          @web_hook_job = "JOB_MOCK"
+          stub(@rubygem).web_hook_jobs{[@web_hook_job]}
+          mock(Delayed::Job).enqueue(@web_hook_job, anything)
+        end
+
+        before_should "not enqueue web hook job if not successfully saved" do
+          mock(@cutter).update { false }
+          @web_hook_job = "JOB_MOCK"
+          stub(@rubygem).web_hook_jobs{[@web_hook_job]}
+          mock(Delayed::Job).enqueue(@web_hook_job, anything).never
         end
 
         setup do
