@@ -56,3 +56,14 @@ When /^I download the rubygem "([^\"]*)" version "([^\"]*)" (\d+) times$/ do |ru
     visit "/gems/#{rubygem_name}-#{version_number}.gem", :get
   end
 end
+
+Given /^I have added a webhook to gem "([^\"]*)"$/ do |gem_name|
+  pending
+  @web_hook_url = 'http://example.org/webhook'
+  WebMock.stub_request(:post, @web_hook_url)
+  user = User.find_by_api_key!(@api_key)
+  WebHook.create!(
+    :url        => @web_hook_url,
+    :gem_name   => gem_name,
+    :user       => user)
+end
