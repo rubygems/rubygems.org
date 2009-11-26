@@ -32,6 +32,7 @@ class Gemcutter
       write_gem
       @version_id = self.version.id
       Delayed::Job.enqueue self, 1
+      enqueue_web_hook_jobs
       notify("Successfully registered gem: #{self.version.to_title}", 200)
     else
       notify("There was a problem saving your gem: #{rubygem.errors.full_messages}", 403)
@@ -101,6 +102,13 @@ class Gemcutter
     upload("specs.4.8.gz", specs_index)
     upload("latest_specs.4.8.gz", latest_index)
     upload("prerelease_specs.4.8.gz", prerelease_index)
+  end
+
+  def enqueue_web_hook_jobs
+    jobs = rubygem.web_hook_jobs
+    jobs.each do |job|
+      Delayed::Job.enqueue(job, 2)
+    end
   end
 
    def self.indexer
