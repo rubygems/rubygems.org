@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   include Clearance::User
+  is_gravtastic
 
   has_many :rubygems, :through    => :ownerships,
                       :order      => "name ASC",

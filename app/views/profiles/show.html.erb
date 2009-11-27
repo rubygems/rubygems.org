@@ -1,5 +1,7 @@
 <h3>Your Profile</h3>
 
+<p>Your Gravatar: <%= image_tag current_user.gravatar_url(:size => 60), :id => 'profile_gravatar' %> (change it at <%= link_to 'gravatar.com', 'http://www.gravatar.com' %>)</p>
+
 <p>Your API key is <strong><%= @user.api_key %></strong>. <br />
    The following line should be added to your <code>~/.gemrc</code> file if isn't there already.</p>
 
