@@ -14,7 +14,8 @@ class Version < ActiveRecord::Base
   }
 
   named_scope :subscribed_to_by, lambda { |user|
-    { :conditions => { :rubygem_id => user.subscribed_gem_ids } }
+    { :conditions => { :rubygem_id => user.subscribed_gem_ids },
+      :order => 'built_at desc' }
   }
 
   named_scope :with_associated, { :conditions => ["rubygems.versions_count > 1"],
