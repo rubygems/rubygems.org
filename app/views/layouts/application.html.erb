@@ -22,6 +22,9 @@
       </div>
       <div class="grid_7 suffix_1 nav">
         <ul>
+          <% if signed_in? %>
+            <li><%= link_to(image_tag(current_user.gravatar_url(:size => 25)), profile_url, :id => 'user_gravatar') %></li>
+          <% end %>
           <li><%= link_to "all gems", rubygems_url %></li>
           <% if signed_in? %>
             <li><%= link_to "dashboard", dashboard_url %></li>
