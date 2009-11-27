@@ -16,6 +16,7 @@ gem "rack-maintenance", "0.3.0", :require_as => "rack/maintenance"
 gem "sinatra",          "0.9.4"
 gem "will_paginate",    "2.3.11"
 gem "xml-simple",       "1.0.12"
+gem "gravtastic",       "2.1.3"
 
 only :test do
   gem "cucumber",     "0.3.101"
