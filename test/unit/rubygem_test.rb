@@ -435,8 +435,8 @@ class RubygemTest < ActiveSupport::TestCase
       jobs = @rubygem.web_hook_jobs
       job_a = jobs.detect {|job| job.hook == @hook_a }
       job_b = jobs.detect {|job| job.hook == @hook_b }
-      assert_equal 'foogem', job_a.gem['name']
-      assert_equal 'foogem', job_b.gem['name']
+      assert_equal 'foogem', job_a.payload['name']
+      assert_equal 'foogem', job_b.payload['name']
     end
     
   end

@@ -3,7 +3,7 @@ Feature: Web Hooks
   A rubygem developer
   Should be able to configure web hooks to be hit when a gem is pushed
 
-    Scenario: User pushes new gem with hooks
+    Scenario: User pushes new gem with webhook
       Given I am signed up and confirmed as "email@person.com/password"
       And I have a gem "RGem" with version "1.2.3"
       And I have an api key for "email@person.com/password"
