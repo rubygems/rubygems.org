@@ -143,9 +143,9 @@ class Rubygem < ActiveRecord::Base
     WebHook.find_matching_by_gem_name(name)
   end
 
-  def web_hook_jobs
+  def web_hook_jobs(host_with_port)
     web_hooks.map{|hook|
-      WebHookJob.new(hook, self)
+      WebHookJob.new(hook, self, host_with_port)
     }
   end
 

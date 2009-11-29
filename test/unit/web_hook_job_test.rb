@@ -6,19 +6,19 @@ class WebHookJobTest < ActiveSupport::TestCase
 
     setup do
       @hook = Factory(:web_hook)
+      version = Factory(:version, 
+                         :number               => "3.2.1", 
+                         :rubyforge_project    => "foogem-rf",
+                         :authors              => "AUTHORS",
+                         :description          => "DESC",
+                         :summary              => "SUMMARY")
       @gem  = Factory(:rubygem,
                       :name      => "foogem",
-                      :versions  => [
-                                     Factory(:version, 
-                                             :number               => "3.2.1", 
-                                             :rubyforge_project    => "foogem-rf",
-                                             :authors              => "AUTHORS",
-                                             :description          => "DESC",
-                                             :summary              => "SUMMARY")
-                                    ],
+                      :versions  => [ version ],
                       :downloads => 42)
-      
-      @job  = WebHookJob.new(@hook, @gem)
+      version.rubygem = @gem
+      version.save
+      @job  = WebHookJob.new(@hook, @gem, 'localhost:1234')
     end
 
     should "have a hook" do
@@ -34,6 +34,8 @@ class WebHookJobTest < ActiveSupport::TestCase
       assert_equal "SUMMARY",    payload["summary"]
       assert_equal "AUTHORS",    payload["authors"]
       assert_equal 42,           payload["downloads"]
+      assert_equal "http://localhost:1234/gems/foogem", payload['project_uri']
+      assert_equal "http://localhost:1234/gems/foogem-3.2.1.gem", payload['gem_uri']
     end
 
   end
@@ -44,7 +46,7 @@ class WebHookJobTest < ActiveSupport::TestCase
       @web_hook_url = 'http://example.com/gemcutter'
       @hook = Factory(:web_hook, :url => @web_hook_url)
       @gem  = Factory(:rubygem, :versions => [Factory(:version)])
-      @job  = WebHookJob.new(@hook, @gem)
+      @job  = WebHookJob.new(@hook, @gem, 'example.org')
       WebMock.stub_request(:post, @web_hook_url)
       @job.perform
     end
@@ -71,7 +73,7 @@ class WebHookJobTest < ActiveSupport::TestCase
       @web_hook_url = 'http://someinvaliddomain.com'
       @hook = Factory(:web_hook, :url => @web_hook_url)
       @gem  = Factory(:rubygem, :versions => [Factory(:version)])
-      @job  = WebHookJob.new(@hook, @gem)
+      @job  = WebHookJob.new(@hook, @gem, 'example.org')
     end
     
     should "increment failure count for hook on errors" do

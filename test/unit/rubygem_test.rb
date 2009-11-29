@@ -432,7 +432,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "should be able to generate a list of web hook jobs" do
-      jobs = @rubygem.web_hook_jobs
+      jobs = @rubygem.web_hook_jobs('HOSTNAME:PORT')
       job_a = jobs.detect {|job| job.hook == @hook_a }
       job_b = jobs.detect {|job| job.hook == @hook_b }
       assert_equal 'foogem', JSON.parse(job_a.payload)['name']
@@ -464,7 +464,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "should be able to generate a list of web hook jobs" do
-      jobs = @rubygem.web_hook_jobs
+      jobs = @rubygem.web_hook_jobs('HOSTNAME:PORT')
       job_a = jobs.detect {|job| job.hook == @hook_a }
       job_b = jobs.detect {|job| job.hook == @hook_b }
       assert_equal 'foogem', JSON.parse(job_a.payload)['name']
