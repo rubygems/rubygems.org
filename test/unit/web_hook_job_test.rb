@@ -22,7 +22,7 @@ class WebHookJobTest < ActiveSupport::TestCase
     end
 
     should "have a hook" do
-      assert_same @hook, @job.hook
+      assert_equal @hook, @job.hook
     end
 
     should "have gem properties encoded in JSON" do

@@ -13,7 +13,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
        setup do
          @rubygem = Factory(:rubygem)
          Factory(:version, :rubygem => @rubygem)
-         post :create, :web_hook => {:gem_name => @rubygem.name, :url => "http://example.org"}
+         post :create, {:gem_name => @rubygem.name, :url => "http://example.org"}
        end
 
        should_assign_to(:web_hook)
@@ -22,7 +22,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
      
      context "On POST to create a hook for a gem that doesn't exist here" do
        setup do
-         post :create, :web_hook => {:gem_name => "a gem that doesnt' exist", :url => "http://example.org"}
+         post :create, {:gem_name => "a gem that doesnt' exist", :url => "http://example.org"}
        end
        
        should_not_assign_to(:web_hook)
