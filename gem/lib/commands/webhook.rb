@@ -28,7 +28,7 @@ class Gem::Commands::WebhookCommand < Gem::AbstractCommand
     say "Registering webhook..."
     name = get_one_gem_name
     url = options[:url]
-    response = make_request(:post, "api/v1/webhooks") do |request|
+    response = make_request(:post, "api/v1/web_hooks") do |request|
       request.set_form_data("gem_name" => name, "url" => url)
       request.add_field("Authorization", api_key)
     end
