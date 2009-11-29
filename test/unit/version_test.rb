@@ -84,10 +84,27 @@ class VersionTest < ActiveSupport::TestCase
       assert @version.prerelease
       assert new_version.prerelease
 
+      @version.rubygem.reorder_versions
+
       assert_equal "gem install #{@version.rubygem.name} -v #{@version.number} --pre",
         @version.to_install
       assert_equal "gem install #{new_version.rubygem.name} --pre",
         new_version.to_install
+    end
+
+    should "give no version count for the latest prerelease version" do
+      @version.update_attribute(:number, "0.3.0.pre")
+      old_version = Factory(:version, :rubygem  => @version.rubygem,
+                                      :built_at => 1.day.from_now,
+                                      :number   => "0.2.0")
+
+      assert @version.prerelease
+      assert !old_version.prerelease
+
+      @version.rubygem.reorder_versions
+
+      assert_equal "gem install #{@version.rubygem.name} --pre", @version.to_install
+      assert_equal "gem install #{old_version.rubygem.name}", old_version.to_install
     end
 
 

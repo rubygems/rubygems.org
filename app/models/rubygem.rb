@@ -8,7 +8,8 @@ class Rubygem < ActiveRecord::Base
   has_many :versions, :dependent => :destroy do
     def latest
       # try to find a ruby platform in the latest version
-      find_by_position_and_platform(0, 'ruby') || first
+      latest = scopes[:latest][self]
+      latest.find_by_platform('ruby') || latest.first || first
     end
   end
   has_one :linkset, :dependent => :destroy
@@ -127,8 +128,10 @@ class Rubygem < ActiveRecord::Base
 
       self.versions.update_all(:latest => false)
 
-      versions.release.platforms.each do |platform|
-        versions.release.find_by_platform(platform).update_attributes(:latest => true)
+      if first_release = versions.release.first
+        versions.find_all_by_number(first_release.number).each do |version|
+          version.update_attributes(:latest => true)
+        end
       end
     end
   end
