@@ -10,7 +10,7 @@ class WebHookJob
 
   attr_reader :hook, :payload
 
-  def initialize(hook, gem)
+  def initialize(hook, gem, host_with_port)
     @hook_id = hook.id
     version = gem.versions.latest
     @payload  = {
@@ -20,7 +20,9 @@ class WebHookJob
       'description'             => version.description,
       'summary'                 => version.summary,
       'authors'                 => version.authors,
-      'downloads'               => gem.downloads
+      'downloads'               => gem.downloads,
+      'project_uri'             => "http://#{host_with_port}/gems/#{gem.name}",
+      'gem_uri'                 => "http://#{host_with_port}/gems/#{version.full_name}.gem"
     }.to_json
   end
 
