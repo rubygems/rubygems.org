@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.3.5") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Quaranto"]
-  s.date = %q{2009-11-22}
+  s.date = %q{2009-11-28}
   s.description = %q{Adds several commands for using gemcutter.org, such as pushing new gems, migrating gems from RubyForge, and more.}
   s.email = %q{nick@quaran.to}
   s.files = [
@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
      "lib/commands/owner.rb",
      "lib/commands/push.rb",
      "lib/commands/tumble.rb",
+     "lib/commands/webhook.rb",
      "lib/rubygems_plugin.rb"
   ]
   s.homepage = %q{http://github.com/qrush/gemcutter}
