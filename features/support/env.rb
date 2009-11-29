@@ -27,6 +27,7 @@ WebMock.disable_net_connect!
 TEST_DIR = File.join('/', 'tmp', 'gemcutter')
 
 Before do
+  WebMock.reset_webmock
   FileUtils.mkdir(TEST_DIR)
   Dir.chdir(TEST_DIR)
 end

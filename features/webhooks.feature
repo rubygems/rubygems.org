@@ -11,3 +11,12 @@ Feature: Web Hooks
       When I push the gem "RGem-1.2.3.gem" with my api key
       And the system processes jobs
       Then the webhook "http://example.org/webhook" should receive a POST
+
+    Scenario: User pushes new gem after registering global webhook
+      Given I am signed up and confirmed as "email@person.com/password"
+      And I have a gem "RGem" with version "1.2.3"
+      And I have an api key for "email@person.com/password"
+      And I have added a webhook "http://example.org/webhook" to gem "*"
+      When I push the gem "RGem-1.2.3.gem" with my api key
+      And the system processes jobs
+      Then the webhook "http://example.org/webhook" should receive a POST
