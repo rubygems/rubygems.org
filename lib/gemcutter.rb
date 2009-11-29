@@ -7,9 +7,10 @@ class Gemcutter
 
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id
 
-  def initialize(user, body)
+  def initialize(user, body, host_with_port=nil)
     @user = user
     @body = StringIO.new(body.read)
+    @host_with_port = host_with_port
   end
 
   def process
@@ -105,7 +106,7 @@ class Gemcutter
   end
 
   def enqueue_web_hook_jobs
-    jobs = rubygem.web_hook_jobs
+    jobs = rubygem.web_hook_jobs(@host_with_port)
     jobs.each do |job|
       Delayed::Job.enqueue(job, 2)
     end
