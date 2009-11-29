@@ -140,8 +140,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def web_hooks
-    WebHook.find_all_by_gem_name(name)
-    WebHook.find(:all, :conditions => { :gem_name => name })
+    WebHook.find_matching_by_gem_name(name)
   end
 
   def web_hook_jobs
