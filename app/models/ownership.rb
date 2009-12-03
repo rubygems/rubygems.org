@@ -24,7 +24,7 @@ class Ownership < ActiveRecord::Base
   protected
 
     def generate_token
-      self.token = "#{rand(1000)}#{Time.now.to_f}".to_md5
+      self.token = ActiveSupport::SecureRandom.hex
     end
 
     def remove_unapproveds
