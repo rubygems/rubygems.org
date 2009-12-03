@@ -24,6 +24,10 @@ class UserTest < ActiveSupport::TestCase
       assert_not_nil @user.api_key
     end
 
+    should "have a 32 character hexadecimal api key" do
+      assert @user.api_key =~ /[a-z0-9]{32}/
+    end
+
     should "reset api key" do
       assert_changed(@user, :api_key) do
         @user.reset_api_key!
