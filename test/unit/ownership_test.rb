@@ -68,6 +68,10 @@ class OwnershipTest < ActiveSupport::TestCase
     should "create token" do
       assert_not_nil @ownership.token
     end
+
+    should "have a 32 character hexadecimal api key" do
+      assert @ownership.token =~ /[a-z0-9]{32}/
+    end
   end
 
   context "with multiple ownerships on the same rubygem" do
