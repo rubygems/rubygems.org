@@ -5,5 +5,13 @@ class ProfilesController < ApplicationController
   def edit
     @user = current_user
   end
+  
+  def update
+    @user = current_user
+    if @user.update_attributes(params[:user])
+      ProfileMailer.deliver_email_reset(@user)
+      redirect_to sign_out_path
+    end
+  end
 
 end
