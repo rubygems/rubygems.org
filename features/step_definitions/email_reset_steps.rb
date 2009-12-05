@@ -1,5 +1,7 @@
 Then /^an email entitled "([^\"]*)" should be sent to "([^\"]*)"$/ do |subject, email|
-  pending
+  sent = ActionMailer::Base.deliveries.first
+  assert_equal [email], sent.to
+  assert_match subject, sent.subject
 end
 
 Given /^I have reset my email address to "([^\"]*)"$/ do |email|
