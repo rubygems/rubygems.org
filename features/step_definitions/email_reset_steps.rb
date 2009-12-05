@@ -1,11 +1,11 @@
-Then /^I should receive an email entitled "([^\"]*)"$/ do |arg1|
+Then /^an email entitled "([^\"]*)" should be sent to "([^\"]*)"$/ do |subject, email|
   pending
 end
 
-Given /^I have reset my email address to "([^\"]*)"$/ do |arg1|
+Given /^I have reset my email address to "([^\"]*)"$/ do |email|
   pending
 end
 
-Then /^I should see the message "([^\"]*)"$/ do |arg1|
+Then /^I should see the message "([^\"]*)"$/ do |message|
   pending
 end

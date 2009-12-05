@@ -1,4 +1,3 @@
-@wip
 Feature: Email reset
   In order to still use my account after I've changed my email address
   A user
