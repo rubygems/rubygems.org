@@ -85,6 +85,7 @@ class HostessTest < ActiveSupport::TestCase
     end
 
     get file
+    assert_match %r{not be found}, last_response.body
     assert_equal 404, last_response.status
   end
 end
