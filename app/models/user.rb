@@ -40,6 +40,12 @@ class User < ActiveRecord::Base
     { 'email' => email }.to_yaml(*args)
   end
 
+  def unconfirm_email!
+    self.email_confirmed = false
+    generate_confirmation_token
+    save
+  end
+  
   protected
 
     def generate_api_key
