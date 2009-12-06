@@ -78,7 +78,7 @@ class HostessTest < ActiveSupport::TestCase
     assert_equal 1, version.reload.downloads_count
   end
 
-  should "not be able to find non existant gemspec" do
+  should "not be able to find gemspec that doesn't exist on s3" do
     file = "/quick/Marshal.4.8/test-0.0.0.gemspec.rz"
     stub(VaultObject).value(anything, anything) do
       raise AWS::S3::NoSuchKey.new("No such key!", VaultObject.current_bucket)
@@ -86,6 +86,6 @@ class HostessTest < ActiveSupport::TestCase
 
     get file
     assert_match %r{not be found}, last_response.body
-    assert_equal 404, last_response.status
+    assert_equal 403, last_response.status
   end
 end
