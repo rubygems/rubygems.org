@@ -5,7 +5,9 @@ Then /^an email entitled "([^\"]*)" should be sent to "([^\"]*)"$/ do |subject, 
 end
 
 Given /^I have reset my email address to "([^\"]*)"$/ do |email|
-  pending
+  Given %{I am on my edit profile page}
+  When %{I fill in "Email address" with "#{email}"}
+  And %{I press "Reset email address"}
 end
 
 Then /^I should see the message "([^\"]*)"$/ do |message|
