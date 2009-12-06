@@ -108,6 +108,7 @@ ActiveRecord::Schema.define(:version => 20100220111111) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "handle"
+    t.boolean  "email_changed"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email"
