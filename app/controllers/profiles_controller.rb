@@ -9,7 +9,7 @@ class ProfilesController < ApplicationController
   def update
     @user = current_user
     if @user.update_attributes(params[:user])
-      @user.unconfirm_email!
+      @user.email_changed!
       ::ClearanceMailer.deliver_confirmation @user
       sign_out
       flash[:notice] = "You will receive an email within the next few minutes. " <<
