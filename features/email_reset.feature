@@ -15,14 +15,15 @@ Feature: Email reset
       Given I have signed in with "email@person.com/password"
       And I have reset my email address to "email@newperson.com"
       And I follow the confirmation link sent to "email@newperson.com"
-      Then I should see the message "Your email address has been confirmed"
+      Then I should see "Confirmed email and signed in"
       And I should be signed in
     
     Scenario: User tries to sign in in after resetting email address without confirmation
       Given I have signed in with "email@person.com/password"
       And I have reset my email address to "email@newperson.com"
       When I sign in as "email@newperson.com/password"
-      Then I should be forbidden
+      Then I should see "Confirmation email will be resent."
+      And an email entitled "Confirm your email address" should be sent to "email@newperson.com"
       
     Scenario: User signs in after resetting and confirming email address
       Given I have signed in with "email@person.com/password"
