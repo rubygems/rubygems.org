@@ -24,7 +24,7 @@ class Hostess < Sinatra::Default
                                  :if_modified_since => env['HTTP_IF_MODIFIED_SINCE'],
                                  :if_none_match     => env['HTTP_IF_NONE_MATCH'])
     rescue AWS::S3::NoSuchKey
-      halt 404
+      not_found "This gemspec could not be found."
     end
 
     # These should raise a 304 if either of them match
