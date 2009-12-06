@@ -31,11 +31,13 @@ class HostessTest < ActiveSupport::TestCase
   ["/yaml",
    "/Marshal.4.8",
    "/specs.4.8",
-   "/latest_specs.4.8"].each do |old_index|
-    should "not serve up #{old_index}" do
+   "/latest_specs.4.8",
+   "/prerelease_specs.4.8"].each do |old_index|
+    should "serve up #{old_index}" do
+      touch old_index
       get old_index
-      assert_equal 403, last_response.status
-      assert_match /gem update --system/, last_response.body
+      assert_not_nil last_response.headers["Cache-Control"]
+      assert_equal 200, last_response.status
     end
   end
 
