@@ -62,11 +62,11 @@ class UserTest < ActiveSupport::TestCase
         @user.save
       end
       
-      should "generate a new confirmation token" do
+      should "generate a new confirmation token and set the email_changed token then the email gets changed" do
         assert_changed(@user, :confirmation_token) do
-          @user.unconfirm_email!
+          @user.email_changed!
         end
-        assert_equal false, @user.email_confirmed
+        assert_equal true, @user.email_changed
       end
     end
 

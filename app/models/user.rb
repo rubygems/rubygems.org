@@ -40,8 +40,8 @@ class User < ActiveRecord::Base
     { 'email' => email }.to_yaml(*args)
   end
 
-  def unconfirm_email!
-    self.email_confirmed = false
+  def email_changed!
+    self.email_changed = true
     generate_confirmation_token
     save
   end
