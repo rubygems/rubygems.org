@@ -10,7 +10,7 @@ class ProfilesController < ApplicationController
     @user = current_user
     if @user.update_attributes(params[:user])
       @user.unconfirm_email!
-      ProfileMailer.deliver_email_reset(@user)
+      ::ClearanceMailer.deliver_confirmation @user
       redirect_to sign_out_path
     end
   end
