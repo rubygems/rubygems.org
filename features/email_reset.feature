@@ -8,7 +8,7 @@ Feature: Email reset
       And I am on my edit profile page
       When I fill in "Email address" with "email@newperson.com"
       And I press "Reset email address"
-      Then an email entitled "Confirm your email address" should be sent to "email@newperson.com"
+      Then an email entitled "Account confirmation" should be sent to "email@newperson.com"
       And I should be signed out
       
     Scenario: User confirms new email address
@@ -23,7 +23,7 @@ Feature: Email reset
       And I have reset my email address to "email@newperson.com"
       When I sign in as "email@newperson.com/password"
       Then I should see "Confirmation email will be resent."
-      And an email entitled "Confirm your email address" should be sent to "email@newperson.com"
+      And an email entitled "Account confirmation" should be sent to "email@newperson.com"
       
     Scenario: User signs in after resetting and confirming email address
       Given I have signed in with "email@person.com/password"
