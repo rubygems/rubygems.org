@@ -9,6 +9,7 @@ test: &TEST
   database: gemcutter_test
   pool: 5
   timeout: 5000
+  min_messages: warning
 
 cucumber:
   <<: *TEST
