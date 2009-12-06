@@ -25,6 +25,7 @@ require 'fakeweb'
 FakeWeb.allow_net_connect = false
 
 TEST_DIR = File.join('/', 'tmp', 'gemcutter')
+Hostess.local = true
 
 Before do
   FileUtils.mkdir(TEST_DIR)
@@ -35,4 +36,3 @@ After do
   Dir.chdir(TEST_DIR)
   FileUtils.rm_rf(TEST_DIR)
 end
-
