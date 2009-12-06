@@ -27,4 +27,6 @@ config.action_mailer.delivery_method = :test
 # like if you have constraints or database-specific column types
 # config.active_record.schema_format = :sql
 
-HOST = "localhost"
+HOST             = "localhost"
+ENV['S3_KEY']    = 'this:is:an:ex:parrot'
+ENV['S3_SECRET'] = 'it:has:ceased:to:be'
