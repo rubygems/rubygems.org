@@ -12,6 +12,8 @@ class ProfilesController < ApplicationController
       @user.unconfirm_email!
       ::ClearanceMailer.deliver_confirmation @user
       redirect_to sign_out_path
+    else
+      render :edit
     end
   end
 

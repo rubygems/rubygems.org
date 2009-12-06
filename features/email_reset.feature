@@ -10,7 +10,14 @@ Feature: Email reset
       And I press "Reset email address"
       Then an email entitled "Account confirmation" should be sent to "email@newperson.com"
       And I should be signed out
-      
+    
+    Scenario: User tries to reset email with an invalid email address
+      Given I have signed in with "email@person.com/password"
+      And I am on my edit profile page
+      When I fill in "Email address" with "this is an invalid email address"
+      And I press "Reset email address"
+      Then I should see error messages
+    
     Scenario: User confirms new email address
       Given I have signed in with "email@person.com/password"
       And I have reset my email address to "email@newperson.com"
