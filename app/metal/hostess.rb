@@ -70,11 +70,13 @@ class Hostess < Sinatra::Default
   end
 
   ["/yaml",
+   "/yaml.Z",
    "/Marshal.4.8",
    "/specs.4.8",
-   "/latest_specs.4.8"].each do |old_index|
+   "/latest_specs.4.8",
+   "/prerelease_specs.4.8"].each do |old_index|
     get old_index do
-      halt 403, "Please update your RubyGems. Run: gem update --system"
+      serve(current_path)
     end
   end
 
