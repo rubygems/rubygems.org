@@ -9,6 +9,7 @@ Feature: Email reset
       When I fill in "Email address" with "email@newperson.com"
       And I press "Reset email address"
       Then an email entitled "Account confirmation" should be sent to "email@newperson.com"
+      And I should see "You will receive an email within the next few minutes."
       And I should be signed out
     
     Scenario: User tries to reset email with an invalid email address
