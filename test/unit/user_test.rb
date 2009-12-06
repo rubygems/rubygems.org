@@ -54,6 +54,21 @@ class UserTest < ActiveSupport::TestCase
 
       assert_equal [my_rubygem], @user.rubygems
     end
+    
+    context "with a confirmed email address" do
+      setup do
+        @user = Factory(:email_confirmed_user)
+        @user.confirmation_token = nil
+        @user.save
+      end
+      
+      should "generate a new confirmation token" do
+        assert_changed(@user, :confirmation_token) do
+          @user.unconfirm_email!
+        end
+        assert_equal false, @user.email_confirmed
+      end
+    end
 
     context "with subscribed gems" do
       setup do
@@ -67,7 +82,7 @@ class UserTest < ActiveSupport::TestCase
         assert_does_not_contain @user.subscribed_gems, @unsubscribed_gem
       end
     end
-
+      
     context "with the rubyforge user set up" do
       setup do
         ENV["RUBYFORGE_IMPORTER"] = "42"
