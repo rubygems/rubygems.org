@@ -11,7 +11,10 @@ class ProfilesController < ApplicationController
     if @user.update_attributes(params[:user])
       @user.unconfirm_email!
       ::ClearanceMailer.deliver_confirmation @user
-      redirect_to sign_out_path
+      sign_out
+      flash[:notice] = "You will receive an email within the next few minutes. " <<
+                       "It contains instructions for reconfirming your account with your new email address."
+      redirect_to root_path
     else
       render :edit
     end
