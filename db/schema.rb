@@ -9,7 +9,16 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091109203935) do
+ActiveRecord::Schema.define(:version => 20091124131329) do
+
+  create_table "daily_downloads", :force => true do |t|
+    t.integer "version_id"
+    t.integer "amount"
+    t.date    "on"
+  end
+
+  add_index "daily_downloads", ["on"], :name => "index_daily_downloads_on_on"
+  add_index "daily_downloads", ["version_id"], :name => "index_daily_downloads_on_version_id"
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -77,6 +86,11 @@ ActiveRecord::Schema.define(:version => 20091109203935) do
 
   add_index "requirements", ["dependency_id"], :name => "index_requirements_on_dependency_id"
   add_index "requirements", ["version_id"], :name => "index_requirements_on_version_id"
+
+  create_table "rubyforgers", :force => true do |t|
+    t.string "email"
+    t.string "encrypted_password", :limit => 40
+  end
 
   create_table "rubygems", :force => true do |t|
     t.string   "name"
