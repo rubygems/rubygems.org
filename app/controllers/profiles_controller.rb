@@ -10,7 +10,7 @@ class ProfilesController < ApplicationController
     @user = current_user
     if @user.update_attributes(params[:user])
       @user.email_changed!
-      ::ClearanceMailer.deliver_confirmation @user
+      ::ClearanceMailer.deliver_email_reset @user
       sign_out
       flash[:notice] = "You will receive an email within the next few minutes. " <<
                        "It contains instructions for reconfirming your account with your new email address."
