@@ -11,7 +11,19 @@ class SearchesControllerTest < ActionController::TestCase
       assert_not_contain "Results"
     end
   end
-  
+
+  context 'on GET to new with search parameters for a rubygem without versions' do
+    setup do
+      @sinatra = Factory(:rubygem, :name => "sinatra")
+      assert_nil @sinatra.versions.latest
+      assert @sinatra.reload.versions_count.zero?
+      get :new, :query => "sinatra"
+    end
+
+    should_respond_with :success
+    should_render_template :new
+  end
+
   context 'on GET to new with search parameters' do
     setup do
       @sinatra = Factory(:rubygem, :name => "sinatra")
@@ -22,7 +34,7 @@ class SearchesControllerTest < ActionController::TestCase
       Factory(:version, :rubygem => @brando)
       get :new, :query => "sinatra"
     end
-    
+
     should_respond_with :success
     should_render_template :new
     should_assign_to(:gems) { [@sinatra, @sinatra_redux] }
