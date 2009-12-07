@@ -20,7 +20,11 @@ class Clearance::SessionsController < ApplicationController
         flash_success_after_create
         redirect_back_or(url_after_create)
       else
-        ::ClearanceMailer.deliver_confirmation(@user)
+        if @user.email_changed? 
+          ::ClearanceMailer.deliver_email_reset(@user)
+        else
+          ::ClearanceMailer.deliver_confirmation(@user)
+        end
         flash_notice_after_create
         redirect_to(new_session_url)
       end
