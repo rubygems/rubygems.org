@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 # rf2gc.rb -- defines the RF2GC module
 #
 # To use, run the file via runner or console, and
@@ -8,13 +9,13 @@
 # transfer_records expects a file called rfdata.txt, containing lines 
 # like this:
 #
-# dblack@blah.com|asofasoinaosdfiansdofiansdelgoid
+# dblack@blah.com|asofasoinaosdfiansdofiansdelgoid|handle
 #
 # i.e., email address and 32-char MD5 password, separated by a pipe. 
 #
 # Given such a file, it will go line by line and:
 #
-#  * look for an existing Rubyforger or Gemcutter 
+#  * look for an existing Rubyforger or Gemcutter
 #    with that email, and skip if found
 #  * create a new Rubyforger record
 #  * create a new Gemcutter record with a random password
@@ -27,12 +28,13 @@
 
 module RF2GC
 
-  RFFILE    = "rfdata.txt"
-  LOGFILE   = "rf2gclog.txt"
+  RFFILE    = "rf2gcdata.txt"
+  LOGFILE   = File.join("log", "rf2gclog.txt")
 
   EMAIL_RE  = /[^@|]+@[^@.|]+(\.\w+)+/
   PW_RE     = /\w{32}/
-  RECORD_RE = /\A#{EMAIL_RE}\|#{PW_RE}\Z/
+  HANDLE_RE = /\w+/
+  RECORD_RE = /\A#{EMAIL_RE}\|#{PW_RE}|#{HANDLE_RE}\Z/
   IGNORE_RE = /^\s*(#.*?)?\Z/
 
   def self.transfer_records
@@ -48,14 +50,20 @@ module RF2GC
           next
         end
 
-        show_progress(i)
-    
         record.chomp!
-        email, password = record.split('|')
-    
+        email, password, handle = record.split('|')
+
         rfer = Rubyforger.find_by_email(email)
         gcer = User.find_by_email(email)
-        next if either_exists?(rfer, gcer)
+
+        if rfer
+          log("Rubyforger exists: #{rfer.email}")
+          next
+        elsif gcer
+          log("Gemcutter account exists: #{gcer.email}, setting handle to: #{handle}")
+          gcer.update_attribute(:handle, handle)
+          next
+        end
 
         rfer = Rubyforger.new(:email => email, :encrypted_password => password)
         unless rfer.save
@@ -63,10 +71,14 @@ module RF2GC
           next
         end
 
-        user = User.new(:email => email, :password => random_password,
-                        :email_confirmed => true)
+        user = User.new
+        user.email = email
+        user.password = ActiveSupport::SecureRandom.hex(16)
+        user.handle = handle
+        user.email_confirmed = true
+
         unless user.save
-          log("Couldn't save user: #{user.email}")
+          log("Couldn't save user: #{user.email} --- #{user.errors.full_messages.join(' ')}")
           Rubyforger.delete(rfer.id)
           next
         end
@@ -84,20 +96,9 @@ module RF2GC
   end
 
   def self.log(msg)
-    @log.puts Time.now.strftime("%c") + ": #{msg}"
-  end
-
-  def self.random_password
-    (Time.now + rand(100000000)).to_s
-  end
-
-  def self.either_exists?(rfer, gcer)
-    log("Rubyforger exists: #{rfer.email}") if rfer
-    log("Gemcutter account exists: #{gcer.email}") if gcer
-    return rfer || gcer
-  end
-
-  def self.show_progress(i)
-    print "\r#{i+1}" if (i+1) % 10 == 0
+    puts msg
   end
 end
+
+require 'config/environment'
+RF2GC.transfer_records
