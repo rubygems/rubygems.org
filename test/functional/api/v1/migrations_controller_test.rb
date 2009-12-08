@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class MigrationsControllerTest < ActionController::TestCase
+class Api::V1::MigrationsControllerTest < ActionController::TestCase
   context "with a rubygem" do
     setup do
       @rubygem = Factory(:rubygem)

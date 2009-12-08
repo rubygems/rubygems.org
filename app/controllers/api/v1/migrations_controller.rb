@@ -1,4 +1,4 @@
-class MigrationsController < ApplicationController
+class Api::V1::MigrationsController < ApplicationController
   skip_before_filter :verify_authenticity_token
   before_filter :authenticate_with_api_key
   before_filter :verify_authenticated_user
