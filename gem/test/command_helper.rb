@@ -22,3 +22,9 @@ require "rubygems_plugin"
 class CommandTest < ActiveSupport::TestCase
   include RR::Adapters::TestUnit unless include?(RR::Adapters::TestUnit)
 end
+
+def stub_config(config)
+  file = Gem::ConfigFile.new({})
+  config.each { |key, value| file[key] = value }
+  stub(Gem).configuration { file }
+end
