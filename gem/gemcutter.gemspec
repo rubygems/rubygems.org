@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gemcutter}
-  s.version = "0.1.8"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.3.5") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Quaranto"]
-  s.date = %q{2009-11-22}
+  s.date = %q{2009-12-08}
   s.description = %q{Adds several commands for using gemcutter.org, such as pushing new gems, migrating gems from RubyForge, and more.}
   s.email = %q{nick@quaran.to}
   s.files = [
@@ -26,7 +26,6 @@ Gem::Specification.new do |s|
 
            Thanks for installing Gemcutter! You can now run:
 
-    gem tumble        use Gemcutter as your primary RubyGem source
     gem push          publish your gems for the world to use and enjoy
     gem migrate       take over your gem from RubyForge on Gemcutter
     gem owner         allow/disallow others to push to your gems
