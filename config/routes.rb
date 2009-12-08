@@ -29,17 +29,16 @@ ActionController::Routing::Routes.draw do |map|
   # API v0
 
   map.json_gem "/gems/:id.json",
-               :controller   => "api/v1/rubygems",
-               :action       => "show",
+               :controller   => "api/deprecated",
                :format       => "json",
                :requirements => { :id => RUBYGEM_NAME_MATCHER }
   map.resource :api_key,
                :only         => [:show, :reset],
                :member       => {:reset => :put},
-               :controller   => "api/v1/api_keys"
+               :controller   => "api/deprecated"
   map.resource :migrate,
                :only         => [:create, :update],
-               :controller   => "migrations",
+               :controller   => "api/deprecated",
                :path_prefix  => "/gems/:rubygem_id",
                :requirements => { :rubygem_id => RUBYGEM_NAME_MATCHER }
 
@@ -58,7 +57,7 @@ ActionController::Routing::Routes.draw do |map|
 
     rubygems.resource :owners,
       :only       => [:show, :create, :destroy],
-      :controller => 'api/v1/owners'
+      :controller => "api/deprecated"
 
     rubygems.resource :subscription, :only => [:create, :destroy]
 
@@ -69,7 +68,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :rubygems,
                 :as         => "gems",
-                :controller => "api/v1/rubygems",
+                :controller => "api/deprecated",
                 :only       => [:create]
 
   ################################################################################
