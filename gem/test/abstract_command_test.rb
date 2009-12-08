@@ -96,7 +96,7 @@ class AbstractCommandTest < CommandTest
         mock(@command).say("Enter your Gemcutter credentials. Don't have an account yet? Create one at #{Gem::AbstractCommand::URL}/sign_up")
         mock(@command).ask("Email: ") { @email }
         mock(@command).ask_for_password("Password: ") { @password }
-        FakeWeb.register_uri :get, "https://#{@email}:#{@password}@gemcutter.heroku.com/api_key", :body => @key
+        FakeWeb.register_uri :get, "https://#{@email}:#{@password}@gemcutter.org/api_key", :body => @key
 
         @config = Object.new
         stub(Gem).configuration { @config }
@@ -115,7 +115,7 @@ class AbstractCommandTest < CommandTest
         mock(@command).terminate_interaction
         mock(@config).write.never
 
-        FakeWeb.register_uri :get, "https://#{@email}:#{@password}@gemcutter.heroku.com/api_key", :body => @problem, :status => 401
+        FakeWeb.register_uri :get, "https://#{@email}:#{@password}@gemcutter.org/api_key", :body => @problem, :status => 401
         @command.sign_in
       end
     end
