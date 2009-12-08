@@ -22,7 +22,7 @@ class PushCommandTest < CommandTest
     should "push a gem" do
       mock(@command).say("Pushing gem to Gemcutter...")
       @response = "success"
-      FakeWeb.register_uri :post, "https://gemcutter.heroku.com/gems", :body => @response
+      FakeWeb.register_uri :post, "https://gemcutter.org/gems", :body => @response
 
       @gem = "test"
       @io = "io"
