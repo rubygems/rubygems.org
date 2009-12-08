@@ -30,7 +30,6 @@ begin
 
            Thanks for installing Gemcutter! You can now run:
 
-    gem tumble        use Gemcutter as your primary RubyGem source
     gem push          publish your gems for the world to use and enjoy
     gem migrate       take over your gem from RubyForge on Gemcutter
     gem owner         allow/disallow others to push to your gems
