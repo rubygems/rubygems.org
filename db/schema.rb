@@ -9,16 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091124131329) do
-
-  create_table "daily_downloads", :force => true do |t|
-    t.integer "version_id"
-    t.integer "amount"
-    t.date    "on"
-  end
-
-  add_index "daily_downloads", ["on"], :name => "index_daily_downloads_on_on"
-  add_index "daily_downloads", ["version_id"], :name => "index_daily_downloads_on_version_id"
+ActiveRecord::Schema.define(:version => 20091207185619) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -125,10 +116,12 @@ ActiveRecord::Schema.define(:version => 20091124131329) do
     t.string   "remember_token",     :limit => 128
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "handle"
   end
 
   add_index "users", ["confirmation_token", "id"], :name => "index_users_on_id_and_confirmation_token"
   add_index "users", ["email"], :name => "index_users_on_email"
+  add_index "users", ["handle"], :name => "index_users_on_handle"
   add_index "users", ["id", "token"], :name => "index_users_on_id_and_token"
   add_index "users", ["remember_token"], :name => "index_users_on_remember_token"
   add_index "users", ["token"], :name => "index_users_on_token"
