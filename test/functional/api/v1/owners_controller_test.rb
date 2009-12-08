@@ -6,7 +6,6 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
              :action     => 'show',
              :rubygem_id => "rails",
              :format     => "json"}
-    assert_recognizes(route, '/gems/rails/owners.json')
     assert_recognizes(route, '/api/v1/gems/rails/owners.json')
   end
 
@@ -15,7 +14,6 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
              :action     => 'create',
              :rubygem_id => "rails",
              :format     => "json"}
-    assert_recognizes(route, :path => '/gems/rails/owners.json', :method => :post)
     assert_recognizes(route, :path => '/api/v1/gems/rails/owners.json', :method => :post)
   end
 
@@ -24,7 +22,6 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
              :action     => 'destroy',
              :rubygem_id => "rails",
              :format     => "json"}
-    assert_recognizes(route, :path => '/gems/rails/owners.json', :method => :delete)
     assert_recognizes(route, :path => '/api/v1/gems/rails/owners.json', :method => :delete)
   end
 end
