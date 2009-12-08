@@ -12,7 +12,7 @@ end
 When /^I push the gem "([^\"]*)" with my api key$/ do |name|
   path = File.join(TEST_DIR, name)
   header("HTTP_AUTHORIZATION", @api_key)
-  visit rubygems_path, :post, File.open(path).read
+  visit api_v1_rubygems_path, :post, File.open(path).read
   assert_match /Successfully registered/, response.body
 end
 
@@ -33,22 +33,22 @@ When /^I migrate the gem "([^\"]*)" with my api key$/ do |name|
                        "http://#{subdomain}.rubyforge.org/migrate-#{name}.html",
                        :body => token)
 
-  visit migrate_path(:rubygem_id => rubygem.to_param), :put
+  visit api_v1_migrate_path(:rubygem_id => rubygem.to_param), :put
 end
 
 When /^I list the owners of gem "([^\"]*)" with my api key$/ do |name|
   header("HTTP_AUTHORIZATION", @api_key)
-  visit rubygem_owners_path(:rubygem_id => name), :get
+  visit api_v1_rubygem_owners_path(:rubygem_id => name), :get
 end
 
 When /^I add the owner "([^\"]*)" to the rubygem "([^\"]*)" with my api key$/ do |owner_email, rubygem_name|
   header("HTTP_AUTHORIZATION", @api_key)
-  visit rubygem_owners_path(:rubygem_id => rubygem_name), :post, :email => owner_email
+  visit api_v1_rubygem_owners_path(:rubygem_id => rubygem_name), :post, :email => owner_email
 end
 
 When /^I remove the owner "([^\"]*)" from the rubygem "([^\"]*)" with my api key$/ do |owner_email, rubygem_name|
   header("HTTP_AUTHORIZATION", @api_key)
-  visit rubygem_owners_path(:rubygem_id => rubygem_name), :delete, :email => owner_email
+  visit api_v1_rubygem_owners_path(:rubygem_id => rubygem_name), :delete, :email => owner_email
 end
 
 When /^I download the rubygem "([^\"]*)" version "([^\"]*)" (\d+) times$/ do |rubygem_name, version_number, count|
