@@ -22,7 +22,7 @@ class PushCommandTest < CommandTest
     should "push a gem" do
       mock(@command).say("Pushing gem to Gemcutter...")
       @response = "success"
-      FakeWeb.register_uri :post, "https://gemcutter.org/gems", :body => @response
+      FakeWeb.register_uri :post, "https://gemcutter.org/api/v1/gems", :body => @response
 
       @gem = "test"
       @io = "io"
@@ -32,7 +32,7 @@ class PushCommandTest < CommandTest
       stub(@io).read.stub!.size
 
       stub(@command).options { {:args => [@gem]} }
-      stub(Gem).configuration { @config }
+      stub_config(@config)
 
       mock(@command).say(@response)
       @command.send_gem

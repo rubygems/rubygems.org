@@ -5,10 +5,6 @@ class Gem::AbstractCommand < Gem::Command
 
   URL = "http://gemcutter.org"
 
-  def api_key
-    Gem.configuration[:gemcutter_key]
-  end
-
   def gemcutter_url
     ENV['GEMCUTTER_URL'] || 'https://gemcutter.org'
   end
@@ -30,20 +26,40 @@ class Gem::AbstractCommand < Gem::Command
 
     case response
     when Net::HTTPSuccess
-      Gem.configuration[:gemcutter_key] = response.body
-      Gem.configuration.write
-      say "Signed in. Your api key has been stored in ~/.gemrc"
+      self.api_key = response.body
+      say "Signed in. Your api key has been stored in ~/.gem/credentials"
     else
       say response.body
       terminate_interaction
     end
   end
 
+  def credentials_path
+    File.join(Gem.user_home, '.gem', 'credentials')
+  end
+
+  def api_key
+    Gem.configuration.load_file(credentials_path)[:rubygems_api_key]
+  end
+
+  def api_key=(api_key)
+    config = Gem.configuration.load_file(credentials_path).merge(:rubygems_api_key => api_key)
+
+    dirname = File.dirname(credentials_path)
+    Dir.mkdir(dirname) unless File.exists?(dirname)
+
+    File.open(credentials_path, 'w') do |f|
+      f.write config.to_yaml
+    end
+
+    @rubygems_api_key = api_key
+  end
+
   def make_request(method, path)
     require 'net/http'
     require 'net/https'
 
-    url = URI.parse("#{gemcutter_url}/#{path}")
+    url = URI.parse("#{gemcutter_url}/api/v1/#{path}")
 
     http = proxy_class.new(url.host, url.port)
 
@@ -67,6 +83,8 @@ class Gem::AbstractCommand < Gem::Command
       end
 
     request = request_method.new(url.path)
+    request.add_field "User-Agent", "Gemcutter/0.2.0"
+
     yield request if block_given?
     http.request(request)
   end
