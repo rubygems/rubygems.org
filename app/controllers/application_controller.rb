@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+
   include Clearance::Authentication
   helper :all
   protect_from_forgery :only => [:create, :update, :destroy]
@@ -35,3 +36,10 @@ end
 # Make the namespaced controllers happy.
 module Api; end
 module Api::V1; end
+
+class Clearance::SessionsController < ApplicationController
+
+  include RubyforgeTransfer
+
+  before_filter :rf_check, :only => "create"
+end
