@@ -1,0 +1,18 @@
+# Create Gemcutter ownerships from YAML file of RubyForge ownerships
+#
+# Run this from inside a live production-environment application
+# directory on Gemcutter. 
+
+ownerships = YAML.load("ownerships.yml")
+
+ownerships.each do |gemname,rf_owners|
+  rubygem = Rubygem.find_by_name(gemname)
+  gc_owners = rubygem.owners 
+
+  diff = rf_owners - gc_owners
+
+  diff.each do |email|
+    gc_user = User.find_by_email(email)
+    Ownership.create(:rubygem => rubygem, :user => gc_user, :approved => true)
+  end
+end

@@ -82,6 +82,8 @@ module RF2GC
           Rubyforger.delete(rfer.id)
           next
         end
+
+        log("Created Rubyforger/User: #{email}/#{handle}")
       end
     end
     @log.close
