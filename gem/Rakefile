@@ -22,7 +22,6 @@ begin
     gem.test_files = FileList["test/command_helper.rb", "test/commands/*"]
     gem.rubyforge_project = "gemcutter"
     gem.add_dependency('json_pure')
-    gem.add_dependency('net-scp')
     gem.required_rubygems_version = Gem::Requirement.new(">= 1.3.5") if gem.respond_to? :required_rubygems_version=
     gem.post_install_message = <<MESSAGE
 
@@ -31,7 +30,6 @@ begin
            Thanks for installing Gemcutter! You can now run:
 
     gem push          publish your gems for the world to use and enjoy
-    gem migrate       take over your gem from RubyForge on Gemcutter
     gem owner         allow/disallow others to push to your gems
 
 ========================================================================
