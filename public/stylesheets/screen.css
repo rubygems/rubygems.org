@@ -244,6 +244,72 @@ body {
   height: 310px;
 }
 
+.main .learn, .main .share {
+  display: inline-block;
+  width: 340px;
+  margin-top: 15px;
+  vertical-align: top;
+  height: 225px;
+  text-align: center;
+}
+
+.main .learn h3, .main .share h3 {
+  -moz-border-radius: 7px;
+  -webkit-border-radius: 7px;
+  background-repeat: repeat-x;
+  color: rgba(0,0,0,.8);
+  border: 1px solid rgba(0,0,0,.2);
+  border-top: none;
+  border-bottom: none;
+  margin-bottom: 16px;
+  padding: 10px 0;
+  margin: 0 auto;
+  display: block;
+  width: 80%;
+  text-align: center;
+  text-transform: lowercase;
+  font-variant: small-caps;
+  font-weight: bold;
+  font-size: 27px;
+  background-image: url(/images/go.png);
+}
+
+.main .learn dl, .main .share dl {
+  display: block;
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 15px;
+}
+
+.main .learn dt a {
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #300000;
+  margin-top: 16px;
+  display: block;
+  padding: 3px;
+}
+
+.main .share dt code {
+  font-size: 13px;
+  padding: 6px 10px;
+  margin-top: 10px;
+  display: inline-block;
+}
+
+.main .share dt:first-child a,
+.main .share dt:first-child code {
+  margin: 0;
+}
+
+.main .learn dd, .main .share dd {
+  font-size: 12px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  color: #666;
+}
+
 .main .info ol.instructions li {
   background-repeat: repeat-x;
   line-height: 4em;
@@ -297,6 +363,10 @@ body {
   text-shadow: 1px 1px 1px rgba(255,255,255,0.2);
   background: #FFF;
   padding: 3px;
+}
+
+.main .info .border .background {
+  background: url('/images/instructions.png') repeat 0 -82px;
 }
 
 .main .info .border .install {
