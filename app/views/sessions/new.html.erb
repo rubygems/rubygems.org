@@ -1,5 +1,8 @@
 <% @title = "sign in" %>
-  <div class="form_links">
+  <div class="form_links sign_in_links">
+    <div class="rubyforge_migrate">
+      You can now sign in with your <%= link_to "RubyForge Account too!", "http://update.gemcutter.org/2009/12/10/rubyforge-accounts-migrated.html" %>
+    </div>
     <%= link_to "Forgot Password?", new_password_url %>
   </div>
 <% form_for :session, :url => session_path do |form| %>
