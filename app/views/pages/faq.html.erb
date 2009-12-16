@@ -11,11 +11,6 @@
   We've got a <%= link_to "Help wiki page", "http://wiki.github.com/qrush/gemcutter/help" %> for common problems. There's also been some great tutorials on using gemcutter, including a <%= link_to "Railscast", "http://railscasts.com/episodes/183-gemcutter-jeweler" %> and several blog posts, some of the most notable by <%= link_to "Adam Wiggins", "http://adam.blog.heroku.com/past/2009/10/3/instant_gem_publishing_with_gemcutter/" %> and <%= link_to "Pat Allan", "http://freelancing-gods.com/posts/better_gem_publishing_with_gemcutter" %>.</p>
 
 <p>
-  <b>How annoying will this be to upgrade?</b><br />
-  The plan is to use Gemcutter as your canonical gem repository. All of the same gems that were available on RubyForge are ready for your consumption. Install the gemcutter gem and run <code>gem tumble</code> to use it as your primary source.
-</p>
-
-<p>
   <b>How can the process for publishing gems get any easier?</b><br />
   Through one command- <code>gem push awesome-0.0.0.gem</code>. <%= link_to "Read more here.", page_path("create") %>
 </p>
@@ -27,7 +22,7 @@
 
 <p>
   <b>How can I gain access of my gem that was available through RubyForge?</b><br />
-  Run <code>gem migrate</code> with the name of your gem, and that's it! Given you have the proper access to your RubyForge account, the Gemcutter gem will upload a secret key to your project's web space on RubyForge then verify its existence to give you full access to your account.
+  All of the RubyForge accounts <%= link_to "have been migrated", "http://update.gemcutter.org/2009/12/10/rubyforge-accounts-migrated.html" %> over to Gemcutter. If you need your accounts merged or you still can't push your gems, feel free to email <code>nick@gemcutter.org</code> about it.
 </p>
 
 <p>
