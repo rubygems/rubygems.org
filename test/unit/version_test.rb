@@ -314,6 +314,19 @@ class VersionTest < ActiveSupport::TestCase
     should "not return the unowned versions from #owned_by" do
       assert_does_not_contain Version.subscribed_to_by(@user), @unsubscribed
     end
+
+    should "order them from latest-oldest pushed to Gemcutter, not build data" do
+      # Setup so that gem one was built earlier than gem two, but pushed to Gemcutter after gem two
+      # We do this so that:
+      #  a) people with RSS will get smooth results, rather than gem versions jumping around the place
+      #  b) people can't hijack the latest gem spot by building in the far future, but pushing today
+      @subscribed_one.update_attributes(:built_at => Time.now - 3.days, :created_at => Time.now - 1.day)
+      @subscribed_two.update_attributes(:built_at => Time.now - 2.days, :created_at => Time.now - 2.days)
+
+      # Even though gem two was build before gem one, it was pushed to gemcutter first
+      # Thus, we should have from newest to oldest, gem one, then gem two
+      assert_equal [@subscribed_one, @subscribed_two], Version.subscribed_to_by(@user)
+    end
   end
 
   context "with a Gem::Specification" do
