@@ -2,7 +2,7 @@ class Hostess < Sinatra::Default
   cattr_writer :local
 
   def self.local
-    @@local ||= true
+    @@local ||= false
   end
 
   def serve(redirect = false)
