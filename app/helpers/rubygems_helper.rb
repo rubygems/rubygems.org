@@ -70,4 +70,8 @@ module RubygemsHelper
         :style => gem.subscribers.find_by_id(current_user.try(:id)) ? 'display:block' : 'display:none'
       }
   end
+  
+  def download_link(version)
+    link_to "Download", "/gems/#{version.to_index[0]}-#{version}.gem", :id => :download
+  end
 end
