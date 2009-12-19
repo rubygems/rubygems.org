@@ -11,6 +11,7 @@
     <%= link_to "Edit", edit_rubygem_path(@rubygem), :id => "edit" if @rubygem.owned_by?(current_user) %>
     <%= subscribe_link(@rubygem) %>
     <%= unsubscribe_link(@rubygem) %>
+    <%= download_link(@latest_version) %>
   </div>
 
   <div id="markup">
