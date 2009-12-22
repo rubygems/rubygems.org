@@ -3,18 +3,78 @@
 <p>
 The API is a work in progress, and <%= link_to "can use your help!", "http://github.com/qrush/gemcutter" %>. The <%= link_to "gemcutter gem", rubygem_url("gemcutter") %> uses the API to push gems, add owners, and more. Check out all of the gem commands <%= link_to "here", page_url("gem_docs") %>.
 </p>
-<h4>/gems/[name].json</h4>
+
+<h4>GET - /api/v1/gems/[name].json</h4>
 <p>
   Returns some basic information about the given gem. For example, here's Rails:
-  <pre><code>$ curl http://gemcutter.org/gems/rails.json | prettify_json
+  <pre><code>$ curl http://gemcutter.org/api/v1/gems/rails.json
+
 {
-"name": "rails",
-"downloads": 10,
-"info": "Rails is a framework for building web-application using CGI, FCGI, mod_ruby,
-         or WEBrick on top of either MySQL, PostgreSQL, SQLite, DB2, SQL Server, or 
-         Oracle with eRuby- or Builder-based templates.",
-"version": "2.3.3",
-"authors": "David Heinemeier Hansson",
-"rubyforge_project": "rails"
+  "name": "rails",
+  "info": "Rails is a framework for building web-application using CGI, FCGI, mod_ruby,
+           or WEBrick on top of either MySQL, PostgreSQL, SQLite, DB2, SQL Server, or 
+           Oracle with eRuby- or Builder-based templates.",
+  "version": "2.3.3",
+  "authors": "David Heinemeier Hansson",
+  "downloads": 134451
 }</code></pre>
+</p>
+
+<h4>GET - /api/v1/api_key</h4>
+<p>
+  Retrieve your API key using HTTP basic auth.
+<pre><code>$ curl -u "nick@gemcutter.org:schwwwwing" \
+       http://gemcutter.org/api/v1/api_key
+
+701243f217cdf23b1370c7b66b65ca97
+</code></pre>
+</p>
+
+<h4>POST - /api/v1/gems</h4>
+<p>
+  Submit a gem to Gemcutter. Must have your API key supplied and give a built RubyGem in the body of the request.
+<pre><code>$ curl --data-binary @gemcutter-0.2.1.gem \
+       -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
+       http://gemcutter.org/api/v1/gems
+
+Successfully registered gem: gemcutter (0.2.1)
+</code></pre> </p>
+
+<h4>GET - /api/v1/gems/[rubygem name]/owners.json</h4>
+<p>
+  View all owners of a gem that you own. These users can all push to this gem.
+<pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
+  http://gemcutter.org/api/v1/gems/gemcutter/owners.json
+
+[
+  {
+    "email": "nick@gemcutter.org"
+  },
+  {
+    "email": "ddollar@gmail.com"
+  }
+]
+</code></pre>
+</p>
+
+<h4>POST - /api/v1/gems/[rubygem name]/owners</h4>
+<p>
+  Add an owner to a RubyGem you own, giving that user permission to manage it.
+<pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
+       -F 'email=josh@technicalpickles.com' \
+       http://gemcutter.org/api/v1/gems/gemcutter/owners
+
+Owner added successfully.
+</code></pre>
+</p>
+
+<h4>DELETE - /api/v1/gems/[rubygem name]/owners</h4>
+<p>
+  Remove a user's permission to manage a RubyGem you own.
+<pre><code> $ curl -X DELETE -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
+       -d "email=josh@technicalpickles.com" \
+       http://gemcutter.org/api/v1/gems/gemcutter/owners.json
+
+Owner removed successfully.
+</code></pre>
 </p>
