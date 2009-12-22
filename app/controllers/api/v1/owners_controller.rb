@@ -26,7 +26,7 @@ class Api::V1::OwnersController < ApplicationController
   def destroy
     if owner = @rubygem.owners.find_by_email(params[:email])
       if @rubygem.ownerships.find_by_user_id(owner.id).try(:destroy)
-        render :json => "Owner removed successfully. #{owner.inspect}"
+        render :json => "Owner removed successfully."
       else
         render :json => 'Unable to remove owner.', :status => :forbidden
       end
