@@ -47,7 +47,12 @@ code {
   background: #000;
   font-family: Monaco, Consolas, "Courier New", monospace;
   font-size: 0.9em;
-  color: #fff
+  color: #fff;
+  padding: 3px;
+}
+
+pre code {
+  padding: 0;
 }
 
 /* remember to define focus styles! */
