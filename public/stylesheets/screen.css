@@ -99,13 +99,14 @@ body {
 .nav ul {
   display: block;
   vertical-align: middle;
-  margin-bottom: 10px;
+  height: 25px;
 }
 
 .nav ul li {
   font-size: 1.5em;
   font-weight: 900;
-  display: inline;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .nav ul li a {
@@ -121,6 +122,10 @@ body {
 .nav ul li a:hover {
   text-decoration: none;
   background: rgba(0,0,0,.2);
+}
+
+.nav ul li a#user_gravatar {
+  padding-top: 16px;
 }
 
 .nav form {

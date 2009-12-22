@@ -24,6 +24,17 @@ class UserTest < ActiveSupport::TestCase
       assert_not_nil @user.api_key
     end
 
+    should "give email if handle is not set for name" do
+      assert_nil @user.handle
+      assert_equal @user.email, @user.name
+    end
+
+    should "give handle if handle is set for name" do
+      @user.handle = "qrush"
+      @user.save
+      assert_equal @user.handle, @user.name
+    end
+
     should "have a 32 character hexadecimal api key" do
       assert @user.api_key =~ /[a-z0-9]{32}/
     end

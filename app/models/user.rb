@@ -12,6 +12,10 @@ class User < ActiveRecord::Base
   has_many :subscriptions
   before_create :generate_api_key
 
+  def name
+    handle || email
+  end
+
   def rubyforge_importer?
     id.to_s == ENV["RUBYFORGE_IMPORTER"]
   end
