@@ -225,6 +225,41 @@ body {
   line-height: 1.5;
 }
 
+.main .info ol.manual {
+  list-style: decimal inside;
+}
+
+.main .info ol.formats {
+  text-align: center;
+}
+
+.main .info ol.formats li {
+  display: inline-block;
+}
+
+.main .info ol.formats li a {
+  font-size: 25px;
+  -moz-border-radius: 7px;
+  -webkit-border-radius: 7px;
+  background-repeat: repeat-x;
+  color: rgba(0,0,0,.8);
+  border: 1px solid rgba(0,0,0,.2);
+  border-top: none;
+  border-bottom: none;
+  margin-bottom: 16px;
+  padding: 10px 25px;
+  margin: 0 20px 0 auto;
+  text-align: center;
+  text-transform: lowercase;
+  font-variant: small-caps;
+  font-weight: bold;
+  background-image: url(/images/go.png);
+}
+
+.main .info ol.formats li a:hover {
+  text-decoration: underline;
+}
+
 .main .info {
   padding-top: 20px;
   padding-bottom: 20px;
