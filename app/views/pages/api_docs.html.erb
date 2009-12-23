@@ -44,7 +44,7 @@ Successfully registered gem: gemcutter (0.2.1)
 <p>
   View all owners of a gem that you own. These users can all push to this gem.
 <pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
-  http://gemcutter.org/api/v1/gems/gemcutter/owners.json
+       http://gemcutter.org/api/v1/gems/gemcutter/owners.json
 
 [
   {
@@ -73,7 +73,7 @@ Owner added successfully.
   Remove a user's permission to manage a RubyGem you own.
 <pre><code> $ curl -X DELETE -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
         -d "email=josh@technicalpickles.com" \
-       http://gemcutter.org/api/v1/gems/gemcutter/owners.json
+        http://gemcutter.org/api/v1/gems/gemcutter/owners
 
 Owner removed successfully.
 </code></pre>
