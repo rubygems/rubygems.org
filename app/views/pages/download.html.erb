@@ -3,7 +3,7 @@
 <p>
   RubyGems is a package management framework for Ruby. Download the latest version here:
 </p>
-<ol class="formats">
+<ol class="formats" id="formats">
   <li><%= link_to "tgz", "http://gemcutter-production.s3.amazonaws.com/rubygems/rubygems-1.3.5.tgz" %></li>
   <li><%= link_to "zip", "http://gemcutter-production.s3.amazonaws.com/rubygems/rubygems-1.3.5.zip" %></li>
   <li><%= link_to "gem", "http://gemcutter-production.s3.amazonaws.com/rubygems/rubygems-update-1.3.5.gem" %></li>
@@ -23,7 +23,7 @@ $ update_rubygems              # ... here too
 If you don't have any RubyGems installed, there is still the pre-gem approach to getting software, doing it manually:
 </p>
 <ol class="manual">
-  <li>Download from above.</li>
+  <li><%=link_to "Download from above.", "#formats" %></li>
   <li>Unpack into a directory and <code>cd</code> there</li>
   <li>Install with: <code>ruby setup.rb</code> (you may need admin/root privilege)</li>
 </ol>
