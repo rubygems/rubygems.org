@@ -13,7 +13,7 @@ class Gem::Commands::WebhookCommand < Gem::AbstractCommand
 
   def initialize
     super 'webhook', description
-    add_option('-u', '--url URL', 'The URL of the webhook') do |value, options|
+    add_option('-a', '--add URL', 'The URL of the webhook') do |value, options|
       options[:url] = value
     end
     add_proxy_option
@@ -28,7 +28,7 @@ class Gem::Commands::WebhookCommand < Gem::AbstractCommand
     say "Registering webhook..."
     name = get_one_gem_name
     url = options[:url]
-    response = make_request(:post, "api/v1/web_hooks") do |request|
+    response = make_request(:post, "web_hooks") do |request|
       request.set_form_data("gem_name" => name, "url" => url)
       request.add_field("Authorization", api_key)
     end

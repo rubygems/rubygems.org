@@ -50,14 +50,16 @@ class AbstractCommandTest < CommandTest
 
     should "sign in if no api key" do
       stub(@command).api_key { nil }
-      mock(@command).sign_in
+      stub(@command).sign_in
       @command.setup
+      assert_received(@command) { |command| command.sign_in }
     end
 
     should "not sign in if api key exists" do
       stub(@command).api_key { "1234567890" }
-      mock(@command).sign_in.never
+      stub(@command).sign_in
       @command.setup
+      assert_received(@command) { |command| command.sign_in.never }
     end
 
     context "using the proxy" do
@@ -78,27 +80,55 @@ class AbstractCommandTest < CommandTest
         @email = "email"
         @password = "password"
         @key = "key"
-        mock(@command).say("Enter your Gemcutter credentials. Don't have an account yet? Create one at #{Gem::AbstractCommand::URL}/sign_up")
-        mock(@command).ask("Email: ") { @email }
-        mock(@command).ask_for_password("Password: ") { @password }
-        FakeWeb.register_uri :get, "https://#{@email}:#{@password}@gemcutter.org/api/v1/api_key", :body => @key
 
-        stub_config(:gemcutter_key => @key)
+        stub(@command).say
+        stub(@command).ask { @email }
+        stub(@command).ask_for_password { @password }
+        stub_config(:rubygems_api_key => @key)
       end
 
-      should "sign in" do
-        mock(@command).say("Signed in. Your api key has been stored in ~/.gem/credentials")
-        @command.sign_in
+      context "on a good request" do
+        setup do
+          WebMock.stub_request(:get, "https://#{@email}:#{@password}@gemcutter.org/api/v1/api_key").to_return(:body => @key)
+        end
+
+        should "ask for email and password" do
+          @command.sign_in
+          assert_received(@command) { |command| command.ask("Email: ") }
+          assert_received(@command) { |command| command.ask_for_password("Password: ") }
+        end
+
+        should "say that we signed in" do
+          @command.sign_in
+          assert_received(@command) { |command| command.say("Signed in. Your api key has been stored in ~/.gem/credentials") }
+          assert_received(@command) { |command| command.say("Enter your Gemcutter credentials. Don't have an account yet? Create one at http://gemcutter.org/sign_up") }
+        end
       end
 
-      should "let the user know if there was a problem" do
-        @problem = "Access Denied"
-        mock(@command).say(@problem)
-        mock(@command).terminate_interaction
-        mock(@config).write.never
+      context "on a bad request" do
+        setup do
+          @problem = "Access Denied"
+          stub(@command).terminate_interaction
+          stub(@command).send(:api_key=)
+          WebMock.stub_request(:get, "https://#{@email}:#{@password}@gemcutter.org/api/v1/api_key").to_return(
+            :body   => @problem,
+            :status => 401)
+        end
 
-        FakeWeb.register_uri :get, "https://#{@email}:#{@password}@gemcutter.org/api/v1/api_key", :body => @problem, :status => 401
-        @command.sign_in
+        should "let the user know there was a problem" do
+          @command.sign_in
+          assert_received(@command) { |command| command.say(@problem) }
+        end
+
+        should "kill the command" do
+          @command.sign_in
+          assert_received(@command) { |command| command.terminate_interaction }
+        end
+
+        should "not write anything to the credentials file" do
+          @command.sign_in
+          assert_received(@command) { |command| command.send(:api_key=).never }
+        end
       end
     end
   end

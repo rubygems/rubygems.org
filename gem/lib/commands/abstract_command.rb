@@ -3,8 +3,6 @@ require 'rubygems/local_remote_options'
 class Gem::AbstractCommand < Gem::Command
   include Gem::LocalRemoteOptions
 
-  URL = "http://gemcutter.org"
-
   def gemcutter_url
     ENV['GEMCUTTER_URL'] || 'https://gemcutter.org'
   end
@@ -15,7 +13,7 @@ class Gem::AbstractCommand < Gem::Command
   end
 
   def sign_in
-    say "Enter your Gemcutter credentials. Don't have an account yet? Create one at #{URL}/sign_up"
+    say "Enter your Gemcutter credentials. Don't have an account yet? Create one at http://gemcutter.org/sign_up"
 
     email = ask("Email: ")
     password = ask_for_password("Password: ")
