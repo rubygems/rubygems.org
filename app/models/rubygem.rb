@@ -71,13 +71,13 @@ class Rubygem < ActiveRecord::Base
     versions.latest.try(:to_title) || name
   end
 
-  def payload
+  def payload(version = versions.latest)
     {
       :name              => name,
       :downloads         => downloads,
-      :version           => versions.latest.number,
-      :authors           => versions.latest.authors,
-      :info              => versions.latest.info,
+      :version           => version.number,
+      :authors           => version.authors,
+      :info              => version.info,
       :rubyforge_project => rubyforge_project
     }
   end
