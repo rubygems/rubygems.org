@@ -5,7 +5,7 @@ Given /^I have an api key for "([^\"]*)"$/ do |creds|
   @api_key = response.body
 end
 
-Given /^I've already pushed the gem "([^\"]*)" with my api key$/ do |name|
+Given /^I've already pushed the gem "([^\"]*)" with my api key$/ do |name| # '
   When %Q[I push the gem "#{name}" with my api key]
 end
 
@@ -29,9 +29,9 @@ When /^I migrate the gem "([^\"]*)" with my api key$/ do |name|
 
   subdomain = rubygem.versions.latest.rubyforge_project
 
-  FakeWeb.register_uri(:get,
-                       "http://#{subdomain}.rubyforge.org/migrate-#{name}.html",
-                       :body => token)
+  WebMock.stub_request(:get,
+                       "http://#{subdomain}.rubyforge.org/migrate-#{name}.html").
+    to_return(:body => token)
 
   visit api_v1_migrate_path(:rubygem_id => rubygem.to_param), :put
 end
@@ -55,4 +55,13 @@ When /^I download the rubygem "([^\"]*)" version "([^\"]*)" (\d+) times$/ do |ru
   count.to_i.times do
     visit "/gems/#{rubygem_name}-#{version_number}.gem", :get
   end
+end
+
+Given /^I have added a webhook "([^\"]*)" to gem "([^\"]*)"$/ do |web_hook_url, gem_name|
+  WebMock.stub_request(:post, web_hook_url)
+  user = User.find_by_api_key!(@api_key)
+  WebHook.create!(
+    :url        => web_hook_url,
+    :gem_name   => gem_name,
+    :user       => user)
 end
