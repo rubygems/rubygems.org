@@ -8,9 +8,11 @@ class WebhookCommandTest < CommandTest
     end
 
     should "setup and post hook" do
-      mock(@command).setup
-      mock(@command).post_webhook
+      stub(@command).setup
+      stub(@command).post_webhook
       @command.execute
+      assert_received(@command) { |command| command.setup }
+      assert_received(@command) { |command| command.post_webhook }
     end
     
     should "raise an error with no arguments" do
@@ -19,19 +21,29 @@ class WebhookCommandTest < CommandTest
       end
     end
     
-    should "push a gem" do
-      mock(@command).say("Registering webhook...")
-      @response = "success"
-      FakeWeb.register_uri :post, "https://gemcutter.org/api/v1/webhooks", :body => @response
-    
-      @gem = "test"
-      @config = { :gemcutter_key => "key" }
-    
-      stub(@command).options { {:args => ["#{@gem} -u http://example.org/gem_hooks"]} }
-      stub(Gem).configuration { @config }
-    
-      mock(@command).say(@response)
-      @command.post_webhook
+    context "adding a hook" do
+      setup do
+        @url = "https://gemcutter.org/api/v1/web_hooks"
+        stub(@command).say
+        stub(@command).options { {:args => ["#{@gem} -a http://example.org/gem_hooks"]} }
+        stub_config({ :rubygems_api_key => "key" })
+        WebMock.stub_request(:post, @url).to_return(:body => "Success!")
+      
+        @command.post_webhook
+      end
+
+      should "say hook was added" do
+        assert_received(@command) { |command| command.say("Registering webhook...") }
+        assert_received(@command) { |command| command.say("Success!") }
+      end
+
+      should "post to api" do
+        # webmock doesn't pass body params on correctly :[
+        WebMock.assert_requested(:post, @url, 
+                                 :times => 1)
+        WebMock.assert_requested(:post, @url,
+                                 :headers => { 'Authorization' => 'key' })
+      end
     end
   end
 end

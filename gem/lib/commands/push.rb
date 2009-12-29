@@ -25,9 +25,9 @@ class Gem::Commands::PushCommand < Gem::AbstractCommand
   def send_gem
     say "Pushing gem to Gemcutter..."
 
-    name = get_one_gem_name
+    path = get_one_gem_name
     response = make_request(:post, "gems") do |request|
-      request.body = File.open(name, 'rb'){|io| io.read }
+      request.body = Gem.read_binary(path)
       request.add_field("Content-Length", request.body.size)
       request.add_field("Content-Type", "application/octet-stream")
       request.add_field("Authorization", api_key)

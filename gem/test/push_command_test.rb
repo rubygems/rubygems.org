@@ -11,6 +11,8 @@ class PushCommandTest < CommandTest
       mock(@command).setup
       mock(@command).send_gem
       @command.execute
+      assert_received(@command) { |command| command.setup }
+      assert_received(@command) { |command| command.send_gem }
     end
 
     should "raise an error with no arguments" do
@@ -19,23 +21,37 @@ class PushCommandTest < CommandTest
       end
     end
 
-    should "push a gem" do
-      mock(@command).say("Pushing gem to Gemcutter...")
-      @response = "success"
-      FakeWeb.register_uri :post, "https://gemcutter.org/api/v1/gems", :body => @response
+    context "pushing a gem" do
+      setup do
+        @url = "https://gemcutter.org/api/v1/gems"
+        @gem_path = "path/to/foo-0.0.0.gem"
+        @gem_binary = StringIO.new("gem")
 
-      @gem = "test"
-      @io = "io"
-      @config = { :gemcutter_key => "key" }
+        stub(@command).say
+        stub(@command).options { {:args => [@gem_path]} }
+        stub(Gem).read_binary(@gem_path) { @gem_binary }
+        stub_config({ :rubygems_api_key => "key" })
+        WebMock.stub_request(:post, @url).to_return(:body => "Success!")
+      
+        @command.send_gem
+      end
 
-      stub(File).open(@gem, "rb") { @io }
-      stub(@io).read.stub!.size
+      should "say push was successful" do
+        assert_received(@command) { |command| command.say("Pushing gem to Gemcutter...") }
+        assert_received(@command) { |command| command.say("Success!") }
+      end
 
-      stub(@command).options { {:args => [@gem]} }
-      stub_config(@config)
-
-      mock(@command).say(@response)
-      @command.send_gem
+      should "post to api" do
+        # webmock doesn't pass body params on correctly :[
+        WebMock.assert_requested(:post, @url, 
+                                 :times => 1)
+        WebMock.assert_requested(:post, @url,
+                                 :headers => { 'Authorization' => 'key' })
+        WebMock.assert_requested(:post, @url,
+                                 :headers => { 'Content-Length' => @gem_binary.size })
+        WebMock.assert_requested(:post, @url,
+                                 :headers => { 'Content-Type' => 'application/octet-stream' })
+      end
     end
   end
 end
