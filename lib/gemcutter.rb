@@ -110,6 +110,7 @@ class Gemcutter
     jobs.each do |job|
       job.host_with_port = @host_with_port
       job.rubygem = @rubygem
+      job.version = @version
       Delayed::Job.enqueue job, PRIORITIES[:web_hook]
     end
   end

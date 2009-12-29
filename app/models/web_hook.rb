@@ -6,7 +6,7 @@ class WebHook < ActiveRecord::Base
   
   GLOBAL_PATTERN = '*'
 
-  attr_accessor :host_with_port
+  attr_accessor :host_with_port, :version
 
   def validate_on_create
     if user && rubygem 
@@ -30,9 +30,9 @@ class WebHook < ActiveRecord::Base
   end
 
   def payload
-    rubygem.payload.merge({
+    rubygem.payload(version).merge({
       'project_uri' => "http://#{host_with_port}/gems/#{rubygem.name}",
-      'gem_uri'     => "http://#{host_with_port}/gems/#{rubygem.versions.latest.full_name}.gem"
+      'gem_uri'     => "http://#{host_with_port}/gems/#{version.full_name}.gem"
     }).to_json
   end
 
