@@ -5,6 +5,7 @@ class UserTest < ActiveSupport::TestCase
   should_have_many :ownerships
   should_have_many :subscribed_gems, :through => :subscriptions
   should_have_many :subscriptions
+  should_have_many :web_hooks
 
   context "with a user" do
     setup do
