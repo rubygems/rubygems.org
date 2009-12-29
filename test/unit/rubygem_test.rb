@@ -424,4 +424,67 @@ class RubygemTest < ActiveSupport::TestCase
       should_change("total number of Dependencies", :by => 2) { Dependency.count }
     end
   end
+
+  context "with Gem-specific web hooks" do
+    setup do
+      @version = Factory(:version)
+      @rubygem = Factory(:rubygem, :name => "foogem", :versions => [@version])
+      @hook_a  = Factory(:web_hook, 
+        :gem_name => "foogem", 
+        :url      => "http://example.org/a")
+      @hook_b  = Factory(:web_hook, 
+        :gem_name => "foogem", 
+        :url      => "http://example.org/b")
+      @hook_c  = Factory(:web_hook, 
+        :gem_name => "bargem", 
+        :url      => "http://example.org/c")
+    end
+
+    should "be able to find associated hooks" do
+      assert_contains @rubygem.web_hooks, @hook_a
+      assert_contains @rubygem.web_hooks, @hook_b
+      assert_does_not_contain @rubygem.web_hooks, @hook_c
+    end
+
+    should "should be able to generate a list of web hook jobs" do
+      jobs = @rubygem.web_hook_jobs('HOSTNAME:PORT')
+      job_a = jobs.detect {|job| job.hook == @hook_a }
+      job_b = jobs.detect {|job| job.hook == @hook_b }
+      assert_equal 'foogem', JSON.parse(job_a.payload)['name']
+      assert_equal 'foogem', JSON.parse(job_b.payload)['name']
+    end
+    
+  end
+
+  context "with global web hooks" do
+    
+    setup do
+      @version = Factory(:version)
+      @rubygem = Factory(:rubygem, :name => "foogem", :versions => [@version])
+      @hook_a  = Factory(:web_hook, 
+        :gem_name => "*", 
+        :url      => "http://example.org/a")
+      @hook_b  = Factory(:web_hook, 
+        :gem_name => "*", 
+        :url      => "http://example.org/b")
+      @hook_c  = Factory(:web_hook, 
+        :gem_name => "bargem", 
+        :url      => "http://example.org/c")
+    end
+
+    should "be able to find associated hooks" do
+      assert_contains @rubygem.web_hooks, @hook_a
+      assert_contains @rubygem.web_hooks, @hook_b
+      assert_does_not_contain @rubygem.web_hooks, @hook_c
+    end
+
+    should "should be able to generate a list of web hook jobs" do
+      jobs = @rubygem.web_hook_jobs('HOSTNAME:PORT')
+      job_a = jobs.detect {|job| job.hook == @hook_a }
+      job_b = jobs.detect {|job| job.hook == @hook_b }
+      assert_equal 'foogem', JSON.parse(job_a.payload)['name']
+      assert_equal 'foogem', JSON.parse(job_b.payload)['name']
+    end
+
+  end
 end

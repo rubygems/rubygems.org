@@ -14,7 +14,7 @@ class Api::V1::RubygemsController < ApplicationController
   end
 
   def create
-    gemcutter = Gemcutter.new(current_user, request.body)
+    gemcutter = Gemcutter.new(current_user, request.body, request.host_with_port)
     gemcutter.process
     render :text => gemcutter.message, :status => gemcutter.code
   end
