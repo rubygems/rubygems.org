@@ -106,8 +106,10 @@ class Gemcutter
   end
 
   def enqueue_web_hook_jobs
-    jobs = rubygem.web_hook_jobs(@host_with_port)
+    jobs = rubygem.web_hooks + WebHook.global
     jobs.each do |job|
+      job.host_with_port = @host_with_port
+      job.rubygem = @rubygem
       Delayed::Job.enqueue job, PRIORITIES[:web_hook]
     end
   end
