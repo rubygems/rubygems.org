@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091207185619) do
+ActiveRecord::Schema.define(:version => 20091229014120) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -147,12 +147,12 @@ ActiveRecord::Schema.define(:version => 20091207185619) do
   add_index "versions", ["rubygem_id"], :name => "index_versions_on_rubygem_id"
 
   create_table "web_hooks", :force => true do |t|
-    t.string   "gem_name"
     t.integer  "user_id"
     t.string   "url"
     t.integer  "failure_count", :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "rubygem_id"
   end
 
 end

@@ -5,19 +5,23 @@ class Api::V1::WebHooksController < ApplicationController
   before_filter :verify_authenticated_user
   
   def create
-    url = params[:url]
+    url      = params[:url]
     gem_name = params[:gem_name]
+    rubygem  = Rubygem.find_by_name(gem_name)
 
-    if gem_name != WebHook::ALL_GEMS_PATTERN && !Rubygem.exists?(:name => gem_name)
+    if rubygem.nil? && gem_name != WebHook::GLOBAL_PATTERN
       render :text   => "This gem could not be found",
-						 :status => :not_found
-    elsif !WebHook.exists?(:url => url, :gem_name => gem_name)
-      WebHook.create(:url => url, :gem_name => gem_name)
-      render :text   => "Successfully created webhook for #{gem_name} to #{url}",
-					   :status => :created
+             :status => :not_found
     else
-      render :text   => "A hook for #{url} has already been registered for #{gem_name}",
-             :status => 409
+      webhook = current_user.web_hooks.build(:url => url, :rubygem => rubygem)
+
+      if webhook.save
+        render :text   => "Successfully created webhook for #{gem_name} to #{url}",
+               :status => :created
+      else
+        render :text   => webhook.errors.full_messages,
+               :status => :conflict
+      end
     end
   end
 end

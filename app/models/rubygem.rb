@@ -12,6 +12,7 @@ class Rubygem < ActiveRecord::Base
       latest.find_by_platform('ruby') || latest.first || first
     end
   end
+  has_many :web_hooks, :dependent => :destroy
   has_one :linkset, :dependent => :destroy
 
   validates_presence_of :name
@@ -145,14 +146,9 @@ class Rubygem < ActiveRecord::Base
     version
   end
 
-  def web_hooks
-    WebHook.find_matching_by_gem_name(name)
-  end
-
   def web_hook_jobs(host_with_port)
-    web_hooks.map{|hook|
+    (web_hooks + WebHook.global).map do |hook|
       WebHookJob.new(hook, self, host_with_port)
-    }
+    end
   end
-
 end

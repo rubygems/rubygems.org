@@ -1,4 +1,9 @@
 Factory.define :web_hook do |web_hook|
-  web_hook.gem_name { 'FACTORY_GEM_NAME' }
-  web_hook.url { 'FACTORY_URL' }
+  web_hook.url { 'http://example.org' }
+  web_hook.association :user
+  web_hook.association :rubygem
+end
+
+Factory.define :global_web_hook, :parent => :web_hook do |web_hook|
+  web_hook.rubygem { nil }
 end

@@ -81,7 +81,7 @@ class Hostess < Sinatra::Default
   get "/gems/*.gem" do
     unless ENV['MAINTENANCE_MODE']
       Delayed::Job.enqueue Download.new(:raw        => params[:splat].to_s,
-                                        :created_at => Time.zone.now)
+                                        :created_at => Time.zone.now), PRIORITIES[:download]
     end
 
     serve(true)
