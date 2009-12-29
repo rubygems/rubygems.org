@@ -60,7 +60,7 @@ module RubygemsHelper
   end
 
   def unsubscribe_link(gem)
-    unsubscribe = link_to_remote 'Unsubscribe',
+    link_to_remote('Unsubscribe',
       :url     => rubygem_subscription_path(gem),
       :method  => :delete,
       :class   => :toggler,
@@ -68,7 +68,7 @@ module RubygemsHelper
         :id    => 'unsubscribe',
         :class => :toggler,
         :style => gem.subscribers.find_by_id(current_user.try(:id)) ? 'display:block' : 'display:none'
-      }
+      }) if signed_in?
   end
   
   def download_link(version)
