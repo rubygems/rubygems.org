@@ -25,14 +25,15 @@ class OwnershipTest < ActiveSupport::TestCase
     should_validate_uniqueness_of :user_id, :scoped_to => :rubygem_id
 
     should "not blow up if checking for upload dies" do
-      FakeWeb.register_uri(:get, @url, :body   => "Nothing to be found 'round here",
-                                       :status => ["404", "Not Found"])
+      WebMock.stub_request(:get, @url).
+        to_return(:body   => "Nothing to be found 'round here", 
+                  :status => 404)
       assert ! @ownership.migrated?
       assert ! @ownership.approved
     end
 
     should "approve upload" do
-      FakeWeb.register_uri(:get, @url, :body => @ownership.token)
+      WebMock.stub_request(:get, @url).to_return(:body => @ownership.token)
 
       assert @ownership.migrated?
       assert @ownership.approved
@@ -42,14 +43,15 @@ class OwnershipTest < ActiveSupport::TestCase
       @ownership.rubygem.versions.latest.update_attribute(:rubyforge_project, nil)
 
       gem_name = @ownership.rubygem.name
-      FakeWeb.register_uri(:get, "http://#{gem_name}.rubyforge.org/migrate-#{gem_name}.html", :body => @ownership.token + "\n")
+      WebMock.stub_request(:get, "http://#{gem_name}.rubyforge.org/migrate-#{gem_name}.html").
+        to_return(:body => @ownership.token + "\n")
 
       assert @ownership.migrated?
       assert @ownership.approved
     end
 
     should "approve upload if token ends with a newline" do
-      FakeWeb.register_uri(:get, @url, :body => @ownership.token + "\n")
+      WebMock.stub_request(:get, @url).to_return(:body => @ownership.token + "\n")
 
       assert @ownership.migrated?
       assert @ownership.approved

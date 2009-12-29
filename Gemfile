@@ -12,11 +12,11 @@ gem "clearance",        "0.8.2"
 gem "ddollar-pacecar",  "1.1.6", :require_as => "pacecar"
 gem "gchartrb",         "0.8",   :require_as => "google_chart"
 gem "rack-maintenance", "0.3.0", :require_as => "rack/maintenance"
+gem "rest-client",      "1.0.3", :require_as => "rest_client"
 gem "sinatra",          "0.9.4"
 gem "will_paginate",    "2.3.11"
 gem "xml-simple",       "1.0.12"
 gem "gravtastic",       "2.1.3"
-
 
 only :test do
   gem "cucumber",     "0.3.101"
@@ -29,6 +29,7 @@ only :test do
   gem "shoulda",      "2.10.2"
   gem "treetop",      "1.4.3"
   gem "webrat",       "0.5.3"
+  gem "webmock",      "0.7.3"
 end
 
 only [:staging, :production] do

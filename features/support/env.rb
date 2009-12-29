@@ -21,13 +21,14 @@ end
 require 'webrat/core/matchers'
 require 'webrat/core/matchers/have_tag'
 
-require 'fakeweb'
-FakeWeb.allow_net_connect = false
+require 'webmock'
+WebMock.disable_net_connect!
 
 TEST_DIR = File.join('/', 'tmp', 'gemcutter')
 Hostess.local = true
 
 Before do
+  WebMock.reset_webmock
   FileUtils.mkdir(TEST_DIR)
   Dir.chdir(TEST_DIR)
 end

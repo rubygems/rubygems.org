@@ -2,7 +2,9 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'test_help'
 
-FakeWeb.allow_net_connect = false
+require 'webmock'
+WebMock.disable_net_connect!
+
 set :environment, :test
 
 Shoulda.autoload_macros(Rails.root, "vendor/bundler_gems/gems/*")
@@ -58,5 +60,7 @@ def gem_dependency_stub(name, requirements = [">= 1.0"])
 end
 
 def stub_uploaded_token(gem_name, token, status = [200, "Success"])
-  FakeWeb.register_uri(:get, "http://#{gem_name}.rubyforge.org/migrate-#{gem_name}.html", :body => token + "\n", :status => status)
+  WebMock.stub_request(:get,
+                       "http://#{gem_name}.rubyforge.org/migrate-#{gem_name}.html").
+    to_return(:body => token + "\n", :status => status)
 end
