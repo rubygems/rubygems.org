@@ -5,67 +5,71 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
   
   context "When logged in" do
     setup do
+		  @url = "http://example.org"
       @user = Factory(:email_confirmed_user)
       @request.env["HTTP_AUTHORIZATION"] = @user.api_key
     end
 
-    context "On POST to create hook for a gem that's hosted" do
-
+	  context "with a rubygem" do
       setup do
         @rubygem = Factory(:rubygem)
         Factory(:version, :rubygem => @rubygem)
-        post :create, {:gem_name => @rubygem.name, :url => "http://example.org"}
       end
 
-      should_assign_to(:web_hook)
-      should_respond_with 201
+      context "On POST to create hook for a gem that's hosted" do
+        setup do
+          post :create, {:gem_name => @rubygem.name, :url => @url}
+        end
+        should_respond_with :created
+        should "say webhook was created" do
+					assert_contain "Successfully created webhook for #{@rubygem.name} to #{@url}"
+				end
+      end
 
       context "on POST to create hook that already exists" do
-        
         setup do
-          post :create, {:gem_name => @rubygem.name, :url => "http://example.org"}
+		  		Factory(:web_hook, :gem_name => @rubygem.name, :url => @url)
+          post :create, :gem_name => @rubygem.name, :url => @url
         end
 
-        should("be only 1 web hook"){ assert_equal 1, WebHook.count }
-        should_respond_with 409
+        should_respond_with :conflict
+        should "be only 1 web hook" do
+					assert_equal 1, WebHook.count
+				  assert_contain "#{@url} has already been registered for #{@rubygem.name}"
+				end
       end
 
+      context "On POST to create hook for all gems" do
+        setup do
+          post :create, :gem_name => '*', :url => @url
+        end
+
+        should_respond_with :created
+      end
     end
 
     context "On POST to create a hook for a gem that doesn't exist here" do
-
       setup do
-        post :create, {:gem_name => "a gem that doesnt' exist", :url => "http://example.org"}
+        post :create, :gem_name => "a gem that doesn't exist", :url => @url
       end
       
-      should_not_assign_to(:web_hook)
-      should_respond_with 404
+      should_respond_with :not_found
+		  should "say gem is not found" do
+				assert_contain "could not be found"
+      end
     end
-
-    context "On POST to create hook for all gems" do
       
+    context "on POST to global web hook that already exists" do
       setup do
-        @rubygem = Factory(:rubygem, :name => 'some_gem')
-        Factory(:version, :rubygem => @rubygem)
-        post :create, {:gem_name => '*', :url => "http://example.org"}
+				Factory(:web_hook, :gem_name => '*', :url => @url)
+        post :create, :gem_name => '*', :url => @url
       end
 
-      should_respond_with 201
-      should_assign_to(:web_hook)
-      
-      context "on POST to global web hook that already exists" do
-        
-        setup do
-          post :create, {:gem_name => '*', :url => "http://example.org"}
-        end
-
-        should("be only 1 web hook"){ assert_equal 1, WebHook.count }
-        should_respond_with 409
-
-      end
-
+      should_respond_with :conflict
+      should "be only 1 web hook" do
+	 			assert_equal 1, WebHook.count
+			end
     end
-    
   end
 end
 
