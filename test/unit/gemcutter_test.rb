@@ -205,29 +205,18 @@ class GemcutterTest < ActiveSupport::TestCase
         stub(Delayed::Job).enqueue
       end
 
+      # FIXME: These tests all SUCK.
       context "saving the rubygem" do
-        before_should "process if succesfully saved" do
+        before_should "process if successfully saved" do
           mock(@cutter).update { true }
+          mock(@cutter).enqueue_web_hook_jobs
           mock(@cutter).notify("Successfully registered gem: latest version", 200)
         end
 
         before_should "not process if not successfully saved" do
           mock(@cutter).update { false }
           mock(@cutter).store.never
-        end
-
-        before_should "enqueue web hook job if successfully saved" do
-          mock(@cutter).update { true }
-          @web_hook_job = "JOB_MOCK"
-          stub(@rubygem).web_hook_jobs{[@web_hook_job]}
-          mock(Delayed::Job).enqueue(@web_hook_job, anything)
-        end
-
-        before_should "not enqueue web hook job if not successfully saved" do
-          mock(@cutter).update { false }
-          @web_hook_job = "JOB_MOCK"
-          stub(@rubygem).web_hook_jobs{[@web_hook_job]}
-          mock(Delayed::Job).enqueue(@web_hook_job, anything).never
+          mock(@cutter).enqueue_web_hook_jobs.never
         end
 
         setup do
