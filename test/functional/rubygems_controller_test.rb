@@ -135,24 +135,6 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
-  context "On GET to edit without being signed in" do
-    setup do
-      @rubygem = Factory(:rubygem)
-      get :edit, :id => @rubygem.to_param
-    end
-    should_respond_with :redirect
-    should_redirect_to('the homepage') { root_url }
-  end
-
-  context "On PUT to update without being signed in" do
-    setup do
-      @rubygem = Factory(:rubygem)
-      put :update, :id => @rubygem.to_param, :linkset => {}
-    end
-    should_respond_with :redirect
-    should_redirect_to('the homepage') { root_url }
-  end
-
   context "On GET to index with no parameters" do
     setup do
       @gems = (1..3).map do |n|
@@ -325,6 +307,27 @@ class RubygemsControllerTest < ActionController::TestCase
       should "have an subscribe link that goes to the sign in page" do
         assert_have_selector "a[href='#{sign_in_path}']"
       end
+      should "not have an unsubscribe link" do
+        assert_have_no_selector "a#unsubscribe"
+      end
+    end
+
+    context "On GET to edit" do
+      setup do
+        @rubygem = Factory(:rubygem)
+        get :edit, :id => @rubygem.to_param
+      end
+      should_respond_with :redirect
+      should_redirect_to('the homepage') { root_url }
+    end
+
+    context "On PUT to update" do
+      setup do
+        @rubygem = Factory(:rubygem)
+        put :update, :id => @rubygem.to_param, :linkset => {}
+      end
+      should_respond_with :redirect
+      should_redirect_to('the homepage') { root_url }
     end
   end
 end
