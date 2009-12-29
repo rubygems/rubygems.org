@@ -72,6 +72,6 @@ module RubygemsHelper
   end
   
   def download_link(version)
-    link_to "Download", "/gems/#{version.to_index[0]}-#{version}.gem", :id => :download
+    link_to "Download", "/gems/#{version.full_name}.gem", :id => :download
   end
 end
