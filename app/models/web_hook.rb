@@ -2,9 +2,11 @@ class WebHook < ActiveRecord::Base
   belongs_to :user
   belongs_to :rubygem
 
-	named_scope :global, :conditions => {:rubygem_id => nil}
+  named_scope :global, :conditions => {:rubygem_id => nil}
   
   GLOBAL_PATTERN = '*'
+
+  attr_accessor :host_with_port
 
   def validate_on_create
     if user && rubygem 
@@ -25,5 +27,18 @@ class WebHook < ActiveRecord::Base
    
   def global?
     rubygem_id.blank?
+  end
+
+  def payload
+    rubygem.payload.merge({
+      'project_uri' => "http://#{host_with_port}/gems/#{rubygem.name}",
+      'gem_uri'     => "http://#{host_with_port}/gems/#{rubygem.versions.latest.full_name}.gem"
+    }).to_json
+  end
+
+  def perform
+    RestClient.post url, payload, 'Content-Type' => 'application/json'
+  rescue *(HTTP_ERRORS + [RestClient::Exception, SocketError]) => e
+    increment! :failure_count
   end
 end

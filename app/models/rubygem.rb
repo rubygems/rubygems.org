@@ -71,13 +71,19 @@ class Rubygem < ActiveRecord::Base
     versions.latest.try(:to_title) || name
   end
 
+  def payload
+    {
+      :name              => name,
+      :downloads         => downloads,
+      :version           => versions.latest.number,
+      :authors           => versions.latest.authors,
+      :info              => versions.latest.info,
+      :rubyforge_project => rubyforge_project
+    }
+  end
+
   def to_json
-    {:name              => name,
-     :downloads         => downloads,
-     :version           => versions.latest.number,
-     :authors           => versions.latest.authors,
-     :info              => versions.latest.info,
-     :rubyforge_project => rubyforge_project}.to_json
+    payload.to_json
   end
 
   def to_param
@@ -144,11 +150,5 @@ class Rubygem < ActiveRecord::Base
     version = self.versions.find_or_initialize_by_number_and_platform(spec.version.to_s, spec.original_platform.to_s)
     version.rubygem = self
     version
-  end
-
-  def web_hook_jobs(host_with_port)
-    (web_hooks + WebHook.global).map do |hook|
-      WebHookJob.new(hook, self, host_with_port)
-    end
   end
 end

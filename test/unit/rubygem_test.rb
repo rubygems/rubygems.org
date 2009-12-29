@@ -425,30 +425,4 @@ class RubygemTest < ActiveSupport::TestCase
       should_change("total number of Dependencies", :by => 2) { Dependency.count }
     end
   end
-
-  context "with gem specific web hooks" do
-    setup do
-      @version = Factory(:version)
-      @rubygem = Factory(:rubygem, :name => "foogem", :versions => [@version])
-      @hook_a  = Factory(:web_hook, 
-        :rubygem => @rubygem,
-        :url     => "http://example.org/a")
-      @hook_b  = Factory(:web_hook, 
-        :rubygem => @rubygem,
-        :url     => "http://example.org/b")
-      @hook_c  = Factory(:web_hook, 
-			  :rubygem => nil,
-        :url     => "http://example.org/c")
-    end
-
-    should "should be able to generate a list of web hook jobs" do
-      jobs = @rubygem.web_hook_jobs('HOSTNAME:PORT')
-      job_a = jobs.detect {|job| job.hook == @hook_a }
-      job_b = jobs.detect {|job| job.hook == @hook_b }
-      job_c = jobs.detect {|job| job.hook == @hook_c }
-      assert_equal 'foogem', JSON.parse(job_a.payload)['name']
-      assert_equal 'foogem', JSON.parse(job_b.payload)['name']
-      assert_equal 'foogem', JSON.parse(job_c.payload)['name']
-    end
-  end
 end
