@@ -57,11 +57,20 @@ When /^I download the rubygem "([^\"]*)" version "([^\"]*)" (\d+) times$/ do |ru
   end
 end
 
-Given /^I have added a webhook "([^\"]*)" to gem "([^\"]*)"$/ do |web_hook_url, gem_name|
+Given /^I have added a webhook for "([^\"]*)" to gem "([^\"]*)"$/ do |web_hook_url, gem_name|
+  WebMock.stub_request(:post, web_hook_url)
+  user = User.find_by_api_key!(@api_key)
+	rubygem = Rubygem.find_by_name!(gem_name)
+  WebHook.create!(
+    :url     => web_hook_url,
+    :rubygem => rubygem,
+    :user    => user)
+end
+
+Given /^I have added a global webhook for "([^\"]*)"$/ do |web_hook_url|
   WebMock.stub_request(:post, web_hook_url)
   user = User.find_by_api_key!(@api_key)
   WebHook.create!(
-    :url        => web_hook_url,
-    :gem_name   => gem_name,
-    :user       => user)
+    :url     => web_hook_url,
+    :user    => user)
 end

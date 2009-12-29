@@ -32,7 +32,7 @@ class Gemcutter
     if update
       write_gem
       @version_id = self.version.id
-      Delayed::Job.enqueue self, 1
+      Delayed::Job.enqueue self, PRIORITIES[:push]
       enqueue_web_hook_jobs
       notify("Successfully registered gem: #{self.version.to_title}", 200)
     else
@@ -108,7 +108,7 @@ class Gemcutter
   def enqueue_web_hook_jobs
     jobs = rubygem.web_hook_jobs(@host_with_port)
     jobs.each do |job|
-      Delayed::Job.enqueue(job, 2)
+      Delayed::Job.enqueue job, PRIORITIES[:web_hook]
     end
   end
 

@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
                              :order   => "name ASC"
   has_many :ownerships
   has_many :subscriptions
+  has_many :web_hooks
   before_create :generate_api_key
 
   def name
