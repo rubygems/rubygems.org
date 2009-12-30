@@ -3,6 +3,7 @@ class WebHook < ActiveRecord::Base
   belongs_to :rubygem
 
   named_scope :global, :conditions => {:rubygem_id => nil}
+  named_scope :specific, :conditions => "rubygem_id is not null"
 
   GLOBAL_PATTERN = '*'
 
@@ -27,6 +28,11 @@ class WebHook < ActiveRecord::Base
 
   def global?
     rubygem_id.blank?
+  end
+
+  def success_message
+    what = global? ? "all gems" : rubygem.name
+    "Successfully created webhook for #{what} to #{url}"
   end
 
   def payload
