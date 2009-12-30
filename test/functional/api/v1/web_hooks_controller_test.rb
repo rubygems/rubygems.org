@@ -30,10 +30,6 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
           end
           should_respond_with :success
           should_respond_with_content_type /json/
-          should "respond with json with webhook urls" do
-            json = ActiveSupport::JSON.decode(@response.body)
-            assert_equal @rubygem_hook.url, json[@rubygem.name].first["url"]
-          end
         end
       end
 
@@ -75,6 +71,9 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
           assert_equal @user, WebHook.last.user
           assert_nil WebHook.last.rubygem
         end
+        should "respond with message that global hook was made" do
+          assert_contain "Successfully created webhook for all gems to #{@url}"
+        end
       end
     end
 
@@ -91,7 +90,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
     context "on POST to global web hook that already exists" do
       setup do
-        Factory(:web_hook, :url => @url, :user => @user)
+        Factory(:global_web_hook, :url => @url, :user => @user)
         post :create, :gem_name => '*', :url => @url
       end
 

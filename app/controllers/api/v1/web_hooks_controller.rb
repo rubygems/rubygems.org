@@ -5,10 +5,11 @@ class Api::V1::WebHooksController < ApplicationController
   before_filter :verify_authenticated_user
 
   def index
-    json = current_user.web_hooks.group_by { |hook| hook.rubygem.name }
+    json = current_user.web_hooks.specific.group_by { |hook| hook.rubygem.name }
+    json["all gems"] = current_user.web_hooks.global
     render :json => json
   end
-  
+
   def create
     url      = params[:url]
     gem_name = params[:gem_name]
@@ -21,7 +22,7 @@ class Api::V1::WebHooksController < ApplicationController
       webhook = current_user.web_hooks.build(:url => url, :rubygem => rubygem)
 
       if webhook.save
-        render :text   => "Successfully created webhook for #{gem_name} to #{url}",
+        render :text   => webhook.success_message,
                :status => :created
       else
         render :text   => webhook.errors.full_messages,
