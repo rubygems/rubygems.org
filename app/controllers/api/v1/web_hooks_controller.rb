@@ -3,6 +3,11 @@ class Api::V1::WebHooksController < ApplicationController
 
   before_filter :authenticate_with_api_key
   before_filter :verify_authenticated_user
+
+  def index
+    json = current_user.web_hooks.group_by { |hook| hook.rubygem.name }
+    render :json => json
+  end
   
   def create
     url      = params[:url]
