@@ -3,7 +3,7 @@ class WebHook < ActiveRecord::Base
   belongs_to :rubygem
 
   named_scope :global, :conditions => {:rubygem_id => nil}
-  
+
   GLOBAL_PATTERN = '*'
 
   attr_accessor :host_with_port, :version
@@ -24,7 +24,7 @@ class WebHook < ActiveRecord::Base
       errors.add_to_base("A user is required for this hook")
     end
   end
-   
+
   def global?
     rubygem_id.blank?
   end
@@ -40,5 +40,9 @@ class WebHook < ActiveRecord::Base
     RestClient.post url, payload, 'Content-Type' => 'application/json'
   rescue *(HTTP_ERRORS + [RestClient::Exception, SocketError]) => e
     increment! :failure_count
+  end
+
+  def to_json(options = {})
+    super(options.merge(:only => [:url, :failure_count]))
   end
 end

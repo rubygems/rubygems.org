@@ -2,18 +2,39 @@ require 'test_helper'
 
 class Api::V1::WebHooksControllerTest < ActionController::TestCase
   should_forbid_access_when("creating a web hook") { post :create }
-  
+  should_forbid_access_when("listing hooks") { get :index }
+
   context "When logged in" do
     setup do
       @url = "http://example.org"
       @user = Factory(:email_confirmed_user)
-      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
+      @request.env["Authorization"] = @user.api_key
     end
 
     context "with a rubygem" do
       setup do
         @rubygem = Factory(:rubygem)
         Factory(:version, :rubygem => @rubygem)
+      end
+
+      context "with some hooks" do
+        setup do
+          @rubygem_hook = Factory(:web_hook,
+                                  :user    => @user,
+                                  :rubygem => @rubygem)
+        end
+
+        context "On GET to index" do
+          setup do
+            get :index
+          end
+          should_respond_with :success
+          should_respond_with_content_type /json/
+          should "respond with json with webhook urls" do
+            json = ActiveSupport::JSON.decode(@response.body)
+            assert_equal @rubygem_hook.url, json[@rubygem.name].first["url"]
+          end
+        end
       end
 
       context "On POST to create hook for a gem that's hosted" do
@@ -61,13 +82,13 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
       setup do
         post :create, :gem_name => "a gem that doesn't exist", :url => @url
       end
-      
+
       should_respond_with :not_found
       should "say gem is not found" do
         assert_contain "could not be found"
       end
     end
-      
+
     context "on POST to global web hook that already exists" do
       setup do
         Factory(:web_hook, :url => @url, :user => @user)
