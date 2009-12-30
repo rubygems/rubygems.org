@@ -8,6 +8,7 @@ class WebHookTest < ActiveSupport::TestCase
     hook = Factory(:web_hook)
     assert !hook.global?
     assert WebHook.global.empty?
+    assert [hook], WebHook.specific
   end
 
   should "be valid for global hook" do
@@ -15,6 +16,7 @@ class WebHookTest < ActiveSupport::TestCase
     assert_nil hook.rubygem
     assert hook.global?
     assert_equal [hook], WebHook.global
+    assert WebHook.specific.empty?
   end
 
   should "require user" do

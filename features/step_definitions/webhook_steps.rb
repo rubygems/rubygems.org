@@ -12,7 +12,7 @@ end
 
 When /^I list the webhooks with my api key$/ do
   header("Authorization", @api_key)
-  visit api_v1_web_hooks_path, :get
+  visit api_v1_web_hooks_path, :get, :format => "json"
 end
 
 Then /^the webhook "([^\"]*)" should receive a POST with gem "([^\"]*)" at version "([^\"]*)"$/ do |web_hook_url, gem_name, version_number|
@@ -25,7 +25,8 @@ Then /^the webhook "([^\"]*)" should receive a POST with gem "([^\"]*)" at versi
   assert_equal version_number, json["version"]
 end
 
-Then /^I should see "([^\"]*)" under the "([^\"]*)" gem$/ do |web_hook_url, gem_name|
+Then /^I should see "([^\"]*)" under "([^\"]*)"$/ do |web_hook_url, gem_name|
   json = ActiveSupport::JSON.decode(response.body)
+  assert json[gem_name]
   assert json[gem_name].find { |hook| hook['url'] == web_hook_url }
 end

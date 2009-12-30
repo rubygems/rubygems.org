@@ -37,7 +37,16 @@ Feature: Web Hooks
   Scenario: User lists hooks for a gem
     Given I am signed up and confirmed as "email@person.com/password"
     And a rubygem exists with a name of "mazeltov"
+    And a rubygem exists with a name of "vodka"
     And I have an api key for "email@person.com/password"
     And I have added a webhook for "http://example.org/webhook" to gem "mazeltov" with my api key
+    And I have added a webhook for "http://example.org/webhook2" to gem "mazeltov" with my api key
+    And I have added a webhook for "http://example.org/webhook3" to gem "vodka" with my api key
+    And I have added a global webhook for "http://example.org/webhook4" with my api key
+    And I have added a global webhook for "http://example.org/webhook5" with my api key
     When I list the webhooks with my api key
-    Then I should see "http://example.org/webhook" under the "mazeltov" gem
+    Then I should see "http://example.org/webhook" under "mazeltov"
+    And I should see "http://example.org/webhook2" under "mazeltov"
+    And I should see "http://example.org/webhook3" under "vodka"
+    And I should see "http://example.org/webhook4" under "all gems"
+    And I should see "http://example.org/webhook5" under "all gems"
