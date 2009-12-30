@@ -61,6 +61,14 @@ class WebHookTest < ActiveSupport::TestCase
                                     :url     => @url)
     end
 
+    should "show limited attributes for to_json" do
+      assert_equal(
+      {
+        'url'           => @url,
+        'failure_count' => @webhook.failure_count
+      }, ActiveSupport::JSON.decode(@webhook.to_json))
+    end
+
     should "not be able to create a webhook under this user, gem, and url" do
       webhook = WebHook.new(:user    => @user,
                             :rubygem => @rubygem,
