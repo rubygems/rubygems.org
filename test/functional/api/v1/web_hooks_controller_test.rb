@@ -3,6 +3,7 @@ require 'test_helper'
 class Api::V1::WebHooksControllerTest < ActionController::TestCase
   should_forbid_access_when("creating a web hook") { post :create }
   should_forbid_access_when("listing hooks") { get :index }
+  should_forbid_access_when("removing hooks") { delete :remove }
 
   context "When logged in" do
     setup do
@@ -30,6 +31,24 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
           end
           should_respond_with :success
           should_respond_with_content_type /json/
+        end
+
+        context "On DELETE to remove with owned hook for rubygem" do
+          setup do
+            delete :remove,
+                   :gem_name => @rubygem.name,
+                   :url      => @rubygem_hook.url
+          end
+
+          should_respond_with :success
+          should "say webhook was removed" do
+            assert_contain "Successfully removed webhook for #{@rubygem.name} to #{@rubygem_hook.url}"
+          end
+          should "have actually removed the webhook" do
+            assert_raise ActiveRecord::RecordNotFound do
+              WebHook.find(@rubygem_hook.id)
+            end
+          end
         end
       end
 
@@ -80,6 +99,17 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
     context "On POST to create a hook for a gem that doesn't exist here" do
       setup do
         post :create, :gem_name => "a gem that doesn't exist", :url => @url
+      end
+
+      should_respond_with :not_found
+      should "say gem is not found" do
+        assert_contain "could not be found"
+      end
+    end
+
+    context "On DELETE to remove a hook for a gem that doesn't exist here" do
+      setup do
+        delete :remove, :gem_name => "a gem that doesn't exist", :url => @url
       end
 
       should_respond_with :not_found

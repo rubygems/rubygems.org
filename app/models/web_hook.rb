@@ -31,8 +31,15 @@ class WebHook < ActiveRecord::Base
   end
 
   def success_message
-    what = global? ? "all gems" : rubygem.name
     "Successfully created webhook for #{what} to #{url}"
+  end
+
+  def removed_message
+    "Successfully removed webhook for #{what} to #{url}"
+  end
+
+  def what
+    global? ? "all gems" : rubygem.name
   end
 
   def payload
