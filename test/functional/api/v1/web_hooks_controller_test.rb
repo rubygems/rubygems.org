@@ -56,7 +56,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         context "On DELETE to remove with owned global hook" do
           setup do
             delete :remove,
-                   :gem_name => '*',
+                   :gem_name => WebHook::GLOBAL_PATTERN,
                    :url      => @global_hook.url
           end
 
@@ -101,7 +101,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         context "On DELETE to remove with global hook" do
           setup do
             delete :remove,
-                   :gem_name => '*',
+                   :gem_name => WebHook::GLOBAL_PATTERN,
                    :url      => @rubygem_hook.url
           end
 
@@ -145,7 +145,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
       context "On POST to create hook for all gems" do
         setup do
-          post :create, :gem_name => '*', :url => @url
+          post :create, :gem_name => WebHook::GLOBAL_PATTERN, :url => @url
         end
 
         should_respond_with :created
@@ -184,7 +184,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
     context "on POST to global web hook that already exists" do
       setup do
         Factory(:global_web_hook, :url => @url, :user => @user)
-        post :create, :gem_name => '*', :url => @url
+        post :create, :gem_name => WebHook::GLOBAL_PATTERN, :url => @url
       end
 
       should_respond_with :conflict
