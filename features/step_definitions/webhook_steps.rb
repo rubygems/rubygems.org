@@ -30,3 +30,15 @@ Then /^I should see "([^\"]*)" under "([^\"]*)"$/ do |web_hook_url, gem_name|
   assert json[gem_name]
   assert json[gem_name].find { |hook| hook['url'] == web_hook_url }
 end
+
+When /^I have removed a webhook for "([^\"]*)" from gem "([^\"]*)" with my api key$/ do |web_hook_url, gem_name|
+  header("Authorization", @api_key)
+  visit remove_api_v1_web_hooks_path,
+        :delete,
+        :gem_name => gem_name,
+        :url      => web_hook_url
+end
+
+Then /^the webhook "([^\"]*)" should not receive a POST$/ do |web_hook_url|
+  WebMock.assert_not_requested(:post, web_hook_url)
+end
