@@ -18,11 +18,13 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         Factory(:version, :rubygem => @rubygem)
       end
 
-      context "with some hooks" do
+      context "with some owned hooks" do
         setup do
           @rubygem_hook = Factory(:web_hook,
                                   :user    => @user,
                                   :rubygem => @rubygem)
+          @global_hook  = Factory(:global_web_hook,
+                                  :user    => @user)
         end
 
         context "On GET to index" do
@@ -48,6 +50,67 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
             assert_raise ActiveRecord::RecordNotFound do
               WebHook.find(@rubygem_hook.id)
             end
+          end
+        end
+
+        context "On DELETE to remove with owned global hook" do
+          setup do
+            delete :remove,
+                   :gem_name => '*',
+                   :url      => @global_hook.url
+          end
+
+          should_respond_with :success
+          should "say webhook was removed" do
+            assert_contain "Successfully removed webhook for all gems to #{@global_hook.url}"
+          end
+          should "have actually removed the webhook" do
+            assert_raise ActiveRecord::RecordNotFound do
+              WebHook.find(@global_hook.id)
+            end
+          end
+        end
+      end
+
+      context "with some unowned hooks" do
+        setup do
+          @other_user   = Factory(:email_confirmed_user)
+          @rubygem_hook = Factory(:web_hook,
+                                  :user    => @other_user,
+                                  :rubygem => @rubygem)
+          @global_hook  = Factory(:global_web_hook,
+                                  :user    => @other_user)
+        end
+
+        context "On DELETE to remove with owned hook for rubygem" do
+          setup do
+            delete :remove,
+                   :gem_name => @rubygem.name,
+                   :url      => @rubygem_hook.url
+          end
+
+          should_respond_with :not_found
+          should "say webhook was not found" do
+            assert_contain "No such webhook exists under your account."
+          end
+          should "not have actually the webhook" do
+            assert_not_nil WebHook.find(@rubygem_hook.id)
+          end
+        end
+
+        context "On DELETE to remove with global hook" do
+          setup do
+            delete :remove,
+                   :gem_name => '*',
+                   :url      => @rubygem_hook.url
+          end
+
+          should_respond_with :not_found
+          should "say webhook was not found" do
+            assert_contain "No such webhook exists under your account."
+          end
+          should "not have actually the webhook" do
+            assert_not_nil WebHook.find(@rubygem_hook.id)
           end
         end
       end
