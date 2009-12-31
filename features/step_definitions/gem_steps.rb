@@ -15,6 +15,11 @@ Given /^a rubygem exists with name "([^\"]*)" and rubyforge project "([^\"]*)"$/
   Factory(:version, :rubygem => rubygem, :rubyforge_project => rubyforge_project)
 end
 
+Given /^a rubygem exists with name "([^\"]*)" and version "([^\"]*)"$/ do |name, version_number|
+  rubygem = Factory(:rubygem, :name => name)
+  Factory(:version, :rubygem => rubygem, :number => version_number)
+end
+
 def build_gem(name, version, summary = "Gemcutter", platform = "ruby")
   builder = Gem::Builder.new(build_gemspec(name, version, summary, platform))
   builder.ui = Gem::SilentUI.new

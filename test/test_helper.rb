@@ -2,10 +2,8 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'test_help'
 
-require 'webmock'
-WebMock.disable_net_connect!
-
 set :environment, :test
+WebMock.disable_net_connect!
 
 Shoulda.autoload_macros(Rails.root, "vendor/bundler_gems/gems/*")
 
@@ -18,11 +16,12 @@ class Test::Unit::TestCase
   include Webrat::Matchers
   include Rack::Test::Methods
   include RR::Adapters::TestUnit unless include?(RR::Adapters::TestUnit)
+  include WebMock
 
   def response_body
     @response.body
   end
-  
+
   def assert_changed(object, attribute, &block)
     original = object.send(attribute)
     yield
