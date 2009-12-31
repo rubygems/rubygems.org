@@ -62,3 +62,15 @@ Feature: Web Hooks
     And I push the gem "vodka-2.0.0.gem" with my api key
     And the system processes jobs
     Then the webhook "http://example.org/webhook" should not receive a POST
+
+  Scenario: User removes global hook
+    Given I am signed up and confirmed as "email@person.com/password"
+    And I have a gem "vodka" with version "1.0.0"
+    And I have a gem "vodka" with version "2.0.0"
+    And I have an api key for "email@person.com/password"
+    And I push the gem "vodka-1.0.0.gem" with my api key
+    And I have added a global webhook for "http://example.org/webhook" with my api key
+    When I have removed the global webhook for "http://example.org/webhook"
+    And I push the gem "vodka-2.0.0.gem" with my api key
+    And the system processes jobs
+    Then the webhook "http://example.org/webhook" should not receive a POST

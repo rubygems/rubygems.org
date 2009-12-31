@@ -39,6 +39,14 @@ When /^I have removed a webhook for "([^\"]*)" from gem "([^\"]*)" with my api k
         :url      => web_hook_url
 end
 
+When /^I have removed the global webhook for "([^\"]*)"$/ do |web_hook_url|
+  header("Authorization", @api_key)
+  visit remove_api_v1_web_hooks_path,
+        :delete,
+        :gem_name => '*',
+        :url      => web_hook_url
+end
+
 Then /^the webhook "([^\"]*)" should not receive a POST$/ do |web_hook_url|
   WebMock.assert_not_requested(:post, web_hook_url)
 end
