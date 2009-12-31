@@ -7,7 +7,10 @@ end
 When /^I have added a global webhook for "([^\"]*)" with my api key$/ do |web_hook_url|
   WebMock.stub_request(:post, web_hook_url)
   header("Authorization", @api_key)
-  visit api_v1_web_hooks_path, :post, :gem_name => '*', :url => web_hook_url
+  visit api_v1_web_hooks_path,
+        :post,
+        :gem_name => WebHook::GLOBAL_PATTERN,
+        :url      => web_hook_url
 end
 
 When /^I list the webhooks with my api key$/ do
@@ -43,7 +46,7 @@ When /^I have removed the global webhook for "([^\"]*)"$/ do |web_hook_url|
   header("Authorization", @api_key)
   visit remove_api_v1_web_hooks_path,
         :delete,
-        :gem_name => '*',
+        :gem_name => WebHook::GLOBAL_PATTERN,
         :url      => web_hook_url
 end
 
