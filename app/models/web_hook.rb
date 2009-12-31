@@ -26,6 +26,18 @@ class WebHook < ActiveRecord::Base
     end
   end
 
+  def fire(host_with_port, rubygem, version, delayed = true)
+    self.host_with_port = host_with_port
+    self.rubygem = rubygem
+    self.version = version
+
+    if delayed
+      Delayed::Job.enqueue self, PRIORITIES[:web_hook]
+    else
+      perform
+    end
+  end
+
   def global?
     rubygem_id.blank?
   end
@@ -36,6 +48,10 @@ class WebHook < ActiveRecord::Base
 
   def removed_message
     "Successfully removed webhook for #{what} to #{url}"
+  end
+
+  def deployed_message
+    "Successfully deployed webhook for #{what} to #{url}"
   end
 
   def what

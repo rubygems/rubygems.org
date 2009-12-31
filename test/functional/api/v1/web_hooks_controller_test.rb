@@ -2,8 +2,16 @@ require 'test_helper'
 
 class Api::V1::WebHooksControllerTest < ActionController::TestCase
   should_forbid_access_when("creating a web hook") { post :create }
-  should_forbid_access_when("listing hooks") { get :index }
-  should_forbid_access_when("removing hooks") { delete :remove }
+  should_forbid_access_when("listing hooks")       { get :index }
+  should_forbid_access_when("removing hooks")      { delete :remove }
+  should_forbid_access_when("test firing hooks")   { post :fire }
+
+  def self.should_not_find_it
+    should_respond_with :not_found
+    should "say gem is not found" do
+      assert_contain "could not be found"
+    end
+  end
 
   context "When logged in" do
     setup do
@@ -93,7 +101,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
           should "say webhook was not found" do
             assert_contain "No such webhook exists under your account."
           end
-          should "not have actually the webhook" do
+          should "not delete the webhook" do
             assert_not_nil WebHook.find(@rubygem_hook.id)
           end
         end
@@ -109,8 +117,36 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
           should "say webhook was not found" do
             assert_contain "No such webhook exists under your account."
           end
-          should "not have actually the webhook" do
+          should "not delete the webhook" do
             assert_not_nil WebHook.find(@rubygem_hook.id)
+          end
+        end
+
+        context "On POST to fire with owned hook for rubygem" do
+          setup do
+            post :fire, :gem_name => @rubygem.name
+          end
+
+          should_respond_with :not_found
+          should "say webhook was not found" do
+            assert_contain "No such webhook exists under your account."
+          end
+          should "not fire the webhook" do
+            WebMock.assert_not_requested(:post, @rubygem_hook.url)
+          end
+        end
+
+        context "On POST to fire with global hook" do
+          setup do
+            post :fire, :gem_name => WebHook::GLOBAL_PATTERN
+          end
+
+          should_respond_with :not_found
+          should "say webhook was not found" do
+            assert_contain "No such webhook exists under your account."
+          end
+          should "not fire the webhook" do
+            WebMock.assert_not_requested(:post, @global_hook.url)
           end
         end
       end
@@ -164,10 +200,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         post :create, :gem_name => "a gem that doesn't exist", :url => @url
       end
 
-      should_respond_with :not_found
-      should "say gem is not found" do
-        assert_contain "could not be found"
-      end
+      should_not_find_it
     end
 
     context "On DELETE to remove a hook for a gem that doesn't exist here" do
@@ -175,10 +208,15 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         delete :remove, :gem_name => "a gem that doesn't exist", :url => @url
       end
 
-      should_respond_with :not_found
-      should "say gem is not found" do
-        assert_contain "could not be found"
+      should_not_find_it
+    end
+
+    context "On POST to fire a test hook for a gem that doesn't exist here" do
+      setup do
+        post :fire, :gem_name => "a gem that doesn't exist", :url => @url
       end
+
+      should_not_find_it
     end
 
     context "on POST to global web hook that already exists" do

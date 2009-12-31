@@ -74,3 +74,21 @@ Feature: Web Hooks
     And I push the gem "vodka-2.0.0.gem" with my api key
     And the system processes jobs
     Then the webhook "http://example.org/webhook" should not receive a POST
+
+  Scenario: User test fires hook for a gem
+    Given I am signed up and confirmed as "email@person.com/password"
+    And I have a gem "vodka" with version "1.2.3"
+    And I have an api key for "email@person.com/password"
+    And I push the gem "vodka-1.2.3.gem" with my api key
+    And I have added a webhook for "http://example.org/webhook" to gem "vodka" with my api key
+    When I have fired hooks for the "vodka" gem with my api key
+    Then the webhook "http://example.org/webhook" should receive a POST with gem "vodka" at version "1.2.3"
+
+  Scenario: User test fires global hook
+    Given I am signed up and confirmed as "email@person.com/password"
+    And a rubygem exists with name "gemcutter" and version "1.0.0"
+    And a rubygem exists with name "vodka" and version "1.2.3"
+    And I have an api key for "email@person.com/password"
+    And I have added a global webhook for "http://example.org/webhook" with my api key
+    When I have fired global hooks with my api key
+    Then the webhook "http://example.org/webhook" should receive a POST with gem "gemcutter" at version "1.0.0"
