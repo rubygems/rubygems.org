@@ -3,6 +3,7 @@ class Api::V1::WebHooksController < ApplicationController
 
   before_filter :authenticate_with_api_key
   before_filter :verify_authenticated_user
+  before_filter :find_gem_by_name, :except => :index
 
   def index
     json = current_user.web_hooks.specific.group_by { |hook| hook.rubygem.name }
@@ -11,23 +12,37 @@ class Api::V1::WebHooksController < ApplicationController
   end
 
   def create
-    url      = params[:url]
-    gem_name = params[:gem_name]
-    rubygem  = Rubygem.find_by_name(gem_name)
+    webhook = current_user.web_hooks.build(:url => @url, :rubygem => @rubygem)
 
-    if rubygem.nil? && gem_name != WebHook::GLOBAL_PATTERN
+    if webhook.save
+      render :text   => webhook.success_message,
+             :status => :created
+    else
+      render :text   => webhook.errors.full_messages,
+             :status => :conflict
+    end
+  end
+
+  def remove
+    webhook = current_user.web_hooks.find_by_rubygem_id_and_url(
+              @rubygem.try(:id),
+              @url)
+
+    if webhook.destroy
+      render :text => webhook.removed_message
+    end
+  end
+
+  protected
+
+  def find_gem_by_name
+    @url      = params[:url]
+    @gem_name = params[:gem_name]
+    @rubygem  = Rubygem.find_by_name(@gem_name)
+
+    if @rubygem.nil? && @gem_name != WebHook::GLOBAL_PATTERN
       render :text   => "This gem could not be found",
              :status => :not_found
-    else
-      webhook = current_user.web_hooks.build(:url => url, :rubygem => rubygem)
-
-      if webhook.save
-        render :text   => webhook.success_message,
-               :status => :created
-      else
-        render :text   => webhook.errors.full_messages,
-               :status => :conflict
-      end
     end
   end
 end

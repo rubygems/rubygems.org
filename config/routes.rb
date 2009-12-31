@@ -28,7 +28,8 @@ ActionController::Routing::Routes.draw do |map|
           :only       => [:show, :create, :destroy]
       end
       v1.resources :web_hooks,
-                   :only => [:create, :index]
+                   :only       => [:create, :index],
+                   :collection => {:remove => :delete}
     end
   end
 
