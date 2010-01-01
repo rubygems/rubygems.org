@@ -11,7 +11,8 @@ the command. You can also use this command to test fire a webhook.
   end
 
   def arguments
-    "GEM_NAME       name of gem to register webhook for. Use '*' for all gems."
+    "GEM_NAME       name of gem to register webhook for. " +
+    "Use '*' for all gems. Or, omit to list all webhooks."
   end
 
   def usage
@@ -32,14 +33,22 @@ the command. You can also use this command to test fire a webhook.
       options[:url] = value
     end
 
+    add_option('-f', '--fire URL', "#{option_text} testfire") do |value, options|
+      options[:send] = 'fire'
+      options[:url] = value
+    end
+
     add_proxy_option
   end
 
   def execute
     setup
-    name = get_one_gem_name
 
-    send("#{options[:send]}_webhook", name, options[:url])
+    if options[:url]
+      send("#{options[:send]}_webhook", get_one_gem_name, options[:url])
+    else
+      list_webhooks
+    end
   end
 
   def add_webhook(name, url)
@@ -52,8 +61,42 @@ the command. You can also use this command to test fire a webhook.
     make_webhook_request(:delete, name, url)
   end
 
-  def make_webhook_request(method, name, url)
-    response = make_request(method, "web_hooks") do |request|
+  def fire_webhook(name, url)
+    say "Test firing webhook..."
+    make_webhook_request(:post, name, url, "web_hooks/fire")
+  end
+
+  def list_webhooks
+    require 'json/pure' unless defined?(JSON::JSON_LOADED)
+
+    response = make_request(:get, "web_hooks") do |request|
+      request.add_field("Authorization", api_key)
+    end
+
+    case response
+    when Net::HTTPSuccess
+      begin
+        groups = JSON.parse(response.body)
+
+        groups.each do |group, hooks|
+          say "#{group}:"
+          hooks.each do |hook|
+            say "- #{hook['url']}"
+          end
+        end
+      rescue JSON::ParserError => json_error
+        say "There was a problem parsing the data:"
+        say json_error.to_s
+        terminate_interaction
+      end
+    else
+      say response.body
+      terminate_interaction
+    end
+  end
+
+  def make_webhook_request(method, name, url, api = "web_hooks")
+    response = make_request(method, api) do |request|
       request.set_form_data("gem_name" => name, "url" => url)
       request.add_field("Authorization", api_key)
     end
