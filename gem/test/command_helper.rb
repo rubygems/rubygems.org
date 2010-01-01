@@ -20,6 +20,11 @@ require "rubygems_plugin"
 
 class CommandTest < ActiveSupport::TestCase
   include RR::Adapters::TestUnit unless include?(RR::Adapters::TestUnit)
+  include WebMock
+
+  def teardown
+    reset_webmock
+  end
 end
 
 def stub_config(config)

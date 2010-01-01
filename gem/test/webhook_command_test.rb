@@ -3,46 +3,68 @@ require 'command_helper'
 class WebhookCommandTest < CommandTest
   context "webhooking" do
     setup do
+      @gem = "foo"
+      @api = "https://gemcutter.org/api/v1/web_hooks"
+      @url = "http://example.com/hook"
       @command = Gem::Commands::WebhookCommand.new
       stub(@command).say
     end
 
-    should "setup and post hook" do
-      stub(@command).setup
-      stub(@command).add_webhook
-      @command.execute
-      assert_received(@command) { |command| command.setup }
-      assert_received(@command) { |command| command.add_webhook }
-    end
-
     should "raise an error with no arguments" do
       assert_raise Gem::CommandLineError do
-        @command.add_webhook
+        @command.execute
       end
     end
 
     context "adding a hook" do
       setup do
-        @url = "https://gemcutter.org/api/v1/web_hooks"
         stub(@command).say
-        stub(@command).options { {:args => ["#{@gem} -a http://example.org/gem_hooks"]} }
         stub_config({ :rubygems_api_key => "key" })
-        WebMock.stub_request(:post, @url).to_return(:body => "Success!")
+        stub_request(:post, @api).to_return(:body => "Success!")
 
-        @command.add_webhook
+        @command.handle_options([@gem, "-a", @url])
+        @command.execute
       end
 
       should "say hook was added" do
-        assert_received(@command) { |command| command.say("Registering webhook...") }
-        assert_received(@command) { |command| command.say("Success!") }
+        assert_received(@command) do |command|
+          command.say("Adding webhook...")
+          command.say("Success!")
+        end
       end
 
       should "post to api" do
         # webmock doesn't pass body params on correctly :[
-        WebMock.assert_requested(:post, @url, 
-                                 :times => 1)
-        WebMock.assert_requested(:post, @url,
-                                 :headers => { 'Authorization' => 'key' })
+        assert_requested(:post, @api,
+                         :times => 1)
+        assert_requested(:post, @api,
+                         :headers => { 'Authorization' => 'key' })
+      end
+    end
+
+    context "removing a hook" do
+      setup do
+        stub(@command).say
+        stub_config({ :rubygems_api_key => "key" })
+        stub_request(:delete, @api).to_return(:body => "Success!")
+
+        @command.handle_options([@gem, "-r", @url])
+        @command.execute
+      end
+
+      should "say hook was removed" do
+        assert_received(@command) do |command|
+          command.say("Removing webhook...")
+          command.say("Success!")
+        end
+      end
+
+      should "send delete to api" do
+        # webmock doesn't pass body params on correctly :[
+        assert_requested(:delete, @api,
+                         :times => 1)
+        assert_requested(:delete, @api,
+                         :headers => { 'Authorization' => 'key' })
       end
     end
   end
