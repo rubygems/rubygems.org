@@ -35,5 +35,4 @@ class Gem::Commands::PushCommand < Gem::AbstractCommand
 
     say response.body
   end
-
 end
