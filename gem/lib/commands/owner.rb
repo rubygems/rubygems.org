@@ -1,6 +1,15 @@
 class Gem::Commands::OwnerCommand < Gem::AbstractCommand
+
   def description
     'Manage gem owners on Gemcutter.'
+  end
+
+  def arguments
+    "GEM_NAME       name of gem to manage owners for."
+  end
+
+  def usage
+    "#{program_name} GEM_NAME"
   end
 
   def initialize
