@@ -10,8 +10,9 @@ Given /^I've already pushed the gem "([^\"]*)" with my api key$/ do |name| # '
 end
 
 When /^I push the gem "([^\"]*)" with my api key$/ do |name|
+  api_key_header
+
   path = File.join(TEST_DIR, name)
-  header("Authorization", @api_key)
   visit api_v1_rubygems_path, :post, File.open(path).read
   assert_match /Successfully registered/, response.body
 end
@@ -21,9 +22,9 @@ When /^I delete the gem "([^\"]*)" with my api key$/ do |arg1|
 end
 
 When /^I migrate the gem "([^\"]*)" with my api key$/ do |name|
-  rubygem = Rubygem.find_by_name!(name)
+  api_key_header
 
-  header("Authorization", @api_key)
+  rubygem = Rubygem.find_by_name!(name)
   visit migrate_path(:rubygem_id => rubygem.to_param), :post
   token = response.body
 
@@ -37,17 +38,17 @@ When /^I migrate the gem "([^\"]*)" with my api key$/ do |name|
 end
 
 When /^I list the owners of gem "([^\"]*)" with my api key$/ do |name|
-  header("Authorization", @api_key)
+  api_key_header
   visit api_v1_rubygem_owners_path(:rubygem_id => name), :get
 end
 
 When /^I add the owner "([^\"]*)" to the rubygem "([^\"]*)" with my api key$/ do |owner_email, rubygem_name|
-  header("Authorization", @api_key)
+  api_key_header
   visit api_v1_rubygem_owners_path(:rubygem_id => rubygem_name), :post, :email => owner_email
 end
 
 When /^I remove the owner "([^\"]*)" from the rubygem "([^\"]*)" with my api key$/ do |owner_email, rubygem_name|
-  header("Authorization", @api_key)
+  api_key_header
   visit api_v1_rubygem_owners_path(:rubygem_id => rubygem_name), :delete, :email => owner_email
 end
 
