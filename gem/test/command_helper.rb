@@ -32,3 +32,15 @@ def stub_config(config)
   config.each { |key, value| file[key] = value }
   stub(Gem).configuration { file }
 end
+
+def assert_said(command, what)
+  assert_received(command) do |command|
+    command.say(what)
+  end
+end
+
+def assert_never_said(command, what)
+  assert_received(command) do |command|
+    command.say(what).never
+  end
+end
