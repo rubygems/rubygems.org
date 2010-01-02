@@ -36,7 +36,7 @@ class Gemcutter
       enqueue_web_hook_jobs
       notify("Successfully registered gem: #{self.version.to_title}", 200)
     else
-      notify("There was a problem saving your gem: #{rubygem.errors.full_messages}", 403)
+      notify("There was a problem saving your gem: #{rubygem.all_errors}", 403)
     end
   end
 

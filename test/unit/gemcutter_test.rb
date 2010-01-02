@@ -193,10 +193,10 @@ class GemcutterTest < ActiveSupport::TestCase
         @spec = gem_spec(:version => @version)
         @ownerships = "ownerships"
 
-        stub(@rubygem).errors.stub!.full_messages
+        stub(@rubygem).all_errors
         stub(@rubygem).save
         stub(@rubygem).ownerships { @ownerships }
-        stub(@rubygem).web_hook_jobs{[]}
+        stub(@rubygem).web_hook_jobs{ [] }
         stub(@cutter).version { @version }
         stub(@version).to_title { "latest version" }
         stub(@version).id { 1337 }
@@ -205,7 +205,7 @@ class GemcutterTest < ActiveSupport::TestCase
         stub(Delayed::Job).enqueue
       end
 
-      # FIXME: These tests all SUCK.
+      # FIXME: These tests all SUCK!!!!
       context "saving the rubygem" do
         before_should "process if successfully saved" do
           mock(@cutter).update { true }
