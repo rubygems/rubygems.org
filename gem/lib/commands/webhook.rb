@@ -78,10 +78,14 @@ the command. You can also use this command to test fire a webhook.
       begin
         groups = JSON.parse(response.body)
 
-        groups.each do |group, hooks|
-          say "#{group}:"
-          hooks.each do |hook|
-            say "- #{hook['url']}"
+        if groups.size.zero?
+          say "You haven't added any webhooks yet."
+        else
+          groups.each do |group, hooks|
+            say "#{group}:"
+            hooks.each do |hook|
+              say "- #{hook['url']}"
+            end
           end
         end
       rescue JSON::ParserError => json_error
