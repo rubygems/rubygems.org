@@ -58,7 +58,7 @@ the command. You can also use this command to test fire a webhook.
 
   def remove_webhook(name, url)
     say "Removing webhook..."
-    make_webhook_request(:delete, name, url)
+    make_webhook_request(:delete, name, url, "web_hooks/remove")
   end
 
   def fire_webhook(name, url)
