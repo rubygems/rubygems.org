@@ -18,12 +18,37 @@ class WebhookCommandTest < CommandTest
       end
     end
 
-    context "adding a hook" do
+    context "adding a specific hook" do
       setup do
         stub_config({ :rubygems_api_key => "key" })
         stub_request(:post, @api).to_return(:body => "Success!")
 
         @command.handle_options([@gem, "-a", @url])
+        @command.execute
+      end
+
+      should "say hook was added" do
+        assert_received(@command) do |command|
+          command.say("Adding webhook...")
+          command.say("Success!")
+        end
+      end
+
+      should "post to api" do
+        # webmock doesn't pass body params on correctly :[
+        assert_requested(:post, @api,
+                         :times => 1)
+        assert_requested(:post, @api,
+                         :headers => { 'Authorization' => 'key' })
+      end
+    end
+
+    context "adding a global hook" do
+      setup do
+        stub_config({ :rubygems_api_key => "key" })
+        stub_request(:post, @api).to_return(:body => "Success!")
+
+        @command.handle_options(["-g", "-a", @url])
         @command.execute
       end
 
@@ -112,12 +137,37 @@ EOF
       end
     end
 
-    context "removing hooks" do
+    context "removing specific hooks" do
       setup do
         stub_config({ :rubygems_api_key => "key" })
         stub_request(:delete, "#{@api}/remove").to_return(:body => "Success!")
 
         @command.handle_options([@gem, "-r", @url])
+        @command.execute
+      end
+
+      should "say hook was removed" do
+        assert_received(@command) do |command|
+          command.say("Removing webhook...")
+          command.say("Success!")
+        end
+      end
+
+      should "send delete to api" do
+        # webmock doesn't pass body params on correctly :[
+        assert_requested(:delete, "#{@api}/remove",
+                         :times => 1)
+        assert_requested(:delete, "#{@api}/remove",
+                         :headers => { 'Authorization' => 'key' })
+      end
+    end
+
+    context "removing global hooks" do
+      setup do
+        stub_config({ :rubygems_api_key => "key" })
+        stub_request(:delete, "#{@api}/remove").to_return(:body => "Success!")
+
+        @command.handle_options(["-g", "-r", @url])
         @command.execute
       end
 
