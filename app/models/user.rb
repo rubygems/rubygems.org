@@ -25,6 +25,13 @@ class User < ActiveRecord::Base
     generate_api_key && save!
   end
 
+  def all_hooks
+    all     = web_hooks.specific.group_by { |hook| hook.rubygem.name }
+    globals = web_hooks.global
+    all["all gems"] = globals unless globals.empty?
+    all
+  end
+
   def to_json(options = {})
     super(options.merge(:only => :email))
   end
