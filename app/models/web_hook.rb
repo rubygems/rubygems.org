@@ -9,6 +9,8 @@ class WebHook < ActiveRecord::Base
 
   attr_accessor :host_with_port, :version
 
+  validates_url_format_of :url
+
   def validate_on_create
     if user && rubygem 
       if WebHook.exists?(:user_id    => user.id,

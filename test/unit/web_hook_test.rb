@@ -24,6 +24,13 @@ class WebHookTest < ActiveSupport::TestCase
     assert !hook.valid?
   end
 
+  ["badurl", "", nil].each do |url|
+    should "invalidate with #{url.inspect} as the url" do
+      hook = Factory.build(:web_hook, :url => url)
+      assert !hook.valid?
+    end
+  end
+
   context "with a global webhook for a gem" do
     setup do
       @url     = "http://example.org"
