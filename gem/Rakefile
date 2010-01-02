@@ -14,14 +14,19 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "gemcutter"
     gem.summary = "Commands to interact with gemcutter.org"
-    gem.description = "Adds several commands for using gemcutter.org, such as pushing new gems, migrating gems from RubyForge, and more."
+    gem.description = "Adds several commands to RubyGems for managing gems and more on Gemcutter.org."
     gem.email = "nick@quaran.to"
-    gem.homepage = "http://github.com/qrush/gemcutter"
+    gem.homepage = "http://gemcutter.org"
     gem.authors = ["Nick Quaranto"]
-    gem.files = FileList["lib/rubygems_plugin.rb", "lib/commands/*"]
-    gem.test_files = FileList["test/command_helper.rb", "test/commands/*"]
-    gem.rubyforge_project = "gemcutter"
-    gem.add_dependency('json_pure')
+    gem.files = FileList["lib/rubygems_plugin.rb",
+                         "lib/commands/*",
+                         "test/*_helper.rb",
+                         "test/*_test.rb",
+                         "Rakefile"]
+    gem.add_runtime_dependency('json_pure')
+    %w[rake shoulda activesupport webmock rr].each do |dep|
+      gem.add_development_dependency(dep)
+    end
     gem.required_rubygems_version = Gem::Requirement.new(">= 1.3.5") if gem.respond_to? :required_rubygems_version=
     gem.post_install_message = <<MESSAGE
 
@@ -31,6 +36,7 @@ begin
 
     gem push          publish your gems for the world to use and enjoy
     gem owner         allow/disallow others to push to your gems
+    gem webhook       register urls to be pinged when gems are pushed
 
 ========================================================================
 
