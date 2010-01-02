@@ -100,7 +100,7 @@ EOF
     context "removing hooks" do
       setup do
         stub_config({ :rubygems_api_key => "key" })
-        stub_request(:delete, @api).to_return(:body => "Success!")
+        stub_request(:delete, "#{@api}/remove").to_return(:body => "Success!")
 
         @command.handle_options([@gem, "-r", @url])
         @command.execute
@@ -115,9 +115,9 @@ EOF
 
       should "send delete to api" do
         # webmock doesn't pass body params on correctly :[
-        assert_requested(:delete, @api,
+        assert_requested(:delete, "#{@api}/remove",
                          :times => 1)
-        assert_requested(:delete, @api,
+        assert_requested(:delete, "#{@api}/remove",
                          :headers => { 'Authorization' => 'key' })
       end
     end
