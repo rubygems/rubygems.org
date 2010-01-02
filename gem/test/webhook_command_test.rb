@@ -43,7 +43,7 @@ class WebhookCommandTest < CommandTest
       end
     end
 
-    context "listing hooks" do
+    context "listing hooks with some available" do
       setup do
         stub_config({ :rubygems_api_key => "key" })
         stub_request(:get, @api).to_return :body => <<EOF
@@ -71,6 +71,21 @@ EOF
                          :times => 1)
         assert_requested(:get, @api,
                          :headers => { 'Authorization' => 'key' })
+      end
+    end
+
+    context "listing hooks with none available" do
+      setup do
+        stub_config({ :rubygems_api_key => "key" })
+        stub_request(:get, @api).to_return(:body => "{}")
+        @command.handle_options([])
+        @command.execute
+      end
+
+      should "list hooks" do
+        assert_received(@command) do |command|
+          command.say("You haven't added any webhooks yet.")
+        end
       end
     end
 
