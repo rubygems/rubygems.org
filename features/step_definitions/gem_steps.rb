@@ -20,18 +20,27 @@ Given /^a rubygem exists with name "([^\"]*)" and version "([^\"]*)"$/ do |name,
   Factory(:version, :rubygem => rubygem, :number => version_number)
 end
 
-def build_gem(name, version, summary = "Gemcutter", platform = "ruby")
-  builder = Gem::Builder.new(build_gemspec(name, version, summary, platform))
+Given /^I have a gem "([^\"]*)" with version "([^\"]*)" and homepage "([^\"]*)"$/ do |name, version, homepage|
+  gemspec = new_gemspec(name, version, "Gemcutter", "ruby")
+  gemspec.homepage = homepage
+  build_gemspec(gemspec)
+end
+
+def build_gemspec(gemspec)
+  builder = Gem::Builder.new(gemspec)
   builder.ui = Gem::SilentUI.new
   builder.build
 end
 
-def build_gemspec(name, version, summary, platform)
-  Gem::Specification.new do |s|
+def build_gem(name, version, summary = "Gemcutter", platform = "ruby")
+  build_gemspec(new_gemspec(name, version, summary, platform))
+end
+
+def new_gemspec(name, version, summary, platform)
+  gemspec = Gem::Specification.new do |s|
     s.name = "#{name}"
     s.platform = "#{platform}"
     s.version = "#{version}"
-    s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
     s.authors = ["John Doe"]
     s.date = "#{Time.now.strftime('%Y-%m-%d')}"
     s.description = "#{summary}"
@@ -43,4 +52,10 @@ def build_gemspec(name, version, summary, platform)
     s.summary = "#{summary}"
     s.test_files = []
   end
+
+  def gemspec.validate
+    "not validating on purpose"
+  end
+
+  gemspec
 end

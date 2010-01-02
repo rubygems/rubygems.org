@@ -90,7 +90,19 @@ class RubygemTest < ActiveSupport::TestCase
       should "not accept #{bad_name} as a name" do
         @rubygem.name = bad_name
         assert ! @rubygem.valid?
+        assert_match /Name/, @rubygem.all_errors
       end
+    end
+
+    should "return linkset errors in #all_errors" do
+      @specification = gem_specification_from_gem_fixture('test-0.0.0')
+      @specification.homepage = "badurl.com"
+
+      assert_raise ActiveRecord::RecordInvalid do
+        @rubygem.update_linkset!(@specification)
+      end
+
+      assert_match /Home/, @rubygem.all_errors
     end
 
     context "with a user" do

@@ -14,7 +14,6 @@ When /^I push the gem "([^\"]*)" with my api key$/ do |name|
 
   path = File.join(TEST_DIR, name)
   visit api_v1_rubygems_path, :post, File.open(path).read
-  assert_match /Successfully registered/, response.body
 end
 
 When /^I delete the gem "([^\"]*)" with my api key$/ do |arg1|

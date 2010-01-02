@@ -39,3 +39,10 @@ Feature: Push Gems
       Then I should see "BGem"
       And I should see "2.0.0"
       And I should see "3.0.0"
+
+    Scenario: User pushes gem with bad url
+      Given I am signed up and confirmed as "email@person.com/password"
+      And I have an api key for "email@person.com/password"
+      And I have a gem "CGem" with version "1.0.0" and homepage "badurl.com"
+      When I push the gem "CGem-1.0.0.gem" with my api key
+      Then I should see "Home does not appear to be a valid URL"
