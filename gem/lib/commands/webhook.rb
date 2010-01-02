@@ -11,12 +11,11 @@ the command. You can also use this command to test fire a webhook.
   end
 
   def arguments
-    "GEM_NAME       name of gem to register webhook for. " +
-    "Use '*' for all gems. Or, omit to list all webhooks."
+    "GEM_NAME       name of gem to register webhook for, or omit to list hooks."
   end
 
   def usage
-    "#{program_name} GEM_NAME or '*'"
+    "#{program_name} GEM_NAME"
   end
 
   def initialize
@@ -38,6 +37,10 @@ the command. You can also use this command to test fire a webhook.
       options[:url] = value
     end
 
+    add_option('-g', '--global', "Apply hook globally") do |value, options|
+      options[:global] = true
+    end
+
     add_proxy_option
   end
 
@@ -45,7 +48,8 @@ the command. You can also use this command to test fire a webhook.
     setup
 
     if options[:url]
-      send("#{options[:send]}_webhook", get_one_gem_name, options[:url])
+      name = options[:global] ? '*' : get_one_gem_name
+      send("#{options[:send]}_webhook", name, options[:url])
     else
       list_webhooks
     end
