@@ -77,20 +77,42 @@ class WebhookCommandTest < CommandTest
   "all gems":[{"url":"http://allgemshook.com","failure_count":0}]
 }
 EOF
-        @command.handle_options([])
-        @command.execute
       end
 
-      should "list hooks" do
-        assert_received(@command) do |command|
-          command.say("all gems:")
-          command.say("- http://allgemshook.com")
-          command.say("foo:")
-          command.say("- http://foogemhook.com")
-        end
+      should "list all hooks" do
+        @command.handle_options([])
+        @command.execute
+
+        assert_said(@command, "all gems:")
+        assert_said(@command, "- http://allgemshook.com")
+        assert_said(@command, "foo:")
+        assert_said(@command, "- http://foogemhook.com")
+      end
+
+      should "list only specific hooks" do
+        @command.handle_options(['foo'])
+        @command.execute
+
+        assert_said(@command, "foo:")
+        assert_said(@command, "- http://foogemhook.com")
+        assert_never_said(@command, "all gems:")
+        assert_never_said(@command, "- http://allgemshook.com")
+      end
+
+      should "list only global hooks" do
+        @command.handle_options(['-g'])
+        @command.execute
+
+        assert_said(@command, "all gems:")
+        assert_said(@command, "- http://allgemshook.com")
+        assert_never_said(@command, "foo:")
+        assert_never_said(@command, "- http://foogemhook.com")
       end
 
       should "send get to api" do
+        @command.handle_options([])
+        @command.execute
+
         # webmock doesn't pass body params on correctly :[
         assert_requested(:get, @api,
                          :times => 1)
