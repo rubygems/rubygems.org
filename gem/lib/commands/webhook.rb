@@ -86,6 +86,12 @@ the command. You can also use this command to test fire a webhook.
           say "You haven't added any webhooks yet."
         else
           groups.each do |group, hooks|
+            if options[:global]
+              next if group != "all gems"
+            elsif options[:args] && options[:args].first
+              next if group != options[:args].first
+            end
+
             say "#{group}:"
             hooks.each do |hook|
               say "- #{hook['url']}"
