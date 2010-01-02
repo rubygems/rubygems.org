@@ -86,5 +86,38 @@ class UserTest < ActiveSupport::TestCase
         ENV["RUBYFORGE_USER"] = nil
       end
     end
+
+    should "have all gems and specific gems for hooks" do
+      rubygem = Factory(:rubygem)
+      rubygem_hook = Factory(:web_hook,
+                             :user    => @user,
+                             :rubygem => rubygem)
+      global_hook  = Factory(:global_web_hook,
+                             :user    => @user)
+
+      all_hooks = @user.all_hooks
+
+      assert_equal rubygem_hook, all_hooks[rubygem.name].first
+      assert_equal global_hook, all_hooks["all gems"].first
+    end
+
+    should "have all gems for hooks" do
+      global_hook  = Factory(:global_web_hook, :user => @user)
+      all_hooks = @user.all_hooks
+
+      assert_equal global_hook, all_hooks["all gems"].first
+      assert_equal 1, all_hooks.keys.size
+    end
+
+    should "have only specific for hooks" do
+      rubygem = Factory(:rubygem)
+      rubygem_hook = Factory(:web_hook,
+                             :user    => @user,
+                             :rubygem => rubygem)
+      all_hooks = @user.all_hooks
+
+      assert_equal rubygem_hook, all_hooks[rubygem.name].first
+      assert_equal 1, all_hooks.keys.size
+    end
   end
 end

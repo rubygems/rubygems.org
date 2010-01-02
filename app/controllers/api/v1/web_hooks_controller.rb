@@ -6,9 +6,7 @@ class Api::V1::WebHooksController < ApplicationController
   before_filter :find_gem_by_name, :except => :index
 
   def index
-    json = current_user.web_hooks.specific.group_by { |hook| hook.rubygem.name }
-    json["all gems"] = current_user.web_hooks.global
-    render :json => json
+    render :json => current_user.all_hooks
   end
 
   def create
