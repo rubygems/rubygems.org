@@ -96,9 +96,16 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On POST to create for existing gem" do
       setup do
-        rubygem = Factory(:rubygem, :name => "test")
-        rubygem.ownerships.create(:user => @user, :approved => true)
-        rubygem.versions.create(:number => "0.0.0", :updated_at => 1.year.ago, :created_at => 1.year.ago)
+        rubygem = Factory(:rubygem,
+                            :name       => "test")
+        Factory(:ownership, :rubygem    => rubygem,
+                            :user       => @user,
+                            :approved   => true)
+        Factory(:version,   :rubygem    => rubygem,
+                            :number     => "0.0.0",
+                            :updated_at => 1.year.ago,
+                            :created_at => 1.year.ago)
+
         @request.env["RAW_POST_DATA"] = gem_file("test-1.0.0.gem").read
         post :create
       end
@@ -106,8 +113,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should_assign_to(:_current_user) { @user }
       should "register new version" do
         assert_equal @user, Rubygem.last.ownerships.first.user
-        assert_equal 1, Rubygem.last.ownerships.size
-        assert_equal 2, Rubygem.last.versions.size
+        assert_equal 1, Rubygem.last.ownerships.count
+        assert_equal 2, Rubygem.last.versions.count
         assert_equal "Successfully registered gem: test (1.0.0)", @response.body
       end
     end

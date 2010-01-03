@@ -218,10 +218,10 @@ class VersionTest < ActiveSupport::TestCase
   context "with versions created out of order" do
     setup do
       @gem = Factory(:rubygem)
-      Factory.create(:version, :rubygem => @gem, :number => '0.5')
-      Factory.create(:version, :rubygem => @gem, :number => '0.3')
-      Factory.create(:version, :rubygem => @gem, :number => '0.7')
-      Factory.create(:version, :rubygem => @gem, :number => '0.2')
+      Factory(:version, :rubygem => @gem, :number => '0.5')
+      Factory(:version, :rubygem => @gem, :number => '0.3')
+      Factory(:version, :rubygem => @gem, :number => '0.7')
+      Factory(:version, :rubygem => @gem, :number => '0.2')
       @gem.reload # make sure to reload the versions just created
     end
 
@@ -238,10 +238,10 @@ class VersionTest < ActiveSupport::TestCase
     setup do
       @gem_one = Factory(:rubygem)
       @gem_two = Factory(:rubygem)
-      @version_one_latest  = Factory.create(:version, :rubygem => @gem_one, :number => '0.2')
-      @version_one_earlier = Factory.create(:version, :rubygem => @gem_one, :number => '0.1')
-      @version_two_latest  = Factory.create(:version, :rubygem => @gem_two, :number => '1.0')
-      @version_two_earlier = Factory.create(:version, :rubygem => @gem_two, :number => '0.5')
+      @version_one_latest  = Factory(:version, :rubygem => @gem_one, :number => '0.2')
+      @version_one_earlier = Factory(:version, :rubygem => @gem_one, :number => '0.1')
+      @version_two_latest  = Factory(:version, :rubygem => @gem_two, :number => '1.0')
+      @version_two_earlier = Factory(:version, :rubygem => @gem_two, :number => '0.5')
     end
 
     should "be able to fetch the latest versions" do
@@ -255,13 +255,13 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with a few versions" do
     setup do
-      @thin = Factory(:version, :authors => "thin", :created_at => 1.year.ago)
-      @rake = Factory(:version, :authors => "rake", :created_at => 1.month.ago)
-      @json = Factory(:version, :authors => "json", :created_at => 1.week.ago)
-      @thor = Factory(:version, :authors => "thor", :created_at => 2.days.ago)
-      @rack = Factory(:version, :authors => "rack", :created_at => 1.day.ago)
-      @haml = Factory(:version, :authors => "haml", :created_at => 1.hour.ago)
-      @dust = Factory(:version, :authors => "dust", :created_at => 1.day.from_now)
+      @thin = Factory(:version, :authors => %w[thin], :created_at => 1.year.ago)
+      @rake = Factory(:version, :authors => %w[rake], :created_at => 1.month.ago)
+      @json = Factory(:version, :authors => %w[json], :created_at => 1.week.ago)
+      @thor = Factory(:version, :authors => %w[thor], :created_at => 2.days.ago)
+      @rack = Factory(:version, :authors => %w[rack], :created_at => 1.day.ago)
+      @haml = Factory(:version, :authors => %w[haml], :created_at => 1.hour.ago)
+      @dust = Factory(:version, :authors => %w[dust], :created_at => 1.day.from_now)
     end
 
     should "get the latest versions up to today" do
@@ -332,11 +332,21 @@ class VersionTest < ActiveSupport::TestCase
   context "with a Gem::Specification" do
     setup do
       @spec    = gem_specification_from_gem_fixture('test-0.0.0')
-      @version = Factory(:version)
-      @version.update_attributes_from_gem_specification!(@spec)
+      @version = Factory.build(:version)
+    end
+
+    [/foo/, 1337, {:foo => "bar"}].each do |example|
+      should "be invalid with authors as an Array of #{example.class}'s" do
+        assert_raise ActiveRecord::RecordInvalid do
+          @spec.authors = [example]
+          @version.update_attributes_from_gem_specification!(@spec)
+        end
+      end
     end
 
     should "have attributes set properly from the specification" do
+      @version.update_attributes_from_gem_specification!(@spec)
+
       assert ! @version.indexed
       assert_equal @spec.authors.join(', '), @version.authors
       assert_equal @spec.description,        @version.description

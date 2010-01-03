@@ -1,5 +1,5 @@
 Factory.define :version do |version|
-  version.authors           { 'Joe User' }
+  version.authors           { ['Joe User'] }
   version.description       { 'Some awesome gem' }
   version.number            { Factory.next(:version_number) }
   version.built_at          { 1.day.ago }

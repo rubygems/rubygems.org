@@ -31,13 +31,17 @@ class Gemcutter
   def save
     if update
       write_gem
-      @version_id = self.version.id
-      Delayed::Job.enqueue self, PRIORITIES[:push]
-      enqueue_web_hook_jobs
-      notify("Successfully registered gem: #{self.version.to_title}", 200)
+      after_write
+      notify("Successfully registered gem: #{version.to_title}", 200)
     else
-      notify("There was a problem saving your gem: #{rubygem.all_errors}", 403)
+      notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403)
     end
+  end
+
+  def after_write
+    @version_id = version.id
+    Delayed::Job.enqueue self, PRIORITIES[:push]
+    enqueue_web_hook_jobs
   end
 
   def notify(message, code)
@@ -58,7 +62,7 @@ class Gemcutter
 
   def pull_spec
     begin
-      format = Gem::Format.from_io(self.body)
+      format = Gem::Format.from_io(body)
       @spec = format.spec
     rescue Exception => e
       notify("Gemcutter cannot process this gem.\n" + 
@@ -68,7 +72,7 @@ class Gemcutter
   end
 
   def find
-    @rubygem = Rubygem.find_or_initialize_by_name(self.spec.name)
+    @rubygem = Rubygem.find_or_initialize_by_name(spec.name)
     @version = @rubygem.find_or_initialize_version_from_spec(spec)
   end
 
@@ -95,7 +99,7 @@ class Gemcutter
   end
 
   def perform
-    Version.update_all({:indexed => true}, {:id => self.version_id})
+    Version.update_all({:indexed => true}, {:id => version_id})
     update_index
   end
 
@@ -108,7 +112,7 @@ class Gemcutter
   def enqueue_web_hook_jobs
     jobs = rubygem.web_hooks + WebHook.global
     jobs.each do |job|
-      job.fire(@host_with_port, @rubygem, @version)
+      job.fire(@host_with_port, rubygem, version)
     end
   end
 

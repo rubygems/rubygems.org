@@ -26,6 +26,19 @@ Given /^I have a gem "([^\"]*)" with version "([^\"]*)" and homepage "([^\"]*)"$
   build_gemspec(gemspec)
 end
 
+Given /^I have a bad gem "([^\"]*)" with version "([^\"]*)"$/ do |name, version|
+  gemspec = new_gemspec(name, version, "Bad Gem", "ruby")
+  gemspec.name = eval(name)
+  build_gemspec(gemspec)
+end
+
+Given /^I have a gem "([^\"]*)" with version "([^\"]*)" and authors "([^\"]*)"$/ do |name, version, authors|
+  gemspec = new_gemspec(name, version, "Bad Gem", "ruby")
+  gemspec.authors = eval(authors)
+  build_gemspec(gemspec)
+end
+
+
 def build_gemspec(gemspec)
   builder = Gem::Builder.new(gemspec)
   builder.ui = Gem::SilentUI.new
@@ -38,7 +51,7 @@ end
 
 def new_gemspec(name, version, summary, platform)
   gemspec = Gem::Specification.new do |s|
-    s.name = "#{name}"
+    s.name = name
     s.platform = "#{platform}"
     s.version = "#{version}"
     s.authors = ["John Doe"]

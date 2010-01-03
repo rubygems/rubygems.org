@@ -118,7 +118,7 @@ class WebHookTest < ActiveSupport::TestCase
                          :rubygem           => @rubygem,
                          :number            => "3.2.1", 
                          :rubyforge_project => "foogem-rf",
-                         :authors           => "AUTHORS",
+                         :authors           => %w[AUTHORS],
                          :description       => "DESC")
       @hook    = Factory(:web_hook,
                          :rubygem        => @rubygem,

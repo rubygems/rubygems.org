@@ -30,10 +30,20 @@ class Version < ActiveRecord::Base
   after_save  :reorder_versions
   after_save  :full_nameify!
 
-  def validate
-    if new_record? && Version.exists?(:rubygem_id => rubygem_id, :number => number, :platform => platform)
+  def validate_on_create
+    if Version.exists?(:rubygem_id => rubygem_id,
+                       :number     => number,
+                       :platform   => platform)
       errors.add_to_base("A version already exists with this number or platform.")
     end
+
+    if !authors.is_a?(Array) || authors.any? { |a| !a.is_a?(String) }
+      errors.add :authors, "must be an Array of Strings"
+    end
+  end
+
+  def after_validation
+    self.authors = self.authors.join(', ') if self.authors.is_a?(Array)
   end
 
   def self.with_indexed(reverse = false)
@@ -81,7 +91,7 @@ class Version < ActiveRecord::Base
 
   def update_attributes_from_gem_specification!(spec)
     self.update_attributes!(
-      :authors           => spec.authors.join(', '),
+      :authors           => spec.authors,
       :description       => spec.description,
       :summary           => spec.summary,
       :rubyforge_project => spec.rubyforge_project,
