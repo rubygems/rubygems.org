@@ -32,15 +32,19 @@ class Rubygem < ActiveRecord::Base
   }
 
   def validate
-    if name =~ /^[\d]+$/
+    if name.class != String
+      errors.add :name, "must be a String"
+    elsif name =~ /^[\d]+$/
       errors.add :name, "must include at least one letter"
     elsif name =~ /[^\d\w\-\.]/
       errors.add :name, "can only include letters, numbers, dashes, and underscores"
     end
   end
 
-  def all_errors
-    (errors.full_messages + linkset.errors.full_messages).join(", ")
+  def all_errors(version = nil)
+    [self, linkset, version].compact.map do |ar|
+      ar.errors.full_messages
+    end.flatten.join(", ")
   end
 
   def self.total_count

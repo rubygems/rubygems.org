@@ -43,6 +43,25 @@ Feature: Push Gems
     Scenario: User pushes gem with bad url
       Given I am signed up and confirmed as "email@person.com/password"
       And I have an api key for "email@person.com/password"
-      And I have a gem "CGem" with version "1.0.0" and homepage "badurl.com"
-      When I push the gem "CGem-1.0.0.gem" with my api key
+      And I have a gem "badurl" with version "1.0.0" and homepage "badurl.com"
+      When I push the gem "badurl-1.0.0.gem" with my api key
       Then I should see "Home does not appear to be a valid URL"
+
+    Scenario: User pushes gem with bad name
+      Given I am signed up and confirmed as "email@person.com/password"
+      And I have an api key for "email@person.com/password"
+      And I have a bad gem "['badname']" with version "1.0.0"
+      When I push the gem "badname-1.0.0.gem" with my api key
+      Then I should see "Name must be a String"
+
+    Scenario: User pushes gem with bad authors
+      Given I am signed up and confirmed as "email@person.com/password"
+      And I have an api key for "email@person.com/password"
+      And I have a gem "badauthors" with version "1.0.0" and authors "[3, 'Bad']"
+      When I push the gem "badauthors-1.0.0.gem" with my api key
+      Then I should see "Authors must be an Array of Strings"
+
+@wip
+    Scenario: User pushes gem with bad platform
+@wip
+    Scenario: User pushes gem with missing :rubygems_version, :specification_version, :name, :version, :date, :summary, :require_paths
