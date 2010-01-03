@@ -83,11 +83,11 @@ class RubygemTest < ActiveSupport::TestCase
 
   context "with a rubygem" do
     setup do
-      @rubygem = Factory.build(:rubygem)
+      @rubygem = Factory.build(:rubygem, :linkset => nil)
     end
 
-    %w[1337 Snakes!].each do |bad_name|
-      should "not accept #{bad_name} as a name" do
+    ['1337', 'Snakes!', ['zomg']].each do |bad_name|
+      should "not accept #{bad_name.inspect} as a name" do
         @rubygem.name = bad_name
         assert ! @rubygem.valid?
         assert_match /Name/, @rubygem.all_errors
@@ -102,7 +102,32 @@ class RubygemTest < ActiveSupport::TestCase
         @rubygem.update_linkset!(@specification)
       end
 
-      assert_match /Home/, @rubygem.all_errors
+      assert_equal "Home does not appear to be a valid URL", @rubygem.all_errors
+    end
+
+    should "return version errors in #all_errors" do
+      @version = Factory.build(:version)
+      @specification = gem_specification_from_gem_fixture('test-0.0.0')
+      @specification.authors = ["bad", 3, "authors"]
+
+      assert_raise ActiveRecord::RecordInvalid do
+        @rubygem.update_versions!(@version, @specification)
+      end
+
+      assert_equal "Authors must be an Array of Strings", @rubygem.all_errors(@version)
+    end
+
+    should "return more than one error joined for #all_errors" do
+      @specification = gem_specification_from_gem_fixture('test-0.0.0')
+      @specification.homepage = "badurl.com"
+      @rubygem.name = "1337"
+
+      assert ! @rubygem.valid?
+      assert_raise ActiveRecord::RecordInvalid do
+        @rubygem.update_linkset!(@specification)
+      end
+
+      assert_match "Name must include at least one letter, Home does not appear to be a valid URL", @rubygem.all_errors
     end
 
     context "with a user" do
