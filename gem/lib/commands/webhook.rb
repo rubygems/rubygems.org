@@ -2,12 +2,10 @@ class Gem::Commands::WebhookCommand < Gem::AbstractCommand
 
   def description
     <<-EOF
-Register a webhook that will be called any time a gem is updated on Gemcutter.
-
 Webhooks can be created for either specific gems or all gems. In both cases
 you'll get a POST request of the gem in JSON format at the URL you specify in
 the command. You can also use this command to test fire a webhook.
-    EOF
+EOF
   end
 
   def arguments
@@ -15,11 +13,11 @@ the command. You can also use this command to test fire a webhook.
   end
 
   def usage
-    "#{program_name} GEM_NAME"
+    "#{program_name} [GEM_NAME]"
   end
 
   def initialize
-    super 'webhook', description
+    super 'webhook', "Register a webhook that will be called any time a gem is updated on Gemcutter."
     option_text = "The URL of the webhook to"
 
     add_option('-a', '--add URL', "#{option_text} add") do |value, options|
