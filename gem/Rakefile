@@ -13,6 +13,7 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "gemcutter"
+    gem.version = "0.3.0.pre"
     gem.summary = "Commands to interact with gemcutter.org"
     gem.description = "Adds several commands to RubyGems for managing gems and more on Gemcutter.org."
     gem.email = "nick@quaran.to"
@@ -22,7 +23,10 @@ begin
                          "lib/commands/*",
                          "test/*_helper.rb",
                          "test/*_test.rb",
+                         "MIT-LICENSE",
                          "Rakefile"]
+    gem.test_files = []
+    gem.executables = []
     gem.add_runtime_dependency('json_pure')
     %w[rake shoulda activesupport webmock rr].each do |dep|
       gem.add_development_dependency(dep)
