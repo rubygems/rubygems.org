@@ -36,7 +36,6 @@ class WebHookTest < ActiveSupport::TestCase
       @url     = "http://example.org"
       @user    = Factory(:email_confirmed_user)
       @webhook = Factory(:global_web_hook, :user    => @user,
-                                           :rubygem => @rubygem,
                                            :url     => @url)
     end
 
@@ -104,6 +103,12 @@ class WebHookTest < ActiveSupport::TestCase
       other_user = Factory(:user)
       webhook = WebHook.new(:user    => other_user,
                             :rubygem => @rubygem,
+                            :url     => @url)
+      assert_valid webhook
+    end
+
+    should "be able to create a global webhook under this user and url" do
+      webhook = WebHook.new(:user    => @user,
                             :url     => @url)
       assert_valid webhook
     end
