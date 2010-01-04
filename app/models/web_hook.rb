@@ -12,7 +12,7 @@ class WebHook < ActiveRecord::Base
   validates_url_format_of :url
 
   def validate_on_create
-    if user && rubygem 
+    if user && rubygem
       if WebHook.exists?(:user_id    => user.id,
                          :rubygem_id => rubygem.id,
                          :url        => url)
@@ -20,6 +20,7 @@ class WebHook < ActiveRecord::Base
       end
     elsif user
       if WebHook.exists?(:user_id    => user.id,
+                         :rubygem_id => nil,
                          :url        => url)
         errors.add_to_base("A global hook for #{url} has already been registered")
       end
