@@ -35,19 +35,13 @@ class Api::V1::WebHooksController < ApplicationController
   end
 
   def fire
-    webhook = current_user.web_hooks.find_by_rubygem_id(@rubygem.try(:id))
+    webhook = WebHook.new(:url => params[:url])
+    @rubygem = Rubygem.find_by_name("gemcutter") unless @rubygem
 
-    if webhook
-      @rubygem = Rubygem.find_by_name("gemcutter") unless @rubygem
-      webhook.fire(request.host_with_port,
-                   @rubygem,
-                   @rubygem.versions.latest,
-                   false)
-      render :text => webhook.deployed_message
-    else
-      render :text   => "No such webhook exists under your account.",
-             :status => :not_found
-    end
+    webhook.fire(request.host_with_port,
+                 @rubygem,
+                 @rubygem.versions.latest)
+    render :text => webhook.deployed_message
   end
 
   protected
