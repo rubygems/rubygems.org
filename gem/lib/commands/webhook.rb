@@ -4,7 +4,7 @@ class Gem::Commands::WebhookCommand < Gem::AbstractCommand
     <<-EOF
 Webhooks can be created for either specific gems or all gems. In both cases
 you'll get a POST request of the gem in JSON format at the URL you specify in
-the command. You can also use this command to test fire a webhook.
+the command. You can also use this command to test fire a webhook for any gem.
 EOF
   end
 
