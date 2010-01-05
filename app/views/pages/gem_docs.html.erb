@@ -40,6 +40,39 @@ Owners for gem: gemcutter
 - nick@quaran.to</code></pre>
 </p>
 
+<h4 id="webhook">gem webhook</h4>
+<p>
+Register a webhook that will be called any time a gem is updated on Gemcutter. Webhooks can be created for either specific gems or all gems. In both cases you'll get a POST request of the gem in JSON format at the URL you specify in the command. You can also use this command to test fire a webhook for any gem. The JSON hash posted is the <%= link_to "API", page_url("api_docs") %> representation of the gem.
+<pre><code>$ gem webhook rails --add http://example.com
+Successfully created webhook for rails to http://example.com
+
+$ gem webhook --global --add http://something.net
+Adding webhook...
+Successfully created webhook for all gems to http://something.net
+
+$ gem webhook
+rails:
+- http://example.com
+all gems:
+- http://something.net
+
+$ gem webhook -g
+all gems:
+- http://something.net
+
+$ gem webhook rails
+rails:
+- http://example.com
+
+$ gem webhook rails --remove http://example.com
+Removing webhook...
+Successfully removed webhook for rails to http://example.com
+
+$ gem webhook rack --fire http://example.com
+Test firing webhook...
+Successfully deployed webhook for rack to http://example.com</code></pre>
+</p>
+
 <h4 id="tumble">gem tumble</h4>
 <p>
 This command has been deprecated since <%= link_to "Gemcutter is now the official gem source.", "http://update.gemcutter.org/2009/10/26/transition.html" %>
