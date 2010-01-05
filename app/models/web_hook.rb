@@ -57,6 +57,10 @@ class WebHook < ActiveRecord::Base
     "Successfully deployed webhook for #{what} to #{url}"
   end
 
+  def failed_message
+    "There was a problem deploying webhook for #{what} to #{url}"
+  end
+
   def what
     global? ? "all gems" : rubygem.name
   end
@@ -70,8 +74,10 @@ class WebHook < ActiveRecord::Base
 
   def perform
     RestClient.post url, payload, 'Content-Type' => 'application/json'
+    true
   rescue *(HTTP_ERRORS + [RestClient::Exception, SocketError]) => e
-    increment! :failure_count
+    increment! :failure_count unless new_record?
+    false
   end
 
   def to_json(options = {})

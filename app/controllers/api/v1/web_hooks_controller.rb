@@ -38,11 +38,14 @@ class Api::V1::WebHooksController < ApplicationController
     webhook = current_user.web_hooks.new(:url => @url)
     @rubygem = Rubygem.find_by_name("gemcutter") unless @rubygem
 
-    webhook.fire(request.host_with_port,
-                 @rubygem,
-                 @rubygem.versions.latest,
-                 false)
-    render :text => webhook.deployed_message
+    if webhook.fire(request.host_with_port,
+                    @rubygem,
+                    @rubygem.versions.latest,
+                    false)
+      render :text => webhook.deployed_message
+    else
+      render :text => webhook.failed_message, :status => :bad_request
+    end
   end
 
   protected

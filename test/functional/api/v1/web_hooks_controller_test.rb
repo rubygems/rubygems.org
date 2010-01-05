@@ -20,6 +20,39 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
       @request.env["Authorization"] = @user.api_key
     end
 
+    context "with the gemcutter gem" do
+      setup do
+        @gemcutter = Factory(:rubygem, :name => "gemcutter")
+        Factory(:version, :rubygem => @gemcutter)
+      end
+
+      context "On POST to fire for all gems" do
+        setup do
+          stub_request(:post, @url)
+          post :fire, :gem_name => WebHook::GLOBAL_PATTERN,
+                      :url      => @url
+        end
+        should_respond_with :success
+        should_not_change("the webhook count") { WebHook.count }
+        should "say successfully deployed" do
+          assert_contain "Successfully deployed webhook for #{@gemcutter.name} to #{@url}"
+        end
+      end
+
+      context "On POST to fire for all gems that fails" do
+        setup do
+          stub_request(:post, @url).to_return(:status => 500)
+          post :fire, :gem_name => WebHook::GLOBAL_PATTERN,
+                      :url      => @url
+        end
+        should_respond_with :bad_request
+        should_not_change("the webhook count") { WebHook.count }
+        should "say successfully deployed" do
+          assert_contain "There was a problem deploying webhook for #{@gemcutter.name} to #{@url}"
+        end
+      end
+    end
+
     context "with a rubygem" do
       setup do
         @rubygem = Factory(:rubygem)
@@ -39,18 +72,16 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         end
       end
 
-      context "On POST to fire for all gems" do
+      context "On POST to fire for a specific gem that fails" do
         setup do
-          stub_request(:post, @url)
-          @gemcutter = Factory(:rubygem, :name => "gemcutter")
-          Factory(:version, :rubygem => @gemcutter)
-          post :fire, :gem_name => WebHook::GLOBAL_PATTERN,
+          stub_request(:post, @url).to_return(:status => 500)
+          post :fire, :gem_name => @rubygem.name,
                       :url      => @url
         end
-        should_respond_with :success
+        should_respond_with :bad_request
         should_not_change("the webhook count") { WebHook.count }
-        should "say successfully deployed" do
-          assert_contain "Successfully deployed webhook for #{@gemcutter.name} to #{@url}"
+        should "say there was a problem" do
+          assert_contain "There was a problem deploying webhook for #{@rubygem.name} to #{@url}"
         end
       end
 
