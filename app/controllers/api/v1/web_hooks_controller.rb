@@ -35,7 +35,7 @@ class Api::V1::WebHooksController < ApplicationController
   end
 
   def fire
-    webhook = WebHook.new(:url => params[:url])
+    webhook = current_user.web_hooks.new(:url => @url)
     @rubygem = Rubygem.find_by_name("gemcutter") unless @rubygem
 
     webhook.fire(request.host_with_port,
