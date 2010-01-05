@@ -50,14 +50,20 @@ When /^I have removed the global webhook for "([^\"]*)"$/ do |web_hook_url|
         :url      => web_hook_url
 end
 
-When /^I have fired hooks for the "([^\"]*)" gem with my api key$/ do |gem_name|
+When /^I have fired a webhook to "([^\"]*)" for the "([^\"]*)" gem with my api key$/ do |web_hook_url, gem_name|
   api_key_header
-  visit fire_api_v1_web_hooks_path, :post, :gem_name => gem_name
+  visit fire_api_v1_web_hooks_path,
+        :post,
+        :gem_name => gem_name,
+        :url      => web_hook_url
 end
 
-When /^I have fired global hooks with my api key$/ do
+When /^I have fired a webhook to "([^\"]*)" for all gems with my api key$/ do |web_hook_url|
   api_key_header
-  visit fire_api_v1_web_hooks_path, :post, :gem_name => WebHook::GLOBAL_PATTERN
+  visit fire_api_v1_web_hooks_path,
+        :post,
+        :gem_name => WebHook::GLOBAL_PATTERN,
+        :url      => web_hook_url
 end
 
 Then /^the webhook "([^\"]*)" should not receive a POST$/ do |web_hook_url|
