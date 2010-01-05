@@ -81,7 +81,6 @@ Feature: Web Hooks
     And I have an api key for "email@person.com/password"
     And I have added a webhook for "http://example.org/webhook" to gem "vodka" with my api key
     When I have fired a webhook to "http://example.org/webhook" for the "vodka" gem with my api key
-    And the system processes jobs
     Then the webhook "http://example.org/webhook" should receive a POST with gem "vodka" at version "1.2.3"
 
   Scenario: User test fires global hook
@@ -90,5 +89,4 @@ Feature: Web Hooks
     And I have an api key for "email@person.com/password"
     And I have added a global webhook for "http://example.org/webhook" with my api key
     When I have fired a webhook to "http://example.org/webhook" for all gems with my api key
-    And the system processes jobs
     Then the webhook "http://example.org/webhook" should receive a POST with gem "gemcutter" at version "1.0.0"
