@@ -31,8 +31,8 @@ class PushCommandTest < CommandTest
         stub(@command).options { {:args => [@gem_path]} }
         stub(Gem).read_binary(@gem_path) { @gem_binary }
         stub_config({ :rubygems_api_key => "key" })
-        WebMock.stub_request(:post, @url).to_return(:body => "Success!")
-      
+        stub_request(:post, @url).to_return(:body => "Success!")
+
         @command.send_gem
       end
 
@@ -43,14 +43,14 @@ class PushCommandTest < CommandTest
 
       should "post to api" do
         # webmock doesn't pass body params on correctly :[
-        WebMock.assert_requested(:post, @url, 
-                                 :times => 1)
-        WebMock.assert_requested(:post, @url,
-                                 :headers => { 'Authorization' => 'key' })
-        WebMock.assert_requested(:post, @url,
-                                 :headers => { 'Content-Length' => @gem_binary.size })
-        WebMock.assert_requested(:post, @url,
-                                 :headers => { 'Content-Type' => 'application/octet-stream' })
+        assert_requested(:post, @url,
+                         :times => 1)
+        assert_requested(:post, @url,
+                         :headers => {'Authorization' => 'key' })
+        assert_requested(:post, @url,
+                         :headers => {'Content-Length' => @gem_binary.size})
+        assert_requested(:post, @url,
+                         :headers => {'Content-Type' => 'application/octet-stream'})
       end
     end
   end
