@@ -26,6 +26,34 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         Factory(:version, :rubygem => @rubygem)
       end
 
+      context "On POST to fire for a specific gem" do
+        setup do
+          stub_request(:post, @url)
+          post :fire, :gem_name => @rubygem.name,
+                      :url      => @url
+        end
+        should_respond_with :success
+        should_not_change("the webhook count") { WebHook.count }
+        should "say successfully deployed" do
+          assert_contain "Successfully deployed webhook for #{@rubygem.name} to #{@url}"
+        end
+      end
+
+      context "On POST to fire for all gems" do
+        setup do
+          stub_request(:post, @url)
+          @gemcutter = Factory(:rubygem, :name => "gemcutter")
+          Factory(:version, :rubygem => @gemcutter)
+          post :fire, :gem_name => WebHook::GLOBAL_PATTERN,
+                      :url      => @url
+        end
+        should_respond_with :success
+        should_not_change("the webhook count") { WebHook.count }
+        should "say successfully deployed" do
+          assert_contain "Successfully deployed webhook for #{@gemcutter.name} to #{@url}"
+        end
+      end
+
       context "with some owned hooks" do
         setup do
           @rubygem_hook = Factory(:web_hook,
