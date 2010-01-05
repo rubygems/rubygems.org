@@ -148,7 +148,6 @@ EOF
       should "dump out with error message" do
         assert_received(@command) do |command|
           command.say("There was a problem parsing the data:")
-          command.say(/unexpected token at 'fubar'/)
         end
       end
 
