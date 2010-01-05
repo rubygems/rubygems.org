@@ -40,7 +40,8 @@ class Api::V1::WebHooksController < ApplicationController
 
     webhook.fire(request.host_with_port,
                  @rubygem,
-                 @rubygem.versions.latest)
+                 @rubygem.versions.latest,
+                 false)
     render :text => webhook.deployed_message
   end
 

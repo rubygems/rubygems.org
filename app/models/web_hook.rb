@@ -29,12 +29,16 @@ class WebHook < ActiveRecord::Base
     end
   end
 
-  def fire(host_with_port, rubygem, version)
+  def fire(host_with_port, rubygem, version, delayed = true)
     self.host_with_port = host_with_port
     self.rubygem = rubygem
     self.version = version
 
-    Delayed::Job.enqueue self, PRIORITIES[:web_hook]
+    if delayed
+      Delayed::Job.enqueue self, PRIORITIES[:web_hook]
+    else
+      perform
+    end
   end
 
   def global?
