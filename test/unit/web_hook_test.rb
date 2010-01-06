@@ -126,7 +126,7 @@ class WebHookTest < ActiveSupport::TestCase
                          :authors           => %w[AUTHORS],
                          :description       => "DESC")
       @hook    = Factory(:web_hook,
-                         :rubygem        => @rubygem,
+                         :deploy_gem     => @rubygem,
                          :host_with_port => 'localhost:1234',
                          :version        => @version)
     end
@@ -146,11 +146,11 @@ class WebHookTest < ActiveSupport::TestCase
     should "send the right version out even for older gems" do
       new_version = Factory(:version, :number => "2.0.0", :rubygem => @rubygem)
       new_hook    = Factory(:web_hook,
-                            :rubygem        => @rubygem,
+                            :deploy_gem     => @rubygem,
                             :host_with_port => 'localhost:1234',
                             :version        => new_version)
       payload = ActiveSupport::JSON.decode(new_hook.payload)
-      
+
       assert_equal "foogem", payload['name']
       assert_equal "2.0.0",  payload['version']
       assert_equal "http://localhost:1234/gems/foogem", payload['project_uri']
@@ -165,20 +165,19 @@ class WebHookTest < ActiveSupport::TestCase
       @version = Factory(:version, :rubygem => @rubygem)
       @hook    = Factory(:web_hook,
                          :rubygem => @rubygem,
-                         :url     => @url,
-                         :version => @version)
-      WebMock.stub_request(:post, @url)
-      @hook.perform
+                         :url     => @url)
+      stub_request(:post, @url)
+
+      @hook.fire('gemcutter.org', @rubygem, @version, false)
     end
 
     should "POST to URL with payload" do
-      # Three assertions are used to more easily determine where failure occurs
-      WebMock.assert_requested(:post, @url, 
-                               :times => 1)
-      WebMock.assert_requested(:post, @url, 
-                               :body => @hook.payload)
-      WebMock.assert_requested(:post, @url, 
-                               :headers => { 'Content-Type' => 'application/json' })
+      assert_requested(:post, @url,
+                       :times => 1)
+      assert_requested(:post, @url,
+                       :body => @hook.payload)
+      assert_requested(:post, @url,
+                       :headers => { 'Content-Type' => 'application/json' })
     end
 
     should "not increment failure count for hook" do
@@ -192,13 +191,10 @@ class WebHookTest < ActiveSupport::TestCase
       @user    = Factory(:email_confirmed_user)
       @rubygem = Factory(:rubygem)
       @version = Factory(:version, :rubygem => @rubygem)
-      @hook    = Factory(:web_hook, :url     => @url,
-                                    :rubygem => @rubygem,
-                                    :user    => @user,
-                                    :version => @version)
-      @hook.host_with_port = 'example.org'
+      @hook    = Factory(:global_web_hook, :url     => @url,
+                                           :user    => @user)
     end
-    
+
     should "increment failure count for hook on errors" do
       [SocketError,
        Timeout::Error,
@@ -208,9 +204,12 @@ class WebHookTest < ActiveSupport::TestCase
        Net::HTTPBadResponse,
        Net::HTTPHeaderSyntaxError,
        Net::ProtocolError].each_with_index do |exception, index|
-        WebMock.stub_request(:post, @url).to_raise(exception)
-        @hook.perform
+        stub_request(:post, @url).to_raise(exception)
+
+        @hook.fire('gemcutter.org', @rubygem, @version, false)
+
         assert_equal index + 1, @hook.failure_count
+        assert @hook.global?
       end
     end
   end
