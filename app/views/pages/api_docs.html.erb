@@ -14,7 +14,7 @@ The API is a work in progress, and <%= link_to "can use your help!", "http://git
 
 <h4 id="gem">Gem Methods</h4>
 
-<h5>GET - /api/v1/gems/[name].json</h5>
+<h5 class="api">GET - /api/v1/gems/[name].json</h5>
 <p>
   Returns some basic information about the given gem. For example, here's Rails:
   <pre><code>$ curl http://gemcutter.org/api/v1/gems/rails.json
@@ -32,7 +32,7 @@ The API is a work in progress, and <%= link_to "can use your help!", "http://git
 }</code></pre>
 </p>
 
-<h5>POST - /api/v1/gems</h5>
+<h5 class="api">POST - /api/v1/gems</h5>
 <p>
   Submit a gem to Gemcutter. Must have your API key supplied and give a built RubyGem in the body of the request.
 <pre><code>$ curl --data-binary @gemcutter-0.2.1.gem \
@@ -44,7 +44,7 @@ Successfully registered gem: gemcutter (0.2.1)</code></pre>
 
 <h4 id="owner">Owner Methods</h4>
 
-<h5>GET - /api/v1/gems/[rubygem name]/owners.json</h5>
+<h5 class="api">GET - /api/v1/gems/[rubygem name]/owners.json</h5>
 <p>
   View all owners of a gem that you own. These users can all push to this gem.
 <pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
@@ -61,7 +61,7 @@ Successfully registered gem: gemcutter (0.2.1)</code></pre>
 </code></pre>
 </p>
 
-<h5>POST - /api/v1/gems/[rubygem name]/owners</h5>
+<h5 class="api">POST - /api/v1/gems/[rubygem name]/owners</h5>
 <p>
   Add an owner to a RubyGem you own, giving that user permission to manage it.
 <pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
@@ -72,7 +72,7 @@ Owner added successfully.
 </code></pre>
 </p>
 
-<h5>DELETE - /api/v1/gems/[rubygem name]/owners</h5>
+<h5 class="api">DELETE - /api/v1/gems/[rubygem name]/owners</h5>
 <p>
   Remove a user's permission to manage a RubyGem you own.
 <pre><code>$ curl -X DELETE -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
@@ -85,7 +85,7 @@ Owner removed successfully.
 
 <h4 id="webhook">WebHook Methods</h4>
 
-<h5>GET - /api/v1/web_hooks.json</h5>
+<h5 class="api">GET - /api/v1/web_hooks.json</h5>
 <p>
   List the webhooks registered under your account.
 <pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
@@ -108,7 +108,7 @@ Owner removed successfully.
 </code></pre>
 </p>
 
-<h5>POST - /api/v1/web_hooks</h5>
+<h5 class="api">POST - /api/v1/web_hooks</h5>
 <p>
   Create a webhook. Requires two parameters: <code>gem_name</code> and <code>url</code>. Specify <code>*</code> for the <code>gem_name</code> parameter to apply the hook globally to all gems.
 <pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
@@ -124,7 +124,7 @@ $ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
 Successfully created webhook for all gems to http://example.com</code></pre>
 </p>
 
-<h5>DELETE - /api/v1/web_hooks/remove</h5>
+<h5 class="api">DELETE - /api/v1/web_hooks/remove</h5>
 <p>
   Remove a webhook. Requires two parameters: <code>gem_name</code> and <code>url</code>. Specify <code>*</code> for the <code>gem_name</code> parameter to apply the hook globally to all gems.
 <pre><code>$ curl -X DELETE -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
@@ -140,7 +140,7 @@ $ curl -X DELETE -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
 Successfully removed webhook for all gems to http://example.com</code></pre>
 </p>
 
-<h5>POST - /api/v1/web_hooks/fire</h5>
+<h5 class="api">POST - /api/v1/web_hooks/fire</h5>
 <p>
 Test fire a webhook. This can be used to test out an endpoint at any time, for example when you're developing your application. Requires two parameters: <code>gem_name</code> and <code>url</code>. Specify <code>*</code> for the <code>gem_name</code> parameter to apply the hook globally to all gems.
 <pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
@@ -158,7 +158,7 @@ Successfully deployed webhook for all gems to http://example.com</code></pre>
 
 <h4 id="misc">Misc Methods</h4>
 
-<h5>GET - /api/v1/api_key</h5>
+<h5 class="api">GET - /api/v1/api_key</h5>
 <p>
   Retrieve your API key using HTTP basic auth.
 <pre><code>$ curl -u "nick@gemcutter.org:schwwwwing" \
