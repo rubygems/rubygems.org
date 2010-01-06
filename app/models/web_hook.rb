@@ -7,7 +7,7 @@ class WebHook < ActiveRecord::Base
 
   GLOBAL_PATTERN = '*'
 
-  attr_accessor :host_with_port, :version
+  attr_accessor :host_with_port, :version, :deploy_gem
 
   validates_url_format_of :url
 
@@ -29,10 +29,10 @@ class WebHook < ActiveRecord::Base
     end
   end
 
-  def fire(host_with_port, rubygem, version, delayed = true)
+  def fire(host_with_port, deploy_gem, version, delayed = true)
     self.host_with_port = host_with_port
-    self.rubygem = rubygem
-    self.version = version
+    self.deploy_gem     = deploy_gem
+    self.version        = version
 
     if delayed
       Delayed::Job.enqueue self, PRIORITIES[:web_hook]
@@ -62,12 +62,18 @@ class WebHook < ActiveRecord::Base
   end
 
   def what
-    global? ? "all gems" : rubygem.name
+    if deploy_gem
+      deploy_gem.name
+    elsif rubygem
+      rubygem.name
+    else
+      "all gems"
+    end
   end
 
   def payload
-    rubygem.payload(version).merge({
-      'project_uri' => "http://#{host_with_port}/gems/#{rubygem.name}",
+    deploy_gem.payload(version).merge({
+      'project_uri' => "http://#{host_with_port}/gems/#{deploy_gem.name}",
       'gem_uri'     => "http://#{host_with_port}/gems/#{version.full_name}.gem"
     }).to_json
   end
