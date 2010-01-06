@@ -4,7 +4,6 @@ Factory.define :version do |version|
   version.number            { Factory.next(:version_number) }
   version.built_at          { 1.day.ago }
   version.platform          { "ruby" }
-  version.rubyforge_project { 'awesome' }
   version.association       :rubygem
 end
 

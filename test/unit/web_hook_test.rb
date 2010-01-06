@@ -121,8 +121,7 @@ class WebHookTest < ActiveSupport::TestCase
                          :downloads => 42)
       @version = Factory(:version, 
                          :rubygem           => @rubygem,
-                         :number            => "3.2.1", 
-                         :rubyforge_project => "foogem-rf",
+                         :number            => "3.2.1",
                          :authors           => %w[AUTHORS],
                          :description       => "DESC")
       @hook    = Factory(:web_hook,
@@ -135,7 +134,6 @@ class WebHookTest < ActiveSupport::TestCase
       payload = ActiveSupport::JSON.decode(@hook.payload)
       assert_equal "foogem",    payload['name']
       assert_equal "3.2.1",     payload['version']
-      assert_equal "foogem-rf", payload["rubyforge_project"]
       assert_equal "DESC",      payload["info"]
       assert_equal "AUTHORS",   payload["authors"]
       assert_equal 42,          payload["downloads"]

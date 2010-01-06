@@ -226,7 +226,6 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal @rubygem.versions.latest.number, hash["version"]
       assert_equal @rubygem.versions.latest.authors, hash["authors"]
       assert_equal @rubygem.versions.latest.info, hash["info"]
-      assert_equal @rubygem.versions.latest.rubyforge_project, hash["rubyforge_project"]
     end
   end
 
@@ -255,28 +254,6 @@ class RubygemTest < ActiveSupport::TestCase
     should "be hosted or not" do
       assert ! @rubygem_without_version.hosted?
       assert @rubygem_with_version.hosted?
-    end
-
-    should "return a nil rubyforge project without any versions" do
-      assert_nil @rubygem_without_version.rubyforge_project
-    end
-
-    should "return the current rubyforge project with a version" do
-      assert_equal @rubygem_with_version.versions.latest.rubyforge_project,
-                   @rubygem_with_version.rubyforge_project
-    end
-  end
-
-  context "with a rubygem that has a version with a nil rubyforge_project" do
-    setup do
-      @rubygem = Factory(:rubygem)
-      @rubyforge_project = 'test_project'
-      Factory(:version, :rubygem => @rubygem, :rubyforge_project => nil)
-      Factory(:version, :rubygem => @rubygem, :rubyforge_project => @rubyforge_project)
-    end
-
-    should "return the first non-nil rubyforge_project" do
-      assert_equal @rubyforge_project, @rubygem.rubyforge_project
     end
   end
 
