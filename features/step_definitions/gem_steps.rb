@@ -10,11 +10,6 @@ Given /^I have a gem "([^\"]*)" with version "([^\"]*)" and platform "([^\"]*)"$
   build_gem(name, version, "Gemcutter", platform)
 end
 
-Given /^a rubygem exists with name "([^\"]*)" and rubyforge project "([^\"]*)"$/ do |name, rubyforge_project|
-  rubygem = Factory(:rubygem, :name => name)
-  Factory(:version, :rubygem => rubygem, :rubyforge_project => rubyforge_project)
-end
-
 Given /^a rubygem exists with name "([^\"]*)" and version "([^\"]*)"$/ do |name, version_number|
   rubygem = Factory(:rubygem, :name => name)
   Factory(:version, :rubygem => rubygem, :number => version_number)

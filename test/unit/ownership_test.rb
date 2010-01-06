@@ -15,48 +15,11 @@ class OwnershipTest < ActiveSupport::TestCase
     setup do
       @ownership = Factory(:ownership)
       Factory(:version, :rubygem => @ownership.rubygem)
-      name = @ownership.rubygem.name
-      subdomain = @ownership.rubygem.rubyforge_project
-      @url = "http://#{subdomain}.rubyforge.org/migrate-#{name}.html"
     end
 
     subject { @ownership }
 
     should_validate_uniqueness_of :user_id, :scoped_to => :rubygem_id
-
-    should "not blow up if checking for upload dies" do
-      WebMock.stub_request(:get, @url).
-        to_return(:body   => "Nothing to be found 'round here", 
-                  :status => 404)
-      assert ! @ownership.migrated?
-      assert ! @ownership.approved
-    end
-
-    should "approve upload" do
-      WebMock.stub_request(:get, @url).to_return(:body => @ownership.token)
-
-      assert @ownership.migrated?
-      assert @ownership.approved
-    end
-
-    should "use gem name if rubyforge project doesn't exist" do
-      @ownership.rubygem.versions.latest.update_attribute(:rubyforge_project, nil)
-
-      gem_name = @ownership.rubygem.name
-      WebMock.stub_request(:get, "http://#{gem_name}.rubyforge.org/migrate-#{gem_name}.html").
-        to_return(:body => @ownership.token + "\n")
-
-      assert @ownership.migrated?
-      assert @ownership.approved
-    end
-
-    should "approve upload if token ends with a newline" do
-      WebMock.stub_request(:get, @url).to_return(:body => @ownership.token + "\n")
-
-      assert @ownership.migrated?
-      assert @ownership.approved
-    end
-
 
     should "delete other ownerships once approved" do
       rubygem = @ownership.rubygem

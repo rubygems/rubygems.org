@@ -63,10 +63,6 @@ class Rubygem < ActiveRecord::Base
     !versions.count.zero?
   end
 
-  def rubyforge_project
-    versions.find(:first, :conditions => "rubyforge_project is not null").try(:rubyforge_project)
-  end
-
   def unowned?
     ownerships.find_by_approved(true).blank?
   end
@@ -85,8 +81,7 @@ class Rubygem < ActiveRecord::Base
       :downloads         => downloads,
       :version           => version.number,
       :authors           => version.authors,
-      :info              => version.info,
-      :rubyforge_project => rubyforge_project
+      :info              => version.info
     }
   end
 

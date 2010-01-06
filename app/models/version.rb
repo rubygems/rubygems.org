@@ -94,7 +94,6 @@ class Version < ActiveRecord::Base
       :authors           => spec.authors,
       :description       => spec.description,
       :summary           => spec.summary,
-      :rubyforge_project => spec.rubyforge_project,
       :built_at          => spec.date,
       :indexed           => false
     )
