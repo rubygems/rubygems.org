@@ -75,13 +75,15 @@ class Rubygem < ActiveRecord::Base
     versions.latest.try(:to_title) || name
   end
 
-  def payload(version = versions.latest)
+  def payload(version = versions.latest, host_with_port = HOST)
     {
-      :name              => name,
-      :downloads         => downloads,
-      :version           => version.number,
-      :authors           => version.authors,
-      :info              => version.info
+      :name         => name,
+      :downloads    => downloads,
+      :version      => version.number,
+      :authors      => version.authors,
+      :info         => version.info,
+      'project_uri' => "http://#{host_with_port}/gems/#{name}",
+      'gem_uri'     => "http://#{host_with_port}/gems/#{version.full_name}.gem"
     }
   end
 
