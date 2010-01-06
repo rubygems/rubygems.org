@@ -72,10 +72,7 @@ class WebHook < ActiveRecord::Base
   end
 
   def payload
-    deploy_gem.payload(version).merge({
-      'project_uri' => "http://#{host_with_port}/gems/#{deploy_gem.name}",
-      'gem_uri'     => "http://#{host_with_port}/gems/#{version.full_name}.gem"
-    }).to_json
+    deploy_gem.payload(version, host_with_port).to_json
   end
 
   def perform

@@ -226,6 +226,8 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal @rubygem.versions.latest.number, hash["version"]
       assert_equal @rubygem.versions.latest.authors, hash["authors"]
       assert_equal @rubygem.versions.latest.info, hash["info"]
+      assert_equal "http://#{HOST}/gems/#{@rubygem.name}", hash["project_uri"]
+      assert_equal "http://#{HOST}/gems/#{@rubygem.versions.latest.full_name}.gem", hash["gem_uri"]
     end
   end
 
