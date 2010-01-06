@@ -8,19 +8,6 @@ class Ownership < ActiveRecord::Base
   after_update :remove_unapproveds
   before_destroy :keep_last_owner
 
-  def migrated?
-    begin
-      url = "http://#{rubygem.rubyforge_project || rubygem.name}.rubyforge.org/migrate-#{rubygem.name}.html"
-      upload = open(url)
-      if upload.string.strip == token
-        update_attribute(:approved, true)
-      end
-    rescue *HTTP_ERRORS => ex
-      logger.info "Problem when opening #{url}: #{ex}"
-      false
-    end
-  end
-
   protected
 
     def generate_token
