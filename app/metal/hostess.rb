@@ -10,7 +10,7 @@ class Hostess < Sinatra::Default
       send_file(Gemcutter.server_path(request.path_info))
     else
       if redirect
-        redirect VaultObject.url_for(request.path_info, :authenticated => false)
+        redirect VaultObject.distribution_for(request.path_info)
       else
         serve_via_s3
       end
