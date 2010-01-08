@@ -54,6 +54,7 @@ class HostessTest < ActiveSupport::TestCase
     get file
     Delayed::Job.work_off
 
+    assert_equal "http://test.cf.rubygems.org/gems/test-0.0.0.gem", last_response.headers["Location"]
     assert_equal 302, last_response.status
     assert_equal download_count + 1, Download.count
     assert_equal 1, rubygem.reload.downloads
@@ -61,18 +62,18 @@ class HostessTest < ActiveSupport::TestCase
   end
 
   should "serve up gem locally" do
-    Hostess.local = false
+    Hostess.local = true
     download_count = Download.count
     file = "/gems/test-0.0.0.gem"
     FileUtils.cp gem_file.path, Gemcutter.server_path("gems")
-    
+
     rubygem = Factory(:rubygem, :name => "test")
     version = Factory(:version, :rubygem => rubygem, :number => "0.0.0")
 
     get file
     Delayed::Job.work_off
 
-    assert_equal 302, last_response.status
+    assert_equal 200, last_response.status
     assert_equal download_count + 1, Download.count
     assert_equal 1, rubygem.reload.downloads
     assert_equal 1, version.reload.downloads_count

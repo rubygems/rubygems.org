@@ -1,5 +1,3 @@
-require 'smtp-tls'
-
 ActionMailer::Base.smtp_settings = {
   :address => "smtp.gmail.com",
   :port => "587",
@@ -8,3 +6,5 @@ ActionMailer::Base.smtp_settings = {
   :user_name => ENV['MAIL_USERNAME'],
   :password => ENV['MAIL_PASSWORD']
 }
+
+DO_NOT_REPLY = "donotreply@gemcutter.org"
