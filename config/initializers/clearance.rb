@@ -3,4 +3,4 @@ require 'clearance/passwords_controller'
 require 'clearance/sessions_controller'
 require 'clearance/users_controller'
 
-ClearanceMailer::DO_NOT_REPLY = "donotreply@gemcutter.org
+ClearanceMailer::DO_NOT_REPLY = "donotreply@gemcutter.org"
