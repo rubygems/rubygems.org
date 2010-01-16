@@ -37,7 +37,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "have a 32 character hexadecimal api key" do
-      assert @user.api_key =~ /[a-z0-9]{32}/
+      assert @user.api_key =~ /^[a-f0-9]{32}$/
     end
 
     should "reset api key" do
