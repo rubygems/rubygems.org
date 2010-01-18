@@ -7,6 +7,10 @@ class Gem::AbstractCommand < Gem::Command
     ENV['GEMCUTTER_URL'] || 'https://gemcutter.org'
   end
 
+  def api_key_name
+    :rubygems_api_key
+  end
+
   def setup
     use_proxy! if http_proxy
     sign_in unless api_key
@@ -37,11 +41,11 @@ class Gem::AbstractCommand < Gem::Command
   end
 
   def api_key
-    Gem.configuration.load_file(credentials_path)[:rubygems_api_key]
+    Gem.configuration.load_file(credentials_path)[api_key_name]
   end
 
   def api_key=(api_key)
-    config = Gem.configuration.load_file(credentials_path).merge(:rubygems_api_key => api_key)
+    config = Gem.configuration.load_file(credentials_path).merge(api_key_name => api_key)
 
     dirname = File.dirname(credentials_path)
     Dir.mkdir(dirname) unless File.exists?(dirname)
