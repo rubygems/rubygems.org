@@ -84,7 +84,11 @@ class Rubygem < ActiveRecord::Base
       :authors           => version.authors,
       :info              => version.info,
       :project_uri       => "http://#{host_with_port}/gems/#{name}",
-      :gem_uri           => "http://#{host_with_port}/gems/#{version.full_name}.gem"
+      :gem_uri           => "http://#{host_with_port}/gems/#{version.full_name}.gem",
+      :dependencies      => {
+        :development => version.dependencies.development,
+        :runtime     => version.dependencies.runtime
+      }
     }
   end
 
