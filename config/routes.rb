@@ -27,6 +27,7 @@ ActionController::Routing::Routes.draw do |map|
         rubygems.resource :owners,
           :only       => [:show, :create, :destroy]
       end
+      v1.resource  :search
       v1.resources :web_hooks,
                    :only       => [:create, :index],
                    :collection => {:remove => :delete,
