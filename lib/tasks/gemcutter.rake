@@ -26,14 +26,15 @@ namespace :gemcutter do
   end
 
   namespace :index do
-    desc "Create the index"
-    task :create => :environment do
-      Gemcutter.indexer.generate_index
-    end
-
     desc "Update the index"
     task :update => :environment do
-      Gemcutter.indexer.update_index
+      require 'benchmark'
+      Benchmark.bm do|b|
+        g = Gemcutter.new(nil, StringIO.new)
+        b.report(" specs index") { g.upload("specs.4.8.gz", g.specs_index) }
+        b.report("latest index") { g.upload("latest_specs.4.8.gz", g.latest_index) }
+        b.report("   pre index") { g.upload("prerelease_specs.4.8.gz", g.prerelease_index) }
+      end
     end
 
     desc "fix the index"
