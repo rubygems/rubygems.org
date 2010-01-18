@@ -20,4 +20,11 @@ class Dependency < ActiveRecord::Base
     )
   end
 
+  def name
+    rubygem.name
+  end
+
+  def to_json(options = {})
+    super(options.merge(:methods => :name, :only => :requirements))
+  end
 end
