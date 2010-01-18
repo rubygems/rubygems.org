@@ -1,4 +1,5 @@
 config.cache_classes = true
+config.log_level = :info
 
 config.action_controller.consider_all_requests_local = false
 config.action_controller.perform_caching             = true
