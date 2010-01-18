@@ -25,7 +25,7 @@ class Rubygem < ActiveRecord::Base
     :limit      => 1 }
   }
   named_scope :search, lambda { |query| {
-    :conditions => ["(name ilike :query or versions.description ilike :query) and versions_count > 0",
+    :conditions => ["(upper(name) like upper(:query) or upper(versions.description) like upper(:query)) and versions_count > 0",
       {:query => "%#{query.strip}%"}],
     :include    => [:versions],
     :order      => "rubygems.downloads desc" }
