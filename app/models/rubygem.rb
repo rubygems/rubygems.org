@@ -92,8 +92,8 @@ class Rubygem < ActiveRecord::Base
     }
   end
 
-  def to_json
-    payload.to_json
+  def to_json(options = {})
+    payload.to_json(options)
   end
 
   def to_param
