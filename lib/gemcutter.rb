@@ -99,13 +99,18 @@ class Gemcutter
   end
 
   def perform
+    log "Updating the index"
     update_index
+    log "Finished updating the index"
   end
 
   def update_index
     upload("specs.4.8.gz", specs_index)
+    log "Uploaded all specs index"
     upload("latest_specs.4.8.gz", latest_index)
+    log "Uploaded latest specs index"
     upload("prerelease_specs.4.8.gz", prerelease_index)
+    log "Uploaded prerelease specs index"
   end
 
   def enqueue_web_hook_jobs
@@ -122,5 +127,9 @@ class Gemcutter
          def indexer.say(message) end
          indexer
        end
+   end
+
+   def log(message)
+     Rails.logger.info "[GEMCUTTER:#{Time.now}] #{message}"
    end
 end
