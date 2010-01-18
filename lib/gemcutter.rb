@@ -99,7 +99,6 @@ class Gemcutter
   end
 
   def perform
-    Version.update_all({:indexed => true}, {:id => version_id})
     update_index
   end
 
