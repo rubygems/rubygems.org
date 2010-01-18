@@ -34,12 +34,18 @@ class HostessTest < ActiveSupport::TestCase
      /latest_specs.4.8.gz
      /specs.4.8.gz
      /Marshal.4.8.Z
-     /yaml
-     /Marshal.4.8
-     /specs.4.8
      /latest_specs.4.8
      /prerelease_specs.4.8
+     /specs.4.8
+     /Marshal.4.8
      /quick/Marshal.4.8/test-0.0.0.gemspec.rz
+     /quick/index
+     /quick/index.rz
+     /quick/latest_index
+     /quick/latest_index.rz
+     /quick/rubygems-update-1.3.5.gemspec.rz
+     /yaml
+     /yaml.Z
   ].each do |index|
     serve_up index, false
     serve_up index, true

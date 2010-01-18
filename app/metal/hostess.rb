@@ -58,8 +58,11 @@ class Hostess < Sinatra::Default
   end
 
   %w[/quick/Marshal.4.8/*.gemspec.rz
+     /quick/rubygems-update-1.3.5.gemspec.rz
      /yaml.Z
      /Marshal.4.8.Z
+     /quick/index.rz
+     /quick/latest_index.rz
   ].each do |deflated_index|
     get deflated_index do
       content_type('application/x-deflate')
@@ -72,6 +75,8 @@ class Hostess < Sinatra::Default
      /specs.4.8
      /latest_specs.4.8
      /prerelease_specs.4.8
+     /quick/index
+     /quick/latest_index
   ].each do |old_index|
     get old_index do
       serve
