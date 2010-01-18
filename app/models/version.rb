@@ -95,7 +95,7 @@ class Version < ActiveRecord::Base
       :description       => spec.description,
       :summary           => spec.summary,
       :built_at          => spec.date,
-      :indexed           => false
+      :indexed           => true
     )
   end
 
