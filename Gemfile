@@ -28,9 +28,3 @@ only :test do
   gem "webrat",       "0.5.3"
   gem "webmock",      "0.7.3"
 end
-
-only [:staging, :production] do
-  gem "ambethia-smtp-tls", "1.1.2", :require_as => "smtp-tls"
-  gem "memcache-client",   "1.7.5", :require_as => "memcache"
-  gem "rack-cache",        "0.5.2", :require_as => "rack/cache"
-end
