@@ -18,14 +18,6 @@ class HostessTest < ActiveSupport::TestCase
     end
   end
 
-  def self.serve_up(index, local)
-    should "serve up #{index} #{local ? 'locally' : 'remotely'}" do
-      touch index, local
-      get index
-      assert_equal 200, last_response.status
-    end
-  end
-
   setup do
     Hostess.local = false
   end
@@ -46,9 +38,19 @@ class HostessTest < ActiveSupport::TestCase
      /quick/rubygems-update-1.3.5.gemspec.rz
      /yaml
      /yaml.Z
+     /yaml.z
   ].each do |index|
-    serve_up index, false
-    serve_up index, true
+    should "serve up #{index} locally" do
+      touch index, true
+      get index
+      assert_equal 200, last_response.status
+    end
+
+    should "serve up #{index} remotely" do
+      touch index, false
+      get index
+      assert_equal 302, last_response.status
+    end
   end
 
   should "serve up gem remotely" do
@@ -83,16 +85,5 @@ class HostessTest < ActiveSupport::TestCase
     assert_equal download_count + 1, Download.count
     assert_equal 1, rubygem.reload.downloads
     assert_equal 1, version.reload.downloads_count
-  end
-
-  should "not be able to find gemspec that doesn't exist on s3" do
-    file = "/quick/Marshal.4.8/test-0.0.0.gemspec.rz"
-    stub(VaultObject).value(anything, anything) do
-      raise AWS::S3::NoSuchKey.new("No such key!", VaultObject.current_bucket)
-    end
-
-    get file
-    assert_match %r{not be found}, last_response.body
-    assert_equal 403, last_response.status
   end
 end
