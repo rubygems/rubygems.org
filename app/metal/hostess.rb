@@ -5,46 +5,24 @@ class Hostess < Sinatra::Default
     @@local ||= false
   end
 
-  def serve(redirect = false)
+  def serve
     if Hostess.local
       send_file(Gemcutter.server_path(request.path_info))
     else
-      if redirect
-        redirect VaultObject.distribution_for(request.path_info)
-      else
-        serve_via_s3
-      end
+      yield
     end
   end
 
   def serve_via_s3
-    # Query S3
-    begin
-      result = VaultObject.value(request.path_info,
-                                 :if_modified_since => env['HTTP_IF_MODIFIED_SINCE'],
-                                 :if_none_match     => env['HTTP_IF_NONE_MATCH'])
-    rescue AWS::S3::NoSuchKey
-      error 403, "This gemspec could not be found."
+    serve do
+      redirect VaultObject.s3_url_for(request.path_info)
     end
+  end
 
-    # These should raise a 304 if either of them match
-    last_modified(result.response['last-modified']) if result.response['last-modified']
-
-    if value = result.response['etag']
-      response['ETag'] = value
-
-      # Conditional GET check
-      if etags = env['HTTP_IF_NONE_MATCH']
-        etags = etags.split(/\s*,\s*/)
-        halt 304 if etags.include?(value) || etags.include?('*')
-      end
+  def serve_via_cf
+    serve do
+      redirect VaultObject.cf_url_for(request.path_info)
     end
-
-    # If we got a 304 back, let's give it back to the client
-    halt 304 if result.response.code == 304
-
-    # Otherwise return the result back
-    result
   end
 
   %w[/specs.4.8.gz
@@ -53,20 +31,21 @@ class Hostess < Sinatra::Default
   ].each do |index|
     get index do
       content_type('application/x-gzip')
-      serve
+      serve_via_s3
     end
   end
 
   %w[/quick/Marshal.4.8/*.gemspec.rz
      /quick/rubygems-update-1.3.5.gemspec.rz
      /yaml.Z
+     /yaml.z
      /Marshal.4.8.Z
      /quick/index.rz
      /quick/latest_index.rz
   ].each do |deflated_index|
     get deflated_index do
       content_type('application/x-deflate')
-      serve
+      serve_via_s3
     end
   end
 
@@ -78,8 +57,12 @@ class Hostess < Sinatra::Default
      /quick/index
      /quick/latest_index
   ].each do |old_index|
+    head old_index do
+      "Please upgrade your RubyGems, it's quite old: http://gemcutter.org/pages/download"
+    end
+
     get old_index do
-      serve
+      serve_via_s3
     end
   end
 
@@ -89,6 +72,6 @@ class Hostess < Sinatra::Default
                                         :created_at => Time.zone.now), PRIORITIES[:download]
     end
 
-    serve(true)
+    serve_via_cf
   end
 end
