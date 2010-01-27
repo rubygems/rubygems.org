@@ -53,20 +53,41 @@ class HostessTest < ActiveSupport::TestCase
     end
   end
 
-  should "serve up gem remotely" do
-    download_count = Download.count
-    file = "/gems/test-0.0.0.gem"
-    rubygem = Factory(:rubygem, :name => "test")
-    version = Factory(:version, :rubygem => rubygem, :number => "0.0.0")
+  context "with gem" do
+    setup do
+      @download_count = Download.count
+      @file = "/gems/test-0.0.0.gem"
+      @rubygem = Factory(:rubygem, :name => "test")
+      @version = Factory(:version, :rubygem => @rubygem, :number => "0.0.0")
+    end
 
-    get file
-    Delayed::Job.work_off
+    should "increase download count" do
+      get @file
 
-    assert_equal "http://test.cf.rubygems.org/gems/test-0.0.0.gem", last_response.headers["Location"]
-    assert_equal 302, last_response.status
-    assert_equal download_count + 1, Download.count
-    assert_equal 1, rubygem.reload.downloads
-    assert_equal 1, version.reload.downloads_count
+      assert_equal @download_count + 1, Download.count
+      assert_equal 1, @rubygem.reload.downloads
+      assert_equal 1, @version.reload.downloads_count
+    end
+
+    should "redirect to s3 for a gem within a day old" do
+      get @file
+
+      assert_equal "http://test.s3.rubygems.org#{@file}", last_response.headers["Location"]
+      assert_equal 302, last_response.status
+    end
+
+    should "redirect to cf for a gem within a day old" do
+      @version.update_attribute(:updated_at, 1.day.ago)
+      get @file
+
+      assert_equal "http://test.s3.rubygems.org#{@file}", last_response.headers["Location"]
+      assert_equal 302, last_response.status
+    end
+  end
+
+  should "not be able to find bad gem" do
+    get "/gems/rails-3.0.0.gem"
+    assert_equal 404, last_response.status
   end
 
   should "serve up gem locally" do
@@ -79,8 +100,6 @@ class HostessTest < ActiveSupport::TestCase
     version = Factory(:version, :rubygem => rubygem, :number => "0.0.0")
 
     get file
-    Delayed::Job.work_off
-
     assert_equal 200, last_response.status
     assert_equal download_count + 1, Download.count
     assert_equal 1, rubygem.reload.downloads

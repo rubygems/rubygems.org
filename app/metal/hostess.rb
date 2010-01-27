@@ -67,11 +67,22 @@ class Hostess < Sinatra::Default
   end
 
   get "/gems/*.gem" do
-    unless ENV['MAINTENANCE_MODE']
-      Delayed::Job.enqueue Download.new(:raw        => params[:splat].to_s,
-                                        :created_at => Time.zone.now), PRIORITIES[:download]
-    end
+    full_name = params[:splat].to_s.chomp(".gem")
 
-    serve_via_cf
+    if ENV['MAINTENANCE_MODE']
+      serve_via_cf
+    else
+      if version = Version.find_by_full_name(full_name)
+        Download.create(:version => version)
+
+        if version.updated_at > 1.day.ago
+          serve_via_s3
+        else
+          serve_via_cf
+        end
+      else
+        not_found "This gem does not currently live at Gemcutter."
+      end
+    end
   end
 end
