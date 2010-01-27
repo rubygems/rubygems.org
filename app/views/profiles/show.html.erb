@@ -1,4 +1,4 @@
-<h3>Your Profile</h3>
+<% @title = "Your Profile" %>
 
 <p>Your Gravatar: <%= image_tag current_user.gravatar_url(:size => 60), :id => 'profile_gravatar' %> (change it at <%= link_to 'gravatar.com', 'http://www.gravatar.com' %>)</p>
 

@@ -890,6 +890,9 @@ body {
 .main .info .mine h3 {
   margin-left: 0;
   margin-bottom: 1em;
+  color: #90856C;
+  font-size: 2em;
+  display: inline-block;
 }
 
 .main .info .subscribed p,
