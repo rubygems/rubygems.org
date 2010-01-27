@@ -170,16 +170,21 @@ body {
   margin-top: 10px;
 }
 
-.main h2 {
-  line-height: 44px;
-  display: inline-block;
-  color: #340505;
-  font-size: 4em;
+.main .title {
   margin-left: 36px;
+  display: inline-block;
 }
 
-.main h3 {
-  display: inline-block;
+.main .title h2 {
+  line-height: 44px;
+  display: inline;
+  color: #340505;
+  font-size: 4em;
+  width: 65%;
+}
+
+.main .title h3 {
+  display: inline;
   color: #90856C;
   font-size: 2em;
   margin-left: 10px;
@@ -511,37 +516,37 @@ body {
   margin: 20px 0;
 }
 
-.main .info #admin {
-  float: right;
-  margin-right: 35px;
+.main .info .meta .admin {
+  padding-bottom: 2em;
+  border-bottom: 1px solid #B4AC99;
 }
 
-.main .info #admin a {
+.main .info .meta .admin a {
   font-size: 1.4em;
   padding-left: 22px;
   padding-top: 2px;
-  margin-left: 10px;
+  margin-right: 10px;
   display: inline-block;
   height: 16px;
 }
 
-.main .info #admin a:hover {
+.main .info .meta .admin a:hover {
   text-decoration: underline;
 }
 
-.main .info #admin #edit {
+.main .info .meta .admin #edit {
   background: url('/images/edit.png') no-repeat;
 }
 
-.main .info #admin #subscribe {
+.main .info .meta .admin #subscribe {
   background: url('/images/subscribe.png') no-repeat;
 }
 
-.main .info #admin #unsubscribe {
+.main .info .meta .admin #unsubscribe {
   background: url('/images/unsubscribe.png') no-repeat;
 }
 
-.main .info #admin #download {
+.main .info .meta .admin #download {
   background: url('/images/download.png') no-repeat;
 }
 
@@ -652,14 +657,15 @@ body {
   padding-top: 0.5em;
 }
 
-.main .info .meta .top {
+.main .info .meta .who {
+  padding-top: 2em;
   padding-bottom: 1em;
   border-bottom: 1px solid #B4AC99;
+  height: 50px;
 }
 
 .main .info .meta .authors {
-  width: 390px;
-  display: inline-block;
+  float: left;
 }
 
 .main .info .meta .downloads {
@@ -667,11 +673,16 @@ body {
   margin-left: 15px;
   font-size: 1.3em;
   color: #ABA28D;
-  display: inline-block;
   vertical-align: top;
+  float: right;
 }
 
-.main .info .meta .downloads strong {
+.main .info .meta .downloads span {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.main .info .meta .downloads span strong {
   font-size: 2.3em;
   font-weight: 1200;
   display: block;
