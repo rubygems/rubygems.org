@@ -105,4 +105,10 @@ class HostessTest < ActiveSupport::TestCase
     assert_equal 1, rubygem.reload.downloads
     assert_equal 1, version.reload.downloads_count
   end
+
+  should "redirect to /gems for /downloads" do
+    get "/downloads/rails-3.0.0.gem"
+    assert_equal "/gems/rails-3.0.0.gem", last_response.headers["Location"]
+    assert_equal 302, last_response.status
+  end
 end
