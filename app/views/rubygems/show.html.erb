@@ -7,12 +7,6 @@
   </p>
 <% else %>
 
-  <div id="admin">
-    <%= link_to "Edit", edit_rubygem_path(@rubygem), :id => "edit" if @rubygem.owned_by?(current_user) %>
-    <%= subscribe_link(@rubygem) %>
-    <%= unsubscribe_link(@rubygem) %>
-    <%= download_link(@latest_version) %>
-  </div>
 
   <div id="markup">
     <%= simple_markup(@latest_version.info) %>
@@ -27,7 +21,14 @@
 
   <div class="border">
     <div class="meta">
-      <div class="top">
+      <div class="admin">
+        <%= link_to "Edit", edit_rubygem_path(@rubygem), :id => "edit" if @rubygem.owned_by?(current_user) %>
+        <%= subscribe_link(@rubygem) %>
+        <%= unsubscribe_link(@rubygem) %>
+        <%= download_link(@latest_version) %>
+      </div>
+
+      <div class="who">
         <div class="authors">
           <h5>Authors</h5>
           <% if @latest_version.authors.present? %>
@@ -38,10 +39,12 @@
         </div>
 
         <div class="downloads">
-          <strong><%= number_with_delimiter(@rubygem.downloads) %></strong> total downloads
-        </div>
-        <div class="downloads">
-          <strong><%= number_with_delimiter(@latest_version.downloads_count) %></strong> for this version
+          <span>
+            <strong><%= number_with_delimiter(@rubygem.downloads) %></strong> total downloads
+          </span>
+          <span>
+            <strong><%= number_with_delimiter(@latest_version.downloads_count) %></strong> for this version
+          </span>
         </div>
       </div>
 
