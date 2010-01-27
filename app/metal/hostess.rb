@@ -81,7 +81,7 @@ class Hostess < Sinatra::Default
           serve_via_cf
         end
       else
-        not_found "This gem does not currently live at Gemcutter."
+        error 400, "This gem does not currently live at Gemcutter."
       end
     end
   end
