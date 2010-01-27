@@ -85,4 +85,8 @@ class Hostess < Sinatra::Default
       end
     end
   end
+
+  get "/downloads/*.gem" do
+    redirect "/gems/#{params[:splat]}.gem"
+  end
 end
