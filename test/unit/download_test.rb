@@ -12,9 +12,7 @@ class DownloadTest < ActiveSupport::TestCase
     version = Factory(:version, :rubygem => rubygem)
 
     3.times do
-      raw_download = Download.new(:raw => "#{rubygem.name}-#{version.number}")
-      raw_download.perform
-      assert_equal raw_download.reload.version, version
+      Download.create(:version => version)
     end
 
     assert_equal 3, version.reload.downloads_count
@@ -26,10 +24,8 @@ class DownloadTest < ActiveSupport::TestCase
     version = Factory(:version, :rubygem => rubygem, :platform => "mswin32-60")
     other_platform_version = Factory(:version, :rubygem => rubygem, :platform => "mswin32")
 
-    raw_download = Download.new(:raw => "#{rubygem.name}-#{version.number}-mswin32-60")
-    raw_download.perform
+    Download.create(:version => version)
 
-    assert_equal raw_download.reload.version, version
     assert_equal 1, version.reload.downloads_count
     assert_equal 1, rubygem.reload.downloads
     assert_equal 0, other_platform_version.reload.downloads_count
