@@ -225,7 +225,6 @@ class RubygemTest < ActiveSupport::TestCase
       hash = JSON.parse(@rubygem.to_json)
 
       assert_equal @rubygem.name, hash["name"]
-      assert_equal @rubygem.slug, hash["slug"]
       assert_equal @rubygem.downloads, hash["downloads"]
       assert_equal @rubygem.versions.latest.number, hash["version"]
       assert_equal @rubygem.versions.latest.downloads_count, hash["version_downloads"]
@@ -236,6 +235,27 @@ class RubygemTest < ActiveSupport::TestCase
 
       assert_equal JSON.parse(dev_dep.to_json), hash["dependencies"]["development"].first
       assert_equal JSON.parse(run_dep.to_json), hash["dependencies"]["runtime"].first
+    end
+
+    should "return a bunch of xml" do
+      version = Factory(:version, :rubygem => @rubygem)
+      run_dep = Factory(:runtime_dependency, :version => version)
+      dev_dep = Factory(:development_dependency, :version => version)
+
+      doc = Nokogiri.parse(@rubygem.to_xml)
+
+      assert_equal "rubygem", doc.root.name
+      assert_equal @rubygem.name, doc.at_css("name").content
+      assert_equal @rubygem.downloads.to_s, doc.at_css("downloads").content
+      assert_equal @rubygem.versions.latest.number, doc.at_css("version").content
+      assert_equal @rubygem.versions.latest.downloads_count.to_s, doc.at_css("version-downloads").content
+      assert_equal @rubygem.versions.latest.authors, doc.at_css("authors").content
+      assert_equal @rubygem.versions.latest.info, doc.at_css("info").content
+      assert_equal "http://#{HOST}/gems/#{@rubygem.name}", doc.at_css("project-uri").content
+      assert_equal "http://#{HOST}/gems/#{@rubygem.versions.latest.full_name}.gem", doc.at_css("gem-uri").content
+
+      assert_equal dev_dep.name, doc.at_css("dependencies development dependency name").content
+      assert_equal run_dep.name, doc.at_css("dependencies runtime dependency name").content
     end
   end
 

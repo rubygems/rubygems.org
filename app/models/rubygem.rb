@@ -97,7 +97,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def to_xml(options = {})
-    payload.to_xml(options)
+    payload.to_xml(options.merge(:root => "rubygem"))
   end
 
   def to_param

@@ -7,9 +7,12 @@ class Api::V1::RubygemsController < ApplicationController
 
   def show
     if @rubygem.hosted?
-      render :json => @rubygem.to_json
+      respond_to do |wants|
+        wants.json { render :json => @rubygem }
+        wants.xml  { render :xml  => @rubygem }
+      end
     else
-      render :json => "This gem does not exist.", :status => :not_found
+      render :text => "This gem does not exist.", :status => :not_found
     end
   end
 

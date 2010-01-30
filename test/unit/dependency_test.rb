@@ -13,6 +13,23 @@ class DependencyTest < ActiveSupport::TestCase
     should "be valid with factory" do
       assert_valid @dependency
     end
+
+    should "return json" do
+      json = JSON.parse(@dependency.to_json)
+
+      assert_equal %w[name requirements], json.keys
+      assert_equal @dependency.rubygem.name, json["name"]
+      assert_equal @dependency.requirements, json["requirements"]
+    end
+
+    should "return xml" do
+      xml = Nokogiri.parse(@dependency.to_xml)
+
+      assert_equal "dependency", xml.root.name
+      assert_equal %w[name requirements], xml.root.children.select(&:element?).map(&:name)
+      assert_equal @dependency.rubygem.name, xml.at_css("name").content
+      assert_equal @dependency.requirements, xml.at_css("requirements").content
+    end
   end
 
   context "with a Gem::Dependency" do

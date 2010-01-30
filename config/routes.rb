@@ -10,14 +10,9 @@ ActionController::Routing::Routes.draw do |map|
       v1.resource  :api_key,
                    :only         => [:show, :reset],
                    :member       => {:reset => :put}
-      v1.json_gem  "/gems/:id.json",
-                   :controller   => "rubygems",
-                   :action       => "show",
-                   :format       => "json",
-                   :requirements => { :id => RUBYGEM_NAME_MATCHER }
       v1.resources :rubygems,
                    :as           => "gems",
-                   :only         => [:create] do |rubygems|
+                   :only         => [:create, :show] do |rubygems|
       v1.resource  :migrate,
                    :only         => [:create, :update],
                    :controller   => "migrations",
