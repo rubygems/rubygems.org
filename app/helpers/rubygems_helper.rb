@@ -52,7 +52,7 @@ module RubygemsHelper
         :html    => {
           :id    => 'subscribe',
           :class => :toggler,
-          :style => gem.subscribers.find_by_id(current_user.try(:id)) ? 'display:none' : 'display:block'
+          :style => gem.subscribers.find_by_id(current_user.try(:id)) ? 'display:none' : 'display:inline-block'
         }
     else
       link_to 'Subscribe', sign_up_path, :id => :subscribe, :class => :toggler
