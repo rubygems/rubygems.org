@@ -14,7 +14,7 @@ The API is a work in progress, and <%= link_to "can use your help!", "http://git
 
 <h4 id="gem">Gem Methods</h4>
 
-<h5 class="api">GET - /api/v1/gems/[name].json</h5>
+<h5 class="api">GET - /api/v1/gems/[name].(json|xml)</h5>
 <p>
   Returns some basic information about the given gem. For example, here's Rails:
   <pre><code>$ curl http://gemcutter.org/api/v1/gems/rails.json
@@ -39,7 +39,41 @@ The API is a work in progress, and <%= link_to "can use your help!", "http://git
     ],
     "development": [ ]
   }
-}</code></pre>
+}
+
+$ curl http://gemcutter.org/api/v1/gems/rails.xml
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;rubygem&gt;
+  &lt;downloads type="integer"&gt;223423&lt;/downloads&gt;
+  &lt;name&gt;rails&lt;/name&gt;
+  &lt;info&gt;
+    Rails is a framework for building web-application using CGI, FCGI, mod_ruby, or WEBrick
+    on top of either MySQL, PostgreSQL, SQLite, DB2, SQL Server, or Oracle with eRuby- or Builder-based templates.
+  &lt;/info&gt;
+  &lt;gem-uri&gt;http://gemcutter.org/gems/rails-2.3.5.gem&lt;/gem-uri&gt;
+  &lt;project-uri&gt;http://gemcutter.org/gems/rails&lt;/project-uri&gt;
+  &lt;version&gt;2.3.5&lt;/version&gt;
+  &lt;authors&gt;David Heinemeier Hansson&lt;/authors&gt;
+  &lt;version-downloads type="integer"&gt;141363&lt;/version-downloads&gt;
+  &lt;dependencies&gt;
+    &lt;development type="array"/&gt;
+    &lt;runtime type="array"&gt;
+      &lt;dependency&gt;
+        &lt;name&gt;activesupport&lt;/name&gt;
+        &lt;requirements&gt;&gt;= 2.3.5&lt;/requirements&gt;
+      &lt;/dependency&gt;
+    &lt;/runtime&gt;
+  &lt;/dependencies&gt;
+&lt;/rubygem&gt;</code></pre>
+</p>
+
+<h5 class="api">GET - /api/v1/search.(json|xml)?query=[YOUR QUERY]</h5>
+<p>
+   Submit a search to Gemcutter for active gems, just like a search query on the site. Returns an array of the XML or JSON representation of gems that match.
+<pre><code>$ curl 'http://staging.rubygems.org/api/v1/search.json?query=cucumber'
+
+$ curl 'http://staging.rubygems.org/api/v1/search.xml?query=cucumber'</code></pre>
 </p>
 
 <h5 class="api">POST - /api/v1/gems</h5>
