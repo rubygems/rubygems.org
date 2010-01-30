@@ -67,7 +67,7 @@ module RubygemsHelper
       :html    => {
         :id    => 'unsubscribe',
         :class => :toggler,
-        :style => gem.subscribers.find_by_id(current_user.try(:id)) ? 'display:block' : 'display:none'
+        :style => gem.subscribers.find_by_id(current_user.try(:id)) ? 'display:inline-block' : 'display:none'
       }) if signed_in?
   end
   

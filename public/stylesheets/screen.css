@@ -550,6 +550,10 @@ body {
   background: url('/images/download.png') no-repeat;
 }
 
+.main .info .meta .admin #metrics {
+  background: url('/images/metrics.png') no-repeat;
+}
+
 .main .info #markup h2 {
   font-size: 1.5em;
   margin: 0 36px;
