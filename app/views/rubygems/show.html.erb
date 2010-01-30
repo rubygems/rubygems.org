@@ -23,9 +23,10 @@
     <div class="meta">
       <div class="admin">
         <%= link_to "Edit", edit_rubygem_path(@rubygem), :id => "edit" if @rubygem.owned_by?(current_user) %>
+        <%= download_link(@latest_version) %>
         <%= subscribe_link(@rubygem) %>
         <%= unsubscribe_link(@rubygem) %>
-        <%= download_link(@latest_version) %>
+        <%= link_to "Metrics", @rubygem.metrics_link(rubygem_path(@rubygem, :only_path => false)), :id => 'metrics' %>
       </div>
 
       <div class="who">
@@ -48,20 +49,17 @@
         </div>
       </div>
 
-      
+      <% unless @rubygem.linkset.empty? %>
         <div class="links">
           <h5>Links</h5>
-          <% unless @rubygem.linkset.empty? %>
           <%= link_to_page "Homepage", @rubygem.linkset.home %>
           <%= link_to_page "Source Code", @rubygem.linkset.code %>
           <%= link_to_page "Documentation", @rubygem.linkset.docs %>
           <%= link_to_page "Wiki", @rubygem.linkset.wiki %>
           <%= link_to_page "Mailing List", @rubygem.linkset.mail %>
           <%= link_to_page "Bug Tracker", @rubygem.linkset.bugs %>
-          <% end %>
-          <%= link_to "Metrics", @rubygem.metrics_link(rubygem_path(@rubygem, :only_path => false)), :id => 'metrics-link' %>
         </div>
-      
+      <% end %>
 
       <div class="versions">
         <h5>Versions</h5>
