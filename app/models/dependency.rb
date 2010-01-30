@@ -24,7 +24,18 @@ class Dependency < ActiveRecord::Base
     rubygem.name
   end
 
+  def payload
+    {
+      'name'         => name,
+      'requirements' => requirements
+    }
+  end
+
   def to_json(options = {})
-    super(options.merge(:methods => :name, :only => :requirements))
+    payload.to_json(options)
+  end
+
+  def to_xml(options = {})
+    payload.to_xml(options.merge(:root => "dependency"))
   end
 end
