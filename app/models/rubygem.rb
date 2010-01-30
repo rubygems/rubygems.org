@@ -77,23 +77,27 @@ class Rubygem < ActiveRecord::Base
 
   def payload(version = versions.latest, host_with_port = HOST)
     {
-      :name              => name,
-      :downloads         => downloads,
-      :version           => version.number,
-      :version_downloads => version.downloads_count,
-      :authors           => version.authors,
-      :info              => version.info,
-      :project_uri       => "http://#{host_with_port}/gems/#{name}",
-      :gem_uri           => "http://#{host_with_port}/gems/#{version.full_name}.gem",
-      :dependencies      => {
-        :development => version.dependencies.development,
-        :runtime     => version.dependencies.runtime
+      'name'              => name,
+      'downloads'         => downloads,
+      'version'           => version.number,
+      'version_downloads' => version.downloads_count,
+      'authors'           => version.authors,
+      'info'              => version.info,
+      'project_uri'       => "http://#{host_with_port}/gems/#{name}",
+      'gem_uri'           => "http://#{host_with_port}/gems/#{version.full_name}.gem",
+      'dependencies'      => {
+        'development' => version.dependencies.development,
+        'runtime'     => version.dependencies.runtime
       }
     }
   end
 
   def to_json(options = {})
     payload.to_json(options)
+  end
+
+  def to_xml(options = {})
+    payload.to_xml(options)
   end
 
   def to_param
