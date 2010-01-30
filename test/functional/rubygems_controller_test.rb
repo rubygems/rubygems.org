@@ -49,7 +49,7 @@ class RubygemsControllerTest < ActionController::TestCase
         assert_have_selector "a[style='display:none']", :content => 'Subscribe'
       end
       should "have a visible unsubscribe link" do
-        assert_have_selector "a[style='display:block']", :content => 'Unsubscribe'
+        assert_have_selector "a[style='display:inline-block']", :content => 'Unsubscribe'
       end
     end
 
@@ -63,7 +63,7 @@ class RubygemsControllerTest < ActionController::TestCase
       should_assign_to(:rubygem) { @rubygem }
       should_respond_with :success
       should "have a visible subscribe link" do
-        assert_have_selector "a[style='display:block']", :content => 'Subscribe'
+        assert_have_selector "a[style='display:inline-block']", :content => 'Subscribe'
       end
       should "have an invisible unsubscribe link" do
         assert_have_selector "a[style='display:none']", :content => 'Unsubscribe'
