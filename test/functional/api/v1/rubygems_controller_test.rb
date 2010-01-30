@@ -29,11 +29,6 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should "return a json hash" do
         assert_not_nil JSON.parse(@response.body)
       end
-      should "include dependencies in the json" do
-        gem = JSON.parse(@response.body)
-        assert [], gem["dependencies"]["development"]
-        assert [], gem["dependencies"]["runtime"]
-      end
     end
 
     context "On GET to show for a gem that doesn't match the slug" do
