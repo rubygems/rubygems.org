@@ -663,22 +663,22 @@ body {
 
 .main .info .meta .who {
   padding-top: 2em;
-  padding-bottom: 1em;
+  padding-bottom: 2em;
   border-bottom: 1px solid #B4AC99;
-  height: 50px;
 }
 
 .main .info .meta .authors {
-  float: left;
+  display: inline-block;
+  width: 50%;
 }
 
 .main .info .meta .downloads {
   text-align: right;
-  margin-left: 15px;
   font-size: 1.3em;
   color: #ABA28D;
   vertical-align: top;
-  float: right;
+  display: inline-block;
+  width: 49%;
 }
 
 .main .info .meta .downloads span {
