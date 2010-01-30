@@ -17,7 +17,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       sign_in_as(@user)
     end
 
-    context "On GET to show for a gem that's hosted" do
+    context "On GET to show with json for a gem that's hosted" do
       setup do
         @rubygem = Factory(:rubygem)
         Factory(:version, :rubygem => @rubygem)
@@ -28,6 +28,20 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should_respond_with :success
       should "return a json hash" do
         assert_not_nil JSON.parse(@response.body)
+      end
+    end
+
+    context "On GET to show with xml for a gem that's hosted" do
+      setup do
+        @rubygem = Factory(:rubygem)
+        Factory(:version, :rubygem => @rubygem)
+        get :show, :id => @rubygem.to_param, :format => "xml"
+      end
+
+      should_assign_to(:rubygem) { @rubygem }
+      should_respond_with :success
+      should "return a json hash" do
+        assert_not_nil Nokogiri.parse(@response.body).root
       end
     end
 
@@ -44,7 +58,6 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         assert_not_nil JSON.parse(@response.body)
       end
     end
-
 
     context "On GET to show for a gem that not hosted" do
       setup do
