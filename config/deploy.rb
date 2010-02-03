@@ -10,10 +10,6 @@ set :ssh_options, { :forward_agent => true }
 set :application, "gemcutter"
 set(:rails_env) { "#{stage}"}
 
-role :app, "rubycentral.org"
-role :web, "rubycentral.org"
-role :db,  "rubycentral.org", :primary => true
-
 # Note that this requires you run 'ssh-add' on your workstation in order to
 # add your private key to the ssh agent.  If that's not good for you, just uncomment the 
 # "set :deploy_via, :copy" and comment "set :deploy_via, :remote_cache"
@@ -102,5 +98,3 @@ after "deploy:symlink", "deploy:move_in_database_yml", "deploy:move_in_secret_se
 Dir[File.join(File.dirname(__FILE__), '..', 'vendor', 'gems', 'hoptoad_notifier-*')].each do |vendored_notifier|
   $: << File.join(vendored_notifier, 'lib')
 end
-
-require 'hoptoad_notifier/capistrano'
