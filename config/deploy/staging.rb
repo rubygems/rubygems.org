@@ -1,3 +1,7 @@
+role :app, "staging.gemcutter.org"
+role :web, "staging.gemcutter.org"
+role :db,  "staging.gemcutter.org", :primary => true
+
 set :deploy_to, "/var/www/rubycentral/staging.gemcutter.org/"
 
 namespace :deploy do
