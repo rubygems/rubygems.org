@@ -255,7 +255,7 @@ class RubygemTest < ActiveSupport::TestCase
       doc = Nokogiri.parse(@rubygem.to_xml)
 
       assert_equal "rubygem", doc.root.name
-      assert_equal @rubygem.name, doc.at_css("name").content
+      assert_equal @rubygem.name, doc.at_css("rubygem > name").content
       assert_equal @rubygem.downloads.to_s, doc.at_css("downloads").content
       assert_equal @rubygem.versions.latest.number, doc.at_css("version").content
       assert_equal @rubygem.versions.latest.downloads_count.to_s, doc.at_css("version-downloads").content
