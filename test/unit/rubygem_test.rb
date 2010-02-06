@@ -9,6 +9,7 @@ class RubygemTest < ActiveSupport::TestCase
 
     should_have_many :owners, :through => :ownerships
     should_have_many :ownerships, :dependent => :destroy
+    should_have_many :subscriptions, :dependent => :destroy
     should_have_many :versions, :dependent => :destroy
     should_have_many :web_hooks, :dependent => :destroy
     should_have_one :linkset, :dependent => :destroy
