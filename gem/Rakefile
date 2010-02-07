@@ -20,6 +20,7 @@ begin
     gem.homepage = "http://gemcutter.org"
     gem.authors = ["Nick Quaranto"]
     gem.files = FileList["lib/rubygems_plugin.rb",
+                         "lib/gemcutter.rb",
                          "lib/commands/*",
                          "test/*_helper.rb",
                          "test/*_test.rb",
