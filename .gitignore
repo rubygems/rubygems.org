@@ -9,6 +9,7 @@ log/*
 tmp/*
 db/*.sqlite3
 config/database.yml
+config/newrelic.yml
 *.sql
 _site/
 vendor/bundler_gems/*

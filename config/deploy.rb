@@ -49,6 +49,7 @@ namespace :deploy do
   desc "Move in secret settings for this environment"
   task :move_in_secret_settings, :roles => :app do
     run "cp #{deploy_to}/shared/system/secret.rb #{current_path}/config/secret.rb"
+    run "cp #{deploy_to}/shared/system/newrelic.yml #{current_path}/config/newrelic.yml"
   end
 end
 
