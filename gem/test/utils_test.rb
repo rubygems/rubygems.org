@@ -1,6 +1,8 @@
-require 'command_helper'
+require 'helper'
 
-class Gem::Commands::FakeCommand < Gem::AbstractCommand
+class Gem::Commands::FakeCommand < Gem::Command
+  include GemcutterUtils
+
   def description
     'fake command'
   end
@@ -13,7 +15,7 @@ class Gem::Commands::FakeCommand < Gem::AbstractCommand
   end
 end
 
-class AbstractCommandTest < CommandTest
+class UtilsTest < CommandTest
   context "with an fake command" do
     setup do
       @command = Gem::Commands::FakeCommand.new

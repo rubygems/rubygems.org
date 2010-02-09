@@ -1,4 +1,6 @@
-class Gem::Commands::WebhookCommand < Gem::AbstractCommand
+class Gem::Commands::WebhookCommand < Gem::Command
+  include GemcutterUtils
+  include Gem::LocalRemoteOptions
 
   def description
     <<-EOF

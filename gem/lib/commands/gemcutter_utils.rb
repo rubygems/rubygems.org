@@ -1,8 +1,6 @@
 require 'rubygems/local_remote_options'
 
-class Gem::AbstractCommand < Gem::Command
-  include Gem::LocalRemoteOptions
-
+module GemcutterUtils
   def gemcutter_url
     ENV['GEMCUTTER_URL'] || 'https://gemcutter.org'
   end

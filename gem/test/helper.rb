@@ -15,8 +15,9 @@ end
 WebMock.disable_net_connect!
 
 $:.unshift File.expand_path(File.join(File.dirname(__FILE__), ".."))
-
-require "rubygems_plugin"
+%w[migrate owner push tumble webhook].each do |command|
+  require "commands/#{command}"
+end
 
 class CommandTest < ActiveSupport::TestCase
   include RR::Adapters::TestUnit unless include?(RR::Adapters::TestUnit)

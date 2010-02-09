@@ -1,4 +1,4 @@
-require 'command_helper'
+require 'helper'
 
 class WebhookCommandTest < CommandTest
   context "webhooking" do
