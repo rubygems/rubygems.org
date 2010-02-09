@@ -1,4 +1,4 @@
-class Gem::Commands::TumbleCommand < Gem::AbstractCommand
+class Gem::Commands::TumbleCommand < Gem::Command
   def description
     "Deprecated method of upgrading to Gemcutter.org for gem downloads"
   end

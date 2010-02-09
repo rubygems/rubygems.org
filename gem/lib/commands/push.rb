@@ -1,4 +1,6 @@
-class Gem::Commands::PushCommand < Gem::AbstractCommand
+class Gem::Commands::PushCommand < Gem::Command
+  include GemcutterUtils
+  include Gem::LocalRemoteOptions
 
   def description
     'Push a gem up to Gemcutter'

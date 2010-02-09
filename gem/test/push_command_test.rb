@@ -1,4 +1,4 @@
-require 'command_helper'
+require 'helper'
 
 class PushCommandTest < CommandTest
   context "pushing" do

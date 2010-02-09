@@ -1,4 +1,4 @@
-class Gem::Commands::MigrateCommand < Gem::AbstractCommand
+class Gem::Commands::MigrateCommand < Gem::Command
   def description
     'Deprecate method for migrating a gem you own from Rubyforge to Gemcutter.'
   end

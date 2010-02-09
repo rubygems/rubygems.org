@@ -1,4 +1,6 @@
-class Gem::Commands::OwnerCommand < Gem::AbstractCommand
+class Gem::Commands::OwnerCommand < Gem::Command
+  include GemcutterUtils
+  include Gem::LocalRemoteOptions
 
   def description
     'Manage gem owners on Gemcutter.'
