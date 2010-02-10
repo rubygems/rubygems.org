@@ -21,7 +21,7 @@ begin
     gem.authors = ["Nick Quaranto"]
     gem.files = FileList["lib/rubygems_plugin.rb",
                          "lib/gemcutter.rb",
-                         "lib/commands/*",
+                         "lib/rubygems/commands/*",
                          "test/*_helper.rb",
                          "test/*_test.rb",
                          "MIT-LICENSE",
@@ -39,8 +39,8 @@ begin
 
            Thanks for installing Gemcutter! You can now run:
 
-    gem push          publish your gems for the world to use and enjoy
-    gem owner         allow/disallow others to push to your gems
+    gem push          merged into RubyGems 1.3.6
+    gem owner         merged into RubyGems 1.3.6
     gem webhook       register urls to be pinged when gems are pushed
 
 ========================================================================
