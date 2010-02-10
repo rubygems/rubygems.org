@@ -5,26 +5,21 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gemcutter}
-  s.version = "0.3.0"
+  s.version = "0.4.0.pre"
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 1.3.5") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new(">= 1.3.6.pre.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Nick Quaranto"]
-  s.date = %q{2010-01-05}
+  s.date = %q{2010-02-10}
   s.description = %q{Adds several commands to RubyGems for managing gems and more on Gemcutter.org.}
   s.email = %q{nick@quaran.to}
   s.files = [
     "MIT-LICENSE",
      "Rakefile",
-     "lib/commands/abstract_command.rb",
-     "lib/commands/migrate.rb",
-     "lib/commands/owner.rb",
-     "lib/commands/push.rb",
-     "lib/commands/tumble.rb",
-     "lib/commands/webhook.rb",
+     "lib/gemcutter.rb",
+     "lib/rubygems/commands/migrate.rb",
+     "lib/rubygems/commands/tumble.rb",
+     "lib/rubygems/commands/webhook.rb",
      "lib/rubygems_plugin.rb",
-     "test/abstract_command_test.rb",
-     "test/command_helper.rb",
-     "test/push_command_test.rb",
      "test/webhook_command_test.rb"
   ]
   s.homepage = %q{http://gemcutter.org}
@@ -33,8 +28,8 @@ Gem::Specification.new do |s|
 
            Thanks for installing Gemcutter! You can now run:
 
-    gem push          publish your gems for the world to use and enjoy
-    gem owner         allow/disallow others to push to your gems
+    gem push          merged into RubyGems 1.3.6
+    gem owner         merged into RubyGems 1.3.6
     gem webhook       register urls to be pinged when gems are pushed
 
 ========================================================================
@@ -42,7 +37,7 @@ Gem::Specification.new do |s|
 }
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6.pre.1}
   s.summary = %q{Commands to interact with gemcutter.org}
 
   if s.respond_to? :specification_version then
