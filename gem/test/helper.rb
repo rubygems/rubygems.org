@@ -15,7 +15,7 @@ end
 WebMock.disable_net_connect!
 
 $:.unshift File.expand_path(File.join(File.dirname(__FILE__), ".."))
-%w[migrate owner push tumble webhook].each do |command|
+%w[migrate tumble webhook].each do |command|
   require "commands/#{command}"
 end
 
@@ -28,9 +28,9 @@ class CommandTest < ActiveSupport::TestCase
   end
 end
 
-def stub_config(config)
+def stub_api_key(api_key)
   file = Gem::ConfigFile.new({})
-  config.each { |key, value| file[key] = value }
+  stub(file).rubygems_api_key { api_key }
   stub(Gem).configuration { file }
 end
 
