@@ -13,7 +13,7 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "gemcutter"
-    gem.version = "0.3.0"
+    gem.version = "0.4.0.pre"
     gem.summary = "Commands to interact with gemcutter.org"
     gem.description = "Adds several commands to RubyGems for managing gems and more on Gemcutter.org."
     gem.email = "nick@quaran.to"
@@ -32,7 +32,7 @@ begin
     %w[rake shoulda activesupport webmock rr].each do |dep|
       gem.add_development_dependency(dep)
     end
-    gem.required_rubygems_version = Gem::Requirement.new(">= 1.3.5") if gem.respond_to? :required_rubygems_version=
+    gem.required_rubygems_version = Gem::Requirement.new(">= 1.3.6.pre.1") if gem.respond_to? :required_rubygems_version=
     gem.post_install_message = <<MESSAGE
 
 ========================================================================

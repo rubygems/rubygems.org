@@ -4,7 +4,7 @@ class WebhookCommandTest < CommandTest
   context "webhooking" do
     setup do
       @gem = "foo"
-      @api = "https://gemcutter.org/api/v1/web_hooks"
+      @api = "https://rubygems.org/api/v1/web_hooks"
       @url = "http://example.com/hook"
       @command = Gem::Commands::WebhookCommand.new
       stub(@command).say
@@ -20,7 +20,7 @@ class WebhookCommandTest < CommandTest
 
     context "adding a specific hook" do
       setup do
-        stub_config({ :rubygems_api_key => "key" })
+        stub_api_key("key")
         stub_request(:post, @api).to_return(:body => "Success!")
 
         @command.handle_options([@gem, "-a", @url])
@@ -45,7 +45,7 @@ class WebhookCommandTest < CommandTest
 
     context "adding a global hook" do
       setup do
-        stub_config({ :rubygems_api_key => "key" })
+        stub_api_key("key")
         stub_request(:post, @api).to_return(:body => "Success!")
 
         @command.handle_options(["-g", "-a", @url])
@@ -70,7 +70,7 @@ class WebhookCommandTest < CommandTest
 
     context "listing hooks with some available" do
       setup do
-        stub_config({ :rubygems_api_key => "key" })
+        stub_api_key("key")
         stub_request(:get, @api).to_return :body => <<EOF
 {
   "foo": [{"url":"http://foogemhook.com","failure_count":0}],
@@ -123,7 +123,7 @@ EOF
 
     context "listing hooks with none available" do
       setup do
-        stub_config({ :rubygems_api_key => "key" })
+        stub_api_key("key")
         stub_request(:get, @api).to_return(:body => "{}")
         @command.handle_options([])
         @command.execute
@@ -139,7 +139,7 @@ EOF
     context "listing hooks with a json error" do
       setup do
         stub(@command).terminate_interaction
-        stub_config({ :rubygems_api_key => "key" })
+        stub_api_key("key")
         stub_request(:get, @api).to_return(:body => "fubar")
         @command.handle_options([])
         @command.execute
@@ -160,7 +160,7 @@ EOF
 
     context "removing specific hooks" do
       setup do
-        stub_config({ :rubygems_api_key => "key" })
+        stub_api_key("key")
         stub_request(:delete, "#{@api}/remove").to_return(:body => "Success!")
 
         @command.handle_options([@gem, "-r", @url])
@@ -185,7 +185,7 @@ EOF
 
     context "removing global hooks" do
       setup do
-        stub_config({ :rubygems_api_key => "key" })
+        stub_api_key("key")
         stub_request(:delete, "#{@api}/remove").to_return(:body => "Success!")
 
         @command.handle_options(["-g", "-r", @url])
@@ -210,7 +210,7 @@ EOF
 
     context "test firing hooks" do
       setup do
-        stub_config({ :rubygems_api_key => "key" })
+        stub_api_key("key")
         stub_request(:post, "#{@api}/fire").to_return(:body => "Success!")
 
         @command.handle_options([@gem, "-f", @url])

@@ -1,6 +1,9 @@
+require 'rubygems/local_remote_options'
+require 'rubygems/gemcutter_utilities'
+
 class Gem::Commands::WebhookCommand < Gem::Command
-  include GemcutterUtils
   include Gem::LocalRemoteOptions
+  include Gem::GemcutterUtilities
 
   def description
     <<-EOF
@@ -45,7 +48,7 @@ EOF
   end
 
   def execute
-    setup
+    sign_in
 
     if options[:url]
       name = options[:global] ? '*' : get_one_gem_name
@@ -62,23 +65,22 @@ EOF
 
   def remove_webhook(name, url)
     say "Removing webhook..."
-    make_webhook_request(:delete, name, url, "web_hooks/remove")
+    make_webhook_request(:delete, name, url, "api/v1/web_hooks/remove")
   end
 
   def fire_webhook(name, url)
     say "Test firing webhook..."
-    make_webhook_request(:post, name, url, "web_hooks/fire")
+    make_webhook_request(:post, name, url, "api/v1/web_hooks/fire")
   end
 
   def list_webhooks
     require 'json/pure' unless defined?(JSON::JSON_LOADED)
 
-    response = make_request(:get, "web_hooks") do |request|
-      request.add_field("Authorization", api_key)
+    resp = rubygems_api_request(:get, "api/v1/web_hooks") do |request|
+      request.add_field("Authorization", Gem.configuration.rubygems_api_key)
     end
 
-    case response
-    when Net::HTTPSuccess
+    with_response(resp) do |response|
       begin
         groups = JSON.parse(response.body)
 
@@ -103,24 +105,15 @@ EOF
         say json_error.to_s
         terminate_interaction
       end
-    else
-      say response.body
-      terminate_interaction
     end
   end
 
-  def make_webhook_request(method, name, url, api = "web_hooks")
-    response = make_request(method, api) do |request|
+  def make_webhook_request(method, name, url, api = "api/v1/web_hooks")
+    response = rubygems_api_request(method, api) do |request|
       request.set_form_data("gem_name" => name, "url" => url)
-      request.add_field("Authorization", api_key)
+      request.add_field("Authorization", Gem.configuration.rubygems_api_key)
     end
 
-    case response
-    when Net::HTTPSuccess
-      say response.body
-    else
-      say response.body
-      terminate_interaction
-    end
+    with_response(response)
   end
 end
