@@ -1,5 +1,5 @@
 class Version < ActiveRecord::Base
-  include Pacecar
+  include Pacecar unless Rails.env.maintenance?
 
   default_scope :order => 'position'
 

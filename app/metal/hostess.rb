@@ -69,7 +69,7 @@ class Hostess < Sinatra::Default
   get "/gems/*.gem" do
     full_name = params[:splat].to_s.chomp(".gem")
 
-    if ENV['MAINTENANCE_MODE']
+    if Rails.env.maintenance?
       serve_via_cf
     else
       if version = Version.find_by_full_name(full_name)

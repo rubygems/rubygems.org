@@ -1,5 +1,5 @@
 class Download < ActiveRecord::Base
-  include Pacecar
+  include Pacecar unless Rails.env.maintenance?
   belongs_to :version, :counter_cache => true
 
   def after_create

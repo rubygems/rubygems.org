@@ -1,5 +1,5 @@
 class Rubygem < ActiveRecord::Base
-  include Pacecar
+  include Pacecar unless Rails.env.maintenance?
 
   has_many :owners, :through => :ownerships, :source => :user
   has_many :ownerships, :dependent => :destroy
