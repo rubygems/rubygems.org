@@ -6,4 +6,6 @@ Rails::Initializer.run do |config|
   config.time_zone = 'UTC'
   config.action_mailer.delivery_method = :sendmail
   config.frameworks -= [:active_resource]
+  config.load_paths << Rails.root.join('app', 'middleware')
+  config.middleware.insert_after 'ActionController::ParamsParser', 'Redirector'
 end
