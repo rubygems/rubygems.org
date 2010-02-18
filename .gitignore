@@ -4,7 +4,6 @@
 server/
 pkg/
 bench/
-*cache*/
 log/*
 tmp/*
 db/*.sqlite3
@@ -12,6 +11,6 @@ config/database.yml
 config/newrelic.yml
 *.sql
 _site/
-vendor/bundler_gems/*
-!vendor/bundler_gems/ruby/1.8/cache/
+.bundle/
 bin/
+vendor/bundler_gems
