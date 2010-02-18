@@ -42,7 +42,7 @@ namespace :deploy do
 
   desc "Run gem bundle"
   task :bundle, :roles => :app do
-    run "cd #{release_path} && bundle install vendor/bundler_gems"
+    run "cd #{release_path} && PATH=/usr/local/pgsql/bin:/usr/local/bin:/bin:/usr/bin bundle install vendor/bundler_gems"
   end
 
   # Surely there's a better way to do this.  But it's eluding me at the moment.
