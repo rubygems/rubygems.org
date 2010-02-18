@@ -5,7 +5,7 @@ require 'test_help'
 set :environment, :test
 WebMock.disable_net_connect!
 
-Shoulda.autoload_macros(Rails.root, "vendor/bundler_gems/ruby/1.8/gems/*")
+Shoulda.autoload_macros(Rails.root, "vendor/bundler_gems/gems/*")
 
 class ActiveSupport::TestCase
   self.use_transactional_fixtures = true
