@@ -6,7 +6,7 @@ class ActiveSupport::TestCase
       end
       should "deny access" do
         assert_response 401
-        assert_match "Access Denied. Please sign up for an account at http://gemcutter.org", @response.body
+        assert_match "Access Denied. Please sign up for an account at http://rubygems.org", @response.body
       end
     end
 
@@ -18,7 +18,7 @@ class ActiveSupport::TestCase
       end
       should "deny access" do
         assert_response 403
-        assert_match "Access Denied. Please confirm your Gemcutter account.", @response.body
+        assert_match "Access Denied. Please confirm your RubyGems.org account.", @response.body
       end
     end
   end

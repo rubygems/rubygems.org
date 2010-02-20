@@ -5,16 +5,8 @@ module ApplicationHelper
     instance_variable_get("@content_for_#{name}").present?
   end
 
-  def title
-    "gemcutter"
-  end
-
-  def subtitle
-    "awesome gem hosting"
-  end
-
   def page_title
-    combo = "#{title} | #{subtitle}"
+    combo = "#{t :title} | #{t :subtitle}"
     if @title
       "#{@title} | #{combo}"
     else

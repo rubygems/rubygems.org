@@ -1,5 +1,9 @@
-# Sample localization file for English. Add more files in this directory for other locales.
-# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
-
 en:
-  hello: "Hello world"
+  title: "RubyGems.org"
+  subtitle: "your community gem host"
+  url: "http://rubygems.org"
+  please_sign_up: "Access Denied. Please sign up for an account at http://rubygems.org"
+  please_confirm: "Access Denied. Please confirm your RubyGems.org account."
+  please_upgrade: "Please upgrade your RubyGems, it's quite old: http://rubygems.org/pages/download"
+  feed_subscribed: "RubyGems.org | Subscribed Gems"
+  feed_latest: "RubyGems.org | Latest Gems"
