@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="fluid-icon" href="/apple-touch-icon.png"/>
-    <link rel="search" type="application/opensearchdescription+xml" title="gemcutter" href="/opensearch.xml">
+    <link rel="search" type="application/opensearchdescription+xml" title="<%=t :title %>" href="/opensearch.xml">
     <%= stylesheet_link_tag "reset", "960", "screen", "humanmsg", :cache => true %>
     <!--[if IE 7]>
       <%= stylesheet_link_tag "ie7" %>
@@ -17,10 +17,10 @@
       <div id="flash_<%= name %>"><%= msg %></div>
     <% end %>
     <div class="container_12">
-      <div class="prefix_1 grid_3 header">
-        <h1><%= link_to "Gemcutter", root_url, :title => "Home" %></h1>
+      <div class="prefix_1 grid_4 header">
+        <h1><%= link_to t(:title), root_url, :title => "Home" %></h1>
       </div>
-      <div class="grid_7 suffix_1 nav">
+      <div class="grid_6 suffix_1 nav">
         <ul>
           <% if signed_in? %>
             <li><%= link_to(image_tag(current_user.gravatar_url(:size => 24)), profile_url, :id => "user_gravatar") %></li>
@@ -65,7 +65,7 @@
           <%= link_to "About", page_url("about") %>
           <%= link_to "Blog", "http://update.gemcutter.org" %>
           <%= link_to "Docs", page_url("docs") %>
-          <%= link_to "Help", "http://help.rubygems.org" %>
+          <%= link_to "Help", t(:help_url) %>
           <%= link_to "Status", "http://twitter.com/gemcutter" %>
           <%= link_to "Code", "http://github.com/qrush/gemcutter" %>
           <%= link_to "Discuss", "http://groups.google.com/group/gemcutter" %>

@@ -73,7 +73,7 @@ class Rubygem < ActiveRecord::Base
 
   def metrics_link(project_path)
     project_url = CGI.escape(project_path)
-    "http://devver.net/caliper/project?repo=#{project_url}"
+    "http://getcaliper.com/caliper/project?repo=#{project_url}"
   end
 
   def to_s

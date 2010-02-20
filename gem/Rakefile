@@ -14,10 +14,10 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "gemcutter"
     gem.version = "0.4.0.pre"
-    gem.summary = "Commands to interact with gemcutter.org"
-    gem.description = "Adds several commands to RubyGems for managing gems and more on Gemcutter.org."
+    gem.summary = "Commands to interact with RubyGems.org"
+    gem.description = "Adds several commands to RubyGems for managing gems and more on RubyGems.org."
     gem.email = "nick@quaran.to"
-    gem.homepage = "http://gemcutter.org"
+    gem.homepage = "http://rubygems.org"
     gem.authors = ["Nick Quaranto"]
     gem.files = FileList["lib/rubygems_plugin.rb",
                          "lib/gemcutter.rb",

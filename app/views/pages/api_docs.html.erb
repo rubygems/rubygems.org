@@ -1,7 +1,7 @@
 <% @title = "API Docs" %>
 <% @subtitle = "get your code on" %>
 <p>
-The API is a work in progress, and <%= link_to "can use your help!", "http://github.com/qrush/gemcutter" %> The <%= link_to "gemcutter gem", rubygem_url("gemcutter") %> uses the API to push gems, add owners, and more. Check out all of the gem commands <%= link_to "here", page_url("gem_docs") %>.
+The API is a work in progress, and <%= link_to "can use your help!", "http://github.com/qrush/gemcutter" %> RubyGems itself and <%= link_to "gemcutter gem", rubygem_url("gemcutter") %> uses the API to push gems, add owners, and more. Check out all of the gem commands <%= link_to "here", page_url("gem_docs") %>.
 </p>
 
 <h4>API Methods</h4>
@@ -17,7 +17,7 @@ The API is a work in progress, and <%= link_to "can use your help!", "http://git
 <h5 class="api">GET - /api/v1/gems/[name].(json|xml)</h5>
 <p>
   Returns some basic information about the given gem. For example, here's Rails:
-  <pre><code>$ curl http://gemcutter.org/api/v1/gems/rails.json
+  <pre><code>$ curl <%=t :url %>/api/v1/gems/rails.json
 
 {
   "name": "rails",
@@ -28,8 +28,8 @@ The API is a work in progress, and <%= link_to "can use your help!", "http://git
   "version_downloads": 2451,
   "authors": "David Heinemeier Hansson",
   "downloads": 134451,
-  "project_uri": "http://gemcutter.org/gems/rails",
-  "gem_uri": "http://gemcutter.org/gems/rails-2.3.5.gem",
+  "project_uri": "<%=t :url %>/gems/rails",
+  "gem_uri": "<%=t :url %>/gems/rails-2.3.5.gem",
   "dependencies": {
     "runtime": [
       {
@@ -41,7 +41,7 @@ The API is a work in progress, and <%= link_to "can use your help!", "http://git
   }
 }
 
-$ curl http://gemcutter.org/api/v1/gems/rails.xml
+$ curl <%=t :url %>/api/v1/gems/rails.xml
 
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;rubygem&gt;
@@ -51,8 +51,8 @@ $ curl http://gemcutter.org/api/v1/gems/rails.xml
     Rails is a framework for building web-application using CGI, FCGI, mod_ruby, or WEBrick
     on top of either MySQL, PostgreSQL, SQLite, DB2, SQL Server, or Oracle with eRuby- or Builder-based templates.
   &lt;/info&gt;
-  &lt;gem-uri&gt;http://gemcutter.org/gems/rails-2.3.5.gem&lt;/gem-uri&gt;
-  &lt;project-uri&gt;http://gemcutter.org/gems/rails&lt;/project-uri&gt;
+  &lt;gem-uri&gt;<%=t :url %>/gems/rails-2.3.5.gem&lt;/gem-uri&gt;
+  &lt;project-uri&gt;<%=t :url %>/gems/rails&lt;/project-uri&gt;
   &lt;version&gt;2.3.5&lt;/version&gt;
   &lt;authors&gt;David Heinemeier Hansson&lt;/authors&gt;
   &lt;version-downloads type="integer"&gt;141363&lt;/version-downloads&gt;
@@ -71,9 +71,9 @@ $ curl http://gemcutter.org/api/v1/gems/rails.xml
 <h5 class="api">GET - /api/v1/search.(json|xml)?query=[YOUR QUERY]</h5>
 <p>
    Submit a search to Gemcutter for active gems, just like a search query on the site. Returns an array of the XML or JSON representation of gems that match.
-<pre><code>$ curl 'http://gemcutter.org/api/v1/search.json?query=cucumber'
+<pre><code>$ curl '<%=t :url %>/api/v1/search.json?query=cucumber'
 
-$ curl 'http://gemcutter.org/api/v1/search.xml?query=cucumber'</code></pre>
+$ curl '<%=t :url %>/api/v1/search.xml?query=cucumber'</code></pre>
 </p>
 
 <h5 class="api">POST - /api/v1/gems</h5>
@@ -81,7 +81,7 @@ $ curl 'http://gemcutter.org/api/v1/search.xml?query=cucumber'</code></pre>
   Submit a gem to Gemcutter. Must have your API key supplied and give a built RubyGem in the body of the request.
 <pre><code>$ curl --data-binary @gemcutter-0.2.1.gem \
        -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
-       http://gemcutter.org/api/v1/gems
+       <%=t :url %>/api/v1/gems
 
 Successfully registered gem: gemcutter (0.2.1)</code></pre>
 </p>
@@ -92,7 +92,7 @@ Successfully registered gem: gemcutter (0.2.1)</code></pre>
 <p>
   View all owners of a gem that you own. These users can all push to this gem.
 <pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
-       http://gemcutter.org/api/v1/gems/gemcutter/owners.json
+       <%=t :url %>/api/v1/gems/gemcutter/owners.json
 
 [
   {
@@ -110,7 +110,7 @@ Successfully registered gem: gemcutter (0.2.1)</code></pre>
   Add an owner to a RubyGem you own, giving that user permission to manage it.
 <pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
        -F 'email=josh@technicalpickles.com' \
-       http://gemcutter.org/api/v1/gems/gemcutter/owners
+       <%=t :url %>/api/v1/gems/gemcutter/owners
 
 Owner added successfully.
 </code></pre>
@@ -121,7 +121,7 @@ Owner added successfully.
   Remove a user's permission to manage a RubyGem you own.
 <pre><code>$ curl -X DELETE -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
         -d "email=josh@technicalpickles.com" \
-        http://gemcutter.org/api/v1/gems/gemcutter/owners
+        <%=t :url %>/api/v1/gems/gemcutter/owners
 
 Owner removed successfully.
 </code></pre>
@@ -133,7 +133,7 @@ Owner removed successfully.
 <p>
   List the webhooks registered under your account.
 <pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
-       http://gemcutter.org/api/v1/web_hooks.json
+       <%=t :url %>/api/v1/web_hooks.json
 
 {
   "all gems": [
@@ -157,13 +157,13 @@ Owner removed successfully.
   Create a webhook. Requires two parameters: <code>gem_name</code> and <code>url</code>. Specify <code>*</code> for the <code>gem_name</code> parameter to apply the hook globally to all gems.
 <pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
        -F 'gem_name=rails' -F 'url=http://example.com' \
-       http://gemcutter.org/api/v1/web_hooks
+       <%=t :url %>/api/v1/web_hooks
 
 Successfully created webhook for rails to http://example.com
 
 $ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
        -F 'gem_name=*' -F 'url=http://example.com' \
-       http://gemcutter.org/api/v1/web_hooks
+       <%=t :url %>/api/v1/web_hooks
 
 Successfully created webhook for all gems to http://example.com</code></pre>
 </p>
@@ -173,13 +173,13 @@ Successfully created webhook for all gems to http://example.com</code></pre>
   Remove a webhook. Requires two parameters: <code>gem_name</code> and <code>url</code>. Specify <code>*</code> for the <code>gem_name</code> parameter to apply the hook globally to all gems.
 <pre><code>$ curl -X DELETE -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
        -d 'gem_name=rails' -d 'url=http://example.com' \
-       http://gemcutter.org/api/v1/web_hooks/remove
+       <%=t :url %>/api/v1/web_hooks/remove
 
 Successfully removed webhook for rails to http://example.com
 
 $ curl -X DELETE -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
        -d 'gem_name=*' -d 'url=http://example.com' \
-       http://gemcutter.org/api/v1/web_hooks/remove
+       <%=t :url %>/api/v1/web_hooks/remove
 
 Successfully removed webhook for all gems to http://example.com</code></pre>
 </p>
@@ -189,13 +189,13 @@ Successfully removed webhook for all gems to http://example.com</code></pre>
 Test fire a webhook. This can be used to test out an endpoint at any time, for example when you're developing your application. Requires two parameters: <code>gem_name</code> and <code>url</code>. Specify <code>*</code> for the <code>gem_name</code> parameter to apply the hook globally to all gems.
 <pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
        -F 'gem_name=rails' -F 'url=http://example.com' \
-       http://gemcutter.org/api/v1/web_hooks/fire
+       <%=t :url %>/api/v1/web_hooks/fire
 
 Successfully deployed webhook for rails to http://example.com
 
 $ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
        -F 'gem_name=*' -F 'url=http://example.com' \
-       http://gemcutter.org/api/v1/web_hooks/fire
+       <%=t :url %>/api/v1/web_hooks/fire
 
 Successfully deployed webhook for all gems to http://example.com</code></pre>
 </p>
@@ -206,7 +206,7 @@ Successfully deployed webhook for all gems to http://example.com</code></pre>
 <p>
   Retrieve your API key using HTTP basic auth.
 <pre><code>$ curl -u "nick@gemcutter.org:schwwwwing" \
-       http://gemcutter.org/api/v1/api_key
+       <%=t :url %>/api/v1/api_key
 
 701243f217cdf23b1370c7b66b65ca97
 </code></pre>
