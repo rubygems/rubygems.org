@@ -88,11 +88,11 @@ body {
 
 .header h1 a {
   display: block;
-  width: 214px;
-  height: 50px;
+  width: 280px;
+  height: 51px;
   text-indent: -9999px;
   text-decoration: none;
-  background: url(/images/logo.png)
+  background: url(/images/rubygems.png)
 }
 
 .nav {

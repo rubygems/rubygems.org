@@ -166,7 +166,7 @@ class WebHookTest < ActiveSupport::TestCase
                          :url     => @url)
       stub_request(:post, @url)
 
-      @hook.fire('gemcutter.org', @rubygem, @version, false)
+      @hook.fire('rubygems.org', @rubygem, @version, false)
     end
 
     should "POST to URL with payload" do
@@ -204,7 +204,7 @@ class WebHookTest < ActiveSupport::TestCase
        Net::ProtocolError].each_with_index do |exception, index|
         stub_request(:post, @url).to_raise(exception)
 
-        @hook.fire('gemcutter.org', @rubygem, @version, false)
+        @hook.fire('rubygems.org', @rubygem, @version, false)
 
         assert_equal index + 1, @hook.failure_count
         assert @hook.global?
