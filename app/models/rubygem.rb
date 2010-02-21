@@ -18,16 +18,25 @@ class Rubygem < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
 
-  named_scope :with_versions, :conditions => ["versions_count > 0"]
-  named_scope :with_one_version, :conditions => ["versions_count = 1"]
+  named_scope :with_versions, 
+    :select => 'DISTINCT rubygems.*',
+    :joins => :versions
+  named_scope :with_one_version, 
+    :select => 'rubygems.*',
+    :joins => :versions,
+    :group => column_names.map{ |name| "rubygems.#{name}" }.join(', '),
+    :having => 'COUNT(versions.id) = 1'
+
   named_scope :name_is, lambda { |name| {
     :conditions => ["name = ?", name.strip],
     :limit      => 1 }
   }
+
   named_scope :search, lambda { |query| {
-    :conditions => ["(upper(name) like upper(:query) or upper(versions.description) like upper(:query)) and versions_count > 0",
+    :conditions => ["(upper(name) like upper(:query) or upper(versions.description) like upper(:query))",
       {:query => "%#{query.strip}%"}],
     :include    => [:versions],
+    :having     => 'count(versions.id) > 0',
     :order      => "rubygems.downloads desc" }
   }
 
@@ -114,7 +123,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def pushable?
-    new_record? || versions_count.zero?
+    new_record? || versions.indexed.count.zero?
   end
 
   def create_ownership(user)
@@ -157,11 +166,18 @@ class Rubygem < ActiveRecord::Base
 
       self.versions.update_all(:latest => false)
 
-      if first_release = versions.release.first
+      if first_release = versions.indexed.release.first
         versions.find_all_by_number(first_release.number).each do |version|
           version.update_attributes(:latest => true)
         end
       end
+    end
+  end
+  
+  def yank!(version)
+    version.yank!
+    if versions(true).indexed.count == 0
+      ownerships.each(&:destroy_without_callbacks)
     end
   end
 

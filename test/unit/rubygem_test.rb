@@ -46,7 +46,6 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "not have a latest version if no versions exist" do
-      assert_equal 0, @rubygem.versions_count
       assert_nil @rubygem.versions.latest
     end
 
@@ -62,7 +61,6 @@ class RubygemTest < ActiveSupport::TestCase
     should "have a latest version if only a platform version exists" do
       version1 = Factory(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "linux")
 
-      assert_equal 1,        @rubygem.reload.versions_count
       assert_equal version1, @rubygem.reload.versions.latest
     end
 
@@ -70,15 +68,20 @@ class RubygemTest < ActiveSupport::TestCase
       version2pre = Factory(:version, :rubygem => @rubygem, :number => "2.0.pre", :platform => "ruby")
       version1 = Factory(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
 
-      assert_equal 2,        @rubygem.reload.versions_count
       assert_equal version1, @rubygem.reload.versions.latest
     end
 
     should "have a latest version if only a prerelease version exists" do
       version1pre = Factory(:version, :rubygem => @rubygem, :number => "1.0.pre", :platform => "ruby")
 
-      assert_equal 1,           @rubygem.reload.versions_count
       assert_equal version1pre, @rubygem.reload.versions.latest
+    end
+    
+    should "return the latest indexed version when a more recent yanked version exists" do
+      indexed_v1 = Factory(:version, :rubygem => @rubygem, :number => "0.1.0", :indexed => true)
+      yanked_v2  = Factory(:version, :rubygem => @rubygem, :number => "0.1.1", :indexed => false)
+      
+      assert_equal indexed_v1, @rubygem.reload.versions.latest
     end
   end
 
@@ -278,6 +281,10 @@ class RubygemTest < ActiveSupport::TestCase
 
       Factory(:version, :rubygem => @rubygem_with_version)
       3.times { Factory(:version, :rubygem => @rubygem_with_versions) }
+      
+      @owner = Factory(:user)
+      Factory(:ownership, :rubygem => @rubygem_with_version, :user => @owner, :approved => true)
+      Factory(:ownership, :rubygem => @rubygem_with_versions, :user => @owner, :approved => true)
     end
 
     should "return only gems with one version" do
@@ -296,6 +303,26 @@ class RubygemTest < ActiveSupport::TestCase
       assert ! @rubygem_without_version.hosted?
       assert @rubygem_with_version.hosted?
     end
+    
+    context "when yanking the last version of a gem with an owner" do
+      setup do
+        @rubygem_with_version.yank!(@rubygem_with_version.versions.first)
+      end
+      should "no longer be owned" do
+        assert @rubygem_with_version.unowned?
+      end
+      should_change("ownership count") { Ownership.count }
+    end
+    
+    context "when yanking one of many versions of a gem" do
+      setup do
+        @rubygem_with_versions.yank!(@rubygem_with_versions.versions.first)
+      end
+      should "remain owned" do
+        assert !@rubygem_with_versions.unowned?
+      end
+      should_not_change("ownership count") { Ownership.count }
+    end
   end
 
   context "with some gems and some that don't have versions" do
@@ -310,7 +337,7 @@ class RubygemTest < ActiveSupport::TestCase
       @new = Factory.build(:rubygem)
 
       @gems = [@thin, @rake, @json, @thor, @rack, @dust]
-      @gems.each { |g| Factory(:version, :rubygem => g); g.increment!(:versions_count) }
+      @gems.each { |g| Factory(:version, :rubygem => g) }
     end
 
     should "be pushable if gem is a new record" do
@@ -497,4 +524,5 @@ class RubygemTest < ActiveSupport::TestCase
       should_change("total number of Dependencies", :by => 2) { Dependency.count }
     end
   end
+  
 end
