@@ -48,13 +48,4 @@ class Gem::Commands::YankCommand < Gem::Command
 
     say response.body
   end
-
-  # private
-  #   def get_version_from_requirements(requirements)
-  #     begin
-  #       requirements.requirements.first[1].version
-  #     rescue
-  #       nil
-  #     end
-  #   end
 end
