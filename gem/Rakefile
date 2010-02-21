@@ -32,7 +32,7 @@ begin
     %w[rake shoulda activesupport webmock rr].each do |dep|
       gem.add_development_dependency(dep)
     end
-    gem.required_rubygems_version = Gem::Requirement.new(">= 1.3.6.pre.1") if gem.respond_to? :required_rubygems_version=
+    gem.required_rubygems_version = Gem::Requirement.new(">= 1.3.6") if gem.respond_to? :required_rubygems_version=
     gem.post_install_message = <<MESSAGE
 
 ========================================================================
