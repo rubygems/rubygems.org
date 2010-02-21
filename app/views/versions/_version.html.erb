@@ -4,4 +4,7 @@
   <% if version.platformed? %>
     <span class="platform"><%= version.platform %></span>
   <% end %>
+  <% if version.yanked? -%>
+    <span class="yanked">yanked</span>
+  <% end -%>
 </li>

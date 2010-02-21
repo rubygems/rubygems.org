@@ -42,6 +42,7 @@ begin
     gem push          merged into RubyGems 1.3.6
     gem owner         merged into RubyGems 1.3.6
     gem webhook       register urls to be pinged when gems are pushed
+    gem yank          remove a specific version of a gem from Gemcutter
 
 ========================================================================
 
