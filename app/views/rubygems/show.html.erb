@@ -1,7 +1,7 @@
 <% @title = @rubygem.name %>
 <% @subtitle = @latest_version.try(:slug) %>
 
-<% if @rubygem.versions_count.zero? %>
+<% if @rubygem.versions.count.zero? %>
   <p>
     This gem is not currently hosted on Gemcutter.
   </p>
@@ -13,10 +13,16 @@
   </div>
 
   <div class="border">
-    <%= clippy(@latest_version.to_install) %>
-    <div class="install">
-      <div class="instructions"><strong>install</strong><span><%= @latest_version.to_install %></span></div>
-    </div>
+    <% if !@latest_version.yanked? -%>
+      <%= clippy(@latest_version.to_install) %>
+      <div class="install">
+        <div class="instructions"><strong>install</strong><span><%= @latest_version.to_install %></span></div>
+      </div>
+    <% else -%>
+      <div class="install">
+        This gem has been yanked.
+      </div>
+    <% end -%>
   </div>
 
   <div class="border">
@@ -66,8 +72,8 @@
         <ol>
           <%= render @rubygem.versions.limited(5) %>
         </ol>
-        <% if @rubygem.versions_count > 5 %>
-          <%= link_to "Show all versions (#{@rubygem.versions_count} total)", rubygem_versions_url(@rubygem), :class => "more" %>
+        <% if @rubygem.versions.count > 5 %>
+          <%= link_to "Show all versions (#{@rubygem.versions.count} total)", rubygem_versions_url(@rubygem), :class => "more" %>
         <% end %>
       </div>
 

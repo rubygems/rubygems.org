@@ -3,7 +3,7 @@ class Version < ActiveRecord::Base
 
   default_scope :order => 'position'
 
-  belongs_to :rubygem, :counter_cache => true
+  belongs_to :rubygem
   has_many :dependencies, :dependent => :destroy
   has_many :downloads, :dependent => :destroy
 
@@ -18,9 +18,11 @@ class Version < ActiveRecord::Base
       :order => 'created_at desc' }
   }
 
-  named_scope :with_associated, { :conditions => ["rubygems.versions_count > 1"],
-                                  :include    => :rubygem,
-                                  :order      => "versions.built_at desc" }
+  named_scope :with_associated, { 
+    :conditions => ["versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)"],
+    :include    => :rubygem,
+    :order      => "versions.built_at desc" 
+  }
   named_scope :latest,          { :conditions => { :latest     => true  }}
   named_scope :with_deps,       { :include => {:dependencies => :rubygem} }
   named_scope :prerelease,      { :conditions => { :prerelease => true  }}
@@ -83,6 +85,14 @@ class Version < ActiveRecord::Base
 
   def reorder_versions
     rubygem.reorder_versions
+  end
+  
+  def yank!
+    update_attributes!({:indexed => false})
+  end
+  
+  def yanked?
+    !indexed
   end
 
   def info

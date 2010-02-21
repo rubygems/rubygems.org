@@ -101,6 +101,10 @@ Then /^I should not see "([^\"]*)"$/ do |text|
   assert_not_contain Regexp.new(text)
 end
 
+Then /^I should see the version "([^\"]*)" featured$/ do |version_number|
+  assert_select("h3", :text => version_number)
+end
+
 Then /^the "([^\"]*)" field should contain "([^\"]*)"$/ do |field, value|
   # field_labeled(field).value.should =~ /#{value}/
   assert field_labeled(field).value =~ /#{value}/

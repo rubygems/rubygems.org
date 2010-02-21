@@ -742,6 +742,12 @@ body {
   margin-left: 4px;
 }
 
+.yanked {
+  color: #B32228;
+  font-size: 0.85em;
+  margi-left: 4px;
+}
+
 .main .info .meta .versions small {
   color: #90856C;
   margin-left: 4px;
