@@ -1,4 +1,9 @@
-class Gem::Commands::YankCommand < Gem::AbstractCommand
+require 'rubygems/local_remote_options'
+require 'rubygems/gemcutter_utilities'
+
+class Gem::Commands::YankCommand < Gem::Command
+  include Gem::LocalRemoteOptions
+  include Gem::GemcutterUtilities
 
   def description
     'Remove a specific gem version release from Gemcutter'
@@ -15,13 +20,13 @@ class Gem::Commands::YankCommand < Gem::AbstractCommand
   def initialize
     super 'yank', description
     add_option('-v', '--version VERSION', 'Version to remove') do |value, options|
-      options[:version] << value
+      options[:version] = value
     end
   end
 
   def execute
-    setup
-    version = get_version_from_requirements(options[:version])
+    sign_in
+    version = options[:version] #get_version_from_requirements(options[:version])
     if !version.nil?
       yank_gem(version)
     else
@@ -33,23 +38,23 @@ class Gem::Commands::YankCommand < Gem::AbstractCommand
     say "Yanking gem from Gemcutter..."
 
     name = get_one_gem_name
-    url = "gems/#{name}/yank"
+    url = "api/v1/gems/#{name}/yank"
     # say "posting to #{url} w/ version '#{version}'"
 
-    response = make_request(:delete, url) do |request|
-      request.add_field("Authorization", api_key)
+    response = rubygems_api_request(:delete, url) do |request|
+      request.add_field("Authorization", Gem.configuration.rubygems_api_key)
       request.set_form_data({'version' => version})
     end
 
     say response.body
   end
 
-  private
-    def get_version_from_requirements(requirements)
-      begin
-        requirements.requirements.first[1].version
-      rescue
-        nil
-      end
-    end
+  # private
+  #   def get_version_from_requirements(requirements)
+  #     begin
+  #       requirements.requirements.first[1].version
+  #     rescue
+  #       nil
+  #     end
+  #   end
 end
