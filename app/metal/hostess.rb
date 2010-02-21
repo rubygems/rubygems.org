@@ -58,7 +58,7 @@ class Hostess < Sinatra::Default
      /quick/latest_index
   ].each do |old_index|
     head old_index do
-      t(:please_upgrade)
+      "Please upgrade your RubyGems, it's quite old: http://rubygems.org/pages/download"
     end
 
     get old_index do
