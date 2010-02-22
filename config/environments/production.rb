@@ -7,3 +7,5 @@ config.action_view.cache_template_loading            = true
 require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?
 
 HOST = "rubygems.org"
+
+config.middleware.insert_after 'ActionController::ParamsParser', 'Redirector'
