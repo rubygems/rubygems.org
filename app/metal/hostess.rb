@@ -36,7 +36,7 @@ class Hostess < Sinatra::Default
   end
 
   %w[/quick/Marshal.4.8/*.gemspec.rz
-     /quick/rubygems-update-1.3.5.gemspec.rz
+     /quick/rubygems-update-1.3.6.gemspec.rz
      /yaml.Z
      /yaml.z
      /Marshal.4.8.Z
