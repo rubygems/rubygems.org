@@ -1,6 +1,6 @@
 require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?
 
-HOST = "gemcutter.org"
+HOST = "rubygems.org"
 
 config.frameworks -= [:active_record]
 
