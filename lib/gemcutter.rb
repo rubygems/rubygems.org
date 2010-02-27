@@ -65,7 +65,7 @@ class Gemcutter
       format = Gem::Format.from_io(body)
       @spec = format.spec
     rescue Exception => e
-      notify("Gemcutter cannot process this gem.\n" + 
+      notify("RubyGems.org cannot process this gem.\n" + 
              "Please try rebuilding it and installing it locally to make sure it's valid.\n" +
              "Error:\n#{e.message}\n#{e.backtrace.join("\n")}", 422)
     end

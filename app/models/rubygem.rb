@@ -18,10 +18,10 @@ class Rubygem < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
 
-  named_scope :with_versions, 
+  named_scope :with_versions,
     :select => 'DISTINCT rubygems.*',
     :joins => :versions
-  named_scope :with_one_version, 
+  named_scope :with_one_version,
     :select => 'rubygems.*',
     :joins => :versions,
     :group => column_names.map{ |name| "rubygems.#{name}" }.join(', '),
@@ -173,10 +173,10 @@ class Rubygem < ActiveRecord::Base
       end
     end
   end
-  
+
   def yank!(version)
     version.yank!
-    if versions(true).indexed.count == 0
+    if versions(true).indexed.count.zero?
       ownerships.each(&:destroy_without_callbacks)
     end
   end
