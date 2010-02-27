@@ -16,8 +16,31 @@ When /^I push the gem "([^\"]*)" with my api key$/ do |name|
   visit api_v1_rubygems_path, :post, File.open(path).read
 end
 
-When /^I delete the gem "([^\"]*)" with my api key$/ do |arg1|
-  pending
+When /^I yank the gem "([^\"]*)" version "([^\"]*)" with my api key$/ do |name, version_number|
+  header("HTTP_AUTHORIZATION", @api_key)
+  visit yank_api_v1_rubygem_path(name, :version => version_number), :delete
+  assert_match /Successfully yanked/, response.body
+end
+
+When /^I attempt to yank the gem "([^\"]*)" version "([^\"]*)" with my api key$/ do |name, version_number|
+  header("HTTP_AUTHORIZATION", @api_key)
+  visit yank_api_v1_rubygem_path(name, :version => version_number), :delete
+end
+
+When /^I migrate the gem "([^\"]*)" with my api key$/ do |name|
+  rubygem = Rubygem.find_by_name!(name)
+
+  header("HTTP_AUTHORIZATION", @api_key)
+  visit migrate_path(:rubygem_id => rubygem.to_param), :post
+  token = response.body
+
+  subdomain = rubygem.versions.latest.rubyforge_project
+
+  FakeWeb.register_uri(:get,
+                       "http://#{subdomain}.rubyforge.org/migrate-#{name}.html",
+                       :body => token)
+
+  visit migrate_path(:rubygem_id => rubygem.to_param), :put
 end
 
 When /^I list the owners of gem "([^\"]*)" with my api key$/ do |name|

@@ -157,7 +157,7 @@ class GemcutterTest < ActiveSupport::TestCase
 
       context "with a existing rubygem" do
         setup do
-          @rubygem = Factory(:rubygem, :versions_count => 1)
+          @rubygem = Factory(:rubygem)
           stub(@cutter).rubygem { @rubygem }
         end
 
@@ -167,17 +167,23 @@ class GemcutterTest < ActiveSupport::TestCase
         end
 
         should "be true if no versions exist since it's a dependency" do
-          @rubygem.update_attribute(:versions_count, 0)
           assert @cutter.authorize
         end
 
-        should "be false if not owned by user" do
+        should "be false if not owned by user and an indexed version exists" do
+          Factory(:version, :rubygem => @rubygem, :number => '0.1.1')
           assert ! @cutter.authorize
           assert_equal "You do not have permission to push to this gem.", @cutter.message
           assert_equal 403, @cutter.code
         end
+        
+        should "be true if not owned by user but no indexed versions exist" do
+          Factory(:version, :rubygem => @rubygem, :number => '0.1.1', :indexed => false)
+          assert @cutter.authorize
+        end
 
-        should "be false if rubygem exists and is owned by unapproved user" do
+        should "be false if rubygem exists with an indexed version and is owned by unapproved user" do
+          Factory(:version, :rubygem => @rubygem, :number => '0.1.1')
           @rubygem.ownerships.create(:user => @user, :approved => false)
           assert ! @cutter.authorize
           assert_equal "You do not have permission to push to this gem.", @cutter.message
