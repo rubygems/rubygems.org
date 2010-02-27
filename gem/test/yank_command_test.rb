@@ -5,7 +5,7 @@ class YankCommandTest < CommandTest
     setup do
       @gem = "MyGem"
       @version = '0.1.0'
-      @api = "https://rubygems.org/api/v1/gems/#{@gem}/yank"
+      @api = "https://rubygems.org/api/v1/gems/yank"
       @command = Gem::Commands::YankCommand.new
       stub(@command).say
     end
