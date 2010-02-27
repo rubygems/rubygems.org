@@ -1,9 +1,8 @@
 Feature: Delete Gems
-  In order to remove my botched release 
+  In order to remove my botched release
   As a rubygem developer
   I want to delete gems from Gemcutter
-  
-@wip
+
   Scenario: User yanks a gem
     Given I am signed up and confirmed as "email@person.com/password"
     And I have a gem "RGem" with version "1.2.2"
@@ -30,8 +29,8 @@ Feature: Delete Gems
     When I yank the gem "RGem" version "1.2.3" with my api key
     And I visit the gem page for "RGem"
     And I should see "This gem has been yanked."
-    
-    When I am signed up and confirmed as "new@owner.com/password"
+
+    Given I am signed up and confirmed as "new@owner.com/password"
     And I have a gem "RGem" with version "0.1.0"
     And I have an api key for "new@owner.com/password"
     When I push the gem "RGem-0.1.0.gem" with my api key
@@ -41,7 +40,7 @@ Feature: Delete Gems
     When I list the owners of gem "RGem" with my api key
     Then I should see "new@owner.com"
     And I should not see "old@owner.com"
-    
+
   Scenario: User who is not owner attempts to yank a gem
     Given I am signed up and confirmed as "non@owner.org/password"
     And a user exists with an email of "the@owner.org"
@@ -52,7 +51,7 @@ Feature: Delete Gems
     And the gem "RGem" with version "1.2.3" has been indexed
     When I attempt to yank the gem "RGem" version "1.2.3" with my api key
     Then I should see "You do not have permission to yank this gem."
-    
+
   Scenario: User attempts to yank a nonexistent version of a gem
     Given I am signed up and confirmed as "the@owner.com/password"
     And I have a gem "RGem" with version "1.2.3"
@@ -61,7 +60,7 @@ Feature: Delete Gems
     And the gem "RGem" with version "1.2.3" has been indexed
     When I attempt to yank the gem "RGem" version "1.2.4" with my api key
     Then I should see "The version 1.2.4 does not exist."
-  
+
   Scenario: User attempts to yank a gem that has already been yanked
     Given I am signed up and confirmed as "the@owner.com/password"
     And I have a gem "RGem" with version "1.2.2"

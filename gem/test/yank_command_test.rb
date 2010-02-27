@@ -9,7 +9,7 @@ class YankCommandTest < CommandTest
       @command = Gem::Commands::YankCommand.new
       stub(@command).say
     end
-    
+
     %w[-v --version].each do |option|
       should "raise an error with no version with #{option}" do
         assert_raise OptionParser::MissingArgument do
@@ -22,23 +22,23 @@ class YankCommandTest < CommandTest
       setup do
         stub_api_key("key")
         stub_request(:delete, @api).to_return(:body => "Successfully yanked")
-    
+
         @command.handle_options([@gem, "-v", @version])
         @command.execute
       end
-      
+
       should 'say gem was yanked' do
         assert_received(@command) do |command|
           command.say("Yanking gem from Gemcutter...")
           command.say("Successfully yanked")
         end
       end
-      
+
       should 'delete to api' do
         assert_requested(:delete, @api,
                          :times => 1)
         assert_requested(:delete, @api,
-                         :headers => { 'Authorization' => 'key' })        
+                         :headers => { 'Authorization' => 'key' })
       end
     end
   end

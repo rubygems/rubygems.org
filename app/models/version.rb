@@ -18,15 +18,16 @@ class Version < ActiveRecord::Base
       :order => 'created_at desc' }
   }
 
-  named_scope :with_associated, { 
+  named_scope :with_associated, {
     :conditions => ["versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)"],
     :include    => :rubygem,
-    :order      => "versions.built_at desc" 
+    :order      => "versions.built_at desc"
   }
-  named_scope :latest,          { :conditions => { :latest     => true  }}
-  named_scope :with_deps,       { :include => {:dependencies => :rubygem} }
-  named_scope :prerelease,      { :conditions => { :prerelease => true  }}
-  named_scope :release,         { :conditions => { :prerelease => false }}
+
+  named_scope :latest,     { :conditions => { :latest       => true  }}
+  named_scope :with_deps,  { :include    => { :dependencies => :rubygem }}
+  named_scope :prerelease, { :conditions => { :prerelease   => true  }}
+  named_scope :release,    { :conditions => { :prerelease   => false }}
 
   before_save :update_prerelease
   after_save  :reorder_versions
@@ -86,11 +87,11 @@ class Version < ActiveRecord::Base
   def reorder_versions
     rubygem.reorder_versions
   end
-  
+
   def yank!
-    update_attributes!({:indexed => false})
+    update_attributes!(:indexed => false)
   end
-  
+
   def yanked?
     !indexed
   end

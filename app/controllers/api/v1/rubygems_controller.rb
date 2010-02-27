@@ -32,7 +32,7 @@ class Api::V1::RubygemsController < ApplicationController
         version = Version.find_from_slug!(@rubygem, params[:version])
         if version.indexed?
           @rubygem.yank!(version)
-          render :json => "Successfully yanked"
+          render :json => "Successfully yanked gem: #{version.to_title}"
         else
           render :json => "The version #{params[:version]} has already been yanked.", :status => :unprocessable_entity
         end
