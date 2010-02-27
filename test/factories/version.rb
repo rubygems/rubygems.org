@@ -5,6 +5,7 @@ Factory.define :version do |version|
   version.built_at          { 1.day.ago }
   version.platform          { "ruby" }
   version.association       :rubygem
+  version.indexed           true
 end
 
 Factory.sequence :version_number do |n|
