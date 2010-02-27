@@ -16,7 +16,7 @@ class SearchesControllerTest < ActionController::TestCase
     setup do
       @sinatra = Factory(:rubygem, :name => "sinatra")
       assert_nil @sinatra.versions.latest
-      assert @sinatra.reload.versions_count.zero?
+      assert @sinatra.reload.versions.count.zero?
       get :new, :query => "sinatra"
     end
 
