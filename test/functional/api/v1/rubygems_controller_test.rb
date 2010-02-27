@@ -172,7 +172,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       context "ON DELETE to yank for existing gem version" do
         setup do
-          delete :yank, :id => @rubygem.to_param, :version => @v1.number
+          delete :yank, :gem_name => @rubygem.to_param, :version => @v1.number
         end
         should_respond_with :success
         should_not_change("the rubygem's version count")     { @rubygem.versions.count }
@@ -187,7 +187,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
         context "ON DELETE to yank for version 0.1.1" do
           setup do
-            delete :yank, :id => @rubygem.to_param, :version => @v2.number
+            delete :yank, :gem_name => @rubygem.to_param, :version => @v2.number
           end
           should_respond_with :success
           should_not_change("the rubygem's version count")     { @rubygem.versions.count }
@@ -198,7 +198,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       context "ON DELETE to yank for existing gem with invalid version" do
         setup do
-          delete :yank, :id => @rubygem.to_param, :version => "0.2.0"
+          delete :yank, :gem_name => @rubygem.to_param, :version => "0.2.0"
         end
         should_respond_with :not_found
         should_not_change("the rubygem's version count")         { @rubygem.versions.count }
@@ -209,7 +209,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         setup do
           @other_user = Factory(:email_confirmed_user)
           @request.env["HTTP_AUTHORIZATION"] = @other_user.api_key
-          delete :yank, :id => @rubygem.to_param, :version => '0.1.0'
+          delete :yank, :gem_name => @rubygem.to_param, :version => '0.1.0'
         end
         should_respond_with :forbidden
         should_not_change("the rubygem's indexed version count") { @rubygem.versions.indexed.count }
@@ -218,7 +218,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       context "ON DELETE to yank for an already yanked gem" do
         setup do
           @v1.yank!
-          delete :yank, :id => @rubygem.to_param, :version => '0.1.0'
+          delete :yank, :gem_name => @rubygem.to_param, :version => '0.1.0'
         end
         should_respond_with :unprocessable_entity
       end

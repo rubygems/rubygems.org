@@ -12,7 +12,7 @@ ActionController::Routing::Routes.draw do |map|
                    :member       => {:reset => :put}
       v1.resources :rubygems,
                    :as           => "gems",
-                   :member       => {:yank => :delete},
+                   :collection   => {:yank => :delete},
                    :only         => [:create, :show] do |rubygems|
       v1.resource  :migrate,
                    :only         => [:create, :update],
