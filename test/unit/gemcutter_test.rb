@@ -91,7 +91,7 @@ class GemcutterTest < ActiveSupport::TestCase
         stub(@cutter).body.stub!.read { nil }
         @cutter.pull_spec
         assert_nil @cutter.spec
-        assert_match %r{Gemcutter cannot process this gem}, @cutter.message
+        assert_match %r{RubyGems\.org cannot process this gem}, @cutter.message
         assert_equal @cutter.code, 422
       end
     end
