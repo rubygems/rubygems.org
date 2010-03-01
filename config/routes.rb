@@ -14,12 +14,6 @@ ActionController::Routing::Routes.draw do |map|
                    :as           => "gems",
                    :collection   => {:yank => :delete},
                    :only         => [:create, :show] do |rubygems|
-      v1.resource  :migrate,
-                   :only         => [:create, :update],
-                   :controller   => "migrations",
-                   :path_prefix  => "/gems/:rubygem_id",
-                   :requirements => { :rubygem_id => RUBYGEM_NAME_MATCHER }
-
         rubygems.resource :owners,
           :only       => [:show, :create, :destroy]
       end
