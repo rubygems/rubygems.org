@@ -19,12 +19,12 @@ class Rubygem < ActiveRecord::Base
   validates_uniqueness_of :name
 
   named_scope :with_versions,
-    :select => 'DISTINCT rubygems.*',
-    :joins => :versions
+    :conditions => "rubygems.id IN (SELECT rubygem_id FROM versions)"
+
   named_scope :with_one_version,
     :select => 'rubygems.*',
-    :joins => :versions,
-    :group => column_names.map{ |name| "rubygems.#{name}" }.join(', '),
+    :joins  => :versions,
+    :group  => column_names.map{ |name| "rubygems.#{name}" }.join(', '),
     :having => 'COUNT(versions.id) = 1'
 
   named_scope :name_is, lambda { |name| {
@@ -57,7 +57,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.total_count
-    with_versions.count
+    Version.latest.count
   end
 
   def self.latest(limit=5)

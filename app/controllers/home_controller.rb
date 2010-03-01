@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
   def index
-    @count = Version.latest.count
+    @count = Rubygem.total_count
     @latest = Rubygem.latest
     @downloaded = Rubygem.downloaded
     @updated = Version.updated
