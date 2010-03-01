@@ -27,7 +27,8 @@ Feature: Delete Gems
     And I've already pushed the gem "RGem-1.2.3.gem" with my api key
     And the gem "RGem" with version "1.2.3" has been indexed
     When I yank the gem "RGem" version "1.2.3" with my api key
-    And I visit the gem page for "RGem"
+    And I go to the dashboard with my api key
+    And I follow "RGem"
     And I should see "This gem has been yanked."
 
     Given I am signed up and confirmed as "new@owner.com/password"
