@@ -6,65 +6,68 @@
     This gem is not currently hosted on Gemcutter.
   </p>
 <% else %>
+  <% if @latest_version.indexed %>
+    <div id="markup">
+      <%= simple_markup(@latest_version.info) %>
+    </div>
 
-
-  <div id="markup">
-    <%= simple_markup(@latest_version.info) %>
-  </div>
-
-  <div class="border">
-    <% if !@latest_version.yanked? -%>
+    <div class="border">
       <%= clippy(@latest_version.to_install) %>
       <div class="install">
         <div class="instructions"><strong>install</strong><span><%= @latest_version.to_install %></span></div>
       </div>
-    <% else -%>
-      <div class="install">
-        This gem has been yanked.
-      </div>
-    <% end -%>
-  </div>
+    </div>
+  <% else %>
+    <p>
+      This gem has been yanked, but it is still available for download for other gems that may have depended on it.
+      For more information or if you need to remove it permanently, <%=link_to "please click here.", "http://help.rubygems.org/faqs/gemcutter/removing-a-published-rubygem" %>
+    </p>
+  <% end %>
 
   <div class="border">
     <div class="meta">
       <div class="admin">
         <%= link_to "Edit", edit_rubygem_path(@rubygem), :id => "edit" if @rubygem.owned_by?(current_user) %>
         <%= download_link(@latest_version) %>
-        <%= subscribe_link(@rubygem) %>
-        <%= unsubscribe_link(@rubygem) %>
-        <%= link_to "Metrics", @rubygem.metrics_link(rubygem_path(@rubygem, :only_path => false)), :id => 'metrics' %>
+        <% if @latest_version.indexed %>
+          <%= subscribe_link(@rubygem) %>
+          <%= unsubscribe_link(@rubygem) %>
+          <%= link_to "Metrics", @rubygem.metrics_link(rubygem_path(@rubygem, :only_path => false)), :id => 'metrics' %>
+        <% end %>
       </div>
 
-      <div class="who">
-        <div class="authors">
-          <h5>Authors</h5>
-          <% if @latest_version.authors.present? %>
-            <p><%=h @latest_version.authors %></p>
-          <% else %>
-            <p>N/A</p>
-          <% end %>
+      <% if @latest_version.indexed %>
+        <div class="who">
+          <div class="authors">
+            <h5>Authors</h5>
+            <% if @latest_version.authors.present? %>
+              <p><%=h @latest_version.authors %></p>
+            <% else %>
+              <p>N/A</p>
+            <% end %>
+          </div>
+
+          <div class="downloads">
+            <span>
+              <strong><%= number_with_delimiter(@rubygem.downloads) %></strong> total downloads
+            </span>
+            <span>
+              <strong><%= number_with_delimiter(@latest_version.downloads_count) %></strong> for this version
+            </span>
+          </div>
         </div>
 
-        <div class="downloads">
-          <span>
-            <strong><%= number_with_delimiter(@rubygem.downloads) %></strong> total downloads
-          </span>
-          <span>
-            <strong><%= number_with_delimiter(@latest_version.downloads_count) %></strong> for this version
-          </span>
-        </div>
-      </div>
-
-      <% unless @rubygem.linkset.empty? %>
-        <div class="links">
-          <h5>Links</h5>
-          <%= link_to_page "Homepage", @rubygem.linkset.home %>
-          <%= link_to_page "Source Code", @rubygem.linkset.code %>
-          <%= link_to_page "Documentation", @rubygem.linkset.docs %>
-          <%= link_to_page "Wiki", @rubygem.linkset.wiki %>
-          <%= link_to_page "Mailing List", @rubygem.linkset.mail %>
-          <%= link_to_page "Bug Tracker", @rubygem.linkset.bugs %>
-        </div>
+        <% unless @rubygem.linkset.empty? %>
+          <div class="links">
+            <h5>Links</h5>
+            <%= link_to_page "Homepage", @rubygem.linkset.home %>
+            <%= link_to_page "Source Code", @rubygem.linkset.code %>
+            <%= link_to_page "Documentation", @rubygem.linkset.docs %>
+            <%= link_to_page "Wiki", @rubygem.linkset.wiki %>
+            <%= link_to_page "Mailing List", @rubygem.linkset.mail %>
+            <%= link_to_page "Bug Tracker", @rubygem.linkset.bugs %>
+          </div>
+        <% end %>
       <% end %>
 
       <div class="versions">
