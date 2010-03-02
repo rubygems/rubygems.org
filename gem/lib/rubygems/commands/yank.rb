@@ -16,19 +16,26 @@ class Gem::Commands::YankCommand < Gem::Command
   end
 
   def usage
-    "#{program_name} GEM -v VERSION"
+    "#{program_name} GEM -v VERSION [--undo]"
   end
-
+  
   def initialize
     super 'yank', description
     add_version_option("remove")
+    add_option('--undo') do |value, options|
+      options[:undo] = true
+    end
   end
 
   def execute
     sign_in
     version = get_version_from_requirements(options[:version])
     if !version.nil?
-      yank_gem(version)
+      if options[:undo]
+        unyank_gem(version)
+      else
+        yank_gem(version)
+      end
     else
       say "A version argument is required: #{usage}"
       terminate_interaction
@@ -37,19 +44,24 @@ class Gem::Commands::YankCommand < Gem::Command
 
   def yank_gem(version)
     say "Yanking gem from RubyGems.org..."
-
-    name = get_one_gem_name
-    url = "api/v1/gems/yank"
-
-    response = rubygems_api_request(:delete, url) do |request|
-      request.add_field("Authorization", Gem.configuration.rubygems_api_key)
-      request.set_form_data({'gem_name' => name, 'version' => version})
-    end
-
-    say response.body
+    yank_api_request(:delete, version, "api/v1/gems/yank")
+  end
+  
+  def unyank_gem(version)
+    say "Unyanking gem from RubyGems.org..."
+    yank_api_request(:put, version, "api/v1/gems/unyank")
   end
   
   private
+    def yank_api_request(method, version, api)
+      name = get_one_gem_name
+      response = rubygems_api_request(method, api) do |request|
+        request.add_field("Authorization", Gem.configuration.rubygems_api_key)
+        request.set_form_data({'gem_name' => name, 'version' => version})
+      end
+      say response.body
+    end
+
     def get_version_from_requirements(requirements)
       begin
         requirements.requirements.first[1].version
