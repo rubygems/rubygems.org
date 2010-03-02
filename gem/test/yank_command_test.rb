@@ -5,7 +5,6 @@ class YankCommandTest < CommandTest
     setup do
       @gem = "MyGem"
       @version = '0.1.0'
-      @api = "https://rubygems.org/api/v1/gems/yank"
       @command = Gem::Commands::YankCommand.new
       stub(@command).say
     end
@@ -21,6 +20,7 @@ class YankCommandTest < CommandTest
     context 'yanking a gem' do
       setup do
         stub_api_key("key")
+        @api = "https://rubygems.org/api/v1/gems/yank"
         stub_request(:delete, @api).to_return(:body => "Successfully yanked")
         @command.handle_options([@gem, "-v", @version])
       end
@@ -53,6 +53,7 @@ class YankCommandTest < CommandTest
     context 'unyanking a gem' do
       setup do
         stub_api_key("key")
+        @api = "https://rubygems.org/api/v1/gems/unyank"
         stub_request(:put, @api).to_return(:body => "Successfully unyanked")
         @command.handle_options([@gem, "-v", @version, "--undo"])
       end
