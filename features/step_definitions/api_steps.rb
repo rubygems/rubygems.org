@@ -27,6 +27,12 @@ When /^I attempt to yank the gem "([^\"]*)" version "([^\"]*)" with my api key$/
   visit yank_api_v1_rubygems_path(:gem_name => name, :version => version_number), :delete
 end
 
+When /^I unyank the gem "([^\"]*)" version "([^\"]*)" with my api key$/ do |name, version_number|
+  header("HTTP_AUTHORIZATION", @api_key)
+  visit unyank_api_v1_rubygems_path(:gem_name => name, :version => version_number), :put
+  assert_match /Successfully unyanked gem: #{name} \(#{version_number}\)/, response.body
+end
+
 When /^I migrate the gem "([^\"]*)" with my api key$/ do |name|
   rubygem = Rubygem.find_by_name!(name)
 

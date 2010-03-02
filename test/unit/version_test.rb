@@ -172,10 +172,18 @@ class VersionTest < ActiveSupport::TestCase
     context "when yanked" do
       setup do
         @version.yank!
-        @version.reload
       end
       should("unindex") { assert !@version.indexed? }
       should("no longer be latest") { assert !@version.latest?}
+      
+      context "and consequently unyanked" do
+        setup do
+          @version.unyank!
+          @version.reload
+        end
+        should("re-index") { assert @version.indexed? }
+        should("become the latest again") { assert @version.latest? }
+      end
     end
   end
 

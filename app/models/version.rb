@@ -91,6 +91,10 @@ class Version < ActiveRecord::Base
   def yank!
     update_attributes!(:indexed => false)
   end
+  
+  def unyank!
+    update_attributes!(:indexed => true)
+  end
 
   def yanked?
     !indexed

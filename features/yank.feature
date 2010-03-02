@@ -71,6 +71,18 @@ Feature: Delete Gems
     And the gem "RGem" with version "1.2.2" has been indexed
     And I've already pushed the gem "RGem-1.2.3.gem" with my api key
     And the gem "RGem" with version "1.2.3" has been indexed
-    And I have have already yanked the gem "RGem" with version "1.2.3" with my api key
+    And I have already yanked the gem "RGem" with version "1.2.3" with my api key
     When I attempt to yank the gem "RGem" version "1.2.3" with my api key
     Then I should see "The version 1.2.3 has already been yanked"
+    
+  Scenario: User unyanks a gem
+    Given I am signed up and confirmed as "the@owner.com/password"
+    And I have a gem "RGem" with version "1.2.2"
+    And I have an api key for "the@owner.com/password"
+    And I've already pushed the gem "Rgem-1.2.2.gem" with my api key
+    And the gem "RGem" with version "1.2.2" has been indexed
+    And I have already yanked the gem "RGem" with version "1.2.2" with my api key
+    When I unyank the gem "RGem" version "1.2.2" with my api key
+    Then I should see "The version 1.2.2 has been unyanked"
+    And I visit the gem page for "RGem" version "1.2.2"
+    Then I should not see "This gem has been yanked."
