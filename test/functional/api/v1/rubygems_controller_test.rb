@@ -252,6 +252,35 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         end
         should_respond_with :unprocessable_entity
       end
+      
+    end
+    
+    context "for a gem SomeGem with a yanked version 0.1.0 and unyanked version 0.1.1" do
+      setup do
+        @rubygem  = Factory(:rubygem, :name => "SomeGem")
+        @v1       = Factory(:version, :rubygem => @rubygem, :number => "0.1.0", :platform => "ruby", :indexed => false)
+        @v2       = Factory(:version, :rubygem => @rubygem, :number => "0.1.1", :platform => "ruby")
+        Factory(:ownership, :user => @user, :rubygem => @rubygem, :approved => true)
+      end
+    
+      context "ON PUT to unyank for version 0.1.0" do
+        setup do
+          put :unyank, :gem_name => @rubygem.to_param, :version => @v1.number
+        end
+        should_respond_with :success
+        should_change("the rubygem's indexed version count", :by => 1) { @rubygem.versions.indexed.count }
+        should "re-index 0.1.0" do
+          assert @v1.reload.indexed?
+        end
+      end
+      
+      context "ON PUT to unyank for version 0.1.1" do
+        setup do
+          put :unyank, :gem_name => @rubygem.to_param, :version => @v2.number
+        end
+        should_respond_with :unprocessable_entity
+        should_not_change("the rubygem's indexed version count") { @rubygem.versions.indexed.count }
+      end
     end
   end
 end
