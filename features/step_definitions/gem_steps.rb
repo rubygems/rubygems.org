@@ -39,7 +39,7 @@ Given /^the gem "([^\"]*)" with version "([^\"]*)" has been indexed$/ do |name, 
   rubygem.versions.find_by_number(version).update_attribute(:indexed, true)
 end
 
-Given /^I have have already yanked the gem "([^\"]*)" with version "([^\"]*)" with my api key$/ do |name, version|
+Given /^I have already yanked the gem "([^\"]*)" with version "([^\"]*)" with my api key$/ do |name, version|
   rubygem = Rubygem.find_by_name!(name)
   rubygem.versions.find_by_number(version).yank!
 end
