@@ -132,6 +132,36 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
+    context "On POST to create for a repush" do
+      setup do
+        rubygem = Factory(:rubygem,
+                          :name       => "test")
+        Factory(:ownership, :rubygem    => rubygem,
+                            :user       => @user,
+                            :approved   => true)
+
+        @date = 1.year.ago
+        @version = Factory(:version,
+                           :rubygem    => rubygem,
+                           :number     => "0.0.0",
+                           :updated_at => @date,
+                           :created_at => @date,
+                           :summary    => "Freewill",
+                           :authors    => ["Geddy Lee"],
+                           :built_at   => @date)
+
+        @request.env["RAW_POST_DATA"] = gem_file.read
+        post :create
+      end
+      should_respond_with :conflict
+      should "not register new version" do
+        version = Rubygem.last.reload.versions.latest
+        assert_equal @date, version.built_at
+        assert_equal "Freewill", version.summary
+        assert_equal "Geddy Lee", version.authors
+      end
+    end
+
     context "On POST to create with bad gem" do
       setup do
         @request.env["RAW_POST_DATA"] = "really bad gem"
