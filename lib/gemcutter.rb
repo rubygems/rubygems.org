@@ -65,7 +65,7 @@ class Gemcutter
       format = Gem::Format.from_io(body)
       @spec = format.spec
     rescue Exception => e
-      notify("RubyGems.org cannot process this gem.\n" + 
+      notify("RubyGems.org cannot process this gem.\n" +
              "Please try rebuilding it and installing it locally to make sure it's valid.\n" +
              "Error:\n#{e.message}\n#{e.backtrace.join("\n")}", 422)
     end
@@ -74,6 +74,13 @@ class Gemcutter
   def find
     @rubygem = Rubygem.find_or_initialize_by_name(spec.name)
     @version = @rubygem.find_or_initialize_version_from_spec(spec)
+
+    if @version.new_record?
+      true
+    else
+      notify("Repushing of gem versions is not allowed.\n" +
+             "Please use `gem yank` to remove bad gem releases.", 409)
+    end
   end
 
   def self.server_path(*more)
