@@ -69,6 +69,18 @@ Test firing webhook...
 Successfully deployed webhook for rack to http://example.com</code></pre>
 </p>
 
+<h4 id="yank">gem yank</h4>
+<p>
+Remove a gem from RubyGems.org's index. Yanking a gem leaves it available for download on the site, but not through the RubyGems client. You can also undo a yank if you mistakenly decided to yank a gem. If you need a gem deleted permanently, feel free to open a request on <%=link_to "our support site", t(:help_url) %>.
+<pre><code>$ gem yank bills -v 0.0.1
+Yanking gem from RubyGems.org...
+Successfully yanked gem: bills (0.0.1)
+
+$ gem yank bills --undo -v 0.0.1
+Unyanking gem from RubyGems.org...
+Successfully unyanked gem: bills (0.0.1)</code></pre>
+</p>
+
 <h4 id="tumble">gem tumble</h4>
 <p>
 This command has been deprecated since <%= link_to "#{t(:title)} is now the official gem source.", "http://update.gemcutter.org/2009/10/26/transition.html" %>

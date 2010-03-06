@@ -78,12 +78,32 @@ $ curl '<%=t :url %>/api/v1/search.xml?query=cucumber'</code></pre>
 
 <h5 class="api">POST - /api/v1/gems</h5>
 <p>
-  Submit a gem to Gemcutter. Must have your API key supplied and give a built RubyGem in the body of the request.
+  Submit a gem to RubyGems.org. Must have your API key supplied and give a built RubyGem in the body of the request.
 <pre><code>$ curl --data-binary @gemcutter-0.2.1.gem \
        -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
        <%=t :url %>/api/v1/gems
 
 Successfully registered gem: gemcutter (0.2.1)</code></pre>
+</p>
+
+<h5 class="api">DELETE - /api/v1/gems/yank</h5>
+<p>
+  Remove a gem from RubyGems.org's index.
+<pre><code> $ curl -X DELETE -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
+        -d 'gem_name=bills' -d 'version=0.0.1' \
+        <%=t :url %>/api/v1/gems/yank
+
+Successfully yanked gem: bills (0.0.1)</code></pre>
+</p>
+
+<h5 class="api">PUT - /api/v1/gems/unyank</h5>
+<p>
+  Update a previously yanked gem back into RubyGems.org's index.
+<pre><code> $ curl -X PUT -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
+        -d 'gem_name=bills' -d 'version=0.0.1' \
+        <%=t :url %>/api/v1/gems/unyank
+
+Successfully unyanked gem: bills (0.0.1)</code></pre>
 </p>
 
 <h4 id="owner">Owner Methods</h4>
