@@ -3,7 +3,6 @@ require File.dirname(__FILE__) + '/../test_helper'
 class DependencyTest < ActiveSupport::TestCase
   should_belong_to :rubygem
   should_belong_to :version
-  should_validate_presence_of :requirements
 
   context "with dependency" do
     setup do
@@ -15,6 +14,7 @@ class DependencyTest < ActiveSupport::TestCase
     end
 
     should "return json" do
+      @dependency.save
       json = JSON.parse(@dependency.to_json)
 
       assert_equal %w[name requirements], json.keys
@@ -23,6 +23,7 @@ class DependencyTest < ActiveSupport::TestCase
     end
 
     should "return xml" do
+      @dependency.save
       xml = Nokogiri.parse(@dependency.to_xml)
 
       assert_equal "dependency", xml.root.name
@@ -37,8 +38,8 @@ class DependencyTest < ActiveSupport::TestCase
       setup do
         @rubygem        = Factory(:rubygem)
         @requirements   = ['>= 0.0.0']
-        @gem_dependency = gem_dependency_stub(@rubygem.name, @requirements)
-        @dependency     = Dependency.create_from_gem_dependency!(@gem_dependency)
+        @gem_dependency = Gem::Dependency.new(@rubygem.name, @requirements)
+        @dependency     = Dependency.create!(:gem_dependency => @gem_dependency)
       end
 
       should "create a Dependency referring to the existing Rubygem" do
@@ -51,8 +52,8 @@ class DependencyTest < ActiveSupport::TestCase
       setup do
         @rubygem        = Factory(:rubygem)
         @requirements   = ['>= 0.0.0', '< 1.0.0']
-        @gem_dependency = gem_dependency_stub(@rubygem.name, @requirements)
-        @dependency     = Dependency.create_from_gem_dependency!(@gem_dependency)
+        @gem_dependency = Gem::Dependency.new(@rubygem.name, @requirements)
+        @dependency     = Dependency.create!(:gem_dependency => @gem_dependency)
       end
 
       should "create a Dependency referring to the existing Rubygem" do
@@ -64,21 +65,23 @@ class DependencyTest < ActiveSupport::TestCase
     context "that refers to a Rubygem that does not exist" do
       setup do
         @rubygem_name   = 'other-name'
-        @gem_dependency = gem_dependency_stub(@rubygem_name)
-        @dependency     = Dependency.create_from_gem_dependency!(@gem_dependency)
+        @gem_dependency = Gem::Dependency.new(@rubygem_name, "= 1.0.0")
       end
 
-      should_change("the existence of the rubygem", :from => false, :to => true) do
-        Rubygem.find_by_name(@rubygem_name).present?
+      should "not create rubygem" do
+        dependency = Dependency.create(:gem_dependency => @gem_dependency)
+        assert dependency.new_record?
+        assert dependency.errors.on_base.present?
+        assert_nil Rubygem.find_by_name(@rubygem_name)
       end
     end
   end
 
-  context "with a bad gem dependency" do
-    should "not fail" do
-      assert_nothing_raised do
-        Dependency.create_from_gem_dependency!(["ruby-ajp", ">= 0.2.0"])
-      end
+  context "without using Gem::Dependency" do
+    should "be invalid" do
+      dependency = Dependency.create(:gem_dependency => ["ruby-ajp", ">= 0.2.0"])
+      assert dependency.new_record?
+      assert dependency.errors[:rubygem].present?
     end
   end
 end
