@@ -134,6 +134,17 @@ class RubygemTest < ActiveSupport::TestCase
       assert_match "Name must include at least one letter, Home does not appear to be a valid URL", @rubygem.all_errors
     end
 
+    should "return dependency errors in #all_errors" do
+      @version = Factory(:version, :rubygem => @rubygem)
+      @specification = gem_specification_from_gem_fixture('test-0.0.0')
+      @specification.add_runtime_dependency "limelight", "1.0.0"
+
+      assert_raise ActiveRecord::RecordInvalid do
+        @rubygem.update_dependencies!(@version, @specification)
+      end
+      assert_match "Please specify dependencies", @rubygem.all_errors(@version)
+    end
+
     context "with a user" do
       setup do
         @user = Factory(:user)
@@ -412,11 +423,11 @@ class RubygemTest < ActiveSupport::TestCase
     should "sort results by number of downloads, descending" do
       assert_equal [@apple_crisp, @apple_pie], Rubygem.search('apple')
     end
-    
+
     should "find exact match by name on #name_is" do
       assert_equal @apple_crisp, Rubygem.name_is('apple_crisp').first
     end
-    
+
     should "find exact match by name with extra spaces on #name_is" do
       assert_equal @apple_crisp, Rubygem.name_is('apple_crisp ').first
     end
@@ -426,7 +437,7 @@ class RubygemTest < ActiveSupport::TestCase
     context "from a Gem::Specification with no dependencies" do
       setup do
         @specification = gem_specification_from_gem_fixture('test-0.0.0')
-        @rubygem       = Rubygem.create(:name => @specification.name)
+        @rubygem       = Rubygem.new(:name => @specification.name)
         @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
         @rubygem.update_attributes_from_gem_specification!(@version, @specification)
       end
@@ -440,89 +451,46 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
-    context "from a Gem::Specification with dependencies" do
+    context "from a Gem::Specification with bad dependencies" do
       setup do
         @specification = gem_specification_from_gem_fixture('with_dependencies-0.0.0')
-        @rubygem       = Rubygem.create(:name => @specification.name)
+        @rubygem       = Rubygem.new(:name => @specification.name)
         @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
-        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
       end
 
-      should_change("total number of Rubygems",     :by => 3) { Rubygem.count }
-      should_change("total number of Versions",     :by => 1) { Version.count }
-      should_change("total number of Dependencies", :by => 2) { Dependency.count }
+      should "raise invalid error" do
+        assert_raise ActiveRecord::RecordInvalid do
+          @rubygem.update_attributes_from_gem_specification!(@version, @specification)
+        end
 
-      should "create Rubygem instances for the dependencies" do
-        assert_not_nil Rubygem.find_by_name('thoughtbot-shoulda')
-        assert_not_nil Rubygem.find_by_name('rake')
+        assert_nil Rubygem.find_by_name('with_dependencies')
+        assert_nil Rubygem.find_by_name('thoughtbot-shoulda')
+        assert_nil Rubygem.find_by_name('rake')
+      end
+    end
+
+    context "from a Gem::Specification with pre-existing dependencies" do
+      setup do
+        @specification = gem_specification_from_gem_fixture('with_dependencies-0.0.0')
+        Rubygem.create(:name => "thoughtbot-shoulda")
+        Rubygem.create(:name => "rake")
+
+        @rubygem       = Rubygem.new(:name => @specification.name)
+        @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
+      end
+
+      should "save the gem" do
+        assert_nothing_raised do
+          @rubygem.update_attributes_from_gem_specification!(@version, @specification)
+        end
+
+        assert ! @rubygem.new_record?
+        assert ! @version.new_record?
+        assert_equal 1, @rubygem.versions.count
+        assert_equal 2, @version.dependencies.count
+        assert Rubygem.exists?(:name => 'thoughtbot-shoulda')
+        assert Rubygem.exists?(:name => 'rake')
       end
     end
   end
-
-  context "updating an existing Rubygem" do
-    setup do
-      @specification = gem_specification_from_gem_fixture('with_dependencies-0.0.0')
-      @rubygem       = Rubygem.create(:name => @specification.name)
-      @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
-      @rubygem.update_attributes_from_gem_specification!(@version, @specification)
-    end
-
-    context "from a Gem::Specification" do
-      setup do
-        @rubygem = Rubygem.find_by_name(@specification.name)
-        @version = @rubygem.find_or_initialize_version_from_spec(@specification)
-        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
-      end
-
-      should_not_change("total number of Rubygems") { Rubygem.count }
-      should_not_change("number of Versions")       { @rubygem.versions.count }
-      should_not_change("number of Dependencies")   { @rubygem.versions.last.dependencies.count }
-
-      should "have the homepage set properly" do
-        assert_equal @specification.homepage, @rubygem.linkset.home
-      end
-    end
-
-    context "from a Gem::Specification with new details" do
-      setup do
-        @homepage = 'http://new.example.org'
-        @specification.homepage = @homepage
-        @rubygem = Rubygem.find_by_name(@specification.name)
-        @version = @rubygem.find_or_initialize_version_from_spec(@specification)
-        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
-      end
-
-      should_not_change("total number of Rubygems") { Rubygem.count }
-      should_not_change("number of Versions")       { @rubygem.versions.count }
-      should_not_change("number of Dependencies")   { @rubygem.versions.last.dependencies.count }
-      should_change("homepage", :to => @homepage)   { @rubygem.linkset.home }
-    end
-
-    context "from a Gem::Specification with a new dependency" do
-      setup do
-        @specification.add_dependency('new-dependency')
-        @rubygem = Rubygem.find_by_name(@specification.name)
-        @version = @rubygem.find_or_initialize_version_from_spec(@specification)
-        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
-      end
-
-      should_change("total number of Rubygems", :by => 1) { Rubygem.count }
-      should_not_change("number of Versions")             { @rubygem.versions.count }
-      should_change("number of Dependencies",   :by => 1) { @rubygem.versions.last.dependencies.count }
-    end
-
-    context "from a Gem::Specification with a new version" do
-      setup do
-        @specification.version = '0.0.1'
-        @rubygem = Rubygem.find_by_name(@specification.name)
-        @version = @rubygem.find_or_initialize_version_from_spec(@specification)
-        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
-      end
-
-      should_not_change("total number of Rubygems")           { Rubygem.count }
-      should_change("number of Versions",           :by => 1) { @rubygem.versions.count }
-      should_change("total number of Dependencies", :by => 2) { Dependency.count }
-    end
-  end
-  
 end

@@ -51,10 +51,8 @@ class Gemcutter
   end
 
   def update
-    Rubygem.transaction do
-      rubygem.update_attributes_from_gem_specification!(version, spec)
-      rubygem.create_ownership(user)
-    end
+    rubygem.update_attributes_from_gem_specification!(version, spec)
+    rubygem.create_ownership(user) unless version.new_record?
     true
   rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback
     false
