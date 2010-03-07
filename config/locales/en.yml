@@ -7,3 +7,7 @@ en:
   please_confirm: "Access Denied. Please confirm your RubyGems.org account."
   feed_subscribed: "RubyGems.org | Subscribed Gems"
   feed_latest: "RubyGems.org | Latest Gems"
+  activerecord:
+    errors:
+      messages:
+        record_invalid: "{{errors}}"

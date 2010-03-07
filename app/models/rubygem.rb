@@ -137,10 +137,13 @@ class Rubygem < ActiveRecord::Base
   end
 
   def update_dependencies!(version, spec)
-    version.dependencies.delete_all
     spec.dependencies.each do |dependency|
-      version.dependencies.create_from_gem_dependency!(dependency)
+      version.dependencies.create!(:gem_dependency => dependency)
     end
+  rescue ActiveRecord::RecordInvalid => ex
+    # ActiveRecord can't chain a nested error here, so we have to add and reraise
+    errors.add_to_base ex.message
+    raise ex
   end
 
   def update_linkset!(spec)
@@ -150,10 +153,12 @@ class Rubygem < ActiveRecord::Base
   end
 
   def update_attributes_from_gem_specification!(version, spec)
-    self.save!
-    update_versions!     version, spec
-    update_dependencies! version, spec
-    update_linkset!      spec
+    Rubygem.transaction do
+      save!
+      update_versions!     version, spec
+      update_dependencies! version, spec
+      update_linkset!      spec
+    end
   end
 
   def reorder_versions
@@ -180,7 +185,7 @@ class Rubygem < ActiveRecord::Base
       ownerships.each(&:destroy_without_callbacks)
     end
   end
-    
+
   def find_or_initialize_version_from_spec(spec)
     version = self.versions.find_or_initialize_by_number_and_platform(spec.version.to_s, spec.original_platform.to_s)
     version.rubygem = self

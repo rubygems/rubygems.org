@@ -44,6 +44,16 @@ Given /^I have already yanked the gem "([^\"]*)" with version "([^\"]*)" with my
   rubygem.versions.find_by_number(version).yank!
 end
 
+Given /^the rubygem "([^\"]*)" does not exist$/ do |name|
+  assert_nil Rubygem.find_by_name(name)
+end
+
+Given /^I have a gem "([^\"]*)" with version "([^\"]*)" and runtime dependency "([^\"]*)"$/ do |name, version, dep|
+  gemspec = new_gemspec(name, version, 'Gem with Bad Deps', 'ruby')
+  gemspec.add_runtime_dependency(dep, '= 0.0.0')
+  build_gemspec(gemspec)
+end
+
 def build_gemspec(gemspec)
   builder = Gem::Builder.new(gemspec)
   builder.ui = Gem::SilentUI.new
