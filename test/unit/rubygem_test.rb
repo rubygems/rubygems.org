@@ -291,6 +291,35 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal dev_dep.name, doc.at_css("dependencies development dependency name").content
       assert_equal run_dep.name, doc.at_css("dependencies runtime dependency name").content
     end
+
+    context "with a linkset" do
+      setup do
+        @rubygem = Factory.build(:rubygem)
+        version = Factory(:version, :rubygem => @rubygem)
+      end
+
+      should "return a bunch of json" do
+        hash = JSON.parse(@rubygem.to_json)
+
+        assert_equal @rubygem.linkset.home, hash["homepage_uri"]
+        assert_equal @rubygem.linkset.wiki, hash["wiki_uri"]
+        assert_equal @rubygem.linkset.docs, hash["documentation_uri"]
+        assert_equal @rubygem.linkset.mail, hash["mailing_list_uri"]
+        assert_equal @rubygem.linkset.code, hash["source_code_uri"]
+        assert_equal @rubygem.linkset.bugs, hash["bug_tracker_uri"]
+      end
+
+      should "return a bunch of xml" do
+        doc = Nokogiri.parse(@rubygem.to_xml)
+
+        assert_equal @rubygem.linkset.home, doc.at_css("homepage-uri").content
+        assert_equal @rubygem.linkset.wiki, doc.at_css("wiki-uri").content
+        assert_equal @rubygem.linkset.docs, doc.at_css("documentation-uri").content
+        assert_equal @rubygem.linkset.mail, doc.at_css("mailing-list-uri").content
+        assert_equal @rubygem.linkset.code, doc.at_css("source-code-uri").content
+        assert_equal @rubygem.linkset.bugs, doc.at_css("bug-tracker-uri").content
+      end
+    end
   end
 
   context "with some rubygems" do
