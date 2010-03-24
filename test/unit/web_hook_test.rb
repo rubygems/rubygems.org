@@ -116,10 +116,8 @@ class WebHookTest < ActiveSupport::TestCase
 
   context "with a rubygem and version" do
     setup do
-      @rubygem = Factory(:rubygem,
-                         :name      => "foogem",
-                         :downloads => 42)
-      @version = Factory(:version, 
+      @rubygem = Factory(:rubygem_with_downloads, :name => "foogem", :downloads => 42)
+      @version = Factory(:version,
                          :rubygem           => @rubygem,
                          :number            => "3.2.1",
                          :authors           => %w[AUTHORS],

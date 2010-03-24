@@ -8,3 +8,5 @@ Rails::Initializer.run do |config|
   config.frameworks -= [:active_resource]
   config.load_paths << Rails.root.join('app', 'middleware')
 end
+
+$redis = Redis.new
