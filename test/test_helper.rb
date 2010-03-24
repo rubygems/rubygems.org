@@ -18,6 +18,11 @@ class Test::Unit::TestCase
   include RR::Adapters::TestUnit unless include?(RR::Adapters::TestUnit)
   include WebMock
 
+  def setup
+    RR.reset
+    $redis.flushdb
+  end
+
   def response_body
     @response.body
   end

@@ -84,6 +84,10 @@ class Rubygem < ActiveRecord::Base
     versions.latest.try(:to_title) || name
   end
 
+  def downloads
+    Download.for(self)
+  end
+
   def payload(version = versions.latest, host_with_port = HOST)
     {
       'name'              => name,
