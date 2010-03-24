@@ -149,6 +149,10 @@ class Version < ActiveRecord::Base
     full_name.gsub(/^#{rubygem.name}-/, '')
   end
 
+  def downloads_count
+    Download.for(self)
+  end
+
   def to_s
     number
   end
