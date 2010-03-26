@@ -1,5 +1,4 @@
-class Download < ActiveRecord::Base
-
+class Download
   COUNT_KEY = "downloads"
   TODAY_KEY = "downloads:today"
 
