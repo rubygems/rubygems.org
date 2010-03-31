@@ -34,10 +34,8 @@ namespace "gemcutter:downloads" do
       version = vmap[version_id.to_i]
       puts ">>> #{index+1}/#{size} #{version.full_name} #{count} #{date}"
 
-      $redis.hset "downloads:version_history:#{version.full_name}", date, count
-      key = "downloads:rubygem_history:#{version.rubygem.name}"
-      dls = $redis.hget(key, date).to_i
-      $redis.hset key, date, dls + count.to_i
+      $redis.hincrby Download.history_key(version), date, count
+      $redis.hincrby Download.history_key(verison.rubygem), date, count
     end
   end
 end
