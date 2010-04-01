@@ -35,7 +35,7 @@ namespace "gemcutter:downloads" do
       puts ">>> #{index+1}/#{size} #{version.full_name} #{count} #{date}"
 
       $redis.hincrby Download.history_key(version), date, count
-      $redis.hincrby Download.history_key(verison.rubygem), date, count
+      $redis.hincrby Download.history_key(version.rubygem), date, count
     end
   end
 end
