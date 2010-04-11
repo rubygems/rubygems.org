@@ -11,7 +11,17 @@ $(document).ready(function() {
     });
   }
 
-  if($(".count").length > 0) {
+  $(document).bind('keyup', function(event) {
+    if ($(event.target).is(':input')) {
+      return;
+    }
+
+    if (event.which == 83) {
+      $('#query').focus();
+    }
+  });
+
+  if ($('.count').length > 0) {
     setInterval(function() {
       $.getJSON("/api/v1/downloads.json", function(data) {
         $(".count strong").text(number_with_delimiter(data['total']) + " downloads");
