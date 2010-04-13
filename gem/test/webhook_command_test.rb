@@ -1,4 +1,5 @@
 require 'helper'
+require 'lib/rubygems/commands/webhook_command'
 
 class WebhookCommandTest < CommandTest
   context "webhooking" do
