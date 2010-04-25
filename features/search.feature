@@ -62,3 +62,30 @@ Feature: Search
       And I fill in "query" with "paperclip"
       And I press "Search"
       Then I should not see "Exact match"
+
+    Scenario: The only pushed version of a gem is yanked
+      Given I am signed up and confirmed as "email@person.com/password"
+      And I have a gem "RGem" with version "1.0.0"
+      And I have an api key for "email@person.com/password"
+      And I've already pushed the gem "RGem-1.0.0.gem" with my api key
+      And I yank the gem "RGem" version "1.0.0" with my api key
+      When I go to the homepage
+      And I fill in "query" with "rgem"
+      And I press "Search"
+      Then I should not see "RGem \(1.0.0\)"
+
+    Scenario: The most recent version of a gem is yanked
+      Given I am signed up and confirmed as "email@person.com/password"
+      And I have a gem "RGem" with version "1.2.1"
+      And I have a gem "RGem" with version "1.2.2"
+      And I have an api key for "email@person.com/password"
+      And I've already pushed the gem "RGem-1.2.1.gem" with my api key
+      And I've already pushed the gem "RGem-1.2.2.gem" with my api key
+      When I yank the gem "RGem" version "1.2.2" with my api key
+      When I go to the homepage
+      And I fill in "query" with "rgem"
+      And I press "Search"
+      And I should see "RGem \(1.2.1\)"
+      And I should not see "RGem \(1.2.2\)"
+
+
