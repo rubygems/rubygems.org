@@ -19,7 +19,7 @@ class Rubygem < ActiveRecord::Base
   validates_uniqueness_of :name
 
   named_scope :with_versions,
-    :conditions => "rubygems.id IN (SELECT rubygem_id FROM versions)"
+    :conditions => "rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)"
 
   named_scope :with_one_version,
     :select => 'rubygems.*',
