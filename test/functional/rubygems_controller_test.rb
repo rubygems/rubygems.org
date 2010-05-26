@@ -238,7 +238,6 @@ class RubygemsControllerTest < ActionController::TestCase
       assert_contain @latest_version.number
       assert_contain @latest_version.built_at.to_date.to_formatted_s(:long)
       assert_contain "Links"
-      assert_have_selector "a[id='metrics']", :content => 'Metrics'
     end
   end
 

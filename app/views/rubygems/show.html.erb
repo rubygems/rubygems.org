@@ -32,7 +32,6 @@
         <% if @latest_version.indexed %>
           <%= subscribe_link(@rubygem) %>
           <%= unsubscribe_link(@rubygem) %>
-          <%= link_to "Metrics", @rubygem.metrics_link(rubygem_path(@rubygem, :only_path => false)), :id => 'metrics' %>
         <% end %>
       </div>
 

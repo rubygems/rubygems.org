@@ -247,16 +247,6 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal @rubygem.name, @rubygem.to_s
     end
 
-    should "return valid metric URL for #metrics_link" do
-      @rubygem.save
-      assert_match /http:\/\/getcaliper\.com\/caliper\/project\?repo=/, @rubygem.metrics_link('http://rubygems.org/gems/fake_gem')
-    end
-
-    should "return CGI escaped metric URL for #metrics_link" do
-      @rubygem.save
-      assert_match /http%3A%2F%2Frubygems.org%2Fgems%2Ffake_gem/, @rubygem.metrics_link('http://rubygems.org/gems/fake_gem')
-    end
-
     should "return name with downloads for #with_downloads" do
       assert_equal "#{@rubygem.name} (#{@rubygem.downloads})", @rubygem.with_downloads
     end
