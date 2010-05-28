@@ -1,5 +1,4 @@
-source 'http://gemcutter.org'
-source 'http://gems.github.com'
+source :rubygems
 
 gem "rails", "2.3.5"
 gem "rack",  "1.0.1"
