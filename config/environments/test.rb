@@ -10,5 +10,3 @@ config.action_mailer.delivery_method = :test
 HOST             = 'www.example.com'
 ENV['S3_KEY']    = 'this:is:an:ex:parrot'
 ENV['S3_SECRET'] = 'it:has:ceased:to:be'
-
-Bundler.require :test

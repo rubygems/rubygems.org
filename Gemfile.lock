@@ -1,201 +1,199 @@
 --- 
+dependencies: 
+  rr: 
+    group: 
+    - :test
+    version: = 0.10.4
+  fakeweb: 
+    group: 
+    - :test
+    version: = 1.2.6
+  ddollar-pacecar: 
+    group: 
+    - :default
+    version: = 1.1.6
+    require: 
+    - pacecar
+  rails: 
+    group: 
+    - :default
+    version: = 2.3.5
+  gravtastic: 
+    group: 
+    - :default
+    version: = 2.1.3
+  pg: 
+    group: 
+    - :default
+    version: = 0.8.0
+  treetop: 
+    group: 
+    - :test
+    version: = 1.4.3
+  shoulda: 
+    group: 
+    - :test
+    version: = 2.10.2
+  rack: 
+    group: 
+    - :default
+    version: = 1.0.1
+  sinatra: 
+    group: 
+    - :default
+    version: = 0.9.4
+  json: 
+    group: 
+    - :default
+    version: = 1.2.0
+  rest-client: 
+    group: 
+    - :default
+    version: = 1.0.3
+    require: 
+    - rest_client
+  will_paginate: 
+    group: 
+    - :default
+    version: = 2.3.11
+  factory_girl: 
+    group: 
+    - :test
+    version: = 1.2.3
+  webrat: 
+    group: 
+    - :test
+    version: = 0.5.3
+  rack-maintenance: 
+    group: 
+    - :default
+    version: = 0.3.0
+    require: 
+    - rack/maintenance
+  gchartrb: 
+    group: 
+    - :default
+    version: = 0.8
+    require: 
+    - google_chart
+  redgreen: 
+    group: 
+    - :test
+    version: = 1.2.2
+  rack-test: 
+    group: 
+    - :test
+    version: = 0.5.0
+    require: 
+    - rack/test
+  cucumber: 
+    group: 
+    - :test
+    version: = 0.3.101
+  hoptoad_notifier: 
+    group: 
+    - :default
+    version: = 2.2.0
+  clearance: 
+    group: 
+    - :default
+    version: = 0.8.2
+  aws-s3: 
+    group: 
+    - :default
+    version: = 0.6.2
+    require: 
+    - aws/s3
+  webmock: 
+    group: 
+    - :test
+    version: = 0.7.3
+  xml-simple: 
+    group: 
+    - :default
+    version: = 1.0.12
+  nokogiri: 
+    group: 
+    - :test
+    version: = 1.4.1
 specs: 
+- rake: 
+    version: 0.8.7
 - activesupport: 
     version: 2.3.5
-- builder: 
-    version: 2.1.2
-- term-ansicolor: 
-    version: 1.0.4
-- xml-simple: 
-    version: 1.0.12
-- json: 
-    version: 1.2.0
-- rest-client: 
-    version: 1.0.3
-- rack-test: 
-    version: 0.5.0
-- actionmailer: 
-    version: 2.3.5
-- gchartrb: 
-    version: "0.8"
-- redgreen: 
-    version: 1.2.2
-- clearance: 
-    version: 0.8.2
-- factory_girl: 
-    version: 1.2.3
 - rack: 
     version: 1.0.1
 - actionpack: 
     version: 2.3.5
-- rack-maintenance: 
-    version: 0.3.0
-- polyglot: 
-    version: 0.3.0
-- sinatra: 
-    version: 0.9.4
-- will_paginate: 
-    version: 2.3.11
-- addressable: 
-    version: 2.1.1
-- webmock: 
-    version: 0.7.3
-- shoulda: 
-    version: 2.10.2
-- diff-lcs: 
-    version: 1.1.2
-- activeresource: 
+- actionmailer: 
     version: 2.3.5
-- ddollar-pacecar: 
-    version: 1.1.6
-- rake: 
-    version: 0.8.7
-- fakeweb: 
-    version: 1.2.6
-- pg: 
-    version: 0.8.0
-- nokogiri: 
-    version: 1.4.1
-- webrat: 
-    version: 0.5.3
-- mime-types: 
-    version: "1.16"
-- aws-s3: 
-    version: 0.6.2
 - activerecord: 
     version: 2.3.5
-- hoptoad_notifier: 
-    version: 2.2.0
+- activeresource: 
+    version: 2.3.5
+- addressable: 
+    version: 2.1.2
+- builder: 
+    version: 2.1.2
+- mime-types: 
+    version: "1.16"
+- xml-simple: 
+    version: 1.0.12
+- aws-s3: 
+    version: 0.6.2
+- clearance: 
+    version: 0.8.2
+- diff-lcs: 
+    version: 1.1.2
+- polyglot: 
+    version: 0.3.1
+- term-ansicolor: 
+    version: 1.0.5
 - treetop: 
     version: 1.4.3
 - cucumber: 
     version: 0.3.101
-- rails: 
-    version: 2.3.5
+- ddollar-pacecar: 
+    version: 1.1.6
+- factory_girl: 
+    version: 1.2.3
+- fakeweb: 
+    version: 1.2.6
+- gchartrb: 
+    version: "0.8"
 - gravtastic: 
     version: 2.1.3
+- hoptoad_notifier: 
+    version: 2.2.0
+- json: 
+    version: 1.2.0
+- nokogiri: 
+    version: 1.4.1
+- pg: 
+    version: 0.8.0
+- rack-maintenance: 
+    version: 0.3.0
+- rack-test: 
+    version: 0.5.0
+- rails: 
+    version: 2.3.5
+- redgreen: 
+    version: 1.2.2
+- rest-client: 
+    version: 1.0.3
 - rr: 
     version: 0.10.4
-hash: 2b746a4f5fefbd8f5dfd7e093b3ee46a8b65bd8e
+- shoulda: 
+    version: 2.10.2
+- sinatra: 
+    version: 0.9.4
+- webmock: 
+    version: 0.7.3
+- webrat: 
+    version: 0.5.3
+- will_paginate: 
+    version: 2.3.11
+hash: 0081b57b2a82b6e0424fc6fb74b2326c0ecc00de
 sources: 
 - Rubygems: 
     uri: http://gemcutter.org
-- Rubygems: 
-    uri: http://gems.github.com
-dependencies: 
-  rr: 
-    version: = 0.10.4
-    group: 
-    - :test
-  treetop: 
-    version: = 1.4.3
-    group: 
-    - :test
-  rails: 
-    version: = 2.3.5
-    group: 
-    - :default
-  gravtastic: 
-    version: = 2.1.3
-    group: 
-    - :default
-  pg: 
-    version: = 0.8.0
-    group: 
-    - :default
-  nokogiri: 
-    version: = 1.4.1
-    group: 
-    - :test
-  fakeweb: 
-    version: = 1.2.6
-    group: 
-    - :test
-  ddollar-pacecar: 
-    version: = 1.1.6
-    require: 
-    - pacecar
-    group: 
-    - :default
-  shoulda: 
-    version: = 2.10.2
-    group: 
-    - :test
-  sinatra: 
-    version: = 0.9.4
-    group: 
-    - :default
-  will_paginate: 
-    version: = 2.3.11
-    group: 
-    - :default
-  rack: 
-    version: = 1.0.1
-    group: 
-    - :default
-  clearance: 
-    version: = 0.8.2
-    group: 
-    - :default
-  factory_girl: 
-    version: = 1.2.3
-    group: 
-    - :test
-  webrat: 
-    version: = 0.5.3
-    group: 
-    - :test
-  rack-maintenance: 
-    version: = 0.3.0
-    require: 
-    - rack/maintenance
-    group: 
-    - :default
-  gchartrb: 
-    version: = 0.8
-    require: 
-    - google_chart
-    group: 
-    - :default
-  redgreen: 
-    version: = 1.2.2
-    group: 
-    - :test
-  webmock: 
-    version: = 0.7.3
-    group: 
-    - :test
-  rack-test: 
-    version: = 0.5.0
-    require: 
-    - rack/test
-    group: 
-    - :test
-  xml-simple: 
-    version: = 1.0.12
-    group: 
-    - :default
-  hoptoad_notifier: 
-    version: = 2.2.0
-    group: 
-    - :default
-  json: 
-    version: = 1.2.0
-    group: 
-    - :default
-  rest-client: 
-    version: = 1.0.3
-    require: 
-    - rest_client
-    group: 
-    - :default
-  aws-s3: 
-    version: = 0.6.2
-    require: 
-    - aws/s3
-    group: 
-    - :default
-  cucumber: 
-    version: = 0.3.101
-    group: 
-    - :test

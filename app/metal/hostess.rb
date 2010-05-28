@@ -1,3 +1,4 @@
+require 'sinatra'
 class Hostess < Sinatra::Default
   cattr_writer :local
 
