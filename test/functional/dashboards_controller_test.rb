@@ -34,6 +34,8 @@ class DashboardsControllerTest < ActionController::TestCase
       setup do
         @subscribed_versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
         @subscribed_versions.each { |v| Factory(:subscription, :rubygem => v.rubygem, :user => @user)}
+        # just to make sure one has a different platform
+        @subscribed_versions.last.update_attributes(:platform => "win32")
         @unsubscribed_versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
 
         @request.env["Authorization"] = @user.api_key
@@ -42,10 +44,10 @@ class DashboardsControllerTest < ActionController::TestCase
 
       should_respond_with :success
       should_render_template 'versions/feed'
-      should "render posts with titles and links of all subscribed versions" do
+      should "render posts with titles and platform-specific links of all subscribed versions" do
         @subscribed_versions.each do |v|
           assert_contain v.to_title
-          assert_have_selector "link[href='#{rubygem_url(v.rubygem)}']"
+          assert_have_selector "link[href='#{rubygem_url(v.rubygem, v.slug)}']"
         end
       end
 

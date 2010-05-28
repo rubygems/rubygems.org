@@ -163,15 +163,17 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to index as an atom feed" do
     setup do
       @versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
+      # just to make sure one has a different platform
+      @versions.last.update_attributes(:platform => "win32")
       get :index, :format => "atom"
     end
 
     should_respond_with :success
     should_assign_to(:versions) { @versions }
-    should "render posts with titles and links" do
+    should "render posts with titles and platform-specific links" do
       @versions.each do |v|
         assert_contain v.to_title
-        assert_have_selector "link[href='#{rubygem_url(v.rubygem)}']"
+        assert_have_selector "link[href='#{rubygem_url(v.rubygem, v.slug)}']"
       end
     end
   end
