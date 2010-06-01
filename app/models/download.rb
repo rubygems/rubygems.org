@@ -49,11 +49,11 @@ class Download
       hash
     end
 
-    downloads = Hash[*$redis.zrange(YESTERDAY_KEY, 0, -1, "withscores")]
+    downloads = Hash[*$redis.zrange(YESTERDAY_KEY, 0, -1, :with_scores => true)]
     downloads.each do |key, score|
       version = versions[key]
-      $redis.hincrby history_key(version), yesterday, score
-      $redis.hincrby history_key(version.rubygem), yesterday, score
+      $redis.hincrby history_key(version), yesterday, score.to_i
+      $redis.hincrby history_key(version.rubygem), yesterday, score.to_i
     end
   end
 end
