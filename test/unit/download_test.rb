@@ -31,26 +31,37 @@ class DownloadTest < ActiveSupport::TestCase
     assert_equal 0, Download.today(other_platform_version)
   end
 
-  should "roll over downloads into history hashes" do
-    rubygem = Factory(:rubygem)
-    version1 = Factory(:version, :rubygem => rubygem, :number => "1.0.0")
-    version2 = Factory(:version, :rubygem => rubygem, :number => "2.0.0")
+  context "with some gems downloaded" do
+    setup do
+      @rubygem = Factory(:rubygem)
+      @version1 = Factory(:version, :rubygem => @rubygem, :number => "1.0.0")
+      @version2 = Factory(:version, :rubygem => @rubygem, :number => "2.0.0")
 
-    Download.incr(version1)
-    Download.incr(version2)
-    Download.incr(version2)
+      Download.incr(@version1)
+      Download.incr(@version2)
+      Download.incr(@version2)
+    end
 
-    Download.rollover
-    assert ! $redis.exists(Download::TODAY_KEY)
-    assert $redis.exists(Download::YESTERDAY_KEY)
+    should "roll over downloads into history hashes" do
+      Download.rollover
+      assert ! $redis.exists(Download::TODAY_KEY)
+      assert $redis.exists(Download::YESTERDAY_KEY)
 
-    rubygem_history = $redis.hgetall(Download.history_key(rubygem))
-    version1_history = $redis.hgetall(Download.history_key(version1))
-    version2_history = $redis.hgetall(Download.history_key(version2))
+      rubygem_history = $redis.hgetall(Download.history_key(@rubygem))
+      version1_history = $redis.hgetall(Download.history_key(@version1))
+      version2_history = $redis.hgetall(Download.history_key(@version2))
 
-    yesterday = 1.day.ago.to_date.to_s
-    assert_equal 3, rubygem_history[yesterday].to_i
-    assert_equal 1, version1_history[yesterday].to_i
-    assert_equal 2, version2_history[yesterday].to_i
+      yesterday = 1.day.ago.to_date.to_s
+      assert_equal 3, rubygem_history[yesterday].to_i
+      assert_equal 1, version1_history[yesterday].to_i
+      assert_equal 2, version2_history[yesterday].to_i
+    end
+
+    should "update the database when we roll over" do
+      Download.rollover
+
+      assert_equal 3, @rubygem.reload.read_attribute(:downloads)
+    end
   end
+
 end
