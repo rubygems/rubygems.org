@@ -36,13 +36,32 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal version3_ruby, @rubygem.versions.latest
     end
 
-    should "return platform gem for latest if the ruby version is old" do
+    should "order latest platform gems with latest uniquely" do
+      pre  = Factory(:version, :rubygem => @rubygem, :number => "1.5.0.pre", :platform => "ruby", :prerelease => true)
+      ming = Factory(:version, :rubygem => @rubygem, :number => "1.4.2.1", :platform => "x86-mingw32")
+      win  = Factory(:version, :rubygem => @rubygem, :number => "1.4.2.1", :platform => "x86-mswin32")
+      ruby = Factory(:version, :rubygem => @rubygem, :number => "1.4.2", :platform => "ruby")
+      java = Factory(:version, :rubygem => @rubygem, :number => "1.4.2", :platform => "java")
+      old  = Factory(:version, :rubygem => @rubygem, :number => "1.4.1", :platform => "ruby")
+
+      @rubygem.reorder_versions
+
+      assert ! pre.reload.latest
+      assert ! old.reload.latest
+      assert ming.reload.latest
+      assert win.reload.latest
+      assert ruby.reload.latest
+      assert java.reload.latest
+    end
+
+    should "not return platform gem for latest if the ruby version is old" do
       version3_mswin = Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "mswin")
       version2_ruby  = Factory(:version, :rubygem => @rubygem, :number => "2.0.0", :platform => "ruby")
 
       @rubygem.reorder_versions
 
-      assert_equal version3_mswin, @rubygem.versions.latest
+      assert_equal version2_ruby.reload, @rubygem.versions.latest
+      assert version3_mswin.reload.latest
     end
 
     should "not have a latest version if no versions exist" do
@@ -76,12 +95,12 @@ class RubygemTest < ActiveSupport::TestCase
 
       assert_equal version1pre, @rubygem.reload.versions.latest
     end
-    
+
     should "return the latest indexed version when a more recent yanked version exists" do
       indexed_v1 = Factory(:version, :rubygem => @rubygem, :number => "0.1.0", :indexed => true)
       yanked_v2  = Factory(:version, :rubygem => @rubygem, :number => "0.1.1", :indexed => false)
-      
-      assert_equal indexed_v1, @rubygem.reload.versions.latest
+
+      assert_equal indexed_v1.reload, @rubygem.reload.versions.latest
     end
   end
 
