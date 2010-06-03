@@ -171,10 +171,11 @@ class Rubygem < ActiveRecord::Base
 
       self.versions.update_all(:latest => false)
 
-      if first_release = versions.indexed.release.first
-        versions.find_all_by_number(first_release.number).each do |version|
-          version.update_attributes(:latest => true)
-        end
+      self.versions.release.with_indexed.inject(Hash.new { |h, k| h[k] = [] }) { |platforms, version|
+        platforms[version.platform] << version
+        platforms
+      }.each_value do |platforms|
+        platforms.sort.last.update_attribute(:latest, true)
       end
     end
   end
