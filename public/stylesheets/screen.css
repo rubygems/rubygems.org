@@ -1,5 +1,8 @@
 body {
   line-height: 1;
+  font-size: .625em;
+  background: #340505 url(/images/top.png) repeat-x;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 ol, ul {
@@ -74,10 +77,8 @@ table {
   border-spacing: 0;
 }
 
-body {
-  font-size: .625em;
-  background: #340505 url(/images/top.png) repeat-x;
-  font-family: Arial, Helvetica, sans-serif;
+.container_16 .grid_8 {
+  width: 480px;
 }
 
 .header h1 {
@@ -97,42 +98,54 @@ body {
 
 .nav {
   text-align: right;
-  padding-top: 2.0em;
 }
 
-.nav ul {
+.nav #signed_out {
+  margin-top: 25px;
+}
+
+.nav ul, .nav > a {
   display: block;
   vertical-align: middle;
   height: 25px;
 }
 
 .nav ul li {
-  font-size: 1.5em;
+  font-size: 1.4em;
   font-weight: 900;
   display: inline-block;
   vertical-align: middle;
 }
 
-.nav ul li a {
+.nav > a {
+  font-size: 1.2em;
+  font-weight: 900;
+  display: inline-block;
+  margin-bottom: 3px;
+}
+
+.nav ul li a, .nav > a {
   color: #EEE;
-  padding: 7px;
+  padding: 5px;
   text-decoration: none;
   text-shadow: 0 0 10px #000;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
-  margin-top: 5px;
+  margin-top: 3px;
 }
 
-.nav ul li a:hover {
+.nav > a img {
+  vertical-align: middle;
+}
+
+.nav > a span {
+  vertical-align: middle;
+  padding-top: 1px;
+}
+
+.nav ul li a:hover, .nav > a:hover {
   text-decoration: none;
   background: rgba(0,0,0,.2);
-}
-
-.nav ul li a#user_gravatar {
-  padding-top: 16px;
-}
-
-.nav form {
 }
 
 .nav form div {
@@ -145,7 +158,7 @@ body {
   -moz-border-radius: 8px;
   -webkit-border-radius: 10px;
   background: #e9e4d1 url(/images/shadow.png) repeat-x scroll 0 -2px;
-  margin-top: 7px;
+  margin: 0;
 }
 
 .nav form .text_field input {
@@ -167,7 +180,7 @@ body {
 .main {
   padding: 2.4em;
   color: #EEE;
-  margin-top: 10px;
+  margin-top: 30px;
 }
 
 .main .title {
