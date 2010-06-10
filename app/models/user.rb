@@ -15,6 +15,8 @@ class User < ActiveRecord::Base
   has_many :web_hooks
   before_create :generate_api_key
 
+  validates_uniqueness_of :handle
+
   def name
     handle || email
   end
