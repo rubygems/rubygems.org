@@ -9,7 +9,7 @@ class UserTest < ActiveSupport::TestCase
 
   context "with a user" do
     setup do
-      @user = Factory(:user)
+      @user = Factory(:user, :handle => nil)
     end
 
     should "only have email when boiling down to json or yaml" do
