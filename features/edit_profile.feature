@@ -3,7 +3,6 @@ Feature: Edit Profile
   A user
   Should be able to edit their profile
 
-  @wip
   Scenario: Edit Handle
     Given I have signed in with "john@example.com/password"
     And my handle is "johndoe"

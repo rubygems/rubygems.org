@@ -2,6 +2,8 @@ class User < ActiveRecord::Base
   include Clearance::User
   is_gravtastic
 
+  attr_accessible :handle
+
   has_many :rubygems, :through    => :ownerships,
                       :order      => "name ASC",
                       :conditions => { 'ownerships.approved' => true }
