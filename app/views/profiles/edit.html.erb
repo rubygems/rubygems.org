@@ -10,12 +10,16 @@ Your <code>~/.gem/credentials</code> file should look like this to use the <%= l
 
 <p><%= button_to "Reset my API key", reset_api_v1_api_key_path, 
         :method => :put, :confirm => "Are you sure? This cannot be undone." %></p>
-        
+
 <% form_for @user, :url => profile_url do |form| %>
   <%= form.error_messages %>
   <div class="text_field">
     <%= form.label :email, 'Email Address' %>
     <%= form.text_field :email %>
+  </div>
+  <div class="text_field">
+    <%= form.label :handle %>
+    <%= form.text_field :handle %>
   </div>
   <div class="submit_field">
     <%= form.submit "Reset email address", :disable_with => "Please wait..." %>
