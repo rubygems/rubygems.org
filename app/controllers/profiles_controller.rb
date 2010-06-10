@@ -19,5 +19,4 @@ class ProfilesController < ApplicationController
       render :edit
     end
   end
-
 end
