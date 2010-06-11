@@ -23,7 +23,7 @@
       <div class="grid_6 suffix_1 nav">
         <% if signed_in? %>
           <a href="<%= profile_url%>">
-            <%= image_tag(current_user.gravatar_url(:size => 24)) %>
+            <%= image_tag(current_user.gravatar_url(:size => 24), :id => "user_gravatar") %>
             <span><%= truncate(current_user.name) %></span>
           </a>
           <ul>
