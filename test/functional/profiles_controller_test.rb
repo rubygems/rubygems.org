@@ -21,7 +21,7 @@ class ProfilesControllerTest < ActionController::TestCase
     context "on PUT to update" do
       context "updating handle" do
         setup do
-          @handle = "john"
+          @handle = "john_m_doe"
           @user = Factory(:email_confirmed_user, :handle => "johndoe")
           sign_in_as(@user)
           put :update, :user => {:handle => @handle}

@@ -9,21 +9,21 @@ Feature: Edit Profile
     And I am on my profile page
 
     When I follow "Edit"
-    And I fill in "Handle" with "john"
+    And I fill in "Handle" with "john_doe"
     And I press "Update"
 
     Then I should see my new "Handle"
 
   Scenario: Update with Existing Handle
     Given I have signed in with "janedoe@example.com/password"
-    And my handle is "doe"
+    And my handle is "some_doe"
 
     And I have signed in with "johndoe@example.com/password"
-    And my handle is "johndoe"
+    And my handle is "john_doe"
     And I am on my profile page
 
     When I follow "Edit"
-    And I fill in "Handle" with "doe"
+    And I fill in "Handle" with "some_doe"
     And I press "Update"
 
     Then I should see "Handle has already been taken"
