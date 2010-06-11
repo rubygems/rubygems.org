@@ -29,14 +29,14 @@ class UserTest < ActiveSupport::TestCase
         assert_equal nil, user.errors.on(:handle)
       end
 
-      should "be between 6 and 32 characters" do
+      should "be between 3 and 15 characters" do
         user = Factory.build(:user, :handle => "a")
         assert_equal false, user.valid?
-        assert_equal "is too short (minimum is 6 characters)", user.errors.on(:handle)
+        assert_equal "is too short (minimum is 3 characters)", user.errors.on(:handle)
 
-        user.handle = "a" * 33
+        user.handle = "a" * 16
         assert_equal false, user.valid?
-        assert_equal "is too long (maximum is 32 characters)", user.errors.on(:handle)
+        assert_equal "is too long (maximum is 15 characters)", user.errors.on(:handle)
 
         user.handle = "abcdef"
         user.valid?
