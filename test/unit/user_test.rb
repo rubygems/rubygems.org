@@ -7,6 +7,50 @@ class UserTest < ActiveSupport::TestCase
   should_have_many :subscriptions
   should_have_many :web_hooks
 
+  context "validations" do
+    context "handle" do
+      should "begin with a lowercase letter" do
+        user = Factory.build(:user, :handle => "1abcde")
+        assert_equal false, user.valid?
+        assert_equal "is invalid", user.errors.on(:handle)
+
+        user.handle = "abcdef"
+        user.valid?
+        assert_equal nil, user.errors.on(:handle)
+      end
+
+      should "contain only lowercase letters, numbers, dashes and underscores" do
+        user = Factory.build(:user, :handle => "abc^%def")
+        assert_equal false, user.valid?
+        assert_equal "is invalid", user.errors.on(:handle)
+
+        user.handle = "abc1_two-four"
+        user.valid?
+        assert_equal nil, user.errors.on(:handle)
+      end
+
+      should "be between 6 and 32 characters" do
+        user = Factory.build(:user, :handle => "a")
+        assert_equal false, user.valid?
+        assert_equal "is too short (minimum is 6 characters)", user.errors.on(:handle)
+
+        user.handle = "a" * 33
+        assert_equal false, user.valid?
+        assert_equal "is too long (maximum is 32 characters)", user.errors.on(:handle)
+
+        user.handle = "abcdef"
+        user.valid?
+        assert_equal nil, user.errors.on(:handle)
+      end
+
+      should "be valid when blank" do
+        user = Factory.build(:user, :handle => nil)
+        user.valid?
+        assert_equal nil, user.errors.on(:handle)
+      end
+    end
+  end
+
   context "with a user" do
     setup do
       @user = Factory(:user, :handle => nil)
