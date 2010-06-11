@@ -17,7 +17,7 @@ class User < ActiveRecord::Base
 
   validates_uniqueness_of :handle
   validates_format_of :handle, :with => /^[a-z][a-z_\-0-9]*$/, :allow_blank => true
-  validates_length_of :handle, :within => (6..32), :allow_blank => true
+  validates_length_of :handle, :within => (3..15), :allow_blank => true
 
   def name
     handle || email
