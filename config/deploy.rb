@@ -14,7 +14,7 @@ set(:rails_env) { "#{stage}"}
 # add your private key to the ssh agent.  If that's not good for you, just uncomment the 
 # "set :deploy_via, :copy" and comment "set :deploy_via, :remote_cache"
 set :scm, :git
-set :repository,  "git@github.com:qrush/gemcutter.git"
+set :repository, "git://github.com/rubygems/gemcutter"
 set :repository_cache, "git_cache"
 set :git_enable_submodules, 1
 set :deploy_via, :remote_cache
