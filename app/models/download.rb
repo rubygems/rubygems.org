@@ -49,7 +49,6 @@ class Download
       hash
     end
 
-    #{"rails-2.3.5" => 9299, "rack-1.1" => 2323", 
     downloads = Hash[*$redis.zrange(YESTERDAY_KEY, 0, -1, :with_scores => true)]
     downloads.each do |key, score|
       version = versions[key]

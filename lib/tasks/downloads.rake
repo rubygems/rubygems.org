@@ -1,4 +1,9 @@
 namespace "gemcutter:downloads" do
+  desc "Daily rollover and aggregation"
+  task :rollover => :environment do
+    Download.rollover
+  end
+
   desc "Migrate from downloads table to redis"
   task :migrate => :environment do
     # create index "index_downloads_on_created_at_and_date" on downloads (version_id, date(created_at));
