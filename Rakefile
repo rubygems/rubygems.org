@@ -9,4 +9,5 @@ require 'tasks/rails'
 desc "Run all tests and features"
 task :default => [:test, :cucumber]
 
-task :cron => ['gemcutter:store_legacy_index']
+desc "Run daily at 00:00 UTC"
+task :cron => %w[gemcutter:downloads:rollover gemcutter:store_legacy_index]
