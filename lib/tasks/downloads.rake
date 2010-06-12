@@ -32,28 +32,21 @@ namespace "gemcutter:downloads" do
 
     puts "*" * 80
 
-    total  = Dl.count
-    offset = 0
-    limit  = 100_000
-
+    total = Dl.count
+    size  = 100_000
     $redis.set Download::COUNT_KEY, total
 
-    until offset > total
-      rows = ActiveRecord::Base.connection.select_rows "select count(version_id), version_id, date(created_at)
-                                                        from downloads
-                                                        group by version_id, date(created_at)
-                                                        limit #{limit} offset #{offset}"
-      size = rows.size
-
-      rows.each_with_index do |(count, version_id, date), index|
-      version = vmap[version_id.to_i]
-      puts ">>> #{index+1}/#{size} #{version.full_name} #{count} #{date}"
-
-      $redis.hincrby Download.history_key(version), date, count
-      $redis.hincrby Download.history_key(version.rubygem), date, count
+    puts "Converting downloads..."
+    Dl.find_in_batches(:select => "id, version_id, date(created_at)", :batch_size => size) do |batch|
+      puts ">>> #{total}"
+      batch.group_by(&:version_id).each do |version_id, downloads|
+        version = vmap[version_id]
+        downloads.group_by { |dl| dl['date'] }.each do |date, dls|
+          $redis.hincrby Download.history_key(version), date, dls.size
+          $redis.hincrby Download.history_key(version.rubygem), date, dls.size
+        end
       end
-
-      offset += limit
+      total -= size
     end
   end
 end
