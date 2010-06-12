@@ -33,7 +33,7 @@ namespace "gemcutter:downloads" do
     puts "*" * 80
 
     total = Dl.count
-    size  = 100_000
+    size  = 10_000
     $redis.set Download::COUNT_KEY, total
 
     puts "Converting downloads..."
