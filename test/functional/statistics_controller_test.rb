@@ -9,7 +9,7 @@ class StatisticsControllerTest < ActionController::TestCase
       @most_downloaded     = [Factory(:rubygem)]
 
       stub(Rubygem).total_count { @number_of_gems }
-      stub(Rubygem).sum { @number_of_downloads }
+      stub(Download).count { @number_of_downloads }
       stub(Rubygem).downloaded { @most_downloaded }
       stub(User).count { @number_of_users }
 
@@ -36,10 +36,10 @@ class StatisticsControllerTest < ActionController::TestCase
     end
 
     should "load up the number of gems, users, and downloads" do
-      assert_received(User)    { |subject| subject.count }
-      assert_received(Rubygem) { |subject| subject.total_count }
-      assert_received(Rubygem) { |subject| subject.sum.with(:downloads) }
-      assert_received(Rubygem) { |subject| subject.downloaded.with(10) }
+      assert_received(User)     { |subject| subject.count }
+      assert_received(Rubygem)  { |subject| subject.total_count }
+      assert_received(Download) { |subject| subject.count }
+      assert_received(Rubygem)  { |subject| subject.downloaded.with(10) }
     end
   end
 end
