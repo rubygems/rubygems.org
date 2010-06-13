@@ -11,8 +11,19 @@ namespace "gemcutter:downloads" do
     $redis.flushdb
 
     class Dl < ActiveRecord::Base
+      include Pacecar
       set_table_name "downloads"
     end
+
+    versions = Version.all(:include => :rubygem)
+    vmap = {}
+    versions.each do |version|
+      print ">> #{Download.key(version)} "
+      puts $redis[Download.key(version)] = version['downloads_count']
+      vmap[version.id] = version
+    end
+
+    puts "*" * 80
 
     rubygems = Rubygem.all
     rubygems.each do |rubygem|
@@ -22,12 +33,9 @@ namespace "gemcutter:downloads" do
 
     puts "*" * 80
 
-    versions = Version.all(:include => :rubygem)
-    vmap = {}
-    versions.each do |version|
-      print ">> #{Download.key(version)} "
-      puts $redis[Download.key(version)] = version['downloads_count']
-      vmap[version.id] = version
+    Dl.created_at_inside(Date.today.to_datetime, Date.today.to_datetime + 1.day).each do |download|
+      version = vmap[download.version_id]
+      $redis.zincrby(TODAY_KEY, 1, version.full_name)
     end
 
     puts "*" * 80
