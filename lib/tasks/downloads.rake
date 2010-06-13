@@ -11,14 +11,14 @@ namespace "gemcutter:downloads" do
     $redis.flushdb
 
     class Dl < ActiveRecord::Base
-      include Pacecar
       set_table_name "downloads"
+      include Pacecar
     end
 
     versions = Version.all(:include => :rubygem)
     vmap = {}
     versions.each do |version|
-      print ">> #{Download.key(version)} "
+      print "> #{Download.key(version)} "
       puts $redis[Download.key(version)] = version['downloads_count']
       vmap[version.id] = version
     end
@@ -27,15 +27,17 @@ namespace "gemcutter:downloads" do
 
     rubygems = Rubygem.all
     rubygems.each do |rubygem|
-      print "> #{rubygem} "
+      print ">> #{rubygem} "
       puts $redis[Download.key(rubygem)] = rubygem['downloads']
     end
 
     puts "*" * 80
 
-    Dl.created_at_inside(Date.today.to_datetime, Date.today.to_datetime + 1.day).each do |download|
-      version = vmap[download.version_id]
-      $redis.zincrby(TODAY_KEY, 1, version.full_name)
+    Dl.created_at_inside(Date.today.to_datetime, Date.today.to_datetime + 1.day).group_by(&:version_id).each do |version_id, downloads|
+      name  = vmap[version_id].full_name
+      count = downloads.size
+      puts ">>> #{name}: #{count}"
+      $redis.zincrby(Download::TODAY_KEY, count, name)
     end
 
     puts "*" * 80
@@ -46,7 +48,7 @@ namespace "gemcutter:downloads" do
 
     puts "Converting downloads..."
     Dl.find_in_batches(:select => "id, version_id, date(created_at)", :batch_size => size) do |batch|
-      puts ">>> #{total}"
+      puts ">>>> #{total}"
       batch.group_by(&:version_id).each do |version_id, downloads|
         version = vmap[version_id]
         downloads.group_by { |dl| dl['date'] }.each do |date, dls|
