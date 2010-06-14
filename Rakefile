@@ -1,10 +1,6 @@
-require(File.join(File.dirname(__FILE__), 'config', 'boot'))
-
+require File.expand_path('../config/application', __FILE__)
 require 'rake'
-require 'rake/testtask'
-require 'rake/rdoctask'
-
-require 'tasks/rails'
+Rails::Application.load_tasks
 
 desc "Run all tests and features"
 task :default => [:test, :cucumber]

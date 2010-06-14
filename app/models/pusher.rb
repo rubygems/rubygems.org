@@ -1,4 +1,4 @@
-class Gemcutter
+class Pusher
   if Rails.env.development? || Rails.env.test?
     include Vault::FS
   else
