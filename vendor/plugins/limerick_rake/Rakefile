@@ -1,2 +1,0 @@
-task :default do
-end

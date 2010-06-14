@@ -8,8 +8,8 @@ class Dependency < ActiveRecord::Base
   validates_presence_of  :requirements
   validates_inclusion_of :scope, :in => %w( development runtime )
 
-  named_scope :development, { :conditions => { :scope => 'development' }}
-  named_scope :runtime,     { :conditions => { :scope => 'runtime'     }}
+  scope :development, { :conditions => { :scope => 'development' }}
+  scope :runtime,     { :conditions => { :scope => 'runtime'     }}
 
   attr_accessor :gem_dependency
 
