@@ -18,21 +18,21 @@ class Rubygem < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
 
-  named_scope :with_versions,
+  scope :with_versions,
     :conditions => "rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)"
 
-  named_scope :with_one_version,
+  scope :with_one_version,
     :select => 'rubygems.*',
     :joins  => :versions,
     :group  => column_names.map{ |name| "rubygems.#{name}" }.join(', '),
     :having => 'COUNT(versions.id) = 1'
 
-  named_scope :name_is, lambda { |name| {
+  scope :name_is, lambda { |name| {
     :conditions => ["name = ?", name.strip],
     :limit      => 1 }
   }
 
-  named_scope :search, lambda { |query| {
+  scope :search, lambda { |query| {
     :conditions => ["(upper(name) like upper(:query) or upper(versions.description) like upper(:query))",
       {:query => "%#{query.strip}%"}],
     :include    => [:versions],

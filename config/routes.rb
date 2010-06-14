@@ -1,6 +1,6 @@
 RUBYGEM_NAME_MATCHER = /[A-Za-z0-9\-\_\.]+/
 
-ActionController::Routing::Routes.draw do |map|
+Gemcutter::Application.routes.draw do |map|
 
   ################################################################################
   # API v1

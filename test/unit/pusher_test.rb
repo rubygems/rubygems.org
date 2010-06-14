@@ -1,17 +1,17 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class GemcutterTest < ActiveSupport::TestCase
+class PusherTest < ActiveSupport::TestCase
   context "getting the server path" do
     should "return just the root server path with no args" do
-      assert_equal "#{Rails.root}/server", Gemcutter.server_path
+      assert_equal "#{Rails.root}/server", Pusher.server_path
     end
 
     should "return a directory inside if one argument is given" do
-      assert_equal "#{Rails.root}/server/gems", Gemcutter.server_path("gems")
+      assert_equal "#{Rails.root}/server/gems", Pusher.server_path("gems")
     end
 
     should "return a directory inside if more than one argument is given" do
-      assert_equal "#{Rails.root}/server/quick/Marshal.4.8", Gemcutter.server_path("quick", "Marshal.4.8")
+      assert_equal "#{Rails.root}/server/quick/Marshal.4.8", Pusher.server_path("quick", "Marshal.4.8")
     end
   end
 
@@ -19,7 +19,7 @@ class GemcutterTest < ActiveSupport::TestCase
     setup do
       @user = Factory(:email_confirmed_user)
       @gem = gem_file
-      @cutter = Gemcutter.new(@user, @gem)
+      @cutter = Pusher.new(@user, @gem)
     end
 
     should "have some state" do

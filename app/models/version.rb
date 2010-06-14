@@ -8,25 +8,25 @@ class Version < ActiveRecord::Base
 
   validates_format_of :number, :with => /\A#{Gem::Version::VERSION_PATTERN}\z/
 
-  named_scope :owned_by, lambda { |user|
+  scope :owned_by, lambda { |user|
     { :conditions => { :rubygem_id => user.rubygem_ids } }
   }
 
-  named_scope :subscribed_to_by, lambda { |user|
+  scope :subscribed_to_by, lambda { |user|
     { :conditions => { :rubygem_id => user.subscribed_gem_ids },
       :order => 'created_at desc' }
   }
 
-  named_scope :with_associated, {
+  scope :with_associated, {
     :conditions => ["versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)"],
     :include    => :rubygem,
     :order      => "versions.built_at desc"
   }
 
-  named_scope :latest,     { :conditions => { :latest       => true  }}
-  named_scope :with_deps,  { :include    => { :dependencies => :rubygem }}
-  named_scope :prerelease, { :conditions => { :prerelease   => true  }}
-  named_scope :release,    { :conditions => { :prerelease   => false }}
+  scope :latest,     { :conditions => { :latest       => true  }}
+  scope :with_deps,  { :include    => { :dependencies => :rubygem }}
+  scope :prerelease, { :conditions => { :prerelease   => true  }}
+  scope :release,    { :conditions => { :prerelease   => false }}
 
   before_save :update_prerelease
   after_save  :reorder_versions
@@ -71,7 +71,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.platforms
-    find(:all, :select => 'platform').map(&:platform).uniq
+    select('platform').map(&:platform).uniq
   end
 
   def platformed?
