@@ -36,4 +36,5 @@ end
 After do
   Dir.chdir(TEST_DIR)
   FileUtils.rm_rf(TEST_DIR)
+  $redis.flushdb
 end

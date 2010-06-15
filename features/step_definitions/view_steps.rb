@@ -11,3 +11,11 @@ end
 And /^I save and open the page$/ do
   save_and_open_page
 end
+
+Then /^I should see the following most recent downloads:$/ do |table|
+  count = 0
+  table.hashes.each do |row|
+    assert_select "#most_downloaded li:nth-child(#{count += 1})",
+                  "#{row['name']} (#{row['downloads']})"
+  end
+end

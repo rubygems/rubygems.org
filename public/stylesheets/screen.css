@@ -652,6 +652,21 @@ table {
   background: #fff;
 }
 
+.main .info .leaderboards p {
+  background: #ECE5D6;
+  color: rgba(0, 0, 0, 0.8);
+  height: 20px;
+  margin: 0;
+  padding: 11px 6px;
+  border: 1px solid #B4AC99;
+  font-size: 1.3em;
+  font-weight: 900;
+  line-height: 23px;
+  text-align: center;
+  display: block;
+  overflow: hidden;
+}
+
 .main .info .meta {
   background: #ECE5D6;
   color: #000;

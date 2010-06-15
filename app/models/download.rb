@@ -22,6 +22,15 @@ class Download
     $redis[key(what)].to_i
   end
 
+  def self.most_downloaded_today
+    items = $redis.zrevrange(TODAY_KEY, 0, 4, :with_scores => true)
+    items.in_groups_of(2).collect do |full_name, downloads|
+      version = Version.find_by_full_name(full_name)
+
+      [version, downloads.to_i]
+    end
+  end
+
   def self.key(what)
     case what
     when Version
