@@ -1,8 +1,9 @@
 class HomeController < ApplicationController
   def index
-    @count = Rubygem.total_count
-    @latest = Rubygem.latest
-    @downloaded = Rubygem.downloaded
-    @updated = Version.updated
+    @rubygems_count  = Rubygem.total_count
+    @downloads_count = Download.count
+    @latest          = Rubygem.latest
+    @downloaded      = Rubygem.downloaded
+    @updated         = Version.updated
   end
 end
