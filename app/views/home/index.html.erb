@@ -1,7 +1,7 @@
 <% content_for :fold do %>
   <div class="count">
-    <strong><%= number_with_delimiter(@count) %> gems</strong>
-    cut since july 2009
+    <strong><%= number_with_delimiter(@downloads_count) %> downloads</strong>
+    of <%= number_with_delimiter(@rubygems_count) %> gems cut since july 2009
   </div>
   <div class="blurb">
     <strong>Welcome to your community RubyGem host.</strong>

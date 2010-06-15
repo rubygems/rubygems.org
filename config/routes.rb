@@ -22,6 +22,7 @@ ActionController::Routing::Routes.draw do |map|
                    :only       => [:create, :index],
                    :collection => {:remove => :delete,
                                    :fire   => :post}
+      v1.resources :downloads, :only => :index
     end
   end
 

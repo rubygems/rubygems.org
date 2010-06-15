@@ -218,7 +218,7 @@ table {
 
 .main .fold .count {
   float: left;
-  width: 30%;
+  width: 40%;
   font-size: 1.3em;
   padding-top: 0.2em;
 }
@@ -235,7 +235,7 @@ table {
   font-size: 1.6em;
   line-height: 1.5;
   margin: 0 0 1.5em 0;
-  width: 70%;
+  width: 60%;
 }
 
 .main p,
