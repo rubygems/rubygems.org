@@ -64,4 +64,28 @@ class DownloadTest < ActiveSupport::TestCase
     end
   end
 
+  should "find most downloaded today" do
+    @rubygem_1 = Factory(:rubygem)
+    @version_1 = Factory(:version, :rubygem => @rubygem_1)
+    @version_2 = Factory(:version, :rubygem => @rubygem_1)
+
+    @rubygem_2 = Factory(:rubygem)
+    @version_3 = Factory(:version, :rubygem => @rubygem_2)
+
+    @rubygem_3 = Factory(:rubygem)
+    @version_4 = Factory(:version, :rubygem => @rubygem_3)
+
+    Download.incr(@version_1)
+    Download.incr(@version_2)
+    Download.incr(@version_3)
+    Download.rollover
+    Download.incr(@version_3)
+    Download.incr(@version_1)
+    Download.incr(@version_3)
+    Download.incr(@version_3)
+    Download.incr(@version_2)
+
+    assert_equal [[@version_3, 3], [@version_2, 1], [@version_1, 1]],
+                 Download.most_downloaded_today
+  end
 end

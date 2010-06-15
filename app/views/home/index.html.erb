@@ -54,14 +54,18 @@
     </ol>
   </div>
   <div class="grid_3" id="most_downloaded">
-    <strong>Most Downloaded</strong>
-    <ol>
-      <% @downloaded.each do |rubygem| %>
-        <li>
-          <%= link_to "#{rubygem.name} (#{rubygem.downloads})", rubygem, :title => rubygem.versions.latest.summary %>
-        </li>
-      <% end %>
-    </ol>
+    <strong>Most Downloaded Today</strong>
+    <% if @downloaded.any? %>
+      <ol>
+        <% @downloaded.each do |version, downloads| %>
+          <li>
+            <%= link_to "#{version.rubygem.name}-#{version.number} (#{number_with_delimiter downloads})", version.rubygem, :title => version.summary %>
+          </li>
+        <% end %>
+      </ol>
+    <% else %>
+      <p>No downloads today.</p>
+    <% end %>
   </div>
   <div class="grid_3" id="just_updated">
     <strong>Just Updated</strong>
