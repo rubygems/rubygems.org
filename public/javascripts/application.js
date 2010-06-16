@@ -5,10 +5,9 @@ $(document).ready(function() {
     return false;
   });
 
-  if(window.location.href.search(/query=/) == -1) {
-    $("#query").click(function() {
-      $(this).val("");
-      $(this).unbind("click");
+  if (window.location.href.search(/query=/) == -1) {
+    $('#query').one('click', function() {
+      $(this).val('');
     });
   }
 
