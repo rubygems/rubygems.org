@@ -83,3 +83,5 @@ Feature: Push Gems
       And I have an api key for "email@person.com/password"
       When I push an invalid .gem file
       Then I should see "RubyGems.org cannot process this gem."
+      And I should not see "Error:"
+      And I should not see "No metadata found!"
