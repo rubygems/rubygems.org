@@ -72,7 +72,14 @@ Feature: Push Gems
       Then I should see "Please specify dependencies that exist on RubyGems.org"
       And the rubygem "unknown" does not exist
 
-@wip
+    @wip
     Scenario: User pushes gem with bad platform
-@wip
+
+    @wip
     Scenario: User pushes gem with missing :rubygems_version, :specification_version, :name, :version, :date, :summary, :require_paths
+
+    Scenario: User pushes file that is not a gem
+      Given I am signed up and confirmed as "email@person.com/password"
+      And I have an api key for "email@person.com/password"
+      When I push an invalid .gem file
+      Then I should see "RubyGems.org cannot process this gem."
