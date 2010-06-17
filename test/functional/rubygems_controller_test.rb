@@ -295,6 +295,14 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  context "On GET to show for nonexistent gem" do
+    setup do
+      get :show, :id => "blahblah"
+    end
+
+    should_respond_with :not_found
+  end
+
   context "When not logged in" do
     context "On GET to show for a gem" do
       setup do
