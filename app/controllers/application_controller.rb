@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
     if @rubygem.blank?
       respond_to do |format|
         format.html do
-          render :file => 'public/404.html'
+          render :file => 'public/404.html', :status => :not_found
         end
         format.json do
           render :text => "This rubygem could not be found.", :status => :not_found
