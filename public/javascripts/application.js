@@ -1,12 +1,10 @@
 $(document).ready(function() {
-  var divs = "#flash_success, #flash_notice, #flash_error";
-  $(divs).each(function() {
+  $('#flash_success, #flash_notice, #flash_error').each(function() {
     humanMsg.displayMsg($(this).text());
-    return false;
   });
 
   if (window.location.href.search(/query=/) == -1) {
-    $('#query').one('click', function() {
+    $('#query').one('click, focus', function() {
       $(this).val('');
     });
   }
@@ -23,8 +21,9 @@ $(document).ready(function() {
 
   if ($('.count').length > 0) {
     setInterval(function() {
-      $.getJSON("/api/v1/downloads.json", function(data) {
-        $(".count strong").text(number_with_delimiter(data['total']) + " downloads");
+      $.getJSON('/api/v1/downloads.json', function(data) {
+        $('.count strong')
+          .text(number_with_delimiter(data['total']) + ' downloads');
       });
     }, 5000);
   }
