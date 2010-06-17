@@ -59,14 +59,14 @@ class Gemcutter
   end
 
   def pull_spec
-    begin
-      format = Gem::Format.from_io(body)
-      @spec = format.spec
-    rescue Exception => e
-      notify("RubyGems.org cannot process this gem.\n" +
-             "Please try rebuilding it and installing it locally to make sure it's valid.\n" +
-             "Error:\n#{e.message}\n#{e.backtrace.join("\n")}", 422)
-    end
+    @spec = Gem::Format.from_io(body).spec
+  rescue Gem::Package::FormatError
+    notify("RubyGems.org cannot process this gem.\nPlease try rebuilding it" +
+           "and installing it locally to make sure it's valid.", 422)
+  rescue Exception => e
+    notify("RubyGems.org cannot process this gem.\nPlease try rebuilding it" +
+           "and installing it locally to make sure it's valid.\n" +
+           "Error:\n#{e.message}\n#{e.backtrace.join("\n")}", 422)
   end
 
   def find

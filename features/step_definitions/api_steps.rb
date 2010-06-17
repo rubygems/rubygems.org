@@ -16,6 +16,11 @@ When /^I push the gem "([^\"]*)" with my api key$/ do |name|
   visit api_v1_rubygems_path, :post, File.open(path).read
 end
 
+When 'I push an invalid .gem file' do
+  api_key_header
+  visit api_v1_rubygems_path, :post, 'ZZZZZZZZZZZZZZZZZZ'
+end
+
 When /^I yank the gem "([^\"]*)" version "([^\"]*)" with my api key$/ do |name, version_number|
   header("HTTP_AUTHORIZATION", @api_key)
   visit yank_api_v1_rubygems_path(:gem_name => name, :version => version_number), :delete
