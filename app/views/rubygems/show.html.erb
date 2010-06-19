@@ -33,6 +33,7 @@
           <%= subscribe_link(@rubygem) %>
           <%= unsubscribe_link(@rubygem) %>
         <% end %>
+        <%= link_to "Stats", stats_rubygem_path(@rubygem), :id => "stats" %>
       </div>
 
       <% if @latest_version.indexed %>
