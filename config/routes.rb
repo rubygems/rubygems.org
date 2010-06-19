@@ -54,6 +54,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :rubygems,
                 :as           => "gems",
                 :except       => [:create],
+                :member       => [:stats],
                 :requirements => { :id => RUBYGEM_NAME_MATCHER } do |rubygems|
 
     rubygems.resource :owners,
@@ -64,6 +65,7 @@ ActionController::Routing::Routes.draw do |map|
 
     rubygems.resources :versions,
       :only         => [:index, :show],
+      :member       => [:stats],
       :requirements => { :rubygem_id => RUBYGEM_NAME_MATCHER, :id => RUBYGEM_NAME_MATCHER }
   end
 

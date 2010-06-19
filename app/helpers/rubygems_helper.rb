@@ -70,7 +70,7 @@ module RubygemsHelper
         :style => gem.subscribers.find_by_id(current_user.try(:id)) ? 'display:inline-block' : 'display:none'
       }) if signed_in?
   end
-  
+
   def download_link(version)
     link_to "Download", "/downloads/#{version.full_name}.gem", :id => :download
   end

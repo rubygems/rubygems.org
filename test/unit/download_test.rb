@@ -88,4 +88,33 @@ class DownloadTest < ActiveSupport::TestCase
     assert_equal [[@version_3, 3], [@version_2, 1], [@version_1, 1]],
                  Download.most_downloaded_today
   end
+
+  should "find counts per day for versions" do
+    @rubygem_1 = Factory(:rubygem)
+    @version_1 = Factory(:version, :rubygem => @rubygem_1)
+    @version_2 = Factory(:version, :rubygem => @rubygem_1)
+
+    @rubygem_2 = Factory(:rubygem)
+    @version_3 = Factory(:version, :rubygem => @rubygem_2)
+
+    @rubygem_3 = Factory(:rubygem)
+    @version_4 = Factory(:version, :rubygem => @rubygem_3)
+
+    Download.incr(@version_1)
+    Download.incr(@version_2)
+    Download.incr(@version_3)
+    Download.rollover
+    Download.incr(@version_3)
+    Download.incr(@version_1)
+    Download.incr(@version_3)
+    Download.incr(@version_3)
+    Download.incr(@version_2)
+
+    downloads = {
+      "#{@version_1.id}-#{2.days.ago.to_date}" => 0, "#{@version_1.id}-#{Date.yesterday}" => 1, "#{@version_1.id}-#{Date.today}" => 1,
+      "#{@version_2.id}-#{2.days.ago.to_date}" => 0, "#{@version_2.id}-#{Date.yesterday}" => 1, "#{@version_2.id}-#{Date.today}" => 1,
+      "#{@version_3.id}-#{2.days.ago.to_date}" => 0, "#{@version_3.id}-#{Date.yesterday}" => 1, "#{@version_3.id}-#{Date.today}" => 3 }
+
+    assert_equal downloads, Download.counts_by_day_for_versions([@version_1, @version_2, @version_3], 2)
+  end
 end

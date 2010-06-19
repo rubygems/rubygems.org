@@ -1,6 +1,6 @@
 class RubygemsController < ApplicationController
   before_filter :redirect_to_root, :only => [:edit, :update], :unless => :signed_in?
-  before_filter :find_gem, :only => [:edit, :update, :show]
+  before_filter :find_gem, :only => [:edit, :update, :show, :stats]
   before_filter :load_gem, :only => [:edit, :update]
 
   def index
@@ -19,6 +19,14 @@ class RubygemsController < ApplicationController
 
   def show
     @latest_version = @rubygem.versions.latest
+  end
+
+  def stats
+    @versions = @rubygem.versions.limited(5)
+    @latest_version = @versions.first
+    if @versions.blank?
+      render :file => 'public/404.html', :status => :not_found
+    end
   end
 
   def edit
