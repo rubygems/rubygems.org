@@ -529,7 +529,8 @@ table {
   margin: 20px 0;
 }
 
-.main .info .meta .admin {
+.main .info .meta .admin,
+.main .info .meta .stat-versions {
   padding-bottom: 2em;
   border-bottom: 1px solid #B4AC99;
 }
@@ -561,6 +562,22 @@ table {
 
 .main .info .meta .admin #download {
   background: url('/images/download.png') no-repeat;
+}
+
+.main .info .meta .admin #stats {
+  background: url('/images/metrics.png') no-repeat;
+}
+
+.main .info .meta .stat-versions a {
+  font-size: 1.4em;
+  padding-top: 2px;
+  margin-right: 10px;
+  display: inline-block;
+  height: 16px;
+}
+
+.main .info .meta .stat-versions a:hover {
+  text-decoration: underline;
 }
 
 .main .info #markup h2 {

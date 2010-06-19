@@ -27,6 +27,10 @@ $(document).ready(function() {
       });
     }, 5000);
   }
+
+  $('#version_for_stats').change(function() {
+    window.location.href = $(this).val();
+  });
 });
 
 // http://kevinvaldek.com/number-with-delimiter-in-javascript

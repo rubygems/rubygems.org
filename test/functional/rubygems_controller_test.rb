@@ -303,6 +303,62 @@ class RubygemsControllerTest < ActionController::TestCase
     should_respond_with :not_found
   end
 
+  context "On GET to stats" do
+    setup do
+      @latest_version = Factory(:version)
+      @rubygem = @latest_version.rubygem
+      @versions = @versions = @rubygem.versions.limited(5)
+      get :stats, :id => @rubygem.to_param
+    end
+
+    should_respond_with :success
+    should_render_template :stats
+    should_assign_to :rubygem
+    should_assign_to(:latest_version) { @latest_version }
+    should_assign_to(:versions) { @versions }
+    should "render info about the gem" do
+      assert_contain @rubygem.name
+    end
+    should "display a dropdown to choose the version to show" do
+      assert_have_no_selector 'select#version_for_stats'
+    end
+  end
+
+  context "On GET to stats with a gem that has multiple versions" do
+    setup do
+      @rubygem = Factory(:rubygem)
+      @older_version = Factory(:version, :number => "1.0.0", :rubygem => @rubygem)
+      @latest_version = Factory(:version, :number => "2.0.0", :rubygem => @rubygem)
+      get :stats, :id => @rubygem.to_param
+    end
+
+    should_respond_with :success
+    should_render_template :stats
+    should_assign_to :rubygem
+    should_assign_to(:latest_version) { @latest_version }
+    should_assign_to(:versions) { [@latest_version, @older_version] }
+    should "display a dropdown to choose the version to show" do
+      assert_have_selector 'select#version_for_stats'
+    end
+  end
+
+  context "On GET to stats for a gem with no versions" do
+    setup do
+      @rubygem = Factory(:rubygem)
+      get :stats, :id => @rubygem.to_param
+    end
+
+    should_respond_with :not_found
+  end
+
+  context "On GET to stats for nonexistent gem" do
+    setup do
+      get :stats, :id => "blahblah"
+    end
+
+    should_respond_with :not_found
+  end
+
   context "When not logged in" do
     context "On GET to show for a gem" do
       setup do
