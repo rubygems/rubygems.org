@@ -8,23 +8,21 @@ class Ownership < ActiveRecord::Base
   after_update :remove_unapproveds
   before_destroy :keep_last_owner
 
-  protected
+  def generate_token
+    self.token = ActiveSupport::SecureRandom.hex
+  end
 
-    def generate_token
-      self.token = ActiveSupport::SecureRandom.hex
-    end
+  def remove_unapproveds
+    self.class.destroy_all(:rubygem_id => rubygem_id, :approved => false) if approved
+  end
 
-    def remove_unapproveds
-      self.class.destroy_all(:rubygem_id => rubygem_id, :approved => false) if approved
+  def keep_last_owner
+    if rubygem.owners.count == 1
+      errors[:base] << "Can't delete last owner of a gem."
+      false
+    else
+      true
     end
-
-    def keep_last_owner
-      if rubygem.owners.count == 1
-        errors.add_to_base("Can't delete last owner of a gem.")
-        false
-      else
-        true
-      end
-    end
+  end
 
 end

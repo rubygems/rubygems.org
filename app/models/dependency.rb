@@ -45,7 +45,7 @@ class Dependency < ActiveRecord::Base
     self.rubygem = Rubygem.find_by_name(gem_dependency.name)
 
     if rubygem.blank?
-      errors.add_to_base "Please specify dependencies that exist on #{I18n.t(:title)}: #{gem_dependency}"
+      errors[:base] << "Please specify dependencies that exist on #{I18n.t(:title)}: #{gem_dependency}"
       false
     end
   end

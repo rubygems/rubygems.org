@@ -8,22 +8,23 @@ class WebHook < ActiveRecord::Base
   GLOBAL_PATTERN = '*'
 
   validates_url_format_of :url
+  validate :unique_hook, :on => :create
 
-  def validate_on_create
+  def unique_hook
     if user && rubygem
       if WebHook.exists?(:user_id    => user.id,
                          :rubygem_id => rubygem.id,
                          :url        => url)
-        errors.add_to_base("A hook for #{url} has already been registered for #{rubygem.name}")
+        errors[:base] << "A hook for #{url} has already been registered for #{rubygem.name}"
       end
     elsif user
       if WebHook.exists?(:user_id    => user.id,
                          :rubygem_id => nil,
                          :url        => url)
-        errors.add_to_base("A global hook for #{url} has already been registered")
+        errors[:base] << "A global hook for #{url} has already been registered"
       end
     else
-      errors.add_to_base("A user is required for this hook")
+      errors[:base] << "A user is required for this hook"
     end
   end
 
