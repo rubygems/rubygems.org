@@ -163,19 +163,17 @@ class Rubygem < ActiveRecord::Base
   def reorder_versions
     numbers = self.reload.versions.sort.reverse.map(&:number).uniq
 
-    Version.without_callbacks(:reorder_versions) do
-      self.versions.each do |version|
-        version.update_attribute(:position, numbers.index(version.number))
-      end
+    self.versions.each do |version|
+      Version.update_all({:position => numbers.index(version.number)}, {:id => version.id})
+    end
 
-      self.versions.update_all(:latest => false)
+    self.versions.update_all(:latest => false)
 
-      self.versions.release.with_indexed.inject(Hash.new { |h, k| h[k] = [] }) { |platforms, version|
-        platforms[version.platform] << version
-        platforms
-      }.each_value do |platforms|
-        platforms.sort.last.update_attribute(:latest, true)
-      end
+    self.versions.release.with_indexed.inject(Hash.new { |h, k| h[k] = [] }) { |platforms, version|
+      platforms[version.platform] << version
+      platforms
+    }.each_value do |platforms|
+      Version.update_all({:latest => true}, {:id => platforms.sort.last.id})
     end
   end
 
