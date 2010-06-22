@@ -96,6 +96,7 @@ table {
   background: url(/images/rubygems.png)
 }
 
+/* old nav stuff
 .nav {
   text-align: right;
 }
@@ -103,6 +104,7 @@ table {
 .nav #signed_out {
   margin-top: 25px;
 }
+
 
 .nav ul, .nav > a {
   display: block;
@@ -175,7 +177,7 @@ table {
 
 .nav form #search_submit {
   display: none;
-}
+}*/
 
 .main {
   padding: 2.4em;
@@ -1153,4 +1155,160 @@ label, .form_links {
 }
 
 .entries {
+}
+
+/* New Nav Stuff - Fred Yates */
+#nav-cap {
+  float: right;
+  margin: 18px 0 0 0;
+  height: 46px;
+  padding: 0 6px 0 0;
+  background: url(/images/nav-cap.png) top right no-repeat;
+  z-index: 0;
+  position: relative;
+}
+
+#nav {
+  height: 46px;
+  background: url(/images/nav.png) 0 0 no-repeat;
+}
+
+#nav a,
+#nav a img {
+  float: left;
+}
+
+#nav a img {
+  margin: 6px;
+  -moz-box-shadow: 0 1px 1px #4b0000;
+  -webkit-box-shadow: 0 1px 1px #4b0000;
+  -box-shadow: 0 1px 1px #4b0000;
+}
+
+#nav a span {
+  margin: 6px 6px 6px 0;
+  height: 32px;
+  line-height: 32px;
+  display: inline-block;
+  font-size: 12px;
+  color: #fff;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+#nav a:hover span {
+  text-decoration: underline;
+}
+
+#nav a:hover img {
+  -moz-box-shadow: 0 0 10px #f00;
+  -webkit-box-shadow: 0 0 10px #f00;
+  -box-shadow: 0 0 10px #f00;
+}
+
+#nav ul {
+  float: left;
+  margin: 6px 0 6px 6px;
+  height: 34px;
+}
+
+#nav ul li {
+  float: left;
+}
+
+#nav ul li a {
+  background-image: url(/images/nav-sprite.png);
+  text-indent: -9999px;
+  display: inline-block;
+  float: left;
+  margin: 0 0 0 1px;
+  height: 34px;
+}
+
+#nav ul li#all-gems a {
+  width: 72px;
+  background-position: 0 0;
+}
+
+#nav ul li#all-gems a:hover {
+  background-position: 0 -34px;
+}
+
+#nav ul li#all-gems a:active {
+  background-position: 0 -68px;
+}
+
+#nav ul li#dashboard a {
+  width: 85px;
+  background-position: -72px 0;
+}
+
+#nav ul li#dashboard a:hover {
+  background-position: -72px -34px;
+}
+
+#nav ul li#dashboard a:active {
+  background-position: -72px -68px;
+}
+
+#nav ul li#sign-out a {
+  width: 59px;
+  background-position: -157px 0;
+}
+
+#nav ul li#sign-out a:hover {
+  background-position: -157px -34px;
+}
+
+#nav ul li#sign-out a:active {
+  background-position: -157px -68px;
+}
+
+#nav ul li#sign-in a {
+  width: 59px;
+  background-position: -216px 0;
+}
+
+#nav ul li#sign-in a:hover {
+  background-position: -216px -34px;
+}
+
+#nav ul li#sign-in a:active {
+  background-position: -216px -68px;
+}
+
+#nav ul li#sign-up a {
+  width: 59px;
+  background-position: -275px 0;
+}
+
+#nav ul li#sign-up a:hover {
+  background-position: -275px -34px;
+}
+
+#nav ul li#sign-up a:active {
+  background-position: -275px -68px;
+}
+
+form#main-search {
+  width: 200px;
+  height: 38px;
+  padding: 0;
+  background: url(/images/search.png);
+  float: right;
+  clear: both;
+  margin: -2px 0 0 0;
+  z-index: -1;
+}
+
+form#main-search input[type="text"] {
+  margin: 9px 0 0 30px;
+  width: 155px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-weight: bold;
+}
+
+form#main-search input[type="submit"] {
+  display: none;
 }
