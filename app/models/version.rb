@@ -1,12 +1,9 @@
 class Version < ActiveRecord::Base
-  include Pacecar unless Rails.env.maintenance?
 
   default_scope :order => 'position'
 
   belongs_to :rubygem
   has_many :dependencies, :dependent => :destroy
-
-  validates_format_of :number, :with => /\A#{Gem::Version::VERSION_PATTERN}\z/
 
   scope :owned_by, lambda { |user|
     { :conditions => { :rubygem_id => user.rubygem_ids } }
@@ -28,23 +25,30 @@ class Version < ActiveRecord::Base
   scope :prerelease, { :conditions => { :prerelease   => true  }}
   scope :release,    { :conditions => { :prerelease   => false }}
 
-  before_save :update_prerelease
-  after_save  :reorder_versions
-  after_save  :full_nameify!
+  before_save      :update_prerelease
+  after_save       :reorder_versions
+  after_save       :full_nameify!
+  after_validation :join_authors
 
-  def validate_on_create
+  validates_format_of :number, :with => /\A#{Gem::Version::VERSION_PATTERN}\z/
+  validate :platform_and_number_are_unique, :on => :create
+  validate :authors_format, :on => :create
+
+  def platform_and_number_are_unique
     if Version.exists?(:rubygem_id => rubygem_id,
                        :number     => number,
                        :platform   => platform)
-      errors.add_to_base("A version already exists with this number or platform.")
+      errors[:base] << "A version already exists with this number or platform."
     end
+  end
 
+  def authors_format
     if !authors.is_a?(Array) || authors.any? { |a| !a.is_a?(String) }
       errors.add :authors, "must be an Array of Strings"
     end
   end
 
-  def after_validation
+  def join_authors
     self.authors = self.authors.join(', ') if self.authors.is_a?(Array)
   end
 

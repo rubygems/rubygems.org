@@ -1,5 +1,4 @@
 class Rubygem < ActiveRecord::Base
-  include Pacecar unless Rails.env.maintenance?
 
   has_many :owners, :through => :ownerships, :source => :user
   has_many :ownerships, :dependent => :destroy
@@ -15,6 +14,7 @@ class Rubygem < ActiveRecord::Base
   has_many :web_hooks, :dependent => :destroy
   has_one :linkset, :dependent => :destroy
 
+  validate :ensure_name_format
   validates_presence_of :name
   validates_uniqueness_of :name
 
@@ -40,7 +40,7 @@ class Rubygem < ActiveRecord::Base
     :order      => "rubygems.downloads desc" }
   }
 
-  def validate
+  def ensure_name_format
     if name.class != String
       errors.add :name, "must be a String"
     elsif name =~ /^[\d]+$/
@@ -147,7 +147,7 @@ class Rubygem < ActiveRecord::Base
     end
   rescue ActiveRecord::RecordInvalid => ex
     # ActiveRecord can't chain a nested error here, so we have to add and reraise
-    errors.add_to_base ex.message
+    errors[:base] << ex.message
     raise ex
   end
 
