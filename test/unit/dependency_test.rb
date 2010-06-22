@@ -1,8 +1,8 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class DependencyTest < ActiveSupport::TestCase
-  should_belong_to :rubygem
-  should_belong_to :version
+  should belong_to :rubygem
+  should belong_to :version
 
   context "with dependency" do
     setup do
@@ -71,7 +71,7 @@ class DependencyTest < ActiveSupport::TestCase
       should "not create rubygem" do
         dependency = Dependency.create(:gem_dependency => @gem_dependency)
         assert dependency.new_record?
-        assert dependency.errors.on_base.present?
+        assert dependency.errors[:base].present?
         assert_nil Rubygem.find_by_name(@rubygem_name)
       end
     end
