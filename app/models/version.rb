@@ -136,12 +136,10 @@ class Version < ActiveRecord::Base
   end
 
   def full_nameify!
-    full_name = "#{rubygem.name}-#{number}"
-    full_name << "-#{platform}" if platformed?
+    self.full_name = "#{rubygem.name}-#{number}"
+    self.full_name << "-#{platform}" if platformed?
 
-    Version.without_callbacks do
-      update_attribute(:full_name, full_name)
-    end
+    Version.update_all({:full_name => full_name}, {:id => id})
   end
 
   def slug
