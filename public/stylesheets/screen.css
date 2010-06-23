@@ -1140,6 +1140,10 @@ input[type='submit']:hover {
 }
 
 /* New Nav Stuff - Fred Yates */
+.nav {
+  position: relative;
+}
+
 #nav-cap {
   float: right;
   margin: 18px 0 0 0;
