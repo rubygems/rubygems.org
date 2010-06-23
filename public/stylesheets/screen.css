@@ -1159,7 +1159,11 @@ input[type='submit']:hover {
   background: url(/images/nav.png) 0 0 no-repeat;
 }
 
-#nav a,
+
+#nav #user-info {
+  float: left;
+}
+
 #nav a img {
   float: left;
 }
@@ -1192,7 +1196,7 @@ input[type='submit']:hover {
 }
 
 #nav ul {
-  float: left;
+  float: right;
   margin: 6px 0 6px 6px;
   height: 34px;
 }

@@ -24,10 +24,12 @@
         <div id="nav-cap">
           <div id="nav">
             <% if signed_in? %>
-                <a href="<%= profile_url%>">
-                  <%= image_tag(current_user.gravatar_url(:size => 32), :id => "user_gravatar") %>
-                  <span><%= truncate(current_user.name) %></span>
-                </a>
+                <div id="user-info">
+                  <a href="<%= profile_url%>">
+                    <%= image_tag(current_user.gravatar_url(:size => 32), :id => "user_gravatar") %>
+                    <span><%= truncate(current_user.name) %></span>
+                  </a>
+                </div>
                 <ul id="signed_in">
                   <li id="all-gems"><%= link_to "all gems", rubygems_url %></li>
                   <li id="dashboard"><%= link_to "dashboard", dashboard_url %></li>
