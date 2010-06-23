@@ -11,7 +11,7 @@ var humanMsg = {
 
     // appendTo is the element the msg is appended to
     if (appendTo == undefined)
-      appendTo = 'body';
+      appendTo = '.nav';
 
     // The text on the Log tab
     if (logName == undefined)
