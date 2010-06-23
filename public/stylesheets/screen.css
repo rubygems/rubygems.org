@@ -110,9 +110,13 @@ table {
 .main .title h2 {
   line-height: 44px;
   display: inline;
-  color: #340505;
+  color: #a00;
   font-size: 4em;
   width: 65%;
+}
+
+.main .title h2 a {
+  color: #a00;
 }
 
 .main .title h3 {
@@ -945,6 +949,66 @@ label, .form_links {
 .text_field,
 .password_field,
 .url_field {
+ margin: 0 0 15px 0; 
+}
+
+.text_field input,
+.password_field input,
+.url_field input {
+  background: #d2c8b2;
+  border: none;
+  padding: 15px;
+  font-size: 48px;
+  -moz-box-shadow: inset 0 3px 3px #706751;
+  -webkit-box-shadow: inset 0 3px 3px #706751;
+  box-shadow: inset 0 3px 3px #706751;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  color: #453000;
+  border-bottom: 2px solid #fff8e8;
+  margin: 5px 0 0 0;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.text_field label,
+.password_field label,
+.url_field label {
+  font-size: 24px;
+}
+
+input[type='submit'] {
+  margin-top: 10px;
+  display: block;
+  padding: 15px;
+  background: #c40000;
+  color: #fff;
+  font-weight: bold;
+  font-size: 24px;
+  text-shadow: 0 -1px 1px #250300;
+  border: 0;
+  cursor: pointer;
+  font-family: Helvetica, Arial, sans-serif;
+  -moz-box-shadow: inset 0 1px 1px #f34217, 0 1px 1px #332300;
+  -webkit-box-shadow: inset 0 1px 1px #f34217, 0 1px 1px #332300;
+  box-shadow: inset 0 1px 1px #f34217, 0 1px 1px #332300;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border: 1px solid #a1100a;
+  background-image: -moz-linear-gradient(bottom, #690900 0%, #8f0e00 49%,  #a41200 50%, #cf1900 100%); 
+  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(1, #690900),color-stop(.5, #8f0e00),color-stop(.49, #a41200),color-stop(0, #cf1900));
+}
+
+input[type='submit']:hover {
+  background-image: -moz-linear-gradient(bottom, #690900 0%, #8f0e00 49%,  #a41200 50%, #f00 100%); 
+  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(1, #690900),color-stop(.5, #8f0e00),color-stop(.49, #a41200),color-stop(0, #f00));
+}
+
+/*
+.text_field,
+.password_field,
+.url_field {
   margin: 0 0 2em 0;
 }
 
@@ -977,7 +1041,8 @@ label, .form_links {
 .form_bottom input[type='submit'] {
   margin-top: 10px;
   display: block;
-}
+}*/
+
 
 /* Rails Flash, Forms, Etc */
 
