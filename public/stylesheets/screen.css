@@ -1286,7 +1286,7 @@ form#main-search {
   background: url(/images/search.png);
   float: right;
   clear: both;
-  margin: -2px 0 0 0;
+  margin: -2px 2px 0 0;
   z-index: -1;
 }
 
