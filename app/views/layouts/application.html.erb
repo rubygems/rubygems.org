@@ -41,14 +41,12 @@
                 <li id="sign-in"><%= link_to "sign in", sign_in_path %></li>
                 <li id="sign-up"><%= link_to "sign up", sign_up_path %></li>
               </ul>
-            <% end %>        
+            <% end %>
           </div>
         </div>
         <% form_tag search_url, :id => "main-search", :method => :get do %>
-            <%= text_field_tag :query, params[:query] ? h(params[:query]) : "Search gems&hellip;" %>
-            <% if false %>
-              <%= submit_tag 'Search', :id => 'search_submit', :name => nil %>  ###This is also CSS hidden if you need to bring it back###
-            <% end %>
+          <%= text_field_tag :query, params[:query] ? h(params[:query]) : "Search gems&hellip;" %>
+          <%= submit_tag 'Search', :id => 'search_submit', :name => nil %>
         <% end %>
       </div>
       <div class="prefix_1 grid_10 suffix_1 main">
