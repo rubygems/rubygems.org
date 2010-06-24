@@ -19,16 +19,18 @@
       </div>
 
       <div class="grid_6 suffix_1 nav">
-        <ul>
-          <li><a href="/gems">all gems</a></li>
-          <li><a href="/sign_in">sign in</a></li>
-          <li><a href="/sign_up">sign up</a></li>
-        </ul>
-        <form action="/search" method="get">
-          <div class="text_field">
-            <input id="query" name="query" type="text" value="Search gems&hellip;" />
+        <div id="nav-cap">
+          <div id="nav">
+              <ul id="signed_out">
+                <li id="all-gems"><a href="/gems">all gems</a></li>
+                <li id="sign-in"><a href="/sign_in">sign in</a></li>
+                <li id="sign-up"><a href="/sign_up">sign up</a></li>
+              </ul>
           </div>
-          <input id="search_submit" name="commit" type="submit" value="Search" />
+        </div>
+        <form action="/search" id="main-search" method="get">
+          <input id="query" name="query" type="text" value="Search gems&hellip;" />
+          <input id="search_submit" type="submit" value="Search" />
         </form>
       </div>
       <div class="prefix_1 grid_10 suffix_1 main">
