@@ -11,5 +11,6 @@ module Gemcutter
     config.load_paths << Rails.root.join('app', 'middleware')
     config.encoding = "utf-8"
     config.filter_parameters += [:password]
+    config.active_record.include_root_in_json = false
   end
 end
