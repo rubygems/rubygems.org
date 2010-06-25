@@ -1,11 +1,11 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class UserTest < ActiveSupport::TestCase
-  should_have_many :rubygems, :through => :ownerships
-  should_have_many :ownerships
-  should_have_many :subscribed_gems, :through => :subscriptions
-  should_have_many :subscriptions
-  should_have_many :web_hooks
+  should have_many(:ownerships)
+  should have_many(:rubygems).through(:ownerships)
+  should have_many(:subscribed_gems).through(:subscriptions)
+  should have_many(:subscriptions)
+  should have_many(:web_hooks)
 
   context "validations" do
     context "handle" do

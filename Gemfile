@@ -31,7 +31,7 @@ group :test do
   gem "rack-test",          "0.5.4", :require => "rack/test"
   gem "redgreen",           "1.2.2"
   gem "rr",                 "0.10.11"
-  gem "shoulda",            "2.11.0"
+  gem "shoulda",            "2.11.1"
   gem "treetop",            "1.4.5"
   gem "webrat",             "0.5.3"
   gem "webmock",            "0.7.3"
