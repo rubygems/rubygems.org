@@ -48,7 +48,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.search "/search", :controller => "searches", :action => "new"
   map.resource  :dashboard,  :only => :show
-  map.resource  :profile
+  map.resource  :profile,    :only => [:edit, :update]
   map.resources :statistics, :only => :index, :as => "stats"
 
   map.resources :rubygems,
