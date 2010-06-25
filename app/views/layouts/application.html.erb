@@ -25,7 +25,7 @@
           <div id="nav">
             <% if signed_in? %>
                 <div id="user-info">
-                  <a href="<%= profile_url%>">
+                  <a href="<%= edit_profile_path %>">
                     <%= image_tag(current_user.gravatar_url(:size => 32), :id => "user_gravatar") %>
                     <span><%= truncate(current_user.name) %></span>
                   </a>
@@ -55,7 +55,7 @@
             <%= yield :fold %>
           </div>
         <% end %>
-        <div class="info">
+        <div class="info clearfix">
           <div class="title">
             <% if @title %>
               <h2><%= link_to @title, "" %></h2>
