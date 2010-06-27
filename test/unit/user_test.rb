@@ -11,49 +11,48 @@ class UserTest < ActiveSupport::TestCase
     context "handle" do
       should "begin with a lowercase letter" do
         user = Factory.build(:user, :handle => "1abcde")
-        assert_equal false, user.valid?
+        assert ! user.valid?
         assert_equal "is invalid", user.errors.on(:handle)
 
         user.handle = "abcdef"
         user.valid?
-        assert_equal nil, user.errors.on(:handle)
+        assert_nil user.errors.on(:handle)
       end
 
       should "contain only lowercase letters, numbers, dashes and underscores" do
         user = Factory.build(:user, :handle => "abc^%def")
-        assert_equal false, user.valid?
+        assert ! user.valid?
         assert_equal "is invalid", user.errors.on(:handle)
 
         user.handle = "abc1_two-four"
         user.valid?
-        assert_equal nil, user.errors.on(:handle)
+        assert_nil user.errors.on(:handle)
       end
 
       should "be between 3 and 15 characters" do
         user = Factory.build(:user, :handle => "a")
-        assert_equal false, user.valid?
+        assert ! user.valid?
         assert_equal "is too short (minimum is 3 characters)", user.errors.on(:handle)
 
         user.handle = "a" * 16
-        assert_equal false, user.valid?
+        assert ! user.valid?
         assert_equal "is too long (maximum is 15 characters)", user.errors.on(:handle)
 
         user.handle = "abcdef"
         user.valid?
-        assert_equal nil, user.errors.on(:handle)
+        assert_nil user.errors.on(:handle)
       end
 
-      should "be valid when blank" do
-        user = Factory.build(:user, :handle => nil)
-        user.valid?
-        assert_equal nil, user.errors.on(:handle)
+      should "be invalid when blank" do
+        user = Factory.build(:user, :handle => "")
+        assert ! user.valid?
       end
     end
   end
 
   context "with a user" do
     setup do
-      @user = Factory(:user, :handle => nil)
+      @user = Factory(:user)
     end
 
     should "only have email when boiling down to json or yaml" do
@@ -70,6 +69,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "give email if handle is not set for name" do
+      @user.handle = nil
       assert_nil @user.handle
       assert_equal @user.email, @user.name
     end
@@ -124,7 +124,7 @@ class UserTest < ActiveSupport::TestCase
         assert_does_not_contain @user.subscribed_gems, @unsubscribed_gem
       end
     end
-      
+
     context "with the rubyforge user set up" do
       setup do
         ENV["RUBYFORGE_IMPORTER"] = "42"
