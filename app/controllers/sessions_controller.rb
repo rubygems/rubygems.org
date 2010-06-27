@@ -1,10 +1,7 @@
 class SessionsController < Clearance::SessionsController
-  include RubyforgeTransfer
-
-  before_filter :rf_check, :only => :create
 
   def create
-    @user = User.authenticate(params[:session][:email],
+    @user = User.authenticate(params[:session][:who],
                               params[:session][:password])
     if @user.nil?
       flash_failure_after_create
