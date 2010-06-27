@@ -13,7 +13,10 @@ class User < ActiveRecord::Base
   has_many :ownerships
   has_many :subscriptions
   has_many :web_hooks
+
+  before_validation_on_update :regenerate_token, :if => :email_changed?
   before_create :generate_api_key
+  after_update :deliver_email_reset, :if => :email_reset
 
   validates_uniqueness_of :handle
   validates_format_of :handle, :with => /^[a-z][a-z_\-0-9]*$/, :allow_blank => true
@@ -46,15 +49,16 @@ class User < ActiveRecord::Base
     { 'email' => email }.to_yaml(*args)
   end
 
-  def email_changed!
-    self.email_changed = true
+  def regenerate_token
+    self.email_reset = true
     generate_confirmation_token
-    save
   end
-  
-  protected
 
-    def generate_api_key
-      self.api_key = ActiveSupport::SecureRandom.hex(16)
-    end
+  def deliver_email_reset
+    Mailer.deliver_email_reset self
+  end
+
+  def generate_api_key
+    self.api_key = ActiveSupport::SecureRandom.hex(16)
+  end
 end

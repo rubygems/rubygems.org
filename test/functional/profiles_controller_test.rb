@@ -9,13 +9,10 @@ class ProfilesControllerTest < ActionController::TestCase
     end
 
     context "on GET to edit" do
-      setup do
-        get :edit
-      end
+      setup { get :edit }
 
       should_respond_with :success
       should_render_template :edit
-      should_assign_to(:user) { @user }
     end
 
     context "on PUT to update" do
@@ -28,9 +25,8 @@ class ProfilesControllerTest < ActionController::TestCase
         end
 
         should_respond_with :redirect
-        should_redirect_to('the profile') { profile_path }
+        should_redirect_to('the profile edit page') { edit_profile_path }
         should_set_the_flash_to "Your profile was updated."
-        should_assign_to(:user) { @user }
 
         should "update handle" do
           assert_equal @handle, User.last.handle
