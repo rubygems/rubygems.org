@@ -55,6 +55,38 @@ class UserTest < ActiveSupport::TestCase
       @user = Factory(:user)
     end
 
+    should "authenticate with email/password" do
+      assert_equal @user, User.authenticate(@user.email, @user.password)
+    end
+
+    should "authenticate with handle/password" do
+      assert_equal @user, User.authenticate(@user.handle, @user.password)
+    end
+
+    should "transfer over rubyforge user" do
+      @rubyforger = Factory(:rubyforger, :email => @user.email, :encrypted_password => Digest::MD5.hexdigest(@user.password))
+      assert_equal @user, User.authenticate(@user.email, @user.password)
+      assert ! Rubyforger.exists?(@rubyforger.id)
+    end
+
+    should "not transfer over rubyforge user if password is wrong" do
+      @rubyforger = Factory(:rubyforger, :email => @user.email, :encrypted_password => Digest::MD5.hexdigest(@user.password))
+      assert_nil User.authenticate(@user.email, "trogdor")
+      assert Rubyforger.exists?(@rubyforger.id)
+    end
+
+    should "not authenticate with bad handle, good password" do
+      assert_nil User.authenticate("bad", @user.password)
+    end
+
+    should "not authenticate with bad email, good password" do
+      assert_nil User.authenticate("bad@example.com", @user.password)
+    end
+
+    should "not authenticate with good email, bad password" do
+      assert_nil User.authenticate(@user.email, "bad")
+    end
+
     should "only have email when boiling down to json or yaml" do
       json = JSON.parse(@user.to_json)
       yaml = YAML.load(@user.to_yaml)

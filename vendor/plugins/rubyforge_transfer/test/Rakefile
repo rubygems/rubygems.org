@@ -1,5 +1,0 @@
-$: << '../../../../'
-task :test do
-  require '../../../../test/test_helper'
-  require 'transfer_test.rb'
-end
