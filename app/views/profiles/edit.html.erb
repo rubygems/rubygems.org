@@ -2,16 +2,16 @@
 
 <p>Your Gravatar: <%= image_tag current_user.gravatar_url(:size => 60), :id => 'profile_gravatar' %> (change it at <%= link_to 'gravatar.com', 'http://www.gravatar.com' %>)</p>
 
-<p>Your API key is <strong><%= @user.api_key %></strong>. <br />
+<p>Your API key is <strong><%= current_user.api_key %></strong>. <br />
 Your <code>~/.gem/credentials</code> file should look like this to use the <%= link_to "gem commands", page_url("gem_docs") %>:</p>
 
 <pre><code>---
-:rubygems_api_key: <%= @user.api_key %></code></pre>
+:rubygems_api_key: <%= current_user.api_key %></code></pre>
 
 <p><%= button_to "Reset my API key", reset_api_v1_api_key_path, 
         :method => :put, :confirm => "Are you sure? This cannot be undone." %></p>
 
-<% form_for @user, :url => profile_url do |form| %>
+<% form_for current_user, :url => profile_url do |form| %>
   <%= form.error_messages %>
   <div class="text_field">
     <%= form.label :email, 'Email Address' %>
@@ -22,6 +22,6 @@ Your <code>~/.gem/credentials</code> file should look like this to use the <%= l
     <%= form.text_field :handle %>
   </div>
   <div class="submit_field">
-    <%= form.submit "Reset email address", :disable_with => "Please wait..." %>
+    <%= form.submit "Update", :disable_with => "Please wait..." %>
   </div>
 <% end %>

@@ -6,6 +6,6 @@ end
 
 Given /^I have reset my email address to "([^\"]*)"$/ do |email|
   Given %{I am on my edit profile page}
-  When %{I fill in "Email address" with "#{email}"}
-  And %{I press "Reset email address"}
+  When  %{I fill in "Email address" with "#{email}"}
+  And   %{I press "Update"}
 end

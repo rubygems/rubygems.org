@@ -98,19 +98,17 @@ class UserTest < ActiveSupport::TestCase
 
       assert_equal [my_rubygem], @user.rubygems
     end
-    
+
     context "with a confirmed email address" do
       setup do
         @user = Factory(:email_confirmed_user)
         @user.confirmation_token = nil
         @user.save
       end
-      
-      should "generate a new confirmation token and set the email_changed token then the email gets changed" do
-        assert_changed(@user, :confirmation_token) do
-          @user.email_changed!
-        end
-        assert_equal true, @user.email_changed
+
+      should "generate a new confirmation token when the email gets changed" do
+        @user.update_attributes(:email => "changed@example.com")
+        assert @user.email_reset
       end
     end
 
