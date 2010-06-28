@@ -136,11 +136,19 @@ class UserTest < ActiveSupport::TestCase
         @user = Factory(:email_confirmed_user)
         @user.confirmation_token = nil
         @user.save
+        @user.update_attributes(:email => "changed@example.com")
       end
 
       should "generate a new confirmation token when the email gets changed" do
-        @user.update_attributes(:email => "changed@example.com")
         assert @user.email_reset
+      end
+
+      should "reset token, confirmation, and reset when confirming email" do
+        @user.confirm_email!
+
+        assert @user.email_confirmed
+        assert_nil @user.confirmation_token
+        assert_nil @user.email_reset
       end
     end
 
