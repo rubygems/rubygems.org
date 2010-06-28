@@ -6,7 +6,7 @@ class Version < ActiveRecord::Base
   belongs_to :rubygem
   has_many :dependencies, :dependent => :destroy
 
-  validates_format_of :number, :with => /^#{Gem::Version::VERSION_PATTERN}$/
+  validates_format_of :number, :with => /\A#{Gem::Version::VERSION_PATTERN}\z/
 
   named_scope :owned_by, lambda { |user|
     { :conditions => { :rubygem_id => user.rubygem_ids } }
