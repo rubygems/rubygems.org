@@ -9,35 +9,9 @@ class UserTest < ActiveSupport::TestCase
 
   context "validations" do
     context "handle" do
-      should "begin with a lowercase letter" do
-        user = Factory.build(:user, :handle => "1abcde")
-        assert ! user.valid?
-        assert_equal "is invalid", user.errors.on(:handle)
-
-        user.handle = "abcdef"
-        user.valid?
-        assert_nil user.errors.on(:handle)
-      end
-
-      should "contain only lowercase letters, numbers, dashes and underscores" do
-        user = Factory.build(:user, :handle => "abc^%def")
-        assert ! user.valid?
-        assert_equal "is invalid", user.errors.on(:handle)
-
-        user.handle = "abc1_two-four"
-        user.valid?
-        assert_nil user.errors.on(:handle)
-      end
-
-      should "validate multiline strings correctly" do
-        user = Factory.build(:user, :handle => "abc\n<script>bad")
-        assert ! user.valid?
-        assert_equal "is invalid", user.errors.on(:handle)
-
-        user.handle = "abc1_two-four"
-        user.valid?
-        assert_nil user.errors.on(:handle)
-      end
+      should_not_allow_values_for :handle, "1abcde",
+                                           "abc^%def",
+                                           "abc\n<script>bad"
 
       should "be between 3 and 15 characters" do
         user = Factory.build(:user, :handle => "a")
