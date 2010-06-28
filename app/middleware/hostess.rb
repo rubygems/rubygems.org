@@ -67,13 +67,13 @@ class Hostess < Sinatra::Base
   end
 
   get "/gems/*.gem" do
-    full_name = params[:splat].to_s.chomp(".gem")
-
     if Rails.env.maintenance?
       serve_via_cf
     else
-      if version = Version.find_by_full_name(full_name)
-        Download.incr(version)
+      full_name = params[:splat].to_s.chomp('.gem')
+
+      if name = $redis.get("versions:#{full_name}")
+        Download.incr(name, full_name)
 
         serve_via_cf
       else
