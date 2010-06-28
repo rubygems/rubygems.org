@@ -47,6 +47,10 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.number, @version.slug
     end
 
+    should "map full_name to name in Redis" do
+      assert_equal @version.rubygem.name, $redis.get("versions:#{@version.full_name}")
+    end
+
     should "raise an ActiveRecord::RecordNotFound if an invalid slug is given" do
       assert_raise ActiveRecord::RecordNotFound do
         Version.find_from_slug!(@version.rubygem_id, "some stupid version 399")

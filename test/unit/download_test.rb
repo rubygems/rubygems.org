@@ -6,7 +6,7 @@ class DownloadTest < ActiveSupport::TestCase
     version = Factory(:version, :rubygem => rubygem)
 
     3.times do
-      Download.incr(version)
+      Download.incr(rubygem.name, version.full_name)
     end
 
     assert_equal 3, version.downloads_count
@@ -20,7 +20,7 @@ class DownloadTest < ActiveSupport::TestCase
     version = Factory(:version, :rubygem => rubygem, :platform => "mswin32-60")
     other_platform_version = Factory(:version, :rubygem => rubygem, :platform => "mswin32")
 
-    Download.incr(version)
+    Download.incr(rubygem.name, version.full_name)
 
     assert_equal 1, version.downloads_count
     assert_equal 1, rubygem.downloads
@@ -37,9 +37,9 @@ class DownloadTest < ActiveSupport::TestCase
       @version1 = Factory(:version, :rubygem => @rubygem, :number => "1.0.0")
       @version2 = Factory(:version, :rubygem => @rubygem, :number => "2.0.0")
 
-      Download.incr(@version1)
-      Download.incr(@version2)
-      Download.incr(@version2)
+      Download.incr(@rubygem.name, @version1.full_name)
+      Download.incr(@rubygem.name, @version2.full_name)
+      Download.incr(@rubygem.name, @version2.full_name)
     end
 
     should "roll over downloads into history hashes" do
@@ -75,15 +75,15 @@ class DownloadTest < ActiveSupport::TestCase
     @rubygem_3 = Factory(:rubygem)
     @version_4 = Factory(:version, :rubygem => @rubygem_3)
 
-    Download.incr(@version_1)
-    Download.incr(@version_2)
-    Download.incr(@version_3)
+    Download.incr(@rubygem_1.name, @version_1.full_name)
+    Download.incr(@rubygem_1.name, @version_2.full_name)
+    Download.incr(@rubygem_2.name, @version_3.full_name)
     Download.rollover
-    Download.incr(@version_3)
-    Download.incr(@version_1)
-    Download.incr(@version_3)
-    Download.incr(@version_3)
-    Download.incr(@version_2)
+    Download.incr(@rubygem_2.name, @version_3.full_name)
+    Download.incr(@rubygem_1.name, @version_1.full_name)
+    Download.incr(@rubygem_2.name, @version_3.full_name)
+    Download.incr(@rubygem_2.name, @version_3.full_name)
+    Download.incr(@rubygem_1.name, @version_2.full_name)
 
     assert_equal [[@version_3, 3], [@version_2, 1], [@version_1, 1]],
                  Download.most_downloaded_today
