@@ -69,18 +69,10 @@ class HostessTest < ActiveSupport::TestCase
       assert_equal 1, @version.reload.downloads_count
     end
 
-    should "redirect to s3 for a gem within a day old" do
+    should "redirect to cf for a gem" do
       get @file
 
-      assert_equal "http://test.s3.rubygems.org#{@file}", last_response.headers["Location"]
-      assert_equal 302, last_response.status
-    end
-
-    should "redirect to cf for a gem within a day old" do
-      @version.update_attribute(:updated_at, 1.day.ago)
-      get @file
-
-      assert_equal "http://test.s3.rubygems.org#{@file}", last_response.headers["Location"]
+      assert_equal "http://test.cf.rubygems.org#{@file}", last_response.headers["Location"]
       assert_equal 302, last_response.status
     end
   end
