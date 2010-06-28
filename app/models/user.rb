@@ -67,4 +67,10 @@ class User < ActiveRecord::Base
   def generate_api_key
     self.api_key = ActiveSupport::SecureRandom.hex(16)
   end
+
+  def confirm_email!
+    self.email_confirmed    = true
+    self.confirmation_token = self.email_reset = nil
+    save(false)
+  end
 end

@@ -39,4 +39,4 @@ Feature: Email reset
       And I follow the confirmation link sent to "email@newperson.com"
       When I return next time
       And I sign in as "email@newperson.com/password"
-      Then I should be signed in
+      Then I should not see "sign in"
