@@ -29,6 +29,16 @@ class UserTest < ActiveSupport::TestCase
         assert_nil user.errors.on(:handle)
       end
 
+      should "validate multiline strings correctly" do
+        user = Factory.build(:user, :handle => "abc\n<script>bad")
+        assert ! user.valid?
+        assert_equal "is invalid", user.errors.on(:handle)
+
+        user.handle = "abc1_two-four"
+        user.valid?
+        assert_nil user.errors.on(:handle)
+      end
+
       should "be between 3 and 15 characters" do
         user = Factory.build(:user, :handle => "a")
         assert ! user.valid?
