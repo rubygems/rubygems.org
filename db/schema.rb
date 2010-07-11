@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100220111111) do
+ActiveRecord::Schema.define(:version => 20100627193405) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -70,6 +70,14 @@ ActiveRecord::Schema.define(:version => 20100220111111) do
   add_index "ownerships", ["rubygem_id"], :name => "index_ownerships_on_rubygem_id"
   add_index "ownerships", ["user_id"], :name => "index_ownerships_on_user_id"
 
+  create_table "requirements", :force => true do |t|
+    t.integer "version_id"
+    t.integer "dependency_id"
+  end
+
+  add_index "requirements", ["dependency_id"], :name => "index_requirements_on_dependency_id"
+  add_index "requirements", ["version_id"], :name => "index_requirements_on_version_id"
+
   create_table "rubyforgers", :force => true do |t|
     t.string "email"
     t.string "encrypted_password", :limit => 40
@@ -108,11 +116,12 @@ ActiveRecord::Schema.define(:version => 20100220111111) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "handle"
+    t.boolean  "email_reset"
   end
 
+  add_index "users", ["confirmation_token", "id"], :name => "index_users_on_id_and_confirmation_token"
   add_index "users", ["email"], :name => "index_users_on_email"
   add_index "users", ["handle"], :name => "index_users_on_handle"
-  add_index "users", ["id", "confirmation_token"], :name => "index_users_on_id_and_confirmation_token"
   add_index "users", ["id", "token"], :name => "index_users_on_id_and_token"
   add_index "users", ["remember_token"], :name => "index_users_on_remember_token"
   add_index "users", ["token"], :name => "index_users_on_token"

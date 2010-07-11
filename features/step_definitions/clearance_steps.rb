@@ -24,6 +24,10 @@ Given /^I am signed up and confirmed as "(.*)\/(.*)"$/ do |email, password|
     :password_confirmation => password)
 end
 
+Given /^my handle is "([^\"]*)"$/ do |handle|
+  @me.update_attributes!(:handle => handle)
+end
+
 # Session
 
 Then /^I should be signed in$/ do

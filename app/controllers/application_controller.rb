@@ -47,15 +47,3 @@ end
 # Make the namespaced controllers happy.
 module Api; end
 module Api::V1; end
-
-class Clearance::SessionsController < ApplicationController
-
-  include RubyforgeTransfer
-
-  before_filter :rf_check, :only => :create
-
-  private
-  def url_after_create
-    dashboard_url
-  end
-end

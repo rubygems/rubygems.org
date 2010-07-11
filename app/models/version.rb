@@ -6,7 +6,7 @@ class Version < ActiveRecord::Base
   belongs_to :rubygem
   has_many :dependencies, :dependent => :destroy
 
-  validates_format_of :number, :with => /^#{Gem::Version::VERSION_PATTERN}$/
+  validates_format_of :number, :with => /\A#{Gem::Version::VERSION_PATTERN}\z/
 
   named_scope :owned_by, lambda { |user|
     { :conditions => { :rubygem_id => user.rubygem_ids } }
@@ -136,12 +136,10 @@ class Version < ActiveRecord::Base
   end
 
   def full_nameify!
-    full_name = "#{rubygem.name}-#{number}"
-    full_name << "-#{platform}" if platformed?
+    self.full_name = "#{rubygem.name}-#{number}"
+    self.full_name << "-#{platform}" if platformed?
 
-    Version.without_callbacks do
-      update_attribute(:full_name, full_name)
-    end
+    Version.update_all({:full_name => full_name}, {:id => id})
   end
 
   def slug

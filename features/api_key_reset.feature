@@ -5,12 +5,12 @@ Feature: API key reset
   
     Scenario: User sees existing key on their profile page
       Given I have signed in with "email@person.com/password"
-      And I am on my profile page
+      And I am on my edit profile page
       Then I should see my "API key"
     
     Scenario: User resets API key
       Given I have signed in with "email@person.com/password"
-      And I am on my profile page
+      And I am on my edit profile page
       When I press "Reset my API key"
       Then I should see my new "API key"    
     
