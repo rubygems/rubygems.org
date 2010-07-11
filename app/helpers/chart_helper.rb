@@ -25,7 +25,7 @@ module ChartHelper
         counts = []
         days_ago.times do |t|
           date = t.days.ago.to_date
-          count = download_counts["#{version.id}-#{date}"]
+          count = download_counts["#{version.id}-#{date}"] || 0
           range[0] = count if !range[0] || (count < range[0])
           range[1] = count if count > range[1]
           counts << count
