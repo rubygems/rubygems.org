@@ -1,12 +1,46 @@
-<% @title = "Your Profile" %>
-
-<p>Your Gravatar: <%= image_tag current_user.gravatar_url(:size => 60), :id => 'profile_gravatar' %> (change it at <%= link_to 'gravatar.com', 'http://www.gravatar.com' %>)</p>
-
-<p>Your API key is <strong><%= @user.api_key %></strong>. <br />
-Your <code>~/.gem/credentials</code> file should look like this to use the <%= link_to "gem commands", page_url("gem_docs") %>:</p>
-
-<pre><code>---
-:rubygems_api_key: <%= @user.api_key %></code></pre>
-
-<p><%= button_to "Reset my API key", reset_api_v1_api_key_path, 
-        :method => :put, :confirm => "Are you sure? This cannot be undone." %></p>
+<div id="profile">
+  <div id="profile-left">
+    <div id="avatar-frame">
+      <%= image_tag current_user.gravatar_url(:size => 150), :id => 'profile_gravatar' %>
+    </div>
+    <div id="profile-info">
+      <h2 id="profile-name">fyates</h2>
+      <h3 id="location">Boston, MA</h3>
+      <h4 id="website"><a href="http://fyates.com">http://fyates.com</a></h4>
+      <p id="bio">Likes long walks in the desert, cloud covered moonlit nights, and stale cookies. He’s the lead designer at craigslist where he hopes to become Creative Director once Hellen Keller retires.</p>
+      <h5 id="downloads">Downloads</h5>
+      <div id="downloads_cont">
+        <div><strong>43</strong>today</div>
+        <div><strong>13,543</strong>all time</div>
+      </div>
+    </div>
+  </div>
+  <div class="profile-list">
+    <div class="profile-list-top">
+      <h3>My Gems</h3>
+      <span>Downloads</span>
+    </div>
+    <ol>
+      <li>
+        <a href="#">
+          awesome_gem <em>0.3.8</em>
+          <strong>43</strong>
+        </a>
+      </li>
+    </ol>
+  </div>
+  <div class="profile-list right">
+    <div class="profile-list-top">
+      <h3>Watched Gems</h3>
+      <span>Downloads</span>
+    </div>
+    <ol>
+      <li>
+        <a href="#">
+          awesome_gem <em>0.3.8</em>
+          <strong>43</strong>
+        </a>
+      </li>
+    </ol>
+  </div>
+</div>

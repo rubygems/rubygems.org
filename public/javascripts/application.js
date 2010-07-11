@@ -1,8 +1,4 @@
 $(document).ready(function() {
-  $('#flash_success, #flash_notice, #flash_error').each(function() {
-    humanMsg.displayMsg($(this).text());
-  });
-
   if (window.location.href.search(/query=/) == -1) {
     $('#query').one('click, focus', function() {
       $(this).val('');

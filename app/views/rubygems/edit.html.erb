@@ -7,23 +7,23 @@ All other fields can only be edited by pushing an updated version of your gem.
 <%- form_for @rubygem.linkset, :url => rubygem_url(@rubygem), :method => :put do |form| %>
   <div class="url_field">
     <%= form.label :code, "Source Code URL" %>
-    <%= form.text_field :code %>
+    <%= form.text_field :code, :size => 25 %>
   </div>
   <div class="url_field">
     <%= form.label :docs, "Documentation URL" %>
-    <%= form.text_field :docs %>
+    <%= form.text_field :docs, :size => 25 %>
   </div>
   <div class="url_field">
     <%= form.label :wiki, "Wiki URL" %>
-    <%= form.text_field :wiki %>
+    <%= form.text_field :wiki, :size => 25 %>
   </div>
   <div class="url_field">
     <%= form.label :mail, "Mailing List URL" %>
-    <%= form.text_field :mail %>
+    <%= form.text_field :mail, :size => 25 %>
   </div>
   <div class="url_field">
     <%= form.label :bugs, "Bug Tracker URL" %>
-    <%= form.text_field :bugs %>
+    <%= form.text_field :bugs, :size => 25 %>
   </div>
     <%= form.submit 'Update', :disable_with => 'Please wait...' %>
 <% end %>

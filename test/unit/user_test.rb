@@ -7,9 +7,68 @@ class UserTest < ActiveSupport::TestCase
   should_have_many :subscriptions
   should_have_many :web_hooks
 
+  context "validations" do
+    context "handle" do
+      should_not_allow_values_for :handle, "1abcde",
+                                           "abc^%def",
+                                           "abc\n<script>bad"
+
+      should "be between 3 and 15 characters" do
+        user = Factory.build(:user, :handle => "a")
+        assert ! user.valid?
+        assert_equal "is too short (minimum is 3 characters)", user.errors.on(:handle)
+
+        user.handle = "a" * 16
+        assert ! user.valid?
+        assert_equal "is too long (maximum is 15 characters)", user.errors.on(:handle)
+
+        user.handle = "abcdef"
+        user.valid?
+        assert_nil user.errors.on(:handle)
+      end
+
+      should "be invalid when blank" do
+        user = Factory.build(:user, :handle => "")
+        assert ! user.valid?
+      end
+    end
+  end
+
   context "with a user" do
     setup do
       @user = Factory(:user)
+    end
+
+    should "authenticate with email/password" do
+      assert_equal @user, User.authenticate(@user.email, @user.password)
+    end
+
+    should "authenticate with handle/password" do
+      assert_equal @user, User.authenticate(@user.handle, @user.password)
+    end
+
+    should "transfer over rubyforge user" do
+      @rubyforger = Factory(:rubyforger, :email => @user.email, :encrypted_password => Digest::MD5.hexdigest(@user.password))
+      assert_equal @user, User.authenticate(@user.email, @user.password)
+      assert ! Rubyforger.exists?(@rubyforger.id)
+    end
+
+    should "not transfer over rubyforge user if password is wrong" do
+      @rubyforger = Factory(:rubyforger, :email => @user.email, :encrypted_password => Digest::MD5.hexdigest(@user.password))
+      assert_nil User.authenticate(@user.email, "trogdor")
+      assert Rubyforger.exists?(@rubyforger.id)
+    end
+
+    should "not authenticate with bad handle, good password" do
+      assert_nil User.authenticate("bad", @user.password)
+    end
+
+    should "not authenticate with bad email, good password" do
+      assert_nil User.authenticate("bad@example.com", @user.password)
+    end
+
+    should "not authenticate with good email, bad password" do
+      assert_nil User.authenticate(@user.email, "bad")
     end
 
     should "only have email when boiling down to json or yaml" do
@@ -26,6 +85,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "give email if handle is not set for name" do
+      @user.handle = nil
       assert_nil @user.handle
       assert_equal @user.email, @user.name
     end
@@ -53,6 +113,27 @@ class UserTest < ActiveSupport::TestCase
       Factory(:ownership, :user => @user, :rubygem => other_rubygem, :approved => false)
 
       assert_equal [my_rubygem], @user.rubygems
+    end
+
+    context "with a confirmed email address" do
+      setup do
+        @user = Factory(:email_confirmed_user)
+        @user.confirmation_token = nil
+        @user.save
+        @user.update_attributes(:email => "changed@example.com")
+      end
+
+      should "generate a new confirmation token when the email gets changed" do
+        assert @user.email_reset
+      end
+
+      should "reset token, confirmation, and reset when confirming email" do
+        @user.confirm_email!
+
+        assert @user.email_confirmed
+        assert_nil @user.confirmation_token
+        assert_nil @user.email_reset
+      end
     end
 
     context "with subscribed gems" do

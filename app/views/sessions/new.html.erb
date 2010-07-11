@@ -7,12 +7,12 @@
   </div>
 <% form_for :session, :url => session_path do |form| %>
   <div class="text_field">
-    <%= form.label :email %>
-    <%= form.text_field :email %>
+    <%= form.label :who, "Email or Handle" %>
+    <%= form.text_field :who, :size => 25 %>
   </div>
   <div class="password_field">
     <%= form.label :password %>
-    <%= form.password_field :password %>
+    <%= form.password_field :password, :size => 25 %>
   </div>
   <div class="form_bottom">
     <%= form.submit "Sign in", :disable_with => "Please wait..." %>

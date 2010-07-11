@@ -76,11 +76,7 @@ class Hostess < Sinatra::Base
       if version = Version.find_by_full_name(full_name)
         Download.incr(version)
 
-        if version.updated_at > 1.day.ago
-          serve_via_s3
-        else
-          serve_via_cf
-        end
+        serve_via_cf
       else
         error 400, "This gem does not currently live at Gemcutter."
       end

@@ -71,9 +71,9 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         put :reset
       end
     end
-    should "redirect to the profile page" do
+    should "redirect to the edit profile page" do
       put :reset
-      assert_redirected_to profile_path
+      assert_redirected_to edit_profile_path
     end
   end
   

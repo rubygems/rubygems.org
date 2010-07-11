@@ -14,14 +14,18 @@ dependencies:
     version: = 1.1.6
     require: 
     - pacecar
-  gravtastic: 
+  system_timer: 
     group: 
     - :default
-    version: = 2.1.3
+    version: = 1.0
   rails: 
     group: 
     - :default
     version: = 2.3.5
+  gravtastic: 
+    group: 
+    - :default
+    version: = 2.1.3
   pg: 
     group: 
     - :default
@@ -38,20 +42,20 @@ dependencies:
     group: 
     - :default
     version: = 1.0.1
-  sinatra: 
-    group: 
-    - :default
-    version: = 0.9.4
-  json: 
-    group: 
-    - :default
-    version: = 1.2.0
   rest-client: 
     group: 
     - :default
     version: = 1.0.3
     require: 
     - rest_client
+  json: 
+    group: 
+    - :default
+    version: = 1.2.0
+  sinatra: 
+    group: 
+    - :default
+    version: = 0.9.4
   will_paginate: 
     group: 
     - :default
@@ -64,18 +68,18 @@ dependencies:
     group: 
     - :test
     version: = 0.5.3
-  gchartrb: 
-    group: 
-    - :default
-    version: = 0.8
-    require: 
-    - google_chart
   rack-maintenance: 
     group: 
     - :default
     version: = 0.3.0
     require: 
     - rack/maintenance
+  gchartrb: 
+    group: 
+    - :default
+    version: = 0.8
+    require: 
+    - google_chart
   redgreen: 
     group: 
     - :test
@@ -90,24 +94,24 @@ dependencies:
     group: 
     - :test
     version: = 0.3.101
-  clearance: 
-    group: 
-    - :default
-    version: = 0.8.2
   hoptoad_notifier: 
     group: 
     - :default
     version: = 2.2.0
-  redis: 
+  clearance: 
     group: 
     - :default
-    version: = 2.0.1
+    version: = 0.8.2
   aws-s3: 
     group: 
     - :default
     version: = 0.6.2
     require: 
     - aws/s3
+  redis: 
+    group: 
+    - :default
+    version: = 2.0.1
   webmock: 
     group: 
     - :test
@@ -193,13 +197,15 @@ specs:
     version: 2.10.2
 - sinatra: 
     version: 0.9.4
+- system_timer: 
+    version: "1.0"
 - webmock: 
     version: 0.7.3
 - webrat: 
     version: 0.5.3
 - will_paginate: 
     version: 2.3.11
-hash: cc9d567f8d3740ec74d4db73def756302a58bf1d
+hash: 7375232cf842731b51a89012a68f12e57787be64
 sources: 
 - Rubygems: 
     uri: http://gemcutter.org

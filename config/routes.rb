@@ -48,7 +48,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.search "/search", :controller => "searches", :action => "new"
   map.resource  :dashboard,  :only => :show
-  map.resource  :profile
+  map.resource  :profile,    :only => [:edit, :update]
   map.resources :statistics, :only => :index, :as => "stats"
 
   map.resources :rubygems,
@@ -83,6 +83,14 @@ ActionController::Routing::Routes.draw do |map|
     :controller => 'clearance/sessions',
     :action     => 'destroy',
     :method     => :delete
+  map.resource  :session,
+    :controller => 'sessions',
+    :only       => :create
+  map.resources :users, :controller => 'clearance/users' do |users|
+    users.resource :confirmation,
+      :controller => 'confirmations',
+      :only       => [:new, :create]
+  end
 
   ################################################################################
   # Root
