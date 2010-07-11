@@ -31,7 +31,8 @@ class VersionTest < ActiveSupport::TestCase
 
     should_not_allow_values_for :number, "#YAML<CEREALIZATION-FAIL>",
                                          "1.2.3-\"[javalol]\"",
-                                         "0.8.45::Gem::PLATFORM::FAILBOAT"
+                                         "0.8.45::Gem::PLATFORM::FAILBOAT",
+                                         "1.2.3\n<bad>"
 
     should "give number for #to_s" do
       assert_equal @version.number, @version.to_s

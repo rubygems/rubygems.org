@@ -14,6 +14,7 @@ gem "rack-maintenance",  "0.3.0", :require => "rack/maintenance"
 gem "redis",             "2.0.1"
 gem "rest-client",       "1.0.3", :require => "rest_client"
 gem "sinatra",           "0.9.4"
+gem "system_timer",      "1.0"
 gem "will_paginate",     "2.3.11"
 gem "xml-simple",        "1.0.12"
 

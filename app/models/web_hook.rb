@@ -76,7 +76,9 @@ class WebHook < ActiveRecord::Base
   end
 
   def perform
-    RestClient.post url, payload, 'Content-Type' => 'application/json'
+    SystemTimer.timeout_after(5) do
+      RestClient.post url, payload, 'Content-Type' => 'application/json', :timeout => 20, :open_timeout => 5
+    end
     true
   rescue *(HTTP_ERRORS + [RestClient::Exception, SocketError]) => e
     increment! :failure_count unless new_record?

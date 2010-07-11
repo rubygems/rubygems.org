@@ -2,6 +2,8 @@ class User < ActiveRecord::Base
   include Clearance::User
   is_gravtastic
 
+  attr_accessible :handle
+
   has_many :rubygems, :through    => :ownerships,
                       :order      => "name ASC",
                       :conditions => { 'ownerships.approved' => true }
@@ -11,7 +13,20 @@ class User < ActiveRecord::Base
   has_many :ownerships
   has_many :subscriptions
   has_many :web_hooks
+
+  before_validation_on_update :regenerate_token, :if => :email_changed?
   before_create :generate_api_key
+  after_update :deliver_email_reset, :if => :email_reset
+
+  validates_uniqueness_of :handle
+  validates_format_of :handle, :with => /\A[a-z][a-z_\-0-9]*\z/
+  validates_length_of :handle, :within => 3..15
+
+  def self.authenticate(who, password)
+    if user = Rubyforger.transfer(who, password) || find_by_email(who) || find_by_handle(who)
+      user if user.authenticated?(password)
+    end
+  end
 
   def name
     handle || email
@@ -40,9 +55,22 @@ class User < ActiveRecord::Base
     { 'email' => email }.to_yaml(*args)
   end
 
-  protected
+  def regenerate_token
+    self.email_reset = true
+    generate_confirmation_token
+  end
 
-    def generate_api_key
-      self.api_key = ActiveSupport::SecureRandom.hex(16)
-    end
+  def deliver_email_reset
+    Mailer.deliver_email_reset self
+  end
+
+  def generate_api_key
+    self.api_key = ActiveSupport::SecureRandom.hex(16)
+  end
+
+  def confirm_email!
+    self.email_confirmed    = true
+    self.confirmation_token = self.email_reset = nil
+    save(false)
+  end
 end

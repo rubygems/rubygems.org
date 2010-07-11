@@ -5,9 +5,9 @@ Feature: RubyForge legacy sign in
   And automatically be given an account
 
     Scenario: RubyForge user has never logged on to GemCutter
-      Given I am a legacy user with "email@person.com/randompw"
+      Given I signed up with "email@person.com/randompw"
       And I have a RubyForge account with "email@person.com/rfpassword"
-      And a RubyForge user signs in with "email@person.com/rfpassword"
+      And I sign in as "email@person.com/rfpassword"
       Then I should see "Signed in"
       And I should be signed in
       And my GemCutter password should be "rfpassword"
