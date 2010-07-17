@@ -11,9 +11,10 @@ Feature: Edit Profile
     And I press "Update"
     Then I should see my new "Handle"
 
-  Scenario: Update with Existing Handle
+  Scenario: Update with existing handle
     Given I have signed in with "janedoe@example.com/password"
     And my handle is "some_doe"
+    And I sign out
     And I have signed in with "johndoe@example.com/password"
     And my handle is "john_doe"
     And I am on my edit profile page

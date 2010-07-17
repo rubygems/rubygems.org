@@ -113,8 +113,8 @@ When /^I request password reset link to be sent to "(.*)"$/ do |email|
 end
 
 When /^I update my password with "(.*)\/(.*)"$/ do |password, confirmation|
-  And %{I fill in "Choose password" with "#{password}"}
-  And %{I fill in "Confirm password" with "#{confirmation}"}
+  And %{I fill in "Password" with "#{password}"}
+  And %{I fill in "Password confirmation" with "#{confirmation}"}
   And %{I press "Save this password"}
 end
 
