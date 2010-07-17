@@ -73,10 +73,14 @@ class WebhookCommandTest < CommandTest
       setup do
         stub_api_key("key")
         stub_request(:get, "#{@api}.yaml").to_return :body => <<EOF
-{
-  "foo": [{"url":"http://foogemhook.com","failure_count":0}],
-  "all gems":[{"url":"http://allgemshook.com","failure_count":0}]
-}
+---
+foo:
+- url: http://foogemhook.com
+  failure_count: 0
+all gems:
+- url: http://allgemshook.com
+  failure_count: 0
+
 EOF
       end
 
