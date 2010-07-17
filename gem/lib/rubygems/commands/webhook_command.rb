@@ -74,15 +74,13 @@ EOF
   end
 
   def list_webhooks
-    require 'json/pure' unless defined?(JSON::JSON_LOADED)
-
     resp = rubygems_api_request(:get, "api/v1/web_hooks.yaml") do |request|
       request.add_field("Authorization", Gem.configuration.rubygems_api_key)
     end
 
     with_response(resp) do |response|
       begin
-        groups = JSON.parse(response.body)
+        groups = YAML.load(response.body)
 
         if groups.size.zero?
           say "You haven't added any webhooks yet."
@@ -100,9 +98,9 @@ EOF
             end
           end
         end
-      rescue JSON::ParserError => json_error
+      rescue Exception => error
         say "There was a problem parsing the data:"
-        say json_error.to_s
+        say error.to_s
         terminate_interaction
       end
     end
