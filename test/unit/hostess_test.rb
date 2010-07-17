@@ -11,10 +11,6 @@ class HostessTest < ActiveSupport::TestCase
       path = Pusher.server_path(path)
       FileUtils.mkdir_p(File.dirname(path))
       FileUtils.touch(path)
-    else
-      net_resp = FakeWeb::Responder.new(:get, "/", {}, 1).response
-      s3_resp = AWS::S3::S3Object::Response.new(net_resp)
-      stub(VaultObject).value(path, anything) { s3_resp }
     end
   end
 
