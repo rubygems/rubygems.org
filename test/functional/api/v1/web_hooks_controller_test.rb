@@ -94,12 +94,40 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
                                   :user    => @user)
         end
 
-        context "On GET to index" do
+        context "On GET to index with json" do
+          setup do
+            get :index, :format => "json"
+          end
+          should_respond_with :success
+          should "be able to parse some json" do
+            assert_nothing_raised do
+              JSON.parse(@response.body)
+            end
+          end
+        end
+
+        context "On GET to index with yaml" do
+          setup do
+            get :index, :format => "yaml"
+          end
+          should_respond_with :success
+          should "be able to parse some yaml" do
+            payload = YAML.load(@response.body)
+            assert_equal @global_hook.payload, payload["all gems"].first
+            assert_equal @rubygem_hook.payload, payload[@rubygem.name].first
+          end
+        end
+
+        context "On GET to index with no format" do
           setup do
             get :index
           end
           should_respond_with :success
-          should_respond_with_content_type /json/
+          should "be able to parse some json" do
+            assert_nothing_raised do
+              JSON.parse(@response.body)
+            end
+          end
         end
 
         context "On DELETE to remove with owned hook for rubygem" do

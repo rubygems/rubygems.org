@@ -43,7 +43,7 @@ class User < ActiveRecord::Base
   def all_hooks
     all     = web_hooks.specific.group_by { |hook| hook.rubygem.name }
     globals = web_hooks.global
-    all["all gems"] = globals unless globals.empty?
+    all["all gems"] = globals if globals.present?
     all
   end
 
