@@ -13,14 +13,13 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "gemcutter"
-    gem.version = "0.5.0"
+    gem.version = "0.6.0.pre"
     gem.summary = "Commands to interact with RubyGems.org"
     gem.description = "Adds several commands to RubyGems for managing gems and more on RubyGems.org."
     gem.email = "nick@quaran.to"
     gem.homepage = "http://rubygems.org"
     gem.authors = ["Nick Quaranto"]
     gem.files = FileList["lib/rubygems_plugin.rb",
-                         "lib/gemcutter.rb",
                          "lib/rubygems/commands/*",
                          "test/*_helper.rb",
                          "test/*_test.rb",
@@ -28,7 +27,6 @@ begin
                          "Rakefile"]
     gem.test_files = []
     gem.executables = []
-    gem.add_runtime_dependency('json_pure')
     %w[rake shoulda activesupport webmock rr].each do |dep|
       gem.add_development_dependency(dep)
     end
