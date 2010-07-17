@@ -27,9 +27,14 @@ class UserTest < ActiveSupport::TestCase
         assert_nil user.errors.on(:handle)
       end
 
-      should "be invalid when blank" do
+      should "be invalid when an empty string" do
         user = Factory.build(:user, :handle => "")
         assert ! user.valid?
+      end
+
+      should "be valid when nil and other users have a nil handle" do
+        assert Factory(:user, :handle => nil)
+        assert Factory(:user, :handle => nil)
       end
     end
   end
