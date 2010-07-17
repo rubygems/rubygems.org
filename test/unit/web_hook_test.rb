@@ -77,6 +77,14 @@ class WebHookTest < ActiveSupport::TestCase
       }, ActiveSupport::JSON.decode(@webhook.to_json))
     end
 
+    should "show limited attributes for to_yaml" do
+      assert_equal(
+      {
+        'url'           => @url,
+        'failure_count' => @webhook.failure_count
+      }, YAML.load(@webhook.to_yaml))
+    end
+
     should "not be able to create a webhook under this user, gem, and url" do
       webhook = WebHook.new(:user    => @user,
                             :rubygem => @rubygem,
@@ -122,14 +130,12 @@ class WebHookTest < ActiveSupport::TestCase
                          :number            => "3.2.1",
                          :authors           => %w[AUTHORS],
                          :description       => "DESC")
-      @hook    = Factory(:web_hook,
-                         :deploy_gem     => @rubygem,
-                         :host_with_port => 'localhost:1234',
-                         :version        => @version)
+      @hook    = Factory(:web_hook)
+      @job     = WebHookJob.new(@hook.url, 'localhost:1234', @rubygem, @version)
     end
 
     should "have gem properties encoded in JSON" do
-      payload = ActiveSupport::JSON.decode(@hook.payload)
+      payload = ActiveSupport::JSON.decode(@job.payload)
       assert_equal "foogem",    payload['name']
       assert_equal "3.2.1",     payload['version']
       assert_equal "DESC",      payload["info"]
@@ -141,11 +147,9 @@ class WebHookTest < ActiveSupport::TestCase
 
     should "send the right version out even for older gems" do
       new_version = Factory(:version, :number => "2.0.0", :rubygem => @rubygem)
-      new_hook    = Factory(:web_hook,
-                            :deploy_gem     => @rubygem,
-                            :host_with_port => 'localhost:1234',
-                            :version        => new_version)
-      payload = ActiveSupport::JSON.decode(new_hook.payload)
+      new_hook    = Factory(:web_hook)
+      job         = WebHookJob.new(new_hook.url, 'localhost:1234', @rubygem, new_version)
+      payload     = ActiveSupport::JSON.decode(job.payload)
 
       assert_equal "foogem", payload['name']
       assert_equal "2.0.0",  payload['version']
@@ -155,7 +159,7 @@ class WebHookTest < ActiveSupport::TestCase
   end
 
   context "with a non-global hook job" do
-    setup do 
+    setup do
       @url     = 'http://example.com/gemcutter'
       @rubygem = Factory(:rubygem)
       @version = Factory(:version, :rubygem => @rubygem)
@@ -165,15 +169,6 @@ class WebHookTest < ActiveSupport::TestCase
       stub_request(:post, @url)
 
       @hook.fire('rubygems.org', @rubygem, @version, false)
-    end
-
-    should "POST to URL with payload" do
-      assert_requested(:post, @url,
-                       :times => 1)
-      assert_requested(:post, @url,
-                       :body => @hook.payload)
-      assert_requested(:post, @url,
-                       :headers => { 'Content-Type' => 'application/json' })
     end
 
     should "not increment failure count for hook" do
@@ -204,7 +199,7 @@ class WebHookTest < ActiveSupport::TestCase
 
         @hook.fire('rubygems.org', @rubygem, @version, false)
 
-        assert_equal index + 1, @hook.failure_count
+        assert_equal index + 1, @hook.reload.failure_count
         assert @hook.global?
       end
     end

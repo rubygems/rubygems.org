@@ -13,9 +13,9 @@ When /^I have added a global webhook for "([^\"]*)" with my api key$/ do |web_ho
         :url      => web_hook_url
 end
 
-When /^I list the webhooks with my api key$/ do
+When /I list the webhooks as (json|yaml) with my api key/ do |format|
   api_key_header
-  visit api_v1_web_hooks_path, :get, :format => "json"
+  visit api_v1_web_hooks_path, :get, :format => format
 end
 
 Then /^the webhook "([^\"]*)" should receive a POST with gem "([^\"]*)" at version "([^\"]*)"$/ do |web_hook_url, gem_name, version_number|
@@ -28,10 +28,15 @@ Then /^the webhook "([^\"]*)" should receive a POST with gem "([^\"]*)" at versi
   assert_equal version_number, json["version"]
 end
 
-Then /^I should see "([^\"]*)" under "([^\"]*)"$/ do |web_hook_url, gem_name|
-  json = ActiveSupport::JSON.decode(response.body)
-  assert json[gem_name]
-  assert json[gem_name].find { |hook| hook['url'] == web_hook_url }
+Then /I should see "(.*)" under "(.*)" in (json|yaml)/ do |web_hook_url, gem_name, format|
+  if format == "json"
+    data = ActiveSupport::JSON.decode(response.body)
+  else
+    data = YAML.load(response.body)
+  end
+
+  assert data[gem_name]
+  assert data[gem_name].find { |hook| hook['url'] == web_hook_url }
 end
 
 When /^I have removed a webhook for "([^\"]*)" from gem "([^\"]*)" with my api key$/ do |web_hook_url, gem_name|

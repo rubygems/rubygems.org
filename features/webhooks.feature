@@ -34,7 +34,7 @@ Feature: Web Hooks
     And the system processes jobs
     Then the webhook "http://example.org/webhook" should receive a POST with gem "vodka" at version "1.2.3"
 
-  Scenario: User lists hooks for a gem
+  Scenario: User lists hooks for a gem in json
     Given I am signed up and confirmed as "email@person.com/password"
     And a rubygem exists with a name of "mazeltov"
     And a rubygem exists with a name of "vodka"
@@ -44,12 +44,29 @@ Feature: Web Hooks
     And I have added a webhook for "http://example.org/webhook3" to gem "vodka" with my api key
     And I have added a global webhook for "http://example.org/webhook4" with my api key
     And I have added a global webhook for "http://example.org/webhook5" with my api key
-    When I list the webhooks with my api key
-    Then I should see "http://example.org/webhook" under "mazeltov"
-    And I should see "http://example.org/webhook2" under "mazeltov"
-    And I should see "http://example.org/webhook3" under "vodka"
-    And I should see "http://example.org/webhook4" under "all gems"
-    And I should see "http://example.org/webhook5" under "all gems"
+    When I list the webhooks as json with my api key
+    Then I should see "http://example.org/webhook" under "mazeltov" in json
+    And I should see "http://example.org/webhook2" under "mazeltov" in json
+    And I should see "http://example.org/webhook3" under "vodka" in json
+    And I should see "http://example.org/webhook4" under "all gems" in json
+    And I should see "http://example.org/webhook5" under "all gems" in json
+
+  Scenario: User lists hooks for a gem in yaml
+    Given I am signed up and confirmed as "email@person.com/password"
+    And a rubygem exists with a name of "mazeltov"
+    And a rubygem exists with a name of "vodka"
+    And I have an api key for "email@person.com/password"
+    And I have added a webhook for "http://example.org/webhook" to gem "mazeltov" with my api key
+    And I have added a webhook for "http://example.org/webhook2" to gem "mazeltov" with my api key
+    And I have added a webhook for "http://example.org/webhook3" to gem "vodka" with my api key
+    And I have added a global webhook for "http://example.org/webhook4" with my api key
+    And I have added a global webhook for "http://example.org/webhook5" with my api key
+    When I list the webhooks as yaml with my api key
+    Then I should see "http://example.org/webhook" under "mazeltov" in yaml
+    And I should see "http://example.org/webhook2" under "mazeltov" in yaml
+    And I should see "http://example.org/webhook3" under "vodka" in yaml
+    And I should see "http://example.org/webhook4" under "all gems" in yaml
+    And I should see "http://example.org/webhook5" under "all gems" in yaml
 
   Scenario: User removes hook for a gem
     Given I am signed up and confirmed as "email@person.com/password"
