@@ -76,7 +76,7 @@ EOF
   def list_webhooks
     require 'json/pure' unless defined?(JSON::JSON_LOADED)
 
-    resp = rubygems_api_request(:get, "api/v1/web_hooks") do |request|
+    resp = rubygems_api_request(:get, "api/v1/web_hooks.yaml") do |request|
       request.add_field("Authorization", Gem.configuration.rubygems_api_key)
     end
 
