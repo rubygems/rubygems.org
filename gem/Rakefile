@@ -13,7 +13,7 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "gemcutter"
-    gem.version = "0.6.0.pre"
+    gem.version = "0.6.0"
     gem.summary = "Commands to interact with RubyGems.org"
     gem.description = "Adds several commands to RubyGems for managing gems and more on RubyGems.org."
     gem.email = "nick@quaran.to"
