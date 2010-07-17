@@ -5,6 +5,7 @@ gem "rack",  "1.1.0"
 
 gem "aws-s3",            "0.6.2", :require => "aws/s3"
 gem "clearance",         "0.9.0.rc5"
+gem "fog",               "0.2.14"
 gem "gchartrb",          "0.8",   :require => "google_chart"
 gem "gravtastic",        "2.1.3"
 gem "high_voltage",      "0.9.0"

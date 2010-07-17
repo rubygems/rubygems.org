@@ -1,15 +1,25 @@
 module Vault
   module S3
-    OPTIONS = {:authenticated => false, :access => :public_read}
+    BUCKET = Rails.env.maintenance? ? "production" : Rails.env
+
+    def directory
+      $fog.directories.new(:key => "#{BUCKET}.s3.rubygems.org")
+    end
 
     def write_gem
-      cache_path = "gems/#{spec.original_name}.gem"
-      VaultObject.store(cache_path, body.string, OPTIONS)
+      directory.files.create(
+        :body => body.string,
+        :key  => "gems/#{spec.original_name}.gem"
+      )
 
       quick_path = "quick/Marshal.4.8/#{spec.original_name}.gemspec.rz"
       Pusher.indexer.abbreviate spec
       Pusher.indexer.sanitize spec
-      VaultObject.store(quick_path, Gem.deflate(Marshal.dump(spec)), OPTIONS)
+
+      directory.files.create(
+        :body => Gem.deflate(Marshal.dump(spec)),
+        :key  => "quick/Marshal.4.8/#{spec.original_name}.gemspec.rz"
+      )
     end
 
     def upload(key, value)
@@ -19,7 +29,10 @@ module Vault
       gzip.close
 
       # For the life of me, I can't figure out how to pass a stream in here from a closed StringIO
-      VaultObject.store(key, final.string, OPTIONS)
+      directory.files.create(
+        :body => final.string,
+        :key  => key
+      )
     end
   end
 
