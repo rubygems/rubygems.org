@@ -72,28 +72,12 @@ class PusherTest < ActiveSupport::TestCase
       end
     end
 
-    context "pulling the spec " do
-      should "pull spec out of the given gem" do
-        # TODO: This test is horrible and brittle. redo it.
-        #io = "io"
-        #spec = "spec"
-        #stream = "stream"
-
-        #mock(@cutter).body { io }
-        #mock(Gem::Format).from_io(io) { format }
-        #mock(format).spec { spec }
-
-        #@cutter.pull_spec
-        #assert_equal spec, @cutter.spec
-      end
-
-      should "not be able to pull spec from a bad path" do
-        stub(@cutter).body.stub!.read { nil }
-        @cutter.pull_spec
-        assert_nil @cutter.spec
-        assert_match %r{RubyGems\.org cannot process this gem}, @cutter.message
-        assert_equal @cutter.code, 422
-      end
+    should "not be able to pull spec from a bad path" do
+      stub(@cutter).body.stub!.read { nil }
+      @cutter.pull_spec
+      assert_nil @cutter.spec
+      assert_match %r{RubyGems\.org cannot process this gem}, @cutter.message
+      assert_equal @cutter.code, 422
     end
 
     context "finding rubygem" do
@@ -176,7 +160,7 @@ class PusherTest < ActiveSupport::TestCase
           assert_equal "You do not have permission to push to this gem.", @cutter.message
           assert_equal 403, @cutter.code
         end
-        
+
         should "be true if not owned by user but no indexed versions exist" do
           Factory(:version, :rubygem => @rubygem, :number => '0.1.1', :indexed => false)
           assert @cutter.authorize
@@ -188,45 +172,6 @@ class PusherTest < ActiveSupport::TestCase
           assert ! @cutter.authorize
           assert_equal "You do not have permission to push to this gem.", @cutter.message
           assert_equal 403, @cutter.code
-        end
-      end
-    end
-
-    context "with a rubygem" do
-      setup do
-        @rubygem = "rubygem"
-        @version = "1.0.0"
-        @spec = gem_spec(:version => @version)
-        @ownerships = "ownerships"
-
-        stub(@rubygem).all_errors
-        stub(@rubygem).save
-        stub(@rubygem).ownerships { @ownerships }
-        stub(@rubygem).web_hook_jobs{ [] }
-        stub(@cutter).version { @version }
-        stub(@version).to_title { "latest version" }
-        stub(@version).id { 1337 }
-        stub(@cutter).rubygem { @rubygem }
-        stub(@cutter).spec { @spec }
-        stub(Delayed::Job).enqueue
-      end
-
-      # FIXME: These tests all SUCK!!!!
-      context "saving the rubygem" do
-        before_should "process if successfully saved" do
-          mock(@cutter).update { true }
-          mock(@cutter).enqueue_web_hook_jobs
-          mock(@cutter).notify("Successfully registered gem: latest version", 200)
-        end
-
-        before_should "not process if not successfully saved" do
-          mock(@cutter).update { false }
-          mock(@cutter).store.never
-          mock(@cutter).enqueue_web_hook_jobs.never
-        end
-
-        setup do
-          @cutter.save
         end
       end
     end

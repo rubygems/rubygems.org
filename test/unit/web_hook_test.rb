@@ -1,8 +1,8 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class WebHookTest < ActiveSupport::TestCase
-  should_belong_to :user
-  should_belong_to :rubygem
+  should belong_to :user
+  should belong_to :rubygem
 
   should "be valid for normal hook" do
     hook = Factory(:web_hook)

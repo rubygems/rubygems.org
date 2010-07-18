@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class RubygemsHelperTest < ActionView::TestCase
+  include Rails.application.routes.url_helpers
+
   should "create the directory" do
     directory = link_to_directory
     ("A".."Z").each do |letter|
