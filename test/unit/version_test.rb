@@ -1,8 +1,8 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class VersionTest < ActiveSupport::TestCase
-  should_belong_to :rubygem
-  should_have_many :dependencies
+  should belong_to :rubygem
+  should have_many :dependencies
 
   context "with a rubygem" do
     setup do
@@ -29,10 +29,10 @@ class VersionTest < ActiveSupport::TestCase
     end
     subject { @version }
 
-    should_not_allow_values_for :number, "#YAML<CEREALIZATION-FAIL>",
-                                         "1.2.3-\"[javalol]\"",
-                                         "0.8.45::Gem::PLATFORM::FAILBOAT",
-                                         "1.2.3\n<bad>"
+    should_not allow_value("#YAML<CEREALIZATION-FAIL>").for(:number)
+    should_not allow_value("1.2.3-\"[javalol]\"").for(:number)
+    should_not allow_value("0.8.45::Gem::PLATFORM::FAILBOAT").for(:number)
+    should_not allow_value("1.2.3\n<bad>").for(:number)
 
     should "give number for #to_s" do
       assert_equal @version.number, @version.to_s
@@ -262,11 +262,11 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "be able to fetch the latest versions" do
-      assert_contains Version.latest, @version_one_latest
-      assert_contains Version.latest, @version_two_latest
+      assert_contains Version.latest.map(&:id), @version_one_latest.id
+      assert_contains Version.latest.map(&:id), @version_two_latest.id
 
-      assert_does_not_contain Version.latest, @version_one_earlier
-      assert_does_not_contain Version.latest, @version_two_earlier
+      assert_does_not_contain Version.latest.map(&:id), @version_one_earlier.id
+      assert_does_not_contain Version.latest.map(&:id), @version_two_earlier.id
     end
   end
 
@@ -303,12 +303,12 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "return the owned gems from #owned_by" do
-      assert_contains Version.owned_by(@user), @owned_one
-      assert_contains Version.owned_by(@user), @owned_two
+      assert_contains Version.owned_by(@user).map(&:id), @owned_one.id
+      assert_contains Version.owned_by(@user).map(&:id), @owned_two.id
     end
 
     should "not return the unowned versions from #owned_by" do
-      assert_does_not_contain Version.owned_by(@user), @unowned
+      assert_does_not_contain Version.owned_by(@user).map(&:id), @unowned.id
     end
   end
 
@@ -324,12 +324,12 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "return the owned gems from #owned_by" do
-      assert_contains Version.subscribed_to_by(@user), @subscribed_one
-      assert_contains Version.subscribed_to_by(@user), @subscribed_two
+      assert_contains Version.subscribed_to_by(@user).map(&:id), @subscribed_one.id
+      assert_contains Version.subscribed_to_by(@user).map(&:id), @subscribed_two.id
     end
 
     should "not return the unowned versions from #owned_by" do
-      assert_does_not_contain Version.subscribed_to_by(@user), @unsubscribed
+      assert_does_not_contain Version.subscribed_to_by(@user).map(&:id), @unsubscribed.id
     end
 
     should "order them from latest-oldest pushed to Gemcutter, not build data" do

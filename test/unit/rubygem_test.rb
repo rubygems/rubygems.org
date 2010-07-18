@@ -7,14 +7,18 @@ class RubygemTest < ActiveSupport::TestCase
     end
     subject { @rubygem }
 
-    should_have_many :owners, :through => :ownerships
-    should_have_many :ownerships, :dependent => :destroy
-    should_have_many :subscriptions, :dependent => :destroy
-    should_have_many :versions, :dependent => :destroy
-    should_have_many :web_hooks, :dependent => :destroy
-    should_have_one :linkset, :dependent => :destroy
-    should_validate_uniqueness_of :name
-    should_allow_values_for :name, "rails", "awesome42", "factory_girl", "rack-test", "perftools.rb"
+    should have_many(:owners).through(:ownerships)
+    should have_many(:ownerships).dependent(:destroy)
+    should have_many(:subscriptions).dependent(:destroy)
+    should have_many(:versions).dependent(:destroy)
+    should have_many(:web_hooks).dependent(:destroy)
+    should have_one(:linkset).dependent(:destroy)
+    should validate_uniqueness_of :name
+    should allow_value("rails").for(:name)
+    should allow_value("awesome42").for(:name)
+    should allow_value("factory_girl").for(:name)
+    should allow_value("rack-test").for(:name)
+    should allow_value("perftools.rb").for(:name)
 
     should "reorder versions with platforms properly" do
       version3_ruby  = Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "ruby")
@@ -330,7 +334,7 @@ class RubygemTest < ActiveSupport::TestCase
 
       Factory(:version, :rubygem => @rubygem_with_version)
       3.times { Factory(:version, :rubygem => @rubygem_with_versions) }
-      
+
       @owner = Factory(:user)
       Factory(:ownership, :rubygem => @rubygem_with_version, :user => @owner, :approved => true)
       Factory(:ownership, :rubygem => @rubygem_with_versions, :user => @owner, :approved => true)
@@ -352,25 +356,24 @@ class RubygemTest < ActiveSupport::TestCase
       assert ! @rubygem_without_version.hosted?
       assert @rubygem_with_version.hosted?
     end
-    
+
     context "when yanking the last version of a gem with an owner" do
       setup do
         @rubygem_with_version.yank!(@rubygem_with_version.versions.first)
       end
+
       should "no longer be owned" do
-        assert @rubygem_with_version.unowned?
+        assert @rubygem_with_version.reload.unowned?
       end
-      should_change("ownership count") { Ownership.count }
     end
-    
+
     context "when yanking one of many versions of a gem" do
       setup do
         @rubygem_with_versions.yank!(@rubygem_with_versions.versions.first)
       end
       should "remain owned" do
-        assert !@rubygem_with_versions.unowned?
+        assert !@rubygem_with_versions.reload.unowned?
       end
-      should_not_change("ownership count") { Ownership.count }
     end
   end
 
@@ -480,9 +483,10 @@ class RubygemTest < ActiveSupport::TestCase
         @rubygem.update_attributes_from_gem_specification!(@version, @specification)
       end
 
-      should_change("total number of Rubygems", :by => 1) { Rubygem.count }
-      should_change("total number of Versions", :by => 1) { Version.count }
-      should_not_change("total number of Dependencies")   { Dependency.count }
+      should "create a rubygem and associated records" do
+        assert ! @rubygem.new_record?
+        assert @rubygem.versions.present?
+      end
 
       should "have the homepage set properly" do
         assert_equal @specification.homepage, @rubygem.linkset.home

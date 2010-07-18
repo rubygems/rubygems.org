@@ -20,10 +20,11 @@ class Version < ActiveRecord::Base
     :order      => "versions.built_at desc"
   }
 
-  scope :latest,     { :conditions => { :latest       => true  }}
+  scope :latest,     { :conditions => { :latest       => true     }}
   scope :with_deps,  { :include    => { :dependencies => :rubygem }}
-  scope :prerelease, { :conditions => { :prerelease   => true  }}
-  scope :release,    { :conditions => { :prerelease   => false }}
+  scope :prerelease, { :conditions => { :prerelease   => true     }}
+  scope :release,    { :conditions => { :prerelease   => false    }}
+  scope :indexed,    { :conditions => { :indexed      => true     }}
 
   before_save      :update_prerelease
   after_save       :reorder_versions
@@ -62,11 +63,11 @@ class Version < ActiveRecord::Base
   end
 
   def self.updated(limit=5)
-    built_at_before(DateTime.now.utc).with_associated.limited(limit)
+    where("built_at < ?", DateTime.now.utc).with_associated.limit(limit)
   end
 
   def self.published(limit=5)
-    created_at_before(DateTime.now.utc).by_created_at(:desc).limited(limit)
+    where("created_at < ?", DateTime.now.utc).order("created_at desc").limit(limit)
   end
 
   def self.find_from_slug!(rubygem_id, slug)

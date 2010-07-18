@@ -33,10 +33,9 @@ class Rubygem < ActiveRecord::Base
   }
 
   scope :search, lambda { |query| {
-    :conditions => ["(upper(name) like upper(:query) or upper(versions.description) like upper(:query))",
+    :conditions => ["versions.indexed and (upper(name) like upper(:query) or upper(versions.description) like upper(:query))",
       {:query => "%#{query.strip}%"}],
-    :include    => [:versions],
-    :having     => 'count(versions.id) > 0',
+    :include    => :versions,
     :order      => "rubygems.downloads desc" }
   }
 
@@ -61,11 +60,11 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.latest(limit=5)
-    with_one_version.by_created_at(:desc).limited(limit)
+    with_one_version.order("created_at desc").limit(limit)
   end
 
   def self.downloaded(limit=5)
-    with_versions.by_downloads(:desc).limited(limit)
+    with_versions.order("downloads desc").limit(limit)
   end
 
   def hosted?
@@ -73,7 +72,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def unowned?
-    ownerships.find_by_approved(true).blank?
+    ownerships.where(:approved => true).blank?
   end
 
   def owned_by?(user)
@@ -105,14 +104,14 @@ class Rubygem < ActiveRecord::Base
       'source_code_uri'   => linkset.try(:code),
       'bug_tracker_uri'   => linkset.try(:bugs),
       'dependencies'      => {
-        'development' => version.dependencies.development,
-        'runtime'     => version.dependencies.runtime
+        'development' => version.dependencies.development.to_a,
+        'runtime'     => version.dependencies.runtime.to_a
       }
     }
   end
 
-  def to_json(options = {})
-    payload.to_json(options)
+  def as_json(options = {})
+    payload
   end
 
   def to_xml(options = {})
@@ -186,7 +185,7 @@ class Rubygem < ActiveRecord::Base
   def yank!(version)
     version.yank!
     if versions(true).indexed.count.zero?
-      ownerships.each(&:destroy_without_callbacks)
+      ownerships.each(&:delete)
     end
   end
 

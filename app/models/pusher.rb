@@ -82,7 +82,7 @@ class Pusher
   end
 
   def self.server_path(*more)
-    File.expand_path(File.join(File.dirname(__FILE__), '..', 'server', *more))
+    File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'server', *more))
   end
 
   # Overridden so we don't get megabytes of the raw data printing out
@@ -126,9 +126,9 @@ class Pusher
   end
 
    def self.indexer
-     @indexer ||= 
+     @indexer ||=
        begin
-         indexer = Gem::Indexer.new(Gemcutter.server_path, :build_legacy => false)
+         indexer = Gem::Indexer.new(server_path, :build_legacy => false)
          def indexer.say(message) end
          indexer
        end

@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
   has_many :subscriptions
   has_many :web_hooks
 
-  before_validation_on_update :regenerate_token, :if => :email_changed?
+  before_validation :regenerate_token, :if => :email_changed?, :on => :update
   before_create :generate_api_key
   after_update :deliver_email_reset, :if => :email_reset
 
@@ -61,7 +61,7 @@ class User < ActiveRecord::Base
   end
 
   def deliver_email_reset
-    Mailer.deliver_email_reset self
+    Mailer.email_reset(self).deliver
   end
 
   def generate_api_key
@@ -71,6 +71,6 @@ class User < ActiveRecord::Base
   def confirm_email!
     self.email_confirmed    = true
     self.confirmation_token = self.email_reset = nil
-    save(false)
+    save(:validate => false)
   end
 end
