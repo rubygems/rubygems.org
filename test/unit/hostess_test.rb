@@ -8,7 +8,7 @@ class HostessTest < ActiveSupport::TestCase
   def touch(path, local = true)
     Hostess.local = local
     if local
-      path = Gemcutter.server_path(path)
+      path = Pusher.server_path(path)
       FileUtils.mkdir_p(File.dirname(path))
       FileUtils.touch(path)
     else
@@ -86,7 +86,7 @@ class HostessTest < ActiveSupport::TestCase
     Hostess.local = true
     download_count = Download.count
     file = "/gems/test-0.0.0.gem"
-    FileUtils.cp gem_file.path, Gemcutter.server_path("gems")
+    FileUtils.cp gem_file.path, Pusher.server_path("gems")
 
     rubygem = Factory(:rubygem, :name => "test")
     version = Factory(:version, :rubygem => rubygem, :number => "0.0.0")

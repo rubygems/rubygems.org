@@ -8,7 +8,7 @@ class Hostess < Sinatra::Base
 
   def serve
     if Hostess.local
-      send_file(Gemcutter.server_path(request.path_info))
+      send_file(Pusher.server_path(request.path_info))
     else
       yield
     end

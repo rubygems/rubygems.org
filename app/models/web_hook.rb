@@ -74,7 +74,7 @@ class WebHook < ActiveRecord::Base
     payload.to_yaml(*options)
   end
 
-  def to_json(options = {})
-    payload.to_json(options)
+  def as_json(options = {})
+    payload
   end
 end

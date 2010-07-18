@@ -24,8 +24,8 @@ class Dependency < ActiveRecord::Base
     }
   end
 
-  def to_json(options = {})
-    payload.to_json(options)
+  def as_json(options = {})
+    payload
   end
 
   def to_xml(options = {})

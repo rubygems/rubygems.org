@@ -7,8 +7,8 @@ module Vault
       VaultObject.store(cache_path, body.string, OPTIONS)
 
       quick_path = "quick/Marshal.4.8/#{spec.original_name}.gemspec.rz"
-      Gemcutter.indexer.abbreviate spec
-      Gemcutter.indexer.sanitize spec
+      Pusher.indexer.abbreviate spec
+      Pusher.indexer.sanitize spec
       VaultObject.store(quick_path, Gem.deflate(Marshal.dump(spec)), OPTIONS)
     end
 
@@ -25,17 +25,17 @@ module Vault
 
   module FS
     def write_gem
-      cache_path = Gemcutter.server_path('gems', "#{spec.original_name}.gem")
+      cache_path = Pusher.server_path('gems', "#{spec.original_name}.gem")
       File.open(cache_path, "wb") do |f|
         f.write body.string
       end
       File.chmod 0644, cache_path
 
-      quick_path = Gemcutter.server_path("quick", "Marshal.4.8", "#{spec.original_name}.gemspec.rz")
+      quick_path = Pusher.server_path("quick", "Marshal.4.8", "#{spec.original_name}.gemspec.rz")
       FileUtils.mkdir_p(File.dirname(quick_path))
 
-      Gemcutter.indexer.abbreviate spec
-      Gemcutter.indexer.sanitize spec
+      Pusher.indexer.abbreviate spec
+      Pusher.indexer.sanitize spec
       File.open(quick_path, "wb") do |f|
         f.write Gem.deflate(Marshal.dump(spec))
       end
@@ -48,7 +48,7 @@ module Vault
       gzip.write(Marshal.dump(value))
       gzip.close
 
-      File.open(Gemcutter.server_path(key), "wb") do |f|
+      File.open(Pusher.server_path(key), "wb") do |f|
         f.write final.string
       end
     end
