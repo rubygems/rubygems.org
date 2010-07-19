@@ -41,7 +41,7 @@
             <% end %>
           </div>
         </div>
-        <% form_tag search_url, :id => "main-search", :method => :get do %>
+        <%= form_tag search_url, :id => "main-search", :method => :get do %>
           <%= text_field_tag :query, params[:query] ? h(params[:query]) : "Search gems&hellip;" %>
           <%= submit_tag 'Search', :id => 'search_submit', :name => nil %>
         <% end %>

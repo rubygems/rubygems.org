@@ -13,19 +13,19 @@ class DashboardsControllerTest < ActionController::TestCase
         @gems = (1..3).map do
           rubygem = Factory(:rubygem)
           rubygem.ownerships.create(:user => @user, :approved => true)
-          Factory(:version, :rubygem => rubygem, :summary => "summary of #{rubygem.name}")
+          Factory(:version, :rubygem => rubygem)
           rubygem
         end
         get :show
       end
 
-      should_respond_with :success
-      should_render_template :show
-      should_assign_to(:my_gems) { @gems }
+      should respond_with :success
+      should render_template :show
+      should assign_to(:my_gems) { @gems }
       should "render links" do
         @gems.each do |g|
           assert_contain g.name
-          assert_have_selector "a[href='#{rubygem_path(g)}'][title='summary of #{g.name}']"
+          assert_have_selector "a[href='#{rubygem_path(g)}'][title='#{g.versions.most_recent.info}']"
         end
       end
     end
@@ -42,8 +42,8 @@ class DashboardsControllerTest < ActionController::TestCase
         get :show, :format => "atom"
       end
 
-      should_respond_with :success
-      should_render_template 'versions/feed'
+      should respond_with :success
+      should render_template 'versions/feed'
       should "render posts with titles and platform-specific links of all subscribed versions" do
         @subscribed_versions.each do |v|
           assert_contain v.to_title
@@ -61,7 +61,7 @@ class DashboardsControllerTest < ActionController::TestCase
 
   context "On GET to show without being signed in" do
     setup { get :show }
-    should_respond_with :redirect
-    should_redirect_to('the homepage') { root_url }
+    should respond_with :redirect
+    should redirect_to('the homepage') { root_url }
   end
 end
