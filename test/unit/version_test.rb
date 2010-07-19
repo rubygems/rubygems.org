@@ -168,14 +168,14 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @dep_one.requirements.split(", "), @spec_dep_one.requirements_list
       assert_equal @dep_two.requirements.split(", "), @spec_dep_two.requirements_list
     end
-    
+
     context "when yanked" do
       setup do
         @version.yank!
       end
       should("unindex") { assert !@version.indexed? }
       should("no longer be latest") { assert !@version.latest?}
-      
+
       context "and consequently unyanked" do
         setup do
           @version.unyank!
@@ -247,7 +247,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "know its latest version" do
-      assert_equal '0.7', @gem.versions.latest.number
+      assert_equal '0.7', @gem.versions.most_recent.number
     end
   end
 

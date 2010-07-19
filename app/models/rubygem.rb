@@ -4,13 +4,7 @@ class Rubygem < ActiveRecord::Base
   has_many :ownerships, :dependent => :destroy
   has_many :subscribers, :through => :subscriptions, :source => :user
   has_many :subscriptions, :dependent => :destroy
-  has_many :versions, :dependent => :destroy do
-    def latest
-      # try to find a ruby platform in the latest version
-      latest = scopes[:latest][self]
-      latest.find_by_platform('ruby') || latest.first || first
-    end
-  end
+  has_many :versions, :dependent => :destroy
   has_many :web_hooks, :dependent => :destroy
   has_one :linkset, :dependent => :destroy
 
@@ -56,7 +50,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.total_count
-    Version.latest.count
+    with_versions.count
   end
 
   def self.latest(limit=5)
@@ -68,7 +62,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def hosted?
-    !versions.count.zero?
+    versions.count.nonzero?
   end
 
   def unowned?
@@ -80,14 +74,14 @@ class Rubygem < ActiveRecord::Base
   end
 
   def to_s
-    versions.latest.try(:to_title) || name
+    versions.most_recent.try(:to_title) || name
   end
 
   def downloads
     Download.for(self)
   end
 
-  def payload(version = versions.latest, host_with_port = HOST)
+  def payload(version = versions.most_recent, host_with_port = HOST)
     {
       'name'              => name,
       'downloads'         => downloads,
@@ -184,7 +178,7 @@ class Rubygem < ActiveRecord::Base
 
   def yank!(version)
     version.yank!
-    if versions(true).indexed.count.zero?
+    if versions.indexed.count.zero?
       ownerships.each(&:delete)
     end
   end
