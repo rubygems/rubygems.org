@@ -43,7 +43,7 @@ class Api::V1::WebHooksController < ApplicationController
 
     if webhook.fire(request.host_with_port,
                     @rubygem,
-                    @rubygem.versions.latest,
+                    @rubygem.versions.most_recent,
                     false)
       render :text => webhook.deployed_message(@rubygem)
     else

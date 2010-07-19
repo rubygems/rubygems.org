@@ -16,12 +16,12 @@ class StatisticsControllerTest < ActionController::TestCase
       get :index
     end
 
-    should_respond_with :success
-    should_render_template :index
-    should_assign_to(:number_of_gems) { @number_of_gems }
-    should_assign_to(:number_of_users) { @number_of_users }
-    should_assign_to(:number_of_downloads) { @number_of_downloads }
-    should_assign_to(:most_downloaded) { @most_downloaded }
+    should respond_with :success
+    should render_template :index
+    should assign_to(:number_of_gems) { @number_of_gems }
+    should assign_to(:number_of_users) { @number_of_users }
+    should assign_to(:number_of_downloads) { @number_of_downloads }
+    should assign_to(:most_downloaded) { @most_downloaded }
 
     should "display number of gems" do
       assert_contain "1,337"

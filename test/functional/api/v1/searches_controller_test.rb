@@ -14,7 +14,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
         get :show, :query => "match", :format => "json"
       end
 
-      should_respond_with :success
+      should respond_with :success
       should "return a json hash" do
         assert_not_nil JSON.parse(@response.body)
       end
@@ -30,7 +30,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
         get :show, :query => "match", :format => "xml"
       end
 
-      should_respond_with :success
+      should respond_with :success
       should "return xml" do
         assert_not_nil Nokogiri.parse(@response.body).root
       end

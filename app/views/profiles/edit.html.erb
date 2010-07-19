@@ -1,6 +1,6 @@
 <% @title = "Edit Profile" %>
 
-<% form_for current_user, :url => profile_url do |form| %>
+<%= form_for current_user, :url => profile_url do |form| %>
   <%= form.error_messages %>
 
   <div class="avatar_field">
