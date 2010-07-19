@@ -12,10 +12,10 @@ class VersionsControllerTest < ActionController::TestCase
       get :index, :rubygem_id => @rubygem.name
     end
 
-    should_respond_with :success
-    should_render_template :index
-    should_assign_to(:rubygem) { @rubygem }
-    should_assign_to(:versions) { @rubygem.reload.versions }
+    should respond_with :success
+    should render_template :index
+    should assign_to(:rubygem) { @rubygem }
+    should assign_to(:versions) { @rubygem.reload.versions }
 
     should "show all related versions" do
       @versions.each do |version|
@@ -26,19 +26,19 @@ class VersionsControllerTest < ActionController::TestCase
 
   context "On GET to show" do
     setup do
-      @latest_version = Factory(:version)
+      @latest_version = Factory(:version, :built_at => 1.week.ago, :created_at => 1.day.ago)
       @rubygem = @latest_version.rubygem
       get :show, :rubygem_id => @rubygem.name, :id => @latest_version.number
     end
 
-    should_respond_with :success
-    should_render_template "rubygems/show"
-    should_assign_to :rubygem
-    should_assign_to(:latest_version) { @latest_version }
+    should respond_with :success
+    should render_template "rubygems/show"
+    should assign_to :rubygem
+    should assign_to(:latest_version) { @latest_version }
     should "render info about the gem" do
       assert_contain @rubygem.name
       assert_contain @latest_version.number
-      assert_contain @latest_version.built_at.to_date.to_formatted_s(:long)
+      assert_contain @latest_version.built_at_date
     end
   end
 

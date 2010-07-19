@@ -5,8 +5,8 @@ class SearchesControllerTest < ActionController::TestCase
   context 'on GET to new with no search parameters' do
     setup { get :new }
 
-    should_respond_with :success
-    should_render_template :new
+    should respond_with :success
+    should render_template :new
     should "see no results" do
       assert_not_contain "Results"
     end
@@ -15,13 +15,13 @@ class SearchesControllerTest < ActionController::TestCase
   context 'on GET to new with search parameters for a rubygem without versions' do
     setup do
       @sinatra = Factory(:rubygem, :name => "sinatra")
-      assert_nil @sinatra.versions.latest
+      assert_nil @sinatra.versions.most_recent
       assert @sinatra.reload.versions.count.zero?
       get :new, :query => "sinatra"
     end
 
-    should_respond_with :success
-    should_render_template :new
+    should respond_with :success
+    should render_template :new
   end
 
   context 'on GET to new with search parameters' do
@@ -35,10 +35,10 @@ class SearchesControllerTest < ActionController::TestCase
       get :new, :query => "sinatra"
     end
 
-    should_respond_with :success
-    should_render_template :new
-    should_assign_to(:gems) { [@sinatra, @sinatra_redux] }
-    should_assign_to(:exact_match) { @sinatra }
+    should respond_with :success
+    should render_template :new
+    should assign_to(:gems) { [@sinatra, @sinatra_redux] }
+    should assign_to(:exact_match) { @sinatra }
     should "see sinatra on the page in the results" do
       assert_contain @sinatra.name
       assert_have_selector "a[href='#{rubygem_path(@sinatra)}']"

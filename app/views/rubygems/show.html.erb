@@ -72,7 +72,7 @@
       <div class="versions">
         <h5>Versions</h5>
         <ol>
-          <%= render @rubygem.versions.limited(5) %>
+          <%= render @rubygem.versions.published %>
         </ol>
         <% if @rubygem.versions.count > 5 %>
           <%= link_to "Show all versions (#{@rubygem.versions.count} total)", rubygem_versions_url(@rubygem), :class => "more" %>

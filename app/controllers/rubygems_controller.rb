@@ -18,7 +18,7 @@ class RubygemsController < ApplicationController
   end
 
   def show
-    @latest_version = @rubygem.versions.latest
+    @latest_version = @rubygem.versions.most_recent
   end
 
   def edit
