@@ -37,7 +37,7 @@ class RubygemTest < ActiveSupport::TestCase
       assert latest_versions.include?(version3_ruby)
       assert latest_versions.include?(version3_mswin)
 
-      assert_equal version3_ruby, @rubygem.versions.latest
+      assert_equal version3_ruby, @rubygem.versions.most_recent
     end
 
     should "order latest platform gems with latest uniquely" do
@@ -64,47 +64,47 @@ class RubygemTest < ActiveSupport::TestCase
 
       @rubygem.reorder_versions
 
-      assert_equal version2_ruby.reload, @rubygem.versions.latest
+      assert_equal version2_ruby.reload, @rubygem.versions.most_recent
       assert version3_mswin.reload.latest
     end
 
-    should "not have a latest version if no versions exist" do
-      assert_nil @rubygem.versions.latest
+    should "not have a most recent version if no versions exist" do
+      assert_nil @rubygem.versions.most_recent
     end
 
-    should "return the ruby version for latest if one exists" do
+    should "return the ruby version for most_recent if one exists" do
       version3_mswin = Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "mswin", :built_at => 1.year.from_now)
       version3_ruby  = Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "ruby")
 
       @rubygem.reorder_versions
 
-      assert_equal version3_ruby, @rubygem.versions.latest
+      assert_equal version3_ruby, @rubygem.versions.most_recent
     end
 
-    should "have a latest version if only a platform version exists" do
+    should "have a most_recent version if only a platform version exists" do
       version1 = Factory(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "linux")
 
-      assert_equal version1, @rubygem.reload.versions.latest
+      assert_equal version1, @rubygem.reload.versions.most_recent
     end
 
-    should "return the release version for latest if one exists" do
+    should "return the release version for most_recent if one exists" do
       version2pre = Factory(:version, :rubygem => @rubygem, :number => "2.0.pre", :platform => "ruby")
       version1 = Factory(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
 
-      assert_equal version1, @rubygem.reload.versions.latest
+      assert_equal version1, @rubygem.reload.versions.most_recent
     end
 
-    should "have a latest version if only a prerelease version exists" do
+    should "have a most_recent version if only a prerelease version exists" do
       version1pre = Factory(:version, :rubygem => @rubygem, :number => "1.0.pre", :platform => "ruby")
 
-      assert_equal version1pre, @rubygem.reload.versions.latest
+      assert_equal version1pre, @rubygem.reload.versions.most_recent
     end
 
-    should "return the latest indexed version when a more recent yanked version exists" do
+    should "return the most_recent indexed version when a more recent yanked version exists" do
       indexed_v1 = Factory(:version, :rubygem => @rubygem, :number => "0.1.0", :indexed => true)
       yanked_v2  = Factory(:version, :rubygem => @rubygem, :number => "0.1.1", :indexed => false)
 
-      assert_equal indexed_v1.reload, @rubygem.reload.versions.latest
+      assert_equal indexed_v1.reload, @rubygem.reload.versions.most_recent
     end
   end
 
@@ -238,13 +238,13 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "return current version" do
-      assert_equal @rubygem.versions.first, @rubygem.versions.latest
+      assert_equal @rubygem.versions.first, @rubygem.versions.most_recent
     end
 
     should "return name with version for #to_s" do
       @rubygem.save
-      @rubygem.versions.create(:number => "0.0.0")
-      assert_equal "#{@rubygem.name} (#{@rubygem.versions.latest})", @rubygem.to_s
+      Factory(:version, :number => "0.0.0", :rubygem => @rubygem)
+      assert_equal "#{@rubygem.name} (#{@rubygem.versions.most_recent})", @rubygem.to_s
     end
 
     should "return name for #to_s if current version doesn't exist" do
@@ -264,12 +264,12 @@ class RubygemTest < ActiveSupport::TestCase
 
       assert_equal @rubygem.name, hash["name"]
       assert_equal @rubygem.downloads, hash["downloads"]
-      assert_equal @rubygem.versions.latest.number, hash["version"]
-      assert_equal @rubygem.versions.latest.downloads_count, hash["version_downloads"]
-      assert_equal @rubygem.versions.latest.authors, hash["authors"]
-      assert_equal @rubygem.versions.latest.info, hash["info"]
+      assert_equal @rubygem.versions.most_recent.number, hash["version"]
+      assert_equal @rubygem.versions.most_recent.downloads_count, hash["version_downloads"]
+      assert_equal @rubygem.versions.most_recent.authors, hash["authors"]
+      assert_equal @rubygem.versions.most_recent.info, hash["info"]
       assert_equal "http://#{HOST}/gems/#{@rubygem.name}", hash["project_uri"]
-      assert_equal "http://#{HOST}/gems/#{@rubygem.versions.latest.full_name}.gem", hash["gem_uri"]
+      assert_equal "http://#{HOST}/gems/#{@rubygem.versions.most_recent.full_name}.gem", hash["gem_uri"]
 
       assert_equal JSON.parse(dev_dep.to_json), hash["dependencies"]["development"].first
       assert_equal JSON.parse(run_dep.to_json), hash["dependencies"]["runtime"].first
@@ -285,12 +285,12 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal "rubygem", doc.root.name
       assert_equal @rubygem.name, doc.at_css("rubygem > name").content
       assert_equal @rubygem.downloads.to_s, doc.at_css("downloads").content
-      assert_equal @rubygem.versions.latest.number, doc.at_css("version").content
-      assert_equal @rubygem.versions.latest.downloads_count.to_s, doc.at_css("version-downloads").content
-      assert_equal @rubygem.versions.latest.authors, doc.at_css("authors").content
-      assert_equal @rubygem.versions.latest.info, doc.at_css("info").content
+      assert_equal @rubygem.versions.most_recent.number, doc.at_css("version").content
+      assert_equal @rubygem.versions.most_recent.downloads_count.to_s, doc.at_css("version-downloads").content
+      assert_equal @rubygem.versions.most_recent.authors, doc.at_css("authors").content
+      assert_equal @rubygem.versions.most_recent.info, doc.at_css("info").content
       assert_equal "http://#{HOST}/gems/#{@rubygem.name}", doc.at_css("project-uri").content
-      assert_equal "http://#{HOST}/gems/#{@rubygem.versions.latest.full_name}.gem", doc.at_css("gem-uri").content
+      assert_equal "http://#{HOST}/gems/#{@rubygem.versions.most_recent.full_name}.gem", doc.at_css("gem-uri").content
 
       assert_equal dev_dep.name, doc.at_css("dependencies development dependency name").content
       assert_equal run_dep.name, doc.at_css("dependencies runtime dependency name").content

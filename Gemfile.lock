@@ -95,7 +95,7 @@ dependencies:
   clearance: 
     group: 
     - :default
-    version: = 0.9.0.rc4
+    version: = 0.9.0.rc5
   hoptoad_notifier: 
     group: 
     - :default
@@ -182,7 +182,7 @@ specs:
 - rails: 
     version: 3.0.0.beta4
 - clearance: 
-    version: 0.9.0.rc4
+    version: 0.9.0.rc5
 - diff-lcs: 
     version: 1.1.2
 - trollop: 
@@ -244,7 +244,7 @@ specs:
     version: 0.5.3
 - will_paginate: 
     version: 2.3.11
-hash: cb9df21844fa9dc006e710a942a2bb89146bced5
+hash: 150b641f21af34ede62d593d4200bce738ab72ee
 sources: 
 - Git: 
     uri: git://github.com/pvdb/delayed_job.git

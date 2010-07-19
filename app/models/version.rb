@@ -62,6 +62,11 @@ class Version < ActiveRecord::Base
         :order      => order
   end
 
+  def self.most_recent
+    recent = where(:latest => true)
+    recent.find_by_platform('ruby') || recent.first || first
+  end
+
   def self.updated(limit=5)
     where("built_at < ?", DateTime.now.utc).with_associated.limit(limit)
   end
@@ -173,7 +178,7 @@ class Version < ActiveRecord::Base
 
   def to_install
     command = "gem install #{rubygem.name}"
-    latest = prerelease ? rubygem.versions.prerelease.first : rubygem.versions.latest
+    latest = prerelease ? rubygem.versions.prerelease.first : rubygem.versions.most_recent
     command << " -v #{number}" if latest != self
     command << " --pre" if prerelease
     command
