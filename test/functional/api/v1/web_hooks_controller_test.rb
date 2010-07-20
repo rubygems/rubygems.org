@@ -1,15 +1,36 @@
 require 'test_helper'
 
 class Api::V1::WebHooksControllerTest < ActionController::TestCase
-  #should_forbid_access_when("creating a web hook") { post :create }
-  #should_forbid_access_when("listing hooks")       { get :index }
-  #should_forbid_access_when("removing hooks")      { delete :remove }
-  #should_forbid_access_when("test firing hooks")   { post :fire }
-
   def self.should_not_find_it
     should respond_with :not_found
     should "say gem is not found" do
       assert_contain "could not be found"
+    end
+  end
+
+  context "When not logged in" do
+    should "forbid access when creating a web hook" do
+      rubygem = Factory(:rubygem)
+      post :create, :gem_name => rubygem.name, :url => "http://example.com"
+      assert @response.body =~ /Access Denied/
+      assert WebHook.count.zero?
+    end
+
+    should "forbid access when listing hooks" do
+      get :index
+      assert @response.body =~ /Access Denied/
+    end
+
+    should "forbid access when firing hooks" do
+      post :fire, :gem_name => WebHook::GLOBAL_PATTERN, :url => "http://example.com"
+      assert @response.body =~ /Access Denied/
+    end
+
+    should "forbid access when removing a web hook" do
+      hook = Factory(:web_hook)
+      delete :remove, :gem_name => hook.rubygem.name, :url => hook.url
+      assert @response.body =~ /Access Denied/
+      assert_equal 1, WebHook.count
     end
   end
 
@@ -33,9 +54,9 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
                       :url      => @url
         end
         should respond_with :success
-        #should_not_change("the webhook count") { WebHook.count }
         should "say successfully deployed" do
           assert_contain "Successfully deployed webhook for #{@gemcutter.name} to #{@url}"
+          assert WebHook.count.zero?
         end
       end
 
@@ -46,9 +67,9 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
                       :url      => @url
         end
         should respond_with :bad_request
-        #should_not_change("the webhook count") { WebHook.count }
         should "say successfully deployed" do
           assert_contain "There was a problem deploying webhook for #{@gemcutter.name} to #{@url}"
+          assert WebHook.count.zero?
         end
       end
     end
@@ -66,9 +87,9 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
                       :url      => @url
         end
         should respond_with :success
-        #should_not_change("the webhook count") { WebHook.count }
         should "say successfully deployed" do
           assert_contain "Successfully deployed webhook for #{@rubygem.name} to #{@url}"
+          assert WebHook.count.zero?
         end
       end
 
@@ -79,9 +100,9 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
                       :url      => @url
         end
         should respond_with :bad_request
-        #should_not_change("the webhook count") { WebHook.count }
         should "say there was a problem" do
           assert_contain "There was a problem deploying webhook for #{@rubygem.name} to #{@url}"
+          assert WebHook.count.zero?
         end
       end
 

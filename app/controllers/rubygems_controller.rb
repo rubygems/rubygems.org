@@ -6,7 +6,8 @@ class RubygemsController < ApplicationController
   def index
     respond_to do |format|
       format.html do
-        @gems = Rubygem.letter(params[:letter]).paginate(:page => params[:page])
+        @letter = Rubygem.letterize(params[:letter])
+        @gems   = Rubygem.letter(@letter).paginate(:page => params[:page])
       end
       format.atom do
         @versions = Version.published(20)
