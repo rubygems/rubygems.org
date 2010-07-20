@@ -4,7 +4,7 @@
 All other fields can only be edited by pushing an updated version of your gem.
 </p>
 <%= error_messages_for :linkset, :object_name => "gem" %>
-<%- form_for @rubygem.linkset, :url => rubygem_url(@rubygem), :method => :put do |form| %>
+<%= form_for @rubygem.linkset, :url => rubygem_url(@rubygem), :method => :put do |form| %>
   <div class="url_field">
     <%= form.label :code, "Source Code URL" %>
     <%= form.text_field :code, :size => 25 %>

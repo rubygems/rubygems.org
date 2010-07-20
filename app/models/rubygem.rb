@@ -33,6 +33,10 @@ class Rubygem < ActiveRecord::Base
     :order      => "rubygems.downloads desc" }
   }
 
+  scope :name_starts_with, lambda { |letter| {
+    :conditions => ["upper(name) like upper(?)", "#{letter}%" ] }
+  }
+
   def ensure_name_format
     if name.class != String
       errors.add :name, "must be a String"
@@ -59,6 +63,11 @@ class Rubygem < ActiveRecord::Base
 
   def self.downloaded(limit=5)
     with_versions.order("downloads desc").limit(limit)
+  end
+
+  def self.letter(letter = 'A')
+    letter = 'A' if letter !~ /\A[A-Za-z]\z/
+    name_starts_with(letter.upcase).order("name asc").with_versions
   end
 
   def hosted?

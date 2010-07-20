@@ -7,8 +7,8 @@ class Api::V1::WebHooksController < ApplicationController
 
   def index
     respond_to do |format|
-      format.json { render :json => current_user.all_hooks }
-      format.yaml { render :text => Hash[current_user.all_hooks.to_a].to_yaml }
+      format.any(:json, :all) { render :json => current_user.all_hooks }
+      format.yaml { render :text => Hash[current_user.all_hooks].to_yaml }
     end
   end
 
