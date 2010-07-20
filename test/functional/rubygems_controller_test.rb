@@ -226,7 +226,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to show" do
     setup do
-      @latest_version = Factory(:version)
+      @latest_version = Factory(:version, :created_at => 1.minute.ago)
       @rubygem = @latest_version.rubygem
       get :show, :id => @rubygem.to_param
     end
@@ -246,8 +246,8 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to show with a gem that has multiple versions" do
     setup do
       @rubygem = Factory(:rubygem)
-      @older_version = Factory(:version, :number => "1.0.0", :rubygem => @rubygem)
-      @latest_version = Factory(:version, :number => "2.0.0", :rubygem => @rubygem)
+      @older_version = Factory(:version, :number => "1.0.0", :rubygem => @rubygem, :created_at => 2.minutes.ago)
+      @latest_version = Factory(:version, :number => "2.0.0", :rubygem => @rubygem, :created_at => 1.minute.ago)
       get :show, :id => @rubygem.to_param
     end
 

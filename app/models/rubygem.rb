@@ -65,9 +65,12 @@ class Rubygem < ActiveRecord::Base
     with_versions.order("downloads desc").limit(limit)
   end
 
-  def self.letter(letter = 'A')
-    letter = 'A' if letter !~ /\A[A-Za-z]\z/
-    name_starts_with(letter.upcase).order("name asc").with_versions
+  def self.letter(letter)
+    name_starts_with(letter).order("name asc").with_versions
+  end
+
+  def self.letterize(letter)
+    letter =~ /\A[A-Za-z]\z/ ? letter.upcase : 'A'
   end
 
   def hosted?

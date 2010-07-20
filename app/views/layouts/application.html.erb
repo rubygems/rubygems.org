@@ -43,7 +43,7 @@
           </div>
         </div>
         <%= form_tag search_url, :id => "main-search", :method => :get do %>
-          <%= text_field_tag :query, params[:query] ? h(params[:query]) : "Search gems&hellip;" %>
+          <%= text_field_tag :query, params[:query] ? params[:query] : "Search gems&hellip;" %>
           <%= submit_tag 'Search', :id => 'search_submit', :name => nil %>
         <% end %>
       </div>
@@ -62,7 +62,7 @@
               <h2><%= link_to @title, "" %></h2>
             <% end %>
             <% if @subtitle %>
-              <h3><%= @subtitle %></h3>
+              <h3><%= @subtitle.html_safe %></h3>
             <% end %>
           </div>
           <%= yield %>

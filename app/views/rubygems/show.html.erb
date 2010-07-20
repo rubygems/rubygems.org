@@ -12,7 +12,28 @@
     </div>
 
     <div class="border">
-      <%= clippy(@latest_version.to_install) %>
+      <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+              width="110"
+              height="32"
+              id="clippy" >
+      <param name="movie" value="/clippy.swf"/>
+      <param name="allowScriptAccess" value="always" />
+      <param name="quality" value="high" />
+      <param name="scale" value="noscale" />
+      <param NAME="FlashVars" value="text=<%= @latest_version.to_install %>">
+      <param name="wmode" value="transparent">
+      <embed src="/clippy.swf"
+             width="110"
+             height="32"
+             name="clippy"
+             quality="high"
+             allowScriptAccess="always"
+             type="application/x-shockwave-flash"
+             pluginspage="http://www.macromedia.com/go/getflashplayer"
+             FlashVars="text=<%= @latest_version.to_install %>"
+             wmode="transparent"
+      />
+      </object>
       <div class="install">
         <div class="instructions"><strong>install</strong><span><%= @latest_version.to_install %></span></div>
       </div>
@@ -40,7 +61,7 @@
           <div class="authors">
             <h5>Authors</h5>
             <% if @latest_version.authors.present? %>
-              <p><%=h @latest_version.authors %></p>
+              <p><%= @latest_version.authors %></p>
             <% else %>
               <p>N/A</p>
             <% end %>
