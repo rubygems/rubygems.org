@@ -5,94 +5,82 @@ Gemcutter::Application.routes.draw do |map|
   ################################################################################
   # API v1
 
-  map.namespace :api do |api|
-    api.namespace :v1 do |v1|
-      v1.resource  :api_key,
-                   :only         => [:show, :reset],
-                   :member       => {:reset => :put}
-      v1.resources :rubygems,
-                   :as           => "gems",
-                   :collection   => {:yank => :delete, :unyank => :put},
-                   :only         => [:create, :show] do |rubygems|
-        rubygems.resource :owners,
-          :only       => [:show, :create, :destroy]
+  namespace :api do
+    namespace :v1 do
+      resource :api_key, :only => :show do
+        put :reset
       end
-      v1.resource  :search, :only => :show
-      v1.resources :web_hooks,
-                   :only       => [:create, :index],
-                   :collection => {:remove => :delete,
-                                   :fire   => :post}
-      v1.resources :downloads, :only => :index
+
+      resources :downloads, :only => :index
+
+      resources :rubygems, :path => "gems", :only => [:create, :show] do
+        collection do
+          delete :yank
+          put :unyank
+        end
+        resource :owners, :only => [:show, :create, :destroy]
+      end
+
+      resource :search, :only => :show
+
+      resources :web_hooks, :only => [:create, :index] do
+        collection do
+          delete :remove
+          post :fire
+        end
+      end
     end
   end
 
   ################################################################################
   # API v0
 
-  map.json_gem "/gems/:id.json",
-               :controller   => "api/deprecated",
-               :format       => "json",
-               :requirements => { :id => RUBYGEM_NAME_MATCHER }
-  map.resource :api_key,
-               :only         => [:show, :reset],
-               :member       => {:reset => :put},
-               :controller   => "api/deprecated"
-  map.resource :migrate,
-               :only         => [:create, :update],
-               :controller   => "api/deprecated",
-               :path_prefix  => "/gems/:rubygem_id",
-               :requirements => { :rubygem_id => RUBYGEM_NAME_MATCHER }
+  scope :to => "api/deprecated#index" do
+    get "api_key"
+    put "api_key/reset"
+
+    post "gems"
+    get  "gems/:id.json"
+
+    scope :path => "gems/:rubygem_id" do
+      put  "migrate"
+      post "migrate"
+
+      get    "owners(.:format)"
+      post   "owners(.:format)"
+      delete "owners(.:format)"
+    end
+  end
 
   ################################################################################
   # UI
 
-  map.search "/search", :controller => "searches", :action => "new"
-  map.resource  :dashboard,  :only => :show
-  map.resource  :profile,    :only => [:edit, :update]
-  map.resources :statistics, :only => :index, :as => "stats"
+  resource :search,    :only => :show
+  resource :dashboard, :only => :show
+  resource :profile,   :only => [:edit, :update]
+  resources :stats,    :only => :index
 
-  map.resources :rubygems,
-                :as           => "gems",
-                :except       => [:create],
-                :requirements => { :id => RUBYGEM_NAME_MATCHER } do |rubygems|
+  constraints :id => RUBYGEM_NAME_MATCHER do
+    resources :rubygems, :path => "gems", :only => [:index, :show, :edit, :update] do
+      resource :subscription, :only => [:create, :destroy]
 
-    rubygems.resource :owners,
-      :only       => [:show, :create, :destroy],
-      :controller => "api/deprecated"
-
-    rubygems.resource :subscription, :only => [:create, :destroy]
-
-    rubygems.resources :versions,
-      :only         => [:index, :show],
-      :requirements => { :rubygem_id => RUBYGEM_NAME_MATCHER, :id => RUBYGEM_NAME_MATCHER }
+      constraints :rubygem_id => RUBYGEM_NAME_MATCHER do
+        resources :versions, :only => [:index, :show]
+      end
+    end
   end
 
-  map.resources :rubygems,
-                :as         => "gems",
-                :controller => "api/deprecated",
-                :only       => [:create]
-
   ################################################################################
-  # Clearance
+  # Clearance Overrides
 
-  map.sign_up  'sign_up', :controller => 'clearance/users',    :action => 'new'
-  map.sign_in  'sign_in', :controller => 'clearance/sessions', :action => 'new'
-  map.sign_out 'sign_out',
-    :controller => 'clearance/sessions',
-    :action     => 'destroy',
-    :method     => :delete
-  map.resource  :session,
-    :controller => 'sessions',
-    :only       => :create
-  map.resources :users, :controller => 'clearance/users' do |users|
-    users.resource :confirmation,
-      :controller => 'confirmations',
-      :only       => [:new, :create]
+  resource :session, :only => :create
+  scope :path => "users/:user_id" do
+    resource :confirmation, :only => [:new, :create], :as => :user_confirmation
   end
 
   ################################################################################
   # Root
 
-  map.root :controller => "home", :action => "index"
+  root :to => "home#index"
 
 end
