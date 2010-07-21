@@ -16,7 +16,7 @@ Feature: Delete Gems
     And I go to the dashboard with my api key
     Then I should see "RGem"
     And I visit the gem page for "RGem" version "1.2.3"
-    Then I should see "This gem has been yanked."
+    Then I should see "This gem has been yanked"
     And I visit the gem page for "RGem"
     Then I should see the version "1.2.2" featured
 
@@ -29,7 +29,7 @@ Feature: Delete Gems
     When I yank the gem "RGem" version "1.2.3" with my api key
     And I go to the dashboard with my api key
     And I follow "RGem"
-    And I should see "This gem has been yanked."
+    And I should see "This gem has been yanked"
 
     Given I am signed up and confirmed as "new@owner.com/password"
     And I have a gem "RGem" with version "0.1.0"
