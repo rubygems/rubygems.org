@@ -1,4 +1,4 @@
-class StatisticsController < ApplicationController
+class StatsController < ApplicationController
   def index
     @number_of_gems      = Rubygem.total_count
     @number_of_users     = User.count
