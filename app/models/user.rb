@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
   include Clearance::User
   is_gravtastic
 
-  attr_accessible :handle
+  attr_accessible :handle, :password_confirmation, :password, :email
 
   has_many :rubygems, :through    => :ownerships,
                       :order      => "name ASC",

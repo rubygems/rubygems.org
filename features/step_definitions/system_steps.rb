@@ -1,3 +1,3 @@
 When 'the system processes jobs' do
-  Delayed::Job.work_off
+  Delayed::Worker.new(:quiet => true).work_off
 end
