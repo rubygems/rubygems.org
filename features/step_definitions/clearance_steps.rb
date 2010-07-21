@@ -56,7 +56,7 @@ end
 
 Then /^a confirmation message should be sent to "(.*)"$/ do |email|
   user = User.find_by_email(email)
-  sent = ActionMailer::Base.deliveries.first
+  sent = ActionMailer::Base.deliveries.last
   assert_equal [user.email], sent.to
   assert_match /confirm/i, sent.subject
   assert !user.confirmation_token.blank?
@@ -71,7 +71,7 @@ end
 
 Then /^a password reset message should be sent to "(.*)"$/ do |email|
   user = User.find_by_email(email)
-  sent = ActionMailer::Base.deliveries.first
+  sent = ActionMailer::Base.deliveries.last
   assert_equal [user.email], sent.to
   assert_match /password/i, sent.subject
   assert !user.confirmation_token.blank?

@@ -27,6 +27,7 @@ group :test do
   gem "cucumber-rails",     "0.3.2"
   gem "factory_girl_rails", "1.0"
 
+  gem "database_cleaner",   "0.5.2"
   gem "fakeweb",            "1.2.6"
   gem "nokogiri",           "1.4.1"
   gem "rack-test",          "0.5.4", :require => "rack/test"

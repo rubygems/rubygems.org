@@ -19,3 +19,7 @@ Then /^I should see the following most recent downloads:$/ do |table|
                   "#{row['name']} (#{row['downloads']})"
   end
 end
+
+Then /^I should see the version "([^\"]*)" featured$/ do |version_number|
+  assert_select("h3", :text => version_number)
+end
