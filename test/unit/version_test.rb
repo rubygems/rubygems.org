@@ -272,13 +272,13 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with a few versions" do
     setup do
-      @thin = Factory(:version, :authors => %w[thin], :created_at => 1.year.ago)
-      @rake = Factory(:version, :authors => %w[rake], :created_at => 1.month.ago)
-      @json = Factory(:version, :authors => %w[json], :created_at => 1.week.ago)
-      @thor = Factory(:version, :authors => %w[thor], :created_at => 2.days.ago)
-      @rack = Factory(:version, :authors => %w[rack], :created_at => 1.day.ago)
-      @haml = Factory(:version, :authors => %w[haml], :created_at => 1.hour.ago)
-      @dust = Factory(:version, :authors => %w[dust], :created_at => 1.day.from_now)
+      @thin = Factory(:version, :authors => %w[thin], :built_at => 1.year.ago)
+      @rake = Factory(:version, :authors => %w[rake], :built_at => 1.month.ago)
+      @json = Factory(:version, :authors => %w[json], :built_at => 1.week.ago)
+      @thor = Factory(:version, :authors => %w[thor], :built_at => 2.days.ago)
+      @rack = Factory(:version, :authors => %w[rack], :built_at => 1.day.ago)
+      @haml = Factory(:version, :authors => %w[haml], :built_at => 1.hour.ago)
+      @dust = Factory(:version, :authors => %w[dust], :built_at => 1.day.from_now)
     end
 
     should "get the latest versions up to today" do

@@ -72,7 +72,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.published(limit=5)
-    where("created_at <= ?", DateTime.now.utc).order("created_at desc").limit(limit)
+    where("built_at <= ?", DateTime.now.utc).order("built_at desc").limit(limit)
   end
 
   def self.find_from_slug!(rubygem_id, slug)
