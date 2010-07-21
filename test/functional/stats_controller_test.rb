@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class StatisticsControllerTest < ActionController::TestCase
+class StatsControllerTest < ActionController::TestCase
   context "on GET to index" do
     setup do
       @number_of_gems      = 1337
