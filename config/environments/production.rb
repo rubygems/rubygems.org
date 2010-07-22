@@ -5,7 +5,7 @@ Gemcutter::Application.configure do
   config.action_dispatch.x_sendfile_header = "X-Sendfile"
   config.serve_static_assets = false
   config.i18n.fallbacks = true
-  config.middleware.insert_after 'ActionController::ParamsParser', 'Redirector'
+  config.middleware.insert_after 'ActionDispatch::ParamsParser', 'Redirector'
 end
 
 require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?

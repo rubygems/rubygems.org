@@ -6,7 +6,7 @@ class Hostess < Sinatra::Base
   end
 
   def serve
-    if Hostess.local
+    if self.class.local
       send_file(Pusher.server_path(request.path_info))
     else
       yield
