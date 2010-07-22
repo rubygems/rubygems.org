@@ -55,17 +55,23 @@ Gemcutter::Application.routes.draw do |map|
   ################################################################################
   # UI
 
-  resource :search,    :only => :show
-  resource :dashboard, :only => :show
-  resource :profile,   :only => [:edit, :update]
-  resources :stats,    :only => :index
+  resource  :search,    :only => :show
+  resource  :dashboard, :only => :show
+  resource  :profile,   :only => [:edit, :update]
+  resources :stats,     :only => :index
+
+  resources :rubygems, :only => :index, :path => "gems" do
+    constraints :rubygem_id => RUBYGEM_NAME_MATCHER do
+      resources :versions, :only => :index
+    end
+  end
 
   constraints :id => RUBYGEM_NAME_MATCHER do
-    resources :rubygems, :path => "gems", :only => [:index, :show, :edit, :update] do
+    resources :rubygems, :path => "gems", :only => [:show, :edit, :update] do
       resource :subscription, :only => [:create, :destroy]
 
       constraints :rubygem_id => RUBYGEM_NAME_MATCHER do
-        resources :versions, :only => [:index, :show]
+        resources :versions, :only => :show
       end
     end
   end
