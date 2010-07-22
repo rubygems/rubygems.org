@@ -12,18 +12,18 @@ dependencies:
     group: 
     - :default
     version: = 0.8.0
-  system_timer: 
-    group: 
-    - :default
-    version: = 1.0
-  gravtastic: 
-    group: 
-    - :default
-    version: = 2.1.3
   rails: 
     group: 
     - :default
     version: = 3.0.0.beta4
+  gravtastic: 
+    group: 
+    - :default
+    version: = 2.1.3
+  system_timer: 
+    group: 
+    - :default
+    version: = 1.0
   treetop: 
     group: 
     - :test
@@ -38,8 +38,18 @@ dependencies:
     version: = 2.11.1
   delayed_job: 
     group: 
-    - :default
+    - :development
+    - :test
+    - :staging
+    - :production
     version: ">= 0"
+  validates_url_format_of: 
+    group: 
+    - :development
+    - :test
+    - :staging
+    - :production
+    version: = 0.1.0
   rack: 
     group: 
     - :default
@@ -48,24 +58,24 @@ dependencies:
     group: 
     - :test
     version: = 0.5.2
+  will_paginate: 
+    group: 
+    - :default
+    version: = 2.3.11
+  sinatra: 
+    group: 
+    - :default
+    version: = 1.0
+  json: 
+    group: 
+    - :default
+    version: = 1.2.0
   rest-client: 
     group: 
     - :default
     version: = 1.0.3
     require: 
     - rest_client
-  json: 
-    group: 
-    - :default
-    version: = 1.2.0
-  sinatra: 
-    group: 
-    - :default
-    version: = 1.0
-  will_paginate: 
-    group: 
-    - :default
-    version: = 2.3.11
   cucumber-rails: 
     group: 
     - :test
@@ -74,18 +84,18 @@ dependencies:
     group: 
     - :test
     version: = 0.5.3
-  rack-maintenance: 
-    group: 
-    - :default
-    version: = 0.3.0
-    require: 
-    - rack/maintenance
   gchartrb: 
     group: 
     - :default
     version: = 0.8
     require: 
     - google_chart
+  rack-maintenance: 
+    group: 
+    - :default
+    version: = 0.3.0
+    require: 
+    - rack/maintenance
   redgreen: 
     group: 
     - :test
@@ -96,24 +106,24 @@ dependencies:
     version: = 0.5.4
     require: 
     - rack/test
-  hoptoad_notifier: 
-    group: 
-    - :default
-    version: = 2.2.0
   clearance: 
     group: 
     - :default
     version: = 0.9.0.rc5
+  hoptoad_notifier: 
+    group: 
+    - :default
+    version: = 2.2.0
+  redis: 
+    group: 
+    - :default
+    version: = 2.0.1
   aws-s3: 
     group: 
     - :default
     version: = 0.6.2
     require: 
     - aws/s3
-  redis: 
-    group: 
-    - :default
-    version: = 2.0.1
   webmock: 
     group: 
     - :test
@@ -244,13 +254,15 @@ specs:
     version: "1.0"
 - system_timer: 
     version: "1.0"
+- validates_url_format_of: 
+    version: 0.1.0
 - webmock: 
     version: 0.7.3
 - webrat: 
     version: 0.5.3
 - will_paginate: 
     version: 2.3.11
-hash: 7fb30ea9ae84dd1506b0ac2eb9ec57ec8894c21a
+hash: 9de8d140f602f2ed789e4ad3efb8df30f9d392be
 sources: 
 - Git: 
     uri: git://github.com/pvdb/delayed_job.git
