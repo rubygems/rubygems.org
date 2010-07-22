@@ -24,6 +24,8 @@ set :use_sudo, false
 set :group, "rubycentral"
 set :user, "rubycentral"
 
+set :ree_path, "/opt/ruby-enterprise-1.8.7-2010.01/bin"
+
 namespace :deploy do
   desc "Restarting mod_rails with restart.txt"
   task :restart, :roles => :app, :except => { :no_release => true } do
@@ -42,7 +44,12 @@ namespace :deploy do
 
   desc "Run gem bundle"
   task :bundle, :roles => :app do
-    run "cd #{release_path} && PATH=/usr/local/pgsql/bin:/usr/local/bin:/bin:/usr/bin bundle install vendor/bundler_gems"
+    run "cd #{release_path} && PATH=/usr/local/pgsql/bin:/usr/local/bin:/bin:/usr/bin #{ree_path}/bundle install"
+  end
+
+  desc "Migrate with bundler"
+  task :migrate_with_bundler, :roles => :app do
+    run "cd #{release_path} && #{ree_path}/bundle exec rake db:migrate"
   end
 
   # Surely there's a better way to do this.  But it's eluding me at the moment.
@@ -90,7 +97,7 @@ after "deploy:stop", "delayed_job:stop"
 after "deploy:restart", "delayed_job:restart"
 
 after "deploy:update_code", "deploy:bundle"
-after "deploy", "deploy:migrate"
+after "deploy", "deploy:migrate_with_bundler"
 after "deploy", "deploy:cleanup"
 after "deploy:symlink", "deploy:move_in_database_yml", "deploy:move_in_secret_settings"
 
