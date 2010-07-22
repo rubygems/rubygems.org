@@ -10,6 +10,6 @@ Gemcutter::Application.configure do
   config.plugins = []
 end
 
-#require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?
+require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?
 
 HOST = "rubygems.org"
