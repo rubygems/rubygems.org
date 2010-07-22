@@ -62,13 +62,13 @@ Gemcutter::Application.routes.draw do |map|
 
   resources :rubygems, :only => :index, :path => "gems" do
     constraints :rubygem_id => RUBYGEM_NAME_MATCHER do
-      resources :versions, :only => :index
+      resource  :subscription, :only => [:create, :destroy]
+      resources :versions,     :only => :index
     end
   end
 
   constraints :id => RUBYGEM_NAME_MATCHER do
     resources :rubygems, :path => "gems", :only => [:show, :edit, :update] do
-      resource :subscription, :only => [:create, :destroy]
 
       constraints :rubygem_id => RUBYGEM_NAME_MATCHER do
         resources :versions, :only => :show
