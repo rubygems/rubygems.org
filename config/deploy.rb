@@ -44,12 +44,12 @@ namespace :deploy do
 
   desc "Run gem bundle"
   task :bundle, :roles => :app do
-    run "cd #{release_path} && PATH=/usr/local/pgsql/bin:/usr/local/bin:/bin:/usr/bin #{ree_path}/bundle install"
+    run "cd #{release_path} && PATH=/usr/local/pgsql/bin:/usr/local/bin:/bin:/usr/bin RAILS_ENV=#{rails_env} #{ree_path}/bundle install #{shared_path}/bundle"
   end
 
   desc "Migrate with bundler"
   task :migrate_with_bundler, :roles => :app do
-    run "cd #{release_path} && #{ree_path}/bundle exec rake db:migrate"
+    run "cd #{release_path} && #{ree_path}/rake db:migrate RAILS_ENV=#{rails_env}"
   end
 
   # Surely there's a better way to do this.  But it's eluding me at the moment.
