@@ -77,7 +77,7 @@ class Hostess < Sinatra::Base
 
         serve_via_cf
       else
-        error 400, "This gem does not currently live at Gemcutter."
+        error 404, "This gem does not currently live at Gemcutter."
       end
     end
   end
