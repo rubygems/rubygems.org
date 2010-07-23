@@ -20,7 +20,9 @@ gem "xml-simple",        "1.0.12"
 
 # These gems suck and do stupid things when in maintenance mode
 group :development, :test, :staging, :production do
-  gem 'delayed_job', :git => 'git://github.com/pvdb/delayed_job.git', :branch => 'rails3'
+  gem 'daemons',     :git => 'git://github.com/ghazel/daemons.git'
+  gem 'delayed_job', :git => 'git://github.com/collectiveidea/delayed_job.git'
+
   gem 'validates_url_format_of', '0.1.0'
 end
 
