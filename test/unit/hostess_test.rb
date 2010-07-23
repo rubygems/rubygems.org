@@ -79,7 +79,7 @@ class HostessTest < ActiveSupport::TestCase
 
   should "not be able to find bad gem" do
     get "/gems/rails-3.0.0.gem"
-    assert_equal 400, last_response.status
+    assert_equal 404, last_response.status
   end
 
   should "serve up gem locally" do
