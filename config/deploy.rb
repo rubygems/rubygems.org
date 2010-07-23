@@ -24,7 +24,7 @@ set :use_sudo, false
 set :group, "rubycentral"
 set :user, "rubycentral"
 
-set :ree_path, "/opt/ruby-enterprise-1.8.7-2010.01/bin"
+set :ree_path, "/opt/ruby-enterprise-1.8.7-2010.02/bin"
 
 namespace :deploy do
   desc "Restarting mod_rails with restart.txt"
