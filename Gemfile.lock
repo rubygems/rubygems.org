@@ -75,7 +75,7 @@ dependencies:
   will_paginate: 
     group: 
     - :default
-    version: = 2.3.11
+    version: = 3.0.pre
   cucumber-rails: 
     group: 
     - :test
@@ -269,8 +269,8 @@ specs:
 - webrat: 
     version: 0.5.3
 - will_paginate: 
-    version: 2.3.11
-hash: f8e0979ed50917a7caa42329376b58e695907074
+    version: 3.0.pre
+hash: 0f8a3d9399e251d2f6f363d39c6fb8fcb0b5e5f7
 sources: 
 - Git: 
     uri: git://github.com/collectiveidea/delayed_job.git
