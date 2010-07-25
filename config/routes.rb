@@ -18,7 +18,9 @@ Gemcutter::Application.routes.draw do |map|
           delete :yank
           put :unyank
         end
-        resource :owners, :only => [:show, :create, :destroy]
+        constraints :rubygem_id => RUBYGEM_NAME_MATCHER do
+          resource :owners, :only => [:show, :create, :destroy]
+        end
       end
 
       resource :search, :only => :show
