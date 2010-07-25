@@ -31,5 +31,6 @@
 <pre><code>---
 :rubygems_api_key: <%= current_user.api_key %></code></pre>
 
-  <p><%= button_to "Reset my API key", reset_api_v1_api_key_path, :method => :put, :confirm => "Are you sure? This cannot be undone." %></p>
 <% end %>
+
+<p><%= button_to "Reset my API key", reset_api_v1_api_key_path, :method => :put, :confirm => "Are you sure? This cannot be undone." %></p>
