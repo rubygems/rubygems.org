@@ -15,7 +15,7 @@ gem "redis",             "2.0.1"
 gem "rest-client",       "1.0.3", :require => "rest_client"
 gem "sinatra",           "1.0"
 gem "system_timer",      "1.0"
-gem "will_paginate",     "2.3.11"
+gem "will_paginate",     "3.0.pre"
 gem "xml-simple",        "1.0.12"
 
 # These gems suck and do stupid things when in maintenance mode
