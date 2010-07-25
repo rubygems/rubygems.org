@@ -9,6 +9,7 @@ class UserTest < ActiveSupport::TestCase
 
   context "validations" do
     context "handle" do
+      should allow_value("CapsLOCK").for(:handle)
       should_not allow_value("1abcde").for(:handle)
       should_not allow_value("abc^%def").for(:handle)
       should_not allow_value("abc\n<script>bad").for(:handle)
