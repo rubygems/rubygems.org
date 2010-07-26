@@ -5,15 +5,10 @@ class Ownership < ActiveRecord::Base
   validates_uniqueness_of :user_id, :scope => :rubygem_id
 
   before_create :generate_token
-  after_update :remove_unapproveds
   before_destroy :keep_last_owner
 
   def generate_token
     self.token = ActiveSupport::SecureRandom.hex
-  end
-
-  def remove_unapproveds
-    self.class.destroy_all(:rubygem_id => rubygem_id, :approved => false) if approved
   end
 
   def keep_last_owner
