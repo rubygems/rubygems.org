@@ -55,12 +55,12 @@ class VersionTest < ActiveSupport::TestCase
 
     %w[x86_64-linux java mswin x86-mswin32-60].each do |platform|
       should "be able to deal with platform of #{platform}" do
-        @version.update_attribute(:platform, platform)
+        @version.update_attributes(:platform => platform)
         slug = "#{@version.number}-#{platform}"
 
-        assert @version.platformed?
-        assert_equal @version, Version.find_from_slug!(@version.rubygem_id, slug)
-        assert_equal slug, @version.slug
+        assert @version.reload.platformed?
+        assert_equal @version.reload, Version.find_from_slug!(@version.reload.rubygem_id, slug)
+        assert_equal slug, @version.reload.slug
       end
     end
 
@@ -76,7 +76,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "tack on prerelease flag" do
-      @version.update_attribute(:number, "0.3.0.pre")
+      @version.update_attributes(:number => "0.3.0.pre")
       new_version = Factory(:version, :rubygem  => @version.rubygem,
                                       :built_at => 1.day.from_now,
                                       :number   => "0.4.0.pre")
@@ -93,7 +93,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "give no version count for the latest prerelease version" do
-      @version.update_attribute(:number, "0.3.0.pre")
+      @version.update_attributes(:number => "0.3.0.pre")
       old_version = Factory(:version, :rubygem  => @version.rubygem,
                                       :built_at => 1.day.from_now,
                                       :number   => "0.2.0")
