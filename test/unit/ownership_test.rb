@@ -21,15 +21,6 @@ class OwnershipTest < ActiveSupport::TestCase
 
     should validate_uniqueness_of(:user_id).scoped_to(:rubygem_id)
 
-    should "delete other ownerships once approved" do
-      rubygem = @ownership.rubygem
-      other_ownership = rubygem.ownerships.create(:user => Factory(:user))
-      @ownership.update_attribute(:approved, true)
-
-      assert Ownership.exists?(@ownership.id)
-      assert ! Ownership.exists?(other_ownership.id)
-    end
-
     should "create token" do
       assert_not_nil @ownership.token
     end

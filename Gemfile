@@ -1,7 +1,7 @@
 source :rubygems
 
-gem "rails", "3.0.0.beta4"
-gem "rack",  "1.1.0"
+gem "rails", "3.0.0.rc"
+gem "rack",  "1.2.1"
 
 gem "aws-s3",            "0.6.2", :require => "aws/s3"
 gem "clearance",         "0.9.0.rc5"
