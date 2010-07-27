@@ -43,7 +43,7 @@
           </div>
         </div>
         <%= form_tag search_url, :id => "main-search", :method => :get do %>
-          <%= text_field_tag :query, params[:query] ? params[:query] : "Search gems&hellip;" %>
+          <%= text_field_tag :query, params[:query] ? params[:query] : "Search gems&hellip;".html_safe %>
           <%= submit_tag 'Search', :id => 'search_submit', :name => nil %>
         <% end %>
       </div>
