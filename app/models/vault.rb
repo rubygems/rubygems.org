@@ -16,10 +16,11 @@ module Vault
       Pusher.indexer.abbreviate spec
       Pusher.indexer.sanitize spec
 
-      directory.files.create(
+      file = directory.files.new(
         :body => Gem.deflate(Marshal.dump(spec)),
         :key  => "quick/Marshal.4.8/#{spec.original_name}.gemspec.rz"
       )
+      file.save('x-amz-acl' => 'public-read')
     end
 
     def upload(key, value)
@@ -29,10 +30,11 @@ module Vault
       gzip.close
 
       # For the life of me, I can't figure out how to pass a stream in here from a closed StringIO
-      directory.files.create(
+      file = directory.files.new(
         :body => final.string,
         :key  => key
       )
+      file.save('x-amz-acl' => 'public-read')
     end
   end
 
