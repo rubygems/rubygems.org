@@ -1196,6 +1196,10 @@ input[type='submit']:hover {
   -moz-box-shadow: 0 1px 1px #4b0000;
   -webkit-box-shadow: 0 1px 1px #4b0000;
   -box-shadow: 0 1px 1px #4b0000;
+  width: 32px;
+  height: 32px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
 }
 
 #nav a span {
