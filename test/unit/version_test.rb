@@ -187,6 +187,13 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
+  context "with a very long authors string." do
+    should "create without error" do
+
+      Factory.create(:version, :authors => ["Fbdoorman: David Pelaez", "MiniFB:Appoxy", "Dan Croak", "Mike Burns", "Jason Morrison", "Joe Ferris", "Eugene Bolshakov", "Nick Quaranto", "Josh Nichols", "Mike Breen", "Marcel G\303\266rner", "Bence Nagy", "Ben Mabey", "Eloy Duran", "Tim Pope", "Mihai Anca", "Mark Cornick", "Shay Arnett", "Jon Yurek", "Chad Pytel"])
+    end
+  end
+
   context "when indexing" do
     setup do
       @rubygem = Factory(:rubygem)
