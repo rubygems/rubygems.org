@@ -1,5 +1,5 @@
 class Pusher
-  if Rails.env.development? || Rails.env.test?
+  if Hostess.local
     include Vault::FS
   else
     include Vault::S3

@@ -11,5 +11,3 @@ Gemcutter::Application.configure do
 end
 
 require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?
-
-HOST = "rubygems.org"
