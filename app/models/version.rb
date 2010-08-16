@@ -84,6 +84,10 @@ class Version < ActiveRecord::Base
     select('platform').map(&:platform).uniq
   end
 
+  def self.here?(full_name)
+    $redis.get("versions:#{full_name}")
+  end
+
   def platformed?
     platform != "ruby"
   end

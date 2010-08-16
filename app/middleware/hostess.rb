@@ -35,8 +35,7 @@ class Hostess < Sinatra::Base
     end
   end
 
-  %w[/quick/Marshal.4.8/*.gemspec.rz
-     /quick/rubygems-update-1.3.6.gemspec.rz
+  %w[/quick/rubygems-update-1.3.6.gemspec.rz
      /yaml.Z
      /yaml.z
      /Marshal.4.8.Z
@@ -66,13 +65,20 @@ class Hostess < Sinatra::Base
     end
   end
 
+  get "/quick/Marshal.4.8/*.gemspec.rz" do
+    if Version.here?(full_name)
+      content_type('application/x-deflate')
+      serve_via_s3
+    else
+      error 404, "This gem does not currently live at Gemcutter."
+    end
+  end
+
   get "/gems/*.gem" do
     if Rails.env.maintenance?
       serve_via_cf
     else
-      full_name = params[:splat].to_s.chomp('.gem')
-
-      if name = $redis.get("versions:#{full_name}")
+      if name = Version.here?(full_name)
         Download.incr(name, full_name)
 
         serve_via_cf
@@ -84,5 +90,9 @@ class Hostess < Sinatra::Base
 
   get "/downloads/*.gem" do
     redirect "/gems/#{params[:splat]}.gem"
+  end
+
+  def full_name
+    @full_name ||= params[:splat].to_s.chomp('.gem')
   end
 end

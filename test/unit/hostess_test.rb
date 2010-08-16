@@ -26,7 +26,6 @@ class HostessTest < ActiveSupport::TestCase
      /prerelease_specs.4.8
      /specs.4.8
      /Marshal.4.8
-     /quick/Marshal.4.8/test-0.0.0.gemspec.rz
      /quick/index
      /quick/index.rz
      /quick/latest_index
@@ -75,6 +74,22 @@ class HostessTest < ActiveSupport::TestCase
 
   should "not be able to find bad gem" do
     get "/gems/rails-3.0.0.gem"
+    assert_equal 404, last_response.status
+  end
+
+  should "find gemspec if loaded in redis" do
+    rubygem = Factory(:rubygem, :name => "rails")
+    version = Factory(:version, :number => "4.0.0", :rubygem => rubygem)
+
+    path = "/quick/Marshal.4.8/#{version.full_name}.gemspec.rz"
+    touch path, false
+    get path
+    assert_equal 302, last_response.status
+  end
+
+  should "not be able to find a bad gemspec" do
+    $redis.flushdb
+    get "/quick/Marshal.4.8/rails-3.0.0.gemspec.rz"
     assert_equal 404, last_response.status
   end
 
