@@ -141,7 +141,7 @@ GEM
     webrat (0.5.3)
       nokogiri (>= 1.2.0)
       rack (>= 1.0)
-    will_paginate (3.0.pre)
+    will_paginate (3.0.pre2)
     xml-simple (1.0.12)
 
 PLATFORMS
@@ -179,5 +179,5 @@ DEPENDENCIES
   validates_url_format_of (= 0.1.0)
   webmock (= 0.7.3)
   webrat (= 0.5.3)
-  will_paginate (= 3.0.pre)
+  will_paginate (= 3.0.pre2)
   xml-simple (= 1.0.12)
