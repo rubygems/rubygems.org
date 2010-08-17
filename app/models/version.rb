@@ -107,10 +107,16 @@ class Version < ActiveRecord::Base
 
   def yank!
     update_attributes!(:indexed => false)
+    $redis.lrem(Rubygem.versions_key(rubygem.name), 1, full_name)
   end
 
   def unyank!
     update_attributes!(:indexed => true)
+    push
+  end
+
+  def push
+    $redis.lpush(Rubygem.versions_key(rubygem.name), full_name)
   end
 
   def yanked?
@@ -164,7 +170,7 @@ class Version < ActiveRecord::Base
                  :number, number,
                  :platform, platform)
 
-    $redis.lpush(Rubygem.versions_key(rubygem.name), full_name)
+    push
   end
 
 
