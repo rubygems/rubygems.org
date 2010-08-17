@@ -34,10 +34,6 @@ class Dependency < ActiveRecord::Base
     payload.to_xml(options.merge(:root => "dependency"))
   end
 
-  def to_a
-    [name, requirements]
-  end
-
   def to_s
     "#{name} #{requirements}"
   end
