@@ -32,6 +32,25 @@ class Dependency < ActiveRecord::Base
     payload.to_xml(options.merge(:root => "dependency"))
   end
 
+  def to_a
+    [name, requirements]
+  end
+
+  # rails,rack,bundler
+  def self.for(gem_list)
+    # [{:name => 'name', :number => 'version', :dependencies => []}, ...]
+    gem_list.split(',').map do |rubygem_name|
+      rubygem = Rubygem.find_by_name(rubygem_name)
+      rubygem.versions.includes(:dependencies).map do |version|
+        {
+          :name         => rubygem.name,
+          :number       => version.number,
+          :dependencies => version.dependencies.runtime.map(&:to_a)
+        }
+      end
+    end.flatten
+  end
+
   private
 
   def use_gem_dependency

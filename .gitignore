@@ -16,3 +16,4 @@ bin/
 vendor/bundler_gems
 *.gemspec
 *.rdb
+.rvmrc
