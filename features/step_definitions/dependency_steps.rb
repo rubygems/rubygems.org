@@ -7,3 +7,12 @@ And "the following dependencies exist:" do |table|
     Factory(:dependency, :version => version, :rubygem => rubygem, :gem_dependency => gem_dependency)
   end
 end
+
+When /^I request dependencies with (\d+) gems$/ do |count|
+  gems = count.to_i.times.map { |n| "zergling#{n}" }.join(",")
+  visit "/api/v1/dependencies?gems=#{gems}"
+end
+
+Then /^I see status code (\d+)$/ do |code|
+  assert_equal code, response.code
+end
