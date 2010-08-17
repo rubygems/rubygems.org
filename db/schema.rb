@@ -112,9 +112,9 @@ ActiveRecord::Schema.define(:version => 20100731230852) do
     t.boolean  "email_reset"
   end
 
+  add_index "users", ["confirmation_token", "id"], :name => "index_users_on_id_and_confirmation_token"
   add_index "users", ["email"], :name => "index_users_on_email"
   add_index "users", ["handle"], :name => "index_users_on_handle"
-  add_index "users", ["id", "confirmation_token"], :name => "index_users_on_id_and_confirmation_token"
   add_index "users", ["id", "token"], :name => "index_users_on_id_and_token"
   add_index "users", ["remember_token"], :name => "index_users_on_remember_token"
   add_index "users", ["token"], :name => "index_users_on_token"

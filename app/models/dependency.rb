@@ -5,6 +5,8 @@ class Dependency < ActiveRecord::Base
   before_validation :use_gem_dependency,
                     :use_existing_rubygem,
                     :parse_gem_dependency
+  after_create      :push_on_to_list
+
   validates_presence_of  :requirements
   validates_inclusion_of :scope, :in => %w( development runtime )
 
@@ -36,16 +38,26 @@ class Dependency < ActiveRecord::Base
     [name, requirements]
   end
 
+  def to_s
+    "#{name} #{requirements}"
+  end
+
+  def self.runtime_key(full_name)
+    "rd:#{full_name}"
+  end
+
   # rails,rack,bundler
   def self.for(gem_list)
     gem_list.split(',').map do |rubygem_name|
-      rubygem = Rubygem.find_by_name(rubygem_name)
-      rubygem.versions.includes(:dependencies).map do |version|
+      versions = $redis.lrange(Rubygem.versions_key(rubygem_name), 0, -1)
+      versions.map do |version|
+        info = $redis.hgetall(Version.info_key(version))
+        deps = $redis.lrange(Dependency.runtime_key(version), 0, -1)
         {
-          :name         => rubygem.name,
-          :number       => version.number,
-          :platform     => version.platform,
-          :dependencies => version.dependencies.runtime.map(&:to_a)
+          :name         => info["name"],
+          :number       => info["number"],
+          :platform     => info["platform"],
+          :dependencies => deps.map { |dep| dep.split(" ", 2) }
         }
       end
     end.flatten
@@ -72,5 +84,9 @@ class Dependency < ActiveRecord::Base
   def parse_gem_dependency
     self.requirements = gem_dependency.requirements_list.join(', ')
     self.scope = gem_dependency.type.to_s
+  end
+
+  def push_on_to_list
+    $redis.lpush(Dependency.runtime_key(self.version.full_name), self.to_s)
   end
 end

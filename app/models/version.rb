@@ -27,9 +27,9 @@ class Version < ActiveRecord::Base
   scope :indexed,    { :conditions => { :indexed      => true     }}
 
   before_save      :update_prerelease
-  after_save       :reorder_versions
-  after_save       :full_nameify!
   after_validation :join_authors
+  after_create     :full_nameify!
+  after_save       :reorder_versions
 
   validates_format_of :number, :with => /\A#{Gem::Version::VERSION_PATTERN}\z/
   validate :platform_and_number_are_unique, :on => :create
@@ -84,8 +84,12 @@ class Version < ActiveRecord::Base
     select('platform').map(&:platform).uniq
   end
 
-  def self.here?(full_name)
-    $redis.get("versions:#{full_name}")
+  def self.rubygem_name_for(full_name)
+    $redis.hget(info_key(full_name), :name)
+  end
+
+  def self.info_key(full_name)
+    "v:#{full_name}"
   end
 
   def platformed?
@@ -104,7 +108,7 @@ class Version < ActiveRecord::Base
   def yank!
     update_attributes!(:indexed => false)
   end
-  
+
   def unyank!
     update_attributes!(:indexed => true)
   end
@@ -153,10 +157,16 @@ class Version < ActiveRecord::Base
     self.full_name = "#{rubygem.name}-#{number}"
     self.full_name << "-#{platform}" if platformed?
 
-    $redis.set("versions:#{full_name}", rubygem.name)
-
     Version.update_all({:full_name => full_name}, {:id => id})
+
+    $redis.hmset(Version.info_key(full_name),
+                 :name, rubygem.name,
+                 :number, number,
+                 :platform, platform)
+
+    $redis.lpush(Rubygem.versions_key(rubygem.name), full_name)
   end
+
 
   def slug
     full_name.gsub(/^#{rubygem.name}-/, '')

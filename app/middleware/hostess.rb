@@ -66,7 +66,7 @@ class Hostess < Sinatra::Base
   end
 
   get "/quick/Marshal.4.8/*.gemspec.rz" do
-    if Version.here?(full_name)
+    if Version.rubygem_name_for(full_name)
       content_type('application/x-deflate')
       serve_via_s3
     else
@@ -78,7 +78,7 @@ class Hostess < Sinatra::Base
     if Rails.env.maintenance?
       serve_via_cf
     else
-      if name = Version.here?(full_name)
+      if name = Version.rubygem_name_for(full_name)
         Download.incr(name, full_name)
 
         serve_via_cf
