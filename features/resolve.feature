@@ -34,3 +34,14 @@ Feature: Resolver endpoint
       | stalker | <= 2.0.0     |
       | zealot  | = 1.0.0      |
     And I should not see any dependencies for "zerg" version "1.0.0"
+
+  Scenario: Resolve zerg non-existent gem
+    When I request "/api/v1/dependencies?gems=zerg,XelNaga"
+    Then I should see the following dependencies for "zerg-1.0.0-java":
+      | Name  | Requirements |
+      | drone | >= 0         |
+    And I should see only 1 element in the array
+
+  Scenario: Resolve non-existent gem
+    When I request "/api/v1/dependencies?gems=XelNaga"
+    Then I should see an empty array
