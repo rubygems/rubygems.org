@@ -24,22 +24,20 @@ Then /^I should see the version "([^\"]*)" featured$/ do |version_number|
   assert_select("h3", :text => version_number)
 end
 
-
-
 Then /^I should see the following dependencies for "([^"]*)" version "([^"]*)":$/ do |rubygem_name, version_number, table|
   data = Marshal.load(response.body)
 
   table.hashes.each do |row|
-    gem_hash = data.detect { |hash| hash[:name] == rubygem_name && hash[:version] == version_number }
+    gem_hash = data.detect { |hash| hash[:name] == rubygem_name && hash[:number] == version_number }
 
     assert gem_hash.present?
 
-    assert gem_hash[:dependencies].any? { |dependency| dependency == [row['Name'], row['Requirement']] }
+    assert gem_hash[:dependencies].any? { |dependency| dependency == [row['Name'], row['Requirements']] }
   end
 end
 
 Then /^I should not see any dependencies for "([^"]*)" version "([^"]*)"$/ do |rubygem_name, version_number|
   data = Marshal.load(response.body)
-  gem_hash = data.detect { |hash| hash[:name] == rubygem_name && hash[:version] == version_number }
+  gem_hash = data.detect { |hash| hash[:name] == rubygem_name && hash[:number] == version_number }
   assert_nil gem_hash
 end
