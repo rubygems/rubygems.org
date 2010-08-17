@@ -6,7 +6,8 @@ class DependencyTest < ActiveSupport::TestCase
 
   context "with dependency" do
     setup do
-      @dependency = Factory.build(:dependency)
+      @version = Factory(:version)
+      @dependency = Factory.build(:dependency, :version => @version)
     end
 
     should "be valid with factory" do
@@ -31,6 +32,12 @@ class DependencyTest < ActiveSupport::TestCase
       assert_equal @dependency.rubygem.name, xml.at_css("name").content
       assert_equal @dependency.requirements, xml.at_css("requirements").content
     end
+
+    should "be pushed onto a redis list if a runtime dependency" do
+      @dependency.save
+
+      assert_equal "#{@dependency.name} #{@dependency.requirements}", $redis.lindex(Dependency.runtime_key(@version.full_name), 0)
+    end
   end
 
   context "with a Gem::Dependency" do
@@ -39,7 +46,7 @@ class DependencyTest < ActiveSupport::TestCase
         @rubygem        = Factory(:rubygem)
         @requirements   = ['>= 0.0.0']
         @gem_dependency = Gem::Dependency.new(@rubygem.name, @requirements)
-        @dependency     = Dependency.create!(:gem_dependency => @gem_dependency)
+        @dependency     = Factory(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
       end
 
       should "create a Dependency referring to the existing Rubygem" do
@@ -53,7 +60,7 @@ class DependencyTest < ActiveSupport::TestCase
         @rubygem        = Factory(:rubygem)
         @requirements   = ['>= 0.0.0', '< 1.0.0']
         @gem_dependency = Gem::Dependency.new(@rubygem.name, @requirements)
-        @dependency     = Dependency.create!(:gem_dependency => @gem_dependency)
+        @dependency     = Factory(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
       end
 
       should "create a Dependency referring to the existing Rubygem" do

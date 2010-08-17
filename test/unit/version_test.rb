@@ -47,8 +47,15 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.number, @version.slug
     end
 
-    should "map full_name to name in Redis" do
-      assert_equal @version.rubygem.name, $redis.get("versions:#{@version.full_name}")
+    should "save info into redis" do
+      info = $redis.hgetall(Version.info_key(@version.full_name))
+      assert_equal @version.rubygem.name, info["name"]
+      assert_equal @version.number, info["number"]
+      assert_equal @version.platform, info["platform"]
+    end
+
+    should "add version onto redis versions list" do
+      assert_equal @version.full_name, $redis.lindex(Rubygem.versions_key(@version.rubygem.name), 0)
     end
 
     should "raise an ActiveRecord::RecordNotFound if an invalid slug is given" do
@@ -58,13 +65,13 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     %w[x86_64-linux java mswin x86-mswin32-60].each do |platform|
-      should "be able to deal with platform of #{platform}" do
-        @version.update_attributes(:platform => platform)
-        slug = "#{@version.number}-#{platform}"
+      should "be able to find with platform of #{platform}" do
+        version = Factory(:version, :platform => platform)
+        slug = "#{version.number}-#{platform}"
 
-        assert @version.reload.platformed?
-        assert_equal @version.reload, Version.find_from_slug!(@version.reload.rubygem_id, slug)
-        assert_equal slug, @version.reload.slug
+        assert version.platformed?
+        assert_equal version.reload, Version.find_from_slug!(version.rubygem_id, slug)
+        assert_equal slug, version.slug
       end
     end
 

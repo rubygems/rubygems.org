@@ -32,7 +32,7 @@ class Api::V1::RubygemsController < ApplicationController
       render :json => "The version #{params[:version]} has already been yanked.", :status => :unprocessable_entity
     end
   end
-  
+
   def unyank
     if !@version.indexed?
       @version.unyank!
@@ -41,7 +41,7 @@ class Api::V1::RubygemsController < ApplicationController
       render :json => "The version #{params[:version]} is already indexed.", :status => :unprocessable_entity
     end
   end
-  
+
   private
     def validate_gem_and_version
       if !@rubygem.hosted?

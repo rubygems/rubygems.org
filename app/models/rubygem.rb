@@ -200,4 +200,8 @@ class Rubygem < ActiveRecord::Base
     version.rubygem = self
     version
   end
+
+  def self.versions_key(name)
+    "r:#{name}"
+  end
 end
