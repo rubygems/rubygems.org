@@ -38,13 +38,13 @@ class Dependency < ActiveRecord::Base
 
   # rails,rack,bundler
   def self.for(gem_list)
-    # [{:name => 'name', :number => 'version', :dependencies => []}, ...]
     gem_list.split(',').map do |rubygem_name|
       rubygem = Rubygem.find_by_name(rubygem_name)
       rubygem.versions.includes(:dependencies).map do |version|
         {
           :name         => rubygem.name,
           :number       => version.number,
+          :platform     => version.platform,
           :dependencies => version.dependencies.runtime.map(&:to_a)
         }
       end
