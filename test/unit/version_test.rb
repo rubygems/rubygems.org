@@ -186,6 +186,9 @@ class VersionTest < ActiveSupport::TestCase
       end
       should("unindex") { assert !@version.indexed? }
       should("no longer be latest") { assert !@version.latest?}
+      should "not appear in the version list" do
+        assert ! $redis.exists(Rubygem.versions_key(@version.rubygem.name))
+      end
 
       context "and consequently unyanked" do
         setup do
@@ -194,6 +197,9 @@ class VersionTest < ActiveSupport::TestCase
         end
         should("re-index") { assert @version.indexed? }
         should("become the latest again") { assert @version.latest? }
+        should "appear in the version list" do
+          assert_equal @version.full_name, $redis.lindex(Rubygem.versions_key(@version.rubygem.name), 0)
+        end
       end
     end
   end
