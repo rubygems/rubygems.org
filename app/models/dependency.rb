@@ -15,6 +15,8 @@ class Dependency < ActiveRecord::Base
 
   attr_accessor :gem_dependency
 
+  LIMIT = 250
+
   def name
     rubygem.name
   end
@@ -44,7 +46,7 @@ class Dependency < ActiveRecord::Base
 
   # rails,rack,bundler
   def self.for(gem_list)
-    gem_list.split(',').map do |rubygem_name|
+    gem_list.map do |rubygem_name|
       versions = $redis.lrange(Rubygem.versions_key(rubygem_name), 0, -1)
       versions.map do |version|
         info = $redis.hgetall(Version.info_key(version))

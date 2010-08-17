@@ -45,3 +45,10 @@ Feature: Resolver endpoint
   Scenario: Resolve non-existent gem
     When I request "/api/v1/dependencies?gems=XelNaga"
     Then I should see an empty array
+
+  Scenario: Limit dependency resolution to 250 gems
+    When I request dependencies with 250 gems
+    Then I see status code 200
+    When I request dependencies with 251 gems
+    Then I see status code 413
+    And I should see "Too many gems to resolve, please request less than 250 gems"
