@@ -24,11 +24,14 @@ Then /^I should see the version "([^\"]*)" featured$/ do |version_number|
   assert_select("h3", :text => version_number)
 end
 
-Then /^I should see the following dependencies for "([^"]*)" version "([^"]*)":$/ do |rubygem_name, version_number, table|
-  data = Marshal.load(response.body)
+Then /^I should see the following dependencies for "([^"]*)":$/ do |full_name, table|
+  data    = Marshal.load(response.body)
+  version = Version.find_by_full_name!(full_name)
 
   table.hashes.each do |row|
-    gem_hash = data.detect { |hash| hash[:name] == rubygem_name && hash[:number] == version_number }
+    gem_hash = data.detect { |hash| hash[:name]     == version.rubygem.name &&
+                                    hash[:number]   == version.number &&
+                                    hash[:platform] == version.platform }
 
     assert gem_hash.present?
 
