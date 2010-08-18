@@ -7,20 +7,21 @@ module Vault
     end
 
     def write_gem
-      directory.files.create(
+      gem_file = directory.files.create(
         :body => body.string,
         :key  => "gems/#{spec.original_name}.gem"
       )
+      gem_file.save('x-amz-acl' => 'public-read')
 
       quick_path = "quick/Marshal.4.8/#{spec.original_name}.gemspec.rz"
       Pusher.indexer.abbreviate spec
       Pusher.indexer.sanitize spec
 
-      file = directory.files.new(
+      gem_spec = directory.files.new(
         :body => Gem.deflate(Marshal.dump(spec)),
         :key  => "quick/Marshal.4.8/#{spec.original_name}.gemspec.rz"
       )
-      file.save('x-amz-acl' => 'public-read')
+      gem_spec.save('x-amz-acl' => 'public-read')
     end
 
     def upload(key, value)
