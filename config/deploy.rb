@@ -74,35 +74,30 @@ namespace :maintenance do
   end
 end
 
-namespace :delayed_job do
-  desc "Start delayed_job process" 
-  task :start, :roles => :app do
-    run "sudo monit start delayed_job_#{rails_env}" 
+namespace :bluepill do
+  desc "Stop processes that bluepill is monitoring and quit bluepill"
+  task :quit, :roles => [:app] do
+    sudo "bluepill stop"
+    sudo "bluepill quit"
   end
 
-  desc "Stop delayed_job process" 
-  task :stop, :roles => :app do
-    run "sudo monit stop delayed_job_#{rails_env}" 
+  desc "Load bluepill configuration and start it"
+  task :start, :roles => [:app] do
+    sudo "bluepill load #{release_path}/config/pills/#{rails_env}.rb"
   end
 
-  desc "Restart delayed_job process" 
-  task :restart, :roles => :app do
-    run "sudo monit stop delayed_job_#{rails_env}" 
-    sleep 5
-    run "sudo monit start delayed_job_#{rails_env}" 
+  desc "Prints bluepills monitored processes statuses"
+  task :status, :roles => [:app] do
+    sudo "bluepill status"
   end
 end
 
-after "deploy:start", "delayed_job:start" 
-after "deploy:stop", "delayed_job:stop" 
-after "deploy:restart", "delayed_job:restart"
+after "deploy:update", "bluepill:quit", "bluepill:start"
 
 after "deploy:update_code", "deploy:bundle"
 after "deploy", "deploy:migrate_with_bundler"
 after "deploy", "deploy:cleanup"
 after "deploy:symlink", "deploy:move_in_database_yml", "deploy:move_in_secret_settings"
-
-
 
 Dir[File.join(File.dirname(__FILE__), '..', 'vendor', 'gems', 'hoptoad_notifier-*')].each do |vendored_notifier|
   $: << File.join(vendored_notifier, 'lib')
