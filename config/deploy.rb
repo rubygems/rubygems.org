@@ -44,7 +44,7 @@ namespace :deploy do
 
   desc "Run gem bundle"
   task :bundle, :roles => :app do
-    ienv = "PATH=/usr/local/pgsql/bin:/usr/local/bin:/bin:/usr/bin RAILS_ENV=#{rails_env} #{ree_path}"
+    env = "PATH=/usr/local/pgsql/bin:/usr/local/bin:/bin:/usr/bin RAILS_ENV=#{rails_env} #{ree_path}"
     run "#{env}/bundle install --gemfile #{release_path}/Gemfile --path #{fetch(:bundle_dir, "#{shared_path}/bundle")} --deployment --without development test"
   end
 
