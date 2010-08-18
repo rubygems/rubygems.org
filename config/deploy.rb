@@ -77,8 +77,8 @@ end
 namespace :bluepill do
   desc "Stop processes that bluepill is monitoring and quit bluepill"
   task :quit, :roles => [:app] do
-    sudo "bluepill stop"
-    sudo "bluepill quit"
+    sudo "bluepill stop; true"
+    sudo "bluepill quit; true"
   end
 
   desc "Load bluepill configuration and start it"
