@@ -1,2 +1,2 @@
 RELEASE_PATH = "/var/www/rubycentral/staging.gemcutter.org"
-require 'config/pill'
+require File.join(File.dirname(__FILE__), "..", "pill")
