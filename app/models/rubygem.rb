@@ -13,28 +13,27 @@ class Rubygem < ActiveRecord::Base
   validates_uniqueness_of :name
 
   scope :with_versions,
-    :conditions => "rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)"
+    where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)")
 
   scope :with_one_version,
-    :select => 'rubygems.*',
-    :joins  => :versions,
-    :group  => column_names.map{ |name| "rubygems.#{name}" }.join(', '),
-    :having => 'COUNT(versions.id) = 1'
+    select('rubygems.*').
+    joins(:versions).
+    group(column_names.map{ |name| "rubygems.#{name}" }.join(', ')).
+    having('COUNT(versions.id) = 1')
 
-  scope :name_is, lambda { |name| {
-    :conditions => ["name = ?", name.strip],
-    :limit      => 1 }
+  scope :name_is, lambda { |name| 
+    where(:name => name.strip).
+    limit(1)
   }
 
-  scope :search, lambda { |query| {
-    :conditions => ["versions.indexed and (upper(name) like upper(:query) or upper(versions.description) like upper(:query))",
-      {:query => "%#{query.strip}%"}],
-    :include    => :versions,
-    :order      => "rubygems.downloads desc" }
+  scope :search, lambda { |query| 
+    where(["versions.indexed and (upper(name) like upper(:query) or upper(versions.description) like upper(:query))", {:query => "%#{query.strip}%"}]).
+    includes(:versions).
+    order("rubygems.downloads desc")
   }
 
-  scope :name_starts_with, lambda { |letter| {
-    :conditions => ["upper(name) like upper(?)", "#{letter}%" ] }
+  scope :name_starts_with, lambda { |letter| 
+    where(["upper(name) like upper(?)", "#{letter}%" ])
   }
 
   def ensure_name_format
