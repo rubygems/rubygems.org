@@ -2,8 +2,8 @@ class WebHook < ActiveRecord::Base
   belongs_to :user
   belongs_to :rubygem
 
-  scope :global, :conditions => {:rubygem_id => nil}
-  scope :specific, :conditions => "rubygem_id is not null"
+  scope :global, where(:rubygem_id => nil)
+  scope :specific, where("rubygem_id is not null")
 
   GLOBAL_PATTERN = '*'
 
