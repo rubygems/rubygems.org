@@ -10,8 +10,8 @@ class Dependency < ActiveRecord::Base
   validates_presence_of  :requirements
   validates_inclusion_of :scope, :in => %w( development runtime )
 
-  scope :development, { :conditions => { :scope => 'development' }}
-  scope :runtime,     { :conditions => { :scope => 'runtime'     }}
+  scope :development, where(:scope => 'development')
+  scope :runtime,     where(:scope => 'runtime')
 
   attr_accessor :gem_dependency
 
