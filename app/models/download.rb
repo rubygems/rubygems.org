@@ -53,7 +53,7 @@ class Download
     $redis.rename TODAY_KEY, YESTERDAY_KEY
 
     yesterday = 1.day.ago.to_date.to_s
-    versions  = Version.all(:include => :rubygem).inject({}) do |hash, v|
+    versions  = Version.includes(:rubygem).inject({}) do |hash, v|
       hash[v.full_name] = v
       hash
     end
