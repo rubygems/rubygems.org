@@ -1,17 +1,18 @@
 class Version < ActiveRecord::Base
 
   default_scope :order => 'position'
+  # default_scope order('position')
 
   belongs_to :rubygem
   has_many :dependencies, :dependent => :destroy
 
   scope :owned_by, lambda { |user|
-    { :conditions => { :rubygem_id => user.rubygem_ids } }
+    where(:rubygem_id => user.rubygem_ids)
   }
 
   scope :subscribed_to_by, lambda { |user|
-    { :conditions => { :rubygem_id => user.subscribed_gem_ids },
-      :order => 'created_at desc' }
+    where(:rubygem_id => user.subscribed_gem_ids).
+    order('created_at desc')
   }
 
   scope :with_associated, {
@@ -19,12 +20,16 @@ class Version < ActiveRecord::Base
     :include    => :rubygem,
     :order      => "versions.built_at desc"
   }
+  # scope :with_associated, 
+  #   where("versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)").
+  #   includes(:rubygem).
+  #   order("versions.built_at desc")
 
-  scope :latest,     { :conditions => { :latest       => true     }}
-  scope :with_deps,  { :include    => { :dependencies => :rubygem }}
-  scope :prerelease, { :conditions => { :prerelease   => true     }}
-  scope :release,    { :conditions => { :prerelease   => false    }}
-  scope :indexed,    { :conditions => { :indexed      => true     }}
+  scope :latest,     where(:latest       => true     )
+  scope :with_deps,  where(:dependencies => :rubygem )
+  scope :prerelease, where(:prerelease   => true     )
+  scope :release,    where(:prerelease   => false    )
+  scope :indexed,    where(:indexed      => true     )
 
   before_save      :update_prerelease
   after_validation :join_authors
@@ -54,12 +59,10 @@ class Version < ActiveRecord::Base
   end
 
   def self.with_indexed(reverse = false)
-    order =  "rubygems.name asc"
-    order << ", position desc" if reverse
+    order_str =  "rubygems.name asc"
+    order_str << ", position desc" if reverse
 
-    all :conditions => {:indexed => true},
-        :include    => :rubygem,
-        :order      => order
+    where(:indexed => true).includes(:rubygem).order(order_str)
   end
 
   def self.most_recent
