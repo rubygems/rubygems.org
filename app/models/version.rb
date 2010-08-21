@@ -1,5 +1,15 @@
 class Version < ActiveRecord::Base
 
+  # The default_scope is still defined with the hash syntax
+  # as well as the :with_associated scope, because there seem to be a bug
+  # in Rails 3 (even in master) where the 2 `order` relations
+  # (from the default_scope and from the scope) are not merge in the same order
+  # than with the relation syntax.
+  # With the hash syntax :
+  #   `(…) ORDER BY (versions.built_at desc, position asc)`
+  # With the relation syntax :
+  #   `(…) ORDER BY (position asc, versions.built_at desc)`
+
   default_scope :order => 'position'
   # default_scope order('position')
 
