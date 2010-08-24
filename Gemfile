@@ -1,6 +1,6 @@
 source :rubygems
 
-gem "rails", "3.0.0.rc"
+gem "rails", "3.0.0.rc2"
 gem "rack",  "1.2.1"
 
 gem "aws-s3",            "0.6.2", :require => "aws/s3"
