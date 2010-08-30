@@ -486,6 +486,10 @@ table {
   background: url('/images/download.png') no-repeat;
 }
 
+.main .info .meta .admin #docs {
+  background: url('/images/docs.png') no-repeat;
+}
+
 .main .info #markup h2 {
   font-size: 1.5em;
   margin: 0 36px;

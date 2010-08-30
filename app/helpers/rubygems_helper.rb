@@ -43,4 +43,12 @@ module RubygemsHelper
   def download_link(version)
     link_to "Download", "/downloads/#{version.full_name}.gem", :id => :download
   end
+
+  def documentation_link(version)
+    link_to 'Documentation', documentation_path(version), :id => :docs
+  end
+
+  def documentation_path(version)
+    "http://rubydoc.info/gems/#{version.rubygem.name}/#{version.number}/frames"
+  end
 end
