@@ -50,6 +50,7 @@
       <div class="admin">
         <%= link_to "Edit", edit_rubygem_path(@rubygem), :id => "edit" if @rubygem.owned_by?(current_user) %>
         <%= download_link(@latest_version) %>
+        <%= documentation_link(@latest_version) %>
         <% if @latest_version.indexed %>
           <%= subscribe_link(@rubygem) %>
           <%= unsubscribe_link(@rubygem) %>
