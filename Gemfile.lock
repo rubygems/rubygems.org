@@ -1,13 +1,13 @@
 GIT
   remote: git://github.com/collectiveidea/delayed_job.git
-  revision: b983b7e
+  revision: b983b7e5b9ca37260b2640f2b0a847f91a9a2d0f
   specs:
     delayed_job (2.1.0.pre)
       daemons
 
 GIT
   remote: git://github.com/ghazel/daemons.git
-  revision: b2802ff
+  revision: b2802ff2af2a9e0981998869308d60a8965222a4
   specs:
     daemons (1.0.12)
 
@@ -15,12 +15,12 @@ GEM
   remote: http://rubygems.org/
   specs:
     abstract (1.0.0)
-    actionmailer (3.0.0.rc2)
-      actionpack (= 3.0.0.rc2)
+    actionmailer (3.0.0)
+      actionpack (= 3.0.0)
       mail (~> 2.2.5)
-    actionpack (3.0.0.rc2)
-      activemodel (= 3.0.0.rc2)
-      activesupport (= 3.0.0.rc2)
+    actionpack (3.0.0)
+      activemodel (= 3.0.0)
+      activesupport (= 3.0.0)
       builder (~> 2.1.2)
       erubis (~> 2.6.6)
       i18n (~> 0.4.1)
@@ -28,29 +28,25 @@ GEM
       rack-mount (~> 0.6.12)
       rack-test (~> 0.5.4)
       tzinfo (~> 0.3.23)
-    activemodel (3.0.0.rc2)
-      activesupport (= 3.0.0.rc2)
+    activemodel (3.0.0)
+      activesupport (= 3.0.0)
       builder (~> 2.1.2)
       i18n (~> 0.4.1)
-    activerecord (3.0.0.rc2)
-      activemodel (= 3.0.0.rc2)
-      activesupport (= 3.0.0.rc2)
-      arel (~> 1.0.0.rc1)
+    activerecord (3.0.0)
+      activemodel (= 3.0.0)
+      activesupport (= 3.0.0)
+      arel (~> 1.0.0)
       tzinfo (~> 0.3.23)
-    activeresource (3.0.0.rc2)
-      activemodel (= 3.0.0.rc2)
-      activesupport (= 3.0.0.rc2)
-    activesupport (3.0.0.rc2)
+    activeresource (3.0.0)
+      activemodel (= 3.0.0)
+      activesupport (= 3.0.0)
+    activesupport (3.0.0)
     addressable (2.2.0)
-    arel (1.0.0.rc1)
-      activesupport (>= 3.0.0.beta)
-    aws-s3 (0.6.2)
-      builder
-      mime-types
-      xml-simple
+    arel (1.0.1)
+      activesupport (~> 3.0.0)
     builder (2.1.2)
-    clearance (0.9.0.rc7)
-      rails (~> 3.0.0.beta4)
+    clearance (0.9.0.rc9)
+      rails (~> 3.0.0)
     cucumber (0.8.5)
       builder (~> 2.1.2)
       diff-lcs (~> 1.1.2)
@@ -101,22 +97,22 @@ GEM
     rack (1.2.1)
     rack-maintenance (0.3.0)
       rack (>= 1.0)
-    rack-mount (0.6.12)
+    rack-mount (0.6.13)
       rack (>= 1.0.0)
     rack-test (0.5.4)
       rack (>= 1.0)
-    rails (3.0.0.rc2)
-      actionmailer (= 3.0.0.rc2)
-      actionpack (= 3.0.0.rc2)
-      activerecord (= 3.0.0.rc2)
-      activeresource (= 3.0.0.rc2)
-      activesupport (= 3.0.0.rc2)
-      bundler (>= 1.0.0.rc.6)
-      railties (= 3.0.0.rc2)
-    railties (3.0.0.rc2)
-      actionpack (= 3.0.0.rc2)
-      activesupport (= 3.0.0.rc2)
-      rake (>= 0.8.3)
+    rails (3.0.0)
+      actionmailer (= 3.0.0)
+      actionpack (= 3.0.0)
+      activerecord (= 3.0.0)
+      activeresource (= 3.0.0)
+      activesupport (= 3.0.0)
+      bundler (~> 1.0.0)
+      railties (= 3.0.0)
+    railties (3.0.0)
+      actionpack (= 3.0.0)
+      activesupport (= 3.0.0)
+      rake (>= 0.8.4)
       thor (~> 0.14.0)
     rake (0.8.7)
     redgreen (1.2.2)
@@ -148,8 +144,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  aws-s3 (= 0.6.2)
-  clearance (= 0.9.0.rc7)
+  clearance (= 0.9.0.rc9)
   cucumber-rails (= 0.3.2)
   daemons!
   database_cleaner (= 0.5.2)
@@ -167,7 +162,7 @@ DEPENDENCIES
   rack (= 1.2.1)
   rack-maintenance (= 0.3.0)
   rack-test (= 0.5.4)
-  rails (= 3.0.0.rc2)
+  rails (= 3.0.0)
   redgreen (= 1.2.2)
   redis (= 2.0.1)
   rest-client (= 1.0.3)

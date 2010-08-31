@@ -1,10 +1,9 @@
 source :rubygems
 
-gem "rails", "3.0.0.rc2"
+gem "rails", "3.0.0"
 gem "rack",  "1.2.1"
 
-gem "aws-s3",            "0.6.2", :require => "aws/s3"
-gem "clearance",         "0.9.0.rc7"
+gem "clearance",         "0.9.0.rc9"
 gem "fog",               "0.2.14"
 gem "gchartrb",          "0.8",   :require => "google_chart"
 gem "gravtastic",        "2.1.3"
