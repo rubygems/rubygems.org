@@ -96,6 +96,10 @@ class Rubygem < ActiveRecord::Base
     Download.for(self)
   end
 
+  def downloads_today
+    versions.to_a.sum {|v| Download.today(v) }
+  end
+
   def payload(version = versions.most_recent, host_with_port = HOST)
     {
       'name'              => name,

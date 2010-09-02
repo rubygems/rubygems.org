@@ -22,3 +22,10 @@ Feature: Edit Profile
     When I fill in "Handle" with "some_doe"
     And I press "Update"
     Then I should see "Handle has already been taken"
+
+  Scenario: Edit bio
+    Given I have signed in with "john@example.com/password"
+    And I am on my edit profile page
+    When I fill in "Bio" with "When are we going to eat"
+    And I press "Update"
+    Then I should see my new "Bio"

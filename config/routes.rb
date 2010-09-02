@@ -52,7 +52,6 @@ Gemcutter::Application.routes.draw do
     scope :path => "gems/:rubygem_id" do
       put  "migrate"
       post "migrate"
-
       get    "owners(.:format)"
       post   "owners(.:format)"
       delete "owners(.:format)"
@@ -64,7 +63,8 @@ Gemcutter::Application.routes.draw do
 
   resource  :search,    :only => :show
   resource  :dashboard, :only => :show
-  resource  :profile,   :only => [:edit, :update, :show]
+  resource  :profile,   :only => [:edit, :update]
+  resources :profiles,  :only => :show
   resources :stats,     :only => :index
 
   resources :rubygems, :only => :index, :path => "gems" do

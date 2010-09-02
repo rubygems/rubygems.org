@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   is_gravtastic
 
   attr_accessible :handle, :password_confirmation, :password, :email
+  attr_accessible :handle, :website, :location, :bio
 
   has_many :rubygems, :through    => :ownerships,
                       :order      => "name ASC",
