@@ -1,6 +1,6 @@
 class Api::V1::ApiKeysController < Api::BaseController
   before_filter :redirect_to_root, :unless => :signed_in?, :only => [:reset]
-  
+
   def show
     authenticate_or_request_with_http_basic do |username, password|
       @_current_user = User.authenticate(username, password)
@@ -11,7 +11,7 @@ class Api::V1::ApiKeysController < Api::BaseController
       end
     end
   end
-  
+
   def reset
     current_user.reset_api_key!
     flash[:notice] = "Your API key has been reset. Don't forget to update your .gemrc file!"

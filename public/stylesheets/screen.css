@@ -974,6 +974,7 @@ label, .form_links {
 }
 
 .text_field input,
+.text_area textarea,
 .password_field input,
 .url_field input,
 .edit_user input[type="text"] {
@@ -994,6 +995,7 @@ label, .form_links {
 }
 
 .text_field label,
+.text_area label,
 .password_field label,
 .avatar_field label,
 .url_field label {

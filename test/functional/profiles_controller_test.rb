@@ -8,6 +8,20 @@ class ProfilesControllerTest < ActionController::TestCase
       sign_in_as(@user)
     end
 
+    context "on GET to show with handle" do
+      setup {get :show, :id => @user.handle}
+
+      should respond_with :success
+      should render_template :show
+    end
+
+    context "on GET to show with id" do
+      setup {get :show, :id => @user.id}
+
+      should respond_with :success
+      should render_template :show
+    end
+
     context "on GET to edit" do
       setup { get :edit }
 

@@ -116,6 +116,9 @@ ActiveRecord::Schema.define(:version => 20101013135725) do
     t.datetime "updated_at"
     t.boolean  "email_reset"
     t.string   "handle"
+    t.string   "website"
+    t.string   "location"
+    t.text     "bio"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email"
