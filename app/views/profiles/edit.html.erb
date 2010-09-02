@@ -1,6 +1,6 @@
 <% @title = "Edit Profile" %>
 
-<%= form_for current_user, :url => profile_url do |form| %>
+<%= form_for current_user, :url => {:controller => 'profiles', :action => 'update'} do |form| %>
   <%= form.error_messages %>
 
   <div class="avatar_field">
@@ -17,6 +17,21 @@
   <div class="text_field">
     <%= form.label :email, 'Email Address' %>
     <%= form.text_field :email, :size => 25 %>
+  </div>
+
+  <div class="text_field">
+    <%= form.label :website, 'Web Site' %>
+    <%= form.text_field :website, :size => 25 %>
+  </div>
+
+  <div class="text_field">
+    <%= form.label :location, 'Location' %>
+    <%= form.text_field :location, :size => 25 %>
+  </div>
+
+  <div class="text_area">
+    <%= form.label :bio, 'Bio' %>
+    <%= form.text_area :bio, :size => '24x3'%>
   </div>
 
   <div class="submit_field">

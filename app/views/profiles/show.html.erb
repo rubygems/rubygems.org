@@ -4,14 +4,19 @@
       <%= gravatar(256, "profile_gravatar") %>
     </div>
     <div id="profile-info">
-      <h2 id="profile-name">fyates</h2>
-      <h3 id="location">Boston, MA</h3>
-      <h4 id="website"><a href="http://fyates.com">http://fyates.com</a></h4>
-      <p id="bio">Likes long walks in the desert, cloud covered moonlit nights, and stale cookies. He’s the lead designer at craigslist where he hopes to become Creative Director once Hellen Keller retires.</p>
+      <% if @user == current_user %>
+        <h2><%= link_to "edit", edit_profile_path %></h2>
+      <% end %>
+      <h2 id="profile-name"><%=h @user.handle %></h2>
+      <h3 id="location"><%=h @user.location %></h3>
+      <% if @user.website.present? %>
+        <h4 id="website"><%= link_to h(@user.website), @user.website %></h4>
+      <% end %>
+      <p id="bio"><%=h @user.bio %></p>
       <h5 id="downloads">Downloads</h5>
       <div id="downloads_cont">
-        <div><strong>43</strong>today</div>
-        <div><strong>13,543</strong>all time</div>
+        <div><strong><%=number_with_delimiter(@user.rubygems.to_a.sum(&:downloads_today)) %></strong> today</div>
+        <div><strong><%=number_with_delimiter( @user.rubygems.to_a.sum(&:downloads))%></strong> all time</div>
       </div>
     </div>
   </div>
@@ -21,12 +26,15 @@
       <span>Downloads</span>
     </div>
     <ol>
-      <li>
-        <a href="#">
-          awesome_gem <em>0.3.8</em>
-          <strong>43</strong>
-        </a>
-      </li>
+      <% @user.rubygems.each do |rubygem| %>
+        <li>
+          <a href="<%=rubygem_path(rubygem)%>">
+            <%= rubygem.name %>
+            <em><%= rubygem.versions.latest %></em>
+            <strong><%=rubygem.downloads%></strong>
+          </a>
+        </li>
+      <% end %>
     </ol>
   </div>
   <div class="profile-list right">
@@ -35,12 +43,15 @@
       <span>Downloads</span>
     </div>
     <ol>
+      <% @user.subscribed_gems.each do |rubygem| %>
       <li>
-        <a href="#">
-          awesome_gem <em>0.3.8</em>
-          <strong>43</strong>
+        <a href="<%=rubygem_path(rubygem)%>">
+          <%= rubygem.name %>
+          <em><%= rubygem.versions.latest %></em>
+          <strong><%=rubygem.downloads%></strong>
         </a>
       </li>
+      <% end %>
     </ol>
   </div>
 </div>
