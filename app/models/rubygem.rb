@@ -72,6 +72,10 @@ class Rubygem < ActiveRecord::Base
     letter =~ /\A[A-Za-z]\z/ ? letter.upcase : 'A'
   end
 
+  def public_versions
+    versions.published.by_position
+  end
+
   def hosted?
     versions.count.nonzero?
   end
