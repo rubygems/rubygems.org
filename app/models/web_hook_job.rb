@@ -5,7 +5,7 @@ class WebHookJob < Struct.new(:url, :host_with_port, :rubygem, :version)
   end
 
   def perform
-    SystemTimer.timeout_after(5) do
+    timeout(5) do
       RestClient.post url,
                       payload,
                       :timeout       => 5,

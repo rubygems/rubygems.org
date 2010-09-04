@@ -15,7 +15,6 @@ gem "rack-maintenance",  "0.3.0", :require => "rack/maintenance"
 gem "redis",             "2.0.1"
 gem "rest-client",       "1.0.3", :require => "rest_client"
 gem "sinatra",           "1.0"
-gem "system_timer",      "1.0"
 gem "will_paginate",     "3.0.pre2"
 gem "xml-simple",        "1.0.12"
 
@@ -38,10 +37,12 @@ group :test do
   gem "fakeweb",            "1.2.6"
   gem "nokogiri",           "1.4.1"
   gem "rack-test",          "0.5.4", :require => "rack/test"
-  gem "redgreen",           "1.2.2"
-  gem "rr",                 "0.10.11"
+  gem "rr",                 "1.0.0"
   gem "shoulda",            "2.11.1"
   gem "treetop",            "1.4.5"
   gem "webrat",             "0.5.3"
   gem "webmock",            "0.7.3"
+
+  gem "test-unit", "2.1.1"
+  gem "mynyml-redgreen", :git => 'git://github.com/mynyml/redgreen.git', :require => 'redgreen'
 end

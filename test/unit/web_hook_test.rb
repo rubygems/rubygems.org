@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require_relative '../test_helper'
 
 class WebHookTest < ActiveSupport::TestCase
   should belong_to :user
@@ -178,7 +178,7 @@ class WebHookTest < ActiveSupport::TestCase
 
   context "with invalid URL" do
     setup do
-      @url     = 'http://someinvaliddomain.com'
+      @url     = 'http://example.com'
       @user    = Factory(:email_confirmed_user)
       @rubygem = Factory(:rubygem)
       @version = Factory(:version, :rubygem => @rubygem)

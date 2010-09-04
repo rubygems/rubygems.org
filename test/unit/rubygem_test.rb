@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require_relative '../test_helper'
 
 class RubygemTest < ActiveSupport::TestCase
   context "with a saved rubygem" do

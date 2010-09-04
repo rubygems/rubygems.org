@@ -89,10 +89,14 @@ class Hostess < Sinatra::Base
   end
 
   get "/downloads/*.gem" do
-    redirect "/gems/#{params[:splat]}.gem"
+    redirect "/gems/#{gem_name}.gem"
+  end
+
+  def gem_name
+    params[:splat].first
   end
 
   def full_name
-    @full_name ||= params[:splat].to_s.chomp('.gem')
+    @full_name ||= gem_name.chomp('.gem')
   end
 end

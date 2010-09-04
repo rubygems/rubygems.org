@@ -11,6 +11,13 @@ GIT
   specs:
     daemons (1.0.12)
 
+GIT
+  remote: git://github.com/mynyml/redgreen.git
+  revision: 7276c75364b263bdd6912bafc01af427a264a062
+  specs:
+    mynyml-redgreen (0.7.1)
+      term-ansicolor (>= 1.0.4)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -116,16 +123,15 @@ GEM
       rake (>= 0.8.4)
       thor (~> 0.14.0)
     rake (0.8.7)
-    redgreen (1.2.2)
     redis (2.0.1)
     rest-client (1.0.3)
-    rr (0.10.11)
+    rr (1.0.0)
     ruby-hmac (0.4.0)
     shoulda (2.11.1)
     sinatra (1.0)
       rack (>= 1.0)
-    system_timer (1.0)
     term-ansicolor (1.0.5)
+    test-unit (2.1.1)
     thor (0.14.0)
     treetop (1.4.5)
       polyglot (>= 0.3.1)
@@ -158,6 +164,7 @@ DEPENDENCIES
   high_voltage (= 0.9.1)
   hoptoad_notifier (= 2.2.0)
   json (= 1.2.0)
+  mynyml-redgreen!
   newrelic_rpm (= 2.13.0.beta6)
   nokogiri (= 1.4.1)
   pg (= 0.8.0)
@@ -165,13 +172,12 @@ DEPENDENCIES
   rack-maintenance (= 0.3.0)
   rack-test (= 0.5.4)
   rails (= 3.0.0)
-  redgreen (= 1.2.2)
   redis (= 2.0.1)
   rest-client (= 1.0.3)
-  rr (= 0.10.11)
+  rr (= 1.0.0)
   shoulda (= 2.11.1)
   sinatra (= 1.0)
-  system_timer (= 1.0)
+  test-unit (= 2.1.1)
   treetop (= 1.4.5)
   validates_url_format_of (= 0.1.0)
   webmock (= 0.7.3)

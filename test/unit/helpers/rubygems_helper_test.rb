@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative '../../test_helper'
 
 class RubygemsHelperTest < ActionView::TestCase
   include Rails.application.routes.url_helpers

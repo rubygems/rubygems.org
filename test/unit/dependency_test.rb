@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require_relative '../test_helper'
 
 class DependencyTest < ActiveSupport::TestCase
   should belong_to :rubygem
@@ -51,7 +51,7 @@ class DependencyTest < ActiveSupport::TestCase
 
       should "create a Dependency referring to the existing Rubygem" do
         assert_equal @rubygem,      @dependency.rubygem
-        assert_equal @requirements.to_s, @dependency.requirements
+        assert_equal @requirements.first, @dependency.requirements
       end
     end
 
