@@ -2,7 +2,7 @@ class VersionsController < ApplicationController
   before_filter :find_rubygem
 
   def index
-    @versions = @rubygem.versions
+    @versions = @rubygem.versions.by_position
   end
 
   def show
