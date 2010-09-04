@@ -31,7 +31,7 @@
                 <ul id="signed_in">
                   <li id="all-gems"><%= link_to "all gems", rubygems_url %></li>
                   <li id="dashboard"><%= link_to "dashboard", dashboard_url %></li>
-                  <li id="sign-out"><%= link_to "sign out", sign_out_path %></li>
+                  <li id="sign-out"><%= link_to "sign out", sign_out_path, :method => :delete %></li>
                 </ul>
             <% else %>
               <ul id="signed_out">
