@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '..', '..', '..', 'test_helper')
+require_relative '../../../test_helper'
 
 class Api::V1::RubygemsControllerTest < ActionController::TestCase
   #should_forbid { post :create }

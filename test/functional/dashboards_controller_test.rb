@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative '../test_helper'
 
 class DashboardsControllerTest < ActionController::TestCase
   context "When logged in" do

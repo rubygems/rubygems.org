@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative '../test_helper'
 
 class HomeControllerTest < ActionController::TestCase
   context "on GET to index" do

@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative '../test_helper'
 
 class SubscriptionsControllerTest < ActionController::TestCase
   context "When logged in" do
