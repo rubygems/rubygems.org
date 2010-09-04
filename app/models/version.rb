@@ -1,18 +1,4 @@
 class Version < ActiveRecord::Base
-
-  # The default_scope is still defined with the hash syntax
-  # as well as the :with_associated scope, because there seem to be a bug
-  # in Rails 3 (even in master) where the 2 `order` relations
-  # (from the default_scope and from the scope) are not merge in the same order
-  # than with the relation syntax.
-  # With the hash syntax :
-  #   `(…) ORDER BY (versions.built_at desc, position asc)`
-  # With the relation syntax :
-  #   `(…) ORDER BY (position asc, versions.built_at desc)`
-
-  default_scope :order => 'position'
-  # default_scope order('position')
-
   belongs_to :rubygem
   has_many :dependencies, :dependent => :destroy
 
@@ -25,21 +11,17 @@ class Version < ActiveRecord::Base
     order('created_at desc')
   }
 
-  scope :with_associated, {
-    :conditions => ["versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)"],
-    :include    => :rubygem,
-    :order      => "versions.built_at desc"
-  }
-  # scope :with_associated, 
-  #   where("versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)").
-  #   includes(:rubygem).
-  #   order("versions.built_at desc")
+  scope :with_associated,
+    where("versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)").
+    includes(:rubygem).
+    order("versions.built_at desc")
 
-  scope :latest,     where(:latest       => true     )
-  scope :with_deps,  where(:dependencies => :rubygem )
-  scope :prerelease, where(:prerelease   => true     )
-  scope :release,    where(:prerelease   => false    )
-  scope :indexed,    where(:indexed      => true     )
+  scope :by_position, order('position')
+  scope :latest,      where(:latest       => true     )
+  scope :with_deps,   where(:dependencies => :rubygem )
+  scope :prerelease,  where(:prerelease   => true     )
+  scope :release,     where(:prerelease   => false    )
+  scope :indexed,     where(:indexed      => true     )
 
   before_save      :update_prerelease
   after_validation :join_authors
@@ -213,7 +195,7 @@ class Version < ActiveRecord::Base
 
   def to_install
     command = "gem install #{rubygem.name}"
-    latest = prerelease ? rubygem.versions.prerelease.first : rubygem.versions.most_recent
+    latest = prerelease ? rubygem.versions.by_position.prerelease.first : rubygem.versions.most_recent
     command << " -v #{number}" if latest != self
     command << " --pre" if prerelease
     command

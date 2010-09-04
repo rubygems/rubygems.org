@@ -267,7 +267,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "be in the proper order" do
-      assert_equal ['0.7', '0.5', '0.3', '0.2'], @gem.versions.map(&:number)
+      assert_equal %w[0.7 0.5 0.3 0.2], @gem.versions.by_position.map(&:number)
     end
 
     should "know its latest version" do
@@ -366,7 +366,7 @@ class VersionTest < ActiveSupport::TestCase
 
       # Even though gem two was build before gem one, it was pushed to gemcutter first
       # Thus, we should have from newest to oldest, gem one, then gem two
-      assert_equal [@subscribed_one, @subscribed_two], Version.subscribed_to_by(@user)
+      assert_equal [@subscribed_one, @subscribed_two].map(&:created_at), Version.subscribed_to_by(@user).map(&:created_at)
     end
   end
 
