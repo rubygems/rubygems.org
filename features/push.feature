@@ -54,7 +54,7 @@ Feature: Push Gems
       Given I am signed up and confirmed as "email@person.com/password"
       And I have an api key for "email@person.com/password"
       And I have a bad gem "['badname']" with version "1.0.0"
-      When I push the gem "badname-1.0.0.gem" with my api key
+      When I push the gem '["badname"]-1.0.0.gem' with my api key
       Then I should see "Name must be a String"
 
     Scenario: User pushes gem with bad authors

@@ -9,11 +9,19 @@ Given /^I've already pushed the gem "([^\"]*)" with my api key$/ do |name| # '
   When %Q[I push the gem "#{name}" with my api key]
 end
 
-When /^I push the gem "([^\"]*)" with my api key$/ do |name|
+def push_gem(name)
   api_key_header
 
   path = File.join(TEST_DIR, name)
   visit api_v1_rubygems_path, :post, File.open(path).read
+end
+
+When /^I push the gem "([^\"]*)" with my api key$/ do |name|
+  push_gem(name)
+end
+
+When /^I push the gem '(.*)' with my api key$/ do |name|
+  push_gem(name)
 end
 
 When 'I push an invalid .gem file' do
