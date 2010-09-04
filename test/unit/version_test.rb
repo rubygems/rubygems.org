@@ -1,4 +1,4 @@
-require_relative '../test_helper'
+require 'test_helper'
 
 class VersionTest < ActiveSupport::TestCase
   should belong_to :rubygem

@@ -1,4 +1,4 @@
-require_relative '../../../test_helper'
+require 'test_helper'
 
 class Api::V1::ApiKeysControllerTest < ActionController::TestCase
   #should_route :get, "/api_key", :action => :show

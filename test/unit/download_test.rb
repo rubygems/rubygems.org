@@ -1,4 +1,4 @@
-require_relative '../test_helper'
+require 'test_helper'
 
 class DownloadTest < ActiveSupport::TestCase
   should "load up all downloads with just raw strings and process them" do

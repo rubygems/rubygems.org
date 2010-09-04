@@ -1,4 +1,4 @@
-require_relative '../../../test_helper'
+require 'test_helper'
 
 class Api::V1::RubygemsControllerTest < ActionController::TestCase
   #should_forbid { post :create }

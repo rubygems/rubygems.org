@@ -1,4 +1,4 @@
-require_relative '../../../test_helper'
+require 'test_helper'
 
 class Api::V1::OwnersControllerTest < ActionController::TestCase
   should "route GET to new controller" do

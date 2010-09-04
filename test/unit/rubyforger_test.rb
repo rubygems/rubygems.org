@@ -1,4 +1,4 @@
-require_relative '../test_helper'
+require 'test_helper'
 
 class RubyforgerTest < ActiveSupport::TestCase
   context "with a rubyforge and gemcutter user" do
