@@ -44,8 +44,8 @@ module RubygemsHelper
     link_to "Download", "/downloads/#{version.full_name}.gem", :id => :download
   end
 
-  def documentation_link(version)
-    link_to 'Documentation', documentation_path(version), :id => :docs
+  def documentation_link(version, linkset)
+    link_to 'Documentation', documentation_path(version), :id => :docs if linkset.docs.blank?
   end
 
   def documentation_path(version)
