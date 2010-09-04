@@ -23,6 +23,17 @@ $(document).ready(function() {
       });
     }, 5000);
   }
+
+  if ($('.downloads.counter').length > 0) {
+    setInterval(function() {
+      $.getJSON($('.downloads.counter').attr('data-href'), function(data) {
+        $('.downloads.counter strong:first')
+          .text(number_with_delimiter(data['total_downloads']));
+        $('.downloads.counter strong:last')
+          .text(number_with_delimiter(data['latest_version_downloads']));
+      });
+    }, 5000);
+  }
 });
 
 // http://kevinvaldek.com/number-with-delimiter-in-javascript

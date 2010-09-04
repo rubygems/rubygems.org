@@ -67,7 +67,7 @@
             <% end %>
           </div>
 
-          <div class="downloads">
+          <div class="downloads counter" data-href="<%= api_v1_download_path(@rubygem, :format => 'json') %>">
             <span>
               <strong><%= number_with_delimiter(@rubygem.downloads) %></strong> total downloads
             </span>
