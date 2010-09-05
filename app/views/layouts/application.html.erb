@@ -10,6 +10,7 @@
       <%= stylesheet_link_tag "ie7" %>
     <![endif]-->
     <%= render "layouts/feeds" %>
+    <%= csrf_meta_tag %>
     <title><%= page_title %></title>
   </head>
   <body>
@@ -30,7 +31,7 @@
                 <ul id="signed_in">
                   <li id="all-gems"><%= link_to "all gems", rubygems_url %></li>
                   <li id="dashboard"><%= link_to "dashboard", dashboard_url %></li>
-                  <li id="sign-out"><%= link_to "sign out", sign_out_path %></li>
+                  <li id="sign-out"><%= link_to "sign out", sign_out_path, :method => :delete %></li>
                 </ul>
             <% else %>
               <ul id="signed_out">
@@ -41,8 +42,8 @@
             <% end %>
           </div>
         </div>
-        <% form_tag search_url, :id => "main-search", :method => :get do %>
-          <%= text_field_tag :query, params[:query] ? h(params[:query]) : "Search gems&hellip;" %>
+        <%= form_tag search_url, :id => "main-search", :method => :get do %>
+          <%= text_field_tag :query, params[:query] ? params[:query] : "Search gems&hellip;".html_safe %>
           <%= submit_tag 'Search', :id => 'search_submit', :name => nil %>
         <% end %>
       </div>
@@ -61,7 +62,7 @@
               <h2><%= link_to @title, @title_url %></h2>
             <% end %>
             <% if @subtitle %>
-              <h3><%= @subtitle %></h3>
+              <h3><%= @subtitle.html_safe %></h3>
             <% end %>
           </div>
           <%= yield %>
@@ -76,13 +77,13 @@
           <%= link_to "Status", "http://twitter.com/gemcutter" %>
           <%= link_to "Code", "http://github.com/rubygems/gemcutter" %>
           <%= link_to "Discuss", "http://groups.google.com/group/gemcutter" %>
-          <%= link_to "Stats", statistics_url %>
-          <%= link_to "designed by #{image_tag('thoughtbot.png')}", "http://thoughtbot.com", :title => "Designed by Thoughtbot", :id => "thoughtbot" %>
-          <%= link_to "supported by #{image_tag('rubycentral.png')}", "http://rubycentral.org", :title => "Supported by Ruby Central", :id => "rubycentral" %>
+          <%= link_to "Stats", stats_url %>
+          <%= link_to "designed by #{image_tag('thoughtbot.png')}".html_safe, "http://thoughtbot.com", :title => "Designed by Thoughtbot", :id => "thoughtbot" %>
+          <%= link_to "supported by #{image_tag('rubycentral.png')}".html_safe, "http://rubycentral.org", :title => "Supported by Ruby Central", :id => "rubycentral" %>
         </div>
       </div>
     </div>
-    <%= javascript_include_tag "jquery", "jquery.easing.1.3", "application", :cache => true %>
+    <%= javascript_include_tag "jquery", "jquery.easing.1.3", "application", "rails", :cache => true %>
     <script type="text/javascript">
     var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
     document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));

@@ -1,9 +1,6 @@
 class ApplicationController < ActionController::Base
-
   include Clearance::Authentication
-  helper :all
   protect_from_forgery :only => [:create, :update, :destroy]
-  layout 'application'
 
   def authenticate_with_api_key
     api_key = request.headers["Authorization"] || params[:api_key]
@@ -23,7 +20,7 @@ class ApplicationController < ActionController::Base
     if @rubygem.blank?
       respond_to do |format|
         format.html do
-          render :file => 'public/404.html', :status => :not_found
+          render :file => "public/404.html", :status => :not_found, :layout => false
         end
         format.json do
           render :text => "This rubygem could not be found.", :status => :not_found
@@ -31,7 +28,7 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-  
+
   def find_gem_by_name
     @url      = params[:url]
     @gem_name = params[:gem_name]
@@ -43,7 +40,3 @@ class ApplicationController < ActionController::Base
     end
   end
 end
-
-# Make the namespaced controllers happy.
-module Api; end
-module Api::V1; end

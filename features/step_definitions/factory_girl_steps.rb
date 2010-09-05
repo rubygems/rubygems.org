@@ -30,3 +30,11 @@ Given /^a subscription by "([^\"]*)" to the gem "([^\"]*)"$/ do |user_email, rub
   user    = User.find_by_email(user_email)
   Factory(:subscription, :rubygem => rubygem, :user => user)
 end
+
+Given "the following versions exist:" do |table|
+  table.hashes.each do |row|
+    Factory(:version, :rubygem  => Rubygem.find_by_name!(row["Rubygem"]),
+                      :number   => row["Number"],
+                      :platform => row["Platform"])
+  end
+end

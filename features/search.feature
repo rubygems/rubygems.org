@@ -72,7 +72,7 @@ Feature: Search
       When I go to the homepage
       And I fill in "query" with "rgem"
       And I press "Search"
-      Then I should not see "RGem \(1.0.0\)"
+      Then I should not see "RGem (1.0.0)"
 
     Scenario: The most recent version of a gem is yanked
       Given I am signed up and confirmed as "email@person.com/password"
@@ -85,7 +85,5 @@ Feature: Search
       When I go to the homepage
       And I fill in "query" with "rgem"
       And I press "Search"
-      And I should see "RGem \(1.2.1\)"
-      And I should not see "RGem \(1.2.2\)"
-
-
+      And I should see "RGem (1.2.1)"
+      And I should not see "RGem (1.2.2)"

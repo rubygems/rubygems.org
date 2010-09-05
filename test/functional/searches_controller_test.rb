@@ -2,29 +2,29 @@ require 'test_helper'
 
 class SearchesControllerTest < ActionController::TestCase
 
-  context 'on GET to new with no search parameters' do
-    setup { get :new }
+  context 'on GET to show with no search parameters' do
+    setup { get :show }
 
-    should_respond_with :success
-    should_render_template :new
+    should respond_with :success
+    should render_template :show
     should "see no results" do
       assert_not_contain "Results"
     end
   end
 
-  context 'on GET to new with search parameters for a rubygem without versions' do
+  context 'on GET to show with search parameters for a rubygem without versions' do
     setup do
       @sinatra = Factory(:rubygem, :name => "sinatra")
-      assert_nil @sinatra.versions.latest
+      assert_nil @sinatra.versions.most_recent
       assert @sinatra.reload.versions.count.zero?
-      get :new, :query => "sinatra"
+      get :show, :query => "sinatra"
     end
 
-    should_respond_with :success
-    should_render_template :new
+    should respond_with :success
+    should render_template :show
   end
 
-  context 'on GET to new with search parameters' do
+  context 'on GET to show with search parameters' do
     setup do
       @sinatra = Factory(:rubygem, :name => "sinatra")
       @sinatra_redux = Factory(:rubygem, :name => "sinatra-redux")
@@ -32,13 +32,13 @@ class SearchesControllerTest < ActionController::TestCase
       Factory(:version, :rubygem => @sinatra)
       Factory(:version, :rubygem => @sinatra_redux)
       Factory(:version, :rubygem => @brando)
-      get :new, :query => "sinatra"
+      get :show, :query => "sinatra"
     end
 
-    should_respond_with :success
-    should_render_template :new
-    should_assign_to(:gems) { [@sinatra, @sinatra_redux] }
-    should_assign_to(:exact_match) { @sinatra }
+    should respond_with :success
+    should render_template :show
+    should assign_to(:gems) { [@sinatra, @sinatra_redux] }
+    should assign_to(:exact_match) { @sinatra }
     should "see sinatra on the page in the results" do
       assert_contain @sinatra.name
       assert_have_selector "a[href='#{rubygem_path(@sinatra)}']"

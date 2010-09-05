@@ -6,10 +6,10 @@ class OwnershipTest < ActiveSupport::TestCase
     assert_valid Factory.build(:ownership)
   end
 
-  should_belong_to :rubygem
-  should_have_db_index :rubygem_id
-  should_belong_to :user
-  should_have_db_index :user_id
+  should belong_to :rubygem
+  should have_db_index :rubygem_id
+  should belong_to :user
+  should have_db_index :user_id
 
   context "with ownership" do
     setup do
@@ -19,16 +19,7 @@ class OwnershipTest < ActiveSupport::TestCase
 
     subject { @ownership }
 
-    should_validate_uniqueness_of :user_id, :scoped_to => :rubygem_id
-
-    should "delete other ownerships once approved" do
-      rubygem = @ownership.rubygem
-      other_ownership = rubygem.ownerships.create(:user => Factory(:user))
-      @ownership.update_attribute(:approved, true)
-
-      assert Ownership.exists?(@ownership.id)
-      assert ! Ownership.exists?(other_ownership.id)
-    end
+    should validate_uniqueness_of(:user_id).scoped_to(:rubygem_id)
 
     should "create token" do
       assert_not_nil @ownership.token
@@ -55,7 +46,7 @@ class OwnershipTest < ActiveSupport::TestCase
       @ownership_one.destroy
       @ownership_two.destroy
       assert_equal 1, @rubygem.owners.length
-      assert_equal "Can't delete last owner of a gem.", @ownership_two.errors.on(:base)
+      assert_equal "Can't delete last owner of a gem.", @ownership_two.errors[:base].first
     end
   end
 

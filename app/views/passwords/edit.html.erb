@@ -1,0 +1,18 @@
+<% @title = "reset password" %>
+
+<%= form_for(:user,
+             :url => user_password_path(@user, :token => @user.confirmation_token),
+             :html => { :method => :put }) do |form| %>
+  <%= error_messages_for :user %>
+  <div class="password_field">
+    <%= form.label :password %>
+    <%= form.password_field :password, :size => 25 %>
+  </div>
+  <div class="password_field">
+    <%= form.label :password_confirmation %>
+    <%= form.password_field :password_confirmation, :size => 25 %>
+  </div>
+  <div class="form_bottom">
+    <%= form.submit "Save this password", :disable_with => "Please wait..." %>
+  </div>
+<% end %>

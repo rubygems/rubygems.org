@@ -15,8 +15,8 @@ class SubscriptionsControllerTest < ActionController::TestCase
       post :create, :rubygem_id => @gem.to_param
     end
 
-    should_assign_to(:gem) { @gem }
-    should_respond_with :success
+    should assign_to(:gem) { @gem }
+    should respond_with :success
     should "toggle the subscribe link" do
       assert_match /\("\.toggler"\)\.toggle\(\)/, @response.body
     end
@@ -30,8 +30,8 @@ class SubscriptionsControllerTest < ActionController::TestCase
       post :create, :rubygem_id => @gem.to_param
     end
 
-    should_assign_to(:gem) { @gem }
-    should_respond_with :forbidden
+    should assign_to(:gem) { @gem }
+    should respond_with :forbidden
   end
 
   context "On DELETE to destroy for a gem that the user is not subscribed to" do
@@ -41,8 +41,8 @@ class SubscriptionsControllerTest < ActionController::TestCase
       delete :destroy, :rubygem_id => @gem.to_param
     end
 
-    should_assign_to(:gem) { @gem }
-    should_respond_with :forbidden
+    should assign_to(:gem) { @gem }
+    should respond_with :forbidden
   end
 
   context "On DELETE to destroy for a gem that the user is subscribed to" do
@@ -53,8 +53,8 @@ class SubscriptionsControllerTest < ActionController::TestCase
       delete :destroy, :rubygem_id => @gem.to_param
     end
 
-    should_assign_to(:gem) { @gem }
-    should_respond_with :success
+    should assign_to(:gem) { @gem }
+    should respond_with :success
     should "toggle the subscribe link" do
       assert_match /\("\.toggler"\)\.toggle\(\)/, @response.body
     end

@@ -13,9 +13,9 @@ class SessionsController < Clearance::SessionsController
         redirect_back_or(url_after_create)
       else
         if @user.email_reset
-          Mailer.deliver_email_reset(@user)
+          Mailer.email_reset(@user).deliver
         else
-          ClearanceMailer.deliver_confirmation(@user)
+          ClearanceMailer.confirmation(@user).deliver
         end
         flash_notice_after_create
         redirect_to(new_session_url)

@@ -74,3 +74,7 @@ When /^I download the rubygem "([^\"]*)" version "([^\"]*)" (\d+) times?$/ do |r
     visit "/gems/#{rubygem_name}-#{version_number}.gem", :get
   end
 end
+
+When 'I request "$url"' do |url|
+  visit url
+end

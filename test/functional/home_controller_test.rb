@@ -13,13 +13,13 @@ class HomeControllerTest < ActionController::TestCase
       get :index
     end
 
-    should_respond_with :success
-    should_render_template :index
-    should_assign_to(:rubygems_count) { @rubygems_count }
-    should_assign_to(:downloads_count) { @downloads_count }
-    should_assign_to(:latest)
-    should_assign_to(:downloaded)
-    should_assign_to(:updated)
+    should respond_with :success
+    should render_template :index
+    should assign_to(:rubygems_count) { @rubygems_count }
+    should assign_to(:downloads_count) { @downloads_count }
+    should assign_to(:latest)
+    should assign_to(:downloaded)
+    should assign_to(:updated)
 
     should "display counts" do
       assert_contain "1,337"

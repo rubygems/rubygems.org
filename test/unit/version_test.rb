@@ -1,8 +1,8 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class VersionTest < ActiveSupport::TestCase
-  should_belong_to :rubygem
-  should_have_many :dependencies
+  should belong_to :rubygem
+  should have_many :dependencies
 
   context "with a rubygem" do
     setup do
@@ -29,10 +29,10 @@ class VersionTest < ActiveSupport::TestCase
     end
     subject { @version }
 
-    should_not_allow_values_for :number, "#YAML<CEREALIZATION-FAIL>",
-                                         "1.2.3-\"[javalol]\"",
-                                         "0.8.45::Gem::PLATFORM::FAILBOAT",
-                                         "1.2.3\n<bad>"
+    should_not allow_value("#YAML<CEREALIZATION-FAIL>").for(:number)
+    should_not allow_value("1.2.3-\"[javalol]\"").for(:number)
+    should_not allow_value("0.8.45::Gem::PLATFORM::FAILBOAT").for(:number)
+    should_not allow_value("1.2.3\n<bad>").for(:number)
 
     should "give number for #to_s" do
       assert_equal @version.number, @version.to_s
@@ -47,6 +47,17 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.number, @version.slug
     end
 
+    should "save info into redis" do
+      info = $redis.hgetall(Version.info_key(@version.full_name))
+      assert_equal @version.rubygem.name, info["name"]
+      assert_equal @version.number, info["number"]
+      assert_equal @version.platform, info["platform"]
+    end
+
+    should "add version onto redis versions list" do
+      assert_equal @version.full_name, $redis.lindex(Rubygem.versions_key(@version.rubygem.name), 0)
+    end
+
     should "raise an ActiveRecord::RecordNotFound if an invalid slug is given" do
       assert_raise ActiveRecord::RecordNotFound do
         Version.find_from_slug!(@version.rubygem_id, "some stupid version 399")
@@ -54,13 +65,13 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     %w[x86_64-linux java mswin x86-mswin32-60].each do |platform|
-      should "be able to deal with platform of #{platform}" do
-        @version.update_attribute(:platform, platform)
-        slug = "#{@version.number}-#{platform}"
+      should "be able to find with platform of #{platform}" do
+        version = Factory(:version, :platform => platform)
+        slug = "#{version.number}-#{platform}"
 
-        assert @version.platformed?
-        assert_equal @version, Version.find_from_slug!(@version.rubygem_id, slug)
-        assert_equal slug, @version.slug
+        assert version.platformed?
+        assert_equal version.reload, Version.find_from_slug!(version.rubygem_id, slug)
+        assert_equal slug, version.slug
       end
     end
 
@@ -76,7 +87,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "tack on prerelease flag" do
-      @version.update_attribute(:number, "0.3.0.pre")
+      @version.update_attributes(:number => "0.3.0.pre")
       new_version = Factory(:version, :rubygem  => @version.rubygem,
                                       :built_at => 1.day.from_now,
                                       :number   => "0.4.0.pre")
@@ -93,7 +104,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "give no version count for the latest prerelease version" do
-      @version.update_attribute(:number, "0.3.0.pre")
+      @version.update_attributes(:number => "0.3.0.pre")
       old_version = Factory(:version, :rubygem  => @version.rubygem,
                                       :built_at => 1.day.from_now,
                                       :number   => "0.2.0")
@@ -168,14 +179,17 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @dep_one.requirements.split(", "), @spec_dep_one.requirements_list
       assert_equal @dep_two.requirements.split(", "), @spec_dep_two.requirements_list
     end
-    
+
     context "when yanked" do
       setup do
         @version.yank!
       end
       should("unindex") { assert !@version.indexed? }
       should("no longer be latest") { assert !@version.latest?}
-      
+      should "not appear in the version list" do
+        assert ! $redis.exists(Rubygem.versions_key(@version.rubygem.name))
+      end
+
       context "and consequently unyanked" do
         setup do
           @version.unyank!
@@ -183,7 +197,17 @@ class VersionTest < ActiveSupport::TestCase
         end
         should("re-index") { assert @version.indexed? }
         should("become the latest again") { assert @version.latest? }
+        should "appear in the version list" do
+          assert_equal @version.full_name, $redis.lindex(Rubygem.versions_key(@version.rubygem.name), 0)
+        end
       end
+    end
+  end
+
+  context "with a very long authors string." do
+    should "create without error" do
+
+      Factory.create(:version, :authors => ["Fbdoorman: David Pelaez", "MiniFB:Appoxy", "Dan Croak", "Mike Burns", "Jason Morrison", "Joe Ferris", "Eugene Bolshakov", "Nick Quaranto", "Josh Nichols", "Mike Breen", "Marcel G\303\266rner", "Bence Nagy", "Ben Mabey", "Eloy Duran", "Tim Pope", "Mihai Anca", "Mark Cornick", "Shay Arnett", "Jon Yurek", "Chad Pytel"])
     end
   end
 
@@ -243,11 +267,11 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "be in the proper order" do
-      assert_equal ['0.7', '0.5', '0.3', '0.2'], @gem.versions.map(&:number)
+      assert_equal %w[0.7 0.5 0.3 0.2], @gem.versions.by_position.map(&:number)
     end
 
     should "know its latest version" do
-      assert_equal '0.7', @gem.versions.latest.number
+      assert_equal '0.7', @gem.versions.most_recent.number
     end
   end
 
@@ -262,23 +286,23 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "be able to fetch the latest versions" do
-      assert_contains Version.latest, @version_one_latest
-      assert_contains Version.latest, @version_two_latest
+      assert_contains Version.latest.map(&:id), @version_one_latest.id
+      assert_contains Version.latest.map(&:id), @version_two_latest.id
 
-      assert_does_not_contain Version.latest, @version_one_earlier
-      assert_does_not_contain Version.latest, @version_two_earlier
+      assert_does_not_contain Version.latest.map(&:id), @version_one_earlier.id
+      assert_does_not_contain Version.latest.map(&:id), @version_two_earlier.id
     end
   end
 
   context "with a few versions" do
     setup do
-      @thin = Factory(:version, :authors => %w[thin], :created_at => 1.year.ago)
-      @rake = Factory(:version, :authors => %w[rake], :created_at => 1.month.ago)
-      @json = Factory(:version, :authors => %w[json], :created_at => 1.week.ago)
-      @thor = Factory(:version, :authors => %w[thor], :created_at => 2.days.ago)
-      @rack = Factory(:version, :authors => %w[rack], :created_at => 1.day.ago)
-      @haml = Factory(:version, :authors => %w[haml], :created_at => 1.hour.ago)
-      @dust = Factory(:version, :authors => %w[dust], :created_at => 1.day.from_now)
+      @thin = Factory(:version, :authors => %w[thin], :built_at => 1.year.ago)
+      @rake = Factory(:version, :authors => %w[rake], :built_at => 1.month.ago)
+      @json = Factory(:version, :authors => %w[json], :built_at => 1.week.ago)
+      @thor = Factory(:version, :authors => %w[thor], :built_at => 2.days.ago)
+      @rack = Factory(:version, :authors => %w[rack], :built_at => 1.day.ago)
+      @haml = Factory(:version, :authors => %w[haml], :built_at => 1.hour.ago)
+      @dust = Factory(:version, :authors => %w[dust], :built_at => 1.day.from_now)
     end
 
     should "get the latest versions up to today" do
@@ -303,12 +327,12 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "return the owned gems from #owned_by" do
-      assert_contains Version.owned_by(@user), @owned_one
-      assert_contains Version.owned_by(@user), @owned_two
+      assert_contains Version.owned_by(@user).map(&:id), @owned_one.id
+      assert_contains Version.owned_by(@user).map(&:id), @owned_two.id
     end
 
     should "not return the unowned versions from #owned_by" do
-      assert_does_not_contain Version.owned_by(@user), @unowned
+      assert_does_not_contain Version.owned_by(@user).map(&:id), @unowned.id
     end
   end
 
@@ -324,12 +348,12 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "return the owned gems from #owned_by" do
-      assert_contains Version.subscribed_to_by(@user), @subscribed_one
-      assert_contains Version.subscribed_to_by(@user), @subscribed_two
+      assert_contains Version.subscribed_to_by(@user).map(&:id), @subscribed_one.id
+      assert_contains Version.subscribed_to_by(@user).map(&:id), @subscribed_two.id
     end
 
     should "not return the unowned versions from #owned_by" do
-      assert_does_not_contain Version.subscribed_to_by(@user), @unsubscribed
+      assert_does_not_contain Version.subscribed_to_by(@user).map(&:id), @unsubscribed.id
     end
 
     should "order them from latest-oldest pushed to Gemcutter, not build data" do
@@ -342,7 +366,7 @@ class VersionTest < ActiveSupport::TestCase
 
       # Even though gem two was build before gem one, it was pushed to gemcutter first
       # Thus, we should have from newest to oldest, gem one, then gem two
-      assert_equal [@subscribed_one, @subscribed_two], Version.subscribed_to_by(@user)
+      assert_equal [@subscribed_one, @subscribed_two].map(&:created_at), Version.subscribed_to_by(@user).map(&:created_at)
     end
   end
 
