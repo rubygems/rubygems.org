@@ -11,8 +11,8 @@ class ProfilesControllerTest < ActionController::TestCase
     context "on GET to edit" do
       setup { get :edit }
 
-      should_respond_with :success
-      should_render_template :edit
+      should respond_with :success
+      should render_template :edit
     end
 
     context "on PUT to update" do
@@ -24,9 +24,9 @@ class ProfilesControllerTest < ActionController::TestCase
           put :update, :user => {:handle => @handle}
         end
 
-        should_respond_with :redirect
-        should_redirect_to('the profile edit page') { edit_profile_path }
-        should_set_the_flash_to "Your profile was updated."
+        should respond_with :redirect
+        should redirect_to('the profile edit page') { edit_profile_path }
+        should set_the_flash.to("Your profile was updated.")
 
         should "update handle" do
           assert_equal @handle, User.last.handle
@@ -37,8 +37,8 @@ class ProfilesControllerTest < ActionController::TestCase
 
   context "On GET to edit without being signed in" do
     setup { get :edit }
-    should_respond_with :redirect
-    should_redirect_to('the homepage') { root_url }
+    should respond_with :redirect
+    should redirect_to('the homepage') { root_url }
   end
 
 end

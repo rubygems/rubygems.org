@@ -3,11 +3,11 @@ class Download
   TODAY_KEY     = "downloads:today"
   YESTERDAY_KEY = "downloads:yesterday"
 
-  def self.incr(version)
+  def self.incr(name, full_name)
     $redis.incr(COUNT_KEY)
-    $redis.incr(key(version.rubygem))
-    $redis.incr(key(version))
-    $redis.zincrby(TODAY_KEY, 1, version.full_name)
+    $redis.incr("downloads:rubygem:#{name}")
+    $redis.incr("downloads:version:#{full_name}")
+    $redis.zincrby(TODAY_KEY, 1, full_name)
   end
 
   def self.count
@@ -65,7 +65,7 @@ class Download
     $redis.rename TODAY_KEY, YESTERDAY_KEY
 
     yesterday = 1.day.ago.to_date.to_s
-    versions  = Version.all(:include => :rubygem).inject({}) do |hash, v|
+    versions  = Version.includes(:rubygem).inject({}) do |hash, v|
       hash[v.full_name] = v
       hash
     end

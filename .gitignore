@@ -8,6 +8,7 @@ log/*
 tmp/*
 db/*.sqlite3
 config/database.yml
+config/rubygems.yml
 config/newrelic.yml
 *.sql
 _site/
@@ -15,3 +16,5 @@ _site/
 bin/
 vendor/bundler_gems
 *.gemspec
+*.rdb
+.rvmrc

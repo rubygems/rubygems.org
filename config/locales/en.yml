@@ -10,4 +10,4 @@ en:
   activerecord:
     errors:
       messages:
-        record_invalid: "{{errors}}"
+        record_invalid: "%{errors}"

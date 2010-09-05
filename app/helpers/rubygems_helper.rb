@@ -1,7 +1,7 @@
 module RubygemsHelper
 
   def link_to_page(text, url)
-    link_to(text, url, :rel => 'nofollow') unless url.blank?
+    link_to(text, url, :rel => 'nofollow') if url.present?
   end
 
   def link_to_directory
@@ -12,66 +12,43 @@ module RubygemsHelper
     if text =~ /^==+ [A-Z]/
       SM::SimpleMarkup.new.convert(text, SM::ToHtml.new)
     else
-      content_tag :p, h(text)
+      content_tag :p, text
     end
   end
 
-  def clippy(text, bgcolor='#AADD44')
-    html = <<-EOF
-            <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
-                    width="110"
-                    height="32"
-                    id="clippy" >
-            <param name="movie" value="/clippy.swf"/>
-            <param name="allowScriptAccess" value="always" />
-            <param name="quality" value="high" />
-            <param name="scale" value="noscale" />
-            <param NAME="FlashVars" value="text=#{text}">
-            <param name="wmode" value="transparent">
-            <embed src="/clippy.swf"
-                   width="110"
-                   height="32"
-                   name="clippy"
-                   quality="high"
-                   allowScriptAccess="always"
-                   type="application/x-shockwave-flash"
-                   pluginspage="http://www.macromedia.com/go/getflashplayer"
-                   FlashVars="text=#{text}"
-                   wmode="transparent"
-            />
-            </object>
-          EOF
-  end
-
-  def subscribe_link(gem)
+  def subscribe_link(rubygem)
     if signed_in?
-      subscribe = link_to_remote 'Subscribe',
-        :url     => rubygem_subscription_path(gem),
-        :method  => :post,
-        :class   => :toggler,
-        :html    => {
-          :id    => 'subscribe',
-          :class => :toggler,
-          :style => gem.subscribers.find_by_id(current_user.try(:id)) ? 'display:none' : 'display:inline-block'
-        }
+      subscribe = link_to 'Subscribe', rubygem_subscription_path(rubygem),
+        :remote => true,
+        :method => :post,
+        :id     => 'subscribe',
+        :class  => 'toggler',
+        :style  => rubygem.subscribers.find_by_id(current_user.try(:id)) ? 'display:none' : 'display:inline-block'
     else
-      link_to 'Subscribe', sign_up_path, :id => :subscribe, :class => :toggler
+      link_to 'Subscribe', sign_in_path, :id => :subscribe, :class => :toggler
     end
   end
 
-  def unsubscribe_link(gem)
-    link_to_remote('Unsubscribe',
-      :url     => rubygem_subscription_path(gem),
-      :method  => :delete,
-      :class   => :toggler,
-      :html    => {
+  def unsubscribe_link(rubygem)
+    if signed_in?
+      link_to 'Unsubscribe', rubygem_subscription_path(rubygem),
+        :remote  => true,
+        :method  => :delete,
         :id    => 'unsubscribe',
         :class => :toggler,
-        :style => gem.subscribers.find_by_id(current_user.try(:id)) ? 'display:inline-block' : 'display:none'
-      }) if signed_in?
+        :style => rubygem.subscribers.find_by_id(current_user.try(:id)) ? 'display:inline-block' : 'display:none'
+    end
   end
 
   def download_link(version)
     link_to "Download", "/downloads/#{version.full_name}.gem", :id => :download
+  end
+
+  def documentation_link(version, linkset)
+    link_to 'Documentation', documentation_path(version), :id => :docs if linkset.docs.blank?
+  end
+
+  def documentation_path(version)
+    "http://rubydoc.info/gems/#{version.rubygem.name}/#{version.number}/frames"
   end
 end

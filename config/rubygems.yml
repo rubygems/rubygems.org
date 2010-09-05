@@ -1,0 +1,22 @@
+development:
+  host: localhost
+  local_storage: true
+
+test: &TEST
+  host: www.example.com
+  local_storage: true
+
+cucumber:
+  <<: *TEST
+
+staging:
+  host: staging.rubygems.org
+  local_storage: false
+
+production:
+  host: rubygems.org
+  local_storage: false
+
+maintenance:
+  host: rubygems.org
+  local_storage: false

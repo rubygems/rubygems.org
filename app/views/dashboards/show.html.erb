@@ -18,7 +18,7 @@
                 <% end -%>
               </strong>
               <%= time_ago_in_words(version.created_at) %> ago</div>
-            <%=h truncate(version.rubygem.versions.latest.info, :length => 100) %>
+            <%= short_info(version) %>
           </a>
         </li>
         <% end %>
@@ -36,19 +36,19 @@
       </p>
     <% else %>
       <ol>
-      <% @my_gems.each do |gem| %>
+      <% @my_gems.each do |rubygem| %>
         <li>
           <div class="downloads">
-            <strong><%= gem.downloads %></strong> downloads
+            <strong><%= rubygem.downloads %></strong> downloads
           </div>
-          <%= link_to gem, gem, :title => gem.versions.latest.try(:summary) %>
+          <%= link_to rubygem.name, rubygem, :title => short_info(rubygem.versions.most_recent) %>
         </li>
       <% end %>
       </ol>
     <% end %>
   </div>
 
-  <% unless @subscribed_gems.empty? %>
+  <% if @subscribed_gems.present? %>
     <h3>My Subscriptions</h3>
     <div class="gems">
       <ol>
@@ -57,7 +57,7 @@
           <div class="downloads">
             <strong><%= gem.downloads %></strong> downloads
           </div>
-          <%= link_to gem, gem, :title => gem.versions.latest.try(:summary) %>
+          <%= link_to gem, gem, :title => short_info(gem.versions.most_recent) %>
         </li>
       <% end %>
       </ol>

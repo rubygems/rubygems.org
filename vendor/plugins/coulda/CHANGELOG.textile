@@ -1,9 +1,0 @@
-h1. March 8, 2009
-
-* Updated functional tests to use shoulda 2.10 should_redirect_to block syntax
-
-h1. March 7, 2009
-
-* Added Paperclip option to model generator
-* Removed comments on model per complaints by thoughtbot
-

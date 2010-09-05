@@ -1,15 +1,36 @@
 require 'test_helper'
 
 class Api::V1::WebHooksControllerTest < ActionController::TestCase
-  should_forbid_access_when("creating a web hook") { post :create }
-  should_forbid_access_when("listing hooks")       { get :index }
-  should_forbid_access_when("removing hooks")      { delete :remove }
-  should_forbid_access_when("test firing hooks")   { post :fire }
-
   def self.should_not_find_it
-    should_respond_with :not_found
+    should respond_with :not_found
     should "say gem is not found" do
       assert_contain "could not be found"
+    end
+  end
+
+  context "When not logged in" do
+    should "forbid access when creating a web hook" do
+      rubygem = Factory(:rubygem)
+      post :create, :gem_name => rubygem.name, :url => "http://example.com"
+      assert @response.body =~ /Access Denied/
+      assert WebHook.count.zero?
+    end
+
+    should "forbid access when listing hooks" do
+      get :index
+      assert @response.body =~ /Access Denied/
+    end
+
+    should "forbid access when firing hooks" do
+      post :fire, :gem_name => WebHook::GLOBAL_PATTERN, :url => "http://example.com"
+      assert @response.body =~ /Access Denied/
+    end
+
+    should "forbid access when removing a web hook" do
+      hook = Factory(:web_hook)
+      delete :remove, :gem_name => hook.rubygem.name, :url => hook.url
+      assert @response.body =~ /Access Denied/
+      assert_equal 1, WebHook.count
     end
   end
 
@@ -32,10 +53,10 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
           post :fire, :gem_name => WebHook::GLOBAL_PATTERN,
                       :url      => @url
         end
-        should_respond_with :success
-        should_not_change("the webhook count") { WebHook.count }
+        should respond_with :success
         should "say successfully deployed" do
           assert_contain "Successfully deployed webhook for #{@gemcutter.name} to #{@url}"
+          assert WebHook.count.zero?
         end
       end
 
@@ -45,10 +66,10 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
           post :fire, :gem_name => WebHook::GLOBAL_PATTERN,
                       :url      => @url
         end
-        should_respond_with :bad_request
-        should_not_change("the webhook count") { WebHook.count }
+        should respond_with :bad_request
         should "say successfully deployed" do
           assert_contain "There was a problem deploying webhook for #{@gemcutter.name} to #{@url}"
+          assert WebHook.count.zero?
         end
       end
     end
@@ -65,10 +86,10 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
           post :fire, :gem_name => @rubygem.name,
                       :url      => @url
         end
-        should_respond_with :success
-        should_not_change("the webhook count") { WebHook.count }
+        should respond_with :success
         should "say successfully deployed" do
           assert_contain "Successfully deployed webhook for #{@rubygem.name} to #{@url}"
+          assert WebHook.count.zero?
         end
       end
 
@@ -78,10 +99,10 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
           post :fire, :gem_name => @rubygem.name,
                       :url      => @url
         end
-        should_respond_with :bad_request
-        should_not_change("the webhook count") { WebHook.count }
+        should respond_with :bad_request
         should "say there was a problem" do
           assert_contain "There was a problem deploying webhook for #{@rubygem.name} to #{@url}"
+          assert WebHook.count.zero?
         end
       end
 
@@ -94,12 +115,40 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
                                   :user    => @user)
         end
 
-        context "On GET to index" do
+        context "On GET to index with json" do
+          setup do
+            get :index, :format => "json"
+          end
+          should respond_with :success
+          should "be able to parse some json" do
+            assert_nothing_raised do
+              JSON.parse(@response.body)
+            end
+          end
+        end
+
+        context "On GET to index with yaml" do
+          setup do
+            get :index, :format => "yaml"
+          end
+          should respond_with :success
+          should "be able to parse some yaml" do
+            payload = YAML.load(@response.body)
+            assert_equal @global_hook.payload, payload["all gems"].first
+            assert_equal @rubygem_hook.payload, payload[@rubygem.name].first
+          end
+        end
+
+        context "On GET to index with no format" do
           setup do
             get :index
           end
-          should_respond_with :success
-          should_respond_with_content_type /json/
+          should respond_with :success
+          should "be able to parse some json" do
+            assert_nothing_raised do
+              JSON.parse(@response.body)
+            end
+          end
         end
 
         context "On DELETE to remove with owned hook for rubygem" do
@@ -109,7 +158,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
                    :url      => @rubygem_hook.url
           end
 
-          should_respond_with :success
+          should respond_with :success
           should "say webhook was removed" do
             assert_contain "Successfully removed webhook for #{@rubygem.name} to #{@rubygem_hook.url}"
           end
@@ -127,7 +176,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
                    :url      => @global_hook.url
           end
 
-          should_respond_with :success
+          should respond_with :success
           should "say webhook was removed" do
             assert_contain "Successfully removed webhook for all gems to #{@global_hook.url}"
           end
@@ -156,7 +205,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
                    :url      => @rubygem_hook.url
           end
 
-          should_respond_with :not_found
+          should respond_with :not_found
           should "say webhook was not found" do
             assert_contain "No such webhook exists under your account."
           end
@@ -172,7 +221,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
                    :url      => @rubygem_hook.url
           end
 
-          should_respond_with :not_found
+          should respond_with :not_found
           should "say webhook was not found" do
             assert_contain "No such webhook exists under your account."
           end
@@ -187,7 +236,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
           post :create, :gem_name => @rubygem.name, :url => @url
         end
 
-        should_respond_with :created
+        should respond_with :created
         should "say webhook was created" do
           assert_contain "Successfully created webhook for #{@rubygem.name} to #{@url}"
         end
@@ -203,7 +252,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
           post :create, :gem_name => @rubygem.name, :url => @url
         end
 
-        should_respond_with :conflict
+        should respond_with :conflict
         should "be only 1 web hook" do
           assert_equal 1, WebHook.count
           assert_contain "#{@url} has already been registered for #{@rubygem.name}"
@@ -215,7 +264,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
           post :create, :gem_name => WebHook::GLOBAL_PATTERN, :url => @url
         end
 
-        should_respond_with :created
+        should respond_with :created
         should "link webhook to current user and no rubygem" do
           assert_equal @user, WebHook.last.user
           assert_nil WebHook.last.rubygem
@@ -248,9 +297,9 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         post :create, :gem_name => WebHook::GLOBAL_PATTERN, :url => @url
       end
 
-      should_respond_with :conflict
+      should respond_with :conflict
       should "be only 1 web hook" do
-         assert_equal 1, WebHook.count
+        assert_equal 1, WebHook.count
       end
     end
   end

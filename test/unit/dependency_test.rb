@@ -1,12 +1,13 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class DependencyTest < ActiveSupport::TestCase
-  should_belong_to :rubygem
-  should_belong_to :version
+  should belong_to :rubygem
+  should belong_to :version
 
   context "with dependency" do
     setup do
-      @dependency = Factory.build(:dependency)
+      @version = Factory(:version)
+      @dependency = Factory.build(:dependency, :version => @version)
     end
 
     should "be valid with factory" do
@@ -31,6 +32,12 @@ class DependencyTest < ActiveSupport::TestCase
       assert_equal @dependency.rubygem.name, xml.at_css("name").content
       assert_equal @dependency.requirements, xml.at_css("requirements").content
     end
+
+    should "be pushed onto a redis list if a runtime dependency" do
+      @dependency.save
+
+      assert_equal "#{@dependency.name} #{@dependency.requirements}", $redis.lindex(Dependency.runtime_key(@version.full_name), 0)
+    end
   end
 
   context "with a Gem::Dependency" do
@@ -39,7 +46,7 @@ class DependencyTest < ActiveSupport::TestCase
         @rubygem        = Factory(:rubygem)
         @requirements   = ['>= 0.0.0']
         @gem_dependency = Gem::Dependency.new(@rubygem.name, @requirements)
-        @dependency     = Dependency.create!(:gem_dependency => @gem_dependency)
+        @dependency     = Factory(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
       end
 
       should "create a Dependency referring to the existing Rubygem" do
@@ -53,7 +60,7 @@ class DependencyTest < ActiveSupport::TestCase
         @rubygem        = Factory(:rubygem)
         @requirements   = ['>= 0.0.0', '< 1.0.0']
         @gem_dependency = Gem::Dependency.new(@rubygem.name, @requirements)
-        @dependency     = Dependency.create!(:gem_dependency => @gem_dependency)
+        @dependency     = Factory(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
       end
 
       should "create a Dependency referring to the existing Rubygem" do
@@ -71,7 +78,7 @@ class DependencyTest < ActiveSupport::TestCase
       should "not create rubygem" do
         dependency = Dependency.create(:gem_dependency => @gem_dependency)
         assert dependency.new_record?
-        assert dependency.errors.on_base.present?
+        assert dependency.errors[:base].present?
         assert_nil Rubygem.find_by_name(@rubygem_name)
       end
     end

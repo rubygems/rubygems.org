@@ -13,9 +13,9 @@ class RubygemsControllerTest < ActionController::TestCase
         get :show, :id => @rubygem.to_param
       end
 
-      should_respond_with :success
-      should_render_template :show
-      should_assign_to :rubygem
+      should respond_with :success
+      should render_template :show
+      should assign_to :rubygem
       should "not render edit link" do
         assert_have_no_selector "a[href='#{edit_rubygem_path(@rubygem)}']"
       end
@@ -27,9 +27,9 @@ class RubygemsControllerTest < ActionController::TestCase
         get :show, :id => @rubygem.to_param
       end
 
-      should_respond_with :success
-      should_render_template :show
-      should_assign_to :rubygem
+      should respond_with :success
+      should render_template :show
+      should assign_to :rubygem
       should "render edit link" do
         assert_have_selector "a[href='#{edit_rubygem_path(@rubygem)}']"
       end
@@ -43,8 +43,8 @@ class RubygemsControllerTest < ActionController::TestCase
         get :show, :id => @rubygem.to_param
       end
 
-      should_assign_to(:rubygem) { @rubygem }
-      should_respond_with :success
+      should assign_to(:rubygem) { @rubygem }
+      should respond_with :success
       should "have an invisible subscribe link" do
         assert_have_selector "a[style='display:none']", :content => 'Subscribe'
       end
@@ -60,8 +60,8 @@ class RubygemsControllerTest < ActionController::TestCase
         get :show, :id => @rubygem.to_param
       end
 
-      should_assign_to(:rubygem) { @rubygem }
-      should_respond_with :success
+      should assign_to(:rubygem) { @rubygem }
+      should respond_with :success
       should "have a visible subscribe link" do
         assert_have_selector "a[style='display:inline-block']", :content => 'Subscribe'
       end
@@ -76,9 +76,9 @@ class RubygemsControllerTest < ActionController::TestCase
         get :edit, :id => @rubygem.to_param
       end
 
-      should_respond_with :success
-      should_render_template :edit
-      should_assign_to :rubygem
+      should respond_with :success
+      should render_template :edit
+      should assign_to :rubygem
       should "render form" do
         assert_have_selector "form"
         assert_have_selector "input#linkset_code"
@@ -96,10 +96,10 @@ class RubygemsControllerTest < ActionController::TestCase
         create_gem(@other_user)
         get :edit, :id => @rubygem.to_param
       end
-      should_respond_with :redirect
-      should_assign_to(:linkset) { @linkset }
-      should_redirect_to('the homepage') { root_url }
-      should_set_the_flash_to "You do not have permission to edit this gem."
+      should respond_with :redirect
+      should assign_to(:linkset) { @linkset }
+      should redirect_to('the homepage') { root_url }
+      should set_the_flash.to("You do not have permission to edit this gem.")
     end
 
     context "On PUT to update for this user's gem that is successful" do
@@ -108,10 +108,10 @@ class RubygemsControllerTest < ActionController::TestCase
         create_gem(@user)
         put :update, :id => @rubygem.to_param, :linkset => {:code => @url}
       end
-      should_respond_with :redirect
-      should_redirect_to('the gem') { rubygem_path(@rubygem) }
-      should_set_the_flash_to "Gem links updated."
-      should_assign_to(:linkset) { @linkset }
+      should respond_with :redirect
+      should redirect_to('the gem') { rubygem_path(@rubygem) }
+      should set_the_flash.to("Gem links updated.")
+      should assign_to(:linkset) { @linkset }
       should "update linkset" do
         assert_equal @url, Rubygem.last.linkset.code
       end
@@ -123,9 +123,9 @@ class RubygemsControllerTest < ActionController::TestCase
         @url = "totally not a url"
         put :update, :id => @rubygem.to_param, :linkset => {:code => @url}
       end
-      should_respond_with :success
-      should_render_template :edit
-      should_assign_to(:linkset) { @linkset }
+      should respond_with :success
+      should render_template :edit
+      should assign_to(:linkset) { @linkset }
       should "not update linkset" do
         assert_not_equal @url, Rubygem.last.linkset.code
       end
@@ -146,9 +146,9 @@ class RubygemsControllerTest < ActionController::TestCase
       get :index
     end
 
-    should_respond_with :success
-    should_render_template :index
-    should_assign_to(:gems) { @gems }
+    should respond_with :success
+    should render_template :index
+    should assign_to(:gems) { @gems }
     should "render links" do
       @gems.each do |g|
         assert_contain g.name
@@ -163,15 +163,17 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to index as an atom feed" do
     setup do
       @versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
+      # just to make sure one has a different platform
+      @versions.last.update_attributes(:platform => "win32")
       get :index, :format => "atom"
     end
 
-    should_respond_with :success
-    should_assign_to(:versions) { @versions }
-    should "render posts with titles and links" do
+    should respond_with :success
+    should assign_to(:versions) { @versions }
+    should "render posts with titles and platform-specific links" do
       @versions.each do |v|
         assert_contain v.to_title
-        assert_have_selector "link[href='#{rubygem_url(v.rubygem)}']"
+        assert_have_selector "link[href='#{rubygem_url(v.rubygem, v.slug)}']"
       end
     end
   end
@@ -183,9 +185,9 @@ class RubygemsControllerTest < ActionController::TestCase
       Factory(:version, :rubygem => @zgem)
       get :index, :letter => "z"
     end
-    should_respond_with :success
-    should_render_template :index
-    should_assign_to(:gems) { [@zgem] }
+    should respond_with :success
+    should render_template :index
+    should assign_to(:gems) { [@zgem] }
     should "render links" do
       assert_contain @zgem.name
       assert_have_selector "a[href='#{rubygem_path(@zgem)}']"
@@ -206,9 +208,9 @@ class RubygemsControllerTest < ActionController::TestCase
       get :index, :letter => "asdf"
     end
 
-    should_respond_with :success
-    should_render_template :index
-    should_assign_to(:gems) { @gems }
+    should respond_with :success
+    should render_template :index
+    should assign_to(:gems) { @gems }
     should "render links" do
       @gems.each do |g|
         assert_contain g.name
@@ -224,15 +226,15 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to show" do
     setup do
-      @latest_version = Factory(:version)
+      @latest_version = Factory(:version, :created_at => 1.minute.ago)
       @rubygem = @latest_version.rubygem
       get :show, :id => @rubygem.to_param
     end
 
-    should_respond_with :success
-    should_render_template :show
-    should_assign_to :rubygem
-    should_assign_to(:latest_version) { @latest_version }
+    should respond_with :success
+    should render_template :show
+    should assign_to :rubygem
+    should assign_to(:latest_version) { @latest_version }
     should "render info about the gem" do
       assert_contain @rubygem.name
       assert_contain @latest_version.number
@@ -244,14 +246,14 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to show with a gem that has multiple versions" do
     setup do
       @rubygem = Factory(:rubygem)
-      @older_version = Factory(:version, :number => "1.0.0", :rubygem => @rubygem)
-      @latest_version = Factory(:version, :number => "2.0.0", :rubygem => @rubygem)
+      @older_version = Factory(:version, :number => "1.0.0", :rubygem => @rubygem, :created_at => 2.minutes.ago)
+      @latest_version = Factory(:version, :number => "2.0.0", :rubygem => @rubygem, :created_at => 1.minute.ago)
       get :show, :id => @rubygem.to_param
     end
 
-    should_respond_with :success
-    should_render_template :show
-    should_assign_to :rubygem
+    should respond_with :success
+    should render_template :show
+    should assign_to :rubygem
     should "render info about the gem" do
       assert_contain @rubygem.name
       assert_contain @latest_version.number
@@ -268,9 +270,9 @@ class RubygemsControllerTest < ActionController::TestCase
       @rubygem = Factory(:rubygem)
       get :show, :id => @rubygem.to_param
     end
-    should_respond_with :success
-    should_render_template :show
-    should_assign_to :rubygem
+    should respond_with :success
+    should render_template :show
+    should assign_to :rubygem
     should "render info about the gem" do
       assert_contain "This gem is not currently hosted on Gemcutter."
     end
@@ -286,9 +288,9 @@ class RubygemsControllerTest < ActionController::TestCase
       get :show, :id => @version.rubygem.to_param
     end
 
-    should_respond_with :success
-    should_render_template :show
-    should_assign_to(:latest_version) { @version }
+    should respond_with :success
+    should render_template :show
+    should assign_to(:latest_version) { @version }
     should "show runtime dependencies and development dependencies" do
       assert_contain @runtime.rubygem.name
       assert_contain @development.rubygem.name
@@ -300,7 +302,7 @@ class RubygemsControllerTest < ActionController::TestCase
       get :show, :id => "blahblah"
     end
 
-    should_respond_with :not_found
+    should respond_with :not_found
   end
 
   context "On GET to stats" do
@@ -367,8 +369,8 @@ class RubygemsControllerTest < ActionController::TestCase
         get :show, :id => @rubygem.to_param
       end
 
-      should_assign_to(:rubygem) { @rubygem }
-      should_respond_with :success
+      should assign_to(:rubygem) { @rubygem }
+      should respond_with :success
       should "have an subscribe link that goes to the sign in page" do
         assert_have_selector "a[href='#{sign_in_path}']"
       end
@@ -382,8 +384,8 @@ class RubygemsControllerTest < ActionController::TestCase
         @rubygem = Factory(:rubygem)
         get :edit, :id => @rubygem.to_param
       end
-      should_respond_with :redirect
-      should_redirect_to('the homepage') { root_url }
+      should respond_with :redirect
+      should redirect_to('the homepage') { root_url }
     end
 
     context "On PUT to update" do
@@ -391,8 +393,8 @@ class RubygemsControllerTest < ActionController::TestCase
         @rubygem = Factory(:rubygem)
         put :update, :id => @rubygem.to_param, :linkset => {}
       end
-      should_respond_with :redirect
-      should_redirect_to('the homepage') { root_url }
+      should respond_with :redirect
+      should redirect_to('the homepage') { root_url }
     end
   end
 end

@@ -1,0 +1,24 @@
+<% @title = "search" %>
+<% if @gems %>
+  <% @subtitle = "for <em>#{params[:query]}</em>" %>
+  <% if @exact_match %>
+    <p>Exact match</p>
+    <div class="gems border">
+      <ol>
+        <%= render @exact_match %>
+      </ol>
+    </div>
+  <% end %>
+
+  <p class="entries">
+    <%= page_entries_info(@gems, :entry_name => 'gem').html_safe %>
+  </p>
+  <% if @gems.present? %>
+    <div class="gems border">
+      <ol>
+        <%= render @gems %>
+      </ol>
+    </div>
+    <%= will_paginate @gems %>
+  <% end %>
+<% end %>
