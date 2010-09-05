@@ -34,4 +34,20 @@ class HomeControllerTest < ActionController::TestCase
       assert_received(Download) { |subject| subject.count }
     end
   end
+
+  context "on GET to index with a non-ssl path" do
+    setup do
+      @request.env['HTTPS'] = nil
+    end
+
+    context "when Rails.env is production" do
+      setup do
+        get :index
+      end
+
+      should "redirect to the SSL path" do
+        assert_redirected_to "https://#{@request.host}#{@request.fullpath}"
+      end
+    end
+  end
 end
