@@ -1,46 +1,42 @@
 class Rubygem < ActiveRecord::Base
-  include Pacecar unless Rails.env.maintenance?
 
   has_many :owners, :through => :ownerships, :source => :user
   has_many :ownerships, :dependent => :destroy
   has_many :subscribers, :through => :subscriptions, :source => :user
   has_many :subscriptions, :dependent => :destroy
-  has_many :versions, :dependent => :destroy do
-    def latest
-      # try to find a ruby platform in the latest version
-      latest = scopes[:latest][self]
-      latest.find_by_platform('ruby') || latest.first || first
-    end
-  end
+  has_many :versions, :dependent => :destroy
   has_many :web_hooks, :dependent => :destroy
   has_one :linkset, :dependent => :destroy
 
+  validate :ensure_name_format
   validates_presence_of :name
   validates_uniqueness_of :name
 
-  named_scope :with_versions,
-    :conditions => "rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)"
+  scope :with_versions,
+    where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)")
 
-  named_scope :with_one_version,
-    :select => 'rubygems.*',
-    :joins  => :versions,
-    :group  => column_names.map{ |name| "rubygems.#{name}" }.join(', '),
-    :having => 'COUNT(versions.id) = 1'
+  scope :with_one_version,
+    select('rubygems.*').
+    joins(:versions).
+    group(column_names.map{ |name| "rubygems.#{name}" }.join(', ')).
+    having('COUNT(versions.id) = 1')
 
-  named_scope :name_is, lambda { |name| {
-    :conditions => ["name = ?", name.strip],
-    :limit      => 1 }
+  scope :name_is, lambda { |name| 
+    where(:name => name.strip).
+    limit(1)
   }
 
-  named_scope :search, lambda { |query| {
-    :conditions => ["(upper(name) like upper(:query) or upper(versions.description) like upper(:query))",
-      {:query => "%#{query.strip}%"}],
-    :include    => [:versions],
-    :having     => 'count(versions.id) > 0',
-    :order      => "rubygems.downloads desc" }
+  scope :search, lambda { |query| 
+    where(["versions.indexed and (upper(name) like upper(:query) or upper(versions.description) like upper(:query))", {:query => "%#{query.strip}%"}]).
+    includes(:versions).
+    order("rubygems.downloads desc")
   }
 
-  def validate
+  scope :name_starts_with, lambda { |letter| 
+    where(["upper(name) like upper(?)", "#{letter}%" ])
+  }
+
+  def ensure_name_format
     if name.class != String
       errors.add :name, "must be a String"
     elsif name =~ /^[\d]+$/
@@ -57,23 +53,35 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.total_count
-    Version.latest.count
+    with_versions.count
   end
 
   def self.latest(limit=5)
-    with_one_version.by_created_at(:desc).limited(limit)
+    with_one_version.order("created_at desc").limit(limit)
   end
 
   def self.downloaded(limit=5)
-    with_versions.by_downloads(:desc).limited(limit)
+    with_versions.order("downloads desc").limit(limit)
+  end
+
+  def self.letter(letter)
+    name_starts_with(letter).order("name asc").with_versions
+  end
+
+  def self.letterize(letter)
+    letter =~ /\A[A-Za-z]\z/ ? letter.upcase : 'A'
+  end
+
+  def public_versions
+    versions.published.by_position
   end
 
   def hosted?
-    !versions.count.zero?
+    versions.count.nonzero?
   end
 
   def unowned?
-    ownerships.find_by_approved(true).blank?
+    ownerships.where(:approved => true).blank?
   end
 
   def owned_by?(user)
@@ -81,14 +89,14 @@ class Rubygem < ActiveRecord::Base
   end
 
   def to_s
-    versions.latest.try(:to_title) || name
+    versions.most_recent.try(:to_title) || name
   end
 
   def downloads
     Download.for(self)
   end
 
-  def payload(version = versions.latest, host_with_port = HOST)
+  def payload(version = versions.most_recent, host_with_port = HOST)
     {
       'name'              => name,
       'downloads'         => downloads,
@@ -98,15 +106,21 @@ class Rubygem < ActiveRecord::Base
       'info'              => version.info,
       'project_uri'       => "http://#{host_with_port}/gems/#{name}",
       'gem_uri'           => "http://#{host_with_port}/gems/#{version.full_name}.gem",
+      'homepage_uri'      => linkset.try(:home),
+      'wiki_uri'          => linkset.try(:wiki),
+      'documentation_uri' => linkset.try(:docs),
+      'mailing_list_uri'  => linkset.try(:mail),
+      'source_code_uri'   => linkset.try(:code),
+      'bug_tracker_uri'   => linkset.try(:bugs),
       'dependencies'      => {
-        'development' => version.dependencies.development,
-        'runtime'     => version.dependencies.runtime
+        'development' => version.dependencies.development.to_a,
+        'runtime'     => version.dependencies.runtime.to_a
       }
     }
   end
 
-  def to_json(options = {})
-    payload.to_json(options)
+  def as_json(options = {})
+    payload
   end
 
   def to_xml(options = {})
@@ -141,7 +155,7 @@ class Rubygem < ActiveRecord::Base
     end
   rescue ActiveRecord::RecordInvalid => ex
     # ActiveRecord can't chain a nested error here, so we have to add and reraise
-    errors.add_to_base ex.message
+    errors[:base] << ex.message
     raise ex
   end
 
@@ -179,8 +193,8 @@ class Rubygem < ActiveRecord::Base
 
   def yank!(version)
     version.yank!
-    if versions(true).indexed.count.zero?
-      ownerships.each(&:destroy_without_callbacks)
+    if versions.indexed.count.zero?
+      ownerships.each(&:delete)
     end
   end
 
@@ -188,5 +202,9 @@ class Rubygem < ActiveRecord::Base
     version = self.versions.find_or_initialize_by_number_and_platform(spec.version.to_s, spec.original_platform.to_s)
     version.rubygem = self
     version
+  end
+
+  def self.versions_key(name)
+    "r:#{name}"
   end
 end

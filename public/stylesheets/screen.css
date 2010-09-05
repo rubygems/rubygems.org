@@ -487,6 +487,10 @@ table {
   background: url('/images/download.png') no-repeat;
 }
 
+.main .info .meta .admin #docs {
+  background: url('/images/docs.png') no-repeat;
+}
+
 .main .info .meta .admin #stats {
   background: url('/images/metrics.png') no-repeat;
 }
@@ -966,7 +970,7 @@ label, .form_links {
 .text_field,
 .password_field,
 .url_field {
- margin: 0 0 15px 0; 
+ margin: 0 0 15px 0;
 }
 
 .text_field input,
@@ -1069,13 +1073,13 @@ input[type='submit'] {
   -webkit-border-radius: 4px;
   border-radius: 4px;
   border: 1px solid #a1100a;
-  background-image: -moz-linear-gradient(bottom, #690900 0%, #8f0e00 49%,  #a41200 50%, #cf1900 100%); 
+  background-image: -moz-linear-gradient(bottom, #690900 0%, #8f0e00 49%,  #a41200 50%, #cf1900 100%);
   background-image: -webkit-gradient(linear,left top,left bottom,color-stop(1, #690900),color-stop(.5, #8f0e00),color-stop(.49, #a41200),color-stop(0, #cf1900));
 }
 
 .edit_user .avatar_field a:hover,
 input[type='submit']:hover {
-  background-image: -moz-linear-gradient(bottom, #690900 0%, #8f0e00 49%,  #a41200 50%, #f00 100%); 
+  background-image: -moz-linear-gradient(bottom, #690900 0%, #8f0e00 49%,  #a41200 50%, #f00 100%);
   background-image: -webkit-gradient(linear,left top,left bottom,color-stop(1, #690900),color-stop(.5, #8f0e00),color-stop(.49, #a41200),color-stop(0, #f00));
 }
 
@@ -1213,6 +1217,10 @@ input[type='submit']:hover {
   -moz-box-shadow: 0 1px 1px #4b0000;
   -webkit-box-shadow: 0 1px 1px #4b0000;
   -box-shadow: 0 1px 1px #4b0000;
+  width: 32px;
+  height: 32px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
 }
 
 #nav a span {
@@ -1342,8 +1350,6 @@ form#main-search input[type="text"] {
 form#main-search input[type="submit"] {
   display: none;
 }
-<<<<<<< HEAD
-=======
 
 /* New Profile Stuff */
 #profile {
@@ -1364,7 +1370,7 @@ form#main-search input[type="submit"] {
   -moz-border-radius: 7px;
   -webkit-border-radius: 7px;
   border-radius: 7px;
-  background-image: -moz-linear-gradient(bottom, #151312 0%, #534a45 100%); 
+  background-image: -moz-linear-gradient(bottom, #151312 0%, #534a45 100%);
   background-image: -webkit-gradient(linear,left top,left bottom,color-stop(1, #151312),color-stop(0, #534a45));
 }
 

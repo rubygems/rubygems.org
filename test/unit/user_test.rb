@@ -1,35 +1,41 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class UserTest < ActiveSupport::TestCase
-  should_have_many :rubygems, :through => :ownerships
-  should_have_many :ownerships
-  should_have_many :subscribed_gems, :through => :subscriptions
-  should_have_many :subscriptions
-  should_have_many :web_hooks
+  should have_many(:ownerships)
+  should have_many(:rubygems).through(:ownerships)
+  should have_many(:subscribed_gems).through(:subscriptions)
+  should have_many(:subscriptions)
+  should have_many(:web_hooks)
 
   context "validations" do
     context "handle" do
-      should_not_allow_values_for :handle, "1abcde",
-                                           "abc^%def",
-                                           "abc\n<script>bad"
+      should allow_value("CapsLOCK").for(:handle)
+      should_not allow_value("1abcde").for(:handle)
+      should_not allow_value("abc^%def").for(:handle)
+      should_not allow_value("abc\n<script>bad").for(:handle)
 
       should "be between 3 and 15 characters" do
         user = Factory.build(:user, :handle => "a")
         assert ! user.valid?
-        assert_equal "is too short (minimum is 3 characters)", user.errors.on(:handle)
+        assert_equal "is too short (minimum is 3 characters)", user.errors[:handle].first
 
         user.handle = "a" * 16
         assert ! user.valid?
-        assert_equal "is too long (maximum is 15 characters)", user.errors.on(:handle)
+        assert_equal "is too long (maximum is 15 characters)", user.errors[:handle].first
 
         user.handle = "abcdef"
         user.valid?
-        assert_nil user.errors.on(:handle)
+        assert_nil user.errors[:handle].first
       end
 
-      should "be invalid when blank" do
+      should "be invalid when an empty string" do
         user = Factory.build(:user, :handle => "")
         assert ! user.valid?
+      end
+
+      should "be valid when nil and other users have a nil handle" do
+        assert Factory(:user, :handle => nil)
+        assert Factory(:user, :handle => nil)
       end
     end
   end
@@ -117,22 +123,21 @@ class UserTest < ActiveSupport::TestCase
 
     context "with a confirmed email address" do
       setup do
-        @user = Factory(:email_confirmed_user)
-        @user.confirmation_token = nil
+        @user = Factory(:email_confirmed_user, :confirmation_token => nil)
+        @user.email = "changed@example.com"
         @user.save
-        @user.update_attributes(:email => "changed@example.com")
       end
 
       should "generate a new confirmation token when the email gets changed" do
-        assert @user.email_reset
+        assert @user.reload.email_reset
       end
 
       should "reset token, confirmation, and reset when confirming email" do
         @user.confirm_email!
 
-        assert @user.email_confirmed
-        assert_nil @user.confirmation_token
-        assert_nil @user.email_reset
+        assert @user.reload.email_confirmed
+        assert_nil @user.reload.confirmation_token
+        assert_nil @user.reload.email_reset
       end
     end
 

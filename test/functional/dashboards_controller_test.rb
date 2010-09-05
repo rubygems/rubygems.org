@@ -13,19 +13,19 @@ class DashboardsControllerTest < ActionController::TestCase
         @gems = (1..3).map do
           rubygem = Factory(:rubygem)
           rubygem.ownerships.create(:user => @user, :approved => true)
-          Factory(:version, :rubygem => rubygem, :summary => "summary of #{rubygem.name}")
+          Factory(:version, :rubygem => rubygem)
           rubygem
         end
         get :show
       end
 
-      should_respond_with :success
-      should_render_template :show
-      should_assign_to(:my_gems) { @gems }
+      should respond_with :success
+      should render_template :show
+      should assign_to(:my_gems) { @gems }
       should "render links" do
         @gems.each do |g|
           assert_contain g.name
-          assert_have_selector "a[href='#{rubygem_path(g)}'][title='summary of #{g.name}']"
+          assert_have_selector "a[href='#{rubygem_path(g)}'][title='#{g.versions.most_recent.info}']"
         end
       end
     end
@@ -34,18 +34,20 @@ class DashboardsControllerTest < ActionController::TestCase
       setup do
         @subscribed_versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
         @subscribed_versions.each { |v| Factory(:subscription, :rubygem => v.rubygem, :user => @user)}
+        # just to make sure one has a different platform
+        @subscribed_versions.last.update_attributes(:platform => "win32")
         @unsubscribed_versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
 
         @request.env["Authorization"] = @user.api_key
         get :show, :format => "atom"
       end
 
-      should_respond_with :success
-      should_render_template 'versions/feed'
-      should "render posts with titles and links of all subscribed versions" do
+      should respond_with :success
+      should render_template 'versions/feed'
+      should "render posts with titles and platform-specific links of all subscribed versions" do
         @subscribed_versions.each do |v|
           assert_contain v.to_title
-          assert_have_selector "link[href='#{rubygem_url(v.rubygem)}']"
+          assert_have_selector "link[href='#{rubygem_url(v.rubygem, v.slug)}']"
         end
       end
 
@@ -59,7 +61,7 @@ class DashboardsControllerTest < ActionController::TestCase
 
   context "On GET to show without being signed in" do
     setup { get :show }
-    should_respond_with :redirect
-    should_redirect_to('the homepage') { root_url }
+    should respond_with :redirect
+    should redirect_to('the homepage') { root_url }
   end
 end

@@ -1,68 +1,73 @@
 class Version < ActiveRecord::Base
-  include Pacecar unless Rails.env.maintenance?
-
-  default_scope :order => 'position'
-
   belongs_to :rubygem
   has_many :dependencies, :dependent => :destroy
 
+  scope :owned_by, lambda { |user|
+    where(:rubygem_id => user.rubygem_ids)
+  }
+
+  scope :subscribed_to_by, lambda { |user|
+    where(:rubygem_id => user.subscribed_gem_ids).
+    order('created_at desc')
+  }
+
+  scope :with_associated,
+    where("versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)").
+    includes(:rubygem).
+    order("versions.built_at desc")
+
+  scope :by_position, order('position')
+  scope :latest,      where(:latest       => true     )
+  scope :with_deps,   where(:dependencies => :rubygem )
+  scope :prerelease,  where(:prerelease   => true     )
+  scope :release,     where(:prerelease   => false    )
+  scope :indexed,     where(:indexed      => true     )
+
+  before_save      :update_prerelease
+  after_validation :join_authors
+  after_create     :full_nameify!
+  after_save       :reorder_versions
+
   validates_format_of :number, :with => /\A#{Gem::Version::VERSION_PATTERN}\z/
+  validate :platform_and_number_are_unique, :on => :create
+  validate :authors_format, :on => :create
 
-  named_scope :owned_by, lambda { |user|
-    { :conditions => { :rubygem_id => user.rubygem_ids } }
-  }
-
-  named_scope :subscribed_to_by, lambda { |user|
-    { :conditions => { :rubygem_id => user.subscribed_gem_ids },
-      :order => 'created_at desc' }
-  }
-
-  named_scope :with_associated, {
-    :conditions => ["versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)"],
-    :include    => :rubygem,
-    :order      => "versions.built_at desc"
-  }
-
-  named_scope :latest,     { :conditions => { :latest       => true  }}
-  named_scope :with_deps,  { :include    => { :dependencies => :rubygem }}
-  named_scope :prerelease, { :conditions => { :prerelease   => true  }}
-  named_scope :release,    { :conditions => { :prerelease   => false }}
-
-  before_save :update_prerelease
-  after_save  :reorder_versions
-  after_save  :full_nameify!
-
-  def validate_on_create
+  def platform_and_number_are_unique
     if Version.exists?(:rubygem_id => rubygem_id,
                        :number     => number,
                        :platform   => platform)
-      errors.add_to_base("A version already exists with this number or platform.")
+      errors[:base] << "A version already exists with this number or platform."
     end
+  end
 
+  def authors_format
     if !authors.is_a?(Array) || authors.any? { |a| !a.is_a?(String) }
       errors.add :authors, "must be an Array of Strings"
     end
   end
 
-  def after_validation
+  def join_authors
     self.authors = self.authors.join(', ') if self.authors.is_a?(Array)
   end
 
   def self.with_indexed(reverse = false)
-    order =  "rubygems.name asc"
-    order << ", position desc" if reverse
+    order_str =  "rubygems.name asc"
+    order_str << ", position desc" if reverse
 
-    all :conditions => {:indexed => true},
-        :include    => :rubygem,
-        :order      => order
+    where(:indexed => true).includes(:rubygem).order(order_str)
+  end
+
+  def self.most_recent
+    recent = where(:latest => true)
+    recent.find_by_platform('ruby') || recent.first || first
   end
 
   def self.updated(limit=5)
-    built_at_before(DateTime.now.utc).with_associated.limited(limit)
+    where("built_at <= ?", DateTime.now.utc).with_associated.limit(limit)
   end
 
   def self.published(limit=5)
-    created_at_before(DateTime.now.utc).by_created_at(:desc).limited(limit)
+    where("built_at <= ?", DateTime.now.utc).order("built_at desc").limit(limit)
   end
 
   def self.find_from_slug!(rubygem_id, slug)
@@ -71,7 +76,15 @@ class Version < ActiveRecord::Base
   end
 
   def self.platforms
-    find(:all, :select => 'platform').map(&:platform).uniq
+    select('platform').map(&:platform).uniq
+  end
+
+  def self.rubygem_name_for(full_name)
+    $redis.hget(info_key(full_name), :name)
+  end
+
+  def self.info_key(full_name)
+    "v:#{full_name}"
   end
 
   def platformed?
@@ -89,10 +102,16 @@ class Version < ActiveRecord::Base
 
   def yank!
     update_attributes!(:indexed => false)
+    $redis.lrem(Rubygem.versions_key(rubygem.name), 1, full_name)
   end
-  
+
   def unyank!
     update_attributes!(:indexed => true)
+    push
+  end
+
+  def push
+    $redis.lpush(Rubygem.versions_key(rubygem.name), full_name)
   end
 
   def yanked?
@@ -140,7 +159,15 @@ class Version < ActiveRecord::Base
     self.full_name << "-#{platform}" if platformed?
 
     Version.update_all({:full_name => full_name}, {:id => id})
+
+    $redis.hmset(Version.info_key(full_name),
+                 :name, rubygem.name,
+                 :number, number,
+                 :platform, platform)
+
+    push
   end
+
 
   def slug
     full_name.gsub(/^#{rubygem.name}-/, '')
@@ -168,7 +195,7 @@ class Version < ActiveRecord::Base
 
   def to_install
     command = "gem install #{rubygem.name}"
-    latest = prerelease ? rubygem.versions.prerelease.first : rubygem.versions.latest
+    latest = prerelease ? rubygem.versions.by_position.prerelease.first : rubygem.versions.most_recent
     command << " -v #{number}" if latest != self
     command << " --pre" if prerelease
     command

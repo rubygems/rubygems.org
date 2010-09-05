@@ -6,7 +6,10 @@ class Api::V1::WebHooksController < ApplicationController
   before_filter :find_gem_by_name, :except => :index
 
   def index
-    render :json => current_user.all_hooks
+    respond_to do |format|
+      format.any(:json, :all) { render :json => current_user.all_hooks }
+      format.yaml { render :text => Hash[current_user.all_hooks].to_yaml }
+    end
   end
 
   def create
@@ -40,11 +43,11 @@ class Api::V1::WebHooksController < ApplicationController
 
     if webhook.fire(request.host_with_port,
                     @rubygem,
-                    @rubygem.versions.latest,
+                    @rubygem.versions.most_recent,
                     false)
-      render :text => webhook.deployed_message
+      render :text => webhook.deployed_message(@rubygem)
     else
-      render :text => webhook.failed_message, :status => :bad_request
+      render :text => webhook.failed_message(@rubygem), :status => :bad_request
     end
   end
 end

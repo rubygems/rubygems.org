@@ -48,7 +48,7 @@
     <ol>
       <% @latest.each do |rubygem| %>
         <li>
-          <%= link_to rubygem, rubygem, :title => rubygem.versions.latest.summary %>
+          <%= link_to rubygem, rubygem, :title => short_info(rubygem.versions.most_recent) %>
         </li>
       <% end %>
     </ol>
@@ -59,7 +59,7 @@
       <ol>
         <% @downloaded.each do |version, downloads| %>
           <li>
-            <%= link_to "#{version.rubygem.name}-#{version.number} (#{number_with_delimiter downloads})", version.rubygem, :title => version.summary %>
+            <%= link_to "#{version.rubygem.name}-#{version.number} (#{number_with_delimiter downloads})", version.rubygem, :title => short_info(version) %>
           </li>
         <% end %>
       </ol>
@@ -72,7 +72,7 @@
     <ol>
       <% @updated.each do |version| %>
         <li>
-          <%= link_to version.to_title, version.rubygem, :title => version.summary %>
+          <%= link_to version.to_title, version.rubygem, :title => short_info(version) %>
         </li>
       <% end %>
     </ol>

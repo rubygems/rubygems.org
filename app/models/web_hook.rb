@@ -2,42 +2,39 @@ class WebHook < ActiveRecord::Base
   belongs_to :user
   belongs_to :rubygem
 
-  named_scope :global, :conditions => {:rubygem_id => nil}
-  named_scope :specific, :conditions => "rubygem_id is not null"
+  scope :global, where(:rubygem_id => nil)
+  scope :specific, where("rubygem_id is not null")
 
   GLOBAL_PATTERN = '*'
 
-  attr_accessor :host_with_port, :version, :deploy_gem
-
   validates_url_format_of :url
+  validate :unique_hook, :on => :create
 
-  def validate_on_create
+  def unique_hook
     if user && rubygem
       if WebHook.exists?(:user_id    => user.id,
                          :rubygem_id => rubygem.id,
                          :url        => url)
-        errors.add_to_base("A hook for #{url} has already been registered for #{rubygem.name}")
+        errors[:base] << "A hook for #{url} has already been registered for #{rubygem.name}"
       end
     elsif user
       if WebHook.exists?(:user_id    => user.id,
                          :rubygem_id => nil,
                          :url        => url)
-        errors.add_to_base("A global hook for #{url} has already been registered")
+        errors[:base] << "A global hook for #{url} has already been registered"
       end
     else
-      errors.add_to_base("A user is required for this hook")
+      errors[:base] << "A user is required for this hook"
     end
   end
 
   def fire(host_with_port, deploy_gem, version, delayed = true)
-    self.host_with_port = host_with_port
-    self.deploy_gem     = deploy_gem
-    self.version        = version
+    job = WebHookJob.new(self.url, host_with_port, deploy_gem, version)
 
     if delayed
-      Delayed::Job.enqueue self, PRIORITIES[:web_hook]
+      Delayed::Job.enqueue job, PRIORITIES[:web_hook]
     else
-      perform
+      job.perform
     end
   end
 
@@ -53,18 +50,16 @@ class WebHook < ActiveRecord::Base
     "Successfully removed webhook for #{what} to #{url}"
   end
 
-  def deployed_message
-    "Successfully deployed webhook for #{what} to #{url}"
+  def deployed_message(rubygem)
+    "Successfully deployed webhook for #{what(rubygem)} to #{url}"
   end
 
-  def failed_message
-    "There was a problem deploying webhook for #{what} to #{url}"
+  def failed_message(rubygem)
+    "There was a problem deploying webhook for #{what(rubygem)} to #{url}"
   end
 
-  def what
-    if deploy_gem
-      deploy_gem.name
-    elsif rubygem
+  def what(rubygem = self.rubygem)
+    if rubygem
       rubygem.name
     else
       "all gems"
@@ -72,20 +67,14 @@ class WebHook < ActiveRecord::Base
   end
 
   def payload
-    deploy_gem.payload(version, host_with_port).to_json
+    {'url' => url, 'failure_count' => failure_count}
   end
 
-  def perform
-    SystemTimer.timeout_after(5) do
-      RestClient.post url, payload, 'Content-Type' => 'application/json', :timeout => 20, :open_timeout => 5
-    end
-    true
-  rescue *(HTTP_ERRORS + [RestClient::Exception, SocketError]) => e
-    increment! :failure_count unless new_record?
-    false
+  def to_yaml(*args)
+    payload.to_yaml(*args)
   end
 
-  def to_json(options = {})
-    super(options.merge(:only => [:url, :failure_count]))
+  def as_json(options = {})
+    payload
   end
 end

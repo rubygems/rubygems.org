@@ -1,11 +1,11 @@
 ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
-require 'test_help'
+require 'rails/test_help'
 
 set :environment, :test
 WebMock.disable_net_connect!
 
-Shoulda.autoload_macros(Rails.root, "vendor/bundler_gems/gems/*")
+require 'clearance/shoulda_macros'
 
 class ActiveSupport::TestCase
   self.use_transactional_fixtures = true

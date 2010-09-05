@@ -6,9 +6,8 @@ class RubygemsController < ApplicationController
   def index
     respond_to do |format|
       format.html do
-        params[:letter] = 'A' unless params[:letter] && ('A'..'Z').to_a.include?(params[:letter].upcase)
-        params[:letter].upcase!
-        @gems = Rubygem.name_starts_with(params[:letter]).by_name(:asc).with_versions.paginate(:page => params[:page])
+        @letter = Rubygem.letterize(params[:letter])
+        @gems   = Rubygem.letter(@letter).paginate(:page => params[:page])
       end
       format.atom do
         @versions = Version.published(20)
@@ -18,7 +17,7 @@ class RubygemsController < ApplicationController
   end
 
   def show
-    @latest_version = @rubygem.versions.latest
+    @latest_version = @rubygem.versions.most_recent
   end
 
   def stats

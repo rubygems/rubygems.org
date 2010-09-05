@@ -19,7 +19,7 @@ class Api::V1::RubygemsController < ApplicationController
   end
 
   def create
-    gemcutter = Gemcutter.new(current_user, request.body, request.host_with_port)
+    gemcutter = Pusher.new(current_user, request.body, request.host_with_port)
     gemcutter.process
     render :text => gemcutter.message, :status => gemcutter.code
   end
@@ -32,7 +32,7 @@ class Api::V1::RubygemsController < ApplicationController
       render :json => "The version #{params[:version]} has already been yanked.", :status => :unprocessable_entity
     end
   end
-  
+
   def unyank
     if !@version.indexed?
       @version.unyank!
@@ -41,7 +41,7 @@ class Api::V1::RubygemsController < ApplicationController
       render :json => "The version #{params[:version]} is already indexed.", :status => :unprocessable_entity
     end
   end
-  
+
   private
     def validate_gem_and_version
       if !@rubygem.hosted?

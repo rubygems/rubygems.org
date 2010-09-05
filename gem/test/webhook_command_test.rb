@@ -1,4 +1,5 @@
 require 'helper'
+require 'lib/rubygems/commands/webhook_command'
 
 class WebhookCommandTest < CommandTest
   context "webhooking" do
@@ -71,11 +72,15 @@ class WebhookCommandTest < CommandTest
     context "listing hooks with some available" do
       setup do
         stub_api_key("key")
-        stub_request(:get, @api).to_return :body => <<EOF
-{
-  "foo": [{"url":"http://foogemhook.com","failure_count":0}],
-  "all gems":[{"url":"http://allgemshook.com","failure_count":0}]
-}
+        stub_request(:get, "#{@api}.yaml").to_return :body => <<EOF
+---
+foo:
+- url: http://foogemhook.com
+  failure_count: 0
+all gems:
+- url: http://allgemshook.com
+  failure_count: 0
+
 EOF
       end
 
@@ -114,9 +119,9 @@ EOF
         @command.execute
 
         # webmock doesn't pass body params on correctly :[
-        assert_requested(:get, @api,
+        assert_requested(:get, "#{@api}.yaml",
                          :times => 1)
-        assert_requested(:get, @api,
+        assert_requested(:get, "#{@api}.yaml",
                          :headers => { 'Authorization' => 'key' })
       end
     end
@@ -124,7 +129,7 @@ EOF
     context "listing hooks with none available" do
       setup do
         stub_api_key("key")
-        stub_request(:get, @api).to_return(:body => "{}")
+        stub_request(:get, "#{@api}.yaml").to_return(:body => "{}")
         @command.handle_options([])
         @command.execute
       end
@@ -140,7 +145,7 @@ EOF
       setup do
         stub(@command).terminate_interaction
         stub_api_key("key")
-        stub_request(:get, @api).to_return(:body => "fubar")
+        stub_request(:get, "#{@api}.yaml").to_return(:body => "fubar")
         @command.handle_options([])
         @command.execute
       end

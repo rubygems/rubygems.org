@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
   include Clearance::User
   is_gravtastic
 
-  attr_accessible :handle
+  attr_accessible :handle, :password_confirmation, :password, :email
 
   has_many :rubygems, :through    => :ownerships,
                       :order      => "name ASC",
@@ -14,13 +14,13 @@ class User < ActiveRecord::Base
   has_many :subscriptions
   has_many :web_hooks
 
-  before_validation_on_update :regenerate_token, :if => :email_changed?
+  before_validation :regenerate_token, :if => :email_changed?, :on => :update
   before_create :generate_api_key
   after_update :deliver_email_reset, :if => :email_reset
 
-  validates_uniqueness_of :handle
-  validates_format_of :handle, :with => /\A[a-z][a-z_\-0-9]*\z/
-  validates_length_of :handle, :within => 3..15
+  validates_uniqueness_of :handle, :allow_nil => true
+  validates_format_of :handle, :with => /\A[A-Za-z][A-Za-z_\-0-9]*\z/, :allow_nil => true
+  validates_length_of :handle, :within => 3..15, :allow_nil => true
 
   def self.authenticate(who, password)
     if user = Rubyforger.transfer(who, password) || find_by_email(who) || find_by_handle(who)
@@ -42,8 +42,8 @@ class User < ActiveRecord::Base
 
   def all_hooks
     all     = web_hooks.specific.group_by { |hook| hook.rubygem.name }
-    globals = web_hooks.global
-    all["all gems"] = globals unless globals.empty?
+    globals = web_hooks.global.to_a
+    all["all gems"] = globals if globals.present?
     all
   end
 
@@ -61,7 +61,7 @@ class User < ActiveRecord::Base
   end
 
   def deliver_email_reset
-    Mailer.deliver_email_reset self
+    Mailer.email_reset(self).deliver
   end
 
   def generate_api_key
@@ -71,6 +71,6 @@ class User < ActiveRecord::Base
   def confirm_email!
     self.email_confirmed    = true
     self.confirmation_token = self.email_reset = nil
-    save(false)
+    save(:validate => false)
   end
 end

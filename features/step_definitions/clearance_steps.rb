@@ -25,7 +25,11 @@ Given /^I am signed up and confirmed as "(.*)\/(.*)"$/ do |email, password|
 end
 
 Given /^my handle is "([^\"]*)"$/ do |handle|
-  @me.update_attributes!(:handle => handle)
+  @me.update_attribute :handle, handle
+end
+
+Given /^my handle is nil$/ do
+  @me.update_attribute :handle, nil
 end
 
 # Session
@@ -52,7 +56,7 @@ end
 
 Then /^a confirmation message should be sent to "(.*)"$/ do |email|
   user = User.find_by_email(email)
-  sent = ActionMailer::Base.deliveries.first
+  sent = ActionMailer::Base.deliveries.last
   assert_equal [user.email], sent.to
   assert_match /confirm/i, sent.subject
   assert !user.confirmation_token.blank?
@@ -67,7 +71,7 @@ end
 
 Then /^a password reset message should be sent to "(.*)"$/ do |email|
   user = User.find_by_email(email)
-  sent = ActionMailer::Base.deliveries.first
+  sent = ActionMailer::Base.deliveries.last
   assert_equal [user.email], sent.to
   assert_match /password/i, sent.subject
   assert !user.confirmation_token.blank?
@@ -109,8 +113,8 @@ When /^I request password reset link to be sent to "(.*)"$/ do |email|
 end
 
 When /^I update my password with "(.*)\/(.*)"$/ do |password, confirmation|
-  And %{I fill in "Choose password" with "#{password}"}
-  And %{I fill in "Confirm password" with "#{confirmation}"}
+  And %{I fill in "Password" with "#{password}"}
+  And %{I fill in "Password confirmation" with "#{confirmation}"}
   And %{I press "Save this password"}
 end
 

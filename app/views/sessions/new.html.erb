@@ -5,7 +5,7 @@
     </div>
     <%= link_to "Forgot Password?", new_password_url %>
   </div>
-<% form_for :session, :url => session_path do |form| %>
+<%= form_for :session, :url => session_path do |form| %>
   <div class="text_field">
     <%= form.label :who, "Email or Handle" %>
     <%= form.text_field :who, :size => 25 %>
