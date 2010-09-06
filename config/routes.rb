@@ -11,7 +11,7 @@ Gemcutter::Application.routes.draw do
         put :reset
       end
 
-      resources :downloads, :only => :index
+      resources :downloads, :only => [:index, :show]
       resources :dependencies, :only => :index
 
       resources :rubygems, :path => "gems", :only => [:create, :show] do
