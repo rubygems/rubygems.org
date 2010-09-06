@@ -25,7 +25,7 @@ h2. Organization
 Gemcutter consists of a few major parts:
 
 * Rails app: To manage users and allow others to view gems, etc.
-* Sinatra app (Hostess): the gem server, lives in @app/metal/hostess.rb@.
+* Sinatra app (Hostess): the gem server, lives in @app/middleware/hostess.rb@.
 * RubyGem: The gemcutter client gem that interacts with the site, lives in @gem/@.
 * Gem processor: Handles incoming gems and storing them in S3 (production) or on the filesystem in @server/@ (development). Lives in @lib/gemcutter.rb@, @lib/indexer.rb@, @lib/vault.rb@.
 
