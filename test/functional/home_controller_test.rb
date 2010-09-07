@@ -35,19 +35,27 @@ class HomeControllerTest < ActionController::TestCase
     end
   end
 
-  context "on GET to index with a non-ssl path" do
+  context "on GET to index with a non-ssl request when not signed in" do
     setup do
       @request.env['HTTPS'] = nil
+      get :index
     end
 
-    context "when Rails.env is production" do
-      setup do
-        get :index
-      end
-
-      should "redirect to the SSL path" do
-        assert_redirected_to "https://#{@request.host}#{@request.fullpath}"
-      end
+    should "redirect to the SSL path" do
+      assert_template 'index'
     end
   end
+
+  context "on GET to index with a non-ssl request when signed in" do
+    setup do
+      sign_in_as(Factory(:user))
+      @request.env['HTTPS'] = nil
+      get :index
+    end
+
+    should "redirect to the SSL path" do
+      assert_redirected_to "https://#{@request.host}#{@request.fullpath}"
+    end
+  end
+
 end
