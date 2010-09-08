@@ -36,8 +36,18 @@
             <% else %>
               <ul id="signed_out">
                 <li id="all-gems"><%= link_to "all gems", rubygems_url %></li>
-                <li id="sign-in"><%= link_to "sign in", sign_in_path %></li>
-                <li id="sign-up"><%= link_to "sign up", sign_up_path %></li>
+
+                <li id="sign-in">
+                  <a href="<%= url_for :controller => 'clearance/sessions',
+                                       :action => 'sign_in',
+                                       :protocol => 'https' %>">sign in</a>
+                </li>
+
+                <li id="sign-up">
+                  <a href="<%= url_for :controller => 'clearance/users',
+                                       :action => 'sign_up',
+                                       :protocol => 'https' %>">sign up</a>
+                </li>
               </ul>
             <% end %>
           </div>
