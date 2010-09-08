@@ -88,4 +88,26 @@ class DownloadTest < ActiveSupport::TestCase
     assert_equal [[@version_3, 3], [@version_2, 1], [@version_1, 1]],
                  Download.most_downloaded_today
   end
+
+  should "only keep the last 3 downloaded gems" do
+    @rubygem_1 = Factory(:rubygem)
+    @version_1 = Factory(:version, :rubygem => @rubygem_1)
+
+    @rubygem_2 = Factory(:rubygem)
+    @version_2 = Factory(:version, :rubygem => @rubygem_2)
+
+    @rubygem_3 = Factory(:rubygem)
+    @version_3 = Factory(:version, :rubygem => @rubygem_3)
+
+    @rubygem_4 = Factory(:rubygem)
+    @version_4 = Factory(:version, :rubygem => @rubygem_4)
+
+    Download.incr(@rubygem_1.name, @version_1.full_name)
+    Download.incr(@rubygem_2.name, @version_2.full_name)
+    Download.incr(@rubygem_3.name, @version_3.full_name)
+    Download.incr(@rubygem_4.name, @version_4.full_name)
+
+    assert_equal [@rubygem_4.name, @rubygem_3.name, @rubygem_2.name], Download.latest
+  end
+
 end

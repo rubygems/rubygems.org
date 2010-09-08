@@ -2,12 +2,15 @@ class Download
   COUNT_KEY     = "downloads"
   TODAY_KEY     = "downloads:today"
   YESTERDAY_KEY = "downloads:yesterday"
+  DOWNLOADED_KEY = "downloaded"
 
   def self.incr(name, full_name)
     $redis.incr(COUNT_KEY)
     $redis.incr("downloads:rubygem:#{name}")
     $redis.incr("downloads:version:#{full_name}")
     $redis.zincrby(TODAY_KEY, 1, full_name)
+    $redis.lpush(DOWNLOADED_KEY, name)
+    $redis.ltrim(DOWNLOADED_KEY, 0, 2)
   end
 
   def self.count
@@ -29,6 +32,10 @@ class Download
 
       [version, downloads.to_i]
     end
+  end
+
+  def self.latest
+    $redis.lrange(DOWNLOADED_KEY,0,-1)
   end
 
   def self.key(what)
