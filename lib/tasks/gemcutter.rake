@@ -10,7 +10,7 @@ namespace :gemcutter do
     end
 
     puts "Uploading to S3..."
-    VaultObject.store("Marshal.4.8.Z", Gem.deflate(Marshal.dump(index)), Vault::S3::OPTIONS)
+    Vault.upload("Marshal.4.8.Z", Gem.deflate(Marshal.dump(index)))
 
     puts "Ding, legacy index is done!"
   end
