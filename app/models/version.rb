@@ -17,8 +17,8 @@ class Version < ActiveRecord::Base
     order("versions.built_at desc")
 
   scope :by_position, order('position')
+  scope :with_deps,   includes(:dependencies)
   scope :latest,      where(:latest       => true     )
-  scope :with_deps,   where(:dependencies => :rubygem )
   scope :prerelease,  where(:prerelease   => true     )
   scope :release,     where(:prerelease   => false    )
   scope :indexed,     where(:indexed      => true     )
