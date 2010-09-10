@@ -9,6 +9,7 @@ Feature: Gravatar
       Then I should not see my gravatar
 
     Scenario: User is signed in
-      Given I have signed in with "email@person.com/password"
+      Given I am using HTTPS
+      And I have signed in with "email@person.com/password"
       When I go to the homepage
       Then I should see my gravatar
