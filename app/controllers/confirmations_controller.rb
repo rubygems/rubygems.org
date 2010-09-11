@@ -1,4 +1,7 @@
 class ConfirmationsController < Clearance::ConfirmationsController
+
+  ssl_required
+
   private
 
   def redirect_signed_out_confirmed_user

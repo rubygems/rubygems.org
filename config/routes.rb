@@ -87,6 +87,13 @@ Gemcutter::Application.routes.draw do
     resource :confirmation, :only => [:new, :create], :as => :user_confirmation
   end
 
+  resources :passwords, :only => [:new, :create]
+
+  resources :users do
+    resource :password, :only => [:create, :edit, :update]
+    resource :confirmation, :only => [:new, :create]
+  end
+
   ################################################################################
   # Root
 

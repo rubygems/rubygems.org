@@ -4,7 +4,8 @@ Feature: Edit Profile
   Should be able to edit their profile
 
   Scenario: Edit Handle
-    Given I have signed in with "john@example.com/password"
+    Given I am using HTTPS
+    And I have signed in with "john@example.com/password"
     And my handle is "johndoe"
     And I am on my edit profile page
     When I fill in "Handle" with "john_doe"
