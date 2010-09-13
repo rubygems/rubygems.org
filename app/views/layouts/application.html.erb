@@ -39,14 +39,14 @@
 
                 <li id="sign-in">
                   <a href="<%= url_for :controller => 'clearance/sessions',
-                                       :action => 'sign_in',
-                                       :protocol => 'https' %>">sign in</a>
+                                       :action     => 'new',
+                                       :protocol   => 'https' %>">sign in</a>
                 </li>
 
                 <li id="sign-up">
                   <a href="<%= url_for :controller => 'clearance/users',
-                                       :action => 'sign_up',
-                                       :protocol => 'https' %>">sign up</a>
+                                       :action     => 'new',
+                                       :protocol   => 'https' %>">sign up</a>
                 </li>
               </ul>
             <% end %>
