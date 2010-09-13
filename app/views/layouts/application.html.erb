@@ -24,7 +24,7 @@
             <% if signed_in? %>
                 <div id="user-info">
                   <a href="<%= edit_profile_path %>">
-                    <%= image_tag(current_user.gravatar_url(:size => 32), :id => "user_gravatar") %>
+                    <%= gravatar(32, "user_gravatar") %>
                     <span><%= truncate(current_user.name) %></span>
                   </a>
                 </div>
