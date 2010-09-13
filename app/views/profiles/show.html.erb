@@ -1,7 +1,7 @@
 <div id="profile">
   <div id="profile-left">
     <div id="avatar-frame">
-      <%= image_tag current_user.gravatar_url(:size => 150), :id => 'profile_gravatar' %>
+      <%= gravatar(150, "profile_gravatar") %>
     </div>
     <div id="profile-info">
       <h2 id="profile-name">fyates</h2>
