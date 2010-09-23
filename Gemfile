@@ -4,7 +4,7 @@ gem "rails", "3.0.0"
 gem "rack",  "1.2.1"
 
 gem "clearance",         "0.9.0.rc9"
-gem "fog",               "0.2.14"
+gem "fog",               "0.3.0"
 gem "gchartrb",          "0.8",   :require => "google_chart"
 gem "gravtastic",        "2.1.3"
 gem "high_voltage",      "0.9.1"
@@ -36,7 +36,7 @@ group :test do
 
   gem "database_cleaner",   "0.5.2"
   gem "fakeweb",            "1.2.6"
-  gem "nokogiri",           "1.4.1"
+  gem "nokogiri",           "1.4.3.1"
   gem "rack-test",          "0.5.4", :require => "rack/test"
   gem "redgreen",           "1.2.2"
   gem "rr",                 "0.10.11"
