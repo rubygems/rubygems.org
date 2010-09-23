@@ -3,7 +3,7 @@ if ENV['S3_KEY'] && ENV['S3_SECRET']
     Fog.mock!
   end
 
-  $fog = Fog::AWS::S3.new(
+  $fog = Fog::AWS::Storage.new(
     :aws_access_key_id     => ENV['S3_KEY'],
     :aws_secret_access_key => ENV['S3_SECRET']
   )
