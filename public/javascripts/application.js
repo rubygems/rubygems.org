@@ -25,12 +25,30 @@ $(document).ready(function() {
   }
 
   if ($('.downloads.counter').length > 0) {
+    var options   = { color : $('.downloads').css('color') };
+    var highlight = '#A70E0E';
+
     setInterval(function() {
       $.getJSON($('.downloads.counter').attr('data-href'), function(data) {
-        $('.downloads.counter strong:first')
-          .text(number_with_delimiter(data['total_downloads']));
-        $('.downloads.counter strong:last')
-          .text(number_with_delimiter(data['latest_version_downloads']));
+        var total   = $('.downloads.counter strong:first');
+        var version = $('.downloads.counter strong:last');
+
+        var previous_total_downloads   = parseInt(total.text(), 10);
+        var previous_version_downloads = parseInt(version.text(), 10);
+
+        if (previous_total_downloads != data['total_downloads']) {
+          total
+            .text(number_with_delimiter(data['total_downloads']))
+            .css('color', highlight)
+            .animate(options, 1500).dequeue();
+        }
+
+        if (previous_version_downloads != data['latest_version_downloads']) {
+          version
+            .text(number_with_delimiter(data['latest_version_downloads']))
+            .css('color', highlight)
+            .animate(options, 1500).dequeue();
+        }
       });
     }, 5000);
   }
