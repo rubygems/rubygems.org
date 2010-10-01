@@ -1,4 +1,4 @@
-class Api::V1::ApiKeysController < ApplicationController
+class Api::V1::ApiKeysController < Api::BaseController
   before_filter :redirect_to_root, :unless => :signed_in?, :only => [:reset]
   
   def show
