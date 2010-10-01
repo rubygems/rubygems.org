@@ -33,8 +33,8 @@ $(document).ready(function() {
         var total   = $('.downloads.counter strong:first');
         var version = $('.downloads.counter strong:last');
 
-        var previous_total_downloads   = parseInt(total.text(), 10);
-        var previous_version_downloads = parseInt(version.text(), 10);
+        var previous_total_downloads   = parseInt(total.text().replace(/,/g, ""), 10);
+        var previous_version_downloads = parseInt(version.text().replace(/,/g, ""), 10);
 
         if (previous_total_downloads != data['total_downloads']) {
           total
