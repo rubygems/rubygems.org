@@ -14,7 +14,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
   end
 
   def get_show(version)
-    get :show, :id => version.full_name
+    get :show, :id => "#{version.full_name}.json"
   end
 
   context "on GET to show" do
