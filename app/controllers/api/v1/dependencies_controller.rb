@@ -1,4 +1,4 @@
-class Api::V1::DependenciesController < ApplicationController
+class Api::V1::DependenciesController < Api::BaseController
   def index
     gem_list = params[:gems].split(',')
 
