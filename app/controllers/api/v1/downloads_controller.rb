@@ -1,4 +1,4 @@
-class Api::V1::DownloadsController < ApplicationController
+class Api::V1::DownloadsController < Api::BaseController
 
   before_filter :find_gem, :only => [:show]
 
