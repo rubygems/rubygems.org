@@ -1,7 +1,5 @@
 class Api::V1::DownloadsController < Api::BaseController
 
-  before_filter :find_gem, :only => [:show]
-
   def index
     render :json => {
       "total" => Download.count
@@ -9,10 +7,14 @@ class Api::V1::DownloadsController < Api::BaseController
   end
 
   def show
-    render :json => {
-      "total_downloads" => @rubygem.downloads,
-      "latest_version_downloads" => @rubygem.versions.most_recent.downloads_count
-    }
+    if rubygem_name = Version.rubygem_name_for(params[:id])
+      render :json => {
+        "total_downloads"   => Download.for_rubygem(rubygem_name),
+        "version_downloads" => Download.for_version(params[:id])
+      }
+    else
+      render :text => "This rubygem could not be found.", :status => :not_found
+    end
   end
 
 end

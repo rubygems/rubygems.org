@@ -5,13 +5,13 @@ class Download
 
   def self.incr(name, full_name)
     $redis.incr(COUNT_KEY)
-    $redis.incr("downloads:rubygem:#{name}")
-    $redis.incr("downloads:version:#{full_name}")
+    $redis.incr(rubygem_key(name))
+    $redis.incr(version_key(full_name))
     $redis.zincrby(TODAY_KEY, 1, full_name)
   end
 
   def self.count
-    $redis[COUNT_KEY].to_i
+    $redis.get(COUNT_KEY).to_i
   end
 
   def self.today(version)
@@ -19,7 +19,15 @@ class Download
   end
 
   def self.for(what)
-    $redis[key(what)].to_i
+    $redis.get(key(what)).to_i
+  end
+
+  def self.for_rubygem(name)
+    $redis.get(rubygem_key(name)).to_i
+  end
+
+  def self.for_version(full_name)
+    $redis.get(version_key(full_name)).to_i
   end
 
   def self.most_downloaded_today
@@ -34,9 +42,9 @@ class Download
   def self.key(what)
     case what
     when Version
-      "downloads:version:#{what.full_name}"
+      version_key(what.full_name)
     when Rubygem
-      "downloads:rubygem:#{what.name}"
+      rubygem_key(what.name)
     end
   end
 
@@ -65,5 +73,13 @@ class Download
       $redis.hincrby history_key(version.rubygem), yesterday, score.to_i
       version.rubygem.increment! :downloads, score.to_i
     end
+  end
+
+  def self.version_key(full_name)
+    "downloads:version:#{full_name}"
+  end
+
+  def self.rubygem_key(name)
+    "downloads:rubygem:#{name}"
   end
 end

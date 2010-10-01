@@ -43,9 +43,9 @@ $(document).ready(function() {
             .animate(options, 1500).dequeue();
         }
 
-        if (previous_version_downloads != data['latest_version_downloads']) {
+        if (previous_version_downloads != data['version_downloads']) {
           version
-            .text(number_with_delimiter(data['latest_version_downloads']))
+            .text(number_with_delimiter(data['version_downloads']))
             .css('color', highlight)
             .animate(options, 1500).dequeue();
         }
