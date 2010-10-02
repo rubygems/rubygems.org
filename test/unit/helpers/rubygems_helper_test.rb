@@ -1,4 +1,4 @@
-require 'test_helper'
+require File.expand_path("../../../test_helper", __FILE__)
 
 class RubygemsHelperTest < ActionView::TestCase
   include Rails.application.routes.url_helpers
@@ -68,5 +68,13 @@ class RubygemsHelperTest < ActionView::TestCase
         assert_equal [version.slug, rubygem_version_stats_path(@rubygem, version.slug)], links[index]
       end
     end
+  end
+
+  should "create links to owners gem overviews" do
+    users = Array.new(2) { Factory(:email_confirmed_user) }
+    create_gem(*users)
+    expected_links = users.map { |u| link_to u.handle, profile_path(u) }.join(", ")
+    assert_equal expected_links, links_to_owners(@rubygem)
+    assert links_to_owners(@rubygem).html_safe?
   end
 end

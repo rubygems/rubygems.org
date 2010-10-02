@@ -59,4 +59,10 @@ module RubygemsHelper
       end
     ]
   end
+
+  def links_to_owners(rubygem)
+    rubygem.owners.sort_by(&:handle).map do |owner|
+      link_to owner.handle, profile_path(owner)
+    end.join(", ").html_safe
+  end
 end
