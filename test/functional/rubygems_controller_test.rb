@@ -7,6 +7,23 @@ class RubygemsControllerTest < ActionController::TestCase
       sign_in_as(@user)
     end
 
+    context "On GET to show for any gem" do
+      setup do
+        @owners = [@user, Factory(:email_confirmed_user)]
+        create_gem(*@owners)
+        get :show, :id => @rubygem.to_param
+      end
+
+      should respond_with :success
+      should render_template :show
+      should assign_to :rubygem
+      should "renders owner gems overview links" do
+        @owners.each do |owner|
+          assert_have_selector "a[href='#{profile_path(owner)}']"
+        end
+      end
+    end
+
     context "On GET to show for another user's gem" do
       setup do
         @rubygem = Factory(:rubygem)

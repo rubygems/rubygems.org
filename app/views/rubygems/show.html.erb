@@ -61,11 +61,14 @@
       <% if @latest_version.indexed %>
         <div class="who">
           <div class="authors">
-            <h5>Authors</h5>
             <% if @latest_version.authors.present? %>
+              <h5>Authors</h5>
               <p><%= @latest_version.authors %></p>
-            <% else %>
-              <p>N/A</p>
+            <% end %>
+
+            <% if @rubygem.owners.present? %>
+              <h5>Owners</h5>
+              <p><%= links_to_owners(@rubygem) %></p>
             <% end %>
           </div>
 
