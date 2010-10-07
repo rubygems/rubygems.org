@@ -98,15 +98,15 @@ class DownloadTest < ActiveSupport::TestCase
     @rubygem_3 = Factory(:rubygem)
     @version_4 = Factory(:version, :rubygem => @rubygem_3)
 
-    Download.incr(@version_1)
-    Download.incr(@version_2)
-    Download.incr(@version_3)
+    Download.incr(@rubygem_1, @version_1.full_name)
+    Download.incr(@rubygem_1, @version_2.full_name)
+    Download.incr(@rubygem_2, @version_3.full_name)
     Download.rollover
-    Download.incr(@version_3)
-    Download.incr(@version_1)
-    Download.incr(@version_3)
-    Download.incr(@version_3)
-    Download.incr(@version_2)
+    Download.incr(@rubygem_2, @version_3.full_name)
+    Download.incr(@rubygem_1, @version_1.full_name)
+    Download.incr(@rubygem_2, @version_3.full_name)
+    Download.incr(@rubygem_2, @version_3.full_name)
+    Download.incr(@rubygem_1, @version_2.full_name)
 
     downloads = {
       "#{@version_1.id}-#{2.days.ago.to_date}" => 0, "#{@version_1.id}-#{Date.yesterday}" => 1, "#{@version_1.id}-#{Date.today}" => 1,
