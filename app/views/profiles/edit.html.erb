@@ -5,7 +5,7 @@
 
   <div class="avatar_field">
     <%= form.label :avatar, 'Avatar' %>
-    <%= image_tag current_user.gravatar_url(:size => 60) %>
+    <%= gravatar(60) %>
     <%= link_to 'Change', 'http://www.gravatar.com' %>
   </div>
 

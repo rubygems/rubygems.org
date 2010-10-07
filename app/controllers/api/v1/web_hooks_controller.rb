@@ -1,4 +1,4 @@
-class Api::V1::WebHooksController < ApplicationController
+class Api::V1::WebHooksController < Api::BaseController
   skip_before_filter :verify_authenticity_token
 
   before_filter :authenticate_with_api_key

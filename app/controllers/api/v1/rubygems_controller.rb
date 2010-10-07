@@ -1,4 +1,4 @@
-class Api::V1::RubygemsController < ApplicationController
+class Api::V1::RubygemsController < Api::BaseController
   skip_before_filter :verify_authenticity_token, :only => [:create, :yank, :unyank]
 
   before_filter :authenticate_with_api_key, :only => [:create, :yank, :unyank]

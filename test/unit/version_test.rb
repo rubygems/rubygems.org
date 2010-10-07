@@ -20,6 +20,13 @@ class VersionTest < ActiveSupport::TestCase
       assert @platform_version.save
       assert ! @dup_version.valid?
     end
+
+    should "be able to find dependencies" do
+      @dependency = Factory(:rubygem)
+      @version = Factory.build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
+      @version.dependencies << Factory(:dependency, :version => @version, :rubygem => @dependency)
+      assert ! Version.with_deps.first.dependencies.empty?
+    end
   end
 
   context "with a version" do

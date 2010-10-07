@@ -24,7 +24,7 @@
             <% if signed_in? %>
                 <div id="user-info">
                   <a href="<%= edit_profile_path %>">
-                    <%= image_tag(current_user.gravatar_url(:size => 32), :id => "user_gravatar") %>
+                    <%= gravatar(32, "user_gravatar") %>
                     <span><%= truncate(current_user.name) %></span>
                   </a>
                 </div>
@@ -36,8 +36,20 @@
             <% else %>
               <ul id="signed_out">
                 <li id="all-gems"><%= link_to "all gems", rubygems_url %></li>
-                <li id="sign-in"><%= link_to "sign in", sign_in_path %></li>
-                <li id="sign-up"><%= link_to "sign up", sign_up_path %></li>
+
+                <li id="sign-in">
+                  <a href="<%= url_for :controller => 'clearance/sessions',
+                                       :action     => 'new',
+                                       :only_path => false,
+                                       :protocol   => 'https' %>">sign in</a>
+                </li>
+
+                <li id="sign-up">
+                  <a href="<%= url_for :controller => 'clearance/users',
+                                       :action     => 'new',
+                                       :only_path => false,
+                                       :protocol   => 'https' %>">sign up</a>
+                </li>
               </ul>
             <% end %>
           </div>
@@ -83,7 +95,7 @@
         </div>
       </div>
     </div>
-    <%= javascript_include_tag "jquery", "jquery.easing.1.3", "application", "rails", :cache => true %>
+    <%= javascript_include_tag "jquery", "jquery.easing.1.3", "jquery.color", "application", "rails", :cache => true %>
     <script type="text/javascript">
     var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
     document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));

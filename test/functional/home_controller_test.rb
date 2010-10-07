@@ -34,4 +34,28 @@ class HomeControllerTest < ActionController::TestCase
       assert_received(Download) { |subject| subject.count }
     end
   end
+
+  context "on GET to index with a non-ssl request when not signed in" do
+    setup do
+      @request.env['HTTPS'] = nil
+      get :index
+    end
+
+    should "redirect to the SSL path" do
+      assert_template 'index'
+    end
+  end
+
+  context "on GET to index with a non-ssl request when signed in" do
+    setup do
+      sign_in_as(Factory(:user))
+      @request.env['HTTPS'] = nil
+      get :index
+    end
+
+    should "redirect to the SSL path" do
+      assert_redirected_to "https://#{@request.host}#{@request.fullpath}"
+    end
+  end
+
 end
