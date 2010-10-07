@@ -49,11 +49,11 @@ class VersionsControllerTest < ActionController::TestCase
       get :stats, :rubygem_id => @rubygem.name, :id => @latest_version.slug
     end
 
-    should_respond_with :success
-    should_render_template "rubygems/stats"
-    should_assign_to :rubygem
-    should_assign_to(:latest_version) { @latest_version }
-    should_assign_to(:versions) { [@latest_version] }
+    should respond_with :success
+    should render_template "rubygems/stats"
+    should assign_to(:rubygem) { @rubygem }
+    should assign_to(:latest_version) { @latest_version }
+    should assign_to(:versions) { [@latest_version] }
     should "render info about the gem" do
       assert_contain @rubygem.name
     end
