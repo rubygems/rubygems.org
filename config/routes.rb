@@ -12,6 +12,10 @@ Gemcutter::Application.routes.draw do
       end
 
       resources :downloads, :only => :index
+      constraints :id => RUBYGEM_NAME_MATCHER do
+        resources :downloads, :only => :show
+      end
+
       resources :dependencies, :only => :index
 
       resources :rubygems, :path => "gems", :only => [:create, :show] do
@@ -60,7 +64,7 @@ Gemcutter::Application.routes.draw do
 
   resource  :search,    :only => :show
   resource  :dashboard, :only => :show
-  resource  :profile,   :only => [:edit, :update]
+  resource  :profile,   :only => [:edit, :update, :show]
   resources :stats,     :only => :index
 
   resources :rubygems, :only => :index, :path => "gems" do
@@ -89,6 +93,13 @@ Gemcutter::Application.routes.draw do
   resource :session, :only => :create
   scope :path => "users/:user_id" do
     resource :confirmation, :only => [:new, :create], :as => :user_confirmation
+  end
+
+  resources :passwords, :only => [:new, :create]
+
+  resources :users do
+    resource :password, :only => [:create, :edit, :update]
+    resource :confirmation, :only => [:new, :create]
   end
 
   ################################################################################

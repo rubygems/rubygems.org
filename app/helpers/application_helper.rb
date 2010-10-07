@@ -18,4 +18,8 @@ module ApplicationHelper
   def short_info(version)
     truncate(version.info, :length => 100)
   end
+
+  def gravatar(size, id = "gravatar")
+    image_tag(current_user.gravatar_url(:size => size, :secure => request.ssl?), :id => id)
+  end
 end

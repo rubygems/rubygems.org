@@ -79,13 +79,11 @@ class DownloadTest < ActiveSupport::TestCase
     Download.incr(@rubygem_1.name, @version_2.full_name)
     Download.incr(@rubygem_2.name, @version_3.full_name)
     Download.rollover
-    Download.incr(@rubygem_2.name, @version_3.full_name)
     Download.incr(@rubygem_1.name, @version_1.full_name)
-    Download.incr(@rubygem_2.name, @version_3.full_name)
-    Download.incr(@rubygem_2.name, @version_3.full_name)
-    Download.incr(@rubygem_1.name, @version_2.full_name)
+    3.times { Download.incr(@rubygem_2.name, @version_3.full_name) }
+    2.times { Download.incr(@rubygem_1.name, @version_2.full_name) }
 
-    assert_equal [[@version_3, 3], [@version_2, 1], [@version_1, 1]],
+    assert_equal [[@version_3, 3], [@version_2, 2], [@version_1, 1]],
                  Download.most_downloaded_today
   end
 
@@ -116,5 +114,18 @@ class DownloadTest < ActiveSupport::TestCase
       "#{@version_3.id}-#{2.days.ago.to_date}" => 0, "#{@version_3.id}-#{Date.yesterday}" => 1, "#{@version_3.id}-#{Date.today}" => 3 }
 
     assert_equal downloads, Download.counts_by_day_for_versions([@version_1, @version_2, @version_3], 2)
+  end
+
+  should "find download count by gem name" do
+    rubygem = Factory(:rubygem)
+    version1 = Factory(:version, :rubygem => rubygem)
+    version2 = Factory(:version, :rubygem => rubygem)
+
+    3.times { Download.incr(rubygem.name, version1.full_name) }
+    2.times { Download.incr(rubygem.name, version2.full_name) }
+
+    assert_equal 5, Download.for_rubygem(rubygem.name)
+    assert_equal 3, Download.for_version(version1.full_name)
+    assert_equal 2, Download.for_version(version2.full_name)
   end
 end

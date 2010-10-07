@@ -10,6 +10,7 @@ require 'clearance/shoulda_macros'
 class ActiveSupport::TestCase
   self.use_transactional_fixtures = true
   self.use_instantiated_fixtures  = false
+  ActionDispatch::TestRequest::DEFAULT_ENV['HTTPS'] = 'on'
 end
 
 class Test::Unit::TestCase

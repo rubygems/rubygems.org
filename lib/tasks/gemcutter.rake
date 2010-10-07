@@ -10,7 +10,8 @@ namespace :gemcutter do
     end
 
     puts "Uploading to S3..."
-    VaultObject.store("Marshal.4.8.Z", Gem.deflate(Marshal.dump(index)), Vault::S3::OPTIONS)
+    include Vault::S3
+    upload("Marshal.4.8.Z", Gem.deflate(Marshal.dump(index)))
 
     puts "Ding, legacy index is done!"
   end
@@ -30,7 +31,7 @@ namespace :gemcutter do
     task :update => :environment do
       require 'benchmark'
       Benchmark.bm do|b|
-        g = Gemcutter.new(nil, StringIO.new)
+        g = Pusher.new(nil, StringIO.new)
         b.report(" specs index") { g.upload("specs.4.8.gz", g.specs_index) }
         b.report("latest index") { g.upload("latest_specs.4.8.gz", g.latest_index) }
         b.report("   pre index") { g.upload("prerelease_specs.4.8.gz", g.prerelease_index) }
@@ -102,7 +103,7 @@ namespace :gemcutter do
         if File.exists?(local_path)
           puts "Processing #{local_path}"
           begin
-            cutter = Gemcutter.new(nil, StringIO.new(File.open(local_path).read))
+            cutter = Pusher.new(nil, StringIO.new(File.open(local_path).read))
             cutter.pull_spec
             cutter.write
           rescue Exception => e
@@ -120,7 +121,7 @@ namespace :gemcutter do
       puts "Processing #{gems.size} gems..."
       gems.each do |path|
         puts "Processing #{path}"
-        cutter = Gemcutter.new(nil, StringIO.new(File.open(path).read))
+        cutter = Pusher.new(nil, StringIO.new(File.open(path).read))
 
         cutter.pull_spec and cutter.find and cutter.save
       end
@@ -134,7 +135,7 @@ namespace :gemcutter do
 
       gems.each do |path|
         puts "Processing #{path}"
-        cutter = Gemcutter.new(nil, StringIO.new(File.open(path).read))
+        cutter = Pusher.new(nil, StringIO.new(File.open(path).read))
 
         begin
           cutter.pull_spec and cutter.find and cutter.build
@@ -143,8 +144,8 @@ namespace :gemcutter do
           if path == spec_path
             cutter.rubygem.save
             spec = cutter.spec
-            Gemcutter.indexer.abbreviate spec
-            Gemcutter.indexer.sanitize spec
+            Pusher.indexer.abbreviate spec
+            Pusher.indexer.sanitize spec
             source_index.add_spec(spec, spec.original_name)
           else
             puts "Processed path (#{spec_path}) did not match: #{path}"
@@ -154,11 +155,11 @@ namespace :gemcutter do
         end
       end
 
-      File.open(Gemcutter.server_path("source_index"), "wb") do |f|
+      File.open(Pusher.server_path("source_index"), "wb") do |f|
         f.write Gem.deflate(Marshal.dump(source_index))
       end
 
-      Gemcutter.indexer.update_index(source_index)
+      Pusher.indexer.update_index(source_index)
     end
   end
 end
