@@ -1,6 +1,10 @@
 class ApplicationController < ActionController::Base
   include Clearance::Authentication
+  include SimpleSSLRequirement
+
   protect_from_forgery :only => [:create, :update, :destroy]
+
+  ssl_required :if => :signed_in?
 
   def authenticate_with_api_key
     api_key = request.headers["Authorization"] || params[:api_key]

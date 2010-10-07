@@ -4,6 +4,8 @@ class ProfilesController < ApplicationController
 
   def edit
   end
+  def show
+  end
 
   def update
     if current_user.update_attributes(params[:user])
