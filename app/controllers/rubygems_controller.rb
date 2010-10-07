@@ -21,7 +21,7 @@ class RubygemsController < ApplicationController
   end
 
   def stats
-    @versions = @rubygem.versions.limited(5)
+    @versions = @rubygem.versions.limit(5)
     @latest_version = @versions.first
     if @versions.blank?
       render :file => 'public/404.html', :status => :not_found

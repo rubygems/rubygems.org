@@ -309,15 +309,15 @@ class RubygemsControllerTest < ActionController::TestCase
     setup do
       @latest_version = Factory(:version)
       @rubygem = @latest_version.rubygem
-      @versions = @versions = @rubygem.versions.limited(5)
+      @versions = @versions = @rubygem.versions.limit(5)
       get :stats, :id => @rubygem.to_param
     end
 
-    should_respond_with :success
-    should_render_template :stats
-    should_assign_to :rubygem
-    should_assign_to(:latest_version) { @latest_version }
-    should_assign_to(:versions) { @versions }
+    should respond_with :success
+    should render_template :stats
+    should assign_to(:rubygem) { @rubygem }
+    should assign_to(:latest_version) { @latest_version }
+    should assign_to(:versions) { @versions }
     should "render info about the gem" do
       assert_contain @rubygem.name
     end
@@ -334,11 +334,11 @@ class RubygemsControllerTest < ActionController::TestCase
       get :stats, :id => @rubygem.to_param
     end
 
-    should_respond_with :success
-    should_render_template :stats
-    should_assign_to :rubygem
-    should_assign_to(:latest_version) { @latest_version }
-    should_assign_to(:versions) { [@latest_version, @older_version] }
+    should respond_with :success
+    should render_template :stats
+    should assign_to(:rubygem) { @rubygem }
+    should assign_to(:latest_version) { @latest_version }
+    should assign_to(:versions) { [@latest_version, @older_version] }
     should "display a dropdown to choose the version to show" do
       assert_have_selector 'select#version_for_stats'
     end
@@ -350,7 +350,7 @@ class RubygemsControllerTest < ActionController::TestCase
       get :stats, :id => @rubygem.to_param
     end
 
-    should_respond_with :not_found
+    should respond_with :not_found
   end
 
   context "On GET to stats for nonexistent gem" do
@@ -358,7 +358,7 @@ class RubygemsControllerTest < ActionController::TestCase
       get :stats, :id => "blahblah"
     end
 
-    should_respond_with :not_found
+    should respond_with :not_found
   end
 
   context "When not logged in" do
