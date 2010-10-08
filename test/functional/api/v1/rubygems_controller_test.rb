@@ -155,9 +155,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should respond_with :conflict
       should "not register new version" do
         version = Rubygem.last.reload.versions.most_recent
-        assert_equal @date, version.built_at
-        assert_equal "Freewill", version.summary
-        assert_equal "Geddy Lee", version.authors
+        assert_equal @date.to_s(:db), version.built_at.to_s(:db), "(date)"
+        assert_equal "Freewill", version.summary, '(summary)'
+        assert_equal "Geddy Lee", version.authors, '(authors)'
       end
     end
 
