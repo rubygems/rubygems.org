@@ -41,7 +41,7 @@ class HomeControllerTest < ActionController::TestCase
       get :index
     end
 
-    should "redirect to the SSL path" do
+    should "not redirect to the SSL path" do
       assert_template 'index'
     end
   end
