@@ -50,7 +50,8 @@ class Api::V1::RubygemsController < Api::BaseController
         render :json => "You do not have permission to yank this gem.", :status => :forbidden
       else
         begin
-          @version = Version.find_from_slug!(@rubygem, params[:version])
+          slug = params[:platform].blank? ? params[:version] : "#{params[:version]}-#{params[:platform]}"
+          @version = Version.find_from_slug!(@rubygem, slug)
         rescue ActiveRecord::RecordNotFound
           render :json => "The version #{params[:version]} does not exist.", :status => :not_found
         end
