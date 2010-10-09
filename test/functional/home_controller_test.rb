@@ -44,6 +44,12 @@ class HomeControllerTest < ActionController::TestCase
     should "not redirect to the SSL path" do
       assert_template 'index'
     end
+    
+    should "contain HTTPS links to sign in and sign up" do
+      assert_select "a[href=?]", new_session_url(:protocol   => 'https')
+      assert_select "a[href=?]", new_user_url(:protocol   => 'https')
+    end
+    
   end
 
   context "on GET to index with a non-ssl request when signed in" do
