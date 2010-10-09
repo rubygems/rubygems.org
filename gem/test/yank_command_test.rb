@@ -6,21 +6,18 @@ class YankCommandTest < CommandTest
     setup do
       @gem = "MyGem"
       @version = '0.1.0'
-      @command = Gem::Commands::YankCommand.new
       @platform = nil
+      @command = Gem::Commands::YankCommand.new
       stub(@command).say
     end
 
-    %w[-v --version].each do |option|
+    %w[-v --version -p --platform].each do |option|
       should "raise an error with no version with #{option}" do
         assert_raise OptionParser::MissingArgument do
           @command.handle_options([@gem, option])
         end
       end
     end
-    
-    ## error if -p has no value passed to it?
-    #pending "error if -p has no value passed to it."
 
     context 'yanking a gem' do
       setup do
@@ -29,8 +26,6 @@ class YankCommandTest < CommandTest
         stub_request(:delete, @api).to_return(:body => "Successfully yanked")
         @command.handle_options([@gem, "-v", @version])
       end
-
-      #pending "yank a gem with a specific platform"
 
       should 'say gem was yanked' do
         @command.execute
@@ -88,4 +83,5 @@ class YankCommandTest < CommandTest
       end
     end
   end
+
 end
