@@ -36,13 +36,10 @@ class ApplicationController < ActionController::Base
   def find_gem_by_name
     @url      = params[:url]
     @gem_name = params[:gem_name]
-    @platform = params[:platform]
-    @rubygem  = @platform.nil? ? Rubygem.find_by_name(@gem_name) : Rubygem.find_by_full_name("#{@gem_name}-#{@platform}")
-
+    @rubygem  = Rubygem.find_by_name(@gem_name)
     if @rubygem.nil? && @gem_name != WebHook::GLOBAL_PATTERN
       render :text   => "This gem could not be found",
              :status => :not_found
     end
   end
-  
 end

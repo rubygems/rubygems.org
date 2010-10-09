@@ -73,10 +73,6 @@ class Gem::Commands::YankCommand < Gem::Command
     end
     
     def get_platform_from_requirements(requirements)
-      begin
-        requirements[:added_platform].nil? ? nil : Gem.platforms[1]
-      rescue
-        nil
-      end
+      Gem.platforms[1] if requirements.key? :added_platform
     end
 end
