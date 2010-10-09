@@ -61,7 +61,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "On GET to show for a gem that not hosted" do
       setup do
         @rubygem = Factory(:rubygem)
-        assert 0, @rubygem.versions.count
+        assert @rubygem.versions.count.zero?
         get :show, :id => @rubygem.to_param, :format => "json"
       end
 
