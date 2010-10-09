@@ -32,6 +32,7 @@ class Gem::Commands::YankCommand < Gem::Command
     sign_in
     version   = get_version_from_requirements(options[:version])
     platform  = get_platform_from_requirements(options)
+    
     if !version.nil?
       if options[:undo]
         unyank_gem(version, platform)
@@ -73,6 +74,6 @@ class Gem::Commands::YankCommand < Gem::Command
     end
     
     def get_platform_from_requirements(requirements)
-      Gem.platforms[1] if requirements.key? :added_platform
+      Gem.platforms[1].to_s if requirements.key? :added_platform
     end
 end
