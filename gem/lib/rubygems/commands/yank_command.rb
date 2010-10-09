@@ -22,18 +22,16 @@ class Gem::Commands::YankCommand < Gem::Command
   def initialize
     super 'yank', description
     add_version_option("remove")
+    add_platform_option("remove")
     add_option('--undo') do |value, options|
       options[:undo] = true
-    end
-    add_option('-p', '--platform PLATFORM', 'Platform of gem to remove') do |value, options|
-      options[:platform] = value
     end
   end
 
   def execute
     sign_in
-    version = get_version_from_requirements(options[:version])
-    platform = options[:platform].nil? ? nil : options[:platform]
+    version   = get_version_from_requirements(options[:version])
+    platform  = get_platform_from_requirements(options)
     if !version.nil?
       if options[:undo]
         unyank_gem(version, platform)
@@ -69,6 +67,14 @@ class Gem::Commands::YankCommand < Gem::Command
     def get_version_from_requirements(requirements)
       begin
         requirements.requirements.first[1].version
+      rescue
+        nil
+      end
+    end
+    
+    def get_platform_from_requirements(requirements)
+      begin
+        requirements[:added_platform].nil? ? nil : Gem.platforms[1]
       rescue
         nil
       end
