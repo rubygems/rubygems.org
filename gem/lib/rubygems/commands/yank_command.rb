@@ -1,6 +1,7 @@
 require 'rubygems/local_remote_options'
 require 'rubygems/version_option'
 require 'rubygems/gemcutter_utilities'
+require 'ap'
 
 class Gem::Commands::YankCommand < Gem::Command
   include Gem::LocalRemoteOptions
@@ -26,13 +27,14 @@ class Gem::Commands::YankCommand < Gem::Command
     add_option('--undo') do |value, options|
       options[:undo] = true
     end
+    #add_option('-p', '--platform') do |value, options|
+      #options[:platform] = get_platform_from_requirements(options)
+    #end
   end
 
   def execute
     sign_in
     version = get_version_from_requirements(options[:version])
-    require 'ap'
-    ap options
     if !version.nil?
       if options[:undo]
         unyank_gem(version)
