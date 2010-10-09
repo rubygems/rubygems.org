@@ -22,4 +22,10 @@ module ApplicationHelper
   def gravatar(size, id = "gravatar")
     image_tag(current_user.gravatar_url(:size => size, :secure => request.ssl?), :id => id)
   end
+  
+  def ssl_url_for(options = {})
+    options.reverse_merge!({:only_path => false, :protocol   => 'https'})
+    url_for(options)
+  end
+  
 end
