@@ -4,6 +4,6 @@ class AddDownloadsToVersions < ActiveRecord::Migration
   end
 
   def self.down
-    remove_column :versions, :downloads_count, :integer
+    remove_column :versions, :downloads_count
   end
 end
