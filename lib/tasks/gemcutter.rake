@@ -10,8 +10,10 @@ namespace :gemcutter do
     end
 
     puts "Uploading to S3..."
-    include Vault::S3
-    upload("Marshal.4.8.Z", Gem.deflate(Marshal.dump(index)))
+    class Uploader
+      include Vault::S3
+    end
+    Uploader.new.upload("Marshal.4.8.Z", Gem.deflate(Marshal.dump(index)))
 
     puts "Ding, legacy index is done!"
   end

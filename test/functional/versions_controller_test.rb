@@ -42,5 +42,22 @@ class VersionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "On GET to stats" do
+    setup do
+      @latest_version = Factory(:version)
+      @rubygem = @latest_version.rubygem
+      get :stats, :rubygem_id => @rubygem.name, :id => @latest_version.slug
+    end
+
+    should respond_with :success
+    should render_template "rubygems/stats"
+    should assign_to(:rubygem) { @rubygem }
+    should assign_to(:latest_version) { @latest_version }
+    should assign_to(:versions) { [@latest_version] }
+    should "render info about the gem" do
+      assert_contain @rubygem.name
+    end
+  end
+
 end
 
