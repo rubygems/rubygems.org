@@ -4,10 +4,10 @@ require 'lib/rubygems/commands/yank_command'
 class YankCommandTest < CommandTest
   context "yanking" do
     setup do
-      @gem = "MyGem"
-      @version = '0.1.0'
+      @gem      = "MyGem"
+      @version  = '0.1.0'
       @platform = nil
-      @command = Gem::Commands::YankCommand.new
+      @command  = Gem::Commands::YankCommand.new
       stub(@command).say
     end
 
@@ -50,6 +50,33 @@ class YankCommandTest < CommandTest
         assert_requested(:delete, @api,
                          :headers => { 'Authorization' => 'key' })
       end
+      
+      context 'with a platform specified' do
+        setup do
+          stub_api_key("key")
+          @api = "https://rubygems.org/api/v1/gems/yank"
+          @platform = "x86-darwin-10"
+          stub_request(:delete, @api).to_return(:body => "Successfully yanked")
+          @command.handle_options([@gem, "-v", @version, "-p", @platform])
+        end
+        
+        should 'say gem was yanked' do
+          @command.execute
+          assert_received(@command) do |command|
+            command.say("Yanking gem from Gemcutter...")
+            command.say("Successfully yanked")
+          end
+        end
+        
+        should 'invoke yank_gem' do
+          stub(@command).yank_gem(@version, @platform)
+          @command.execute
+          assert_received(@command) do |command|
+            command.yank_gem(@version, @platform)
+          end
+        end
+      end
+      
     end
     
     context 'unyanking a gem' do
@@ -82,6 +109,34 @@ class YankCommandTest < CommandTest
         assert_requested(:put, @api, :headers => { 'Authorization' => 'key' })
       end
     end
+    
+    
+    context 'with a platform specified' do
+      setup do
+        stub_api_key("key")
+        @api = "https://rubygems.org/api/v1/gems/unyank"
+        @platform = "x86-darwin-10"
+        stub_request(:put, @api).to_return(:body => "Successfully unyanked")
+        @command.handle_options([@gem, "-v", @version, "-p", @platform, "--undo"])
+      end
+      
+      should 'say gem was unyanked' do
+        @command.execute
+        assert_received(@command) do |command|
+          command.say("Re-indexing gem")
+          command.say("Successfully unyanked")
+        end
+      end
+      
+      should 'invoke unyank_gem' do
+        stub(@command).unyank_gem(@version, @platform)
+        @command.execute
+        assert_received(@command) do |command|
+          command.unyank_gem(@version, @platform)
+        end
+      end
+    end
+    
   end
 
 end
