@@ -210,6 +210,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           assert @rubygem.ownerships.count.zero?
         end
       end
+      
 
       context "and a version 0.1.1" do
         setup do
@@ -219,6 +220,24 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         context "ON DELETE to yank for version 0.1.1" do
           setup do
             delete :yank, :gem_name => @rubygem.to_param, :version => @v2.number
+          end
+          should respond_with :success
+          should "keep the gem, deindex it, and keep the owners" do
+            assert_equal 2, @rubygem.versions.count
+            assert_equal 1, @rubygem.versions.indexed.count
+            assert_equal 1, @rubygem.ownerships.count
+          end
+        end
+      end
+      
+      context "and a version 0.1.1 and platform x86-darwin-10" do
+        setup do
+          @v2 = Factory(:version, :rubygem => @rubygem, :number => "0.1.1", :platform => "x86-darwin-10")
+        end
+
+        context "ON DELETE to yank for version 0.1.1 and x86-darwin-10" do
+          setup do
+            delete :yank, :gem_name => @rubygem.to_param, :version => @v2.number, :platform => @v2.platform
           end
           should respond_with :success
           should "keep the gem, deindex it, and keep the owners" do
@@ -265,6 +284,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         @rubygem  = Factory(:rubygem, :name => "SomeGem")
         @v1       = Factory(:version, :rubygem => @rubygem, :number => "0.1.0", :platform => "ruby", :indexed => false)
         @v2       = Factory(:version, :rubygem => @rubygem, :number => "0.1.1", :platform => "ruby")
+        @v3       = Factory(:version, :rubygem => @rubygem, :number => "0.1.2", :platform => "x86-darwin-10", :indexed => false)
         Factory(:ownership, :user => @user, :rubygem => @rubygem, :approved => true)
       end
 
@@ -278,6 +298,18 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           assert @v1.reload.indexed?
         end
       end
+      
+      context "ON PUT to unyank for version 0.1.2 and platform x86-darwin-10" do
+        setup do
+          put :unyank, :gem_name => @rubygem.to_param, :version => @v3.number, :platform => @v3.platform
+        end
+        should respond_with :success
+        #should change("the rubygem's indexed version count", :by => 1) { @rubygem.versions.indexed.count }
+        should "re-index 0.1.2" do
+          assert @v3.reload.indexed?
+        end
+      end
+      
 
       context "ON PUT to unyank for version 0.1.1" do
         setup do
@@ -288,4 +320,6 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
   end
+
+  
 end
