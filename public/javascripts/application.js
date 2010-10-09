@@ -24,6 +24,10 @@ $(document).ready(function() {
     }, 5000);
   }
 
+  $('#version_for_stats').change(function() {
+    window.location.href = $(this).val();
+  });
+
   if ($('.downloads.counter').length > 0) {
     var options   = { color : $('.downloads').css('color') };
     var highlight = '#A70E0E';
