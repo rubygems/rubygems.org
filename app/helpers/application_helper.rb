@@ -24,7 +24,12 @@ module ApplicationHelper
   end
   
   def ssl_url_for(options = {})
-    options.reverse_merge!({:only_path => false, :protocol   => 'https'})
+    if %w(production staging test).include?(Rails.env)
+      protocol = 'https'  # when using simple_ssl_requirement
+    else
+      protocol = 'http'   # for development
+    end
+    options.reverse_merge!({:only_path => false, :protocol => protocol})
     url_for(options)
   end
   
