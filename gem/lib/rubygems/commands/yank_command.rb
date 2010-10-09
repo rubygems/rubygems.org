@@ -16,12 +16,13 @@ class Gem::Commands::YankCommand < Gem::Command
   end
 
   def usage
-    "#{program_name} GEM -v VERSION [--undo]"
+    "#{program_name} GEM -v VERSION [--platform PLATFORM] [--undo]"
   end
   
   def initialize
     super 'yank', description
     add_version_option("remove")
+    add_platform_option("remove")
     add_option('--undo') do |value, options|
       options[:undo] = true
     end
@@ -30,6 +31,8 @@ class Gem::Commands::YankCommand < Gem::Command
   def execute
     sign_in
     version = get_version_from_requirements(options[:version])
+    require 'ap'
+    ap options
     if !version.nil?
       if options[:undo]
         unyank_gem(version)
