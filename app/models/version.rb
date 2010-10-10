@@ -168,7 +168,6 @@ class Version < ActiveRecord::Base
     push
   end
 
-
   def slug
     full_name.gsub(/^#{rubygem.name}-/, '')
   end
