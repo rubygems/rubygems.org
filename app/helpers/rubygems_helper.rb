@@ -53,9 +53,9 @@ module RubygemsHelper
 
   def stats_options(rubygem)
     [
-      ['Overview', stats_rubygem_path(rubygem)],
+      ['Overview', rubygem_stats_path(rubygem)],
       *rubygem.versions.sort.reverse.map do |version|
-        [version.slug, stats_rubygem_version_path(rubygem, version.slug)]
+        [version.slug, rubygem_version_stats_path(rubygem, version.slug)]
       end
     ]
   end
