@@ -1,7 +1,6 @@
 class StatsController < ApplicationController
-  before_filter :find_gem, :only => :show
+  before_filter :find_gem,      :only => :show
   before_filter :ensure_hosted, :only => :show
-
 
   def index
     @number_of_gems      = Rubygem.total_count
@@ -12,12 +11,21 @@ class StatsController < ApplicationController
 
   def show
     if params[:version_id]
-      @version  = Version.find_from_slug!(@rubygem.id, params[:version_id])
-      @versions = [@version]
+      @subtitle        = "stats for #{params[:version_id]}"
+      @version         = Version.find_from_slug!(@rubygem.id, params[:version_id])
+      @versions        = [@version]
+      @downloads_today = Download.today(@version)
+      @rank            = Download.rank(@version)
     else
-      @version  = @rubygem.versions.most_recent
-      @versions = @rubygem.versions.limit(5)
+      @subtitle        = "stats overview"
+      @version         = @rubygem.versions.most_recent
+      @versions        = @rubygem.versions.limit(5)
+      @downloads_today = Download.today(@rubygem.versions)
+      @rank            = Download.highest_rank(@rubygem.versions)
     end
+
+    @downloads_total = @version.rubygem.downloads
+    @cardinality     = Download.cardinality
   end
 
   private

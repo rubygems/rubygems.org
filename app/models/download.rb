@@ -14,8 +14,10 @@ class Download
     $redis.get(COUNT_KEY).to_i
   end
 
-  def self.today(version)
-    $redis.zscore(TODAY_KEY, version.full_name).to_i
+  def self.today(*versions)
+    versions.flatten.inject(0) do |sum, version|
+      sum + $redis.zscore(TODAY_KEY, version.full_name).to_i
+    end
   end
 
   def self.for(what)
@@ -85,6 +87,22 @@ class Download
       $redis.hincrby history_key(version.rubygem), yesterday, score.to_i
       version.rubygem.increment! :downloads, score.to_i
     end
+  end
+
+  def self.cardinality
+    $redis.zcard(TODAY_KEY)
+  end
+
+  def self.rank(version)
+    if rank = $redis.zrevrank(TODAY_KEY, version.full_name)
+      rank + 1
+    else
+      0
+    end
+  end
+
+  def self.highest_rank(versions)
+    versions.map { |version| Download.rank(version) }.min
   end
 
   def self.version_key(full_name)
