@@ -19,7 +19,7 @@ class StatsController < ApplicationController
     else
       @subtitle        = "stats overview"
       @version         = @rubygem.versions.most_recent
-      @versions        = @rubygem.versions.limit(5)
+      @versions        = @rubygem.versions.with_indexed.by_position.limit(5)
       @downloads_today = Download.today(@rubygem.versions)
       @rank            = Download.highest_rank(@rubygem.versions)
     end
