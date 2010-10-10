@@ -62,6 +62,9 @@ class StatsControllerTest < ActionController::TestCase
     should "display a dropdown to choose the version to show" do
       assert_have_no_selector 'select#version_for_stats'
     end
+    should "see that stats are an overview" do
+      assert_contain "stats overview"
+    end
   end
 
   context "On GET to stats with a gem that has multiple versions" do
@@ -79,6 +82,58 @@ class StatsControllerTest < ActionController::TestCase
     should assign_to(:versions) { [@latest_version, @older_version] }
     should "display a dropdown to choose the version to show" do
       assert_have_selector 'select#version_for_stats'
+    end
+  end
+
+  context "On GET to stats" do
+    setup do
+      @version        = Factory(:version)
+      rubygem         = @version.rubygem
+      @other_version  = Factory(:version)
+      @latest_version = Factory(:version, :rubygem => rubygem)
+
+      Download.incr(rubygem.name, @version.full_name)
+      Download.rollover
+
+      5.times  { Download.incr(rubygem.name, @latest_version.full_name) }
+      4.times  { Download.incr(rubygem.name, @version.full_name) }
+      11.times { Download.incr(@other_version.rubygem.name, @other_version.full_name) }
+    end
+
+    should "show overview stats" do
+      get :show, :rubygem_id => @version.rubygem.to_param
+
+      assert_equal 2, assigns[:rank]
+      assert_equal 3, assigns[:cardinality]
+      assert_equal 9, assigns[:downloads_today]
+      assert_equal 10, assigns[:downloads_total]
+    end
+
+    should "show stats for just a version" do
+      get :show, :rubygem_id => @version.rubygem.to_param, :version_id => @version.slug
+
+      assert_equal 3, assigns[:rank]
+      assert_equal 3, assigns[:cardinality]
+      assert_equal 4, assigns[:downloads_today]
+      assert_equal 10, assigns[:downloads_total]
+    end
+
+    should "show stats for just the latest version" do
+      get :show, :rubygem_id => @version.rubygem.to_param, :version_id => @latest_version.slug
+
+      assert_equal 2, assigns[:rank]
+      assert_equal 3, assigns[:cardinality]
+      assert_equal 5, assigns[:downloads_today]
+      assert_equal 10, assigns[:downloads_total]
+    end
+
+    should "show stats for a totally different version" do
+      get :show, :rubygem_id => @other_version.rubygem.to_param, :version_id => @other_version.slug
+
+      assert_equal 1, assigns[:rank]
+      assert_equal 3, assigns[:cardinality]
+      assert_equal 11, assigns[:downloads_today]
+      assert_equal 11, assigns[:downloads_total]
     end
   end
 
@@ -115,6 +170,9 @@ class StatsControllerTest < ActionController::TestCase
     should assign_to(:versions) { [@version] }
     should "render info about the gem" do
       assert_contain @rubygem.name
+    end
+    should "see that stats are for this specific version" do
+      assert_contain "stats for #{@version.slug}"
     end
   end
 end

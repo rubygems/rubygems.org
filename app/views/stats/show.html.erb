@@ -1,17 +1,33 @@
 <% @title, @title_url = @rubygem.name, rubygem_path(@rubygem) %>
 
+<% if @rubygem.versions.size > 1 %>
+  <%= select_tag :version_for_stats, options_for_select(stats_options(@rubygem), request.path) %>
+<% end %>
+
 <div id="markup">
   <%= simple_markup(@version.info) %>
 </div>
 
+<div class="statistics statistics-show clearfix">
+  <div class="border">
+    <span><%= number_with_delimiter @downloads_total %></span> total downloads
+  </div>
+
+  <div class="border">
+    <span><%= number_with_delimiter @downloads_today %></span> downloads today
+  </div>
+
+  <div class="border">
+    <span><%= number_with_delimiter @rank %> / <%= number_with_delimiter @cardinality %></span>
+    <% if params[:version_id] %>
+      current rank today
+    <% else %>
+      highest rank today
+    <% end %>
+  </div>
+</div>
 <div class="border">
   <div class="meta">
-    <% if @rubygem.versions.size > 1 %>
-      <div class="stat-versions">
-        <%= select_tag :version_for_stats, options_for_select(stats_options(@rubygem), request.path) %>
-      </div>
-    <% end %>
-
     <div class="stats-graph">
       <%= downloads_over_time_chart(@versions) %>
     </div>
