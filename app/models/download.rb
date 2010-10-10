@@ -102,7 +102,7 @@ class Download
   end
 
   def self.highest_rank(versions)
-    versions.map { |version| Download.rank(version) }.min
+    versions.map { |version| Download.rank(version) }.reject(&:zero?).min
   end
 
   def self.version_key(full_name)
