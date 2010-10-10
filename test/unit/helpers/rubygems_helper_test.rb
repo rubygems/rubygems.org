@@ -49,4 +49,24 @@ class RubygemsHelperTest < ActionView::TestCase
       assert_nil link_to_page("Code", @linkset.code)
     end
   end
+
+  context "options for individual stats" do
+    setup do
+      @rubygem = Factory(:rubygem)
+      @versions = (1..3).map { Factory(:version, :rubygem => @rubygem) }
+    end
+
+    should "show the overview link first" do
+      overview = stats_options(@rubygem).first
+      assert_equal ["Overview", stats_rubygem_path(@rubygem)], overview
+    end
+
+    should "have all the links for the rubygem" do
+      _, *links = stats_options(@rubygem)
+
+      @versions.sort.reverse.each_with_index do |version, index|
+        assert_equal [version.slug, stats_rubygem_version_path(@rubygem, version.slug)], links[index]
+      end
+    end
+  end
 end
