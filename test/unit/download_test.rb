@@ -142,4 +142,8 @@ class DownloadTest < ActiveSupport::TestCase
   should "return zero for rank if no downloads exist" do
     assert_equal 0, Download.rank(Factory.build(:version))
   end
+
+  should "return zero for highest rank the given versions have zero downloads" do
+    assert_equal 0, Download.highest_rank([Factory.build(:version), Factory.build(:version)])
+  end
 end
