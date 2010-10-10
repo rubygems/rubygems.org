@@ -10,8 +10,8 @@ class Api::V1::RubygemsController < Api::BaseController
   def index
     @rubygems = current_user.rubygems.with_versions
     respond_to do |wants|
-      wants.json { render :json => @rubygems }
-      wants.xml  { render :xml  => @rubygems }
+      wants.any(:json, :all) { render :json => @rubygems }
+      wants.xml              { render :xml  => @rubygems }
     end
   end
 
