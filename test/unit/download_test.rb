@@ -94,6 +94,7 @@ class DownloadTest < ActiveSupport::TestCase
     assert_equal 3, Download.today([@version_1, @version_2])
     assert_equal 2, Download.highest_rank([@version_1, @version_2])
     assert_equal 1, Download.highest_rank([@version_3])
+    assert_equal 1, Download.highest_rank([@version_3, @version_4])
   end
 
   should "find counts per day for versions" do
