@@ -38,17 +38,13 @@
                 <li id="all-gems"><%= link_to "all gems", rubygems_url %></li>
 
                 <li id="sign-in">
-                  <a href="<%= url_for :controller => 'clearance/sessions',
-                                       :action     => 'new',
-                                       :only_path => false,
-                                       :protocol   => 'https' %>">sign in</a>
+                  <a href="<%= ssl_url_for :controller => 'clearance/sessions',
+                                           :action     => 'new' %>">sign in</a>
                 </li>
 
                 <li id="sign-up">
-                  <a href="<%= url_for :controller => 'clearance/users',
-                                       :action     => 'new',
-                                       :only_path => false,
-                                       :protocol   => 'https' %>">sign up</a>
+                  <a href="<%= ssl_url_for :controller => 'clearance/users',
+                                           :action     => 'new' %>">sign up</a>
                 </li>
               </ul>
             <% end %>

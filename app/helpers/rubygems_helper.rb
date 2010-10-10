@@ -1,5 +1,4 @@
 module RubygemsHelper
-
   def link_to_page(text, url)
     link_to(text, url, :rel => 'nofollow') if url.present?
   end
@@ -50,5 +49,14 @@ module RubygemsHelper
 
   def documentation_path(version)
     "http://rubydoc.info/gems/#{version.rubygem.name}/#{version.number}/frames"
+  end
+
+  def stats_options(rubygem)
+    [
+      ['Overview', rubygem_stats_path(rubygem)],
+      *rubygem.versions.sort.reverse.map do |version|
+        [version.slug, rubygem_version_stats_path(rubygem, version.slug)]
+      end
+    ]
   end
 end

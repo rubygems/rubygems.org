@@ -78,3 +78,8 @@ end
 When 'I request "$url"' do |url|
   visit url
 end
+
+When 'I list the gems with my api key' do
+  api_key_header
+  visit api_v1_rubygems_path, :get
+end

@@ -61,7 +61,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "On GET to show for a gem that not hosted" do
       setup do
         @rubygem = Factory(:rubygem)
-        assert 0, @rubygem.versions.count
+        assert @rubygem.versions.count.zero?
         get :show, :id => @rubygem.to_param, :format => "json"
       end
 
@@ -155,9 +155,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should respond_with :conflict
       should "not register new version" do
         version = Rubygem.last.reload.versions.most_recent
-        assert_equal @date, version.built_at
-        assert_equal "Freewill", version.summary
-        assert_equal "Geddy Lee", version.authors
+        assert_equal @date.to_s(:db), version.built_at.to_s(:db), "(date)"
+        assert_equal "Freewill", version.summary, '(summary)'
+        assert_equal "Geddy Lee", version.authors, '(authors)'
       end
     end
 
@@ -317,6 +317,45 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         end
         should respond_with :unprocessable_entity
         #should not_change("the rubygem's indexed version count") { @rubygem.versions.indexed.count }
+      end
+    end
+
+    context "On GET to index with json for a list of owned gems" do
+      setup do
+        @mygems = [ Factory(:rubygem, :name => "SomeGem"), Factory(:rubygem, :name => "AnotherGem") ]
+        @mygems.each do |rubygem|
+          Factory(:version, :rubygem => rubygem)
+          Factory(:ownership, :user => @user, :rubygem => rubygem, :approved => true)
+        end
+
+        @other_user = Factory(:email_confirmed_user)
+        @not_my_rubygem = Factory(:rubygem, :name => "NotMyGem")
+        Factory(:version, :rubygem => @not_my_rubygem)
+        Factory(:ownership, :user => @other_user, :rubygem => @not_my_rubygem, :approved => true)
+
+        get :index, :format => "json"
+      end
+
+      should assign_to(:rubygems) { [@rubygem] }
+      should respond_with :success
+      should "return a json hash" do
+        assert_not_nil JSON.parse(@response.body)
+      end
+      should "only return my gems" do
+        gem_names = JSON.parse(@response.body).map { |rubygem| rubygem['name'] }.sort
+        assert_equal ["AnotherGem", "SomeGem"], gem_names
+      end
+    end
+  end
+
+  context "No signed in-user" do
+    context "On GET to index with json for a list of gems" do
+      setup do
+        get :index, :format => "json"
+      end
+      should "deny access" do
+        assert_response 401
+        assert_match "Access Denied. Please sign up for an account at http://rubygems.org", @response.body
       end
     end
   end

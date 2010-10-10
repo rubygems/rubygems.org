@@ -1,11 +1,19 @@
 class Api::V1::RubygemsController < Api::BaseController
   skip_before_filter :verify_authenticity_token, :only => [:create, :yank, :unyank]
 
-  before_filter :authenticate_with_api_key, :only => [:create, :yank, :unyank]
-  before_filter :verify_authenticated_user, :only => [:create, :yank, :unyank]
+  before_filter :authenticate_with_api_key, :only => [:index, :create, :yank, :unyank]
+  before_filter :verify_authenticated_user, :only => [:index, :create, :yank, :unyank]
   before_filter :find_gem,                  :only => [:show]
   before_filter :find_gem_by_name,          :only => [:yank, :unyank]
   before_filter :validate_gem_and_version,  :only => [:yank, :unyank]
+
+  def index
+    @rubygems = current_user.rubygems.with_versions
+    respond_to do |wants|
+      wants.any(:json, :all) { render :json => @rubygems }
+      wants.xml              { render :xml  => @rubygems }
+    end
+  end
 
   def show
     if @rubygem.hosted?

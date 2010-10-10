@@ -18,7 +18,7 @@ Gemcutter::Application.routes.draw do
 
       resources :dependencies, :only => :index
 
-      resources :rubygems, :path => "gems", :only => [:create, :show] do
+      resources :rubygems, :path => "gems", :only => [:create, :show, :index] do
         collection do
           delete :yank
           put :unyank
@@ -71,7 +71,7 @@ Gemcutter::Application.routes.draw do
     constraints :rubygem_id => RUBYGEM_NAME_MATCHER do
       resource  :subscription, :only => [:create, :destroy]
       resources :versions,     :only => :index
-      member { get :stats }
+      resource  :stats,        :only => :show
     end
   end
 
@@ -80,7 +80,7 @@ Gemcutter::Application.routes.draw do
 
       constraints :rubygem_id => RUBYGEM_NAME_MATCHER do
         resources :versions, :only => :show do
-          member { get :stats }
+          resource :stats, :only => :show
         end
       end
     end

@@ -35,7 +35,7 @@ class DropRequirementsTable < ActiveRecord::Migration
         dependencies
     }.squish
 
-    rename_column :dependencies, :requirement, :name
+    rename_column :dependencies, :requirements, :name
     remove_column :dependencies, :version_id
   end
 end
