@@ -85,6 +85,15 @@ class DownloadTest < ActiveSupport::TestCase
 
     assert_equal [[@version_3, 3], [@version_2, 2], [@version_1, 1]],
                  Download.most_downloaded_today
+
+    assert_equal 3, Download.cardinality
+    assert_equal 1, Download.rank(@version_3)
+    assert_equal 2, Download.rank(@version_2)
+    assert_equal 3, Download.rank(@version_1)
+
+    assert_equal 3, Download.today([@version_1, @version_2])
+    assert_equal 2, Download.highest_rank([@version_1, @version_2])
+    assert_equal 1, Download.highest_rank([@version_3])
   end
 
   should "find counts per day for versions" do
@@ -127,5 +136,9 @@ class DownloadTest < ActiveSupport::TestCase
     assert_equal 5, Download.for_rubygem(rubygem.name)
     assert_equal 3, Download.for_version(version1.full_name)
     assert_equal 2, Download.for_version(version2.full_name)
+  end
+
+  should "return zero for rank if no downloads exist" do
+    assert_equal 0, Download.rank(Factory.build(:version))
   end
 end

@@ -364,6 +364,11 @@ table {
   float: left;
 }
 
+.main .info .statistics-show .border {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
 .main .info .statistics .chart {
   width: 678px;
 }
@@ -452,8 +457,7 @@ table {
   margin: 20px 0;
 }
 
-.main .info .meta .admin,
-.main .info .meta .stat-versions {
+.main .info .meta .admin {
   padding-bottom: 2em;
   border-bottom: 1px solid #B4AC99;
 }
@@ -501,10 +505,6 @@ table {
   margin-right: 10px;
   display: inline-block;
   height: 16px;
-}
-
-.main .info .meta .stat-versions a:hover {
-  text-decoration: underline;
 }
 
 .main .info #markup h2 {
@@ -1518,4 +1518,17 @@ h5#downloads {
 
 .profile-list ol li a:hover {
   background: #fff;
+}
+
+#version_for_stats {
+  float: right;
+  font-size: 15px;
+  vertical-align: middle;
+  border: 1px solid #cccccc;
+  margin: 12px 36px 2px 2px;
+  color: #a00;
+  -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
 }
