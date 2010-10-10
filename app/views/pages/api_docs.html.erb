@@ -88,6 +88,13 @@ $ curl <%=t :url %>/api/v1/gems/rails.xml
 $ curl '<%=t :url %>/api/v1/search.xml?query=cucumber'</code></pre>
 </p>
 
+<h5 class="api">GET - /api/v1/gems.(json|xml)</h5>
+<p>
+  List all gems that you own. Returns an array of the XML or JSON representation of gems you own.
+<pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
+          <%=t :url %>/api/v1/gems.json</code></pre>
+</p>
+
 <h5 class="api">POST - /api/v1/gems</h5>
 <p>
   Submit a gem to RubyGems.org. Must have your API key supplied and give a built RubyGem in the body of the request.
