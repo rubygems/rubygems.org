@@ -32,10 +32,10 @@ class DashboardsControllerTest < ActionController::TestCase
 
     context "On GET to show as an atom feed" do
       setup do
-        @subscribed_versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
+        @subscribed_versions = (1..2).map { |n| Factory(:version, :created_at => n.hours.ago) }
+        # just to make sure one has a different platform and a summary
+        @subscribed_versions << Factory(:version, :created_at => 3.hours.ago, :platform => "win32", :summary => "&")
         @subscribed_versions.each { |v| Factory(:subscription, :rubygem => v.rubygem, :user => @user)}
-        # just to make sure one has a different platform
-        @subscribed_versions.last.update_attributes(:platform => "win32")
         @unsubscribed_versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
 
         @request.env["Authorization"] = @user.api_key
@@ -44,14 +44,30 @@ class DashboardsControllerTest < ActionController::TestCase
 
       should respond_with :success
       should render_template 'versions/feed'
-      should "render posts with titles and platform-specific links of all subscribed versions" do
+
+      should "render posts with platform-specific titles and links of all subscribed versions" do
         @subscribed_versions.each do |v|
-          assert_contain v.to_title
-          assert_have_selector "link[href='#{rubygem_url(v.rubygem, v.slug)}']"
+          assert_select "entry > title", :count => 1, :text => (v.platformed? ? "#{v.to_title} #{v.platform}" : v.to_title)
+          assert_select "entry > link[href='#{rubygem_version_url(v.rubygem, v.slug)}']", :count => 1
+          assert_select "entry > id", :count => 1, :text => rubygem_version_url(v.rubygem, v.slug)
+        end
+      end
+
+      should "render valid entry authors" do
+        @subscribed_versions.each do |v|
+          assert_select "entry > author > name", :text => v.authors
+        end
+      end
+
+      should "render entry summaries only for versions with summaries" do
+        assert_select "entry > summary", :count => @subscribed_versions.select {|v| v.summary? }.size
+        @subscribed_versions.each do |v|
+          assert_select "entry > summary", :text => ERB::Util.h(v.summary) if v.summary?
         end
       end
 
       should "not render posts for versions the user isn't subscribed to" do
+        assert_select "entry", @subscribed_versions.size
         @unsubscribed_versions.each do |v|
           assert_does_not_contain @response.body, v.to_title
         end
