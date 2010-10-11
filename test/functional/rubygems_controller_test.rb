@@ -179,18 +179,33 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to index as an atom feed" do
     setup do
-      @versions = (1..3).map { |n| Factory(:version, :created_at => n.hours.ago) }
-      # just to make sure one has a different platform
-      @versions.last.update_attributes(:platform => "win32")
+      @versions = (1..2).map { |n| Factory(:version, :created_at => n.hours.ago) }
+      # just to make sure one has a different platform and a summary
+      @versions << Factory(:version, :created_at => 3.hours.ago, :platform => "win32", :summary => "&")
       get :index, :format => "atom"
     end
 
     should respond_with :success
     should assign_to(:versions) { @versions }
-    should "render posts with titles and platform-specific links" do
+
+    should "render posts with platform-specific titles and links of all subscribed versions" do
       @versions.each do |v|
-        assert_contain v.to_title
-        assert_have_selector "link[href='#{rubygem_url(v.rubygem, v.slug)}']"
+        assert_select "entry > title", :count => 1, :text => (v.platformed? ? "#{v.to_title} #{v.platform}" : v.to_title)
+        assert_select "entry > link[href='#{rubygem_version_url(v.rubygem, v.slug)}']", :count => 1
+        assert_select "entry > id", :count => 1, :text => rubygem_version_url(v.rubygem, v.slug)
+      end
+    end
+
+    should "render valid entry authors" do
+      @versions.each do |v|
+        assert_select "entry > author > name", :text => v.authors
+      end
+    end
+
+    should "render entry summaries only for versions with summaries" do
+      assert_select "entry > summary", :count => @versions.select {|v| v.summary? }.size
+      @versions.each do |v|
+        assert_select "entry > summary", :text => ERB::Util.h(v.summary) if v.summary?
       end
     end
   end

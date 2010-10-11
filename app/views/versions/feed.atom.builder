@@ -13,13 +13,12 @@ xml.feed "xmlns" => "http://www.w3.org/2005/Atom" do
 
   @versions.each do |version|
     xml.entry do
-      xml.title     version.to_title
-      xml.platform  version.platform
-      xml.link      "rel" => "alternate", "href" => rubygem_url(version.rubygem, version.slug)
-      xml.id        rubygem_url(version.rubygem, :version => version.number)
+      xml.title     "#{version.to_title}#{" " + version.platform if version.platformed?}"
+      xml.link      "rel" => "alternate", "href" => rubygem_version_url(version.rubygem, version.slug)
+      xml.id        rubygem_version_url(version.rubygem, version.slug)
       xml.updated   version.created_at.strftime("%Y-%m-%dT%H:%M:%SZ")
-      xml.author    { h(version.authors) }
-      xml.summary   h(version.summary)
+      xml.author    {|author| author.name h(version.authors) }
+      xml.summary   version.summary if version.summary?
       xml.content   "type" => "html" do
         xml.text!   h(version.description)
       end
