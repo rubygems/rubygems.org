@@ -1085,7 +1085,7 @@ input[type='submit']:hover {
 
 /* Rails Flash, Forms, Etc */
 
-#flash_success, #flash_notice, #flash_failure {
+#flash_success, #flash_notice, #flash_failure, #announcement {
   font-size: 13px;
   font-weight: bold;
   font-family: Helvetica, Arial, Sans-Serif;
@@ -1109,8 +1109,16 @@ input[type='submit']:hover {
   background: #7FAF1B;
 }
 
-#flash_notice {
+#flash_notice, #announcement {
   background: #E09C19;
+}
+
+#announcement .hide {
+  display: inline-block;
+}
+
+#announcement .hide a {
+  color: #ff9;
 }
 
 #flash_failure {
