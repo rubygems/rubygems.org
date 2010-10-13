@@ -2,6 +2,9 @@ class ApplicationController < ActionController::Base
   include Clearance::Authentication
   include SimpleSSLRequirement
 
+  helper :announcements
+  #include AnnouncementsHelper
+
   protect_from_forgery :only => [:create, :update, :destroy]
 
   ssl_required :if => :signed_in?
