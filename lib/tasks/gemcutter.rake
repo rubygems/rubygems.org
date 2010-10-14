@@ -10,8 +10,10 @@ namespace :gemcutter do
     end
 
     puts "Uploading to S3..."
-    include Vault::S3
-    file = directory.files.new(
+    class Uploader
+      include Vault::S3
+    end
+    file = Uploader.new.directory.files.new(
       :body => Gem.deflate(Marshal.dump(index)),
       :key  => "Marshal.4.8.Z"
     )
