@@ -57,7 +57,9 @@
       </div>
       <div class="prefix_1 grid_10 suffix_1 main">
         <% flash.each do |name, msg| %>
-          <div id="flash_<%= name %>"><%= msg %></div>
+          <div id="flash-border">
+            <div id="flash_<%= name %>"><span><%= msg %></span></div>
+          </div>
         <% end %>
         <%= render :partial => "announcements/announcement_for_all" %>
         <% if content_for?(:fold) %>
