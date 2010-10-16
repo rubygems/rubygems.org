@@ -10,6 +10,7 @@ end
 
 And /^I save and open the page$/ do
   save_and_open_page
+  print @response.body
 end
 
 Then /^I should see the following most recent downloads:$/ do |table|
