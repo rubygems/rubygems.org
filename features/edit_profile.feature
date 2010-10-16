@@ -3,9 +3,11 @@ Feature: Edit Profile
   A user
   Should be able to edit their profile
 
-  Scenario: Edit Handle
+  Background:
     Given I am using HTTPS
-    And I have signed in with "john@example.com/password"
+
+  Scenario: Edit Handle
+    Given I have signed in with "john@example.com/password"
     And my handle is "johndoe"
     And I am on my edit profile page
     When I fill in "Handle" with "john_doe"
@@ -25,6 +27,7 @@ Feature: Edit Profile
 
   Scenario: Edit bio
     Given I have signed in with "john@example.com/password"
+    And my handle is "john_doe"
     And I am on my edit profile page
     When I fill in "Bio" with "When are we going to eat"
     And I press "Update"

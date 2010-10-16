@@ -36,6 +36,7 @@ group :test do
 
   gem "database_cleaner",   "0.5.2"
   gem "fakeweb",            "1.2.6"
+  gem "launchy",            "0.3.7"
   gem "nokogiri",           "1.4.3.1"
   gem "rack-test",          "0.5.4", :require => "rack/test"
   gem "redgreen",           "1.2.2"

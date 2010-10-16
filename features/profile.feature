@@ -3,6 +3,9 @@ Feature: Profile Feature
   As a user
   I want to see a page with all of my gems
 
+  Background:
+    Given I am using HTTPS
+
   Scenario: Show Profile
     Given I have signed in with "jon@example.com/password"
     And a rubygem exists with a name of "sandworm"
@@ -31,10 +34,9 @@ Feature: Profile Feature
     And I should see "3 today"
 
   Scenario: Show Profile
-    Given a user exists with an email of "jon@example.com"
+    Given I have signed in with "bob@example.com/password"
+    And a user exists with an email of "jon@example.com"
     And a rubygem exists with a name of "sandworm"
     And the "sandworm" rubygem is owned by "jon@example.com"
     When I go to "jon@example.com" profile page
     Then I should see "sandworm"
-
-

@@ -14,7 +14,7 @@ module NavigationHelpers
     when /my edit profile page/
       edit_profile_path
     when /"([^\"]+)" profile page/
-     profile_path(User.first)
+      profile_path(User.find_by_email!($1))
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end
