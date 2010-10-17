@@ -18,9 +18,48 @@
     </div>
   </div>
 <% end %>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag "raphael", "g.raphael", "g.bar", :cache => true %>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      var r    = Raphael("holder"),
+          fin  = function () {
+            this.flag = r.g.popup(this.bar.x, this.bar.y, "9/13: " + this.bar.value || "0").insertBefore(this);
+          },
+          fout = function () {
+            this.flag.animate({opacity: 0}, 300, function () {this.remove();});
+          };
+      r.g.barchart(13, 9, 720, 125, [
+        [38, 92, 37, 98, 38, 
+        87, 83, 30, 19, 10, 
+        38, 93, 47, 57, 55, 
+        87, 83, 30, 19, 10, 
+        38, 93, 47, 57, 55, 
+        20, 13, 32, 28, 10]
+        ],
+        {colors : { 0 : "rgb(200, 164, 164)" } }
+
+        ).hover(fin, fout);
+    });
+  </script>
+<% end %>
+
 <div id="profile">
   <div class="profile-list">
     <ol>
+      <li>
+        <a href="" class="profile-rubygem">
+          rails
+          <em>3.0.0</em>
+        </a>
+        <a href="" class="profile-downloads">
+          <div><span>8,990</span> downloads</div>
+          <div><span>1,337</span> today</div>
+        </a>
+        <div id="holder" class="profile-graph">
+        </div>
+      </li>
       <% @user.rubygems.each do |rubygem| %>
         <li>
           <a href="<%=rubygem_path(rubygem)%>" class="profile-rubygem">
