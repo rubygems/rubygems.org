@@ -13,6 +13,7 @@ class ProfilesControllerTest < ActionController::TestCase
 
       should respond_with :success
       should render_template :show
+      should assign_to(:user) { @user }
     end
 
     context "on GET to show with id" do
@@ -20,6 +21,7 @@ class ProfilesControllerTest < ActionController::TestCase
 
       should respond_with :success
       should render_template :show
+      should assign_to(:user) { @user }
     end
 
     context "on GET to edit" do

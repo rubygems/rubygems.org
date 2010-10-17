@@ -29,6 +29,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.find_by_slug(slug)
+    find_by_id(slug) || find_by_handle(slug)
+  end
+
   def name
     handle || email
   end

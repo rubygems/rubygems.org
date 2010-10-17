@@ -19,10 +19,10 @@ module ApplicationHelper
     truncate(version.info, :length => 100)
   end
 
-  def gravatar(size, id = "gravatar")
-    image_tag(current_user.gravatar_url(:size => size, :secure => request.ssl?), :id => id)
+  def gravatar(size, id = "gravatar", user = current_user)
+    image_tag(user.gravatar_url(:size => size, :secure => request.ssl?), :id => id)
   end
-  
+
   def ssl_url_for(options = {})
     if %w(production staging test).include?(Rails.env)
       protocol = 'https'  # when using simple_ssl_requirement
