@@ -1393,18 +1393,16 @@ form#main-search input[type="submit"] {
 
 /* New Profile Stuff */
 #profile {
-  float: left;
-  margin: -10px 0 0 0;
+  margin-left: 13px;
 }
 
 #profile-left {
-  width: 170px;
-  float: left;
-  margin: -7px 0 0 13px;
 }
 
 #avatar-frame {
-  width: 150px;
+  margin-left: -5px;
+  float: left;
+  width: 80px;
   padding: 9px;
   border: 1px solid #000;
   -moz-border-radius: 7px;
@@ -1415,23 +1413,35 @@ form#main-search input[type="submit"] {
 }
 
 #profile-info {
-  padding: 0 10px;
+  padding: 0 10px 0 20px;
+  display: inline-block;
+  width: 595px;
+  margin-bottom: 15px;
+}
+
+#downloads-ego {
+  margin-left: 600px;
+  position: absolute;
+  top: 180px;
 }
 
 h2#profile-name {
-  font-size: 24px;
+  line-height: 60px;
+  font-size: 50px;
   color: #b40000;
-  margin: 10px 0 0 0;
+  margin: 0;
+  display: block;
 }
 
 h3#location {
+  display: block;
   color: #32221b;
   font-size: 16px;
   margin: 5px 0 0 0;
 }
 
 h4#website {
-  width: auto;
+  display: block;
   color: #5e5450;
   font-size: 14px;
   margin: 5px 0 0 0;
@@ -1448,8 +1458,7 @@ h4#website a {
   font-size: 12px;
   line-height: 16px;
   text-shadow: 0 1px 0 #fff;
-  width: 150px;
-  margin: 5px 0 0 0;
+  margin: 10px 0 0 0;
 }
 
 h5#downloads {
@@ -1480,9 +1489,7 @@ h5#downloads {
 }
 
 .profile-list {
-  width: 260px;
   margin: 0 15px;
-  float: left;
 }
 
 .profile-list-top {
