@@ -75,6 +75,7 @@
             <% if @subtitle %>
               <h3><%= @subtitle.html_safe %></h3>
             <% end %>
+            <%= yield :title %>
           </div>
           <%= yield %>
         </div>

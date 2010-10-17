@@ -1,56 +1,34 @@
-<div id="profile">
-  <div id="profile-left">
-    <div id="avatar-frame">
-      <%= gravatar(256, "profile_gravatar") %>
-    </div>
-    <div id="profile-info">
-      <% if @user == current_user %>
-        <h2><%= link_to "edit", edit_profile_path %></h2>
-      <% end %>
-      <h2 id="profile-name"><%=h @user.handle %></h2>
-      <h3 id="location"><%=h @user.location %></h3>
-      <% if @user.website.present? %>
-        <h4 id="website"><%= link_to h(@user.website), @user.website %></h4>
-      <% end %>
-      <p id="bio"><%=h @user.bio %></p>
-      <h5 id="downloads">Downloads</h5>
-      <div id="downloads_cont">
-        <div><strong><%=number_with_delimiter(@user.rubygems.to_a.sum(&:downloads_today)) %></strong> today</div>
-        <div><strong><%=number_with_delimiter( @user.rubygems.to_a.sum(&:downloads))%></strong> all time</div>
-      </div>
+<% content_for :title do %>
+  <div id="avatar-frame">
+    <%= gravatar(64, "profile_gravatar", @user) %>
+  </div>
+  <div id="profile-info">
+    <h2 id="profile-name"><%= link_to @user.handle, profile_path(@user) %></h2>
+    <h3 id="location"><%= @user.location %></h3>
+    <% if @user.website.present? %>
+      <h4 id="website"><%= link_to @user.website, @user.website %></h4>
+    <% end %>
+    <p id="bio"><%= @user.bio %></p>
+  </div>
+  <div id="downloads-ego">
+    <h5 id="downloads">Downloads</h5>
+    <div id="downloads_cont">
+      <div><strong><%=number_with_delimiter(@user.rubygems.to_a.sum(&:downloads_today)) %></strong> today</div>
+      <div><strong><%=number_with_delimiter(@user.rubygems.to_a.sum(&:downloads))%></strong> all time</div>
     </div>
   </div>
+<% end %>
+<div id="profile">
   <div class="profile-list">
-    <div class="profile-list-top">
-      <h3>My Gems</h3>
-      <span>Downloads</span>
-    </div>
     <ol>
       <% @user.rubygems.each do |rubygem| %>
         <li>
           <a href="<%=rubygem_path(rubygem)%>">
             <%= rubygem.name %>
-            <em><%= rubygem.versions.latest %></em>
+            <em><%= rubygem.versions.most_recent %></em>
             <strong><%=rubygem.downloads%></strong>
           </a>
         </li>
-      <% end %>
-    </ol>
-  </div>
-  <div class="profile-list right">
-    <div class="profile-list-top">
-      <h3>Watched Gems</h3>
-      <span>Downloads</span>
-    </div>
-    <ol>
-      <% @user.subscribed_gems.each do |rubygem| %>
-      <li>
-        <a href="<%=rubygem_path(rubygem)%>">
-          <%= rubygem.name %>
-          <em><%= rubygem.versions.latest %></em>
-          <strong><%=rubygem.downloads%></strong>
-        </a>
-      </li>
       <% end %>
     </ol>
   </div>
