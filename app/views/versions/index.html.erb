@@ -1,6 +1,6 @@
 <% @title = "all versions of #{@rubygem.name}" %>
 <p>
-<%= @versions.size %> versions since <%= @rubygem.versions.last.built_at_date %>
+<%= @versions.size %> versions since <%= @rubygem.versions.first.built_at_date %>
 </p>
 <div class="versions">
   <ol>
