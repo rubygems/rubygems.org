@@ -1393,7 +1393,9 @@ form#main-search input[type="submit"] {
 
 /* New Profile Stuff */
 #profile {
-  margin-left: 13px;
+  margin-top: 15px;
+  margin-left: 15px;
+  margin-right: 23px;
 }
 
 #profile-left {
@@ -1420,9 +1422,9 @@ form#main-search input[type="submit"] {
 }
 
 #downloads-ego {
-  margin-left: 600px;
+  margin-left: 560px;
   position: absolute;
-  top: 180px;
+  top: 175px;
 }
 
 h2#profile-name {
@@ -1462,22 +1464,21 @@ h4#website a {
 }
 
 h5#downloads {
-  margin: 10px 0 0 0;
+  margin: 10px 0 8px 1px;
   color: #b40000;
   font-size: 14px;
 }
 
-#downloads_cont {
+#downloads_count {
   height: 35px;
   padding: 0 0 0 35px;
-  width: 115px;
   margin: 5px 0 0 0;
   background: url(/images/downloads-icon.png) 0 0 no-repeat;
 }
 
-#downloads_cont div {
-  width: 115px;
+#downloads_count div {
   color: #32221b;
+  margin-top: 2px;
   height: 17px;
   line-height: 17px;
   font-size: 12px;
@@ -1544,6 +1545,7 @@ h5#downloads {
 }
 
 .main .info .profile-list ol li a.profile-downloads {
+  font-weight: bold;
   color: #c8a4a4;
   font-size: 13px;
   text-align: right;
@@ -1564,8 +1566,10 @@ h5#downloads {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1D0000', endColorstr='#2F0000',GradientType=0 ); /* ie */
   height: 115px;
   margin: 10px 4px;
-  -moz-border-radius: 0 0 7px 7px;
-  border-radius: 0 0 7px 7px;
+  /*-moz-border-radius: 0 0 7px 7px;
+  border-radius: 0 0 7px 7px;*/
+  -moz-border-radius: 7px 7px 0 0;
+  border-radius: 7px 7px 0 0;
 }
 
 .profile-list ol li a.profile-rubygem {
@@ -1575,7 +1579,7 @@ h5#downloads {
   font-weight: 900;
   color: #fff;
   display: inline-block;
-  width: 600px;
+  width: 575px;
   overflow: hidden;
   height: 21px;
   line-height: 23px;
