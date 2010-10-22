@@ -4,15 +4,10 @@
   </div>
   <div id="profile-info">
     <h2 id="profile-name"><%= link_to @user.handle, profile_path(@user) %></h2>
-    <h3 id="location"><%= @user.location %></h3>
-    <% if @user.website.present? %>
-      <h4 id="website"><%= link_to @user.website, @user.website %></h4>
-    <% end %>
-    <p id="bio"><%= @user.bio %></p>
   </div>
   <div id="downloads-ego">
     <h5 id="downloads">Downloads</h5>
-    <div id="downloads_cont">
+    <div id="downloads_count">
       <div><strong><%=number_with_delimiter(@user.rubygems.to_a.sum(&:downloads_today)) %></strong> today</div>
       <div><strong><%=number_with_delimiter(@user.rubygems.to_a.sum(&:downloads))%></strong> all time</div>
     </div>
@@ -31,7 +26,7 @@
             fout = function () {
               this.flag.animate({opacity: 0}, 300, function () {this.remove();});
             };
-        r.g.barchart(13, 9, 720, 125, [
+        r.g.barchart(1, 9, 690, 125, [
           [38, 92, 37, 98, 38, 
           87, 83, 30, 19, 10, 
           38, 93, 47, 57, 55, 
@@ -39,7 +34,7 @@
           38, 93, 47, 57, 55, 
           20, 13, 32, 28, 10]
           ],
-          {colors : { 0 : "rgb(200, 164, 164)" } }
+          { type: "soft", colors : { 0 : "rgb(200, 164, 164)" } }
 
           ).hover(fin, fout);
       });
