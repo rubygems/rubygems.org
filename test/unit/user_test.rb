@@ -206,4 +206,43 @@ class UserTest < ActiveSupport::TestCase
       assert_equal 1, all_hooks.keys.size
     end
   end
+
+  context "downloads" do
+    setup do
+      @user      = Factory(:user)
+      @rubygem   = Factory(:rubygem)
+      @ownership = Factory(:ownership, :rubygem => @rubygem, :user => @user, :approved => true)
+      @version   = Factory(:version, :rubygem => @rubygem)
+
+      Download.incr(@version.rubygem.name, @version.full_name)
+      Download.rollover
+      2.times { Download.incr(@version.rubygem.name, @version.full_name) }
+    end
+
+    should "sum up downloads for this user" do
+      assert_equal 2, @user.total_downloads_count
+      assert_equal 3, @user.today_downloads_count
+    end
+  end
+
+  context "rubygems" do
+    setup do
+      @user     = Factory(:user)
+      @rubygem1 = Factory(:rubygem, :downloads => 100)
+      @rubygem2 = Factory(:rubygem, :downloads => 200)
+      @rubygem3 = Factory(:rubygem, :downloads => 300)
+
+      [@rubygem1, @rubygem2, @rubygem3].each do |rubygem|
+        Factory(:ownership, :rubygem => rubygem, :user => @user, :approved => true)
+      end
+    end
+
+    should "give rubygems sorted by downloads" do
+      assert_equal [@rubygem3, @rubygem2, @rubygem1],
+        @user.rubygems_downloaded
+
+      assert_equal [@rubygem3, @rubygem2],
+        @user.rubygems_downloaded(2)
+    end
+  end
 end
