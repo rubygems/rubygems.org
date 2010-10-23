@@ -8,8 +8,8 @@
   <div id="downloads-ego">
     <h5 id="downloads">Downloads</h5>
     <div id="downloads_count">
-      <div><strong><%=number_with_delimiter(@user.rubygems.to_a.sum(&:downloads_today)) %></strong> today</div>
-      <div><strong><%=number_with_delimiter(@user.rubygems.to_a.sum(&:downloads))%></strong> all time</div>
+      <div><strong><%= number_with_delimiter(@user.today_downloads_count) %></strong> today</div>
+      <div><strong><%= number_with_delimiter(@user.total_downloads_count) %></strong> all time</div>
     </div>
   </div>
 <% end %>
