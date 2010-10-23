@@ -6,8 +6,8 @@ class User < ActiveRecord::Base
   attr_accessible :handle, :website, :location, :bio
 
   has_many :rubygems, :through    => :ownerships,
-                      :order      => "name ASC",
                       :conditions => { 'ownerships.approved' => true }
+
   has_many :subscribed_gems, :through => :subscriptions,
                              :source  => :rubygem,
                              :order   => "name ASC"
@@ -77,5 +77,17 @@ class User < ActiveRecord::Base
     self.email_confirmed    = true
     self.confirmation_token = self.email_reset = nil
     save(:validate => false)
+  end
+
+  def total_downloads_count
+    rubygems.to_a.sum(&:downloads_today)
+  end
+
+  def today_downloads_count
+    rubygems.to_a.sum(&:downloads)
+  end
+
+  def rubygems_downloaded(limit = 10)
+    rubygems.order("rubygems.downloads desc").limit(limit)
   end
 end
