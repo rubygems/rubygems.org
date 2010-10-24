@@ -1422,7 +1422,7 @@ form#main-search input[type="submit"] {
 }
 
 #downloads-ego {
-  margin-left: 560px;
+  margin-left: 575px;
   position: absolute;
   top: 175px;
 }
@@ -1435,25 +1435,9 @@ h2#profile-name {
   display: block;
 }
 
-h3#location {
-  display: block;
-  color: #32221b;
-  font-size: 16px;
-  margin: 5px 0 0 0;
-}
-
-h4#website {
-  display: block;
-  color: #5e5450;
-  font-size: 14px;
-  margin: 5px 0 0 0;
-  border-bottom: 0;
-}
-
-h4#website a {
-  color: #5e5450;
-  font-size: 14px;
-  text-decoration: underline;
+h3#profile-email {
+  font-size: 20px;
+  margin: 0;
 }
 
 #profile-info p {

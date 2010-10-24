@@ -37,6 +37,14 @@ class UserTest < ActiveSupport::TestCase
         assert Factory(:user, :handle => nil)
         assert Factory(:user, :handle => nil)
       end
+
+      should "show user id if no handle set" do
+        user = Factory.build(:user, :handle => nil, :id => 13)
+        assert_equal "#13", user.display_handle
+
+        user.handle = "bills"
+        assert_equal "bills", user.display_handle
+      end
     end
   end
 

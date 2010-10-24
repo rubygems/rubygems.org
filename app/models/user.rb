@@ -37,6 +37,10 @@ class User < ActiveRecord::Base
     handle || email
   end
 
+  def display_handle
+    handle || "##{id}"
+  end
+
   def rubyforge_importer?
     id.to_s == ENV["RUBYFORGE_IMPORTER"]
   end
