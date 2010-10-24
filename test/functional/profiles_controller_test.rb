@@ -8,8 +8,28 @@ class ProfilesControllerTest < ActionController::TestCase
       sign_in_as(@user)
     end
 
+    context "on GET to show" do
+      setup do
+        @rubygems = (0..10).map do |n|
+          Factory(:rubygem, :downloads => n * 100).tap do |rubygem|
+            Factory(:ownership, :rubygem => rubygem, :user => @user, :approved => true)
+          end
+        end.reverse
+        get :show, :id => @user.handle
+      end
+
+      should respond_with :success
+      should render_template :show
+      should assign_to(:user) { @user }
+      should "assign the last 10 most downloaded gems" do
+        assert_equal @rubygems[0..9], assigns[:rubygems]
+      end
+    end
+
     context "on GET to show with handle" do
-      setup {get :show, :id => @user.handle}
+      setup do
+        get :show, :id => @user.handle
+      end
 
       should respond_with :success
       should render_template :show
@@ -56,6 +76,4 @@ class ProfilesControllerTest < ActionController::TestCase
     should respond_with :redirect
     should redirect_to('the homepage') { root_url }
   end
-
 end
-
