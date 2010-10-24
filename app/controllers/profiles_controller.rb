@@ -1,11 +1,12 @@
 class ProfilesController < ApplicationController
-  #before_filter :redirect_to_root, :unless => :signed_in?, :except => :show
+  before_filter :redirect_to_root, :unless => :signed_in?, :except => :show
 
   def edit
   end
 
   def show
-    @user = User.find_by_slug(params[:id])
+    @user     = User.find_by_slug(params[:id])
+    @rubygems = @user.rubygems_downloaded
   end
 
   def update

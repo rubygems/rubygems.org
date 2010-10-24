@@ -18,25 +18,26 @@
   <%= javascript_include_tag "raphael", "g.raphael", "g.bar", :cache => true %>
   <script type="text/javascript">
     $(document).ready(function() {
+      var dates = <%= Rubygem.monthly_short_dates.to_json.html_safe %>;
+      <% @rubygems.each do |rubygem| %>
+        $.data(document.body, "graph-<%= rubygem.id %>", <%= rubygem.monthly_downloads.to_json.html_safe %>);
+      <% end %>
+
       $(".profile-graph").each(function() {
-        var r    = Raphael($(this).attr("id")),
+        var id   = $(this).attr("id"),
+            r    = Raphael(id),
             fin  = function () {
-              this.flag = r.g.popup(this.bar.x, this.bar.y, "9/13: " + this.bar.value || "0").insertBefore(this);
+              var currentDate = dates[Math.floor(this.bar.x / 23)]
+              this.flag = r.g.popup(this.bar.x, this.bar.y, currentDate + ": " + this.bar.value || "0").insertBefore(this);
             },
             fout = function () {
               this.flag.animate({opacity: 0}, 300, function () {this.remove();});
             };
-        r.g.barchart(1, 9, 690, 125, [
-          [38, 92, 37, 98, 38, 
-          87, 83, 30, 19, 10, 
-          38, 93, 47, 57, 55, 
-          87, 83, 30, 19, 10, 
-          38, 93, 47, 57, 55, 
-          20, 13, 32, 28, 10]
-          ],
-          { type: "soft", colors : { 0 : "rgb(200, 164, 164)" } }
 
-          ).hover(fin, fout);
+        r.g.barchart(15, 9, 655, 125,
+          [ $.data(document.body, id) ],
+          { type: "soft", colors : { 0 : "rgb(200, 164, 164)" } }
+        ).hover(fin, fout);
       });
     });
   </script>
@@ -45,15 +46,15 @@
 <div id="profile">
   <div class="profile-list">
     <ol>
-      <% @user.rubygems.each do |rubygem| %>
+      <% @rubygems.each do |rubygem| %>
         <li>
-          <a href="<%=rubygem_path(rubygem)%>" class="profile-rubygem">
+          <a href="<%= rubygem_path(rubygem) %>" class="profile-rubygem">
             <%= rubygem.name %>
             <em><%= rubygem.versions.most_recent %></em>
           </a>
-          <a href="" class="profile-downloads">
-            <div><span>8,990</span> downloads</div>
-            <div><span>1,337</span> today</div>
+          <a href="<%= rubygem_stats_path(rubygem) %>" class="profile-downloads">
+            <div><span><%= number_with_delimiter rubygem.downloads %></span> downloads</div>
+            <div><span><%= number_with_delimiter rubygem.downloads_today %></span> today</div>
           </a>
           <div id="graph-<%= rubygem.id %>" class="profile-graph">
           </div>

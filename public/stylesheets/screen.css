@@ -1553,6 +1553,7 @@ h5#downloads {
   text-shadow: 0 -1px 3px #000000;
   vertical-align: top;
   padding-top: 5px;
+  width: 178px;
 }
 
 .main .info .profile-list ol li a.profile-downloads span {
@@ -1579,7 +1580,7 @@ h5#downloads {
   font-weight: 900;
   color: #fff;
   display: inline-block;
-  width: 575px;
+  width: 500px;
   overflow: hidden;
   height: 21px;
   line-height: 23px;
