@@ -3,7 +3,8 @@
     <%= gravatar(64, "profile_gravatar", @user) %>
   </div>
   <div id="profile-info">
-    <h2 id="profile-name"><%= link_to @user.handle, profile_path(@user) %></h2>
+    <h2 id="profile-name"><%= link_to @user.display_handle, profile_path(@user) %></h2>
+    <h3 id="profile-email"><%= link_to @user.email, "mailto:#{@user.email}" %></h2>
   </div>
   <div id="downloads-ego">
     <h5 id="downloads">Downloads</h5>
