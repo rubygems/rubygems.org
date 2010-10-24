@@ -535,4 +535,52 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "downloads" do
+    setup do
+      @rubygem = Factory(:rubygem)
+      @version = Factory(:version, :rubygem => @rubygem)
+
+      Timecop.freeze DateTime.parse("10/2/2010")
+      1.times { Download.incr(@rubygem.name, @version.full_name) }
+      Download.rollover
+
+      Timecop.freeze DateTime.parse("10/3/2010")
+      6.times { Download.incr(@rubygem.name, @version.full_name) }
+      Download.rollover
+
+      Timecop.freeze DateTime.parse("10/16/2010")
+      4.times { Download.incr(@rubygem.name, @version.full_name) }
+      Download.rollover
+
+      Timecop.freeze DateTime.parse("11/1/2010")
+      2.times { Download.incr(@rubygem.name, @version.full_name) }
+      Download.rollover
+
+      Timecop.freeze DateTime.parse("11/2/2010")
+    end
+
+    should "give counts from the past 30 days" do
+      downloads = @rubygem.monthly_downloads
+
+      assert_equal 30, downloads.size
+      assert_equal 6, downloads.first
+      (3..14).each do |n|
+        assert_equal 0, downloads[n.to_i - 2]
+      end
+      assert_equal 4, downloads[13]
+      (16..30).each do |n|
+        assert_equal 0, downloads[n.to_i - 2]
+      end
+      assert_equal 2, downloads.last
+    end
+
+    should "give the monthly dates back" do
+      assert_equal ("02".."31").map { |date| "10/#{date}" }, Rubygem.monthly_short_dates
+    end
+
+    teardown do
+      Timecop.return
+    end
+  end
 end

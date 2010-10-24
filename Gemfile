@@ -42,6 +42,7 @@ group :test do
   gem "redgreen",           "1.2.2"
   gem "rr",                 "0.10.11"
   gem "shoulda",            "2.11.1"
+  gem "timecop",            "0.3.5"
   gem "treetop",            "1.4.5"
   gem "webrat",             "0.5.3"
   gem "webmock",            "0.7.3"
