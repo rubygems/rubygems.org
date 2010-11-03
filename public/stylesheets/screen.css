@@ -640,6 +640,18 @@ table {
   width: 50%;
 }
 
+.main .info .meta .owners h5 {
+  margin-top: 13px;
+}
+
+.main .info .meta .owners p {
+  width: 100%;
+}
+
+.main .info .meta .owners img {
+  margin-right: 5px;
+}
+
 .main .info .meta .downloads {
   text-align: right;
   font-size: 1.3em;
@@ -1404,7 +1416,7 @@ form#main-search input[type="submit"] {
 #avatar-frame {
   margin-left: -5px;
   float: left;
-  width: 80px;
+  width: 64px;
   padding: 9px;
   border: 1px solid #000;
   -moz-border-radius: 7px;
