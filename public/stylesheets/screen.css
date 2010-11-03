@@ -1436,7 +1436,7 @@ form#main-search input[type="submit"] {
 #downloads-ego {
   margin-left: 575px;
   position: absolute;
-  top: 175px;
+  margin-top: -90px;
 }
 
 h2#profile-name {
