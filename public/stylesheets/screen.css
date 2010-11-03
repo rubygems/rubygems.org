@@ -1557,6 +1557,11 @@ h5#downloads {
   border-radius: 7px 7px 0 0;
 }
 
+.main .info .profile-list ol li.small {
+  height: 50px;
+}
+
+
 .profile-list ol li a.profile-rubygem {
   padding: 13px 7px 7px;
   vertical-align: top;

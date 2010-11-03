@@ -53,3 +53,18 @@ Then /^I should see only (\d+) element in the array$/ do |count|
   assert_equal count.to_i, marshal_body.size
 end
 
+Then /I (should|should not) see download graphs for the following rubygems:/ do |should, table|
+  table.raw.flatten.each do |name|
+    rubygem = Rubygem.find_by_name!(name)
+    meth = should == "should not" ? :assert_have_no_selector : :assert_have_selector
+    send meth, "#graph-#{rubygem.id}"
+
+    within(".profile-rubygem") do
+      assert_contain rubygem.name
+    end
+
+    within(".profile-downloads") do
+      assert_contain "#{rubygem.downloads} downloads"
+    end
+  end
+end

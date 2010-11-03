@@ -87,3 +87,14 @@ def new_gemspec(name, version, summary, platform)
 
   gemspec
 end
+
+Given 'the following rubygems exist for "$email":' do |email, table|
+  user = User.find_by_email! email
+  table.hashes.each do |row|
+    rubygem = Factory(:rubygem, :name => row['name'], :downloads => row['downloads'])
+    version = Factory(:version, :rubygem => rubygem)
+    row['downloads'].to_i.times { Download.incr(rubygem.name, version.full_name) }
+
+    rubygem.ownerships.create :user => user, :approved => true
+  end
+end

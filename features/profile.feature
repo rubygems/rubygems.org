@@ -40,3 +40,35 @@ Feature: Profile Feature
     And the "sandworm" rubygem is owned by "jon@example.com"
     When I go to "jon@example.com" profile page
     Then I should see "sandworm"
+
+  Scenario: Show other gems in my profile
+    Given I have signed in with "jon@example.com/password"
+    And the following rubygems exist for "jon@example.com":
+      | name            | downloads |
+      | the_trees       | 11        |
+      | tom_sawyer      | 10        |
+      | red_barchetta   | 9         |
+      | yyz             | 8         |
+      | limelight       | 7         |
+      | the_camera_eye  | 6         |
+      | witch_hunt      | 5         |
+      | vital_signs     | 4         |
+      | spirit_of_radio | 3         |
+      | freewill        | 2         |
+      | subdivisions    | 1         |
+      | high_water      | 0         |
+    When I am on "jon@example.com" profile page
+    Then I should see download graphs for the following rubygems:
+      | the_trees       |
+      | tom_sawyer      |
+      | red_barchetta   |
+      | yyz             |
+      | limelight       |
+      | the_camera_eye  |
+      | witch_hunt      |
+      | vital_signs     |
+      | spirit_of_radio |
+      | freewill        |
+    And I should not see download graphs for the following rubygems:
+      | subdivisions |
+      | high_water   |
