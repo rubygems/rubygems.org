@@ -61,8 +61,8 @@ module RubygemsHelper
   end
 
   def links_to_owners(rubygem)
-    rubygem.owners.sort_by(&:handle).map do |owner|
-      link_to owner.handle, profile_path(owner)
-    end.join(", ").html_safe
+    rubygem.owners.sort_by(&:id).map do |owner|
+      link_to gravatar(48, "gravatar-#{owner.id}", owner), profile_path(owner.display_id), :alt => owner.display_handle
+    end.join.html_safe
   end
 end

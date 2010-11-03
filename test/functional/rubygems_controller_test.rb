@@ -19,7 +19,7 @@ class RubygemsControllerTest < ActionController::TestCase
       should assign_to :rubygem
       should "renders owner gems overview links" do
         @owners.each do |owner|
-          assert_have_selector "a[href='#{profile_path(owner)}']"
+          assert_have_selector "a[href='#{profile_path(owner.display_id)}']"
         end
       end
     end

@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   include Clearance::User
-  is_gravtastic
+  is_gravtastic :default => "retro"
 
   attr_accessible :handle, :password_confirmation, :password, :email
   attr_accessible :handle, :website, :location, :bio
@@ -39,6 +39,10 @@ class User < ActiveRecord::Base
 
   def display_handle
     handle || "##{id}"
+  end
+
+  def display_id
+    handle || id
   end
 
   def rubyforge_importer?

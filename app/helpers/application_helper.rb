@@ -20,7 +20,7 @@ module ApplicationHelper
   end
 
   def gravatar(size, id = "gravatar", user = current_user)
-    image_tag(user.gravatar_url(:size => size, :secure => request.ssl?), :id => id)
+    image_tag(user.gravatar_url(:size => size, :secure => request.ssl?), :id => id, :width => size, :height => size)
   end
 
   def ssl_url_for(options = {})
@@ -32,5 +32,4 @@ module ApplicationHelper
     options.reverse_merge!({:only_path => false, :protocol => protocol})
     url_for(options)
   end
-  
 end

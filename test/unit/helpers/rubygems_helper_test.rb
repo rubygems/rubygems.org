@@ -2,6 +2,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 
 class RubygemsHelperTest < ActionView::TestCase
   include Rails.application.routes.url_helpers
+  include ApplicationHelper
 
   should "create the directory" do
     directory = link_to_directory
@@ -13,7 +14,7 @@ class RubygemsHelperTest < ActionView::TestCase
   should "link to docs if no docs link is set" do
     version = Factory.build(:version)
     linkset = Factory.build(:linkset, :docs => nil)
-    
+
     link = documentation_link(version, linkset)
     assert link.include?(documentation_path(version))
   end
@@ -21,7 +22,7 @@ class RubygemsHelperTest < ActionView::TestCase
   should "not link to docs if docs link is set" do
     version = Factory.build(:version)
     linkset = Factory.build(:linkset)
-    
+
     link = documentation_link(version, linkset)
     assert link.blank?
   end
@@ -70,11 +71,19 @@ class RubygemsHelperTest < ActionView::TestCase
     end
   end
 
-  should "create links to owners gem overviews" do
-    users = Array.new(2) { Factory(:email_confirmed_user) }
-    create_gem(*users)
-    expected_links = users.map { |u| link_to u.handle, profile_path(u) }.join(", ")
-    assert_equal expected_links, links_to_owners(@rubygem)
-    assert links_to_owners(@rubygem).html_safe?
+  context "profiles" do
+    setup do
+      fake_request = stub
+      stub(fake_request).ssl? { false }
+      stub(self).request { fake_request }
+    end
+
+    should "create links to owners gem overviews" do
+      users = Array.new(2) { Factory(:email_confirmed_user) }
+      create_gem(*users)
+      expected_links = users.sort_by(&:id).map { |u| link_to gravatar(48, "gravatar-#{u.id}", u), profile_path(u.display_id), :alt => u.display_handle }.join
+      assert_equal expected_links, links_to_owners(@rubygem)
+      assert links_to_owners(@rubygem).html_safe?
+    end
   end
 end
