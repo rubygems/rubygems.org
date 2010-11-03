@@ -88,11 +88,11 @@ class User < ActiveRecord::Base
   end
 
   def total_downloads_count
-    rubygems.to_a.sum(&:downloads_today)
+    rubygems.to_a.sum(&:downloads)
   end
 
   def today_downloads_count
-    rubygems.to_a.sum(&:downloads)
+    rubygems.to_a.sum(&:downloads_today)
   end
 
   def rubygems_downloaded(limit = 10, offset = 0)
