@@ -1436,7 +1436,7 @@ form#main-search input[type="submit"] {
 #downloads-ego {
   margin-left: 575px;
   position: absolute;
-  margin-top: -90px;
+  margin-top: -93px;
 }
 
 h2#profile-name {
@@ -1601,3 +1601,12 @@ h5#downloads {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
 }
+
+#edit-profile {
+  background: url('/images/edit.png') no-repeat;
+  margin: 10px 0 8px 1px;
+  font-size: 15px;
+  font-weight: bold;
+  padding-left: 24px;
+}
+

@@ -7,6 +7,9 @@
     <h3 id="profile-email"><%= link_to @user.email, "mailto:#{@user.email}" %></h2>
   </div>
   <div id="downloads-ego">
+    <% if @user == current_user %>
+      <%= link_to "Edit Profile", edit_profile_path, :id => "edit-profile" %>
+    <% end %>
     <h5 id="downloads">Downloads</h5>
     <div id="downloads_count">
       <div><strong><%= number_with_delimiter(@user.today_downloads_count) %></strong> today</div>
