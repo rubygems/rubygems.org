@@ -228,8 +228,8 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "sum up downloads for this user" do
-      assert_equal 2, @user.total_downloads_count
-      assert_equal 3, @user.today_downloads_count
+      assert_equal 2, @user.today_downloads_count
+      assert_equal 3, @user.total_downloads_count
     end
   end
 
