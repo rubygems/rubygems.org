@@ -65,11 +65,6 @@
               <h5>Authors</h5>
               <p><%= @latest_version.authors %></p>
             <% end %>
-
-            <% if @rubygem.owners.present? %>
-              <h5>Owners</h5>
-              <p><%= links_to_owners(@rubygem) %></p>
-            <% end %>
           </div>
 
           <div class="downloads counter" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
@@ -80,6 +75,14 @@
               <strong><%= number_with_delimiter(@latest_version.downloads_count) %></strong> for this version
             </span>
           </div>
+
+          <% if @rubygem.owners.present? %>
+            <div class="owners">
+              <h5>Owners</h5>
+              <p><%= links_to_owners(@rubygem) %></p>
+            </div>
+          <% end %>
+
         </div>
 
         <% unless @rubygem.linkset.empty? %>
