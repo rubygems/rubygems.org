@@ -1,0 +1,14 @@
+<li class="<%= "small" unless graph %>">
+  <a href="<%= rubygem_path(rubygem) %>" class="profile-rubygem">
+    <%= rubygem.name %>
+    <em><%= rubygem.versions.most_recent %></em>
+  </a>
+  <a href="<%= rubygem_stats_path(rubygem) %>" class="profile-downloads">
+    <div><span><%= number_with_delimiter rubygem.downloads %></span> downloads</div>
+    <div><span><%= number_with_delimiter rubygem.downloads_today %></span> today</div>
+  </a>
+  <% if graph %>
+    <div id="graph-<%= rubygem.id %>" class="profile-graph">
+    </div>
+  <% end %>
+</li>

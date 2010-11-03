@@ -15,6 +15,7 @@ class ProfilesControllerTest < ActionController::TestCase
             Factory(:ownership, :rubygem => rubygem, :user => @user, :approved => true)
           end
         end.reverse
+
         get :show, :id => @user.handle
       end
 
@@ -23,6 +24,9 @@ class ProfilesControllerTest < ActionController::TestCase
       should assign_to(:user) { @user }
       should "assign the last 10 most downloaded gems" do
         assert_equal @rubygems[0..9], assigns[:rubygems]
+      end
+      should "assign the extra gems you own" do
+        assert_equal [@rubygems.last], assigns[:extra_rubygems]
       end
     end
 
