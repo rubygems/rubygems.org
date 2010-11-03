@@ -91,7 +91,9 @@ class User < ActiveRecord::Base
     rubygems.to_a.sum(&:downloads)
   end
 
-  def rubygems_downloaded(limit = 10)
-    rubygems.order("rubygems.downloads desc").limit(limit)
+  def rubygems_downloaded(limit = 10, offset = 0)
+    chain = rubygems.order("rubygems.downloads desc").offset(offset)
+    chain = chain.limit(limit) if limit
+    chain
   end
 end

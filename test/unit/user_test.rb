@@ -245,12 +245,24 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
-    should "give rubygems sorted by downloads" do
+    should "limit by default" do
       assert_equal [@rubygem3, @rubygem2, @rubygem1],
         @user.rubygems_downloaded
+    end
 
+    should "limit by 2" do
       assert_equal [@rubygem3, @rubygem2],
         @user.rubygems_downloaded(2)
+    end
+
+    should "skip the first gem and limit to 2" do
+      assert_equal [@rubygem2, @rubygem1],
+        @user.rubygems_downloaded(2, 1)
+    end
+
+    should "skip no gems if limit is nil" do
+      assert_equal [@rubygem3, @rubygem2, @rubygem1],
+        @user.rubygems_downloaded(nil, 0)
     end
   end
 end
