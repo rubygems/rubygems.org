@@ -15,13 +15,13 @@ class Hostess < Sinatra::Base
 
   def serve_via_s3
     serve do
-      redirect VaultObject.s3_url_for(request.path_info)
+      redirect Vault.s3_url_for(request.path_info)
     end
   end
 
   def serve_via_cf
     serve do
-      redirect VaultObject.cf_url_for(request.path_info)
+      redirect Vault.cf_url_for(request.path_info)
     end
   end
 
