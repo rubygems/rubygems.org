@@ -1,9 +1,5 @@
 class Pusher
-  if Hostess.local
-    include Vault::FS
-  else
-    include Vault::S3
-  end
+  include Vault
 
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id
 
