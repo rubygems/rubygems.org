@@ -11,13 +11,12 @@ namespace :gemcutter do
 
     puts "Uploading to S3..."
     class Uploader
-      include Vault::S3
+      include Vault
     end
-    file = Uploader.new.directory.files.new(
+    file = Uploader.new.directory.files.create(
       :body => Gem.deflate(Marshal.dump(index)),
       :key  => "Marshal.4.8.Z"
     )
-    file.save('x-amz-acl' => 'public-read')
 
     puts "Ding, legacy index is done!"
   end
