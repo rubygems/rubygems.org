@@ -20,7 +20,7 @@ module ApplicationHelper
   end
 
   def gravatar(size, id = "gravatar", user = current_user)
-    image_tag(user.gravatar_url(:size => size, :secure => request.ssl?), :id => id, :width => size, :height => size)
+    image_tag(user.gravatar_url(:size => size, :secure => request.ssl?).html_safe, :id => id, :width => size, :height => size)
   end
 
   def ssl_url_for(options = {})
