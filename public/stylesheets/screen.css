@@ -1283,10 +1283,12 @@ input[type='submit']:hover {
   font-size: 12px;
   color: #fff;
   font-family: Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  text-shadow: 0 0 2px #fff;
 }
 
 #nav a:hover span {
-  text-decoration: underline;
+  text-shadow: 0 0 2px #f00;
 }
 
 #nav a:hover img {
