@@ -1487,6 +1487,7 @@ form#main-search input[type="submit"] {
   margin-left: 565px;
   position: absolute;
   margin-top: -93px;
+  text-shadow: 1px 1px 1px #fff;
 }
 
 h2#profile-name {
@@ -1528,7 +1529,6 @@ h5#downloads {
   height: 17px;
   line-height: 17px;
   font-size: 12px;
-  text-shadow: 0 1px 0 #fff;
 }
 
 #downloads_cont div strong {
