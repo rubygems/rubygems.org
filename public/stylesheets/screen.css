@@ -250,6 +250,10 @@ table {
   font-weight: bold;
   font-size: 27px;
   background-image: url(/images/go.png);
+  box-shadow: 1px 1px 5px #000;
+
+  -moz-box-shadow: 1px 1px 3px #000;
+  -webkit-box-shadow: 1px 1px 3px #000;
 }
 
 .main .learn dl, .main .share dl {
@@ -341,6 +345,13 @@ table {
   text-shadow: 1px 1px 1px rgba(255,255,255,0.2);
   background: #FFF;
   padding: 3px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px #000;
+
+  -moz-border-radius: 5px;
+  -moz-box-shadow: 2px 2px 5px #000;
+  -webkit-border-radius: 5px;
+  -webkit-box-shadow: 2px 2px 5px #000;
 }
 
 .main .info .border .background {
@@ -568,8 +579,25 @@ table {
   margin: 0 15px;
 }
 
+.main .info .leaderboards ol {
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px #000;
+
+  -moz-border-radius: 5px;
+  -moz-box-shadow: 2px 2px 5px #000;
+  -webkit-border-radius: 5px;
+  -webkit-box-shadow: 2px 2px 5px #000;
+}
+
 .main .info .leaderboards ol li:first-child {
   border-top: 1px solid #B4AC99;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+
+  -moz-border-top-left-radius: 5px;
+  -moz-border-top-right-radius: 5px;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
 }
 
 .main .info .leaderboards ol li {
@@ -578,6 +606,16 @@ table {
   background: #FDF5E4;
   padding: 4px;
   border-bottom: 1px solid #B4AC99;
+}
+
+.main .info .leaderboards ol li:last-child {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+
+  -moz-border-bottom-left-radius: 5px;
+  -moz-border-bottom-right-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
 }
 
 .main .info .leaderboards ol li a {
@@ -609,6 +647,13 @@ table {
   text-align: center;
   display: block;
   overflow: hidden;
+  border-radius: 5px;
+  box-shadow: #000 2px 2px 5px;
+
+  -moz-border-radius: 5px;
+  -moz-box-shadow: #000 2px 2px 5px;
+  -webkit-border-radius: 5px;
+  -webkit-box-shadow: #000 2px 2px 5px;
 }
 
 .main .info .meta {
