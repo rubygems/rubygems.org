@@ -112,6 +112,7 @@ table {
   display: inline;
   color: #a00;
   font-size: 4em;
+  text-shadow: 1px 1px 2px #000;
   width: 65%;
 }
 
@@ -124,6 +125,7 @@ table {
   color: #90856C;
   font-size: 2em;
   margin-left: 10px;
+  text-shadow: 1px 1px 1px #fff;
 }
 
 .main h4 {
@@ -928,6 +930,7 @@ table {
   color: #90856C;
   font-size: 2em;
   display: inline-block;
+  text-shadow: 1px 1px 1px #000;
 }
 
 .main .info .subscribed p,
