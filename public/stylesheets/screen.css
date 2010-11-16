@@ -883,6 +883,16 @@ table {
   margin-left: 1em;
 }
 
+.main .info .subscribed #feed img {
+  border-radius: 3px;
+  box-shadow: 1px 1px 1px #000;
+
+  -moz-border-radius: 3px;
+  -moz-box-shadow: 1px 1px 1px #000;
+  -webkit-border-radius: 3px;
+  -webkit-box-shadow: 1px 1px 1px #000;
+}
+
 .main .info .subscribed .gems ol {
   padding: 15px;
 }
