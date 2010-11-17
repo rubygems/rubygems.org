@@ -86,6 +86,9 @@ class DownloadTest < ActiveSupport::TestCase
     assert_equal [[@version_3, 3], [@version_2, 2], [@version_1, 1]],
                  Download.most_downloaded_today
 
+    assert_equal [[@version_3, 3], [@version_2, 2]],
+                 Download.most_downloaded_today(2)
+
     assert_equal 3, Download.cardinality
     assert_equal 1, Download.rank(@version_3)
     assert_equal 2, Download.rank(@version_2)
