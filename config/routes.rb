@@ -7,7 +7,9 @@ Gemcutter::Application.routes.draw do
       resource :api_key, :only => :show do
         put :reset
       end
-      resources :downloads, :only => :index
+      resources :downloads, :only => :index do
+        get :top, :on => :collection
+      end
       constraints :id => Rubygem::ROUTE_PATTERN, :format => /json|xml|yaml/ do
         # In Rails 3.1, the following line can be replaced with:
         # resources :downloads, :only => :show, :format => true
