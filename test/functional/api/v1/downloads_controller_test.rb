@@ -33,7 +33,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
       get :top
     end
 
-    should "return the 100 gems with the most downloads" do
+    should "return the up to 50 gems with the most downloads" do
       gems = JSON.parse(@response.body)['gems']
       assert_equal 3, gems.length
       assert_equal 3, gems[0][1]
