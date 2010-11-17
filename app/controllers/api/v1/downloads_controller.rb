@@ -9,6 +9,12 @@ class Api::V1::DownloadsController < Api::BaseController
     end
   end
 
+  def top
+    render :json => {
+      "gems" => Download.most_downloaded_today(50)
+    }
+  end
+
   def show
     full_name = params[:id]
     if rubygem_name = Version.rubygem_name_for(full_name)
