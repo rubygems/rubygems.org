@@ -3,7 +3,7 @@ gem "rails", "3.0.0"
 gem "rack",  "1.2.1"
 
 gem "clearance",         "0.9.0.rc9"
-gem "fog",               "0.3.17"
+gem "fog",               "0.3.21"
 gem "gchartrb",          "0.8",   :require => "google_chart"
 gem "gravtastic",        "2.1.3"
 gem "high_voltage",      "0.9.1"
