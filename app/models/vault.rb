@@ -46,6 +46,7 @@ module Vault
 
     # For the life of me, I can't figure out how to pass a stream in here from a closed StringIO
     file = directory.files.create(
+      :acl  => 'public-read',
       :body => final.string,
       :key  => key
     )
