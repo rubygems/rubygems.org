@@ -9,7 +9,7 @@ module RubygemsHelper
 
   def simple_markup(text)
     if text =~ /^==+ [A-Z]/
-      SM::SimpleMarkup.new.convert(text, SM::ToHtml.new)
+      SM::SimpleMarkup.new.convert(text, SM::ToHtml.new).html_safe
     else
       content_tag :p, text
     end
