@@ -14,8 +14,9 @@ namespace :gemcutter do
       include Vault
     end
     file = Uploader.new.directory.files.create(
-      :body => Gem.deflate(Marshal.dump(index)),
-      :key  => "Marshal.4.8.Z"
+      :body   => Gem.deflate(Marshal.dump(index)),
+      :key    => "Marshal.4.8.Z",
+      :public => true
     )
 
     puts "Ding, legacy index is done!"
