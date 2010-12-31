@@ -89,7 +89,7 @@ Gemcutter::Application.routes.draw do
   ################################################################################
   # Clearance Overrides
 
-  resource :session, :only => :create
+  resource :session, :only => [:new, :create]
   scope :path => "users/:user_id" do
     resource :confirmation, :only => [:new, :create], :as => :user_confirmation
   end
