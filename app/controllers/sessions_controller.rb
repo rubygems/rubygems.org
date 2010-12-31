@@ -1,5 +1,4 @@
 class SessionsController < Clearance::SessionsController
-
   ssl_required
 
   def create
