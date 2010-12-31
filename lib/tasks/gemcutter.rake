@@ -1,4 +1,15 @@
 namespace :gemcutter do
+  desc "Reorder gem versions"
+  task :reorder_versions => :environment do
+    current = 1
+    count   = Rubygem.count
+    Rubygem.find_each do |rubygem|
+      puts "Reordering #{current}/#{count} - #{rubygem.name}"
+      rubygem.reorder_versions
+      current += 1
+    end
+  end
+
   desc "Store legacy index"
   task :store_legacy_index => :environment do
     puts "Loading up versions..."
