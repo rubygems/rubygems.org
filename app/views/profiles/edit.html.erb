@@ -23,8 +23,10 @@
     <%= form.submit "Update", :disable_with => "Please wait..." %>
   </div>
 
-  <h3>API Access</h3>
+  <h3>Reset Password</h3>
+  <p>Need a new password? No problem. <%= link_to "Request a new one here.", new_password_url %></p>
 
+  <h3>API Access</h3>
   <p>Your API key is <strong><%= current_user.api_key %></strong>. <br />
   Your <code>~/.gem/credentials</code> file should look like this to use the <%= link_to "gem commands", page_url("gem_docs") %>:</p>
 
