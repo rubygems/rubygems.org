@@ -5,7 +5,7 @@ class ProfilesController < ApplicationController
   end
 
   def show
-    @user           = User.find_by_slug(params[:id])
+    @user           = User.find_by_slug!(params[:id])
     @rubygems       = @user.rubygems_downloaded(10)
     @extra_rubygems = @user.rubygems_downloaded(nil, 10).to_a
   end

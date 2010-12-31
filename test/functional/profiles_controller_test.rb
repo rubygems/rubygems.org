@@ -2,6 +2,14 @@ require 'test_helper'
 
 class ProfilesControllerTest < ActionController::TestCase
 
+  context "for a user that doesn't exist" do
+    should "throw a not found" do
+      assert_raise ActiveRecord::RecordNotFound do
+        get :show, :id => "unknown"
+      end
+    end
+  end
+
   context "when logged in" do
     setup do
       @user = Factory(:email_confirmed_user)
