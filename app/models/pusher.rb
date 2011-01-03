@@ -87,20 +87,16 @@ class Pusher
     "<Gemcutter #{attrs.join(' ')}>"
   end
 
-  def compact(specs)
-    self.class.indexer.compact_specs(specs)
-  end
-
   def specs_index
-    compact Version.with_indexed(true).map(&:to_index)
+    Version.with_indexed(true).map(&:to_index)
   end
 
   def latest_index
-    compact Version.latest.with_indexed.map(&:to_index)
+    Version.latest.with_indexed.map(&:to_index)
   end
 
   def prerelease_index
-    compact Version.prerelease.with_indexed(true).map(&:to_index)
+    Version.prerelease.with_indexed(true).map(&:to_index)
   end
 
   def perform
