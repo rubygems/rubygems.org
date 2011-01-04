@@ -1,12 +1,10 @@
 module Vault
-  BUCKET = Rails.env.maintenance? ? "production" : Rails.env
-
   def self.cf_url_for(path)
-    "http://#{BUCKET}.cf.rubygems.org#{path}"
+    "http://#{$rubygems_config[:cf_domain]}#{path}"
   end
 
   def self.s3_url_for(path)
-    "http://#{BUCKET}.s3.rubygems.org#{path}"
+    "http://#{$rubygems_config[:s3_domain]}#{path}"
   end
 
   def fog
@@ -18,7 +16,7 @@ module Vault
 
   def directory
     fog.directories.create(
-      :key => "#{BUCKET}.s3.rubygems.org",
+      :key    => $rubygems_config[:s3_bucket],
       :public => true
     )
   end
