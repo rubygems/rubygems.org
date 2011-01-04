@@ -64,10 +64,10 @@ class HostessTest < ActiveSupport::TestCase
       assert_equal 1, @version.reload.downloads_count
     end
 
-    should "redirect to cf for a gem" do
+    should "redirect to cdn for a gem" do
       get @file
 
-      assert_equal "http://test.cf.rubygems.org#{@file}", last_response.headers["Location"]
+      assert_equal "http://#{$rubygems_config[:cf_domain]}#{@file}", last_response.headers["Location"]
       assert_equal 302, last_response.status
     end
   end
