@@ -36,7 +36,7 @@ class Pusher
 
   def after_write
     @version_id = version.id
-    Delayed::Job.enqueue self, PRIORITIES[:push]
+    Delayed::Job.enqueue self, :priority => PRIORITIES[:push]
     enqueue_web_hook_jobs
   end
 
