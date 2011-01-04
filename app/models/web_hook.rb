@@ -32,7 +32,7 @@ class WebHook < ActiveRecord::Base
     job = WebHookJob.new(self.url, host_with_port, deploy_gem, version)
 
     if delayed
-      Delayed::Job.enqueue job, PRIORITIES[:web_hook]
+      Delayed::Job.enqueue job, :priority => PRIORITIES[:web_hook]
     else
       job.perform
     end
