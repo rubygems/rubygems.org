@@ -22,6 +22,7 @@ class Test::Unit::TestCase
   def setup
     RR.reset
     $redis.flushdb
+    $fog.directories.create(:key => $rubygems_config[:s3_bucket], :public => true)
   end
 
   def response_body
