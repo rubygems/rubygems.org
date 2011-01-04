@@ -13,6 +13,8 @@ Before do
 
   FileUtils.mkdir(TEST_DIR)
   Dir.chdir(TEST_DIR)
+
+  $fog.directories.create(:key => $rubygems_config[:s3_bucket], :public => true)
 end
 
 After do
