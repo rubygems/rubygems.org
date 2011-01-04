@@ -2,23 +2,28 @@ development:
   host: localhost
   local_storage: true
   redirector: false
+  delivery_method: :sendmail
 
 test:
   host: www.example.com
   local_storage: true
   redirector: false
+  delivery_method: :test
 
 staging:
   host: staging.rubygems.org
   local_storage: false
   redirector: true
+  delivery_method: :sendmail
 
 production:
   host: rubygems.org
   local_storage: false
   redirector: true
+  delivery_method: :sendmail
 
 maintenance:
   host: rubygems.org
   local_storage: false
   redirector: true
+  delivery_method: :test
