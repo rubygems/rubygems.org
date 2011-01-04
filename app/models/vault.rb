@@ -15,7 +15,7 @@ module Vault
   end
 
   def directory
-    fog.directories.create(
+    fog.directories.get(
       :key    => $rubygems_config[:s3_bucket],
       :public => true
     )
