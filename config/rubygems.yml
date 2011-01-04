@@ -1,22 +1,24 @@
 development:
   host: localhost
   local_storage: true
+  redirector: false
 
-test: &TEST
+test:
   host: www.example.com
   local_storage: true
-
-cucumber:
-  <<: *TEST
+  redirector: false
 
 staging:
   host: staging.rubygems.org
   local_storage: false
+  redirector: true
 
 production:
   host: rubygems.org
   local_storage: false
+  redirector: true
 
 maintenance:
   host: rubygems.org
   local_storage: false
+  redirector: true

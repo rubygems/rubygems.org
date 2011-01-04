@@ -6,4 +6,5 @@ RUBYGEMS_VERSION = "1.4.1"
 
 Gemcutter::Application.configure do
   config.action_mailer.default_url_options = { :host => HOST }
+  config.middleware.insert_after 'Hostess', 'Redirector' if $rubygems_config[:redirector]
 end
