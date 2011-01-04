@@ -68,7 +68,7 @@ class Hostess < Sinatra::Base
   get "/quick/Marshal.4.8/*.gemspec.rz" do
     if Version.rubygem_name_for(full_name)
       content_type('application/x-deflate')
-      serve_via_s3
+      serve_via_cf
     else
       error 404, "This gem does not currently live at Gemcutter."
     end
