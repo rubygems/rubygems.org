@@ -83,3 +83,7 @@ When 'I list the gems with my api key' do
   api_key_header
   visit api_v1_rubygems_path, :get
 end
+
+When /I list the versions of the rubygem "([^\"]*)"/ do |rubygem_name|
+  visit api_v1_rubygem_versions_path(:rubygem_id => rubygem_name), :get
+end

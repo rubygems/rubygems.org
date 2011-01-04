@@ -214,4 +214,27 @@ class Version < ActiveRecord::Base
       end
     end
   end
+  
+  def payload
+    {
+      "built_at"        => built_at,
+      "number"          => number,
+      "prerelease"      => prerelease,
+      "full_name"       => full_name,
+      "authors"         => authors,
+      "description"     => description,
+      "downloads_count" => downloads_count,
+      "latest"          => latest,
+      "rubygem"         => rubygem.name,
+      "platform"        =>"ruby"
+    }
+  end
+
+  def as_json(options = {})
+    payload
+  end
+
+  def to_xml(options = {})
+    payload.to_xml(options.merge(:root => "version"))
+  end
 end

@@ -25,6 +25,7 @@ Gemcutter::Application.routes.draw do
         end
         constraints :rubygem_id => RUBYGEM_NAME_MATCHER do
           resource :owners, :only => [:show, :create, :destroy]
+          resource :versions, :only => [:show]
         end
       end
 
