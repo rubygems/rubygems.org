@@ -252,3 +252,27 @@ Successfully deployed webhook for all gems to http://example.com</code></pre>
 701243f217cdf23b1370c7b66b65ca97
 </code></pre>
 </p>
+
+<h5 class="api">GET - /api/v1/dependencies?gems=[comma delimited rubygems]</h5>
+<p>
+  Returns a marshalled array of hashes for all versions of given gems. Each hash
+  contains a gem version with its dependencies making this useful for resolving dependencies.
+<pre><code>
+$ ruby -ropen-uri -rpp -e \
+  'pp Marshal.load(open("<%= t :url %>/api/v1/dependencies?gems=rails,thor"))'
+
+[{:platform=>"ruby",
+  :dependencies=>
+   [["bundler", "~> 1.0"],
+    ["railties", "= 3.0.3"],
+    ["actionmailer", "= 3.0.3"],
+    ["activeresource", "= 3.0.3"],
+    ["activerecord", "= 3.0.3"],
+    ["actionpack", "= 3.0.3"],
+    ["activesupport", "= 3.0.3"]],
+  :name=>"rails",
+  :number=>"3.0.3"},
+...
+{:number=>"0.9.9", :platform=>"ruby", :dependencies=>[], :name=>"thor"}]
+</code></pre>
+</p>
