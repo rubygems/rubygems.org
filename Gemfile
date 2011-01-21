@@ -3,7 +3,7 @@ gem "rails", "3.0.0"
 gem "rack",  "1.2.1"
 
 gem "clearance",         "0.9.0.rc9"
-gem "fog",               "0.3.21"
+gem "fog",               "0.3.25"
 gem "gchartrb",          "0.8",   :require => "google_chart"
 gem "gravtastic",        "2.1.3"
 gem "high_voltage",      "0.9.1"
@@ -21,10 +21,8 @@ gem "xml-simple",        "1.0.12"
 
 # These gems suck and do stupid things when in maintenance mode
 group :development, :test, :staging, :production do
-  gem 'daemons',     :git => 'git://github.com/ghazel/daemons.git'
-  gem 'delayed_job', :git => 'git://github.com/collectiveidea/delayed_job.git'
-
-  gem 'validates_url_format_of', '0.1.0'
+  gem "delayed_job",             "2.1.2"
+  gem "validates_url_format_of", "0.1.0"
 end
 
 gem "pg", "0.8.0"

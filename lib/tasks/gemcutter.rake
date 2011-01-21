@@ -1,4 +1,15 @@
 namespace :gemcutter do
+  desc "Reorder gem versions"
+  task :reorder_versions => :environment do
+    current = 1
+    count   = Rubygem.count
+    Rubygem.find_each do |rubygem|
+      puts "Reordering #{current}/#{count} - #{rubygem.name}"
+      rubygem.reorder_versions
+      current += 1
+    end
+  end
+
   desc "Store legacy index"
   task :store_legacy_index => :environment do
     puts "Loading up versions..."
@@ -14,8 +25,9 @@ namespace :gemcutter do
       include Vault
     end
     file = Uploader.new.directory.files.create(
-      :body => Gem.deflate(Marshal.dump(index)),
-      :key  => "Marshal.4.8.Z"
+      :body   => Gem.deflate(Marshal.dump(index)),
+      :key    => "Marshal.4.8.Z",
+      :public => true
     )
 
     puts "Ding, legacy index is done!"

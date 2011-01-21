@@ -1,22 +1,46 @@
 development:
   host: localhost
   local_storage: true
+  redirector: false
+  delivery_method: :sendmail
+  s3_bucket: development.s3.rubygems.org
+  s3_domain: development.s3.rubygems.org
+  cf_domain: development.cf.rubygems.org
+  asset_cacher: false
 
-test: &TEST
+test:
   host: www.example.com
   local_storage: true
-
-cucumber:
-  <<: *TEST
+  redirector: false
+  delivery_method: :test
+  s3_bucket: test.s3.rubygems.org
+  s3_domain: test.s3.rubygems.org
+  cf_domain: test.cf.rubygems.org
+  asset_cacher: false
 
 staging:
   host: staging.rubygems.org
   local_storage: false
+  redirector: true
+  delivery_method: :sendmail
+  s3_bucket: staging.s3.rubygems.org
+  s3_domain: staging.s3.rubygems.org
+  cf_domain: staging.cf.rubygems.org
+  asset_cacher: false
+
+live: &LIVE
+  host: rubygems.org
+  local_storage: false
+  redirector: true
+  s3_bucket: production.s3.rubygems.org
+  s3_domain: production.s3.rubygems.org
+  cf_domain: production.cf.rubygems.org
+  asset_cacher: false
 
 production:
-  host: rubygems.org
-  local_storage: false
+  delivery_method: :sendmail
+  <<: *LIVE
 
 maintenance:
-  host: rubygems.org
-  local_storage: false
+  delivery_method: :test
+  <<: *LIVE

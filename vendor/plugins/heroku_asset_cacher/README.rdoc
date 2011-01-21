@@ -1,0 +1,48 @@
+= Heroku Asset Cacher
+
+This plugin will override the caching options of Rails helpers: javascript_include_tag and stylesheet_link_tag. It will
+instruct them to place their cached assets into the Rails /tmp directory, the only writeable directory in Heroku. It then adds
+some Rack middleware to route requests for those files to the /tmp directory.
+
+== Install
+
+  script/plugin install http://github.com/mgomes/heroku_asset_cacher.git
+  
+== Usage
+
+This plugin will only override the requests for all.js and all.css. So please use the convention of naming your cached JS and CSS assets: all.js and all.css, respectively. (these are the default naming conventions).
+Here is an example:
+
+  javascript_include_tag :all, :cache => true
+  stylesheet_link_tag :all, :cache => true
+  
+Or you can specify individual files to cache, as such:
+
+  javascript_include_tag 'jquery', 'jquery.tooltip', :cache => true
+  stylesheet_link_tag 'main_design', 'secondary_design', :cache => true
+  
+Files that are not included in the all.js or all.css bundle will still be served from their original directories.
+
+== Clearing the cached assets
+
+You can run the following rake task on Heroku to regenerate your cached assets:
+
+  rake asset_cache:clear
+
+== Testing
+
+To run the test suite:
+
+  rake test
+  
+To try out Heroku Asset Cacher in development, you can set the following option in environment.rb:
+
+  ActionController::Base.perform_caching = true
+
+== Previous Art
+
+This plugin is based off of the work by Matthew Savage in his {Heroku Asset Packager}[http://github.com/amasses/heroku_asset_packager] plugin.
+
+== Author
+
+Copyright (c) 2010 Mauricio Gomes, released under the MIT license

@@ -1,16 +1,3 @@
-GIT
-  remote: git://github.com/collectiveidea/delayed_job.git
-  revision: b983b7e
-  specs:
-    delayed_job (2.1.0.pre)
-      daemons
-
-GIT
-  remote: git://github.com/ghazel/daemons.git
-  revision: b2802ff
-  specs:
-    daemons (1.0.12)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -56,26 +43,30 @@ GEM
       term-ansicolor (~> 1.0.4)
     cucumber-rails (0.3.2)
       cucumber (>= 0.8.0)
+    daemons (1.1.0)
     database_cleaner (0.5.2)
+    delayed_job (2.1.2)
+      activesupport (~> 3.0)
+      daemons
     diff-lcs (1.1.2)
     erubis (2.6.6)
       abstract (>= 1.0.0)
-    excon (0.2.4)
+    excon (0.2.8)
     factory_girl (1.3.2)
     factory_girl_rails (1.0)
       factory_girl (~> 1.3)
       rails (>= 3.0.0.beta4)
     fakeweb (1.2.6)
-    fog (0.3.21)
+    fog (0.3.25)
       builder
       excon (>= 0.2.4)
-      formatador (>= 0.0.15)
+      formatador (>= 0.0.16)
       json
       mime-types
       net-ssh (~> 2.0.23)
       nokogiri (~> 1.4.3.1)
       ruby-hmac
-    formatador (0.0.15)
+    formatador (0.0.16)
     gchartrb (0.8)
     gherkin (2.1.5)
       trollop (~> 1.16.2)
@@ -154,12 +145,11 @@ PLATFORMS
 DEPENDENCIES
   clearance (= 0.9.0.rc9)
   cucumber-rails (= 0.3.2)
-  daemons!
   database_cleaner (= 0.5.2)
-  delayed_job!
+  delayed_job (= 2.1.2)
   factory_girl_rails (= 1.0)
   fakeweb (= 1.2.6)
-  fog (= 0.3.21)
+  fog (= 0.3.25)
   gchartrb (= 0.8)
   gravtastic (= 2.1.3)
   high_voltage (= 0.9.1)

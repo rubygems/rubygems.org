@@ -4,7 +4,7 @@
   </div>
   <div id="profile-info">
     <h2 id="profile-name"><%= link_to @user.display_handle, profile_path(@user.display_id) %></h2>
-    <h3 id="profile-email"><%= link_to @user.email, "mailto:#{@user.email}" %></h2>
+    <h3 id="profile-email"><%= link_to @user.email, "mailto:#{@user.email}" %></h3>
   </div>
   <div id="downloads-ego">
     <% if @user == current_user %>
