@@ -9,7 +9,7 @@ class Api::V1::OwnersController < Api::BaseController
 
   def show
     respond_to do |format|
-      format.any(:json, :all) { render :json => @rubygem.owners }
+      format.any(:json, :all) { render :text => @rubygem.owners.map(&:to_json) }
       format.yaml { render :text => @rubygem.owners.to_yaml }
     end
   end
