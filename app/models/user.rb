@@ -60,8 +60,8 @@ class User < ActiveRecord::Base
     all
   end
 
-  def to_json(options = {})
-    super(options.merge(:only => :email))
+  def as_json(options={})
+    { 'email' => email }
   end
 
   def to_yaml(*args)
