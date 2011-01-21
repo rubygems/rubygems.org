@@ -39,7 +39,7 @@ namespace :deploy do
 
   desc "Move in database.yml for this environment"
   task :move_in_database_yml, :roles => :app do
-    run "cp #{deploy_to}/shared/system/database.yml #{current_path}/config/"
+    run "cp #{deploy_to}/shared/config/database.yml #{current_path}/config/"
   end
 
   desc "Run gem bundle"
@@ -56,8 +56,8 @@ namespace :deploy do
   # Surely there's a better way to do this.  But it's eluding me at the moment.
   desc "Move in secret settings for this environment"
   task :move_in_secret_settings, :roles => :app do
-    run "cp #{deploy_to}/shared/system/secret.rb #{current_path}/config/secret.rb"
-    run "cp #{deploy_to}/shared/system/newrelic.yml #{current_path}/config/newrelic.yml"
+    run "cp #{deploy_to}/shared/config/secret.rb #{current_path}/config/secret.rb"
+    run "cp #{deploy_to}/shared/config/newrelic.yml #{current_path}/config/newrelic.yml"
   end
 end
 
