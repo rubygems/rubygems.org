@@ -1,6 +1,7 @@
 source :rubygems
-gem "rails", "3.0.0"
+gem "rails", "3.0.3"
 gem "rack",  "1.2.1"
+gem "mail",  "2.2.15"
 
 gem "clearance",         "0.9.0.rc9"
 gem "fog",               "0.3.25"
@@ -36,12 +37,11 @@ group :test do
   gem "fakeweb",            "1.2.6"
   gem "launchy",            "0.3.7"
   gem "nokogiri",           "1.4.3.1"
-  gem "rack-test",          "0.5.4", :require => "rack/test"
+  gem "rack-test",          "0.5.7", :require => "rack/test"
   gem "redgreen",           "1.2.2"
   gem "rr",                 "0.10.11"
   gem "shoulda",            "2.11.1"
   gem "timecop",            "0.3.5"
-  gem "treetop",            "1.4.5"
   gem "webrat",             "0.5.3"
   gem "webmock",            "0.7.3"
 end
