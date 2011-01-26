@@ -63,8 +63,8 @@ Gemcutter::Application.routes.draw do
 
   resource  :search,    :only => :show
   resource  :dashboard, :only => :show
-  resource  :profile,   :only => [:edit, :update]
   resources :profiles,  :only => :show
+  resource  :profile,   :only => [:edit, :update]
   resources :stats,     :only => :index
 
   resources :rubygems, :only => :index, :path => "gems" do
