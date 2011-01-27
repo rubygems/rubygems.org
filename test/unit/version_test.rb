@@ -310,6 +310,7 @@ class VersionTest < ActiveSupport::TestCase
       @rack = Factory(:version, :authors => %w[rack], :built_at => 1.day.ago)
       @haml = Factory(:version, :authors => %w[haml], :built_at => 1.hour.ago)
       @dust = Factory(:version, :authors => %w[dust], :built_at => 1.day.from_now)
+      @fake = Factory(:version, :authors => %w[fake], :indexed => false, :built_at => 1.minute.ago)
     end
 
     should "get the latest versions up to today" do
