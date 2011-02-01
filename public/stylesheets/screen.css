@@ -911,22 +911,19 @@ table {
   margin-top: -15px;
 }
 
-.footer .links #thoughtbot {
+.footer .links .sponsor {
   float: right;
   font-size: 0.9em;
   margin-top: -25px;
-}
-
-.footer .links #rubycentral {
-  margin-top: -25px;
-  font-size: 1em;
-  float: right;
-  margin-right: 25px;
   margin-bottom: 20px;
+  margin-left: 10px;
 }
 
-.footer .links #thoughtbot img,
-.footer .links #rubycentral img {
+.footer .links #dnsimple img {
+  margin-top: 13px;
+}
+
+.footer .links .sponsor img {
   padding-top: 5px;
   display: block;
 }
