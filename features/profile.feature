@@ -12,6 +12,7 @@ Feature: Profile Feature
     And the "sandworm" rubygem is owned by "jon@example.com"
     When I am on "jon@example.com" profile page
     Then I should see "sandworm"
+	And I should not see "jon@example.com"
 
   Scenario: Show todays downloads for my gems in my profile
     Given I have signed in with "jon@example.com/password"
