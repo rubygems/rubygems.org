@@ -21,7 +21,11 @@ Gemcutter::Application.routes.draw do
       end
 
       constraints :id => RUBYGEM_NAME_MATCHER do
-        resources :stats, :only => :show
+        resources :stats, :only => :show do
+          member do 
+            get :search
+          end
+        end
       end
 
       constraints :id => RUBYGEM_NAME_MATCHER do
