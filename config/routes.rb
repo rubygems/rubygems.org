@@ -16,6 +16,10 @@ Gemcutter::Application.routes.draw do
         resources :downloads, :only => :show
       end
 
+      constraints :id => RUBYGEM_NAME_MATCHER do
+        resources :versions, :only => :show
+      end
+
       resources :dependencies, :only => :index
 
       resources :rubygems, :path => "gems", :only => [:create, :show, :index] do
