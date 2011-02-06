@@ -5,6 +5,12 @@ class Api::V1::StatsControllerTest < ActionController::TestCase
     get :show, :id => "#{version.full_name}.json"
   end
 
+  def get_search(version, from, to)
+    get :search, :id => "#{version.full_name}.json", 
+                 :from => from.to_date.to_s,
+                 :to => to.to_date.to_s
+  end
+
   context "on GET to show" do
     setup do
       @version = Factory(:version)
@@ -41,6 +47,73 @@ class Api::V1::StatsControllerTest < ActionController::TestCase
 
     should "say gem could not be found" do
       assert_equal "This rubygem could not be found.", @response.body
+    end
+  end
+
+  context "on GET to search" do
+    setup do
+      @one_hundred_days_ago = 100.days.ago.to_date.to_s
+      @one_hundred_one_days_ago = 101.days.ago.to_date.to_s
+      @one_hundred_eighty_nine_days_ago = 189.day.ago.to_date.to_s
+      @one_hundred_ninety_days_ago = 190.day.ago.to_date.to_s
+    end
+
+    context "happy path" do
+      setup do
+        @version = Factory(:version)
+
+        $redis.hincrby Download.history_key(@version), @one_hundred_ninety_days_ago, 41
+        $redis.hincrby Download.history_key(@version), @one_hundred_eighty_nine_days_ago, 42
+        $redis.hincrby Download.history_key(@version), @one_hundred_days_ago, 1764
+      end
+
+      should "return download stats for the days specified for at most 90 days" do
+        get_search(@version, @one_hundred_eighty_nine_days_ago, @one_hundred_days_ago)
+        json = JSON.parse(@response.body)
+
+        assert_equal 90, json.size
+        assert_equal 42, json[@one_hundred_eighty_nine_days_ago]
+        assert_equal 1764, json[@one_hundred_days_ago]
+        assert_nil json[@one_hundred_ninety_days_ago]
+      end
+
+      should "return download stats for the days specified for ranges smaller than 90 days" do
+        get_search(@version, @one_hundred_one_days_ago, @one_hundred_days_ago)
+        json = JSON.parse(@response.body)
+
+        assert_equal 2, json.size
+        assert_equal 0, json[@one_hundred_one_days_ago]
+        assert_equal 1764, json[@one_hundred_days_ago]
+      end
+
+      should "be able to return stats for a single day" do
+        get_search(@version, @one_hundred_days_ago, @one_hundred_days_ago)
+        json = JSON.parse(@response.body)
+
+        assert_equal 1, json.size
+        assert_equal 1764, json[@one_hundred_days_ago]
+      end
+    end
+
+    context "for a date range greater than 90 days" do
+      should "return a 403"
+      should "say that 90 days is the maximum date range size"
+    end
+
+    context "for an unknown gem" do
+      setup do
+        get :show, :id => "nonexistent_gem", 
+                   :from => @one_hundred_days_ago,
+                   :to => @one_hundred_eighty_nine_days_ago
+      end
+
+      should "return a 404" do
+        assert_response :not_found
+      end
+
+      should "say gem could not be found" do
+        assert_equal "This rubygem could not be found.", @response.body
+      end
     end
   end
 end
