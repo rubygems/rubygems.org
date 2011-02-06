@@ -13,6 +13,12 @@ class Api::V1::StatsController < Api::BaseController
     start, stop = [params[:from], params[:to]].map do |d| 
       Date.parse(d)
     end
+
+    if stop - start >= 90
+      render :text => "Date ranges for searches may not exceed 90 days", :status => 403
+      return
+    end
+
     if version = Version.find_by_full_name(full_name)
       render :json => Download.counts_by_day_for_version_in_date_range(version, start, stop) 
     else
