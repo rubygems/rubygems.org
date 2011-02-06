@@ -96,8 +96,18 @@ class Api::V1::StatsControllerTest < ActionController::TestCase
     end
 
     context "for a date range greater than 90 days" do
-      should "return a 403"
-      should "say that 90 days is the maximum date range size"
+      setup do
+        @version = Factory(:version)
+        get_search(@version, @one_hundred_ninety_days_ago, @one_hundred_days_ago)
+      end
+
+      should "return a 403" do
+        assert_response 403
+      end
+
+      should "say that 90 days is the maximum date range size" do
+        assert_equal "Date ranges for searches may not exceed 90 days", @response.body
+      end
     end
 
     context "for an unknown gem" do
