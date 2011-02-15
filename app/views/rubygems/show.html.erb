@@ -108,8 +108,8 @@
         <% end %>
       </div>
 
-      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.runtime } %>
-      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.development } %>
+      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.runtime.sort_by(&:name) } %>
+      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.development.sort_by(&:name) } %>
     </div>
   </div>
 <% end %>
