@@ -1,6 +1,6 @@
 class Version < ActiveRecord::Base
   belongs_to :rubygem
-  has_many :dependencies, :dependent => :destroy
+  has_many :dependencies, :order => 'name ASC', :dependent => :destroy
 
   scope :owned_by, lambda { |user|
     where(:rubygem_id => user.rubygem_ids)
