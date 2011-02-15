@@ -11,6 +11,28 @@ class Rubygem < ActiveRecord::Base
   validate :ensure_name_format
   validates_presence_of :name
   validates_uniqueness_of :name
+  
+  searchable do
+    text :name
+    text :authors do
+      versions.most_recent.try(:authors)
+    end
+    text :description do
+      versions.most_recent.try(:description)
+    end
+    text :summary do
+      versions.most_recent.try(:summary)
+    end
+    text :dependencies do
+      if versions.most_recent
+        versions.most_recent.dependencies.collect(&:rubygem).collect(&:name)
+      else
+        nil
+      end
+    end
+    integer :downloads
+    # string :slug
+  end
 
   scope :with_versions,
     where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)")
@@ -26,15 +48,23 @@ class Rubygem < ActiveRecord::Base
     limit(1)
   }
 
-  scope :search, lambda { |query| 
-    where(["versions.indexed and (upper(name) like upper(:query) or upper(versions.description) like upper(:query))", {:query => "%#{query.strip}%"}]).
-    includes(:versions).
-    order("rubygems.downloads desc")
-  }
-
   scope :name_starts_with, lambda { |letter| 
     where(["upper(name) like upper(?)", "#{letter}%" ])
   }
+  
+  def self.search(query, options={})
+    options = {
+      :page => 1
+    }.merge(options)
+    self.solr_search(:include => :versions) do
+      keywords query do
+        minimum_match 0
+        boost_fields :name => 5.0, :authors => 2.0, :dependencies => 2.0
+        boost(function { :downloads })
+      end
+      paginate :page => options[:page]
+    end.results
+  end
 
   def ensure_name_format
     if name.class != String
@@ -93,7 +123,8 @@ class Rubygem < ActiveRecord::Base
   end
 
   def downloads
-    Download.for(self)
+    # use the cached value if redis gives us 0 (useful in development)
+    Download.for(self) > self[:downloads] ? Download.for(self) : self[:downloads]
   end
 
   def downloads_today

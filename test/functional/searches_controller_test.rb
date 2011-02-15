@@ -17,6 +17,7 @@ class SearchesControllerTest < ActionController::TestCase
       @sinatra = Factory(:rubygem, :name => "sinatra")
       assert_nil @sinatra.versions.most_recent
       assert @sinatra.reload.versions.count.zero?
+      stub_solr_select(@sinatra)
       get :show, :query => "sinatra"
     end
 
@@ -32,6 +33,7 @@ class SearchesControllerTest < ActionController::TestCase
       Factory(:version, :rubygem => @sinatra)
       Factory(:version, :rubygem => @sinatra_redux)
       Factory(:version, :rubygem => @brando)
+      stub_solr_select(@sinatra, @sinatra_redux)
       get :show, :query => "sinatra"
     end
 

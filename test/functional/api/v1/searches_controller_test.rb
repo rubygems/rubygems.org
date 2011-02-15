@@ -11,6 +11,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
 
     context "On GET to show with query=match for json" do
       setup do
+        stub_solr_select(@match)
         get :show, :query => "match", :format => "json"
       end
 
@@ -27,6 +28,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
 
     context "On GET to show with query=match for xml" do
       setup do
+        stub_solr_select(@match)
         get :show, :query => "match", :format => "xml"
       end
 

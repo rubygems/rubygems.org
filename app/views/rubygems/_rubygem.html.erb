@@ -1,10 +1,10 @@
 <li>
   <div class="downloads">
-    <strong><%= rubygem.downloads %></strong>
+    <strong><%= number_with_delimiter rubygem.downloads %></strong>
     downloads
   </div>
   <a href="<%= rubygem_path(rubygem) %>">
     <strong><%= rubygem %></strong>
-    <%= short_info(rubygem.versions.most_recent) %>
+    <%= short_info(rubygem.versions.most_recent) if rubygem.versions.most_recent%>
   </a>
 </li>

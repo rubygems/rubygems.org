@@ -44,3 +44,9 @@ production:
 maintenance:
   delivery_method: :test
   <<: *LIVE
+
+demo:
+  delivery_method: :test
+  redirector: false
+  asset_cacher: true
+  <<: *LIVE
