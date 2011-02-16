@@ -432,8 +432,37 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "find rubygems by name on #search" do
-      stub_solr_select(@apple_pie)
       assert Rubygem.search('apple').include?(@apple_pie)
+      assert Rubygem.search('orange').include?(@orange_julius)
+
+      assert ! Rubygem.search('apple').include?(@orange_julius)
+      assert ! Rubygem.search('orange').include?(@apple_pie)
+    end
+
+    should "find rubygems by name with extra spaces on #search" do
+      assert Rubygem.search('apple  ').include?(@apple_pie)
+      assert Rubygem.search('orange   ').include?(@orange_julius)
+      assert_equal Rubygem.search('apple'), Rubygem.search('apple ')
+
+      assert ! Rubygem.search('apple  ').include?(@orange_julius)
+      assert ! Rubygem.search('orange   ').include?(@apple_pie)
+    end
+
+    should "find rubygems by description on #search" do
+      assert Rubygem.search('pie').include?(@apple_pie)
+      assert Rubygem.search('julius').include?(@orange_julius)
+
+      assert ! Rubygem.search('pie').include?(@orange_julius)
+      assert ! Rubygem.search('julius').include?(@apple_pie)
+    end
+
+    should "find rubygems case insensitively on #search" do
+      assert Rubygem.search('APPLE').include?(@apple_pie)
+      assert Rubygem.search('PIE').include?(@apple_pie)
+    end
+
+    should "sort results by number of downloads, descending" do
+      assert_equal [@apple_crisp, @apple_pie], Rubygem.search('apple')
     end
 
     should "find exact match by name on #name_is" do

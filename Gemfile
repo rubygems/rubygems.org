@@ -47,5 +47,5 @@ group :test do
   gem "shoulda",            "2.11.1"
   gem "timecop",            "0.3.5"
   gem "webrat",             "0.5.3"
-  gem "webmock",            "0.7.3"
+  gem "webmock",            "1.6.2"
 end

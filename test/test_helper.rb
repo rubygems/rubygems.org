@@ -4,7 +4,7 @@ require 'rails/test_help'
 
 set :environment, :test
 
-WebMock.disable_net_connect!
+WebMock.disable_net_connect!(:allow => 'localhost:8981')
 
 require 'clearance/shoulda_macros'
 
@@ -70,7 +70,7 @@ end
 ##
 
 # Ignore all calls to update documents
-WebMock.stub_http_request(:post, %r{http://localhost:8981/solr/update})
+# WebMock.stub_http_request(:post, %r{http://localhost:8981/solr/update})
 
 # Build a search response body for the given gems
 def mock_solr_search_response(*gems)

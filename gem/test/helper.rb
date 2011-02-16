@@ -12,7 +12,7 @@ begin
 rescue LoadError
 end
 
-WebMock.disable_net_connect!
+WebMock.disable_net_connect!(:allow => 'localhost:8981')
 
 class CommandTest < ActiveSupport::TestCase
   include RR::Adapters::TestUnit unless include?(RR::Adapters::TestUnit)

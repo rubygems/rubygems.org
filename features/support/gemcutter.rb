@@ -1,4 +1,4 @@
-WebMock.disable_net_connect!
+WebMock.disable_net_connect!(:allow => 'localhost:8981')
 
 Hostess.local = true
 
