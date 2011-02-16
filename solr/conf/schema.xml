@@ -68,6 +68,17 @@
         <filter class="solr.EdgeNGramFilterFactory" minGramSize="3" maxGramSize="15" side="front"/>
       </analyzer>
     </fieldType>
+    
+    <fieldType name="name" class="solr.TextField" omitNorms="false">
+      <analyzer>
+        <tokenizer class="solr.PatternTokenizerFactory" pattern="-_" />
+        <filter class="solr.StandardFilterFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.EnglishPorterFilterFactory"/>
+        <filter class="solr.EdgeNGramFilterFactory" minGramSize="1" maxGramSize="15" side="front"/>
+      </analyzer>
+    </fieldType>
+    
     <!-- *** This fieldType is used by Sunspot! *** -->
     <fieldType name="boolean" class="solr.BoolField" omitNorms="true"/>
     <!-- *** This fieldType is used by Sunspot! *** -->
@@ -133,6 +144,10 @@
     <dynamicField name="*_text" stored="false" type="text" multiValued="true" indexed="true"/>
     <!-- *** This dynamicField is used by Sunspot! *** -->
     <dynamicField name="*_texts" stored="true" type="text" multiValued="true" indexed="true"/>
+
+    <!-- A special field type for handling gem names, which have their own unique needs -->
+    <dynamicField name="*_name" stored="false" type="name" multiValued="true" indexed="true"/>
+    
     <!-- *** This dynamicField is used by Sunspot! *** -->
     <dynamicField name="*_b" stored="false" type="boolean" multiValued="false" indexed="true"/>
     <!-- *** This dynamicField is used by Sunspot! *** -->

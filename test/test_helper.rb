@@ -70,7 +70,7 @@ end
 ##
 
 # Ignore all calls to update documents
-# WebMock.stub_http_request(:post, %r{http://localhost:8981/solr/update})
+WebMock.stub_http_request(:post, %r{http://localhost:8981/solr/update})
 
 # Build a search response body for the given gems
 def mock_solr_search_response(*gems)

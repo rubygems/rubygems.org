@@ -27,6 +27,7 @@ class Version < ActiveRecord::Base
   after_validation :join_authors
   after_create     :full_nameify!
   after_save       :reorder_versions
+  after_save       :reindex_rubygem
 
   validates_format_of :number, :with => /\A#{Gem::Version::VERSION_PATTERN}\z/
   validate :platform_and_number_are_unique, :on => :create
@@ -98,6 +99,10 @@ class Version < ActiveRecord::Base
 
   def reorder_versions
     rubygem.reorder_versions
+  end
+  
+  def reindex_rubygem
+    rubygem.solr_index
   end
 
   def yank!

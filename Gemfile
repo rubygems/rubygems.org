@@ -38,7 +38,6 @@ group :test do
   gem "factory_girl_rails", "1.0"
 
   gem "database_cleaner",   "0.5.2"
-  gem "fakeweb",            "1.2.6"
   gem "launchy",            "0.3.7"
   gem "nokogiri",           "1.4.3.1"
   gem "rack-test",          "0.5.7", :require => "rack/test"
@@ -48,4 +47,5 @@ group :test do
   gem "timecop",            "0.3.5"
   gem "webrat",             "0.5.3"
   gem "webmock",            "1.6.2"
+
 end

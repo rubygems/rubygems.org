@@ -421,14 +421,24 @@ class RubygemTest < ActiveSupport::TestCase
 
   context "when some gems exist with titles and versions that have descriptions" do
     setup do
+      WebMock.reset!
+      WebMock.disable_net_connect!(:allow => 'localhost:8981')
+      
       @apple_pie = Factory(:rubygem, :name => 'apple', :downloads => 1)
       Factory(:version, :description => 'pie', :rubygem => @apple_pie)
 
-      @apple_crisp = Factory(:rubygem, :name => 'apple_crisp', :downloads => 10)
+      @apple_crisp = Factory(:rubygem, :name => 'apple-crisp', :downloads => 100)
       Factory(:version, :description => 'pie', :rubygem => @apple_crisp)
 
       @orange_julius = Factory(:rubygem, :name => 'orange')
       Factory(:version, :description => 'julius', :rubygem => @orange_julius)
+
+      Sunspot.commit
+    end
+    
+    teardown do
+      WebMock.disable_net_connect!
+      WebMock.stub_http_request(:post, %r{http://localhost:8981/solr/update})
     end
 
     should "find rubygems by name on #search" do

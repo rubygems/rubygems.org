@@ -13,7 +13,7 @@ class Rubygem < ActiveRecord::Base
   validates_uniqueness_of :name
   
   searchable do
-    text :name
+    text :name, :as => 'rubygem_name'
     text :authors do
       versions.most_recent.try(:authors)
     end
@@ -23,7 +23,7 @@ class Rubygem < ActiveRecord::Base
     text :summary do
       versions.most_recent.try(:summary)
     end
-    text :dependencies do
+    text :dependencies, :as => 'dependency_name' do
       if versions.most_recent
         versions.most_recent.dependencies.collect(&:rubygem).collect(&:name)
       else
@@ -31,7 +31,6 @@ class Rubygem < ActiveRecord::Base
       end
     end
     integer :downloads
-    # string :slug
   end
 
   scope :with_versions,
@@ -59,7 +58,7 @@ class Rubygem < ActiveRecord::Base
     self.solr_search(:include => :versions) do
       keywords query do
         minimum_match 0
-        boost_fields :name => 5.0, :authors => 2.0, :dependencies => 2.0
+        boost_fields :gem_name => 5.0, :authors => 2.0, :dependency_name => 2.0
         boost(function { :downloads })
       end
       paginate :page => options[:page]
