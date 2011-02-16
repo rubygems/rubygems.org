@@ -18,7 +18,7 @@ class Test::Unit::TestCase
   include Webrat::Matchers
   include Rack::Test::Methods
   include RR::Adapters::TestUnit unless include?(RR::Adapters::TestUnit)
-  include WebMock
+  include WebMock::API
 
   def setup
     RR.reset

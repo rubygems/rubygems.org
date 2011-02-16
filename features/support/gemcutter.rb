@@ -8,7 +8,7 @@ DatabaseCleaner.clean_with :truncation
 DatabaseCleaner.strategy = :transaction
 
 Before do
-  WebMock.reset_webmock
+  WebMock.reset!
   DatabaseCleaner.start
 
   FileUtils.mkdir(TEST_DIR)
