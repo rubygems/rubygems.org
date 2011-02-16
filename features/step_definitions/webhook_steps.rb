@@ -19,13 +19,10 @@ When /I list the webhooks as (json|yaml) with my api key/ do |format|
 end
 
 Then /^the webhook "([^\"]*)" should receive a POST with gem "([^\"]*)" at version "([^\"]*)"$/ do |web_hook_url, gem_name, version_number|
-  WebMock.assert_requested(:post, web_hook_url, :times => 1)
-
-  request = WebMock::RequestRegistry.instance.requested_signatures.hash.keys.first
-  json = ActiveSupport::JSON.decode(request.body)
-
-  assert_equal gem_name, json["name"]
-  assert_equal version_number, json["version"]
+  WebMock.assert_requested(:post, web_hook_url, :times => 1) do |request|
+    json = ActiveSupport::JSON.decode(request.body)
+    gem_name == json["name"] && version_number == json["version"]
+  end
 end
 
 Then /I should see "(.*)" under "(.*)" in (json|yaml)/ do |web_hook_url, gem_name, format|
