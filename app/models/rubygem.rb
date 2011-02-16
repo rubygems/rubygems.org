@@ -42,11 +42,6 @@ class Rubygem < ActiveRecord::Base
     group(column_names.map{ |name| "rubygems.#{name}" }.join(', ')).
     having('COUNT(versions.id) = 1')
 
-  scope :name_is, lambda { |name| 
-    where(:name => name.strip).
-    limit(1)
-  }
-
   scope :name_starts_with, lambda { |letter| 
     where(["upper(name) like upper(?)", "#{letter}%" ])
   }

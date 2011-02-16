@@ -474,14 +474,6 @@ class RubygemTest < ActiveSupport::TestCase
     should "sort results by number of downloads, descending" do
       assert_equal [@apple_crisp, @apple_pie], Rubygem.search('apple')
     end
-
-    should "find exact match by name on #name_is" do
-      assert_equal @apple_crisp, Rubygem.name_is('apple_crisp').first
-    end
-
-    should "find exact match by name with extra spaces on #name_is" do
-      assert_equal @apple_crisp, Rubygem.name_is('apple_crisp ').first
-    end
   end
 
   context "building a new Rubygem" do
