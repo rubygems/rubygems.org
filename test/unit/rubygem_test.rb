@@ -422,7 +422,7 @@ class RubygemTest < ActiveSupport::TestCase
   context "when some gems exist with titles and versions that have descriptions" do
     setup do
       WebMock.reset!
-      WebMock.disable_net_connect!(:allow => 'localhost:8981')
+      disable_net_connect_with_solr!
       
       @apple_pie = Factory(:rubygem, :name => 'apple', :downloads => 1)
       Factory(:version, :description => 'pie', :rubygem => @apple_pie)
@@ -437,8 +437,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
     
     teardown do
-      WebMock.disable_net_connect!
-      WebMock.stub_http_request(:post, %r{http://localhost:8981/solr/update})
+      disable_net_connect!
     end
 
     should "find rubygems by name on #search" do
@@ -473,6 +472,11 @@ class RubygemTest < ActiveSupport::TestCase
 
     should "sort results by number of downloads, descending" do
       assert_equal [@apple_crisp, @apple_pie], Rubygem.search('apple')
+    end
+    
+    should "not show in search results after being yanked" do
+      @orange_julius.yank!(@orange_julius.versions.first)
+      assert ! Rubygem.search('orange').include?(@orange_julius)
     end
   end
 

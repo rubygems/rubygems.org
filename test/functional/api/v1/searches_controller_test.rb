@@ -1,17 +1,26 @@
 require 'test_helper'
 
 class Api::V1::SearchesControllerTest < ActionController::TestCase
+
+  setup do
+    disable_net_connect_with_solr!
+  end
+  
+  teardown do
+    disable_net_connect!
+  end
+
   context "with some gems" do
     setup do
       @match = Factory(:rubygem, :name => "match")
       @other = Factory(:rubygem, :name => "other")
       Factory(:version, :rubygem => @match)
       Factory(:version, :rubygem => @other)
+      Sunspot.commit
     end
 
     context "On GET to show with query=match for json" do
       setup do
-        stub_solr_select(@match)
         get :show, :query => "match", :format => "json"
       end
 
@@ -28,7 +37,6 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
 
     context "On GET to show with query=match for xml" do
       setup do
-        stub_solr_select(@match)
         get :show, :query => "match", :format => "xml"
       end
 

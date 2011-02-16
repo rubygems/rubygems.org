@@ -1,5 +1,3 @@
-WebMock.disable_net_connect!(:allow => 'localhost:8981')
-
 Hostess.local = true
 
 TEST_DIR = File.join('/', 'tmp', 'gemcutter')
@@ -9,8 +7,11 @@ DatabaseCleaner.strategy = :transaction
 
 Before do
   WebMock.reset!
-  DatabaseCleaner.start
+  WebMock.disable_net_connect!(:allow => Sunspot.config.solr.url)
+  Sunspot.remove_all!
 
+  DatabaseCleaner.start
+  
   FileUtils.mkdir(TEST_DIR)
   Dir.chdir(TEST_DIR)
 

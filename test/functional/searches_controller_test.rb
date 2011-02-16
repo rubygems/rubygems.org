@@ -1,6 +1,14 @@
 require 'test_helper'
 
 class SearchesControllerTest < ActionController::TestCase
+  
+  setup do
+    disable_net_connect_with_solr!
+  end
+  
+  teardown do
+    disable_net_connect!
+  end
 
   context 'on GET to show with no search parameters' do
     setup { get :show }
@@ -17,7 +25,7 @@ class SearchesControllerTest < ActionController::TestCase
       @sinatra = Factory(:rubygem, :name => "sinatra")
       assert_nil @sinatra.versions.most_recent
       assert @sinatra.reload.versions.count.zero?
-      stub_solr_select(@sinatra)
+      Sunspot.commit
       get :show, :query => "sinatra"
     end
 
@@ -33,7 +41,7 @@ class SearchesControllerTest < ActionController::TestCase
       Factory(:version, :rubygem => @sinatra)
       Factory(:version, :rubygem => @sinatra_redux)
       Factory(:version, :rubygem => @brando)
-      stub_solr_select(@sinatra, @sinatra_redux)
+      Sunspot.commit
       get :show, :query => "sinatra"
     end
 

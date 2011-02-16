@@ -13,24 +13,25 @@ class Rubygem < ActiveRecord::Base
   validates_uniqueness_of :name
   
   searchable do
-    text :name, :as => 'rubygem_name'
+    text(:name, :as => 'rubygem_name')
     text :authors do
-      versions.most_recent.try(:authors)
+      versions.indexed.most_recent.try(:authors)
     end
     text :description do
-      versions.most_recent.try(:description)
+      versions.indexed.most_recent.try(:description)
     end
     text :summary do
-      versions.most_recent.try(:summary)
+      versions.indexed.most_recent.try(:summary)
     end
-    text :dependencies, :as => 'dependency_name' do
-      if versions.most_recent
-        versions.most_recent.dependencies.collect(&:rubygem).collect(&:name)
-      else
-        nil
+    text(:dependencies, :as => 'dependency_name') do
+      if versions.indexed.most_recent
+        versions.indexed.most_recent.dependencies.collect(&:rubygem).collect(&:name)
       end
     end
     integer :downloads
+    boolean :indexed do
+      versions.indexed.most_recent.present?
+    end
   end
 
   scope :with_versions,
@@ -56,6 +57,7 @@ class Rubygem < ActiveRecord::Base
         boost_fields :gem_name => 5.0, :authors => 2.0, :dependency_name => 2.0
         boost(function { :downloads })
       end
+      where(:indexed, true)
       paginate :page => options[:page]
     end.results
   end
@@ -224,6 +226,9 @@ class Rubygem < ActiveRecord::Base
     version.yank!
     if versions.indexed.count.zero?
       ownerships.each(&:delete)
+      solr_remove_from_index!
+    else
+      solr_index
     end
   end
 

@@ -4,7 +4,18 @@ require 'rails/test_help'
 
 set :environment, :test
 
-WebMock.disable_net_connect!(:allow => 'localhost:8981')
+def disable_net_connect!
+  WebMock.disable_net_connect!
+  WebMock.stub_request(:any, Regexp.new(Sunspot.config.solr.url))
+end
+
+def disable_net_connect_with_solr!
+  WebMock.reset!
+  WebMock.disable_net_connect!(:allow => Sunspot.config.solr.url)
+  Sunspot.remove_all!
+end
+
+disable_net_connect!
 
 require 'clearance/shoulda_macros'
 
@@ -63,26 +74,4 @@ def stub_uploaded_token(gem_name, token, status = [200, "Success"])
   WebMock.stub_request(:get,
                        "http://#{gem_name}.rubyforge.org/migrate-#{gem_name}.html").
     to_return(:body => token + "\n", :status => status)
-end
-
-###
-# Stubbing for calls to Solr
-##
-
-# Ignore all calls to update documents
-WebMock.stub_http_request(:post, %r{http://localhost:8981/solr/update})
-
-# Build a search response body for the given gems
-def mock_solr_search_response(*gems)
-  docs = [gems].flatten.collect do |rubygem|
-    "{'id' => 'Rubygem #{rubygem.id}'}"
-  end.join(",")
-  "{'response' => {'docs'=>[#{docs}]}}"
-end
-
-# Mock a search request and response for the given gems
-def stub_solr_select(*gems)
-  WebMock.stub_http_request(:get, %r{http://localhost:8981/solr/select}).to_return(
-    :body => mock_solr_search_response(*gems)
-  )
 end
