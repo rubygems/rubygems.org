@@ -36,7 +36,7 @@
       <% @my_gems.each do |rubygem| %>
         <li>
           <div class="downloads">
-            <strong><%= rubygem.downloads %></strong> downloads
+            <strong><%= number_with_delimiter rubygem.downloads %></strong> downloads
           </div>
           <%= link_to rubygem.name, rubygem, :title => short_info(rubygem.versions.most_recent) %>
         </li>
@@ -52,7 +52,7 @@
       <% current_user.subscribed_gems.each do |gem| %>
         <li>
           <div class="downloads">
-            <strong><%= gem.downloads %></strong> downloads
+            <strong><%= number_with_delimiter gem.downloads %></strong> downloads
           </div>
           <%= link_to gem, gem, :title => short_info(gem.versions.most_recent) %>
         </li>
