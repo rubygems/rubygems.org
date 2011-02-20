@@ -1,12 +1,12 @@
 require 'test_helper'
 
-class Api::V1::StatsControllerTest < ActionController::TestCase
+class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
   def get_show(version)
-    get :show, :id => "#{version.full_name}.json"
+    get :index, :version_id => "#{version.full_name}.json"
   end
 
   def get_search(version, from, to)
-    get :search, :id => "#{version.full_name}.json", 
+    get :search, :version_id => "#{version.full_name}.json", 
                  :from => from.to_date.to_s,
                  :to => to.to_date.to_s
   end
@@ -36,9 +36,9 @@ class Api::V1::StatsControllerTest < ActionController::TestCase
     end
   end
 
-  context "on GET to show for an unknown gem" do
+  context "on GET to index for an unknown gem" do
     setup do
-      get :show, :id => "nonexistent_gem"
+      get :index, :version_id => "nonexistent_gem"
     end
 
     should "return a 404" do
@@ -112,9 +112,9 @@ class Api::V1::StatsControllerTest < ActionController::TestCase
 
     context "for an unknown gem" do
       setup do
-        get :show, :id => "nonexistent_gem", 
-                   :from => @one_hundred_days_ago,
-                   :to => @one_hundred_eighty_nine_days_ago
+        get :index, :version_id => "nonexistent_gem", 
+                    :from => @one_hundred_days_ago,
+                    :to => @one_hundred_eighty_nine_days_ago
       end
 
       should "return a 404" do
