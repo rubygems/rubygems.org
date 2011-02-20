@@ -13,6 +13,8 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
 
   context "on GET to show" do
     setup do
+      Timecop.travel(2011, 2, 19, 19, 0, 0)
+
       @version = Factory(:version)
       @eight_nine_days_ago = 89.days.ago.to_date.to_s
       @one_day_ago = 1.day.ago.to_date.to_s
@@ -21,6 +23,8 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
       $redis.hincrby Download.history_key(@version), @one_day_ago, 2
       Download.incr(@version.rubygem.name, @version.full_name)
     end
+
+    teardown { Timecop.return }
 
     should "have a json object with 90 attributes, one per day of gem version download counts" do
       get_show(@version)
