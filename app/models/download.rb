@@ -56,9 +56,9 @@ class Download
   def self.counts_by_day_for_version_in_date_range(version, start, stop)
     downloads = {}
 
-    if stop == Date.today
+    if stop == Time.zone.today
       stop -= 1.day
-      downloads["#{Date.today}"] = self.today(version)
+      downloads["#{Time.zone.today}"] = self.today(version)
     end
 
     dates = (start..stop).map &:to_s
@@ -71,7 +71,7 @@ class Download
   end
 
   def self.counts_by_day_for_version(version)
-    counts_by_day_for_version_in_date_range(version, Date.today - 89.days, Date.today)
+    counts_by_day_for_version_in_date_range(version, Time.zone.today - 89.days, Time.zone.today)
   end
 
   def self.key(what)
