@@ -54,17 +54,17 @@ class Download
   end
 
   def self.counts_by_day_for_version_in_date_range(version, start, stop)
-    downloads = {}
-
-    if stop == Time.zone.today
-      stop -= 1.day
-      downloads["#{Time.zone.today}"] = self.today(version)
-    end
+    downloads = ActiveSupport::OrderedHash.new
 
     dates = (start..stop).map &:to_s
 
     $redis.hmget(self.history_key(version), *dates).each_with_index do |count, idx|
       downloads["#{dates[idx]}"] = count.to_i
+    end
+
+    if stop == Time.zone.today
+      stop -= 1.day
+      downloads["#{Time.zone.today}"] = self.today(version)
     end
 
     downloads

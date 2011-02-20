@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
-  def get_show(version)
+  def get_index(version)
     get :index, :version_id => "#{version.full_name}.json"
   end
 
@@ -23,12 +23,12 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
     end
 
     should "have a json object with 90 attributes, one per day of gem version download counts" do
-      get_show(@version)
+      get_index(@version)
       assert_equal 90, JSON.parse(@response.body).count
     end
 
     should "have a json object with the download counts by day" do
-      get_show(@version)
+      get_index(@version)
       json = JSON.parse(@response.body)
       assert_equal 42, json[@eight_nine_days_ago]
       assert_equal 2, json[@one_day_ago]
