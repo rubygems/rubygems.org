@@ -1,4 +1,5 @@
 class Api::V1::VersionsController < Api::BaseController
+
   def show
     gem_name = params[:id].try(:chomp, ".json")
     if rubygem = Rubygem.find_by_name(gem_name)
