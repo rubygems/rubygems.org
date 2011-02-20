@@ -70,8 +70,8 @@ class Download
     downloads
   end
 
-  def self.counts_by_day_for_version(version, days)
-    counts_by_day_for_version_in_date_range(version, Date.today - days.days, Date.today)
+  def self.counts_by_day_for_version(version)
+    counts_by_day_for_version_in_date_range(version, Date.today - 89.days, Date.today)
   end
 
   def self.key(what)

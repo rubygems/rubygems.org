@@ -95,21 +95,6 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
       end
     end
 
-    context "for a date range greater than 90 days" do
-      setup do
-        @version = Factory(:version)
-        get_search(@version, @one_hundred_ninety_days_ago, @one_hundred_days_ago)
-      end
-
-      should "return a 403" do
-        assert_response 403
-      end
-
-      should "say that 90 days is the maximum date range size" do
-        assert_equal "Date ranges for searches may not exceed 90 days", @response.body
-      end
-    end
-
     context "for an unknown gem" do
       setup do
         get :index, :version_id => "nonexistent_gem", 
