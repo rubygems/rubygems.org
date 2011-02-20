@@ -3,7 +3,7 @@ class Api::V1::Versions::DownloadsController < Api::BaseController
 
   def index
     if version = Version.find_by_full_name(@name)
-      render :json => Download.counts_by_day_for_version(version, 89)
+      render :json => Download.counts_by_day_for_version(version)
     else
       render :text => "This rubygem could not be found.", :status => :not_found
     end
@@ -12,11 +12,6 @@ class Api::V1::Versions::DownloadsController < Api::BaseController
   def search
     start, stop = [params[:from], params[:to]].map do |d| 
       Date.parse(d)
-    end
-
-    if stop - start >= 90
-      render :text => "Date ranges for searches may not exceed 90 days", :status => 403
-      return
     end
 
     if version = Version.find_by_full_name(@name)
