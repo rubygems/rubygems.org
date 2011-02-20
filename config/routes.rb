@@ -21,15 +21,13 @@ Gemcutter::Application.routes.draw do
       end
 
       constraints :id => RUBYGEM_NAME_MATCHER do
-        resources :stats, :only => :show do
-          member do 
-            get :search
+        resources :versions, :only => :show do
+          resources :downloads, :only => :index, :controller => "versions/downloads" do
+            collection do 
+              get :search
+            end
           end
         end
-      end
-
-      constraints :id => RUBYGEM_NAME_MATCHER do
-        resources :versions, :only => :show
       end
 
       resources :dependencies, :only => :index
