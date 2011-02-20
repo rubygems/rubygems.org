@@ -119,10 +119,11 @@ class DownloadTest < ActiveSupport::TestCase
     Download.incr(@rubygem_1, @version_2.full_name)
 
     downloads = {
-      "#{@version_1.id}-#{2.days.ago.to_date}" => 0, "#{@version_1.id}-#{Date.yesterday}" => 1, "#{@version_1.id}-#{Date.today}" => 1,
-      "#{@version_2.id}-#{2.days.ago.to_date}" => 0, "#{@version_2.id}-#{Date.yesterday}" => 1, "#{@version_2.id}-#{Date.today}" => 1,
-      "#{@version_3.id}-#{2.days.ago.to_date}" => 0, "#{@version_3.id}-#{Date.yesterday}" => 1, "#{@version_3.id}-#{Date.today}" => 3 }
+      "#{@version_1.id}-#{2.days.ago.to_date}" => 0, "#{@version_1.id}-#{Date.yesterday}" => 1, "#{@version_1.id}-#{Time.zone.today}" => 1,
+      "#{@version_2.id}-#{2.days.ago.to_date}" => 0, "#{@version_2.id}-#{Date.yesterday}" => 1, "#{@version_2.id}-#{Time.zone.today}" => 1,
+      "#{@version_3.id}-#{2.days.ago.to_date}" => 0, "#{@version_3.id}-#{Date.yesterday}" => 1, "#{@version_3.id}-#{Time.zone.today}" => 3 }
 
+    assert_equal downloads.size, 9
     assert_equal downloads, Download.counts_by_day_for_versions([@version_1, @version_2, @version_3], 2)
   end
 
