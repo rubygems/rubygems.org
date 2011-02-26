@@ -13,7 +13,7 @@ xml.feed "xmlns" => "http://www.w3.org/2005/Atom" do
 
   @versions.each do |version|
     xml.entry do
-      xml.title     "#{version.to_title}#{" " + version.platform if version.platformed?}"
+      xml.title     version.to_title
       xml.link      "rel" => "alternate", "href" => rubygem_version_url(version.rubygem, version.slug)
       xml.id        rubygem_version_url(version.rubygem, version.slug)
       xml.updated   version.created_at.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -24,5 +24,4 @@ xml.feed "xmlns" => "http://www.w3.org/2005/Atom" do
       end
     end
   end
-
 end
