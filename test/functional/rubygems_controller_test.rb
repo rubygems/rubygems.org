@@ -190,7 +190,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     should "render posts with platform-specific titles and links of all subscribed versions" do
       @versions.each do |v|
-        assert_select "entry > title", :count => 1, :text => (v.platformed? ? "#{v.to_title} #{v.platform}" : v.to_title)
+        assert_select "entry > title", :count => 1, :text => v.to_title
         assert_select "entry > link[href='#{rubygem_version_url(v.rubygem, v.slug)}']", :count => 1
         assert_select "entry > id", :count => 1, :text => rubygem_version_url(v.rubygem, v.slug)
       end

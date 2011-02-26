@@ -51,18 +51,19 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   private
-    def validate_gem_and_version
-      if !@rubygem.hosted?
-        render :json => "This gem does not exist.", :status => :not_found
-      elsif !@rubygem.owned_by?(current_user)
-        render :json => "You do not have permission to yank this gem.", :status => :forbidden
-      else
-        begin
-          slug = params[:platform].blank? ? params[:version] : "#{params[:version]}-#{params[:platform]}"
-          @version = Version.find_from_slug!(@rubygem, slug)
-        rescue ActiveRecord::RecordNotFound
-          render :json => "The version #{params[:version]} does not exist.", :status => :not_found
-        end
+
+  def validate_gem_and_version
+    if !@rubygem.hosted?
+      render :json => "This gem does not exist.", :status => :not_found
+    elsif !@rubygem.owned_by?(current_user)
+      render :json => "You do not have permission to yank this gem.", :status => :forbidden
+    else
+      begin
+        slug = params[:platform].blank? ? params[:version] : "#{params[:version]}-#{params[:platform]}"
+        @version = Version.find_from_slug!(@rubygem, slug)
+      rescue ActiveRecord::RecordNotFound
+        render :json => "The version #{params[:version]} does not exist.", :status => :not_found
       end
     end
+  end
 end
