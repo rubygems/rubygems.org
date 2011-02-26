@@ -33,7 +33,7 @@ namespace "gemcutter:downloads" do
 
     puts "*" * 80
 
-    Dl.created_at_inside(Date.today.to_datetime, Date.today.to_datetime + 1.day).group_by(&:version_id).each do |version_id, downloads|
+    Dl.created_at_inside(Date.current.to_datetime, Date.current.to_datetime + 1.day).group_by(&:version_id).each do |version_id, downloads|
       name  = vmap[version_id].full_name
       count = downloads.size
       puts ">>> #{name}: #{count}"

@@ -20,6 +20,9 @@ module Gemcutter
     config.time_zone = "UTC"
     config.encoding  = "utf-8"
 
+    require 'memprof/tracer'
+    config.middleware.insert 0, Memprof::Tracer
+
     config.middleware.use "Hostess"
     config.middleware.insert_after "Hostess", "Redirector" if $rubygems_config[:redirector]
 
