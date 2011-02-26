@@ -181,7 +181,11 @@ class Version < ActiveRecord::Base
   end
 
   def to_title
-    "#{rubygem.name} (#{to_s})"
+    if platformed?
+      "#{rubygem.name} (#{number}-#{platform})"
+    else
+      "#{rubygem.name} (#{number})"
+    end
   end
 
   def to_gem_version
