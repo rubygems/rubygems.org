@@ -15,6 +15,6 @@ _site/
 .bundle/
 bin/
 vendor/bundler_gems
-*.gemspec
 .rvmrc
 *.rdb
+*.gem
