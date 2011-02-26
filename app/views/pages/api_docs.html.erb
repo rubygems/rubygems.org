@@ -230,7 +230,7 @@ Successfully removed webhook for all gems to http://example.com</code></pre>
 Test fire a webhook. This can be used to test out an endpoint at any time, for example when you're developing your application. Requires two parameters: <code>gem_name</code> and <code>url</code>. Specify <code>*</code> for the <code>gem_name</code> parameter to apply the hook globally to all gems.
 </p>
 <p>
-  An Authorization header is included with every fired webhook so you can be sure the request came from RubyGems.org. The value of the header is the SHA1-hashed concatenation of the gem name, the gem version and your API key.
+  An Authorization header is included with every fired webhook so you can be sure the request came from RubyGems.org. The value of the header is the SHA2-hashed concatenation of the gem name, the gem version and your API key.
 </p>
 <p>
 <pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
