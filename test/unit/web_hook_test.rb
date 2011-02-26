@@ -173,7 +173,7 @@ class WebHookTest < ActiveSupport::TestCase
 
     should "include an Authorization header" do
       request = WebMock::RequestRegistry.instance.requested_signatures.hash.keys.first
-      authorization = Digest::SHA1.hexdigest(@rubygem.name + @version.number + @hook.user.api_key)
+      authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number + @hook.user.api_key)
 
       assert_equal authorization, request.headers['Authorization']
     end

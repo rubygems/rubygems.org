@@ -5,7 +5,7 @@ class WebHookJob < Struct.new(:url, :host_with_port, :rubygem, :version, :api_ke
   end
 
   def authorization
-    Digest::SHA1.hexdigest(rubygem.name + version.number + api_key)
+    Digest::SHA2.hexdigest(rubygem.name + version.number + api_key)
   end
 
   def perform
