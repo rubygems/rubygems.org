@@ -1,5 +1,5 @@
 Feature: Dashboard
-  In order to see the status of gems to which I''ve subscribed
+  In order to see the status of gems to which I've subscribed
   A user
   Should be able to see a list of updates in their feed
 
