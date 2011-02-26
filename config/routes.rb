@@ -12,15 +12,12 @@ Gemcutter::Application.routes.draw do
       end
 
       resources :downloads, :only => :index
-      constraints :id => RUBYGEM_NAME_MATCHER do
-        resources :downloads, :only => :show
-      end
 
       constraints :id => RUBYGEM_NAME_MATCHER do
         resources :downloads, :only => :show
-      end
 
-      constraints :id => RUBYGEM_NAME_MATCHER do
+        resources :downloads, :only => :show
+
         resources :versions, :only => :show do
           resources :downloads, :only => :index, :controller => "versions/downloads" do
             collection do 
