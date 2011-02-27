@@ -20,8 +20,6 @@ gem "system_timer",      "1.0"
 gem "will_paginate",     "3.0.pre2"
 gem "xml-simple",        "1.0.12"
 
-gem "memprof",           "0.3.10.beta.1"
-
 # These gems suck and do stupid things when in maintenance mode
 group :development, :test, :staging, :production do
   gem "delayed_job",             "2.1.2"
