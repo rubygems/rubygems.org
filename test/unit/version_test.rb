@@ -125,9 +125,13 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal "gem install #{old_version.rubygem.name}", old_version.to_install
     end
 
-
     should "give title for #to_title" do
       assert_equal "#{@version.rubygem.name} (#{@version.to_s})", @version.to_title
+    end
+
+    should "give title and platform for #to_title" do
+      @version.platform = "zomg"
+      assert_equal "#{@version.rubygem.name} (#{@version.number}-zomg)", @version.to_title
     end
 
     should "have description for info" do
@@ -310,6 +314,7 @@ class VersionTest < ActiveSupport::TestCase
       @rack = Factory(:version, :authors => %w[rack], :built_at => 1.day.ago)
       @haml = Factory(:version, :authors => %w[haml], :built_at => 1.hour.ago)
       @dust = Factory(:version, :authors => %w[dust], :built_at => 1.day.from_now)
+      @fake = Factory(:version, :authors => %w[fake], :indexed => false, :built_at => 1.minute.ago)
     end
 
     should "get the latest versions up to today" do

@@ -67,7 +67,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.published(limit=5)
-    where("built_at <= ?", DateTime.now.utc).order("built_at desc").limit(limit)
+    where("built_at <= ? and indexed", DateTime.now.utc).order("built_at desc").limit(limit)
   end
 
   def self.find_from_slug!(rubygem_id, slug)
@@ -181,7 +181,11 @@ class Version < ActiveRecord::Base
   end
 
   def to_title
-    "#{rubygem.name} (#{to_s})"
+    if platformed?
+      "#{rubygem.name} (#{number}-#{platform})"
+    else
+      "#{rubygem.name} (#{number})"
+    end
   end
 
   def to_gem_version

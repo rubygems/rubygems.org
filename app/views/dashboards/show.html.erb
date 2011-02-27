@@ -13,9 +13,6 @@
             <div class="top">
               <strong>
                 <%= version.to_title %>
-                <% if version.platformed? -%>
-                  <%= version.platform %>
-                <% end -%>
               </strong>
               <%= time_ago_in_words(version.created_at) %> ago</div>
             <%= short_info(version) %>
