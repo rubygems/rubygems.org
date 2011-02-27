@@ -29,6 +29,20 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
+    context "On GET to show with json for a gem that's hosted with a period in its name" do
+      setup do
+        @rubygem = Factory(:rubygem, :name => "foo.rb")
+        Factory(:version, :rubygem => @rubygem)
+        get :show, :id => @rubygem.to_param, :format => "json"
+      end
+
+      should assign_to(:rubygem) { @rubygem }
+      should respond_with :success
+      should "return a json hash" do
+        assert_not_nil JSON.parse(@response.body)
+      end
+    end
+
     context "On GET to show with xml for a gem that's hosted" do
       setup do
         @rubygem = Factory(:rubygem)
@@ -43,6 +57,19 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
+    context "On GET to show with xml for a gem that's hosted with a period in its name" do
+      setup do
+        @rubygem = Factory(:rubygem, :name => "foo.rb")
+        Factory(:version, :rubygem => @rubygem)
+        get :show, :id => @rubygem.to_param, :format => "xml"
+      end
+
+      should assign_to(:rubygem) { @rubygem }
+      should respond_with :success
+      should "return a json hash" do
+        assert_not_nil Nokogiri.parse(@response.body).root
+      end
+    end
     context "On GET to show for a gem that doesn't match the slug" do
       setup do
         @rubygem = Factory(:rubygem, :name => "ZenTest", :slug => "zentest")
