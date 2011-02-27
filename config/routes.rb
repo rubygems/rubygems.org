@@ -29,7 +29,7 @@ Gemcutter::Application.routes.draw do
 
       resources :dependencies, :only => :index
 
-      resources :rubygems, :path => "gems", :only => [:create, :show, :index] do
+      resources :rubygems, :path => "gems", :only => [:create, :show, :index], :id => /.+?/, :format => /json|xml/ do
         collection do
           delete :yank
           put :unyank
