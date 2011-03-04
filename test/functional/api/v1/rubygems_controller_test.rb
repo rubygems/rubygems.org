@@ -1,7 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', '..', '..', 'test_helper')
 
 class Api::V1::RubygemsControllerTest < ActionController::TestCase
-  #should_forbid { post :create }
   should "route old paths to new controller" do
     get_route = {:controller => 'api/v1/rubygems', :action => 'show', :id => "rails", :format => "json"}
     assert_recognizes(get_route, '/api/v1/gems/rails.json')
@@ -18,7 +17,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to show with json for a gem that's hosted" do
       setup do
-        @rubygem = Factory(:rubygem)
+        @rubygem = Factory(:rubygem, :name => "foo")
         Factory(:version, :rubygem => @rubygem)
         get :show, :id => @rubygem.to_param, :format => "json"
       end
@@ -109,14 +108,14 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "On POST to create for existing gem" do
       setup do
         rubygem = Factory(:rubygem,
-                            :name       => "test")
+                          :name       => "test")
         Factory(:ownership, :rubygem    => rubygem,
-                            :user       => @user,
-                            :approved   => true)
+                :user       => @user,
+                :approved   => true)
         Factory(:version,   :rubygem    => rubygem,
-                            :number     => "0.0.0",
-                            :updated_at => 1.year.ago,
-                            :created_at => 1.year.ago)
+                :number     => "0.0.0",
+                :updated_at => 1.year.ago,
+                :created_at => 1.year.ago)
 
         @request.env["RAW_POST_DATA"] = gem_file("test-1.0.0.gem").read
         post :create
@@ -136,8 +135,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         rubygem = Factory(:rubygem,
                           :name       => "test")
         Factory(:ownership, :rubygem    => rubygem,
-                            :user       => @user,
-                            :approved   => true)
+                :user       => @user,
+                :approved   => true)
 
         @date = 1.year.ago
         @version = Factory(:version,
@@ -210,7 +209,6 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           assert @rubygem.ownerships.count.zero?
         end
       end
-      
 
       context "and a version 0.1.1" do
         setup do
@@ -229,7 +227,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           end
         end
       end
-      
+
       context "and a version 0.1.1 and platform x86-darwin-10" do
         setup do
           @v2 = Factory(:version, :rubygem => @rubygem, :number => "0.1.1", :platform => "x86-darwin-10")
@@ -244,6 +242,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
             assert_equal 2, @rubygem.versions.count
             assert_equal 1, @rubygem.versions.indexed.count
             assert_equal 1, @rubygem.ownerships.count
+          end
+          should "show platform in response" do
+            assert_equal "Successfully yanked gem: SomeGem (0.1.1-x86-darwin-10)", @response.body
           end
         end
       end
@@ -266,7 +267,6 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           delete :yank, :gem_name => @rubygem.to_param, :version => '0.1.0'
         end
         should respond_with :forbidden
-        #should not_change("the rubygem's indexed version count") { @rubygem.versions.indexed.count }
       end
 
       context "ON DELETE to yank for an already yanked gem" do
@@ -276,7 +276,6 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         end
         should respond_with :unprocessable_entity
       end
-
     end
 
     context "for a gem SomeGem with a yanked version 0.1.0 and unyanked version 0.1.1" do
@@ -298,7 +297,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           assert @v1.reload.indexed?
         end
       end
-      
+
       context "ON PUT to unyank for version 0.1.2 and platform x86-darwin-10" do
         setup do
           put :unyank, :gem_name => @rubygem.to_param, :version => @v3.number, :platform => @v3.platform
@@ -309,14 +308,13 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           assert @v3.reload.indexed?
         end
       end
-      
+
 
       context "ON PUT to unyank for version 0.1.1" do
         setup do
           put :unyank, :gem_name => @rubygem.to_param, :version => @v2.number
         end
         should respond_with :unprocessable_entity
-        #should not_change("the rubygem's indexed version count") { @rubygem.versions.indexed.count }
       end
     end
 
@@ -359,6 +357,4 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
   end
-
-  
 end

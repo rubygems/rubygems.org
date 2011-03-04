@@ -13,7 +13,7 @@ Bundler.require(:default, Rails.env) if defined?(Bundler)
 
 $rubygems_config = YAML.load_file("config/rubygems.yml")[Rails.env].symbolize_keys
 HOST             = $rubygems_config[:host]
-RUBYGEMS_VERSION = "1.5.2"
+RUBYGEMS_VERSION = "1.6.0"
 
 module Gemcutter
   class Application < Rails::Application
