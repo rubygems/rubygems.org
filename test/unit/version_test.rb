@@ -74,6 +74,22 @@ class VersionTest < ActiveSupport::TestCase
       @version.dependencies << Factory(:dependency, :version => @version, :rubygem => @dependency)
       assert ! Version.with_deps.first.dependencies.empty?
     end
+    
+    should "sort dependencies alphabetically" do
+      @version = Factory.build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
+      
+      @first_dependency_by_alpha = Factory(:rubygem, :name => 'acts_as_indexed')
+      @second_dependency_by_alpha = Factory(:rubygem, :name => 'friendly_id')
+      @third_dependency_by_alpha = Factory(:rubygem, :name => 'refinerycms')
+      
+      @version.dependencies << Factory(:dependency, :version => @version, :rubygem => @second_dependency_by_alpha)
+      @version.dependencies << Factory(:dependency, :version => @version, :rubygem => @third_dependency_by_alpha)
+      @version.dependencies << Factory(:dependency, :version => @version, :rubygem => @first_dependency_by_alpha)
+      
+      assert @first_dependency_by_alpha.name, @version.dependencies.first.name
+      assert @second_dependency_by_alpha.name, @version.dependencies[1].name
+      assert @third_dependency_by_alpha.name, @version.dependencies.last.name
+    end
   end
 
   context "with a version" do
