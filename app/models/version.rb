@@ -23,7 +23,7 @@ class Version < ActiveRecord::Base
   def self.with_associated
     where("versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)").
     includes(:rubygem).
-    order("versions.built_at desc")
+    by_built_at
   end
 
   def self.with_deps
@@ -58,7 +58,7 @@ class Version < ActiveRecord::Base
     order_str =  "rubygems.name asc"
     order_str << ", position desc" if reverse
 
-    where(:indexed => true).includes(:rubygem).order(order_str)
+    indexed.includes(:rubygem).order(order_str)
   end
 
   def self.most_recent
@@ -67,11 +67,15 @@ class Version < ActiveRecord::Base
   end
 
   def self.updated(limit=5)
-    where("built_at <= ?", DateTime.now.utc).with_associated.limit(limit)
+    where("built_at <= ?", DateTime.now.utc).
+      with_associated.
+      limit(limit)
   end
 
   def self.published(limit=5)
-    where("built_at <= ? and indexed", DateTime.now.utc).order("built_at desc").limit(limit)
+    where("built_at <= ? and indexed", DateTime.now.utc).
+      by_built_at.
+      limit(limit)
   end
 
   def self.find_from_slug!(rubygem_id, slug)
@@ -122,19 +126,20 @@ class Version < ActiveRecord::Base
   end
 
   def update_attributes_from_gem_specification!(spec)
-    self.update_attributes!(
-      :authors           => spec.authors,
-      :description       => spec.description,
-      :summary           => spec.summary,
-      :built_at          => spec.date,
-      :indexed           => true
+    update_attributes!(
+      :authors     => spec.authors,
+      :description => spec.description,
+      :summary     => spec.summary,
+      :built_at    => spec.date,
+      :indexed     => true
     )
   end
 
   def platform_as_number
-    case self.platform
-      when 'ruby' then 1
-      else             0
+    if platformed?
+      0
+    else
+      1
     end
   end
 
