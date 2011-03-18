@@ -1,5 +1,6 @@
 class Pusher
   include Vault
+  include NewRelic::Agent::Instrumentation::ControllerInstrumentation
 
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id
 
@@ -121,16 +122,21 @@ class Pusher
     end
   end
 
-   def self.indexer
-     @indexer ||=
-       begin
-         indexer = Gem::Indexer.new(server_path, :build_legacy => false)
-         def indexer.say(message) end
-         indexer
-       end
-   end
+  def self.indexer
+    @indexer ||=
+      begin
+        indexer = Gem::Indexer.new(server_path, :build_legacy => false)
+        def indexer.say(message) end
+        indexer
+      end
+  end
 
-   def log(message)
-     Rails.logger.info "[GEMCUTTER:#{Time.now}] #{message}"
-   end
+  def log(message)
+    Rails.logger.info "[GEMCUTTER:#{Time.now}] #{message}"
+  end
+
+  add_transaction_tracer :perform, :category => :task
+  add_transaction_tracer :specs_index, :category => :task
+  add_transaction_tracer :latest_index, :category => :task
+  add_transaction_tracer :prerelease_index, :category => :task
 end
