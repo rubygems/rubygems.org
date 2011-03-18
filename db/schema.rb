@@ -148,9 +148,11 @@ ActiveRecord::Schema.define(:version => 20110318162103) do
   add_index "versions", ["created_at"], :name => "index_versions_on_created_at"
   add_index "versions", ["full_name"], :name => "index_versions_on_full_name"
   add_index "versions", ["indexed"], :name => "index_versions_on_indexed"
+  add_index "versions", ["number"], :name => "index_versions_on_number"
   add_index "versions", ["position"], :name => "index_versions_on_position"
   add_index "versions", ["prerelease"], :name => "index_versions_on_prerelease"
   add_index "versions", ["rubygem_id", "number", "platform"], :name => "index_versions_on_rubygem_id_and_number_and_platform", :unique => true
+  add_index "versions", ["rubygem_id"], :name => "index_versions_on_rubygem_id"
 
   create_table "web_hooks", :force => true do |t|
     t.integer  "user_id"
