@@ -4,6 +4,34 @@ class VersionTest < ActiveSupport::TestCase
   should belong_to :rubygem
   should have_many :dependencies
 
+  context "updated gems" do
+    setup do
+      Timecop.freeze
+      @existing_gem = Factory(:rubygem)
+      @second = Factory(:version, :rubygem => @existing_gem, :created_at => 1.day.ago)
+      @fourth = Factory(:version, :rubygem => @existing_gem, :created_at => 4.days.ago)
+
+      @another_gem = Factory(:rubygem)
+      @third  = Factory(:version, :rubygem => @another_gem, :created_at => 3.days.ago)
+      @first  = Factory(:version, :rubygem => @another_gem, :created_at => 1.minute.ago)
+      @yanked = Factory(:version, :rubygem => @another_gem, :created_at => 30.seconds.ago)
+      @yanked.yank!
+
+      @bad_gem = Factory(:rubygem)
+      @only_one = Factory(:version, :rubygem => @bad_gem, :created_at => 1.minute.ago)
+    end
+
+    teardown do
+      Timecop.return
+    end
+
+    should "order gems by created at and show only gems that have more than one version" do
+      versions = Version.just_updated
+      assert_equal 4, versions.size
+      assert_equal [@first, @second, @third, @fourth], versions
+    end
+  end
+
   context "with a rubygem" do
     setup do
       @rubygem = Factory(:rubygem)
@@ -334,10 +362,6 @@ class VersionTest < ActiveSupport::TestCase
       Factory(:ownership, :rubygem => @gem, :user => @user, :approved => true)
     end
 
-    should "find versions that have other associated versions" do
-      assert_equal [@owned_one, @owned_two], Version.with_associated
-    end
-
     should "return the owned gems from #owned_by" do
       assert_contains Version.owned_by(@user).map(&:id), @owned_one.id
       assert_contains Version.owned_by(@user).map(&:id), @owned_two.id
@@ -413,4 +437,5 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @spec.date,               @version.built_at
     end
   end
+
 end
