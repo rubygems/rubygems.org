@@ -65,4 +65,8 @@ module RubygemsHelper
       link_to gravatar(48, "gravatar-#{owner.id}", owner), profile_path(owner.display_id), :alt => owner.display_handle
     end.join.html_safe
   end
+
+  def nice_date_for(time)
+    time.to_date.to_formatted_s(:long)
+  end
 end
