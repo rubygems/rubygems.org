@@ -37,7 +37,6 @@ class VersionsControllerTest < ActionController::TestCase
     should "render info about the gem" do
       assert_contain @rubygem.name
       assert_contain @latest_version.number
-      assert_contain @latest_version.built_at_date
     end
   end
 end

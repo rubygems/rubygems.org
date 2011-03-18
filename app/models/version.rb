@@ -149,10 +149,6 @@ class Version < ActiveRecord::Base
     end
   end
 
-  def built_at_date
-    built_at.to_date.to_formatted_s(:long)
-  end
-
   def slug
     full_name.gsub(/^#{rubygem.name}-/, '')
   end
