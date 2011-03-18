@@ -17,13 +17,7 @@ class Version < ActiveRecord::Base
 
   def self.subscribed_to_by(user)
     where(:rubygem_id => user.subscribed_gem_ids).
-    order('created_at desc')
-  end
-
-  def self.with_associated
-    where("versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)").
-    includes(:rubygem).
-    by_built_at
+      by_created_at
   end
 
   def self.with_deps
@@ -54,6 +48,10 @@ class Version < ActiveRecord::Base
     order("versions.built_at desc")
   end
 
+  def self.by_created_at
+    order('created_at desc')
+  end
+
   def self.with_indexed(reverse = false)
     order_str =  "rubygems.name asc"
     order_str << ", position desc" if reverse
@@ -66,10 +64,12 @@ class Version < ActiveRecord::Base
     recent.find_by_platform('ruby') || recent.first || first
   end
 
-  def self.updated(limit=5)
-    where("built_at <= ?", DateTime.now.utc).
-      with_associated.
-      limit(limit)
+  def self.just_updated
+    where("versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)").
+      joins(:rubygem).
+      indexed.
+      by_created_at.
+      limit(5)
   end
 
   def self.published(limit=5)
