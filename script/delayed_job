@@ -3,4 +3,12 @@
 require File.expand_path('../../config/environment',  __FILE__)
 require 'delayed/command'
 
+require 'newrelic_rpm'
+
+if Rails.env.production?
+  NewRelic::Agent.manual_start :app_name => 'Gemcutter'
+elsif Rails.env.staging?
+  NewRelic::Agent.manual_start :app_name => 'Gemcutter (Staging)'
+end
+
 Delayed::Command.new(ARGV).daemonize
