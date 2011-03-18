@@ -58,13 +58,13 @@ class DependencyTest < ActiveSupport::TestCase
     context "that refers to a Rubygem that exists and has multiple requirements" do
       setup do
         @rubygem        = Factory(:rubygem)
-        @requirements   = ['>= 0.0.0', '< 1.0.0']
+        @requirements   = ['< 1.0.0', '>= 0.0.0']
         @gem_dependency = Gem::Dependency.new(@rubygem.name, @requirements)
         @dependency     = Factory(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
       end
 
       should "create a Dependency referring to the existing Rubygem" do
-        assert_equal @rubygem,            @dependency.rubygem
+        assert_equal @rubygem, @dependency.rubygem
         assert_equal @requirements.join(', '), @dependency.requirements
       end
     end
