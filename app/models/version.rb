@@ -2,27 +2,6 @@ class Version < ActiveRecord::Base
   belongs_to :rubygem
   has_many :dependencies, :dependent => :destroy
 
-  scope :owned_by, lambda { |user|
-    where(:rubygem_id => user.rubygem_ids)
-  }
-
-  scope :subscribed_to_by, lambda { |user|
-    where(:rubygem_id => user.subscribed_gem_ids).
-    order('created_at desc')
-  }
-
-  scope :with_associated,
-    where("versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)").
-    includes(:rubygem).
-    order("versions.built_at desc")
-
-  scope :by_position, order('position')
-  scope :with_deps,   includes(:dependencies)
-  scope :latest,      where(:latest       => true     )
-  scope :prerelease,  where(:prerelease   => true     )
-  scope :release,     where(:prerelease   => false    )
-  scope :indexed,     where(:indexed      => true     )
-
   before_save      :update_prerelease
   after_validation :join_authors
   after_create     :full_nameify!
@@ -32,22 +11,47 @@ class Version < ActiveRecord::Base
   validate :platform_and_number_are_unique, :on => :create
   validate :authors_format, :on => :create
 
-  def platform_and_number_are_unique
-    if Version.exists?(:rubygem_id => rubygem_id,
-                       :number     => number,
-                       :platform   => platform)
-      errors[:base] << "A version already exists with this number or platform."
-    end
+  def self.owned_by(user)
+    where(:rubygem_id => user.rubygem_ids)
   end
 
-  def authors_format
-    if !authors.is_a?(Array) || authors.any? { |a| !a.is_a?(String) }
-      errors.add :authors, "must be an Array of Strings"
-    end
+  def self.subscribed_to_by(user)
+    where(:rubygem_id => user.subscribed_gem_ids).
+    order('created_at desc')
   end
 
-  def join_authors
-    self.authors = self.authors.join(', ') if self.authors.is_a?(Array)
+  def self.with_associated
+    where("versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)").
+    includes(:rubygem).
+    order("versions.built_at desc")
+  end
+
+  def self.with_deps
+    includes(:dependencies)
+  end
+
+  def self.latest
+    where(:latest => true)
+  end
+
+  def self.prerelease
+    where(:prerelease => true)
+  end
+
+  def self.release
+    where(:prerelease => false)
+  end
+
+  def self.indexed
+    where(:indexed => true)
+  end
+
+  def self.by_position
+    order('position')
+  end
+
+  def self.by_built_at
+    order("versions.built_at desc")
   end
 
   def self.with_indexed(reverse = false)
@@ -89,11 +93,6 @@ class Version < ActiveRecord::Base
 
   def platformed?
     platform != "ruby"
-  end
-
-  def update_prerelease
-    self[:prerelease] = !!to_gem_version.prerelease?
-    true
   end
 
   def reorder_versions
@@ -154,20 +153,6 @@ class Version < ActiveRecord::Base
     built_at.to_date.to_formatted_s(:long)
   end
 
-  def full_nameify!
-    self.full_name = "#{rubygem.name}-#{number}"
-    self.full_name << "-#{platform}" if platformed?
-
-    Version.update_all({:full_name => full_name}, {:id => id})
-
-    $redis.hmset(Version.info_key(full_name),
-                 :name, rubygem.name,
-                 :number, number,
-                 :platform, platform)
-
-    push
-  end
-
   def slug
     full_name.gsub(/^#{rubygem.name}-/, '')
   end
@@ -217,5 +202,44 @@ class Version < ActiveRecord::Base
         spec.add_dependency(dep.rubygem.name, dep.requirements.split(', '))
       end
     end
+  end
+
+  private
+
+  def platform_and_number_are_unique
+    if Version.exists?(:rubygem_id => rubygem_id,
+                       :number     => number,
+                       :platform   => platform)
+      errors[:base] << "A version already exists with this number or platform."
+    end
+  end
+
+  def authors_format
+    if !authors.is_a?(Array) || authors.any? { |a| !a.is_a?(String) }
+      errors.add :authors, "must be an Array of Strings"
+    end
+  end
+
+  def update_prerelease
+    self[:prerelease] = !!to_gem_version.prerelease?
+    true
+  end
+
+  def join_authors
+    self.authors = self.authors.join(', ') if self.authors.is_a?(Array)
+  end
+
+  def full_nameify!
+    self.full_name = "#{rubygem.name}-#{number}"
+    self.full_name << "-#{platform}" if platformed?
+
+    Version.update_all({:full_name => full_name}, {:id => id})
+
+    $redis.hmset(Version.info_key(full_name),
+                 :name, rubygem.name,
+                 :number, number,
+                 :platform, platform)
+
+    push
   end
 end

@@ -1,5 +1,4 @@
 class Rubygem < ActiveRecord::Base
-
   has_many :owners, :through => :ownerships, :source => :user
   has_many :ownerships, :dependent => :destroy
   has_many :subscribers, :through => :subscriptions, :source => :user
@@ -12,44 +11,29 @@ class Rubygem < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
 
-  scope :with_versions,
+  def self.with_versions
     where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)")
-
-  scope :with_one_version,
-    select('rubygems.*').
-    joins(:versions).
-    group(column_names.map{ |name| "rubygems.#{name}" }.join(', ')).
-    having('COUNT(versions.id) = 1')
-
-  scope :name_is, lambda { |name| 
-    where(:name => name.strip).
-    limit(1)
-  }
-
-  scope :search, lambda { |query| 
-    where(["versions.indexed and (upper(name) like upper(:query) or upper(versions.description) like upper(:query))", {:query => "%#{query.strip}%"}]).
-    includes(:versions).
-    order("rubygems.downloads desc")
-  }
-
-  scope :name_starts_with, lambda { |letter| 
-    where(["upper(name) like upper(?)", "#{letter}%" ])
-  }
-
-  def ensure_name_format
-    if name.class != String
-      errors.add :name, "must be a String"
-    elsif name =~ /^[\d]+$/
-      errors.add :name, "must include at least one letter"
-    elsif name =~ /[^\d\w\-\.]/
-      errors.add :name, "can only include letters, numbers, dashes, and underscores"
-    end
   end
 
-  def all_errors(version = nil)
-    [self, linkset, version].compact.map do |ar|
-      ar.errors.full_messages
-    end.flatten.join(", ")
+  def self.with_one_version
+    select('rubygems.*').
+    joins(:versions).
+    group(column_names.map { |name| "rubygems.#{name}" }.join(', ')).
+    having('COUNT(versions.id) = 1')
+  end
+
+  def self.name_is(name)
+    where(:name => name.strip).limit(1)
+  end
+
+  def self.search(query)
+    where("versions.indexed and (upper(name) like upper(:query) or upper(versions.description) like upper(:query))", {:query => "%#{query.strip}%"}).
+    includes(:versions).
+    order("rubygems.downloads desc")
+  end
+
+  def self.name_starts_with(letter)
+    where("upper(name) like upper(?)", "#{letter}%")
   end
 
   def self.total_count
@@ -70,6 +54,24 @@ class Rubygem < ActiveRecord::Base
 
   def self.letterize(letter)
     letter =~ /\A[A-Za-z]\z/ ? letter.upcase : 'A'
+  end
+
+  def self.monthly_dates
+    (2..31).map { |n| n.days.ago.to_date }.reverse
+  end
+
+  def self.monthly_short_dates
+    monthly_dates.map { |date| date.strftime("%m/%d") }
+  end
+
+  def self.versions_key(name)
+    "r:#{name}"
+  end
+
+  def all_errors(version = nil)
+    [self, linkset, version].compact.map do |ar|
+      ar.errors.full_messages
+    end.flatten.join(", ")
   end
 
   def public_versions
@@ -213,15 +215,19 @@ class Rubygem < ActiveRecord::Base
     $redis.hmget(Download.history_key(self), *key_dates).map(&:to_i)
   end
 
-  def self.monthly_dates
-    (2..31).map { |n| n.days.ago.to_date }.reverse
+  def first_built_date
+    versions.order("versions.built_at asc").limit(1).first.built_at
   end
 
-  def self.monthly_short_dates
-    monthly_dates.map { |date| date.strftime("%m/%d") }
-  end
+  private
 
-  def self.versions_key(name)
-    "r:#{name}"
+  def ensure_name_format
+    if name.class != String
+      errors.add :name, "must be a String"
+    elsif name =~ /^[\d]+$/
+      errors.add :name, "must include at least one letter"
+    elsif name =~ /[^\d\w\-\.]/
+      errors.add :name, "can only include letters, numbers, dashes, and underscores"
+    end
   end
 end
