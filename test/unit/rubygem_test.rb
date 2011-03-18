@@ -81,6 +81,17 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal version3_ruby, @rubygem.versions.most_recent
     end
 
+    should "can find when the first built date was" do
+      Timecop.travel(DateTime.now) do
+        Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :built_at => 1.day.ago)
+        Factory(:version, :rubygem => @rubygem, :number => "2.0.0", :built_at => 2.days.ago)
+        Factory(:version, :rubygem => @rubygem, :number => "1.0.0", :built_at => 3.days.ago)
+        Factory(:version, :rubygem => @rubygem, :number => "1.0.0.beta", :built_at => 4.days.ago)
+
+        assert_equal 4.days.ago.to_date, @rubygem.first_built_date.to_date
+      end
+    end
+
     should "have a most_recent version if only a platform version exists" do
       version1 = Factory(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "linux")
 

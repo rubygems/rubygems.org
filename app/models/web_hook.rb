@@ -1,31 +1,18 @@
 class WebHook < ActiveRecord::Base
+  GLOBAL_PATTERN = '*'
+
   belongs_to :user
   belongs_to :rubygem
-
-  scope :global, where(:rubygem_id => nil)
-  scope :specific, where("rubygem_id is not null")
-
-  GLOBAL_PATTERN = '*'
 
   validates_url_format_of :url
   validate :unique_hook, :on => :create
 
-  def unique_hook
-    if user && rubygem
-      if WebHook.exists?(:user_id    => user.id,
-                         :rubygem_id => rubygem.id,
-                         :url        => url)
-        errors[:base] << "A hook for #{url} has already been registered for #{rubygem.name}"
-      end
-    elsif user
-      if WebHook.exists?(:user_id    => user.id,
-                         :rubygem_id => nil,
-                         :url        => url)
-        errors[:base] << "A global hook for #{url} has already been registered"
-      end
-    else
-      errors[:base] << "A user is required for this hook"
-    end
+  def self.global
+    where(:rubygem_id => nil)
+  end
+
+  def self.specific
+    where("rubygem_id is not null")
   end
 
   def fire(host_with_port, deploy_gem, version, delayed = true)
@@ -76,5 +63,25 @@ class WebHook < ActiveRecord::Base
 
   def as_json(options = {})
     payload
+  end
+
+  private
+
+  def unique_hook
+    if user && rubygem
+      if WebHook.exists?(:user_id    => user.id,
+                         :rubygem_id => rubygem.id,
+                         :url        => url)
+        errors[:base] << "A hook for #{url} has already been registered for #{rubygem.name}"
+      end
+    elsif user
+      if WebHook.exists?(:user_id    => user.id,
+                         :rubygem_id => nil,
+                         :url        => url)
+        errors[:base] << "A global hook for #{url} has already been registered"
+      end
+    else
+      errors[:base] << "A user is required for this hook"
+    end
   end
 end
