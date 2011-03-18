@@ -49,7 +49,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.by_created_at
-    order('created_at desc')
+    order('versions.created_at desc')
   end
 
   def self.with_indexed(reverse = false)
