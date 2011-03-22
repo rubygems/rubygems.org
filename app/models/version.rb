@@ -59,6 +59,24 @@ class Version < ActiveRecord::Base
     indexed.includes(:rubygem).order(order_str)
   end
 
+  def self.rows_for_index
+    query = "SELECT gem.name, v.number, v.platform FROM versions as v, rubygems as gem WHERE v.indexed = 't' and gem.id = v.rubygem_id ORDER BY gem.name asc, position desc"
+
+    connection.select_rows(query)
+  end
+
+  def self.rows_for_latest_index
+    query = "SELECT gem.name, v.number, v.platform FROM versions as v, rubygems as gem WHERE v.indexed = 't' and v.latest = 't' and gem.id = v.rubygem_id ORDER BY gem.name asc, position desc"
+
+    connection.select_rows(query)
+  end
+
+  def self.rows_for_prerelease_index
+    query = "SELECT gem.name, v.number, v.platform FROM versions as v, rubygems as gem WHERE v.indexed = 't' and v.prerelease = 't' and gem.id = v.rubygem_id ORDER BY gem.name asc, position desc"
+
+    connection.select_rows(query)
+  end
+
   def self.most_recent
     recent = where(:latest => true)
     recent.find_by_platform('ruby') || recent.first || first

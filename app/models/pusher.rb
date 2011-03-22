@@ -88,15 +88,55 @@ class Pusher
     "<Gemcutter #{attrs.join(' ')}>"
   end
 
+  # Not using this yet, switch to this when we're on at least Rubygems
+  # 1.5.
+  # def minimize_specs(data)
+    # names     = Hash.new { |h,k| h[k] = k }
+    # versions  = Hash.new { |h,k| h[k] = Gem::Version.new(k) }
+    # platforms = Hash.new { |h,k| h[k] = k }
+
+    # data.each do |row|
+      # row[0] = names[row[0]]
+      # row[1] = versions[row[1]]
+      # row[2] = platforms[row[2]]
+    # end
+
+    # data
+  # end
+
+  def minimize_specs(data)
+    data.each do |row|
+      row[1] = Gem::Version.new(row[1])
+    end
+    data
+  end
+
   def specs_index
+    minimize_specs Version.rows_for_index
+  end
+
+  def slow_specs_index
+    vers = Version.indexed.select('rubygems.name, versions.number, versions.platform').from("versions").joins(:rubygem).order("rubygems.name asc, position desc")
+    vers.map { |v| [v.name, Gem::Version.new(v.number), v.platform ] }
+  end
+
+  def very_slow_specs_index
     Version.with_indexed(true).map(&:to_index)
   end
 
   def latest_index
+    minimize_specs Version.rows_for_latest_index
+  end
+
+  def slow_latest_index
     Version.latest.with_indexed.map(&:to_index)
   end
 
   def prerelease_index
+    minimize_specs Version.rows_for_prerelease_index
+  end
+
+  def slow_prerelease_index
     Version.prerelease.with_indexed(true).map(&:to_index)
   end
 
