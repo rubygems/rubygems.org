@@ -55,6 +55,21 @@ namespace :gemcutter do
       end
     end
 
+    desc "benchmark index creation"
+    task :benchmark => :environment do
+      require 'benchmark'
+      puts "Total versions: #{Version.count}"
+      Benchmark.bm do|b|
+        g = Pusher.new(nil, StringIO.new)
+        b.report(" specs index") { g.stringify(g.specs_index) }
+        b.report("        slow") { g.stringify(g.slow_specs_index) }
+        b.report("latest index") { g.stringify(g.latest_index) }
+        b.report("        slow") { g.stringify(g.slow_latest_index) }
+        b.report("   pre index") { g.stringify(g.prerelease_index) }
+        b.report("        slow") { g.stringify(g.slow_prerelease_index) }
+      end
+    end
+
     desc "fix the index"
     task :reprocess => :environment do
       index = Gem::SourceIndex.new

@@ -35,15 +35,19 @@ module Vault
     )
   end
 
-  def upload(key, value)
+  def stringify(value)
     final = StringIO.new
     gzip = Zlib::GzipWriter.new(final)
     gzip.write(Marshal.dump(value))
     gzip.close
 
+    final.string
+  end
+
+  def upload(key, value)
     # For the life of me, I can't figure out how to pass a stream in here from a closed StringIO
     file = directory.files.create(
-      :body   => final.string,
+      :body   => stringify(value),
       :key    => key,
       :public => true
     )
