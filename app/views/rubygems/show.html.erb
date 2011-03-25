@@ -56,6 +56,7 @@
           <%= unsubscribe_link(@rubygem) %>
         <% end %>
         <%= link_to "Stats", rubygem_stats_path(@rubygem), :id => "stats" %>
+        <%= link_to "Dependency", rubygem_dependency_path(@rubygem) %>
       </div>
 
       <% if @latest_version.indexed %>

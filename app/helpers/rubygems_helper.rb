@@ -69,4 +69,12 @@ module RubygemsHelper
   def nice_date_for(time)
     time.to_date.to_formatted_s(:long)
   end
+
+  def dependencies_options(rubygem)
+    [
+      *rubygem.versions.sort.reverse.map do |version|
+        [version.slug, rubygem_version_dependency_path(rubygem, version.slug)]
+      end
+    ]
+  end
 end

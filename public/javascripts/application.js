@@ -28,6 +28,10 @@ $(document).ready(function() {
     window.location.href = $(this).val();
   });
 
+  $('#version_for_dependencies').change(function() {
+    window.location.href = $(this).val();
+  });
+
   if ($('.downloads.counter').length > 0) {
     var options   = { color : $('.downloads').css('color') };
     var highlight = '#A70E0E';

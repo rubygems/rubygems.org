@@ -111,6 +111,15 @@ namespace :gemcutter do
       puts ">> ding, gems are done!"
       File.open("/tmp/index", "wb") { |f| f.write Marshal.dump(index) }
     end
+    desc "Rebuild dependencies graphs"
+    task :build_dependency_graphs => :environment do
+      g = Pusher.new(nil, StringIO.new)
+      Version.all(:include => :rubygem).each do |version|
+        puts "Processing #{version.rubygem.name}-#{version.to_s}"
+        g.instance_variable_set(:@spec, version.to_spec)
+        g.generate_graph
+      end
+    end
   end
 
   namespace :import do

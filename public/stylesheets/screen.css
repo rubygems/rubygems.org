@@ -1587,7 +1587,7 @@ h5#downloads {
   letter-spacing: 0.5px;
 }
 
-#version_for_stats {
+#version_for_stats, #version_for_dependencies {
   float: right;
   font-size: 15px;
   vertical-align: middle;
@@ -1607,4 +1607,16 @@ h5#downloads {
   font-weight: bold;
   padding-left: 24px;
 }
+.zoom {
+  font-size: 50px;
+  display: block;
+  line-height: 25px;
+}
 
+#zoombox {
+  position: relative;
+  float:left;
+  top: 0;
+  width: 50px;
+  margin-left: -35px;
+}

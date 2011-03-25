@@ -52,4 +52,16 @@ module Vault
       :public => true
     )
   end
+
+  def generate_graph
+    dep_graph = DependencyGraph.new(spec)
+    %w{png svg svgz}.each do |format|
+      graph_path = Pusher.server_path('graphs', "#{spec.original_name}.#{format}")
+      file = directory.files.new(
+        :body => dep_graph.graph.output(format.to_sym => String),
+        :key => "graphs/#{spec.original_name}.#{format}"
+      )
+      file.save('x-amz-acl' => 'public-read')
+    end
+  end
 end

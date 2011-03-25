@@ -88,6 +88,17 @@ class Hostess < Sinatra::Base
     end
   end
 
+  get %r{/graphs/(([\w-]*)-([0-9]+(?:\.[0-9a-zA-Z]+)*)(?:-(v))?\.(svg|png|svgz))$} do
+    filename, gem, version, version_info, format = params[:captures]
+    headers({'Content-encoding' => 'gzip'}) if format == "svgz"
+    content_type(format.to_sym)
+    if Rails.env.maintenance?
+      serve_via_cf
+    else
+      serve_via_s3
+    end
+  end
+
   get "/downloads/*.gem" do
     redirect "/gems/#{params[:splat]}.gem"
   end

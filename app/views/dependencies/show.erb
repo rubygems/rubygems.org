@@ -1,0 +1,27 @@
+<% @title = @rubygem.name %>
+<% @subtitle = " dependencies for #{@version.try(:slug)}" %>
+
+<% if @rubygem.versions.size > 1 %>
+  <%= select_tag :version_for_dependencies, options_for_select(dependencies_options(@rubygem), request.path) %>
+<% end %>
+<% content_for :javascript do %>
+  <%= javascript_include_tag "svg" %>
+<% end %>
+<div id="markup">
+  <%= simple_markup(@version.info) %>
+</div>
+<div class="border">
+  <div id="zoombox">
+    <a href="#" id="zin" class="zoom">+</a>&nbsp;<a href="#" id="zout" class="zoom">&ndash;</a>
+  </div>
+  <div class="meta">
+    <div class="stats-graph">
+      <object id="graph" data="/graphs/<%= @version.full_name %>.svg" type="image/svg+xml" width="631" height="350" bgcolor="transparent">
+        <a href="/graphs/<%= @version.full_name %>.png">
+          <!-- Sorry old IE users -->
+          <img src="/graphs/<%= @version.full_name%>.png" alt="<%= @version.full_name %>"/>
+        </a>
+      </object>
+   </div>
+  </div>
+</div>
