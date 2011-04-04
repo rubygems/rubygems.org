@@ -15,27 +15,54 @@
       <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
               width="110"
               height="32"
-              id="clippy" >
-      <param name="movie" value="/clippy.swf"/>
-      <param name="allowScriptAccess" value="always" />
-      <param name="quality" value="high" />
-      <param name="scale" value="noscale" />
-      <param NAME="FlashVars" value="text=<%= @latest_version.to_install %>">
-      <param name="wmode" value="transparent">
-      <embed src="/clippy.swf"
-             width="110"
-             height="32"
-             name="clippy"
-             quality="high"
-             allowScriptAccess="always"
-             type="application/x-shockwave-flash"
-             pluginspage="http://www.macromedia.com/go/getflashplayer"
-             FlashVars="text=<%= @latest_version.to_install %>"
-             wmode="transparent"
-      />
+              id="clippy_install" >
+        <param name="movie" value="/clippy.swf"/>
+        <param name="allowScriptAccess" value="always" />
+        <param name="quality" value="high" />
+        <param name="scale" value="noscale" />
+        <param NAME="FlashVars" value="text=<%= @latest_version.to_install %>">
+        <param name="wmode" value="transparent">
+        <embed src="/clippy.swf"
+               width="110"
+               height="32"
+               name="clippy_install"
+               quality="high"
+               allowScriptAccess="always"
+               type="application/x-shockwave-flash"
+               pluginspage="http://www.macromedia.com/go/getflashplayer"
+               FlashVars="text=<%= @latest_version.to_install %>"
+               wmode="transparent" />
+      </object>
+      <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+              width="110"
+              height="32"
+              id="clippy_gemfile" >
+        <param name="movie" value="/clippy.swf"/>
+        <param name="allowScriptAccess" value="always" />
+        <param name="quality" value="high" />
+        <param name="scale" value="noscale" />
+        <param NAME="FlashVars" value="text=<%= @latest_version.to_install %>">
+        <param name="wmode" value="transparent">
+        <embed src="/clippy.swf"
+               width="110"
+               height="32"
+               name="clippy_gemfile"
+               quality="high"
+               allowScriptAccess="always"
+               type="application/x-shockwave-flash"
+               pluginspage="http://www.macromedia.com/go/getflashplayer"
+               FlashVars='text=gem "<%= @rubygem.name %>", "~> <%= @latest_version.number %>"'
+               wmode="transparent" />
       </object>
       <div class="install">
-        <div class="instructions"><strong>install</strong><span><%= @latest_version.to_install %></span></div>
+        <div class="instructions">
+          <div class="command">
+            <strong>install</strong><span><%= @latest_version.to_install %></span>
+          </div>
+          <div class="command">
+            <strong>gemfile</strong><span>gem "<%= @rubygem.name %>", "~> <%= @latest_version.number %>"</span>
+          </div>
+        </div>
       </div>
     </div>
   <% else %>

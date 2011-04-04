@@ -385,14 +385,22 @@ table {
 }
 
 .main .info .install .instructions {
+  overflow: hidden;
   background-repeat: repeat-x;
   background-color: #AD4;
   background-image: url('/images/go.png');
   color: rgba(0,0,0,.8);
-  height: 90px;
+  height: 88px;
+  padding-top: 12px;
 }
 
-.main .info .install .instructions strong {
+.main .info .install .instructions .command {
+  height: 32px;
+  padding-top: 4px;
+  white-space: nowrap;
+}
+
+.main .info .install .instructions .command strong {
   text-transform: lowercase;
   font-variant: small-caps;
   font-weight: bold;
@@ -403,26 +411,28 @@ table {
   padding-right: 50px;
   float: left;
   background: url('/images/arrow.png') no-repeat 85% 52%;
-  line-height: 90px;
+  line-height: 32px;
 }
 
-.main .info .install .instructions span {
+.main .info .install .instructions .command span {
   font-family: Monaco, Consolas, "Courier New", monospace;
   margin-left: 0.5em;
   display: table-cell;
   vertical-align: middle;
   font-size: 1em;
-  height: 90px;
-  width: 400px;
+  height: 32px;
+  width: 1400px;
   line-height: 1.2em;
 }
 
-.main .info .border #clippy {
+.main .info .border #clippy_install,
+.main .info .border #clippy_gemfile {
   display: block;
   margin-left: 582px;
-  margin-top: 42px;
   position: absolute;
 }
+.main .info .border #clippy_install { margin-top: 29px; }
+.main .info .border #clippy_gemfile { margin-top: 63px; }
 
 .main .info .border .paste span {
   visibility: hidden;
