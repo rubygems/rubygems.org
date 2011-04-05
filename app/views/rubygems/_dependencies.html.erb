@@ -4,7 +4,9 @@
     <ol>
     <% dependencies.each do |dependency| %>
       <li>
-        <%= link_to "<strong>#{dependency.rubygem.name}</strong> #{dependency.requirements}".html_safe, dependency.rubygem %>
+        <a href="<%= rubygem_url(dependency.rubygem) %>">
+          <strong><%= dependency.rubygem.name %></strong> <%= dependency.requirements %>
+        </a>
       </li>
     <% end %>
     </ol>
