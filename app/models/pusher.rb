@@ -56,7 +56,15 @@ class Pusher
   end
 
   def pull_spec
-    @spec = Gem::Format.from_io(body).spec
+    # Use Gem::Package instead of Gem::Format so that we don't have
+    # to reread and decode the body of the gem since we only want
+    # the metadata.
+    Gem::Package.open body, "r", nil do |pkg|
+      @spec = pkg.metadata
+      return true
+    end
+
+    false
   rescue Gem::Package::FormatError
     notify("RubyGems.org cannot process this gem.\nPlease try rebuilding it" +
            " and installing it locally to make sure it's valid.", 422)
