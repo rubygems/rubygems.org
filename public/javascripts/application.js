@@ -15,6 +15,7 @@ $(document).ready(function() {
     }
   });
 
+  /*
   if ($('.count').length > 0) {
     setInterval(function() {
       $.getJSON('/api/v1/downloads.json', function(data) {
@@ -23,6 +24,7 @@ $(document).ready(function() {
       });
     }, 5000);
   }
+  */
 
   $('#version_for_stats').change(function() {
     window.location.href = $(this).val();
