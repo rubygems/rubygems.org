@@ -57,4 +57,18 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       assert_equal "This rubygem could not be found.", @response.body
     end
   end
+
+  context "on GET to show with lots of gems" do
+    setup do
+      @rubygem  = Factory(:rubygem)
+      12.times do |n|
+        Factory(:version, :rubygem => @rubygem, :number => "#{n}.0.0")
+      end
+    end
+
+    should "give all releases" do
+      get_show(@rubygem)
+      assert_equal 12, JSON.parse(@response.body).size
+    end
+  end
 end

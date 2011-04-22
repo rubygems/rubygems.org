@@ -90,7 +90,7 @@ class Version < ActiveRecord::Base
       limit(5)
   end
 
-  def self.published(limit=5)
+  def self.published(limit)
     where("built_at <= ? and indexed", DateTime.now.utc).
       by_built_at.
       limit(limit)
