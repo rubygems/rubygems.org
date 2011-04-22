@@ -50,6 +50,36 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to index for a yanked gem" do
+    setup do
+      version = Factory(:version, :indexed => false)
+      get_index(version)
+    end
+
+    should "return a 404" do
+      assert_response :not_found
+    end
+
+    should "say gem could not be found" do
+      assert_equal "This rubygem could not be found.", @response.body
+    end
+  end
+
+  context "on GET to search for a yanked gem" do
+    setup do
+      version = Factory(:version, :indexed => false)
+      get_search(version, 2.days.ago, 1.day.ago)
+    end
+
+    should "return a 404" do
+      assert_response :not_found
+    end
+
+    should "say gem could not be found" do
+      assert_equal "This rubygem could not be found.", @response.body
+    end
+  end
+
   context "on GET to search" do
     setup do
       @one_hundred_days_ago = 100.days.ago.to_date.to_s

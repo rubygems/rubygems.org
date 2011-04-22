@@ -10,6 +10,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       @rubygem  = Factory(:rubygem)
       Factory(:version, :rubygem => @rubygem, :number => '1.0.0')
       Factory(:version, :rubygem => @rubygem, :number => '2.0.0')
+      Factory(:version, :rubygem => @rubygem, :number => '3.0.0', :indexed => false)
 
       @rubygem2 = Factory(:rubygem)
       Factory(:version, :rubygem => @rubygem2, :number => '1.0.0')
