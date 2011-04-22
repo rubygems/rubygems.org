@@ -74,8 +74,8 @@ class Rubygem < ActiveRecord::Base
     end.flatten.join(", ")
   end
 
-  def public_versions
-    versions.published.by_position
+  def public_versions(limit = nil)
+    versions.published(limit).by_position
   end
 
   def hosted?
