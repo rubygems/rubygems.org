@@ -365,7 +365,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "get the latest versions up to today" do
-      assert_equal [@haml, @rack, @thor, @json, @rake].map(&:authors),        Version.published.map(&:authors)
+      assert_equal [@haml, @rack, @thor, @json, @rake].map(&:authors),        Version.published(5).map(&:authors)
       assert_equal [@haml, @rack, @thor, @json, @rake, @thin].map(&:authors), Version.published(6).map(&:authors)
     end
   end
