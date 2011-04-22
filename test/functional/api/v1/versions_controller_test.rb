@@ -8,19 +8,34 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
   context "on GET to show" do
     setup do
       @rubygem  = Factory(:rubygem)
-      Factory(:version, :rubygem => @rubygem, :number => '1.0.0')
       Factory(:version, :rubygem => @rubygem, :number => '2.0.0')
+      Factory(:version, :rubygem => @rubygem, :number => '1.0.0.pre', :prerelease => true)
       Factory(:version, :rubygem => @rubygem, :number => '3.0.0', :indexed => false)
 
       @rubygem2 = Factory(:rubygem)
-      Factory(:version, :rubygem => @rubygem2, :number => '1.0.0')
-      Factory(:version, :rubygem => @rubygem2, :number => '2.0.0')
       Factory(:version, :rubygem => @rubygem2, :number => '3.0.0')
+      Factory(:version, :rubygem => @rubygem2, :number => '2.0.0')
+      Factory(:version, :rubygem => @rubygem2, :number => '1.0.0')
     end
 
     should "have some json with the list of versions for the first gem" do
       get_show(@rubygem)
       assert_equal 2, JSON.parse(@response.body).size
+    end
+
+    should "be ordered by position with prereleases" do
+      get_show(@rubygem)
+      json = JSON.parse(@response.body)
+      assert_equal "1.0.0.pre", json.first["number"]
+      assert_equal "2.0.0", json.second["number"]
+    end
+
+    should "be ordered by position" do
+      get_show(@rubygem2)
+      json = JSON.parse(@response.body)
+      assert_equal "1.0.0", json.first["number"]
+      assert_equal "2.0.0", json.second["number"]
+      assert_equal "3.0.0", json.third["number"]
     end
 
     should "have some json with the list of versions for the second gem" do
