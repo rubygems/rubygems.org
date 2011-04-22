@@ -20,7 +20,7 @@ Gemcutter::Application.routes.draw do
 
         resources :versions, :only => :show do
           resources :downloads, :only => :index, :controller => "versions/downloads" do
-            collection do 
+            collection do
               get :search
             end
           end
