@@ -138,23 +138,14 @@ Returns a JSON array of gem version details like the below:
 
 [
    {
-      "latest" : true,
       "number" : "0.6.3",
-      "position" : 0,
       "built_at" : "2010-12-23T05:00:00Z",
-      "indexed" : true,
-      "created_at" : "2010-12-23T20:28:43Z",
       "summary" : "Test::Unit-based acceptance testing DSL",
       "downloads_count" : 175,
       "platform" : "ruby",
-      "id" : 176580,
       "authors" : "Evan David Light",
-      "full_name" : "coulda-0.6.3",
       "description" : "Behaviour Driven Development derived from Cucumber but as an internal DSL with methods for reuse",
       "prerelease" : false,
-      "rubyforge_project" : null,
-      "updated_at" : "2010-12-23T20:28:43Z",
-      "rubygem_id" : 20664
    }
 ]
 
@@ -182,8 +173,7 @@ Returns a JSON object containing the number of downloads by day for a particular
 <p>
 Returns a JSON object containing the number of downloads by day for a particular gem version for 90 days of data.
 
-<pre><code>$ curl \
-<%=t :url %>/api/v1/versions/coulda-0.6.3/downloads/search.json?from=2011-11-1&to=2011-11-5</h5>
+<pre><code>$ curl <%=t :url %>/api/v1/versions/coulda-0.6.3/downloads/search.json?from=2011-11-1&to=2011-11-5</h5>
 
 {
   "2011-11-01":0,
