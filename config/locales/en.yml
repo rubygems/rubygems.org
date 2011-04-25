@@ -9,6 +9,29 @@ en:
   feed_latest: "RubyGems.org | Latest Gems"
   time_ago: "%{duration} ago"
   download_count: "%{count} downloads"
+  layouts:
+    application:
+      header:
+        all_gems: "all gems"
+        dashboard: "dashboard"
+        sign_in: "sign in"
+        sign_in: "sign up"
+        sign_out: "sign out"
+      footer:
+        about: "About"
+        blog: "Blog"
+        documentation: "Docs"
+        help: "Help"
+        status: "Status"
+        source_code: "Code"
+        discussion_forum: "Discuss"
+        statistics: "Stats"
+        designed_by: "designed by %{designer}"
+        designed_by_title: "Designed by %{designer}"
+        resolved_with: "resolved with %{resolver}"
+        resolved_with_title: "Resolved with %{resolver}"
+        supported_by: "hosted by %{supporter}"
+        supported_by_title: "Hosted by %{supporter}"
   dashboards:
     show:
       latest: "Latest Updates"
