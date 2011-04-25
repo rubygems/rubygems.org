@@ -5,6 +5,6 @@
     <span class="platform"><%= version.platform %></span>
   <% end %>
   <% if version.yanked? -%>
-    <span class="yanked">yanked</span>
+    <span class="yanked"><%= t '.yanked' %></span>
   <% end -%>
 </li>
