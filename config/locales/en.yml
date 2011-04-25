@@ -9,6 +9,7 @@ en:
   feed_latest: "RubyGems.org | Latest Gems"
   time_ago: "%{duration} ago"
   download_count: "%{count} downloads"
+  form_disable_with: "Please wait..."
   layouts:
     application:
       header:
@@ -72,6 +73,11 @@ en:
       creating_link_text: 'creating'
       migrating_link_text: 'migrating'
       my_subscriptions: 'My Subscriptions'
+  users:
+    new:
+      rubyforge_banner: "You can now sign in with your %{link}"
+      or_rubyforge: "RubyForge Account too!"
+      have_account: "Already have an account?"
   versions:
     index:
       title: "all versions of %{name}"
@@ -79,6 +85,9 @@ en:
     version:
       yanked: "yanked"
   activerecord:
+    attributes:
+      user:
+        password_confirmation: Confirm password
     errors:
       messages:
         record_invalid: "%{errors}"
