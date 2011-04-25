@@ -29,9 +29,9 @@
                   </a>
                 </div>
                 <ul id="signed_in">
-                  <li id="all-gems"><%= link_to "all gems", rubygems_url %></li>
-                  <li id="dashboard"><%= link_to "dashboard", dashboard_url %></li>
-                  <li id="sign-out"><%= link_to "sign out", sign_out_path, :method => :delete %></li>
+                  <li id="all-gems"><%= link_to t('.header.all_gems'), rubygems_url %></li>
+                  <li id="dashboard"><%= link_to t('.header.dashboard'), dashboard_url %></li>
+                  <li id="sign-out"><%= link_to t('.header.sign_out'), sign_out_path, :method => :delete %></li>
                 </ul>
             <% else %>
               <ul id="signed_out">
@@ -39,12 +39,12 @@
 
                 <li id="sign-in">
                   <a href="<%= ssl_url_for :controller => 'clearance/sessions',
-                                           :action     => 'new' %>">sign in</a>
+                                           :action     => 'new' %>"><%= t('.header.sign_in') %></a>
                 </li>
 
                 <li id="sign-up">
                   <a href="<%= ssl_url_for :controller => 'clearance/users',
-                                           :action     => 'new' %>">sign up</a>
+                                           :action     => 'new' %>"><%= t('.header.sign_up') %></a>
                 </li>
               </ul>
             <% end %>
@@ -82,23 +82,24 @@
       </div>
       <div class="prefix_1 grid_10 suffix_1 footer">
         <div class="links">
-          <%= link_to "Blog", "http://update.gemcutter.org" %>
-          <%= link_to "Guides", "http://guides.rubygems.org" %>
-          <%= link_to "Help", t(:help_url) %>
-          <%= link_to "Status", "http://twitter.com/gemcutter" %>
-          <%= link_to "Code", "http://github.com/rubygems/gemcutter" %>
-          <%= link_to "Discuss", "http://groups.google.com/group/gemcutter" %>
-          <%= link_to "Stats", stats_url %>
-          <%= link_to "designed by #{image_tag('thoughtbot.png')}".html_safe, "http://thoughtbot.com",
+          <%= link_to t('.footer.about'), page_url("about") %>
+          <%= link_to t('.footer.blog'), "http://update.gemcutter.org" %>
+          <%= link_to t('.footer.guides'), "http://guides.rubygems.org"  %>
+          <%= link_to t('.footer.help'), t(:help_url) %>
+          <%= link_to t('.footer.status'), "http://twitter.com/gemcutter" %>
+          <%= link_to t('.footer.source_code'), "http://github.com/rubygems/gemcutter" %>
+          <%= link_to t('.footer.discussion_forum'), "http://groups.google.com/group/gemcutter" %>
+          <%= link_to t('.footer.statistics'), stats_url %>
+          <%= link_to t('.footer.designed_by', :designer => image_tag('thoughtbot.png')).html_safe, "http://thoughtbot.com",
             :class => "sponsor",
-            :title => "Designed by Thoughtbot",
+            :title => t('.footer.designed_by_title', :designer => 'Thoughtbot'),
             :id    => "thoughtbot" %>
-          <%= link_to "resolved with #{image_tag('dnsimple.png')}".html_safe, "http://dnsimple.com",
-            :title => "Resolved with DNSimple",
+          <%= link_to t('.footer.resolved_with', :resolver => image_tag('dnsimple.png')).html_safe, "http://dnsimple.com",
+            :title => t('.footer.resolved_with_title', :resolver => 'DNSimple'),
             :class => "sponsor",
             :id    => "dnsimple" %>
-          <%= link_to "supported by #{image_tag('rubycentral.png')}".html_safe, "http://rubycentral.org",
-            :title => "Supported by Ruby Central",
+          <%= link_to t('.footer.supported_by', :supporter => image_tag('rubycentral.png')).html_safe, "http://rubycentral.org",
+            :title => t('.footer.supported_by_title', :supporter => 'Ruby Central'),
             :class => "sponsor",
             :id    => "rubycentral" %>
         </div>
