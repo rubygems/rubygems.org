@@ -32,6 +32,35 @@ en:
         resolved_with_title: "Resolved with %{resolver}"
         supported_by: "hosted by %{supporter}"
         supported_by_title: "Hosted by %{supporter}"
+  home:
+    index:
+      gems_header: "of %{gem_count} gems cut since July 2009"
+      welcome_blurb: "Welcome to your community RubyGem host."
+      find_blurb: "Find your gems easier, publish them faster, and have fun doing it."
+      learn:
+        header: 'learn'
+        install_rubygems: "Install RubyGems %{version}"
+        rubygems_subtitle: "Ruby's premier packaging system"
+        browse_docs: "Browse the Docs"
+        docs_subtitle: "The comprehensive guide on RubyGems"
+        gem_specification: "Gem Specification"
+        spec_subtitle: "Your gem's interface to the world"
+      share:
+        header: share
+        update: "Update to the latest RubyGems version"
+        build: "Build your gem"
+        deploy: "Deploy your gem instantly"
+      pitch:
+        content: "%{rubygems} is the Ruby community's gem hosting service. %{publish} your gems and install them. %{api} to interact and find out more information about available gems. %{contribute} and enhance the site with your own changes."
+        publish: Instantly publish
+        api: Use the API
+        contribute: Become a contributor
+      leaderboards:
+        header: leaderboards
+        new: New Gems
+        downloaded: Most Downloaded Today
+        no_downloaded: No downloads today
+        updated: Just Updated
   dashboards:
     show:
       latest: "Latest Updates"
