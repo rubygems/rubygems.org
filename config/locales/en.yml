@@ -7,6 +7,19 @@ en:
   please_confirm: "Access Denied. Please confirm your RubyGems.org account."
   feed_subscribed: "RubyGems.org | Subscribed Gems"
   feed_latest: "RubyGems.org | Latest Gems"
+  time_ago: "%{duration} ago"
+  download_count: "%{count} downloads"
+  dashboards:
+    show:
+      latest: "Latest Updates"
+      latest_title: "Latest Updates RSS Feed"
+      no_subscriptions: "You're not subscribed to any gems yet. Visit a %{gem_link} to subscribe to one!"
+      gem_link_text: "gem page"
+      mine: "My Gems"
+      no_owned: "You haven't pushed any gems yet. Perhaps check out the guides on %{creating_link} a gem or %{migrating_link} a gem from RubyForge."
+      creating_link_text: 'creating'
+      migrating_link_text: 'migrating'
+      my_subscriptions: 'My Subscriptions'
   activerecord:
     errors:
       messages:
