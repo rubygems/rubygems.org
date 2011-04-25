@@ -1,9 +1,8 @@
 <div class="subscribed">
-  <h3>Latest Updates</h3><%= link_to image_tag("feed.png"), dashboard_url(:api_key => current_user.api_key, :format => :atom), :id => "feed", :title => "Latest Updates RSS Feed" %>
+  <h3><%= t '.latest' %></h3><%= link_to image_tag("feed.png"), dashboard_url(:api_key => current_user.api_key, :format => :atom), :id => "feed", :title => t('.latest_title') %>
   <div class="gems">
     <% if @latest_updates.empty? %>
-      <p>
-        You're not subscribed to any gems yet. Visit a <%= link_to "gem page", rubygem_path("gemcutter") %> to subscribe to one!
+      <p><%= t('.no_subscriptions', :gem_link => link_to(t('.gem_link_text'), rubygem_path("gemcutter"))).html_safe %>
       </p>
     <% else %>
       <ol>
@@ -14,7 +13,8 @@
               <strong>
                 <%= version.to_title %>
               </strong>
-              <%= time_ago_in_words(version.created_at) %> ago</div>
+              <%= t 'time_ago', :duration => time_ago_in_words(version.created_at) %>
+            </div>
             <%= short_info(version) %>
           </a>
         </li>
@@ -25,19 +25,18 @@
 </div>
 
 <div class="mine">
-  <h3>My Gems</h3>
+  <h3><%= t '.mine' %></h3>
   <div class="gems">
     <% if @my_gems.empty? %>
       <p>
-      You haven't pushed any gems yet. Perhaps check out the guides on <%= link_to "creating", page_url("create") %> a gem or <%= link_to "migrating", page_url("migrate") %> a gem from RubyForge.
+        <%= t('.no_owned', :creating_link => link_to(t('.creating_link_text'), page_url("create")),
+                           :migrating_link => link_to(t('.migrating_link_text'), page_url("migrate"))).html_safe %>
       </p>
     <% else %>
       <ol>
       <% @my_gems.each do |rubygem| %>
         <li>
-          <div class="downloads">
-            <strong><%= number_with_delimiter rubygem.downloads %></strong> downloads
-          </div>
+          <%= download_count(rubygem) %>
           <%= link_to rubygem.name, rubygem, :title => short_info(rubygem.versions.most_recent) %>
         </li>
       <% end %>
@@ -46,14 +45,12 @@
   </div>
 
   <% if @subscribed_gems.present? %>
-    <h3>My Subscriptions</h3>
+    <h3><%= t '.my_subscriptions' %></h3>
     <div class="gems">
       <ol>
       <% current_user.subscribed_gems.each do |gem| %>
         <li>
-          <div class="downloads">
-            <strong><%= number_with_delimiter gem.downloads %></strong> downloads
-          </div>
+          <%= download_count(gem) %>
           <%= link_to gem, gem, :title => short_info(gem.versions.most_recent) %>
         </li>
       <% end %>

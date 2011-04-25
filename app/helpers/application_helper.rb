@@ -32,4 +32,10 @@ module ApplicationHelper
     options.reverse_merge!({:only_path => false, :protocol => protocol})
     url_for(options)
   end
+
+  def download_count(rubygem)
+    content_tag(:div, :class => 'downloads') do
+      t('download_count', :count => content_tag(:strong, number_with_delimiter(rubygem.downloads))).html_safe
+    end
+  end
 end
