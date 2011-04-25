@@ -1,50 +1,51 @@
 <% content_for :fold do %>
   <div class="count">
-    <strong><%= number_with_delimiter(@downloads_count) %> downloads</strong>
-    of <%= number_with_delimiter(@rubygems_count) %> gems cut since july 2009
+    <strong><%= t 'download_count', :count => number_with_delimiter(@downloads_count) %></strong>
+    <%= t '.gems_header', :gem_count => number_with_delimiter(@rubygems_count) %>
   </div>
   <div class="blurb">
-    <strong>Welcome to your community RubyGem host.</strong>
-    <br />Find your gems easier, publish them faster, and have fun doing it.
+    <strong><%= t '.welcome_blurb' %></strong>
+    <br /><%= t '.find_blurb' %>
   </div>
 <% end %>
 
 <div class="border">
   <div class="background">
     <div class="learn">
-      <h3>learn</h3>
+      <h3><%= t '.learn.header' %></h3>
       <dl>
-        <dt><%= link_to "Install RubyGems #{RUBYGEMS_VERSION}", page_url("download") %></dt>
-        <dd>Ruby's premier packaging system</dd>
-        <dt><%= link_to "Browse the Docs", "http://docs.rubygems.org" %></dt>
-        <dd>The comprehensive guide on RubyGems</dd>
-        <dt><%= link_to "Gem Specification", "http://docs.rubygems.org/read/chapter/20" %></dt>
-        <dd>Your gem's interface to the world</dd>
+        <dt><%= link_to t('.learn.install_rubygems', :version => RUBYGEMS_VERSION), page_url("download") %></dt>
+        <dd><%= t '.learn.rubygems_subtitle' %></dd>
+        <dt><%= link_to t('.learn.browse_docs'), "http://docs.rubygems.org" %></dt>
+        <dd><%= t '.learn.docs_subtitle' %></dd>
+        <dt><%= link_to t('.learn.gem_specification'), "http://docs.rubygems.org/read/chapter/20" %></dt>
+        <dd><%= t '.learn.spec_subtitle' %></dd>
       </dl>
     </div>
     <div class="share">
-      <h3>share</h3>
+      <h3><%= t '.share.header' %></h3>
       <dl>
         <dt><code>gem update --system</code></dt>
-        <dd>Update to the latest RubyGems version</dd>
+        <dd><%= t '.share.update' %></dd>
         <dt><code>gem build foo.gemspec</code></dt>
-        <dd>Build your gem</dd>
+        <dd><%= t '.share.build' %></dd>
         <dt><code>gem push foo-1.0.0.gem</code></dt>
-        <dd>Deploy your gem instantly</dd>
+        <dd><%= t '.share.deploy' %></dd>
       </dl>
     </div>
   </div>
 </div>
 
 <p class="pitch">
-  <strong><%= link_to t(:title), page_url("about") %></strong> is the Ruby community's gem hosting service.
-  <strong><%= link_to "Instantly publish", page_url("gem_docs"), :anchor => "push" %></strong> your gems and install them.
-  <strong><%= link_to "Use the API", page_url("api_docs") %></strong> to interact and find out more information about available gems.
-  <strong><%= link_to "Become a contributor", "http://github.com/rubygems/gemcutter" %></strong> and enhance the site with your own changes.
+  <%= t('.pitch.content',
+        :rubygems => content_tag(:strong, link_to(t(:title), page_url('about'))),
+        :publish => content_tag(:strong, link_to(t('.pitch.publish'), page_url('gem_docs'), :anchor => 'push')),
+        :api => content_tag(:strong, link_to(t('.pitch.api'), page_url('api_docs'))),
+        :contribute => content_tag(:strong, link_to(t('.pitch.contribute'), "http://github.com/rubygems/gemcutter"))).html_safe %>
 </p>
 <div class="leaderboards">
   <div class="grid_3" id="new_gems">
-    <strong>New Gems</strong>
+    <strong><%= t '.leaderboards.new' %></strong>
     <ol>
       <% @latest.each do |rubygem| %>
         <li>
@@ -54,7 +55,7 @@
     </ol>
   </div>
   <div class="grid_3" id="most_downloaded">
-    <strong>Most Downloaded Today</strong>
+    <strong><%= t '.leaderboards.downloaded' %></strong>
     <% if @downloaded.any? %>
       <ol>
         <% @downloaded.each do |version, downloads| %>
@@ -64,11 +65,11 @@
         <% end %>
       </ol>
     <% else %>
-      <p>No downloads today.</p>
+      <p><%= t '.leaderboards.no_downloaded' %></p>
     <% end %>
   </div>
   <div class="grid_3" id="just_updated">
-    <strong>Just Updated</strong>
+    <strong><%= t '.leaderboards.updated' %></strong>
     <ol>
       <% @updated.each do |version| %>
         <li>
