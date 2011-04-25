@@ -72,6 +72,12 @@ en:
       creating_link_text: 'creating'
       migrating_link_text: 'migrating'
       my_subscriptions: 'My Subscriptions'
+  versions:
+    index:
+      title: "all versions of %{name}"
+      versions_since: "%{count} versions since %{since}"
+    version:
+      yanked: "yanked"
   activerecord:
     errors:
       messages:
