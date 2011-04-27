@@ -10,29 +10,19 @@ en:
   time_ago: "%{duration} ago"
   download_count: "%{count} downloads"
   form_disable_with: "Please wait..."
-  layouts:
-    application:
-      header:
-        all_gems: "all gems"
-        dashboard: "dashboard"
-        sign_in: "sign in"
-        sign_in: "sign up"
-        sign_out: "sign out"
-      footer:
-        about: "About"
-        blog: "Blog"
-        documentation: "Docs"
-        help: "Help"
-        status: "Status"
-        source_code: "Code"
-        discussion_forum: "Discuss"
-        statistics: "Stats"
-        designed_by: "designed by %{designer}"
-        designed_by_title: "Designed by %{designer}"
-        resolved_with: "resolved with %{resolver}"
-        resolved_with_title: "Resolved with %{resolver}"
-        supported_by: "hosted by %{supporter}"
-        supported_by_title: "Hosted by %{supporter}"
+
+  dashboards:
+    show:
+      latest: "Latest Updates"
+      latest_title: "Latest Updates RSS Feed"
+      no_subscriptions: "You're not subscribed to any gems yet. Visit a %{gem_link} to subscribe to one!"
+      gem_link_text: "gem page"
+      mine: "My Gems"
+      no_owned: "You haven't pushed any gems yet. Perhaps check out the guides on %{creating_link} a gem or %{migrating_link} a gem from RubyForge."
+      creating_link_text: 'creating'
+      migrating_link_text: 'migrating'
+      my_subscriptions: 'My Subscriptions'
+
   home:
     index:
       gems_header: "of %{gem_count} gems cut since July 2009"
@@ -62,24 +52,40 @@ en:
         downloaded: Most Downloaded Today
         no_downloaded: No downloads today
         updated: Just Updated
-  dashboards:
-    show:
-      latest: "Latest Updates"
-      latest_title: "Latest Updates RSS Feed"
-      no_subscriptions: "You're not subscribed to any gems yet. Visit a %{gem_link} to subscribe to one!"
-      gem_link_text: "gem page"
-      mine: "My Gems"
-      no_owned: "You haven't pushed any gems yet. Perhaps check out the guides on %{creating_link} a gem or %{migrating_link} a gem from RubyForge."
-      creating_link_text: 'creating'
-      migrating_link_text: 'migrating'
-      my_subscriptions: 'My Subscriptions'
+
+  layouts:
+    application:
+      header:
+        all_gems: "all gems"
+        dashboard: "dashboard"
+        sign_in: "sign in"
+        sign_in: "sign up"
+        sign_out: "sign out"
+      footer:
+        about: "About"
+        blog: "Blog"
+        documentation: "Docs"
+        help: "Help"
+        status: "Status"
+        source_code: "Code"
+        discussion_forum: "Discuss"
+        statistics: "Stats"
+        designed_by: "designed by %{designer}"
+        designed_by_title: "Designed by %{designer}"
+        resolved_with: "resolved with %{resolver}"
+        resolved_with_title: "Resolved with %{resolver}"
+        supported_by: "hosted by %{supporter}"
+        supported_by_title: "Hosted by %{supporter}"
+
   searches:
     show:
       subtitle: "for %{query}"
       exact_match: Exact match
+
   sessions:
     new:
       forgot_password: "Forgot Password?"
+
   stats:
     index:
       gem_count: "%{count} gems"
@@ -91,17 +97,20 @@ en:
       daily_downloads: "%{count} downloads today"
       current_rank: current rank today
       highest_rank: highest rank today
+
   users:
     new:
       rubyforge_banner: "You can now sign in with your %{link}"
       or_rubyforge: "RubyForge Account too!"
       have_account: "Already have an account?"
+
   versions:
     index:
       title: "all versions of %{name}"
       versions_since: "%{count} versions since %{since}"
     version:
       yanked: "yanked"
+
   activerecord:
     attributes:
       user:
