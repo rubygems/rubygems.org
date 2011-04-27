@@ -1,20 +1,20 @@
 <% @title = "sign in" %>
   <div class="form_links sign_in_links">
     <div class="rubyforge_migrate">
-      You can now sign in with your <%= link_to "RubyForge Account too!", "http://update.gemcutter.org/2009/12/10/rubyforge-accounts-migrated.html" %>
+      <%= t('users.new.rubyforge_banner', :link => link_to(t('users.new.or_rubyforge'), "http://update.gemcutter.org/2009/12/10/rubyforge-accounts-migrated.html")).html_safe %>
     </div>
-    <%= link_to "Forgot Password?", new_password_url %>
+    <%= link_to t('.forgot_password'), new_password_url %>
   </div>
 <%= form_for :session, :url => session_path do |form| %>
   <div class="text_field">
-    <%= form.label :who, "Email or Handle" %>
+    <%= form.label :who, t('activerecord.attributes.session.who') %>
     <%= form.text_field :who, :size => 25 %>
   </div>
   <div class="password_field">
-    <%= form.label :password %>
+    <%= form.label :password, t('activerecord.attributes.session.password') %>
     <%= form.password_field :password, :size => 25 %>
   </div>
   <div class="form_bottom">
-    <%= form.submit "Sign in", :disable_with => "Please wait..." %>
+    <%= form.submit "Sign in", :disable_with => t('form_disable_with') %>
   </div>
 <% end %>
