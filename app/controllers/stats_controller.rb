@@ -11,13 +11,13 @@ class StatsController < ApplicationController
 
   def show
     if params[:version_id]
-      @subtitle        = "stats for #{params[:version_id]}"
+      @subtitle        = I18n.t('stats.show.for', :for => params[:version_id])
       @version         = Version.find_from_slug!(@rubygem.id, params[:version_id])
       @versions        = [@version]
       @downloads_today = Download.today(@version)
       @rank            = Download.rank(@version)
     else
-      @subtitle        = "stats overview"
+      @subtitle        = I18n.t('stats.show.overview')
       @version         = @rubygem.versions.most_recent
       @versions        = @rubygem.versions.with_indexed.by_position.limit(5)
       @downloads_today = Download.today(@rubygem.versions)
