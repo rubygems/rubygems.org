@@ -77,6 +77,15 @@ en:
         supported_by: "hosted by %{supporter}"
         supported_by_title: "Hosted by %{supporter}"
 
+  passwords:
+    edit:
+      title: reset password
+      submit: Save this password
+    new:
+      title: change your password
+      will_email_notice: We will email you a link to change your password.
+      submit: Reset password
+
   searches:
     show:
       subtitle: "for %{query}"
@@ -114,7 +123,9 @@ en:
   activerecord:
     attributes:
       user:
+        email: Email address
         password_confirmation: Confirm password
+        password: Password
       session:
         who: Email or Handle
         password: Password
