@@ -10,19 +10,19 @@
 
 <div class="statistics statistics-show clearfix">
   <div class="border">
-    <span><%= number_with_delimiter @downloads_total %></span> total downloads
+    <%= t('.total_downloads', :count => content_tag(:span, number_with_delimiter(@downloads_total))).html_safe %>
   </div>
 
   <div class="border">
-    <span><%= number_with_delimiter @downloads_today %></span> downloads today
+    <%= t('.daily_downloads', :count => content_tag(:span, number_with_delimiter(@downloads_today))).html_safe %>
   </div>
 
   <div class="border">
     <span><%= number_with_delimiter @rank %> / <%= number_with_delimiter @cardinality %></span>
     <% if params[:version_id] %>
-      current rank today
+      <%= t '.current_rank' %>
     <% else %>
-      highest rank today
+      <%= t '.highest_rank' %>
     <% end %>
   </div>
 </div>
