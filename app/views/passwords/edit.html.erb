@@ -1,4 +1,4 @@
-<% @title = "reset password" %>
+<% @title = t('.title') %>
 
 <%= form_for(:user,
              :url => user_password_path(@user, :token => @user.confirmation_token),
@@ -13,6 +13,6 @@
     <%= form.password_field :password_confirmation, :size => 25 %>
   </div>
   <div class="form_bottom">
-    <%= form.submit "Save this password", :disable_with => "Please wait..." %>
+    <%= form.submit t('.submit'), :disable_with => t('form_disable_with') %>
   </div>
 <% end %>
