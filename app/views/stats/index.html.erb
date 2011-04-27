@@ -3,15 +3,15 @@
 
 <div class="statistics clearfix">
   <div class="border">
-    <span><%= number_with_delimiter @number_of_gems %></span> gems
+    <%= t('.gem_count', :count => content_tag(:span, number_with_delimiter(@number_of_gems))).html_safe %>
   </div>
 
   <div class="border">
-    <span><%= number_with_delimiter @number_of_downloads %></span> downloads
+    <%= t('download_count', :count => content_tag(:span, number_with_delimiter(@number_of_downloads))).html_safe %>
   </div>
 
   <div class="border">
-    <span><%= number_with_delimiter @number_of_users %></span> users
+    <%= t('.user_count', :count => content_tag(:span, number_with_delimiter(@number_of_users))).html_safe %>
   </div>
 
   <div class="border chart">
