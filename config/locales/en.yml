@@ -86,6 +86,21 @@ en:
       will_email_notice: We will email you a link to change your password.
       submit: Reset password
 
+  profiles:
+    edit:
+      title: Edit Profile
+      reset_password:
+        title: Reset password
+        text: "Need a new password? No problem. %{link}"
+        link_text: Request a new one here.
+      api_access:
+        title: API Access
+        key_is: "Your API key is %{key}."
+        credentials: "Your %{gem_credentials_file} should look like this to use the %{gem_commands_link}:"
+        link_text: gem commands
+        reset: Reset my API key
+        confirm_reset: Are you sure? This cannot be undone.
+
   searches:
     show:
       subtitle: "for %{query}"
@@ -123,7 +138,9 @@ en:
   activerecord:
     attributes:
       user:
+        avatar: Avatar
         email: Email address
+        handle: Handle
         password_confirmation: Confirm password
         password: Password
       session:
