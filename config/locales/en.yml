@@ -73,6 +73,17 @@ en:
       creating_link_text: 'creating'
       migrating_link_text: 'migrating'
       my_subscriptions: 'My Subscriptions'
+  stats:
+    index:
+      gem_count: "%{count} gems"
+      user_count: "%{count} users"
+    show:
+      for: "stats for %{for}"
+      overview: "stats overview"
+      total_downloads: "%{count} total downloads"
+      daily_downloads: "%{count} downloads today"
+      current_rank: current rank today
+      highest_rank: highest rank today
   users:
     new:
       rubyforge_banner: "You can now sign in with your %{link}"
