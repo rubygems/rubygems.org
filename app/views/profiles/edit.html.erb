@@ -1,38 +1,41 @@
-<% @title = "Edit Profile" %>
+<% @title = t('.title') %>
 
 <%= form_for current_user, :url => {:controller => 'profiles', :action => 'update'} do |form| %>
   <%= form.error_messages %>
 
   <div class="avatar_field">
-    <%= form.label :avatar, 'Avatar' %>
+    <%= form.label :avatar %>
     <%= gravatar(60) %>
     <%= link_to 'Change', 'http://www.gravatar.com' %>
   </div>
 
   <div class="text_field">
-    <%= form.label :handle, 'Handle' %>
+    <%= form.label :handle %>
     <%= form.text_field :handle, :size => 25 %>
   </div>
 
   <div class="text_field">
-    <%= form.label :email, 'Email Address' %>
+    <%= form.label :email %>
     <%= form.text_field :email, :size => 25 %>
   </div>
 
   <div class="submit_field">
-    <%= form.submit "Update", :disable_with => "Please wait..." %>
+    <%= form.submit "Update", :disable_with => t('form_disable_with') %>
   </div>
 
-  <h3>Reset Password</h3>
-  <p>Need a new password? No problem. <%= link_to "Request a new one here.", new_password_url %></p>
+  <h3><%= t '.reset_password.title' %></h3>
+  <p><%= t('.reset_password.text', :link => link_to(t('.reset_password.link_text', new_password_url))).html_safe %></p>
 
-  <h3>API Access</h3>
-  <p>Your API key is <strong><%= current_user.api_key %></strong>. <br />
-  Your <code>~/.gem/credentials</code> file should look like this to use the <%= link_to "gem commands", page_url("gem_docs") %>:</p>
+  <h3><%= t '.api_access.title' %></h3>
+  <p>
+    <%= t('.api_access.key_is', :key => content_tag(:strong, current_user.api_key)).html_safe %><br />
+    <%= t('.api_access.credentials', :gem_credentials_file => content_tag(:code, '~/.gem/credentials'),
+                                     :gem_commands_link => link_to(t('.api_access.link_text'), page_url('gem_docs'))).html_safe %>
+  </p>
 
 <pre><code>---
 :rubygems_api_key: <%= current_user.api_key %></code></pre>
 
 <% end %>
 
-<p><%= button_to "Reset my API key", reset_api_v1_api_key_path, :method => :put, :confirm => "Are you sure? This cannot be undone." %></p>
+<p><%= button_to t('.api_access.reset'), reset_api_v1_api_key_path, :method => :put, :confirm => t('.api_access.confirm_reset') %></p>
