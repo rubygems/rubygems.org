@@ -73,6 +73,10 @@ en:
       creating_link_text: 'creating'
       migrating_link_text: 'migrating'
       my_subscriptions: 'My Subscriptions'
+  searches:
+    show:
+      subtitle: "for %{query}"
+      exact_match: Exact match
   sessions:
     new:
       forgot_password: "Forgot Password?"
