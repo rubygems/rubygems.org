@@ -73,6 +73,9 @@ en:
       creating_link_text: 'creating'
       migrating_link_text: 'migrating'
       my_subscriptions: 'My Subscriptions'
+  sessions:
+    new:
+      forgot_password: "Forgot Password?"
   stats:
     index:
       gem_count: "%{count} gems"
@@ -99,6 +102,9 @@ en:
     attributes:
       user:
         password_confirmation: Confirm password
+      session:
+        who: Email or Handle
+        password: Password
     errors:
       messages:
         record_invalid: "%{errors}"
