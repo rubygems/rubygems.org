@@ -1,19 +1,27 @@
-<% @title = "About" %>
-<% @subtitle = "what this is" %>
-<p>
-  Welcome to <%=t :title %>, the Ruby community's gem hosting service. The purpose of this project is three-fold:
-</p>
+<% @title = t('.title') %>
+<% @subtitle = t('.subtitle') %>
+<p><%= t '.purpose.header', :site => t('title') %></p>
 <ol class="manual">
-  <li>Provide a better API for dealing with gems</li>
-  <li>Create more transparent and accessible project pages</li>
-  <li>Enable the community to improve and enhance the site</li>
+  <li><%= t '.purpose.better_api' %></li>
+  <li><%= t '.purpose.transparent_pages' %></li>
+  <li><%= t '.purpose.enable_community' %></li>
 </ol>
 <p>
-The project was started in April 2009 by <%= link_to "Nick Quaranto", "http://twitter.com/qrush" %>, and has since grown to include the contributions of over <%= link_to "55 Rubyists", "http://twitter.com/gemcutter/contributors" %> and <%= link_to "millions of gem downloads", stats_url %>. As of the RubyGems 1.3.6 release, the site has been renamed to <%=t :title %> from Gemcutter to solidify the site's central role in the Ruby community.
+  <%= t('.founding', :founder => link_to('Nick Quaranto', 'http://twitter.com/qrush'),
+                     :contributors => link_to("55 Rubyists", "http://twitter.com/gemcutter/contributors"),
+                     :downloads => link_to("millions of gem downloads", stats_url),
+                     :title => t('title')).html_safe %>
 </p>
 <p>
-Although Gemcutter is not run by one specific company, plenty have helped us out so far. The current design of the site was sponsored by <%= link_to "Thoughtbot", "http://thoughtbot.com" %>. <%= link_to "GitHub", "http://github.com" %> has also been invaluable for helping us collaborate and share code easily. The site started on <%= link_to "Heroku", "http://heroku.com" %>, whose great service helped prove Gemcutter as a viable solution that the whole community could rely on.
+  <%= t('.support', :thoughtbot => link_to("Thoughtbot", "http://thoughtbot.com"),
+                    :github => link_to("GitHub", "http://github.com"),
+                    :heroku => link_to("Heroku", "http://heroku.com")).html_safe %>
 </p>
 <p>
-Some insights into the technical aspects of the site: It's 100% Ruby. The main site is a <%= link_to "Rails", "http://rubyonrails.org" %> application, and the RubyGem serving is done through <%= link_to "Sinatra", "http://www.sinatrarb.com" %>. Gems are hosted on <%= link_to "Amazon S3", "http://aws.amazon.com/s3/" %>, and the time between publishing a new gem and having it ready for installation is minimal. For more info, <%= link_to "please check out the code", "http://github.com/rubygems/gemcutter" %>, which is <%= link_to "MIT licensed", "http://www.opensource.org/licenses/mit-license.php" %> over at GitHub.
+  <%= t('.technical', :rails => link_to("Rails", "http://rubyonrails.org"),
+                      :sinatra => link_to("Sinatra", "http://www.sinatrarb.com"),
+                      :s3 => link_to("Amazon S3", "http://aws.amazon.com/s3/"),
+                      :source_code => link_to("please check out the code", "http://github.com/rubygems/gemcutter"),
+                      :license => link_to("MIT licensed", "http://www.opensource.org/licenses/mit-license.php")
+                      ).html_safe %>
 </p>

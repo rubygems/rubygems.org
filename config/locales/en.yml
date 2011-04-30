@@ -79,6 +79,86 @@ en:
         supported_by: "hosted by %{supporter}"
         supported_by_title: "Hosted by %{supporter}"
 
+  pages:
+    about:
+      title: About
+      subtitle: what this is
+      purpose:
+        header: "Welcome to %{site}, the Ruby community's gem hosting service. The purpose of this project is three-fold:"
+        better_api: Provide a better API for dealing with gems
+        transparent_pages: Create more transparent and accessible project pages
+        enable_community: Enable the community to improve and enhance the site
+      founding: "The project was started in April 2009 by %{founder}, and has since grown to include the contributions of over %{contributors} and %{downloads}. As of the RubyGems 1.3.6 release, the site has been renamed to %{title} from Gemcutter to solidify the site's central role in the Ruby community."
+      support: "Although Gemcutter is not run by one specific company, plenty have helped us out so far. The current design of the site was sponsored by %{thoughtbot}. %{github} has also been invaluable for helping us collaborate and share code easily. The site started on %{heroku}, whose great service helped prove Gemcutter as a viable solution that the whole community could rely on."
+      technical: "Some insights into the technical aspects of the site: It's 100% Ruby. The main site is a %{rails} application, and the RubyGem serving is done through %{sinatra}. Gems are hosted on %{s3}, and the time between publishing a new gem and having it ready for installation is minimal. For more info, %{source_code}, which is %{license} over at GitHub."
+
+    api_docs:
+      title: API Docs
+      subtitle: get your code on
+      wip_header: "The API is a work in progress, and %{help_link}! RubyGems itself and %{gemcutter_gem_link} uses the API to push gems, add owners, and more. Check out all of the gem commands %{gem_docs_link}."
+      help_link_text: can use your help
+      gemcutter_gem_link_text: gemcutter gem
+      gem_docs_link_text: here
+      sections:
+        header: Methods
+        gem: Gem Methods
+        gem_info: Query or create rubygems to be hosted
+        gemversion: Gem Version Methods
+        gemversion_info: Query for information about versions of a particular ruby gem
+        gemversiondownloads: Gem Version Download Methods
+        gemversiondownloads_info: Query for download statistics about a particular ruby gem version
+        owner: Owner Methods
+        owner_info: Manage owners for gems
+        webhook: Webhook Methods
+        webhook_info: Manage notifications for when gems are pushed
+        misc: Misc Methods
+        misc_info: Various other interactions with the site
+      gem:
+        show: "Returns some basic information about the given gem. For example, here's Rails:"
+        search: "Submit a search to Gemcutter for active gems, just like a search query on the site. Returns an array of the XML or JSON representation of gems that match."
+        index: "List all gems that you own. Returns an array of the XML or JSON representation of gems you own."
+        create: "Submit a gem to RubyGems.org. Must have your API key supplied and give a built RubyGem in the body of the request."
+        delete: "Remove a gem from RubyGems.org's index. Platform is optional."
+        update: "Update a previously yanked gem back into RubyGems.org's index. Platform is optional."
+      gemversion:
+        show: "Returns a JSON array of gem version details like the below:"
+      gemversiondownloads:
+        index: "Returns a JSON object containing the number of downloads by day for a particular gem version for 90 days of data. "
+        search: "Returns a JSON object containing the number of downloads by day for a particular gem version for 90 days of data."
+      owner:
+        index: "View all owners of a gem that you own. These users can all push to this gem."
+        create: "Add an owner to a RubyGem you own, giving that user permission to manage it."
+        delete: "Remove a user's permission to manage a RubyGem you own."
+      webhook:
+        index: "List the webhooks registered under your account."
+        create: Create a webhook.
+        delete: Remove a webhook.
+        test: "Test fire a webhook. This can be used to test out an endpoint at any time, for example when you're developing your application."
+        params: "Requires two parameters: %{gem_name} and %{url}. Specify %{all_gems} for the %{gem_name} parameter to apply the hook globally to all gems."
+        authorization: "An Authorization header is included with every fired webhook so you can be sure the request came from RubyGems.org. The value of the header is the SHA2-hashed concatenation of the gem name, the gem version and your API key."
+      misc:
+        api_key: Retrieve your API key using HTTP basic auth.
+        dependencies: "Returns a marshalled array of hashes for all versions of given gems. Each hash contains a gem version with its dependencies making this useful for resolving dependencies."
+
+    create:
+      title: create
+      notice: This page has been moved onto Gemcutter's new support site.
+
+    docs:
+      title: Docs
+      subtitle: "yeah, we got 'em"
+      gem:
+        title: Gem Docs
+        info: Use the Gemcutter gem to publish your own RubyGems and more.
+      api:
+        title: API Docs
+        info: Learn to use the Gemcutter API to interact in new ways with your RubyGems.
+      rubygem:
+        title: RubyGem Docs
+        info: Read up on the RubyGem specification and how to use RubyGems.
+      contribute: "Know of more great RubyGem documentation sources? %{fork_link} and add your own!"
+      fork_link_text: Fork away
+
   passwords:
     edit:
       title: reset password
