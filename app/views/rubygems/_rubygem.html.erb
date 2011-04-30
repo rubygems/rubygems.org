@@ -1,8 +1,5 @@
 <li>
-  <div class="downloads">
-    <strong><%= number_with_delimiter rubygem.downloads %></strong>
-    downloads
-  </div>
+  <%= download_count rubygem %>
   <a href="<%= rubygem_path(rubygem) %>">
     <strong><%= rubygem %></strong>
     <%= short_info(rubygem.versions.most_recent) %>

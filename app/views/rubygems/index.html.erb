@@ -1,5 +1,5 @@
-<% @title = "all gems" %>
-<% @subtitle = "starting with <em>#{@letter}</em>" %>
+<% @title = t('.title') %>
+<% @subtitle = t('.subtitle', :prefix => content_tag(:em, @letter)).html_safe %>
 <div class="directory border">
   <ol>
     <% ("A".."Z").each do |letter| %><li><%= link_to(letter, rubygems_path(:letter => letter)) %></li><% end %>
