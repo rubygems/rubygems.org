@@ -1,29 +1,27 @@
-<% @title = "edit gem links" %>
-<% @subtitle = "for #{@rubygem.name}" %>
-<p>
-All other fields can only be edited by pushing an updated version of your gem.
-</p>
+<% @title = t('.title') %>
+<% @subtitle = t('.subtitle', :gem => @rubygem.name) %>
+<p><%= t '.other_fields_notice' %></p>
 <%= error_messages_for :linkset, :object_name => "gem" %>
 <%= form_for @rubygem.linkset, :url => rubygem_url(@rubygem), :method => :put do |form| %>
   <div class="url_field">
-    <%= form.label :code, "Source Code URL" %>
+    <%= form.label :code %>
     <%= form.text_field :code, :size => 25 %>
   </div>
   <div class="url_field">
-    <%= form.label :docs, "Documentation URL" %>
+    <%= form.label :docs %>
     <%= form.text_field :docs, :size => 25 %>
   </div>
   <div class="url_field">
-    <%= form.label :wiki, "Wiki URL" %>
+    <%= form.label :wiki %>
     <%= form.text_field :wiki, :size => 25 %>
   </div>
   <div class="url_field">
-    <%= form.label :mail, "Mailing List URL" %>
+    <%= form.label :mail %>
     <%= form.text_field :mail, :size => 25 %>
   </div>
   <div class="url_field">
-    <%= form.label :bugs, "Bug Tracker URL" %>
+    <%= form.label :bugs %>
     <%= form.text_field :bugs, :size => 25 %>
   </div>
-    <%= form.submit 'Update', :disable_with => 'Please wait...' %>
+    <%= form.submit t('update'), :disable_with => t('form_disable_with') %>
 <% end %>

@@ -10,6 +10,8 @@ en:
   time_ago: "%{duration} ago"
   download_count: "%{count} downloads"
   form_disable_with: "Please wait..."
+  update: Update
+  edit: Edit
 
   dashboards:
     show:
@@ -101,6 +103,36 @@ en:
         reset: Reset my API key
         confirm_reset: Are you sure? This cannot be undone.
 
+  rubygems:
+    dependencies:
+      header: "%{scope} Dependencies"
+    edit:
+      title: "edit gem links"
+      subtitle: "for %{gem}"
+      other_fields_notice: All other fields can only be edited by pushing an updated version of your gem.
+    index:
+      title: 'all gems'
+      subtitle: 'starting with %{prefix}'
+    show:
+      not_hosted_notice: This gem is not currently hosted on Gemcutter.
+      install: install
+      yanked_notice: "This gem has been yanked, but it is still available for download for other gems that may have depended on it. For more information or if you need to remove it permanently, %{more_info_link}."
+      yank_info_link_text: please click here
+      stats_header: Stats
+      authors_header: Authors
+      downloads_for_this_version: "%{count} for this version"
+      owners_header: Owners
+      links:
+        header: Links
+        home: Homepage
+        code: Source Code
+        docs: Documentation
+        wiki: Wiki
+        mail: Mailing List
+        bugs: Bug Tracker
+      versions_header: Versions
+      show_all_versions: "Show all versions (%{count} total)"
+
   searches:
     show:
       subtitle: "for %{query}"
@@ -143,6 +175,12 @@ en:
         handle: Handle
         password_confirmation: Confirm password
         password: Password
+      linkset:
+        bugs: Bug Tracker URL
+        code: Source Code URL
+        docs: Documentation URL
+        mail: Mailing List URL
+        wiki: Wiki URL
       session:
         who: Email or Handle
         password: Password
