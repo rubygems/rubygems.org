@@ -27,7 +27,13 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.search(query)
-    where("versions.indexed and (upper(name) like upper(:query) or upper(versions.description) like upper(:query))", {:query => "%#{query.strip}%"}).
+    current_scope = Rubygem
+
+    query.split.each do |q|
+      current_scope = current_scope.where("versions.indexed and (upper(name) like upper(:query) or upper(versions.description) like upper(:query))", {:query => "%#{q.strip}%"})
+    end
+
+    current_scope.
     includes(:versions).
     order("rubygems.downloads desc")
   end
