@@ -473,6 +473,11 @@ class RubygemTest < ActiveSupport::TestCase
       assert Rubygem.search('PIE').include?(@apple_pie)
     end
 
+    should "find rubygems with missing punctuation on #search" do
+      assert Rubygem.search('apple crisp').include?(@apple_crisp)
+      assert ! Rubygem.search('apple crisp').include?(@apple_pie)
+    end
+
     should "sort results by number of downloads, descending" do
       assert_equal [@apple_crisp, @apple_pie], Rubygem.search('apple')
     end
