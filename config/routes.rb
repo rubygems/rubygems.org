@@ -1,4 +1,4 @@
-RUBYGEM_NAME_MATCHER = /[A-Za-z0-9\-\_\.]+/
+RUBYGEM_NAME_MATCHER = /[A-Za-z0-9\-\_\.]+?/
 
 Gemcutter::Application.routes.draw do
 
@@ -29,7 +29,7 @@ Gemcutter::Application.routes.draw do
 
       resources :dependencies, :only => :index
 
-      resources :rubygems, :path => "gems", :only => [:create, :show, :index], :id => /.+?/, :format => /json|xml/ do
+      resources :rubygems, :path => "gems", :only => [:create, :show, :index], :id => RUBYGEM_NAME_MATCHER, :format => /json|xml/ do
         collection do
           delete :yank
           put :unyank
