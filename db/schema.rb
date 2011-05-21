@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101013135725) do
+ActiveRecord::Schema.define(:version => 20110318162103) do
 
   create_table "announcements", :force => true do |t|
     t.text     "body"
@@ -90,7 +90,7 @@ ActiveRecord::Schema.define(:version => 20101013135725) do
     t.string   "slug"
   end
 
-  add_index "rubygems", ["name"], :name => "index_rubygems_on_name"
+  add_index "rubygems", ["name"], :name => "index_rubygems_on_name", :unique => true
 
   create_table "subscriptions", :force => true do |t|
     t.integer  "rubygem_id"
@@ -151,6 +151,7 @@ ActiveRecord::Schema.define(:version => 20101013135725) do
   add_index "versions", ["number"], :name => "index_versions_on_number"
   add_index "versions", ["position"], :name => "index_versions_on_position"
   add_index "versions", ["prerelease"], :name => "index_versions_on_prerelease"
+  add_index "versions", ["rubygem_id", "number", "platform"], :name => "index_versions_on_rubygem_id_and_number_and_platform", :unique => true
   add_index "versions", ["rubygem_id"], :name => "index_versions_on_rubygem_id"
 
   create_table "web_hooks", :force => true do |t|

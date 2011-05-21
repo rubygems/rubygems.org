@@ -18,6 +18,7 @@ class RubygemsController < ApplicationController
 
   def show
     @latest_version = @rubygem.versions.most_recent
+    @versions       = @rubygem.public_versions(5)
   end
 
   def edit

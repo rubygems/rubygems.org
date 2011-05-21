@@ -455,6 +455,7 @@ table {
 
 .main .info #markup {
   margin: 20px 0;
+  color: #000;
 }
 
 .main .info .meta .admin {
@@ -990,7 +991,7 @@ label, .form_links {
   background: #d2c8b2;
   border: none;
   padding: 15px;
-  font-size: 48px;
+  font-size: 46px;
   -moz-box-shadow: inset 0 3px 3px #706751;
   -webkit-box-shadow: inset 0 3px 3px #706751;
   box-shadow: inset 0 3px 3px #706751;

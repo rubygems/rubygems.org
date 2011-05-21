@@ -1,5 +1,6 @@
 class Pusher
   include Vault
+  include NewRelic::Agent::Instrumentation::ControllerInstrumentation
 
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id
 
@@ -55,7 +56,15 @@ class Pusher
   end
 
   def pull_spec
-    @spec = Gem::Format.from_io(body).spec
+    # Use Gem::Package instead of Gem::Format so that we don't have
+    # to reread and decode the body of the gem since we only want
+    # the metadata.
+    Gem::Package.open body, "r", nil do |pkg|
+      @spec = pkg.metadata
+      return true
+    end
+
+    false
   rescue Gem::Package::FormatError
     notify("RubyGems.org cannot process this gem.\nPlease try rebuilding it" +
            " and installing it locally to make sure it's valid.", 422)
@@ -87,15 +96,55 @@ class Pusher
     "<Gemcutter #{attrs.join(' ')}>"
   end
 
+  # Not using this yet, switch to this when we're on at least Rubygems
+  # 1.5.
+  # def minimize_specs(data)
+    # names     = Hash.new { |h,k| h[k] = k }
+    # versions  = Hash.new { |h,k| h[k] = Gem::Version.new(k) }
+    # platforms = Hash.new { |h,k| h[k] = k }
+
+    # data.each do |row|
+      # row[0] = names[row[0]]
+      # row[1] = versions[row[1]]
+      # row[2] = platforms[row[2]]
+    # end
+
+    # data
+  # end
+
+  def minimize_specs(data)
+    data.each do |row|
+      row[1] = Gem::Version.new(row[1])
+    end
+    data
+  end
+
   def specs_index
+    minimize_specs Version.rows_for_index
+  end
+
+  def slow_specs_index
+    vers = Version.indexed.select('rubygems.name, versions.number, versions.platform').from("versions").joins(:rubygem).order("rubygems.name asc, position desc")
+    vers.map { |v| [v.name, Gem::Version.new(v.number), v.platform ] }
+  end
+
+  def very_slow_specs_index
     Version.with_indexed(true).map(&:to_index)
   end
 
   def latest_index
+    minimize_specs Version.rows_for_latest_index
+  end
+
+  def slow_latest_index
     Version.latest.with_indexed.map(&:to_index)
   end
 
   def prerelease_index
+    minimize_specs Version.rows_for_prerelease_index
+  end
+
+  def slow_prerelease_index
     Version.prerelease.with_indexed(true).map(&:to_index)
   end
 
@@ -121,16 +170,21 @@ class Pusher
     end
   end
 
-   def self.indexer
-     @indexer ||=
-       begin
-         indexer = Gem::Indexer.new(server_path, :build_legacy => false)
-         def indexer.say(message) end
-         indexer
-       end
-   end
+  def self.indexer
+    @indexer ||=
+      begin
+        indexer = Gem::Indexer.new(server_path, :build_legacy => false)
+        def indexer.say(message) end
+        indexer
+      end
+  end
 
-   def log(message)
-     Rails.logger.info "[GEMCUTTER:#{Time.now}] #{message}"
-   end
+  def log(message)
+    Rails.logger.info "[GEMCUTTER:#{Time.now}] #{message}"
+  end
+
+  add_transaction_tracer :perform, :category => :task
+  add_transaction_tracer :specs_index, :category => :task
+  add_transaction_tracer :latest_index, :category => :task
+  add_transaction_tracer :prerelease_index, :category => :task
 end

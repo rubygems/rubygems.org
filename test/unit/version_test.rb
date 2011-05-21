@@ -4,6 +4,53 @@ class VersionTest < ActiveSupport::TestCase
   should belong_to :rubygem
   should have_many :dependencies
 
+  context "#as_json" do
+    setup do
+      @version = Factory(:version)
+    end
+
+    should "only have relevant API fields" do
+      json = @version.as_json
+      assert_equal %w[number built_at summary description authors platform prerelease downloads_count].map(&:to_s).sort, json.keys.map(&:to_s).sort
+      assert_equal @version.authors, json["authors"]
+      assert_equal @version.built_at, json["built_at"]
+      assert_equal @version.description, json["description"]
+      assert_equal @version.downloads_count, json[:downloads_count]
+      assert_equal @version.number, json["number"]
+      assert_equal @version.platform, json["platform"]
+      assert_equal @version.prerelease, json["prerelease"]
+      assert_equal @version.summary, json["summary"]
+    end
+  end
+
+  context "updated gems" do
+    setup do
+      Timecop.freeze
+      @existing_gem = Factory(:rubygem)
+      @second = Factory(:version, :rubygem => @existing_gem, :created_at => 1.day.ago)
+      @fourth = Factory(:version, :rubygem => @existing_gem, :created_at => 4.days.ago)
+
+      @another_gem = Factory(:rubygem)
+      @third  = Factory(:version, :rubygem => @another_gem, :created_at => 3.days.ago)
+      @first  = Factory(:version, :rubygem => @another_gem, :created_at => 1.minute.ago)
+      @yanked = Factory(:version, :rubygem => @another_gem, :created_at => 30.seconds.ago)
+      @yanked.yank!
+
+      @bad_gem = Factory(:rubygem)
+      @only_one = Factory(:version, :rubygem => @bad_gem, :created_at => 1.minute.ago)
+    end
+
+    teardown do
+      Timecop.return
+    end
+
+    should "order gems by created at and show only gems that have more than one version" do
+      versions = Version.just_updated
+      assert_equal 4, versions.size
+      assert_equal [@first, @second, @third, @fourth], versions
+    end
+  end
+
   context "with a rubygem" do
     setup do
       @rubygem = Factory(:rubygem)
@@ -318,7 +365,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "get the latest versions up to today" do
-      assert_equal [@haml, @rack, @thor, @json, @rake].map(&:authors),        Version.published.map(&:authors)
+      assert_equal [@haml, @rack, @thor, @json, @rake].map(&:authors),        Version.published(5).map(&:authors)
       assert_equal [@haml, @rack, @thor, @json, @rake, @thin].map(&:authors), Version.published(6).map(&:authors)
     end
   end
@@ -332,10 +379,6 @@ class VersionTest < ActiveSupport::TestCase
       @unowned   = Factory(:version)
 
       Factory(:ownership, :rubygem => @gem, :user => @user, :approved => true)
-    end
-
-    should "find versions that have other associated versions" do
-      assert_equal [@owned_one, @owned_two], Version.with_associated
     end
 
     should "return the owned gems from #owned_by" do

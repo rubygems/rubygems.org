@@ -1,26 +1,24 @@
 source :rubygems
-gem "rails", "3.0.3"
-gem "rack",  "1.2.1"
+gem "rails", "3.0.5"
+gem "rack",  "1.2.2"
 gem "mail",  "2.2.15"
 
 gem "clearance",         "0.9.0.rc9"
-gem "fog",               "0.3.25"
+gem "fog",               "0.7.0"
 gem "gchartrb",          "0.8",   :require => "google_chart"
 gem "gravtastic",        "2.1.3"
 gem "high_voltage",      "0.9.1"
 gem "hoptoad_notifier",  "2.2.0"
-gem "json",              "1.2.0"
-gem "newrelic_rpm",      "2.13.0.beta6"
+gem "yajl-ruby",         "0.8.2", :require => "yajl/json_gem"
+gem "newrelic_rpm",      "2.13.4"
 gem "paul_revere",       "0.1.5"
 gem "rack-maintenance",  "0.3.0", :require => "rack/maintenance"
-gem "redis",             "2.0.1"
+gem "redis",             "2.1.1"
 gem "rest-client",       "1.0.3", :require => "rest_client"
-gem "sinatra",           "1.0"
+gem "sinatra",           "1.2.1"
 gem "system_timer",      "1.0"
 gem "will_paginate",     "3.0.pre2"
 gem "xml-simple",        "1.0.12"
-
-gem "memprof",           "0.3.10.beta.1"
 
 # These gems suck and do stupid things when in maintenance mode
 group :development, :test, :staging, :production do
@@ -41,7 +39,7 @@ group :test do
   gem "database_cleaner",   "0.5.2"
   gem "fakeweb",            "1.2.6"
   gem "launchy",            "0.3.7"
-  gem "nokogiri",           "1.4.3.1"
+  gem "nokogiri",           "1.4.4"
   gem "rack-test",          "0.5.7", :require => "rack/test"
   gem "redgreen",           "1.2.2"
   gem "rr",                 "0.10.11"

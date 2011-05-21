@@ -20,6 +20,8 @@ Gemcutter has a 'commit-bit' policy, much like the Rubinius project. Submit a pa
 
 Please read up on the "GitHub Wiki":http://wiki.github.com/rubygems/gemcutter/contribution-guidelines for the latest contribution guidelines.
 
+To get setup, please check out the "Development Setup":https://github.com/rubygems/gemcutter/wiki/Development-Setup page on the wiki. It's on the wiki so anyone can edit it, so please fix it if you have trouble getting set up!
+
 h2. Organization
 
 Gemcutter consists of a few major parts:

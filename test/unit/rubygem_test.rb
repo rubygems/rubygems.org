@@ -19,6 +19,7 @@ class RubygemTest < ActiveSupport::TestCase
     should allow_value("factory_girl").for(:name)
     should allow_value("rack-test").for(:name)
     should allow_value("perftools.rb").for(:name)
+    should_not allow_value("\342\230\203").for(:name)
 
     should "reorder versions with platforms properly" do
       version3_ruby  = Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "ruby")
@@ -79,6 +80,17 @@ class RubygemTest < ActiveSupport::TestCase
       @rubygem.reorder_versions
 
       assert_equal version3_ruby, @rubygem.versions.most_recent
+    end
+
+    should "can find when the first built date was" do
+      Timecop.travel(DateTime.now) do
+        Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :built_at => 1.day.ago)
+        Factory(:version, :rubygem => @rubygem, :number => "2.0.0", :built_at => 2.days.ago)
+        Factory(:version, :rubygem => @rubygem, :number => "1.0.0", :built_at => 3.days.ago)
+        Factory(:version, :rubygem => @rubygem, :number => "1.0.0.beta", :built_at => 4.days.ago)
+
+        assert_equal 4.days.ago.to_date, @rubygem.first_built_date.to_date
+      end
     end
 
     should "have a most_recent version if only a platform version exists" do

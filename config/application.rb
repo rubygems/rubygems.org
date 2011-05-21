@@ -13,15 +13,12 @@ Bundler.require(:default, Rails.env) if defined?(Bundler)
 
 $rubygems_config = YAML.load_file("config/rubygems.yml")[Rails.env].symbolize_keys
 HOST             = $rubygems_config[:host]
-RUBYGEMS_VERSION = "1.5.3"
+RUBYGEMS_VERSION = "1.7.2"
 
 module Gemcutter
   class Application < Rails::Application
     config.time_zone = "UTC"
     config.encoding  = "utf-8"
-
-    require 'memprof/tracer'
-    config.middleware.insert 0, Memprof::Tracer
 
     config.middleware.use "Hostess"
     config.middleware.insert_after "Hostess", "Redirector" if $rubygems_config[:redirector]

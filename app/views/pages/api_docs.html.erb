@@ -7,6 +7,8 @@ The API is a work in progress, and <%= link_to "can use your help!", "http://git
 <h4>API Methods</h4>
 <ul id="docs">
   <li><%= link_to "Gem Methods", "#gem" %>: Query or create rubygems to be hosted</li>
+  <li><%= link_to "Gem Version Methods", "#gemversion" %>: Query for information about versions of a particular ruby gem</li>
+  <li><%= link_to "Gem Version Download Methods", "#gemversiondownloads" %>: Query for download statistics about a particular ruby gem version</li>
   <li><%= link_to "Owner Methods", "#owner" %>: Manage owners for gems</li>
   <li><%= link_to "Webhook Methods", "#webhook" %>: Manage notifications for when gems are pushed</li>
   <li><%= link_to "Misc Methods", "#misc" %>: Various other interactions with the site</li>
@@ -16,8 +18,8 @@ The API is a work in progress, and <%= link_to "can use your help!", "http://git
 
 <h5 class="api">GET - /api/v1/gems/[name].(json|xml)</h5>
 <p>
-  Returns some basic information about the given gem. For example, here's Rails:
-  <pre><code>$ curl <%=t :url %>/api/v1/gems/rails.json
+Returns some basic information about the given gem. For example, here's Rails:
+<pre><code>$ curl <%=t :url %>/api/v1/gems/rails.json
 
 {
   "name": "rails",
@@ -82,7 +84,7 @@ $ curl <%=t :url %>/api/v1/gems/rails.xml
 
 <h5 class="api">GET - /api/v1/search.(json|xml)?query=[YOUR QUERY]</h5>
 <p>
-   Submit a search to Gemcutter for active gems, just like a search query on the site. Returns an array of the XML or JSON representation of gems that match.
+Submit a search to Gemcutter for active gems, just like a search query on the site. Returns an array of the XML or JSON representation of gems that match.
 <pre><code>$ curl '<%=t :url %>/api/v1/search.json?query=cucumber'
 
 $ curl '<%=t :url %>/api/v1/search.xml?query=cucumber'</code></pre>
@@ -90,14 +92,14 @@ $ curl '<%=t :url %>/api/v1/search.xml?query=cucumber'</code></pre>
 
 <h5 class="api">GET - /api/v1/gems.(json|xml)</h5>
 <p>
-  List all gems that you own. Returns an array of the XML or JSON representation of gems you own.
+List all gems that you own. Returns an array of the XML or JSON representation of gems you own.
 <pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
           <%=t :url %>/api/v1/gems.json</code></pre>
 </p>
 
 <h5 class="api">POST - /api/v1/gems</h5>
 <p>
-  Submit a gem to RubyGems.org. Must have your API key supplied and give a built RubyGem in the body of the request.
+Submit a gem to RubyGems.org. Must have your API key supplied and give a built RubyGem in the body of the request.
 <pre><code>$ curl --data-binary @gemcutter-0.2.1.gem \
        -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
        <%=t :url %>/api/v1/gems
@@ -107,7 +109,7 @@ Successfully registered gem: gemcutter (0.2.1)</code></pre>
 
 <h5 class="api">DELETE - /api/v1/gems/yank</h5>
 <p>
-  Remove a gem from RubyGems.org's index. Platform is optional.
+Remove a gem from RubyGems.org's index. Platform is optional.
 <pre><code> $ curl -X DELETE -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
         -d 'gem_name=bills' -d 'version=0.0.1' \
         -d 'platform=x86-darwin-10' \
@@ -118,7 +120,7 @@ Successfully yanked gem: bills (0.0.1)</code></pre>
 
 <h5 class="api">PUT - /api/v1/gems/unyank</h5>
 <p>
-  Update a previously yanked gem back into RubyGems.org's index. Platform is optional.
+Update a previously yanked gem back into RubyGems.org's index. Platform is optional.
 <pre><code> $ curl -X PUT -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
         -d 'gem_name=bills' -d 'version=0.0.1' \
         -d 'platform=x86-darwin-10' \
@@ -127,11 +129,67 @@ Successfully yanked gem: bills (0.0.1)</code></pre>
 Successfully unyanked gem: bills (0.0.1)</code></pre>
 </p>
 
+<h4 id="gemversion">Gem Version Methods</h4>
+
+<h5 class="api">GET - /api/v1/versions/[rubygem name].json</h5>
+<p>
+Returns a JSON array of gem version details like the below:
+<pre><code>$ curl <%=t :url %>/api/v1/versions/coulda.json
+
+[
+   {
+      "number" : "0.6.3",
+      "built_at" : "2010-12-23T05:00:00Z",
+      "summary" : "Test::Unit-based acceptance testing DSL",
+      "downloads_count" : 175,
+      "platform" : "ruby",
+      "authors" : "Evan David Light",
+      "description" : "Behaviour Driven Development derived from Cucumber but as an internal DSL with methods for reuse",
+      "prerelease" : false,
+   }
+]
+
+</code></pre>
+</p>
+
+
+<h4 id="gemversiondownloads">Gem Version Download Methods</h4>
+
+<h5 class="api">GET - /api/v1/versions/[rubygem name]-[rubygem version]/downloads.json</h5>
+<p>
+Returns a JSON object containing the number of downloads by day for a particular gem version for 90 days of data. 
+<pre><code>$ curl <%=t :url %>/api/v1/versions/coulda-0.6.3/downloads.json
+
+{
+  "2010-11-30":0,
+  "2010-12-01":0,
+  "2010-12-02":0,
+  ...
+}
+
+</code></pre>
+
+<h5 class="api">GET - /api/v1/versions/[rubygem name]-[rubygem version]/downloads/search.json?from=[start date str]&to=[end date str]</h5>
+<p>
+Returns a JSON object containing the number of downloads by day for a particular gem version for 90 days of data.
+
+<pre><code>$ curl <%=t :url %>/api/v1/versions/coulda-0.6.3/downloads/search.json?from=2011-11-1&to=2011-11-5</h5>
+
+{
+  "2011-11-01":0,
+  "2011-11-02":0,
+  "2011-11-03":0,
+  "2011-11-04":0,
+  "2011-11-05":0
+}
+
+</code></pre>
+
 <h4 id="owner">Owner Methods</h4>
 
 <h5 class="api">GET - /api/v1/gems/[rubygem name]/owners.json</h5>
 <p>
-  View all owners of a gem that you own. These users can all push to this gem.
+View all owners of a gem that you own. These users can all push to this gem.
 <pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
        <%=t :url %>/api/v1/gems/gemcutter/owners.json
 
@@ -148,7 +206,7 @@ Successfully unyanked gem: bills (0.0.1)</code></pre>
 
 <h5 class="api">POST - /api/v1/gems/[rubygem name]/owners</h5>
 <p>
-  Add an owner to a RubyGem you own, giving that user permission to manage it.
+Add an owner to a RubyGem you own, giving that user permission to manage it.
 <pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
        -F 'email=josh@technicalpickles.com' \
        <%=t :url %>/api/v1/gems/gemcutter/owners
@@ -159,7 +217,7 @@ Owner added successfully.
 
 <h5 class="api">DELETE - /api/v1/gems/[rubygem name]/owners</h5>
 <p>
-  Remove a user's permission to manage a RubyGem you own.
+Remove a user's permission to manage a RubyGem you own.
 <pre><code>$ curl -X DELETE -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
         -d "email=josh@technicalpickles.com" \
         <%=t :url %>/api/v1/gems/gemcutter/owners
@@ -172,7 +230,7 @@ Owner removed successfully.
 
 <h5 class="api">GET - /api/v1/web_hooks.json</h5>
 <p>
-  List the webhooks registered under your account.
+List the webhooks registered under your account.
 <pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
        <%=t :url %>/api/v1/web_hooks.json
 
@@ -195,7 +253,7 @@ Owner removed successfully.
 
 <h5 class="api">POST - /api/v1/web_hooks</h5>
 <p>
-  Create a webhook. Requires two parameters: <code>gem_name</code> and <code>url</code>. Specify <code>*</code> for the <code>gem_name</code> parameter to apply the hook globally to all gems.
+Create a webhook. Requires two parameters: <code>gem_name</code> and <code>url</code>. Specify <code>*</code> for the <code>gem_name</code> parameter to apply the hook globally to all gems.
 <pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
        -F 'gem_name=rails' -F 'url=http://example.com' \
        <%=t :url %>/api/v1/web_hooks
@@ -211,7 +269,7 @@ Successfully created webhook for all gems to http://example.com</code></pre>
 
 <h5 class="api">DELETE - /api/v1/web_hooks/remove</h5>
 <p>
-  Remove a webhook. Requires two parameters: <code>gem_name</code> and <code>url</code>. Specify <code>*</code> for the <code>gem_name</code> parameter to apply the hook globally to all gems.
+Remove a webhook. Requires two parameters: <code>gem_name</code> and <code>url</code>. Specify <code>*</code> for the <code>gem_name</code> parameter to apply the hook globally to all gems.
 <pre><code>$ curl -X DELETE -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
        -d 'gem_name=rails' -d 'url=http://example.com' \
        <%=t :url %>/api/v1/web_hooks/remove
@@ -228,6 +286,11 @@ Successfully removed webhook for all gems to http://example.com</code></pre>
 <h5 class="api">POST - /api/v1/web_hooks/fire</h5>
 <p>
 Test fire a webhook. This can be used to test out an endpoint at any time, for example when you're developing your application. Requires two parameters: <code>gem_name</code> and <code>url</code>. Specify <code>*</code> for the <code>gem_name</code> parameter to apply the hook globally to all gems.
+</p>
+<p>
+An Authorization header is included with every fired webhook so you can be sure the request came from RubyGems.org. The value of the header is the SHA2-hashed concatenation of the gem name, the gem version and your API key.
+</p>
+<p>
 <pre><code>$ curl -H 'Authorization:701243f217cdf23b1370c7b66b65ca97' \
        -F 'gem_name=rails' -F 'url=http://example.com' \
        <%=t :url %>/api/v1/web_hooks/fire
@@ -245,7 +308,7 @@ Successfully deployed webhook for all gems to http://example.com</code></pre>
 
 <h5 class="api">GET - /api/v1/api_key</h5>
 <p>
-  Retrieve your API key using HTTP basic auth.
+Retrieve your API key using HTTP basic auth.
 <pre><code>$ curl -u "nick@gemcutter.org:schwwwwing" \
        <%=t :url %>/api/v1/api_key
 
@@ -255,8 +318,8 @@ Successfully deployed webhook for all gems to http://example.com</code></pre>
 
 <h5 class="api">GET - /api/v1/dependencies?gems=[comma delimited rubygems]</h5>
 <p>
-  Returns a marshalled array of hashes for all versions of given gems. Each hash
-  contains a gem version with its dependencies making this useful for resolving dependencies.
+Returns a marshalled array of hashes for all versions of given gems. Each hash
+contains a gem version with its dependencies making this useful for resolving dependencies.
 <pre><code>
 $ ruby -ropen-uri -rpp -e \
   'pp Marshal.load(open("<%= t :url %>/api/v1/dependencies?gems=rails,thor"))'

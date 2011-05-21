@@ -1,4 +1,6 @@
 class Dependency < ActiveRecord::Base
+  LIMIT = 250
+
   belongs_to :rubygem
   belongs_to :version
 
@@ -10,12 +12,36 @@ class Dependency < ActiveRecord::Base
   validates_presence_of  :requirements
   validates_inclusion_of :scope, :in => %w( development runtime )
 
-  scope :development, where(:scope => 'development')
-  scope :runtime,     where(:scope => 'runtime')
-
   attr_accessor :gem_dependency
 
-  LIMIT = 250
+  def self.development
+    where(:scope => 'development')
+  end
+
+  def self.runtime
+    where(:scope => 'runtime')
+  end
+
+  def self.runtime_key(full_name)
+    "rd:#{full_name}"
+  end
+
+  # rails,rack,bundler
+  def self.for(gem_list)
+    gem_list.map do |rubygem_name|
+      versions = $redis.lrange(Rubygem.versions_key(rubygem_name), 0, -1)
+      versions.map do |version|
+        info = $redis.hgetall(Version.info_key(version))
+        deps = $redis.lrange(Dependency.runtime_key(version), 0, -1)
+        {
+          :name         => info["name"],
+          :number       => info["number"],
+          :platform     => info["platform"],
+          :dependencies => deps.map { |dep| dep.split(" ", 2) }
+        }
+      end
+    end.flatten
+  end
 
   def name
     rubygem.name
@@ -38,27 +64,6 @@ class Dependency < ActiveRecord::Base
 
   def to_s
     "#{name} #{requirements}"
-  end
-
-  def self.runtime_key(full_name)
-    "rd:#{full_name}"
-  end
-
-  # rails,rack,bundler
-  def self.for(gem_list)
-    gem_list.map do |rubygem_name|
-      versions = $redis.lrange(Rubygem.versions_key(rubygem_name), 0, -1)
-      versions.map do |version|
-        info = $redis.hgetall(Version.info_key(version))
-        deps = $redis.lrange(Dependency.runtime_key(version), 0, -1)
-        {
-          :name         => info["name"],
-          :number       => info["number"],
-          :platform     => info["platform"],
-          :dependencies => deps.map { |dep| dep.split(" ", 2) }
-        }
-      end
-    end.flatten
   end
 
   private
