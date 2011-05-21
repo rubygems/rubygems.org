@@ -13,8 +13,7 @@ class RubygemsHelperTest < ActionView::TestCase
 
   should "show a nice formatted date" do
     Timecop.travel(Date.parse("2011-03-18")) do
-      version = Factory.build(:version, :built_at => DateTime.now)
-      assert_equal "March 18, 2011", nice_date_for(version.built_at)
+      assert_equal "March 18, 2011", nice_date_for(DateTime.now)
     end
   end
 
