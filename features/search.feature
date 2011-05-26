@@ -39,7 +39,6 @@ Feature: Search
       And I press "Search"
       Then I should see "LDAP"
 
-    @wip
     Scenario: Search without punctuation
       Given a rubygem exists with a name of "sinatra-controllers"
       And a version exists for the "sinatra-controllers" rubygem with a description of "sinatra stuff"
