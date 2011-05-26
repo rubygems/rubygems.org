@@ -12,7 +12,7 @@
     </div>
 
     <div class="border">
-      <%= render :partial => "clippy", :locals => { :embed => "clippy", :text => @latest_version.to_install } %>
+      <%= render :partial => "rubygems/clippy", :locals => { :embed => "clippy", :text => @latest_version.to_install } %>
       <div class="install">
         <div class="instructions"><strong>install</strong><span><%= @latest_version.to_install %></span></div>
       </div>
@@ -78,7 +78,7 @@
 
         <div class="bundler">
           <h5>Bundler</h5>
-          <%= render :partial => "clippy", :locals => { :embed => "github_clippy", :text => @latest_version.to_bundler } %>
+          <%= render :partial => "rubygems/clippy", :locals => { :embed => "github_clippy", :text => @latest_version.to_bundler } %>
           <pre><code><%= @latest_version.to_bundler %></code></pre>
         </div>
       <% end %>
