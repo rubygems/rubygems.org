@@ -1,4 +1,6 @@
 class Rubygem < ActiveRecord::Base
+  SPECIAL_CHARACTERS = ".-_"
+
   has_many :owners, :through => :ownerships, :source => :user
   has_many :ownerships, :dependent => :destroy
   has_many :subscribers, :through => :subscriptions, :source => :user
@@ -27,7 +29,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.search(query)
-    where("versions.indexed and (upper(name) like upper(:query) or upper(versions.description) like upper(:query))", {:query => "%#{query.strip}%"}).
+    where("versions.indexed and (upper(name) like upper(:query) or upper(translate(name, '#{SPECIAL_CHARACTERS}', '#{' ' * SPECIAL_CHARACTERS.length}')) like upper(:query) or upper(versions.description) like upper(:query))", {:query => "%#{query.strip}%"}).
       includes(:versions).
       order("rubygems.downloads desc")
   end
