@@ -1,11 +1,11 @@
 <% @title = "sign up" %>
 <div class="form_links sign_up_links">
   <div class="rubyforge_migrate">
-    You can now sign in with your <%= link_to "RubyForge Account too!", "http://update.gemcutter.org/2009/12/10/rubyforge-accounts-migrated.html" %>
+    <%= t('.rubyforge_banner', :link => link_to(t('.or_rubyforge'), "http://update.gemcutter.org/2009/12/10/rubyforge-accounts-migrated.html")).html_safe %>
   </div>
-  <%= link_to "Already have an account?", sign_in_path %>
+  <%= link_to t('.have_account'), sign_in_path %>
 </div>
 <%= form_for @user do |form| %>
   <%= render :partial => '/users/form', :object => form %>
-  <%= form.submit 'Sign up', :disable_with => 'Please wait...' %>
+  <%= form.submit 'Sign up', :disable_with => t('form_disable_with') %>
 <% end %>

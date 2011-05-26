@@ -4,8 +4,8 @@
     <em><%= rubygem.versions.most_recent %></em>
   </a>
   <a href="<%= rubygem_stats_path(rubygem) %>" class="profile-downloads">
-    <div><span><%= number_with_delimiter rubygem.downloads %></span> downloads</div>
-    <div><span><%= number_with_delimiter rubygem.downloads_today %></span> today</div>
+    <div><%= t('download_count', :count => content_tag(:span, number_with_delimiter(rubygem.downloads))).html_safe %>
+    <div><%= t('stats.show.daily_downloads', :count => content_tag(:span, number_with_delimiter(rubygem.downloads_today))).html_safe %>
   </a>
   <% if graph %>
     <div id="graph-<%= rubygem.id %>" class="profile-graph">

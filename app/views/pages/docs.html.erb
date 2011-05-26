@@ -1,16 +1,17 @@
-<% @title = "Docs" %>
-<% @subtitle = "yeah, we got 'em" %>
+<% @title = t('.title') %>
+<% @subtitle = t('.subtitle') %>
 <p>
-  <strong><%= link_to "Gem Docs", page_url("gem_docs") %></strong> Use the Gemcutter gem to publish your own RubyGems and more.
+  <strong><%= link_to t('.gem.title'), page_url("gem_docs") %></strong>
+  <%= t '.gem.info' %>
 </p>
 <p>
-  <strong><%= link_to "API Docs", page_url("api_docs") %></strong>
-  Learn to use the Gemcutter API to interact in new ways with your RubyGems.
+  <strong><%= link_to t('.api.title'), page_url("api_docs") %></strong>
+  <%= t '.api.info' %>
 </p>
 <p>
-  <strong><%= link_to "RubyGem Docs", "http://docs.rubygems.org" %></strong>
-  Read up on the RubyGem specification and how to use RubyGems.
+  <strong><%= link_to t('.rubygem.title'), "http://docs.rubygems.org" %></strong>
+  <%= t '.rubygem.info' %>
 </p>
 <p>
-  Know of more great RubyGem documentation sources? <%= link_to "Fork away", "http://github.com/rubygems/gemcutter" %> and add your own!
+  <%= t('.contribute', :fork_link => link_to(t('.fork_link_text'), "http://github.com/rubygems/gemcutter")).html_safe %>
 </p>

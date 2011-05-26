@@ -11,7 +11,7 @@ Feature: Homepage
     And I push the gem "fireworm-1.0.0.gem" with my api key
 
     When I am on the homepage
-    Then I should see "No downloads today."
+    Then I should see "No downloads today"
 
     Given I download the rubygem "sandworm" version "1.0.0" 5 times
     And I download the rubygem "sandworm" version "2.0.0" 10 times

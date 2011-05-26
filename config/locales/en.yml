@@ -7,7 +7,263 @@ en:
   please_confirm: "Access Denied. Please confirm your RubyGems.org account."
   feed_subscribed: "RubyGems.org | Subscribed Gems"
   feed_latest: "RubyGems.org | Latest Gems"
+  time_ago: "%{duration} ago"
+  download_count: "%{count} downloads"
+  form_disable_with: "Please wait..."
+  update: Update
+  edit: Edit
+
+  dashboards:
+    show:
+      latest: "Latest Updates"
+      latest_title: "Latest Updates RSS Feed"
+      no_subscriptions: "You're not subscribed to any gems yet. Visit a %{gem_link} to subscribe to one!"
+      gem_link_text: "gem page"
+      mine: "My Gems"
+      no_owned: "You haven't pushed any gems yet. Perhaps check out the guides on %{creating_link} a gem or %{migrating_link} a gem from RubyForge."
+      creating_link_text: 'creating'
+      migrating_link_text: 'migrating'
+      my_subscriptions: 'My Subscriptions'
+
+  home:
+    index:
+      gems_header: "of %{gem_count} gems cut since July 2009"
+      welcome_blurb: "Welcome to your community RubyGem host."
+      find_blurb: "Find your gems easier, publish them faster, and have fun doing it."
+      learn:
+        header: 'learn'
+        install_rubygems: "Install RubyGems %{version}"
+        rubygems_subtitle: "Ruby's premier packaging system"
+        browse_docs: "Browse the Docs"
+        docs_subtitle: "The comprehensive guide on RubyGems"
+        gem_specification: "Gem Specification"
+        spec_subtitle: "Your gem's interface to the world"
+      share:
+        header: share
+        update: "Update to the latest RubyGems version"
+        build: "Build your gem"
+        deploy: "Deploy your gem instantly"
+      pitch:
+        content: "%{rubygems} is the Ruby community's gem hosting service. %{publish} your gems and install them. %{api} to interact and find out more information about available gems. %{contribute} and enhance the site with your own changes."
+        publish: Instantly publish
+        api: Use the API
+        contribute: Become a contributor
+      leaderboards:
+        header: leaderboards
+        new: New Gems
+        downloaded: Most Downloaded Today
+        no_downloaded: No downloads today
+        updated: Just Updated
+
+  layouts:
+    application:
+      header:
+        all_gems: "all gems"
+        dashboard: "dashboard"
+        sign_in: "sign in"
+        sign_in: "sign up"
+        sign_out: "sign out"
+      footer:
+        about: "About"
+        blog: "Blog"
+        documentation: "Docs"
+        help: "Help"
+        status: "Status"
+        source_code: "Code"
+        discussion_forum: "Discuss"
+        statistics: "Stats"
+        designed_by: "designed by %{designer}"
+        designed_by_title: "Designed by %{designer}"
+        resolved_with: "resolved with %{resolver}"
+        resolved_with_title: "Resolved with %{resolver}"
+        supported_by: "hosted by %{supporter}"
+        supported_by_title: "Hosted by %{supporter}"
+
+  pages:
+    about:
+      title: About
+      subtitle: what this is
+      purpose:
+        header: "Welcome to %{site}, the Ruby community's gem hosting service. The purpose of this project is three-fold:"
+        better_api: Provide a better API for dealing with gems
+        transparent_pages: Create more transparent and accessible project pages
+        enable_community: Enable the community to improve and enhance the site
+      founding: "The project was started in April 2009 by %{founder}, and has since grown to include the contributions of over %{contributors} and %{downloads}. As of the RubyGems 1.3.6 release, the site has been renamed to %{title} from Gemcutter to solidify the site's central role in the Ruby community."
+      support: "Although Gemcutter is not run by one specific company, plenty have helped us out so far. The current design of the site was sponsored by %{thoughtbot}. %{github} has also been invaluable for helping us collaborate and share code easily. The site started on %{heroku}, whose great service helped prove Gemcutter as a viable solution that the whole community could rely on."
+      technical: "Some insights into the technical aspects of the site: It's 100% Ruby. The main site is a %{rails} application, and the RubyGem serving is done through %{sinatra}. Gems are hosted on %{s3}, and the time between publishing a new gem and having it ready for installation is minimal. For more info, %{source_code}, which is %{license} over at GitHub."
+
+    api_docs:
+      title: API Docs
+      subtitle: get your code on
+      wip_header: "The API is a work in progress, and %{help_link}! RubyGems itself and %{gemcutter_gem_link} uses the API to push gems, add owners, and more. Check out all of the gem commands %{gem_docs_link}."
+      help_link_text: can use your help
+      gemcutter_gem_link_text: gemcutter gem
+      gem_docs_link_text: here
+      sections:
+        header: Methods
+        gem: Gem Methods
+        gem_info: Query or create rubygems to be hosted
+        gemversion: Gem Version Methods
+        gemversion_info: Query for information about versions of a particular ruby gem
+        gemversiondownloads: Gem Version Download Methods
+        gemversiondownloads_info: Query for download statistics about a particular ruby gem version
+        owner: Owner Methods
+        owner_info: Manage owners for gems
+        webhook: Webhook Methods
+        webhook_info: Manage notifications for when gems are pushed
+        misc: Misc Methods
+        misc_info: Various other interactions with the site
+      gem:
+        show: "Returns some basic information about the given gem. For example, here's Rails:"
+        search: "Submit a search to Gemcutter for active gems, just like a search query on the site. Returns an array of the XML or JSON representation of gems that match."
+        index: "List all gems that you own. Returns an array of the XML or JSON representation of gems you own."
+        create: "Submit a gem to RubyGems.org. Must have your API key supplied and give a built RubyGem in the body of the request."
+        delete: "Remove a gem from RubyGems.org's index. Platform is optional."
+        update: "Update a previously yanked gem back into RubyGems.org's index. Platform is optional."
+      gemversion:
+        show: "Returns a JSON array of gem version details like the below:"
+      gemversiondownloads:
+        index: "Returns a JSON object containing the number of downloads by day for a particular gem version for 90 days of data. "
+        search: "Returns a JSON object containing the number of downloads by day for a particular gem version for 90 days of data."
+      owner:
+        index: "View all owners of a gem that you own. These users can all push to this gem."
+        create: "Add an owner to a RubyGem you own, giving that user permission to manage it."
+        delete: "Remove a user's permission to manage a RubyGem you own."
+      webhook:
+        index: "List the webhooks registered under your account."
+        create: Create a webhook.
+        delete: Remove a webhook.
+        test: "Test fire a webhook. This can be used to test out an endpoint at any time, for example when you're developing your application."
+        params: "Requires two parameters: %{gem_name} and %{url}. Specify %{all_gems} for the %{gem_name} parameter to apply the hook globally to all gems."
+        authorization: "An Authorization header is included with every fired webhook so you can be sure the request came from RubyGems.org. The value of the header is the SHA2-hashed concatenation of the gem name, the gem version and your API key."
+      misc:
+        api_key: Retrieve your API key using HTTP basic auth.
+        dependencies: "Returns a marshalled array of hashes for all versions of given gems. Each hash contains a gem version with its dependencies making this useful for resolving dependencies."
+
+    create:
+      title: create
+      notice: This page has been moved onto Gemcutter's new support site.
+
+    docs:
+      title: Docs
+      subtitle: "yeah, we got 'em"
+      gem:
+        title: Gem Docs
+        info: Use the Gemcutter gem to publish your own RubyGems and more.
+      api:
+        title: API Docs
+        info: Learn to use the Gemcutter API to interact in new ways with your RubyGems.
+      rubygem:
+        title: RubyGem Docs
+        info: Read up on the RubyGem specification and how to use RubyGems.
+      contribute: "Know of more great RubyGem documentation sources? %{fork_link} and add your own!"
+      fork_link_text: Fork away
+
+  passwords:
+    edit:
+      title: reset password
+      submit: Save this password
+    new:
+      title: change your password
+      will_email_notice: We will email you a link to change your password.
+      submit: Reset password
+
+  profiles:
+    edit:
+      title: Edit Profile
+      reset_password:
+        title: Reset password
+        text: "Need a new password? No problem. %{link}"
+        link_text: Request a new one here.
+      api_access:
+        title: API Access
+        key_is: "Your API key is %{key}."
+        credentials: "Your %{gem_credentials_file} should look like this to use the %{gem_commands_link}:"
+        link_text: gem commands
+        reset: Reset my API key
+        confirm_reset: Are you sure? This cannot be undone.
+
+  rubygems:
+    dependencies:
+      header: "%{scope} Dependencies"
+    edit:
+      title: "edit gem links"
+      subtitle: "for %{gem}"
+      other_fields_notice: All other fields can only be edited by pushing an updated version of your gem.
+    index:
+      title: 'all gems'
+      subtitle: 'starting with %{prefix}'
+    show:
+      not_hosted_notice: This gem is not currently hosted on Gemcutter.
+      install: install
+      yanked_notice: "This gem has been yanked, but it is still available for download for other gems that may have depended on it. For more information or if you need to remove it permanently, %{more_info_link}."
+      yank_info_link_text: please click here
+      stats_header: Stats
+      authors_header: Authors
+      downloads_for_this_version: "%{count} for this version"
+      owners_header: Owners
+      links:
+        header: Links
+        home: Homepage
+        code: Source Code
+        docs: Documentation
+        wiki: Wiki
+        mail: Mailing List
+        bugs: Bug Tracker
+      versions_header: Versions
+      show_all_versions: "Show all versions (%{count} total)"
+
+  searches:
+    show:
+      subtitle: "for %{query}"
+      exact_match: Exact match
+
+  sessions:
+    new:
+      forgot_password: "Forgot Password?"
+
+  stats:
+    index:
+      gem_count: "%{count} gems"
+      user_count: "%{count} users"
+    show:
+      for: "stats for %{for}"
+      overview: "stats overview"
+      total_downloads: "%{count} total downloads"
+      daily_downloads: "%{count} downloads today"
+      current_rank: current rank today
+      highest_rank: highest rank today
+
+  users:
+    new:
+      rubyforge_banner: "You can now sign in with your %{link}"
+      or_rubyforge: "RubyForge Account too!"
+      have_account: "Already have an account?"
+
+  versions:
+    index:
+      title: "all versions of %{name}"
+      versions_since: "%{count} versions since %{since}"
+    version:
+      yanked: "yanked"
+
   activerecord:
+    attributes:
+      user:
+        avatar: Avatar
+        email: Email address
+        handle: Handle
+        password_confirmation: Confirm password
+        password: Password
+      linkset:
+        bugs: Bug Tracker URL
+        code: Source Code URL
+        docs: Documentation URL
+        mail: Mailing List URL
+        wiki: Wiki URL
+      session:
+        who: Email or Handle
+        password: Password
     errors:
       messages:
         record_invalid: "%{errors}"

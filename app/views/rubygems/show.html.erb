@@ -2,9 +2,7 @@
 <% @subtitle = @latest_version.try(:slug) %>
 
 <% if @rubygem.versions.count.zero? %>
-  <p>
-    This gem is not currently hosted on Gemcutter.
-  </p>
+  <p><%= t '.not_hosted_notice' %></p>
 <% else %>
   <% if @latest_version.indexed %>
     <div id="markup">
@@ -35,50 +33,47 @@
       />
       </object>
       <div class="install">
-        <div class="instructions"><strong>install</strong><span><%= @latest_version.to_install %></span></div>
+        <div class="instructions"><strong><%= t '.install' %></strong><span><%= @latest_version.to_install %></span></div>
       </div>
     </div>
   <% else %>
-    <p>
-      This gem has been yanked, but it is still available for download for other gems that may have depended on it.
-      For more information or if you need to remove it permanently, <%=link_to "please click here.", "http://help.rubygems.org/faqs/gemcutter/removing-a-published-rubygem" %>
-    </p>
+    <p><%= t('.yanked_notice', :more_info_link => link_to(t('.yank_info_link_text'), "http://help.rubygems.org/faqs/gemcutter/removing-a-published-rubygem")).html_safe %></p>
   <% end %>
 
   <div class="border">
     <div class="meta">
       <div class="admin">
-        <%= link_to "Edit", edit_rubygem_path(@rubygem), :id => "edit" if @rubygem.owned_by?(current_user) %>
+        <%= link_to t('edit'), edit_rubygem_path(@rubygem), :id => "edit" if @rubygem.owned_by?(current_user) %>
         <%= download_link(@latest_version) %>
         <%= documentation_link(@latest_version, @rubygem.linkset) %>
         <% if @latest_version.indexed %>
           <%= subscribe_link(@rubygem) %>
           <%= unsubscribe_link(@rubygem) %>
         <% end %>
-        <%= link_to "Stats", rubygem_stats_path(@rubygem), :id => "stats" %>
+        <%= link_to t('.stats_header'), rubygem_stats_path(@rubygem), :id => "stats" %>
       </div>
 
       <% if @latest_version.indexed %>
         <div class="who">
           <div class="authors">
             <% if @latest_version.authors.present? %>
-              <h5>Authors</h5>
+              <h5><%= t '.authors_header' %></h5>
               <p><%= @latest_version.authors %></p>
             <% end %>
           </div>
 
           <div class="downloads counter" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
             <span>
-              <strong><%= number_with_delimiter(@rubygem.downloads) %></strong> total downloads
+              <%= t('stats.show.total_downloads', :count => content_tag(:span, number_with_delimiter(@rubygem.downloads))).html_safe %>
             </span>
             <span>
-              <strong><%= number_with_delimiter(@latest_version.downloads_count) %></strong> for this version
+              <%= t('.downloads_for_this_version', :count => content_tag(:span, number_with_delimiter(@latest_version.downloads_count))).html_safe %>
             </span>
           </div>
 
           <% if @rubygem.owners.present? %>
             <div class="owners">
-              <h5>Owners</h5>
+              <h5><%= t '.owners_header' %></h5>
               <p><%= links_to_owners(@rubygem) %></p>
             </div>
           <% end %>
@@ -87,24 +82,24 @@
 
         <% unless @rubygem.linkset.empty? %>
           <div class="links">
-            <h5>Links</h5>
-            <%= link_to_page "Homepage", @rubygem.linkset.home %>
-            <%= link_to_page "Source Code", @rubygem.linkset.code %>
-            <%= link_to_page "Documentation", @rubygem.linkset.docs %>
-            <%= link_to_page "Wiki", @rubygem.linkset.wiki %>
-            <%= link_to_page "Mailing List", @rubygem.linkset.mail %>
-            <%= link_to_page "Bug Tracker", @rubygem.linkset.bugs %>
+            <h5><%= t '.links.header' %></h5>
+            <%= link_to_page t('.links.home'), @rubygem.linkset.home %>
+            <%= link_to_page t('.links.code'), @rubygem.linkset.code %>
+            <%= link_to_page t('.links.docs'), @rubygem.linkset.docs %>
+            <%= link_to_page t('.links.wiki'), @rubygem.linkset.wiki %>
+            <%= link_to_page t('.links.mail'), @rubygem.linkset.mail %>
+            <%= link_to_page t('.links.bugs'), @rubygem.linkset.bugs %>
           </div>
         <% end %>
       <% end %>
 
       <div class="versions">
-        <h5>Versions</h5>
+        <h5><%= t '.versions_header' %></h5>
         <ol>
           <%= render @versions %>
         </ol>
         <% if @rubygem.versions.count > 5 %>
-          <%= link_to "Show all versions (#{@rubygem.versions.count} total)", rubygem_versions_url(@rubygem), :class => "more" %>
+          <%= link_to t('.show_all_versions', :count => @rubygem.versions.count), rubygem_versions_url(@rubygem), :class => "more" %>
         <% end %>
       </div>
 
