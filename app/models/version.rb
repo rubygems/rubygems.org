@@ -196,6 +196,10 @@ class Version < ActiveRecord::Base
     end
   end
 
+  def to_bundler
+    %{gem "#{rubygem.name}", "~> #{number}"}
+  end
+
   def to_gem_version
     Gem::Version.new(number)
   end

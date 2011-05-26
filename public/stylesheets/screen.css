@@ -421,6 +421,7 @@ table {
   display: block;
   margin-left: 582px;
   margin-top: 42px;
+  height: 32px;
   position: absolute;
 }
 
@@ -677,6 +678,28 @@ table {
   padding-top: 2em;
   padding-bottom: 2em;
   border-bottom: 1px solid #B4AC99;
+}
+
+.main .info .meta .bundler {
+  padding-top: 2em;
+  padding-bottom: 2em;
+  border-bottom: 1px solid #B4AC99;
+}
+
+.main .info .meta .bundler pre {
+  display: block;
+  margin: 0;
+}
+
+.main .info .meta .bundler #github_clippy {
+  margin-left: 3px;
+  display: inline-block;
+  height: 10px;
+}
+
+.main .info .meta .bundler h5 {
+  margin-bottom: 0.7em;
+  display: inline-block;
 }
 
 .main .info .meta .links h5 {
