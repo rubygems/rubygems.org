@@ -30,7 +30,6 @@ class Rubygem < ActiveRecord::Base
     where("upper(name) like upper(:query) or upper(versions.description) like upper(:query)",
       {:query => "%#{query.strip}%"}).
       where("versions.indexed").
-      joins(:versions).
       order("rubygems.downloads desc")
   end
 
