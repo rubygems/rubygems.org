@@ -28,8 +28,8 @@ class Rubygem < ActiveRecord::Base
 
   def self.search(query)
     where("versions.indexed and (upper(name) like upper(:query) or upper(versions.description) like upper(:query))", {:query => "%#{query.strip}%"}).
-    includes(:versions).
-    order("rubygems.downloads desc")
+      includes(:versions).
+      order("rubygems.downloads desc")
   end
 
   def self.name_starts_with(letter)

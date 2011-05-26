@@ -1,6 +1,6 @@
 class Version < ActiveRecord::Base
   belongs_to :rubygem
-  has_many :dependencies, :dependent => :destroy
+  has_many :dependencies, :order => 'rubygems.name ASC', :include => :rubygem, :dependent => :destroy
 
   before_save      :update_prerelease
   after_validation :join_authors
@@ -194,6 +194,10 @@ class Version < ActiveRecord::Base
     else
       "#{rubygem.name} (#{number})"
     end
+  end
+
+  def to_bundler
+    %{gem "#{rubygem.name}", "~> #{number}"}
   end
 
   def to_gem_version
