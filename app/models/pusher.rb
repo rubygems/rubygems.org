@@ -96,26 +96,17 @@ class Pusher
     "<Gemcutter #{attrs.join(' ')}>"
   end
 
-  # Not using this yet, switch to this when we're on at least Rubygems
-  # 1.5.
-  # def minimize_specs(data)
-    # names     = Hash.new { |h,k| h[k] = k }
-    # versions  = Hash.new { |h,k| h[k] = Gem::Version.new(k) }
-    # platforms = Hash.new { |h,k| h[k] = k }
-
-    # data.each do |row|
-      # row[0] = names[row[0]]
-      # row[1] = versions[row[1]]
-      # row[2] = platforms[row[2]]
-    # end
-
-    # data
-  # end
-
   def minimize_specs(data)
+    names     = Hash.new { |h,k| h[k] = k }
+    versions  = Hash.new { |h,k| h[k] = k }
+    platforms = Hash.new { |h,k| h[k] = k }
+
     data.each do |row|
-      row[1] = Gem::Version.new(row[1])
+      row[0] = names[row[0]]
+      row[1] = versions[Gem::Version.new(row[1])]
+      row[2] = platforms[row[2]]
     end
+
     data
   end
 
