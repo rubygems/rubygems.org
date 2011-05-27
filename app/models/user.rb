@@ -2,8 +2,8 @@ class User < ActiveRecord::Base
   include Clearance::User
   is_gravtastic :default => "retro"
 
-  attr_accessible :handle, :password_confirmation, :password, :email
-  attr_accessible :handle, :website, :location, :bio
+  attr_accessible :bio, :email, :handle, :location, :password,
+                  :password_confirmation, :website 
 
   has_many :rubygems, :through    => :ownerships,
                       :conditions => { 'ownerships.approved' => true }
