@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   is_gravtastic :default => "retro"
 
   attr_accessible :handle, :password_confirmation, :password, :email
-  attr_accessible :handle, :website, :location, :bio
+  attr_accessible :website, :location, :bio
 
   has_many :rubygems, :through    => :ownerships,
                       :conditions => { 'ownerships.approved' => true }
