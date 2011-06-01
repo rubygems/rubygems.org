@@ -38,6 +38,12 @@ class DependencyTest < ActiveSupport::TestCase
 
       assert_equal "#{@dependency.name} #{@dependency.requirements}", $redis.lindex(Dependency.runtime_key(@version.full_name), 0)
     end
+
+    should "not push development dependency onto the redis list" do
+      @dependency = Factory(:development_dependency)
+
+      assert !$redis.exists(Dependency.runtime_key(@dependency.version.full_name))
+    end
   end
 
   context "with a Gem::Dependency" do
