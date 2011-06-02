@@ -5,7 +5,7 @@
     <% dependencies.each do |dependency| %>
       <li>
         <a href="<%= rubygem_url(dependency.rubygem) %>">
-          <strong><%= dependency.rubygem.name %></strong> <%= dependency.requirements %>
+          <strong><%= dependency.rubygem.name %></strong> <%= dependency.clean_requirements %>
         </a>
       </li>
     <% end %>
