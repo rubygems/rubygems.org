@@ -4,6 +4,25 @@ class VersionTest < ActiveSupport::TestCase
   should belong_to :rubygem
   should have_many :dependencies
 
+  context "#as_json" do
+    setup do
+      @version = Factory(:version)
+    end
+
+    should "only have relevant API fields" do
+      json = @version.as_json
+      assert_equal %w[number built_at summary description authors platform prerelease downloads_count].map(&:to_s).sort, json.keys.map(&:to_s).sort
+      assert_equal @version.authors, json["authors"]
+      assert_equal @version.built_at, json["built_at"]
+      assert_equal @version.description, json["description"]
+      assert_equal @version.downloads_count, json[:downloads_count]
+      assert_equal @version.number, json["number"]
+      assert_equal @version.platform, json["platform"]
+      assert_equal @version.prerelease, json["prerelease"]
+      assert_equal @version.summary, json["summary"]
+    end
+  end
+
   context "updated gems" do
     setup do
       Timecop.freeze
@@ -54,6 +73,22 @@ class VersionTest < ActiveSupport::TestCase
       @version = Factory.build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
       @version.dependencies << Factory(:dependency, :version => @version, :rubygem => @dependency)
       assert ! Version.with_deps.first.dependencies.empty?
+    end
+    
+    should "sort dependencies alphabetically" do
+      @version = Factory.build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
+      
+      @first_dependency_by_alpha = Factory(:rubygem, :name => 'acts_as_indexed')
+      @second_dependency_by_alpha = Factory(:rubygem, :name => 'friendly_id')
+      @third_dependency_by_alpha = Factory(:rubygem, :name => 'refinerycms')
+      
+      @version.dependencies << Factory(:dependency, :version => @version, :rubygem => @second_dependency_by_alpha)
+      @version.dependencies << Factory(:dependency, :version => @version, :rubygem => @third_dependency_by_alpha)
+      @version.dependencies << Factory(:dependency, :version => @version, :rubygem => @first_dependency_by_alpha)
+      
+      assert @first_dependency_by_alpha.name, @version.dependencies.first.name
+      assert @second_dependency_by_alpha.name, @version.dependencies[1].name
+      assert @third_dependency_by_alpha.name, @version.dependencies.last.name
     end
   end
 
@@ -155,6 +190,10 @@ class VersionTest < ActiveSupport::TestCase
 
     should "give title for #to_title" do
       assert_equal "#{@version.rubygem.name} (#{@version.to_s})", @version.to_title
+    end
+
+    should "give version with twiddle-wakka for #to_bundler" do
+      assert_equal %{gem "#{@version.rubygem.name}", "~> #{@version.to_s}"}, @version.to_bundler
     end
 
     should "give title and platform for #to_title" do
@@ -346,7 +385,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "get the latest versions up to today" do
-      assert_equal [@haml, @rack, @thor, @json, @rake].map(&:authors),        Version.published.map(&:authors)
+      assert_equal [@haml, @rack, @thor, @json, @rake].map(&:authors),        Version.published(5).map(&:authors)
       assert_equal [@haml, @rack, @thor, @json, @rake, @thin].map(&:authors), Version.published(6).map(&:authors)
     end
   end
@@ -437,5 +476,4 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @spec.date,               @version.built_at
     end
   end
-
 end

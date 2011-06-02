@@ -28,8 +28,8 @@ class Rubygem < ActiveRecord::Base
 
   def self.search(query)
     where("versions.indexed and (upper(name) like upper(:query) or upper(versions.description) like upper(:query))", {:query => "%#{query.strip}%"}).
-    includes(:versions).
-    order("rubygems.downloads desc")
+      includes(:versions).
+      order("rubygems.downloads desc")
   end
 
   def self.name_starts_with(letter)
@@ -74,8 +74,8 @@ class Rubygem < ActiveRecord::Base
     end.flatten.join(", ")
   end
 
-  def public_versions
-    versions.published.by_position
+  def public_versions(limit = nil)
+    versions.published(limit).by_position
   end
 
   def hosted?
@@ -224,9 +224,9 @@ class Rubygem < ActiveRecord::Base
   def ensure_name_format
     if name.class != String
       errors.add :name, "must be a String"
-    elsif name =~ /^[\d]+$/
+    elsif name =~ /\A[\d]+\Z/
       errors.add :name, "must include at least one letter"
-    elsif name =~ /[^\d\w\-\.]/
+    elsif name !~ /\A[A-Za-z0-9_\-\.]+\Z/
       errors.add :name, "can only include letters, numbers, dashes, and underscores"
     end
   end

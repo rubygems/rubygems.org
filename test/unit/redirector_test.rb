@@ -50,4 +50,25 @@ class RedirectorTest < ActiveSupport::TestCase
       assert_equal "http://docs.rubygems.org#{uri}", last_response.headers["Location"]
     end
   end
+
+  should "redirect request to docs to guides " do
+    get "/pages/docs", {}, {"HTTP_HOST" => HOST}
+
+    assert_equal 301, last_response.status
+    assert_equal "http://guides.rubygems.org", last_response.headers["Location"]
+  end
+
+  should "redirect request to gem docs to guides " do
+    get "/pages/gem_docs", {}, {"HTTP_HOST" => HOST}
+
+    assert_equal 301, last_response.status
+    assert_equal "http://guides.rubygems.org/command-reference", last_response.headers["Location"]
+  end
+
+  should "redirect request to api docs to guides " do
+    get "/pages/api_docs", {}, {"HTTP_HOST" => HOST}
+
+    assert_equal 301, last_response.status
+    assert_equal "http://guides.rubygems.org/rubygems-org-api", last_response.headers["Location"]
+  end
 end

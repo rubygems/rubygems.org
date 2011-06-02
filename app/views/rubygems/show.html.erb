@@ -12,28 +12,7 @@
     </div>
 
     <div class="border">
-      <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
-              width="110"
-              height="32"
-              id="clippy" >
-      <param name="movie" value="/clippy.swf"/>
-      <param name="allowScriptAccess" value="always" />
-      <param name="quality" value="high" />
-      <param name="scale" value="noscale" />
-      <param NAME="FlashVars" value="text=<%= @latest_version.to_install %>">
-      <param name="wmode" value="transparent">
-      <embed src="/clippy.swf"
-             width="110"
-             height="32"
-             name="clippy"
-             quality="high"
-             allowScriptAccess="always"
-             type="application/x-shockwave-flash"
-             pluginspage="http://www.macromedia.com/go/getflashplayer"
-             FlashVars="text=<%= @latest_version.to_install %>"
-             wmode="transparent"
-      />
-      </object>
+      <%= render :partial => "rubygems/clippy", :locals => { :embed => "clippy", :text => @latest_version.to_install } %>
       <div class="install">
         <div class="instructions"><strong>install</strong><span><%= @latest_version.to_install %></span></div>
       </div>
@@ -96,12 +75,18 @@
             <%= link_to_page "Bug Tracker", @rubygem.linkset.bugs %>
           </div>
         <% end %>
+
+        <div class="bundler">
+          <h5>Bundler</h5>
+          <%= render :partial => "rubygems/clippy", :locals => { :embed => "github_clippy", :text => @latest_version.to_bundler } %>
+          <pre><code><%= @latest_version.to_bundler %></code></pre>
+        </div>
       <% end %>
 
       <div class="versions">
         <h5>Versions</h5>
         <ol>
-          <%= render @rubygem.public_versions %>
+          <%= render @versions %>
         </ol>
         <% if @rubygem.versions.count > 5 %>
           <%= link_to "Show all versions (#{@rubygem.versions.count} total)", rubygem_versions_url(@rubygem), :class => "more" %>

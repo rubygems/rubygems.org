@@ -1,6 +1,6 @@
 class Version < ActiveRecord::Base
   belongs_to :rubygem
-  has_many :dependencies, :dependent => :destroy
+  has_many :dependencies, :order => 'rubygems.name ASC', :include => :rubygem, :dependent => :destroy
 
   before_save      :update_prerelease
   after_validation :join_authors
@@ -90,7 +90,7 @@ class Version < ActiveRecord::Base
       limit(5)
   end
 
-  def self.published(limit=5)
+  def self.published(limit)
     where("built_at <= ? and indexed", DateTime.now.utc).
       by_built_at.
       limit(limit)
@@ -180,6 +180,10 @@ class Version < ActiveRecord::Base
     Download.for(self)
   end
 
+  def as_json(options = {})
+    super(:methods => [:downloads_count], :only => [:authors, :built_at, :description, :number, :platform, :prerelease, :summary])
+  end
+
   def to_s
     number
   end
@@ -190,6 +194,10 @@ class Version < ActiveRecord::Base
     else
       "#{rubygem.name} (#{number})"
     end
+  end
+
+  def to_bundler
+    %{gem "#{rubygem.name}", "~> #{number}"}
   end
 
   def to_gem_version
