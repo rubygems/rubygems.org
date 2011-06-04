@@ -98,3 +98,7 @@ Given 'the following rubygems exist for "$email":' do |email, table|
     rubygem.ownerships.create :user => user, :approved => true
   end
 end
+
+Given /the version has a description of "([^\"]*)"/ do |desc|
+  Version.last.update_attribute(:description, desc)
+end

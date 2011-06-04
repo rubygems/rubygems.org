@@ -15,6 +15,8 @@ module NavigationHelpers
       edit_profile_path
     when /"([^\"]+)" profile page/
       profile_path(User.find_by_email!($1))
+    when /the top downloads api/
+      top_api_v1_downloads_path
     else
       raise "Can't find mapping from \"#{page_name}\" to a path."
     end
