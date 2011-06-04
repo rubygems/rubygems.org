@@ -43,10 +43,10 @@
 
           <div class="downloads counter" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
             <span>
-              <%= t('stats.show.total_downloads', :count => content_tag(:span, number_with_delimiter(@rubygem.downloads))).html_safe %>
+              <%= t('stats.show.total_downloads', :count => content_tag(:strong, number_with_delimiter(@rubygem.downloads))).html_safe %>
             </span>
             <span>
-              <%= t('.downloads_for_this_version', :count => content_tag(:span, number_with_delimiter(@latest_version.downloads_count))).html_safe %>
+              <%= t('.downloads_for_this_version', :count => content_tag(:strong, number_with_delimiter(@latest_version.downloads_count))).html_safe %>
             </span>
           </div>
 
@@ -72,7 +72,7 @@
         <% end %>
 
         <div class="bundler">
-          <h5>Bundler</h5>
+          <h5><%= t '.bundler_header' %></h5>
           <%= render :partial => "rubygems/clippy", :locals => { :embed => "github_clippy", :text => @latest_version.to_bundler } %>
           <pre><code><%= @latest_version.to_bundler %></code></pre>
         </div>
