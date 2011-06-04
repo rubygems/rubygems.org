@@ -90,6 +90,6 @@ class Dependency < ActiveRecord::Base
   end
 
   def push_on_to_list
-    $redis.lpush(Dependency.runtime_key(self.version.full_name), self.to_s)
+    $redis.lpush(Dependency.runtime_key(self.version.full_name), self.to_s) if self.scope == 'runtime'
   end
 end
