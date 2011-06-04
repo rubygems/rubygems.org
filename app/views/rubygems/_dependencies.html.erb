@@ -1,6 +1,6 @@
 <% if dependencies.present? && @latest_version.indexed %>
   <div class="dependencies" id="<%= dependencies.first.scope %>_dependencies">
-    <h5><%= t '.header', :scope => dependencies.first.scope.titleize %></h5>
+    <h5><%= t '.header', :title => dependencies.first.scope.titleize %></h5>
     <ol>
     <% dependencies.each do |dependency| %>
       <li>
