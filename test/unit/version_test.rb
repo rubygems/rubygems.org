@@ -231,10 +231,14 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.number, spec.version.to_s
       assert_equal [@version.authors], spec.authors
       assert_equal @version.description, spec.description
-      assert_equal @version.summary, spec.summary
+      assert_equal @version.summary.blank?, spec.summary.blank?
 
       date = @version.built_at
-      assert_equal Time.local(date.year, date.month, date.day), spec.date
+      if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.8.0')
+        assert_equal Time.utc(date.year, date.month, date.day), spec.date
+      else
+        assert_equal Time.local(date.year, date.month, date.day), spec.date
+      end
     end
 
     should "join multiple authors on gemspecs" do
