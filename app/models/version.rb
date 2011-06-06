@@ -242,7 +242,8 @@ class Version < ActiveRecord::Base
   end
 
   def authors_format
-    if !authors.is_a?(Array) || authors.any? { |a| !a.is_a?(String) }
+    a = authors.is_a?(Array) && authors.grep(String)
+    if a.blank? || a.size != authors.size
       errors.add :authors, "must be an Array of Strings"
     end
   end
