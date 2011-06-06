@@ -147,7 +147,7 @@ class RubygemTest < ActiveSupport::TestCase
     should "return version errors in #all_errors" do
       @version = Factory.build(:version)
       @specification = gem_specification_from_gem_fixture('test-0.0.0')
-      @specification.authors = ["bad", 3, "authors"]
+      @specification.authors = [3]
 
       assert_raise ActiveRecord::RecordInvalid do
         @rubygem.update_versions!(@version, @specification)
