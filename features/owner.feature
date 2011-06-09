@@ -3,15 +3,19 @@ Feature: Manage owners
   A gem owner
   Should be able to add and remove gem owners
 
-    Scenario: Gem owner user lists gem owners
+    Scenario Outline: Gem owner user lists gem owners
       Given I am signed up and confirmed as "original@owner.org/password"
       And a user exists with an email of "new@owner.org"
       And I have an api key for "original@owner.org/password"
       And a rubygem exists with a name of "OGem"
       And the "OGem" rubygem is owned by "original@owner.org"
-      When I list the owners of gem "OGem" with my api key
+      When I list the owners of gem "OGem" as "<format>" with my api key
       Then I should see "original@owner.org"
       And I should not see "new@owner.org"
+    Examples:
+      | format |
+      | json   |
+      | yaml   |
 
     Scenario: User who is not an owner of the gem lists gem owners
       Given I am signed up and confirmed as "non@owner.org/password"
