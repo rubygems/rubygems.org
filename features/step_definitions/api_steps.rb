@@ -59,6 +59,11 @@ When /^I list the owners of gem "([^\"]*)" with my api key$/ do |name|
   visit api_v1_rubygem_owners_path(:rubygem_id => name), :get
 end
 
+When /^I list the owners of gem "([^\"]*)" as "([^"]+)" with my api key$/ do |name, format|
+  api_key_header
+  visit "#{api_v1_rubygem_owners_path(name)}.#{format}", :get
+end
+
 When /^I add the owner "([^\"]*)" to the rubygem "([^\"]*)" with my api key$/ do |owner_email, rubygem_name|
   api_key_header
   visit api_v1_rubygem_owners_path(:rubygem_id => rubygem_name), :post, :email => owner_email

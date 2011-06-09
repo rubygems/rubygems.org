@@ -30,7 +30,7 @@ Gemcutter::Application.routes.draw do
 
       resources :dependencies, :only => :index
 
-      resources :rubygems, :path => "gems", :only => [:create, :show, :index], :id => LAZY_RUBYGEM_NAME_MATCHER, :format => /json|xml/ do
+      resources :rubygems, :path => "gems", :only => [:create, :show, :index], :id => LAZY_RUBYGEM_NAME_MATCHER, :format => /json|xml|yaml/ do
         collection do
           delete :yank
           put :unyank
