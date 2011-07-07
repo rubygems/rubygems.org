@@ -11,6 +11,15 @@ Feature: Sign up
       And I press "Sign Up"
       Then I should see error messages
 
+    Scenario: User signs up with an already registered email
+      Given I signed up with "email@person.com/password"
+      When I go to the sign up page
+      And I fill in "Email" with "email@person.com"
+      And I fill in "Password" with "password"
+      And I fill in "Confirm password" with ""
+      And I press "Sign Up"
+      Then I should see error messages
+
     Scenario: User signs up with no handle
       When I go to the sign up page
       And I fill in "Email" with "email@person.com"
