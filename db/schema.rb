@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110601153519) do
+ActiveRecord::Schema.define(:version => 20110710054014) do
 
   create_table "announcements", :force => true do |t|
     t.text     "body"
@@ -142,6 +142,7 @@ ActiveRecord::Schema.define(:version => 20110601153519) do
     t.integer  "downloads_count",   :default => 0
     t.boolean  "latest"
     t.string   "full_name"
+    t.integer  "size"
   end
 
   add_index "versions", ["built_at"], :name => "index_versions_on_built_at"

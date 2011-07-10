@@ -6,6 +6,7 @@ Factory.define :version do |version|
   version.platform          { "ruby" }
   version.association       :rubygem
   version.indexed           true
+  version.size              1024
 end
 
 Factory.sequence :version_number do |n|
