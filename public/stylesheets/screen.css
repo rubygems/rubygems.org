@@ -744,7 +744,7 @@ table {
   text-decoration: underline;
 }
 
-.main .info .meta .versions .platform {
+.main .info .meta .versions .platform .size {
   color: #B0A58C;
   font-size: 0.85em;
   margin-left: 4px;
