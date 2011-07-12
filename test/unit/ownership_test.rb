@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class OwnershipTest < ActiveSupport::TestCase
-
   should "be valid with factory" do
     assert_valid Factory.build(:ownership)
   end
@@ -20,14 +19,6 @@ class OwnershipTest < ActiveSupport::TestCase
     subject { @ownership }
 
     should validate_uniqueness_of(:user_id).scoped_to(:rubygem_id)
-
-    should "create token" do
-      assert_not_nil @ownership.token
-    end
-
-    should "have a 32 character hexadecimal api key" do
-      assert @ownership.token =~ /[a-z0-9]{32}/
-    end
   end
 
   context "with multiple ownerships on the same rubygem" do
@@ -49,5 +40,4 @@ class OwnershipTest < ActiveSupport::TestCase
       assert_equal "Can't delete last owner of a gem.", @ownership_two.errors[:base].first
     end
   end
-
 end

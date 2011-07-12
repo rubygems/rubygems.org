@@ -4,12 +4,7 @@ class Ownership < ActiveRecord::Base
 
   validates :user_id, :uniqueness => {:scope => :rubygem_id}
 
-  before_create :generate_token
   before_destroy :keep_last_owner
-
-  def generate_token
-    self.token = ActiveSupport::SecureRandom.hex
-  end
 
   def keep_last_owner
     if rubygem.owners.count == 1
@@ -19,5 +14,4 @@ class Ownership < ActiveRecord::Base
       true
     end
   end
-
 end
