@@ -9,8 +9,8 @@ class Dependency < ActiveRecord::Base
                     :parse_gem_dependency
   after_create      :push_on_to_list
 
-  validates_presence_of  :requirements
-  validates_inclusion_of :scope, :in => %w( development runtime )
+  validates :requirements, :presence => true
+  validates :scope,        :inclusion => {:in => %w(development runtime)}
 
   attr_accessor :gem_dependency
 

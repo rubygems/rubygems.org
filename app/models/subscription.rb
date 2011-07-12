@@ -2,5 +2,5 @@ class Subscription < ActiveRecord::Base
   belongs_to :rubygem
   belongs_to :user
 
-  validates_uniqueness_of :rubygem_id, :scope => :user_id
+  validates :rubygem_id, :uniqueness => {:scope => :user_id}
 end
