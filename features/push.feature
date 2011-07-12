@@ -73,9 +73,6 @@ Feature: Push Gems
       And the rubygem "unknown" does not exist
 
     @wip
-    Scenario: User pushes gem with bad platform
-
-    @wip
     Scenario: User pushes gem with missing :rubygems_version, :specification_version, :name, :version, :date, :summary, :require_paths
 
     Scenario: User pushes file that is not a gem
