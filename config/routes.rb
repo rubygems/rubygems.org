@@ -1,5 +1,3 @@
-LAZY_RUBYGEM_NAME_MATCHER = /[A-Za-z0-9\-\_\.]+?/
-
 Gemcutter::Application.routes.draw do
   ################################################################################
   # API v1
@@ -28,7 +26,7 @@ Gemcutter::Application.routes.draw do
 
       resources :dependencies, :only => :index
 
-      resources :rubygems, :path => "gems", :only => [:create, :show, :index], :id => LAZY_RUBYGEM_NAME_MATCHER, :format => /json|xml|yaml/ do
+      resources :rubygems, :path => "gems", :only => [:create, :show, :index], :id => Rubygem::ALLOWED_CHARACTERS, :format => /json|xml|yaml/ do
         collection do
           delete :yank
           put :unyank
