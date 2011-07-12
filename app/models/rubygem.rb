@@ -1,5 +1,7 @@
 class Rubygem < ActiveRecord::Base
   SPECIAL_CHARACTERS = ".-_"
+  ALLOWED_CHARACTERS = /[A-Za-z0-9\-\_\.]+/
+  NAME_PATTERN       = /\A#{ALLOWED_CHARACTERS}\Z/
 
   has_many :owners, :through => :ownerships, :source => :user
   has_many :ownerships, :dependent => :destroy
@@ -228,7 +230,7 @@ class Rubygem < ActiveRecord::Base
       errors.add :name, "must be a String"
     elsif name =~ /\A[\d]+\Z/
       errors.add :name, "must include at least one letter"
-    elsif name !~ /\A[A-Za-z0-9_\-\.]+\Z/
+    elsif name !~ NAME_PATTERN
       errors.add :name, "can only include letters, numbers, dashes, and underscores"
     end
   end
