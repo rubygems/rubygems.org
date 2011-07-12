@@ -2,9 +2,6 @@ require File.join(File.dirname(__FILE__), '..', '..', '..', 'test_helper')
 
 class Api::V1::RubygemsControllerTest < ActionController::TestCase
   should "route old paths to new controller" do
-    get_route = {:controller => 'api/v1/rubygems', :action => 'show', :id => "rails", :format => "json"}
-    assert_recognizes(get_route, '/api/v1/gems/rails.json')
-
     post_route = {:controller => 'api/v1/rubygems', :action => 'create'}
     assert_recognizes(post_route, :path => '/api/v1/gems', :method => :post)
   end

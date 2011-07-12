@@ -1,6 +1,6 @@
 class Rubygem < ActiveRecord::Base
   SPECIAL_CHARACTERS = ".-_"
-  ALLOWED_CHARACTERS = /[A-Za-z0-9\-\_\.]+/
+  ALLOWED_CHARACTERS = /[A-Za-z0-9#{Regexp.escape(SPECIAL_CHARACTERS)}]+/
   NAME_PATTERN       = /\A#{ALLOWED_CHARACTERS}\Z/
 
   has_many :owners, :through => :ownerships, :source => :user
