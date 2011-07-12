@@ -96,7 +96,7 @@ class User < ActiveRecord::Base
   end
 
   def rubygems_downloaded(limit = 10, offset = 0)
-    chain = rubygems.order("rubygems.downloads desc").offset(offset)
+    chain = rubygems.by_downloads.offset(offset)
     chain = chain.limit(limit) if limit
     chain
   end

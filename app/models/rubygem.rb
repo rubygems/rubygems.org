@@ -30,9 +30,16 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.search(query)
-    where("versions.indexed and (upper(name) like upper(:query) or upper(translate(name, '#{SPECIAL_CHARACTERS}', '#{' ' * SPECIAL_CHARACTERS.length}')) like upper(:query) or upper(versions.description) like upper(:query))", {:query => "%#{query.strip}%"}).
+    conditions = <<-SQL
+      versions.indexed and
+        (upper(name) like upper(:query) or
+         upper(translate(name, '#{SPECIAL_CHARACTERS}', '#{' ' * SPECIAL_CHARACTERS.length}')) like upper(:query) or
+         upper(versions.description) like upper(:query))
+    SQL
+
+    where(conditions, {:query => "%#{query.strip}%"}).
       includes(:versions).
-      order("rubygems.downloads desc")
+      by_downloads
   end
 
   def self.name_starts_with(letter)
@@ -48,7 +55,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.downloaded(limit=5)
-    with_versions.order("downloads desc").limit(limit)
+    with_versions.by_downloads.limit(limit)
   end
 
   def self.letter(letter)
@@ -69,6 +76,10 @@ class Rubygem < ActiveRecord::Base
 
   def self.versions_key(name)
     "r:#{name}"
+  end
+
+  def self.by_downloads
+    order("rubygems.downloads desc")
   end
 
   def all_errors(version = nil)
@@ -219,7 +230,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def first_built_date
-    versions.order("versions.built_at asc").limit(1).first.built_at
+    versions.by_built_at.limit(1).last.built_at
   end
 
   private
