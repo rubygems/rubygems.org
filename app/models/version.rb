@@ -54,11 +54,8 @@ class Version < ActiveRecord::Base
     order('versions.created_at desc')
   end
 
-  def self.with_indexed(reverse = false)
-    order_str =  "rubygems.name asc"
-    order_str << ", position desc" if reverse
-
-    indexed.includes(:rubygem).order(order_str)
+  def self.with_indexed
+    indexed.order("full_name")
   end
 
   def self.rows_for_index
