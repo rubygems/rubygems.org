@@ -67,7 +67,7 @@ end
 def new_gemspec(name, version, summary, platform)
   gemspec = Gem::Specification.new do |s|
     s.name = name
-    s.platform = "#{platform}"
+    s.platform = platform
     s.version = "#{version}"
     s.authors = ["John Doe"]
     s.date = "#{Time.now.strftime('%Y-%m-%d')}"

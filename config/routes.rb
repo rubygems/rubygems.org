@@ -1,8 +1,6 @@
-RUBYGEM_NAME_MATCHER = /[A-Za-z0-9\-\_\.]+/
 LAZY_RUBYGEM_NAME_MATCHER = /[A-Za-z0-9\-\_\.]+?/
 
 Gemcutter::Application.routes.draw do
-
   ################################################################################
   # API v1
 
@@ -14,7 +12,7 @@ Gemcutter::Application.routes.draw do
 
       resources :downloads, :only => :index
 
-      constraints :id => RUBYGEM_NAME_MATCHER do
+      constraints :id => Rubygem::ALLOWED_CHARACTERS do
         resources :downloads, :only => :show
 
         resources :downloads, :only => :show
@@ -35,7 +33,7 @@ Gemcutter::Application.routes.draw do
           delete :yank
           put :unyank
         end
-        constraints :rubygem_id => RUBYGEM_NAME_MATCHER do
+        constraints :rubygem_id => Rubygem::ALLOWED_CHARACTERS do
           resource :owners, :only => [:show, :create, :destroy]
         end
       end
@@ -80,17 +78,17 @@ Gemcutter::Application.routes.draw do
   resources :stats,     :only => :index
 
   resources :rubygems, :only => :index, :path => "gems" do
-    constraints :rubygem_id => RUBYGEM_NAME_MATCHER do
+    constraints :rubygem_id => Rubygem::ALLOWED_CHARACTERS do
       resource  :subscription, :only => [:create, :destroy]
       resources :versions,     :only => :index
       resource  :stats,        :only => :show
     end
   end
 
-  constraints :id => RUBYGEM_NAME_MATCHER do
+  constraints :id => Rubygem::ALLOWED_CHARACTERS do
     resources :rubygems, :path => "gems", :only => [:show, :edit, :update] do
 
-      constraints :rubygem_id => RUBYGEM_NAME_MATCHER do
+      constraints :rubygem_id => Rubygem::ALLOWED_CHARACTERS do
         resources :versions, :only => :show do
           resource :stats, :only => :show
         end

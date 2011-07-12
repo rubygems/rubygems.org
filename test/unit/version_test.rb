@@ -74,18 +74,18 @@ class VersionTest < ActiveSupport::TestCase
       @version.dependencies << Factory(:dependency, :version => @version, :rubygem => @dependency)
       assert ! Version.with_deps.first.dependencies.empty?
     end
-    
+
     should "sort dependencies alphabetically" do
       @version = Factory.build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
-      
+
       @first_dependency_by_alpha = Factory(:rubygem, :name => 'acts_as_indexed')
       @second_dependency_by_alpha = Factory(:rubygem, :name => 'friendly_id')
       @third_dependency_by_alpha = Factory(:rubygem, :name => 'refinerycms')
-      
+
       @version.dependencies << Factory(:dependency, :version => @version, :rubygem => @second_dependency_by_alpha)
       @version.dependencies << Factory(:dependency, :version => @version, :rubygem => @third_dependency_by_alpha)
       @version.dependencies << Factory(:dependency, :version => @version, :rubygem => @first_dependency_by_alpha)
-      
+
       assert @first_dependency_by_alpha.name, @version.dependencies.first.name
       assert @second_dependency_by_alpha.name, @version.dependencies[1].name
       assert @third_dependency_by_alpha.name, @version.dependencies.last.name
@@ -103,6 +103,11 @@ class VersionTest < ActiveSupport::TestCase
     should_not allow_value("1.2.3-\"[javalol]\"").for(:number)
     should_not allow_value("0.8.45::Gem::PLATFORM::FAILBOAT").for(:number)
     should_not allow_value("1.2.3\n<bad>").for(:number)
+
+    should allow_value("ruby").for(:platform)
+    should allow_value("mswin32").for(:platform)
+    should allow_value("x86_64-linux").for(:platform)
+    should_not allow_value("Gem::Platform::Ruby").for(:platform)
 
     should "give number for #to_s" do
       assert_equal @version.number, @version.to_s
@@ -159,8 +164,8 @@ class VersionTest < ActiveSupport::TestCase
     should "tack on prerelease flag" do
       @version.update_attributes(:number => "0.3.0.pre")
       new_version = Factory(:version, :rubygem  => @version.rubygem,
-                                      :built_at => 1.day.from_now,
-                                      :number   => "0.4.0.pre")
+                            :built_at => 1.day.from_now,
+                            :number   => "0.4.0.pre")
 
       assert @version.prerelease
       assert new_version.prerelease
@@ -176,8 +181,8 @@ class VersionTest < ActiveSupport::TestCase
     should "give no version count for the latest prerelease version" do
       @version.update_attributes(:number => "0.3.0.pre")
       old_version = Factory(:version, :rubygem  => @version.rubygem,
-                                      :built_at => 1.day.from_now,
-                                      :number   => "0.2.0")
+                            :built_at => 1.day.from_now,
+                            :number   => "0.2.0")
 
       assert @version.prerelease
       assert !old_version.prerelease
