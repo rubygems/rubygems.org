@@ -45,7 +45,6 @@ module Vault
   end
 
   def upload(key, value)
-    # For the life of me, I can't figure out how to pass a stream in here from a closed StringIO
     file = directory.files.create(
       :body   => stringify(value),
       :key    => key,
