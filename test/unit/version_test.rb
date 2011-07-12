@@ -485,4 +485,37 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @spec.date,               @version.built_at
     end
   end
+
+  context "indexes" do
+    setup do
+      @first_rubygem  = Factory(:rubygem, :name => "first")
+      @second_rubygem = Factory(:rubygem, :name => "second")
+
+      @first_version  = Factory(:version, :rubygem => @first_rubygem,  :number => "0.0.1", :platform => "ruby")
+      @second_version = Factory(:version, :rubygem => @first_rubygem,  :number => "0.0.2", :platform => "ruby")
+      @other_version  = Factory(:version, :rubygem => @second_rubygem, :number => "0.0.2", :platform => "java")
+      @pre_version    = Factory(:version, :rubygem => @second_rubygem, :number => "0.0.2.pre", :platform => "java", :prerelease => true)
+    end
+
+    should "select all gems" do
+      assert_equal [
+        ["first",  "0.0.1", "ruby"],
+        ["first",  "0.0.2", "ruby"],
+        ["second", "0.0.2", "java"]
+      ], Version.rows_for_index
+    end
+
+    should "select only most recent" do
+      assert_equal [
+        ["first",  "0.0.2", "ruby"],
+        ["second", "0.0.2", "java"]
+      ], Version.rows_for_latest_index
+    end
+
+    should "select only prerelease" do
+      assert_equal [
+        ["second", "0.0.2.pre", "java"]
+      ], Version.rows_for_prerelease_index
+    end
+  end
 end

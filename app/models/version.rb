@@ -59,21 +59,15 @@ class Version < ActiveRecord::Base
   end
 
   def self.rows_for_index
-    query = "SELECT gem.name, v.number, v.platform FROM versions as v, rubygems as gem WHERE v.indexed = 't' and gem.id = v.rubygem_id ORDER BY gem.name asc, position desc"
-
-    connection.select_rows(query)
+    to_rows(:release)
   end
 
   def self.rows_for_latest_index
-    query = "SELECT gem.name, v.number, v.platform FROM versions as v, rubygems as gem WHERE v.indexed = 't' and v.latest = 't' and gem.id = v.rubygem_id ORDER BY gem.name asc, position desc"
-
-    connection.select_rows(query)
+    to_rows(:latest)
   end
 
   def self.rows_for_prerelease_index
-    query = "SELECT gem.name, v.number, v.platform FROM versions as v, rubygems as gem WHERE v.indexed = 't' and v.prerelease = 't' and gem.id = v.rubygem_id ORDER BY gem.name asc, position desc"
-
-    connection.select_rows(query)
+    to_rows(:prerelease)
   end
 
   def self.most_recent
@@ -227,6 +221,16 @@ class Version < ActiveRecord::Base
   end
 
   private
+
+  def self.to_rows(scope)
+    sql = select("rubygems.name, number, platform").
+            indexed.send(scope).
+            from("rubygems, versions").
+            where("rubygems.id = versions.rubygem_id").
+            order("rubygems.name asc, position desc").to_sql
+
+    connection.select_rows(sql)
+  end
 
   def platform_and_number_are_unique
     if Version.exists?(:rubygem_id => rubygem_id,
