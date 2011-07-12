@@ -103,10 +103,6 @@ class Version < ActiveRecord::Base
     find_by_full_name!("#{rubygem.name}-#{slug}")
   end
 
-  def self.platforms
-    select('platform').map(&:platform).uniq
-  end
-
   def self.rubygem_name_for(full_name)
     $redis.hget(info_key(full_name), :name)
   end
