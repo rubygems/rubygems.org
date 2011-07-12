@@ -12,8 +12,7 @@ class Rubygem < ActiveRecord::Base
   has_one :linkset, :dependent => :destroy
 
   validate :ensure_name_format
-  validates_presence_of :name
-  validates_uniqueness_of :name
+  validates :name, :presence => true, :uniqueness => true
 
   def self.with_versions
     where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)")
