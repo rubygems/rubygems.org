@@ -7,8 +7,9 @@ class Version < ActiveRecord::Base
   after_create     :full_nameify!
   after_save       :reorder_versions
 
-  validates_format_of :number,   :with => /\A#{Gem::Version::VERSION_PATTERN}\z/
-  validates_format_of :platform, :with => Rubygem::NAME_PATTERN
+  validates :number,   :format => {:with => /\A#{Gem::Version::VERSION_PATTERN}\z/}
+  validates :platform, :format => {:with => Rubygem::NAME_PATTERN}
+
   validate :platform_and_number_are_unique, :on => :create
   validate :authors_format, :on => :create
 
