@@ -77,8 +77,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.most_recent
-    recent = where(:latest => true)
-    recent.find_by_platform('ruby') || recent.first || first
+    latest.find_by_platform('ruby') || latest.first || first
   end
 
   def self.just_updated
@@ -90,7 +89,8 @@ class Version < ActiveRecord::Base
   end
 
   def self.published(limit)
-    where("built_at <= ? and indexed", DateTime.now.utc).
+    where("built_at <= ?", DateTime.now.utc).
+      indexed.
       by_built_at.
       limit(limit)
   end
