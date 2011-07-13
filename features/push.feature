@@ -11,7 +11,7 @@ Feature: Push Gems
       And I visit the gem page for "RGem"
       Then I should see "RGem"
       And I should see "1.2.3"
-      And I should see "(3Kb)"
+      And I should see "(3 KB)"
 
     Scenario: User pushes existing version of existing gem
       Given I am signed up and confirmed as "email@person.com/password"
