@@ -136,6 +136,10 @@ class Version < ActiveRecord::Base
     size?
   end
 
+  def size_in_kilobytes
+    size.bytes / 1.kilobyte
+  end
+
   def info
     [ description, summary, "This rubygem does not have a description or summary." ].detect(&:present?)
   end
