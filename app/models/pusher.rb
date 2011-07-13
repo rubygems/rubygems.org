@@ -46,7 +46,7 @@ class Pusher
 
   def find
     @rubygem = Rubygem.find_or_initialize_by_name(spec.name)
-    @version = @rubygem.find_or_initialize_version_from_spec(spec)
+    @version = @rubygem.find_or_initialize_version_from_spec(spec, size)
 
     if @version.new_record?
       true
