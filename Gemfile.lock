@@ -145,6 +145,9 @@ GEM
     rr (1.0.2)
     ruby-hmac (0.4.0)
     rubyzip (0.9.4)
+    selenium-client (1.2.18)
+    selenium-rc (2.4.0)
+      selenium-client (>= 1.2.18)
     selenium-webdriver (0.2.2)
       childprocess (>= 0.1.9)
       ffi (>= 1.0.7)
@@ -154,7 +157,7 @@ GEM
     silent-postgres (0.0.8)
     sinatra (1.2.6)
       rack (~> 1.1)
-      tilt (< 2.0, >= 1.2.2)
+      tilt (>= 1.2.2, < 2.0)
     system_timer (1.2.4)
     term-ansicolor (1.0.5)
     thor (0.14.6)
@@ -166,7 +169,7 @@ GEM
     validates_url_format_of (0.1.0)
       activerecord (>= 2.3.4)
     webmock (1.6.4)
-      addressable (> 2.2.5, ~> 2.2)
+      addressable (~> 2.2, > 2.2.5)
       crack (>= 0.1.7)
     webrat (0.7.3)
       nokogiri (>= 1.2.0)
@@ -207,6 +210,7 @@ DEPENDENCIES
   redis
   rest-client
   rr
+  selenium-rc
   shoulda
   silent-postgres
   sinatra
