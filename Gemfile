@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.9'
+gem 'rails', '~> 3.0.9'
 
 gem 'clearance'
 gem 'fog'
@@ -17,7 +17,7 @@ gem 'rack-maintenance', :require => 'rack/maintenance'
 gem 'redis'
 gem 'rest-client',      :require => 'rest_client'
 gem 'sinatra'
-gem 'will_paginate',    '3.0.pre2'
+gem 'will_paginate',    '~> 3.0.pre2'
 gem 'xml-simple'
 gem 'yajl-ruby',        :require => 'yajl/json_gem'
 

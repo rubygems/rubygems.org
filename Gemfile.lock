@@ -205,7 +205,7 @@ DEPENDENCIES
   rack
   rack-maintenance
   rack-test
-  rails (= 3.0.9)
+  rails (~> 3.0.9)
   redgreen
   redis
   rest-client
@@ -218,6 +218,6 @@ DEPENDENCIES
   validates_url_format_of
   webmock
   webrat
-  will_paginate (= 3.0.pre2)
+  will_paginate (~> 3.0.pre2)
   xml-simple
   yajl-ruby
