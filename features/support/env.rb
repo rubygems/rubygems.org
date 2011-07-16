@@ -5,8 +5,21 @@
 # files.
 
 require 'cucumber/rails'
-
 require 'webmock/cucumber'
+require 'webrat'
+require 'webrat/core/matchers'
+require 'webrat/selenium'
+
+include Webrat::Methods
+include Webrat::Selenium::Methods
+include Webrat::Selenium::Matchers
+
+Webrat.configure do |config|
+  config.mode = :rack
+  config.open_error_files = false # Set to true if you want error pages to pop up in the browser
+end
+
+World(Webrat::Selenium::Matchers)
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
 # order to ease the transition to Capybara we set the default here. If you'd
