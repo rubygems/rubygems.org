@@ -97,7 +97,7 @@ GEM
     json (1.5.3)
     json (1.5.3-java)
     json_pure (1.5.3)
-    launchy (0.3.7)
+    launchy (0.4.0)
       configuration (>= 0.0.5)
       rake (>= 0.8.1)
     mail (2.2.19)
@@ -193,7 +193,7 @@ DEPENDENCIES
   gravtastic
   high_voltage
   hoptoad_notifier
-  launchy (= 0.3.7)
+  launchy
   mail
   newrelic_rpm
   nokogiri

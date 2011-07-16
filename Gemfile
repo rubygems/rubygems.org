@@ -40,7 +40,7 @@ group :test do
   gem 'database_cleaner'
   gem 'factory_girl_rails'
   gem 'fakeweb'
-  gem 'launchy',            '0.3.7'
+  gem 'launchy'
   gem 'nokogiri'
   gem 'rack-test',          '0.5.7', :require => 'rack/test'
   gem 'redgreen',           '1.2.2'
