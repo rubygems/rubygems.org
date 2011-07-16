@@ -37,7 +37,7 @@ end
 
 group :test do
   gem 'cucumber-rails'
-  gem 'database_cleaner',   '0.5.2'
+  gem 'database_cleaner'
   gem 'factory_girl_rails', '1.0'
   gem 'fakeweb',            '1.2.6'
   gem 'launchy',            '0.3.7'
