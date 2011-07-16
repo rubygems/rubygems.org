@@ -25,6 +25,10 @@ platforms :ruby_18 do
   gem 'system_timer'
 end
 
+platforms :jruby do
+  gem 'jruby-openssl'
+end
+
 # These gems suck and do stupid things when in maintenance mode
 group :development, :test, :staging, :production do
   gem 'delayed_job'

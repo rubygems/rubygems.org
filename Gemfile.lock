@@ -30,6 +30,7 @@ GEM
     activesupport (3.0.9)
     addressable (2.2.6)
     arel (2.0.10)
+    bouncy-castle-java (1.5.0146.1)
     builder (2.1.2)
     capybara (1.0.0)
       mime-types (>= 1.16)
@@ -92,6 +93,8 @@ GEM
       activesupport
       builder
     i18n (0.5.0)
+    jruby-openssl (0.7.4)
+      bouncy-castle-java
     json (1.5.3)
     json (1.5.3-java)
     json_pure (1.5.3)
@@ -193,6 +196,7 @@ DEPENDENCIES
   gravtastic
   high_voltage
   hoptoad_notifier
+  jruby-openssl
   launchy
   mail
   newrelic_rpm
