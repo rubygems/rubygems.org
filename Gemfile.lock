@@ -113,7 +113,7 @@ GEM
     newrelic_rpm (3.1.0)
     nokogiri (1.5.0)
     nokogiri (1.5.0-java)
-    paul_revere (0.1.5)
+    paul_revere (0.2.0)
       rails (~> 3.0.0)
     pg (0.11.0)
     polyglot (0.3.1)
@@ -200,7 +200,7 @@ DEPENDENCIES
   mail
   newrelic_rpm
   nokogiri
-  paul_revere (= 0.1.5)
+  paul_revere
   pg
   rack
   rack-maintenance
