@@ -16,10 +16,13 @@ gem 'rails', '3.0.5'
 gem 'redis',             '2.1.1'
 gem 'rest-client',       '1.0.3', :require => 'rest_client'
 gem 'sinatra',           '1.2.1'
-gem 'system_timer'
 gem 'will_paginate',     '3.0.pre2'
 gem 'xml-simple',        '1.0.12'
 gem 'yajl-ruby',         '0.8.2', :require => 'yajl/json_gem'
+
+platforms :ruby_18 do
+  gem 'system_timer'
+end
 
 # These gems suck and do stupid things when in maintenance mode
 group :development, :test, :staging, :production do
