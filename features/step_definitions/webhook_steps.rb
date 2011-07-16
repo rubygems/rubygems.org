@@ -1,21 +1,20 @@
 When /^I have added a webhook for "([^\"]*)" to gem "([^\"]*)" with my api key$/ do |web_hook_url, gem_name|
   api_key_header
   WebMock.stub_request(:post, web_hook_url)
-  visit api_v1_web_hooks_path, :post, :gem_name => gem_name, :url => web_hook_url
+  post api_v1_web_hooks_path, :gem_name => gem_name, :url => web_hook_url
 end
 
 When /^I have added a global webhook for "([^\"]*)" with my api key$/ do |web_hook_url|
   api_key_header
   WebMock.stub_request(:post, web_hook_url)
-  visit api_v1_web_hooks_path,
-        :post,
-        :gem_name => WebHook::GLOBAL_PATTERN,
-        :url      => web_hook_url
+  post api_v1_web_hooks_path,
+       :gem_name => WebHook::GLOBAL_PATTERN,
+       :url      => web_hook_url
 end
 
 When /I list the webhooks as (json|yaml) with my api key/ do |format|
   api_key_header
-  visit api_v1_web_hooks_path, :get, :format => format
+  get api_v1_web_hooks_path(:format => format)
 end
 
 Then /^the webhook "([^\"]*)" should receive a POST with gem "([^\"]*)" at version "([^\"]*)"$/ do |web_hook_url, gem_name, version_number|
@@ -30,9 +29,9 @@ end
 
 Then /I should see "(.*)" under "(.*)" in (json|yaml)/ do |web_hook_url, gem_name, format|
   if format == "json"
-    data = ActiveSupport::JSON.decode(response.body)
+    data = ActiveSupport::JSON.decode(page.body)
   else
-    data = YAML.load(response.body)
+    data = YAML.load(page.body)
   end
 
   assert data[gem_name]
@@ -41,34 +40,30 @@ end
 
 When /^I have removed a webhook for "([^\"]*)" from gem "([^\"]*)" with my api key$/ do |web_hook_url, gem_name|
   api_key_header
-  visit remove_api_v1_web_hooks_path,
-        :delete,
+  delete remove_api_v1_web_hooks_path,
         :gem_name => gem_name,
         :url      => web_hook_url
 end
 
 When /^I have removed the global webhook for "([^\"]*)"$/ do |web_hook_url|
   api_key_header
-  visit remove_api_v1_web_hooks_path,
-        :delete,
+  delete remove_api_v1_web_hooks_path,
         :gem_name => WebHook::GLOBAL_PATTERN,
         :url      => web_hook_url
 end
 
 When /^I have fired a webhook to "([^\"]*)" for the "([^\"]*)" gem with my api key$/ do |web_hook_url, gem_name|
   api_key_header
-  visit fire_api_v1_web_hooks_path,
-        :post,
-        :gem_name => gem_name,
-        :url      => web_hook_url
+  post fire_api_v1_web_hooks_path,
+       :gem_name => gem_name,
+       :url      => web_hook_url
 end
 
 When /^I have fired a webhook to "([^\"]*)" for all gems with my api key$/ do |web_hook_url|
   api_key_header
-  visit fire_api_v1_web_hooks_path,
-        :post,
-        :gem_name => WebHook::GLOBAL_PATTERN,
-        :url      => web_hook_url
+  post fire_api_v1_web_hooks_path,
+       :gem_name => WebHook::GLOBAL_PATTERN,
+       :url      => web_hook_url
 end
 
 Then /^the webhook "([^\"]*)" should not receive a POST$/ do |web_hook_url|

@@ -25,4 +25,3 @@ Feature: Dashboard
     And I should see "x86-mswin32"
     And I should see "1,001 downloads"
     And I should see "1,008 downloads"
-    
