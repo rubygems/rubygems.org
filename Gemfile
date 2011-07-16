@@ -32,7 +32,7 @@ group :development, :test, :staging, :production do
 end
 
 group :development, :test do
-  gem 'silent-postgres', '0.0.7'
+  gem 'silent-postgres'
 end
 
 group :test do
