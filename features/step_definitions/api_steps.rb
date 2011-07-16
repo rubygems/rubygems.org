@@ -47,9 +47,7 @@ When /^I migrate the gem "([^\"]*)" with my api key$/ do |name|
 
   subdomain = rubygem.versions.latest.rubyforge_project
 
-  FakeWeb.register_uri(:get,
-                       "http://#{subdomain}.rubyforge.org/migrate-#{name}.html",
-                       :body => token)
+  WebMock.stub_request(:get, "http://#{subdomain}.rubyforge.org/migrate-#{name}.html")
 
   visit migrate_path(:rubygem_id => rubygem.to_param), :put
 end
