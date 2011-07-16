@@ -45,7 +45,7 @@ group :test do
   gem 'rack-test',          '0.5.7', :require => 'rack/test'
   gem 'redgreen',           '1.2.2'
   gem 'rr'
-  gem 'shoulda',            '2.11.1'
+  gem 'shoulda'
   gem 'timecop',            '0.3.5'
   gem 'webmock',            '0.7.3'
   gem 'webrat',             '0.5.3'
