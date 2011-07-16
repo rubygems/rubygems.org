@@ -89,7 +89,7 @@ GEM
     gherkin (2.4.5-java)
       json (>= 1.4.6)
     gravtastic (3.1.0)
-    high_voltage (0.9.1)
+    high_voltage (1.0.0)
     hoptoad_notifier (2.4.1)
       activesupport
       builder
@@ -190,7 +190,7 @@ DEPENDENCIES
   fog
   gchartrb (= 0.8)
   gravtastic
-  high_voltage (= 0.9.1)
+  high_voltage
   hoptoad_notifier (= 2.4.1)
   launchy (= 0.3.7)
   mail
