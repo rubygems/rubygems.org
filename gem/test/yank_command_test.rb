@@ -1,5 +1,4 @@
 require 'helper'
-require 'lib/rubygems/commands/yank_command'
 
 class YankCommandTest < CommandTest
   context "yanking" do
