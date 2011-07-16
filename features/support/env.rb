@@ -4,29 +4,47 @@
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
 
-ENV["RAILS_ENV"] ||= "test"
-require File.expand_path(File.dirname(__FILE__) + '/../../config/environment')
+require 'cucumber/rails'
 
-require 'cucumber/formatter/unicode' # Remove this line if you don't want Cucumber Unicode support
-require 'cucumber/rails/world'
-require 'cucumber/web/tableish'
+# Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
+# order to ease the transition to Capybara we set the default here. If you'd
+# prefer to use XPath just remove this line and adjust any selectors in your
+# steps to use the XPath syntax.
+Capybara.default_selector = :css
 
-require 'webrat'
-require 'webrat/core/matchers'
+# By default, any exception happening in your Rails application will bubble up
+# to Cucumber so that your scenario will fail. This is a different from how 
+# your application behaves in the production environment, where an error page will 
+# be rendered instead.
+#
+# Sometimes we want to override this default behaviour and allow Rails to rescue
+# exceptions and display an error page (just like when the app is running in production).
+# Typical scenarios where you want to do this is when you test your error pages.
+# There are two ways to allow Rails to rescue exceptions:
+#
+# 1) Tag your scenario (or feature) with @allow-rescue
+#
+# 2) Set the value below to true. Beware that doing this globally is not
+# recommended as it will mask a lot of errors for you!
+#
+ActionController::Base.allow_rescue = false
 
-Webrat.configure do |config|
-  config.mode = :rails
-  config.open_error_files = false # Set to true if you want error pages to pop up in the browser
+# Remove/comment out the lines below if your app doesn't have a database.
+# For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
+begin
+  DatabaseCleaner.strategy = :transaction
+rescue NameError
+  raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
 end
 
-
-# If you set this to false, any error raised from within your app will bubble 
-# up to your step definition and out to cucumber unless you catch it somewhere
-# on the way. You can make Rails rescue errors and render error pages on a
-# per-scenario basis by tagging a scenario or feature with the @allow-rescue tag.
+# You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
+# See the DatabaseCleaner documentation for details. Example:
 #
-# If you set this to true, Rails will rescue all errors and render error
-# pages, more or less in the same way your application would behave in the
-# default production environment. It's not recommended to do this for all
-# of your scenarios, as this makes it hard to discover errors in your application.
-ActionController::Base.allow_rescue = false
+#   Before('@no-txn,@selenium,@culerity,@celerity,@javascript') do
+#     DatabaseCleaner.strategy = :truncation, {:except => %w[widgets]}
+#   end
+#
+#   Before('~@no-txn', '~@selenium', '~@culerity', '~@celerity', '~@javascript') do
+#     DatabaseCleaner.strategy = :transaction
+#   end
+#
