@@ -90,7 +90,7 @@ GEM
       json (>= 1.4.6)
     gravtastic (3.1.0)
     high_voltage (1.0.0)
-    hoptoad_notifier (2.4.1)
+    hoptoad_notifier (2.4.11)
       activesupport
       builder
     i18n (0.5.0)
@@ -191,7 +191,7 @@ DEPENDENCIES
   gchartrb (= 0.8)
   gravtastic
   high_voltage
-  hoptoad_notifier (= 2.4.1)
+  hoptoad_notifier
   launchy (= 0.3.7)
   mail
   newrelic_rpm (= 2.13.4)
