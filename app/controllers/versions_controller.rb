@@ -12,7 +12,7 @@ class VersionsController < ApplicationController
   end
 
   protected
-  
+
   def find_rubygem
     @rubygem = Rubygem.find_by_name(params[:rubygem_id])
   end

@@ -10,7 +10,7 @@ set :application, "gemcutter"
 set(:rails_env) { "#{stage}"}
 
 # Note that this requires you run 'ssh-add' on your workstation in order to
-# add your private key to the ssh agent.  If that's not good for you, just uncomment the 
+# add your private key to the ssh agent.  If that's not good for you, just uncomment the
 # "set :deploy_via, :copy" and comment "set :deploy_via, :remote_cache"
 set :scm, :git
 set :repository, "git://github.com/rubygems/#{application}"

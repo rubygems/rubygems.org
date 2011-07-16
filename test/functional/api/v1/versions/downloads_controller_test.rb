@@ -6,7 +6,7 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
   end
 
   def get_search(version, from, to)
-    get :search, :version_id => "#{version.full_name}.json", 
+    get :search, :version_id => "#{version.full_name}.json",
                  :from => from.to_date.to_s,
                  :to => to.to_date.to_s
   end
@@ -127,7 +127,7 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
 
     context "for an unknown gem" do
       setup do
-        get :index, :version_id => "nonexistent_gem", 
+        get :index, :version_id => "nonexistent_gem",
                     :from => @one_hundred_days_ago,
                     :to => @one_hundred_eighty_nine_days_ago
       end
