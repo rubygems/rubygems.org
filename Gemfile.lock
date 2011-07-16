@@ -192,7 +192,7 @@ DEPENDENCIES
   factory_girl_rails
   fakeweb
   fog
-  gchartrb (= 0.8)
+  gchartrb
   gravtastic
   high_voltage
   hoptoad_notifier
@@ -204,20 +204,20 @@ DEPENDENCIES
   pg
   rack
   rack-maintenance
-  rack-test (= 0.5.7)
+  rack-test
   rails (= 3.0.9)
-  redgreen (= 1.2.2)
+  redgreen
   redis
   rest-client
   rr
   shoulda
   silent-postgres
-  sinatra (= 1.2.6)
+  sinatra
   system_timer
-  timecop (= 0.3.5)
-  validates_url_format_of (= 0.1.0)
+  timecop
+  validates_url_format_of
   webmock
   webrat
   will_paginate (= 3.0.pre2)
   xml-simple
-  yajl-ruby (= 0.8.2)
+  yajl-ruby
