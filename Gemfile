@@ -43,7 +43,6 @@ group :test do
   gem 'cucumber-rails'
   gem 'database_cleaner'
   gem 'factory_girl_rails'
-  gem 'fakeweb'
   gem 'launchy'
   gem 'nokogiri'
   gem 'rack-test',          :require => 'rack/test'
