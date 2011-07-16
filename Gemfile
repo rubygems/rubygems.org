@@ -47,6 +47,7 @@ group :test do
   gem 'nokogiri'
   gem 'rack-test',          :require => 'rack/test'
   gem 'rr'
+  gem 'selenium-rc'
   gem 'shoulda'
   gem 'timecop'
   gem 'webmock'
