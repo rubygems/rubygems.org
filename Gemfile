@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 gem 'rails', '3.0.9'
 
-gem 'clearance',        '0.9.0.rc9'
+gem 'clearance'
 gem 'fog'
 gem 'gchartrb',         '0.8',   :require => 'google_chart'
 gem 'gravtastic',       '2.1.3'
