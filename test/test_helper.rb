@@ -1,10 +1,7 @@
 ENV["RAILS_ENV"] = "test"
-require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
+require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
-
-set :environment, :test
-WebMock.disable_net_connect!
-
+require 'webmock/test_unit'
 require 'clearance/shoulda_macros'
 
 class ActiveSupport::TestCase
@@ -59,7 +56,6 @@ def gem_specification_from_gem_fixture(name)
 end
 
 def stub_uploaded_token(gem_name, token, status = [200, "Success"])
-  WebMock.stub_request(:get,
-                       "http://#{gem_name}.rubyforge.org/migrate-#{gem_name}.html").
+  WebMock.stub_request(:get, "http://#{gem_name}.rubyforge.org/migrate-#{gem_name}.html").
     to_return(:body => token + "\n", :status => status)
 end
