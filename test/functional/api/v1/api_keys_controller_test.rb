@@ -25,7 +25,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
   context "on GET to show with unconfirmed user" do
     setup do
       @user = Factory(:user)
-      @request.env["HTTP_AUTHORIZATION"] = "Basic " + 
+      @request.env["HTTP_AUTHORIZATION"] = "Basic " +
         Base64::encode64("#{@user.email}:#{@user.password}")
       get :show
     end
@@ -38,7 +38,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
   context "on GET to show with bad credentials" do
     setup do
       @user = Factory(:user)
-      @request.env["HTTP_AUTHORIZATION"] = "Basic " + 
+      @request.env["HTTP_AUTHORIZATION"] = "Basic " +
         Base64::encode64("bad:creds")
       get :show
     end
@@ -51,7 +51,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
   context "on GET to show with confirmed user" do
     setup do
       @user = Factory(:email_confirmed_user)
-      @request.env["HTTP_AUTHORIZATION"] = "Basic " + 
+      @request.env["HTTP_AUTHORIZATION"] = "Basic " +
         Base64::encode64("#{@user.email}:#{@user.password}")
       get :show
     end
@@ -60,7 +60,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       assert_equal @user.api_key, @response.body
     end
   end
-  
+
   context "on PUT to reset with signed in user" do
     setup do
       @user = Factory(:email_confirmed_user)
@@ -76,7 +76,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       assert_redirected_to edit_profile_path
     end
   end
-  
+
   context "on PUT to reset with no signed in user" do
     setup do
       put :reset

@@ -70,7 +70,7 @@ class Dependency < ActiveRecord::Base
 
   def use_gem_dependency
     if gem_dependency.class != Gem::Dependency
-      errors.add :rubygem, "Please use Gem::Dependency to specify dependencies." 
+      errors.add :rubygem, "Please use Gem::Dependency to specify dependencies."
       false
     end
   end
