@@ -47,7 +47,6 @@ group :test do
   gem 'launchy'
   gem 'nokogiri'
   gem 'rack-test',          :require => 'rack/test'
-  gem 'redgreen'
   gem 'rr'
   gem 'shoulda'
   gem 'timecop'
