@@ -113,7 +113,7 @@ GEM
       rails (~> 3.0.0)
     pg (0.11.0)
     polyglot (0.3.1)
-    rack (1.2.2)
+    rack (1.2.3)
     rack-maintenance (0.3.0)
       rack (>= 1.0)
     rack-mount (0.6.14)
@@ -195,8 +195,8 @@ DEPENDENCIES
   nokogiri
   paul_revere (= 0.1.5)
   pg
-  rack (= 1.2.2)
-  rack-maintenance (= 0.3.0)
+  rack
+  rack-maintenance
   rack-test (= 0.5.7)
   rails (= 3.0.9)
   redgreen (= 1.2.2)
