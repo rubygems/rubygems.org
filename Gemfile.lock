@@ -141,7 +141,8 @@ GEM
     rdoc (3.8)
     redgreen (1.2.2)
     redis (2.2.1)
-    rest-client (1.0.3)
+    rest-client (1.6.3)
+      mime-types (>= 1.16)
     rr (0.10.11)
     ruby-hmac (0.4.0)
     rubyzip (0.9.4)
@@ -204,7 +205,7 @@ DEPENDENCIES
   rails (= 3.0.9)
   redgreen (= 1.2.2)
   redis
-  rest-client (= 1.0.3)
+  rest-client
   rr (= 0.10.11)
   shoulda (= 2.11.1)
   silent-postgres (= 0.0.7)
