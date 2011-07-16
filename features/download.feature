@@ -29,7 +29,7 @@ Feature: Download Gems
     When I follow "1.0.0"
     Then I should see "5 total downloads"
     And I should see "2 for this version"
-    
+
     When I download the rubygem "sandworm" version "2.0.0" 1000 times
     And the system processes jobs
     And I visit the gem page for "sandworm"

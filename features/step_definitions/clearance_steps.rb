@@ -1,7 +1,7 @@
 # General
 
 Then /^I should see error messages$/ do
-  assert_match /error(s)? prohibited/m, response.body
+  assert_match /error(s)? prohibited/m, page.body
 end
 
 # Database
@@ -65,8 +65,7 @@ end
 
 When /^I follow the confirmation link sent to "(.*)"$/ do |email|
   user = User.find_by_email(email)
-  visit new_user_confirmation_path(:user_id => user,
-                                   :token   => user.confirmation_token)
+  get new_user_confirmation_path(:user_id => user, :token => user.confirmation_token)
 end
 
 Then /^a password reset message should be sent to "(.*)"$/ do |email|
@@ -80,13 +79,12 @@ end
 
 When /^I follow the password reset link sent to "(.*)"$/ do |email|
   user = User.find_by_email(email)
-  visit edit_user_password_path(:user_id => user,
-                                :token   => user.confirmation_token)
+  get edit_user_password_path(:user_id => user, :token => user.confirmation_token)
 end
 
 When /^I try to change the password of "(.*)" without token$/ do |email|
   user = User.find_by_email(email)
-  visit edit_user_password_path(:user_id => user)
+  get edit_user_password_path(:user_id => user)
 end
 
 Then /^I should be forbidden$/ do
@@ -99,11 +97,11 @@ When /^I sign in as "(.*)\/(.*)"$/ do |email, password|
   When %{I go to the sign in page}
   And %{I fill in "Email" with "#{email}"}
   And %{I fill in "Password" with "#{password}"}
-  And %{I press "Sign In"}
+  And %{I press "Sign in"}
 end
 
 When /^I sign out$/ do
-  visit '/session', :delete
+  delete '/session'
 end
 
 When /^I request password reset link to be sent to "(.*)"$/ do |email|
