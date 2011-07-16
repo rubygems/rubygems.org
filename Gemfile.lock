@@ -168,11 +168,12 @@ GEM
     validates_url_format_of (0.1.0)
       activerecord (>= 2.3.4)
     webmock (1.6.4)
-      addressable (~> 2.2, > 2.2.5)
+      addressable (> 2.2.5, ~> 2.2)
       crack (>= 0.1.7)
-    webrat (0.5.3)
+    webrat (0.7.3)
       nokogiri (>= 1.2.0)
       rack (>= 1.0)
+      rack-test (>= 0.5.3)
     will_paginate (3.0.pre2)
     xml-simple (1.1.0)
     xpath (0.1.4)
@@ -216,7 +217,7 @@ DEPENDENCIES
   timecop (= 0.3.5)
   validates_url_format_of (= 0.1.0)
   webmock
-  webrat (= 0.5.3)
+  webrat
   will_paginate (= 3.0.pre2)
   xml-simple
   yajl-ruby (= 0.8.2)
