@@ -56,7 +56,7 @@ GEM
       nokogiri (>= 1.4.6)
     daemons (1.1.4)
     database_cleaner (0.5.2)
-    delayed_job (2.1.2)
+    delayed_job (2.1.4)
       activesupport (~> 3.0)
       daemons
     diesel (0.1.5)
@@ -185,7 +185,7 @@ DEPENDENCIES
   clearance
   cucumber-rails
   database_cleaner (= 0.5.2)
-  delayed_job (= 2.1.2)
+  delayed_job
   factory_girl_rails (= 1.0)
   fakeweb (= 1.2.6)
   fog
