@@ -40,16 +40,15 @@ group :development, :test do
 end
 
 group :test do
-  gem 'cucumber-rails'
+  gem 'cucumber-rails',     '~> 0.3.2'
   gem 'database_cleaner'
   gem 'factory_girl_rails'
   gem 'launchy'
   gem 'nokogiri'
   gem 'rack-test',          :require => 'rack/test'
   gem 'rr'
-  gem 'selenium-rc'
   gem 'shoulda'
   gem 'timecop'
   gem 'webmock'
-  gem 'webrat'
+  gem 'webrat',             '~> 0.5.3'
 end
