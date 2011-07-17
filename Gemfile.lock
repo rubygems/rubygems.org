@@ -141,7 +141,7 @@ GEM
     redis (2.2.1)
     rest-client (1.6.3)
       mime-types (>= 1.16)
-    rr (1.0.2)
+    rr (1.0.3)
     ruby-hmac (0.4.0)
     rubyzip (0.9.4)
     selenium-client (1.2.18)
