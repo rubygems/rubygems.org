@@ -60,3 +60,4 @@ Feature: Sign up
       And I follow the confirmation link sent to "email@person.com"
       Then I should see "Already confirmed email. Please sign in."
       And I should be signed out
+
