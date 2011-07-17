@@ -181,6 +181,7 @@ DEPENDENCIES
   rack-maintenance
   rack-test
   rails (~> 3.0.9)
+  rdoc
   redis
   rest-client
   rr
