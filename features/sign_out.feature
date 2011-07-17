@@ -13,3 +13,4 @@ Feature: Sign out
       And I should be signed out
       When I return next time
       Then I should be signed out
+
