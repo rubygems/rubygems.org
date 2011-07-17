@@ -91,7 +91,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def public_versions(limit = nil)
-    versions.by_position.published(limit)
+    versions.published(limit).by_position
   end
 
   def hosted?

@@ -278,11 +278,8 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to show with a gem that has multiple versions" do
     setup do
       @rubygem = Factory(:rubygem)
-      @versions = [
-        Factory(:version, :number => "2.0.0rc1", :rubygem => @rubygem, :created_at => 1.day.ago),
-        Factory(:version, :number => "1.9.9", :rubygem => @rubygem, :created_at => 1.minute.ago),
-        Factory(:version, :number => "1.9.9.rc4", :rubygem => @rubygem, :created_at => 2.days.ago)
-      ]
+      @older_version = Factory(:version, :number => "1.0.0", :rubygem => @rubygem, :created_at => 2.minutes.ago)
+      @latest_version = Factory(:version, :number => "2.0.0", :rubygem => @rubygem, :created_at => 1.minute.ago)
       get :show, :id => @rubygem.to_param
     end
 
@@ -291,20 +288,12 @@ class RubygemsControllerTest < ActionController::TestCase
     should assign_to :rubygem
     should "render info about the gem" do
       assert_contain @rubygem.name
-      assert_contain @versions[0].number
-      assert_contain @versions[0].built_at.to_date.to_formatted_s(:long)
+      assert_contain @latest_version.number
+      assert_contain @latest_version.built_at.to_date.to_formatted_s(:long)
 
       assert_contain "Versions"
       assert_contain @rubygem.versions.last.number
       assert_contain @rubygem.versions.last.built_at.to_date.to_formatted_s(:long)
-    end
-
-    should "render versions in correct order" do
-      assert_select("div.versions > ol > li") do |elements|
-        elements.each_with_index do |elem, index|
-          assert_select elem, "a", @versions[index].number
-        end
-      end
     end
   end
 
