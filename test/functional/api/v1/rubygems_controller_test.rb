@@ -15,7 +15,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       sign_in_as(@user)
     end
 
-    context "On GET to show with json for a gem that's hosted" do
+    context "On GET to show with JSON for a gem that's hosted" do
       setup do
         @rubygem = Factory(:rubygem, :name => "foo")
         Factory(:version, :rubygem => @rubygem)
@@ -24,12 +24,14 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       should assign_to(:rubygem) { @rubygem }
       should respond_with :success
-      should "return a json hash" do
-        assert_not_nil JSON.parse(@response.body)
+      should "return a JSON hash" do
+        response = JSON.parse(@response.body)
+        assert_not_nil response
+        assert_kind_of Hash, response
       end
     end
 
-    context "On GET to show with json for a gem that's hosted with a period in its name" do
+    context "On GET to show with JSON for a gem that's hosted with a period in its name" do
       setup do
         @rubygem = Factory(:rubygem, :name => "foo.rb")
         Factory(:version, :rubygem => @rubygem)
@@ -38,12 +40,14 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       should assign_to(:rubygem) { @rubygem }
       should respond_with :success
-      should "return a json hash" do
-        assert_not_nil JSON.parse(@response.body)
+      should "return a JSON hash" do
+        response = JSON.parse(@response.body)
+        assert_not_nil response
+        assert_kind_of Hash, response
       end
     end
 
-    context "On GET to show with xml for a gem that's hosted" do
+    context "On GET to show with XML for a gem that's hosted" do
       setup do
         @rubygem = Factory(:rubygem)
         Factory(:version, :rubygem => @rubygem)
@@ -52,12 +56,14 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       should assign_to(:rubygem) { @rubygem }
       should respond_with :success
-      should "return a json hash" do
-        assert_not_nil Nokogiri.parse(@response.body).root
+      should "return an XML document" do
+        response = Nokogiri.parse(@response.body).root
+        assert_not_nil response
+        assert_kind_of Nokogiri::XML::Element, response
       end
     end
 
-    context "On GET to show with xml for a gem that's hosted with a period in its name" do
+    context "On GET to show with XML for a gem that's hosted with a period in its name" do
       setup do
         @rubygem = Factory(:rubygem, :name => "foo.rb")
         Factory(:version, :rubygem => @rubygem)
@@ -66,10 +72,45 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       should assign_to(:rubygem) { @rubygem }
       should respond_with :success
-      should "return a json hash" do
-        assert_not_nil Nokogiri.parse(@response.body).root
+      should "return an XML document" do
+        response = Nokogiri.parse(@response.body).root
+        assert_not_nil response
+        assert_kind_of Nokogiri::XML::Element, response
       end
     end
+
+    context "On GET to show with YAML for a gem that's hosted" do
+      setup do
+        @rubygem = Factory(:rubygem)
+        Factory(:version, :rubygem => @rubygem)
+        get :show, :id => @rubygem.to_param, :format => "yaml"
+      end
+
+      should assign_to(:rubygem) { @rubygem }
+      should respond_with :success
+      should "return a YAML hash" do
+        response = YAML.load(@response.body)
+        assert_not_nil response
+        assert_kind_of Hash, response
+      end
+    end
+
+    context "On GET to show with YAML for a gem that's hosted with a period in its name" do
+      setup do
+        @rubygem = Factory(:rubygem, :name => "foo.rb")
+        Factory(:version, :rubygem => @rubygem)
+        get :show, :id => @rubygem.to_param, :format => "yaml"
+      end
+
+      should assign_to(:rubygem) { @rubygem }
+      should respond_with :success
+      should "return an YAML hash" do
+        response = YAML.load(@response.body)
+        assert_not_nil response
+        assert_kind_of Hash, response
+      end
+    end
+
     context "On GET to show for a gem that doesn't match the slug" do
       setup do
         @rubygem = Factory(:rubygem, :name => "ZenTest", :slug => "zentest")
@@ -79,7 +120,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       should assign_to(:rubygem) { @rubygem }
       should respond_with :success
-      should "return a json hash" do
+      should "return a JSON hash" do
         assert_not_nil JSON.parse(@response.body)
       end
     end
@@ -345,7 +386,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
-    context "On GET to index with json for a list of owned gems" do
+    context "On GET to index with JSON for a list of owned gems" do
       setup do
         @mygems = [ Factory(:rubygem, :name => "SomeGem"), Factory(:rubygem, :name => "AnotherGem") ]
         @mygems.each do |rubygem|
@@ -363,7 +404,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       should assign_to(:rubygems) { [@rubygem] }
       should respond_with :success
-      should "return a json hash" do
+      should "return a JSON hash" do
         assert_not_nil JSON.parse(@response.body)
       end
       should "only return my gems" do
@@ -374,7 +415,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
   end
 
   context "No signed in-user" do
-    context "On GET to index with json for a list of gems" do
+    context "On GET to index with JSON for a list of gems" do
       setup do
         get :index, :format => "json"
       end
