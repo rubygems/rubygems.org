@@ -1,4 +1,5 @@
-require File.join(File.dirname(__FILE__), '..', '..', '..', 'test_helper')
+require 'test_helper'
+require 'yaml'
 
 class Api::V1::RubygemsControllerTest < ActionController::TestCase
   should "route old paths to new controller" do
