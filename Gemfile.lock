@@ -82,8 +82,8 @@ GEM
       bouncy-castle-java
     json (1.5.3)
     json (1.5.3-java)
-    launchy (2.0.2)
-    launchy (2.0.2-java)
+    launchy (2.0.3)
+    launchy (2.0.3-java)
       spoon (~> 0.0.1)
     mail (2.2.19)
       activesupport (>= 2.3.6)
