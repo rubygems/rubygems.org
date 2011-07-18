@@ -28,8 +28,8 @@
         <% if @latest_version.indexed %>
           <%= subscribe_link(@rubygem) %>
           <%= unsubscribe_link(@rubygem) %>
+          <%= link_to t('.stats_header'), rubygem_stats_path(@rubygem), :id => "stats" %>
         <% end %>
-        <%= link_to t('.stats_header'), rubygem_stats_path(@rubygem), :id => "stats" %>
       </div>
 
       <% if @latest_version.indexed %>
