@@ -9,17 +9,23 @@ class Api::V1::RubygemsController < Api::BaseController
 
   def index
     @rubygems = current_user.rubygems.with_versions
-    respond_to do |wants|
-      wants.any(:json, :all) { render :json => @rubygems }
-      wants.xml              { render :xml  => @rubygems }
+    respond_to do |format|
+      format.any(:json, :all) { render :json => @rubygems }
+      format.xml              { render :xml  => @rubygems }
+      # Convert object to JSON and back before converting to YAML in order to
+      # strip the object type (e.g. !ruby/ActiveRecord:Rubygem) from response
+      format.yaml             { render :text => JSON.load(@rubygems.to_json).to_yaml }
     end
   end
 
   def show
     if @rubygem.hosted?
-      respond_to do |wants|
-        wants.json { render :json => @rubygem }
-        wants.xml  { render :xml  => @rubygem }
+      respond_to do |format|
+        format.json { render :json => @rubygem }
+        format.xml  { render :xml  => @rubygem }
+        # Convert object to JSON and back before converting to YAML in order to
+        # strip the object type (e.g. !ruby/ActiveRecord:Rubygem) from response
+        format.yaml { render :text => JSON.load(@rubygem.to_json).to_yaml }
       end
     else
       render :text => "This gem does not exist.", :status => :not_found

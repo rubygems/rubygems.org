@@ -9,7 +9,7 @@ class Api::V1::SearchesController < Api::BaseController
       format.xml  { render :xml  => @gems }
       # Convert object to JSON and back before converting to YAML in order to
       # strip the object type (e.g. !ruby/ActiveRecord:Rubygem) from response
-      format.yaml { render :text => JSON.load(@gems.to_json).to_yaml}
+      format.yaml { render :text => JSON.load(@gems.to_json).to_yaml }
     end
   end
 
