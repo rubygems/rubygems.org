@@ -16,9 +16,7 @@ module ChartHelper
   end
 
   def downloads_over_time_chart(versions, days_ago = 90)
-    rubygem         = versions.first.rubygem
     download_counts = Download.counts_by_day_for_versions(versions, days_ago)
-
     range = [nil, 0]
     chart = GoogleChart::LineChart.new('630x400', "Downloads over the last #{pluralize(days_ago, 'day')}") do |lc|
       versions.each_with_index do |version, idx|
