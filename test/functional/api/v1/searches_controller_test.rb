@@ -13,7 +13,6 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
       setup do
         get :show, :query => "match", :format => "json"
       end
-
       should respond_with :success
       should "return a json hash" do
         assert_not_nil JSON.parse(@response.body)
@@ -29,7 +28,6 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
       setup do
         get :show, :query => "match", :format => "xml"
       end
-
       should respond_with :success
       should "return xml" do
         assert_not_nil Nokogiri.parse(@response.body).root
@@ -38,6 +36,21 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
         gems = Nokogiri.parse(@response.body).css("name")
         assert_equal 1, gems.size
         assert_equal "match", gems.first.content
+      end
+    end
+
+    context "On GET to show with query=match for yaml" do
+      setup do
+        get :show, :query => "match", :format => "yaml"
+      end
+      should respond_with :success
+      should "return yaml" do
+        assert_not_nil YAML.load(@response.body)
+      end
+      should "only include matching gems" do
+        gems = YAML.load(@response.body)
+        assert_equal 1, gems.size
+        assert_equal "match", gems.first['name']
       end
     end
   end
