@@ -7,14 +7,9 @@ Gemcutter::Application.routes.draw do
       resource :api_key, :only => :show do
         put :reset
       end
-
       resources :downloads, :only => :index
-
       constraints :id => Rubygem::ROUTE_PATTERN do
         resources :downloads, :only => :show
-
-        resources :downloads, :only => :show
-
         resources :versions, :only => :show do
           resources :downloads, :only => :index, :controller => "versions/downloads" do
             collection do
