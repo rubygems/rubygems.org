@@ -1,3 +1,5 @@
+require 'yaml'
+
 class Api::V1::WebHooksController < Api::BaseController
   skip_before_filter :verify_authenticity_token
 

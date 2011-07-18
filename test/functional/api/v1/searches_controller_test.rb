@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'yaml'
 
 class Api::V1::SearchesControllerTest < ActionController::TestCase
   context "with some gems" do
