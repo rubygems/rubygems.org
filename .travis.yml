@@ -1,0 +1,4 @@
+before_script: cp config/database.yml.example config/database.yml
+script: bundle exec rake db:migrate db:test:prepare default
+rvm:
+  - ree
