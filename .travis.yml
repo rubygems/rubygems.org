@@ -1,4 +1,4 @@
-before_script: cp config/database.yml.example config/database.yml
+before_script: cp config/database.yml.example config/database.yml && bundle exec rake db:create
 script: bundle exec rake db:migrate db:test:prepare default
 rvm:
   - ree
