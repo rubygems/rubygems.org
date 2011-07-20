@@ -11,7 +11,7 @@ h2. Purpose
 h2. Links
 
 "Mailing List":http://groups.google.com/group/gemcutter
-"FAQ":http://gemcutter.org/pages/faq
+"FAQ":http://help.rubygems.org/kb/gemcutter/faq
 IRC: #gemcutter on irc.freenode.net
 
 h2. Contributions
