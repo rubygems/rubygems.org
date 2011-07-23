@@ -59,3 +59,26 @@ def stub_uploaded_token(gem_name, token, status = [200, "Success"])
   WebMock.stub_request(:get, "http://#{gem_name}.rubyforge.org/migrate-#{gem_name}.html").
     to_return(:body => token + "\n", :status => status)
 end
+
+def gem_spec(opts = {})
+  Gem::Specification.new do |s|
+    s.name = %q{test}
+    s.version = opts[:version] || "0.0.0"
+    s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+    s.authors = ["Joe User"]
+    s.description = %q{This is my awesome gem.}
+    s.email = %q{joe@user.com}
+    s.files = [
+      "README.textile",
+      "Rakefile",
+      "VERSION.yml",
+      "lib/test.rb",
+      "test/test_test.rb"
+    ]
+    s.homepage = %q{http://user.com/test}
+  end
+end
+
+def gem_file(name = "test-0.0.0.gem")
+  File.open(File.expand_path("../gems/#{name}", __FILE__))
+end
