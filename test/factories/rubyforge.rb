@@ -1,5 +1,6 @@
-Factory.define :rubyforger do |rf|
-  rf.email                 { Factory.next :email }
-  rf.encrypted_password    { Digest::SHA1.hexdigest("password") }
+FactoryGirl.define do
+  factory :rubyforger do
+    email
+    encrypted_password Digest::SHA1.hexdigest("password")
+  end
 end
-

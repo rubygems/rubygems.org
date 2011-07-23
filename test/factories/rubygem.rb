@@ -1,12 +1,16 @@
-Factory.sequence(:name) { |n| "RubyGem#{n}" }
+FactoryGirl.define do
+  sequence :name do |n|
+    "RubyGem#{n}"
+  end
 
-Factory.define :rubygem do |rubygem|
-  rubygem.name        { Factory.next(:name) }
-  rubygem.association :linkset
-end
+  factory :rubygem do
+    linkset
+    name
+  end
 
-Factory.define :rubygem_with_downloads, :parent => :rubygem do |rubygem|
-  rubygem.after_create do |r|
-    $redis[Download.key(r)] = r['downloads']
+  factory :rubygem_with_downloads, :parent => :rubygem do
+    after_create do |r|
+      $redis[Download.key(r)] = r['downloads']
+    end
   end
 end
