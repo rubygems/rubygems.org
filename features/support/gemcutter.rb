@@ -7,6 +7,8 @@ TEST_DIR = File.join('/', 'tmp', 'gemcutter')
 DatabaseCleaner.clean_with :truncation
 DatabaseCleaner.strategy = :transaction
 
+require 'factory_girl/step_definitions'
+
 Before do
   WebMock.reset_webmock
   DatabaseCleaner.start
