@@ -1,76 +1,61 @@
 Given /^I have an api key for "([^\"]*)"$/ do |creds|
   user, pass = creds.split('/')
-  basic_auth(user, pass)
-  visit api_v1_api_key_path, :get
-  @api_key = response.body
+  page.driver.browser.basic_authorize(user, pass)
+  visit api_v1_api_key_path
+  @api_key = page.source
 end
 
 When /^I push the gem "([^\"]*)" with my api key$/ do |name|
   api_key_header
-
   path = File.join(TEST_DIR, name)
-  visit api_v1_rubygems_path, :post, File.open(path).read
+  page.driver.post api_v1_rubygems_path, File.read(path)
 end
 
-When 'I push an invalid .gem file' do
+When /^I push an invalid .gem file$/ do
   api_key_header
-  visit api_v1_rubygems_path, :post, 'ZZZZZZZZZZZZZZZZZZ'
+  page.driver.post api_v1_rubygems_path, 'ZZZZZZZZZZZZZZZZZZ'
 end
 
 When /^I yank the gem "([^\"]*)" version "([^\"]*)" with my api key$/ do |name, version_number|
-  header("HTTP_AUTHORIZATION", @api_key)
-  visit yank_api_v1_rubygems_path(:gem_name => name, :version => version_number), :delete
-  assert_match /Successfully yanked gem: #{name} \(#{version_number}\)/, response.body
+  api_key_header
+  page.driver.delete yank_api_v1_rubygems_path(:gem_name => name, :version => version_number)
+  assert_match /Successfully yanked gem: #{name} \(#{version_number}\)/, page.source
 end
 
 When /^I attempt to yank the gem "([^\"]*)" version "([^\"]*)" with my api key$/ do |name, version_number|
-  header("HTTP_AUTHORIZATION", @api_key)
-  visit yank_api_v1_rubygems_path(:gem_name => name, :version => version_number), :delete
+  api_key_header
+  page.driver.delete yank_api_v1_rubygems_path(:gem_name => name, :version => version_number)
 end
 
 When /^I unyank the gem "([^\"]*)" version "([^\"]*)" with my api key$/ do |name, version_number|
-  header("HTTP_AUTHORIZATION", @api_key)
-  visit unyank_api_v1_rubygems_path(:gem_name => name, :version => version_number), :put
-  assert_match /Successfully unyanked gem: #{name} \(#{version_number}\)/, response.body
-end
-
-When /^I migrate the gem "([^\"]*)" with my api key$/ do |name|
-  rubygem = Rubygem.find_by_name!(name)
-
-  header("HTTP_AUTHORIZATION", @api_key)
-  visit migrate_path(:rubygem_id => rubygem.to_param), :post
-  token = response.body
-
-  subdomain = rubygem.versions.latest.rubyforge_project
-
-  WebMock.stub_request(:get, "http://#{subdomain}.rubyforge.org/migrate-#{name}.html")
-
-  visit migrate_path(:rubygem_id => rubygem.to_param), :put
+  api_key_header
+  page.driver.put unyank_api_v1_rubygems_path(:gem_name => name, :version => version_number)
+  assert_match /Successfully unyanked gem: #{name} \(#{version_number}\)/, page.source
 end
 
 When /^I list the owners of gem "([^\"]*)" with my api key$/ do |name|
   api_key_header
-  visit api_v1_rubygem_owners_path(:rubygem_id => name), :get
+  visit api_v1_rubygem_owners_path(:rubygem_id => name)
 end
 
 When /^I list the owners of gem "([^\"]*)" as "([^"]+)" with my api key$/ do |name, format|
   api_key_header
-  visit "#{api_v1_rubygem_owners_path(name)}.#{format}", :get
+  visit "#{api_v1_rubygem_owners_path(name)}.#{format}"
 end
 
 When /^I add the owner "([^\"]*)" to the rubygem "([^\"]*)" with my api key$/ do |owner_email, rubygem_name|
   api_key_header
-  visit api_v1_rubygem_owners_path(:rubygem_id => rubygem_name), :post, :email => owner_email
+  page.driver.post api_v1_rubygem_owners_path(:rubygem_id => rubygem_name), :email => owner_email
 end
 
 When /^I remove the owner "([^\"]*)" from the rubygem "([^\"]*)" with my api key$/ do |owner_email, rubygem_name|
   api_key_header
-  visit api_v1_rubygem_owners_path(:rubygem_id => rubygem_name), :delete, :email => owner_email
+  page.driver.delete api_v1_rubygem_owners_path(:rubygem_id => rubygem_name), :email => owner_email
 end
 
 When /^I download the rubygem "([^\"]*)" version "([^\"]*)" (\d+) times?$/ do |rubygem_name, version_number, count|
   count.to_i.times do
-    visit "/gems/#{rubygem_name}-#{version_number}.gem", :get
+    visit "/gems/#{rubygem_name}-#{version_number}.gem"
   end
 end
 
@@ -78,7 +63,11 @@ When 'I request "$url"' do |url|
   visit url
 end
 
-When 'I list the gems with my api key' do
+When /I list the gems with my api key/ do
   api_key_header
-  visit api_v1_rubygems_path, :get
+  visit api_v1_rubygems_path
+end
+
+Then /the response should contain "([^"]+)"/ do |text|
+  assert_match text, page.source
 end

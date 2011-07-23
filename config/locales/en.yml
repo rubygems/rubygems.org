@@ -61,7 +61,7 @@ en:
         all_gems: "all gems"
         dashboard: "dashboard"
         sign_in: "sign in"
-        sign_in: "sign up"
+        sign_up: "sign up"
         sign_out: "sign out"
       footer:
         about: "About"

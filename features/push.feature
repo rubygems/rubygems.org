@@ -24,8 +24,8 @@ Feature: Push Gems
 
     When I have a gem "PGem" with version "1.0.0" and summary "Second try"
     And I push the gem "PGem-1.0.0.gem" with my api key
-    Then I should see "Repushing of gem versions is not allowed."
-    And I should see "Please use `gem yank` to remove bad gem releases."
+    Then the response should contain "Repushing of gem versions is not allowed."
+    And the response should contain "Please use `gem yank` to remove bad gem releases."
     And I visit the gem page for "PGem"
     And I should see "PGem"
     And I should see "1.0.0"

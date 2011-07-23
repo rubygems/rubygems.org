@@ -3,33 +3,31 @@ Feature: Sign in
   A user
   Should be able to sign in
 
-    Scenario: User is not signed up
+    Background:
       Given I am using HTTPS
-      And no user exists with an email of "email@person.com"
+
+    Scenario: User is not signed up
       When I go to the sign in page
       And I sign in as "email@person.com/password"
       Then I should see "Bad email or password"
       And I should be signed out
 
     Scenario: User is not confirmed
-      Given I am using HTTPS
-      And I signed up with "email@person.com/password"
+      Given I signed up with "email@person.com/password"
       When I go to the sign in page
       And I sign in as "email@person.com/password"
       Then I should see "User has not confirmed email"
       And I should be signed out
 
     Scenario: User enters wrong password
-      Given I am using HTTPS
-      And I am signed up and confirmed as "email@person.com/password"
+      Given I am signed up and confirmed as "email@person.com/password"
       When I go to the sign in page
       And I sign in as "email@person.com/wrongpassword"
       Then I should see "Bad email or password"
       And I should be signed out
 
     Scenario: User signs in successfully with email
-      Given I am using HTTPS
-      And I am signed up and confirmed as "email@person.com/password"
+      Given I am signed up and confirmed as "email@person.com/password"
       When I go to the sign in page
       And I sign in as "email@person.com/password"
       Then I should see "Signed in"
@@ -38,8 +36,7 @@ Feature: Sign in
       Then I should be signed in
 
     Scenario: User signs in successfully with handle
-      Given I am using HTTPS
-      And I am signed up and confirmed as "email@person.com/password"
+      Given I am signed up and confirmed as "email@person.com/password"
       And my handle is "signinnow"
       When I go to the sign in page
       And I sign in as "signinnow/password"

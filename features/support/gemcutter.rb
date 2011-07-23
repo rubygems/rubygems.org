@@ -10,7 +10,7 @@ DatabaseCleaner.strategy = :transaction
 require 'factory_girl/step_definitions'
 
 Before do
-  WebMock.reset_webmock
+  WebMock.reset!
   DatabaseCleaner.start
 
   FileUtils.mkdir(TEST_DIR)

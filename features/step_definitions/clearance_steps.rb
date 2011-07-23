@@ -1,14 +1,10 @@
 # General
 
 Then /^I should see error messages$/ do
-  assert_match /error(s)? prohibited/m, response.body
+  assert_match /error(s)? prohibited/m, page.body
 end
 
 # Database
-
-Given /^no user exists with an email of "(.*)"$/ do |email|
-  assert_nil User.find_by_email(email)
-end
 
 Given /^I signed up with "(.*)\/(.*)"$/ do |email, password|
   @me = user = Factory(:user,
@@ -35,16 +31,11 @@ end
 # Session
 
 Then /^I should be signed in$/ do
-  assert controller.signed_in?
+  Then %{I should see "sign out"}
 end
 
 Then /^I should be signed out$/ do
-  assert ! controller.signed_in?
-end
-
-When /^session is cleared$/ do
-  request.reset_session
-  controller.instance_variable_set(:@_current_user, nil)
+  Then %{I should see "sign in"}
 end
 
 Given /^I have signed in with "(.*)\/(.*)"$/ do |email, password|
@@ -99,11 +90,11 @@ When /^I sign in as "(.*)\/(.*)"$/ do |email, password|
   When %{I go to the sign in page}
   And %{I fill in "Email" with "#{email}"}
   And %{I fill in "Password" with "#{password}"}
-  And %{I press "Sign In"}
+  And %{I press "Sign in"}
 end
 
 When /^I sign out$/ do
-  visit '/session', :delete
+  When %{I follow "sign out"}
 end
 
 When /^I request password reset link to be sent to "(.*)"$/ do |email|
@@ -119,6 +110,6 @@ When /^I update my password with "(.*)\/(.*)"$/ do |password, confirmation|
 end
 
 When /^I return next time$/ do
-  When %{session is cleared}
+  reset!
   And %{I go to the homepage}
 end
