@@ -55,9 +55,57 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         Base64::encode64("#{@user.email}:#{@user.password}")
       get :show
     end
-    should "render api key" do
-      assert_response 200
+    should respond_with :success
+    should "return API key" do
       assert_equal @user.api_key, @response.body
+    end
+  end
+
+  context "on GET to show with JSON with confirmed user" do
+    setup do
+      @user = Factory(:email_confirmed_user)
+      @request.env["HTTP_AUTHORIZATION"] = "Basic " +
+        Base64::encode64("#{@user.email}:#{@user.password}")
+      get :show, :format => 'json'
+    end
+    should respond_with :success
+    should "return API key" do
+      response = JSON.parse(@response.body)
+      assert_not_nil response
+      assert_kind_of Hash, response
+      assert_equal @user.api_key, response["rubygems_api_key"]
+    end
+  end
+
+  context "on GET to show with XML with confirmed user" do
+    setup do
+      @user = Factory(:email_confirmed_user)
+      @request.env["HTTP_AUTHORIZATION"] = "Basic " +
+        Base64::encode64("#{@user.email}:#{@user.password}")
+      get :show, :format => 'xml'
+    end
+    should respond_with :success
+    should "return API key" do
+      response = Nokogiri.parse(@response.body).root
+      assert_not_nil response
+      assert_kind_of Nokogiri::XML::Element, response
+      assert_equal @user.api_key, response.children[1].text
+    end
+  end
+
+  context "on GET to show with YAML with confirmed user" do
+    setup do
+      @user = Factory(:email_confirmed_user)
+      @request.env["HTTP_AUTHORIZATION"] = "Basic " +
+        Base64::encode64("#{@user.email}:#{@user.password}")
+      get :show, :format => 'yaml'
+    end
+    should respond_with :success
+    should "return API key" do
+      response = YAML.load(@response.body)
+      assert_not_nil response
+      assert_kind_of Hash, response
+      assert_equal @user.api_key, response[:rubygems_api_key]
     end
   end
 
