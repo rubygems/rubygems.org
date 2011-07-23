@@ -1,6 +1,3 @@
-require 'rdoc/markup/simple_markup'
-require 'rdoc/markup/simple_markup/to_html'
-
 module RubygemsHelper
   def link_to_page(text, url)
     link_to(text, url, :rel => 'nofollow') if url.present?
