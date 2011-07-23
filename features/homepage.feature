@@ -19,7 +19,6 @@ Feature: Homepage
 
     When I am on the homepage
     Then I should see the following most recent downloads:
-      | name           | downloads |
-      | fireworm-1.0.0 | 20        |
-      | sandworm-2.0.0 | 10        |
-      | sandworm-1.0.0 | 5         |
+      | fireworm-1.0.0 (20) |
+      | sandworm-2.0.0 (10) |
+      | sandworm-1.0.0 (5)  |

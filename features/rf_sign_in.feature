@@ -17,10 +17,8 @@ Feature: RubyForge legacy sign in
     And no RubyForge user exists with an email of "email@person.com"
 
   Scenario: RubyForge user logs on with wrong password
-    Given no user exists with an email of "email@person.com"
-    And I have a RubyForge account with "email@person.com/rfpassword"
+    Given I have a RubyForge account with "email@person.com/rfpassword"
     When I go to the sign in page
     And I sign in as "email@person.com/badpassword"
     Then I should see "Bad email or password"
     And I should be signed out
-    And no user exists with an email of "email@person.com"

@@ -36,6 +36,5 @@ Feature: Email reset
   Scenario: User signs in after resetting and confirming email address
     When I have reset my email address to "email@newperson.com"
     And I follow the confirmation link sent to "email@newperson.com"
-    And I return next time
     And I sign in as "email@newperson.com/password"
     Then I should not see "sign in"

@@ -12,14 +12,14 @@ Feature: Edit Profile
     And I am on my edit profile page
     When I fill in "Handle" with "john_doe"
     And I press "Update"
-    Then I should see my new "Handle"
+    Then I should see "john_doe"
+    And I should not see "johndoe"
 
   Scenario: Update with existing handle
-    Given I have signed in with "janedoe@example.com/password"
-    And my handle is "some_doe"
-    And I sign out
+    Given the following user exists:
+      | email               | handle   |
+      | janedoe@example.com | some_doe |
     And I have signed in with "johndoe@example.com/password"
-    And my handle is "john_doe"
     And I am on my edit profile page
     When I fill in "Handle" with "some_doe"
     And I press "Update"
