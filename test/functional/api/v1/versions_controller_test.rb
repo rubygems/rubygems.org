@@ -7,7 +7,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
   context "on GET to show" do
     setup do
-      @rubygem  = Factory(:rubygem)
+      @rubygem = Factory(:rubygem)
       Factory(:version, :rubygem => @rubygem, :number => '2.0.0')
       Factory(:version, :rubygem => @rubygem, :number => '1.0.0.pre', :prerelease => true)
       Factory(:version, :rubygem => @rubygem, :number => '3.0.0', :indexed => false)
@@ -26,16 +26,16 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     should "be ordered by position with prereleases" do
       get_show(@rubygem)
       json = JSON.parse(@response.body)
-      assert_equal "1.0.0.pre", json.first["number"]
-      assert_equal "2.0.0", json.second["number"]
+      assert_equal "2.0.0", json.first["number"]
+      assert_equal "1.0.0.pre", json.second["number"]
     end
 
     should "be ordered by position" do
       get_show(@rubygem2)
       json = JSON.parse(@response.body)
-      assert_equal "1.0.0", json.first["number"]
+      assert_equal "3.0.0", json.first["number"]
       assert_equal "2.0.0", json.second["number"]
-      assert_equal "3.0.0", json.third["number"]
+      assert_equal "1.0.0", json.third["number"]
     end
 
     should "have some json with the list of versions for the second gem" do
@@ -60,7 +60,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
   context "on GET to show with lots of gems" do
     setup do
-      @rubygem  = Factory(:rubygem)
+      @rubygem = Factory(:rubygem)
       12.times do |n|
         Factory(:version, :rubygem => @rubygem, :number => "#{n}.0.0")
       end

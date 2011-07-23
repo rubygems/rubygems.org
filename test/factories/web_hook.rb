@@ -1,13 +1,15 @@
-Factory.sequence :url do |n|
-  "http://example#{n}.com"
-end
+FactoryGirl.define do
+  sequence :url do |n|
+    "http://example#{n}.com"
+  end
 
-Factory.define :web_hook do |web_hook|
-  web_hook.url { Factory.next :url }
-  web_hook.association :user
-  web_hook.association :rubygem
-end
+  factory :web_hook do
+    rubygem
+    url
+    user
+  end
 
-Factory.define :global_web_hook, :parent => :web_hook do |web_hook|
-  web_hook.rubygem { nil }
+  factory :global_web_hook, :parent => :web_hook do
+    rubygem nil
+  end
 end

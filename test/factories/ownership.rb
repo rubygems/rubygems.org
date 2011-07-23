@@ -1,4 +1,6 @@
-Factory.define :ownership do |ownership|
-  ownership.association(:rubygem)
-  ownership.association(:user)
+FactoryGirl.define do
+  factory :ownership do
+    rubygem
+    user
+  end
 end

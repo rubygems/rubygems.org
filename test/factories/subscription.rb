@@ -1,4 +1,6 @@
-Factory.define :subscription do |subscription|
-  subscription.association(:rubygem)
-  subscription.association(:user)
+FactoryGirl.define do
+  factory :subscription do
+    rubygem
+    user
+  end
 end
