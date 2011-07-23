@@ -4,11 +4,12 @@ Feature: Manage owners
   Should be able to add and remove gem owners
 
   Background:
-    Given the following email confirmed users exist:
+    Given I am using HTTPS
+    And the following email confirmed users exist:
       | email              |
       | original@owner.org |
       | new@owner.org      |
-    Given the following rubygem exists:
+    And the following rubygem exists:
       | name |
       | OGem |
     And the following ownership exists:
@@ -39,7 +40,7 @@ Feature: Manage owners
     Given I sign in as "original@owner.org/password"
     And I have an api key for "original@owner.org/password"
     When I add the owner "other@owner.org" to the rubygem "OGem" with my api key
-    Then I should see "Owner could not be found."
+    Then the response should contain "Owner could not be found."
 
   Scenario: Gem owner removes an owner
     Given I sign in as "original@owner.org/password"
@@ -56,7 +57,7 @@ Feature: Manage owners
     Given I sign in as "original@owner.org/password"
     And I have an api key for "original@owner.org/password"
     When I remove the owner "new@owner.org" from the rubygem "OGem" with my api key
-    Then I should see "Owner could not be found."
+    Then the response should contain "Owner could not be found."
 
   Scenario: Gem owner removes himself when he is not the last owner
     Given I sign in as "original@owner.org/password"
@@ -65,21 +66,21 @@ Feature: Manage owners
       | user                 | rubygem    |
       | email: new@owner.org | name: OGem |
     When I remove the owner "original@owner.org" from the rubygem "OGem" with my api key
-    Then I should see "Owner removed successfully."
+    Then the response should contain "Owner removed successfully."
 
   Scenario: Gem owner removes himself when he is the last owner
     Given I sign in as "original@owner.org/password"
     And I have an api key for "original@owner.org/password"
     When I remove the owner "original@owner.org" from the rubygem "OGem" with my api key
-    Then I should see "Unable to remove owner."
+    Then the response should contain "Unable to remove owner."
 
   Scenario Outline: Attempt to manage a gem without the right permission
     Given I am signed up and confirmed as "non@owner.org/password"
     And I have an api key for "non@owner.org/password"
     When I <action> with my api key
-    Then I should see "You do not have permission to manage this gem."
+    Then the response should contain "You do not have permission to manage this gem."
 
-    Examples: 
+    Examples:
       | action                                                        |
       | list the owners of gem "OGem"                                 |
       | add the owner "new@owner.org" to the rubygem "OGem"           |

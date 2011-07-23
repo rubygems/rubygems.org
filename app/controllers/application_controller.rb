@@ -3,7 +3,6 @@ class ApplicationController < ActionController::Base
   include SimpleSSLRequirement
 
   helper :announcements
-  #include AnnouncementsHelper
 
   protect_from_forgery :only => [:create, :update, :destroy]
 

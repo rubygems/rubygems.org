@@ -14,5 +14,5 @@ When /^I request dependencies with (\d+) gems$/ do |count|
 end
 
 Then /^I see status code (\d+)$/ do |code|
-  assert_equal code, response.code
+  assert_equal code.to_i, page.status_code
 end

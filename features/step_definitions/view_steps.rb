@@ -8,21 +8,12 @@ When /^I visit the gem page for "([^\"]*)" version "([^\"]*)"$/ do |gem_name, ve
   visit rubygem_version_path(rubygem, version_number)
 end
 
-And /^I save and open the page$/ do
-  save_and_open_page
-  print @response.body
-end
-
 Then /^I should see the following most recent downloads:$/ do |table|
-  count = 0
-  table.hashes.each do |row|
-    assert_select "#most_downloaded li:nth-child(#{count += 1})",
-                  "#{row['name']} (#{row['downloads']})"
-  end
+  assert_equal table.raw.flatten, page.all("#most_downloaded li a").map(&:text)
 end
 
 Then /^I should see the version "([^\"]*)" featured$/ do |version_number|
-  assert_select("h3", :text => version_number)
+  assert page.has_css?("h3:contains('#{version_number}')")
 end
 
 Then /^I should see the following dependencies for "([^"]*)":$/ do |full_name, table|
@@ -44,7 +35,7 @@ Then /^I should not see any dependencies for "([^"]*)" version "([^"]*)"$/ do |r
   assert_nil gem_hash
 end
 
-Then "I should see an empty array" do
+Then /^I should see an empty array$/ do
   assert marshal_body.is_a?(Array)
   assert marshal_body.empty?
 end
@@ -55,16 +46,16 @@ end
 
 Then /I (should|should not) see download graphs for the following rubygems:/ do |should, table|
   table.raw.flatten.each do |name|
-    rubygem = Rubygem.find_by_name!(name)
-    meth = should == "should not" ? :assert_have_no_selector : :assert_have_selector
-    send meth, "#graph-#{rubygem.id}"
+    rubygem  = Rubygem.find_by_name!(name)
+    selector = "#graph-#{rubygem.id}"
 
-    within(".profile-rubygem") do
-      assert_contain rubygem.name
+    if should == "should not"
+      assert ! page.has_css?(selector)
+    else
+      assert page.has_css?(selector)
     end
 
-    within(".profile-downloads") do
-      assert_contain "#{rubygem.downloads} downloads"
-    end
+    assert page.has_css?(".profile-rubygem:contains('#{rubygem.name}')")
+    assert page.has_css?(".profile-downloads:contains('#{rubygem.downloads} downloads')")
   end
 end

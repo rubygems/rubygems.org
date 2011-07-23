@@ -3,12 +3,15 @@ Feature: Sign up
   A user
   Should be able to sign up
 
+  Background:
+    Given I am using HTTPS
+
   Scenario: User signs up with invalid email
     When I go to the sign up page
     And I fill in "Email" with "invalidemail"
     And I fill in "Password" with "password"
     And I fill in "Confirm password" with ""
-    And I press "Sign Up"
+    And I press "Sign up"
     Then I should see error messages
 
   Scenario: User signs up with no handle
@@ -16,7 +19,7 @@ Feature: Sign up
     And I fill in "Email" with "email@person.com"
     And I fill in "Password" with "password"
     And I fill in "Confirm password" with ""
-    And I press "Sign Up"
+    And I press "Sign up"
     Then I should see error messages
 
   Scenario: User signs up with invalid handle
@@ -25,7 +28,7 @@ Feature: Sign up
     And I fill in "Handle" with "thisusernameiswaytoolongseriouslywaytoolong"
     And I fill in "Password" with "password"
     And I fill in "Confirm password" with ""
-    And I press "Sign Up"
+    And I press "Sign up"
     Then I should see error messages
 
   Scenario: User signs up with valid data
@@ -34,7 +37,7 @@ Feature: Sign up
     And I fill in "Handle" with "validhandledude"
     And I fill in "Password" with "password"
     And I fill in "Confirm password" with "password"
-    And I press "Sign Up"
+    And I press "Sign up"
     Then I should see "instructions for confirming"
     And a confirmation message should be sent to "email@person.com"
 
