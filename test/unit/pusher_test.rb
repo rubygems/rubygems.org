@@ -38,6 +38,7 @@ class PusherTest < ActiveSupport::TestCase
     context "processing incoming gems" do
       should "work normally when things go well" do
         mock(@cutter).pull_spec { true }
+        mock(@cutter).size_gem { true }
         mock(@cutter).find { true }
         stub(@cutter).authorize { true }
         mock(@cutter).save
@@ -47,6 +48,7 @@ class PusherTest < ActiveSupport::TestCase
 
       should "not attempt to find rubygem if spec can't be pulled" do
         mock(@cutter).pull_spec { false }
+        mock(@cutter).size_gem.never
         mock(@cutter).find.never
         mock(@cutter).authorize.never
         mock(@cutter).save.never
@@ -55,6 +57,7 @@ class PusherTest < ActiveSupport::TestCase
 
       should "not attempt to authorize if not found" do
         mock(@cutter).pull_spec { true }
+        mock(@cutter).size_gem { true }
         mock(@cutter).find { nil }
         mock(@cutter).authorize.never
         mock(@cutter).save.never
@@ -64,6 +67,7 @@ class PusherTest < ActiveSupport::TestCase
 
       should "not attempt to save if not authorized" do
         mock(@cutter).pull_spec { true }
+        mock(@cutter).size_gem { true }
         mock(@cutter).find { true }
         mock(@cutter).authorize { false }
         mock(@cutter).save.never

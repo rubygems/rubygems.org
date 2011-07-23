@@ -1,7 +1,7 @@
 class Pusher
   include Vault
 
-  attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id
+  attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
 
   def initialize(user, body, host_with_port=nil)
     @user = user
@@ -10,7 +10,7 @@ class Pusher
   end
 
   def process
-    pull_spec && find && authorize && save
+    pull_spec && size_gem && find && authorize && save
   end
 
   def authorize
@@ -54,6 +54,15 @@ class Pusher
     false
   end
 
+  def size_gem
+    if body
+      @size = body.size
+      true
+    else
+      false
+    end
+  end
+
   def pull_spec
     Gem::Package.open body, "r", nil do |pkg|
       @spec = pkg.metadata
@@ -72,7 +81,7 @@ class Pusher
 
   def find
     @rubygem = Rubygem.find_or_initialize_by_name(spec.name)
-    @version = @rubygem.find_or_initialize_version_from_spec(spec)
+    @version = @rubygem.find_or_initialize_version_from_spec(spec, size)
 
     if @version.new_record?
       true

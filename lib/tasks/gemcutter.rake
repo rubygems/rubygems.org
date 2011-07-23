@@ -133,8 +133,7 @@ namespace :gemcutter do
           puts "Processing #{local_path}"
           begin
             cutter = Pusher.new(nil, StringIO.new(File.open(local_path).read))
-            cutter.pull_spec
-            cutter.write
+            cutter.pull_spec and cutter.size_gem and cutter.write
           rescue Exception => e
             puts "Problem uploading #{local_path}: #{e}"
           end
@@ -152,7 +151,7 @@ namespace :gemcutter do
         puts "Processing #{path}"
         cutter = Pusher.new(nil, StringIO.new(File.open(path).read))
 
-        cutter.pull_spec and cutter.find and cutter.save
+        cutter.pull_spec and cutter.size_gem and cutter.find and cutter.save
       end
     end
 
@@ -167,7 +166,7 @@ namespace :gemcutter do
         cutter = Pusher.new(nil, StringIO.new(File.open(path).read))
 
         begin
-          cutter.pull_spec and cutter.find and cutter.build
+          cutter.pull_spec and cutter.size_gem and cutter.find and cutter.build
           spec_path = File.join(ARGV[1], "#{cutter.rubygem.name}-#{cutter.rubygem.versions.last.to_s}.gem")
 
           if path == spec_path

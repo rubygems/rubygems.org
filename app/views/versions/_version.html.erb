@@ -4,6 +4,9 @@
   <% if version.platformed? %>
     <span class="platform"><%= version.platform %></span>
   <% end %>
+  <% if version.sized? %>
+    <span class="size">(<%= number_to_human_size(version.size) %>)</span>
+  <% end %>
   <% if version.yanked? -%>
     <span class="yanked"><%= t '.yanked' %></span>
   <% end -%>
