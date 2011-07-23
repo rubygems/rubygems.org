@@ -4,12 +4,12 @@ Feature: Resolver endpoint
     And a rubygem exists with a name of "zerg"
     And a rubygem exists with a name of "protoss"
     And the following versions exist:
-      | Rubygem | Number | Platform |
-      | terran  | 1.0.0  | mswin32  |
-      | terran  | 2.0.0  | mswin32  |
-      | protoss | 1.0.0  | ruby     |
-      | zerg    | 1.0.0  | java     |
-    And the following dependencies exist:
+      | rubygem       | number | platform |
+      | name: terran  | 1.0.0  | mswin32  |
+      | name: terran  | 2.0.0  | mswin32  |
+      | name: protoss | 1.0.0  | ruby     |
+      | name: zerg    | 1.0.0  | java     |
+    And the following gem dependencies exist:
       | Version              | Rubygem   | Requirements |
       | terran-1.0.0-mswin32 | scv       | >= 0         |
       | terran-1.0.0-mswin32 | marine    | = 0.0.1      |
