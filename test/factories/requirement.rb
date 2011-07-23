@@ -1,4 +1,6 @@
-Factory.define :requirement do |requirement|
-  requirement.association(:version)
-  requirement.association(:dependency)
+FactoryGirl.define do
+  factory :requirement do
+    dependency
+    version
+  end
 end

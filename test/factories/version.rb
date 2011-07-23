@@ -1,13 +1,15 @@
-Factory.define :version do |version|
-  version.authors           { ['Joe User'] }
-  version.description       { 'Some awesome gem' }
-  version.number            { Factory.next(:version_number) }
-  version.built_at          { 1.day.ago }
-  version.platform          { "ruby" }
-  version.association       :rubygem
-  version.indexed           true
-end
+FactoryGirl.define do
+  sequence :number do |n|
+    "0.0.#{n}"
+  end
 
-Factory.sequence :version_number do |n|
-  "0.0.#{n}"
+  factory :version do
+    authors ["Joe User"]
+    built_at 1.day.ago
+    description "Some awesome gem"
+    indexed true
+    number
+    platform "ruby"
+    rubygem
+  end
 end

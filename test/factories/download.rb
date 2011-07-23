@@ -1,2 +1,4 @@
-Factory.define :download do |download|
+FactoryGirl.define do
+  factory :download do
+  end
 end
