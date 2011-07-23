@@ -24,6 +24,7 @@ FactoryGirl.define do
   factory :ownership do
     rubygem
     user
+    approved true
   end
 
   factory :rubyforger do

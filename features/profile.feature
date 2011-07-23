@@ -5,46 +5,32 @@ Feature: Profile Feature
 
   Background:
     Given I am using HTTPS
+    And I have signed in with "jon@example.com/password"
+    And the following version exists:
+      | rubygem        | number |
+      | name: sandworm | 2.0.0  |
+    And the following ownership exists:
+      | rubygem        | user                   |
+      | name: sandworm | email: jon@example.com |
 
-  Scenario: Show Profile
-    Given I have signed in with "jon@example.com/password"
-    And a rubygem exists with a name of "sandworm"
-    And the "sandworm" rubygem is owned by "jon@example.com"
+  Scenario: Show profile
     When I am on "jon@example.com" profile page
     Then I should see "sandworm"
     And I should not see "jon@example.com"
 
-  Scenario: Show todays downloads for my gems in my profile
-    Given I have signed in with "jon@example.com/password"
-    And a rubygem exists with a name of "sandworm"
-    And a version exists for the "sandworm" rubygem with a number of "2.0.0"
-    And the "sandworm" rubygem is owned by "jon@example.com"
-    And I download the rubygem "sandworm" version "2.0.0" 3 times
+  Scenario: Show downloads for my gems in my profile
+    Given I download the rubygem "sandworm" version "2.0.0" 3 times
     When I am on "jon@example.com" profile page
     Then I should see "sandworm"
     And I should see "3 today"
 
-  Scenario: Show total downloads for my gems in my profile
-    Given I have signed in with "jon@example.com/password"
-    And a rubygem exists with a name of "sandworm"
-    And a version exists for the "sandworm" rubygem with a number of "2.0.0"
-    And the "sandworm" rubygem is owned by "jon@example.com"
-    And I download the rubygem "sandworm" version "2.0.0" 3 times
-    When I am on "jon@example.com" profile page
-    Then I should see "sandworm"
-    And I should see "3 today"
-
-  Scenario: Show Profile
+  Scenario: View another user's profile
     Given I have signed in with "bob@example.com/password"
-    And a user exists with an email of "jon@example.com"
-    And a rubygem exists with a name of "sandworm"
-    And the "sandworm" rubygem is owned by "jon@example.com"
     When I go to "jon@example.com" profile page
     Then I should see "sandworm"
 
   Scenario: Show other gems in my profile
-    Given I have signed in with "jon@example.com/password"
-    And the following rubygems exist for "jon@example.com":
+    Given the following rubygems exist for "jon@example.com":
       | name            | downloads |
       | the_trees       | 11        |
       | tom_sawyer      | 10        |
