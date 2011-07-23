@@ -1047,7 +1047,7 @@ label, .form_links {
   color: #b40000;
   font-size: 24px;
   clear: both;
-  margin-bottom: 25px;
+  margin: 20px 0 10px 0;
 }
 
 .edit_user .avatar_field {

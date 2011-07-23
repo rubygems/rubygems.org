@@ -114,7 +114,7 @@ en:
       api_access:
         title: API Access
         key_is: "Your API key is %{key}."
-        credentials: "Your %{gem_credentials_file} should look like this to use the %{gem_commands_link}:"
+        credentials: "If you want to use %{gem_commands_link} from the command line, you'll need a %{gem_credentials_file} file, which you can generate using the following command:"
         link_text: gem commands
         reset: Reset my API key
         confirm_reset: Are you sure? This cannot be undone.
