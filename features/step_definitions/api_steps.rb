@@ -5,10 +5,6 @@ Given /^I have an api key for "([^\"]*)"$/ do |creds|
   @api_key = response.body
 end
 
-Given /^I've already pushed the gem "([^\"]*)" with my api key$/ do |name| # '
-  When %Q[I push the gem "#{name}" with my api key]
-end
-
 When /^I push the gem "([^\"]*)" with my api key$/ do |name|
   api_key_header
 
