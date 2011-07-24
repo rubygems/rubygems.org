@@ -56,6 +56,7 @@ GEM
     factory_girl_rails (1.1.0)
       factory_girl (~> 2.0.0)
       railties (>= 3.0.0)
+    ffi (1.0.9-java)
     fog (0.9.0)
       builder
       excon (~> 0.6.1)
@@ -82,8 +83,11 @@ GEM
       bouncy-castle-java
     json (1.5.3)
     json (1.5.3-java)
-    launchy (2.0.3)
-    launchy (2.0.3-java)
+    launchy (2.0.4)
+      addressable (~> 2.2.6)
+    launchy (2.0.4-java)
+      addressable (~> 2.2.6)
+      ffi (~> 1.0.9)
       spoon (~> 0.0.1)
     mail (2.2.19)
       activesupport (>= 2.3.6)
