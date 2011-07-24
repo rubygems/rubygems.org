@@ -50,7 +50,7 @@ class Dependency < ActiveRecord::Base
   def payload
     {
       'name'         => name,
-      'requirements' => requirements
+      'requirements' => clean_requirements
     }
   end
 
@@ -63,7 +63,11 @@ class Dependency < ActiveRecord::Base
   end
 
   def to_s
-    "#{name} #{requirements}"
+    "#{name} #{clean_requirements}"
+  end
+
+  def clean_requirements
+    requirements.sub /#<YAML::Syck::DefaultKey[^>]*>/, "="
   end
 
   private
@@ -85,7 +89,9 @@ class Dependency < ActiveRecord::Base
   end
 
   def parse_gem_dependency
-    self.requirements = gem_dependency.requirements_list.join(', ')
+    reqs = gem_dependency.requirements_list.join(', ')
+    self.requirements = reqs.sub(/#<YAML::Syck::DefaultKey[^>]*>/, "=")
+
     self.scope = gem_dependency.type.to_s
   end
 

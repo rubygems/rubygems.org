@@ -215,7 +215,7 @@ class Version < ActiveRecord::Base
       spec.summary     = summary
 
       dependencies.each do |dep|
-        spec.add_dependency(dep.rubygem.name, dep.requirements.split(', '))
+        spec.add_dependency(dep.rubygem.name, dep.clean_requirements.split(', '))
       end
     end
   end
