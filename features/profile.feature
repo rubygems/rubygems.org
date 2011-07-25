@@ -4,8 +4,7 @@ Feature: Profile Feature
   I want to see a page with all of my gems
 
   Background:
-    Given I am using HTTPS
-    And I have signed in with "jon@example.com/password"
+    Given I have signed in with "jon@example.com/password"
     And the following version exists:
       | rubygem        | number |
       | name: sandworm | 2.0.0  |

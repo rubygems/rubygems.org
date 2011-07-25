@@ -3,9 +3,6 @@ Feature: Sign up
   A user
   Should be able to sign up
 
-  Background:
-    Given I am using HTTPS
-
   Scenario: User signs up with invalid email
     When I go to the sign up page
     And I fill in "Email" with "invalidemail"
