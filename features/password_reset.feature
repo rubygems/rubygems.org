@@ -4,7 +4,6 @@ Feature: Password reset
   Should be able to reset it
 
   Scenario: User is not signed up
-    Given I am using HTTPS
     When I request password reset link to be sent to "email@person.com"
     Then I should see "Unknown email"
 

@@ -4,9 +4,6 @@ Feature: RubyForge legacy sign in
   Should be able to sign in with their RubyForge credentials
   And automatically be given an account
 
-  Background:
-    Given I am using HTTPS
-
   Scenario: RubyForge user has never logged on to GemCutter
     Given I signed up with "email@person.com/randompw"
     And I have a RubyForge account with "email@person.com/rfpassword"

@@ -1,6 +1,7 @@
 WebMock.disable_net_connect!
 
 Hostess.local = true
+Capybara.app_host = "https://gemcutter.local"
 
 TEST_DIR = File.join('/', 'tmp', 'gemcutter')
 

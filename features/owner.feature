@@ -4,8 +4,7 @@ Feature: Manage owners
   Should be able to add and remove gem owners
 
   Background:
-    Given I am using HTTPS
-    And the following email confirmed users exist:
+    Given the following email confirmed users exist:
       | email              |
       | original@owner.org |
       | new@owner.org      |

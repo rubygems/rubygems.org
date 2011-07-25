@@ -4,8 +4,7 @@ Feature: Dashboard
   Should be able to see a list of updates in their feed
 
   Background:
-    Given I am using HTTPS
-    And I am signed up and confirmed as "email@person.com/password"
+    Given I am signed up and confirmed as "email@person.com/password"
 
   Scenario: User goes to their dashboard
     Given the following rubygems exist:
