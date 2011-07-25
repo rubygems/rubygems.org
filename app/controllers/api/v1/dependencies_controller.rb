@@ -1,6 +1,6 @@
 class Api::V1::DependenciesController < Api::BaseController
   def index
-    gem_list = params[:gems].split(',')
+    gem_list = (params[:gems] || '').split(',')
 
     if gem_list.size <= Dependency::LIMIT
       render :text => Marshal.dump(Dependency.for(gem_list))
