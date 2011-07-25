@@ -85,12 +85,15 @@ class UserTest < ActiveSupport::TestCase
       assert_nil User.authenticate(@user.email, "bad")
     end
 
-    should "only have email when boiling down to json or yaml" do
+    should "only have email when boiling down to JSON" do
       json = JSON.parse(@user.to_json)
-      yaml = YAML.load(@user.to_yaml)
-
-      hash = {"email" => @user.email}
+      hash = {'email' => @user.email}
       assert_equal hash, json
+    end
+
+    should "only have email when boiling down to YAML" do
+      yaml = YAML.load(@user.to_yaml)
+      hash = {:email => @user.email}
       assert_equal hash, yaml
     end
 
