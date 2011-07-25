@@ -57,12 +57,16 @@ class WebHook < ActiveRecord::Base
     {'url' => url, 'failure_count' => failure_count}
   end
 
-  def to_yaml(*args)
-    payload.to_yaml(*args)
-  end
-
   def as_json(options = {})
     payload
+  end
+
+  def to_xml(options = {})
+    payload.to_xml(options.merge(:root => 'web_hook'))
+  end
+
+  def to_yaml(*args)
+    payload.to_yaml(*args)
   end
 
   private
