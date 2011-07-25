@@ -314,7 +314,7 @@ class RubygemTest < ActiveSupport::TestCase
         version = Factory(:version, :rubygem => @rubygem)
       end
 
-      should "return a bunch of json" do
+      should "return a bunch of JSON" do
         hash = JSON.parse(@rubygem.to_json)
 
         assert_equal @rubygem.linkset.home, hash["homepage_uri"]
@@ -325,7 +325,7 @@ class RubygemTest < ActiveSupport::TestCase
         assert_equal @rubygem.linkset.bugs, hash["bug_tracker_uri"]
       end
 
-      should "return a bunch of xml" do
+      should "return a bunch of XML" do
         doc = Nokogiri.parse(@rubygem.to_xml)
 
         assert_equal @rubygem.linkset.home, doc.at_css("homepage-uri").content

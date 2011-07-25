@@ -50,8 +50,8 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
   end
 
-  def get_show(version)
-    get :show, :id => "#{version.full_name}.json"
+  def get_show(version, format='json')
+    get :show, :id => version.full_name, :format => format
   end
 
   context "on GET to show" do
@@ -88,7 +88,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
 
   context "on GET to show for an unknown gem" do
     setup do
-      get :show, :id => "rials"
+      get :show, :id => "rials", :format => 'json'
     end
 
     should "return a 404" do

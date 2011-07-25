@@ -169,7 +169,7 @@ class Version < ActiveRecord::Base
     Download.for(self)
   end
 
-  def as_json(options = {})
+  def as_json(options={})
     super(:methods => [:downloads_count], :only => [:authors, :built_at, :description, :number, :platform, :prerelease, :summary])
   end
 
