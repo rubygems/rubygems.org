@@ -85,12 +85,23 @@ class UserTest < ActiveSupport::TestCase
       assert_nil User.authenticate(@user.email, "bad")
     end
 
-    should "only have email when boiling down to json or yaml" do
+    should "only have email when boiling down to JSON" do
       json = JSON.parse(@user.to_json)
-      yaml = YAML.load(@user.to_yaml)
-
       hash = {"email" => @user.email}
       assert_equal hash, json
+    end
+
+    should "only have email when boiling down to XML" do
+      xml = Nokogiri.parse(@user.to_xml)
+
+      assert_equal "user", xml.root.name
+      assert_equal %w[email], xml.root.children.select(&:element?).map(&:name)
+      assert_equal @user.email, xml.at_css("email").content
+    end
+
+    should "only have email when boiling down to YAML" do
+      yaml = YAML.load(@user.to_yaml)
+      hash = {'email' => @user.email}
       assert_equal hash, yaml
     end
 
