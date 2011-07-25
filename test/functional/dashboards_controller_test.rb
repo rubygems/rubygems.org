@@ -24,8 +24,8 @@ class DashboardsControllerTest < ActionController::TestCase
       should assign_to(:my_gems) { @gems }
       should "render links" do
         @gems.each do |g|
-          assert_contain g.name
-          assert_have_selector "a[href='#{rubygem_path(g)}'][title='#{g.versions.most_recent.info}']"
+          assert page.has_content?(g.name)
+          assert page.has_selector?("a[href='#{rubygem_path(g)}'][title='#{g.versions.most_recent.info}']")
         end
       end
     end

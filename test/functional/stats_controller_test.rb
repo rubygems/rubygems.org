@@ -24,15 +24,15 @@ class StatsControllerTest < ActionController::TestCase
     should assign_to(:most_downloaded) { @most_downloaded }
 
     should "display number of gems" do
-      assert_contain "1,337"
+      assert page.has_content?("1,337")
     end
 
     should "display number of users" do
-      assert_contain "101"
+      assert page.has_content?("101")
     end
 
     should "display number of downloads" do
-      assert_contain "42"
+      assert page.has_content?("42")
     end
 
     should "load up the number of gems, users, and downloads" do
@@ -57,13 +57,13 @@ class StatsControllerTest < ActionController::TestCase
     should assign_to(:version) { @version }
     should assign_to(:versions) { @versions }
     should "render info about the gem" do
-      assert_contain @rubygem.name
+      assert page.has_content?(@rubygem.name)
     end
     should "display a dropdown to choose the version to show" do
-      assert_have_no_selector 'select#version_for_stats'
+      assert ! page.has_selector?('select#version_for_stats')
     end
     should "see that stats are an overview" do
-      assert_contain "stats overview"
+      assert page.has_content?("stats overview")
     end
   end
 
@@ -81,7 +81,7 @@ class StatsControllerTest < ActionController::TestCase
     should assign_to(:version) { @latest_version }
     should assign_to(:versions) { [@latest_version, @older_version] }
     should "display a dropdown to choose the version to show" do
-      assert_have_selector 'select#version_for_stats'
+      assert page.has_selector?('select#version_for_stats')
     end
   end
 
@@ -169,10 +169,10 @@ class StatsControllerTest < ActionController::TestCase
     should assign_to(:version) { @version }
     should assign_to(:versions) { [@version] }
     should "render info about the gem" do
-      assert_contain @rubygem.name
+      assert page.has_content?(@rubygem.name)
     end
     should "see that stats are for this specific version" do
-      assert_contain "stats for #{@version.slug}"
+      assert page.has_content?("stats for #{@version.slug}")
     end
   end
 end

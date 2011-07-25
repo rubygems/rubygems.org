@@ -18,7 +18,7 @@ class VersionsControllerTest < ActionController::TestCase
 
     should "show all related versions" do
       @versions.each do |version|
-        assert_contain version.number
+        assert page.has_content?(version.number)
       end
     end
   end
@@ -35,8 +35,8 @@ class VersionsControllerTest < ActionController::TestCase
     should assign_to :rubygem
     should assign_to(:latest_version) { @latest_version }
     should "render info about the gem" do
-      assert_contain @rubygem.name
-      assert_contain @latest_version.number
+      assert page.has_content?(@rubygem.name)
+      assert page.has_content?(@latest_version.number)
     end
   end
 end
