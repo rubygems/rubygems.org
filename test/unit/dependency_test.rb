@@ -14,7 +14,7 @@ class DependencyTest < ActiveSupport::TestCase
       assert_valid @dependency
     end
 
-    should "return json" do
+    should "return JSON" do
       @dependency.save
       json = JSON.parse(@dependency.to_json)
 
@@ -23,7 +23,7 @@ class DependencyTest < ActiveSupport::TestCase
       assert_equal @dependency.requirements, json["requirements"]
     end
 
-    should "return xml" do
+    should "return XML" do
       @dependency.save
       xml = Nokogiri.parse(@dependency.to_xml)
 
@@ -31,6 +31,15 @@ class DependencyTest < ActiveSupport::TestCase
       assert_equal %w[name requirements], xml.root.children.select(&:element?).map(&:name)
       assert_equal @dependency.rubygem.name, xml.at_css("name").content
       assert_equal @dependency.requirements, xml.at_css("requirements").content
+    end
+
+    should "return YAML" do
+      @dependency.save
+      yaml = YAML.load(@dependency.to_yaml)
+
+      assert_equal %w[name requirements], yaml.keys
+      assert_equal @dependency.rubygem.name, yaml["name"]
+      assert_equal @dependency.requirements, yaml["requirements"]
     end
 
     should "be pushed onto a redis list if a runtime dependency" do

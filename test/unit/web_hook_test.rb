@@ -77,6 +77,15 @@ class WebHookTest < ActiveSupport::TestCase
       }, ActiveSupport::JSON.decode(@webhook.to_json))
     end
 
+    should "show limited attributes for to_xml" do
+      xml = Nokogiri.parse(@webhook.to_xml)
+
+      assert_equal "web-hook", xml.root.name
+      assert_equal %w[url failure-count], xml.root.children.select(&:element?).map(&:name)
+      assert_equal @webhook.url, xml.at_css("url").content
+      assert_equal @webhook.failure_count, xml.at_css("failure-count").content.to_i
+    end
+
     should "show limited attributes for to_yaml" do
       assert_equal(
       {
