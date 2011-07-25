@@ -59,11 +59,7 @@ class Dependency < ActiveRecord::Base
   end
 
   def to_xml(options = {})
-    payload.to_xml(options.merge(:root => 'dependency'))
-  end
-
-  def to_yaml(*args)
-    payload.to_yaml(*args)
+    payload.to_xml(options.merge(:root => "dependency"))
   end
 
   def to_s

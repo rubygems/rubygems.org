@@ -62,15 +62,11 @@ class User < ActiveRecord::Base
   end
 
   def as_json(options={})
-    {'email' => email}
-  end
-
-  def to_xml(options={})
-    {'email' => email}.to_xml(options.merge(:root => 'user'))
+    { 'email' => email }
   end
 
   def to_yaml(*args)
-    {:email => email}.to_yaml(*args)
+    { 'email' => email }.to_yaml(*args)
   end
 
   def regenerate_token
