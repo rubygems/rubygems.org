@@ -46,6 +46,10 @@ Feature: Resolver endpoint
     When I request "/api/v1/dependencies?gems=XelNaga"
     Then I should see an empty array
 
+  Scenario: Resolve no gems
+    When I request "/api/v1/dependencies"
+    Then I should see an empty array
+
   Scenario: Limit dependency resolution to 250 gems
     When I request dependencies with 250 gems
     Then I see status code 200
