@@ -9,7 +9,7 @@ Gemcutter::Application.routes.draw do
       end
       resources :downloads, :only => :index
       constraints :id => Rubygem::ROUTE_PATTERN do
-        resources :downloads, :only => :show
+        get 'downloads/:id.:format', :to => 'downloads#show', :as => 'download'
         resources :versions, :only => :show do
           resources :downloads, :only => :index, :controller => "versions/downloads" do
             collection do
