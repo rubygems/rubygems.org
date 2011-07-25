@@ -13,7 +13,7 @@ namespace :gemcutter do
   desc "Store legacy index"
   task :store_legacy_index => :environment do
     puts "Loading up versions..."
-    versions = Version.with_deps.indexed
+    versions = Version.with_deps.indexed.order("full_name")
 
     puts "Mapping specs..."
     index = versions.map do |version|
