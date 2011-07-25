@@ -84,6 +84,46 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
       get_show(@version2)
       assert_equal 2, JSON.parse(@response.body)['version_downloads']
     end
+
+    should "have some XML with the total downloads for version1" do
+      get_show(@version1, 'xml')
+      assert_equal 3, Nokogiri.parse(@response.body).at_css('total-downloads').content.to_i
+    end
+
+    should "have some XML with the downloads for the most recent version of version1" do
+      get_show(@version1, 'xml')
+      assert_equal 1, Nokogiri.parse(@response.body).at_css('version-downloads').content.to_i
+    end
+
+    should "have some XML with the total downloads for version2" do
+      get_show(@version2, 'xml')
+      assert_equal 3, Nokogiri.parse(@response.body).at_css('total-downloads').content.to_i
+    end
+
+    should "have some XML with the downloads for the most recent version of version2" do
+      get_show(@version2, 'xml')
+      assert_equal 2, Nokogiri.parse(@response.body).at_css('version-downloads').content.to_i
+    end
+
+    should "have some YAML with the total downloads for version1" do
+      get_show(@version1, 'yaml')
+      assert_equal 3, YAML.load(@response.body)['total_downloads']
+    end
+
+    should "have some YAML with the downloads for the most recent version of version1" do
+      get_show(@version1, 'yaml')
+      assert_equal 1, YAML.load(@response.body)['version_downloads']
+    end
+
+    should "have some YAML with the total downloads for version2" do
+      get_show(@version2, 'yaml')
+      assert_equal 3, YAML.load(@response.body)['total_downloads']
+    end
+
+    should "have some YAML with the downloads for the most recent version of version2" do
+      get_show(@version2, 'yaml')
+      assert_equal 2, YAML.load(@response.body)['version_downloads']
+    end
   end
 
   context "on GET to show for an unknown gem" do
