@@ -116,39 +116,39 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
                                   :user    => @user)
         end
 
-        context "On GET to index with json" do
+        context "On GET to index with JSON" do
           setup do
             get :index, :format => "json"
           end
           should respond_with :success
-          should "be able to parse some json" do
+          should "be able to parse some JSON" do
             assert_nothing_raised do
               JSON.parse(@response.body)
             end
           end
         end
 
-        context "On GET to index with yaml" do
+        context "On GET to index with XML" do
+          setup do
+            get :index, :format => "xml"
+          end
+          should respond_with :success
+          should "be able to parse some XML" do
+            assert_nothing_raised do
+              Nokogiri.parse(@response.body)
+            end
+          end
+        end
+
+        context "On GET to index with YAML" do
           setup do
             get :index, :format => "yaml"
           end
           should respond_with :success
-          should "be able to parse some yaml" do
+          should "be able to parse some YAML" do
             payload = YAML.load(@response.body)
             assert_equal @global_hook.payload, payload["all gems"].first
             assert_equal @rubygem_hook.payload, payload[@rubygem.name].first
-          end
-        end
-
-        context "On GET to index with no format" do
-          setup do
-            get :index
-          end
-          should respond_with :success
-          should "be able to parse some json" do
-            assert_nothing_raised do
-              JSON.parse(@response.body)
-            end
           end
         end
 
