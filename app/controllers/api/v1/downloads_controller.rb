@@ -13,8 +13,8 @@ class Api::V1::DownloadsController < Api::BaseController
     full_name = params[:id]
     if rubygem_name = Version.rubygem_name_for(full_name)
       object = {
-        'total_downloads'   => Download.for_rubygem(rubygem_name),
-        'version_downloads' => Download.for_version(full_name),
+        :total_downloads   => Download.for_rubygem(rubygem_name),
+        :version_downloads => Download.for_version(full_name),
       }
       respond_to do |format|
         format.json { render :json => object }

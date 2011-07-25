@@ -107,22 +107,22 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
 
     should "have some YAML with the total downloads for version1" do
       get_show(@version1, 'yaml')
-      assert_equal 3, YAML.load(@response.body)['total_downloads']
+      assert_equal 3, YAML.load(@response.body)[:total_downloads]
     end
 
     should "have some YAML with the downloads for the most recent version of version1" do
       get_show(@version1, 'yaml')
-      assert_equal 1, YAML.load(@response.body)['version_downloads']
+      assert_equal 1, YAML.load(@response.body)[:version_downloads]
     end
 
     should "have some YAML with the total downloads for version2" do
       get_show(@version2, 'yaml')
-      assert_equal 3, YAML.load(@response.body)['total_downloads']
+      assert_equal 3, YAML.load(@response.body)[:total_downloads]
     end
 
     should "have some YAML with the downloads for the most recent version of version2" do
       get_show(@version2, 'yaml')
-      assert_equal 2, YAML.load(@response.body)['version_downloads']
+      assert_equal 2, YAML.load(@response.body)[:version_downloads]
     end
   end
 
