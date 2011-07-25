@@ -1,16 +1,16 @@
-When /^I have added a webhook for "([^\"]*)" to gem "([^\"]*)" with my api key$/ do |web_hook_url, gem_name|
+When /^I have added a webhook for "([^\"]*)" to gem "([^\"]*)" with my API key$/ do |web_hook_url, gem_name|
   api_key_header
   WebMock.stub_request(:post, web_hook_url)
   page.driver.post api_v1_web_hooks_path, :gem_name => gem_name, :url => web_hook_url
 end
 
-When /^I have added a global webhook for "([^\"]*)" with my api key$/ do |web_hook_url|
+When /^I have added a global webhook for "([^\"]*)" with my API key$/ do |web_hook_url|
   api_key_header
   WebMock.stub_request(:post, web_hook_url)
   page.driver.post api_v1_web_hooks_path, :gem_name => WebHook::GLOBAL_PATTERN, :url => web_hook_url
 end
 
-When /I list the webhooks as (json|yaml) with my api key/ do |format|
+When /I list the webhooks as (json|yaml) with my API key/ do |format|
   api_key_header
   visit api_v1_web_hooks_path(:format => format)
 end
@@ -36,7 +36,7 @@ Then /I should see "(.*)" under "(.*)" in (json|yaml)/ do |web_hook_url, gem_nam
   assert data[gem_name].find { |hook| hook['url'] == web_hook_url }
 end
 
-When /^I have removed a webhook for "([^\"]*)" from gem "([^\"]*)" with my api key$/ do |web_hook_url, gem_name|
+When /^I have removed a webhook for "([^\"]*)" from gem "([^\"]*)" with my API key$/ do |web_hook_url, gem_name|
   api_key_header
   page.driver.delete remove_api_v1_web_hooks_path, :gem_name => gem_name, :url => web_hook_url
 end
@@ -46,12 +46,12 @@ When /^I have removed the global webhook for "([^\"]*)"$/ do |web_hook_url|
   page.driver.delete remove_api_v1_web_hooks_path, :gem_name => WebHook::GLOBAL_PATTERN, :url => web_hook_url
 end
 
-When /^I have fired a webhook to "([^\"]*)" for the "([^\"]*)" gem with my api key$/ do |web_hook_url, gem_name|
+When /^I have fired a webhook to "([^\"]*)" for the "([^\"]*)" gem with my API key$/ do |web_hook_url, gem_name|
   api_key_header
   page.driver.post fire_api_v1_web_hooks_path, :gem_name => gem_name, :url => web_hook_url
 end
 
-When /^I have fired a webhook to "([^\"]*)" for all gems with my api key$/ do |web_hook_url|
+When /^I have fired a webhook to "([^\"]*)" for all gems with my API key$/ do |web_hook_url|
   api_key_header
   page.driver.post fire_api_v1_web_hooks_path, :gem_name => WebHook::GLOBAL_PATTERN, :url => web_hook_url
 end
