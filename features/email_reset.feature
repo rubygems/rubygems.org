@@ -4,8 +4,7 @@ Feature: Email reset
   Should be able to reset the email address associated with my account
 
   Background:
-    Given I am using HTTPS
-    And I have signed in with "email@person.com/password"
+    Given I have signed in with "email@person.com/password"
 
   Scenario: User resets email address
     Given I am on my edit profile page
