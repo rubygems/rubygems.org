@@ -12,11 +12,11 @@ class Api::V1::RubygemsController < Api::BaseController
   def index
     @rubygems = current_user.rubygems.with_versions
     respond_to do |format|
-      format.any(:json, :all) { render :json => @rubygems }
-      format.xml              { render :xml  => @rubygems }
+      format.json { render :json => @rubygems }
+      format.xml  { render :xml  => @rubygems }
       # Convert object to JSON and back before converting to YAML in order to
       # strip the object type (e.g. !ruby/ActiveRecord:Rubygem) from response
-      format.yaml             { render :text => JSON.load(@rubygems.to_json).to_yaml }
+      format.yaml { render :text => JSON.load(@rubygems.to_json).to_yaml }
     end
   end
 
