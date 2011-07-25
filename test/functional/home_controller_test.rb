@@ -22,8 +22,8 @@ class HomeControllerTest < ActionController::TestCase
     should assign_to(:updated)
 
     should "display counts" do
-      assert_contain "1,337"
-      assert_contain "1,000,000"
+      assert page.has_content?("1,337")
+      assert page.has_content?("1,000,000")
     end
 
     should "load up the total count, latest, and most downloaded gems" do
