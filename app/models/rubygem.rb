@@ -205,10 +205,10 @@ class Rubygem < ActiveRecord::Base
 
     self.versions.update_all(:latest => false)
 
-    self.versions.release.with_indexed.inject(Hash.new { |h, k| h[k] = [] }) { |platforms, version|
+    self.versions.release.indexed.inject(Hash.new{|h, k| h[k] = []}) do |platforms, version|
       platforms[version.platform] << version
       platforms
-    }.each_value do |platforms|
+    end.each_value do |platforms|
       Version.update_all({:latest => true}, {:id => platforms.sort.last.id})
     end
   end

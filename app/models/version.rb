@@ -54,10 +54,6 @@ class Version < ActiveRecord::Base
     order('versions.created_at desc')
   end
 
-  def self.with_indexed
-    indexed.order("full_name")
-  end
-
   def self.rows_for_index
     to_rows(:release)
   end
