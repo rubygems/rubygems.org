@@ -41,7 +41,7 @@ group :development, :test do
 end
 
 group :test do
-  gem 'cucumber-rails', '~> 1.0.2'
+  gem 'cucumber-rails'
   gem 'database_cleaner'
   gem 'factory_girl_rails'
   gem 'launchy'
