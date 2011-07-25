@@ -158,9 +158,10 @@ GEM
     webmock (1.6.4)
       addressable (> 2.2.5, ~> 2.2)
       crack (>= 0.1.7)
-    webrat (0.5.3)
+    webrat (0.7.3)
       nokogiri (>= 1.2.0)
       rack (>= 1.0)
+      rack-test (>= 0.5.3)
     will_paginate (3.0.pre2)
     xml-simple (1.1.0)
     xpath (0.1.4)
@@ -203,7 +204,7 @@ DEPENDENCIES
   timecop
   validates_url_format_of
   webmock
-  webrat (~> 0.5.3)
+  webrat
   will_paginate (~> 3.0.pre2)
   xml-simple
   yajl-ruby
