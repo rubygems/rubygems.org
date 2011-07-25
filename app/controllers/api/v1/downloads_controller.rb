@@ -1,9 +1,12 @@
 class Api::V1::DownloadsController < Api::BaseController
 
   def index
-    render :json => {
-      "total" => Download.count
-    }
+    respond_to do |format|
+      format.any(:all) { render :text => Download.count }
+      format.json { render :json => {:total => Download.count} }
+      format.xml  { render :xml  => {:total => Download.count} }
+      format.yaml { render :text => {:total => Download.count}.to_yaml }
+    end
   end
 
   def show
