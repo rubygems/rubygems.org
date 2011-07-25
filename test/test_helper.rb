@@ -1,8 +1,8 @@
 ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
-require 'webmock/test_unit'
 require 'clearance/shoulda_macros'
+require 'capybara/rails'
 
 class ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -11,7 +11,6 @@ class ActiveSupport::TestCase
 end
 
 class Test::Unit::TestCase
-  include Webrat::Matchers
   include Rack::Test::Methods
   include RR::Adapters::TestUnit unless include?(RR::Adapters::TestUnit)
   include WebMock::API
@@ -22,8 +21,8 @@ class Test::Unit::TestCase
     $fog.directories.create(:key => $rubygems_config[:s3_bucket], :public => true)
   end
 
-  def response_body
-    @response.body
+  def page
+    Capybara::Node::Simple.new(@response.body)
   end
 
   def assert_changed(object, attribute, &block)

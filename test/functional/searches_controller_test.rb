@@ -8,7 +8,7 @@ class SearchesControllerTest < ActionController::TestCase
     should respond_with :success
     should render_template :show
     should "see no results" do
-      assert_not_contain "Results"
+      assert ! page.has_content?("Results")
     end
   end
 
@@ -40,13 +40,12 @@ class SearchesControllerTest < ActionController::TestCase
     should assign_to(:gems) { [@sinatra, @sinatra_redux] }
     should assign_to(:exact_match) { @sinatra }
     should "see sinatra on the page in the results" do
-      assert_contain @sinatra.name
-      assert_have_selector "a[href='#{rubygem_path(@sinatra)}']"
+      assert page.has_content?(@sinatra.name)
+      assert page.has_selector?("a[href='#{rubygem_path(@sinatra)}']")
     end
     should "not see brando on the page in the results" do
-      assert_not_contain @brando.name
-      assert_have_no_selector "a[href='#{rubygem_path(@brando)}']"
+      assert ! page.has_content?(@brando.name)
+      assert ! page.has_selector?("a[href='#{rubygem_path(@brando)}']")
     end
   end
-
 end

@@ -24,6 +24,9 @@ gem 'yajl-ruby', :require => 'yajl/json_gem'
 
 platforms :ruby_18 do
   gem 'system_timer'
+  group :test do
+    gem 'redgreen'
+  end
 end
 
 platforms :jruby do
@@ -51,5 +54,4 @@ group :test do
   gem 'shoulda'
   gem 'timecop'
   gem 'webmock'
-  gem 'webrat'
 end
