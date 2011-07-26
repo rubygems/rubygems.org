@@ -9,7 +9,12 @@ Gemcutter::Application.routes.draw do
       end
       resources :downloads, :only => :index
       constraints :id => Rubygem::ROUTE_PATTERN do
+        # In Rails 3.1, the following line can be replaced with
+        # resources :downloads, :only => :show, :format => true
         get 'downloads/:id.:format', :to => 'downloads#show', :as => 'download'
+        # In Rails 3.1, the next TWO lines can be replaced with
+        # resources :versions, :only => :show, :format => true do
+        get 'versions/:id.:format', :to => 'versions#show', :as => 'version'
         resources :versions, :only => :show do
           resources :downloads, :only => :index, :controller => "versions/downloads" do
             collection do

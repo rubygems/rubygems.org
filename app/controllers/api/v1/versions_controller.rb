@@ -1,8 +1,11 @@
 class Api::V1::VersionsController < Api::BaseController
   def show
-    gem_name = params[:id].try(:chomp, ".json")
-    if rubygem = Rubygem.find_by_name(gem_name)
-      render :json => rubygem.public_versions
+    if rubygem = Rubygem.find_by_name(params[:id])
+      respond_to do |format|
+        format.json { render :json => rubygem.public_versions }
+        format.xml  { render :xml  => rubygem.public_versions }
+        format.yaml { render :text => rubygem.public_versions.to_yaml }
+      end
     else
       render :text => "This rubygem could not be found.", :status => 404
     end
