@@ -50,7 +50,7 @@ class Dependency < ActiveRecord::Base
   def payload
     {
       'name'         => name,
-      'requirements' => requirements
+      'requirements' => requirements,
     }
   end
 
