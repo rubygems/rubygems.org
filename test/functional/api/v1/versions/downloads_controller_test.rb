@@ -1,12 +1,13 @@
 require 'test_helper'
 
 class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
-  def get_index(version)
-    get :index, :version_id => "#{version.full_name}.json"
+  def get_index(version, format='json')
+    get :index, :version_id => version.full_name, :format => format
   end
 
-  def get_search(version, from, to)
-    get :search, :version_id => "#{version.full_name}.json",
+  def get_search(version, from, to, format='json')
+    get :search, :version_id => version.full_name,
+                 :format => format,
                  :from => from.to_date.to_s,
                  :to => to.to_date.to_s
   end
@@ -22,23 +23,42 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
       Download.incr(@version.rubygem.name, @version.full_name)
     end
 
-    should "have a json object with 90 attributes, one per day of gem version download counts" do
-      get_index(@version)
-      assert_equal 90, JSON.parse(@response.body).count
+
+    context "with JSON" do
+      should "have a JSON object with 90 attributes, one per day of gem version download counts" do
+        get_index(@version)
+        assert_equal 90, JSON.parse(@response.body).count
+      end
+
+      should "have a JSON object with the download counts by day" do
+        get_index(@version)
+        json = JSON.parse(@response.body)
+        assert_equal 42, json[@eight_nine_days_ago]
+        assert_equal 2, json[@one_day_ago]
+        assert_equal 1, json[Time.zone.today.to_s]
+      end
     end
 
-    should "have a json object with the download counts by day" do
-      get_index(@version)
-      json = JSON.parse(@response.body)
-      assert_equal 42, json[@eight_nine_days_ago]
-      assert_equal 2, json[@one_day_ago]
-      assert_equal 1, json[Time.zone.today.to_s]
+    context "with YAML" do
+      should "have a YAML object with 90 attributes, one per day of gem version download counts" do
+        get_index(@version, 'yaml')
+        assert_equal 90, YAML.load(@response.body).count
+      end
+
+      should "have a JSON object with the download counts by day" do
+        get_index(@version, 'yaml')
+        yaml = YAML.load(@response.body)
+        assert_equal 42, yaml[@eight_nine_days_ago]
+        assert_equal 2, yaml[@one_day_ago]
+        assert_equal 1, yaml[Time.zone.today.to_s]
+      end
     end
+
   end
 
   context "on GET to index for an unknown gem" do
     setup do
-      get :index, :version_id => "nonexistent_gem"
+      get :index, :version_id => "nonexistent_gem", :format => 'json'
     end
 
     should "return a 404" do
@@ -128,6 +148,7 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
     context "for an unknown gem" do
       setup do
         get :index, :version_id => "nonexistent_gem",
+                    :format => 'json',
                     :from => @one_hundred_days_ago,
                     :to => @one_hundred_eighty_nine_days_ago
       end
