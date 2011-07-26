@@ -15,9 +15,8 @@ class WebHook < ActiveRecord::Base
     where("rubygem_id is not null")
   end
 
-  def fire(host_with_port, deploy_gem, version, delayed = true)
+  def fire(host_with_port, deploy_gem, version, delayed=true)
     job = WebHookJob.new(self.url, host_with_port, deploy_gem, version, self.user.api_key)
-
     if delayed
       Delayed::Job.enqueue job, :priority => PRIORITIES[:web_hook]
     else
@@ -54,7 +53,10 @@ class WebHook < ActiveRecord::Base
   end
 
   def payload
-    {'url' => url, 'failure_count' => failure_count}
+    {
+      'failure_count' => failure_count,
+      'url'           => url,
+    }
   end
 
   def as_json(options={})

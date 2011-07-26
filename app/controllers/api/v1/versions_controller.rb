@@ -4,7 +4,6 @@ class Api::V1::VersionsController < Api::BaseController
       respond_to do |format|
         format.json { render :json => rubygem.public_versions }
         format.xml  { render :xml  => rubygem.public_versions }
-        format.yaml { render :text => rubygem.public_versions.to_yaml }
       end
     else
       render :text => "This rubygem could not be found.", :status => 404
