@@ -165,8 +165,25 @@ class Version < ActiveRecord::Base
     Download.for(self)
   end
 
+  def payload
+    {
+      'authors'         => authors,
+      'built_at'        => built_at,
+      'description'     => description,
+      'downloads_count' => downloads_count,
+      'number'          => number,
+      'summary'         => summary,
+      'platform'        => platform,
+      'prerelease'      => prerelease,
+    }
+  end
+
   def as_json(options={})
-    super(:methods => [:downloads_count], :only => [:authors, :built_at, :description, :number, :platform, :prerelease, :summary])
+    payload
+  end
+
+  def to_xml(options={})
+    payload.to_xml(options.merge(:root => 'version'))
   end
 
   def to_s

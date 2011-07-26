@@ -71,34 +71,6 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
         assert_equal 3, Nokogiri.parse(@response.body).css('version').size
       end
     end
-
-    context "with YAML" do
-      should "have some YAML with the list of versions for the first gem" do
-        get_show(@rubygem, 'yaml')
-        assert_equal 2, YAML.load(@response.body).size
-      end
-
-      should "be ordered by position with prereleases" do
-        get_show(@rubygem, 'yaml')
-        yaml = YAML.load(@response.body)
-        assert_equal "2.0.0", yaml.first["number"]
-        assert_equal "1.0.0.pre", yaml.second["number"]
-      end
-
-      should "be ordered by position" do
-        get_show(@rubygem2, 'yaml')
-        yaml = YAML.load(@response.body)
-        assert_equal "3.0.0", yaml.first["number"]
-        assert_equal "2.0.0", yaml.second["number"]
-        assert_equal "1.0.0", yaml.third["number"]
-      end
-
-      should "have some YAML with the list of versions for the second gem" do
-        get_show(@rubygem2, 'yaml')
-        assert_equal 3, YAML.load(@response.body).size
-      end
-    end
-
   end
 
   context "on GET to show for an unknown gem" do
