@@ -160,7 +160,7 @@ GEM
     webmock (1.6.4)
       addressable (> 2.2.5, ~> 2.2)
       crack (>= 0.1.7)
-    will_paginate (3.0.pre2)
+    will_paginate (3.0.pre4)
     xml-simple (1.1.0)
     xpath (0.1.4)
       nokogiri (~> 1.3)
