@@ -78,6 +78,7 @@
         </div>
       <% end %>
 
+    <% unless @versions.empty? %>
       <div class="versions">
         <h5><%= t '.versions_header' %></h5>
         <ol>
@@ -87,6 +88,7 @@
           <%= link_to t('.show_all_versions', :count => @rubygem.versions.count), rubygem_versions_url(@rubygem), :class => "more" %>
         <% end %>
       </div>
+    <% end %>
 
       <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.runtime } %>
       <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.development } %>
