@@ -59,7 +59,7 @@
 
         </div>
 
-        <% unless @rubygem.linkset.empty? %>
+        <% if @rubygem.linkset.present? %>
           <div class="links">
             <h5><%= t '.links.header' %></h5>
             <%= link_to_page t('.links.home'), @rubygem.linkset.home %>
@@ -78,7 +78,7 @@
         </div>
       <% end %>
 
-    <% unless @versions.empty? %>
+    <% if @versions.present? %>
       <div class="versions">
         <h5><%= t '.versions_header' %></h5>
         <ol>
