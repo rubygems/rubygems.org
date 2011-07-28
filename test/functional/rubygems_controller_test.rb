@@ -297,6 +297,22 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  context "On GET to show for a yanked gem with no versions" do
+    setup do
+      version = Factory(:version, :created_at => 1.minute.ago)
+      @rubygem = version.rubygem
+      @rubygem.yank!(version)
+      get :show, :id => @rubygem.to_param
+    end
+    should respond_with :success
+    should render_template :show
+    should assign_to :rubygem
+    should "render info about the gem" do
+      assert page.has_content?("This gem has been yanked")
+      assert page.has_no_content?('Versions')
+    end
+  end
+
   context "On GET to show for a gem with no versions" do
     setup do
       @rubygem = Factory(:rubygem)
