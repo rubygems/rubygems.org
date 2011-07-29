@@ -1,4 +1,4 @@
-h1. gemcutter
+h1. RubyGems.org (Gemcutter)
 
 Awesome RubyGem hosting. Now the Ruby community's gem host, living at https://rubygems.org.
 
@@ -13,17 +13,17 @@ h2. Links
 "Mailing List":http://groups.google.com/group/gemcutter
 "FAQ":http://help.rubygems.org/kb/gemcutter/faq
 IRC: #gemcutter on irc.freenode.net
-"CI":http://travis-ci.org/#!/rubygems/gemcutter !https://secure.travis-ci.org/rubygems/gemcutter.png?branch=master!
+"CI":http://travis-ci.org/#!/rubygems/rubygems.org !https://secure.travis-ci.org/rubygems/rubygems.org.png?branch=master!
 
 h2. Contributions
 
 Gemcutter has a 'commit-bit' policy, much like the Rubinius project. Submit a patch that is accepted, and you can get full commit access to the project. All you have to do is ask us on #gemcutter on Freenode or bug qrush in a message and he'll add you as a collaborator on the main repository. Feel free to fork the project though and have fun in your own sandbox.
 
-Please read up on the "GitHub Wiki":http://wiki.github.com/rubygems/gemcutter/contribution-guidelines for the latest contribution guidelines.
+Please read up on the "GitHub Wiki":http://wiki.github.com/rubygems/rubygems.org/contribution-guidelines for the latest contribution guidelines.
 
-To get setup, please check out the "Development Setup":https://github.com/rubygems/gemcutter/wiki/Development-Setup page on the wiki. It's on the wiki so anyone can edit it, so please fix it if you have trouble getting set up!
+To get setup, please check out the "Development Setup":https://github.com/rubygems/rubygems.org/wiki/Development-Setup page on the wiki. It's on the wiki so anyone can edit it, so please fix it if you have trouble getting set up!
 
-Our deployment process is documented on the wiki as well, there's a multi-step "Checklist":https://github.com/rubygems/gemcutter/wiki/Deployment to run through.
+Our deployment process is documented on the wiki as well, there's a multi-step "Checklist":https://github.com/rubygems/rubygems.org/wiki/Deployment to run through.
 
 h2. Organization
 
@@ -31,7 +31,6 @@ Gemcutter consists of a few major parts:
 
 * Rails app: To manage users and allow others to view gems, etc.
 * Sinatra app (Hostess): the gem server
-* RubyGem: The gemcutter client gem that interacts with the site, lives in @gem/@.
 * Gem processor: Handles incoming gems and storing them in S3 (production) or on the filesystem in @server/@ (development).
 
 h2. License
