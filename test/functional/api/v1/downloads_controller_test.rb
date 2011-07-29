@@ -140,6 +140,18 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
   end
 
+  def get_top(format)
+    get :top, :format => format
+  end
+
+  def should_return_top_gems(gems)
+    assert_equal 3, gems.length
+    gems.each {|g| assert g[0].is_a?(Hash) }
+    assert_equal 3, gems[0][1]
+    assert_equal 2, gems[1][1]
+    assert_equal 1, gems[2][1]
+  end
+
   context "On GET to top" do
     setup do
       @rubygem_1 = Factory(:rubygem)
@@ -157,15 +169,22 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
       Download.incr(@rubygem_2.name, @version_3.full_name)
 
       stub(Download).most_downloaded_today(50){ [[@version_1, 3], [@version_2, 2], [@version_3, 1]] }
-      get :top
     end
 
-    should "return the 100 gems with the most downloads" do
-      gems = JSON.parse(@response.body)['gems']
-      assert_equal 3, gems.length
-      assert_equal 3, gems[0][1]
-      assert_equal 2, gems[1][1]
-      assert_equal 1, gems[2][1]
+    should "return correct JSON for top gems" do
+      get_top :json
+      should_return_top_gems JSON.parse(@response.body)['gems']
+    end
+
+    should "return correct YAML for top gems" do
+      get_top :yaml
+      should_return_top_gems YAML.load(@response.body)[:gems]
+    end
+
+    should "return correct XML for top gems" do
+      get_top :xml
+      gems = Hash.from_xml(Nokogiri.parse(@response.body).to_xml)['hash']['gems']
+      should_return_top_gems(gems)
     end
   end
 
