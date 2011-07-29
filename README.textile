@@ -1,6 +1,6 @@
 h1. gemcutter
 
-Awesome RubyGem hosting.
+Awesome RubyGem hosting. Now the Ruby community's gem host, living at https://rubygems.org.
 
 h2. Purpose
 
@@ -23,14 +23,16 @@ Please read up on the "GitHub Wiki":http://wiki.github.com/rubygems/gemcutter/co
 
 To get setup, please check out the "Development Setup":https://github.com/rubygems/gemcutter/wiki/Development-Setup page on the wiki. It's on the wiki so anyone can edit it, so please fix it if you have trouble getting set up!
 
+Our deployment process is documented on the wiki as well, there's a multi-step "Checklist":https://github.com/rubygems/gemcutter/wiki/Deployment to run through.
+
 h2. Organization
 
 Gemcutter consists of a few major parts:
 
 * Rails app: To manage users and allow others to view gems, etc.
-* Sinatra app (Hostess): the gem server, lives in @app/middleware/hostess.rb@.
+* Sinatra app (Hostess): the gem server
 * RubyGem: The gemcutter client gem that interacts with the site, lives in @gem/@.
-* Gem processor: Handles incoming gems and storing them in S3 (production) or on the filesystem in @server/@ (development). Lives in @lib/gemcutter.rb@, @lib/indexer.rb@, @lib/vault.rb@.
+* Gem processor: Handles incoming gems and storing them in S3 (production) or on the filesystem in @server/@ (development).
 
 h2. License
 
