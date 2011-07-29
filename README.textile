@@ -13,6 +13,7 @@ h2. Links
 "Mailing List":http://groups.google.com/group/gemcutter
 "FAQ":http://help.rubygems.org/kb/gemcutter/faq
 IRC: #gemcutter on irc.freenode.net
+"CI":http://travis-ci.org/#!/rubygems/gemcutter !https://secure.travis-ci.org/rubygems/gemcutter.png?branch=master!
 
 h2. Contributions
 
