@@ -44,7 +44,7 @@ class VersionTest < ActiveSupport::TestCase
 
   context "updated gems" do
     setup do
-      Timecop.freeze
+      Timecop.freeze Date.today
       @existing_gem = Factory(:rubygem)
       @second = Factory(:version, :rubygem => @existing_gem, :created_at => 1.day.ago)
       @fourth = Factory(:version, :rubygem => @existing_gem, :created_at => 4.days.ago)
