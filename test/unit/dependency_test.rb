@@ -66,7 +66,7 @@ class DependencyTest < ActiveSupport::TestCase
 
       should "create a Dependency referring to the existing Rubygem" do
         assert_equal @rubygem,      @dependency.rubygem
-        assert_equal @requirements.to_s, @dependency.requirements
+        assert_equal @requirements[0].to_s, @dependency.requirements
       end
     end
 
