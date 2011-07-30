@@ -36,7 +36,7 @@ end
 # These gems suck and do stupid things when in maintenance mode
 group :development, :test, :staging, :production do
   gem 'delayed_job'
-  gem 'validates_url_format_of'
+  gem 'validates_url_format_of', '~> 0.1.2'
 end
 
 group :development, :test do
