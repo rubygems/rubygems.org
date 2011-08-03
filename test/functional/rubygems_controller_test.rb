@@ -270,7 +270,7 @@ class RubygemsControllerTest < ActionController::TestCase
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
       assert page.has_content?(@latest_version.number)
-      assert page.has_content?(@latest_version.built_at.to_date.to_formatted_s(:long))
+      assert page.has_css?("small:contains('#{@latest_version.built_at.to_date.to_formatted_s(:long)}')")
       assert page.has_content?("Links")
     end
   end
@@ -278,7 +278,7 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to show with a gem that has multiple versions" do
     setup do
       @rubygem = Factory(:rubygem)
-      @older_version = Factory(:version, :number => "1.0.0", :rubygem => @rubygem, :created_at => 2.minutes.ago)
+      @older_version = Factory(:version, :number => "1.0.0", :rubygem => @rubygem, :created_at => 2.days.ago)
       @latest_version = Factory(:version, :number => "2.0.0", :rubygem => @rubygem, :created_at => 1.minute.ago)
       get :show, :id => @rubygem.to_param
     end
@@ -289,11 +289,11 @@ class RubygemsControllerTest < ActionController::TestCase
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
       assert page.has_content?(@latest_version.number)
-      assert page.has_content?(@latest_version.built_at.to_date.to_formatted_s(:long))
+      assert page.has_css?("small:contains('#{@latest_version.built_at.to_date.to_formatted_s(:long)}')")
 
       assert page.has_content?("Versions")
-      assert page.has_content?(@rubygem.versions.last.number)
-      assert page.has_content?(@rubygem.versions.last.built_at.to_date.to_formatted_s(:long))
+      assert page.has_content?(@older_version.number)
+      assert page.has_css?("small:contains('#{@older_version.built_at.to_date.to_formatted_s(:long)}')")
     end
   end
 
