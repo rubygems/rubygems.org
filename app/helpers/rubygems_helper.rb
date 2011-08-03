@@ -1,6 +1,3 @@
-require 'rdoc/markup/simple_markup'
-require 'rdoc/markup/simple_markup/to_html'
-
 module RubygemsHelper
   def link_to_page(text, url)
     link_to(text, url, :rel => 'nofollow') if url.present?
@@ -12,7 +9,7 @@ module RubygemsHelper
 
   def simple_markup(text)
     if text =~ /^==+ [A-Z]/
-      SM::SimpleMarkup.new.convert(text, SM::ToHtml.new).html_safe
+      RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new).html_safe
     else
       content_tag :p, text
     end
