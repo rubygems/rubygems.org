@@ -51,7 +51,7 @@ Then /^a confirmation message should be sent to "(.*)"$/ do |email|
   assert_equal [user.email], sent.to
   assert_match /confirm/i, sent.subject
   assert !user.confirmation_token.blank?
-  assert_match /#{user.confirmation_token}/, sent.body
+  assert_match /#{user.confirmation_token}/, sent.body.to_s
 end
 
 When /^I follow the confirmation link sent to "(.*)"$/ do |email|
@@ -66,7 +66,7 @@ Then /^a password reset message should be sent to "(.*)"$/ do |email|
   assert_equal [user.email], sent.to
   assert_match /password/i, sent.subject
   assert !user.confirmation_token.blank?
-  assert_match /#{user.confirmation_token}/, sent.body
+  assert_match /#{user.confirmation_token}/, sent.body.to_s
 end
 
 When /^I follow the password reset link sent to "(.*)"$/ do |email|
