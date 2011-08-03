@@ -558,23 +558,23 @@ class RubygemTest < ActiveSupport::TestCase
       @rubygem = Factory(:rubygem)
       @version = Factory(:version, :rubygem => @rubygem)
 
-      Timecop.freeze DateTime.parse("10/2/2010")
+      Timecop.freeze DateTime.parse("2010-10-02")
       1.times { Download.incr(@rubygem.name, @version.full_name) }
       Download.rollover
 
-      Timecop.freeze DateTime.parse("10/3/2010")
+      Timecop.freeze DateTime.parse("2010-10-03")
       6.times { Download.incr(@rubygem.name, @version.full_name) }
       Download.rollover
 
-      Timecop.freeze DateTime.parse("10/16/2010")
+      Timecop.freeze DateTime.parse("2010-10-16")
       4.times { Download.incr(@rubygem.name, @version.full_name) }
       Download.rollover
 
-      Timecop.freeze DateTime.parse("11/1/2010")
+      Timecop.freeze DateTime.parse("2010-11-01")
       2.times { Download.incr(@rubygem.name, @version.full_name) }
       Download.rollover
 
-      Timecop.freeze DateTime.parse("11/2/2010")
+      Timecop.freeze DateTime.parse("2010-11-02")
     end
 
     should "give counts from the past 30 days" do
