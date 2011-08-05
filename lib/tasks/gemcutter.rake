@@ -10,29 +10,6 @@ namespace :gemcutter do
     end
   end
 
-  desc "Store legacy index"
-  task :store_legacy_index => :environment do
-    puts "Loading up versions..."
-    versions = Version.with_deps.indexed.order("full_name")
-
-    puts "Mapping specs..."
-    index = versions.map do |version|
-      [version.full_name, version.to_spec]
-    end
-
-    puts "Uploading to S3..."
-    class Uploader
-      include Vault
-    end
-    file = Uploader.new.directory.files.create(
-      :body   => Gem.deflate(Marshal.dump(index)),
-      :key    => "Marshal.4.8.Z",
-      :public => true
-    )
-
-    puts "Ding, legacy index is done!"
-  end
-
   desc "fix full names"
   task :fix_full_names => :environment do
     Version.without_any_callbacks do

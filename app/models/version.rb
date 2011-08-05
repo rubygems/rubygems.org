@@ -218,21 +218,6 @@ class Version < ActiveRecord::Base
     command
   end
 
-  def to_spec
-    Gem::Specification.new do |spec|
-      spec.name        = rubygem.name
-      spec.version     = to_gem_version
-      spec.authors     = authors.split(', ')
-      spec.date        = built_at
-      spec.description = description
-      spec.summary     = summary
-
-      dependencies.each do |dep|
-        spec.add_dependency(dep.rubygem.name, dep.requirements.split(', '))
-      end
-    end
-  end
-
   private
 
   def self.to_rows(scope)
