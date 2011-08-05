@@ -71,7 +71,7 @@ class Dependency < ActiveRecord::Base
   end
 
   def clean_requirements
-    requirements.sub /#<YAML::Syck::DefaultKey[^>]*>/, "="
+    requirements.gsub /#<YAML::Syck::DefaultKey[^>]*>/, "="
   end
 
   private
@@ -94,7 +94,7 @@ class Dependency < ActiveRecord::Base
 
   def parse_gem_dependency
     reqs = gem_dependency.requirements_list.join(', ')
-    self.requirements = reqs.sub(/#<YAML::Syck::DefaultKey[^>]*>/, "=")
+    self.requirements = reqs.gsub(/#<YAML::Syck::DefaultKey[^>]*>/, "=")
 
     self.scope = gem_dependency.type.to_s
   end
