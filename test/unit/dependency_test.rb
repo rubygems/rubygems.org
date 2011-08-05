@@ -56,6 +56,30 @@ class DependencyTest < ActiveSupport::TestCase
   end
 
   context "with a Gem::Dependency" do
+    context "that refers to a Rubygem that exists with a malformed dependency" do
+      setup do
+        @rubygem        = Factory(:rubygem)
+        @requirements   = ['= 0.0.0']
+        @gem_dependency = Gem::Dependency.new(@rubygem.name, @requirements)
+      end
+
+      should "correctly create a Dependency referring to the existing Rubygem" do
+        stub(@gem_dependency).requirements_list { ['#<YAML::Syck::DefaultKey:0x0000000> 0.0.0'] }
+        @dependency = Factory(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
+
+        assert_equal @rubygem, @dependency.rubygem
+        assert_equal @requirements[0].to_s, @dependency.requirements
+      end
+
+      should "correctly display a malformed Dependency referring to the existing Rubygem" do 
+        @dependency = Factory(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
+        stub(@dependency).requirements { '#<YAML::Syck::DefaultKey:0x0000000> 0.0.0' }
+
+        assert_equal @rubygem, @dependency.rubygem
+        assert_equal @requirements[0].to_s, @dependency.clean_requirements
+      end
+    end
+
     context "that refers to a Rubygem that exists" do
       setup do
         @rubygem        = Factory(:rubygem)
