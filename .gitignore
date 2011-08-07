@@ -5,7 +5,6 @@
 *~
 .DS_Store
 .bundle
-.rvmrc
 .sass-cache/
 _site/
 bench/

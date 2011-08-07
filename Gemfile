@@ -22,6 +22,10 @@ gem 'will_paginate', '~> 3.0.pre2'
 gem 'xml-simple'
 gem 'yajl-ruby', :require => 'yajl/json_gem'
 
+platforms :ruby_19 do
+  gem 'psych'
+end
+
 platforms :ruby_18 do
   gem 'system_timer'
   group :test do
