@@ -123,6 +123,10 @@ GEM
       activesupport (= 3.0.9)
       bundler (~> 1.0)
       railties (= 3.0.9)
+    rails-erd (0.4.5)
+      activerecord (~> 3.0)
+      activesupport (~> 3.0)
+      ruby-graphviz (~> 0.9.18)
     railties (3.0.9)
       actionpack (= 3.0.9)
       activesupport (= 3.0.9)
@@ -136,6 +140,7 @@ GEM
     rest-client (1.6.3)
       mime-types (>= 1.16)
     rr (1.0.3)
+    ruby-graphviz (0.9.21)
     ruby-hmac (0.4.0)
     rubyzip (0.9.4)
     selenium-webdriver (0.2.2)
@@ -194,6 +199,7 @@ DEPENDENCIES
   rack-maintenance
   rack-test
   rails (~> 3.0.9)
+  rails-erd
   rdoc
   redgreen
   redis
