@@ -37,6 +37,10 @@ platforms :jruby do
   gem 'jruby-openssl'
 end
 
+group :development do
+  gem 'rails-erd'
+end
+
 # These gems suck and do stupid things when in maintenance mode
 group :development, :test, :staging, :production do
   gem 'delayed_job'
