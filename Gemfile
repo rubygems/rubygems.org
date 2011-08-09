@@ -18,7 +18,7 @@ gem 'rdoc'
 gem 'redis'
 gem 'rest-client', :require => 'rest_client'
 gem 'sinatra'
-gem 'will_paginate', '~> 3.0.pre2'
+gem 'will_paginate'
 gem 'xml-simple'
 gem 'yajl-ruby', :require => 'yajl/json_gem'
 
