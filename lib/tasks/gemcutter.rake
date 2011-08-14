@@ -127,9 +127,12 @@ namespace :gemcutter do
       puts "Processing #{gems.size} gems..."
       gems.each do |path|
         puts "Processing #{path}"
-        cutter = Pusher.new(nil, StringIO.new(File.open(path).read))
-
-        cutter.pull_spec and cutter.find and cutter.save
+        begin
+          cutter = Pusher.new(nil, StringIO.new(File.open(path).read))
+          cutter.pull_spec and cutter.find and cutter.save
+        rescue Exception => e
+          puts "Failed processing #{path}. Reason: #{e}"
+        end
       end
     end
 
