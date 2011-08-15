@@ -44,7 +44,7 @@ class VersionTest < ActiveSupport::TestCase
 
   context "updated gems" do
     setup do
-      Timecop.freeze
+      Timecop.freeze Date.today
       @existing_gem = Factory(:rubygem)
       @second = Factory(:version, :rubygem => @existing_gem, :created_at => 1.day.ago)
       @fourth = Factory(:version, :rubygem => @existing_gem, :created_at => 4.days.ago)
@@ -246,44 +246,6 @@ class VersionTest < ActiveSupport::TestCase
       @version.description = nil
       @version.summary = nil
       assert_equal "This rubygem does not have a description or summary.", @version.info
-    end
-
-    should "create a gem spec" do
-      spec = @version.to_spec
-      assert spec.is_a?(Gem::Specification)
-      assert_equal @version.rubygem.name, spec.name
-      assert_equal @version.number, spec.version.to_s
-      assert_equal [@version.authors], spec.authors
-      assert_equal @version.description, spec.description
-      assert_equal @version.summary.blank?, spec.summary.blank?
-
-      date = @version.built_at
-      if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.8.0')
-        assert_equal Time.utc(date.year, date.month, date.day), spec.date
-      else
-        assert_equal Time.local(date.year, date.month, date.day), spec.date
-      end
-    end
-
-    should "join multiple authors on gemspecs" do
-      @version.authors = "Geddy Lee, Neil Peart, Alex Lifeson"
-      assert_equal ["Geddy Lee", "Neil Peart", "Alex Lifeson"], @version.to_spec.authors
-    end
-
-    should "create gemspec with some dependencies" do
-      @dep_one = Factory(:dependency, :version => @version, :requirements => ">= 0, = 1.2.3")
-      @dep_two = Factory(:dependency, :version => @version, :requirements => "= 3.0.0")
-      spec = @version.to_spec
-
-      @spec_dep_one = spec.dependencies.detect { |d| d.name == @dep_one.rubygem.name }
-      @spec_dep_two = spec.dependencies.detect { |d| d.name == @dep_two.rubygem.name }
-
-      assert_equal 2, spec.dependencies.size
-      assert @spec_dep_one
-      assert @spec_dep_two
-
-      assert_equal @dep_one.requirements.split(", "), @spec_dep_one.requirements_list
-      assert_equal @dep_two.requirements.split(", "), @spec_dep_two.requirements_list
     end
 
     context "when yanked" do
