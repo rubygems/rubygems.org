@@ -3,7 +3,7 @@ development:
   local_storage: true
   redirector: false
   delivery_method: :sendmail
-  s3_bucket: development.s3.rubygems.org
+  s3_bucket: .
   s3_domain: development.s3.rubygems.org
   cf_domain: development.cf.rubygems.org
   asset_cacher: false
