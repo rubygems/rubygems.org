@@ -10,7 +10,7 @@ module Vault
   def fog
     $fog || Fog::Storage.new(
       :provider => 'Local',
-      :local_root => Pusher.server_path('gems')
+      :local_root => Pusher.server_path
     )
   end
 
