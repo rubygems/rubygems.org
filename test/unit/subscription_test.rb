@@ -6,7 +6,7 @@ class SubscriptionTest < ActiveSupport::TestCase
 
   context "with a linkset" do
     setup do
-      @subscription = Factory.create(:subscription)
+      @subscription = FactoryGirl.create(:subscription)
     end
 
     subject { @subscription }
