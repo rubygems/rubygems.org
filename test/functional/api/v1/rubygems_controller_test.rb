@@ -142,7 +142,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to show for a gem that doesn't exist" do
       setup do
-        @name = Factory.next(:name)
+        @name = FactoryGirl.generate(:name)
         assert ! Rubygem.exists?(:name => @name)
         get :show, :id => @name, :format => "json"
       end
