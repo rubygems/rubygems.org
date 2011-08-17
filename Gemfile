@@ -1,8 +1,5 @@
 source 'http://rubygems.org'
 
-# Load psych before anything else, since load order is significant in defining YAML::ENGINE.yamler
-gem 'psych', :platforms => :ruby_19
-
 gem 'rails', '~> 3.0.10'
 
 gem 'clearance', '~> 0.9.1'
@@ -25,29 +22,18 @@ gem 'will_paginate'
 gem 'xml-simple'
 gem 'yajl-ruby', :require => 'yajl/json_gem'
 
-platforms :ruby_18 do
-  gem 'system_timer'
-  group :test do
-    gem 'redgreen'
-  end
-end
-
-platforms :jruby do
-  gem 'jruby-openssl'
-end
-
 group :development do
   gem 'rails-erd'
+end
+
+group :development, :test do
+  gem 'silent-postgres'
 end
 
 # These gems suck and do stupid things when in maintenance mode
 group :development, :test, :staging, :production do
   gem 'delayed_job'
-  gem 'validates_url_format_of', '~> 0.1.2'
-end
-
-group :development, :test do
-  gem 'silent-postgres'
+  gem 'validates_url_format_of'
 end
 
 group :test do
@@ -57,8 +43,21 @@ group :test do
   gem 'launchy'
   gem 'nokogiri'
   gem 'rack-test', :require => 'rack/test'
+  gem 'redgreen', :platforms => :ruby_18
   gem 'rr'
   gem 'shoulda'
   gem 'timecop'
   gem 'webmock'
+end
+
+platforms :jruby do
+  gem 'jruby-openssl'
+end
+
+platforms :ruby_18 do
+  gem 'system_timer'
+end
+
+platforms :ruby_19 do
+  gem 'psych'
 end
