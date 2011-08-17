@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   end
 
   def find_gem
-    @rubygem = Rubygem.find_by_name(params[:id] || params[:rubygem_id])
+    @rubygem = Rubygem.find_by_name(params[:rubygem_id] || params[:id])
     if @rubygem.blank?
       respond_to do |format|
         format.html do
