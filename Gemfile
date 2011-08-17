@@ -1,5 +1,8 @@
 source 'http://rubygems.org'
 
+# Load psych before anything else, since load order is significant in defining YAML::ENGINE.yamler
+gem 'psych', :platforms => :ruby_19
+
 gem 'rails', '~> 3.0.10'
 
 gem 'clearance', '~> 0.9.1'
@@ -56,8 +59,4 @@ end
 
 platforms :ruby_18 do
   gem 'system_timer'
-end
-
-platforms :ruby_19 do
-  gem 'psych'
 end
