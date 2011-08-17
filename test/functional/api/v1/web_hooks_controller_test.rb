@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'yaml'
 
 class Api::V1::WebHooksControllerTest < ActionController::TestCase
   def self.should_not_find_it
