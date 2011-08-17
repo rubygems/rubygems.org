@@ -7,7 +7,7 @@ class DependencyTest < ActiveSupport::TestCase
   context "with dependency" do
     setup do
       @version = Factory(:version)
-      @dependency = Factory.build(:dependency, :version => @version)
+      @dependency = FactoryGirl.build(:dependency, :version => @version)
     end
 
     should "be valid with factory" do

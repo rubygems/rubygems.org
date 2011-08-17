@@ -18,16 +18,16 @@ class RubygemsHelperTest < ActionView::TestCase
   end
 
   should "link to docs if no docs link is set" do
-    version = Factory.build(:version)
-    linkset = Factory.build(:linkset, :docs => nil)
+    version = FactoryGirl.build(:version)
+    linkset = FactoryGirl.build(:linkset, :docs => nil)
 
     link = documentation_link(version, linkset)
     assert link.include?(documentation_path(version))
   end
 
   should "not link to docs if docs link is set" do
-    version = Factory.build(:version)
-    linkset = Factory.build(:linkset)
+    version = FactoryGirl.build(:version)
+    linkset = FactoryGirl.build(:linkset)
 
     link = documentation_link(version, linkset)
     assert link.blank?
@@ -35,7 +35,7 @@ class RubygemsHelperTest < ActionView::TestCase
 
   context "creating linkset links" do
     setup do
-      @linkset = Factory.build(:linkset)
+      @linkset = FactoryGirl.build(:linkset)
       @linkset.wiki = nil
       @linkset.code = ""
     end
