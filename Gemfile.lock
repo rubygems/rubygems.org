@@ -79,7 +79,7 @@ GEM
       ruby-hmac
     formatador (0.2.0)
     gchartrb (0.8)
-    gherkin (2.4.6)
+    gherkin (2.4.8)
       json (>= 1.4.6)
     gravtastic (3.1.0)
     high_voltage (1.0.0)
@@ -210,7 +210,7 @@ DEPENDENCIES
   sinatra
   system_timer
   timecop
-  validates_url_format_of (~> 0.1.2)
+  validates_url_format_of
   webmock
   will_paginate
   xml-simple
