@@ -122,7 +122,7 @@ class RubygemTest < ActiveSupport::TestCase
 
   context "with a rubygem" do
     setup do
-      @rubygem = Factory.build(:rubygem, :linkset => nil)
+      @rubygem = FactoryGirl.build(:rubygem, :linkset => nil)
     end
 
     ['1337', 'Snakes!', ['zomg']].each do |bad_name|
@@ -145,7 +145,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "return version errors in #all_errors" do
-      @version = Factory.build(:version)
+      @version = FactoryGirl.build(:version)
       @specification = gem_specification_from_gem_fixture('test-0.0.0')
       @specification.authors = [3]
 
@@ -310,7 +310,7 @@ class RubygemTest < ActiveSupport::TestCase
 
     context "with a linkset" do
       setup do
-        @rubygem = Factory.build(:rubygem)
+        @rubygem = FactoryGirl.build(:rubygem)
         version = Factory(:version, :rubygem => @rubygem)
       end
 
@@ -398,7 +398,7 @@ class RubygemTest < ActiveSupport::TestCase
       @rack = Factory(:rubygem, :name => 'rack', :created_at => 1.day.ago,   :downloads => 2)
       @dust = Factory(:rubygem, :name => 'dust', :created_at => 3.days.ago,  :downloads => 1)
       @haml = Factory(:rubygem, :name => 'haml')
-      @new = Factory.build(:rubygem)
+      @new = FactoryGirl.build(:rubygem)
 
       @gems = [@thin, @rake, @json, @thor, @rack, @dust]
       @gems.each { |g| Factory(:version, :rubygem => g) }

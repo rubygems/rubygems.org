@@ -76,10 +76,10 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "not allow duplicate versions" do
-      @version = Factory.build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
+      @version = FactoryGirl.build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
       @dup_version = @version.dup
-      @number_version = Factory.build(:version, :rubygem => @rubygem, :number => "2.0.0", :platform => "ruby")
-      @platform_version = Factory.build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "mswin32")
+      @number_version = FactoryGirl.build(:version, :rubygem => @rubygem, :number => "2.0.0", :platform => "ruby")
+      @platform_version = FactoryGirl.build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "mswin32")
 
       assert @version.save
       assert @number_version.save
@@ -89,13 +89,13 @@ class VersionTest < ActiveSupport::TestCase
 
     should "be able to find dependencies" do
       @dependency = Factory(:rubygem)
-      @version = Factory.build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
+      @version = FactoryGirl.build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
       @version.dependencies << Factory(:dependency, :version => @version, :rubygem => @dependency)
       assert ! Version.with_deps.first.dependencies.empty?
     end
 
     should "sort dependencies alphabetically" do
-      @version = Factory.build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
+      @version = FactoryGirl.build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
 
       @first_dependency_by_alpha = Factory(:rubygem, :name => 'acts_as_indexed')
       @second_dependency_by_alpha = Factory(:rubygem, :name => 'friendly_id')
@@ -444,7 +444,7 @@ class VersionTest < ActiveSupport::TestCase
   context "with a Gem::Specification" do
     setup do
       @spec    = gem_specification_from_gem_fixture('test-0.0.0')
-      @version = Factory.build(:version)
+      @version = FactoryGirl.build(:version)
     end
 
     [/foo/, 1337, {:foo => "bar"}].each do |example|

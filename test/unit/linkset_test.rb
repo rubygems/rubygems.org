@@ -6,7 +6,7 @@ class LinksetTest < ActiveSupport::TestCase
 
   context "with a linkset" do
     setup do
-      @linkset = Factory.build(:linkset)
+      @linkset = FactoryGirl.build(:linkset)
     end
 
     should "be valid with factory" do

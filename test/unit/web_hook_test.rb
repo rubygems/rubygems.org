@@ -20,13 +20,13 @@ class WebHookTest < ActiveSupport::TestCase
   end
 
   should "require user" do
-    hook = Factory.build(:web_hook, :user => nil)
+    hook = FactoryGirl.build(:web_hook, :user => nil)
     assert !hook.valid?
   end
 
   ["badurl", "", nil].each do |url|
     should "invalidate with #{url.inspect} as the url" do
-      hook = Factory.build(:web_hook, :url => url)
+      hook = FactoryGirl.build(:web_hook, :url => url)
       assert !hook.valid?
     end
   end

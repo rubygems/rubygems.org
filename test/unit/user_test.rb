@@ -15,7 +15,7 @@ class UserTest < ActiveSupport::TestCase
       should_not allow_value("abc\n<script>bad").for(:handle)
 
       should "be between 3 and 15 characters" do
-        user = Factory.build(:user, :handle => "a")
+        user = FactoryGirl.build(:user, :handle => "a")
         assert ! user.valid?
         assert_equal "is too short (minimum is 3 characters)", user.errors[:handle].first
 
@@ -29,17 +29,17 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should "be invalid when an empty string" do
-        user = Factory.build(:user, :handle => "")
+        user = FactoryGirl.build(:user, :handle => "")
         assert ! user.valid?
       end
 
       should "be valid when nil and other users have a nil handle" do
-        assert_valid Factory.build(:user, :handle => nil)
-        assert_valid Factory.build(:user, :handle => nil)
+        assert_valid FactoryGirl.build(:user, :handle => nil)
+        assert_valid FactoryGirl.build(:user, :handle => nil)
       end
 
       should "show user id if no handle set" do
-        user = Factory.build(:user, :handle => nil, :id => 13)
+        user = FactoryGirl.build(:user, :handle => nil, :id => 13)
         assert_equal "#13", user.display_handle
 
         user.handle = "bills"
