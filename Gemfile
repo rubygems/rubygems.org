@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~> 3.0.9'
+gem 'rails', '~> 3.0.10'
 
 gem 'clearance', '~> 0.9.1'
 gem 'fog'
@@ -8,7 +8,7 @@ gem 'gchartrb', :require => 'google_chart'
 gem 'gravtastic'
 gem 'high_voltage'
 gem 'hoptoad_notifier'
-gem 'mail'
+gem 'mail', '~> 2.2.19'
 gem 'newrelic_rpm'
 gem 'paul_revere'
 gem 'pg'
