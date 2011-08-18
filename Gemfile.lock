@@ -67,7 +67,7 @@ GEM
       factory_girl (~> 2.0.0)
       railties (>= 3.0.0)
     ffi (1.0.9)
-    fog (0.10.0)
+    fog (0.11.0)
       builder
       excon (~> 0.6.5)
       formatador (~> 0.2.0)
