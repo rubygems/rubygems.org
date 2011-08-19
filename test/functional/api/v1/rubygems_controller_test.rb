@@ -424,5 +424,49 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         assert_match "Access Denied. Please sign up for an account at http://rubygems.org", @response.body
       end
     end
+    
+    def get_latest(format)
+      get :latest, :format => format
+    end
+
+    def should_return_latest_gems(gems)
+      assert_equal 2, gems.length
+      gems.each {|g| assert g.is_a?(Hash) }
+      assert_equal @rubygem_2.attributes['name'], gems[0]['name']
+      assert_equal @rubygem_3.attributes['name'], gems[1]['name']
+    end
+
+    context "On GET to latest" do
+      setup do
+        @rubygem_1 = Factory(:rubygem)
+        @version_1 = Factory(:version, :rubygem => @rubygem_1)
+        @version_2 = Factory(:version, :rubygem => @rubygem_1)
+
+        @rubygem_2 = Factory(:rubygem)
+        @version_3 = Factory(:version, :rubygem => @rubygem_2)
+
+        @rubygem_3 = Factory(:rubygem)
+        @version_4 = Factory(:version, :rubygem => @rubygem_3)
+
+        stub(Rubygem).latest(50){ [@rubygem_2, @rubygem_3] }
+      end
+
+      should "return correct JSON for latest gems" do
+        get_latest :json
+        should_return_latest_gems JSON.parse(@response.body)['gems']
+      end
+
+      should "return correct YAML for latest gems" do
+        get_latest :yaml
+        should_return_latest_gems YAML.load(@response.body)[:gems]
+      end
+
+      should "return correct XML for latest gems" do
+        get_latest :xml
+        gems = Hash.from_xml(Nokogiri.parse(@response.body).to_xml)['hash']['gems']
+        should_return_latest_gems(gems)
+      end
+    end
+
   end
 end
