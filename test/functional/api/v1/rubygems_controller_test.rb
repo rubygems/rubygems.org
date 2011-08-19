@@ -467,6 +467,50 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         should_return_latest_gems(gems)
       end
     end
+    
+    def get_just_updated(format)
+      get :just_updated, :format => format
+    end
+
+    def should_return_just_updated_gems(gems)
+      assert_equal 3, gems.length
+      gems.each {|g| assert g.is_a?(Hash) }
+      assert_equal @version_2.number, gems[0]['number']
+      assert_equal @version_3.number, gems[1]['number']
+      assert_equal @version_4.number, gems[2]['number']
+    end
+
+    context "On GET to just_updated" do
+      setup do
+        @rubygem_1 = Factory(:rubygem)
+        @version_1 = Factory(:version, :rubygem => @rubygem_1)
+        @version_2 = Factory(:version, :rubygem => @rubygem_1)
+
+        @rubygem_2 = Factory(:rubygem)
+        @version_3 = Factory(:version, :rubygem => @rubygem_2)
+
+        @rubygem_3 = Factory(:rubygem)
+        @version_4 = Factory(:version, :rubygem => @rubygem_3)
+
+        stub(Version).just_updated(50){ [@version_2, @version_3, @version_4] }
+      end
+
+      should "return correct JSON for just_updated gems" do
+        get_just_updated :json
+        should_return_just_updated_gems JSON.parse(@response.body)['gems']
+      end
+
+      should "return correct YAML for just_updated gems" do
+        get_just_updated :yaml
+        should_return_just_updated_gems YAML.load(@response.body)[:gems]
+      end
+
+      should "return correct XML for just_updated gems" do
+        get_just_updated :xml
+        gems = Hash.from_xml(Nokogiri.parse(@response.body).to_xml)['hash']['gems']
+        should_return_just_updated_gems(gems)
+      end
+    end
 
   end
 end
