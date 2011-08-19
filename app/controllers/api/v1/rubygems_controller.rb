@@ -66,6 +66,17 @@ class Api::V1::RubygemsController < Api::BaseController
       format.yaml { render :text => object.to_yaml }
     end
   end
+  
+  def just_updated
+    object = {
+      :gems => Version.just_updated(50).map {|version| version.attributes}
+    }
+    respond_to do |format|
+      format.json { render :json => object }
+      format.xml  { render :xml  => object }
+      format.yaml { render :text => object.to_yaml }
+    end
+  end
 
   private
 
