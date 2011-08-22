@@ -37,6 +37,8 @@ Gemcutter::Application.routes.draw do
         collection do
           delete :yank
           put :unyank
+          get :latest
+          get :just_updated
         end
         constraints :rubygem_id => Rubygem::ROUTE_PATTERN do
           resource :owners, :only => [:show, :create, :destroy]
