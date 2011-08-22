@@ -57,24 +57,26 @@ class Api::V1::RubygemsController < Api::BaseController
   end
   
   def latest
-    object = {
-      :gems => Rubygem.latest(50).map { |rubygem| rubygem.attributes }
-    }
+    @rubygems = Rubygem.latest(50)
+    
     respond_to do |format|
-      format.json { render :json => object }
-      format.xml  { render :xml  => object }
-      format.yaml { render :text => object.to_yaml }
+      format.json { render :json => @rubygems }
+      format.xml  { render :xml  => @rubygems }
+      # Convert object to JSON and back before converting to YAML in order to
+      # strip the object type (e.g. !ruby/ActiveRecord:Rubygem) from response
+      format.yaml { render :text => JSON.load(@rubygems.to_json).to_yaml }
     end
   end
   
   def just_updated
-    object = {
-      :gems => Version.just_updated(50).map {|version| version.attributes}
-    }
+    @versions = Version.just_updated(50)
+
     respond_to do |format|
-      format.json { render :json => object }
-      format.xml  { render :xml  => object }
-      format.yaml { render :text => object.to_yaml }
+      format.json { render :json => @versions }
+      format.xml  { render :xml  => @versions }
+      # Convert object to JSON and back before converting to YAML in order to
+      # strip the object type (e.g. !ruby/ActiveRecord:Version) from response
+      format.yaml { render :text => JSON.load(@versions.to_json).to_yaml }
     end
   end
 
