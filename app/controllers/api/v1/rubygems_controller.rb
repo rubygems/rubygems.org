@@ -55,6 +55,30 @@ class Api::V1::RubygemsController < Api::BaseController
       render :text => "The version #{params[:version]} is already indexed.", :status => :unprocessable_entity
     end
   end
+  
+  def latest
+    @rubygems = Rubygem.latest(50)
+    
+    respond_to do |format|
+      format.json { render :json => @rubygems }
+      format.xml  { render :xml  => @rubygems }
+      # Convert object to JSON and back before converting to YAML in order to
+      # strip the object type (e.g. !ruby/ActiveRecord:Rubygem) from response
+      format.yaml { render :text => JSON.load(@rubygems.to_json).to_yaml }
+    end
+  end
+  
+  def just_updated
+    @versions = Version.just_updated(50)
+
+    respond_to do |format|
+      format.json { render :json => @versions }
+      format.xml  { render :xml  => @versions }
+      # Convert object to JSON and back before converting to YAML in order to
+      # strip the object type (e.g. !ruby/ActiveRecord:Version) from response
+      format.yaml { render :text => JSON.load(@versions.to_json).to_yaml }
+    end
+  end
 
   private
 
