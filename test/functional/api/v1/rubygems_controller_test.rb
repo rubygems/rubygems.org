@@ -424,7 +424,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         assert_match "Access Denied. Please sign up for an account at http://rubygems.org", @response.body
       end
     end
-    
+
     def get_latest(format)
       get :latest, :format => format
     end
@@ -467,7 +467,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         should_return_latest_gems(gems)
       end
     end
-    
+
     def get_just_updated(format)
       get :just_updated, :format => format
     end
