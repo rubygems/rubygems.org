@@ -20,5 +20,5 @@ namespace :rvm do
     run "rvm rvmrc trust #{current_release}"
   end
 end
- 
+
 after "deploy:update_code", "rvm:trust_rvmrc"
