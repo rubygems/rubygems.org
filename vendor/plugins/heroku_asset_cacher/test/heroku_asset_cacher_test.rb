@@ -25,25 +25,25 @@ class HerokuAssetPackagerTest < Test::Unit::TestCase
 
     hac.call(env)
   end
-  
+
   def test_regular_js_call
     env = {"REQUEST_PATH" => "/javascripts/test.js"}
 
     app = mock()
     app.expects(:call).with(env)
     hac = HerokuAssetCacher.new(app)
-    
+
     hac.call(env)
   end
-  
+
   def test_regular_css_call
     env = {"REQUEST_PATH" => "/stylesheets/test.css"}
 
     app = mock()
     app.expects(:call).with(env)
     hac = HerokuAssetCacher.new(app)
-    
+
     hac.call(env)
   end
-  
+
 end

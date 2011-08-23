@@ -55,10 +55,10 @@ class Api::V1::RubygemsController < Api::BaseController
       render :text => "The version #{params[:version]} is already indexed.", :status => :unprocessable_entity
     end
   end
-  
+
   def latest
     @rubygems = Rubygem.latest(50)
-    
+
     respond_to do |format|
       format.json { render :json => @rubygems }
       format.xml  { render :xml  => @rubygems }
@@ -67,7 +67,7 @@ class Api::V1::RubygemsController < Api::BaseController
       format.yaml { render :text => JSON.load(@rubygems.to_json).to_yaml }
     end
   end
-  
+
   def just_updated
     @versions = Version.just_updated(50)
 
