@@ -425,10 +425,6 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
-    def get_latest(format)
-      get :latest, :format => format
-    end
-
     def should_return_latest_gems(gems)
       assert_equal 2, gems.length
       gems.each {|g| assert g.is_a?(Hash) }
@@ -452,24 +448,20 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
 
       should "return correct JSON for latest gems" do
-        get_latest :json
+        get :latest, :format => :json
         should_return_latest_gems JSON.parse(@response.body)
       end
 
       should "return correct YAML for latest gems" do
-        get_latest :yaml
+        get :latest, :format => :yaml
         should_return_latest_gems YAML.load(@response.body)
       end
 
       should "return correct XML for latest gems" do
-        get_latest :xml
+        get :latest, :format => :xml
         gems = Hash.from_xml(Nokogiri.parse(@response.body).to_xml)['rubygems']
         should_return_latest_gems(gems)
       end
-    end
-
-    def get_just_updated(format)
-      get :just_updated, :format => format
     end
 
     def should_return_just_updated_gems(gems)
@@ -496,17 +488,17 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
 
       should "return correct JSON for just_updated gems" do
-        get_just_updated :json
+        get :just_updated, :format => :json
         should_return_just_updated_gems JSON.parse(@response.body)
       end
 
       should "return correct YAML for just_updated gems" do
-        get_just_updated :yaml
+        get :just_updated, :format => :yaml
         should_return_just_updated_gems YAML.load(@response.body)
       end
 
       should "return correct XML for just_updated gems" do
-        get_just_updated :xml
+        get :just_updated, :format => :xml
         gems = Hash.from_xml(Nokogiri.parse(@response.body).to_xml)['versions']
         should_return_just_updated_gems(gems)
       end
