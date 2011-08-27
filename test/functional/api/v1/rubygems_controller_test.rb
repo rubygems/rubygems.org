@@ -414,6 +414,21 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  def should_return_latest_gems(gems)
+    assert_equal 2, gems.length
+    gems.each {|g| assert g.is_a?(Hash) }
+    assert_equal @rubygem_2.attributes['name'], gems[0]['name']
+    assert_equal @rubygem_3.attributes['name'], gems[1]['name']
+  end
+
+  def should_return_just_updated_gems(gems)
+    assert_equal 3, gems.length
+    gems.each {|g| assert g.is_a?(Hash) }
+    assert_equal @version_2.number, gems[0]['number']
+    assert_equal @version_3.number, gems[1]['number']
+    assert_equal @version_4.number, gems[2]['number']
+  end
+
   context "No signed in-user" do
     context "On GET to index with JSON for a list of gems" do
       setup do
@@ -423,13 +438,6 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         assert_response 401
         assert_match "Access Denied. Please sign up for an account at http://rubygems.org", @response.body
       end
-    end
-
-    def should_return_latest_gems(gems)
-      assert_equal 2, gems.length
-      gems.each {|g| assert g.is_a?(Hash) }
-      assert_equal @rubygem_2.attributes['name'], gems[0]['name']
-      assert_equal @rubygem_3.attributes['name'], gems[1]['name']
     end
 
     context "On GET to latest" do
@@ -462,14 +470,6 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         gems = Hash.from_xml(Nokogiri.parse(@response.body).to_xml)['rubygems']
         should_return_latest_gems(gems)
       end
-    end
-
-    def should_return_just_updated_gems(gems)
-      assert_equal 3, gems.length
-      gems.each {|g| assert g.is_a?(Hash) }
-      assert_equal @version_2.number, gems[0]['number']
-      assert_equal @version_3.number, gems[1]['number']
-      assert_equal @version_4.number, gems[2]['number']
     end
 
     context "On GET to just_updated" do
