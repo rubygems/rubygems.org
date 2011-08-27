@@ -42,6 +42,20 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
+  context ".most_recent" do
+    setup do
+      @gem = Factory(:rubygem)
+    end
+
+    should "return most recently created version for versions with multiple non-ruby platforms" do
+      Factory(:version, :rubygem => @gem, :number => '0.1', :platform => 'linux')
+      @most_recent = Factory(:version, :rubygem => @gem, :number => '0.2', :platform => 'universal-rubinius')
+      Factory(:version, :rubygem => @gem, :number => '0.1', :platform => 'mswin32')
+
+      assert_equal @most_recent, Version.most_recent
+    end
+  end
+
   context "updated gems" do
     setup do
       Timecop.freeze Date.today

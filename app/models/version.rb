@@ -67,7 +67,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.most_recent
-    latest.find_by_platform('ruby') || latest.first || first
+    latest.find_by_platform('ruby') || latest.order("number DESC").first || first
   end
 
   def self.just_updated(limit=5)
