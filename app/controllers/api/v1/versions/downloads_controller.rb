@@ -1,10 +1,9 @@
 class Api::V1::Versions::DownloadsController < Api::BaseController
+  respond_to :json, :yaml
+
   def index
     if version
-      respond_to do |format|
-        format.json { render :json => Download.counts_by_day_for_version(version) }
-        format.yaml { render :text => Download.counts_by_day_for_version(version).to_yaml }
-      end
+      respond_with Download.counts_by_day_for_version(version)
     else
       render :text => "This rubygem could not be found.", :status => :not_found
     end
@@ -16,10 +15,7 @@ class Api::V1::Versions::DownloadsController < Api::BaseController
     end
 
     if version
-      respond_to do |format|
-        format.json { render :json => Download.counts_by_day_for_version_in_date_range(version, start, stop) }
-        format.yaml { render :text => Download.counts_by_day_for_version_in_date_range(version, start, stop).to_yaml }
-      end
+      respond_with Download.counts_by_day_for_version_in_date_range(version, start, stop)
     else
       render :text => "This rubygem could not be found.", :status => :not_found
     end
