@@ -40,4 +40,3 @@ class VersionsControllerTest < ActionController::TestCase
     end
   end
 end
-
