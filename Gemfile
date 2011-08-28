@@ -27,6 +27,7 @@ gem 'yajl-ruby', :require => 'yajl/json_gem'
 
 group :development do
   gem 'rails-erd'
+  gem 'pry'
 end
 
 group :development, :test do
