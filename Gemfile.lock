@@ -42,6 +42,7 @@ GEM
       ffi (~> 1.0.6)
     clearance (0.9.1)
       rails (~> 3.0.0)
+    coderay (0.9.8)
     crack (0.1.8)
     cucumber (1.0.2)
       builder (>= 2.1.2)
@@ -96,6 +97,8 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    method_source (0.6.0)
+      ruby_parser (>= 2.0.5)
     mime-types (1.16)
     multi_json (1.0.3)
     net-scp (1.0.4)
@@ -107,6 +110,11 @@ GEM
       rails (~> 3.0.0)
     pg (0.11.0)
     polyglot (0.3.2)
+    pry (0.9.3)
+      coderay (>= 0.9.8)
+      method_source (>= 0.6.0)
+      ruby_parser (>= 2.0.5)
+      slop (~> 1.9.0)
     psych (1.2.1)
     rack (1.2.3)
     rack-maintenance (0.3.0)
@@ -142,17 +150,21 @@ GEM
     rr (1.0.3)
     ruby-graphviz (0.9.21)
     ruby-hmac (0.4.0)
+    ruby_parser (2.2.0)
+      sexp_processor (~> 3.0)
     rubyzip (0.9.4)
     selenium-webdriver (2.5.0)
       childprocess (>= 0.2.1)
       ffi (>= 1.0.7)
       json_pure
       rubyzip
+    sexp_processor (3.0.6)
     shoulda (2.11.3)
     silent-postgres (0.0.8)
     sinatra (1.2.6)
       rack (~> 1.1)
       tilt (< 2.0, >= 1.2.2)
+    slop (1.9.1)
     system_timer (1.2.4)
     term-ansicolor (1.0.6)
     thor (0.14.6)
@@ -194,6 +206,7 @@ DEPENDENCIES
   nokogiri
   paul_revere
   pg
+  pry
   psych
   rack
   rack-maintenance
