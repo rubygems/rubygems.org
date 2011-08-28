@@ -5,6 +5,35 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     get :show, :id => rubygem.name, :format => format
   end
 
+  def self.should_respond_to(format)
+    context "with #{format.to_s.upcase}" do
+      should "have a list of versions for the first gem" do
+        get_show(@rubygem, format)
+        assert_equal 2, yield(@response.body).size
+      end
+
+      should "be ordered by position with prereleases" do
+        get_show(@rubygem, format)
+        arr = yield(@response.body)
+        assert_equal "2.0.0", arr.first["number"]
+        assert_equal "1.0.0.pre", arr.second["number"]
+      end
+
+      should "be ordered by position" do
+        get_show(@rubygem2, format)
+        arr = yield(@response.body)
+        assert_equal "3.0.0", arr.first["number"]
+        assert_equal "2.0.0", arr.second["number"]
+        assert_equal "1.0.0", arr.third["number"]
+      end
+
+      should "have a list of versions for the second gem" do
+        get_show(@rubygem2, format)
+        assert_equal 3, yield(@response.body).size
+      end
+    end
+  end
+
   context "on GET to show" do
     setup do
       @rubygem = Factory(:rubygem)
@@ -18,87 +47,17 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       Factory(:version, :rubygem => @rubygem2, :number => '1.0.0')
     end
 
-    context "with JSON" do
-      should "have some JSON with the list of versions for the first gem" do
-        get_show(@rubygem)
-        assert_equal 2, JSON.parse(@response.body).size
-      end
-
-      should "be ordered by position with prereleases" do
-        get_show(@rubygem)
-        json = JSON.parse(@response.body)
-        assert_equal "2.0.0", json.first["number"]
-        assert_equal "1.0.0.pre", json.second["number"]
-      end
-
-      should "be ordered by position" do
-        get_show(@rubygem2)
-        json = JSON.parse(@response.body)
-        assert_equal "3.0.0", json.first["number"]
-        assert_equal "2.0.0", json.second["number"]
-        assert_equal "1.0.0", json.third["number"]
-      end
-
-      should "have some JSON with the list of versions for the second gem" do
-        get_show(@rubygem2)
-        assert_equal 3, JSON.parse(@response.body).size
-      end
+    should_respond_to(:json) do |body|
+      JSON.parse(body)
     end
 
-    context "with XML" do
-      should "have some XML with the list of versions for the first gem" do
-        get_show(@rubygem, 'xml')
-        assert_equal 2, Nokogiri.parse(@response.body).css('version').size
-      end
-
-      should "be ordered by position with prereleases" do
-        get_show(@rubygem, 'xml')
-        xml = Nokogiri.parse(@response.body).css('number')
-        assert_equal "2.0.0", xml[0].content
-        assert_equal "1.0.0.pre", xml[1].content
-      end
-
-      should "be ordered by position" do
-        get_show(@rubygem2, 'xml')
-        xml = Nokogiri.parse(@response.body).css('number')
-        assert_equal "3.0.0", xml[0].content
-        assert_equal "2.0.0", xml[1].content
-        assert_equal "1.0.0", xml[2].content
-      end
-
-      should "have some XML with the list of versions for the second gem" do
-        get_show(@rubygem2, 'xml')
-        assert_equal 3, Nokogiri.parse(@response.body).css('version').size
-      end
+    should_respond_to(:xml) do |body|
+      Hash.from_xml(Nokogiri.parse(body).to_xml)['versions']
     end
 
-    context "with YAML" do
-      should "have some YAML with the list of versions for the first gem" do
-        get_show(@rubygem, 'yaml')
-        assert_equal 2, YAML.load(@response.body).size
-      end
-
-      should "be ordered by position with prereleases" do
-        get_show(@rubygem, 'yaml')
-        yaml = YAML.load(@response.body)
-        assert_equal "2.0.0", yaml.first["number"]
-        assert_equal "1.0.0.pre", yaml.second["number"]
-      end
-
-      should "be ordered by position" do
-        get_show(@rubygem2, 'yaml')
-        yaml = YAML.load(@response.body)
-        assert_equal "3.0.0", yaml.first["number"]
-        assert_equal "2.0.0", yaml.second["number"]
-        assert_equal "1.0.0", yaml.third["number"]
-      end
-
-      should "have some YAML with the list of versions for the second gem" do
-        get_show(@rubygem2, 'yaml')
-        assert_equal 3, YAML.load(@response.body).size
-      end
+    should_respond_to(:yaml) do |body|
+      YAML.load(body)
     end
-
   end
 
   context "on GET to show for an unknown gem" do
