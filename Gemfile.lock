@@ -174,8 +174,8 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.29)
-    validates_url_format_of (0.1.2)
-      activerecord (>= 2.3.4)
+    validates_url_format_of (0.2.0)
+      activerecord (~> 3.0.10)
     webmock (1.6.4)
       addressable (> 2.2.5, ~> 2.2)
       crack (>= 0.1.7)
