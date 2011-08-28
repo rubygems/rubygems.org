@@ -2,56 +2,63 @@ require 'test_helper'
 
 class Api::V1::DownloadsControllerTest < ActionController::TestCase
 
+  def self.should_respond_to(format)
+    should "return #{format.to_s.upcase} with the download count" do
+      get :index, :format => format
+      assert_equal @count, yield(@response.body)
+    end
+  end
+
   context "On GET to index" do
     setup do
       @count = 30_000_000
       stub(Download).count { @count }
-      get :index
     end
 
     should "return the download count" do
+      get :index
       assert_equal @count, @response.body.to_i
     end
-  end
 
-  context "On GET to index with JSON" do
-    setup do
-      @count = 30_000_000
-      stub(Download).count { @count }
-      get :index, :format => 'json'
+    should_respond_to(:json) do |body|
+      JSON.parse(body)['total']
     end
 
-    should "return the download count" do
-      assert_equal @count, JSON.parse(@response.body)['total']
-    end
-  end
-
-  context "On GET to index with XML" do
-    setup do
-      @count = 30_000_000
-      stub(Download).count { @count }
-      get :index, :format => 'xml'
+    should_respond_to(:xml) do |body|
+      Nokogiri.parse(body).root.children[1].children.first.text.to_i
     end
 
-    should "return the download count" do
-      assert_equal @count, Nokogiri.parse(@response.body).root.children[1].children.first.text.to_i
-    end
-  end
-
-  context "On GET to index with YAML" do
-    setup do
-      @count = 30_000_000
-      stub(Download).count { @count }
-      get :index, :format => 'yaml'
-    end
-
-    should "return the download count" do
-      assert_equal @count, YAML.load(@response.body)[:total]
+    should_respond_to(:yaml) do |body|
+      YAML.load(body)[:total]
     end
   end
 
   def get_show(version, format='json')
     get :show, :id => version.full_name, :format => format
+  end
+
+  def self.should_respond_to(format, to_meth = :to_s)
+    context "with #{format.to_s.upcase}" do
+      should "have total downloads for version1" do
+        get_show(@version1, format)
+        assert_equal 3, yield(@response.body)['total_downloads'.send(to_meth)]
+      end
+
+      should "have downloads for the most recent version of version1" do
+        get_show(@version1, format)
+        assert_equal 1, yield(@response.body)['version_downloads'.send(to_meth)]
+      end
+
+      should "have total downloads for version2" do
+        get_show(@version2, format)
+        assert_equal 3, yield(@response.body)['total_downloads'.send(to_meth)]
+      end
+
+      should "have downloads for the most recent version of version2" do
+        get_show(@version2, format)
+        assert_equal 2, yield(@response.body)['version_downloads'.send(to_meth)]
+      end
+    end
   end
 
   context "on GET to show" do
@@ -65,64 +72,16 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
       Download.incr(rubygem.name, @version2.full_name)
     end
 
-    should "have some JSON with the total downloads for version1" do
-      get_show(@version1)
-      assert_equal 3, JSON.parse(@response.body)['total_downloads']
+    should_respond_to(:json) do |body|
+      JSON.parse body
     end
 
-    should "have some JSON with the downloads for the most recent version of version1" do
-      get_show(@version1)
-      assert_equal 1, JSON.parse(@response.body)['version_downloads']
+    should_respond_to(:xml) do |body|
+      Hash.from_xml(Nokogiri.parse(body).to_xml)['hash']
     end
 
-    should "have some JSON with the total downloads for version2" do
-      get_show(@version2)
-      assert_equal 3, JSON.parse(@response.body)['total_downloads']
-    end
-
-    should "have some JSON with the downloads for the most recent version of version2" do
-      get_show(@version2)
-      assert_equal 2, JSON.parse(@response.body)['version_downloads']
-    end
-
-    should "have some XML with the total downloads for version1" do
-      get_show(@version1, 'xml')
-      assert_equal 3, Nokogiri.parse(@response.body).at_css('total-downloads').content.to_i
-    end
-
-    should "have some XML with the downloads for the most recent version of version1" do
-      get_show(@version1, 'xml')
-      assert_equal 1, Nokogiri.parse(@response.body).at_css('version-downloads').content.to_i
-    end
-
-    should "have some XML with the total downloads for version2" do
-      get_show(@version2, 'xml')
-      assert_equal 3, Nokogiri.parse(@response.body).at_css('total-downloads').content.to_i
-    end
-
-    should "have some XML with the downloads for the most recent version of version2" do
-      get_show(@version2, 'xml')
-      assert_equal 2, Nokogiri.parse(@response.body).at_css('version-downloads').content.to_i
-    end
-
-    should "have some YAML with the total downloads for version1" do
-      get_show(@version1, 'yaml')
-      assert_equal 3, YAML.load(@response.body)[:total_downloads]
-    end
-
-    should "have some YAML with the downloads for the most recent version of version1" do
-      get_show(@version1, 'yaml')
-      assert_equal 1, YAML.load(@response.body)[:version_downloads]
-    end
-
-    should "have some YAML with the total downloads for version2" do
-      get_show(@version2, 'yaml')
-      assert_equal 3, YAML.load(@response.body)[:total_downloads]
-    end
-
-    should "have some YAML with the downloads for the most recent version of version2" do
-      get_show(@version2, 'yaml')
-      assert_equal 2, YAML.load(@response.body)[:version_downloads]
+    should_respond_to(:yaml, :to_sym) do |body|
+      YAML.load(body)
     end
   end
 
@@ -140,16 +99,29 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
   end
 
-  def get_top(format)
-    get :top, :format => format
-  end
+  def self.should_respond_to(format)
+    context "with #{format.to_s.upcase}" do
+      setup do
+        get :top, :format => format
+      end
 
-  def should_return_top_gems(gems)
-    assert_equal 3, gems.length
-    gems.each {|g| assert g[0].is_a?(Hash) }
-    assert_equal 3, gems[0][1]
-    assert_equal 2, gems[1][1]
-    assert_equal 1, gems[2][1]
+      should "have correct size" do
+        assert_equal 3, yield(@response.body).size
+      end
+
+      should "have versions as hashes" do
+        yield(@response.body).each do |arr|
+          assert arr[0].is_a?(Hash)
+        end
+      end
+
+      should "have correct version counts" do
+        arr = yield(@response.body)
+        assert_equal 3, arr[0][1]
+        assert_equal 2, arr[1][1]
+        assert_equal 1, arr[2][1]
+      end
+    end
   end
 
   context "On GET to top" do
@@ -171,20 +143,16 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
       stub(Download).most_downloaded_today(50){ [[@version_1, 3], [@version_2, 2], [@version_3, 1]] }
     end
 
-    should "return correct JSON for top gems" do
-      get_top :json
-      should_return_top_gems JSON.parse(@response.body)['gems']
+    should_respond_to(:json) do |body|
+      JSON.parse(body)['gems']
     end
 
-    should "return correct YAML for top gems" do
-      get_top :yaml
-      should_return_top_gems YAML.load(@response.body)[:gems]
+    should_respond_to(:yaml) do |body|
+      YAML.load(body)[:gems]
     end
 
-    should "return correct XML for top gems" do
-      get_top :xml
-      gems = Hash.from_xml(Nokogiri.parse(@response.body).to_xml)['hash']['gems']
-      should_return_top_gems(gems)
+    should_respond_to(:xml) do |body|
+      Hash.from_xml(Nokogiri.parse(body).to_xml)['hash']['gems']
     end
   end
 
