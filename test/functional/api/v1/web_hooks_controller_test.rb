@@ -34,6 +34,20 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
     end
   end
 
+  def self.should_respond_to(format)
+    context "with #{format.to_s.upcase}" do
+      setup do
+        get :index, :format => format
+      end
+      should respond_with :success
+      should "be able to parse body" do
+        payload = yield(@response.body)
+        assert_equal @global_hook.payload, payload["all gems"].first
+        assert_equal @rubygem_hook.payload, payload[@rubygem.name].first
+      end
+    end
+  end
+
   context "When logged in" do
     setup do
       @url = "http://example.org"
@@ -106,7 +120,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         end
       end
 
-      context "with some owned hooks" do
+      context "On GET to index with some owned hooks" do
         setup do
           @rubygem_hook = Factory(:web_hook,
                                   :user    => @user,
@@ -115,40 +129,19 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
                                   :user    => @user)
         end
 
-        context "On GET to index with JSON" do
-          setup do
-            get :index, :format => "json"
-          end
-          should respond_with :success
-          should "be able to parse some JSON" do
-            assert_nothing_raised do
-              JSON.parse(@response.body)
-            end
-          end
+        should_respond_to(:json) do |body|
+          JSON.parse body
         end
 
-        context "On GET to index with XML" do
-          setup do
-            get :index, :format => "xml"
-          end
-          should respond_with :success
-          should "be able to parse some XML" do
-            assert_nothing_raised do
-              Nokogiri.parse(@response.body)
-            end
-          end
+        should_respond_to(:yaml) do |body|
+          YAML.load body
         end
 
-        context "On GET to index with YAML" do
-          setup do
-            get :index, :format => "yaml"
-          end
-          should respond_with :success
-          should "be able to parse some YAML" do
-            payload = YAML.load(@response.body)
-            assert_equal @global_hook.payload, payload["all gems"].first
-            assert_equal @rubygem_hook.payload, payload[@rubygem.name].first
-          end
+        should_respond_to(:xml) do |body|
+          children = Nokogiri.parse(body).root.children
+          Hash.from_xml(children[1].to_xml).update(
+            'all gems' => [Hash.from_xml(children[5].to_xml)['web_hook']]
+          )
         end
 
         context "On DELETE to remove with owned hook for rubygem" do
