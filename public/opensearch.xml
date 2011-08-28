@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
   <ShortName>RubyGems.org</ShortName>
-  <Description>RubyGems.org - your community gem host</Description>
+  <Description>Search RubyGems.org</Description>
   <InputEncoding>UTF-8</InputEncoding>
   <Image width="16" height="16" type="image/x-icon">http://rubygems.org/favicon.ico</Image>
-  <Url type="text/html" method="get" template="http://rubygems.org/search?query={searchTerms}"></Url>
+  <Url type="text/html" method="get" template="http://rubygems.org/search">
+    <Param name="query" value="{searchTerms}"/>
+  </Url>
+  <SearchForm>http://rubygems.org/search</SearchForm>
 </OpenSearchDescription>
