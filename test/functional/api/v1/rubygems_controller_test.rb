@@ -9,119 +9,65 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     assert_recognizes(post_route, :path => '/api/v1/gems', :method => :post)
   end
 
+  def self.should_respond_to_show(format, &block)
+    should assign_to(:rubygem) { @rubygem }
+    should respond_with :success
+    should "return a hash" do
+      response = yield(@response.body)
+      assert_not_nil response
+      assert_kind_of Hash, response
+    end
+  end
+
+  def self.should_respond_to(format, &block)
+    context "with #{format.to_s.upcase} for a hosted gem" do
+      setup do
+        @rubygem = Factory(:rubygem)
+        Factory(:version, :rubygem => @rubygem)
+        get :show, :id => @rubygem.to_param, :format => format
+      end
+
+      should_respond_to_show(format, &block)
+    end
+
+    context "with #{format.to_s.upcase} for a hosted gem with a period in its name" do
+      setup do
+        @rubygem = Factory(:rubygem, :name => 'foo.rb')
+        Factory(:version, :rubygem => @rubygem)
+        get :show, :id => @rubygem.to_param, :format => format
+      end
+
+      should_respond_to_show(format, &block)
+    end
+
+    context "with #{format.to_s.upcase} for a gem that doesn't match the slug" do
+      setup do
+        @rubygem = Factory(:rubygem, :name => "ZenTest", :slug => "zentest")
+        Factory(:version, :rubygem => @rubygem)
+        get :show, :id => "ZenTest", :format => format
+      end
+
+      should_respond_to_show(format, &block)
+    end
+  end
+
   context "When logged in" do
     setup do
       @user = Factory(:email_confirmed_user)
       sign_in_as(@user)
     end
 
-    context "On GET to show with JSON for a gem that's hosted" do
-      setup do
-        @rubygem = Factory(:rubygem, :name => "foo")
-        Factory(:version, :rubygem => @rubygem)
-        get :show, :id => @rubygem.to_param, :format => "json"
+    context "On GET to show" do
+      should_respond_to(:json) do |body|
+        JSON.parse body
       end
 
-      should assign_to(:rubygem) { @rubygem }
-      should respond_with :success
-      should "return a JSON hash" do
-        response = JSON.parse(@response.body)
-        assert_not_nil response
-        assert_kind_of Hash, response
-      end
-    end
-
-    context "On GET to show with JSON for a gem that's hosted with a period in its name" do
-      setup do
-        @rubygem = Factory(:rubygem, :name => "foo.rb")
-        Factory(:version, :rubygem => @rubygem)
-        get :show, :id => @rubygem.to_param, :format => "json"
+      should_respond_to(:yaml) do |body|
+       YAML.load body
       end
 
-      should assign_to(:rubygem) { @rubygem }
-      should respond_with :success
-      should "return a JSON hash" do
-        response = JSON.parse(@response.body)
-        assert_not_nil response
-        assert_kind_of Hash, response
-      end
-    end
-
-    context "On GET to show with XML for a gem that's hosted" do
-      setup do
-        @rubygem = Factory(:rubygem)
-        Factory(:version, :rubygem => @rubygem)
-        get :show, :id => @rubygem.to_param, :format => "xml"
-      end
-
-      should assign_to(:rubygem) { @rubygem }
-      should respond_with :success
-      should "return an XML document" do
-        response = Nokogiri.parse(@response.body).root
-        assert_not_nil response
-        assert_kind_of Nokogiri::XML::Element, response
-      end
-    end
-
-    context "On GET to show with XML for a gem that's hosted with a period in its name" do
-      setup do
-        @rubygem = Factory(:rubygem, :name => "foo.rb")
-        Factory(:version, :rubygem => @rubygem)
-        get :show, :id => @rubygem.to_param, :format => "xml"
-      end
-
-      should assign_to(:rubygem) { @rubygem }
-      should respond_with :success
-      should "return an XML document" do
-        response = Nokogiri.parse(@response.body).root
-        assert_not_nil response
-        assert_kind_of Nokogiri::XML::Element, response
-      end
-    end
-
-    context "On GET to show with YAML for a gem that's hosted" do
-      setup do
-        @rubygem = Factory(:rubygem)
-        Factory(:version, :rubygem => @rubygem)
-        get :show, :id => @rubygem.to_param, :format => "yaml"
-      end
-
-      should assign_to(:rubygem) { @rubygem }
-      should respond_with :success
-      should "return a YAML hash" do
-        response = YAML.load(@response.body)
-        assert_not_nil response
-        assert_kind_of Hash, response
-      end
-    end
-
-    context "On GET to show with YAML for a gem that's hosted with a period in its name" do
-      setup do
-        @rubygem = Factory(:rubygem, :name => "foo.rb")
-        Factory(:version, :rubygem => @rubygem)
-        get :show, :id => @rubygem.to_param, :format => "yaml"
-      end
-
-      should assign_to(:rubygem) { @rubygem }
-      should respond_with :success
-      should "return an YAML hash" do
-        response = YAML.load(@response.body)
-        assert_not_nil response
-        assert_kind_of Hash, response
-      end
-    end
-
-    context "On GET to show for a gem that doesn't match the slug" do
-      setup do
-        @rubygem = Factory(:rubygem, :name => "ZenTest", :slug => "zentest")
-        Factory(:version, :rubygem => @rubygem)
-        get :show, :id => "ZenTest", :format => "json"
-      end
-
-      should assign_to(:rubygem) { @rubygem }
-      should respond_with :success
-      should "return a JSON hash" do
-        assert_not_nil JSON.parse(@response.body)
+      should_respond_to(:xml) do |body|
+        Hash.from_xml(Nokogiri.parse(body).to_xml)
       end
     end
 
@@ -153,10 +99,53 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  def self.should_respond_to(format)
+    context "with #{format.to_s.upcase} for a list of gems" do
+      setup do
+        @mygems = [ Factory(:rubygem, :name => "SomeGem"), Factory(:rubygem, :name => "AnotherGem") ]
+        @mygems.each do |rubygem|
+          Factory(:version, :rubygem => rubygem)
+          Factory(:ownership, :user => @user, :rubygem => rubygem, :approved => true)
+        end
+
+        @other_user = Factory(:email_confirmed_user)
+        @not_my_rubygem = Factory(:rubygem, :name => "NotMyGem")
+        Factory(:version, :rubygem => @not_my_rubygem)
+        Factory(:ownership, :user => @other_user, :rubygem => @not_my_rubygem, :approved => true)
+
+        get :index, :format => format
+      end
+
+      should assign_to(:rubygems) { [@rubygem] }
+      should respond_with :success
+      should "return a hash" do
+        assert_not_nil yield(@response.body)
+      end
+      should "only return my gems" do
+        gem_names = yield(@response.body).map { |rubygem| rubygem['name'] }.sort
+        assert_equal ["AnotherGem", "SomeGem"], gem_names
+      end
+    end
+  end
+
   context "with a confirmed user authenticated" do
     setup do
       @user = Factory(:email_confirmed_user)
       @request.env["HTTP_AUTHORIZATION"] = @user.api_key
+    end
+
+    context "On GET to index" do
+      should_respond_to :json do |body|
+        JSON.parse body
+      end
+
+      should_respond_to :yaml do |body|
+        YAML.load body
+      end
+
+      should_respond_to :xml do |body|
+        Hash.from_xml(Nokogiri.parse(body).to_xml)['rubygems']
+      end
     end
 
     context "On POST to create for new gem" do
@@ -383,33 +372,6 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           put :unyank, :gem_name => @rubygem.to_param, :version => @v2.number
         end
         should respond_with :unprocessable_entity
-      end
-    end
-
-    context "On GET to index with JSON for a list of owned gems" do
-      setup do
-        @mygems = [ Factory(:rubygem, :name => "SomeGem"), Factory(:rubygem, :name => "AnotherGem") ]
-        @mygems.each do |rubygem|
-          Factory(:version, :rubygem => rubygem)
-          Factory(:ownership, :user => @user, :rubygem => rubygem, :approved => true)
-        end
-
-        @other_user = Factory(:email_confirmed_user)
-        @not_my_rubygem = Factory(:rubygem, :name => "NotMyGem")
-        Factory(:version, :rubygem => @not_my_rubygem)
-        Factory(:ownership, :user => @other_user, :rubygem => @not_my_rubygem, :approved => true)
-
-        get :index, :format => "json"
-      end
-
-      should assign_to(:rubygems) { [@rubygem] }
-      should respond_with :success
-      should "return a JSON hash" do
-        assert_not_nil JSON.parse(@response.body)
-      end
-      should "only return my gems" do
-        gem_names = JSON.parse(@response.body).map { |rubygem| rubygem['name'] }.sort
-        assert_equal ["AnotherGem", "SomeGem"], gem_names
       end
     end
   end
