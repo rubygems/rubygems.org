@@ -6,9 +6,10 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
       setup do
         get :show, :query => "match", :format => format
       end
+
       should respond_with :success
-      should "return a hash" do
-        assert Hash, yield(@response.body).class
+      should "contain a hash" do
+        assert_kind_of Hash, yield(@response.body).first
       end
       should "only include matching gems" do
         gems = yield(@response.body)
