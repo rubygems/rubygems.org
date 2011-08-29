@@ -7,24 +7,16 @@ class Api::V1::RubygemsController < Api::BaseController
   before_filter :find_gem_by_name,          :only => [:yank, :unyank]
   before_filter :validate_gem_and_version,  :only => [:yank, :unyank]
 
-  respond_to :json, :xml, :on => [:index, :show, :latest, :just_updated]
+  respond_to :json, :xml, :yaml, :on => [:index, :show, :latest, :just_updated]
 
   def index
     @rubygems = current_user.rubygems.with_versions
-    respond_with(@rubygems) do |format|
-      # Convert object to JSON and back before converting to YAML in order to
-      # strip the object type (e.g. !ruby/ActiveRecord:Rubygem) from response
-      format.yaml { render :text => JSON.load(@rubygems.to_json).to_yaml }
-    end
+    respond_with(@rubygems, :yamlish => true)
   end
 
   def show
     if @rubygem.hosted?
-      respond_with(@rubygem) do |format|
-        # Convert object to JSON and back before converting to YAML in order to
-        # strip the object type (e.g. !ruby/ActiveRecord:Rubygem) from response
-        format.yaml { render :text => JSON.load(@rubygem.to_json).to_yaml }
-      end
+      respond_with(@rubygem, :yamlish => true)
     else
       render :text => "This gem does not exist.", :status => :not_found
     end
@@ -56,22 +48,12 @@ class Api::V1::RubygemsController < Api::BaseController
 
   def latest
     @rubygems = Rubygem.latest(50)
-
-    respond_with(@rubygems) do |format|
-      # Convert object to JSON and back before converting to YAML in order to
-      # strip the object type (e.g. !ruby/ActiveRecord:Rubygem) from response
-      format.yaml { render :text => JSON.load(@rubygems.to_json).to_yaml }
-    end
+    respond_with(@rubygems, :yamlish => true)
   end
 
   def just_updated
     @versions = Version.just_updated(50)
-
-    respond_with(@versions) do |format|
-      # Convert object to JSON and back before converting to YAML in order to
-      # strip the object type (e.g. !ruby/ActiveRecord:Version) from response
-      format.yaml { render :text => JSON.load(@versions.to_json).to_yaml }
-    end
+    respond_with(@versions, :yamlish => true)
   end
 
   private
