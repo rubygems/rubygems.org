@@ -13,6 +13,9 @@ Bundler.require(:default, Rails.env) if defined?(Bundler)
 
 $rubygems_config = YAML.load_file("config/rubygems.yml")[Rails.env].symbolize_keys
 HOST             = $rubygems_config[:host]
+
+# DO NOT EDIT THIS LINE DIRECTLY
+# Instead, run: bundle exec rake gemcutter:rubygems:update VERSION=[version number] RAILS_ENV=[staging|production] S3_KEY=[key] S3_SECRET=[secret]
 RUBYGEMS_VERSION = "1.8.10"
 
 module Gemcutter
