@@ -44,7 +44,8 @@ module RubygemsHelper
   end
 
   def documentation_link(version, linkset)
-    link_to 'Documentation', documentation_path(version), :id => :docs if linkset.docs.blank?
+    link_to 'Documentation', documentation_path(version), :id => :docs if linkset.nil? ||
+      linkset.docs.blank?
   end
 
   def documentation_path(version)
