@@ -24,6 +24,20 @@ class RubygemsControllerTest < ActionController::TestCase
       end
     end
 
+    context "On GET to show for any gem without a linkset" do
+      setup do
+        @owners = [@user, Factory(:email_confirmed_user)]
+        create_gem(*@owners)
+        @rubygem.linkset = nil
+        get :show, :id => @rubygem.to_param
+      end
+
+      should respond_with :success
+      should "render documentation link" do
+        assert page.has_selector?("a#docs")
+      end
+    end
+
     context "On GET to show for another user's gem" do
       setup do
         @rubygem = Factory(:rubygem)
