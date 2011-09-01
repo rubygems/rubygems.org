@@ -7,12 +7,10 @@ class Api::V1::OwnersController < Api::BaseController
   before_filter :find_rubygem
   before_filter :verify_gem_ownership
 
+  respond_to :yaml, :xml, :json, :only => :show
+
   def show
-    respond_to do |format|
-      format.json { render :json => @rubygem.owners }
-      format.xml  { render :xml  => @rubygem.owners }
-      format.yaml { render :text => @rubygem.owners.to_yaml }
-    end
+    respond_with @rubygem.owners
   end
 
   def create
