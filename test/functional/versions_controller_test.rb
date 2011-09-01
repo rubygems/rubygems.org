@@ -23,6 +23,19 @@ class VersionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "GET to index for gem with no versions" do
+    setup do
+      @rubygem = Factory(:rubygem)
+      get :index, :rubygem_id => @rubygem.name
+    end
+
+    should respond_with :success
+    should render_template :index
+    should "show not hosted notice" do
+      assert page.has_content?('This gem is not currently hosted')
+    end
+  end
+
   context "On GET to show" do
     setup do
       @latest_version = Factory(:version, :built_at => 1.week.ago, :created_at => 1.day.ago)

@@ -181,6 +181,7 @@ en:
     index:
       title: "all versions of %{name}"
       versions_since: "%{count} versions since %{since}"
+      not_hosted_notice: This gem is not currently hosted on Gemcutter.
     version:
       yanked: "yanked"
 
