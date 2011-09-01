@@ -4,19 +4,8 @@ class Api::V1::SearchesController < Api::BaseController
   respond_to :json, :xml, :yaml
 
   def show
-    has_required_param(:query) do
-      @rubygems = Rubygem.search(params[:query]).with_versions.paginate(:page => params[:page])
-      respond_with(@rubygems, :yamlish => true)
-    end
-  end
-
-  private
-
-  def has_required_param(key)
-    if params[key]
-      yield
-    else
-      render :text => "Request is missing param #{key.inspect}", :status => :bad_request
-    end
+    return unless has_required_params?(:query)
+    @rubygems = Rubygem.search(params[:query]).with_versions.paginate(:page => params[:page])
+    respond_with(@rubygems, :yamlish => true)
   end
 end
