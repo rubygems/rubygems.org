@@ -10,6 +10,8 @@ class Api::V1::Versions::DownloadsController < Api::BaseController
   end
 
   def search
+    return unless has_required_params?(:from, :to)
+
     start, stop = [params[:from], params[:to]].map do |d|
       Date.parse(d)
     end

@@ -95,6 +95,18 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to search with missing params" do
+    setup do
+      version = Factory(:version, :indexed => false)
+      get :search, :version_id => version.full_name, :format => 'json'
+    end
+
+    should respond_with :bad_request
+    should "explain failed request" do
+      assert page.has_content?("Request is missing params :from and :to")
+    end
+  end
+
   def self.should_respond_to(format)
     context "with #{format.to_s.upcase}" do
       should "return download stats for the days specified for at most 90 days" do
