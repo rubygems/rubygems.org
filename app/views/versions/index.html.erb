@@ -1,9 +1,13 @@
 <% @title = t('.title', :name => @rubygem.name) %>
-<p>
-  <%= t('.versions_since', :count => @versions.size, :since => nice_date_for(@rubygem.first_built_date)) %>
-</p>
-<div class="versions">
-  <ol>
-    <%= render @versions %>
-  </ol>
-</div>
+<% if @versions.size.zero? %>
+  <p><%= t('.not_hosted_notice') %></p>
+<% else %>
+  <p>
+    <%= t('.versions_since', :count => @versions.size, :since => nice_date_for(@rubygem.first_built_date)) %>
+  </p>
+  <div class="versions">
+    <ol>
+      <%= render @versions %>
+    </ol>
+  </div>
+<% end %>
