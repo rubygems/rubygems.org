@@ -2,7 +2,7 @@ require 'test_helper'
 
 class Api::V1::SearchesControllerTest < ActionController::TestCase
   def self.should_respond_to(format)
-    context "and with #{format.to_s.upcase}" do
+    context "with query=match and with #{format.to_s.upcase}" do
       setup do
         get :show, :query => "match", :format => format
       end
@@ -17,9 +17,20 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
         assert_equal "match", gems.first['name']
       end
     end
+
+    context "with no query and with #{format.to_s.upcase}" do
+      setup do
+        get :show, :format => format
+      end
+
+      should respond_with :bad_request
+      should "explain failed request" do
+        assert page.has_content?("Request is missing param :query")
+      end
+    end
   end
 
-  context "on GET to show with query=match" do
+  context "on GET to show" do
     setup do
       @match = Factory(:rubygem, :name => "match")
       @other = Factory(:rubygem, :name => "other")
