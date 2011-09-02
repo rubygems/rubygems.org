@@ -50,11 +50,12 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     end
   end
 
-  context "on GET to show with confirmed user" do
+  # this endpoint is used by rubygems
+  context "on GET to show with TEXT and with confirmed user" do
     setup do
       @user = Factory(:email_confirmed_user)
       authorize_with("#{@user.email}:#{@user.password}")
-      get :show
+      get :show, :format => 'text'
     end
     should respond_with :success
     should "return API key" do
@@ -63,7 +64,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
   end
 
   def self.should_respond_to(format, to_meth = :to_s)
-    context "with #{format.to_s.upcase} with confirmed user" do
+    context "with #{format.to_s.upcase} and with confirmed user" do
       setup do
         @user = Factory(:email_confirmed_user)
         authorize_with("#{@user.email}:#{@user.password}")
