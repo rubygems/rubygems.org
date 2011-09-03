@@ -82,7 +82,7 @@ GEM
     gchartrb (0.8)
     gherkin (2.4.16)
       json (>= 1.4.6)
-    gravtastic (3.1.0)
+    gravtastic (3.2.6)
     high_voltage (1.0.0)
     hoptoad_notifier (2.4.11)
       activesupport
