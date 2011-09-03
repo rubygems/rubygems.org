@@ -203,7 +203,7 @@ DEPENDENCIES
   hoptoad_notifier
   jruby-openssl
   launchy
-  mail (~> 2.2.19)
+  mail
   newrelic_rpm
   nokogiri
   paul_revere
