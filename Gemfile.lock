@@ -148,7 +148,7 @@ GEM
     redis (2.2.2)
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    rr (1.0.3)
+    rr (1.0.4)
     ruby-graphviz (0.9.21)
     ruby-hmac (0.4.0)
     ruby_parser (2.2.0)
