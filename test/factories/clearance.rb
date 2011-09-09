@@ -10,8 +10,7 @@ FactoryGirl.define do
   factory :user do
     email
     handle
-    password              "password"
-    password_confirmation "password"
+    password "password"
   end
 
   factory :email_confirmed_user, :parent => :user do
