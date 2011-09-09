@@ -7,17 +7,7 @@ end
 # Database
 
 Given /^I signed up with "(.*)\/(.*)"$/ do |email, password|
-  @me = user = Factory(:user,
-    :email                 => email,
-    :password              => password,
-    :password_confirmation => password)
-end
-
-Given /^I am signed up and confirmed as "(.*)\/(.*)"$/ do |email, password|
-  @me = user = Factory(:email_confirmed_user,
-    :email                 => email,
-    :password              => password,
-    :password_confirmation => password)
+  @me = user = Factory(:user, :email => email, :password => password)
 end
 
 Given /^my handle is "([^\"]*)"$/ do |handle|
@@ -39,7 +29,7 @@ Then /^I should be signed out$/ do
 end
 
 Given /^I have signed in with "(.*)\/(.*)"$/ do |email, password|
-  Given %{I am signed up and confirmed as "#{email}/#{password}"}
+  Given %{I signed up with "#{email}/#{password}"}
   And %{I sign in as "#{email}/#{password}"}
 end
 
