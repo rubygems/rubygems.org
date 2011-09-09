@@ -12,8 +12,4 @@ FactoryGirl.define do
     handle
     password "password"
   end
-
-  factory :email_confirmed_user, :parent => :user do
-    email_confirmed true
-  end
 end

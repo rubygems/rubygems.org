@@ -85,7 +85,7 @@ class RubygemsHelperTest < ActionView::TestCase
     end
 
     should "create links to owners gem overviews" do
-      users = Array.new(2) { Factory(:email_confirmed_user) }
+      users = Array.new(2) { Factory(:user) }
       create_gem(*users)
       expected_links = users.sort_by(&:id).map { |u|
         link_to gravatar(48, "gravatar-#{u.id}", u), profile_path(u.display_id), :alt => u.display_handle,

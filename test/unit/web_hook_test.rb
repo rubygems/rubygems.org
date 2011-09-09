@@ -34,7 +34,7 @@ class WebHookTest < ActiveSupport::TestCase
   context "with a global webhook for a gem" do
     setup do
       @url     = "http://example.org"
-      @user    = Factory(:email_confirmed_user)
+      @user    = Factory(:user)
       @webhook = Factory(:global_web_hook, :user    => @user,
                                            :url     => @url)
     end
@@ -62,7 +62,7 @@ class WebHookTest < ActiveSupport::TestCase
   context "with a webhook for a gem" do
     setup do
       @url     = "http://example.org"
-      @user    = Factory(:email_confirmed_user)
+      @user    = Factory(:user)
       @rubygem = Factory(:rubygem)
       @webhook = Factory(:web_hook, :user    => @user,
                                     :rubygem => @rubygem,
@@ -195,7 +195,7 @@ class WebHookTest < ActiveSupport::TestCase
   context "with invalid URL" do
     setup do
       @url     = 'http://someinvaliddomain.com'
-      @user    = Factory(:email_confirmed_user)
+      @user    = Factory(:user)
       @rubygem = Factory(:rubygem)
       @version = Factory(:version, :rubygem => @rubygem)
       @hook    = Factory(:global_web_hook, :url     => @url,

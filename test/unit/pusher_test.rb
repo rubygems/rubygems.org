@@ -17,7 +17,7 @@ class PusherTest < ActiveSupport::TestCase
 
   context "creating a new gemcutter" do
     setup do
-      @user = Factory(:email_confirmed_user)
+      @user = Factory(:user)
       @gem = gem_file
       @cutter = Pusher.new(@user, @gem)
     end
