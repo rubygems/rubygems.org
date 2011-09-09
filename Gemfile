@@ -5,7 +5,7 @@ gem 'psych', :platforms => :ruby_19
 
 gem 'rails', '~> 3.0.10'
 
-gem 'clearance', '~> 0.9.1'
+gem 'clearance'
 gem 'fog'
 gem 'gchartrb', :require => 'google_chart'
 gem 'gravtastic'
