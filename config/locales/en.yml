@@ -191,7 +191,6 @@ en:
         avatar: Avatar
         email: Email address
         handle: Handle
-        password_confirmation: Confirm password
         password: Password
       linkset:
         bugs: Bug Tracker URL
