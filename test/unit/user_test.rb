@@ -142,7 +142,7 @@ class UserTest < ActiveSupport::TestCase
 
     context "with a confirmed email address" do
       setup do
-        @user = Factory(:email_confirmed_user, :confirmation_token => nil)
+        @user = Factory(:user, :confirmation_token => nil)
         @user.email = "changed@example.com"
         @user.save
       end

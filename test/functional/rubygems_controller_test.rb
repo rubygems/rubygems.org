@@ -3,13 +3,13 @@ require 'test_helper'
 class RubygemsControllerTest < ActionController::TestCase
   context "When logged in" do
     setup do
-      @user = Factory(:email_confirmed_user)
+      @user = Factory(:user)
       sign_in_as(@user)
     end
 
     context "On GET to show for any gem" do
       setup do
-        @owners = [@user, Factory(:email_confirmed_user)]
+        @owners = [@user, Factory(:user)]
         create_gem(*@owners)
         get :show, :id => @rubygem.to_param
       end
@@ -26,7 +26,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to show for any gem without a linkset" do
       setup do
-        @owners = [@user, Factory(:email_confirmed_user)]
+        @owners = [@user, Factory(:user)]
         create_gem(*@owners)
         @rubygem.linkset = nil
         get :show, :id => @rubygem.to_param
@@ -123,7 +123,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to edit for another user's gem" do
       setup do
-        @other_user = Factory(:email_confirmed_user)
+        @other_user = Factory(:user)
         create_gem(@other_user)
         get :edit, :id => @rubygem.to_param
       end
