@@ -151,7 +151,7 @@ GEM
     rr (1.0.4)
     ruby-graphviz (0.9.21)
     ruby-hmac (0.4.0)
-    ruby_parser (2.2.0)
+    ruby_parser (2.3.0)
       sexp_processor (~> 3.0)
     rubyzip (0.9.4)
     selenium-webdriver (2.5.0)
