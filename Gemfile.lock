@@ -105,7 +105,7 @@ GEM
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-ssh (2.1.4)
-    newrelic_rpm (3.1.1)
+    newrelic_rpm (3.1.2)
     nokogiri (1.5.0)
     paul_revere (0.2.0)
       rails (~> 3.0.0)
