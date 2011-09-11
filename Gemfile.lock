@@ -83,7 +83,7 @@ GEM
     gherkin (2.4.18)
       json (>= 1.4.6)
     gravtastic (3.2.6)
-    high_voltage (1.0.0)
+    high_voltage (1.0.1)
     hoptoad_notifier (2.4.11)
       activesupport
       builder
