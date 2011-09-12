@@ -1,4 +1,4 @@
-before_script: cp config/database.yml.example config/database.yml && bundle exec rake db:create db:migrate db:test:prepare
+before_script: sudo /etc/init.d/redis-server start && cp config/database.yml.example config/database.yml && bundle exec rake db:create db:migrate db:test:prepare
 rvm:
   - 1.8.7
   - ree
