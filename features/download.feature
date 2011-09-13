@@ -4,7 +4,7 @@ Feature: Download Gems
   Should be able to download some gems
 
   Scenario: Download a gem
-    Given I am signed up and confirmed as "email@person.com/password"
+    Given I am signed up as "email@person.com"
     And I have a gem "sandworm" with version "1.0.0"
     And I have a gem "sandworm" with version "2.0.0"
     And I have an API key for "email@person.com/password"
@@ -37,7 +37,7 @@ Feature: Download Gems
     And I should see "1,003 for this version"
 
   Scenario: Download a platform gem
-    Given I am signed up and confirmed as "email@person.com/password"
+    Given I am signed up as "email@person.com"
     And I have a gem "crysknife" with version "1.0.0"
     And I have a gem "crysknife" with version "1.0.0" and platform "java"
     And I have an API key for "email@person.com/password"
@@ -61,7 +61,7 @@ Feature: Download Gems
     And I should see "2 for this version"
 
   Scenario: Download a .gem file for a platform gem
-    Given I am signed up and confirmed as "email@person.com/password"
+    Given I am signed up as "email@person.com"
     And I have a gem "andhapp" with version "1.1.1"
     And I have a gem "andhapp" with version "1.1.0"
     And I have an API key for "email@person.com/password"
