@@ -15,7 +15,6 @@ class Rubyforger < ActiveRecord::Base
     if rubyforger = Rubyforger.find_by_email(email)
       if user = rubyforger.transferable?(password)
         user.update_password(password)
-        user.confirm_email!
         rubyforger.destroy
         user
       end
