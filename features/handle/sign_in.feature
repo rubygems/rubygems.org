@@ -8,7 +8,6 @@ Feature: Sign in with handle
     And my handle is "signinnow"
     When I go to the sign in page
     And I sign in as "signinnow"
-    Then I should see "Signed in"
-    And I should be signed in
+    Then I should be signed in
     When I return next time
     Then I should be signed in
