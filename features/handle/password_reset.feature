@@ -4,14 +4,14 @@ Feature: Password reset with handle
   Should be able to reset it with handle
 
   Scenario: User is signed up and updates his password without having a handle
-    Given I signed up with "email@person.com/password"
+    Given I signed up with "email@person.com"
     And my handle is nil
     When I go to the password reset request page
     And I fill in "Email address" with "email@person.com"
     And I press "Reset password"
     Then a password reset message should be sent to "email@person.com"
     When I follow the password reset link sent to "email@person.com"
-    And I update my password with "newpassword/newpassword"
+    And I update my password with "newpassword"
     Then I should be signed in
     When I sign out
     Then I should be signed out
