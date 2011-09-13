@@ -4,10 +4,10 @@ Feature: Sign in with handle
   Should be able to sign in with handle
 
   Scenario: User signs in successfully with handle
-    Given I am signed up and confirmed as "email@person.com/password"
+    Given I am signed up as "email@person.com"
     And my handle is "signinnow"
     When I go to the sign in page
-    And I sign in as "signinnow/password"
+    And I sign in as "signinnow"
     Then I should see "Signed in"
     And I should be signed in
     When I return next time
