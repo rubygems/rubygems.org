@@ -4,7 +4,7 @@ Feature: List gems API
   Should be able to list their gems
 
   Scenario: Gem owner user lists their gems
-    Given I am signed up and confirmed as "original@owner.org/password"
+    Given I am signed up as "original@owner.org"
     And I have an API key for "original@owner.org/password"
     And the following version exists:
       | rubygem     | number |

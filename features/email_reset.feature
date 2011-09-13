@@ -4,7 +4,7 @@ Feature: Email reset
   Should be able to reset the email address associated with my account
 
   Background:
-    Given I have signed in with "email@person.com/password"
+    Given I have signed in with "email@person.com"
 
   Scenario: User resets email address
     Given I am on my edit profile page
@@ -28,12 +28,12 @@ Feature: Email reset
 
   Scenario: User tries to sign in in after resetting email address without confirmation
     When I have reset my email address to "email@newperson.com"
-    And I sign in as "email@newperson.com/password"
+    And I sign in as "email@newperson.com"
     Then I should see "Confirmation email will be resent."
     And an email entitled "Email address confirmation" should be sent to "email@newperson.com"
 
   Scenario: User signs in after resetting and confirming email address
     When I have reset my email address to "email@newperson.com"
     And I follow the confirmation link sent to "email@newperson.com"
-    And I sign in as "email@newperson.com/password"
+    And I sign in as "email@newperson.com"
     Then I should not see "sign in"

@@ -15,5 +15,5 @@ Feature: Password reset with handle
     Then I should be signed in
     When I sign out
     Then I should be signed out
-    And I sign in as "email@person.com/newpassword"
+    And I sign in as "email@person.com"
     Then I should be signed in

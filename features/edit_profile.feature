@@ -4,7 +4,7 @@ Feature: Edit Profile
   Should be able to edit their profile
 
   Scenario: Edit Handle
-    Given I have signed in with "john@example.com/password"
+    Given I have signed in with "john@example.com"
     And my handle is "johndoe"
     And I am on my edit profile page
     When I fill in "Handle" with "john_doe"
@@ -16,7 +16,7 @@ Feature: Edit Profile
     Given the following user exists:
       | email               | handle   |
       | janedoe@example.com | some_doe |
-    And I have signed in with "johndoe@example.com/password"
+    And I have signed in with "johndoe@example.com"
     And I am on my edit profile page
     When I fill in "Handle" with "some_doe"
     And I press "Update"
