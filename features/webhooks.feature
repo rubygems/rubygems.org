@@ -4,7 +4,7 @@ Feature: Web Hooks
   Should be able to configure web hooks to be hit when a gem is pushed
 
   Background:
-    Given I am signed up and confirmed as "email@person.com/password"
+    Given I am signed up as "email@person.com"
 
   Scenario: User pushes new gem with webhook
     Given I have a gem "fiddler" with version "1.0.0"
