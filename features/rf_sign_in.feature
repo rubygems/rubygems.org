@@ -8,8 +8,7 @@ Feature: RubyForge legacy sign in
     Given I signed up with "email@person.com"
     And I have a RubyForge account with "email@person.com/rfpassword"
     And I sign in as "email@person.com"
-    Then I should see "Signed in"
-    And I should be signed in
+    Then I should be signed in
     And my GemCutter password should be "rfpassword"
     And no RubyForge user exists with an email of "email@person.com"
 
