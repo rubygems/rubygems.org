@@ -85,12 +85,6 @@ class User < ActiveRecord::Base
     self.api_key = ActiveSupport::SecureRandom.hex(16)
   end
 
-  def confirm_email!
-    self.email_confirmed    = true
-    self.confirmation_token = self.email_reset = nil
-    save(:validate => false)
-  end
-
   def total_downloads_count
     rubygems.to_a.sum(&:downloads)
   end
