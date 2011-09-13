@@ -16,7 +16,7 @@ Feature: Sign up with handle
     And I fill in "Handle" with "thisusernameiswaytoolongseriouslywaytoolong"
     And I fill in "Password" with "password"
     And I press "Sign up"
-    Then I should see error messages
+    Then I should see an error message
 
   Scenario: User signs up with valid data
     When I go to the sign up page
@@ -24,5 +24,4 @@ Feature: Sign up with handle
     And I fill in "Handle" with "validhandledude"
     And I fill in "Password" with "password"
     And I press "Sign up"
-    Then I should see "instructions for confirming"
-    And a confirmation message should be sent to "email@person.com"
+    Then I should be signed in
