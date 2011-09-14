@@ -8,7 +8,7 @@ FactoryGirl.define do
       gem_dependency { Gem::Dependency.new(Rubygem.last.name, "1.0.0", :development) }
     end
 
-    factory :runtime_dependency, :parent => :dependency do
+    factory :runtime_dependency do
     end
   end
 
