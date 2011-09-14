@@ -2,12 +2,14 @@ class Download
   COUNT_KEY     = "downloads"
   TODAY_KEY     = "downloads:today"
   YESTERDAY_KEY = "downloads:yesterday"
+  ALL_KEY       = "downloads:all"
 
   def self.incr(name, full_name)
     $redis.incr(COUNT_KEY)
     $redis.incr(rubygem_key(name))
     $redis.incr(version_key(full_name))
     $redis.zincrby(TODAY_KEY, 1, full_name)
+    $redis.zincrby(ALL_KEY, 1, full_name)
   end
 
   def self.count
@@ -37,6 +39,14 @@ class Download
     items.in_groups_of(2).collect do |full_name, downloads|
       version = Version.find_by_full_name(full_name)
 
+      [version, downloads.to_i]
+    end
+  end
+
+  def self.most_downloaded_all_time(n=5)
+    items = $redis.zrevrange(ALL_KEY, 0, (n-1), :with_scores => true)
+    items.in_groups_of(2).collect do |full_name, downloads|
+      version = Version.find_by_full_name(full_name)
       [version, downloads.to_i]
     end
   end
