@@ -50,10 +50,10 @@ GEM
       gherkin (~> 2.4.18)
       json (>= 1.4.6)
       term-ansicolor (>= 1.0.6)
-    cucumber-rails (1.0.2)
-      capybara (>= 1.0.0)
-      cucumber (~> 1.0.0)
-      nokogiri (>= 1.4.6)
+    cucumber-rails (1.0.5)
+      capybara (>= 1.1.1)
+      cucumber (~> 1.0.6)
+      nokogiri (>= 1.5.0)
     daemons (1.1.4)
     database_cleaner (0.6.7)
     delayed_job (2.1.4)
@@ -190,7 +190,7 @@ PLATFORMS
 
 DEPENDENCIES
   clearance (~> 0.9.1)
-  cucumber-rails (!= 1.0.3, != 1.0.4)
+  cucumber-rails
   database_cleaner
   delayed_job
   factory_girl_rails
