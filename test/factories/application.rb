@@ -1,15 +1,15 @@
 FactoryGirl.define do
   factory :dependency do
     gem_dependency { Gem::Dependency.new(Rubygem.last.name, "1.0.0") }
-    rubygem # { Factory(:rubygem) }
+    rubygem
     version
-  end
 
-  factory :development_dependency, :parent => :dependency do
-    gem_dependency { Gem::Dependency.new(Rubygem.last.name, "1.0.0", :development) }
-  end
+    factory :development_dependency do
+      gem_dependency { Gem::Dependency.new(Rubygem.last.name, "1.0.0", :development) }
+    end
 
-  factory :runtime_dependency, :parent => :dependency do
+    factory :runtime_dependency, :parent => :dependency do
+    end
   end
 
   factory :linkset do
@@ -44,11 +44,11 @@ FactoryGirl.define do
   factory :rubygem do
     linkset
     name
-  end
 
-  factory :rubygem_with_downloads, :parent => :rubygem do
-    after_create do |r|
-      $redis[Download.key(r)] = r['downloads']
+    factory :rubygem_with_downloads do
+      after_create do |r|
+        $redis[Download.key(r)] = r['downloads']
+      end
     end
   end
 
@@ -74,9 +74,9 @@ FactoryGirl.define do
     rubygem
     url
     user
-  end
 
-  factory :global_web_hook, :parent => :web_hook do
-    rubygem nil
+    factory :global_web_hook do
+      rubygem nil
+    end
   end
 end
