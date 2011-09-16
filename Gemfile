@@ -34,6 +34,7 @@ group :development, :test do
   gem 'silent-postgres'
   gem 'guard'
   gem 'guard-cucumber'
+  gem 'guard-bundler'
 end
 
 # These gems suck and do stupid things when in maintenance mode
