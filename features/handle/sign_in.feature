@@ -9,5 +9,3 @@ Feature: Sign in with handle
     When I go to the sign in page
     And I sign in as "signinnow"
     Then I should be signed in
-    When I return next time
-    Then I should be signed in
