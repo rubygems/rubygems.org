@@ -91,7 +91,7 @@ end
 When "I sign out" do
   steps %{
     When I go to the homepage
-    And I follow "Sign out"
+    And I follow "sign out"
   }
 end
 
