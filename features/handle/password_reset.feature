@@ -15,5 +15,8 @@ Feature: Password reset with handle
     Then I should be signed in
     When I sign out
     Then I should be signed out
-    And I sign in as "email@person.com"
+    When I go to the sign in page
+    And I fill in "Email" with "email@person.com"
+    And I fill in "Password" with "newpassword"
+    And I press "Sign in"
     Then I should be signed in
