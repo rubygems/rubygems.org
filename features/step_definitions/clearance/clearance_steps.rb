@@ -10,9 +10,9 @@ end
 
 Then /^I should see an email field$/ do
   if page.respond_to?(:should)
-    page.should have_css?("input[type='email']")
+    page.should have_css?("input[id='session_who']")
   else
-    assert page.has_css?("input[type='email']")
+    assert page.has_css?("input[id='session_who']")
   end
 end
 
