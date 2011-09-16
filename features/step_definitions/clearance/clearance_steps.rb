@@ -78,7 +78,6 @@ When /^I try to change the password of "(.*)" without token$/ do |email|
 end
 
 # Actions
-
 When /^I sign in (?:with|as) "(.*)"$/ do |email|
   When %{I go to the sign in page}
   And %{I fill in "Email" with "#{email}"}
@@ -102,9 +101,4 @@ end
 When /^I update my password with "(.*)"$/ do |password|
   And %{I fill in "Password" with "#{password}"}
   And %{I press "Save this password"}
-end
-
-When /^I return next time$/ do
-  When %{session is cleared}
-  And %{I go to the homepage}
 end
