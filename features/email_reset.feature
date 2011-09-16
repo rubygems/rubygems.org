@@ -18,7 +18,7 @@ Feature: Email reset
     When I am on my edit profile page
     And I fill in "Email address" with "this is an invalid email address"
     And I press "Update"
-    Then I should see error messages
+    Then I should see an error message
 
   Scenario: User confirms new email address
     When I have reset my email address to "email@newperson.com"
