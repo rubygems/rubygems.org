@@ -35,12 +35,10 @@ end
 # Session
 
 Then /^I should be signed in$/ do
-  Given %{I am on the homepage}
   Then %{I should see "sign out"}
 end
 
 Then /^I should be signed out$/ do
-  Given %{I am on the homepage}
   Then %{I should see "sign in"}
 end
 
