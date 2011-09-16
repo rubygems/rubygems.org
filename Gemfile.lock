@@ -200,6 +200,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  capybara (~> 1.1)
   clearance
   cucumber-rails
   database_cleaner
