@@ -36,12 +36,12 @@ end
 
 Then /^I should be signed in$/ do
   Given %{I am on the homepage}
-  Then %{I should see "Sign out"}
+  Then %{I should see "sign out"}
 end
 
 Then /^I should be signed out$/ do
   Given %{I am on the homepage}
-  Then %{I should see "Sign in"}
+  Then %{I should see "sign in"}
 end
 
 Given /^(?:I am|I have|I) signed in (?:with|as) "(.*)"$/ do |email|
