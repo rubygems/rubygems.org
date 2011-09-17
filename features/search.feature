@@ -1,6 +1,6 @@
 Feature: Search
   In order to find a gem I want
-  As a ruby developer 
+  As a ruby developer
   I should be able to search for gems on gemcutter
 
   Scenario Outline: Search
