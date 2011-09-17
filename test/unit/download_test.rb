@@ -100,6 +100,37 @@ class DownloadTest < ActiveSupport::TestCase
     assert_equal 1, Download.highest_rank([@version_3, @version_4])
   end
 
+  should "find most downloaded all time" do
+    @rubygem_1 = Factory(:rubygem)
+    @version_1 = Factory(:version, :rubygem => @rubygem_1)
+    @version_2 = Factory(:version, :rubygem => @rubygem_1)
+
+    @rubygem_2 = Factory(:rubygem)
+    @version_3 = Factory(:version, :rubygem => @rubygem_2)
+
+    @rubygem_3 = Factory(:rubygem)
+    @version_4 = Factory(:version, :rubygem => @rubygem_3)
+
+    Download.incr(@rubygem_1.name, @version_1.full_name)
+    Download.incr(@rubygem_1.name, @version_2.full_name)
+    Download.incr(@rubygem_2.name, @version_3.full_name)
+    Download.incr(@rubygem_1.name, @version_1.full_name)
+    3.times { Download.incr(@rubygem_2.name, @version_3.full_name) }
+    2.times { Download.incr(@rubygem_1.name, @version_2.full_name) }
+
+    assert_equal [[@version_3, 4], [@version_2, 3], [@version_1, 2]],
+                 Download.most_downloaded_all_time
+
+    assert_equal [[@version_3, 4], [@version_2, 3]],
+                 Download.most_downloaded_all_time(2)
+
+    assert_equal 3, Download.cardinality
+    assert_equal 1, Download.rank(@version_3)
+    assert_equal 2, Download.rank(@version_2)
+    assert_equal 3, Download.rank(@version_1)
+
+  end
+
   should "find counts per day for versions" do
     @rubygem_1 = Factory(:rubygem)
     @version_1 = Factory(:version, :rubygem => @rubygem_1)
