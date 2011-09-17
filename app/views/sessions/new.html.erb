@@ -8,7 +8,7 @@
 <%= form_for :session, :url => session_path do |form| %>
   <div class="text_field">
     <%= form.label :who, t('activerecord.attributes.session.who') %>
-    <%= form.text_field :who, :size => 25 %>
+    <%= form.email_field :who, :size => 25 %>
   </div>
   <div class="password_field">
     <%= form.label :password, t('activerecord.attributes.session.password') %>

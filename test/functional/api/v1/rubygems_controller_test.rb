@@ -53,7 +53,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
   context "When logged in" do
     setup do
-      @user = Factory(:email_confirmed_user)
+      @user = Factory(:user)
       sign_in_as(@user)
     end
 
@@ -108,7 +108,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           Factory(:ownership, :user => @user, :rubygem => rubygem, :approved => true)
         end
 
-        @other_user = Factory(:email_confirmed_user)
+        @other_user = Factory(:user)
         @not_my_rubygem = Factory(:rubygem, :name => "NotMyGem")
         Factory(:version, :rubygem => @not_my_rubygem)
         Factory(:ownership, :user => @other_user, :rubygem => @not_my_rubygem, :approved => true)
@@ -130,7 +130,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
   context "with a confirmed user authenticated" do
     setup do
-      @user = Factory(:email_confirmed_user)
+      @user = Factory(:user)
       @request.env["HTTP_AUTHORIZATION"] = @user.api_key
     end
 
@@ -231,7 +231,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On POST to create for someone else's gem" do
       setup do
-        @other_user = Factory(:email_confirmed_user)
+        @other_user = Factory(:user)
         create_gem(@other_user, :name => "test")
         @rubygem.reload
 
@@ -319,7 +319,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       context "ON DELETE to yank for someone else's gem" do
         setup do
-          @other_user = Factory(:email_confirmed_user)
+          @other_user = Factory(:user)
           @request.env["HTTP_AUTHORIZATION"] = @other_user.api_key
           delete :yank, :gem_name => @rubygem.to_param, :version => '0.1.0'
         end

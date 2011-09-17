@@ -4,7 +4,7 @@ Feature: Dashboard
   Should be able to see a list of updates in their feed
 
   Background:
-    Given I am signed up and confirmed as "email@person.com/password"
+    Given I am signed up as "email@person.com"
 
   Scenario: User goes to their dashboard
     Given the following rubygems exist:
@@ -27,7 +27,7 @@ Feature: Dashboard
       | email: email@person.com | name: fireworm |
     And I download the rubygem "fireworm" version "1.0.0" 1001 times
     And I download the rubygem "sandworm" version "2.0.0" 1008 times
-    When I sign in as "email@person.com/password"
+    When I sign in as "email@person.com"
     And I go to the dashboard
     And I should see "ffi"
     And I should see "java"

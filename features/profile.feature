@@ -4,7 +4,7 @@ Feature: Profile Feature
   I want to see a page with all of my gems
 
   Background:
-    Given I have signed in with "jon@example.com/password"
+    Given I have signed in with "jon@example.com"
     And the following version exists:
       | rubygem        | number |
       | name: sandworm | 2.0.0  |
@@ -24,7 +24,7 @@ Feature: Profile Feature
     And I should see "3 today"
 
   Scenario: View another user's profile
-    Given I have signed in with "bob@example.com/password"
+    Given I have signed in with "bob@example.com"
     When I go to "jon@example.com" profile page
     Then I should see "sandworm"
 

@@ -140,26 +140,6 @@ class UserTest < ActiveSupport::TestCase
       assert_equal [my_rubygem], @user.rubygems
     end
 
-    context "with a confirmed email address" do
-      setup do
-        @user = Factory(:email_confirmed_user, :confirmation_token => nil)
-        @user.email = "changed@example.com"
-        @user.save
-      end
-
-      should "generate a new confirmation token when the email gets changed" do
-        assert @user.reload.email_reset
-      end
-
-      should "reset token, confirmation, and reset when confirming email" do
-        @user.confirm_email!
-
-        assert @user.reload.email_confirmed
-        assert_nil @user.reload.confirmation_token
-        assert_nil @user.reload.email_reset
-      end
-    end
-
     context "with subscribed gems" do
       setup do
         @subscribed_gem   = Factory(:rubygem)

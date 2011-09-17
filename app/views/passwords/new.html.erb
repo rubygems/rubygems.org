@@ -5,7 +5,7 @@
 <%= form_for :password, :url => passwords_path do |form| %>
   <div class="text_field">
     <%= form.label :email, t('activerecord.attributes.user.email') %>
-    <%= form.text_field :email, :size => '25' %>
+    <%= form.email_field :email, :size => '25' %>
   </div>
   <div class="submit_field">
     <%= form.submit t('.submit'), :disable_with => t('form_disable_with') %>
