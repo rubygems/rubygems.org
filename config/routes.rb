@@ -9,6 +9,7 @@ Gemcutter::Application.routes.draw do
       end
       resources :downloads, :only => :index do
         get :top, :on => :collection
+        get :all, :on => :collection
       end
       constraints :id => Rubygem::ROUTE_PATTERN, :format => /json|xml|yaml/ do
         # In Rails 3.1, the following line can be replaced with:
