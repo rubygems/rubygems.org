@@ -19,9 +19,3 @@ Feature: Sign up
     And I fill in "Password" with ""
     And I press "Sign up"
     Then I should see "Password can't be blank"
-
-  Scenario: Visitor signs up with valid data
-    When I fill in "Email" with "email@example.com"
-    And I fill in "Password" with "password"
-    And I press "Sign up"
-    Then I should be on the home page
