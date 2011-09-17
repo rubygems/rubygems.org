@@ -5,7 +5,7 @@ class Api::V1::ApiKeysController < Api::BaseController
   def show
     authenticate_or_request_with_http_basic do |username, password|
       @_current_user = User.authenticate(username, password)
-      if current_user && current_user.email_confirmed
+      if current_user
         respond_to do |format|
           format.any(:all) { render :text => current_user.api_key }
           format.json { render :json => {:rubygems_api_key => current_user.api_key} }

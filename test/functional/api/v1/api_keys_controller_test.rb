@@ -26,18 +26,6 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     @request.env["HTTP_AUTHORIZATION"] = "Basic " + Base64::encode64(str)
   end
 
-  context "on GET to show with unconfirmed user" do
-    setup do
-      @user = Factory(:user)
-      authorize_with("#{@user.email}:#{@user.password}")
-      get :show
-    end
-    should "deny access" do
-      assert_response 401
-      assert_match "HTTP Basic: Access denied.", @response.body
-    end
-  end
-
   context "on GET to show with bad credentials" do
     setup do
       @user = Factory(:user)
@@ -53,7 +41,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
   # this endpoint is used by rubygems
   context "on GET to show with TEXT and with confirmed user" do
     setup do
-      @user = Factory(:email_confirmed_user)
+      @user = Factory(:user)
       authorize_with("#{@user.email}:#{@user.password}")
       get :show, :format => 'text'
     end
@@ -66,7 +54,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
   def self.should_respond_to(format, to_meth = :to_s)
     context "with #{format.to_s.upcase} and with confirmed user" do
       setup do
-        @user = Factory(:email_confirmed_user)
+        @user = Factory(:user)
         authorize_with("#{@user.email}:#{@user.password}")
         get :show, :format => format
       end
@@ -96,7 +84,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
   context "on PUT to reset with signed in user" do
     setup do
-      @user = Factory(:email_confirmed_user)
+      @user = Factory(:user)
       sign_in_as(@user)
     end
     should "reset the user's api key" do

@@ -51,7 +51,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
   context "When logged in" do
     setup do
       @url = "http://example.org"
-      @user = Factory(:email_confirmed_user)
+      @user = Factory(:user)
       @request.env["Authorization"] = @user.api_key
     end
 
@@ -183,7 +183,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
       context "with some unowned hooks" do
         setup do
-          @other_user   = Factory(:email_confirmed_user)
+          @other_user   = Factory(:user)
           @rubygem_hook = Factory(:web_hook,
                                   :user    => @other_user,
                                   :rubygem => @rubygem)
