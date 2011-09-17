@@ -8,18 +8,8 @@ class SessionsController < Clearance::SessionsController
       flash_failure_after_create
       render :template => 'sessions/new', :status => :unauthorized
     else
-      if !@user.email_reset
-        sign_in(@user)
-        redirect_back_or(url_after_create)
-      else
-        if @user.email_reset
-          Mailer.email_reset(@user).deliver
-        else
-          ClearanceMailer.confirmation(@user).deliver
-        end
-        flash_notice_after_create
-        redirect_to(new_session_url)
-      end
+      sign_in(@user)
+      redirect_back_or(url_after_create)
     end
   end
 

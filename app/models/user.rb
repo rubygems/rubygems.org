@@ -17,7 +17,6 @@ class User < ActiveRecord::Base
 
   before_validation :regenerate_token, :if => :email_changed?, :on => :update
   before_create :generate_api_key
-  after_update :deliver_email_reset, :if => :email_reset
 
   validates_uniqueness_of :handle, :allow_nil => true
   validates_format_of :handle, :with => /\A[A-Za-z][A-Za-z_\-0-9]*\z/, :allow_nil => true
@@ -73,12 +72,7 @@ class User < ActiveRecord::Base
   end
 
   def regenerate_token
-    self.email_reset = true
     generate_confirmation_token
-  end
-
-  def deliver_email_reset
-    Mailer.email_reset(self).deliver
   end
 
   def generate_api_key
