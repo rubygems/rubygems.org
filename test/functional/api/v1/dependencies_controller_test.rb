@@ -34,7 +34,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
 
     should respond_with :request_entity_too_large
     should "see too many gems text" do
-      assert page.has_content?('Too many gems to resolve') 
+      assert page.has_content?('Too many gems to resolve')
     end
   end
 end
