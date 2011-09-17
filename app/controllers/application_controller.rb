@@ -16,8 +16,6 @@ class ApplicationController < ActionController::Base
   def verify_authenticated_user
     if current_user.nil?
       render :text => t(:please_sign_up), :status => 401
-    elsif !current_user.email_confirmed
-      render :text => t(:please_confirm), :status => 403
     end
   end
 

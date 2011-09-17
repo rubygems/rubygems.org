@@ -12,7 +12,7 @@ class ProfilesControllerTest < ActionController::TestCase
 
   context "when logged in" do
     setup do
-      @user = Factory(:email_confirmed_user)
+      @user = Factory(:user)
       sign_in_as(@user)
     end
 
@@ -67,7 +67,7 @@ class ProfilesControllerTest < ActionController::TestCase
       context "updating handle" do
         setup do
           @handle = "john_m_doe"
-          @user = Factory(:email_confirmed_user, :handle => "johndoe")
+          @user = Factory(:user, :handle => "johndoe")
           sign_in_as(@user)
           put :update, :user => {:handle => @handle}
         end

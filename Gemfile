@@ -5,7 +5,7 @@ gem 'psych', :platforms => :ruby_19
 
 gem 'rails', '~> 3.0.10'
 
-gem 'clearance', '~> 0.9.1'
+gem 'clearance'
 gem 'fog'
 gem 'gchartrb', :require => 'google_chart'
 gem 'gravtastic'
@@ -32,6 +32,9 @@ end
 
 group :development, :test do
   gem 'silent-postgres'
+  gem 'guard'
+  gem 'guard-cucumber'
+  gem 'guard-bundler'
 end
 
 # These gems suck and do stupid things when in maintenance mode
@@ -41,6 +44,7 @@ group :development, :test, :staging, :production do
 end
 
 group :test do
+  gem 'capybara', '~> 1.1'
   gem 'cucumber-rails'
   gem 'database_cleaner'
   gem 'factory_girl_rails'
