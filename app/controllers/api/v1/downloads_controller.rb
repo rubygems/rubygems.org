@@ -30,4 +30,12 @@ class Api::V1::DownloadsController < Api::BaseController
     )
   end
 
+  def all
+    respond_with(
+      :gems => Download.most_downloaded_all_time(50).map {|version, count|
+        [version.attributes, count]
+      }
+    )
+  end
+
 end
