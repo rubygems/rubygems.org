@@ -386,9 +386,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
   def should_return_just_updated_gems(gems)
     assert_equal 3, gems.length
     gems.each {|g| assert g.is_a?(Hash) }
-    assert_equal @version_2.number, gems[0]['number']
-    assert_equal @version_3.number, gems[1]['number']
-    assert_equal @version_4.number, gems[2]['number']
+    assert_equal @rubygem_1.attributes['name'], gems[0]['name']
+    assert_equal @rubygem_2.attributes['name'], gems[1]['name']
+    assert_equal @rubygem_3.attributes['name'], gems[2]['name']
   end
 
   context "No signed in-user" do
@@ -461,7 +461,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       should "return correct XML for just_updated gems" do
         get :just_updated, :format => :xml
-        gems = Hash.from_xml(Nokogiri.parse(@response.body).to_xml)['versions']
+        gems = Hash.from_xml(Nokogiri.parse(@response.body).to_xml)['rubygems']
         should_return_just_updated_gems(gems)
       end
     end
