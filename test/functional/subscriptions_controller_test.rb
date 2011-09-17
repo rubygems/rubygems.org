@@ -3,7 +3,7 @@ require 'test_helper'
 class SubscriptionsControllerTest < ActionController::TestCase
   context "When logged in" do
     setup do
-      @user = Factory(:email_confirmed_user)
+      @user = Factory(:user)
       sign_in_as(@user)
     end
   end

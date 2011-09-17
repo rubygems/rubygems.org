@@ -1,7 +1,7 @@
 Feature: Homepage
 
   Scenario: Most downloaded gems for today
-    Given I am signed up and confirmed as "email@person.com/password"
+    Given I am signed up as "email@person.com"
     And I have an API key for "email@person.com/password"
     And I have a gem "sandworm" with version "1.0.0"
     And I have a gem "sandworm" with version "2.0.0"

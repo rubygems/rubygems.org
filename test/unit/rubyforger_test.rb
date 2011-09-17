@@ -31,7 +31,7 @@ class RubyforgerTest < ActiveSupport::TestCase
     end
 
     should "fail transfer when password is wrong" do
-      Factory(:email_confirmed_user, :email => @email)
+      Factory(:user, :email => @email)
 
       assert_nil Rubyforger.transfer(@email, "trogdor")
       assert Rubyforger.exists?(@rubyforger.id)

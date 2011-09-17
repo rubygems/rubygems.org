@@ -13,7 +13,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     context "on GET to show with #{format.to_s.upcase}" do
       setup do
         @rubygem = Factory(:rubygem)
-        @user = Factory(:email_confirmed_user)
+        @user = Factory(:user)
         @rubygem.ownerships.create(:user => @user, :approved => true)
 
         @request.env["HTTP_AUTHORIZATION"] = @user.api_key
