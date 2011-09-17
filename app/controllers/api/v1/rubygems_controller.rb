@@ -52,8 +52,8 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   def just_updated
-    @versions = Version.just_updated(50)
-    respond_with(@versions, :yamlish => true)
+    @rubygems = Version.just_updated(50).map(&:rubygem)
+    respond_with(@rubygems, :yamlish => true)
   end
 
   private
