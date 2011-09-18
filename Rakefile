@@ -1,6 +1,6 @@
 #!/usr/bin/env rake
 require File.expand_path('../config/application', __FILE__)
-Gemcutter::Application.load_tasks
+RubygemsOrg::Application.load_tasks
 
 desc "Run all tests and features"
 task :default => [:test, :cucumber]

@@ -1,4 +1,4 @@
-Gemcutter::Application.routes.draw do
+RubygemsOrg::Application.routes.draw do
   ################################################################################
   # API v1
 
