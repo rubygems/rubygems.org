@@ -23,7 +23,7 @@ Feature: Sign in
  Scenario: Visitor signs in successfully
     Given I am signed up as "email@example.com"
     When I go to the sign in page
-    Then I should see an email field
+    Then I should see a login field
     And I sign in as "email@example.com"
     Then I should be signed in
 
