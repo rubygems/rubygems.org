@@ -18,6 +18,15 @@ Feature: Sign up with handle
     And I press "Sign up"
     Then I should see an error message
 
+  Scenario: User signs up with registered handle
+    Given I am signed up as "email@person.com"
+    When I go to the sign up page
+    And I fill in "Email" with "email@person.com"
+    And I fill in "Handle" with "validhandledude"
+    And I fill in "Password" with "password"
+    And I press "Sign up"
+    Then I should see an error message
+
   Scenario: User signs up with valid data
     When I go to the sign up page
     And I fill in "Email" with "email@person.com"
