@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110601153519) do
+ActiveRecord::Schema.define(:version => 20110907000456) do
 
   create_table "announcements", :force => true do |t|
     t.text     "body"
@@ -43,14 +44,6 @@ ActiveRecord::Schema.define(:version => 20110601153519) do
   add_index "dependencies", ["rubygem_id"], :name => "index_dependencies_on_rubygem_id"
   add_index "dependencies", ["version_id"], :name => "index_dependencies_on_version_id"
 
-  create_table "downloads", :force => true do |t|
-    t.integer  "version_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "downloads", ["version_id"], :name => "index_downloads_on_version_id"
-
   create_table "linksets", :force => true do |t|
     t.integer  "rubygem_id"
     t.string   "home"
@@ -69,7 +62,6 @@ ActiveRecord::Schema.define(:version => 20110601153519) do
     t.integer  "rubygem_id"
     t.integer  "user_id"
     t.string   "token"
-    t.boolean  "approved",   :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -139,7 +131,6 @@ ActiveRecord::Schema.define(:version => 20110601153519) do
     t.boolean  "indexed",           :default => true
     t.boolean  "prerelease"
     t.integer  "position"
-    t.integer  "downloads_count",   :default => 0
     t.boolean  "latest"
     t.string   "full_name"
   end
