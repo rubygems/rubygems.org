@@ -402,7 +402,7 @@ class VersionTest < ActiveSupport::TestCase
       @owned_two = Factory(:version, :rubygem => @gem, :built_at => 2.days.ago)
       @unowned   = Factory(:version)
 
-      Factory(:ownership, :rubygem => @gem, :user => @user, :approved => true)
+      Factory(:ownership, :rubygem => @gem, :user => @user)
     end
 
     should "return the owned gems from #owned_by" do

@@ -15,7 +15,7 @@ class Api::V1::OwnersController < Api::BaseController
 
   def create
     if owner = User.find_by_email(params[:email])
-      @rubygem.ownerships.create(:user => owner, :approved => true)
+      @rubygem.ownerships.create(:user => owner)
       render :text => 'Owner added successfully.'
     else
       render :text => 'Owner could not be found.', :status => :not_found

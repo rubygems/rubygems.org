@@ -105,13 +105,13 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         @mygems = [ Factory(:rubygem, :name => "SomeGem"), Factory(:rubygem, :name => "AnotherGem") ]
         @mygems.each do |rubygem|
           Factory(:version, :rubygem => rubygem)
-          Factory(:ownership, :user => @user, :rubygem => rubygem, :approved => true)
+          Factory(:ownership, :user => @user, :rubygem => rubygem)
         end
 
         @other_user = Factory(:user)
         @not_my_rubygem = Factory(:rubygem, :name => "NotMyGem")
         Factory(:version, :rubygem => @not_my_rubygem)
-        Factory(:ownership, :user => @other_user, :rubygem => @not_my_rubygem, :approved => true)
+        Factory(:ownership, :user => @other_user, :rubygem => @not_my_rubygem)
 
         get :index, :format => format
       end
@@ -164,16 +164,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On POST to create for existing gem" do
       setup do
-        rubygem = Factory(:rubygem,
-                          :name       => "test")
-        Factory(:ownership, :rubygem    => rubygem,
-                :user       => @user,
-                :approved   => true)
-        Factory(:version,   :rubygem    => rubygem,
-                :number     => "0.0.0",
-                :updated_at => 1.year.ago,
-                :created_at => 1.year.ago)
-
+        rubygem = Factory(:rubygem, :name => "test")
+        Factory(:ownership, :rubygem => rubygem, :user => @user)
+        Factory(:version, :rubygem => rubygem, :number => "0.0.0", :updated_at => 1.year.ago, :created_at => 1.year.ago)
         @request.env["RAW_POST_DATA"] = gem_file("test-1.0.0.gem").read
         post :create
       end
@@ -341,7 +334,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         @v1       = Factory(:version, :rubygem => @rubygem, :number => "0.1.0", :platform => "ruby", :indexed => false)
         @v2       = Factory(:version, :rubygem => @rubygem, :number => "0.1.1", :platform => "ruby")
         @v3       = Factory(:version, :rubygem => @rubygem, :number => "0.1.2", :platform => "x86-darwin-10", :indexed => false)
-        Factory(:ownership, :user => @user, :rubygem => @rubygem, :approved => true)
+        Factory(:ownership, :user => @user, :rubygem => @rubygem)
       end
 
       context "ON PUT to unyank for version 0.1.0" do

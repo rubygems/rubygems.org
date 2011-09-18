@@ -12,7 +12,7 @@ class DashboardsControllerTest < ActionController::TestCase
         3.times { Factory(:rubygem) }
         @gems = (1..3).map do
           rubygem = Factory(:rubygem)
-          rubygem.ownerships.create(:user => @user, :approved => true)
+          rubygem.ownerships.create(:user => @user)
           Factory(:version, :rubygem => rubygem)
           rubygem
         end

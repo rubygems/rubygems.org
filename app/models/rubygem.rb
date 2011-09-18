@@ -99,11 +99,11 @@ class Rubygem < ActiveRecord::Base
   end
 
   def unowned?
-    ownerships.where(:approved => true).blank?
+    ownerships.blank?
   end
 
   def owned_by?(user)
-    ownerships.find_by_user_id(user.id).try(:approved) if user
+    ownerships.find_by_user_id(user.id) if user
   end
 
   def to_s
@@ -163,7 +163,7 @@ class Rubygem < ActiveRecord::Base
 
   def create_ownership(user)
     if unowned? && !user.try(:rubyforge_importer?)
-      ownerships.create(:user => user, :approved => true)
+      ownerships.create(:user => user)
     end
   end
 

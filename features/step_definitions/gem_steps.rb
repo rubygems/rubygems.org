@@ -50,6 +50,6 @@ Given 'the following rubygems exist for "$email":' do |email, table|
     version = Factory(:version, :rubygem => rubygem)
     row['downloads'].to_i.times { Download.incr(rubygem.name, version.full_name) }
 
-    rubygem.ownerships.create :user => user, :approved => true
+    rubygem.ownerships.create :user => user
   end
 end
