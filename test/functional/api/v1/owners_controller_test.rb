@@ -14,7 +14,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       setup do
         @rubygem = Factory(:rubygem)
         @user = Factory(:user)
-        @rubygem.ownerships.create(:user => @user, :approved => true)
+        @rubygem.ownerships.create(:user => @user)
 
         @request.env["HTTP_AUTHORIZATION"] = @user.api_key
         get :show, :rubygem_id => @rubygem.to_param, :format => format

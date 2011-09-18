@@ -47,7 +47,7 @@ def create_gem(*owners_and_or_opts)
   opts, owners = owners_and_or_opts.extract_options!, owners_and_or_opts
   @rubygem = Factory(:rubygem, :name => opts[:name] || FactoryGirl.generate(:name))
   Factory(:version, :rubygem => @rubygem)
-  owners.each { |owner| @rubygem.ownerships.create(:user => owner, :approved => true) }
+  owners.each { |owner| @rubygem.ownerships.create(:user => owner) }
 end
 
 def gem_specification_from_gem_fixture(name)

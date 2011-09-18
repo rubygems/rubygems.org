@@ -131,12 +131,9 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
-    should "only return approved rubygems" do
+    should "only return rubygems" do
       my_rubygem = Factory(:rubygem)
-      other_rubygem = Factory(:rubygem)
-      Factory(:ownership, :user => @user, :rubygem => my_rubygem, :approved => true)
-      Factory(:ownership, :user => @user, :rubygem => other_rubygem, :approved => false)
-
+      Factory(:ownership, :user => @user, :rubygem => my_rubygem)
       assert_equal [my_rubygem], @user.rubygems
     end
 
@@ -210,7 +207,7 @@ class UserTest < ActiveSupport::TestCase
     setup do
       @user      = Factory(:user)
       @rubygem   = Factory(:rubygem)
-      @ownership = Factory(:ownership, :rubygem => @rubygem, :user => @user, :approved => true)
+      @ownership = Factory(:ownership, :rubygem => @rubygem, :user => @user)
       @version   = Factory(:version, :rubygem => @rubygem)
 
       Download.incr(@version.rubygem.name, @version.full_name)
@@ -232,7 +229,7 @@ class UserTest < ActiveSupport::TestCase
       @rubygem3 = Factory(:rubygem, :downloads => 300)
 
       [@rubygem1, @rubygem2, @rubygem3].each do |rubygem|
-        Factory(:ownership, :rubygem => rubygem, :user => @user, :approved => true)
+        Factory(:ownership, :rubygem => rubygem, :user => @user)
       end
     end
 

@@ -5,8 +5,7 @@ class User < ActiveRecord::Base
 
   attr_accessible :bio, :email, :handle, :location, :password, :website
 
-  has_many :rubygems, :through    => :ownerships,
-                      :conditions => { 'ownerships.approved' => true }
+  has_many :rubygems, :through => :ownerships
 
   has_many :subscribed_gems, :through => :subscriptions,
                              :source  => :rubygem,
