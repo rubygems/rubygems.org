@@ -3,6 +3,7 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'clearance/testing'
 require 'capybara/rails'
+require 'shoulda/rails'
 
 class ActiveSupport::TestCase
   self.use_transactional_fixtures = true
