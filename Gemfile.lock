@@ -182,7 +182,11 @@ GEM
       json_pure
       rubyzip
     sexp_processor (3.0.6)
-    shoulda (2.11.3)
+    shoulda (3.0.0.beta2)
+      shoulda-context (~> 1.0.0.beta1)
+      shoulda-matchers (~> 1.0.0.beta1)
+    shoulda-context (1.0.0.beta1)
+    shoulda-matchers (1.0.0.beta3)
     silent-postgres (0.1.1)
     sinatra (1.2.6)
       rack (~> 1.1)
@@ -253,7 +257,7 @@ DEPENDENCIES
   redis
   rest-client
   rr
-  shoulda
+  shoulda (>= 3.0.0.beta)
   silent-postgres
   sinatra
   system_timer

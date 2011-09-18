@@ -58,7 +58,7 @@ group :test do
   gem 'rack-test', :require => 'rack/test'
   gem 'redgreen', :platforms => :ruby_18
   gem 'rr'
-  gem 'shoulda'
+  gem 'shoulda', '>= 3.0.0.beta'
   gem 'timecop'
   gem 'webmock'
 end
