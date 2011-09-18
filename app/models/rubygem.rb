@@ -162,9 +162,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def create_ownership(user)
-    if unowned? && !user.try(:rubyforge_importer?)
-      ownerships.create(:user => user)
-    end
+    ownerships.create(:user => user) if unowned?
   end
 
   def update_versions!(version, spec)

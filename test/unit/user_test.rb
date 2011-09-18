@@ -93,7 +93,6 @@ class UserTest < ActiveSupport::TestCase
 
     should "only have email when boiling down to XML" do
       xml = Nokogiri.parse(@user.to_xml)
-
       assert_equal "user", xml.root.name
       assert_equal %w[email], xml.root.children.select(&:element?).map(&:name)
       assert_equal @user.email, xml.at_css("email").content
@@ -150,35 +149,11 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
-    context "with the rubyforge user set up" do
-      setup do
-        ENV["RUBYFORGE_IMPORTER"] = "42"
-      end
-
-      should "be true if rubyforge user is pushing to us" do
-        stub(@user).id { ENV["RUBYFORGE_IMPORTER"] }
-        assert @user.rubyforge_importer?
-      end
-
-      should "be false if it's not the rubyforge user" do
-        assert ! @user.rubyforge_importer?
-      end
-
-      teardown do
-        ENV["RUBYFORGE_USER"] = nil
-      end
-    end
-
     should "have all gems and specific gems for hooks" do
       rubygem = Factory(:rubygem)
-      rubygem_hook = Factory(:web_hook,
-                             :user    => @user,
-                             :rubygem => rubygem)
-      global_hook  = Factory(:global_web_hook,
-                             :user    => @user)
-
+      rubygem_hook = Factory(:web_hook, :user => @user, :rubygem => rubygem)
+      global_hook  = Factory(:global_web_hook, :user => @user)
       all_hooks = @user.all_hooks
-
       assert_equal rubygem_hook, all_hooks[rubygem.name].first
       assert_equal global_hook, all_hooks["all gems"].first
     end
@@ -186,18 +161,14 @@ class UserTest < ActiveSupport::TestCase
     should "have all gems for hooks" do
       global_hook  = Factory(:global_web_hook, :user => @user)
       all_hooks = @user.all_hooks
-
       assert_equal global_hook, all_hooks["all gems"].first
       assert_equal 1, all_hooks.keys.size
     end
 
     should "have only specific for hooks" do
       rubygem = Factory(:rubygem)
-      rubygem_hook = Factory(:web_hook,
-                             :user    => @user,
-                             :rubygem => rubygem)
+      rubygem_hook = Factory(:web_hook, :user => @user, :rubygem => rubygem)
       all_hooks = @user.all_hooks
-
       assert_equal rubygem_hook, all_hooks[rubygem.name].first
       assert_equal 1, all_hooks.keys.size
     end
