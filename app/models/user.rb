@@ -43,10 +43,6 @@ class User < ActiveRecord::Base
     handle || id
   end
 
-  def rubyforge_importer?
-    id.to_s == ENV["RUBYFORGE_IMPORTER"]
-  end
-
   def reset_api_key!
     generate_api_key && save!
   end

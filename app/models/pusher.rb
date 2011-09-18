@@ -14,14 +14,9 @@ class Pusher
   end
 
   def authorize
-    import? ||
     rubygem.pushable? ||
     rubygem.owned_by?(user) ||
     notify("You do not have permission to push to this gem.", 403)
-  end
-
-  def import?
-    user.rubyforge_importer? && version.new_record?
   end
 
   def save
