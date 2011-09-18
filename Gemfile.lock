@@ -83,7 +83,7 @@ GEM
       ruby-hmac
     formatador (0.2.1)
     gchartrb (0.8)
-    gherkin (2.4.18)
+    gherkin (2.4.21)
       json (>= 1.4.6)
     gravtastic (3.2.6)
     guard (0.7.0)
