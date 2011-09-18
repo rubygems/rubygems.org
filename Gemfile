@@ -26,6 +26,10 @@ gem 'will_paginate'
 gem 'xml-simple'
 gem 'yajl-ruby', :require => 'yajl/json_gem'
 
+group :assets do
+  gem 'uglifier', '>= 1.0.3'
+end
+
 group :development do
   gem 'rails-erd'
   gem 'pry'
