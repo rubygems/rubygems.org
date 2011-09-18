@@ -71,7 +71,7 @@ class User < ActiveRecord::Base
   end
 
   def generate_api_key
-    self.api_key = ActiveSupport::SecureRandom.hex(16)
+    self.api_key = SecureRandom.hex(16)
   end
 
   def total_downloads_count
