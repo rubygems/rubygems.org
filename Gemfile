@@ -3,7 +3,7 @@ source 'http://rubygems.org'
 # Load psych before anything else, since load order is significant in defining YAML::ENGINE.yamler
 gem 'psych', :platforms => :ruby_19
 
-gem 'rails', '~> 3.0.10'
+gem 'rails', '~> 3.1.0'
 
 gem 'clearance'
 gem 'fog'
