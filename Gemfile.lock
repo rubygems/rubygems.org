@@ -127,7 +127,7 @@ GEM
       ruby_parser (>= 2.0.5)
       slop (~> 2.1.0)
     psych (1.2.1)
-    rack (1.2.3)
+    rack (1.2.4)
     rack-maintenance (0.3.0)
       rack (>= 1.0)
     rack-mount (0.6.14)
