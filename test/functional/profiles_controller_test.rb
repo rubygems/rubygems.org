@@ -20,7 +20,7 @@ class ProfilesControllerTest < ActionController::TestCase
       setup do
         @rubygems = (0..10).map do |n|
           Factory(:rubygem, :downloads => n * 100).tap do |rubygem|
-            Factory(:ownership, :rubygem => rubygem, :user => @user, :approved => true)
+            Factory(:ownership, :rubygem => rubygem, :user => @user)
           end
         end.reverse
 

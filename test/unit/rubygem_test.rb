@@ -193,7 +193,7 @@ class RubygemTest < ActiveSupport::TestCase
 
       should "not be able to assign ownership when owners exist" do
         @new_user = Factory(:user)
-        @rubygem.ownerships.create(:user => @new_user, :approved => true)
+        @rubygem.ownerships.create(:user => @new_user)
         @rubygem.create_ownership(@user)
         assert_equal @rubygem.reload.owners, [@new_user]
       end
@@ -205,23 +205,10 @@ class RubygemTest < ActiveSupport::TestCase
         @user = Factory(:user)
       end
 
-      should "be owned by a user in approved ownership" do
-        ownership = Factory(:ownership, :user => @user, :rubygem => @rubygem, :approved => true)
+      should "be owned by a user in ownership" do
+        ownership = Factory(:ownership, :user => @user, :rubygem => @rubygem)
         assert @rubygem.owned_by?(@user)
         assert !@rubygem.unowned?
-      end
-
-      should "be not owned by a user in unapproved ownership" do
-        ownership = Factory(:ownership, :user => @user, :rubygem => @rubygem, :approved => false)
-        assert !@rubygem.owned_by?(@user)
-        assert @rubygem.unowned?
-      end
-
-      should "be not owned by a user without ownership" do
-        other_user = Factory(:user)
-        ownership = Factory(:ownership, :user => other_user, :rubygem => @rubygem, :approved => false)
-        assert !@rubygem.owned_by?(@user)
-        assert @rubygem.unowned?
       end
 
       should "be not owned if no ownerships" do
@@ -348,8 +335,8 @@ class RubygemTest < ActiveSupport::TestCase
       3.times { Factory(:version, :rubygem => @rubygem_with_versions) }
 
       @owner = Factory(:user)
-      Factory(:ownership, :rubygem => @rubygem_with_version, :user => @owner, :approved => true)
-      Factory(:ownership, :rubygem => @rubygem_with_versions, :user => @owner, :approved => true)
+      Factory(:ownership, :rubygem => @rubygem_with_version, :user => @owner)
+      Factory(:ownership, :rubygem => @rubygem_with_versions, :user => @owner)
     end
 
     should "return only gems with one version" do

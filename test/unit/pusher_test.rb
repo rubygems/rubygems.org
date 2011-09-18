@@ -146,7 +146,7 @@ class PusherTest < ActiveSupport::TestCase
         end
 
         should "be true if owned by the user" do
-          @rubygem.ownerships.create(:user => @user, :approved => true)
+          @rubygem.ownerships.create(:user => @user)
           assert @cutter.authorize
         end
 
@@ -164,14 +164,6 @@ class PusherTest < ActiveSupport::TestCase
         should "be true if not owned by user but no indexed versions exist" do
           Factory(:version, :rubygem => @rubygem, :number => '0.1.1', :indexed => false)
           assert @cutter.authorize
-        end
-
-        should "be false if rubygem exists with an indexed version and is owned by unapproved user" do
-          Factory(:version, :rubygem => @rubygem, :number => '0.1.1')
-          @rubygem.ownerships.create(:user => @user, :approved => false)
-          assert ! @cutter.authorize
-          assert_equal "You do not have permission to push to this gem.", @cutter.message
-          assert_equal 403, @cutter.code
         end
       end
     end
