@@ -99,7 +99,7 @@ GEM
       activesupport
       builder
     i18n (0.5.0)
-    json (1.6.0)
+    json (1.6.1)
     json_pure (1.6.1)
     launchy (2.0.5)
       addressable (~> 2.2.6)
