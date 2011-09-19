@@ -63,6 +63,10 @@ RubygemsOrg::Application.configure do
     :secure => true,
   }
 
+  # Compress both stylesheets and JavaScripts
+  config.assets.js_compressor  = :uglifier
+  config.assets.css_compressor = :scss
+
   # if on heroku:
   # config.action_mailer.smtp_settings = {
   #   :address        => "smtp.sendgrid.net",
