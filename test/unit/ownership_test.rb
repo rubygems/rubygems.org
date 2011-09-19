@@ -2,7 +2,7 @@ require 'test_helper'
 
 class OwnershipTest < ActiveSupport::TestCase
   should "be valid with factory" do
-    assert_valid FactoryGirl.build(:ownership)
+    assert FactoryGirl.build(:ownership).valid?
   end
 
   should belong_to :rubygem

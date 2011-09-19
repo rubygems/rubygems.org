@@ -10,7 +10,7 @@ class LinksetTest < ActiveSupport::TestCase
     end
 
     should "be valid with factory" do
-      assert_valid @linkset
+      assert @linkset.valid?
     end
 
     should "not be empty with some links filled out" do

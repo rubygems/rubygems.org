@@ -14,7 +14,7 @@ class SubscriptionTest < ActiveSupport::TestCase
     should validate_uniqueness_of(:rubygem_id).scoped_to(:user_id)
 
     should "be valid with factory" do
-      assert_valid @subscription
+      assert @subscription.valid?
     end
   end
 end

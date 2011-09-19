@@ -34,8 +34,8 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should "be valid when nil and other users have a nil handle" do
-        assert_valid FactoryGirl.build(:user, :handle => nil)
-        assert_valid FactoryGirl.build(:user, :handle => nil)
+        assert FactoryGirl.build(:user, :handle => nil).valid?
+        assert FactoryGirl.build(:user, :handle => nil).valid?
       end
 
       should "show user id if no handle set" do
