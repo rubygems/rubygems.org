@@ -28,6 +28,7 @@ gem 'yajl-ruby', :require => 'yajl/json_gem'
 
 group :assets do
   gem 'uglifier', '>= 1.0.3'
+  gem 'jquery-rails'
 end
 
 group :development do
