@@ -26,51 +26,9 @@ $(document).ready(function() {
     }
   });
 
-  /*
-  if ($('.count').length > 0) {
-    setInterval(function() {
-      $.getJSON('/api/v1/downloads.json', function(data) {
-        $('.count strong')
-          .text(number_with_delimiter(data['total']) + ' downloads');
-      });
-    }, 5000);
-  }
-  */
-
   $('#version_for_stats').change(function() {
     window.location.href = $(this).val();
   });
-
-  /*
-  if ($('.downloads.counter').length > 0) {
-    var options   = { color : $('.downloads').css('color') };
-    var highlight = '#A70E0E';
-
-    setInterval(function() {
-      $.getJSON($('.downloads.counter').attr('data-href'), function(data) {
-        var total   = $('.downloads.counter strong:first');
-        var version = $('.downloads.counter strong:last');
-
-        var previous_total_downloads   = parseInt(total.text().replace(/,/g, ""), 10);
-        var previous_version_downloads = parseInt(version.text().replace(/,/g, ""), 10);
-
-        if (previous_total_downloads != data['total_downloads']) {
-          total
-            .text(number_with_delimiter(data['total_downloads']))
-            .css('color', highlight)
-            .animate(options, 1500).dequeue();
-        }
-
-        if (previous_version_downloads != data['version_downloads']) {
-          version
-            .text(number_with_delimiter(data['version_downloads']))
-            .css('color', highlight)
-            .animate(options, 1500).dequeue();
-        }
-      });
-    }, 5000);
-  }
-  */
 });
 
 // http://kevinvaldek.com/number-with-delimiter-in-javascript
