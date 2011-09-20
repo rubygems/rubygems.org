@@ -487,7 +487,6 @@ class RubygemTest < ActiveSupport::TestCase
         @specification = gem_specification_from_gem_fixture('test-0.0.0')
         @rubygem       = Rubygem.new(:name => @specification.name)
         @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
-        puts "#{@version.inspect}"
         @rubygem.update_attributes_from_gem_specification!(@version, @specification)
       end
 
