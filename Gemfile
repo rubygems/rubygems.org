@@ -32,7 +32,6 @@ end
 
 group :development do
   gem 'rails-erd'
-  gem 'pry'
 end
 
 group :development, :test do
@@ -40,6 +39,7 @@ group :development, :test do
   gem 'guard'
   gem 'guard-cucumber'
   gem 'guard-bundler'
+  gem 'pry'
 end
 
 # These gems suck and do stupid things when in maintenance mode
