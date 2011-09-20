@@ -19,7 +19,6 @@
 <% end %>
 
 <% content_for :javascript do %>
-  <%= javascript_include_tag "raphael", "g.raphael", "g.bar" %>
   <script type="text/javascript">
     $(document).ready(function() {
       var dates = <%= Rubygem.monthly_short_dates.to_json.html_safe %>;
