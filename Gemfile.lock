@@ -99,6 +99,9 @@ GEM
       activesupport
       builder
     i18n (0.5.0)
+    jquery-rails (1.0.14)
+      railties (~> 3.0)
+      thor (~> 0.14)
     json (1.6.1)
     json_pure (1.6.1)
     launchy (2.0.5)
@@ -214,6 +217,7 @@ DEPENDENCIES
   guard-cucumber
   high_voltage
   hoptoad_notifier
+  jquery-rails (~> 1.0.12)
   jruby-openssl
   launchy
   mail
