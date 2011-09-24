@@ -26,6 +26,8 @@ module Gemcutter
     config.middleware.use "Hostess"
     config.middleware.insert_after "Hostess", "Redirector" if $rubygems_config[:redirector]
 
+    config.autoload_paths += %W(#{config.root}/lib)
+
     unless Rails.env.maintenance?
       config.action_mailer.default_url_options  = { :host => HOST }
       config.action_mailer.delivery_method      = $rubygems_config[:delivery_method]
