@@ -71,4 +71,9 @@ module RubygemsHelper
   def nice_date_for(time)
     time.to_date.to_formatted_s(:long)
   end
+
+  def show_all_versions_link?(rubygem)
+    rubygem.versions_count > 5 || rubygem.yanked_versions?
+  end
+
 end

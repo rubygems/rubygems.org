@@ -373,6 +373,9 @@ class RubygemTest < ActiveSupport::TestCase
       should "remain owned" do
         assert !@rubygem_with_versions.reload.unowned?
       end
+      should "then know there is a yanked version" do
+        assert @rubygem_with_versions.yanked_versions?
+      end
     end
   end
 
@@ -533,6 +536,7 @@ class RubygemTest < ActiveSupport::TestCase
         assert ! @rubygem.new_record?
         assert ! @version.new_record?
         assert_equal 1, @rubygem.versions.count
+        assert_equal 1, @rubygem.versions_count
         assert_equal 2, @version.dependencies.count
         assert Rubygem.exists?(:name => 'thoughtbot-shoulda')
         assert Rubygem.exists?(:name => 'rake')

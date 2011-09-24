@@ -84,7 +84,7 @@
         <ol>
           <%= render @versions %>
         </ol>
-        <% if @rubygem.versions.count > 5 %>
+        <% if show_all_versions_link?(@rubygem) %>
           <%= link_to t('.show_all_versions', :count => @rubygem.versions.count), rubygem_versions_url(@rubygem), :class => "more" %>
         <% end %>
       </div>

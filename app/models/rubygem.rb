@@ -190,6 +190,14 @@ class Rubygem < ActiveRecord::Base
     end
   end
 
+  delegate :count,
+    :to => :versions,
+    :prefix => true
+
+  def yanked_versions?
+    versions.yanked.exists?
+  end
+
   def reorder_versions
     numbers = self.reload.versions.sort.reverse.map(&:number).uniq
 

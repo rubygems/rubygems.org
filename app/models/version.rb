@@ -42,6 +42,10 @@ class Version < ActiveRecord::Base
     where(:indexed => true)
   end
 
+  def self.yanked
+    where(:indexed => false)
+  end
+
   def self.by_position
     order('position')
   end
