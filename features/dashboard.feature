@@ -44,3 +44,4 @@ Feature: Dashboard
     And I follow "RGem"
     Then I should not see "yanked"
     And I should see "1.2.2"
+    And I should see "Show all versions (2 total)"

@@ -11,6 +11,18 @@ class RubygemsHelperTest < ActionView::TestCase
     end
   end
 
+  should "know when to show the all versions link" do
+    rubygem = stub
+    stub(rubygem).versions_count { 6 }
+    stub(rubygem).yanked_versions? { false }
+    assert show_all_versions_link?(rubygem)
+    stub(rubygem).versions_count { 1 }
+    stub(rubygem).yanked_versions? { false }
+    assert !show_all_versions_link?(rubygem)
+    stub(rubygem).yanked_versions? { true }
+    assert show_all_versions_link?(rubygem)
+  end
+
   should "show a nice formatted date" do
     Timecop.travel(Date.parse("2011-03-18")) do
       assert_equal "March 18, 2011", nice_date_for(DateTime.now)
