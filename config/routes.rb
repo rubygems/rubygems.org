@@ -11,7 +11,7 @@ Gemcutter::Application.routes.draw do
         get :top, :on => :collection
         get :all, :on => :collection
       end
-      constraints :id => Rubygem::ROUTE_PATTERN, :format => /json|xml|yaml/ do
+      constraints :id => Patterns::ROUTE_PATTERN, :format => /json|xml|yaml/ do
         # In Rails 3.1, the following line can be replaced with:
         # resources :downloads, :only => :show, :format => true
         get 'downloads/:id.:format', :to => 'downloads#show', :as => 'download'
@@ -34,14 +34,14 @@ Gemcutter::Application.routes.draw do
 
       resources :dependencies, :only => :index
 
-      resources :rubygems, :path => 'gems', :only => [:create, :show, :index], :id => Rubygem::LAZY_ROUTE_PATTERN, :format => /json|xml|yaml/ do
+      resources :rubygems, :path => 'gems', :only => [:create, :show, :index], :id => Patterns::LAZY_ROUTE_PATTERN, :format => /json|xml|yaml/ do
         collection do
           delete :yank
           put :unyank
           get :latest
           get :just_updated
         end
-        constraints :rubygem_id => Rubygem::ROUTE_PATTERN do
+        constraints :rubygem_id => Patterns::ROUTE_PATTERN do
           resource :owners, :only => [:show, :create, :destroy]
         end
       end
@@ -86,17 +86,17 @@ Gemcutter::Application.routes.draw do
   resources :stats,     :only => :index
 
   resources :rubygems, :only => :index, :path => 'gems' do
-    constraints :rubygem_id => Rubygem::ROUTE_PATTERN do
+    constraints :rubygem_id => Patterns::ROUTE_PATTERN do
       resource  :subscription, :only => [:create, :destroy]
       resources :versions,     :only => :index
       resource  :stats,        :only => :show
     end
   end
 
-  constraints :id => Rubygem::ROUTE_PATTERN do
+  constraints :id => Patterns::ROUTE_PATTERN do
     resources :rubygems, :path => 'gems', :only => [:show, :edit, :update] do
 
-      constraints :rubygem_id => Rubygem::ROUTE_PATTERN do
+      constraints :rubygem_id => Patterns::ROUTE_PATTERN do
         resources :versions, :only => :show do
           resource :stats, :only => :show
         end
