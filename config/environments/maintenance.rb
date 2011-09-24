@@ -1,4 +1,6 @@
 Gemcutter::Application.configure do
+  config.active_support.deprecation = :notify
+
   config.middleware.use ::Rack::Static,
     :urls => ["/index.html",
               "/favicon.ico",
@@ -7,6 +9,7 @@ Gemcutter::Application.configure do
     :root => "public/maintenance"
   config.middleware.use ::Rack::Maintenance,
     :file => File.join('public', 'maintenance', 'index.html')
+
   config.plugins = []
 end
 
