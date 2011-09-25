@@ -43,7 +43,7 @@ GEM
     clearance (0.12.0)
       diesel (~> 0.1.4)
       rails (>= 3.0)
-    coderay (0.9.8)
+    coderay (1.0.0)
     crack (0.3.1)
     cucumber (1.0.6)
       builder (>= 2.1.2)
