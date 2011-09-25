@@ -125,7 +125,7 @@ GEM
       rails (~> 3.0)
     pg (0.11.0)
     polyglot (0.3.2)
-    pry (0.9.5)
+    pry (0.9.6)
       coderay (>= 0.9.8)
       method_source (>= 0.6.5)
       ruby_parser (>= 2.0.5)
@@ -165,7 +165,7 @@ GEM
     rr (1.0.4)
     ruby-graphviz (0.9.21)
     ruby-hmac (0.4.0)
-    ruby_parser (2.3.0)
+    ruby_parser (2.3.1)
       sexp_processor (~> 3.0)
     rubyzip (0.9.4)
     selenium-webdriver (2.6.0)
@@ -173,7 +173,7 @@ GEM
       ffi (>= 1.0.7)
       json_pure
       rubyzip
-    sexp_processor (3.0.6)
+    sexp_processor (3.0.7)
     shoulda (2.11.3)
     silent-postgres (0.1.1)
     sinatra (1.2.6)
