@@ -54,16 +54,24 @@ class User < ActiveRecord::Base
     all
   end
 
+  def payload
+    {"email" => email}
+  end
+
   def as_json(options={})
-    {'email' => email}
+    payload
   end
 
   def to_xml(options={})
-    {'email' => email}.to_xml(options.merge(:root => 'user'))
+    payload.to_xml(options.merge(:root => 'user'))
   end
 
   def to_yaml(*args)
-    {'email' => email}.to_yaml(*args)
+    payload.to_yaml(*args)
+  end
+
+  def encode_with(coder)
+    coder.tag, coder.implicit, coder.map = nil, true, payload
   end
 
   def regenerate_token
