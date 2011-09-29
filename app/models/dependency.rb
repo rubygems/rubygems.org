@@ -66,6 +66,10 @@ class Dependency < ActiveRecord::Base
     payload.to_yaml(*args)
   end
 
+  def encode_with(coder)
+    coder.tag, coder.implicit, coder.map = nil, true, payload
+  end
+
   def to_s
     "#{name} #{clean_requirements}"
   end

@@ -71,6 +71,10 @@ class WebHook < ActiveRecord::Base
     payload.to_yaml(*args)
   end
 
+  def encode_with(coder)
+    coder.tag, coder.implicit, coder.map = nil, true, payload
+  end
+
   private
 
   def unique_hook

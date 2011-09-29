@@ -220,4 +220,18 @@ class WebHookTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "yaml" do
+    setup do
+      @webhook = Factory(:web_hook)
+    end
+
+    should "return its payload" do
+      assert_equal @webhook.payload, YAML.load(@webhook.to_yaml)
+    end
+
+    should "nest properly" do
+      assert_equal [@webhook.payload], YAML.load([@webhook].to_yaml)
+    end
+  end
 end
