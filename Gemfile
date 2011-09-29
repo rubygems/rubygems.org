@@ -1,8 +1,5 @@
 source 'http://rubygems.org'
 
-# Load psych before anything else, since load order is significant in defining YAML::ENGINE.yamler
-gem 'psych', :platforms => :ruby_19
-
 gem 'rails', '~> 3.0.10'
 
 gem 'clearance'
@@ -40,7 +37,8 @@ end
 
 # These gems suck and do stupid things when in maintenance mode
 group :development, :test, :staging, :production do
-  gem 'delayed_job'
+  gem 'delayed_job', '3.0.0.pre'
+  gem 'delayed_job_active_record'
   gem 'validates_url_format_of'
 end
 

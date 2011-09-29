@@ -130,4 +130,19 @@ class DependencyTest < ActiveSupport::TestCase
       assert dependency.errors[:rubygem].present?
     end
   end
+
+  context "yaml" do
+    setup do
+      Factory(:rubygem)
+      @dependency = Factory(:dependency)
+    end
+
+    should "return its payload" do
+      assert_equal @dependency.payload, YAML.load(@dependency.to_yaml)
+    end
+
+    should "nest properly" do
+      assert_equal [@dependency.payload], YAML.load([@dependency].to_yaml)
+    end
+  end
 end
