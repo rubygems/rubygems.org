@@ -224,4 +224,18 @@ class UserTest < ActiveSupport::TestCase
         @user.rubygems_downloaded(nil, 0)
     end
   end
+
+  context "yaml" do
+    setup do
+      @user = Factory(:user)
+    end
+
+    should "return its payload" do
+      assert_equal @user.payload, YAML.load(@user.to_yaml)
+    end
+
+    should "nest properly" do
+      assert_equal [@user.payload], YAML.load([@user].to_yaml)
+    end
+  end
 end
