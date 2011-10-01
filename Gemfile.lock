@@ -178,7 +178,7 @@ GEM
     sexp_processor (3.0.7)
     shoulda (2.11.3)
     silent-postgres (0.1.1)
-    sinatra (1.2.6)
+    sinatra (1.2.7)
       rack (~> 1.1)
       tilt (>= 1.2.2, < 2.0)
     slop (2.1.0)
