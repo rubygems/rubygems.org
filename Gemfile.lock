@@ -190,7 +190,7 @@ GEM
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
-    tzinfo (0.3.29)
+    tzinfo (0.3.30)
     validates_url_format_of (0.2.0)
       activerecord (~> 3.0.10)
     webmock (1.7.6)
