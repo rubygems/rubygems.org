@@ -68,16 +68,16 @@ GEM
     diff-lcs (1.1.3)
     erubis (2.6.6)
       abstract (>= 1.0.0)
-    excon (0.6.6)
+    excon (0.7.4)
     factory_girl (2.1.2)
       activesupport
     factory_girl_rails (1.2.0)
       factory_girl (~> 2.1.0)
       railties (>= 3.0.0)
     ffi (1.0.9)
-    fog (0.11.0)
+    fog (1.0.0)
       builder
-      excon (~> 0.6.5)
+      excon (~> 0.7.3)
       formatador (~> 0.2.0)
       mime-types
       multi_json (~> 1.0.3)
