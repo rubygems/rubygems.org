@@ -8,7 +8,7 @@ gem 'gchartrb', :require => 'google_chart'
 gem 'gravtastic'
 gem 'high_voltage'
 gem 'hoptoad_notifier'
-gem 'jquery-rails', '~> 1.0.12'
+gem 'jquery-rails'
 gem 'mail'
 gem 'newrelic_rpm'
 gem 'paul_revere'
@@ -43,7 +43,7 @@ group :development, :test, :staging, :production do
 end
 
 group :test do
-  gem 'capybara', '~> 1.1'
+  gem 'capybara'
   gem 'cucumber-rails'
   gem 'database_cleaner'
   gem 'factory_girl_rails'
