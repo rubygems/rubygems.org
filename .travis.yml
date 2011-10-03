@@ -2,5 +2,4 @@ before_script: cp config/database.yml.example config/database.yml && bundle exec
 rvm:
   - 1.8.7
   - 1.9.2
-  - 1.9.3
   - ree
