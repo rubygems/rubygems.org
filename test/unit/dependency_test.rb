@@ -71,7 +71,7 @@ class DependencyTest < ActiveSupport::TestCase
         assert_equal @requirements[0].to_s, @dependency.requirements
       end
 
-      should "correctly display a malformed Dependency referring to the existing Rubygem" do 
+      should "correctly display a malformed Dependency referring to the existing Rubygem" do
         @dependency = Factory(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
         stub(@dependency).requirements { '#<YAML::Syck::DefaultKey:0x0000000> 0.0.0' }
 
