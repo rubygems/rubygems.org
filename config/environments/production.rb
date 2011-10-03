@@ -6,7 +6,7 @@ Gemcutter::Application.configure do
   config.active_support.deprecation = :notify
   config.serve_static_assets = $rubygems_config[:asset_cacher]
   config.i18n.fallbacks = true
-  
+
   config.action_dispatch.session = {
     :domain => ".rubygems.org",
     :secure => true
