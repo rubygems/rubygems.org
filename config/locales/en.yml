@@ -34,8 +34,8 @@ en:
         header: 'learn'
         install_rubygems: "Install RubyGems %{version}"
         rubygems_subtitle: "Ruby's premier packaging system"
-        browse_docs: "Browse the Docs"
-        docs_subtitle: "The comprehensive guide on RubyGems"
+        browse_docs: "Browse the Guides"
+        docs_subtitle: "In depth explanations, tutorials, and references"
         gem_specification: "Gem Specification"
         spec_subtitle: "Your gem's interface to the world"
       share:
