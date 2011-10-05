@@ -1,4 +1,7 @@
 class Hostess < Sinatra::Base
+  enable :raise_errors
+  disable :show_exceptions
+
   cattr_writer :local
 
   def self.local
