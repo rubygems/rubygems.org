@@ -1,12 +1,9 @@
 class Api::V1::OwnersController < Api::BaseController
-
   skip_before_filter :verify_authenticity_token, :only => [:create, :destroy]
-
-  before_filter :authenticate_with_api_key
-  before_filter :verify_authenticated_user
+  before_filter :authenticate_with_api_key, :except => :show
+  before_filter :verify_authenticated_user, :except => :show
   before_filter :find_rubygem
-  before_filter :verify_gem_ownership
-
+  before_filter :verify_gem_ownership, :except => :show
   respond_to :yaml, :xml, :json, :only => :show
 
   def show
