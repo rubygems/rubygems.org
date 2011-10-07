@@ -3,10 +3,10 @@ class ApplicationController < ActionController::Base
   include SimpleSSLRequirement
 
   helper :announcements
-
   protect_from_forgery :only => [:create, :update, :destroy]
-
   ssl_required :if => :signed_in?
+
+protected
 
   def authenticate_with_api_key
     api_key = request.headers["Authorization"] || params[:api_key]
@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def find_gem
+  def find_rubygem
     @rubygem = Rubygem.find_by_name(params[:rubygem_id] || params[:id])
     if @rubygem.blank?
       respond_to do |format|
@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def find_gem_by_name
+  def find_rubygem_by_name
     @url      = params[:url]
     @gem_name = params[:gem_name]
     @rubygem  = Rubygem.find_by_name(@gem_name)

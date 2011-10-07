@@ -1,5 +1,5 @@
 class StatsController < ApplicationController
-  before_filter :find_gem,      :only => :show
+  before_filter :find_rubygem,  :only => :show
   before_filter :ensure_hosted, :only => :show
 
   def index
