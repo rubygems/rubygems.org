@@ -81,6 +81,5 @@ Feature: Manage owners
 
     Examples:
       | action                                                        |
-      | list the owners of gem "OGem"                                 |
       | add the owner "new@owner.org" to the rubygem "OGem"           |
       | remove the owner "original@owner.org" from the rubygem "OGem" |
