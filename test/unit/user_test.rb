@@ -86,7 +86,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "only have email when boiling down to JSON" do
-      json = JSON.parse(@user.to_json)
+      json = Yajl.load(@user.to_json)
       hash = {"email" => @user.email}
       assert_equal hash, json
     end

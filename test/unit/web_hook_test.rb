@@ -74,7 +74,7 @@ class WebHookTest < ActiveSupport::TestCase
       {
         'url'           => @url,
         'failure_count' => @webhook.failure_count
-      }, ActiveSupport::JSON.decode(@webhook.to_json))
+      }, Yajl.load(@webhook.to_json))
     end
 
     should "show limited attributes for to_xml" do
@@ -144,7 +144,7 @@ class WebHookTest < ActiveSupport::TestCase
     end
 
     should "have gem properties encoded in JSON" do
-      payload = ActiveSupport::JSON.decode(@job.payload)
+      payload = Yajl.load(@job.payload)
       assert_equal "foogem",    payload['name']
       assert_equal "3.2.1",     payload['version']
       assert_equal "DESC",      payload["info"]
@@ -158,7 +158,7 @@ class WebHookTest < ActiveSupport::TestCase
       new_version = Factory(:version, :number => "2.0.0", :rubygem => @rubygem)
       new_hook    = Factory(:web_hook)
       job         = WebHookJob.new(new_hook.url, 'localhost:1234', @rubygem, new_version)
-      payload     = ActiveSupport::JSON.decode(job.payload)
+      payload     = Yajl.load(job.payload)
 
       assert_equal "foogem", payload['name']
       assert_equal "2.0.0",  payload['version']
