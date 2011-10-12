@@ -21,7 +21,7 @@ gem 'rest-client', :require => 'rest_client'
 gem 'sinatra'
 gem 'will_paginate'
 gem 'xml-simple'
-gem 'yajl-ruby', :require => 'yajl/json_gem'
+gem 'yajl-ruby', :require => 'yajl'
 
 group :development do
   gem 'rails-erd'

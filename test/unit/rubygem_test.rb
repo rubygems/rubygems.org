@@ -259,7 +259,7 @@ class RubygemTest < ActiveSupport::TestCase
       run_dep = Factory(:runtime_dependency, :version => version)
       dev_dep = Factory(:development_dependency, :version => version)
 
-      hash = JSON.parse(@rubygem.to_json)
+      hash = Yajl.load(@rubygem.to_json)
 
       assert_equal @rubygem.name, hash["name"]
       assert_equal @rubygem.downloads, hash["downloads"]
@@ -270,8 +270,8 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal "http://#{HOST}/gems/#{@rubygem.name}", hash["project_uri"]
       assert_equal "http://#{HOST}/gems/#{@rubygem.versions.most_recent.full_name}.gem", hash["gem_uri"]
 
-      assert_equal JSON.parse(dev_dep.to_json), hash["dependencies"]["development"].first
-      assert_equal JSON.parse(run_dep.to_json), hash["dependencies"]["runtime"].first
+      assert_equal Yajl.load(dev_dep.to_json), hash["dependencies"]["development"].first
+      assert_equal Yajl.load(run_dep.to_json), hash["dependencies"]["runtime"].first
     end
 
     should "return a bunch of xml" do
@@ -302,7 +302,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "return a bunch of JSON" do
-        hash = JSON.parse(@rubygem.to_json)
+        hash = Yajl.load(@rubygem.to_json)
 
         assert_equal @rubygem.linkset.home, hash["homepage_uri"]
         assert_equal @rubygem.linkset.wiki, hash["wiki_uri"]
