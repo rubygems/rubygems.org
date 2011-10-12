@@ -36,7 +36,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
   end
 
   should_respond_to :json do |body|
-    JSON.parse body
+    Yajl.load body
   end
 
   should_respond_to :yaml do |body|
