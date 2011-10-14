@@ -21,7 +21,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:json) do |body|
-      Yajl.load(body)['total']
+      MultiJson.decode(body)['total']
     end
 
     should_respond_to(:xml) do |body|
@@ -75,7 +75,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:json) do |body|
-      Yajl.load body
+      MultiJson.decode body
     end
 
     should_respond_to(:xml) do |body|
@@ -146,7 +146,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:json) do |body|
-      Yajl.load(body)['gems']
+      MultiJson.decode(body)['gems']
     end
 
     should_respond_to(:yaml) do |body|
@@ -178,7 +178,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:json) do |body|
-      Yajl.load(body)['gems']
+      MultiJson.decode(body)['gems']
     end
 
     should_respond_to(:yaml) do |body|

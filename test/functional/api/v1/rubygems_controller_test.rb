@@ -59,7 +59,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to show" do
       should_respond_to(:json) do |body|
-        Yajl.load body
+        MultiJson.decode body
       end
 
       should_respond_to(:yaml) do |body|
@@ -136,7 +136,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to index" do
       should_respond_to :json do |body|
-        Yajl.load body
+        MultiJson.decode body
       end
 
       should_respond_to :yaml do |body|
@@ -410,7 +410,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       should "return correct JSON for latest gems" do
         get :latest, :format => :json
-        should_return_latest_gems Yajl.load(@response.body)
+        should_return_latest_gems MultiJson.decode(@response.body)
       end
 
       should "return correct YAML for latest gems" do
@@ -442,7 +442,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       should "return correct JSON for just_updated gems" do
         get :just_updated, :format => :json
-        should_return_just_updated_gems Yajl.load(@response.body)
+        should_return_just_updated_gems MultiJson.decode(@response.body)
       end
 
       should "return correct YAML for just_updated gems" do

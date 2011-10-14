@@ -19,7 +19,7 @@ Then /^the webhook "([^\"]*)" should receive a POST with gem "([^\"]*)" at versi
   WebMock.assert_requested(:post, web_hook_url, :times => 1)
 
   request = WebMock::RequestRegistry.instance.requested_signatures.hash.keys.first
-  json = Yajl.load(request.body)
+  json = MultiJson.decode(request.body)
 
   assert_equal gem_name, json["name"]
   assert_equal version_number, json["version"]
@@ -27,7 +27,7 @@ end
 
 Then /I should see "(.*)" under "(.*)" in (json|yaml)/ do |web_hook_url, gem_name, format|
   if format == "json"
-    data = Yajl.load(page.source)
+    data = MultiJson.decode(page.source)
   else
     data = YAML.load(page.source)
   end
