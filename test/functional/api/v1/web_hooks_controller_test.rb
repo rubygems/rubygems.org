@@ -130,7 +130,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         end
 
         should_respond_to(:json) do |body|
-          Yajl.load body
+          MultiJson.decode body
         end
 
         should_respond_to(:yaml) do |body|
