@@ -1,15 +1,17 @@
 development:
   adapter: postgresql
   database: gemcutter_development
+  host: localhost
   pool: 5
   timeout: 5000
 
 test: &TEST
   adapter: postgresql
   database: gemcutter_test
+  host: localhost
+  min_messages: warning
   pool: 5
   timeout: 5000
-  min_messages: warning
 
 cucumber:
   <<: *TEST
