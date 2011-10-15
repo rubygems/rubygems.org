@@ -226,6 +226,7 @@ DEPENDENCIES
   jruby-openssl
   launchy
   mail
+  multi_json
   newrelic_rpm
   nokogiri
   paul_revere
