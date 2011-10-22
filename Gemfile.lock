@@ -171,9 +171,9 @@ GEM
     ruby_parser (2.0.6)
       sexp_processor (~> 3.0)
     rubyzip (0.9.4)
-    selenium-webdriver (2.8.0)
+    selenium-webdriver (2.9.1)
       childprocess (>= 0.2.1)
-      ffi (>= 1.0.7)
+      ffi (= 1.0.9)
       json_pure
       rubyzip
     sexp_processor (3.0.7)
