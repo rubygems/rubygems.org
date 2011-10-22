@@ -253,7 +253,7 @@ DEPENDENCIES
   rack
   rack-maintenance
   rack-test
-  rails (~> 3.1.1)
+  rails (~> 3.1)
   rails-erd
   rdoc
   redgreen

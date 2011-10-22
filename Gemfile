@@ -3,7 +3,7 @@ source 'http://rubygems.org'
 # Load psych before anything else, since load order is significant in defining YAML::ENGINE.yamler
 gem 'psych', :platforms => :ruby_19
 
-gem 'rails', '~> 3.1.1'
+gem 'rails', '~> 3.1'
 
 gem 'clearance'
 gem 'fog'
@@ -26,15 +26,12 @@ gem 'xml-simple'
 gem 'yajl-ruby', :require => 'yajl/json_gem'
 
 group :assets do
-  gem 'uglifier', '>= 1.0.3'
+  gem 'uglifier',     '>= 1.0.3'
   gem 'jquery-rails', '~> 1.0.12'
 end
 
-group :development do
-  gem 'rails-erd'
-end
-
 group :development, :test do
+  gem 'rails-erd'
   gem 'silent-postgres'
   gem 'guard'
   gem 'guard-cucumber'
@@ -56,11 +53,14 @@ group :test do
   gem 'launchy'
   gem 'nokogiri'
   gem 'rack-test', :require => 'rack/test'
-  gem 'redgreen', :platforms => :ruby_18
   gem 'rr'
   gem 'shoulda', '>= 3.0.0.beta'
   gem 'timecop'
   gem 'webmock'
+
+  platforms :ruby_18 do 
+    gem 'redgreen'
+  end
 end
 
 platforms :jruby do
