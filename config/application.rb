@@ -2,6 +2,7 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails'
 require 'action_controller/railtie'
+require 'sprockets/railtie'
 
 unless Rails.env.maintenance?
   require 'rails/test_unit/railtie'
