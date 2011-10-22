@@ -11,7 +11,6 @@ gem 'gchartrb', :require => 'google_chart'
 gem 'gravtastic'
 gem 'high_voltage'
 gem 'hoptoad_notifier'
-gem 'jquery-rails', '~> 1.0.12'
 gem 'mail'
 gem 'newrelic_rpm'
 gem 'paul_revere'
@@ -28,7 +27,7 @@ gem 'yajl-ruby', :require => 'yajl/json_gem'
 
 group :assets do
   gem 'uglifier', '>= 1.0.3'
-  gem 'jquery-rails'
+  gem 'jquery-rails', '~> 1.0.12'
 end
 
 group :development do
