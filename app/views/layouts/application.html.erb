@@ -8,9 +8,9 @@
     <link rel="fluid-icon" href="/fluid-icon.png"/>
     <link rel="search" type="application/opensearchdescription+xml" title="<%=t :title %>" href="/opensearch.xml">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-    <%= stylesheet_link_tag "reset", "960", "screen", :cache => true %>
+    <%= stylesheet_link_tag :application %>
     <!--[if IE 7]>
-      <%= stylesheet_link_tag "ie7" %>
+      <%= stylesheet_link_tag :ie7 %>
     <![endif]-->
     <%= render "layouts/feeds" %>
     <%= csrf_meta_tag %>
@@ -108,7 +108,7 @@
         </div>
       </div>
     </div>
-    <%= javascript_include_tag "application" %>
+    <%= javascript_include_tag :application %>
     <%= yield :javascript %>
     <script type="text/javascript">
     var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");

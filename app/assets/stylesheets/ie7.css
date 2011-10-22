@@ -1,0 +1,64 @@
+.nav form {
+  width: 300px;
+}
+
+.main .info ol.instructions li {
+  margin-bottom: 10px;
+}
+
+.main .info .leaderboards {
+  height: 275px;
+}
+
+.main .info .subscribed h3 {
+  float: left;
+}
+
+.main .info .subscribed .gems {
+  margin-top: 21px;
+}
+
+.main .info .directory li,
+.main h2,
+.main h3,
+.form_links,
+.main .info .subscribed #feed,
+.main .info .meta .links h5,
+.main .info .meta .links a,
+.main .info .meta .versions,
+.main .info .meta .versions .more,
+.main .info .meta .dependencies {
+  zoom: 1;
+  *display: inline;
+}
+
+/* vertical centering in css causes me too much pain, if you want to figure it out go for it */
+.main .info .install .instructions span {
+  position: relative;
+  top: 27px;
+}
+
+/*
+.nav ul li {
+  margin-top: -5px;
+  zoom: 1;
+  filter:alpha(opacity=50);
+  padding-top: 6px;
+  height: 22px;
+}
+
+.nav ul li:hover {
+  zoom: 1;
+  filter:alpha(opacity=50);
+  background: #000;
+}
+
+.nav ul li a {
+  position: relative;
+  color: #fff;
+}
+*/
+
+.main .info #admin {
+  margin-top: -50px;
+}
