@@ -20,7 +20,7 @@ class SubscriptionsController < ApplicationController
 
     def render_toggle_or_unacceptable(success)
       if success
-        render(:update) { |page| page['.toggler'].toggle }
+        render :update
       else
         render :text => '', :status => :forbidden
       end

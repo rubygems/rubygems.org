@@ -12,7 +12,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
     setup do
       @gem = Factory(:rubygem)
       Factory(:version, :rubygem => @gem)
-      post :create, :rubygem_id => @gem.to_param
+      post :create, :rubygem_id => @gem.to_param, :format => 'js'
     end
 
     should assign_to(:gem) { @gem }
@@ -27,7 +27,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
       @gem = Factory(:rubygem)
       Factory(:version, :rubygem => @gem)
       Factory(:subscription, :rubygem => @gem, :user => @user)
-      post :create, :rubygem_id => @gem.to_param
+      post :create, :rubygem_id => @gem.to_param, :format => 'js'
     end
 
     should assign_to(:gem) { @gem }
@@ -38,7 +38,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
     setup do
       @gem = Factory(:rubygem)
       Factory(:version, :rubygem => @gem)
-      delete :destroy, :rubygem_id => @gem.to_param
+      delete :destroy, :rubygem_id => @gem.to_param, :format => 'js'
     end
 
     should assign_to(:gem) { @gem }
@@ -50,7 +50,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
       @gem = Factory(:rubygem)
       Factory(:version, :rubygem => @gem)
       Factory(:subscription, :rubygem => @gem, :user => @user)
-      delete :destroy, :rubygem_id => @gem.to_param
+      delete :destroy, :rubygem_id => @gem.to_param, :format => 'js'
     end
 
     should assign_to(:gem) { @gem }
