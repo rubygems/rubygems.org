@@ -31,16 +31,16 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     end
   end
 
-  should_respond_to :xml do |body|
-    Hash.from_xml(Nokogiri.parse(body).to_xml)['users']
+  should_respond_to :json do |body|
+    JSON.parse(body)
   end
 
-  should_respond_to :json do |body|
-    JSON.parse body
+  should_respond_to :xml do |body|
+    MultiXml.parse(body)['users']
   end
 
   should_respond_to :yaml do |body|
-    YAML.load body
+    YAML.load(body)
   end
 
   should "route POST" do

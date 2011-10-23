@@ -13,6 +13,7 @@ gem 'high_voltage'
 gem 'hoptoad_notifier'
 gem 'mail'
 gem 'newrelic_rpm'
+gem 'nokogiri'
 gem 'paul_revere'
 gem 'pg'
 gem 'rack'
@@ -51,14 +52,15 @@ group :test do
   gem 'database_cleaner'
   gem 'factory_girl_rails'
   gem 'launchy'
-  gem 'nokogiri'
+  gem 'multi_xml'
+  gem 'ox'
   gem 'rack-test', :require => 'rack/test'
   gem 'rr'
   gem 'shoulda', '>= 3.0.0.beta'
   gem 'timecop'
   gem 'webmock'
 
-  platforms :ruby_18 do 
+  platforms :ruby_18 do
     gem 'redgreen'
   end
 end

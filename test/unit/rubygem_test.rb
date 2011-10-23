@@ -279,20 +279,20 @@ class RubygemTest < ActiveSupport::TestCase
       run_dep = Factory(:runtime_dependency, :version => version)
       dev_dep = Factory(:development_dependency, :version => version)
 
-      doc = Nokogiri.parse(@rubygem.to_xml)
+      xml = MultiXml.parse(@rubygem.to_xml)
 
-      assert_equal "rubygem", doc.root.name
-      assert_equal @rubygem.name, doc.at_css("rubygem > name").content
-      assert_equal @rubygem.downloads.to_s, doc.at_css("downloads").content
-      assert_equal @rubygem.versions.most_recent.number, doc.at_css("version").content
-      assert_equal @rubygem.versions.most_recent.downloads_count.to_s, doc.at_css("version-downloads").content
-      assert_equal @rubygem.versions.most_recent.authors, doc.at_css("authors").content
-      assert_equal @rubygem.versions.most_recent.info, doc.at_css("info").content
-      assert_equal "http://#{HOST}/gems/#{@rubygem.name}", doc.at_css("project-uri").content
-      assert_equal "http://#{HOST}/gems/#{@rubygem.versions.most_recent.full_name}.gem", doc.at_css("gem-uri").content
+      assert_equal %w(rubygem), xml.keys.sort
+      assert_equal @rubygem.name, xml['rubygem']['name']
+      assert_equal @rubygem.downloads.to_i, xml['rubygem']['downloads']
+      assert_equal @rubygem.versions.most_recent.number, xml['rubygem']['version']
+      assert_equal @rubygem.versions.most_recent.downloads_count.to_i, xml['rubygem']['version_downloads']
+      assert_equal @rubygem.versions.most_recent.authors, xml['rubygem']['authors']
+      assert_equal @rubygem.versions.most_recent.info, xml['rubygem']['info']
+      assert_equal "http://#{HOST}/gems/#{@rubygem.name}", xml['rubygem']['project_uri']
+      assert_equal "http://#{HOST}/gems/#{@rubygem.versions.most_recent.full_name}.gem", xml['rubygem']['gem_uri']
 
-      assert_equal dev_dep.name, doc.at_css("dependencies development dependency name").content
-      assert_equal run_dep.name, doc.at_css("dependencies runtime dependency name").content
+      assert_equal dev_dep.name, xml['rubygem']['dependencies']['development'].first['name']
+      assert_equal run_dep.name, xml['rubygem']['dependencies']['runtime'].first['name']
     end
 
     context "with a linkset" do
@@ -313,14 +313,14 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "return a bunch of XML" do
-        doc = Nokogiri.parse(@rubygem.to_xml)
+        xml = MultiXml.parse(@rubygem.to_xml)
 
-        assert_equal @rubygem.linkset.home, doc.at_css("homepage-uri").content
-        assert_equal @rubygem.linkset.wiki, doc.at_css("wiki-uri").content
-        assert_equal @rubygem.linkset.docs, doc.at_css("documentation-uri").content
-        assert_equal @rubygem.linkset.mail, doc.at_css("mailing-list-uri").content
-        assert_equal @rubygem.linkset.code, doc.at_css("source-code-uri").content
-        assert_equal @rubygem.linkset.bugs, doc.at_css("bug-tracker-uri").content
+        assert_equal @rubygem.linkset.home, xml['rubygem']['homepage_uri']
+        assert_equal @rubygem.linkset.wiki, xml['rubygem']['wiki_uri']
+        assert_equal @rubygem.linkset.docs, xml['rubygem']['documentation_uri']
+        assert_equal @rubygem.linkset.mail, xml['rubygem']['mailing_list_uri']
+        assert_equal @rubygem.linkset.code, xml['rubygem']['source_code_uri']
+        assert_equal @rubygem.linkset.bugs, xml['rubygem']['bug_tracker_uri']
       end
     end
   end

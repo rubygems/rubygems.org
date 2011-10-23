@@ -67,7 +67,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
 
       should_respond_to(:xml) do |body|
-        Hash.from_xml(Nokogiri.parse(body).to_xml)
+        Hash.from_xml(MultiXml.parse(body).to_xml)
       end
     end
 
@@ -136,15 +136,15 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to index" do
       should_respond_to :json do |body|
-        JSON.parse body
-      end
-
-      should_respond_to :yaml do |body|
-        YAML.load body
+        JSON.parse(body)
       end
 
       should_respond_to :xml do |body|
-        Hash.from_xml(Nokogiri.parse(body).to_xml)['rubygems']
+        MultiXml.parse(body)['rubygems']
+      end
+
+      should_respond_to :yaml do |body|
+        YAML.load(body)
       end
     end
 
@@ -413,15 +413,15 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         should_return_latest_gems JSON.parse(@response.body)
       end
 
+      should "return correct XML for latest gems" do
+        get :latest, :format => :xml
+        gems = MultiXml.parse(@response.body)['rubygems']
+        should_return_latest_gems(gems)
+      end
+
       should "return correct YAML for latest gems" do
         get :latest, :format => :yaml
         should_return_latest_gems YAML.load(@response.body)
-      end
-
-      should "return correct XML for latest gems" do
-        get :latest, :format => :xml
-        gems = Hash.from_xml(Nokogiri.parse(@response.body).to_xml)['rubygems']
-        should_return_latest_gems(gems)
       end
     end
 
@@ -445,15 +445,15 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         should_return_just_updated_gems JSON.parse(@response.body)
       end
 
+      should "return correct XML for just_updated gems" do
+        get :just_updated, :format => :xml
+        gems = MultiXml.parse(@response.body)['rubygems']
+        should_return_just_updated_gems(gems)
+      end
+
       should "return correct YAML for just_updated gems" do
         get :just_updated, :format => :yaml
         should_return_just_updated_gems YAML.load(@response.body)
-      end
-
-      should "return correct XML for just_updated gems" do
-        get :just_updated, :format => :xml
-        gems = Hash.from_xml(Nokogiri.parse(@response.body).to_xml)['rubygems']
-        should_return_just_updated_gems(gems)
       end
     end
 

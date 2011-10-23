@@ -52,7 +52,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:xml) do |body|
-      Hash.from_xml(Nokogiri.parse(body).to_xml)['versions']
+      MultiXml.parse(body)['versions']
     end
 
     should_respond_to(:yaml) do |body|

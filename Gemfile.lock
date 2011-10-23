@@ -118,11 +118,13 @@ GEM
       ruby_parser (~> 2.0.5)
     mime-types (1.16)
     multi_json (1.0.3)
+    multi_xml (0.4.1)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-ssh (2.1.4)
     newrelic_rpm (3.2.0)
     nokogiri (1.5.0)
+    ox (1.4.0)
     paul_revere (0.2.1)
       rails (~> 3.0)
     pg (0.11.0)
@@ -244,8 +246,10 @@ DEPENDENCIES
   jruby-openssl
   launchy
   mail
+  multi_xml
   newrelic_rpm
   nokogiri
+  ox
   paul_revere
   pg
   pry

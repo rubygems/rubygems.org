@@ -25,7 +25,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:xml) do |body|
-      Nokogiri.parse(body).root.children[1].children.first.text.to_i
+      MultiXml.parse(body)['hash']['total']
     end
 
     should_respond_to(:yaml) do |body|
@@ -79,7 +79,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:xml) do |body|
-      Hash.from_xml(Nokogiri.parse(body).to_xml)['hash']
+      Hash.from_xml(MultiXml.parse(body)['hash'].to_xml)['hash']
     end
 
     should_respond_to(:yaml, :to_sym) do |body|
@@ -154,7 +154,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:xml) do |body|
-      Hash.from_xml(Nokogiri.parse(body).to_xml)['hash']['gems']
+      Hash.from_xml(MultiXml.parse(body)['hash'].to_xml)['hash']['gems']
     end
   end
 
@@ -186,7 +186,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:xml) do |body|
-      Hash.from_xml(Nokogiri.parse(body).to_xml)['hash']['gems']
+      Hash.from_xml(MultiXml.parse(body)['hash'].to_xml)['hash']['gems']
     end
   end
 

@@ -78,12 +78,11 @@ class WebHookTest < ActiveSupport::TestCase
     end
 
     should "show limited attributes for to_xml" do
-      xml = Nokogiri.parse(@webhook.to_xml)
-
-      assert_equal "web-hook", xml.root.name
-      assert_equal %w[failure-count url], xml.root.children.select(&:element?).map(&:name).sort
-      assert_equal @webhook.url, xml.at_css("url").content
-      assert_equal @webhook.failure_count, xml.at_css("failure-count").content.to_i
+      xml = MultiXml.parse(@webhook.to_xml)
+      assert_equal %w(web_hook), xml.keys.sort
+      assert_equal %w(failure_count url), xml['web_hook'].keys.sort
+      assert_equal @webhook.url, xml['web_hook']['url']
+      assert_equal @webhook.failure_count, xml['web_hook']['failure_count']
     end
 
     should "show limited attributes for to_yaml" do

@@ -130,18 +130,17 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         end
 
         should_respond_to(:json) do |body|
-          JSON.parse body
+          JSON.parse(body)
         end
 
         should_respond_to(:yaml) do |body|
-          YAML.load body
+          YAML.load(body)
         end
 
         should_respond_to(:xml) do |body|
-          children = Nokogiri.parse(body).root.children
-          Hash.from_xml(children[1].to_xml).update(
-            'all gems' => [Hash.from_xml(children[5].to_xml)['web_hook']]
-          )
+          xml = MultiXml.parse(body)['hash']
+          xml['all gems'] = xml.delete('all_gems')
+          xml
         end
 
         context "On DELETE to remove with owned hook for rubygem" do

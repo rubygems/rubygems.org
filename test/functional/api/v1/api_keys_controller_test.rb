@@ -51,7 +51,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     end
   end
 
-  def self.should_respond_to(format, to_meth = :to_s)
+  def self.should_respond_to(format, to_meth=:to_s)
     context "with #{format.to_s.upcase} and with confirmed user" do
       setup do
         @user = Factory(:user)
@@ -70,15 +70,15 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
   context "on GET to show" do
     should_respond_to(:json) do |body|
-      JSON.parse body
-    end
-
-    should_respond_to(:yaml, :to_sym) do |body|
-     YAML.load body
+      JSON.parse(body)
     end
 
     should_respond_to(:xml) do |body|
-      Hash.from_xml(Nokogiri.parse(body).to_xml)['hash']
+      Hash.from_xml(MultiXml.parse(body)['hash'].to_xml)['hash']
+    end
+
+    should_respond_to(:yaml, :to_sym) do |body|
+      YAML.load(body)
     end
   end
 

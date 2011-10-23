@@ -92,10 +92,10 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "only have email when boiling down to XML" do
-      xml = Nokogiri.parse(@user.to_xml)
-      assert_equal "user", xml.root.name
-      assert_equal %w[email], xml.root.children.select(&:element?).map(&:name)
-      assert_equal @user.email, xml.at_css("email").content
+      xml = MultiXml.parse(@user.to_xml)
+      assert_equal %w(user), xml.keys.sort
+      assert_equal %w(email), xml['user'].keys.sort
+      assert_equal @user.email, xml['user']['email']
     end
 
     should "only have email when boiling down to YAML" do

@@ -18,26 +18,26 @@ class DependencyTest < ActiveSupport::TestCase
       @dependency.save
       json = JSON.parse(@dependency.to_json)
 
-      assert_equal %w[name requirements], json.keys
+      assert_equal %w[name requirements], json.keys.sort
       assert_equal @dependency.rubygem.name, json["name"]
       assert_equal @dependency.requirements, json["requirements"]
     end
 
     should "return XML" do
       @dependency.save
-      xml = Nokogiri.parse(@dependency.to_xml)
+      xml = MultiXml.parse(@dependency.to_xml)
 
-      assert_equal "dependency", xml.root.name
-      assert_equal %w[name requirements], xml.root.children.select(&:element?).map(&:name)
-      assert_equal @dependency.rubygem.name, xml.at_css("name").content
-      assert_equal @dependency.requirements, xml.at_css("requirements").content
+      assert_equal %w(dependency), xml.keys.sort
+      assert_equal %w(name requirements), xml['dependency'].keys.sort
+      assert_equal @dependency.rubygem.name, xml['dependency']['name']
+      assert_equal @dependency.requirements, xml['dependency']['requirements']
     end
 
     should "return YAML" do
       @dependency.save
       yaml = YAML.load(@dependency.to_yaml)
 
-      assert_equal %w[name requirements], yaml.keys
+      assert_equal %w[name requirements], yaml.keys.sort
       assert_equal @dependency.rubygem.name, yaml["name"]
       assert_equal @dependency.requirements, yaml["requirements"]
     end
@@ -71,7 +71,7 @@ class DependencyTest < ActiveSupport::TestCase
         assert_equal @requirements[0].to_s, @dependency.requirements
       end
 
-      should "correctly display a malformed Dependency referring to the existing Rubygem" do 
+      should "correctly display a malformed Dependency referring to the existing Rubygem" do
         @dependency = Factory(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
         stub(@dependency).requirements { '#<YAML::Syck::DefaultKey:0x0000000> 0.0.0' }
 
