@@ -117,7 +117,7 @@ GEM
       treetop (~> 1.4.8)
     method_source (0.6.6)
       ruby_parser (~> 2.0.5)
-    mime-types (1.16)
+    mime-types (1.17.1)
     multi_json (1.0.3)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
