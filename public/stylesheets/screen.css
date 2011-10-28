@@ -920,36 +920,90 @@ table {
   margin-right: 35px;
 }
 
-.footer .links {
-  height: 30px;
-  margin-top: 15px;
+.footer {
+  height: 100px;
 }
 
-.footer .links a {
-  border: none;
-  text-align: center;
-  font-weight: normal;
+.footer ul li a {
   color: #9E8686;
-  font-size: 1.5em;
-  margin-right: 10px;
-  margin-top: -15px;
 }
 
-.footer .links .sponsor {
+.footer ul.major {
+  width: 290px;
+  padding-left: 10px;
+  padding-top: 25px;
+  position: absolute;
+}
+
+.footer ul.major li {
+  display: inline-block;
+  padding-right: 18px;
+  float: left;
+}
+
+.footer ul.major li a {
+  font-size: 1.8em;
+}
+
+.footer ul.minor {
+  width: 290px;
+  position: absolute;
+  clear: both;
+  padding-top: 17px;
+  padding-left: 10px;
+  margin-top: 35px;
+}
+
+.footer ul.minor li {
+  display: inline-block;
+  padding-right: 10px;
+}
+
+.footer ul.minor li a {
+  font-size: 1.1em;
+}
+
+.footer ul.sponsors {
   float: right;
-  font-size: 0.9em;
-  margin-top: -25px;
-  margin-bottom: 20px;
-  margin-left: 10px;
+  padding-top: 5px;
+  width: 485px;
+  height: 90px;
+  text-align: center;
 }
 
-.footer .links #dnsimple img {
+.footer ul.sponsors li {
+  display: inline-block;
+  width: 90px;
+}
+
+.footer ul.sponsors li a img {
+  margin: 0 auto;
+  display: block;
+}
+
+.footer ul.sponsors li a {
+  text-align: center;
+  font-size: 0.9em;
+}
+
+.footer ul.sponsors li a#thoughtbot img {
+  margin-top: 10px;
+}
+
+.footer ul.sponsors li a#rubycentral img {
   margin-top: 13px;
 }
 
-.footer .links .sponsor img {
-  padding-top: 5px;
-  display: block;
+.footer ul.sponsors li a#dnsimple img {
+  margin-top: 28px;
+}
+
+.footer ul.sponsors li a#newrelic img {
+  margin-top: 14px;
+}
+
+.footer ul.sponsors li a#gauges img {
+  margin-top: 16px;
 }
 
 .footer a:hover {
@@ -1630,4 +1684,3 @@ h5#downloads {
   font-weight: bold;
   padding-left: 24px;
 }
-

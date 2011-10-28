@@ -39,8 +39,8 @@
 <p class="pitch">
   <%= t('.pitch.content',
         :rubygems => content_tag(:strong, link_to(t(:title), page_url('about'))),
-        :publish => content_tag(:strong, link_to(t('.pitch.publish'), page_url('gem_docs'), :anchor => 'push')),
-        :api => content_tag(:strong, link_to(t('.pitch.api'), page_url('api_docs'))),
+        :publish => content_tag(:strong, link_to(t('.pitch.publish'), "http://guides.rubygems.org/make-your-own-gem", :anchor => 'push')),
+        :api => content_tag(:strong, link_to(t('.pitch.api'), "http://guides.rubygems.org/rubygems-org-api/")),
         :contribute => content_tag(:strong, link_to(t('.pitch.contribute'), "http://github.com/rubygems/rubygems.org"))).html_safe %>
 </p>
 <div class="leaderboards">
@@ -79,4 +79,3 @@
     </ol>
   </div>
 </div>
-
