@@ -91,11 +91,12 @@
           <li><%= link_to t('.footer.contribute'), "http://contribute.rubygems.org"  %></li>
         </ul>
         <ul class="minor">
-          <li><%= link_to t('.footer.about'), page_url("about") %></li>
+          <li><%= link_to t('.footer.mobile'), "http://m.rubygems.org" %></li>
           <li><%= link_to t('.footer.status'), "http://twitter.com/gemcutter" %></li>
           <li><%= link_to t('.footer.source_code'), "http://github.com/rubygems/rubygems.org" %></li>
           <li><%= link_to t('.footer.discussion_forum'), "http://groups.google.com/group/gemcutter" %></li>
           <li><%= link_to t('.footer.statistics'), stats_url %></li>
+          <li><%= link_to t('.footer.about'), page_url("about") %></li>
         </ul>
         <ul class="sponsors">
           <li><%= link_to t('.footer.supported_by', :supporter => image_tag('rubycentral.png')).html_safe, "http://rubycentral.org",
