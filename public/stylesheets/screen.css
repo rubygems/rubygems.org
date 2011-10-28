@@ -933,6 +933,7 @@ table {
   padding-left: 10px;
   padding-top: 25px;
   position: absolute;
+  z-index: 2;
 }
 
 .footer ul.major li {
@@ -952,6 +953,7 @@ table {
   padding-top: 17px;
   padding-left: 10px;
   margin-top: 35px;
+  z-index: 1;
 }
 
 .footer ul.minor li {
