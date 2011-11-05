@@ -128,7 +128,7 @@ GEM
       rails (~> 3.0)
     pg (0.11.0)
     polyglot (0.3.3)
-    pry (0.9.7.3)
+    pry (0.9.7.4)
       coderay (~> 0.9.8)
       method_source (~> 0.6.7)
       ruby_parser (>= 2.3.1)
