@@ -75,14 +75,14 @@ GEM
       factory_girl (~> 2.2.0)
       railties (>= 3.0.0)
     ffi (1.0.10)
-    fog (1.0.0)
+    fog (1.1.0)
       builder
-      excon (~> 0.7.3)
+      excon (~> 0.7.4)
       formatador (~> 0.2.0)
       mime-types
       multi_json (~> 1.0.3)
       net-scp (~> 1.0.4)
-      net-ssh (~> 2.1.4)
+      net-ssh (>= 2.2.1)
       nokogiri (~> 1.5.0)
       ruby-hmac
     formatador (0.2.1)
@@ -121,7 +121,7 @@ GEM
     multi_json (1.0.3)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
-    net-ssh (2.1.4)
+    net-ssh (2.2.1)
     newrelic_rpm (3.3.0)
     nokogiri (1.5.0)
     paul_revere (0.2.1)
