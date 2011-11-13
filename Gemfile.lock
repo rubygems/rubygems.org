@@ -56,7 +56,7 @@ GEM
       cucumber (>= 1.1.1)
       nokogiri (>= 1.5.0)
     daemons (1.1.4)
-    database_cleaner (0.6.7)
+    database_cleaner (0.7.0)
     delayed_job (3.0.0.pre)
       activesupport (~> 3.0)
       daemons
