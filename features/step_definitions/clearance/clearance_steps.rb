@@ -1,11 +1,15 @@
 # General
 
 Then /^I should see error messages$/ do
-  Then %{I should see "errors prohibited"}
+  steps %{
+    Then I should see "errors prohibited"
+  }
 end
 
 Then /^I should see an error message$/ do
-  Then %{I should see "error prohibited"}
+  steps %{
+    Then I should see "error prohibited"
+  }
 end
 
 Then /^I should see an email field$/ do
@@ -43,21 +47,29 @@ end
 # Session
 
 Then /^I should be signed in$/ do
-  Then %{I should see "sign out"}
+  steps %{
+    Then I should see "sign out"
+  }
 end
 
 Then /^I should be signed out$/ do
-  Then %{I should see "sign in"}
+  steps %{
+    Then I should see "sign in"
+  }
 end
 
 Given /^(?:I am|I have|I) signed in (?:with|as) "(.*)"$/ do |email|
-  Given %{I am signed up as "#{email}"}
-  And %{I sign in as "#{email}"}
+  steps %{
+    Given I am signed up as "#{email}"
+    And I sign in as "#{email}"
+  }
 end
 
 Given /^I sign in$/ do
   email = Factory.next(:email)
-  Given %{I have signed in with "#{email}"}
+  steps %{
+    Given I have signed in with "#{email}"
+  }
 end
 
 # Emails
@@ -87,10 +99,12 @@ end
 
 # Actions
 When /^I sign in (?:with|as) "(.*)"$/ do |email|
-  When %{I go to the sign in page}
-  And %{I fill in "Email" with "#{email}"}
-  And %{I fill in "Password" with "password"}
-  And %{I press "Sign in"}
+  steps %{
+    When I go to the sign in page
+    And I fill in "Email" with "#{email}"
+    And I fill in "Password" with "password"
+    And I press "Sign in"
+  }
 end
 
 When "I sign out" do
@@ -101,12 +115,16 @@ When "I sign out" do
 end
 
 When /^I request password reset link to be sent to "(.*)"$/ do |email|
-  When %{I go to the password reset request page}
-  And %{I fill in "Email address" with "#{email}"}
-  And %{I press "Reset password"}
+  steps %{
+    When I go to the password reset request page
+    And I fill in "Email address" with "#{email}"
+    And I press "Reset password"
+  }
 end
 
 When /^I update my password with "(.*)"$/ do |password|
-  And %{I fill in "Password" with "#{password}"}
-  And %{I press "Save this password"}
+  steps %{
+    When I fill in "Password" with "#{password}"
+    And I press "Save this password"
+  }
 end
