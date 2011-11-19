@@ -133,6 +133,7 @@ GEM
       method_source (~> 0.6.7)
       ruby_parser (>= 2.3.1)
       slop (~> 2.1.0)
+    psych (1.2.2)
     rack (1.2.4)
     rack-maintenance (0.3.0)
       rack (>= 1.0)
@@ -232,6 +233,7 @@ DEPENDENCIES
   paul_revere
   pg
   pry
+  psych (~> 1.2.2)
   rack
   rack-maintenance
   rack-test
