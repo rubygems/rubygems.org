@@ -176,7 +176,7 @@ GEM
       ffi (~> 1.0.9)
       json_pure
       rubyzip
-    sexp_processor (3.0.7)
+    sexp_processor (3.0.8)
     shoulda (2.11.3)
     silent-postgres (0.1.1)
     sinatra (1.2.7)
