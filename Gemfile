@@ -1,5 +1,6 @@
 source 'http://rubygems.org'
 
+gem 'psych', '~> 1.2.2'
 gem 'rails', '~> 3.0.10'
 
 gem 'clearance'
