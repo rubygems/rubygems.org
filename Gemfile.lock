@@ -195,7 +195,7 @@ GEM
     tzinfo (0.3.31)
     validates_url_format_of (0.2.0)
       activerecord (~> 3.0.10)
-    webmock (1.7.7)
+    webmock (1.7.8)
       addressable (~> 2.2, > 2.2.5)
       crack (>= 0.1.7)
     will_paginate (3.0.2)
