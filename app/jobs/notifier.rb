@@ -1,8 +1,8 @@
 class Notifier < Struct.new(:event, :url, :host_with_port, :rubygem, :version, :api_key)
 
   def payload
-    payload = rubygem.payload(version, host_with_port)
-    payload.merge("event" => event, "payload" => payload).to_json
+    rubygem_payload = rubygem.payload(version, host_with_port)
+    rubygem_payload.merge("event" => event, "rubygem" => rubygem_payload).to_json
   end
 
   def authorization
