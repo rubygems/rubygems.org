@@ -31,7 +31,7 @@ class Api::V1::RubygemsController < Api::BaseController
   def yank
     if @version.indexed?
       @rubygem.yank!(@version)
-      (@rubygem.web_hooks + WebHook.global).each do |web_hook|
+      WebHook.for_rubygem(@rubygem).each do |web_hook|
         web_hook.fire("yank", request.host_with_port, @rubygem, @version, true)
       end
       render :text => "Successfully yanked gem: #{@version.to_title}"
@@ -43,7 +43,7 @@ class Api::V1::RubygemsController < Api::BaseController
   def unyank
     if !@version.indexed?
       @version.unyank!
-      (@rubygem.web_hooks + WebHook.global).each do |web_hook|
+      WebHook.for_rubygem(@rubygem).each do |web_hook|
         web_hook.fire("unyank", request.host_with_port, @rubygem, @version, true)
       end
       render :text => "Successfully unyanked gem: #{@version.to_title}"
