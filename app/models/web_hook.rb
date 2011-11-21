@@ -15,6 +15,10 @@ class WebHook < ActiveRecord::Base
     where("rubygem_id is not null")
   end
 
+  def self.for_rubygem(rubygem)
+    where("rubygem_id = ? or rubygem_id is null", rubygem.id)
+  end
+
   def fire(event, host_with_port, deploy_gem, version, delayed=true)
     job = Notifier.new(event, url, host_with_port, deploy_gem, version, user.api_key)
     if delayed
