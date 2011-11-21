@@ -22,8 +22,8 @@ Then /^the webhook "([^\"]*)" should receive an? "([^\"]*)" event for gem "([^\"
   json = MultiJson.decode(request.body)
 
   assert_equal event, json["event"]
-  assert_equal gem_name, json["payload"]["name"]
-  assert_equal version_number, json["payload"]["version"]
+  assert_equal gem_name, json["rubygem"]["name"]
+  assert_equal version_number, json["rubygem"]["version"]
 end
 
 Then /I should see "(.*)" under "(.*)" in (json|yaml)/ do |web_hook_url, gem_name, format|
