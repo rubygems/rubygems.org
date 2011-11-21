@@ -1,7 +1,7 @@
 Feature: Web Hooks
-  In order to keep the world abreast of new gem versions
+  In order to keep the world abreast of gem versions
   A rubygem developer
-  Should be able to configure web hooks to be hit when a gem is pushed
+  Should be able to configure web hooks to be hit when a gem is pushed, yanked or unyanked
 
   Background:
     Given I am signed up as "email@person.com"
@@ -14,7 +14,7 @@ Feature: Web Hooks
     When I have added a webhook for "http://example.org/webhook" to gem "fiddler" with my API key
     And I push the gem "fiddler-2.0.0.gem" with my API key
     And the system processes jobs
-    Then the webhook "http://example.org/webhook" should receive a POST with gem "fiddler" at version "2.0.0"
+    Then the webhook "http://example.org/webhook" should receive a "push" event for gem "fiddler" at version "2.0.0"
 
   Scenario: User pushes older gem with webhook
     Given I have a gem "fiddler" with version "1.0.0"
@@ -24,7 +24,7 @@ Feature: Web Hooks
     When I have added a webhook for "http://example.org/webhook" to gem "fiddler" with my API key
     And I push the gem "fiddler-0.5.0.gem" with my API key
     And the system processes jobs
-    Then the webhook "http://example.org/webhook" should receive a POST with gem "fiddler" at version "0.5.0"
+    Then the webhook "http://example.org/webhook" should receive a "push" event for gem "fiddler" at version "0.5.0"
 
   Scenario: User pushes new gem after registering global webhook
     Given I have a gem "vodka" with version "1.2.3"
@@ -32,7 +32,7 @@ Feature: Web Hooks
     When I have added a global webhook for "http://example.org/webhook" with my API key
     And I push the gem "vodka-1.2.3.gem" with my API key
     And the system processes jobs
-    Then the webhook "http://example.org/webhook" should receive a POST with gem "vodka" at version "1.2.3"
+    Then the webhook "http://example.org/webhook" should receive a "push" event for gem "vodka" at version "1.2.3"
 
   Scenario: User lists hooks for a gem in json
     Given the following rubygems exist:
@@ -79,7 +79,7 @@ Feature: Web Hooks
     When I have removed a webhook for "http://example.org/webhook" from gem "vodka" with my API key
     And I push the gem "vodka-2.0.0.gem" with my API key
     And the system processes jobs
-    Then the webhook "http://example.org/webhook" should not receive a POST
+    Then the webhook "http://example.org/webhook" should not receive an event
 
   Scenario: User removes global hook
     Given I have a gem "vodka" with version "1.0.0"
@@ -90,7 +90,7 @@ Feature: Web Hooks
     When I have removed the global webhook for "http://example.org/webhook"
     And I push the gem "vodka-2.0.0.gem" with my API key
     And the system processes jobs
-    Then the webhook "http://example.org/webhook" should not receive a POST
+    Then the webhook "http://example.org/webhook" should not receive an event
 
   Scenario: User test fires hook for a gem
     Given the following version exists:
@@ -99,7 +99,7 @@ Feature: Web Hooks
     And I have an API key for "email@person.com/password"
     And I have added a webhook for "http://example.org/webhook" to gem "vodka" with my API key
     When I have fired a webhook to "http://example.org/webhook" for the "vodka" gem with my API key
-    Then the webhook "http://example.org/webhook" should receive a POST with gem "vodka" at version "1.2.3"
+    Then the webhook "http://example.org/webhook" should receive a "push" event for gem "vodka" at version "1.2.3"
 
   Scenario: User test fires global hook
     Given the following version exists:
@@ -108,4 +108,46 @@ Feature: Web Hooks
     And I have an API key for "email@person.com/password"
     And I have added a global webhook for "http://example.org/webhook" with my API key
     When I have fired a webhook to "http://example.org/webhook" for all gems with my API key
-    Then the webhook "http://example.org/webhook" should receive a POST with gem "gemcutter" at version "1.0.0"
+    Then the webhook "http://example.org/webhook" should receive a "push" event for gem "gemcutter" at version "1.0.0"
+
+  Scenario: User yanks gem with webhook
+    Given I have a gem "fiddler" with version "1.0.0"
+    And I have an API key for "email@person.com/password"
+    And I push the gem "fiddler-1.0.0.gem" with my API key
+    When I have added a webhook for "http://example.org/webhook" to gem "fiddler" with my API key
+    And I yank the gem "fiddler" version "1.0.0" with my API key
+    And the system processes jobs
+    Then the webhook "http://example.org/webhook" should receive a "yank" event for gem "fiddler" at version "1.0.0"
+
+  Scenario: User yanks gem after registering global webhook
+    Given I have a gem "fiddler" with version "1.0.0"
+    And I have an API key for "email@person.com/password"
+    And I push the gem "fiddler-1.0.0.gem" with my API key
+    When I have added a global webhook for "http://example.org/webhook" with my API key
+    And I yank the gem "fiddler" version "1.0.0" with my API key
+    And the system processes jobs
+    Then the webhook "http://example.org/webhook" should receive a "yank" event for gem "fiddler" at version "1.0.0"
+
+  Scenario: User unyanks gem with webhook
+    Given I have a gem "fiddler" with version "1.0.0"
+    And I have a gem "fiddler" with version "2.0.0"
+    And I have an API key for "email@person.com/password"
+    And I push the gem "fiddler-1.0.0.gem" with my API key
+    And I push the gem "fiddler-2.0.0.gem" with my API key
+    And I yank the gem "fiddler" version "2.0.0" with my API key
+    When I have added a webhook for "http://example.org/webhook" to gem "fiddler" with my API key
+    And I unyank the gem "fiddler" version "2.0.0" with my API key
+    And the system processes jobs
+    Then the webhook "http://example.org/webhook" should receive an "unyank" event for gem "fiddler" at version "2.0.0"
+
+  Scenario: User unyanks gem after registering global webhook
+    Given I have a gem "fiddler" with version "1.0.0"
+    And I have a gem "fiddler" with version "2.0.0"
+    And I have an API key for "email@person.com/password"
+    And I push the gem "fiddler-1.0.0.gem" with my API key
+    And I push the gem "fiddler-2.0.0.gem" with my API key
+    And I yank the gem "fiddler" version "2.0.0" with my API key
+    When I have added a global webhook for "http://example.org/webhook" with my API key
+    And I unyank the gem "fiddler" version "2.0.0" with my API key
+    And the system processes jobs
+    Then the webhook "http://example.org/webhook" should receive an "unyank" event for gem "fiddler" at version "2.0.0"
