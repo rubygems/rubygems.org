@@ -31,6 +31,9 @@ class Api::V1::RubygemsController < Api::BaseController
   def yank
     if @version.indexed?
       @rubygem.yank!(@version)
+      (@rubygem.web_hooks + WebHook.global).each do |web_hook|
+        web_hook.fire("yank", request.host_with_port, @rubygem, @version, true)
+      end
       render :text => "Successfully yanked gem: #{@version.to_title}"
     else
       render :text => "The version #{params[:version]} has already been yanked.", :status => :unprocessable_entity
@@ -40,6 +43,9 @@ class Api::V1::RubygemsController < Api::BaseController
   def unyank
     if !@version.indexed?
       @version.unyank!
+      (@rubygem.web_hooks + WebHook.global).each do |web_hook|
+        web_hook.fire("unyank", request.host_with_port, @rubygem, @version, true)
+      end
       render :text => "Successfully unyanked gem: #{@version.to_title}"
     else
       render :text => "The version #{params[:version]} is already indexed.", :status => :unprocessable_entity
