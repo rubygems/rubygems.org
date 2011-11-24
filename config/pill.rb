@@ -8,11 +8,12 @@ Bluepill.application("gemcutter") do |app|
     process.stop_grace_time     = 10.seconds
     process.restart_grace_time  = 10.seconds
 
-    process.start_command = "PATH=#{REE_PATH}:$PATH RAILS_ENV=#{RAILS_ENV} script/delayed_job start"
-    process.stop_command  = "PATH=#{REE_PATH}:$PATH RAILS_ENV=#{RAILS_ENV} script/delayed_job stop"
+    process.start_command = "RAILS_ENV=#{RAILS_ENV} script/delayed_job start"
+    process.stop_command  = "RAILS_ENV=#{RAILS_ENV} script/delayed_job stop"
 
     process.pid_file = "#{RELEASE_PATH}/shared/pids/delayed_job.pid"
 
     process.uid = process.gid = "rubycentral"
+    process.supplementary_groups = ['rvm']
   end
 end

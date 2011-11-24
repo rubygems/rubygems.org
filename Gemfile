@@ -26,7 +26,9 @@ gem 'xml-simple'
 gem 'yajl-ruby', :require => 'yajl'
 
 group :development do
+  gem 'capistrano-ext'
   gem 'rails-erd'
+  gem 'rvm'
   gem 'pry'
 end
 

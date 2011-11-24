@@ -3,6 +3,9 @@ set :default_stage, "staging"
 
 require 'capistrano/ext/multistage'
 require 'bundler/capistrano'
+require 'rvm/capistrano'
+
+set :rvm_ruby_string, '1.9.3-p0'
 
 default_run_options[:pty] = true
 set :ssh_options, { :forward_agent => true }

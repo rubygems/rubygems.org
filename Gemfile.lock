@@ -31,6 +31,14 @@ GEM
     addressable (2.2.6)
     arel (2.0.10)
     builder (2.1.2)
+    capistrano (2.9.0)
+      highline
+      net-scp (>= 1.0.0)
+      net-sftp (>= 2.0.0)
+      net-ssh (>= 2.0.14)
+      net-ssh-gateway (>= 1.1.0)
+    capistrano-ext (1.2.1)
+      capistrano (>= 1.0.0)
     capybara (1.1.2)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
@@ -99,6 +107,7 @@ GEM
       cucumber (>= 0.10)
       guard (>= 0.8.3)
     high_voltage (1.0.1)
+    highline (1.6.8)
     hoptoad_notifier (2.4.11)
       activesupport
       builder
@@ -121,7 +130,11 @@ GEM
     multi_json (1.0.3)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
+    net-sftp (2.0.5)
+      net-ssh (>= 2.0.9)
     net-ssh (2.2.1)
+    net-ssh-gateway (1.1.0)
+      net-ssh (>= 1.99.1)
     newrelic_rpm (3.3.0)
     nokogiri (1.5.0)
     paul_revere (0.2.1)
@@ -172,6 +185,7 @@ GEM
     ruby_parser (2.3.1)
       sexp_processor (~> 3.0)
     rubyzip (0.9.4)
+    rvm (1.9.2)
     selenium-webdriver (2.13.0)
       childprocess (>= 0.2.1)
       ffi (~> 1.0.9)
@@ -208,6 +222,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  capistrano-ext
   capybara
   clearance
   cucumber-rails
@@ -244,6 +259,7 @@ DEPENDENCIES
   redis
   rest-client
   rr
+  rvm
   shoulda
   silent-postgres
   sinatra
