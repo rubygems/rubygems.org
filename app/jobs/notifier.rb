@@ -1,4 +1,4 @@
-class WebHookJob < Struct.new(:url, :host_with_port, :rubygem, :version, :api_key)
+class Notifier < Struct.new(:url, :host_with_port, :rubygem, :version, :api_key)
 
   def payload
     rubygem.payload(version, host_with_port).to_json
