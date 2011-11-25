@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
 class RubyforgerTest < ActiveSupport::TestCase
   context "with a rubyforge and gemcutter user" do
