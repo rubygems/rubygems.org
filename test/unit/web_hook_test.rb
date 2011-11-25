@@ -140,7 +140,7 @@ class WebHookTest < ActiveSupport::TestCase
                          :authors           => %w[AUTHORS],
                          :description       => "DESC")
       @hook    = Factory(:web_hook)
-      @job     = WebHookJob.new(@hook.url, 'localhost:1234', @rubygem, @version)
+      @job     = Notifier.new(@hook.url, 'localhost:1234', @rubygem, @version)
     end
 
     should "have gem properties encoded in JSON" do
@@ -157,7 +157,7 @@ class WebHookTest < ActiveSupport::TestCase
     should "send the right version out even for older gems" do
       new_version = Factory(:version, :number => "2.0.0", :rubygem => @rubygem)
       new_hook    = Factory(:web_hook)
-      job         = WebHookJob.new(new_hook.url, 'localhost:1234', @rubygem, new_version)
+      job         = Notifier.new(new_hook.url, 'localhost:1234', @rubygem, new_version)
       payload     = MultiJson.decode(job.payload)
 
       assert_equal "foogem", payload['name']
