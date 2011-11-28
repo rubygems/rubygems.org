@@ -34,8 +34,6 @@ module Gemcutter
 
     config.after_initialize do
       Hostess.local = $rubygems_config[:local_storage]
-
-      YAML::ENGINE.yamler = "syck"
     end
 
     config.plugins = [:dynamic_form]
