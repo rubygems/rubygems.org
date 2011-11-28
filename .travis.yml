@@ -2,5 +2,4 @@ before_script: cp config/database.yml.example config/database.yml && bundle exec
 rvm:
   - 1.9.3
   - rbx
-  - rbx-2.0
   - ree
