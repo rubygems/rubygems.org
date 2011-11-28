@@ -127,7 +127,7 @@ GEM
     method_source (0.6.7)
       ruby_parser (>= 2.3.1)
     mime-types (1.17.2)
-    multi_json (1.0.3)
+    multi_json (1.0.4)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-sftp (2.0.5)
