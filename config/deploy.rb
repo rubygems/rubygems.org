@@ -30,12 +30,3 @@ after "deploy:update", "bluepill:quit", "bluepill:start"
 after "deploy", "deploy:cleanup"
 after "deploy:symlink", "deploy:move_in_database_yml", "deploy:move_in_secret_settings"
 before "bundle:install", "deploy:set_config_for_pg_gem"
-
-namespace :rvm do
-  desc 'Trust rvmrc file'
-  task :trust_rvmrc do
-    run "rvm rvmrc trust #{current_release}"
-  end
-end
-
-after "deploy:update_code", "rvm:trust_rvmrc"
