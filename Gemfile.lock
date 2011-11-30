@@ -205,8 +205,8 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.31)
-    validates_url_format_of (0.2.0)
-      activerecord (~> 3.0.10)
+    validates_formatting_of (0.3.0)
+      rails (>= 3.0.0)
     webmock (1.7.8)
       addressable (~> 2.2, > 2.2.5)
       crack (>= 0.1.7)
@@ -262,7 +262,7 @@ DEPENDENCIES
   sinatra
   system_timer
   timecop
-  validates_url_format_of
+  validates_formatting_of (>= 0.3.0)
   webmock
   will_paginate
   xml-simple
