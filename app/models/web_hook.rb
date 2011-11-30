@@ -4,7 +4,7 @@ class WebHook < ActiveRecord::Base
   belongs_to :user
   belongs_to :rubygem
 
-  validates_url_format_of :url
+  validates_formatting_of :url, :using => :url, :message => "does not appear to be a valid URL"
   validate :unique_hook, :on => :create
 
   def self.global
