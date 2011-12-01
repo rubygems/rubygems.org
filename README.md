@@ -12,25 +12,22 @@ The Ruby community's gem host.
 * [Mailing List][]
 * [FAQ][]
 * [IRC][]: #gemcutter on Freenode
-* [CI][]: ![Build Status](https://secure.travis-ci.org/rubygems/rubygems.org)
-* [Gemnasium][]: ![Dependency Status](https://gemnasium.com/rubygems/rubygems.org)
+* [CI][]: ![Build Status](https://secure.travis-ci.org/rubygems/rubygems.org.png?branch=master)
+* [Gemnasium][]: ![Dependency Status](https://gemnasium.com/rubygems/rubygems.org.png)
 
 [mailing list]: http://groups.google.com/group/gemcutter
 [faq]: http://help.rubygems.org/kb/gemcutter/faq
 [irc]: http://webchat.freenode.net/?channels=gemcutter
 [ci]: http://travis-ci.org/rubygems/rubygems.org
-[gemnasium]: https://gemnasium.com/codeforamerica/adopt-a-hydrant
+[gemnasium]: https://gemnasium.com/rubygems/rubygems.org
 
 ## Contributions
 
-Please read up on the [GitHub Wiki][wiki] for the latest contribution
-guidelines.
+Please see the wiki for the latest [contribution guidelines][].
 
-[wiki]: http://wiki.github.com/rubygems/rubygems.org/contribution-guidelines
+[contribution guidelines]: http://wiki.github.com/rubygems/rubygems.org/contribution-guidelines
 
-To get setup, please check out the [Development Setup][] page on the wiki. It's
-on the wiki so anyone can edit it, so please fix it if you have trouble getting
-set up!
+To get setup, please check out the [Development Setup][].
 
 [development setup]: https://github.com/rubygems/rubygems.org/wiki/Development-Setup
 
