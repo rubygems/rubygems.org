@@ -12,13 +12,13 @@ The Ruby community's gem host.
 * [Mailing List][]
 * [FAQ][]
 * [IRC][]: #gemcutter on Freenode
-* [CI][]: ![Build Status](https://secure.travis-ci.org/rubygems/rubygems.org.png?branch=master)
-* [Gemnasium][]: ![Dependency Status](https://gemnasium.com/rubygems/rubygems.org.png)
+* [CI][]: [![Build Status](https://secure.travis-ci.org/rubygems/rubygems.org.png?branch=master)][ci]
+* [Gemnasium][]: [![Dependency Status](https://gemnasium.com/rubygems/rubygems.org.png)][gemnasium]
 
 [mailing list]: http://groups.google.com/group/gemcutter
 [faq]: http://help.rubygems.org/kb/gemcutter/faq
 [irc]: http://webchat.freenode.net/?channels=gemcutter
-[ci]: http://travis-ci.org/rubygems/rubygems.org
+[ci]: http://travis-ci.org/#!/rubygems/rubygems.org
 [gemnasium]: https://gemnasium.com/rubygems/rubygems.org
 
 ## Contributions
