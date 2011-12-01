@@ -1,5 +1,7 @@
 before_script: cp config/database.yml.example config/database.yml
 script: bundle exec rake db:create db:migrate db:test:prepare default
 rvm:
+  - 1.8.7
   - 1.9.2
   - rbx
+  - ree
