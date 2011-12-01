@@ -1,4 +1,4 @@
-before_script: cp config/database.yml.example config/database.yml
+before_script: cp config/database.yml.example config/database.yml && bundle exec rake db:test:prepare
 rvm:
   - 1.9.2
   - 1.9.3
