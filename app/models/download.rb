@@ -106,14 +106,14 @@ class Download
     $redis.rename TODAY_KEY, YESTERDAY_KEY
 
     yesterday = 1.day.ago.to_date.to_s
-    versions  = Version.includes(:rubygem).inject({}) do |hash, v|
-      hash[v.full_name] = v
-      hash
+    versions  = {}
+
+    Version.find_each(include: :rubygem, batch_size: 10000) do |version|
+      versions[version.full_name] = version
     end
 
-    downloads = Hash[*$redis.zrange(YESTERDAY_KEY, 0, -1, :with_scores => true)]
-    downloads.each do |key, score|
-      if version = versions[key]
+    $redis.zrange(YESTERDAY_KEY, 0, -1, with_scores: true).in_groups_of(2).each do |(full_name, score)|
+      if version = versions[full_name]
         $redis.hincrby history_key(version), yesterday, score.to_i
         $redis.hincrby history_key(version.rubygem), yesterday, score.to_i
         version.rubygem.increment! :downloads, score.to_i
