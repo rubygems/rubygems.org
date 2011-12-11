@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/evanphx/excon.git
-  revision: c3a2f3074d760bcbb42e49f89512b4e07f66023a
+  revision: 24ffc60420c09cecb46e1d7c177a8919627057a9
   specs:
     excon (0.7.12)
 
