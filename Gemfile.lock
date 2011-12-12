@@ -5,7 +5,7 @@ GIT
     excon (0.7.12)
 
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     abstract (1.0.0)
     actionmailer (3.0.11)
