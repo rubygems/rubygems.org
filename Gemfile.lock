@@ -178,7 +178,7 @@ GEM
     rake (0.9.2.2)
     rake-compiler (0.7.9)
       rake
-    rdoc (3.11)
+    rdoc (3.12)
       json (~> 1.4)
     redgreen (1.2.2)
     redis (2.2.2)
