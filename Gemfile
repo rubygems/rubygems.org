@@ -3,12 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '~> 3.0.10'
 
 gem 'clearance'
-# Use a fork of excon to resolve the issue discussed in:
-# https://github.com/geemus/excon/pull/87
-#
-# It's should be safe to remove this line once this pull request is merged and
-# a new gem version of excon is released.
-gem 'excon', :git => 'git://github.com/evanphx/excon.git'
+gem 'excon'
 gem 'fog'
 gem 'gchartrb', :require => 'google_chart'
 gem 'gravtastic'
