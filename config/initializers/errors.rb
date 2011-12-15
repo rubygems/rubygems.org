@@ -5,7 +5,7 @@ require 'open-uri'
 #   begin
 #     some http call
 #   rescue *HTTP_ERRORS => error
-#     notify_hoptoad error
+#     notify_airbrake error
 #   end
 
 HTTP_ERRORS = [Timeout::Error,

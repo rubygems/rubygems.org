@@ -29,6 +29,9 @@ GEM
       activesupport (= 3.0.11)
     activesupport (3.0.11)
     addressable (2.2.6)
+    airbrake (3.0.9)
+      activesupport
+      builder
     arel (2.0.10)
     builder (2.1.2)
     capistrano (2.9.0)
@@ -107,9 +110,6 @@ GEM
       guard (>= 0.8.3)
     high_voltage (1.0.1)
     highline (1.6.8)
-    hoptoad_notifier (2.4.11)
-      activesupport
-      builder
     i18n (0.5.0)
     jquery-rails (1.0.19)
       railties (~> 3.0)
@@ -221,6 +221,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  airbrake
   capistrano-ext
   capybara
   clearance
@@ -237,7 +238,6 @@ DEPENDENCIES
   guard-bundler
   guard-cucumber
   high_voltage
-  hoptoad_notifier
   jquery-rails
   jruby-openssl
   launchy
