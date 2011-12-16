@@ -31,39 +31,6 @@ class DownloadTest < ActiveSupport::TestCase
     assert_equal 0, Download.today(other_platform_version)
   end
 
-  context "with some gems downloaded" do
-    setup do
-      @rubygem = Factory(:rubygem)
-      @version1 = Factory(:version, :rubygem => @rubygem, :number => "1.0.0")
-      @version2 = Factory(:version, :rubygem => @rubygem, :number => "2.0.0")
-
-      Download.incr(@rubygem.name, @version1.full_name)
-      Download.incr(@rubygem.name, @version2.full_name)
-      Download.incr(@rubygem.name, @version2.full_name)
-    end
-
-    should "roll over downloads into history hashes" do
-      Download.rollover
-      assert ! $redis.exists(Download::TODAY_KEY)
-      assert $redis.exists(Download::YESTERDAY_KEY)
-
-      rubygem_history = $redis.hgetall(Download.history_key(@rubygem))
-      version1_history = $redis.hgetall(Download.history_key(@version1))
-      version2_history = $redis.hgetall(Download.history_key(@version2))
-
-      yesterday = 1.day.ago.to_date.to_s
-      assert_equal 3, rubygem_history[yesterday].to_i
-      assert_equal 1, version1_history[yesterday].to_i
-      assert_equal 2, version2_history[yesterday].to_i
-    end
-
-    should "update the database when we roll over" do
-      Download.rollover
-
-      assert_equal 3, @rubygem.reload.read_attribute(:downloads)
-    end
-  end
-
   should "find most downloaded today" do
     @rubygem_1 = Factory(:rubygem)
     @version_1 = Factory(:version, :rubygem => @rubygem_1)
@@ -75,10 +42,12 @@ class DownloadTest < ActiveSupport::TestCase
     @rubygem_3 = Factory(:rubygem)
     @version_4 = Factory(:version, :rubygem => @rubygem_3)
 
-    Download.incr(@rubygem_1.name, @version_1.full_name)
-    Download.incr(@rubygem_1.name, @version_2.full_name)
-    Download.incr(@rubygem_2.name, @version_3.full_name)
-    Download.rollover
+    Timecop.freeze(Date.today - 1) do
+      Download.incr(@rubygem_1.name, @version_1.full_name)
+      Download.incr(@rubygem_1.name, @version_2.full_name)
+      Download.incr(@rubygem_2.name, @version_3.full_name)
+    end
+
     Download.incr(@rubygem_1.name, @version_1.full_name)
     3.times { Download.incr(@rubygem_2.name, @version_3.full_name) }
     2.times { Download.incr(@rubygem_1.name, @version_2.full_name) }
@@ -142,10 +111,12 @@ class DownloadTest < ActiveSupport::TestCase
     @rubygem_3 = Factory(:rubygem)
     @version_4 = Factory(:version, :rubygem => @rubygem_3)
 
-    Download.incr(@rubygem_1, @version_1.full_name)
-    Download.incr(@rubygem_1, @version_2.full_name)
-    Download.incr(@rubygem_2, @version_3.full_name)
-    Download.rollover
+    Timecop.freeze(1.day.ago) do
+      Download.incr(@rubygem_1, @version_1.full_name)
+      Download.incr(@rubygem_1, @version_2.full_name)
+      Download.incr(@rubygem_2, @version_3.full_name)
+    end
+
     Download.incr(@rubygem_2, @version_3.full_name)
     Download.incr(@rubygem_1, @version_1.full_name)
     Download.incr(@rubygem_2, @version_3.full_name)
@@ -182,4 +153,16 @@ class DownloadTest < ActiveSupport::TestCase
     assert_equal 0, Download.highest_rank([FactoryGirl.build(:version), FactoryGirl.build(:version)])
   end
 
+  should "delete all old today keys except the current" do
+    rubygem = Factory(:rubygem)
+    version = Factory(:version, :rubygem => rubygem)
+    10.times do |n|
+      Timecop.freeze(n.days.ago) do
+        3.times { Download.incr(rubygem.name, version.full_name) }
+      end
+    end
+    assert_equal 9, Download.today_keys.size
+    Download.cleanup_today_keys
+    assert_equal 0, Download.today_keys.size
+  end
 end
