@@ -181,8 +181,9 @@ class UserTest < ActiveSupport::TestCase
       @ownership = Factory(:ownership, :rubygem => @rubygem, :user => @user)
       @version   = Factory(:version, :rubygem => @rubygem)
 
-      Download.incr(@version.rubygem.name, @version.full_name)
-      Download.rollover
+      Timecop.freeze(1.day.ago) do
+        Download.incr(@version.rubygem.name, @version.full_name)
+      end
       2.times { Download.incr(@version.rubygem.name, @version.full_name) }
     end
 
