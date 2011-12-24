@@ -92,8 +92,9 @@ class StatsControllerTest < ActionController::TestCase
       @other_version  = Factory(:version)
       @latest_version = Factory(:version, :rubygem => rubygem)
 
-      Download.incr(rubygem.name, @version.full_name)
-      Download.rollover
+      Timecop.freeze(1.day.ago) do
+        Download.incr(rubygem.name, @version.full_name)
+      end
 
       5.times  { Download.incr(rubygem.name, @latest_version.full_name) }
       4.times  { Download.incr(rubygem.name, @version.full_name) }
