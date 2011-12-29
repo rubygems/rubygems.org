@@ -4,11 +4,7 @@ gem 'rails', '~> 3.0.10'
 
 gem 'airbrake'
 gem 'clearance'
-# Use a fork of excon to resolve the issue discussed in:
-# https://github.com/geemus/excon/pull/87
-#
-# It's should be safe to remove this line once this pull request is merged and
-# a new gem version of excon is released.
+gem 'delayed_job_active_record'
 gem 'excon'
 gem 'fog'
 gem 'gchartrb', :require => 'google_chart'
@@ -26,6 +22,7 @@ gem 'rdoc'
 gem 'redis'
 gem 'rest-client', :require => 'rest_client'
 gem 'sinatra'
+gem 'validates_formatting_of', '>= 0.3.0'
 gem 'will_paginate'
 gem 'xml-simple'
 gem 'yajl-ruby', :require => 'yajl'
@@ -42,13 +39,6 @@ group :development, :test do
   gem 'guard'
   gem 'guard-cucumber'
   gem 'guard-bundler'
-end
-
-# These gems suck and do stupid things when in maintenance mode
-group :development, :test, :staging, :production do
-  gem 'delayed_job', '~> 3.0.0.pre'
-  gem 'delayed_job_active_record'
-  gem 'validates_formatting_of', '>= 0.3.0'
 end
 
 group :test do
