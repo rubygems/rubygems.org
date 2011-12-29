@@ -229,7 +229,6 @@ DEPENDENCIES
   clearance
   cucumber-rails
   database_cleaner
-  delayed_job (~> 3.0.0.pre)
   delayed_job_active_record
   excon
   factory_girl_rails
