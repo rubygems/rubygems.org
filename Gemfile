@@ -21,7 +21,6 @@ gem 'rdoc'
 gem 'redis'
 gem 'rest-client', :require => 'rest_client'
 gem 'sinatra'
-gem 'validates_formatting_of', '>= 0.3.0'
 gem 'will_paginate'
 gem 'xml-simple'
 gem 'yajl-ruby', :require => 'yajl'
@@ -55,10 +54,11 @@ group :test do
   gem 'webmock'
 end
 
-# For some reason, including this gem in the maintenance environment enables
+# For some reason, including these gems in the maintenance environment enables
 # maintenance mode
 group :development, :test, :staging, :production do
   gem 'delayed_job_active_record'
+  gem 'validates_formatting_of', '>= 0.3.0'
 end
 
 platforms :jruby do
