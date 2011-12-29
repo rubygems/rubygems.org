@@ -57,6 +57,7 @@ end
 # For some reason, including these gems in the maintenance environment enables
 # maintenance mode
 group :development, :test, :staging, :production do
+  gem 'delayed_job', '~> 3.0.0.pre'
   gem 'delayed_job_active_record'
   gem 'validates_formatting_of', '>= 0.3.0'
 end
