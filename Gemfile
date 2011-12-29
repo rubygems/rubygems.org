@@ -4,7 +4,6 @@ gem 'rails', '~> 3.0.10'
 
 gem 'airbrake'
 gem 'clearance'
-gem 'delayed_job_active_record'
 gem 'excon'
 gem 'fog'
 gem 'gchartrb', :require => 'google_chart'
@@ -54,6 +53,12 @@ group :test do
   gem 'shoulda'
   gem 'timecop'
   gem 'webmock'
+end
+
+# For some reason, including this gem in the maintenance environment enables
+# maintenance mode
+group :development, :test, :staging, :production do
+  gem 'delayed_job_active_record'
 end
 
 platforms :jruby do
