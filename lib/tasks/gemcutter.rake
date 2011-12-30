@@ -129,15 +129,20 @@ namespace :gemcutter do
       updater = Indexer.new
       html    = Nokogiri.parse(open("http://rubyforge.org/frs/?group_id=126"))
       links   = html.css("a[href*='#{version}']").map { |n| n["href"] }
-      links.each do |link|
-        url = "http://rubyforge.org#{link}"
 
-        puts "Uploading #{url}..."
-        updater.directory.files.create({
-          :body   => open(url).read,
-          :key    => "rubygems/#{File.basename(url)}",
-          :public => true
-        })
+      if links.empty?
+        abort "gem/tgz/zip for RubyGems #{version} hasn't been uploaded yet!"
+      else
+        links.each do |link|
+          url = "http://rubyforge.org#{link}"
+
+          puts "Uploading #{url}..."
+          updater.directory.files.create({
+            :body   => open(url).read,
+            :key    => "rubygems/#{File.basename(url)}",
+            :public => true
+          })
+        end
       end
     end
   end
