@@ -66,13 +66,14 @@ GEM
       capybara (>= 1.1.2)
       cucumber (>= 1.1.3)
       nokogiri (>= 1.5.0)
-    daemons (1.1.5)
+    daemons (1.0.10)
     database_cleaner (0.7.0)
-    delayed_job (3.0.0)
+    delayed_job (3.0.0.pre4)
       activesupport (~> 3.0)
-    delayed_job_active_record (0.3.1)
+      daemons (= 1.0.10)
+    delayed_job_active_record (0.2.1)
       activerecord (> 2.1.0)
-      delayed_job (~> 3.0.0)
+      delayed_job (~> 3.0.0.pre)
     diesel (0.1.5)
       railties
     diff-lcs (1.1.3)
@@ -227,7 +228,6 @@ DEPENDENCIES
   capybara
   clearance
   cucumber-rails
-  daemons
   database_cleaner
   delayed_job (~> 3.0.0.pre)
   delayed_job_active_record
