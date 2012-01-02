@@ -4,6 +4,7 @@ gem 'rails', '~> 3.0.10'
 
 gem 'airbrake'
 gem 'clearance'
+gem 'daemons'
 gem 'excon'
 gem 'fog'
 gem 'gchartrb', :require => 'google_chart'
