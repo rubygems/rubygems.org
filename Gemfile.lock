@@ -228,6 +228,7 @@ DEPENDENCIES
   capybara
   clearance
   cucumber-rails
+  daemons
   database_cleaner
   delayed_job (~> 3.0.0.pre)
   delayed_job_active_record
