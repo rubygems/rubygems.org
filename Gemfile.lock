@@ -183,8 +183,8 @@ GEM
       sexp_processor (~> 3.0)
     rubyzip (0.9.5)
     rvm (1.9.2)
-    selenium-webdriver (2.15.0)
-      childprocess (>= 0.2.1)
+    selenium-webdriver (2.16.0)
+      childprocess (>= 0.2.5)
       ffi (~> 1.0.9)
       multi_json (~> 1.0.4)
       rubyzip
