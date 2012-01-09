@@ -49,7 +49,7 @@ GEM
       rack-test (>= 0.5.4)
       selenium-webdriver (~> 2.0)
       xpath (~> 0.1.4)
-    childprocess (0.2.6)
+    childprocess (0.2.8)
       ffi (~> 1.0.6)
     clearance (0.13.0)
       diesel (~> 0.1.5)
