@@ -51,7 +51,7 @@ GEM
       xpath (~> 0.1.4)
     childprocess (0.2.8)
       ffi (~> 1.0.6)
-    clearance (0.13.0)
+    clearance (0.13.1)
       diesel (~> 0.1.5)
       rails (>= 3.0)
     coderay (0.9.8)
