@@ -459,6 +459,10 @@ table {
   color: #000;
 }
 
+.main .info #markup .description {
+  white-space: pre;
+}
+
 .main .info .meta .admin {
   padding-bottom: 2em;
   border-bottom: 1px solid #B4AC99;
