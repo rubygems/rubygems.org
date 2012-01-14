@@ -28,7 +28,7 @@
                 <div id="user-info">
                   <a href="<%= profile_path(current_user) %>">
                     <%= gravatar(32, "user_gravatar") %>
-                    <span><%= truncate(current_user.name) %></span>
+                    <span><%= truncate(current_user.name, :length => 28) %></span>
                   </a>
                 </div>
                 <ul id="signed_in">
