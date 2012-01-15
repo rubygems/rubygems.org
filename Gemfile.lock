@@ -222,7 +222,7 @@ DEPENDENCIES
   airbrake
   capistrano-ext
   capybara
-  clearance
+  clearance (~> 0.13.2)
   cucumber-rails
   daemons
   database_cleaner

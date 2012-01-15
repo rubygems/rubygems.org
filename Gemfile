@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '~> 3.0.10'
 
 gem 'airbrake'
-gem 'clearance'
+gem 'clearance', '~> 0.13.2'
 gem 'excon'
 gem 'fog'
 gem 'gchartrb', :require => 'google_chart'
