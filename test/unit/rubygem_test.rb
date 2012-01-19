@@ -169,17 +169,6 @@ class RubygemTest < ActiveSupport::TestCase
       assert_match "Name must include at least one letter, Home does not appear to be a valid URL", @rubygem.all_errors
     end
 
-    should "return dependency errors in #all_errors" do
-      @version = Factory(:version, :rubygem => @rubygem)
-      @specification = gem_specification_from_gem_fixture('test-0.0.0')
-      @specification.add_runtime_dependency "limelight", "1.0.0"
-
-      assert_raise ActiveRecord::RecordInvalid do
-        @rubygem.update_dependencies!(@version, @specification)
-      end
-      assert_match "Please specify dependencies", @rubygem.all_errors(@version)
-    end
-
     context "with a user" do
       setup do
         @user = Factory(:user)
@@ -500,21 +489,42 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
-    context "from a Gem::Specification with bad dependencies" do
+    context "from a Gem::Specification with dependencies on unknown gems" do
       setup do
         @specification = gem_specification_from_gem_fixture('with_dependencies-0.0.0')
         @rubygem       = Rubygem.new(:name => @specification.name)
         @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
       end
 
-      should "raise invalid error" do
-        assert_raise ActiveRecord::RecordInvalid do
-          @rubygem.update_attributes_from_gem_specification!(@version, @specification)
-        end
+      should "save the gem" do
+        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
 
-        assert_nil Rubygem.find_by_name('with_dependencies')
+        assert Rubygem.find_by_name('with_dependencies')
         assert_nil Rubygem.find_by_name('thoughtbot-shoulda')
         assert_nil Rubygem.find_by_name('rake')
+
+        assert_equal "rake", @version.dependencies[0].unresolved_name
+        assert_equal "thoughtbot-shoulda", @version.dependencies[1].unresolved_name
+      end
+    end
+
+    context "that was previous an unresolved dependency" do
+      setup do
+        @specification = gem_specification_from_gem_fixture('with_dependencies-0.0.0')
+        @rubygem       = Rubygem.new(:name => @specification.name)
+        @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
+
+        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
+
+        @rack_dep = @version.dependencies.first
+      end
+
+      should "update the dependency" do
+        rg = Rubygem.create(:name => "rake")
+
+        dep = Dependency.find_by_id(@rack_dep.id)
+        assert_nil dep.unresolved_name
+        assert_equal rg, dep.rubygem
       end
     end
 

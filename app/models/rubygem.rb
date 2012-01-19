@@ -12,6 +12,8 @@ class Rubygem < ActiveRecord::Base
   validate :ensure_name_format
   validates :name, :presence => true, :uniqueness => true
 
+  after_create :update_unresolved
+
   def self.with_versions
     where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)")
   end
@@ -247,5 +249,13 @@ class Rubygem < ActiveRecord::Base
     elsif name !~ NAME_PATTERN
       errors.add :name, "can only include letters, numbers, dashes, and underscores"
     end
+  end
+
+  def update_unresolved
+    Dependency.find_all_by_unresolved_name(name).each do |d|
+      d.update_resolved(self)
+    end
+
+    true
   end
 end

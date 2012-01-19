@@ -110,15 +110,24 @@ class DependencyTest < ActiveSupport::TestCase
 
     context "that refers to a Rubygem that does not exist" do
       setup do
+        @specification = gem_specification_from_gem_fixture('with_dependencies-0.0.0')
+        @rubygem       = Rubygem.new(:name => @specification.name)
+        @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
+
+        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
+
         @rubygem_name   = 'other-name'
         @gem_dependency = Gem::Dependency.new(@rubygem_name, "= 1.0.0")
       end
 
-      should "not create rubygem" do
-        dependency = Dependency.create(:gem_dependency => @gem_dependency)
-        assert dependency.new_record?
-        assert dependency.errors[:base].present?
+      should "create a Dependency but not a rubygem" do
+        dependency = Dependency.create(:gem_dependency => @gem_dependency, :version => @version)
+        assert !dependency.new_record?
+        assert !dependency.errors[:base].present?
         assert_nil Rubygem.find_by_name(@rubygem_name)
+
+        assert_equal "other-name", dependency.unresolved_name
+        assert_equal "other-name", dependency.name
       end
     end
   end

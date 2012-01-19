@@ -44,7 +44,7 @@ class Dependency < ActiveRecord::Base
   end
 
   def name
-    rubygem.name
+    unresolved_name || rubygem.name
   end
 
   def payload
@@ -78,9 +78,17 @@ class Dependency < ActiveRecord::Base
     requirements.gsub /#<YAML::Syck::DefaultKey[^>]*>/, "="
   end
 
+  def update_resolved(rubygem)
+    self.rubygem = rubygem
+    self.unresolved_name = nil
+    save!
+  end
+
   private
 
   def use_gem_dependency
+    return if self.rubygem
+
     if gem_dependency.class != Gem::Dependency
       errors.add :rubygem, "Please use Gem::Dependency to specify dependencies."
       false
@@ -88,15 +96,20 @@ class Dependency < ActiveRecord::Base
   end
 
   def use_existing_rubygem
+    return if self.rubygem
+
     self.rubygem = Rubygem.find_by_name(gem_dependency.name)
 
-    if rubygem.blank?
-      errors[:base] << "Please specify dependencies that exist on #{I18n.t(:title)}: #{gem_dependency}"
-      false
+    unless self.rubygem
+      self.unresolved_name = gem_dependency.name
     end
+
+    true
   end
 
   def parse_gem_dependency
+    return if self.requirements
+
     reqs = gem_dependency.requirements_list.join(', ')
     self.requirements = reqs.gsub(/#<YAML::Syck::DefaultKey[^>]*>/, "=")
 
