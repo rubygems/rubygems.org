@@ -105,9 +105,7 @@ class Dependency < ActiveRecord::Base
   def use_existing_rubygem
     return if self.rubygem
 
-    self.rubygem = Rubygem.find_by_name(gem_dependency.name)
-
-    unless self.rubygem
+    unless self.rubygem = Rubygem.find_by_name(gem_dependency.name)
       self.unresolved_name = gem_dependency.name
     end
 
