@@ -91,8 +91,15 @@ class Dependency < ActiveRecord::Base
 
     if gem_dependency.class != Gem::Dependency
       errors.add :rubygem, "Please use Gem::Dependency to specify dependencies."
-      false
+      return false
     end
+
+    if gem_dependency.name.empty?
+      errors.add :rubygem, "Blank is not a valid dependency name"
+      return false
+    end
+
+    true
   end
 
   def use_existing_rubygem
