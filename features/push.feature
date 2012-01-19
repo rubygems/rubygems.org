@@ -64,13 +64,14 @@ Feature: Push Gems
     When I push the gem "badauthors-1.0.0.gem" with my API key
     Then I should see "Authors must be an Array of Strings"
 
-  Scenario: User pushes gem with bad runtime dependency
+  Scenario: User pushes gem with unknown runtime dependency
     Given I am signed up as "email@person.com"
     And I have an API key for "email@person.com/password"
-    And I have a gem "baddeps" with version "1.0.0" and runtime dependency "unknown"
-    When I push the gem "baddeps-1.0.0.gem" with my API key
-    Then I should see "Please specify dependencies that exist on RubyGems.org"
-    And the rubygem "unknown" does not exist
+    And I have a gem "unkdeps" with version "1.0.0" and runtime dependency "unknown"
+    When I push the gem "unkdeps-1.0.0.gem" with my API key
+    And I visit the gem page for "unkdeps"
+    Then I should see "unkdeps"
+    And I should see "1.0.0"
 
   @wip
   Scenario: User pushes gem with missing :rubygems_version, :specification_version, :name, :version, :date, :summary, :require_paths
