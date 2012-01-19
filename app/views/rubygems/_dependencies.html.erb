@@ -9,6 +9,8 @@
           <strong><%= rubygem.name %></strong> <%= dependency.clean_requirements %>
         </a>
         </li>
+      <% elsif name = dependency.unresolved_name %>
+        <strong><%= name %></strong> <%= dependency.clean_requirements %>
       <% end %>
     <% end %>
     </ol>

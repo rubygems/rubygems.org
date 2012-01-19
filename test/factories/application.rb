@@ -10,6 +10,10 @@ FactoryGirl.define do
 
     factory :runtime_dependency do
     end
+
+    factory :unresolved_dependency do
+      gem_dependency { Gem::Dependency.new("unresolved-gem-nothere", "1.0.0") }
+    end
   end
 
   factory :linkset do
