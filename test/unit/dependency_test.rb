@@ -140,6 +140,19 @@ class DependencyTest < ActiveSupport::TestCase
     end
   end
 
+  context "with a Gem::Dependency for with a blank name" do
+    setup do
+      @gem_dependency = Gem::Dependency.new("", "= 1.0.0")
+    end
+
+    should "not create a Dependency" do
+      dependency = Dependency.create(:gem_dependency => @gem_dependency)
+      assert dependency.new_record?
+      assert dependency.errors[:rubygem].present?
+      assert_nil Rubygem.find_by_name("")
+    end
+  end
+
   context "yaml" do
     setup do
       Factory(:rubygem)
