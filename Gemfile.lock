@@ -78,7 +78,7 @@ GEM
     diff-lcs (1.1.3)
     erubis (2.6.6)
       abstract (>= 1.0.0)
-    excon (0.9.4)
+    excon (0.9.5)
     factory_girl (2.4.0)
       activesupport
     factory_girl_rails (1.5.0)
