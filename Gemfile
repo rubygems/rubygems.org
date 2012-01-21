@@ -42,7 +42,7 @@ end
 
 group :test do
   gem 'capybara'
-  gem 'cucumber-rails'
+  gem 'cucumber-rails', :require => false
   gem 'database_cleaner'
   gem 'factory_girl_rails'
   gem 'launchy'
