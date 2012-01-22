@@ -22,3 +22,15 @@ Feature: Homepage
       | fireworm-1.0.0 (20) |
       | sandworm-2.0.0 (10) |
       | sandworm-1.0.0 (5)  |
+
+  Scenario: Just updated
+    Given I am signed up as "email@person.com"
+    And I have an API key for "email@person.com/password"
+    And I have a gem "sandworm" with version "0.0.1"
+    And I have a gem "sandworm" with version "0.0.2"
+    And I push the gem "sandworm-0.0.1"
+    And I push the gem "sandworm-0.0.2"
+    
+    When I am on the homepage
+    Then I should see the following just updated gems:
+      | sandworm (0.0.2) |
