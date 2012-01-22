@@ -34,3 +34,4 @@ Feature: Homepage
     When I am on the homepage
     Then I should see the following just updated gems:
       | sandworm (0.0.2) |
+    Then I should not see the just updated gem "sandworm (0.0.1)"
