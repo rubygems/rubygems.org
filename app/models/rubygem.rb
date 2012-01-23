@@ -67,6 +67,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.monthly_dates
+    (2..31).map { |n| puts n.days.ago }
     (2..31).map { |n| n.days.ago.to_date }.reverse
   end
 
