@@ -594,7 +594,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "give the monthly dates back" do
-      Timecop.freeze DateTime.parse("2010-11-02") do
+      Timecop.freeze DateTime.parse('2010-11-02 00:00:00 +0000') do
         assert_equal(("01".."30").map { |date| "10/#{date}" }, Rubygem.monthly_short_dates)
       end
     end
