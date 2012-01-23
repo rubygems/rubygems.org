@@ -11,7 +11,7 @@ module RubygemsHelper
     if text =~ /^==+ [A-Z]/
       RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new).html_safe
     else
-      content_tag :p, text, :class => 'description'
+      content_tag :p, text
     end
   end
 
