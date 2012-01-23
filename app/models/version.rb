@@ -75,7 +75,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.just_updated(limit=5)
-    where("versions.rubygem_id IN (SELECT DISTINCT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)").
+    where("versions.rubygem_id IN (SELECT versions.rubygem_id FROM (SELECT DISTINCT ON versions.rubygem_id, versions.id FROM versions) GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)").
       joins(:rubygem).
       indexed.
       by_created_at.
