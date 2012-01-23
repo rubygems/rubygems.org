@@ -12,6 +12,15 @@ Then /^I should see the following most recent downloads:$/ do |table|
   assert_equal table.raw.flatten, page.all("#most_downloaded li a").map(&:text)
 end
 
+Then /^I should not see the just updated gem "([^"]*)"$/ do |rubygem_name|
+  assert_equal false, page.all("#just_updated li a").map(&:text).include?(rubygem_name)
+end
+
+Then /^I should see the following just updated gems:$/ do |table|
+  assert_equal table.raw.flatten, page.all("#just_updated li a").map(&:text)
+end
+
+
 Then /^I should see the version "([^\"]*)" featured$/ do |version_number|
   assert page.has_css?("h3:contains('#{version_number}')")
 end

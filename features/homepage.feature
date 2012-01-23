@@ -22,3 +22,16 @@ Feature: Homepage
       | fireworm-1.0.0 (20) |
       | sandworm-2.0.0 (10) |
       | sandworm-1.0.0 (5)  |
+
+  Scenario: Just updated
+    Given I am signed up as "email@person.com"
+    And I have an API key for "email@person.com/password"
+    And I have a gem "sandworm" with version "1.0.0"
+    And I have a gem "sandworm" with version "2.0.0"
+    And I push the gem "sandworm-1.0.0" with my API key
+    And I push the gem "sandworm-2.0.0" with my API key
+    
+    When I am on the homepage
+    Then I should see the following just updated gems:
+      | sandworm (2.0.0) |
+    Then I should not see the just updated gem "sandworm (1.0.0)"
