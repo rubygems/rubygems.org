@@ -577,7 +577,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "give counts from the past 30 days" do
-      Timecop.freeze Date.parse("2010-11-03") do
+      Timecop.freeze Time.utc(2010, 11, 03) do
         downloads = @rubygem.monthly_downloads
 
         assert_equal 30, downloads.size
@@ -594,7 +594,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "give the monthly dates back" do
-      Timecop.freeze DateTime.parse("2010-11-02") do
+      Timecop.freeze Time.utc(2010, 11, 01) do
         assert_equal(("01".."30").map { |date| "10/#{date}" }, Rubygem.monthly_short_dates)
       end
     end
