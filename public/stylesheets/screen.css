@@ -460,7 +460,7 @@ table {
 }
 
 .main .info #markup .description {
-  white-space: pre;
+  white-space: pre-wrap;
 }
 
 .main .info .meta .admin {
