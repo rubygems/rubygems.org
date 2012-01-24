@@ -54,10 +54,6 @@ class Rubygem < ActiveRecord::Base
     with_one_version.order("created_at desc").limit(limit)
   end
 
-  def self.just_updated(limit=5)
-    with_versions.order("updated_at desc").limit(limit).map { |rg| rg.versions.last }
-  end
-
   def self.downloaded(limit=5)
     with_versions.by_downloads.limit(limit)
   end
