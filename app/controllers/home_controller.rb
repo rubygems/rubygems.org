@@ -4,6 +4,6 @@ class HomeController < ApplicationController
     @downloads_count = Download.count
     @latest          = Rubygem.latest
     @downloaded      = Download.most_downloaded_today
-    @updated         = Rubygem.just_updated
+    @updated         = Version.just_updated
   end
 end
