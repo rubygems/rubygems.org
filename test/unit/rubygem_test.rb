@@ -128,7 +128,6 @@ class RubygemTest < ActiveSupport::TestCase
         assert @rubygem.public_versions_with_extra_version(@extra_version).include?(@first_version)
       end
       should "include extra version" do
-        stub(@rubygem).public_versions { [@first_version] }
         assert @rubygem.public_versions_with_extra_version(@extra_version).include?(@extra_version)
       end
       should "maintain proper ordering" do
