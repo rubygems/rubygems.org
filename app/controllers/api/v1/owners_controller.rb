@@ -1,10 +1,10 @@
 class Api::V1::OwnersController < Api::BaseController
   skip_before_filter :verify_authenticity_token, :only => [:create, :destroy]
-  before_filter :authenticate_with_api_key, :except => :show
-  before_filter :verify_authenticated_user, :except => :show
-  before_filter :find_rubygem
-  before_filter :verify_gem_ownership, :except => :show
-  respond_to :yaml, :xml, :json, :only => :show
+  before_filter :authenticate_with_api_key, :except => [:show, :gems]
+  before_filter :verify_authenticated_user, :except => [:show, :gems]
+  before_filter :find_rubygem, :except => :gems
+  before_filter :verify_gem_ownership, :except => [:show, :gems]
+  respond_to :yaml, :xml, :json, :only => [:show, :gems]
 
   def show
     respond_with @rubygem.owners
@@ -28,6 +28,16 @@ class Api::V1::OwnersController < Api::BaseController
       end
     else
       render :text => 'Owner could not be found.', :status => :not_found
+    end
+  end
+
+  def gems
+    user = User.find_by_handle(params[:handle])
+    if user
+      rubygems = user.rubygems.with_versions
+      respond_with rubygems, :yamlish => true
+    else
+      render :text => "Owner could not be found.", :status => :not_found
     end
   end
 

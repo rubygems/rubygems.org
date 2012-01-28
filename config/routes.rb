@@ -12,6 +12,8 @@ Gemcutter::Application.routes.draw do
         get :all, :on => :collection
       end
       constraints :id => Patterns::ROUTE_PATTERN, :format => /json|xml|yaml/ do
+        get 'owners/:handle/gems(.:format)', :to => 'owners#gems', :as => 'owners_gems', :constraints => {:handle => Patterns::ROUTE_PATTERN}
+
         # In Rails 3.1, the following line can be replaced with:
         # resources :downloads, :only => :show, :format => true
         get 'downloads/:id.:format', :to => 'downloads#show', :as => 'download'
