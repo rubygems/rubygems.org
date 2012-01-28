@@ -58,4 +58,12 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
              :format     => "json"}
     assert_recognizes(route, :path => '/api/v1/gems/rails/owners.json', :method => :delete)
   end
+
+  should "route GET gems" do
+    route = {:controller => 'api/v1/owners',
+             :action      => 'gems',
+             :handle      => 'example',
+             :format      => 'json'}
+    assert_recognizes(route, :path => '/api/v1/owners/example/gems.json', :method => :get)
+  end
 end

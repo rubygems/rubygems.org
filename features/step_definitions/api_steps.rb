@@ -59,6 +59,10 @@ When /^I download the rubygem "([^\"]*)" version "([^\"]*)" (\d+) times?$/ do |r
   end
 end
 
+When /^I list the gems for owner "([^\"]*)"$/ do |handle|
+  visit api_v1_owners_gems_path(:handle => handle, :format => 'json')
+end
+
 When 'I request "$url"' do |url|
   visit url
 end
