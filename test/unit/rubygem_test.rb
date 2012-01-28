@@ -119,24 +119,25 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal indexed_v1.reload, @rubygem.reload.versions.most_recent
     end
 
-    context "#public_versions_with_extra" do
+    context "#public_versions_with_extra_version" do
       setup do
         @first_version = Factory(:version, :rubygem => @rubygem, :number => '1.0.0', :position => 1)
         @extra_version = Factory(:version, :rubygem => @rubygem, :number => '0.1.0', :position => 2)
       end
       should "include public versions" do
-        assert @rubygem.public_versions_with_extra(1,@extra_version).include?(@first_version)
+        assert @rubygem.public_versions_with_extra_version(@extra_version).include?(@first_version)
       end
       should "include extra version" do
-        assert @rubygem.public_versions_with_extra(1,@extra_version).include?(@extra_version)
+        stub(@rubygem).public_versions { [@first_version] }
+        assert @rubygem.public_versions_with_extra_version(@extra_version).include?(@extra_version)
       end
       should "maintain proper ordering" do
-        versions = @rubygem.public_versions_with_extra(1,@extra_version)
+        versions = @rubygem.public_versions_with_extra_version(@extra_version)
         assert_equal versions, versions.sort_by(&:position)
       end
       should "not duplicate versions" do
-        versions = @rubygem.public_versions_with_extra(1,@first_version)
-        assert_equal 1, versions.count
+        versions = @rubygem.public_versions_with_extra_version(@first_version)
+        assert_equal versions.count, versions.uniq.count
       end
     end
   end
