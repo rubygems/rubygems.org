@@ -92,8 +92,10 @@ class Rubygem < ActiveRecord::Base
     versions.published(limit).by_position
   end
 
-  def public_versions_with_extra(limit = nil, extra)
-    (public_versions(limit) << extra).uniq.sort_by(&:position)
+  def public_versions_with_extra_version(extra_version)
+    versions = public_versions(5)
+    versions << extra_version
+    versions.uniq.sort_by(&:position)
   end
 
   def hosted?
