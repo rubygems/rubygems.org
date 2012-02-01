@@ -139,7 +139,7 @@ GEM
       rails (~> 3.0)
     pg (0.12.2)
     polyglot (0.3.3)
-    pry (0.9.8)
+    pry (0.9.8.1)
       coderay (~> 1.0.5)
       method_source (~> 0.7)
       slop (>= 2.4.3, < 3)
