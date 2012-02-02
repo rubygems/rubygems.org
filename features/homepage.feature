@@ -1,5 +1,21 @@
 Feature: Homepage
 
+  Scenario: Just updated gems for today
+    Given I am signed up as "email@person.com"
+    And I have an API key for "email@person.com/password"
+    And I have a gem "sandworm" with version "1.0.0"
+    And I have a gem "sandworm" with version "2.0.0"
+    And I have a gem "fireworm" with version "1.0.0"
+    And I push the gem "sandworm-1.0.0.gem" with my API key
+    And I push the gem "sandworm-2.0.0.gem" with my API key
+    And I push the gem "fireworm-1.0.0.gem" with my API key
+
+    When I am on the homepage
+    Then I should see the following just updated gems:
+      | fireworm (1.0.0) |
+      | sandworm (2.0.0) |
+      | sandworm (1.0.0) |
+
   Scenario: Most downloaded gems for today
     Given I am signed up as "email@person.com"
     And I have an API key for "email@person.com/password"
