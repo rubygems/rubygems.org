@@ -12,7 +12,6 @@ Feature: Homepage
 
     When I am on the homepage
     Then I should see the following just updated gems:
-      | fireworm (1.0.0) |
       | sandworm (2.0.0) |
       | sandworm (1.0.0) |
 
