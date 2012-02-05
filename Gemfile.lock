@@ -79,7 +79,7 @@ GEM
     erubis (2.6.6)
       abstract (>= 1.0.0)
     excon (0.9.5)
-    factory_girl (2.5.0)
+    factory_girl (2.5.1)
       activesupport
     factory_girl_rails (1.6.0)
       factory_girl (~> 2.5.0)
