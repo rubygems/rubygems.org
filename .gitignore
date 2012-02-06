@@ -17,3 +17,4 @@ log/*.log
 pkg/
 server/
 tmp/
+tags
