@@ -49,3 +49,5 @@ end
 #     DatabaseCleaner.strategy = :transaction
 #   end
 #
+
+Capybara.javascript_driver = :selenium
