@@ -190,7 +190,7 @@ GEM
     sinatra (1.2.8)
       rack (~> 1.1)
       tilt (>= 1.2.2, < 2.0)
-    slop (2.4.3)
+    slop (2.4.4)
     system_timer (1.2.4)
     term-ansicolor (1.0.7)
     thor (0.14.6)
