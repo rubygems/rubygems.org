@@ -57,6 +57,7 @@ ActiveRecord::Schema.define(:version => 20121124000000) do
     t.string   "bugs"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.string   "logs"
   end
 
   add_index "linksets", ["rubygem_id"], :name => "index_linksets_on_rubygem_id"

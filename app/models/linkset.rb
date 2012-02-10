@@ -2,7 +2,7 @@ class Linkset < ActiveRecord::Base
   belongs_to :rubygem
   attr_protected :rubygem_id
 
-  LINKS = %w(home wiki docs mail code bugs).freeze
+  LINKS = %w(home wiki docs mail code bugs logs).freeze
 
   LINKS.each do |url|
     validates_formatting_of url.to_sym, :using => :url, :allow_nil => true, :allow_blank => true, :message => "does not appear to be a valid URL"

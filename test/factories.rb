@@ -37,6 +37,7 @@ FactoryGirl.define do
     mail 'http://example.com'
     code 'http://example.com'
     bugs 'http://example.com'
+    logs 'http://example.com'
   end
 
   factory :ownership do
