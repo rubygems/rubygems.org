@@ -10,7 +10,7 @@ Bluepill.application("gemcutter", :log_file => log_file, :base_dir => base_dir) 
     process.restart_grace_time  = 10.seconds
 
     process.environment = { 'RAILS_ENV' => RAILS_ENV }
-    process.start_command = "bundle exec rake jobs:work"
+    process.start_command = "bash -l -c 'bundle exec rake jobs:work'"
     process.daemonize = true
 
     process.pid_file = "#{RELEASE_PATH}/shared/pids/delayed_job.pid"
