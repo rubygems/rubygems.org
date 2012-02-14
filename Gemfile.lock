@@ -200,7 +200,7 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.31)
-    validates_formatting_of (0.4.0)
+    validates_formatting_of (0.4.1)
       rails (~> 3.0)
     webmock (1.7.10)
       addressable (~> 2.2, > 2.2.5)
