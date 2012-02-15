@@ -39,12 +39,17 @@ Gemcutter::Application.routes.draw do
       resources :rubygems, :path => 'gems', :only => [:create, :show, :index], :id => Patterns::LAZY_ROUTE_PATTERN, :format => /json|xml|yaml/ do
         collection do
           delete :yank
-          put :unyank
-          get :latest
-          get :just_updated
+          put :unyank          
         end
         constraints :rubygem_id => Patterns::ROUTE_PATTERN do
           resource :owners, :only => [:show, :create, :destroy]
+        end
+      end
+
+      resource :activity, :only => [], :format => /json|xml|yaml/ do
+        collection do
+          get :latest
+          get :just_updated
         end
       end
 
