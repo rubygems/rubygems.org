@@ -46,16 +46,6 @@ class Api::V1::RubygemsController < Api::BaseController
     end
   end
 
-  def latest
-    @rubygems = Rubygem.latest(50)
-    respond_with(@rubygems, :yamlish => true)
-  end
-
-  def just_updated
-    @rubygems = Version.just_updated(50).map(&:rubygem)
-    respond_with(@rubygems, :yamlish => true)
-  end
-
   private
 
   def validate_gem_and_version
