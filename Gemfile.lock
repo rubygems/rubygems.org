@@ -34,7 +34,7 @@ GEM
       builder
     arel (2.0.10)
     builder (2.1.2)
-    capistrano (2.9.0)
+    capistrano (2.10.0)
       highline
       net-scp (>= 1.0.0)
       net-sftp (>= 2.0.0)
