@@ -24,10 +24,11 @@ gem 'xml-simple', '~> 1.1'
 gem 'multi_json', '~> 1.0.3'
 gem 'yajl-ruby', '~> 1.1', require: 'yajl/json_gem'
 gem 'validates_formatting_of', '~> 0.4'
+gem 'slim-rails', '~> 1.0'
 gem 'sass-rails', '~> 3.2'
 gem 'jquery-rails', '~> 2.0'
 gem 'rdoc', '~> 3.12'
-gem 'thin'
+gem 'thin', '~> 1.3'
 
 # These gems suck and do stupid things when in maintenance mode
 group :development, :test, :staging, :production do
