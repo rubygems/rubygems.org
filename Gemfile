@@ -25,6 +25,7 @@ gem 'multi_json', '~> 1.0.3'
 gem 'yajl-ruby', '~> 1.1', require: 'yajl/json_gem'
 gem 'validates_formatting_of', '~> 0.4'
 gem 'jquery-rails', '~> 2.0'
+gem 'rdoc', '~> 3.12'
 
 # These gems suck and do stupid things when in maintenance mode
 group :development, :test, :staging, :production do
@@ -43,7 +44,6 @@ end
 
 group :development do
   gem 'capistrano-ext', '~> 1.2'
-  gem 'rdoc', '~> 3.12'
   gem 'pry', '~> 0.9'
   gem 'rails-erd', '~> 0.4'
   gem 'guard', '~> 1.0'
