@@ -1,0 +1,8 @@
+<div class="grid_3" id="just_updated">
+  <strong><%= t '.leaderboards.updated' %></strong>
+  <ol>
+    <% @updated.each do |version| %>
+      <li> <%= link_to version.to_title, version.rubygem, title: short_info(version) %> </li>
+    <% end %>
+  </ol>
+</div>
