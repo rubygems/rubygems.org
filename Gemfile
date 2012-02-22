@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'psych'
 
-gem 'rails', '~> 3.2.1'
+gem 'rails', '~> 3.2'
 gem 'sinatra', '~> 1.3'
 gem 'pg', '~> 0.13'
 
