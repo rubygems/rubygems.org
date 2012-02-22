@@ -1,0 +1,9 @@
+<div class="title">
+  <% if @title %>
+    <h2><%= link_to @title, @title_url %></h2>
+  <% end %>
+  <% if @subtitle %>
+    <h3><%= @subtitle.html_safe %></h3>
+  <% end %>
+  <%= yield :title %>
+</div>
