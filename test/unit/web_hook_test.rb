@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
 class WebHookTest < ActiveSupport::TestCase
   should belong_to :user
@@ -74,7 +74,7 @@ class WebHookTest < ActiveSupport::TestCase
       {
         'url'           => @url,
         'failure_count' => @webhook.failure_count
-      }, ActiveSupport::JSON.decode(@webhook.to_json))
+      }, MultiJson.decode(@webhook.to_json))
     end
 
     should "show limited attributes for to_xml" do
@@ -139,11 +139,11 @@ class WebHookTest < ActiveSupport::TestCase
                          :authors           => %w[AUTHORS],
                          :description       => "DESC")
       @hook    = Factory(:web_hook)
-      @job     = WebHookJob.new(@hook.url, 'localhost:1234', @rubygem, @version)
+      @job     = Notifier.new(@hook.url, 'localhost:1234', @rubygem, @version)
     end
 
     should "have gem properties encoded in JSON" do
-      payload = ActiveSupport::JSON.decode(@job.payload)
+      payload = MultiJson.decode(@job.payload)
       assert_equal "foogem",    payload['name']
       assert_equal "3.2.1",     payload['version']
       assert_equal "DESC",      payload["info"]
@@ -156,8 +156,8 @@ class WebHookTest < ActiveSupport::TestCase
     should "send the right version out even for older gems" do
       new_version = Factory(:version, :number => "2.0.0", :rubygem => @rubygem)
       new_hook    = Factory(:web_hook)
-      job         = WebHookJob.new(new_hook.url, 'localhost:1234', @rubygem, new_version)
-      payload     = ActiveSupport::JSON.decode(job.payload)
+      job         = Notifier.new(new_hook.url, 'localhost:1234', @rubygem, new_version)
+      payload     = MultiJson.decode(job.payload)
 
       assert_equal "foogem", payload['name']
       assert_equal "2.0.0",  payload['version']
@@ -217,6 +217,20 @@ class WebHookTest < ActiveSupport::TestCase
         assert_equal index + 1, @hook.reload.failure_count
         assert @hook.global?
       end
+    end
+  end
+
+  context "yaml" do
+    setup do
+      @webhook = Factory(:web_hook)
+    end
+
+    should "return its payload" do
+      assert_equal @webhook.payload, YAML.load(@webhook.to_yaml)
+    end
+
+    should "nest properly" do
+      assert_equal [@webhook.payload], YAML.load([@webhook].to_yaml)
     end
   end
 end

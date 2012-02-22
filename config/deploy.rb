@@ -3,6 +3,9 @@ set :default_stage, "staging"
 
 require 'capistrano/ext/multistage'
 require 'bundler/capistrano'
+require 'rvm/capistrano'
+
+set :rvm_ruby_string, '1.9.3-p0'
 
 default_run_options[:pty] = true
 set :ssh_options, { :forward_agent => true }
@@ -27,3 +30,6 @@ after "deploy:update", "bluepill:quit", "bluepill:start"
 after "deploy", "deploy:cleanup"
 after "deploy:symlink", "deploy:move_in_database_yml", "deploy:move_in_secret_settings"
 before "bundle:install", "deploy:set_config_for_pg_gem"
+
+require './config/boot'
+require 'airbrake/capistrano'

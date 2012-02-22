@@ -1,8 +1,8 @@
 require 'test_helper'
 
 class Api::V1::ApiKeysControllerTest < ActionController::TestCase
-  #should_route :get, "/api_key", :action => :show
-  #should_route :put, "/api_key/reset", :action => :reset
+  # should_route :get, "/api_key", :action => :show
+  # should_route :put, "/api_key/reset", :action => :reset
 
   should "route new paths to new controller" do
     route = {:controller => 'api/v1/api_keys', :action => 'show'}
@@ -70,7 +70,8 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
   context "on GET to show" do
     should_respond_to(:json) do |body|
-      JSON.parse(body)
+      # JSON.parse(body)
+      MultiJson.decode body
     end
 
     should_respond_to(:xml) do |body|

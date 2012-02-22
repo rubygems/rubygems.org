@@ -1,82 +1,25 @@
 <% content_for :fold do %>
-  <div class="count">
-    <strong><%= t 'download_count', :count => number_with_delimiter(@downloads_count) %></strong>
-    <%= t '.gems_header', :gem_count => number_with_delimiter(@rubygems_count) %>
-  </div>
-  <div class="blurb">
-    <strong><%= t '.welcome_blurb' %></strong>
-    <br /><%= t '.find_blurb' %>
-  </div>
+  <%= render partial: 'count' %>
+  <%= render partial: 'blurb' %>
 <% end %>
 
 <div class="border">
   <div class="background">
-    <div class="learn">
-      <h3><%= t '.learn.header' %></h3>
-      <dl>
-        <dt><%= link_to t('.learn.install_rubygems', :version => RUBYGEMS_VERSION), page_url("download") %></dt>
-        <dd><%= t '.learn.rubygems_subtitle' %></dd>
-        <dt><%= link_to t('.learn.browse_docs'), "http://docs.rubygems.org" %></dt>
-        <dd><%= t '.learn.docs_subtitle' %></dd>
-        <dt><%= link_to t('.learn.gem_specification'), "http://docs.rubygems.org/read/chapter/20" %></dt>
-        <dd><%= t '.learn.spec_subtitle' %></dd>
-      </dl>
-    </div>
-    <div class="share">
-      <h3><%= t '.share.header' %></h3>
-      <dl>
-        <dt><code>gem update --system</code></dt>
-        <dd><%= t '.share.update' %></dd>
-        <dt><code>gem build foo.gemspec</code></dt>
-        <dd><%= t '.share.build' %></dd>
-        <dt><code>gem push foo-1.0.0.gem</code></dt>
-        <dd><%= t '.share.deploy' %></dd>
-      </dl>
-    </div>
+    <%= render partial: 'learn' %>
+    <%= render partial: 'share' %>
   </div>
 </div>
 
 <p class="pitch">
   <%= t('.pitch.content',
         :rubygems => content_tag(:strong, link_to(t(:title), page_url('about'))),
-        :publish => content_tag(:strong, link_to(t('.pitch.publish'), page_url('gem_docs'), :anchor => 'push')),
-        :api => content_tag(:strong, link_to(t('.pitch.api'), page_url('api_docs'))),
+        :publish => content_tag(:strong, link_to(t('.pitch.publish'), "http://guides.rubygems.org/make-your-own-gem", :anchor => 'push')),
+        :api => content_tag(:strong, link_to(t('.pitch.api'), "http://guides.rubygems.org/rubygems-org-api/")),
         :contribute => content_tag(:strong, link_to(t('.pitch.contribute'), "http://github.com/rubygems/rubygems.org"))).html_safe %>
 </p>
-<div class="leaderboards">
-  <div class="grid_3" id="new_gems">
-    <strong><%= t '.leaderboards.new' %></strong>
-    <ol>
-      <% @latest.each do |rubygem| %>
-        <li>
-          <%= link_to rubygem, rubygem, :title => short_info(rubygem.versions.most_recent) %>
-        </li>
-      <% end %>
-    </ol>
-  </div>
-  <div class="grid_3" id="most_downloaded">
-    <strong><%= t '.leaderboards.downloaded' %></strong>
-    <% if @downloaded.any? %>
-      <ol>
-        <% @downloaded.each do |version, downloads| %>
-          <li>
-            <%= link_to "#{version.rubygem.name}-#{version.number} (#{number_with_delimiter downloads})", version.rubygem, :title => short_info(version) %>
-          </li>
-        <% end %>
-      </ol>
-    <% else %>
-      <p><%= t '.leaderboards.no_downloaded' %></p>
-    <% end %>
-  </div>
-  <div class="grid_3" id="just_updated">
-    <strong><%= t '.leaderboards.updated' %></strong>
-    <ol>
-      <% @updated.each do |version| %>
-        <li>
-          <%= link_to version.to_title, version.rubygem, :title => short_info(version) %>
-        </li>
-      <% end %>
-    </ol>
-  </div>
-</div>
 
+<div class="leaderboards">
+  <%= render partial: 'newgems' %>
+  <%= render partial: 'mostdownloaded' %>
+  <%= render partial: 'justupdated' %>
+</div>

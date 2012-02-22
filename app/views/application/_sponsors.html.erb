@@ -1,0 +1,18 @@
+<ul class="sponsors">
+  <li>
+    <%= link_to t('.footer.supported_by', supporter: image_tag('rubycentral.png')).html_safe, "http://rubycentral.org", title:  t('.footer.supported_by_title', supporter: 'Ruby Central'), id: "rubycentral" %>
+  </li>
+  <li>
+    <%= link_to t('.footer.designed_by', designer: image_tag('thoughtbot.png')).html_safe, "http://thoughtbot.com", title: t('.footer.designed_by_title', designer: 'Thoughtbot'), id: "thoughtbot" %>
+  </li>
+  <li>
+    <%= link_to t('.footer.resolved_with', resolver: image_tag('dnsimple.png')).html_safe, "http://dnsimple.com",title: t('.footer.resolved_with_title', resolver: 'DNSimple'),
+    :id    => "dnsimple" %>
+  </li>
+  <li>
+    <%= link_to t('.footer.optimized_by', optimizer: image_tag('newrelic.png')).html_safe, "http://newrelic.com", title: t('.footer.optimized_by_title', optimizer: 'NewRelic'), id: "newrelic" %>
+  </li>
+  <li>
+    <%= link_to t('.footer.tracking_by', tracker: image_tag('gauges.png')).html_safe, "http://gaug.es", title: t('.footer.tracking_by_title', tracker: 'Gauges'), id: "gauges" %>
+  </li>
+</ul>

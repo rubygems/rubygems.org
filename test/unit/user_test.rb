@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
   should have_many(:ownerships)
@@ -86,7 +86,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "only have email when boiling down to JSON" do
-      json = JSON.parse(@user.to_json)
+      json = MultiJson.decode(@user.to_json)
       hash = {"email" => @user.email}
       assert_equal hash, json
     end
@@ -181,8 +181,9 @@ class UserTest < ActiveSupport::TestCase
       @ownership = Factory(:ownership, :rubygem => @rubygem, :user => @user)
       @version   = Factory(:version, :rubygem => @rubygem)
 
-      Download.incr(@version.rubygem.name, @version.full_name)
-      Download.rollover
+      Timecop.freeze(1.day.ago) do
+        Download.incr(@version.rubygem.name, @version.full_name)
+      end
       2.times { Download.incr(@version.rubygem.name, @version.full_name) }
     end
 
@@ -222,6 +223,20 @@ class UserTest < ActiveSupport::TestCase
     should "skip no gems if limit is nil" do
       assert_equal [@rubygem3, @rubygem2, @rubygem1],
         @user.rubygems_downloaded(nil, 0)
+    end
+  end
+
+  context "yaml" do
+    setup do
+      @user = Factory(:user)
+    end
+
+    should "return its payload" do
+      assert_equal @user.payload, YAML.load(@user.to_yaml)
+    end
+
+    should "nest properly" do
+      assert_equal [@user.payload], YAML.load([@user].to_yaml)
     end
   end
 end

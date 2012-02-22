@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
 class DependencyTest < ActiveSupport::TestCase
   should belong_to :rubygem
@@ -16,7 +16,7 @@ class DependencyTest < ActiveSupport::TestCase
 
     should "return JSON" do
       @dependency.save
-      json = JSON.parse(@dependency.to_json)
+      json = MultiJson.decode(@dependency.to_json)
 
       assert_equal %w[name requirements], json.keys.sort
       assert_equal @dependency.rubygem.name, json["name"]
@@ -27,10 +27,16 @@ class DependencyTest < ActiveSupport::TestCase
       @dependency.save
       xml = MultiXml.parse(@dependency.to_xml)
 
-      assert_equal %w(dependency), xml.keys.sort
-      assert_equal %w(name requirements), xml['dependency'].keys.sort
-      assert_equal @dependency.rubygem.name, xml['dependency']['name']
-      assert_equal @dependency.requirements, xml['dependency']['requirements']
+# <<<<<<< HEAD
+#       assert_equal %w(dependency), xml.keys.sort
+#       assert_equal %w(name requirements), xml['dependency'].keys.sort
+#       assert_equal @dependency.rubygem.name, xml['dependency']['name']
+#       assert_equal @dependency.requirements, xml['dependency']['requirements']
+# =======
+      assert_equal "dependency", xml.root.name
+      assert_equal %w[name requirements], xml.root.children.select(&:element?).map(&:name).sort
+      assert_equal @dependency.rubygem.name, xml.at_css("name").content
+      assert_equal @dependency.requirements, xml.at_css("requirements").content
     end
 
     should "return YAML" do
@@ -110,15 +116,24 @@ class DependencyTest < ActiveSupport::TestCase
 
     context "that refers to a Rubygem that does not exist" do
       setup do
+        @specification = gem_specification_from_gem_fixture('with_dependencies-0.0.0')
+        @rubygem       = Rubygem.new(:name => @specification.name)
+        @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
+
+        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
+
         @rubygem_name   = 'other-name'
         @gem_dependency = Gem::Dependency.new(@rubygem_name, "= 1.0.0")
       end
 
-      should "not create rubygem" do
-        dependency = Dependency.create(:gem_dependency => @gem_dependency)
-        assert dependency.new_record?
-        assert dependency.errors[:base].present?
+      should "create a Dependency but not a rubygem" do
+        dependency = Dependency.create(:gem_dependency => @gem_dependency, :version => @version)
+        assert !dependency.new_record?
+        assert !dependency.errors[:base].present?
         assert_nil Rubygem.find_by_name(@rubygem_name)
+
+        assert_equal "other-name", dependency.unresolved_name
+        assert_equal "other-name", dependency.name
       end
     end
   end
@@ -128,6 +143,34 @@ class DependencyTest < ActiveSupport::TestCase
       dependency = Dependency.create(:gem_dependency => ["ruby-ajp", ">= 0.2.0"])
       assert dependency.new_record?
       assert dependency.errors[:rubygem].present?
+    end
+  end
+
+  context "with a Gem::Dependency for with a blank name" do
+    setup do
+      @gem_dependency = Gem::Dependency.new("", "= 1.0.0")
+    end
+
+    should "not create a Dependency" do
+      dependency = Dependency.create(:gem_dependency => @gem_dependency)
+      assert dependency.new_record?
+      assert dependency.errors[:rubygem].present?
+      assert_nil Rubygem.find_by_name("")
+    end
+  end
+
+  context "yaml" do
+    setup do
+      Factory(:rubygem)
+      @dependency = Factory(:dependency)
+    end
+
+    should "return its payload" do
+      assert_equal @dependency.payload, YAML.load(@dependency.to_yaml)
+    end
+
+    should "nest properly" do
+      assert_equal [@dependency.payload], YAML.load([@dependency].to_yaml)
     end
   end
 end

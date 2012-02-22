@@ -44,7 +44,7 @@ class Dependency < ActiveRecord::Base
   end
 
   def name
-    rubygem.name
+    unresolved_name || rubygem.name
   end
 
   def payload
@@ -66,6 +66,10 @@ class Dependency < ActiveRecord::Base
     payload.to_yaml(*args)
   end
 
+  def encode_with(coder)
+    coder.tag, coder.implicit, coder.map = nil, true, payload
+  end
+
   def to_s
     "#{name} #{clean_requirements}"
   end
@@ -74,25 +78,43 @@ class Dependency < ActiveRecord::Base
     requirements.gsub /#<YAML::Syck::DefaultKey[^>]*>/, "="
   end
 
+  def update_resolved(rubygem)
+    self.rubygem = rubygem
+    self.unresolved_name = nil
+    save!
+  end
+
   private
 
   def use_gem_dependency
+    return if self.rubygem
+
     if gem_dependency.class != Gem::Dependency
       errors.add :rubygem, "Please use Gem::Dependency to specify dependencies."
-      false
+      return false
     end
+
+    if gem_dependency.name.empty?
+      errors.add :rubygem, "Blank is not a valid dependency name"
+      return false
+    end
+
+    true
   end
 
   def use_existing_rubygem
-    self.rubygem = Rubygem.find_by_name(gem_dependency.name)
+    return if self.rubygem
 
-    if rubygem.blank?
-      errors[:base] << "Please specify dependencies that exist on #{I18n.t(:title)}: #{gem_dependency}"
-      false
+    unless self.rubygem = Rubygem.find_by_name(gem_dependency.name)
+      self.unresolved_name = gem_dependency.name
     end
+
+    true
   end
 
   def parse_gem_dependency
+    return if self.requirements
+
     reqs = gem_dependency.requirements_list.join(', ')
     self.requirements = reqs.gsub(/#<YAML::Syck::DefaultKey[^>]*>/, "=")
 

@@ -1,4 +1,7 @@
 class Hostess < Sinatra::Base
+  enable :raise_errors
+  disable :show_exceptions
+
   cattr_writer :local
 
   def self.local
@@ -15,13 +18,13 @@ class Hostess < Sinatra::Base
 
   def serve_via_s3
     serve do
-      redirect Vault.s3_url_for(request.path_info)
+      redirect "http://#{$rubygems_config[:s3_domain]}#{request.path_info}"
     end
   end
 
   def serve_via_cf
     serve do
-      redirect Vault.cf_url_for(request.path_info)
+      redirect "http://#{$rubygems_config[:cf_domain]}#{request.path_info}"
     end
   end
 

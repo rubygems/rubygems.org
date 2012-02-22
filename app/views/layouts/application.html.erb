@@ -1,20 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="apple-touch-icon" href="/assets/touch-icon-iphone.png" />
-    <link rel="apple-touch-icon" sizes="72x72" href="/assets/touch-icon-ipad.png" />
-    <link rel="apple-touch-icon" sizes="114x114" href="/assets/touch-icon-iphone4.png" />
-    <link rel="fluid-icon" href="/assets/fluid-icon.png"/>
-    <link rel="search" type="application/opensearchdescription+xml" title="<%=t :title %>" href="/opensearch.xml">
-    <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
+    <%= render partial: 'metadata' %>
+    <%= render partial: 'feeds' %>
     <%= stylesheet_link_tag :application %>
     <!--[if IE 7]>
       <%= stylesheet_link_tag :ie7 %>
     <![endif]-->
-    <%= render "layouts/feeds" %>
-    <%= csrf_meta_tag %>
-    <title><%= page_title %></title>
   </head>
   <body>
     <div class="container_12">
@@ -22,41 +14,7 @@
         <h1><%= link_to t(:title), root_url, :title => "Home" %></h1>
       </div>
       <div class="grid_6 suffix_1 nav">
-        <div id="nav-cap">
-          <div id="nav">
-            <% if signed_in? %>
-                <div id="user-info">
-                  <a href="<%= profile_path(current_user) %>">
-                    <%= gravatar(32, "user_gravatar") %>
-                    <span><%= truncate(current_user.name) %></span>
-                  </a>
-                </div>
-                <ul id="signed_in">
-                  <li id="all-gems"><%= link_to t('.header.all_gems'), rubygems_url %></li>
-                  <li id="dashboard"><%= link_to t('.header.dashboard'), dashboard_url %></li>
-                  <li id="sign-out"><%= link_to t('.header.sign_out'), sign_out_path, :method => :delete %></li>
-                </ul>
-            <% else %>
-              <ul id="signed_out">
-                <li id="all-gems"><%= link_to "all gems", rubygems_url %></li>
-
-                <li id="sign-in">
-                  <a href="<%= ssl_url_for :controller => 'clearance/sessions',
-                                           :action     => 'new' %>"><%= t('.header.sign_in') %></a>
-                </li>
-
-                <li id="sign-up">
-                  <a href="<%= ssl_url_for :controller => 'clearance/users',
-                                           :action     => 'new' %>"><%= t('.header.sign_up') %></a>
-                </li>
-              </ul>
-            <% end %>
-          </div>
-        </div>
-        <%= form_tag search_url, :id => "main-search", :method => :get do %>
-          <%= text_field_tag :query, params[:query] ? params[:query] : "Search gems&hellip;".html_safe %>
-          <%= submit_tag 'Search', :id => 'search_submit', :name => nil %>
-        <% end %>
+        <%= render partial: 'navigation' %>
       </div>
       <div class="prefix_1 grid_10 suffix_1 main">
         <% flash.each do |name, msg| %>
@@ -64,60 +22,25 @@
             <div id="flash_<%= name %>"><span><%= msg %></span></div>
           </div>
         <% end %>
-        <%= render :partial => "announcements/announcement_for_all" %>
+        <%= render partial: "announcements/announcement_for_all" %>
         <% if content_for?(:fold) %>
           <div class="fold">
             <%= yield :fold %>
           </div>
         <% end %>
         <div class="info clearfix">
-          <div class="title">
-            <% if @title %>
-              <h2><%= link_to @title, @title_url %></h2>
-            <% end %>
-            <% if @subtitle %>
-              <h3><%= @subtitle.html_safe %></h3>
-            <% end %>
-            <%= yield :title %>
-          </div>
+          <%= render partial: 'info_title' %>
           <%= yield %>
         </div>
       </div>
       <div class="prefix_1 grid_10 suffix_1 footer">
-        <div class="links">
-          <%= link_to t('.footer.about'), page_url("about") %>
-          <%= link_to t('.footer.blog'), "http://blog.rubygems.org" %>
-          <%= link_to t('.footer.guides'), "http://guides.rubygems.org"  %>
-          <%= link_to t('.footer.help'), t(:help_url) %>
-          <%= link_to t('.footer.status'), "http://twitter.com/gemcutter" %>
-          <%= link_to t('.footer.source_code'), "http://github.com/rubygems/rubygems.org" %>
-          <%= link_to t('.footer.discussion_forum'), "http://groups.google.com/group/gemcutter" %>
-          <%= link_to t('.footer.statistics'), stats_url %>
-          <%= link_to t('.footer.designed_by', :designer => image_tag('thoughtbot.png')).html_safe, "http://thoughtbot.com",
-            :class => "sponsor",
-            :title => t('.footer.designed_by_title', :designer => 'Thoughtbot'),
-            :id    => "thoughtbot" %>
-          <%= link_to t('.footer.resolved_with', :resolver => image_tag('dnsimple.png')).html_safe, "http://dnsimple.com",
-            :title => t('.footer.resolved_with_title', :resolver => 'DNSimple'),
-            :class => "sponsor",
-            :id    => "dnsimple" %>
-          <%= link_to t('.footer.supported_by', :supporter => image_tag('rubycentral.png')).html_safe, "http://rubycentral.org",
-            :title => t('.footer.supported_by_title', :supporter => 'Ruby Central'),
-            :class => "sponsor",
-            :id    => "rubycentral" %>
-        </div>
+        <%= render partial: 'major' %>
+        <%= render partial: 'minor' %>
+        <%= render partial: 'sponsors' %>
       </div>
     </div>
     <%= javascript_include_tag :application %>
     <%= yield :javascript %>
-    <script type="text/javascript">
-    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-    </script>
-    <script type="text/javascript">
-    try {
-    var pageTracker = _gat._getTracker("UA-10315684-1");
-    pageTracker._trackPageview();
-    } catch(err) {}</script>
+    <%= render partial: 'analytics' %>
   </body>
 </html>

@@ -4,7 +4,7 @@ class WebHook < ActiveRecord::Base
   belongs_to :user
   belongs_to :rubygem
 
-  validates_url_format_of :url
+  validates_formatting_of :url, :using => :url, :message => "does not appear to be a valid URL"
   validate :unique_hook, :on => :create
 
   def self.global
@@ -16,7 +16,7 @@ class WebHook < ActiveRecord::Base
   end
 
   def fire(host_with_port, deploy_gem, version, delayed=true)
-    job = WebHookJob.new(self.url, host_with_port, deploy_gem, version, self.user.api_key)
+    job = Notifier.new(self.url, host_with_port, deploy_gem, version, self.user.api_key)
     if delayed
       Delayed::Job.enqueue job, :priority => PRIORITIES[:web_hook]
     else
@@ -69,6 +69,10 @@ class WebHook < ActiveRecord::Base
 
   def to_yaml(*args)
     payload.to_yaml(*args)
+  end
+
+  def encode_with(coder)
+    coder.tag, coder.implicit, coder.map = nil, true, payload
   end
 
   private

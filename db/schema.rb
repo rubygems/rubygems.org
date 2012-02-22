@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110907000456) do
+ActiveRecord::Schema.define(:version => 20120118194729) do
 
   create_table "announcements", :force => true do |t|
     t.text     "body"
@@ -39,9 +39,11 @@ ActiveRecord::Schema.define(:version => 20110907000456) do
     t.integer  "rubygem_id"
     t.integer  "version_id"
     t.string   "scope"
+    t.string   "unresolved_name"
   end
 
   add_index "dependencies", ["rubygem_id"], :name => "index_dependencies_on_rubygem_id"
+  add_index "dependencies", ["unresolved_name"], :name => "index_dependencies_on_unresolved_name"
   add_index "dependencies", ["version_id"], :name => "index_dependencies_on_version_id"
 
   create_table "linksets", :force => true do |t|

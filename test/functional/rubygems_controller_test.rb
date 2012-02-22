@@ -359,6 +359,23 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  context "On GET to show for a gem with dependencies that are unresolved" do
+    setup do
+      @version = Factory(:version)
+
+      @unresolved = Factory(:unresolved_dependency, :version => @version)
+
+      get :show, :id => @version.rubygem.to_param
+    end
+
+    should respond_with :success
+    should render_template :show
+    should assign_to(:latest_version) { @version }
+    should "show unresolved dependencies" do
+      assert page.has_content?(@unresolved.name)
+    end
+  end
+
   context "On GET to show for nonexistent gem" do
     setup do
       get :show, :id => "blahblah"

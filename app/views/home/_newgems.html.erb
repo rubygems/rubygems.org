@@ -1,0 +1,8 @@
+<div class="grid_3" id="new_gems">
+  <strong><%= t '.leaderboards.new' %></strong>
+  <ol>
+    <% @latest.each do |gem| %>
+      <li><%= link_to gem, gem, title: short_info(gem.versions.most_recent) %></li>
+    <% end %>
+  </ol>
+</div>

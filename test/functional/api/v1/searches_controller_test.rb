@@ -39,7 +39,8 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:json) do |body|
-      JSON.parse(body)
+      # JSON.parse(body)
+      MultiJson.decode body
     end
 
     should_respond_to(:xml) do |body|
