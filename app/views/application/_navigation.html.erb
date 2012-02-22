@@ -1,0 +1,33 @@
+<div id="nav-cap">
+  <div id="nav">
+    <% if signed_in? %>
+        <div id="user-info">
+          <a href="<%= profile_path(current_user) %>">
+            <%= gravatar(32, "user_gravatar") %>
+            <span><%= truncate(current_user.name) %></span>
+          </a>
+        </div>
+        <ul id="signed_in">
+          <li id="all-gems"><%= link_to t('.header.all_gems'), rubygems_url %></li>
+          <li id="dashboard"><%= link_to t('.header.dashboard'), dashboard_url %></li>
+          <li id="sign-out"><%= link_to t('.header.sign_out'), sign_out_path, :method => :delete %></li>
+        </ul>
+    <% else %>
+      <ul id="signed_out">
+        <li id="all-gems"><%= link_to "all gems", rubygems_url %></li>
+
+        <li id="sign-in">
+          <a href="<%= ssl_url_for :controller => 'clearance/sessions', :action => 'new' %>"><%= t('.header.sign_in') %></a>
+        </li>
+
+        <li id="sign-up">
+          <a href="<%= ssl_url_for :controller => 'clearance/users', :action => 'new' %>"><%= t('.header.sign_up') %></a>
+        </li>
+      </ul>
+    <% end %>
+  </div>
+</div>
+<%= form_tag search_url, :id => "main-search", :method => :get do %>
+  <%= text_field_tag :query, params[:query] ? params[:query] : "Search gems&hellip;".html_safe %>
+  <%= submit_tag 'Search', :id => 'search_submit', :name => nil %>
+<% end %>
