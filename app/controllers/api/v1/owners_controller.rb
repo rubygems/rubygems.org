@@ -1,13 +1,10 @@
 class Api::V1::OwnersController < Api::BaseController
-
   skip_before_filter :verify_authenticity_token, :only => [:create, :destroy]
-
-  before_filter :authenticate_with_api_key
-  before_filter :verify_authenticated_user
-  before_filter :find_rubygem
-  before_filter :verify_gem_ownership
-
-  respond_to :yaml, :xml, :json, :only => :show
+  before_filter :authenticate_with_api_key, :except => [:show, :gems]
+  before_filter :verify_authenticated_user, :except => [:show, :gems]
+  before_filter :find_rubygem, :except => :gems
+  before_filter :verify_gem_ownership, :except => [:show, :gems]
+  respond_to :yaml, :xml, :json, :only => [:show, :gems]
 
   def show
     respond_with @rubygem.owners
@@ -34,18 +31,22 @@ class Api::V1::OwnersController < Api::BaseController
     end
   end
 
-  protected
-
-    def find_rubygem
-      unless @rubygem = Rubygem.find_by_name(params[:rubygem_id])
-        render :text => 'This gem could not be found.', :status => :not_found
-      end
+  def gems
+    user = User.find_by_handle(params[:handle])
+    if user
+      rubygems = user.rubygems.with_versions
+      respond_with rubygems, :yamlish => true
+    else
+      render :text => "Owner could not be found.", :status => :not_found
     end
+  end
 
-    def verify_gem_ownership
-      unless current_user.rubygems.find_by_name(params[:rubygem_id])
-        render :text => 'You do not have permission to manage this gem.', :status => :unauthorized
-      end
+protected
+
+  def verify_gem_ownership
+    unless current_user.rubygems.find_by_name(params[:rubygem_id])
+      render :text => 'You do not have permission to manage this gem.', :status => :unauthorized
     end
+  end
 
 end

@@ -9,7 +9,7 @@ development:
   asset_cacher: false
 
 test:
-  host: www.example.com
+  host: localhost
   local_storage: true
   redirector: false
   delivery_method: :test

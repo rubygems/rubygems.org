@@ -35,8 +35,10 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     JSON.parse(body)
   end
 
-  should_respond_to :xml do |body|
-    MultiXml.parse(body)['users']
+  # should_respond_to :xml do |body|
+  #   MultiXml.parse(body)['users']
+  should_respond_to :json do |body|
+    MultiJson.decode body
   end
 
   should_respond_to :yaml do |body|
@@ -57,5 +59,13 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
              :rubygem_id => "rails",
              :format     => "json"}
     assert_recognizes(route, :path => '/api/v1/gems/rails/owners.json', :method => :delete)
+  end
+
+  should "route GET gems" do
+    route = {:controller => 'api/v1/owners',
+             :action      => 'gems',
+             :handle      => 'example',
+             :format      => 'json'}
+    assert_recognizes(route, :path => '/api/v1/owners/example/gems.json', :method => :get)
   end
 end

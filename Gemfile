@@ -1,33 +1,34 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
-# Load psych before anything else, since load order is significant in defining YAML::ENGINE.yamler
-gem 'psych', '~> 1.2'
-
-gem 'rails', '~> 3.2'
+gem 'rails', '~> 3.2.1'
 gem 'sinatra', '~> 1.3'
 gem 'pg', '~> 0.13'
 
+gem 'excon', '~> 0.9'
 gem 'clearance', '~> 0.15'
 gem 'fog', '~> 1.1'
 gem 'gchartrb', '~> 0.8', require: 'google_chart'
 gem 'gravtastic', '~> 3.2'
 gem 'high_voltage', '~> 1.0'
-gem 'hoptoad_notifier', '~> 2.4'
+gem 'airbrake', '~> 3.0'
 gem 'mail', '~> 2.4'
 gem 'paul_revere', '~> 0.2'
-gem 'rack', '~> 1.4'
 gem 'rack-maintenance', '~> 0.3', require: 'rack/maintenance'
 gem 'redis', '~> 2.2'
 gem 'rest-client', '~> 1.6', require: 'rest_client'
 gem 'will_paginate', '~> 3.0'
 gem 'nokogiri', '~> 1.5'
 gem 'xml-simple', '~> 1.1'
+gem 'multi_json', '~> 1.0.3'
 gem 'yajl-ruby', '~> 1.1', require: 'yajl/json_gem'
+gem 'validates_formatting_of', '~> 0.4'
+gem 'jquery-rails', '~> 2.0'
 
 # These gems suck and do stupid things when in maintenance mode
 group :development, :test, :staging, :production do
+  gem 'daemons', '~> 1.1'
   gem 'delayed_job', '~> 3.0'
-  # gem 'validates_url_format_of', '~> 0.3'
+  gem 'delayed_job_active_record', '~> 0.3'
 end
 
 group :development, :test do
@@ -39,6 +40,7 @@ group :production do
 end
 
 group :development do
+  gem 'capistrano-ext', '~> 1.2'
   gem 'rdoc', '~> 3.12'
   gem 'pry', '~> 0.9'
   gem 'rails-erd', '~> 0.4'
@@ -63,7 +65,6 @@ end
 
 group :assets do
   gem 'uglifier', '~> 1.2'
-  gem 'jquery-rails', '~> 2.0'
 end
 
 platforms :jruby do

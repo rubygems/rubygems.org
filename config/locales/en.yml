@@ -34,8 +34,8 @@ en:
         header: 'learn'
         install_rubygems: "Install RubyGems %{version}"
         rubygems_subtitle: "Ruby's premier packaging system"
-        browse_docs: "Browse the Docs"
-        docs_subtitle: "The comprehensive guide on RubyGems"
+        browse_docs: "Browse the Guides"
+        docs_subtitle: "In depth explanations, tutorials, and references"
         gem_specification: "Gem Specification"
         spec_subtitle: "Your gem's interface to the world"
       share:
@@ -67,17 +67,23 @@ en:
         about: "About"
         blog: "Blog"
         guides: "Guides"
+        contribute: "Contribute"
         help: "Help"
+        mobile: "Mobile"
         status: "Status"
         source_code: "Code"
         discussion_forum: "Discuss"
         statistics: "Stats"
-        designed_by: "designed by %{designer}"
-        designed_by_title: "Designed by %{designer}"
+        designed_by: "design by %{designer}"
+        designed_by_title: "Design by %{designer}"
         resolved_with: "resolved with %{resolver}"
         resolved_with_title: "Resolved with %{resolver}"
         supported_by: "hosted by %{supporter}"
         supported_by_title: "Hosted by %{supporter}"
+        optimized_by: "optimized by %{optimizer}"
+        optimized_by_title: "Optimized by %{optimizer}"
+        tracking_by: "tracking by %{tracker}"
+        tracking_by_title: "Tracking by %{tracker}"
 
   pages:
     about:

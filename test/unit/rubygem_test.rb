@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
 class RubygemTest < ActiveSupport::TestCase
   context "with a saved rubygem" do
@@ -74,7 +74,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "return the ruby version for most_recent if one exists" do
-      version3_mswin = Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "mswin", :built_at => 1.year.from_now)
+      Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "mswin", :built_at => 1.year.from_now)
       version3_ruby  = Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "ruby")
 
       @rubygem.reorder_versions
@@ -100,7 +100,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "return the release version for most_recent if one exists" do
-      version2pre = Factory(:version, :rubygem => @rubygem, :number => "2.0.pre", :platform => "ruby")
+      Factory(:version, :rubygem => @rubygem, :number => "2.0.pre", :platform => "ruby")
       version1 = Factory(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
 
       assert_equal version1, @rubygem.reload.versions.most_recent
@@ -113,8 +113,8 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "return the most_recent indexed version when a more recent yanked version exists" do
+      Factory(:version, :rubygem => @rubygem, :number => "0.1.1", :indexed => false)
       indexed_v1 = Factory(:version, :rubygem => @rubygem, :number => "0.1.0", :indexed => true)
-      yanked_v2  = Factory(:version, :rubygem => @rubygem, :number => "0.1.1", :indexed => false)
 
       assert_equal indexed_v1.reload, @rubygem.reload.versions.most_recent
     end
@@ -129,7 +129,7 @@ class RubygemTest < ActiveSupport::TestCase
       should "not accept #{bad_name.inspect} as a name" do
         @rubygem.name = bad_name
         assert ! @rubygem.valid?
-        assert_match /Name/, @rubygem.all_errors
+        assert_match(/Name/, @rubygem.all_errors)
       end
     end
 
@@ -167,17 +167,6 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       assert_match "Name must include at least one letter, Home does not appear to be a valid URL", @rubygem.all_errors
-    end
-
-    should "return dependency errors in #all_errors" do
-      @version = Factory(:version, :rubygem => @rubygem)
-      @specification = gem_specification_from_gem_fixture('test-0.0.0')
-      @specification.add_runtime_dependency "limelight", "1.0.0"
-
-      assert_raise ActiveRecord::RecordInvalid do
-        @rubygem.update_dependencies!(@version, @specification)
-      end
-      assert_match "Please specify dependencies", @rubygem.all_errors(@version)
     end
 
     context "with a user" do
@@ -259,7 +248,7 @@ class RubygemTest < ActiveSupport::TestCase
       run_dep = Factory(:runtime_dependency, :version => version)
       dev_dep = Factory(:development_dependency, :version => version)
 
-      hash = JSON.parse(@rubygem.to_json)
+      hash = MultiJson.decode(@rubygem.to_json)
 
       assert_equal @rubygem.name, hash["name"]
       assert_equal @rubygem.downloads, hash["downloads"]
@@ -270,8 +259,8 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal "http://#{HOST}/gems/#{@rubygem.name}", hash["project_uri"]
       assert_equal "http://#{HOST}/gems/#{@rubygem.versions.most_recent.full_name}.gem", hash["gem_uri"]
 
-      assert_equal JSON.parse(dev_dep.to_json), hash["dependencies"]["development"].first
-      assert_equal JSON.parse(run_dep.to_json), hash["dependencies"]["runtime"].first
+      assert_equal MultiJson.decode(dev_dep.to_json), hash["dependencies"]["development"].first
+      assert_equal MultiJson.decode(run_dep.to_json), hash["dependencies"]["runtime"].first
     end
 
     should "return a bunch of xml" do
@@ -302,7 +291,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "return a bunch of JSON" do
-        hash = JSON.parse(@rubygem.to_json)
+        hash = MultiJson.decode(@rubygem.to_json)
 
         assert_equal @rubygem.linkset.home, hash["homepage_uri"]
         assert_equal @rubygem.linkset.wiki, hash["wiki_uri"]
@@ -500,21 +489,42 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
-    context "from a Gem::Specification with bad dependencies" do
+    context "from a Gem::Specification with dependencies on unknown gems" do
       setup do
         @specification = gem_specification_from_gem_fixture('with_dependencies-0.0.0')
         @rubygem       = Rubygem.new(:name => @specification.name)
         @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
       end
 
-      should "raise invalid error" do
-        assert_raise ActiveRecord::RecordInvalid do
-          @rubygem.update_attributes_from_gem_specification!(@version, @specification)
-        end
+      should "save the gem" do
+        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
 
-        assert_nil Rubygem.find_by_name('with_dependencies')
+        assert Rubygem.find_by_name('with_dependencies')
         assert_nil Rubygem.find_by_name('thoughtbot-shoulda')
         assert_nil Rubygem.find_by_name('rake')
+
+        assert_equal "rake", @version.dependencies[0].unresolved_name
+        assert_equal "thoughtbot-shoulda", @version.dependencies[1].unresolved_name
+      end
+    end
+
+    context "that was previous an unresolved dependency" do
+      setup do
+        @specification = gem_specification_from_gem_fixture('with_dependencies-0.0.0')
+        @rubygem       = Rubygem.new(:name => @specification.name)
+        @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
+
+        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
+
+        @rack_dep = @version.dependencies.first
+      end
+
+      should "update the dependency" do
+        rg = Rubygem.create(:name => "rake")
+
+        dep = Dependency.find_by_id(@rack_dep.id)
+        assert_nil dep.unresolved_name
+        assert_equal rg, dep.rubygem
       end
     end
 
@@ -549,46 +559,44 @@ class RubygemTest < ActiveSupport::TestCase
       @rubygem = Factory(:rubygem)
       @version = Factory(:version, :rubygem => @rubygem)
 
-      Timecop.freeze DateTime.parse("2010-10-02")
-      1.times { Download.incr(@rubygem.name, @version.full_name) }
-      Download.rollover
+      Timecop.freeze Date.parse("2010-10-02") do
+        1.times { Download.incr(@rubygem.name, @version.full_name) }
+      end
 
-      Timecop.freeze DateTime.parse("2010-10-03")
-      6.times { Download.incr(@rubygem.name, @version.full_name) }
-      Download.rollover
+      Timecop.freeze Date.parse("2010-10-03") do
+        6.times { Download.incr(@rubygem.name, @version.full_name) }
+      end
 
-      Timecop.freeze DateTime.parse("2010-10-16")
-      4.times { Download.incr(@rubygem.name, @version.full_name) }
-      Download.rollover
+      Timecop.freeze Date.parse("2010-10-16") do
+        4.times { Download.incr(@rubygem.name, @version.full_name) }
+      end
 
-      Timecop.freeze DateTime.parse("2010-11-01")
-      2.times { Download.incr(@rubygem.name, @version.full_name) }
-      Download.rollover
-
-      Timecop.freeze DateTime.parse("2010-11-02")
+      Timecop.freeze Date.parse("2010-11-01") do
+        2.times { Download.incr(@rubygem.name, @version.full_name) }
+      end
     end
 
     should "give counts from the past 30 days" do
-      downloads = @rubygem.monthly_downloads
+      Timecop.freeze Time.utc(2010, 11, 03) do
+        downloads = @rubygem.monthly_downloads
 
-      assert_equal 30, downloads.size
-      assert_equal 6, downloads.first
-      (3..14).each do |n|
-        assert_equal 0, downloads[n.to_i - 2]
+        assert_equal 30, downloads.size
+        assert_equal 6, downloads.first
+        (3..14).each do |n|
+          assert_equal 0, downloads[n.to_i - 2]
+        end
+        assert_equal 4, downloads[13]
+        (16..30).each do |n|
+          assert_equal 0, downloads[n.to_i - 2]
+        end
+        assert_equal 2, downloads.last
       end
-      assert_equal 4, downloads[13]
-      (16..30).each do |n|
-        assert_equal 0, downloads[n.to_i - 2]
-      end
-      assert_equal 2, downloads.last
     end
 
     should "give the monthly dates back" do
-      assert_equal ("02".."31").map { |date| "10/#{date}" }, Rubygem.monthly_short_dates
-    end
-
-    teardown do
-      Timecop.return
+      Timecop.freeze Time.utc(2010, 11, 01) do
+        assert_equal(("01".."30").map { |date| "10/#{date}" }, Rubygem.monthly_short_dates)
+      end
     end
   end
 end

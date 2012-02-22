@@ -22,7 +22,7 @@ HOST             = $rubygems_config[:host]
 
 # DO NOT EDIT THIS LINE DIRECTLY
 # Instead, run: bundle exec rake gemcutter:rubygems:update VERSION=[version number] RAILS_ENV=[staging|production] S3_KEY=[key] S3_SECRET=[secret]
-RUBYGEMS_VERSION = "1.8.10"
+RUBYGEMS_VERSION = "1.8.17"
 
 module RubygemsOrg
   class Application < Rails::Application
@@ -74,5 +74,9 @@ module RubygemsOrg
     end
 
     config.plugins = [:dynamic_form]
+
+    config.plugins << :heroku_asset_cacher if $rubygems_config[:asset_cacher]
+
+    config.autoload_paths << "./app/jobs"
   end
 end

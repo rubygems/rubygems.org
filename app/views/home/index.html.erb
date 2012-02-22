@@ -16,9 +16,9 @@
       <dl>
         <dt><%= link_to t('.learn.install_rubygems', :version => RUBYGEMS_VERSION), page_url("download") %></dt>
         <dd><%= t '.learn.rubygems_subtitle' %></dd>
-        <dt><%= link_to t('.learn.browse_docs'), "http://docs.rubygems.org" %></dt>
+        <dt><%= link_to t('.learn.browse_docs'), "http://guides.rubygems.org/" %></dt>
         <dd><%= t '.learn.docs_subtitle' %></dd>
-        <dt><%= link_to t('.learn.gem_specification'), "http://docs.rubygems.org/read/chapter/20" %></dt>
+        <dt><%= link_to t('.learn.gem_specification'), "http://guides.rubygems.org/specification-reference/" %></dt>
         <dd><%= t '.learn.spec_subtitle' %></dd>
       </dl>
     </div>
@@ -39,8 +39,8 @@
 <p class="pitch">
   <%= t('.pitch.content',
         :rubygems => content_tag(:strong, link_to(t(:title), page_url('about'))),
-        :publish => content_tag(:strong, link_to(t('.pitch.publish'), page_url('gem_docs'), :anchor => 'push')),
-        :api => content_tag(:strong, link_to(t('.pitch.api'), page_url('api_docs'))),
+        :publish => content_tag(:strong, link_to(t('.pitch.publish'), "http://guides.rubygems.org/make-your-own-gem", :anchor => 'push')),
+        :api => content_tag(:strong, link_to(t('.pitch.api'), "http://guides.rubygems.org/rubygems-org-api/")),
         :contribute => content_tag(:strong, link_to(t('.pitch.contribute'), "http://github.com/rubygems/rubygems.org"))).html_safe %>
 </p>
 <div class="leaderboards">
@@ -79,4 +79,3 @@
     </ol>
   </div>
 </div>
-

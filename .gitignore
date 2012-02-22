@@ -32,5 +32,6 @@ config/rubygems.yml
 /log/*.log
 /tmp
 
-pkg/
-server/
+
+# Ignore the server generated files
+/server

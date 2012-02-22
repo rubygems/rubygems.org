@@ -1,14 +1,16 @@
-development:
+development: &DEVELOPMENT
   adapter: postgresql
   database: gemcutter_development
+  host: localhost
   pool: 5
   timeout: 5000
 
+staging:
+  <<: *DEVELOPMENT
+
 test: &TEST
-  adapter: postgresql
+  <<: *DEVELOPMENT
   database: gemcutter_test
-  pool: 5
-  timeout: 5000
   min_messages: warning
 
 cucumber:
@@ -16,4 +18,4 @@ cucumber:
 
 production:
   adapter: postgresql
-  database: gemcutter_production
+  database: gemcutter-production

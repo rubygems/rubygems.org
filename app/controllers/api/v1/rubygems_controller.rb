@@ -3,8 +3,8 @@ class Api::V1::RubygemsController < Api::BaseController
 
   before_filter :authenticate_with_api_key, :only => [:index, :create, :yank, :unyank]
   before_filter :verify_authenticated_user, :only => [:index, :create, :yank, :unyank]
-  before_filter :find_gem,                  :only => [:show]
-  before_filter :find_gem_by_name,          :only => [:yank, :unyank]
+  before_filter :find_rubygem,              :only => [:show]
+  before_filter :find_rubygem_by_name,      :only => [:yank, :unyank]
   before_filter :validate_gem_and_version,  :only => [:yank, :unyank]
 
   respond_to :json, :xml, :yaml, :on => [:index, :show, :latest, :just_updated]
@@ -44,16 +44,6 @@ class Api::V1::RubygemsController < Api::BaseController
     else
       render :text => "The version #{params[:version]} is already indexed.", :status => :unprocessable_entity
     end
-  end
-
-  def latest
-    @rubygems = Rubygem.latest(50)
-    respond_with(@rubygems, :yamlish => true)
-  end
-
-  def just_updated
-    @rubygems = Version.just_updated(50).map(&:rubygem)
-    respond_with(@rubygems, :yamlish => true)
   end
 
   private

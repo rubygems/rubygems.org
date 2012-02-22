@@ -13,12 +13,3 @@ namespace :deploy do
 end
 
 after "deploy:symlink", "deploy:move_in_staging_robots_txt"
-
-namespace :rvm do
-  desc 'Trust rvmrc file'
-  task :trust_rvmrc do
-    run "rvm rvmrc trust #{current_release}"
-  end
-end
-
-# after "deploy:update_code", "rvm:trust_rvmrc"

@@ -84,40 +84,53 @@
         </div>
       </div>
       <div class="prefix_1 grid_10 suffix_1 footer">
-        <div class="links">
-          <%= link_to t('.footer.about'), page_url("about") %>
-          <%= link_to t('.footer.blog'), "http://blog.rubygems.org" %>
-          <%= link_to t('.footer.guides'), "http://guides.rubygems.org"  %>
-          <%= link_to t('.footer.help'), t(:help_url) %>
-          <%= link_to t('.footer.status'), "http://twitter.com/gemcutter" %>
-          <%= link_to t('.footer.source_code'), "http://github.com/rubygems/rubygems.org" %>
-          <%= link_to t('.footer.discussion_forum'), "http://groups.google.com/group/gemcutter" %>
-          <%= link_to t('.footer.statistics'), stats_url %>
-          <%= link_to t('.footer.designed_by', :designer => image_tag('thoughtbot.png')).html_safe, "http://thoughtbot.com",
-            :class => "sponsor",
-            :title => t('.footer.designed_by_title', :designer => 'Thoughtbot'),
-            :id    => "thoughtbot" %>
-          <%= link_to t('.footer.resolved_with', :resolver => image_tag('dnsimple.png')).html_safe, "http://dnsimple.com",
-            :title => t('.footer.resolved_with_title', :resolver => 'DNSimple'),
-            :class => "sponsor",
-            :id    => "dnsimple" %>
-          <%= link_to t('.footer.supported_by', :supporter => image_tag('rubycentral.png')).html_safe, "http://rubycentral.org",
+        <ul class="major">
+          <li><%= link_to t('.footer.help'), t(:help_url) %></li>
+          <li><%= link_to t('.footer.guides'), "http://guides.rubygems.org"  %></li>
+          <li><%= link_to t('.footer.blog'), "http://blog.rubygems.org" %></li>
+          <li><%= link_to t('.footer.contribute'), "http://guides.rubygems.org/contributing/"  %></li>
+        </ul>
+        <ul class="minor">
+          <li><%= link_to t('.footer.mobile'), "http://m.rubygems.org" %></li>
+          <li><%= link_to t('.footer.status'), "http://twitter.com/gemcutter" %></li>
+          <li><%= link_to t('.footer.source_code'), "http://github.com/rubygems/rubygems.org" %></li>
+          <li><%= link_to t('.footer.discussion_forum'), "http://groups.google.com/group/gemcutter" %></li>
+          <li><%= link_to t('.footer.statistics'), stats_url %></li>
+          <li><%= link_to t('.footer.about'), page_url("about") %></li>
+        </ul>
+        <ul class="sponsors">
+          <li><%= link_to t('.footer.supported_by', :supporter => image_tag('rubycentral.png')).html_safe, "http://rubycentral.org",
             :title => t('.footer.supported_by_title', :supporter => 'Ruby Central'),
-            :class => "sponsor",
-            :id    => "rubycentral" %>
-        </div>
+            :id    => "rubycentral" %></li>
+          <li><%= link_to t('.footer.designed_by', :designer => image_tag('thoughtbot.png')).html_safe, "http://thoughtbot.com",
+            :title => t('.footer.designed_by_title', :designer => 'Thoughtbot'),
+            :id    => "thoughtbot" %></li>
+          <li><%= link_to t('.footer.resolved_with', :resolver => image_tag('dnsimple.png')).html_safe, "http://dnsimple.com",
+            :title => t('.footer.resolved_with_title', :resolver => 'DNSimple'),
+            :id    => "dnsimple" %></li>
+          <li><%= link_to t('.footer.optimized_by', :optimizer => image_tag('newrelic.png')).html_safe, "http://newrelic.com",
+            :title => t('.footer.optimized_by_title', :optimizer => 'NewRelic'),
+            :id    => "newrelic" %></li>
+          <li><%= link_to t('.footer.tracking_by', :tracker => image_tag('gauges.png')).html_safe, "http://gaug.es",
+            :title => t('.footer.tracking_by_title', :tracker => 'Gauges'),
+            :id    => "gauges" %></li>
+        </ul>
       </div>
     </div>
     <%= javascript_include_tag :application %>
     <%= yield :javascript %>
     <script type="text/javascript">
-    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+      var _gauges = _gauges || [];
+      (function() {
+        var t   = document.createElement('script');
+        t.type  = 'text/javascript';
+        t.async = true;
+        t.id    = 'gauges-tracker';
+        t.setAttribute('data-site-id', '4eab0ac8613f5d1583000005');
+        t.src = '//secure.gaug.es/track.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(t, s);
+      })();
     </script>
-    <script type="text/javascript">
-    try {
-    var pageTracker = _gat._getTracker("UA-10315684-1");
-    pageTracker._trackPageview();
-    } catch(err) {}</script>
   </body>
 </html>

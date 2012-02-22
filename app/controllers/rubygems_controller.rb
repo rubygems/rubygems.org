@@ -1,6 +1,6 @@
 class RubygemsController < ApplicationController
   before_filter :redirect_to_root, :only => [:edit, :update], :unless => :signed_in?
-  before_filter :find_gem, :only => [:edit, :update, :show]
+  before_filter :find_rubygem, :only => [:edit, :update, :show]
   before_filter :load_gem, :only => [:edit, :update]
 
   def index
@@ -33,13 +33,14 @@ class RubygemsController < ApplicationController
     end
   end
 
-  protected
-    def load_gem
-      if !@rubygem.owned_by?(current_user)
-        flash[:warning] = "You do not have permission to edit this gem."
-        redirect_to root_url
-      end
+protected
 
-      @linkset = @rubygem.linkset
+  def load_gem
+    if !@rubygem.owned_by?(current_user)
+      flash[:warning] = "You do not have permission to edit this gem."
+      redirect_to root_url
     end
+
+    @linkset = @rubygem.linkset
+  end
 end
