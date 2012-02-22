@@ -26,6 +26,7 @@ gem 'yajl-ruby', '~> 1.1', require: 'yajl/json_gem'
 gem 'validates_formatting_of', '~> 0.4'
 gem 'jquery-rails', '~> 2.0'
 gem 'rdoc', '~> 3.12'
+gem 'thin'
 
 # These gems suck and do stupid things when in maintenance mode
 group :development, :test, :staging, :production do
