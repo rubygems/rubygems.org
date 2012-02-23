@@ -109,7 +109,7 @@ GEM
     guard-cucumber (0.7.5)
       cucumber (>= 0.10)
       guard (>= 0.8.3)
-    high_voltage (1.1.0)
+    high_voltage (1.1.1)
     highline (1.6.11)
     i18n (0.5.0)
     jquery-rails (1.0.19)
