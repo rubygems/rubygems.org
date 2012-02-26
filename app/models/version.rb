@@ -54,6 +54,10 @@ class Version < ActiveRecord::Base
     order("versions.built_at desc")
   end
 
+  def self.by_earliest_built_at
+    order("versions.built_at asc")
+  end
+
   def self.by_created_at
     order('versions.created_at desc')
   end

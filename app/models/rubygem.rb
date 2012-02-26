@@ -236,7 +236,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def first_built_date
-    versions.by_built_at.limit(1).last.built_at
+    versions.by_earliest_built_at.limit(1).last.built_at
   end
 
   private
