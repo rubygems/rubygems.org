@@ -5,7 +5,7 @@ class Rubygem < ActiveRecord::Base
   has_many :ownerships, :dependent => :destroy
   has_many :subscribers, :through => :subscriptions, :source => :user
   has_many :subscriptions, :dependent => :destroy
-  has_many :versions, :dependent => :destroy
+  has_many :versions, :dependent => :destroy, :validate => false
   has_many :web_hooks, :dependent => :destroy
   has_one :linkset, :dependent => :destroy
 
@@ -236,7 +236,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def first_built_date
-    versions.by_built_at.limit(1).last.built_at
+    versions.by_earliest_built_at.limit(1).last.built_at
   end
 
   private
