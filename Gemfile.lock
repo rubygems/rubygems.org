@@ -180,10 +180,10 @@ GEM
     ruby-hmac (0.4.0)
     rubyzip (0.9.6.1)
     rvm (1.9.2)
-    selenium-webdriver (2.19.0)
+    selenium-webdriver (2.20.0)
       childprocess (>= 0.2.5)
-      ffi (~> 1.0.9)
-      multi_json (~> 1.0.4)
+      ffi (~> 1.0)
+      multi_json (~> 1.0)
       rubyzip
     shoulda (2.11.3)
     silent-postgres (0.1.1)
