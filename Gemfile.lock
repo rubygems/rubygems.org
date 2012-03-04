@@ -203,7 +203,7 @@ GEM
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
-    tzinfo (0.3.31)
+    tzinfo (0.3.32)
     validates_formatting_of (0.5.0)
       rails (~> 3.0)
     webmock (1.8.0)
