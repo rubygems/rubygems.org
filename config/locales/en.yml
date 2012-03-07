@@ -71,6 +71,7 @@ en:
         help: "Help"
         mobile: "Mobile"
         status: "Status"
+        uptime: "Uptime"
         source_code: "Code"
         discussion_forum: "Discuss"
         statistics: "Stats"
