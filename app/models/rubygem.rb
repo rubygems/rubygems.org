@@ -33,8 +33,7 @@ class Rubygem < ActiveRecord::Base
     conditions = <<-SQL
       versions.indexed and
         (upper(name) like upper(:query) or
-         upper(translate(name, '#{SPECIAL_CHARACTERS}', '#{' ' * SPECIAL_CHARACTERS.length}')) like upper(:query) or
-         upper(versions.description) like upper(:query))
+         upper(translate(name, '#{SPECIAL_CHARACTERS}', '#{' ' * SPECIAL_CHARACTERS.length}')) like upper(:query))
     SQL
 
     where(conditions, {:query => "%#{query.strip}%"}).
