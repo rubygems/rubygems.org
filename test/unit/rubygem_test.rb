@@ -410,7 +410,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
   end
 
-  context "when some gems exist with titles and versions that have descriptions" do
+  context "when some gems exist with titles and versions" do
     setup do
       @apple_pie = Factory(:rubygem, :name => 'apple', :downloads => 1)
       Factory(:version, :description => 'pie', :rubygem => @apple_pie)
@@ -439,17 +439,8 @@ class RubygemTest < ActiveSupport::TestCase
       assert ! Rubygem.search('orange   ').include?(@apple_pie)
     end
 
-    should "find rubygems by description on #search" do
-      assert Rubygem.search('pie').include?(@apple_pie)
-      assert Rubygem.search('julius').include?(@orange_julius)
-
-      assert ! Rubygem.search('pie').include?(@orange_julius)
-      assert ! Rubygem.search('julius').include?(@apple_pie)
-    end
-
     should "find rubygems case insensitively on #search" do
       assert Rubygem.search('APPLE').include?(@apple_pie)
-      assert Rubygem.search('PIE').include?(@apple_pie)
     end
 
     should "find rubygems with missing punctuation on #search" do
