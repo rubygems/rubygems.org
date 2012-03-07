@@ -175,6 +175,9 @@ GEM
     redis (2.2.2)
     rest-client (1.6.7)
       mime-types (>= 1.16)
+    rpm_contrib (2.1.7)
+      newrelic_rpm (>= 3.1.1)
+      newrelic_rpm (>= 3.1.1)
     rr (1.0.4)
     ruby-graphviz (0.9.21)
     ruby-hmac (0.4.0)
@@ -252,6 +255,7 @@ DEPENDENCIES
   redgreen
   redis
   rest-client
+  rpm_contrib
   rr
   rvm
   shoulda
