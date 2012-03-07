@@ -28,19 +28,30 @@ class Dependency < ActiveRecord::Base
 
   # rails,rack,bundler
   def self.for(gem_list)
-    gem_list.map do |rubygem_name|
-      versions = $redis.lrange(Rubygem.versions_key(rubygem_name), 0, -1)
-      versions.map do |version|
-        info = $redis.hgetall(Version.info_key(version))
-        deps = $redis.lrange(Dependency.runtime_key(version), 0, -1)
-        {
-          :name         => info["name"],
-          :number       => info["number"],
-          :platform     => info["platform"],
-          :dependencies => deps.map { |dep| dep.split(" ", 2) }
-        }
+    versions = $redis.pipelined do
+      gem_list.each do |rubygem_name|
+        $redis.lrange(Rubygem.versions_key(rubygem_name), 0, -1)
       end
-    end.flatten
+    end || []
+    versions.flatten!
+
+    return [] if versions.blank?
+
+    data = $redis.pipelined do
+      versions.each do |version|
+        $redis.hvals(Version.info_key(version))
+        $redis.lrange(Dependency.runtime_key(version), 0, -1)
+      end
+    end
+
+    data.in_groups_of(2).map do |(name, number, platform), deps|
+      {
+        :name         => name,
+        :number       => number,
+        :platform     => platform,
+        :dependencies => deps.map { |dep| dep.split(" ", 2) }
+      }
+    end
   end
 
   def name
