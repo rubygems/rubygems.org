@@ -28,7 +28,7 @@ set :user, "rubycentral"
 after "deploy", "deploy:migrate"
 after "deploy:update", "bluepill:quit", "bluepill:start"
 after "deploy", "deploy:cleanup"
-after "deploy:symlink", "deploy:move_in_database_yml", "deploy:move_in_secret_settings"
+after "deploy:create_symlink", "deploy:move_in_database_yml", "deploy:move_in_secret_settings"
 before "bundle:install", "deploy:set_config_for_pg_gem"
 
 require './config/boot'
