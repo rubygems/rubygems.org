@@ -12,7 +12,6 @@ gem 'high_voltage'
 gem 'jquery-rails'
 gem 'mail'
 gem 'multi_json'
-gem 'newrelic_rpm'
 gem 'paul_revere'
 gem 'pg'
 gem 'rack'
@@ -61,6 +60,9 @@ group :development, :test, :staging, :production do
   gem 'daemons'
   gem 'delayed_job', '~> 3.0.0.pre'
   gem 'delayed_job_active_record'
+
+  gem 'newrelic_rpm'
+  gem 'rpm_contrib'
 end
 
 platforms :jruby do
