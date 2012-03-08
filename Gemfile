@@ -62,7 +62,7 @@ group :development, :test, :staging, :production do
   gem 'delayed_job_active_record'
 
   gem 'newrelic_rpm'
-  gem 'rpm_contrib'
+  gem 'rpm_contrib', :git => "git://github.com/evanphx/rpm_contrib.git"
 end
 
 platforms :jruby do
