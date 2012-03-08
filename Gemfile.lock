@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/evanphx/rpm_contrib.git
-  revision: 12f7b133dac5749f6548a44ca90459b691009a51
+  revision: 617b77bce9589232c13f92eaec6b843859949445
   specs:
     rpm_contrib (2.1.6)
       newrelic_rpm (>= 3.1.1)
