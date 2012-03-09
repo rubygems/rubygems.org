@@ -133,7 +133,7 @@ GEM
     net-ssh (2.3.0)
     net-ssh-gateway (1.1.0)
       net-ssh (>= 1.99.1)
-    newrelic-redis (1.0.0)
+    newrelic-redis (1.1.0)
       newrelic_rpm (~> 3.0)
       redis (< 3.0)
     newrelic_rpm (3.3.2)
