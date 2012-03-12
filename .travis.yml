@@ -1,4 +1,5 @@
 before_script: cp config/database.yml.example config/database.yml
-script: bundle exec rake db:create db:migrate db:test:prepare default
+langauge: ruby
 rvm:
   - 1.9.2
+script: bundle exec rake db:create db:migrate db:test:prepare default
