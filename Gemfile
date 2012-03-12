@@ -50,6 +50,7 @@ group :test do
   gem 'redgreen', :platforms => :ruby_18
   gem 'rr'
   gem 'shoulda'
+  gem 'test-unit'
   gem 'timecop'
   gem 'webmock'
 end
