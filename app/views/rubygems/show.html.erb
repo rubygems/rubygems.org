@@ -25,11 +25,9 @@
         <%= link_to t('edit'), edit_rubygem_path(@rubygem), :id => "edit" if @rubygem.owned_by?(current_user) %>
         <%= download_link(@latest_version) %>
         <%= documentation_link(@latest_version, @rubygem.linkset) %>
-        <% if @latest_version.indexed %>
-          <%= subscribe_link(@rubygem) %>
-          <%= unsubscribe_link(@rubygem) %>
-          <%= link_to t('.stats_header'), rubygem_stats_path(@rubygem), :id => "stats" %>
-        <% end %>
+        <%= subscribe_link(@rubygem) if @latest_version.indexed %>
+        <%= unsubscribe_link(@rubygem) %>
+        <%= link_to t('.stats_header'), rubygem_stats_path(@rubygem), :id => "stats" if @latest_version.indexed %>
       </div>
 
       <% if @latest_version.indexed %>
