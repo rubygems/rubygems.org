@@ -89,9 +89,8 @@ class Pusher
   end
 
   def enqueue_web_hook_jobs
-    jobs = rubygem.web_hooks + WebHook.global
-    jobs.each do |job|
-      job.fire(@host_with_port, rubygem, version)
+    WebHook.for_rubygem(rubygem).each do |web_hook|
+      web_hook.fire("push", @host_with_port, rubygem, version)
     end
   end
 end

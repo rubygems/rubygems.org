@@ -140,7 +140,7 @@ class WebHookTest < ActiveSupport::TestCase
                          :authors           => %w[AUTHORS],
                          :description       => "DESC")
       @hook    = Factory(:web_hook)
-      @job     = Notifier.new(@hook.url, 'localhost:1234', @rubygem, @version)
+      @job     = Notifier.new("push", @hook.url, 'localhost:1234', @rubygem, @version)
     end
 
     should "have gem properties encoded in JSON" do
@@ -157,7 +157,7 @@ class WebHookTest < ActiveSupport::TestCase
     should "send the right version out even for older gems" do
       new_version = Factory(:version, :number => "2.0.0", :rubygem => @rubygem)
       new_hook    = Factory(:web_hook)
-      job         = Notifier.new(new_hook.url, 'localhost:1234', @rubygem, new_version)
+      job         = Notifier.new("push", new_hook.url, 'localhost:1234', @rubygem, new_version)
       payload     = MultiJson.decode(job.payload)
 
       assert_equal "foogem", payload['name']
@@ -177,7 +177,7 @@ class WebHookTest < ActiveSupport::TestCase
                          :url     => @url)
       stub_request(:post, @url)
 
-      @hook.fire('rubygems.org', @rubygem, @version, false)
+      @hook.fire("push", 'rubygems.org', @rubygem, @version, false)
     end
 
     should "include an Authorization header" do
@@ -213,7 +213,7 @@ class WebHookTest < ActiveSupport::TestCase
        Net::ProtocolError].each_with_index do |exception, index|
         stub_request(:post, @url).to_raise(exception)
 
-        @hook.fire('rubygems.org', @rubygem, @version, false)
+        @hook.fire("push", 'rubygems.org', @rubygem, @version, false)
 
         assert_equal index + 1, @hook.reload.failure_count
         assert @hook.global?
