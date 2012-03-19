@@ -22,5 +22,3 @@ Gemcutter::Application.configure do
   #   :domain         => ENV['SENDGRID_DOMAIN']
   # }
 end
-
-require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?

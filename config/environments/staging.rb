@@ -7,5 +7,3 @@ Gemcutter::Application.configure do
   config.serve_static_assets = $rubygems_config[:asset_cacher]
   config.i18n.fallbacks = true
 end
-
-require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?
