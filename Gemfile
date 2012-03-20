@@ -47,10 +47,9 @@ group :test do
   gem 'launchy'
   gem 'nokogiri'
   gem 'rack-test', :require => 'rack/test'
-  gem 'redgreen', :platforms => :ruby_18
   gem 'rr'
   gem 'shoulda'
-  gem 'test-unit'
+  #gem 'test-unit', :require => 'test/unit'
   gem 'timecop'
   gem 'webmock'
 end
@@ -68,8 +67,4 @@ end
 
 platforms :jruby do
   gem 'jruby-openssl'
-end
-
-platforms :ruby_18 do
-  gem 'system_timer'
 end

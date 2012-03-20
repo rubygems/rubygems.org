@@ -1,3 +1,5 @@
+require 'timeout'
+
 class Notifier < Struct.new(:url, :host_with_port, :rubygem, :version, :api_key)
 
   def payload
@@ -25,15 +27,7 @@ class Notifier < Struct.new(:url, :host_with_port, :rubygem, :version, :api_key)
 
   private
 
-  if RUBY_VERSION < '1.9.2'
-    def timeout(sec, &block)
-      SystemTimer.timeout_after(sec, &block)
-    end
-  else
-    require 'timeout'
-
-    def timeout(sec, &block)
-      Timeout.timeout(sec, &block)
-    end
+  def timeout(sec, &block)
+    Timeout.timeout(sec, &block)
   end
 end

@@ -2,5 +2,5 @@ before_script: cp config/database.yml.example config/database.yml
 language: ruby
 rvm:
   - 1.9.2
-  - 1.9.3
+  #- 1.9.3
 script: bundle exec rake db:create db:migrate db:test:prepare default
