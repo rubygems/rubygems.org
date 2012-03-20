@@ -4,3 +4,6 @@ rvm:
   - 1.9.2
   #- 1.9.3
 script: bundle exec rake db:create db:migrate db:test:prepare default
+branches:
+  only:
+    - master
