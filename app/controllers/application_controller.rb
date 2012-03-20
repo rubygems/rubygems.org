@@ -15,6 +15,13 @@ protected
 
   def verify_authenticated_user
     if current_user.nil?
+      # When in passenger, this forces the whole body to be read before
+      # we return a 401 and end the request. We need to do this because
+      # otherwise apache is confused why we never read the whole body.
+      #
+      # This works because request.body is a RewindableInput which will
+      # slurp all the socket data into a tempfile, satisfying apache.
+      request.body.size if request.body.respond_to? :size
       render :text => t(:please_sign_up), :status => 401
     end
   end
