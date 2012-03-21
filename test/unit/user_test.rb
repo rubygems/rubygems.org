@@ -196,33 +196,17 @@ class UserTest < ActiveSupport::TestCase
   context "rubygems" do
     setup do
       @user     = Factory(:user)
-      @rubygem1 = Factory(:rubygem, :downloads => 100)
-      @rubygem2 = Factory(:rubygem, :downloads => 200)
-      @rubygem3 = Factory(:rubygem, :downloads => 300)
-
-      [@rubygem1, @rubygem2, @rubygem3].each do |rubygem|
-        Factory(:ownership, :rubygem => rubygem, :user => @user)
+      @rubygems = [[100, 2000], [200, 1000], [300, 3000]].map do |downloads, real_downloads|
+        Factory(:rubygem, :downloads => downloads).tap do |rubygem|
+          $redis[Download.key(rubygem)] = real_downloads
+          Factory(:ownership, :rubygem => rubygem, :user => @user)
+        end
       end
     end
 
-    should "limit by default" do
-      assert_equal [@rubygem3, @rubygem2, @rubygem1],
+    should "sort by downloads method" do
+      assert_equal @rubygems.values_at(2, 0, 1),
         @user.rubygems_downloaded
-    end
-
-    should "limit by 2" do
-      assert_equal [@rubygem3, @rubygem2],
-        @user.rubygems_downloaded(2)
-    end
-
-    should "skip the first gem and limit to 2" do
-      assert_equal [@rubygem2, @rubygem1],
-        @user.rubygems_downloaded(2, 1)
-    end
-
-    should "skip no gems if limit is nil" do
-      assert_equal [@rubygem3, @rubygem2, @rubygem1],
-        @user.rubygems_downloaded(nil, 0)
     end
   end
 

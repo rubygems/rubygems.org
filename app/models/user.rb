@@ -90,9 +90,7 @@ class User < ActiveRecord::Base
     rubygems.to_a.sum(&:downloads_today)
   end
 
-  def rubygems_downloaded(limit = 10, offset = 0)
-    chain = rubygems.by_downloads.offset(offset)
-    chain = chain.limit(limit) if limit
-    chain
+  def rubygems_downloaded
+    rubygems.sort_by{ |rubygem| -rubygem.downloads }
   end
 end
