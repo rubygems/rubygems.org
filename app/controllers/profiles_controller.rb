@@ -6,8 +6,9 @@ class ProfilesController < ApplicationController
 
   def show
     @user           = User.find_by_slug!(params[:id])
-    @rubygems       = @user.rubygems_downloaded(10)
-    @extra_rubygems = @user.rubygems_downloaded(nil, 10).to_a
+    rubygems        = @user.rubygems_downloaded
+    @rubygems       = rubygems.slice!(0, 10)
+    @extra_rubygems = rubygems
   end
 
   def update
