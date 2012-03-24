@@ -567,8 +567,8 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
-    should "give counts from the past 30 days" do
-      Timecop.freeze Time.utc(2010, 11, 03) do
+    should "give counts from the past 30 days starting with the day before yesterday" do
+      Timecop.freeze Date.parse("2010-11-03") do
         downloads = @rubygem.monthly_downloads
 
         assert_equal 30, downloads.size
