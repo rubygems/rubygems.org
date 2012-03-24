@@ -316,14 +316,27 @@ class RubygemsControllerTest < ActionController::TestCase
       version = Factory(:version, :created_at => 1.minute.ago)
       @rubygem = version.rubygem
       @rubygem.yank!(version)
-      get :show, :id => @rubygem.to_param
     end
-    should respond_with :success
-    should render_template :show
-    should assign_to :rubygem
-    should "render info about the gem" do
-      assert page.has_content?("This gem has been yanked")
-      assert page.has_no_content?('Versions')
+    context 'when signed out' do
+      setup { get :show, :id => @rubygem.to_param }
+      should respond_with :success
+      should render_template :show
+      should assign_to :rubygem
+      should "render info about the gem" do
+        assert page.has_content?("This gem has been yanked")
+        assert page.has_no_content?('Versions')
+      end
+    end
+    context 'with a signed in user subscribed to the gem' do
+      setup do
+        @user = Factory(:user)
+        sign_in_as @user
+        Factory(:subscription, :user => @user, :rubygem => @rubygem)
+        get :show, :id => @rubygem.to_param
+      end
+      should "have a visible unsubscribe link" do
+        assert page.has_selector?("a[style='display:inline-block']", :content => 'Unsubscribe')
+      end
     end
   end
 
