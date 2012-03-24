@@ -48,14 +48,14 @@ class WebHookTest < ActiveSupport::TestCase
     should "be able to create a webhook for a url under this user and gem" do
       webhook = WebHook.new(:user    => @user,
                             :url     => "http://example.net")
-      assert_valid webhook
+      assert webhook.valid?
     end
 
     should "be able to create a webhook for another user under this url" do
       other_user = Factory(:user)
       webhook = WebHook.new(:user    => other_user,
                             :url     => @url)
-      assert_valid webhook
+      assert webhook.valid?
     end
   end
 
@@ -105,7 +105,7 @@ class WebHookTest < ActiveSupport::TestCase
       webhook = WebHook.new(:user    => @user,
                             :rubygem => @rubygem,
                             :url     => "http://example.net")
-      assert_valid webhook
+      assert webhook.valid?
     end
 
     should "be able to create a webhook for another rubygem under this user and url" do
@@ -113,7 +113,7 @@ class WebHookTest < ActiveSupport::TestCase
       webhook = WebHook.new(:user    => @user,
                             :rubygem => other_rubygem,
                             :url     => @url)
-      assert_valid webhook
+      assert webhook.valid?
     end
 
     should "be able to create a webhook for another user under this rubygem and url" do
@@ -121,13 +121,13 @@ class WebHookTest < ActiveSupport::TestCase
       webhook = WebHook.new(:user    => other_user,
                             :rubygem => @rubygem,
                             :url     => @url)
-      assert_valid webhook
+      assert webhook.valid?
     end
 
     should "be able to create a global webhook under this user and url" do
       webhook = WebHook.new(:user    => @user,
                             :url     => @url)
-      assert_valid webhook
+      assert webhook.valid?
     end
   end
 

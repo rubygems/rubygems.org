@@ -11,7 +11,7 @@ class DependencyTest < ActiveSupport::TestCase
     end
 
     should "be valid with factory" do
-      assert_valid @dependency
+      assert @dependency.valid?
     end
 
     should "return JSON" do
