@@ -1,9 +1,10 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 3.1.0'
+gem 'rails', '~> 3.2.2'
 
 gem 'airbrake'
 gem 'clearance', '~> 0.13.2'
+gem 'dynamic_form'
 gem 'excon'
 gem 'fog'
 gem 'gchartrb', :require => 'google_chart'
@@ -25,6 +26,10 @@ gem 'will_paginate'
 gem 'xml-simple'
 gem 'yajl-ruby', :require => 'yajl'
 
+# enable if on heroku, make sure to toss this into an initializer:
+#     Rails.application.config.middleware.use HerokuAssetCacher
+#gem 'heroku_asset_cacher', :git => "git@github.com/qrush/heroku_asset_cacher"
+
 group :development do
   gem 'capistrano-ext'
   gem 'rails-erd'
@@ -33,7 +38,6 @@ group :development do
 end
 
 group :development, :test do
-  gem 'silent-postgres'
   gem 'guard'
   gem 'guard-cucumber'
   gem 'guard-bundler'
