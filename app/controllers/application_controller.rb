@@ -31,7 +31,7 @@ protected
     if @rubygem.blank?
       respond_to do |format|
         format.html do
-          render :file => "public/404.html", :status => :not_found, :layout => false
+          render :file => "public/404", :status => :not_found, :layout => false, :formats => [:html]
         end
         format.json do
           render :text => "This rubygem could not be found.", :status => :not_found
