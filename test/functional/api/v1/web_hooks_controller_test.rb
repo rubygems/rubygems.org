@@ -140,7 +140,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         should_respond_to(:xml) do |body|
           children = Nokogiri.parse(body).root.children
           Hash.from_xml(children[1].to_xml).update(
-            'all gems' => [Hash.from_xml(children[5].to_xml)['web_hook']]
+            'all gems' => Hash.from_xml(children[3].to_xml).delete('all_gems')
           )
         end
 

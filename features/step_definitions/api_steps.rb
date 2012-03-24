@@ -8,12 +8,12 @@ end
 When /^I push the gem "([^\"]*)" with my API key$/ do |name|
   api_key_header
   path = File.join(TEST_DIR, name)
-  page.driver.post api_v1_rubygems_path, File.read(path)
+  page.driver.post api_v1_rubygems_path, File.read(path), {"CONTENT_TYPE" => "application/octet-stream"}
 end
 
 When /^I push an invalid .gem file$/ do
   api_key_header
-  page.driver.post api_v1_rubygems_path, 'ZZZZZZZZZZZZZZZZZZ'
+  page.driver.post api_v1_rubygems_path, 'ZZZZZZZZZZZZZZZZZZ', {"CONTENT_TYPE" => "application/octet-stream"}
 end
 
 When /^I yank the gem "([^\"]*)" version "([^\"]*)" with my API key$/ do |name, version_number|
