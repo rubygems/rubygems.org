@@ -5,7 +5,7 @@ class RubyforgerTest < ActiveSupport::TestCase
     setup do
       @email      = "blah@blah.com"
       @password   = "secret"
-      @rubyforger = Factory(:rubyforger, :email              => @email,
+      @rubyforger = FactoryGirl.create(:rubyforger, :email              => @email,
                                          :encrypted_password => Digest::MD5.hexdigest(@password))
     end
 
@@ -23,7 +23,7 @@ class RubyforgerTest < ActiveSupport::TestCase
     end
 
     should "transfer over with valid password" do
-      user = Factory(:user, :email => @email)
+      user = FactoryGirl.create(:user, :email => @email)
 
       assert_equal user, Rubyforger.transfer(@email, @password)
       assert User.authenticate(@email, @password)
@@ -31,7 +31,7 @@ class RubyforgerTest < ActiveSupport::TestCase
     end
 
     should "fail transfer when password is wrong" do
-      Factory(:user, :email => @email)
+      FactoryGirl.create(:user, :email => @email)
 
       assert_nil Rubyforger.transfer(@email, "trogdor")
       assert Rubyforger.exists?(@rubyforger.id)

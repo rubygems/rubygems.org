@@ -71,8 +71,8 @@ class RubygemsHelperTest < ActionView::TestCase
 
   context "options for individual stats" do
     setup do
-      @rubygem = Factory(:rubygem)
-      @versions = (1..3).map { Factory(:version, :rubygem => @rubygem) }
+      @rubygem = FactoryGirl.create(:rubygem)
+      @versions = (1..3).map { FactoryGirl.create(:version, :rubygem => @rubygem) }
     end
 
     should "show the overview link first" do
@@ -97,7 +97,7 @@ class RubygemsHelperTest < ActionView::TestCase
     end
 
     should "create links to owners gem overviews" do
-      users = Array.new(2) { Factory(:user) }
+      users = Array.new(2) { FactoryGirl.create(:user) }
       create_gem(*users)
       expected_links = users.sort_by(&:id).map { |u|
         link_to gravatar(48, "gravatar-#{u.id}", u), profile_path(u.display_id), :alt => u.display_handle,

@@ -3,15 +3,15 @@ require 'test_helper'
 class SubscriptionsControllerTest < ActionController::TestCase
   context "When logged in" do
     setup do
-      @user = Factory(:user)
+      @user = FactoryGirl.create(:user)
       sign_in_as(@user)
     end
   end
 
   context "On POST to create for a gem that the user is not subscribed to" do
     setup do
-      @rubygem = Factory(:rubygem)
-      Factory(:version, :rubygem => @rubygem)
+      @rubygem = FactoryGirl.create(:rubygem)
+      FactoryGirl.create(:version, :rubygem => @rubygem)
       post :create, :rubygem_id => @rubygem.to_param, :format => 'js'
     end
 
@@ -24,9 +24,9 @@ class SubscriptionsControllerTest < ActionController::TestCase
 
   context "On POST to create for a gem that the user is subscribed to" do
     setup do
-      @rubygem = Factory(:rubygem)
-      Factory(:version, :rubygem => @rubygem)
-      Factory(:subscription, :rubygem => @rubygem, :user => @user)
+      @rubygem = FactoryGirl.create(:rubygem)
+      FactoryGirl.create(:version, :rubygem => @rubygem)
+      FactoryGirl.create(:subscription, :rubygem => @rubygem, :user => @user)
       post :create, :rubygem_id => @rubygem.to_param, :format => 'js'
     end
 
@@ -36,8 +36,8 @@ class SubscriptionsControllerTest < ActionController::TestCase
 
   context "On DELETE to destroy for a gem that the user is not subscribed to" do
     setup do
-      @rubygem = Factory(:rubygem)
-      Factory(:version, :rubygem => @rubygem)
+      @rubygem = FactoryGirl.create(:rubygem)
+      FactoryGirl.create(:version, :rubygem => @rubygem)
       delete :destroy, :rubygem_id => @rubygem.to_param, :format => 'js'
     end
 
@@ -47,9 +47,9 @@ class SubscriptionsControllerTest < ActionController::TestCase
 
   context "On DELETE to destroy for a gem that the user is subscribed to" do
     setup do
-      @rubygem = Factory(:rubygem)
-      Factory(:version, :rubygem => @rubygem)
-      Factory(:subscription, :rubygem => @rubygem, :user => @user)
+      @rubygem = FactoryGirl.create(:rubygem)
+      FactoryGirl.create(:version, :rubygem => @rubygem)
+      FactoryGirl.create(:subscription, :rubygem => @rubygem, :user => @user)
       delete :destroy, :rubygem_id => @rubygem.to_param, :format => 'js'
     end
 

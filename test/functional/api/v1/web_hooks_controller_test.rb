@@ -10,7 +10,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
   context "When not logged in" do
     should "forbid access when creating a web hook" do
-      rubygem = Factory(:rubygem)
+      rubygem = FactoryGirl.create(:rubygem)
       post :create, :gem_name => rubygem.name, :url => "http://example.com"
       assert @response.body =~ /Access Denied/
       assert WebHook.count.zero?
@@ -27,7 +27,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
     end
 
     should "forbid access when removing a web hook" do
-      hook = Factory(:web_hook)
+      hook = FactoryGirl.create(:web_hook)
       delete :remove, :gem_name => hook.rubygem.name, :url => hook.url
       assert @response.body =~ /Access Denied/
       assert_equal 1, WebHook.count
@@ -51,14 +51,14 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
   context "When logged in" do
     setup do
       @url = "http://example.org"
-      @user = Factory(:user)
+      @user = FactoryGirl.create(:user)
       @request.env["Authorization"] = @user.api_key
     end
 
     context "with the gemcutter gem" do
       setup do
-        @gemcutter = Factory(:rubygem, :name => "gemcutter")
-        Factory(:version, :rubygem => @gemcutter)
+        @gemcutter = FactoryGirl.create(:rubygem, :name => "gemcutter")
+        FactoryGirl.create(:version, :rubygem => @gemcutter)
       end
 
       context "On POST to fire for all gems" do
@@ -90,8 +90,8 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
     context "with a rubygem" do
       setup do
-        @rubygem = Factory(:rubygem)
-        Factory(:version, :rubygem => @rubygem)
+        @rubygem = FactoryGirl.create(:rubygem)
+        FactoryGirl.create(:version, :rubygem => @rubygem)
       end
 
       context "On POST to fire for a specific gem" do
@@ -122,10 +122,10 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
       context "On GET to index with some owned hooks" do
         setup do
-          @rubygem_hook = Factory(:web_hook,
+          @rubygem_hook = FactoryGirl.create(:web_hook,
                                   :user    => @user,
                                   :rubygem => @rubygem)
-          @global_hook  = Factory(:global_web_hook,
+          @global_hook  = FactoryGirl.create(:global_web_hook,
                                   :user    => @user)
         end
 
@@ -183,11 +183,11 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
       context "with some unowned hooks" do
         setup do
-          @other_user   = Factory(:user)
-          @rubygem_hook = Factory(:web_hook,
+          @other_user   = FactoryGirl.create(:user)
+          @rubygem_hook = FactoryGirl.create(:web_hook,
                                   :user    => @other_user,
                                   :rubygem => @rubygem)
-          @global_hook  = Factory(:global_web_hook,
+          @global_hook  = FactoryGirl.create(:global_web_hook,
                                   :user    => @other_user)
         end
 
@@ -241,7 +241,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
       context "on POST to create hook that already exists" do
         setup do
-          Factory(:web_hook, :rubygem => @rubygem, :url => @url, :user => @user)
+          FactoryGirl.create(:web_hook, :rubygem => @rubygem, :url => @url, :user => @user)
           post :create, :gem_name => @rubygem.name, :url => @url
         end
 
@@ -286,7 +286,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
     context "on POST to global web hook that already exists" do
       setup do
-        Factory(:global_web_hook, :url => @url, :user => @user)
+        FactoryGirl.create(:global_web_hook, :url => @url, :user => @user)
         post :create, :gem_name => WebHook::GLOBAL_PATTERN, :url => @url
       end
 

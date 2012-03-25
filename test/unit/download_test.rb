@@ -2,8 +2,8 @@ require 'test_helper'
 
 class DownloadTest < ActiveSupport::TestCase
   should "load up all downloads with just raw strings and process them" do
-    rubygem = Factory(:rubygem, :name => "some-stupid13-gem42-9000")
-    version = Factory(:version, :rubygem => rubygem)
+    rubygem = FactoryGirl.create(:rubygem, :name => "some-stupid13-gem42-9000")
+    version = FactoryGirl.create(:version, :rubygem => rubygem)
 
     3.times do
       Download.incr(rubygem.name, version.full_name)
@@ -16,9 +16,9 @@ class DownloadTest < ActiveSupport::TestCase
   end
 
   should "track platform gem downloads correctly" do
-    rubygem = Factory(:rubygem)
-    version = Factory(:version, :rubygem => rubygem, :platform => "mswin32-60")
-    other_platform_version = Factory(:version, :rubygem => rubygem, :platform => "mswin32")
+    rubygem = FactoryGirl.create(:rubygem)
+    version = FactoryGirl.create(:version, :rubygem => rubygem, :platform => "mswin32-60")
+    other_platform_version = FactoryGirl.create(:version, :rubygem => rubygem, :platform => "mswin32")
 
     Download.incr(rubygem.name, version.full_name)
 
@@ -32,15 +32,15 @@ class DownloadTest < ActiveSupport::TestCase
   end
 
   should "find most downloaded today" do
-    @rubygem_1 = Factory(:rubygem)
-    @version_1 = Factory(:version, :rubygem => @rubygem_1)
-    @version_2 = Factory(:version, :rubygem => @rubygem_1)
+    @rubygem_1 = FactoryGirl.create(:rubygem)
+    @version_1 = FactoryGirl.create(:version, :rubygem => @rubygem_1)
+    @version_2 = FactoryGirl.create(:version, :rubygem => @rubygem_1)
 
-    @rubygem_2 = Factory(:rubygem)
-    @version_3 = Factory(:version, :rubygem => @rubygem_2)
+    @rubygem_2 = FactoryGirl.create(:rubygem)
+    @version_3 = FactoryGirl.create(:version, :rubygem => @rubygem_2)
 
-    @rubygem_3 = Factory(:rubygem)
-    @version_4 = Factory(:version, :rubygem => @rubygem_3)
+    @rubygem_3 = FactoryGirl.create(:rubygem)
+    @version_4 = FactoryGirl.create(:version, :rubygem => @rubygem_3)
 
     Timecop.freeze(Date.today - 1) do
       Download.incr(@rubygem_1.name, @version_1.full_name)
@@ -70,15 +70,15 @@ class DownloadTest < ActiveSupport::TestCase
   end
 
   should "find most downloaded all time" do
-    @rubygem_1 = Factory(:rubygem)
-    @version_1 = Factory(:version, :rubygem => @rubygem_1)
-    @version_2 = Factory(:version, :rubygem => @rubygem_1)
+    @rubygem_1 = FactoryGirl.create(:rubygem)
+    @version_1 = FactoryGirl.create(:version, :rubygem => @rubygem_1)
+    @version_2 = FactoryGirl.create(:version, :rubygem => @rubygem_1)
 
-    @rubygem_2 = Factory(:rubygem)
-    @version_3 = Factory(:version, :rubygem => @rubygem_2)
+    @rubygem_2 = FactoryGirl.create(:rubygem)
+    @version_3 = FactoryGirl.create(:version, :rubygem => @rubygem_2)
 
-    @rubygem_3 = Factory(:rubygem)
-    @version_4 = Factory(:version, :rubygem => @rubygem_3)
+    @rubygem_3 = FactoryGirl.create(:rubygem)
+    @version_4 = FactoryGirl.create(:version, :rubygem => @rubygem_3)
 
     Download.incr(@rubygem_1.name, @version_1.full_name)
     Download.incr(@rubygem_1.name, @version_2.full_name)
@@ -101,15 +101,15 @@ class DownloadTest < ActiveSupport::TestCase
   end
 
   should "find counts per day for versions" do
-    @rubygem_1 = Factory(:rubygem)
-    @version_1 = Factory(:version, :rubygem => @rubygem_1)
-    @version_2 = Factory(:version, :rubygem => @rubygem_1)
+    @rubygem_1 = FactoryGirl.create(:rubygem)
+    @version_1 = FactoryGirl.create(:version, :rubygem => @rubygem_1)
+    @version_2 = FactoryGirl.create(:version, :rubygem => @rubygem_1)
 
-    @rubygem_2 = Factory(:rubygem)
-    @version_3 = Factory(:version, :rubygem => @rubygem_2)
+    @rubygem_2 = FactoryGirl.create(:rubygem)
+    @version_3 = FactoryGirl.create(:version, :rubygem => @rubygem_2)
 
-    @rubygem_3 = Factory(:rubygem)
-    @version_4 = Factory(:version, :rubygem => @rubygem_3)
+    @rubygem_3 = FactoryGirl.create(:rubygem)
+    @version_4 = FactoryGirl.create(:version, :rubygem => @rubygem_3)
 
     Timecop.freeze(1.day.ago) do
       Download.incr(@rubygem_1, @version_1.full_name)
@@ -133,9 +133,9 @@ class DownloadTest < ActiveSupport::TestCase
   end
 
   should "find download count by gem name" do
-    rubygem = Factory(:rubygem)
-    version1 = Factory(:version, :rubygem => rubygem)
-    version2 = Factory(:version, :rubygem => rubygem)
+    rubygem = FactoryGirl.create(:rubygem)
+    version1 = FactoryGirl.create(:version, :rubygem => rubygem)
+    version2 = FactoryGirl.create(:version, :rubygem => rubygem)
 
     3.times { Download.incr(rubygem.name, version1.full_name) }
     2.times { Download.incr(rubygem.name, version2.full_name) }
@@ -154,8 +154,8 @@ class DownloadTest < ActiveSupport::TestCase
   end
 
   should "delete all old today keys except the current" do
-    rubygem = Factory(:rubygem)
-    version = Factory(:version, :rubygem => rubygem)
+    rubygem = FactoryGirl.create(:rubygem)
+    version = FactoryGirl.create(:version, :rubygem => rubygem)
     10.times do |n|
       Timecop.freeze(n.days.ago) do
         3.times { Download.incr(rubygem.name, version.full_name) }

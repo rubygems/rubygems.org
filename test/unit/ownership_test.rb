@@ -12,8 +12,8 @@ class OwnershipTest < ActiveSupport::TestCase
 
   context "with ownership" do
     setup do
-      @ownership = Factory(:ownership)
-      Factory(:version, :rubygem => @ownership.rubygem)
+      @ownership = FactoryGirl.create(:ownership)
+      FactoryGirl.create(:version, :rubygem => @ownership.rubygem)
     end
 
     subject { @ownership }
@@ -23,9 +23,9 @@ class OwnershipTest < ActiveSupport::TestCase
 
   context "with multiple ownerships on the same rubygem" do
     setup do
-      @rubygem       = Factory(:rubygem)
-      @ownership_one = Factory(:ownership, :rubygem => @rubygem)
-      @ownership_two = Factory(:ownership, :rubygem => @rubygem)
+      @rubygem       = FactoryGirl.create(:rubygem)
+      @ownership_one = FactoryGirl.create(:ownership, :rubygem => @rubygem)
+      @ownership_two = FactoryGirl.create(:ownership, :rubygem => @rubygem)
     end
 
     should "allow deletion of one ownership" do
