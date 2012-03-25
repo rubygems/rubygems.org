@@ -3,13 +3,13 @@ require 'test_helper'
 class RubygemsControllerTest < ActionController::TestCase
   context "When logged in" do
     setup do
-      @user = Factory(:user)
+      @user = FactoryGirl.create(:user)
       sign_in_as(@user)
     end
 
     context "On GET to show for any gem" do
       setup do
-        @owners = [@user, Factory(:user)]
+        @owners = [@user, FactoryGirl.create(:user)]
         create_gem(*@owners)
         get :show, :id => @rubygem.to_param
       end
@@ -26,7 +26,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to show for any gem without a linkset" do
       setup do
-        @owners = [@user, Factory(:user)]
+        @owners = [@user, FactoryGirl.create(:user)]
         create_gem(*@owners)
         @rubygem.linkset = nil
         get :show, :id => @rubygem.to_param
@@ -40,7 +40,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to show for another user's gem" do
       setup do
-        @rubygem = Factory(:rubygem)
+        @rubygem = FactoryGirl.create(:rubygem)
         get :show, :id => @rubygem.to_param
       end
 
@@ -68,9 +68,9 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to show for a gem that the user is subscribed to" do
       setup do
-        @rubygem = Factory(:rubygem)
-        Factory(:version, :rubygem => @rubygem)
-        Factory(:subscription, :rubygem => @rubygem, :user => @user)
+        @rubygem = FactoryGirl.create(:rubygem)
+        FactoryGirl.create(:version, :rubygem => @rubygem)
+        FactoryGirl.create(:subscription, :rubygem => @rubygem, :user => @user)
         get :show, :id => @rubygem.to_param
       end
 
@@ -86,8 +86,8 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to show for a gem that the user is not subscribed to" do
       setup do
-        @rubygem = Factory(:rubygem)
-        Factory(:version, :rubygem => @rubygem)
+        @rubygem = FactoryGirl.create(:rubygem)
+        FactoryGirl.create(:version, :rubygem => @rubygem)
         get :show, :id => @rubygem.to_param
       end
 
@@ -123,7 +123,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to edit for another user's gem" do
       setup do
-        @other_user = Factory(:user)
+        @other_user = FactoryGirl.create(:user)
         create_gem(@other_user)
         get :edit, :id => @rubygem.to_param
       end
@@ -169,11 +169,11 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to index with no parameters" do
     setup do
       @gems = (1..3).map do |n|
-        gem = Factory(:rubygem, :name => "agem#{n}")
-        Factory(:version, :rubygem => gem)
+        gem = FactoryGirl.create(:rubygem, :name => "agem#{n}")
+        FactoryGirl.create(:version, :rubygem => gem)
         gem
       end
-      Factory(:rubygem, :name => "zeta")
+      FactoryGirl.create(:rubygem, :name => "zeta")
       get :index
     end
 
@@ -193,9 +193,9 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to index as an atom feed" do
     setup do
-      @versions = (1..2).map { |n| Factory(:version, :created_at => n.hours.ago) }
+      @versions = (1..2).map { |n| FactoryGirl.create(:version, :created_at => n.hours.ago) }
       # just to make sure one has a different platform and a summary
-      @versions << Factory(:version, :created_at => 3.hours.ago, :platform => "win32", :summary => "&")
+      @versions << FactoryGirl.create(:version, :created_at => 3.hours.ago, :platform => "win32", :summary => "&")
       get :index, :format => "atom"
     end
 
@@ -226,9 +226,9 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to index with a letter" do
     setup do
-      @gems = (1..3).map { |n| Factory(:rubygem, :name => "agem#{n}") }
-      @zgem = Factory(:rubygem, :name => "zeta")
-      Factory(:version, :rubygem => @zgem)
+      @gems = (1..3).map { |n| FactoryGirl.create(:rubygem, :name => "agem#{n}") }
+      @zgem = FactoryGirl.create(:rubygem, :name => "zeta")
+      FactoryGirl.create(:version, :rubygem => @zgem)
       get :index, :letter => "z"
     end
     should respond_with :success
@@ -246,11 +246,11 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to index with a bad letter" do
     setup do
       @gems = (1..3).map do |n|
-        gem = Factory(:rubygem, :name => "agem#{n}")
-        Factory(:version, :rubygem => gem)
+        gem = FactoryGirl.create(:rubygem, :name => "agem#{n}")
+        FactoryGirl.create(:version, :rubygem => gem)
         gem
       end
-      Factory(:rubygem, :name => "zeta")
+      FactoryGirl.create(:rubygem, :name => "zeta")
       get :index, :letter => "asdf"
     end
 
@@ -272,7 +272,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to show" do
     setup do
-      @latest_version = Factory(:version, :created_at => 1.minute.ago)
+      @latest_version = FactoryGirl.create(:version, :created_at => 1.minute.ago)
       @rubygem = @latest_version.rubygem
       get :show, :id => @rubygem.to_param
     end
@@ -291,9 +291,9 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to show with a gem that has multiple versions" do
     setup do
-      @rubygem = Factory(:rubygem)
-      @older_version = Factory(:version, :number => "1.0.0", :rubygem => @rubygem, :created_at => 2.days.ago)
-      @latest_version = Factory(:version, :number => "2.0.0", :rubygem => @rubygem, :created_at => 1.minute.ago)
+      @rubygem = FactoryGirl.create(:rubygem)
+      @older_version = FactoryGirl.create(:version, :number => "1.0.0", :rubygem => @rubygem, :created_at => 2.days.ago)
+      @latest_version = FactoryGirl.create(:version, :number => "2.0.0", :rubygem => @rubygem, :created_at => 1.minute.ago)
       get :show, :id => @rubygem.to_param
     end
 
@@ -313,7 +313,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to show for a yanked gem with no versions" do
     setup do
-      version = Factory(:version, :created_at => 1.minute.ago)
+      version = FactoryGirl.create(:version, :created_at => 1.minute.ago)
       @rubygem = version.rubygem
       @rubygem.yank!(version)
     end
@@ -329,9 +329,9 @@ class RubygemsControllerTest < ActionController::TestCase
     end
     context 'with a signed in user subscribed to the gem' do
       setup do
-        @user = Factory(:user)
+        @user = FactoryGirl.create(:user)
         sign_in_as @user
-        Factory(:subscription, :user => @user, :rubygem => @rubygem)
+        FactoryGirl.create(:subscription, :user => @user, :rubygem => @rubygem)
         get :show, :id => @rubygem.to_param
       end
       should "have a visible unsubscribe link" do
@@ -342,7 +342,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to show for a gem with no versions" do
     setup do
-      @rubygem = Factory(:rubygem)
+      @rubygem = FactoryGirl.create(:rubygem)
       get :show, :id => @rubygem.to_param
     end
     should respond_with :success
@@ -355,10 +355,10 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to show for a gem with both runtime and development dependencies" do
     setup do
-      @version = Factory(:version)
+      @version = FactoryGirl.create(:version)
 
-      @development = Factory(:development_dependency, :version => @version)
-      @runtime     = Factory(:runtime_dependency,     :version => @version)
+      @development = FactoryGirl.create(:development_dependency, :version => @version)
+      @runtime     = FactoryGirl.create(:runtime_dependency,     :version => @version)
 
       get :show, :id => @version.rubygem.to_param
     end
@@ -374,9 +374,9 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to show for a gem with dependencies that are unresolved" do
     setup do
-      @version = Factory(:version)
+      @version = FactoryGirl.create(:version)
 
-      @unresolved = Factory(:unresolved_dependency, :version => @version)
+      @unresolved = FactoryGirl.create(:unresolved_dependency, :version => @version)
 
       get :show, :id => @version.rubygem.to_param
     end
@@ -400,8 +400,8 @@ class RubygemsControllerTest < ActionController::TestCase
   context "When not logged in" do
     context "On GET to show for a gem" do
       setup do
-        @rubygem = Factory(:rubygem)
-        Factory(:version, :rubygem => @rubygem)
+        @rubygem = FactoryGirl.create(:rubygem)
+        FactoryGirl.create(:version, :rubygem => @rubygem)
         get :show, :id => @rubygem.to_param
       end
 
@@ -417,7 +417,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to edit" do
       setup do
-        @rubygem = Factory(:rubygem)
+        @rubygem = FactoryGirl.create(:rubygem)
         get :edit, :id => @rubygem.to_param
       end
       should respond_with :redirect
@@ -426,7 +426,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On PUT to update" do
       setup do
-        @rubygem = Factory(:rubygem)
+        @rubygem = FactoryGirl.create(:rubygem)
         put :update, :id => @rubygem.to_param, :linkset => {}
       end
       should respond_with :redirect

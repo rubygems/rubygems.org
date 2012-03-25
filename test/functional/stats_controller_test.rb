@@ -6,7 +6,7 @@ class StatsControllerTest < ActionController::TestCase
       @number_of_gems      = 1337
       @number_of_users     = 101
       @number_of_downloads = 42
-      @most_downloaded     = [Factory(:rubygem)]
+      @most_downloaded     = [FactoryGirl.create(:rubygem)]
 
       stub(Rubygem).total_count { @number_of_gems }
       stub(Download).count { @number_of_downloads }
@@ -45,7 +45,7 @@ class StatsControllerTest < ActionController::TestCase
 
   context "On GET to stats" do
     setup do
-      @version = Factory(:version)
+      @version = FactoryGirl.create(:version)
       @rubygem = @version.rubygem
       @versions = @versions = @rubygem.versions.limit(5)
       get :show, :rubygem_id => @rubygem.to_param
@@ -69,9 +69,9 @@ class StatsControllerTest < ActionController::TestCase
 
   context "On GET to stats with a gem that has multiple versions" do
     setup do
-      @rubygem = Factory(:rubygem)
-      @older_version = Factory(:version, :number => "1.0.0", :rubygem => @rubygem)
-      @latest_version = Factory(:version, :number => "2.0.0", :rubygem => @rubygem)
+      @rubygem = FactoryGirl.create(:rubygem)
+      @older_version = FactoryGirl.create(:version, :number => "1.0.0", :rubygem => @rubygem)
+      @latest_version = FactoryGirl.create(:version, :number => "2.0.0", :rubygem => @rubygem)
       get :show, :rubygem_id => @rubygem.to_param
     end
 
@@ -87,10 +87,10 @@ class StatsControllerTest < ActionController::TestCase
 
   context "On GET to stats" do
     setup do
-      @version        = Factory(:version)
+      @version        = FactoryGirl.create(:version)
       rubygem         = @version.rubygem
-      @other_version  = Factory(:version)
-      @latest_version = Factory(:version, :rubygem => rubygem)
+      @other_version  = FactoryGirl.create(:version)
+      @latest_version = FactoryGirl.create(:version, :rubygem => rubygem)
 
       Timecop.freeze(1.day.ago) do
         Download.incr(rubygem.name, @version.full_name)
@@ -140,7 +140,7 @@ class StatsControllerTest < ActionController::TestCase
 
   context "On GET to stats for a gem with no versions" do
     setup do
-      @rubygem = Factory(:rubygem)
+      @rubygem = FactoryGirl.create(:rubygem)
       get :show, :rubygem_id => @rubygem.to_param
     end
 
@@ -157,9 +157,9 @@ class StatsControllerTest < ActionController::TestCase
 
   context "On GET to stats for a specific version" do
     setup do
-      @version        = Factory(:version, :number => "0.0.1")
+      @version        = FactoryGirl.create(:version, :number => "0.0.1")
       @rubygem        = @version.rubygem
-      @latest_version = Factory(:version, :rubygem => @rubygem, :number => "0.0.2")
+      @latest_version = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "0.0.2")
 
       get :show, :rubygem_id => @rubygem.name, :version_id => @version.slug
     end

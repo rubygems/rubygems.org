@@ -3,7 +3,7 @@ require 'test_helper'
 class RubygemTest < ActiveSupport::TestCase
   context "with a saved rubygem" do
     setup do
-      @rubygem = Factory(:rubygem, :name => "SomeGem")
+      @rubygem = FactoryGirl.create(:rubygem, :name => "SomeGem")
     end
     subject { @rubygem }
 
@@ -22,10 +22,10 @@ class RubygemTest < ActiveSupport::TestCase
     should_not allow_value("\342\230\203").for(:name)
 
     should "reorder versions with platforms properly" do
-      version3_ruby  = Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "ruby")
-      version3_mswin = Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "mswin")
-      version2_ruby  = Factory(:version, :rubygem => @rubygem, :number => "2.0.0", :platform => "ruby")
-      version1_linux = Factory(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "linux")
+      version3_ruby  = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "ruby")
+      version3_mswin = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "mswin")
+      version2_ruby  = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "2.0.0", :platform => "ruby")
+      version1_linux = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "linux")
 
       @rubygem.reorder_versions
 
@@ -42,12 +42,12 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "order latest platform gems with latest uniquely" do
-      pre  = Factory(:version, :rubygem => @rubygem, :number => "1.5.0.pre", :platform => "ruby", :prerelease => true)
-      ming = Factory(:version, :rubygem => @rubygem, :number => "1.4.2.1", :platform => "x86-mingw32")
-      win  = Factory(:version, :rubygem => @rubygem, :number => "1.4.2.1", :platform => "x86-mswin32")
-      ruby = Factory(:version, :rubygem => @rubygem, :number => "1.4.2", :platform => "ruby")
-      java = Factory(:version, :rubygem => @rubygem, :number => "1.4.2", :platform => "java")
-      old  = Factory(:version, :rubygem => @rubygem, :number => "1.4.1", :platform => "ruby")
+      pre  = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "1.5.0.pre", :platform => "ruby", :prerelease => true)
+      ming = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "1.4.2.1", :platform => "x86-mingw32")
+      win  = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "1.4.2.1", :platform => "x86-mswin32")
+      ruby = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "1.4.2", :platform => "ruby")
+      java = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "1.4.2", :platform => "java")
+      old  = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "1.4.1", :platform => "ruby")
 
       @rubygem.reorder_versions
 
@@ -60,8 +60,8 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "not return platform gem for latest if the ruby version is old" do
-      version3_mswin = Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "mswin")
-      version2_ruby  = Factory(:version, :rubygem => @rubygem, :number => "2.0.0", :platform => "ruby")
+      version3_mswin = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "mswin")
+      version2_ruby  = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "2.0.0", :platform => "ruby")
 
       @rubygem.reorder_versions
 
@@ -74,8 +74,8 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "return the ruby version for most_recent if one exists" do
-      Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "mswin", :built_at => 1.year.from_now)
-      version3_ruby  = Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "ruby")
+      FactoryGirl.create(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "mswin", :built_at => 1.year.from_now)
+      version3_ruby  = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "ruby")
 
       @rubygem.reorder_versions
 
@@ -84,37 +84,37 @@ class RubygemTest < ActiveSupport::TestCase
 
     should "can find when the first built date was" do
       Timecop.travel(DateTime.now) do
-        Factory(:version, :rubygem => @rubygem, :number => "3.0.0", :built_at => 1.day.ago)
-        Factory(:version, :rubygem => @rubygem, :number => "2.0.0", :built_at => 2.days.ago)
-        Factory(:version, :rubygem => @rubygem, :number => "1.0.0", :built_at => 3.days.ago)
-        Factory(:version, :rubygem => @rubygem, :number => "1.0.0.beta", :built_at => 4.days.ago)
+        FactoryGirl.create(:version, :rubygem => @rubygem, :number => "3.0.0", :built_at => 1.day.ago)
+        FactoryGirl.create(:version, :rubygem => @rubygem, :number => "2.0.0", :built_at => 2.days.ago)
+        FactoryGirl.create(:version, :rubygem => @rubygem, :number => "1.0.0", :built_at => 3.days.ago)
+        FactoryGirl.create(:version, :rubygem => @rubygem, :number => "1.0.0.beta", :built_at => 4.days.ago)
 
         assert_equal 4.days.ago.to_date, @rubygem.first_built_date.to_date
       end
     end
 
     should "have a most_recent version if only a platform version exists" do
-      version1 = Factory(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "linux")
+      version1 = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "linux")
 
       assert_equal version1, @rubygem.reload.versions.most_recent
     end
 
     should "return the release version for most_recent if one exists" do
-      Factory(:version, :rubygem => @rubygem, :number => "2.0.pre", :platform => "ruby")
-      version1 = Factory(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
+      FactoryGirl.create(:version, :rubygem => @rubygem, :number => "2.0.pre", :platform => "ruby")
+      version1 = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
 
       assert_equal version1, @rubygem.reload.versions.most_recent
     end
 
     should "have a most_recent version if only a prerelease version exists" do
-      version1pre = Factory(:version, :rubygem => @rubygem, :number => "1.0.pre", :platform => "ruby")
+      version1pre = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "1.0.pre", :platform => "ruby")
 
       assert_equal version1pre, @rubygem.reload.versions.most_recent
     end
 
     should "return the most_recent indexed version when a more recent yanked version exists" do
-      Factory(:version, :rubygem => @rubygem, :number => "0.1.1", :indexed => false)
-      indexed_v1 = Factory(:version, :rubygem => @rubygem, :number => "0.1.0", :indexed => true)
+      FactoryGirl.create(:version, :rubygem => @rubygem, :number => "0.1.1", :indexed => false)
+      indexed_v1 = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "0.1.0", :indexed => true)
 
       assert_equal indexed_v1.reload, @rubygem.reload.versions.most_recent
     end
@@ -171,7 +171,7 @@ class RubygemTest < ActiveSupport::TestCase
 
     context "with a user" do
       setup do
-        @user = Factory(:user)
+        @user = FactoryGirl.create(:user)
         @rubygem.save
       end
 
@@ -181,7 +181,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "not be able to assign ownership when owners exist" do
-        @new_user = Factory(:user)
+        @new_user = FactoryGirl.create(:user)
         @rubygem.ownerships.create(:user => @new_user)
         @rubygem.create_ownership(@user)
         assert_equal @rubygem.reload.owners, [@new_user]
@@ -191,11 +191,11 @@ class RubygemTest < ActiveSupport::TestCase
     context "with a user" do
       setup do
         @rubygem.save
-        @user = Factory(:user)
+        @user = FactoryGirl.create(:user)
       end
 
       should "be owned by a user in ownership" do
-        ownership = Factory(:ownership, :user => @user, :rubygem => @rubygem)
+        ownership = FactoryGirl.create(:ownership, :user => @user, :rubygem => @rubygem)
         assert @rubygem.owned_by?(@user)
         assert !@rubygem.unowned?
       end
@@ -214,9 +214,9 @@ class RubygemTest < ActiveSupport::TestCase
 
     context "with subscribed users" do
       setup do
-        @subscribed_user   = Factory(:user)
-        @unsubscribed_user = Factory(:user)
-        Factory(:subscription, :rubygem => @rubygem, :user => @subscribed_user)
+        @subscribed_user   = FactoryGirl.create(:user)
+        @unsubscribed_user = FactoryGirl.create(:user)
+        FactoryGirl.create(:subscription, :rubygem => @rubygem, :user => @subscribed_user)
       end
 
       should "only fetch the subscribed users with #subscribers" do
@@ -231,7 +231,7 @@ class RubygemTest < ActiveSupport::TestCase
 
     should "return name with version for #to_s" do
       @rubygem.save
-      Factory(:version, :number => "0.0.0", :rubygem => @rubygem)
+      FactoryGirl.create(:version, :number => "0.0.0", :rubygem => @rubygem)
       assert_equal "#{@rubygem.name} (#{@rubygem.versions.most_recent})", @rubygem.to_s
     end
 
@@ -244,9 +244,9 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "return a bunch of json" do
-      version = Factory(:version, :rubygem => @rubygem)
-      run_dep = Factory(:runtime_dependency, :version => version)
-      dev_dep = Factory(:development_dependency, :version => version)
+      version = FactoryGirl.create(:version, :rubygem => @rubygem)
+      run_dep = FactoryGirl.create(:runtime_dependency, :version => version)
+      dev_dep = FactoryGirl.create(:development_dependency, :version => version)
 
       hash = MultiJson.decode(@rubygem.to_json)
 
@@ -264,9 +264,9 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "return a bunch of xml" do
-      version = Factory(:version, :rubygem => @rubygem)
-      run_dep = Factory(:runtime_dependency, :version => version)
-      dev_dep = Factory(:development_dependency, :version => version)
+      version = FactoryGirl.create(:version, :rubygem => @rubygem)
+      run_dep = FactoryGirl.create(:runtime_dependency, :version => version)
+      dev_dep = FactoryGirl.create(:development_dependency, :version => version)
 
       doc = Nokogiri.parse(@rubygem.to_xml)
 
@@ -287,7 +287,7 @@ class RubygemTest < ActiveSupport::TestCase
     context "with a linkset" do
       setup do
         @rubygem = FactoryGirl.build(:rubygem)
-        version = Factory(:version, :rubygem => @rubygem)
+        version = FactoryGirl.create(:version, :rubygem => @rubygem)
       end
 
       should "return a bunch of JSON" do
@@ -316,16 +316,16 @@ class RubygemTest < ActiveSupport::TestCase
 
   context "with some rubygems" do
     setup do
-      @rubygem_without_version = Factory(:rubygem)
-      @rubygem_with_version = Factory(:rubygem)
-      @rubygem_with_versions = Factory(:rubygem)
+      @rubygem_without_version = FactoryGirl.create(:rubygem)
+      @rubygem_with_version = FactoryGirl.create(:rubygem)
+      @rubygem_with_versions = FactoryGirl.create(:rubygem)
 
-      Factory(:version, :rubygem => @rubygem_with_version)
-      3.times { Factory(:version, :rubygem => @rubygem_with_versions) }
+      FactoryGirl.create(:version, :rubygem => @rubygem_with_version)
+      3.times { FactoryGirl.create(:version, :rubygem => @rubygem_with_versions) }
 
-      @owner = Factory(:user)
-      Factory(:ownership, :rubygem => @rubygem_with_version, :user => @owner)
-      Factory(:ownership, :rubygem => @rubygem_with_versions, :user => @owner)
+      @owner = FactoryGirl.create(:user)
+      FactoryGirl.create(:ownership, :rubygem => @rubygem_with_version, :user => @owner)
+      FactoryGirl.create(:ownership, :rubygem => @rubygem_with_versions, :user => @owner)
     end
 
     should "return only gems with one version" do
@@ -370,17 +370,17 @@ class RubygemTest < ActiveSupport::TestCase
 
   context "with some gems and some that don't have versions" do
     setup do
-      @thin = Factory(:rubygem, :name => 'thin', :created_at => 1.year.ago,  :downloads => 20)
-      @rake = Factory(:rubygem, :name => 'rake', :created_at => 1.month.ago, :downloads => 10)
-      @json = Factory(:rubygem, :name => 'json', :created_at => 1.week.ago,  :downloads => 5)
-      @thor = Factory(:rubygem, :name => 'thor', :created_at => 2.days.ago,  :downloads => 3)
-      @rack = Factory(:rubygem, :name => 'rack', :created_at => 1.day.ago,   :downloads => 2)
-      @dust = Factory(:rubygem, :name => 'dust', :created_at => 3.days.ago,  :downloads => 1)
-      @haml = Factory(:rubygem, :name => 'haml')
+      @thin = FactoryGirl.create(:rubygem, :name => 'thin', :created_at => 1.year.ago,  :downloads => 20)
+      @rake = FactoryGirl.create(:rubygem, :name => 'rake', :created_at => 1.month.ago, :downloads => 10)
+      @json = FactoryGirl.create(:rubygem, :name => 'json', :created_at => 1.week.ago,  :downloads => 5)
+      @thor = FactoryGirl.create(:rubygem, :name => 'thor', :created_at => 2.days.ago,  :downloads => 3)
+      @rack = FactoryGirl.create(:rubygem, :name => 'rack', :created_at => 1.day.ago,   :downloads => 2)
+      @dust = FactoryGirl.create(:rubygem, :name => 'dust', :created_at => 3.days.ago,  :downloads => 1)
+      @haml = FactoryGirl.create(:rubygem, :name => 'haml')
       @new = FactoryGirl.build(:rubygem)
 
       @gems = [@thin, @rake, @json, @thor, @rack, @dust]
-      @gems.each { |g| Factory(:version, :rubygem => g) }
+      @gems.each { |g| FactoryGirl.create(:version, :rubygem => g) }
     end
 
     should "be pushable if gem is a new record" do
@@ -412,14 +412,14 @@ class RubygemTest < ActiveSupport::TestCase
 
   context "when some gems exist with titles and versions" do
     setup do
-      @apple_pie = Factory(:rubygem, :name => 'apple', :downloads => 1)
-      Factory(:version, :description => 'pie', :rubygem => @apple_pie)
+      @apple_pie = FactoryGirl.create(:rubygem, :name => 'apple', :downloads => 1)
+      FactoryGirl.create(:version, :description => 'pie', :rubygem => @apple_pie)
 
-      @apple_crisp = Factory(:rubygem, :name => 'apple_crisp', :downloads => 10)
-      Factory(:version, :description => 'pie', :rubygem => @apple_crisp)
+      @apple_crisp = FactoryGirl.create(:rubygem, :name => 'apple_crisp', :downloads => 10)
+      FactoryGirl.create(:version, :description => 'pie', :rubygem => @apple_crisp)
 
-      @orange_julius = Factory(:rubygem, :name => 'orange')
-      Factory(:version, :description => 'julius', :rubygem => @orange_julius)
+      @orange_julius = FactoryGirl.create(:rubygem, :name => 'orange')
+      FactoryGirl.create(:version, :description => 'julius', :rubygem => @orange_julius)
     end
 
     should "find rubygems by name on #search" do
@@ -547,8 +547,8 @@ class RubygemTest < ActiveSupport::TestCase
 
   context "downloads" do
     setup do
-      @rubygem = Factory(:rubygem)
-      @version = Factory(:version, :rubygem => @rubygem)
+      @rubygem = FactoryGirl.create(:rubygem)
+      @version = FactoryGirl.create(:version, :rubygem => @rubygem)
 
       Timecop.freeze Date.parse("2010-10-02") do
         1.times { Download.incr(@rubygem.name, @version.full_name) }

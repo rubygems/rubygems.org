@@ -65,9 +65,9 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
 
   context "on GET to show" do
     setup do
-      rubygem  = Factory(:rubygem_with_downloads)
-      @version1 = Factory(:version, :rubygem => rubygem, :number => '1.0.0')
-      @version2 = Factory(:version, :rubygem => rubygem, :number => '2.0.0')
+      rubygem  = FactoryGirl.create(:rubygem_with_downloads)
+      @version1 = FactoryGirl.create(:version, :rubygem => rubygem, :number => '1.0.0')
+      @version2 = FactoryGirl.create(:version, :rubygem => rubygem, :number => '2.0.0')
 
       Download.incr(rubygem.name, @version1.full_name)
       Download.incr(rubygem.name, @version2.full_name)
@@ -128,15 +128,15 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
 
   context "On GET to top" do
     setup do
-      @rubygem_1 = Factory(:rubygem)
-      @version_1 = Factory(:version, :rubygem => @rubygem_1)
-      @version_2 = Factory(:version, :rubygem => @rubygem_1)
+      @rubygem_1 = FactoryGirl.create(:rubygem)
+      @version_1 = FactoryGirl.create(:version, :rubygem => @rubygem_1)
+      @version_2 = FactoryGirl.create(:version, :rubygem => @rubygem_1)
 
-      @rubygem_2 = Factory(:rubygem)
-      @version_3 = Factory(:version, :rubygem => @rubygem_2)
+      @rubygem_2 = FactoryGirl.create(:rubygem)
+      @version_3 = FactoryGirl.create(:version, :rubygem => @rubygem_2)
 
-      @rubygem_3 = Factory(:rubygem)
-      @version_4 = Factory(:version, :rubygem => @rubygem_3)
+      @rubygem_3 = FactoryGirl.create(:rubygem)
+      @version_4 = FactoryGirl.create(:version, :rubygem => @rubygem_3)
 
       3.times { Download.incr(@rubygem_1.name, @version_1.full_name) }
       2.times { Download.incr(@rubygem_1.name, @version_2.full_name) }
@@ -160,15 +160,15 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
 
   context "On GET to all" do
     setup do
-      @rubygem_1 = Factory(:rubygem)
-      @version_1 = Factory(:version, :rubygem => @rubygem_1)
-      @version_2 = Factory(:version, :rubygem => @rubygem_1)
+      @rubygem_1 = FactoryGirl.create(:rubygem)
+      @version_1 = FactoryGirl.create(:version, :rubygem => @rubygem_1)
+      @version_2 = FactoryGirl.create(:version, :rubygem => @rubygem_1)
 
-      @rubygem_2 = Factory(:rubygem)
-      @version_3 = Factory(:version, :rubygem => @rubygem_2)
+      @rubygem_2 = FactoryGirl.create(:rubygem)
+      @version_3 = FactoryGirl.create(:version, :rubygem => @rubygem_2)
 
-      @rubygem_3 = Factory(:rubygem)
-      @version_4 = Factory(:version, :rubygem => @rubygem_3)
+      @rubygem_3 = FactoryGirl.create(:rubygem)
+      @version_4 = FactoryGirl.create(:version, :rubygem => @rubygem_3)
 
       3.times { Download.incr(@rubygem_1.name, @version_1.full_name) }
       2.times { Download.incr(@rubygem_1.name, @version_2.full_name) }

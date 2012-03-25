@@ -22,8 +22,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
   def self.should_respond_to(format, &block)
     context "with #{format.to_s.upcase} for a hosted gem" do
       setup do
-        @rubygem = Factory(:rubygem)
-        Factory(:version, :rubygem => @rubygem)
+        @rubygem = FactoryGirl.create(:rubygem)
+        FactoryGirl.create(:version, :rubygem => @rubygem)
         get :show, :id => @rubygem.to_param, :format => format
       end
 
@@ -32,8 +32,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "with #{format.to_s.upcase} for a hosted gem with a period in its name" do
       setup do
-        @rubygem = Factory(:rubygem, :name => 'foo.rb')
-        Factory(:version, :rubygem => @rubygem)
+        @rubygem = FactoryGirl.create(:rubygem, :name => 'foo.rb')
+        FactoryGirl.create(:version, :rubygem => @rubygem)
         get :show, :id => @rubygem.to_param, :format => format
       end
 
@@ -42,8 +42,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "with #{format.to_s.upcase} for a gem that doesn't match the slug" do
       setup do
-        @rubygem = Factory(:rubygem, :name => "ZenTest", :slug => "zentest")
-        Factory(:version, :rubygem => @rubygem)
+        @rubygem = FactoryGirl.create(:rubygem, :name => "ZenTest", :slug => "zentest")
+        FactoryGirl.create(:version, :rubygem => @rubygem)
         get :show, :id => "ZenTest", :format => format
       end
 
@@ -53,7 +53,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
   context "When logged in" do
     setup do
-      @user = Factory(:user)
+      @user = FactoryGirl.create(:user)
       sign_in_as(@user)
     end
 
@@ -73,7 +73,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to show for a gem that not hosted" do
       setup do
-        @rubygem = Factory(:rubygem)
+        @rubygem = FactoryGirl.create(:rubygem)
         assert @rubygem.versions.count.zero?
         get :show, :id => @rubygem.to_param, :format => "json"
       end
@@ -102,16 +102,16 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
   def self.should_respond_to(format)
     context "with #{format.to_s.upcase} for a list of gems" do
       setup do
-        @mygems = [ Factory(:rubygem, :name => "SomeGem"), Factory(:rubygem, :name => "AnotherGem") ]
+        @mygems = [ FactoryGirl.create(:rubygem, :name => "SomeGem"), FactoryGirl.create(:rubygem, :name => "AnotherGem") ]
         @mygems.each do |rubygem|
-          Factory(:version, :rubygem => rubygem)
-          Factory(:ownership, :user => @user, :rubygem => rubygem)
+          FactoryGirl.create(:version, :rubygem => rubygem)
+          FactoryGirl.create(:ownership, :user => @user, :rubygem => rubygem)
         end
 
-        @other_user = Factory(:user)
-        @not_my_rubygem = Factory(:rubygem, :name => "NotMyGem")
-        Factory(:version, :rubygem => @not_my_rubygem)
-        Factory(:ownership, :user => @other_user, :rubygem => @not_my_rubygem)
+        @other_user = FactoryGirl.create(:user)
+        @not_my_rubygem = FactoryGirl.create(:rubygem, :name => "NotMyGem")
+        FactoryGirl.create(:version, :rubygem => @not_my_rubygem)
+        FactoryGirl.create(:ownership, :user => @other_user, :rubygem => @not_my_rubygem)
 
         get :index, :format => format
       end
@@ -130,7 +130,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
   context "with a confirmed user authenticated" do
     setup do
-      @user = Factory(:user)
+      @user = FactoryGirl.create(:user)
       @request.env["HTTP_AUTHORIZATION"] = @user.api_key
     end
 
@@ -164,9 +164,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On POST to create for existing gem" do
       setup do
-        rubygem = Factory(:rubygem, :name => "test")
-        Factory(:ownership, :rubygem => rubygem, :user => @user)
-        Factory(:version, :rubygem => rubygem, :number => "0.0.0", :updated_at => 1.year.ago, :created_at => 1.year.ago)
+        rubygem = FactoryGirl.create(:rubygem, :name => "test")
+        FactoryGirl.create(:ownership, :rubygem => rubygem, :user => @user)
+        FactoryGirl.create(:version, :rubygem => rubygem, :number => "0.0.0", :updated_at => 1.year.ago, :created_at => 1.year.ago)
         @request.env["RAW_POST_DATA"] = gem_file("test-1.0.0.gem").read
         post :create
       end
@@ -182,12 +182,12 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On POST to create for a repush" do
       setup do
-        rubygem = Factory(:rubygem,
+        rubygem = FactoryGirl.create(:rubygem,
                           :name       => "test")
-        Factory(:ownership, :rubygem => rubygem, :user => @user)
+        FactoryGirl.create(:ownership, :rubygem => rubygem, :user => @user)
 
         @date = 1.year.ago
-        @version = Factory(:version,
+        @version = FactoryGirl.create(:version,
                            :rubygem    => rubygem,
                            :number     => "0.0.0",
                            :updated_at => @date,
@@ -222,7 +222,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On POST to create for someone else's gem" do
       setup do
-        @other_user = Factory(:user)
+        @other_user = FactoryGirl.create(:user)
         create_gem(@other_user, :name => "test")
         @rubygem.reload
 
@@ -241,9 +241,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "for a gem SomeGem with a version 0.1.0" do
       setup do
-        @rubygem  = Factory(:rubygem, :name => "SomeGem")
-        @v1       = Factory(:version, :rubygem => @rubygem, :number => "0.1.0", :platform => "ruby")
-        Factory(:ownership, :user => @user, :rubygem => @rubygem)
+        @rubygem  = FactoryGirl.create(:rubygem, :name => "SomeGem")
+        @v1       = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "0.1.0", :platform => "ruby")
+        FactoryGirl.create(:ownership, :user => @user, :rubygem => @rubygem)
       end
 
       context "ON DELETE to yank for existing gem version" do
@@ -260,7 +260,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       context "and a version 0.1.1" do
         setup do
-          @v2 = Factory(:version, :rubygem => @rubygem, :number => "0.1.1", :platform => "ruby")
+          @v2 = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "0.1.1", :platform => "ruby")
         end
 
         context "ON DELETE to yank for version 0.1.1" do
@@ -278,7 +278,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       context "and a version 0.1.1 and platform x86-darwin-10" do
         setup do
-          @v2 = Factory(:version, :rubygem => @rubygem, :number => "0.1.1", :platform => "x86-darwin-10")
+          @v2 = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "0.1.1", :platform => "x86-darwin-10")
         end
 
         context "ON DELETE to yank for version 0.1.1 and x86-darwin-10" do
@@ -310,7 +310,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       context "ON DELETE to yank for someone else's gem" do
         setup do
-          @other_user = Factory(:user)
+          @other_user = FactoryGirl.create(:user)
           @request.env["HTTP_AUTHORIZATION"] = @other_user.api_key
           delete :yank, :gem_name => @rubygem.to_param, :version => '0.1.0'
         end
@@ -328,11 +328,11 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "for a gem SomeGem with a yanked version 0.1.0 and unyanked version 0.1.1" do
       setup do
-        @rubygem  = Factory(:rubygem, :name => "SomeGem")
-        @v1       = Factory(:version, :rubygem => @rubygem, :number => "0.1.0", :platform => "ruby", :indexed => false)
-        @v2       = Factory(:version, :rubygem => @rubygem, :number => "0.1.1", :platform => "ruby")
-        @v3       = Factory(:version, :rubygem => @rubygem, :number => "0.1.2", :platform => "x86-darwin-10", :indexed => false)
-        Factory(:ownership, :user => @user, :rubygem => @rubygem)
+        @rubygem  = FactoryGirl.create(:rubygem, :name => "SomeGem")
+        @v1       = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "0.1.0", :platform => "ruby", :indexed => false)
+        @v2       = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "0.1.1", :platform => "ruby")
+        @v3       = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "0.1.2", :platform => "x86-darwin-10", :indexed => false)
+        FactoryGirl.create(:ownership, :user => @user, :rubygem => @rubygem)
       end
 
       context "ON PUT to unyank for version 0.1.0" do

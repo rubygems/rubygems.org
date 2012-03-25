@@ -35,11 +35,11 @@ Given /^no user exists with an email of "(.*)"$/ do |email|
 end
 
 Given /^(?:I am|I have|I) signed up (?:as|with) "(.*)"$/ do |email|
-  @me = Factory(:user, :email => email)
+  @me = FactoryGirl.create(:user, :email => email)
 end
 
 Given /^a user "([^"]*)" exists without a salt, remember token, or password$/ do |email|
-  @me = user = Factory(:user, :email => email)
+  @me = user = FactoryGirl.create(:user, :email => email)
   sql  = "update users set salt = NULL, encrypted_password = NULL, remember_token = NULL where id = #{user.id}"
   ActiveRecord::Base.connection.update(sql)
 end

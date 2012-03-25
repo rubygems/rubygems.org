@@ -28,7 +28,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
   context "on GET to show with bad credentials" do
     setup do
-      @user = Factory(:user)
+      @user = FactoryGirl.create(:user)
       authorize_with("bad:creds")
       get :show
     end
@@ -41,7 +41,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
   # this endpoint is used by rubygems
   context "on GET to show with TEXT and with confirmed user" do
     setup do
-      @user = Factory(:user)
+      @user = FactoryGirl.create(:user)
       authorize_with("#{@user.email}:#{@user.password}")
       get :show, :format => 'text'
     end
@@ -54,7 +54,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
   def self.should_respond_to(format, to_meth = :to_s)
     context "with #{format.to_s.upcase} and with confirmed user" do
       setup do
-        @user = Factory(:user)
+        @user = FactoryGirl.create(:user)
         authorize_with("#{@user.email}:#{@user.password}")
         get :show, :format => format
       end
@@ -84,7 +84,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
   context "on PUT to reset with signed in user" do
     setup do
-      @user = Factory(:user)
+      @user = FactoryGirl.create(:user)
       sign_in_as(@user)
     end
     should "reset the user's api key" do

@@ -47,7 +47,7 @@ group :test do
   gem 'capybara'
   gem 'cucumber-rails', :require => false
   gem 'database_cleaner'
-  gem 'factory_girl_rails', "~> 1.7.0"
+  gem 'factory_girl_rails'
   gem 'launchy'
   gem 'nokogiri'
   gem 'rack-test', :require => 'rack/test'
