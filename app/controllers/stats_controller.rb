@@ -31,6 +31,6 @@ class StatsController < ApplicationController
   private
 
   def ensure_hosted
-    render :file => 'public/404.html', :status => :not_found if !@rubygem.hosted?
+    render :file => 'public/404', :status => :not_found if !@rubygem.hosted?
   end
 end
