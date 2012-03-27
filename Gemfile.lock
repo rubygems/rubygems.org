@@ -138,6 +138,7 @@ GEM
       redis (< 3.0)
     newrelic_rpm (3.3.2.1)
     nokogiri (1.5.2)
+    oj (1.1.1)
     paul_revere (0.2.1)
       rails (~> 3.0)
     pg (0.13.2)
@@ -223,7 +224,6 @@ GEM
     xml-simple (1.1.1)
     xpath (0.1.4)
       nokogiri (~> 1.3)
-    yajl-ruby (1.1.0)
 
 PLATFORMS
   ruby
@@ -256,6 +256,7 @@ DEPENDENCIES
   newrelic-redis
   newrelic_rpm
   nokogiri
+  oj
   paul_revere
   pg
   pry
@@ -276,4 +277,3 @@ DEPENDENCIES
   webmock
   will_paginate
   xml-simple
-  yajl-ruby

@@ -13,6 +13,7 @@ gem 'high_voltage'
 gem 'jquery-rails'
 gem 'mail'
 gem 'multi_json'
+gem 'oj'
 gem 'paul_revere'
 gem 'pg'
 gem 'rack'
@@ -24,7 +25,6 @@ gem 'sinatra'
 gem 'validates_formatting_of', '>= 0.3.0'
 gem 'will_paginate'
 gem 'xml-simple'
-gem 'yajl-ruby', :require => 'yajl'
 
 # enable if on heroku, make sure to toss this into an initializer:
 #     Rails.application.config.middleware.use HerokuAssetCacher
