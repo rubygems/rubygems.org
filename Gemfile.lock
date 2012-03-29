@@ -138,7 +138,7 @@ GEM
       redis (< 3.0)
     newrelic_rpm (3.3.2.1)
     nokogiri (1.5.2)
-    oj (1.1.1)
+    oj (1.2.0)
     paul_revere (0.2.1)
       rails (~> 3.0)
     pg (0.13.2)
