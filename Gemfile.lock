@@ -136,7 +136,7 @@ GEM
     newrelic-redis (1.2.0)
       newrelic_rpm (~> 3.0)
       redis (< 3.0)
-    newrelic_rpm (3.3.2.1)
+    newrelic_rpm (3.3.3)
     nokogiri (1.5.2)
     oj (1.2.1)
     paul_revere (0.2.1)
