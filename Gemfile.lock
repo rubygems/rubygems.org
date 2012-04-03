@@ -68,7 +68,7 @@ GEM
       nokogiri (>= 1.5.0)
     daemons (1.1.8)
     database_cleaner (0.7.2)
-    delayed_job (3.0.1)
+    delayed_job (3.0.2)
       activesupport (~> 3.0)
     delayed_job_active_record (0.3.2)
       activerecord (> 2.1.0)
