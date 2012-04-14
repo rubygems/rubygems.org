@@ -6,6 +6,7 @@ Capybara.app_host = "https://gemcutter.local"
 TEST_DIR = File.join('/', 'tmp', 'gemcutter')
 
 require 'factory_girl/step_definitions'
+World(FactoryGirl::Syntax::Methods)
 
 Before do
   WebMock.reset!

@@ -2,7 +2,7 @@ require 'test_helper'
 
 class OwnershipTest < ActiveSupport::TestCase
   should "be valid with factory" do
-    assert FactoryGirl.build(:ownership).valid?
+    assert build(:ownership).valid?
   end
 
   should belong_to :rubygem
@@ -12,8 +12,8 @@ class OwnershipTest < ActiveSupport::TestCase
 
   context "with ownership" do
     setup do
-      @ownership = FactoryGirl.create(:ownership)
-      FactoryGirl.create(:version, :rubygem => @ownership.rubygem)
+      @ownership = create(:ownership)
+      create(:version, :rubygem => @ownership.rubygem)
     end
 
     subject { @ownership }
@@ -23,9 +23,9 @@ class OwnershipTest < ActiveSupport::TestCase
 
   context "with multiple ownerships on the same rubygem" do
     setup do
-      @rubygem       = FactoryGirl.create(:rubygem)
-      @ownership_one = FactoryGirl.create(:ownership, :rubygem => @rubygem)
-      @ownership_two = FactoryGirl.create(:ownership, :rubygem => @rubygem)
+      @rubygem       = create(:rubygem)
+      @ownership_one = create(:ownership, :rubygem => @rubygem)
+      @ownership_two = create(:ownership, :rubygem => @rubygem)
     end
 
     should "allow deletion of one ownership" do

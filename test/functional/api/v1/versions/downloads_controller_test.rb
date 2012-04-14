@@ -32,7 +32,7 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
 
   context "on GET to index" do
     setup do
-      @version = FactoryGirl.create(:version)
+      @version = create(:version)
       @eight_nine_days_ago = 89.days.ago.to_date.to_s
       @one_day_ago = 1.day.ago.to_date.to_s
 
@@ -67,7 +67,7 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
 
   context "on GET to index for a yanked gem" do
     setup do
-      version = FactoryGirl.create(:version, :indexed => false)
+      version = create(:version, :indexed => false)
       get_index(version)
     end
 
@@ -82,7 +82,7 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
 
   context "on GET to search for a yanked gem" do
     setup do
-      version = FactoryGirl.create(:version, :indexed => false)
+      version = create(:version, :indexed => false)
       get_search(version, 2.days.ago, 1.day.ago)
     end
 
@@ -97,7 +97,7 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
 
   context "on GET to search with missing params" do
     setup do
-      version = FactoryGirl.create(:version, :indexed => false)
+      version = create(:version, :indexed => false)
       get :search, :version_id => version.full_name, :format => 'json'
     end
 
@@ -148,7 +148,7 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
 
     context "happy path" do
       setup do
-        @version = FactoryGirl.create(:version)
+        @version = create(:version)
 
         $redis.hincrby Download.history_key(@version), @one_hundred_ninety_days_ago, 41
         $redis.hincrby Download.history_key(@version), @one_hundred_eighty_nine_days_ago, 42

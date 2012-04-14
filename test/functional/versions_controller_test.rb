@@ -3,9 +3,9 @@ require 'test_helper'
 class VersionsControllerTest < ActionController::TestCase
   context 'GET to index' do
     setup do
-      @rubygem = FactoryGirl.create(:rubygem)
+      @rubygem = create(:rubygem)
       @versions = (1..5).map do |version|
-        FactoryGirl.create(:version, :rubygem => @rubygem)
+        create(:version, :rubygem => @rubygem)
       end
 
       get :index, :rubygem_id => @rubygem.name
@@ -25,7 +25,7 @@ class VersionsControllerTest < ActionController::TestCase
 
   context "GET to index for gem with no versions" do
     setup do
-      @rubygem = FactoryGirl.create(:rubygem)
+      @rubygem = create(:rubygem)
       get :index, :rubygem_id => @rubygem.name
     end
 
@@ -38,7 +38,7 @@ class VersionsControllerTest < ActionController::TestCase
 
   context "On GET to show" do
     setup do
-      @latest_version = FactoryGirl.create(:version, :built_at => 1.week.ago, :created_at => 1.day.ago)
+      @latest_version = create(:version, :built_at => 1.week.ago, :created_at => 1.day.ago)
       @rubygem = @latest_version.rubygem
       get :show, :rubygem_id => @rubygem.name, :id => @latest_version.number
     end

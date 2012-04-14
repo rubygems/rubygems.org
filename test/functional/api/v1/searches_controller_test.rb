@@ -32,10 +32,10 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
 
   context "on GET to show" do
     setup do
-      @match = FactoryGirl.create(:rubygem, :name => "match")
-      @other = FactoryGirl.create(:rubygem, :name => "other")
-      FactoryGirl.create(:version, :rubygem => @match)
-      FactoryGirl.create(:version, :rubygem => @other)
+      @match = create(:rubygem, :name => "match")
+      @other = create(:rubygem, :name => "other")
+      create(:version, :rubygem => @match)
+      create(:version, :rubygem => @other)
     end
 
     should_respond_to(:json) do |body|

@@ -14,6 +14,7 @@ class Test::Unit::TestCase
   include Rack::Test::Methods
   include RR::Adapters::TestUnit unless include?(RR::Adapters::TestUnit)
   include WebMock::API
+  include FactoryGirl::Syntax::Methods
 
   def setup
     RR.reset
@@ -45,8 +46,8 @@ end
 
 def create_gem(*owners_and_or_opts)
   opts, owners = owners_and_or_opts.extract_options!, owners_and_or_opts
-  @rubygem = FactoryGirl.create(:rubygem, :name => opts[:name] || FactoryGirl.generate(:name))
-  FactoryGirl.create(:version, :rubygem => @rubygem)
+  @rubygem = create(:rubygem, :name => opts[:name] || generate(:name))
+  create(:version, :rubygem => @rubygem)
   owners.each { |owner| @rubygem.ownerships.create(:user => owner) }
 end
 

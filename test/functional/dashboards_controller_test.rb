@@ -3,17 +3,17 @@ require 'test_helper'
 class DashboardsControllerTest < ActionController::TestCase
   context "When logged in" do
     setup do
-      @user = FactoryGirl.create(:user)
+      @user = create(:user)
       sign_in_as(@user)
     end
 
     context "on GET to show" do
       setup do
-        3.times { FactoryGirl.create(:rubygem) }
+        3.times { create(:rubygem) }
         @gems = (1..3).map do
-          rubygem = FactoryGirl.create(:rubygem)
+          rubygem = create(:rubygem)
           rubygem.ownerships.create(:user => @user)
-          FactoryGirl.create(:version, :rubygem => rubygem)
+          create(:version, :rubygem => rubygem)
           rubygem
         end
         get :show
@@ -32,11 +32,11 @@ class DashboardsControllerTest < ActionController::TestCase
 
     context "On GET to show as an atom feed" do
       setup do
-        @subscribed_versions = (1..2).map { |n| FactoryGirl.create(:version, :created_at => n.hours.ago) }
+        @subscribed_versions = (1..2).map { |n| create(:version, :created_at => n.hours.ago) }
         # just to make sure one has a different platform and a summary
-        @subscribed_versions << FactoryGirl.create(:version, :created_at => 3.hours.ago, :platform => "win32", :summary => "&")
-        @subscribed_versions.each { |v| FactoryGirl.create(:subscription, :rubygem => v.rubygem, :user => @user)}
-        @unsubscribed_versions = (1..3).map { |n| FactoryGirl.create(:version, :created_at => n.hours.ago) }
+        @subscribed_versions << create(:version, :created_at => 3.hours.ago, :platform => "win32", :summary => "&")
+        @subscribed_versions.each { |v| create(:subscription, :rubygem => v.rubygem, :user => @user)}
+        @unsubscribed_versions = (1..3).map { |n| create(:version, :created_at => n.hours.ago) }
 
         @request.env["Authorization"] = @user.api_key
         get :show, :format => "atom"

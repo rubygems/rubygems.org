@@ -6,7 +6,7 @@ class VersionTest < ActiveSupport::TestCase
 
   context "#as_json" do
     setup do
-      @version = FactoryGirl.create(:version)
+      @version = create(:version)
     end
 
     should "only have relevant API fields" do
@@ -25,7 +25,7 @@ class VersionTest < ActiveSupport::TestCase
 
   context "#to_xml" do
     setup do
-      @version = FactoryGirl.create(:version)
+      @version = create(:version)
     end
 
     should "only have relevant API fields" do
@@ -44,13 +44,13 @@ class VersionTest < ActiveSupport::TestCase
 
   context ".most_recent" do
     setup do
-      @gem = FactoryGirl.create(:rubygem)
+      @gem = create(:rubygem)
     end
 
     should "return most recently created version for versions with multiple non-ruby platforms" do
-      FactoryGirl.create(:version, :rubygem => @gem, :number => '0.1', :platform => 'linux')
-      @most_recent = FactoryGirl.create(:version, :rubygem => @gem, :number => '0.2', :platform => 'universal-rubinius')
-      FactoryGirl.create(:version, :rubygem => @gem, :number => '0.1', :platform => 'mswin32')
+      create(:version, :rubygem => @gem, :number => '0.1', :platform => 'linux')
+      @most_recent = create(:version, :rubygem => @gem, :number => '0.2', :platform => 'universal-rubinius')
+      create(:version, :rubygem => @gem, :number => '0.1', :platform => 'mswin32')
 
       assert_equal @most_recent, Version.most_recent
     end
@@ -59,18 +59,18 @@ class VersionTest < ActiveSupport::TestCase
   context "updated gems" do
     setup do
       Timecop.freeze Date.today
-      @existing_gem = FactoryGirl.create(:rubygem)
-      @second = FactoryGirl.create(:version, :rubygem => @existing_gem, :created_at => 1.day.ago)
-      @fourth = FactoryGirl.create(:version, :rubygem => @existing_gem, :created_at => 4.days.ago)
+      @existing_gem = create(:rubygem)
+      @second = create(:version, :rubygem => @existing_gem, :created_at => 1.day.ago)
+      @fourth = create(:version, :rubygem => @existing_gem, :created_at => 4.days.ago)
 
-      @another_gem = FactoryGirl.create(:rubygem)
-      @third  = FactoryGirl.create(:version, :rubygem => @another_gem, :created_at => 3.days.ago)
-      @first  = FactoryGirl.create(:version, :rubygem => @another_gem, :created_at => 1.minute.ago)
-      @yanked = FactoryGirl.create(:version, :rubygem => @another_gem, :created_at => 30.seconds.ago)
+      @another_gem = create(:rubygem)
+      @third  = create(:version, :rubygem => @another_gem, :created_at => 3.days.ago)
+      @first  = create(:version, :rubygem => @another_gem, :created_at => 1.minute.ago)
+      @yanked = create(:version, :rubygem => @another_gem, :created_at => 30.seconds.ago)
       @yanked.yank!
 
-      @bad_gem = FactoryGirl.create(:rubygem)
-      @only_one = FactoryGirl.create(:version, :rubygem => @bad_gem, :created_at => 1.minute.ago)
+      @bad_gem = create(:rubygem)
+      @only_one = create(:version, :rubygem => @bad_gem, :created_at => 1.minute.ago)
     end
 
     teardown do
@@ -86,14 +86,14 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with a rubygem" do
     setup do
-      @rubygem = FactoryGirl.create(:rubygem)
+      @rubygem = create(:rubygem)
     end
 
     should "not allow duplicate versions" do
-      @version = FactoryGirl.build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
+      @version = build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
       @dup_version = @version.dup
-      @number_version = FactoryGirl.build(:version, :rubygem => @rubygem, :number => "2.0.0", :platform => "ruby")
-      @platform_version = FactoryGirl.build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "mswin32")
+      @number_version = build(:version, :rubygem => @rubygem, :number => "2.0.0", :platform => "ruby")
+      @platform_version = build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "mswin32")
 
       assert @version.save
       assert @number_version.save
@@ -102,22 +102,22 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "be able to find dependencies" do
-      @dependency = FactoryGirl.create(:rubygem)
-      @version = FactoryGirl.build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
-      @version.dependencies << FactoryGirl.create(:dependency, :version => @version, :rubygem => @dependency)
+      @dependency = create(:rubygem)
+      @version = build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
+      @version.dependencies << create(:dependency, :version => @version, :rubygem => @dependency)
       assert ! Version.with_deps.first.dependencies.empty?
     end
 
     should "sort dependencies alphabetically" do
-      @version = FactoryGirl.build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
+      @version = build(:version, :rubygem => @rubygem, :number => "1.0.0", :platform => "ruby")
 
-      @first_dependency_by_alpha = FactoryGirl.create(:rubygem, :name => 'acts_as_indexed')
-      @second_dependency_by_alpha = FactoryGirl.create(:rubygem, :name => 'friendly_id')
-      @third_dependency_by_alpha = FactoryGirl.create(:rubygem, :name => 'refinerycms')
+      @first_dependency_by_alpha = create(:rubygem, :name => 'acts_as_indexed')
+      @second_dependency_by_alpha = create(:rubygem, :name => 'friendly_id')
+      @third_dependency_by_alpha = create(:rubygem, :name => 'refinerycms')
 
-      @version.dependencies << FactoryGirl.create(:dependency, :version => @version, :rubygem => @second_dependency_by_alpha)
-      @version.dependencies << FactoryGirl.create(:dependency, :version => @version, :rubygem => @third_dependency_by_alpha)
-      @version.dependencies << FactoryGirl.create(:dependency, :version => @version, :rubygem => @first_dependency_by_alpha)
+      @version.dependencies << create(:dependency, :version => @version, :rubygem => @second_dependency_by_alpha)
+      @version.dependencies << create(:dependency, :version => @version, :rubygem => @third_dependency_by_alpha)
+      @version.dependencies << create(:dependency, :version => @version, :rubygem => @first_dependency_by_alpha)
 
       assert @first_dependency_by_alpha.name, @version.dependencies.first.name
       assert @second_dependency_by_alpha.name, @version.dependencies[1].name
@@ -127,7 +127,7 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with a version" do
     setup do
-      @version = FactoryGirl.create(:version)
+      @version = create(:version)
       @info = "some info"
     end
     subject { @version }
@@ -174,7 +174,7 @@ class VersionTest < ActiveSupport::TestCase
 
     %w[x86_64-linux java mswin x86-mswin32-60].each do |platform|
       should "be able to find with platform of #{platform}" do
-        version = FactoryGirl.create(:version, :platform => platform)
+        version = create(:version, :platform => platform)
         slug = "#{version.number}-#{platform}"
 
         assert version.platformed?
@@ -188,7 +188,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "give no version flag for the latest version" do
-      new_version = FactoryGirl.create(:version, :rubygem => @version.rubygem, :built_at => 1.day.from_now)
+      new_version = create(:version, :rubygem => @version.rubygem, :built_at => 1.day.from_now)
 
       assert_equal "gem install #{@version.rubygem.name} -v #{@version.number}", @version.to_install
       assert_equal "gem install #{new_version.rubygem.name}", new_version.to_install
@@ -196,7 +196,7 @@ class VersionTest < ActiveSupport::TestCase
 
     should "tack on prerelease flag" do
       @version.update_attributes(:number => "0.3.0.pre")
-      new_version = FactoryGirl.create(:version, :rubygem  => @version.rubygem,
+      new_version = create(:version, :rubygem  => @version.rubygem,
                             :built_at => 1.day.from_now,
                             :number   => "0.4.0.pre")
 
@@ -213,7 +213,7 @@ class VersionTest < ActiveSupport::TestCase
 
     should "give no version count for the latest prerelease version" do
       @version.update_attributes(:number => "0.3.0.pre")
-      old_version = FactoryGirl.create(:version, :rubygem  => @version.rubygem,
+      old_version = create(:version, :rubygem  => @version.rubygem,
                             :built_at => 1.day.from_now,
                             :number   => "0.2.0")
 
@@ -291,17 +291,17 @@ class VersionTest < ActiveSupport::TestCase
   context "with a very long authors string." do
     should "create without error" do
 
-      FactoryGirl.create(:version, :authors => ["Fbdoorman: David Pelaez", "MiniFB:Appoxy", "Dan Croak", "Mike Burns", "Jason Morrison", "Joe Ferris", "Eugene Bolshakov", "Nick Quaranto", "Josh Nichols", "Mike Breen", "Marcel G\303\266rner", "Bence Nagy", "Ben Mabey", "Eloy Duran", "Tim Pope", "Mihai Anca", "Mark Cornick", "Shay Arnett", "Jon Yurek", "Chad Pytel"])
+      create(:version, :authors => ["Fbdoorman: David Pelaez", "MiniFB:Appoxy", "Dan Croak", "Mike Burns", "Jason Morrison", "Joe Ferris", "Eugene Bolshakov", "Nick Quaranto", "Josh Nichols", "Mike Breen", "Marcel G\303\266rner", "Bence Nagy", "Ben Mabey", "Eloy Duran", "Tim Pope", "Mihai Anca", "Mark Cornick", "Shay Arnett", "Jon Yurek", "Chad Pytel"])
     end
   end
 
   context "when indexing" do
     setup do
-      @rubygem = FactoryGirl.create(:rubygem)
-      @first_version  = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "0.0.1", :built_at => 7.days.ago)
-      @second_version = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "0.0.2", :built_at => 6.days.ago)
-      @third_version  = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "0.0.3", :built_at => 5.days.ago)
-      @fourth_version = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "0.0.4", :built_at => 5.days.ago)
+      @rubygem = create(:rubygem)
+      @first_version  = create(:version, :rubygem => @rubygem, :number => "0.0.1", :built_at => 7.days.ago)
+      @second_version = create(:version, :rubygem => @rubygem, :number => "0.0.2", :built_at => 6.days.ago)
+      @third_version  = create(:version, :rubygem => @rubygem, :number => "0.0.3", :built_at => 5.days.ago)
+      @fourth_version = create(:version, :rubygem => @rubygem, :number => "0.0.4", :built_at => 5.days.ago)
     end
 
     should "always sort properly" do
@@ -325,8 +325,8 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with mixed release and prerelease versions" do
     setup do
-      @prerelease = FactoryGirl.create(:version, :number => '1.0.rc1')
-      @release    = FactoryGirl.create(:version, :number => '1.0')
+      @prerelease = create(:version, :number => '1.0.rc1')
+      @release    = create(:version, :number => '1.0')
     end
 
     should "know if it is a prelease version" do
@@ -342,11 +342,11 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with versions created out of order" do
     setup do
-      @gem = FactoryGirl.create(:rubygem)
-      FactoryGirl.create(:version, :rubygem => @gem, :number => '0.5')
-      FactoryGirl.create(:version, :rubygem => @gem, :number => '0.3')
-      FactoryGirl.create(:version, :rubygem => @gem, :number => '0.7')
-      FactoryGirl.create(:version, :rubygem => @gem, :number => '0.2')
+      @gem = create(:rubygem)
+      create(:version, :rubygem => @gem, :number => '0.5')
+      create(:version, :rubygem => @gem, :number => '0.3')
+      create(:version, :rubygem => @gem, :number => '0.7')
+      create(:version, :rubygem => @gem, :number => '0.2')
       @gem.reload # make sure to reload the versions just created
     end
 
@@ -361,12 +361,12 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with multiple rubygems and versions created out of order" do
     setup do
-      @gem_one = FactoryGirl.create(:rubygem)
-      @gem_two = FactoryGirl.create(:rubygem)
-      @version_one_latest  = FactoryGirl.create(:version, :rubygem => @gem_one, :number => '0.2')
-      @version_one_earlier = FactoryGirl.create(:version, :rubygem => @gem_one, :number => '0.1')
-      @version_two_latest  = FactoryGirl.create(:version, :rubygem => @gem_two, :number => '1.0')
-      @version_two_earlier = FactoryGirl.create(:version, :rubygem => @gem_two, :number => '0.5')
+      @gem_one = create(:rubygem)
+      @gem_two = create(:rubygem)
+      @version_one_latest  = create(:version, :rubygem => @gem_one, :number => '0.2')
+      @version_one_earlier = create(:version, :rubygem => @gem_one, :number => '0.1')
+      @version_two_latest  = create(:version, :rubygem => @gem_two, :number => '1.0')
+      @version_two_earlier = create(:version, :rubygem => @gem_two, :number => '0.5')
     end
 
     should "be able to fetch the latest versions" do
@@ -380,14 +380,14 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with a few versions" do
     setup do
-      @thin = FactoryGirl.create(:version, :authors => %w[thin], :built_at => 1.year.ago)
-      @rake = FactoryGirl.create(:version, :authors => %w[rake], :built_at => 1.month.ago)
-      @json = FactoryGirl.create(:version, :authors => %w[json], :built_at => 1.week.ago)
-      @thor = FactoryGirl.create(:version, :authors => %w[thor], :built_at => 2.days.ago)
-      @rack = FactoryGirl.create(:version, :authors => %w[rack], :built_at => 1.day.ago)
-      @haml = FactoryGirl.create(:version, :authors => %w[haml], :built_at => 1.hour.ago)
-      @dust = FactoryGirl.create(:version, :authors => %w[dust], :built_at => 1.day.from_now)
-      @fake = FactoryGirl.create(:version, :authors => %w[fake], :indexed => false, :built_at => 1.minute.ago)
+      @thin = create(:version, :authors => %w[thin], :built_at => 1.year.ago)
+      @rake = create(:version, :authors => %w[rake], :built_at => 1.month.ago)
+      @json = create(:version, :authors => %w[json], :built_at => 1.week.ago)
+      @thor = create(:version, :authors => %w[thor], :built_at => 2.days.ago)
+      @rack = create(:version, :authors => %w[rack], :built_at => 1.day.ago)
+      @haml = create(:version, :authors => %w[haml], :built_at => 1.hour.ago)
+      @dust = create(:version, :authors => %w[dust], :built_at => 1.day.from_now)
+      @fake = create(:version, :authors => %w[fake], :indexed => false, :built_at => 1.minute.ago)
     end
 
     should "get the latest versions up to today" do
@@ -398,13 +398,13 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with a few versions some owned by a user" do
     setup do
-      @user      = FactoryGirl.create(:user)
-      @gem       = FactoryGirl.create(:rubygem)
-      @owned_one = FactoryGirl.create(:version, :rubygem => @gem, :built_at => 1.day.ago)
-      @owned_two = FactoryGirl.create(:version, :rubygem => @gem, :built_at => 2.days.ago)
-      @unowned   = FactoryGirl.create(:version)
+      @user      = create(:user)
+      @gem       = create(:rubygem)
+      @owned_one = create(:version, :rubygem => @gem, :built_at => 1.day.ago)
+      @owned_two = create(:version, :rubygem => @gem, :built_at => 2.days.ago)
+      @unowned   = create(:version)
 
-      FactoryGirl.create(:ownership, :rubygem => @gem, :user => @user)
+      create(:ownership, :rubygem => @gem, :user => @user)
     end
 
     should "return the owned gems from #owned_by" do
@@ -419,13 +419,13 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with a few versions some subscribed to by a user" do
     setup do
-      @user           = FactoryGirl.create(:user)
-      @gem            = FactoryGirl.create(:rubygem)
-      @subscribed_one = FactoryGirl.create(:version, :rubygem => @gem)
-      @subscribed_two = FactoryGirl.create(:version, :rubygem => @gem)
-      @unsubscribed   = FactoryGirl.create(:version)
+      @user           = create(:user)
+      @gem            = create(:rubygem)
+      @subscribed_one = create(:version, :rubygem => @gem)
+      @subscribed_two = create(:version, :rubygem => @gem)
+      @unsubscribed   = create(:version)
 
-      FactoryGirl.create(:subscription, :rubygem => @gem, :user => @user)
+      create(:subscription, :rubygem => @gem, :user => @user)
     end
 
     should "return the owned gems from #owned_by" do
@@ -460,7 +460,7 @@ class VersionTest < ActiveSupport::TestCase
   context "with a Gem::Specification" do
     setup do
       @spec    = gem_specification_from_gem_fixture('test-0.0.0')
-      @version = FactoryGirl.build(:version)
+      @version = build(:version)
     end
 
     [/foo/, 1337, {:foo => "bar"}].each do |example|
@@ -485,13 +485,13 @@ class VersionTest < ActiveSupport::TestCase
 
   context "indexes" do
     setup do
-      @first_rubygem  = FactoryGirl.create(:rubygem, :name => "first")
-      @second_rubygem = FactoryGirl.create(:rubygem, :name => "second")
+      @first_rubygem  = create(:rubygem, :name => "first")
+      @second_rubygem = create(:rubygem, :name => "second")
 
-      @first_version  = FactoryGirl.create(:version, :rubygem => @first_rubygem,  :number => "0.0.1", :platform => "ruby")
-      @second_version = FactoryGirl.create(:version, :rubygem => @first_rubygem,  :number => "0.0.2", :platform => "ruby")
-      @other_version  = FactoryGirl.create(:version, :rubygem => @second_rubygem, :number => "0.0.2", :platform => "java")
-      @pre_version    = FactoryGirl.create(:version, :rubygem => @second_rubygem, :number => "0.0.2.pre", :platform => "java", :prerelease => true)
+      @first_version  = create(:version, :rubygem => @first_rubygem,  :number => "0.0.1", :platform => "ruby")
+      @second_version = create(:version, :rubygem => @first_rubygem,  :number => "0.0.2", :platform => "ruby")
+      @other_version  = create(:version, :rubygem => @second_rubygem, :number => "0.0.2", :platform => "java")
+      @pre_version    = create(:version, :rubygem => @second_rubygem, :number => "0.0.2.pre", :platform => "java", :prerelease => true)
     end
 
     should "select all gems" do

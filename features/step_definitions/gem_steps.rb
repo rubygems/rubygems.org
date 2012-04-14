@@ -11,8 +11,8 @@ Given /^I have a gem "([^\"]*)" with version "([^\"]*)" and platform "([^\"]*)"$
 end
 
 Given /^a rubygem exists with name "([^\"]*)" and version "([^\"]*)"$/ do |name, version_number|
-  rubygem = FactoryGirl.create(:rubygem, :name => name)
-  FactoryGirl.create(:version, :rubygem => rubygem, :number => version_number)
+  rubygem = create(:rubygem, :name => name)
+  create(:version, :rubygem => rubygem, :number => version_number)
 end
 
 Given /^I have a gem "([^\"]*)" with version "([^\"]*)" and homepage "([^\"]*)"$/ do |name, version, homepage|
@@ -46,8 +46,8 @@ end
 Given 'the following rubygems exist for "$email":' do |email, table|
   user = User.find_by_email! email
   table.hashes.each do |row|
-    rubygem = FactoryGirl.create(:rubygem, :name => row['name'], :downloads => row['downloads'])
-    version = FactoryGirl.create(:version, :rubygem => rubygem)
+    rubygem = create(:rubygem, :name => row['name'], :downloads => row['downloads'])
+    version = create(:version, :rubygem => rubygem)
     row['downloads'].to_i.times { Download.incr(rubygem.name, version.full_name) }
 
     rubygem.ownerships.create :user => user
