@@ -30,16 +30,16 @@ class RubygemsHelperTest < ActionView::TestCase
   end
 
   should "link to docs if no docs link is set" do
-    version = FactoryGirl.build(:version)
-    linkset = FactoryGirl.build(:linkset, :docs => nil)
+    version = build(:version)
+    linkset = build(:linkset, :docs => nil)
 
     link = documentation_link(version, linkset)
     assert link.include?(documentation_path(version))
   end
 
   should "not link to docs if docs link is set" do
-    version = FactoryGirl.build(:version)
-    linkset = FactoryGirl.build(:linkset)
+    version = build(:version)
+    linkset = build(:linkset)
 
     link = documentation_link(version, linkset)
     assert link.blank?
@@ -47,7 +47,7 @@ class RubygemsHelperTest < ActionView::TestCase
 
   context "creating linkset links" do
     setup do
-      @linkset = FactoryGirl.build(:linkset)
+      @linkset = build(:linkset)
       @linkset.wiki = nil
       @linkset.code = ""
     end
@@ -71,8 +71,8 @@ class RubygemsHelperTest < ActionView::TestCase
 
   context "options for individual stats" do
     setup do
-      @rubygem = FactoryGirl.create(:rubygem)
-      @versions = (1..3).map { FactoryGirl.create(:version, :rubygem => @rubygem) }
+      @rubygem = create(:rubygem)
+      @versions = (1..3).map { create(:version, :rubygem => @rubygem) }
     end
 
     should "show the overview link first" do
@@ -97,7 +97,7 @@ class RubygemsHelperTest < ActionView::TestCase
     end
 
     should "create links to owners gem overviews" do
-      users = Array.new(2) { FactoryGirl.create(:user) }
+      users = Array.new(2) { create(:user) }
       create_gem(*users)
       expected_links = users.sort_by(&:id).map { |u|
         link_to gravatar(48, "gravatar-#{u.id}", u), profile_path(u.display_id), :alt => u.display_handle,

@@ -1,10 +1,10 @@
 And /the following gem dependencies exist:/ do |table|
   table.hashes.each do |hash|
     version        = Version.find_by_full_name!(hash['Version'])
-    rubygem        = FactoryGirl.create(:rubygem, :name => hash['Rubygem'])
+    rubygem        = create(:rubygem, :name => hash['Rubygem'])
     gem_dependency = Gem::Dependency.new(rubygem.name, hash['Requirements'])
 
-    FactoryGirl.create(:dependency, :version => version, :rubygem => rubygem, :gem_dependency => gem_dependency)
+    create(:dependency, :version => version, :rubygem => rubygem, :gem_dependency => gem_dependency)
   end
 end
 

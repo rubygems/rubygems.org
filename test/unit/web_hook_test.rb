@@ -5,14 +5,14 @@ class WebHookTest < ActiveSupport::TestCase
   should belong_to :rubygem
 
   should "be valid for normal hook" do
-    hook = FactoryGirl.create(:web_hook)
+    hook = create(:web_hook)
     assert !hook.global?
     assert WebHook.global.empty?
     assert_equal [hook], WebHook.specific
   end
 
   should "be valid for global hook" do
-    hook = FactoryGirl.create(:global_web_hook)
+    hook = create(:global_web_hook)
     assert_nil hook.rubygem
     assert hook.global?
     assert_equal [hook], WebHook.global
@@ -20,13 +20,13 @@ class WebHookTest < ActiveSupport::TestCase
   end
 
   should "require user" do
-    hook = FactoryGirl.build(:web_hook, :user => nil)
+    hook = build(:web_hook, :user => nil)
     assert !hook.valid?
   end
 
   ["badurl", "", nil].each do |url|
     should "invalidate with #{url.inspect} as the url" do
-      hook = FactoryGirl.build(:web_hook, :url => url)
+      hook = build(:web_hook, :url => url)
       assert !hook.valid?
     end
   end
@@ -34,8 +34,8 @@ class WebHookTest < ActiveSupport::TestCase
   context "with a global webhook for a gem" do
     setup do
       @url     = "http://example.org"
-      @user    = FactoryGirl.create(:user)
-      @webhook = FactoryGirl.create(:global_web_hook, :user    => @user,
+      @user    = create(:user)
+      @webhook = create(:global_web_hook, :user    => @user,
                                            :url     => @url)
     end
 
@@ -52,7 +52,7 @@ class WebHookTest < ActiveSupport::TestCase
     end
 
     should "be able to create a webhook for another user under this url" do
-      other_user = FactoryGirl.create(:user)
+      other_user = create(:user)
       webhook = WebHook.new(:user    => other_user,
                             :url     => @url)
       assert webhook.valid?
@@ -62,9 +62,9 @@ class WebHookTest < ActiveSupport::TestCase
   context "with a webhook for a gem" do
     setup do
       @url     = "http://example.org"
-      @user    = FactoryGirl.create(:user)
-      @rubygem = FactoryGirl.create(:rubygem)
-      @webhook = FactoryGirl.create(:web_hook, :user    => @user,
+      @user    = create(:user)
+      @rubygem = create(:rubygem)
+      @webhook = create(:web_hook, :user    => @user,
                                     :rubygem => @rubygem,
                                     :url     => @url)
     end
@@ -109,7 +109,7 @@ class WebHookTest < ActiveSupport::TestCase
     end
 
     should "be able to create a webhook for another rubygem under this user and url" do
-      other_rubygem = FactoryGirl.create(:rubygem)
+      other_rubygem = create(:rubygem)
       webhook = WebHook.new(:user    => @user,
                             :rubygem => other_rubygem,
                             :url     => @url)
@@ -117,7 +117,7 @@ class WebHookTest < ActiveSupport::TestCase
     end
 
     should "be able to create a webhook for another user under this rubygem and url" do
-      other_user = FactoryGirl.create(:user)
+      other_user = create(:user)
       webhook = WebHook.new(:user    => other_user,
                             :rubygem => @rubygem,
                             :url     => @url)
@@ -133,13 +133,13 @@ class WebHookTest < ActiveSupport::TestCase
 
   context "with a rubygem and version" do
     setup do
-      @rubygem = FactoryGirl.create(:rubygem_with_downloads, :name => "foogem", :downloads => 42)
-      @version = FactoryGirl.create(:version,
+      @rubygem = create(:rubygem_with_downloads, :name => "foogem", :downloads => 42)
+      @version = create(:version,
                          :rubygem           => @rubygem,
                          :number            => "3.2.1",
                          :authors           => %w[AUTHORS],
                          :description       => "DESC")
-      @hook    = FactoryGirl.create(:web_hook)
+      @hook    = create(:web_hook)
       @job     = Notifier.new(@hook.url, 'localhost:1234', @rubygem, @version)
     end
 
@@ -155,8 +155,8 @@ class WebHookTest < ActiveSupport::TestCase
     end
 
     should "send the right version out even for older gems" do
-      new_version = FactoryGirl.create(:version, :number => "2.0.0", :rubygem => @rubygem)
-      new_hook    = FactoryGirl.create(:web_hook)
+      new_version = create(:version, :number => "2.0.0", :rubygem => @rubygem)
+      new_hook    = create(:web_hook)
       job         = Notifier.new(new_hook.url, 'localhost:1234', @rubygem, new_version)
       payload     = MultiJson.decode(job.payload)
 
@@ -170,9 +170,9 @@ class WebHookTest < ActiveSupport::TestCase
   context "with a non-global hook job" do
     setup do
       @url     = 'http://example.com/gemcutter'
-      @rubygem = FactoryGirl.create(:rubygem)
-      @version = FactoryGirl.create(:version, :rubygem => @rubygem)
-      @hook    = FactoryGirl.create(:web_hook,
+      @rubygem = create(:rubygem)
+      @version = create(:version, :rubygem => @rubygem)
+      @hook    = create(:web_hook,
                          :rubygem => @rubygem,
                          :url     => @url)
       stub_request(:post, @url)
@@ -195,10 +195,10 @@ class WebHookTest < ActiveSupport::TestCase
   context "with invalid URL" do
     setup do
       @url     = 'http://someinvaliddomain.com'
-      @user    = FactoryGirl.create(:user)
-      @rubygem = FactoryGirl.create(:rubygem)
-      @version = FactoryGirl.create(:version, :rubygem => @rubygem)
-      @hook    = FactoryGirl.create(:global_web_hook, :url     => @url,
+      @user    = create(:user)
+      @rubygem = create(:rubygem)
+      @version = create(:version, :rubygem => @rubygem)
+      @hook    = create(:global_web_hook, :url     => @url,
                                            :user    => @user)
     end
 
@@ -223,7 +223,7 @@ class WebHookTest < ActiveSupport::TestCase
 
   context "yaml" do
     setup do
-      @webhook = FactoryGirl.create(:web_hook)
+      @webhook = create(:web_hook)
     end
 
     should "return its payload" do

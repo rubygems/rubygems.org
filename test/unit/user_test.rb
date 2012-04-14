@@ -15,7 +15,7 @@ class UserTest < ActiveSupport::TestCase
       should_not allow_value("abc\n<script>bad").for(:handle)
 
       should "be between 3 and 15 characters" do
-        user = FactoryGirl.build(:user, :handle => "a")
+        user = build(:user, :handle => "a")
         assert ! user.valid?
         assert_equal "is too short (minimum is 3 characters)", user.errors[:handle].first
 
@@ -29,17 +29,17 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should "be invalid when an empty string" do
-        user = FactoryGirl.build(:user, :handle => "")
+        user = build(:user, :handle => "")
         assert ! user.valid?
       end
 
       should "be valid when nil and other users have a nil handle" do
-        assert FactoryGirl.build(:user, :handle => nil).valid?
-        assert FactoryGirl.build(:user, :handle => nil).valid?
+        assert build(:user, :handle => nil).valid?
+        assert build(:user, :handle => nil).valid?
       end
 
       should "show user id if no handle set" do
-        user = FactoryGirl.build(:user, :handle => nil, :id => 13)
+        user = build(:user, :handle => nil, :id => 13)
         assert_equal "#13", user.display_handle
 
         user.handle = "bills"
@@ -50,7 +50,7 @@ class UserTest < ActiveSupport::TestCase
 
   context "with a user" do
     setup do
-      @user = FactoryGirl.create(:user)
+      @user = create(:user)
     end
 
     should "authenticate with email/password" do
@@ -62,13 +62,13 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "transfer over rubyforge user" do
-      @rubyforger = FactoryGirl.create(:rubyforger, :email => @user.email, :encrypted_password => Digest::MD5.hexdigest(@user.password))
+      @rubyforger = create(:rubyforger, :email => @user.email, :encrypted_password => Digest::MD5.hexdigest(@user.password))
       assert_equal @user, User.authenticate(@user.email, @user.password)
       assert ! Rubyforger.exists?(@rubyforger.id)
     end
 
     should "not transfer over rubyforge user if password is wrong" do
-      @rubyforger = FactoryGirl.create(:rubyforger, :email => @user.email, :encrypted_password => Digest::MD5.hexdigest(@user.password))
+      @rubyforger = create(:rubyforger, :email => @user.email, :encrypted_password => Digest::MD5.hexdigest(@user.password))
       assert_nil User.authenticate(@user.email, "trogdor")
       assert Rubyforger.exists?(@rubyforger.id)
     end
@@ -131,16 +131,16 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "only return rubygems" do
-      my_rubygem = FactoryGirl.create(:rubygem)
-      FactoryGirl.create(:ownership, :user => @user, :rubygem => my_rubygem)
+      my_rubygem = create(:rubygem)
+      create(:ownership, :user => @user, :rubygem => my_rubygem)
       assert_equal [my_rubygem], @user.rubygems
     end
 
     context "with subscribed gems" do
       setup do
-        @subscribed_gem   = FactoryGirl.create(:rubygem)
-        @unsubscribed_gem = FactoryGirl.create(:rubygem)
-        FactoryGirl.create(:subscription, :user => @user, :rubygem => @subscribed_gem)
+        @subscribed_gem   = create(:rubygem)
+        @unsubscribed_gem = create(:rubygem)
+        create(:subscription, :user => @user, :rubygem => @subscribed_gem)
       end
 
       should "only fetch the subscribed gems with #subscribed_gems" do
@@ -150,24 +150,24 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "have all gems and specific gems for hooks" do
-      rubygem = FactoryGirl.create(:rubygem)
-      rubygem_hook = FactoryGirl.create(:web_hook, :user => @user, :rubygem => rubygem)
-      global_hook  = FactoryGirl.create(:global_web_hook, :user => @user)
+      rubygem = create(:rubygem)
+      rubygem_hook = create(:web_hook, :user => @user, :rubygem => rubygem)
+      global_hook  = create(:global_web_hook, :user => @user)
       all_hooks = @user.all_hooks
       assert_equal rubygem_hook, all_hooks[rubygem.name].first
       assert_equal global_hook, all_hooks["all gems"].first
     end
 
     should "have all gems for hooks" do
-      global_hook  = FactoryGirl.create(:global_web_hook, :user => @user)
+      global_hook  = create(:global_web_hook, :user => @user)
       all_hooks = @user.all_hooks
       assert_equal global_hook, all_hooks["all gems"].first
       assert_equal 1, all_hooks.keys.size
     end
 
     should "have only specific for hooks" do
-      rubygem = FactoryGirl.create(:rubygem)
-      rubygem_hook = FactoryGirl.create(:web_hook, :user => @user, :rubygem => rubygem)
+      rubygem = create(:rubygem)
+      rubygem_hook = create(:web_hook, :user => @user, :rubygem => rubygem)
       all_hooks = @user.all_hooks
       assert_equal rubygem_hook, all_hooks[rubygem.name].first
       assert_equal 1, all_hooks.keys.size
@@ -176,10 +176,10 @@ class UserTest < ActiveSupport::TestCase
 
   context "downloads" do
     setup do
-      @user      = FactoryGirl.create(:user)
-      @rubygem   = FactoryGirl.create(:rubygem)
-      @ownership = FactoryGirl.create(:ownership, :rubygem => @rubygem, :user => @user)
-      @version   = FactoryGirl.create(:version, :rubygem => @rubygem)
+      @user      = create(:user)
+      @rubygem   = create(:rubygem)
+      @ownership = create(:ownership, :rubygem => @rubygem, :user => @user)
+      @version   = create(:version, :rubygem => @rubygem)
 
       Timecop.freeze(1.day.ago) do
         Download.incr(@version.rubygem.name, @version.full_name)
@@ -195,13 +195,13 @@ class UserTest < ActiveSupport::TestCase
 
   context "rubygems" do
     setup do
-      @user     = FactoryGirl.create(:user)
-      @rubygem1 = FactoryGirl.create(:rubygem, :downloads => 100)
-      @rubygem2 = FactoryGirl.create(:rubygem, :downloads => 200)
-      @rubygem3 = FactoryGirl.create(:rubygem, :downloads => 300)
+      @user     = create(:user)
+      @rubygem1 = create(:rubygem, :downloads => 100)
+      @rubygem2 = create(:rubygem, :downloads => 200)
+      @rubygem3 = create(:rubygem, :downloads => 300)
 
       [@rubygem1, @rubygem2, @rubygem3].each do |rubygem|
-        FactoryGirl.create(:ownership, :rubygem => rubygem, :user => @user)
+        create(:ownership, :rubygem => rubygem, :user => @user)
       end
     end
 
@@ -228,7 +228,7 @@ class UserTest < ActiveSupport::TestCase
 
   context "yaml" do
     setup do
-      @user = FactoryGirl.create(:user)
+      @user = create(:user)
     end
 
     should "return its payload" do

@@ -52,8 +52,8 @@ class HostessTest < ActiveSupport::TestCase
     setup do
       @download_count = Download.count
       @file = "/gems/test-0.0.0.gem"
-      @rubygem = FactoryGirl.create(:rubygem, :name => "test")
-      @version = FactoryGirl.create(:version, :rubygem => @rubygem, :number => "0.0.0")
+      @rubygem = create(:rubygem, :name => "test")
+      @version = create(:version, :rubygem => @rubygem, :number => "0.0.0")
     end
 
     should "increase download count" do
@@ -78,8 +78,8 @@ class HostessTest < ActiveSupport::TestCase
   end
 
   should "find gemspec if loaded in redis" do
-    rubygem = FactoryGirl.create(:rubygem, :name => "rails")
-    version = FactoryGirl.create(:version, :number => "4.0.0", :rubygem => rubygem)
+    rubygem = create(:rubygem, :name => "rails")
+    version = create(:version, :number => "4.0.0", :rubygem => rubygem)
 
     path = "/quick/Marshal.4.8/#{version.full_name}.gemspec.rz"
     touch path, false
@@ -99,8 +99,8 @@ class HostessTest < ActiveSupport::TestCase
     file = "/gems/test-0.0.0.gem"
     FileUtils.cp gem_file.path, Pusher.server_path("gems")
 
-    rubygem = FactoryGirl.create(:rubygem, :name => "test")
-    version = FactoryGirl.create(:version, :rubygem => rubygem, :number => "0.0.0")
+    rubygem = create(:rubygem, :name => "test")
+    version = create(:version, :rubygem => rubygem, :number => "0.0.0")
 
     get file
     assert_equal 200, last_response.status

@@ -12,7 +12,7 @@ class ActiveSupport::TestCase
 
     context "On #{action} with unconfirmed user" do
       setup do
-        @user = FactoryGirl.create(:user)
+        @user = create(:user)
         @request.env["HTTP_AUTHORIZATION"] = @user.api_key
         instance_eval(&block)
       end

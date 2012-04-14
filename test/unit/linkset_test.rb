@@ -6,7 +6,7 @@ class LinksetTest < ActiveSupport::TestCase
 
   context "with a linkset" do
     setup do
-      @linkset = FactoryGirl.build(:linkset)
+      @linkset = build(:linkset)
     end
 
     should "be valid with factory" do
@@ -28,7 +28,7 @@ class LinksetTest < ActiveSupport::TestCase
   context "with a Gem::Specification" do
     setup do
       @spec    = gem_specification_from_gem_fixture('test-0.0.0')
-      @linkset = FactoryGirl.create(:linkset)
+      @linkset = create(:linkset)
       @linkset.update_attributes_from_gem_specification!(@spec)
     end
 

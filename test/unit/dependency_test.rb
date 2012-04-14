@@ -6,8 +6,8 @@ class DependencyTest < ActiveSupport::TestCase
 
   context "with dependency" do
     setup do
-      @version = FactoryGirl.create(:version)
-      @dependency = FactoryGirl.build(:dependency, :version => @version)
+      @version = create(:version)
+      @dependency = build(:dependency, :version => @version)
     end
 
     should "be valid with factory" do
@@ -49,7 +49,7 @@ class DependencyTest < ActiveSupport::TestCase
     end
 
     should "not push development dependency onto the redis list" do
-      @dependency = FactoryGirl.create(:development_dependency)
+      @dependency = create(:development_dependency)
 
       assert !$redis.exists(Dependency.runtime_key(@dependency.version.full_name))
     end
@@ -58,21 +58,21 @@ class DependencyTest < ActiveSupport::TestCase
   context "with a Gem::Dependency" do
     context "that refers to a Rubygem that exists with a malformed dependency" do
       setup do
-        @rubygem        = FactoryGirl.create(:rubygem)
+        @rubygem        = create(:rubygem)
         @requirements   = ['= 0.0.0']
         @gem_dependency = Gem::Dependency.new(@rubygem.name, @requirements)
       end
 
       should "correctly create a Dependency referring to the existing Rubygem" do
         stub(@gem_dependency).requirements_list { ['#<YAML::Syck::DefaultKey:0x0000000> 0.0.0'] }
-        @dependency = FactoryGirl.create(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
+        @dependency = create(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
 
         assert_equal @rubygem, @dependency.rubygem
         assert_equal @requirements[0].to_s, @dependency.requirements
       end
 
       should "correctly display a malformed Dependency referring to the existing Rubygem" do
-        @dependency = FactoryGirl.create(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
+        @dependency = create(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
         stub(@dependency).requirements { '#<YAML::Syck::DefaultKey:0x0000000> 0.0.0' }
 
         assert_equal @rubygem, @dependency.rubygem
@@ -82,10 +82,10 @@ class DependencyTest < ActiveSupport::TestCase
 
     context "that refers to a Rubygem that exists" do
       setup do
-        @rubygem        = FactoryGirl.create(:rubygem)
+        @rubygem        = create(:rubygem)
         @requirements   = ['>= 0.0.0']
         @gem_dependency = Gem::Dependency.new(@rubygem.name, @requirements)
-        @dependency     = FactoryGirl.create(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
+        @dependency     = create(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
       end
 
       should "create a Dependency referring to the existing Rubygem" do
@@ -96,10 +96,10 @@ class DependencyTest < ActiveSupport::TestCase
 
     context "that refers to a Rubygem that exists and has multiple requirements" do
       setup do
-        @rubygem        = FactoryGirl.create(:rubygem)
+        @rubygem        = create(:rubygem)
         @requirements   = ['< 1.0.0', '>= 0.0.0']
         @gem_dependency = Gem::Dependency.new(@rubygem.name, @requirements)
-        @dependency     = FactoryGirl.create(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
+        @dependency     = create(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
       end
 
       should "create a Dependency referring to the existing Rubygem" do
@@ -155,8 +155,8 @@ class DependencyTest < ActiveSupport::TestCase
 
   context "yaml" do
     setup do
-      FactoryGirl.create(:rubygem)
-      @dependency = FactoryGirl.create(:dependency)
+      create(:rubygem)
+      @dependency = create(:dependency)
     end
 
     should "return its payload" do

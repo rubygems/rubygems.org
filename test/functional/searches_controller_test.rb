@@ -14,7 +14,7 @@ class SearchesControllerTest < ActionController::TestCase
 
   context 'on GET to show with search parameters for a rubygem without versions' do
     setup do
-      @sinatra = FactoryGirl.create(:rubygem, :name => "sinatra")
+      @sinatra = create(:rubygem, :name => "sinatra")
       assert_nil @sinatra.versions.most_recent
       assert @sinatra.reload.versions.count.zero?
       get :show, :query => "sinatra"
@@ -26,12 +26,12 @@ class SearchesControllerTest < ActionController::TestCase
 
   context 'on GET to show with search parameters' do
     setup do
-      @sinatra = FactoryGirl.create(:rubygem, :name => "sinatra")
-      @sinatra_redux = FactoryGirl.create(:rubygem, :name => "sinatra-redux")
-      @brando  = FactoryGirl.create(:rubygem, :name => "brando")
-      FactoryGirl.create(:version, :rubygem => @sinatra)
-      FactoryGirl.create(:version, :rubygem => @sinatra_redux)
-      FactoryGirl.create(:version, :rubygem => @brando)
+      @sinatra = create(:rubygem, :name => "sinatra")
+      @sinatra_redux = create(:rubygem, :name => "sinatra-redux")
+      @brando  = create(:rubygem, :name => "brando")
+      create(:version, :rubygem => @sinatra)
+      create(:version, :rubygem => @sinatra_redux)
+      create(:version, :rubygem => @brando)
       get :show, :query => "sinatra"
     end
 

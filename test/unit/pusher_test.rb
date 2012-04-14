@@ -17,7 +17,7 @@ class PusherTest < ActiveSupport::TestCase
 
   context "creating a new gemcutter" do
     setup do
-      @user = FactoryGirl.create(:user)
+      @user = create(:user)
       @gem = gem_file
       @cutter = Pusher.new(@user, @gem)
     end
@@ -94,7 +94,7 @@ class PusherTest < ActiveSupport::TestCase
       end
 
       should "bring up existing gem with matching spec" do
-        @rubygem = FactoryGirl.create(:rubygem)
+        @rubygem = create(:rubygem)
         spec = "spec"
         stub(spec).name { @rubygem.name }
         stub(spec).version { "1.3.3.7" }
@@ -115,7 +115,7 @@ class PusherTest < ActiveSupport::TestCase
 
       context "with a existing rubygem" do
         setup do
-          @rubygem = FactoryGirl.create(:rubygem)
+          @rubygem = create(:rubygem)
           stub(@cutter).rubygem { @rubygem }
         end
 
@@ -129,14 +129,14 @@ class PusherTest < ActiveSupport::TestCase
         end
 
         should "be false if not owned by user and an indexed version exists" do
-          FactoryGirl.create(:version, :rubygem => @rubygem, :number => '0.1.1')
+          create(:version, :rubygem => @rubygem, :number => '0.1.1')
           assert ! @cutter.authorize
           assert_equal "You do not have permission to push to this gem.", @cutter.message
           assert_equal 403, @cutter.code
         end
 
         should "be true if not owned by user but no indexed versions exist" do
-          FactoryGirl.create(:version, :rubygem => @rubygem, :number => '0.1.1', :indexed => false)
+          create(:version, :rubygem => @rubygem, :number => '0.1.1', :indexed => false)
           assert @cutter.authorize
         end
       end

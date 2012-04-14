@@ -36,15 +36,15 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
   context "on GET to show" do
     setup do
-      @rubygem = FactoryGirl.create(:rubygem)
-      FactoryGirl.create(:version, :rubygem => @rubygem, :number => '2.0.0')
-      FactoryGirl.create(:version, :rubygem => @rubygem, :number => '1.0.0.pre', :prerelease => true)
-      FactoryGirl.create(:version, :rubygem => @rubygem, :number => '3.0.0', :indexed => false)
+      @rubygem = create(:rubygem)
+      create(:version, :rubygem => @rubygem, :number => '2.0.0')
+      create(:version, :rubygem => @rubygem, :number => '1.0.0.pre', :prerelease => true)
+      create(:version, :rubygem => @rubygem, :number => '3.0.0', :indexed => false)
 
-      @rubygem2 = FactoryGirl.create(:rubygem)
-      FactoryGirl.create(:version, :rubygem => @rubygem2, :number => '3.0.0')
-      FactoryGirl.create(:version, :rubygem => @rubygem2, :number => '2.0.0')
-      FactoryGirl.create(:version, :rubygem => @rubygem2, :number => '1.0.0')
+      @rubygem2 = create(:rubygem)
+      create(:version, :rubygem => @rubygem2, :number => '3.0.0')
+      create(:version, :rubygem => @rubygem2, :number => '2.0.0')
+      create(:version, :rubygem => @rubygem2, :number => '1.0.0')
     end
 
     should_respond_to(:json) do |body|
@@ -76,9 +76,9 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
   context "on GET to show with lots of gems" do
     setup do
-      @rubygem = FactoryGirl.create(:rubygem)
+      @rubygem = create(:rubygem)
       12.times do |n|
-        FactoryGirl.create(:version, :rubygem => @rubygem, :number => "#{n}.0.0")
+        create(:version, :rubygem => @rubygem, :number => "#{n}.0.0")
       end
     end
 

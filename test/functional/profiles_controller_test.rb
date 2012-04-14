@@ -12,15 +12,15 @@ class ProfilesControllerTest < ActionController::TestCase
 
   context "when logged in" do
     setup do
-      @user = FactoryGirl.create(:user)
+      @user = create(:user)
       sign_in_as(@user)
     end
 
     context "on GET to show" do
       setup do
         @rubygems = (0..10).map do |n|
-          FactoryGirl.create(:rubygem, :downloads => n * 100).tap do |rubygem|
-            FactoryGirl.create(:ownership, :rubygem => rubygem, :user => @user)
+          create(:rubygem, :downloads => n * 100).tap do |rubygem|
+            create(:ownership, :rubygem => rubygem, :user => @user)
           end
         end.reverse
 
@@ -67,7 +67,7 @@ class ProfilesControllerTest < ActionController::TestCase
       context "updating handle" do
         setup do
           @handle = "john_m_doe"
-          @user = FactoryGirl.create(:user, :handle => "johndoe")
+          @user = create(:user, :handle => "johndoe")
           sign_in_as(@user)
           put :update, :user => {:handle => @handle}
         end

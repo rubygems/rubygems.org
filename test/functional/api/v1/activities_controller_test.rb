@@ -20,15 +20,15 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
   context "No signed in-user" do
     context "On GET to latest" do
       setup do
-        @rubygem_1 = FactoryGirl.create(:rubygem)
-        @version_1 = FactoryGirl.create(:version, :rubygem => @rubygem_1)
-        @version_2 = FactoryGirl.create(:version, :rubygem => @rubygem_1)
+        @rubygem_1 = create(:rubygem)
+        @version_1 = create(:version, :rubygem => @rubygem_1)
+        @version_2 = create(:version, :rubygem => @rubygem_1)
 
-        @rubygem_2 = FactoryGirl.create(:rubygem)
-        @version_3 = FactoryGirl.create(:version, :rubygem => @rubygem_2)
+        @rubygem_2 = create(:rubygem)
+        @version_3 = create(:version, :rubygem => @rubygem_2)
 
-        @rubygem_3 = FactoryGirl.create(:rubygem)
-        @version_4 = FactoryGirl.create(:version, :rubygem => @rubygem_3)
+        @rubygem_3 = create(:rubygem)
+        @version_4 = create(:version, :rubygem => @rubygem_3)
 
         stub(Rubygem).latest(50){ [@rubygem_2, @rubygem_3] }
       end
@@ -52,15 +52,15 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
 
     context "On GET to just_updated" do
       setup do
-        @rubygem_1 = FactoryGirl.create(:rubygem)
-        @version_1 = FactoryGirl.create(:version, :rubygem => @rubygem_1)
-        @version_2 = FactoryGirl.create(:version, :rubygem => @rubygem_1)
+        @rubygem_1 = create(:rubygem)
+        @version_1 = create(:version, :rubygem => @rubygem_1)
+        @version_2 = create(:version, :rubygem => @rubygem_1)
 
-        @rubygem_2 = FactoryGirl.create(:rubygem)
-        @version_3 = FactoryGirl.create(:version, :rubygem => @rubygem_2)
+        @rubygem_2 = create(:rubygem)
+        @version_3 = create(:version, :rubygem => @rubygem_2)
 
-        @rubygem_3 = FactoryGirl.create(:rubygem)
-        @version_4 = FactoryGirl.create(:version, :rubygem => @rubygem_3)
+        @rubygem_3 = create(:rubygem)
+        @version_4 = create(:version, :rubygem => @rubygem_3)
 
         stub(Version).just_updated(50){ [@version_2, @version_3, @version_4] }
       end

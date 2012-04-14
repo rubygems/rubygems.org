@@ -3,8 +3,8 @@ require 'test_helper'
 class Api::V1::DependenciesControllerTest < ActionController::TestCase
   context "on GET to index" do
     setup do
-      @versions = [FactoryGirl.create(:version), FactoryGirl.create(:version)].each do |version|
-        FactoryGirl.create(:dependency, :version => version)
+      @versions = [create(:version), create(:version)].each do |version|
+        create(:dependency, :version => version)
       end
       get :index, :gems => @versions.map(&:rubygem).map(&:name).join(',')
     end
