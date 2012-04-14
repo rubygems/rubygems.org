@@ -15,8 +15,8 @@ ActiveRecord::Schema.define(:version => 20120118194729) do
 
   create_table "announcements", :force => true do |t|
     t.text     "body"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "delayed_jobs", :force => true do |t|
@@ -28,14 +28,14 @@ ActiveRecord::Schema.define(:version => 20120118194729) do
     t.datetime "locked_at"
     t.datetime "failed_at"
     t.string   "locked_by"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   create_table "dependencies", :force => true do |t|
     t.string   "requirements"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.integer  "rubygem_id"
     t.integer  "version_id"
     t.string   "scope"
@@ -54,8 +54,8 @@ ActiveRecord::Schema.define(:version => 20120118194729) do
     t.string   "mail"
     t.string   "code"
     t.string   "bugs"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "linksets", ["rubygem_id"], :name => "index_linksets_on_rubygem_id"
@@ -64,8 +64,8 @@ ActiveRecord::Schema.define(:version => 20120118194729) do
     t.integer  "rubygem_id"
     t.integer  "user_id"
     t.string   "token"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "ownerships", ["rubygem_id"], :name => "index_ownerships_on_rubygem_id"
@@ -78,8 +78,8 @@ ActiveRecord::Schema.define(:version => 20120118194729) do
 
   create_table "rubygems", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
     t.integer  "downloads",  :default => 0
     t.string   "slug"
   end
@@ -89,8 +89,8 @@ ActiveRecord::Schema.define(:version => 20120118194729) do
   create_table "subscriptions", :force => true do |t|
     t.integer  "rubygem_id"
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "subscriptions", ["rubygem_id"], :name => "index_subscriptions_on_rubygem_id"
@@ -124,8 +124,8 @@ ActiveRecord::Schema.define(:version => 20120118194729) do
     t.text     "description"
     t.string   "number"
     t.integer  "rubygem_id"
-    t.datetime "built_at"
-    t.datetime "updated_at"
+    t.datetime "built_at",                            :null => false
+    t.datetime "updated_at",                          :null => false
     t.string   "rubyforge_project"
     t.text     "summary"
     t.string   "platform"
@@ -151,8 +151,8 @@ ActiveRecord::Schema.define(:version => 20120118194729) do
     t.integer  "user_id"
     t.string   "url"
     t.integer  "failure_count", :default => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
     t.integer  "rubygem_id"
   end
 
