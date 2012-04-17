@@ -48,7 +48,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:json) do |body|
-      MultiJson.decode(body)
+      MultiJson.load(body)
     end
 
     should_respond_to(:xml) do |body|
@@ -84,7 +84,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "give all releases" do
       get_show(@rubygem)
-      assert_equal 12, MultiJson.decode(@response.body).size
+      assert_equal 12, MultiJson.load(@response.body).size
     end
   end
 end

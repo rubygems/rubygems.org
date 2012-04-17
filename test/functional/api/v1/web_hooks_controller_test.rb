@@ -123,18 +123,18 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
       context "On GET to index with some owned hooks" do
         setup do
           @rubygem_hook = create(:web_hook,
-                                  :user    => @user,
-                                  :rubygem => @rubygem)
+                                 :user    => @user,
+                                 :rubygem => @rubygem)
           @global_hook  = create(:global_web_hook,
-                                  :user    => @user)
+                                 :user    => @user)
         end
 
         should_respond_to(:json) do |body|
-          MultiJson.decode body
+          MultiJson.load(body)
         end
 
         should_respond_to(:yaml) do |body|
-          YAML.load body
+          YAML.load(body)
         end
 
         should_respond_to(:xml) do |body|

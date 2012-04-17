@@ -248,7 +248,7 @@ class RubygemTest < ActiveSupport::TestCase
       run_dep = create(:runtime_dependency, :version => version)
       dev_dep = create(:development_dependency, :version => version)
 
-      hash = MultiJson.decode(@rubygem.to_json)
+      hash = MultiJson.load(@rubygem.to_json)
 
       assert_equal @rubygem.name, hash["name"]
       assert_equal @rubygem.downloads, hash["downloads"]
@@ -259,8 +259,8 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal "http://#{HOST}/gems/#{@rubygem.name}", hash["project_uri"]
       assert_equal "http://#{HOST}/gems/#{@rubygem.versions.most_recent.full_name}.gem", hash["gem_uri"]
 
-      assert_equal MultiJson.decode(dev_dep.to_json), hash["dependencies"]["development"].first
-      assert_equal MultiJson.decode(run_dep.to_json), hash["dependencies"]["runtime"].first
+      assert_equal MultiJson.load(dev_dep.to_json), hash["dependencies"]["development"].first
+      assert_equal MultiJson.load(run_dep.to_json), hash["dependencies"]["runtime"].first
     end
 
     should "return a bunch of xml" do
@@ -291,7 +291,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "return a bunch of JSON" do
-        hash = MultiJson.decode(@rubygem.to_json)
+        hash = MultiJson.load(@rubygem.to_json)
 
         assert_equal @rubygem.linkset.home, hash["homepage_uri"]
         assert_equal @rubygem.linkset.wiki, hash["wiki_uri"]

@@ -35,7 +35,7 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
 
       should "return correct JSON for latest gems" do
         get :latest, :format => :json
-        should_return_latest_gems MultiJson.decode(@response.body)
+        should_return_latest_gems MultiJson.load(@response.body)
       end
 
       should "return correct YAML for latest gems" do
@@ -67,7 +67,7 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
 
       should "return correct JSON for just_updated gems" do
         get :just_updated, :format => :json
-        should_return_just_updated_gems MultiJson.decode(@response.body)
+        should_return_just_updated_gems MultiJson.load(@response.body)
       end
 
       should "return correct YAML for just_updated gems" do
