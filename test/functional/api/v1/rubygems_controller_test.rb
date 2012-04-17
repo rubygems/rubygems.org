@@ -59,7 +59,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to show" do
       should_respond_to(:json) do |body|
-        MultiJson.decode body
+        MultiJson.load body
       end
 
       should_respond_to(:yaml) do |body|
@@ -136,7 +136,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to index" do
       should_respond_to :json do |body|
-        MultiJson.decode body
+        MultiJson.load body
       end
 
       should_respond_to :yaml do |body|
