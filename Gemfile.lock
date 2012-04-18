@@ -190,7 +190,7 @@ GEM
     ruby-hmac (0.4.0)
     rubyzip (0.9.7)
     rvm (1.9.2)
-    selenium-webdriver (2.21.0)
+    selenium-webdriver (2.21.2)
       childprocess (>= 0.2.5)
       ffi (~> 1.0)
       libwebsocket (~> 0.1.3)
