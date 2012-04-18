@@ -154,7 +154,7 @@ en:
         mail: Mailing List
         bugs: Bug Tracker
       versions_header: Versions
-      bundler_header: Bundler
+      bundler_header: Gemfile
       show_all_versions: "Show all versions (%{count} total)"
 
   searches:
