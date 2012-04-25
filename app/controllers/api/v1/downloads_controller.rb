@@ -12,7 +12,7 @@ class Api::V1::DownloadsController < Api::BaseController
 
   def show
     full_name = params[:id]
-    if rubygem_name = Version.rubygem_name_for(full_name)
+    if rubygem_name = Version.rubygem_name_for(full_name) and rubygem = Rubygem.find_by_name(rubygem_name) and rubygem.public_versions.count.nonzero?
       respond_with(
         :total_downloads   => Download.for_rubygem(rubygem_name),
         :version_downloads => Download.for_version(full_name)

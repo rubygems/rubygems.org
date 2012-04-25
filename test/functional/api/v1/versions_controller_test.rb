@@ -74,6 +74,22 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to show for a yanked gem" do
+    setup do
+      @rubygem = create(:rubygem)
+      create(:version, :rubygem => @rubygem, :indexed => false, :number => '1.0.0')
+      get_show(@rubygem)
+    end
+
+    should "return a 404" do
+      assert_response :not_found
+    end
+
+    should "say gem could not be found" do
+      assert_equal "This rubygem could not be found.", @response.body
+    end
+  end
+
   context "on GET to show with lots of gems" do
     setup do
       @rubygem = create(:rubygem)
