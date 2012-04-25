@@ -101,6 +101,22 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to show for a yanked gem" do
+    setup do
+      rubygem = create(:rubygem)
+      @version = create(:version, :rubygem => rubygem, :number => "1.0.0", :indexed => false)
+      get_show(@version)
+    end
+
+    should "return a 404" do
+      assert_response :not_found
+    end
+
+    should "say gem could not be found" do
+      assert_equal "This rubygem could not be found.", @response.body
+    end
+  end
+
   def self.should_respond_to(format)
     context "with #{format.to_s.upcase}" do
       setup do

@@ -97,6 +97,19 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         assert_match /not be found/, @response.body
       end
     end
+
+    context "On GET to show for a gem that's yanked" do
+      setup do
+        @rubygem = create(:rubygem)
+        create(:version, :rubygem => @rubygem, :number => "1.0.0", :indexed => false)
+        get :show, :id => @rubygem.to_param, :format => "json"
+      end
+
+      should respond_with :not_found
+      should "say the rubygem was not found" do
+        assert_match /does not exist/, @response.body
+      end
+    end
   end
 
   def self.should_respond_to(format)
