@@ -15,7 +15,7 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   def show
-    if @rubygem.hosted?
+    if @rubygem.hosted? and @rubygem.public_versions.indexed.count.nonzero?
       respond_with(@rubygem, :yamlish => true)
     else
       render :text => "This gem does not exist.", :status => :not_found
