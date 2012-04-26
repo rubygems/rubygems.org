@@ -188,7 +188,7 @@ GEM
     rr (1.0.4)
     ruby-graphviz (0.9.21)
     ruby-hmac (0.4.0)
-    rubyzip (0.9.7)
+    rubyzip (0.9.8)
     rvm (1.9.2)
     selenium-webdriver (2.21.2)
       childprocess (>= 0.2.5)
