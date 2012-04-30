@@ -100,7 +100,7 @@ GEM
     gherkin (2.9.3)
       json (>= 1.4.6)
     gravtastic (3.2.6)
-    guard (1.0.1)
+    guard (1.0.2)
       ffi (>= 0.5.0)
       thor (~> 0.14.6)
     guard-bundler (0.1.3)
