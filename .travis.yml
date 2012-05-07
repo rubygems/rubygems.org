@@ -1,9 +1,14 @@
-before_script: cp config/database.yml.example config/database.yml
-language: ruby
-rvm:
-  - 1.9.2
-  #- 1.9.3
-script: bundle exec rake db:create db:migrate db:test:prepare default
 branches:
   only:
     - master
+before_script: cp config/database.yml.example config/database.yml
+language: ruby
+matrix:
+  allow_failures:
+    - rvm: 1.9.3
+    - rvm: ruby-head
+rvm:
+  - 1.9.2
+  - 1.9.3
+  - ruby-head
+script: bundle exec rake db:create db:migrate db:test:prepare default
