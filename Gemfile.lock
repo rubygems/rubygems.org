@@ -117,7 +117,7 @@ GEM
     jquery-rails (1.0.19)
       railties (~> 3.0)
       thor (~> 0.14)
-    json (1.7.0)
+    json (1.7.1)
     launchy (2.1.0)
       addressable (~> 2.2.6)
     libwebsocket (0.1.3)
