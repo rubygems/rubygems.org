@@ -109,7 +109,7 @@ GEM
       cucumber (>= 1.2.0)
       guard (>= 0.8.3)
     high_voltage (1.1.1)
-    highline (1.6.11)
+    highline (1.6.12)
     hike (1.2.1)
     i18n (0.6.0)
     journey (1.0.3)
