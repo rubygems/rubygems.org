@@ -140,7 +140,7 @@ GEM
       redis (< 3.0)
     newrelic_rpm (3.3.4.1)
     nokogiri (1.5.2)
-    paul_revere (0.2.1)
+    paul_revere (1.0)
       rails (~> 3.0)
     pg (0.13.2)
     polyglot (0.3.3)
