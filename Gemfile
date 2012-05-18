@@ -18,7 +18,7 @@ gem 'pg'
 gem 'rack'
 gem 'rack-maintenance', :require => 'rack/maintenance'
 gem 'rdoc'
-gem 'redis'
+gem 'redis', "3.0.0.rc2"
 gem 'rest-client', :require => 'rest_client'
 gem 'sinatra'
 gem 'validates_formatting_of', '>= 0.3.0'
