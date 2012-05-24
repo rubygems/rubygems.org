@@ -1,8 +1,6 @@
 ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
-require 'clearance/testing'
-require 'capybara/rails'
 
 class ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -34,6 +32,16 @@ class Test::Unit::TestCase
       "Expected #{object.class} #{attribute} to change but still #{latest}"
   end
 end
+
+# why isn't clearance doing this for us!?
+class ActionController::TestCase
+  setup do
+    @request.env[:clearance] = Clearance::Session.new(@request.env)
+  end
+end
+
+require 'clearance/testing'
+require 'capybara/rails'
 
 def regenerate_index
   FileUtils.rm_rf(

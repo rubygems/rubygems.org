@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '~> 3.2.2'
 
 gem 'airbrake'
-gem 'clearance', '~> 0.13.2'
+gem 'clearance', '~> 0.16.2'
 gem 'dynamic_form'
 gem 'excon'
 gem 'fog'

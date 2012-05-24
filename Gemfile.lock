@@ -51,7 +51,7 @@ GEM
       xpath (~> 0.1.4)
     childprocess (0.3.2)
       ffi (~> 1.0.6)
-    clearance (0.13.2)
+    clearance (0.16.2)
       diesel (~> 0.1.5)
       rails (>= 3.0)
     coderay (1.0.6)
@@ -236,7 +236,7 @@ DEPENDENCIES
   airbrake
   capistrano-ext
   capybara
-  clearance (~> 0.13.2)
+  clearance (~> 0.16.2)
   cucumber-rails
   daemons
   database_cleaner

@@ -23,19 +23,8 @@ module NavigationHelpers
       edit_profile_path
     when /"([^\"]+)" profile page/
       profile_path(User.find_by_email!($1))
-
-    # Add more mappings here.
-    when /the sign up page/i
-          sign_up_path
-        when /the sign in page/i
-          sign_in_path
-        when /the password reset request page/i
-          new_password_path
-    # Here is an example that pulls values out of the Regexp:
-    #
-    #   when /^(.*)'s profile page$/i
-    #     user_profile_path(User.find_by_login($1))
-
+    when /"([^"]+)" rubygem page/
+      rubygem_path(Rubygem.find_by_name!($1))
     else
       begin
         page_name =~ /^the (.*) page$/
