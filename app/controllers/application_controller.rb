@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery :only => [:create, :update, :destroy]
   ssl_required :if => :signed_in?
 
-protected
+  protected
 
   def authenticate_with_api_key
     api_key = request.headers["Authorization"] || params[:api_key]

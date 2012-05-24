@@ -167,7 +167,6 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         post :create
       end
       should respond_with :success
-      should assign_to(:_current_user) { @user }
       should "register new gem" do
         assert_equal 1, Rubygem.count
         assert_equal @user, Rubygem.last.ownerships.first.user
@@ -184,7 +183,6 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         post :create
       end
       should respond_with :success
-      should assign_to(:_current_user) { @user }
       should "register new version" do
         assert_equal @user, Rubygem.last.ownerships.first.user
         assert_equal 1, Rubygem.last.ownerships.count
@@ -243,7 +241,6 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         post :create
       end
       should respond_with 403
-      should assign_to(:_current_user) { @user }
       should "not allow new version to be saved" do
         assert_equal 1, @rubygem.ownerships.size
         assert_equal @other_user, @rubygem.ownerships.first.user

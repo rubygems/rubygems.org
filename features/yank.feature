@@ -32,7 +32,7 @@ Feature: Delete Gems
       | name: RGem | 1.2.3  |
     When I yank the gem "RGem" version "1.2.3" with my API key
     And I go to the dashboard
-    And I follow "RGem"
+    And I go to the "RGem" rubygem page
     Then I should see "This gem has been yanked"
 
     Given I am signed up as "new@owner.com"
