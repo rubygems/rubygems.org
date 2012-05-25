@@ -49,7 +49,7 @@ FactoryGirl.define do
     name
 
     factory :rubygem_with_downloads do
-      after_create do |r|
+      after(:create) do |r|
         $redis[Download.key(r)] = r['downloads']
       end
     end
