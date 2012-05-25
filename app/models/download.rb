@@ -37,16 +37,15 @@ class Download
 
   def self.most_downloaded_today(n=5)
     items = $redis.zrevrange(today_key, 0, (n-1), :with_scores => true)
-    items.in_groups_of(2).collect do |full_name, downloads|
+    items.collect do |full_name, downloads|
       version = Version.find_by_full_name(full_name)
-
       [version, downloads.to_i]
     end
   end
 
   def self.most_downloaded_all_time(n=5)
     items = $redis.zrevrange(ALL_KEY, 0, (n-1), :with_scores => true)
-    items.in_groups_of(2).collect do |full_name, downloads|
+    items.collect do |full_name, downloads|
       version = Version.find_by_full_name(full_name)
       [version, downloads.to_i]
     end
