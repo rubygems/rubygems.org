@@ -218,7 +218,7 @@ GEM
     tzinfo (0.3.33)
     validates_formatting_of (0.5.0)
       rails (~> 3.0)
-    webmock (1.8.6)
+    webmock (1.8.7)
       addressable (>= 2.2.7)
       crack (>= 0.1.7)
     will_paginate (3.0.3)
