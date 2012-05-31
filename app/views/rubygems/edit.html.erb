@@ -23,5 +23,5 @@
     <%= form.label :bugs %>
     <%= form.text_field :bugs, :size => 25 %>
   </div>
-    <%= form.submit t('update'), :disable_with => t('form_disable_with') %>
+  <%= form.submit t('update'), :data => {:disable_with => t('form_disable_with')} %>
 <% end %>

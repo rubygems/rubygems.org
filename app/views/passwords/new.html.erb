@@ -8,6 +8,6 @@
     <%= form.email_field :email, :size => '25' %>
   </div>
   <div class="submit_field">
-    <%= form.submit t('.submit'), :disable_with => t('form_disable_with') %>
+    <%= form.submit t('.submit'), :data => {:disable_with => t('form_disable_with')} %>
   </div>
 <% end %>
