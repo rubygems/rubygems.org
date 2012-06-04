@@ -99,7 +99,7 @@ GEM
     gherkin (2.10.0)
       json (>= 1.4.6)
     gravtastic (3.2.6)
-    guard (1.1.0)
+    guard (1.1.1)
       listen (>= 0.4.2)
       thor (>= 0.14.6)
     guard-bundler (0.1.3)
