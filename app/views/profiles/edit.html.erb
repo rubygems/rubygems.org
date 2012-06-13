@@ -38,4 +38,4 @@
 
 <% end %>
 
-<p><%= button_to t('.api_access.reset'), reset_api_v1_api_key_path, :method => :put, :confirm => t('.api_access.confirm_reset') %></p>
+<p><%= button_to t('.api_access.reset'), reset_api_v1_api_key_path, :method => :put, :data => {:confirm => t('.api_access.confirm_reset')} %></p>
