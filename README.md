@@ -14,12 +14,14 @@ The Ruby community's gem host.
 * [IRC][]: #gemcutter on Freenode
 * [Travis][]: [![Build Status](https://secure.travis-ci.org/rubygems/rubygems.org.png?branch=master)][travis]
 * [Gemnasium][]: [![Dependency Status](https://gemnasium.com/rubygems/rubygems.org.png?travis)][gemnasium]
+* [Code Climate][]: [![Code Climate](https://codeclimate.com/badge.png)][code climate]
 
 [mailing list]: http://groups.google.com/group/gemcutter
 [faq]: http://help.rubygems.org/kb/gemcutter/faq
 [irc]: http://webchat.freenode.net/?channels=gemcutter
 [travis]: http://travis-ci.org/#!/rubygems/rubygems.org
 [gemnasium]: https://gemnasium.com/rubygems/rubygems.org
+[code climate]: https://codeclimate.com/github/rubygems/rubygems.org
 
 ## Contributions
 
