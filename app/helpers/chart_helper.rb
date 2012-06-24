@@ -34,7 +34,7 @@ module ChartHelper
     end
     image_tag(chart.to_url(:chf => 'bg,s,FFFFFF00'), :alt => 'title')
   end
-  
+
   def downloads_over_time_labels
     [60, 40, 20, 0].map { |t| t.days.ago.to_date }
   end
@@ -49,9 +49,9 @@ module ChartHelper
         counts << count
       end
       {
-        :slug => version.slug, 
-        :counts => counts.reverse, 
-        :color => color_from_cycle(idx, versions.size) 
+        :slug => version.slug,
+        :counts => counts.reverse,
+        :color => color_from_cycle(idx, versions.size)
       }
     end
   end
