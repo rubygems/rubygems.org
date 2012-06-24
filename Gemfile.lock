@@ -146,7 +146,7 @@ GEM
     nokogiri (1.5.4)
     paul_revere (1.0)
       rails (~> 3.0)
-    pg (0.13.2)
+    pg (0.14.0)
     polyglot (0.3.3)
     pry (0.9.9.6)
       coderay (~> 1.0.5)
