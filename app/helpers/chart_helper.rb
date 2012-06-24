@@ -26,7 +26,7 @@ module ChartHelper
       range = [0, max]
 
       lc.axis :y, :range => range
-      lc.axis :x, :labels => downloads_over_time_labels
+      lc.axis :x, :labels => downloads_over_time_labels(days_ago)
       lc.grid :x_step         => 100.0 / 12.0,
               :y_step         => 100.0 / 15.0,
               :length_segment => 1,
@@ -34,9 +34,9 @@ module ChartHelper
     end
     image_tag(chart.to_url(:chf => 'bg,s,FFFFFF00'), :alt => 'title')
   end
-  
-  def downloads_over_time_labels
-    [60, 40, 20, 0].map { |t| t.days.ago.to_date }
+
+  def downloads_over_time_labels(days_ago = 90)
+    [days_ago, days_ago*2/3, days_ago/3, 0].map { |t| t.days.ago.to_date }
   end
 
   def downloads_over_time(versions, days_ago = 90)
@@ -49,9 +49,9 @@ module ChartHelper
         counts << count
       end
       {
-        :slug => version.slug, 
-        :counts => counts.reverse, 
-        :color => color_from_cycle(idx, versions.size) 
+        :slug => version.slug,
+        :counts => counts.reverse,
+        :color => color_from_cycle(idx, versions.size)
       }
     end
   end
