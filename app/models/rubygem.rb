@@ -121,6 +121,7 @@ class Rubygem < ActiveRecord::Base
       'downloads'         => downloads,
       'version'           => version.number,
       'version_downloads' => version.downloads_count,
+      'platform'          => version.platform,
       'authors'           => version.authors,
       'info'              => version.info,
       'project_uri'       => "http://#{host_with_port}/gems/#{name}",
