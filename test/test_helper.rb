@@ -40,6 +40,7 @@ class ActionController::TestCase
   end
 end
 
+require 'shoulda'
 require 'clearance/testing'
 require 'capybara/rails'
 
