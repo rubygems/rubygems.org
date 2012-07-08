@@ -42,9 +42,9 @@
       $('#downloads_over_time').height(430)
       var dates = <%= downloads_over_time_chart_dates.to_json.html_safe %>;
       var r = Raphael("downloads_over_time");
-            
+
       var days = <%= (0..90).to_json.html_safe %>
-      
+
       var versions = <%= downloads_over_time(@versions).map{|v| v[:counts] }.to_json.html_safe
        %>
        var labels = <%= downloads_over_time_labels.to_json.html_safe %>
@@ -58,7 +58,7 @@
 
       chart = r.g.linechart(30, 20, 500, 400, days, versions, {'axis':'0 0 0 1'}).hover(fin, fout);
       yaxis = r.g.axis(40,410,480,0,90,3,0, labels);
-      
+
       var raph = r
       var labels = <%= @versions.map(&:number).to_json.html_safe %>;
       chart.labels = raph.set();
