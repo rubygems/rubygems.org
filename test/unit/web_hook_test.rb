@@ -147,6 +147,7 @@ class WebHookTest < ActiveSupport::TestCase
       payload = MultiJson.load(@job.payload)
       assert_equal "foogem",    payload['name']
       assert_equal "3.2.1",     payload['version']
+      assert_equal 'ruby',      payload['platform']
       assert_equal "DESC",      payload["info"]
       assert_equal "AUTHORS",   payload["authors"]
       assert_equal 42,          payload["downloads"]
