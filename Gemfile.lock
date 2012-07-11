@@ -224,8 +224,8 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.33)
-    validates_formatting_of (0.6.0)
-      activerecord (~> 3.0)
+    validates_formatting_of (0.6.2)
+      activemodel (~> 3.0)
     webmock (1.8.7)
       addressable (>= 2.2.7)
       crack (>= 0.1.7)
