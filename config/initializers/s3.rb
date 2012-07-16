@@ -1,7 +1,5 @@
 if ENV['S3_KEY'] && ENV['S3_SECRET']
-  if !Rails.env.production? && !Rails.env.staging?
-    Fog.mock!
-  end
+  Fog.mock! if Rails.env.test?
 
   $fog = Fog::Storage.new(
     :provider               => 'AWS',
