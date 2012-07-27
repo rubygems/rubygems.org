@@ -120,7 +120,7 @@ GEM
     json (1.7.4)
     launchy (2.1.0)
       addressable (~> 2.2.6)
-    libwebsocket (0.1.4)
+    libwebsocket (0.1.5)
       addressable
     listen (0.4.7)
       rb-fchange (~> 0.0.5)
@@ -275,7 +275,7 @@ DEPENDENCIES
   rack
   rack-maintenance
   rack-test
-  rails (~> 3.2.3)
+  rails (~> 3.2.7)
   rails-erd
   rdoc
   redis
