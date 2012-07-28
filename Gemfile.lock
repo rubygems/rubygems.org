@@ -199,7 +199,7 @@ GEM
     ruby-graphviz (1.0.8)
     ruby-hmac (0.4.0)
     rubyzip (0.9.9)
-    rvm (1.9.2)
+    rvm (1.11.3.5)
     selenium-webdriver (2.25.0)
       childprocess (>= 0.2.5)
       libwebsocket (~> 0.1.3)
@@ -245,16 +245,16 @@ DEPENDENCIES
   airbrake
   capistrano-ext
   capybara
-  clearance (~> 0.16.2)
+  clearance (~> 0.16)
   cucumber-rails
   daemons
   database_cleaner
-  delayed_job (~> 3.0.0.pre)
+  delayed_job
   delayed_job_active_record
   dynamic_form
   excon
   factory_girl_rails
-  fog
+  fog (~> 1.4)
   gchartrb
   gravtastic
   guard
@@ -285,7 +285,7 @@ DEPENDENCIES
   shoulda
   sinatra
   timecop
-  validates_formatting_of (>= 0.3.0)
+  validates_formatting_of (>= 0.3)
   webmock
   will_paginate
   xml-simple
