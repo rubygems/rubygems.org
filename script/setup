@@ -1,0 +1,37 @@
+#!/bin/sh
+set -e
+export PATH="$(dirname "$0")/../bin:$PATH"  # Use binstubs
+
+if [ "$1" = "-v" ]; then
+  exec 3>&1
+else
+  exec 3>/dev/null
+fi
+
+if [ ! -f config/database.yml ]; then
+  echo "Copying database.yml.example over"
+  cp config/database.yml.example config/database.yml
+fi
+
+# Wipe out logs and scss cache.
+echo "Cleaning out old logs"
+{ rm -f log/*
+} >&3 2>&1
+
+# Install dependencies
+echo "Installing libraries and plugins"
+{ gem list -i bundler || gem install bundler
+} >&3 2>&1
+
+# Wipe and load the database unless KEEPDB=1 env var is set.
+if [ -z "$KEEPDB" ]; then
+  echo "Reloading the database"
+  { rake db:create:all db:drop:all db:setup --trace
+    rake db:test:prepare --trace
+  } >&3 2>&1
+fi
+
+echo "Restarting Pow/Passenger"
+touch tmp/restart.txt
+
+echo "Done!"
