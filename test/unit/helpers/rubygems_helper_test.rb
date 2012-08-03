@@ -24,7 +24,7 @@ class RubygemsHelperTest < ActionView::TestCase
   end
 
   should "show a nice formatted date" do
-    Timecop.travel(Date.parse("2011-03-18")) do
+    Timecop.travel(Date.parse("2011-03-18").end_of_day) do
       assert_equal "March 18, 2011", nice_date_for(DateTime.now)
     end
   end
