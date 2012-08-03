@@ -78,16 +78,16 @@ GEM
     diff-lcs (1.1.3)
     dynamic_form (1.1.4)
     erubis (2.7.0)
-    excon (0.15.5)
+    excon (0.14.3)
     factory_girl (3.6.1)
       activesupport (>= 3.0.0)
     factory_girl_rails (3.6.0)
       factory_girl (~> 3.6.0)
       railties (>= 3.0.0)
     ffi (1.1.3)
-    fog (1.5.0)
+    fog (1.4.0)
       builder
-      excon (~> 0.14)
+      excon (~> 0.14.0)
       formatador (~> 0.2.0)
       mime-types
       multi_json (~> 1.0)
@@ -253,8 +253,8 @@ DEPENDENCIES
   delayed_job_active_record
   dynamic_form
   excon
-  factory_girl_rails
-  fog (~> 1.4)
+  factory_girl_rails (~> 3.6.0)
+  fog (~> 1.4.0)
   gchartrb
   gravtastic
   guard

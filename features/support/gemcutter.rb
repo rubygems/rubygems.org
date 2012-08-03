@@ -1,3 +1,4 @@
+require 'webmock'
 WebMock.disable_net_connect!
 
 Hostess.local = true
@@ -5,14 +6,13 @@ Capybara.app_host = "https://gemcutter.local"
 
 TEST_DIR = File.join('/', 'tmp', 'gemcutter')
 
-require 'factory_girl/step_definitions'
 World(FactoryGirl::Syntax::Methods)
 
 Before do
   WebMock.reset!
   FileUtils.mkdir(TEST_DIR)
   Dir.chdir(TEST_DIR)
-  $fog.directories.create(:key => $rubygems_config[:s3_bucket], :public => true)
+  $fog.directories.create(:key => $rubygems_config[:s3_bucket], :public => true) if $fog
 end
 
 After do

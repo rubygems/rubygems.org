@@ -1,4 +1,18 @@
 FactoryGirl.define do
+  sequence :email do |n|
+    "user#{n}@example.com"
+  end
+
+  sequence :handle do |n|
+    "handle#{n}"
+  end
+
+  factory :user do
+    email
+    handle
+    password "password"
+  end
+
   factory :dependency do
     gem_dependency { Gem::Dependency.new(Rubygem.last.name, "1.0.0") }
     rubygem
