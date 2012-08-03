@@ -37,12 +37,6 @@ group :development do
   gem 'pry'
 end
 
-group :development, :test do
-  gem 'guard'
-  gem 'guard-cucumber'
-  gem 'guard-bundler'
-end
-
 group :test do
   gem 'capybara'
   gem 'cucumber-rails', :require => false
