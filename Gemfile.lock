@@ -84,7 +84,7 @@ GEM
     factory_girl_rails (3.6.0)
       factory_girl (~> 3.6.0)
       railties (>= 3.0.0)
-    ffi (1.1.3)
+    ffi (1.1.4)
     fog (1.4.0)
       builder
       excon (~> 0.14.0)
