@@ -56,6 +56,12 @@ class Pusher
     end
   end
 
+  # Overridden so we don't get megabytes of the raw data printing out
+  def inspect
+    attrs = [:@rubygem, :@user, :@message, :@code].map { |attr| "#{attr}=#{instance_variable_get(attr) || 'nil'}" }
+    "<Pusher #{attrs.join(' ')}>"
+  end
+
   private
 
   def after_write
@@ -80,12 +86,6 @@ class Pusher
 
   def self.server_path(*more)
     File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'server', *more))
-  end
-
-  # Overridden so we don't get megabytes of the raw data printing out
-  def inspect
-    attrs = [:@rubygem, :@user, :@message, :@code].map { |attr| "#{attr}=#{instance_variable_get(attr) || 'nil'}" }
-    "<Gemcutter #{attrs.join(' ')}>"
   end
 
   def enqueue_web_hook_jobs
