@@ -79,10 +79,10 @@ GEM
     dynamic_form (1.1.4)
     erubis (2.7.0)
     excon (0.14.3)
-    factory_girl (3.6.1)
+    factory_girl (4.0.0)
       activesupport (>= 3.0.0)
-    factory_girl_rails (3.6.0)
-      factory_girl (~> 3.6.0)
+    factory_girl_rails (4.0.0)
+      factory_girl (~> 4.0.0)
       railties (>= 3.0.0)
     ffi (1.1.4)
     fog (1.4.0)
@@ -235,7 +235,7 @@ DEPENDENCIES
   delayed_job_active_record
   dynamic_form
   excon
-  factory_girl_rails (~> 3.6.0)
+  factory_girl_rails
   fog (~> 1.4.0)
   gchartrb
   gravtastic
