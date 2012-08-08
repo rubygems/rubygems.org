@@ -974,22 +974,22 @@ table {
   padding-top: 5px;
   width: 485px;
   height: 90px;
-  text-align: center;
+  text-align: right;
 }
 
 .footer ul.sponsors li {
   display: inline-block;
-  width: 90px;
+  text-align: center;
+  width: 75px;
+}
+
+.footer ul.sponsors li a {
+  font-size: 0.9em;
 }
 
 .footer ul.sponsors li a img {
   margin: 0 auto;
   display: block;
-}
-
-.footer ul.sponsors li a {
-  text-align: center;
-  font-size: 0.9em;
 }
 
 .footer ul.sponsors li a#thoughtbot img {
@@ -1013,49 +1013,6 @@ table {
 }
 
 .footer ul.sponsors li a#gauges img {
-  margin-top: 16px;
-}
-
-.footer ul.sponsors2 {
-  float: right;
-  padding-top: 5px;
-  width: 485px;
-  height: 90px;
-  text-align: center;
-}
-
-.footer ul.sponsors2 li {
-  display: inline-block;
-  width: 90px;
-}
-
-.footer ul.sponsors2 li a img {
-  margin: 0 auto;
-  display: block;
-}
-
-.footer ul.sponsors2 li a {
-  text-align: center;
-  font-size: 0.9em;
-}
-
-.footer ul.sponsors2 li a#thoughtbot img {
-  margin-top: 10px;
-}
-
-.footer ul.sponsors2 li a#rubycentral img {
-  margin-top: 13px;
-}
-
-.footer ul.sponsors2 li a#dnsimple img {
-  margin-top: 28px;
-}
-
-.footer ul.sponsors2 li a#newrelic img {
-  margin-top: 14px;
-}
-
-.footer ul.sponsors2 li a#gauges img {
   margin-top: 16px;
 }
 
