@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+from_email, to_email = *ARGV
+
+if from_email.nil? || to_email.nil?
+  abort "Usage: script/change_email [FROM_EMAIL] [TO_EMAIL]"
+end
+
+ENV['RAILS_ENV'] ||= 'production'
+require_relative '../config/environment'
+
+from_user = User.find_by_email!(from_email)
+from_user.email = to_email
+from_user.save!
+
+puts "#{from_user.name}'s email is now: #{to_email}"
