@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+name, email = *ARGV
+
+if name.nil? || email.nil?
+  abort "Usage: script/add_owner [GEM_NAME] [USER_EMAIL]"
+end
+
+ENV['RAILS_ENV'] ||= 'production'
+require_relative '../config/environment'
+
+user    = User.find_by_email!(email)
+rubygem = Rubygem.find_by_name!(name)
+rubygem.ownerships.create(:user_id => user.id)
+
+puts "#{email} added to #{name}."

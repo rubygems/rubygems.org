@@ -1,0 +1,52 @@
+#!/usr/bin/env ruby
+
+first, second = *ARGV
+
+if first.nil? || second.nil?
+  abort "Usage: script/merge_users [FIRST_EMAIL] [SECOND_EMAIL]"
+end
+
+ENV['RAILS_ENV'] ||= 'production'
+require_relative '../config/environment'
+
+first_user  = User.find_by_email!(first)
+second_user = User.find_by_email!(second)
+
+require 'highline'
+terminal = HighLine.new
+
+puts "Which email do you want to keep?"
+email = terminal.choose do |menu|
+  menu.choice first_user.email
+  menu.choice second_user.email
+end
+
+puts "Which handle do you want to keep?"
+handle = terminal.choose do |menu|
+  menu.choice first_user.handle
+  menu.choice second_user.handle
+end
+
+if email == first_user.email
+  chosen_user = first_user
+  other_user  = second_user
+else
+  chosen_user = second_user
+  other_user  = first_user
+end
+
+puts "Merging #{chosen_user.email}/#{handle}..."
+
+(other_user.rubygems - chosen_user.rubygems).each do |rubygem|
+  puts "Merging ownership for #{rubygem.name}..."
+  ownership = rubygem.ownerships.find_by_user_id(other_user.id)
+  ownership.user = chosen_user
+  ownership.save!
+end
+
+other_user.destroy
+
+chosen_user.handle = handle
+chosen_user.save!
+
+puts "Done!"
