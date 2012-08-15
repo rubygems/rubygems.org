@@ -1,0 +1,202 @@
+zx:
+  update: inctxxyzkdtnhgnsbdfinctxdc3ee9bb-9e22-4789-99dd-b89b44d1c846exctxxyzkdtnhgnsbdfexctx
+  home:
+    index:
+      share:
+        update: inctxxyzkdtnhgnsbdfinctxce04fb2a-d0c7-49c3-b4b0-4c1048b90392exctxxyzkdtnhgnsbdfexctx
+        deploy: inctxxyzkdtnhgnsbdfinctxad82b0dc-91ef-40eb-956c-09a340796dedexctxxyzkdtnhgnsbdfexctx
+        build: inctxxyzkdtnhgnsbdfinctx3a90cca9-1ff8-4cc4-aa39-2412149435a6exctxxyzkdtnhgnsbdfexctx
+        header: inctxxyzkdtnhgnsbdfinctxf626ebfb-b6bf-424c-816d-dba744e5ee16exctxxyzkdtnhgnsbdfexctx
+      gems_header: inctxxyzkdtnhgnsbdfinctxa429bbee-0ac8-46a2-815e-7648d68346b7|JXtnZW1fY291bnR9|%{gem_count}exctxxyzkdtnhgnsbdfexctx
+      welcome_blurb: inctxxyzkdtnhgnsbdfinctx321acca3-7959-44e1-829a-7685cdbce6d6exctxxyzkdtnhgnsbdfexctx
+      learn:
+        browse_docs: inctxxyzkdtnhgnsbdfinctx6a049a51-283d-478c-91ce-26d115bd5b34exctxxyzkdtnhgnsbdfexctx
+        gem_specification: inctxxyzkdtnhgnsbdfinctx2c175359-4cfc-46dc-ae47-586da339d716exctxxyzkdtnhgnsbdfexctx
+        spec_subtitle: inctxxyzkdtnhgnsbdfinctx6df27f74-f6a6-439e-9264-eb6d7928af24exctxxyzkdtnhgnsbdfexctx
+        header: inctxxyzkdtnhgnsbdfinctx1465cde7-c3f3-495d-aacc-9135a46392ffexctxxyzkdtnhgnsbdfexctx
+        docs_subtitle: inctxxyzkdtnhgnsbdfinctxdc7a1a21-e471-434d-8226-159e329d41b4exctxxyzkdtnhgnsbdfexctx
+        install_rubygems: inctxxyzkdtnhgnsbdfinctxae0c8027-9b97-4a4c-be0f-f50f8bf15893|JXt2ZXJzaW9ufQ==|%{version}exctxxyzkdtnhgnsbdfexctx
+        rubygems_subtitle: inctxxyzkdtnhgnsbdfinctx9b7e02e7-b063-432f-880d-600f0d064a3dexctxxyzkdtnhgnsbdfexctx
+      leaderboards:
+        new: inctxxyzkdtnhgnsbdfinctx64500a63-b5b5-49ab-afdc-a4fa7c114a66exctxxyzkdtnhgnsbdfexctx
+        no_downloaded: inctxxyzkdtnhgnsbdfinctx6fc62a43-7557-4c02-a9f3-0ce42ac97a95exctxxyzkdtnhgnsbdfexctx
+        updated: inctxxyzkdtnhgnsbdfinctx43f1c499-51de-4277-ad4d-27753a8912efexctxxyzkdtnhgnsbdfexctx
+        downloaded: inctxxyzkdtnhgnsbdfinctx5f08e928-d7fa-4f58-9c69-ddbbbd76a3e1exctxxyzkdtnhgnsbdfexctx
+        header: inctxxyzkdtnhgnsbdfinctx4fb83f03-ad11-44a2-ac76-47a07a849344exctxxyzkdtnhgnsbdfexctx
+      pitch:
+        content: inctxxyzkdtnhgnsbdfinctxf06af712-dcce-46a5-b7d3-25299d98fc3c|JXtydWJ5Z2Vtc30=|%{rubygems}delimxyzkdtnhgnsbdfdelimJXtwdWJsaXNofQ==|%{publish}delimxyzkdtnhgnsbdfdelimJXthcGl9|%{api}delimxyzkdtnhgnsbdfdelimJXtjb250cmlidXRlfQ==|%{contribute}exctxxyzkdtnhgnsbdfexctx
+        api: inctxxyzkdtnhgnsbdfinctx84efe054-1077-41a6-987a-0cdfb2694116exctxxyzkdtnhgnsbdfexctx
+        publish: inctxxyzkdtnhgnsbdfinctx050ce8f0-ce62-4e0d-a594-36e14c2b9f20exctxxyzkdtnhgnsbdfexctx
+        contribute: inctxxyzkdtnhgnsbdfinctx913d6397-c8f6-4fde-a983-e2a0a2f638edexctxxyzkdtnhgnsbdfexctx
+      find_blurb: inctxxyzkdtnhgnsbdfinctxbf3636cd-3f88-41de-8f51-56ba2b8813dcexctxxyzkdtnhgnsbdfexctx
+  users:
+    new:
+      or_rubyforge: inctxxyzkdtnhgnsbdfinctxc3be03a8-1a68-4ebf-ad23-37b2e278c758exctxxyzkdtnhgnsbdfexctx
+      have_account: inctxxyzkdtnhgnsbdfinctxa10abb9a-12e7-42af-9e0f-7171c143cc5aexctxxyzkdtnhgnsbdfexctx
+      rubyforge_banner: inctxxyzkdtnhgnsbdfinctx03a3b551-28e3-44bc-b723-74f74689dad9|JXtsaW5rfQ==|%{link}exctxxyzkdtnhgnsbdfexctx
+  stats:
+    index:
+      gem_count: inctxxyzkdtnhgnsbdfinctxaf098923-6790-41de-860a-b06267e36a23|JXtjb3VudH0=|%{count}exctxxyzkdtnhgnsbdfexctx
+      user_count: inctxxyzkdtnhgnsbdfinctx7c131fd8-fdd8-4d89-9ca7-9b0fa89ce24a|JXtjb3VudH0=|%{count}exctxxyzkdtnhgnsbdfexctx
+    show:
+      current_rank: inctxxyzkdtnhgnsbdfinctxcca55865-1976-4f7e-a97b-43718db1150aexctxxyzkdtnhgnsbdfexctx
+      overview: inctxxyzkdtnhgnsbdfinctx84bd6253-7a8f-4c62-a7bc-27f492b98db7exctxxyzkdtnhgnsbdfexctx
+      for: inctxxyzkdtnhgnsbdfinctx07647dd8-77cf-4718-8c41-7341726a3806|JXtmb3J9|%{for}exctxxyzkdtnhgnsbdfexctx
+      total_downloads: inctxxyzkdtnhgnsbdfinctx625f0d64-cbea-4327-9040-f4e73c92b961|JXtjb3VudH0=|%{count}exctxxyzkdtnhgnsbdfexctx
+      highest_rank: inctxxyzkdtnhgnsbdfinctxd9ad4f89-72e6-4c8c-b0f7-a65c2e1e3b91exctxxyzkdtnhgnsbdfexctx
+      daily_downloads: inctxxyzkdtnhgnsbdfinctx6c35dae6-4bd9-4df6-8490-00e0861b9183|JXtjb3VudH0=|%{count}exctxxyzkdtnhgnsbdfexctx
+  time_ago: inctxxyzkdtnhgnsbdfinctx7713204d-966b-4ebf-888d-ef195bf7f48c|JXtkdXJhdGlvbn0=|%{duration}exctxxyzkdtnhgnsbdfexctx
+  download_count: inctxxyzkdtnhgnsbdfinctx0eb59804-90d6-437d-b636-c73d788bfe54|JXtjb3VudH0=|%{count}exctxxyzkdtnhgnsbdfexctx
+  please_confirm: inctxxyzkdtnhgnsbdfinctxc9dac28d-a093-4240-8181-188f832ccd1bexctxxyzkdtnhgnsbdfexctx
+  activerecord:
+    errors:
+      messages:
+        record_invalid: inctxxyzkdtnhgnsbdfinctxf3276b65-3910-4702-864d-172e96f6baae|JXtlcnJvcnN9|%{errors}exctxxyzkdtnhgnsbdfexctx
+    attributes:
+      session:
+        password: inctxxyzkdtnhgnsbdfinctxd1d86b1b-e948-41cc-b37b-ff9b2be08be9exctxxyzkdtnhgnsbdfexctx
+        who: inctxxyzkdtnhgnsbdfinctx5d1787ee-d7f6-4de7-89a0-22428c480d8fexctxxyzkdtnhgnsbdfexctx
+      linkset:
+        mail: inctxxyzkdtnhgnsbdfinctx66b33c69-6e35-4e99-aa57-dbfa021fe694exctxxyzkdtnhgnsbdfexctx
+        bugs: inctxxyzkdtnhgnsbdfinctx643d7db8-fcf7-43d5-9624-ac2d4f3f8e10exctxxyzkdtnhgnsbdfexctx
+        docs: inctxxyzkdtnhgnsbdfinctx05417f14-c86f-4c77-850c-73f242cf73e9exctxxyzkdtnhgnsbdfexctx
+        code: inctxxyzkdtnhgnsbdfinctx2af295d0-6ff3-41af-98d7-d2543d2a8ff0exctxxyzkdtnhgnsbdfexctx
+        wiki: inctxxyzkdtnhgnsbdfinctx7751fefc-f835-4fbc-91fd-bd26be39dbd5exctxxyzkdtnhgnsbdfexctx
+      user:
+        handle: inctxxyzkdtnhgnsbdfinctx2a4aabff-e698-421d-8510-467c22e4a110exctxxyzkdtnhgnsbdfexctx
+        email: inctxxyzkdtnhgnsbdfinctx2f6e3ef8-c59a-4418-9812-b166ac05e089exctxxyzkdtnhgnsbdfexctx
+        avatar: inctxxyzkdtnhgnsbdfinctx8c52bab0-eded-4c1f-b570-dbac1191e359exctxxyzkdtnhgnsbdfexctx
+        password: inctxxyzkdtnhgnsbdfinctx36783657-a483-4552-b803-695cc6999216exctxxyzkdtnhgnsbdfexctx
+  title: inctxxyzkdtnhgnsbdfinctx0bdae062-28da-455c-8698-9f4e75677cb2exctxxyzkdtnhgnsbdfexctx
+  rubygems:
+    index:
+      title: inctxxyzkdtnhgnsbdfinctxe6a0cc03-d7b1-4818-bf61-5dbc7813fb15exctxxyzkdtnhgnsbdfexctx
+      subtitle: inctxxyzkdtnhgnsbdfinctx7d81058c-544a-4a16-a081-e0f18f4910fc|JXtwcmVmaXh9|%{prefix}exctxxyzkdtnhgnsbdfexctx
+    dependencies:
+      header: inctxxyzkdtnhgnsbdfinctxc20b4aa2-0d93-4d07-bf53-a54afb2e75d4|JXt0aXRsZX0=|%{title}exctxxyzkdtnhgnsbdfexctx
+    edit:
+      title: inctxxyzkdtnhgnsbdfinctx78f83fda-1f38-4f00-9022-7dadcb2331acexctxxyzkdtnhgnsbdfexctx
+      other_fields_notice: inctxxyzkdtnhgnsbdfinctxf24b8804-0ee8-41c5-b6d1-77def7f4b41cexctxxyzkdtnhgnsbdfexctx
+      subtitle: inctxxyzkdtnhgnsbdfinctxa0456038-5a02-4a9c-be25-b87991add444|JXtnZW19|%{gem}exctxxyzkdtnhgnsbdfexctx
+    show:
+      install: inctxxyzkdtnhgnsbdfinctxbfb86f5f-4d67-4b15-a07a-a5648f77d87bexctxxyzkdtnhgnsbdfexctx
+      bundler_header: inctxxyzkdtnhgnsbdfinctxf6d2ff26-7e02-41e6-b498-899051a0a262exctxxyzkdtnhgnsbdfexctx
+      downloads_for_this_version: inctxxyzkdtnhgnsbdfinctxa0e882d1-1b97-487a-a652-5142d3d33aaa|JXtjb3VudH0=|%{count}exctxxyzkdtnhgnsbdfexctx
+      stats_header: inctxxyzkdtnhgnsbdfinctxf3cd4000-14c1-498b-b4dd-87f4b7fe9645exctxxyzkdtnhgnsbdfexctx
+      authors_header: inctxxyzkdtnhgnsbdfinctxa8bc0c57-3baa-4503-af8c-8d167a411d33exctxxyzkdtnhgnsbdfexctx
+      versions_header: inctxxyzkdtnhgnsbdfinctx99dc3b3d-bf0b-471d-986a-e216055de11aexctxxyzkdtnhgnsbdfexctx
+      not_hosted_notice: inctxxyzkdtnhgnsbdfinctx0bc377e8-0a5b-4eee-b72b-ec60fc7b50f1exctxxyzkdtnhgnsbdfexctx
+      yanked_notice: inctxxyzkdtnhgnsbdfinctxf9d7a9bb-2520-4384-bc6b-e7019b706f31|JXttb3JlX2luZm9fbGlua30=|%{more_info_link}exctxxyzkdtnhgnsbdfexctx
+      yank_info_link_text: inctxxyzkdtnhgnsbdfinctxe3f40c3a-d65d-4156-835c-7c144e87ba5bexctxxyzkdtnhgnsbdfexctx
+      owners_header: inctxxyzkdtnhgnsbdfinctx094919f8-5f79-42d1-85a5-93cc983f2468exctxxyzkdtnhgnsbdfexctx
+      links:
+        home: inctxxyzkdtnhgnsbdfinctx997a476a-12a9-4547-8213-04e48151c606exctxxyzkdtnhgnsbdfexctx
+        mail: inctxxyzkdtnhgnsbdfinctxb6a8c1b5-0788-4373-9c23-899af9a9f184exctxxyzkdtnhgnsbdfexctx
+        bugs: inctxxyzkdtnhgnsbdfinctx70e9e20f-96ff-4711-ba2e-48592ab742f0exctxxyzkdtnhgnsbdfexctx
+        docs: inctxxyzkdtnhgnsbdfinctxb403a248-52af-46f5-9350-18baae10f103exctxxyzkdtnhgnsbdfexctx
+        code: inctxxyzkdtnhgnsbdfinctxa3f304a1-cf88-4fbc-add8-a8c3f133ffb2exctxxyzkdtnhgnsbdfexctx
+        wiki: inctxxyzkdtnhgnsbdfinctx8f396f84-f715-4dc6-a9f8-3bb63c991de7exctxxyzkdtnhgnsbdfexctx
+        header: inctxxyzkdtnhgnsbdfinctxd462b3f3-88b8-4ed3-acf6-35e07edaefa6exctxxyzkdtnhgnsbdfexctx
+      show_all_versions: inctxxyzkdtnhgnsbdfinctxc8ae6554-1c6e-4e26-b724-067f31da9030|JXtjb3VudH0=|%{count}exctxxyzkdtnhgnsbdfexctx
+  dashboards:
+    show:
+      gem_link_text: inctxxyzkdtnhgnsbdfinctx0266c8a2-07ac-4601-925f-e7ec0df49e79exctxxyzkdtnhgnsbdfexctx
+      latest_title: inctxxyzkdtnhgnsbdfinctxb0b40deb-37ce-4167-ac68-838eb4a99ebdexctxxyzkdtnhgnsbdfexctx
+      no_subscriptions: inctxxyzkdtnhgnsbdfinctx8bf82c8c-797f-4dd5-9c16-7687c8c432d4|JXtnZW1fbGlua30=|%{gem_link}exctxxyzkdtnhgnsbdfexctx
+      mine: inctxxyzkdtnhgnsbdfinctx731f7336-6a93-4519-bde7-35c49dd99d37exctxxyzkdtnhgnsbdfexctx
+      creating_link_text: inctxxyzkdtnhgnsbdfinctx3c9ea0d0-f460-4ff3-be77-352f182c2347exctxxyzkdtnhgnsbdfexctx
+      migrating_link_text: inctxxyzkdtnhgnsbdfinctx9410f28a-652b-44e6-9909-81f90575bee9exctxxyzkdtnhgnsbdfexctx
+      latest: inctxxyzkdtnhgnsbdfinctxd2000e75-6dba-4e11-b00c-78f62acc174eexctxxyzkdtnhgnsbdfexctx
+      my_subscriptions: inctxxyzkdtnhgnsbdfinctx4607a3ae-379d-44e3-a01c-9bfc74a5ecadexctxxyzkdtnhgnsbdfexctx
+      no_owned: inctxxyzkdtnhgnsbdfinctx95150543-284c-4192-bda2-d19bc5bf4daf|JXtjcmVhdGluZ19saW5rfQ==|%{creating_link}delimxyzkdtnhgnsbdfdelimJXttaWdyYXRpbmdfbGlua30=|%{migrating_link}exctxxyzkdtnhgnsbdfexctx
+  please_sign_up: inctxxyzkdtnhgnsbdfinctxb19145b7-46bc-4e5f-aaec-fd4bc0264727exctxxyzkdtnhgnsbdfexctx
+  feed_latest: inctxxyzkdtnhgnsbdfinctxe40e331b-bdc8-4dae-b8f5-031e8386d740exctxxyzkdtnhgnsbdfexctx
+  sessions:
+    new:
+      forgot_password: inctxxyzkdtnhgnsbdfinctx38c7141b-9160-4e45-ae7b-a66fb05098eaexctxxyzkdtnhgnsbdfexctx
+  form_disable_with: inctxxyzkdtnhgnsbdfinctxf2e42265-5571-4a77-b96c-9be20d8e0799exctxxyzkdtnhgnsbdfexctx
+  passwords:
+    new:
+      title: inctxxyzkdtnhgnsbdfinctxc442f31b-e140-4d57-809f-22100c740ad4exctxxyzkdtnhgnsbdfexctx
+      submit: inctxxyzkdtnhgnsbdfinctx3ee43411-bbdf-4e88-8e79-8003c8256e83exctxxyzkdtnhgnsbdfexctx
+      will_email_notice: inctxxyzkdtnhgnsbdfinctxeb9f316f-040e-402a-a9ab-711a22d7a541exctxxyzkdtnhgnsbdfexctx
+    edit:
+      title: inctxxyzkdtnhgnsbdfinctxac2db1d1-a892-430d-8c95-f4ab9109ebbfexctxxyzkdtnhgnsbdfexctx
+      submit: inctxxyzkdtnhgnsbdfinctxddebb41c-b949-4d83-9f11-9903382c17e1exctxxyzkdtnhgnsbdfexctx
+  pages:
+    about:
+      title: inctxxyzkdtnhgnsbdfinctxad2c699d-e22e-435a-96da-e0bf3e8237beexctxxyzkdtnhgnsbdfexctx
+      support: inctxxyzkdtnhgnsbdfinctx2302fa98-4780-4818-93a9-7db0fc0f408e|JXt0aG91Z2h0Ym90fQ==|%{thoughtbot}delimxyzkdtnhgnsbdfdelimJXtnaXRodWJ9|%{github}delimxyzkdtnhgnsbdfdelimJXtoZXJva3V9|%{heroku}exctxxyzkdtnhgnsbdfexctx
+      subtitle: inctxxyzkdtnhgnsbdfinctxc9bc3ad6-9dab-425d-a082-8cc67f977e48exctxxyzkdtnhgnsbdfexctx
+      founding: inctxxyzkdtnhgnsbdfinctx569ba1e5-28b6-4a5d-8763-4286cdb23e1f|JXtmb3VuZGVyfQ==|%{founder}delimxyzkdtnhgnsbdfdelimJXtjb250cmlidXRvcnN9|%{contributors}delimxyzkdtnhgnsbdfdelimJXtkb3dubG9hZHN9|%{downloads}delimxyzkdtnhgnsbdfdelimJXt0aXRsZX0=|%{title}exctxxyzkdtnhgnsbdfexctx
+      purpose:
+        transparent_pages: inctxxyzkdtnhgnsbdfinctx885b8468-7ddb-49ac-bee0-6bbde825446aexctxxyzkdtnhgnsbdfexctx
+        enable_community: inctxxyzkdtnhgnsbdfinctxf5b2d046-615d-4c82-ae97-45d9bead6df1exctxxyzkdtnhgnsbdfexctx
+        better_api: inctxxyzkdtnhgnsbdfinctxd16b8c92-6bfb-45c3-9aa9-4f6716f6ea5dexctxxyzkdtnhgnsbdfexctx
+        header: inctxxyzkdtnhgnsbdfinctx1989be15-2718-4c3c-90ac-6b88c196f0b1|JXtzaXRlfQ==|%{site}exctxxyzkdtnhgnsbdfexctx
+      technical: inctxxyzkdtnhgnsbdfinctx609239da-1d52-4a1e-a9e3-f256bfc7ad0d|JXtyYWlsc30=|%{rails}delimxyzkdtnhgnsbdfdelimJXtzaW5hdHJhfQ==|%{sinatra}delimxyzkdtnhgnsbdfdelimJXtzM30=|%{s3}delimxyzkdtnhgnsbdfdelimJXtzb3VyY2VfY29kZX0=|%{source_code}delimxyzkdtnhgnsbdfdelimJXtsaWNlbnNlfQ==|%{license}exctxxyzkdtnhgnsbdfexctx
+    create:
+      title: inctxxyzkdtnhgnsbdfinctxc8b40f0f-c761-4afa-bdfd-409459b9c288exctxxyzkdtnhgnsbdfexctx
+      notice: inctxxyzkdtnhgnsbdfinctx0c891070-3c4d-4a97-b606-84d704e94a29exctxxyzkdtnhgnsbdfexctx
+  edit: inctxxyzkdtnhgnsbdfinctxa95136c2-2b9e-44c0-a09d-38aa719521c0exctxxyzkdtnhgnsbdfexctx
+  searches:
+    show:
+      exact_match: inctxxyzkdtnhgnsbdfinctxe57ed4e6-8865-4246-93da-2a1207dcbd59exctxxyzkdtnhgnsbdfexctx
+      subtitle: inctxxyzkdtnhgnsbdfinctx8f93108d-3677-4fb7-9e29-28d65c97e777|JXtxdWVyeX0=|%{query}exctxxyzkdtnhgnsbdfexctx
+  url: inctxxyzkdtnhgnsbdfinctx955be465-8df1-41e1-946b-911f74f73fb5exctxxyzkdtnhgnsbdfexctx
+  versions:
+    index:
+      title: inctxxyzkdtnhgnsbdfinctxf5dd8d5b-1321-471c-a103-b881cd2a6a4a|JXtuYW1lfQ==|%{name}exctxxyzkdtnhgnsbdfexctx
+      not_hosted_notice: inctxxyzkdtnhgnsbdfinctx3e164214-e5e6-4df8-b92a-d50322d38bfbexctxxyzkdtnhgnsbdfexctx
+      versions_since: inctxxyzkdtnhgnsbdfinctx054c3f1d-5c90-4f25-8b3d-ef2afa83af03|JXtjb3VudH0=|%{count}delimxyzkdtnhgnsbdfdelimJXtzaW5jZX0=|%{since}exctxxyzkdtnhgnsbdfexctx
+    version:
+      yanked: inctxxyzkdtnhgnsbdfinctxa0e9be95-72ae-41f2-9105-73ae32ddcc96exctxxyzkdtnhgnsbdfexctx
+  feed_subscribed: inctxxyzkdtnhgnsbdfinctx966c5cf7-eb8c-4726-af2f-b1179ce32e76exctxxyzkdtnhgnsbdfexctx
+  subtitle: inctxxyzkdtnhgnsbdfinctx0af27d25-18b6-4aca-9528-ddb46d8f5e86exctxxyzkdtnhgnsbdfexctx
+  help_url: inctxxyzkdtnhgnsbdfinctx36720bd6-095b-4087-a404-d22f2c6f9fbaexctxxyzkdtnhgnsbdfexctx
+  profiles:
+    edit:
+      title: inctxxyzkdtnhgnsbdfinctx21ec8103-3a5d-418f-96d5-23247c98fab6exctxxyzkdtnhgnsbdfexctx
+      api_access:
+        confirm_reset: inctxxyzkdtnhgnsbdfinctxe64ec6ce-9c88-47ca-a5fd-adf15095a07fexctxxyzkdtnhgnsbdfexctx
+        title: inctxxyzkdtnhgnsbdfinctx467567fd-1f09-4b4c-8885-0a214f14ed9eexctxxyzkdtnhgnsbdfexctx
+        key_is: inctxxyzkdtnhgnsbdfinctx6925e6eb-a90e-4cb1-8110-56575b479655|JXtrZXl9|%{key}exctxxyzkdtnhgnsbdfexctx
+        link_text: inctxxyzkdtnhgnsbdfinctxb96ee1cf-ad0b-4dd4-a236-9f4beacee582exctxxyzkdtnhgnsbdfexctx
+        reset: inctxxyzkdtnhgnsbdfinctxa3a41883-40c6-46e6-b2f7-18b2f9419446exctxxyzkdtnhgnsbdfexctx
+        credentials: inctxxyzkdtnhgnsbdfinctx9dba6915-769e-4e81-93f9-745e2da6774f|JXtnZW1fY29tbWFuZHNfbGlua30=|%{gem_commands_link}delimxyzkdtnhgnsbdfdelimJXtnZW1fY3JlZGVudGlhbHNfZmlsZX0=|%{gem_credentials_file}exctxxyzkdtnhgnsbdfexctx
+      reset_password:
+        title: inctxxyzkdtnhgnsbdfinctx9f6b8011-79eb-43aa-a996-fd07677b0c37exctxxyzkdtnhgnsbdfexctx
+        text: inctxxyzkdtnhgnsbdfinctx09a005b6-5171-460c-9553-b3fc0fee7ec5|JXtsaW5rfQ==|%{link}exctxxyzkdtnhgnsbdfexctx
+        link_text: inctxxyzkdtnhgnsbdfinctxc7835c98-c525-4b3f-b30a-efdee0f7a358exctxxyzkdtnhgnsbdfexctx
+  layouts:
+    application:
+      footer:
+        status: inctxxyzkdtnhgnsbdfinctx46821bfc-a37d-4732-9bbf-1524361b3e98exctxxyzkdtnhgnsbdfexctx
+        discussion_forum: inctxxyzkdtnhgnsbdfinctx1a61f348-b552-4775-b839-faf002e30c9aexctxxyzkdtnhgnsbdfexctx
+        hosted_by: inctxxyzkdtnhgnsbdfinctxfd6ed54f-3a79-4957-91a2-1486fd7382a8|JXtzdXBwb3J0ZXJ9|%{supporter}exctxxyzkdtnhgnsbdfexctx
+        resolved_with_title: inctxxyzkdtnhgnsbdfinctx07d2b968-bd5f-492a-8ddf-7c8dfb9e97bf|JXtyZXNvbHZlcn0=|%{resolver}exctxxyzkdtnhgnsbdfexctx
+        about: inctxxyzkdtnhgnsbdfinctxba25acde-2298-4679-b0bc-da1096ed8e40exctxxyzkdtnhgnsbdfexctx
+        uptime: inctxxyzkdtnhgnsbdfinctxb9c578bb-6b95-47fd-9d98-aaa58a7b8146exctxxyzkdtnhgnsbdfexctx
+        optimized_by: inctxxyzkdtnhgnsbdfinctxef22fba5-161a-4378-b96f-5f4809c1491f|JXtvcHRpbWl6ZXJ9|%{optimizer}exctxxyzkdtnhgnsbdfexctx
+        optimized_by_title: inctxxyzkdtnhgnsbdfinctx7ea105f1-5367-4967-8361-c1f1212c1de8|JXtvcHRpbWl6ZXJ9|%{optimizer}exctxxyzkdtnhgnsbdfexctx
+        contribute: inctxxyzkdtnhgnsbdfinctx83dc81e7-68e6-47f1-8acd-41e60cc0c3daexctxxyzkdtnhgnsbdfexctx
+        blog: inctxxyzkdtnhgnsbdfinctx98ba6731-9513-4c8e-9ebe-f9f9aca6bb0dexctxxyzkdtnhgnsbdfexctx
+        guides: inctxxyzkdtnhgnsbdfinctx941f194b-f6a0-4b09-8428-6a6d618f1351exctxxyzkdtnhgnsbdfexctx
+        designed_by: inctxxyzkdtnhgnsbdfinctx396443b8-9ad7-4d26-b5dc-005c6fd5a983|JXtkZXNpZ25lcn0=|%{designer}exctxxyzkdtnhgnsbdfexctx
+        statistics: inctxxyzkdtnhgnsbdfinctxd86ac52a-a77f-430e-a853-30eb25a6aa46exctxxyzkdtnhgnsbdfexctx
+        source_code: inctxxyzkdtnhgnsbdfinctxe9ffce77-1c28-4c19-9d9d-28c1d05fc25cexctxxyzkdtnhgnsbdfexctx
+        help: inctxxyzkdtnhgnsbdfinctx6e39d91f-e6d3-4873-ae25-2f1a8bbabd1aexctxxyzkdtnhgnsbdfexctx
+        supported_by: inctxxyzkdtnhgnsbdfinctxcadd74e4-46df-4fd8-8e74-35294775c888|JXtzdXBwb3J0ZXJ9|%{supporter}exctxxyzkdtnhgnsbdfexctx
+        tracking_by: inctxxyzkdtnhgnsbdfinctxbaf268a6-6feb-455a-a052-cbd901e5196f|JXt0cmFja2VyfQ==|%{tracker}exctxxyzkdtnhgnsbdfexctx
+        supported_by_title: inctxxyzkdtnhgnsbdfinctx8da1a985-7a5b-4037-8dc6-4426a408e495|JXtzdXBwb3J0ZXJ9|%{supporter}exctxxyzkdtnhgnsbdfexctx
+        resolved_with: inctxxyzkdtnhgnsbdfinctx792a600c-e665-4877-b480-74feb8a824f5|JXtyZXNvbHZlcn0=|%{resolver}exctxxyzkdtnhgnsbdfexctx
+        tracking_by_title: inctxxyzkdtnhgnsbdfinctxc40b1ea3-5a7e-49cd-bd95-23584751fbf1|JXt0cmFja2VyfQ==|%{tracker}exctxxyzkdtnhgnsbdfexctx
+        designed_by_title: inctxxyzkdtnhgnsbdfinctx7e550c10-920a-4d61-881f-56ad437e02b9|JXtkZXNpZ25lcn0=|%{designer}exctxxyzkdtnhgnsbdfexctx
+        mobile: inctxxyzkdtnhgnsbdfinctx7fe102ee-11c1-44a3-8f09-0a567dd1bf88exctxxyzkdtnhgnsbdfexctx
+        hosted_by_title: inctxxyzkdtnhgnsbdfinctx87a8c1f0-3341-4e36-a1c2-4f760519187f|JXtzdXBwb3J0ZXJ9|%{supporter}exctxxyzkdtnhgnsbdfexctx
+      header:
+        sign_in: inctxxyzkdtnhgnsbdfinctx0ef3e759-60da-4ad6-b81b-4038d8483b11exctxxyzkdtnhgnsbdfexctx
+        sign_out: inctxxyzkdtnhgnsbdfinctx8d9654ea-6390-46e9-acfb-e508945e73ccexctxxyzkdtnhgnsbdfexctx
+        dashboard: inctxxyzkdtnhgnsbdfinctx18da6ecc-7f42-4807-961f-549168fc6a74exctxxyzkdtnhgnsbdfexctx
+        sign_up: inctxxyzkdtnhgnsbdfinctx4f385cc9-662b-4fb4-93fb-b229cb739e75exctxxyzkdtnhgnsbdfexctx
+        all_gems: inctxxyzkdtnhgnsbdfinctxb10baaff-1167-4892-93f5-c9fe2465e7b1exctxxyzkdtnhgnsbdfexctx
