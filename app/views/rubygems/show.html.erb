@@ -39,14 +39,16 @@
             <% end %>
           </div>
 
-          <div class="downloads counter" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
-            <span>
-              <%= t('stats.show.total_downloads', :count => content_tag(:strong, number_with_delimiter(@rubygem.downloads))).html_safe %>
-            </span>
-            <span>
-              <%= t('.downloads_for_this_version', :count => content_tag(:strong, number_with_delimiter(@latest_version.downloads_count))).html_safe %>
-            </span>
-          </div>
+          <% unless Rails.env.recovery? %>
+            <div class="downloads counter" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
+              <span>
+                <%= t('stats.show.total_downloads', :count => content_tag(:strong, number_with_delimiter(@rubygem.downloads))).html_safe %>
+              </span>
+              <span>
+                <%= t('.downloads_for_this_version', :count => content_tag(:strong, number_with_delimiter(@latest_version.downloads_count))).html_safe %>
+              </span>
+            </div>
+          <% end %>
 
           <% if @rubygem.owners.present? %>
             <div class="owners">

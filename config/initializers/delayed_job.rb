@@ -1,6 +1,7 @@
 unless Rails.env.maintenance?
-  Delayed::Job.const_set('MAX_ATTEMPTS', 3)
-  Delayed::Job.const_set('MAX_RUN_TIME', 5.minutes)
+  require 'delayed_job'
+  Delayed::Worker.max_attempts = 3
+  Delayed::Worker.max_run_time = 5.minutes
 end
 
 PRIORITIES = {

@@ -1,7 +1,9 @@
 <% content_for :fold do %>
   <div class="count">
-    <strong><%= t 'download_count', :count => number_with_delimiter(@downloads_count) %></strong>
-    <%= t '.gems_header', :gem_count => number_with_delimiter(@rubygems_count) %>
+    <% unless Rails.env.recovery? %>
+      <strong><%= t 'download_count', :count => number_with_delimiter(@downloads_count) %></strong>
+      <%= t '.gems_header', :gem_count => number_with_delimiter(@rubygems_count) %>
+    <% end %>
   </div>
   <div class="blurb">
     <strong><%= t '.welcome_blurb' %></strong>
@@ -56,7 +58,9 @@
   </div>
   <div class="grid_3" id="most_downloaded">
     <strong><%= t '.leaderboards.downloaded' %></strong>
-    <% if @downloaded.any? %>
+    <% if Rails.env.recovery? || @downloaded.none? %>
+      <p><%= t '.leaderboards.no_downloaded' %></p>
+    <% else %>
       <ol>
         <% @downloaded.each do |version, downloads| %>
           <li>
@@ -64,8 +68,6 @@
           </li>
         <% end %>
       </ol>
-    <% else %>
-      <p><%= t '.leaderboards.no_downloaded' %></p>
     <% end %>
   </div>
   <div class="grid_3" id="just_updated">

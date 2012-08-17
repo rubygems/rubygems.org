@@ -84,6 +84,8 @@ GEM
     factory_girl_rails (4.0.0)
       factory_girl (~> 4.0.0)
       railties (>= 3.0.0)
+    fakeredis (0.4.0)
+      redis (~> 3.0.0)
     ffi (1.1.5)
     fog (1.4.0)
       builder
@@ -238,6 +240,7 @@ DEPENDENCIES
   dynamic_form
   excon
   factory_girl_rails
+  fakeredis
   fog (~> 1.4.0)
   gchartrb
   gravtastic
