@@ -90,13 +90,13 @@ Gemcutter::Application.routes.draw do
   resource  :dashboard, :only => :show
   resources :profiles,  :only => :show
   resource  :profile,   :only => [:edit, :update]
-  resources :stats,     :only => :index
+  resources :stats,     :only => :index, :constraints => RecoveryMode
 
   resources :rubygems, :only => :index, :path => 'gems' do
     constraints :rubygem_id => Patterns::ROUTE_PATTERN do
       resource  :subscription, :only => [:create, :destroy]
       resources :versions,     :only => :index
-      resource  :stats,        :only => :show
+      resource  :stats,        :only => :show, :constraints => RecoveryMode
     end
   end
 
@@ -105,7 +105,7 @@ Gemcutter::Application.routes.draw do
 
       constraints :rubygem_id => Patterns::ROUTE_PATTERN do
         resources :versions, :only => :show do
-          resource :stats, :only => :show
+          resource :stats, :only => :show, :constraints => RecoveryMode
         end
       end
     end

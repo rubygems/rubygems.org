@@ -64,6 +64,10 @@ group :development, :test, :staging, :production do
   gem 'newrelic-redis'
 end
 
+group :recovery do
+  gem "fakeredis"
+end
+
 platforms :jruby do
   gem 'jruby-openssl'
 end

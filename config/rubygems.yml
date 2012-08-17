@@ -44,3 +44,7 @@ production:
 maintenance:
   delivery_method: :test
   <<: *LIVE
+
+recovery:
+  delivery_method: :sendmail
+  <<: *LIVE

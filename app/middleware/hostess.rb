@@ -73,7 +73,7 @@ class Hostess < Sinatra::Base
       content_type('application/x-deflate')
       serve_via_cf
     else
-      error 404, "This gem does not currently live at Gemcutter."
+      error 404, "This gem does not currently live at RubyGems.org."
     end
   end
 
@@ -86,7 +86,7 @@ class Hostess < Sinatra::Base
 
         serve_via_cf
       else
-        error 404, "This gem does not currently live at Gemcutter."
+        error 404, "This gem does not currently live at RubyGems.org."
       end
     end
   end

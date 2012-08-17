@@ -50,7 +50,7 @@
       <ol>
       <% current_user.subscribed_gems.each do |gem| %>
         <li>
-          <%= download_count(gem) %>
+          <%= download_count(gem) unless Rails.env.recovery? %>
           <%= link_to gem, gem, :title => short_info(gem.versions.most_recent) %>
         </li>
       <% end %>
