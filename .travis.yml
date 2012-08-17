@@ -7,7 +7,6 @@ matrix:
   allow_failures:
     - rvm: ruby-head
 rvm:
-  - 1.9.2
   - 1.9.3
   - ruby-head
 script: bundle exec rake db:create db:migrate db:test:prepare default
