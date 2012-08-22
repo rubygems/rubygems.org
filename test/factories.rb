@@ -55,7 +55,7 @@ FactoryGirl.define do
   end
 
   sequence :name do |n|
-    "RubyGem#{n}"
+    "rubygem#{n}"
   end
 
   factory :rubygem do

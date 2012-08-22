@@ -9,14 +9,14 @@ Feature: List gems API
       | user@example.com | myhandle |
     And the following version exists:
       | rubygem    | number |
-      | name: AGem | 1.0.0 |
+      | name: agem | 1.0.0 |
     And the following ownership exists:
       | rubygem    | user                    |
-      | name: AGem | email: user@example.com |
-      | name: BGem | |
+      | name: agem | email: user@example.com |
+      | name: bgem | |
     When I list the gems for owner "myhandle"
-    Then I should see "AGem"
-    And I should not see "BGem"
+    Then I should see "agem"
+    And I should not see "bgem"
 
   Scenario: Anonymous user lists gems for unknown user
     When I list the gems for owner "nobody"
@@ -27,9 +27,9 @@ Feature: List gems API
     And I have an API key for "original@owner.org/password"
     And the following version exists:
       | rubygem     | number |
-      | name: MyGem | 1.0.0  |
+      | name: mygem | 1.0.0  |
     And the following ownership exists:
       | rubygem     | user                      |
-      | name: MyGem | email: original@owner.org |
+      | name: mygem | email: original@owner.org |
     When I list the gems with my API key
-    Then I should see "MyGem"
+    Then I should see "mygem"
