@@ -5,41 +5,41 @@ Feature: Push Gems
 
   Scenario: User pushes new gem
     Given I am signed up as "email@person.com"
-    And I have a gem "RGem" with version "1.2.3"
+    And I have a gem "rgem" with version "1.2.3"
     And I have an API key for "email@person.com/password"
-    When I push the gem "RGem-1.2.3.gem" with my API key
-    And I visit the gem page for "RGem"
-    Then I should see "RGem"
+    When I push the gem "rgem-1.2.3.gem" with my API key
+    And I visit the gem page for "rgem"
+    Then I should see "rgem"
     And I should see "1.2.3"
 
   Scenario: User pushes existing version of existing gem
     Given I am signed up as "email@person.com"
-    And I have a gem "PGem" with version "1.0.0" and summary "First try"
+    And I have a gem "pgem" with version "1.0.0" and summary "First try"
     And I have an API key for "email@person.com/password"
-    When I push the gem "PGem-1.0.0.gem" with my API key
-    And I visit the gem page for "PGem"
-    Then I should see "PGem"
+    When I push the gem "pgem-1.0.0.gem" with my API key
+    And I visit the gem page for "pgem"
+    Then I should see "pgem"
     And I should see "1.0.0"
     And I should see "First try"
 
-    When I have a gem "PGem" with version "1.0.0" and summary "Second try"
-    And I push the gem "PGem-1.0.0.gem" with my API key
+    When I have a gem "pgem" with version "1.0.0" and summary "Second try"
+    And I push the gem "pgem-1.0.0.gem" with my API key
     Then the response should contain "Repushing of gem versions is not allowed."
     And the response should contain "Please use `gem yank` to remove bad gem releases."
-    And I visit the gem page for "PGem"
-    And I should see "PGem"
+    And I visit the gem page for "pgem"
+    And I should see "pgem"
     And I should see "1.0.0"
     And I should see "First try"
 
   Scenario: User pushes new version of existing gem
     Given I am signed up as "email@person.com"
     And I have an API key for "email@person.com/password"
-    And I have a gem "BGem" with version "2.0.0"
-    And I push the gem "BGem-2.0.0.gem" with my API key
-    And I have a gem "BGem" with version "3.0.0"
-    When I push the gem "BGem-3.0.0.gem" with my API key
-    And I visit the gem page for "BGem"
-    Then I should see "BGem"
+    And I have a gem "bgem" with version "2.0.0"
+    And I push the gem "bgem-2.0.0.gem" with my API key
+    And I have a gem "bgem" with version "3.0.0"
+    When I push the gem "bgem-3.0.0.gem" with my API key
+    And I visit the gem page for "bgem"
+    Then I should see "bgem"
     And I should see "2.0.0"
     And I should see "3.0.0"
 
