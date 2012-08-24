@@ -1,3 +1,6 @@
+require 'webmock'          # Allow connections to elasticsearch
+WebMock.disable_net_connect!(:allow => /localhost\:9200/)
+
 Gemcutter::Application.configure do
   config.cache_classes = true
   config.whiny_nils = true
