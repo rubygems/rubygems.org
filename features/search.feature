@@ -1,3 +1,5 @@
+@search
+
 Feature: Search
   In order to find a gem I want
   As a ruby developer

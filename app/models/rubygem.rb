@@ -20,6 +20,8 @@ class Rubygem < ActiveRecord::Base
   before_destroy :mark_unresolved
 
   tire do
+    index_prefix Rails.env
+
     mapping do
       indexes :name
       indexes :indexed, :type => 'boolean'

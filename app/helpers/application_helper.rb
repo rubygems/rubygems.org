@@ -16,7 +16,7 @@ module ApplicationHelper
   end
 
   def short_info(version)
-    truncate(version.info, :length => 100)
+    version ? truncate(version.info, :length => 100) : ''
   end
 
   def gravatar(size, id = "gravatar", user = current_user)
