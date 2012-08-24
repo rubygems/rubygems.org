@@ -1,8 +1,8 @@
 class Dependency < ActiveRecord::Base
   LIMIT = 250
 
-  belongs_to :rubygem
-  belongs_to :version
+  belongs_to :rubygem, :touch => true
+  belongs_to :version, :touch => true
 
   before_validation :use_gem_dependency,
                     :use_existing_rubygem,

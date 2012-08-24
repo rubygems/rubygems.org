@@ -1,6 +1,9 @@
 class Rubygem < ActiveRecord::Base
   include Patterns
 
+  include Tire::Model::Search
+  include Tire::Model::Callbacks
+
   has_many :owners, :through => :ownerships, :source => :user
   has_many :ownerships, :dependent => :destroy
   has_many :subscribers, :through => :subscriptions, :source => :user
@@ -12,8 +15,16 @@ class Rubygem < ActiveRecord::Base
   validate :ensure_name_format, :if => :needs_name_validation?
   validates :name, :presence => true, :uniqueness => true
 
-  after_create :update_unresolved
+  after_create :update_unresolved, :update_elasticsearch_index
+  after_touch  :update_elasticsearch_index
   before_destroy :mark_unresolved
+
+  tire do
+    mapping do
+      indexes :name
+      indexes :indexed, :type => 'boolean'
+    end
+  end
 
   def self.with_versions
     where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)")
@@ -168,6 +179,10 @@ class Rubygem < ActiveRecord::Base
 
   def to_param
     name
+  end
+
+  def to_indexed_json
+    MultiJson.dump :name => name, :indexed => versions.any?(&:indexed?)
   end
 
   def with_downloads

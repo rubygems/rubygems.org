@@ -1,5 +1,5 @@
 class Linkset < ActiveRecord::Base
-  belongs_to :rubygem
+  belongs_to :rubygem, :touch => true
   attr_protected :rubygem_id
 
   LINKS = %w(home wiki docs mail code bugs).freeze

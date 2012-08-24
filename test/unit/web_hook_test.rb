@@ -176,9 +176,9 @@ class WebHookTest < ActiveSupport::TestCase
   context "with a non-global hook job" do
     setup do
       @url     = 'http://example.com/gemcutter'
-      @rubygem = create(:rubygem)
-      @version = create(:version, :rubygem => @rubygem)
-      @hook    = create(:web_hook,
+      @rubygem = build(:rubygem)
+      @version = build(:version, :rubygem => @rubygem)
+      @hook    = build(:web_hook,
                          :rubygem => @rubygem,
                          :url     => @url)
       stub_request(:post, @url)
@@ -187,7 +187,7 @@ class WebHookTest < ActiveSupport::TestCase
     end
 
     should "include an Authorization header" do
-      request = WebMock::RequestRegistry.instance.requested_signatures.hash.keys.first
+      request = WebMock::RequestRegistry.instance.requested_signatures.hash.keys.last
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number + @hook.user.api_key)
 
       assert_equal authorization, request.headers['Authorization']
