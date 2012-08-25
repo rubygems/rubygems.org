@@ -33,8 +33,9 @@ class Rubygem < ActiveRecord::Base
                }
              } do
       mapping do
-        indexes :name,    :analyzer => 'rubygem'
-        indexes :indexed, :type => 'boolean'
+        indexes :name,      :analyzer => 'rubygem'
+        indexes :indexed,   :type => 'boolean'
+        indexes :downloads, :type => 'integer'
       end
     end
   end
@@ -195,7 +196,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def to_indexed_json
-    MultiJson.dump :name => name, :indexed => versions.any?(&:indexed?)
+    MultiJson.dump :name => name, :indexed => versions.any?(&:indexed?), :downloads => downloads
   end
 
   def with_downloads

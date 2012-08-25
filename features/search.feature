@@ -66,3 +66,13 @@ Feature: Search
     And I press "Search"
     And I should see "RGem (1.2.1)"
     And I should not see "RGem (1.2.2)"
+
+  Scenario: The most downloaded gem is listed first
+    Given a rubygem "Cereal-Bowl" exists with version "0.0.1" and 500 downloads
+    And a rubygem "Cereal" exists with version "0.0.9" and 5 downloads
+    When I go to the homepage
+    And I fill in "query" with "cereal"
+    And I press "Search"
+    Then I should see these search results:
+      | Cereal-Bowl (0.0.1) |
+      | Cereal (0.0.9)      |

@@ -19,6 +19,11 @@ Given /^a rubygem exists with name "([^\"]*)" and version "([^\"]*)"$/ do |name,
   create(:version, :rubygem => rubygem, :number => version_number)
 end
 
+Given /^a rubygem "([^\"]*)" exists with version "([^\"]*)" and (\d+) downloads$/ do |name, version, downloads|
+  rubygem = create(:rubygem_with_downloads, :name => name, downloads: downloads)
+  create(:version, :rubygem => rubygem, :number => version)
+end
+
 Given /^I have a gem "([^\"]*)" with version "([^\"]*)" and homepage "([^\"]*)"$/ do |name, version, homepage|
   gemspec = new_gemspec(name, version, "Gemcutter", "ruby")
   gemspec.homepage = homepage
