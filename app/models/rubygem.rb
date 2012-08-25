@@ -22,9 +22,20 @@ class Rubygem < ActiveRecord::Base
   tire do
     index_prefix Rails.env
 
-    mapping do
-      indexes :name
-      indexes :indexed, :type => 'boolean'
+    settings :number_of_shards   => 1,
+             :number_of_replicas => 1,
+             :analysis           => {
+               :analyzer => {
+                 :rubygem => {
+                   :type => 'pattern',
+                   :pattern => "[\s#{Regexp.escape(SPECIAL_CHARACTERS)}]+"
+                 }
+               }
+             } do
+      mapping do
+        indexes :name,    :analyzer => 'rubygem'
+        indexes :indexed, :type => 'boolean'
+      end
     end
   end
 
