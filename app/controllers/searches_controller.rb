@@ -5,13 +5,17 @@ class SearchesController < ApplicationController
       @gems = Rubygem.tire.search :page     => params[:page],
                                   :per_page => Rubygem.per_page,
                                   :load     => {:include => 'versions'} do |search|
+
         search.query do |s|
           s.filtered do |f|
             f.query  { |q| q.match :name, params[:query], :type => 'phrase_prefix', :operator => 'and' }
             f.filter :term, :indexed => true
           end
         end
-        search.sort   { by :downloads, 'desc' }
+        search.sort   do
+          by 'downloads', :desc
+          by 'name.raw',  :asc
+        end
 
         # STDOUT.puts search.to_curl if Rails.env.development?
       end

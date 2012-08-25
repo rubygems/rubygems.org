@@ -76,3 +76,15 @@ Feature: Search
     Then I should see these search results:
       | Cereal-Bowl (0.0.1) |
       | Cereal (0.0.9)      |
+
+  Scenario: The most downloaded gem is listed first and the rest of results is ordered alphabetically
+    Given a rubygem "Straight-F" exists with version "0.0.1" and 10 downloads
+    And a rubygem "Straight-B" exists with version "0.0.1" and 0 downloads
+    And a rubygem "Straight-A" exists with version "0.0.1" and 0 downloads
+    When I go to the homepage
+    And I fill in "query" with "straight"
+    And I press "Search"
+    Then I should see these search results:
+      | Straight-F (0.0.1) |
+      | Straight-A (0.0.1) |
+      | Straight-B (0.0.1) |
