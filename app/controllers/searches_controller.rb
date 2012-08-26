@@ -1,5 +1,11 @@
 class SearchesController < ApplicationController
 
+  # Indicate incorrect query to the user
+  rescue_from Tire::Search::SearchRequestFailed do |error|
+    flash.now[:failure] = "Sorry, your query is incorrect." if error.message =~ /SearchParseException/ && params[:query]
+    render :show, :status => :internal_server_error
+  end
+
   def show
     if params[:query].present?
       @gems = Rubygem.tire.search :page     => params[:page],

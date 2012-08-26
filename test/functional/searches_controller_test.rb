@@ -65,4 +65,15 @@ class SearchesControllerTest < ActionController::TestCase
     should respond_with :redirect
     should redirect_to('the gem') { rubygem_path(@sinatra) }
   end
+
+  context 'on GET to show with bad search query' do
+    setup { get :show, :query => 'bang!' }
+
+    should respond_with :internal_server_error
+    should render_template :show
+    should set_the_flash.now[:failure].to /query is incorrect/
+    should "see no results" do
+      assert ! page.has_content?("Results")
+    end
+  end
 end
