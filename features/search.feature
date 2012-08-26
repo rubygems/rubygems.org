@@ -88,3 +88,10 @@ Feature: Search
       | Straight-F (0.0.1) |
       | Straight-A (0.0.1) |
       | Straight-B (0.0.1) |
+
+  Scenario: The user enters a search query with incorrect syntax
+    When I go to the homepage
+    And I fill in "query" with "bang!"
+    And I press "Search"
+    Then I should not see /Displaying.*Rubygem/
+    But I should see "Sorry, your query is incorrect."
