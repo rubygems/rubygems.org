@@ -103,7 +103,7 @@ GEM
       json (>= 1.4.6)
     gravtastic (3.2.6)
     high_voltage (1.1.1)
-    highline (1.6.13)
+    highline (1.6.14)
     hike (1.2.1)
     i18n (0.6.0)
     journey (1.0.4)
