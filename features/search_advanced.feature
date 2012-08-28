@@ -18,3 +18,16 @@ Feature: Search Advanced
       | capybara (0.0.1) |
       | sinatra (0.0.1)  |
       | vegas (0.0.1)    |
+
+Scenario: Searching in authors
+    Given gems with these properties exist:
+      | name     | version | authors                        | downloads |
+      | sinatra  | 0.0.1   | Blake Mizerany, Ryan Tomayko   | 500       |
+      | beefcake | 0.0.1   | Blake Mizerany                 | 50        |
+      | vegas    | 0.0.1   | Aaron Quint                    | 5         |
+    When I go to the homepage
+    And I fill in "query" with "author:blake"
+    And I press "Search"
+    Then I should see these search results:
+      | sinatra (0.0.1)   |
+      | beefcake (0.0.1)  |
