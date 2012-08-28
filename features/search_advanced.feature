@@ -11,9 +11,7 @@ Feature: Search Advanced
       | name: sinatra  | 0.0.1  | Sinatra is a DSL ...                      |                         |
       | name: vegas    | 0.0.1  | executable versions ... Sinatra/Rack apps |                         |
       | name: capybara | 0.0.1  |                                           | ... testing Sinatra ... |
-    When I go to the homepage
-    And I fill in "query" with "sinatra"
-    And I press "Search"
+    When I search for "sinatra"
     Then I should see these search results:
       | capybara (0.0.1) |
       | sinatra (0.0.1)  |
@@ -25,9 +23,7 @@ Scenario: Searching in authors
       | sinatra  | 0.0.1   | Blake Mizerany, Ryan Tomayko   | 500       |
       | beefcake | 0.0.1   | Blake Mizerany                 | 50        |
       | vegas    | 0.0.1   | Aaron Quint                    | 5         |
-    When I go to the homepage
-    And I fill in "query" with "author:blake"
-    And I press "Search"
+    When I search for "author:blake"
     Then I should see these search results:
       | sinatra (0.0.1)   |
       | beefcake (0.0.1)  |
