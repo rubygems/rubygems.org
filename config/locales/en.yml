@@ -166,6 +166,8 @@ en:
     show:
       subtitle: "for %{query}"
       exact_match: Exact match
+      tips: Tips
+      tips_tooltip: "Show search tips"
 
   sessions:
     new:

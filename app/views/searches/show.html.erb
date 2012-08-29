@@ -1,5 +1,13 @@
 <% @title = "search" %>
-<% @subtitle = t('.subtitle', :query => content_tag(:em, h(params[:query]))) if params[:query].present? %>
+
+<% @subtitle = t('.subtitle', :query => nil) if params[:query].present? %>
+<%= form_tag search_url, :id => "in-page-search", :method => :get do %>
+  <%= text_field_tag :query, params[:query] if params[:query].present? %>
+  <a href="#" id="search-tips-toggle" title="<%= t '.tips_tooltip' %>"><%= t '.tips' %></a>
+<% end %>
+
+<%= render :partial => 'search_tips' %>
+
 <% if @gems %>
   <% if @exact_match %>
     <p><%= t '.exact_match' %></p>
