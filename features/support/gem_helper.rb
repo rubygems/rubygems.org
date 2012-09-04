@@ -24,6 +24,7 @@ module GemHelper
       s.rubygems_version = %q{1.3.5}
       s.summary = "#{summary}"
       s.test_files = []
+      s.licenses = []
     end
 
     def gemspec.validate
