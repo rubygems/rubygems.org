@@ -7,6 +7,8 @@ class Version < ActiveRecord::Base
   after_create     :full_nameify!
   after_save       :reorder_versions
 
+  serialize :licenses
+
   validates :number,   :format => {:with => /\A#{Gem::Version::VERSION_PATTERN}\z/}
   validates :platform, :format => {:with => Rubygem::NAME_PATTERN}
 
@@ -141,6 +143,7 @@ class Version < ActiveRecord::Base
       :authors     => spec.authors,
       :description => spec.description,
       :summary     => spec.summary,
+      :licenses    => spec.licenses,
       :built_at    => spec.date,
       :indexed     => true
     )
@@ -183,6 +186,7 @@ class Version < ActiveRecord::Base
       'summary'         => summary,
       'platform'        => platform,
       'prerelease'      => prerelease,
+      'licenses'        => licenses
     }
   end
 

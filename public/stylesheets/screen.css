@@ -641,17 +641,22 @@ table {
   border-bottom: 1px solid #B4AC99;
 }
 
-.main .info .meta .authors {
-  display: inline-block;
-  width: 50%;
-}
-
-.main .info .meta .owners h5 {
+.main .info .meta .info-item {
+  width: 100%;
   margin-top: 13px;
 }
 
-.main .info .meta .owners p {
+.main .info .meta .info-item:first-child {
+  margin-top: 0;
+}
+
+.main .info .meta .info-item p {
   width: 100%;
+}
+
+.main .info .meta .authors {
+  display: inline-block;
+  width: 50%;
 }
 
 .main .info .meta .owners img {

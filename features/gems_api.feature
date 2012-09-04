@@ -5,15 +5,15 @@ Feature: List gems API
 
   Scenario: Anonymous user lists gems for owner
     Given the following user exists:
-      | email            | handle     |
+      | email            | handle   |
       | user@example.com | myhandle |
     And the following version exists:
       | rubygem    | number |
-      | name: AGem | 1.0.0 |
+      | name: AGem | 1.0.0  |
     And the following ownership exists:
       | rubygem    | user                    |
       | name: AGem | email: user@example.com |
-      | name: BGem | |
+      | name: BGem |                         |
     When I list the gems for owner "myhandle"
     Then I should see "AGem"
     And I should not see "BGem"
@@ -33,3 +33,10 @@ Feature: List gems API
       | name: MyGem | email: original@owner.org |
     When I list the gems with my API key
     Then I should see "MyGem"
+
+  Scenario: Gem versions include all gem version data
+    Given the following version exists:
+      | rubygem                  | number | licenses |
+      | name: testgemwithlicense | 1.0.0  | MIT      |
+    When I GET "/api/v1/versions/testgemwithlicense.json"
+    Then the JSON response should include all of the gem version metadata
