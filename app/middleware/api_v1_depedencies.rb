@@ -28,7 +28,7 @@ class V1MarshaledDepedencies
     end
 
     if cache
-      cache.set "gem.#{name}", [Marshal.dump(these)].pack("m")
+      cache.set "gem.#{name}", Marshal.dump(these)
     end
 
     ary
@@ -55,7 +55,7 @@ class V1MarshaledDepedencies
     gems.each do |g|
       begin
         data = cache.get "gem.#{g}"
-        ary += Marshal.load(data.unpack("m").first)
+        ary += Marshal.load(data)
       rescue Memcached::NotFound
         begin
           data_for g, ary, cache
