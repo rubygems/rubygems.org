@@ -14,14 +14,14 @@ class V1MarshaledDepedencies
 
     these = []
 
-    gem.versions.each do |ver|
+    gem.versions.order(:number).reverse_each do |ver|
       deps = ver.dependencies.find_all { |d| d.scope == "runtime" }
 
       data = {
         :name => name,
         :number => ver.number,
         :platform => ver.platform,
-        :dependencies => deps.map { |d| d.requirements.split(" ", 2) }
+        :dependencies => deps.map { |d| [d.name, d.requirements] }
       }
       these << data
       ary << data
