@@ -8,7 +8,7 @@ class V1MarshaledDepedencies
   TooMany =    [413, {}, 
                 ["Too many gems to resolve, please request less than #{LIMIT}"]]
 
-  def data_for(name, ary, cache)
+  def data_for(name)
     gem = Rubygem.find_by_name(name)
     raise "Unknown gem - #{name}" unless gem
 
@@ -23,15 +23,21 @@ class V1MarshaledDepedencies
         :platform => ver.platform,
         :dependencies => deps.map { |d| [d.name, d.requirements] }
       }
+
       these << data
-      ary << data
     end
 
-    if cache
-      cache.set "gem.#{name}", [Marshal.dump(these)].pack("m")
+    # Strip off the version header
+    str = Marshal.dump(these)
+    val = str[3].ord
+
+    if val == 0 or val > 4
+      m = str[4..-1]
+    else
+      m = str[4+val..-1]
     end
 
-    ary
+    [these.size, m]
   end
 
   CACHE = Memcached.new("localhost:11211")
@@ -49,30 +55,43 @@ class V1MarshaledDepedencies
 
     return TooMany if gems.size > LIMIT
 
-    ary = []
+    total = 0
+    body = []
     cache = CACHE.clone
 
     gems.each do |g|
+      key = "gem.#{g}"
+
       begin
-        data = cache.get "gem.#{g}"
-        ary += Marshal.load(data.unpack("m").first)
+        n, m = cache.get(key).split(":",2)
+
+        total += n.to_i
+        body << m
       rescue Memcached::NotFound
         begin
-          data_for g, ary, cache
+          n, m = data_for(g)
+
+          cache.set key, "#{n}:#{m}"
+
+          total += n
+          body << m
         rescue
           return BadRequest
         end
       rescue Memcached::ServerIsMarkedDead
         begin
-          data_for g, ary, nil
+          n, m = data_for(g)
+
+          total += n
+          body << m
         rescue
           return BadRequest
         end
       end
     end
 
-    body = Marshal.dump ary
+    body.unshift "\x04\x08[\x04#{[total].pack('V')}"
 
-    [200, {}, [body]]
+    [200, {}, body]
   end
 end
