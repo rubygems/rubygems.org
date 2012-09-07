@@ -252,6 +252,7 @@ DEPENDENCIES
   gchartrb
   gravtastic
   high_voltage
+  highline
   jquery-rails
   jruby-openssl
   launchy
