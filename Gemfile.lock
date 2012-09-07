@@ -34,7 +34,7 @@ GEM
       builder
       girl_friday
     arel (3.0.2)
-    builder (3.0.0)
+    builder (3.0.1)
     capistrano (2.13.3)
       highline
       net-scp (>= 1.0.0)
