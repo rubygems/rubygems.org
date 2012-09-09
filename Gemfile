@@ -49,6 +49,7 @@ group :test do
   gem 'factory_girl_rails'
   gem 'launchy'
   gem 'nokogiri'
+  gem 'poltergeist'
   gem 'rack-test', :require => 'rack/test'
   gem 'rr'
   gem 'shoulda', :require => false
