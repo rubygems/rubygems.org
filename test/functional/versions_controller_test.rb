@@ -40,6 +40,9 @@ class VersionsControllerTest < ActionController::TestCase
     setup do
       @latest_version = create(:version, :built_at => 1.week.ago, :created_at => 1.day.ago)
       @rubygem = @latest_version.rubygem
+      @versions = (1..5).map do |_|
+        Factory(:version, :rubygem => @rubygem)
+      end
       get :show, :rubygem_id => @rubygem.name, :id => @latest_version.number
     end
 
@@ -49,7 +52,14 @@ class VersionsControllerTest < ActionController::TestCase
     should assign_to(:latest_version) { @latest_version }
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
+    end
+    should "render the specified version" do
       assert page.has_content?(@latest_version.number)
+    end
+    should "render other related versions" do
+      @versions.each do |version|
+        assert page.has_content?(version.number)
+      end
     end
   end
 end
