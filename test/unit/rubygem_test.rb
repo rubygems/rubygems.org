@@ -121,8 +121,8 @@ class RubygemTest < ActiveSupport::TestCase
 
     context "#public_versions_with_extra_version" do
       setup do
-        @first_version = Factory(:version, :rubygem => @rubygem, :number => '1.0.0', :position => 1)
-        @extra_version = Factory(:version, :rubygem => @rubygem, :number => '0.1.0', :position => 2)
+        @first_version = FactoryGirl.create(:version, :rubygem => @rubygem, :number => '1.0.0', :position => 1)
+        @extra_version = FactoryGirl.create(:version, :rubygem => @rubygem, :number => '0.1.0', :position => 2)
       end
       should "include public versions" do
         assert @rubygem.public_versions_with_extra_version(@extra_version).include?(@first_version)
