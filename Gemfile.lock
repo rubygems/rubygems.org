@@ -34,7 +34,7 @@ GEM
       builder
       girl_friday
     arel (3.0.2)
-    builder (3.0.1)
+    builder (3.0.3)
     capistrano (2.13.3)
       highline
       net-scp (>= 1.0.0)
@@ -236,6 +236,7 @@ PLATFORMS
 
 DEPENDENCIES
   airbrake
+  builder (> 3.0.1)
   capistrano-ext
   capybara
   clearance (~> 0.16)
