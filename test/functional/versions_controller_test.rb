@@ -41,7 +41,7 @@ class VersionsControllerTest < ActionController::TestCase
       @latest_version = create(:version, :built_at => 1.week.ago, :created_at => 1.day.ago)
       @rubygem = @latest_version.rubygem
       @versions = (1..5).map do |_|
-        Factory(:version, :rubygem => @rubygem)
+        FactoryGirl.create(:version, :rubygem => @rubygem)
       end
       get :show, :rubygem_id => @rubygem.name, :id => @latest_version.number
     end
