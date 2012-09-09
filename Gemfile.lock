@@ -222,7 +222,7 @@ GEM
     tzinfo (0.3.33)
     validates_formatting_of (0.7.1)
       activemodel (~> 3.0)
-    webmock (1.8.9)
+    webmock (1.8.10)
       addressable (>= 2.2.7)
       crack (>= 0.1.7)
     will_paginate (3.0.3)
