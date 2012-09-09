@@ -7,7 +7,7 @@ class VersionsController < ApplicationController
 
   def show
     @latest_version = Version.find_from_slug!(@rubygem.id, params[:id])
-    @versions = [@latest_version]
+    @versions = @rubygem.public_versions_with_extra_version(@latest_version)
     render "rubygems/show"
   end
 
