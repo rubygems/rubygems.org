@@ -54,13 +54,26 @@ class Download
   def self.counts_by_day_for_versions(versions, days)
     dates = (days.days.ago.to_date...Time.zone.today).map(&:to_s)
 
-    versions.inject({}) do |downloads, version|
-      $redis.hmget(self.history_key(version), *dates).each_with_index do |count, idx|
-        downloads["#{version.id}-#{dates[idx]}"] = count.to_i
+    downloads = {}
+    versions.each do |version|
+      key = history_key(version)
+
+      $redis.hmget(key, *dates).zip(dates).each do |count, date|
+        if count
+          count = count.to_i
+        else
+          vh = VersionHistory.where(:version_id => version.id,
+                                    :day => date).first
+
+          count = vh ? vh.count : 0
+        end
+
+        downloads["#{version.id}-#{date}"] = count
       end
       downloads["#{version.id}-#{Time.zone.today}"] = self.today(version)
-      downloads
     end
+
+    downloads
   end
 
   def self.counts_by_day_for_version_in_date_range(version, start, stop)
@@ -68,8 +81,21 @@ class Download
 
     dates = (start..stop).map(&:to_s)
 
-    $redis.hmget(self.history_key(version), *dates).each_with_index do |count, idx|
-      downloads["#{dates[idx]}"] = count.to_i
+    $redis.hmget(history_key(version), *dates).zip(dates).each do |count, date|
+      if count
+        count = count.to_i
+      else
+        vh = VersionHistory.where(:version_id => version.id,
+                                  :day => date).first
+
+        if vh
+          count = vh.count
+        else
+          count = 0
+        end
+      end
+
+      downloads[date] = count
     end
 
     if stop == Time.zone.today
@@ -90,6 +116,8 @@ class Download
       version_key(what.full_name)
     when Rubygem
       rubygem_key(what.name)
+    else
+      raise TypeError, "Unknown type for key - #{what.class}"
     end
   end
 
@@ -99,6 +127,8 @@ class Download
       version_history_key(what.full_name)
     when Rubygem
       rubygem_history_key(what.name)
+    else
+      raise TypeError, "Unknown type for history_key - #{what.class}"
     end
   end
 
