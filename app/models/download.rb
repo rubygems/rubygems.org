@@ -117,7 +117,26 @@ class Download
     end
   end
 
-  def self.migrate_to_sql(version)
+  def self.copy_all_to_sql
+    i = 0
+    count = 0
+    versions = Version.all
+    total = versions.size
+
+    VersionHistory.transaction do
+      versions.each do |ver|
+        i += 1
+        yield total, i, ver if block_given?
+
+        dates = migrate_to_sql ver, false
+        count += 1 unless dates.empty?
+      end
+    end
+
+    count
+  end
+
+  def self.migrate_to_sql(version, remove=true)
     key = history_key version
 
     dates = $redis.hkeys(key)
@@ -128,7 +147,7 @@ class Download
 
     dates.each do |d|
       copy_to_sql version, d
-      $redis.hdel key, d
+      $redis.hdel key, d if remove
     end
 
     dates
