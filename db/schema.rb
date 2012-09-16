@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120915212528) do
+ActiveRecord::Schema.define(:version => 20120916165331) do
 
   create_table "announcements", :force => true do |t|
     t.text     "body"
@@ -120,11 +120,9 @@ ActiveRecord::Schema.define(:version => 20120915212528) do
   add_index "users", ["token"], :name => "index_users_on_token"
 
   create_table "version_histories", :force => true do |t|
-    t.integer  "version_id"
-    t.date     "day"
-    t.integer  "count"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.integer "version_id"
+    t.date    "day"
+    t.integer "count"
   end
 
   add_index "version_histories", ["version_id", "day"], :name => "index_version_histories_on_version_id_and_day", :unique => true
