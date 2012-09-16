@@ -83,6 +83,11 @@ FactoryGirl.define do
     rubygem
   end
 
+  factory :version_history do
+    day { Time.zone.today.to_s }
+    count 1
+  end
+
   sequence :url do |n|
     "http://example#{n}.com"
   end
