@@ -132,6 +132,60 @@ class DownloadTest < ActiveSupport::TestCase
     assert_equal downloads, Download.counts_by_day_for_versions([@version_1, @version_2, @version_3], 2)
   end
 
+  should "find counts per day for versions when in DB also" do
+    @rubygem_1 = create(:rubygem)
+    @version_1 = create(:version, :rubygem => @rubygem_1)
+    @version_2 = create(:version, :rubygem => @rubygem_1)
+
+    @rubygem_2 = create(:rubygem)
+    @version_3 = create(:version, :rubygem => @rubygem_2)
+
+    @rubygem_3 = create(:rubygem)
+    @version_4 = create(:version, :rubygem => @rubygem_3)
+
+    Timecop.freeze(1.day.ago) do
+      create :version_history, :version => @version_1, :count => 5
+      create :version_history, :version => @version_2
+      create :version_history, :version => @version_3
+    end
+
+    Download.incr(@rubygem_2, @version_3.full_name)
+    Download.incr(@rubygem_1, @version_1.full_name)
+    Download.incr(@rubygem_2, @version_3.full_name)
+    Download.incr(@rubygem_2, @version_3.full_name)
+    Download.incr(@rubygem_1, @version_2.full_name)
+
+    downloads = {
+      "#{@version_1.id}-#{2.days.ago.to_date}" => 0, "#{@version_1.id}-#{Date.yesterday}" => 5, "#{@version_1.id}-#{Time.zone.today}" => 1,
+      "#{@version_2.id}-#{2.days.ago.to_date}" => 0, "#{@version_2.id}-#{Date.yesterday}" => 1, "#{@version_2.id}-#{Time.zone.today}" => 1,
+      "#{@version_3.id}-#{2.days.ago.to_date}" => 0, "#{@version_3.id}-#{Date.yesterday}" => 1, "#{@version_3.id}-#{Time.zone.today}" => 3 }
+
+    assert_equal downloads.size, 9
+    assert_equal downloads, Download.counts_by_day_for_versions([@version_1, @version_2, @version_3], 2)
+  end
+
+  should "find counts per day for versions in range" do
+    @rubygem_1 = create(:rubygem)
+    @version_1 = create(:version, :rubygem => @rubygem_1)
+
+    Timecop.freeze(1.day.ago) do
+      create :version_history, :version => @version_1, :count => 5
+    end
+
+    Download.incr(@rubygem_1, @version_1.full_name)
+
+    start = 2.days.ago.to_date.to_s
+    fin = Time.zone.today.to_s
+
+    downloads = ActiveSupport::OrderedHash.new.tap do |d|
+      d[start] = 0
+      d["#{Date.yesterday}"] = 5
+      d[fin] = 1
+    end
+
+    assert_equal downloads, Download.counts_by_day_for_version_in_date_range(@version_1, start, fin)
+  end
+
   should "find download count by gem name" do
     rubygem = create(:rubygem)
     version1 = create(:version, :rubygem => rubygem)
@@ -164,5 +218,59 @@ class DownloadTest < ActiveSupport::TestCase
     assert_equal 9, Download.today_keys.size
     Download.cleanup_today_keys
     assert_equal 0, Download.today_keys.size
+  end
+
+  should "copy data from redis into SQL" do
+    rubygem = create(:rubygem)
+    version = create(:version, :rubygem => rubygem)
+
+    Download.incr rubygem.name, version.full_name
+
+    date = Time.zone.today.to_s
+
+    assert_equal nil, VersionHistory.for(version, date)
+
+    Download.copy_to_sql version, date
+
+    assert_equal 1, VersionHistory.for(version, date).count
+
+    Download.incr rubygem.name, version.full_name
+
+    Download.copy_to_sql version, date
+
+    assert_equal 2, VersionHistory.for(version, date).count
+  end
+
+  should "copy all be the last 2 days into SQL" do
+    rubygem = create(:rubygem)
+    version = create(:version, :rubygem => rubygem)
+
+    10.times do |n|
+      Timecop.freeze(n.days.ago) do
+        3.times { Download.incr(rubygem.name, version.full_name) }
+      end
+    end
+
+    Download.migrate_to_sql version
+
+    assert_equal [1.day.ago.to_date.to_s, Time.zone.today.to_s].sort,
+                 $redis.hkeys(Download.history_key(version)).sort
+  end
+
+  should "migrate all keys in redis" do
+    rubygem = create(:rubygem)
+    version = create(:version, :rubygem => rubygem)
+
+    10.times do |n|
+      Timecop.freeze(n.days.ago) do
+        3.times { Download.incr(rubygem.name, version.full_name) }
+      end
+    end
+
+    assert_equal 1, Download.migrate_all_to_sql
+
+    assert_equal [1.day.ago.to_date.to_s, Time.zone.today.to_s].sort,
+                 $redis.hkeys(Download.history_key(version)).sort
+
   end
 end

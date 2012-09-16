@@ -58,4 +58,11 @@ namespace :gemcutter do
       end
     end
   end
+
+  desc "Move all but the last 2 days of version history to SQL"
+  task :migrate_history => :environment do
+    Download.migrate_all_to_sql do |t,c,v|
+      puts "#{c} of #{t}: #{v.full_name}"
+    end
+  end
 end
