@@ -135,8 +135,16 @@ class Download
   end
 
   def self.migrate_all_to_sql
+    i = 0
     count = 0
-    Version.all.each do |ver|
+    versions = Version.all
+    total = versions.size
+
+
+    versions.each do |ver|
+      i += 1
+      yield total, i, ver if block_given?
+
       dates = migrate_to_sql ver
       count += 1 unless dates.empty?
     end
