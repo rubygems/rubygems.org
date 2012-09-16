@@ -106,6 +106,44 @@ class Download
     downloads
   end
 
+  def self.copy_to_sql(version, date)
+    count = $redis.hget(history_key(version), date)
+
+    if vh = VersionHistory.for(version, date)
+      vh.count = count
+      vh.save
+    else
+      VersionHistory.make(version, date, count)
+    end
+  end
+
+  def self.migrate_to_sql(version)
+    key = history_key version
+
+    dates = $redis.hkeys(key)
+
+    back = 1.days.ago.to_date
+
+    dates.delete_if { |e| Date.parse(e) >= back }
+
+    dates.each do |d|
+      copy_to_sql version, d
+      $redis.hdel key, d
+    end
+
+    dates
+  end
+
+  def self.migrate_all_to_sql
+    count = 0
+    Version.all.each do |ver|
+      dates = migrate_to_sql ver
+      count += 1 unless dates.empty?
+    end
+
+    count
+  end
+
   def self.counts_by_day_for_version(version)
     counts_by_day_for_version_in_date_range(version, Time.zone.today - 89.days, Time.zone.today)
   end
