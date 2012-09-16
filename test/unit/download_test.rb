@@ -219,4 +219,58 @@ class DownloadTest < ActiveSupport::TestCase
     Download.cleanup_today_keys
     assert_equal 0, Download.today_keys.size
   end
+
+  should "copy data from redis into SQL" do
+    rubygem = create(:rubygem)
+    version = create(:version, :rubygem => rubygem)
+
+    Download.incr rubygem.name, version.full_name
+
+    date = Time.zone.today.to_s
+
+    assert_equal nil, VersionHistory.for(version, date)
+
+    Download.copy_to_sql version, date
+
+    assert_equal 1, VersionHistory.for(version, date).count
+
+    Download.incr rubygem.name, version.full_name
+
+    Download.copy_to_sql version, date
+
+    assert_equal 2, VersionHistory.for(version, date).count
+  end
+
+  should "copy all be the last 2 days into SQL" do
+    rubygem = create(:rubygem)
+    version = create(:version, :rubygem => rubygem)
+
+    10.times do |n|
+      Timecop.freeze(n.days.ago) do
+        3.times { Download.incr(rubygem.name, version.full_name) }
+      end
+    end
+
+    Download.migrate_to_sql version
+
+    assert_equal [1.day.ago.to_date.to_s, Time.zone.today.to_s].sort,
+                 $redis.hkeys(Download.history_key(version)).sort
+  end
+
+  should "migrate all keys in redis" do
+    rubygem = create(:rubygem)
+    version = create(:version, :rubygem => rubygem)
+
+    10.times do |n|
+      Timecop.freeze(n.days.ago) do
+        3.times { Download.incr(rubygem.name, version.full_name) }
+      end
+    end
+
+    assert_equal 1, Download.migrate_all_to_sql
+
+    assert_equal [1.day.ago.to_date.to_s, Time.zone.today.to_s].sort,
+                 $redis.hkeys(Download.history_key(version)).sort
+
+  end
 end
