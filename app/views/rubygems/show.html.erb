@@ -27,7 +27,6 @@
         <%= documentation_link(@latest_version, @rubygem.linkset) %>
         <%= subscribe_link(@rubygem) if @latest_version.indexed %>
         <%= unsubscribe_link(@rubygem) %>
-        <%= link_to t('.stats_header'), rubygem_stats_path(@rubygem), :id => "stats" if @latest_version.indexed %>
       </div>
 
       <% if @latest_version.indexed %>
