@@ -76,11 +76,13 @@ class RubygemsHelperTest < ActionView::TestCase
     end
 
     should "show the overview link first" do
+      pending
       overview = stats_options(@rubygem).first
       assert_equal ["Overview", rubygem_stats_path(@rubygem)], overview
     end
 
     should "have all the links for the rubygem" do
+      pending
       _, *links = stats_options(@rubygem)
 
       @versions.sort.reverse.each_with_index do |version, index|
