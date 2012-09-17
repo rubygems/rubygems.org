@@ -96,7 +96,7 @@ Gemcutter::Application.routes.draw do
     constraints :rubygem_id => Patterns::ROUTE_PATTERN do
       resource  :subscription, :only => [:create, :destroy]
       resources :versions,     :only => :index
-      resource  :stats,        :only => :show, :constraints => RecoveryMode
+      #resource  :stats,        :only => :show, :constraints => RecoveryMode
     end
   end
 
