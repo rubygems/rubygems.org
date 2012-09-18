@@ -34,7 +34,7 @@ GEM
       girl_friday
     arel (3.0.2)
     builder (3.0.3)
-    capistrano (2.13.3)
+    capistrano (2.13.4)
       highline
       net-scp (>= 1.0.0)
       net-sftp (>= 2.0.0)
