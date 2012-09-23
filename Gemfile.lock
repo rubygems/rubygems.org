@@ -114,6 +114,7 @@ GEM
       railties (>= 3.1.0, < 5.0)
       thor (~> 0.14)
     json (1.7.5)
+    kgio (2.7.4)
     launchy (2.1.2)
       addressable (~> 2.3)
     libwebsocket (0.1.5)
@@ -179,6 +180,7 @@ GEM
       rake (>= 0.8.7)
       rdoc (~> 3.4)
       thor (>= 0.14.6, < 2.0)
+    raindrops (0.10.0)
     rake (0.9.2.2)
     rdoc (3.12)
       json (~> 1.4)
@@ -219,6 +221,10 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.33)
+    unicorn (4.3.1)
+      kgio (~> 2.6)
+      rack
+      raindrops (~> 0.7)
     validates_formatting_of (0.7.1)
       activemodel (~> 3.0)
     webmock (1.8.10)
@@ -280,6 +286,7 @@ DEPENDENCIES
   shoulda
   sinatra
   timecop
+  unicorn
   validates_formatting_of (>= 0.3)
   webmock
   will_paginate
