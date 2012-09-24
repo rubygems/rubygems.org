@@ -4,6 +4,7 @@ gem 'rails', '~> 3.2.7'
 
 gem 'airbrake'
 gem 'builder', '> 3.0.1'
+gem 'bluepill'
 gem 'clearance', '~> 0.16'
 gem 'dynamic_form'
 gem 'excon'
