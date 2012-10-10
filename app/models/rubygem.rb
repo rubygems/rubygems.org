@@ -223,10 +223,6 @@ class Rubygem < ActiveRecord::Base
     end
   end
 
-  def yank!(version)
-    version.yank!
-  end
-
   def disown
     ownerships.each(&:delete)
   end

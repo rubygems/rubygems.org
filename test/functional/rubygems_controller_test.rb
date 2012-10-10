@@ -315,7 +315,7 @@ class RubygemsControllerTest < ActionController::TestCase
     setup do
       version = create(:version, :created_at => 1.minute.ago)
       @rubygem = version.rubygem
-      @rubygem.yank!(version)
+      version.yank!
     end
     context 'when signed out' do
       setup { get :show, :id => @rubygem.to_param }
