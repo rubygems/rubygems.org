@@ -372,8 +372,12 @@ class RubygemTest < ActiveSupport::TestCase
         @rubygem_with_version.yank!(@rubygem_with_version.versions.first)
       end
 
-      should "no longer be owned" do
-        assert @rubygem_with_version.reload.unowned?
+      should "still be owned" do
+        assert @rubygem_with_version.owned_by?(@owner)
+      end
+
+      should "no longer be indexed" do
+        assert @rubygem_with_version.versions.indexed.count.zero?
       end
     end
 

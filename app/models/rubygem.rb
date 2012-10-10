@@ -225,9 +225,10 @@ class Rubygem < ActiveRecord::Base
 
   def yank!(version)
     version.yank!
-    if versions.indexed.count.zero?
-      ownerships.each(&:delete)
-    end
+  end
+
+  def disown
+    ownerships.each(&:delete)
   end
 
   def find_or_initialize_version_from_spec(spec)
