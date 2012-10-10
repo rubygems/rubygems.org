@@ -261,10 +261,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           delete :yank, :gem_name => @rubygem.to_param, :version => @v1.number
         end
         should respond_with :success
-        should "keep the gem, deindex, remove owner" do
+        should "keep the gem, deindex, keep owner" do
           assert_equal 1, @rubygem.versions.count
           assert @rubygem.versions.indexed.count.zero?
-          assert @rubygem.ownerships.count.zero?
         end
       end
 
