@@ -229,7 +229,7 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.33)
-    unicorn (4.3.1)
+    unicorn (4.4.0)
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
