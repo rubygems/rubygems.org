@@ -71,7 +71,7 @@ group :development, :test, :staging, :production do
 end
 
 group :recovery do
-  gem "fakeredis"
+  gem 'fakeredis'
 end
 
 platforms :jruby do
