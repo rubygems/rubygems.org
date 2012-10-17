@@ -58,6 +58,28 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     should_respond_to(:yaml) do |body|
       YAML.load(body)
     end
+
+    should "return Last-Modified header" do
+      get_show(@rubygem)
+      assert_equal @response.headers['Last-Modified'], @rubygem.updated_at.httpdate
+    end
+
+    should "return 304 when If-Modified-Since header is satisfied" do
+      set_cache_header(@rubygem.updated_at)
+      get_show(@rubygem)
+      assert_response :not_modified
+    end
+
+    should "return 200 when If-Modified-Since header is not satisfied" do
+      set_cache_header(@rubygem.updated_at - 1)
+      get_show(@rubygem)
+      assert_response :success
+    end
+
+    def set_cache_header(timestamp)
+      ims = ActionDispatch::Http::Cache::Request::HTTP_IF_MODIFIED_SINCE
+      request.env[ims] = timestamp.httpdate
+    end
   end
 
   context "on GET to show for an unknown gem" do
@@ -103,4 +125,5 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       assert_equal 12, MultiJson.load(@response.body).size
     end
   end
+
 end
