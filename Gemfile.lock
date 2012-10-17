@@ -93,9 +93,9 @@ GEM
     fakeredis (0.4.1)
       redis (~> 3.0.0)
     ffi (1.1.5)
-    fog (1.4.0)
+    fog (1.6.0)
       builder
-      excon (~> 0.14.0)
+      excon (~> 0.14)
       formatador (~> 0.2.0)
       mime-types
       multi_json (~> 1.0)
@@ -250,20 +250,20 @@ PLATFORMS
 DEPENDENCIES
   airbrake
   bluepill
-  builder (> 3.0.1)
+  builder
   capistrano-ext
   capybara
-  clearance (~> 0.16)
+  clearance
   cucumber-rails
   daemons
   database_cleaner
   delayed_job
   delayed_job_active_record
   dynamic_form
-  excon
+  excon (~> 0.14.0)
   factory_girl_rails
   fakeredis
-  fog (~> 1.4.0)
+  fog
   gchartrb
   gravtastic
   high_voltage
@@ -296,7 +296,7 @@ DEPENDENCIES
   sinatra
   timecop
   unicorn
-  validates_formatting_of (>= 0.3)
+  validates_formatting_of
   webmock
   will_paginate
   xml-simple
