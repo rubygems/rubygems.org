@@ -45,39 +45,3 @@
         :api => content_tag(:strong, link_to(t('.pitch.api'), "http://guides.rubygems.org/rubygems-org-api/")),
         :contribute => content_tag(:strong, link_to(t('.pitch.contribute'), "http://github.com/rubygems/rubygems.org"))).html_safe %>
 </p>
-<div class="leaderboards">
-  <div class="grid_3" id="new_gems">
-    <strong><%= t '.leaderboards.new' %></strong>
-    <ol>
-      <% @latest.each do |rubygem| %>
-        <li>
-          <%= link_to rubygem, rubygem, :title => short_info(rubygem.versions.most_recent) %>
-        </li>
-      <% end %>
-    </ol>
-  </div>
-  <div class="grid_3" id="most_downloaded">
-    <strong><%= t '.leaderboards.downloaded' %></strong>
-    <% if Rails.env.recovery? || @downloaded.none? %>
-      <p><%= t '.leaderboards.no_downloaded' %></p>
-    <% else %>
-      <ol>
-        <% @downloaded.each do |version, downloads| %>
-          <li>
-            <%= link_to "#{version.rubygem.name}-#{version.number} (#{number_with_delimiter downloads})", version.rubygem, :title => short_info(version) %>
-          </li>
-        <% end %>
-      </ol>
-    <% end %>
-  </div>
-  <div class="grid_3" id="just_updated">
-    <strong><%= t '.leaderboards.updated' %></strong>
-    <ol>
-      <% @updated.each do |version| %>
-        <li>
-          <%= link_to version.to_title, version.rubygem, :title => short_info(version) %>
-        </li>
-      <% end %>
-    </ol>
-  </div>
-</div>
