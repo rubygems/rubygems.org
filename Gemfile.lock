@@ -84,7 +84,7 @@ GEM
     diff-lcs (1.1.3)
     dynamic_form (1.1.4)
     erubis (2.7.0)
-    excon (0.14.3)
+    excon (0.16.7)
     factory_girl (4.1.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.1.0)
@@ -260,7 +260,7 @@ DEPENDENCIES
   delayed_job
   delayed_job_active_record
   dynamic_form
-  excon (~> 0.14.0)
+  excon
   factory_girl_rails
   fakeredis
   fog
