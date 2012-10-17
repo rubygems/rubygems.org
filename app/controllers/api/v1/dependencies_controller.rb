@@ -1,5 +1,7 @@
 class Api::V1::DependenciesController < Api::BaseController
   def index
+    render :text => "Dependency API disabled temporarily for performance reasons", :status => 503 and return
+
     gem_list = (params[:gems] || '').split(',')
 
     if gem_list.size <= Dependency::LIMIT
