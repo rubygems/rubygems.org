@@ -6,7 +6,6 @@ gem 'rails', '~> 3.2.7'
 gem 'airbrake'
 gem 'builder', '> 3.0.1'
 gem 'bluepill'
-gem 'clearance', '~> 0.16'
 gem 'dynamic_form'
 gem 'excon'
 gem 'fog', '~> 1.4.0'
@@ -63,6 +62,7 @@ end
 # For some reason, including these gems in the maintenance environment enables
 # maintenance mode
 group :development, :test, :staging, :production do
+  gem 'clearance', '~> 0.16'
   gem 'daemons'
   gem 'delayed_job'
   gem 'delayed_job_active_record'
