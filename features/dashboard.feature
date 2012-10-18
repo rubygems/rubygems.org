@@ -35,6 +35,7 @@ Feature: Dashboard
     And I should see "1,001 downloads"
     And I should see "1,008 downloads"
 
+  @wip
   Scenario: Yanked gem is hidden from listing
     Given the following versions exist:
       | rubygem    | number | indexed |

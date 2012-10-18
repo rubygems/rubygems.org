@@ -1,3 +1,4 @@
+@wip
 Feature: Resolver endpoint
   Background:
     Given a rubygem exists with a name of "terran"

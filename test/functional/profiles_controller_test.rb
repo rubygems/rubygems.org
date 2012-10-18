@@ -32,9 +32,11 @@ class ProfilesControllerTest < ActionController::TestCase
       should assign_to(:user) { @user }
       should "assign the last 10 most downloaded gems" do
         assert_equal @rubygems[0..9], assigns[:rubygems]
+        pending
       end
       should "assign the extra gems you own" do
         assert_equal [@rubygems.last], assigns[:extra_rubygems]
+        pending
       end
     end
 
