@@ -11,6 +11,7 @@ class HomeControllerTest < ActionController::TestCase
       stub(Version).just_updated { [] }
       stub(Download).count { @downloads_count }
       get :index
+      pending
     end
 
     should respond_with :success
