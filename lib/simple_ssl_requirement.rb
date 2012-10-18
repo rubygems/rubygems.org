@@ -5,7 +5,7 @@ module SimpleSSLRequirement
       private
 
       def require_ssl
-        if !request.ssl?
+        if !request.ssl? && !Rails.env.test?
           redirect_to "https://#{request.host}#{request.fullpath}"
           flash.keep
         end

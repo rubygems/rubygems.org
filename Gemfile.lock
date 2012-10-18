@@ -84,6 +84,7 @@ GEM
     diff-lcs (1.1.3)
     dynamic_form (1.1.4)
     erubis (2.7.0)
+    eventmachine (1.0.0)
     excon (0.14.3)
     factory_girl (4.1.0)
       activesupport (>= 3.0.0)
@@ -92,6 +93,8 @@ GEM
       railties (>= 3.0.0)
     fakeredis (0.4.1)
       redis (~> 3.0.0)
+    faye-websocket (0.4.6)
+      eventmachine (>= 0.12.0)
     ffi (1.1.5)
     fog (1.4.0)
       builder
@@ -113,6 +116,7 @@ GEM
     high_voltage (1.2.0)
     highline (1.6.15)
     hike (1.2.1)
+    http_parser.rb (0.5.3)
     i18n (0.6.1)
     journey (1.0.4)
     jquery-rails (2.1.3)
@@ -149,6 +153,12 @@ GEM
     paul_revere (1.1)
       rails (~> 3.0)
     pg (0.14.1)
+    poltergeist (0.7.0)
+      capybara (~> 1.1)
+      childprocess (~> 0.3)
+      faye-websocket (~> 0.4, >= 0.4.4)
+      http_parser.rb (~> 0.5.3)
+      multi_json (~> 1.0)
     polyglot (0.3.3)
     pry (0.9.10)
       coderay (~> 1.0.5)
@@ -279,6 +289,7 @@ DEPENDENCIES
   nokogiri
   paul_revere
   pg
+  poltergeist
   pry
   puma
   rack
