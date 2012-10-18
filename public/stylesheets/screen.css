@@ -1240,6 +1240,8 @@ input[type='submit']:hover {
 
 #announcement {
   background: #584b3a;
+  margin-top: -20px;
+  margin-bottom: 20px;
   padding-top: 10px;
   padding-bottom: 10px;
   border-bottom: none;
