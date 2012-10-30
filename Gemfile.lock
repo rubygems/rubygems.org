@@ -110,7 +110,7 @@ GEM
     girl_friday (0.10.0)
       connection_pool (~> 0.9.0)
     gravtastic (3.2.6)
-    high_voltage (1.2.0)
+    high_voltage (1.2.1)
     highline (1.6.15)
     hike (1.2.1)
     i18n (0.6.1)
