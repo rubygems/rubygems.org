@@ -16,5 +16,6 @@ end
 
 After do
   FileUtils.rm_rf(TEST_DIR)
+  Dir.chdir(Rails.root)
   $redis.flushdb
 end
