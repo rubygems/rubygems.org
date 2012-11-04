@@ -22,6 +22,7 @@ Feature: Profile Feature
     When I am on "jon@example.com" profile page
     Then I should see "sandworm"
     And I should see "3 today"
+    And I should see "(1 gem)"
 
   Scenario: View another user's profile
     Given I have signed in with "bob@example.com"
@@ -58,3 +59,4 @@ Feature: Profile Feature
     And I should not see download graphs for the following rubygems:
       | subdivisions |
       | high_water   |
+    And I should see "(13 gems)"

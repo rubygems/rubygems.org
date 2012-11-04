@@ -11,7 +11,7 @@
       <%= link_to "Edit Profile", edit_profile_path, :id => "edit-profile" %>
     <% end %>
     <% unless Rails.env.recovery? %>
-      <h5 id="downloads">Downloads</h5>
+      <h5 id="downloads">Downloads (<%= @user.total_rubygems_count.to_s %> <%= "gem".pluralize(@user.total_rubygems_count) %>)</h5>
       <div id="downloads_count">
         <div><strong><%= number_with_delimiter(@user.today_downloads_count) %></strong> today</div>
         <div><strong><%= number_with_delimiter(@user.total_downloads_count) %></strong> all time</div>
