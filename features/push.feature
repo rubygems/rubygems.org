@@ -83,3 +83,10 @@ Feature: Push Gems
     Then I should see "RubyGems.org cannot process this gem."
     And I should not see "Error:"
     And I should not see "No metadata found!"
+
+  Scenario: User pushes gem with bad description
+    Given I am signed up as "email@person.com"
+    And I have an API key for "email@person.com/password"
+    And I have a gem "bad-characters" with version "0.0.0" and summary "Breaking this field later"
+    When I push the fixture gem "bad-characters-1.0.0.gem" with my API key
+    Then I should see "RubyGems.org cannot process this gem. Please try rebuilding it and installing it locally to make sure it's valid."
