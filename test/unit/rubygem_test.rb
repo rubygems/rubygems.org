@@ -548,7 +548,7 @@ class RubygemTest < ActiveSupport::TestCase
         Rubygem.create(:name => "rake")
 
         @rubygem       = Rubygem.new(:name => @specification.name)
-        @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
+        @version       = @rubygem.find_or_initialize_version_from_spec_and_size(@specification, 5)
       end
 
       should "save the gem" do
@@ -561,6 +561,7 @@ class RubygemTest < ActiveSupport::TestCase
         assert_equal 1, @rubygem.versions.count
         assert_equal 1, @rubygem.versions_count
         assert_equal 2, @version.dependencies.count
+        assert_equal 5, @version.size
         assert Rubygem.exists?(:name => 'thoughtbot-shoulda')
         assert Rubygem.exists?(:name => 'rake')
       end
