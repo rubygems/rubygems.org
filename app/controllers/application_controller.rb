@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
         format.html do
           render :file => "public/404", :status => :not_found, :layout => false, :formats => [:html]
         end
-        format.json do
+        format.any do
           render :text => "This rubygem could not be found.", :status => :not_found
         end
       end
