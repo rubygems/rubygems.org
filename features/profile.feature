@@ -59,4 +59,5 @@ Feature: Profile Feature
     And I should not see download graphs for the following rubygems:
       | subdivisions |
       | high_water   |
+      | sandworm     |
     And I should see "(13 gems)"
