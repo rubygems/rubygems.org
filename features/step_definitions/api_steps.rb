@@ -5,6 +5,12 @@ Given /^I have an API key for "([^\"]*)"$/ do |creds|
   @api_key = page.source
 end
 
+When /^I push the fixture gem "([^\"]*)" with my API key$/ do |name|
+  api_key_header
+  path = Rails.root.join('test', 'gems', name)
+  page.driver.post api_v1_rubygems_path, File.read(path), {"CONTENT_TYPE" => "application/octet-stream"}
+end
+
 When /^I push the gem "([^\"]*)" with my API key$/ do |name|
   api_key_header
   path = File.join(TEST_DIR, name)
