@@ -22,7 +22,7 @@ Feature: Profile Feature
     When I am on "jon@example.com" profile page
     Then I should see "sandworm"
     And I should see "3 today"
-    And I should see "(1 gem)"
+    And I should see "1 gem"
 
   Scenario: View another user's profile
     Given I have signed in with "bob@example.com"
@@ -60,4 +60,4 @@ Feature: Profile Feature
       | subdivisions |
       | high_water   |
       | sandworm     |
-    And I should see "(13 gems)"
+    And I should see "13 gems"
