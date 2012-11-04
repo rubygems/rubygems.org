@@ -39,6 +39,10 @@ module RubygemsHelper
     end
   end
 
+  def atom_link(rubygem)
+    link_to 'RSS', rubygem_versions_path(rubygem, format: 'atom'), :id => :rss
+  end
+
   def download_link(version)
     link_to "Download", "/downloads/#{version.full_name}.gem", :id => :download
   end

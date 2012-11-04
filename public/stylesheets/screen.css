@@ -497,6 +497,10 @@ table {
   background: url('/images/download.png') no-repeat;
 }
 
+.main .info .meta .admin #rss {
+  background: url('/images/feed.png') no-repeat;
+}
+
 .main .info .meta .admin #docs {
   background: url('/images/docs.png') no-repeat;
 }
