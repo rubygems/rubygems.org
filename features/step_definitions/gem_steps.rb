@@ -6,6 +6,10 @@ Given /^I have a gem "([^\"]*)" with version "([^\"]*)" and summary "([^\"]*)"$/
   build_gem(name, version, summary)
 end
 
+Given /^I have a gem "([^\"]*)" with version "([^\"]*)" and a bogus summary$/ do |name, version|
+  build_gem(name, version, "There\x91s nothing.")
+end
+
 Given /^I have a gem "([^\"]*)" with version "([^\"]*)" and platform "([^\"]*)"$/ do |name, version, platform|
   build_gem(name, version, "Gemcutter", platform)
 end
