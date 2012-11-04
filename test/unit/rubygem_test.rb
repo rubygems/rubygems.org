@@ -20,6 +20,7 @@ class RubygemTest < ActiveSupport::TestCase
     should allow_value("rack-test").for(:name)
     should allow_value("perftools.rb").for(:name)
     should_not allow_value("\342\230\203").for(:name)
+    should_not allow_value("2.2").for(:name)
 
     should "reorder versions with platforms properly" do
       version3_ruby  = create(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "ruby")
