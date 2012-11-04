@@ -208,6 +208,10 @@ class UserTest < ActiveSupport::TestCase
       assert_equal @rubygems.values_at(2, 0, 1),
         @user.rubygems_downloaded
     end
+
+    should "total their number of pushed rubygems" do
+      assert_equal @user.total_rubygems_count, 3
+    end
   end
 
   context "yaml" do
