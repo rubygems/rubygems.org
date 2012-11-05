@@ -1,11 +1,11 @@
-require 'memcached'
+require 'dalli'
 
 class V1MarshaledDepedencies
 
   LIMIT = 250
 
   BadRequest = [404, {}, ["Go away"]]
-  TooMany =    [413, {}, 
+  TooMany =    [413, {},
                 ["Too many gems to resolve, please request less than #{LIMIT}"]]
 
   def data_for(name, ary, cache)
@@ -34,7 +34,7 @@ class V1MarshaledDepedencies
     ary
   end
 
-  CACHE = Memcached.new("localhost:11211")
+  CACHE = Dalli::Client.new("localhost:11211")
 
   def call(env)
     request = Rack::Request.new(env)
@@ -55,14 +55,16 @@ class V1MarshaledDepedencies
     gems.each do |g|
       begin
         data = cache.get "gem.#{g}"
-        ary += Marshal.load(data)
-      rescue Memcached::NotFound
-        begin
-          data_for g, ary, cache
-        rescue
-          return BadRequest
+        if data
+          ary += Marshal.load(data)
+        else
+          begin
+            data_for g, ary, cache
+          rescue
+            return BadRequest
+          end
         end
-      rescue Memcached::ServerIsMarkedDead
+      rescue Dalli::RingError
         begin
           data_for g, ary, nil
         rescue
