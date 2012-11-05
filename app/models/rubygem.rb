@@ -250,7 +250,7 @@ class Rubygem < ActiveRecord::Base
   def ensure_name_format
     if name.class != String
       errors.add :name, "must be a String"
-    elsif name =~ /\A[\d]+\Z/
+    elsif name !~ /[a-zA-Z]+/
       errors.add :name, "must include at least one letter"
     elsif name !~ NAME_PATTERN
       errors.add :name, "can only include letters, numbers, dashes, and underscores"
