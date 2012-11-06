@@ -39,10 +39,10 @@ Feature: Dashboard
   Scenario: Yanked gem is hidden from listing
     Given the following versions exist:
       | rubygem    | number | indexed |
-      | name: RGem | 1.2.2  | true    |
-      | name: RGem | 1.2.3  | false   |
+      | name: rgem | 1.2.2  | true    |
+      | name: rgem | 1.2.3  | false   |
     When I go to the dashboard
-    And I follow "RGem"
+    And I follow "rgem"
     Then I should not see "yanked"
     And I should see "1.2.2"
     And I should see "Show all versions (2 total)"
