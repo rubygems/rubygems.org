@@ -252,7 +252,7 @@ class Rubygem < ActiveRecord::Base
       errors.add :name, "must be a String"
     elsif name !~ /[a-zA-Z]+/
       errors.add :name, "must include at least one letter"
-    elsif name !~ NAME_PATTERN
+    elsif name !~ (new_record? ? CREATE_NAME_PATTERN : NAME_PATTERN)
       errors.add :name, "can only include letters, numbers, dashes, and underscores"
     end
   end

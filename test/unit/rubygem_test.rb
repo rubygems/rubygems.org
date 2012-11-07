@@ -3,7 +3,7 @@ require 'test_helper'
 class RubygemTest < ActiveSupport::TestCase
   context "with a saved rubygem" do
     setup do
-      @rubygem = create(:rubygem, :name => "SomeGem")
+      @rubygem = create(:rubygem, :name => "somegem")
     end
     subject { @rubygem }
 
@@ -142,9 +142,28 @@ class RubygemTest < ActiveSupport::TestCase
     end
   end
 
-  context "with a rubygem" do
+  context "with a new rubygem" do
     setup do
       @rubygem = build(:rubygem, :linkset => nil)
+    end
+
+    ['1337', 'Snakes!', ['zomg'], 'rAils'].each do |bad_name|
+      should "not accept #{bad_name.inspect} as a name" do
+        @rubygem.name = bad_name
+        assert ! @rubygem.valid?
+        assert_match(/Name/, @rubygem.all_errors)
+      end
+    end
+  end
+
+  context "with an existing rubygem" do
+    setup do
+      @rubygem = create(:rubygem, :linkset => nil)
+    end
+
+    should "accept rAils as a name" do
+      @rubygem.name = 'rAils'
+      assert @rubygem.valid?
     end
 
     ['1337', 'Snakes!', ['zomg']].each do |bad_name|

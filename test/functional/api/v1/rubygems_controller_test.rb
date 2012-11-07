@@ -42,9 +42,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "with #{format.to_s.upcase} for a gem that doesn't match the slug" do
       setup do
-        @rubygem = create(:rubygem, :name => "ZenTest", :slug => "zentest")
+        @rubygem = create(:rubygem, :name => "zentest", :slug => "zentest")
         create(:version, :rubygem => @rubygem)
-        get :show, :id => "ZenTest", :format => format
+        get :show, :id => "zentest", :format => format
       end
 
       should_respond_to_show(format, &block)
@@ -115,14 +115,14 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
   def self.should_respond_to(format)
     context "with #{format.to_s.upcase} for a list of gems" do
       setup do
-        @mygems = [ create(:rubygem, :name => "SomeGem"), create(:rubygem, :name => "AnotherGem") ]
+        @mygems = [ create(:rubygem, :name => "somegem"), create(:rubygem, :name => "anothergem") ]
         @mygems.each do |rubygem|
           create(:version, :rubygem => rubygem)
           create(:ownership, :user => @user, :rubygem => rubygem)
         end
 
         @other_user = create(:user)
-        @not_my_rubygem = create(:rubygem, :name => "NotMyGem")
+        @not_my_rubygem = create(:rubygem, :name => "notmygem")
         create(:version, :rubygem => @not_my_rubygem)
         create(:ownership, :user => @other_user, :rubygem => @not_my_rubygem)
 
@@ -136,7 +136,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
       should "only return my gems" do
         gem_names = yield(@response.body).map { |rubygem| rubygem['name'] }.sort
-        assert_equal ["AnotherGem", "SomeGem"], gem_names
+        assert_equal ["anothergem", "somegem"], gem_names
       end
     end
   end
@@ -251,7 +251,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "for a gem SomeGem with a version 0.1.0" do
       setup do
-        @rubygem  = create(:rubygem, :name => "SomeGem")
+        @rubygem  = create(:rubygem, :name => "somegem")
         @v1       = create(:version, :rubygem => @rubygem, :number => "0.1.0", :platform => "ruby")
         create(:ownership, :user => @user, :rubygem => @rubygem)
       end
@@ -302,7 +302,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
             assert_equal 1, @rubygem.ownerships.count
           end
           should "show platform in response" do
-            assert_equal "Successfully yanked gem: SomeGem (0.1.1-x86-darwin-10)", @response.body
+            assert_equal "Successfully yanked gem: somegem (0.1.1-x86-darwin-10)", @response.body
           end
         end
       end
@@ -338,7 +338,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "for a gem SomeGem with a yanked version 0.1.0 and unyanked version 0.1.1" do
       setup do
-        @rubygem  = create(:rubygem, :name => "SomeGem")
+        @rubygem  = create(:rubygem, :name => "somegem")
         @v1       = create(:version, :rubygem => @rubygem, :number => "0.1.0", :platform => "ruby", :indexed => false)
         @v2       = create(:version, :rubygem => @rubygem, :number => "0.1.1", :platform => "ruby")
         @v3       = create(:version, :rubygem => @rubygem, :number => "0.1.2", :platform => "x86-darwin-10", :indexed => false)
