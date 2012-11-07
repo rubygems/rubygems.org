@@ -1,5 +1,10 @@
 Gemcutter::Application.routes.draw do
   ################################################################################
+  # Root
+
+  root :to => 'home#index'
+
+  ################################################################################
   # API v1
 
   namespace :api do
@@ -121,10 +126,5 @@ Gemcutter::Application.routes.draw do
   resources :users do
     resource :password, :only => [:create, :edit, :update]
   end
-
-  ################################################################################
-  # Root
-
-  root :to => 'home#index'
 
 end
