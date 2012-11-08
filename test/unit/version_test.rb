@@ -150,10 +150,6 @@ class VersionTest < ActiveSupport::TestCase
       assert ! @version.platformed?
     end
 
-    should "return the size in kilobytes" do 
-      assert (@version.size.bytes / 1.kilobyte) == @version.size_in_kilobytes
-    end
-
     should "save full name" do
       assert_equal "#{@version.rubygem.name}-#{@version.number}", @version.full_name
       assert_equal @version.number, @version.slug
@@ -264,6 +260,11 @@ class VersionTest < ActiveSupport::TestCase
       @version.description = nil
       @version.summary = nil
       assert_equal "This rubygem does not have a description or summary.", @version.info
+    end
+
+    should "give 'N/A' for size when size not available" do
+      @version.size = nil
+      assert_equal 'N/A', @version.size
     end
 
     context "when yanked" do

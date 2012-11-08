@@ -132,12 +132,8 @@ class Version < ActiveRecord::Base
     !indexed
   end
 
-  def sized?
-    size.present?
-  end
-
-  def size_in_kilobytes
-    size.bytes / 1.kilobyte
+  def size
+    read_attribute(:size) || 'N/A'
   end
 
   def info
