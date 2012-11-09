@@ -38,7 +38,6 @@ class PusherTest < ActiveSupport::TestCase
     context "processing incoming gems" do
       should "work normally when things go well" do
         mock(@cutter).pull_spec { true }
-        mock(@cutter).size_gem { true }
         mock(@cutter).find { true }
         stub(@cutter).authorize { true }
         mock(@cutter).save
@@ -48,7 +47,6 @@ class PusherTest < ActiveSupport::TestCase
 
       should "not attempt to find rubygem if spec can't be pulled" do
         mock(@cutter).pull_spec { false }
-        mock(@cutter).size_gem.never
         mock(@cutter).find.never
         mock(@cutter).authorize.never
         mock(@cutter).save.never
@@ -57,7 +55,6 @@ class PusherTest < ActiveSupport::TestCase
 
       should "not attempt to authorize if not found" do
         mock(@cutter).pull_spec { true }
-        mock(@cutter).size_gem { true }
         mock(@cutter).find { nil }
         mock(@cutter).authorize.never
         mock(@cutter).save.never
@@ -67,7 +64,6 @@ class PusherTest < ActiveSupport::TestCase
 
       should "not attempt to save if not authorized" do
         mock(@cutter).pull_spec { true }
-        mock(@cutter).size_gem { true }
         mock(@cutter).find { true }
         mock(@cutter).authorize { false }
         mock(@cutter).save.never
@@ -84,19 +80,31 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal @cutter.code, 422
     end
 
-    context "finding rubygem" do
-      should "initialize new gem if one does not exist" do
+    context "initialize new gem with find if one does not exist" do
+      setup do
         spec = "spec"
         stub(spec).name { "some name" }
         stub(spec).version { "1.3.3.7" }
         stub(spec).original_platform { "ruby" }
         stub(@cutter).spec { spec }
+        stub(@cutter).size { 5 }
         @cutter.find
-
-        assert_not_nil @cutter.rubygem
-        assert_not_nil @cutter.version
       end
 
+      should "set rubygem" do
+        assert_equal 'some name', @cutter.rubygem.name
+      end
+
+      should "set version" do
+        assert_equal '1.3.3.7',  @cutter.version.number
+      end
+
+      should "set gem version size" do
+        assert_equal 5, @cutter.version.size
+      end
+    end
+
+    context "finding an existing gem" do
       should "bring up existing gem with matching spec" do
         @rubygem = create(:rubygem)
         spec = "spec"
@@ -143,6 +151,33 @@ class PusherTest < ActiveSupport::TestCase
           create(:version, :rubygem => @rubygem, :number => '0.1.1', :indexed => false)
           assert @cutter.authorize
         end
+      end
+    end
+
+    context "successfully saving a gemcutter" do
+      setup do
+        @rubygem = create(:rubygem)
+        stub(@cutter).rubygem { @rubygem }
+        create(:version, :rubygem => @rubygem, :number => '0.1.1')
+        stub(@cutter).version { @rubygem.versions[0] }
+        stub(@rubygem).update_attributes_from_gem_specification!
+        any_instance_of(Indexer) {|i| stub(i).write_gem }
+        @cutter.save
+      end
+
+      should "update rubygem attributes" do
+        assert_received(@rubygem) do |rubygem|
+            rubygem.update_attributes_from_gem_specification!(@cutter.version,
+                                                              @cutter.spec)
+        end
+      end
+
+      should "set gem file size" do
+        assert_equal @gem.size, @cutter.size
+      end
+
+      should "set success code" do
+        assert_equal 200, @cutter.code
       end
     end
   end
