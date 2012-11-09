@@ -97,7 +97,7 @@ GEM
     faraday (0.8.4)
       multipart-post (~> 1.1)
     ffi (1.1.5)
-    fog (1.6.0)
+    fog (1.7.0)
       builder
       excon (~> 0.14)
       formatador (~> 0.2.0)
