@@ -126,12 +126,12 @@ GEM
     kgio (2.7.4)
     launchy (2.1.2)
       addressable (~> 2.3)
-    librato-metrics (0.7.3)
+    librato-metrics (0.7.4)
       aggregate (~> 0.2.2)
       faraday (~> 0.7)
-      multi_json (~> 1.3)
-    librato-rails (0.7.0)
-      librato-metrics (~> 0.7.3)
+      multi_json
+    librato-rails (0.7.3)
+      librato-metrics (~> 0.7.4)
       rails (>= 3.0)
     libwebsocket (0.1.5)
       addressable
