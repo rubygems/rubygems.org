@@ -230,12 +230,6 @@ class Rubygem < ActiveRecord::Base
     end
   end
 
-  def find_or_initialize_version_from_spec_and_size(spec, size)
-    version = find_or_initialize_version_from_spec(spec)
-    version.size = size
-    version
-  end
-
   def find_or_initialize_version_from_spec(spec)
     version = self.versions.find_or_initialize_by_number_and_platform(spec.version.to_s, spec.original_platform.to_s)
     version.rubygem = self

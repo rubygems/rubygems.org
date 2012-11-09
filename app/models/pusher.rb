@@ -9,7 +9,7 @@ class Pusher
   end
 
   def process
-    pull_spec && size_gem && find && authorize && save
+    pull_spec && find && authorize && save
   end
 
   def authorize
@@ -25,15 +25,6 @@ class Pusher
       notify("Successfully registered gem: #{version.to_title}", 200)
     else
       notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403)
-    end
-  end
-
-  def size_gem
-    if body
-      @size = body.size
-      true
-    else
-      false
     end
   end
 
@@ -55,7 +46,8 @@ class Pusher
 
   def find
     @rubygem = Rubygem.find_or_initialize_by_name(spec.name)
-    @version = @rubygem.find_or_initialize_version_from_spec_and_size(spec, size)
+    @version = @rubygem.find_or_initialize_version_from_spec(spec)
+    @version.size ||= size
 
     if @version.new_record?
       true
@@ -88,6 +80,7 @@ class Pusher
   def update
     rubygem.update_attributes_from_gem_specification!(version, spec)
     rubygem.create_ownership(user) unless version.new_record?
+    @size = body.size if body
     true
   rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback
     false
