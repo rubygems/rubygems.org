@@ -6,6 +6,17 @@ class ApplicationController < ActionController::Base
   protect_from_forgery :only => [:create, :update, :destroy]
   ssl_required :if => :signed_in?
 
+  before_filter :set_locale
+
+  def set_locale
+      I18n.locale = params[:locale] || I18n.default_locale
+  end
+
+  # Adding this keeps the user on the same locale, but currently breaks a lot of tests testing for specific urls. 
+  # def default_url_options(options={})
+      # { :locale => I18n.locale }
+  # end
+
   protected
 
   def authenticate_with_api_key
