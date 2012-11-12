@@ -57,6 +57,20 @@ namespace :gemcutter do
         end
       end
     end
+
+    desc "Update the download counts for all gems."
+    task :update_download_counts => :environment do
+      case_query = Rubygem.pluck(:name)
+        .map { |name| "WHEN '#{name}' THEN #{$redis["downloads:rubygem:#{name}"].to_i}" }
+        .join("\n            ")
+
+      ActiveRecord::Base.connection.execute <<-SQL.strip_heredoc
+        UPDATE rubygems
+          SET downloads = CASE name
+            #{case_query}
+          END
+      SQL
+    end
   end
 
   desc "Move all but the last 2 days of version history to SQL"
