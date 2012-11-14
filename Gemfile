@@ -65,7 +65,7 @@ end
 group :development, :test, :staging, :production do
   gem 'clearance'
   gem 'daemons'
-  gem 'delayed_job'
+  gem 'delayed_job', '3.0.3'
   gem 'delayed_job_active_record'
 
   gem 'newrelic_rpm'

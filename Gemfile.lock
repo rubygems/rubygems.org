@@ -272,7 +272,7 @@ DEPENDENCIES
   daemons
   dalli
   database_cleaner
-  delayed_job
+  delayed_job (= 3.0.3)
   delayed_job_active_record
   dynamic_form
   excon
