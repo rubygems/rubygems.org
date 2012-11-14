@@ -266,7 +266,7 @@ DEPENDENCIES
   bluepill
   builder
   capistrano-ext
-  capybara
+  capybara (~> 1.1)
   clearance
   cucumber-rails
   daemons
