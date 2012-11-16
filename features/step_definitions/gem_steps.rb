@@ -25,6 +25,14 @@ Given /^I have a gem "([^\"]*)" with version "([^\"]*)" and homepage "([^\"]*)"$
   build_gemspec(gemspec)
 end
 
+Given /^I have a gem "([^\"]*)" with version "([^\"]*)" and the following attributes:$/ do |name, version, table|
+  gemspec = new_gemspec(name, version, "Gemcutter", "ruby")
+  table.hashes.first.each do |key, value|
+    gemspec.send("#{key}=", value)
+  end
+  build_gemspec(gemspec)
+end
+
 Given /^I have a bad gem "([^\"]*)" with version "([^\"]*)"$/ do |name, version|
   gemspec = new_gemspec(name, version, "Bad Gem", "ruby")
   gemspec.name = eval(name)

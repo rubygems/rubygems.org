@@ -11,6 +11,20 @@ When /^I push the fixture gem "([^\"]*)" with my API key$/ do |name|
   page.driver.post api_v1_rubygems_path, File.read(path), {"CONTENT_TYPE" => "application/octet-stream"}
 end
 
+When /^I GET "(.*?)"$/ do |url|
+  get url
+end
+
+Then /^the JSON response should include all of the gem version metadata$/ do
+  response = JSON.parse last_response.body
+
+  version = Version.first
+
+  version.payload.each do |attribute, value|
+    assert_equal value, response.first[attribute] unless attribute == "built_at"
+  end
+end
+
 When /^I push the gem "([^\"]*)" with my API key$/ do |name|
   api_key_header
   path = File.join(TEST_DIR, name)
@@ -81,3 +95,4 @@ end
 Then /the response should contain "([^"]+)"/ do |text|
   assert_match text, page.source
 end
+

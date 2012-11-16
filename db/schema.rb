@@ -143,6 +143,7 @@ ActiveRecord::Schema.define(:version => 20120916165331) do
     t.integer  "position"
     t.boolean  "latest"
     t.string   "full_name"
+    t.string   "licenses"
   end
 
   add_index "versions", ["built_at"], :name => "index_versions_on_built_at"
