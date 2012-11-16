@@ -31,7 +31,7 @@
 
       <% if @latest_version.indexed %>
         <div class="who">
-          <div class="authors">
+          <div class="authors info-item">
             <% if @latest_version.authors.present? %>
               <h5><%= t '.authors_header' %></h5>
               <p><%= @latest_version.authors %></p>
@@ -50,12 +50,16 @@
           <% end %>
 
           <% if @rubygem.owners.present? %>
-            <div class="owners">
+            <div class="owners info-item">
               <h5><%= t '.owners_header' %></h5>
               <p><%= links_to_owners(@rubygem) %></p>
             </div>
           <% end %>
 
+          <div class="licenses info-item">
+            <h5><%= t '.licenses_header' %></h5>
+            <p><%= formatted_licenses @latest_version.licenses %></p>
+          </div>
         </div>
 
         <% if @rubygem.linkset.present? %>

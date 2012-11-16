@@ -3,14 +3,33 @@ Feature: Push Gems
   A rubygem developer
   Should be able to push gems up to Gemcutter
 
-  Scenario: User pushes new gem
+  Scenario: User pushes new gem and sees metadata
     Given I am signed up as "email@person.com"
-    And I have a gem "RGem" with version "1.2.3"
+    And I have a gem "RGem" with version "1.2.3" and the following attributes:
+      | authors  | description  | license |
+      | John Doe | The best gem | MIT     |
     And I have an API key for "email@person.com/password"
     When I push the gem "RGem-1.2.3.gem" with my API key
     And I visit the gem page for "RGem"
     Then I should see "RGem"
     And I should see "1.2.3"
+    And I should see "John Doe"
+    And I should see "The best gem"
+    And I should see "MIT"
+
+  Scenario: User pushes new gem and sees metadata
+    Given I am signed up as "email@person.com"
+    And I have a gem "RGem" with version "1.2.3" and the following attributes:
+      | authors  | description  |
+      | John Doe | The best gem |
+    And I have an API key for "email@person.com/password"
+    When I push the gem "RGem-1.2.3.gem" with my API key
+    And I visit the gem page for "RGem"
+    Then I should see "RGem"
+    And I should see "1.2.3"
+    And I should see "John Doe"
+    And I should see "The best gem"
+    And I should see "N/A"
 
   Scenario: User pushes existing version of existing gem
     Given I am signed up as "email@person.com"
