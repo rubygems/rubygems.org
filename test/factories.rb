@@ -80,6 +80,7 @@ FactoryGirl.define do
     indexed true
     number
     platform "ruby"
+    licenses "MIT"
     rubygem
   end
 
