@@ -930,7 +930,7 @@ table {
 }
 
 .footer {
-  height: 100px;
+  padding-bottom: 60px;
 }
 
 .footer ul li a {
@@ -938,10 +938,7 @@ table {
 }
 
 .footer ul.major {
-  width: 290px;
   padding-left: 10px;
-  padding-top: 25px;
-  position: absolute;
   z-index: 2;
 }
 
@@ -951,18 +948,27 @@ table {
   float: left;
 }
 
-.footer ul.major li a {
+.footer ul.major li a,
+.footer ul.major li a:visited {
   font-size: 1.8em;
+  -webkit-transition: all 0.1s linear;
+  -moz-transition: all 0.1s linear;
+  -o-transition: all 0.1s linear;
+  transition: all 0.1s linear;
+}
+
+.footer ul.major li a:hover {
+  color: #fff;
+  text-decoration: none;
 }
 
 .footer ul.minor {
-  width: 290px;
-  position: absolute;
-  clear: both;
+  float: right;
   padding-top: 17px;
   padding-left: 10px;
-  margin-top: 35px;
   z-index: 1;
+  position: relative;
+  top: -16px;
 }
 
 .footer ul.minor li {
@@ -970,22 +976,65 @@ table {
   padding-right: 8px;
 }
 
-.footer ul.minor li a {
-  font-size: 1.1em;
+.footer ul.minor li a,
+.footer ul.minor li a:visited {
+  font-size: 1.4em;
+  -webkit-transition: all 0.1s linear;
+  -moz-transition: all 0.1s linear;
+  -o-transition: all 0.1s linear;
+  transition: all 0.1s linear;
+}
+
+.footer ul.minor li a:hover {
+  color: #fff;
+  text-decoration: none;
 }
 
 .footer ul.sponsors {
-  float: right;
+  clear: both
   padding-top: 5px;
-  width: 485px;
-  height: 90px;
-  text-align: right;
+  text-align: left;
+  margin-top: 60px;
+}
+
+.footer ul.sponsors .row {
+  padding-bottom: 58px;
+  padding-top: 20px;
 }
 
 .footer ul.sponsors li {
   display: inline-block;
   text-align: center;
-  width: 75px;
+  width: 175px;
+}
+
+.footer ul.sponsors li span.sponsor_text {
+  color: #745252;
+  font-size: 1.2em;
+  font-family: Georgia,serif;
+  font-style: italic;
+}
+
+.footer ul.sponsors li .sponsor_logo {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  display: inline;
+  margin-left: 7px;
+  top: -30px;
+}
+
+.footer ul.sponsors li .sponsor_logo a {
+  position: absolute;
+  left: 0;
+  -webkit-transition: opacity 0.2s ease-in-out;
+  -moz-transition: opacity 0.2s ease-in-out;
+  -o-transition: opacity 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.footer ul.sponsors li .sponsor_logo a.top:hover {
+  opacity: 0;
 }
 
 .footer ul.sponsors li a {
