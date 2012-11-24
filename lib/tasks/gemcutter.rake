@@ -4,10 +4,7 @@ namespace :gemcutter do
     task :update => :environment do
       require 'benchmark'
       Benchmark.bm do|b|
-        g = Pusher.new(nil, StringIO.new)
-        b.report(" specs index") { g.upload("specs.4.8.gz", g.specs_index) }
-        b.report("latest index") { g.upload("latest_specs.4.8.gz", g.latest_index) }
-        b.report("   pre index") { g.upload("prerelease_specs.4.8.gz", g.prerelease_index) }
+        b.report("update index") { Indexer.new.perform }
       end
     end
   end
