@@ -76,7 +76,7 @@ GEM
     daemons (1.1.9)
     dalli (2.5.0)
     database_cleaner (0.9.1)
-    delayed_job (3.0.3)
+    delayed_job (3.0.4)
       activesupport (~> 3.0)
     delayed_job_active_record (0.3.3)
       activerecord (>= 2.1.0, < 4)
@@ -273,7 +273,7 @@ DEPENDENCIES
   daemons
   dalli
   database_cleaner
-  delayed_job (= 3.0.3)
+  delayed_job
   delayed_job_active_record
   dynamic_form
   excon
