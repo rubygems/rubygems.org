@@ -1,6 +1,8 @@
 <% @title = @rubygem.name %>
 <% @subtitle = @latest_version.try(:slug) %>
 
+<%= content_for :head, auto_discovery_link_tag(:atom, rubygem_versions_path(@rubygem, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
+
 <% if @rubygem.versions.count.zero? %>
   <p><%= t '.not_hosted_notice' %></p>
 <% else %>
@@ -27,6 +29,7 @@
         <%= documentation_link(@latest_version, @rubygem.linkset) %>
         <%= subscribe_link(@rubygem) if @latest_version.indexed %>
         <%= unsubscribe_link(@rubygem) %>
+        <%= atom_link(@rubygem) %>
       </div>
 
       <% if @latest_version.indexed %>
