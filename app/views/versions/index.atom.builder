@@ -3,5 +3,5 @@ render(
   locals: { 
     builder: xml, 
     versions: @versions,
-    title: "Rubygems | Latest Gems"
+    title: "Rubygems | Latest Versions for #{@rubygem.name}"
 })
