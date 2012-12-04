@@ -29,7 +29,6 @@ Feature: Push Gems
     And I should see "1.2.3"
     And I should see "John Doe"
     And I should see "The best gem"
-    And I should see "N/A"
 
   Scenario: User pushes existing version of existing gem
     Given I am signed up as "email@person.com"

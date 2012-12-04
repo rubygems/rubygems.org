@@ -59,10 +59,12 @@
             </div>
           <% end %>
 
-          <div class="licenses info-item">
-            <h5><%= t '.licenses_header' %></h5>
-            <p><%= formatted_licenses @latest_version.licenses %></p>
-          </div>
+          <% if @latest_version.licenses.present? %>
+            <div class="licenses info-item">
+              <h5><%= t '.licenses_header' %></h5>
+              <p><%= formatted_licenses @latest_version.licenses %></p>
+            </div>
+          <% end %>
         </div>
 
         <% if @rubygem.linkset.present? %>
