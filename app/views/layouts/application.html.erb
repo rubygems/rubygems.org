@@ -27,7 +27,7 @@
           <div id="nav">
             <% if signed_in? %>
                 <div id="user-info">
-                  <a href="<%= profile_path(current_user) %>">
+                  <a href="<%= profile_path(current_user.display_id) %>">
                     <%= gravatar(32, "user_gravatar") %>
                     <span><%= truncate(current_user.name) %></span>
                   </a>
