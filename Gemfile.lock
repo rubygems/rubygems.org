@@ -62,7 +62,7 @@ GEM
       diesel (~> 0.1.5)
       rails (>= 3.0)
     coderay (1.0.8)
-    connection_pool (0.9.2)
+    connection_pool (0.9.3)
     crack (0.3.1)
     cucumber (1.2.1)
       builder (>= 2.1.2)
