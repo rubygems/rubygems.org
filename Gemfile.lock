@@ -253,7 +253,7 @@ GEM
     webmock (1.9.0)
       addressable (>= 2.2.7)
       crack (>= 0.1.7)
-    websocket (1.0.4)
+    websocket (1.0.6)
     will_paginate (3.0.3)
     xml-simple (1.1.2)
     xpath (0.1.4)
