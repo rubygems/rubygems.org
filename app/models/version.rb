@@ -8,6 +8,7 @@ class Version < ActiveRecord::Base
   after_save       :reorder_versions
 
   serialize :licenses
+  serialize :requirements
 
   validates :number,   :format => {:with => /\A#{Gem::Version::VERSION_PATTERN}\z/}
   validates :platform, :format => {:with => Rubygem::NAME_PATTERN}
@@ -144,6 +145,7 @@ class Version < ActiveRecord::Base
       :description => spec.description,
       :summary     => spec.summary,
       :licenses    => spec.licenses,
+      :requirements    => spec.requirements,
       :built_at    => spec.date,
       :indexed     => true
     )
@@ -186,7 +188,8 @@ class Version < ActiveRecord::Base
       'summary'         => summary,
       'platform'        => platform,
       'prerelease'      => prerelease,
-      'licenses'        => licenses
+      'licenses'        => licenses,
+      'requirements'    => requirements
     }
   end
 

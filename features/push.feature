@@ -6,8 +6,8 @@ Feature: Push Gems
   Scenario: User pushes new gem and sees metadata
     Given I am signed up as "email@person.com"
     And I have a gem "RGem" with version "1.2.3" and the following attributes:
-      | authors  | description  | license |
-      | John Doe | The best gem | MIT     |
+      | authors  | description  | license | requirements |
+      | John Doe | The best gem | MIT     | Opencv       |
     And I have an API key for "email@person.com/password"
     When I push the gem "RGem-1.2.3.gem" with my API key
     And I visit the gem page for "RGem"

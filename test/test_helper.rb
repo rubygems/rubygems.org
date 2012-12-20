@@ -78,6 +78,7 @@ def gem_spec(opts = {})
     s.description = %q{This is my awesome gem.}
     s.email = %q{joe@user.com}
     s.licenses = %w(MIT BSD)
+    s.requirements = %w(Opencv)
     s.files = [
       "README.textile",
       "Rakefile",

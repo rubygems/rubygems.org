@@ -81,6 +81,7 @@ FactoryGirl.define do
     number
     platform "ruby"
     licenses "MIT"
+    requirements "Opencv"
     rubygem
   end
 
