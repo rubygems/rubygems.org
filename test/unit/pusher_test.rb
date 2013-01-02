@@ -80,6 +80,28 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal @cutter.code, 422
     end
 
+    should "post info to the remote bundler API" do
+      @cutter.pull_spec
+
+      @cutter.bundler_api_url = "http://test.com"
+
+      obj = Object.new
+      post_data = nil
+
+      stub(obj).post { |*x| post_data = x }
+
+      @cutter.update_remote_bundler_api obj
+
+      url, payload, options = post_data
+
+      params = MultiJson.load payload
+
+      assert_equal "test",  params["name"]
+      assert_equal "0.0.0", params["version"]
+      assert_equal "ruby",  params["platform"]
+      assert_equal false,   params["prerelease"]
+    end
+
     context "finding rubygem" do
       should "initialize new gem if one does not exist" do
         spec = "spec"
