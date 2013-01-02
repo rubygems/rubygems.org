@@ -17,10 +17,14 @@ module RubygemsHelper
 
   def simple_markup(text)
     if text =~ /^==+ [A-Z]/
-      RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new).html_safe
+      markup_text(text)
     else
       content_tag :p, text
     end
+  end
+
+  def markup_text(text)
+    RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new).html_safe
   end
 
   def subscribe_link(rubygem)

@@ -534,14 +534,16 @@ table {
   list-style: inside disc;
 }
 
+#gem_summary {
+  border-bottom: 1px solid #DAD0BD;
+}
 
 .main .info p {
   color: #5e543e;
   margin: 1.5em 36px;
 }
 
-.main .info p a:hover {
-  text-decoration: underline;
+.main .info p a:hover { text-decoration: underline;
 }
 
 .main .info .pitch {
