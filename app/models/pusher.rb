@@ -1,11 +1,14 @@
 class Pusher
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id
+  attr_accessor :bundler_api_url
 
   def initialize(user, body, host_with_port=nil)
     @user = user
     @body = StringIO.new(body.read)
     @indexer = Indexer.new
     @host_with_port = host_with_port
+    @bundler_token = ENV['BUNDLER_TOKEN'] || "tokenmeaway"
+    @bundler_api_url = ENV['BUNDLER_API_URL']
   end
 
   def process
@@ -62,12 +65,30 @@ class Pusher
     "<Pusher #{attrs.join(' ')}>"
   end
 
+  def update_remote_bundler_api(to=RestClient)
+    return unless @bundler_api_url
+
+    json = %Q!{ "name": "#{spec.name}", "version": "#{spec.version}", "platform": "#{spec.platform}", "prerelease": #{spec.version.prerelease? ? 'true' : 'false'}, "rubygems_token": "#{@bundler_token}"}!
+
+    begin
+      timeout(5) do
+        to.post @bundler_api_url,
+                        json,
+                        :timeout        => 5,
+                        :open_timeout   => 5,
+                        'Content-Type'  => 'application/json'
+      end
+    rescue StandardError, Interrupt
+      false
+    end
+  end
   private
 
   def after_write
     @version_id = version.id
     Delayed::Job.enqueue Indexer.new, :priority => PRIORITIES[:push]
     enqueue_web_hook_jobs
+    update_remote_bundler_api
   end
 
   def notify(message, code)
