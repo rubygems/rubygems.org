@@ -8,7 +8,12 @@
 <% else %>
   <% if @latest_version.indexed %>
     <div id="markup">
-      <%= simple_markup(@latest_version.info) %>
+      <div id="gem_summary">
+        <%= markup_text(@latest_version.summary_or_apology) %>
+      </div>
+      <div id="gem_description">
+        <%= markup_text(@latest_version.description_or_apology) %>
+      </div>
     </div>
 
     <div class="border">
