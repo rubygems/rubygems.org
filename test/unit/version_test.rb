@@ -244,24 +244,35 @@ class VersionTest < ActiveSupport::TestCase
     should "have description for info" do
       @version.description = @info
       assert_equal @info, @version.info
+      assert_equal @info, @version.description_or_apology
     end
 
     should "have summary for info if description does not exist" do
       @version.description = nil
       @version.summary = @info
       assert_equal @info, @version.info
+      assert_equal @info, @version.summary_or_apology
     end
 
     should "have summary for info if description is blank" do
       @version.description = ""
       @version.summary = @info
       assert_equal @info, @version.info
+      assert_equal @info, @version.summary_or_apology
+    end
+
+    should "filter out the bad habit of putting the summary in the desc" do
+      @version.description = @info + 'etc.'
+      @version.summary = @info
+      assert_equal 'etc.', @version.description_or_apology
     end
 
     should "have some text for info if neither summary or description exist" do
       @version.description = nil
       @version.summary = nil
-      assert_equal "This rubygem does not have a description or summary.", @version.info
+      assert_equal "This rubygem does not have a summary or description.", @version.info
+      assert_equal 'This rubygem does not have a summary.', @version.summary_or_apology
+      assert_equal 'This rubygem does not have a description.', @version.description_or_apology
     end
 
     context "when yanked" do

@@ -135,7 +135,26 @@ class Version < ActiveRecord::Base
   end
 
   def info
-    [ description, summary, "This rubygem does not have a description or summary." ].detect(&:present?)
+    text_or_apology_for :summary, :description
+  end
+
+  def summary_or_apology
+    text_or_apology_for :summary
+  end
+
+  def description_or_apology
+    desc = text_or_apology_for :description
+    if summary
+      desc.sub summary, ''
+    else
+      desc
+    end
+  end
+
+  def text_or_apology_for *attrs
+    apology = "This rubygem does not have a #{attrs.map(&:to_s).join ' or '}."
+    candidates = attrs.map { |e| send e } + [ apology ]
+    candidates.detect(&:present?)
   end
 
   def update_attributes_from_gem_specification!(spec)
