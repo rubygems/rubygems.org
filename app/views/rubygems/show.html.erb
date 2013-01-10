@@ -74,12 +74,13 @@
           <% end %>
         </div>
 
-        <% if @rubygem.linkset.present? %>
+        <% if @rubygem.linkset.present? || @rubygem.gittip_enabled? %>
           <div class="links">
             <h5><%= t '.links.header' %></h5>
             <%= link_to_page t('.links.home'), @rubygem.linkset.home %>
             <%= link_to_page t('.links.code'), @rubygem.linkset.code %>
             <%= link_to_page t('.links.docs'), @rubygem.linkset.docs %>
+            <%= link_to_page 'Gittip', @rubygem.gittip_url if @rubygem.gittip_enabled? %>
             <%= link_to_page t('.links.wiki'), @rubygem.linkset.wiki %>
             <%= link_to_page t('.links.mail'), @rubygem.linkset.mail %>
             <%= link_to_page t('.links.bugs'), @rubygem.linkset.bugs %>
