@@ -248,6 +248,14 @@ class Rubygem < ActiveRecord::Base
     versions.by_earliest_built_at.limit(1).last.built_at
   end
 
+  def gittip_url
+    'http://gittip.com/on/rubygems/gem/' + name
+  end
+
+  def gittip_enabled?
+    owners.where('gittip_username is not null').count > 0
+  end
+
   private
 
   def ensure_name_format
