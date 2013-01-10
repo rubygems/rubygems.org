@@ -24,7 +24,14 @@
   <div class="border">
     <div class="meta">
       <div class="admin">
-        <%= link_to t('edit'), edit_rubygem_path(@rubygem), :id => "edit" if @rubygem.owned_by?(current_user) %>
+        <% if @rubygem.owned_by?(current_user) %>
+          <%= link_to t('edit'), edit_rubygem_path(@rubygem), :id => "edit"  %>
+          <% if @rubygem.gittip_enabled? %>
+            <%= link_to 'Disable Gittip', rubygem_path(@rubygem, gittip_enabled: false), :method => :put, :id => "gittip" %>
+          <% else %>
+            <%= link_to 'Enable Gittip', rubygem_path(@rubygem, gittip_enabled: true), :method => :put, :id => "gittip" %>
+          <% end %>
+        <% end %>
         <%= download_link(@latest_version) %>
         <%= documentation_link(@latest_version, @rubygem.linkset) %>
         <%= subscribe_link(@rubygem) if @latest_version.indexed %>

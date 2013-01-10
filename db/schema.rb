@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121124000000) do
+ActiveRecord::Schema.define(:version => 20130110011523) do
 
   create_table "announcements", :force => true do |t|
     t.text     "body"
@@ -79,10 +79,11 @@ ActiveRecord::Schema.define(:version => 20121124000000) do
 
   create_table "rubygems", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
-    t.integer  "downloads",  :default => 0
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+    t.integer  "downloads",      :default => 0
     t.string   "slug"
+    t.boolean  "gittip_enabled", :default => false, :null => false
   end
 
   add_index "rubygems", ["name"], :name => "index_rubygems_on_name", :unique => true
