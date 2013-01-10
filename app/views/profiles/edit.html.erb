@@ -19,6 +19,12 @@
     <%= form.email_field :email, :size => 25 %>
   </div>
 
+  <div class="text_field">
+    <%= form.label :gittip_username %>
+    <%= link_to "What's this?", "http://gittip.org/about" %>
+    <%= form.text_field :gittip_username, :size => 25 %>
+  </div>
+
   <div class="submit_field">
     <%= form.submit "Update", :data => {:disable_with => t('form_disable_with')} %>
   </div>
