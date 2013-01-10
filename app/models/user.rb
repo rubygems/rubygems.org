@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   include Gravtastic
   is_gravtastic :default => "retro"
 
-  attr_accessible :bio, :email, :handle, :location, :password, :website
+  attr_accessible :bio, :email, :handle, :location, :password, :website, :gittip_username
 
   has_many :rubygems, :through => :ownerships
 
@@ -96,5 +96,9 @@ class User < ActiveRecord::Base
 
   def total_rubygems_count
     rubygems.count
+  end
+
+  def gittip_url
+    'http://gittip.com/' + gittip_username
   end
 end
