@@ -505,6 +505,10 @@ table {
   background: url('/images/docs.png') no-repeat;
 }
 
+.main .info .meta .admin #badge {
+  background: url('/images/badge.png') no-repeat;
+}
+
 .main .info .meta .admin #stats {
   background: url('/images/metrics.png') no-repeat;
 }
