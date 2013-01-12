@@ -493,6 +493,10 @@ table {
   background: url('/images/unsubscribe.png') no-repeat;
 }
 
+.main .info .meta .admin #gittip {
+  background: url('/images/gittip.png') no-repeat;
+}
+
 .main .info .meta .admin #download {
   background: url('/images/download.png') no-repeat;
 }

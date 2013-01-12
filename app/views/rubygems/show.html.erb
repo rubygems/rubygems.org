@@ -25,6 +25,7 @@
     <div class="meta">
       <div class="admin">
         <%= link_to t('edit'), edit_rubygem_path(@rubygem), :id => "edit" if @rubygem.owned_by?(current_user) %>
+        <%= gittip_link(@rubygem) if @rubygem.gittip_enabled? %>
         <%= download_link(@latest_version) %>
         <%= documentation_link(@latest_version, @rubygem.linkset) %>
         <%= subscribe_link(@rubygem) if @latest_version.indexed %>
@@ -67,13 +68,12 @@
           <% end %>
         </div>
 
-        <% if @rubygem.linkset.present? || @rubygem.gittip_enabled? %>
+        <% if @rubygem.linkset.present? %>
           <div class="links">
             <h5><%= t '.links.header' %></h5>
             <%= link_to_page t('.links.home'), @rubygem.linkset.home %>
             <%= link_to_page t('.links.code'), @rubygem.linkset.code %>
             <%= link_to_page t('.links.docs'), @rubygem.linkset.docs %>
-            <%= link_to_page 'Gittip', @rubygem.gittip_url if @rubygem.gittip_enabled? %>
             <%= link_to_page t('.links.wiki'), @rubygem.linkset.wiki %>
             <%= link_to_page t('.links.mail'), @rubygem.linkset.mail %>
             <%= link_to_page t('.links.bugs'), @rubygem.linkset.bugs %>
