@@ -25,14 +25,9 @@ class RubygemsController < ApplicationController
   end
 
   def update
-    if params.has_key?(:linkset) && @linkset.update_attributes(params[:linkset])
+    if @linkset.update_attributes(params[:linkset])
       redirect_to rubygem_path(@rubygem)
       flash[:success] = "Gem links updated."
-    elsif params.has_key? :gittip_enabled
-      @rubygem.gittip_enabled = params[:gittip_enabled]
-      # FIXME: this is not translation friendly.  does it need to be?
-      notice = "Gittip is now #{params[:gittip_enabled] ? 'en' : 'dis'}abled for this gem!"
-      redirect_to rubygem_path(@rubygem, notice: notice) if @rubygem.save
     else
       render :edit
     end
