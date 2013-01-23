@@ -833,7 +833,7 @@ table {
   border: none;
 }
 
-.main .info .gems ol li:hover {
+.main .info .gems ol li:hover, .main .info .gems ol li.selected {
   background: #fff url('/images/bullet-directory.png') no-repeat 10px 14px;
 }
 
@@ -859,7 +859,7 @@ table {
   margin-right: 5px;
 }
 
-.main .info .gems ol li a:hover strong {
+.main .info .gems ol li a:hover strong, .main .info .gems ol li.selected a strong {
   color: #8F0B0B;
 }
 
