@@ -131,7 +131,7 @@ GEM
       aggregate (~> 0.2.2)
       faraday (~> 0.7)
       multi_json
-    librato-rails (0.8.1)
+    librato-rails (0.8.2)
       librato-metrics (~> 1.0.2)
       rails (>= 3.0)
     mail (2.4.4)
