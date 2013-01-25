@@ -209,7 +209,7 @@ GEM
     ruby-graphviz (1.0.8)
     ruby-hmac (0.4.0)
     rubyzip (0.9.9)
-    rvm (1.11.3.5)
+    rvm (1.11.3.6)
     rvm-capistrano (1.2.7)
       capistrano (>= 2.0.0)
     selenium-webdriver (2.29.0)
