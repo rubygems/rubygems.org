@@ -84,6 +84,17 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal 4, versions.size
       assert_equal [@first, @second, @third, @fourth], versions
     end
+
+    should "be able to paginate with will_paginate" do
+      versions = Version.just_updated.paginate(:page => 2, :per_page => 2)
+      assert_equal 2, versions.size
+      assert_equal [@third, @fourth], versions
+    end
+
+    should "not take the limit parameter into account when paginating" do
+      versions = Version.just_updated(12).paginate(:page => 2, :per_page => 2)
+      assert_equal 2, versions.size
+    end
   end
 
   context "with a rubygem" do
