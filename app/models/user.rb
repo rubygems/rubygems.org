@@ -55,7 +55,7 @@ class User < ActiveRecord::Base
   end
 
   def payload
-    {"email" => email}
+    {"email" => email, "gittip_username" => gittip_username}
   end
 
   def as_json(options={})
