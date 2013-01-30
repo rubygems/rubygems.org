@@ -32,4 +32,3 @@ after "deploy:create_symlink", "deploy:move_in_database_yml", "deploy:move_in_se
 before "bundle:install", "deploy:set_config_for_pg_gem"
 
 require './config/boot'
-require 'airbrake/capistrano'
