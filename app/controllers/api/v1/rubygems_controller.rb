@@ -23,9 +23,10 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   def create
-    gemcutter = Pusher.new(current_user, request.body, request.host_with_port)
-    gemcutter.process
-    render :text => gemcutter.message, :status => gemcutter.code
+    render :text => "Pushing is temporarily disabled. Please check http://status.rubygems.org for more info.", :status => 503
+    #gemcutter = Pusher.new(current_user, request.body, request.host_with_port)
+    #gemcutter.process
+    #render :text => gemcutter.message, :status => gemcutter.code
   end
 
   def yank
