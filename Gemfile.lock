@@ -72,7 +72,7 @@ GEM
     daemons (1.1.9)
     dalli (2.6.2)
     database_cleaner (0.9.1)
-    delayed_job (3.0.4)
+    delayed_job (3.0.5)
       activesupport (~> 3.0)
     delayed_job_active_record (0.3.3)
       activerecord (>= 2.1.0, < 4)
