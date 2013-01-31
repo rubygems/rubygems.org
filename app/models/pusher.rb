@@ -51,7 +51,7 @@ class Pusher
   end
 
   def find
-    @rubygem = Rubygem.find_or_initialize_by_name(spec.name)
+    @rubygem = Rubygem.find_or_initialize_by_name(spec.name.to_s)
     @version = @rubygem.find_or_initialize_version_from_spec(spec)
 
     if @version.new_record?
