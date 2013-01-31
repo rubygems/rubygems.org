@@ -55,7 +55,10 @@ class User < ActiveRecord::Base
   end
 
   def payload
-    {"email" => email, "gittip_username" => gittip_username}
+    attrs = {"email" => email}
+    attrs.merge!({"gittip_username" => gittip_username}) if gittip_username
+
+    attrs
   end
 
   def as_json(options={})
