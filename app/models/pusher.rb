@@ -38,6 +38,9 @@ class Pusher
     end
 
     false
+  rescue Psych::ForbiddenClassException => e
+    Rails.logger.info "Attempted YAML metadata exploit: #{e}"
+    notify("RubyGems.org cannot process this gem.\nThe metadata is invalid.\n#{e}", 422)
   rescue Gem::Package::FormatError
     notify("RubyGems.org cannot process this gem.\nPlease try rebuilding it" +
            " and installing it locally to make sure it's valid.", 422)
