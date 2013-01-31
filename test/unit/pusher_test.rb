@@ -80,6 +80,17 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal @cutter.code, 422
     end
 
+    should "not be able to pull spec with metadata containing bad ruby objects" do
+      @gem = gem_file("exploit.gem")
+      @cutter = Pusher.new(@user, @gem)
+      @cutter.pull_spec
+      assert_nil @cutter.spec
+      assert_match %r{RubyGems\.org cannot process this gem}, @cutter.message
+      assert_match %r{The metadata is invalid.}, @cutter.message
+      assert_match %r{ActionController::Routing::RouteSet::NamedRouteCollection}, @cutter.message
+      assert_equal @cutter.code, 422
+    end
+
     should "post info to the remote bundler API" do
       @cutter.pull_spec
 
