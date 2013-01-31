@@ -44,7 +44,7 @@ class Pusher
   rescue Exception => e
     notify("RubyGems.org cannot process this gem.\nPlease try rebuilding it" +
            " and installing it locally to make sure it's valid.\n" +
-           "Error:\n#{e.message}\n#{e.backtrace.join("\n")}", 422)
+           "Error:\n#{e.message}}", 422)
   end
 
   def find
