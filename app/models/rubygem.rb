@@ -1,6 +1,8 @@
 class Rubygem < ActiveRecord::Base
   include Patterns
 
+  self.primary_key = 'id'
+
   has_many :owners, :through => :ownerships, :source => :user
   has_many :ownerships, :dependent => :destroy
   has_many :subscribers, :through => :subscriptions, :source => :user
