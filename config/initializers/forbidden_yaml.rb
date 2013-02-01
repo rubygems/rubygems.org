@@ -21,6 +21,14 @@ module Psych
         Gem::Version::Requirement
       )
 
+     def deserialize o
+        if klass = Psych.load_tags[o.tag]
+          raise ForbiddenClassException, "Forbidden class in YAML: #{klassname}" unless WHITELISTED_CLASSES.include? klass.name
+        end
+
+        super
+      end
+
     private
 
       def resolve_class klassname
