@@ -38,6 +38,9 @@ class Pusher
     end
 
     false
+  rescue Psych::ForbiddenClassException => e
+    Rails.logger.info "Attempted YAML metadata exploit: #{e}"
+    notify("RubyGems.org cannot process this gem.\nThe metadata is invalid.\n#{e}", 422)
   rescue Gem::Package::FormatError
     notify("RubyGems.org cannot process this gem.\nPlease try rebuilding it" +
            " and installing it locally to make sure it's valid.", 422)
@@ -48,7 +51,7 @@ class Pusher
   end
 
   def find
-    @rubygem = Rubygem.find_or_initialize_by_name(spec.name)
+    @rubygem = Rubygem.find_or_initialize_by_name(spec.name.to_s)
     @version = @rubygem.find_or_initialize_version_from_spec(spec)
 
     if @version.new_record?
