@@ -12,7 +12,7 @@ module Psych
 
   module Visitors
     class WhitelistedToRuby < ToRuby
-      WHITELIST = %w(
+      WHITELISTED_CLASSES = %w(
         Gem::Dependency
         Gem::Platform
         Gem::Requirement
@@ -24,7 +24,7 @@ module Psych
     private
 
       def resolve_class klassname
-        raise ForbiddenClassException, "Forbidden class in YAML: #{klassname}" unless WHITELIST.include? klassname
+        raise ForbiddenClassException, "Forbidden class in YAML: #{klassname}" unless WHITELISTED_CLASSES.include? klassname
         super klassname
       end
     end
