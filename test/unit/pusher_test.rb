@@ -91,6 +91,20 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal @cutter.code, 422
     end
 
+    should "not be able to pull spec with metadata containing bad ruby symbols" do
+      ["1.0.0", "2.0.0", "3.0.0", "4.0.0"].each do |version|
+        @gem = gem_file("dos-#{version}.gem")
+        @cutter = Pusher.new(@user, @gem)
+        @cutter.pull_spec
+        assert_nil @cutter.spec
+        assert_include @cutter.message, %{RubyGems.org cannot process this gem}
+        assert_include @cutter.message, %{The metadata is invalid}
+        assert_include @cutter.message, %{Forbidden symbol in YAML}
+        assert_include @cutter.message, %{badsymbol}
+        assert_equal @cutter.code, 422
+      end
+    end
+
     should "post info to the remote bundler API" do
       @cutter.pull_spec
 
