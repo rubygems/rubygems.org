@@ -7,23 +7,58 @@ require "rubygems"
 abort "Use Psych for YAML, install libyaml and reinstall ruby" unless YAML == Psych
 
 module Psych
-  class ForbiddenClassException < Exception
+  class WhitelistException < Exception; end
+  class ForbiddenClassException < WhitelistException; end
+  class ForbiddenSymbolException < WhitelistException; end
+
+  WHITELISTED_CLASSES = %w(
+    Gem::Dependency
+    Gem::Platform
+    Gem::Requirement
+    Gem::Specification
+    Gem::Version
+    Gem::Version::Requirement
+  )
+
+  # These are all unique symbols used across all currently published gems' metadata
+  WHITELISTED_SYMBOLS = %w(
+    development
+    json
+    mocha
+    rdoc
+    runtime
+  )
+
+  class WhitelistedScalarScanner < ScalarScanner
+    def tokenize string
+      # Protect against scanned scalars which will become symbols
+      if string[/^:./]
+        symbol = string.sub(/^:/, "")
+        symbol = $2 if string =~ /^(["'])(.*)\1/
+
+        raise ForbiddenSymbolException, "Forbidden symbol in YAML: #{symbol}" unless WHITELISTED_SYMBOLS.include? symbol
+      end
+
+      super
+    end
   end
 
   module Visitors
     class WhitelistedToRuby < ToRuby
-      WHITELISTED_CLASSES = %w(
-        Gem::Dependency
-        Gem::Platform
-        Gem::Requirement
-        Gem::Specification
-        Gem::Version
-        Gem::Version::Requirement
-      )
+      def initialize
+        super
+        @ss = WhitelistedScalarScanner.new
+      end
 
-     def deserialize o
+      def visit_Psych_Nodes_Scalar o
+        # Protect against explicitly tagged ruby classes which take the YAML shortcut, i.e. ActiveRecord::Base
         if klass = Psych.load_tags[o.tag]
           raise ForbiddenClassException, "Forbidden class in YAML: #{klassname}" unless WHITELISTED_CLASSES.include? klass.name
+        end
+
+        # Protect against explicitly tagged ruby symbols
+        if o.tag and o.tag[/^!ruby\/sym(bol)?:?(.*)?$/]
+          raise ForbiddenSymbolException, "Forbidden symbol in YAML: #{o.value}" unless WHITELISTED_SYMBOLS.include? o.value
         end
 
         super
@@ -32,7 +67,9 @@ module Psych
     private
 
       def resolve_class klassname
+        # Protect against all explicit ruby classes, from tags or otherwise
         raise ForbiddenClassException, "Forbidden class in YAML: #{klassname}" unless WHITELISTED_CLASSES.include? klassname
+
         super klassname
       end
     end
