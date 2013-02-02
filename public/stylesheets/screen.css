@@ -1023,7 +1023,7 @@ table {
   position: relative;
   width: 70px;
   height: 70px;
-  display: inline;
+  display: inline !important;
   margin-left: 7px;
   top: -30px;
 }
