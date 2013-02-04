@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+export DEBIAN_FRONTEND=noninteractive
+
+apt-get update > /dev/null
+apt-get -y install autoconf automake bison build-essential curl g++ git-core libc6-dev libreadline6 libreadline6-dev libsqlite3-dev libssl-dev libtool libxml2-dev libxslt-dev libyaml-dev ncurses-dev nodejs openjdk-7-jdk openjdk-7-jre-headless openssl pkg-config postgresql-9.1 postgresql-server-dev-9.1 redis-server sqlite3 subversion unzip xvfb zlib1g zlib1g-dev
+
+if [ ! -f $HOME/.postgresql_setup_done ]; then
+  # Setup vagrant and root users for PostgreSQL
+  sudo -u postgres createuser -s vagrant
+  sudo -u postgres createdb -O vagrant vagrant
+  sudo -u postgres createuser -s root
+  sudo -u postgres createdb -O root root
+
+  # Grant access to PostgreSQL for the vagrant and root users inside the Vagrant box
+  cat > "/etc/postgresql/9.1/main/pg_hba.conf" <<EOF
+  # TYPE  DATABASE        USER            ADDRESS                 METHOD
+  local   all             postgres                                peer
+  local   all             vagrant                                 ident
+  local   all             root                                    ident
+  host    all             vagrant         127.0.0.1/32            trust
+  host    all             root            127.0.0.1/32            trust
+EOF
+
+  service postgresql restart
+
+  touch $HOME/.postgresql_setup_done
+fi
+
+if [ ! -f $HOME/.redis_setup_done ]; then
+  # Setup env for the application to use Redis
+  echo 'export REDISTOGO_URL="redis://localhost:6379"' >> /etc/profile.d/redis.sh 
+  echo 'export REDISTOGO_URL="redis://localhost:6379"' >> /etc/zsh/zprofile
+  touch $HOME/.redis_setup_done
+fi
+
+# Use chruby to manage Rubies (and ruby-build to build them)
+if [ -f "/usr/local/share/chruby/chruby.sh" ]; then
+  echo 'chruby already present'
+else
+  # Download and install chruby
+  echo 'chruby not yet installed, installing now...'
+  wget -O chruby-0.3.2.tar.gz https://github.com/postmodern/chruby/archive/v0.3.2.tar.gz
+  tar -xzvf chruby-0.3.2.tar.gz
+  cd chruby-0.3.2/
+  make install
+  # Add to global profile (enabling chruby for all bash users)
+  echo '[ -n "$BASH_VERSION" ] || [ -n "$ZSH_VERSION" ] || return' >> /etc/profile.d/chruby.sh
+  echo "source /usr/local/share/chruby/chruby.sh" >> /etc/profile.d/chruby.sh
+  # Add to global zprofile (enabling chruby for all zsh users)
+  echo "source /usr/local/share/chruby/chruby.sh" >> /etc/zsh/zprofile
+  # Install ruby-build
+  cd
+  git clone git://github.com/sstephenson/ruby-build.git
+  cd ruby-build
+  ./install.sh
+  # Use ruby-build to install MRI and JRuby
+  ruby-build 1.9.3-p374 /opt/rubies/ruby-1.9.3-p374
+  # Set ruby-1.9 as the global default for bash users
+  echo "chruby ruby-1.9" >> /etc/profile.d/chruby.sh
+  # Set ruby-1.9 as the global default for zsh users
+  echo "chruby ruby-1.9" >> /etc/zsh/zprofile
+fi
+
+cd /vagrant
+
+# Setup the bundle
+source /usr/local/share/chruby/chruby.sh 
+chruby ruby-1.9 && gem install bundler && bundle
+
+if [ ! -f config/database.yml ]; then
+  echo "Copying database.yml.example over"
+  cp config/database.yml.example config/database.yml
+
+  bundle exec rake db:create:all db:drop:all db:setup
+  bundle exec rake db:test:prepare
+fi
