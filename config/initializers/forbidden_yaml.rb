@@ -23,9 +23,6 @@ module Psych
   # These are all unique symbols used across all currently published gems' metadata
   WHITELISTED_SYMBOLS = %w(
     development
-    json
-    mocha
-    rdoc
     runtime
   )
 
