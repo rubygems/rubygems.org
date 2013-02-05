@@ -71,7 +71,7 @@ class Pusher
   def update_remote_bundler_api(to=RestClient)
     return unless @bundler_api_url
 
-    json = %Q!{ "name": "#{spec.name}", "version": "#{spec.version}", "platform": "#{spec.platform}", "prerelease": #{spec.version.prerelease? ? 'true' : 'false'}, "rubygems_token": "#{@bundler_token}"}!
+    json = %Q!{ "name": "#{spec.name}", "version": "#{spec.version}", "platform": "#{spec.original_platform}", "prerelease": #{spec.version.prerelease? ? 'true' : 'false'}, "rubygems_token": "#{@bundler_token}"}!
 
     begin
       timeout(5) do
