@@ -157,7 +157,7 @@ GEM
       slop (~> 3.4)
     puma (1.6.3)
       rack (~> 1.2)
-    rack (1.4.4)
+    rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
     rack-maintenance (1.0.0)
