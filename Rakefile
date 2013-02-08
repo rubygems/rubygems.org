@@ -39,8 +39,8 @@ namespace :chef do
       end
     end
 
-    ENV['RUBYGEMS_EC2_APP'] = "ec2-54-245-134-70.us-west-2.compute.amazonaws.com"
-
-    sh "cd chef; cap rubygems.org chef:app"
+    Bundler.with_clean_env do
+      sh "cd chef; bundle install && librarian-chef install && RUBYGEMS_EC2_APP=ec2-54-245-134-70.us-west-2.compute.amazonaws.com cap rubygems.org chef:app"
+    end
   end
 end
