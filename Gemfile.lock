@@ -79,7 +79,7 @@ GEM
       delayed_job (~> 3.0)
     diesel (0.1.5)
       railties
-    diff-lcs (1.2.0)
+    diff-lcs (1.2.1)
     dynamic_form (1.1.4)
     erubis (2.7.0)
     excon (0.16.10)
