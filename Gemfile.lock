@@ -132,7 +132,7 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     method_source (0.8.1)
-    mime-types (1.20.1)
+    mime-types (1.21)
     multi_json (1.5.0)
     multipart-post (1.1.5)
     net-scp (1.0.6)
