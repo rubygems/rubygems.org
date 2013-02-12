@@ -74,7 +74,7 @@ GEM
     database_cleaner (0.9.1)
     delayed_job (3.0.5)
       activesupport (~> 3.0)
-    delayed_job_active_record (0.3.3)
+    delayed_job_active_record (0.4.1)
       activerecord (>= 2.1.0, < 4)
       delayed_job (~> 3.0)
     diesel (0.1.5)
