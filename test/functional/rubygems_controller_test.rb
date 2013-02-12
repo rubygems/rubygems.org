@@ -189,6 +189,9 @@ class RubygemsControllerTest < ActionController::TestCase
     should "display uppercase A" do
       assert page.has_content?("starting with A")
     end
+    should "display 'gems' in pagination summary" do
+      assert page.has_content?("all #{@gems.count} gems")
+    end
   end
 
   context "On GET to index as an atom feed" do
