@@ -38,17 +38,20 @@ class Pusher
     end
 
     false
+  rescue Psych::WhitelistException => e
+    Rails.logger.info "Attempted YAML metadata exploit: #{e}"
+    notify("RubyGems.org cannot process this gem.\nThe metadata is invalid.\n#{e}", 422)
   rescue Gem::Package::FormatError
     notify("RubyGems.org cannot process this gem.\nPlease try rebuilding it" +
            " and installing it locally to make sure it's valid.", 422)
   rescue Exception => e
     notify("RubyGems.org cannot process this gem.\nPlease try rebuilding it" +
            " and installing it locally to make sure it's valid.\n" +
-           "Error:\n#{e.message}\n#{e.backtrace.join("\n")}", 422)
+           "Error:\n#{e.message}}", 422)
   end
 
   def find
-    @rubygem = Rubygem.find_or_initialize_by_name(spec.name)
+    @rubygem = Rubygem.find_or_initialize_by_name(spec.name.to_s)
     @version = @rubygem.find_or_initialize_version_from_spec(spec)
 
     if @version.new_record?
@@ -68,7 +71,7 @@ class Pusher
   def update_remote_bundler_api(to=RestClient)
     return unless @bundler_api_url
 
-    json = %Q!{ "name": "#{spec.name}", "version": "#{spec.version}", "platform": "#{spec.platform}", "prerelease": #{spec.version.prerelease? ? 'true' : 'false'}, "rubygems_token": "#{@bundler_token}"}!
+    json = %Q!{ "name": "#{spec.name}", "version": "#{spec.version}", "platform": "#{spec.original_platform}", "prerelease": #{spec.version.prerelease? ? 'true' : 'false'}, "rubygems_token": "#{@bundler_token}"}!
 
     begin
       timeout(5) do
