@@ -47,5 +47,8 @@ class SearchesControllerTest < ActionController::TestCase
       assert ! page.has_content?(@brando.name)
       assert ! page.has_selector?("a[href='#{rubygem_path(@brando)}']")
     end
+    should "display 'gems' in pagination summary" do
+      assert page.has_content?("all 2 gems")
+    end
   end
 end
