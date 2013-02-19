@@ -82,7 +82,7 @@ GEM
     diff-lcs (1.2.1)
     dynamic_form (1.1.4)
     erubis (2.7.0)
-    excon (0.16.10)
+    excon (0.17.0)
     factory_girl (4.2.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.2.1)
