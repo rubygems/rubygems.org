@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
       I18n.locale = params[:locale] || I18n.default_locale
   end
 
-  # Adding this keeps the user on the same locale, but currently breaks a lot of tests testing for specific urls. 
+  # Adding this keeps the user on the same locale, but currently breaks a lot of tests testing for specific urls.
   # def default_url_options(options={})
       # { :locale => I18n.locale }
   # end
