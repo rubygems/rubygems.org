@@ -29,6 +29,7 @@ class VersionsControllerTest < ActionController::TestCase
       @versions = (1..5).map do |version|
         create(:version, :rubygem => @rubygem)
       end
+      @rubygem.reload
 
       get :index, :rubygem_id => @rubygem.name, :format => "atom"
     end
