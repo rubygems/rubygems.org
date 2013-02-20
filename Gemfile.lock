@@ -202,7 +202,7 @@ GEM
     rvm (1.11.3.6)
     rvm-capistrano (1.2.7)
       capistrano (>= 2.0.0)
-    selenium-webdriver (2.29.0)
+    selenium-webdriver (2.30.0)
       childprocess (>= 0.2.5)
       multi_json (~> 1.0)
       rubyzip
