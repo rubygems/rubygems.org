@@ -190,7 +190,7 @@ GEM
       thor (>= 0.14.6, < 2.0)
     raindrops (0.10.0)
     rake (10.0.3)
-    rdoc (3.12.1)
+    rdoc (3.12.2)
       json (~> 1.4)
     redis (3.0.2)
     rest-client (1.6.7)
