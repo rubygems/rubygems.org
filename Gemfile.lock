@@ -237,7 +237,7 @@ GEM
       raindrops (~> 0.7)
     validates_formatting_of (0.7.1)
       activemodel (~> 3.0)
-    webmock (1.9.3)
+    webmock (1.10.1)
       addressable (>= 2.2.7)
       crack (>= 0.3.2)
     websocket (1.0.7)
