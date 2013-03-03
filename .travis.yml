@@ -8,5 +8,5 @@ matrix:
     - rvm: ruby-head
 rvm:
   - 1.9.3
-  - ruby-head
+  - 2.0.0
 script: bundle exec rake db:create db:migrate db:test:prepare default
