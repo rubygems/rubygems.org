@@ -5,7 +5,7 @@ before_script: cp config/database.yml.example config/database.yml
 language: ruby
 matrix:
   allow_failures:
-    - rvm: ruby-head
+    - rvm: 2.0.0
 rvm:
   - 1.9.3
   - 2.0.0
