@@ -5,6 +5,10 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     get :show, :id => rubygem.name, :format => format
   end
 
+  def get_reverse_dependencies(rubygem, format='json')
+    get :reverse_dependencies, :id => rubygem.name, :format => format
+  end
+
   def self.should_respond_to(format)
     context "with #{format.to_s.upcase}" do
       should "have a list of versions for the first gem" do
@@ -126,4 +130,34 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to reverse_dependencies" do
+    setup do
+      @dep_rubygem = create(:rubygem)
+      @gem_one = create(:rubygem)
+      @gem_two = create(:rubygem)
+      @gem_three = create(:rubygem)
+      @version_one_latest  = create(:version, :rubygem => @gem_one, :number => '0.2')
+      @version_one_earlier = create(:version, :rubygem => @gem_one, :number => '0.1')
+      @version_two_latest  = create(:version, :rubygem => @gem_two, :number => '1.0')
+      @version_two_earlier = create(:version, :rubygem => @gem_two, :number => '0.5')
+      @version_three = create(:version, :rubygem => @gem_three, :number => '1.7')
+
+      @version_one_latest.dependencies << create(:dependency, :version => @version_one_latest, :rubygem => @dep_rubygem)
+      @version_two_earlier.dependencies << create(:dependency, :version => @version_two_earlier, :rubygem => @dep_rubygem)
+      @version_three.dependencies << create(:dependency, :version => @version_three, :rubygem => @dep_rubygem)
+    end
+
+    should "give all depended gem versions" do
+      get_reverse_dependencies(@dep_rubygem)
+      ret_versions = MultiJson.load(@response.body).map { |h| h["number"] }
+
+      assert_equal 3, ret_versions.size
+
+      assert ret_versions.include?(@version_one_latest.number)
+      assert ret_versions.include?(@version_two_earlier.number)
+      assert ret_versions.include?(@version_three.number)
+      assert ! ret_versions.include?(@version_one_earlier.number)
+      assert ! ret_versions.include?(@version_two_latest.number)
+    end
+  end
 end
