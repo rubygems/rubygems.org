@@ -12,4 +12,8 @@ class Api::V1::VersionsController < Api::BaseController
       render :text => "This rubygem could not be found.", :status => 404
     end
   end
+
+  def reverse_dependencies
+    respond_with(Version.reverse_dependencies(params[:id]), :yamlish => true)
+  end
 end
