@@ -84,7 +84,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
   context "on GET to show for an unknown gem" do
     setup do
-      get :show, :id => "nonexistent_gem"
+      get :show, :id => "nonexistent_gem", :format => "json"
     end
 
     should "return a 404" do
