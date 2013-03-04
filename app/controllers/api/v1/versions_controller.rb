@@ -14,6 +14,12 @@ class Api::V1::VersionsController < Api::BaseController
   end
 
   def reverse_dependencies
-    respond_with(Version.reverse_dependencies(params[:id]), :yamlish => true)
+    versions = Version.reverse_dependencies(params[:id])
+
+    respond_to do |format|
+      format.json { render :json => versions.map { |v| v.as_json.merge("full_name" => v.full_name) } }
+      format.xml  { render :xml  => versions.map { |v| v.payload.merge("full_name" => v.full_name) } }
+      format.yaml { render :text => versions.map { |v| v.payload.merge("full_name" => v.full_name) }.to_yaml }
+    end
   end
 end
