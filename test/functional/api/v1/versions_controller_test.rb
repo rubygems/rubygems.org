@@ -5,8 +5,8 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     get :show, :id => rubygem.name, :format => format
   end
 
-  def get_reverse_dependencies(rubygem, format='json')
-    get :reverse_dependencies, :id => rubygem.name, :format => format
+  def get_reverse_dependencies(rubygem, options={ :format => 'json' })
+    get :reverse_dependencies, options.merge(:id => rubygem.name)
   end
 
   def self.should_respond_to(format)
@@ -136,11 +136,11 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       @gem_one = create(:rubygem)
       @gem_two = create(:rubygem)
       @gem_three = create(:rubygem)
-      @version_one_latest  = create(:version, :rubygem => @gem_one, :number => '0.2')
-      @version_one_earlier = create(:version, :rubygem => @gem_one, :number => '0.1')
-      @version_two_latest  = create(:version, :rubygem => @gem_two, :number => '1.0')
-      @version_two_earlier = create(:version, :rubygem => @gem_two, :number => '0.5')
-      @version_three = create(:version, :rubygem => @gem_three, :number => '1.7')
+      @version_one_latest  = create(:version, :rubygem => @gem_one, :number => '0.2', :full_name => "gem_one-0.2")
+      @version_one_earlier = create(:version, :rubygem => @gem_one, :number => '0.1', :full_name => "gem_one-0.1")
+      @version_two_latest  = create(:version, :rubygem => @gem_two, :number => '1.0', :full_name => "gem_two-1.0")
+      @version_two_earlier = create(:version, :rubygem => @gem_two, :number => '0.5', :full_name => "gem_two-0.5")
+      @version_three = create(:version, :rubygem => @gem_three, :number => '1.7', :full_name => "gem_three-1.7")
 
       @version_one_latest.dependencies << create(:dependency, :version => @version_one_latest, :rubygem => @dep_rubygem)
       @version_two_earlier.dependencies << create(:dependency, :version => @version_two_earlier, :rubygem => @dep_rubygem)
@@ -158,6 +158,21 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       assert ret_versions.include?(@version_three.number)
       assert ! ret_versions.include?(@version_one_earlier.number)
       assert ! ret_versions.include?(@version_two_latest.number)
+    end
+
+    context "with 'short=true' param" do
+      should "return only names of reverse dependencies" do
+        get_reverse_dependencies(@dep_rubygem, :format => "json", :short => true)
+        ret_versions = MultiJson.load(@response.body)
+
+        assert_equal 3, ret_versions.size
+
+        assert ret_versions.include?(@version_one_latest.full_name)
+        assert ret_versions.include?(@version_two_earlier.full_name)
+        assert ret_versions.include?(@version_three.full_name)
+        assert ! ret_versions.include?(@version_one_earlier.full_name)
+        assert ! ret_versions.include?(@version_two_latest.full_name)
+      end
     end
   end
 end
