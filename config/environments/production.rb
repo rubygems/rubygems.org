@@ -24,4 +24,6 @@ Gemcutter::Application.configure do
   # }
 end
 
+Excon.defaults[:ssl_ca_path]= "/etc/ssl/certs"
+
 require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?
