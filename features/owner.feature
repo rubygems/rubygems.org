@@ -83,3 +83,15 @@ Feature: Manage owners
       | action                                                        |
       | add the owner "new@owner.org" to the rubygem "OGem"           |
       | remove the owner "original@owner.org" from the rubygem "OGem" |
+
+  Scenario: Gem owner adds another owner through UI
+    Given I sign in as "original@owner.org"
+    And I have an API key for "original@owner.org/password"
+    And I have a gem "OGem" with version "2.0.0"
+    And I push the gem "OGem-2.0.0.gem" with my API key
+    When I visit the gem page for "OGem"
+    And I add the owner "new@owner.org" to the rubygem "OGem" through the UI
+    And I list the owners of gem "OGem" with my API key
+    Then I should see "original@owner.org"
+    And I should see "new@owner.org"
+

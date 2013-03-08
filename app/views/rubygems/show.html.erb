@@ -56,6 +56,9 @@
             <div class="owners info-item">
               <h5><%= t '.owners_header' %></h5>
               <p><%= links_to_owners(@rubygem) %></p>
+              <% if @rubygem.owned_by?(current_user) %>
+                <%= link_to t('.edit_owners'), rubygem_ownerships_path(@rubygem) %>
+              <% end %>
             </div>
           <% end %>
 

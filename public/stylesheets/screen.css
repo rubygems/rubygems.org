@@ -667,6 +667,15 @@ table {
   margin-right: 5px;
 }
 
+.main .info .meta .owners a {
+  display: inline-block;
+  font-size: 1.3em;
+  margin: 0 0.7em;
+  font-weight: 900;
+  color: #5B7B9C;
+  text-decoration: underline;
+}
+
 .main .info .meta .downloads {
   text-align: right;
   font-size: 1.3em;
@@ -1238,6 +1247,10 @@ input[type='submit'] {
 input[type='submit']:hover {
   background-image: -moz-linear-gradient(bottom, #690900 0%, #8f0e00 49%,  #a41200 50%, #f00 100%);
   background-image: -webkit-gradient(linear,left top,left bottom,color-stop(1, #690900),color-stop(.5, #8f0e00),color-stop(.49, #a41200),color-stop(0, #f00));
+}
+
+.owners img {
+  margin-right: 5px;
 }
 
 /* Rails Flash, Forms, Etc */
