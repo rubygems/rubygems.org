@@ -51,4 +51,15 @@ class SearchesControllerTest < ActionController::TestCase
       assert page.has_content?("all 2 gems")
     end
   end
+
+  context 'on GET to show with search parameters with a single exact match' do
+    setup do
+      @sinatra = create(:rubygem, :name => "sinatra")
+      create(:version, :rubygem => @sinatra)
+      get :show, :query => "sinatra"
+    end
+
+    should respond_with :redirect
+    should redirect_to('the gem') { rubygem_path(@sinatra) }
+  end
 end
