@@ -217,7 +217,7 @@ GEM
       shoulda-context (~> 1.0, >= 1.0.1)
       shoulda-matchers (~> 1.0, >= 1.4.1)
     shoulda-context (1.0.2)
-    shoulda-matchers (1.5.2)
+    shoulda-matchers (1.5.4)
       activesupport (>= 3.0.0)
       bourne (~> 1.3)
     sinatra (1.3.6)
