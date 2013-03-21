@@ -56,7 +56,7 @@ class User < ActiveRecord::Base
 
   def payload
     attrs = {"email" => email}
-    attrs.merge!({"gittip_username" => gittip_username}) if gittip_username
+    attrs["gittip_username"] = gittip_username if gittip_username
 
     attrs
   end
