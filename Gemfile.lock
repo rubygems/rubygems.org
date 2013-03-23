@@ -139,7 +139,7 @@ GEM
     mime-types (1.21)
     mocha (0.13.3)
       metaclass (~> 0.0.1)
-    multi_json (1.7.1)
+    multi_json (1.7.2)
     multipart-post (1.2.0)
     net-scp (1.1.0)
       net-ssh (>= 2.6.5)
