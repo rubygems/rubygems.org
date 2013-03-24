@@ -93,7 +93,7 @@ GEM
       railties (>= 3.0.0)
     fakeredis (0.4.2)
       redis (~> 3.0.0)
-    faraday (0.8.6)
+    faraday (0.8.7)
       multipart-post (~> 1.1)
     ffi (1.5.0)
     fog (1.10.0)
