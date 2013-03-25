@@ -58,6 +58,37 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
+  context ".reverse_dependencies" do
+    setup do
+      @dep_rubygem = create(:rubygem)
+      @gem_one = create(:rubygem)
+      @gem_two = create(:rubygem)
+      @gem_three = create(:rubygem)
+      @version_one_latest  = create(:version, :rubygem => @gem_one, :number => '0.2')
+      @version_one_earlier = create(:version, :rubygem => @gem_one, :number => '0.1')
+      @version_two_latest  = create(:version, :rubygem => @gem_two, :number => '1.0')
+      @version_two_earlier = create(:version, :rubygem => @gem_two, :number => '0.5')
+      @version_three = create(:version, :rubygem => @gem_three, :number => '1.7')
+
+      @version_one_latest.dependencies << create(:dependency, :version => @version_one_latest, :rubygem => @dep_rubygem)
+      @version_two_earlier.dependencies << create(:dependency, :version => @version_two_earlier, :rubygem => @dep_rubygem)
+      @version_three.dependencies << create(:dependency, :version => @version_three, :rubygem => @dep_rubygem)
+    end
+
+    should "return all depended gem versions" do
+      version_list = Version.reverse_dependencies(@dep_rubygem.name)
+
+      assert_equal 3, version_list.size
+
+      assert version_list.include?(@version_one_latest)
+      assert version_list.include?(@version_two_earlier)
+      assert version_list.include?(@version_three)
+      assert ! version_list.include?(@version_one_earlier)
+      assert ! version_list.include?(@version_two_latest)
+    end
+  end
+
+
   context "updated gems" do
     setup do
       Timecop.freeze Date.today

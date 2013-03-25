@@ -45,6 +45,10 @@ class Rubygem < ActiveRecord::Base
     where("upper(name) like upper(?)", "#{letter}%")
   end
 
+  def self.reverse_dependencies(name)
+    find(Version.reverse_dependencies(name).map(&:rubygem_id))
+  end
+
   def self.total_count
     with_versions.count
   end

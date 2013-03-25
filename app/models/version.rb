@@ -15,6 +15,11 @@ class Version < ActiveRecord::Base
   validate :platform_and_number_are_unique, :on => :create
   validate :authors_format, :on => :create
 
+  def self.reverse_dependencies(name)
+    joins({ dependencies: :rubygem }).
+      where(rubygems: { name: name })
+  end
+
   def self.owned_by(user)
     where(:rubygem_id => user.rubygem_ids)
   end
