@@ -24,7 +24,7 @@ module ApplicationHelper
   end
 
   def ssl_url_for(options = {})
-    if %w(production staging test).include?(Rails.env)
+    if SimpleSSLRequirement::SSL_ENVIRONMENTS.include?(Rails.env)
       protocol = 'https'  # when using simple_ssl_requirement
     else
       protocol = 'http'   # for development
