@@ -10,3 +10,4 @@ Feature: Sign out
     Then I should be signed in
     And I sign out
     Then I should be signed out
+    And a cookie named "ssl" should not be set
