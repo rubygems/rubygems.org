@@ -46,6 +46,16 @@ class Api::V1::RubygemsController < Api::BaseController
     end
   end
 
+  def reverse_dependencies
+    rubygems = Rubygem.reverse_dependencies(params[:id])
+
+    if params[:short]
+      respond_with(rubygems.map(&:name), :yamlish => true)
+    else
+      respond_with(rubygems, :yamlish => true)
+    end
+  end
+
   private
 
   def validate_gem_and_version
