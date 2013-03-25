@@ -9,8 +9,14 @@ class SessionsController < Clearance::SessionsController
       render :template => 'sessions/new', :status => :unauthorized
     else
       sign_in(@user)
+      cookies[:ssl] = true
       redirect_back_or(url_after_create)
     end
+  end
+
+  def destroy
+    cookies.delete(:ssl)
+    super
   end
 
   private

@@ -128,7 +128,9 @@ Gemcutter::Application.routes.draw do
   ################################################################################
   # Clearance Overrides
 
-  resource :session, :only => [:new, :create]
+  resource :session, :only => [:create, :destroy]
+
+  match 'sign_out' => 'sessions#destroy', :via => :delete, :as => 'sign_out'
 
   resources :passwords, :only => [:new, :create]
 
