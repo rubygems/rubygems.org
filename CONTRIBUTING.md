@@ -140,7 +140,7 @@ running:
 
 * Get set up: `./script/setup`
 * Run the database rake tasks if needed: 
-    `rake db:create:all db:drop:all db:setup db:test:prepare —trace`
+    `rake db:create:all db:drop:all db:setup db:test:prepare --trace`
 
 **Running tests:**
 
