@@ -26,6 +26,12 @@ Gemcutter::Application.routes.draw do
         # resources :versions, :only => :show, :format => true do
         get 'versions/:id.:format', :to => 'versions#show', :as => 'version'
         resources :versions, :only => :show do
+          member do
+            # In Rails 3.1, the following line can be replaced with:
+            # get :reverse_dependencies, :format => true
+            get 'reverse_dependencies.:format', :to => 'versions#reverse_dependencies', :as => 'reverse_dependencies'
+          end
+
           # In Rails 3.1, the next TWO lines can be replaced with:
           # resources :downloads, :only => :show, :controller => 'versions/downloads', :format => true do
           get 'downloads.:format', :to => 'versions/downloads#index', :as => 'downloads'
@@ -42,6 +48,9 @@ Gemcutter::Application.routes.draw do
       resources :dependencies, :only => :index
 
       resources :rubygems, :path => 'gems', :only => [:create, :show, :index], :id => Patterns::LAZY_ROUTE_PATTERN, :format => /json|xml|yaml/ do
+        member do
+          get :reverse_dependencies
+        end
         collection do
           delete :yank
           put :unyank

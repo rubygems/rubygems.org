@@ -419,4 +419,50 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "on GET to reverse_dependencies" do
+    setup do
+      @dep_rubygem = create(:rubygem)
+      @gem_one = create(:rubygem)
+      @gem_two = create(:rubygem)
+      @gem_three = create(:rubygem)
+      @gem_four = create(:rubygem)
+      @version_one_latest  = create(:version, :rubygem => @gem_one, :number => '0.2')
+      @version_one_earlier = create(:version, :rubygem => @gem_one, :number => '0.1')
+      @version_two_latest  = create(:version, :rubygem => @gem_two, :number => '1.0')
+      @version_two_earlier = create(:version, :rubygem => @gem_two, :number => '0.5')
+      @version_three = create(:version, :rubygem => @gem_three, :number => '1.7')
+      @version_four = create(:version, :rubygem => @gem_four, :number => '3.9')
+
+      @version_one_latest.dependencies << create(:dependency, :version => @version_one_latest, :rubygem => @dep_rubygem)
+      @version_two_earlier.dependencies << create(:dependency, :version => @version_two_earlier, :rubygem => @dep_rubygem)
+      @version_three.dependencies << create(:dependency, :version => @version_three, :rubygem => @dep_rubygem)
+    end
+
+    should "give all reverse dependencies" do
+      get :reverse_dependencies, :id => @dep_rubygem.to_param, :format => "json"
+      gems = MultiJson.load(@response.body).map { |h| h["name"] }
+
+      assert_equal 3, gems.size
+
+      assert gems.include?(@gem_one.name)
+      assert gems.include?(@gem_two.name)
+      assert gems.include?(@gem_three.name)
+      assert ! gems.include?(@gem_four.name)
+    end
+
+    context "with 'short=true' param" do
+      should "return only names of reverse dependencies" do
+        get :reverse_dependencies, :id => @dep_rubygem.to_param, :format => "json", :short => true
+        gems = MultiJson.load(@response.body)
+
+        assert_equal 3, gems.size
+
+        assert gems.include?(@gem_one.name)
+        assert gems.include?(@gem_two.name)
+        assert gems.include?(@gem_three.name)
+        assert ! gems.include?(@gem_four.name)
+      end
+    end
+  end
 end
