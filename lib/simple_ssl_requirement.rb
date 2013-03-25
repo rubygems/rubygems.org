@@ -1,4 +1,6 @@
 module SimpleSSLRequirement
+  SSL_ENVIRONMENTS = %w(production staging test)
+
   def self.included(base)
     base.extend(ClassMethods)
     base.class_eval do
@@ -15,7 +17,7 @@ module SimpleSSLRequirement
 
   module ClassMethods
     def ssl_required(options={})
-      options.reverse_merge!(:environments => %w(production staging test))
+      options.reverse_merge!(:environments => SSL_ENVIRONMENTS)
 
       if options.delete(:environments).include?(Rails.env)
         before_filter :require_ssl, options
