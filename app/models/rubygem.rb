@@ -249,7 +249,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def gittip_url
-    'http://gittip.com/on/rubygems/gem/' + name
+    'https://gittip.com/on/rubygems/gem/' + name + '/'
   end
 
   def gittip_enabled?

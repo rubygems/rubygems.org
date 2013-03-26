@@ -102,6 +102,6 @@ class User < ActiveRecord::Base
   end
 
   def gittip_url
-    'http://gittip.com/on/rubygems/user/' + gittip_username
+    'https://gittip.com/' + gittip_username + '/'
   end
 end
