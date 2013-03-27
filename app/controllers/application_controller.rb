@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   include Clearance::Authentication
+  include Clearance::Authorization
   include SimpleSSLRequirement
 
   helper :announcements
@@ -18,6 +19,10 @@ class ApplicationController < ActionController::Base
   # end
 
   protected
+
+  def redirect_to_root
+    redirect_to root_path
+  end
 
   def authenticate_with_api_key
     api_key = request.headers["Authorization"] || params[:api_key]
