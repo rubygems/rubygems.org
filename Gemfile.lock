@@ -242,7 +242,7 @@ GEM
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
-    validates_formatting_of (0.7.2)
+    validates_formatting_of (0.8.0)
       activemodel (~> 3.0)
     webmock (1.11.0)
       addressable (>= 2.2.7)
