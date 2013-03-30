@@ -201,7 +201,7 @@ GEM
     redis (3.0.3)
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    rr (1.0.4)
+    rr (1.0.5)
     ruby-graphviz (1.0.8)
     ruby-hmac (0.4.0)
     rubyzip (0.9.9)
