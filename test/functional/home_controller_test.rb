@@ -55,7 +55,7 @@ class HomeControllerTest < ActionController::TestCase
 
   context "on GET to index with a non-ssl request when signed in" do
     setup do
-      sign_in_as(create(:user))
+      cookies[:ssl] = true
       @request.env['HTTPS'] = nil
       get :index
     end

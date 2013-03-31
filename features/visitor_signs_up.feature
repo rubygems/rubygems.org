@@ -12,7 +12,7 @@ Feature: Sign up
     When I fill in "Email" with "invalidemail"
     And I fill in "Password" with "password"
     And I press "Sign up"
-    Then I should see "Must be a valid email address"
+    Then I should see "Email address is invalid"
 
   Scenario: Visitor signs up with blank password
     When I fill in "Email" with "email@example.com"
