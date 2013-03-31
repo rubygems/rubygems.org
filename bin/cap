@@ -1,3 +1,0 @@
-#!/usr/bin/env ruby-local-exec
-require_relative '../config/boot'
-load Gem.bin_path('capistrano', 'cap')
