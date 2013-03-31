@@ -7,7 +7,7 @@ Feature: Password reset
   Scenario: User is not signed up
     Given no user exists with an email of "email@example.com"
     When I request password reset link to be sent to "email@example.com"
-    Then I should see "Unknown email"
+    Then I should see "instructions for changing your password"
 
   Scenario: User is signed up and requests password reset
     Given I signed up with "email@example.com"
