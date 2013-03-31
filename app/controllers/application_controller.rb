@@ -1,10 +1,11 @@
 class ApplicationController < ActionController::Base
   include Clearance::Authentication
+  include Clearance::Authorization
   include SimpleSSLRequirement
 
   helper :announcements
   protect_from_forgery :only => [:create, :update, :destroy]
-  ssl_required :if => :signed_in?
+  ssl_required :if => :ssl_required?
 
   before_filter :set_locale
 
@@ -18,6 +19,10 @@ class ApplicationController < ActionController::Base
   # end
 
   protected
+
+  def redirect_to_root
+    redirect_to root_path
+  end
 
   def authenticate_with_api_key
     api_key = request.headers["Authorization"] || params[:api_key]
@@ -35,6 +40,10 @@ class ApplicationController < ActionController::Base
       request.body.size if request.body.respond_to? :size
       render :text => t(:please_sign_up), :status => 401
     end
+  end
+
+  def ssl_required?
+    cookies[:ssl]
   end
 
   def find_rubygem

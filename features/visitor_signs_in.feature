@@ -26,9 +26,11 @@ Feature: Sign in
     Then I should see a login field
     And I sign in as "email@example.com"
     Then I should be signed in
+    And a cookie named "ssl" should be set
 
  Scenario: Visitor signs in successfully with uppercase email
     Given I am signed up as "email@example.com"
     When I go to the sign in page
     And I sign in as "Email@example.com"
     Then I should be signed in
+    And a cookie named "ssl" should be set
