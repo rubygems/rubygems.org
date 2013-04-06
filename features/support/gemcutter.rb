@@ -10,7 +10,7 @@ World(FactoryGirl::Syntax::Methods)
 
 Before do
   WebMock.reset!
-  FileUtils.mkdir(TEST_DIR)
+  FileUtils.mkdir_p(TEST_DIR)
   Dir.chdir(TEST_DIR)
   $fog.directories.create(:key => $rubygems_config[:s3_bucket], :public => true) if $fog
 end
