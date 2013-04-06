@@ -47,6 +47,7 @@ end
 group :test do
   gem 'capybara'
   gem 'cucumber-rails', :require => false
+  gem 'gherkin', "2.11.6" # 2.11.7 has a stupid amount of deprecation warnings that can't be turned off, lock to 2.11.6 until this is fixed
   gem 'database_cleaner'
   gem 'factory_girl_rails'
   gem 'launchy'
