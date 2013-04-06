@@ -55,7 +55,6 @@ group :test do
   gem 'rack-test', :require => 'rack/test'
   gem 'rr'
   gem 'shoulda', :require => false
-  #gem 'test-unit', :require => 'test/unit'
   gem 'timecop'
   gem 'webmock'
 end
