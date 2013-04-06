@@ -110,8 +110,8 @@ GEM
       ruby-hmac
     formatador (0.2.4)
     gchartrb (0.8)
-    gherkin (2.11.6)
-      json (>= 1.7.6)
+    gherkin (2.11.7)
+      multi_json (~> 1.3)
     gravtastic (3.2.6)
     high_voltage (1.2.2)
     highline (1.6.16)
