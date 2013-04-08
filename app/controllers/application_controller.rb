@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   before_filter :set_locale
 
   def set_locale
-      I18n.locale = params[:locale] || I18n.default_locale
+    I18n.locale = params[:locale] || I18n.default_locale
   end
 
   # Adding this keeps the user on the same locale, but currently breaks a lot of tests testing for specific urls. 
