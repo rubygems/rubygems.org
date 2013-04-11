@@ -71,15 +71,21 @@ class Pusher
   def update_remote_bundler_api(to=RestClient)
     return unless @bundler_api_url
 
-    json = %Q!{ "name": "#{spec.name}", "version": "#{spec.version}", "platform": "#{spec.original_platform}", "prerelease": #{spec.version.prerelease? ? 'true' : 'false'}, "rubygems_token": "#{@bundler_token}"}!
+    json = {
+      "name"           => spec.name,
+      "version"        => spec.version,
+      "platform"       => spec.platform,
+      "prerelease"     => spec.version.prerelease?,
+      "rubygems_token" => @bundler_token
+    }.to_json
 
     begin
       timeout(5) do
         to.post @bundler_api_url,
-                        json,
-                        :timeout        => 5,
-                        :open_timeout   => 5,
-                        'Content-Type'  => 'application/json'
+                json,
+                :timeout        => 5,
+                :open_timeout   => 5,
+                'Content-Type'  => 'application/json'
       end
     rescue StandardError, Interrupt
       false
