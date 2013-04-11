@@ -239,7 +239,7 @@ class Version < ActiveRecord::Base
 
   def self.to_rows(scope)
     sql = select("rubygems.name, number, platform").
-            indexed.send(scope).
+            indexed.public_send(scope).
             from("rubygems, versions").
             where("rubygems.id = versions.rubygem_id").
             order("rubygems.name asc, position desc").to_sql
