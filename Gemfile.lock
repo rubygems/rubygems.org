@@ -208,7 +208,7 @@ GEM
     ruby-hmac (0.4.0)
     rubyzip (0.9.9)
     rvm (1.11.3.7)
-    rvm-capistrano (1.2.7)
+    rvm-capistrano (1.3.0)
       capistrano (>= 2.0.0)
     selenium-webdriver (2.32.1)
       childprocess (>= 0.2.5)
