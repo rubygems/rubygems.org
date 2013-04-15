@@ -18,4 +18,4 @@ cucumber:
 
 production:
   adapter: postgresql
-  database: gemcutter-production
+  database: gemcutter_production
