@@ -73,9 +73,9 @@ class Pusher
 
     json = {
       "name"           => spec.name,
-      "version"        => spec.version,
+      "version"        => spec.version.to_s,
       "platform"       => spec.platform,
-      "prerelease"     => spec.version.prerelease?,
+      "prerelease"     => !!spec.version.prerelease?,
       "rubygems_token" => @bundler_token
     }.to_json
 
