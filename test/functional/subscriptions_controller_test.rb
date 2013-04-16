@@ -15,7 +15,6 @@ class SubscriptionsControllerTest < ActionController::TestCase
       post :create, :rubygem_id => @rubygem.to_param, :format => 'js'
     end
 
-    should assign_to(:rubygem) { @rubygem }
     should respond_with :success
     should "toggle the subscribe link" do
       assert_match /\("\.toggler"\)\.toggle\(\)/, @response.body
@@ -30,7 +29,6 @@ class SubscriptionsControllerTest < ActionController::TestCase
       post :create, :rubygem_id => @rubygem.to_param, :format => 'js'
     end
 
-    should assign_to(:rubygem) { @rubygem }
     should respond_with :forbidden
   end
 
@@ -41,7 +39,6 @@ class SubscriptionsControllerTest < ActionController::TestCase
       delete :destroy, :rubygem_id => @rubygem.to_param, :format => 'js'
     end
 
-    should assign_to(:rubygem) { @rubygem }
     should respond_with :forbidden
   end
 
@@ -53,7 +50,6 @@ class SubscriptionsControllerTest < ActionController::TestCase
       delete :destroy, :rubygem_id => @rubygem.to_param, :format => 'js'
     end
 
-    should assign_to(:rubygem) { @rubygem }
     should respond_with :success
     should "toggle the subscribe link" do
       assert_match /\("\.toggler"\)\.toggle\(\)/, @response.body

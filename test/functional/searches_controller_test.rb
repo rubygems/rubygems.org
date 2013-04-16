@@ -37,8 +37,6 @@ class SearchesControllerTest < ActionController::TestCase
 
     should respond_with :success
     should render_template :show
-    should assign_to(:gems) { [@sinatra, @sinatra_redux] }
-    should assign_to(:exact_match) { @sinatra }
     should "see sinatra on the page in the results" do
       assert page.has_content?(@sinatra.name)
       assert page.has_selector?("a[href='#{rubygem_path(@sinatra)}']")

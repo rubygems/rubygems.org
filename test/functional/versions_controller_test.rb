@@ -13,8 +13,6 @@ class VersionsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should render_template :index
-    should assign_to(:rubygem) { @rubygem }
-    should assign_to(:versions) { @rubygem.reload.versions }
 
     should "show all related versions" do
       @versions.each do |version|
@@ -35,7 +33,6 @@ class VersionsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should assign_to(:versions) { @versions }
 
     should "render correct gem information in the feed" do
       assert_select "feed > title", :count => 1, :text => /#{@rubygem.name}/
@@ -77,8 +74,6 @@ class VersionsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should render_template "rubygems/show"
-    should assign_to :rubygem
-    should assign_to(:latest_version) { @latest_version }
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
     end

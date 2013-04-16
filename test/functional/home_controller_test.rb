@@ -16,11 +16,6 @@ class HomeControllerTest < ActionController::TestCase
 
     should respond_with :success
     should render_template :index
-    should assign_to(:rubygems_count) { @rubygems_count }
-    should assign_to(:downloads_count) { @downloads_count }
-    should assign_to(:latest)
-    should assign_to(:downloaded)
-    should assign_to(:updated)
 
     should "display counts" do
       assert page.has_content?("1,337")

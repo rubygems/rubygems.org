@@ -29,7 +29,6 @@ class ProfilesControllerTest < ActionController::TestCase
 
       should respond_with :success
       should render_template :show
-      should assign_to(:user) { @user }
       should "assign the last 10 most downloaded gems" do
         assert_equal @rubygems[0..9], assigns[:rubygems]
         pending
@@ -47,7 +46,6 @@ class ProfilesControllerTest < ActionController::TestCase
 
       should respond_with :success
       should render_template :show
-      should assign_to(:user) { @user }
     end
 
     context "on GET to show with id" do
@@ -55,7 +53,6 @@ class ProfilesControllerTest < ActionController::TestCase
 
       should respond_with :success
       should render_template :show
-      should assign_to(:user) { @user }
     end
 
     context "on GET to edit" do

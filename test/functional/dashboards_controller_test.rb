@@ -21,7 +21,6 @@ class DashboardsControllerTest < ActionController::TestCase
 
       should respond_with :success
       should render_template :show
-      should assign_to(:my_gems) { @gems }
       should "render links" do
         @gems.each do |g|
           assert page.has_content?(g.name)
