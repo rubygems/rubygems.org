@@ -21,10 +21,6 @@ class StatsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should render_template :index
-    should assign_to(:number_of_gems) { @number_of_gems }
-    should assign_to(:number_of_users) { @number_of_users }
-    should assign_to(:number_of_downloads) { @number_of_downloads }
-    should assign_to(:most_downloaded) { @most_downloaded }
 
     should "display number of gems" do
       assert page.has_content?("1,337")
@@ -56,9 +52,6 @@ class StatsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should render_template :show
-    should assign_to(:rubygem) { @rubygem }
-    should assign_to(:version) { @version }
-    should assign_to(:versions) { @versions }
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
     end
@@ -80,9 +73,6 @@ class StatsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should render_template :show
-    should assign_to(:rubygem) { @rubygem }
-    should assign_to(:version) { @latest_version }
-    should assign_to(:versions) { [@latest_version, @older_version] }
     should "display a dropdown to choose the version to show" do
       assert page.has_selector?('select#version_for_stats')
     end
@@ -169,9 +159,6 @@ class StatsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should render_template :show
-    should assign_to(:rubygem) { @rubygem }
-    should assign_to(:version) { @version }
-    should assign_to(:versions) { [@version] }
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
     end

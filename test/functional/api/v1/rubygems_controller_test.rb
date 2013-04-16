@@ -10,7 +10,6 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
   end
 
   def self.should_respond_to_show(format, &block)
-    should assign_to(:rubygem) { @rubygem }
     should respond_with :success
     should "return a hash" do
       response = yield(@response.body)
@@ -78,7 +77,6 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         get :show, :id => @rubygem.to_param, :format => "json"
       end
 
-      should assign_to(:rubygem) { @rubygem }
       should respond_with :not_found
       should "say not be found" do
         assert_match /does not exist/, @response.body
@@ -129,7 +127,6 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         get :index, :format => format
       end
 
-      should assign_to(:rubygems) { [@rubygem] }
       should respond_with :success
       should "return a hash" do
         assert_not_nil yield(@response.body)

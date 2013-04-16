@@ -16,7 +16,6 @@ class RubygemsControllerTest < ActionController::TestCase
 
       should respond_with :success
       should render_template :show
-      should assign_to :rubygem
       should "renders owner gems overview links" do
         @owners.each do |owner|
           assert page.has_selector?("a[href='#{profile_path(owner.display_id)}']")
@@ -46,7 +45,6 @@ class RubygemsControllerTest < ActionController::TestCase
 
       should respond_with :success
       should render_template :show
-      should assign_to :rubygem
       should "not render edit link" do
         assert ! page.has_selector?("a[href='#{edit_rubygem_path(@rubygem)}']")
       end
@@ -60,7 +58,6 @@ class RubygemsControllerTest < ActionController::TestCase
 
       should respond_with :success
       should render_template :show
-      should assign_to :rubygem
       should "render edit link" do
         assert page.has_selector?("a[href='#{edit_rubygem_path(@rubygem)}']")
       end
@@ -74,7 +71,6 @@ class RubygemsControllerTest < ActionController::TestCase
         get :show, :id => @rubygem.to_param
       end
 
-      should assign_to(:rubygem) { @rubygem }
       should respond_with :success
       should "have a visible unsubscribe link" do
         assert page.has_selector?("a[style='display:inline-block']", :text => 'Unsubscribe')
@@ -88,7 +84,6 @@ class RubygemsControllerTest < ActionController::TestCase
         get :show, :id => @rubygem.to_param
       end
 
-      should assign_to(:rubygem) { @rubygem }
       should respond_with :success
       should "have a visible subscribe link" do
         assert page.has_selector?("a[style='display:inline-block']", :text => 'Subscribe')
@@ -103,7 +98,6 @@ class RubygemsControllerTest < ActionController::TestCase
 
       should respond_with :success
       should render_template :edit
-      should assign_to :rubygem
       should "render form" do
         assert page.has_selector?("form")
         assert page.has_selector?("input#linkset_code")
@@ -122,7 +116,6 @@ class RubygemsControllerTest < ActionController::TestCase
         get :edit, :id => @rubygem.to_param
       end
       should respond_with :redirect
-      should assign_to(:linkset) { @linkset }
       should redirect_to('the homepage') { root_url }
       should set_the_flash.to("You do not have permission to edit this gem.")
     end
@@ -136,7 +129,6 @@ class RubygemsControllerTest < ActionController::TestCase
       should respond_with :redirect
       should redirect_to('the gem') { rubygem_path(@rubygem) }
       should set_the_flash.to("Gem links updated.")
-      should assign_to(:linkset) { @linkset }
       should "update linkset" do
         assert_equal @url, Rubygem.last.linkset.code
       end
@@ -150,7 +142,6 @@ class RubygemsControllerTest < ActionController::TestCase
       end
       should respond_with :success
       should render_template :edit
-      should assign_to(:linkset) { @linkset }
       should "not update linkset" do
         assert_not_equal @url, Rubygem.last.linkset.code
       end
@@ -173,7 +164,6 @@ class RubygemsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should render_template :index
-    should assign_to(:gems) { @gems }
     should "render links" do
       @gems.each do |g|
         assert page.has_content?(g.name)
@@ -197,7 +187,6 @@ class RubygemsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should assign_to(:versions) { @versions }
 
     should "render posts with platform-specific titles and links of all subscribed versions" do
       @versions.each do |v|
@@ -230,7 +219,6 @@ class RubygemsControllerTest < ActionController::TestCase
     end
     should respond_with :success
     should render_template :index
-    should assign_to(:gems) { [@zgem] }
     should "render links" do
       assert page.has_content?(@zgem.name)
       assert page.has_selector?("a[href='#{rubygem_path(@zgem)}']")
@@ -253,7 +241,6 @@ class RubygemsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should render_template :index
-    should assign_to(:gems) { @gems }
     should "render links" do
       @gems.each do |g|
         assert page.has_content?(g.name)
@@ -276,8 +263,6 @@ class RubygemsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should render_template :show
-    should assign_to :rubygem
-    should assign_to(:latest_version) { @latest_version }
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
       assert page.has_content?(@latest_version.number)
@@ -296,7 +281,6 @@ class RubygemsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should render_template :show
-    should assign_to :rubygem
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
       assert page.has_content?(@latest_version.number)
@@ -318,7 +302,6 @@ class RubygemsControllerTest < ActionController::TestCase
       setup { get :show, :id => @rubygem.to_param }
       should respond_with :success
       should render_template :show
-      should assign_to :rubygem
       should "render info about the gem" do
         assert page.has_content?("This gem has been yanked")
         assert page.has_no_content?('Versions')
@@ -344,7 +327,6 @@ class RubygemsControllerTest < ActionController::TestCase
     end
     should respond_with :success
     should render_template :show
-    should assign_to :rubygem
     should "render info about the gem" do
       assert page.has_content?("This gem is not currently hosted on Gemcutter.")
     end
@@ -362,7 +344,6 @@ class RubygemsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should render_template :show
-    should assign_to(:latest_version) { @version }
     should "show runtime dependencies and development dependencies" do
       assert page.has_content?(@runtime.rubygem.name)
       assert page.has_content?(@development.rubygem.name)
@@ -380,7 +361,6 @@ class RubygemsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should render_template :show
-    should assign_to(:latest_version) { @version }
     should "show unresolved dependencies" do
       assert page.has_content?(@unresolved.name)
     end
@@ -402,7 +382,6 @@ class RubygemsControllerTest < ActionController::TestCase
         get :show, :id => @rubygem.to_param
       end
 
-      should assign_to(:rubygem) { @rubygem }
       should respond_with :success
       should "have an subscribe link that goes to the sign in page" do
         assert page.has_selector?("a[href='#{sign_in_path}']")
