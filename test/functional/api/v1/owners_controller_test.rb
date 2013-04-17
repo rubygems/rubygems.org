@@ -66,4 +66,13 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
              :format      => 'json'}
     assert_recognizes(route, :path => '/api/v1/owners/example/gems.json', :method => :get)
   end
+
+  should "return plain text 404 error" do
+    @user = create(:user)
+    @request.env["HTTP_AUTHORIZATION"] = @user.api_key
+    @request.accept = '*/*'
+    post :create, rubygem_id: 'bananas'
+    assert_equal 'This rubygem could not be found.', @response.body
+  end
+
 end
