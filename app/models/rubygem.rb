@@ -46,7 +46,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.reverse_dependencies(name)
-    find(Version.reverse_dependencies(name).map(&:rubygem_id))
+    find(Version.reverse_dependencies(name).pluck("versions.rubygem_id"))
   end
 
   def self.total_count
