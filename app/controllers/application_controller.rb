@@ -50,11 +50,11 @@ class ApplicationController < ActionController::Base
     @rubygem = Rubygem.find_by_name(params[:rubygem_id] || params[:id])
     if @rubygem.blank?
       respond_to do |format|
-        format.html do
-          render :file => "public/404", :status => :not_found, :layout => false, :formats => [:html]
-        end
         format.any do
           render :text => "This rubygem could not be found.", :status => :not_found
+        end
+        format.html do
+          render :file => "public/404", :status => :not_found, :layout => false, :formats => [:html]
         end
       end
     end
