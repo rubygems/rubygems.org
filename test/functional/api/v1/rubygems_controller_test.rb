@@ -436,9 +436,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       @version_three.dependencies << create(:dependency, :version => @version_three, :rubygem => @dep_rubygem)
     end
 
-    should "give all reverse dependencies" do
+    should "return names of reverse dependencies" do
       get :reverse_dependencies, :id => @dep_rubygem.to_param, :format => "json"
-      gems = MultiJson.load(@response.body).map { |h| h["name"] }
+      gems = MultiJson.load(@response.body)
 
       assert_equal 3, gems.size
 
@@ -446,20 +446,6 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       assert gems.include?(@gem_two.name)
       assert gems.include?(@gem_three.name)
       assert ! gems.include?(@gem_four.name)
-    end
-
-    context "with 'short=true' param" do
-      should "return only names of reverse dependencies" do
-        get :reverse_dependencies, :id => @dep_rubygem.to_param, :format => "json", :short => true
-        gems = MultiJson.load(@response.body)
-
-        assert_equal 3, gems.size
-
-        assert gems.include?(@gem_one.name)
-        assert gems.include?(@gem_two.name)
-        assert gems.include?(@gem_three.name)
-        assert ! gems.include?(@gem_four.name)
-      end
     end
   end
 end
