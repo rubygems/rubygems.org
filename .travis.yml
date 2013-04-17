@@ -1,7 +1,9 @@
 branches:
   only:
     - master
-before_script: cp config/database.yml.example config/database.yml
+before_script:
+  - rvm rubygems 1.8.25
+  - cp config/database.yml.example config/database.yml
 language: ruby
 matrix:
   allow_failures:
