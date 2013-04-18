@@ -5,14 +5,17 @@ Feature: Search
 
   Scenario Outline: Search
     Given the following versions exist:
-      | rubygem          | description  |
-      | name: LDAP       | mail stuff   |
-      | name: twitter    | social junk  |
-      | name: beer_laser | amazing beer |
+      | rubygem           | description  |
+      | name: LDAP        | mail stuff   |
+      | name: ldap-plus   | more LDAP    |
+      | name: twitter     | social junk  |
+      | name: twitter-cli | command line |
+      | name: beer_laser  | amazing beer |
     When I go to the homepage
     And I fill in "query" with "<query>"
     And I press "Search"
-    Then I should see "<result>"
+    Then I should see "search for <query>"
+    And I should see "<result>"
 
     Examples:
       | query      | result       |
@@ -32,6 +35,15 @@ Feature: Search
     Then I should not see "Exact match"
     But I should see "foos-paperclip"
 
+  Scenario: Only one exact match found
+    Given the following version exists:
+      | rubygem          | description |
+      | name: beer_laser | amazing beer |
+    When I go to the homepage
+    And I fill in "query" with "beer_laser"
+    And I press "Search"
+    Then I should be on "beer_laser" rubygem page
+
   Scenario: The only pushed version of a gem is yanked
     Given the following version exists:
       | rubygem    | number | indexed |
@@ -43,9 +55,10 @@ Feature: Search
 
   Scenario: The most recent version of a gem is yanked
     Given the following versions exist:
-      | rubygem    | number | indexed |
-      | name: RGem | 1.2.1  | true    |
-      | name: RGem | 1.2.2  | false   |
+      | rubygem     | number | indexed |
+      | name: RGem  | 1.2.1  | true    |
+      | name: RGem  | 1.2.2  | false   |
+      | name: RGem2 | 2.0.0  | true    |
     When I go to the homepage
     And I fill in "query" with "RGem"
     And I press "Search"
