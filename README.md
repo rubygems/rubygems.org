@@ -14,7 +14,7 @@ The Ruby community's gem host.
 * [IRC][]: #rubygems on Freenode
 * [Travis][]: [![Build Status](https://secure.travis-ci.org/rubygems/rubygems.org.png?branch=master)][travis]
 * [Gemnasium][]: [![Dependency Status](https://gemnasium.com/rubygems/rubygems.org.png?travis)][gemnasium]
-* [Code Climate][]: [![Code Climate](https://codeclimate.com/badge.png)][code climate]
+* [Code Climate][]: [![Code Climate](https://codeclimate.com/github/rubygems/rubygems.org.png)][code climate]
 
 [mailing list]: http://groups.google.com/group/rubygems-org
 [faq]: http://help.rubygems.org/kb/gemcutter/faq
