@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
 
   validates_uniqueness_of :handle, :allow_nil => true
   validates_format_of :handle, :with => /\A[A-Za-z][A-Za-z_\-0-9]*\z/, :allow_nil => true
-  validates_length_of :handle, :within => 1..40, :allow_nil => true
+  validates_length_of :handle, :within => 2..40, :allow_nil => true
 
   def self.authenticate(who, password)
     if user = Rubyforger.transfer(who, password) || find_by_email(who.downcase) || find_by_handle(who)
