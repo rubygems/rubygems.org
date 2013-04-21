@@ -192,7 +192,7 @@ GEM
       rake (>= 0.8.7)
       rdoc (~> 3.4)
       thor (>= 0.14.6, < 2.0)
-    raindrops (0.10.0)
+    raindrops (0.11.0)
     rake (10.0.4)
     rdoc (3.12.2)
       json (~> 1.4)
