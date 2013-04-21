@@ -14,14 +14,14 @@ class UserTest < ActiveSupport::TestCase
       should_not allow_value("abc^%def").for(:handle)
       should_not allow_value("abc\n<script>bad").for(:handle)
 
-      should "be between 3 and 15 characters" do
-        user = build(:user, :handle => "a")
+      should "be between 1 and 40 characters" do
+        user = build(:user, :handle => "")
         assert ! user.valid?
-        assert_equal "is too short (minimum is 3 characters)", user.errors[:handle].first
+        assert_contains user.errors[:handle], "is too short (minimum is 1 characters)"
 
-        user.handle = "a" * 16
+        user.handle = "a" * 41
         assert ! user.valid?
-        assert_equal "is too long (maximum is 15 characters)", user.errors[:handle].first
+        assert_contains user.errors[:handle], "is too long (maximum is 40 characters)"
 
         user.handle = "abcdef"
         user.valid?
