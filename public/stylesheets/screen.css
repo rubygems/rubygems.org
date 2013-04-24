@@ -1251,6 +1251,7 @@ input[type='submit']:hover {
   padding: 5px;
   -webkit-box-shadow: 0 1px 0 rgba(255,255,255,.2);
   -moz-box-shadow: 0 1px 0 rgba(255,255,255,.2);
+  box-shadow: 0 1px 0 rgba(255,255,255,.2);
   margin: -20px 0 20px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -1419,7 +1420,7 @@ input[type='submit']:hover {
   margin: 6px;
   -moz-box-shadow: 0 1px 1px #4b0000;
   -webkit-box-shadow: 0 1px 1px #4b0000;
-  -box-shadow: 0 1px 1px #4b0000;
+  box-shadow: 0 1px 1px #4b0000;
   width: 32px;
   height: 32px;
   -moz-border-radius: 3px;
@@ -1444,7 +1445,7 @@ input[type='submit']:hover {
 #nav a:hover img {
   -moz-box-shadow: 0 0 10px #f00;
   -webkit-box-shadow: 0 0 10px #f00;
-  -box-shadow: 0 0 10px #f00;
+  box-shadow: 0 0 10px #f00;
 }
 
 #nav ul {
@@ -1750,6 +1751,7 @@ h5#downloads {
   color: #a00;
   -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
   -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
