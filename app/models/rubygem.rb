@@ -48,9 +48,9 @@ class Rubygem < ActiveRecord::Base
         indexes :version,     :analyzer => 'keyword', :as => proc { versions.map(&:number) },
                               :include_in_all => false
 
-        indexes :uses,        :as => proc { versions.most_recent.dependencies.map(&:name) if versions.most_recent },
+        indexes :uses,        :as => proc { versions.most_recent.dependencies.map(&:name) if versions.most_recent rescue nil },
                               :include_in_all => false
-        indexes :depends,     :as => proc { versions.most_recent.dependencies.runtime.map(&:name) if versions.most_recent },
+        indexes :depends,     :as => proc { versions.most_recent.dependencies.runtime.map(&:name) if versions.most_recent rescue nil },
                               :include_in_all => false
 
         indexes :created_at,  :type => 'date', :include_in_all => false
