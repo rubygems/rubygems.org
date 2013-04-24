@@ -41,12 +41,14 @@ pre {
   color: #fff;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
+  border-radius: 10px;
   line-height: 1.4em;
 }
 
 code {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
+  border-radius: 5px;
   background: #000;
   font-family: Monaco, Consolas, "Courier New", monospace;
   font-size: 0.9em;
@@ -184,6 +186,7 @@ table {
   font-size: 25px;
   -moz-border-radius: 7px;
   -webkit-border-radius: 7px;
+  border-radius: 7px;
   background-repeat: repeat-x;
   color: rgba(0,0,0,.8);
   border: 1px solid rgba(0,0,0,.2);
@@ -210,6 +213,7 @@ table {
   border: 5px solid #cbc2ae;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
+  border-radius: 10px;
 }
 
 .main .info ol.instructions {
@@ -234,6 +238,7 @@ table {
 .main .learn h3, .main .share h3 {
   -moz-border-radius: 7px;
   -webkit-border-radius: 7px;
+  border-radius: 7px;
   background-repeat: repeat-x;
   color: rgba(0,0,0,.8);
   border: 1px solid rgba(0,0,0,.2);
@@ -1249,6 +1254,7 @@ input[type='submit']:hover {
   margin: -20px 0 20px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
+  border-radius: 5px;
 }
 
 #flash_success, #flash_notice, #flash_failure, #announcement {
@@ -1418,6 +1424,7 @@ input[type='submit']:hover {
   height: 32px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
+  border-radius: 3px;
 }
 
 #nav a span {
@@ -1745,6 +1752,7 @@ h5#downloads {
   -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
+  border-radius: 5px;
 }
 
 #edit-profile {
