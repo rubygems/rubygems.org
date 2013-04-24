@@ -1237,12 +1237,14 @@ input[type='submit'] {
   border: 1px solid #a1100a;
   background-image: -moz-linear-gradient(bottom, #690900 0%, #8f0e00 49%,  #a41200 50%, #cf1900 100%);
   background-image: -webkit-gradient(linear,left top,left bottom,color-stop(1, #690900),color-stop(.5, #8f0e00),color-stop(.49, #a41200),color-stop(0, #cf1900));
+  background-image: linear-gradient(bottom, #690900 0%, #8f0e00 49%, #a41200 50%, #cf1900 100%);
 }
 
 .edit_user .avatar_field a:hover,
 input[type='submit']:hover {
   background-image: -moz-linear-gradient(bottom, #690900 0%, #8f0e00 49%,  #a41200 50%, #f00 100%);
   background-image: -webkit-gradient(linear,left top,left bottom,color-stop(1, #690900),color-stop(.5, #8f0e00),color-stop(.49, #a41200),color-stop(0, #f00));
+  background-image: linear-gradient(bottom, #690900 0%, #8f0e00 49%,  #a41200 50%, #f00 100%);
 }
 
 /* Rails Flash, Forms, Etc */
@@ -1577,6 +1579,7 @@ form#main-search input[type="submit"] {
   border-radius: 7px;
   background-image: -moz-linear-gradient(bottom, #151312 0%, #534a45 100%);
   background-image: -webkit-gradient(linear,left top,left bottom,color-stop(1, #151312),color-stop(0, #534a45));
+  background-image: linear-gradient(bottom, #151312 0%, #534a45 100%);
 }
 
 #profile-info {
@@ -1683,6 +1686,7 @@ h5#downloads {
   background: #930000; /* old browsers */
   background: -moz-linear-gradient(top, #930000 1%, #730000 17%, #690000 18%, #4E0000 100%); /* firefox */
   background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#930000), color-stop(17%,#730000), color-stop(18%,#690000), color-stop(100%,#4E0000)); /* webkit */
+  background: linear-gradient(top, #930000 1%, #730000 17%, #690000 18%, #4E0000 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#930000', endColorstr='#4E0000',GradientType=0 ); /* ie */
 }
 
@@ -1713,6 +1717,7 @@ h5#downloads {
   background: #1D0000; /* old browsers */
   background: -moz-linear-gradient(top, #1D0000 1%, #360000 10%, #2F0000 100%); /* firefox */
   background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#1D0000), color-stop(10%,#360000), color-stop(100%,#2F0000)); /* webkit */
+  background: linear-gradient(top, #1D0000 1%, #360000 10%, #2F0000 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1D0000', endColorstr='#2F0000',GradientType=0 ); /* ie */
   height: 115px;
   margin: 10px 4px;
