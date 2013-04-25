@@ -1,6 +1,14 @@
 class SearchesController < ApplicationController
 
+  # Handle search engine not being available
+  #
+  rescue_from Errno::EHOSTUNREACH, Errno::ECONNREFUSED, SocketError do |error|
+    flash.now[:failure] = "Sorry, search is not available at the moment." if params[:query]
+    render :show, :status => :internal_server_error
+  end
+
   # Indicate incorrect query to the user
+  #
   rescue_from Tire::Search::SearchRequestFailed do |error|
     flash.now[:failure] = "Sorry, your query is incorrect." if error.message =~ /SearchParseException/ && params[:query]
     render :show, :status => :internal_server_error
