@@ -26,6 +26,10 @@ class Indexer
     fog.directories.get($rubygems_config[:s3_bucket]) || fog.directories.create(:key => $rubygems_config[:s3_bucket])
   end
 
+  def error(job, exception)
+    monitor.alert_error(job, exception)
+  end
+
   private
 
   def fog
@@ -89,6 +93,10 @@ class Indexer
 
   def log(message)
     Rails.logger.info "[GEMCUTTER:#{Time.now}] #{message}"
+  end
+
+  def monitor
+    @monitor ||= Jobs::Monitor.new
   end
 
   def self.indexer
