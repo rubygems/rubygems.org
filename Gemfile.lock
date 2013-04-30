@@ -72,6 +72,8 @@ GEM
       activerecord (>= 2.1.0, < 4)
       delayed_job (~> 3.0)
     diff-lcs (1.2.4)
+    dogapi (1.6.0)
+      json (>= 1.5.1)
     dynamic_form (1.1.4)
     email_validator (1.4.0)
       activemodel
@@ -245,6 +247,7 @@ DEPENDENCIES
   database_cleaner
   delayed_job
   delayed_job_active_record
+  dogapi
   dynamic_form
   excon
   factory_girl_rails

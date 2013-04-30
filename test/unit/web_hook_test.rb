@@ -176,16 +176,15 @@ class WebHookTest < ActiveSupport::TestCase
       @hook    = create(:web_hook,
                          :rubygem => @rubygem,
                          :url     => @url)
-      stub_request(:post, @url)
+      @request = stub_request(:post, @url)
 
       @hook.fire('rubygems.org', @rubygem, @version, false)
     end
 
     should "include an Authorization header" do
-      request = WebMock::RequestRegistry.instance.requested_signatures.hash.keys.first
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number + @hook.user.api_key)
-
-      assert_equal authorization, request.headers['Authorization']
+      @request.with(headers: {authorization: authorization})
+      assert_requested @request
     end
 
     should "not increment failure count for hook" do
