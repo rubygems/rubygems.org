@@ -5,6 +5,10 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     get :show, :id => rubygem.name, :format => format
   end
 
+  def get_latest(rubygem, format='json')
+    get :latest, :id => rubygem.name, :format => format
+  end
+
   def get_reverse_dependencies(rubygem, options={ :format => 'json' })
     get :reverse_dependencies, options.merge(:id => rubygem.name)
   end
@@ -127,6 +131,20 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     should "give all releases" do
       get_show(@rubygem)
       assert_equal 12, MultiJson.load(@response.body).size
+    end
+  end
+
+  context "on GET to latest" do
+    setup do
+      @rubygem = create(:rubygem)
+      (1..3).each do |n|
+        create(:version, :rubygem => @rubygem, :number => "#{n}.0.0")
+      end
+    end
+
+    should "return latest version" do
+      get_latest @rubygem
+      assert_equal "3.0.0", MultiJson.load(@response.body)['version']
     end
   end
 

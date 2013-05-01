@@ -13,6 +13,12 @@ class Api::V1::VersionsController < Api::BaseController
     end
   end
 
+  def latest
+    version = @rubygem.versions.latest.first
+
+    render :json => { "version" => version.number }
+  end
+
   def reverse_dependencies
     versions = Version.reverse_dependencies(params[:id])
 
