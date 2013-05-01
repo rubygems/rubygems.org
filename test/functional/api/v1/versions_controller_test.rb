@@ -162,6 +162,33 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to of latest for unknown gem" do
+    setup do
+      @rubygem = create(:rubygem)
+      (1..3).each do |n|
+        create(:version, :rubygem => @rubygem, :number => "#{n}.0.0")
+      end
+    end
+
+    should "return latest version" do
+      get :latest, :id => "blah", :format => "json"
+      assert_equal "unknown", MultiJson.load(@response.body)['version']
+    end
+  end
+
+  context "on GET to of latest for a gem with no versions" do
+    setup do
+      @rubygem = create(:rubygem)
+      v = create(:version, :rubygem => @rubygem, :number => "1.0.0")
+      v.yank!
+    end
+
+    should "return latest version" do
+      get :latest, :id => @rubygem.name, :format => "json"
+      assert_equal "unknown", MultiJson.load(@response.body)['version']
+    end
+  end
+
   context "on GET to reverse_dependencies" do
     setup do
       @dep_rubygem = create(:rubygem)
