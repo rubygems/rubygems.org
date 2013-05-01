@@ -32,6 +32,10 @@ Gemcutter::Application.routes.draw do
             get 'reverse_dependencies.:format', :to => 'versions#reverse_dependencies', :as => 'reverse_dependencies'
           end
 
+          member do
+            get 'latest.json', :to => 'versions#latest', :as => 'latest'
+          end
+
           # In Rails 3.1, the next TWO lines can be replaced with:
           # resources :downloads, :only => :show, :controller => 'versions/downloads', :format => true do
           get 'downloads.:format', :to => 'versions/downloads#index', :as => 'downloads'
