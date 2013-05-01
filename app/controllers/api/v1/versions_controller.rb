@@ -16,7 +16,8 @@ class Api::V1::VersionsController < Api::BaseController
   def latest
     version = @rubygem.versions.latest.first
 
-    render :json => { "version" => version.number }
+    render :json => { "version" => version.number },
+           :callback => params['callback']
   end
 
   def reverse_dependencies

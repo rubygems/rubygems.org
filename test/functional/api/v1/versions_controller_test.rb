@@ -148,6 +148,20 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to jsonp version of latest" do
+    setup do
+      @rubygem = create(:rubygem)
+      (1..3).each do |n|
+        create(:version, :rubygem => @rubygem, :number => "#{n}.0.0")
+      end
+    end
+
+    should "return latest version" do
+      get :latest, :id => @rubygem.name, :format => "js", :callback => "blah"
+      assert_equal "blah", @response.body.split("(",2).first
+    end
+  end
+
   context "on GET to reverse_dependencies" do
     setup do
       @dep_rubygem = create(:rubygem)
