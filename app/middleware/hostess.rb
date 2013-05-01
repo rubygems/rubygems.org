@@ -2,6 +2,8 @@ class Hostess < Sinatra::Base
   enable :raise_errors
   disable :show_exceptions
 
+  set :protection, { :except => [:json_csrf] }
+
   cattr_writer :local
 
   def self.local
