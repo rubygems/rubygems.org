@@ -84,7 +84,7 @@ GEM
     email_validator (1.4.0)
       activemodel
     erubis (2.7.0)
-    excon (0.20.1)
+    excon (0.21.0)
     factory_girl (4.2.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.2.1)
