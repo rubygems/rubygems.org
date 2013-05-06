@@ -39,14 +39,12 @@ pre {
   overflow: auto;
   margin: 1.5em 36px;
   color: #fff;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
+  border-radius: 10px;
   line-height: 1.4em;
 }
 
 code {
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
+  border-radius: 5px;
   background: #000;
   font-family: Monaco, Consolas, "Courier New", monospace;
   font-size: 0.9em;
@@ -182,8 +180,7 @@ table {
 
 .main .info ol.formats li a {
   font-size: 25px;
-  -moz-border-radius: 7px;
-  -webkit-border-radius: 7px;
+  border-radius: 7px;
   background-repeat: repeat-x;
   color: rgba(0,0,0,.8);
   border: 1px solid rgba(0,0,0,.2);
@@ -208,8 +205,7 @@ table {
   padding-bottom: 20px;
   background: #ebe3d1;
   border: 5px solid #cbc2ae;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
+  border-radius: 10px;
 }
 
 .main .info ol.instructions {
@@ -232,8 +228,7 @@ table {
 }
 
 .main .learn h3, .main .share h3 {
-  -moz-border-radius: 7px;
-  -webkit-border-radius: 7px;
+  border-radius: 7px;
   background-repeat: repeat-x;
   color: rgba(0,0,0,.8);
   border: 1px solid rgba(0,0,0,.2);
@@ -1137,11 +1132,7 @@ label, .form_links {
   border: none;
   padding: 15px;
   font-size: 46px;
-  -moz-box-shadow: inset 0 3px 3px #706751;
-  -webkit-box-shadow: inset 0 3px 3px #706751;
   box-shadow: inset 0 3px 3px #706751;
-  -moz-border-radius: 8px;
-  -webkit-border-radius: 8px;
   border-radius: 8px;
   color: #453000;
   border-bottom: 2px solid #fff8e8;
@@ -1223,32 +1214,26 @@ input[type='submit'] {
   border: 0;
   cursor: pointer;
   font-family: Helvetica, Arial, sans-serif;
-  -moz-box-shadow: inset 0 1px 1px #f34217, 0 1px 1px #332300;
-  -webkit-box-shadow: inset 0 1px 1px #f34217, 0 1px 1px #332300;
   box-shadow: inset 0 1px 1px #f34217, 0 1px 1px #332300;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
   border-radius: 4px;
   border: 1px solid #a1100a;
-  background-image: -moz-linear-gradient(bottom, #690900 0%, #8f0e00 49%,  #a41200 50%, #cf1900 100%);
   background-image: -webkit-gradient(linear,left top,left bottom,color-stop(1, #690900),color-stop(.5, #8f0e00),color-stop(.49, #a41200),color-stop(0, #cf1900));
+  background-image: linear-gradient(bottom, #690900 0%, #8f0e00 49%, #a41200 50%, #cf1900 100%);
 }
 
 .edit_user .avatar_field a:hover,
 input[type='submit']:hover {
-  background-image: -moz-linear-gradient(bottom, #690900 0%, #8f0e00 49%,  #a41200 50%, #f00 100%);
   background-image: -webkit-gradient(linear,left top,left bottom,color-stop(1, #690900),color-stop(.5, #8f0e00),color-stop(.49, #a41200),color-stop(0, #f00));
+  background-image: linear-gradient(bottom, #690900 0%, #8f0e00 49%,  #a41200 50%, #f00 100%);
 }
 
 /* Rails Flash, Forms, Etc */
 #flash-border {
   background: #000;
   padding: 5px;
-  -webkit-box-shadow: 0 1px 0 rgba(255,255,255,.2);
-  -moz-box-shadow: 0 1px 0 rgba(255,255,255,.2);
+  box-shadow: 0 1px 0 rgba(255,255,255,.2);
   margin: -20px 0 20px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
+  border-radius: 5px;
 }
 
 #flash_success, #flash_notice, #flash_failure, #announcement {
@@ -1258,13 +1243,9 @@ input[type='submit']:hover {
   color: #fff;
   text-align: center;
   z-index: 100000;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
   border-radius: 4px;
   padding: 0 10px;
   background: url(/images/flash.jpg) repeat-x;
-  -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.25);
-  -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.25);
   box-shadow: inset 0 1px 0 rgba(255,255,255,.25);
   height: 45px;
   line-height: 47px;
@@ -1276,11 +1257,7 @@ input[type='submit']:hover {
   height: 16px;
   line-height: 16px;
   padding: 7px 7px 7px 30px;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
   border-radius: 3px;
-  -webkit-box-shadow: 0 1px 0 rgba(255,255,255,.2), inset 0 1px 2px rgba(0,0,0,.7);
-  -moz-box-shadow: 0 1px 0 rgba(255,255,255,.2), inset 0 1px 2px rgba(0,0,0,.7);
   box-shadow: 0 1px 0 rgba(255,255,255,.2), inset 0 1px 2px rgba(0,0,0,.7);
 }
 
@@ -1411,13 +1388,10 @@ input[type='submit']:hover {
 
 #nav a img {
   margin: 6px;
-  -moz-box-shadow: 0 1px 1px #4b0000;
-  -webkit-box-shadow: 0 1px 1px #4b0000;
-  -box-shadow: 0 1px 1px #4b0000;
+  box-shadow: 0 1px 1px #4b0000;
   width: 32px;
   height: 32px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
+  border-radius: 3px;
 }
 
 #nav a span {
@@ -1435,9 +1409,7 @@ input[type='submit']:hover {
 }
 
 #nav a:hover img {
-  -moz-box-shadow: 0 0 10px #f00;
-  -webkit-box-shadow: 0 0 10px #f00;
-  -box-shadow: 0 0 10px #f00;
+  box-shadow: 0 0 10px #f00;
 }
 
 #nav ul {
@@ -1564,11 +1536,9 @@ form#main-search input[type="submit"] {
   width: 64px;
   padding: 9px;
   border: 1px solid #000;
-  -moz-border-radius: 7px;
-  -webkit-border-radius: 7px;
   border-radius: 7px;
-  background-image: -moz-linear-gradient(bottom, #151312 0%, #534a45 100%);
   background-image: -webkit-gradient(linear,left top,left bottom,color-stop(1, #151312),color-stop(0, #534a45));
+  background-image: linear-gradient(bottom, #151312 0%, #534a45 100%);
 }
 
 #profile-info {
@@ -1673,8 +1643,8 @@ h5#downloads {
 
   /* http://www.colorzilla.com/gradient-editor/ */
   background: #930000; /* old browsers */
-  background: -moz-linear-gradient(top, #930000 1%, #730000 17%, #690000 18%, #4E0000 100%); /* firefox */
   background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#930000), color-stop(17%,#730000), color-stop(18%,#690000), color-stop(100%,#4E0000)); /* webkit */
+  background: linear-gradient(top, #930000 1%, #730000 17%, #690000 18%, #4E0000 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#930000', endColorstr='#4E0000',GradientType=0 ); /* ie */
 }
 
@@ -1703,8 +1673,8 @@ h5#downloads {
 
 .main .info .profile-list ol li .profile-graph {
   background: #1D0000; /* old browsers */
-  background: -moz-linear-gradient(top, #1D0000 1%, #360000 10%, #2F0000 100%); /* firefox */
   background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#1D0000), color-stop(10%,#360000), color-stop(100%,#2F0000)); /* webkit */
+  background: linear-gradient(top, #1D0000 1%, #360000 10%, #2F0000 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1D0000', endColorstr='#2F0000',GradientType=0 ); /* ie */
   height: 115px;
   margin: 10px 4px;
@@ -1741,10 +1711,8 @@ h5#downloads {
   border: 1px solid #cccccc;
   margin: 12px 36px 2px 2px;
   color: #a00;
-  -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-  -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  border-radius: 5px;
 }
 
 #edit-profile {
