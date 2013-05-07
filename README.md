@@ -15,6 +15,7 @@ The Ruby community's gem host.
 * [Travis][]: [![Build Status](https://secure.travis-ci.org/rubygems/rubygems.org.png?branch=master)][travis]
 * [Gemnasium][]: [![Dependency Status](https://gemnasium.com/rubygems/rubygems.org.png?travis)][gemnasium]
 * [Code Climate][]: [![Code Climate](https://codeclimate.com/github/rubygems/rubygems.org.png)][code climate]
+* [Trello Board][]
 
 [mailing list]: http://groups.google.com/group/rubygems-org
 [faq]: http://help.rubygems.org/kb/gemcutter/faq
@@ -22,6 +23,7 @@ The Ruby community's gem host.
 [travis]: http://travis-ci.org/#!/rubygems/rubygems.org
 [gemnasium]: https://gemnasium.com/rubygems/rubygems.org
 [code climate]: https://codeclimate.com/github/rubygems/rubygems.org
+[trello board]: https://trello.com/board/rubygems-org/513f9634a7ed906115000755
 
 ## Contributions
 
