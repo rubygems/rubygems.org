@@ -88,4 +88,13 @@ module RubygemsHelper
     rubygem.versions_count > 5 || rubygem.yanked_versions?
   end
 
+  def versions_to_gem_hash(versions)
+    versions.map do |version|
+      gem = version.rubygem
+      JSON.parse(gem.to_json).tap do |hash|
+        hash[:built_at] = version.built_at
+        hash[:prerelease] = version.prerelease
+      end
+    end    
+  end
 end
