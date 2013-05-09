@@ -2,7 +2,6 @@ class Rubygem < ActiveRecord::Base
   include Patterns
 
   include Tire::Model::Search
-  include Tire::Model::Callbacks
 
   has_many :owners, :through => :ownerships, :source => :user
   has_many :ownerships, :dependent => :destroy
@@ -15,9 +14,12 @@ class Rubygem < ActiveRecord::Base
   validate :ensure_name_format, :if => :needs_name_validation?
   validates :name, :presence => true, :uniqueness => true
 
-  after_create :update_unresolved, :update_elasticsearch_index
-  after_touch  :update_elasticsearch_index
+  after_create :update_unresolved
   before_destroy :mark_unresolved
+
+  after_create  :update_elasticsearch_index_with_rescue
+  after_destroy :update_elasticsearch_index_with_rescue
+  after_touch   :update_elasticsearch_index_with_rescue
 
   tire do
     index_prefix Rails.env
@@ -310,6 +312,13 @@ class Rubygem < ActiveRecord::Base
 
   def gittip_enabled?
     owners.where('gittip_username is not null').count > 0
+  end
+
+  def update_elasticsearch_index_with_rescue
+    update_elasticsearch_index
+  rescue Exception => e
+    Rails.logger.error "Error when updating Elasticsearch. Original exception: #{e.inspect}"
+    return true
   end
 
   private
