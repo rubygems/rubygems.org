@@ -1,6 +1,11 @@
 require 'test_helper'
 
 class RubygemTest < ActiveSupport::TestCase
+  def setup
+    super
+    WebMock.stub_request(:any, /.*localhost:9200.*/).to_return(:body => '{}', :status => 200)
+  end
+
   context "with a saved rubygem" do
     setup do
       @rubygem = create(:rubygem, :name => "SomeGem")

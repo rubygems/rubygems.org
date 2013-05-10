@@ -4,6 +4,11 @@ class RubygemsHelperTest < ActionView::TestCase
   include Rails.application.routes.url_helpers
   include ApplicationHelper
 
+  def setup
+    super
+    WebMock.stub_request(:any, /.*localhost:9200.*/).to_return(:body => '{}', :status => 200)
+  end
+
   should "create the directory" do
     directory = link_to_directory
     ("A".."Z").each do |letter|

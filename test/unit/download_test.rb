@@ -1,6 +1,11 @@
 require 'test_helper'
 
 class DownloadTest < ActiveSupport::TestCase
+  def setup
+    super
+    WebMock.stub_request(:any, /.*localhost:9200.*/).to_return(:body => '{}', :status => 200)
+  end
+
   should "load up all downloads with just raw strings and process them" do
     rubygem = create(:rubygem, :name => "some-stupid13-gem42-9000")
     version = create(:version, :rubygem => rubygem)

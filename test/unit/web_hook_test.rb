@@ -1,6 +1,11 @@
 require 'test_helper'
 
 class WebHookTest < ActiveSupport::TestCase
+  def setup
+    super
+    WebMock.stub_request(:any, /.*localhost:9200.*/).to_return(:body => '{}', :status => 200)
+  end
+
   should belong_to :user
   should belong_to :rubygem
 

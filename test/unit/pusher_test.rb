@@ -1,6 +1,11 @@
 require 'test_helper'
 
 class PusherTest < ActiveSupport::TestCase
+  def setup
+    super
+    WebMock.stub_request(:any, /.*localhost:9200.*/).to_return(:body => '{}', :status => 200)
+  end
+
   context "getting the server path" do
     should "return just the root server path with no args" do
       assert_equal "#{Rails.root}/server", Pusher.server_path
