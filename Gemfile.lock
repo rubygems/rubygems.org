@@ -38,7 +38,7 @@ GEM
       i18n (>= 0.5.0)
       state_machine (~> 1.1.0)
     builder (3.0.4)
-    capistrano (2.14.2)
+    capistrano (2.15.4)
       highline
       net-scp (>= 1.0.0)
       net-sftp (>= 2.0.0)
