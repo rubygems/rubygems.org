@@ -102,6 +102,6 @@ class User < ActiveRecord::Base
   end
 
   def gittip_url
-    'https://gittip.com/' + gittip_username + '/'
+    'https://www.gittip.com/' + gittip_username + '/'
   end
 end
