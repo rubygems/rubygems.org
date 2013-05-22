@@ -150,7 +150,7 @@ running:
 **Developing on rubygems.org:**
 
 * Set the REDISTOGO_URL environment variable. For example:
-    `REDISTOGO_URL=“redis://localhost:6379”`
+    `REDISTOGO_URL="redis://localhost:6379"`
 * Import gems if you want to seed the database. 
     `rake gemcutter:import:process PATHTO_GEMS/cache`
     * _To import a small set of gems you can point the import process to any
