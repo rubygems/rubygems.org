@@ -70,7 +70,7 @@ GEM
       nokogiri (>= 1.5.0)
       rails (~> 3.0)
     daemons (1.1.9)
-    dalli (2.6.3)
+    dalli (2.6.4)
     database_cleaner (1.0.1)
     delayed_job (3.0.5)
       activesupport (~> 3.0)
