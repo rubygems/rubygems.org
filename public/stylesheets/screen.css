@@ -91,7 +91,8 @@ table {
   height: 51px;
   text-indent: -9999px;
   text-decoration: none;
-  background: url(/images/logo.png)
+  background: url(/images/logo.png);
+  background-repeat: no-repeat;
 }
 
 .main {
