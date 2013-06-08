@@ -110,7 +110,7 @@ GEM
     gravtastic (3.2.6)
     high_voltage (1.2.2)
     highline (1.6.19)
-    hike (1.2.2)
+    hike (1.2.3)
     i18n (0.6.1)
     journey (1.0.4)
     jquery-rails (2.2.1)
