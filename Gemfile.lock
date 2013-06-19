@@ -144,7 +144,7 @@ GEM
     newrelic-redis (1.4.0)
       newrelic_rpm (~> 3.0)
       redis (< 4.0)
-    newrelic_rpm (3.6.3.111)
+    newrelic_rpm (3.6.4.122)
     nokogiri (1.5.10)
     paul_revere (1.1)
       rails (~> 3.0)
