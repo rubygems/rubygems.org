@@ -10,7 +10,6 @@ end
 
 class Test::Unit::TestCase
   include Rack::Test::Methods
-  include RR::Adapters::TestUnit unless include?(RR::Adapters::TestUnit)
   include WebMock::API
   include FactoryGirl::Syntax::Methods
 
