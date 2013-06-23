@@ -42,7 +42,7 @@ class DownloadTest < ActiveSupport::TestCase
     @rubygem_3 = create(:rubygem)
     @version_4 = create(:version, :rubygem => @rubygem_3)
 
-    Timecop.freeze(Date.today - 1) do
+    Timecop.freeze(1.day.ago) do
       Download.incr(@rubygem_1.name, @version_1.full_name)
       Download.incr(@rubygem_1.name, @version_2.full_name)
       Download.incr(@rubygem_2.name, @version_3.full_name)

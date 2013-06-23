@@ -9,7 +9,7 @@ class Rubygem < ActiveRecord::Base
   has_many :web_hooks, :dependent => :destroy
   has_one :linkset, :dependent => :destroy
 
-  validate :ensure_name_format
+  validate :ensure_name_format, :if => :needs_name_validation?
   validates :name, :presence => true, :uniqueness => true
 
   after_create :update_unresolved
@@ -258,6 +258,10 @@ class Rubygem < ActiveRecord::Base
     elsif name !~ NAME_PATTERN
       errors.add :name, "can only include letters, numbers, dashes, and underscores"
     end
+  end
+
+  def needs_name_validation?
+    new_record? || name_changed?
   end
 
   def update_unresolved

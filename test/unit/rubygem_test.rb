@@ -22,6 +22,16 @@ class RubygemTest < ActiveSupport::TestCase
     should_not allow_value("\342\230\203").for(:name)
     should_not allow_value("2.2").for(:name)
 
+    context "that has an invalid name already persisted" do
+      setup do
+        subject.update_column(:name, "_")
+      end
+
+      should "consider the gem valid" do
+        assert subject.valid?
+      end
+    end
+
     should "reorder versions with platforms properly" do
       version3_ruby  = create(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "ruby")
       version3_mswin = create(:version, :rubygem => @rubygem, :number => "3.0.0", :platform => "mswin")
