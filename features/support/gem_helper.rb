@@ -15,7 +15,7 @@ module GemHelper
       s.platform = platform
       s.version = "#{version}"
       s.authors = ["John Doe"]
-      s.date = "#{Time.now.strftime('%Y-%m-%d')}"
+      s.date = "#{Time.now.utc.strftime('%Y-%m-%d')}"
       s.description = "#{summary}"
       s.email = "john.doe@example.org"
       s.files = []
