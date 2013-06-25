@@ -198,7 +198,7 @@ GEM
     ruby-graphviz (1.0.9)
     ruby-hmac (0.4.0)
     rvm (1.11.3.8)
-    rvm-capistrano (1.3.1)
+    rvm-capistrano (1.3.4)
       capistrano (>= 2.0.0)
     safe_yaml (0.9.3)
     shoulda (3.5.0)
