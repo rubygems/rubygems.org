@@ -150,6 +150,16 @@ class RubygemTest < ActiveSupport::TestCase
         assert_equal versions.count, versions.uniq.count
       end
     end
+
+    should "update references in dependencies when destroyed" do
+      dependency = create(:dependency, :rubygem => @rubygem)
+
+      @rubygem.destroy
+
+      dependency.reload
+      assert_nil dependency.rubygem_id
+      assert_equal dependency.unresolved_name, @rubygem.name
+    end
   end
 
   context ".reverse_dependencies" do
