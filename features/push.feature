@@ -75,6 +75,17 @@ Feature: Push Gems
     When I push the gem "badauthors-1.0.0.gem" with my API key
     Then I should see "Authors must be an Array of Strings"
 
+  Scenario: User pushes gem with a runtime dependency
+    Given I am signed up as "email@person.com"
+    And I have an API key for "email@person.com/password"
+    And I have a gem "knowndeps" with version "1.0.0" and runtime dependency "knowngem"
+    And a rubygem exists with name "knowngem" and version "0.0.0"
+    When I push the gem "knowndeps-1.0.0.gem" with my API key
+    And I visit the gem page for "knowndeps"
+    Then I should see "knowndeps"
+    And I should see "1.0.0"
+    And I should see "knowngem" as a runtime dependency
+
   Scenario: User pushes gem with unknown runtime dependency
     Given I am signed up as "email@person.com"
     And I have an API key for "email@person.com/password"
@@ -83,6 +94,7 @@ Feature: Push Gems
     And I visit the gem page for "unkdeps"
     Then I should see "unkdeps"
     And I should see "1.0.0"
+    And I should see "unknown" as a runtime dependency
 
   @wip
   Scenario: User pushes gem with missing :rubygems_version, :specification_version, :name, :version, :date, :summary, :require_paths
