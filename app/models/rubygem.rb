@@ -13,6 +13,7 @@ class Rubygem < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => true
 
   after_create :update_unresolved
+  before_destroy :mark_unresolved
 
   def self.with_versions
     where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)")
@@ -269,6 +270,11 @@ class Rubygem < ActiveRecord::Base
       dependency.update_resolved(self)
     end
 
+    true
+  end
+
+  def mark_unresolved
+    Dependency.mark_unresolved_for(self)
     true
   end
 end
