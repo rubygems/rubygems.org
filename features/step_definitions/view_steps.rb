@@ -16,6 +16,12 @@ Then /^I should see the version "([^\"]*)" featured$/ do |version_number|
   assert page.has_css?("h3:contains('#{version_number}')")
 end
 
+Then /^I should see "([^\"]*)" as a (\w+) dependency$/ do |dependency_name, dependency_scope|
+  page.within "##{dependency_scope}_dependencies li" do
+    assert page.has_content?(dependency_name)
+  end
+end
+
 Then /^I should see the following dependencies for "([^"]*)":$/ do |full_name, table|
   version = Version.find_by_full_name!(full_name)
 
