@@ -3,15 +3,15 @@
     <h5><%= t '.header', :title => dependencies.first.scope.titleize %></h5>
     <ol>
     <% dependencies.each do |dependency| %>
-      <% if rubygem = dependency.rubygem %>
       <li>
-        <a href="<%= rubygem_url(rubygem) %>">
-          <strong><%= rubygem.name %></strong> <%= dependency.clean_requirements %>
-        </a>
-        </li>
-      <% elsif name = dependency.unresolved_name %>
-        <strong><%= name %></strong> <%= dependency.clean_requirements %>
-      <% end %>
+        <% if rubygem = dependency.rubygem %>
+          <%= link_to rubygem_path(rubygem) do %>
+            <strong><%= rubygem.name %></strong> <%= dependency.clean_requirements %>
+          <% end %>
+        <% else %>
+          <strong><%= dependency.name %></strong> <%= dependency.clean_requirements %>
+        <% end %>
+      </li>
     <% end %>
     </ol>
   </div>
