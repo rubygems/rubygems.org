@@ -5,6 +5,7 @@ class Pusher
   def initialize(user, body, host_with_port=nil)
     @user = user
     @body = StringIO.new(body.read)
+    @size = @body.size
     @indexer = Indexer.new
     @host_with_port = host_with_port
     @bundler_token = ENV['BUNDLER_TOKEN'] || "tokenmeaway"
@@ -52,15 +53,19 @@ class Pusher
 
   def find
     @rubygem = Rubygem.find_or_initialize_by_name(spec.name.to_s)
-    @version = @rubygem.find_or_initialize_version_from_spec(spec)
-    @version.size ||= size
 
-    if @version.new_record?
-      true
-    else
+    if !@rubygem.new_record? and @rubygem.find_version_from_spec(spec)
       notify("Repushing of gem versions is not allowed.\n" +
              "Please use `gem yank` to remove bad gem releases.", 409)
+
+      return false
     end
+
+    @version = @rubygem.versions.new number: spec.version.to_s,
+                                     platform: spec.original_platform.to_s,
+                                     size: size
+
+    true
   end
 
   # Overridden so we don't get megabytes of the raw data printing out
@@ -110,7 +115,6 @@ class Pusher
   def update
     rubygem.update_attributes_from_gem_specification!(version, spec)
     rubygem.create_ownership(user) unless version.new_record?
-    @size = body.size if body
     true
   rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback
     false
