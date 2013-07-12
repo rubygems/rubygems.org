@@ -82,6 +82,7 @@ FactoryGirl.define do
     platform "ruby"
     licenses "MIT"
     rubygem
+    size 1024
   end
 
   factory :version_history do

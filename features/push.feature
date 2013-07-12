@@ -13,6 +13,7 @@ Feature: Push Gems
     And I visit the gem page for "RGem"
     Then I should see "RGem"
     And I should see "1.2.3"
+    And I should see "(3 KB)"
     And I should see "John Doe"
     And I should see "The best gem"
     And I should see "MIT"
