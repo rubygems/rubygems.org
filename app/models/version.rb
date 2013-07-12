@@ -143,6 +143,14 @@ class Version < ActiveRecord::Base
     read_attribute(:size) || 'N/A'
   end
 
+  def byte_size
+    read_attribute(:size)
+  end
+
+  def byte_size=(bs)
+    write_attribute :size, bs.to_i
+  end
+
   def info
     [ description, summary, "This rubygem does not have a description or summary." ].detect(&:present?)
   end

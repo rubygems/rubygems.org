@@ -35,6 +35,10 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal @user, @cutter.user
     end
 
+    should "initialize size from the gem" do
+      assert_equal @gem.size, @cutter.size
+    end
+
     context "processing incoming gems" do
       should "work normally when things go well" do
         mock(@cutter).pull_spec { true }
