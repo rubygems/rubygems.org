@@ -20,8 +20,9 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.with_one_version
+    select('rubygems.*').
     joins(:versions).
-    group('rubygems.id').
+    group(column_names.map { |name| "rubygems.#{name}" }.join(', ')).
     having('COUNT(versions.id) = 1')
   end
 
