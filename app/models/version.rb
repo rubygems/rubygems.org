@@ -139,6 +139,10 @@ class Version < ActiveRecord::Base
     !indexed
   end
 
+  def size
+    read_attribute(:size) || 'N/A'
+  end
+
   def info
     [ description, summary, "This rubygem does not have a description or summary." ].detect(&:present?)
   end

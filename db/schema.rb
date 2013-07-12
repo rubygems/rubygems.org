@@ -12,7 +12,6 @@
 # It's strongly recommended to check this file into your version control system.
 
 ActiveRecord::Schema.define(:version => 20121124000000) do
-
   create_table "announcements", :force => true do |t|
     t.text     "body"
     t.datetime "created_at", :null => false
@@ -145,6 +144,7 @@ ActiveRecord::Schema.define(:version => 20121124000000) do
     t.boolean  "latest"
     t.string   "full_name"
     t.string   "licenses"
+    t.integer  "size"
   end
 
   add_index "versions", ["built_at"], :name => "index_versions_on_built_at"

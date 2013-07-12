@@ -1,5 +1,5 @@
 class Pusher
-  attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id
+  attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
   attr_accessor :bundler_api_url
 
   def initialize(user, body, host_with_port=nil)
@@ -53,6 +53,7 @@ class Pusher
   def find
     @rubygem = Rubygem.find_or_initialize_by_name(spec.name.to_s)
     @version = @rubygem.find_or_initialize_version_from_spec(spec)
+    @version.size ||= size
 
     if @version.new_record?
       true
@@ -109,6 +110,7 @@ class Pusher
   def update
     rubygem.update_attributes_from_gem_specification!(version, spec)
     rubygem.create_ownership(user) unless version.new_record?
+    @size = body.size if body
     true
   rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback
     false

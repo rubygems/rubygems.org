@@ -295,6 +295,11 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal "This rubygem does not have a description or summary.", @version.info
     end
 
+    should "give 'N/A' for size when size not available" do
+      @version.size = nil
+      assert_equal 'N/A', @version.size
+    end
+
     context "when yanked" do
       setup do
         @version.yank!
