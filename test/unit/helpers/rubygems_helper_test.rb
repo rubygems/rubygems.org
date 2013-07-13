@@ -45,6 +45,12 @@ class RubygemsHelperTest < ActionView::TestCase
     assert link.blank?
   end
 
+  should "link to the badge" do
+    rubygem = create(:rubygem)
+    url = "http://badge.fury.io/rb/#{rubygem.name}/install"
+    assert_match url, badge_link(rubygem)
+  end
+
   context "creating linkset links" do
     setup do
       @linkset = build(:linkset)
