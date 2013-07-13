@@ -230,6 +230,7 @@ class Rubygem < ActiveRecord::Base
 
   def disown
     ownerships.each(&:delete)
+    ownerships.clear
   end
 
   def find_version_from_spec(spec)

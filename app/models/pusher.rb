@@ -117,7 +117,8 @@ class Pusher
   def update
     rubygem.disown if rubygem.versions.indexed.count.zero?
     rubygem.update_attributes_from_gem_specification!(version, spec)
-    rubygem.create_ownership(user) unless version.new_record?
+    rubygem.create_ownership(user)
+
     true
   rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback
     false
