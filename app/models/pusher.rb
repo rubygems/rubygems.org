@@ -52,7 +52,9 @@ class Pusher
   end
 
   def find
-    @rubygem = Rubygem.find_or_initialize_by_name(spec.name.to_s)
+    name = spec.name.to_s
+
+    @rubygem = Rubygem.name_is(name).first || Rubygem.new(:name => name)
 
     if !@rubygem.new_record? and @rubygem.find_version_from_spec(spec)
       notify("Repushing of gem versions is not allowed.\n" +
