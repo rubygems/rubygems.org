@@ -27,7 +27,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.name_is(name)
-    where(:name => name.strip).limit(1)
+    where("name ILIKE ?", name.strip).limit(1)
   end
 
   def self.search(query)
