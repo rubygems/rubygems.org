@@ -30,7 +30,7 @@ class Api::V1::RubygemsController < Api::BaseController
 
   def yank
     if @version.indexed?
-      @rubygem.yank!(@version)
+      @version.yank!
       render :text => "Successfully yanked gem: #{@version.to_title}"
     else
       render :text => "The version #{params[:version]} has already been yanked.", :status => :unprocessable_entity
