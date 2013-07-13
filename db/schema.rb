@@ -144,8 +144,8 @@ ActiveRecord::Schema.define(:version => 20121220014214) do
     t.integer  "position"
     t.boolean  "latest"
     t.string   "full_name"
-    t.integer  "size"
     t.string   "licenses"
+    t.integer  "size"
     t.string   "requirements"
   end
 
