@@ -64,6 +64,11 @@ module RubygemsHelper
     "http://rubydoc.info/gems/#{version.rubygem.name}/#{version.number}/frames"
   end
 
+  def badge_link(rubygem)
+    badge_url = "http://badge.fury.io/rb/#{rubygem.name}/install"
+    link_to "Badge", badge_url, :id => :badge
+  end
+
   def stats_options(rubygem)
     [
       ['Overview', rubygem_stats_path(rubygem)],
