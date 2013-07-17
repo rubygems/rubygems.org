@@ -112,6 +112,8 @@ class PusherTest < ActiveSupport::TestCase
     should "post info to the remote bundler API" do
       @cutter.pull_spec
 
+      stub(@cutter.spec).platform { Gem::Platform.new("x86-java1.6") }
+
       @cutter.bundler_api_url = "http://test.com"
 
       obj = Object.new
@@ -127,7 +129,7 @@ class PusherTest < ActiveSupport::TestCase
 
       assert_equal "test",  params["name"]
       assert_equal "0.0.0", params["version"]
-      assert_equal "ruby",  params["platform"]
+      assert_equal "x86-java-1.6", params["platform"]
       assert_equal false,   params["prerelease"]
     end
 
