@@ -27,6 +27,9 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.name_is(name)
+    sensitive = where(:name => name.strip).limit(1)
+    return sensitive unless sensitive.empty?
+
     where("name ILIKE ?", name.strip).limit(1)
   end
 
