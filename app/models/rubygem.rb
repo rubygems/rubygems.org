@@ -30,7 +30,7 @@ class Rubygem < ActiveRecord::Base
     sensitive = where(:name => name.strip).limit(1)
     return sensitive unless sensitive.empty?
 
-    where("name ILIKE ?", name.strip).limit(1)
+    where("UPPER(name) = UPPER(?)", name.strip).limit(1)
   end
 
   def self.search(query)
