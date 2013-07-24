@@ -56,11 +56,18 @@ class Pusher
 
     @rubygem = Rubygem.name_is(name).first || Rubygem.new(:name => name)
 
-    if !@rubygem.new_record? and @rubygem.find_version_from_spec(spec)
-      notify("Repushing of gem versions is not allowed.\n" +
-             "Please use `gem yank` to remove bad gem releases.", 409)
+    unless @rubygem.new_record?
+      if @rubygem.find_version_from_spec(spec)
+        notify("Repushing of gem versions is not allowed.\n" +
+               "Please use `gem yank` to remove bad gem releases.", 409)
 
-      return false
+        return false
+      end
+
+      if @rubygem.name != name and @rubygem.indexed_versions?
+        return notify("Unable to change case of gem name with indexed versions\n" +
+                      "Please yank all versions first", 409)
+      end
     end
 
     # Update the name to reflect a valid case change
