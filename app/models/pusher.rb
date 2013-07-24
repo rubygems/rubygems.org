@@ -63,6 +63,9 @@ class Pusher
       return false
     end
 
+    # Update the name to reflect a valid case change
+    @rubygem.name = name
+
     @version = @rubygem.versions.new number: spec.version.to_s,
                                      platform: spec.original_platform.to_s,
                                      size: size

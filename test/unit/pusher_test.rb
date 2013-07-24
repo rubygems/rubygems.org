@@ -185,6 +185,23 @@ class PusherTest < ActiveSupport::TestCase
         assert_equal @rubygem, @cutter.rubygem
         assert_not_nil @cutter.version
       end
+
+      should "update the DB to reflect the case in the spec" do
+        @rubygem = create(:rubygem)
+        assert_not_equal @rubygem.name, @rubygem.name.upcase
+
+        spec = "spec"
+        stub(spec).name { @rubygem.name.upcase }
+        stub(spec).version { "1.3.3.7" }
+        stub(spec).original_platform { "ruby" }
+        stub(@cutter).spec { spec }
+        @cutter.find
+
+        @cutter.rubygem.save
+        @rubygem.reload
+
+        assert_equal @rubygem.name, @rubygem.name.upcase
+      end
     end
 
     context "checking if the rubygem can be pushed to" do
