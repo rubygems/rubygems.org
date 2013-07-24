@@ -113,6 +113,10 @@ class Rubygem < ActiveRecord::Base
     ownerships.blank?
   end
 
+  def indexed_versions?
+    versions.indexed.count > 0
+  end
+
   def owned_by?(user)
     ownerships.find_by_user_id(user.id) if user
   end
