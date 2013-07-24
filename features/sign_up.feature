@@ -22,7 +22,7 @@ Feature: Sign up with handle
     Given I am signed up as "email@person.com"
     When I go to the sign up page
     And I fill in "Email" with "email@person.com"
-    And I fill in "Handle" with "validhandledude"
+    And I fill in "Handle" with "Validhandledude"
     And I fill in "Password" with "password"
     And I press "Sign up"
     Then I should see an error message
