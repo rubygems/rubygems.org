@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   include Gravtastic
   is_gravtastic :default => "retro"
 
-  attr_accessible :bio, :email, :handle, :location, :password, :website
+  attr_accessible :bio, :email, :handle, :location, :password, :website, :gittip_username
 
   has_many :rubygems, :through => :ownerships
 
@@ -55,7 +55,10 @@ class User < ActiveRecord::Base
   end
 
   def payload
-    {"email" => email}
+    attrs = {"email" => email}
+    attrs["gittip_username"] = gittip_username if gittip_username
+
+    attrs
   end
 
   def as_json(options={})
@@ -96,5 +99,9 @@ class User < ActiveRecord::Base
 
   def total_rubygems_count
     rubygems.count
+  end
+
+  def gittip_url
+    'https://www.gittip.com/' + gittip_username + '/'
   end
 end

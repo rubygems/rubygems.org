@@ -4,7 +4,8 @@
   </div>
   <div id="profile-info">
     <h2 id="profile-name"><%= link_to @user.display_handle, profile_path(@user.display_id) %></h2>
-    <h3 id="profile-email"><%= mail_to @user.email, "(email)", :encode => "hex" %></h3>
+    <h3 id="profile-email"><%= mail_to @user.email, "email", :encode => "hex" %></h3>
+    <h3 id="profile-gittip"><%= link_to "gittip", @user.gittip_url unless @user.gittip_username.blank? %></h3>
     <h3 id="profile-gems-count"><%= @user.total_rubygems_count.to_s %> <%= "gem".pluralize(@user.total_rubygems_count) %></h3>
   </div>
   <div id="downloads-ego">
