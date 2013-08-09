@@ -40,3 +40,24 @@ Feature: List gems API
       | name: testgemwithlicense | 1.0.0  | MIT      |
     When I GET "/api/v1/versions/testgemwithlicense.json"
     Then the JSON response should include all of the gem version metadata
+
+  Scenario: Gem has MIT license
+    Given the following version exists:
+      | rubygem                     | number | licenses |
+      | name: testgemwithmitlicense | 1.0.0  | MIT      |
+    When I GET "/api/v1/versions/testgemwithmitlicense.json"
+    Then the returned JSON should include licenses:MIT
+
+  Scenario: Gem has dual (MIT/Proprietary) licenses
+    Given the following version exists:
+      | rubygem                      | number | licenses        |
+      | name: testgemwithduallicense | 1.0.0  | MIT,Proprietary |
+    When I GET "/api/v1/versions/testgemwithduallicense.json"
+    Then the returned JSON should include licenses:GPLv2,Proprietary
+
+  Scenario: Gem has no license
+    Given the following version exists:
+      | rubygem                    | number | licenses |
+      | name: testgemwithnolicense | 1.0.0  |          |
+    When I GET "/api/v1/versions/testgemwithnolicense.json"
+    Then the returned JSON should include licenses:
