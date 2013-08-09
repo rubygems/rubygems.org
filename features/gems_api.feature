@@ -52,7 +52,7 @@ Feature: List gems API
     Given the following version exists:
       | rubygem                      | number | licenses        |
       | name: testgemwithduallicense | 1.0.0  | MIT,Proprietary |
-    When I GET "/api/v1/versions/testgemwithduallicense.json"
+    When I GET "/api/v1/versions/testgemwithduallicenses.json"
     Then the returned JSON should include licenses:GPLv2,Proprietary
 
   Scenario: Gem has no license
