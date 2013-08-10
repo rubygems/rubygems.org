@@ -42,8 +42,8 @@ class HomeControllerTest < ActionController::TestCase
     end
 
     should "contain HTTPS links to sign in and sign up" do
-      assert_select "a[href=?]", new_session_url(:protocol   => 'https')
-      assert_select "a[href=?]", new_user_url(:protocol   => 'https')
+      assert_select "a[href=?]", sign_in_url(:protocol   => 'https')
+      assert_select "a[href=?]", sign_up_url(:protocol   => 'https')
     end
 
   end
