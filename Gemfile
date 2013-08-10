@@ -61,7 +61,7 @@ end
 # For some reason, including these gems in the maintenance environment enables
 # maintenance mode
 group :development, :test, :staging, :production do
-  gem 'clearance', '>= 1.0.0.rc7'
+  gem 'clearance', '~> 1.0.1'
   gem 'daemons'
   gem 'delayed_job'
   gem 'delayed_job_active_record'

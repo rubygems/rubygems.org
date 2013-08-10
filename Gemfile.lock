@@ -53,10 +53,10 @@ GEM
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
     choice (0.1.6)
-    clearance (1.0.0.rc7)
+    clearance (1.0.1)
       bcrypt-ruby
-      email_validator
-      rails (>= 3.0)
+      email_validator (~> 1.4)
+      rails (>= 3.1)
     coderay (1.0.9)
     crack (0.4.1)
       safe_yaml (~> 0.9.0)
@@ -252,7 +252,7 @@ DEPENDENCIES
   builder
   capistrano-ext
   capybara
-  clearance (>= 1.0.0.rc7)
+  clearance (~> 1.0.1)
   cucumber-rails
   daemons
   dalli
