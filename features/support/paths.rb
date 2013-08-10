@@ -14,7 +14,7 @@ module NavigationHelpers
     when /the sign up page/
       new_user_path
     when /the sign in page/
-      new_session_path
+      sign_in_path
     when /the password reset request page/
       new_password_path
     when /the dashboard/
