@@ -25,6 +25,21 @@ Then /^the JSON response should include all of the gem version metadata$/ do
   end
 end
 
+Then /the returned JSON should include licenses:MIT$/ do
+  response = JSON.parse last_response.body
+  assert_equal 'MIT', response.first['licenses']
+end
+
+Then /the returned JSON should include licenses:GPLv2,Proprietary$/ do
+  response = JSON.parse last_response.body
+  assert_equal 'MIT,Proprietary', response.first['licenses']
+end
+
+Then /the returned JSON should include licenses:$/ do
+  response = JSON.parse last_response.body
+  assert_equal '', response.first['licenses']
+end
+
 When /^I push the gem "([^\"]*)" with my API key$/ do |name|
   api_key_header
   path = File.join(TEST_DIR, name)
