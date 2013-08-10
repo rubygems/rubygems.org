@@ -50,8 +50,8 @@ Feature: List gems API
 
   Scenario: Gem has dual (MIT/Proprietary) licenses
     Given the following version exists:
-      | rubygem                      | number | licenses        |
-      | name: testgemwithduallicense | 1.0.0  | MIT,Proprietary |
+      | rubygem                       | number | licenses        |
+      | name: testgemwithduallicenses | 1.0.0  | MIT,Proprietary |
     When I GET "/api/v1/versions/testgemwithduallicenses.json"
     Then the returned JSON should include licenses:GPLv2,Proprietary
 
