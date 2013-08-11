@@ -223,4 +223,4 @@ directory. The proper directory will be full of .gem files.
 
 Courtesy of [Rails ERD](http://rails-erd.rubyforge.org)
 
-![Rubygems.org Domain Model](https://github.com/rubygems/rubygems.org/raw/master/erd.png)
+![Rubygems.org Domain Model](https://github.com/rubygems/rubygems.org/raw/master/doc/erd.png)
