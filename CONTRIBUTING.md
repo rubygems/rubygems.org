@@ -132,7 +132,7 @@ running:
 
 **Environment (Linux - Debian/Ubuntu):**
 
-* Install Ruby 1.9.3: `apt-get install ruby1.9.3`
+* Install Ruby 1.9.3: `apt-get install ruby1.9.3` (Or install via [alternate methods](http://www.ruby-lang.org/en/downloads/))
 * Install Bundler: `gem install bundler`
 * Install Redis: `apt-get install redis-server`
 * Install PostgreSQL: `apt-get install postgresql-9.1 postgresql-server-dev-9.1`
