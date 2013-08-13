@@ -1,5 +1,6 @@
 class Api::BaseController < ApplicationController
   skip_before_filter :require_ssl
+  before_filter :enable_cross_origin_resource_sharing
 
   private
 
@@ -13,5 +14,10 @@ class Api::BaseController < ApplicationController
         :status => :bad_request
       false
     end
+  end
+
+  def enable_cross_origin_resource_sharing
+    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Request-Method'] = 'GET'
   end
 end
