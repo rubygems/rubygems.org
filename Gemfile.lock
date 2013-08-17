@@ -94,7 +94,7 @@ GEM
       redis (~> 3.0.0)
     faraday (0.8.8)
       multipart-post (~> 1.2.0)
-    fog (1.14.0)
+    fog (1.15.0)
       builder
       excon (~> 0.25.0)
       formatador (~> 0.2.0)
