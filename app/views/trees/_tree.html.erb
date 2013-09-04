@@ -1,0 +1,9 @@
+<% if tree && tree.tree_data.present? %>
+<div class="depTree runtime">
+  <h5>Dependency Tree</h5>
+  <label><%= check_box_tag "dep_check", "runtime", true %>Only runtime dependencies</label>
+  <ul>
+    <%= render :partial => "trees/tree_node", :locals => { :node => JSON(tree.tree_data) } %>
+  </ul>
+</div>
+<% end %>

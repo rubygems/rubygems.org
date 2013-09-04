@@ -1,0 +1,18 @@
+<li class="<%= node["type"] %>">
+<strong><%= link_to node["name"], "/gems/#{node["name"]}" %> </strong> 
+
+  <% if node["version"] %>
+    <%= link_to node["version"], "/gems/#{node["name"]}/versions/#{node["version"]}" %>
+  <% end %>
+  
+  <% if node["requirement"]  %>
+    (req <%= node["requirement"] %>)
+  <% end %>
+  <% if node["children"] && node["children"].any? %>
+    <ul>
+      <% node["children"].each do |child| %>
+        <%= render :partial => "trees/tree_node", :locals => { :node => child } %>
+      <% end %>
+    </ul>
+  <% end %>
+</li>

@@ -1731,3 +1731,45 @@ h5#downloads {
   font-weight: bold;
   padding-left: 24px;
 }
+
+/* Dependency Tree */
+
+.main .info .depTree ul{
+  padding:0px;
+  margin:0px;
+}
+
+.main .info .depTree ul li{
+  border:1px solid #cbc2ae;
+  margin:0px;
+  padding:4px;
+  margin:4px 0 0 0;
+}
+
+.main .info .depTree h5{
+  margin-bottom:1em;
+}
+
+.main .info .depTree label{
+  font-size:12px;
+}
+
+.main .info .depTree ul li{
+  font-size:12px;
+}
+
+.main .info .depTree ul li:hover{
+  background: rgba(193,184,164,0.2);
+  #background: rgba(52,5,5,0.1);
+  border:1px solid #340505;
+}
+
+.main .info .depTree ul li.development,
+.main .info .depTree ul li.development a{
+  color:#787878;
+}
+
+.main .info .depTree.runtime ul li.development{
+  display:none;
+}
+
