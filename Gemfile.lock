@@ -119,7 +119,7 @@ GEM
       multi_json
     librato-rack (0.4.3)
       librato-metrics (~> 1.1.1)
-    librato-rails (0.10.0)
+    librato-rails (0.10.1)
       librato-rack (~> 0.4.2)
       rails (>= 3.0)
     mail (2.5.4)
