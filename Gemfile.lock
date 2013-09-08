@@ -117,7 +117,7 @@ GEM
       aggregate (~> 0.2.2)
       faraday (~> 0.7)
       multi_json
-    librato-rack (0.4.2)
+    librato-rack (0.4.3)
       librato-metrics (~> 1.1.1)
     librato-rails (0.10.0)
       librato-rack (~> 0.4.2)
