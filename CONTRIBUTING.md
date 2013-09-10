@@ -195,7 +195,7 @@ running:
 
 ### MySQL2
 
-* Remove `pg` and `silent-postgres` gems from your Gemfile
+* Remove `pg` gem from your Gemfile
 * Add `mysql2` gem to your Gemfile:
 
      ``` ruby
