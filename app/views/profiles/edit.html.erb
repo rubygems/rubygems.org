@@ -19,6 +19,11 @@
     <%= form.email_field :email, :size => 25 %>
   </div>
 
+  <div class="checkbox" style="padding-bottom: 10px;">
+    <%= form.label :hide_email %>
+    <%= form.check_box :hide_email %>
+  </div>
+
   <div class="text_field">
     <%= form.label :gittip_username %>
     <%= link_to "What's this?", "https://www.gittip.com/about/" %>
