@@ -120,6 +120,10 @@ class UserTest < ActiveSupport::TestCase
       assert_equal @user.handle, @user.name
     end
 
+    should "setup a field to toggle showing email" do
+      assert_nil @user.hide_email
+    end
+
     should "have a 32 character hexadecimal api key" do
       assert @user.api_key =~ /^[a-f0-9]{32}$/
     end
