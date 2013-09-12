@@ -1731,3 +1731,81 @@ h5#downloads {
   font-weight: bold;
   padding-left: 24px;
 }
+
+/* In page search */
+#in-page-search {
+  margin: 0 0 0 1em;
+  padding: 0;
+  display: inline-block;
+}
+
+#in-page-search input[type="text"] {
+  padding: 0.5em 0.5em 0.75em 0.5em;
+  border: 1px solid rgba(0,0,0,0.15);
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 0.5em;
+  width: 41em;
+  bottom: 0.2em;
+  position: relative;
+}
+
+#in-page-search input[type="text"]:focus {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+#search-tips-toggle {
+  color: #6b604a;
+  background: url('/images/help.png') 0 0px no-repeat;
+  padding: 4px 0 0 20px;
+  margin: 0 0 0 0.25em;
+  height: 20px;
+  display: inline-block;
+  bottom: 0.25em;
+  position: relative;
+}
+#search-tips-toggle:hover {
+  color: #300000;
+  text-decoration: underline;
+}
+
+#search-tips {
+  font-size: 80%;
+  background: rgba(255, 255, 255, 0.4);
+  border-top: 1px solid rgba(0,0,0,0.1);
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  margin: 2em 0 0 0;
+  padding: 1.75em 0 1em 0;
+}
+
+#search-tips p {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+}
+
+#search-tips a.external {
+  text-decoration: underline;
+}
+
+#search-tips code {
+  color: #5E543E;
+  background: rgba(255, 255, 0, 0.4);
+  padding: 0.25em 0.75em 0.25em 0.75em;
+}
+#search-tips code:hover {
+ color: #fff;
+ background: rgba(0, 0, 0, 0.6);
+}
+
+#search-tips code a {
+  color: #5E543E;
+}
+#search-tips code:hover a {
+  color: #fff;
+}
+
+#search-tips .legend {
+  color: #85775b;
+  border-top: 1px solid rgba(0,0,0,0.05);
+  margin-top: 1.5em;
+  padding-top: 1em;
+}

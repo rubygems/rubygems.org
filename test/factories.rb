@@ -62,6 +62,11 @@ FactoryGirl.define do
     linkset
     name
 
+    after(:create) do |this|
+      this.touch
+      Rubygem.tire.index.refresh
+    end
+
     factory :rubygem_with_downloads do
       after(:create) do |r|
         $redis[Download.key(r)] = r['downloads']
@@ -84,6 +89,11 @@ FactoryGirl.define do
     requirements "Opencv"
     rubygem
     size 1024
+
+    after(:create) do |this|
+      this.rubygem.touch
+      Rubygem.tire.index.refresh
+    end
   end
 
   factory :version_history do

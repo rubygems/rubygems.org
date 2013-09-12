@@ -4,6 +4,9 @@
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
 
+require 'webmock/cucumber' # Allow connections to elasticsearch
+WebMock.disable_net_connect!(:allow => /localhost\:9200/)
+
 require 'cucumber/rails'
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In

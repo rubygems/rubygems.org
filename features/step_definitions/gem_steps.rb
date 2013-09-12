@@ -19,6 +19,11 @@ Given /^a rubygem exists with name "([^\"]*)" and version "([^\"]*)"$/ do |name,
   create(:version, :rubygem => rubygem, :number => version_number)
 end
 
+Given /^a rubygem "([^\"]*)" exists with version "([^\"]*)" and (\d+) downloads$/ do |name, version, downloads|
+  rubygem = create(:rubygem_with_downloads, :name => name, downloads: downloads)
+  create(:version, :rubygem => rubygem, :number => version)
+end
+
 Given /^I have a gem "([^\"]*)" with version "([^\"]*)" and homepage "([^\"]*)"$/ do |name, version, homepage|
   gemspec = new_gemspec(name, version, "Gemcutter", "ruby")
   gemspec.homepage = homepage
@@ -63,5 +68,24 @@ Given 'the following rubygems exist for "$email":' do |email, table|
     row['downloads'].to_i.times { Download.incr(rubygem.name, version.full_name) }
 
     rubygem.ownerships.create :user => user
+  end
+end
+
+Given /^gems with these properties exist:$/ do |table|
+  table.hashes.each do |row|
+    if row['downloads']
+      rubygem = FactoryGirl.create :rubygem_with_downloads, :name => row['name'], :downloads => row['downloads']
+    else
+      rubygem = FactoryGirl.create :rubygem, :name => row['name']
+    end
+
+    FactoryGirl.create(:version, :rubygem => rubygem) do |version|
+      version.number      = row['version']
+      version.authors     = row['authors'].split(/\s*,\s*/)
+      version.summary     = row['summary']
+      version.description = row['description']
+
+      version.save
+    end
   end
 end

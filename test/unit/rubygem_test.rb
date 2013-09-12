@@ -1,6 +1,11 @@
 require 'test_helper'
 
 class RubygemTest < ActiveSupport::TestCase
+  def setup
+    super
+    WebMock.stub_request(:any, /.*localhost:9200.*/).to_return(:body => '{}', :status => 200)
+  end
+
   context "with a saved rubygem" do
     setup do
       @rubygem = create(:rubygem, :name => "SomeGem")
@@ -282,6 +287,13 @@ class RubygemTest < ActiveSupport::TestCase
       should "be not owned if no user" do
         assert !@rubygem.owned_by?(nil)
         assert @rubygem.unowned?
+      end
+
+      should "not fail when cannot connect to Elasticsearch on save" do
+        WebMock::API.stub_request(:any, /.*localhost:9200.*/).to_raise(Errno::ECONNREFUSED)
+        assert_nothing_raised do
+          @rubygem.save # Calls @rubygem.update_elasticsearch_index_with_rescue
+        end
       end
     end
 

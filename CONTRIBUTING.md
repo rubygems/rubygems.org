@@ -43,7 +43,7 @@ git remote set-url origin git@github.com:rubygems/rubygems.org.git
 
 Otherwise, you can continue to hack away in your own fork.
 
-If you’re looking for things to hack on, please check 
+If you’re looking for things to hack on, please check
 [GitHub Issues](http://github.com/rubygems/rubygems.org/issues). If you’ve
 found bugs or have feature ideas don’t be afraid to pipe up and ask the
 [mailing list](http://groups.google.com/group/gemcutter) or IRC channel
@@ -127,19 +127,23 @@ running:
     **version 2.0 or higher**. If you have homebrew,
     do `brew install redis -H`, if you use macports,
     do `sudo port install redis`.
+* Install [Elasticsearch](http://www.elasticsearch.org).
+    You can do it with `brew install elasticsearch`,
+    or just download, unzip and run
+    a [release](http://www.elasticsearch.org/download/).
 * Rubygems is configured to use PostgreSQL (>= 8.4.x),
     for MySQL see below. Install with: `brew install postgres`
 
 **Get the code:**
 
 * Clone the repo: `git clone git://github.com/rubygems/rubygems.org`
-* Move into your cloned rubygems directory if you haven’t already: 
+* Move into your cloned rubygems directory if you haven’t already:
     `cd rubygems.org`
-    
+
 **Setup the database:**
 
 * Get set up: `./script/setup`
-* Run the database rake tasks if needed: 
+* Run the database rake tasks if needed:
     `rake db:create:all db:drop:all db:setup db:test:prepare --trace`
 
 **Running tests:**
@@ -151,7 +155,7 @@ running:
 
 * Set the REDISTOGO_URL environment variable. For example:
     `REDISTOGO_URL="redis://localhost:6379"`
-* Import gems if you want to seed the database. 
+* Import gems if you want to seed the database.
     `rake gemcutter:import:process PATHTO_GEMS/cache`
     * _To import a small set of gems you can point the import process to any
         gems cache directory, like a very small `rvm` gemset for instance._
@@ -188,8 +192,8 @@ running:
 
 > **Warning:** Gem names are case sensitive (eg. `BlueCloth` vs.
 > `bluecloth` 2). MySQL has a `utf8_bin` collation, but it appears
-> that you still need to do `BINARY name = ?` for searching. 
-> It is recommended that you stick to PostgreSQL >= 8.4.x 
+> that you still need to do `BINARY name = ?` for searching.
+> It is recommended that you stick to PostgreSQL >= 8.4.x
 > for development. Some tests will also fail if you use MySQL
 > because some queries use SQL functions which don't exist in MySQL..
 

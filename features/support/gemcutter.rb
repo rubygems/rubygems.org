@@ -1,6 +1,3 @@
-require 'webmock'
-WebMock.disable_net_connect!
-
 Hostess.local = true
 Capybara.app_host = "https://gemcutter.local"
 
@@ -18,4 +15,10 @@ end
 After do
   FileUtils.rm_rf(TEST_DIR)
   $redis.flushdb
+end
+
+Before('@search') do |s|
+  Rails.logger.debug "[TIRE] Recreating the elasticsearch index"
+  Rubygem.tire.index.delete
+  Rubygem.tire.create_elasticsearch_index
 end

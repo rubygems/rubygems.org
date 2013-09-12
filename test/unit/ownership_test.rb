@@ -1,6 +1,11 @@
 require 'test_helper'
 
 class OwnershipTest < ActiveSupport::TestCase
+  def setup
+    super
+    WebMock.stub_request(:any, /.*localhost:9200.*/).to_return(:body => '{}', :status => 200)
+  end
+
   should "be valid with factory" do
     assert build(:ownership).valid?
   end

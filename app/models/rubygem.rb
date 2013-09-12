@@ -1,6 +1,8 @@
 class Rubygem < ActiveRecord::Base
   include Patterns
 
+  include Tire::Model::Search
+
   has_many :owners, :through => :ownerships, :source => :user
   has_many :ownerships, :dependent => :destroy
   has_many :subscribers, :through => :subscriptions, :source => :user
@@ -14,6 +16,50 @@ class Rubygem < ActiveRecord::Base
 
   after_create :update_unresolved
   before_destroy :mark_unresolved
+
+  after_create  :update_elasticsearch_index_with_rescue
+  after_destroy :update_elasticsearch_index_with_rescue
+  after_touch   :update_elasticsearch_index_with_rescue
+
+  tire do
+    index_prefix Rails.env
+
+    settings :number_of_shards   => 1,
+             :number_of_replicas => 1,
+             :analysis           => {
+               :analyzer => {
+                 :rubygem => {
+                   :type => 'pattern',
+                   :pattern => "[\s#{Regexp.escape(SPECIAL_CHARACTERS)}]+"
+                 }
+               }
+             } do
+      mapping do
+        indexes :name,      :type => 'multi_field',
+                            :fields => {
+                              :name => { :type => 'string', :analyzer => 'rubygem', :boost => 10.0 },
+                              :raw  => { :type => 'string', :analyzer => 'keyword', :boost => 10.0 }
+                            }
+        indexes :indexed,   :type => 'boolean', :include_in_all => false, :as => proc { versions.any?(&:indexed?) }
+        indexes :downloads, :type => 'integer', :include_in_all => false
+
+        indexes :summary,     :analyzer => 'english', :as => proc { versions.most_recent.try(:summary) }
+        indexes :description, :analyzer => 'english', :as => proc { versions.most_recent.try(:description) }
+        indexes :author,      :as => proc { versions.most_recent.try(:authors).try(:split, /\s*,\s*/) }
+
+        indexes :version,     :analyzer => 'keyword', :as => proc { versions.map(&:number) },
+                              :include_in_all => false
+
+        indexes :uses,        :as => proc { versions.most_recent.dependencies.map(&:name) if versions.most_recent rescue nil },
+                              :include_in_all => false
+        indexes :depends,     :as => proc { versions.most_recent.dependencies.runtime.map(&:name) if versions.most_recent rescue nil },
+                              :include_in_all => false
+
+        indexes :created_at,  :type => 'date', :include_in_all => false
+        indexes :updated_at,  :type => 'date', :include_in_all => false
+      end
+    end
+  end
 
   def self.with_versions
     where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)")
@@ -266,6 +312,13 @@ class Rubygem < ActiveRecord::Base
 
   def gittip_enabled?
     owners.where('gittip_username is not null').count > 0
+  end
+
+  def update_elasticsearch_index_with_rescue
+    update_elasticsearch_index
+  rescue Exception => e
+    Rails.logger.error "Error when updating Elasticsearch. Original exception: #{e.inspect}"
+    return true
   end
 
   private

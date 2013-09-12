@@ -1,0 +1,43 @@
+<div id="search-tips">
+<div>
+  <p>
+    When looking for gems, you can use a wide variety of search queries
+    in the <a href="http://lucene.apache.org/core/3_6_1/queryparsersyntax.html" class="external">Lucene syntax</a>.
+  </p>
+
+  <p>
+    Quite simply, you can search in gem names, summaries and descriptions with queries like
+    <code><%= link_to_example_search 'rack' %></code> or
+    <code><%= link_to_example_search 'imap' %></code>
+  </p>
+
+  <p>You can, of course, restrict the search to gem names only:</p>
+  <p><code><%= link_to_example_search 'name:rack' %></code></p>
+
+  <p>To broaden your search, you can use wildcards:</p>
+  <p>
+    <code><%= link_to_example_search 'name:ra*' %></code> or
+    <code><%= link_to_example_search 'web*' %></code>
+  </p>
+
+  <p>You can search for specific gem authors:</p>
+  <p><code><%= link_to_example_search 'author:john' %></code></p>
+
+  <p>Of course, you can combine these queries into complex ones:</p>
+  <p>
+    <code><%= link_to_example_search 'name:ra* AND author:john' %></code> or
+    <code><%= link_to_example_search 'name:ra* AND version:1*' %></code>
+  </p>
+
+  <p>To discover more gems, you can search by their depencies in runtime:</p>
+  <p><code><%= link_to_example_search 'depends:rack' %></code></p>
+  <p>or in development:</p>
+  <p><code><%= link_to_example_search 'uses:rack' %></code></p>
+
+  <p>Lastly, you can restrict your search to gems created or updated in certain timeframe:</p>
+  <p><code><%= link_to_example_search "name:rack AND updated_at:[#{Time.now.to_date.beginning_of_month.to_s(:db)} TO #{Time.now.to_date.end_of_month.to_s(:db)}]" %></code></p>
+
+  <p class="legend">The searchable fields are <em>name</em>, <em>summary</em>, <em>description</em>, <em>author</em>, <em>version</em>, <em>uses</em>, <em>depends</em>, <em>created_at</em>, <em>updated_at</em> and <em>downloads</em>.</p>
+
+</div>
+</div>

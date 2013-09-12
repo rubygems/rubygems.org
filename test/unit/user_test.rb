@@ -1,6 +1,11 @@
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
+  def setup
+    super
+    WebMock.stub_request(:any, /.*localhost:9200.*/).to_return(:body => '{}', :status => 200)
+  end
+
   should have_many(:ownerships)
   should have_many(:rubygems).through(:ownerships)
   should have_many(:subscribed_gems).through(:subscriptions)
