@@ -1,6 +1,7 @@
 class Version < ActiveRecord::Base
   belongs_to :rubygem
   has_many :dependencies, :order => 'rubygems.name ASC', :include => :rubygem, :dependent => :destroy
+  has_one :tree
 
   before_save      :update_prerelease
   after_validation :join_authors
@@ -248,6 +249,11 @@ class Version < ActiveRecord::Base
     command << " -v #{number}" if latest != self
     command << " --pre" if prerelease
     command
+  end
+
+  def prep_tree
+    tree = self.create_tree!
+    tree.prep_data
   end
 
   private

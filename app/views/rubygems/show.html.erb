@@ -100,6 +100,7 @@
       </div>
     <% end %>
 
+      
       <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.runtime } %>
       <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.development } %>
 
@@ -113,6 +114,8 @@
 	  	  </ol>
         </div>
       <% end %>
+
+      <%= render :partial => "trees/tree", :locals => { :tree => @latest_version.tree } %>
 
     </div>
   </div>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130829225823) do
+ActiveRecord::Schema.define(:version => 20130904203129) do
 
   create_table "announcements", :force => true do |t|
     t.text     "body"
@@ -96,6 +96,19 @@ ActiveRecord::Schema.define(:version => 20130829225823) do
 
   add_index "subscriptions", ["rubygem_id"], :name => "index_subscriptions_on_rubygem_id"
   add_index "subscriptions", ["user_id"], :name => "index_subscriptions_on_user_id"
+
+  create_table "trees", :force => true do |t|
+    t.integer  "version_id"
+    t.string   "state"
+    t.integer  "runtime_weight"
+    t.integer  "development_weight"
+    t.text     "data"
+    t.text     "tree_data"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
+
+  add_index "trees", ["version_id"], :name => "index_trees_on_version_id"
 
   create_table "users", :force => true do |t|
     t.string   "email"
