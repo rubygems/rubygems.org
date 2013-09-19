@@ -225,7 +225,7 @@ GEM
     webmock (1.13.0)
       addressable (>= 2.2.7)
       crack (>= 0.3.2)
-    will_paginate (3.0.4)
+    will_paginate (3.0.5)
     xml-simple (1.1.2)
     xpath (2.0.0)
       nokogiri (~> 1.3)
