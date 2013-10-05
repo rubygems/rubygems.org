@@ -129,6 +129,7 @@ running:
     do `sudo port install redis`.
 * Rubygems is configured to use PostgreSQL (>= 8.4.x),
     for MySQL see below. Install with: `brew install postgres`
+* If this is your first time using pg, don't forget to initialize the database (initdb /usr/local/var/postgres -E utf8) before starting postgres (pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start)
 
 **Get the code:**
 
