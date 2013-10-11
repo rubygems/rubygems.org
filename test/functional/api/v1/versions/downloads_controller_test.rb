@@ -128,6 +128,17 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
         assert_equal 1764, hash[@one_hundred_days_ago]
       end
 
+      should "return download stats for the days specified for ranges larger than 90 days" do
+        get_search(@version, @two_hundred_days_ago, @one_day_ago, format)
+        hash = yield(@response.body)
+        assert_equal 200, hash.size
+        #  this passes, but real behavir doesn't. this implies that
+        #  thje setup/mock is doing someting that isn't actually happening
+        #  in reality.
+        #  which is...the redis set.
+        assert_equal (1764 + 41 + 42 + 5 + 7), hash.map(&:last).sum
+      end
+
       should "be able to return stats for a single day" do
         get_search(@version, @one_hundred_days_ago, @one_hundred_days_ago, format)
         hash = yield(@response.body)
@@ -140,10 +151,12 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
 
   context "on GET to search" do
     setup do
+      @one_day_ago = 1.days.ago.to_date.to_s
       @one_hundred_days_ago = 100.days.ago.to_date.to_s
       @one_hundred_one_days_ago = 101.days.ago.to_date.to_s
       @one_hundred_eighty_nine_days_ago = 189.day.ago.to_date.to_s
       @one_hundred_ninety_days_ago = 190.day.ago.to_date.to_s
+      @two_hundred_days_ago = 200.day.ago.to_date.to_s
     end
 
     context "happy path" do
@@ -153,6 +166,8 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
         $redis.hincrby Download.history_key(@version), @one_hundred_ninety_days_ago, 41
         $redis.hincrby Download.history_key(@version), @one_hundred_eighty_nine_days_ago, 42
         $redis.hincrby Download.history_key(@version), @one_hundred_days_ago, 1764
+        $redis.hincrby Download.history_key(@version), @two_hundred_days_ago, 5
+        $redis.hincrby Download.history_key(@version), @one_day_ago, 7
       end
 
       should_respond_to(:json) do |body|
