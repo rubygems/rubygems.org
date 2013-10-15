@@ -25,7 +25,11 @@
     <div class="meta">
       <div class="admin">
         <%= link_to t('edit'), edit_rubygem_path(@rubygem), :id => "edit" if @rubygem.owned_by?(current_user) %>
+        <!-- 
+          Not ready yet on the Gittip side! :-(
+          https://github.com/gittip/www.gittip.com/issues/1591
         <%= gittip_link(@rubygem) if @rubygem.gittip_enabled? %>
+        -->
         <%= download_link(@latest_version) %>
         <%= documentation_link(@latest_version, @rubygem.linkset) %>
         <%= badge_link(@rubygem) %>
