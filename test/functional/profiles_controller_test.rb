@@ -79,6 +79,25 @@ class ProfilesControllerTest < ActionController::TestCase
           assert_equal @handle, User.last.handle
         end
       end
+
+      context "updating show email" do
+        setup do
+          @handle = "john_m_doe"
+          @hide_email = true
+          @user = create(:user, :handle => "johndoe")
+          sign_in_as(@user)
+          put :update, :user => {:handle => @handle, :hide_email => @hide_email}
+        end
+
+        should respond_with :redirect
+        should redirect_to('the profile edit page') { edit_profile_path }
+        should set_the_flash.to("Your profile was updated.")
+
+        should "update email toggle" do
+          assert_equal @hide_email, User.last.hide_email
+        end
+
+      end
     end
   end
 
