@@ -33,7 +33,7 @@ Please see the wiki for the latest [contribution guidelines][].
 
 To get setup, please check out the [Development Setup][].
 
-[development setup]: https://github.com/rubygems/rubygems.org/wiki/Development-Setup
+[development setup]: https://github.com/rubygems/rubygems.org/blob/master/CONTRIBUTING.md
 
 Our deployment process is documented on the wiki as well, there's a multi-step
 [Checklist][] to run through.
