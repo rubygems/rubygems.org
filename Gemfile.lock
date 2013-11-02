@@ -76,7 +76,7 @@ GEM
     email_validator (1.4.0)
       activemodel
     erubis (2.7.0)
-    excon (0.27.6)
+    excon (0.28.0)
     factory_girl (4.2.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.2.1)
@@ -86,9 +86,9 @@ GEM
       redis (~> 3.0.0)
     faraday (0.8.8)
       multipart-post (~> 1.2.0)
-    fog (1.17.0)
+    fog (1.18.0)
       builder
-      excon (~> 0.27.0)
+      excon (~> 0.28.0)
       formatador (~> 0.2.0)
       mime-types
       multi_json (~> 1.0)
