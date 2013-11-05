@@ -8,4 +8,4 @@ git:
 language: ruby
 rvm:
   - 2.0.0
-script: bundle exec rake default
+script: rake default
