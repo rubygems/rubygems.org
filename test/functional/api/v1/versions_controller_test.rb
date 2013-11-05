@@ -13,6 +13,11 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     get :reverse_dependencies, options.merge(:id => rubygem.name)
   end
 
+  def set_cache_header(timestamp)
+    ims = ActionDispatch::Http::Cache::Request::HTTP_IF_MODIFIED_SINCE
+    request.env[ims] = timestamp.httpdate
+  end
+
   def self.should_respond_to(format)
     context "with #{format.to_s.upcase}" do
       should "have a list of versions for the first gem" do
@@ -84,10 +89,6 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       assert_response :success
     end
 
-    def set_cache_header(timestamp)
-      ims = ActionDispatch::Http::Cache::Request::HTTP_IF_MODIFIED_SINCE
-      request.env[ims] = timestamp.httpdate
-    end
   end
 
   context "on GET to show for an unknown gem" do
