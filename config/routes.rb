@@ -135,7 +135,7 @@ Gemcutter::Application.routes.draw do
 
   resource :session, :only => [:create, :destroy]
 
-  match 'sign_out' => 'sessions#destroy', :via => :delete, :as => 'sign_out'
+  delete 'sign_out' => 'sessions#destroy', :as => nil
 
   resources :passwords, :only => [:new, :create]
 
