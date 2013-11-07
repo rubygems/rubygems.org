@@ -1,4 +1,22 @@
 class Version < ActiveRecord::Base
+  attr_accessible \
+    :authors,
+    :built_at,
+    :description,
+    :full_name,
+    :indexed,
+    :latest,
+    :licenses,
+    :number,
+    :platform,
+    :position,
+    :prerelease,
+    :requirements,
+    :rubyforge_project,
+    :rubygem,
+    :size,
+    :summary
+
   belongs_to :rubygem
   has_many :dependencies, :order => 'rubygems.name ASC', :include => :rubygem, :dependent => :destroy
 

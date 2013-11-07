@@ -1,6 +1,8 @@
 class WebHook < ActiveRecord::Base
   GLOBAL_PATTERN = '*'
 
+  attr_accessible :user, :url, :failure_count, :rubygem
+
   belongs_to :user
   belongs_to :rubygem
 

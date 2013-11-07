@@ -1,6 +1,7 @@
 class Dependency < ActiveRecord::Base
   LIMIT = 250
 
+  attr_accessible :rubygem, :version, :gem_dependency
   belongs_to :rubygem
   belongs_to :version
 

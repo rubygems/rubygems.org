@@ -1,24 +1,14 @@
 ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
+require 'rr'
 
 class ActiveSupport::TestCase
   self.use_transactional_fixtures = true
   self.use_instantiated_fixtures  = false
-  ActionDispatch::TestRequest::DEFAULT_ENV['HTTPS'] = 'on'
-end
-
-class Test::Unit::TestCase
-  include Rack::Test::Methods
-  include RR::Adapters::TestUnit unless include?(RR::Adapters::TestUnit)
-  include WebMock::API
   include FactoryGirl::Syntax::Methods
-
-  def setup
-    RR.reset
-    $redis.flushdb
-    $fog.directories.create(:key => $rubygems_config[:s3_bucket], :public => true)
-  end
+  include Rack::Test::Methods
+  include WebMock::API
 
   def page
     Capybara::Node::Simple.new(@response.body)
@@ -31,12 +21,19 @@ class Test::Unit::TestCase
     assert_not_equal original, latest,
       "Expected #{object.class} #{attribute} to change but still #{latest}"
   end
+
+  def setup
+    RR.reset
+    $redis.flushdb
+    $fog.directories.create(:key => $rubygems_config[:s3_bucket], :public => true)
+  end
 end
 
 # why isn't clearance doing this for us!?
 class ActionController::TestCase
   setup do
     @request.env[:clearance] = Clearance::Session.new(@request.env)
+    @request.env["rack.url_scheme"] = "https"
   end
 end
 
