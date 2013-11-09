@@ -185,7 +185,7 @@ GEM
     rake (10.1.0)
     rdoc (3.12.2)
       json (~> 1.4)
-    redis (3.0.5)
+    redis (3.0.6)
     rest-client (1.6.7)
       mime-types (>= 1.16)
     rr (1.1.2)
