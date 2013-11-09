@@ -71,7 +71,7 @@ GEM
     delayed_job_active_record (0.4.4)
       activerecord (>= 2.1.0, < 4)
       delayed_job (~> 3.0)
-    diff-lcs (1.2.4)
+    diff-lcs (1.2.5)
     dynamic_form (1.1.4)
     email_validator (1.4.0)
       activemodel
