@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130910013917) do
+ActiveRecord::Schema.define(:version => 20131110192552) do
 
   create_table "announcements", :force => true do |t|
     t.text     "body"
@@ -149,6 +149,7 @@ ActiveRecord::Schema.define(:version => 20130910013917) do
     t.integer  "size"
     t.string   "licenses"
     t.text     "requirements"
+    t.string   "ruby_version"
   end
 
   add_index "versions", ["built_at"], :name => "index_versions_on_built_at"
