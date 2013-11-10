@@ -164,6 +164,7 @@ class Version < ActiveRecord::Base
       :licenses    => spec.licenses,
       :requirements    => spec.requirements,
       :built_at    => spec.date,
+      :ruby_version => spec.required_ruby_version.to_s,
       :indexed     => true
     )
   end
