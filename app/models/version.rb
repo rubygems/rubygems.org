@@ -158,14 +158,14 @@ class Version < ActiveRecord::Base
 
   def update_attributes_from_gem_specification!(spec)
     update_attributes!(
-      :authors     => spec.authors,
-      :description => spec.description,
-      :summary     => spec.summary,
-      :licenses    => spec.licenses,
-      :requirements    => spec.requirements,
-      :built_at    => spec.date,
+      :authors      => spec.authors,
+      :description  => spec.description,
+      :summary      => spec.summary,
+      :licenses     => spec.licenses,
+      :requirements => spec.requirements,
+      :built_at     => spec.date,
       :ruby_version => spec.required_ruby_version.to_s,
-      :indexed     => true
+      :indexed      => true
     )
   end
 
@@ -205,6 +205,7 @@ class Version < ActiveRecord::Base
       'number'          => number,
       'summary'         => summary,
       'platform'        => platform,
+      'ruby_version'    => ruby_version,
       'prerelease'      => prerelease,
       'licenses'        => licenses,
       'requirements'    => requirements
