@@ -111,7 +111,7 @@ GEM
       thor (>= 0.14, < 2.0)
     json (1.8.1)
     kgio (2.8.1)
-    launchy (2.3.0)
+    launchy (2.4.0)
       addressable (~> 2.3)
     librato-metrics (1.2.0)
       aggregate (~> 0.2.2)
