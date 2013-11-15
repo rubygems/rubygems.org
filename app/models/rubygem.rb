@@ -225,7 +225,7 @@ class Rubygem < ActiveRecord::Base
     numbers = self.reload.versions.sort.reverse.map(&:number).uniq
 
     self.versions.each do |version|
-      Version.update_all({:position => numbers.index(version.number)}, {:id => version.id})
+      Version.where(id: version.id).update_all(position: numbers.index(version.number))
     end
 
     self.versions.update_all(:latest => false)
@@ -234,7 +234,7 @@ class Rubygem < ActiveRecord::Base
       platforms[version.platform] << version
       platforms
     end.each_value do |platforms|
-      Version.update_all({:latest => true}, {:id => platforms.sort.last.id})
+      Version.where(id: platforms.sort.last.id).update_all(latest: true)
     end
   end
 
