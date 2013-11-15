@@ -18,7 +18,7 @@ class Rubygem < ActiveRecord::Base
   before_destroy :mark_unresolved
 
   def self.with_versions
-    where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)")
+    where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)").references(:versions)
   end
 
   def self.with_one_version
@@ -44,6 +44,7 @@ class Rubygem < ActiveRecord::Base
 
     where(conditions, {:query => "%#{query.strip}%"}).
       includes(:versions).
+      references(:versions).
       by_downloads
   end
 
