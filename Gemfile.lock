@@ -216,6 +216,9 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.38)
+    unf (0.1.3)
+      unf_ext
+    unf_ext (0.0.6)
     unicorn (4.6.3)
       kgio (~> 2.6)
       rack
@@ -280,6 +283,7 @@ DEPENDENCIES
   shoulda
   sinatra
   timecop
+  unf
   unicorn
   validates_formatting_of
   webmock
