@@ -5,4 +5,5 @@ Gemcutter::Application.configure do
   config.action_controller.perform_caching             = false
   config.active_support.deprecation = :log
   config.action_mailer.raise_delivery_errors = false
+  config.eager_load = false
 end

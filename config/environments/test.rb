@@ -7,6 +7,7 @@ Gemcutter::Application.configure do
   config.action_controller.allow_forgery_protection = false
   config.active_support.deprecation = :stderr
   config.action_mailer.delivery_method = :test
+  config.eager_load = false
 end
 
 ENV['S3_KEY']    = 'this:is:an:ex:parrot'

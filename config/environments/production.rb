@@ -7,6 +7,7 @@ Gemcutter::Application.configure do
   config.serve_static_assets = $rubygems_config[:asset_cacher]
   config.i18n.fallbacks = true
   config.log_level = :error
+  config.eager_load = true
 
   config.action_dispatch.session = {
     :domain => ".rubygems.org",
