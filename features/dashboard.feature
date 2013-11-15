@@ -25,15 +25,15 @@ Feature: Dashboard
     And the following ownerships exist:
       | user                    | rubygem        |
       | email: email@person.com | name: fireworm |
-    And I download the rubygem "fireworm" version "1.0.0" 1001 times
-    And I download the rubygem "sandworm" version "2.0.0" 1008 times
+    And I download the rubygem "fireworm" version "1.0.0" 1 time
+    And I download the rubygem "sandworm" version "2.0.0" 2 times
     When I sign in as "email@person.com"
     And I go to the dashboard
     And I should see "ffi"
     And I should see "java"
     And I should see "x86-mswin32"
-    And I should see "1,001 downloads"
-    And I should see "1,008 downloads"
+    And I should see "1 download"
+    And I should see "2 downloads"
 
   @wip
   Scenario: Yanked gem is hidden from listing
