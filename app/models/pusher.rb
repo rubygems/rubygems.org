@@ -33,12 +33,8 @@ class Pusher
   end
 
   def pull_spec
-    Gem::Package.open body, "r", nil do |pkg|
-      @spec = pkg.metadata
-      return true
-    end
-
-    false
+    @spec = Gem::Package.new(body).spec
+    true
   rescue Psych::WhitelistException => e
     Rails.logger.info "Attempted YAML metadata exploit: #{e}"
     notify("RubyGems.org cannot process this gem.\nThe metadata is invalid.\n#{e}", 422)

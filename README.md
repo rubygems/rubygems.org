@@ -25,6 +25,61 @@ The Ruby community's gem host.
 [code climate]: https://codeclimate.com/github/rubygems/rubygems.org
 [trello board]: https://trello.com/board/rubygems-org/513f9634a7ed906115000755
 
+## TUF
+
+The Update Framework (TUF) is used on top of the Rubygems file structure to
+provide defence against a number of different attacks.
+
+### Development
+
+Bootstrap a TUF environment with default keys.
+
+    export PATH=script/tuf:$PATH
+    tuf-dev-bootstrap config/keys config/tuf
+
+After running the server and `rake jobs:work`, upload a new gem:
+
+    RUBYGEMS_HOST=http://localhost:3000 gem push yourgem-0.0.1.gem
+
+That gem can now be fetched with TUF:
+
+    script/fetch-me-a-gem-with-tuf yourgem
+
+### Production
+
+Production requires more setup because offline keys need to be distributed to
+maintainers, who then need to sign for the initial metadata files.
+
+    # Setting up an initial repository, with offline keys for xavier and tony.
+    export PATH=script/tuf:$PATH
+    export KEYDIR=config/keys
+    export TUFDIR=config/tuf
+    mkdir -p $KEYDIR
+    mkdir -p $TUFDIR
+
+    tuf-generate-key $KEYDIR online # $KEYDIR/online-*.pem
+    tuf-generate-key $KEYDIR xavier # $KEYDIR/xavier-*.pem
+    tuf-generate-key $KEYDIR tony   # $KEYDIR/tony-*.pem
+
+    # Generate initial set of offline documents that need to be # signed.
+    # Need to know all the public keys that will be used to sign documents in
+    # advance. Adding new ones will require re-signing by all keys.
+    tuf-generate-offline-files $TUFDIR \
+      --offline $KEYDIR/xavier-public.pem \
+      --offline $KEYDIR/tony-public.pem \
+      --online $KEYDIR/online-public.pem
+
+    # Each individual signs for the offline files using their private key.
+    # Public key is also required as an identifier.
+    tuf-sign-files $KEYDIR/xavier-{private,public}.pem $TUFDIR/*.txt
+    tuf-sign-files $KEYDIR/tony-{private,public}.pem $TUFDIR/*.txt
+
+    # Publish an empty TUF repository using the already signed offline files,
+    # and an online key to sign new files that need to be generated..
+    tuf-bootstrap $KEYDIR/online-{private,public}.pem $TUFDIR
+
+    rm $TUFDIR/*.txt
+
 ## Contributions
 
 Please see the wiki for the latest [contribution guidelines][].

@@ -1,0 +1,112 @@
+#!/usr/bin/env ruby
+
+# TODO: Remove this before merging to master, after rubygems changes have
+# shipped.
+$LOAD_PATH.unshift(File.expand_path('../../../rubygems/lib', __FILE__))
+
+begin
+  require 'openssl'
+  require 'rubygems/tuf'
+rescue LoadError
+  $stderr.puts <<-EOS
+Your version of rubygems is too old, it does not include rubygems/tuf which
+is required for secure operation.
+  EOS
+  exit 1
+end
+
+$LOAD_PATH.unshift 'app/models'
+
+require 'tuf/repository'
+
+require 'pp'
+require 'open-uri'
+require 'json'
+require 'digest/md5'
+require 'digest/sha2'
+require 'zlib'
+
+$host = 'http://localhost:3000'
+$cache_dir = '/tmp'
+
+# Proof-of-concept implementation of remote file fetching with TUF.
+def main
+  last_good_root = from_file($cache_dir + '/root.txt') ||
+                   from_file('config/root.txt') ||
+                   raise("Can't find root.txt")
+
+  repository = Tuf::Repository.new(
+    root:   JSON.parse(last_good_root),
+    bucket: FileCachingBucket.new(HttpBucket.new($host))
+  )
+
+  gem_name = ARGV.shift
+
+  specs = repository.target('latest_specs.4.8.gz')
+  raise "could not find latest_specs.4.8.gz" unless specs
+  specs = unmarshal_gz specs
+  gem = specs.detect {|x| x[0] == gem_name } || raise("Can't find gem #{gem}")
+
+  gem_with_version = "#{gem[0]}-#{gem[1]}"
+  gem_path         = "gems/#{gem_with_version}.gem"
+  gemspec_path     = "quick/Marshal.4.8/#{gem_with_version}.gemspec.rz"
+
+  repository.target(gemspec_path)
+  repository.target(gem_path)
+
+  puts "Downloaded #{gem_path} and #{gemspec_path}"
+end
+
+def from_file(path)
+  if File.exists?(path)
+    File.read(path)
+  end
+end
+
+def unmarshal_gz(content)
+  # ....
+  Marshal.load(Zlib::GzipReader.new(StringIO.new(content.body)).read)
+end
+
+class HttpBucket
+  def initialize(host)
+  end
+
+  def get(path, opts = {})
+    open($host + '/' + path).read
+  end
+
+  def create(*)
+    raise "Not supported, this is a read-only bucket."
+  end
+end
+
+class FileCachingBucket
+  def initialize(bucket, dir = "/tmp/tuf-cache/")
+    @bucket = bucket
+    FileUtils.mkdir_p(dir)
+    @dir = dir
+  end
+
+  def get(path, opts = {})
+    cache_key = opts.fetch(:cache_key, path)
+    full_path = dir + cache_key
+
+    if ::File.exists?(full_path) && opts[:cache] != false
+      puts "cache hit: #{cache_key}"
+      ::File.read(full_path)
+    else
+      puts "cache miss: #{cache_key}"
+      bucket.get(path).tap do |content|
+        FileUtils.mkdir_p(::File.dirname(full_path))
+        ::File.write full_path, content
+      end
+    end
+  end
+
+  private
+
+  attr_reader :dir, :bucket
+end
+
+main

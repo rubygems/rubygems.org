@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -ex
+
+KEYDIR=$1
+TUFDIR=$2
+
+mkdir -p $KEYDIR
+mkdir -p $TUFDIR
+
+tuf-generate-key $KEYDIR online
+tuf-generate-key $KEYDIR offline
+
+tuf-generate-offline-files $TUFDIR \
+  --offline $KEYDIR/offline-public.pem \
+  --online  $KEYDIR/online-public.pem
+
+tuf-sign-files $KEYDIR/offline-{private,public}.pem $TUFDIR/*.txt
+
+tuf-bootstrap $KEYDIR/online-{private,public}.pem $TUFDIR
+
+rm $TUFDIR/*.txt

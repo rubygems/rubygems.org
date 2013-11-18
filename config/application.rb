@@ -1,3 +1,18 @@
+# TODO: Remove this before merging to master, after rubygems changes have
+# shipped.
+$LOAD_PATH.unshift(File.expand_path('../../../rubygems/lib', __FILE__))
+
+begin
+  require 'openssl'
+  require 'rubygems/tuf'
+rescue LoadError
+  $stderr.puts <<-EOS
+Your version of rubygems is too old, it does not include rubygems/tuf which
+is required for secure operation.
+  EOS
+  exit 1
+end
+
 require File.expand_path('../boot', __FILE__)
 
 require 'rails'

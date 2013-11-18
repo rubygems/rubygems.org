@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+require_relative '../../config/boot'
+require_relative '../../config/environment'
+
+require 'tuf/gemcutter'
+
+private_file = ARGV.shift
+public_file  = ARGV.shift
+to_sign      = ARGV
+
+key = Tuf::Key.build('rsa', File.read(private_file), File.read(public_file))
+tuf = Tuf::Gemcutter.new
+
+to_sign.each do |path|
+  tuf.sign_file(key, path)
+end
