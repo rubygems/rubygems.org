@@ -45,7 +45,7 @@ GEM
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
     choice (0.1.6)
-    clearance (1.0.1)
+    clearance (1.1.0)
       bcrypt-ruby
       email_validator (~> 1.4)
       rails (>= 3.1)
@@ -238,7 +238,7 @@ DEPENDENCIES
   bluepill
   builder
   capybara
-  clearance (~> 1.0.1)
+  clearance (~> 1.1)
   cucumber-rails
   daemons
   dalli
