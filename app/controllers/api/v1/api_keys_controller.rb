@@ -4,7 +4,7 @@ class Api::V1::ApiKeysController < Api::BaseController
 
   def show
     authenticate_or_request_with_http_basic do |username, password|
-      self.current_user = User.authenticate(username, password)
+      sign_in User.authenticate(username, password)
       if current_user
         respond_to do |format|
           format.any(:all) { render :text => current_user.api_key }
