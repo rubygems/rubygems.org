@@ -111,7 +111,7 @@ On the main repo, branches are used as follows:
 This page is for setting up Rubygems on a local development machine to
 contribute patches/fixes/awesome stuff. **If you need to host your own
 gem server, please consider checking out
-[Geminabox](http://github.com/cwninja/geminabox). It’s a lot simpler
+[Geminabox](http://github.com/geminabox/geminabox). It’s a lot simpler
 than Rubygems and may suit your organization’s needs better.**
 
 ### Setup
