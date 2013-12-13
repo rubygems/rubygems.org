@@ -17,7 +17,6 @@
     <% unless Rails.env.recovery? %>
       <h5 id="downloads">Downloads</h5>
       <div id="downloads_count">
-        <div><strong><%= number_with_delimiter(@user.today_downloads_count) %></strong> today</div>
         <div><strong><%= number_with_delimiter(@user.total_downloads_count) %></strong> all time</div>
       </div>
     <% end %>
@@ -56,12 +55,7 @@
 <div id="profile">
   <div class="profile-list">
     <ol>
-      <% if Rails.env.recovery? %>
-        <%= render :partial => 'rubygem', :collection => @rubygems + @extra_rubygems, :locals => {:graph => false}  %>
-      <% else %>
-        <%= render :partial => 'rubygem', :collection => @rubygems, :locals => {:graph => true}  %>
-        <%= render :partial => 'rubygem', :collection => @extra_rubygems, :locals => {:graph => false} %>
-      <% end %>
+      <%= render :partial => 'rubygem', :collection => @rubygems + @extra_rubygems, :locals => {:graph => false}  %>
     </ol>
   </div>
 </div>

@@ -6,7 +6,6 @@
   <% unless Rails.env.recovery? %>
     <a href="#" class="profile-downloads">
       <div><%= t('download_count', :count => content_tag(:span, number_with_delimiter(rubygem.downloads))).html_safe %></div>
-      <div><%= t('stats.show.daily_downloads', :count => content_tag(:span, number_with_delimiter(rubygem.downloads_today))).html_safe %></div>
     </a>
     <% if graph %>
       <div id="graph-<%= rubygem.id %>" class="profile-graph">
