@@ -2,7 +2,7 @@ body {
   line-height: 1;
   font-size: .625em;
   background: #340505 url(/images/top.png) repeat-x;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: sans-serif;
 }
 
 ol, ul {
@@ -1146,7 +1146,7 @@ label, .form_links {
   color: #453000;
   border-bottom: 2px solid #fff8e8;
   margin: 5px 0 0 0;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: sans-serif;
 }
 
 .text_field label,
