@@ -20,7 +20,7 @@ The Ruby community's gem host.
 [mailing list]: http://groups.google.com/group/rubygems-org
 [faq]: http://help.rubygems.org/kb/gemcutter/faq
 [irc]: http://webchat.freenode.net/?channels=gemcutter
-[travis]: http://travis-ci.org/#!/rubygems/rubygems.org
+[travis]: http://travis-ci.org/rubygems/rubygems.org
 [gemnasium]: https://gemnasium.com/rubygems/rubygems.org
 [code climate]: https://codeclimate.com/github/rubygems/rubygems.org
 [trello board]: https://trello.com/board/rubygems-org/513f9634a7ed906115000755
