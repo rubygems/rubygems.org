@@ -21,7 +21,6 @@ Feature: Profile Feature
     Given I download the rubygem "sandworm" version "2.0.0" 3 times
     When I am on "jon@example.com" profile page
     Then I should see "sandworm"
-    And I should see "3 today"
     And I should see "1 gem"
 
   Scenario: View another user's profile
@@ -45,19 +44,4 @@ Feature: Profile Feature
       | subdivisions    | 1         |
       | high_water      | 0         |
     When I am on "jon@example.com" profile page
-    Then I should see download graphs for the following rubygems:
-      | the_trees       |
-      | tom_sawyer      |
-      | red_barchetta   |
-      | yyz             |
-      | limelight       |
-      | the_camera_eye  |
-      | witch_hunt      |
-      | vital_signs     |
-      | spirit_of_radio |
-      | freewill        |
-    And I should not see download graphs for the following rubygems:
-      | subdivisions |
-      | high_water   |
-      | sandworm     |
     And I should see "13 gems"
