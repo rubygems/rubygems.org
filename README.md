@@ -27,9 +27,9 @@ The Ruby community's gem host.
 
 ## Contributions
 
-Please see the wiki for the latest [contribution guidelines][].
+Please follow our [contribution guidelines][].
 
-[contribution guidelines]: http://wiki.github.com/rubygems/rubygems.org/contribution-guidelines
+[contribution guidelines]: https://github.com/rubygems/rubygems.org/blob/master/CONTRIBUTING.md
 
 To get setup, please check out the [Development Setup][].
 
