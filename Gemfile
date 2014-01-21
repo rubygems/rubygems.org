@@ -37,6 +37,7 @@ gem 'yajl-ruby', :require => 'yajl'
 #gem 'heroku_asset_cacher', :git => "git@github.com/qrush/heroku_asset_cacher"
 
 group :development do
+  gem 'capistrano', '~> 2.0'
   gem 'rails-erd'
   gem 'pry'
 end
