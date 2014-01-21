@@ -1,6 +1,3 @@
-role :app, "b1.rubygems.org"
-role :web, "b1.rubygems.org"
-role :db,  "b1.rubygems.org", :primary => true
-
-set :branch,    "production"
-set :deploy_to, "/var/www/rubycentral/gemcutter.org/"
+server 'deploy@app02-aws.rubygems.org', :app, :db, :primary => true
+role :restart, 'app02-aws.rubygems.org', :no_release => true
+set :branch, 'master'
