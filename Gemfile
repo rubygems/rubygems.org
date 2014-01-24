@@ -4,7 +4,6 @@ source 'https://rubygems.org'
 gem 'rails', '~> 3.2.15'
 
 gem 'builder'
-gem 'bluepill'
 gem 'dynamic_form'
 gem 'excon'
 gem 'fog', '= 1.15.0'
