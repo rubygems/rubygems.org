@@ -147,7 +147,7 @@ GEM
       mini_portile (~> 0.5.0)
     paul_revere (1.2)
       rails (>= 3.0)
-    pg (0.17.0)
+    pg (0.17.1)
     polyglot (0.3.3)
     pry (0.9.12.4)
       coderay (~> 1.0)
