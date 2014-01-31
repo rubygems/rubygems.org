@@ -52,7 +52,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
     setup do
       @url = "http://example.org"
       @user = create(:user)
-      @request.env["Authorization"] = @user.api_key
+      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
     end
 
     context "with the gemcutter gem" do

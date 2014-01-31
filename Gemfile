@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 # ruby '1.9.3'
 
-gem 'rails', '~> 3.2.15'
+gem 'rails', '~> 4.0.1'
 
 gem 'builder'
 gem 'bluepill'
@@ -20,6 +20,7 @@ gem 'multi_json'
 gem 'paul_revere'
 gem 'pg'
 gem 'puma'
+gem 'protected_attributes'
 gem 'rack'
 gem 'rack-maintenance', :require => 'rack/maintenance'
 gem 'rdoc'
@@ -27,6 +28,7 @@ gem 'redis'
 gem 'rest-client', :require => 'rest_client'
 gem 'sinatra'
 gem 'unicorn'
+gem 'unf'
 gem 'validates_formatting_of'
 gem 'will_paginate'
 gem 'xml-simple'
@@ -38,7 +40,6 @@ gem 'yajl-ruby', :require => 'yajl'
 
 group :development do
   gem 'rails-erd'
-  gem 'pry'
 end
 
 group :test do
@@ -49,10 +50,14 @@ group :test do
   gem 'launchy'
   gem 'nokogiri'
   gem 'rack-test', :require => 'rack/test'
-  gem 'rr'
+  gem 'rr', '1.1.0.rc1' , :require => false
   gem 'shoulda', :require => false
   gem 'timecop'
   gem 'webmock'
+end
+
+group :development, :test do
+  gem 'pry'
 end
 
 # For some reason, including these gems in the maintenance environment enables

@@ -1,6 +1,8 @@
 class Rubygem < ActiveRecord::Base
   include Patterns
 
+  attr_accessible :name, :downloads, :slug
+
   has_many :owners, :through => :ownerships, :source => :user
   has_many :ownerships, :dependent => :destroy
   has_many :subscribers, :through => :subscriptions, :source => :user
@@ -16,7 +18,7 @@ class Rubygem < ActiveRecord::Base
   before_destroy :mark_unresolved
 
   def self.with_versions
-    where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)")
+    where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)").references(:versions)
   end
 
   def self.with_one_version
@@ -42,6 +44,7 @@ class Rubygem < ActiveRecord::Base
 
     where(conditions, {:query => "%#{query.strip}%"}).
       includes(:versions).
+      references(:versions).
       by_downloads
   end
 
@@ -223,7 +226,7 @@ class Rubygem < ActiveRecord::Base
     numbers = self.reload.versions.sort.reverse.map(&:number).uniq
 
     self.versions.each do |version|
-      Version.update_all({:position => numbers.index(version.number)}, {:id => version.id})
+      Version.where(id: version.id).update_all(position: numbers.index(version.number))
     end
 
     self.versions.update_all(:latest => false)
@@ -232,7 +235,7 @@ class Rubygem < ActiveRecord::Base
       platforms[version.platform] << version
       platforms
     end.each_value do |platforms|
-      Version.update_all({:latest => true}, {:id => platforms.sort.last.id})
+      Version.where(id: platforms.sort.last.id).update_all(latest: true)
     end
   end
 
@@ -246,7 +249,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def find_or_initialize_version_from_spec(spec)
-    version = self.versions.find_or_initialize_by_number_and_platform(spec.version.to_s, spec.original_platform.to_s)
+    version = self.versions.find_or_initialize_by(number: spec.version.to_s, platform: spec.original_platform.to_s)
     version.rubygem = self
     version
   end

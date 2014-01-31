@@ -25,6 +25,10 @@ en:
       migrating_link_text: 'migrating'
       my_subscriptions: 'My Subscriptions'
 
+  helpers:
+    label:
+      password_reset:
+        password: Password
   home:
     index:
       gems_header: "of %{gem_count} gems cut since July 2009"

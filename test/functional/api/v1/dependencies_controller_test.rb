@@ -7,7 +7,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
         create(:dependency, :version => version)
       end
       get :index, :gems => @versions.map(&:rubygem).map(&:name).join(',')
-      pending
+      skip
     end
 
     should respond_with :success
@@ -31,7 +31,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
     setup do
       gems = Array.new Dependency::LIMIT + 1, 'gem'
       get :index, :gems => gems.join(',')
-      pending
+      skip
     end
 
     should respond_with :request_entity_too_large

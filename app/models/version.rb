@@ -1,6 +1,24 @@
 class Version < ActiveRecord::Base
+  attr_accessible \
+    :authors,
+    :built_at,
+    :description,
+    :full_name,
+    :indexed,
+    :latest,
+    :licenses,
+    :number,
+    :platform,
+    :position,
+    :prerelease,
+    :requirements,
+    :rubyforge_project,
+    :rubygem,
+    :size,
+    :summary
+
   belongs_to :rubygem
-  has_many :dependencies, :order => 'rubygems.name ASC', :include => :rubygem, :dependent => :destroy
+  has_many :dependencies, -> { order('rubygems.name ASC').includes(:rubygem) }, :dependent => :destroy
 
   before_save      :update_prerelease
   after_validation :join_authors
@@ -290,7 +308,7 @@ class Version < ActiveRecord::Base
     self.full_name = "#{rubygem.name}-#{number}"
     self.full_name << "-#{platform}" if platformed?
 
-    Version.update_all({:full_name => full_name}, {:id => id})
+    Version.where(id: id).update_all(full_name: full_name)
 
     $redis.hmset(Version.info_key(full_name),
                  :name, rubygem.name,

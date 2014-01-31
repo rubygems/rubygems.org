@@ -1,5 +1,9 @@
 nl:
   update: Wijzig
+  helpers:
+    label:
+      password_reset:
+        password: Wachtwoord
   home:
     index:
       share:
