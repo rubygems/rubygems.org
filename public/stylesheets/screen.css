@@ -1108,16 +1108,6 @@ label, .form_links {
   width: 74%;
 }
 
-.form_links .rubyforge_migrate {
-  font-size: 12px;
-  color: #5e543e;
-  display: inline-block;
-}
-
-.form_links .rubyforge_migrate a {
-  margin: 0;
-}
-
 .form_links a {
   margin-left: 20px;
 }
