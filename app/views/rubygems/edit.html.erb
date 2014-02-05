@@ -5,23 +5,23 @@
 <%= form_for @rubygem.linkset, :url => rubygem_url(@rubygem), :method => :put do |form| %>
   <div class="url_field">
     <%= form.label :code %>
-    <%= form.text_field :code, :size => 25 %>
+    <%= form.text_field :code %>
   </div>
   <div class="url_field">
     <%= form.label :docs %>
-    <%= form.text_field :docs, :size => 25 %>
+    <%= form.text_field :docs %>
   </div>
   <div class="url_field">
     <%= form.label :wiki %>
-    <%= form.text_field :wiki, :size => 25 %>
+    <%= form.text_field :wiki %>
   </div>
   <div class="url_field">
     <%= form.label :mail %>
-    <%= form.text_field :mail, :size => 25 %>
+    <%= form.text_field :mail %>
   </div>
   <div class="url_field">
     <%= form.label :bugs %>
-    <%= form.text_field :bugs, :size => 25 %>
+    <%= form.text_field :bugs %>
   </div>
   <%= form.submit t('update'), :data => {:disable_with => t('form_disable_with')} %>
 <% end %>

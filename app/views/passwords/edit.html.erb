@@ -6,7 +6,7 @@
   <%= error_messages_for :user %>
   <div class="password_field">
     <%= form.label :password %>
-    <%= form.password_field :password, :size => 25 %>
+    <%= form.password_field :password %>
   </div>
   <div class="form_bottom">
     <%= form.submit t('.submit'), :data => {:disable_with => t('form_disable_with')} %>
