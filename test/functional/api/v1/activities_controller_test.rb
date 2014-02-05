@@ -15,6 +15,8 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
     assert_equal @rubygem_1.attributes['name'], gems[0]['name']
     assert_equal @rubygem_2.attributes['name'], gems[1]['name']
     assert_equal @rubygem_3.attributes['name'], gems[2]['name']
+    assert gems[0]['prerelease'], "JSON for the first gem should have contained prerelease"
+    assert gems[0]['built_at'], "JSON for the first gem should have contained built_at"
   end
 
   context "No signed in-user" do
@@ -53,8 +55,8 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
     context "On GET to just_updated" do
       setup do
         @rubygem_1 = create(:rubygem)
-        @version_1 = create(:version, :rubygem => @rubygem_1)
-        @version_2 = create(:version, :rubygem => @rubygem_1)
+        @version_1 = create(:version, :rubygem => @rubygem_1, :prerelease => true, :built_at => Time.now)
+        @version_2 = create(:version, :rubygem => @rubygem_1, :prerelease => true, :built_at => Time.now)
 
         @rubygem_2 = create(:rubygem)
         @version_3 = create(:version, :rubygem => @rubygem_2)
@@ -63,6 +65,11 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
         @version_4 = create(:version, :rubygem => @rubygem_3)
 
         stub(Version).just_updated(50){ [@version_2, @version_3, @version_4] }
+      end
+
+      should "return a 200 status" do
+        get :just_updated, :format => :json
+        assert_equal 200, @response.status
       end
 
       should "return correct JSON for just_updated gems" do
@@ -81,6 +88,5 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
         should_return_just_updated_gems(gems)
       end
     end
-
   end
 end

@@ -7,8 +7,9 @@ class Api::V1::ActivitiesController < Api::BaseController
   end
 
   def just_updated
-    @rubygems = Version.just_updated(50).map(&:rubygem)
-    respond_with(@rubygems, :yamlish => true)
+    updated_gems = versions_to_gem_hash(Version.just_updated(50))
+    respond_with(updated_gems, :yamlish => true)
   end
+
 
 end

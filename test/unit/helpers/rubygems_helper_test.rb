@@ -97,6 +97,27 @@ class RubygemsHelperTest < ActionView::TestCase
     end
   end
 
+  context "#versions_to_gem_hash" do
+    setup do
+      @rubygem_1 = create(:rubygem)
+      @version_1 = create(:version, :rubygem => @rubygem_1, :number => "1.0RC1", :built_at => Time.now)
+      @rubygem_2 = create(:rubygem)
+      @version_2 = create(:version, :rubygem => @rubygem_2)
+      stub(Version).just_updated(50) { [@version_1, @version_2] }
+
+      @gem_hashes = versions_to_gem_hash(Version.just_updated(50))
+    end
+    
+    should "return a Hash per Gem" do
+      assert_equal 2, @gem_hashes.count
+    end
+    
+    should "propagate the prerelease flag for the Gem Version" do
+      assert @gem_hashes[0][:prerelease], "prerelease came back with a value of '#{@gem_hashes.first[:prerelease]}'"
+      refute @gem_hashes[1][:prerelease]
+    end
+  end
+
   context "profiles" do
     setup do
       fake_request = stub
