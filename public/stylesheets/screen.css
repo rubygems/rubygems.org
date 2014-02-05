@@ -1731,3 +1731,7 @@ h5#downloads {
   font-weight: bold;
   padding-left: 24px;
 }
+
+form .text_field input, form .password_field input {
+  width: 669px;
+}
