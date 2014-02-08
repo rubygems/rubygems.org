@@ -5,11 +5,11 @@
 <%= form_for :session, :url => session_path do |form| %>
   <div class="text_field">
     <%= form.label :who, t('activerecord.attributes.session.who') %>
-    <%= form.text_field :who, :size => 25 %>
+    <%= form.text_field :who %>
   </div>
   <div class="password_field">
     <%= form.label :password, t('activerecord.attributes.session.password') %>
-    <%= form.password_field :password, :size => 25 %>
+    <%= form.password_field :password %>
   </div>
   <div class="form_bottom">
     <%= form.submit "Sign in", :data => {:disable_with => t('form_disable_with')} %>
