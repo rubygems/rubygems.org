@@ -158,7 +158,7 @@ GEM
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
-    rack-maintenance (1.0.0)
+    rack-maintenance (1.1.0)
       rack (>= 1.0)
     rack-protection (1.5.2)
       rack
