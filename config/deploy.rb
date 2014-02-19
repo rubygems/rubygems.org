@@ -3,6 +3,13 @@ set :default_stage, "staging"
 
 require 'capistrano/ext/multistage'
 require 'bundler/capistrano'
+require 'capistrano-notification'
+
+notification.irc do |irc|
+  irc.host    'chat.freenode.net'
+  irc.channel '#rubygems-aws'
+  irc.message { "#{local_user} deployed rubygems.org @ #{fetch(:current_revision)} to #{deploy_target} (#{roles[:app].servers.compact.map(&:host).join(', ')})" }
+end
 
 default_run_options[:pty] = true
 set :ssh_options, { :forward_agent => true }
