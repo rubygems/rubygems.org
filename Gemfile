@@ -37,6 +37,7 @@ gem 'yajl-ruby', :require => 'yajl'
 
 group :development do
   gem 'capistrano', '~> 2.0'
+  gem 'capistrano-notification'
   gem 'rails-erd'
   gem 'pry'
 end
