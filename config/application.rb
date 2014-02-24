@@ -14,9 +14,22 @@ Bundler.require(:default, Rails.env) if defined?(Bundler)
 $rubygems_config = YAML.load_file("config/rubygems.yml")[Rails.env].symbolize_keys
 HOST             = $rubygems_config[:host]
 
-RUBYGEMS_VERSION = "2.2.2"
-
 module Gemcutter
+
+  def self.current_rubygems_release
+    @current_rubygems_release ||= begin
+      if g = Rubygem.find_by_name("rubygems-update")
+        if v = g.versions.release.indexed.by_created_at.first
+          v.number
+        else
+          "0.0.0"
+        end
+      else
+        "0.0.0"
+      end
+    end
+  end
+
   class Application < Rails::Application
     config.time_zone = "UTC"
     config.encoding  = "utf-8"
