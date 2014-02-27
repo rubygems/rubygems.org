@@ -1,4 +1,4 @@
-raise "No staging server setup yet!"
+warn "No staging server setup yet!"
 # server ".us-west-2.compute.amazonaws.com", :app, :db, :primary => true
 # set :branch,    "staging"
 
