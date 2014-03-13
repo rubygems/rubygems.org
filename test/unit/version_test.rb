@@ -175,12 +175,20 @@ class VersionTest < ActiveSupport::TestCase
       new_version = Version.find(@version.id)
       assert_equal new_version.ruby_version, @ruby_version
     end
+  end
+
+  context "without a ruby version" do
+    setup do
+      @ruby_version = ">= 1.9.3"
+      @version = create(:version)
+    end
+    subject { @version }
 
     should "not have a ruby version" do
       @version.ruby_version = nil
       @version.save!
       nil_version = Version.find(@version.id)
-      assert_equal nil_version.ruby_version, nil
+      assert_nil nil_version.ruby_version
     end
   end
 
