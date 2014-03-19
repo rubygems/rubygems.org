@@ -11,7 +11,7 @@ class VersionTest < ActiveSupport::TestCase
 
     should "only have relevant API fields" do
       json = @version.as_json
-      assert_equal %w[number built_at summary description authors platform prerelease downloads_count licenses requirements].map(&:to_s).sort, json.keys.sort
+      assert_equal %w[number built_at summary description authors platform ruby_version prerelease downloads_count licenses requirements].map(&:to_s).sort, json.keys.sort
       assert_equal @version.authors, json["authors"]
       assert_equal @version.built_at, json["built_at"]
       assert_equal @version.description, json["description"]
@@ -19,6 +19,7 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.number, json["number"]
       assert_equal @version.platform, json["platform"]
       assert_equal @version.prerelease, json["prerelease"]
+      assert_equal @version.ruby_version, json["ruby_version"]
       assert_equal @version.summary, json["summary"]
       assert_equal @version.licenses, json["licenses"]
       assert_equal @version.requirements, json["requirements"]
@@ -32,7 +33,7 @@ class VersionTest < ActiveSupport::TestCase
 
     should "only have relevant API fields" do
       xml = Nokogiri.parse(@version.to_xml)
-      assert_equal %w[number built-at summary description authors platform prerelease downloads-count licenses requirements].map(&:to_s).sort, xml.root.children.map{|a| a.name}.reject{|t| t == "text"}.sort
+      assert_equal %w[number built-at summary description authors platform ruby-version prerelease downloads-count licenses requirements].map(&:to_s).sort, xml.root.children.map{|a| a.name}.reject{|t| t == "text"}.sort
       assert_equal @version.authors, xml.at_css("authors").content
       assert_equal @version.built_at.to_i, xml.at_css("built-at").content.to_time.to_i
       assert_equal @version.description, xml.at_css("description").content
@@ -40,6 +41,7 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.number, xml.at_css("number").content
       assert_equal @version.platform, xml.at_css("platform").content
       assert_equal @version.prerelease.to_s, xml.at_css("prerelease").content
+      assert_equal @version.ruby_version, xml.at_css("ruby-version").content
       assert_equal @version.summary.to_s, xml.at_css("summary").content
       assert_equal @version.licenses, xml.at_css("licenses").content
       assert_equal @version.requirements, xml.at_css("requirements").content
@@ -157,6 +159,36 @@ class VersionTest < ActiveSupport::TestCase
       assert @first_dependency_by_alpha.name, @version.dependencies.first.name
       assert @second_dependency_by_alpha.name, @version.dependencies[1].name
       assert @third_dependency_by_alpha.name, @version.dependencies.last.name
+    end
+  end
+
+  context "with a ruby version" do
+    setup do
+      @ruby_version = ">= 1.9.3"
+      @version = create(:version)
+    end
+    subject { @version }
+
+    should "have a ruby version" do
+      @version.ruby_version = @ruby_version
+      @version.save!
+      new_version = Version.find(@version.id)
+      assert_equal new_version.ruby_version, @ruby_version
+    end
+  end
+
+  context "without a ruby version" do
+    setup do
+      @ruby_version = ">= 1.9.3"
+      @version = create(:version)
+    end
+    subject { @version }
+
+    should "not have a ruby version" do
+      @version.ruby_version = nil
+      @version.save!
+      nil_version = Version.find(@version.id)
+      assert_nil nil_version.ruby_version
     end
   end
 
