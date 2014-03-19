@@ -80,6 +80,7 @@ FactoryGirl.define do
     indexed true
     number
     platform "ruby"
+    ruby_version ">= 2.0.0"
     licenses "MIT"
     requirements "Opencv"
     rubygem

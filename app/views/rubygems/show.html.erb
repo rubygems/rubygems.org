@@ -105,6 +105,7 @@
     <% end %>
 
       <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.runtime } %>
+      <%= render :partial => "rubygems/ruby_version", :locals => { :ruby_version => @latest_version.ruby_version } %>
       <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.development } %>
 
       <% if @latest_version.requirements.present? %>
