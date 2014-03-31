@@ -10,9 +10,9 @@ class StatsController < ApplicationController
   end
 
   def show
-    if params[:version_id]
-      @subtitle        = I18n.t('stats.show.for', :for => params[:version_id])
-      @version         = Version.find_from_slug!(@rubygem.id, params[:version_id])
+    if params_version_id
+      @subtitle        = I18n.t('stats.show.for', :for => params_version_id)
+      @version         = Version.find_from_slug!(@rubygem.id, params_version_id)
       @versions        = [@version]
       @downloads_today = Download.today(@version)
       @rank            = Download.rank(@version)
@@ -32,5 +32,9 @@ class StatsController < ApplicationController
 
   def ensure_hosted
     render :file => 'public/404', :status => :not_found if !@rubygem.hosted?
+  end
+  
+  def params_version_id
+    params.permit(:version_id)[:version_id]
   end
 end
