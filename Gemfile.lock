@@ -142,8 +142,6 @@ GEM
       rails (>= 3.0)
     pg (0.17.0)
     polyglot (0.3.3)
-    protected_attributes (1.0.5)
-      activemodel (>= 4.0.1, < 5.0)
     pry (0.9.12.2)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -268,7 +266,6 @@ DEPENDENCIES
   nokogiri
   paul_revere
   pg
-  protected_attributes
   pry
   puma
   rack

@@ -1,6 +1,4 @@
 class Ownership < ActiveRecord::Base
-  attr_accessible :user
-
   belongs_to :rubygem
   belongs_to :user
 
