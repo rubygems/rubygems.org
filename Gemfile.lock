@@ -288,7 +288,7 @@ DEPENDENCIES
   rack
   rack-maintenance
   rack-test
-  rails (~> 4.0.1)
+  rails (~> 4.0.4)
   rails-erd
   rdoc
   redis
