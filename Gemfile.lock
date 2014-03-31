@@ -252,7 +252,7 @@ DEPENDENCIES
   capistrano (~> 2.0)
   capistrano-notification
   capybara
-  clearance (~> 1.1)
+  clearance (~> 1.1.0)
   cucumber-rails
   daemons
   dalli
