@@ -6,6 +6,8 @@ before_script:
 git:
   strategy: tarball
 language: ruby
+services:
+  - redis-server
 rvm:
   - 1.9.3
 script: bundle exec rake default
