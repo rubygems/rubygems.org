@@ -36,7 +36,7 @@
         var id   = $(this).attr("id"),
             r    = Raphael(id),
             fin  = function () {
-              var currentDate = dates[Math.floor(this.bar.x / 22 - 1)]
+              var currentDate = dates[Math.floor(this.bar.x / 22 - 1)];
               this.flag = r.g.popup(this.bar.x, this.bar.y, currentDate + ": " + this.bar.value || "0").insertBefore(this);
             },
             fout = function () {
