@@ -4,7 +4,7 @@ WebMock.disable_net_connect!
 Hostess.local = true
 Capybara.app_host = "https://gemcutter.local"
 
-TEST_DIR = File.join('/', 'tmp', 'gemcutter')
+TEST_DIR = Rails.root.join('tmp', 'gemcutter')
 
 World(FactoryGirl::Syntax::Methods)
 
@@ -16,6 +16,7 @@ Before do
 end
 
 After do
+  Dir.chdir(Rails.root)
   FileUtils.rm_rf(TEST_DIR)
   $redis.flushdb
 end

@@ -7,8 +7,8 @@ end
 
 When /^I push the fixture gem "([^\"]*)" with my API key$/ do |name|
   api_key_header
-  path = Rails.root.join('test', 'gems', name)
-  page.driver.post api_v1_rubygems_path, File.read(path), {"CONTENT_TYPE" => "application/octet-stream"}
+  fixture_gem_path = Rails.root.join("test", "gems", name)
+  page.driver.post api_v1_rubygems_path, File.read(fixture_gem_path), {"CONTENT_TYPE" => "application/octet-stream"}
 end
 
 When /^I GET "(.*?)"$/ do |url|
@@ -42,8 +42,8 @@ end
 
 When /^I push the gem "([^\"]*)" with my API key$/ do |name|
   api_key_header
-  path = File.join(TEST_DIR, name)
-  page.driver.post api_v1_rubygems_path, File.read(path), {"CONTENT_TYPE" => "application/octet-stream"}
+  tmp_gem_path = "#{TEST_DIR}/#{name}"
+  page.driver.post api_v1_rubygems_path, File.read(tmp_gem_path), {"CONTENT_TYPE" => "application/octet-stream"}
 end
 
 When /^I push an invalid .gem file$/ do
