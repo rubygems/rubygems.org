@@ -111,11 +111,11 @@
       <% if @latest_version.requirements.present? %>
         <div class="dependencies requirements_dependencies">
           <h5><%= t '.requirements_header' %></h5>
-		  <ol>
-		    <% Array(@latest_version.requirements).each do |requirement| %>
-			  <li><%= requirement %></li>
-		    <% end %>
-	  	  </ol>
+          <ol>
+            <% Array(@latest_version.requirements).each do |requirement| %>
+              <li><%= requirement %></li>
+            <% end %>
+          </ol>
         </div>
       <% end %>
 

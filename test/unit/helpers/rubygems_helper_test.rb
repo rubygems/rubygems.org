@@ -75,28 +75,6 @@ class RubygemsHelperTest < ActionView::TestCase
     end
   end
 
-  context "options for individual stats" do
-    setup do
-      @rubygem = create(:rubygem)
-      @versions = (1..3).map { create(:version, :rubygem => @rubygem) }
-    end
-
-    should "show the overview link first" do
-      pending
-      overview = stats_options(@rubygem).first
-      assert_equal ["Overview", rubygem_stats_path(@rubygem)], overview
-    end
-
-    should "have all the links for the rubygem" do
-      pending
-      _, *links = stats_options(@rubygem)
-
-      @versions.sort.reverse.each_with_index do |version, index|
-        assert_equal [version.slug, rubygem_version_stats_path(@rubygem, version.slug)], links[index]
-      end
-    end
-  end
-
   context "profiles" do
     setup do
       fake_request = stub
