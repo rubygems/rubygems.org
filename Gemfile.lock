@@ -138,7 +138,7 @@ GEM
     multi_json (1.9.2)
     multi_test (0.1.1)
     multipart-post (2.0.0)
-    net-scp (1.1.2)
+    net-scp (1.2.0)
       net-ssh (>= 2.6.5)
     net-sftp (2.1.2)
       net-ssh (>= 2.6.5)
