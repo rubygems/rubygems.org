@@ -1725,3 +1725,18 @@ h5#downloads {
 form .text_field input, form .password_field input {
   width: 669px;
 }
+
+.profile-checkbox {
+  padding: 10px 0 20px 0;
+}
+
+.profile-checkbox label {
+  padding-top: 2px;
+  display: inline;
+  font-size: 24px;
+}
+
+.profile-checkbox input {
+  position: relative;
+  top: -4px;
+}
