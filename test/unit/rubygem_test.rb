@@ -526,8 +526,8 @@ class RubygemTest < ActiveSupport::TestCase
       assert ! Rubygem.search('apple crisp').include?(@apple_pie)
     end
 
-    should "sort results by number of downloads, descending" do
-      assert_equal [@apple_crisp, @apple_pie], Rubygem.search('apple')
+    should "sort results by pg_search_rank, descending" do
+      assert_equal [@apple_pie, @apple_crisp], Rubygem.search('apple')
     end
 
     should "find exact match by name on #name_is" do
