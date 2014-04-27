@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131110192552) do
+ActiveRecord::Schema.define(:version => 20140427100146) do
 
   create_table "announcements", :force => true do |t|
     t.text     "body"
@@ -85,7 +85,7 @@ ActiveRecord::Schema.define(:version => 20131110192552) do
     t.string   "slug"
   end
 
-  add_index "rubygems", ["name"], :name => "index_rubygems_on_name", :unique => true
+  add_index "rubygems", ["name"], :name => "index_rubygems_on_name"
 
   create_table "subscriptions", :force => true do |t|
     t.integer  "rubygem_id"
