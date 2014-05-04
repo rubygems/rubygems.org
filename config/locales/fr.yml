@@ -1,0 +1,291 @@
+fr:
+  title: "RubyGems.org"
+  subtitle: "votre collectivité gem hôte"
+  url: "http://rubygems.org"
+  help_url: "http://help.rubygems.org"
+  please_sign_up: "Accès Refusé. S'il vous plaît vous inscrire à un compte à http://rubygems.org"
+  please_confirm: "Accès Refusé. S'il vous plaît confirmer votre RubyGems.org compte."
+  feed_subscribed: "RubyGems.org | Souscrit Gems"
+  feed_latest: "RubyGems.org | Dernier Gems"
+  time_ago: "%{duration} Il ya"
+  download_count: "%{count} téléchargements"
+  form_disable_with: "S'il vous plaît attendre..."
+  update: "Mettre À Jour"
+  edit: "Modifier"
+  search_text: "Recherche gems"
+
+  dashboards:
+    show:
+      latest: "Dernières Mises À Jour"
+      latest_title: "Dernières Mises À Jour RSS Alimentation"
+      no_subscriptions: "Vous n'êtes pas abonné à tout gems encore. Visite d'un %{gem_link} de souscrire à une!"
+      gem_link_text: "gem page"
+      mine: "Ma Gems"
+      no_owned: "Vous n'avez pas poussé les gems encore. Peut-être consulter les guides sur %{creating_link} un gem ou %{migrating_link} un gem de RubyForge."
+      creating_link_text: "la création"
+      migrating_link_text: "la migration"
+      my_subscriptions: "Mes Abonnements"
+
+  home:
+    index:
+      gems_header: "de %{gem_count} gems couper depuis juillet 2009"
+      welcome_blurb: "Bienvenue dans votre communauté RubyGem hôte."
+      find_blurb: "Trouver vos gems plus facile, les publier plus rapidement, et amusez-vous."
+      learn:
+        header: "apprendre"
+        install_rubygems: "Installer RubyGems %{version}"
+        rubygems_subtitle: "Ruby's système d'emballage premier"
+        browse_docs: "Parcourir les Guides"
+        docs_subtitle: "Des explications détaillées, des didacticiels et des références"
+        gem_specification: "Gem Spécification"
+        spec_subtitle: "De votre gem's interface avec le monde"
+      share:
+        header: "part"
+        update: "Mise à jour de la dernière RubyGems version"
+        build: "Construire votre gem"
+        deploy: "Déployer votre gem immédiatement"
+      pitch:
+        content: "%{rubygems} est gem service d'hébergement de la communauté Ruby. %{publish} vos gemmes et les installer. %{api} d'interagir et de trouver plus d'informations sur les gems disponibles. %{contribute} et améliorer le site avec vos propres changements."
+        publish: "Publier instantanément"
+        api: "Utilisation de API"
+        contribute: "Devenir un contributeur"
+      leaderboards:
+        header: "classements"
+        new: "Nouveau Gems"
+        downloaded: "Aujourd'hui Plus Téléchargés"
+        no_downloaded: "Aucun téléchargement aujourd'hui"
+        updated: "Juste Mis À Jour"
+
+  layouts:
+    application:
+      header:
+        all_gems: "tout gems"
+        dashboard: "tableau de bord"
+        sign_in: "signer dans"
+        sign_up: "signer jusqu'à"
+        sign_out: "signer dehors"
+      footer:
+        about: "À Propos"
+        blog: "Blog"
+        guides: "Guides"
+        contribute: "Contribuer"
+        help: "Aider"
+        mobile: "Mobile"
+        status: "Statut"
+        uptime: "Uptime"
+        source_code: "Code"
+        discussion_forum: "Discuter"
+        statistics: "Statistiques"
+        supported_by: "Soutenu par"
+        hosted_by: "Hébergé par"
+        designed_by: "Conception par"
+        resolved_with: "Résolu avec"
+        optimized_by: "Optimisé par"
+        tracking_by: "Poursuite par"
+        monitored_by: "Suivi par"
+
+  pages:
+    about:
+      title: "À Propos"
+      subtitle: "ce que c'est"
+      purpose:
+        header: "Bienvenue à %{site}, gem d'hébergement service de la communauté Ruby. Le but de ce projet est triple:"
+        better_api: "Fournir une meilleure API pour traiter avec des gems"
+        transparent_pages: "Créer des pages de projets plus transparents et accessibles"
+        enable_community: "Permettre à la communauté pour améliorer et renforcer le site"
+      founding: "Le projet a été lancé en Avril 2009 par %{founder}, et a depuis grandi pour inclure les contributions de plus de %{contributors} et %{downloads}. Comme versez la Version 1.3.6 RubyGems, le site a été renommé %{title} de Gemcutter à solidifier le rôle central de la place de la communauté Ruby."
+      support: "Bien RubyGems n'est pas géré par une entreprise spécifique, beaucoup nous ont aidés jusqu'à présent. La conception actuelle du site a été parrainé par %{thoughtbot}. %{github} a également été précieux pour nous aider à collaborer et de partager facilement le code. Le site a commencé le %{heroku}, dont le grand service aidé prouver RubyGems comme une solution viable que toute la communauté peut compter sur."
+      technical: "Certaines réflexions sur les aspects techniques du site: C'est 100% Ruby. Le site principal est un %{rails} application, et la portion de RubyGem se fait à travers %{sinatra}. Gems sont hébergés sur %{s3}, et le délai entre la publication d'un nouvel gem et l'avoir prêt pour l'installation est minime. Pour plus d'informations, %{source_code}, qui est %{license} sur au GitHub."
+      cookies: "Important: Ce site utilise les cookies pour stocker des informations sur votre ordinateur."
+    create:
+      title: "créer"
+      notice: "Cette page a été déplacée à %{website}."
+
+  passwords:
+    edit:
+      title: "réinitialiser le mot de passe"
+      submit: "Enregistrer ce mot de passe"
+    new:
+      title: "changer votre mot de passe"
+      will_email_notice: "Nous vous enverrons un lien pour modifier votre mot de passe."
+      submit: "Réinitialiser le mot de passe"
+
+  profiles:
+    show:
+      downloads: "Téléchargements"
+      edit_profile: "Modifier Le Profil"
+      all_time: "Tous Les Temps"
+    edit:
+      title: "Modifier Le Profil"
+      change: "Changement"
+      update_button: "Mettre À Jour"
+      gittip_whats_this: "Qu'est-ce que c'est?"
+      language_settings:
+        title: "Paramètres de langue"
+        text: "S'il vous plaît choisir votre langue préférée dans la liste ci-dessous."
+        default: " (défaut)"
+        english: "Anglais"
+        dutch: "Néerlandais"
+        italian: "Italien"
+        french: "Français"
+        spanish: "Espagnol"
+      reset_password:
+        title: "Réinitialiser le mot de passe"
+        text: "Besoin d'un nouveau mot de passe? Pas de problème. %{link}"
+        link_text: "Demander un nouveau ici."
+      api_access:
+        title: "API Accès"
+        key_is: "Votre clé API est %{key}."
+        credentials: "Si vous souhaitez utiliser %{gem_commands_link} à partir de la ligne de commande, vous aurez besoin d'un %{gem_credentials_file} fichier, que vous pouvez générer avec la commande suivante:"
+        link_text: "gem commands"
+        reset: "Réinitialiser ma API clé"
+        confirm_reset: "Etes-vous sûr? Cela ne peut pas être annulée."
+
+  rubygems:
+    dependencies:
+      header: "%{title} Dépendances"
+    edit:
+      title: "de modifier gem liens"
+      subtitle: "pour %{gem}"
+      other_fields_notice: "Tous les autres champs ne peuvent être modifiés en appuyant sur une version mise à jour de votre gem."
+    index:
+      title: "tout gems"
+      subtitle: "en commençant par %{prefix}"
+    show:
+      not_hosted_notice: "Ce petit bijou n'est pas actuellement hébergé sur RubyGems."
+      install: "installer"
+      yanked_notice: "Cette gem a été arrachés, mais il est encore disponible en téléchargement pour les autres gems qui peuvent avoir en dépendait. Pour plus d'informations ou si vous avez besoin de l'enlever de façon permanente, %{more_info_link}."
+      yank_info_link_text: "s'il vous plaît cliquez ici"
+      stats_header: "Statistiques"
+      authors_header: "Auteurs"
+      downloads_for_this_version: "%{count} pour cette version"
+      owners_header: "Propriétaires"
+      links:
+        header: "Links"
+        home: "Page d'accueil"
+        code: "Source Code"
+        docs: "Documentation"
+        wiki: "Wiki"
+        mail: "Liste De Diffusion"
+        bugs: "Bug Tracker"
+      versions_header: "Versions"
+      bundler_header: "Gemfile"
+      show_all_versions: "Voir toutes les versions (%{count} total)"
+      licenses_header: "Licenses"
+      no_licenses: "N/A"
+      requirements_header: "Exigences"
+
+  searches:
+    show:
+      subtitle: "pour %{query}"
+      exact_match: "Exact aller bien ensemble"
+
+  will_paginate:
+    previous_label: "&#8592; Précédent"
+    next_label: "Suivant &#8594;"
+    page_gap: "&hellip;"
+    page_entries_info:
+      single_page:
+        zero: "Pas %{model} trouvé"
+        one: "Affichage de 1 %{model}"
+        other: "Affichez tous les %{count} %{model}"
+      single_page_html:
+        zero: "Pas %{model} trouvé"
+        one: "Affichage de <b>1</b> %{model}"
+        other: "Affichez <b>tous les&nbsp;%{count}</b> %{model}"
+      multi_page: "Liste %{model} %{from} - %{to} de %{count} au total"
+      multi_page_html: "Liste %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> de <b>%{count}</b> au total"
+
+  sessions:
+    new:
+      forgot_password: "Mot De Passe Oublié?"
+
+  stats:
+    index:
+      since: "depuis"
+      gem_count: "%{count} gems"
+      user_count: "%{count} utilisateurs"
+    show:
+      for: "statistiques pour %{for}"
+      overview: "statistiques vue d'ensemble"
+      total_downloads: "%{count} nombre de téléchargements"
+      daily_downloads: "%{count} téléchargements aujourd'hui"
+      current_rank: "grade actuel aujourd'hui"
+      highest_rank: "rang le plus élevé aujourd'hui"
+
+  users:
+    new:
+      rubyforge_banner: "Vous pouvez maintenant vous connecter avec votre %{link}"
+      or_rubyforge: "RubyForge Compte trop!"
+      have_account: "Vous avez déjà un compte?"
+
+  versions:
+    index:
+      title: "toutes les versions de %{name}"
+      versions_since: "%{count} versions depuis %{since}"
+      not_hosted_notice: "Cette gem n'est pas actuellement hébergé sur RubyGems."
+    version:
+      yanked: "arrachés"
+
+  activerecord:
+    attributes:
+      user:
+        avatar: "Avatar"
+        email: "Adresse e-mail"
+        hide_email: "cacher de profil"
+        handle: "Poignée"
+        password: "Mot De Passe"
+        gittip_username: "Gittip nom d'utilisateur"
+        language: "Langue"
+      linkset:
+        bugs: "Bug Tracker URL"
+        code: "Source Code URL"
+        docs: "Documentation URL"
+        mail: "Liste De Diffusion URL"
+        wiki: "Wiki URL"
+      session:
+        who: "Envoyer Ou Poignée"
+        password: "Mot De Passe"
+    errors:
+      messages:
+        record_invalid: "%{errors}"
+        accepted: "doit être accepté"
+        blank: "doit être rempli"
+        present: "doit être vide"
+        confirmation: "ne correspond pas %{attribute}"
+        empty: "doit être rempli"
+        equal_to: "doit être égal à %{count}"
+        even: "doit être pair"
+        exclusion: "n'est pas disponible"
+        greater_than: "doit être supérieur à %{count}"
+        greater_than_or_equal_to: "doit être supérieur ou égal à %{count}"
+        inclusion: "n'est pas inclus dans la liste"
+        invalid: "n'est pas valide"
+        less_than: "doit être inférieur à %{count}"
+        less_than_or_equal_to: "doit être inférieur ou égal à %{count}"
+        not_a_number: "n'est pas un nombre"
+        not_an_integer: "doit être un nombre entier"
+        odd: "doit être impair"
+        restrict_dependent_destroy:
+          one: "Vous ne pouvez pas supprimer l'enregistrement car une personne à charge %{record} existe"
+          many: "Vous ne pouvez pas supprimer l'enregistrement car dépendant %{record} existe"
+        taken: "n'est pas disponible"
+        too_long:
+          one: "est trop long (pas plus d'un caractère)"
+          other: "est trop long (pas plus de %{count} caractères)"
+        too_short:
+          one: "est trop court (au moins un caractère)"
+          other: "est trop court (au moins %{count} caractères)"
+        wrong_length:
+          one: "ne fait pas la bonne longueur (doit comporter un seul caractère)"
+          other: "ne fait pas la bonne longueur (doit comporter %{count} caractères)"
+        other_than: "doit être différent de %{count}"
+      template:
+        header:
+          one:  "%{count} erreur interdit ce %{model} d'être sauvé"
+          other: "%{count} erreurs interdit ce %{model} d'être sauvé"
+      models:
+        user:
+          attributes:
+            language:
+              invalid: "Traductions pour '%{value}' n'existent pas."
