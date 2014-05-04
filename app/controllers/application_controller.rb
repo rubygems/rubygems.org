@@ -7,26 +7,26 @@ class ApplicationController < ActionController::Base
   protect_from_forgery :only => [:create, :update, :destroy]
   ssl_required :if => :ssl_required?
 
-  before_filter :set_locale, :auto_login
-
-  def set_locale
-    I18n.locale = params[:locale] || I18n.default_locale
-  end
+  before_filter :auto_login, :set_locale
+  skip_before_filter :verify_authenticity_token
 
   def auto_login
     unless current_user
       if cookies[:auto_login]
-        # Sign them in using the unique `remember_token` saved
+        # Signs them in using the unique `remember_token` saved
         # to the `auto_login` cookie when they first logged in.
         sign_in(User.find_by_remember_token(cookies[:auto_login]))
       end
     end
   end
 
-  # Adding this keeps the user on the same locale, but currently breaks a lot of tests testing for specific urls.
-  # def default_url_options(options={})
-      # { :locale => I18n.locale }
-  # end
+  def set_locale
+    if current_user
+      I18n.locale = User.find(current_user).language
+    else
+      I18n.locale = I18n.default_locale
+    end
+  end
 
   protected
 

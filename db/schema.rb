@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131110192552) do
+ActiveRecord::Schema.define(:version => 20140419145132) do
 
   create_table "announcements", :force => true do |t|
     t.text     "body"
@@ -113,6 +113,7 @@ ActiveRecord::Schema.define(:version => 20131110192552) do
     t.string   "handle"
     t.string   "gittip_username"
     t.boolean  "hide_email"
+    t.string   "language",                          :default => "en",  :null => false
   end
 
   add_index "users", ["email"], :name => "index_users_on_email"

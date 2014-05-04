@@ -1,13 +1,23 @@
 <% @title = t('.title') %>
 
 <%= form_for current_user, :url => {:controller => 'profiles', :action => 'update'} do |form| %>
-  <%= form.error_messages %>
+  <div class="language_field" style="margin-bottom:30px;">
+    <%= form.label :language, t('.language_settings.title') %>
+    <p style="margin-bottom:10px;"><%= t('.language_settings.text') %></p>
+    <%= form.select :language, {
+      en: t('.language_settings.english') + t('.language_settings.default'),
+      nl: t('.language_settings.dutch'),
+      fr: t('.language_settings.french')
+    }.invert %>
+  </div>
 
   <div class="avatar_field">
-    <%= form.label :avatar %>
+    <%= link_to t('.change'), 'http://www.gravatar.com' %>
     <%= gravatar(60) %>
-    <%= link_to 'Change', 'http://www.gravatar.com' %>
   </div>
+
+  <div style="clear:both;"></div>
+  <%= form.error_messages %>
 
   <div class="text_field">
     <%= form.label :handle %>
@@ -15,23 +25,22 @@
   </div>
 
   <div class="text_field">
-    <%= form.label :email %>
+    <div class="email_top">
+      <%= form.label :email %>
+      <%= form.check_box :hide_email %>
+      <%= form.label :hide_email, :class => "hide_email" %>
+    </div>
     <%= form.email_field :email %>
   </div>
 
-  <div class="checkbox" style="padding-bottom: 10px;">
-    <%= form.label :hide_email %>
-    <%= form.check_box :hide_email %>
-  </div>
-
   <div class="text_field">
-    <%= form.label :gittip_username %>
-    <%= link_to "What's this?", "https://www.gittip.com/about/" %>
+    <%= form.label :gittip_username, :class => "gittip_label" %>
+    <a href="http://gittip.com/about" target="_blank" title="<%= t('.gittip_whats_this') %>"><div class="help_icon"></div></a>
     <%= form.text_field :gittip_username %>
   </div>
 
   <div class="submit_field">
-    <%= form.submit "Update", :data => {:disable_with => t('form_disable_with')} %>
+    <%= form.submit t(".update_button"), :data => {:disable_with => t('form_disable_with')} %>
   </div>
 
   <h3><%= t '.reset_password.title' %></h3>

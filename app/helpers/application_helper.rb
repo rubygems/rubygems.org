@@ -1,6 +1,6 @@
 module ApplicationHelper
   def page_title
-    combo = "#{t :title} | #{t :subtitle}"
+    combo = "#{t('title')} | #{t('subtitle')}"
     if @title
       "#{@title} | #{combo}"
     else
