@@ -12,12 +12,12 @@
   </div>
   <div id="downloads-ego">
     <% if @user == current_user %>
-      <%= link_to "Edit Profile", edit_profile_path, :id => "edit-profile" %>
+      <%= link_to t('.edit_profile'), edit_profile_path, :id => "edit-profile" %>
     <% end %>
     <% unless Rails.env.recovery? %>
-      <h5 id="downloads">Downloads</h5>
+      <h5 id="downloads"><%= t(".downloads") %></h5>
       <div id="downloads_count">
-        <div><strong><%= number_with_delimiter(@user.total_downloads_count) %></strong> all time</div>
+        <div><strong><%= number_with_delimiter(@user.total_downloads_count) %></strong> <%= t('.all_time') %></div>
       </div>
     <% end %>
   </div>

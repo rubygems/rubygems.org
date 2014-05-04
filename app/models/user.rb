@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   include Gravtastic
   is_gravtastic :default => "retro"
 
-  attr_accessible :bio, :email, :handle, :hide_email, :location, :password, :website, :gittip_username
+  attr_accessible :bio, :email, :handle, :hide_email, :location, :password, :website, :gittip_username, :language
 
   has_many :rubygems, :through => :ownerships
 
@@ -17,9 +17,22 @@ class User < ActiveRecord::Base
   before_validation :regenerate_token, :if => :email_changed?, :on => :update
   before_create :generate_api_key
 
+  validate :verify_language_translations
+
   validates_uniqueness_of :handle, :allow_nil => true
   validates_format_of :handle, :with => /\A[A-Za-z][A-Za-z_\-0-9]*\z/, :allow_nil => true
   validates_length_of :handle, :within => 2..40, :allow_nil => true
+
+  def verify_language_translations
+    lang_codes = Array.new
+    Dir["./config/locales/*.yml"].each do |locale|
+      lang_codes << File.basename(locale, ".yml")
+    end
+
+    unless lang_codes.include?(self.language)
+      errors.add(:language)
+    end
+  end
 
   def self.authenticate(who, password)
     if user = Rubyforger.transfer(who, password) || find_by_email(who.downcase) || find_by_handle(who)

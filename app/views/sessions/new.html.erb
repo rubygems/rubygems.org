@@ -11,7 +11,9 @@
     <%= form.label :password, t('activerecord.attributes.session.password') %>
     <%= form.password_field :password %>
   </div>
-  <div class="form_bottom">
+  <div class="form_bottom with_checkbox">
     <%= form.submit "Sign in", :data => {:disable_with => t('form_disable_with')} %>
+    <%= form.check_box :auto_login, {checked: true} %>
+    <%= form.label :auto_login, "Stay signed in?", :id => "session_auto_login" %>
   </div>
 <% end %>

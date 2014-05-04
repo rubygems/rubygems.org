@@ -56,7 +56,7 @@
           </div>
         </div>
         <%= form_tag search_url, :id => "main-search", :method => :get do %>
-          <%= text_field_tag :query, params[:query], :placeholder => "Search gems&hellip;".html_safe %>
+          <%= text_field_tag :query, params[:query], :placeholder => "#{t('search_text')}&hellip;".html_safe %>
           <%= submit_tag 'Search', :id => 'search_submit', :name => nil %>
         <% end %>
       </div>
@@ -108,28 +108,28 @@
             <div class="row">
 
               <li id="rubycentral" class="sponsor">
-                <span class="sponsor_text"><%= link_to 'Supported by', 'http://rubycentral.org', :title => 'Ruby Central' %></span>
+                <span class="sponsor_text"><%= link_to t('.footer.supported_by'), 'http://rubycentral.org', :title => 'Ruby Central' %></span>
                 <div class="sponsor_logo">
                   <%= link_to image_tag('sponsors/rubycentral.png', :alt => 'Ruby Central'), "http://rubycentral.org", :class => 'bottom' %>
                 </div>
               </li>
 
               <li id="bluebox" class="sponsor">
-                <span class="sponsor_text"><%= link_to 'Hosted by', 'http://bluebox.net', :title => 'Bluebox' %></span>
+                <span class="sponsor_text"><%= link_to t('.footer.hosted_by'), 'http://bluebox.net', :title => 'Bluebox' %></span>
                 <div class="sponsor_logo">
                   <%= link_to image_tag('sponsors/bluebox.png', :alt => 'Bluebox'), "http://bluebox.net", :class => 'bottom' %>
                 </div>
               </li>
 
               <li id="thoughtbot" class="sponsor">
-                <span class="sponsor_text"><%= link_to 'Designed by', 'http://thoughtbot.com', :title => 'Thoughtbot' %></span>
+                <span class="sponsor_text"><%= link_to t('.footer.designed_by'), 'http://thoughtbot.com', :title => 'Thoughtbot' %></span>
                 <div class="sponsor_logo">
                   <%= link_to image_tag('sponsors/thoughtbot.png', :alt => 'Thoughtbot'), "http://thoughtbot.com", :class => 'bottom' %>
                 </div>
               </li>
 
               <li id="dnsimple" class="sponsor">
-                <span class="sponsor_text"><%= link_to 'Resolved with', 'http://dnsimple.com', :title => 'dnsimple' %></span>
+                <span class="sponsor_text"><%= link_to t('.footer.resolved_with'), 'http://dnsimple.com', :title => 'dnsimple' %></span>
                 <div class="sponsor_logo">
                   <%= link_to image_tag('sponsors/dnsimple.png', :alt => 'dnsimple'), "http://dnsimple.com", :class => 'bottom' %>
                 </div>
@@ -140,21 +140,21 @@
             <div class="row">
 
               <li id="newrelic" class="sponsor">
-                <span class="sponsor_text"><%= link_to 'Optimized by', 'http://newrelic.com', :title => 'New Relic' %></span>
+                <span class="sponsor_text"><%= link_to t('.footer.optimized_by'), 'http://newrelic.com', :title => 'New Relic' %></span>
                 <div class="sponsor_logo">
                   <%= link_to image_tag('sponsors/newrelic.png', :alt => 'New Relic'), "http://newrelic.com", :class => 'bottom' %>
                 </div>
               </li>
 
               <li id="gauges" class="sponsor">
-                <span class="sponsor_text"><%= link_to 'Tracking by', 'http://gaug.es', :title => 'Gauges' %></span>
+                <span class="sponsor_text"><%= link_to t('.footer.tracking_by'), 'http://gaug.es', :title => 'Gauges' %></span>
                 <div class="sponsor_logo">
                   <%= link_to image_tag('sponsors/gauges.png', :alt => 'Gauges'), "http://gaug.es", :class => 'bottom' %>
                 </div>
               </li>
 
               <li id="stillalive" class="sponsor">
-                <span class="sponsor_text"><%= link_to 'Monitored by', 'http://stillalive.com', :title => 'StillAlive' %></span>
+                <span class="sponsor_text"><%= link_to t('.footer.monitored_by'), 'http://stillalive.com', :title => 'StillAlive' %></span>
                 <div class="sponsor_logo">
                   <%= link_to image_tag('sponsors/stillalive_hover.png', :alt => 'StillAlive'), "http://stillalive.com", :class => 'bottom' %>
                   <%= link_to image_tag('sponsors/stillalive.png', :alt => 'StillAlive'), "http://stillalive.com", :class => 'top' %>

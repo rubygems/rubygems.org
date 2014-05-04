@@ -1143,8 +1143,25 @@ label, .form_links {
 .text_area label,
 .password_field label,
 .avatar_field label,
+.language_field label,
 .url_field label {
   font-size: 24px;
+}
+
+.form_bottom.with_checkbox input[type="submit"] {
+  display: inline;
+}
+
+input[type="checkbox"]#session_auto_login {
+  margin: 0 0 0 20px;
+  cursor: pointer;
+}
+
+label#session_auto_login {
+  display: inline;
+  font-size: 14px;
+  padding: 5px 0 5px 4px;
+  cursor: pointer;
 }
 
 .edit_user {
@@ -1162,12 +1179,16 @@ label, .form_links {
   margin: 20px 0 10px 0;
 }
 
+.edit_user .language_field {
+  float:left;
+}
+
 .edit_user .avatar_field {
   height: 100px;
 }
 
 .edit_user .avatar_field * {
-  float: left;
+  float: right;
 }
 
 .edit_user .avatar_field label {
@@ -1224,6 +1245,46 @@ input[type='submit'] {
 input[type='submit']:hover {
   background-image: -webkit-gradient(linear,left top,left bottom,color-stop(1, #690900),color-stop(.5, #8f0e00),color-stop(.49, #a41200),color-stop(0, #f00));
   background-image: linear-gradient(bottom, #690900 0%, #8f0e00 49%,  #a41200 50%, #f00 100%);
+}
+
+.edit_user .email_top {
+  display: block;
+  float: left;
+  font-size: 12px;
+}
+
+.edit_user .email_top input {
+  background: none;
+  font-size: 12px;
+  padding: 0;
+  box-shadow: none;
+  border-radius: 0;
+  color: inherit;
+  border-bottom: 0px;
+  margin: -2px 0 0 8px;
+  display: inline;
+  width: auto;
+  vertical-align: text-top;
+  cursor: pointer;
+}
+
+.edit_user .email_top label, .edit_user label.gittip_label {
+  display: inline-block;
+}
+
+.edit_user .email_top label.hide_email {
+  font-size: 13px;
+  cursor: pointer;
+  line-height: 26px;
+  vertical-align:top;
+}
+
+.help_icon {
+  width:16px;
+  height:16px;
+  background:url(/images/help.png) no-repeat;
+  display:inline-block;
+  margin-left:4px;
 }
 
 /* Rails Flash, Forms, Etc */
