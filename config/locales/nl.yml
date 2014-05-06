@@ -51,7 +51,7 @@ nl:
   activerecord:
     errors:
       messages:
-        record_invalid: 
+        record_invalid:
     attributes:
       session:
         password: Wachtwoord
@@ -135,6 +135,7 @@ nl:
         better_api: Een betere API ter beschikking te stellen voor het beheren van gems.
         header: ! 'Welkom bij %{site}, dé hosting service voor de Ruby community. Het doel van dit poroject is drieledig:'
       technical: ! 'Een klein inkijkje in de technische aspecten van de site: Het is 100% Ruby. The main site is a %{rails}-applicatie en het uitserveren van de RubyGem wordt verzorgd door %{sinatra}. Gems worden gehost op %{s3} en de tijd tussen het publiceren van een nieuwe gem en het beschikbaar zijn voor installatie is minimaal. Voor meer informatie, %{source_code} op GitHub. De code is %{license}'
+      cookies: "Let op: Deze website maakt gebruik van cookies om informatie op te slaan op uw computer."
     create:
       title: aanmaken
       notice: Deze pagaina is verplaatst naar the nieuwe rubygems.org support site.

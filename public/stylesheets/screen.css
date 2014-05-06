@@ -1147,6 +1147,22 @@ label, .form_links {
   font-size: 24px;
 }
 
+.form_bottom.with_checkbox input[type="submit"] {
+  display: inline;
+}
+
+input[type="checkbox"]#session_auto_login {
+  margin: 0 0 0 20px;
+  cursor: pointer;
+}
+
+label#session_auto_login {
+  display: inline;
+  font-size: 14px;
+  padding: 5px 0 5px 4px;
+  cursor: pointer;
+}
+
 .edit_user {
   margin: 0 95px;
 }
