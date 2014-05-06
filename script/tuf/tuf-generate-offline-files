@@ -1,0 +1,46 @@
+#!/usr/bin/env ruby
+
+require_relative '../../config/boot'
+require_relative '../../config/environment'
+
+require 'optparse'
+
+require 'tuf/gemcutter'
+
+options = {
+  offline: [],
+  online:  []
+}
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: generate-offline-files OUTDIR [options]"
+
+  opts.on("--offline PATH", "Include the given offline public key") do |path|
+    options[:offline] << path
+  end
+
+  opts.on("--online PATH", "Include the given online public key") do |path|
+    options[:online] << path
+  end
+
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+end.parse!
+
+outdir = ARGV.shift
+
+to_rsa = lambda {|path| Tuf::Key.public('rsa', File.read(path)) }
+
+offline_keys = options[:offline].map(&to_rsa)
+online_keys  = options[:online].map(&to_rsa)
+
+tuf = Tuf::Gemcutter.new
+{
+  'root'    => tuf.generate_root(online_keys, offline_keys),
+  'targets' => tuf.generate_targets(online_keys, offline_keys),
+  'claimed' => tuf.generate_claimed
+}.each do |file, content|
+  File.write(outdir + "/#{file}.txt", Tuf::Serialize.canonical(content))
+end

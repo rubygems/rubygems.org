@@ -1,4 +1,10 @@
 namespace :gemcutter do
+  namespace :tuf do
+    task generate_metadata: :environment do
+      Indexer.new.perform
+    end
+  end
+
   namespace :index do
     desc "Update the index"
     task :update => :environment do

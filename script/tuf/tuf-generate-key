@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+require_relative '../../config/boot'
+require_relative '../../config/environment'
+
+require 'tuf/gemcutter'
+
+keydir = ARGV.shift
+name   = ARGV.shift
+
+tuf = Tuf::Gemcutter.new
+key = tuf.generate_key
+
+File.write "#{keydir}/#{name}-private.pem", key.private
+File.write "#{keydir}/#{name}-public.pem", key.public

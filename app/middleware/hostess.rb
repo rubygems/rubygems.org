@@ -12,7 +12,7 @@ class Hostess < Sinatra::Base
 
   def serve
     if self.class.local
-      send_file(Pusher.server_path(request.path_info))
+      send_file Pusher.server_path(request.path_info)
     else
       yield
     end
@@ -33,6 +33,9 @@ class Hostess < Sinatra::Base
   %w[/specs.4.8.gz
      /latest_specs.4.8.gz
      /prerelease_specs.4.8.gz
+     /specs.4.8.*.gz
+     /latest_specs.4.8.*.gz
+     /prerelease_specs.4.8.*.gz
   ].each do |index|
     get index do
       content_type('application/x-gzip')
@@ -77,6 +80,10 @@ class Hostess < Sinatra::Base
     else
       error 404, "This gem does not currently live at RubyGems.org."
     end
+  end
+
+  get "/metadata/*" do
+    serve_via_cf
   end
 
   get "/gems/*.gem" do

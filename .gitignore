@@ -19,3 +19,6 @@ tmp/
 tags
 .idea
 chef
+config/root.txt
+config/keys
+config/tuf
