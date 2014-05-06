@@ -1,5 +1,6 @@
 class Rubygem < ActiveRecord::Base
   include Patterns
+  include PgSearch
 
   has_many :owners, :through => :ownerships, :source => :user
   has_many :ownerships, :dependent => :destroy
@@ -14,6 +15,13 @@ class Rubygem < ActiveRecord::Base
 
   after_create :update_unresolved
   before_destroy :mark_unresolved
+
+  # pg_search scopes
+  pg_search_scope :search_by_name,
+    :against => :name,
+    :using => {
+      :tsearch => { :prefix => true }
+    }
 
   def self.with_versions
     where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)")
@@ -34,13 +42,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.search(query)
-    conditions = <<-SQL
-      versions.indexed and
-        (upper(name) like upper(:query) or
-         upper(translate(name, '#{SPECIAL_CHARACTERS}', '#{' ' * SPECIAL_CHARACTERS.length}')) like upper(:query))
-    SQL
-
-    where(conditions, {:query => "%#{query.strip}%"}).
+    search_by_name(query.strip).
       includes(:versions).
       by_downloads
   end
