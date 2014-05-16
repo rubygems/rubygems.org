@@ -41,7 +41,7 @@ class ActionController::TestCase
 end
 
 require 'shoulda'
-require 'clearance/testing'
+require 'clearance/test_unit'
 require 'capybara/rails'
 
 def regenerate_index
