@@ -44,12 +44,13 @@ class Pusher
   end
 
   def pull_spec
-    GemPackage.open body, "r", nil do |pkg|
-      @spec = pkg.metadata
-      return true
+    gem_tar = Gem::Package::TarReader.new body
+    gem_tar.each do |entry|
+      load_spec entry
     end
 
-    false
+    raise Gem::Package::FormatError.new('package metadata is missing') unless @spec
+    @spec
   rescue Psych::WhitelistException => e
     Rails.logger.info "Attempted YAML metadata exploit: #{e}"
     notify("RubyGems.org cannot process this gem.\nThe metadata is invalid.\n#{e}", 422)
@@ -120,7 +121,24 @@ class Pusher
       false
     end
   end
+
   private
+
+  def load_spec entry
+    case entry.full_name
+    when 'metadata' then
+      @spec = Gem::Specification.from_yaml entry.read
+    when 'metadata.gz' then
+      args = [entry]
+      args << { :external_encoding => Encoding::UTF_8 } if
+        Object.const_defined?(:Encoding) &&
+          Zlib::GzipReader.method(:wrap).arity != 1
+
+      Zlib::GzipReader.wrap(*args) do |gzio|
+        @spec = Gem::Specification.from_yaml gzio.read
+      end
+    end
+  end
 
   def after_write
     @version_id = version.id
