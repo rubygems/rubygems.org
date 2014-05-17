@@ -46,7 +46,9 @@ class Pusher
   def pull_spec
     gem_tar = Gem::Package::TarReader.new body
     gem_tar.each do |entry|
-      load_spec entry
+      if @spec = load_spec(entry)
+        break
+      end
     end
 
     raise Gem::Package::FormatError.new('package metadata is missing') unless @spec
@@ -126,18 +128,19 @@ class Pusher
 
   def load_spec entry
     case entry.full_name
-    when 'metadata' then
-      @spec = Gem::Specification.from_yaml entry.read
-    when 'metadata.gz' then
+    when 'metadata'
+      return Gem::Specification.from_yaml entry.read
+    when 'metadata.gz'
       args = [entry]
       args << { :external_encoding => Encoding::UTF_8 } if
         Object.const_defined?(:Encoding) &&
           Zlib::GzipReader.method(:wrap).arity != 1
 
       Zlib::GzipReader.wrap(*args) do |gzio|
-        @spec = Gem::Specification.from_yaml gzio.read
+        return Gem::Specification.from_yaml gzio.read
       end
     end
+    nil
   end
 
   def after_write
