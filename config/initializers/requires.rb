@@ -1,3 +1,4 @@
+require 'rubygems/package'
 require 'rubygems/indexer'
 require 'rdoc/markup'
 require 'rdoc/markup/to_html'
