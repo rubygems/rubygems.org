@@ -125,9 +125,10 @@ GEM
       multi_json
     librato-rack (0.4.5)
       librato-metrics (~> 1.1)
-    librato-rails (0.10.2)
+    librato-rails (0.10.3)
+      activesupport (>= 3.0)
       librato-rack (~> 0.4.2)
-      rails (>= 3.0)
+      railties (>= 3.0)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
