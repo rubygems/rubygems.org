@@ -154,7 +154,7 @@ GEM
     paul_revere (1.2)
       rails (>= 3.0)
     pg (0.17.1)
-    polyglot (0.3.4)
+    polyglot (0.3.5)
     pry (0.9.12.6)
       coderay (~> 1.0)
       method_source (~> 0.8)
