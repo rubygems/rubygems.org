@@ -89,6 +89,18 @@ class Rubygem < ActiveRecord::Base
     order("rubygems.downloads desc")
   end
 
+  def self.current_rubygems_release
+    if g = find_by_name("rubygems-update")
+      if v = g.versions.release.indexed.by_created_at.first
+        v.number
+      else
+        "0.0.0"
+      end
+    else
+      "0.0.0"
+    end
+  end
+
   def all_errors(version = nil)
     [self, linkset, version].compact.map do |ar|
       ar.errors.full_messages

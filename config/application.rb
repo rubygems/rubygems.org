@@ -14,8 +14,6 @@ Bundler.require(:default, Rails.env) if defined?(Bundler)
 $rubygems_config = YAML.load_file("config/rubygems.yml")[Rails.env].symbolize_keys
 HOST             = $rubygems_config[:host]
 
-RUBYGEMS_VERSION = "2.2.2"
-
 module Gemcutter
   class Application < Rails::Application
     config.time_zone = "UTC"

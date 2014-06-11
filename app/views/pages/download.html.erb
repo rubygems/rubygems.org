@@ -1,12 +1,13 @@
 <% @title = "Download RubyGems" %>
-<% @subtitle = "v#{RUBYGEMS_VERSION}" %>
+<% ver = Rubygem.current_rubygems_release %>
+<% @subtitle = "v#{ver}" %>
 <p>
   RubyGems is a package management framework for Ruby. Download the latest version here:
 </p>
 <ol class="formats" id="formats">
-  <li><%= link_to "tgz", "http://production.cf.rubygems.org/rubygems/rubygems-#{RUBYGEMS_VERSION}.tgz" %></li>
-  <li><%= link_to "zip", "http://production.cf.rubygems.org/rubygems/rubygems-#{RUBYGEMS_VERSION}.zip" %></li>
-  <li><%= link_to "gem", "http://production.cf.rubygems.org/rubygems/rubygems-update-#{RUBYGEMS_VERSION}.gem" %></li>
+  <li><%= link_to "tgz", "http://production.cf.rubygems.org/rubygems/rubygems-#{ver}.tgz" %></li>
+  <li><%= link_to "zip", "http://production.cf.rubygems.org/rubygems/rubygems-#{ver}.zip" %></li>
+  <li><%= link_to "gem", "http://production.cf.rubygems.org/rubygems/rubygems-update-#{ver}.gem" %></li>
   <li><%= link_to "git", "http://github.com/rubygems/rubygems" %></li>
 </ol>
 <p>
