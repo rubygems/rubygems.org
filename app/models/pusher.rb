@@ -1,3 +1,5 @@
+require 'vendor/package'
+
 class Pusher
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
   attr_accessor :bundler_api_url
@@ -33,7 +35,7 @@ class Pusher
   end
 
   def pull_spec
-    Gem::Package.open body, "r", nil do |pkg|
+    GemPackage.open body, "r", nil do |pkg|
       @spec = pkg.metadata
       return true
     end

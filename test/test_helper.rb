@@ -2,6 +2,8 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 
+require 'rubygems/package'
+
 class ActiveSupport::TestCase
   self.use_transactional_fixtures = true
   self.use_instantiated_fixtures  = false
@@ -61,7 +63,7 @@ def create_gem(*owners_and_or_opts)
 end
 
 def gem_specification_from_gem_fixture(name)
-  Gem::Format.from_file_by_path(File.join('test', 'gems', "#{name}.gem")).spec
+  Gem::Package.new(File.join('test', 'gems', "#{name}.gem")).spec
 end
 
 def stub_uploaded_token(gem_name, token, status = [200, "Success"])
