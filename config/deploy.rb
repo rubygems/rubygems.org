@@ -27,18 +27,18 @@ set :group, "deploy"
 
 after "deploy", "deploy:migrate"
 after "deploy", "deploy:cleanup"
-after "deploy:create_symlink", "deploy:move_in_database_yml", "deploy:move_in_secret_settings"
+after "deploy:create_symlink", "deploy:symlink_database_yml", "deploy:symlink_secret_settings"
 
 namespace :deploy do
 
-  desc "Move in database.yml for this environment"
-  task :move_in_database_yml, :roles => :app do
-    run "cp #{deploy_to}/shared/database.yml #{current_path}/config/"
+  desc "Symlink database.yml for this environment"
+  task :symlink_database_yml, :roles => :app do
+    run "ln -fs #{shared_path}/database.yml #{release_path}/config/database.yml"
   end
 
-  desc "Move in secret settings for this environment"
-  task :move_in_secret_settings, :roles => :app do
-    run "cp #{deploy_to}/shared/secret.rb #{current_path}/config/secret.rb"
+  desc "Symlink secret settings for this environment"
+  task :symlink_secret_settings, :roles => :app do
+    run "ln -fs #{shared_path}/secret.rb #{release_path}/config/secret.rb"
   end
 
   desc "Restart unicorn and delayed_job"
