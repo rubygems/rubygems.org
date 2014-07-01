@@ -9,6 +9,9 @@
     <link rel="fluid-icon" href="/fluid-icon.png"/>
     <link rel="search" type="application/opensearchdescription+xml" title="<%=t :title %>" href="/opensearch.xml">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <% if content_for?(:canonical) %>
+      <link rel="canonical" href="<%= yield(:canonical) %>" />
+    <% end %>
     <%= stylesheet_link_tag "reset", "960", "screen", :cache => true %>
     <!--[if IE 7]>
       <%= stylesheet_link_tag "ie7" %>

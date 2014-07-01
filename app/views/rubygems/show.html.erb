@@ -2,6 +2,7 @@
 <% @subtitle = @latest_version.try(:slug) %>
 
 <%= content_for :head, auto_discovery_link_tag(:atom, rubygem_versions_path(@rubygem, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
+<% content_for :canonical, rubygem_path(@rubygem) %>
 
 <% if @rubygem.versions.count.zero? %>
   <p><%= t '.not_hosted_notice' %></p>
