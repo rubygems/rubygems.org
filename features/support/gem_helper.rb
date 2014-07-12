@@ -1,8 +1,6 @@
 module GemHelper
   def build_gemspec(gemspec)
-    builder = Gem::Builder.new(gemspec)
-    builder.ui = Gem::SilentUI.new
-    builder.build
+    Gem::Package.build(gemspec)
   end
 
   def build_gem(name, version, summary = "Gemcutter", platform = "ruby")
