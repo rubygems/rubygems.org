@@ -1,5 +1,3 @@
-before_install:
-  - gem update --system 1.8.25
 before_script:
   - cp config/database.yml.example config/database.yml
   - bundle exec rake db:create db:migrate db:test:prepare
