@@ -122,16 +122,50 @@ running:
 **Environment:**
 
 * Use Ruby 1.9.3
-* Use Rubygem 1.8.11
+* Use Rubygem 1.8.11 `rvm rubygems --force 1.8.11`
 * Install bundler: `gem install bundler`
 * Install [redis](http://github.com/antirez/redis),
     **version 2.0 or higher**. If you have homebrew,
     do `brew install redis -H`, if you use macports,
-    do `sudo port install redis`.
+    do `sudo port install redis`.  If you use 
+    Debian-based Linux, enter `sudo apt-get install 
+    redis-server`.
 * Rubygems is configured to use PostgreSQL (>= 8.4.x),
-    for MySQL see below. Install with: `brew install postgres`
-* If this is your first time using pg, don't forget to initialize the database (initdb /usr/local/var/postgres -E utf8) before starting postgres (pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start)
-
+    for MySQL see below. In Mac OS X, install by entering `brew install postgres`.
+    Inb Debian-based Linux, install by entering `sudo apt-get install 
+    postgresql`.
+* If you have not already done so, don't forget to initialize the database
+	before starting PostgreSQL.  For a Mac OS X setup, enter 
+	`initdb /usr/local/var/postgres -E utf8` and then 
+	`pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start`.
+	For a Debian-based Linux setup with version 9.1 of PostgreSQL, 
+	the commands for initializing and starting the database are:
+	<pre>
+	sudo mkdir /usr/local/var
+	sudo mkdir /usr/local/var/postgres
+	sudo chown -R $USER /usr/local/var
+	/usr/lib/postgresql/9.1/bin/initdb /usr/local/var/postgres -E utf8
+	/usr/lib/postgresql/9.1/bin/pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
+	</pre>
+* If you have not already done so, you MUST give your username PostgreSQL 
+    privileges and the appropriate password (which is "rubygemsrock").  
+    If you skip this step, the rake commands will not work.  For a Debian-based 
+    Linux setup, enter the following commands (substituting your system 
+    username for [local username] and entering "rubygemsrock" when 
+    prompted for the password):
+    <pre>
+    sudo su postgres -c psql
+    CREATE ROLE [local username] SUPERUSER LOGIN;
+    \password [local username]
+    \q
+    </pre>
+* If you have not already done so, you MUST create the required databases.  
+	Enter the following commands:
+	<pre>
+	createdb gemcutter_development
+	createdb gemcutter_test
+	</pre>
+	
 **Get the code:**
 
 * Clone the repo: `git clone git://github.com/rubygems/rubygems.org`
@@ -155,6 +189,8 @@ running:
     `REDISTOGO_URL="redis://localhost:6379"`
 * Import gems if you want to seed the database. 
     `rake gemcutter:import:process PATHTO_GEMS/cache`
+    * _To find the path to the gems directory (PATHTO_GEMS), enter the command 
+    `gem environment` and look for the installation directory._
     * _To import a small set of gems you can point the import process to any
         gems cache directory, like a very small `rvm` gemset for instance._
 * If you need the index available - needed when working in conjunction
