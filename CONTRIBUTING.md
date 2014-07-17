@@ -154,7 +154,8 @@ running:
 * Set the REDISTOGO_URL environment variable. For example:
     `REDISTOGO_URL="redis://localhost:6379"`
 * Import gems if you want to seed the database. 
-    `rake gemcutter:import:process PATHTO_GEMS/cache`
+    `rake gemcutter:import:process vendor/cache`
+* To seed database from custom cache, you can specify `GEM_PATH/cache` rather than `vendor/cache`.
     * _To import a small set of gems you can point the import process to any
         gems cache directory, like a very small `rvm` gemset for instance._
 * If you need the index available - needed when working in conjunction
