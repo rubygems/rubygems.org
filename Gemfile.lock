@@ -198,7 +198,7 @@ GEM
     rdoc (3.12.2)
       json (~> 1.4)
     redis (3.1.0)
-    rest-client (1.7.1)
+    rest-client (1.7.2)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
     rr (1.1.2)
