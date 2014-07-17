@@ -160,7 +160,7 @@ running:
 	specifying `GEM_PATH/cache` instead of `vendor/cache`._
 * If you need the index available - needed when working in conjunction
     with [bundler-api](http://github.com/rubygems/bundler-api) - then run
-    `gemcutter:index:update`. This primes the filesystem gem index for
+    `rake gemcutter:index:update`. This primes the filesystem gem index for
     local use.
 * Start the web server: `rails server` and browse to
     [localhost:3000](http://localhost:3000) or use [Pow](http://pow.cx)!
