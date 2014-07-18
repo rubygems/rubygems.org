@@ -154,12 +154,13 @@ running:
 * Set the REDISTOGO_URL environment variable. For example:
     `REDISTOGO_URL="redis://localhost:6379"`
 * Import gems if you want to seed the database. 
-    `rake gemcutter:import:process PATHTO_GEMS/cache`
+    `rake gemcutter:import:process vendor/cache`
     * _To import a small set of gems you can point the import process to any
-        gems cache directory, like a very small `rvm` gemset for instance._
+        gems cache directory, like a very small `rvm` gemset for instance, or 
+	specifying `GEM_PATH/cache` instead of `vendor/cache`._
 * If you need the index available - needed when working in conjunction
     with [bundler-api](http://github.com/rubygems/bundler-api) - then run
-    `gemcutter:index:update`. This primes the filesystem gem index for
+    `rake gemcutter:index:update`. This primes the filesystem gem index for
     local use.
 * Start the web server: `rails server` and browse to
     [localhost:3000](http://localhost:3000) or use [Pow](http://pow.cx)!
