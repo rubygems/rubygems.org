@@ -712,11 +712,13 @@ table {
   margin-left: 3px;
   display: inline-block;
   height: 10px;
+  vertical-align: top;
 }
 
 .main .info .meta .bundler h5 {
   margin-bottom: 0.7em;
   display: inline-block;
+  vertical-align: top;
 }
 
 .main .info .meta .links h5 {
