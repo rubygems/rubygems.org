@@ -1,3 +1,5 @@
+<% content_for :canonical, rubygem_path(@rubygem) %>
+
 <% @title = t('.title', :name => @rubygem.name) %>
 <% if @versions.size.zero? %>
   <p><%= t('.not_hosted_notice') %></p>
