@@ -55,7 +55,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.by_position
-    order('position')
+    order('versions.position')
   end
 
   def self.by_built_at
