@@ -108,7 +108,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def public_versions(limit = nil)
-    versions.published(limit).by_position
+    versions.by_position.published(limit)
   end
 
   def public_versions_with_extra_version(extra_version)
