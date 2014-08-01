@@ -21,6 +21,7 @@ class ProfilesControllerTest < ActionController::TestCase
         @rubygems = (0..10).map do |n|
           create(:rubygem_with_downloads, :downloads => n * 100).tap do |rubygem|
             create(:ownership, :rubygem => rubygem, :user => @user)
+            create(:version, :rubygem => rubygem)
           end
         end.reverse
 
