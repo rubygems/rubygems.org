@@ -121,8 +121,8 @@ running:
 
 **Environment:**
 
-* Use Ruby 2.0.0-p384
-* Use Rubygem 1.8.11
+* Use Ruby 2.0.0-p481
+* Use Rubygem 2.3.0
 * Install bundler: `gem install bundler`
 * Install [redis](http://github.com/antirez/redis),
     **version 2.0 or higher**. If you have homebrew,
