@@ -176,34 +176,18 @@ running:
 
 ### MySQL
 
-- Modify Gemfile to use `mysql` instead of `pg`
-- If you’re running Max OS X Snow Leopard, the MySQL gem will fail to
-    install without configuring it as follows:
-
-    ``` bash
-    bundle config build.mysql \
-        —with-mysql-config=/usr/local/mysql/bin/mysql_config \
-        export ARCHFLAGS=“-arch x86_64”
-    ```
-
-- Continue setup as above, installing dependencies, setting up
-    database.yml, etc.
-
-> **Warning:** Gem names are case sensitive (eg. `BlueCloth` vs.
-> `bluecloth` 2). MySQL has a `utf8_bin` collation, but it appears
-> that you still need to do `BINARY name = ?` for searching. 
-> It is recommended that you stick to PostgreSQL >= 8.4.x 
-> for development. Some tests will also fail if you use MySQL
-> because some queries use SQL functions which don't exist in MySQL..
-
-### MySQL2
-
 * Remove `pg` gem from your Gemfile
 * Add `mysql2` gem to your Gemfile:
 
      ``` ruby
        gem "mysql2"
      ```
+> **Warning:** Gem names are case sensitive (eg. `BlueCloth` vs.
+> `bluecloth` 2). MySQL has a `utf8_bin` collation, but it appears
+> that you still need to do `BINARY name = ?` for searching. 
+> It is recommended that you stick to PostgreSQL >= 8.4.x 
+> for development. Some tests will also fail if you use MySQL
+> because some queries use SQL functions which don't exist in MySQL..
 
 * Run `bundle install` command
 
