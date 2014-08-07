@@ -204,6 +204,7 @@ class UserTest < ActiveSupport::TestCase
         create(:rubygem, :downloads => downloads).tap do |rubygem|
           $redis[Download.key(rubygem)] = real_downloads
           create(:ownership, :rubygem => rubygem, :user => @user)
+          create(:version, :rubygem => rubygem)
         end
       end
     end
@@ -211,6 +212,11 @@ class UserTest < ActiveSupport::TestCase
     should "sort by downloads method" do
       assert_equal @rubygems.values_at(2, 0, 1),
         @user.rubygems_downloaded
+    end
+
+    should "not include gem if all versions have been yanked" do
+      @rubygems.first.versions.first.yank!
+      assert_equal 2, @user.rubygems_downloaded.count
     end
 
     should "total their number of pushed rubygems" do
