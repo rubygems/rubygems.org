@@ -7,7 +7,7 @@ require 'capistrano-notification'
 
 notification.irc do |irc|
   irc.host    'chat.freenode.net'
-  irc.channel '#rubygems-aws'
+  irc.channel '#rubygems'
   irc.message { "#{local_user} deployed rubygems.org @ https://github.com/rubygems/rubygems.org/commit/#{fetch(:current_revision)} to #{stage} (#{roles[:app].servers.compact.map(&:host).join(', ')})" }
 end
 
