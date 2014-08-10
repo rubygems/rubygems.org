@@ -1,3 +1,5 @@
+require 'digest/sha2'
+
 class Version < ActiveRecord::Base
   belongs_to :rubygem
   has_many :dependencies, :order => 'rubygems.name ASC', :include => :rubygem, :dependent => :destroy
@@ -15,6 +17,10 @@ class Version < ActiveRecord::Base
 
   validate :platform_and_number_are_unique, :on => :create
   validate :authors_format, :on => :create
+
+  def self.without_sha256
+    where('sha256 = ""')
+  end
 
   def self.reverse_dependencies(name)
     joins({ dependencies: :rubygem }).
@@ -250,6 +256,18 @@ class Version < ActiveRecord::Base
     command << " -v #{number}" if latest != self
     command << " --pre" if prerelease
     command
+  end
+
+  def recalculate_sha256
+    key = "gems/#{full_name}.gem"
+    digest = Digest::SHA2.new
+    dir = Indexer.new.directory
+
+    dir.files.get(key) do |chunk|
+      digest << chunk
+    end
+
+    digest.base64digest
   end
 
   private
