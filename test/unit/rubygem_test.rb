@@ -557,6 +557,7 @@ class RubygemTest < ActiveSupport::TestCase
         @specification = gem_specification_from_gem_fixture('test-0.0.0')
         @rubygem       = Rubygem.new(:name => @specification.name)
         @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
+        @version.sha256 = "dummy"
         @rubygem.update_attributes_from_gem_specification!(@version, @specification)
       end
 
@@ -575,6 +576,7 @@ class RubygemTest < ActiveSupport::TestCase
         @specification = gem_specification_from_gem_fixture('with_dependencies-0.0.0')
         @rubygem       = Rubygem.new(:name => @specification.name)
         @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
+        @version.sha256 = "dummy"
       end
 
       should "save the gem" do
@@ -594,6 +596,7 @@ class RubygemTest < ActiveSupport::TestCase
         @specification = gem_specification_from_gem_fixture('with_dependencies-0.0.0')
         @rubygem       = Rubygem.new(:name => @specification.name)
         @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
+        @version.sha256 = "dummy"
 
         @rubygem.update_attributes_from_gem_specification!(@version, @specification)
 
@@ -617,6 +620,7 @@ class RubygemTest < ActiveSupport::TestCase
 
         @rubygem       = Rubygem.new(:name => @specification.name)
         @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
+        @version.sha256 = "dummy"
       end
 
       should "save the gem" do
