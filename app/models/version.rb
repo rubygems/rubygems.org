@@ -255,7 +255,7 @@ class Version < ActiveRecord::Base
   private
 
   def self.to_rows(scope)
-    sql = select("rubygems.name, number, platform").
+    sql = select("rubygems.name, number, platform, sha256").
             indexed.public_send(scope).
             from("rubygems, versions").
             where("rubygems.id = versions.rubygem_id").

@@ -560,30 +560,30 @@ class VersionTest < ActiveSupport::TestCase
       @first_rubygem  = create(:rubygem, :name => "first")
       @second_rubygem = create(:rubygem, :name => "second")
 
-      @first_version  = create(:version, :rubygem => @first_rubygem,  :number => "0.0.1", :platform => "ruby")
-      @second_version = create(:version, :rubygem => @first_rubygem,  :number => "0.0.2", :platform => "ruby")
-      @other_version  = create(:version, :rubygem => @second_rubygem, :number => "0.0.2", :platform => "java")
-      @pre_version    = create(:version, :rubygem => @second_rubygem, :number => "0.0.2.pre", :platform => "java", :prerelease => true)
+      @first_version  = create(:version, :rubygem => @first_rubygem,  :number => "0.0.1", :platform => "ruby", :sha256 => "SHA_1")
+      @second_version = create(:version, :rubygem => @first_rubygem,  :number => "0.0.2", :platform => "ruby", :sha256 => "SHA_2")
+      @other_version  = create(:version, :rubygem => @second_rubygem, :number => "0.0.2", :platform => "java", :sha256 => "SHA_3")
+      @pre_version    = create(:version, :rubygem => @second_rubygem, :number => "0.0.2.pre", :platform => "java", :prerelease => true, :sha256 => "SHA_4")
     end
 
     should "select all gems" do
       assert_equal [
-        ["first",  "0.0.1", "ruby"],
-        ["first",  "0.0.2", "ruby"],
-        ["second", "0.0.2", "java"]
+        ["first",  "0.0.1", "ruby", "SHA_1"],
+        ["first",  "0.0.2", "ruby", "SHA_2"],
+        ["second", "0.0.2", "java", "SHA_3"]
       ], Version.rows_for_index
     end
 
     should "select only most recent" do
       assert_equal [
-        ["first",  "0.0.2", "ruby"],
-        ["second", "0.0.2", "java"]
+        ["first",  "0.0.2", "ruby", "SHA_2"],
+        ["second", "0.0.2", "java", "SHA_3"]
       ], Version.rows_for_latest_index
     end
 
     should "select only prerelease" do
       assert_equal [
-        ["second", "0.0.2.pre", "java"]
+        ["second", "0.0.2.pre", "java", "SHA_4"]
       ], Version.rows_for_prerelease_index
     end
   end

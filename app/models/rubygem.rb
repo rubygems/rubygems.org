@@ -157,6 +157,7 @@ class Rubygem < ActiveRecord::Base
       'licenses'          => version.licenses,
       'project_uri'       => "http://#{host_with_port}/gems/#{name}",
       'gem_uri'           => "http://#{host_with_port}/gems/#{version.full_name}.gem",
+      'gem_sha256'        => version.sha256,
       'homepage_uri'      => linkset.try(:home),
       'wiki_uri'          => linkset.try(:wiki),
       'documentation_uri' => linkset.try(:docs),
