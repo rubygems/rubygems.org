@@ -146,7 +146,7 @@ GEM
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
     netrc (0.7.7)
-    newrelic-redis (1.4.0)
+    newrelic-redis (1.5.0)
       newrelic_rpm (~> 3.0)
       redis (< 4.0)
     newrelic_rpm (3.9.3.241)
