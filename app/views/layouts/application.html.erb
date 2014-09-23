@@ -56,7 +56,7 @@
           </div>
         </div>
         <%= form_tag search_url, :id => "main-search", :method => :get do %>
-          <%= text_field_tag :query, params[:query], :placeholder => "Search gems&hellip;".html_safe %>
+          <%= text_field_tag :query, params[:query], :placeholder => "Search gems&hellip;".html_safe, autofocus: current_page?(root_url) %>
           <%= submit_tag 'Search', :id => 'search_submit', :name => nil %>
         <% end %>
       </div>
