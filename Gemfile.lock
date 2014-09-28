@@ -72,7 +72,7 @@ GEM
     daemons (1.1.9)
     dalli (2.7.2)
     database_rewinder (0.4.1)
-    delayed_job (4.0.3)
+    delayed_job (4.0.4)
       activesupport (>= 3.0, < 4.2)
     delayed_job_active_record (4.0.2)
       activerecord (>= 3.0, < 4.2)
