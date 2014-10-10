@@ -17,10 +17,20 @@ class LinksetTest < ActiveSupport::TestCase
     end
 
     should "be empty with no links filled out" do
-      Linkset::LINKS.each do |link|
+      Linkset::LINKS.keys.each do |link|
         @linkset.send("#{link}=", nil)
       end
       assert @linkset.empty?
+    end
+
+    should "have api uri getter" do
+      @linkset.docs = "http://example.com/docs"
+      assert_equal "http://example.com/docs", @linkset.documentation_uri
+    end
+
+    should "have api uri setter" do
+      @linkset.documentation_uri = "http://example.com/docs"
+      assert_equal "http://example.com/docs", @linkset.docs
     end
   end
 

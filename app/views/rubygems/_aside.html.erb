@@ -63,7 +63,7 @@
 
     <% if @latest_version.indexed %>
       <% if @rubygem.linkset.present? %>
-        <%- Linkset::LINKS.each do |link| %>
+        <%- Linkset::LINKS.keys.each do |link| %>
           <%= link_to_page link, @rubygem.linkset.public_send(link) %>
         <%- end %>
       <% end %>
