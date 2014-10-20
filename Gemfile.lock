@@ -83,10 +83,10 @@ GEM
       activemodel
     erubis (2.7.0)
     excon (0.25.3)
-    factory_girl (4.4.0)
+    factory_girl (4.5.0)
       activesupport (>= 3.0.0)
-    factory_girl_rails (4.4.1)
-      factory_girl (~> 4.4.0)
+    factory_girl_rails (4.5.0)
+      factory_girl (~> 4.5.0)
       railties (>= 3.0.0)
     fakeredis (0.5.0)
       redis (~> 3.0)
