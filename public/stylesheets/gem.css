@@ -1,0 +1,83 @@
+.gem__version {
+  font-size: 18px;
+  color: #a6aab2; }
+
+.gem__intro {
+  margin-bottom: 45px;
+  border-bottom: 1px solid #c1c4ca; }
+
+.gem__pre {
+  padding-left: 30px;
+  height: 60px;
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-radius: 30px; }
+  .gem__pre:first-of-type {
+    margin-top: 35px;
+    margin-bottom: 30px; }
+  .gem__pre:last-of-type {
+    margin-bottom: 75px; }
+
+.gem__code__heading {
+  display: inline-block;
+  width: 112px;
+  background-image: url("/arrow.svg");
+  background-repeat: no-repeat;
+  background-position: center right;
+  font-weight: 800;
+  font-size: 18px;
+  font-family: "aktiv-grotesk-std", sans-serif;
+  line-height: 60px;
+  text-transform: uppercase; }
+
+.gem__code {
+  padding-right: 30px;
+  position: absolute;
+  top: 0;
+  left: 155px;
+  line-height: 60px; }
+
+@media (max-width: 779px) {
+  .gem__aside {
+    margin-bottom: 48px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid #c1c4ca; } }
+
+.gem__downloads-wrap {
+  margin-bottom: 40px; }
+
+.gem__downloads__heading {
+  margin-bottom: 6px; }
+
+.gem__downloads {
+  margin-bottom: 20px;
+  display: block;
+  font-weight: 800;
+  font-size: 24px; }
+
+.gem__see-all-versions {
+  font-style: italic; }
+
+.gem__ruby-version__heading {
+  margin-bottom: 10px; }
+
+.gem__ruby-version {
+  margin-bottom: 40px;
+  display: block;
+  font-weight: 800;
+  font-style: italic;
+  font-size: 24px;
+  color: #141c22; }
+
+.gem__link:before {
+  margin-right: 16px; }
+
+.gem__versions-wrap {
+  margin-bottom: 70px; }
+
+.gem__versions {
+  margin-bottom: 12px; }
+
+.gem__version__date {
+  color: #c1c4ca; }

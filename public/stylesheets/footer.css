@@ -1,0 +1,99 @@
+.footer {
+  padding-top: 48px;
+  padding-bottom: 48px;
+  position: relative;
+  overflow: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: #141c22;
+  box-shadow: 0 -4px 0 0 #141c22;
+  z-index: 2; }
+  @media (min-width: 780px) {
+    .footer {
+      min-height: 70vh; } }
+
+.l-wrap--footer {
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 940px; }
+  @media (max-width: 579px) {
+    .l-wrap--footer {
+      width: 78%; } }
+  @media (min-width: 580px) {
+    .l-wrap--footer {
+      width: 90%; } }
+
+.footer__about {
+  max-width: 550px;
+  font-weight: 300;
+  line-height: 1.66;
+  color: #6c767e; }
+  @media (max-width: 579px) {
+    .footer__about {
+      font-size: 15px; } }
+  @media (min-width: 580px) {
+    .footer__about {
+      font-size: 18px; } }
+  @media (min-width: 780px) {
+    .footer__about {
+      min-height: 222px; } }
+
+.footer__sponsors-wrap {
+  margin-top: 60px;
+  padding-top: 45px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1); }
+  @media (min-width: 1040px) {
+    .footer__sponsors-wrap {
+      margin-right: auto;
+      margin-left: auto;
+      max-width: 940px; } }
+
+.footer__sponsors {
+  margin-right: auto;
+  margin-left: auto; }
+  @media (max-width: 579px) {
+    .footer__sponsors {
+      width: 78%; } }
+  @media (min-width: 580px) and (max-width: 1039px) {
+    .footer__sponsors {
+      width: 90%; } }
+
+.footer__sponsor {
+  margin-bottom: 36px;
+  float: left;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 12px;
+  text-align: center;
+  color: white;
+  opacity: .4;
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -ms-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-property: opacity;
+  -moz-transition-property: opacity;
+  -ms-transition-property: opacity;
+  -o-transition-property: opacity;
+  transition-property: opacity; }
+  .footer__sponsor:focus, .footer__sponsor:hover {
+    opacity: 1; }
+  .footer__sponsor:focus {
+    outline: none; }
+  @media (max-width: 579px) {
+    .footer__sponsor {
+      width: 100px; }
+      .footer__sponsor:nth-child(odd) {
+        margin-right: 18%; } }
+  @media (min-width: 580px) {
+    .footer__sponsor {
+      width: 10%; }
+      .footer__sponsor:not(:last-child) {
+        margin-right: 5%; } }
+  @media (min-width: 580px) and (max-width: 859px) {
+    .footer__sponsor {
+      min-width: 100px; } }
+
+.footer__sponsor__logo {
+  margin-top: 5px;
+  width: 100%; }
