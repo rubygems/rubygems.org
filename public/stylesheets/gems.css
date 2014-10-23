@@ -1,0 +1,113 @@
+.gems__nav-links {
+  margin-top: -21px;
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #c1c4ca;
+  text-align: center; }
+
+.gems__nav-link {
+  margin-right: 1px;
+  margin-left: 1px;
+  display: inline-block;
+  height: 30px;
+  width: 30px;
+  border-radius: 15px;
+  font-weight: 800;
+  line-height: 30px;
+  color: #141c22;
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -ms-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-property: background-color, color;
+  -moz-transition-property: background-color, color;
+  -ms-transition-property: background-color, color;
+  -o-transition-property: background-color, color;
+  transition-property: background-color, color; }
+  .gems__nav-link:focus, .gems__nav-link:hover {
+    background-color: #fa3c29;
+    color: white; }
+  .gems__nav-link:focus {
+    outline: none; }
+
+.gems__header {
+  padding-bottom: 30px;
+  overflow: auto; }
+
+.gems__meter {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #c1c4ca; }
+  @media (min-width: 780px) {
+    .gems__meter {
+      float: left; } }
+
+.gems__gem {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  display: block;
+  overflow: auto;
+  border-bottom: 1px solid #c1c4ca; }
+  .gems__gem:focus .gems__gem__name, .gems__gem:hover .gems__gem__name {
+    color: #fa3c29; }
+  .gems__gem:focus {
+    outline: none; }
+
+.gems__gem__info {
+  color: #141c22; }
+  @media (min-width: 600px) {
+    .gems__gem__info {
+      padding-right: 4%;
+      float: left; } }
+  @media (min-width: 600px) and (max-width: 899px) {
+    .gems__gem__info {
+      width: 75%; } }
+  @media (min-width: 900px) {
+    .gems__gem__info {
+      width: 80%; } }
+
+.gems__gem__name, .gems__gem__downloads__count {
+  margin-bottom: 6px;
+  font-weight: 800;
+  font-size: 24px; }
+
+.gems__gem__name {
+  color: #141c22;
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -ms-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-property: color;
+  -moz-transition-property: color;
+  -ms-transition-property: color;
+  -o-transition-property: color;
+  transition-property: color; }
+  .gems__gem__name:hover {
+    color: #fa3c29; }
+
+.gems__gem__downloads__count {
+  color: #141c22; }
+  @media (max-width: 599px) {
+    .gems__gem__downloads__count {
+      margin-top: 16px; } }
+  @media (min-width: 600px) {
+    .gems__gem__downloads__count {
+      float: right;
+      text-align: right; } }
+
+.gems__gem__version {
+  margin-left: 10px;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 18px;
+  color: #a6aab2; }
+
+.gems__gem__downloads__heading {
+  margin-top: 10px;
+  display: block;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.66;
+  text-transform: uppercase; }
