@@ -1,0 +1,11 @@
+#clippy, #github_clippy {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+#clippy embed, #github_clippy embed {
+  position: absolute;
+  top: 18px;
+  right: 0;
+}
