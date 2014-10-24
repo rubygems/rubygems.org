@@ -8,7 +8,7 @@ module RubygemsHelper
   end
 
   def link_to_page(text, url)
-    link_to(text, url, :rel => 'nofollow') if url.present?
+    link_to(text, url, :rel => 'nofollow', :class => ['gem__link', 't-list__item']) if url.present?
   end
 
   def link_to_directory
@@ -29,10 +29,11 @@ module RubygemsHelper
         :remote => true,
         :method => :post,
         :id     => 'subscribe',
-        :class  => 'toggler',
+        :class  => ['toggler', 'gem__link', 't-list__item'],
+        :'data-icon' => '✉',
         :style  => rubygem.subscribers.find_by_id(current_user.try(:id)) ? 'display:none' : 'display:inline-block'
     else
-      link_to 'Subscribe', sign_in_path, :id => :subscribe, :class => :toggler
+      link_to 'Subscribe', sign_in_path, :id => :subscribe, :class => [:toggler, 'gem__link', 't-list__item'], 'data-icon' => '✉'
     end
   end
 
@@ -42,13 +43,14 @@ module RubygemsHelper
         :remote  => true,
         :method  => :delete,
         :id    => 'unsubscribe',
-        :class => :toggler,
+        :class  => [:toggler, 'gem__link', 't-list__item'],
+        :'data-icon' => '✉',
         :style => rubygem.subscribers.find_by_id(current_user.try(:id)) ? 'display:inline-block' : 'display:none'
     end
   end
 
   def atom_link(rubygem)
-    link_to 'RSS', rubygem_versions_path(rubygem, format: 'atom'), :id => :rss
+    link_to 'RSS', rubygem_versions_path(rubygem, format: 'atom'), :id => :rss, :class => 'gem__link t-list__item', 'data-icon' => '#'
   end
 
   def download_link(version)
@@ -60,7 +62,7 @@ module RubygemsHelper
   end
 
   def documentation_link(version, linkset)
-    link_to 'Documentation', documentation_path(version), :id => :docs if linkset.nil? ||
+    link_to 'Documentation', documentation_path(version), :id => :docs, :class => 'gem__link t-list__item', 'data-icon' => '▯' if linkset.nil? ||
       linkset.docs.blank?
   end
 
@@ -70,7 +72,7 @@ module RubygemsHelper
 
   def badge_link(rubygem)
     badge_url = "http://badge.fury.io/rb/#{rubygem.name}/install"
-    link_to "Badge", badge_url, :id => :badge
+    link_to "Badge", badge_url, :id => :badge, :class => "gem__link t-list__item", "data-icon" => "★"
   end
 
   def stats_options(rubygem)
@@ -97,4 +99,7 @@ module RubygemsHelper
     rubygem.versions_count > 5 || rubygem.yanked_versions?
   end
 
+  def latest_version_number(rubygem)
+    rubygem.versions.latest.first.number
+  end
 end

@@ -42,7 +42,7 @@ nl:
       current_rank: huidige positie
       overview: Statistiekenoverzicht
       for: Statistieken voor %{for}
-      total_downloads: ! '%{count} downloads totaal'
+      total_downloads: ! 'Downloads totaal'
       highest_rank: hoogste notering vandaag
       daily_downloads: ! '%{count} downloads vandaag'
   time_ago: ! '%{duration} ago'
@@ -81,7 +81,7 @@ nl:
     show:
       install: Installeer
       bundler_header: Gemfile
-      downloads_for_this_version: ! '%{count} voor deze versie'
+      downloads_for_this_version: ! 'Voor deze versie'
       stats_header: Statistieken
       authors_header: Auteurs
       versions_header: Versies
