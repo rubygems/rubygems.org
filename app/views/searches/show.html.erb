@@ -1,24 +1,21 @@
 <% @title = "search" %>
+
 <% if @gems %>
   <% @subtitle = t('.subtitle', :query => content_tag(:em, h(params[:query]))) %>
+
   <% if @exact_match %>
-    <p><%= t '.exact_match' %></p>
-    <div class="gems border">
-      <ol>
-        <%= render @exact_match %>
-      </ol>
-    </div>
+    <header class="gems__header">
+      <p class="gems__meter"><%= t '.exact_match' %></p>
+    </header>
+    <%= render @exact_match %>
   <% end %>
 
-  <p class="entries">
-    <%= page_entries_info(@gems, :entry_name => 'gem', :model => 'gem').html_safe %>
-  </p>
+  <header class="gems__header push">
+    <p class="gems__meter"><%= page_entries_info(@gems, :entry_name => 'gem', :model => 'gem').html_safe %></p>
+  </header>
+
   <% if @gems.present? %>
-    <div class="gems border">
-      <ol>
-        <%= render @gems %>
-      </ol>
-    </div>
+    <%= render @gems %>
     <%= will_paginate @gems %>
   <% end %>
 <% end %>
