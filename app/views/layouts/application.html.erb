@@ -34,26 +34,20 @@
 
         <div class="header__nav-links-wrap">
           <% if request.path_info == "/" %>
-            <form class="header__search-wrap--home">
-              <input class="header__search" id="header__search" name="header__search" placeholder="Search Gems..." type="search">
-              <label class="header__search__icon" data-icon="⌕" for="header__search">
+            <%= form_tag search_url, :id => "main-search", :class => "header__search-wrap--home", :method => :get do %>
+              <%= search_field_tag :query, params[:query], :placeholder => "Search Gems&hellip;".html_safe, autofocus: current_page?(root_url), :class => "header__search" %>
+              <%= label_tag :query do %>
                 <span class="t-hidden">Search gems</span>
-              </label>
-            </form>
-            <%= form_tag search_url, :id => "main-search", :method => :get do %>
-              <%= text_field_tag :query, params[:query], :placeholder => "Search gems&hellip;".html_safe, autofocus: current_page?(root_url) %>
-              <%= submit_tag 'Search', :id => 'search_submit', :name => nil %>
+              <% end %>
+              <%= submit_tag '⌕', :id => 'search_submit', :name => nil, :class => "header__search__icon" %>
             <% end %>
           <% else %>
-            <form class="header__search-wrap">
-              <input class="header__search" id="header__search" name="header__search" placeholder="Search Gems..." type="search">
-              <label class="header__search__icon" data-icon="⌕" for="header__search">
+            <%= form_tag search_url, :id => "main-search", :class => "header__search-wrap", :method => :get do %>
+              <%= search_field_tag :query, params[:query], :placeholder => "Search Gems&hellip;".html_safe, autofocus: current_page?(root_url), :class => "header__search" %>
+              <%= label_tag :query do %>
                 <span class="t-hidden">Search gems</span>
-              </label>
-            </form>
-            <%= form_tag search_url, :id => "main-search", :method => :get do %>
-              <%= text_field_tag :query, params[:query], :placeholder => "Search gems&hellip;".html_safe, autofocus: current_page?(root_url) %>
-              <%= submit_tag 'Search', :id => 'search_submit', :name => nil %>
+              <% end %>
+              <%= submit_tag '⌕', :id => 'search_submit', :name => nil, :class => "header__search__icon" %>
             <% end %>
           <% end %>
 
