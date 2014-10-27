@@ -229,6 +229,11 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal "Authors must be an Array of Strings", @rubygem.all_errors(@version)
     end
 
+    should "return array of author names in #authors_array" do
+      @version = build(:version)
+      assert_equal ['Joe User'], @version.authors_array
+    end
+
     should "return more than one error joined for #all_errors" do
       @specification = gem_specification_from_gem_fixture('test-0.0.0')
       @specification.homepage = "badurl.com"

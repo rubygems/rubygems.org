@@ -252,6 +252,10 @@ class Version < ActiveRecord::Base
     command
   end
 
+  def authors_array
+    self.authors.split(',').flatten
+  end
+
   private
 
   def self.to_rows(scope)

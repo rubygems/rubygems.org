@@ -136,7 +136,7 @@ en:
       subtitle: "for %{gem}"
       other_fields_notice: All other fields can only be edited by pushing an updated version of your gem.
     index:
-      title: 'all gems'
+      title: 'Gems'
       subtitle: 'starting with %{prefix}'
     show:
       not_hosted_notice: This gem is not currently hosted on Gemcutter.
@@ -145,7 +145,7 @@ en:
       yank_info_link_text: please click here
       stats_header: Stats
       authors_header: Authors
-      downloads_for_this_version: "%{count} for this version"
+      downloads_for_this_version: "For this version"
       owners_header: Owners
       links:
         header: Links
@@ -178,7 +178,7 @@ en:
     show:
       for: "stats for %{for}"
       overview: "stats overview"
-      total_downloads: "%{count} total downloads"
+      total_downloads: "Total downloads"
       daily_downloads: "%{count} downloads today"
       current_rank: current rank today
       highest_rank: highest rank today
