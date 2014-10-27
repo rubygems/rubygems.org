@@ -1,0 +1,410 @@
+.stats {
+  overflow: auto;
+  border-bottom: 1px solid #c1c4ca; }
+  @media (max-width: 709px) {
+    .stats {
+      margin-top: -32px;
+      margin-bottom: 24px;
+      padding-bottom: 12px; } }
+  @media (min-width: 710px) {
+    .stats {
+      margin-top: -15px;
+      margin-bottom: 60px;
+      padding-bottom: 24px; } }
+
+.stat {
+  width: 33.33%;
+  float: left;
+  font-weight: 500;
+  text-transform: uppercase; }
+  @media (max-width: 709px) {
+    .stat {
+      font-size: 9px; } }
+  @media (min-width: 710px) {
+    .stat {
+      font-size: 12px; } }
+  @media (max-width: 399px) {
+    .stat:before {
+      display: none; } }
+  @media (min-width: 400px) {
+    .stat:before {
+      float: left; } }
+  @media (min-width: 400px) and (max-width: 719px) {
+    .stat:before {
+      margin-right: 6px;
+      font-size: 20px; } }
+  @media (min-width: 710px) {
+    .stat:before {
+      margin-right: 18px;
+      font-size: 34px; } }
+
+.stat__count {
+  display: block;
+  font-weight: 600; }
+  @media (max-width: 719px) {
+    .stat__count {
+      font-size: 12px; } }
+  @media (min-width: 710px) {
+    .stat__count {
+      font-size: 24px; } }
+
+.stats__graph__heading {
+  margin-bottom: 42px;
+  font-weight: 600;
+  font-size: 18px;
+  text-transform: uppercase; }
+
+.stats__graph__gem {
+  margin-bottom: 15px;
+  display: table;
+  height: 30px;
+  width: 100%;
+  position: relative; }
+
+.stats__graph__gem__name {
+  display: table-cell;
+  font-weight: 400;
+  text-align: right;
+  vertical-align: middle; }
+  @media (max-width: 709px) {
+    .stats__graph__gem__name {
+      width: 15%;
+      width: -webkit-calc(86px);
+      width: -moz-calc(86px);
+      width: calc(86px);
+      font-size: 13px; } }
+  @media (min-width: 710px) {
+    .stats__graph__gem__name {
+      width: 15%;
+      width: -webkit-calc(140px);
+      width: -moz-calc(140px);
+      width: calc(140px);
+      font-size: 15px; } }
+
+.stats__graph__gem__meter-wrap {
+  position: relative; }
+
+.stats__graph__gem__meter {
+  height: 30px;
+  box-shadow: inset 0 1px 1px -1px #c1c4ca;
+  background-image: none;
+  background-color: #f8f8f9;
+  -webkit-appearance: none; }
+  @media (max-width: 420px) {
+    .stats__graph__gem__meter {
+      margin-left: 3%;
+      margin-left: -webkit-calc(10px);
+      margin-left: -moz-calc(10px);
+      margin-left: calc(10px);
+      width: 97%;
+      width: -webkit-calc(100% - 10px);
+      width: -moz-calc(100% - 10px);
+      width: calc(100% - 10px); } }
+  @media (min-width: 421px) and (max-width: 709px) {
+    .stats__graph__gem__meter {
+      margin-left: 3%;
+      margin-left: -webkit-calc(16px);
+      margin-left: -moz-calc(16px);
+      margin-left: calc(16px);
+      width: 97%;
+      width: -webkit-calc(100% - 16px);
+      width: -moz-calc(100% - 16px);
+      width: calc(100% - 16px); } }
+  @media (min-width: 710px) {
+    .stats__graph__gem__meter {
+      margin-left: 3%;
+      margin-left: -webkit-calc(30px);
+      margin-left: -moz-calc(30px);
+      margin-left: calc(30px);
+      width: 97%;
+      width: -webkit-calc(100% - 30px);
+      width: -moz-calc(100% - 30px);
+      width: calc(100% - 30px); } }
+  .stats__graph__gem__meter::-webkit-meter-bar {
+    box-shadow: inset 0 1px 1px -1px #c1c4ca;
+    background-image: none;
+    background-color: #f8f8f9; }
+  .stats__graph__gem__meter::-webkit-meter-optimum-value {
+    background: none; }
+
+.stats__graph__gem:nth-of-type(2) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+  border-right: 1px solid #eba000;
+  background-color: #ffae00;
+  background: -webkit-linear-gradient(right, #ffae00 0%, #ffd67f 100%);
+  background: -moz-linear-gradient(right, #ffae00 0%, #ffd67f 100%);
+  background: linear-gradient(to left, #ffae00 0%, #ffd67f 100%); }
+
+.stats__graph__gem:nth-of-type(2) .stats__graph__gem__meter::-moz-meter-bar {
+  border-right: 1px solid #eba000;
+  background-color: #ffae00;
+  background: -webkit-linear-gradient(right, #ffae00 0%, #ffd67f 100%);
+  background: -moz-linear-gradient(right, #ffae00 0%, #ffd67f 100%);
+  background: linear-gradient(to left, #ffae00 0%, #ffd67f 100%); }
+
+.stats__graph__gem:nth-of-type(2) .stats__graph__gem__meter-polyfill {
+  border-right: 1px solid #eba000;
+  background-color: #ffae00;
+  background: -webkit-linear-gradient(right, #ffae00 0%, #ffd67f 100%);
+  background: -moz-linear-gradient(right, #ffae00 0%, #ffd67f 100%);
+  background: linear-gradient(to left, #ffae00 0%, #ffd67f 100%);
+  height: 100%; }
+
+.stats__graph__gem:nth-of-type(3) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+  border-right: 1px solid #92cb16;
+  background-color: #9fdd18;
+  background: -webkit-linear-gradient(right, #9fdd18 0%, #cbed83 100%);
+  background: -moz-linear-gradient(right, #9fdd18 0%, #cbed83 100%);
+  background: linear-gradient(to left, #9fdd18 0%, #cbed83 100%); }
+
+.stats__graph__gem:nth-of-type(3) .stats__graph__gem__meter::-moz-meter-bar {
+  border-right: 1px solid #92cb16;
+  background-color: #9fdd18;
+  background: -webkit-linear-gradient(right, #9fdd18 0%, #cbed83 100%);
+  background: -moz-linear-gradient(right, #9fdd18 0%, #cbed83 100%);
+  background: linear-gradient(to left, #9fdd18 0%, #cbed83 100%); }
+
+.stats__graph__gem:nth-of-type(3) .stats__graph__gem__meter-polyfill {
+  border-right: 1px solid #92cb16;
+  background-color: #9fdd18;
+  background: -webkit-linear-gradient(right, #9fdd18 0%, #cbed83 100%);
+  background: -moz-linear-gradient(right, #9fdd18 0%, #cbed83 100%);
+  background: linear-gradient(to left, #9fdd18 0%, #cbed83 100%);
+  height: 100%; }
+
+.stats__graph__gem:nth-of-type(4) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+  border-right: 1px solid #bd49ff;
+  background-color: #c45dff;
+  background: -webkit-linear-gradient(right, #c45dff 0%, #dda1ff 100%);
+  background: -moz-linear-gradient(right, #c45dff 0%, #dda1ff 100%);
+  background: linear-gradient(to left, #c45dff 0%, #dda1ff 100%); }
+
+.stats__graph__gem:nth-of-type(4) .stats__graph__gem__meter::-moz-meter-bar {
+  border-right: 1px solid #bd49ff;
+  background-color: #c45dff;
+  background: -webkit-linear-gradient(right, #c45dff 0%, #dda1ff 100%);
+  background: -moz-linear-gradient(right, #c45dff 0%, #dda1ff 100%);
+  background: linear-gradient(to left, #c45dff 0%, #dda1ff 100%); }
+
+.stats__graph__gem:nth-of-type(4) .stats__graph__gem__meter-polyfill {
+  border-right: 1px solid #bd49ff;
+  background-color: #c45dff;
+  background: -webkit-linear-gradient(right, #c45dff 0%, #dda1ff 100%);
+  background: -moz-linear-gradient(right, #c45dff 0%, #dda1ff 100%);
+  background: linear-gradient(to left, #c45dff 0%, #dda1ff 100%);
+  height: 100%; }
+
+.stats__graph__gem:nth-of-type(5) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+  border-right: 1px solid #4892d7;
+  background-color: #599cdb;
+  background: -webkit-linear-gradient(right, #599cdb 0%, #8abae8 100%);
+  background: -moz-linear-gradient(right, #599cdb 0%, #8abae8 100%);
+  background: linear-gradient(to left, #599cdb 0%, #8abae8 100%); }
+
+.stats__graph__gem:nth-of-type(5) .stats__graph__gem__meter::-moz-meter-bar {
+  border-right: 1px solid #4892d7;
+  background-color: #599cdb;
+  background: -webkit-linear-gradient(right, #599cdb 0%, #8abae8 100%);
+  background: -moz-linear-gradient(right, #599cdb 0%, #8abae8 100%);
+  background: linear-gradient(to left, #599cdb 0%, #8abae8 100%); }
+
+.stats__graph__gem:nth-of-type(5) .stats__graph__gem__meter-polyfill {
+  border-right: 1px solid #4892d7;
+  background-color: #599cdb;
+  background: -webkit-linear-gradient(right, #599cdb 0%, #8abae8 100%);
+  background: -moz-linear-gradient(right, #599cdb 0%, #8abae8 100%);
+  background: linear-gradient(to left, #599cdb 0%, #8abae8 100%);
+  height: 100%; }
+
+.stats__graph__gem:nth-of-type(6) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+  border-right: 1px solid #a7f2ff;
+  background-color: #bbf5ff;
+  background: -webkit-linear-gradient(right, #bbf5ff 0%, #cff8ff 100%);
+  background: -moz-linear-gradient(right, #bbf5ff 0%, #cff8ff 100%);
+  background: linear-gradient(to left, #bbf5ff 0%, #cff8ff 100%); }
+
+.stats__graph__gem:nth-of-type(6) .stats__graph__gem__meter::-moz-meter-bar {
+  border-right: 1px solid #a7f2ff;
+  background-color: #bbf5ff;
+  background: -webkit-linear-gradient(right, #bbf5ff 0%, #cff8ff 100%);
+  background: -moz-linear-gradient(right, #bbf5ff 0%, #cff8ff 100%);
+  background: linear-gradient(to left, #bbf5ff 0%, #cff8ff 100%); }
+
+.stats__graph__gem:nth-of-type(6) .stats__graph__gem__meter-polyfill {
+  border-right: 1px solid #a7f2ff;
+  background-color: #bbf5ff;
+  background: -webkit-linear-gradient(right, #bbf5ff 0%, #cff8ff 100%);
+  background: -moz-linear-gradient(right, #bbf5ff 0%, #cff8ff 100%);
+  background: linear-gradient(to left, #bbf5ff 0%, #cff8ff 100%);
+  height: 100%; }
+
+.stats__graph__gem:nth-of-type(7) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+  border-right: 1px solid #a7a7ff;
+  background-color: #bbbbff;
+  background: -webkit-linear-gradient(right, #bbbbff 0%, #cfcfff 100%);
+  background: -moz-linear-gradient(right, #bbbbff 0%, #cfcfff 100%);
+  background: linear-gradient(to left, #bbbbff 0%, #cfcfff 100%); }
+
+.stats__graph__gem:nth-of-type(7) .stats__graph__gem__meter::-moz-meter-bar {
+  border-right: 1px solid #a7a7ff;
+  background-color: #bbbbff;
+  background: -webkit-linear-gradient(right, #bbbbff 0%, #cfcfff 100%);
+  background: -moz-linear-gradient(right, #bbbbff 0%, #cfcfff 100%);
+  background: linear-gradient(to left, #bbbbff 0%, #cfcfff 100%); }
+
+.stats__graph__gem:nth-of-type(7) .stats__graph__gem__meter-polyfill {
+  border-right: 1px solid #a7a7ff;
+  background-color: #bbbbff;
+  background: -webkit-linear-gradient(right, #bbbbff 0%, #cfcfff 100%);
+  background: -moz-linear-gradient(right, #bbbbff 0%, #cfcfff 100%);
+  background: linear-gradient(to left, #bbbbff 0%, #cfcfff 100%);
+  height: 100%; }
+
+.stats__graph__gem:nth-of-type(8) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+  border-right: 1px solid #ff7cd8;
+  background-color: #ff90de;
+  background: -webkit-linear-gradient(right, #ff90de 0%, #ffb1e8 100%);
+  background: -moz-linear-gradient(right, #ff90de 0%, #ffb1e8 100%);
+  background: linear-gradient(to left, #ff90de 0%, #ffb1e8 100%); }
+
+.stats__graph__gem:nth-of-type(8) .stats__graph__gem__meter::-moz-meter-bar {
+  border-right: 1px solid #ff7cd8;
+  background-color: #ff90de;
+  background: -webkit-linear-gradient(right, #ff90de 0%, #ffb1e8 100%);
+  background: -moz-linear-gradient(right, #ff90de 0%, #ffb1e8 100%);
+  background: linear-gradient(to left, #ff90de 0%, #ffb1e8 100%); }
+
+.stats__graph__gem:nth-of-type(8) .stats__graph__gem__meter-polyfill {
+  border-right: 1px solid #ff7cd8;
+  background-color: #ff90de;
+  background: -webkit-linear-gradient(right, #ff90de 0%, #ffb1e8 100%);
+  background: -moz-linear-gradient(right, #ff90de 0%, #ffb1e8 100%);
+  background: linear-gradient(to left, #ff90de 0%, #ffb1e8 100%);
+  height: 100%; }
+
+.stats__graph__gem:nth-of-type(9) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+  border-right: 1px solid #fc6551;
+  background-color: #fc7765;
+  background: -webkit-linear-gradient(right, #fc7765 0%, #fda093 100%);
+  background: -moz-linear-gradient(right, #fc7765 0%, #fda093 100%);
+  background: linear-gradient(to left, #fc7765 0%, #fda093 100%); }
+
+.stats__graph__gem:nth-of-type(9) .stats__graph__gem__meter::-moz-meter-bar {
+  border-right: 1px solid #fc6551;
+  background-color: #fc7765;
+  background: -webkit-linear-gradient(right, #fc7765 0%, #fda093 100%);
+  background: -moz-linear-gradient(right, #fc7765 0%, #fda093 100%);
+  background: linear-gradient(to left, #fc7765 0%, #fda093 100%); }
+
+.stats__graph__gem:nth-of-type(9) .stats__graph__gem__meter-polyfill {
+  border-right: 1px solid #fc6551;
+  background-color: #fc7765;
+  background: -webkit-linear-gradient(right, #fc7765 0%, #fda093 100%);
+  background: -moz-linear-gradient(right, #fc7765 0%, #fda093 100%);
+  background: linear-gradient(to left, #fc7765 0%, #fda093 100%);
+  height: 100%; }
+
+.stats__graph__gem:nth-of-type(10) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+  border-right: 1px solid #92f3a0;
+  background-color: #a4f5b0;
+  background: -webkit-linear-gradient(right, #a4f5b0 0%, #bff8c8 100%);
+  background: -moz-linear-gradient(right, #a4f5b0 0%, #bff8c8 100%);
+  background: linear-gradient(to left, #a4f5b0 0%, #bff8c8 100%); }
+
+.stats__graph__gem:nth-of-type(10) .stats__graph__gem__meter::-moz-meter-bar {
+  border-right: 1px solid #92f3a0;
+  background-color: #a4f5b0;
+  background: -webkit-linear-gradient(right, #a4f5b0 0%, #bff8c8 100%);
+  background: -moz-linear-gradient(right, #a4f5b0 0%, #bff8c8 100%);
+  background: linear-gradient(to left, #a4f5b0 0%, #bff8c8 100%); }
+
+.stats__graph__gem:nth-of-type(10) .stats__graph__gem__meter-polyfill {
+  border-right: 1px solid #92f3a0;
+  background-color: #a4f5b0;
+  background: -webkit-linear-gradient(right, #a4f5b0 0%, #bff8c8 100%);
+  background: -moz-linear-gradient(right, #a4f5b0 0%, #bff8c8 100%);
+  background: linear-gradient(to left, #a4f5b0 0%, #bff8c8 100%);
+  height: 100%; }
+
+.stats__graph__gem:nth-of-type(11) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+  border-right: 1px solid #fce551;
+  background-color: #fce865;
+  background: -webkit-linear-gradient(right, #fce865 0%, #fdef92 100%);
+  background: -moz-linear-gradient(right, #fce865 0%, #fdef92 100%);
+  background: linear-gradient(to left, #fce865 0%, #fdef92 100%); }
+
+.stats__graph__gem:nth-of-type(11) .stats__graph__gem__meter::-moz-meter-bar {
+  border-right: 1px solid #fce551;
+  background-color: #fce865;
+  background: -webkit-linear-gradient(right, #fce865 0%, #fdef92 100%);
+  background: -moz-linear-gradient(right, #fce865 0%, #fdef92 100%);
+  background: linear-gradient(to left, #fce865 0%, #fdef92 100%); }
+
+.stats__graph__gem:nth-of-type(11) .stats__graph__gem__meter-polyfill {
+  border-right: 1px solid #fce551;
+  background-color: #fce865;
+  background: -webkit-linear-gradient(right, #fce865 0%, #fdef92 100%);
+  background: -moz-linear-gradient(right, #fce865 0%, #fdef92 100%);
+  background: linear-gradient(to left, #fce865 0%, #fdef92 100%);
+  height: 100%; }
+
+.stats__graph__gem:nth-of-type(2) .stats__graph__gem__count {
+  color: #b8820a; }
+
+.stats__graph__gem:nth-of-type(3) .stats__graph__gem__count {
+  color: #75a31b; }
+
+.stats__graph__gem:nth-of-type(4) .stats__graph__gem__count {
+  color: #8f49bc; }
+
+.stats__graph__gem:nth-of-type(5) .stats__graph__gem__count {
+  color: #4475a3; }
+
+.stats__graph__gem:nth-of-type(6) .stats__graph__gem__count {
+  color: #82aab2; }
+
+.stats__graph__gem:nth-of-type(7) .stats__graph__gem__count {
+  color: #7779a3; }
+
+.stats__graph__gem:nth-of-type(8) .stats__graph__gem__count {
+  color: #b86da5; }
+
+.stats__graph__gem:nth-of-type(9) .stats__graph__gem__count {
+  color: #b65c51; }
+
+.stats__graph__gem:nth-of-type(10) .stats__graph__gem__count {
+  color: #689972; }
+
+.stats__graph__gem:nth-of-type(11) .stats__graph__gem__count {
+  color: #b6aa51; }
+
+.stats__graph__gem__count {
+  position: absolute;
+  top: 7px;
+  font-size: 13px; }
+  @media (max-width: 420px) {
+    .stats__graph__gem__count {
+      font-size: 12px; } }
+  @media (min-width: 710px) {
+    .stats__graph__gem__count {
+      top: 5px;
+      font-size: 15px; } }
+  .stats__graph__gem__count[data-name='rake'] {
+    right: 9%; }
+  .stats__graph__gem__count[data-name='rack'] {
+    right: 11.5%; }
+  .stats__graph__gem__count[data-name='thor'] {
+    right: 17%; }
+  .stats__graph__gem__count[data-name='activesupport'] {
+    right: 23%; }
+  .stats__graph__gem__count[data-name='json'] {
+    right: 27%; }
+  .stats__graph__gem__count[data-name='rails'] {
+    right: 28%; }
+  .stats__graph__gem__count[data-name='activerecord'] {
+    right: 42.5%; }
+  .stats__graph__gem__count[data-name='actionpack'] {
+    right: 46.5%; }
+  .stats__graph__gem__count[data-name='actionmailer'] {
+    right: 52%; }
+  .stats__graph__gem__count[data-name='activesource'] {
+    right: 64%; }
