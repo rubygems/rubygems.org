@@ -53,8 +53,8 @@ pre {
   font-family: "icomoon";
   font-weight: normal;
   font-style: normal;
-  src: url("/fonts/icomoon.eot");
-  src: url("/fonts/icomoon.eot?#iefix") format("eot"), url("/fonts/icomoon.woff") format("woff"), url("/fonts/icomoon.ttf") format("truetype"); }
+  src: url("../fonts/icomoon.eot");
+  src: url("../fonts/icomoon.eot?#iefix") format("eot"), url("../fonts/icomoon.woff") format("woff"), url("../fonts/icomoon.ttf") format("truetype"); }
 [data-icon]:before {
   content: attr(data-icon);
   font-family: "icomoon";

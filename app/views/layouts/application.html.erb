@@ -87,21 +87,23 @@
     <% end %>
 
     <main class="<%= 'main--interior' if request.path_info != '/' %>">
-      <div class="l-wrap--b">
-        <% if @title %>
-          <h1 class="t-display page__heading">
-            <%= link_to @title, @title_url, class: "t-link--black" %>
+      <% if request.path_info != '/' %>
+        <div class="l-wrap--b">
+          <% if @title %>
+            <h1 class="t-display page__heading">
+              <%= link_to @title, @title_url, class: "t-link--black" %>
 
-            <% if @subtitle %>
-              <i class="gem__version"><%= @subtitle.html_safe %></i>
-            <% end %>
-          </h1>
-        <% end %>
-
-        <%= yield :title %>
-
+              <% if @subtitle %>
+                <i class="gem__version"><%= @subtitle.html_safe %></i>
+              <% end %>
+            </h1>
+          <% end %>
+          <%= yield :title %>
+          <%= yield %>
+        </div>
+      <% else %>
         <%= yield %>
-      </div>
+      <% end %>
     </main>
 
     <footer class="footer">
@@ -126,37 +128,37 @@
         <div class="footer__sponsors">
           <a class="footer__sponsor" href="http://rubycentral.org/" target="_blank">
             Supported by
-            <%= image_tag('ruby-central.png', class: 'footer__sponsor__logo') %>
+            <%= image_tag('sponsors/ruby-central.png', class: 'footer__sponsor__logo') %>
           </a>
           <a class="footer__sponsor" href="https://www.bluebox.net/" target="_blank">
             Hosted by
-            <img alt="Blue Box" class="footer__sponsor__logo" src="/logos/bluebox.png">
+            <%= image_tag('sponsors/bluebox.png', class: 'footer__sponsor__logo') %>
           </a>
           <a class="footer__sponsor" href="http://www.dockyard.com/" target="_blank">
             Designed by
-            <img alt="DockYard" class="footer__sponsor__logo" src="/logos/dockyard.png">
+            <%= image_tag('sponsors/dockyard.png', class: 'footer__sponsor__logo') %>
           </a>
           <a class="footer__sponsor" href="https://dnsimple.com/" target="_blank">
             Resolved with
-            <img alt="DNSimple" class="footer__sponsor__logo" src="/logos/dnsimple.png">
+            <%= image_tag('sponsors/dnsimple.png', class: 'footer__sponsor__logo') %>
           </a>
           <a class="footer__sponsor" href="http://newrelic.com/" target="_blank">
             Optimized by
-            <img alt="New Relic" class="footer__sponsor__logo" src="/logos/new-relic.png">
+            <%= image_tag('sponsors/new-relic.png', class: 'footer__sponsor__logo') %>
           </a>
           <a class="footer__sponsor" href="http://get.gaug.es/" target="_blank">
             Tracking by
-            <img alt="Gauges" class="footer__sponsor__logo" src="/logos/gauges.png">
+            <%= image_tag('sponsors/gauges.png', class: 'footer__sponsor__logo') %>
           </a>
           <a class="footer__sponsor" href="https://www.runscope.com/" target="_blank">
             Monitored by
-            <img alt="Runscope" class="footer__sponsor__logo" src="/logos/runscope.png">
+            <%= image_tag('sponsors/runscope.png', class: 'footer__sponsor__logo') %>
           </a>
         </div>
       </div>
     </footer>
 
-    <%= javascript_include_tag "jquery.min", "jquery.easing.1.3", "jquery.color", "jquery_ujs", "announcements", "application", :cache => true %>
+    <%= javascript_include_tag "jquery.min", "jquery.easing.1.3", "jquery.color", "jquery_ujs", "announcements", "meter-polyfill", "mobile-nav", "modal", "parallax", "application", :cache => true %>
     <%= yield :javascript %>
 
     <script type="text/javascript">
