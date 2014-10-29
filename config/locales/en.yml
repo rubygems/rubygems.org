@@ -29,10 +29,10 @@ en:
     index:
       gems_header: "of %{gem_count} gems cut since July 2009"
       welcome_blurb: "Welcome to your community RubyGem host."
-      find_blurb: "Find your gems easier, publish them faster, and have fun doing it."
+      find_blurb: "Find your gems easier, publish them faster, and have fun."
       learn:
         header: 'learn'
-        install_rubygems: "Install RubyGems %{version}"
+        install_rubygems: "Install RubyGems"
         rubygems_subtitle: "Ruby's premier packaging system"
         browse_docs: "Browse the Guides"
         docs_subtitle: "In depth explanations, tutorials, and references"
