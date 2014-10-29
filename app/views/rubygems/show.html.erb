@@ -3,6 +3,53 @@
 
 <%= content_for :head, auto_discovery_link_tag(:atom, rubygem_versions_path(@rubygem, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
 
+
+
+
+
+<div class="l-overflow">
+  <div class="l-colspan--l colspan--l--has-border">
+    <article class="gem__intro">
+      <p class="gem__desc t-text">Active Merchant is a simple payment abstraction library used in and sponsored by Shopify. It is written by Tobias Luetke, Cody Fauser, and contributors. The aim of the project is to feel natural to Ruby users and to abstract as many parts as possible away from the user to offer a consistent interface across all supported gateways.</p>
+      <pre class="gem__pre"><code><span class="gem__code__heading">Gemfile</span>
+      <span class="gem__code">gem "act_as_csv", ~> 0.1.1"</span></code></pre>
+      <pre class="gem__pre"><code><span class="gem__code__heading">Install</span>
+      <span class="gem__code">gem install achdirect-activemerchant and something really long long long!</span></code></pre>
+    </article>
+  </div>
+
+  <div class="gem__aside l-col--r--pad">
+    <div class="gem__downloads-wrap">
+      <h2 class="gem__downloads__heading t-text--s">
+        Total Downloads
+        <span class="gem__downloads">3,860</span>
+      </h2>
+      <h2 class="gem__downloads__heading t-text--s">
+        For This Version
+        <span class="gem__downloads">1,750</span>
+      </h2>
+      <a class="gem__see-all-versions t-link--gray t-link--has-arrow" href="#">See all 12 versions</a>
+    </div>
+    <h2 class="gem__ruby-version__heading t-list__heading">
+      Required Ruby Version:
+      <span class="gem__ruby-version">&#126;&gt; 2.0</span>
+    </h2>
+    <h3 class="t-list__heading">Links:</h3>
+    <div class="t-list__items">
+      <a class="gem__link t-list__item" data-icon="→" href="#">Homepage</a>
+      <a class="gem__link t-list__item" data-icon="▯" href="#">Documentation</a>
+      <a class="gem__link t-list__item" data-icon="★" href="#">Badge</a>
+      <a class="gem__link t-list__item" data-icon="✉" href="#">Subscribe</a>
+      <a class="gem__link t-list__item" data-icon="#" href="#">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
 <% if @rubygem.versions.count.zero? %>
   <p><%= t '.not_hosted_notice' %></p>
 <% else %>

@@ -15,7 +15,7 @@ nl:
         spec_subtitle: Het gezicht van jouw gem's voor de wereld.
         header: leren
         docs_subtitle: Gedetailleerde uitleg, stap voor stap instructies en naslagwerk
-        install_rubygems: Installeer RubyGems %{version}
+        install_rubygems: Installeer RubyGems
         rubygems_subtitle: Ruby's bewezen packaging systeem
       leaderboards:
         new: Nieuwe Gems
