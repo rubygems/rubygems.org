@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 # ruby '2.0.0'
 
-gem 'rails', '~> 3.2.19'
+gem 'rails', '~> 3.2.20'
 
 gem 'builder'
 gem 'dynamic_form'
