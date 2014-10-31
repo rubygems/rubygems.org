@@ -1,17 +1,19 @@
-<% @title = "sign in" %>
-  <div class="form_links sign_in_links">
-    <%= link_to t('.forgot_password'), new_password_url %>
-  </div>
+<% @title = "Sign in" %>
+
+<div class="form_links sign_in_links t-body">
+  <p><%= link_to t('.forgot_password'), new_password_url %></p>
+</div>
+
 <%= form_for :session, :url => session_path do |form| %>
   <div class="text_field">
-    <%= form.label :who, t('activerecord.attributes.session.who') %>
-    <%= form.text_field :who %>
+    <%= form.label :who, t('activerecord.attributes.session.who'), :class => 'form__label' %>
+    <%= form.text_field :who, :class => 'form__input' %>
   </div>
   <div class="password_field">
-    <%= form.label :password, t('activerecord.attributes.session.password') %>
-    <%= form.password_field :password %>
+    <%= form.label :password, t('activerecord.attributes.session.password'), :class => 'form__label' %>
+    <%= form.password_field :password, :class => 'form__input' %>
   </div>
   <div class="form_bottom">
-    <%= form.submit "Sign in", :data => {:disable_with => t('form_disable_with')} %>
+    <%= form.submit "Sign in", :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
   </div>
 <% end %>

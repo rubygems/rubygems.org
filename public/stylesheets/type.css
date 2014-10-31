@@ -165,17 +165,16 @@ a.t-list__item {
   border-left: none; }
 .t-body pre {
   padding: 30px;
-  overflow: auto;
+  overflow-x: scroll;
   border-radius: 5px;
   color: white; }
   .t-body pre code {
-    padding-right: 0;
-    padding-left: 0;
-    line-height: 1.33; }
+    overflow-x: scroll;
+    line-height: 1.33;
+    word-break: normal; }
 .t-body code {
   font-weight: bold;
-  font-family: "courier", monospace;
-  word-break: break-word; }
+  font-family: "courier", monospace; }
 .t-body ul, .t-body ol {
   margin-top: 18px; }
   .t-body ul li, .t-body ol li {
