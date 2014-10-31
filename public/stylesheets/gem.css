@@ -22,7 +22,7 @@
 .gem__code__heading {
   display: inline-block;
   width: 112px;
-  background-image: url("/arrow.svg");
+  background-image: url("/images/arrow.svg");
   background-repeat: no-repeat;
   background-position: center right;
   font-weight: 800;
@@ -37,6 +37,16 @@
   top: 0;
   left: 155px;
   line-height: 60px; }
+
+#clippy, #github_clippy {
+  position: absolute;
+  top: 0;
+  right: 0; }
+
+#clippy embed, #github_clippy embed {
+  position: absolute;
+  top: 18px;
+  right: 0; }
 
 @media (max-width: 779px) {
   .gem__aside {
@@ -74,10 +84,24 @@
   margin-right: 16px; }
 
 .gem__versions-wrap {
-  margin-bottom: 70px; }
+  margin-bottom: 70px;
+  overflow: auto; }
 
 .gem__versions {
   margin-bottom: 12px; }
 
 .gem__version__date {
   color: #c1c4ca; }
+
+.gem__versions-wrap {
+  overflow: auto; }
+
+.gem__version__date {
+  font-size: 15px; }
+
+.gem__version-wrap {
+  font-weight: 800; }
+  .gem__version-wrap a.t-list__item {
+    display: inline-block; }
+  .gem__version-wrap .gem__version__date {
+    font-weight: 400; }

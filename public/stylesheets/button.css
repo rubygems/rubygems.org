@@ -1,4 +1,4 @@
-.home__join, .modal__submit, .help__link--new-discussion, .help__form__submit, .help__category__link--new-discussion, .post__aside__close {
+.home__join, .modal__submit, .help__link--new-discussion, .form__submit, .help__category__link--new-discussion, .post__aside__close {
   -webkit-appearance: none;
   position: relative;
   display: block;
@@ -19,15 +19,15 @@
   -o-transition-property: border-color, background-color;
   transition-property: border-color, background-color; }
 
-.home__join, .modal__submit, .help__link--new-discussion, .help__form__submit, .help__category__link--new-discussion {
+.home__join, .modal__submit, .help__link--new-discussion, .form__submit, .help__category__link--new-discussion {
   padding-top: 10px;
   padding-bottom: 10px;
   border-radius: 20px; }
-  .home__join:before, .modal__submit:before, .help__link--new-discussion:before, .help__form__submit:before, .help__category__link--new-discussion:before {
+  .home__join:before, .modal__submit:before, .help__link--new-discussion:before, .form__submit:before, .help__category__link--new-discussion:before {
     position: absolute;
     right: 18px;
     line-height: 22px; }
-  .home__join:focus:before, .modal__submit:focus:before, .help__link--new-discussion:focus:before, .help__form__submit:focus:before, .help__category__link--new-discussion:focus:before, .home__join:hover:before, .modal__submit:hover:before, .help__link--new-discussion:hover:before, .help__form__submit:hover:before, .help__category__link--new-discussion:hover:before {
+  .home__join:focus:before, .modal__submit:focus:before, .help__link--new-discussion:focus:before, .form__submit:focus:before, .help__category__link--new-discussion:focus:before, .home__join:hover:before, .modal__submit:hover:before, .help__link--new-discussion:hover:before, .form__submit:hover:before, .help__category__link--new-discussion:hover:before {
     -webkit-animation: arrow .75s infinite;
     animation: arrow .75s infinite; }
 
@@ -65,7 +65,7 @@
   width: 150px;
   text-align: left; }
 
-.help__link--new-discussion, .help__form__submit {
+.help__link--new-discussion, .form__submit {
   background-color: #fa3c29;
   color: white; }
 
@@ -103,7 +103,7 @@
     .help__category__link--new-discussion {
       padding-left: 68px; } }
 
-.help__form__submit {
+.form__submit {
   margin-top: 42px;
   margin-bottom: 150px;
   width: 100%;
@@ -136,3 +136,32 @@
   .post__aside__close:hover {
     background-color: #ff4625; }
 
+.download__format {
+  margin-bottom: 24px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: inline-block;
+  float: left;
+  width: 22%;
+  max-width: 320px;
+  border-radius: 20px;
+  background-color: #fa3c29;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: white !important;
+  letter-spacing: 1px;
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -ms-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-property: background-color !important;
+  -moz-transition-property: background-color !important;
+  -ms-transition-property: background-color !important;
+  -o-transition-property: background-color !important;
+  transition-property: background-color !important; }
+  .download__format:hover, .download__format:focus {
+    background-color: #ff4625 !important; }
+  .download__format:not(:last-of-type) {
+    margin-right: 4%; }

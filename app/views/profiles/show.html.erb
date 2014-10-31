@@ -21,11 +21,6 @@
     <% end %>
   </header>
 
-
-
-
-
-
   <div id="profile-info">
     <h3 id="profile-gittip"><%= link_to "gittip", @user.gittip_url unless @user.gittip_username.blank? %></h3>
   </div>
@@ -67,8 +62,8 @@
 
 <div id="profile">
   <div class="profile-list">
-    <ol>
+    <ul>
       <%= render :partial => 'rubygem', :collection => @rubygems + @extra_rubygems, :locals => {:graph => false}  %>
-    </ol>
+    </ul>
   </div>
 </div>
