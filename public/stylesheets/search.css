@@ -167,11 +167,11 @@
 .home__search__icon {
   top: 5px;
   right: 0;
-  color: white;
   border: none;
   background-color: transparent;
   font-size: 18px;
-  font-family: "icomoon"; }
+  font-family: "icomoon";
+  color: white; }
 
 .home__search {
   margin-bottom: 45px;

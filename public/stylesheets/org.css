@@ -1,52 +1,156 @@
-#clippy, #github_clippy {
-  position: absolute;
-  top: 0;
-  right: 0;
+@media (max-width: 899px) {
+  .desktop__header__nav-link {
+    display: none;
+  }
+  .header__popup-link {
+    display: none;
+  }
 }
 
-#clippy embed, #github_clippy embed {
-  position: absolute;
-  top: 18px;
-  right: 0;
+@media (min-width: 900px) {
+  .mobile__header__nav-link {
+    display: none;
+  }
+  .header__popup-link {
+    margin-left: 5px;
+    float: right;
+    line-height: 70px;
+    color: #ffffff;
+    -webkit-transition-duration: 0.25s;
+    -moz-transition-duration: 0.25s;
+    -ms-transition-duration: 0.25s;
+    -o-transition-duration: 0.25s;
+    transition-duration: 0.25s;
+    -webkit-transition-property: color;
+    -moz-transition-property: color;
+    -ms-transition-property: color;
+    -o-transition-property: color;
+    transition-property: color;
+  }
+  .header__popup-link:hover {
+    color: rgba(255, 255, 255, 0.3);
+  }
 }
 
-.pagination {
-  margin-top: 90px;
+@media (min-width: 900px) {
+  .header__popup__nav-links {
+    display: none;
+  }
+  .header__popup__nav-links.is-expanded {
+    margin-top: -7px;
+    display: block;
+    float: right;
+    position: absolute;
+    right: 0;
+    width: 180px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.15);
+    background-color: #fa3c29;
+    text-align: right;
+  }
+  .header__popup__nav-links .header__nav-link {
+    padding-top: 15px;
+    padding-right: 30px;
+    padding-bottom: 15px;
+    display: block;
+    width: 100%;
+  }
+  .header__popup__nav-links .header__nav-link:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  }
+}
+
+#user_gravatar {
+  margin-top: -30px;
+  margin-left: 16px;
   position: relative;
+  top: 14px;
+  height: 40px;
+  width: 40px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+  border: 2px solid white;
+  border-radius: 20px;
+}
+
+.push--bottom {
+  margin-bottom: 60px;
+}
+
+
+
+
+.dashboard {
+  width: 100%;
+  overflow: auto; }
+
+.dashboard__gems {
+  margin-top: -30px; }
+
+.dashboard__updates {
+  margin-top: 3px;
+  margin-bottom: 30px;
+  font-weight: 800;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #c1c4ca; }
+
+.password-reset {
+  padding-top: 50px;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.66; }
+
+.profile__header {
+  padding-top: 60px;
+  padding-bottom: 40px;
+  width: 100%;
   overflow: auto;
-  text-align: center;}
+  border-bottom: 1px solid #c1c4ca; }
 
-.pagination .previous_page {
-  position: absolute;
-  left: 0; }
+@media (min-width: 600px) {
+  .profile__header__name-wrap {
+    float: left;
+    width: 70%; } }
 
-.pagination .next_page {
-  position: absolute;
-  right: 0; }
+.profile__header__name {
+  word-break: break-word; }
+  @media (min-width: 600px) {
+    .profile__header__name {
+      padding-top: 16px; } }
+  @media (min-width: 780px) {
+    .profile__header__name {
+      padding-left: 195px; } }
 
-.pagination a, .pagination em {
-  margin-right: 8px;
-  margin-left: 8px;
-  font-style: normal; }
+@media (max-width: 779px) {
+  .profile__header__avatar {
+    display: none; } }
+@media (min-width: 780px) {
+  .profile__header__avatar {
+    margin-right: 45px;
+    height: 150px;
+    width: 150px;
+    float: left;
+    border-radius: 50%; } }
 
-.pagination a {
-  color: #9da2ab;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  -ms-transition-duration: 0.25s;
-  -o-transition-duration: 0.25s;
-  transition-duration: 0.25s;
-  -webkit-transition-property: color;
-  -moz-transition-property: color;
-  -ms-transition-property: color;
-  -o-transition-property: color;
-  outline: none;
-}
+.profile__header__email {
+  padding-top: 10px;
+  display: inline-block; }
+  .profile__header__email:before {
+    margin-right: 9px;
+    position: relative;
+    top: 1px; }
 
-.pagination a:hover, .pagination a:focus, .pagination a:active {
-  color: #141c22;
-}
-
-.push {
-  margin-top: 60px;
-}
+.profile__downloads-wrap {
+  padding-top: 32px; }
+  @media (max-width: 599px) {
+    .profile__downloads-wrap {
+      width: 100%;
+      float: left; } }
+  @media (min-width: 600px) {
+    .profile__downloads-wrap {
+      float: right;
+      text-align: right; } }

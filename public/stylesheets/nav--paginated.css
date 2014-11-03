@@ -53,3 +53,34 @@
 .paginated-nav-link--numbered {
   margin-right: 8px;
   margin-left: 8px; }
+
+.pagination {
+  margin-top: 90px;
+  position: relative;
+  overflow: auto;
+  text-align: center; }
+  .pagination.previous_page {
+    position: absolute;
+    left: 0; }
+  .pagination.next_page {
+    position: absolute;
+    right: 0; }
+  .pagination a, .pagination em {
+    margin-right: 8px;
+    margin-left: 8px;
+    font-style: normal; }
+  .pagination a {
+    color: #9da2ab;
+    -webkit-transition-duration: 0.25s;
+    -moz-transition-duration: 0.25s;
+    -ms-transition-duration: 0.25s;
+    -o-transition-duration: 0.25s;
+    transition-duration: 0.25s;
+    -webkit-transition-property: color;
+    -moz-transition-property: color;
+    -ms-transition-property: color;
+    -o-transition-property: color;
+    transition-property: color;
+    outline: none; }
+    .pagination a:hover, .pagination a:focus, .pagination a:active {
+      color: #141c22; }
