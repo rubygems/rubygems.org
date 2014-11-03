@@ -237,7 +237,7 @@ GEM
     validatable (1.6.7)
     validates_formatting_of (0.8.0)
       activemodel (~> 3.0)
-    webmock (1.20.0)
+    webmock (1.20.2)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
     will_paginate (3.0.7)
