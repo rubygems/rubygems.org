@@ -23,7 +23,7 @@ en:
       no_owned: "You haven't pushed any gems yet. Perhaps check out the guides on %{creating_link} a gem or %{migrating_link} a gem from RubyForge."
       creating_link_text: 'creating'
       migrating_link_text: 'migrating'
-      my_subscriptions: 'My Subscriptions'
+      my_subscriptions: 'Subscriptions'
 
   home:
     index:
@@ -58,11 +58,11 @@ en:
   layouts:
     application:
       header:
-        all_gems: "all gems"
-        dashboard: "dashboard"
-        sign_in: "sign in"
-        sign_up: "sign up"
-        sign_out: "sign out"
+        all_gems: "All gems"
+        dashboard: "Dashboard"
+        sign_in: "Sign in"
+        sign_up: "Sign up"
+        sign_out: "Sign out"
       footer:
         about: "About"
         blog: "Blog"
@@ -91,7 +91,6 @@ en:
   pages:
     about:
       title: About
-      subtitle: what this is
       purpose:
         header: "Welcome to %{site}, the Ruby community's gem hosting service. The purpose of this project is three-fold:"
         better_api: Provide a better API for dealing with gems
@@ -106,10 +105,10 @@ en:
 
   passwords:
     edit:
-      title: reset password
+      title: Reset password
       submit: Save this password
     new:
-      title: change your password
+      title: Change your password
       will_email_notice: We will email you a link to change your password.
       submit: Reset password
 

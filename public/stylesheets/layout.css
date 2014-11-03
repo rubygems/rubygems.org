@@ -60,13 +60,15 @@
   .l-half--l, .l-half--r {
     width: 50%; } }
 
-@media (max-width: 959px) {
-  .l-half--l {
-    margin-bottom: 60px; } }
-@media (min-width: 960px) {
-  .l-half--l {
-    padding-right: 60px;
-    float: left; } }
+.l-half--l {
+  margin-bottom: 60px; }
+  @media (max-width: 959px) {
+    .l-half--l {
+      margin-bottom: 60px; } }
+  @media (min-width: 960px) {
+    .l-half--l {
+      padding-right: 60px;
+      float: left; } }
 
 @media (min-width: 960px) {
   .l-half--r {

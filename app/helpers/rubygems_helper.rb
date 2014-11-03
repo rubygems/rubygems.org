@@ -54,7 +54,7 @@ module RubygemsHelper
   end
 
   def download_link(version)
-    link_to "Download", "/downloads/#{version.full_name}.gem", :id => :download
+    link_to "Download", "/downloads/#{version.full_name}.gem", :id => :download, :class => 'gem__link t-list__item'
   end
 
   def gittip_link(rubygem)
