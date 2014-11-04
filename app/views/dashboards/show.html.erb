@@ -11,23 +11,21 @@
     </a>
     <div class="push--bottom">
       <% if @latest_updates.empty? %>
-        <div class="t-body push">
+        <div class="t-body push--s">
           <i class="t-text"><%= t('.no_subscriptions', :gem_link => link_to(t('.gem_link_text'), rubygem_path("gemcutter"))).html_safe %></i>
         </div>
       <% else %>
         <ol>
           <% @latest_updates.each do |version| %>
-          <li>
-            <a href="<%= rubygem_url(version.rubygem) %>">
-              <div class="top">
-                <strong>
-                  <%= version.to_title %>
-                </strong>
-                <%= t 'time_ago', :duration => time_ago_in_words(version.created_at) %>
-              </div>
-              <%= short_info(version) %>
-            </a>
-          </li>
+            <li>
+              <a href="<%= rubygem_url(version.rubygem) %>" class="dashboard__gem">
+                <div class="dashboard__gem__info">
+                  <strong class="dashboard__gem__name"><%= version.to_title %></strong>
+                  <i class="dashboard__gem__version"><%= t 'time_ago', :duration => time_ago_in_words(version.created_at) %></i>
+                </div>
+                <p class="dashboard__gem__desc t-text"><%= short_info(version) %></p>
+              </a>
+            </li>
           <% end %>
         </ol>
       <% end %>

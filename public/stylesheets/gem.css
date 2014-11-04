@@ -41,12 +41,14 @@
 #clippy, #github_clippy {
   position: absolute;
   top: 0;
-  right: 0; }
+  right: 0;
+  width: 50px;
+  overflow: hidden; }
 
 #clippy embed, #github_clippy embed {
   position: absolute;
-  top: 18px;
-  right: 0; }
+  top: 22px;
+  right: -70px; }
 
 @media (max-width: 779px) {
   .gem__aside {

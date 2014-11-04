@@ -1,88 +1,3 @@
-@media (max-width: 899px) {
-  .desktop__header__nav-link {
-    display: none;
-  }
-  .header__popup-link {
-    display: none;
-  }
-}
-
-@media (min-width: 900px) {
-  .mobile__header__nav-link {
-    display: none;
-  }
-  .header__popup-link {
-    margin-left: 5px;
-    float: right;
-    line-height: 70px;
-    color: #ffffff;
-    -webkit-transition-duration: 0.25s;
-    -moz-transition-duration: 0.25s;
-    -ms-transition-duration: 0.25s;
-    -o-transition-duration: 0.25s;
-    transition-duration: 0.25s;
-    -webkit-transition-property: color;
-    -moz-transition-property: color;
-    -ms-transition-property: color;
-    -o-transition-property: color;
-    transition-property: color;
-  }
-  .header__popup-link:hover {
-    color: rgba(255, 255, 255, 0.3);
-  }
-}
-
-@media (min-width: 900px) {
-  .header__popup__nav-links {
-    display: none;
-  }
-  .header__popup__nav-links.is-expanded {
-    margin-top: -7px;
-    display: block;
-    float: right;
-    position: absolute;
-    right: 0;
-    width: 180px;
-    border-bottom-left-radius: 3px;
-    border-bottom-right-radius: 3px;
-    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.15);
-    background-color: #fa3c29;
-    text-align: right;
-  }
-  .header__popup__nav-links .header__nav-link {
-    padding-top: 15px;
-    padding-right: 30px;
-    padding-bottom: 15px;
-    display: block;
-    width: 100%;
-  }
-  .header__popup__nav-links .header__nav-link:not(:last-child) {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  }
-}
-
-#user_gravatar {
-  margin-top: -30px;
-  margin-left: 16px;
-  position: relative;
-  top: 14px;
-  height: 40px;
-  width: 40px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
-  border: 2px solid white;
-  border-radius: 20px;
-}
-
-.push--bottom {
-  margin-bottom: 60px;
-}
-
-
-
-
 .dashboard {
   width: 100%;
   overflow: auto; }
@@ -98,6 +13,38 @@
   text-transform: uppercase;
   color: #c1c4ca; }
 
+.dashboard__gem {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  display: block;
+  border-bottom: 1px solid #c1c4ca;
+  color: #141c22; }
+  .dashboard__gem:hover .dashboard__gem__name {
+    color: #fa3c29; }
+
+.dashboard__gem__info {
+  margin-bottom: 6px; }
+
+.dashboard__gem__name {
+  font-weight: 800;
+  font-size: 18px;
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -ms-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-property: color;
+  -moz-transition-property: color;
+  -ms-transition-property: color;
+  -o-transition-property: color;
+  transition-property: color; }
+
+.dashboard__gem__version {
+  margin-left: 10px;
+  font-weight: 300;
+  font-size: 18px;
+  color: #a6aab2; }
+
 .password-reset {
   padding-top: 50px;
   font-weight: 300;
@@ -105,11 +52,16 @@
   line-height: 1.66; }
 
 .profile__header {
-  padding-top: 60px;
   padding-bottom: 40px;
   width: 100%;
   overflow: auto;
   border-bottom: 1px solid #c1c4ca; }
+  @media (max-width: 779px) {
+    .profile__header {
+      padding-top: 18px; } }
+  @media (min-width: 780px) {
+    .profile__header {
+      padding-top: 60px; } }
 
 @media (min-width: 600px) {
   .profile__header__name-wrap {
@@ -118,7 +70,7 @@
 
 .profile__header__name {
   word-break: break-word; }
-  @media (min-width: 600px) {
+  @media (min-width: 780px) {
     .profile__header__name {
       padding-top: 16px; } }
   @media (min-width: 780px) {
@@ -144,13 +96,15 @@
     position: relative;
     top: 1px; }
 
-.profile__downloads-wrap {
-  padding-top: 32px; }
-  @media (max-width: 599px) {
-    .profile__downloads-wrap {
-      width: 100%;
-      float: left; } }
-  @media (min-width: 600px) {
-    .profile__downloads-wrap {
-      float: right;
-      text-align: right; } }
+@media (max-width: 599px) {
+  .profile__downloads-wrap {
+    padding-top: 32px;
+    width: 100%;
+    float: left; } }
+@media (min-width: 600px) {
+  .profile__downloads-wrap {
+    float: right;
+    text-align: right; } }
+@media (min-width: 780px) {
+  .profile__downloads-wrap {
+    padding-top: 32px; } }
