@@ -33,6 +33,12 @@ pre code, [data-icon]:before, .t-list__heading, .home__join, .modal__submit, .he
 
 
 
+
+
+
+
+
+
 .body--index, .header--interior {
   background-image: url("/red.jpg"); }
 
@@ -42,7 +48,7 @@ pre code, [data-icon]:before, .t-list__heading, .home__join, .modal__submit, .he
 .header--interior {
   background-size: 100% auto; }
 
-@media (max-width: 899px) {
+@media (max-width: 1019px) {
   main, .header, .footer {
     position: relative;
     left: 0;
@@ -60,14 +66,14 @@ pre code, [data-icon]:before, .t-list__heading, .home__join, .modal__submit, .he
     main.mobile-nav-is-expanded, .header.mobile-nav-is-expanded, .footer.mobile-nav-is-expanded {
       left: -270px; } }
 
-@media (max-width: 899px) {
+@media (max-width: 1019px) {
   main.mobile-nav-is-expanded, .header.mobile-nav-is-expanded {
     overflow: visible; } }
 
 main {
   display: block; }
 
-@media (max-width: 899px) {
+@media (max-width: 1019px) {
   .footer.mobile-nav-is-expanded {
     overflow: hidden; } }
 
@@ -160,3 +166,9 @@ a.page__heading {
 
 .push {
   margin-top: 60px; }
+
+.push--bottom {
+  margin-bottom: 60px; }
+
+.push--s {
+  margin-top: 20px; }
