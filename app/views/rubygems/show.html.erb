@@ -16,9 +16,9 @@
             <%= simple_markup(@latest_version.info) %>
           </div>
           <pre class="gem__pre"><code><span class="gem__code__heading"><%= t '.bundler_header' %></span>
-          <span class="gem__code"><%= @latest_version.to_bundler %></span></code><%= render :partial => "rubygems/clippy", :locals => { :embed => "clippy", :text => @latest_version.to_bundler } %></pre>
+          <span class="gem__code"><%= @latest_version.to_bundler %></span></code><%= render :partial => "rubygems/clippy", :locals => { :embed => "github_clippy", :text => @latest_version.to_bundler } %></pre>
           <pre class="gem__pre"><code><span class="gem__code__heading"><%= t '.install' %></span>
-          <span class="gem__code"><%= @latest_version.to_install %></span></code><%= render :partial => "rubygems/clippy", :locals => { :embed => "clippy", :text => @latest_version.to_install } %></pre>
+          <span class="gem__code"><%= @latest_version.to_install %></span></code><%= render :partial => "rubygems/clippy", :locals => { :embed => "github_clippy", :text => @latest_version.to_install } %></pre>
         </article>
 
         <article class="l-overflow">
@@ -36,23 +36,11 @@
           <% if @rubygem.owners.present? %>
             <div class="l-half--l">
               <h3 class="t-list__heading"><%= t '.owners_header' %>:</h3>
-              <p><%= links_to_owners(@rubygem) %></p>
               <div class="project__members">
-                <a class="project__member--v" href="/profile">
-                  <img class="project__member__image" src="https://secure.gravatar.com/avatar/58479f76374a3ba3c69b9804163f39f4?s=32" title="Eric Hodel">
-                  <p class="project__member__name">Krista1212</p>
-                </a>
-                <a class="project__member--v" href="https://github.com/zenspider">
-                  <img class="project__member__image" src="https://secure.gravatar.com/avatar/16c4b19d8670085a428787f8b2438223?s=32" title="Ryan Davis">
-                  <p class="project__member__name">Herman</p>
-                </a>
+                <%= links_to_owners(@rubygem) %>
                 <a class="project__member--v" href="https://github.com/jbarnette">
                   <img class="project__member__image" src="https://secure.gravatar.com/avatar/c237cf537a06b60921c97804679e3b15?s=32" title="John Barnette">
                   <p class="project__member__name">Krista1212</p>
-                </a>
-                <a class="project__member--v" href="https://github.com/evanphx">
-                  <img class="project__member__image" src="https://secure.gravatar.com/avatar/540cb3b3712ffe045113cb03bab616a2?s=32" title="Evan Phoenix">
-                  <p class="project__member__name">NinjaBoy92</p>
                 </a>
               </div>
             </div>
@@ -87,11 +75,11 @@
           <div class="gem__downloads-wrap" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
             <h2 class="gem__downloads__heading t-text--s">
               <%= t('stats.show.total_downloads') %>
-              <span class="gem__downloads"><% number_with_delimiter(@rubygem.downloads) %></span>
+              <span class="gem__downloads"><%= number_with_delimiter(@rubygem.downloads) %></span>
             </h2>
             <h2 class="gem__downloads__heading t-text--s">
               <%= t('.downloads_for_this_version') %>
-              <span class="gem__downloads"><% number_with_delimiter(@latest_version.downloads_count) %></span>
+              <span class="gem__downloads"><%= number_with_delimiter(@latest_version.downloads_count) %></span>
             </h2>
             <% if @versions.present? %>
               <% if show_all_versions_link?(@rubygem) %>
