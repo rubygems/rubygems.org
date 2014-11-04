@@ -10,6 +10,14 @@
           <%= mail_to @user.email, "Email Me", :encode => "hex", class: "profile__header__email t-link--black", 'data-icon' => '✉' %>
         </p>
       <% end %>
+      <div id="profile-info">
+        <%= link_to "Gittip", @user.gittip_url, :id => "profile-gittip", class: "profile__header__email t-link--black" unless @user.gittip_username.blank? %>
+      </div>
+      <% if @user == current_user %>
+        <div id="downloads-ego">
+          <%= link_to "Edit Profile", edit_profile_path, :id => "edit-profile", class: "profile__header__email t-link--black" %>
+        </div>
+      <% end %>
     </div>
     <% unless Rails.env.recovery? %>
       <div class="profile__downloads-wrap">
@@ -20,15 +28,6 @@
       </div>
     <% end %>
   </header>
-
-  <div id="profile-info">
-    <h3 id="profile-gittip"><%= link_to "gittip", @user.gittip_url unless @user.gittip_username.blank? %></h3>
-  </div>
-  <div id="downloads-ego">
-    <% if @user == current_user %>
-      <%= link_to "Edit Profile", edit_profile_path, :id => "edit-profile" %>
-    <% end %>
-  </div>
 <% end %>
 
 <% content_for :javascript do %>
