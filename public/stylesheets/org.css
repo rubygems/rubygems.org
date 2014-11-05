@@ -12,6 +12,33 @@
   font-style: italic;
   color: #80221a; }
 
+.errorExplanation {
+  margin-bottom: 60px;
+  padding: 20px;
+  border: 1px solid #fa3c29;
+  border-radius: 3px; }
+  .errorExplanation h2 {
+    margin-bottom: 10px; }
+  .errorExplanation p {
+    font-style: italic; }
+  .errorExplanation ul {
+    margin-top: 18px; }
+  .errorExplanation ul li, .errorExplanation p {
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 1.66; }
+  .errorExplanation ul li {
+    padding-left: 23px;
+    text-indent: -23px; }
+    .errorExplanation ul li:before {
+      content: "✘";
+      margin-right: 15px;
+      position: relative;
+      top: -2px;
+      font-family: "icomoon";
+      font-size: 10px;
+      color: #fa3c29; }
+
 .dashboard {
   width: 100%;
   overflow: auto; }
