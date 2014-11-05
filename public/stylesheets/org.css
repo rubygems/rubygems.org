@@ -1,3 +1,19 @@
+.flash {
+  border-bottom: 1px solid #ff4625;
+  background-color: white;
+}
+
+.flash div {
+  background-image: linear-gradient(to right, rgba(255, 70, 37, .3), #ff4625);
+}
+
+
+
+
+
+
+
+
 .dashboard {
   width: 100%;
   overflow: auto; }
