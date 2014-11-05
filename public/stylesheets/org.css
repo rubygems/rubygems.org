@@ -1,18 +1,16 @@
 .flash {
-  border-bottom: 1px solid #ff4625;
-  background-color: white;
-}
+  border-bottom: 1px solid #fa3c29;
+  background-color: white; }
 
-.flash div {
-  background-image: linear-gradient(to right, rgba(255, 70, 37, .3), #ff4625);
-}
+.flash-wrap {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background-image: linear-gradient(to right, rgba(255, 70, 37, 0.3), #ff4625); }
 
-
-
-
-
-
-
+.flash-wrap span {
+  font-size: 13px;
+  font-style: italic;
+  color: #80221a; }
 
 .dashboard {
   width: 100%;
