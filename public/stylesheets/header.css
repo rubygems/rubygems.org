@@ -201,9 +201,12 @@
   .desktop__header__nav-link {
     display: none; } }
 @media (min-width: 1020px) {
-  .desktop__header__nav-link span {
-    margin-top: -4px;
-    top: 4px; } }
+  .desktop__header__nav-link {
+    position: relative;
+    z-index: 1; }
+    .desktop__header__nav-link span {
+      margin-top: -4px;
+      top: 4px; } }
 
 #user_gravatar {
   margin-top: -30px;
@@ -217,38 +220,57 @@
   border-radius: 20px; }
 
 @media (min-width: 1020px) {
-  .header__popup__nav-links {
+  .header__popup__nav-links, .home__header__popup__nav-links {
     display: none; }
-    .header__popup__nav-links.is-expanded {
+    .header__popup__nav-links.is-expanded, .home__header__popup__nav-links.is-expanded {
       margin-top: -7px;
       display: block;
       float: right;
       position: absolute;
       right: 0;
-      width: 180px;
-      border-bottom-right-radius: 3px;
-      border-bottom-left-radius: 3px;
-      box-shadow: 0 2px 0 0 rgba(20, 28, 34, 0.15);
-      background-color: #fa3c29;
       text-align: right; }
-    .header__popup__nav-links .header__nav-link {
+    .header__popup__nav-links .header__nav-link, .home__header__popup__nav-links .header__nav-link {
       padding-top: 15px;
       padding-right: 30px;
       padding-bottom: 15px;
       display: block;
-      width: 100%; }
-      .header__popup__nav-links .header__nav-link:not(:last-child) {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.3); } }
+      width: 100%; } }
+
+@media (min-width: 1020px) {
+  .header__popup__nav-links.is-expanded {
+    width: 180px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    box-shadow: 0 2px 0 0 rgba(20, 28, 34, 0.15);
+    background-color: #fa3c29; }
+  .header__popup__nav-links .header__nav-link:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3); } }
+
+@media (min-width: 1020px) {
+  .body--index .header__popup__nav-links.is-expanded {
+    width: 150px;
+    top: 0;
+    padding-top: 74px;
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0;
+    box-shadow: none;
+    background-color: transparent; }
+  .body--index .header__popup__nav-links .header__nav-link {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3); } }
 
 @media (max-width: 1019px) {
   .header__popup-link {
     display: none; } }
 @media (min-width: 1020px) {
   .header__popup-link {
+    margin-right: 5px;
     margin-left: 5px;
+    position: relative;
+    right: 11px;
     float: right;
     line-height: 70px;
     color: white;
+    z-index: 1;
     -webkit-transition-duration: 0.25s;
     -moz-transition-duration: 0.25s;
     -ms-transition-duration: 0.25s;
