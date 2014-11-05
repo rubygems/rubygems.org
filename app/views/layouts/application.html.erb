@@ -88,8 +88,10 @@
     </header>
 
     <% flash.each do |name, msg| %>
-      <div id="flash-border">
-        <div id="flash_<%= name %>"><span><%= msg %></span></div>
+      <div id="flash-border" class="flash">
+        <div class="flash-wrap">
+          <div id="flash_<%= name %>" class="l-wrap--b"><span><%= msg %></span></div>
+        </div>
       </div>
     <% end %>
 
