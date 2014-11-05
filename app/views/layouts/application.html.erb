@@ -61,7 +61,11 @@
                 <span class="t-hidden">More items</span>
               </a>
             <% end %>
-            <%= link_to "Gems", rubygems_url, class: "header__nav-link" %>
+            <%- if request.path_info == '/gems' %>
+              <%= link_to "Gems", rubygems_url, class: "header__nav-link is-active" %>
+            <%- else %>
+              <%= link_to "Gems", rubygems_url, class: "header__nav-link" %>
+            <%- end %>
             <%= link_to t('.footer.guides'), "http://guides.rubygems.org", class: "header__nav-link" %>
             <%= link_to t('.footer.contribute'), "http://guides.rubygems.org/contributing/", class: "header__nav-link" %>
 
@@ -75,8 +79,8 @@
                 <%= link_to t('.header.sign_out'), sign_out_path, :method => :delete, class: "header__nav-link" %>
               </div>
             <% else %>
-              <a href="<%= ssl_url_for :controller => 'clearance/sessions', :action => 'new' %>" class="header__nav-link"><%= t('.header.sign_in') %></a>
-              <a href="<%= ssl_url_for :controller => 'clearance/users', :action => 'new' %>" class="header__nav-link"><%= t('.header.sign_up') %></a>
+              <a href="<%= ssl_url_for :controller => 'clearance/sessions', :action => 'new' %>" class="header__nav-link <%= 'is-active' if request.path_info == '/sign_in' %>"><%= t('.header.sign_in') %></a>
+              <a href="<%= ssl_url_for :controller => 'clearance/users', :action => 'new' %>" class="header__nav-link <%= 'is-active' if request.path_info == '/sign_up' %>"><%= t('.header.sign_up') %></a>
             <% end %>
           </nav>
         </div>
@@ -127,7 +131,11 @@
             <%= link_to t('.footer.discussion_forum'), "http://groups.google.com/group/rubygems-org", class: "nav--v__link--footer" %>
             <%= link_to t('.footer.statistics'), stats_url, class: "nav--v__link--footer" %>
             <%= link_to t('.footer.blog'), "http://blog.rubygems.org", class: "nav--v__link--footer" %>
-            <%= link_to t('.footer.about'), page_url("about"), class: "nav--v__link--footer" %>
+            <%- if request.path_info == '/pages/about' %>
+              <%= link_to t('.footer.about'), page_url("about"), class: "nav--v__link--footer is-active" %>
+            <%- else %>
+              <%= link_to t('.footer.about'), page_url("about"), class: "nav--v__link--footer" %>
+            <%- end %>
             <%= link_to t('.footer.help'), t(:help_url), class: "nav--v__link--footer" %>
           </div>
           <div class="l-colspan--l colspan--l--has-border">
