@@ -119,7 +119,7 @@ GEM
     kgio (2.9.2)
     launchy (2.4.3)
       addressable (~> 2.3)
-    librato-metrics (1.4.0)
+    librato-metrics (1.5.0)
       aggregate (~> 0.2.2)
       faraday (~> 0.7)
       multi_json
