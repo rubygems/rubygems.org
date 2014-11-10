@@ -2,7 +2,7 @@
   <header class="profile__header">
     <div class="profile__header__name-wrap">
       <div id="avatar-frame">
-        <%= image_tag(@user.gravatar_url(:secure => request.ssl?).html_safe, :id => "profile_gravatar", :width => 150, :height => 150, :class => 'profile__header__avatar') %>
+        <%= image_tag(@user.gravatar_url(:size => 300, :secure => request.ssl?).html_safe, :id => "profile_gravatar", :width => 300, :height => 300, :class => 'profile__header__avatar') %>
       </div>
       <h1 id="profile-name" class="profile__header__name t-display"><%= link_to @user.display_handle, profile_path(@user.display_id), class: "t-link--black" %></h1>
       <% unless @user.hide_email %>

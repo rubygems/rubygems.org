@@ -38,10 +38,6 @@
               <h3 class="t-list__heading"><%= t '.owners_header' %>:</h3>
               <div class="project__members">
                 <%= links_to_owners(@rubygem) %>
-                <a class="project__member--v" href="https://github.com/jbarnette">
-                  <img class="project__member__image" src="https://secure.gravatar.com/avatar/c237cf537a06b60921c97804679e3b15?s=32" title="John Barnette">
-                  <p class="project__member__name">Krista1212</p>
-                </a>
               </div>
             </div>
           <% end %>
@@ -97,7 +93,7 @@
 
       <h3 class="t-list__heading"><%= t '.links.header' %>:</h3>
       <div class="t-list__items">
-        <%= link_to t('edit'), edit_rubygem_path(@rubygem), :id => "edit" if @rubygem.owned_by?(current_user) %>
+        <%= link_to t('edit'), edit_rubygem_path(@rubygem), :class => "gem__link t-list__item", :id => "edit" if @rubygem.owned_by?(current_user) %>
 
         <% if @latest_version.indexed %>
           <% if @rubygem.linkset.present? %>

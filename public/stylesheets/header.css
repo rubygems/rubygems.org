@@ -217,7 +217,7 @@
   width: 40px;
   box-shadow: 0 0 0 1px rgba(20, 28, 34, 0.2);
   border: 2px solid white;
-  border-radius: 20px; }
+  border-radius: 22px; }
 
 @media (min-width: 1020px) {
   .header__popup__nav-links, .home__header__popup__nav-links {

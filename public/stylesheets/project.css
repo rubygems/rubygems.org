@@ -44,15 +44,13 @@
   overflow: auto; }
   .project__member--v:not(:first-child) {
     margin-top: 12px; }
-  .project__member--v .project__member__image {
-    float: left; }
+  .project__member--v img {
+    margin-right: 12px;
+    float: left;
+    height: 32px;
+    width: 32px;
+    border-radius: 16px;
+    border-radius: 50%; }
   .project__member--v .project__member__name {
     display: table-cell;
     vertical-align: middle; }
-
-.project__member__image {
-  margin-right: 12px;
-  height: 32px;
-  width: 32px;
-  border-radius: 16px;
-  border-radius: 50%; }
