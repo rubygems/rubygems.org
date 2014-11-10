@@ -55,7 +55,7 @@
             <% if signed_in? %>
               <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link mobile__header__nav-link">
                 <span><%= truncate(current_user.name) %></span>
-                <%= gravatar(32, "user_gravatar") %>
+                <%= gravatar(80, "user_gravatar") %>
               </a>
               <a href="#" class="header__popup-link" data-icon="▼">
                 <span class="t-hidden">More items</span>
@@ -72,7 +72,7 @@
             <% if signed_in? %>
               <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link desktop__header__nav-link">
                 <span><%= truncate(current_user.name) %></span>
-                <%= gravatar(32, "user_gravatar") %>
+                <%= gravatar(80, "user_gravatar") %>
               </a>
               <div class="header__popup__nav-links">
                 <%= link_to t('.header.dashboard'), dashboard_url, class: "header__nav-link" %>
