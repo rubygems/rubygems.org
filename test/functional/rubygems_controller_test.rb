@@ -105,6 +105,7 @@ class RubygemsControllerTest < ActionController::TestCase
         assert page.has_selector?("input#linkset_wiki")
         assert page.has_selector?("input#linkset_mail")
         assert page.has_selector?("input#linkset_bugs")
+        assert page.has_selector?("input#linkset_logs")
         assert page.has_selector?("input[type='submit']")
       end
     end
