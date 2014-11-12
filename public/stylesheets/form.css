@@ -167,12 +167,7 @@
   color: white; }
 
 .form__checkbox {
-  margin-top: 42px;
-  padding-top: 26px;
-  padding-bottom: 36px;
-  display: block;
-  border-top: 1px solid #c1c4ca;
-  border-bottom: 5px solid #f8f8f9; }
+  margin-bottom: 40px; }
 
 .form__checkbox__label {
   position: relative;
@@ -216,3 +211,18 @@
     font-family: "icomoon";
     line-height: 1.8;
     text-align: center; }
+
+.edit_user #gravatar {
+  margin-right: 20px;
+  margin-bottom: 30px;
+  float: left;
+  height: 80px;
+  width: 80px;
+  border-radius: 40px; }
+  .edit_user #gravatar + .t-link, .edit_user .t-body #gravatar + a, .t-body .edit_user #gravatar + a {
+    margin-top: 24px;
+    display: inline-block; }
+
+.form__label + .t-link, .t-body .form__label + a {
+  margin-bottom: 10px;
+  display: inline-block; }
