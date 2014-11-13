@@ -88,7 +88,13 @@
 
       <h2 class="gem__ruby-version__heading t-list__heading">
         Required Ruby Version:
-        <span class="gem__ruby-version"><%= @latest_version.ruby_version %></span>
+        <span class="gem__ruby-version">
+          <% if @latest_version.ruby_version %>
+            <%= @latest_version.ruby_version %>
+          <% else %>
+            None
+          <% end %>
+        </span>
       </h2>
 
       <h3 class="t-list__heading"><%= t '.links.header' %>:</h3>
