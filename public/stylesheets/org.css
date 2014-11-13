@@ -149,3 +149,6 @@
 @media (min-width: 780px) {
   .profile__downloads-wrap {
     padding-top: 32px; } }
+
+.mine li a {
+  word-break: break-all; }
