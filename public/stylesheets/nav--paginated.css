@@ -57,6 +57,7 @@
 .pagination {
   margin-top: 90px;
   position: relative;
+  width: 100%;
   overflow: auto;
   text-align: center; }
   .pagination a, .pagination em {
@@ -78,6 +79,10 @@
     outline: none; }
     .pagination a:hover, .pagination a:focus, .pagination a:active {
       color: #141c22; }
+  .pagination .previous_page.disabled, .pagination .next_page.disabled {
+    color: #9da2ab; }
+    .pagination .previous_page.disabled:hover, .pagination .previous_page.disabled:focus, .pagination .previous_page.disabled:active, .pagination .next_page.disabled:hover, .pagination .next_page.disabled:focus, .pagination .next_page.disabled:active {
+      color: #9da2ab; }
   .pagination .previous_page {
     position: absolute;
     left: 0; }

@@ -72,7 +72,7 @@
   font-weight: 800;
   font-size: 24px; }
 
-a.gems__gem__name {
+.gems__gem__name {
   color: #141c22;
   -webkit-transition-duration: 0.25s;
   -moz-transition-duration: 0.25s;
@@ -84,7 +84,7 @@ a.gems__gem__name {
   -ms-transition-property: color;
   -o-transition-property: color;
   transition-property: color; }
-  a.gems__gem__name:hover {
+  .gems__gem__name:hover {
     color: #fa3c29; }
 
 .gems__gem__downloads__count {
