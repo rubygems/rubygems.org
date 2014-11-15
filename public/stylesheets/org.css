@@ -150,5 +150,12 @@
   .profile__downloads-wrap {
     padding-top: 32px; } }
 
-.mine li a {
-  word-break: break-all; }
+.mine li {
+  text-indent: 0 !important;
+  overflow: auto; }
+  .mine li:before {
+    margin-left: -23px;
+    float: left;
+    top: 11px !important; }
+  .mine li a {
+    word-break: break-all; }
