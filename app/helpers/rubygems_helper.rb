@@ -101,6 +101,6 @@ module RubygemsHelper
   end
 
   def latest_version_number(rubygem)
-    rubygem.versions.latest.first.number
+    rubygem.versions.latest.try(:first).try(:number)
   end
 end
