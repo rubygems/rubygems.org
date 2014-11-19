@@ -43,7 +43,7 @@
             <% end %>
           <% else %>
             <%= form_tag search_url, :id => "main-search", :class => "header__search-wrap", :method => :get do %>
-              <%= search_field_tag :query, params[:query], :placeholder => "Search Gems&hellip;".html_safe, :class => "header__search" %>
+              <%= search_field_tag :query, params[:query], :placeholder => "Search Gems&hellip;".html_safe, :class => "header__search", :autofocus => true %>
               <%= label_tag :query do %>
                 <span class="t-hidden">Search gems</span>
               <% end %>
