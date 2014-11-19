@@ -9,7 +9,7 @@
   z-index: 2; }
   @media (min-width: 780px) {
     .footer {
-      min-height: 70vh; } }
+      min-height: 40vh; } }
 
 .l-wrap--footer {
   margin-right: auto;
