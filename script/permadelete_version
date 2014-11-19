@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+
+unless ARGV.size == 2
+  abort "Usage: script/permadelete_version [GEM_NAME] [VERSION]"
+end
+
+ENV['RAILS_ENV'] ||= 'production'
+require_relative '../config/environment'
+
+name, version = ARGV
+index   = Indexer.new
+rubygem = Rubygem.find_by_name!(name).versions.find_by_number!(version)
+full_name = rubygem.full_name
+
+require 'highline'
+terminal = HighLine.new
+confirm  = terminal.ask("Are you sure you want to permadelete #{full_name}? (Y/N)")
+
+if confirm.upcase == "Y" || confirm.upcase == "YES"
+  index.directory.files.get("gems/#{full_name}.gem").try(:destroy)
+  index.directory.files.get("quick/Marshal.4.8/#{full_name}.gemspec.rz").try(:destroy)
+  rubygem.destroy
+  puts "#{full_name} permadeleted."
+else
+  abort "No problem! #{full_name} lives on."
+end
