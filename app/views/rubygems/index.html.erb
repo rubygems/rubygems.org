@@ -1,16 +1,17 @@
 <% @title = t('.title') %>
-<% @subtitle = t('.subtitle', :prefix => content_tag(:em, @letter)).html_safe %>
-<div class="directory border">
-  <ol>
-    <% ("A".."Z").each do |letter| %><li><%= link_to(letter, rubygems_path(:letter => letter)) %></li><% end %>
-  </ol>
+
+<div class="gems__nav-links">
+  <% ("A".."Z").each do |letter| %>
+    <%= link_to(letter, rubygems_path(:letter => letter), :class => "gems__nav-link") %>
+  <% end %>
 </div>
-<p class="entries">
-  <%= page_entries_info @gems, :entry_name => 'gem', :model => 'gem' %>
-</p>
-<div class="gems border">
-  <ol>
-    <%= render @gems %>
-  </ol>
-</div>
+
+<header class="gems__header">
+  <p class="gems__meter">
+    <%= page_entries_info @gems, :entry_name => 'gem', :model => 'gem' %>
+  </p>
+</header>
+
+<%= render @gems %>
+
 <%= will_paginate @gems %>

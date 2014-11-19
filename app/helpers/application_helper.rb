@@ -16,7 +16,7 @@ module ApplicationHelper
   end
 
   def short_info(version)
-    truncate(version.info, :length => 100)
+    truncate(version.info, :length => 90)
   end
 
   def gravatar(size, id = "gravatar", user = current_user)
@@ -34,8 +34,6 @@ module ApplicationHelper
   end
 
   def download_count(rubygem)
-    content_tag(:div, :class => 'downloads') do
-      t('download_count', :count => content_tag(:strong, number_with_delimiter(rubygem.downloads))).html_safe
-    end
+    number_with_delimiter(rubygem.downloads)
   end
 end
