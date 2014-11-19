@@ -170,9 +170,6 @@ class RubygemsControllerTest < ActionController::TestCase
         assert page.has_selector?("a[href='#{rubygem_path(g)}']")
       end
     end
-    should "display uppercase A" do
-      assert page.has_content?("starting with A")
-    end
     should "display 'gems' in pagination summary" do
       assert page.has_content?("all #{@gems.count} gems")
     end
@@ -223,9 +220,6 @@ class RubygemsControllerTest < ActionController::TestCase
       assert page.has_content?(@zgem.name)
       assert page.has_selector?("a[href='#{rubygem_path(@zgem)}']")
     end
-    should "display uppercase letter" do
-      assert page.has_content?("starting with Z")
-    end
   end
 
   context "On GET to index with a bad letter" do
@@ -246,11 +240,6 @@ class RubygemsControllerTest < ActionController::TestCase
         assert page.has_content?(g.name)
         assert page.has_selector?("a[href='#{rubygem_path(g)}']")
       end
-    end
-    should "display uppercase A" do
-      assert page.has_content?("starting with A")
-      assert ! page.has_content?("asdf")
-      assert ! page.has_content?("ASDF")
     end
   end
 

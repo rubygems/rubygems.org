@@ -1,20 +1,19 @@
-<% @title = "stats" %>
-<% @subtitle = "since 2009" %>
+<% @title = "Stats" %>
+<% @subtitle = "Since 2009" %>
 
-<div class="statistics clearfix">
-  <div class="border">
-    <%= t('.gem_count', :count => content_tag(:span, number_with_delimiter(@number_of_gems))).html_safe %>
-  </div>
-
-  <div class="border">
-    <%= t('download_count', :count => content_tag(:span, number_with_delimiter(@number_of_downloads))).html_safe %>
-  </div>
-
-  <div class="border">
-    <%= t('.user_count', :count => content_tag(:span, number_with_delimiter(@number_of_users))).html_safe %>
-  </div>
-
-  <div class="border chart">
-    <%= most_downloaded_chart(@most_downloaded) %>
-  </div>
+<div class="stats">
+  <h2 class="stat" data-icon="⟡">
+    Total Gems
+    <span class="stat__count"><%= @number_of_gems %></span>
+  </h2>
+  <h2 class="stat" data-icon="☺">
+    Total Users
+    <span class="stat__count"><%= @number_of_users %></span>
+  </h2>
+  <h2 class="stat" data-icon="⌄">
+    Total Downloads
+    <span class="stat__count"><%= @number_of_downloads %></span>
+  </h2>
 </div>
+
+<%= most_downloaded_chart(@most_downloaded) %>

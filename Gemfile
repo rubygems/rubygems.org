@@ -39,7 +39,6 @@ group :development do
   gem 'capistrano', '~> 2.0'
   gem 'capistrano-notification'
   gem 'rails-erd'
-  gem 'pry'
 end
 
 group :test do
@@ -54,6 +53,10 @@ group :test do
   gem 'shoulda', :require => false
   gem 'timecop'
   gem 'webmock'
+end
+
+group :development, :test do
+  gem 'pry'
 end
 
 # For some reason, including these gems in the maintenance environment enables

@@ -1,11 +1,12 @@
-<li>
-  <%= link_to version.number, rubygem_version_url(version.rubygem, version.slug) %>
-  <small><%= nice_date_for(version.built_at) %></small>
+<li class="gem__version-wrap">
+  <%= link_to version.number, rubygem_version_url(version.rubygem, version.slug), :class => 't-list__item' %>
+  <small class="gem__version__date">- <%= nice_date_for(version.built_at) %></small>
   <% if version.platformed? %>
-    <span class="platform"><%= version.platform %></span>
+    <span class="gem__version__date platform"><%= version.platform %></span>
   <% end %>
-  <span class="size">(<%= number_to_human_size(version.size) %>)</span>
+
+  <span class="gem__version__date">(<%= number_to_human_size(version.size) %>)</span>
   <% if version.yanked? -%>
-    <span class="yanked"><%= t '.yanked' %></span>
+    <span class="gem__version__date"><%= t '.yanked' %></span>
   <% end -%>
 </li>
