@@ -3,6 +3,7 @@ require 'test_helper'
 class RubygemsHelperTest < ActionView::TestCase
   include Rails.application.routes.url_helpers
   include ApplicationHelper
+  include ERB::Util
 
   should "create the directory" do
     directory = link_to_directory
@@ -86,8 +87,9 @@ class RubygemsHelperTest < ActionView::TestCase
       users = Array.new(2) { create(:user) }
       create_gem(*users)
       expected_links = users.sort_by(&:id).map { |u|
-        link_to gravatar(48, "gravatar-#{u.id}", u), profile_path(u.display_id), :alt => u.display_handle,
-          :title => u.display_handle
+        link_to profile_path(u.display_id), :class => 'project__member--v' do
+          gravatar(64, "gravatar-#{u.id}", u) + "<p class='project__member__name'>#{h u.display_handle}</p>".html_safe
+        end
       }.join
       assert_equal expected_links, links_to_owners(@rubygem)
       assert links_to_owners(@rubygem).html_safe?
