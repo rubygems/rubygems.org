@@ -34,7 +34,8 @@
 
 .header__logo-wrap {
   position: relative;
-  float: left; }
+  float: left;
+  z-index: 1; }
   .header__logo-wrap:focus {
     outline: none; }
   .header__logo-wrap:focus .header__logo:before, .header__logo-wrap:hover .header__logo:before {
@@ -115,11 +116,11 @@
       width: 270px; } }
   @media (min-width: 1020px) {
     .header__nav-links-wrap {
-      right: 0; } }
+      width: 100%; } }
 
 @media (min-width: 1020px) {
   .header__nav-links {
-    float: left; } }
+    float: right; } }
 
 .header__nav-link {
   font-weight: 500;
@@ -137,14 +138,12 @@
       padding: 18px 30px;
       display: block;
       width: 100%;
-      border-top: 1px solid #e74000;
+      border-bottom: 1px solid #e74000;
       -webkit-transition-property: background-color, border-top-color;
       -moz-transition-property: background-color, border-top-color;
       -ms-transition-property: background-color, border-top-color;
       -o-transition-property: background-color, border-top-color;
       transition-property: background-color, border-top-color; }
-      .header__nav-link:last-child {
-        border-bottom: 1px solid #e74000; }
       .header__nav-link:focus, .header__nav-link:hover {
         border-top-color: #d23a00;
         background-color: #e74000; }
