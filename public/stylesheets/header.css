@@ -186,9 +186,6 @@
     overflow: hidden;
     text-overflow: ellipsis; }
 
-@-moz-document url-prefix() {
-  .header__nav-link {
-    padding-bottom: 25px; } }
 @media (max-width: 1019px) {
   .mobile__header__nav-link span {
     top: 2px; } }
