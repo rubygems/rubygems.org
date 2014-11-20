@@ -4,27 +4,23 @@
 
 .header__search, .home__search {
   -webkit-appearance: none;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  background-color: transparent;
-  border-top: none;
-  border-right: none;
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-  border-left: none;
-  border-radius: 0;
+  padding: 10px;
+  background: #fff;
+  border: 2px solid #FE6724;
+  border-radius: 5px;
   font-weight: 300;
   font-family: "aktiv-grotesk-std", sans-serif;
-  color: white;
+  color: #fa3c29;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.20);
   outline: none; }
   .header__search::-webkit-input-placeholder, .home__search::-webkit-input-placeholder {
-    color: white; }
+    color: #fa3c29; }
   .header__search:-moz-placeholder, .home__search:-moz-placeholder {
-    color: white; }
+    color: #fa3c29; }
   .header__search::-moz-placeholder, .home__search::-moz-placeholder {
-    color: white; }
+    color: #fa3c29; }
   .header__search:-ms-input-placeholder, .home__search:-ms-input-placeholder {
-    color: white; }
+    color: #fa3c29; }
 
 .header__search-wrap, .header__search-wrap--home {
   position: relative; }
@@ -59,7 +55,6 @@
   background-color: transparent;
   font-size: 18px;
   font-family: "icomoon";
-  color: white;
   color: rgba(255, 255, 255, 0.5);
   -webkit-transition-duration: 0.25s;
   -moz-transition-duration: 0.25s;
@@ -165,19 +160,18 @@
     top: 70px; } }
 
 .home__search__icon {
-  top: 5px;
-  right: 0;
+  top: 12px;
+  right: 10px;
   border: none;
   background-color: transparent;
   font-size: 18px;
   font-family: "icomoon";
-  color: white; }
+  color: #FB6C21; }
 
 .home__search {
   margin-bottom: 45px;
   padding-right: 30px;
   width: 100%;
-  border-bottom-color: white;
   font-size: 18px; }
 
 .help__search__icon {
