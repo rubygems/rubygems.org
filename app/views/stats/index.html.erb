@@ -4,15 +4,15 @@
 <div class="stats">
   <h2 class="stat" data-icon="⟡">
     Total Gems
-    <span class="stat__count"><%= @number_of_gems %></span>
+    <span class="stat__count"><%= number_with_delimiter @number_of_gems %></span>
   </h2>
   <h2 class="stat" data-icon="☺">
     Total Users
-    <span class="stat__count"><%= @number_of_users %></span>
+    <span class="stat__count"><%= number_with_delimiter @number_of_users %></span>
   </h2>
   <h2 class="stat" data-icon="⌄">
     Total Downloads
-    <span class="stat__count"><%= @number_of_downloads %></span>
+    <span class="stat__count"><%= number_with_delimiter @number_of_downloads %></span>
   </h2>
 </div>
 
