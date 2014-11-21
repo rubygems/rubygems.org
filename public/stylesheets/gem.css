@@ -1,63 +1,57 @@
 .gem__version {
-  font-size: 18px;
+  position: relative;
   color: #a6aab2; }
+  @media (max-width: 929px) {
+    .gem__version {
+      top: 5px;
+      font-size: 20px; } }
+  @media (min-width: 930px) {
+    .gem__version {
+      top: 10px;
+      font-size: 42px; } }
 
 .gem__intro {
-  margin-bottom: 45px;
+  margin-bottom: 32px;
+  padding-bottom: 30px;
   border-bottom: 1px solid #c1c4ca; }
 
-.gem__pre {
-  padding-left: 30px;
-  height: 60px;
-  position: relative;
-  overflow-x: auto;
-  overflow-y: hidden;
-  border-radius: 30px; }
-  .gem__pre:first-of-type {
-    margin-top: 35px;
-    margin-bottom: 30px; }
-  .gem__pre:last-of-type {
-    margin-bottom: 75px; }
+.gem__desc {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.5; }
 
-.gem__code__heading {
-  display: inline-block;
-  width: 112px;
-  background-image: url("/images/arrow.svg");
-  background-repeat: no-repeat;
-  background-position: center right;
-  font-weight: 800;
-  font-size: 18px;
-  font-family: "aktiv-grotesk-std", sans-serif;
-  line-height: 60px;
-  text-transform: uppercase; }
+.gem__members {
+  padding-top: 30px;
+  border-top: 1px solid #c1c4ca;
+  clear: both; }
+  @media (max-width: 779px) {
+    .gem__members {
+      margin-bottom: 30px;
+      padding-bottom: 30px;
+      overflow: auto;
+      border-bottom: 1px solid #c1c4ca; } }
 
-.gem__code {
-  padding-right: 30px;
-  position: absolute;
-  top: 0;
-  left: 155px;
-  line-height: 60px; }
-
-#clippy, #github_clippy {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 50px;
-  overflow: hidden; }
-
-#clippy embed, #github_clippy embed {
-  position: absolute;
-  top: 22px;
-  right: -70px; }
-
-@media (max-width: 779px) {
-  .gem__aside {
-    margin-bottom: 48px;
-    padding-bottom: 48px;
-    border-bottom: 1px solid #c1c4ca; } }
+.gem__owners {
+  margin-top: 16px; }
+  .gem__owners img {
+    margin-right: 12px;
+    float: left;
+    height: 32px;
+    width: 32px;
+    border-radius: 16px; }
+  .gem__owners a {
+    position: relative; }
+  .gem__owners a:hover:before {
+    content: "";
+    height: 32px;
+    width: 32px;
+    position: absolute;
+    border-radius: 16px; 
+    background-color: #fa3c29;
+    opacity: .5; }
 
 .gem__downloads-wrap {
-  margin-bottom: 40px; }
+  margin-bottom: 30px; }
 
 .gem__downloads__heading {
   margin-bottom: 6px; }
@@ -75,12 +69,104 @@
   margin-bottom: 10px; }
 
 .gem__ruby-version {
-  margin-bottom: 40px;
+  margin-top: 10px;
+  margin-bottom: 30px;
   display: block;
   font-weight: 800;
-  font-style: italic;
-  font-size: 24px;
+  font-size: 18px;
   color: #141c22; }
+
+.gem__code-wrap {
+  margin-top: 12px;
+  position: relative;
+  width: 100%;
+  border: 1px solid #141c22;
+  border-radius: 6px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
+
+.gem__code {
+  padding-right: 10px;
+  padding-left: 10px;
+  display: inline-block;
+  overflow: scroll;
+  width: 100%;
+  width: calc(100% - 32px);
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  font-family: "courier", monospace;
+  font-size: 12px;
+  line-height: 30px;
+  text-transform: none;
+  white-space: nowrap;
+  color: #141c22;
+  -moz-appearance: none; }
+  .gem__code::-webkit-scrollbar {
+    display: none; }
+  @-moz-document url-prefix() {
+    .gem__code {
+      margin-bottom: -18px;
+      padding-bottom: 18px;
+      width: calc(100% - 45px); } }
+
+.gem__code__icon {
+  padding-left: 2px;
+  height: 100%;
+  width: 30px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  background-color: #141c22;
+  font-family: "icomoon";
+  font-size: 14px;
+  line-height: 32px;
+  text-align: center;
+  z-index: 5;
+  color: #ffffff;
+  cursor: pointer; }
+  .gem__code__icon:before {
+    content: "";
+    position: absolute;
+    left: -10px;
+    height: 100%;
+    width: 10px;
+    background-image: -webkit-linear-gradient(left,transparent,white); }
+
+.gem__code__tooltip--copy,
+.gem__code__tooltip--copied,
+.zeroclipboard-is-hover.zeroclipboard-is-active ~ .gem__code__tooltip--copy {
+  display: none; }
+
+.zeroclipboard-is-hover ~ .gem__code__tooltip--copy,
+.zeroclipboard-is-active ~ .gem__code__tooltip--copied {
+  display: block;
+  position: absolute;
+  top: 45px;
+  right: 0;
+  width: 120px;
+  border-radius: 6px; 
+  background-color: #141c22;
+  text-transform: none;
+  line-height: 30px;
+  text-align: center;
+  color: #ffffff; }
+  .zeroclipboard-is-hover ~ .gem__code__tooltip--copy:before,
+  .zeroclipboard-is-active ~ .gem__code__tooltip--copied:before {
+    content: "";
+    position: absolute;
+    top: -4px;
+    right: 8px;
+    height: 15px;
+    width: 15px;
+    background-color: #141c22;
+    -ms-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
 
 .gem__link:before {
   margin-right: 16px; }
@@ -93,7 +179,7 @@
   margin-bottom: 12px; }
 
 .gem__version__date {
-  color: #c1c4ca; }
+  color: #a6aab2; }
 
 .gem__versions-wrap {
   overflow: auto; }

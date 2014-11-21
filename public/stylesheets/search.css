@@ -31,7 +31,8 @@
       padding-right: 10px; }
     @-moz-document url-prefix() {
       .header__search-wrap, .header__search-wrap--home {
-        margin-top: 9px; } } }
+        margin-top: 7px;
+        padding-bottom: 6px; } } }
   @media (min-width: 1020px) {
     .header__search-wrap {
       margin-top: 18px;
