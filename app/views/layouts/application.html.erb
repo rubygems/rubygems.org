@@ -111,7 +111,7 @@
               <%= link_to @title, @title_url, class: "t-link--black" %>
 
               <% if @subtitle %>
-                <i class="gem__version"><%= @subtitle.html_safe %></i>
+                <i class="page__subheading"><%= @subtitle.html_safe %></i>
               <% end %>
             </h1>
           <% end %>
@@ -155,7 +155,7 @@
             Hosted by
             <%= image_tag('sponsors/bluebox.png', class: 'footer__sponsor__logo') %>
           </a>
-          <a class="footer__sponsor" href="http://www.dockyard.com/" target="_blank">
+          <a class="footer__sponsor" href="http://dockyard.com/" target="_blank">
             Designed by
             <%= image_tag('sponsors/dockyard.png', class: 'footer__sponsor__logo') %>
           </a>
