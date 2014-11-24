@@ -1,5 +1,5 @@
 .gems__nav-links {
-  margin-top: -21px;
+  margin-top: -5px;
   margin-bottom: 28px;
   padding-bottom: 24px;
   border-bottom: 1px solid #c1c4ca;
@@ -38,7 +38,7 @@
 .gems__meter {
   font-size: 12px;
   text-transform: uppercase;
-  color: #c1c4ca; }
+  color: #a6aab2; }
   @media (min-width: 780px) {
     .gems__meter {
       float: left; } }
