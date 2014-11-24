@@ -31,6 +31,8 @@ GEM
     addressable (2.3.6)
     aggregate (0.2.2)
     arel (3.0.3)
+    autoprefixer-rails (4.0.1)
+      execjs
     bcrypt (3.1.9)
     builder (3.0.4)
     capistrano (2.15.5)
@@ -83,6 +85,7 @@ GEM
       activemodel
     erubis (2.7.0)
     excon (0.25.3)
+    execjs (2.2.2)
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.5.0)
@@ -250,6 +253,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  autoprefixer-rails
   builder
   capistrano (~> 2.0)
   capistrano-notification

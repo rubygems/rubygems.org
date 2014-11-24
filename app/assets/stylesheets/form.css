@@ -25,15 +25,7 @@
   box-shadow: inset 0 1px 1px -1px #c1c4ca;
   background-color: #f8f8f9;
   outline: none;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  -ms-transition-duration: 0.25s;
-  -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  -webkit-transition-property: border-color;
-  -moz-transition-property: border-color;
-  -ms-transition-property: border-color;
-  -o-transition-property: border-color;
   transition-property: border-color; }
   .form__input::-webkit-input-placeholder, .form__textarea::-webkit-input-placeholder {
     color: #858a96; }
@@ -72,15 +64,7 @@
   outline: none;
   z-index: 2;
   cursor: pointer;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  -ms-transition-duration: 0.25s;
-  -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  -webkit-transition-property: border-color;
-  -moz-transition-property: border-color;
-  -ms-transition-property: border-color;
-  -o-transition-property: border-color;
   transition-property: border-color; }
   .form__select::-ms-expand {
     display: none; }
@@ -101,15 +85,7 @@
   color: #c1c4ca;
   z-index: 1;
   cursor: pointer;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  -ms-transition-duration: 0.25s;
-  -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  -webkit-transition-property: border-left-color, color;
-  -moz-transition-property: border-left-color, color;
-  -ms-transition-property: border-left-color, color;
-  -o-transition-property: border-left-color, color;
   transition-property: border-left-color, color; }
 
 .form__file {
@@ -130,15 +106,7 @@
   color: #828894;
   cursor: pointer;
   white-space: nowrap;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  -ms-transition-duration: 0.25s;
-  -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  -webkit-transition-property: border-color;
-  -moz-transition-property: border-color;
-  -ms-transition-property: border-color;
-  -o-transition-property: border-color;
   transition-property: border-color; }
   .form__file__label:before {
     position: absolute;
@@ -150,15 +118,7 @@
     line-height: 2.4;
     text-align: center;
     color: #c1c4ca;
-    -webkit-transition-duration: 0.25s;
-    -moz-transition-duration: 0.25s;
-    -ms-transition-duration: 0.25s;
-    -o-transition-duration: 0.25s;
     transition-duration: 0.25s;
-    -webkit-transition-property: color;
-    -moz-transition-property: color;
-    -ms-transition-property: color;
-    -o-transition-property: color;
     transition-property: color; }
   .form__file__label:hover:before {
     color: white; }
@@ -192,15 +152,7 @@
   background-color: transparent\0;
   outline: none;
   cursor: pointer;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  -ms-transition-duration: 0.25s;
-  -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  -webkit-transition-property: border-color;
-  -moz-transition-property: border-color;
-  -ms-transition-property: border-color;
-  -o-transition-property: border-color;
   transition-property: border-color; }
   .form__checkbox__input:focus {
     border-color: #53a4e0; }

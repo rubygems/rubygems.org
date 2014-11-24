@@ -7,6 +7,7 @@ unless Rails.env.maintenance?
   require 'rails/test_unit/railtie'
   require 'action_mailer/railtie'
   require 'active_record/railtie'
+  require 'sprockets/railtie'
 end
 
 Bundler.require(:default, Rails.env) if defined?(Bundler)
