@@ -8,15 +8,7 @@
   font-size: 18px;
   cursor: pointer;
   outline: none;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  -ms-transition-duration: 0.25s;
-  -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  -webkit-transition-property: border-color, background-color;
-  -moz-transition-property: border-color, background-color;
-  -ms-transition-property: border-color, background-color;
-  -o-transition-property: border-color, background-color;
   transition-property: border-color, background-color; }
 
 .home__join, .modal__submit, .help__link--new-discussion, .form__submit, .help__category__link--new-discussion {
@@ -28,7 +20,6 @@
     right: 18px;
     line-height: 22px; }
   .home__join:focus:before, .modal__submit:focus:before, .help__link--new-discussion:focus:before, .form__submit:focus:before, .help__category__link--new-discussion:focus:before, .home__join:hover:before, .modal__submit:hover:before, .help__link--new-discussion:hover:before, .form__submit:hover:before, .help__category__link--new-discussion:hover:before {
-    -webkit-animation: arrow .75s infinite;
     animation: arrow .75s infinite; }
 
 @-webkit-keyframes arrow {
@@ -118,15 +109,7 @@
   background-color: #fa3c29;
   text-align: center;
   color: white;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  -ms-transition-duration: 0.25s;
-  -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  -webkit-transition-property: background-color;
-  -moz-transition-property: background-color;
-  -ms-transition-property: background-color;
-  -o-transition-property: background-color;
   transition-property: background-color; }
   .post__aside__close.is-disabled {
     background-color: #c1c4ca;
@@ -151,15 +134,7 @@
   font-weight: 800;
   color: white !important;
   letter-spacing: 1px;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  -ms-transition-duration: 0.25s;
-  -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  -webkit-transition-property: background-color !important;
-  -moz-transition-property: background-color !important;
-  -ms-transition-property: background-color !important;
-  -o-transition-property: background-color !important;
   transition-property: background-color !important; }
   .download__format:hover, .download__format:focus {
     background-color: #ff4625 !important; }

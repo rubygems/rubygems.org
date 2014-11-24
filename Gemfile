@@ -30,6 +30,7 @@ gem 'validates_formatting_of'
 gem 'will_paginate'
 gem 'xml-simple'
 gem 'yajl-ruby', :require => 'yajl'
+gem "autoprefixer-rails"
 
 # enable if on heroku, make sure to toss this into an initializer:
 #     Rails.application.config.middleware.use HerokuAssetCacher
@@ -78,3 +79,4 @@ end
 platforms :jruby do
   gem 'jruby-openssl'
 end
+

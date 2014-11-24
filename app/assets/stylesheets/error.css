@@ -13,11 +13,9 @@
   left: 0; }
 
 .error__illustration__bubble {
-  -webkit-animation: bounce 3s infinite;
   animation: bounce 3s infinite; }
 
 .error__illustration__boat, .error__illustration__shadow {
-  -webkit-animation: rock 5s infinite;
   animation: rock 5s infinite; }
 
 .error__info {
