@@ -87,7 +87,7 @@ main {
       padding-bottom: 175px; } }
 
 .page__heading {
-  margin-bottom: 45px;
+  margin-bottom: 30px;
   border-bottom: 1px solid #c1c4ca; }
   @media (max-width: 929px) {
     .page__heading {
@@ -95,8 +95,8 @@ main {
       padding-bottom: 10px; } }
   @media (min-width: 930px) {
     .page__heading {
-      padding-top: 50px;
-      padding-bottom: 32px; } }
+      padding-top: 30px;
+      padding-bottom: 30px; } }
 
 a.page__heading {
   display: block;
@@ -115,6 +115,15 @@ a.page__heading {
     color: #fa3c29; }
   a.page__heading:focus {
     outline: none; }
+
+.page__subheading {
+  color: #a6aab2; }
+  @media (max-width: 929px) {
+    .page__subheading {
+      font-size: 18px; } }
+  @media (min-width: 930px) {
+    .page__subheading {
+      font-size: 24px; } }
 
 .page__heading__info {
   font-weight: 200;
