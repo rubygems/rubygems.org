@@ -63,6 +63,7 @@ end
 # For some reason, including these gems in the maintenance environment enables
 # maintenance mode
 group :development, :test, :staging, :production do
+  gem 'minitest'
   gem 'clearance'
   gem 'daemons'
   gem 'delayed_job'
