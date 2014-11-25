@@ -21,11 +21,6 @@
     line-height: 22px; }
   .home__join:focus:before, .modal__submit:focus:before, .help__link--new-discussion:focus:before, .form__submit:focus:before, .help__category__link--new-discussion:focus:before, .home__join:hover:before, .modal__submit:hover:before, .help__link--new-discussion:hover:before, .form__submit:hover:before, .help__category__link--new-discussion:hover:before {
     animation: arrow .75s infinite; }
-
-@-webkit-keyframes arrow {
-  50% {
-    -webkit-transform: translateX(3px);
-    -webkit-animation-timing-function: ease-in-out; } }
 @-ms-keyframes arrow {
   50% {
     transform: translateX(3px);

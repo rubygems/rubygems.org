@@ -142,15 +142,7 @@
   text-align: center;
   color: white;
   z-index: 1;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  -ms-transition-duration: 0.25s;
-  -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  -webkit-transition-property: top;
-  -moz-transition-property: top;
-  -ms-transition-property: top;
-  -o-transition-property: top;
   transition-property: top; }
   @media (max-width: 599px) {
     .home__link {

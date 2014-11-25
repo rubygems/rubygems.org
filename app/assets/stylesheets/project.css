@@ -26,15 +26,7 @@
 
 .project__member, .project__member--v {
   color: #141c22;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  -ms-transition-duration: 0.25s;
-  -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  -webkit-transition-property: color;
-  -moz-transition-property: color;
-  -ms-transition-property: color;
-  -o-transition-property: color;
   transition-property: color; }
   .project__member:hover, .project__member--v:hover {
     color: #fa3c29; }

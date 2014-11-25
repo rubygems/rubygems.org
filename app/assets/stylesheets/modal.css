@@ -1,14 +1,6 @@
 body.has-modal > *:not(.modal-wrap) {
-  -webkit-animation: blur .15s linear;
   animation: blur .15s linear;
-  -webkit-animation-fill-mode: forwards;
-  -moz-animation-fill-mode: forwards;
   animation-fill-mode: forwards; }
-
-@-webkit-keyframes blur {
-  100% {
-    -webkit-filter: blur(2px);
-    filter: blur(2px); } }
 @media (max-height: 479px) {
   body.has-modal {
     position: relative; } }
@@ -37,19 +29,8 @@ body.has-modal > *:not(.modal-wrap) {
   background-color: #141c22;
   opacity: 0;
   z-index: 3;
-  -webkit-transition-duration: 0.5s;
-  -moz-transition-duration: 0.5s;
-  -ms-transition-duration: 0.5s;
-  -o-transition-duration: 0.5s;
   transition-duration: 0.5s;
-  -webkit-transition-property: top, opacity;
-  -moz-transition-property: top, opacity;
-  -ms-transition-property: top, opacity;
-  -o-transition-property: top, opacity;
   transition-property: top, opacity;
-  -webkit-transition-delay: 0.15s;
-  -moz-transition-delay: 0.15s;
-  -o-transition-delay: 0.15s;
   transition-delay: 0.15s; }
   @media (max-width: 465px) {
     .modal--sign-in, .modal--sign-up {
@@ -98,15 +79,7 @@ body.has-modal > *:not(.modal-wrap) {
   right: 16px;
   font-size: 16px;
   color: #6c767e;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  -ms-transition-duration: 0.25s;
-  -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  -webkit-transition-property: color;
-  -moz-transition-property: color;
-  -ms-transition-property: color;
-  -o-transition-property: color;
   transition-property: color; }
   .modal__close:hover {
     color: white; }
@@ -130,15 +103,7 @@ body.has-modal > *:not(.modal-wrap) {
   text-align: center;
   color: white;
   outline: none;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  -ms-transition-duration: 0.25s;
-  -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  -webkit-transition-property: border-bottom-color;
-  -moz-transition-property: border-bottom-color;
-  -ms-transition-property: border-bottom-color;
-  -o-transition-property: border-bottom-color;
   transition-property: border-bottom-color; }
   .modal__input::-webkit-input-placeholder {
     color: #6c767e; }
