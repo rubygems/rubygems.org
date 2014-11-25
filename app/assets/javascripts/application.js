@@ -7,3 +7,10 @@
 //= require jquery
 //= require jquery_ujs
 //= require_tree .
+
+//= jquery.easing.1.3
+//= jquery.color
+//= announcements
+//= mobile-nav
+//= popup-nav
+//= misc

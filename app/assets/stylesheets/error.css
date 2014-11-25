@@ -13,11 +13,9 @@
   left: 0; }
 
 .error__illustration__bubble {
-  -webkit-animation: bounce 3s infinite;
   animation: bounce 3s infinite; }
 
 .error__illustration__boat, .error__illustration__shadow {
-  -webkit-animation: rock 5s infinite;
   animation: rock 5s infinite; }
 
 .error__info {
@@ -28,11 +26,6 @@
 
 .error__info__heading {
   margin-bottom: 8px; }
-
-@-webkit-keyframes bounce {
-  50% {
-    -webkit-transform: translateY(-8px);
-    -webkit-animation-timing-function: ease-in-out; } }
 @-ms-keyframes bounce {
   50% {
     transform: translateY(-8px);
@@ -41,10 +34,6 @@
   50% {
     transform: translateY(-8px);
     animation-timing-function: ease-in-out; } }
-@-webkit-keyframes rock {
-  50% {
-    -webkit-transform: rotate(-3deg) translateX(3px);
-    -webkit-animation-timing-function: ease-in-out; } }
 @-ms-keyframes rock {
   50% {
     transform: rotate(-3deg) translateX(3px);

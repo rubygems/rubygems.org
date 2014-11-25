@@ -58,15 +58,7 @@
   font-size: 16px;
   font-family: "icomoon";
   color: #fa3c29;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  -ms-transition-duration: 0.25s;
-  -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  -webkit-transition-property: color;
-  -moz-transition-property: color;
-  -ms-transition-property: color;
-  -o-transition-property: color;
   transition-property: color; }
   @media (max-width: 1019px) {
     .header__search__icon {

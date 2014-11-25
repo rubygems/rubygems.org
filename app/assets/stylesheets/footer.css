@@ -66,15 +66,7 @@
   text-align: center;
   color: white;
   opacity: .4;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  -ms-transition-duration: 0.25s;
-  -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  -webkit-transition-property: opacity;
-  -moz-transition-property: opacity;
-  -ms-transition-property: opacity;
-  -o-transition-property: opacity;
   transition-property: opacity; }
   .footer__sponsor:focus, .footer__sponsor:hover {
     opacity: 1; }

@@ -15,15 +15,7 @@
   font-weight: 800;
   line-height: 30px;
   color: #141c22;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  -ms-transition-duration: 0.25s;
-  -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  -webkit-transition-property: background-color, color;
-  -moz-transition-property: background-color, color;
-  -ms-transition-property: background-color, color;
-  -o-transition-property: background-color, color;
   transition-property: background-color, color; }
   .gems__nav-link:focus, .gems__nav-link:hover {
     background-color: #fa3c29;
@@ -74,15 +66,7 @@
 
 .gems__gem__name {
   color: #141c22;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  -ms-transition-duration: 0.25s;
-  -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  -webkit-transition-property: color;
-  -moz-transition-property: color;
-  -ms-transition-property: color;
-  -o-transition-property: color;
   transition-property: color; }
   .gems__gem__name:hover {
     color: #fa3c29; }
