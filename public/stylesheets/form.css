@@ -1,0 +1,228 @@
+.form__legend, .form__label {
+  font-weight: 600;
+  font-size: 18px; }
+
+.form__legend {
+  margin-bottom: 40px; }
+
+.form__label {
+  margin-bottom: 10px;
+  display: block; }
+
+.form__input, .form__textarea, .form__select {
+  margin-bottom: 30px; }
+
+.form__input, .form__textarea {
+  -webkit-appearance: none;
+  padding: 12px 50px 12px 16px;
+  display: block;
+  width: 100%;
+  font-weight: 300;
+  font-size: 18px;
+  font-family: "aktiv-grotesk-std", sans-serif;
+  border: 1px solid #f2f3f4;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 1px -1px #c1c4ca;
+  background-color: #f8f8f9;
+  outline: none;
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -ms-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-property: border-color;
+  -moz-transition-property: border-color;
+  -ms-transition-property: border-color;
+  -o-transition-property: border-color;
+  transition-property: border-color; }
+  .form__input::-webkit-input-placeholder, .form__textarea::-webkit-input-placeholder {
+    color: #858a96; }
+  .form__input:-moz-placeholder, .form__textarea:-moz-placeholder {
+    color: #858a96; }
+  .form__input::-moz-placeholder, .form__textarea::-moz-placeholder {
+    color: #858a96; }
+  .form__input:-ms-input-placeholder, .form__textarea:-ms-input-placeholder {
+    color: #858a96; }
+  .form__input:focus, .form__textarea:focus {
+    border-color: #53a4e0; }
+
+.form__input {
+  max-width: 320px; }
+
+.form__textarea {
+  max-width: 640px;
+  resize: none; }
+
+.form__select-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 320px; }
+
+.form__select {
+  -webkit-appearance: none;
+  padding: 12px 50px 12px 16px;
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  border: 3px solid #f8f8f9;
+  background-color: transparent;
+  font-weight: 300;
+  font-size: 18px;
+  font-family: "aktiv-grotesk-std", sans-serif;
+  outline: none;
+  z-index: 2;
+  cursor: pointer;
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -ms-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-property: border-color;
+  -moz-transition-property: border-color;
+  -ms-transition-property: border-color;
+  -o-transition-property: border-color;
+  transition-property: border-color; }
+  .form__select::-ms-expand {
+    display: none; }
+  .form__select:focus {
+    border-color: #53a4e0; }
+    .form__select:focus + .form__select__label {
+      border-left-color: #53a4e0;
+      color: #53a4e0; }
+
+.form__select__label {
+  padding-left: 15px;
+  position: absolute;
+  top: 4px;
+  right: 20px;
+  border-left: 3px solid #f8f8f9;
+  font-size: 16px;
+  line-height: 46px;
+  color: #c1c4ca;
+  z-index: 1;
+  cursor: pointer;
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -ms-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-property: border-left-color, color;
+  -moz-transition-property: border-left-color, color;
+  -ms-transition-property: border-left-color, color;
+  -o-transition-property: border-left-color, color;
+  transition-property: border-left-color, color; }
+
+.form__file {
+  padding-top: 10px; }
+
+.form__file__label {
+  padding: 12px 50px 12px 66px;
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background-color: #c1c4ca;
+  font-size: 18px;
+  text-overflow: ellipsis;
+  color: #828894;
+  cursor: pointer;
+  white-space: nowrap;
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -ms-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-property: border-color;
+  -moz-transition-property: border-color;
+  -ms-transition-property: border-color;
+  -o-transition-property: border-color;
+  transition-property: border-color; }
+  .form__file__label:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 44px;
+    background-color: #828894;
+    font-size: 20px;
+    line-height: 2.4;
+    text-align: center;
+    color: #c1c4ca;
+    -webkit-transition-duration: 0.25s;
+    -moz-transition-duration: 0.25s;
+    -ms-transition-duration: 0.25s;
+    -o-transition-duration: 0.25s;
+    transition-duration: 0.25s;
+    -webkit-transition-property: color;
+    -moz-transition-property: color;
+    -ms-transition-property: color;
+    -o-transition-property: color;
+    transition-property: color; }
+  .form__file__label:hover:before {
+    color: white; }
+
+.form__file__input:focus + label:before {
+  color: white; }
+
+.form__checkbox {
+  margin-bottom: 40px; }
+
+.form__checkbox__label {
+  position: relative;
+  top: 5px;
+  font-size: 18px;
+  color: #a6aab2;
+  cursor: pointer; }
+
+.form__checkbox__input {
+  -webkit-appearance: none;
+  margin-right: 10px;
+  height: 26px;
+  width: 26px;
+  float: left;
+  border: 1px solid #f2f3f4;
+  border: 0 none #f2f3f4 \0;
+  border-radius: 4px;
+  border-radius: 0\0;
+  box-shadow: inset 0 1px 1px -1px #c1c4ca;
+  box-shadow: none\0;
+  background-color: #f8f8f9;
+  background-color: transparent\0;
+  outline: none;
+  cursor: pointer;
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -ms-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-property: border-color;
+  -moz-transition-property: border-color;
+  -ms-transition-property: border-color;
+  -o-transition-property: border-color;
+  transition-property: border-color; }
+  .form__checkbox__input:focus {
+    border-color: #53a4e0; }
+  .form__checkbox__input:checked:after {
+    content: "✔";
+    display: block;
+    font-size: 14px;
+    font-family: "icomoon";
+    line-height: 1.8;
+    text-align: center; }
+
+.edit_user #gravatar {
+  margin-right: 20px;
+  margin-bottom: 30px;
+  float: left;
+  height: 80px;
+  width: 80px;
+  border-radius: 40px; }
+  .edit_user #gravatar + .t-link, .edit_user .t-body #gravatar + a, .t-body .edit_user #gravatar + a {
+    margin-top: 24px;
+    display: inline-block; }
+
+.form__label + .t-link, .t-body .form__label + a {
+  margin-bottom: 10px;
+  display: inline-block; }

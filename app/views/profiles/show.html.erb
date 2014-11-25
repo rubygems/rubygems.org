@@ -1,26 +1,33 @@
 <% content_for :title do %>
-  <div id="avatar-frame">
-    <%= gravatar(64, "profile_gravatar", @user) %>
-  </div>
-  <div id="profile-info">
-    <h2 id="profile-name"><%= link_to @user.display_handle, profile_path(@user.display_id) %></h2>
-    <% unless @user.hide_email %>
-      <h3 id="profile-email"><%= mail_to @user.email, "email", :encode => "hex" %></h3>
-    <% end %>
-    <h3 id="profile-gittip"><%= link_to "gittip", @user.gittip_url unless @user.gittip_username.blank? %></h3>
-    <h3 id="profile-gems-count"><%= @user.total_rubygems_count.to_s %> <%= "gem".pluralize(@user.total_rubygems_count) %></h3>
-  </div>
-  <div id="downloads-ego">
-    <% if @user == current_user %>
-      <%= link_to "Edit Profile", edit_profile_path, :id => "edit-profile" %>
-    <% end %>
+  <header class="profile__header">
+    <div class="profile__header__name-wrap">
+      <div id="avatar-frame">
+        <%= image_tag(@user.gravatar_url(:size => 300, :secure => request.ssl?).html_safe, :id => "profile_gravatar", :width => 300, :height => 300, :class => 'profile__header__avatar') %>
+      </div>
+      <h1 id="profile-name" class="profile__header__name t-display"><%= link_to @user.display_handle, profile_path(@user.display_id), class: "t-link--black" %></h1>
+      <% unless @user.hide_email %>
+        <p id="profile-email">
+          <%= mail_to @user.email, "Email Me", :encode => "hex", class: "profile__header__email t-link--black", 'data-icon' => '✉' %>
+        </p>
+      <% end %>
+      <div id="profile-info">
+        <%= link_to "Gittip", @user.gittip_url, :id => "profile-gittip", class: "profile__header__email t-link--black" unless @user.gittip_username.blank? %>
+      </div>
+      <% if @user == current_user %>
+        <div id="downloads-ego">
+          <%= link_to "Edit Profile", edit_profile_path, :id => "edit-profile", class: "profile__header__email t-link--black" %>
+        </div>
+      <% end %>
+    </div>
     <% unless Rails.env.recovery? %>
-      <h5 id="downloads">Downloads</h5>
-      <div id="downloads_count">
-        <div><strong><%= number_with_delimiter(@user.total_downloads_count) %></strong> all time</div>
+      <div class="profile__downloads-wrap">
+        <h4 class="gem__downloads__heading t-text--s">Total <%= "gem".pluralize(@user.total_rubygems_count) %></h4>
+        <h2 id="profile-gems-count" class="gem__downloads"><%= @user.total_rubygems_count.to_s %></h2>
+        <h4 id="downloads" class="gem__downloads__heading t-text--s">Total Downloads</h4>
+        <h2 id="downloads_count" class="gem__downloads"><%= number_with_delimiter(@user.total_downloads_count) %></h2>
       </div>
     <% end %>
-  </div>
+  </header>
 <% end %>
 
 <% content_for :javascript do %>
@@ -36,7 +43,7 @@
         var id   = $(this).attr("id"),
             r    = Raphael(id),
             fin  = function () {
-              var currentDate = dates[Math.floor(this.bar.x / 22 - 1)]
+              var currentDate = dates[Math.floor(this.bar.x / 22 - 1)];
               this.flag = r.g.popup(this.bar.x, this.bar.y, currentDate + ": " + this.bar.value || "0").insertBefore(this);
             },
             fout = function () {
@@ -54,8 +61,8 @@
 
 <div id="profile">
   <div class="profile-list">
-    <ol>
+    <ul>
       <%= render :partial => 'rubygem', :collection => @rubygems + @extra_rubygems, :locals => {:graph => false}  %>
-    </ol>
+    </ul>
   </div>
 </div>

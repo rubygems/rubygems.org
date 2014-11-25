@@ -1,0 +1,167 @@
+.home__join, .modal__submit, .help__link--new-discussion, .form__submit, .help__category__link--new-discussion, .post__aside__close {
+  -webkit-appearance: none;
+  position: relative;
+  display: block;
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-family: "aktiv-grotesk-std", sans-serif;
+  font-size: 18px;
+  cursor: pointer;
+  outline: none;
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -ms-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-property: border-color, background-color;
+  -moz-transition-property: border-color, background-color;
+  -ms-transition-property: border-color, background-color;
+  -o-transition-property: border-color, background-color;
+  transition-property: border-color, background-color; }
+
+.home__join, .modal__submit, .help__link--new-discussion, .form__submit, .help__category__link--new-discussion {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 20px; }
+  .home__join:before, .modal__submit:before, .help__link--new-discussion:before, .form__submit:before, .help__category__link--new-discussion:before {
+    position: absolute;
+    right: 18px;
+    line-height: 22px; }
+  .home__join:focus:before, .modal__submit:focus:before, .help__link--new-discussion:focus:before, .form__submit:focus:before, .help__category__link--new-discussion:focus:before, .home__join:hover:before, .modal__submit:hover:before, .help__link--new-discussion:hover:before, .form__submit:hover:before, .help__category__link--new-discussion:hover:before {
+    -webkit-animation: arrow .75s infinite;
+    animation: arrow .75s infinite; }
+
+@-webkit-keyframes arrow {
+  50% {
+    -webkit-transform: translateX(3px);
+    -webkit-animation-timing-function: ease-in-out; } }
+@-ms-keyframes arrow {
+  50% {
+    transform: translateX(3px);
+    animation-timing-function: ease-in-out; } }
+@keyframes arrow {
+  50% {
+    transform: translateX(3px);
+    animation-timing-function: ease-in-out; } }
+.home__join, .modal__submit {
+  background-color: white;
+  color: #fa3c29; }
+
+.home__join {
+  padding-left: 22px;
+  width: 250px; }
+  @media (max-width: 519px) {
+    .home__join {
+      margin-right: auto;
+      margin-left: auto; } }
+  @media (min-width: 520px) {
+    .home__join {
+      float: right; } }
+
+.modal__submit {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 36px;
+  width: 150px;
+  text-align: left; }
+
+.help__link--new-discussion, .form__submit {
+  background-color: #fa3c29;
+  color: white; }
+
+.help__link--new-discussion {
+  margin-right: auto;
+  margin-bottom: 14px;
+  margin-left: auto;
+  width: 90%;
+  max-width: 300px; }
+  @media (max-width: 379px) {
+    .help__link--new-discussion {
+      padding-left: 10%; } }
+  @media (min-width: 380px) {
+    .help__link--new-discussion {
+      padding-left: 68px; } }
+
+.help__category__link--new-discussion {
+  max-width: 300px;
+  background-color: #fa3c29;
+  color: white; }
+  @media (max-width: 799px) {
+    .help__category__link--new-discussion {
+      margin-right: auto;
+      margin-bottom: 40px;
+      margin-left: auto;
+      width: 100%; } }
+  @media (min-width: 800px) {
+    .help__category__link--new-discussion {
+      width: 40%;
+      float: right; } }
+  @media (max-width: 899px) {
+    .help__category__link--new-discussion {
+      padding-left: 5%; } }
+  @media (min-width: 900px) {
+    .help__category__link--new-discussion {
+      padding-left: 68px; } }
+
+.form__submit {
+  margin-top: 42px;
+  margin-bottom: 150px;
+  width: 100%;
+  max-width: 320px; }
+
+.post__aside__close {
+  margin-bottom: 24px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  max-width: 320px;
+  border-radius: 20px;
+  background-color: #fa3c29;
+  text-align: center;
+  color: white;
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -ms-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-property: background-color;
+  -moz-transition-property: background-color;
+  -ms-transition-property: background-color;
+  -o-transition-property: background-color;
+  transition-property: background-color; }
+  .post__aside__close.is-disabled {
+    background-color: #c1c4ca;
+    cursor: default; }
+    .post__aside__close.is-disabled:hover {
+      background-color: #c1c4ca; }
+  .post__aside__close:hover {
+    background-color: #ff4625; }
+
+.download__format {
+  margin-bottom: 24px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: inline-block;
+  float: left;
+  width: 22%;
+  max-width: 320px;
+  border-radius: 20px;
+  background-color: #fa3c29;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: white !important;
+  letter-spacing: 1px;
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -ms-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-property: background-color !important;
+  -moz-transition-property: background-color !important;
+  -ms-transition-property: background-color !important;
+  -o-transition-property: background-color !important;
+  transition-property: background-color !important; }
+  .download__format:hover, .download__format:focus {
+    background-color: #ff4625 !important; }
+  .download__format:not(:last-of-type) {
+    margin-right: 4%; }

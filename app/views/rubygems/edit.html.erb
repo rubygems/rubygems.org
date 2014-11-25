@@ -1,27 +1,31 @@
 <% @title = t('.title') %>
 <% @subtitle = t('.subtitle', :gem => @rubygem.name) %>
-<p><%= t '.other_fields_notice' %></p>
+
+<div class='t-body'>
+  <p><%= t '.other_fields_notice' %></p>
+</div>
+
 <%= error_messages_for :linkset, :object_name => "gem" %>
 <%= form_for @rubygem.linkset, :url => rubygem_url(@rubygem), :method => :put do |form| %>
   <div class="url_field">
-    <%= form.label :code %>
-    <%= form.text_field :code %>
+    <%= form.label :code, :class => 'form__label' %>
+    <%= form.text_field :code, :class => 'form__input' %>
   </div>
   <div class="url_field">
-    <%= form.label :docs %>
-    <%= form.text_field :docs %>
+    <%= form.label :docs, :class => 'form__label' %>
+    <%= form.text_field :docs, :class => 'form__input' %>
   </div>
   <div class="url_field">
-    <%= form.label :wiki %>
-    <%= form.text_field :wiki %>
+    <%= form.label :wiki, :class => 'form__label' %>
+    <%= form.text_field :wiki, :class => 'form__input' %>
   </div>
   <div class="url_field">
-    <%= form.label :mail %>
-    <%= form.text_field :mail %>
+    <%= form.label :mail, :class => 'form__label' %>
+    <%= form.text_field :mail, :class => 'form__input' %>
   </div>
   <div class="url_field">
-    <%= form.label :bugs %>
-    <%= form.text_field :bugs %>
+    <%= form.label :bugs, :class => 'form__label' %>
+    <%= form.text_field :bugs, :class => 'form__input' %>
   </div>
-  <%= form.submit t('update'), :data => {:disable_with => t('form_disable_with')} %>
+  <%= form.submit t('update'), :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
 <% end %>

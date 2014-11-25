@@ -5,6 +5,8 @@ require 'factory_girl_rails'
 require 'webmock'
 require 'rr'
 
+require 'rubygems/package'
+
 class ActiveSupport::TestCase
   self.use_transactional_fixtures = true
   self.use_instantiated_fixtures  = false
@@ -40,7 +42,7 @@ class ActionController::TestCase
 end
 
 require 'shoulda'
-require 'clearance/testing'
+require 'clearance/test_unit'
 require 'capybara/rails'
 
 def regenerate_index
@@ -60,7 +62,7 @@ def create_gem(*owners_and_or_opts)
 end
 
 def gem_specification_from_gem_fixture(name)
-  Gem::Format.from_file_by_path(File.join('test', 'gems', "#{name}.gem")).spec
+  Gem::Package.new(File.join('test', 'gems', "#{name}.gem")).spec
 end
 
 def stub_uploaded_token(gem_name, token, status = [200, "Success"])

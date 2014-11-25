@@ -170,9 +170,6 @@ class RubygemsControllerTest < ActionController::TestCase
         assert page.has_selector?("a[href='#{rubygem_path(g)}']")
       end
     end
-    should "display uppercase A" do
-      assert page.has_content?("starting with A")
-    end
     should "display 'gems' in pagination summary" do
       assert page.has_content?("all #{@gems.count} gems")
     end
@@ -223,9 +220,6 @@ class RubygemsControllerTest < ActionController::TestCase
       assert page.has_content?(@zgem.name)
       assert page.has_selector?("a[href='#{rubygem_path(@zgem)}']")
     end
-    should "display uppercase letter" do
-      assert page.has_content?("starting with Z")
-    end
   end
 
   context "On GET to index with a bad letter" do
@@ -246,11 +240,6 @@ class RubygemsControllerTest < ActionController::TestCase
         assert page.has_content?(g.name)
         assert page.has_selector?("a[href='#{rubygem_path(g)}']")
       end
-    end
-    should "display uppercase A" do
-      assert page.has_content?("starting with A")
-      assert ! page.has_content?("asdf")
-      assert ! page.has_content?("ASDF")
     end
   end
 
@@ -274,8 +263,11 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to show with a gem that has multiple versions" do
     setup do
       @rubygem = create(:rubygem)
-      @older_version = create(:version, :number => "1.0.0", :rubygem => @rubygem, :created_at => 2.days.ago)
-      @latest_version = create(:version, :number => "2.0.0", :rubygem => @rubygem, :created_at => 1.minute.ago)
+      @versions = [
+        create(:version, :number => "2.0.0rc1", :rubygem => @rubygem, :created_at => 1.day.ago),
+        create(:version, :number => "1.9.9", :rubygem => @rubygem, :created_at => 1.minute.ago),
+        create(:version, :number => "1.9.9.rc4", :rubygem => @rubygem, :created_at => 2.days.ago)
+      ]
       get :show, :id => @rubygem.to_param
     end
 
@@ -283,12 +275,20 @@ class RubygemsControllerTest < ActionController::TestCase
     should render_template :show
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
-      assert page.has_content?(@latest_version.number)
-      assert page.has_css?("small:contains('#{@latest_version.built_at.to_date.to_formatted_s(:long)}')")
+      assert page.has_content?(@versions[0].number)
+      assert page.has_css?("small:contains('#{@versions[0].built_at.to_date.to_formatted_s(:long)}')")
 
       assert page.has_content?("Versions")
-      assert page.has_content?(@older_version.number)
-      assert page.has_css?("small:contains('#{@older_version.built_at.to_date.to_formatted_s(:long)}')")
+      assert page.has_content?(@versions[2].number)
+      assert page.has_css?("small:contains('#{@versions[2].built_at.to_date.to_formatted_s(:long)}')")
+    end
+
+    should "render versions in correct order" do
+      assert_select("div.versions > ol > li") do |elements|
+        elements.each_with_index do |elem, index|
+          assert_select elem, "a", @versions[index].number
+        end
+      end
     end
   end
 

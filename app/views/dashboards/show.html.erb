@@ -1,63 +1,67 @@
-<div class="subscribed">
-  <h3><%= t '.latest' %></h3><%= link_to image_tag("feed.png"), dashboard_url(:api_key => current_user.api_key, :format => :atom), :id => "feed", :title => t('.latest_title') %>
-  <div class="gems">
-    <% if @latest_updates.empty? %>
-      <p><%= t('.no_subscriptions', :gem_link => link_to(t('.gem_link_text'), rubygem_path("gemcutter"))).html_safe %>
-      </p>
-    <% else %>
-      <ol>
-        <% @latest_updates.each do |version| %>
-        <li>
-          <a href="<%= rubygem_url(version.rubygem) %>">
-            <div class="top">
-              <strong>
-                <%= version.to_title %>
-              </strong>
-              <%= t 'time_ago', :duration => time_ago_in_words(version.created_at) %>
-            </div>
-            <%= short_info(version) %>
-          </a>
-        </li>
-        <% end %>
-      </ol>
-    <% end %>
-  </div>
-</div>
+<h1 class="t-display page__heading">Dashboard</h1>
 
-<div class="mine">
-  <h3><%= t '.mine' %></h3>
-  <div class="gems">
-    <% if @my_gems.empty? %>
-      <p>
-        <%= t('.no_owned', :creating_link => link_to(t('.creating_link_text'), page_url("create")),
-                           :migrating_link => link_to(t('.migrating_link_text'), page_url("migrate"))).html_safe %>
-      </p>
-    <% else %>
-      <ol>
-      <% @my_gems.each do |rubygem| %>
-        <li>
-          <%= download_count(rubygem) %>
-          <%= link_to rubygem.name, rubygem, :title => short_info(rubygem.versions.most_recent) %>
-        </li>
-      <% end %>
-      </ol>
+<div class="l-overflow">
+  <div class="subscribed l-colspan--l colspan--l--has-border">
+    <h3 class="gems__gem__name">
+      <%= t '.latest' %>:
+    </h3>
+    <%= link_to dashboard_url(:api_key => current_user.api_key, :format => :atom), :id => 'feed', :title => t('.latest_title'), :class => 'gem__link t-list__item', 'data-icon' => '#' do %>
+      <span class="t-hidden">RSS</span>
     <% end %>
-  </div>
-
-  <% if @subscribed_gems.present? %>
-    <h3><%= t '.my_subscriptions' %></h3>
-    <div class="gems">
-      <ol>
-      <% current_user.subscribed_gems.each do |gem| %>
-        <li>
-          <%= download_count(gem) unless Rails.env.recovery? %>
-          <%= link_to gem, gem, :title => short_info(gem.versions.most_recent) %>
-        </li>
+    </a>
+    <div class="push--bottom">
+      <% if @latest_updates.empty? %>
+        <div class="t-body push--s">
+          <i class="t-text"><%= t('.no_subscriptions', :gem_link => link_to(t('.gem_link_text'), rubygem_path("gemcutter"))).html_safe %></i>
+        </div>
+      <% else %>
+        <ol>
+          <% @latest_updates.each do |version| %>
+            <li>
+              <a href="<%= rubygem_url(version.rubygem) %>" class="dashboard__gem">
+                <div class="dashboard__gem__info">
+                  <strong class="dashboard__gem__name"><%= version.to_title %></strong>
+                  <i class="dashboard__gem__version"><%= t 'time_ago', :duration => time_ago_in_words(version.created_at) %></i>
+                </div>
+                <p class="dashboard__gem__desc t-text"><%= short_info(version) %></p>
+              </a>
+            </li>
+          <% end %>
+        </ol>
       <% end %>
-      </ol>
     </div>
-  <% end %>
-</div>
+  </div>
 
-<div class="clear">
+  <div class="l-col--r--pad">
+    <div class="mine t-body">
+      <h1><%= t '.mine' %></h1>
+      <% if @my_gems.empty? %>
+        <div class="t-body push--bottom">
+          <p>
+            <%= t('.no_owned', :creating_link => link_to(t('.creating_link_text'), "http://guides.rubygems.org/make-your-own-gem/").html_safe,
+                               :migrating_link => link_to(t('.migrating_link_text'), page_url("migrate"))).html_safe %>
+          </p>
+        </div>
+      <% else %>
+        <ul>
+          <% @my_gems.each do |rubygem| %>
+            <li>
+              <%= link_to rubygem.name, rubygem, :title => short_info(rubygem.versions.most_recent), :class => 't-link' %>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+
+      <% if @subscribed_gems.present? %>
+        <h1><%= t '.my_subscriptions' %></h1>
+        <ul>
+          <% current_user.subscribed_gems.each do |gem| %>
+            <li>
+              <%= link_to gem, gem, :title => short_info(gem.versions.most_recent), :class => 't-link' %>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  </div>
 </div>

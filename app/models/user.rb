@@ -93,7 +93,7 @@ class User < ActiveRecord::Base
   end
 
   def rubygems_downloaded
-    rubygems.sort_by{ |rubygem| -rubygem.downloads }
+    rubygems.with_versions.sort_by{ |rubygem| -rubygem.downloads }
   end
 
   def total_rubygems_count

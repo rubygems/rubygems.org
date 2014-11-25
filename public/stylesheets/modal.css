@@ -1,0 +1,152 @@
+body.has-modal > *:not(.modal-wrap) {
+  -webkit-animation: blur .15s linear;
+  animation: blur .15s linear;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  animation-fill-mode: forwards; }
+
+@-webkit-keyframes blur {
+  100% {
+    -webkit-filter: blur(2px);
+    filter: blur(2px); } }
+@media (max-height: 479px) {
+  body.has-modal {
+    position: relative; } }
+@media (min-height: 480px) {
+  body.has-modal {
+    overflow: hidden; } }
+
+.modal-wrap.is-showing {
+  height: 100%;
+  width: 100%;
+  z-index: 3; }
+  @media (max-height: 479px) {
+    .modal-wrap.is-showing {
+      position: absolute; } }
+  @media (min-height: 480px) {
+    .modal-wrap.is-showing {
+      position: fixed; } }
+
+.modal--sign-in, .modal--sign-up {
+  padding-top: 18px;
+  padding-bottom: 60px;
+  display: block;
+  width: 90%;
+  max-width: 420px;
+  border-radius: 3px;
+  background-color: #141c22;
+  opacity: 0;
+  z-index: 3;
+  -webkit-transition-duration: 0.5s;
+  -moz-transition-duration: 0.5s;
+  -ms-transition-duration: 0.5s;
+  -o-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  -webkit-transition-property: top, opacity;
+  -moz-transition-property: top, opacity;
+  -ms-transition-property: top, opacity;
+  -o-transition-property: top, opacity;
+  transition-property: top, opacity;
+  -webkit-transition-delay: 0.15s;
+  -moz-transition-delay: 0.15s;
+  -o-transition-delay: 0.15s;
+  transition-delay: 0.15s; }
+  @media (max-width: 465px) {
+    .modal--sign-in, .modal--sign-up {
+      margin-left: 5%; } }
+  @media (min-width: 466px) {
+    .modal--sign-in, .modal--sign-up {
+      margin-left: -210px;
+      left: 50%; } }
+  @media (max-height: 479px) {
+    .modal--sign-in, .modal--sign-up {
+      position: absolute;
+      top: -150%; }
+      .modal-wrap.is-showing .modal--sign-in, .modal-wrap.is-showing .modal--sign-up {
+        top: 60px; } }
+  @media (min-height: 480px) {
+    .modal--sign-in, .modal--sign-up {
+      position: fixed;
+      top: -100%; }
+      .modal-wrap.is-showing .modal--sign-in, .modal-wrap.is-showing .modal--sign-up {
+        top: 50%; } }
+  .modal-wrap.is-showing .modal--sign-in, .modal-wrap.is-showing .modal--sign-up {
+    opacity: 1; }
+
+@media (min-height: 480px) {
+  .modal--sign-in {
+    margin-top: -164px; } }
+
+@media (min-height: 480px) {
+  .modal--sign-up {
+    margin-top: -200px; } }
+
+.modal__input-wrap {
+  margin-right: auto;
+  margin-left: auto;
+  padding-top: 36px;
+  overflow: hidden;
+  display: block;
+  width: 80%;
+  max-width: 300px; }
+  .modal__input-wrap:last-of-type {
+    margin-bottom: 58px; }
+
+.modal__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 16px;
+  color: #6c767e;
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -ms-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-property: color;
+  -moz-transition-property: color;
+  -ms-transition-property: color;
+  -o-transition-property: color;
+  transition-property: color; }
+  .modal__close:hover {
+    color: white; }
+
+.modal__label {
+  color: white; }
+
+.modal__input {
+  -webkit-appearance: none;
+  padding: 5px;
+  width: 100%;
+  border-top: none;
+  border-right: none;
+  border-bottom: 1px solid white;
+  border-left: none;
+  border-radius: 0;
+  background-color: transparent;
+  font-family: "aktiv-grotesk-std", sans-serif;
+  font-weight: 300;
+  font-size: 18px;
+  text-align: center;
+  color: white;
+  outline: none;
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -ms-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-property: border-bottom-color;
+  -moz-transition-property: border-bottom-color;
+  -ms-transition-property: border-bottom-color;
+  -o-transition-property: border-bottom-color;
+  transition-property: border-bottom-color; }
+  .modal__input::-webkit-input-placeholder {
+    color: #6c767e; }
+  .modal__input:-moz-placeholder {
+    color: #6c767e; }
+  .modal__input::-moz-placeholder {
+    color: #6c767e; }
+  .modal__input:-ms-input-placeholder {
+    color: #6c767e; }
+  .modal__input:focus {
+    border-bottom-color: #53a4e0; }

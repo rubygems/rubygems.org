@@ -55,7 +55,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.by_position
-    order('position')
+    order('versions.position')
   end
 
   def self.by_built_at
@@ -83,7 +83,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.most_recent
-    latest.find_by_platform('ruby') || latest.order("number DESC").first || first
+    latest.find_by_platform('ruby') || latest.order("number DESC").first || last
   end
 
   def self.just_updated(limit=5)
@@ -250,6 +250,10 @@ class Version < ActiveRecord::Base
     command << " -v #{number}" if latest != self
     command << " --pre" if prerelease
     command
+  end
+
+  def authors_array
+    self.authors.split(',').flatten
   end
 
   private

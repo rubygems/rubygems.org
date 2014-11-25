@@ -1,12 +1,12 @@
-warn "No staging server setup yet!"
-# server ".us-west-2.compute.amazonaws.com", :app, :db, :primary => true
-# set :branch,    "staging"
+server 'deploy@app01.staging.rubygems.org', :app, :db, :primary => true
+role :restart, 'app01.staging.rubygems.org', :no_release => true
+set :branch, 'staging'
 
-# namespace :deploy do
-#   desc "For the staging environment, move in a robots.txt that blocks robots from the entire site"
-#   task :move_in_staging_robots_txt, :roles => :app do
-#     run "cp #{deploy_to}/shared/config/robots.txt #{current_path}/public/robots.txt"
-#   end
-# end
+namespace :deploy do
+  desc "For the staging environment, symlink a robots.txt that blocks robots from the entire site"
+  task :symlink_staging_robots_txt, :roles => :app do
+    run "ln -fs #{release_path}/public/robots.txt.staging #{release_path}/public/robots.txt"
+  end
+end
 
-# after "deploy:symlink", "deploy:move_in_staging_robots_txt"
+after "deploy:symlink", "deploy:symlink_staging_robots_txt"

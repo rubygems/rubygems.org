@@ -1,5 +1,3 @@
-before_install:
-  - rvm rubygems 1.8.25
 before_script:
   - cp config/database.yml.example config/database.yml
   - bundle exec rake db:create db:migrate db:test:prepare
@@ -7,11 +5,12 @@ git:
   strategy: tarball
 language: ruby
 rvm:
-  - 1.9.3
   - 2.0.0
+  - 2.1
+  - ruby-head
 matrix:
   allow_failures:
-    - rvm: 2.0.0
-script: bundle exec rake default
+    - rvm: 2.1
+    - rvm: ruby-head
 services:
   - redis-server

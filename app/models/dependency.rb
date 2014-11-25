@@ -59,7 +59,7 @@ class Dependency < ActiveRecord::Base
   end
 
   def name
-    unresolved_name || rubygem.name
+    unresolved_name || rubygem.try(:name)
   end
 
   def payload
