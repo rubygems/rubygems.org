@@ -1,47 +1,27 @@
-<% content_for :fold do %>
-  <div class="count">
-    <% unless Rails.env.recovery? %>
-      <strong><%= t 'download_count', :count => number_with_delimiter(@downloads_count) %></strong>
-      <%= t '.gems_header', :gem_count => number_with_delimiter(@rubygems_count) %>
-    <% end %>
-  </div>
-  <div class="blurb">
-    <strong><%= t '.welcome_blurb' %></strong>
-    <br /><%= t '.find_blurb' %>
-  </div>
-<% end %>
-
-<div class="border">
-  <div class="background">
-    <div class="learn">
-      <h3><%= t '.learn.header' %></h3>
-      <dl>
-        <dt><%= link_to t('.learn.install_rubygems', :version => @version), page_url("download") %></dt>
-        <dd><%= t '.learn.rubygems_subtitle' %></dd>
-        <dt><%= link_to t('.learn.browse_docs'), "http://guides.rubygems.org/" %></dt>
-        <dd><%= t '.learn.docs_subtitle' %></dd>
-        <dt><%= link_to t('.learn.gem_specification'), "http://guides.rubygems.org/specification-reference/" %></dt>
-        <dd><%= t '.learn.spec_subtitle' %></dd>
-      </dl>
-    </div>
-    <div class="share">
-      <h3><%= t '.share.header' %></h3>
-      <dl>
-        <dt><code>gem update --system</code></dt>
-        <dd><%= t '.share.update' %></dd>
-        <dt><code>gem build foo.gemspec</code></dt>
-        <dd><%= t '.share.build' %></dd>
-        <dt><code>gem push foo-1.0.0.gem</code></dt>
-        <dd><%= t '.share.deploy' %></dd>
-      </dl>
-    </div>
-  </div>
+<div class="home__images">
+  <div class="home__image--ghost"></div>
+  <div class="home__image"></div>
 </div>
-
-<p class="pitch">
-  <%= t('.pitch.content',
-        :rubygems => content_tag(:strong, link_to(t(:title), page_url('about'))),
-        :publish => content_tag(:strong, link_to(t('.pitch.publish'), "http://guides.rubygems.org/make-your-own-gem", :anchor => 'push')),
-        :api => content_tag(:strong, link_to(t('.pitch.api'), "http://guides.rubygems.org/rubygems-org-api/")),
-        :contribute => content_tag(:strong, link_to(t('.pitch.contribute'), "http://github.com/rubygems/rubygems.org"))).html_safe %>
-</p>
+<h1 class="home__heading"><%= t '.find_blurb' %></h1>
+<div class="home__search-wrap">
+  <%= form_tag search_url, :id => "main-search", :method => :get do %>
+    <%= search_field_tag :query, params[:query], :placeholder => "Search Gems&hellip;".html_safe, autofocus: current_page?(root_url), :class => "home__search" %>
+    <%= label_tag :query do %>
+    <span class="t-hidden">Search gems</span>
+    <% end %>
+    <%= submit_tag '⌕', :id => 'search_submit', :name => nil, :class => "home__search__icon" %>
+  <% end %>
+</div>
+<div class="home__cta-wrap">
+  <h2 class="home__downloads">
+    <% unless Rails.env.recovery? %>
+      <p><%= number_with_delimiter(@downloads_count) %></p>
+    <% end %>
+    <span class="home__downloads__desc">downloads &amp; counting</span>
+  </h2>
+  <%= link_to t('.learn.install_rubygems'), page_url("download"), :class => "home__join", "data-icon" => ">" %>
+</div>
+<div class="home__links">
+  <%= link_to t('.footer.status'), "https://status.rubygems.org", class: "home__link", "data-icon" => "⌁" %>
+  <%= link_to t('.footer.uptime'), "http://uptime.rubygems.org", class: "home__link", "data-icon" => "⧖" %>
+</div>

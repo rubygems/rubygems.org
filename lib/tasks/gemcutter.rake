@@ -27,37 +27,6 @@ namespace :gemcutter do
   end
 
   namespace :rubygems do
-    desc "update rubygems. run as: rake gemcutter:rubygems:update VERSION=[version number] RAILS_ENV=[staging|production] S3_KEY=[key] S3_SECRET=[secret]"
-    task :update => :environment do
-      version     = ENV["VERSION"]
-      app_path    = Rails.root.join("config", "application.rb")
-      old_content = app_path.read
-      new_content = old_content.gsub(/RUBYGEMS_VERSION = "(.*)"/, %{RUBYGEMS_VERSION = "#{version}"})
-
-      app_path.open("w") do |file|
-        file.write new_content
-      end
-
-      updater = Indexer.new
-      html    = Nokogiri.parse(open("http://rubyforge.org/frs/?group_id=126"))
-      links   = html.css("a[href*='#{version}']").map { |n| n["href"] }
-
-      if links.empty?
-        abort "gem/tgz/zip for RubyGems #{version} hasn't been uploaded yet!"
-      else
-        links.each do |link|
-          url = "http://rubyforge.org#{link}"
-
-          puts "Uploading #{url}..."
-          updater.directory.files.create({
-            :body   => open(url).read,
-            :key    => "rubygems/#{File.basename(url)}",
-            :public => true
-          })
-        end
-      end
-    end
-
     desc "Update the download counts for all gems."
     task :update_download_counts => :environment do
       case_query = Rubygem.pluck(:name)

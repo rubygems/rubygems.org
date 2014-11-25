@@ -3,6 +3,7 @@ require 'test_helper'
 class RubygemsHelperTest < ActionView::TestCase
   include Rails.application.routes.url_helpers
   include ApplicationHelper
+  include ERB::Util
 
   should "create the directory" do
     directory = link_to_directory
@@ -72,28 +73,6 @@ class RubygemsHelperTest < ActionView::TestCase
 
     should "not create link for code" do
       assert_nil link_to_page("Code", @linkset.code)
-    end
-  end
-
-  context "options for individual stats" do
-    setup do
-      @rubygem = create(:rubygem)
-      @versions = (1..3).map { create(:version, :rubygem => @rubygem) }
-    end
-
-    should "show the overview link first" do
-      skip
-      overview = stats_options(@rubygem).first
-      assert_equal ["Overview", rubygem_stats_path(@rubygem)], overview
-    end
-
-    should "have all the links for the rubygem" do
-      skip
-      _, *links = stats_options(@rubygem)
-
-      @versions.sort.reverse.each_with_index do |version, index|
-        assert_equal [version.slug, rubygem_version_stats_path(@rubygem, version.slug)], links[index]
-      end
     end
   end
 

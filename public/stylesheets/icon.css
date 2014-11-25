@@ -1,0 +1,59 @@
+.icon--normal:before,
+.icon--up:before,
+.icon--disruption:before,
+.icon--partial:before,
+.icon--outage:before,
+.icon--down:before,
+.icon--no-data:before,
+.icon--unknown:before {
+  display: inline-block;
+  font-family: "icomoon";
+  text-align: center;
+  color: white;
+  speak: none; }
+
+.icon--normal:before,
+.icon--up:before {
+  background-color: #4fcc9c; }
+
+.icon--disruption:before,
+.icon--partial:before {
+  background-color: #ffde00; }
+
+.icon--outage:before,
+.icon--down:before {
+  background-color: #fa3c29; }
+
+.icon--no-data:before,
+.icon--unknown:before {
+  background-color: #c1c4ca; }
+
+.status__icon:before,
+.uptime__icon:before,
+.uptime__definition__icon:before {
+  height: 30px;
+  width: 30px;
+  border-radius: 15px;
+  line-height: 30px; }
+  @media (max-width: 529px) {
+    .status__icon:before,
+    .uptime__icon:before,
+    .uptime__definition__icon:before {
+      font-size: 12px; } }
+  @media (min-width: 530px) {
+    .status__icon:before,
+    .uptime__icon:before,
+    .uptime__definition__icon:before {
+      font-size: 14px; } }
+
+.status__icon:before {
+  position: absolute;
+  top: -4px;
+  left: 0; }
+
+.uptime__definition__icon {
+  position: relative; }
+  .uptime__definition__icon:before {
+    position: absolute;
+    top: -6px;
+    left: -40px; }

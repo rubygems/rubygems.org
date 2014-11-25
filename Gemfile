@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-# ruby '1.9.3'
+# ruby '2.0.0'
 
 gem 'rails', '~> 4.0.4'
 
@@ -45,7 +45,7 @@ end
 group :test do
   gem 'capybara'
   gem 'cucumber-rails', :require => false
-  gem 'database_cleaner'
+  gem 'database_rewinder'
   gem 'factory_girl_rails'
   gem 'launchy'
   gem 'nokogiri'
@@ -63,7 +63,8 @@ end
 # For some reason, including these gems in the maintenance environment enables
 # maintenance mode
 group :development, :test, :staging, :production do
-  gem 'clearance', '~> 1.1.0'
+  gem 'minitest'
+  gem 'clearance'
   gem 'daemons'
   gem 'delayed_job'
   gem 'delayed_job_active_record'

@@ -121,8 +121,8 @@ running:
 
 **Environment:**
 
-* Use Ruby 1.9.3
-* Use Rubygem 1.8.11
+* Use Ruby 2.0.0-p481
+* Use Rubygem 2.3.0
 * Install bundler: `gem install bundler`
 * Install [redis](http://github.com/antirez/redis),
     **version 2.0 or higher**. If you have homebrew,
@@ -154,12 +154,13 @@ running:
 * Set the REDISTOGO_URL environment variable. For example:
     `REDISTOGO_URL="redis://localhost:6379"`
 * Import gems if you want to seed the database. 
-    `rake gemcutter:import:process PATHTO_GEMS/cache`
+    `rake gemcutter:import:process vendor/cache`
     * _To import a small set of gems you can point the import process to any
-        gems cache directory, like a very small `rvm` gemset for instance._
+        gems cache directory, like a very small `rvm` gemset for instance, or 
+	specifying `GEM_PATH/cache` instead of `vendor/cache`._
 * If you need the index available - needed when working in conjunction
     with [bundler-api](http://github.com/rubygems/bundler-api) - then run
-    `gemcutter:index:update`. This primes the filesystem gem index for
+    `rake gemcutter:index:update`. This primes the filesystem gem index for
     local use.
 * Start the web server: `rails server` and browse to
     [localhost:3000](http://localhost:3000) or use [Pow](http://pow.cx)!
@@ -175,34 +176,18 @@ running:
 
 ### MySQL
 
-- Modify Gemfile to use `mysql` instead of `pg`
-- If you’re running Max OS X Snow Leopard, the MySQL gem will fail to
-    install without configuring it as follows:
-
-    ``` bash
-    bundle config build.mysql \
-        —with-mysql-config=/usr/local/mysql/bin/mysql_config \
-        export ARCHFLAGS=“-arch x86_64”
-    ```
-
-- Continue setup as above, installing dependencies, setting up
-    database.yml, etc.
-
-> **Warning:** Gem names are case sensitive (eg. `BlueCloth` vs.
-> `bluecloth` 2). MySQL has a `utf8_bin` collation, but it appears
-> that you still need to do `BINARY name = ?` for searching. 
-> It is recommended that you stick to PostgreSQL >= 8.4.x 
-> for development. Some tests will also fail if you use MySQL
-> because some queries use SQL functions which don't exist in MySQL..
-
-### MySQL2
-
 * Remove `pg` gem from your Gemfile
 * Add `mysql2` gem to your Gemfile:
 
      ``` ruby
        gem "mysql2"
      ```
+> **Warning:** Gem names are case sensitive (eg. `BlueCloth` vs.
+> `bluecloth` 2). MySQL has a `utf8_bin` collation, but it appears
+> that you still need to do `BINARY name = ?` for searching. 
+> It is recommended that you stick to PostgreSQL >= 8.4.x 
+> for development. Some tests will also fail if you use MySQL
+> because some queries use SQL functions which don't exist in MySQL..
 
 * Run `bundle install` command
 

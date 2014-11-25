@@ -1,3 +1,5 @@
+require 'vendor/package'
+
 class Pusher
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
   attr_accessor :bundler_api_url
@@ -23,17 +25,26 @@ class Pusher
   end
 
   def save
-    if update
+    # Restructured so that if we fail to write the gem (ie, s3 is down)
+    # can clean things up well.
+
+    begin
       @indexer.write_gem @body, @spec
-      after_write
-      notify("Successfully registered gem: #{version.to_title}", 200)
+    rescue StandardError => e
+      @version.destroy
+      notify("There was a problem saving your gem: #{e}", 403)
     else
-      notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403)
+      if update
+        after_write
+        notify("Successfully registered gem: #{version.to_title}", 200)
+      else
+        notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403)
+      end
     end
   end
 
   def pull_spec
-    Gem::Package.open body, "r", nil do |pkg|
+    GemPackage.open body, "r", nil do |pkg|
       @spec = pkg.metadata
       return true
     end

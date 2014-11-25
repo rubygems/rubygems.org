@@ -412,6 +412,20 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
+  context "with only prerelease versions" do
+    setup do
+      @rubygem = create(:rubygem)
+      @one = create(:version, :rubygem => @rubygem, :number => '1.0.0.pre')
+      @two = create(:version, :rubygem => @rubygem, :number => '1.0.1.pre')
+      @three = create(:version, :rubygem => @rubygem, :number => '1.0.2.pre')
+      @rubygem.reload
+    end
+
+    should "show last pushed as latest version" do
+      assert_equal @three, @rubygem.versions.most_recent
+    end
+  end
+
   context "with versions created out of order" do
     setup do
       @gem = create(:rubygem)

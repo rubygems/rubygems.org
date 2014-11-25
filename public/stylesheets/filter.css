@@ -1,0 +1,19 @@
+@media (max-width: 779px) {
+  .filters {
+    margin-top: 10px; } }
+@media (min-width: 780px) {
+  .filters {
+    float: right; } }
+
+.filters__heading {
+  margin-right: 5px;
+  font-weight: 800;
+  font-size: 9px;
+  text-transform: uppercase;
+  color: #c1c4ca; }
+
+.filter:not(:last-child):after {
+  content: " /";
+  margin-right: 2px;
+  margin-left: 2px;
+  color: #c1c4ca; }

@@ -4,121 +4,167 @@
 <%= content_for :head, auto_discovery_link_tag(:atom, rubygem_versions_path(@rubygem, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
 
 <% if @rubygem.versions.count.zero? %>
-  <p><%= t '.not_hosted_notice' %></p>
+  <div class="t-body">
+    <p><%= t '.not_hosted_notice' %></p>
+  </div>
 <% else %>
-  <% if @latest_version.indexed %>
-    <div id="markup">
-      <%= simple_markup(@latest_version.info) %>
-    </div>
-
-    <div class="border">
-      <%= render :partial => "rubygems/clippy", :locals => { :embed => "clippy", :text => @latest_version.to_install } %>
-      <div class="install">
-        <div class="instructions"><strong><%= t '.install' %></strong><span><%= @latest_version.to_install %></span></div>
-      </div>
-    </div>
-  <% else %>
-    <p><%= t('.yanked_notice', :more_info_link => link_to(t('.yank_info_link_text'), "http://help.rubygems.org/faqs/gemcutter/removing-a-published-rubygem")).html_safe %></p>
-  <% end %>
-
-  <div class="border">
-    <div class="meta">
-      <div class="admin">
-        <%= link_to t('edit'), edit_rubygem_path(@rubygem), :id => "edit" if @rubygem.owned_by?(current_user) %>
-        <!-- 
-          Not ready yet on the Gittip side! :-(
-          https://github.com/gittip/www.gittip.com/issues/1591
-        <%= gittip_link(@rubygem) if @rubygem.gittip_enabled? %>
-        -->
-        <%= download_link(@latest_version) %>
-        <%= documentation_link(@latest_version, @rubygem.linkset) %>
-        <%= badge_link(@rubygem) %>
-        <%= subscribe_link(@rubygem) if @latest_version.indexed %>
-        <%= unsubscribe_link(@rubygem) %>
-        <%= atom_link(@rubygem) %>
-      </div>
-
+  <div class="l-overflow">
+    <div class="l-colspan--l colspan--l--has-border">
       <% if @latest_version.indexed %>
-        <div class="who">
-          <div class="authors info-item">
-            <% if @latest_version.authors.present? %>
-              <h5><%= t '.authors_header' %></h5>
-              <p><%= @latest_version.authors %></p>
+        <div class="gem__intro">
+          <div id="markup" class="gem__desc">
+            <%= simple_markup(@latest_version.info) %>
+          </div>
+        </div>
+      <% else %>
+        <div class="t-body">
+          <p><%= t('.yanked_notice', :more_info_link => link_to(t('.yank_info_link_text'), "http://help.rubygems.org/faqs/gemcutter/removing-a-published-rubygem")).html_safe %></p>
+        </div>
+      <% end %>
+
+      <% if @versions.present? %>
+        <div class="l-half--l">
+          <div class="versions">
+            <h3 class="t-list__heading"><%= t '.versions_header' %>:</h3>
+            <ol class="gem__versions t-list__items">
+              <%= render @versions %>
+            </ol>
+            <% if show_all_versions_link?(@rubygem) %>
+              <%= link_to t('.show_all_versions', :count => @rubygem.versions.count), rubygem_versions_url(@rubygem), :class => "gem__see-all-versions t-link--gray t-link--has-arrow" %>
             <% end %>
           </div>
+        </div>
+      <% end %>
 
-          <% unless Rails.env.recovery? %>
-            <div class="downloads counter" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
-              <span>
-                <%= t('stats.show.total_downloads', :count => content_tag(:strong, number_with_delimiter(@rubygem.downloads))).html_safe %>
-              </span>
-              <span>
-                <%= t('.downloads_for_this_version', :count => content_tag(:strong, number_with_delimiter(@latest_version.downloads_count))).html_safe %>
-              </span>
-            </div>
+      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.runtime } %>
+      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.development } %>
+
+      <% if @latest_version.requirements.present? %>
+        <div class="l-half--l">
+          <h3 class="t-list__heading"><%= t '.requirements_header' %>:</h3>
+          <div class="t-list__items">
+            <% Array(@latest_version.requirements).each do |requirement| %>
+              <p><%= requirement %></p>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="gem__members">
+        <% if @latest_version.indexed %>
+          <% if @latest_version.authors.present? %>
+            <h3 class="t-list__heading"><%= t '.authors_header' %>:</h3>
+            <ul class="t-list__items">
+              <li class="t-list__item">
+                <p><%= @latest_version.authors %></p>
+              </li>
+            </ul>
           <% end %>
 
           <% if @rubygem.owners.present? %>
-            <div class="owners info-item">
-              <h5><%= t '.owners_header' %></h5>
-              <p><%= links_to_owners(@rubygem) %></p>
+            <h3 class="t-list__heading"><%= t '.owners_header' %>:</h3>
+            <div class="gem__owners">
+              <%= links_to_owners(@rubygem) %>
             </div>
           <% end %>
+        <% end %>
+      </div>
+    </div>
 
-          <% if @latest_version.licenses.present? %>
-            <div class="licenses info-item">
-              <h5><%= t '.licenses_header' %></h5>
-              <p><%= formatted_licenses @latest_version.licenses %></p>
-            </div>
+    <div class="gem__aside l-col--r--pad">
+      <% if @latest_version.indexed %>
+        <% unless Rails.env.recovery? %>
+          <div class="gem__downloads-wrap" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
+            <h2 class="gem__downloads__heading t-text--s">
+              <%= t('stats.show.total_downloads') %>
+              <span class="gem__downloads"><%= number_with_delimiter(@rubygem.downloads) %></span>
+            </h2>
+            <h2 class="gem__downloads__heading t-text--s">
+              <%= t('.downloads_for_this_version') %>
+              <span class="gem__downloads"><%= number_with_delimiter(@latest_version.downloads_count) %></span>
+            </h2>
+            <% if @versions.present? %>
+              <% if show_all_versions_link?(@rubygem) %>
+                <%= link_to t('.show_all_versions', :count => @rubygem.versions.count), rubygem_versions_url(@rubygem), :class => "gem__see-all-versions t-link--gray t-link--has-arrow" %>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+
+      <h2 class="gem__ruby-version__heading t-list__heading">
+        Required Ruby Version:
+        <i class="gem__ruby-version">
+          <% if @latest_version.ruby_version %>
+            <%= @latest_version.ruby_version %>
+          <% else %>
+            None
           <% end %>
-        </div>
+        </i>
+      </h2>
 
-        <% if @rubygem.linkset.present? %>
-          <div class="links">
-            <h5><%= t '.links.header' %></h5>
+      <% if @latest_version.indexed %>
+        <h2 class="gem__ruby-version__heading t-list__heading">
+          <%= t '.licenses_header' %>:
+          <span class="gem__ruby-version">
+            <p><%= formatted_licenses @latest_version.licenses %></p>
+          </span>
+        </h2>
+
+        <h2 class="gem__ruby-version__heading t-list__heading">
+          <%= t '.bundler_header' %>:
+          <div class="gem__code-wrap">
+            <span class="gem__code"><%= @latest_version.to_bundler %></span></code>
+            <span class="gem__code__icon" id="js-gem__code--gemfile" data-clipboard-text="<%= @latest_version.to_bundler %>">=</span>
+            <span class="gem__code__tooltip--copy">Copy to clipboard</span>
+            <span class="gem__code__tooltip--copied">Copied!</span>
+          </div>
+        </h2>
+        <h2 class="gem__ruby-version__heading t-list__heading">
+          <%= t '.install' %>:
+          <div class="gem__code-wrap">
+            <span class="gem__code"><%= @latest_version.to_install %></span></code>
+            <span class="gem__code__icon" id="js-gem__code--install" data-clipboard-text="<%= @latest_version.to_install %>">=</span>
+            <span class="gem__code__tooltip--copy">Copy to clipboard</span>
+            <span class="gem__code__tooltip--copied">Copied!</span>
+          </div>
+        </h2>
+      <% end %>
+
+      <h3 class="t-list__heading"><%= t '.links.header' %>:</h3>
+      <div class="t-list__items">
+        <%= link_to t('edit'), edit_rubygem_path(@rubygem), :class => "gem__link t-list__item", :id => "edit" if @rubygem.owned_by?(current_user) %>
+
+        <% if @latest_version.indexed %>
+          <% if @rubygem.linkset.present? %>
             <%= link_to_page t('.links.home'), @rubygem.linkset.home %>
             <%= link_to_page t('.links.code'), @rubygem.linkset.code %>
             <%= link_to_page t('.links.docs'), @rubygem.linkset.docs %>
             <%= link_to_page t('.links.wiki'), @rubygem.linkset.wiki %>
             <%= link_to_page t('.links.mail'), @rubygem.linkset.mail %>
             <%= link_to_page t('.links.bugs'), @rubygem.linkset.bugs %>
-          </div>
+          <% end %>
         <% end %>
 
-        <div class="bundler">
-          <h5><%= t '.bundler_header' %></h5>
-          <%= render :partial => "rubygems/clippy", :locals => { :embed => "github_clippy", :text => @latest_version.to_bundler } %>
-          <pre><code><%= @latest_version.to_bundler %></code></pre>
-        </div>
-      <% end %>
-
-    <% if @versions.present? %>
-      <div class="versions">
-        <h5><%= t '.versions_header' %></h5>
-        <ol>
-          <%= render @versions %>
-        </ol>
-        <% if show_all_versions_link?(@rubygem) %>
-          <%= link_to t('.show_all_versions', :count => @rubygem.versions.count), rubygem_versions_url(@rubygem), :class => "more" %>
-        <% end %>
+        <%= download_link(@latest_version) %>
+        <%= documentation_link(@latest_version, @rubygem.linkset) %>
+        <%= badge_link(@rubygem) %>
+        <%= subscribe_link(@rubygem) if @latest_version.indexed %>
+        <%= unsubscribe_link(@rubygem) %>
+        <%= atom_link(@rubygem) %>
+        <!--
+          Not ready yet on the Gittip side! :-(
+          https://github.com/gittip/www.gittip.com/issues/1591
+        <%= gittip_link(@rubygem) if @rubygem.gittip_enabled? %>
+        -->
       </div>
-    <% end %>
-
-      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.runtime } %>
-      <%= render :partial => "rubygems/ruby_version", :locals => { :ruby_version => @latest_version.ruby_version } %>
-      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.development } %>
-
-      <% if @latest_version.requirements.present? %>
-        <div class="dependencies requirements_dependencies">
-          <h5><%= t '.requirements_header' %></h5>
-		  <ol>
-		    <% Array(@latest_version.requirements).each do |requirement| %>
-			  <li><%= requirement %></li>
-		    <% end %>
-	  	  </ol>
-        </div>
-      <% end %>
-
     </div>
   </div>
 <% end %>
+
+<%= javascript_include_tag "ZeroClipboard" %>
+
+<script>
+  var client = new ZeroClipboard( document.getElementById("js-gem__code--gemfile") );
+  var client2 = new ZeroClipboard( document.getElementById("js-gem__code--install") );
+</script>

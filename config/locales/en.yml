@@ -23,7 +23,7 @@ en:
       no_owned: "You haven't pushed any gems yet. Perhaps check out the guides on %{creating_link} a gem or %{migrating_link} a gem from RubyForge."
       creating_link_text: 'creating'
       migrating_link_text: 'migrating'
-      my_subscriptions: 'My Subscriptions'
+      my_subscriptions: 'Subscriptions'
 
   helpers:
     label:
@@ -33,10 +33,10 @@ en:
     index:
       gems_header: "of %{gem_count} gems cut since July 2009"
       welcome_blurb: "Welcome to your community RubyGem host."
-      find_blurb: "Find your gems easier, publish them faster, and have fun doing it."
+      find_blurb: "Find, install, and publish RubyGems."
       learn:
         header: 'learn'
-        install_rubygems: "Install RubyGems %{version}"
+        install_rubygems: "Install RubyGems"
         rubygems_subtitle: "Ruby's premier packaging system"
         browse_docs: "Browse the Guides"
         docs_subtitle: "In depth explanations, tutorials, and references"
@@ -62,11 +62,11 @@ en:
   layouts:
     application:
       header:
-        all_gems: "all gems"
-        dashboard: "dashboard"
-        sign_in: "sign in"
-        sign_up: "sign up"
-        sign_out: "sign out"
+        all_gems: "All gems"
+        dashboard: "Dashboard"
+        sign_in: "Sign in"
+        sign_up: "Sign up"
+        sign_out: "Sign out"
       footer:
         about: "About"
         blog: "Blog"
@@ -95,14 +95,13 @@ en:
   pages:
     about:
       title: About
-      subtitle: what this is
       purpose:
         header: "Welcome to %{site}, the Ruby community's gem hosting service. The purpose of this project is three-fold:"
         better_api: Provide a better API for dealing with gems
         transparent_pages: Create more transparent and accessible project pages
         enable_community: Enable the community to improve and enhance the site
       founding: "The project was started in April 2009 by %{founder}, and has since grown to include the contributions of over %{contributors} and %{downloads}. As of the RubyGems 1.3.6 release, the site has been renamed to %{title} from Gemcutter to solidify the site's central role in the Ruby community."
-      support: "Although Gemcutter is not run by one specific company, plenty have helped us out so far. The current design of the site was sponsored by %{thoughtbot}. %{github} has also been invaluable for helping us collaborate and share code easily. The site started on %{heroku}, whose great service helped prove Gemcutter as a viable solution that the whole community could rely on."
+      support: "Although Gemcutter is not run by one specific company, plenty have helped us out so far. The current design, illustrations, and front-end development of this site were created by %{dockyard}. %{github} has also been invaluable for helping us collaborate and share code easily. The site started on %{heroku}, whose great service helped prove Gemcutter as a viable solution that the whole community could rely on."
       technical: "Some insights into the technical aspects of the site: It's 100% Ruby. The main site is a %{rails} application, and the RubyGem serving is done through %{sinatra}. Gems are hosted on %{s3}, and the time between publishing a new gem and having it ready for installation is minimal. For more info, %{source_code}, which is %{license} over at GitHub."
     create:
       title: create
@@ -110,16 +109,16 @@ en:
 
   passwords:
     edit:
-      title: reset password
+      title: Reset password
       submit: Save this password
     new:
-      title: change your password
+      title: Change your password
       will_email_notice: We will email you a link to change your password.
       submit: Reset password
 
   profiles:
     edit:
-      title: Edit Profile
+      title: Edit profile
       reset_password:
         title: Reset password
         text: "Need a new password? No problem. %{link}"
@@ -136,11 +135,11 @@ en:
     dependencies:
       header: "%{title} Dependencies"
     edit:
-      title: "edit gem links"
+      title: "Edit links"
       subtitle: "for %{gem}"
       other_fields_notice: All other fields can only be edited by pushing an updated version of your gem.
     index:
-      title: 'all gems'
+      title: 'Gems'
       subtitle: 'starting with %{prefix}'
     show:
       not_hosted_notice: This gem is not currently hosted on Gemcutter.
@@ -149,7 +148,7 @@ en:
       yank_info_link_text: please click here
       stats_header: Stats
       authors_header: Authors
-      downloads_for_this_version: "%{count} for this version"
+      downloads_for_this_version: "For this version"
       owners_header: Owners
       links:
         header: Links
@@ -182,7 +181,7 @@ en:
     show:
       for: "stats for %{for}"
       overview: "stats overview"
-      total_downloads: "%{count} total downloads"
+      total_downloads: "Total downloads"
       daily_downloads: "%{count} downloads today"
       current_rank: current rank today
       highest_rank: highest rank today
@@ -195,7 +194,7 @@ en:
 
   versions:
     index:
-      title: "all versions of %{name}"
+      title: "All versions of %{name}"
       versions_since: "%{count} versions since %{since}"
       not_hosted_notice: This gem is not currently hosted on Gemcutter.
     version:
