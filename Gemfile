@@ -7,7 +7,7 @@ gem 'builder'
 gem 'dynamic_form'
 gem 'excon'
 gem 'fog', '= 1.15.0'
-gem 'gchartrb', :require => 'google_chart'
+gem 'gchartrb', require: 'google_chart'
 gem 'gravtastic'
 gem 'high_voltage'
 gem 'highline'
@@ -20,21 +20,27 @@ gem 'paul_revere'
 gem 'pg'
 gem 'puma'
 gem 'rack'
-gem 'rack-maintenance', :require => 'rack/maintenance'
+gem 'rack-maintenance', require: 'rack/maintenance'
 gem 'rdoc'
 gem 'redis'
-gem 'rest-client', :require => 'rest_client'
+gem 'rest-client', require: 'rest_client'
 gem 'sinatra'
 gem 'unicorn'
 gem 'validates_formatting_of'
 gem 'will_paginate'
 gem 'xml-simple'
-gem 'yajl-ruby', :require => 'yajl'
-gem "autoprefixer-rails"
+gem 'yajl-ruby', require: 'yajl'
+gem 'autoprefixer-rails'
+
+group :assets do
+  gem 'sass-rails',   '~> 3.2.3'
+  gem 'coffee-rails', '~> 3.2.1'
+  gem 'uglifier', '>= 1.0.3'
+end
 
 # enable if on heroku, make sure to toss this into an initializer:
 #     Rails.application.config.middleware.use HerokuAssetCacher
-#gem 'heroku_asset_cacher', :git => "git@github.com/qrush/heroku_asset_cacher"
+#gem 'heroku_asset_cacher', git: "git@github.com/qrush/heroku_asset_cacher"
 
 group :development do
   gem 'capistrano', '~> 2.0'
@@ -44,14 +50,14 @@ end
 
 group :test do
   gem 'capybara'
-  gem 'cucumber-rails', :require => false
+  gem 'cucumber-rails', require: false
   gem 'database_rewinder'
   gem 'factory_girl_rails'
   gem 'launchy'
   gem 'nokogiri'
-  gem 'rack-test', :require => 'rack/test'
+  gem 'rack-test', require: 'rack/test'
   gem 'rr'
-  gem 'shoulda', :require => false
+  gem 'shoulda', require: false
   gem 'timecop'
   gem 'webmock'
 end
