@@ -27,8 +27,6 @@ pre code, [data-icon]:before, .t-list__heading, .home__join, .modal__submit, .he
   -moz-osx-font-smoothing: grayscale; }
 
 .l-colspan--l, .l-colspan--r, .l-col--l, .l-col--l--pad, .l-col--r, .l-col--r--pad, .l-half--l, .l-half--r, .home__join, .help__link--new-discussion, .help__category__link--new-discussion, .form__input, .form__textarea, .form__file__label, .gem__pre, .gems__nav-link, .header__nav-link, .help__footer__articles-wrap, .help__footer__discussions-wrap, .home__downloads, .home__link, .modal__input-wrap, .post__link--posts, .header__search-wrap, .header__search-wrap--home, .header__search, .help__search, .statuses, .status__twitter, .uptime__definitions, .uptime__credits {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
 
@@ -53,15 +51,7 @@ pre code, [data-icon]:before, .t-list__heading, .home__join, .modal__submit, .he
     position: relative;
     left: 0;
     overflow: hidden;
-    -webkit-transition-duration: 0.25s;
-    -moz-transition-duration: 0.25s;
-    -ms-transition-duration: 0.25s;
-    -o-transition-duration: 0.25s;
     transition-duration: 0.25s;
-    -webkit-transition-property: left;
-    -moz-transition-property: left;
-    -ms-transition-property: left;
-    -o-transition-property: left;
     transition-property: left; }
     main.mobile-nav-is-expanded, .header.mobile-nav-is-expanded, .footer.mobile-nav-is-expanded {
       left: -270px; } }
@@ -101,15 +91,7 @@ main {
 a.page__heading {
   display: block;
   color: #141c22;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  -ms-transition-duration: 0.25s;
-  -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  -webkit-transition-property: color;
-  -moz-transition-property: color;
-  -ms-transition-property: color;
-  -o-transition-property: color;
   transition-property: color; }
   a.page__heading:focus, a.page__heading:hover, a.page__heading:active {
     color: #fa3c29; }

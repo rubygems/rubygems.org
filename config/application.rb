@@ -7,15 +7,23 @@ unless Rails.env.maintenance?
   require 'rails/test_unit/railtie'
   require 'action_mailer/railtie'
   require 'active_record/railtie'
+  require 'sprockets/railtie'
 end
 
-Bundler.require(:default, Rails.env) if defined?(Bundler)
+if defined?(Bundler)
+  # If you precompile assets before deploying to production, use this line
+  Bundler.require(*Rails.groups(:assets => %w(development test)))
+  # If you want your assets lazily compiled in production, use this line
+  # Bundler.require(:default, :assets, Rails.env)
+end
 
 $rubygems_config = YAML.load_file("config/rubygems.yml")[Rails.env].symbolize_keys
 HOST             = $rubygems_config[:host]
 
 module Gemcutter
   class Application < Rails::Application
+    config.assets.enabled = true
+
     config.time_zone = "UTC"
     config.encoding  = "utf-8"
 
