@@ -38,17 +38,22 @@
   left: 155px;
   line-height: 60px; }
 
-#clippy, #github_clippy {
+span.copy-button {
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 50px;
-  overflow: hidden; }
+  top: 20px;
+  right: 25px;
+  overflow: hidden;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  font-size: 18px;
+}
+.copy-button.zeroclipboard-is-hover { border: none; outline: 0; }
+.copy-button.zeroclipboard-is-active { color: #ff4625; border: none; outline: 0; }
 
-#clippy embed, #github_clippy embed {
-  position: absolute;
-  top: 22px;
-  right: -70px; }
+object, embed {
+  outline: 0;
+}
 
 @media (max-width: 779px) {
   .gem__aside {

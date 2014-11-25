@@ -16,9 +16,11 @@
             <%= simple_markup(@latest_version.info) %>
           </div>
           <pre class="gem__pre"><code><span class="gem__code__heading"><%= t '.bundler_header' %></span>
-          <span class="gem__code"><%= @latest_version.to_bundler %></span></code><%= render :partial => "rubygems/clippy", :locals => { :embed => "github_clippy", :text => @latest_version.to_bundler } %></pre>
+          <span class="gem__code"><%= @latest_version.to_bundler %></span></code>
+          <span class="copy-button" data-clipboard-text="<%= @latest_version.to_bundler %>" data-icon="="></span></pre>
           <pre class="gem__pre"><code><span class="gem__code__heading"><%= t '.install' %></span>
-          <span class="gem__code"><%= @latest_version.to_install %></span></code><%= render :partial => "rubygems/clippy", :locals => { :embed => "github_clippy", :text => @latest_version.to_install } %></pre>
+          <span class="gem__code"><%= @latest_version.to_install %></span></code>
+          <span class="copy-button" data-clipboard-text="<%= @latest_version.to_install %>" data-icon="="></span></pre>
         </article>
 
         <article class="l-overflow">
