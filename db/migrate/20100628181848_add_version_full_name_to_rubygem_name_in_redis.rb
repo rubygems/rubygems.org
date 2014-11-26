@@ -1,6 +1,6 @@
 class AddVersionFullNameToRubygemNameInRedis < ActiveRecord::Migration
   def self.up
-    Version.find_each(:include => :rubygem) do |version|
+    Version.includes(:rubygem).find_each do |version|
       $redis.set("versions:#{version.full_name}", version.rubygem.name)
     end
   end

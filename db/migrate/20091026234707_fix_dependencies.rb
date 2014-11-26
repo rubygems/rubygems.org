@@ -14,7 +14,7 @@ class FixDependencies < ActiveRecord::Migration
     end
 
     # kill bad deps too
-    Dependency.all(:include => :rubygem).select { |v| v.rubygem.nil? }.each { |d| d.destroy }
+    Dependency.includes(:rubygem).select { |v| v.rubygem.nil? }.each { |d| d.destroy }
   end
 
   def self.down

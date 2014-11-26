@@ -1,6 +1,6 @@
 before_script:
   - cp config/database.yml.example config/database.yml
-  - bundle exec rake db:create db:migrate db:test:prepare
+  - RAILS_ENV=test bundle exec rake db:create db:migrate
 git:
   strategy: tarball
 language: ruby
