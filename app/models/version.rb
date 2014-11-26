@@ -296,7 +296,7 @@ class Version < ActiveRecord::Base
     self.full_name = "#{rubygem.name}-#{number}"
     self.full_name << "-#{platform}" if platformed?
 
-    Version.update_all({:full_name => full_name}, {:id => id})
+    Version.find(id).update(full_name: full_name)
 
     $redis.hmset(Version.info_key(full_name),
                  :name, rubygem.name,
