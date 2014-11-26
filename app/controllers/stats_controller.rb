@@ -14,8 +14,4 @@ class StatsController < ApplicationController
   def ensure_hosted
     render :file => 'public/404', :status => :not_found if !@rubygem.hosted?
   end
-  
-  def params_version_id
-    params.permit(:version_id)[:version_id]
-  end
 end
