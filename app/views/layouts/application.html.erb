@@ -15,7 +15,7 @@
     <script>
       try{Typekit.load();}catch(e){}
     </script>
-    <%= stylesheet_link_tag "base", "layout", "type", "button", "error", "filter", "footer", "form", "gem", "gems", "header", "home", "icon", "modal", "nav--paginated", "nav--v", "org", "post", "project", "search", "shared", "stats", "uptime", :cache => true %>
+    <%= stylesheet_link_tag("application") %>
     <%= render "layouts/feeds" %>
     <%= csrf_meta_tag %>
     <%= yield :head %>
@@ -149,37 +149,37 @@
         <div class="footer__sponsors">
           <a class="footer__sponsor" href="http://rubycentral.org/" target="_blank">
             Supported by
-            <%= image_tag('sponsors/ruby-central.png', class: 'footer__sponsor__logo') %>
+            <%= image_tag('/images/sponsors/ruby-central.png', class: 'footer__sponsor__logo') %>
           </a>
           <a class="footer__sponsor" href="https://www.bluebox.net/" target="_blank">
             Hosted by
-            <%= image_tag('sponsors/bluebox.png', class: 'footer__sponsor__logo') %>
+            <%= image_tag('/images/sponsors/bluebox.png', class: 'footer__sponsor__logo') %>
           </a>
           <a class="footer__sponsor" href="http://dockyard.com/" target="_blank">
             Designed by
-            <%= image_tag('sponsors/dockyard.png', class: 'footer__sponsor__logo') %>
+            <%= image_tag('/images/sponsors/dockyard.png', class: 'footer__sponsor__logo') %>
           </a>
           <a class="footer__sponsor" href="https://dnsimple.com/" target="_blank">
             Resolved with
-            <%= image_tag('sponsors/dnsimple.png', class: 'footer__sponsor__logo') %>
+            <%= image_tag('/images/sponsors/dnsimple.png', class: 'footer__sponsor__logo') %>
           </a>
           <a class="footer__sponsor" href="http://newrelic.com/" target="_blank">
             Optimized by
-            <%= image_tag('sponsors/new-relic.png', class: 'footer__sponsor__logo') %>
+            <%= image_tag('/images/sponsors/new-relic.png', class: 'footer__sponsor__logo') %>
           </a>
           <a class="footer__sponsor" href="http://get.gaug.es/" target="_blank">
             Tracking by
-            <%= image_tag('sponsors/gauges.png', class: 'footer__sponsor__logo') %>
+            <%= image_tag('/images/sponsors/gauges.png', class: 'footer__sponsor__logo') %>
           </a>
           <a class="footer__sponsor" href="https://www.runscope.com/" target="_blank">
             Monitored by
-            <%= image_tag('sponsors/runscope.png', class: 'footer__sponsor__logo') %>
+            <%= image_tag('/images/sponsors/runscope.png', class: 'footer__sponsor__logo') %>
           </a>
         </div>
       </div>
     </footer>
 
-    <%= javascript_include_tag "jquery.min", "jquery.easing.1.3", "jquery.color", "jquery_ujs", "announcements", "mobile-nav", "popup-nav", "application", :cache => true %>
+    <%= javascript_include_tag "application" %>
     <%= yield :javascript %>
 
     <script type="text/javascript">

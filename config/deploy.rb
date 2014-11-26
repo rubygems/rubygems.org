@@ -24,10 +24,11 @@ set :deploy_via, :remote_cache
 set :git_shallow_clone, 1
 set :use_sudo, false
 set :group, "deploy"
+set :assets_role, [:app]
 
 after "deploy", "deploy:migrate"
 after "deploy", "deploy:cleanup"
-after "deploy:create_symlink", "deploy:symlink_database_yml", "deploy:symlink_secret_settings"
+after "deploy:finalize_update", "deploy:symlink_database_yml", "deploy:symlink_secret_settings"
 
 namespace :deploy do
 

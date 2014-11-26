@@ -4,15 +4,7 @@
   font-size: 12px;
   line-height: 1.66;
   text-transform: uppercase;
-  -webkit-transition-duration: 0.25s;
-  -moz-transition-duration: 0.25s;
-  -ms-transition-duration: 0.25s;
-  -o-transition-duration: 0.25s;
   transition-duration: 0.25s;
-  -webkit-transition-property: color;
-  -moz-transition-property: color;
-  -ms-transition-property: color;
-  -o-transition-property: color;
   transition-property: color; }
   .nav--v__link:not(:last-child), .nav--v__link--footer:not(:last-child) {
     margin-bottom: 10px; }
