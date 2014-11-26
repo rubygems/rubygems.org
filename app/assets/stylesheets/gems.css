@@ -71,6 +71,12 @@
   .gems__gem__name:hover {
     color: #fa3c29; }
 
+.gems__gem__desc .emoji {
+  height: 18px;
+  width: 18px;
+  vertical-align: middle;
+}
+
 .gems__gem__downloads__count {
   color: #141c22; }
   @media (max-width: 599px) {

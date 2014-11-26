@@ -1,6 +1,8 @@
 require File.expand_path('../config/application', __FILE__)
 Gemcutter::Application.load_tasks
 
+load 'tasks/emoji.rake'
+
 desc "Run all tests and features"
 task :default => [:test, :cucumber]
 

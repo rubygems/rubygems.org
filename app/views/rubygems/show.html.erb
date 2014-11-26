@@ -13,7 +13,7 @@
       <% if @latest_version.indexed %>
         <div class="gem__intro">
           <div id="markup" class="gem__desc">
-            <%= simple_markup(@latest_version.info) %>
+            <%= emojify simple_markup(@latest_version.info) %>
           </div>
         </div>
       <% else %>

@@ -15,6 +15,16 @@ module RubygemsHelper
     ("A".."Z").map { |letter| link_to(letter, rubygems_path(:letter => letter)) }.join
   end
 
+  def emojify(content)
+    h(content).to_str.gsub(/:([\w+-]+):/) do |match|
+      if emoji = Emoji.find_by_alias($1)
+        %(<img alt="#$1" src="#{"/images/emoji/#{emoji.image_filename}"}" class="emoji" />)
+      else
+        match
+      end
+    end.html_safe if content.present?
+  end
+
   def simple_markup(text)
     if text =~ /^==+ [A-Z]/
       RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new).html_safe
