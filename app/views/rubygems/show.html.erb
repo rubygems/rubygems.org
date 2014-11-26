@@ -162,7 +162,9 @@
   </div>
 <% end %>
 
-<script>
-  var client = new ZeroClipboard( document.getElementById("js-gem__code--gemfile") );
-  var client2 = new ZeroClipboard( document.getElementById("js-gem__code--install") );
-</script>
+<% content_for :javascript do %>
+  <script>
+    var client = new ZeroClipboard( document.getElementById("js-gem__code--gemfile") );
+    var client2 = new ZeroClipboard( document.getElementById("js-gem__code--install") );
+  </script>
+<% end %>

@@ -6,12 +6,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.easing.1.3
+//= require jquery.color
+//= require ZeroClipboard
 //= require_tree .
-
-//= jquery.easing.1.3
-//= jquery.color
-//= announcements
-//= mobile-nav
-//= popup-nav
-//= misc
-//= ZeroClipboard
