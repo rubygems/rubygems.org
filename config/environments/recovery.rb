@@ -1,4 +1,4 @@
-Gemcutter::Application.configure do
+Rails.application.configure do
   # for testing recovery mode on your local machine, LOCAL=1 rails s -e recovery
   if ENV["LOCAL"]
     config.cache_classes = false
