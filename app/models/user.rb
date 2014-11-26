@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
 
   has_many :rubygems, :through => :ownerships
 
-  has_many :subscribed_gems, -> { order("name ASC") }, 
+  has_many :subscribed_gems, -> { order(name: :asc) }, 
     :through => :subscriptions,
     :source  => :rubygem
 
