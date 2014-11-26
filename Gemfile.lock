@@ -114,6 +114,7 @@ GEM
       ruby-hmac
     formatador (0.2.5)
     gchartrb (0.8)
+    gemoji (2.1.0)
     gherkin (2.12.2)
       multi_json (~> 1.3)
     gravtastic (3.2.6)
@@ -287,6 +288,7 @@ DEPENDENCIES
   fakeredis
   fog (= 1.15.0)
   gchartrb
+  gemoji
   gravtastic
   high_voltage
   highline

@@ -18,7 +18,13 @@
 .gem__desc {
   font-size: 16px;
   font-weight: 300;
-  line-height: 1.5; }
+  line-height: 20px; }
+
+.gem__desc .emoji {
+  vertical-align: middle;
+  height: 20px;
+  width: 20px;
+}
 
 .gem__members {
   padding-top: 30px;
