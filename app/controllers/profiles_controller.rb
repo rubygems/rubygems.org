@@ -38,7 +38,7 @@ class ProfilesController < ApplicationController
       :location, 
       :password, 
       :website, 
-      :gittip_username
+      :gittip_username,
     )
   end
 end
