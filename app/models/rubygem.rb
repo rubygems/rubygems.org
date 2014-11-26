@@ -16,7 +16,7 @@ class Rubygem < ActiveRecord::Base
   before_destroy :mark_unresolved
 
   def self.with_versions
-    where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)").references(:versions)
+    joins(:versions).where(versions: { indexed: true })
   end
 
   def self.with_one_version
