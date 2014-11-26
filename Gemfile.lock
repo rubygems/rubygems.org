@@ -33,7 +33,7 @@ GEM
     autoprefixer-rails (4.0.1)
       execjs
     bcrypt (3.1.9)
-    builder (3.1.4)
+    builder (3.2.2)
     capistrano (2.15.5)
       highline
       net-scp (>= 1.0.0)
@@ -300,7 +300,7 @@ DEPENDENCIES
   rack
   rack-maintenance
   rack-test
-  rails (~> 4.1.7)
+  rails (~> 4.1.8)
   rails-erd
   rdoc
   redis
