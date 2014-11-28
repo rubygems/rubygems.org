@@ -66,7 +66,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.letter(letter)
-    name_starts_with(letter).order("name asc").with_versions
+    name_starts_with(letter).by_name.with_versions
   end
 
   def self.letterize(letter)
@@ -83,6 +83,10 @@ class Rubygem < ActiveRecord::Base
 
   def self.versions_key(name)
     "r:#{name}"
+  end
+
+  def self.by_name
+    order("name asc")
   end
 
   def self.by_downloads
