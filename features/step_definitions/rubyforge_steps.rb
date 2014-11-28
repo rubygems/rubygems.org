@@ -1,13 +1,13 @@
 Given /^I have a RubyForge account with "([^\"]*)\/(.*)"$/ do |email,password|
-  @rf = Rubyforger.create(
-          :email => email,
-          :encrypted_password => Digest::MD5.hexdigest(password))
+  @rf = Rubyforger.new(:email => email)
+  @rf.encrypted_password = Digest::MD5.hexdigest(password)
+  @rf.save
 end
 
 Given /^I am a RubyForge user with an email of "([^\"]*)"$/ do |email|
-  @rf = Rubyforger.create(
-          :email => "email@person.com",
-          :encrypted_password => Digest::MD5.hexdigest("password"))
+  @rf = Rubyforger.new(:email => "email@person.com")
+  @rf.encrypted_password = Digest::MD5.hexdigest("password")
+  @rf.save
 end
 
 Given /^my RubyForge password is "([^\"]*)"$/ do |password|

@@ -1,4 +1,5 @@
 class Rubyforger < ActiveRecord::Base
+  
   def authentic?(password)
     password.present? && encrypted_password == Digest::MD5.hexdigest(password)
   end

@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 # ruby '2.0.0'
 
-gem 'rails', '~> 3.2.20'
+gem 'rails', '~> 4.1.8'
 
 gem 'builder'
 gem 'dynamic_form'
@@ -26,6 +26,7 @@ gem 'redis'
 gem 'rest-client', require: 'rest_client'
 gem 'sinatra'
 gem 'unicorn'
+gem 'unf'
 gem 'validates_formatting_of'
 gem 'will_paginate'
 gem 'xml-simple'
@@ -56,7 +57,7 @@ group :test do
   gem 'launchy'
   gem 'nokogiri'
   gem 'rack-test', require: 'rack/test'
-  gem 'rr'
+  gem 'rr', '1.1.0.rc1' , require: false
   gem 'shoulda', require: false
   gem 'timecop'
   gem 'webmock'
@@ -69,6 +70,7 @@ end
 # For some reason, including these gems in the maintenance environment enables
 # maintenance mode
 group :development, :test, :staging, :production do
+  gem 'minitest'
   gem 'clearance'
   gem 'daemons'
   gem 'delayed_job'

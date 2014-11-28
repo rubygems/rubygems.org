@@ -12,7 +12,7 @@ class ProfilesController < ApplicationController
   end
 
   def update
-    if current_user.update_attributes(params[:user])
+    if current_user.update_attributes(user_params)
       if current_user.email_reset
         sign_out
         flash[:notice] = "You will receive an email within the next few minutes. " <<
@@ -25,5 +25,20 @@ class ProfilesController < ApplicationController
     else
       render :edit
     end
+  end
+  
+  private 
+  
+  def user_params
+    params.require(:user).permit(
+      :bio, 
+      :email, 
+      :handle, 
+      :hide_email, 
+      :location, 
+      :password, 
+      :website, 
+      :gittip_username,
+    )
   end
 end

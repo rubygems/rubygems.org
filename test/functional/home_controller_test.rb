@@ -11,7 +11,7 @@ class HomeControllerTest < ActionController::TestCase
       stub(Version).just_updated { [] }
       stub(Download).count { @downloads_count }
       get :index
-      pending
+      skip
     end
 
     should respond_with :success
@@ -33,7 +33,7 @@ class HomeControllerTest < ActionController::TestCase
 
   context "on GET to index with a non-ssl request when not signed in" do
     setup do
-      @request.env['HTTPS'] = nil
+      @request.env["rack.url_scheme"] = "http"
       get :index
     end
 
@@ -51,7 +51,7 @@ class HomeControllerTest < ActionController::TestCase
   context "on GET to index with a non-ssl request when signed in" do
     setup do
       cookies[:ssl] = true
-      @request.env['HTTPS'] = nil
+      @request.env["rack.url_scheme"] = "http"
       get :index
     end
 

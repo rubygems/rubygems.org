@@ -1,5 +1,4 @@
 class VersionHistory < ActiveRecord::Base
-  attr_accessible :count, :day, :version_id
   belongs_to :version
 
   def self.for(version, day)

@@ -1,4 +1,4 @@
-Gemcutter::Application.configure do
+Rails.application.configure do
   config.active_support.deprecation = :notify
 
   config.middleware.use ::Rack::Static,
@@ -11,6 +11,7 @@ Gemcutter::Application.configure do
     :file => File.join('public', 'maintenance', 'index.html')
 
   config.plugins = []
+  config.eager_load = true
 end
 
 require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?

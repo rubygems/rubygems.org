@@ -25,7 +25,7 @@ class RubygemsController < ApplicationController
   end
 
   def update
-    if @linkset.update_attributes(params[:linkset])
+    if @linkset.update_attributes(linkset_params)
       redirect_to rubygem_path(@rubygem)
       flash[:success] = "Gem links updated."
     else
@@ -42,5 +42,10 @@ protected
     end
 
     @linkset = @rubygem.linkset
+  end
+
+private
+  def linkset_params
+    params.require(:linkset).permit(:code)
   end
 end

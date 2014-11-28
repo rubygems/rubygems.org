@@ -3,13 +3,12 @@ class User < ActiveRecord::Base
   include Gravtastic
   is_gravtastic :default => "retro"
 
-  attr_accessible :bio, :email, :handle, :hide_email, :location, :password, :website, :gittip_username
-
   has_many :rubygems, :through => :ownerships
 
-  has_many :subscribed_gems, :through => :subscriptions,
-                             :source  => :rubygem,
-                             :order   => "name ASC"
+  has_many :subscribed_gems, -> { order(name: :asc) }, 
+    :through => :subscriptions,
+    :source  => :rubygem
+
   has_many :ownerships
   has_many :subscriptions
   has_many :web_hooks

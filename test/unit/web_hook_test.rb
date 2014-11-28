@@ -170,6 +170,7 @@ class WebHookTest < ActiveSupport::TestCase
 
   context "with a non-global hook job" do
     setup do
+      WebMock.reset!
       @url     = 'http://example.com/gemcutter'
       @rubygem = create(:rubygem)
       @version = create(:version, :rubygem => @rubygem)
