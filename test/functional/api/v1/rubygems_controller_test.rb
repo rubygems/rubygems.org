@@ -68,6 +68,13 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should_respond_to(:xml) do |body|
         Hash.from_xml(Nokogiri.parse(body).to_xml)
       end
+
+      should "allow cross origin resource sharing" do
+        @rubygem = create(:rubygem)
+        get :show, :id => @rubygem.to_param, :format => :json
+        assert_equal @response.headers['Access-Control-Allow-Origin'], '*'
+        assert_equal @response.headers['Access-Control-Request-Method'], 'GET'
+      end
     end
 
     context "On GET to show for a gem that not hosted" do
