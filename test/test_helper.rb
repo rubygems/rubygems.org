@@ -1,6 +1,7 @@
 ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
+require 'rr'
 
 require 'rubygems/package'
 
@@ -12,7 +13,6 @@ end
 
 class Test::Unit::TestCase
   include Rack::Test::Methods
-  include RR::Adapters::TestUnit unless include?(RR::Adapters::TestUnit)
   include WebMock::API
   include FactoryGirl::Syntax::Methods
 

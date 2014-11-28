@@ -56,7 +56,7 @@ group :test do
   gem 'launchy'
   gem 'nokogiri'
   gem 'rack-test', require: 'rack/test'
-  gem 'rr'
+  gem 'rr', require: false
   gem 'shoulda', require: false
   gem 'timecop'
   gem 'webmock'
