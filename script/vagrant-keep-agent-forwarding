@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# Ensure that SSH_AUTH_SOCK is kept
+echo "Defaults env_keep+=\"SSH_AUTH_SOCK\"" > "/etc/sudoers.d/keep_ssh_auth_sock"
+chmod 0440 /etc/sudoers.d/keep_ssh_auth_sock

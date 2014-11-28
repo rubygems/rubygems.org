@@ -3,8 +3,10 @@
 *.sql
 *.swp
 *~
+.apt-cache
 .bundle
 .sass-cache/
+.vagrant
 _site/
 bench/
 bin/
