@@ -44,75 +44,11 @@
     .home__join {
       float: right; } }
 
-.modal__submit {
-  margin-right: auto;
-  margin-left: auto;
-  padding-left: 36px;
-  width: 150px;
-  text-align: left; }
-
-.help__link--new-discussion, .form__submit {
-  background-color: #fa3c29;
-  color: white; }
-
-.help__link--new-discussion {
-  margin-right: auto;
-  margin-bottom: 14px;
-  margin-left: auto;
-  width: 90%;
-  max-width: 300px; }
-  @media (max-width: 379px) {
-    .help__link--new-discussion {
-      padding-left: 10%; } }
-  @media (min-width: 380px) {
-    .help__link--new-discussion {
-      padding-left: 68px; } }
-
-.help__category__link--new-discussion {
-  max-width: 300px;
-  background-color: #fa3c29;
-  color: white; }
-  @media (max-width: 799px) {
-    .help__category__link--new-discussion {
-      margin-right: auto;
-      margin-bottom: 40px;
-      margin-left: auto;
-      width: 100%; } }
-  @media (min-width: 800px) {
-    .help__category__link--new-discussion {
-      width: 40%;
-      float: right; } }
-  @media (max-width: 899px) {
-    .help__category__link--new-discussion {
-      padding-left: 5%; } }
-  @media (min-width: 900px) {
-    .help__category__link--new-discussion {
-      padding-left: 68px; } }
-
 .form__submit {
   margin-top: 42px;
   margin-bottom: 150px;
   width: 100%;
   max-width: 320px; }
-
-.post__aside__close {
-  margin-bottom: 24px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  max-width: 320px;
-  border-radius: 20px;
-  background-color: #fa3c29;
-  text-align: center;
-  color: white;
-  transition-duration: 0.25s;
-  transition-property: background-color; }
-  .post__aside__close.is-disabled {
-    background-color: #c1c4ca;
-    cursor: default; }
-    .post__aside__close.is-disabled:hover {
-      background-color: #c1c4ca; }
-  .post__aside__close:hover {
-    background-color: #ff4625; }
 
 .download__format {
   margin-bottom: 24px;

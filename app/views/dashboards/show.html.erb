@@ -23,7 +23,7 @@
                   <strong class="dashboard__gem__name"><%= version.to_title %></strong>
                   <i class="dashboard__gem__version"><%= t 'time_ago', :duration => time_ago_in_words(version.created_at) %></i>
                 </div>
-                <p class="dashboard__gem__desc t-text"><%= short_info(version) %></p>
+                <p class="dashboard__gem__desc"><%= short_info(version) %></p>
               </a>
             </li>
           <% end %>
