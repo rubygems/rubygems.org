@@ -17,7 +17,7 @@ class User < ActiveRecord::Base
   before_validation :regenerate_token, :if => :email_changed?, :on => :update
   before_create :generate_api_key
 
-  validates_uniqueness_of :handle, :allow_nil => true
+  validates_uniqueness_of :handle, :allow_nil => true, :case_sensitive => :false 
   validates_format_of :handle, :with => /\A[A-Za-z][A-Za-z_\-0-9]*\z/, :allow_nil => true
   validates_length_of :handle, :within => 2..40, :allow_nil => true
 
