@@ -57,7 +57,6 @@ group :test do
   gem 'rr', require: false
   gem 'shoulda', require: false
   gem 'timecop'
-  gem 'webmock'
 end
 
 group :development, :test do
