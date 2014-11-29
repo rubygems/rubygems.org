@@ -1,5 +1,5 @@
 module SimpleSSLRequirement
-  SSL_ENVIRONMENTS = %w(production staging test)
+  SSL_ENVIRONMENTS = %w(production staging)
 
   def self.included(base)
     base.extend(ClassMethods)
