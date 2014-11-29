@@ -67,6 +67,12 @@ FactoryGirl.define do
         $redis[Download.key(r)] = r['downloads']
       end
     end
+
+    factory :rubygem_with_version do
+      after(:create) do |r|
+        create(:version, rubygem: r, number: "1.0.0")
+      end
+    end
   end
 
   sequence :number do |n|
