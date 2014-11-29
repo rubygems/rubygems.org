@@ -10,7 +10,7 @@ class ApiKeyResetTest < ActionDispatch::IntegrationTest
     get edit_profile_path
 
     assert_response :success
-    assert_match @user.api_key, response.body
+    assert page.has_content? @user.api_key
   end
 
   test "user resets api key" do
@@ -20,6 +20,6 @@ class ApiKeyResetTest < ActionDispatch::IntegrationTest
     get edit_profile_path
 
     assert_response :success
-    assert_match @user.reload.api_key, response.body
+    assert page.has_content? @user.reload.api_key
   end
 end
