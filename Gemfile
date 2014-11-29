@@ -50,8 +50,6 @@ end
 
 group :test do
   gem 'capybara'
-  gem 'cucumber-rails', require: false
-  gem 'database_rewinder'
   gem 'factory_girl_rails'
   gem 'launchy'
   gem 'nokogiri'
