@@ -14,7 +14,6 @@ I18n.enforce_available_locales = false
 
 class Test::Unit::TestCase
   include Rack::Test::Methods
-  include WebMock::API
   include FactoryGirl::Syntax::Methods
   include GemHelpers
 

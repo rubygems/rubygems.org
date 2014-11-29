@@ -64,8 +64,6 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.8.0)
-    crack (0.4.2)
-      safe_yaml (~> 1.0.0)
     daemons (1.1.9)
     dalli (2.7.2)
     delayed_job (4.0.4)
@@ -197,7 +195,6 @@ GEM
     rr (1.1.2)
     ruby-graphviz (1.0.9)
     ruby-hmac (0.4.0)
-    safe_yaml (1.0.4)
     sass (3.4.9)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
@@ -238,9 +235,6 @@ GEM
     validatable (1.6.7)
     validates_formatting_of (0.8.0)
       activemodel (~> 3.0)
-    webmock (1.20.4)
-      addressable (>= 2.3.6)
-      crack (>= 0.3.2)
     will_paginate (3.0.7)
     xml-simple (1.1.4)
     xpath (2.0.0)
@@ -300,7 +294,6 @@ DEPENDENCIES
   uglifier (>= 1.0.3)
   unicorn
   validates_formatting_of
-  webmock
   will_paginate
   xml-simple
   yajl-ruby

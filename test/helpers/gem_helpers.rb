@@ -19,11 +19,6 @@ module GemHelpers
     Gem::Package.new(File.join('test', 'gems', "#{name}.gem")).spec
   end
 
-  def stub_uploaded_token(gem_name, token, status = [200, "Success"])
-    WebMock.stub_request(:get, "http://#{gem_name}.rubyforge.org/migrate-#{gem_name}.html").
-      to_return(:body => token + "\n", :status => status)
-  end
-
   def gem_spec(opts = {})
     Gem::Specification.new do |s|
       s.name = %q{test}
@@ -47,5 +42,40 @@ module GemHelpers
 
   def gem_file(name = "test-0.0.0.gem")
     File.open(File.expand_path("../gems/#{name}", __FILE__))
+  end
+
+  def build_gemspec(gemspec)
+    Gem::DefaultUserInteraction.use_ui(Gem::StreamUI.new(StringIO.new, StringIO.new)) do
+      Gem::Package.build(gemspec)
+    end
+  end
+
+  def build_gem(name, version, summary = "Gemcutter", platform = "ruby")
+    build_gemspec(new_gemspec(name, version, summary, platform))
+  end
+
+  def new_gemspec(name, version, summary, platform)
+    gemspec = Gem::Specification.new do |s|
+      s.name = name
+      s.platform = platform
+      s.version = "#{version}"
+      s.authors = ["John Doe"]
+      s.date = "#{Time.now.utc.strftime('%Y-%m-%d')}"
+      s.description = "#{summary}"
+      s.email = "john.doe@example.org"
+      s.files = []
+      s.homepage = "http://example.org/#{name}"
+      s.require_paths = ["lib"]
+      s.rubygems_version = %q{1.3.5}
+      s.summary = "#{summary}"
+      s.test_files = []
+      s.licenses = []
+    end
+
+    def gemspec.validate
+      "not validating on purpose"
+    end
+
+    gemspec
   end
 end
