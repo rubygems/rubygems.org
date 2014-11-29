@@ -5,12 +5,6 @@ require 'rr'
 
 require 'rubygems/package'
 
-class ActiveSupport::TestCase
-  self.use_transactional_fixtures = true
-  self.use_instantiated_fixtures  = false
-  ActionDispatch::TestRequest::DEFAULT_ENV['HTTPS'] = 'on'
-end
-
 class Test::Unit::TestCase
   include Rack::Test::Methods
   include WebMock::API
@@ -45,6 +39,8 @@ end
 require 'shoulda'
 require 'clearance/test_unit'
 require 'capybara/rails'
+
+I18n.enforce_available_locales = false
 
 def regenerate_index
   FileUtils.rm_rf(
