@@ -52,11 +52,11 @@ found bugs or have feature ideas don’t be afraid to pipe up and ask the
 Acceptance
 ----------
 
-**Contributions WILL NOT be accepted without tests.** If it’s a brand
-new feature, you should have a [Cucumber](http://cukes.info) scenario
-(or several!) as well. If you haven't tested before, start reading up
-in the test/ directory to see what's going on. If you've got good links
-regarding TDD or testing in general feel free to add them here!
+**Contributions WILL NOT be accepted without tests.**
+
+If you haven't tested before, start reading up in the test/ directory to see
+what's going on. If you've got good links regarding TDD or testing in general
+feel free to add them here!
 
 Branching
 ---------
