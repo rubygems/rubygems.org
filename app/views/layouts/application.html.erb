@@ -79,8 +79,8 @@
                 <%= link_to t('.header.sign_out'), sign_out_path, :method => :delete, class: "header__nav-link" %>
               </div>
             <% else %>
-              <a href="<%= ssl_url_for :controller => 'clearance/sessions', :action => 'new' %>" class="header__nav-link <%= 'is-active' if request.path_info == '/sign_in' %>"><%= t('.header.sign_in') %></a>
-              <a href="<%= ssl_url_for :controller => 'clearance/users', :action => 'new' %>" class="header__nav-link <%= 'is-active' if request.path_info == '/sign_up' %>"><%= t('.header.sign_up') %></a>
+              <%= link_to t('.header.sign_in'), sign_in_path, class: "header__nav-link #{'is-active' if request.path_info == '/sign_in'}" %>
+              <%= link_to t('.header.sign_up'), sign_up_path, class: "header__nav-link #{'is-active' if request.path_info == '/sign_up'}" %>
             <% end %>
           </nav>
         </div>

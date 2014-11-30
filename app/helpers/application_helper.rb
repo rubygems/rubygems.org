@@ -23,16 +23,6 @@ module ApplicationHelper
     image_tag(user.gravatar_url(:size => size, :secure => request.ssl?).html_safe, :id => id, :width => size, :height => size)
   end
 
-  def ssl_url_for(options = {})
-    if SimpleSSLRequirement::SSL_ENVIRONMENTS.include?(Rails.env)
-      protocol = 'https'  # when using simple_ssl_requirement
-    else
-      protocol = 'http'   # for development
-    end
-    options.reverse_merge!({:only_path => false, :protocol => protocol})
-    url_for(options)
-  end
-
   def download_count(rubygem)
     number_with_delimiter(rubygem.downloads)
   end
