@@ -1,13 +1,4 @@
 module GemHelpers
-  def regenerate_index
-    FileUtils.rm_rf(
-      %w[server/cache/*
-      server/*specs*
-      server/quick
-      server/specifications
-      server/source_index].map { |d| Dir[d] })
-  end
-
   def create_gem(*owners_and_or_opts)
     opts, owners = owners_and_or_opts.extract_options!, owners_and_or_opts
     @rubygem = create(:rubygem, :name => opts[:name] || generate(:name))
@@ -41,7 +32,7 @@ module GemHelpers
   end
 
   def gem_file(name = "test-0.0.0.gem")
-    File.open(File.expand_path("../gems/#{name}", __FILE__))
+    Rails.root.join("test/gems/#{name}").open
   end
 
   def build_gemspec(gemspec)
