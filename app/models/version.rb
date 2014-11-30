@@ -233,7 +233,12 @@ class Version < ActiveRecord::Base
   end
 
   def to_bundler
-    %{gem '#{rubygem.name}', '~> #{number}'}
+    release = feature_release(number)
+    if release == Gem::Version.new(number)
+      %{gem '#{rubygem.name}', '~> #{release}'}
+    else
+      %{gem '#{rubygem.name}', '~> #{release}', '>= #{number}'}
+    end
   end
 
   def to_gem_version
@@ -304,5 +309,10 @@ class Version < ActiveRecord::Base
                  :platform, platform)
 
     push
+  end
+
+  def feature_release(number)
+    feature_version = Gem::Version.new(number).segments[0,2].join('.')
+    Gem::Version.new(feature_version)
   end
 end

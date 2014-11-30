@@ -297,8 +297,42 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal "#{@version.rubygem.name} (#{@version.to_s})", @version.to_title
     end
 
-    should "give version with twiddle-wakka for #to_bundler" do
-      assert_equal %{gem '#{@version.rubygem.name}', '~> #{@version.to_s}'}, @version.to_bundler
+    context "#to_bundler" do
+      should "give feature release version up to current version for patched versions" do
+        name = @version.rubygem.name
+        number = @version.number
+        actual = @version.to_bundler
+        expected =  %{gem '#{name}', '~> #{@version.send(:feature_release, number)}', '>= #{number}'}
+
+        assert_equal expected, actual
+      end
+
+      should "give only feature release version if no bug fix" do
+        no_bugfix = create(:version, number: "1.0")
+        name = no_bugfix.rubygem.name
+        actual = no_bugfix.to_bundler
+        expected = %{gem '#{name}', '~> 1.0'}
+
+        assert_equal expected, actual
+      end
+
+      should "give only feature release version if long version specified with no bugfix" do
+        long_version = create(:version, number: "1.0.0.0")
+        name = long_version.rubygem.name
+        actual = long_version.to_bundler
+        expected = %{gem '#{name}', '~> 1.0'}
+
+        assert_equal expected, actual
+      end
+
+      should "give feature release version up to current version if long version specified with bugfix" do
+        long_version = create(:version, number: "1.0.3.0")
+        name = long_version.rubygem.name
+        actual = long_version.to_bundler
+        expected = %{gem '#{name}', '~> 1.0', '>= 1.0.3.0'}
+
+        assert_equal expected, actual
+      end
     end
 
     should "give title and platform for #to_title" do
