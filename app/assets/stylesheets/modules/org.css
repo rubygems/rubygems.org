@@ -55,8 +55,8 @@
   color: #c1c4ca; }
 
 .dashboard__gem {
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   display: block;
   border-bottom: 1px solid #c1c4ca;
   color: #141c22; }
@@ -75,8 +75,12 @@
 .dashboard__gem__version {
   margin-left: 10px;
   font-weight: 300;
-  font-size: 18px;
   color: #a6aab2; }
+
+.dashboard__gem__desc {
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.66; }
 
 .password-reset {
   padding-top: 50px;
@@ -142,12 +146,19 @@
   .profile__downloads-wrap {
     padding-top: 32px; } }
 
+.mine h1 {
+  margin-bottom: 0 !important; }
+
+.mine ul {
+  margin-top: 10px !important; }
+
 .mine li {
   text-indent: 0 !important;
-  overflow: auto; }
+  overflow: auto;
+  font-size: 15px !important; }
   .mine li:before {
     margin-left: -23px;
     float: left;
-    top: 11px !important; }
+    top: 9px !important; }
   .mine li a {
     word-break: break-all; }
