@@ -101,7 +101,7 @@ class User < ActiveRecord::Base
     rubygems.count
   end
 
-  def gittip_url
-    'https://www.gittip.com/' + gittip_username + '/'
+  def gratipay_url
+    "https://www.gratipay.com/#{gittip_username}/"
   end
 end
