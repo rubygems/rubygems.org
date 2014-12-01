@@ -44,11 +44,6 @@ FactoryGirl.define do
     user
   end
 
-  factory :rubyforger do
-    email
-    encrypted_password Digest::SHA1.hexdigest("password")
-  end
-
   factory :subscription do
     rubygem
     user

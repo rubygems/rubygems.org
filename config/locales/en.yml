@@ -184,8 +184,6 @@ en:
 
   users:
     new:
-      rubyforge_banner: "You can now sign in with your %{link}"
-      or_rubyforge: "RubyForge Account too!"
       have_account: "Already have an account?"
 
   versions:
