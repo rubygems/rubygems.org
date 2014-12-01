@@ -10,27 +10,6 @@ module GemHelpers
     Gem::Package.new(File.join('test', 'gems', "#{name}.gem")).spec
   end
 
-  def gem_spec(opts = {})
-    Gem::Specification.new do |s|
-      s.name = %q{test}
-      s.version = opts[:version] || "0.0.0"
-      s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-      s.authors = ["Joe User"]
-      s.description = %q{This is my awesome gem.}
-      s.email = %q{joe@user.com}
-      s.licenses = %w(MIT BSD)
-      s.requirements = %w(Opencv)
-      s.files = [
-        "README.textile",
-        "Rakefile",
-        "VERSION.yml",
-        "lib/test.rb",
-        "test/test_test.rb"
-      ]
-      s.homepage = %q{http://user.com/test}
-    end
-  end
-
   def gem_file(name = "test-0.0.0.gem")
     Rails.root.join("test/gems/#{name}").open
   end
