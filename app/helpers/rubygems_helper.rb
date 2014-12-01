@@ -55,8 +55,8 @@ module RubygemsHelper
     link_to "Download", "/downloads/#{version.full_name}.gem", :id => :download, :class => 'gem__link t-list__item'
   end
 
-  def gittip_link(rubygem)
-    link_to "Gittip", rubygem.gittip_url, :id => :gittip
+  def gratipay_link(rubygem)
+    link_to "Gratipay", rubygem.gratipay_url, :id => :gratipay
   end
 
   def documentation_link(version, linkset)

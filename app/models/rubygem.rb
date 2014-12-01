@@ -276,11 +276,11 @@ class Rubygem < ActiveRecord::Base
     versions.by_earliest_built_at.limit(1).last.built_at
   end
 
-  def gittip_url
-    'https://www.gittip.com/on/rubygems/gem/' + name + '/'
+  def gratipay_url
+    'https://www.gratipay.com/on/rubygems/gem/' + name + '/'
   end
 
-  def gittip_enabled?
+  def gratipay_enabled?
     owners.where('gittip_username is not null').count > 0
   end
 
