@@ -208,6 +208,6 @@ directory. The proper directory will be full of .gem files.
 
 #### Database Layout
 
-Courtesy of [Rails ERD](http://rails-erd.rubyforge.org)
+Courtesy of [Rails ERD](http://voormedia.github.io/rails-erd/)
 
 ![Rubygems.org Domain Model](https://github.com/rubygems/rubygems.org/raw/master/doc/erd.png)

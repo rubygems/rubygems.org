@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
   validates_length_of :handle, :within => 2..40, :allow_nil => true
 
   def self.authenticate(who, password)
-    if user = Rubyforger.transfer(who, password) || find_by_email(who.downcase) || find_by_handle(who)
+    if user = find_by_email(who.downcase) || find_by_handle(who)
       user if user.authenticated?(password)
     end
   end

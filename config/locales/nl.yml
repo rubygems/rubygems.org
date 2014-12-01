@@ -31,9 +31,7 @@ nl:
       find_blurb: Vind je gems makkelijker en publiceer ze sneller.
   users:
     new:
-      or_rubyforge: RubyForge Account!
       have_account: Heb je al een account?
-      rubyforge_banner: Je kunt nu ook inloggen met je %{link}
   stats:
     index:
       gem_count: ! '%{count} gems'
