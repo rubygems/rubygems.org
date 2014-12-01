@@ -59,18 +59,25 @@ FactoryGirl.define do
   end
 
   factory :rubygem do
+    transient do
+      owners []
+      number nil
+    end
+
     linkset
     name
 
-    factory :rubygem_with_downloads do
-      after(:create) do |r|
-        $redis[Download.key(r)] = r['downloads']
+    after(:create) do |rubygem, evaluator|
+      evaluator.owners.each do |owner|
+        create(:ownership, rubygem: rubygem, user: owner)
       end
-    end
 
-    factory :rubygem_with_version do
-      after(:create) do |r|
-        create(:version, rubygem: r, number: "1.0.0")
+      if evaluator.number
+        create(:version, rubygem: rubygem, number: evaluator.number)
+      end
+
+      if evaluator.downloads
+        $redis[Download.key(rubygem)] = evaluator.downloads
       end
     end
   end

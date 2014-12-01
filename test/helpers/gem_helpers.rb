@@ -1,11 +1,4 @@
 module GemHelpers
-  def create_gem(*owners_and_or_opts)
-    opts, owners = owners_and_or_opts.extract_options!, owners_and_or_opts
-    @rubygem = create(:rubygem, :name => opts[:name] || generate(:name))
-    create(:version, :rubygem => @rubygem)
-    owners.each { |owner| @rubygem.ownerships.create(:user => owner) }
-  end
-
   def gem_specification_from_gem_fixture(name)
     Gem::Package.new(File.join('test', 'gems', "#{name}.gem")).spec
   end

@@ -20,7 +20,7 @@ class PushTest < ActionDispatch::IntegrationTest
   end
 
   test "push a new version of a gem" do
-    rubygem = create(:rubygem_with_version, name: "sandworm")
+    rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
     create(:ownership, rubygem: rubygem, user: @user)
 
     build_gem "sandworm", "2.0.0"
@@ -35,7 +35,7 @@ class PushTest < ActionDispatch::IntegrationTest
   end
 
   test "pushing a gem with a known dependency" do
-    rubygem = create(:rubygem_with_version, name: "crysknife")
+    rubygem = create(:rubygem, name: "crysknife", number: "1.0.0")
 
     build_gem "sandworm", "1.0.0" do |gemspec|
       gemspec.add_runtime_dependency(rubygem.name, '> 0')
