@@ -10,7 +10,7 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On GET to show for any gem" do
       setup do
         @owners = [@user, create(:user)]
-        create_gem(*@owners)
+        @rubygem = create(:rubygem, owners: @owners, number: "1.0.0")
         get :show, :id => @rubygem.to_param
       end
 
@@ -26,7 +26,7 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On GET to show for any gem without a linkset" do
       setup do
         @owners = [@user, create(:user)]
-        create_gem(*@owners)
+        @rubygem = create(:rubygem, owners: @owners, number: "1.0.0")
         @rubygem.linkset = nil
         get :show, :id => @rubygem.to_param
       end
@@ -52,7 +52,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to show for this user's gem" do
       setup do
-        create_gem(@user)
+        @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
         get :show, :id => @rubygem.to_param
       end
 
@@ -92,7 +92,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to edit for this user's gem" do
       setup do
-        create_gem(@user)
+        @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
         get :edit, :id => @rubygem.to_param
       end
 
@@ -112,7 +112,7 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On GET to edit for another user's gem" do
       setup do
         @other_user = create(:user)
-        create_gem(@other_user)
+        @rubygem = create(:rubygem, owners: [@other_user], number: "1.0.0")
         get :edit, :id => @rubygem.to_param
       end
       should respond_with :redirect
@@ -123,7 +123,7 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On PUT to update for this user's gem that is successful" do
       setup do
         @url = "http://github.com/qrush/gemcutter"
-        create_gem(@user)
+        @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
         put :update, :id => @rubygem.to_param, :linkset => {:code => @url}
       end
       should respond_with :redirect
@@ -136,7 +136,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On PUT to update for this user's gem that fails" do
       setup do
-        create_gem(@user)
+        @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
         @url = "totally not a url"
         put :update, :id => @rubygem.to_param, :linkset => {:code => @url}
       end

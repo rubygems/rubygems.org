@@ -231,8 +231,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "On POST to create for someone else's gem" do
       setup do
         @other_user = create(:user)
-        create_gem(@other_user, :name => "test")
-        @rubygem.reload
+        @rubygem = create(:rubygem, name: "test", number: "0.0.0", owners: [@other_user])
 
         @request.env["RAW_POST_DATA"] = gem_file("test-1.0.0.gem").read
         post :create
