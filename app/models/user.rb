@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   include Gravtastic
   is_gravtastic :default => "retro"
 
-  attr_accessible :bio, :email, :handle, :hide_email, :location, :password, :website, :gittip_username
+  attr_accessible :bio, :email, :handle, :hide_email, :location, :password, :website, :gratipay_username
 
   has_many :rubygems, :through => :ownerships
 
@@ -56,7 +56,7 @@ class User < ActiveRecord::Base
 
   def payload
     attrs = {"email" => email}
-    attrs["gittip_username"] = gittip_username if gittip_username
+    attrs["gratipay_username"] = gratipay_username if gratipay_username
 
     attrs
   end
@@ -101,7 +101,7 @@ class User < ActiveRecord::Base
     rubygems.count
   end
 
-  def gittip_url
-    'https://www.gittip.com/' + gittip_username + '/'
+  def gratipay_url
+    'https://www.gratipay.com/' + gratipay_username + '/'
   end
 end

@@ -11,7 +11,7 @@
         </p>
       <% end %>
       <div id="profile-info">
-        <%= link_to "Gittip", @user.gittip_url, :id => "profile-gittip", class: "profile__header__email t-link--black" unless @user.gittip_username.blank? %>
+        <%= link_to "Gratipay", @user.gratipay_url, :id => "profile-gratipay", class: "profile__header__email t-link--black" unless @user.gratipay_username.blank? %>
       </div>
       <% if @user == current_user %>
         <div id="downloads-ego">

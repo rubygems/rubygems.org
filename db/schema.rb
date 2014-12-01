@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131110192552) do
+ActiveRecord::Schema.define(:version => 20141201160643) do
 
   create_table "announcements", :force => true do |t|
     t.text     "body"
@@ -111,7 +111,7 @@ ActiveRecord::Schema.define(:version => 20131110192552) do
     t.datetime "updated_at"
     t.boolean  "email_reset"
     t.string   "handle"
-    t.string   "gittip_username"
+    t.string   "gratipay_username"
     t.boolean  "hide_email"
   end
 
