@@ -41,11 +41,11 @@ module GemHelpers
     end
   end
 
-  def build_gem(name, version, summary = "Gemcutter", platform = "ruby")
-    build_gemspec(new_gemspec(name, version, summary, platform))
+  def build_gem(name, version, summary = "Gemcutter", platform = "ruby", &block)
+    build_gemspec(new_gemspec(name, version, summary, platform, &block))
   end
 
-  def new_gemspec(name, version, summary, platform)
+  def new_gemspec(name, version, summary, platform, &block)
     gemspec = Gem::Specification.new do |s|
       s.name = name
       s.platform = platform
@@ -61,6 +61,7 @@ module GemHelpers
       s.summary = "#{summary}"
       s.test_files = []
       s.licenses = []
+      block.call(s) if block
     end
 
     def gemspec.validate
