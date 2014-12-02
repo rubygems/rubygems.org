@@ -190,6 +190,18 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to show for a gem with a license" do
+    setup do
+      @rubygem = create(:rubygem)
+      create(:version, rubygem: @rubygem, licenses: "MIT")
+    end
+
+    should "return license info" do
+      get :show, :id => @rubygem.name, :format => "json"
+      assert_equal "MIT", MultiJson.load(@response.body).first['licenses']
+    end
+  end
+
   context "on GET to reverse_dependencies" do
     setup do
       @dep_rubygem = create(:rubygem)
