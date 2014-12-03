@@ -42,3 +42,15 @@ class ActionController::TestCase
     @request.env[:clearance] = Clearance::Session.new(@request.env)
   end
 end
+
+class SystemTest < ActionDispatch::IntegrationTest
+  include Capybara::DSL
+
+  def setup
+    Capybara.app = Gemcutter::Application
+  end
+
+  def teardown
+    Capybara.reset_sessions!
+  end
+end
