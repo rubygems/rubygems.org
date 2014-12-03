@@ -2,7 +2,7 @@ require 'test_helper'
 
 class DashboardTest < ActionDispatch::IntegrationTest
   setup do
-    @user = create(:user, email: "nick@example.com", api_key: "secret123")
+    @user = create(:user)
     cookies[:remember_token] = @user.remember_token
 
     create(:rubygem, name: "arrakis", number: "1.0.0")
