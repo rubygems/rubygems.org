@@ -14,6 +14,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       setup do
         @rubygem = create(:rubygem)
         @user = create(:user)
+        @other_user = create(:user)
         @rubygem.ownerships.create(:user => @user)
 
         @request.env["HTTP_AUTHORIZATION"] = @user.api_key
@@ -27,6 +28,10 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
       should "return correct owner email" do
         assert_equal @user.email, yield(@response.body)[0]['email']
+      end
+
+      should "not return other owner email" do
+        assert yield(@response.body).map { |owner| owner['email'] }.exclude?(@other_user.email)
       end
     end
   end
