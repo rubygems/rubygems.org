@@ -1,25 +1,24 @@
 require 'test_helper'
 
-class ApiKeyResetTest < ActionDispatch::IntegrationTest
+class ApiKeyResetTest < SystemTest
   setup do
     @user = create(:user)
-    cookies[:remember_token] = @user.remember_token
   end
 
-  test "user sees key on profile" do
-    get edit_profile_path
+  test "reset API key" do
+    visit sign_in_path
 
-    assert_response :success
-    assert page.has_content? @user.api_key
-  end
+    fill_in "Email or Handle", with: @user.handle
+    fill_in "Password", with: @user.password
+    click_button "Sign in"
 
-  test "user resets api key" do
-    put reset_api_v1_api_key_path
-    assert_response :redirect
+    visit profile_path(@user.handle)
+    click_link "Edit Profile"
 
-    get edit_profile_path
+    old_api_key = @user.api_key
+    click_button "Reset my API key"
 
-    assert_response :success
     assert page.has_content? @user.reload.api_key
+    assert_not_equal old_api_key, @user.api_key
   end
 end

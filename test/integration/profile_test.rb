@@ -1,57 +1,67 @@
 require 'test_helper'
 
-class ProfileTest < ActionDispatch::IntegrationTest
+class ProfileTest < SystemTest
   setup do
     @user = create(:user, email: "nick@example.com", password: "secret123", handle: "nick1")
     cookies[:remember_token] = @user.remember_token
   end
 
+  def sign_in
+    visit sign_in_path
+    fill_in "Email or Handle", with: @user.reload.email
+    fill_in "Password", with: @user.password
+    click_button "Sign in"
+  end
+
   test "changing handle" do
-    get profile_path("nick1")
-    assert_response :success
+    sign_in
+
+    visit profile_path("nick1")
     assert page.has_content? "nick1"
 
-    put "profile", user: {handle: "nick2"}
-    assert_response :redirect
+    click_link "Edit Profile"
+    fill_in "Handle", with: "nick2"
+    click_button "Update"
 
-    get profile_path("nick2")
-    assert_response :success
     assert page.has_content? "nick2"
   end
 
   test "changing to an existing handle" do
     create(:user, email: "nick2@example.com", handle: "nick2")
 
-    put "profile", user: {handle: "nick2"}
-    assert_response :success
+    sign_in
+    visit profile_path("nick1")
+    click_link "Edit Profile"
+
+    fill_in "Handle", with: "nick2"
+    click_button "Update"
+
     assert page.has_content? "Handle has already been taken"
   end
 
   test "changing email allows signing in with new email" do
-    put "profile", user: {email: "nick2@example.com"}
-    assert_response :redirect
+    sign_in
+    visit profile_path("nick1")
+    click_link "Edit Profile"
 
-    delete sign_out_path
-    assert_response :redirect
-    assert_nil cookies[:remember_token]
+    fill_in "Email address", with: "nick2@example.com"
+    click_button "Update"
 
-    post session_path, session: {who: "nick2@example.com", password: "secret123"}
-    assert_response :redirect
+    click_link "Sign out"
 
-    get root_path
-    assert page.has_content?("Sign out")
+    sign_in
+    assert page.has_content? "Sign out"
   end
 
   test "disabling email on profile" do
-    get profile_path("nick1")
-    assert_response :success
-    assert page.has_content? "Email Me"
+    sign_in
+    visit profile_path("nick1")
+    click_link "Edit Profile"
 
-    put "profile", user: {hide_email: true}
-    assert_response :redirect
+    check "Hide email in public profile"
+    click_button "Update"
 
-    get profile_path("nick1")
-    assert_response :success
+    visit profile_path("nick1")
     assert ! page.has_content?("Email Me")
   end
 end
