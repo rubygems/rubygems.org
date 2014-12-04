@@ -3,7 +3,6 @@ require 'test_helper'
 class ProfileTest < SystemTest
   setup do
     @user = create(:user, email: "nick@example.com", password: "secret123", handle: "nick1")
-    cookies[:remember_token] = @user.remember_token
   end
 
   def sign_in
