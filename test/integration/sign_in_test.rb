@@ -1,20 +1,56 @@
 require 'test_helper'
 
-class SignInTest < ActionDispatch::IntegrationTest
+class SignInTest < SystemTest
   setup do
     create(:user, email: "nick@example.com", password: "secret123")
   end
 
   test "signing in" do
-    post session_path, {session: {who: "nick@example.com", password: "secret123"}}
+    visit sign_in_path
+    fill_in "Email or Handle", with: "nick@example.com"
+    fill_in "Password", with: "secret123"
+    click_button "Sign in"
 
-    assert_response :redirect
-    assert_redirected_to "/dashboard"
+    assert page.has_content? "Sign out"
+  end
+
+  test "signing in with uppercase email" do
+    visit sign_in_path
+    fill_in "Email or Handle", with: "Nick@example.com"
+    fill_in "Password", with: "secret123"
+    click_button "Sign in"
+
+    assert page.has_content? "Sign out"
   end
 
   test "signing in with wrong password" do
-    post session_path, {session: {who: "nick@example.com", password: "secret321"}}
+    visit sign_in_path
+    fill_in "Email or Handle", with: "nick@example.com"
+    fill_in "Password", with: "secret"
+    click_button "Sign in"
 
-    assert_response :unauthorized
+    assert page.has_content? "Sign in"
+    assert page.has_content? "Bad email or password"
+  end
+
+  test "signing in with wrong email" do
+    visit sign_in_path
+    fill_in "Email or Handle", with: "someone@example.com"
+    fill_in "Password", with: "secret"
+    click_button "Sign in"
+
+    assert page.has_content? "Sign in"
+    assert page.has_content? "Bad email or password"
+  end
+
+  test "signing out" do
+    visit sign_in_path
+    fill_in "Email or Handle", with: "nick@example.com"
+    fill_in "Password", with: "secret123"
+    click_button "Sign in"
+
+    click_link "Sign out"
+
+    assert page.has_content? "Sign in"
   end
 end
