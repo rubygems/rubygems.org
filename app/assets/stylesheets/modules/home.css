@@ -1,7 +1,7 @@
 .home {
   position: relative; }
 
-.home__images {
+.home__image-wrap {
   position: absolute;
   top: 68px;
   left: 0;
@@ -10,30 +10,19 @@
   z-index: -1;
 }
 
-@media (min-width: 1020px) {
+@media (min-height: 550px) {
   .home__image {
-    position: absolute;
     height: 100%;
-    width: 100%;
     background-image: url(/home.svg);
     background-repeat: no-repeat;
-    background-position: center bottom;
-    background-size: 1200px auto;
-    bottom: -16%;
-    opacity: .5; } }
-
-.home__image--ghost {
-  height: 100%;
-  background-image: url(/home.svg);
-  background-repeat: no-repeat;
-  background-size: 1400px auto;
-  opacity: .1; }
-  @media (max-width: 899px) {
-    .home__image--ghost {
-      background-position: center top; } }
-  @media (min-width: 900px) {
-    .home__image--ghost {
-      background-position: center bottom; } }
+    background-size: 1400px auto;
+    opacity: .1; } }
+@media (max-width: 899px) {
+  .home__image {
+    background-position: center top; } }
+@media (min-width: 900px) {
+  .home__image {
+    background-position: center bottom; } }
 
 .home__heading {
   margin-right: auto;

@@ -1,18 +1,18 @@
 /* Flash Intercoms */
 
 .flash {
-  border-bottom: 1px solid #fa3c29;
+  border-bottom: 1px solid #e9573f;
   background-color: white; }
 
 .flash-wrap {
   padding-top: 5px;
   padding-bottom: 5px;
-  background-image: linear-gradient(to right, rgba(255, 70, 37, 0.3), #ff4625); }
+  background-image: linear-gradient(to right, rgba(233, 87, 63, 0.3), #e9573f); }
 
 .flash-wrap span {
   font-size: 13px;
   font-style: italic;
-  color: #80221a; }
+  color: #141c22; }
 
 
 
@@ -21,7 +21,7 @@
 .errorExplanation {
   margin-bottom: 60px;
   padding: 20px;
-  border: 1px solid #fa3c29;
+  border: 1px solid #e9573f;
   border-radius: 3px; }
   .errorExplanation h2 {
     margin-bottom: 10px; }
@@ -43,7 +43,7 @@
       top: -2px;
       font-family: "icomoon";
       font-size: 10px;
-      color: #fa3c29; }
+      color: #e9573f; }
 
 
 
@@ -81,7 +81,7 @@
   border-bottom: 1px solid #c1c4ca;
   color: #141c22; }
   .dashboard__gem:hover .dashboard__gem__name {
-    color: #fa3c29; }
+    color: #e9573f; }
 
 .dashboard__gem__info {
   margin-bottom: 6px; }
@@ -228,7 +228,7 @@
   font-weight: 800;
   line-height: 44px; }
   .about__assets__download:focus, .about__assets__download:hover {
-    color: rgba(250, 60, 41, 1) !important; }
+    color: #e9573f !important; }
   .about__assets__download:before {
     margin-left: 8px;
     float: right; }
