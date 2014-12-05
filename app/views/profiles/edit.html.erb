@@ -26,12 +26,6 @@
     <%= form.label :hide_email, "Hide email in public profile", :class => 'form__checkbox__label' %>
   </div>
 
-  <div class="text_field">
-    <%= form.label :gittip_username, :class => 'form__label' %>
-    <%= link_to 'What’s this?', 'https://www.gittip.com/about/', :class => 't-text t-link' %>
-    <%= form.text_field :gittip_username, :class => 'form__input' %>
-  </div>
-
   <div class="submit_field">
     <%= form.submit 'Update', :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
   </div>

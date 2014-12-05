@@ -10,9 +10,6 @@
           <%= mail_to @user.email, "Email Me", :encode => "hex", class: "profile__header__email t-link--black", 'data-icon' => '✉' %>
         </p>
       <% end %>
-      <div id="profile-info">
-        <%= link_to "Gittip", @user.gittip_url, :id => "profile-gittip", class: "profile__header__email t-link--black" unless @user.gittip_username.blank? %>
-      </div>
       <% if @user == current_user %>
         <div id="downloads-ego">
           <%= link_to "Edit Profile", edit_profile_path, :id => "edit-profile", class: "profile__header__email t-link--black" %>
