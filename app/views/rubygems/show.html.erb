@@ -152,11 +152,6 @@
         <%= subscribe_link(@rubygem) if @latest_version.indexed %>
         <%= unsubscribe_link(@rubygem) %>
         <%= atom_link(@rubygem) %>
-        <!--
-          Not ready yet on the Gittip side! :-(
-          https://github.com/gittip/www.gittip.com/issues/1591
-        <%= gittip_link(@rubygem) if @rubygem.gittip_enabled? %>
-        -->
       </div>
     </div>
   </div>

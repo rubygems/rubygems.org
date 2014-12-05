@@ -55,10 +55,6 @@ module RubygemsHelper
     link_to "Download", "/downloads/#{version.full_name}.gem", :id => :download, :class => 'gem__link t-list__item'
   end
 
-  def gittip_link(rubygem)
-    link_to "Gittip", rubygem.gittip_url, :id => :gittip
-  end
-
   def documentation_link(version, linkset)
     link_to 'Documentation', documentation_path(version), :class => 'gem__link t-list__item', :id => :docs if linkset.nil? || linkset.docs.blank?
   end
