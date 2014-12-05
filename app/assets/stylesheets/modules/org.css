@@ -1,3 +1,5 @@
+/* Flash Intercoms */
+
 .flash {
   border-bottom: 1px solid #fa3c29;
   background-color: white; }
@@ -11,6 +13,10 @@
   font-size: 13px;
   font-style: italic;
   color: #80221a; }
+
+
+
+/* Error Styles */
 
 .errorExplanation {
   margin-bottom: 60px;
@@ -38,6 +44,20 @@
       font-family: "icomoon";
       font-size: 10px;
       color: #fa3c29; }
+
+
+
+/* Password Reset  */
+
+.password-reset {
+  padding-top: 50px;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.66; }
+
+
+
+/* Dashboard */
 
 .dashboard {
   width: 100%;
@@ -82,11 +102,9 @@
   font-size: 15px;
   line-height: 1.66; }
 
-.password-reset {
-  padding-top: 50px;
-  font-weight: 300;
-  font-size: 18px;
-  line-height: 1.66; }
+
+
+/* Profile */
 
 .profile__header {
   padding-bottom: 40px;
@@ -146,6 +164,10 @@
   .profile__downloads-wrap {
     padding-top: 32px; } }
 
+
+
+/* Dashboard Gems and Subscriptions */
+
 .mine h1 {
   margin-bottom: 0 !important; }
 
@@ -162,3 +184,53 @@
     top: 9px !important; }
   .mine li a {
     word-break: break-all; }
+
+
+
+/* About Page Assets */
+
+@media (max-width: 529px) {
+  .hide-assets {
+    display: none; }}
+
+.about__assets__heading {
+  text-transform: none !important;
+  margin-bottom: 18px !important; }
+
+.about__assets-wrap {
+  padding-left: 32px;
+  height: 90px;
+  max-width: 440px;
+  background-color: #c1c4ca;
+  border-radius: 45px; }
+
+.about__assets {
+  padding-right: 26px;
+  position: relative;
+  top: 16px;
+  float: left;
+  height: 60px;
+  border-right: 1px solid #8d9197; }
+
+.about__asset {
+  width: 60px; }
+
+.about__assets__download {
+  margin-left: 32px;
+  padding-right: 24px;
+  padding-left: 24px;
+  display: inline-block;
+  position: relative;
+  top: 24px;
+  border-radius: 22px;
+  background-color: #ffffff;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 44px; }
+  .about__assets__download:focus, .about__assets__download:hover {
+    color: rgba(250, 60, 41, 1) !important; }
+  .about__assets__download:before {
+    margin-left: 8px;
+    float: right; }
+  .about__assets__download:focus:before, .about__assets__download:hover:before {
+    animation: arrow .75s infinite; }
