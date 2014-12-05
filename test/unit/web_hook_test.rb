@@ -133,13 +133,13 @@ class WebHookTest < ActiveSupport::TestCase
 
   context "with a rubygem and version" do
     setup do
-      @rubygem = create(:rubygem_with_downloads, :name => "foogem", :downloads => 42)
+      @rubygem = create(:rubygem, :name => "foogem", :downloads => 42)
       @version = create(:version,
                          :rubygem           => @rubygem,
                          :number            => "3.2.1",
                          :authors           => %w[AUTHORS],
                          :description       => "DESC")
-      @hook    = create(:web_hook)
+      @hook    = create(:web_hook, rubygem: @rubygem)
       @job     = Notifier.new(@hook.url, 'localhost:1234', @rubygem, @version)
     end
 
@@ -176,16 +176,17 @@ class WebHookTest < ActiveSupport::TestCase
       @hook    = create(:web_hook,
                          :rubygem => @rubygem,
                          :url     => @url)
-      stub_request(:post, @url)
 
+      stub(RestClient).post {}
       @hook.fire('rubygems.org', @rubygem, @version, false)
     end
 
     should "include an Authorization header" do
-      request = WebMock::RequestRegistry.instance.requested_signatures.hash.keys.first
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number + @hook.user.api_key)
 
-      assert_equal authorization, request.headers['Authorization']
+      assert_received(RestClient) do |client|
+        client.post anything, anything, hash_including("Authorization" => authorization)
+      end
     end
 
     should "not increment failure count for hook" do
@@ -212,7 +213,7 @@ class WebHookTest < ActiveSupport::TestCase
        Net::HTTPBadResponse,
        Net::HTTPHeaderSyntaxError,
        Net::ProtocolError].each_with_index do |exception, index|
-        stub_request(:post, @url).to_raise(exception)
+        stub(RestClient).post { raise exception }
 
         @hook.fire('rubygems.org', @rubygem, @version, false)
 
