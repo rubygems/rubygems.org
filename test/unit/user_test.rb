@@ -61,18 +61,6 @@ class UserTest < ActiveSupport::TestCase
       assert_equal @user, User.authenticate(@user.handle, @user.password)
     end
 
-    should "transfer over rubyforge user" do
-      @rubyforger = create(:rubyforger, :email => @user.email, :encrypted_password => Digest::MD5.hexdigest(@user.password))
-      assert_equal @user, User.authenticate(@user.email, @user.password)
-      assert ! Rubyforger.exists?(@rubyforger.id)
-    end
-
-    should "not transfer over rubyforge user if password is wrong" do
-      @rubyforger = create(:rubyforger, :email => @user.email, :encrypted_password => Digest::MD5.hexdigest(@user.password))
-      assert_nil User.authenticate(@user.email, "trogdor")
-      assert Rubyforger.exists?(@rubyforger.id)
-    end
-
     should "not authenticate with bad handle, good password" do
       assert_nil User.authenticate("bad", @user.password)
     end

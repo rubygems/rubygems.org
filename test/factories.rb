@@ -11,6 +11,7 @@ FactoryGirl.define do
     email
     handle
     password "password"
+    api_key "secret123"
   end
 
   factory :dependency do
@@ -44,11 +45,6 @@ FactoryGirl.define do
     user
   end
 
-  factory :rubyforger do
-    email
-    encrypted_password Digest::SHA1.hexdigest("password")
-  end
-
   factory :subscription do
     rubygem
     user
@@ -59,12 +55,25 @@ FactoryGirl.define do
   end
 
   factory :rubygem do
+    transient do
+      owners []
+      number nil
+    end
+
     linkset
     name
 
-    factory :rubygem_with_downloads do
-      after(:create) do |r|
-        $redis[Download.key(r)] = r['downloads']
+    after(:create) do |rubygem, evaluator|
+      evaluator.owners.each do |owner|
+        create(:ownership, rubygem: rubygem, user: owner)
+      end
+
+      if evaluator.number
+        create(:version, rubygem: rubygem, number: evaluator.number)
+      end
+
+      if evaluator.downloads
+        $redis[Download.key(rubygem)] = evaluator.downloads
       end
     end
   end

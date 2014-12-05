@@ -13,9 +13,6 @@ test: &TEST
   database: gemcutter_test
   min_messages: warning
 
-cucumber:
-  <<: *TEST
-
 production:
   adapter: postgresql
   database: gemcutter_production

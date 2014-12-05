@@ -545,7 +545,7 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with a Gem::Specification" do
     setup do
-      @spec    = gem_spec
+      @spec    = new_gemspec "test", "1.0.0", "a test gem", "ruby"
       @version = build(:version)
     end
 
