@@ -60,7 +60,7 @@ a.t-list__item {
   transition-duration: 0.25s;
   transition-property: color; }
   a.t-list__item:hover {
-    color: #fa3c29; }
+    color: #e9573f; }
 
 .t-bulleted-items, .t-numbered-items {
   padding-left: 23px;
@@ -81,14 +81,14 @@ a.t-list__item {
     outline: none; }
 
 .t-link, .t-body a {
-  color: #fa3c29; }
+  color: #e9573f; }
   .t-link:focus, .t-body a:focus, .t-link:hover, .t-body a:hover, .t-link:active, .t-body a:active {
-    color: rgba(250, 60, 41, 0.7); }
+    color: rgba(233, 87, 63, 0.7); }
 
 .t-link--black {
   color: #141c22 !important; }
   .t-link--black:focus, .t-link--black:hover, .t-link--black:active {
-    color: #fa3c29 !important; }
+    color: #e9573f !important; }
 
 .t-link--blue {
   color: #53a4e0; }

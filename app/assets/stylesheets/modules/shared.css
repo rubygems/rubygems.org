@@ -37,14 +37,12 @@ pre code, [data-icon]:before, .t-list__heading, .home__join, .modal__submit, .he
 
 
 
-.body--index, .header--interior {
-  background-image: url("/red.jpg"); }
-
 .body--index {
+  background-image: linear-gradient(to bottom right, #e9573f, #d9422d);
   background-size: cover; }
 
 .header--interior {
-  background-size: 100% auto; }
+  background-color: #e9573f; }
 
 @media (max-width: 1019px) {
   main, .header, .footer {
@@ -94,7 +92,7 @@ a.page__heading {
   transition-duration: 0.25s;
   transition-property: color; }
   a.page__heading:focus, a.page__heading:hover, a.page__heading:active {
-    color: #fa3c29; }
+    color: #e9573f; }
   a.page__heading:focus {
     outline: none; }
 
