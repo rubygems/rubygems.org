@@ -9,7 +9,7 @@
   .nav--v__link:not(:last-child), .nav--v__link--footer:not(:last-child) {
     margin-bottom: 10px; }
   .nav--v__link.is-active, .nav--v__link--footer.is-active {
-    color: #fa3c29; }
+    color: #e9573f; }
 
 .nav--v__link {
   padding-right: 32px;
@@ -18,7 +18,7 @@
     .nav--v__link:last-child {
       margin-bottom: 60px; } }
   .nav--v__link:focus, .nav--v__link:hover, .nav--v__link:active {
-    color: #fa3c29; }
+    color: #e9573f; }
   .nav--v__link:focus {
     outline: none; }
 
