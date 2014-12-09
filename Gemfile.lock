@@ -102,6 +102,8 @@ GEM
     high_voltage (2.2.1)
     highline (1.6.21)
     hike (1.2.3)
+    honeybadger (1.16.6)
+      json
     i18n (0.6.11)
     journey (1.0.4)
     jquery-rails (2.3.0)
@@ -265,6 +267,7 @@ DEPENDENCIES
   gravtastic
   high_voltage
   highline
+  honeybadger
   jquery-rails
   jruby-openssl
   launchy

@@ -4,6 +4,7 @@ set :default_stage, "staging"
 require 'capistrano/ext/multistage'
 require 'bundler/capistrano'
 require 'capistrano-notification'
+require 'honeybadger/capistrano'
 
 notification.irc do |irc|
   irc.host    'chat.freenode.net'
