@@ -39,7 +39,7 @@
   .header__logo-wrap:focus {
     outline: none; }
   .header__logo-wrap:focus .header__logo:before, .header__logo-wrap:hover .header__logo:before {
-    transform: rotateY(180deg); }
+    transform: rotateY(360deg); }
   @media (max-width: 1019px) {
     .header__logo-wrap {
       top: 9px;
@@ -58,7 +58,7 @@
   transform: rotateY(0deg); }
   .header__logo:before {
     position: absolute;
-    transition-duration: 0.5s;
+    transition-duration: 0.75s;
     transition-property: transform; }
   @media (max-width: 1019px) {
     .header__logo {
@@ -121,7 +121,7 @@
         background-color: #dc3519; }
       .header__nav-link:active, .header__nav-link.is-active {
         background-color: white;
-        color: #ff4625; } }
+        color: #e9573f; } }
   @media (min-width: 1020px) {
     .header__popup__nav-links .header__nav-link:focus, .header__popup__nav-links .header__nav-link:hover {
       box-shadow: inset 0 5px 0 0 transparent; }
