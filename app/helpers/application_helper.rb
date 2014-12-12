@@ -26,4 +26,9 @@ module ApplicationHelper
   def download_count(rubygem)
     number_with_delimiter(rubygem.downloads)
   end
+
+  def stats_graph_meter(gem, count)
+    decimal = gem.downloads * 1.0 / count
+    decimal * 100
+  end
 end
