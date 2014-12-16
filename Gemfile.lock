@@ -72,7 +72,7 @@ GEM
       activerecord (>= 3.0, < 4.2)
       delayed_job (>= 3.0, < 4.1)
     dynamic_form (1.1.4)
-    email_validator (1.4.0)
+    email_validator (1.5.0)
       activemodel
     erubis (2.7.0)
     excon (0.25.3)
