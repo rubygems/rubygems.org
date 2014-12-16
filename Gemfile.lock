@@ -227,7 +227,7 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.42)
-    uglifier (2.5.3)
+    uglifier (2.6.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
     unicorn (4.8.3)
