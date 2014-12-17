@@ -13,13 +13,17 @@
   color: #141c22;
   outline: none; }
   .header__search::-webkit-input-placeholder, .home__search::-webkit-input-placeholder {
-    color: #e9573f; }
+    color: #e9573f;
+    opacity: 1; }
   .header__search:-moz-placeholder, .home__search:-moz-placeholder {
-    color: #e9573f; }
+    color: #e9573f;
+    opacity: 1; }
   .header__search::-moz-placeholder, .home__search::-moz-placeholder {
-    color: #e9573f; }
+    color: #e9573f;
+    opacity: 1; }
   .header__search:-ms-input-placeholder, .home__search:-ms-input-placeholder {
-    color: #e9573f; }
+    color: #e9573f;
+    opacity: 1; }
 
 .header__search-wrap, .header__search-wrap--home {
   position: relative; }
