@@ -37,13 +37,6 @@ pre code, [data-icon]:before, .t-list__heading, .home__join, .modal__submit, .he
 
 
 
-.body--index {
-  background-image: linear-gradient(to bottom right, #e9573f, #d9422d);
-  background-size: cover; }
-
-.header--interior {
-  background-color: #e9573f; }
-
 @media (max-width: 1019px) {
   main, .header, .footer {
     position: relative;
