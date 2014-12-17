@@ -7,6 +7,7 @@ class StatsController < ApplicationController
     @number_of_users     = User.count
     @number_of_downloads = Download.count
     @most_downloaded     = Rubygem.downloaded(10)
+    @most_downloaded_count = @most_downloaded.first.downloads
   end
 
   private
