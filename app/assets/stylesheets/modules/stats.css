@@ -1,16 +1,15 @@
 .stats {
+  margin-top: -15px;
   overflow: auto;
   border-bottom: 1px solid #c1c4ca; }
   @media (max-width: 709px) {
     .stats {
-      margin-top: -32px;
       margin-bottom: 24px;
       padding-bottom: 12px; } }
   @media (min-width: 710px) {
     .stats {
-      margin-top: -15px;
       margin-bottom: 60px;
-      padding-bottom: 24px; } }
+      padding-bottom: 10px; } }
 
 .stat {
   width: 33.33%;
@@ -78,198 +77,82 @@
       font-size: 15px; } }
 
 .stats__graph__gem__meter-wrap {
-  position: relative; }
-
-.stats__graph__gem__meter {
   height: 30px;
   box-shadow: inset 0 1px 1px -1px #c1c4ca;
   background-image: none;
-  background-color: #f8f8f9;
-  -webkit-appearance: none; }
+  background-color: #f8f8f9; }
   @media (max-width: 420px) {
-    .stats__graph__gem__meter {
+    .stats__graph__gem__meter-wrap {
       margin-left: 3%;
       margin-left: calc(10px);
       width: 97%;
       width: calc(100% - 10px); } }
   @media (min-width: 421px) and (max-width: 709px) {
-    .stats__graph__gem__meter {
+    .stats__graph__gem__meter-wrap {
       margin-left: 3%;
       margin-left: calc(16px);
       width: 97%;
       width: calc(100% - 16px); } }
   @media (min-width: 710px) {
-    .stats__graph__gem__meter {
+    .stats__graph__gem__meter-wrap {
       margin-left: 3%;
       margin-left: calc(30px);
       width: 97%;
       width: calc(100% - 30px); } }
-  .stats__graph__gem__meter::-webkit-meter-bar {
-    box-shadow: inset 0 1px 1px -1px #c1c4ca;
-    background-image: none;
-    background-color: #f8f8f9; }
-  .stats__graph__gem__meter::-webkit-meter-optimum-value {
-    background: none; }
 
-.stats__graph__gem:nth-of-type(2) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+.stats__graph__gem__meter {
+  position: relative;
+  height: 100%; }
+
+.stats__graph__gem:nth-of-type(2) .stats__graph__gem__meter {
   border-right: 1px solid #eba000;
   background-color: #ffae00;
   background: linear-gradient(to left, #ffae00 0%, #ffd67f 100%); }
 
-.stats__graph__gem:nth-of-type(2) .stats__graph__gem__meter::-moz-meter-bar {
-  border-right: 1px solid #eba000;
-  background-color: #ffae00;
-  background: linear-gradient(to left, #ffae00 0%, #ffd67f 100%); }
-
-.stats__graph__gem:nth-of-type(2) .stats__graph__gem__meter-polyfill {
-  border-right: 1px solid #eba000;
-  background-color: #ffae00;
-  background: linear-gradient(to left, #ffae00 0%, #ffd67f 100%);
-  height: 100%; }
-
-.stats__graph__gem:nth-of-type(3) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+.stats__graph__gem:nth-of-type(3) .stats__graph__gem__meter {
   border-right: 1px solid #92cb16;
   background-color: #9fdd18;
   background: linear-gradient(to left, #9fdd18 0%, #cbed83 100%); }
 
-.stats__graph__gem:nth-of-type(3) .stats__graph__gem__meter::-moz-meter-bar {
-  border-right: 1px solid #92cb16;
-  background-color: #9fdd18;
-  background: linear-gradient(to left, #9fdd18 0%, #cbed83 100%); }
-
-.stats__graph__gem:nth-of-type(3) .stats__graph__gem__meter-polyfill {
-  border-right: 1px solid #92cb16;
-  background-color: #9fdd18;
-  background: linear-gradient(to left, #9fdd18 0%, #cbed83 100%);
-  height: 100%; }
-
-.stats__graph__gem:nth-of-type(4) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+.stats__graph__gem:nth-of-type(4) .stats__graph__gem__meter {
   border-right: 1px solid #bd49ff;
   background-color: #c45dff;
   background: linear-gradient(to left, #c45dff 0%, #dda1ff 100%); }
 
-.stats__graph__gem:nth-of-type(4) .stats__graph__gem__meter::-moz-meter-bar {
-  border-right: 1px solid #bd49ff;
-  background-color: #c45dff;
-  background: linear-gradient(to left, #c45dff 0%, #dda1ff 100%); }
-
-.stats__graph__gem:nth-of-type(4) .stats__graph__gem__meter-polyfill {
-  border-right: 1px solid #bd49ff;
-  background-color: #c45dff;
-  background: linear-gradient(to left, #c45dff 0%, #dda1ff 100%);
-  height: 100%; }
-
-.stats__graph__gem:nth-of-type(5) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+.stats__graph__gem:nth-of-type(5) .stats__graph__gem__meter {
   border-right: 1px solid #4892d7;
   background-color: #599cdb;
   background: linear-gradient(to left, #599cdb 0%, #8abae8 100%); }
 
-.stats__graph__gem:nth-of-type(5) .stats__graph__gem__meter::-moz-meter-bar {
-  border-right: 1px solid #4892d7;
-  background-color: #599cdb;
-  background: linear-gradient(to left, #599cdb 0%, #8abae8 100%); }
-
-.stats__graph__gem:nth-of-type(5) .stats__graph__gem__meter-polyfill {
-  border-right: 1px solid #4892d7;
-  background-color: #599cdb;
-  background: linear-gradient(to left, #599cdb 0%, #8abae8 100%);
-  height: 100%; }
-
-.stats__graph__gem:nth-of-type(6) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+.stats__graph__gem:nth-of-type(6) .stats__graph__gem__meter {
   border-right: 1px solid #a7f2ff;
   background-color: #bbf5ff;
   background: linear-gradient(to left, #bbf5ff 0%, #cff8ff 100%); }
 
-.stats__graph__gem:nth-of-type(6) .stats__graph__gem__meter::-moz-meter-bar {
-  border-right: 1px solid #a7f2ff;
-  background-color: #bbf5ff;
-  background: linear-gradient(to left, #bbf5ff 0%, #cff8ff 100%); }
-
-.stats__graph__gem:nth-of-type(6) .stats__graph__gem__meter-polyfill {
-  border-right: 1px solid #a7f2ff;
-  background-color: #bbf5ff;
-  background: linear-gradient(to left, #bbf5ff 0%, #cff8ff 100%);
-  height: 100%; }
-
-.stats__graph__gem:nth-of-type(7) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+.stats__graph__gem:nth-of-type(7) .stats__graph__gem__meter {
   border-right: 1px solid #a7a7ff;
   background-color: #bbbbff;
   background: linear-gradient(to left, #bbbbff 0%, #cfcfff 100%); }
 
-.stats__graph__gem:nth-of-type(7) .stats__graph__gem__meter::-moz-meter-bar {
-  border-right: 1px solid #a7a7ff;
-  background-color: #bbbbff;
-  background: linear-gradient(to left, #bbbbff 0%, #cfcfff 100%); }
-
-.stats__graph__gem:nth-of-type(7) .stats__graph__gem__meter-polyfill {
-  border-right: 1px solid #a7a7ff;
-  background-color: #bbbbff;
-  background: linear-gradient(to left, #bbbbff 0%, #cfcfff 100%);
-  height: 100%; }
-
-.stats__graph__gem:nth-of-type(8) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+.stats__graph__gem:nth-of-type(8) .stats__graph__gem__meter {
   border-right: 1px solid #ff7cd8;
   background-color: #ff90de;
   background: linear-gradient(to left, #ff90de 0%, #ffb1e8 100%); }
 
-.stats__graph__gem:nth-of-type(8) .stats__graph__gem__meter::-moz-meter-bar {
-  border-right: 1px solid #ff7cd8;
-  background-color: #ff90de;
-  background: linear-gradient(to left, #ff90de 0%, #ffb1e8 100%); }
-
-.stats__graph__gem:nth-of-type(8) .stats__graph__gem__meter-polyfill {
-  border-right: 1px solid #ff7cd8;
-  background-color: #ff90de;
-  background: linear-gradient(to left, #ff90de 0%, #ffb1e8 100%);
-  height: 100%; }
-
-.stats__graph__gem:nth-of-type(9) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+.stats__graph__gem:nth-of-type(9) .stats__graph__gem__meter {
   border-right: 1px solid #fc6551;
   background-color: #fc7765;
   background: linear-gradient(to left, #fc7765 0%, #fda093 100%); }
 
-.stats__graph__gem:nth-of-type(9) .stats__graph__gem__meter::-moz-meter-bar {
-  border-right: 1px solid #fc6551;
-  background-color: #fc7765;
-  background: linear-gradient(to left, #fc7765 0%, #fda093 100%); }
-
-.stats__graph__gem:nth-of-type(9) .stats__graph__gem__meter-polyfill {
-  border-right: 1px solid #fc6551;
-  background-color: #fc7765;
-  background: linear-gradient(to left, #fc7765 0%, #fda093 100%);
-  height: 100%; }
-
-.stats__graph__gem:nth-of-type(10) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+.stats__graph__gem:nth-of-type(10) .stats__graph__gem__meter {
   border-right: 1px solid #92f3a0;
   background-color: #a4f5b0;
   background: linear-gradient(to left, #a4f5b0 0%, #bff8c8 100%); }
 
-.stats__graph__gem:nth-of-type(10) .stats__graph__gem__meter::-moz-meter-bar {
-  border-right: 1px solid #92f3a0;
-  background-color: #a4f5b0;
-  background: linear-gradient(to left, #a4f5b0 0%, #bff8c8 100%); }
-
-.stats__graph__gem:nth-of-type(10) .stats__graph__gem__meter-polyfill {
-  border-right: 1px solid #92f3a0;
-  background-color: #a4f5b0;
-  background: linear-gradient(to left, #a4f5b0 0%, #bff8c8 100%);
-  height: 100%; }
-
-.stats__graph__gem:nth-of-type(11) .stats__graph__gem__meter::-webkit-meter-optimum-value {
+.stats__graph__gem:nth-of-type(11) .stats__graph__gem__meter {
   border-right: 1px solid #fce551;
   background-color: #fce865;
   background: linear-gradient(to left, #fce865 0%, #fdef92 100%); }
-
-.stats__graph__gem:nth-of-type(11) .stats__graph__gem__meter::-moz-meter-bar {
-  border-right: 1px solid #fce551;
-  background-color: #fce865;
-  background: linear-gradient(to left, #fce865 0%, #fdef92 100%); }
-
-.stats__graph__gem:nth-of-type(11) .stats__graph__gem__meter-polyfill {
-  border-right: 1px solid #fce551;
-  background-color: #fce865;
-  background: linear-gradient(to left, #fce865 0%, #fdef92 100%);
-  height: 100%; }
 
 .stats__graph__gem:nth-of-type(2) .stats__graph__gem__count {
   color: #b8820a; }
@@ -303,32 +186,20 @@
 
 .stats__graph__gem__count {
   position: absolute;
-  top: 7px;
-  font-size: 13px; }
-  @media (max-width: 420px) {
+  right: 12px; }
+  @media (max-width: 419px) {
     .stats__graph__gem__count {
       font-size: 12px; } }
+  @media (min-width: 420px) and (max-width: 709px) {
+    .stats__graph__gem__count {
+      font-size: 13px; } }
+  @media (max-width: 709px) {
+    .stats__graph__gem__count {
+      top: 7px; } }
   @media (min-width: 710px) {
     .stats__graph__gem__count {
       top: 5px;
       font-size: 15px; } }
-  .stats__graph__gem__count[data-name='rake'] {
-    right: 9%; }
-  .stats__graph__gem__count[data-name='rack'] {
-    right: 11.5%; }
-  .stats__graph__gem__count[data-name='thor'] {
-    right: 17%; }
-  .stats__graph__gem__count[data-name='activesupport'] {
-    right: 23%; }
-  .stats__graph__gem__count[data-name='json'] {
-    right: 27%; }
-  .stats__graph__gem__count[data-name='rails'] {
-    right: 28%; }
-  .stats__graph__gem__count[data-name='activerecord'] {
-    right: 42.5%; }
-  .stats__graph__gem__count[data-name='actionpack'] {
-    right: 46.5%; }
-  .stats__graph__gem__count[data-name='actionmailer'] {
-    right: 52%; }
-  .stats__graph__gem__count[data-name='activesource'] {
-    right: 64%; }
+  @-moz-document url-prefix() {
+    .stats__graph__gem__count {
+      top: 8px; } }
