@@ -60,6 +60,10 @@
 .footer__sponsor {
   margin-bottom: 36px;
   float: left;
+  height: 100px;
+  width: 90px;
+  background-image: url(/sponsors.png);
+  background-size: 100%;
   font-style: italic;
   font-weight: 300;
   font-size: 12px;
@@ -72,19 +76,50 @@
     opacity: 1; }
   .footer__sponsor:focus {
     outline: none; }
-  @media (max-width: 579px) {
+  .footer__sponsor:nth-child(1) {
+    background-position: 0 20px; }
+  @media (max-width: 1039px) {
     .footer__sponsor {
       width: 100px; }
-      .footer__sponsor:nth-child(odd) {
-        margin-right: 18%; } }
+    .footer__sponsor:nth-child(2) {
+      background-position: 0 -84px; }
+    .footer__sponsor:nth-child(3) {
+      background-position: 0 -174px; }
+    .footer__sponsor:nth-child(4) {
+      background-position: 0 -264px; }
+    .footer__sponsor:nth-child(5) {
+      background-position: 0 -355px; }
+    .footer__sponsor:nth-child(6) {
+      background-position: 0 108px; }
+    .footer__sponsor:nth-child(7) {
+      background-position: 0 -456px; }
+    .footer__sponsor:nth-child(8) {
+      background-position: 0 210px; }
+    }
+  @media (min-width: 1040px) {
+    .footer__sponsor {
+      width: 90px; }
+    .footer__sponsor:nth-child(2) {
+      background-position: 0 -72px; }
+    .footer__sponsor:nth-child(3) {
+      background-position: 0 -153px; }
+    .footer__sponsor:nth-child(4) {
+      background-position: 0 -236px; }
+    .footer__sponsor:nth-child(5) {
+      background-position: 0 -314px; }
+    .footer__sponsor:nth-child(6) {
+      background-position: 0 100px; }
+    .footer__sponsor:nth-child(7) {
+      background-position: 0 -409px; }
+    .footer__sponsor:nth-child(8) {
+      background-position: 0 192px; }
+    }
+  @media (max-width: 579px) {
+    .footer__sponsor:nth-child(odd) {
+      margin-right: 18%; } }
   @media (min-width: 580px) {
-    .footer__sponsor {
-      width: 10%; }
-      .footer__sponsor:not(:last-child) {
-        margin-right: 5%; } }
-  @media (min-width: 580px) and (max-width: 859px) {
-    .footer__sponsor {
-      min-width: 100px; } }
+    .footer__sponsor:not(:last-child) {
+      margin-right: 30px; } }
 
 .footer__sponsor__logo {
   margin-top: 5px;
