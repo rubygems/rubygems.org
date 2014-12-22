@@ -47,7 +47,7 @@ If you’re looking for things to hack on, please check
 [GitHub Issues](http://github.com/rubygems/rubygems.org/issues). If you’ve
 found bugs or have feature ideas don’t be afraid to pipe up and ask the
 [mailing list](http://groups.google.com/group/gemcutter) or IRC channel
-(#gemcutter on irc.freenode.net) about them.
+(`#rubygems` on `irc.freenode.net`) about them.
 
 Acceptance
 ----------
