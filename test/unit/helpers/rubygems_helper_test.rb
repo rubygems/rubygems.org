@@ -95,4 +95,12 @@ class RubygemsHelperTest < ActionView::TestCase
       assert links_to_owners(@rubygem).html_safe?
     end
   end
+
+  context 'simple_markup' do
+    should 'sanitize copy' do
+      text = '<script>alert("foo");</script> Rails authentication & authorization'
+      assert_equal '<p>Rails authentication &amp; authorization</p>', simple_markup(text)
+      assert simple_markup(text).html_safe?
+    end
+  end
 end
