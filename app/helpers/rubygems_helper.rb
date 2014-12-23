@@ -19,7 +19,7 @@ module RubygemsHelper
     if text =~ /^==+ [A-Z]/
       RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new).html_safe
     else
-      content_tag :p, text
+      content_tag :p, escape_once(sanitize(text).strip.html_safe), nil, false
     end
   end
 
