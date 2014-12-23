@@ -60,7 +60,7 @@ module RubygemsHelper
   end
 
   def documentation_path(version)
-    "http://rubydoc.info/gems/#{version.rubygem.name}/#{version.number}/frames"
+    "http://www.rubydoc.info/gems/#{version.rubygem.name}/#{version.number}"
   end
 
   def badge_link(rubygem)
