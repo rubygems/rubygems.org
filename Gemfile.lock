@@ -129,6 +129,7 @@ GEM
     method_source (0.8.2)
     mime-types (1.25.1)
     mini_portile (0.6.1)
+    minitest (4.7.5)
     multi_json (1.10.1)
     multipart-post (2.0.0)
     net-scp (1.2.1)
@@ -273,6 +274,7 @@ DEPENDENCIES
   launchy
   librato-rails
   mail
+  minitest
   multi_json
   newrelic-redis
   newrelic_rpm

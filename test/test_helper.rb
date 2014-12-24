@@ -1,8 +1,10 @@
 ENV["RAILS_ENV"] = "test"
+
 require File.expand_path('../../config/environment', __FILE__)
+
+require 'minitest/autorun'
 require 'rails/test_help'
 require 'rr'
-
 require 'capybara/rails'
 require 'clearance/test_unit'
 require 'rubygems/package'
@@ -12,7 +14,10 @@ require 'helpers/gem_helpers'
 
 I18n.enforce_available_locales = false
 
-class Test::Unit::TestCase
+# Shim for compatibility with older versions of MiniTest
+MiniTest::Test = MiniTest::Unit::TestCase unless defined?(MiniTest::Test)
+
+class MiniTest::Test
   include Rack::Test::Methods
   include FactoryGirl::Syntax::Methods
   include GemHelpers
