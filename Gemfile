@@ -1,8 +1,7 @@
 source 'https://rubygems.org'
 # ruby '2.0.0'
 
-gem 'rails', '~> 3.2.20'
-gem 'strong_parameters', '~> 0.2.3'
+gem 'rails', '~> 4.0.12'
 
 gem 'builder'
 gem 'dynamic_form'
@@ -34,8 +33,8 @@ gem 'xml-simple'
 gem 'yajl-ruby', require: 'yajl'
 gem 'autoprefixer-rails'
 
-gem 'sass-rails',   '~> 3.2.3'
-gem 'coffee-rails', '~> 3.2.1'
+gem 'sass-rails',   '~> 4.0.0'
+gem 'coffee-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.0.3'
 
 # enable if on heroku, make sure to toss this into an initializer:
