@@ -130,7 +130,8 @@ class Rubygem < ActiveRecord::Base
   end
 
   def owned_by?(user)
-    ownerships.find_by_user_id(user.id) if user
+    return false unless user
+    ownerships.exists?(:user_id => user.id)
   end
 
   def to_s
