@@ -50,6 +50,7 @@ group :development do
 end
 
 group :test do
+  gem 'minitest', require: false
   gem 'capybara'
   gem 'factory_girl_rails'
   gem 'launchy'
@@ -83,4 +84,3 @@ end
 platforms :jruby do
   gem 'jruby-openssl'
 end
-
