@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 # ruby '2.0.0'
 
 gem 'rails', '~> 3.2.20'
+gem 'strong_parameters', '~> 0.2.3'
 
 gem 'builder'
 gem 'dynamic_form'

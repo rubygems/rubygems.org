@@ -44,5 +44,7 @@ module Gemcutter
     config.plugins << :heroku_asset_cacher if $rubygems_config[:asset_cacher]
 
     config.autoload_paths << "./app/jobs"
+    # Use strong parameters instead
+    config.active_record.whitelist_attributes = false
   end
 end
