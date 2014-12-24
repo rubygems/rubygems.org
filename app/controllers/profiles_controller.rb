@@ -26,19 +26,18 @@ class ProfilesController < ApplicationController
       render :edit
     end
   end
-  
-  private 
-  
+
+  private
+
   def params_user
     params.require(:user).permit(
-      :bio, 
-      :email, 
-      :handle, 
-      :hide_email, 
-      :location, 
-      :password, 
-      :website, 
-      :gittip_username
+      :bio,
+      :email,
+      :handle,
+      :hide_email,
+      :location,
+      :password,
+      :website
     )
   end
 end
