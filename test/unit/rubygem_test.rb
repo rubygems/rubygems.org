@@ -285,7 +285,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "be not owned if no user" do
-        assert !@rubygem.owned_by?(nil)
+        assert_equal false, @rubygem.owned_by?(nil)
         assert @rubygem.unowned?
       end
     end
