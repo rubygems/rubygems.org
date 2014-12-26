@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DownloadTest < ActionDispatch::IntegrationTest
+class DownloadingTest < ActionDispatch::IntegrationTest
   test "downloading a gem" do
     rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
     create(:version, rubygem: rubygem, number: "1.0.0", platform: "java")
