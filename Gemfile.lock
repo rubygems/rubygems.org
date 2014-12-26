@@ -102,7 +102,7 @@ GEM
     high_voltage (2.2.1)
     highline (1.6.21)
     hike (1.2.3)
-    honeybadger (1.16.6)
+    honeybadger (1.16.7)
       json
     i18n (0.7.0)
     journey (1.0.4)
