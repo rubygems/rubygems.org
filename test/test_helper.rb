@@ -1,5 +1,4 @@
-ENV["RAILS_ENV"] = "test"
-
+ENV["RAILS_ENV"] ||= "test"
 require File.expand_path('../../config/environment', __FILE__)
 
 require 'minitest/autorun'
@@ -41,21 +40,6 @@ class MiniTest::Test
   end
 end
 
-# why isn't clearance doing this for us!?
-class ActionController::TestCase
-  setup do
-    @request.env[:clearance] = Clearance::Session.new(@request.env)
-  end
-end
-
 class SystemTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
-
-  def setup
-    Capybara.app = Gemcutter::Application
-  end
-
-  def teardown
-    Capybara.reset_sessions!
-  end
 end
