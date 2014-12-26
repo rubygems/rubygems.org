@@ -37,7 +37,7 @@ class DashboardsControllerTest < ActionController::TestCase
         @subscribed_versions.each { |v| create(:subscription, :rubygem => v.rubygem, :user => @user)}
         @unsubscribed_versions = (1..3).map { |n| create(:version, :created_at => n.hours.ago) }
 
-        @request.env["Authorization"] = @user.api_key
+        @request.env["HTTP_AUTHORIZATION"] = @user.api_key
         get :show, :format => "atom"
       end
 
