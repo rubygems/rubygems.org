@@ -3,11 +3,8 @@ require File.expand_path('../boot', __FILE__)
 require 'rails'
 require 'action_controller/railtie'
 
-unless Rails.env.maintenance?
-  require 'rails/test_unit/railtie'
-  require 'action_mailer/railtie'
-  require 'active_record/railtie'
-  require 'sprockets/railtie'
+if 'maintenance' != ENV["RAILS_ENV"]
+  require 'rails/all'
 end
 
 # Require the gems listed in Gemfile, including any gems
