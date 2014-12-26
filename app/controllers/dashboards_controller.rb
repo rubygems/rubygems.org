@@ -1,7 +1,7 @@
 class DashboardsController < ApplicationController
 
-  before_filter :authenticate_with_api_key, :if => lambda { |controller| controller.request.format.atom? }
-  before_filter :redirect_to_root, :unless => :signed_in?
+  before_filter :authenticate_with_api_key, unless: :signed_in?
+  before_filter :redirect_to_root, unless: :signed_in?
 
   def show
     respond_to do |format|
