@@ -159,7 +159,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return latest version" do
       get :latest, :id => @rubygem.name, :format => "js", :callback => "blah"
-      assert_equal "blah", @response.body.split("(",2).first
+      assert_match(/blah\(.*\)\Z/, @response.body)
     end
   end
 
