@@ -35,7 +35,7 @@ namespace :deploy do
 
   desc "Remove git cache for clean deploy"
   task :clean_git_cache, :roles => :app do
-    run "rm -rf #{repository_cache}"
+    run "rm -rf #{shared_path}/#{repository_cache}"
   end
 
   desc "Symlink database.yml for this environment"
