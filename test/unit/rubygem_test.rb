@@ -198,11 +198,18 @@ class RubygemTest < ActiveSupport::TestCase
       @rubygem = build(:rubygem, :linkset => nil)
     end
 
-    ['1337', 'Snakes!', ['zomg']].each do |bad_name|
+    ['1337', 'Snakes!'].each do |bad_name|
       should "not accept #{bad_name.inspect} as a name" do
         @rubygem.name = bad_name
         assert ! @rubygem.valid?
         assert_match(/Name/, @rubygem.all_errors)
+      end
+    end
+
+    should "not accept an Array as name" do
+      assert_raise TypeError do
+        @rubygem.name = ['zomg']
+        @rubygem.valid?
       end
     end
 

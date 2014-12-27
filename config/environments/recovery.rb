@@ -2,14 +2,14 @@ Gemcutter::Application.configure do
   # for testing recovery mode on your local machine, LOCAL=1 rails s -e recovery
   if ENV["LOCAL"]
     config.cache_classes = false
-    config.whiny_nils = true
-
+    config.eager_load = false
     config.consider_all_requests_local = true
     config.action_controller.perform_caching             = false
     config.active_support.deprecation = :log
     config.action_mailer.raise_delivery_errors = false
   else
     config.cache_classes = true
+    config.eager_load = true
     config.consider_all_requests_local = false
     config.action_controller.perform_caching = true
     config.action_dispatch.x_sendfile_header = "X-Sendfile"

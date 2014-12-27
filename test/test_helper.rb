@@ -2,6 +2,8 @@ ENV["RAILS_ENV"] ||= "test"
 require File.expand_path('../../config/environment', __FILE__)
 
 require 'minitest/autorun'
+# Workaround https://github.com/rr/rr/pull/60
+Minitest::VERSION = Minitest::Unit::VERSION unless defined?(Minitest::VERSION)
 require 'rails/test_help'
 require 'rr'
 require 'capybara/rails'

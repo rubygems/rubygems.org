@@ -14,6 +14,8 @@ Gemcutter::Application.configure do
     :secure => true
   }
 
+  config.eager_load = true
+
   # if on heroku:
   # config.action_mailer.smtp_settings = {
   #   :address        => "smtp.sendgrid.net",
