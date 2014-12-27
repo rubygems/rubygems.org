@@ -9,7 +9,7 @@ require 'honeybadger/capistrano'
 notification.irc do |irc|
   irc.host    'chat.freenode.net'
   irc.channel '#rubygems'
-  irc.message { "#{local_user} deployed rubygems.org @ https://github.com/rubygems/rubygems.org/commit/#{fetch(:current_revision)} to #{stage} (#{roles[:app].servers.compact.map(&:host).join(', ')})" }
+  irc.message { "Deployed rubygems.org @ https://github.com/rubygems/rubygems.org/commit/#{fetch(:current_revision)} to #{stage} (#{roles[:app].servers.compact.map(&:host).join(', ')})" }
 end
 
 default_run_options[:pty] = true
@@ -32,6 +32,11 @@ after "deploy", "deploy:cleanup"
 after "deploy:finalize_update", "deploy:symlink_database_yml", "deploy:symlink_secret_settings"
 
 namespace :deploy do
+
+  desc "Remove git cache for clean deploy"
+  task :clean_git_cache, :roles => :app do
+    run "rm -rf #{repository_cache}"
+  end
 
   desc "Symlink database.yml for this environment"
   task :symlink_database_yml, :roles => :app do
