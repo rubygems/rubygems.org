@@ -1,6 +1,6 @@
 class Version < ActiveRecord::Base
   belongs_to :rubygem
-  has_many :dependencies, :order => 'rubygems.name ASC', :include => :rubygem, :dependent => :destroy
+  has_many :dependencies, -> { order('rubygems.name ASC').includes(:rubygem) }, :dependent => :destroy
 
   before_save      :update_prerelease
   after_validation :join_authors
