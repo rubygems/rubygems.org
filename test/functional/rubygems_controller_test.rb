@@ -366,6 +366,21 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  context "On GET to show for a gem with runtime dependencies that have a bad link" do
+    setup do
+      @version = create(:version)
+      @runtime = create(:runtime_dependency, version: @version)
+      @runtime.rubygem.update_column(:name, 'foo>0.1.1')
+      get :show, id: @version.rubygem.to_param
+    end
+
+    should respond_with :success
+    should render_template :show
+    should "show runtime dependencies and development dependencies" do
+      assert page.has_content?(@runtime.rubygem.name)
+    end
+  end
+
   context "On GET to show for nonexistent gem" do
     setup do
       get :show, :id => "blahblah"

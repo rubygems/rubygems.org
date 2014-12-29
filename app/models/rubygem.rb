@@ -181,7 +181,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def to_param
-    name
+    name.gsub(/[^#{Patterns::ALLOWED_CHARACTERS}]/, '')
   end
 
   def with_downloads
