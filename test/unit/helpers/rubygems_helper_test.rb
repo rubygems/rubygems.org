@@ -102,5 +102,11 @@ class RubygemsHelperTest < ActionView::TestCase
       assert_equal '<p>Rails authentication &amp; authorization</p>', simple_markup(text)
       assert simple_markup(text).html_safe?
     end
+
+    should 'work on rdoc strings' do
+      text = '== FOO'
+      assert_equal "\n<h2 id=\"label-FOO\">FOO</h2>\n", simple_markup(text)
+      assert simple_markup(text).html_safe?
+    end
   end
 end
