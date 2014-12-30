@@ -27,35 +27,6 @@
   </header>
 <% end %>
 
-<% content_for :javascript do %>
-  <%= javascript_include_tag "raphael", "g.raphael", "g.bar" %>
-  <script type="text/javascript">
-    $(document).ready(function() {
-      var dates = <%= Rubygem.monthly_short_dates.to_json.html_safe %>;
-      <% @rubygems.each do |rubygem| %>
-        $.data(document.body, "graph-<%= rubygem.id %>", <%= rubygem.monthly_downloads.to_json.html_safe %>);
-      <% end %>
-
-      $(".profile-graph").each(function() {
-        var id   = $(this).attr("id"),
-            r    = Raphael(id),
-            fin  = function () {
-              var currentDate = dates[Math.floor(this.bar.x / 22 - 1)];
-              this.flag = r.g.popup(this.bar.x, this.bar.y, currentDate + ": " + this.bar.value || "0").insertBefore(this);
-            },
-            fout = function () {
-              this.flag.animate({opacity: 0}, 300, function () {this.remove();});
-            };
-
-        r.g.barchart(15, 9, 655, 125,
-          [ $.data(document.body, id) ],
-          { type: "soft", colors : { 0 : "rgb(200, 164, 164)" } }
-        ).hover(fin, fout);
-      });
-    });
-  </script>
-<% end %>
-
 <div id="profile">
   <div class="profile-list">
     <ul>
