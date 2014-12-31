@@ -1,4 +1,4 @@
-Gemcutter::Application.configure do
+Rails.application.configure do
   config.active_support.deprecation = :notify
 
   config.middleware.use ::Rack::Static,
