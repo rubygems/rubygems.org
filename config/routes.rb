@@ -118,7 +118,7 @@ Rails.application.routes.draw do
     end
   end
 
-  constraints :id => Patterns::ROUTE_PATTERN do
+  scope constraints: {id: Patterns::ROUTE_PATTERN}, defaults: {format: 'html'} do
     resources :rubygems, :path => 'gems', :only => [:show, :edit, :update] do
 
       constraints :rubygem_id => Patterns::ROUTE_PATTERN do
