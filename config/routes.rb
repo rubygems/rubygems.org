@@ -18,33 +18,19 @@ Rails.application.routes.draw do
         get :all, :on => :collection
       end
       constraints :id => Patterns::ROUTE_PATTERN, :format => /json|xml|yaml/ do
-        get 'owners/:handle/gems(.:format)', :to => 'owners#gems', :as => 'owners_gems', :constraints => {:handle => Patterns::ROUTE_PATTERN}
+        get 'owners/:handle/gems', to: 'owners#gems', as: 'owners_gems', constraints: {handle: Patterns::ROUTE_PATTERN}, format: true
 
-        # In Rails 3.1, the following line can be replaced with:
-        # resources :downloads, :only => :show, :format => true
-        get 'downloads/:id.:format', :to => 'downloads#show', :as => 'download'
-        # In Rails 3.1, the next TWO lines can be replaced with:
-        # resources :versions, :only => :show, :format => true do
-        get 'versions/:id.:format', :to => 'versions#show', :as => 'version'
-        resources :versions, :only => :show do
+        resources :downloads, only: :show, format: true
+
+        resources :versions, only: :show, format: true do
           member do
-            # In Rails 3.1, the following line can be replaced with:
-            # get :reverse_dependencies, :format => true
-            get 'reverse_dependencies.:format', :to => 'versions#reverse_dependencies', :as => 'reverse_dependencies'
+            get :reverse_dependencies, format: true
+            get 'latest', to: 'versions#latest', as: 'latest', format: true, constraints: {format: /json|js/}
           end
 
-          member do
-            get 'latest.json', :to => 'versions#latest', :as => 'latest'
-          end
-
-          # In Rails 3.1, the next TWO lines can be replaced with:
-          # resources :downloads, :only => :show, :controller => 'versions/downloads', :format => true do
-          get 'downloads.:format', :to => 'versions/downloads#index', :as => 'downloads'
-          resources :downloads, :only => :index, :controller => 'versions/downloads' do
+          resources :downloads, only: [:index, :show], controller: 'versions/downloads', format: true do
             collection do
-              # In Rails 3.1, the following line can be replaced with:
-              # get :search, :format => true
-              get 'search.:format', :to => 'versions/downloads#search', :as => 'search'
+              get :search, format: true
             end
           end
         end
@@ -120,10 +106,7 @@ Rails.application.routes.draw do
 
   scope constraints: {id: Patterns::ROUTE_PATTERN}, defaults: {format: 'html'} do
     resources :rubygems, :path => 'gems', :only => [:show, :edit, :update] do
-
-      constraints :rubygem_id => Patterns::ROUTE_PATTERN do
-        resources :versions, :only => :show
-      end
+      resources :versions, only: :show, constraints: {rubygem_id: Patterns::ROUTE_PATTERN}
     end
   end
 
