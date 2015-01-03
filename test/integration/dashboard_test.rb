@@ -27,4 +27,10 @@ class DashboardTest < ActionDispatch::IntegrationTest
     assert page.has_content? "sandworm"
     assert ! page.has_content?("arrakis")
   end
+
+  test "dashboard with a non valid format" do
+    assert_raises(ActionController::RoutingError) do
+      get dashboard_path(format: :json)
+    end
+  end
 end
