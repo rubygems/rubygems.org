@@ -95,7 +95,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.current_rubygems_release
-    if (g = find_by_name("rubygems-update")) && (v = g.versions.release.indexed.latest.first)
+    if (g = find_by(name: "rubygems-update")) && (v = g.versions.release.indexed.latest.first)
       v.number
     else
       "0.0.0"
