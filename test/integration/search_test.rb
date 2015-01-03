@@ -43,4 +43,10 @@ class SearchTest < SystemTest
     assert ! page.has_content?("2.2.2")
     assert page.has_content?("3.3.3")
   end
+
+  test "search page with a non valid format" do
+    assert_raises(ActionController::RoutingError) do
+      get search_path(format: :json), {query: 'foobar'}
+    end
+  end
 end

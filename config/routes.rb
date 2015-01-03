@@ -90,23 +90,24 @@ Rails.application.routes.draw do
 
   ################################################################################
   # UI
+  scope constraints: {format: :html}, defaults: {format: 'html'} do
+    resource  :search,    :only => :show
+    resource  :dashboard, :only => :show
+    resources :profiles,  :only => :show
+    resource  :profile,   :only => [:edit, :update]
+    resources :stats,     :only => :index, :constraints => RecoveryMode
 
-  resource  :search,    :only => :show
-  resource  :dashboard, :only => :show
-  resources :profiles,  :only => :show
-  resource  :profile,   :only => [:edit, :update]
-  resources :stats,     :only => :index, :constraints => RecoveryMode
-
-  resources :rubygems, :only => :index, :path => 'gems' do
-    constraints :rubygem_id => Patterns::ROUTE_PATTERN do
-      resource  :subscription, :only => [:create, :destroy]
-      resources :versions,     :only => :index
+    resources :rubygems, :only => :index, :path => 'gems' do
+      constraints :rubygem_id => Patterns::ROUTE_PATTERN do
+        resource  :subscription, :only => [:create, :destroy]
+        resources :versions,     :only => :index
+      end
     end
-  end
 
-  scope constraints: {id: Patterns::ROUTE_PATTERN}, defaults: {format: 'html'} do
-    resources :rubygems, :path => 'gems', :only => [:show, :edit, :update] do
-      resources :versions, only: :show, constraints: {rubygem_id: Patterns::ROUTE_PATTERN}
+    scope constraints: {id: Patterns::ROUTE_PATTERN} do
+      resources :rubygems, :path => 'gems', :only => [:show, :edit, :update] do
+        resources :versions, only: :show, constraints: {rubygem_id: Patterns::ROUTE_PATTERN}
+      end
     end
   end
 
