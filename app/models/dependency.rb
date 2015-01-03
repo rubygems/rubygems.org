@@ -12,8 +12,13 @@ class Dependency < ActiveRecord::Base
 
   attr_accessor :gem_dependency
 
+  def self.unresolved(rubygem)
+    where(unresolved_name: nil, rubygem_id: rubygem.id)
+  end
+
   def self.mark_unresolved_for(rubygem)
-    where(:unresolved_name => nil, :rubygem_id => rubygem.id).update_all(:unresolved_name => rubygem.name, :rubygem_id => nil)
+    unresolved(rubygem).update_all(unresolved_name: rubygem.name,
+                                   rubygem_id: nil)
   end
 
   def self.development
