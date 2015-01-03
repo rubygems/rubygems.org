@@ -24,10 +24,10 @@
   <body class="<%= 'body--index' if request.path_info == '/' %>">
     <header class="header <%= 'header--interior' if request.path_info != '/' %>">
       <div class="l-wrap--header">
-        <a class="header__logo-wrap" href="/" title="RubyGems">
+        <%= link_to(root_path, title: 'RubyGems', class: 'header__logo-wrap') do %>
           <span class="header__logo" data-icon="⬡">⬢</span>
           <span class="t-hidden">RubyGems</span>
-        </a>
+        <% end %>
         <a class="header__club-sandwich" href="#">
           <span class="t-hidden">Navigation menu</span>
         </a>
