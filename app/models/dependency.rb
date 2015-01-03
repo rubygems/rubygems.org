@@ -93,7 +93,7 @@ class Dependency < ActiveRecord::Base
   end
 
   def clean_requirements
-    requirements.gsub /#<YAML::Syck::DefaultKey[^>]*>/, "="
+    requirements.gsub(/#<YAML::Syck::DefaultKey[^>]*>/, "=")
   end
 
   def update_resolved(rubygem)
