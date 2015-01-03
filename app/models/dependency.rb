@@ -92,8 +92,8 @@ class Dependency < ActiveRecord::Base
     "#{name} #{clean_requirements}"
   end
 
-  def clean_requirements
-    requirements.gsub(/#<YAML::Syck::DefaultKey[^>]*>/, "=")
+  def clean_requirements(reqs = requirements)
+    reqs.gsub(/#<YAML::Syck::DefaultKey[^>]*>/, "=")
   end
 
   def update_resolved(rubygem)
@@ -134,7 +134,7 @@ class Dependency < ActiveRecord::Base
     return if self.requirements
 
     reqs = gem_dependency.requirements_list.join(', ')
-    self.requirements = reqs.gsub(/#<YAML::Syck::DefaultKey[^>]*>/, "=")
+    self.requirements = clean_requirements(reqs)
 
     self.scope = gem_dependency.type.to_s
   end
