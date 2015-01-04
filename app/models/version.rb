@@ -55,19 +55,19 @@ class Version < ActiveRecord::Base
   end
 
   def self.by_position
-    order('versions.position')
+    order(:position)
   end
 
   def self.by_built_at
-    order("versions.built_at desc")
+    order(built_at: :desc)
   end
 
   def self.by_earliest_built_at
-    order("versions.built_at asc")
+    order(built_at: :asc)
   end
 
   def self.by_created_at
-    order('versions.created_at desc')
+    order(created_at: :desc)
   end
 
   def self.rows_for_index
@@ -83,7 +83,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.most_recent
-    latest.find_by_platform('ruby') || latest.order("number DESC").first || last
+    latest.find_by(platform: 'ruby') || latest.order(number: :desc).first || last
   end
 
   def self.just_updated(limit=5)
@@ -103,7 +103,7 @@ class Version < ActiveRecord::Base
 
   def self.find_from_slug!(rubygem_id, slug)
     rubygem = Rubygem.find(rubygem_id)
-    find_by_full_name!("#{rubygem.name}-#{slug}")
+    find_by!(full_name: "#{rubygem.name}-#{slug}")
   end
 
   def self.rubygem_name_for(full_name)
