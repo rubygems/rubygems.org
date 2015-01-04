@@ -15,6 +15,10 @@ sudo: false
 
 bundler_args: --jobs=3 --retry=3 --deployment --local --without development
 
+before_install:
+  - gem update --system 2.2.2
+  - gem --version
+
 before_script:
   - cp config/database.yml.example config/database.yml
   - bundle exec rake db:create db:migrate db:test:prepare
