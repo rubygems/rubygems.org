@@ -51,7 +51,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.reverse_dependencies(name)
-    find(Version.reverse_dependencies(name).pluck("versions.rubygem_id"))
+    find(Version.reverse_dependencies(name).pluck(:rubygem_id))
   end
 
   def self.total_count
@@ -59,7 +59,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.latest(limit=5)
-    with_one_version.order("created_at desc").limit(limit)
+    with_one_version.order(created_at: :desc).limit(limit)
   end
 
   def self.downloaded(limit=5)
@@ -87,15 +87,15 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.by_name
-    order("name asc")
+    order(name: :asc)
   end
 
   def self.by_downloads
-    order("rubygems.downloads desc")
+    order(downloads: :desc)
   end
 
   def self.current_rubygems_release
-    if (g = find_by_name("rubygems-update")) && (v = g.versions.release.indexed.latest.first)
+    if (g = find_by(name: "rubygems-update")) && (v = g.versions.release.indexed.latest.first)
       v.number
     else
       "0.0.0"
