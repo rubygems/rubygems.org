@@ -1,7 +1,7 @@
 module RubygemsHelper
   def formatted_licenses(license_names)
     if license_names.blank?
-      t(".no_licenses")
+      t("rubygems.show.no_licenses")
     else
       Array(license_names).join ", "
     end
