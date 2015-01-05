@@ -1,14 +1,11 @@
 en:
   title: "RubyGems.org"
   subtitle: "your community gem host"
-  url: "http://rubygems.org"
   help_url: "http://help.rubygems.org"
   please_sign_up: "Access Denied. Please sign up for an account at http://rubygems.org"
-  please_confirm: "Access Denied. Please confirm your RubyGems.org account."
   feed_subscribed: "RubyGems.org | Subscribed Gems"
   feed_latest: "RubyGems.org | Latest Gems"
   time_ago: "%{duration} ago"
-  download_count: "%{count} downloads"
   form_disable_with: "Please wait..."
   update: Update
   edit: Edit
@@ -27,38 +24,13 @@ en:
 
   home:
     index:
-      gems_header: "of %{gem_count} gems cut since July 2009"
-      welcome_blurb: "Welcome to your community RubyGem host."
       find_blurb: "Find, install, and publish RubyGems."
       learn:
-        header: 'learn'
         install_rubygems: "Install RubyGems"
-        rubygems_subtitle: "Ruby's premier packaging system"
-        browse_docs: "Browse the Guides"
-        docs_subtitle: "In depth explanations, tutorials, and references"
-        gem_specification: "Gem Specification"
-        spec_subtitle: "Your gem's interface to the world"
-      share:
-        header: share
-        update: "Update to the latest RubyGems version"
-        build: "Build your gem"
-        deploy: "Deploy your gem instantly"
-      pitch:
-        content: "%{rubygems} is the Ruby community's gem hosting service. %{publish} your gems and install them. %{api} to interact and find out more information about available gems. %{contribute} and enhance the site with your own changes."
-        publish: Instantly publish
-        api: Use the API
-        contribute: Become a contributor
-      leaderboards:
-        header: leaderboards
-        new: New Gems
-        downloaded: Most Downloaded Today
-        no_downloaded: No downloads today
-        updated: Just Updated
 
   layouts:
     application:
       header:
-        all_gems: "All gems"
         dashboard: "Dashboard"
         sign_in: "Sign in"
         sign_up: "Sign up"
@@ -69,24 +41,11 @@ en:
         guides: "Guides"
         contribute: "Contribute"
         help: "Help"
-        mobile: "Mobile"
         status: "Status"
         uptime: "Uptime"
         source_code: "Code"
         discussion_forum: "Discuss"
         statistics: "Stats"
-        designed_by: "design by %{designer}"
-        designed_by_title: "Design by %{designer}"
-        resolved_with: "resolved with %{resolver}"
-        resolved_with_title: "Resolved with %{resolver}"
-        supported_by: "backed by %{supporter}"
-        supported_by_title: "Backed by %{supporter}"
-        hosted_by: "hosted by %{supporter}"
-        hosted_by_title: "hosted by %{supporter}"
-        optimized_by: "optimized by %{optimizer}"
-        optimized_by_title: "Optimized by %{optimizer}"
-        tracking_by: "tracking by %{tracker}"
-        tracking_by_title: "Tracking by %{tracker}"
 
   pages:
     about:
@@ -99,9 +58,6 @@ en:
       founding: "The project was started in April 2009 by %{founder}, and has since grown to include the contributions of over %{contributors} and %{downloads}. As of the RubyGems 1.3.6 release, the site has been renamed to %{title} from Gemcutter to solidify the site's central role in the Ruby community."
       support: "Although Gemcutter is not run by one specific company, plenty have helped us out so far. The current design, illustrations, and front-end development of this site were created by %{dockyard}. %{github} has also been invaluable for helping us collaborate and share code easily. The site started on %{heroku}, whose great service helped prove Gemcutter as a viable solution that the whole community could rely on."
       technical: "Some insights into the technical aspects of the site: It's 100% Ruby. The main site is a %{rails} application, and the RubyGem serving is done through %{sinatra}. Gems are hosted on %{s3}, and the time between publishing a new gem and having it ready for installation is minimal. For more info, %{source_code}, which is %{license} over at GitHub."
-    create:
-      title: create
-      notice: This page has been moved onto Gemcutter's new support site.
 
   passwords:
     edit:
@@ -136,13 +92,11 @@ en:
       other_fields_notice: All other fields can only be edited by pushing an updated version of your gem.
     index:
       title: 'Gems'
-      subtitle: 'starting with %{prefix}'
     show:
       not_hosted_notice: This gem is not currently hosted on Gemcutter.
       install: install
       yanked_notice: "This gem has been yanked, but it is still available for download for other gems that may have depended on it. For more information or if you need to remove it permanently, %{more_info_link}."
       yank_info_link_text: please click here
-      stats_header: Stats
       authors_header: Authors
       downloads_for_this_version: "For this version"
       owners_header: Owners
@@ -171,16 +125,8 @@ en:
       forgot_password: "Forgot Password?"
 
   stats:
-    index:
-      gem_count: "%{count} gems"
-      user_count: "%{count} users"
     show:
-      for: "stats for %{for}"
-      overview: "stats overview"
       total_downloads: "Total downloads"
-      daily_downloads: "%{count} downloads today"
-      current_rank: current rank today
-      highest_rank: highest rank today
 
   users:
     new:
@@ -210,6 +156,3 @@ en:
       session:
         who: Email or Handle
         password: Password
-    errors:
-      messages:
-        record_invalid: "%{errors}"
