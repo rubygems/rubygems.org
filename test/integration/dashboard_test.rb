@@ -33,4 +33,14 @@ class DashboardTest < ActionDispatch::IntegrationTest
       get dashboard_path(format: :json)
     end
   end
+
+  test "dashboard with atom format" do
+    rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
+    create(:subscription, rubygem: rubygem, user: @user)
+
+    get dashboard_path(format: :atom)
+    assert_response :success
+    assert_equal :atom, response.content_type.symbol
+    assert page.has_content? "sandworm"
+  end
 end
