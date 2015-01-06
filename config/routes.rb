@@ -92,19 +92,19 @@ Rails.application.routes.draw do
   # UI
   scope constraints: {format: :html}, defaults: {format: 'html'} do
     resource  :search,    :only => :show
-    resource  :dashboard, :only => :show
+    resource  :dashboard, :only => :show, constraints: {format: /html|atom/}
     resources :profiles,  :only => :show
     resource  :profile,   :only => [:edit, :update]
     resources :stats,     :only => :index, :constraints => RecoveryMode
 
-    resources :rubygems, :only => :index, :path => 'gems' do
-      constraints :rubygem_id => Patterns::ROUTE_PATTERN do
+    resources :rubygems, only: :index, path: 'gems', constraints: {format: /html|atom/} do
+      scope constraints: {rubygem_id: Patterns::ROUTE_PATTERN, format: :html} do
         resource  :subscription, :only => [:create, :destroy]
         resources :versions,     :only => :index
       end
     end
 
-    scope constraints: {id: Patterns::ROUTE_PATTERN} do
+    scope constraints: {id: Patterns::ROUTE_PATTERN, format: :html} do
       resources :rubygems, :path => 'gems', :only => [:show, :edit, :update] do
         resources :versions, only: :show, constraints: {rubygem_id: Patterns::ROUTE_PATTERN}
       end
