@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   helper :announcements
   protect_from_forgery :only => [:create, :update, :destroy]
-  ssl_required :if => :ssl_required?
+  ssl_required
 
   before_filter :set_locale
 
@@ -39,10 +39,6 @@ class ApplicationController < ActionController::Base
       request.body.size if request.body.respond_to? :size
       render :text => t(:please_sign_up), :status => 401
     end
-  end
-
-  def ssl_required?
-    cookies[:ssl]
   end
 
   def find_rubygem

@@ -10,7 +10,6 @@ class SessionsController < Clearance::SessionsController
     sign_in(@user) do |status|
       if status.success?
         Librato.increment 'login.success'
-        cookies[:ssl] = true
         redirect_back_or(url_after_create)
       else
         Librato.increment 'login.failure'
@@ -18,11 +17,6 @@ class SessionsController < Clearance::SessionsController
         render :template => 'sessions/new', :status => :unauthorized
       end
     end
-  end
-
-  def destroy
-    cookies.delete(:ssl)
-    super
   end
 
   private

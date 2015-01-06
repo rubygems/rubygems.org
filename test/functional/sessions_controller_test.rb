@@ -11,10 +11,6 @@ class SessionsControllerTest < ActionController::TestCase
       should respond_with :redirect
       should redirect_to('the dashboard') { dashboard_url }
 
-      should "set the ssl cookie" do
-        assert_not_nil cookies[:ssl]
-      end
-
       should "sign in the user" do
         assert @controller.signed_in?
       end
@@ -30,10 +26,6 @@ class SessionsControllerTest < ActionController::TestCase
       should render_template 'sessions/new'
       should set_the_flash.now[:notice]
 
-      should "not set the ssl cookie" do
-        assert_nil cookies[:ssl]
-      end
-
       should "not sign in the user" do
         assert !@controller.signed_in?
       end
@@ -47,10 +39,6 @@ class SessionsControllerTest < ActionController::TestCase
 
     should respond_with :redirect
     should redirect_to('login page') { sign_in_url }
-
-    should "clear the ssl cookie" do
-      assert_nil cookies[:ssl]
-    end
 
     should "sign out the user" do
       assert !@controller.signed_in?
