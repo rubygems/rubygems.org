@@ -17,6 +17,14 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
     assert_equal @rubygem_3.attributes['name'], gems[2]['name']
   end
 
+  def should_return_paginated_just_updated_gems(gems)
+    assert_equal 3, gems.length
+    gems.each {|g| assert g.is_a?(Hash) }
+    assert_equal @rubygem_3.attributes['name'], gems[0]['name']
+    assert_equal @rubygem_2.attributes['name'], gems[1]['name']
+    assert_equal @rubygem_1.attributes['name'], gems[2]['name']
+  end
+
   context "No signed in-user" do
     context "On GET to latest" do
       setup do
@@ -62,7 +70,9 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
         @rubygem_3 = create(:rubygem)
         @version_4 = create(:version, :rubygem => @rubygem_3)
 
-        stub(Version).just_updated(50){ [@version_2, @version_3, @version_4] }
+        stub(Version).just_updated { subject }
+        stub(subject).paginate(:page => nil, :per_page => 50){ [@version_2, @version_3, @version_4] }
+        stub(subject).paginate(:page => 2, :per_page => 50){ [@version_4, @version_3, @version_2] }
       end
 
       should "return correct JSON for just_updated gems" do
@@ -79,6 +89,11 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
         get :just_updated, :format => :xml
         gems = Hash.from_xml(Nokogiri.parse(@response.body).to_xml)['rubygems']
         should_return_just_updated_gems(gems)
+      end
+
+      should "support a page parameter" do
+        get :just_updated, :page => 2, :format => :json
+        should_return_paginated_just_updated_gems MultiJson.load(@response.body)
       end
     end
 

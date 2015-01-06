@@ -86,12 +86,11 @@ class Version < ActiveRecord::Base
     latest.find_by(platform: 'ruby') || latest.order(number: :desc).first || last
   end
 
-  def self.just_updated(limit=5)
+  def self.just_updated
     where("versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)").
       joins(:rubygem).
       indexed.
-      by_created_at.
-      limit(limit)
+      by_created_at
   end
 
   def self.published(limit)

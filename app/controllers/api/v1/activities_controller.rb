@@ -7,7 +7,7 @@ class Api::V1::ActivitiesController < Api::BaseController
   end
 
   def just_updated
-    @rubygems = Version.just_updated(50).map(&:rubygem)
+    @rubygems = Version.just_updated.paginate(:page => params[:page], :per_page => 50).map(&:rubygem)
     respond_with(@rubygems, :yamlish => true)
   end
 
