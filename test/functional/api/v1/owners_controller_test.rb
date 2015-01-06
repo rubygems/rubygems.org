@@ -36,10 +36,6 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     end
   end
 
-  should_respond_to :xml do |body|
-    Hash.from_xml(Nokogiri.parse(body).to_xml)['users']
-  end
-
   should_respond_to :json do |body|
     MultiJson.load body
   end
