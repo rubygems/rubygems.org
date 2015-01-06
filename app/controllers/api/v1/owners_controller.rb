@@ -4,7 +4,7 @@ class Api::V1::OwnersController < Api::BaseController
   before_filter :verify_authenticated_user, :except => [:show, :gems]
   before_filter :find_rubygem, :except => :gems
   before_filter :verify_gem_ownership, :except => [:show, :gems]
-  respond_to :yaml, :xml, :json, :only => [:show, :gems]
+  respond_to :yaml, :json, :only => [:show, :gems]
 
   def show
     respond_with @rubygem.owners

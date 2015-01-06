@@ -1,5 +1,5 @@
 class Api::V1::ActivitiesController < Api::BaseController
-  respond_to :json, :xml, :yaml, :on => [:latest, :just_updated]
+  respond_to :json, :yaml, :on => [:latest, :just_updated]
 
   def latest
     @rubygems = Rubygem.latest(50)

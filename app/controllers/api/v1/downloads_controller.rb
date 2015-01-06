@@ -1,11 +1,10 @@
 class Api::V1::DownloadsController < Api::BaseController
-  respond_to :json, :xml, :yaml
+  respond_to :json, :yaml
 
   def index
     respond_to do |format|
       format.any(:all) { render :text => Download.count }
       format.json { render :json => {:total => Download.count} }
-      format.xml  { render :xml  => {:total => Download.count} }
       format.yaml { render :text => {:total => Download.count}.to_yaml }
     end
   end
