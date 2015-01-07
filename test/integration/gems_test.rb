@@ -37,4 +37,11 @@ class GemsTest < ActionDispatch::IntegrationTest
     delete rubygem_subscription_path(@rubygem, as: @user.id), nil, {'HTTP_ACCEPT' => 'application/javascript'}
     assert_match(/\("\.toggler"\)\.toggle\(\)/, @response.body)
   end
+
+  test "versions with atom format" do
+    create(:version, rubygem: @rubygem)
+    get rubygem_versions_path(@rubygem, format: :atom)
+    assert_equal :atom, response.content_type.symbol
+    assert page.has_content? "sandworm"
+  end
 end
