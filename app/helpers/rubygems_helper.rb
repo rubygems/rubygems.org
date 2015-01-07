@@ -25,7 +25,7 @@ module RubygemsHelper
 
   def subscribe_link(rubygem)
     if signed_in?
-      subscribe = link_to 'Subscribe', rubygem_subscription_path(rubygem),
+      link_to 'Subscribe', rubygem_subscription_path(rubygem),
         :remote => true,
         :method => :post,
         :id     => 'subscribe',
