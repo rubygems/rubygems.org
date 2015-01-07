@@ -114,12 +114,12 @@ Rails.application.routes.draw do
   ################################################################################
   # Clearance Overrides
 
-  resource :session, :only => [:create, :destroy]
+  resource :session, only: [:create, :destroy]
 
-  resources :passwords, :only => [:new, :create]
+  resources :passwords, only: [:new, :create]
 
-  resources :users do
-    resource :password, :only => [:create, :edit, :update]
+  resources :users, only: [:new, :create] do
+    resource :password, only: [:create, :edit, :update]
   end
 
 end
