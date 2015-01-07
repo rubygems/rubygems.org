@@ -7,6 +7,8 @@ Rails.application.configure do
   config.action_controller.allow_forgery_protection = false
   config.active_support.deprecation = :stderr
   config.action_mailer.delivery_method = :test
+  require 'clearance_backdoor'
+  config.middleware.use ClearanceBackdoor
 end
 
 ENV['S3_KEY']    = 'this:is:an:ex:parrot'
