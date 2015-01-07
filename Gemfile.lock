@@ -51,7 +51,7 @@ GEM
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
     choice (0.1.7)
-    clearance (1.6.0)
+    clearance (1.6.1)
       bcrypt
       email_validator (~> 1.4)
       rails (>= 3.1)
