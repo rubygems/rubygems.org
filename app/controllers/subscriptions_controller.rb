@@ -15,7 +15,9 @@ protected
 
   def render_toggle_or_unacceptable(success)
     if success
-      render :update
+      respond_to do |format|
+        format.js { render :update }
+      end
     else
       render :text => '', :status => :forbidden
     end
