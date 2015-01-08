@@ -137,13 +137,6 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
           YAML.load(body)
         end
 
-        should_respond_to(:xml) do |body|
-          children = Nokogiri.parse(body).root.children
-          Hash.from_xml(children[1].to_xml).update(
-            'all gems' => Hash.from_xml(children[3].to_xml).delete('all_gems')
-          )
-        end
-
         context "On DELETE to remove with owned hook for rubygem" do
           setup do
             delete :remove,
@@ -297,4 +290,3 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
     end
   end
 end
-

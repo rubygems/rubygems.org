@@ -1,6 +1,6 @@
 class Api::V1::ApiKeysController < Api::BaseController
   before_filter :redirect_to_root, :unless => :signed_in?, :only => [:reset]
-  respond_to :json, :xml, :yaml, :only => :show
+  respond_to :json, :yaml, :only => :show
 
   def show
     authenticate_or_request_with_http_basic do |username, password|
@@ -9,7 +9,6 @@ class Api::V1::ApiKeysController < Api::BaseController
         respond_to do |format|
           format.any(:all) { render :text => current_user.api_key }
           format.json { render :json => {:rubygems_api_key => current_user.api_key} }
-          format.xml  { render :xml  => {:rubygems_api_key => current_user.api_key} }
           format.yaml { render :text => {:rubygems_api_key => current_user.api_key}.to_yaml }
         end
       else

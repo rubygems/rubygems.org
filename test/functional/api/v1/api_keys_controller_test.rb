@@ -76,10 +76,6 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     should_respond_to(:yaml, :to_sym) do |body|
      YAML.load body
     end
-
-    should_respond_to(:xml) do |body|
-      Hash.from_xml(Nokogiri.parse(body).to_xml)['hash']
-    end
   end
 
   context "on PUT to reset with signed in user" do

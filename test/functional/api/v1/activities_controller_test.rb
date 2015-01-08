@@ -42,12 +42,6 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
         get :latest, :format => :yaml
         should_return_latest_gems YAML.load(@response.body)
       end
-
-      should "return correct XML for latest gems" do
-        get :latest, :format => :xml
-        gems = Hash.from_xml(Nokogiri.parse(@response.body).to_xml)['rubygems']
-        should_return_latest_gems(gems)
-      end
     end
 
     context "On GET to just_updated" do
@@ -74,13 +68,6 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
         get :just_updated, :format => :yaml
         should_return_just_updated_gems YAML.load(@response.body)
       end
-
-      should "return correct XML for just_updated gems" do
-        get :just_updated, :format => :xml
-        gems = Hash.from_xml(Nokogiri.parse(@response.body).to_xml)['rubygems']
-        should_return_just_updated_gems(gems)
-      end
     end
-
   end
 end

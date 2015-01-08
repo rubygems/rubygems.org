@@ -24,10 +24,6 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
       MultiJson.load(body)['total']
     end
 
-    should_respond_to(:xml) do |body|
-      Nokogiri.parse(body).root.children[1].children.first.text.to_i
-    end
-
     should_respond_to(:yaml) do |body|
       YAML.load(body)[:total]
     end
@@ -76,10 +72,6 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
 
     should_respond_to(:json) do |body|
       MultiJson.load body
-    end
-
-    should_respond_to(:xml) do |body|
-      Hash.from_xml(Nokogiri.parse(body).to_xml)['hash']
     end
 
     should_respond_to(:yaml, :to_sym) do |body|
@@ -168,10 +160,6 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     should_respond_to(:yaml) do |body|
       YAML.load(body)[:gems]
     end
-
-    should_respond_to(:xml) do |body|
-      Hash.from_xml(Nokogiri.parse(body).to_xml)['hash']['gems']
-    end
   end
 
   context "On GET to all" do
@@ -200,10 +188,5 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     should_respond_to(:yaml) do |body|
       YAML.load(body)[:gems]
     end
-
-    should_respond_to(:xml) do |body|
-      Hash.from_xml(Nokogiri.parse(body).to_xml)['hash']['gems']
-    end
   end
-
 end

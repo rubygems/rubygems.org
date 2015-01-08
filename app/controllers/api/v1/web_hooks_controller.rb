@@ -3,7 +3,7 @@ class Api::V1::WebHooksController < Api::BaseController
   before_filter :authenticate_with_api_key
   before_filter :verify_authenticated_user
   before_filter :find_rubygem_by_name, :except => :index
-  respond_to :json, :xml, :yaml, :only => :index
+  respond_to :json, :yaml, :only => :index
 
   def index
     respond_with current_user.all_hooks

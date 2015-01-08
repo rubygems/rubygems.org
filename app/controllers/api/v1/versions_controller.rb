@@ -1,5 +1,5 @@
 class Api::V1::VersionsController < Api::BaseController
-  respond_to :json, :xml, :yaml
+  respond_to :json, :yaml
 
   def show
     find_rubygem
