@@ -17,7 +17,7 @@ Rails.application.routes.draw do
         get :top, :on => :collection
         get :all, :on => :collection
       end
-      constraints :id => Patterns::ROUTE_PATTERN, :format => /json|xml|yaml/ do
+      constraints id: Patterns::ROUTE_PATTERN, format: /json|yaml/ do
         get 'owners/:handle/gems', to: 'owners#gems', as: 'owners_gems', constraints: {handle: Patterns::ROUTE_PATTERN}, format: true
 
         resources :downloads, only: :show, format: true
@@ -38,7 +38,7 @@ Rails.application.routes.draw do
 
       resources :dependencies, :only => :index
 
-      resources :rubygems, :path => 'gems', :only => [:create, :show, :index], :id => Patterns::LAZY_ROUTE_PATTERN, :format => /json|xml|yaml/ do
+      resources :rubygems, path: 'gems', only: [:create, :show, :index], id: Patterns::LAZY_ROUTE_PATTERN, format: /json|yaml/ do
         member do
           get :reverse_dependencies
         end
@@ -51,7 +51,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resource :activity, :only => [], :format => /json|xml|yaml/ do
+      resource :activity, only: [], format: /json|yaml/ do
         collection do
           get :latest
           get :just_updated

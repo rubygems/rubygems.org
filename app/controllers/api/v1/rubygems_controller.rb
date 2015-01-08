@@ -7,7 +7,7 @@ class Api::V1::RubygemsController < Api::BaseController
   before_filter :find_rubygem_by_name,      :only => [:yank, :unyank]
   before_filter :validate_gem_and_version,  :only => [:yank, :unyank]
 
-  respond_to :json, :xml, :yaml, :on => [:index, :show, :latest, :just_updated]
+  respond_to :json, :yaml, :on => [:index, :show, :latest, :just_updated]
 
   def index
     @rubygems = current_user.rubygems.with_versions

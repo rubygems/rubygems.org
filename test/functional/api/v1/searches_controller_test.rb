@@ -42,10 +42,6 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
       MultiJson.load body
     end
 
-    should_respond_to(:xml) do |body|
-      Hash.from_xml(Nokogiri.parse(body).to_xml)['rubygems']
-    end
-
     should_respond_to(:yaml) do |body|
       YAML.load body
     end
