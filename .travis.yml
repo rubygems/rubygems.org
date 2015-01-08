@@ -8,9 +8,6 @@ rvm:
 services:
   - redis-server
 
-git:
-  strategy: tarball
-
 sudo: false
 
 bundler_args: --jobs=3 --retry=3 --deployment --local --without development
