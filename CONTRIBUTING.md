@@ -119,7 +119,7 @@ than Rubygems and may suit your organization’s needs better.**
 Some things you’ll need to do in order to get this project up and
 running:
 
-**Environment:**
+**Environment (OS X):**
 
 * Use Ruby 2.0.0-p481
 * Use Rubygem 2.3.0
@@ -131,6 +131,14 @@ running:
 * Rubygems is configured to use PostgreSQL (>= 8.4.x),
     for MySQL see below. Install with: `brew install postgres`
 * If this is your first time using pg, don't forget to initialize the database (initdb /usr/local/var/postgres -E utf8) before starting postgres (pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start)
+
+**Environment (Linux - Debian/Ubuntu):**
+
+* Install Ruby 1.9.3: `apt-get install ruby1.9.3` (Or install via [alternate methods](http://www.ruby-lang.org/en/downloads/))
+* Install Bundler: `gem install bundler`
+* Install Redis: `apt-get install redis-server`
+* Install PostgreSQL: `apt-get install postgresql-9.1 postgresql-server-dev-9.1`
+* Install build dependencies `apt-get install build-essential`
 
 **Get the code:**
 
