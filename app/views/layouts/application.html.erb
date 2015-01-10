@@ -184,6 +184,9 @@
     </footer>
 
     <%= javascript_include_tag "application" %>
+    <script type="text/javascript">
+     ZeroClipboard.config( { swfPath: "<%= asset_path 'ZeroClipboard.swf' %>" } );
+    </script>
     <%= yield :javascript %>
 
     <script type="text/javascript">

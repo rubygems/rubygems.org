@@ -16,8 +16,6 @@ HOST             = $rubygems_config[:host]
 
 module Gemcutter
   class Application < Rails::Application
-    config.assets.enabled = true
-
     config.time_zone = "UTC"
     config.encoding  = "utf-8"
 
