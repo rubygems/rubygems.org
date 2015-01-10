@@ -185,7 +185,7 @@
 
     <%= javascript_include_tag "application" %>
     <script type="text/javascript">
-     ZeroClipboard.config( { swfPath: "<%= asset_path 'ZeroClipboard.swf' %>" } );
+     ZeroClipboard.config( { swfPath: "<%= asset_path 'ZeroClipboard.swf' %>", cacheBust: false  } );
     </script>
     <%= yield :javascript %>
 
