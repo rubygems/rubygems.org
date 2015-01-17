@@ -67,7 +67,7 @@ class HostessTest < ActiveSupport::TestCase
     should "redirect to cdn for a gem" do
       get @file
 
-      assert_equal "http://#{$rubygems_config[:cf_domain]}#{@file}", last_response.headers["Location"]
+      assert_equal "http://#{Gemcutter.config['cf_domain']}#{@file}", last_response.headers["Location"]
       assert_equal 302, last_response.status
     end
   end
