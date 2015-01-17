@@ -1,13 +1,13 @@
 class ReallyRegenerateRuntimeDependenciesList < ActiveRecord::Migration
   def self.up
     each_dependency do |row|
-      $redis.lrem "rd:#{row['full_name']}", 0, "#{row['name']} #{row['requirements']}"
+      Redis.current.lrem "rd:#{row['full_name']}", 0, "#{row['name']} #{row['requirements']}"
     end
   end
 
   def self.down
     each_dependency do |row|
-      $redis.lpush "rd:#{row['full_name']}", "#{row['name']} #{row['requirements']}"
+      Redis.current.lpush "rd:#{row['full_name']}", "#{row['name']} #{row['requirements']}"
     end
   end
 

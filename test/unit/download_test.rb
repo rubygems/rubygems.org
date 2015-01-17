@@ -278,7 +278,7 @@ class DownloadTest < ActiveSupport::TestCase
     Download.migrate_to_sql version
 
     assert_equal [1.day.ago.to_date.to_s, Time.zone.today.to_s].sort,
-                 $redis.hkeys(Download.history_key(version)).sort
+                 Redis.current.hkeys(Download.history_key(version)).sort
   end
 
   should "migrate all keys in redis" do
@@ -294,7 +294,7 @@ class DownloadTest < ActiveSupport::TestCase
     assert_equal 1, Download.migrate_all_to_sql
 
     assert_equal [1.day.ago.to_date.to_s, Time.zone.today.to_s].sort,
-                 $redis.hkeys(Download.history_key(version)).sort
+                 Redis.current.hkeys(Download.history_key(version)).sort
 
   end
 end
