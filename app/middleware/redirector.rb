@@ -6,8 +6,8 @@ class Redirector
   def call(env)
     request = Rack::Request.new(env)
 
-    if request.host != HOST && request.path !~ %r{^/api}
-      fake_request = Rack::Request.new(env.merge("HTTP_HOST" => HOST))
+    if request.host != Gemcutter::HOST && request.path !~ %r{^/api}
+      fake_request = Rack::Request.new(env.merge("HTTP_HOST" => Gemcutter::HOST))
       redirect_to(fake_request.url)
     elsif request.path =~ %r{^/(book|chapter|export|read|shelf|syndicate)}
       redirect_to("http://docs.rubygems.org#{request.path}")

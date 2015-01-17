@@ -26,7 +26,7 @@ class MiniTest::Test
   def setup
     RR.reset
     Redis.current.flushdb
-    $fog.directories.create(:key => $rubygems_config[:s3_bucket], :public => true)
+    $fog.directories.create(key: Gemcutter.config['s3_bucket'], public: true)
   end
 
   def page

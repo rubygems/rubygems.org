@@ -23,7 +23,8 @@ class Indexer
   end
 
   def directory
-    fog.directories.get($rubygems_config[:s3_bucket]) || fog.directories.create(:key => $rubygems_config[:s3_bucket])
+    fog.directories.get(Gemcutter.config['s3_bucket']) ||
+      fog.directories.create(key: Gemcutter.config['s3_bucket'])
   end
 
   private
