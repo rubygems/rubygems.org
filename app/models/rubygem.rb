@@ -267,7 +267,7 @@ class Rubygem < ActiveRecord::Base
 
   def monthly_downloads
     key_dates = self.class.monthly_dates.map(&:to_s)
-    $redis.hmget(Download.history_key(self), *key_dates).map(&:to_i)
+    Redis.current.hmget(Download.history_key(self), *key_dates).map(&:to_i)
   end
 
   def first_built_date

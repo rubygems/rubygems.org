@@ -22,7 +22,7 @@ class GemcutterTest < ActiveSupport::TestCase
 
     should "update download counts for all gems" do
       @rubygems.each_with_index do |rubygem, download_count|
-        $redis.incrby "downloads:rubygem:#{rubygem.name}", download_count
+        Redis.current.incrby "downloads:rubygem:#{rubygem.name}", download_count
       end
 
       update_download_counts

@@ -223,14 +223,14 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "save info into redis" do
-      info = $redis.hgetall(Version.info_key(@version.full_name))
+      info = Redis.current.hgetall(Version.info_key(@version.full_name))
       assert_equal @version.rubygem.name, info["name"]
       assert_equal @version.number, info["number"]
       assert_equal @version.platform, info["platform"]
     end
 
     should "add version onto redis versions list" do
-      assert_equal @version.full_name, $redis.lindex(Rubygem.versions_key(@version.rubygem.name), 0)
+      assert_equal @version.full_name, Redis.current.lindex(Rubygem.versions_key(@version.rubygem.name), 0)
     end
 
     should "raise an ActiveRecord::RecordNotFound if an invalid slug is given" do
@@ -342,7 +342,7 @@ class VersionTest < ActiveSupport::TestCase
       should("be considered yanked") { assert Version.yanked.include?(@version) }
       should("no longer be latest") { assert !@version.latest?}
       should "not appear in the version list" do
-        assert ! $redis.exists(Rubygem.versions_key(@version.rubygem.name))
+        assert ! Redis.current.exists(Rubygem.versions_key(@version.rubygem.name))
       end
 
       context "and consequently unyanked" do
@@ -354,7 +354,7 @@ class VersionTest < ActiveSupport::TestCase
         should("become the latest again") { assert @version.latest? }
         should("be considered unyanked") { assert !Version.yanked.include?(@version) }
         should "appear in the version list" do
-          assert_equal @version.full_name, $redis.lindex(Rubygem.versions_key(@version.rubygem.name), 0)
+          assert_equal @version.full_name, Redis.current.lindex(Rubygem.versions_key(@version.rubygem.name), 0)
         end
       end
     end

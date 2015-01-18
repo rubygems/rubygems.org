@@ -36,8 +36,8 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
       @eight_nine_days_ago = 89.days.ago.to_date.to_s
       @one_day_ago = 1.day.ago.to_date.to_s
 
-      $redis.hincrby Download.history_key(@version), @eight_nine_days_ago, 42
-      $redis.hincrby Download.history_key(@version), @one_day_ago, 2
+      Redis.current.hincrby Download.history_key(@version), @eight_nine_days_ago, 42
+      Redis.current.hincrby Download.history_key(@version), @one_day_ago, 2
       Download.incr(@version.rubygem.name, @version.full_name)
     end
 
@@ -150,9 +150,9 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
       setup do
         @version = create(:version)
 
-        $redis.hincrby Download.history_key(@version), @one_hundred_ninety_days_ago, 41
-        $redis.hincrby Download.history_key(@version), @one_hundred_eighty_nine_days_ago, 42
-        $redis.hincrby Download.history_key(@version), @one_hundred_days_ago, 1764
+        Redis.current.hincrby Download.history_key(@version), @one_hundred_ninety_days_ago, 41
+        Redis.current.hincrby Download.history_key(@version), @one_hundred_eighty_nine_days_ago, 42
+        Redis.current.hincrby Download.history_key(@version), @one_hundred_days_ago, 1764
       end
 
       should_respond_to(:json) do |body|

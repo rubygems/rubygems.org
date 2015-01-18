@@ -107,7 +107,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.rubygem_name_for(full_name)
-    $redis.hget(info_key(full_name), :name)
+    Redis.current.hget(info_key(full_name), :name)
   end
 
   def self.info_key(full_name)
@@ -124,7 +124,7 @@ class Version < ActiveRecord::Base
 
   def yank!
     update_attributes!(:indexed => false)
-    $redis.lrem(Rubygem.versions_key(rubygem.name), 1, full_name)
+    Redis.current.lrem(Rubygem.versions_key(rubygem.name), 1, full_name)
   end
 
   def unyank!
@@ -133,7 +133,7 @@ class Version < ActiveRecord::Base
   end
 
   def push
-    $redis.lpush(Rubygem.versions_key(rubygem.name), full_name)
+    Redis.current.lpush(Rubygem.versions_key(rubygem.name), full_name)
   end
 
   def yanked?
@@ -298,7 +298,7 @@ class Version < ActiveRecord::Base
 
     Version.find(id).update_attributes(full_name: full_name)
 
-    $redis.hmset(Version.info_key(full_name),
+    Redis.current.hmset(Version.info_key(full_name),
                  :name, rubygem.name,
                  :number, number,
                  :platform, platform)

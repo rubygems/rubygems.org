@@ -35,19 +35,19 @@ class Dependency < ActiveRecord::Base
 
   # rails,rack,bundler
   def self.for(gem_list)
-    versions = $redis.pipelined do
+    versions = Redis.current.pipelined do
       gem_list.each do |rubygem_name|
-        $redis.lrange(Rubygem.versions_key(rubygem_name), 0, -1)
+        Redis.current.lrange(Rubygem.versions_key(rubygem_name), 0, -1)
       end
     end || []
     versions.flatten!
 
     return [] if versions.blank?
 
-    data = $redis.pipelined do
+    data = Redis.current.pipelined do
       versions.each do |version|
-        $redis.hvals(Version.info_key(version))
-        $redis.lrange(Dependency.runtime_key(version), 0, -1)
+        Redis.current.hvals(Version.info_key(version))
+        Redis.current.lrange(Dependency.runtime_key(version), 0, -1)
       end
     end
 
@@ -140,6 +140,6 @@ class Dependency < ActiveRecord::Base
   end
 
   def push_on_to_list
-    $redis.lpush(Dependency.runtime_key(self.version.full_name), self.to_s) if self.scope == 'runtime'
+    Redis.current.lpush(Dependency.runtime_key(self.version.full_name), self.to_s) if self.scope == 'runtime'
   end
 end

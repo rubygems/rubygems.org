@@ -73,7 +73,7 @@ FactoryGirl.define do
       end
 
       if evaluator.downloads
-        $redis[Download.key(rubygem)] = evaluator.downloads
+        Redis.current[Download.key(rubygem)] = evaluator.downloads
       end
     end
   end

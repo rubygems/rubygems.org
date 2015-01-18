@@ -25,7 +25,7 @@ class MiniTest::Test
 
   def setup
     RR.reset
-    $redis.flushdb
+    Redis.current.flushdb
     $fog.directories.create(:key => $rubygems_config[:s3_bucket], :public => true)
   end
 
