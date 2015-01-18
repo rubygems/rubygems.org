@@ -124,13 +124,25 @@ class RubygemsControllerTest < ActionController::TestCase
       setup do
         @url = "http://github.com/qrush/gemcutter"
         @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
-        put :update, :id => @rubygem.to_param, :linkset => {:code => @url}
+        put :update, id: @rubygem.to_param, linkset: {code: @url, docs: 'http://docs.com', wiki: 'http://wiki.com', mail: 'http://mail.com', bugs: 'http://bugs.com'}
       end
       should respond_with :redirect
       should redirect_to('the gem') { rubygem_path(@rubygem) }
       should set_the_flash.to("Gem links updated.")
-      should "update linkset" do
+      should "update source code url" do
         assert_equal @url, Rubygem.last.linkset.code
+      end
+      should "update documentation rul" do
+        assert_equal 'http://docs.com', Rubygem.last.linkset.docs
+      end
+      should "update wiki url" do
+        assert_equal 'http://wiki.com', Rubygem.last.linkset.wiki
+      end
+      should "update mailing list url" do
+        assert_equal 'http://mail.com', Rubygem.last.linkset.mail
+      end
+      should "update bugtracker url" do
+        assert_equal 'http://bugs.com', Rubygem.last.linkset.bugs
       end
     end
 

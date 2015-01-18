@@ -33,7 +33,7 @@ class RubygemsController < ApplicationController
     end
   end
 
-protected
+  protected
 
   def load_gem
     if !@rubygem.owned_by?(current_user)
@@ -44,8 +44,8 @@ protected
     @linkset = @rubygem.linkset
   end
 
-private
+  private
   def params_linkset
-    params.require(:linkset).permit(:code)
+    params.require(:linkset).permit(:code, :docs, :wiki, :mail, :bugs)
   end
 end
