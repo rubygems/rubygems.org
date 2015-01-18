@@ -4,39 +4,39 @@ class Download
 
   def self.incr(name, full_name)
     today = Time.zone.today.to_s
-    $redis.incr(COUNT_KEY)
-    $redis.incr(rubygem_key(name))
-    $redis.incr(version_key(full_name))
-    $redis.zincrby(today_key, 1, full_name)
-    $redis.zincrby(ALL_KEY, 1, full_name)
-    $redis.hincrby(version_history_key(full_name), today, 1)
-    $redis.hincrby(rubygem_history_key(name), today, 1)
+    Redis.current.incr(COUNT_KEY)
+    Redis.current.incr(rubygem_key(name))
+    Redis.current.incr(version_key(full_name))
+    Redis.current.zincrby(today_key, 1, full_name)
+    Redis.current.zincrby(ALL_KEY, 1, full_name)
+    Redis.current.hincrby(version_history_key(full_name), today, 1)
+    Redis.current.hincrby(rubygem_history_key(name), today, 1)
   end
 
   def self.count
-    $redis.get(COUNT_KEY).to_i
+    Redis.current.get(COUNT_KEY).to_i
   end
 
   def self.today(*versions)
     versions.flatten.inject(0) do |sum, version|
-      sum + $redis.zscore(today_key, version.full_name).to_i
+      sum + Redis.current.zscore(today_key, version.full_name).to_i
     end
   end
 
   def self.for(what)
-    $redis.get(key(what)).to_i
+    Redis.current.get(key(what)).to_i
   end
 
   def self.for_rubygem(name)
-    $redis.get(rubygem_key(name)).to_i
+    Redis.current.get(rubygem_key(name)).to_i
   end
 
   def self.for_version(full_name)
-    $redis.get(version_key(full_name)).to_i
+    Redis.current.get(version_key(full_name)).to_i
   end
 
   def self.most_downloaded_today(n=5)
-    items = $redis.zrevrange(today_key, 0, (n-1), :with_scores => true)
+    items = Redis.current.zrevrange(today_key, 0, (n-1), :with_scores => true)
     items.collect do |full_name, downloads|
       version = Version.find_by_full_name(full_name)
       [version, downloads.to_i]
@@ -44,7 +44,7 @@ class Download
   end
 
   def self.most_downloaded_all_time(n=5)
-    items = $redis.zrevrange(ALL_KEY, 0, (n-1), :with_scores => true)
+    items = Redis.current.zrevrange(ALL_KEY, 0, (n-1), :with_scores => true)
     items.collect do |full_name, downloads|
       version = Version.find_by_full_name(full_name)
       [version, downloads.to_i]
@@ -58,7 +58,7 @@ class Download
     versions.each do |version|
       key = history_key(version)
 
-      $redis.hmget(key, *dates).zip(dates).each do |count, date|
+      Redis.current.hmget(key, *dates).zip(dates).each do |count, date|
         if count
           count = count.to_i
         else
@@ -81,7 +81,7 @@ class Download
 
     dates = (start..stop).map(&:to_s)
 
-    $redis.hmget(history_key(version), *dates).zip(dates).each do |count, date|
+    Redis.current.hmget(history_key(version), *dates).zip(dates).each do |count, date|
       if count
         count = count.to_i
       else
@@ -107,7 +107,7 @@ class Download
   end
 
   def self.copy_to_sql(version, date)
-    count = $redis.hget(history_key(version), date)
+    count = Redis.current.hget(history_key(version), date)
 
     if vh = VersionHistory.for(version, date)
       vh.count = count
@@ -139,7 +139,7 @@ class Download
   def self.migrate_to_sql(version, remove=true)
     key = history_key version
 
-    dates = $redis.hkeys(key)
+    dates = Redis.current.hkeys(key)
 
     back = 1.days.ago.to_date
 
@@ -147,7 +147,7 @@ class Download
 
     dates.each do |d|
       copy_to_sql version, d
-      $redis.hdel key, d if remove
+      Redis.current.hdel key, d if remove
     end
 
     dates
@@ -198,11 +198,11 @@ class Download
   end
 
   def self.cardinality
-    $redis.zcard(today_key)
+    Redis.current.zcard(today_key)
   end
 
   def self.rank(version)
-    if rank = $redis.zrevrank(today_key, version.full_name)
+    if rank = Redis.current.zrevrank(today_key, version.full_name)
       rank + 1
     else
       0
@@ -219,11 +219,11 @@ class Download
   end
 
   def self.cleanup_today_keys
-    $redis.del(*today_keys)
+    Redis.current.del(*today_keys)
   end
 
   def self.today_keys
-    today_keys = $redis.keys("downloads:today:*")
+    today_keys = Redis.current.keys("downloads:today:*")
     today_keys.delete(today_key)
     today_keys
   end

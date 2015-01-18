@@ -190,7 +190,7 @@ class UserTest < ActiveSupport::TestCase
       @user     = create(:user)
       @rubygems = [[100, 2000], [200, 1000], [300, 3000]].map do |downloads, real_downloads|
         create(:rubygem, :downloads => downloads).tap do |rubygem|
-          $redis[Download.key(rubygem)] = real_downloads
+          Redis.current[Download.key(rubygem)] = real_downloads
           create(:ownership, :rubygem => rubygem, :user => @user)
           create(:version, :rubygem => rubygem)
         end
