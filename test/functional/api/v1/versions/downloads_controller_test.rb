@@ -103,7 +103,7 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
 
     should respond_with :bad_request
     should "explain failed request" do
-      assert page.has_content?("Request is missing params :from and :to")
+      assert page.has_content?("Request is missing param 'from'")
     end
   end
 
