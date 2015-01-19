@@ -25,7 +25,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
 
       should respond_with :bad_request
       should "explain failed request" do
-        assert page.has_content?("Request is missing param :query")
+        assert page.has_content?("Request is missing param 'query'")
       end
     end
   end
