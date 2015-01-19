@@ -39,11 +39,28 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:json) do |body|
-      MultiJson.load body
+      JSON.parse(body)
     end
 
     should_respond_to(:yaml) do |body|
       YAML.load body
+    end
+  end
+
+  context "on GET passing a page" do
+    setup do
+      @match = create(:rubygem, name: "match")
+      create(:version, rubygem: @match)
+    end
+
+    should "default to first page when page is 0" do
+      get :show, query: "match", page: 0, format: :json
+      assert JSON.parse(response.body).size > 0
+    end
+
+    should "default to first page when page is not a number" do
+      get :show, query: "match", page: "foo", format: :json
+      assert JSON.parse(response.body).size > 0
     end
   end
 end
