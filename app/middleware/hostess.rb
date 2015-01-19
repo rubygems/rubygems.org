@@ -20,13 +20,13 @@ class Hostess < Sinatra::Base
 
   def serve_via_s3
     serve do
-      redirect "http://#{$rubygems_config[:s3_domain]}#{request.path_info}"
+      redirect "http://#{Gemcutter.config['s3_domain']}#{request.path_info}"
     end
   end
 
   def serve_via_cf
     serve do
-      redirect "http://#{$rubygems_config[:cf_domain]}#{request.path_info}"
+      redirect "http://#{Gemcutter.config['cf_domain']}#{request.path_info}"
     end
   end
 
