@@ -4,7 +4,9 @@ class Api::V1::SearchesController < Api::BaseController
   respond_to :json, :yaml
 
   def show
-    @rubygems = Rubygem.search(params.require(:query)).with_versions.paginate(:page => params[:page])
-    respond_with(@rubygems, :yamlish => true)
+    page = params[:page].to_i
+    page = nil if page == 0
+    @rubygems = Rubygem.search(params.require(:query)).with_versions.paginate(page: page)
+    respond_with(@rubygems, yamlish: true)
   end
 end
