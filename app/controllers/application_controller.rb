@@ -68,4 +68,8 @@ class ApplicationController < ActionController::Base
              :status => :not_found
     end
   end
+
+  def set_page
+    @page = [1, params[:page].to_i].max
+  end
 end
