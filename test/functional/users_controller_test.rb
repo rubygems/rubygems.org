@@ -20,9 +20,9 @@ class UsersControllerTest < ActionController::TestCase
 
     context "when missing a parameter" do
       should "raises parameter missing" do
-        assert_raises(ActionController::ParameterMissing) do
-          post :create
-        end
+        post :create
+        assert_response :bad_request
+        assert page.has_content?("Request is missing param 'user'")
       end
     end
 
