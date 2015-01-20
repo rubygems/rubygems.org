@@ -1,5 +1,5 @@
 class Version < ActiveRecord::Base
-  belongs_to :rubygem
+  belongs_to :rubygem, touch: true
   has_many :dependencies, -> { order('rubygems.name ASC').includes(:rubygem) }, :dependent => :destroy
 
   before_save      :update_prerelease

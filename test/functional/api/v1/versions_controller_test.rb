@@ -2,7 +2,7 @@ require 'test_helper'
 
 class Api::V1::VersionsControllerTest < ActionController::TestCase
   def get_show(rubygem, format='json')
-    get :show, :id => rubygem.name, :format => format
+    get :show, id: rubygem.name, format: format
   end
 
   def get_latest(rubygem, format='json')
@@ -13,9 +13,9 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     get :reverse_dependencies, options.merge(:id => rubygem.name)
   end
 
-  def set_cache_header(timestamp)
-    ims = ActionDispatch::Http::Cache::Request::HTTP_IF_MODIFIED_SINCE
-    request.env[ims] = timestamp.httpdate
+  def set_cache_header
+    @request.if_modified_since = @response.headers['Last-Modified']
+    @request.if_none_match = @response.etag
   end
 
   def self.should_respond_to(format)
@@ -74,17 +74,36 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
 
     should "return 304 when If-Modified-Since header is satisfied" do
-      set_cache_header(@rubygem.updated_at)
+      get_show(@rubygem)
+      assert_response :success
+      set_cache_header
+
       get_show(@rubygem)
       assert_response :not_modified
     end
 
     should "return 200 when If-Modified-Since header is not satisfied" do
-      set_cache_header(@rubygem.updated_at - 1)
+      get_show(@rubygem)
+      assert_response :success
+      set_cache_header
+
+      @rubygem.update(updated_at: Time.now + 1)
       get_show(@rubygem)
       assert_response :success
     end
 
+    should "return 404 if all versions yanked" do
+      get_show(@rubygem)
+      assert_response :success
+      set_cache_header
+
+      Timecop.travel(Time.now + 1) do
+        @rubygem.public_versions.each { |v| v.yank! }
+      end
+
+      get_show(@rubygem)
+      assert_response :not_found
+    end
   end
 
   context "on GET to show for an unknown gem" do
@@ -104,7 +123,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
   context "on GET to show for a yanked gem" do
     setup do
       @rubygem = create(:rubygem)
-      create(:version, :rubygem => @rubygem, :indexed => false, :number => '1.0.0')
+      create(:version, rubygem: @rubygem, indexed: false, number: '1.0.0')
       get_show(@rubygem)
     end
 
@@ -114,6 +133,13 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "say gem could not be found" do
       assert_equal "This rubygem could not be found.", @response.body
+    end
+
+    should "should cache the 404" do
+      set_cache_header
+
+      get_show(@rubygem)
+      assert_response :not_modified
     end
   end
 
