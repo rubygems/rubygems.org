@@ -1,17 +1,15 @@
 class Api::V1::VersionsController < Api::BaseController
   respond_to :json, :yaml
 
+  before_filter :find_rubygem, only: :show
+
   def show
-    find_rubygem
-    return unless @rubygem
+    return unless stale?(@rubygem)
 
     if @rubygem.public_versions.count.nonzero?
-
-      if stale?(@rubygem)
-        respond_with(@rubygem.public_versions, :yamlish => true)
-      end
+      respond_with(@rubygem.public_versions, yamlish: true)
     else
-      render :text => "This rubygem could not be found.", :status => 404
+      render text: "This rubygem could not be found.", status: 404
     end
   end
 
