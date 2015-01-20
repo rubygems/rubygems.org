@@ -2,7 +2,7 @@ require 'test_helper'
 
 class Api::V1::VersionsControllerTest < ActionController::TestCase
   def get_show(rubygem, format='json')
-    get :show, :id => rubygem.name, :format => format
+    get :show, id: rubygem.name, format: format
   end
 
   def get_latest(rubygem, format='json')
@@ -13,9 +13,9 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     get :reverse_dependencies, options.merge(:id => rubygem.name)
   end
 
-  def set_cache_header(timestamp)
-    ims = ActionDispatch::Http::Cache::Request::HTTP_IF_MODIFIED_SINCE
-    request.env[ims] = timestamp.httpdate
+  def set_cache_header
+    @request.if_modified_since = @response.headers['Last-Modified']
+    @request.if_none_match = @response.etag
   end
 
   def self.should_respond_to(format)
@@ -74,17 +74,24 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
 
     should "return 304 when If-Modified-Since header is satisfied" do
-      set_cache_header(@rubygem.updated_at)
+      get_show(@rubygem)
+      assert_response :success
+
+      set_cache_header
       get_show(@rubygem)
       assert_response :not_modified
     end
 
     should "return 200 when If-Modified-Since header is not satisfied" do
-      set_cache_header(@rubygem.updated_at - 1)
+      get_show(@rubygem)
+      assert_response :success
+
+      set_cache_header
+      @rubygem.touch
+
       get_show(@rubygem)
       assert_response :success
     end
-
   end
 
   context "on GET to show for an unknown gem" do
