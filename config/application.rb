@@ -27,7 +27,6 @@ module Gemcutter
     end
 
     unless Rails.env.maintenance?
-      config.action_mailer.delivery_method      = config.rubygems['delivery_method']
       config.active_record.include_root_in_json = false
     end
 
