@@ -42,6 +42,11 @@ class MiniTest::Test
   end
 end
 
+class ActionDispatch::IntegrationTest
+  setup { host! Gemcutter::HOST }
+end
+Capybara.app_host = "http://#{Gemcutter::HOST}"
+
 class SystemTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
 end
