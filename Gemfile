@@ -36,10 +36,6 @@ gem 'sass-rails',   '~> 4.0.0'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.0.3'
 
-# enable if on heroku, make sure to toss this into an initializer:
-#     Rails.application.config.middleware.use HerokuAssetCacher
-#gem 'heroku_asset_cacher', git: "git@github.com/qrush/heroku_asset_cacher"
-
 group :development do
   gem 'capistrano', '~> 2.0'
   gem 'capistrano-notification'

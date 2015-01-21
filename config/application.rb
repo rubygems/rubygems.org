@@ -22,12 +22,9 @@ module Gemcutter
     config.encoding  = "utf-8"
 
     config.middleware.use "Hostess"
-    if config.rubygems['redirector'] && ENV["LOCAL"].nil?
-      config.middleware.insert_after "Hostess", "Redirector"
-    end
+    config.middleware.use "Redirector"
 
     unless Rails.env.maintenance?
-      config.action_mailer.delivery_method      = config.rubygems['delivery_method']
       config.active_record.include_root_in_json = false
     end
 
@@ -36,7 +33,6 @@ module Gemcutter
     end
 
     config.plugins = [:dynamic_form]
-    config.plugins << :heroku_asset_cacher if config.rubygems['asset_cacher']
 
     config.autoload_paths << "./app/jobs"
   end
