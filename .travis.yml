@@ -6,7 +6,6 @@ git:
 rvm:
   - 2.0.0
   - 2.1
-  - ruby-head
 
 services:
   - redis-server
@@ -30,4 +29,4 @@ env:
 matrix:
   allow_failures:
     - rvm: 2.1
-    - rvm: ruby-head
+    - env: "RUBYGEMS_VERSION=latest"
