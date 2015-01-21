@@ -22,9 +22,7 @@ module Gemcutter
     config.encoding  = "utf-8"
 
     config.middleware.use "Hostess"
-    if config.rubygems['redirector'] && ENV["LOCAL"].nil?
-      config.middleware.insert_after "Hostess", "Redirector"
-    end
+    config.middleware.use "Redirector"
 
     unless Rails.env.maintenance?
       config.active_record.include_root_in_json = false
