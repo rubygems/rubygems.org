@@ -35,7 +35,6 @@ module Gemcutter
     end
 
     config.plugins = [:dynamic_form]
-    config.plugins << :heroku_asset_cacher if config.rubygems['asset_cacher']
 
     config.autoload_paths << "./app/jobs"
   end
