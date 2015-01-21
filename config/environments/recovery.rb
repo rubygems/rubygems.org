@@ -14,7 +14,7 @@ Rails.application.configure do
     config.action_controller.perform_caching = true
     config.action_dispatch.x_sendfile_header = "X-Sendfile"
     config.active_support.deprecation = :notify
-    config.serve_static_assets = Gemcutter.config['asset_cacher']
+    config.serve_static_assets = true
     config.i18n.fallbacks = true
 
     config.action_dispatch.session = {
