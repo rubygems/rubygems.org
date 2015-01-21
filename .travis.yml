@@ -16,12 +16,16 @@ sudo: false
 bundler_args: --jobs=3 --retry=3 --deployment --local --without development
 
 before_install:
-  - gem update --system 2.2.2
+  - sh -c "if [ '$RUBYGEMS_VERSION' != 'latest' ]; then gem update --system $RUBYGEMS_VERSION; fi"
   - gem --version
 
 before_script:
   - cp config/database.yml.example config/database.yml
   - bundle exec rake db:create db:migrate db:test:prepare
+
+env:
+  - RUBYGEMS_VERSION=2.2.2
+  - RUBYGEMS_VERSION=latest
 
 matrix:
   allow_failures:
