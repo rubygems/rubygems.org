@@ -71,15 +71,15 @@ class Version < ActiveRecord::Base
   end
 
   def self.rows_for_index
-    to_rows(:release)
+    joins(:rubygem).indexed.release.order("rubygems.name asc, position desc").pluck('rubygems.name', :number, :platform)
   end
 
   def self.rows_for_latest_index
-    to_rows(:latest)
+    joins(:rubygem).indexed.latest.order("rubygems.name asc, position desc").pluck('rubygems.name', :number, :platform)
   end
 
   def self.rows_for_prerelease_index
-    to_rows(:prerelease)
+    joins(:rubygem).indexed.prerelease.order("rubygems.name asc, position desc").pluck('rubygems.name', :number, :platform)
   end
 
   def self.most_recent
@@ -257,16 +257,6 @@ class Version < ActiveRecord::Base
   end
 
   private
-
-  def self.to_rows(scope)
-    sql = select("rubygems.name, number, platform").
-            indexed.public_send(scope).
-            from("rubygems, versions").
-            where("rubygems.id = versions.rubygem_id").
-            order("rubygems.name asc, position desc").to_sql
-
-    connection.select_rows(sql)
-  end
 
   def platform_and_number_are_unique
     if Version.exists?(:rubygem_id => rubygem_id,
