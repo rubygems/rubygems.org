@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131110192552) do
+ActiveRecord::Schema.define(version: 20150124074536) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "announcements", force: true do |t|
     t.text     "body"
@@ -153,6 +154,7 @@ ActiveRecord::Schema.define(version: 20131110192552) do
     t.string   "licenses"
     t.text     "requirements"
     t.string   "ruby_version"
+    t.hstore   "metadata",          default: {},   null: false
   end
 
   add_index "versions", ["built_at"], name: "index_versions_on_built_at", using: :btree

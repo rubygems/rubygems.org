@@ -32,6 +32,7 @@ module GemHelpers
       s.summary = "#{summary}"
       s.test_files = []
       s.licenses = []
+      s.metadata = { "foo" => "bar" }
       block.call(s) if block
     end
 
