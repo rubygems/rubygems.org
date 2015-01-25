@@ -68,15 +68,6 @@ module RubygemsHelper
     link_to "Badge", badge_url, :id => :badge, :class => "gem__link t-list__item"
   end
 
-  def stats_options(rubygem)
-    [
-      ['Overview', rubygem_stats_path(rubygem)],
-      *rubygem.versions.sort.reverse.map do |version|
-        [version.slug, rubygem_version_stats_path(rubygem, version.slug)]
-      end
-    ]
-  end
-
   def links_to_owners(rubygem)
     rubygem.owners.sort_by(&:id).map do |owner|
       link_to gravatar(48, "gravatar-#{owner.id}", owner), profile_path(owner.display_id),
