@@ -32,7 +32,7 @@ GEM
     arel (5.0.1.20140414130214)
     autoprefixer-rails (4.0.2.2)
       execjs
-    bcrypt (3.1.9)
+    bcrypt (3.1.10)
     builder (3.2.2)
     capistrano (2.15.5)
       highline
