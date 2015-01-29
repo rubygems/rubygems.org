@@ -23,6 +23,7 @@ set :repository, "https://github.com/rubygems/rubygems.org.git"
 set :repository_cache, "git_cache"
 set :deploy_via, :remote_cache
 set :git_shallow_clone, 1
+set :git_enable_submodules, 1
 set :use_sudo, false
 set :group, "deploy"
 set :assets_role, [:app]
