@@ -91,7 +91,7 @@
   padding-right: 10px;
   padding-left: 10px;
   display: inline-block;
-  overflow: scroll;
+  overflow: hidden;
   width: 100%;
   width: calc(100% - 32px);
   -webkit-box-sizing: border-box;
