@@ -74,7 +74,7 @@ class ProfilesControllerTest < ActionController::TestCase
 
         should respond_with :redirect
         should redirect_to('the profile edit page') { edit_profile_path }
-        should set_the_flash.to("Your profile was updated.")
+        should set_flash.to("Your profile was updated.")
 
         should "update handle" do
           assert_equal @handle, User.last.handle
@@ -92,7 +92,7 @@ class ProfilesControllerTest < ActionController::TestCase
 
         should respond_with :redirect
         should redirect_to('the profile edit page') { edit_profile_path }
-        should set_the_flash.to("Your profile was updated.")
+        should set_flash.to("Your profile was updated.")
 
         should "update email toggle" do
           assert_equal @hide_email, User.last.hide_email

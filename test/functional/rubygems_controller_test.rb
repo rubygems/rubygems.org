@@ -117,7 +117,7 @@ class RubygemsControllerTest < ActionController::TestCase
       end
       should respond_with :redirect
       should redirect_to('the homepage') { root_url }
-      should set_the_flash.to("You do not have permission to edit this gem.")
+      should set_flash.to("You do not have permission to edit this gem.")
     end
 
     context "On PUT to update for this user's gem that is successful" do
@@ -128,7 +128,7 @@ class RubygemsControllerTest < ActionController::TestCase
       end
       should respond_with :redirect
       should redirect_to('the gem') { rubygem_path(@rubygem) }
-      should set_the_flash.to("Gem links updated.")
+      should set_flash.to("Gem links updated.")
       should "update source code url" do
         assert_equal @url, Rubygem.last.linkset.code
       end
