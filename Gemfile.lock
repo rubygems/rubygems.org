@@ -155,7 +155,7 @@ GEM
       rack (>= 1.0)
     rack-protection (1.5.3)
       rack
-    rack-test (0.6.2)
+    rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.1.9)
       actionmailer (= 4.1.9)
