@@ -154,6 +154,7 @@ class Pusher
     enqueue_web_hook_jobs
     update_remote_bundler_api
     Librato.increment 'push.success'
+    StatsD.increment 'push.success'
   end
 
   def notify(message, code)

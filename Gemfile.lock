@@ -217,6 +217,7 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
+    statsd-instrument (2.0.6)
     thor (0.19.1)
     thread_safe (0.3.4)
     tilt (1.4.1)
@@ -290,6 +291,7 @@ DEPENDENCIES
   sass-rails (~> 4.0.0)
   shoulda
   sinatra
+  statsd-instrument (~> 2.0.6)
   timecop
   uglifier (>= 1.0.3)
   unicorn
