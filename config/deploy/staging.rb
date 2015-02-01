@@ -1,6 +1,7 @@
 server 'deploy@app01.staging.rubygems.org', :app, :db, :primary => true
 role :restart, 'app01.staging.rubygems.org', :no_release => true
 set :branch, ENV['BRANCH'] || 'master'
+set :bundle_flags, ''
 
 namespace :deploy do
   desc "For the staging environment, symlink a robots.txt that blocks robots from the entire site"
