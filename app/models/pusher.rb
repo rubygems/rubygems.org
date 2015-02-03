@@ -42,6 +42,8 @@ class Pusher
   end
 
   def pull_spec
+    # After we upgrade to rubygems 2.3.0+, we can replace this with `Gem::Package.new(body).load_spec`
+    # as https://github.com/rubygems/rubygems/pull/716 is merged for those versions.
     gem_tar = Gem::Package::TarReader.new body
     gem_tar.each do |entry|
       if @spec = load_spec(entry)
