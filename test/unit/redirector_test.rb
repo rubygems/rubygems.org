@@ -51,6 +51,12 @@ class RedirectorTest < ActiveSupport::TestCase
     end
   end
 
+  should "not redirect docs.rubygems.org to a url that redirects back to docs.rubygems.org" do
+    get '/read/book/2', {}, {"HTTP_HOST" => 'docs.rubygems.org'}
+
+    assert_equal 200, last_response.status
+  end
+
   should "redirect request to docs to guides " do
     get "/pages/docs", {}, {"HTTP_HOST" => Gemcutter::HOST}
 
