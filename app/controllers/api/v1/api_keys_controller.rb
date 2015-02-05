@@ -1,5 +1,5 @@
 class Api::V1::ApiKeysController < Api::BaseController
-  before_filter :redirect_to_root, :unless => :signed_in?, :only => [:reset]
+  before_action :redirect_to_root, :unless => :signed_in?, :only => [:reset]
   respond_to :json, :yaml, :only => :show
 
   def show

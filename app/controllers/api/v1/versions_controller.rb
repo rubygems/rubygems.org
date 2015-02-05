@@ -1,7 +1,7 @@
 class Api::V1::VersionsController < Api::BaseController
   respond_to :json, :yaml
 
-  before_filter :find_rubygem, only: :show
+  before_action :find_rubygem, only: :show
 
   def show
     return unless stale?(@rubygem)

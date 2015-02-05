@@ -1,5 +1,5 @@
 class VersionsController < ApplicationController
-  before_filter :find_rubygem
+  before_action :find_rubygem
 
   def index
     @versions = @rubygem.versions.by_position

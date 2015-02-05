@@ -1,5 +1,5 @@
 class SearchesController < ApplicationController
-  before_filter :set_page, only: :show
+  before_action :set_page, only: :show
 
   def show
     if params[:query]

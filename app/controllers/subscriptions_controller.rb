@@ -1,5 +1,5 @@
 class SubscriptionsController < ApplicationController
-  before_filter :find_rubygem
+  before_action :find_rubygem
 
   def create
     subscription = @rubygem.subscriptions.build(:user => current_user)

@@ -1,6 +1,6 @@
 class StatsController < ApplicationController
-  before_filter :find_rubygem,  :only => :show
-  before_filter :ensure_hosted, :only => :show
+  before_action :find_rubygem,  :only => :show
+  before_action :ensure_hosted, :only => :show
 
   def index
     @number_of_gems      = Rubygem.total_count

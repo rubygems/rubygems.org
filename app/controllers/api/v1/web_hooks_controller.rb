@@ -1,8 +1,8 @@
 class Api::V1::WebHooksController < Api::BaseController
-  skip_before_filter :verify_authenticity_token
-  before_filter :authenticate_with_api_key
-  before_filter :verify_authenticated_user
-  before_filter :find_rubygem_by_name, :except => :index
+  skip_before_action :verify_authenticity_token
+  before_action :authenticate_with_api_key
+  before_action :verify_authenticated_user
+  before_action :find_rubygem_by_name, :except => :index
   respond_to :json, :yaml, :only => :index
 
   def index

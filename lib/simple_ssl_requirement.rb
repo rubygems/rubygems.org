@@ -20,7 +20,7 @@ module SimpleSSLRequirement
       options.reverse_merge!(:environments => SSL_ENVIRONMENTS)
 
       if options.delete(:environments).include?(Rails.env)
-        before_filter :require_ssl, options
+        before_action :require_ssl, options
       end
     end
   end
