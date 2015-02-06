@@ -150,6 +150,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    psych (2.0.12)
     rack (1.5.2)
     rack-maintenance (2.0.0)
       rack (>= 1.0)
@@ -276,6 +277,7 @@ DEPENDENCIES
   paul_revere
   pg
   pry
+  psych (~> 2.0.12)
   rack
   rack-maintenance
   rack-test
