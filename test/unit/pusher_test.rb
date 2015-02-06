@@ -103,8 +103,7 @@ class PusherTest < ActiveSupport::TestCase
         assert_nil @cutter.spec
         assert_includes @cutter.message, %{RubyGems.org cannot process this gem}
         assert_includes @cutter.message, %{The metadata is invalid}
-        assert_includes @cutter.message, %{Forbidden symbol in YAML}
-        assert_includes @cutter.message, %{badsymbol}
+        assert_includes @cutter.message, %{Tried to load unspecified class: Symbol}
         assert_equal @cutter.code, 422
       end
     end

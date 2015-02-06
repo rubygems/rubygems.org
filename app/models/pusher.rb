@@ -53,7 +53,7 @@ class Pusher
 
     raise Gem::Package::FormatError.new('package metadata is missing') unless @spec
     @spec
-  rescue Psych::WhitelistException => e
+  rescue Psych::Exception => e
     Rails.logger.info "Attempted YAML metadata exploit: #{e}"
     notify("RubyGems.org cannot process this gem.\nThe metadata is invalid.\n#{e}", 422)
   rescue Gem::Package::FormatError
