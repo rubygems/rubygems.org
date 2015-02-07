@@ -29,19 +29,13 @@ namespace :gemcutter do
   namespace :checksums do
     desc "Initialize missing checksums."
     task :init => :environment do
-      versions = Version.without_sha256
-      versions.each do |version|
-        sha256 = version.recalculate_sha256
-        version.sha256 = sha256
-        version.save!
-      end
+      Version.without_sha256.find_each(&:recalculate_sha256!)
     end
 
     desc "Check existing checksums."
     task :check => :environment do
       failed = false
-      versions = Version.all
-      versions.each do |version|
+      Version.find_each do |version|
         actual_sha256 = version.recalculate_sha256
         if version.sha256 != actual_sha256
           puts "#{version.full_name}.gem has sha256 '#{actual_sha256}', but '#{version.sha256}' was expected."

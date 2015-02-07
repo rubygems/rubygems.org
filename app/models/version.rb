@@ -274,6 +274,10 @@ class Version < ActiveRecord::Base
     digest.base64digest
   end
 
+  def recalculate_sha256!
+    update_attributes(sha256: recalculate_sha256)
+  end
+
   private
 
   def platform_and_number_are_unique
