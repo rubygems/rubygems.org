@@ -1,5 +1,3 @@
-require 'digest/sha2'
-
 class Pusher
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
   attr_accessor :bundler_api_url
@@ -89,12 +87,9 @@ class Pusher
     # Update the name to reflect a valid case change
     @rubygem.name = name
 
-    sha256 = Digest::SHA2.base64digest(body.string)
-
     @version = @rubygem.versions.new number: spec.version.to_s,
                                      platform: spec.original_platform.to_s,
-                                     size: size,
-                                     sha256: sha256
+                                     size: size
 
     true
   end
