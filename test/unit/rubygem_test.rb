@@ -584,8 +584,7 @@ class RubygemTest < ActiveSupport::TestCase
         assert_nil Rubygem.find_by_name('thoughtbot-shoulda')
         assert_nil Rubygem.find_by_name('rake')
 
-        assert_equal "rake", @version.dependencies[0].unresolved_name
-        assert_equal "thoughtbot-shoulda", @version.dependencies[1].unresolved_name
+        assert_equal ["rake", "thoughtbot-shoulda"], @version.dependencies.map(&:unresolved_name).sort
       end
     end
 
@@ -597,7 +596,7 @@ class RubygemTest < ActiveSupport::TestCase
 
         @rubygem.update_attributes_from_gem_specification!(@version, @specification)
 
-        @rack_dep = @version.dependencies.first
+        @rack_dep = @version.dependencies.find_by(unresolved_name: "rake")
       end
 
       should "update the dependency" do
