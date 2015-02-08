@@ -12,7 +12,7 @@ repository. Feel free to fork the repository and send a pull request,
 once it’s merged in you’ll get added. If not, feel free to bug
 [qrush](http://github.com/qrush) about it.
 
-Also, if you’re hacking on Gemcutter, hop in `#rubygems` on
+Also, if you’re hacking on RubyGems.org, hop in `#rubygems` on
 `irc.freenode.net`! Chances are someone else will be around to answer
 questions or bounce ideas off of.
 
@@ -45,7 +45,7 @@ Otherwise, you can continue to hack away in your own fork.
 If you’re looking for things to hack on, please check
 [GitHub Issues](http://github.com/rubygems/rubygems.org/issues). If you’ve
 found bugs or have feature ideas don’t be afraid to pipe up and ask the
-[mailing list](http://groups.google.com/group/gemcutter) or IRC channel
+[mailing list](http://groups.google.com/group/rubygems-org) or IRC channel
 (`#rubygems` on `irc.freenode.net`) about them.
 
 Acceptance
@@ -78,19 +78,10 @@ On the main repo, branches are used as follows:
             <td>The main development branch. **Always** should be fast-forwardable.</td>
         </tr>
         <tr>
-            <td>`staging`</td>
-            <td>
-                Whatever’s currently on http://staging.rubygems.org. Can be
-                moved around as needed to test out new features/fixes. If
-                you want to test out your changes on our staging server, bug
-                qrush and you can play around there.
-            </td>
-        </tr>
-        <tr>
             <td>`production`</td>
             <td>
-                What’s currently on http://rubygems.org. Should be updated
-                when deploys happen from master with `git push origin master:production`
+                What’s currently on https://rubygems.org. Should be updated
+                when deploys happen from master.
             </td>
         </tr>
         <tr>
@@ -117,8 +108,8 @@ than Rubygems and may suit your organization’s needs better.**
 
 #### Environment
 
-* Use Ruby 2.0.0-p481
-* Use Rubygems 2.3.0
+* Use Ruby 2.1.5
+* Use Rubygems 2.2.2
 * Install bundler: `gem install bundler`
 * Install [redis](http://github.com/antirez/redis),
     **version 2.0 or higher**. If you have homebrew,
