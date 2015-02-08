@@ -94,6 +94,7 @@ FactoryGirl.define do
     requirements "Opencv"
     rubygem
     size 1024
+    sha256 "tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g="
   end
 
   factory :version_history do

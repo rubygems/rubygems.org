@@ -140,6 +140,7 @@ class PusherTest < ActiveSupport::TestCase
         stub(spec).original_platform { "ruby" }
         stub(@cutter).spec { spec }
         stub(@cutter).size { 5 }
+        stub(@cutter).body { StringIO.new("dummy body") }
         @cutter.find
       end
 
@@ -153,6 +154,11 @@ class PusherTest < ActiveSupport::TestCase
 
       should "set gem version size" do
         assert_equal 5, @cutter.version.size
+      end
+
+      should "set sha256" do
+        expectedSha = Digest::SHA2.base64digest(@cutter.body.string)
+        assert_equal expectedSha, @cutter.version.sha256
       end
     end
 
