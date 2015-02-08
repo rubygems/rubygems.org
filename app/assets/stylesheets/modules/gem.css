@@ -36,12 +36,9 @@
   .gem__owners img {
     margin-right: 12px;
     margin-bottom: 12px;
-    float: left;
     height: 32px;
     width: 32px;
     border-radius: 16px; }
-  .gem__owners a {
-    position: relative; }
   .gem__owners a:hover:before {
     content: "";
     height: 32px;
