@@ -1,3 +1,5 @@
+require 'digest/sha2'
+
 class Version < ActiveRecord::Base
   belongs_to :rubygem, touch: true
   has_many :dependencies, -> { order('rubygems.name ASC').includes(:rubygem) }, :dependent => :destroy
@@ -15,6 +17,10 @@ class Version < ActiveRecord::Base
 
   validate :platform_and_number_are_unique, :on => :create
   validate :authors_format, :on => :create
+
+  def self.without_sha256
+    where(sha256: "")
+  end
 
   def self.reverse_dependencies(name)
     joins({ dependencies: :rubygem }).
@@ -71,15 +77,15 @@ class Version < ActiveRecord::Base
   end
 
   def self.rows_for_index
-    joins(:rubygem).indexed.release.order("rubygems.name asc, position desc").pluck('rubygems.name', :number, :platform)
+    joins(:rubygem).indexed.release.order("rubygems.name asc, position desc").pluck('rubygems.name', :number, :platform, :sha256)
   end
 
   def self.rows_for_latest_index
-    joins(:rubygem).indexed.latest.order("rubygems.name asc, position desc").pluck('rubygems.name', :number, :platform)
+    joins(:rubygem).indexed.latest.order("rubygems.name asc, position desc").pluck('rubygems.name', :number, :platform, :sha256)
   end
 
   def self.rows_for_prerelease_index
-    joins(:rubygem).indexed.prerelease.order("rubygems.name asc, position desc").pluck('rubygems.name', :number, :platform)
+    joins(:rubygem).indexed.prerelease.order("rubygems.name asc, position desc").pluck('rubygems.name', :number, :platform, :sha256)
   end
 
   def self.most_recent
@@ -254,6 +260,22 @@ class Version < ActiveRecord::Base
 
   def authors_array
     self.authors.split(',').flatten
+  end
+
+  def recalculate_sha256
+    key = "gems/#{full_name}.gem"
+    digest = Digest::SHA2.new
+    dir = Indexer.new.directory
+
+    dir.files.get(key) do |chunk|
+      digest << chunk
+    end
+
+    digest.base64digest
+  end
+
+  def recalculate_sha256!
+    update_attributes(sha256: recalculate_sha256)
   end
 
   private
