@@ -73,15 +73,15 @@ class Version < ActiveRecord::Base
   end
 
   def self.rows_for_index
-    joins(:rubygem).indexed.release.order("rubygems.name asc, position desc").pluck('rubygems.name', :number, :platform, :sha256)
+    joins(:rubygem).indexed.release.order("rubygems.name asc, position desc").pluck('rubygems.name', :number, :platform)
   end
 
   def self.rows_for_latest_index
-    joins(:rubygem).indexed.latest.order("rubygems.name asc, position desc").pluck('rubygems.name', :number, :platform, :sha256)
+    joins(:rubygem).indexed.latest.order("rubygems.name asc, position desc").pluck('rubygems.name', :number, :platform)
   end
 
   def self.rows_for_prerelease_index
-    joins(:rubygem).indexed.prerelease.order("rubygems.name asc, position desc").pluck('rubygems.name', :number, :platform, :sha256)
+    joins(:rubygem).indexed.prerelease.order("rubygems.name asc, position desc").pluck('rubygems.name', :number, :platform)
   end
 
   def self.most_recent
