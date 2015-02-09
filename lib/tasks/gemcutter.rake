@@ -29,7 +29,15 @@ namespace :gemcutter do
   namespace :checksums do
     desc "Initialize missing checksums."
     task :init => :environment do
-      Version.without_sha256.find_each(&:recalculate_sha256!)
+      without_sha256 = Version.where(sha256: nil)
+      total = without_sha256.count
+      i = 0
+      without_sha256.find_each do |version|
+        print "\r%.2f%% (#{i}/#{total}) complete" % (i.to_f / total * 100.0)
+        version.recalculate_sha256!
+        i += 1
+      end
+      puts "Done."
     end
 
     desc "Check existing checksums."

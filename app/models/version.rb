@@ -18,10 +18,6 @@ class Version < ActiveRecord::Base
   validate :platform_and_number_are_unique, :on => :create
   validate :authors_format, :on => :create
 
-  def self.without_sha256
-    where(sha256: "")
-  end
-
   def self.reverse_dependencies(name)
     joins({ dependencies: :rubygem }).
       where(rubygems: { name: name })
