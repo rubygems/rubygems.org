@@ -153,7 +153,7 @@ ActiveRecord::Schema.define(version: 20140809000000) do
     t.string   "licenses"
     t.text     "requirements"
     t.string   "ruby_version"
-    t.string   "sha256",                              :null => false
+    t.string   "sha256"
   end
 
   add_index "versions", ["built_at"], name: "index_versions_on_built_at", using: :btree
