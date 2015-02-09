@@ -73,7 +73,8 @@ class Indexer
       row[2] = platforms[row[2]]
     end
 
-    data
+    # always take the first 3 args
+    data[0..2]
   end
 
   def specs_index
