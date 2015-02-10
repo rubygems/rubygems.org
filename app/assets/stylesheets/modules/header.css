@@ -169,10 +169,7 @@
 @media (min-width: 1020px) {
   .desktop__header__nav-link {
     position: relative;
-    z-index: 1; }
-    .desktop__header__nav-link span {
-      margin-top: -4px;
-      top: 4px; } }
+    z-index: 1; } }
 
 #user_gravatar {
   margin-top: -30px;
