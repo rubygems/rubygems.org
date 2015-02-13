@@ -54,29 +54,31 @@
           <nav class="header__nav-links">
             <% if signed_in? %>
               <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link mobile__header__nav-link">
-                <span><%= truncate(current_user.name) %></span>
-                <%= gravatar(80, "user_gravatar") %>
-              </a>
-              <a href="#" class="header__popup-link" data-icon="▼">
-                <span class="t-hidden">More items</span>
+                <%= truncate current_user.name %>
+                <%= gravatar 80, "user_gravatar" %>
               </a>
             <% end %>
+
             <%- if request.path_info == '/gems' %>
               <%= link_to "Gems", rubygems_url, class: "header__nav-link is-active" %>
             <%- else %>
               <%= link_to "Gems", rubygems_url, class: "header__nav-link" %>
             <%- end %>
+
             <%= link_to t('.footer.guides'), "http://guides.rubygems.org", class: "header__nav-link" %>
             <%= link_to t('.footer.contribute'), "http://guides.rubygems.org/contributing/", class: "header__nav-link" %>
 
             <% if signed_in? %>
               <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link desktop__header__nav-link">
-                <span><%= truncate(current_user.name) %></span>
-                <%= gravatar(80, "user_gravatar") %>
+                <%= truncate current_user.name %>
+                <%= gravatar 80, "user_gravatar" %>
+              </a>
+              <a href="#" class="header__popup-link" data-icon="▼">
+                <span class="t-hidden">More items</span>
               </a>
               <div class="header__popup__nav-links">
                 <%= link_to t('.header.dashboard'), dashboard_url, class: "header__nav-link" %>
-                <%= link_to t('.header.sign_out'), sign_out_path, :method => :delete, class: "header__nav-link" %>
+                <%= link_to t('.header.sign_out'), sign_out_path, method: :delete, class: "header__nav-link" %>
               </div>
             <% else %>
               <%= link_to t('.header.sign_in'), sign_in_path, class: "header__nav-link #{'is-active' if request.path_info == '/sign_in'}" %>
