@@ -17,7 +17,7 @@ module GemHelpers
     build_gemspec(new_gemspec(name, version, summary, platform, &block))
   end
 
-  def new_gemspec(name, version, summary, platform, &block)
+  def new_gemspec(name, version, summary, platform)
     gemspec = Gem::Specification.new do |s|
       s.name = name
       s.platform = platform
@@ -32,7 +32,7 @@ module GemHelpers
       s.summary = "#{summary}"
       s.test_files = []
       s.licenses = []
-      block.call(s) if block
+      yield s if block_given?
     end
 
     def gemspec.validate
