@@ -1,5 +1,5 @@
 <% if signed_in? %>
-  <%= atom_feed_link t(:feed_subscribed), dashboard_url(:api_key => current_user.api_key, :format => :atom) %>
+  <%= atom_feed_link t(:feed_subscribed), dashboard_url(api_key: current_user.api_key, format: :atom) %>
 <% end %>
 
 <%= atom_feed_link t(:feed_latest), 'http://feeds.feedburner.com/gemcutter-latest' %>
