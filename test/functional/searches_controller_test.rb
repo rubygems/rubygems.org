@@ -60,4 +60,13 @@ class SearchesControllerTest < ActionController::TestCase
     should respond_with :redirect
     should redirect_to('the gem') { rubygem_path(@sinatra) }
   end
+
+  context 'on GET to show with non string search parameter' do
+    setup do
+      get :show, query: { foo: "bar" }
+    end
+
+    should respond_with :success
+    should render_template :show
+  end
 end

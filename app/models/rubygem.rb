@@ -27,7 +27,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.name_is(name)
-    sensitive = where(:name => name.strip).limit(1)
+    sensitive = where(name: name.strip).limit(1)
     return sensitive unless sensitive.empty?
 
     where("UPPER(name) = UPPER(?)", name.strip).limit(1)
@@ -40,7 +40,7 @@ class Rubygem < ActiveRecord::Base
          upper(translate(name, '#{SPECIAL_CHARACTERS}', '#{' ' * SPECIAL_CHARACTERS.length}')) like upper(:query))
     SQL
 
-    where(conditions, {:query => "%#{query.strip}%"}).
+    where(conditions, {query: "%#{query.strip}%"}).
       includes(:versions).
       references(:versions).
       by_downloads
