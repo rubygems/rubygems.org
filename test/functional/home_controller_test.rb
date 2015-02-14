@@ -18,4 +18,11 @@ class HomeControllerTest < ActionController::TestCase
       assert_received(Download) { |subject| subject.count }
     end
   end
+
+  should "on GET to index with non html accept header" do
+    assert_raises(ActionController::UnknownFormat) do
+      @request.env['HTTP_ACCEPT'] = "image/gif, image/x-bitmap, image/jpeg, image/pjpeg"
+      get :index
+    end
+  end
 end
