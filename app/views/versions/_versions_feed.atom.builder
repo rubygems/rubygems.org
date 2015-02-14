@@ -3,7 +3,7 @@ builder.instruct!
 builder.feed "xmlns" => "http://www.w3.org/2005/Atom" do
 
   builder.title   title
-  builder.link    "rel" => "self",      "href" => rubygems_url(:format => :atom)
+  builder.link    "rel" => "self",      "href" => rubygems_url(format: :atom)
   builder.link    "rel" => "alternate", "href" => rubygems_url
   builder.id      rubygems_url
 
