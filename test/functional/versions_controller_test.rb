@@ -60,6 +60,9 @@ class VersionsControllerTest < ActionController::TestCase
     should "show not hosted notice" do
       assert page.has_content?('This gem is not currently hosted')
     end
+    should "not show checksum" do
+      assert page.has_no_content?('Sha 256 checksum')
+    end
   end
 
   context "On GET to show" do
@@ -84,6 +87,9 @@ class VersionsControllerTest < ActionController::TestCase
       @versions.each do |version|
         assert page.has_content?(version.number)
       end
+    end
+    should "render the checksum version" do
+      assert page.has_content?(@latest_version.sha256_hex)
     end
   end
 end
