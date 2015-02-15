@@ -260,14 +260,10 @@ class Version < ActiveRecord::Base
 
   def recalculate_sha256
     key = "gems/#{full_name}.gem"
-    digest = Digest::SHA2.new
     dir = Indexer.new.directory
-
-    dir.files.get(key) do |chunk|
-      digest << chunk
+    if file = dir.files.get(key)
+      Digest::SHA2.base64digest file.body
     end
-
-    digest.base64digest
   end
 
   def recalculate_sha256!
