@@ -19,7 +19,7 @@ questions or bounce ideas off of.
 How To Contribute
 -----------------
 
-* Follow the steps described in [Development Setup][#development-setup]
+* Follow the steps described in [Development Setup](#development-setup)
 * Create a topic branch: `git checkout -b awesome_feature`
 * Commit your changes
 * Keep up to date: `git fetch && git rebase origin/master`
