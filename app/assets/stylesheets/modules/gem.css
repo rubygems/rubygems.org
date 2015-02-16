@@ -90,7 +90,6 @@
   display: inline-block;
   overflow: hidden;
   width: 100%;
-  width: calc(100% - 32px);
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -100,14 +99,14 @@
   text-transform: none;
   white-space: nowrap;
   color: #141c22;
-  -moz-appearance: none; }
+  -moz-appearance: none;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  border: none;
+  font-weight: bold; }
+
   .gem__code::-webkit-scrollbar {
     display: none; }
-  @-moz-document url-prefix() {
-    .gem__code {
-      margin-bottom: -18px;
-      padding-bottom: 18px;
-      width: calc(100% - 45px); } }
 
 .gem__code__icon {
   padding-left: 2px;
