@@ -104,7 +104,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.find_from_slug!(rubygem_id, slug)
-    rubygem = Rubygem.find(rubygem_id)
+    rubygem = rubygem_id.is_a?(Rubygem) ? rubygem_id : Rubygem.find(rubygem_id)
     find_by!(full_name: "#{rubygem.name}-#{slug}")
   end
 
