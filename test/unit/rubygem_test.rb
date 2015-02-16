@@ -207,10 +207,8 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "not accept an Array as name" do
-      assert_raise TypeError do
-        @rubygem.name = ['zomg']
-        @rubygem.valid?
-      end
+      @rubygem.name = ['zomg']
+      assert !@rubygem.valid?
     end
 
     should "return linkset errors in #all_errors" do
