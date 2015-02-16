@@ -159,7 +159,20 @@
 
 <% content_for :javascript do %>
   <script>
-    var client = new ZeroClipboard( document.getElementById("js-gem__code--gemfile") );
-    var client2 = new ZeroClipboard( document.getElementById("js-gem__code--install") );
+    var gemfileCopyButton = document.getElementById("js-gem__code--gemfile");
+    var installCopyButton = document.getElementById("js-gem__code--install");
+
+    var client   = new ZeroClipboard( gemfileCopyButton );
+    var client2  = new ZeroClipboard( installCopyButton );
+
+    client.on("error", function() {
+      client.destroy();
+      gemfileCopyButton.style.display = "none";
+    });
+
+    client2.on("error", function() {
+      client2.destroy();
+      installCopyButton.style.display = "none";
+    });
   </script>
 <% end %>
