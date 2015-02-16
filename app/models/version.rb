@@ -210,7 +210,8 @@ class Version < ActiveRecord::Base
       'ruby_version'    => ruby_version,
       'prerelease'      => prerelease,
       'licenses'        => licenses,
-      'requirements'    => requirements
+      'requirements'    => requirements,
+      'sha'             => sha256_hex
     }
   end
 
@@ -256,6 +257,10 @@ class Version < ActiveRecord::Base
 
   def authors_array
     self.authors.split(',').flatten
+  end
+
+  def sha256_hex
+    sha256.unpack("m0").first.unpack("H*").first if sha256
   end
 
   def recalculate_sha256

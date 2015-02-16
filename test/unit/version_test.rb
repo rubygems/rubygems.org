@@ -11,7 +11,7 @@ class VersionTest < ActiveSupport::TestCase
 
     should "only have relevant API fields" do
       json = @version.as_json
-      assert_equal %w[number built_at summary description authors platform ruby_version prerelease downloads_count licenses requirements].map(&:to_s).sort, json.keys.sort
+      assert_equal %w[number built_at summary description authors platform ruby_version prerelease downloads_count licenses requirements sha].map(&:to_s).sort, json.keys.sort
       assert_equal @version.authors, json["authors"]
       assert_equal @version.built_at, json["built_at"]
       assert_equal @version.description, json["description"]
@@ -33,7 +33,7 @@ class VersionTest < ActiveSupport::TestCase
 
     should "only have relevant API fields" do
       xml = Nokogiri.parse(@version.to_xml)
-      assert_equal %w[number built-at summary description authors platform ruby-version prerelease downloads-count licenses requirements].map(&:to_s).sort, xml.root.children.map{|a| a.name}.reject{|t| t == "text"}.sort
+      assert_equal %w[number built-at summary description authors platform ruby-version prerelease downloads-count licenses requirements sha].map(&:to_s).sort, xml.root.children.map{|a| a.name}.reject{|t| t == "text"}.sort
       assert_equal @version.authors, xml.at_css("authors").content
       assert_equal @version.built_at.to_i, xml.at_css("built-at").content.to_time.to_i
       assert_equal @version.description, xml.at_css("description").content
@@ -604,12 +604,20 @@ class VersionTest < ActiveSupport::TestCase
 
   context "checksums" do
     setup do
-      @version = create(:version, :sha256 => "SHA_1")
+      @version = create(:version)
     end
 
     should "be available from the database" do
-      assert_equal "SHA_1", @version.reload.sha256
+      assert_equal "tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=", @version.reload.sha256
+    end
+
+    should "convert to hex on sha256_hex" do
+      assert_equal "b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78", @version.reload.sha256_hex
+    end
+
+    should "should return nil on sha256_hex when sha not avaible" do
+      version = create(:version, sha256: nil)
+      assert_nil version.sha256_hex
     end
   end
-
 end

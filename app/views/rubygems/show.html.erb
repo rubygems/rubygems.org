@@ -67,6 +67,13 @@
               <%= links_to_owners(@rubygem) %>
             </div>
           <% end %>
+
+          <% if @latest_version.sha256.present? %>
+            <h3 class="t-list__heading">Sha 256 checksum:</h3>
+            <div class="gem__sha">
+              <%= @latest_version.sha256_hex %>
+            </div>
+          <% end %>
         <% end %>
       </div>
     </div>
