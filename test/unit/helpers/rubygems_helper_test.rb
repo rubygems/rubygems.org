@@ -98,7 +98,7 @@ class RubygemsHelperTest < ActionView::TestCase
 
   context 'simple_markup' do
     should 'sanitize copy' do
-      text = '<script>alert("foo");</script> Rails authentication & authorization'
+      text = '<script>alert("foo");</script>Rails authentication & authorization'
       assert_equal '<p>Rails authentication &amp; authorization</p>', simple_markup(text)
       assert simple_markup(text).html_safe?
     end
