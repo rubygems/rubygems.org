@@ -32,14 +32,15 @@ namespace :gemcutter do
       without_sha256 = Version.where(sha256: nil)
       total = without_sha256.count
       i = 0
-      mod = ENV['shard']
+      mod = ENV['shard'].to_i
       without_sha256.find_each do |version|
+        i += 1
         if (version.id % 4) == mod
           version.recalculate_sha256!
         end
         print "\r%.2f%% (#{i}/#{total}) complete" % (i.to_f / total * 100.0)
-        i += 1
       end
+      puts
       puts "Done."
     end
 
