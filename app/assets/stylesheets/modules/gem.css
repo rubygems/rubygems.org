@@ -90,6 +90,7 @@
 .gem__code {
   padding-right: 10px;
   padding-left: 10px;
+  margin-bottom: 1px;
   display: inline-block;
   overflow: hidden;
   width: 100%;
