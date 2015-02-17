@@ -212,15 +212,17 @@
 
 @media (min-width: 1020px) {
   .body--index .header__popup__nav-links.is-expanded {
-    width: 150px;
-    top: 0;
+    background-color: transparent;
+    box-shadow: 0 2px 0 0 rgba(20, 28, 34, 0.15);
     padding-top: 74px;
-    border-right: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 0;
-    box-shadow: none;
-    background-color: transparent; }
+    top: 0;
+    width: 150px; }
   .body--index .header__popup__nav-links .header__nav-link {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3); } }
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-top: none; }
+  .body--index .header__popup__nav-links .header__nav-link:last-child {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px; } }
 
 @media (max-width: 1019px) {
   .header__popup-link {
