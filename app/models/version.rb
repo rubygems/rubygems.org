@@ -17,6 +17,7 @@ class Version < ActiveRecord::Base
 
   validate :platform_and_number_are_unique, :on => :create
   validate :authors_format, :on => :create
+  attribute :authors, Type::Value.new
 
   def self.reverse_dependencies(name)
     joins({ dependencies: :rubygem }).
