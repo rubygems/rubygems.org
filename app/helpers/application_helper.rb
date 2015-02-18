@@ -16,7 +16,8 @@ module ApplicationHelper
   end
 
   def short_info(version)
-    escape_once(truncate(sanitize(version.info).strip, :length => 90)).html_safe
+    info = version.info.strip.truncate(90)
+    escape_once(sanitize(info))
   end
 
   def gravatar(size, id = "gravatar", user = current_user)
