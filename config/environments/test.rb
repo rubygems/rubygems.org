@@ -13,7 +13,7 @@ Rails.application.configure do
   config.eager_load = false
 
   # Configure static asset server for tests with Cache-Control for performance.
-  config.serve_static_assets  = true
+  config.serve_static_files  = true
   config.static_cache_control = 'public, max-age=3600'
 
   # Show full error reports and disable caching.
@@ -40,6 +40,8 @@ Rails.application.configure do
 
   require 'clearance_backdoor'
   config.middleware.use ClearanceBackdoor
+
+  config.active_support.test_order = :random
 end
 
 ENV['S3_KEY']    = 'this:is:an:ex:parrot'
