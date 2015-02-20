@@ -40,6 +40,8 @@ Rails.application.configure do
 
   require 'clearance_backdoor'
   config.middleware.use ClearanceBackdoor
+
+  config.active_support.test_order = :random
 end
 
 ENV['S3_KEY']    = 'this:is:an:ex:parrot'
