@@ -29,8 +29,11 @@ namespace :gemcutter do
   namespace :checksums do
     desc "Initialize missing checksums."
     task :init => :environment do
-      mod = ENV['shard'].to_i
-      without_sha256 = Version.where(sha256: nil).where("id % 4 = ?", mod)
+      without_sha256 = Version.where(sha256: nil)
+      if mod = ENV['shard']
+        without_sha256.where("id % 4 = ?", mod.to_i)
+      end
+
       total = without_sha256.count
       i = 0
       without_sha256.find_each do |version|
