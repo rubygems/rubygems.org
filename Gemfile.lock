@@ -288,7 +288,7 @@ DEPENDENCIES
   gravtastic
   high_voltage
   highline
-  honeybadger
+  honeybadger (~> 1.0)
   jquery-rails
   jruby-openssl
   launchy
