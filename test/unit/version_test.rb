@@ -615,9 +615,11 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal "b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78", @version.reload.sha256_hex
     end
 
-    should "should return nil on sha256_hex when sha not avaible" do
-      version = create(:version, sha256: nil)
-      assert_nil version.sha256_hex
+    should "recalculate" do
+      stub(@version).recalculate_sha256 { "newVALUEb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=" }
+
+      @version.recalculate_sha256!
+      assert_equal "newVALUEb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=", @version.reload.sha256
     end
   end
 end
