@@ -27,7 +27,7 @@ module Gem
 
     def self.from_yaml input
       input = normalize_yaml_input input
-      spec = Psych.safe_load(input, WHITELISTED_CLASSES, WHITELISTED_SYMBOLS)
+      spec = Psych.safe_load(input, WHITELISTED_CLASSES, WHITELISTED_SYMBOLS, true)
 
       if spec && spec.class == FalseClass then
         raise Gem::EndOfYAMLException
