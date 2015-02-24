@@ -108,6 +108,14 @@ class PusherTest < ActiveSupport::TestCase
       end
     end
 
+    should "be able to pull spec with metadata containing aliases" do
+      @gem = gem_file("aliases-0.0.0.gem")
+      @cutter = Pusher.new(@user, @gem)
+      @cutter.pull_spec
+      assert_not_nil @cutter.spec
+      assert_not_nil @cutter.spec.dependencies.first.requirement
+    end
+
     should "post info to the remote bundler API" do
       @cutter.pull_spec
 
