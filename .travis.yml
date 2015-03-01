@@ -21,7 +21,7 @@ before_script:
   - bundle exec rake db:create db:migrate db:test:prepare
 
 env:
-  - RUBYGEMS_VERSION=2.2.2
+  - RUBYGEMS_VERSION=2.4.5
   - RUBYGEMS_VERSION=latest
 
 matrix:
