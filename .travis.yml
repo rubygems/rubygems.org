@@ -1,8 +1,5 @@
 language: ruby
 
-git:
-  depth: 1
-
 rvm:
   - 2.1.5
   - 2.2
