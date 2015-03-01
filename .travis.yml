@@ -6,6 +6,7 @@ git:
 rvm:
   - 2.1.5
   - 2.2
+  - ruby-head
 
 services:
   - redis-server
