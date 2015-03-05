@@ -14,6 +14,7 @@
           var files, xml;
           xml = $(data);
           files = parseS3Listing(xml);
+          files = sortByLastModified(files);
           $('ul.rubygems-dump-listing').html(renderDumpList(files));
         }).fail(function(error) {
           console.error(error);
@@ -32,6 +33,10 @@
           };
         });
         return files;
+      };
+
+      var sortByLastModified = function(files) {
+        return files.sort(function(a, b) {return Date.parse(b.LastModified) - Date.parse(a.LastModified)});
       };
 
       var bytesToSize = function(bytes) {
