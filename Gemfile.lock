@@ -106,7 +106,7 @@ GEM
       ruby-hmac
     formatador (0.2.5)
     gchartrb (0.8)
-    globalid (0.3.0)
+    globalid (0.3.3)
       activesupport (>= 4.1.0)
     gravtastic (3.2.6)
     high_voltage (2.2.1)
