@@ -76,6 +76,8 @@
       width: calc(140px);
       font-size: 15px; } }
 
+.graph__gem__name a { color: black; }
+
 .stats__graph__gem__meter-wrap {
   height: 30px;
   box-shadow: inset 0 1px 1px -1px #c1c4ca;
