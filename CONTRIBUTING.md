@@ -109,7 +109,7 @@ than Rubygems and may suit your organization’s needs better.**
 #### Environment
 
 * Use Ruby 2.1.5
-* Use Rubygems 2.2.2
+* Use Rubygems 2.4.5
 * Install bundler: `gem install bundler`
 * Install [redis](http://github.com/antirez/redis),
     **version 2.0 or higher**. If you have homebrew,
