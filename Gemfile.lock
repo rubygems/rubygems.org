@@ -243,7 +243,7 @@ GEM
       sprockets (>= 2.8, < 4.0)
     statsd-instrument (2.0.6)
     thor (0.19.1)
-    thread_safe (0.3.4)
+    thread_safe (0.3.5)
     tilt (1.4.1)
     timecop (0.7.1)
     tzinfo (1.2.2)
