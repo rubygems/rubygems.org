@@ -114,4 +114,11 @@ Rails.application.routes.draw do
     resource :password, only: [:create, :edit, :update]
   end
 
+  ################################################################################
+  # Internal Routes
+
+  namespace :internal do
+    get 'background_job_stats', to: Internal::BackgroundJobStatsController.action(:stats)
+  end
+
 end
