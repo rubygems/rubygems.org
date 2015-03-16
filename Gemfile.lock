@@ -84,7 +84,7 @@ GEM
       activemodel
     erubis (2.7.0)
     excon (0.25.3)
-    execjs (2.2.2)
+    execjs (2.4.0)
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.5.0)
