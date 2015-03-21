@@ -27,6 +27,7 @@ class YankTest < SystemTest
     end
     click_link "2.2.2"
     assert page.has_content? "This gem has been yanked"
+    assert page.has_css? 'meta[name="robots"][content="noindex"]', visible: false
   end
 
   test "yanked gem entirely then someone else pushes a new version" do
