@@ -3,7 +3,7 @@
 
 <% content_for :head do %>
   <%= auto_discovery_link_tag(:atom, rubygem_versions_path(@rubygem, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
-  <% unless @latest_version.indexed %>
+  <% unless @rubygem.versions.count.zero? || @latest_version.indexed %>
     <meta name="robots" content="noindex" />
   <% end %>
 <% end %>
