@@ -52,6 +52,12 @@ class RubygemsHelperTest < ActionView::TestCase
     assert_match url, badge_link(rubygem)
   end
 
+  should "link to report abuse" do
+    rubygem = create(:rubygem, :name => 'my_gem')
+    url = "http://help.rubygems.org/discussion/new?discussion[title]=Reporting%20Abuse%20on%20my_gem&discussion[private]=1"
+    assert_match url, report_abuse_link(rubygem)
+  end
+
   context "creating linkset links" do
     setup do
       @linkset = build(:linkset)
