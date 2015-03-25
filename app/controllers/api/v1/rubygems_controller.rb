@@ -31,11 +31,9 @@ class Api::V1::RubygemsController < Api::BaseController
   def yank
     if @version.indexed?
       @version.yank!
-      Librato.increment 'yank.success'
       StatsD.increment 'yank.success'
       render :text => "Successfully yanked gem: #{@version.to_title}"
     else
-      Librato.increment 'yank.failure'
       StatsD.increment 'yank.failure'
       render :text => "The version #{params[:version]} has already been yanked.", :status => :unprocessable_entity
     end

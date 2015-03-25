@@ -9,11 +9,9 @@ class SessionsController < Clearance::SessionsController
 
     sign_in(@user) do |status|
       if status.success?
-        Librato.increment 'login.success'
         StatsD.increment 'login.success'
         redirect_back_or(url_after_create)
       else
-        Librato.increment 'login.failure'
         StatsD.increment 'login.failure'
         flash.now.notice = status.failure_message
         render :template => 'sessions/new', :status => :unauthorized

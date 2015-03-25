@@ -153,7 +153,6 @@ class Pusher
     Delayed::Job.enqueue Indexer.new, :priority => PRIORITIES[:push]
     enqueue_web_hook_jobs
     update_remote_bundler_api
-    Librato.increment 'push.success'
     StatsD.increment 'push.success'
   end
 
