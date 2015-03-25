@@ -151,8 +151,6 @@ GEM
       slop (~> 3.4)
     psych (2.0.12)
     rack (1.6.0)
-    rack-maintenance (2.0.0)
-      rack (>= 1.0)
     rack-protection (1.5.3)
       rack
     rack-test (0.6.3)
@@ -290,7 +288,6 @@ DEPENDENCIES
   pry
   psych (~> 2.0.12)
   rack
-  rack-maintenance
   rack-test
   rails (~> 4.2.1)
   rails-erd

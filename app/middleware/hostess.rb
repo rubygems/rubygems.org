@@ -80,16 +80,11 @@ class Hostess < Sinatra::Base
   end
 
   get "/gems/*.gem" do
-    if Rails.env.maintenance?
+    if name = Version.rubygem_name_for(full_name)
+      Download.incr(name, full_name)
       serve_via_cf
     else
-      if name = Version.rubygem_name_for(full_name)
-        Download.incr(name, full_name)
-
-        serve_via_cf
-      else
-        error 404, "This gem does not currently live at RubyGems.org."
-      end
+      error 404, "This gem does not currently live at RubyGems.org."
     end
   end
 

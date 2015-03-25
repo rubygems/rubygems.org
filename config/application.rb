@@ -1,11 +1,6 @@
 require File.expand_path('../boot', __FILE__)
 
-require 'rails'
-require 'action_controller/railtie'
-
-if 'maintenance' != ENV["RAILS_ENV"]
-  require 'rails/all'
-end
+require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -24,9 +19,7 @@ module Gemcutter
     config.middleware.use "Hostess"
     config.middleware.use "Redirector"
 
-    unless Rails.env.maintenance?
-      config.active_record.include_root_in_json = false
-    end
+    config.active_record.include_root_in_json = false
 
     config.after_initialize do
       Hostess.local = config.rubygems['local_storage']

@@ -20,7 +20,6 @@ gem 'multi_json'
 gem 'paul_revere'
 gem 'pg'
 gem 'rack'
-gem 'rack-maintenance', require: 'rack/maintenance'
 gem 'rdoc', '~> 3.12.2'
 gem 'redis'
 gem 'rest-client', require: 'rest_client'
@@ -32,6 +31,13 @@ gem 'will_paginate'
 gem 'xml-simple'
 gem 'yajl-ruby', require: 'yajl'
 gem 'autoprefixer-rails'
+gem 'clearance'
+gem 'daemons'
+gem 'delayed_job'
+gem 'delayed_job_active_record'
+
+gem 'newrelic_rpm'
+gem 'newrelic-redis'
 
 gem 'sass-rails',   '~> 5.0.0'
 gem 'coffee-rails', '~> 4.0.0'
@@ -57,18 +63,6 @@ end
 
 group :development, :test do
   gem 'pry'
-end
-
-# For some reason, including these gems in the maintenance environment enables
-# maintenance mode
-group :development, :test, :staging, :production do
-  gem 'clearance'
-  gem 'daemons'
-  gem 'delayed_job'
-  gem 'delayed_job_active_record'
-
-  gem 'newrelic_rpm'
-  gem 'newrelic-redis'
 end
 
 group :recovery do

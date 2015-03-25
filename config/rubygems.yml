@@ -29,8 +29,5 @@ live: &LIVE
 production:
   <<: *LIVE
 
-maintenance:
-  <<: *LIVE
-
 recovery:
   <<: *LIVE
