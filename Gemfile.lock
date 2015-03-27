@@ -282,7 +282,6 @@ DEPENDENCIES
   multi_json
   newrelic-redis
   newrelic_rpm
-  nokogiri
   paul_revere
   pg
   pry

@@ -54,7 +54,6 @@ group :test do
   gem 'capybara'
   gem 'factory_girl_rails'
   gem 'launchy'
-  gem 'nokogiri'
   gem 'rack-test', require: 'rack/test'
   gem 'rr', require: false
   gem 'shoulda', require: false
