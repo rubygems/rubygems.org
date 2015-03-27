@@ -52,6 +52,24 @@ class ProfilesControllerTest < ActionController::TestCase
 
       should respond_with :success
       should render_template :show
+      should "render Email link" do
+        assert page.has_content?("Email Me")
+        assert page.has_selector?("a[href='mailto:#{@user.email}']")
+      end
+    end
+
+    context "on GET to show when hide email" do
+      setup do
+        @user.update(hide_email: true)
+        get :show, id: @user.id
+      end
+
+      should respond_with :success
+      should render_template :show
+      should "not render Email link" do
+        refute page.has_content?("Email Me")
+        refute page.has_selector?("a[href='mailto:#{@user.email}']")
+      end
     end
 
     context "on GET to edit" do
