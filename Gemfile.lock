@@ -189,8 +189,6 @@ GEM
     rdoc (3.12.2)
       json (~> 1.4)
     redis (3.2.1)
-    responders (2.0.2)
-      railties (>= 4.2.0.alpha, < 5)
     rest-client (1.7.3)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
@@ -292,7 +290,6 @@ DEPENDENCIES
   rails-erd
   rdoc (~> 3.12.2)
   redis
-  responders (~> 2.0)
   rest-client
   rr
   sass-rails (~> 5.0.0)

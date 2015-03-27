@@ -3,10 +3,12 @@ class Api::V1::WebHooksController < Api::BaseController
   before_action :authenticate_with_api_key
   before_action :verify_authenticated_user
   before_action :find_rubygem_by_name, :except => :index
-  respond_to :json, :yaml, :only => :index
 
   def index
-    respond_with current_user.all_hooks
+    respond_to do |format|
+      format.json { render json: current_user.all_hooks }
+      format.yaml { render yaml: current_user.all_hooks }
+    end
   end
 
   def create

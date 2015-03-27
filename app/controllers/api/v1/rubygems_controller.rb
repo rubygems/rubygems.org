@@ -7,16 +7,20 @@ class Api::V1::RubygemsController < Api::BaseController
   before_action :find_rubygem_by_name,      :only => [:yank, :unyank]
   before_action :validate_gem_and_version,  :only => [:yank, :unyank]
 
-  respond_to :json, :yaml, :on => [:index, :show, :latest, :just_updated]
-
   def index
     @rubygems = current_user.rubygems.with_versions
-    respond_with(@rubygems, :yamlish => true)
+    respond_to do |format|
+      format.json { render json: @rubygems }
+      format.yaml { render yaml: @rubygems, yamlish: true }
+    end
   end
 
   def show
     if @rubygem.hosted? and @rubygem.public_versions.indexed.count.nonzero?
-      respond_with(@rubygem, :yamlish => true)
+      respond_to do |format|
+        format.json { render json: @rubygem }
+        format.yaml { render yaml: @rubygem, yamlish: true }
+      end
     else
       render :text => "This gem does not exist.", :status => :not_found
     end
@@ -51,7 +55,10 @@ class Api::V1::RubygemsController < Api::BaseController
   def reverse_dependencies
     rubygems = Rubygem.reverse_dependencies(params[:id])
 
-    respond_with(rubygems.map(&:name), :yamlish => true)
+    respond_to do |format|
+      format.json { render json: rubygems.map(&:name) }
+      format.yaml { render yaml: rubygems.map(&:name), yamlish: true }
+    end
   end
 
   private
