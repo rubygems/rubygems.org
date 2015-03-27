@@ -87,6 +87,7 @@ FactoryGirl.define do
     built_at 1.day.ago
     description "Some awesome gem"
     indexed true
+    metadata "foo" => "bar"
     number
     platform "ruby"
     ruby_version ">= 2.0.0"

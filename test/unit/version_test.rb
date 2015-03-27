@@ -11,11 +11,12 @@ class VersionTest < ActiveSupport::TestCase
 
     should "only have relevant API fields" do
       json = @version.as_json
-      assert_equal %w[number built_at summary description authors platform ruby_version prerelease downloads_count licenses requirements sha].map(&:to_s).sort, json.keys.sort
+      assert_equal %w[number built_at summary description authors platform ruby_version prerelease downloads_count licenses requirements sha metadata].map(&:to_s).sort, json.keys.sort
       assert_equal @version.authors, json["authors"]
       assert_equal @version.built_at, json["built_at"]
       assert_equal @version.description, json["description"]
       assert_equal @version.downloads_count, json["downloads_count"]
+      assert_equal @version.metadata, json["metadata"]
       assert_equal @version.number, json["number"]
       assert_equal @version.platform, json["platform"]
       assert_equal @version.prerelease, json["prerelease"]
@@ -33,11 +34,12 @@ class VersionTest < ActiveSupport::TestCase
 
     should "only have relevant API fields" do
       xml = Nokogiri.parse(@version.to_xml)
-      assert_equal %w[number built-at summary description authors platform ruby-version prerelease downloads-count licenses requirements sha].map(&:to_s).sort, xml.root.children.map{|a| a.name}.reject{|t| t == "text"}.sort
+      assert_equal %w[number built-at summary description authors platform ruby-version prerelease downloads-count licenses requirements sha metadata].map(&:to_s).sort, xml.root.children.map{|a| a.name}.reject{|t| t == "text"}.sort
       assert_equal @version.authors, xml.at_css("authors").content
       assert_equal @version.built_at.to_i, xml.at_css("built-at").content.to_time.to_i
       assert_equal @version.description, xml.at_css("description").content
       assert_equal @version.downloads_count, xml.at_css("downloads-count").content.to_i
+      assert_equal @version.metadata["foo"], xml.at_css("metadata foo").content
       assert_equal @version.number, xml.at_css("number").content
       assert_equal @version.platform, xml.at_css("platform").content
       assert_equal @version.prerelease.to_s, xml.at_css("prerelease").content
@@ -566,6 +568,7 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @spec.description,         @version.description
       assert_equal @spec.summary,             @version.summary
       assert_equal @spec.date,                @version.built_at
+      assert_equal @spec.metadata,            @version.metadata
     end
   end
 

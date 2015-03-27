@@ -32,6 +32,7 @@ module GemHelpers
       s.summary = "#{summary}"
       s.test_files = []
       s.licenses = []
+      s.metadata = { "foo" => "bar" }
       yield s if block_given?
     end
 
