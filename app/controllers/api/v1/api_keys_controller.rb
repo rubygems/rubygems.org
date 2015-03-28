@@ -1,6 +1,5 @@
 class Api::V1::ApiKeysController < Api::BaseController
   before_action :redirect_to_root, :unless => :signed_in?, :only => [:reset]
-  respond_to :json, :yaml, :only => :show
 
   def show
     authenticate_or_request_with_http_basic do |username, password|

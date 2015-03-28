@@ -3,7 +3,6 @@ source 'https://rubygems.org'
 gem 'rails', '~> 4.2.1'
 
 gem 'psych', '~> 2.0.12'
-gem 'responders', '~> 2.0'
 gem 'builder'
 gem 'dynamic_form'
 gem 'excon'
