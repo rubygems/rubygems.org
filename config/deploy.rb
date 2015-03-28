@@ -28,7 +28,6 @@ set :use_sudo, false
 set :group, "deploy"
 set :assets_role, [:app]
 
-after "deploy", "deploy:migrate"
 after "deploy", "deploy:cleanup"
 after "deploy:finalize_update", "deploy:symlink_database_yml", "deploy:symlink_secret_settings"
 
@@ -54,5 +53,4 @@ namespace :deploy do
     sudo "service unicorn restart"
     sudo "service delayed_job restart"
   end
-
 end
