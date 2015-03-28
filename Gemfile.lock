@@ -38,8 +38,6 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.3.7)
     arel (6.0.0)
-    autoprefixer-rails (4.0.2.2)
-      execjs
     bcrypt (3.1.10)
     builder (3.2.2)
     capistrano (2.15.5)
@@ -251,7 +249,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  autoprefixer-rails
   builder
   capistrano (~> 2.0)
   capistrano-notification
