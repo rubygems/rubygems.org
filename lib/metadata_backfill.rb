@@ -11,7 +11,8 @@ class MetadataBackfill
     file = dir.files.get(key) or return
     pusher = Pusher.new(nil, StringIO.new(file.body))
     pusher.pull_spec
-    version.update_attributes(metadata: pusher.spec.metadata || {})
+    metadata = pusher.spec.metadata
+    version.update(metadata: metadata) if metadata
   end
 
   private
