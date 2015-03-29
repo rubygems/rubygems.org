@@ -7,7 +7,7 @@ class Api::V1::VersionsController < Api::BaseController
     if @rubygem.public_versions.count.nonzero?
       respond_to do |format|
         format.json { render json: @rubygem.public_versions }
-        format.yaml { render yaml: @rubygem.public_versions, yamlish: true }
+        format.yaml { render yaml: @rubygem.public_versions }
       end
     else
       render text: "This rubygem could not be found.", status: 404
@@ -27,7 +27,7 @@ class Api::V1::VersionsController < Api::BaseController
     names = Version.reverse_dependencies(params[:id]).pluck(:full_name)
     respond_to do |format|
       format.json { render json: names }
-      format.yaml { render yaml: names, yamlish: true }
+      format.yaml { render yaml: names }
     end
   end
 end

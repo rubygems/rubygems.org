@@ -6,7 +6,7 @@ class Api::V1::SearchesController < Api::BaseController
     @rubygems = Rubygem.search(params.require(:query)).with_versions.paginate(page: @page)
     respond_to do |format|
       format.json { render json: @rubygems }
-      format.yaml { render yaml: @rubygems, yamlish: true }
+      format.yaml { render yaml: @rubygems }
     end
   end
 end

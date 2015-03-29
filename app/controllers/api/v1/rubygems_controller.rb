@@ -9,7 +9,7 @@ class Api::V1::RubygemsController < Api::BaseController
     @rubygems = current_user.rubygems.with_versions
     respond_to do |format|
       format.json { render json: @rubygems }
-      format.yaml { render yaml: @rubygems, yamlish: true }
+      format.yaml { render yaml: @rubygems }
     end
   end
 
@@ -17,7 +17,7 @@ class Api::V1::RubygemsController < Api::BaseController
     if @rubygem.hosted? and @rubygem.public_versions.indexed.count.nonzero?
       respond_to do |format|
         format.json { render json: @rubygem }
-        format.yaml { render yaml: @rubygem, yamlish: true }
+        format.yaml { render yaml: @rubygem }
       end
     else
       render :text => "This gem does not exist.", :status => :not_found
@@ -35,7 +35,7 @@ class Api::V1::RubygemsController < Api::BaseController
 
     respond_to do |format|
       format.json { render json: names }
-      format.yaml { render yaml: names, yamlish: true }
+      format.yaml { render yaml: names }
     end
   end
 end

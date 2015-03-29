@@ -42,7 +42,7 @@ class Api::V1::DownloadsController < Api::BaseController
   def respond_with_data(data)
     respond_to do |format|
       format.json { render json: data }
-      format.yaml { render yaml: data }
+      format.yaml { render text: data.to_yaml }
     end
   end
 end
