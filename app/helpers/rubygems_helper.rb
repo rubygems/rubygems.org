@@ -68,6 +68,11 @@ module RubygemsHelper
     link_to "Badge", badge_url, :id => :badge, :class => "gem__link t-list__item"
   end
 
+  def report_abuse_link(rubygem)
+    report_abuse_url = "http://help.rubygems.org/discussion/new?discussion[title]=Reporting%20Abuse%20on%20#{CGI.escape(rubygem.name)}&discussion[private]=1".html_safe
+    link_to 'Report Abuse', report_abuse_url, :class => 'gem__link t-list__item'
+  end
+
   def links_to_owners(rubygem)
     rubygem.owners.sort_by(&:id).map do |owner|
       link_to gravatar(48, "gravatar-#{owner.id}", owner), profile_path(owner.display_id),
