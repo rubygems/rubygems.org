@@ -59,10 +59,6 @@ group :test do
   gem 'timecop'
 end
 
-group :development, :test do
-  gem 'pry'
-end
-
 group :recovery do
   gem "fakeredis"
 end
