@@ -2,6 +2,7 @@
 
 ENV['RAILS_ENV'] ||= 'production'
 require_relative '../config/environment'
+require 'fog'
 
 def fog
   $fog || Fog::Storage.new(:provider => 'Local',

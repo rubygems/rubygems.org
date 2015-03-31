@@ -6,7 +6,7 @@ gem 'psych', '~> 2.0.12'
 gem 'builder'
 gem 'dynamic_form'
 gem 'excon'
-gem 'fog', '= 1.15.0'
+gem 'fog', '= 1.15.0', require: false
 gem 'gchartrb', require: 'google_chart'
 gem 'gravtastic'
 gem 'high_voltage'

@@ -1,3 +1,5 @@
+require 'fog'
+
 class Indexer
   extend StatsD::Instrument
 
@@ -34,10 +36,7 @@ class Indexer
   private
 
   def fog
-    $fog || Fog::Storage.new(
-      :provider => 'Local',
-      :local_root => Pusher.server_path
-    )
+    $fog || Fog::Storage.new(provider: 'Local', local_root: Pusher.server_path)
   end
 
   def stringify(value)
