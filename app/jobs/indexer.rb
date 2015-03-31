@@ -1,24 +1,28 @@
 class Indexer
+  extend StatsD::Instrument
+
   def perform
     log "Updating the index"
     update_index
     log "Finished updating the index"
   end
+  statsd_count_success :perform, 'Indexer.perform.success'
+  statsd_measure :perform, 'Indexer.perform'
 
   def write_gem(body, spec)
-    gem_file = directory.files.create(
-      :body   => body.string,
-      :key    => "gems/#{spec.original_name}.gem",
-      :public => true
+    directory.files.create(
+      body: body.string,
+      key: "gems/#{spec.original_name}.gem",
+      public: true
     )
 
     self.class.indexer.abbreviate spec
     self.class.indexer.sanitize spec
 
-    gem_spec = directory.files.create(
-      :body   => Gem.deflate(Marshal.dump(spec)),
-      :key    => "quick/Marshal.4.8/#{spec.original_name}.gemspec.rz",
-      :public => true
+    directory.files.create(
+      body: Gem.deflate(Marshal.dump(spec)),
+      key: "quick/Marshal.4.8/#{spec.original_name}.gemspec.rz",
+      public: true
     )
   end
 

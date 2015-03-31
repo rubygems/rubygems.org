@@ -1,11 +1,4 @@
-Notifier.extend StatsD::Instrument
-Notifier.statsd_count_success :perform, 'Webhook.perform.success'
-
-Indexer.extend StatsD::Instrument
-Indexer.statsd_count_success :perform, 'Indexer.perform.success'
-Indexer.statsd_measure :perform, 'Indexer.perform'
-
-ActiveSupport::Notifications.subscribe /process_action.action_controller/ do |*args|
+ActiveSupport::Notifications.subscribe(/process_action.action_controller/) do |*args|
   event = ActiveSupport::Notifications::Event.new(*args)
   event.payload[:format] = event.payload[:format] || 'all'
   event.payload[:format] = 'all' if event.payload[:format] == '*/*'
@@ -16,7 +9,7 @@ ActiveSupport::Notifications.subscribe /process_action.action_controller/ do |*a
   ActiveSupport::Notifications.instrument :performance, event.payload.merge(measurement: "status.#{status}")
 end
 
-ActiveSupport::Notifications.subscribe /performance/ do |name, start, finish, id, payload|
+ActiveSupport::Notifications.subscribe(/performance/) do |name, start, finish, id, payload|
   method = payload[:statsd_method] || :increment
   measurement = payload[:measurement]
   value = payload[:value]

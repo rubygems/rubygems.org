@@ -1,6 +1,7 @@
 require 'timeout'
 
 class Notifier < Struct.new(:url, :host_with_port, :rubygem, :version, :api_key)
+  extend StatsD::Instrument
 
   def payload
     rubygem.payload(version, host_with_port).to_json
@@ -24,6 +25,7 @@ class Notifier < Struct.new(:url, :host_with_port, :rubygem, :version, :api_key)
     WebHook.find_by_url(url).try(:increment!, :failure_count)
     false
   end
+  statsd_count_success :perform, 'Webhook.perform.success'
 
   private
 
