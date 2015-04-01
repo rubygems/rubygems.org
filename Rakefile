@@ -7,3 +7,7 @@ task :weekly_cron => %w[gemcutter:rubygems:update_download_counts]
 task :gen_erd do
   `bundle exec rake erd filetype=svg filename=doc/erd orientation=vertical title="RubyGems.org domain model"`
 end
+
+Rake::Task['db:migrate'].enhance do
+  Rake::Task['gen_erd'].invoke
+end
