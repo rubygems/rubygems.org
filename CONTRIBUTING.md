@@ -187,4 +187,4 @@ Database Layout
 
 Courtesy of [Rails ERD](http://voormedia.github.io/rails-erd/)
 
-![Rubygems.org Domain Model](https://github.com/rubygems/rubygems.org/raw/master/doc/erd.svg)
+![Rubygems.org Domain Model](https://cdn.rawgit.com/rubygems/rubygems.org/master/doc/erd.svg)
