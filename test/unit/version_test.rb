@@ -346,19 +346,6 @@ class VersionTest < ActiveSupport::TestCase
       should "not appear in the version list" do
         assert ! Redis.current.exists(Rubygem.versions_key(@version.rubygem.name))
       end
-
-      context "and consequently unyanked" do
-        setup do
-          @version.unyank!
-          @version.reload
-        end
-        should("re-index") { assert @version.indexed? }
-        should("become the latest again") { assert @version.latest? }
-        should("be considered unyanked") { assert !Version.yanked.include?(@version) }
-        should "appear in the version list" do
-          assert_equal @version.full_name, Redis.current.lindex(Rubygem.versions_key(@version.rubygem.name), 0)
-        end
-      end
     end
   end
 

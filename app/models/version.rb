@@ -130,11 +130,6 @@ class Version < ActiveRecord::Base
     Redis.current.lrem(Rubygem.versions_key(rubygem.name), 1, full_name)
   end
 
-  def unyank!
-    update_attributes!(:indexed => true)
-    push
-  end
-
   def push
     Redis.current.lpush(Rubygem.versions_key(rubygem.name), full_name)
   end
