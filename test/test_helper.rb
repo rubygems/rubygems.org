@@ -18,6 +18,10 @@ I18n.enforce_available_locales = false
 # Shim for compatibility with older versions of MiniTest
 MiniTest::Test = MiniTest::Unit::TestCase unless defined?(MiniTest::Test)
 
+require 'fog'
+Fog.mock!
+$fog = Fog::Storage.new(provider: 'AWS', aws_access_key_id: '', aws_secret_access_key: '')
+
 class MiniTest::Test
   include Rack::Test::Methods
   include FactoryGirl::Syntax::Methods
