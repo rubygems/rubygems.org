@@ -44,12 +44,7 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   def unyank
-    if !@version.indexed?
-      @version.unyank!
-      render :text => "Successfully unyanked gem: #{@version.to_title}"
-    else
-      render :text => "The version #{params[:version]} is already indexed.", :status => :unprocessable_entity
-    end
+    render text: "Unyanking of gems is no longer supported.", status: :gone
   end
 
   def reverse_dependencies

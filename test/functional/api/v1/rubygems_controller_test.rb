@@ -336,22 +336,14 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         setup do
           put :unyank, :gem_name => @rubygem.to_param, :version => @v1.number
         end
-        should respond_with :success
-        #should change("the rubygem's indexed version count", :by => 1) { @rubygem.versions.indexed.count }
-        should "re-index 0.1.0" do
-          assert @v1.reload.indexed?
-        end
+        should respond_with :gone
       end
 
       context "ON PUT to unyank for version 0.1.2 and platform x86-darwin-10" do
         setup do
           put :unyank, :gem_name => @rubygem.to_param, :version => @v3.number, :platform => @v3.platform
         end
-        should respond_with :success
-        #should change("the rubygem's indexed version count", :by => 1) { @rubygem.versions.indexed.count }
-        should "re-index 0.1.2" do
-          assert @v3.reload.indexed?
-        end
+        should respond_with :gone
       end
 
 
@@ -359,24 +351,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         setup do
           put :unyank, :gem_name => @rubygem.to_param, :version => @v2.number
         end
-        should respond_with :unprocessable_entity
+        should respond_with :gone
       end
     end
-  end
-
-  def should_return_latest_gems(gems)
-    assert_equal 2, gems.length
-    gems.each {|g| assert g.is_a?(Hash) }
-    assert_equal @rubygem_2.attributes['name'], gems[0]['name']
-    assert_equal @rubygem_3.attributes['name'], gems[1]['name']
-  end
-
-  def should_return_just_updated_gems(gems)
-    assert_equal 3, gems.length
-    gems.each {|g| assert g.is_a?(Hash) }
-    assert_equal @rubygem_1.attributes['name'], gems[0]['name']
-    assert_equal @rubygem_2.attributes['name'], gems[1]['name']
-    assert_equal @rubygem_3.attributes['name'], gems[2]['name']
   end
 
   context "No signed in-user" do
