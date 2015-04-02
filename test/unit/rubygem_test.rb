@@ -340,6 +340,7 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal @rubygem.versions.most_recent.platform, hash["platform"]
       assert_equal @rubygem.versions.most_recent.authors, hash["authors"]
       assert_equal @rubygem.versions.most_recent.info, hash["info"]
+      assert_equal @rubygem.versions.most_recent.metadata, hash["metadata"]
       assert_equal "http://#{Gemcutter::HOST}/gems/#{@rubygem.name}", hash["project_uri"]
       assert_equal "http://#{Gemcutter::HOST}/gems/#{@rubygem.versions.most_recent.full_name}.gem", hash["gem_uri"]
 
@@ -361,6 +362,7 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal @rubygem.versions.most_recent.downloads_count.to_s, doc.at_css("version-downloads").content
       assert_equal @rubygem.versions.most_recent.authors, doc.at_css("authors").content
       assert_equal @rubygem.versions.most_recent.info, doc.at_css("info").content
+      assert_equal @rubygem.versions.most_recent.metadata["foo"], doc.at_css("metadata foo").content
       assert_equal @rubygem.versions.most_recent.sha256_hex, doc.at_css("sha").content
       assert_equal "http://#{Gemcutter::HOST}/gems/#{@rubygem.name}", doc.at_css("project-uri").content
       assert_equal "http://#{Gemcutter::HOST}/gems/#{@rubygem.versions.most_recent.full_name}.gem", doc.at_css("gem-uri").content
