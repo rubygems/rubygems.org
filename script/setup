@@ -21,7 +21,7 @@ echo "Cleaning out old logs"
 # Install dependencies
 echo "Installing libraries and plugins"
 { gem list -i bundler || gem install bundler
-  bundle --local
+  bundle
 } >&3 2>&1
 
 # Wipe and load the database unless KEEPDB=1 env var is set.
