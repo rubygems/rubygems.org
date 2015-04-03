@@ -34,7 +34,6 @@ gem 'clearance'
 gem 'daemons'
 gem 'delayed_job'
 gem 'delayed_job_active_record'
-gem 'buffered-logger', require: 'buffered_logger/rails'
 
 gem 'newrelic_rpm'
 gem 'newrelic-redis'

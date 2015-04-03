@@ -41,7 +41,6 @@ GEM
     autoprefixer-rails (4.0.2.2)
       execjs
     bcrypt (3.1.10)
-    buffered-logger (1.0.3)
     builder (3.2.2)
     capistrano (2.15.5)
       highline
@@ -246,7 +245,6 @@ PLATFORMS
 
 DEPENDENCIES
   autoprefixer-rails
-  buffered-logger
   builder
   capistrano (~> 2.0)
   capistrano-notification
