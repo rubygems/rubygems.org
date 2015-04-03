@@ -44,6 +44,3 @@ Rails.application.configure do
 
   config.active_support.test_order = :random
 end
-
-ENV['S3_KEY']    = 'this:is:an:ex:parrot'
-ENV['S3_SECRET'] = 'it:has:ceased:to:be'
