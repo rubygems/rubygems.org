@@ -1,1 +1,1 @@
-Rails.logger.formatter = ::ActiveSupport::Logger::SimpleFormatter.new
+#Rails.logger.formatter = ::ActiveSupport::Logger::SimpleFormatter.new
