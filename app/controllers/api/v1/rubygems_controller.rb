@@ -5,7 +5,7 @@ class Api::V1::RubygemsController < Api::BaseController
   before_action :verify_authenticated_user, :only => [:index, :create, :yank, :unyank]
   before_action :find_rubygem,              :only => [:show]
   before_action :find_rubygem_by_name,      :only => [:yank, :unyank]
-  before_action :validate_gem_and_version,  :only => [:yank, :unyank]
+  before_action :validate_gem_and_version,  :only => [:yank]
 
   def index
     @rubygems = current_user.rubygems.with_versions
