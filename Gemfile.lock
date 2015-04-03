@@ -246,7 +246,7 @@ PLATFORMS
 
 DEPENDENCIES
   autoprefixer-rails
-  buffered-logger (= 1.0.3)
+  buffered-logger
   builder
   capistrano (~> 2.0)
   capistrano-notification
