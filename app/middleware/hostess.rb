@@ -4,10 +4,8 @@ class Hostess < Sinatra::Base
 
   set :protection, { :except => [:json_csrf] }
 
-  cattr_writer :local
-
-  def self.local
-    @@local ||= false
+  cattr_accessor :local do
+    true
   end
 
   def serve

@@ -40,6 +40,7 @@ Rails.application.configure do
 
   require 'clearance_backdoor'
   config.middleware.use ClearanceBackdoor
+  config.middleware.use "Hostess"
 
   config.active_support.test_order = :random
 end

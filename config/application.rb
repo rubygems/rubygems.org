@@ -16,14 +16,9 @@ module Gemcutter
     config.time_zone = "UTC"
     config.encoding  = "utf-8"
 
-    config.middleware.use "Hostess"
     config.middleware.use "Redirector"
 
     config.active_record.include_root_in_json = false
-
-    config.after_initialize do
-      Hostess.local = config.rubygems['local_storage']
-    end
 
     config.plugins = [:dynamic_form]
 
