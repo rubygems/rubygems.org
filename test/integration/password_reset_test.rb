@@ -21,9 +21,9 @@ class PasswordResetTest < SystemTest
 
   test "resetting password without handle" do
     forgot_password_with @user.email
-
-    email = ActionMailer::Base.deliveries.last.body.to_s
-    link = email.split("\n").find { |line| line =~ /^http/ }
+    body = ActionMailer::Base.deliveries.last.to_s
+    link = body.split("\n").find { |line| line =~ /^http/ }
+    assert_not_nil link
 
     visit link
     fill_in "Password", with: "secret321"
@@ -42,8 +42,9 @@ class PasswordResetTest < SystemTest
   test "resetting a password with a blank password" do
     forgot_password_with @user.email
 
-    email = ActionMailer::Base.deliveries.last.body.to_s
-    link = email.split("\n").find { |line| line =~ /^http/ }
+    body = ActionMailer::Base.deliveries.last.to_s
+    link = body.split("\n").find { |line| line =~ /^http/ }
+    assert_not_nil link
 
     visit link
     fill_in "Password", with: ""
@@ -68,8 +69,8 @@ class PasswordResetTest < SystemTest
     fill_in "Email address", with: @user.email
     click_button "Reset password"
 
-    email = ActionMailer::Base.deliveries.last.body.to_s
-    link = email.split("\n").find { |line| line =~ /^http/ }
+    body = ActionMailer::Base.deliveries.last.to_s
+    link = body.split("\n").find { |line| line =~ /^http/ }
     visit link
 
     fill_in "Password", with: "secret321"
