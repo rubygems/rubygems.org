@@ -30,6 +30,10 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         assert_equal @user.email, yield(@response.body)[0]['email']
       end
 
+      should "return correct owner handle" do
+        assert_equal @user.handle, yield(@response.body)[0]['handle']
+      end
+
       should "not return other owner email" do
         assert yield(@response.body).map { |owner| owner['email'] }.exclude?(@other_user.email)
       end
@@ -37,7 +41,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
   end
 
   should_respond_to :json do |body|
-    MultiJson.load body
+    JSON.parse body
   end
 
   should_respond_to :yaml do |body|

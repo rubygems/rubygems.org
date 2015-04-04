@@ -56,7 +56,7 @@ class User < ActiveRecord::Base
   end
 
   def payload
-    attrs = {}
+    attrs = { "handle" => handle }
     attrs["email"] = email unless hide_email
     attrs
   end

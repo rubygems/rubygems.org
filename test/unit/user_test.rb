@@ -73,22 +73,22 @@ class UserTest < ActiveSupport::TestCase
       assert_nil User.authenticate(@user.email, "bad")
     end
 
-    should "only have email when boiling down to JSON" do
-      json = MultiJson.load(@user.to_json)
-      hash = {"email" => @user.email}
+    should "have email and handle on JSON" do
+      json = JSON.parse(@user.to_json)
+      hash = {"email" => @user.email, 'handle' => @user.handle}
       assert_equal hash, json
     end
 
-    should "only have email when boiling down to XML" do
+    should "have email and handle on XML" do
       xml = Nokogiri.parse(@user.to_xml)
       assert_equal "user", xml.root.name
-      assert_equal %w[email], xml.root.children.select(&:element?).map(&:name)
+      assert_equal %w[handle email], xml.root.children.select(&:element?).map(&:name)
       assert_equal @user.email, xml.at_css("email").content
     end
 
-    should "only have email when boiling down to YAML" do
+    should "have email and handle on YAML" do
       yaml = YAML.load(@user.to_yaml)
-      hash = {'email' => @user.email}
+      hash = {'email' => @user.email, 'handle' => @user.handle}
       assert_equal hash, yaml
     end
 
