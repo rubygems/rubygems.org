@@ -338,6 +338,7 @@ class VersionTest < ActiveSupport::TestCase
 
     context "when yanked" do
       setup do
+        RubygemFs.instance.store("gems/#{@version.full_name}.gem", "")
         @version.yank!
       end
       should("unindex") { assert !@version.indexed? }
@@ -345,6 +346,9 @@ class VersionTest < ActiveSupport::TestCase
       should("no longer be latest") { assert !@version.latest?}
       should "not appear in the version list" do
         assert ! Redis.current.exists(Rubygem.versions_key(@version.rubygem.name))
+      end
+      should "delete the .gem file" do
+        assert_nil RubygemFs.instance.get("gems/#{@version.full_name}.gem")
       end
     end
   end

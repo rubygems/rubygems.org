@@ -126,8 +126,9 @@ class Version < ActiveRecord::Base
   end
 
   def yank!
-    update_attributes!(:indexed => false)
+    update!(indexed: false)
     Redis.current.lrem(Rubygem.versions_key(rubygem.name), 1, full_name)
+    RubygemFs.instance.remove("gems/#{full_name}.gem")
   end
 
   def push

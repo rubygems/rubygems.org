@@ -242,6 +242,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         @rubygem  = create(:rubygem, :name => "SomeGem")
         @v1       = create(:version, :rubygem => @rubygem, :number => "0.1.0", :platform => "ruby")
         create(:ownership, :user => @user, :rubygem => @rubygem)
+        RubygemFs.instance.store("gems/#{@v1.full_name}.gem", "")
       end
 
       context "ON DELETE to yank for existing gem version" do
@@ -252,6 +253,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         should "keep the gem, deindex, keep owner" do
           assert_equal 1, @rubygem.versions.count
           assert @rubygem.versions.indexed.count.zero?
+        end
+        should "delete the .gem file" do
+          assert_nil RubygemFs.instance.get("gems/#{@v1.full_name}.gem")
         end
       end
 
