@@ -34,12 +34,14 @@ module RubygemFs
 
     def get(key)
       File.read("#{base_dir}/#{key}")
-    rescue
+    rescue Errno::ENOENT
       nil
     end
 
     def remove(key)
       FileUtils.rm("#{base_dir}/#{key}")
+    rescue Errno::ENOENT
+      false
     end
 
     def base_dir
