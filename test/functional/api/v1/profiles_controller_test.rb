@@ -30,5 +30,10 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
       json = JSON.parse @response.body
       refute json.key?("email")
     end
+
+    should "shows the handle" do
+      json = JSON.parse @response.body
+      assert_equal @user.handle, json["handle"]
+    end
   end
 end
