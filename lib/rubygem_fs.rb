@@ -42,7 +42,6 @@ module RubygemFs
       FileUtils.rm("#{base_dir}/#{key}")
     end
 
-    private
     def base_dir
       Rails.root.join('server')
     end
