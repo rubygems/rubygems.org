@@ -7,7 +7,6 @@ end
 ENV['RAILS_ENV'] ||= 'production'
 require_relative '../config/environment'
 
-index   = Indexer.new
 rubygem = Rubygem.find_by_name!(name)
 
 if !rubygem
@@ -22,8 +21,10 @@ terminal = HighLine.new
 confirm  = terminal.ask("Are you sure you want to permadelete #{name} with #{names.size} versions? (Y/N)")
 
 if confirm.upcase == "Y" || confirm.upcase == "YES"
-  names.map { |n| index.directory.files.get("gems/#{n}.gem") }.compact.each(&:destroy)
-  names.map { |n| index.directory.files.get("quick/Marshal.4.8/#{n}.gemspec.rz") }.compact.each(&:destroy)
+  names.each do |n|
+    RubygemFs.instance.remove("gems/#{n}.gem")
+    RubygemFs.instance.remove("quick/Marshal.4.8/#{n}.gemspec.rz")
+  end
 
   rubygem.destroy
 

@@ -268,9 +268,8 @@ class Version < ActiveRecord::Base
 
   def recalculate_sha256
     key = "gems/#{full_name}.gem"
-    dir = Indexer.new.directory
-    if file = dir.files.get(key)
-      Digest::SHA2.base64digest file.body
+    if file = RubygemFs.instance.get(key)
+      Digest::SHA2.base64digest file
     end
   end
 

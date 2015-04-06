@@ -1,20 +1,6 @@
 require 'test_helper'
 
 class PusherTest < ActiveSupport::TestCase
-  context "getting the server path" do
-    should "return just the root server path with no args" do
-      assert_equal "#{Rails.root}/server", Pusher.server_path
-    end
-
-    should "return a directory inside if one argument is given" do
-      assert_equal "#{Rails.root}/server/gems", Pusher.server_path("gems")
-    end
-
-    should "return a directory inside if more than one argument is given" do
-      assert_equal "#{Rails.root}/server/quick/Marshal.4.8", Pusher.server_path("quick", "Marshal.4.8")
-    end
-  end
-
   context "creating a new gemcutter" do
     setup do
       @user = create(:user)

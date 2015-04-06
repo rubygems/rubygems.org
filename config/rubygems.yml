@@ -1,6 +1,6 @@
 development:
   host: localhost
-  s3_bucket: ""
+  s3_bucket: s3bucket
 
 test:
   host: localhost

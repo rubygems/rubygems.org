@@ -1,6 +1,7 @@
 class Hostess < Rack::Static
   def initialize(app, options={})
-    options[:root] = Rails.root.join("server")
+    options[:root] = RubygemFs.instance.base_dir
+
     options[:urls] = %w[/specs.4.8.gz
      /latest_specs.4.8.gz
      /prerelease_specs.4.8.gz

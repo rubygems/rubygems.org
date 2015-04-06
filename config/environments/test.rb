@@ -40,10 +40,6 @@ Rails.application.configure do
 
   require 'clearance_backdoor'
   config.middleware.use ClearanceBackdoor
-  config.middleware.use "Hostess"
 
   config.active_support.test_order = :random
 end
-
-ENV['S3_KEY']    = 'this:is:an:ex:parrot'
-ENV['S3_SECRET'] = 'it:has:ceased:to:be'

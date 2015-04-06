@@ -172,10 +172,6 @@ class Pusher
     false
   end
 
-  def self.server_path(*more)
-    File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'server', *more))
-  end
-
   def enqueue_web_hook_jobs
     jobs = rubygem.web_hooks + WebHook.global
     jobs.each do |job|

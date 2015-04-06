@@ -10,35 +10,18 @@ class Indexer
   statsd_measure :perform, 'Indexer.perform'
 
   def write_gem(body, spec)
-    directory.files.create(
-      body: body.string,
-      key: "gems/#{spec.original_name}.gem",
-      public: true
-    )
+    RubygemFs.instance.store("gems/#{spec.original_name}.gem",
+                             body.string)
 
     self.class.indexer.abbreviate spec
     self.class.indexer.sanitize spec
 
-    directory.files.create(
-      body: Gem.deflate(Marshal.dump(spec)),
-      key: "quick/Marshal.4.8/#{spec.original_name}.gemspec.rz",
-      public: true
-    )
-  end
-
-  def directory
-    fog.directories.get(Gemcutter.config['s3_bucket']) ||
-      fog.directories.create(key: Gemcutter.config['s3_bucket'])
+    RubygemFs.instance.store(
+      "quick/Marshal.4.8/#{spec.original_name}.gemspec.rz",
+      Gem.deflate(Marshal.dump(spec)))
   end
 
   private
-
-  def fog
-    $fog || Fog::Storage.new(
-      :provider => 'Local',
-      :local_root => Pusher.server_path
-    )
-  end
 
   def stringify(value)
     final = StringIO.new
@@ -50,11 +33,7 @@ class Indexer
   end
 
   def upload(key, value)
-    file = directory.files.create(
-      :body   => stringify(value),
-      :key    => key,
-      :public => true
-    )
+    RubygemFs.instance.store(key, stringify(value))
   end
 
   def update_index
@@ -97,9 +76,10 @@ class Indexer
   end
 
   def self.indexer
+    # TODO: remove this after we upgrade rubygems client
     @indexer ||=
       begin
-        indexer = Gem::Indexer.new(Pusher.server_path, :build_legacy => false)
+        indexer = Gem::Indexer.new(Rails.root.join("server"), build_legacy: false)
         def indexer.say(message) end
         indexer
       end

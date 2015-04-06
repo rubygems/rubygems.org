@@ -6,9 +6,7 @@ class HostessTest < ActiveSupport::TestCase
   end
 
   def touch(path)
-    path = Pusher.server_path(path)
-    FileUtils.mkdir_p(File.dirname(path))
-    FileUtils.touch(path)
+    RubygemFs.instance.store(path, '')
   end
 
   %w[/prerelease_specs.4.8.gz
@@ -76,8 +74,7 @@ class HostessTest < ActiveSupport::TestCase
   should "serve up gem locally" do
     download_count = Download.count
     file = "/gems/test-0.0.0.gem"
-    FileUtils.cp gem_file.path, Pusher.server_path("gems")
-
+    touch file
     rubygem = create(:rubygem, :name => "test")
     version = create(:version, :rubygem => rubygem, :number => "0.0.0")
 

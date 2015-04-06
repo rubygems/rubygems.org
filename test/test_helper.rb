@@ -18,6 +18,8 @@ I18n.enforce_available_locales = false
 # Shim for compatibility with older versions of MiniTest
 MiniTest::Test = MiniTest::Unit::TestCase unless defined?(MiniTest::Test)
 
+RubygemFs.mock!
+
 class MiniTest::Test
   include Rack::Test::Methods
   include FactoryGirl::Syntax::Methods
@@ -26,7 +28,6 @@ class MiniTest::Test
   def setup
     RR.reset
     Redis.current.flushdb
-    $fog.directories.create(key: Gemcutter.config['s3_bucket'], public: true)
   end
 
   def page

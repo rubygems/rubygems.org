@@ -20,9 +20,13 @@ module Gemcutter
 
     config.active_record.include_root_in_json = false
 
+    config.after_initialize do
+      RubygemFs.s3! ENV['S3_PROXY'] if ENV['S3_PROXY']
+    end
+
     config.plugins = [:dynamic_form]
 
-    config.autoload_paths << "./app/jobs"
+    config.autoload_paths << Rails.root.join('lib')
   end
 
   def self.config
