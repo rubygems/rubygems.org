@@ -15,7 +15,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         RubygemFs.instance.store("gems/#{@v1.full_name}.gem", "")
       end
 
-      context "ON DELETE to yank for existing gem version" do
+      context "ON DELETE to create for existing gem version" do
         setup do
           delete :create, :gem_name => @rubygem.to_param, :version => @v1.number
         end
@@ -24,8 +24,8 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           assert_equal 1, @rubygem.versions.count
           assert @rubygem.versions.indexed.count.zero?
         end
-        should "delete the .gem file" do
-          assert_nil RubygemFs.instance.get("gems/#{@v1.full_name}.gem")
+        should "record the deletion" do
+          assert_not_nil Deletion.where(user: @user, rubygem: @rubygem.name, number: @v1.number).first
         end
       end
 
@@ -34,7 +34,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           @v2 = create(:version, :rubygem => @rubygem, :number => "0.1.1", :platform => "ruby")
         end
 
-        context "ON DELETE to yank for version 0.1.1" do
+        context "ON DELETE to create for version 0.1.1" do
           setup do
             delete :create, :gem_name => @rubygem.to_param, :version => @v2.number
           end
@@ -55,7 +55,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           @v2 = create(:version, :rubygem => @rubygem, :number => "0.1.1", :platform => "x86-darwin-10")
         end
 
-        context "ON DELETE to yank for version 0.1.1 and x86-darwin-10" do
+        context "ON DELETE to create for version 0.1.1 and x86-darwin-10" do
           setup do
             delete :create, :gem_name => @rubygem.to_param, :version => @v2.number, :platform => @v2.platform
           end
@@ -66,7 +66,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
             assert_equal 1, @rubygem.ownerships.count
           end
           should "show platform in response" do
-            assert_equal "Successfully yanked gem: SomeGem (0.1.1-x86-darwin-10)", @response.body
+            assert_equal "Successfully deleted gem: SomeGem (0.1.1-x86-darwin-10)", @response.body
           end
           should "record the deletion" do
             assert_not_nil Deletion.where(user: @user, rubygem: @rubygem.name, number: @v2.number, platform: @v2.platform).first
@@ -74,7 +74,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         end
       end
 
-      context "ON DELETE to yank for existing gem with invalid version" do
+      context "ON DELETE to create for existing gem with invalid version" do
         setup do
           delete :create, :gem_name => @rubygem.to_param, :version => "0.2.0"
         end
@@ -88,7 +88,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         end
       end
 
-      context "ON DELETE to yank for someone else's gem" do
+      context "ON DELETE to create for someone else's gem" do
         setup do
           @other_user = create(:user)
           @request.env["HTTP_AUTHORIZATION"] = @other_user.api_key
@@ -100,19 +100,19 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         end
       end
 
-      context "ON DELETE to yank for an already yanked gem" do
+      context "ON DELETE to create for an already deleted gem" do
         setup do
-          @v1.yank!
-          delete :create, :gem_name => @rubygem.to_param, :version => '0.1.0'
+          Deletion.create!(user: @user, version: @v1)
+          delete :create, :gem_name => @rubygem.to_param, :version => @v1.number
         end
         should respond_with :unprocessable_entity
-        should "not record the deletion" do
-          assert_equal 0, @user.deletions.count
+        should "not re-record the deletion" do
+          assert_equal 1, Deletion.count(user: @user, rubygem: @rubygem.name, number: @v1.number)
         end
       end
     end
 
-    context "for a gem SomeGem with a yanked version 0.1.0 and unyanked version 0.1.1" do
+    context "for a gem SomeGem with a deleted version 0.1.0 and indexed version 0.1.1" do
       setup do
         @rubygem  = create(:rubygem, :name => "SomeGem")
         @v1       = create(:version, :rubygem => @rubygem, :number => "0.1.0", :platform => "ruby", :indexed => false)
@@ -121,21 +121,21 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         create(:ownership, :user => @user, :rubygem => @rubygem)
       end
 
-      context "ON PUT to unyank for version 0.1.0" do
+      context "ON PUT to destroy for version 0.1.0" do
         setup do
           put :destroy, :gem_name => @rubygem.to_param, :version => @v1.number
         end
         should respond_with :gone
       end
 
-      context "ON PUT to unyank for version 0.1.2 and platform x86-darwin-10" do
+      context "ON PUT to destroy for version 0.1.2 and platform x86-darwin-10" do
         setup do
           put :destroy, :gem_name => @rubygem.to_param, :version => @v3.number, :platform => @v3.platform
         end
         should respond_with :gone
       end
 
-      context "ON PUT to unyank for version 0.1.1" do
+      context "ON PUT to destroy for version 0.1.1" do
         setup do
           put :destroy, :gem_name => @rubygem.to_param, :version => @v2.number
         end

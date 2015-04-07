@@ -19,6 +19,7 @@ module Gemcutter
     config.middleware.use "Redirector"
 
     config.active_record.include_root_in_json = false
+    config.active_record.raise_in_transactional_callbacks = true
 
     config.after_initialize do
       RubygemFs.s3! ENV['S3_PROXY'] if ENV['S3_PROXY']

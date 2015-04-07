@@ -187,5 +187,4 @@ ActiveRecord::Schema.define(version: 20150407012331) do
     t.integer  "rubygem_id"
   end
 
-  add_foreign_key "deletions", "users"
 end

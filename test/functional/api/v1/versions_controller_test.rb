@@ -98,7 +98,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       set_cache_header
 
       Timecop.travel(Time.now + 1) do
-        @rubygem.public_versions.each { |v| v.yank! }
+        @rubygem.public_versions.each { |v| v.update!(indexed: false) }
       end
 
       get_show(@rubygem)
@@ -202,8 +202,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
   context "on GET to of latest for a gem with no versions" do
     setup do
       @rubygem = create(:rubygem)
-      v = create(:version, :rubygem => @rubygem, :number => "1.0.0")
-      v.yank!
+      @version = create(:version, :rubygem => @rubygem, :number => "1.0.0", indexed: false)
     end
 
     should "return latest version" do

@@ -203,7 +203,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "not include gem if all versions have been yanked" do
-      @rubygems.first.versions.first.yank!
+      @rubygems.first.versions.first.update! indexed: false
       assert_equal 2, @user.rubygems_downloaded.count
     end
 

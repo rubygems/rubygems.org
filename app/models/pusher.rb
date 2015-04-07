@@ -82,7 +82,7 @@ class Pusher
 
       if @rubygem.name != name and @rubygem.indexed_versions?
         return notify("Unable to change case of gem name with indexed versions\n" +
-                      "Please yank all versions first", 409)
+                      "Please delete all versions first with `gem yank`.", 409)
       end
     end
 

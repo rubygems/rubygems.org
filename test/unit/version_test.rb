@@ -105,8 +105,7 @@ class VersionTest < ActiveSupport::TestCase
       @another_gem = create(:rubygem)
       @third  = create(:version, :rubygem => @another_gem, :created_at => 3.days.ago)
       @first  = create(:version, :rubygem => @another_gem, :created_at => 1.minute.ago)
-      @yanked = create(:version, :rubygem => @another_gem, :created_at => 30.seconds.ago)
-      @yanked.yank!
+      @yanked = create(:version, :rubygem => @another_gem, :created_at => 30.seconds.ago, :indexed => false)
 
       @bad_gem = create(:rubygem)
       @only_one = create(:version, :rubygem => @bad_gem, :created_at => 1.minute.ago)
@@ -334,22 +333,6 @@ class VersionTest < ActiveSupport::TestCase
     should "give 'N/A' for size when size not available" do
       @version.size = nil
       assert_equal 'N/A', @version.size
-    end
-
-    context "when yanked" do
-      setup do
-        RubygemFs.instance.store("gems/#{@version.full_name}.gem", "")
-        @version.yank!
-      end
-      should("unindex") { assert !@version.indexed? }
-      should("be considered yanked") { assert Version.yanked.include?(@version) }
-      should("no longer be latest") { assert !@version.latest?}
-      should "not appear in the version list" do
-        assert ! Redis.current.exists(Rubygem.versions_key(@version.rubygem.name))
-      end
-      should "delete the .gem file" do
-        assert_nil RubygemFs.instance.get("gems/#{@version.full_name}.gem")
-      end
     end
   end
 

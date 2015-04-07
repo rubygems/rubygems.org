@@ -434,7 +434,7 @@ class RubygemTest < ActiveSupport::TestCase
 
     context "when yanking the last version of a gem with an owner" do
       setup do
-        @rubygem_with_version.versions.first.yank!
+        @rubygem_with_version.versions.first.update! indexed: false
       end
 
       should "still be owned" do
@@ -448,7 +448,7 @@ class RubygemTest < ActiveSupport::TestCase
 
     context "when yanking one of many versions of a gem" do
       setup do
-        @rubygem_with_versions.versions.first.yank!
+        @rubygem_with_versions.versions.first.update! indexed: false
       end
       should "remain owned" do
         assert !@rubygem_with_versions.reload.unowned?
