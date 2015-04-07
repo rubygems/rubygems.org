@@ -274,6 +274,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
             assert_equal 1, @rubygem.versions.indexed.count
             assert_equal 1, @rubygem.ownerships.count
           end
+          should "record the deletion" do
+            assert_not_nil Deletion.where(user: @user, rubygem: @rubygem.name, number: @v2.number).first
+          end
         end
       end
 
@@ -295,6 +298,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           should "show platform in response" do
             assert_equal "Successfully yanked gem: SomeGem (0.1.1-x86-darwin-10)", @response.body
           end
+          should "record the deletion" do
+            assert_not_nil Deletion.where(user: @user, rubygem: @rubygem.name, number: @v2.number, platform: @v2.platform).first
+          end
         end
       end
 
@@ -307,6 +313,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           assert_equal 1, @rubygem.versions.count
           assert_equal 1, @rubygem.versions.indexed.count
         end
+        should "not record the deletion" do
+          assert_equal 0, @user.deletions.count
+        end
       end
 
       context "ON DELETE to yank for someone else's gem" do
@@ -316,6 +325,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           delete :yank, :gem_name => @rubygem.to_param, :version => '0.1.0'
         end
         should respond_with :forbidden
+        should "not record the deletion" do
+          assert_equal 0, @user.deletions.count
+        end
       end
 
       context "ON DELETE to yank for an already yanked gem" do
@@ -324,6 +336,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           delete :yank, :gem_name => @rubygem.to_param, :version => '0.1.0'
         end
         should respond_with :unprocessable_entity
+        should "not record the deletion" do
+          assert_equal 0, @user.deletions.count
+        end
       end
     end
 
@@ -349,7 +364,6 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         end
         should respond_with :gone
       end
-
 
       context "ON PUT to unyank for version 0.1.1" do
         setup do

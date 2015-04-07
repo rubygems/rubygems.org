@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150209074817) do
+ActiveRecord::Schema.define(version: 20150407012331) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,17 @@ ActiveRecord::Schema.define(version: 20150209074817) do
     t.datetime "updated_at",                         null: false
     t.string   "queue",      limit: 255
   end
+
+  create_table "deletions", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "rubygem"
+    t.string   "number"
+    t.string   "platform"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "deletions", ["user_id"], name: "index_deletions_on_user_id", using: :btree
 
   create_table "dependencies", force: :cascade do |t|
     t.string   "requirements",    limit: 255
@@ -176,4 +187,5 @@ ActiveRecord::Schema.define(version: 20150209074817) do
     t.integer  "rubygem_id"
   end
 
+  add_foreign_key "deletions", "users"
 end

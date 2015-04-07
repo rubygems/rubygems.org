@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
     :through => :subscriptions,
     :source  => :rubygem
 
+  has_many :deletions
   has_many :ownerships
   has_many :subscriptions
   has_many :web_hooks

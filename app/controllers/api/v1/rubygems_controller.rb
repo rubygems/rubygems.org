@@ -35,6 +35,7 @@ class Api::V1::RubygemsController < Api::BaseController
   def yank
     if @version.indexed?
       @version.yank!
+      current_user.deletions.create! rubygem: @version.rubygem.name, number: @version.number, platform: @version.platform
       StatsD.increment 'yank.success'
       render :text => "Successfully yanked gem: #{@version.to_title}"
     else
