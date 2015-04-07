@@ -106,7 +106,7 @@ gem server, please consider checking out
 [Geminabox](http://github.com/geminabox/geminabox). It’s a lot simpler
 than Rubygems and may suit your organization’s needs better.**
 
-#### Environment
+#### Environment (OS X)
 
 * Use Ruby 2.1.5
 * Use Rubygems 2.4.5
@@ -125,6 +125,16 @@ than Rubygems and may suit your organization’s needs better.**
 * If you want to use MySQL instead
   * Install with: `brew install mysql`
   * Start the DB server with: `sudo /usr/local/mysql/support-files/mysql.server start`
+
+#### Environment (Linux - Debian/Ubuntu)
+
+* Use Ruby 2.1.5 `apt-get install ruby2.1`
+  * Or install via [alternate methods](http://www.ruby-lang.org/en/downloads/)
+* Use Rubygems 2.4.5
+* Install bundler: `gem install bundler`
+* Install Redis: `apt-get install redis-server`
+* Install PostgreSQL: `apt-get install postgresql postgresql-server-dev-all`
+  * Help to setup database <https://wiki.debian.org/PostgreSql>
 
 #### Getting the code
 
