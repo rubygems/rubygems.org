@@ -43,8 +43,8 @@ Rails.application.routes.draw do
           get :reverse_dependencies
         end
         collection do
-          delete :yank
-          put :unyank
+          delete :yank, to: "deletions#create"
+          put :unyank, to: "deletions#destroy"
         end
         constraints :rubygem_id => Patterns::ROUTE_PATTERN do
           resource :owners, :only => [:show, :create, :destroy]
