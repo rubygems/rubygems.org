@@ -44,27 +44,14 @@ class Pusher
   end
 
   def pull_spec
-    # After we upgrade to rubygems 2.3.0+, we can replace this with `Gem::Package.new(body).load_spec`
-    # as https://github.com/rubygems/rubygems/pull/716 is merged for those versions.
-    gem_tar = Gem::Package::TarReader.new body
-    gem_tar.each do |entry|
-      if @spec = load_spec(entry)
-        break
-      end
-    end
-
-    raise Gem::Package::FormatError.new('package metadata is missing') unless @spec
-    @spec
-  rescue Psych::Exception => e
-    Rails.logger.info "Attempted YAML metadata exploit: #{e}"
-    notify("RubyGems.org cannot process this gem.\nThe metadata is invalid.\n#{e}", 422)
-  rescue Gem::Package::FormatError
-    notify("RubyGems.org cannot process this gem.\nPlease try rebuilding it" +
-           " and installing it locally to make sure it's valid.", 422)
+    @spec = Gem::Package.new(body).spec
   rescue Exception => e
-    notify("RubyGems.org cannot process this gem.\nPlease try rebuilding it" +
-           " and installing it locally to make sure it's valid.\n" +
-           "Error:\n#{e.message}}", 422)
+    notify <<-MSG, 422
+RubyGems.org cannot process this gem.
+Please try rebuilding it and installing it locally to make sure it's valid.
+Error:
+#{e.message}
+MSG
   end
 
   def find
@@ -130,23 +117,6 @@ class Pusher
   end
 
   private
-
-  def load_spec entry
-    case entry.full_name
-    when 'metadata'
-      return Gem::Specification.from_yaml entry.read
-    when 'metadata.gz'
-      args = [entry]
-      args << { :external_encoding => Encoding::UTF_8 } if
-        Object.const_defined?(:Encoding) &&
-          Zlib::GzipReader.method(:wrap).arity != 1
-
-      Zlib::GzipReader.wrap(*args) do |gzio|
-        return Gem::Specification.from_yaml gzio.read
-      end
-    end
-    nil
-  end
 
   def after_write
     @version_id = version.id

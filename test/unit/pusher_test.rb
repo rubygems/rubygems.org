@@ -76,7 +76,6 @@ class PusherTest < ActiveSupport::TestCase
       @cutter.pull_spec
       assert_nil @cutter.spec
       assert_match %r{RubyGems\.org cannot process this gem}, @cutter.message
-      assert_match %r{The metadata is invalid.}, @cutter.message
       assert_match %r{ActionController::Routing::RouteSet::NamedRouteCollection}, @cutter.message
       assert_equal @cutter.code, 422
     end
@@ -88,7 +87,6 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.pull_spec
         assert_nil @cutter.spec
         assert_includes @cutter.message, %{RubyGems.org cannot process this gem}
-        assert_includes @cutter.message, %{The metadata is invalid}
         assert_includes @cutter.message, %{Tried to load unspecified class: Symbol}
         assert_equal @cutter.code, 422
       end
@@ -100,6 +98,13 @@ class PusherTest < ActiveSupport::TestCase
       @cutter.pull_spec
       assert_not_nil @cutter.spec
       assert_not_nil @cutter.spec.dependencies.first.requirement
+    end
+
+    should "not be able to pull spec when no data available" do
+      @gem = gem_file("aliases-nodata-0.0.1.gem")
+      @cutter = Pusher.new(@user, @gem)
+      @cutter.pull_spec
+      assert_includes @cutter.message, %{package content (data.tar.gz) is missing}
     end
 
     should "post info to the remote bundler API" do
