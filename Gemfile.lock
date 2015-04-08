@@ -81,7 +81,6 @@ GEM
     email_validator (1.5.0)
       activemodel
     erubis (2.7.0)
-    excon (0.25.3)
     execjs (2.4.0)
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
@@ -241,7 +240,6 @@ DEPENDENCIES
   delayed_job
   delayed_job_active_record
   dynamic_form
-  excon
   factory_girl_rails
   fakeredis
   gchartrb
