@@ -18,10 +18,9 @@ module RubygemFs
   end
 
   def self.s3!(host)
-    uri = URI(host)
     @fs = RubygemFs::S3.new
-    s3 = @fs.s3(access_key_id: 'k', secret_access_key: 's',  proxy: {host: uri.host, port: uri.port})
-    s3.buckets.build(Gemcutter.config['s3_bucket']).save
+    s3 = @fs.s3(access_key_id: 'k', secret_access_key: 's', endpoint: host, force_path_style: true, region: 'us-west-1')
+    s3.create_bucket(bucket: Gemcutter.config['s3_bucket'])
   end
 
   class Local
@@ -51,29 +50,28 @@ module RubygemFs
 
   class S3
     def store(key, body)
-      object = bucket.objects.build(key)
-      object.content = body
-      object.save
+      s3.put_object(key: key, body: body, bucket: bucket, acl: 'public-read')
     end
 
     def get(key)
-      if object = bucket.objects.find(key)
-        object.content
-      end
+      s3.get_object(key: key, bucket: bucket).body.read
+    rescue Aws::S3::Errors::NoSuchKey
+      nil
     end
 
     def remove(key)
-      if object = bucket.objects.find(key)
-        object.destroy
-      end
+      s3.delete_object(key: key, bucket: bucket)
     end
 
     def bucket
-      @bucket ||= s3.buckets.find(Gemcutter.config['s3_bucket'])
+      Gemcutter.config['s3_bucket']
     end
 
     def s3(options = nil)
-      @s3 ||= ::S3::Service.new(options || { access_key_id: ENV['S3_KEY'], secret_access_key: ENV['S3_SECRET'] })
+      @s3 ||= Aws::S3::Client.new(options ||
+                                  { access_key_id: ENV['S3_KEY'],
+                                    secret_access_key: ENV['S3_SECRET'],
+                                    endpoint: "https://s3.amazonaws.com" })
     end
   end
 end
