@@ -34,5 +34,6 @@ class Deletion < ActiveRecord::Base
 
   def remove_from_storage
     RubygemFs.instance.remove("gems/#{@version.full_name}.gem")
+    RubygemFs.instance.remove("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
   end
 end
