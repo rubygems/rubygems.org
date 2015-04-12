@@ -19,7 +19,11 @@ module RubygemFs
 
   def self.s3!(host)
     @fs = RubygemFs::S3.new
-    s3 = @fs.s3(access_key_id: 'k', secret_access_key: 's', endpoint: host, force_path_style: true, region: 'us-west-1')
+    s3 = @fs.s3(access_key_id: 'k',
+                secret_access_key: 's',
+                endpoint: host,
+                force_path_style: true,
+                region: 'us-east-1')
     s3.create_bucket(bucket: Gemcutter.config['s3_bucket'])
   end
 
@@ -80,6 +84,7 @@ module RubygemFs
       @s3 ||= Aws::S3::Client.new(options ||
                                   { access_key_id: ENV['S3_KEY'],
                                     secret_access_key: ENV['S3_SECRET'],
+                                    region: 'us-east-1',
                                     endpoint: "https://s3.amazonaws.com" })
     end
   end
