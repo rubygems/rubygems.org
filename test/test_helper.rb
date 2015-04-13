@@ -15,9 +15,6 @@ require 'helpers/gem_helpers'
 
 I18n.enforce_available_locales = false
 
-# Shim for compatibility with older versions of MiniTest
-MiniTest::Test = MiniTest::Unit::TestCase unless defined?(MiniTest::Test)
-
 RubygemFs.mock!
 
 class MiniTest::Test
