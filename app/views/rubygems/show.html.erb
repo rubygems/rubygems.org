@@ -158,9 +158,10 @@
             <%= link_to_page t('.links.mail'), @rubygem.linkset.mail %>
             <%= link_to_page t('.links.bugs'), @rubygem.linkset.bugs %>
           <% end %>
+
+          <%= download_link(@latest_version) %>
         <% end %>
 
-        <%= download_link(@latest_version) %>
         <%= documentation_link(@latest_version, @rubygem.linkset) %>
         <%= badge_link(@rubygem) %>
         <%= subscribe_link(@rubygem) if @latest_version.indexed %>
