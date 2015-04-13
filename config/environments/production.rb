@@ -78,6 +78,4 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 end
 
-Excon.defaults[:ssl_ca_path]= "/etc/ssl/certs"
-
 require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?
