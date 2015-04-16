@@ -31,8 +31,7 @@ class Api::V1::VersionsController < Api::BaseController
   end
 
   def reverse_dependencies
-    versions = Version.reverse_dependencies(params[:id])
-    names = versions.map(&:full_name)
+    names = Version.reverse_dependencies(params[:id]).pluck(:full_name)
     respond_to do |format|
       format.json { render json: names }
       format.yaml { render yaml: names, yamlish: true }
