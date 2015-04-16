@@ -16,18 +16,11 @@ class Api::V1::VersionsController < Api::BaseController
 
   def latest
     rg = Rubygem.find_by_name params[:id]
-
-    if rg.blank?
-      number = "unknown"
-    else
-      if ver = rg.versions.latest.first
-        number = ver.number
-      else
-        number = "unknown"
-      end
+    if rg.present? && ver = rg.versions.latest.first
+      number = ver.number
     end
 
-    render json: { "version" => number }, callback: params['callback']
+    render json: { "version" => number || "unknown" }, callback: params['callback']
   end
 
   def reverse_dependencies
