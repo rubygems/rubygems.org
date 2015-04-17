@@ -53,11 +53,11 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   def reverse_dependencies
-    rubygems = Rubygem.reverse_dependencies(params[:id])
+    names = Rubygem.reverse_dependencies(params[:id]).pluck(:name)
 
     respond_to do |format|
-      format.json { render json: rubygems.map(&:name) }
-      format.yaml { render yaml: rubygems.map(&:name), yamlish: true }
+      format.json { render json: names }
+      format.yaml { render yaml: names, yamlish: true }
     end
   end
 
