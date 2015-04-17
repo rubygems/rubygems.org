@@ -81,6 +81,8 @@ GEM
     delayed_job_active_record (4.0.3)
       activerecord (>= 3.0, < 5.0)
       delayed_job (>= 3.0, < 4.1)
+    domain_name (0.5.24)
+      unf (>= 0.0.5, < 1.0.0)
     dynamic_form (1.1.4)
     email_validator (1.5.0)
       activemodel
@@ -102,6 +104,8 @@ GEM
     hike (1.2.3)
     honeybadger (1.16.7)
       json
+    http-cookie (1.0.2)
+      domain_name (~> 0.5)
     i18n (0.7.0)
     jmespath (1.0.2)
       multi_json (~> 1.0)
@@ -175,7 +179,8 @@ GEM
     rdoc (3.12.2)
       json (~> 1.4)
     redis (3.2.1)
-    rest-client (1.7.3)
+    rest-client (1.8.0)
+      http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
     rr (1.1.2)
@@ -214,6 +219,9 @@ GEM
     uglifier (2.7.1)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7)
     unicorn (4.8.3)
       kgio (~> 2.6)
       rack
