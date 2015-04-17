@@ -108,7 +108,7 @@ than Rubygems and may suit your organization’s needs better.**
 
 #### Environment (OS X)
 
-* Use Ruby 2.1.5
+* Use Ruby 2.1.6
 * Use Rubygems 2.4.5
 * Install bundler: `gem install bundler`
 * Install [redis](http://github.com/antirez/redis),
@@ -128,7 +128,7 @@ than Rubygems and may suit your organization’s needs better.**
 
 #### Environment (Linux - Debian/Ubuntu)
 
-* Use Ruby 2.1.5 `apt-get install ruby2.1`
+* Use Ruby 2.1.6 `apt-get install ruby2.1`
   * Or install via [alternate methods](http://www.ruby-lang.org/en/downloads/)
 * Use Rubygems 2.4.5
 * Install bundler: `gem install bundler`
