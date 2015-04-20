@@ -84,8 +84,6 @@ nl:
       authors_header: Auteurs
       versions_header: Versies
       not_hosted_notice: Deze gem wordt momenteel niet gehost op rubygems.org.
-      yanked_notice: Deze gem is verwijderd, maar is nog steeds te downloaden voor andere gems die ervan afhankelijk zijn. Voor meer informatie of als het nodig is de gem permanent te verwijderen, zie %{more_info_link}.
-      yank_info_link_text: gebruik deze link
       owners_header: Eigenaren
       links:
         home: Startpagina

@@ -58,7 +58,8 @@ class YankTest < SystemTest
     assert ! page.has_content?(@user.handle)
   end
 
-  test "undo a yank" do
+  test "undo a yank is not supported" do
+    create(:version, rubygem: @rubygem, number: "1.0.0", indexed: true)
     create(:version, rubygem: @rubygem, number: "0.0.0", indexed: false)
 
     page.driver.browser.header("Authorization", @user.api_key)
@@ -68,7 +69,8 @@ class YankTest < SystemTest
     assert page.has_content? "sandworm"
 
     click_link "sandworm"
-    assert page.has_content? "0.0.0"
+    assert page.has_content?("1.0.0")
+    assert ! page.has_content?("0.0.0")
   end
 
   teardown do
