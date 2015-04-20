@@ -95,8 +95,7 @@ en:
     show:
       not_hosted_notice: This gem is not currently hosted on Gemcutter.
       install: install
-      yanked_notice: "This gem has been yanked, but it is still available for download for other gems that may have depended on it. For more information or if you need to remove it permanently, %{more_info_link}."
-      yank_info_link_text: please click here
+      yanked_notice: "This gem has been yanked, and it is not available for download directly or for other gems that may have depended on it."
       authors_header: Authors
       downloads_for_this_version: "For this version"
       owners_header: Owners
