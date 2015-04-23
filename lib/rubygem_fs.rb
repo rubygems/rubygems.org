@@ -70,6 +70,13 @@ module RubygemFs
       nil
     end
 
+    def deleted?(key)
+      s3.get_object(key: key, bucket: bucket)
+      false
+    rescue Aws::S3::Errors::NoSuchKey
+      true
+    end
+
     def remove(key)
       s3.delete_object(key: key, bucket: bucket)
     end

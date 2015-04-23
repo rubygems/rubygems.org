@@ -133,6 +133,11 @@ class Version < ActiveRecord::Base
     !indexed
   end
 
+  def deleted?
+    key = "gems/#{full_name}.gem"
+    RubygemFs.instance.deleted?(key)
+  end
+
   def size
     read_attribute(:size) || 'N/A'
   end
