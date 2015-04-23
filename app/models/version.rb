@@ -134,8 +134,7 @@ class Version < ActiveRecord::Base
   end
 
   def deleted?
-    key = "gems/#{full_name}.gem"
-    RubygemFs.instance.deleted?(key)
+    RubygemFs.instance.deleted?(fs_key)
   end
 
   def size
@@ -261,9 +260,12 @@ class Version < ActiveRecord::Base
     sha256.unpack("m0").first.unpack("H*").first if sha256
   end
 
+  def fs_key
+    "gems/#{full_name}.gem"
+  end
+
   def recalculate_sha256
-    key = "gems/#{full_name}.gem"
-    if file = RubygemFs.instance.get(key)
+    if file = RubygemFs.instance.get(fs_key)
       Digest::SHA2.base64digest file
     end
   end
