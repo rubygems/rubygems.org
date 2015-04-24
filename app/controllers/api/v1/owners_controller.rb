@@ -39,7 +39,7 @@ class Api::V1::OwnersController < Api::BaseController
       rubygems = user.rubygems.with_versions
       respond_to do |format|
         format.json { render json: rubygems }
-        format.yaml { render yaml: rubygems, yamlish: true }
+        format.yaml { render yaml: rubygems }
       end
     else
       render :text => "Owner could not be found.", :status => :not_found

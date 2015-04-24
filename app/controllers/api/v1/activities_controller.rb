@@ -14,7 +14,7 @@ class Api::V1::ActivitiesController < Api::BaseController
   def render_rubygems
     respond_to do |format|
       format.json { render json: @rubygems }
-      format.yaml { render yaml: @rubygems, yamlish: true }
+      format.yaml { render yaml: @rubygems }
     end
   end
 end
