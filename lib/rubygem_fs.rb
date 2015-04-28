@@ -70,6 +70,7 @@ module RubygemFs
       nil
     end
 
+    # Util method used for debugging and console scripts
     def deleted?(key)
       s3.head_object(key: key, bucket: bucket)
       false
@@ -81,6 +82,7 @@ module RubygemFs
       s3.delete_object(key: key, bucket: bucket)
     end
 
+    # Util method used for debugging and console scripts
     def restore(key)
       begin
         s3.head_object(key: key, bucket: bucket)
