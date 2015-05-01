@@ -152,6 +152,29 @@ than Rubygems and may suit your organization’s needs better.**
 * Run the database rake tasks if needed:
     `rake db:create:all db:drop:all db:setup db:test:prepare --trace`
 
+#### Import production database
+
+You can download dump from [here](https://rubygems.org/pages/data).
+This dump is sanitized from announcements, owners and schema_migration tables.
+
+One way to use this dump, for development and testing purpose, is to disable
+migration error on `config/environments/development.rb`:
+
+~~~ ruby
+config.active_record.migration_error = false
+~~~
+
+Create announcements, owners and users tables on console:
+
+~~~
+require Rails.root.join('db/migrate/20101013135725_create_announcements')
+CreateAnnouncements.up
+require Rails.root.join('db/migrate/20090607004258_create_ownerships')
+CreateOwnerships.up
+require Rails.root.join('db/migrate/20090527120326_clearance_create_users')
+ClearanceCreateUsers.up
+~~~
+
 #### Running tests
 
 * Start redis: `redis-server`
