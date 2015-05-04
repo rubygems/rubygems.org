@@ -87,7 +87,7 @@ GEM
     email_validator (1.5.0)
       activemodel
     erubis (2.7.0)
-    execjs (2.4.0)
+    execjs (2.5.2)
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.5.0)
