@@ -31,10 +31,10 @@
   </div>
 
   <div class="t-body">
-    <h2><%= t '.reset_password.title' %></h3>
+    <h2><%= t '.reset_password.title' %></h2>
     <p><%= t('.reset_password.text', :link => link_to(t('.reset_password.link_text'), new_password_url)).html_safe %></p>
 
-    <h2><%= t '.api_access.title' %></h3>
+    <h2><%= t '.api_access.title' %></h2>
     <p>
       <%= t('.api_access.key_is', :key => content_tag(:strong, current_user.api_key)).html_safe %>
     </p>
