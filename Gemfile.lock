@@ -138,7 +138,7 @@ GEM
       mini_portile (~> 0.6.0)
     paul_revere (1.4)
       rails (~> 4.0)
-    pg (0.18.1)
+    pg (0.18.2)
     psych (2.0.13)
     rack (1.6.1)
     rack-test (0.6.3)
