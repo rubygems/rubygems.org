@@ -40,7 +40,7 @@ GEM
     arel (6.0.0)
     autoprefixer-rails (4.0.2.2)
       execjs
-    aws-sdk-core (2.0.38)
+    aws-sdk-core (2.0.42)
       builder (~> 3.0)
       jmespath (~> 1.0)
       multi_json (~> 1.0)
