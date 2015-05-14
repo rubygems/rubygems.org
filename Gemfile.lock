@@ -201,7 +201,7 @@ GEM
       addressable
     sprockets (3.1.0)
       rack (~> 1.0)
-    sprockets-rails (2.2.4)
+    sprockets-rails (2.3.1)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
