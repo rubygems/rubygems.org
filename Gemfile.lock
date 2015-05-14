@@ -100,7 +100,7 @@ GEM
       activesupport (>= 4.1.0)
     gravtastic (3.2.6)
     high_voltage (2.2.1)
-    highline (1.6.21)
+    highline (1.7.2)
     hike (1.2.3)
     honeybadger (1.16.7)
       json
