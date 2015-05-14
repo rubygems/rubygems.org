@@ -137,8 +137,8 @@ GEM
     newrelic_rpm (3.12.0.288)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
-    paul_revere (1.3)
-      rails (>= 3.0)
+    paul_revere (1.4)
+      rails (~> 4.0)
     pg (0.18.1)
     psych (2.0.13)
     rack (1.6.1)
@@ -263,7 +263,7 @@ DEPENDENCIES
   multi_json
   newrelic-redis
   newrelic_rpm
-  paul_revere
+  paul_revere (~> 1.4)
   pg
   psych (~> 2.0.12)
   rack
