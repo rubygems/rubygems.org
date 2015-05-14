@@ -19,22 +19,22 @@ ActiveRecord::Schema.define(version: 20150407012331) do
 
   create_table "announcements", force: :cascade do |t|
     t.text     "body"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
-    t.integer  "priority",               default: 0
-    t.integer  "attempts",               default: 0
+    t.integer  "priority",   default: 0
+    t.integer  "attempts",   default: 0
     t.text     "handler"
     t.text     "last_error"
     t.datetime "run_at"
     t.datetime "locked_at"
     t.datetime "failed_at"
-    t.string   "locked_by",  limit: 255
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
-    t.string   "queue",      limit: 255
+    t.string   "locked_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "queue"
   end
 
   create_table "deletions", force: :cascade do |t|
@@ -49,13 +49,13 @@ ActiveRecord::Schema.define(version: 20150407012331) do
   add_index "deletions", ["user_id"], name: "index_deletions_on_user_id", using: :btree
 
   create_table "dependencies", force: :cascade do |t|
-    t.string   "requirements",    limit: 255
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.string   "requirements"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "rubygem_id"
     t.integer  "version_id"
-    t.string   "scope",           limit: 255
-    t.string   "unresolved_name", limit: 255
+    t.string   "scope"
+    t.string   "unresolved_name"
   end
 
   add_index "dependencies", ["rubygem_id"], name: "index_dependencies_on_rubygem_id", using: :btree
@@ -64,14 +64,14 @@ ActiveRecord::Schema.define(version: 20150407012331) do
 
   create_table "linksets", force: :cascade do |t|
     t.integer  "rubygem_id"
-    t.string   "home",       limit: 255
-    t.string   "wiki",       limit: 255
-    t.string   "docs",       limit: 255
-    t.string   "mail",       limit: 255
-    t.string   "code",       limit: 255
-    t.string   "bugs",       limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "home"
+    t.string   "wiki"
+    t.string   "docs"
+    t.string   "mail"
+    t.string   "code"
+    t.string   "bugs"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "linksets", ["rubygem_id"], name: "index_linksets_on_rubygem_id", using: :btree
@@ -79,25 +79,25 @@ ActiveRecord::Schema.define(version: 20150407012331) do
   create_table "ownerships", force: :cascade do |t|
     t.integer  "rubygem_id"
     t.integer  "user_id"
-    t.string   "token",      limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "token"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "ownerships", ["rubygem_id"], name: "index_ownerships_on_rubygem_id", using: :btree
   add_index "ownerships", ["user_id"], name: "index_ownerships_on_user_id", using: :btree
 
   create_table "rubyforgers", force: :cascade do |t|
-    t.string "email",              limit: 255
+    t.string "email"
     t.string "encrypted_password", limit: 40
   end
 
   create_table "rubygems", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
-    t.integer  "downloads",              default: 0
-    t.string   "slug",       limit: 255
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "downloads",  default: 0
+    t.string   "slug"
   end
 
   add_index "rubygems", ["name"], name: "index_rubygems_on_name", unique: true, using: :btree
@@ -105,27 +105,27 @@ ActiveRecord::Schema.define(version: 20150407012331) do
   create_table "subscriptions", force: :cascade do |t|
     t.integer  "rubygem_id"
     t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "subscriptions", ["rubygem_id"], name: "index_subscriptions_on_rubygem_id", using: :btree
   add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",              limit: 255
+    t.string   "email"
     t.string   "encrypted_password", limit: 128
     t.string   "salt",               limit: 128
     t.string   "token",              limit: 128
     t.datetime "token_expires_at"
     t.boolean  "email_confirmed",                default: false, null: false
-    t.string   "api_key",            limit: 255
+    t.string   "api_key"
     t.string   "confirmation_token", limit: 128
     t.string   "remember_token",     limit: 128
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "email_reset"
-    t.string   "handle",             limit: 255
+    t.string   "handle"
     t.boolean  "hide_email"
   end
 
@@ -147,25 +147,25 @@ ActiveRecord::Schema.define(version: 20150407012331) do
   create_table "versions", force: :cascade do |t|
     t.text     "authors"
     t.text     "description"
-    t.string   "number",            limit: 255
+    t.string   "number"
     t.integer  "rubygem_id"
-    t.datetime "built_at",                                     null: false
-    t.datetime "updated_at",                                   null: false
-    t.string   "rubyforge_project", limit: 255
+    t.datetime "built_at"
+    t.datetime "updated_at"
+    t.string   "rubyforge_project"
     t.text     "summary"
-    t.string   "platform",          limit: 255
+    t.string   "platform"
     t.datetime "created_at"
-    t.boolean  "indexed",                       default: true
+    t.boolean  "indexed",           default: true
     t.boolean  "prerelease"
     t.integer  "position"
     t.boolean  "latest"
-    t.string   "full_name",         limit: 255
+    t.string   "full_name"
     t.integer  "size"
-    t.string   "licenses",          limit: 255
+    t.string   "licenses"
     t.text     "requirements"
-    t.string   "ruby_version",      limit: 255
+    t.string   "ruby_version"
     t.string   "sha256"
-    t.hstore   "metadata",                      default: {},   null: false
+    t.hstore   "metadata",          default: {},   null: false
   end
 
   add_index "versions", ["built_at"], name: "index_versions_on_built_at", using: :btree
@@ -180,10 +180,10 @@ ActiveRecord::Schema.define(version: 20150407012331) do
 
   create_table "web_hooks", force: :cascade do |t|
     t.integer  "user_id"
-    t.string   "url",           limit: 255
-    t.integer  "failure_count",             default: 0
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.string   "url"
+    t.integer  "failure_count", default: 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "rubygem_id"
   end
 
