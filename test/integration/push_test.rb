@@ -2,7 +2,7 @@ require 'test_helper'
 
 class PushTest < ActionDispatch::IntegrationTest
   setup do
-    Dir.chdir(Rails.root.join("tmp"))
+    Dir.chdir(Dir.mktmpdir)
     @user = create(:user)
     cookies[:remember_token] = @user.remember_token
   end

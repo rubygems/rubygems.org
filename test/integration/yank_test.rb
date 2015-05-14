@@ -5,7 +5,7 @@ class YankTest < SystemTest
     @user = create(:user)
     @rubygem = create(:rubygem, name: "sandworm")
     create(:ownership, user: @user, rubygem: @rubygem)
-    Dir.chdir(Rails.root.join("tmp"))
+    Dir.chdir(Dir.mktmpdir)
   end
 
   test "view yanked gem" do
