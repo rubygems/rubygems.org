@@ -84,7 +84,7 @@ GEM
     domain_name (0.5.24)
       unf (>= 0.0.5, < 1.0.0)
     dynamic_form (1.1.4)
-    email_validator (1.5.0)
+    email_validator (1.6.0)
       activemodel
     erubis (2.7.0)
     execjs (2.5.2)
