@@ -37,7 +37,7 @@ gem 'newrelic_rpm'
 gem 'newrelic-redis'
 
 gem 'sass-rails',   '~> 5.0.0'
-gem 'coffee-rails', '~> 4.0.0'
+gem 'coffee-rails', '~> 4.1'
 gem 'uglifier', '>= 1.0.3'
 
 group :development do
