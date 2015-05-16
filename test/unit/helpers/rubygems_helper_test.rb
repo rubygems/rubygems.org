@@ -35,7 +35,7 @@ class RubygemsHelperTest < ActionView::TestCase
     linkset = build(:linkset, :docs => nil)
 
     link = documentation_link(version, linkset)
-    assert link.include?(documentation_path(version))
+    assert link.include?(version.documentation_path)
   end
 
   should "not link to docs if docs link is set" do

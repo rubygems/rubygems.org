@@ -267,6 +267,10 @@ class Version < ActiveRecord::Base
     update_attributes(sha256: recalculate_sha256)
   end
 
+  def documentation_path
+    "http://www.rubydoc.info/gems/#{rubygem.name}/#{number}"
+  end
+
   private
 
   def platform_and_number_are_unique
