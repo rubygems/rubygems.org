@@ -48,6 +48,24 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     YAML.load body
   end
 
+  context "on GET to owner gems with handle" do
+    setup do
+      @user = create(:user)
+      get :gems, handle: @user.handle, format: :json
+    end
+
+    should respond_with :success
+  end
+
+  context "on GET to owner gems with id" do
+    setup do
+      @user = create(:user)
+      get :gems, handle: @user.id, format: :json
+    end
+
+    should respond_with :success
+  end
+
   should "route POST" do
     route = {:controller => 'api/v1/owners',
              :action     => 'create',
