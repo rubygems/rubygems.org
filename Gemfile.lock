@@ -222,8 +222,8 @@ GEM
       rack
       raindrops (~> 0.7)
     validatable (1.6.7)
-    validates_formatting_of (0.8.1)
-      activemodel (~> 4.0)
+    validates_formatting_of (0.9.0)
+      activemodel
     will_paginate (3.0.7)
     xml-simple (1.1.5)
     xpath (2.0.0)
