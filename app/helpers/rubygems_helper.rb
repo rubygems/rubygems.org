@@ -56,11 +56,7 @@ module RubygemsHelper
   end
 
   def documentation_link(version, linkset)
-    link_to 'Documentation', documentation_path(version), :class => 'gem__link t-list__item', :id => :docs if linkset.nil? || linkset.docs.blank?
-  end
-
-  def documentation_path(version)
-    "http://www.rubydoc.info/gems/#{version.rubygem.name}/#{version.number}"
+    link_to 'Documentation', version.documentation_path, :class => 'gem__link t-list__item', :id => :docs if linkset.nil? || linkset.docs.blank?
   end
 
   def badge_link(rubygem)
