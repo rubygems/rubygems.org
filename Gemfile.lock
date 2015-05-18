@@ -102,7 +102,8 @@ GEM
     high_voltage (2.3.0)
     highline (1.7.2)
     hike (1.2.3)
-    honeybadger (2.0.12)
+    honeybadger (1.16.7)
+      json
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     i18n (0.7.0)
@@ -256,7 +257,7 @@ DEPENDENCIES
   gravtastic
   high_voltage
   highline
-  honeybadger
+  honeybadger (~> 1.0)
   jquery-rails
   jruby-openssl
   launchy
