@@ -63,7 +63,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.downloaded(limit=5)
-    with_versions.by_downloads.limit(limit)
+    most_downloaded_by_redis(limit) || most_downloaded_by_db(limit) 
   end
 
   def self.letter(letter)
@@ -80,6 +80,23 @@ class Rubygem < ActiveRecord::Base
 
   def self.monthly_short_dates
     monthly_dates.map { |date| date.strftime("%m/%d") }
+  end
+
+  def self.most_downloaded_by_db(limit=10)
+    with_versions.by_downloads.limit(limit)
+  end
+
+  def self.most_downloaded_by_redis(limit=10)
+    counts = {}
+    self.pluck(:name).in_groups_of(100).each do |group|
+      group.each do |name|
+        counts[name] = Download.for_rubygem(name)
+      end
+    end
+    counts = counts.sort_by{|x| -x.last.to_i }.first(limit).collect(&:first)
+    self.where(name: counts).by_downloads
+  rescue
+    nil
   end
 
   def self.versions_key(name)
