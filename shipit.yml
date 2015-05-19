@@ -1,0 +1,6 @@
+tasks:
+  restart:
+    action: Restart application
+    description: Trigger the restart of both unicorn and background workers
+    steps:
+      - cap $ENVIRONMENT deploy:restart
