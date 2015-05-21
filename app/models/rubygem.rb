@@ -51,7 +51,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.reverse_dependencies(name)
-    where(id: Version.reverse_dependencies(name).pluck(:rubygem_id))
+    where(id: Version.reverse_dependencies(name).select(:rubygem_id))
   end
 
   def self.total_count
