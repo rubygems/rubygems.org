@@ -6,15 +6,13 @@
         <span class="gems__gem__version"><%= rubygem.versions.most_recent %></span>
       </p>
     </div>
-    <% unless Rails.env.recovery? %>
-      <p class="gems__gem__downloads__count">
-        <%= number_with_delimiter(rubygem.downloads) %>
-        <span class="gems__gem__downloads__heading">Downloads</span>
-      </p>
-      <% if graph %>
-        <div id="graph-<%= rubygem.id %>" class="profile-graph">
-        </div>
-      <% end %>
+    <p class="gems__gem__downloads__count">
+      <%= number_with_delimiter(rubygem.downloads) %>
+      <span class="gems__gem__downloads__heading">Downloads</span>
+    </p>
+    <% if graph %>
+      <div id="graph-<%= rubygem.id %>" class="profile-graph">
+      </div>
     <% end %>
   </a>
 </li>

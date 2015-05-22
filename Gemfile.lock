@@ -96,8 +96,6 @@ GEM
     factory_girl_rails (4.5.0)
       factory_girl (~> 4.5.0)
       railties (>= 3.0.0)
-    fakeredis (0.5.0)
-      redis (~> 3.0)
     gchartrb (0.8)
     globalid (0.3.5)
       activesupport (>= 4.1.0)
@@ -254,7 +252,6 @@ DEPENDENCIES
   delayed_job_active_record
   dynamic_form
   factory_girl_rails
-  fakeredis
   gchartrb
   gravtastic
   high_voltage

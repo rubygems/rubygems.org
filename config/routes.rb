@@ -95,7 +95,7 @@ Rails.application.routes.draw do
     resource  :dashboard, :only => :show, constraints: {format: /html|atom/}
     resources :profiles,  :only => :show
     resource  :profile,   :only => [:edit, :update]
-    resources :stats,     :only => :index, :constraints => RecoveryMode
+    resources :stats,     :only => :index
 
     resources :rubygems, only: [:index, :show, :edit, :update], path: 'gems', constraints: {id: Patterns::ROUTE_PATTERN, format: /html|atom/} do
       resource  :subscription, only: [:create, :destroy], constraints: {format: :js}, defaults: {format: :js}
