@@ -1,4 +1,3 @@
-server 'deploy@app02.production.rubygems.org', :app, :db, :primary => true
-server 'deploy@app03.production.rubygems.org', :app, :db
-role :restart, 'app02.production.rubygems.org', 'app03.production.rubygems.org', :no_release => true
-set :branch, 'production'
+server 'app02.production.rubygems.org', user: 'deploy', roles: %w{app db}
+server 'app03.production.rubygems.org', user: 'deploy', roles: %w{app}
+set :branch, 'master'

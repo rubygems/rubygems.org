@@ -1,56 +1,32 @@
-set :stages, %w(vagrant staging production)
-set :default_stage, "staging"
+# config valid only for current version of Capistrano
+lock '3.4.0'
 
-require 'capistrano/ext/multistage'
-require 'bundler/capistrano'
-require 'capistrano-notification'
-require 'honeybadger/capistrano'
-
-notification.irc do |irc|
-  irc.host    'chat.freenode.net'
-  irc.channel '#rubygems'
-  irc.message { "Deployed rubygems.org @ https://github.com/rubygems/rubygems.org/commit/#{fetch(:current_revision)} to #{stage} (#{roles[:app].servers.compact.map(&:host).join(', ')})" }
-end
-
-default_run_options[:pty] = true
-set :ssh_options, { :forward_agent => true }
-set :application, "rubygems"
-set(:rails_env) { "#{stage}"}
-set :deploy_to, "/applications/rubygems"
-set :bundle_cmd, "/usr/local/bin/bundle"
+set :application, 'rubygems'
+set :deploy_to, '/applications/rubygems'
+set :repo_url, 'https://github.com/rubygems/rubygems.org.git'
 set :scm, :git
-set :repository, "https://github.com/rubygems/rubygems.org.git"
-set :repository_cache, "git_cache"
-set :deploy_via, :remote_cache
-set :git_shallow_clone, 1
-set :git_enable_submodules, 1
-set :use_sudo, false
-set :group, "deploy"
-set :assets_role, [:app]
-
-after "deploy", "deploy:cleanup"
-after "deploy:finalize_update", "deploy:symlink_database_yml", "deploy:symlink_secret_settings"
+set :git_strategy, Capistrano::Git::SubmoduleStrategy
+set :pty, true
+set :assets_roles, [:app]
+set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/cache', 'tmp/sockets')
+set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secret.rb')
 
 namespace :deploy do
 
-  desc "Remove git cache for clean deploy"
-  task :clean_git_cache, :roles => :app do
-    run "rm -rf #{shared_path}/#{repository_cache}"
+  desc 'Remove git cache for clean deploy'
+  task :clean_git_cache do
+    on roles(:app) do
+      execute :rm, "-rf #{repo_path}"
+    end
   end
 
-  desc "Symlink database.yml for this environment"
-  task :symlink_database_yml, :roles => :app do
-    run "ln -fs #{shared_path}/database.yml #{release_path}/config/database.yml"
+  desc 'Restart unicorn and delayed_job'
+  task :restart do
+    on roles(:app) do |host|
+      execute :sudo, 'service unicorn restart'
+      execute :sudo, 'service delayed_job restart'
+    end
   end
+  after :publishing, :'deploy:restart'
 
-  desc "Symlink secret settings for this environment"
-  task :symlink_secret_settings, :roles => :app do
-    run "ln -fs #{shared_path}/secret.rb #{release_path}/config/secret.rb"
-  end
-
-  desc "Restart unicorn and delayed_job"
-  task :restart, :roles => :restart do
-    sudo "service unicorn restart"
-    sudo "service delayed_job restart"
-  end
 end
