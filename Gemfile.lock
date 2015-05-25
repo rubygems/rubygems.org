@@ -104,7 +104,6 @@ GEM
     gravtastic (3.2.6)
     high_voltage (2.3.0)
     highline (1.7.2)
-    hike (1.2.3)
     honeybadger (1.16.7)
       json
     http-cookie (1.0.2)
