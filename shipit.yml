@@ -4,3 +4,13 @@ tasks:
     description: Trigger the restart of both unicorn and background workers
     steps:
       - cap $ENVIRONMENT deploy:restart
+  enable_maintenance:
+    action: Enable maintenance mode
+    description: Disable access to the rails app and show the maintenance page
+    steps:
+      - cap $ENVIRONMENT maintenance:enable
+  disable_maintenance:
+    action: Disable maintenance mode
+    description: Enable access to the rails app and hide the maintenance page
+    steps:
+      - cap $ENVIRONMENT maintenance:disable

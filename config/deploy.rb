@@ -30,3 +30,21 @@ namespace :deploy do
   after :publishing, :'deploy:restart'
 
 end
+
+namespace :maintenance do
+
+  desc 'Enable maintenance mode'
+  task :enable do
+    on roles(:lb) do
+      execute :sudo, 'ln -s /etc/nginx/maintenance.html /var/www/rubygems/maintenance.html'
+    end
+  end
+
+  desc 'Disable maintenance mode'
+  task :disable do
+    on roles(:lb) do
+      execute :sudo, 'rm /var/www/rubygems/maintenance.html'
+    end
+  end
+
+end
