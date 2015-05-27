@@ -1,5 +1,5 @@
 server 'app01.staging.rubygems.org', user: 'deploy', roles: %w{app db}
-server 'lb01.staging.rubygems.org', user: 'deploy', roles: %w{lb}
+server 'lb01.staging.rubygems.org', user: 'deploy', roles: %w{lb}, no_release: true
 set :branch, ENV['BRANCH'] || 'master'
 set :bundle_flags, ''
 
