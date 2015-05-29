@@ -62,7 +62,7 @@ class Rubygem < ActiveRecord::Base
     with_one_version.order(created_at: :desc).limit(limit)
   end
 
-  def self.downloaded(limit=5)
+  def self.downloaded(limit=10)
     most_downloaded_by_redis(limit) || most_downloaded_by_db(limit) 
   end
 

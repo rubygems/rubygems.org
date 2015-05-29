@@ -496,7 +496,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "only latest downloaded versions" do
-      assert_equal [@thin, @rake, @json, @thor, @rack],        Rubygem.downloaded
+      assert_equal [@thin, @rake, @json, @thor, @rack],        Rubygem.downloaded(5)
       assert_equal [@thin, @rake, @json, @thor, @rack, @dust], Rubygem.downloaded(6)
     end
   end
@@ -708,6 +708,13 @@ class RubygemTest < ActiveSupport::TestCase
 
       should "by redis" do
         assert_equal [@thin, @rake, @json, @thor, @rack], Rubygem.most_downloaded_by_redis(5)
+      end
+
+      should "differentiate if the ranking is not the same for redis and postgres" do
+        version = @thin.versions.last
+        version.indexed = false
+        version.save
+        assert_not_equal Rubygem.most_downloaded_by_db(5), Rubygem.most_downloaded_by_redis(5)
       end
     end
   end
