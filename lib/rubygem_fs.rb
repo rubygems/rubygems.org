@@ -76,7 +76,7 @@ module RubygemFs
 
     def restore(key)
       begin
-        s3.get_object(key: key, bucket: bucket)
+        s3.head_object(key: key, bucket: bucket)
       rescue Aws::S3::Errors::NoSuchKey => e
         version_id = e.context.http_response.headers["x-amz-version-id"]
         s3.delete_object(key: key, bucket: bucket, version_id: version_id)
