@@ -140,6 +140,8 @@ GEM
       rails (~> 4.0)
     pg (0.18.2)
     psych (2.0.13)
+    quiet_assets (1.0.3)
+      railties (>= 3.1, < 5.0)
     rack (1.6.1)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -268,6 +270,7 @@ DEPENDENCIES
   paul_revere (~> 1.4)
   pg
   psych (~> 2.0.12)
+  quiet_assets
   rack
   rack-test
   rails (~> 4.2.1)

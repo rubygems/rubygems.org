@@ -41,6 +41,7 @@ gem 'coffee-rails', '~> 4.1'
 gem 'uglifier', '>= 1.0.3'
 
 group :development do
+  gem 'quiet_assets'
   gem 'rails-erd'
 end
 
