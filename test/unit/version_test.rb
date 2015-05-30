@@ -334,6 +334,10 @@ class VersionTest < ActiveSupport::TestCase
       @version.size = nil
       assert_equal 'N/A', @version.size
     end
+
+    should "have a filename" do
+      assert_equal "gems/#{@version.full_name}.gem", @version.filename
+    end
   end
 
   context "with a very long authors string." do
