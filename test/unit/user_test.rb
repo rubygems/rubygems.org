@@ -207,8 +207,9 @@ class UserTest < ActiveSupport::TestCase
       assert_equal 2, @user.rubygems_downloaded.count
     end
 
-    should "total their number of pushed rubygems" do
-      assert_equal @user.total_rubygems_count, 3
+    should "total their number of pushed rubygems except yanked gems" do
+      @rubygems.first.versions.first.update! indexed: false
+      assert_equal @user.total_rubygems_count, 2
     end
   end
 
