@@ -18,8 +18,8 @@
     </div>
     <% unless Rails.env.recovery? %>
       <div class="profile__downloads-wrap">
-        <h4 class="gem__downloads__heading t-text--s">Total <%= "gem".pluralize(@user.rubygems_downloaded.count) %></h4>
-        <h2 id="profile-gems-count" class="gem__downloads"><%= @user.rubygems_downloaded.count.to_s %></h2>
+        <h4 class="gem__downloads__heading t-text--s">Total <%= "gem".pluralize(@user.total_rubygems_count) %></h4>
+        <h2 id="profile-gems-count" class="gem__downloads"><%= @user.total_rubygems_count.to_s %></h2>
         <h4 id="downloads" class="gem__downloads__heading t-text--s">Total Downloads</h4>
         <h2 id="downloads_count" class="gem__downloads"><%= number_with_delimiter(@user.total_downloads_count) %></h2>
       </div>
