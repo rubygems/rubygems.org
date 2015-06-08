@@ -6,7 +6,15 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
     sign_in_as(@user)
   end
 
-  context "on GET to show" do
+  context "on GET to show with id" do
+    setup do
+      get :show, id: @user.id, format: :json
+    end
+
+    should respond_with :success
+  end
+
+  context "on GET to show with handle" do
     setup do
       get :show, id: @user.handle, format: :json
     end
