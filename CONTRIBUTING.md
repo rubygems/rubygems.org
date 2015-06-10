@@ -178,6 +178,10 @@ than Rubygems and may suit your organization’s needs better.**
 * If you see "Processing 0 gems" you’ve probably specified the wrong
 directory. The proper directory will be full of .gem files.
 
+#### Getting the data dumps
+* You can use rubygems.org data [dumps](https://rubygems.org/pages/data) to test
+application in development environment especially for performance related issues.
+
 #### Pushing gems
 
 * In order to push a gem to your local installation use a command like
