@@ -575,34 +575,36 @@ class RubygemTest < ActiveSupport::TestCase
       create(:version, description: 'julius', rubygem: @orange_julius)
     end
 
-    should "find rubygems by name on #search" do
-      assert Rubygem.search('apple').include?(@apple_pie)
-      assert Rubygem.search('orange').include?(@orange_julius)
+    context '#legacy_search' do
+      should "find rubygems by name" do
+        assert Rubygem.legacy_search('apple').include?(@apple_pie)
+        assert Rubygem.legacy_search('orange').include?(@orange_julius)
 
-      assert !Rubygem.search('apple').include?(@orange_julius)
-      assert !Rubygem.search('orange').include?(@apple_pie)
-    end
+        assert !Rubygem.legacy_search('apple').include?(@orange_julius)
+        assert !Rubygem.legacy_search('orange').include?(@apple_pie)
+      end
 
-    should "find rubygems by name with extra spaces on #search" do
-      assert Rubygem.search('apple  ').include?(@apple_pie)
-      assert Rubygem.search('orange   ').include?(@orange_julius)
-      assert_equal Rubygem.search('apple'), Rubygem.search('apple ')
+      should "find rubygems by name with extra spaces" do
+        assert Rubygem.legacy_search('apple  ').include?(@apple_pie)
+        assert Rubygem.legacy_search('orange   ').include?(@orange_julius)
+        assert_equal Rubygem.legacy_search('apple'), Rubygem.legacy_search('apple ')
 
-      assert !Rubygem.search('apple  ').include?(@orange_julius)
-      assert !Rubygem.search('orange   ').include?(@apple_pie)
-    end
+        assert !Rubygem.legacy_search('apple  ').include?(@orange_julius)
+        assert !Rubygem.legacy_search('orange   ').include?(@apple_pie)
+      end
 
-    should "find rubygems case insensitively on #search" do
-      assert Rubygem.search('APPLE').include?(@apple_pie)
-    end
+      should "find rubygems case insensitively" do
+        assert Rubygem.legacy_search('APPLE').include?(@apple_pie)
+      end
 
-    should "find rubygems with missing punctuation on #search" do
-      assert Rubygem.search('apple crisp').include?(@apple_crisp)
-      assert !Rubygem.search('apple crisp').include?(@apple_pie)
-    end
+      should "find rubygems with missing punctuation" do
+        assert Rubygem.legacy_search('apple crisp').include?(@apple_crisp)
+        assert !Rubygem.legacy_search('apple crisp').include?(@apple_pie)
+      end
 
-    should "sort results by number of downloads, descending" do
-      assert_equal [@apple_crisp, @apple_pie], Rubygem.search('apple')
+      should "sort results by number of downloads, descending" do
+        assert_equal [@apple_crisp, @apple_pie], Rubygem.legacy_search('apple')
+      end
     end
 
     should "find exact match by name on #name_is" do

@@ -175,7 +175,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           updated_at: 1.year.ago,
           created_at: 1.year.ago)
         @request.env["RAW_POST_DATA"] = gem_file("test-1.0.0.gem").read
-        post :create
+        assert_difference 'Delayed::Job.count', 2 do
+          post :create
+        end
       end
       should respond_with :success
       should "register new version" do
@@ -239,6 +241,32 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         assert_equal @other_user, @rubygem.ownerships.first.user
         assert_equal 1, @rubygem.versions.size
         assert_equal "You do not have permission to push to this gem.", @response.body
+      end
+    end
+
+    context "with elasticsearch down" do
+      setup do
+        rubygem = create(:rubygem, name: "test")
+        create(:ownership,
+          rubygem: rubygem,
+          user: @user)
+        create(:version,
+          rubygem: rubygem,
+          number: "0.0.0",
+          updated_at: 1.year.ago,
+          created_at: 1.year.ago)
+      end
+      should "POST to create for existing gem should not fail" do
+        requires_toxiproxy
+        Toxiproxy[:elasticsearch].down do
+          @request.env["RAW_POST_DATA"] = gem_file("test-1.0.0.gem").read
+          post :create
+          assert_response :success
+          assert_equal @user, Rubygem.last.ownerships.first.user
+          assert_equal 1, Rubygem.last.ownerships.count
+          assert_equal 2, Rubygem.last.versions.count
+          assert_equal "Successfully registered gem: test (1.0.0)", @response.body
+        end
       end
     end
   end

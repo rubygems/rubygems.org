@@ -1,5 +1,12 @@
 <% @title = "search" %>
 
+<% if @fallback %>
+  <div class="errorExplanation">
+    <h2>Uh oh...</h2>
+    <ul><li>Advanced search is currently unavailable, sorry!</li></ul>
+  </div>
+<% end %>
+
 <% if @gems %>
   <% @subtitle = t('.subtitle', :query => content_tag(:em, h(params[:query]))) %>
 

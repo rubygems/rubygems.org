@@ -39,6 +39,8 @@ gem 'uglifier', '>= 1.0.3'
 gem 'unicorn'
 gem 'validates_formatting_of'
 gem 'will_paginate'
+gem 'elasticsearch-model', '~> 0.1.7'
+gem 'elasticsearch-rails', '~> 0.1.7'
 gem 'xml-simple'
 gem 'yajl-ruby', require: 'yajl'
 
