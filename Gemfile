@@ -56,10 +56,6 @@ group :test do
   gem 'timecop'
 end
 
-group :recovery do
-  gem "fakeredis"
-end
-
 group :development, :deploy do
   gem 'capistrano', '~> 3.0', require: false
   gem 'capistrano-rails', '~> 1.1', require: false

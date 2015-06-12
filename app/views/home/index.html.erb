@@ -13,9 +13,7 @@
 </div>
 <div class="home__cta-wrap">
   <h2 class="home__downloads">
-    <% unless Rails.env.recovery? %>
-      <p><%= number_with_delimiter(@downloads_count) %></p>
-    <% end %>
+    <p><%= number_with_delimiter(@downloads_count) %></p>
     <span class="home__downloads__desc">downloads &amp; counting</span>
   </h2>
   <%= link_to t('.learn.install_rubygems'), page_url("download"), :class => "home__join", "data-icon" => ">" %>

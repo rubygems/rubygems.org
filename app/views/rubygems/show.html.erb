@@ -87,23 +87,21 @@
 
     <div class="gem__aside l-col--r--pad">
       <% if @latest_version.indexed %>
-        <% unless Rails.env.recovery? %>
-          <div class="gem__downloads-wrap" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
-            <h2 class="gem__downloads__heading t-text--s">
-              <%= t('stats.show.total_downloads') %>
-              <span class="gem__downloads"><%= number_with_delimiter(@rubygem.downloads) %></span>
-            </h2>
-            <h2 class="gem__downloads__heading t-text--s">
-              <%= t('.downloads_for_this_version') %>
-              <span class="gem__downloads"><%= number_with_delimiter(@latest_version.downloads_count) %></span>
-            </h2>
-            <% if @versions.present? %>
-              <% if show_all_versions_link?(@rubygem) %>
-                <%= link_to t('.show_all_versions', :count => @rubygem.versions.count), rubygem_versions_url(@rubygem), :class => "gem__see-all-versions t-link--gray t-link--has-arrow" %>
-              <% end %>
+        <div class="gem__downloads-wrap" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
+          <h2 class="gem__downloads__heading t-text--s">
+            <%= t('stats.show.total_downloads') %>
+            <span class="gem__downloads"><%= number_with_delimiter(@rubygem.downloads) %></span>
+          </h2>
+          <h2 class="gem__downloads__heading t-text--s">
+            <%= t('.downloads_for_this_version') %>
+            <span class="gem__downloads"><%= number_with_delimiter(@latest_version.downloads_count) %></span>
+          </h2>
+          <% if @versions.present? %>
+            <% if show_all_versions_link?(@rubygem) %>
+              <%= link_to t('.show_all_versions', :count => @rubygem.versions.count), rubygem_versions_url(@rubygem), :class => "gem__see-all-versions t-link--gray t-link--has-arrow" %>
             <% end %>
-          </div>
-        <% end %>
+          <% end %>
+        </div>
       <% end %>
 
       <h2 class="gem__ruby-version__heading t-list__heading">
