@@ -267,6 +267,15 @@ class Version < ActiveRecord::Base
     update_attributes(sha256: recalculate_sha256)
   end
 
+  def recalculate_metadata!
+    key = "gems/#{full_name}.gem"
+    if file = RubygemFs.instance.get(key)
+      spec = Gem::Package.new(StringIO.new(file)).spec
+      metadata = spec.metadata
+      update(metadata: metadata || {})
+    end
+  end
+
   def documentation_path
     "http://www.rubydoc.info/gems/#{rubygem.name}/#{number}"
   end
