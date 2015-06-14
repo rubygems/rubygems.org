@@ -82,4 +82,26 @@ namespace :gemcutter do
       puts "#{c} of #{t}: #{v.full_name}"
     end
   end
+
+  namespace :metadata do
+    desc "Backfill old gem versions with metadata."
+    task :backfill => :environment do
+      require 'metadata_backfill'
+
+      without_metadata = Version.where("metadata = ''")
+      if mod = ENV['shard']
+        without_metadata = without_metadata.where("id % 4 = ?", mod.to_i)
+      end
+
+      total = without_metadata.count
+      i = 0
+      without_metadata.find_each do |version|
+        MetadataBackfill.new(version).backfill
+        i += 1
+        print "\r%.2f%% (#{i}/#{total}) complete" % (i.to_f / total * 100.0)
+      end
+      puts
+      puts "Done."
+    end
+  end
 end
