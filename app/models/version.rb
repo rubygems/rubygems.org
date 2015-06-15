@@ -274,6 +274,8 @@ class Version < ActiveRecord::Base
       metadata = spec.metadata
       update(metadata: metadata || {})
     end
+  rescue Gem::Package::FormatError
+    nil
   end
 
   def documentation_path
