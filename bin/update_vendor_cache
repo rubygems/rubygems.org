@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+
+git submodule update -f
+bundle install
+cd vendor/cache
+git checkout master
+git pull origin master
+git add -A
+git commit -m "update gems"
+git push origin master
+cd ../..
+git add vendor/cache
