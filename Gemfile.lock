@@ -141,7 +141,7 @@ GEM
       rails (~> 4.0)
     pg (0.18.2)
     psych (2.0.13)
-    quiet_assets (1.0.3)
+    quiet_assets (1.1.0)
       railties (>= 3.1, < 5.0)
     rack (1.6.1)
     rack-test (0.6.3)
