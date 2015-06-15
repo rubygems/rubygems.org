@@ -40,10 +40,8 @@ GEM
     arel (6.0.0)
     autoprefixer-rails (4.0.2.2)
       execjs
-    aws-sdk-core (2.0.45)
-      builder (~> 3.0)
+    aws-sdk-core (2.1.0)
       jmespath (~> 1.0)
-      multi_json (~> 1.0)
     bcrypt (3.1.10)
     builder (3.2.2)
     capistrano (3.4.0)
