@@ -163,7 +163,7 @@ class Rubygem < ActiveRecord::Base
       'gem_uri'           => "http://#{host_with_port}/gems/#{version.full_name}.gem",
       'homepage_uri'      => linkset.try(:home),
       'wiki_uri'          => linkset.try(:wiki),
-      'documentation_uri' => linkset.try(:docs) || version.documentation_path,
+      'documentation_uri' => linkset.try(:docs).presence || version.documentation_path,
       'mailing_list_uri'  => linkset.try(:mail),
       'source_code_uri'   => linkset.try(:code),
       'bug_tracker_uri'   => linkset.try(:bugs),

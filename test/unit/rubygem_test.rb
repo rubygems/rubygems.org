@@ -374,7 +374,7 @@ class RubygemTest < ActiveSupport::TestCase
     context "with a linkset" do
       setup do
         @rubygem = build(:rubygem)
-        version = create(:version, :rubygem => @rubygem)
+        @version = create(:version, rubygem: @rubygem)
       end
 
       should "return a bunch of JSON" do
@@ -386,6 +386,14 @@ class RubygemTest < ActiveSupport::TestCase
         assert_equal @rubygem.linkset.mail, hash["mailing_list_uri"]
         assert_equal @rubygem.linkset.code, hash["source_code_uri"]
         assert_equal @rubygem.linkset.bugs, hash["bug_tracker_uri"]
+      end
+
+      should "return version documentation url if linkset docs is empty" do
+        @rubygem.linkset.docs = ""
+        @rubygem.save
+        hash = JSON.load(@rubygem.to_json)
+
+        assert_equal @version.documentation_path, hash["documentation_uri"]
       end
 
       should "return a bunch of XML" do
