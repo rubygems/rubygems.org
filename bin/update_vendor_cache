@@ -2,12 +2,17 @@
 set -e
 
 git submodule update -f
-bundle install
 cd vendor/cache
-git checkout master
-git pull origin master
+git co master
+git clean -xfd
+cd -
+
+bundle install
+
+cd vendor/cache
 git add -A
 git commit -m "update gems"
-git push origin master
-cd ../..
+git push origin HEAD
+cd -
+
 git add vendor/cache
