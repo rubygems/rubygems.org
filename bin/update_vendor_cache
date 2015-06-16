@@ -3,7 +3,7 @@ set -e
 
 git submodule update -f
 cd vendor/cache
-git co master
+git checkout master
 git clean -xfd
 cd -
 
