@@ -16,7 +16,7 @@ class Api::V1::VersionsController < Api::BaseController
 
   def latest
     rg = Rubygem.find_by_name params[:id]
-    if rg.present? && ver = rg.versions.latest.first
+    if rg.present? && ver = rg.versions.most_recent
       number = ver.number
     end
 
