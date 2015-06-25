@@ -201,7 +201,7 @@ GEM
       activesupport (>= 3.0.0)
     sprockets (3.2.0)
       rack (~> 1.0)
-    sprockets-rails (2.3.1)
+    sprockets-rails (2.3.2)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
@@ -292,4 +292,4 @@ DEPENDENCIES
   yajl-ruby
 
 BUNDLED WITH
-   1.10.3
+   1.10.5
