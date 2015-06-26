@@ -175,7 +175,7 @@ GEM
       activesupport (= 4.2.2)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-    raindrops (0.13.0)
+    raindrops (0.14.0)
     rake (10.4.2)
     rdoc (3.12.2)
       json (~> 1.4)
