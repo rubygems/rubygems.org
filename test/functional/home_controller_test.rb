@@ -3,7 +3,7 @@ require 'test_helper'
 class HomeControllerTest < ActionController::TestCase
   context "on GET to index" do
     setup do
-      stub(Download).count { 1_000_000 }
+      Download.stubs(:count).returns 1_1000_000
       get :index
     end
 
@@ -15,7 +15,7 @@ class HomeControllerTest < ActionController::TestCase
     end
 
     should "load up the downloaded gems count" do
-      assert_received(Download) { |subject| subject.count }
+      assert_received(Download, :count)
     end
   end
 

@@ -44,6 +44,8 @@ GEM
     aws-sdk-core (2.1.2)
       jmespath (~> 1.0)
     bcrypt (3.1.10)
+    bourne (1.6.0)
+      mocha (~> 1.1)
     builder (3.2.2)
     capistrano (3.4.0)
       i18n
@@ -123,9 +125,12 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
+    metaclass (0.0.4)
     mime-types (2.6.1)
     mini_portile (0.6.2)
     minitest (5.7.0)
+    mocha (1.1.0)
+      metaclass (~> 0.0.1)
     multi_json (1.11.1)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
@@ -184,7 +189,6 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
-    rr (1.1.2)
     ruby-graphviz (1.2.2)
     sass (3.4.15)
     sass-rails (5.0.3)
@@ -240,6 +244,7 @@ PLATFORMS
 DEPENDENCIES
   autoprefixer-rails
   aws-sdk-core
+  bourne
   builder
   capistrano (~> 3.0)
   capistrano-bundler (~> 1.1)
@@ -265,6 +270,7 @@ DEPENDENCIES
   launchy
   mail
   minitest
+  mocha
   multi_json
   newrelic-redis
   newrelic_rpm
@@ -279,7 +285,6 @@ DEPENDENCIES
   rdoc (~> 3.12.2)
   redis
   rest-client
-  rr
   sass-rails (~> 5.0.0)
   shoulda
   statsd-instrument (~> 2.0.6)

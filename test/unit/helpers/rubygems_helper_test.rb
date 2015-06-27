@@ -14,13 +14,13 @@ class RubygemsHelperTest < ActionView::TestCase
 
   should "know when to show the all versions link" do
     rubygem = stub
-    stub(rubygem).versions_count { 6 }
-    stub(rubygem).yanked_versions? { false }
+    rubygem.stubs(:versions_count).returns 6
+    rubygem.stubs(:yanked_versions?).returns false
     assert show_all_versions_link?(rubygem)
-    stub(rubygem).versions_count { 1 }
-    stub(rubygem).yanked_versions? { false }
+    rubygem.stubs(:versions_count).returns 1
+    rubygem.stubs(:yanked_versions?).returns false
     assert !show_all_versions_link?(rubygem)
-    stub(rubygem).yanked_versions? { true }
+    rubygem.stubs(:yanked_versions?).returns true
     assert show_all_versions_link?(rubygem)
   end
 
@@ -85,8 +85,8 @@ class RubygemsHelperTest < ActionView::TestCase
   context "profiles" do
     setup do
       fake_request = stub
-      stub(fake_request).ssl? { false }
-      stub(self).request { fake_request }
+      fake_request.stubs(:ssl?).returns false
+      self.stubs(:request).returns fake_request
     end
 
     should "create links to owners gem overviews" do

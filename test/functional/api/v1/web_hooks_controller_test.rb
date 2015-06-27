@@ -63,7 +63,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
       context "On POST to fire for all gems" do
         setup do
-          stub(RestClient).post {}
+          RestClient.stubs(:post)
           post :fire, :gem_name => WebHook::GLOBAL_PATTERN,
                       :url      => @url
         end
@@ -76,7 +76,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
       context "On POST to fire for all gems that fails" do
         setup do
-          stub(RestClient).post { raise RestClient::Exception.new }
+          RestClient.stubs(:post).raises(RestClient::Exception.new)
           post :fire, :gem_name => WebHook::GLOBAL_PATTERN,
                       :url      => @url
         end
@@ -96,7 +96,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
       context "On POST to fire for a specific gem" do
         setup do
-          stub(RestClient).post {}
+          RestClient.stubs(:post)
           post :fire, :gem_name => @rubygem.name,
                       :url      => @url
         end
@@ -109,7 +109,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
       context "On POST to fire for a specific gem that fails" do
         setup do
-          stub(RestClient).post { raise RestClient::Exception.new }
+          RestClient.stubs(:post).raises(RestClient::Exception.new)
           post :fire, :gem_name => @rubygem.name,
                       :url      => @url
         end

@@ -12,7 +12,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
   context "On GET to index" do
     setup do
       @count = 30_000_000
-      stub(Download).count { @count }
+      Download.stubs(:count).returns @count
     end
 
     should "return the download count" do
@@ -150,7 +150,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
       2.times { Download.incr(@rubygem_1.name, @version_2.full_name) }
       Download.incr(@rubygem_2.name, @version_3.full_name)
 
-      stub(Download).most_downloaded_today(50){ [[@version_1, 3], [@version_2, 2], [@version_3, 1]] }
+      Download.stubs(:most_downloaded_today).with(50).returns [[@version_1, 3], [@version_2, 2], [@version_3, 1]]
     end
 
     should_respond_to(:json) do |body|
@@ -178,7 +178,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
       2.times { Download.incr(@rubygem_1.name, @version_2.full_name) }
       Download.incr(@rubygem_2.name, @version_3.full_name)
 
-      stub(Download).most_downloaded_all_time(50){ [[@version_1, 3], [@version_2, 2], [@version_3, 1]] }
+      Download.stubs(:most_downloaded_all_time).with(50).returns [[@version_1, 3], [@version_2, 2], [@version_3, 1]]
     end
 
     should_respond_to(:json) do |body|
