@@ -3,7 +3,6 @@ require File.expand_path('../../config/environment', __FILE__)
 
 require 'minitest/autorun'
 require 'rails/test_help'
-require 'minitest/unit'
 require 'mocha/mini_test'
 require 'bourne'
 require 'capybara/rails'
