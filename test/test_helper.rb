@@ -2,10 +2,10 @@ ENV["RAILS_ENV"] ||= "test"
 require File.expand_path('../../config/environment', __FILE__)
 
 require 'minitest/autorun'
-# Workaround https://github.com/rr/rr/pull/60
-Minitest::VERSION = Minitest::Unit::VERSION unless defined?(Minitest::VERSION)
 require 'rails/test_help'
-require 'rr'
+require 'minitest/unit'
+require 'mocha/mini_test'
+require 'bourne'
 require 'capybara/rails'
 require 'clearance/test_unit'
 require 'rubygems/package'
@@ -23,7 +23,6 @@ class MiniTest::Test
   include GemHelpers
 
   def setup
-    RR.reset
     Redis.current.flushdb
   end
 

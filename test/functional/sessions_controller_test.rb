@@ -4,7 +4,7 @@ class SessionsControllerTest < ActionController::TestCase
   context "on POST to create" do
     context "when login and password are correct" do
       setup do
-        mock(User).authenticate('login', 'pass') { User.new }
+        User.expects(:authenticate).with('login', 'pass').returns User.new
         post :create, :session => { :who => 'login', :password => 'pass' }
       end
 
@@ -18,7 +18,7 @@ class SessionsControllerTest < ActionController::TestCase
 
     context "when login and password are incorrect" do
       setup do
-        mock(User).authenticate('login', 'pass') { nil }
+        User.expects(:authenticate).with('login', 'pass').returns nil
         post :create, :session => { :who => 'login', :password => 'pass' }
       end
 

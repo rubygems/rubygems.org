@@ -8,10 +8,10 @@ class StatsControllerTest < ActionController::TestCase
       @number_of_downloads = 42
       @most_downloaded     = [create(:rubygem)]
 
-      stub(Rubygem).total_count { @number_of_gems }
-      stub(Download).count { @number_of_downloads }
-      stub(Rubygem).downloaded { @most_downloaded }
-      stub(User).count { @number_of_users }
+      Rubygem.stubs(:total_count).returns @number_of_gems
+      Download.stubs(:count).returns @number_of_downloads
+      Rubygem.stubs(:downloaded).returns @most_downloaded
+      User.stubs(:count).returns @number_of_users
 
       get :index
     end
@@ -32,10 +32,10 @@ class StatsControllerTest < ActionController::TestCase
     end
 
     should "load up the number of gems, users, and downloads" do
-      assert_received(User)     { |subject| subject.count }
-      assert_received(Rubygem)  { |subject| subject.total_count }
-      assert_received(Download) { |subject| subject.count }
-      assert_received(Rubygem)  { |subject| subject.downloaded.with(10) }
+      assert_received(User, :count)
+      assert_received(Rubygem, :total_count)
+      assert_received(Download, :count)
+      assert_received(Rubygem, :downloaded) { |subject| subject.with(10) }
     end
   end
 
@@ -49,7 +49,7 @@ class StatsControllerTest < ActionController::TestCase
       rg3 = create(:rubygem, downloads: 30, number: "1")
       def rg3.downloads; 30; end
 
-      stub(Rubygem).downloaded { [rg1, rg2, rg3] }
+      Rubygem.stubs(:downloaded).returns [rg1, rg2, rg3]
 
       get :index
     end

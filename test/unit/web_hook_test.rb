@@ -177,15 +177,15 @@ class WebHookTest < ActiveSupport::TestCase
                          :rubygem => @rubygem,
                          :url     => @url)
 
-      stub(RestClient).post {}
+      RestClient.stubs(:post)
       @hook.fire('rubygems.org', @rubygem, @version, false)
     end
 
     should "include an Authorization header" do
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number + @hook.user.api_key)
 
-      assert_received(RestClient) do |client|
-        client.post anything, anything, hash_including("Authorization" => authorization)
+      assert_received(RestClient, :post) do |client|
+        client.with(anything, anything, has_entries("Authorization" => authorization))
       end
     end
 
@@ -213,7 +213,7 @@ class WebHookTest < ActiveSupport::TestCase
        Net::HTTPBadResponse,
        Net::HTTPHeaderSyntaxError,
        Net::ProtocolError].each_with_index do |exception, index|
-        stub(RestClient).post { raise exception }
+         RestClient.stubs(:post).raises(exception)
 
         @hook.fire('rubygems.org', @rubygem, @version, false)
 

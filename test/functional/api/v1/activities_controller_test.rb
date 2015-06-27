@@ -30,7 +30,7 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
         @rubygem_3 = create(:rubygem)
         @version_4 = create(:version, :rubygem => @rubygem_3)
 
-        stub(Rubygem).latest(50){ [@rubygem_2, @rubygem_3] }
+        Rubygem.stubs(:latest).with(50).returns [@rubygem_2, @rubygem_3]
       end
 
       should "return correct JSON for latest gems" do
@@ -56,7 +56,7 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
         @rubygem_3 = create(:rubygem)
         @version_4 = create(:version, :rubygem => @rubygem_3)
 
-        stub(Version).just_updated(50){ [@version_2, @version_3, @version_4] }
+        Version.stubs(:just_updated).with(50).returns([@version_2, @version_3, @version_4])
       end
 
       should "return correct JSON for just_updated gems" do

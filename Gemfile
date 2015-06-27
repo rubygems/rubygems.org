@@ -52,7 +52,8 @@ group :test do
   gem 'factory_girl_rails'
   gem 'launchy'
   gem 'rack-test', require: 'rack/test'
-  gem 'rr', require: false
+  gem 'mocha', require: false
+  gem 'bourne', require: false
   gem 'shoulda', require: false
   gem 'timecop'
 end

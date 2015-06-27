@@ -64,7 +64,7 @@ class DependencyTest < ActiveSupport::TestCase
       end
 
       should "correctly create a Dependency referring to the existing Rubygem" do
-        stub(@gem_dependency).requirements_list { ['#<YAML::Syck::DefaultKey:0x0000000> 0.0.0'] }
+        @gem_dependency.stubs(:requirements_list).returns ['#<YAML::Syck::DefaultKey:0x0000000> 0.0.0']
         @dependency = create(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
 
         assert_equal @rubygem, @dependency.rubygem
@@ -73,7 +73,7 @@ class DependencyTest < ActiveSupport::TestCase
 
       should "correctly display a malformed Dependency referring to the existing Rubygem" do
         @dependency = create(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
-        stub(@dependency).requirements { '#<YAML::Syck::DefaultKey:0x0000000> 0.0.0' }
+        @dependency.stubs(:requirements).returns '#<YAML::Syck::DefaultKey:0x0000000> 0.0.0'
 
         assert_equal @rubygem, @dependency.rubygem
         assert_equal @requirements[0].to_s, @dependency.clean_requirements
