@@ -29,6 +29,10 @@ class MiniTest::Test
     Capybara::Node::Simple.new(@response.body)
   end
 
+  def requires_toxiproxy
+    skip("Toxiproxy is not running, but was required for this test.") unless Toxiproxy.running?
+  end
+
   def assert_changed(object, attribute, &block)
     original = object.send(attribute)
     yield

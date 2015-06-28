@@ -41,6 +41,10 @@ gem 'sass-rails',   '~> 5.0.0'
 gem 'coffee-rails', '~> 4.1'
 gem 'uglifier', '>= 1.0.3'
 
+group :development, :test do
+  gem 'toxiproxy'
+end
+
 group :development do
   gem 'quiet_assets'
   gem 'rails-erd'

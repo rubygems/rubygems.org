@@ -8,13 +8,14 @@ rvm:
 services:
   - redis-server
 
-sudo: false
+sudo: true
 
 bundler_args: --jobs=3 --retry=3 --without development
 
 before_install:
   - sh -c "if [ '$RUBYGEMS_VERSION' != 'latest' ]; then gem update --system $RUBYGEMS_VERSION; fi"
   - gem --version
+  - script/install_toxiproxy.sh
 
 before_script:
   - cp config/database.yml.example config/database.yml

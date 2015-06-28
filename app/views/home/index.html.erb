@@ -12,10 +12,12 @@
   <% end %>
 </div>
 <div class="home__cta-wrap">
-  <h2 class="home__downloads">
-    <p><%= number_with_delimiter(@downloads_count) %></p>
-    <span class="home__downloads__desc">downloads &amp; counting</span>
-  </h2>
+  <% if @downloads_count %>
+    <h2 class="home__downloads">
+      <p><%= number_with_delimiter(@downloads_count) %></p>
+      <span class="home__downloads__desc">downloads &amp; counting</span>
+    </h2>
+  <% end %>
   <%= link_to t('.learn.install_rubygems'), page_url("download"), :class => "home__join", "data-icon" => ">" %>
 </div>
 <div class="home__links">
