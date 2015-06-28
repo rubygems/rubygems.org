@@ -471,14 +471,18 @@ class RubygemTest < ActiveSupport::TestCase
     setup do
       @thin = create(:rubygem, :name => 'thin', :created_at => 1.year.ago,  :downloads => 20)
       @rake = create(:rubygem, :name => 'rake', :created_at => 1.month.ago, :downloads => 10)
-      @json = create(:rubygem, :name => 'json', :created_at => 1.week.ago,  :downloads => 5)
+      @json = create(:rubygem, :name => 'json', :created_at => 1.week.ago,  :downloads => 9)
+      @rdoc = create(:rubygem, :name => 'rdoc', :created_at => 2.year.ago,  :downloads => 8)
+      @mail = create(:rubygem, :name => 'mail', :created_at => 2.year.ago,  :downloads => 7)
+      @sass = create(:rubygem, :name => 'sass', :created_at => 2.year.ago,  :downloads => 6)
+      @arel = create(:rubygem, :name => 'arel', :created_at => 2.year.ago,  :downloads => 5)
       @thor = create(:rubygem, :name => 'thor', :created_at => 2.days.ago,  :downloads => 3)
       @rack = create(:rubygem, :name => 'rack', :created_at => 1.day.ago,   :downloads => 2)
       @dust = create(:rubygem, :name => 'dust', :created_at => 3.days.ago,  :downloads => 1)
       @haml = create(:rubygem, :name => 'haml')
       @new = build(:rubygem)
 
-      @gems = [@thin, @rake, @json, @thor, @rack, @dust]
+      @gems = [@thin, @rake, @json, @rdoc, @mail, @sass, @arel, @thor, @rack, @dust]
       @gems.each { |g| create(:version, :rubygem => g) }
     end
 
@@ -495,7 +499,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "give a count of only rubygems with versions" do
-      assert_equal 6, Rubygem.total_count
+      assert_equal 10, Rubygem.total_count
     end
 
     should "only return the latest gems with versions" do
@@ -503,9 +507,9 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal [@rack, @thor, @dust, @json, @rake, @thin], Rubygem.latest(6)
     end
 
-    should "only latest downloaded versions" do
-      assert_equal [@thin, @rake, @json, @thor, @rack],        Rubygem.downloaded
-      assert_equal [@thin, @rake, @json, @thor, @rack, @dust], Rubygem.downloaded(6)
+    should "only most downloaded gems" do
+      assert_equal [@thin, @rake, @json, @rdoc, @mail, @sass, @arel, @thor, @rack, @dust], Rubygem.downloaded
+      assert_equal [@thin, @rake, @json, @rdoc, @mail, @sass], Rubygem.downloaded(6)
     end
   end
 
