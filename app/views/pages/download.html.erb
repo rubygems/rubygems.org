@@ -1,18 +1,15 @@
 <% @title = "Download RubyGems" %>
-<% version = Rubygem.current_rubygems_release %>
-<% version_number = version.try(:number) || "0.0.0" %>
-<% @subtitle = "v#{version_number}" %>
-<% @subtitle += " - #{nice_date_for(version.built_at)}" if version.try(:built_at) %>
+<% @subtitle = subtitle %>
 
 <div class="l-colspan t-body">
   <p>
     RubyGems is a package management framework for Ruby. Download the latest version here:
   </p>
   <div id="formats" class="download__formats">
-    <%= link_to "tgz", "http://production.cf.rubygems.org/rubygems/rubygems-#{version_number}.tgz", :class => "download__format" %>
-    <%= link_to "zip", "http://production.cf.rubygems.org/rubygems/rubygems-#{version_number}.zip", :class => "download__format" %>
-    <%= link_to "gem", "http://production.cf.rubygems.org/rubygems/rubygems-update-#{version_number}.gem", :class => "download__format" %>
-    <%= link_to "git", "http://github.com/rubygems/rubygems", :class => "download__format" %>
+    <%= link_to "tgz", "http://production.cf.rubygems.org/rubygems/rubygems-#{version_number}.tgz", class: "download__format" %>
+    <%= link_to "zip", "http://production.cf.rubygems.org/rubygems/rubygems-#{version_number}.zip", class: "download__format" %>
+    <%= link_to "gem", "http://production.cf.rubygems.org/rubygems/rubygems-update-#{version_number}.gem", class: "download__format" %>
+    <%= link_to "git", "http://github.com/rubygems/rubygems", class: "download__format" %>
   </div>
   <p>
   Or, to upgrade to the latest RubyGems:
