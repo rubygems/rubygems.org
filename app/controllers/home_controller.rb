@@ -1,9 +1,6 @@
 class HomeController < ApplicationController
   def index
-    begin
-      @downloads_count = Download.count
-    rescue Redis::CannotConnectError
-    end
+    @downloads_count = Download.count
     respond_to do |format|
       format.html
     end

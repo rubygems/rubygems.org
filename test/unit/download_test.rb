@@ -297,4 +297,13 @@ class DownloadTest < ActiveSupport::TestCase
                  Redis.current.hkeys(Download.history_key(version)).sort
 
   end
+
+  context "with redis down" do
+    should "return nil for count" do
+      requires_toxiproxy
+      Toxiproxy[:redis].down do
+        assert_equal nil, Download.count
+      end
+    end
+  end
 end

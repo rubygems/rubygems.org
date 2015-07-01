@@ -15,6 +15,8 @@ class Download
 
   def self.count
     Redis.current.get(COUNT_KEY).to_i
+  rescue Redis::CannotConnectError
+    nil
   end
 
   def self.today(*versions)
