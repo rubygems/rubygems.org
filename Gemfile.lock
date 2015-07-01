@@ -218,6 +218,7 @@ GEM
     thread_safe (0.3.5)
     tilt (1.4.1)
     timecop (0.7.4)
+    toxiproxy (0.1.2)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     uglifier (2.7.1)
@@ -289,6 +290,7 @@ DEPENDENCIES
   shoulda
   statsd-instrument (~> 2.0.6)
   timecop
+  toxiproxy
   uglifier (>= 1.0.3)
   unicorn
   validates_formatting_of

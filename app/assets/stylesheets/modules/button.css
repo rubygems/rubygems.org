@@ -47,7 +47,11 @@
       margin-left: auto; } }
   @media (min-width: 520px) {
     .home__join {
-      float: right; } }
+      float: right; }
+    .home__join.no-download-count {
+      float: none;
+      margin-right: auto;
+      margin-left: auto; } }
 
 .form__submit {
   margin-top: 42px;

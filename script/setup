@@ -22,6 +22,7 @@ echo "Cleaning out old logs"
 echo "Installing libraries and plugins"
 { gem list -i bundler || gem install bundler
   bundle
+  script/install_toxiproxy.sh
 } >&3 2>&1
 
 # Wipe and load the database unless KEEPDB=1 env var is set.
