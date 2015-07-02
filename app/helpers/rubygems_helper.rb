@@ -12,7 +12,9 @@ module RubygemsHelper
   end
 
   def link_to_directory
-    ("A".."Z").map { |letter| link_to(letter, rubygems_path(:letter => letter)) }.join
+    ("A".."Z").map do |letter|
+      link_to(letter, rubygems_path(:letter => letter), :class => "gems__nav-link")
+    end.join("\n").html_safe
   end
 
   def simple_markup(text)

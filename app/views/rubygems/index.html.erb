@@ -1,9 +1,7 @@
 <% @title = t('.title') %>
 
 <div class="gems__nav-links">
-  <% ("A".."Z").each do |letter| %>
-    <%= link_to(letter, rubygems_path(:letter => letter), :class => "gems__nav-link") %>
-  <% end %>
+  <%= link_to_directory %>
 </div>
 
 <header class="gems__header">
