@@ -37,17 +37,17 @@ class PusherTest < ActiveSupport::TestCase
 
       should "not attempt to find rubygem if spec can't be pulled" do
         @cutter.stubs(:pull_spec).returns false
-        @cutter.stubs(:find).stubs(:never)
-        @cutter.stubs(:authorize).stubs(:never)
-        @cutter.stubs(:save).stubs(:never)
+        @cutter.stubs(:find).never
+        @cutter.stubs(:authorize).never
+        @cutter.stubs(:save).never
         @cutter.process
       end
 
       should "not attempt to authorize if not found" do
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns nil
-        @cutter.stubs(:authorize).stubs(:never)
-        @cutter.stubs(:save).stubs(:never)
+        @cutter.stubs(:authorize).never
+        @cutter.stubs(:save).never
 
         @cutter.process
       end
@@ -56,7 +56,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns false
-        @cutter.stubs(:save).stubs(:never)
+        @cutter.stubs(:save).never
 
         @cutter.process
       end
