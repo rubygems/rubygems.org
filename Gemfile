@@ -42,7 +42,7 @@ gem 'coffee-rails', '~> 4.1'
 gem 'uglifier', '>= 1.0.3'
 
 group :development, :test do
-  gem 'toxiproxy'
+  gem 'toxiproxy', '~> 0.1.3'
 end
 
 group :development do

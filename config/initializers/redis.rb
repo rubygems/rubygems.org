@@ -1,12 +1,3 @@
-class Toxiproxy
-  def self.running?
-    TCPSocket.new('127.0.0.1', 8474).close
-    true
-  rescue Errno::ECONNREFUSED, Errno::ECONNRESET
-    false
-  end
-end
-
 port = Toxiproxy.running? ? 22220 : 6379
 
 if Rails.env.test? && Toxiproxy.running?
