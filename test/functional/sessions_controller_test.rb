@@ -18,7 +18,7 @@ class SessionsControllerTest < ActionController::TestCase
 
     context "when login and password are incorrect" do
       setup do
-        User.expects(:authenticate).with('login', 'pass').returns nil
+        User.expects(:authenticate).with('login', 'pass')
         post :create, :session => { :who => 'login', :password => 'pass' }
       end
 
