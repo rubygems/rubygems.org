@@ -12,8 +12,6 @@ require 'shoulda'
 
 require 'helpers/gem_helpers'
 
-I18n.enforce_available_locales = false
-
 RubygemFs.mock!
 
 class MiniTest::Test
