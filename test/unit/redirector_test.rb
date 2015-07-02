@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class RedirectorTest < ActiveSupport::TestCase
+  include Rack::Test::Methods
+
   def app
     Rack::Builder.new do
       use Redirector
