@@ -8,7 +8,7 @@ class RubygemsHelperTest < ActionView::TestCase
   should "create the directory" do
     directory = link_to_directory
     ("A".."Z").each do |letter|
-      assert_match rubygems_path(:letter => letter), directory
+      assert_match rubygems_path(letter: letter), directory
     end
   end
 
