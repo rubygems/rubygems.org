@@ -213,7 +213,7 @@ class WebHookTest < ActiveSupport::TestCase
        Net::HTTPBadResponse,
        Net::HTTPHeaderSyntaxError,
        Net::ProtocolError].each_with_index do |exception, index|
-         RestClient.stubs(:post).raises(exception)
+        RestClient.stubs(:post).raises(exception)
 
         @hook.fire('rubygems.org', @rubygem, @version, false)
 
