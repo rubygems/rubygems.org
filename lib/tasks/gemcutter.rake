@@ -1,7 +1,7 @@
 namespace :gemcutter do
   namespace :index do
     desc "Update the index"
-    task :update => :environment do
+    task update: :environment do
       require 'benchmark'
       Benchmark.bm do|b|
         b.report("update index") { Indexer.new.perform }
@@ -11,7 +11,7 @@ namespace :gemcutter do
 
   namespace :import do
     desc 'Bring the gems through the gemcutter process'
-    task :process => :environment do
+    task process: :environment do
       gems = Dir[File.join(ARGV[1] || "#{Gem.path.first}/cache", "*.gem")].sort.reverse
       puts "Processing #{gems.size} gems..."
       gems.each do |path|
@@ -28,7 +28,7 @@ namespace :gemcutter do
 
   namespace :checksums do
     desc "Initialize missing checksums."
-    task :init => :environment do
+    task init: :environment do
       without_sha256 = Version.where(sha256: nil)
       if mod = ENV['shard']
         without_sha256.where("id % 4 = ?", mod.to_i)
@@ -46,7 +46,7 @@ namespace :gemcutter do
     end
 
     desc "Check existing checksums."
-    task :check => :environment do
+    task check: :environment do
       failed = false
       Version.find_each do |version|
         actual_sha256 = version.recalculate_sha256
@@ -62,7 +62,7 @@ namespace :gemcutter do
 
   namespace :rubygems do
     desc "Update the download counts for all gems."
-    task :update_download_counts => :environment do
+    task update_download_counts: :environment do
       case_query = Rubygem.pluck(:name)
         .map { |name| "WHEN '#{name}' THEN #{Redis.current["downloads:rubygem:#{name}"].to_i}" }
         .join("\n            ")
@@ -77,7 +77,7 @@ namespace :gemcutter do
   end
 
   desc "Move all but the last 2 days of version history to SQL"
-  task :migrate_history => :environment do
+  task migrate_history: :environment do
     Download.copy_all_to_sql do |t,c,v|
       puts "#{c} of #{t}: #{v.full_name}"
     end

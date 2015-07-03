@@ -7,7 +7,7 @@ class DependencyTest < ActiveSupport::TestCase
   context "with dependency" do
     setup do
       @version = create(:version)
-      @dependency = build(:dependency, :version => @version)
+      @dependency = build(:dependency, version: @version)
     end
 
     should "be valid with factory" do
@@ -65,14 +65,14 @@ class DependencyTest < ActiveSupport::TestCase
 
       should "correctly create a Dependency referring to the existing Rubygem" do
         @gem_dependency.stubs(:requirements_list).returns ['#<YAML::Syck::DefaultKey:0x0000000> 0.0.0']
-        @dependency = create(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
+        @dependency = create(:dependency, rubygem: @rubygem, gem_dependency: @gem_dependency)
 
         assert_equal @rubygem, @dependency.rubygem
         assert_equal @requirements[0].to_s, @dependency.requirements
       end
 
       should "correctly display a malformed Dependency referring to the existing Rubygem" do
-        @dependency = create(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
+        @dependency = create(:dependency, rubygem: @rubygem, gem_dependency: @gem_dependency)
         @dependency.stubs(:requirements).returns '#<YAML::Syck::DefaultKey:0x0000000> 0.0.0'
 
         assert_equal @rubygem, @dependency.rubygem
@@ -85,7 +85,7 @@ class DependencyTest < ActiveSupport::TestCase
         @rubygem        = create(:rubygem)
         @requirements   = ['>= 0.0.0']
         @gem_dependency = Gem::Dependency.new(@rubygem.name, @requirements)
-        @dependency     = create(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
+        @dependency     = create(:dependency, rubygem: @rubygem, gem_dependency: @gem_dependency)
       end
 
       should "create a Dependency referring to the existing Rubygem" do
@@ -99,7 +99,7 @@ class DependencyTest < ActiveSupport::TestCase
         @rubygem        = create(:rubygem)
         @requirements   = ['< 1.0.0', '>= 0.0.0']
         @gem_dependency = Gem::Dependency.new(@rubygem.name, @requirements)
-        @dependency     = create(:dependency, :rubygem => @rubygem, :gem_dependency => @gem_dependency)
+        @dependency     = create(:dependency, rubygem: @rubygem, gem_dependency: @gem_dependency)
       end
 
       should "create a Dependency referring to the existing Rubygem" do
@@ -111,7 +111,7 @@ class DependencyTest < ActiveSupport::TestCase
     context "that refers to a Rubygem that does not exist" do
       setup do
         @specification = gem_specification_from_gem_fixture('with_dependencies-0.0.0')
-        @rubygem       = Rubygem.new(:name => @specification.name)
+        @rubygem       = Rubygem.new(name: @specification.name)
         @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
         @version.sha256 = "dummy"
 
@@ -122,7 +122,7 @@ class DependencyTest < ActiveSupport::TestCase
       end
 
       should "create a Dependency but not a rubygem" do
-        dependency = Dependency.create(:gem_dependency => @gem_dependency, :version => @version)
+        dependency = Dependency.create(gem_dependency: @gem_dependency, version: @version)
         assert !dependency.new_record?
         assert !dependency.errors[:base].present?
         assert_nil Rubygem.find_by_name(@rubygem_name)
@@ -135,7 +135,7 @@ class DependencyTest < ActiveSupport::TestCase
 
   context "without using Gem::Dependency" do
     should "be invalid" do
-      dependency = Dependency.create(:gem_dependency => ["ruby-ajp", ">= 0.2.0"])
+      dependency = Dependency.create(gem_dependency: ["ruby-ajp", ">= 0.2.0"])
       assert dependency.new_record?
       assert dependency.errors[:rubygem].present?
     end
@@ -147,7 +147,7 @@ class DependencyTest < ActiveSupport::TestCase
     end
 
     should "not create a Dependency" do
-      dependency = Dependency.create(:gem_dependency => @gem_dependency)
+      dependency = Dependency.create(gem_dependency: @gem_dependency)
       assert dependency.new_record?
       assert dependency.errors[:rubygem].present?
       assert_nil Rubygem.find_by_name("")

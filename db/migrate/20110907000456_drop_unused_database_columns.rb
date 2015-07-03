@@ -11,7 +11,7 @@ class DropUnusedDatabaseColumns < ActiveRecord::Migration
       t.datetime "created_at"
       t.datetime "updated_at"
     end
-    add_column :versions, :downloads_count, :integer, :default => 0
-    add_column :ownerships, :approved, :boolean, :default => false
+    add_column :versions, :downloads_count, :integer, default: 0
+    add_column :ownerships, :approved, :boolean, default: false
   end
 end

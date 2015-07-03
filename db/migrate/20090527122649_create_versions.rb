@@ -3,7 +3,7 @@ class CreateVersions < ActiveRecord::Migration
     create_table :versions do |table|
       table.string :authors
       table.text :description
-      table.integer :downloads, :default => 0
+      table.integer :downloads, default: 0
       table.string :number
       table.integer :rubygem_id
       table.timestamps

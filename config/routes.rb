@@ -2,20 +2,20 @@ Rails.application.routes.draw do
   ################################################################################
   # Root
 
-  root :to => 'home#index'
+  root to: 'home#index'
 
   ################################################################################
   # API v1
 
   namespace :api do
     namespace :v1 do
-      resource :api_key, :only => :show do
+      resource :api_key, only: :show do
         put :reset
       end
-      resources :profiles, :only => :show
-      resources :downloads, :only => :index do
-        get :top, :on => :collection
-        get :all, :on => :collection
+      resources :profiles, only: :show
+      resources :downloads, only: :index do
+        get :top, on: :collection
+        get :all, on: :collection
       end
       constraints id: Patterns::ROUTE_PATTERN, format: /json|yaml/ do
         get 'owners/:handle/gems', to: 'owners#gems', as: 'owners_gems', constraints: {handle: Patterns::ROUTE_PATTERN}, format: true
@@ -36,6 +36,8 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :dependencies, only: :index
+
       resources :rubygems, path: 'gems', only: [:create, :show, :index], id: Patterns::LAZY_ROUTE_PATTERN, format: /json|yaml/ do
         member do
           get :reverse_dependencies
@@ -44,8 +46,8 @@ Rails.application.routes.draw do
           delete :yank, to: "deletions#create"
           put :unyank, to: "deletions#destroy"
         end
-        constraints :rubygem_id => Patterns::ROUTE_PATTERN do
-          resource :owners, :only => [:show, :create, :destroy]
+        constraints rubygem_id: Patterns::ROUTE_PATTERN do
+          resource :owners, only: [:show, :create, :destroy]
         end
       end
 
@@ -56,9 +58,9 @@ Rails.application.routes.draw do
         end
       end
 
-      resource :search, :only => :show
+      resource :search, only: :show
 
-      resources :web_hooks, :only => [:create, :index] do
+      resources :web_hooks, only: [:create, :index] do
         collection do
           delete :remove
           post :fire
@@ -70,14 +72,14 @@ Rails.application.routes.draw do
   ################################################################################
   # API v0
 
-  scope :to => 'api/deprecated#index' do
+  scope to: 'api/deprecated#index' do
     get 'api_key'
     put 'api_key/reset'
 
     post 'gems'
     get  'gems/:id.json'
 
-    scope :path => 'gems/:rubygem_id' do
+    scope path: 'gems/:rubygem_id' do
       put  'migrate'
       post 'migrate'
       get    'owners(.:format)'
@@ -89,11 +91,11 @@ Rails.application.routes.draw do
   ################################################################################
   # UI
   scope constraints: {format: :html}, defaults: {format: 'html'} do
-    resource  :search,    :only => :show
-    resource  :dashboard, :only => :show, constraints: {format: /html|atom/}
-    resources :profiles,  :only => :show
-    resource  :profile,   :only => [:edit, :update]
-    resources :stats,     :only => :index
+    resource  :search,    only: :show
+    resource  :dashboard, only: :show, constraints: {format: /html|atom/}
+    resources :profiles,  only: :show
+    resource  :profile,   only: [:edit, :update]
+    resources :stats,     only: :index
 
     resources :rubygems, only: [:index, :show, :edit, :update], path: 'gems', constraints: {id: Patterns::ROUTE_PATTERN, format: /html|atom/} do
       resource  :subscription, only: [:create, :destroy], constraints: {format: :js}, defaults: {format: :js}

@@ -4,7 +4,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
 
   def self.should_respond_to(format)
     should "return #{format.to_s.upcase} with the download count" do
-      get :index, :format => format
+      get :index, format: format
       assert_equal @count, yield(@response.body)
     end
   end
@@ -32,7 +32,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
   end
 
   def get_show(version, format='json')
-    get :show, :id => version.full_name, :format => format
+    get :show, id: version.full_name, format: format
   end
 
   def self.should_respond_to(format, to_meth = :to_s)
@@ -62,8 +62,8 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
   context "on GET to show" do
     setup do
       rubygem  = create(:rubygem)
-      @version1 = create(:version, :rubygem => rubygem, :number => '1.0.0')
-      @version2 = create(:version, :rubygem => rubygem, :number => '2.0.0')
+      @version1 = create(:version, rubygem: rubygem, number: '1.0.0')
+      @version2 = create(:version, rubygem: rubygem, number: '2.0.0')
 
       Download.incr(rubygem.name, @version1.full_name)
       Download.incr(rubygem.name, @version2.full_name)
@@ -81,7 +81,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
 
   context "on GET to show for an unknown gem" do
     setup do
-      get :show, :id => "rials", :format => 'json'
+      get :show, id: "rials", format: 'json'
     end
 
     should "return a 404" do
@@ -96,7 +96,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
   context "on GET to show for a yanked gem" do
     setup do
       rubygem = create(:rubygem)
-      @version = create(:version, :rubygem => rubygem, :number => "1.0.0", :indexed => false)
+      @version = create(:version, rubygem: rubygem, number: "1.0.0", indexed: false)
       get_show(@version)
     end
 
@@ -112,7 +112,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
   def self.should_respond_to(format)
     context "with #{format.to_s.upcase}" do
       setup do
-        get :top, :format => format
+        get :top, format: format
       end
 
       should "have correct size" do
@@ -137,14 +137,14 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
   context "On GET to top" do
     setup do
       @rubygem_1 = create(:rubygem)
-      @version_1 = create(:version, :rubygem => @rubygem_1)
-      @version_2 = create(:version, :rubygem => @rubygem_1)
+      @version_1 = create(:version, rubygem: @rubygem_1)
+      @version_2 = create(:version, rubygem: @rubygem_1)
 
       @rubygem_2 = create(:rubygem)
-      @version_3 = create(:version, :rubygem => @rubygem_2)
+      @version_3 = create(:version, rubygem: @rubygem_2)
 
       @rubygem_3 = create(:rubygem)
-      @version_4 = create(:version, :rubygem => @rubygem_3)
+      @version_4 = create(:version, rubygem: @rubygem_3)
 
       3.times { Download.incr(@rubygem_1.name, @version_1.full_name) }
       2.times { Download.incr(@rubygem_1.name, @version_2.full_name) }
@@ -165,14 +165,14 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
   context "On GET to all" do
     setup do
       @rubygem_1 = create(:rubygem)
-      @version_1 = create(:version, :rubygem => @rubygem_1)
-      @version_2 = create(:version, :rubygem => @rubygem_1)
+      @version_1 = create(:version, rubygem: @rubygem_1)
+      @version_2 = create(:version, rubygem: @rubygem_1)
 
       @rubygem_2 = create(:rubygem)
-      @version_3 = create(:version, :rubygem => @rubygem_2)
+      @version_3 = create(:version, rubygem: @rubygem_2)
 
       @rubygem_3 = create(:rubygem)
-      @version_4 = create(:version, :rubygem => @rubygem_3)
+      @version_4 = create(:version, rubygem: @rubygem_3)
 
       3.times { Download.incr(@rubygem_1.name, @version_1.full_name) }
       2.times { Download.incr(@rubygem_1.name, @version_2.full_name) }

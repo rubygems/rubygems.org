@@ -5,10 +5,10 @@ class VersionsControllerTest < ActionController::TestCase
     setup do
       @rubygem = create(:rubygem)
       @versions = (1..5).map do |version|
-        create(:version, :rubygem => @rubygem)
+        create(:version, rubygem: @rubygem)
       end
 
-      get :index, :rubygem_id => @rubygem.name
+      get :index, rubygem_id: @rubygem.name
     end
 
     should respond_with :success
@@ -25,25 +25,25 @@ class VersionsControllerTest < ActionController::TestCase
     setup do
       @rubygem = create(:rubygem)
       @versions = (1..5).map do |version|
-        create(:version, :rubygem => @rubygem)
+        create(:version, rubygem: @rubygem)
       end
       @rubygem.reload
 
-      get :index, :rubygem_id => @rubygem.name, :format => "atom"
+      get :index, rubygem_id: @rubygem.name, format: "atom"
     end
 
     should respond_with :success
 
     should "render correct gem information in the feed" do
-      assert_select "feed > title", :count => 1, :text => /#{@rubygem.name}/
-      assert_select "feed > updated", :count => 1, :text => @rubygem.updated_at.iso8601
+      assert_select "feed > title", count: 1, text: /#{@rubygem.name}/
+      assert_select "feed > updated", count: 1, text: @rubygem.updated_at.iso8601
     end
 
     should "render information about versions" do
       @versions.each do |v|
-        assert_select "entry > title", :count => 1, :text => v.to_title
-        assert_select "entry > link[href='#{rubygem_version_url(v.rubygem, v.slug)}']", :count => 1
-        assert_select "entry > id", :count => 1, :text => rubygem_version_url(v.rubygem, v.slug)
+        assert_select "entry > title", count: 1, text: v.to_title
+        assert_select "entry > link[href='#{rubygem_version_url(v.rubygem, v.slug)}']", count: 1
+        assert_select "entry > id", count: 1, text: rubygem_version_url(v.rubygem, v.slug)
         # assert_select "entry > updated", :count => @versions.count, :text => v.created_at.iso8601
       end
     end
@@ -52,7 +52,7 @@ class VersionsControllerTest < ActionController::TestCase
   context "GET to index for gem with no versions" do
     setup do
       @rubygem = create(:rubygem)
-      get :index, :rubygem_id => @rubygem.name
+      get :index, rubygem_id: @rubygem.name
     end
 
     should respond_with :success
@@ -67,12 +67,12 @@ class VersionsControllerTest < ActionController::TestCase
 
   context "On GET to show" do
     setup do
-      @latest_version = create(:version, :built_at => 1.week.ago, :created_at => 1.day.ago)
+      @latest_version = create(:version, built_at: 1.week.ago, created_at: 1.day.ago)
       @rubygem = @latest_version.rubygem
       @versions = (1..5).map do |_|
-        FactoryGirl.create(:version, :rubygem => @rubygem)
+        FactoryGirl.create(:version, rubygem: @rubygem)
       end
-      get :show, :rubygem_id => @rubygem.name, :id => @latest_version.number
+      get :show, rubygem_id: @rubygem.name, id: @latest_version.number
     end
 
     should respond_with :success
