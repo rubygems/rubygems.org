@@ -42,6 +42,7 @@ gem 'coffee-rails', '~> 4.1'
 gem 'uglifier', '>= 1.0.3'
 
 group :development, :test do
+  gem 'rubocop', '~> 0.32.1'
   gem 'toxiproxy', '~> 0.1.3'
 end
 
