@@ -37,17 +37,17 @@ class PusherTest < ActiveSupport::TestCase
 
       should "not attempt to find rubygem if spec can't be pulled" do
         @cutter.stubs(:pull_spec).returns false
-        @cutter.stubs(:find).stubs(:never)
-        @cutter.stubs(:authorize).stubs(:never)
-        @cutter.stubs(:save).stubs(:never)
+        @cutter.stubs(:find).never
+        @cutter.stubs(:authorize).never
+        @cutter.stubs(:save).never
         @cutter.process
       end
 
       should "not attempt to authorize if not found" do
         @cutter.stubs(:pull_spec).returns true
-        @cutter.stubs(:find).returns nil
-        @cutter.stubs(:authorize).stubs(:never)
-        @cutter.stubs(:save).stubs(:never)
+        @cutter.stubs(:find)
+        @cutter.stubs(:authorize).never
+        @cutter.stubs(:save).never
 
         @cutter.process
       end
@@ -56,14 +56,14 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns false
-        @cutter.stubs(:save).stubs(:never)
+        @cutter.stubs(:save).never
 
         @cutter.process
       end
     end
 
     should "not be able to pull spec from a bad path" do
-      @cutter.stubs(:body).stubs(:stub!).stubs(:read).returns nil
+      @cutter.stubs(:body).stubs(:stub!).stubs(:read)
       @cutter.pull_spec
       assert_nil @cutter.spec
       assert_match %r{RubyGems\.org cannot process this gem}, @cutter.message
