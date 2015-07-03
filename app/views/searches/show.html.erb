@@ -1,7 +1,7 @@
 <% @title = "search" %>
 
 <% if @gems %>
-  <% @subtitle = t('.subtitle', :query => content_tag(:em, h(params[:query]))) %>
+  <% @subtitle = t('.subtitle', query: content_tag(:em, h(params[:query]))) %>
 
   <% if @exact_match %>
     <header class="gems__header">
@@ -11,7 +11,7 @@
   <% end %>
 
   <header class="gems__header push">
-    <p class="gems__meter"><%= page_entries_info(@gems, :entry_name => 'gem', :model => 'gem').html_safe %></p>
+    <p class="gems__meter"><%= page_entries_info(@gems, entry_name: 'gem', model: 'gem').html_safe %></p>
   </header>
 
   <% if @gems.present? %>

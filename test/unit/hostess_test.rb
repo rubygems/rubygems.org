@@ -39,8 +39,8 @@ class HostessTest < ActiveSupport::TestCase
     setup do
       @download_count = Download.count
       @file = "/gems/test-0.0.0.gem"
-      @rubygem = create(:rubygem, :name => "test")
-      @version = create(:version, :rubygem => @rubygem, :number => "0.0.0")
+      @rubygem = create(:rubygem, name: "test")
+      @version = create(:version, rubygem: @rubygem, number: "0.0.0")
     end
 
     should "increase download count" do
@@ -58,8 +58,8 @@ class HostessTest < ActiveSupport::TestCase
   end
 
   should "find gemspec" do
-    rubygem = create(:rubygem, :name => "rails")
-    version = create(:version, :number => "4.0.0", :rubygem => rubygem)
+    rubygem = create(:rubygem, name: "rails")
+    version = create(:version, number: "4.0.0", rubygem: rubygem)
 
     path = "/quick/Marshal.4.8/#{version.full_name}.gemspec.rz"
     touch path
@@ -77,8 +77,8 @@ class HostessTest < ActiveSupport::TestCase
     download_count = Download.count
     file = "/gems/test-0.0.0.gem"
     touch file
-    rubygem = create(:rubygem, :name => "test")
-    version = create(:version, :rubygem => rubygem, :number => "0.0.0")
+    rubygem = create(:rubygem, name: "test")
+    version = create(:version, rubygem: rubygem, number: "0.0.0")
 
     get file
     assert_equal 200, last_response.status

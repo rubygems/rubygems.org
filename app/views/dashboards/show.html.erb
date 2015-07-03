@@ -5,14 +5,14 @@
     <h3 class="gems__gem__name">
       <%= t '.latest' %>:
     </h3>
-    <%= link_to dashboard_url(:api_key => current_user.api_key, :format => :atom), :id => 'feed', :title => t('.latest_title'), :class => 'gem__link t-list__item', 'data-icon' => '#' do %>
+    <%= link_to dashboard_url(api_key: current_user.api_key, format: :atom), id: 'feed', title: t('.latest_title'), class: 'gem__link t-list__item', 'data-icon' => '#' do %>
       <span class="t-hidden">RSS</span>
     <% end %>
     </a>
     <div class="push--bottom">
       <% if @latest_updates.empty? %>
         <div class="t-body push--s">
-          <i class="t-text"><%= t('.no_subscriptions', :gem_link => link_to(t('.gem_link_text'), rubygem_path("gemcutter"))).html_safe %></i>
+          <i class="t-text"><%= t('.no_subscriptions', gem_link: link_to(t('.gem_link_text'), rubygem_path("gemcutter"))).html_safe %></i>
         </div>
       <% else %>
         <ol>
@@ -21,7 +21,7 @@
               <a href="<%= rubygem_url(version.rubygem) %>" class="dashboard__gem">
                 <div class="dashboard__gem__info">
                   <strong class="dashboard__gem__name"><%= version.to_title %></strong>
-                  <i class="dashboard__gem__version"><%= t 'time_ago', :duration => time_ago_in_words(version.created_at) %></i>
+                  <i class="dashboard__gem__version"><%= t 'time_ago', duration: time_ago_in_words(version.created_at) %></i>
                 </div>
                 <p class="dashboard__gem__desc"><%= short_info(version) %></p>
               </a>
@@ -38,15 +38,15 @@
       <% if @my_gems.empty? %>
         <div class="t-body push--bottom">
           <p>
-            <%= t('.no_owned', :creating_link => link_to(t('.creating_link_text'), "http://guides.rubygems.org/make-your-own-gem/").html_safe,
-                               :migrating_link => link_to(t('.migrating_link_text'), page_url("migrate"))).html_safe %>
+            <%= t('.no_owned', creating_link: link_to(t('.creating_link_text'), "http://guides.rubygems.org/make-your-own-gem/").html_safe,
+                                migrating_link: link_to(t('.migrating_link_text'), page_url("migrate"))).html_safe %>
           </p>
         </div>
       <% else %>
         <ul>
           <% @my_gems.each do |rubygem| %>
             <li>
-              <%= link_to rubygem.name, rubygem, :title => short_info(rubygem.versions.most_recent), :class => 't-link' %>
+              <%= link_to rubygem.name, rubygem, title: short_info(rubygem.versions.most_recent), class: 't-link' %>
             </li>
           <% end %>
         </ul>
@@ -57,7 +57,7 @@
         <ul>
           <% current_user.subscribed_gems.each do |gem| %>
             <li>
-              <%= link_to gem, gem, :title => short_info(gem.versions.most_recent), :class => 't-link' %>
+              <%= link_to gem, gem, title: short_info(gem.versions.most_recent), class: 't-link' %>
             </li>
           <% end %>
         </ul>

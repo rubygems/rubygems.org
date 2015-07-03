@@ -1,49 +1,49 @@
 <% @title = t('.title') %>
 
-<%= form_for current_user, :url => {:controller => 'profiles', :action => 'update'} do |form| %>
+<%= form_for current_user, url: {controller: 'profiles', action: 'update'} do |form| %>
   <%= form.error_messages %>
 
   <div class="avatar_field">
-    <%= form.label :avatar, :class => 'form__label'  %>
+    <%= form.label :avatar, class: 'form__label'  %>
     <div class="l-overflow">
       <%= gravatar(160) %>
-      <%= link_to 'Change', 'http://www.gravatar.com', :class => 't-text t-link' %>
+      <%= link_to 'Change', 'http://www.gravatar.com', class: 't-text t-link' %>
     </div>
   </div>
 
   <div class="text_field">
-    <%= form.label :handle, :class => 'form__label' %>
-    <%= form.text_field :handle, :class => 'form__input' %>
+    <%= form.label :handle, class: 'form__label' %>
+    <%= form.text_field :handle, class: 'form__input' %>
   </div>
 
   <div class="text_field">
-    <%= form.label :email, :class => 'form__label' %>
-    <%= form.email_field :email, :class => 'form__input' %>
+    <%= form.label :email, class: 'form__label' %>
+    <%= form.email_field :email, class: 'form__input' %>
   </div>
 
   <div class="profile-checkbox form__checkbox">
-    <%= form.check_box :hide_email, :class => 'form__checkbox__input' %>
-    <%= form.label :hide_email, "Hide email in public profile", :class => 'form__checkbox__label' %>
+    <%= form.check_box :hide_email, class: 'form__checkbox__input' %>
+    <%= form.label :hide_email, "Hide email in public profile", class: 'form__checkbox__label' %>
   </div>
 
   <div class="submit_field">
-    <%= form.submit 'Update', :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
+    <%= form.submit 'Update', data: {disable_with: t('form_disable_with')}, class: 'form__submit' %>
   </div>
 
   <div class="t-body">
     <h2><%= t '.reset_password.title' %></h2>
-    <p><%= t('.reset_password.text', :link => link_to(t('.reset_password.link_text'), new_password_url)).html_safe %></p>
+    <p><%= t('.reset_password.text', link: link_to(t('.reset_password.link_text'), new_password_url)).html_safe %></p>
 
     <h2><%= t '.api_access.title' %></h2>
     <p>
-      <%= t('.api_access.key_is', :key => content_tag(:strong, current_user.api_key)).html_safe %>
+      <%= t('.api_access.key_is', key: content_tag(:strong, current_user.api_key)).html_safe %>
     </p>
     <p>
-      <%= t('.api_access.credentials', :gem_credentials_file => content_tag(:code, '~/.gem/credentials'),
-                                       :gem_commands_link => link_to(t('.api_access.link_text'), page_url('gem_docs'))).html_safe %>
+      <%= t('.api_access.credentials', gem_credentials_file: content_tag(:code, '~/.gem/credentials'),
+                                       gem_commands_link: link_to(t('.api_access.link_text'), page_url('gem_docs'))).html_safe %>
     </p>
     <pre><code>curl -u <%= current_user.name %> https://rubygems.org/api/v1/api_key.yaml > ~/.gem/credentials; chmod 0600 ~/.gem/credentials</code></pre>
   </div>
 <% end %>
 
-<%= button_to t('.api_access.reset'), reset_api_v1_api_key_path, :method => :put, :data => {:confirm => t('.api_access.confirm_reset')}, :class => 'form__submit' %>
+<%= button_to t('.api_access.reset'), reset_api_v1_api_key_path, method: :put, data: {confirm: t('.api_access.confirm_reset')}, class: 'form__submit' %>

@@ -57,7 +57,7 @@ MSG
   def find
     name = spec.name.to_s
 
-    @rubygem = Rubygem.name_is(name).first || Rubygem.new(:name => name)
+    @rubygem = Rubygem.name_is(name).first || Rubygem.new(name: name)
 
     unless @rubygem.new_record?
       if @rubygem.find_version_from_spec(spec)
@@ -107,8 +107,8 @@ MSG
       timeout(5) do
         to.post @bundler_api_url,
                 json,
-                :timeout        => 5,
-                :open_timeout   => 5,
+                timeout:            5,
+                open_timeout:       5,
                 'Content-Type'  => 'application/json'
       end
     rescue StandardError, Interrupt
@@ -120,7 +120,7 @@ MSG
 
   def after_write
     @version_id = version.id
-    Delayed::Job.enqueue Indexer.new, :priority => PRIORITIES[:push]
+    Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
     enqueue_web_hook_jobs
     update_remote_bundler_api
     StatsD.increment 'push.success'

@@ -14,10 +14,10 @@ class SearchesControllerTest < ActionController::TestCase
 
   context 'on GET to show with search parameters for a rubygem without versions' do
     setup do
-      @sinatra = create(:rubygem, :name => "sinatra")
+      @sinatra = create(:rubygem, name: "sinatra")
       assert_nil @sinatra.versions.most_recent
       assert @sinatra.reload.versions.count.zero?
-      get :show, :query => "sinatra"
+      get :show, query: "sinatra"
     end
 
     should respond_with :success
@@ -26,13 +26,13 @@ class SearchesControllerTest < ActionController::TestCase
 
   context 'on GET to show with search parameters' do
     setup do
-      @sinatra = create(:rubygem, :name => "sinatra")
-      @sinatra_redux = create(:rubygem, :name => "sinatra-redux")
-      @brando  = create(:rubygem, :name => "brando")
-      create(:version, :rubygem => @sinatra)
-      create(:version, :rubygem => @sinatra_redux)
-      create(:version, :rubygem => @brando)
-      get :show, :query => "sinatra"
+      @sinatra = create(:rubygem, name: "sinatra")
+      @sinatra_redux = create(:rubygem, name: "sinatra-redux")
+      @brando  = create(:rubygem, name: "brando")
+      create(:version, rubygem: @sinatra)
+      create(:version, rubygem: @sinatra_redux)
+      create(:version, rubygem: @brando)
+      get :show, query: "sinatra"
     end
 
     should respond_with :success
@@ -52,9 +52,9 @@ class SearchesControllerTest < ActionController::TestCase
 
   context 'on GET to show with search parameters with a single exact match' do
     setup do
-      @sinatra = create(:rubygem, :name => "sinatra")
-      create(:version, :rubygem => @sinatra)
-      get :show, :query => "sinatra"
+      @sinatra = create(:rubygem, name: "sinatra")
+      create(:version, rubygem: @sinatra)
+      get :show, query: "sinatra"
     end
 
     should respond_with :redirect

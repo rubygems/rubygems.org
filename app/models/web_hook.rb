@@ -4,11 +4,11 @@ class WebHook < ActiveRecord::Base
   belongs_to :user
   belongs_to :rubygem
 
-  validates_formatting_of :url, :using => :url, :message => "does not appear to be a valid URL"
-  validate :unique_hook, :on => :create
+  validates_formatting_of :url, using: :url, message: "does not appear to be a valid URL"
+  validate :unique_hook, on: :create
 
   def self.global
-    where(:rubygem_id => nil)
+    where(rubygem_id: nil)
   end
 
   def self.specific
@@ -18,7 +18,7 @@ class WebHook < ActiveRecord::Base
   def fire(host_with_port, deploy_gem, version, delayed=true)
     job = Notifier.new(self.url, host_with_port, deploy_gem, version, self.user.api_key)
     if delayed
-      Delayed::Job.enqueue job, :priority => PRIORITIES[:web_hook]
+      Delayed::Job.enqueue job, priority: PRIORITIES[:web_hook]
     else
       job.perform
     end
@@ -64,7 +64,7 @@ class WebHook < ActiveRecord::Base
   end
 
   def to_xml(options={})
-    payload.to_xml(options.merge(:root => 'web_hook'))
+    payload.to_xml(options.merge(root:'web_hook'))
   end
 
   def to_yaml(*args)
@@ -79,15 +79,15 @@ class WebHook < ActiveRecord::Base
 
   def unique_hook
     if user && rubygem
-      if WebHook.exists?(:user_id    => user.id,
-                         :rubygem_id => rubygem.id,
-                         :url        => url)
+      if WebHook.exists?(user_id:    user.id,
+                         rubygem_id: rubygem.id,
+                         url:        url)
         errors[:base] << "A hook for #{url} has already been registered for #{rubygem.name}"
       end
     elsif user
-      if WebHook.exists?(:user_id    => user.id,
-                         :rubygem_id => nil,
-                         :url        => url)
+      if WebHook.exists?(user_id:     user.id,
+                         rubygem_id:  nil,
+                         url:         url)
         errors[:base] << "A global hook for #{url} has already been registered"
       end
     else

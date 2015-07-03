@@ -2,8 +2,8 @@ require 'test_helper'
 
 class DownloadTest < ActiveSupport::TestCase
   should "load up all downloads with just raw strings and process them" do
-    rubygem = create(:rubygem, :name => "some-stupid13-gem42-9000")
-    version = create(:version, :rubygem => rubygem)
+    rubygem = create(:rubygem, name: "some-stupid13-gem42-9000")
+    version = create(:version, rubygem: rubygem)
 
     3.times do
       Download.incr(rubygem.name, version.full_name)
@@ -17,8 +17,8 @@ class DownloadTest < ActiveSupport::TestCase
 
   should "track platform gem downloads correctly" do
     rubygem = create(:rubygem)
-    version = create(:version, :rubygem => rubygem, :platform => "mswin32-60")
-    other_platform_version = create(:version, :rubygem => rubygem, :platform => "mswin32")
+    version = create(:version, rubygem: rubygem, platform: "mswin32-60")
+    other_platform_version = create(:version, rubygem: rubygem, platform: "mswin32")
 
     Download.incr(rubygem.name, version.full_name)
 
@@ -33,14 +33,14 @@ class DownloadTest < ActiveSupport::TestCase
 
   should "find most downloaded today" do
     @rubygem_1 = create(:rubygem)
-    @version_1 = create(:version, :rubygem => @rubygem_1)
-    @version_2 = create(:version, :rubygem => @rubygem_1)
+    @version_1 = create(:version, rubygem: @rubygem_1)
+    @version_2 = create(:version, rubygem: @rubygem_1)
 
     @rubygem_2 = create(:rubygem)
-    @version_3 = create(:version, :rubygem => @rubygem_2)
+    @version_3 = create(:version, rubygem: @rubygem_2)
 
     @rubygem_3 = create(:rubygem)
-    @version_4 = create(:version, :rubygem => @rubygem_3)
+    @version_4 = create(:version, rubygem: @rubygem_3)
 
     Timecop.freeze(1.day.ago) do
       Download.incr(@rubygem_1.name, @version_1.full_name)
@@ -71,14 +71,14 @@ class DownloadTest < ActiveSupport::TestCase
 
   should "find most downloaded all time" do
     @rubygem_1 = create(:rubygem)
-    @version_1 = create(:version, :rubygem => @rubygem_1)
-    @version_2 = create(:version, :rubygem => @rubygem_1)
+    @version_1 = create(:version, rubygem: @rubygem_1)
+    @version_2 = create(:version, rubygem: @rubygem_1)
 
     @rubygem_2 = create(:rubygem)
-    @version_3 = create(:version, :rubygem => @rubygem_2)
+    @version_3 = create(:version, rubygem: @rubygem_2)
 
     @rubygem_3 = create(:rubygem)
-    @version_4 = create(:version, :rubygem => @rubygem_3)
+    @version_4 = create(:version, rubygem: @rubygem_3)
 
     Download.incr(@rubygem_1.name, @version_1.full_name)
     Download.incr(@rubygem_1.name, @version_2.full_name)
@@ -102,14 +102,14 @@ class DownloadTest < ActiveSupport::TestCase
 
   should "find counts per day for versions" do
     @rubygem_1 = create(:rubygem)
-    @version_1 = create(:version, :rubygem => @rubygem_1)
-    @version_2 = create(:version, :rubygem => @rubygem_1)
+    @version_1 = create(:version, rubygem: @rubygem_1)
+    @version_2 = create(:version, rubygem: @rubygem_1)
 
     @rubygem_2 = create(:rubygem)
-    @version_3 = create(:version, :rubygem => @rubygem_2)
+    @version_3 = create(:version, rubygem: @rubygem_2)
 
     @rubygem_3 = create(:rubygem)
-    @version_4 = create(:version, :rubygem => @rubygem_3)
+    @version_4 = create(:version, rubygem: @rubygem_3)
 
     Timecop.freeze(1.day.ago) do
       Download.incr(@rubygem_1, @version_1.full_name)
@@ -134,19 +134,19 @@ class DownloadTest < ActiveSupport::TestCase
 
   should "find counts per day for versions when in DB also" do
     @rubygem_1 = create(:rubygem)
-    @version_1 = create(:version, :rubygem => @rubygem_1)
-    @version_2 = create(:version, :rubygem => @rubygem_1)
+    @version_1 = create(:version, rubygem: @rubygem_1)
+    @version_2 = create(:version, rubygem: @rubygem_1)
 
     @rubygem_2 = create(:rubygem)
-    @version_3 = create(:version, :rubygem => @rubygem_2)
+    @version_3 = create(:version, rubygem: @rubygem_2)
 
     @rubygem_3 = create(:rubygem)
-    @version_4 = create(:version, :rubygem => @rubygem_3)
+    @version_4 = create(:version, rubygem: @rubygem_3)
 
     Timecop.freeze(1.day.ago) do
-      create :version_history, :version => @version_1, :count => 5
-      create :version_history, :version => @version_2
-      create :version_history, :version => @version_3
+      create :version_history, version: @version_1,count: 5
+      create :version_history, version: @version_2
+      create :version_history, version: @version_3
     end
 
     Download.incr(@rubygem_2, @version_3.full_name)
@@ -167,10 +167,10 @@ class DownloadTest < ActiveSupport::TestCase
   should "find counts per day for versions in range across month boundary" do
     Timecop.freeze(Time.parse("2012-10-01")) do
       @rubygem_1 = create(:rubygem)
-      @version_1 = create(:version, :rubygem => @rubygem_1)
+      @version_1 = create(:version, rubygem: @rubygem_1)
 
       Timecop.freeze(1.day.ago) do
-        create :version_history, :version => @version_1, :count => 5
+        create :version_history, version: @version_1,count: 5
       end
 
       Download.incr(@rubygem_1, @version_1.full_name)
@@ -190,10 +190,10 @@ class DownloadTest < ActiveSupport::TestCase
 
   should "find counts per day for versions in range" do
     @rubygem_1 = create(:rubygem)
-    @version_1 = create(:version, :rubygem => @rubygem_1)
+    @version_1 = create(:version, rubygem: @rubygem_1)
 
     Timecop.freeze(1.day.ago) do
-      create :version_history, :version => @version_1, :count => 5
+      create :version_history, version: @version_1,count: 5
     end
 
     Download.incr(@rubygem_1, @version_1.full_name)
@@ -212,8 +212,8 @@ class DownloadTest < ActiveSupport::TestCase
 
   should "find download count by gem name" do
     rubygem = create(:rubygem)
-    version1 = create(:version, :rubygem => rubygem)
-    version2 = create(:version, :rubygem => rubygem)
+    version1 = create(:version, rubygem: rubygem)
+    version2 = create(:version, rubygem: rubygem)
 
     3.times { Download.incr(rubygem.name, version1.full_name) }
     2.times { Download.incr(rubygem.name, version2.full_name) }
@@ -233,7 +233,7 @@ class DownloadTest < ActiveSupport::TestCase
 
   should "delete all old today keys except the current" do
     rubygem = create(:rubygem)
-    version = create(:version, :rubygem => rubygem)
+    version = create(:version, rubygem: rubygem)
     10.times do |n|
       Timecop.freeze(n.days.ago) do
         3.times { Download.incr(rubygem.name, version.full_name) }
@@ -246,7 +246,7 @@ class DownloadTest < ActiveSupport::TestCase
 
   should "copy data from redis into SQL" do
     rubygem = create(:rubygem)
-    version = create(:version, :rubygem => rubygem)
+    version = create(:version, rubygem: rubygem)
 
     Download.incr rubygem.name, version.full_name
 
@@ -267,7 +267,7 @@ class DownloadTest < ActiveSupport::TestCase
 
   should "copy all be the last 2 days into SQL" do
     rubygem = create(:rubygem)
-    version = create(:version, :rubygem => rubygem)
+    version = create(:version, rubygem: rubygem)
 
     10.times do |n|
       Timecop.freeze(n.days.ago) do
@@ -283,7 +283,7 @@ class DownloadTest < ActiveSupport::TestCase
 
   should "migrate all keys in redis" do
     rubygem = create(:rubygem)
-    version = create(:version, :rubygem => rubygem)
+    version = create(:version, rubygem: rubygem)
 
     10.times do |n|
       Timecop.freeze(n.days.ago) do

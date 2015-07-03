@@ -1,7 +1,7 @@
 class RubygemsController < ApplicationController
-  before_action :redirect_to_root, :only => [:edit, :update], :unless => :signed_in?
-  before_action :find_rubygem, :only => [:edit, :update, :show]
-  before_action :load_gem, :only => [:edit, :update]
+  before_action :redirect_to_root, only:[:edit, :update], unless: :signed_in?
+  before_action :find_rubygem, only:[:edit, :update, :show]
+  before_action :load_gem, only:[:edit, :update]
   before_action :set_page, only: :index
 
   def index

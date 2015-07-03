@@ -14,7 +14,7 @@ class SessionsController < Clearance::SessionsController
       else
         StatsD.increment 'login.failure'
         flash.now.notice = status.failure_message
-        render :template => 'sessions/new', :status => :unauthorized
+        render template: 'sessions/new', status: :unauthorized
       end
     end
   end

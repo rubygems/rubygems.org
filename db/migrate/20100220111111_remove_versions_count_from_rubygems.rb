@@ -4,6 +4,6 @@ class RemoveVersionsCountFromRubygems < ActiveRecord::Migration
   end
 
   def self.down
-    add_column :rubygems, :versions_count, :integer, :default => 0
+    add_column :rubygems, :versions_count, :integer, default: 0
   end
 end

@@ -1,10 +1,10 @@
-<% @title = t('.title', :name => @rubygem.name) %>
+<% @title = t('.title', name: @rubygem.name) %>
 <% if @versions.size.zero? %>
   <div class="t-body">
     <p><%= t('.not_hosted_notice') %></p>
   </div>
 <% else %>
-  <h3 class="t-list__heading"><%= t('.versions_since', :count => @versions.size, :since => nice_date_for(@rubygem.first_built_date)) %>:</h3>
+  <h3 class="t-list__heading"><%= t('.versions_since',count: @versions.size, since: nice_date_for(@rubygem.first_built_date)) %>:</h3>
   <div class="versions">
     <ul class="t-list__items">
       <%= render @versions %>

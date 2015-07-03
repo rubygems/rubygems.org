@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   helper :announcements
   helper ActiveSupport::NumberHelper
 
-  protect_from_forgery :only => [:create, :update, :destroy]
+  protect_from_forgery only:[:create, :update, :destroy]
   ssl_required
 
   before_action :set_locale
@@ -40,7 +40,7 @@ class ApplicationController < ActionController::Base
       # This works because request.body is a RewindableInput which will
       # slurp all the socket data into a tempfile, satisfying apache.
       request.body.size if request.body.respond_to? :size
-      render :text => t(:please_sign_up), :status => 401
+      render text: t(:please_sign_up), status: 401
     end
   end
 
@@ -49,10 +49,10 @@ class ApplicationController < ActionController::Base
     if @rubygem.blank?
       respond_to do |format|
         format.any do
-          render :text => "This rubygem could not be found.", :status => :not_found
+          render text: "This rubygem could not be found.", status: :not_found
         end
         format.html do
-          render :file => "public/404", :status => :not_found, :layout => false, :formats => [:html]
+          render file: "public/404", status: :not_found, layout: false, formats: [:html]
         end
       end
     end
