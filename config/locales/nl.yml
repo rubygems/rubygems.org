@@ -41,7 +41,6 @@ nl:
       overview: Statistiekenoverzicht
       for: Statistieken voor %{for}
       total_downloads: ! 'Downloads totaal'
-      highest_rank: hoogste notering vandaag
       daily_downloads: ! '%{count} downloads vandaag'
   time_ago: ! '%{duration} ago'
   download_count: ! '%{count} downloads'
