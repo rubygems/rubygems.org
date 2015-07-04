@@ -3,10 +3,10 @@ class Mailer < ActionMailer::Base
 
   def email_reset(user)
     @user = user
-    mail :from    => Clearance.configuration.mailer_sender,
-         :to      => user.email,
-         :subject => I18n.t(:confirmation,
-                            :scope   => [:clearance, :models, :clearance_mailer],
-                            :default => "Email address confirmation")
+    mail from:     Clearance.configuration.mailer_sender,
+         to:       user.email,
+         subject:  I18n.t(:confirmation,
+                            scope:   [:clearance, :models, :clearance_mailer],
+                            default: "Email address confirmation")
   end
 end

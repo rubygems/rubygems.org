@@ -6,11 +6,11 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
   end
 
   def get_latest(rubygem, format='json')
-    get :latest, :id => rubygem.name, :format => format
+    get :latest, id: rubygem.name, format: format
   end
 
-  def get_reverse_dependencies(rubygem, options={ :format => 'json' })
-    get :reverse_dependencies, options.merge(:id => rubygem.name)
+  def get_reverse_dependencies(rubygem, options={ format: 'json' })
+    get :reverse_dependencies, options.merge(id: rubygem.name)
   end
 
   def set_cache_header
@@ -50,14 +50,14 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
   context "on GET to show" do
     setup do
       @rubygem = create(:rubygem)
-      create(:version, :rubygem => @rubygem, :number => '2.0.0')
-      create(:version, :rubygem => @rubygem, :number => '1.0.0.pre', :prerelease => true)
-      create(:version, :rubygem => @rubygem, :number => '3.0.0', :indexed => false)
+      create(:version, rubygem: @rubygem, number: '2.0.0')
+      create(:version, rubygem: @rubygem, number: '1.0.0.pre', prerelease: true)
+      create(:version, rubygem: @rubygem, number: '3.0.0', indexed: false)
 
       @rubygem2 = create(:rubygem)
-      create(:version, :rubygem => @rubygem2, :number => '3.0.0')
-      create(:version, :rubygem => @rubygem2, :number => '2.0.0')
-      create(:version, :rubygem => @rubygem2, :number => '1.0.0')
+      create(:version, rubygem: @rubygem2, number: '3.0.0')
+      create(:version, rubygem: @rubygem2, number: '2.0.0')
+      create(:version, rubygem: @rubygem2, number: '1.0.0')
     end
 
     should_respond_to(:json) do |body|
@@ -108,7 +108,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
   context "on GET to show for an unknown gem" do
     setup do
-      get :show, :id => "nonexistent_gem", :format => "json"
+      get :show, id: "nonexistent_gem", format: "json"
     end
 
     should "return a 404" do
@@ -147,7 +147,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     setup do
       @rubygem = create(:rubygem)
       12.times do |n|
-        create(:version, :rubygem => @rubygem, :number => "#{n}.0.0")
+        create(:version, rubygem: @rubygem, number: "#{n}.0.0")
       end
     end
 
@@ -161,7 +161,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     setup do
       @rubygem = create(:rubygem)
       (1..3).each do |n|
-        create(:version, :rubygem => @rubygem, :number => "#{n}.0.0")
+        create(:version, rubygem: @rubygem, number: "#{n}.0.0")
       end
     end
 
@@ -175,12 +175,12 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     setup do
       @rubygem = create(:rubygem)
       (1..3).each do |n|
-        create(:version, :rubygem => @rubygem, :number => "#{n}.0.0")
+        create(:version, rubygem: @rubygem, number: "#{n}.0.0")
       end
     end
 
     should "return latest version" do
-      get :latest, :id => @rubygem.name, :format => "js", :callback => "blah"
+      get :latest, id: @rubygem.name, format: "js", callback: "blah"
       assert_match(/blah\(.*\)\Z/, @response.body)
     end
   end
@@ -189,12 +189,12 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     setup do
       @rubygem = create(:rubygem)
       (1..3).each do |n|
-        create(:version, :rubygem => @rubygem, :number => "#{n}.0.0")
+        create(:version, rubygem: @rubygem, number: "#{n}.0.0")
       end
     end
 
     should "return latest version" do
-      get :latest, :id => "blah", :format => "json"
+      get :latest, id: "blah", format: "json"
       assert_equal "unknown", MultiJson.load(@response.body)['version']
     end
   end
@@ -202,11 +202,11 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
   context "on GET to of latest for a gem with no versions" do
     setup do
       @rubygem = create(:rubygem)
-      @version = create(:version, :rubygem => @rubygem, :number => "1.0.0", indexed: false)
+      @version = create(:version, rubygem: @rubygem, number: "1.0.0", indexed: false)
     end
 
     should "return latest version" do
-      get :latest, :id => @rubygem.name, :format => "json"
+      get :latest, id: @rubygem.name, format: "json"
       assert_equal "unknown", MultiJson.load(@response.body)['version']
     end
   end
@@ -218,7 +218,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
 
     should "return license info" do
-      get :show, :id => @rubygem.name, :format => "json"
+      get :show, id: @rubygem.name, format: "json"
       assert_equal "MIT", MultiJson.load(@response.body).first['licenses']
     end
   end
@@ -229,19 +229,19 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       @gem_one = create(:rubygem)
       @gem_two = create(:rubygem)
       @gem_three = create(:rubygem)
-      @version_one_latest  = create(:version, :rubygem => @gem_one, :number => '0.2', :full_name => "gem_one-0.2")
-      @version_one_earlier = create(:version, :rubygem => @gem_one, :number => '0.1', :full_name => "gem_one-0.1")
-      @version_two_latest  = create(:version, :rubygem => @gem_two, :number => '1.0', :full_name => "gem_two-1.0")
-      @version_two_earlier = create(:version, :rubygem => @gem_two, :number => '0.5', :full_name => "gem_two-0.5")
-      @version_three = create(:version, :rubygem => @gem_three, :number => '1.7', :full_name => "gem_three-1.7")
+      @version_one_latest  = create(:version, rubygem: @gem_one, number: '0.2', full_name: "gem_one-0.2")
+      @version_one_earlier = create(:version, rubygem: @gem_one, number: '0.1', full_name: "gem_one-0.1")
+      @version_two_latest  = create(:version, rubygem: @gem_two, number: '1.0', full_name: "gem_two-1.0")
+      @version_two_earlier = create(:version, rubygem: @gem_two, number: '0.5', full_name: "gem_two-0.5")
+      @version_three = create(:version, rubygem: @gem_three, number: '1.7', full_name: "gem_three-1.7")
 
-      @version_one_latest.dependencies << create(:dependency, :version => @version_one_latest, :rubygem => @dep_rubygem)
-      @version_two_earlier.dependencies << create(:dependency, :version => @version_two_earlier, :rubygem => @dep_rubygem)
-      @version_three.dependencies << create(:dependency, :version => @version_three, :rubygem => @dep_rubygem)
+      @version_one_latest.dependencies << create(:dependency, version: @version_one_latest, rubygem: @dep_rubygem)
+      @version_two_earlier.dependencies << create(:dependency, version: @version_two_earlier, rubygem: @dep_rubygem)
+      @version_three.dependencies << create(:dependency, version: @version_three, rubygem: @dep_rubygem)
     end
 
     should "return names of reverse dependencies" do
-      get_reverse_dependencies(@dep_rubygem, :format => "json")
+      get_reverse_dependencies(@dep_rubygem, format: "json")
       ret_versions = MultiJson.load(@response.body)
 
       assert_equal 3, ret_versions.size

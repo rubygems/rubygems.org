@@ -1,7 +1,7 @@
 class AddScopeToDependencies < ActiveRecord::Migration
   def self.up
     add_column :dependencies, :scope, :string
-    Dependency.update_all(:scope => 'runtime')
+    Dependency.update_all(scope: 'runtime')
     announce "Please reprocess all gems after this migration"
   end
 

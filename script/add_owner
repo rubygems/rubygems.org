@@ -11,6 +11,6 @@ require_relative '../config/environment'
 
 user    = User.find_by_email!(email)
 rubygem = Rubygem.find_by_name!(name)
-rubygem.ownerships.create(:user_id => user.id)
+rubygem.ownerships.create(user_id: user.id)
 
 puts "#{email} added to #{name}."

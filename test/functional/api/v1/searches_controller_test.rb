@@ -4,7 +4,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
   def self.should_respond_to(format)
     context "with query=match and with #{format.to_s.upcase}" do
       setup do
-        get :show, :query => "match", :format => format
+        get :show, query: "match", format: format
       end
 
       should respond_with :success
@@ -20,7 +20,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
 
     context "with no query and with #{format.to_s.upcase}" do
       setup do
-        get :show, :format => format
+        get :show, format: format
       end
 
       should respond_with :bad_request
@@ -32,10 +32,10 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
 
   context "on GET to show" do
     setup do
-      @match = create(:rubygem, :name => "match")
-      @other = create(:rubygem, :name => "other")
-      create(:version, :rubygem => @match)
-      create(:version, :rubygem => @other)
+      @match = create(:rubygem, name: "match")
+      @other = create(:rubygem, name: "other")
+      create(:version, rubygem: @match)
+      create(:version, rubygem: @other)
     end
 
     should_respond_to(:json) do |body|

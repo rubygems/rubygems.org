@@ -4,7 +4,7 @@ class CreateWebHooks < ActiveRecord::Migration
       table.string    :gem_name
       table.integer   :user_id
       table.string    :url
-      table.integer   :failure_count, :default => 0
+      table.integer   :failure_count, default: 0
       table.timestamps
     end
 

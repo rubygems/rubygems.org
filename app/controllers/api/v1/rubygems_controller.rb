@@ -1,9 +1,9 @@
 class Api::V1::RubygemsController < Api::BaseController
-  skip_before_action :verify_authenticity_token, :only => [:create]
+  skip_before_action :verify_authenticity_token, only:[:create]
 
-  before_action :authenticate_with_api_key, :only => [:index, :create]
-  before_action :verify_authenticated_user, :only => [:index, :create]
-  before_action :find_rubygem,              :only => [:show]
+  before_action :authenticate_with_api_key, only:[:index, :create]
+  before_action :verify_authenticated_user, only:[:index, :create]
+  before_action :find_rubygem,              only:[:show]
 
   def index
     @rubygems = current_user.rubygems.with_versions
@@ -20,14 +20,14 @@ class Api::V1::RubygemsController < Api::BaseController
         format.yaml { render yaml: @rubygem }
       end
     else
-      render :text => "This gem does not exist.", :status => :not_found
+      render text:"This gem does not exist.", status: :not_found
     end
   end
 
   def create
     gemcutter = Pusher.new(current_user, request.body, request.host_with_port)
     gemcutter.process
-    render :text => gemcutter.message, :status => gemcutter.code
+    render text:gemcutter.message, status: gemcutter.code
   end
 
   def reverse_dependencies

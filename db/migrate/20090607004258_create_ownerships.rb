@@ -4,7 +4,7 @@ class CreateOwnerships < ActiveRecord::Migration
       table.belongs_to :rubygem
       table.belongs_to :user
       table.string :token
-      table.boolean :approved, :default => false
+      table.boolean :approved, default: false
       table.timestamps
     end
 

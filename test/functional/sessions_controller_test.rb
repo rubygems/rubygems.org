@@ -5,7 +5,7 @@ class SessionsControllerTest < ActionController::TestCase
     context "when login and password are correct" do
       setup do
         User.expects(:authenticate).with('login', 'pass').returns User.new
-        post :create, :session => { :who => 'login', :password => 'pass' }
+        post :create,session: { who: 'login', password: 'pass' }
       end
 
       should respond_with :redirect
@@ -18,8 +18,8 @@ class SessionsControllerTest < ActionController::TestCase
 
     context "when login and password are incorrect" do
       setup do
-        User.expects(:authenticate).with('login', 'pass')
-        post :create, :session => { :who => 'login', :password => 'pass' }
+        User.expects(:authenticate).with('login', 'pass').returns nil
+        post :create, session: { who: 'login', password: 'pass' }
       end
 
       should respond_with :unauthorized

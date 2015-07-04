@@ -7,8 +7,8 @@ class Dependency < ActiveRecord::Base
                     :parse_gem_dependency
   after_create      :push_on_to_list
 
-  validates :requirements, :presence => true
-  validates :scope,        :inclusion => {:in => %w(development runtime)}
+  validates :requirements, presence: true
+  validates :scope,        inclusion: {in: %w(development runtime)}
 
   attr_accessor :gem_dependency
 
@@ -22,11 +22,11 @@ class Dependency < ActiveRecord::Base
   end
 
   def self.development
-    where(:scope => 'development')
+    where(scope: 'development')
   end
 
   def self.runtime
-    where(:scope => 'runtime')
+    where(scope: 'runtime')
   end
 
   def self.runtime_key(full_name)
@@ -53,10 +53,10 @@ class Dependency < ActiveRecord::Base
 
     data.in_groups_of(2).map do |(name, number, platform), deps|
       {
-        :name         => name,
-        :number       => number,
-        :platform     => platform,
-        :dependencies => deps.map { |dep| dep.split(" ", 2) }
+        name:         name,
+        number:       number,
+        platform:     platform,
+        dependencies: deps.map { |dep| dep.split(" ", 2) }
       }
     end
   end
@@ -77,7 +77,7 @@ class Dependency < ActiveRecord::Base
   end
 
   def to_xml(options={})
-    payload.to_xml(options.merge(:root => 'dependency'))
+    payload.to_xml(options.merge(root: 'dependency'))
   end
 
   def to_yaml(*args)

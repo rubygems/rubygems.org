@@ -13,7 +13,7 @@ class OwnershipTest < ActiveSupport::TestCase
   context "with ownership" do
     setup do
       @ownership = create(:ownership)
-      create(:version, :rubygem => @ownership.rubygem)
+      create(:version, rubygem: @ownership.rubygem)
     end
 
     subject { @ownership }
@@ -24,8 +24,8 @@ class OwnershipTest < ActiveSupport::TestCase
   context "with multiple ownerships on the same rubygem" do
     setup do
       @rubygem       = create(:rubygem)
-      @ownership_one = create(:ownership, :rubygem => @rubygem)
-      @ownership_two = create(:ownership, :rubygem => @rubygem)
+      @ownership_one = create(:ownership, rubygem: @rubygem)
+      @ownership_two = create(:ownership, rubygem: @rubygem)
     end
 
     should "allow deletion of one ownership" do

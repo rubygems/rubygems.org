@@ -2,17 +2,17 @@
   <header class="profile__header">
     <div class="profile__header__name-wrap">
       <div id="avatar-frame">
-        <%= image_tag(@user.gravatar_url(:size => 300, :secure => request.ssl?).html_safe, :id => "profile_gravatar", :width => 300, :height => 300, :class => 'profile__header__avatar') %>
+        <%= image_tag(@user.gravatar_url(size: 300, secure: request.ssl?).html_safe, id: "profile_gravatar", width: 300, height: 300, class: 'profile__header__avatar') %>
       </div>
       <h1 id="profile-name" class="profile__header__name t-display"><%= link_to @user.display_handle, profile_path(@user.display_id), class: "t-link--black" %></h1>
       <% unless @user.hide_email %>
         <p id="profile-email">
-          <%= mail_to @user.email, "Email Me", :encode => "hex", class: "profile__header__email t-link--black", 'data-icon' => '✉' %>
+          <%= mail_to @user.email, "Email Me", encode: "hex", class: "profile__header__email t-link--black", 'dataicon' => '✉' %>
         </p>
       <% end %>
       <% if @user == current_user %>
         <div id="downloads-ego">
-          <%= link_to "Edit Profile", edit_profile_path, :id => "edit-profile", class: "profile__header__email t-link--black" %>
+          <%= link_to "Edit Profile", edit_profile_path, id: "edit-profile", class: "profile__header__email t-link--black" %>
         </div>
       <% end %>
     </div>
@@ -28,7 +28,7 @@
 <div id="profile">
   <div class="profile-list">
     <ul>
-      <%= render :partial => 'rubygem', :collection => @rubygems + @extra_rubygems, :locals => {:graph => false}  %>
+      <%= render partial: 'rubygem', collection: @rubygems + @extra_rubygems, locals: {graph: false}  %>
     </ul>
   </div>
 </div>

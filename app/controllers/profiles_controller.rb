@@ -1,5 +1,5 @@
 class ProfilesController < ApplicationController
-  before_action :redirect_to_root, :unless => :signed_in?, :except => :show
+  before_action :redirect_to_root, unless: :signed_in?, except: :show
 
   def edit
   end

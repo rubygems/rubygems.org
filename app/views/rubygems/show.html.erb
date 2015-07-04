@@ -37,14 +37,14 @@
               <%= render @versions %>
             </ol>
             <% if show_all_versions_link?(@rubygem) %>
-              <%= link_to t('.show_all_versions', :count => @rubygem.versions.count), rubygem_versions_url(@rubygem), :class => "gem__see-all-versions t-link--gray t-link--has-arrow" %>
+              <%= link_to t('.show_all_versions',count: @rubygem.versions.count), rubygem_versions_url(@rubygem), class: "gem__see-all-versions t-link--gray t-link--has-arrow" %>
             <% end %>
           </div>
         </div>
       <% end %>
 
-      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.runtime } %>
-      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.development } %>
+      <%= render partial: "rubygems/dependencies", locals: { dependencies: @latest_version.dependencies.runtime } %>
+      <%= render partial: "rubygems/dependencies", locals: { dependencies: @latest_version.dependencies.development } %>
 
       <% if @latest_version.requirements.present? %>
         <div class="l-half--l">
@@ -87,7 +87,7 @@
 
     <div class="gem__aside l-col--r--pad">
       <% if @latest_version.indexed %>
-        <div class="gem__downloads-wrap" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
+        <div class="gem__downloads-wrap" data-href="<%= api_v1_download_path(@latest_version.full_name, format: 'json') %>">
           <h2 class="gem__downloads__heading t-text--s">
             <%= t('stats.show.total_downloads') %>
             <span class="gem__downloads"><%= number_with_delimiter(@rubygem.downloads) %></span>
@@ -98,7 +98,7 @@
           </h2>
           <% if @versions.present? %>
             <% if show_all_versions_link?(@rubygem) %>
-              <%= link_to t('.show_all_versions', :count => @rubygem.versions.count), rubygem_versions_url(@rubygem), :class => "gem__see-all-versions t-link--gray t-link--has-arrow" %>
+              <%= link_to t('.show_all_versions',count: @rubygem.versions.count), rubygem_versions_url(@rubygem), class: "gem__see-all-versions t-link--gray t-link--has-arrow" %>
             <% end %>
           <% end %>
         </div>
@@ -145,7 +145,7 @@
 
       <h3 class="t-list__heading"><%= t '.links.header' %>:</h3>
       <div class="t-list__items">
-        <%= link_to t('edit'), edit_rubygem_path(@rubygem), :class => "gem__link t-list__item", :id => "edit" if @rubygem.owned_by?(current_user) %>
+        <%= link_to t('edit'), edit_rubygem_path(@rubygem), class: "gem__link t-list__item", id: "edit" if @rubygem.owned_by?(current_user) %>
 
         <% if @latest_version.indexed %>
           <% if @rubygem.linkset.present? %>

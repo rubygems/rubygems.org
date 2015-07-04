@@ -32,7 +32,7 @@ class RubygemsHelperTest < ActionView::TestCase
 
   should "link to docs if no docs link is set" do
     version = build(:version)
-    linkset = build(:linkset, :docs => nil)
+    linkset = build(:linkset, docs: nil)
 
     link = documentation_link(version, linkset)
     assert link.include?(version.documentation_path)
@@ -53,7 +53,7 @@ class RubygemsHelperTest < ActionView::TestCase
   end
 
   should "link to report abuse" do
-    rubygem = create(:rubygem, :name => 'my_gem')
+    rubygem = create(:rubygem, name: 'my_gem')
     url = "http://help.rubygems.org/discussion/new?discussion[title]=Reporting%20Abuse%20on%20my_gem&discussion[private]=1"
     assert_match url, report_abuse_link(rubygem)
   end
@@ -94,8 +94,8 @@ class RubygemsHelperTest < ActionView::TestCase
       @rubygem = create(:rubygem, owners: users)
 
       expected_links = users.sort_by(&:id).map { |u|
-        link_to gravatar(48, "gravatar-#{u.id}", u), profile_path(u.display_id), :alt => u.display_handle,
-          :title => u.display_handle
+        link_to gravatar(48, "gravatar-#{u.id}", u), profile_path(u.display_id), alt: u.display_handle,
+          title: u.display_handle
       }.join
       assert_equal expected_links, links_to_owners(@rubygem)
       assert links_to_owners(@rubygem).html_safe?

@@ -34,20 +34,20 @@
 
         <div class="header__nav-links-wrap">
           <% if request.path_info == "/" %>
-            <%= form_tag search_url, :id => "main-search", :class => "header__search-wrap--home", :method => :get do %>
-              <%= search_field_tag :query, params[:query], :placeholder => "Search Gems&hellip;".html_safe, :class => "header__search" %>
+            <%= form_tag search_url, id: "main-search", class: "header__search-wrap--home", method: :get do %>
+              <%= search_field_tag :query, params[:query], placeholder: "Search Gems&hellip;".html_safe, class: "header__search" %>
               <%= label_tag :query do %>
                 <span class="t-hidden">Search gems</span>
               <% end %>
-              <%= submit_tag '⌕', :id => 'search_submit', :name => nil, :class => "header__search__icon" %>
+              <%= submit_tag '⌕', id: 'search_submit', name: nil, class: "header__search__icon" %>
             <% end %>
           <% else %>
-            <%= form_tag search_url, :id => "main-search", :class => "header__search-wrap", :method => :get do %>
-              <%= search_field_tag :query, params[:query], :placeholder => "Search Gems&hellip;".html_safe, :class => "header__search" %>
+            <%= form_tag search_url, id: "main-search", class: "header__search-wrap", method: :get do %>
+              <%= search_field_tag :query, params[:query], placeholder: "Search Gems&hellip;".html_safe, class: "header__search" %>
               <%= label_tag :query do %>
                 <span class="t-hidden">Search gems</span>
               <% end %>
-              <%= submit_tag '⌕', :id => 'search_submit', :name => nil, :class => "header__search__icon" %>
+              <%= submit_tag '⌕', id: 'search_submit', name: nil, class: "header__search__icon" %>
             <% end %>
           <% end %>
 
@@ -97,7 +97,7 @@
       </div>
     <% end %>
 
-    <%= render :partial => "announcements/announcement_for_all" %>
+    <%= render partial: "announcements/announcement_for_all" %>
 
     <% if content_for?(:fold) %>
       <div class="fold">

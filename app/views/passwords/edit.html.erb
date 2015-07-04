@@ -1,15 +1,15 @@
 <% @title = t('.title') %>
 
 <%= form_for(:password_reset,
-             :url => user_password_path(@user, :token => @user.confirmation_token),
-             :html => { :method => :put }) do |form| %>
+             url: user_password_path(@user, token: @user.confirmation_token),
+             html: { method: :put }) do |form| %>
   <%= error_messages_for :user %>
   <div class="password_field">
-    <%= form.label :password, "Password", :class => 'form__label' %>
-    <%= form.password_field :password, :class => 'form__input' %>
+    <%= form.label :password, "Password", class: 'form__label' %>
+    <%= form.password_field :password, class: 'form__input' %>
   </div>
 
   <div class="form_bottom">
-    <%= form.submit t('.submit'), :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
+    <%= form.submit t('.submit'), data: {disable_with: t('form_disable_with')}, class: 'form__submit' %>
   </div>
 <% end %>

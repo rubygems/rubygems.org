@@ -38,7 +38,7 @@ class Download
   end
 
   def self.most_downloaded_today(n=5)
-    items = Redis.current.zrevrange(today_key, 0, (n-1), :with_scores => true)
+    items = Redis.current.zrevrange(today_key, 0, (n-1), with_scores: true)
     items.collect do |full_name, downloads|
       version = Version.find_by_full_name(full_name)
       [version, downloads.to_i]
@@ -46,7 +46,7 @@ class Download
   end
 
   def self.most_downloaded_all_time(n=5)
-    items = Redis.current.zrevrange(ALL_KEY, 0, (n-1), :with_scores => true)
+    items = Redis.current.zrevrange(ALL_KEY, 0, (n-1), with_scores: true)
     items.collect do |full_name, downloads|
       version = Version.find_by_full_name(full_name)
       [version, downloads.to_i]
@@ -64,8 +64,8 @@ class Download
         if count
           count = count.to_i
         else
-          vh = VersionHistory.where(:version_id => version.id,
-                                    :day => date).first
+          vh = VersionHistory.where(version_id: version.id,
+                                    day: date).first
 
           count = vh ? vh.count : 0
         end
@@ -87,8 +87,8 @@ class Download
       if count
         count = count.to_i
       else
-        vh = VersionHistory.where(:version_id => version.id,
-                                  :day => date).first
+        vh = VersionHistory.where(version_id: version.id,
+                                  day: date).first
 
         if vh
           count = vh.count

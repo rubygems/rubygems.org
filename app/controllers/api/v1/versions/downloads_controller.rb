@@ -8,7 +8,7 @@ class Api::V1::Versions::DownloadsController < Api::BaseController
         format.yaml { render yaml: counts }
       end
     else
-      render :text => "This rubygem could not be found.", :status => :not_found
+      render text:"This rubygem could not be found.", status: :not_found
     end
   end
 
@@ -24,7 +24,7 @@ class Api::V1::Versions::DownloadsController < Api::BaseController
         format.yaml { render yaml: counts }
       end
     else
-      render :text => "This rubygem could not be found.", :status => :not_found
+      render text:"This rubygem could not be found.", status: :not_found
     end
   end
 

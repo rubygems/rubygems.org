@@ -1,16 +1,16 @@
 class Rubygem < ActiveRecord::Base
   include Patterns
 
-  has_many :owners, :through => :ownerships, :source => :user
-  has_many :ownerships, :dependent => :destroy
-  has_many :subscribers, :through => :subscriptions, :source => :user
-  has_many :subscriptions, :dependent => :destroy
-  has_many :versions, :dependent => :destroy, :validate => false
-  has_many :web_hooks, :dependent => :destroy
-  has_one :linkset, :dependent => :destroy
+  has_many :owners, through: :ownerships, source: :user
+  has_many :ownerships, dependent: :destroy
+  has_many :subscribers, through: :subscriptions, source: :user
+  has_many :subscriptions, dependent: :destroy
+  has_many :versions, dependent: :destroy, validate: false
+  has_many :web_hooks, dependent: :destroy
+  has_one :linkset, dependent: :destroy
 
-  validate :ensure_name_format, :if => :needs_name_validation?
-  validates :name, :presence => true, :uniqueness => true
+  validate :ensure_name_format, if: :needs_name_validation?
+  validates :name, presence: true, uniqueness: true
 
   after_create :update_unresolved
   before_destroy :mark_unresolved
@@ -132,7 +132,7 @@ class Rubygem < ActiveRecord::Base
 
   def owned_by?(user)
     return false unless user
-    ownerships.exists?(:user_id => user.id)
+    ownerships.exists?(user_id: user.id)
   end
 
   def to_s
@@ -179,7 +179,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def to_xml(options={})
-    payload.to_xml(options.merge(:root => 'rubygem'))
+    payload.to_xml(options.merge(root:'rubygem'))
   end
 
   def to_param
@@ -195,7 +195,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def create_ownership(user)
-    ownerships.create(:user => user) if unowned?
+    ownerships.create(user: user) if unowned?
   end
 
   def update_versions!(version, spec)
@@ -204,7 +204,7 @@ class Rubygem < ActiveRecord::Base
 
   def update_dependencies!(version, spec)
     spec.dependencies.each do |dependency|
-      version.dependencies.create!(:gem_dependency => dependency)
+      version.dependencies.create!(gem_dependency: dependency)
     end
   rescue ActiveRecord::RecordInvalid => ex
     # ActiveRecord can't chain a nested error here, so we have to add and reraise
@@ -228,8 +228,8 @@ class Rubygem < ActiveRecord::Base
   end
 
   delegate :count,
-    :to => :versions,
-    :prefix => true
+    to: :versions,
+    prefix: true
 
   def yanked_versions?
     versions.yanked.exists?
@@ -242,7 +242,7 @@ class Rubygem < ActiveRecord::Base
       Version.find(version.id).update_column(:position, numbers.index(version.number))
     end
 
-    self.versions.update_all(:latest => false)
+    self.versions.update_all(latest: false)
 
     self.versions.release.indexed.inject(Hash.new{|h, k| h[k] = []}) do |platforms, version|
       platforms[version.platform] << version
@@ -293,7 +293,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def update_unresolved
-    Dependency.where(:unresolved_name => name).each do |dependency|
+    Dependency.where(unresolved_name: name).each do |dependency|
       dependency.update_resolved(self)
     end
 

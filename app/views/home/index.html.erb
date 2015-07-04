@@ -3,12 +3,12 @@
 </div>
 <h1 class="home__heading"><%= t '.find_blurb' %></h1>
 <div class="home__search-wrap">
-  <%= form_tag search_url, :id => "main-search", :method => :get do %>
-    <%= search_field_tag :query, params[:query], :placeholder => "Search Gems&hellip;".html_safe, autofocus: current_page?(root_url), :id => 'home_query', :class => "home__search" %>
+  <%= form_tag search_url, id: "main-search", method: :get do %>
+    <%= search_field_tag :query, params[:query], placeholder: "Search Gems&hellip;".html_safe, autofocus: current_page?(root_url), id: 'home_query', class: "home__search" %>
     <%= label_tag :home_query do %>
     <span class="t-hidden">Search gems</span>
     <% end %>
-    <%= submit_tag '⌕', :id => 'search_submit', :name => nil, :class => "home__search__icon" %>
+    <%= submit_tag '⌕', id: 'search_submit', name: nil, class: "home__search__icon" %>
   <% end %>
 </div>
 <div class="home__cta-wrap">
@@ -18,7 +18,7 @@
       <span class="home__downloads__desc">downloads &amp; counting</span>
     </h2>
   <% end %>
-  <%= link_to t('.learn.install_rubygems'), page_url("download"), :class => "home__join #{@downloads_count.nil? ? 'no-download-count' : ''}", "data-icon" => ">" %>
+  <%= link_to t('.learn.install_rubygems'), page_url("download"), class: "home__join #{@downloads_count.nil? ? 'no-download-count' : ''}", "data-icon" => ">" %>
 </div>
 <div class="home__links">
   <%= link_to t('.footer.status'), "https://status.rubygems.org", class: "home__link", "data-icon" => "⌁" %>

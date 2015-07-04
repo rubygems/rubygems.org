@@ -11,7 +11,7 @@ class RubygemsControllerTest < ActionController::TestCase
       setup do
         @owners = [@user, create(:user)]
         @rubygem = create(:rubygem, owners: @owners, number: "1.0.0")
-        get :show, :id => @rubygem.to_param
+        get :show, id: @rubygem.to_param
       end
 
       should respond_with :success
@@ -28,7 +28,7 @@ class RubygemsControllerTest < ActionController::TestCase
         @owners = [@user, create(:user)]
         @rubygem = create(:rubygem, owners: @owners, number: "1.0.0")
         @rubygem.linkset = nil
-        get :show, :id => @rubygem.to_param
+        get :show, id: @rubygem.to_param
       end
 
       should respond_with :success
@@ -40,7 +40,7 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On GET to show for another user's gem" do
       setup do
         @rubygem = create(:rubygem)
-        get :show, :id => @rubygem.to_param
+        get :show, id: @rubygem.to_param
       end
 
       should respond_with :success
@@ -53,7 +53,7 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On GET to show for this user's gem" do
       setup do
         @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
-        get :show, :id => @rubygem.to_param
+        get :show, id: @rubygem.to_param
       end
 
       should respond_with :success
@@ -66,34 +66,34 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On GET to show for a gem that the user is subscribed to" do
       setup do
         @rubygem = create(:rubygem)
-        create(:version, :rubygem => @rubygem)
-        create(:subscription, :rubygem => @rubygem, :user => @user)
-        get :show, :id => @rubygem.to_param
+        create(:version, rubygem: @rubygem)
+        create(:subscription, rubygem: @rubygem, user: @user)
+        get :show, id: @rubygem.to_param
       end
 
       should respond_with :success
       should "have a visible unsubscribe link" do
-        assert page.has_selector?("a[style='display:inline-block']", :text => 'Unsubscribe')
+        assert page.has_selector?("a[style='display:inline-block']", text:'Unsubscribe')
       end
     end
 
     context "On GET to show for a gem that the user is not subscribed to" do
       setup do
         @rubygem = create(:rubygem)
-        create(:version, :rubygem => @rubygem)
-        get :show, :id => @rubygem.to_param
+        create(:version, rubygem: @rubygem)
+        get :show, id: @rubygem.to_param
       end
 
       should respond_with :success
       should "have a visible subscribe link" do
-        assert page.has_selector?("a[style='display:inline-block']", :text => 'Subscribe')
+        assert page.has_selector?("a[style='display:inline-block']", text:'Subscribe')
       end
     end
 
     context "On GET to edit for this user's gem" do
       setup do
         @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
-        get :edit, :id => @rubygem.to_param
+        get :edit, id: @rubygem.to_param
       end
 
       should respond_with :success
@@ -113,7 +113,7 @@ class RubygemsControllerTest < ActionController::TestCase
       setup do
         @other_user = create(:user)
         @rubygem = create(:rubygem, owners: [@other_user], number: "1.0.0")
-        get :edit, :id => @rubygem.to_param
+        get :edit, id: @rubygem.to_param
       end
       should respond_with :redirect
       should redirect_to('the homepage') { root_url }
@@ -150,7 +150,7 @@ class RubygemsControllerTest < ActionController::TestCase
       setup do
         @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
         @url = "totally not a url"
-        put :update, :id => @rubygem.to_param, :linkset => {:code => @url}
+        put :update, id: @rubygem.to_param, linkset: {code: @url}
       end
       should respond_with :success
       should render_template :edit
@@ -166,11 +166,11 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to index with no parameters" do
     setup do
       @gems = (1..3).map do |n|
-        gem = create(:rubygem, :name => "agem#{n}")
-        create(:version, :rubygem => gem)
+        gem = create(:rubygem, name: "agem#{n}")
+        create(:version, rubygem: gem)
         gem
       end
-      create(:rubygem, :name => "zeta")
+      create(:rubygem, name: "zeta")
       get :index
     end
 
@@ -189,30 +189,30 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to index as an atom feed" do
     setup do
-      @versions = (1..2).map { |n| create(:version, :created_at => n.hours.ago) }
+      @versions = (1..2).map { |n| create(:version, created_at: n.hours.ago) }
       # just to make sure one has a different platform and a summary
-      @versions << create(:version, :created_at => 3.hours.ago, :platform => "win32", :summary => "&")
-      get :index, :format => "atom"
+      @versions << create(:version, created_at: 3.hours.ago, platform: "win32", summary: "&")
+      get :index, format: "atom"
     end
 
     should respond_with :success
 
     should "render posts with platform-specific titles and links of all subscribed versions" do
       @versions.each do |v|
-        assert_select "entry > title", :count => 1, :text => v.to_title
-        assert_select "entry > link[href='#{rubygem_version_url(v.rubygem, v.slug)}']", :count => 1
-        assert_select "entry > id", :count => 1, :text => rubygem_version_url(v.rubygem, v.slug)
+        assert_select "entry > title",count: 1, text:v.to_title
+        assert_select "entry > link[href='#{rubygem_version_url(v.rubygem, v.slug)}']",count: 1
+        assert_select "entry > id",count: 1, text:rubygem_version_url(v.rubygem, v.slug)
       end
     end
 
     should "render valid entry authors" do
       @versions.each do |v|
-        assert_select "entry > author > name", :text => v.authors
+        assert_select "entry > author > name", text:v.authors
       end
     end
 
     should "render entry summaries only for versions with summaries" do
-      assert_select "entry > summary", :count => @versions.select {|v| v.summary? }.size
+      assert_select "entry > summary",count: @versions.select {|v| v.summary? }.size
       @versions.each do |v|
         assert_select "entry > summary", text: v.summary if v.summary?
       end
@@ -221,10 +221,10 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to index with a letter" do
     setup do
-      @gems = (1..3).map { |n| create(:rubygem, :name => "agem#{n}") }
-      @zgem = create(:rubygem, :name => "zeta")
-      create(:version, :rubygem => @zgem)
-      get :index, :letter => "z"
+      @gems = (1..3).map { |n| create(:rubygem, name: "agem#{n}") }
+      @zgem = create(:rubygem, name: "zeta")
+      create(:version, rubygem: @zgem)
+      get :index, letter: "z"
     end
     should respond_with :success
     should render_template :index
@@ -237,12 +237,12 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to index with a bad letter" do
     setup do
       @gems = (1..3).map do |n|
-        gem = create(:rubygem, :name => "agem#{n}")
-        create(:version, :rubygem => gem)
+        gem = create(:rubygem, name: "agem#{n}")
+        create(:version, rubygem: gem)
         gem
       end
-      create(:rubygem, :name => "zeta")
-      get :index, :letter => "asdf"
+      create(:rubygem, name: "zeta")
+      get :index, letter: "asdf"
     end
 
     should respond_with :success
@@ -257,9 +257,9 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to show" do
     setup do
-      @latest_version = create(:version, :created_at => 1.minute.ago)
+      @latest_version = create(:version, created_at: 1.minute.ago)
       @rubygem = @latest_version.rubygem
-      get :show, :id => @rubygem.to_param
+      get :show, id: @rubygem.to_param
     end
 
     should respond_with :success
@@ -276,11 +276,11 @@ class RubygemsControllerTest < ActionController::TestCase
     setup do
       @rubygem = create(:rubygem)
       @versions = [
-        create(:version, :number => "2.0.0rc1", :rubygem => @rubygem, :created_at => 1.day.ago),
-        create(:version, :number => "1.9.9", :rubygem => @rubygem, :created_at => 1.minute.ago),
-        create(:version, :number => "1.9.9.rc4", :rubygem => @rubygem, :created_at => 2.days.ago)
+        create(:version, number: "2.0.0rc1", rubygem: @rubygem, created_at: 1.day.ago),
+        create(:version, number: "1.9.9", rubygem: @rubygem, created_at: 1.minute.ago),
+        create(:version, number: "1.9.9.rc4", rubygem: @rubygem, created_at: 2.days.ago)
       ]
-      get :show, :id => @rubygem.to_param
+      get :show, id: @rubygem.to_param
     end
 
     should respond_with :success
@@ -310,7 +310,7 @@ class RubygemsControllerTest < ActionController::TestCase
       @rubygem = version.rubygem
     end
     context 'when signed out' do
-      setup { get :show, :id => @rubygem.to_param }
+      setup { get :show, id: @rubygem.to_param }
       should respond_with :success
       should render_template :show
       should "render info about the gem" do
@@ -322,11 +322,11 @@ class RubygemsControllerTest < ActionController::TestCase
       setup do
         @user = create(:user)
         sign_in_as @user
-        create(:subscription, :user => @user, :rubygem => @rubygem)
-        get :show, :id => @rubygem.to_param
+        create(:subscription, user: @user, rubygem: @rubygem)
+        get :show, id: @rubygem.to_param
       end
       should "have a visible unsubscribe link" do
-        assert page.has_selector?("a[style='display:inline-block']", :text => 'Unsubscribe')
+        assert page.has_selector?("a[style='display:inline-block']", text:'Unsubscribe')
       end
     end
   end
@@ -334,7 +334,7 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to show for a gem with no versions" do
     setup do
       @rubygem = create(:rubygem)
-      get :show, :id => @rubygem.to_param
+      get :show, id: @rubygem.to_param
     end
     should respond_with :success
     should render_template :show
@@ -347,10 +347,10 @@ class RubygemsControllerTest < ActionController::TestCase
     setup do
       @version = create(:version)
 
-      @development = create(:development_dependency, :version => @version)
-      @runtime     = create(:runtime_dependency,     :version => @version)
+      @development = create(:development_dependency, version: @version)
+      @runtime     = create(:runtime_dependency,     version: @version)
 
-      get :show, :id => @version.rubygem.to_param
+      get :show, id: @version.rubygem.to_param
     end
 
     should respond_with :success
@@ -365,9 +365,9 @@ class RubygemsControllerTest < ActionController::TestCase
     setup do
       @version = create(:version)
 
-      @unresolved = create(:unresolved_dependency, :version => @version)
+      @unresolved = create(:unresolved_dependency, version: @version)
 
-      get :show, :id => @version.rubygem.to_param
+      get :show, id: @version.rubygem.to_param
     end
 
     should respond_with :success
@@ -394,7 +394,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to show for nonexistent gem" do
     setup do
-      get :show, :id => "blahblah"
+      get :show, id: "blahblah"
     end
 
     should respond_with :not_found
@@ -404,8 +404,8 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On GET to show for a gem" do
       setup do
         @rubygem = create(:rubygem)
-        create(:version, :rubygem => @rubygem)
-        get :show, :id => @rubygem.to_param
+        create(:version, rubygem: @rubygem)
+        get :show, id: @rubygem.to_param
       end
 
       should respond_with :success
@@ -420,7 +420,7 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On GET to edit" do
       setup do
         @rubygem = create(:rubygem)
-        get :edit, :id => @rubygem.to_param
+        get :edit, id: @rubygem.to_param
       end
       should respond_with :redirect
       should redirect_to('the homepage') { root_url }
@@ -429,7 +429,7 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On PUT to update" do
       setup do
         @rubygem = create(:rubygem)
-        put :update, :id => @rubygem.to_param, :linkset => {}
+        put :update, id: @rubygem.to_param, linkset: {}
       end
       should respond_with :redirect
       should redirect_to('the homepage') { root_url }
