@@ -36,8 +36,6 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :dependencies, :only => :index
-
       resources :rubygems, path: 'gems', only: [:create, :show, :index], id: Patterns::LAZY_ROUTE_PATTERN, format: /json|yaml/ do
         member do
           get :reverse_dependencies
