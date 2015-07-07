@@ -35,7 +35,7 @@ class StatsControllerTest < ActionController::TestCase
       assert_received(User, :count)
       assert_received(Rubygem, :total_count)
       assert_received(Download, :count)
-      assert_received(Rubygem, :downloaded) { |subject| subject.with(10) }
+      assert_received(Rubygem, :downloaded)
     end
   end
 
@@ -49,7 +49,7 @@ class StatsControllerTest < ActionController::TestCase
       rg3 = create(:rubygem, downloads: 30, number: "1")
       def rg3.downloads; 30; end
 
-      Rubygem.stubs(:downloaded).returns [rg1, rg2, rg3]
+      Rubygem.stubs(:downloaded).returns [rg2, rg3, rg1]
 
       get :index
     end

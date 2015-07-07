@@ -62,8 +62,8 @@ class Rubygem < ActiveRecord::Base
     with_one_version.order(created_at: :desc).limit(limit)
   end
 
-  def self.downloaded(limit=5)
-    with_versions.by_downloads.limit(limit)
+  def self.downloaded(limit=10)
+    with_versions.by_downloads.limit(limit).sort_by { |r| r.downloads }.reverse!
   end
 
   def self.letter(letter)
