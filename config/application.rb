@@ -16,7 +16,7 @@ module Gemcutter
     config.time_zone = "UTC"
     config.encoding  = "utf-8"
 
-    config.middleware.use "Redirector"
+    config.middleware.use "Redirector" unless Rails.env.development?
 
     config.active_record.include_root_in_json = false
     config.active_record.raise_in_transactional_callbacks = true
