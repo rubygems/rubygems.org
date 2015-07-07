@@ -211,6 +211,7 @@ class Version < ActiveRecord::Base
     {
       'authors'         => authors,
       'built_at'        => built_at,
+      'created_at'      => created_at,
       'description'     => description,
       'downloads_count' => downloads_count,
       'metadata'        => metadata,
