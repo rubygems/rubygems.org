@@ -117,7 +117,7 @@
 
       <% if @latest_version.indexed %>
         <h2 class="gem__ruby-version__heading t-list__heading">
-          <%= t '.licenses_header' %>:
+          <%= pluralized_licenses_header @latest_version %>:
           <span class="gem__ruby-version">
             <p><%= formatted_licenses @latest_version.licenses %></p>
           </span>
