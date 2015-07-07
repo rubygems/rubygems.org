@@ -211,15 +211,6 @@ class Download
     end
   end
 
-  def self.highest_rank(versions)
-    ranks = versions.map { |version| Download.rank(version) }.reject(&:zero?)
-    if ranks.empty?
-      0
-    else
-      ranks.min
-    end
-  end
-
   def self.cleanup_today_keys
     Redis.current.del(*today_keys)
   end
