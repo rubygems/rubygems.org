@@ -124,7 +124,7 @@
     width: 70%; } }
 
 .profile__header__name {
-  word-break: break-word; }
+  overflow-x: scroll; }
   @media (min-width: 780px) {
     .profile__header__name {
       padding-top: 16px; } }
