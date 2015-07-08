@@ -5,6 +5,23 @@ class RubygemsHelperTest < ActionView::TestCase
   include ApplicationHelper
   include ERB::Util
 
+  context "licenses header" do
+    setup do
+      @version = build(:version)
+    end
+    should "singular if version has one license" do
+      @version.stubs(:licenses).returns(["MIT"])
+      assert_equal "License", pluralized_licenses_header(@version)
+    end
+    should "plural if version has no license or more than one license" do
+      @version.stubs(:licenses)
+      assert_equal "Licenses", pluralized_licenses_header(@version)
+
+      @version.stubs(:licenses).returns(["MIT", "GPL-2"])
+      assert_equal "Licenses", pluralized_licenses_header(@version)
+    end
+  end
+
   should "create the directory" do
     directory = link_to_directory
     ("A".."Z").each do |letter|

@@ -1,4 +1,8 @@
 module RubygemsHelper
+  def pluralized_licenses_header(version)
+    t("rubygems.show.licenses_header").pluralize(version.try(:licenses).try(:length) || 0)
+  end
+
   def formatted_licenses(license_names)
     if license_names.blank?
       t("rubygems.show.no_licenses")

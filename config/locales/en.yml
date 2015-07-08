@@ -111,7 +111,7 @@ en:
       versions_header: Versions
       bundler_header: Gemfile
       show_all_versions: "Show all versions (%{count} total)"
-      licenses_header: Licenses
+      licenses_header: License
       no_licenses: N/A
       requirements_header: Requirements
 

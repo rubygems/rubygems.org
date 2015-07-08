@@ -272,6 +272,29 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  context "On GET to show with version licenses" do
+    setup do
+      @latest_version = create(:version)
+      @rubygem = @latest_version.rubygem
+    end
+    should "render plural licenses header for other than one license" do
+      @latest_version.update_attributes(licenses: nil)
+      get :show, id: @rubygem.to_param
+      assert page.has_content?("Licenses")
+
+      @latest_version.update_attributes(licenses: ["MIT", "GPL-2"])
+      get :show, id: @rubygem.to_param
+      assert page.has_content?("Licenses")
+    end
+
+    should "render singular license header for one line license" do
+      @latest_version.update_attributes(licenses: ["MIT"])
+      get :show, id: @rubygem.to_param
+      assert page.has_content?("License")
+      assert page.has_no_content?("Licenses")
+    end
+  end
+
   context "On GET to show with a gem that has multiple versions" do
     setup do
       @rubygem = create(:rubygem)
