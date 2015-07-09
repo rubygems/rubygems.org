@@ -91,6 +91,8 @@ GEM
       delayed_job (>= 3.0, < 4.1)
     domain_name (0.5.24)
       unf (>= 0.0.5, < 1.0.0)
+    doorkeeper (3.0.0)
+      railties (>= 3.2)
     dynamic_form (1.1.4)
     email_validator (1.6.0)
       activemodel
@@ -272,6 +274,7 @@ DEPENDENCIES
   dalli
   delayed_job
   delayed_job_active_record
+  doorkeeper
   dynamic_form
   factory_girl_rails
   gchartrb
