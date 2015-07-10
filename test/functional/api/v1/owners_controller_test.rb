@@ -74,6 +74,27 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     assert_recognizes(route, :path => '/api/v1/gems/rails/owners.json', :method => :post)
   end
 
+  context "on POST to owner gem" do
+    setup do
+      @rubygem = create(:rubygem)
+      @user = create(:user)
+      @second_user = create(:user)
+      @third_user = create(:user)
+      @rubygem.ownerships.create(user: @user)
+      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
+    end
+
+    should "add other user as gem owner with email" do
+      post :create, rubygem_id: @rubygem.to_param, email: @second_user.email, format: :json
+      assert @rubygem.owners.include?(@second_user)
+    end
+
+    should "add other user as gem owner with handle" do
+      post :create, rubygem_id: @rubygem.to_param, email: @third_user.handle, format: :json
+      assert @rubygem.owners.include?(@third_user)
+    end
+  end
+
   should "route DELETE" do
     route = {:controller => 'api/v1/owners',
              :action     => 'destroy',

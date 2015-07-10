@@ -33,6 +33,10 @@ class User < ActiveRecord::Base
     find_by(id: slug) || find_by!(handle: slug)
   end
 
+  def self.find_by_name(name)
+    find_by(email: name) || find_by(handle: name)
+  end
+
   def name
     handle || email
   end

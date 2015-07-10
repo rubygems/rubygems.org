@@ -96,6 +96,11 @@ class UserTest < ActiveSupport::TestCase
       assert_not_nil @user.api_key
     end
 
+    should "give user if specified name is user handle or email" do
+      assert_not_nil User.find_by_name(@user.handle)
+      assert_equal User.find_by_name(@user.handle), User.find_by_name(@user.handle)
+    end
+
     should "give email if handle is not set for name" do
       @user.handle = nil
       assert_nil @user.handle
