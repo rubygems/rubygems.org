@@ -13,7 +13,7 @@ class Api::V1::OwnersController < Api::BaseController
   end
 
   def create
-    if owner = User.find_by_email(params[:email])
+    if owner = User.find_by_name(params[:email])
       @rubygem.ownerships.create(:user => owner)
       render :text => 'Owner added successfully.'
     else
@@ -22,7 +22,7 @@ class Api::V1::OwnersController < Api::BaseController
   end
 
   def destroy
-    if owner = @rubygem.owners.find_by_email(params[:email])
+    if owner = @rubygem.owners.find_by_name(params[:email])
       if @rubygem.ownerships.find_by_user_id(owner.id).try(:destroy)
         render :text => "Owner removed successfully."
       else
