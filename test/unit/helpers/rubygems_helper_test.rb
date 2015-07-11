@@ -22,6 +22,16 @@ class RubygemsHelperTest < ActionView::TestCase
     end
   end
 
+  context "formatted licenses" do
+    should "be N/A if there is no license" do
+      assert_equal "N/A", formatted_licenses([])
+    end
+
+    should "be combined with comma if there are licenses" do
+      assert_equal "MIT, GPL-2", formatted_licenses(["MIT", "GPL-2"])
+    end
+  end
+
   should "create the directory" do
     directory = link_to_directory
     ("A".."Z").each do |letter|
