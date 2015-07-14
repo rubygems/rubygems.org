@@ -23,7 +23,9 @@ module RubygemsHelper
 
   def simple_markup(text)
     if text =~ /^==+ [A-Z]/
-      RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new).html_safe
+      options = RDoc::Options.new
+      options.pipe = true
+      RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new(options)).html_safe
     else
       content_tag :p, escape_once(sanitize(text.strip)), nil, false
     end

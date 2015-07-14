@@ -181,7 +181,7 @@ GEM
       thor (>= 0.18.1, < 2.0)
     raindrops (0.14.0)
     rake (10.4.2)
-    rdoc (3.12.2)
+    rdoc (4.2.0)
       json (~> 1.4)
     redis (3.2.1)
     rest-client (1.8.0)
@@ -282,7 +282,7 @@ DEPENDENCIES
   rack-test
   rails (~> 4.2.2)
   rails-erd
-  rdoc (~> 3.12.2)
+  rdoc
   redis
   rest-client
   sass-rails (~> 5.0.0)
