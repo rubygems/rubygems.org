@@ -59,6 +59,21 @@ en:
       founding: "The project was started in April 2009 by %{founder}, and has since grown to include the contributions of over %{contributors} and %{downloads}. As of the RubyGems 1.3.6 release, the site has been renamed to %{title} from Gemcutter to solidify the site's central role in the Ruby community."
       support: "Although Gemcutter is not run by one specific company, plenty have helped us out so far. The current design, illustrations, and front-end development of this site were created by %{dockyard}. %{github} has also been invaluable for helping us collaborate and share code easily. The site started on %{heroku}, whose great service helped prove Gemcutter as a viable solution that the whole community could rely on."
       technical: "Some insights into the technical aspects of the site: It's 100% Ruby. The main site is a %{rails} application, and the RubyGem serving is done through %{sinatra}. Gems are hosted on %{s3}, and the time between publishing a new gem and having it ready for installation is minimal. For more info, %{source_code}, which is %{license} over at GitHub."
+    security:
+      title: Security
+      header: "%{site} Security"
+      reporting:
+        title: Reporting
+        contacting: "If you have a query or report to make regarding security please contact %{contacts}. All have GPG keys on key servers like pgp.mit.edu."
+        person: "%{name}'s GPG key has key id %{key_id} (full fingerprint %{full_fingerprint}) and email address %{email}"
+        list: "You may also report issues in the %{link} where reports may be made privately."
+        list_name: "PyPI bug tracker"
+      your_security:
+        title: "Your %{title}"
+        sign_uploads: "You may sign your uploads with GPG using the <code>%{command}</code>."
+        alternative: "Additionally you may avoid using the default HTTP authentication used on the site and instead %{link}."
+        alternative_text: "upload using ssh"
+        disclaimer: "The MD5 hash provided with files on PyPI exists only to provide some download corruption protection. It is not intended to provide any sort of security regarding tampering. Please use GPG signing for that."
 
   passwords:
     edit:
