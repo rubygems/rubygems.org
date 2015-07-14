@@ -40,6 +40,10 @@ Our deployment process is documented on the wiki as well, there's a multi-step
 
 [checklist]: https://github.com/rubygems/rubygems.org/wiki/Deployment
 
+Also please take note of our [Code of Conduct](https://github.com/rubygems/rubygems.org/blob/master/CONDUCT.md).
+
+If you have any trouble or questions getting set up please create an issue on this repository and we'll be happy to help!
+
 ## Organization
 
 RubyGems.org consists of a few major parts:
