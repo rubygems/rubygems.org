@@ -149,12 +149,9 @@
 
         <% if @latest_version.indexed %>
           <% if @rubygem.linkset.present? %>
-            <%= link_to_page t('.links.home'), @rubygem.linkset.home %>
-            <%= link_to_page t('.links.code'), @rubygem.linkset.code %>
-            <%= link_to_page t('.links.docs'), @rubygem.linkset.docs %>
-            <%= link_to_page t('.links.wiki'), @rubygem.linkset.wiki %>
-            <%= link_to_page t('.links.mail'), @rubygem.linkset.mail %>
-            <%= link_to_page t('.links.bugs'), @rubygem.linkset.bugs %>
+            <%- %i{home code docs wiki mail bugs}.each do |link| %>
+              <%= link_to_page t("rubygems.show.links.#{link}"), @rubygem.linkset.public_send(link) %>
+            <%- end %>
           <% end %>
 
           <%= download_link(@latest_version) %>
