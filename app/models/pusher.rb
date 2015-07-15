@@ -28,18 +28,16 @@ class Pusher
     # Restructured so that if we fail to write the gem (ie, s3 is down)
     # can clean things up well.
 
-    begin
-      @indexer.write_gem @body, @spec
-    rescue StandardError => e
-      @version.destroy
-      notify("There was a problem saving your gem: #{e}", 403)
+    @indexer.write_gem @body, @spec
+  rescue StandardError => e
+    @version.destroy
+    notify("There was a problem saving your gem: #{e}", 403)
+  else
+    if update
+      after_write
+      notify("Successfully registered gem: #{version.to_title}", 200)
     else
-      if update
-        after_write
-        notify("Successfully registered gem: #{version.to_title}", 200)
-      else
-        notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403)
-      end
+      notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403)
     end
   end
 

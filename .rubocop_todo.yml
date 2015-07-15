@@ -188,11 +188,6 @@ Style/PercentLiteralDelimiters:
 Style/PerlBackrefs:
   Enabled: false
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/RedundantBegin:
-  Enabled: false
-
 # Offense count: 23
 # Cop supports --auto-correct.
 Style/RedundantSelf:
