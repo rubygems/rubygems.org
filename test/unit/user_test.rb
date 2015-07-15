@@ -15,7 +15,7 @@ class UserTest < ActiveSupport::TestCase
       should_not allow_value("abc\n<script>bad").for(:handle)
 
       should "be between 2 and 40 characters" do
-        user = build(:user, :handle => "a")
+        user = build(:user, handle: "a")
         assert ! user.valid?
         assert_contains user.errors[:handle], "is too short (minimum is 2 characters)"
 
@@ -29,17 +29,17 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should "be invalid when an empty string" do
-        user = build(:user, :handle => "")
+        user = build(:user, handle: "")
         assert ! user.valid?
       end
 
       should "be valid when nil and other users have a nil handle" do
-        assert build(:user, :handle => nil).valid?
-        assert build(:user, :handle => nil).valid?
+        assert build(:user, handle: nil).valid?
+        assert build(:user, handle: nil).valid?
       end
 
       should "show user id if no handle set" do
-        user = build(:user, :handle => nil, :id => 13)
+        user = build(:user, handle: nil, id: 13)
         assert_equal "#13", user.display_handle
 
         user.handle = "bills"
@@ -129,7 +129,7 @@ class UserTest < ActiveSupport::TestCase
 
     should "only return rubygems" do
       my_rubygem = create(:rubygem)
-      create(:ownership, :user => @user, :rubygem => my_rubygem)
+      create(:ownership, user: @user, rubygem: my_rubygem)
       assert_equal [my_rubygem], @user.rubygems
     end
 
@@ -137,7 +137,7 @@ class UserTest < ActiveSupport::TestCase
       setup do
         @subscribed_gem   = create(:rubygem)
         @unsubscribed_gem = create(:rubygem)
-        create(:subscription, :user => @user, :rubygem => @subscribed_gem)
+        create(:subscription, user: @user, rubygem: @subscribed_gem)
       end
 
       should "only fetch the subscribed gems with #subscribed_gems" do
@@ -148,15 +148,15 @@ class UserTest < ActiveSupport::TestCase
 
     should "have all gems and specific gems for hooks" do
       rubygem = create(:rubygem)
-      rubygem_hook = create(:web_hook, :user => @user, :rubygem => rubygem)
-      global_hook  = create(:global_web_hook, :user => @user)
+      rubygem_hook = create(:web_hook, user: @user, rubygem: rubygem)
+      global_hook  = create(:global_web_hook, user: @user)
       all_hooks = @user.all_hooks
       assert_equal rubygem_hook, all_hooks[rubygem.name].first
       assert_equal global_hook, all_hooks["all gems"].first
     end
 
     should "have all gems for hooks" do
-      global_hook  = create(:global_web_hook, :user => @user)
+      global_hook  = create(:global_web_hook, user: @user)
       all_hooks = @user.all_hooks
       assert_equal global_hook, all_hooks["all gems"].first
       assert_equal 1, all_hooks.keys.size
@@ -164,7 +164,7 @@ class UserTest < ActiveSupport::TestCase
 
     should "have only specific for hooks" do
       rubygem = create(:rubygem)
-      rubygem_hook = create(:web_hook, :user => @user, :rubygem => rubygem)
+      rubygem_hook = create(:web_hook, user: @user, rubygem: rubygem)
       all_hooks = @user.all_hooks
       assert_equal rubygem_hook, all_hooks[rubygem.name].first
       assert_equal 1, all_hooks.keys.size
@@ -175,8 +175,8 @@ class UserTest < ActiveSupport::TestCase
     setup do
       @user      = create(:user)
       @rubygem   = create(:rubygem)
-      @ownership = create(:ownership, :rubygem => @rubygem, :user => @user)
-      @version   = create(:version, :rubygem => @rubygem)
+      @ownership = create(:ownership, rubygem: @rubygem, user: @user)
+      @version   = create(:version, rubygem: @rubygem)
 
       Timecop.freeze(1.day.ago) do
         Download.incr(@version.rubygem.name, @version.full_name)
@@ -194,10 +194,10 @@ class UserTest < ActiveSupport::TestCase
     setup do
       @user     = create(:user)
       @rubygems = [[100, 2000], [200, 1000], [300, 3000]].map do |downloads, real_downloads|
-        create(:rubygem, :downloads => downloads).tap do |rubygem|
+        create(:rubygem, downloads: downloads).tap do |rubygem|
           Redis.current[Download.key(rubygem)] = real_downloads
-          create(:ownership, :rubygem => rubygem, :user => @user)
-          create(:version, :rubygem => rubygem)
+          create(:ownership, rubygem: rubygem, user: @user)
+          create(:version, rubygem: rubygem)
         end
       end
     end

@@ -1,6 +1,6 @@
 class AddIndexedToVersions < ActiveRecord::Migration
   def self.up
-    add_column :versions, :indexed, :boolean, :default => true
+    add_column :versions, :indexed, :boolean, default: true
   end
 
   def self.down

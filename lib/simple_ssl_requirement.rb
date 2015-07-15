@@ -17,7 +17,7 @@ module SimpleSSLRequirement
 
   module ClassMethods
     def ssl_required(options={})
-      options.reverse_merge!(:environments => SSL_ENVIRONMENTS)
+      options.reverse_merge!(environments: SSL_ENVIRONMENTS)
 
       if options.delete(:environments).include?(Rails.env)
         before_action :require_ssl, options

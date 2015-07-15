@@ -5,11 +5,11 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
   #should_route :put, "/api_key/reset", :action => :reset
 
   should "route new paths to new controller" do
-    route = {:controller => 'api/v1/api_keys', :action => 'show'}
+    route = {controller: 'api/v1/api_keys', action: 'show'}
     assert_recognizes(route, '/api/v1/api_key')
 
-    route = {:controller => 'api/v1/api_keys', :action => 'reset'}
-    assert_recognizes(route, :path => '/api/v1/api_key/reset', :method => :put)
+    route = {controller: 'api/v1/api_keys', action: 'reset'}
+    assert_recognizes(route, path: '/api/v1/api_key/reset', method: :put)
   end
 
   context "on GET to show with no credentials" do
@@ -43,7 +43,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     setup do
       @user = create(:user)
       authorize_with("#{@user.email}:#{@user.password}")
-      get :show, :format => 'text'
+      get :show, format: 'text'
     end
     should respond_with :success
     should "return API key" do
@@ -56,7 +56,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       setup do
         @user = create(:user)
         authorize_with("#{@user.email}:#{@user.password}")
-        get :show, :format => format
+        get :show, format: format
       end
       should respond_with :success
       should "return API key" do

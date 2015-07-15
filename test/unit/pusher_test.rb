@@ -177,7 +177,7 @@ class PusherTest < ActiveSupport::TestCase
 
       should "error out when changing case with usuable versions" do
         @rubygem = create(:rubygem)
-        create(:version, :rubygem => @rubygem)
+        create(:version, rubygem: @rubygem)
 
         assert_not_equal @rubygem.name, @rubygem.name.upcase
 
@@ -222,7 +222,7 @@ class PusherTest < ActiveSupport::TestCase
         end
 
         should "be true if owned by the user" do
-          @rubygem.ownerships.create(:user => @user)
+          @rubygem.ownerships.create(user: @user)
           assert @cutter.authorize
         end
 
@@ -231,14 +231,14 @@ class PusherTest < ActiveSupport::TestCase
         end
 
         should "be false if not owned by user and an indexed version exists" do
-          create(:version, :rubygem => @rubygem, :number => '0.1.1')
+          create(:version, rubygem: @rubygem, number: '0.1.1')
           assert ! @cutter.authorize
           assert_equal "You do not have permission to push to this gem.", @cutter.message
           assert_equal 403, @cutter.code
         end
 
         should "be true if not owned by user but no indexed versions exist" do
-          create(:version, :rubygem => @rubygem, :number => '0.1.1', :indexed => false)
+          create(:version, rubygem: @rubygem, number: '0.1.1', indexed: false)
           assert @cutter.authorize
         end
       end
@@ -248,7 +248,7 @@ class PusherTest < ActiveSupport::TestCase
       setup do
         @rubygem = create(:rubygem)
         @cutter.stubs(:rubygem).returns @rubygem
-        create(:version, :rubygem => @rubygem, :number => '0.1.1')
+        create(:version, rubygem: @rubygem, number: '0.1.1')
         @cutter.stubs(:version).returns @rubygem.versions[0]
         @rubygem.stubs(:update_attributes_from_gem_specification!)
         Indexer.any_instance.stubs(:write_gem)

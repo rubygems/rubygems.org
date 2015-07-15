@@ -2,7 +2,7 @@ require 'digest/sha2'
 
 class Version < ActiveRecord::Base
   belongs_to :rubygem, touch: true
-  has_many :dependencies, -> { order('rubygems.name ASC').includes(:rubygem) }, :dependent => :destroy
+  has_many :dependencies, -> { order('rubygems.name ASC').includes(:rubygem) }, dependent: :destroy
 
   before_save      :update_prerelease
   after_validation :join_authors
@@ -12,11 +12,11 @@ class Version < ActiveRecord::Base
   serialize :licenses
   serialize :requirements
 
-  validates :number,   :format => {:with => /\A#{Gem::Version::VERSION_PATTERN}\z/}
-  validates :platform, :format => {:with => Rubygem::NAME_PATTERN}
+  validates :number,   format: {with: /\A#{Gem::Version::VERSION_PATTERN}\z/}
+  validates :platform, format: {with: Rubygem::NAME_PATTERN}
 
-  validate :platform_and_number_are_unique, :on => :create
-  validate :authors_format, :on => :create
+  validate :platform_and_number_are_unique, on: :create
+  validate :authors_format, on: :create
   attribute :authors, Type::Value.new
 
   def self.reverse_dependencies(name)
@@ -25,11 +25,11 @@ class Version < ActiveRecord::Base
   end
 
   def self.owned_by(user)
-    where(:rubygem_id => user.rubygem_ids)
+    where(rubygem_id: user.rubygem_ids)
   end
 
   def self.subscribed_to_by(user)
-    where(:rubygem_id => user.subscribed_gem_ids).
+    where(rubygem_id: user.subscribed_gem_ids).
       by_created_at
   end
 
@@ -38,23 +38,23 @@ class Version < ActiveRecord::Base
   end
 
   def self.latest
-    where(:latest => true)
+    where(latest: true)
   end
 
   def self.prerelease
-    where(:prerelease => true)
+    where(prerelease: true)
   end
 
   def self.release
-    where(:prerelease => false)
+    where(prerelease: false)
   end
 
   def self.indexed
-    where(:indexed => true)
+    where(indexed: true)
   end
 
   def self.yanked
-    where(:indexed => false)
+    where(indexed: false)
   end
 
   def self.by_position
@@ -151,15 +151,15 @@ class Version < ActiveRecord::Base
 
   def update_attributes_from_gem_specification!(spec)
     update_attributes!(
-      :authors      => spec.authors,
-      :description  => spec.description,
-      :summary      => spec.summary,
-      :licenses     => spec.licenses,
-      :metadata     => spec.metadata || {},
-      :requirements => spec.requirements,
-      :built_at     => spec.date,
-      :ruby_version => spec.required_ruby_version.to_s,
-      :indexed      => true
+      authors: spec.authors,
+      description: spec.description,
+      summary: spec.summary,
+      licenses: spec.licenses,
+      metadata: spec.metadata || {},
+      requirements: spec.requirements,
+      built_at: spec.date,
+      ruby_version: spec.required_ruby_version.to_s,
+      indexed: true
     )
   end
 
@@ -213,7 +213,7 @@ class Version < ActiveRecord::Base
   end
 
   def to_xml(options={})
-    payload.to_xml(options.merge(:root => 'version'))
+    payload.to_xml(options.merge(root: 'version'))
   end
 
   def to_s
@@ -285,9 +285,9 @@ class Version < ActiveRecord::Base
   private
 
   def platform_and_number_are_unique
-    if Version.exists?(:rubygem_id => rubygem_id,
-                       :number     => number,
-                       :platform   => platform)
+    if Version.exists?(rubygem_id: rubygem_id,
+                       number: number,
+                       platform: platform)
       errors[:base] << "A version already exists with this number or platform."
     end
   end

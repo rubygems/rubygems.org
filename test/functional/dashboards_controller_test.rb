@@ -12,8 +12,8 @@ class DashboardsControllerTest < ActionController::TestCase
         3.times { create(:rubygem) }
         @gems = (1..3).map do
           rubygem = create(:rubygem)
-          rubygem.ownerships.create(:user => @user)
-          create(:version, :rubygem => rubygem)
+          rubygem.ownerships.create(user: @user)
+          create(:version, rubygem: rubygem)
           rubygem
         end
         get :show
@@ -31,14 +31,14 @@ class DashboardsControllerTest < ActionController::TestCase
 
     context "On GET to show as an atom feed" do
       setup do
-        @subscribed_versions = (1..2).map { |n| create(:version, :created_at => n.hours.ago) }
+        @subscribed_versions = (1..2).map { |n| create(:version, created_at: n.hours.ago) }
         # just to make sure one has a different platform and a summary
-        @subscribed_versions << create(:version, :created_at => 3.hours.ago, :platform => "win32", :summary => "&")
-        @subscribed_versions.each { |v| create(:subscription, :rubygem => v.rubygem, :user => @user)}
-        @unsubscribed_versions = (1..3).map { |n| create(:version, :created_at => n.hours.ago) }
+        @subscribed_versions << create(:version, created_at: 3.hours.ago, platform: "win32", summary: "&")
+        @subscribed_versions.each { |v| create(:subscription, rubygem: v.rubygem, user: @user)}
+        @unsubscribed_versions = (1..3).map { |n| create(:version, created_at: n.hours.ago) }
 
         @request.env["HTTP_AUTHORIZATION"] = @user.api_key
-        get :show, :format => "atom"
+        get :show, format: "atom"
       end
 
       should respond_with :success
@@ -46,20 +46,20 @@ class DashboardsControllerTest < ActionController::TestCase
 
       should "render posts with platform-specific titles and links of all subscribed versions" do
         @subscribed_versions.each do |v|
-          assert_select "entry > title", :count => 1, :text => v.to_title
-          assert_select "entry > link[href='#{rubygem_version_url(v.rubygem, v.slug)}']", :count => 1
-          assert_select "entry > id", :count => 1, :text => rubygem_version_url(v.rubygem, v.slug)
+          assert_select "entry > title", count: 1, text: v.to_title
+          assert_select "entry > link[href='#{rubygem_version_url(v.rubygem, v.slug)}']", count: 1
+          assert_select "entry > id", count: 1, text: rubygem_version_url(v.rubygem, v.slug)
         end
       end
 
       should "render valid entry authors" do
         @subscribed_versions.each do |v|
-          assert_select "entry > author > name", :text => v.authors
+          assert_select "entry > author > name", text: v.authors
         end
       end
 
       should "render entry summaries only for versions with summaries" do
-        assert_select "entry > summary", :count => @subscribed_versions.select {|v| v.summary? }.size
+        assert_select "entry > summary", count: @subscribed_versions.select {|v| v.summary? }.size
         @subscribed_versions.each do |v|
           assert_select "entry > summary", text: v.summary if v.summary?
         end

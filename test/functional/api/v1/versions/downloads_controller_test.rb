@@ -2,14 +2,14 @@ require 'test_helper'
 
 class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
   def get_index(version, format='json')
-    get :index, :version_id => version.full_name, :format => format
+    get :index, version_id: version.full_name, format: format
   end
 
   def get_search(version, from, to, format='json')
-    get :search, :version_id => version.full_name,
-                 :format => format,
-                 :from => from.to_date.to_s,
-                 :to => to.to_date.to_s
+    get :search, version_id: version.full_name,
+                 format: format,
+                 from: from.to_date.to_s,
+                 to: to.to_date.to_s
   end
 
 
@@ -53,7 +53,7 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
 
   context "on GET to index for an unknown gem" do
     setup do
-      get :index, :version_id => "nonexistent_gem", :format => 'json'
+      get :index, version_id: "nonexistent_gem", format: 'json'
     end
 
     should "return a 404" do
@@ -67,7 +67,7 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
 
   context "on GET to index for a yanked gem" do
     setup do
-      version = create(:version, :indexed => false)
+      version = create(:version, indexed: false)
       get_index(version)
     end
 
@@ -82,7 +82,7 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
 
   context "on GET to search for a yanked gem" do
     setup do
-      version = create(:version, :indexed => false)
+      version = create(:version, indexed: false)
       get_search(version, 2.days.ago, 1.day.ago)
     end
 
@@ -97,8 +97,8 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
 
   context "on GET to search with missing params" do
     setup do
-      version = create(:version, :indexed => false)
-      get :search, :version_id => version.full_name, :format => 'json'
+      version = create(:version, indexed: false)
+      get :search, version_id: version.full_name, format: 'json'
     end
 
     should respond_with :bad_request
@@ -166,10 +166,10 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
 
     context "for an unknown gem" do
       setup do
-        get :index, :version_id => "nonexistent_gem",
-                    :format => 'json',
-                    :from => @one_hundred_days_ago,
-                    :to => @one_hundred_eighty_nine_days_ago
+        get :index, version_id: "nonexistent_gem",
+                    format: 'json',
+                    from: @one_hundred_days_ago,
+                    to: @one_hundred_eighty_nine_days_ago
       end
 
       should "return a 404" do
