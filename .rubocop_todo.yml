@@ -69,12 +69,6 @@ Performance/Count:
 Rails/Date:
   Enabled: false
 
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: Include.
-Rails/FindBy:
-  Enabled: false
-
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: Include.

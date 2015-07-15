@@ -64,8 +64,7 @@ class Download
         if count
           count = count.to_i
         else
-          vh = VersionHistory.where(version_id: version.id,
-                                    day: date).first
+          vh = VersionHistory.find_by(version_id: version.id, day: date)
 
           count = vh ? vh.count : 0
         end
@@ -87,7 +86,7 @@ class Download
       if count
         count = count.to_i
       else
-        vh = VersionHistory.where(version_id: version.id, day: date).first
+        vh = VersionHistory.find_by(version_id: version.id, day: date)
 
         if vh
           count = vh.count
