@@ -20,7 +20,7 @@ class YankTest < SystemTest
 
     click_link "sandworm"
     assert page.has_content?("1.1.1")
-    assert ! page.has_content?("2.2.2")
+    assert !page.has_content?("2.2.2")
 
     within ".versions" do
       click_link "Show all versions (2 total)"
@@ -54,8 +54,8 @@ class YankTest < SystemTest
     assert page.has_content? "sandworm"
     assert page.has_content? "1.0.0"
     assert page.has_content? other_user.handle
-    assert ! page.has_content?("0.0.0")
-    assert ! page.has_content?(@user.handle)
+    assert !page.has_content?("0.0.0")
+    assert !page.has_content?(@user.handle)
   end
 
   test "undo a yank is not supported" do
@@ -70,7 +70,7 @@ class YankTest < SystemTest
 
     click_link "sandworm"
     assert page.has_content?("1.0.0")
-    assert ! page.has_content?("0.0.0")
+    assert !page.has_content?("0.0.0")
   end
 
   teardown do

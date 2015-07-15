@@ -25,7 +25,7 @@ class OwnerTest < ActionDispatch::IntegrationTest
 
     get rubygem_path(@rubygem)
     assert page.has_selector?("a[alt='#{@user.handle}']")
-    assert ! page.has_selector?("a[alt='#{@other_user.handle}']")
+    assert !page.has_selector?("a[alt='#{@other_user.handle}']")
   end
 
   test "transferring ownership" do
@@ -34,7 +34,7 @@ class OwnerTest < ActionDispatch::IntegrationTest
     delete api_v1_rubygem_owners_path(@rubygem), { email: @user.email }, { "HTTP_AUTHORIZATION" => @user.api_key }
 
     get rubygem_path(@rubygem)
-    assert ! page.has_selector?("a[alt='#{@user.handle}']")
+    assert !page.has_selector?("a[alt='#{@user.handle}']")
     assert page.has_selector?("a[alt='#{@other_user.handle}']")
   end
 

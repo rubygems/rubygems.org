@@ -16,11 +16,11 @@ class UserTest < ActiveSupport::TestCase
 
       should "be between 2 and 40 characters" do
         user = build(:user, handle: "a")
-        assert ! user.valid?
+        assert !user.valid?
         assert_contains user.errors[:handle], "is too short (minimum is 2 characters)"
 
         user.handle = "a" * 41
-        assert ! user.valid?
+        assert !user.valid?
         assert_contains user.errors[:handle], "is too long (maximum is 40 characters)"
 
         user.handle = "abcdef"
@@ -30,7 +30,7 @@ class UserTest < ActiveSupport::TestCase
 
       should "be invalid when an empty string" do
         user = build(:user, handle: "")
-        assert ! user.valid?
+        assert !user.valid?
       end
 
       should "be valid when nil and other users have a nil handle" do

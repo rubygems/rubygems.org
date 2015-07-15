@@ -89,8 +89,8 @@ class VersionTest < ActiveSupport::TestCase
       assert version_list.include?(@version_one_latest)
       assert version_list.include?(@version_two_earlier)
       assert version_list.include?(@version_three)
-      assert ! version_list.include?(@version_one_earlier)
-      assert ! version_list.include?(@version_two_latest)
+      assert !version_list.include?(@version_one_earlier)
+      assert !version_list.include?(@version_two_latest)
     end
   end
 
@@ -142,7 +142,7 @@ class VersionTest < ActiveSupport::TestCase
       @dependency = create(:rubygem)
       @version = build(:version, rubygem: @rubygem, number: "1.0.0", platform: "ruby")
       @version.dependencies << create(:dependency, version: @version, rubygem: @dependency)
-      assert ! Version.with_deps.first.dependencies.empty?
+      assert !Version.with_deps.first.dependencies.empty?
     end
 
     should "sort dependencies alphabetically" do
