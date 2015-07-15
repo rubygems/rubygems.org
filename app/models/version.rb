@@ -132,15 +132,15 @@ class Version < ActiveRecord::Base
   end
 
   def size
-    read_attribute(:size) || 'N/A'
+    self[:size] || 'N/A'
   end
 
   def byte_size
-    read_attribute(:size)
+    self[:size]
   end
 
   def byte_size=(bs)
-    write_attribute :size, bs.to_i
+    self[:size] = bs.to_i
   end
 
   def info

@@ -75,12 +75,6 @@ Rails/Date:
 Rails/FindEach:
   Enabled: false
 
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: Include.
-Rails/ReadWriteAttribute:
-  Enabled: false
-
 # Offense count: 13
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Rails/TimeZone:
