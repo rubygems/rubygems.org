@@ -182,19 +182,11 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On POST to create for a repush" do
       setup do
-        rubygem = create(:rubygem,
-                          name: "test")
+        rubygem = create(:rubygem, name: "test")
         create(:ownership, rubygem: rubygem, user: @user)
 
         @date = 1.year.ago
-        @version = create(:version,
-                           rubygem: rubygem,
-                           number: "0.0.0",
-                           updated_at: @date,
-                           created_at: @date,
-                           summary: "Freewill",
-                           authors: ["Geddy Lee"],
-                           built_at: @date)
+        @version = create(:version, rubygem: rubygem, number: "0.0.0", updated_at: @date, created_at: @date, summary: "Freewill", authors: ["Geddy Lee"], built_at: @date)
 
         @request.env["RAW_POST_DATA"] = gem_file.read
         post :create

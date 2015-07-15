@@ -177,18 +177,13 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
       context "with some unowned hooks" do
         setup do
           @other_user   = create(:user)
-          @rubygem_hook = create(:web_hook,
-                                  user: @other_user,
-                                  rubygem: @rubygem)
-          @global_hook  = create(:global_web_hook,
-                                  user: @other_user)
+          @rubygem_hook = create(:web_hook, user: @other_user, rubygem: @rubygem)
+          @global_hook  = create(:global_web_hook, user: @other_user)
         end
 
         context "On DELETE to remove with owned hook for rubygem" do
           setup do
-            delete :remove,
-                   gem_name: @rubygem.name,
-                   url: @rubygem_hook.url
+            delete(:remove, gem_name: @rubygem.name, url: @rubygem_hook.url)
           end
 
           should respond_with :not_found

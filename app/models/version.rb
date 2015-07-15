@@ -314,10 +314,7 @@ class Version < ActiveRecord::Base
 
     update_attributes(full_name: full_name)
 
-    Redis.current.hmset(Version.info_key(full_name),
-                 :name, rubygem.name,
-                 :number, number,
-                 :platform, platform)
+    Redis.current.hmset(Version.info_key(full_name), :name, rubygem.name, :number, number, :platform, platform)
 
     push
   end

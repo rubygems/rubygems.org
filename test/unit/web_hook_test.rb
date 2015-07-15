@@ -35,8 +35,7 @@ class WebHookTest < ActiveSupport::TestCase
     setup do
       @url     = "http://example.org"
       @user    = create(:user)
-      @webhook = create(:global_web_hook, user: @user,
-                                           url: @url)
+      @webhook = create(:global_web_hook, user: @user, url: @url)
     end
 
     should "not be able to create a webhook under this user, gem, and url" do
@@ -64,9 +63,7 @@ class WebHookTest < ActiveSupport::TestCase
       @url     = "http://example.org"
       @user    = create(:user)
       @rubygem = create(:rubygem)
-      @webhook = create(:web_hook, user: @user,
-                                    rubygem: @rubygem,
-                                    url: @url)
+      @webhook = create(:web_hook, user: @user, rubygem: @rubygem, url: @url)
     end
 
     should "show limited attributes for to_json" do
@@ -134,11 +131,7 @@ class WebHookTest < ActiveSupport::TestCase
   context "with a rubygem and version" do
     setup do
       @rubygem = create(:rubygem, name: "foogem", downloads: 42)
-      @version = create(:version,
-                         rubygem: @rubygem,
-                         number: "3.2.1",
-                         authors: %w[AUTHORS],
-                         description: "DESC")
+      @version = create(:version, rubygem: @rubygem, number: "3.2.1", authors: %w[AUTHORS], description: "DESC")
       @hook    = create(:web_hook, rubygem: @rubygem)
       @job     = Notifier.new(@hook.url, 'localhost:1234', @rubygem, @version)
     end
@@ -173,9 +166,7 @@ class WebHookTest < ActiveSupport::TestCase
       @url     = 'http://example.com/gemcutter'
       @rubygem = create(:rubygem)
       @version = create(:version, rubygem: @rubygem)
-      @hook    = create(:web_hook,
-                         rubygem: @rubygem,
-                         url: @url)
+      @hook    = create(:web_hook, rubygem: @rubygem, url: @url)
 
       RestClient.stubs(:post)
       @hook.fire('rubygems.org', @rubygem, @version, false)
@@ -200,8 +191,7 @@ class WebHookTest < ActiveSupport::TestCase
       @user    = create(:user)
       @rubygem = create(:rubygem)
       @version = create(:version, rubygem: @rubygem)
-      @hook    = create(:global_web_hook, url: @url,
-                                           user: @user)
+      @hook    = create(:global_web_hook, url: @url, user: @user)
     end
 
     should "increment failure count for hook on errors" do

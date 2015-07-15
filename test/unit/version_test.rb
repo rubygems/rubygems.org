@@ -264,26 +264,20 @@ class VersionTest < ActiveSupport::TestCase
 
     should "tack on prerelease flag" do
       @version.update_attributes(number: "0.3.0.pre")
-      new_version = create(:version, rubygem: @version.rubygem,
-                            built_at: 1.day.from_now,
-                            number: "0.4.0.pre")
+      new_version = create(:version, rubygem: @version.rubygem, built_at: 1.day.from_now, number: "0.4.0.pre")
 
       assert @version.prerelease
       assert new_version.prerelease
 
       @version.rubygem.reorder_versions
 
-      assert_equal "gem install #{@version.rubygem.name} -v #{@version.number} --pre",
-        @version.to_install
-      assert_equal "gem install #{new_version.rubygem.name} --pre",
-        new_version.to_install
+      assert_equal "gem install #{@version.rubygem.name} -v #{@version.number} --pre", @version.to_install
+      assert_equal "gem install #{new_version.rubygem.name} --pre", new_version.to_install
     end
 
     should "give no version count for the latest prerelease version" do
       @version.update_attributes(number: "0.3.0.pre")
-      old_version = create(:version, rubygem: @version.rubygem,
-                            built_at: 1.day.from_now,
-                            number: "0.2.0")
+      old_version = create(:version, rubygem: @version.rubygem, built_at: 1.day.from_now, number: "0.2.0")
 
       assert @version.prerelease
       assert !old_version.prerelease

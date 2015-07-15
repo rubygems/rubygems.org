@@ -227,9 +227,7 @@ class Rubygem < ActiveRecord::Base
     end
   end
 
-  delegate :count,
-    to: :versions,
-    prefix: true
+  delegate :count, to: :versions, prefix: true
 
   def yanked_versions?
     versions.yanked.exists?

@@ -21,19 +21,15 @@ class Api::V1::DownloadsController < Api::BaseController
   end
 
   def top
-    data =
-      { gems: Download.most_downloaded_today(50).map {|version, count|
-          [version.attributes, count]
-        }
-      }
+    data = {
+      gems: Download.most_downloaded_today(50).map { |version, count| [version.attributes, count] }
+    }
     respond_with_data(data)
   end
 
   def all
     data = {
-      gems: Download.most_downloaded_all_time(50).map {|version, count|
-        [version.attributes, count]
-      }
+      gems: Download.most_downloaded_all_time(50).map { |version, count| [version.attributes, count] }
     }
     respond_with_data(data)
   end

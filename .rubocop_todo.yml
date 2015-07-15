@@ -10,11 +10,6 @@
 Lint/AssignmentInCondition:
   Enabled: false
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Lint/BlockAlignment:
-  Enabled: false
-
 # Offense count: 3
 Lint/DuplicateMethods:
   Enabled: false
@@ -120,12 +115,6 @@ Rails/Validation:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/AccessModifierIndentation:
-  Enabled: false
-
-# Offense count: 9
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedHashRocketStyle, EnforcedColonStyle, EnforcedLastArgumentHashStyle, SupportedLastArgumentHashStyles.
-Style/AlignHash:
   Enabled: false
 
 # Offense count: 22
