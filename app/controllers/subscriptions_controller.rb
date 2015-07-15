@@ -22,5 +22,4 @@ class SubscriptionsController < ApplicationController
       render text: '', status: :forbidden
     end
   end
-
 end

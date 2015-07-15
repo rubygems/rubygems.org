@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Api::DeprecatedControllerTest < ActionController::TestCase
-
   should "route old paths to new controller" do
     route = { controller: "api/deprecated" }
     assert_recognizes(route.merge(action: "index"),  path: "/api_key")
@@ -17,5 +16,4 @@ class Api::DeprecatedControllerTest < ActionController::TestCase
     route = { controller: "api/deprecated" }
     assert_recognizes(route.merge(action: "index"), path: '/gems', method: :post)
   end
-
 end

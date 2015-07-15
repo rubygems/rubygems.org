@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Api::V1::ActivitiesControllerTest < ActionController::TestCase
-
   def should_return_latest_gems(gems)
     assert_equal 2, gems.length
     gems.each { |g| assert g.is_a?(Hash) }

@@ -53,5 +53,4 @@ class Api::V1::OwnersController < Api::BaseController
       render text: 'You do not have permission to manage this gem.', status: :unauthorized
     end
   end
-
 end

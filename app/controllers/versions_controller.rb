@@ -10,5 +10,4 @@ class VersionsController < ApplicationController
     @versions = @rubygem.public_versions_with_extra_version(@latest_version)
     render "rubygems/show"
   end
-
 end

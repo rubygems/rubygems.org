@@ -7,7 +7,6 @@ class CreateWebHooks < ActiveRecord::Migration
       table.integer   :failure_count, default: 0
       table.timestamps
     end
-
   end
 
   def self.down

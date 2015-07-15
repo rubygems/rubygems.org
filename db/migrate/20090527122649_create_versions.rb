@@ -8,7 +8,6 @@ class CreateVersions < ActiveRecord::Migration
       table.integer :rubygem_id
       table.timestamps
     end
-
   end
 
   def self.down

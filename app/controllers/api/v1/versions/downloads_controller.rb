@@ -1,5 +1,4 @@
 class Api::V1::Versions::DownloadsController < Api::BaseController
-
   def index
     if version
       counts = Download.counts_by_day_for_version(version)

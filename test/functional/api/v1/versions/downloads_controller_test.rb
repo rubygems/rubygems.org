@@ -12,7 +12,6 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
                  to: to.to_date.to_s
   end
 
-
   def self.should_respond_to(format)
     context "with #{format.to_s.upcase}" do
       should "have 90 attributes, one per day of gem version download counts" do
@@ -48,7 +47,6 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
     should_respond_to(:yaml) do |body|
       YAML.load body
     end
-
   end
 
   context "on GET to index for an unknown gem" do

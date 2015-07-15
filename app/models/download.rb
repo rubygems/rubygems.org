@@ -158,7 +158,6 @@ class Download
     versions = Version.all
     total = versions.size
 
-
     versions.each do |ver|
       i += 1
       yield total, i, ver if block_given?

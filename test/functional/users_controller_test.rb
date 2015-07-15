@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class UsersControllerTest < ActionController::TestCase
-
   context "on GET to new" do
     setup do
       get :new

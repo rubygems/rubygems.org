@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class Api::V1::DownloadsControllerTest < ActionController::TestCase
-
   def self.should_respond_to(format)
     should "return #{format.to_s.upcase} with the download count" do
       get :index, format: format

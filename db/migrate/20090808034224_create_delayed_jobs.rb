@@ -11,7 +11,6 @@ class CreateDelayedJobs < ActiveRecord::Migration
       table.string   :locked_by                    # Who is working on this object (if locked)
       table.timestamps
     end
-
   end
 
   def self.down

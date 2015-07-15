@@ -10,7 +10,6 @@ class CreateLinksets < ActiveRecord::Migration
       table.string :bugs
       table.timestamps
     end
-
   end
 
   def self.down

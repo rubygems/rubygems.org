@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class SearchesControllerTest < ActionController::TestCase
-
   context 'on GET to show with no search parameters' do
     setup { get :show }
 

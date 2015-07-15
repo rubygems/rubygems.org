@@ -6,7 +6,6 @@ class CreateDependencies < ActiveRecord::Migration
       table.string :requirement
       table.timestamps
     end
-
   end
 
   def self.down

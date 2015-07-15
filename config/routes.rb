@@ -120,5 +120,4 @@ Rails.application.routes.draw do
   namespace :internal do
     get 'background_job_stats', to: Internal::BackgroundJobStatsController.action(:stats)
   end
-
 end

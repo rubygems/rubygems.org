@@ -118,5 +118,4 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     post :create, rubygem_id: 'bananas'
     assert_equal 'This rubygem could not be found.', @response.body
   end
-
 end

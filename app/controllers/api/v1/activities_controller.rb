@@ -1,5 +1,4 @@
 class Api::V1::ActivitiesController < Api::BaseController
-
   def latest
     @rubygems = Rubygem.latest(50)
     render_rubygems

@@ -12,7 +12,6 @@ set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/cache', 'tmp/sockets'
 set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secret.rb')
 
 namespace :deploy do
-
   desc 'Remove git cache for clean deploy'
   task :clean_git_cache do
     on roles(:app) do
@@ -28,11 +27,9 @@ namespace :deploy do
     end
   end
   after :publishing, :'deploy:restart'
-
 end
 
 namespace :maintenance do
-
   desc 'Enable maintenance mode'
   task :enable do
     on roles(:lb) do
@@ -46,5 +43,4 @@ namespace :maintenance do
       execute :sudo, 'rm /var/www/rubygems/maintenance.html'
     end
   end
-
 end

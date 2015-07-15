@@ -94,7 +94,6 @@ class DownloadTest < ActiveSupport::TestCase
     assert_equal 1, Download.rank(@version_3)
     assert_equal 2, Download.rank(@version_2)
     assert_equal 3, Download.rank(@version_1)
-
   end
 
   should "find counts per day for versions" do
@@ -288,7 +287,6 @@ class DownloadTest < ActiveSupport::TestCase
 
     assert_equal [1.day.ago.to_date.to_s, Time.zone.today.to_s].sort,
                  Redis.current.hkeys(Download.history_key(version)).sort
-
   end
 
   context "with redis down" do

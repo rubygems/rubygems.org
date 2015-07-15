@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class ProfilesControllerTest < ActionController::TestCase
-
   context "for a user that doesn't exist" do
     should "throw a not found" do
       assert_raise ActiveRecord::RecordNotFound do
@@ -113,7 +112,6 @@ class ProfilesControllerTest < ActionController::TestCase
         should "update email toggle" do
           assert_equal @hide_email, User.last.hide_email
         end
-
       end
     end
   end

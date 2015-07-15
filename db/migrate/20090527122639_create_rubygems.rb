@@ -6,7 +6,6 @@ class CreateRubygems < ActiveRecord::Migration
       table.integer :user_id
       table.timestamps
     end
-
   end
 
   def self.down

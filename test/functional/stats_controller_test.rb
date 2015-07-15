@@ -40,7 +40,6 @@ class StatsControllerTest < ActionController::TestCase
   end
 
   context "on GET to index with multiple gems" do
-
     setup do
       rg1 = create(:rubygem, downloads: 10, number: "1")
       def rg1.downloads; 10; end
