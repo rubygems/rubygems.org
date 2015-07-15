@@ -109,7 +109,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
   def self.should_respond_to(format)
     context "with #{format.to_s.upcase} for a list of gems" do
       setup do
-        @mygems = [ create(:rubygem, name: "SomeGem"), create(:rubygem, name: "AnotherGem") ]
+        @mygems = [create(:rubygem, name: "SomeGem"), create(:rubygem, name: "AnotherGem")]
         @mygems.each do |rubygem|
           create(:version, rubygem: rubygem)
           create(:ownership, user: @user, rubygem: rubygem)

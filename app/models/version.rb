@@ -144,7 +144,7 @@ class Version < ActiveRecord::Base
   end
 
   def info
-    [ description, summary, "This rubygem does not have a description or summary." ].detect(&:present?)
+    [description, summary, "This rubygem does not have a description or summary."].detect(&:present?)
   end
 
   def update_attributes_from_gem_specification!(spec)
