@@ -68,10 +68,10 @@ class WebHookTest < ActiveSupport::TestCase
 
     should "show limited attributes for to_json" do
       assert_equal(
-      {
-        'url'           => @url,
-        'failure_count' => @webhook.failure_count
-      }, MultiJson.load(@webhook.to_json))
+        {
+          'url'           => @url,
+          'failure_count' => @webhook.failure_count
+        }, MultiJson.load(@webhook.to_json))
     end
 
     should "show limited attributes for to_xml" do
@@ -85,10 +85,10 @@ class WebHookTest < ActiveSupport::TestCase
 
     should "show limited attributes for to_yaml" do
       assert_equal(
-      {
-        'url'           => @url,
-        'failure_count' => @webhook.failure_count
-      }, YAML.load(@webhook.to_yaml))
+        {
+          'url'           => @url,
+          'failure_count' => @webhook.failure_count
+        }, YAML.load(@webhook.to_yaml))
     end
 
     should "not be able to create a webhook under this user, gem, and url" do

@@ -159,12 +159,6 @@ Style/EmptyLinesAroundMethodBody:
   Enabled: false
 
 # Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/FirstParameterIndentation:
-  Enabled: false
-
-# Offense count: 2
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/FormatString:
   Enabled: false
