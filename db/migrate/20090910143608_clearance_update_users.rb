@@ -11,7 +11,7 @@ class ClearanceUpdateUsers < ActiveRecord::Migration
 
   def self.down
     change_table(:users) do |t|
-      t.remove :confirmation_token,:remember_token
+      t.remove :confirmation_token, :remember_token
     end
   end
 end

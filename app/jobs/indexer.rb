@@ -46,9 +46,9 @@ class Indexer
   end
 
   def minimize_specs(data)
-    names     = Hash.new { |h,k| h[k] = k }
-    versions  = Hash.new { |h,k| h[k] = Gem::Version.new(k) }
-    platforms = Hash.new { |h,k| h[k] = k }
+    names     = Hash.new { |h, k| h[k] = k }
+    versions  = Hash.new { |h, k| h[k] = Gem::Version.new(k) }
+    platforms = Hash.new { |h, k| h[k] = k }
 
     data.each do |row|
       row[0] = names[row[0]]

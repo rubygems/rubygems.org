@@ -298,11 +298,6 @@ Style/SingleLineMethods:
 Style/SingleSpaceBeforeFirstArg:
   Enabled: false
 
-# Offense count: 6
-# Cop supports --auto-correct.
-Style/SpaceAfterComma:
-  Enabled: false
-
 # Offense count: 37
 # Cop supports --auto-correct.
 Style/SpaceAfterNot:
