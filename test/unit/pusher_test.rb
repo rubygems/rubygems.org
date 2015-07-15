@@ -120,7 +120,7 @@ class PusherTest < ActiveSupport::TestCase
       obj.stubs(:post).with() { |*value| post_data = value }
       @cutter.update_remote_bundler_api obj
 
-      url, payload, options = post_data
+      _, payload = post_data
 
       params = MultiJson.load payload
 

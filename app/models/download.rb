@@ -100,7 +100,6 @@ class Download
     end
 
     if stop == Time.zone.today
-      stop -= 1.day
       downloads["#{Time.zone.today}"] = self.today(version)
     end
 

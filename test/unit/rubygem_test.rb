@@ -278,7 +278,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "be owned by a user in ownership" do
-        ownership = create(:ownership, user: @user, rubygem: @rubygem)
+        create(:ownership, user: @user, rubygem: @rubygem)
         assert @rubygem.owned_by?(@user)
         assert !@rubygem.unowned?
       end
