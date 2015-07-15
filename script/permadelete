@@ -1,27 +1,27 @@
 #!/usr/bin/env ruby
 
-unless name = ARGV.first
-  abort "Usage: script/permadelete [GEM_NAME]"
-end
-
 ENV['RAILS_ENV'] ||= 'production'
 require_relative '../config/environment'
 
+name, number, email = ARGV
+
+abort "Usage: script/permadelete [GEM_NAME=hola] [VERSION=all] [AS=email]" if [name, number, email].any?(&:blank?)
+
 rubygem = Rubygem.find_by_name!(name)
 
-if !rubygem
-  puts "Gem '#{name}' was not found!"
-  exit 1
+if number == "all"
+  names = rubygem.versions.map(&:full_name)
+else
+  names = [rubygem.versions.find_by_number!(number)]
 end
 
-names   = rubygem.versions.map(&:full_name)
+owner = User.find_by_email!(email)
 
 require 'highline'
 terminal = HighLine.new
 confirm  = terminal.ask("Are you sure you want to permadelete #{name} with #{names.size} versions? (Y/N)")
 
 if confirm.upcase == "Y" || confirm.upcase == "YES"
-  owner = rubygem.owners.first
   rubygem.versions.each do |version|
     owner.deletions.create!(version: version)
   end
