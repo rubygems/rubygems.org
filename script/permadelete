@@ -21,12 +21,10 @@ terminal = HighLine.new
 confirm  = terminal.ask("Are you sure you want to permadelete #{name} with #{names.size} versions? (Y/N)")
 
 if confirm.upcase == "Y" || confirm.upcase == "YES"
-  names.each do |n|
-    RubygemFs.instance.remove("gems/#{n}.gem")
-    RubygemFs.instance.remove("quick/Marshal.4.8/#{n}.gemspec.rz")
+  owner = rubygem.owners.first
+  rubygem.versions.each do |version|
+    owner.deletions.create!(version: version)
   end
-
-  rubygem.destroy
 
   puts "#{name} permadeleted."
 else
