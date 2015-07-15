@@ -5,3 +5,5 @@ AllCops:
     - db/schema.rb
     - vendor/**/*
   RunRailsCops: true
+  DisplayCopNames: true
+  DisplayStyleGuide: true
