@@ -13,6 +13,6 @@ ActiveSupport::Notifications.subscribe(/performance/) do |name, start, finish, i
   method = payload[:statsd_method] || :increment
   measurement = payload[:measurement]
   value = payload[:value]
-  key_name = "rails.#{name.to_s}.#{measurement}"
+  key_name = "rails.#{name}.#{measurement}"
   StatsD.__send__ method.to_s, key_name, (value || 1), tags: ["controller:#{payload[:controller]}", "action:#{payload[:action]}", "format:#{payload[:format]}"]
 end

@@ -295,11 +295,11 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "give title for #to_title" do
-      assert_equal "#{@version.rubygem.name} (#{@version.to_s})", @version.to_title
+      assert_equal "#{@version.rubygem.name} (#{@version})", @version.to_title
     end
 
     should "give version with twiddle-wakka for #to_bundler" do
-      assert_equal %{gem '#{@version.rubygem.name}', '~> #{@version.to_s}'}, @version.to_bundler
+      assert_equal %{gem '#{@version.rubygem.name}', '~> #{@version}'}, @version.to_bundler
     end
 
     should "give title and platform for #to_title" do
