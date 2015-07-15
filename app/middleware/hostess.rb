@@ -41,8 +41,7 @@ class Hostess < Rack::Static
       return [302, { 'Location' => "/gems/#{$1}.gem" }, []]
     end
 
-    if (full_name = gem_download_path(path)) &&
-      name = Version.rubygem_name_for(full_name)
+    if (full_name = gem_download_path(path)) && name = Version.rubygem_name_for(full_name)
       Download.incr(name, full_name)
     end
     super

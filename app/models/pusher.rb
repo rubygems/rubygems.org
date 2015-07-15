@@ -20,8 +20,8 @@ class Pusher
 
   def authorize
     rubygem.pushable? ||
-    rubygem.owned_by?(user) ||
-    notify("You do not have permission to push to this gem.", 403)
+      rubygem.owned_by?(user) ||
+      notify("You do not have permission to push to this gem.", 403)
   end
 
   def save

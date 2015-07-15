@@ -63,9 +63,10 @@ namespace :gemcutter do
   namespace :rubygems do
     desc "Update the download counts for all gems."
     task update_download_counts: :environment do
-      case_query = Rubygem.pluck(:name)
-        .map { |name| "WHEN '#{name}' THEN #{Redis.current["downloads:rubygem:#{name}"].to_i}" }
-        .join("\n            ")
+      case_query = Rubygem
+                   .pluck(:name)
+                   .map { |name| "WHEN '#{name}' THEN #{Redis.current["downloads:rubygem:#{name}"].to_i}" }
+                   .join("\n            ")
 
       ActiveRecord::Base.connection.execute <<-SQL.strip_heredoc
         UPDATE rubygems
