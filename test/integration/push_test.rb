@@ -66,7 +66,7 @@ class PushTest < ActionDispatch::IntegrationTest
     push_gem Rails.root.join("test/gems/bad-characters-1.0.0.gem")
 
     assert_response :unprocessable_entity
-    assert_match /cannot process this gem/, response.body
+    assert_match(/cannot process this gem/, response.body)
   end
 
   def push_gem(path)

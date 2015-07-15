@@ -66,7 +66,7 @@ class PusherTest < ActiveSupport::TestCase
       @cutter.stubs(:body).stubs(:stub!).stubs(:read)
       @cutter.pull_spec
       assert_nil @cutter.spec
-      assert_match %r{RubyGems\.org cannot process this gem}, @cutter.message
+      assert_match(/RubyGems\.org cannot process this gem/, @cutter.message)
       assert_equal @cutter.code, 422
     end
 
@@ -75,8 +75,8 @@ class PusherTest < ActiveSupport::TestCase
       @cutter = Pusher.new(@user, @gem)
       @cutter.pull_spec
       assert_nil @cutter.spec
-      assert_match %r{RubyGems\.org cannot process this gem}, @cutter.message
-      assert_match %r{ActionController::Routing::RouteSet::NamedRouteCollection}, @cutter.message
+      assert_match(/RubyGems\.org cannot process this gem/, @cutter.message)
+      assert_match(/ActionController::Routing::RouteSet::NamedRouteCollection/, @cutter.message)
       assert_equal @cutter.code, 422
     end
 
@@ -188,7 +188,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:spec).returns spec
         assert !@cutter.find
 
-        assert_match /Unable to change case/, @cutter.message
+        assert_match(/Unable to change case/, @cutter.message)
       end
 
       should "update the DB to reflect the case in the spec" do

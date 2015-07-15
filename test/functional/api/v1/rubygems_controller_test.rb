@@ -75,7 +75,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       should respond_with :not_found
       should "say not be found" do
-        assert_match /does not exist/, @response.body
+        assert_match(/does not exist/, @response.body)
       end
     end
 
@@ -88,7 +88,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       should respond_with :not_found
       should "say the rubygem was not found" do
-        assert_match /not be found/, @response.body
+        assert_match(/not be found/, @response.body)
       end
     end
 
@@ -101,7 +101,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       should respond_with :not_found
       should "say the rubygem was not found" do
-        assert_match /does not exist/, @response.body
+        assert_match(/does not exist/, @response.body)
       end
     end
   end
@@ -216,7 +216,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should respond_with :unprocessable_entity
       should "not register gem" do
         assert Rubygem.count.zero?
-        assert_match /RubyGems\.org cannot process this gem/, @response.body
+        assert_match(/RubyGems\.org cannot process this gem/, @response.body)
       end
     end
 
@@ -245,7 +245,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
       should "deny access" do
         assert_response 401
-        assert_match "Access Denied. Please sign up for an account at http://rubygems.org", @response.body
+        assert_match("Access Denied. Please sign up for an account at http://rubygems.org", @response.body)
       end
     end
 
