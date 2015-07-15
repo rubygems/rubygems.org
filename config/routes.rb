@@ -5,9 +5,17 @@ Rails.application.routes.draw do
   root :to => 'home#index'
 
   ################################################################################
-  # API v1
+  # API
 
   namespace :api do
+    namespace :v2 do
+      resources :rubygems, param: :name, only: [] do
+        resources :versions, param: :number, only: :show, constraints: {
+          number: /#{Gem::Version::VERSION_PATTERN}(?=\.json\z)|#{Gem::Version::VERSION_PATTERN}/
+        }
+      end
+    end
+
     namespace :v1 do
       resource :api_key, :only => :show do
         put :reset
