@@ -10,19 +10,19 @@ abort "Usage: script/permadelete [GEM_NAME=hola] [VERSION=all] [AS=email]" if [n
 rubygem = Rubygem.find_by_name!(name)
 
 if number == "all"
-  names = rubygem.versions.map(&:full_name)
+  versions = rubygem.versions
 else
-  names = [rubygem.versions.find_by_number!(number)]
+  versions = [rubygem.versions.find_by_number!(number)]
 end
 
 owner = User.find_by_email!(email)
 
 require 'highline'
 terminal = HighLine.new
-confirm  = terminal.ask("Are you sure you want to permadelete #{name} with #{names.size} versions? (Y/N)")
+confirm  = terminal.ask("Are you sure you want to permadelete #{name} with #{versions.size} versions? (Y/N)")
 
 if confirm.upcase == "Y" || confirm.upcase == "YES"
-  rubygem.versions.each do |version|
+  versions.each do |version|
     owner.deletions.create!(version: version)
   end
 
