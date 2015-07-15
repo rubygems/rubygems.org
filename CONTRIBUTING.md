@@ -157,6 +157,19 @@ than Rubygems and may suit your organization’s needs better.**
 * Start redis: `redis-server`
 * Run the tests: `bundle exec rake`
 
+#### Running RuboCop
+
+We use RuboCop to enforce a consistent coding style throughout the project.
+Please ensure any changes you make conform to our style standards or else the
+build will fail.
+
+    bundle exec rake rubocop
+
+If you'd like RuboCop to attempt to automatically fix your style offenses, you
+can try running:
+
+    bundle exec rake rubocop:auto_correct
+
 #### Importing gems into the database
 
 * Import gems into the database with Rake task.
