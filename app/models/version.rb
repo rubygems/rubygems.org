@@ -12,8 +12,8 @@ class Version < ActiveRecord::Base
   serialize :licenses
   serialize :requirements
 
-  validates :number,   format: {with: /\A#{Gem::Version::VERSION_PATTERN}\z/}
-  validates :platform, format: {with: Rubygem::NAME_PATTERN}
+  validates :number,   format: { with: /\A#{Gem::Version::VERSION_PATTERN}\z/ }
+  validates :platform, format: { with: Rubygem::NAME_PATTERN }
 
   validate :platform_and_number_are_unique, on: :create
   validate :authors_format, on: :create

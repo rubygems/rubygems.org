@@ -519,7 +519,7 @@ class VersionTest < ActiveSupport::TestCase
       @version = build(:version)
     end
 
-    [/foo/, 1337, {foo: "bar"}].each do |example|
+    [/foo/, 1337, { foo: "bar" }].each do |example|
       should "be invalid with authors as an Array of #{example.class}'s" do
         assert_raise ActiveRecord::RecordInvalid do
           @spec.authors = [example]

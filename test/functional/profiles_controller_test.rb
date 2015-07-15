@@ -85,7 +85,7 @@ class ProfilesControllerTest < ActionController::TestCase
           @handle = "john_m_doe"
           @user = create(:user, handle: "johndoe")
           sign_in_as(@user)
-          put :update, user: {handle: @handle}
+          put :update, user: { handle: @handle }
         end
 
         should respond_with :redirect
@@ -103,7 +103,7 @@ class ProfilesControllerTest < ActionController::TestCase
           @hide_email = true
           @user = create(:user, handle: "johndoe")
           sign_in_as(@user)
-          put :update, user: {handle: @handle, hide_email: @hide_email}
+          put :update, user: { handle: @handle, hide_email: @hide_email }
         end
 
         should respond_with :redirect

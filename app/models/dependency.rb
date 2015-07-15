@@ -8,7 +8,7 @@ class Dependency < ActiveRecord::Base
   after_create      :push_on_to_list
 
   validates :requirements, presence: true
-  validates :scope,        inclusion: {in: %w(development runtime)}
+  validates :scope,        inclusion: { in: %w(development runtime) }
 
   attr_accessor :gem_dependency
 

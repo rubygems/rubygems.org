@@ -38,7 +38,7 @@ class Hostess < Rack::Static
     path = env['PATH_INFO']
 
     if path =~ /\/downloads\/(.*)\.gem/
-      return [302, {'Location' => "/gems/#{$1}.gem"}, []]
+      return [302, { 'Location' => "/gems/#{$1}.gem" }, []]
     end
 
     if (full_name = gem_download_path(path)) &&

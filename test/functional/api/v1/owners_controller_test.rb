@@ -3,10 +3,10 @@ require 'test_helper'
 class Api::V1::OwnersControllerTest < ActionController::TestCase
   def self.should_respond_to(format)
     should "route GET show with #{format.to_s.upcase}" do
-      route = {controller: 'api/v1/owners',
-               action: 'show',
-               rubygem_id: "rails",
-               format: format.to_s}
+      route = { controller: 'api/v1/owners',
+                action: 'show',
+                rubygem_id: "rails",
+                format: format.to_s }
       assert_recognizes(route, "/api/v1/gems/rails/owners.#{format}")
     end
 
@@ -67,10 +67,10 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
   end
 
   should "route POST" do
-    route = {controller: 'api/v1/owners',
-             action: 'create',
-             rubygem_id: "rails",
-             format: "json"}
+    route = { controller: 'api/v1/owners',
+              action: 'create',
+              rubygem_id: "rails",
+              format: "json" }
     assert_recognizes(route, path: '/api/v1/gems/rails/owners.json', method: :post)
   end
 
@@ -96,18 +96,18 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
   end
 
   should "route DELETE" do
-    route = {controller: 'api/v1/owners',
-             action: 'destroy',
-             rubygem_id: "rails",
-             format: "json"}
+    route = { controller: 'api/v1/owners',
+              action: 'destroy',
+              rubygem_id: "rails",
+              format: "json" }
     assert_recognizes(route, path: '/api/v1/gems/rails/owners.json', method: :delete)
   end
 
   should "route GET gems" do
-    route = {controller: 'api/v1/owners',
-             action: 'gems',
-             handle: 'example',
-             format: 'json'}
+    route = { controller: 'api/v1/owners',
+              action: 'gems',
+              handle: 'example',
+              format: 'json' }
     assert_recognizes(route, path: '/api/v1/owners/example/gems.json', method: :get)
   end
 

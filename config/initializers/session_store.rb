@@ -5,7 +5,7 @@
 
 # Be sure to restart your server when you modify this file.
 
-options = {key: '_rubygems_session'}
+options = { key: '_rubygems_session' }
 unless Rails.env.test? || Rails.env.development?
   options[:secure] = true
 end

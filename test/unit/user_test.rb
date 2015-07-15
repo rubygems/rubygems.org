@@ -75,7 +75,7 @@ class UserTest < ActiveSupport::TestCase
 
     should "have email and handle on JSON" do
       json = JSON.parse(@user.to_json)
-      hash = {"id" => @user.id, "email" => @user.email, 'handle' => @user.handle}
+      hash = { "id" => @user.id, "email" => @user.email, 'handle' => @user.handle }
       assert_equal hash, json
     end
 
@@ -88,7 +88,7 @@ class UserTest < ActiveSupport::TestCase
 
     should "have email and handle on YAML" do
       yaml = YAML.load(@user.to_yaml)
-      hash = {'id' => @user.id, 'email' => @user.email, 'handle' => @user.handle}
+      hash = { 'id' => @user.id, 'email' => @user.email, 'handle' => @user.handle }
       assert_equal hash, yaml
     end
 

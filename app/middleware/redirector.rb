@@ -25,6 +25,6 @@ class Redirector
   private
 
   def redirect_to(url)
-    [301, {"Location" => url}, []]
+    [301, { "Location" => url }, []]
   end
 end

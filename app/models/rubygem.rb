@@ -40,7 +40,7 @@ class Rubygem < ActiveRecord::Base
          upper(translate(name, '#{SPECIAL_CHARACTERS}', '#{' ' * SPECIAL_CHARACTERS.length}')) like upper(:query))
     SQL
 
-    where(conditions, {query: "%#{query.strip}%"}).
+    where(conditions, { query: "%#{query.strip}%" }).
       includes(:versions).
       references(:versions).
       by_downloads

@@ -124,7 +124,7 @@ class RubygemsControllerTest < ActionController::TestCase
       setup do
         @url = "http://github.com/qrush/gemcutter"
         @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
-        put :update, id: @rubygem.to_param, linkset: {code: @url, docs: 'http://docs.com', wiki: 'http://wiki.com', mail: 'http://mail.com', bugs: 'http://bugs.com'}
+        put :update, id: @rubygem.to_param, linkset: { code: @url, docs: 'http://docs.com', wiki: 'http://wiki.com', mail: 'http://mail.com', bugs: 'http://bugs.com' }
       end
       should respond_with :redirect
       should redirect_to('the gem') { rubygem_path(@rubygem) }
@@ -150,7 +150,7 @@ class RubygemsControllerTest < ActionController::TestCase
       setup do
         @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
         @url = "totally not a url"
-        put :update, id: @rubygem.to_param, linkset: {code: @url}
+        put :update, id: @rubygem.to_param, linkset: { code: @url }
       end
       should respond_with :success
       should render_template :edit
