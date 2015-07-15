@@ -62,18 +62,77 @@ en:
     security:
       title: Security
       header: "%{site} Security"
-      reporting:
+      rubygems:
         title: Reporting
-        contacting: "If you have a query or report to make regarding security please contact %{contacts}. All have GPG keys on key servers like pgp.mit.edu."
-        person: "%{name}'s GPG key has key id %{key_id} (full fingerprint %{full_fingerprint}) and email address %{email}"
-        list: "You may also report issues in the %{link} where reports may be made privately."
-        list_name: "PyPI bug tracker"
+        body: >
+          <p>
+          If you have a query or report to make regarding security please
+          contact Larry, Moe, and/or Curly.
+          All have GPG keys on key servers like pgp.mit.edu.
+          </p>
+
+          <p>
+          Larry's GPG key has key id 41C6E930 (full fingerprint
+          0145 FD2B 52E8 0A8E 329A 16C7 AC68 AC04 41C6 E930) and email address
+          richard@python.org
+          </p>
+
+          <p>
+          Moe's GPG key has key id 41C6E930 (full fingerprint
+          0145 FD2B 52E8 0A8E 329A 16C7 AC68 AC04 41C6 E930) and email address
+          richard@python.org
+          </p>
+
+          <p>
+          Curly's GPG key has key id 41C6E930 (full fingerprint
+          0145 FD2B 52E8 0A8E 329A 16C7 AC68 AC04 41C6 E930) and email address
+          richard@python.org
+          </p>
+
+          <p>
+          You may also report issues in the
+          <a href="http://mail.python.org/mailman/listinfo/pydotorg-www"> PyPI bug tracker</a>
+          where reports may be made privately.
+          </p>
       your_security:
         title: "Your %{title}"
-        sign_uploads: "You may sign your uploads with GPG using the <code>%{command}</code>."
-        alternative: "Additionally you may avoid using the default HTTP authentication used on the site and instead %{link}."
-        alternative_text: "upload using ssh"
-        disclaimer: "The MD5 hash provided with files on PyPI exists only to provide some download corruption protection. It is not intended to provide any sort of security regarding tampering. Please use GPG signing for that."
+        body: >
+          <p>
+          You may sign your uploads with GPG using the this command
+          <code>echo `whoami`</code>.
+          </p>
+
+          <p>
+          Additionally you may avoid using the default HTTP authentication used
+          on the site and instead
+          <a href="/pages/upload-using-ssh">upload using ssh</a>..
+          </p>
+
+          <p>
+          The MD5 hash provided with files on PyPI exists only to provide some download corruption protection. It is not intended to provide any sort of security regarding tampering. Please use GPG signing for that.
+          </p>
+      website:
+        title: Reporting %{site} Website Problems
+        body: >
+          <p>
+          To report a bug or to suggest an enhancement,
+          send an e-mail to <webmaster@python.org>.
+          </p>
+
+          <p>
+          If you're reporting a problem (a broken link, typo,
+          formatting glitch, etc),  please include the URL of the affected page.
+          </p>
+
+          <p>
+          Note that this address is only for problems with the main python.org
+          website.
+          </p>
+
+          <p>
+          For problems with PyPI please use the
+          <a href="http://mail.python.org/mailman/listinfo/pydotorg-www"> PyPI bug tracker</a>.
+          </p>
 
   passwords:
     edit:

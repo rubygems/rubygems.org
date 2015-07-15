@@ -3,52 +3,13 @@
 <div class="l-colspan t-body">
   <p><%= t '.header', :site => t('title') %></p>
 
-  <h2><%= t('.reporting.title') %></h2>
-  <% contacts = Rails.configuration.contacts.security %>
-  <p>
-    <%= t('.reporting.contacting', :contacts => contacts.names).html_safe %>
-  </p>
-  <% contacts.each do |contact| %>
-    <p>
-      <%= t('.reporting.person', :name => contact.name,
-                                :key_id => contact.key_id,
-                                :full_fingerprint => contact.full_fingerprint,
-                                :email => contact.email
-           ).html_safe %>
-    </p>
-  <% end %>
-  <p>
-  <%= t('.reporting.list', :link => link_to(t('.list_name'), contacts.list_url)
-       ).html_safe %>
-  </p>
+  <h2><%= t('.rubygems.title') %></h2>
+  <p><%= t('.rubygems.body').html_safe %></p>
 
   <h2><%= t('.your_security.title', :title => t('.title')) %></h2>
-  <p>
-    <%= t('.your_security.sign_uploads', :command => "nc -l 3000").html_safe %>
-  </p>
-  <p>
-    <%= t('.your_security.alternative', :link => link_to(t('.your_security.alternative_text'), "http://localhost/dont-pwn-me-bro")
-         ).html_safe %>
-  </p>
-  <p>
-    <%= t('.your_security.disclaimer') %>
-  </p>
+  <p><%= t('.your_security.body').html_safe %></p>
 
-  <%# got tired of possible over-engineering above %>
-  <h2>Reporting Website Problems</h2>
+  <h2><%= t('.website.title', :site => t('title')) %></h2>
+  <p><%= t('.website.body').html_safe %></p>
 
-  <p>
-    To report a bug or to suggest an enhancement,
-    send an e-mail to <webmaster@python.org>.
-  </p>
-
-  <p>
-    If you're reporting a problem (a broken link, typo, formatting glitch, etc),
-    please include the URL of the affected page.
-  </p>
-
-  <p>
-    Note that this address is only for problems with the main python.org website.
-    For problems with PyPI please use the PyPI bug tracker.
-  </p>
 </div>
