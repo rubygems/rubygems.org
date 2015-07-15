@@ -1,211 +1,142 @@
 <% @title = "Security" %>
 
 <div class="l-colspan t-body">
-  <p>RubyGems.org Security</p>
-
-  <h2>Reporting a Rubygems or RubyGems.org security bug</h2>
-
   <p>
-    For Rails, see <a href="http://rubyonrails.org/security/">Rails Security</a>
+    Found a security issue with RubyGems or RubyGems.org?
+    Please follow these steps to report it.
   </p>
 
-  <h3>Getting a CVE</h3>
+  <h2>Reporting a security issue</h2>
 
   <p>
-    See the <a href="http://guides.rubygems.org/security/#reporting-security-vulnerabilities">
-      RubyGems Security Guide
-    </a>.
-  </p>
-
-  <h3>Bounty Program (?)</h3>
-
-  <p>
-    All security bugs in RubyGems should be reported through our bounty
-    <a href="https://hackerone.com/rubygems">program page at HackerOne</a>.
-    This will deliver a message to a subset of the <a href="#">core team</a>
-    who handle security issues.
+    Before continuing, please ensure this is a security issue for the RubyGems
+    client or the RubyGems.org service. For all vulnerabilites with individual
+    gems, follow our guide on <a href="http://guides.rubygems.org/security/#reporting-security-vulnerabilities">
+      reporting security issues</a> with others' gems. If it's a security issue
+    with the Ruby on Rails framework, see the <a href="http://rubyonrails.org/security/">
+      Rails Security</a> guide.
   </p>
 
   <p>
-    Your report will be acknowledged within 24 hours, and you’ll receive a more
-    detailed response to your email within 48 hours indicating the next steps in
-    handling your report.
+    <strong>
+      For any security bug or issue with the RubyGems client or
+      RubyGems.org service, please email <a href="mailto:security@rubygems.org">
+        security@rubygems.org</a> with details about the problem.
+    </strong>
   </p>
 
   <p>
-    After the initial reply to your report the security team will endeavor to
-    keep you informed of the progress being made towards a fix and full
-    announcement. These updates will be sent *at least* every five days,
-    in reality this is more likely to be every 24-48 hours.
+    <small>
+      Please note: the <a href="https://groups.google.com/forum/#!forum/rubygems-developers">
+        rubygems-developers mailing list</a>, the
+      <a href="https://groups.google.com/forum/#!forum/rubygems-org">rubygems.org
+        mailing list</a>, and the <a href="ircs://irc.freenode.net:6697/#rubygems">
+        #rubygems</a> IRC channel are public areas.
+
+      If escalating to these places, please do not discuss your issue,
+      simply say that you’re trying to get a hold of someone from the security
+      team. Thanks in advance for responsibly disclosing your security issue.
+    </small>
+  </p>
+
+  <h2>Your Security</h2>
+
+  <h3>Securely pushing Gems</h3>
+  <p>
+    You may wish to <a href="http://guides.rubygems.org/security/#building-gems">
+      sign your gems</a> before releasing them to RubyGems.org.
+  </p>
+
+  <h3>Securely downloading Gems</h3>
+  <p>
+    The SHA256hash provided with files on RubyGems.org exists only to provide some
+    download corruption protection. It is not intended to provide any sort of
+    security regarding tampering. Please use GPG signing for that.
   </p>
 
   <p>
-    If you have not received a reply to your email within 48 hours, or have not
-    heard from the security team for the past five days there are a few
-    steps you can take:
+    Also, see <a href="https://gist.github.com/bf4/4223e83e8becacfb2a8e">this gist</a>.
+  </p>
+
+  <h2>Reporting RubyGems.org Website Problems</h2>
+  <p>
+    If you're having trouble pushing a gem, or otherwise need help with your
+    RubyGems.org account, please <a href="http://help.rubygems.org">
+      open a new help issue</a>.
+  </p>
+
+  <p>
+    For bugs or other problems with RubyGems.org, please use the
+    <a href="https://github.com/rubygems/rubygems.org">RubyGems.org issue tracker</a>
+    to open a new issue.
+  </p>
+
+  <h2>Disclosure Policy</h2>
+
+  <p>
+    RubyGems and RubyGems.org follow a 5 step disclosure policy:
   </p>
 
   <ol>
     <li>
-      Send an email to the security reports list (security@rubygems.org).
+      Security report received and is assigned a primary handler. This person
+      will coordinate the fix and release process.
     </li>
     <li>
-      Contact the current security coordinator
-      (<a href="mailto:nicklovesseucrity@quaran.to">Nick Quaranto</a>)
-      directly.
+      Problem is confirmed and, a list of all affected versions is determined.
+      Code is audited to find any potential similar problems.
     </li>
     <li>
-      Contact the back-up contact
-      (<a href="mailto:evanlovessecurity@evanphoenix.com">Evan Phoenix</a>)
-      directly.
+      Fixes are prepared for all releases which are still supported. These fixes
+      are not committed to the public repository but rather held locally pending
+      the announcement.
     </li>
     <li>
-      Email the <a href="#">rubygems core list</a> or ask in
-      <a href="ircs://irc.freenode.net:6697/#rubygems">#rubygems</a>.
+      A suggested embargo date for this vulnerability is chosen and
+      distros@openwall is notified. This notification will include patches
+      for all versions still under support and a contact address for packagers
+      who need advice back-porting patches to older versions.
+    </li>
+    <li>
+      On the embargo date, the <a href="https://groups.google.com/forum/#!forum/rubygems-developers">
+        rubygems-developers mailing list</a> is sent a copy of the announcement.
+      The changes are pushed to the public repository and new gems released to
+      rubygems. At least 6 hours after the mailing list is notified, a copy of
+      the advisory will be published on the <a href="http://blog.rubygems.org/">
+        RubyGems.org blog</a>.
     </li>
   </ol>
 
   <p>
-    Please note, the <a href="#">rubygems core list</a> and
-    <a href="ircs://irc.freenode.net:6697/#rubygems">#rubygems</a>
-    are public areas.
-
-    When escalating to that address please do not discuss your issue,
-    simply say that you’re trying to get a hold of someone from the security team.
+    This process can take some time, especially when coordination is required
+    with maintainers of other projects. Every effort will be made to handle
+    the bug in as timely a manner as possible, however it’s important that
+    we follow the release process above to ensure that the disclosure is
+    handled in a consistent manner.
   </p>
 
-  <h3>GPG and email</h3>
-  <p>
-    If you have a query or report to make regarding security please
-    contact Larry, Moe, and/or Curly.
-    All have GPG keys on key servers like pgp.mit.edu.
-  </p>
+  <h2>Receiving Security Updates</h2>
 
   <p>
-    Larry's GPG key has key id 41C6E930 (full fingerprint
-    0145 FD2B 52E8 0A8E 329A 16C7 AC68 AC04 41C6 E930) and email address
-    richard@python.org
+    The best way to receive all the security announcements is to subscribe
+    to the <a href="https://groups.google.com/forum/#!forum/rubygems-developers">
+      rubygems-developers mailing list</a>.
   </p>
 
   <p>
-    Moe's GPG key has key id 41C6E930 (full fingerprint
-    0145 FD2B 52E8 0A8E 329A 16C7 AC68 AC04 41C6 E930) and email address
-    richard@python.org
+    No one outside the core team or the initial reporter will be notified prior
+    to the lifting of the embargo. We regret that we cannot make exceptions to
+    this policy for high traffic or important sites, as any disclosure beyond
+    the minimum required to coordinate a fix could cause an early leak of the
+    vulnerability.
   </p>
+
+  <h2>Comments on this Policy</h2>
 
   <p>
-    Curly's GPG key has key id 41C6E930 (full fingerprint
-    0145 FD2B 52E8 0A8E 329A 16C7 AC68 AC04 41C6 E930) and email address
-    richard@python.org
+    If you have any suggestions to improve this policy,
+    please send an email to <a href="mailto:security@rubygems.org">
+      security@rubygems.org</a> or <a href="https://github.com/rubygems/rubygems.org/issues">
+      open an issue on GitHub</a>. Thanks!
   </p>
-
-  <h2>RubyGems Security Release Policy</h2>
-  <p>Security issues:</p>
-  <p>Severe Security Issues:</p>
-  <p>Unsupported Security Issues:</p>
-
-  <h2>Your Security</h2>
-  <h3>Securely updating your RubyGems Gem</h3>
-
-
-  <h3>Securely pushing Gems</h3>
-  <p>
-    You may <a href="http://guides.rubygems.org/security/#building-gems">
-      sign your gems per the guides</a>.
-  </p>
-
-  <h3>Securely download Gems</3>
-    <p>
-      The SHA256hash provided with files on RubyGems.org exists only to provide some
-      download corruption protection. It is not intended to provide any sort of
-      security regarding tampering. Please use GPG signing for that.
-    </p>
-
-    Also, see <a href="https://gist.github.com/bf4/4223e83e8becacfb2a8e">this gist</a>
-
-    <h2>Reporting RubyGems.org Website Problems</h2>
-    <p>
-      To report a bug or to suggest an enhancement,
-      send an e-mail to <webmaster@rubygems.org>.
-    </p>
-
-    <p>
-      If you're reporting a problem (a broken link, typo,
-      formatting glitch, etc),  please include the URL of the affected page.
-    </p>
-
-    <p>
-      Note that this address is only for problems with the main rubygems.org
-      website.
-    </p>
-
-    <p>
-      For problems with RubyGems.org please use the
-      <a href="https://github.com/rubygems/rubygems.org">RubyGems.org issue tracker</a>.
-    </p>
-
-    <h2>Disclosure Policy</h2>
-    <p>
-      RubyGems.org has a 5 step disclosure policy.
-    </p>
-
-    <ol>
-      <li>
-        Security report received and is assigned a primary handler. This person will coordinate the fix and release process.
-      </li>
-      <li>
-        Problem is confirmed and, a list of all affected versions is determined. Code is audited to find any potential similar problems.
-      </li>
-      <li>
-        Fixes are prepared for all releases which are still supported. These fixes are not committed to the public repository but rather held locally pending the announcement.
-      </li>
-      <li>
-        A suggested embargo date for this vulnerability is chosen and distros@openwall is notified. This notification will include patches for all versions still under support and a contact address for packagers who need advice back-porting patches to older versions.
-      </li>
-      <li>
-        On the embargo date, the RubyBems security mailing list is sent a copy of the announcement. The changes are pushed to the public repository and new gems released to rubygems. At least 6 hours after the mailing list is notified, a copy of the advisory will be published on
-        the <a href="http://blog.rubygems.org/">RubyGems.org blog</a>.
-      </li>
-    </ol>
-
-    <p>
-      Typically the embargo date will be set 72 hours from the time vendor-sec
-      is first notified, however this may vary depending on the severity of the
-      bug or difficulty in applying a fix.
-    </p>
-
-    <p>
-      This process can take some time, especially when coordination is required
-      with maintainers of other projects. Every effort will be made to handle
-      the bug in as timely a manner as possible, however it’s important that
-      we follow the release process above to ensure that the disclosure is
-      handled in a consistent manner.
-    </p>
-
-    <h2>Receiving Security Updates</h2>
-
-    <p>
-      The best way to receive all the security announcements is to subscribe
-      to the rubygems security mailing list.
-      The mailing list is very low traffic, and it receives the public
-      notifications the moment the embargo is lifted. If you produce packages of
-      RubyGems and require prior notification of vulnerabilities, you
-      should be subscribed to vendor-sec.
-    </p>
-
-    <p>
-      No one outside the core team, the initial reporter or vendor-sec
-      will be notified prior to the lifting of the embargo.
-      We regret that we cannot make exceptions to this policy for high traffic
-      or important sites, as any disclosure beyond the minimum required to
-      coordinate a fix could cause an early leak of the vulnerability.
-    </p>
-
-    <h2>Comments on this Policy</h2>
-
-    <p>
-      If you have any suggestions to improve this policy,
-      please send an email to security@rubygems.org.
-    </p>
-
-  </div>
+</div>
