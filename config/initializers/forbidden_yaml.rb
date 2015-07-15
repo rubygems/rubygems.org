@@ -25,7 +25,7 @@ module Gem
       runtime
     )
 
-    def self.from_yaml input
+    def self.from_yaml(input)
       input = normalize_yaml_input input
       spec = Psych.safe_load(input, WHITELISTED_CLASSES, WHITELISTED_SYMBOLS, true)
 
