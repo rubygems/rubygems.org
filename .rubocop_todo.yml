@@ -59,11 +59,6 @@ Metrics/MethodLength:
 Metrics/PerceivedComplexity:
   Enabled: false
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Performance/Count:
-  Enabled: false
-
 # Offense count: 10
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Rails/Date:

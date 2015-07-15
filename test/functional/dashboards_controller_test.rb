@@ -59,7 +59,7 @@ class DashboardsControllerTest < ActionController::TestCase
       end
 
       should "render entry summaries only for versions with summaries" do
-        assert_select "entry > summary", count: @subscribed_versions.select {|v| v.summary? }.size
+        assert_select "entry > summary", count: @subscribed_versions.count {|v| v.summary? }
         @subscribed_versions.each do |v|
           assert_select "entry > summary", text: v.summary if v.summary?
         end
