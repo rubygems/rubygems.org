@@ -4,14 +4,14 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
 
   def should_return_latest_gems(gems)
     assert_equal 2, gems.length
-    gems.each {|g| assert g.is_a?(Hash) }
+    gems.each { |g| assert g.is_a?(Hash) }
     assert_equal @rubygem_2.attributes['name'], gems[0]['name']
     assert_equal @rubygem_3.attributes['name'], gems[1]['name']
   end
 
   def should_return_just_updated_gems(gems)
     assert_equal 3, gems.length
-    gems.each {|g| assert g.is_a?(Hash) }
+    gems.each { |g| assert g.is_a?(Hash) }
     assert_equal @rubygem_1.attributes['name'], gems[0]['name']
     assert_equal @rubygem_2.attributes['name'], gems[1]['name']
     assert_equal @rubygem_3.attributes['name'], gems[2]['name']

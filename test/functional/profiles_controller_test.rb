@@ -48,7 +48,7 @@ class ProfilesControllerTest < ActionController::TestCase
     end
 
     context "on GET to show with id" do
-      setup {get :show, id: @user.id}
+      setup { get :show, id: @user.id }
 
       should respond_with :success
       should render_template :show

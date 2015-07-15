@@ -34,7 +34,7 @@ class DashboardsControllerTest < ActionController::TestCase
         @subscribed_versions = (1..2).map { |n| create(:version, created_at: n.hours.ago) }
         # just to make sure one has a different platform and a summary
         @subscribed_versions << create(:version, created_at: 3.hours.ago, platform: "win32", summary: "&")
-        @subscribed_versions.each { |v| create(:subscription, rubygem: v.rubygem, user: @user)}
+        @subscribed_versions.each { |v| create(:subscription, rubygem: v.rubygem, user: @user) }
         @unsubscribed_versions = (1..3).map { |n| create(:version, created_at: n.hours.ago) }
 
         @request.env["HTTP_AUTHORIZATION"] = @user.api_key
