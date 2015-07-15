@@ -212,7 +212,7 @@ class RubygemsControllerTest < ActionController::TestCase
     end
 
     should "render entry summaries only for versions with summaries" do
-      assert_select "entry > summary", count: @versions.count {|v| v.summary? }
+      assert_select "entry > summary", count: @versions.count(&:summary?)
       @versions.each do |v|
         assert_select "entry > summary", text: v.summary if v.summary?
       end
