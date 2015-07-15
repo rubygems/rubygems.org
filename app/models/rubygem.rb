@@ -242,7 +242,7 @@ class Rubygem < ActiveRecord::Base
 
     self.versions.update_all(latest: false)
 
-    self.versions.release.indexed.inject(Hash.new{ |h, k| h[k] = [] }) do |platforms, version|
+    self.versions.release.indexed.inject(Hash.new { |h, k| h[k] = [] }) do |platforms, version|
       platforms[version.platform] << version
       platforms
     end.each_value do |platforms|

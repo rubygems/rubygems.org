@@ -34,7 +34,7 @@ class VersionTest < ActiveSupport::TestCase
 
     should "only have relevant API fields" do
       xml = Nokogiri.parse(@version.to_xml)
-      assert_equal %w[number built-at summary description authors platform ruby-version prerelease downloads-count licenses requirements sha metadata].map(&:to_s).sort, xml.root.children.map(&:name).reject{ |t| t == "text" }.sort
+      assert_equal %w[number built-at summary description authors platform ruby-version prerelease downloads-count licenses requirements sha metadata].map(&:to_s).sort, xml.root.children.map(&:name).reject { |t| t == "text" }.sort
       assert_equal @version.authors, xml.at_css("authors").content
       assert_equal @version.built_at.to_i, xml.at_css("built-at").content.to_time.to_i
       assert_equal @version.description, xml.at_css("description").content
