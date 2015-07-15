@@ -166,11 +166,6 @@ Style/MethodCallParentheses:
 Style/MultilineBlockChain:
   Enabled: false
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/MultilineIfThen:
-  Enabled: false
-
 # Offense count: 3
 # Cop supports --auto-correct.
 Style/NegatedIf:

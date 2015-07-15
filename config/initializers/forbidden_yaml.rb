@@ -29,11 +29,11 @@ module Gem
       input = normalize_yaml_input input
       spec = Psych.safe_load(input, WHITELISTED_CLASSES, WHITELISTED_SYMBOLS, true)
 
-      if spec && spec.class == FalseClass then
+      if spec && spec.class == FalseClass
         raise Gem::EndOfYAMLException
       end
 
-      unless Gem::Specification === spec then
+      unless Gem::Specification === spec
         raise Gem::Exception, "YAML data doesn't evaluate to gem specification"
       end
 
