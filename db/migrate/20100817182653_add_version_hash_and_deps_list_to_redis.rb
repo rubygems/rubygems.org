@@ -4,10 +4,7 @@ class AddVersionHashAndDepsListToRedis < ActiveRecord::Migration
       Redis.current.del(key)
     end
 
-    count = Version.count
-    progress = 0
     Version.indexed.with_deps.find_each do |version|
-      puts "#{progress += 1}/#{count}"
       next if version.rubygem.blank?
 
       Redis.current.hmset(Version.info_key(version.full_name), :name, version.rubygem.name, :number, version.number, :platform, version.platform)

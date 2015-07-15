@@ -20,7 +20,6 @@ class ReallyRegenerateRuntimeDependenciesList < ActiveRecord::Migration
       where scope = 'development'
     SQL
     connection.select_all(dependencies).each_with_index do |row, index|
-      puts index if index % 10000 == 0
       yield row
     end
   end

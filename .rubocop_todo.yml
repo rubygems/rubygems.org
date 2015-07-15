@@ -75,11 +75,6 @@ Rails/Date:
 Rails/FindEach:
   Enabled: false
 
-# Offense count: 2
-# Configuration parameters: Include.
-Rails/Output:
-  Enabled: false
-
 # Offense count: 3
 # Cop supports --auto-correct.
 # Configuration parameters: Include.
