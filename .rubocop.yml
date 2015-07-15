@@ -1,1 +1,6 @@
 inherit_from: .rubocop_todo.yml
+
+AllCops:
+  Excludes:
+    - db/schema.rb
+  RunRailsCops: true
