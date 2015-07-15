@@ -1,5 +1,5 @@
 class Hostess < Rack::Static
-  def initialize(app, options={})
+  def initialize(app, options = {})
     options[:root] = RubygemFs.instance.base_dir
 
     options[:urls] = %w[

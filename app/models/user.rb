@@ -67,11 +67,11 @@ class User < ActiveRecord::Base
     attrs
   end
 
-  def as_json(options={})
+  def as_json(options = {})
     payload
   end
 
-  def to_xml(options={})
+  def to_xml(options = {})
     payload.to_xml(options.merge(root: 'user'))
   end
 

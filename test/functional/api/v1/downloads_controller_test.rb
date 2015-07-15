@@ -31,7 +31,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     should_respond_to(:text) { |body| body.to_i }
   end
 
-  def get_show(version, format='json')
+  def get_show(version, format = 'json')
     get :show, id: version.full_name, format: format
   end
 

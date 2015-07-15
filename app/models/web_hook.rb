@@ -15,7 +15,7 @@ class WebHook < ActiveRecord::Base
     where("rubygem_id is not null")
   end
 
-  def fire(host_with_port, deploy_gem, version, delayed=true)
+  def fire(host_with_port, deploy_gem, version, delayed = true)
     job = Notifier.new(self.url, host_with_port, deploy_gem, version, self.user.api_key)
     if delayed
       Delayed::Job.enqueue job, priority: PRIORITIES[:web_hook]
@@ -59,11 +59,11 @@ class WebHook < ActiveRecord::Base
     }
   end
 
-  def as_json(options={})
+  def as_json(options = {})
     payload
   end
 
-  def to_xml(options={})
+  def to_xml(options = {})
     payload.to_xml(options.merge(root: 'web_hook'))
   end
 

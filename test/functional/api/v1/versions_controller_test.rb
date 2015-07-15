@@ -1,15 +1,15 @@
 require 'test_helper'
 
 class Api::V1::VersionsControllerTest < ActionController::TestCase
-  def get_show(rubygem, format='json')
+  def get_show(rubygem, format = 'json')
     get :show, id: rubygem.name, format: format
   end
 
-  def get_latest(rubygem, format='json')
+  def get_latest(rubygem, format = 'json')
     get :latest, id: rubygem.name, format: format
   end
 
-  def get_reverse_dependencies(rubygem, options={ format: 'json' })
+  def get_reverse_dependencies(rubygem, options = { format: 'json' })
     get :reverse_dependencies, options.merge(id: rubygem.name)
   end
 

@@ -37,7 +37,7 @@ class Download
     Redis.current.get(version_key(full_name)).to_i
   end
 
-  def self.most_downloaded_today(n=5)
+  def self.most_downloaded_today(n = 5)
     items = Redis.current.zrevrange(today_key, 0, (n - 1), with_scores: true)
     items.collect do |full_name, downloads|
       version = Version.find_by_full_name(full_name)
@@ -45,7 +45,7 @@ class Download
     end
   end
 
-  def self.most_downloaded_all_time(n=5)
+  def self.most_downloaded_all_time(n = 5)
     items = Redis.current.zrevrange(ALL_KEY, 0, (n - 1), with_scores: true)
     items.collect do |full_name, downloads|
       version = Version.find_by_full_name(full_name)
@@ -135,7 +135,7 @@ class Download
     count
   end
 
-  def self.migrate_to_sql(version, remove=true)
+  def self.migrate_to_sql(version, remove = true)
     key = history_key version
 
     dates = Redis.current.hkeys(key)
@@ -218,7 +218,7 @@ class Download
     today_keys
   end
 
-  def self.today_key(date_string=Time.zone.today)
+  def self.today_key(date_string = Time.zone.today)
     "downloads:today:#{date_string}"
   end
 

@@ -89,7 +89,7 @@ class Version < ActiveRecord::Base
     latest.find_by(platform: 'ruby') || latest.order(number: :desc).first || last
   end
 
-  def self.just_updated(limit=5)
+  def self.just_updated(limit = 5)
     where("versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)").
       joins(:rubygem).
       indexed.
@@ -206,11 +206,11 @@ class Version < ActiveRecord::Base
     }
   end
 
-  def as_json(options={})
+  def as_json(options = {})
     payload
   end
 
-  def to_xml(options={})
+  def to_xml(options = {})
     payload.to_xml(options.merge(root: 'version'))
   end
 

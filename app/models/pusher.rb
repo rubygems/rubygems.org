@@ -4,7 +4,7 @@ class Pusher
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
   attr_accessor :bundler_api_url
 
-  def initialize(user, body, host_with_port=nil)
+  def initialize(user, body, host_with_port = nil)
     @user = user
     @body = StringIO.new(body.read)
     @size = @body.size
@@ -92,7 +92,7 @@ MSG
     "<Pusher #{attrs.join(' ')}>"
   end
 
-  def update_remote_bundler_api(to=RestClient)
+  def update_remote_bundler_api(to = RestClient)
     return unless @bundler_api_url
 
     json = {

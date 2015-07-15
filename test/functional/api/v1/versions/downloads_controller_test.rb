@@ -1,11 +1,11 @@
 require 'test_helper'
 
 class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
-  def get_index(version, format='json')
+  def get_index(version, format = 'json')
     get :index, version_id: version.full_name, format: format
   end
 
-  def get_search(version, from, to, format='json')
+  def get_search(version, from, to, format = 'json')
     get :search, version_id: version.full_name,
                  format: format,
                  from: from.to_date.to_s,

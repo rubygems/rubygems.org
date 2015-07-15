@@ -58,11 +58,11 @@ class Rubygem < ActiveRecord::Base
     with_versions.count
   end
 
-  def self.latest(limit=5)
+  def self.latest(limit = 5)
     with_one_version.order(created_at: :desc).limit(limit)
   end
 
-  def self.downloaded(limit=5)
+  def self.downloaded(limit = 5)
     with_versions.by_downloads.limit(limit)
   end
 
@@ -147,7 +147,7 @@ class Rubygem < ActiveRecord::Base
     versions.to_a.sum { |v| Download.today(v) }
   end
 
-  def payload(version=versions.most_recent, host_with_port=Gemcutter::HOST)
+  def payload(version = versions.most_recent, host_with_port = Gemcutter::HOST)
     {
       'name'              => name,
       'downloads'         => downloads,
@@ -174,11 +174,11 @@ class Rubygem < ActiveRecord::Base
     }
   end
 
-  def as_json(options={})
+  def as_json(options = {})
     payload
   end
 
-  def to_xml(options={})
+  def to_xml(options = {})
     payload.to_xml(options.merge(root: 'rubygem'))
   end
 
