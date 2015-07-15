@@ -150,30 +150,30 @@ than Rubygems and may suit your organization’s needs better.**
 
 * Get set up: `./script/setup`
 * Run the database rake tasks if needed:
-    `rake db:create:all db:drop:all db:setup db:test:prepare --trace`
+    `bundle exec rake db:create:all db:drop:all db:setup db:test:prepare --trace`
 
 #### Running tests
 
 * Start redis: `redis-server`
-* Run the tests: `rake`
+* Run the tests: `bundle exec rake`
 
 #### Importing gems into the database
 
 * Import gems into the database with Rake task.
-    `rake gemcutter:import:process vendor/cache`
+    `bundle exec rake gemcutter:import:process vendor/cache`
     * _To import a small set of gems you can point the import process to any
         gems cache directory, like a very small `rvm` gemset for instance, or
 	specifying `GEM_PATH/cache` instead of `vendor/cache`._
 * If you need the index available - needed when working in conjunction
     with [bundler-api](http://github.com/rubygems/bundler-api) - then run
-    `rake gemcutter:index:update`. This primes the filesystem gem index for
+    `bundle exec rake gemcutter:index:update`. This primes the filesystem gem index for
     local use.
 
 #### Getting the test data
 
 * A good way to get some test data is to import from a local gem directory.
 `gem env` will tell you where rubygems stores your gems. Run
-`rake gemcutter:import:process #{INSTALLATION_DIRECTORY}/cache`
+`bundle exec rake gemcutter:import:process #{INSTALLATION_DIRECTORY}/cache`
 
 * If you see "Processing 0 gems" you’ve probably specified the wrong
 directory. The proper directory will be full of .gem files.
@@ -194,7 +194,6 @@ application in development environment especially for performance related issues
 
 When everything is set up, start the web server with `rails server` and browse to
 [localhost:3000](http://localhost:3000) or use [Pow](http://pow.cx)!
-
 
 Database Layout
 ---------------
