@@ -55,7 +55,7 @@ class WebHook < ActiveRecord::Base
   def payload
     {
       'failure_count' => failure_count,
-      'url'           => url,
+      'url'           => url
     }
   end
 
