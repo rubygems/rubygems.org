@@ -20,6 +20,7 @@ class ApplicationController < ActionController::Base
   rescue_from(ActionController::ParameterMissing) do |e|
     render text: "Request is missing param '#{e.param}'", status: :bad_request
   end
+
   protected
 
   def redirect_to_root

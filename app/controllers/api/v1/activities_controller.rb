@@ -11,6 +11,7 @@ class Api::V1::ActivitiesController < Api::BaseController
   end
 
   private
+
   def render_rubygems
     respond_to do |format|
       format.json { render json: @rubygems }

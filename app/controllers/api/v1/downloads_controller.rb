@@ -35,6 +35,7 @@ class Api::V1::DownloadsController < Api::BaseController
   end
 
   private
+
   def respond_with_data(data)
     respond_to do |format|
       format.json { render json: data }
