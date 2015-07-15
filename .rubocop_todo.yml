@@ -132,11 +132,6 @@ Rails/Validation:
 Style/AccessModifierIndentation:
   Enabled: false
 
-# Offense count: 15
-# Cop supports --auto-correct.
-Style/AlignArray:
-  Enabled: false
-
 # Offense count: 9
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedHashRocketStyle, EnforcedColonStyle, EnforcedLastArgumentHashStyle, SupportedLastArgumentHashStyles.
