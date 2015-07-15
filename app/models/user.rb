@@ -17,9 +17,12 @@ class User < ActiveRecord::Base
   before_validation :regenerate_token, if: :email_changed?, on: :update
   before_create :generate_api_key
 
-  validates_uniqueness_of :handle, allow_nil: true
-  validates_format_of :handle, with: /\A[A-Za-z][A-Za-z_\-0-9]*\z/, allow_nil: true
-  validates_length_of :handle, within: 2..40, allow_nil: true
+  validates :handle, uniqueness: true, allow_nil: true
+  validates :handle, format: {
+    with: /\A[A-Za-z][A-Za-z_\-0-9]*\z/,
+    message: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
+  }, allow_nil: true
+  validates :handle, length: { within: 2..40 }, allow_nil: true
 
   def self.authenticate(who, password)
     if user = find_by(email: who.downcase) || find_by(handle: who)

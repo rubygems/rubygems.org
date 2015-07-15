@@ -80,11 +80,6 @@ Rails/FindEach:
 Rails/TimeZone:
   Enabled: false
 
-# Offense count: 3
-# Configuration parameters: Include.
-Rails/Validation:
-  Enabled: false
-
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
