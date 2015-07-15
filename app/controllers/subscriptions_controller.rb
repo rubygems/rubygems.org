@@ -11,7 +11,7 @@ class SubscriptionsController < ApplicationController
     render_toggle_or_unacceptable(subscription.try(:destroy))
   end
 
-protected
+  protected
 
   def render_toggle_or_unacceptable(success)
     if success

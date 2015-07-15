@@ -46,7 +46,7 @@ class Api::V1::OwnersController < Api::BaseController
     end
   end
 
-protected
+  protected
 
   def verify_gem_ownership
     unless current_user.rubygems.find_by_name(params[:rubygem_id])
