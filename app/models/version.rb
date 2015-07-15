@@ -4,10 +4,10 @@ class Version < ActiveRecord::Base
   belongs_to :rubygem, touch: true
   has_many :dependencies, -> { order('rubygems.name ASC').includes(:rubygem) }, dependent: :destroy
 
-  before_save      :update_prerelease
+  before_save :update_prerelease
   after_validation :join_authors
-  after_create     :full_nameify!
-  after_save       :reorder_versions
+  after_create :full_nameify!
+  after_save :reorder_versions
 
   serialize :licenses
   serialize :requirements

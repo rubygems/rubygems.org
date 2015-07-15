@@ -221,9 +221,9 @@ class Rubygem < ActiveRecord::Base
   def update_attributes_from_gem_specification!(version, spec)
     Rubygem.transaction do
       save!
-      update_versions!     version, spec
+      update_versions! version, spec
       update_dependencies! version, spec
-      update_linkset!      spec
+      update_linkset! spec
     end
   end
 

@@ -211,11 +211,6 @@ Style/SignalException:
 Style/SingleLineMethods:
   Enabled: false
 
-# Offense count: 99
-# Cop supports --auto-correct.
-Style/SingleSpaceBeforeFirstArg:
-  Enabled: false
-
 # Offense count: 37
 # Cop supports --auto-correct.
 Style/SpaceAfterNot:

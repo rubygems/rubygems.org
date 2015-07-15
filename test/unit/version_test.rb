@@ -370,7 +370,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "know if it is a prelease version" do
-      assert  @prerelease.prerelease?
+      assert @prerelease.prerelease?
       assert !@release.prerelease?
     end
 

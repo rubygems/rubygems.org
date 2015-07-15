@@ -303,7 +303,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "only fetch the subscribed users with #subscribers" do
-        assert_contains         @rubygem.subscribers, @subscribed_user
+        assert_contains @rubygem.subscribers, @subscribed_user
         assert_does_not_contain @rubygem.subscribers, @unsubscribed_user
       end
     end

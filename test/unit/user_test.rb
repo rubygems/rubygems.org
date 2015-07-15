@@ -141,7 +141,7 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should "only fetch the subscribed gems with #subscribed_gems" do
-        assert_contains         @user.subscribed_gems, @subscribed_gem
+        assert_contains @user.subscribed_gems, @subscribed_gem
         assert_does_not_contain @user.subscribed_gems, @unsubscribed_gem
       end
     end
