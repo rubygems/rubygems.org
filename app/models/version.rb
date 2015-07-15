@@ -121,9 +121,7 @@ class Version < ActiveRecord::Base
     platform != "ruby"
   end
 
-  def reorder_versions
-    rubygem.reorder_versions
-  end
+  delegate :reorder_versions, to: :rubygem
 
   def push
     Redis.current.lpush(Rubygem.versions_key(rubygem.name), full_name)
