@@ -1,5 +1,8 @@
 language: ruby
-cache: bundler
+cache:
+  bundler: true
+  directories:
+    - reports
 
 rvm:
   - 2.1.6
@@ -29,6 +32,7 @@ before_script:
 script:
   - bundle exec rake
   - bundle exec rake rubocop
+  - script/brakeman
 
 env:
   - RUBYGEMS_VERSION=2.4.5

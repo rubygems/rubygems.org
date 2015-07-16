@@ -1,0 +1,10 @@
+---
+:min_confidence: 3
+:ignore_ifs: false
+:skip_libs: false
+:exit_on_warn: false
+:interactive_ignore: false
+:output_files:
+- reports/brakeman.json
+- reports/brakeman.html
+:rails4: true
