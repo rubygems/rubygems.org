@@ -46,7 +46,7 @@ class SearchTest < SystemTest
 
   test "search page with a non valid format" do
     assert_raises(ActionController::RoutingError) do
-      get search_path(format: :json), { query: 'foobar' }
+      get search_path(format: :json), query: 'foobar'
     end
   end
 end

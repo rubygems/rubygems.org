@@ -7,7 +7,7 @@ class GemsTest < ActionDispatch::IntegrationTest
   end
 
   test "gem page with a non valid HTTP_ACCEPT header" do
-    get rubygem_path(@rubygem), nil, { 'HTTP_ACCEPT' => 'application/mercurial-0.1' }
+    get rubygem_path(@rubygem), nil, 'HTTP_ACCEPT' => 'application/mercurial-0.1'
     assert page.has_content? "1.0.0"
   end
 
@@ -22,7 +22,7 @@ class GemsTest < ActionDispatch::IntegrationTest
     get rubygem_path(@rubygem, as: @user.id)
     assert page.has_css?('a#subscribe')
 
-    post rubygem_subscription_path(@rubygem, as: @user.id), nil, { 'HTTP_ACCEPT' => 'application/javascript' }
+    post rubygem_subscription_path(@rubygem, as: @user.id), nil, 'HTTP_ACCEPT' => 'application/javascript'
 
     assert_match(/\("\.toggler"\)\.toggle\(\)/, @response.body)
     assert_equal @user.subscribed_gems.first, @rubygem
@@ -34,7 +34,7 @@ class GemsTest < ActionDispatch::IntegrationTest
     get rubygem_path(@rubygem, as: @user.id)
     assert page.has_css?('a#unsubscribe')
 
-    delete rubygem_subscription_path(@rubygem, as: @user.id), nil, { 'HTTP_ACCEPT' => 'application/javascript' }
+    delete rubygem_subscription_path(@rubygem, as: @user.id), nil, 'HTTP_ACCEPT' => 'application/javascript'
     assert_match(/\("\.toggler"\)\.toggle\(\)/, @response.body)
   end
 

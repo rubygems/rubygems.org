@@ -48,7 +48,7 @@ class YankTest < SystemTest
 
     build_gem "sandworm", "1.0.0"
     page.driver.browser.header("Authorization", other_user.api_key)
-    page.driver.post api_v1_rubygems_path, File.read("sandworm-1.0.0.gem"), { "CONTENT_TYPE" => "application/octet-stream" }
+    page.driver.post api_v1_rubygems_path, File.read("sandworm-1.0.0.gem"), "CONTENT_TYPE" => "application/octet-stream"
 
     visit rubygem_path(@rubygem)
     assert page.has_content? "sandworm"

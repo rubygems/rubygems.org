@@ -20,7 +20,7 @@ class Version < ActiveRecord::Base
   attribute :authors, Type::Value.new
 
   def self.reverse_dependencies(name)
-    joins({ dependencies: :rubygem })
+    joins(dependencies: :rubygem)
       .where(rubygems: { name: name })
   end
 
