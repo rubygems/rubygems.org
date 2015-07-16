@@ -141,11 +141,6 @@ Style/GuardClause:
 Style/IfUnlessModifier:
   Enabled: false
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/Lambda:
-  Enabled: false
-
 # Offense count: 3
 # Cop supports --auto-correct.
 Style/LineEndConcatenation:

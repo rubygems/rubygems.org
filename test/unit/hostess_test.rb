@@ -4,7 +4,7 @@ class HostessTest < ActiveSupport::TestCase
   include Rack::Test::Methods
 
   def app
-    Hostess.new(proc { [200, {}, ''] })
+    Hostess.new(-> { [200, {}, ''] })
   end
 
   def touch(path)
