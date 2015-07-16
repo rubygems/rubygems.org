@@ -1,6 +1,6 @@
 require 'timeout'
 
-class Notifier < Struct.new(:url, :host_with_port, :rubygem, :version, :api_key)
+Notifier = Struct.new(:url, :host_with_port, :rubygem, :version, :api_key) do
   extend StatsD::Instrument
 
   def payload
