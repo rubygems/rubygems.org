@@ -25,11 +25,11 @@ class Hostess < Rack::Static
   end
 
   def can_serve(path)
-    super(path) || gem_download_path(path) || path =~ /\/quick\/Marshal\.4\.8\/.*\.gemspec.rz/
+    super(path) || gem_download_path(path) || path =~ %r{/quick/Marshal\.4\.8/.*\.gemspec.rz}
   end
 
   def gem_download_path(path)
-    if path =~ /\/gems\/(.*)\.gem/
+    if path =~ %r{/gems/(.*)\.gem}
       $1
     end
   end
@@ -37,7 +37,7 @@ class Hostess < Rack::Static
   def call(env)
     path = env['PATH_INFO']
 
-    if path =~ /\/downloads\/(.*)\.gem/
+    if path =~ %r{/downloads/(.*)\.gem}
       return [302, { 'Location' => "/gems/#{$1}.gem" }, []]
     end
 
