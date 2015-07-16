@@ -160,12 +160,6 @@ Style/MethodCallParentheses:
 Style/MultilineBlockChain:
   Enabled: false
 
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: MinDigits.
-Style/NumericLiterals:
-  Enabled: false
-
 # Offense count: 3
 # Cop supports --auto-correct.
 Style/ParallelAssignment:

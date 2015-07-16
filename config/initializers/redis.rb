@@ -1,5 +1,5 @@
 if Rails.env.test?
-  port = Toxiproxy.running? ? 22220 : 6379
+  port = Toxiproxy.running? ? 22_220 : 6379
   if Toxiproxy.running?
     Toxiproxy.populate(
       [
