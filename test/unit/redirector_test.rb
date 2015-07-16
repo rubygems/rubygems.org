@@ -6,7 +6,7 @@ class RedirectorTest < ActiveSupport::TestCase
   def app
     Rack::Builder.new do
       use Redirector
-      run ->(_env) { [200, { "Content-Type" => "text/html" }, []] }
+      run ->(_) { [200, { "Content-Type" => "text/html" }, []] }
     end
   end
 
