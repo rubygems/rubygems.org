@@ -377,10 +377,10 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal @rubygem.versions.most_recent.authors, hash["authors"]
       assert_equal @rubygem.versions.most_recent.info, hash["info"]
       assert_equal @rubygem.versions.most_recent.metadata, hash["metadata"]
-      assert_equal "http://#{Gemcutter::HOST}/gems/#{@rubygem.name}",
+      assert_equal "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}/gems/#{@rubygem.name}",
         hash["project_uri"]
-      assert_equal "http://#{Gemcutter::HOST}/gems/#{@rubygem.versions.most_recent.full_name}.gem",
-        hash["gem_uri"]
+      assert_equal "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}/gems/"\
+        "#{@rubygem.versions.most_recent.full_name}.gem", hash["gem_uri"]
 
       assert_equal MultiJson.load(dev_dep.to_json), hash["dependencies"]["development"].first
       assert_equal MultiJson.load(run_dep.to_json), hash["dependencies"]["runtime"].first
@@ -411,10 +411,10 @@ class RubygemTest < ActiveSupport::TestCase
         doc.at_css("metadata foo").content
       assert_equal @rubygem.versions.most_recent.sha256_hex,
         doc.at_css("sha").content
-      assert_equal "http://#{Gemcutter::HOST}/gems/#{@rubygem.name}",
+      assert_equal "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}/gems/#{@rubygem.name}",
         doc.at_css("project-uri").content
-      assert_equal "http://#{Gemcutter::HOST}/gems/#{@rubygem.versions.most_recent.full_name}.gem",
-        doc.at_css("gem-uri").content
+      assert_equal "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}/gems/"\
+        "#{@rubygem.versions.most_recent.full_name}.gem", doc.at_css("gem-uri").content
 
       assert_equal dev_dep.name, doc.at_css("dependencies development dependency name").content
       assert_equal run_dep.name, doc.at_css("dependencies runtime dependency name").content

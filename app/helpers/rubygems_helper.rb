@@ -76,7 +76,7 @@ module RubygemsHelper
   end
 
   def badge_link(rubygem)
-    badge_url = "http://badge.fury.io/rb/#{rubygem.name}/install"
+    badge_url = "https://badge.fury.io/rb/#{rubygem.name}/install"
     link_to "Badge", badge_url, class: "gem__link t-list__item", id: :badge
   end
 

@@ -10,7 +10,7 @@ From the [Rubinius](http://rubini.us/) contribution page:
 Submit a patch and once it’s accepted, you’ll get commit access to the
 repository. Feel free to fork the repository and send a pull request,
 once it’s merged in you’ll get added. If not, feel free to bug
-[qrush](http://github.com/qrush) about it.
+[qrush](https://github.com/qrush) about it.
 
 Also, if you’re hacking on RubyGems.org, hop in `#rubygems` on
 `irc.freenode.net`! Chances are someone else will be around to answer
@@ -43,9 +43,9 @@ git remote set-url origin git@github.com:rubygems/rubygems.org.git
 Otherwise, you can continue to hack away in your own fork.
 
 If you’re looking for things to hack on, please check
-[GitHub Issues](http://github.com/rubygems/rubygems.org/issues). If you’ve
+[GitHub Issues](https://github.com/rubygems/rubygems.org/issues). If you’ve
 found bugs or have feature ideas don’t be afraid to pipe up and ask the
-[mailing list](http://groups.google.com/group/rubygems-org) or IRC channel
+[mailing list](https://groups.google.com/group/rubygems-org) or IRC channel
 (`#rubygems` on `irc.freenode.net`) about them.
 
 Acceptance
@@ -72,7 +72,7 @@ Development Setup
 This page is for setting up Rubygems on a local development machine to
 contribute patches/fixes/awesome stuff. **If you need to host your own
 gem server, please consider checking out
-[Geminabox](http://github.com/geminabox/geminabox). It’s a lot simpler
+[Geminabox](https://github.com/geminabox/geminabox). It’s a lot simpler
 than Rubygems and may suit your organization’s needs better.**
 
 #### Environment (OS X)
@@ -80,7 +80,7 @@ than Rubygems and may suit your organization’s needs better.**
 * Use Ruby 2.2.2
 * Use Rubygems 2.4.5
 * Install bundler: `gem install bundler`
-* Install [redis](http://github.com/antirez/redis),
+* Install [redis](https://github.com/antirez/redis),
     **version 2.0 or higher**. If you have homebrew,
     do `brew install redis -H`, if you use macports,
     do `sudo port install redis`.
@@ -98,7 +98,7 @@ than Rubygems and may suit your organization’s needs better.**
 #### Environment (Linux - Debian/Ubuntu)
 
 * Use Ruby 2.2.2 `apt-get install ruby2.2`
-  * Or install via [alternate methods](http://www.ruby-lang.org/en/downloads/)
+  * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
 * Use Rubygems 2.4.5
 * Install bundler: `gem install bundler`
 * Install Redis: `apt-get install redis-server`
@@ -147,7 +147,7 @@ can try running:
         gems cache directory, like a very small `rvm` gemset for instance, or
 	specifying `GEM_PATH/cache` instead of `vendor/cache`._
 * If you need the index available - needed when working in conjunction
-    with [bundler-api](http://github.com/rubygems/bundler-api) - then run
+    with [bundler-api](https://github.com/rubygems/bundler-api) - then run
     `bundle exec rake gemcutter:index:update`. This primes the filesystem gem index for
     local use.
 
@@ -180,6 +180,6 @@ When everything is set up, start the web server with `rails server` and browse t
 Database Layout
 ---------------
 
-Courtesy of [Rails ERD](http://voormedia.github.io/rails-erd/)
+Courtesy of [Rails ERD](https://voormedia.github.io/rails-erd/)
 
 ![Rubygems.org Domain Model](https://cdn.rawgit.com/rubygems/rubygems.org/master/doc/erd.svg)

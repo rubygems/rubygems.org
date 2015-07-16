@@ -33,7 +33,8 @@ class Api::V1::WebHooksController < Api::BaseController
     webhook = current_user.web_hooks.new(url: @url)
     @rubygem = Rubygem.find_by_name("gemcutter") unless @rubygem
 
-    if webhook.fire(request.host_with_port, @rubygem, @rubygem.versions.most_recent, false)
+    if webhook.fire(request.protocol, request.host_with_port, @rubygem,
+      @rubygem.versions.most_recent, false)
       render text: webhook.deployed_message(@rubygem)
     else
       render text: webhook.failed_message(@rubygem), status: :bad_request

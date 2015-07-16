@@ -1,16 +1,20 @@
 development:
+  protocol: http
   host: localhost
   s3_bucket: s3bucket
 
 test:
+  protocol: http
   host: localhost
   s3_bucket: test.s3.rubygems.org
 
 staging:
+  protocol: https
   host: staging.rubygems.org
   s3_bucket: staging.s3.rubygems.org
 
 live: &LIVE
+  protocol: https
   host: rubygems.org
   s3_bucket: production.s3.rubygems.org
 

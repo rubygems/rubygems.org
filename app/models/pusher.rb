@@ -4,11 +4,12 @@ class Pusher
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
   attr_accessor :bundler_api_url
 
-  def initialize(user, body, host_with_port = nil)
+  def initialize(user, body, protocol = nil, host_with_port = nil)
     @user = user
     @body = StringIO.new(body.read)
     @size = @body.size
     @indexer = Indexer.new
+    @protocol = protocol
     @host_with_port = host_with_port
     @bundler_token = ENV['BUNDLER_TOKEN'] || "tokenmeaway"
     @bundler_api_url = ENV['BUNDLER_API_URL']
@@ -145,7 +146,7 @@ class Pusher
   def enqueue_web_hook_jobs
     jobs = rubygem.web_hooks + WebHook.global
     jobs.each do |job|
-      job.fire(@host_with_port, rubygem, version)
+      job.fire(@protocol, @host_with_port, rubygem, version)
     end
   end
 end

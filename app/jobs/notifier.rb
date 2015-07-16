@@ -1,10 +1,10 @@
 require 'timeout'
 
-Notifier = Struct.new(:url, :host_with_port, :rubygem, :version, :api_key) do
+Notifier = Struct.new(:url, :protocol, :host_with_port, :rubygem, :version, :api_key) do
   extend StatsD::Instrument
 
   def payload
-    rubygem.payload(version, host_with_port).to_json
+    rubygem.payload(version, protocol, host_with_port).to_json
   end
 
   def authorization

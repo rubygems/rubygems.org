@@ -39,7 +39,7 @@ end
 class ActionDispatch::IntegrationTest
   setup { host! Gemcutter::HOST }
 end
-Capybara.app_host = "http://#{Gemcutter::HOST}"
+Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
 
 class SystemTest < ActionDispatch::IntegrationTest
   include Capybara::DSL

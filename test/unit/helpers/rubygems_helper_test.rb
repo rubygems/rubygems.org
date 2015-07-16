@@ -75,7 +75,7 @@ class RubygemsHelperTest < ActionView::TestCase
 
   should "link to the badge" do
     rubygem = create(:rubygem)
-    url = "http://badge.fury.io/rb/#{rubygem.name}/install"
+    url = "https://badge.fury.io/rb/#{rubygem.name}/install"
     assert_match url, badge_link(rubygem)
   end
 

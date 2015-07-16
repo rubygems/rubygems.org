@@ -122,7 +122,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On PUT to update for this user's gem that is successful" do
       setup do
-        @url = "http://github.com/qrush/gemcutter"
+        @url = "https://github.com/qrush/gemcutter"
         @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
         put :update,
           id: @rubygem.to_param,

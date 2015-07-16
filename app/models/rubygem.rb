@@ -147,7 +147,8 @@ class Rubygem < ActiveRecord::Base
     versions.to_a.sum { |v| Download.today(v) }
   end
 
-  def payload(version = versions.most_recent, host_with_port = Gemcutter::HOST)
+  def payload(version = versions.most_recent, protocol = Gemcutter::PROTOCOL,
+              host_with_port = Gemcutter::HOST)
     {
       'name'              => name,
       'downloads'         => downloads,
@@ -159,8 +160,8 @@ class Rubygem < ActiveRecord::Base
       'licenses'          => version.licenses,
       'metadata'          => version.metadata,
       'sha'               => version.sha256_hex,
-      'project_uri'       => "http://#{host_with_port}/gems/#{name}",
-      'gem_uri'           => "http://#{host_with_port}/gems/#{version.full_name}.gem",
+      'project_uri'       => "#{protocol}://#{host_with_port}/gems/#{name}",
+      'gem_uri'           => "#{protocol}://#{host_with_port}/gems/#{version.full_name}.gem",
       'homepage_uri'      => linkset.try(:home),
       'wiki_uri'          => linkset.try(:wiki),
       'documentation_uri' => linkset.try(:docs).presence || version.documentation_path,
