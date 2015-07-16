@@ -95,7 +95,7 @@ Style/DoubleNegation:
 Style/GuardClause:
   Enabled: false
 
-# Offense count: 4
+# Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: MaxLineLength.
 Style/IfUnlessModifier:

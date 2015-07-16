@@ -29,9 +29,7 @@ class Hostess < Rack::Static
   end
 
   def gem_download_path(path)
-    if path =~ %r{/gems/(.*)\.gem}
-      Regexp.last_match(1)
-    end
+    Regexp.last_match(1) if path =~ %r{/gems/(.*)\.gem}
   end
 
   def call(env)

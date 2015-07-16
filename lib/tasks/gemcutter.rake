@@ -19,9 +19,7 @@ namespace :gemcutter do
         cutter = Pusher.new(nil, File.open(path))
 
         cutter.process
-        unless cutter.code == 200
-          puts cutter.message
-        end
+        puts cutter.message unless cutter.code == 200
       end
     end
   end

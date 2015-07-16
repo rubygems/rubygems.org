@@ -98,9 +98,7 @@ class Download
       downloads[date] = count
     end
 
-    if stop == Time.zone.today
-      downloads["#{Time.zone.today}"] = today(version)
-    end
+    downloads["#{Time.zone.today}"] = today(version) if stop == Time.zone.today
 
     downloads
   end
