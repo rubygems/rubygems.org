@@ -86,8 +86,8 @@ class PusherTest < ActiveSupport::TestCase
         @cutter = Pusher.new(@user, @gem)
         @cutter.pull_spec
         assert_nil @cutter.spec
-        assert_includes @cutter.message, %{RubyGems.org cannot process this gem}
-        assert_includes @cutter.message, %{Tried to load unspecified class: Symbol}
+        assert_includes @cutter.message, %(RubyGems.org cannot process this gem)
+        assert_includes @cutter.message, %(Tried to load unspecified class: Symbol)
         assert_equal @cutter.code, 422
       end
     end

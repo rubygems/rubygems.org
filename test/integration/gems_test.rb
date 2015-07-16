@@ -48,12 +48,12 @@ class GemsTest < ActionDispatch::IntegrationTest
   test "canonical url for gem points to most recent version" do
     create(:version, rubygem: @rubygem, number: "1.1.1")
     get rubygem_path(@rubygem)
-    assert page.has_css? %{link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.1.1"]}, visible: false
+    assert page.has_css? %(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.1.1"]), visible: false
   end
 
   test "canonical url for an old version" do
     create(:version, rubygem: @rubygem, number: "1.1.1")
     get rubygem_version_path(@rubygem, "1.0.0")
-    assert page.has_css? %{link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.0.0"]}, visible: false
+    assert page.has_css? %(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.0.0"]), visible: false
   end
 end

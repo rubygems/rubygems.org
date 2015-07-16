@@ -130,12 +130,6 @@ Style/MethodCallParentheses:
 Style/MultilineBlockChain:
   Enabled: false
 
-# Offense count: 35
-# Cop supports --auto-correct.
-# Configuration parameters: PreferredDelimiters.
-Style/PercentLiteralDelimiters:
-  Enabled: false
-
 # Offense count: 2005
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.

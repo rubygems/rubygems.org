@@ -11,7 +11,7 @@ class VersionTest < ActiveSupport::TestCase
 
     should "only have relevant API fields" do
       json = @version.as_json
-      assert_equal %w[number built_at summary description authors platform ruby_version prerelease downloads_count licenses requirements sha metadata].map(&:to_s).sort, json.keys.sort
+      assert_equal %w(number built_at summary description authors platform ruby_version prerelease downloads_count licenses requirements sha metadata).map(&:to_s).sort, json.keys.sort
       assert_equal @version.authors, json["authors"]
       assert_equal @version.built_at, json["built_at"]
       assert_equal @version.description, json["description"]
@@ -34,7 +34,7 @@ class VersionTest < ActiveSupport::TestCase
 
     should "only have relevant API fields" do
       xml = Nokogiri.parse(@version.to_xml)
-      assert_equal %w[number built-at summary description authors platform ruby-version prerelease downloads-count licenses requirements sha metadata].map(&:to_s).sort, xml.root.children.map(&:name).reject { |t| t == "text" }.sort
+      assert_equal %w(number built-at summary description authors platform ruby-version prerelease downloads-count licenses requirements sha metadata).map(&:to_s).sort, xml.root.children.map(&:name).reject { |t| t == "text" }.sort
       assert_equal @version.authors, xml.at_css("authors").content
       assert_equal @version.built_at.to_i, xml.at_css("built-at").content.to_time.to_i
       assert_equal @version.description, xml.at_css("description").content
@@ -239,7 +239,7 @@ class VersionTest < ActiveSupport::TestCase
       end
     end
 
-    %w[x86_64-linux java mswin x86-mswin32-60].each do |platform|
+    %w(x86_64-linux java mswin x86-mswin32-60).each do |platform|
       should "be able to find with platform of #{platform}" do
         version = create(:version, platform: platform)
         slug = "#{version.number}-#{platform}"
@@ -292,7 +292,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "give version with twiddle-wakka for #to_bundler" do
-      assert_equal %{gem '#{@version.rubygem.name}', '~> #{@version}'}, @version.to_bundler
+      assert_equal %(gem '#{@version.rubygem.name}', '~> #{@version}'), @version.to_bundler
     end
 
     should "give title and platform for #to_title" do
@@ -405,7 +405,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "be in the proper order" do
-      assert_equal %w[0.7 0.5 0.3 0.2], @gem.versions.by_position.map(&:number)
+      assert_equal %w(0.7 0.5 0.3 0.2), @gem.versions.by_position.map(&:number)
     end
 
     should "know its latest version" do
@@ -434,14 +434,14 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with a few versions" do
     setup do
-      @thin = create(:version, authors: %w[thin], built_at: 1.year.ago)
-      @rake = create(:version, authors: %w[rake], built_at: 1.month.ago)
-      @json = create(:version, authors: %w[json], built_at: 1.week.ago)
-      @thor = create(:version, authors: %w[thor], built_at: 2.days.ago)
-      @rack = create(:version, authors: %w[rack], built_at: 1.day.ago)
-      @haml = create(:version, authors: %w[haml], built_at: 1.hour.ago)
-      @dust = create(:version, authors: %w[dust], built_at: 1.day.from_now)
-      @fake = create(:version, authors: %w[fake], indexed: false, built_at: 1.minute.ago)
+      @thin = create(:version, authors: %w(thin), built_at: 1.year.ago)
+      @rake = create(:version, authors: %w(rake), built_at: 1.month.ago)
+      @json = create(:version, authors: %w(json), built_at: 1.week.ago)
+      @thor = create(:version, authors: %w(thor), built_at: 2.days.ago)
+      @rack = create(:version, authors: %w(rack), built_at: 1.day.ago)
+      @haml = create(:version, authors: %w(haml), built_at: 1.hour.ago)
+      @dust = create(:version, authors: %w(dust), built_at: 1.day.from_now)
+      @fake = create(:version, authors: %w(fake), indexed: false, built_at: 1.minute.ago)
     end
 
     should "get the latest versions up to today" do

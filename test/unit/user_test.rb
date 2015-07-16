@@ -82,7 +82,7 @@ class UserTest < ActiveSupport::TestCase
     should "have email and handle on XML" do
       xml = Nokogiri.parse(@user.to_xml)
       assert_equal "user", xml.root.name
-      assert_equal %w[id handle email], xml.root.children.select(&:element?).map(&:name)
+      assert_equal %w(id handle email), xml.root.children.select(&:element?).map(&:name)
       assert_equal @user.email, xml.at_css("email").content
     end
 

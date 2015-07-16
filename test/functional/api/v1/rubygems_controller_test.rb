@@ -241,7 +241,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
-    %w[json xml yaml].each do |format|
+    %w(json xml yaml).each do |format|
       context "on GET to show for an unknown gem with #{format} format" do
         setup do
           get :show, id: "rials", format: format

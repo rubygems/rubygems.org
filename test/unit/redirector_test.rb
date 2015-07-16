@@ -38,13 +38,13 @@ class RedirectorTest < ActiveSupport::TestCase
     assert last_response.ok?
   end
 
-  %w[/book
+  %w(/book
      /book/42
      /chapter/58
      /read/book/2
      /export
      /shelf/9000
-     /syndicate.xml].each do |uri|
+     /syndicate.xml).each do |uri|
     should "redirect to docs.rubygems.org when #{uri} is hit" do
       get uri, {}, { "HTTP_HOST" => Gemcutter::HOST }
 
