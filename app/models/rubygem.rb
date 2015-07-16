@@ -20,10 +20,10 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.with_one_version
-    select('rubygems.*').
-      joins(:versions).
-      group(column_names.map { |name| "rubygems.#{name}" }.join(', ')).
-      having('COUNT(versions.id) = 1')
+    select('rubygems.*')
+      .joins(:versions)
+      .group(column_names.map { |name| "rubygems.#{name}" }.join(', '))
+      .having('COUNT(versions.id) = 1')
   end
 
   def self.name_is(name)
@@ -40,10 +40,10 @@ class Rubygem < ActiveRecord::Base
          upper(translate(name, '#{SPECIAL_CHARACTERS}', '#{' ' * SPECIAL_CHARACTERS.length}')) like upper(:query))
     SQL
 
-    where(conditions, { query: "%#{query.strip}%" }).
-      includes(:versions).
-      references(:versions).
-      by_downloads
+    where(conditions, { query: "%#{query.strip}%" })
+      .includes(:versions)
+      .references(:versions)
+      .by_downloads
   end
 
   def self.name_starts_with(letter)

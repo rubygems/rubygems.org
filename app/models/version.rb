@@ -20,8 +20,8 @@ class Version < ActiveRecord::Base
   attribute :authors, Type::Value.new
 
   def self.reverse_dependencies(name)
-    joins({ dependencies: :rubygem }).
-      where(rubygems: { name: name })
+    joins({ dependencies: :rubygem })
+      .where(rubygems: { name: name })
   end
 
   def self.owned_by(user)
@@ -29,8 +29,8 @@ class Version < ActiveRecord::Base
   end
 
   def self.subscribed_to_by(user)
-    where(rubygem_id: user.subscribed_gem_ids).
-      by_created_at
+    where(rubygem_id: user.subscribed_gem_ids)
+      .by_created_at
   end
 
   def self.with_deps
@@ -90,18 +90,18 @@ class Version < ActiveRecord::Base
   end
 
   def self.just_updated(limit = 5)
-    where("versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)").
-      joins(:rubygem).
-      indexed.
-      by_created_at.
-      limit(limit)
+    where("versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)")
+      .joins(:rubygem)
+      .indexed
+      .by_created_at
+      .limit(limit)
   end
 
   def self.published(limit)
-    where("built_at <= ?", DateTime.now.utc).
-      indexed.
-      by_built_at.
-      limit(limit)
+    where("built_at <= ?", DateTime.now.utc)
+      .indexed
+      .by_built_at
+      .limit(limit)
   end
 
   def self.find_from_slug!(rubygem_id, slug)
