@@ -55,10 +55,6 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Enabled: false
 
-# Offense count: 1
-Metrics/PerceivedComplexity:
-  Enabled: false
-
 # Offense count: 10
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Rails/Date:
