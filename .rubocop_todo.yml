@@ -102,11 +102,6 @@ Style/CaseEquality:
 Style/ClassAndModuleChildren:
   Enabled: false
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/ColonMethodCall:
-  Enabled: false
-
 # Offense count: 186
 Style/Documentation:
   Enabled: false
