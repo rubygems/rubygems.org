@@ -42,12 +42,8 @@ class StatsControllerTest < ActionController::TestCase
   context "on GET to index with multiple gems" do
     setup do
       rg1 = create(:rubygem, downloads: 10, number: "1")
-      def rg1.downloads; 10; end
       rg2 = create(:rubygem, downloads: 20, number: "1")
-      def rg2.downloads; 50; end
       rg3 = create(:rubygem, downloads: 30, number: "1")
-      def rg3.downloads; 30; end
-
       Rubygem.stubs(:downloaded).returns [rg1, rg2, rg3]
 
       get :index
