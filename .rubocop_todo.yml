@@ -171,11 +171,6 @@ Style/ParallelAssignment:
 Style/PercentLiteralDelimiters:
   Enabled: false
 
-# Offense count: 23
-# Cop supports --auto-correct.
-Style/RedundantSelf:
-  Enabled: false
-
 # Offense count: 2005
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.

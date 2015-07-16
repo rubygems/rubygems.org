@@ -170,11 +170,11 @@ class Version < ActiveRecord::Base
   end
 
   def <=>(other)
-    self_version  = self.to_gem_version
+    self_version  = to_gem_version
     other_version = other.to_gem_version
 
     if self_version == other_version
-      self.platform_as_number <=> other.platform_as_number
+      platform_as_number <=> other.platform_as_number
     else
       self_version <=> other_version
     end
@@ -247,7 +247,7 @@ class Version < ActiveRecord::Base
   end
 
   def authors_array
-    self.authors.split(',').flatten
+    authors.split(',').flatten
   end
 
   def sha256_hex
@@ -303,12 +303,12 @@ class Version < ActiveRecord::Base
   end
 
   def join_authors
-    self.authors = self.authors.join(', ') if self.authors.is_a?(Array)
+    self.authors = authors.join(', ') if authors.is_a?(Array)
   end
 
   def full_nameify!
     self.full_name = "#{rubygem.name}-#{number}"
-    self.full_name << "-#{platform}" if platformed?
+    full_name << "-#{platform}" if platformed?
 
     update_attributes(full_name: full_name)
 

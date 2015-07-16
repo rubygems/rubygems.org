@@ -234,15 +234,15 @@ class Rubygem < ActiveRecord::Base
   end
 
   def reorder_versions
-    numbers = self.reload.versions.sort.reverse.map(&:number).uniq
+    numbers = reload.versions.sort.reverse.map(&:number).uniq
 
-    self.versions.each do |version|
+    versions.each do |version|
       Version.find(version.id).update_column(:position, numbers.index(version.number))
     end
 
-    self.versions.update_all(latest: false)
+    versions.update_all(latest: false)
 
-    self.versions.release.indexed.inject(Hash.new { |h, k| h[k] = [] }) do |platforms, version|
+    versions.release.indexed.inject(Hash.new { |h, k| h[k] = [] }) do |platforms, version|
       platforms[version.platform] << version
       platforms
     end.each_value do |platforms|
@@ -256,11 +256,11 @@ class Rubygem < ActiveRecord::Base
   end
 
   def find_version_from_spec(spec)
-    self.versions.find_by_number_and_platform(spec.version.to_s, spec.original_platform.to_s)
+    versions.find_by_number_and_platform(spec.version.to_s, spec.original_platform.to_s)
   end
 
   def find_or_initialize_version_from_spec(spec)
-    version = self.versions.find_or_initialize_by(number: spec.version.to_s, platform: spec.original_platform.to_s)
+    version = versions.find_or_initialize_by(number: spec.version.to_s, platform: spec.original_platform.to_s)
     version.rubygem = self
     version
   end

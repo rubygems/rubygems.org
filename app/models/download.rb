@@ -71,7 +71,7 @@ class Download
 
         downloads["#{version.id}-#{date}"] = count
       end
-      downloads["#{version.id}-#{Time.zone.today}"] = self.today(version)
+      downloads["#{version.id}-#{Time.zone.today}"] = today(version)
     end
 
     downloads
@@ -99,7 +99,7 @@ class Download
     end
 
     if stop == Time.zone.today
-      downloads["#{Time.zone.today}"] = self.today(version)
+      downloads["#{Time.zone.today}"] = today(version)
     end
 
     downloads
