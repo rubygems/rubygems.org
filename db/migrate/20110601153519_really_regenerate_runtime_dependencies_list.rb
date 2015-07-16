@@ -19,7 +19,7 @@ class ReallyRegenerateRuntimeDependenciesList < ActiveRecord::Migration
       inner join rubygems on rubygems.id = dependencies.rubygem_id
       where scope = 'development'
     SQL
-    connection.select_all(dependencies).each_with_index do |row, _index|
+    connection.select_all(dependencies).each_with_index do |row, _|
       yield row
     end
   end

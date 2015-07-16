@@ -4,7 +4,7 @@ class VersionsControllerTest < ActionController::TestCase
   context 'GET to index' do
     setup do
       @rubygem = create(:rubygem)
-      @versions = (1..5).map do |_version|
+      @versions = (1..5).map do
         create(:version, rubygem: @rubygem)
       end
 

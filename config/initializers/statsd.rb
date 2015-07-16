@@ -9,7 +9,7 @@ ActiveSupport::Notifications.subscribe(/process_action.action_controller/) do |*
   ActiveSupport::Notifications.instrument :performance, event.payload.merge(measurement: "status.#{status}")
 end
 
-ActiveSupport::Notifications.subscribe(/performance/) do |name, _start, _finish, _id, payload|
+ActiveSupport::Notifications.subscribe(/performance/) do |name, _, _, _, payload|
   method = payload[:statsd_method] || :increment
   measurement = payload[:measurement]
   value = payload[:value]
