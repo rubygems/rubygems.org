@@ -41,10 +41,6 @@ Metrics/AbcSize:
 Metrics/ClassLength:
   Enabled: false
 
-# Offense count: 1
-Metrics/CyclomaticComplexity:
-  Enabled: false
-
 # Offense count: 496
 # Configuration parameters: AllowURI, URISchemes.
 Metrics/LineLength:
