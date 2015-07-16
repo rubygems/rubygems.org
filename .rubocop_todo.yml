@@ -160,11 +160,6 @@ Style/MethodCallParentheses:
 Style/MultilineBlockChain:
   Enabled: false
 
-# Offense count: 3
-# Cop supports --auto-correct.
-Style/ParallelAssignment:
-  Enabled: false
-
 # Offense count: 35
 # Cop supports --auto-correct.
 # Configuration parameters: PreferredDelimiters.
