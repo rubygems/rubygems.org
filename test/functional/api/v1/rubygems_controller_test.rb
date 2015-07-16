@@ -129,7 +129,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
       should "only return my gems" do
         gem_names = yield(@response.body).map { |rubygem| rubygem['name'] }.sort
-        assert_equal ["AnotherGem", "SomeGem"], gem_names
+        assert_equal %w(AnotherGem SomeGem), gem_names
       end
     end
   end
