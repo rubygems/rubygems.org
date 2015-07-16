@@ -121,10 +121,6 @@ Style/DotPosition:
 Style/DoubleNegation:
   Enabled: false
 
-# Offense count: 1
-Style/EachWithObject:
-  Enabled: false
-
 # Offense count: 2
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/FormatString:
