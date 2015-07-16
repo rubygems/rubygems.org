@@ -30,7 +30,7 @@ class Hostess < Rack::Static
 
   def gem_download_path(path)
     if path =~ %r{/gems/(.*)\.gem}
-      $1
+      Regexp.last_match(1)
     end
   end
 
@@ -38,7 +38,7 @@ class Hostess < Rack::Static
     path = env['PATH_INFO']
 
     if path =~ %r{/downloads/(.*)\.gem}
-      return [302, { 'Location' => "/gems/#{$1}.gem" }, []]
+      return [302, { 'Location' => "/gems/#{Regexp.last_match(1)}.gem" }, []]
     end
 
     if (full_name = gem_download_path(path)) && name = Version.rubygem_name_for(full_name)

@@ -177,11 +177,6 @@ Style/ParallelAssignment:
 Style/PercentLiteralDelimiters:
   Enabled: false
 
-# Offense count: 4
-# Cop supports --auto-correct.
-Style/PerlBackrefs:
-  Enabled: false
-
 # Offense count: 23
 # Cop supports --auto-correct.
 Style/RedundantSelf:
