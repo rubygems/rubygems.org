@@ -90,11 +90,6 @@ Style/Documentation:
 Style/DoubleNegation:
   Enabled: false
 
-# Offense count: 2
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/FormatString:
-  Enabled: false
-
 # Offense count: 13
 # Configuration parameters: MinBodyLength.
 Style/GuardClause:
