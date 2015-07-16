@@ -4,10 +4,10 @@ class Version < ActiveRecord::Base
   belongs_to :rubygem, touch: true
   has_many :dependencies, -> { order('rubygems.name ASC').includes(:rubygem) }, dependent: :destroy
 
-  before_save      :update_prerelease
+  before_save :update_prerelease
   after_validation :join_authors
-  after_create     :full_nameify!
-  after_save       :reorder_versions
+  after_create :full_nameify!
+  after_save :reorder_versions
 
   serialize :licenses
   serialize :requirements
@@ -20,8 +20,8 @@ class Version < ActiveRecord::Base
   attribute :authors, Type::Value.new
 
   def self.reverse_dependencies(name)
-    joins({ dependencies: :rubygem }).
-      where(rubygems: { name: name })
+    joins(dependencies: :rubygem)
+      .where(rubygems: { name: name })
   end
 
   def self.owned_by(user)
@@ -29,8 +29,8 @@ class Version < ActiveRecord::Base
   end
 
   def self.subscribed_to_by(user)
-    where(rubygem_id: user.subscribed_gem_ids).
-      by_created_at
+    where(rubygem_id: user.subscribed_gem_ids)
+      .by_created_at
   end
 
   def self.with_deps
@@ -90,18 +90,18 @@ class Version < ActiveRecord::Base
   end
 
   def self.just_updated(limit = 5)
-    where("versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)").
-      joins(:rubygem).
-      indexed.
-      by_created_at.
-      limit(limit)
+    where("versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)")
+      .joins(:rubygem)
+      .indexed
+      .by_created_at
+      .limit(limit)
   end
 
   def self.published(limit)
-    where("built_at <= ?", DateTime.now.utc).
-      indexed.
-      by_built_at.
-      limit(limit)
+    where("built_at <= ?", DateTime.now.utc)
+      .indexed
+      .by_built_at
+      .limit(limit)
   end
 
   def self.find_from_slug!(rubygem_id, slug)
@@ -170,11 +170,11 @@ class Version < ActiveRecord::Base
   end
 
   def <=>(other)
-    self_version  = self.to_gem_version
+    self_version  = to_gem_version
     other_version = other.to_gem_version
 
     if self_version == other_version
-      self.platform_as_number <=> other.platform_as_number
+      platform_as_number <=> other.platform_as_number
     else
       self_version <=> other_version
     end
@@ -227,7 +227,7 @@ class Version < ActiveRecord::Base
   end
 
   def to_bundler
-    %{gem '#{rubygem.name}', '~> #{number}'}
+    %(gem '#{rubygem.name}', '~> #{number}')
   end
 
   def to_gem_version
@@ -247,7 +247,7 @@ class Version < ActiveRecord::Base
   end
 
   def authors_array
-    self.authors.split(',').flatten
+    authors.split(',').flatten
   end
 
   def sha256_hex
@@ -303,12 +303,12 @@ class Version < ActiveRecord::Base
   end
 
   def join_authors
-    self.authors = self.authors.join(', ') if self.authors.is_a?(Array)
+    self.authors = authors.join(', ') if authors.is_a?(Array)
   end
 
   def full_nameify!
     self.full_name = "#{rubygem.name}-#{number}"
-    self.full_name << "-#{platform}" if platformed?
+    full_name << "-#{platform}" if platformed?
 
     update_attributes(full_name: full_name)
 

@@ -3,7 +3,7 @@ require 'test_helper'
 class HomeControllerTest < ActionController::TestCase
   context "on GET to index" do
     setup do
-      Download.stubs(:count).returns 1_1000_000
+      Download.stubs(:count).returns 11_000_000
       get :index
     end
 

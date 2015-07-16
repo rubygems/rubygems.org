@@ -25,16 +25,16 @@ module Gem
       runtime
     )
 
-    def self.from_yaml input
+    def self.from_yaml(input)
       input = normalize_yaml_input input
       spec = Psych.safe_load(input, WHITELISTED_CLASSES, WHITELISTED_SYMBOLS, true)
 
-      if spec && spec.class == FalseClass then
-        raise Gem::EndOfYAMLException
+      if spec && spec.class == FalseClass
+        fail Gem::EndOfYAMLException
       end
 
-      unless Gem::Specification === spec then
-        raise Gem::Exception, "YAML data doesn't evaluate to gem specification"
+      unless Gem::Specification === spec
+        fail Gem::Exception, "YAML data doesn't evaluate to gem specification"
       end
 
       spec.specification_version ||= NONEXISTENT_SPECIFICATION_VERSION

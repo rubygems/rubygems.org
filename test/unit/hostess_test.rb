@@ -4,14 +4,14 @@ class HostessTest < ActiveSupport::TestCase
   include Rack::Test::Methods
 
   def app
-    Hostess.new(proc { [200, {}, ''] })
+    Hostess.new(-> { [200, {}, ''] })
   end
 
   def touch(path)
     RubygemFs.instance.store(path, '')
   end
 
-  %w[/prerelease_specs.4.8.gz
+  %w(/prerelease_specs.4.8.gz
      /latest_specs.4.8.gz
      /specs.4.8.gz
      /Marshal.4.8.Z
@@ -27,7 +27,7 @@ class HostessTest < ActiveSupport::TestCase
      /yaml
      /yaml.Z
      /yaml.z
-  ].each do |index|
+  ).each do |index|
     should "serve up #{index} locally" do
       touch index
       get index

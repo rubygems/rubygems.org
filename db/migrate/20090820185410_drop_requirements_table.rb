@@ -1,6 +1,6 @@
 class DropRequirementsTable < ActiveRecord::Migration
   def self.up
-    add_column    :dependencies, :version_id, :integer
+    add_column :dependencies, :version_id, :integer
     rename_column :dependencies, :name, :requirements
 
     execute %{

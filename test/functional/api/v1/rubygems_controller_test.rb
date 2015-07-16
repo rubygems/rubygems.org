@@ -82,7 +82,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "On GET to show for a gem that doesn't exist" do
       setup do
         @name = generate(:name)
-        assert ! Rubygem.exists?(name: @name)
+        assert !Rubygem.exists?(name: @name)
         get :show, id: @name, format: "json"
       end
 
@@ -129,7 +129,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
       should "only return my gems" do
         gem_names = yield(@response.body).map { |rubygem| rubygem['name'] }.sort
-        assert_equal ["AnotherGem", "SomeGem"], gem_names
+        assert_equal %w(AnotherGem SomeGem), gem_names
       end
     end
   end
@@ -241,7 +241,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
-    %w[json xml yaml].each do |format|
+    %w(json xml yaml).each do |format|
       context "on GET to show for an unknown gem with #{format} format" do
         setup do
           get :show, id: "rials", format: format
@@ -286,7 +286,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       assert gems.include?(@gem_one.name)
       assert gems.include?(@gem_two.name)
       assert gems.include?(@gem_three.name)
-      assert ! gems.include?(@gem_four.name)
+      assert !gems.include?(@gem_four.name)
     end
   end
 end

@@ -113,7 +113,7 @@ class RubygemsHelperTest < ActionView::TestCase
     setup do
       fake_request = stub
       fake_request.stubs(:ssl?).returns false
-      self.stubs(:request).returns fake_request
+      stubs(:request).returns fake_request
     end
 
     should "create links to owners gem overviews" do

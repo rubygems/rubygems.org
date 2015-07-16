@@ -33,7 +33,7 @@ class DeletionTest < ActiveSupport::TestCase
 
   test "not appear in the version list" do
     delete_gem
-    assert ! Redis.current.exists(Rubygem.versions_key(@version.rubygem.name)), "Version still in list!"
+    assert !Redis.current.exists(Rubygem.versions_key(@version.rubygem.name)), "Version still in list!"
   end
 
   test "delete the .gem file" do

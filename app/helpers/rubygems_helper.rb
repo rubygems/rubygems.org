@@ -33,12 +33,13 @@ module RubygemsHelper
 
   def subscribe_link(rubygem)
     if signed_in?
-      link_to 'Subscribe', rubygem_subscription_path(rubygem),
-        remote: true,
-        method: :post,
-        id: 'subscribe',
-        class: ['toggler', 'gem__link', 't-list__item'],
-        style: rubygem.subscribers.find_by_id(current_user.try(:id)) ? 'display:none' : 'display:inline-block'
+      link_to 'Subscribe',
+              rubygem_subscription_path(rubygem),
+              remote: true,
+              method: :post,
+              id: 'subscribe',
+              class: ['toggler', 'gem__link', 't-list__item'],
+              style: rubygem.subscribers.find_by_id(current_user.try(:id)) ? 'display:none' : 'display:inline-block'
     else
       link_to 'Subscribe', sign_in_path, id: :subscribe, class: [:toggler, 'gem__link', 't-list__item']
     end
@@ -46,12 +47,13 @@ module RubygemsHelper
 
   def unsubscribe_link(rubygem)
     if signed_in?
-      link_to 'Unsubscribe', rubygem_subscription_path(rubygem),
-        remote: true,
-        method: :delete,
-        id: 'unsubscribe',
-        class: [:toggler, 'gem__link', 't-list__item'],
-        style: rubygem.subscribers.find_by_id(current_user.try(:id)) ? 'display:inline-block' : 'display:none'
+      link_to 'Unsubscribe',
+              rubygem_subscription_path(rubygem),
+              remote: true,
+              method: :delete,
+              id: 'unsubscribe',
+              class: [:toggler, 'gem__link', 't-list__item'],
+              style: rubygem.subscribers.find_by_id(current_user.try(:id)) ? 'display:inline-block' : 'display:none'
     end
   end
 
@@ -79,8 +81,10 @@ module RubygemsHelper
 
   def links_to_owners(rubygem)
     rubygem.owners.sort_by(&:id).map do |owner|
-      link_to gravatar(48, "gravatar-#{owner.id}", owner), profile_path(owner.display_id),
-        alt: owner.display_handle, title: owner.display_handle
+      link_to gravatar(48, "gravatar-#{owner.id}", owner),
+              profile_path(owner.display_id),
+              alt: owner.display_handle,
+              title: owner.display_handle
     end.join.html_safe
   end
 

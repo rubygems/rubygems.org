@@ -7,7 +7,7 @@ module SimpleSSLRequirement
       private
 
       def require_ssl
-        if !request.ssl?
+        unless request.ssl?
           redirect_to "https://#{request.host}#{request.fullpath}"
           flash.keep
         end

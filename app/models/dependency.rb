@@ -5,7 +5,7 @@ class Dependency < ActiveRecord::Base
   before_validation :use_gem_dependency,
                     :use_existing_rubygem,
                     :parse_gem_dependency
-  after_create      :push_on_to_list
+  after_create :push_on_to_list
 
   validates :requirements, presence: true
   validates :scope,        inclusion: { in: %w(development runtime) }
@@ -85,7 +85,9 @@ class Dependency < ActiveRecord::Base
   end
 
   def encode_with(coder)
-    coder.tag, coder.implicit, coder.map = nil, true, payload
+    coder.tag = nil
+    coder.implicit = true
+    coder.map = payload
   end
 
   def to_s
@@ -105,7 +107,7 @@ class Dependency < ActiveRecord::Base
   private
 
   def use_gem_dependency
-    return if self.rubygem
+    return if rubygem
 
     if gem_dependency.class != Gem::Dependency
       errors.add :rubygem, "Please use Gem::Dependency to specify dependencies."
@@ -121,7 +123,7 @@ class Dependency < ActiveRecord::Base
   end
 
   def use_existing_rubygem
-    return if self.rubygem
+    return if rubygem
 
     unless self.rubygem = Rubygem.find_by_name(gem_dependency.name)
       self.unresolved_name = gem_dependency.name
@@ -131,7 +133,7 @@ class Dependency < ActiveRecord::Base
   end
 
   def parse_gem_dependency
-    return if self.requirements
+    return if requirements
 
     reqs = gem_dependency.requirements_list.join(', ')
     self.requirements = clean_requirements(reqs)
@@ -140,6 +142,6 @@ class Dependency < ActiveRecord::Base
   end
 
   def push_on_to_list
-    Redis.current.lpush(Dependency.runtime_key(self.version.full_name), self.to_s) if self.scope == 'runtime'
+    Redis.current.lpush(Dependency.runtime_key(version.full_name), to_s) if scope == 'runtime'
   end
 end

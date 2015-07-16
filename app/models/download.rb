@@ -71,7 +71,7 @@ class Download
 
         downloads["#{version.id}-#{date}"] = count
       end
-      downloads["#{version.id}-#{Time.zone.today}"] = self.today(version)
+      downloads["#{version.id}-#{Time.zone.today}"] = today(version)
     end
 
     downloads
@@ -98,9 +98,7 @@ class Download
       downloads[date] = count
     end
 
-    if stop == Time.zone.today
-      downloads["#{Time.zone.today}"] = self.today(version)
-    end
+    downloads["#{Time.zone.today}"] = today(version) if stop == Time.zone.today
 
     downloads
   end
@@ -180,7 +178,7 @@ class Download
     when Rubygem
       rubygem_key(what.name)
     else
-      raise TypeError, "Unknown type for key - #{what.class}"
+      fail TypeError, "Unknown type for key - #{what.class}"
     end
   end
 
@@ -191,7 +189,7 @@ class Download
     when Rubygem
       rubygem_history_key(what.name)
     else
-      raise TypeError, "Unknown type for history_key - #{what.class}"
+      fail TypeError, "Unknown type for history_key - #{what.class}"
     end
   end
 

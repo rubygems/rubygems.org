@@ -249,8 +249,8 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       assert ret_versions.include?(@version_one_latest.full_name)
       assert ret_versions.include?(@version_two_earlier.full_name)
       assert ret_versions.include?(@version_three.full_name)
-      assert ! ret_versions.include?(@version_one_earlier.full_name)
-      assert ! ret_versions.include?(@version_two_latest.full_name)
+      assert !ret_versions.include?(@version_one_earlier.full_name)
+      assert !ret_versions.include?(@version_two_latest.full_name)
     end
   end
 end

@@ -77,13 +77,13 @@ Rails.application.routes.draw do
     put 'api_key/reset'
 
     post 'gems'
-    get  'gems/:id.json'
+    get 'gems/:id.json'
 
     scope path: 'gems/:rubygem_id' do
-      put  'migrate'
+      put 'migrate'
       post 'migrate'
-      get    'owners(.:format)'
-      post   'owners(.:format)'
+      get 'owners(.:format)'
+      post 'owners(.:format)'
       delete 'owners(.:format)'
     end
   end
@@ -91,14 +91,14 @@ Rails.application.routes.draw do
   ################################################################################
   # UI
   scope constraints: { format: :html }, defaults: { format: 'html' } do
-    resource  :search,    only: :show
-    resource  :dashboard, only: :show, constraints: { format: /html|atom/ }
+    resource :search,    only: :show
+    resource :dashboard, only: :show, constraints: { format: /html|atom/ }
     resources :profiles,  only: :show
-    resource  :profile,   only: [:edit, :update]
+    resource :profile,   only: [:edit, :update]
     resources :stats,     only: :index
 
     resources :rubygems, only: [:index, :show, :edit, :update], path: 'gems', constraints: { id: Patterns::ROUTE_PATTERN, format: /html|atom/ } do
-      resource  :subscription, only: [:create, :destroy], constraints: { format: :js }, defaults: { format: :js }
+      resource :subscription, only: [:create, :destroy], constraints: { format: :js }, defaults: { format: :js }
       resources :versions, only: [:show, :index]
     end
   end

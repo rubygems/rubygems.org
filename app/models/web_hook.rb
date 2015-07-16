@@ -16,7 +16,7 @@ class WebHook < ActiveRecord::Base
   end
 
   def fire(host_with_port, deploy_gem, version, delayed = true)
-    job = Notifier.new(self.url, host_with_port, deploy_gem, version, self.user.api_key)
+    job = Notifier.new(url, host_with_port, deploy_gem, version, user.api_key)
     if delayed
       Delayed::Job.enqueue job, priority: PRIORITIES[:web_hook]
     else
@@ -72,7 +72,9 @@ class WebHook < ActiveRecord::Base
   end
 
   def encode_with(coder)
-    coder.tag, coder.implicit, coder.map = nil, true, payload
+    coder.tag = nil
+    coder.implicit = true
+    coder.map = payload
   end
 
   private

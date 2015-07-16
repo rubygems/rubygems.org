@@ -19,9 +19,7 @@ namespace :gemcutter do
         cutter = Pusher.new(nil, File.open(path))
 
         cutter.process
-        unless cutter.code == 200
-          puts cutter.message
-        end
+        puts cutter.message unless cutter.code == 200
       end
     end
   end
@@ -39,7 +37,7 @@ namespace :gemcutter do
       without_sha256.find_each do |version|
         version.recalculate_sha256!
         i += 1
-        print "\r%.2f%% (#{i}/#{total}) complete" % (i.to_f / total * 100.0)
+        print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
       end
       puts
       puts "Done."
@@ -98,7 +96,7 @@ namespace :gemcutter do
       without_metadata.find_each do |version|
         version.recalculate_metadata!
         i += 1
-        print "\r%.2f%% (#{i}/#{total}) complete" % (i.to_f / total * 100.0)
+        print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
       end
       puts
       puts "Done."

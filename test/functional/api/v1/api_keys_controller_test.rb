@@ -23,7 +23,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
   end
 
   def authorize_with(str)
-    @request.env["HTTP_AUTHORIZATION"] = "Basic " + Base64::encode64(str)
+    @request.env["HTTP_AUTHORIZATION"] = "Basic " + Base64.encode64(str)
   end
 
   context "on GET to show with bad credentials" do

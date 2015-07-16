@@ -86,8 +86,8 @@ class PusherTest < ActiveSupport::TestCase
         @cutter = Pusher.new(@user, @gem)
         @cutter.pull_spec
         assert_nil @cutter.spec
-        assert_includes @cutter.message, %{RubyGems.org cannot process this gem}
-        assert_includes @cutter.message, %{Tried to load unspecified class: Symbol}
+        assert_includes @cutter.message, %(RubyGems.org cannot process this gem)
+        assert_includes @cutter.message, %(Tried to load unspecified class: Symbol)
         assert_equal @cutter.code, 422
       end
     end
@@ -156,8 +156,8 @@ class PusherTest < ActiveSupport::TestCase
       end
 
       should "set sha256" do
-        expectedSha = Digest::SHA2.base64digest(@cutter.body.string)
-        assert_equal expectedSha, @cutter.version.sha256
+        expected_sha = Digest::SHA2.base64digest(@cutter.body.string)
+        assert_equal expected_sha, @cutter.version.sha256
       end
     end
 

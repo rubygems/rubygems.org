@@ -62,8 +62,8 @@ class RubygemTest < ActiveSupport::TestCase
 
       @rubygem.reorder_versions
 
-      assert ! pre.reload.latest
-      assert ! old.reload.latest
+      assert !pre.reload.latest
+      assert !old.reload.latest
       assert ming.reload.latest
       assert win.reload.latest
       assert ruby.reload.latest
@@ -189,7 +189,7 @@ class RubygemTest < ActiveSupport::TestCase
       assert gem_list.include?(@gem_one)
       assert gem_list.include?(@gem_two)
       assert gem_list.include?(@gem_three)
-      assert ! gem_list.include?(@gem_four)
+      assert !gem_list.include?(@gem_four)
     end
   end
 
@@ -303,7 +303,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "only fetch the subscribed users with #subscribers" do
-        assert_contains         @rubygem.subscribers, @subscribed_user
+        assert_contains @rubygem.subscribers, @subscribed_user
         assert_does_not_contain @rubygem.subscribers, @unsubscribed_user
       end
     end
@@ -424,13 +424,13 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "return only gems with one version" do
-      assert ! Rubygem.with_one_version.include?(@rubygem_without_version)
+      assert !Rubygem.with_one_version.include?(@rubygem_without_version)
       assert Rubygem.with_one_version.include?(@rubygem_with_version)
-      assert ! Rubygem.with_one_version.include?(@rubygem_with_versions)
+      assert !Rubygem.with_one_version.include?(@rubygem_with_versions)
     end
 
     should "return only gems with versions for #with_versions" do
-      assert ! Rubygem.with_versions.include?(@rubygem_without_version)
+      assert !Rubygem.with_versions.include?(@rubygem_without_version)
       assert Rubygem.with_versions.include?(@rubygem_with_version)
       assert Rubygem.with_versions.include?(@rubygem_with_versions)
     end
@@ -525,8 +525,8 @@ class RubygemTest < ActiveSupport::TestCase
       assert Rubygem.search('apple').include?(@apple_pie)
       assert Rubygem.search('orange').include?(@orange_julius)
 
-      assert ! Rubygem.search('apple').include?(@orange_julius)
-      assert ! Rubygem.search('orange').include?(@apple_pie)
+      assert !Rubygem.search('apple').include?(@orange_julius)
+      assert !Rubygem.search('orange').include?(@apple_pie)
     end
 
     should "find rubygems by name with extra spaces on #search" do
@@ -534,8 +534,8 @@ class RubygemTest < ActiveSupport::TestCase
       assert Rubygem.search('orange   ').include?(@orange_julius)
       assert_equal Rubygem.search('apple'), Rubygem.search('apple ')
 
-      assert ! Rubygem.search('apple  ').include?(@orange_julius)
-      assert ! Rubygem.search('orange   ').include?(@apple_pie)
+      assert !Rubygem.search('apple  ').include?(@orange_julius)
+      assert !Rubygem.search('orange   ').include?(@apple_pie)
     end
 
     should "find rubygems case insensitively on #search" do
@@ -544,7 +544,7 @@ class RubygemTest < ActiveSupport::TestCase
 
     should "find rubygems with missing punctuation on #search" do
       assert Rubygem.search('apple crisp').include?(@apple_crisp)
-      assert ! Rubygem.search('apple crisp').include?(@apple_pie)
+      assert !Rubygem.search('apple crisp').include?(@apple_pie)
     end
 
     should "sort results by number of downloads, descending" do

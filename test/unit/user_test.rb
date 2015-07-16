@@ -16,11 +16,11 @@ class UserTest < ActiveSupport::TestCase
 
       should "be between 2 and 40 characters" do
         user = build(:user, handle: "a")
-        assert ! user.valid?
+        assert !user.valid?
         assert_contains user.errors[:handle], "is too short (minimum is 2 characters)"
 
         user.handle = "a" * 41
-        assert ! user.valid?
+        assert !user.valid?
         assert_contains user.errors[:handle], "is too long (maximum is 40 characters)"
 
         user.handle = "abcdef"
@@ -30,7 +30,7 @@ class UserTest < ActiveSupport::TestCase
 
       should "be invalid when an empty string" do
         user = build(:user, handle: "")
-        assert ! user.valid?
+        assert !user.valid?
       end
 
       should "be valid when nil and other users have a nil handle" do
@@ -82,7 +82,7 @@ class UserTest < ActiveSupport::TestCase
     should "have email and handle on XML" do
       xml = Nokogiri.parse(@user.to_xml)
       assert_equal "user", xml.root.name
-      assert_equal %w[id handle email], xml.root.children.select(&:element?).map(&:name)
+      assert_equal %w(id handle email), xml.root.children.select(&:element?).map(&:name)
       assert_equal @user.email, xml.at_css("email").content
     end
 
@@ -141,7 +141,7 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should "only fetch the subscribed gems with #subscribed_gems" do
-        assert_contains         @user.subscribed_gems, @subscribed_gem
+        assert_contains @user.subscribed_gems, @subscribed_gem
         assert_does_not_contain @user.subscribed_gems, @unsubscribed_gem
       end
     end

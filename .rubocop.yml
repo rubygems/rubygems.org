@@ -7,3 +7,9 @@ AllCops:
   RunRailsCops: true
   DisplayCopNames: true
   DisplayStyleGuide: true
+
+Metrics/PerceivedComplexity:
+  Max: 10 # TODO: Lower to 7
+
+Metrics/CyclomaticComplexity:
+  Max: 9 # TODO: Lower to 6
