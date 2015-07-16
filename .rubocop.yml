@@ -2,8 +2,7 @@ inherit_from: .rubocop_todo.yml
 
 AllCops:
   Exclude:
-    - db/schema.rb
-    - vendor/**/*
+    - !ruby/regexp /(vendor|bundle|bin|db)\/.*/
   RunRailsCops: true
   DisplayCopNames: true
   DisplayStyleGuide: true
