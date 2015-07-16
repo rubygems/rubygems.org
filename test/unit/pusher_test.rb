@@ -156,8 +156,8 @@ class PusherTest < ActiveSupport::TestCase
       end
 
       should "set sha256" do
-        expectedSha = Digest::SHA2.base64digest(@cutter.body.string)
-        assert_equal expectedSha, @cutter.version.sha256
+        expected_sha = Digest::SHA2.base64digest(@cutter.body.string)
+        assert_equal expected_sha, @cutter.version.sha256
       end
     end
 
