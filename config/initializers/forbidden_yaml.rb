@@ -30,11 +30,11 @@ module Gem
       spec = Psych.safe_load(input, WHITELISTED_CLASSES, WHITELISTED_SYMBOLS, true)
 
       if spec && spec.class == FalseClass
-        raise Gem::EndOfYAMLException
+        fail Gem::EndOfYAMLException
       end
 
       unless Gem::Specification === spec
-        raise Gem::Exception, "YAML data doesn't evaluate to gem specification"
+        fail Gem::Exception, "YAML data doesn't evaluate to gem specification"
       end
 
       spec.specification_version ||= NONEXISTENT_SPECIFICATION_VERSION

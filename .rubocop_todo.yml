@@ -193,12 +193,6 @@ Style/RedundantSelf:
 Style/RegexpLiteral:
   Enabled: false
 
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/SignalException:
-  Enabled: false
-
 # Offense count: 2005
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
