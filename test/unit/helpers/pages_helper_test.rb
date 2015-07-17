@@ -10,7 +10,7 @@ class PagesHelperTest < ActionView::TestCase
     setup do
       @rubygem = create(:rubygem, name: "rubygems-update")
       @version_first = create(:version, number: "1.4.8", rubygem: @rubygem)
-      @version_last = create(:version, number: "2.4.8", built_at: DateTime.new(2015,1,1), rubygem: @rubygem)
+      @version_last = create(:version, number: "2.4.8", built_at: DateTime.new(2015, 1, 1), rubygem: @rubygem)
     end
 
     should "return latest rubygem release version number" do
