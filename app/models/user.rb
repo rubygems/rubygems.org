@@ -66,7 +66,7 @@ class User < ActiveRecord::Base
     attrs
   end
 
-  def as_json(options = {})
+  def as_json(*)
     payload
   end
 

@@ -27,9 +27,9 @@ class ActiveSupport::TestCase
     skip("Toxiproxy is not running, but was required for this test.") unless Toxiproxy.running?
   end
 
-  def assert_changed(object, attribute, &block)
+  def assert_changed(object, attribute)
     original = object.send(attribute)
-    yield
+    yield if block_given?
     latest = object.reload.send(attribute)
     assert_not_equal original, latest, "Expected #{object.class} #{attribute} to change but still #{latest}"
   end

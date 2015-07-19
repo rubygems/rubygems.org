@@ -17,11 +17,6 @@ Lint/NestedMethodDefinition:
 Lint/RescueException:
   Enabled: false
 
-# Offense count: 9
-# Cop supports --auto-correct.
-Lint/UnusedMethodArgument:
-  Enabled: false
-
 # Offense count: 37
 Metrics/AbcSize:
   Enabled: false

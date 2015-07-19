@@ -171,7 +171,7 @@ class Rubygem < ActiveRecord::Base
     }
   end
 
-  def as_json(options = {})
+  def as_json(*)
     payload
   end
 

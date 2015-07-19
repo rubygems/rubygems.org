@@ -80,7 +80,7 @@ class Indexer
     @indexer ||=
       begin
         indexer = Gem::Indexer.new(Rails.root.join("server"), build_legacy: false)
-        def indexer.say(message) end
+        def indexer.say(_) end
         indexer
       end
   end

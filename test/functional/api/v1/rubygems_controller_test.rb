@@ -9,10 +9,10 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     assert_recognizes(post_route, path: '/api/v1/gems', method: :post)
   end
 
-  def self.should_respond_to_show(format, &block)
+  def self.should_respond_to_show
     should respond_with :success
     should "return a hash" do
-      response = yield(@response.body)
+      response = yield(@response.body) if block_given?
       assert_not_nil response
       assert_kind_of Hash, response
     end
@@ -26,7 +26,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         get :show, id: @rubygem.to_param, format: format
       end
 
-      should_respond_to_show(format, &block)
+      should_respond_to_show(&block)
     end
 
     context "with #{format.to_s.upcase} for a hosted gem with a period in its name" do
@@ -36,7 +36,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         get :show, id: @rubygem.to_param, format: format
       end
 
-      should_respond_to_show(format, &block)
+      should_respond_to_show(&block)
     end
 
     context "with #{format.to_s.upcase} for a gem that doesn't match the slug" do
@@ -46,7 +46,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         get :show, id: "ZenTest", format: format
       end
 
-      should_respond_to_show(format, &block)
+      should_respond_to_show(&block)
     end
   end
 
