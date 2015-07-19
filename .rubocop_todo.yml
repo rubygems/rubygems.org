@@ -95,11 +95,6 @@ Style/IfUnlessModifier:
 Style/LineEndConcatenation:
   Enabled: false
 
-# Offense count: 6
-# Cop supports --auto-correct.
-Style/MethodCallParentheses:
-  Enabled: false
-
 # Offense count: 1
 Style/MultilineBlockChain:
   Enabled: false

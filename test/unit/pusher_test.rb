@@ -114,10 +114,10 @@ class PusherTest < ActiveSupport::TestCase
 
       @cutter.bundler_api_url = "http://test.com"
 
-      obj = mock()
+      obj = mock
       post_data = nil
 
-      obj.stubs(:post).with() { |*value| post_data = value }
+      obj.stubs(:post).with { |*value| post_data = value }
       @cutter.update_remote_bundler_api obj
 
       _, payload = post_data
@@ -132,7 +132,7 @@ class PusherTest < ActiveSupport::TestCase
 
     context "initialize new gem with find if one does not exist" do
       setup do
-        spec = mock()
+        spec = mock
         spec.expects(:name).returns "some name"
         spec.expects(:version).returns "1.3.3.7"
         spec.expects(:original_platform).returns "ruby"
@@ -164,7 +164,7 @@ class PusherTest < ActiveSupport::TestCase
     context "finding an existing gem" do
       should "bring up existing gem with matching spec" do
         @rubygem = create(:rubygem)
-        spec = mock()
+        spec = mock
         spec.stubs(:name).returns @rubygem.name
         spec.stubs(:version).returns "1.3.3.7"
         spec.stubs(:original_platform).returns "ruby"
@@ -181,7 +181,7 @@ class PusherTest < ActiveSupport::TestCase
 
         assert_not_equal @rubygem.name, @rubygem.name.upcase
 
-        spec = mock()
+        spec = mock
         spec.expects(:name).returns @rubygem.name.upcase
         spec.expects(:version).returns "1.3.3.7"
         spec.expects(:original_platform).returns "ruby"
@@ -195,7 +195,7 @@ class PusherTest < ActiveSupport::TestCase
         @rubygem = create(:rubygem)
         assert_not_equal @rubygem.name, @rubygem.name.upcase
 
-        spec = mock()
+        spec = mock
         spec.stubs(:name).returns @rubygem.name.upcase
         spec.stubs(:version).returns "1.3.3.7"
         spec.stubs(:original_platform).returns "ruby"
