@@ -241,9 +241,7 @@ class Rubygem < ActiveRecord::Base
 
     versions.update_all(latest: false)
 
-    versions.release.indexed.each_with_object(Hash.new { |h, k| h[k] = [] }) do |version, platforms|
-      platforms[version.platform] << version
-    end.each_value do |platforms|
+    versions.release.indexed.each_with_object(Hash.new { |h, k| h[k] = [] }) { |v, p| p[v.platform] << v }.each_value do |platforms|
       Version.find(platforms.sort.last.id).update_column(:latest, true)
     end
   end

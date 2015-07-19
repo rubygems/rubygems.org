@@ -95,10 +95,6 @@ Style/IfUnlessModifier:
 Style/LineEndConcatenation:
   Enabled: false
 
-# Offense count: 1
-Style/MultilineBlockChain:
-  Enabled: false
-
 # Offense count: 2005
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
