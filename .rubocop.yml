@@ -2,6 +2,7 @@ inherit_from: .rubocop_todo.yml
 
 AllCops:
   Exclude:
+    - config/initializers/forbidden_yaml.rb
     - !ruby/regexp /(vendor|bundle|bin|db)\/.*/
   RunRailsCops: true
   DisplayCopNames: true
@@ -12,6 +13,9 @@ Metrics/PerceivedComplexity:
 
 Metrics/CyclomaticComplexity:
   Max: 9 # TODO: Lower to 6
+
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
 
 Style/Documentation:
   Enabled: false

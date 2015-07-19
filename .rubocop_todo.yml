@@ -32,15 +32,6 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Enabled: false
 
-# Offense count: 1
-Style/CaseEquality:
-  Enabled: false
-
-# Offense count: 30
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/ClassAndModuleChildren:
-  Enabled: false
-
 # Offense count: 2
 Style/DoubleNegation:
   Enabled: false
