@@ -59,14 +59,14 @@ MSG
 
     unless @rubygem.new_record?
       if @rubygem.find_version_from_spec(spec)
-        notify("Repushing of gem versions is not allowed.\n" +
+        notify("Repushing of gem versions is not allowed.\n" \
                "Please use `gem yank` to remove bad gem releases.", 409)
 
         return false
       end
 
       if @rubygem.name != name && @rubygem.indexed_versions?
-        return notify("Unable to change case of gem name with indexed versions\n" +
+        return notify("Unable to change case of gem name with indexed versions\n" \
                       "Please delete all versions first with `gem yank`.", 409)
       end
     end
