@@ -289,7 +289,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def update_unresolved
-    Dependency.where(unresolved_name: name).each do |dependency|
+    Dependency.where(unresolved_name: name).find_each do |dependency|
       dependency.update_resolved(self)
     end
 
