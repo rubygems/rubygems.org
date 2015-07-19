@@ -53,10 +53,10 @@ class DownloadTest < ActiveSupport::TestCase
     2.times { Download.incr(@rubygem_1.name, @version_2.full_name) }
 
     assert_equal [[@version_3, 3], [@version_2, 2], [@version_1, 1]],
-                 Download.most_downloaded_today
+      Download.most_downloaded_today
 
     assert_equal [[@version_3, 3], [@version_2, 2]],
-                 Download.most_downloaded_today(2)
+      Download.most_downloaded_today(2)
 
     assert_equal 3, Download.cardinality
     assert_equal 1, Download.rank(@version_3)
@@ -85,10 +85,10 @@ class DownloadTest < ActiveSupport::TestCase
     2.times { Download.incr(@rubygem_1.name, @version_2.full_name) }
 
     assert_equal [[@version_3, 4], [@version_2, 3], [@version_1, 2]],
-                 Download.most_downloaded_all_time
+      Download.most_downloaded_all_time
 
     assert_equal [[@version_3, 4], [@version_2, 3]],
-                 Download.most_downloaded_all_time(2)
+      Download.most_downloaded_all_time(2)
 
     assert_equal 3, Download.cardinality
     assert_equal 1, Download.rank(@version_3)
@@ -120,12 +120,22 @@ class DownloadTest < ActiveSupport::TestCase
     Download.incr(@rubygem_1, @version_2.full_name)
 
     downloads = {
-      "#{@version_1.id}-#{2.days.ago.to_date}" => 0, "#{@version_1.id}-#{Time.zone.yesterday}" => 1, "#{@version_1.id}-#{Time.zone.today}" => 1,
-      "#{@version_2.id}-#{2.days.ago.to_date}" => 0, "#{@version_2.id}-#{Time.zone.yesterday}" => 1, "#{@version_2.id}-#{Time.zone.today}" => 1,
-      "#{@version_3.id}-#{2.days.ago.to_date}" => 0, "#{@version_3.id}-#{Time.zone.yesterday}" => 1, "#{@version_3.id}-#{Time.zone.today}" => 3 }
+      "#{@version_1.id}-#{2.days.ago.to_date}" => 0,
+      "#{@version_1.id}-#{Time.zone.yesterday}" => 1,
+      "#{@version_1.id}-#{Time.zone.today}" => 1,
+      "#{@version_2.id}-#{2.days.ago.to_date}" => 0,
+      "#{@version_2.id}-#{Time.zone.yesterday}" => 1,
+      "#{@version_2.id}-#{Time.zone.today}" => 1,
+      "#{@version_3.id}-#{2.days.ago.to_date}" => 0,
+      "#{@version_3.id}-#{Time.zone.yesterday}" => 1,
+      "#{@version_3.id}-#{Time.zone.today}" => 3
+    }
 
     assert_equal downloads.size, 9
-    assert_equal downloads, Download.counts_by_day_for_versions([@version_1, @version_2, @version_3], 2)
+    assert_equal downloads,
+      Download.counts_by_day_for_versions([@version_1,
+                                           @version_2,
+                                           @version_3], 2)
   end
 
   should "find counts per day for versions when in DB also" do
@@ -152,12 +162,22 @@ class DownloadTest < ActiveSupport::TestCase
     Download.incr(@rubygem_1, @version_2.full_name)
 
     downloads = {
-      "#{@version_1.id}-#{2.days.ago.to_date}" => 0, "#{@version_1.id}-#{Time.zone.yesterday}" => 5, "#{@version_1.id}-#{Time.zone.today}" => 1,
-      "#{@version_2.id}-#{2.days.ago.to_date}" => 0, "#{@version_2.id}-#{Time.zone.yesterday}" => 1, "#{@version_2.id}-#{Time.zone.today}" => 1,
-      "#{@version_3.id}-#{2.days.ago.to_date}" => 0, "#{@version_3.id}-#{Time.zone.yesterday}" => 1, "#{@version_3.id}-#{Time.zone.today}" => 3 }
+      "#{@version_1.id}-#{2.days.ago.to_date}" => 0,
+      "#{@version_1.id}-#{Time.zone.yesterday}" => 5,
+      "#{@version_1.id}-#{Time.zone.today}" => 1,
+      "#{@version_2.id}-#{2.days.ago.to_date}" => 0,
+      "#{@version_2.id}-#{Time.zone.yesterday}" => 1,
+      "#{@version_2.id}-#{Time.zone.today}" => 1,
+      "#{@version_3.id}-#{2.days.ago.to_date}" => 0,
+      "#{@version_3.id}-#{Time.zone.yesterday}" => 1,
+      "#{@version_3.id}-#{Time.zone.today}" => 3
+    }
 
     assert_equal downloads.size, 9
-    assert_equal downloads, Download.counts_by_day_for_versions([@version_1, @version_2, @version_3], 2)
+    assert_equal downloads,
+      Download.counts_by_day_for_versions([@version_1,
+                                           @version_2,
+                                           @version_3], 2)
   end
 
   should "find counts per day for versions in range across month boundary" do
@@ -180,7 +200,8 @@ class DownloadTest < ActiveSupport::TestCase
         d[fin.to_s] = 1
       end
 
-      assert_equal downloads, Download.counts_by_day_for_version_in_date_range(@version_1, start, fin)
+      assert_equal downloads,
+        Download.counts_by_day_for_version_in_date_range(@version_1, start, fin)
     end
   end
 
@@ -270,7 +291,7 @@ class DownloadTest < ActiveSupport::TestCase
     Download.migrate_to_sql version
 
     assert_equal [1.day.ago.to_date.to_s, Time.zone.today.to_s].sort,
-                 Redis.current.hkeys(Download.history_key(version)).sort
+      Redis.current.hkeys(Download.history_key(version)).sort
   end
 
   should "migrate all keys in redis" do
@@ -286,7 +307,7 @@ class DownloadTest < ActiveSupport::TestCase
     assert_equal 1, Download.migrate_all_to_sql
 
     assert_equal [1.day.ago.to_date.to_s, Time.zone.today.to_s].sort,
-                 Redis.current.hkeys(Download.history_key(version)).sort
+      Redis.current.hkeys(Download.history_key(version)).sort
   end
 
   context "with redis down" do

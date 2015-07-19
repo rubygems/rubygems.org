@@ -13,7 +13,8 @@ class DeletionTest < ActiveSupport::TestCase
 
   test "must be indexed" do
     @version.indexed = false
-    assert Deletion.new(version: @version, user: @user).invalid?, "Deletion should only work on indexed gems"
+    assert Deletion.new(version: @version, user: @user).invalid?,
+      "Deletion should only work on indexed gems"
   end
 
   test "unindexes" do
@@ -33,7 +34,8 @@ class DeletionTest < ActiveSupport::TestCase
 
   test "not appear in the version list" do
     delete_gem
-    assert !Redis.current.exists(Rubygem.versions_key(@version.rubygem.name)), "Version still in list!"
+    assert !Redis.current.exists(Rubygem.versions_key(@version.rubygem.name)),
+      "Version still in list!"
   end
 
   test "delete the .gem file" do
@@ -43,7 +45,8 @@ class DeletionTest < ActiveSupport::TestCase
 
   def teardown
     super
-    [Rubygem, Version, User, Deletion].each(&:delete_all) # necessary thanks to after_commit not cleaning up for us
+    # This is necessary due to after_commit not cleaning up for us
+    [Rubygem, Version, User, Deletion].each(&:delete_all)
   end
 
   private

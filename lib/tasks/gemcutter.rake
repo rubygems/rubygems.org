@@ -48,7 +48,8 @@ namespace :gemcutter do
       Version.find_each do |version|
         actual_sha256 = version.recalculate_sha256
         if version.sha256 != actual_sha256
-          puts "#{version.full_name}.gem has sha256 '#{actual_sha256}', but '#{version.sha256}' was expected."
+          puts "#{version.full_name}.gem has sha256 '#{actual_sha256}', " \
+            "but '#{version.sha256}' was expected."
           failed = true
         end
       end
@@ -61,9 +62,9 @@ namespace :gemcutter do
     desc "Update the download counts for all gems."
     task update_download_counts: :environment do
       case_query = Rubygem
-                   .pluck(:name)
-                   .map { |name| "WHEN '#{name}' THEN #{Redis.current["downloads:rubygem:#{name}"].to_i}" }
-                   .join("\n            ")
+        .pluck(:name)
+        .map { |name| "WHEN '#{name}' THEN #{Redis.current["downloads:rubygem:#{name}"].to_i}" }
+        .join("\n            ")
 
       ActiveRecord::Base.connection.execute <<-SQL.strip_heredoc
         UPDATE rubygems

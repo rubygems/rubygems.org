@@ -4,7 +4,11 @@ class Linkset < ActiveRecord::Base
   LINKS = %w(home wiki docs mail code bugs).freeze
 
   LINKS.each do |url|
-    validates_formatting_of url.to_sym, using: :url, allow_nil: true, allow_blank: true, message: "does not appear to be a valid URL"
+    validates_formatting_of url.to_sym,
+      using: :url,
+      allow_nil: true,
+      allow_blank: true,
+      message: "does not appear to be a valid URL"
   end
 
   def empty?

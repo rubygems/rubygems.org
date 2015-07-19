@@ -69,7 +69,8 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         end
         should respond_with :success
         should "say successfully deployed" do
-          assert page.has_content?("Successfully deployed webhook for #{@gemcutter.name} to #{@url}")
+          content = "Successfully deployed webhook for #{@gemcutter.name} to #{@url}"
+          assert page.has_content?(content)
           assert WebHook.count.zero?
         end
       end
@@ -82,7 +83,8 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         end
         should respond_with :bad_request
         should "say successfully deployed" do
-          assert page.has_content?("There was a problem deploying webhook for #{@gemcutter.name} to #{@url}")
+          content = "There was a problem deploying webhook for #{@gemcutter.name} to #{@url}"
+          assert page.has_content?(content)
           assert WebHook.count.zero?
         end
       end
@@ -115,7 +117,8 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         end
         should respond_with :bad_request
         should "say there was a problem" do
-          assert page.has_content?("There was a problem deploying webhook for #{@rubygem.name} to #{@url}")
+          content = "There was a problem deploying webhook for #{@rubygem.name} to #{@url}"
+          assert page.has_content?(content)
           assert WebHook.count.zero?
         end
       end
@@ -123,10 +126,10 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
       context "On GET to index with some owned hooks" do
         setup do
           @rubygem_hook = create(:web_hook,
-                                 user: @user,
-                                 rubygem: @rubygem)
+            user: @user,
+            rubygem: @rubygem)
           @global_hook  = create(:global_web_hook,
-                                 user: @user)
+            user: @user)
         end
 
         should_respond_to(:json) do |body|
@@ -140,13 +143,14 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         context "On DELETE to remove with owned hook for rubygem" do
           setup do
             delete :remove,
-                   gem_name: @rubygem.name,
-                   url: @rubygem_hook.url
+              gem_name: @rubygem.name,
+              url: @rubygem_hook.url
           end
 
           should respond_with :success
           should "say webhook was removed" do
-            assert page.has_content?("Successfully removed webhook for #{@rubygem.name} to #{@rubygem_hook.url}")
+            content = "Successfully removed webhook for #{@rubygem.name} to #{@rubygem_hook.url}"
+            assert page.has_content?(content)
           end
           should "have actually removed the webhook" do
             assert_raise ActiveRecord::RecordNotFound do
@@ -158,13 +162,14 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         context "On DELETE to remove with owned global hook" do
           setup do
             delete :remove,
-                   gem_name: WebHook::GLOBAL_PATTERN,
-                   url: @global_hook.url
+              gem_name: WebHook::GLOBAL_PATTERN,
+              url: @global_hook.url
           end
 
           should respond_with :success
           should "say webhook was removed" do
-            assert page.has_content?("Successfully removed webhook for all gems to #{@global_hook.url}")
+            content = "Successfully removed webhook for all gems to #{@global_hook.url}"
+            assert page.has_content?(content)
           end
           should "have actually removed the webhook" do
             assert_raise ActiveRecord::RecordNotFound do
@@ -198,8 +203,8 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         context "On DELETE to remove with global hook" do
           setup do
             delete :remove,
-                   gem_name: WebHook::GLOBAL_PATTERN,
-                   url: @rubygem_hook.url
+              gem_name: WebHook::GLOBAL_PATTERN,
+              url: @rubygem_hook.url
           end
 
           should respond_with :not_found

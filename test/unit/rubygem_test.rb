@@ -53,12 +53,31 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "order latest platform gems with latest uniquely" do
-      pre  = create(:version, rubygem: @rubygem, number: "1.5.0.pre", platform: "ruby", prerelease: true)
-      ming = create(:version, rubygem: @rubygem, number: "1.4.2.1", platform: "x86-mingw32")
-      win  = create(:version, rubygem: @rubygem, number: "1.4.2.1", platform: "x86-mswin32")
-      ruby = create(:version, rubygem: @rubygem, number: "1.4.2", platform: "ruby")
-      java = create(:version, rubygem: @rubygem, number: "1.4.2", platform: "java")
-      old  = create(:version, rubygem: @rubygem, number: "1.4.1", platform: "ruby")
+      pre  = create(:version,
+        rubygem: @rubygem,
+        number: "1.5.0.pre",
+        platform: "ruby",
+        prerelease: true)
+      ming = create(:version,
+        rubygem: @rubygem,
+        number: "1.4.2.1",
+        platform: "x86-mingw32")
+      win  = create(:version,
+        rubygem: @rubygem,
+        number: "1.4.2.1",
+        platform: "x86-mswin32")
+      ruby = create(:version,
+        rubygem: @rubygem,
+        number: "1.4.2",
+        platform: "ruby")
+      java = create(:version,
+        rubygem: @rubygem,
+        number: "1.4.2",
+        platform: "java")
+      old  = create(:version,
+        rubygem: @rubygem,
+        number: "1.4.1",
+        platform: "ruby")
 
       @rubygem.reorder_versions
 
@@ -85,7 +104,11 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "return the ruby version for most_recent if one exists" do
-      create(:version, rubygem: @rubygem, number: "3.0.0", platform: "mswin", built_at: 1.year.from_now)
+      create(:version,
+        rubygem: @rubygem,
+        number: "3.0.0",
+        platform: "mswin",
+        built_at: 1.year.from_now)
       version3_ruby  = create(:version, rubygem: @rubygem, number: "3.0.0", platform: "ruby")
 
       @rubygem.reorder_versions
@@ -132,8 +155,14 @@ class RubygemTest < ActiveSupport::TestCase
 
     context "#public_versions_with_extra_version" do
       setup do
-        @first_version = FactoryGirl.create(:version, rubygem: @rubygem, number: '1.0.0', position: 1)
-        @extra_version = FactoryGirl.create(:version, rubygem: @rubygem, number: '0.1.0', position: 2)
+        @first_version = FactoryGirl.create(:version,
+          rubygem: @rubygem,
+          number: '1.0.0',
+          position: 1)
+        @extra_version = FactoryGirl.create(:version,
+          rubygem: @rubygem,
+          number: '0.1.0',
+          position: 2)
       end
       should "include public versions" do
         assert @rubygem.public_versions_with_extra_version(@extra_version).include?(@first_version)
@@ -176,9 +205,15 @@ class RubygemTest < ActiveSupport::TestCase
       @version_three = create(:version, rubygem: @gem_three, number: '1.7')
       @version_four = create(:version, rubygem: @gem_four, number: '3.9')
 
-      @version_one_latest.dependencies << create(:dependency, version: @version_one_latest, rubygem: @dep_rubygem)
-      @version_two_earlier.dependencies << create(:dependency, version: @version_two_earlier, rubygem: @dep_rubygem)
-      @version_three.dependencies << create(:dependency, version: @version_three, rubygem: @dep_rubygem)
+      @version_one_latest.dependencies << create(:dependency,
+        version: @version_one_latest,
+        rubygem: @dep_rubygem)
+      @version_two_earlier.dependencies << create(:dependency,
+        version: @version_two_earlier,
+        rubygem: @dep_rubygem)
+      @version_three.dependencies << create(:dependency,
+        version: @version_three,
+        rubygem: @dep_rubygem)
     end
 
     should "return all depended rubygems" do
@@ -249,7 +284,8 @@ class RubygemTest < ActiveSupport::TestCase
         @rubygem.update_linkset!(@specification)
       end
 
-      assert_match "Name must include at least one letter, Home does not appear to be a valid URL", @rubygem.all_errors
+      assert_match "Name must include at least one letter, Home does not appear to be a valid URL",
+        @rubygem.all_errors
     end
 
     context "with a user" do
@@ -341,8 +377,10 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal @rubygem.versions.most_recent.authors, hash["authors"]
       assert_equal @rubygem.versions.most_recent.info, hash["info"]
       assert_equal @rubygem.versions.most_recent.metadata, hash["metadata"]
-      assert_equal "http://#{Gemcutter::HOST}/gems/#{@rubygem.name}", hash["project_uri"]
-      assert_equal "http://#{Gemcutter::HOST}/gems/#{@rubygem.versions.most_recent.full_name}.gem", hash["gem_uri"]
+      assert_equal "http://#{Gemcutter::HOST}/gems/#{@rubygem.name}",
+        hash["project_uri"]
+      assert_equal "http://#{Gemcutter::HOST}/gems/#{@rubygem.versions.most_recent.full_name}.gem",
+        hash["gem_uri"]
 
       assert_equal MultiJson.load(dev_dep.to_json), hash["dependencies"]["development"].first
       assert_equal MultiJson.load(run_dep.to_json), hash["dependencies"]["runtime"].first
@@ -355,17 +393,28 @@ class RubygemTest < ActiveSupport::TestCase
 
       doc = Nokogiri.parse(@rubygem.to_xml)
 
-      assert_equal "rubygem", doc.root.name
-      assert_equal @rubygem.name, doc.at_css("rubygem > name").content
-      assert_equal @rubygem.downloads.to_s, doc.at_css("downloads").content
-      assert_equal @rubygem.versions.most_recent.number, doc.at_css("version").content
-      assert_equal @rubygem.versions.most_recent.downloads_count.to_s, doc.at_css("version-downloads").content
-      assert_equal @rubygem.versions.most_recent.authors, doc.at_css("authors").content
-      assert_equal @rubygem.versions.most_recent.info, doc.at_css("info").content
-      assert_equal @rubygem.versions.most_recent.metadata["foo"], doc.at_css("metadata foo").content
-      assert_equal @rubygem.versions.most_recent.sha256_hex, doc.at_css("sha").content
-      assert_equal "http://#{Gemcutter::HOST}/gems/#{@rubygem.name}", doc.at_css("project-uri").content
-      assert_equal "http://#{Gemcutter::HOST}/gems/#{@rubygem.versions.most_recent.full_name}.gem", doc.at_css("gem-uri").content
+      assert_equal "rubygem",
+        doc.root.name
+      assert_equal @rubygem.name,
+        doc.at_css("rubygem > name").content
+      assert_equal @rubygem.downloads.to_s,
+        doc.at_css("downloads").content
+      assert_equal @rubygem.versions.most_recent.number,
+        doc.at_css("version").content
+      assert_equal @rubygem.versions.most_recent.downloads_count.to_s,
+        doc.at_css("version-downloads").content
+      assert_equal @rubygem.versions.most_recent.authors,
+        doc.at_css("authors").content
+      assert_equal @rubygem.versions.most_recent.info,
+        doc.at_css("info").content
+      assert_equal @rubygem.versions.most_recent.metadata["foo"],
+        doc.at_css("metadata foo").content
+      assert_equal @rubygem.versions.most_recent.sha256_hex,
+        doc.at_css("sha").content
+      assert_equal "http://#{Gemcutter::HOST}/gems/#{@rubygem.name}",
+        doc.at_css("project-uri").content
+      assert_equal "http://#{Gemcutter::HOST}/gems/#{@rubygem.versions.most_recent.full_name}.gem",
+        doc.at_css("gem-uri").content
 
       assert_equal dev_dep.name, doc.at_css("dependencies development dependency name").content
       assert_equal run_dep.name, doc.at_css("dependencies runtime dependency name").content
@@ -595,7 +644,8 @@ class RubygemTest < ActiveSupport::TestCase
         assert_nil Rubygem.find_by_name('thoughtbot-shoulda')
         assert_nil Rubygem.find_by_name('rake')
 
-        assert_equal ["rake", "thoughtbot-shoulda"], @version.dependencies.map(&:unresolved_name).sort
+        assert_equal ["rake", "thoughtbot-shoulda"],
+          @version.dependencies.map(&:unresolved_name).sort
       end
     end
 

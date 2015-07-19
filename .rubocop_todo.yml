@@ -22,11 +22,6 @@ Metrics/AbcSize:
 Metrics/ClassLength:
   Enabled: false
 
-# Offense count: 496
-# Configuration parameters: AllowURI, URISchemes.
-Metrics/LineLength:
-  Enabled: false
-
 # Offense count: 44
 # Configuration parameters: CountComments.
 Metrics/MethodLength:

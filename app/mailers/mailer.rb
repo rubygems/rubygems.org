@@ -5,6 +5,8 @@ class Mailer < ActionMailer::Base
     @user = user
     mail from: Clearance.configuration.mailer_sender,
          to: user.email,
-         subject: I18n.t(:confirmation, scope: [:clearance, :models, :clearance_mailer], default: "Email address confirmation")
+         subject: I18n.t(:confirmation,
+           scope: [:clearance, :models, :clearance_mailer],
+           default: "Email address confirmation")
   end
 end

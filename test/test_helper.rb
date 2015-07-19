@@ -31,7 +31,8 @@ class ActiveSupport::TestCase
     original = object.send(attribute)
     yield if block_given?
     latest = object.reload.send(attribute)
-    assert_not_equal original, latest, "Expected #{object.class} #{attribute} to change but still #{latest}"
+    assert_not_equal original, latest,
+      "Expected #{object.class} #{attribute} to change but still #{latest}"
   end
 end
 

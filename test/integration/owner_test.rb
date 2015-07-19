@@ -11,7 +11,8 @@ class OwnerTest < ActionDispatch::IntegrationTest
   end
 
   test "adding an owner" do
-    post api_v1_rubygem_owners_path(@rubygem), { email: @other_user.email }, "HTTP_AUTHORIZATION" => @user.api_key
+    post api_v1_rubygem_owners_path(@rubygem), { email: @other_user.email },
+      "HTTP_AUTHORIZATION" => @user.api_key
     assert_response :success
 
     get rubygem_path(@rubygem)
@@ -21,7 +22,8 @@ class OwnerTest < ActionDispatch::IntegrationTest
 
   test "removing an owner" do
     create(:ownership, user: @other_user, rubygem: @rubygem)
-    delete api_v1_rubygem_owners_path(@rubygem), { email: @other_user.email }, "HTTP_AUTHORIZATION" => @user.api_key
+    delete api_v1_rubygem_owners_path(@rubygem), { email: @other_user.email },
+      "HTTP_AUTHORIZATION" => @user.api_key
 
     get rubygem_path(@rubygem)
     assert page.has_selector?("a[alt='#{@user.handle}']")
@@ -31,7 +33,8 @@ class OwnerTest < ActionDispatch::IntegrationTest
   test "transferring ownership" do
     create(:ownership, user: @other_user, rubygem: @rubygem)
 
-    delete api_v1_rubygem_owners_path(@rubygem), { email: @user.email }, "HTTP_AUTHORIZATION" => @user.api_key
+    delete api_v1_rubygem_owners_path(@rubygem), { email: @user.email },
+      "HTTP_AUTHORIZATION" => @user.api_key
 
     get rubygem_path(@rubygem)
     assert !page.has_selector?("a[alt='#{@user.handle}']")
@@ -39,10 +42,12 @@ class OwnerTest < ActionDispatch::IntegrationTest
   end
 
   test "adding ownership without permission" do
-    post api_v1_rubygem_owners_path(@rubygem), { email: @other_user.email }, "HTTP_AUTHORIZATION" => @other_user.api_key
+    post api_v1_rubygem_owners_path(@rubygem), { email: @other_user.email },
+      "HTTP_AUTHORIZATION" => @other_user.api_key
     assert_response :unauthorized
 
-    delete api_v1_rubygem_owners_path(@rubygem), { email: @other_user.email }, "HTTP_AUTHORIZATION" => @other_user.api_key
+    delete api_v1_rubygem_owners_path(@rubygem), { email: @other_user.email },
+      "HTTP_AUTHORIZATION" => @other_user.api_key
     assert_response :unauthorized
   end
 end

@@ -24,7 +24,8 @@ class DashboardsControllerTest < ActionController::TestCase
       should "render links" do
         @gems.each do |g|
           assert page.has_content?(g.name)
-          assert page.has_selector?("a[href='#{rubygem_path(g)}'][title='#{g.versions.most_recent.info}']")
+          selector = "a[href='#{rubygem_path(g)}'][title='#{g.versions.most_recent.info}']"
+          assert page.has_selector?(selector)
         end
       end
     end
@@ -33,9 +34,16 @@ class DashboardsControllerTest < ActionController::TestCase
       setup do
         @subscribed_versions = (1..2).map { |n| create(:version, created_at: n.hours.ago) }
         # just to make sure one has a different platform and a summary
-        @subscribed_versions << create(:version, created_at: 3.hours.ago, platform: "win32", summary: "&")
-        @subscribed_versions.each { |v| create(:subscription, rubygem: v.rubygem, user: @user) }
-        @unsubscribed_versions = (1..3).map { |n| create(:version, created_at: n.hours.ago) }
+        @subscribed_versions << create(:version,
+          created_at: 3.hours.ago,
+          platform: "win32",
+          summary: "&")
+        @subscribed_versions.each do |v|
+          create(:subscription, rubygem: v.rubygem, user: @user)
+        end
+        @unsubscribed_versions = (1..3).map do |n|
+          create(:version, created_at: n.hours.ago)
+        end
 
         @request.env["HTTP_AUTHORIZATION"] = @user.api_key
         get :show, format: "atom"

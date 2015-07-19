@@ -18,7 +18,8 @@ class Api::V1::ApiKeysController < Api::BaseController
 
   def reset
     current_user.reset_api_key!
-    flash[:notice] = "Your API key has been reset. Don't forget to update your ~/.gem/credentials file!"
+    flash[:notice] =
+      "Your API key has been reset. Don't forget to update your ~/.gem/credentials file!"
     redirect_to edit_profile_path
   end
 end

@@ -86,7 +86,9 @@ MSG
 
   # Overridden so we don't get megabytes of the raw data printing out
   def inspect
-    attrs = [:@rubygem, :@user, :@message, :@code].map { |attr| "#{attr}=#{instance_variable_get(attr) || 'nil'}" }
+    attrs = [:@rubygem, :@user, :@message, :@code].map do |attr|
+      "#{attr}=#{instance_variable_get(attr).inspect}"
+    end
     "<Pusher #{attrs.join(' ')}>"
   end
 
@@ -104,10 +106,10 @@ MSG
     begin
       timeout(5) do
         to.post @bundler_api_url,
-                json,
-                :timeout        => 5,
-                :open_timeout   => 5,
-                'Content-Type'  => 'application/json'
+          json,
+          :timeout        => 5,
+          :open_timeout   => 5,
+          'Content-Type'  => 'application/json'
       end
     rescue StandardError, Interrupt
       false

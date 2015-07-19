@@ -74,15 +74,27 @@ class Version < ActiveRecord::Base
   end
 
   def self.rows_for_index
-    joins(:rubygem).indexed.release.order("rubygems.name asc, position desc").pluck('rubygems.name', :number, :platform)
+    joins(:rubygem)
+      .indexed
+      .release
+      .order("rubygems.name asc, position desc")
+      .pluck('rubygems.name', :number, :platform)
   end
 
   def self.rows_for_latest_index
-    joins(:rubygem).indexed.latest.order("rubygems.name asc, position desc").pluck('rubygems.name', :number, :platform)
+    joins(:rubygem)
+      .indexed
+      .latest
+      .order("rubygems.name asc, position desc")
+      .pluck('rubygems.name', :number, :platform)
   end
 
   def self.rows_for_prerelease_index
-    joins(:rubygem).indexed.prerelease.order("rubygems.name asc, position desc").pluck('rubygems.name', :number, :platform)
+    joins(:rubygem)
+      .indexed
+      .prerelease
+      .order("rubygems.name asc, position desc")
+      .pluck('rubygems.name', :number, :platform)
   end
 
   def self.most_recent
@@ -90,7 +102,14 @@ class Version < ActiveRecord::Base
   end
 
   def self.just_updated(limit = 5)
-    where("versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions GROUP BY versions.rubygem_id HAVING COUNT(versions.id) > 1)")
+    subquery = <<-SQL
+      versions.rubygem_id IN (SELECT versions.rubygem_id
+                                FROM versions
+                            GROUP BY versions.rubygem_id
+                              HAVING COUNT(versions.id) > 1)
+    SQL
+
+    where(subquery)
       .joins(:rubygem)
       .indexed
       .by_created_at
@@ -144,7 +163,7 @@ class Version < ActiveRecord::Base
   end
 
   def info
-    [description, summary, "This rubygem does not have a description or summary."].detect(&:present?)
+    [description, summary, "This rubygem does not have a description or summary."].find(&:present?)
   end
 
   def update_attributes_from_gem_specification!(spec)
@@ -240,7 +259,11 @@ class Version < ActiveRecord::Base
 
   def to_install
     command = "gem install #{rubygem.name}"
-    latest = prerelease ? rubygem.versions.by_position.prerelease.first : rubygem.versions.most_recent
+    latest = if prerelease
+               rubygem.versions.by_position.prerelease.first
+             else
+               rubygem.versions.most_recent
+             end
     command << " -v #{number}" if latest != self
     command << " --pre" if prerelease
     command
@@ -309,11 +332,9 @@ class Version < ActiveRecord::Base
   def full_nameify!
     self.full_name = "#{rubygem.name}-#{number}"
     full_name << "-#{platform}" if platformed?
-
     update_attributes(full_name: full_name)
-
-    Redis.current.hmset(Version.info_key(full_name), :name, rubygem.name, :number, number, :platform, platform)
-
+    Redis.current.hmset(Version.info_key(full_name), :name, rubygem.name,
+      :number, number, :platform, platform)
     push
   end
 end

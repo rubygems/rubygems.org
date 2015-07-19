@@ -166,8 +166,14 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "On POST to create for existing gem" do
       setup do
         rubygem = create(:rubygem, name: "test")
-        create(:ownership, rubygem: rubygem, user: @user)
-        create(:version, rubygem: rubygem, number: "0.0.0", updated_at: 1.year.ago, created_at: 1.year.ago)
+        create(:ownership,
+          rubygem: rubygem,
+          user: @user)
+        create(:version,
+          rubygem: rubygem,
+          number: "0.0.0",
+          updated_at: 1.year.ago,
+          created_at: 1.year.ago)
         @request.env["RAW_POST_DATA"] = gem_file("test-1.0.0.gem").read
         post :create
       end
@@ -186,7 +192,14 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         create(:ownership, rubygem: rubygem, user: @user)
 
         @date = 1.year.ago
-        @version = create(:version, rubygem: rubygem, number: "0.0.0", updated_at: @date, created_at: @date, summary: "Freewill", authors: ["Geddy Lee"], built_at: @date)
+        @version = create(:version,
+          rubygem: rubygem,
+          number: "0.0.0",
+          updated_at: @date,
+          created_at: @date,
+          summary: "Freewill",
+          authors: ["Geddy Lee"],
+          built_at: @date)
 
         @request.env["RAW_POST_DATA"] = gem_file.read
         post :create
@@ -237,7 +250,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
       should "deny access" do
         assert_response 401
-        assert_match("Access Denied. Please sign up for an account at http://rubygems.org", @response.body)
+        assert_equal "Access Denied. Please sign up for an account at http://rubygems.org",
+          @response.body
       end
     end
 
@@ -272,9 +286,15 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       @version_three = create(:version, rubygem: @gem_three, number: '1.7')
       @version_four = create(:version, rubygem: @gem_four, number: '3.9')
 
-      @version_one_latest.dependencies << create(:dependency, version: @version_one_latest, rubygem: @dep_rubygem)
-      @version_two_earlier.dependencies << create(:dependency, version: @version_two_earlier, rubygem: @dep_rubygem)
-      @version_three.dependencies << create(:dependency, version: @version_three, rubygem: @dep_rubygem)
+      @version_one_latest.dependencies << create(:dependency,
+        version: @version_one_latest,
+        rubygem: @dep_rubygem)
+      @version_two_earlier.dependencies << create(:dependency,
+        version: @version_two_earlier,
+        rubygem: @dep_rubygem)
+      @version_three.dependencies << create(:dependency,
+        version: @version_three,
+        rubygem: @dep_rubygem)
     end
 
     should "return names of reverse dependencies" do

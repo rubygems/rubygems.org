@@ -229,15 +229,36 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       @gem_one = create(:rubygem)
       @gem_two = create(:rubygem)
       @gem_three = create(:rubygem)
-      @version_one_latest  = create(:version, rubygem: @gem_one, number: '0.2', full_name: "gem_one-0.2")
-      @version_one_earlier = create(:version, rubygem: @gem_one, number: '0.1', full_name: "gem_one-0.1")
-      @version_two_latest  = create(:version, rubygem: @gem_two, number: '1.0', full_name: "gem_two-1.0")
-      @version_two_earlier = create(:version, rubygem: @gem_two, number: '0.5', full_name: "gem_two-0.5")
-      @version_three = create(:version, rubygem: @gem_three, number: '1.7', full_name: "gem_three-1.7")
+      @version_one_latest  = create(:version,
+        rubygem: @gem_one,
+        number: '0.2',
+        full_name: "gem_one-0.2")
+      @version_one_earlier = create(:version,
+        rubygem: @gem_one,
+        number: '0.1',
+        full_name: "gem_one-0.1")
+      @version_two_latest  = create(:version,
+        rubygem: @gem_two,
+        number: '1.0',
+        full_name: "gem_two-1.0")
+      @version_two_earlier = create(:version,
+        rubygem: @gem_two,
+        number: '0.5',
+        full_name: "gem_two-0.5")
+      @version_three = create(:version,
+        rubygem: @gem_three,
+        number: '1.7',
+        full_name: "gem_three-1.7")
 
-      @version_one_latest.dependencies << create(:dependency, version: @version_one_latest, rubygem: @dep_rubygem)
-      @version_two_earlier.dependencies << create(:dependency, version: @version_two_earlier, rubygem: @dep_rubygem)
-      @version_three.dependencies << create(:dependency, version: @version_three, rubygem: @dep_rubygem)
+      @version_one_latest.dependencies << create(:dependency,
+        version: @version_one_latest,
+        rubygem: @dep_rubygem)
+      @version_two_earlier.dependencies << create(:dependency,
+        version: @version_two_earlier,
+        rubygem: @dep_rubygem)
+      @version_three.dependencies << create(:dependency,
+        version: @version_three,
+        rubygem: @dep_rubygem)
     end
 
     should "return names of reverse dependencies" do

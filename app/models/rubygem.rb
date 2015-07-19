@@ -36,8 +36,11 @@ class Rubygem < ActiveRecord::Base
   def self.search(query)
     conditions = <<-SQL
       versions.indexed and
-        (upper(name) like upper(:query) or
-         upper(translate(name, '#{SPECIAL_CHARACTERS}', '#{' ' * SPECIAL_CHARACTERS.length}')) like upper(:query))
+        (UPPER(name) LIKE UPPER(:query) OR
+         UPPER(TRANSLATE(name,
+                         '#{SPECIAL_CHARACTERS}',
+                         '#{' ' * SPECIAL_CHARACTERS.length}')
+              ) LIKE UPPER(:query))
     SQL
 
     where(conditions, query: "%#{query.strip}%")
@@ -47,7 +50,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.name_starts_with(letter)
-    where("upper(name) like upper(?)", "#{letter}%")
+    where("UPPER(name) LIKE UPPER(?)", "#{letter}%")
   end
 
   def self.reverse_dependencies(name)
@@ -239,7 +242,14 @@ class Rubygem < ActiveRecord::Base
 
     versions.update_all(latest: false)
 
-    versions.release.indexed.each_with_object(Hash.new { |h, k| h[k] = [] }) { |v, p| p[v.platform] << v }.each_value do |platforms|
+    versions_of_platforms = versions
+      .release
+      .indexed
+      .each_with_object(Hash.new { |h, k| h[k] = [] }) do |version, platforms|
+      platforms[version.platform] << version
+    end
+
+    versions_of_platforms.each_value do |platforms|
       Version.find(platforms.sort.last.id).update_column(:latest, true)
     end
   end
@@ -254,7 +264,8 @@ class Rubygem < ActiveRecord::Base
   end
 
   def find_or_initialize_version_from_spec(spec)
-    version = versions.find_or_initialize_by(number: spec.version.to_s, platform: spec.original_platform.to_s)
+    version = versions.find_or_initialize_by(number: spec.version.to_s,
+                                             platform: spec.original_platform.to_s)
     version.rubygem = self
     version
   end

@@ -6,9 +6,12 @@ class Api::DeprecatedControllerTest < ActionController::TestCase
     assert_recognizes(route.merge(action: "index"),  path: "/api_key")
 
     route = { controller: "api/deprecated", rubygem_id: "rails", format: "json" }
-    assert_recognizes(route.merge(action: "index"),    path: "/gems/rails/owners.json")
-    assert_recognizes(route.merge(action: "index"),  path: "/gems/rails/owners.json", method: :post)
-    assert_recognizes(route.merge(action: "index"), path: "/gems/rails/owners.json", method: :delete)
+    assert_recognizes(route.merge(action: "index"),
+      path: "/gems/rails/owners.json")
+    assert_recognizes(route.merge(action: "index"),
+      path: "/gems/rails/owners.json", method: :post)
+    assert_recognizes(route.merge(action: "index"),
+      path: "/gems/rails/owners.json", method: :delete)
 
     route = { controller: "api/deprecated", id: "rails" }
     assert_recognizes(route.merge(action: "index"), path: "/gems/rails.json")

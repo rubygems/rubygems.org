@@ -33,58 +33,65 @@ module RubygemsHelper
 
   def subscribe_link(rubygem)
     if signed_in?
-      link_to 'Subscribe',
-              rubygem_subscription_path(rubygem),
-              remote: true,
-              method: :post,
-              id: 'subscribe',
-              class: ['toggler', 'gem__link', 't-list__item'],
-              style: rubygem.subscribers.find_by_id(current_user.try(:id)) ? 'display:none' : 'display:inline-block'
+      style = if rubygem.subscribers.find_by_id(current_user.id)
+                'display:none'
+              else
+                'display:inline-block'
+              end
+      link_to 'Subscribe', rubygem_subscription_path(rubygem),
+        class: ['toggler', 'gem__link', 't-list__item'], id: 'subscribe',
+        method: :post, remote: true, style: style
     else
-      link_to 'Subscribe', sign_in_path, id: :subscribe, class: [:toggler, 'gem__link', 't-list__item']
+      link_to 'Subscribe', sign_in_path,
+        class: [:toggler, 'gem__link', 't-list__item'], id: :subscribe
     end
   end
 
   def unsubscribe_link(rubygem)
     if signed_in?
-      link_to 'Unsubscribe',
-              rubygem_subscription_path(rubygem),
-              remote: true,
-              method: :delete,
-              id: 'unsubscribe',
-              class: [:toggler, 'gem__link', 't-list__item'],
-              style: rubygem.subscribers.find_by_id(current_user.try(:id)) ? 'display:inline-block' : 'display:none'
+      style = if rubygem.subscribers.find_by_id(current_user.id)
+                'display:inline-block'
+              else
+                'display:none'
+              end
+      link_to 'Unsubscribe', rubygem_subscription_path(rubygem),
+        class: [:toggler, 'gem__link', 't-list__item'], id: 'unsubscribe',
+        method: :delete, remote: true, style: style
     end
   end
 
   def atom_link(rubygem)
-    link_to 'RSS', rubygem_versions_path(rubygem, format: 'atom'), id: :rss, class: 'gem__link t-list__item'
+    link_to 'RSS', rubygem_versions_path(rubygem, format: 'atom'),
+      class: 'gem__link t-list__item', id: :rss
   end
 
   def download_link(version)
-    link_to "Download", "/downloads/#{version.full_name}.gem", id: :download, class: 'gem__link t-list__item'
+    link_to "Download", "/downloads/#{version.full_name}.gem",
+      class: 'gem__link t-list__item', id: :download
   end
 
   def documentation_link(version, linkset)
-    link_to 'Documentation', version.documentation_path, class: 'gem__link t-list__item', id: :docs if linkset.nil? || linkset.docs.blank?
+    if linkset.nil? || linkset.docs.blank?
+      link_to 'Documentation', version.documentation_path,
+        class: 'gem__link t-list__item', id: :docs
+    end
   end
 
   def badge_link(rubygem)
     badge_url = "http://badge.fury.io/rb/#{rubygem.name}/install"
-    link_to "Badge", badge_url, id: :badge, class: "gem__link t-list__item"
+    link_to "Badge", badge_url, class: "gem__link t-list__item", id: :badge
   end
 
   def report_abuse_link(rubygem)
-    report_abuse_url = "http://help.rubygems.org/discussion/new?discussion[title]=Reporting%20Abuse%20on%20#{CGI.escape(rubygem.name)}&discussion[private]=1".html_safe
-    link_to 'Report Abuse', report_abuse_url, class: 'gem__link t-list__item'
+    encoded_title = URI.encode("Reporting Abuse on #{rubygem.name}")
+    report_abuse_url = "http://help.rubygems.org/discussion/new?discussion[private]=1&discussion[title]=" + encoded_title # rubocop:disable Metrics/LineLength
+    link_to 'Report Abuse', report_abuse_url.html_safe, class: 'gem__link t-list__item'
   end
 
   def links_to_owners(rubygem)
     rubygem.owners.sort_by(&:id).map do |owner|
-      link_to gravatar(48, "gravatar-#{owner.id}", owner),
-              profile_path(owner.display_id),
-              alt: owner.display_handle,
-              title: owner.display_handle
+      link_to gravatar(48, "gravatar-#{owner.id}", owner), profile_path(owner.display_id),
+        alt: owner.display_handle, title: owner.display_handle
     end.join.html_safe
   end
 

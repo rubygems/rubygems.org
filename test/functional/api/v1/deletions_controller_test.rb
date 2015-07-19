@@ -25,7 +25,9 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           assert @rubygem.versions.indexed.count.zero?
         end
         should "record the deletion" do
-          assert_not_nil Deletion.where(user: @user, rubygem: @rubygem.name, number: @v1.number).first
+          assert_not_nil Deletion.where(user: @user,
+                                        rubygem: @rubygem.name,
+                                        number: @v1.number).first
         end
       end
 
@@ -45,7 +47,9 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
             assert_equal 1, @rubygem.ownerships.count
           end
           should "record the deletion" do
-            assert_not_nil Deletion.where(user: @user, rubygem: @rubygem.name, number: @v2.number).first
+            assert_not_nil Deletion.where(user: @user,
+                                          rubygem: @rubygem.name,
+                                          number: @v2.number).first
           end
         end
       end
@@ -69,7 +73,11 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
             assert_equal "Successfully deleted gem: SomeGem (0.1.1-x86-darwin-10)", @response.body
           end
           should "record the deletion" do
-            assert_not_nil Deletion.where(user: @user, rubygem: @rubygem.name, number: @v2.number, platform: @v2.platform).first
+            assert_not_nil Deletion.where(
+              user: @user,
+              rubygem: @rubygem.name,
+              number: @v2.number,
+              platform: @v2.platform).first
           end
         end
       end
@@ -107,7 +115,9 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         end
         should respond_with :unprocessable_entity
         should "not re-record the deletion" do
-          assert_equal 1, Deletion.count(user: @user, rubygem: @rubygem.name, number: @v1.number)
+          assert_equal 1, Deletion.count(user: @user,
+                                         rubygem: @rubygem.name,
+                                         number: @v1.number)
         end
       end
     end
@@ -115,9 +125,20 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
     context "for a gem SomeGem with a deleted version 0.1.0 and indexed version 0.1.1" do
       setup do
         @rubygem  = create(:rubygem, name: "SomeGem")
-        @v1       = create(:version, rubygem: @rubygem, number: "0.1.0", platform: "ruby", indexed: false)
-        @v2       = create(:version, rubygem: @rubygem, number: "0.1.1", platform: "ruby")
-        @v3       = create(:version, rubygem: @rubygem, number: "0.1.2", platform: "x86-darwin-10", indexed: false)
+        @v1 = create(:version,
+          rubygem: @rubygem,
+          number: "0.1.0",
+          platform: "ruby",
+          indexed: false)
+        @v2 = create(:version,
+          rubygem: @rubygem,
+          number: "0.1.1",
+          platform: "ruby")
+        @v3 = create(:version,
+          rubygem: @rubygem,
+          number: "0.1.2",
+          platform: "x86-darwin-10",
+          indexed: false)
         create(:ownership, user: @user, rubygem: @rubygem)
       end
 

@@ -13,27 +13,36 @@ class Api::V1::DeletionsController < Api::BaseController
       render text: "Successfully deleted gem: #{@version.to_title}"
     else
       StatsD.increment 'yank.failure'
-      render text: "The version #{params[:version]} has already been deleted.", status: :unprocessable_entity
+      render text: "The version #{params[:version]} has already been deleted.",
+             status: :unprocessable_entity
     end
   end
 
   def destroy
-    render text: "Unyanking of gems is no longer supported.", status: :gone
+    render text: "Unyanking of gems is no longer supported.",
+           status: :gone
   end
 
   private
 
   def validate_gem_and_version
     if !@rubygem.hosted?
-      render text: "This gem does not exist.", status: :not_found
+      render text: "This gem does not exist.",
+             status: :not_found
     elsif !@rubygem.owned_by?(current_user)
-      render text: "You do not have permission to delete this gem.", status: :forbidden
+      render text: "You do not have permission to delete this gem.",
+             status: :forbidden
     else
       begin
-        slug = params[:platform].blank? ? params[:version] : "#{params[:version]}-#{params[:platform]}"
+        slug = if params[:platform].blank?
+                 params[:version]
+               else
+                 "#{params[:version]}-#{params[:platform]}"
+               end
         @version = Version.find_from_slug!(@rubygem, slug)
       rescue ActiveRecord::RecordNotFound
-        render text: "The version #{params[:version]} does not exist.", status: :not_found
+        render text: "The version #{params[:version]} does not exist.",
+               status: :not_found
       end
     end
   end

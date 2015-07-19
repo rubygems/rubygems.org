@@ -11,7 +11,10 @@ class VersionTest < ActiveSupport::TestCase
 
     should "only have relevant API fields" do
       json = @version.as_json
-      assert_equal %w(number built_at summary description authors platform ruby_version prerelease downloads_count licenses requirements sha metadata).map(&:to_s).sort, json.keys.sort
+      fields = %w(number built_at summary description authors platform
+                  ruby_version prerelease downloads_count licenses requirements
+                  sha metadata)
+      assert_equal fields.map(&:to_s).sort, json.keys.sort
       assert_equal @version.authors, json["authors"]
       assert_equal @version.built_at, json["built_at"]
       assert_equal @version.description, json["description"]
@@ -34,7 +37,11 @@ class VersionTest < ActiveSupport::TestCase
 
     should "only have relevant API fields" do
       xml = Nokogiri.parse(@version.to_xml)
-      assert_equal %w(number built-at summary description authors platform ruby-version prerelease downloads-count licenses requirements sha metadata).map(&:to_s).sort, xml.root.children.map(&:name).reject { |t| t == "text" }.sort
+      fields = %w(number built-at summary description authors platform
+                  ruby-version prerelease downloads-count licenses requirements
+                  sha metadata)
+      assert_equal fields.map(&:to_s).sort,
+        xml.root.children.map(&:name).reject { |t| t == "text" }.sort
       assert_equal @version.authors, xml.at_css("authors").content
       assert_equal @version.built_at.iso8601, xml.at_css("built-at").content
       assert_equal @version.description, xml.at_css("description").content
@@ -76,9 +83,15 @@ class VersionTest < ActiveSupport::TestCase
       @version_two_earlier = create(:version, rubygem: @gem_two, number: '0.5')
       @version_three = create(:version, rubygem: @gem_three, number: '1.7')
 
-      @version_one_latest.dependencies << create(:dependency, version: @version_one_latest, rubygem: @dep_rubygem)
-      @version_two_earlier.dependencies << create(:dependency, version: @version_two_earlier, rubygem: @dep_rubygem)
-      @version_three.dependencies << create(:dependency, version: @version_three, rubygem: @dep_rubygem)
+      @version_one_latest.dependencies << create(:dependency,
+        version: @version_one_latest,
+        rubygem: @dep_rubygem)
+      @version_two_earlier.dependencies << create(:dependency,
+        version: @version_two_earlier,
+        rubygem: @dep_rubygem)
+      @version_three.dependencies << create(:dependency,
+        version: @version_three,
+        rubygem: @dep_rubygem)
     end
 
     should "return all depended gem versions" do
@@ -152,9 +165,15 @@ class VersionTest < ActiveSupport::TestCase
       @second_dependency_by_alpha = create(:rubygem, name: 'friendly_id')
       @third_dependency_by_alpha = create(:rubygem, name: 'refinerycms')
 
-      @version.dependencies << create(:dependency, version: @version, rubygem: @second_dependency_by_alpha)
-      @version.dependencies << create(:dependency, version: @version, rubygem: @third_dependency_by_alpha)
-      @version.dependencies << create(:dependency, version: @version, rubygem: @first_dependency_by_alpha)
+      @version.dependencies << create(:dependency,
+        version: @version,
+        rubygem: @second_dependency_by_alpha)
+      @version.dependencies << create(:dependency,
+        version: @version,
+        rubygem: @third_dependency_by_alpha)
+      @version.dependencies << create(:dependency,
+        version: @version,
+        rubygem: @first_dependency_by_alpha)
 
       assert @first_dependency_by_alpha.name, @version.dependencies.first.name
       assert @second_dependency_by_alpha.name, @version.dependencies[1].name
@@ -230,7 +249,8 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "add version onto redis versions list" do
-      assert_equal @version.full_name, Redis.current.lindex(Rubygem.versions_key(@version.rubygem.name), 0)
+      assert_equal @version.full_name,
+        Redis.current.lindex(Rubygem.versions_key(@version.rubygem.name), 0)
     end
 
     should "raise an ActiveRecord::RecordNotFound if an invalid slug is given" do
@@ -263,20 +283,28 @@ class VersionTest < ActiveSupport::TestCase
 
     should "tack on prerelease flag" do
       @version.update_attributes(number: "0.3.0.pre")
-      new_version = create(:version, rubygem: @version.rubygem, built_at: 1.day.from_now, number: "0.4.0.pre")
+      new_version = create(:version,
+        rubygem: @version.rubygem,
+        built_at: 1.day.from_now,
+        number: "0.4.0.pre")
 
       assert @version.prerelease
       assert new_version.prerelease
 
       @version.rubygem.reorder_versions
 
-      assert_equal "gem install #{@version.rubygem.name} -v #{@version.number} --pre", @version.to_install
-      assert_equal "gem install #{new_version.rubygem.name} --pre", new_version.to_install
+      assert_equal "gem install #{@version.rubygem.name} -v #{@version.number} --pre",
+        @version.to_install
+      assert_equal "gem install #{new_version.rubygem.name} --pre",
+        new_version.to_install
     end
 
     should "give no version count for the latest prerelease version" do
       @version.update_attributes(number: "0.3.0.pre")
-      old_version = create(:version, rubygem: @version.rubygem, built_at: 1.day.from_now, number: "0.2.0")
+      old_version = create(:version,
+        rubygem: @version.rubygem,
+        built_at: 1.day.from_now,
+        number: "0.2.0")
 
       assert @version.prerelease
       assert !old_version.prerelease
@@ -331,7 +359,29 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with a very long authors string." do
     should "create without error" do
-      create(:version, authors: ["Fbdoorman: David Pelaez", "MiniFB:Appoxy", "Dan Croak", "Mike Burns", "Jason Morrison", "Joe Ferris", "Eugene Bolshakov", "Nick Quaranto", "Josh Nichols", "Mike Breen", "Marcel G\303\266rner", "Bence Nagy", "Ben Mabey", "Eloy Duran", "Tim Pope", "Mihai Anca", "Mark Cornick", "Shay Arnett", "Jon Yurek", "Chad Pytel"])
+      create(:version,
+        authors: [
+          "Fbdoorman: David Pelaez",
+          "MiniFB:Appoxy",
+          "Dan Croak",
+          "Mike Burns",
+          "Jason Morrison",
+          "Joe Ferris",
+          "Eugene Bolshakov",
+          "Nick Quaranto",
+          "Josh Nichols",
+          "Mike Breen",
+          "Marcel G\303\266rner",
+          "Bence Nagy",
+          "Ben Mabey",
+          "Eloy Duran",
+          "Tim Pope",
+          "Mihai Anca",
+          "Mark Cornick",
+          "Shay Arnett",
+          "Jon Yurek",
+          "Chad Pytel"
+        ])
     end
   end
 
@@ -445,8 +495,10 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "get the latest versions up to today" do
-      assert_equal [@haml, @rack, @thor, @json, @rake].map(&:authors),        Version.published(5).map(&:authors)
-      assert_equal [@haml, @rack, @thor, @json, @rake, @thin].map(&:authors), Version.published(6).map(&:authors)
+      assert_equal [@haml, @rack, @thor, @json, @rake].map(&:authors),
+        Version.published(5).map(&:authors)
+      assert_equal [@haml, @rack, @thor, @json, @rake, @thin].map(&:authors),
+        Version.published(6).map(&:authors)
     end
   end
 
@@ -492,12 +544,17 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "order them from latest-oldest pushed to Gemcutter, not build data" do
-      # Setup so that gem one was built earlier than gem two, but pushed to Gemcutter after gem two
+      # Setup so that gem one was built earlier than gem two, but pushed to
+      # Gemcutter after gem two
       # We do this so that:
-      #  a) people with RSS will get smooth results, rather than gem versions jumping around the place
-      #  b) people can't hijack the latest gem spot by building in the far future, but pushing today
-      @subscribed_one.update_attributes(built_at: Time.zone.now - 3.days, created_at: Time.zone.now - 1.day)
-      @subscribed_two.update_attributes(built_at: Time.zone.now - 2.days, created_at: Time.zone.now - 2.days)
+      #  a) people with RSS will get smooth results, rather than gem versions
+      #     jumping around the place
+      #  b) people can't hijack the latest gem spot by building in the far
+      #     future, but pushing today
+      @subscribed_one.update_attributes(built_at: Time.zone.now - 3.days,
+                                        created_at: Time.zone.now - 1.day)
+      @subscribed_two.update_attributes(built_at: Time.zone.now - 2.days,
+                                        created_at: Time.zone.now - 2.days)
 
       # Even though gem two was build before gem one, it was pushed to gemcutter first
       # Thus, we should have from newest to oldest, gem one, then gem two
@@ -543,10 +600,23 @@ class VersionTest < ActiveSupport::TestCase
       @first_rubygem  = create(:rubygem, name: "first")
       @second_rubygem = create(:rubygem, name: "second")
 
-      @first_version  = create(:version, rubygem: @first_rubygem,  number: "0.0.1", platform: "ruby")
-      @second_version = create(:version, rubygem: @first_rubygem,  number: "0.0.2", platform: "ruby")
-      @other_version  = create(:version, rubygem: @second_rubygem, number: "0.0.2", platform: "java")
-      @pre_version    = create(:version, rubygem: @second_rubygem, number: "0.0.2.pre", platform: "java", prerelease: true)
+      @first_version  = create(:version,
+        rubygem: @first_rubygem,
+        number: "0.0.1",
+        platform: "ruby")
+      @second_version = create(:version,
+        rubygem: @first_rubygem,
+        number: "0.0.2",
+        platform: "ruby")
+      @other_version  = create(:version,
+        rubygem: @second_rubygem,
+        number: "0.0.2",
+        platform: "java")
+      @pre_version    = create(:version,
+        rubygem: @second_rubygem,
+        number: "0.0.2.pre",
+        platform: "java",
+        prerelease: true)
     end
 
     should "select only name, version, and platform for all gems" do
@@ -577,11 +647,13 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "be available from the database" do
-      assert_equal "tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=", @version.reload.sha256
+      assert_equal "tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=",
+        @version.reload.sha256
     end
 
     should "convert to hex on sha256_hex" do
-      assert_equal "b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78", @version.reload.sha256_hex
+      assert_equal "b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78",
+        @version.reload.sha256_hex
     end
 
     should "should return nil on sha256_hex when sha not avaible" do

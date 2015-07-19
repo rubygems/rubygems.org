@@ -131,7 +131,11 @@ class WebHookTest < ActiveSupport::TestCase
   context "with a rubygem and version" do
     setup do
       @rubygem = create(:rubygem, name: "foogem", downloads: 42)
-      @version = create(:version, rubygem: @rubygem, number: "3.2.1", authors: %w(AUTHORS), description: "DESC")
+      @version = create(:version,
+        rubygem: @rubygem,
+        number: "3.2.1",
+        authors: %w(AUTHORS),
+        description: "DESC")
       @hook    = create(:web_hook, rubygem: @rubygem)
       @job     = Notifier.new(@hook.url, 'localhost:1234', @rubygem, @version)
     end

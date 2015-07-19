@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
   validates :handle, uniqueness: true, allow_nil: true
   validates :handle, format: {
     with: /\A[A-Za-z][A-Za-z_\-0-9]*\z/,
-    message: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
+    message: "must start with a letter and can only contain letters, numbers, underscores, and dashes" # rubocop:disable Metrics/LineLength
   }, allow_nil: true
   validates :handle, length: { within: 2..40 }, allow_nil: true
 

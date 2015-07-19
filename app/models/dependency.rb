@@ -3,8 +3,8 @@ class Dependency < ActiveRecord::Base
   belongs_to :version
 
   before_validation :use_gem_dependency,
-                    :use_existing_rubygem,
-                    :parse_gem_dependency
+    :use_existing_rubygem,
+    :parse_gem_dependency
   after_create :push_on_to_list
 
   validates :requirements, presence: true

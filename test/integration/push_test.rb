@@ -70,7 +70,10 @@ class PushTest < ActionDispatch::IntegrationTest
   end
 
   def push_gem(path)
-    post api_v1_rubygems_path, File.read(path), "HTTP_AUTHORIZATION" => @user.api_key, "CONTENT_TYPE" => "application/octet-stream"
+    post api_v1_rubygems_path,
+      File.read(path),
+      "CONTENT_TYPE" => "application/octet-stream",
+      "HTTP_AUTHORIZATION" => @user.api_key
   end
 
   teardown do

@@ -45,7 +45,8 @@ class DependencyTest < ActiveSupport::TestCase
     should "be pushed onto a redis list if a runtime dependency" do
       @dependency.save
 
-      assert_equal "#{@dependency.name} #{@dependency.requirements}", Redis.current.lindex(Dependency.runtime_key(@version.full_name), 0)
+      assert_equal "#{@dependency.name} #{@dependency.requirements}",
+        Redis.current.lindex(Dependency.runtime_key(@version.full_name), 0)
     end
 
     should "not push development dependency onto the redis list" do
@@ -64,7 +65,8 @@ class DependencyTest < ActiveSupport::TestCase
       end
 
       should "correctly create a Dependency referring to the existing Rubygem" do
-        @gem_dependency.stubs(:requirements_list).returns ['#<YAML::Syck::DefaultKey:0x0000000> 0.0.0']
+        @gem_dependency.stubs(:requirements_list)
+          .returns(['#<YAML::Syck::DefaultKey:0x0000000> 0.0.0'])
         @dependency = create(:dependency, rubygem: @rubygem, gem_dependency: @gem_dependency)
 
         assert_equal @rubygem, @dependency.rubygem

@@ -6,7 +6,8 @@ class ActiveSupport::TestCase
       end
       should "deny access" do
         assert_response 401
-        assert_match "Access Denied. Please sign up for an account at http://rubygems.org", @response.body
+        assert_match "Access Denied. Please sign up for an account at http://rubygems.org",
+          @response.body
       end
     end
 

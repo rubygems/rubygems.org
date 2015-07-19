@@ -81,7 +81,7 @@ class RubygemsHelperTest < ActionView::TestCase
 
   should "link to report abuse" do
     rubygem = create(:rubygem, name: 'my_gem')
-    url = "http://help.rubygems.org/discussion/new?discussion[title]=Reporting%20Abuse%20on%20my_gem&discussion[private]=1"
+    url = "http://help.rubygems.org/discussion/new?discussion[private]=1&discussion[title]=Reporting%20Abuse%20on%20my_gem" # rubocop:disable Metrics/LineLength
     assert_match url, report_abuse_link(rubygem)
   end
 
@@ -120,7 +120,12 @@ class RubygemsHelperTest < ActionView::TestCase
       users = Array.new(2) { create(:user) }
       @rubygem = create(:rubygem, owners: users)
 
-      expected_links = users.sort_by(&:id).map { |u| link_to gravatar(48, "gravatar-#{u.id}", u), profile_path(u.display_id), alt: u.display_handle, title: u.display_handle }.join
+      expected_links = users.sort_by(&:id).map do |u|
+        link_to gravatar(48, "gravatar-#{u.id}", u),
+          profile_path(u.display_id),
+          alt: u.display_handle,
+          title: u.display_handle
+      end.join
       assert_equal expected_links, links_to_owners(@rubygem)
       assert links_to_owners(@rubygem).html_safe?
     end

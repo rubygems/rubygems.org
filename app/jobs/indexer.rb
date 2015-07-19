@@ -10,8 +10,7 @@ class Indexer
   statsd_measure :perform, 'Indexer.perform'
 
   def write_gem(body, spec)
-    RubygemFs.instance.store("gems/#{spec.original_name}.gem",
-                             body.string)
+    RubygemFs.instance.store("gems/#{spec.original_name}.gem", body.string)
 
     self.class.indexer.abbreviate spec
     self.class.indexer.sanitize spec

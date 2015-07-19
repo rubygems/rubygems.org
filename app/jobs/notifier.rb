@@ -14,11 +14,11 @@ Notifier = Struct.new(:url, :host_with_port, :rubygem, :version, :api_key) do
   def perform
     timeout(5) do
       RestClient.post url,
-                      payload,
-                      :timeout        => 5,
-                      :open_timeout   => 5,
-                      'Content-Type'  => 'application/json',
-                      'Authorization' => authorization
+        payload,
+        :timeout        => 5,
+        :open_timeout   => 5,
+        'Content-Type'  => 'application/json',
+        'Authorization' => authorization
     end
     true
   rescue *(HTTP_ERRORS + [RestClient::Exception, SocketError, SystemCallError])

@@ -124,7 +124,15 @@ class RubygemsControllerTest < ActionController::TestCase
       setup do
         @url = "http://github.com/qrush/gemcutter"
         @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
-        put :update, id: @rubygem.to_param, linkset: { code: @url, docs: 'http://docs.com', wiki: 'http://wiki.com', mail: 'http://mail.com', bugs: 'http://bugs.com' }
+        put :update,
+          id: @rubygem.to_param,
+          linkset: {
+            code: @url,
+            docs: 'http://docs.com',
+            wiki: 'http://wiki.com',
+            mail: 'http://mail.com',
+            bugs: 'http://bugs.com'
+          }
       end
       should respond_with :redirect
       should redirect_to('the gem') { rubygem_path(@rubygem) }
@@ -267,7 +275,8 @@ class RubygemsControllerTest < ActionController::TestCase
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
       assert page.has_content?(@latest_version.number)
-      assert page.has_css?("small:contains('#{@latest_version.built_at.to_date.to_formatted_s(:long)}')")
+      css = "small:contains('#{@latest_version.built_at.to_date.to_formatted_s(:long)}')"
+      assert page.has_css?(css)
       assert page.has_content?("Links")
     end
   end
@@ -311,11 +320,13 @@ class RubygemsControllerTest < ActionController::TestCase
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
       assert page.has_content?(@versions[0].number)
-      assert page.has_css?("small:contains('#{@versions[0].built_at.to_date.to_formatted_s(:long)}')")
+      css = "small:contains('#{@versions[0].built_at.to_date.to_formatted_s(:long)}')"
+      assert page.has_css?(css)
 
       assert page.has_content?("Versions")
       assert page.has_content?(@versions[2].number)
-      assert page.has_css?("small:contains('#{@versions[2].built_at.to_date.to_formatted_s(:long)}')")
+      css = "small:contains('#{@versions[2].built_at.to_date.to_formatted_s(:long)}')"
+      assert page.has_css?(css)
     end
 
     should "render versions in correct order" do

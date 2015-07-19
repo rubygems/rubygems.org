@@ -3,7 +3,7 @@ class SessionsController < Clearance::SessionsController
 
   def create
     @user = User.authenticate(params[:session][:who],
-                              params[:session][:password])
+      params[:session][:password])
     sign_in(@user) do |status|
       if status.success?
         redirect_back_or(url_after_create)
