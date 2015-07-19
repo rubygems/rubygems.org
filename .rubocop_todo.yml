@@ -41,10 +41,6 @@ Style/CaseEquality:
 Style/ClassAndModuleChildren:
   Enabled: false
 
-# Offense count: 186
-Style/Documentation:
-  Enabled: false
-
 # Offense count: 2
 Style/DoubleNegation:
   Enabled: false
