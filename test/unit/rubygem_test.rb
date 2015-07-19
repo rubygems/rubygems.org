@@ -612,11 +612,11 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "update the dependency" do
-        rg = Rubygem.create(name: "rake")
+        rubygem = Rubygem.create(name: "rake")
 
-        dep = Dependency.find_by_id(@rack_dep.id)
-        assert_nil dep.unresolved_name
-        assert_equal rg, dep.rubygem
+        dependency = Dependency.find_by_id(@rack_dep.id)
+        assert_nil dependency.unresolved_name
+        assert_equal rubygem, dependency.rubygem
       end
     end
 

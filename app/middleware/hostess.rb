@@ -39,9 +39,9 @@ class Hostess < Rack::Static
       return [302, { 'Location' => "/gems/#{Regexp.last_match(1)}.gem" }, []]
     end
 
-    if (full_name = gem_download_path(path)) && name = Version.rubygem_name_for(full_name)
-      Download.incr(name, full_name)
-    end
+    download_path = gem_download_path(path)
+    name = Version.rubygem_name_for(download_path) if download_path
+    Download.incr(name, download_path) if name
     super
   end
 end

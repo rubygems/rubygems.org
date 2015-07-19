@@ -28,9 +28,8 @@ namespace :gemcutter do
     desc "Initialize missing checksums."
     task init: :environment do
       without_sha256 = Version.where(sha256: nil)
-      if mod = ENV['shard']
-        without_sha256.where("id % 4 = ?", mod.to_i)
-      end
+      mod = ENV['shard']
+      without_sha256.where("id % 4 = ?", mod.to_i) if mod
 
       total = without_sha256.count
       i = 0
@@ -86,9 +85,8 @@ namespace :gemcutter do
     desc "Backfill old gem versions with metadata."
     task backfill: :environment do
       without_metadata = Version.where("metadata = ''")
-      if mod = ENV['shard']
-        without_metadata = without_metadata.where("id % 4 = ?", mod.to_i)
-      end
+      mod = ENV['shard']
+      without_metadata = without_metadata.where("id % 4 = ?", mod.to_i) if mod
 
       total = without_metadata.count
       i = 0

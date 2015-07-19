@@ -256,9 +256,8 @@ class Version < ActiveRecord::Base
 
   def recalculate_sha256
     key = "gems/#{full_name}.gem"
-    if file = RubygemFs.instance.get(key)
-      Digest::SHA2.base64digest file
-    end
+    file = RubygemFs.instance.get(key)
+    Digest::SHA2.base64digest(file) if file
   end
 
   def recalculate_sha256!
@@ -267,7 +266,8 @@ class Version < ActiveRecord::Base
 
   def recalculate_metadata!
     key = "gems/#{full_name}.gem"
-    if file = RubygemFs.instance.get(key)
+    file = RubygemFs.instance.get(key)
+    if file
       spec = Gem::Package.new(StringIO.new(file)).spec
       metadata = spec.metadata
       update(metadata: metadata || {})

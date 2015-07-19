@@ -105,10 +105,10 @@ class Download
 
   def self.copy_to_sql(version, date)
     count = Redis.current.hget(history_key(version), date)
-
-    if vh = VersionHistory.for(version, date)
-      vh.count = count
-      vh.save
+    version_history = VersionHistory.for(version, date)
+    if version_history
+      version_history.count = count
+      version_history.save
     else
       VersionHistory.make(version, date, count)
     end
@@ -198,11 +198,8 @@ class Download
   end
 
   def self.rank(version)
-    if rank = Redis.current.zrevrank(today_key, version.full_name)
-      rank + 1
-    else
-      0
-    end
+    rank = Redis.current.zrevrank(today_key, version.full_name)
+    rank ? rank + 1 : 0
   end
 
   def self.cleanup_today_keys

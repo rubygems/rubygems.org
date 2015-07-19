@@ -25,9 +25,8 @@ class User < ActiveRecord::Base
   validates :handle, length: { within: 2..40 }, allow_nil: true
 
   def self.authenticate(who, password)
-    if user = find_by(email: who.downcase) || find_by(handle: who)
-      user if user.authenticated?(password)
-    end
+    user = find_by(email: who.downcase) || find_by(handle: who)
+    user if user && user.authenticated?(password)
   end
 
   def self.find_by_slug!(slug)

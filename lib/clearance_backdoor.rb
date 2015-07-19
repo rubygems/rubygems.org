@@ -12,10 +12,10 @@ class ClearanceBackdoor
   private
 
   def sign_in_through_the_back_door
-    if user_id = params['as']
-      user = User.find(user_id)
-      @env[:clearance].sign_in(user)
-    end
+    user_id = params['as']
+    return if user_id.nil?
+    user = User.find(user_id)
+    @env[:clearance].sign_in(user)
   end
 
   def params
