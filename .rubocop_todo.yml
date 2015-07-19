@@ -10,10 +10,6 @@ Lint/DuplicateMethods:
   Enabled: false
 
 # Offense count: 1
-Lint/NestedMethodDefinition:
-  Enabled: false
-
-# Offense count: 1
 Lint/RescueException:
   Enabled: false
 

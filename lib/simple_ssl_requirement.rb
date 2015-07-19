@@ -3,16 +3,6 @@ module SimpleSSLRequirement
 
   def self.included(base)
     base.extend(ClassMethods)
-    base.class_eval do
-      private
-
-      def require_ssl
-        unless request.ssl?
-          redirect_to "https://#{request.host}#{request.fullpath}"
-          flash.keep
-        end
-      end
-    end
   end
 
   module ClassMethods
@@ -22,6 +12,15 @@ module SimpleSSLRequirement
       if options.delete(:environments).include?(Rails.env)
         before_action :require_ssl, options
       end
+    end
+  end
+
+  private
+
+  def require_ssl
+    unless request.ssl?
+      redirect_to "https://#{request.host}#{request.fullpath}"
+      flash.keep
     end
   end
 end
