@@ -4,7 +4,7 @@ class VersionsControllerTest < ActionController::TestCase
   context 'GET to index' do
     setup do
       @rubygem = create(:rubygem)
-      @versions = (1..5).map do |version|
+      @versions = (1..5).map do
         create(:version, rubygem: @rubygem)
       end
 
@@ -24,7 +24,7 @@ class VersionsControllerTest < ActionController::TestCase
   context 'GET to index as an atom feed' do
     setup do
       @rubygem = create(:rubygem)
-      @versions = (1..5).map do |version|
+      @versions = (1..5).map do
         create(:version, rubygem: @rubygem)
       end
       @rubygem.reload
@@ -69,7 +69,7 @@ class VersionsControllerTest < ActionController::TestCase
     setup do
       @latest_version = create(:version, built_at: 1.week.ago, created_at: 1.day.ago)
       @rubygem = @latest_version.rubygem
-      @versions = (1..5).map do |_|
+      @versions = (1..5).map do
         FactoryGirl.create(:version, rubygem: @rubygem)
       end
       get :show, rubygem_id: @rubygem.name, id: @latest_version.number

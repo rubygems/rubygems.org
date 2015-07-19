@@ -22,11 +22,6 @@ Lint/NestedMethodDefinition:
 Lint/RescueException:
   Enabled: false
 
-# Offense count: 8
-# Cop supports --auto-correct.
-Lint/UnusedBlockArgument:
-  Enabled: false
-
 # Offense count: 9
 # Cop supports --auto-correct.
 Lint/UnusedMethodArgument:
