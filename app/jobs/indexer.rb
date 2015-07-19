@@ -72,7 +72,7 @@ class Indexer
   end
 
   def log(message)
-    Rails.logger.info "[GEMCUTTER:#{Time.now}] #{message}"
+    Rails.logger.info "[GEMCUTTER:#{Time.zone.now}] #{message}"
   end
 
   def self.indexer

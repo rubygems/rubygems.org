@@ -36,7 +36,7 @@ class VersionTest < ActiveSupport::TestCase
       xml = Nokogiri.parse(@version.to_xml)
       assert_equal %w(number built-at summary description authors platform ruby-version prerelease downloads-count licenses requirements sha metadata).map(&:to_s).sort, xml.root.children.map(&:name).reject { |t| t == "text" }.sort
       assert_equal @version.authors, xml.at_css("authors").content
-      assert_equal @version.built_at.to_i, xml.at_css("built-at").content.to_time.to_i
+      assert_equal @version.built_at.iso8601, xml.at_css("built-at").content
       assert_equal @version.description, xml.at_css("description").content
       assert_equal @version.downloads_count, xml.at_css("downloads-count").content.to_i
       assert_equal @version.metadata["foo"], xml.at_css("metadata foo").content
@@ -96,7 +96,7 @@ class VersionTest < ActiveSupport::TestCase
 
   context "updated gems" do
     setup do
-      Timecop.freeze Date.today
+      Timecop.freeze Time.zone.today
       @existing_gem = create(:rubygem)
       @second = create(:version, rubygem: @existing_gem, created_at: 1.day.ago)
       @fourth = create(:version, rubygem: @existing_gem, created_at: 4.days.ago)
@@ -496,8 +496,8 @@ class VersionTest < ActiveSupport::TestCase
       # We do this so that:
       #  a) people with RSS will get smooth results, rather than gem versions jumping around the place
       #  b) people can't hijack the latest gem spot by building in the far future, but pushing today
-      @subscribed_one.update_attributes(built_at: Time.now - 3.days, created_at: Time.now - 1.day)
-      @subscribed_two.update_attributes(built_at: Time.now - 2.days, created_at: Time.now - 2.days)
+      @subscribed_one.update_attributes(built_at: Time.zone.now - 3.days, created_at: Time.zone.now - 1.day)
+      @subscribed_two.update_attributes(built_at: Time.zone.now - 2.days, created_at: Time.zone.now - 2.days)
 
       # Even though gem two was build before gem one, it was pushed to gemcutter first
       # Thus, we should have from newest to oldest, gem one, then gem two

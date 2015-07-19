@@ -41,16 +41,6 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Enabled: false
 
-# Offense count: 10
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Rails/Date:
-  Enabled: false
-
-# Offense count: 13
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Rails/TimeZone:
-  Enabled: false
-
 # Offense count: 1
 Style/CaseEquality:
   Enabled: false

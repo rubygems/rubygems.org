@@ -120,9 +120,9 @@ class DownloadTest < ActiveSupport::TestCase
     Download.incr(@rubygem_1, @version_2.full_name)
 
     downloads = {
-      "#{@version_1.id}-#{2.days.ago.to_date}" => 0, "#{@version_1.id}-#{Date.yesterday}" => 1, "#{@version_1.id}-#{Time.zone.today}" => 1,
-      "#{@version_2.id}-#{2.days.ago.to_date}" => 0, "#{@version_2.id}-#{Date.yesterday}" => 1, "#{@version_2.id}-#{Time.zone.today}" => 1,
-      "#{@version_3.id}-#{2.days.ago.to_date}" => 0, "#{@version_3.id}-#{Date.yesterday}" => 1, "#{@version_3.id}-#{Time.zone.today}" => 3 }
+      "#{@version_1.id}-#{2.days.ago.to_date}" => 0, "#{@version_1.id}-#{Time.zone.yesterday}" => 1, "#{@version_1.id}-#{Time.zone.today}" => 1,
+      "#{@version_2.id}-#{2.days.ago.to_date}" => 0, "#{@version_2.id}-#{Time.zone.yesterday}" => 1, "#{@version_2.id}-#{Time.zone.today}" => 1,
+      "#{@version_3.id}-#{2.days.ago.to_date}" => 0, "#{@version_3.id}-#{Time.zone.yesterday}" => 1, "#{@version_3.id}-#{Time.zone.today}" => 3 }
 
     assert_equal downloads.size, 9
     assert_equal downloads, Download.counts_by_day_for_versions([@version_1, @version_2, @version_3], 2)
@@ -152,16 +152,16 @@ class DownloadTest < ActiveSupport::TestCase
     Download.incr(@rubygem_1, @version_2.full_name)
 
     downloads = {
-      "#{@version_1.id}-#{2.days.ago.to_date}" => 0, "#{@version_1.id}-#{Date.yesterday}" => 5, "#{@version_1.id}-#{Time.zone.today}" => 1,
-      "#{@version_2.id}-#{2.days.ago.to_date}" => 0, "#{@version_2.id}-#{Date.yesterday}" => 1, "#{@version_2.id}-#{Time.zone.today}" => 1,
-      "#{@version_3.id}-#{2.days.ago.to_date}" => 0, "#{@version_3.id}-#{Date.yesterday}" => 1, "#{@version_3.id}-#{Time.zone.today}" => 3 }
+      "#{@version_1.id}-#{2.days.ago.to_date}" => 0, "#{@version_1.id}-#{Time.zone.yesterday}" => 5, "#{@version_1.id}-#{Time.zone.today}" => 1,
+      "#{@version_2.id}-#{2.days.ago.to_date}" => 0, "#{@version_2.id}-#{Time.zone.yesterday}" => 1, "#{@version_2.id}-#{Time.zone.today}" => 1,
+      "#{@version_3.id}-#{2.days.ago.to_date}" => 0, "#{@version_3.id}-#{Time.zone.yesterday}" => 1, "#{@version_3.id}-#{Time.zone.today}" => 3 }
 
     assert_equal downloads.size, 9
     assert_equal downloads, Download.counts_by_day_for_versions([@version_1, @version_2, @version_3], 2)
   end
 
   should "find counts per day for versions in range across month boundary" do
-    Timecop.freeze(Time.parse("2012-10-01")) do
+    Timecop.freeze(Time.zone.parse("2012-10-01")) do
       @rubygem_1 = create(:rubygem)
       @version_1 = create(:version, rubygem: @rubygem_1)
 
@@ -176,7 +176,7 @@ class DownloadTest < ActiveSupport::TestCase
 
       downloads = ActiveSupport::OrderedHash.new.tap do |d|
         d[start.to_s] = 0
-        d["#{Date.yesterday}"] = 5
+        d["#{Time.zone.yesterday}"] = 5
         d[fin.to_s] = 1
       end
 
@@ -199,7 +199,7 @@ class DownloadTest < ActiveSupport::TestCase
 
     downloads = ActiveSupport::OrderedHash.new.tap do |d|
       d[start.to_s] = 0
-      d["#{Date.yesterday}"] = 5
+      d["#{Time.zone.yesterday}"] = 5
       d[fin.to_s] = 1
     end
 

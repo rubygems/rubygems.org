@@ -98,7 +98,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.published(limit)
-    where("built_at <= ?", DateTime.now.utc)
+    where("built_at <= ?", Time.zone.now)
       .indexed
       .by_built_at
       .limit(limit)

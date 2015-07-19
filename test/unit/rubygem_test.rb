@@ -94,7 +94,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "can find when the first built date was" do
-      Timecop.travel(DateTime.now) do
+      Timecop.travel(Time.zone.now) do
         create(:version, rubygem: @rubygem, number: "3.0.0", built_at: 1.day.ago)
         create(:version, rubygem: @rubygem, number: "2.0.0", built_at: 2.days.ago)
         create(:version, rubygem: @rubygem, number: "1.0.0", built_at: 3.days.ago)
