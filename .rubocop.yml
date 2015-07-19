@@ -8,11 +8,22 @@ AllCops:
   DisplayCopNames: true
   DisplayStyleGuide: true
 
+Metrics/AbcSize:
+  Max: 42 # TODO: Lower to 15
+
+Metrics/ClassLength:
+  Max: 300 # TODO: Lower to 100
+  Exclude:
+    - test/**/*.rb
+
 Metrics/CyclomaticComplexity:
   Max: 9 # TODO: Lower to 6
 
 Metrics/LineLength:
   Max: 100 # TODO: Lower to 80
+
+Metrics/MethodLength:
+  Max: 30 # TODO: Lower to 10
 
 Metrics/PerceivedComplexity:
   Max: 10 # TODO: Lower to 7
