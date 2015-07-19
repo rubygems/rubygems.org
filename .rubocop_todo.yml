@@ -56,12 +56,6 @@ Rails/Date:
 Rails/TimeZone:
   Enabled: false
 
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/AndOr:
-  Enabled: false
-
 # Offense count: 1
 Style/CaseEquality:
   Enabled: false
