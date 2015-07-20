@@ -43,12 +43,12 @@ class Pusher
 
   def pull_spec
     @spec = Gem::Package.new(body).spec
-  rescue Exception => e
+  rescue StandardError => error
     notify <<-MSG, 422
 RubyGems.org cannot process this gem.
 Please try rebuilding it and installing it locally to make sure it's valid.
 Error:
-#{e.message}
+#{error.message}
 MSG
   end
 

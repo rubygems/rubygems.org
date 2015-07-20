@@ -9,10 +9,6 @@
 Lint/DuplicateMethods:
   Enabled: false
 
-# Offense count: 1
-Lint/RescueException:
-  Enabled: false
-
 # Offense count: 2
 Style/DoubleNegation:
   Enabled: false
