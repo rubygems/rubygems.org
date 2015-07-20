@@ -74,6 +74,8 @@ GEM
     clearance-deprecated_password_strategies (1.10.1)
       activesupport
       clearance (>= 1.10)
+    codeclimate-test-reporter (0.4.7)
+      simplecov (>= 0.7.1, < 1.0.0)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -89,6 +91,7 @@ GEM
     delayed_job_active_record (4.0.3)
       activerecord (>= 3.0, < 5.0)
       delayed_job (>= 3.0, < 4.1)
+    docile (1.1.5)
     domain_name (0.5.24)
       unf (>= 0.0.5, < 1.0.0)
     dynamic_form (1.1.4)
@@ -213,6 +216,11 @@ GEM
     shoulda-context (1.2.1)
     shoulda-matchers (2.8.0)
       activesupport (>= 3.0.0)
+    simplecov (0.10.0)
+      docile (~> 1.1.0)
+      json (~> 1.8)
+      simplecov-html (~> 0.10.0)
+    simplecov-html (0.10.0)
     sprockets (3.3.2)
       rack (~> 1.0)
     sprockets-rails (2.3.2)
@@ -263,6 +271,7 @@ DEPENDENCIES
   capybara
   clearance
   clearance-deprecated_password_strategies
+  codeclimate-test-reporter
   coffee-rails (~> 4.1)
   daemons
   dalli
@@ -298,6 +307,7 @@ DEPENDENCIES
   rubocop (~> 0.32.1)
   sass-rails (~> 5.0.0)
   shoulda
+  simplecov (~> 0.10)
   statsd-instrument (~> 2.0.6)
   timecop
   toxiproxy (~> 0.1.3)

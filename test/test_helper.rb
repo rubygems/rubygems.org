@@ -1,4 +1,10 @@
 ENV["RAILS_ENV"] ||= "test"
+begin
+  require 'simplecov'
+  AppCoverage.start
+rescue LoadError
+  STDERR.puts 'Running without SimpleCov'
+end
 require File.expand_path('../../config/environment', __FILE__)
 
 require 'rails/test_help'
