@@ -17,11 +17,6 @@ Lint/RescueException:
 Style/DoubleNegation:
   Enabled: false
 
-# Offense count: 11
-# Configuration parameters: MinBodyLength.
-Style/GuardClause:
-  Enabled: false
-
 # Offense count: 1841
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.

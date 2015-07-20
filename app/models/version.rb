@@ -306,18 +306,14 @@ class Version < ActiveRecord::Base
   private
 
   def platform_and_number_are_unique
-    if Version.exists?(rubygem_id: rubygem_id,
-                       number: number,
-                       platform: platform)
-      errors[:base] << "A version already exists with this number or platform."
-    end
+    return unless Version.exists?(rubygem_id: rubygem_id, number: number, platform: platform)
+    errors[:base] << "A version already exists with this number or platform."
   end
 
   def authors_format
     string_authors = authors.is_a?(Array) && authors.grep(String)
-    if string_authors.blank? || string_authors.size != authors.size
-      errors.add :authors, "must be an Array of Strings"
-    end
+    return unless string_authors.blank? || string_authors.size != authors.size
+    errors.add :authors, "must be an Array of Strings"
   end
 
   def update_prerelease

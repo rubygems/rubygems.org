@@ -48,16 +48,15 @@ module RubygemsHelper
   end
 
   def unsubscribe_link(rubygem)
-    if signed_in?
-      style = if rubygem.subscribers.find_by_id(current_user.id)
-                'display:inline-block'
-              else
-                'display:none'
-              end
-      link_to 'Unsubscribe', rubygem_subscription_path(rubygem),
-        class: [:toggler, 'gem__link', 't-list__item'], id: 'unsubscribe',
-        method: :delete, remote: true, style: style
-    end
+    return unless signed_in?
+    style = if rubygem.subscribers.find_by_id(current_user.id)
+              'display:inline-block'
+            else
+              'display:none'
+            end
+    link_to 'Unsubscribe', rubygem_subscription_path(rubygem),
+      class: [:toggler, 'gem__link', 't-list__item'], id: 'unsubscribe',
+      method: :delete, remote: true, style: style
   end
 
   def atom_link(rubygem)
@@ -71,10 +70,9 @@ module RubygemsHelper
   end
 
   def documentation_link(version, linkset)
-    if linkset.nil? || linkset.docs.blank?
-      link_to 'Documentation', version.documentation_path,
-        class: 'gem__link t-list__item', id: :docs
-    end
+    return unless linkset.nil? || linkset.docs.blank?
+    link_to 'Documentation', version.documentation_path,
+      class: 'gem__link t-list__item', id: :docs
   end
 
   def badge_link(rubygem)

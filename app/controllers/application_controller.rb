@@ -33,28 +33,26 @@ class ApplicationController < ActionController::Base
   end
 
   def verify_authenticated_user
-    if current_user.nil?
-      # When in passenger, this forces the whole body to be read before
-      # we return a 401 and end the request. We need to do this because
-      # otherwise apache is confused why we never read the whole body.
-      #
-      # This works because request.body is a RewindableInput which will
-      # slurp all the socket data into a tempfile, satisfying apache.
-      request.body.size if request.body.respond_to? :size
-      render text: t(:please_sign_up), status: 401
-    end
+    return if current_user
+    # When in passenger, this forces the whole body to be read before
+    # we return a 401 and end the request. We need to do this because
+    # otherwise apache is confused why we never read the whole body.
+    #
+    # This works because request.body is a RewindableInput which will
+    # slurp all the socket data into a tempfile, satisfying apache.
+    request.body.size if request.body.respond_to? :size
+    render text: t(:please_sign_up), status: 401
   end
 
   def find_rubygem
     @rubygem = Rubygem.find_by_name(params[:rubygem_id] || params[:id])
-    if @rubygem.blank?
-      respond_to do |format|
-        format.any do
-          render text: "This rubygem could not be found.", status: :not_found
-        end
-        format.html do
-          render file: "public/404", status: :not_found, layout: false, formats: [:html]
-        end
+    return if @rubygem
+    respond_to do |format|
+      format.any do
+        render text: "This rubygem could not be found.", status: :not_found
+      end
+      format.html do
+        render file: "public/404", status: :not_found, layout: false, formats: [:html]
       end
     end
   end
