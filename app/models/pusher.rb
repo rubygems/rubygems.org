@@ -99,7 +99,7 @@ MSG
       "name"           => spec.name,
       "version"        => spec.version.to_s,
       "platform"       => spec.platform.to_s,
-      "prerelease"     => !!spec.version.prerelease?,
+      "prerelease"     => !!spec.version.prerelease?, # rubocop:disable Style/DoubleNegation
       "rubygems_token" => @bundler_token
     }.to_json
 

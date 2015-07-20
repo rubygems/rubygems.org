@@ -317,7 +317,7 @@ class Version < ActiveRecord::Base
   end
 
   def update_prerelease
-    self[:prerelease] = !!to_gem_version.prerelease?
+    self[:prerelease] = !!to_gem_version.prerelease? # rubocop:disable Style/DoubleNegation
     true
   end
 
