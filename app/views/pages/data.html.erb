@@ -2,20 +2,22 @@
 
 <div class="t-body">
   <p>We provide weekly dumps of the RubyGems.org PostgreSQL data. This dump is sanitized, removing all user information.</p>
-  <ul class="rubygems-dump-listing"></ul>
+  <ul class="rubygems-dump-listing-postgresql"></ul>
+  <p>We also provide weekly dumps of the RubyGems.org Redis data.</p>
+  <ul class="rubygems-dump-listing-redis"></ul>
 </div>
 
 <% content_for :javascript do %>
   <script type="text/javascript">
     $(document).ready(function() {
 
-      var getDumpData = function(marker, html) {
-        return $.get('https://s3-us-west-2.amazonaws.com/rubygems-dumps/').done(function(data) {
+      var getDumpData = function(target, type) {
+        return $.get('https://s3-us-west-2.amazonaws.com/rubygems-dumps/?prefix=production/public_' + type).done(function(data) {
           var files, xml;
           xml = $(data);
           files = parseS3Listing(xml);
           files = sortByLastModified(files);
-          $('ul.rubygems-dump-listing').html(renderDumpList(files));
+          $(target).html(renderDumpList(files));
         }).fail(function(error) {
           console.error(error);
         });
@@ -61,7 +63,8 @@
         return content.join("\n");
       };
 
-      getDumpData();
+      getDumpData('ul.rubygems-dump-listing-postgresql', 'postgresql');
+      getDumpData('ul.rubygems-dump-listing-redis', 'redis');
     });
   </script>
 <% end %>
