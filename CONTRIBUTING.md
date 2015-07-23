@@ -63,39 +63,8 @@ Branching
 For your own development, use the topic branches. Basically, cut each
 feature into its own branch and send pull requests based off those.
 
-On the main repo, branches are used as follows:
-
-<table>
-    <thead>
-        <tr>
-            <th>Branch</th>
-            <th>Used for...</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>`master`</td>
-            <td>The main development branch. **Always** should be fast-forwardable.</td>
-        </tr>
-        <tr>
-            <td>`production`</td>
-            <td>
-                What’s currently on https://rubygems.org. Should be updated
-                when deploys happen from master.
-            </td>
-        </tr>
-        <tr>
-            <td>Topic branches</td>
-            <td>
-                Individual features/fixes. These should be moved around/rebased
-                on top of the latest master before submitting. Makes your
-                patches easier to merge and keep the history clean if at all
-                possible.
-            </td>
-        </tr>
-    </tbody>
-</table>
-
+The master branch is the main production branch. **Always** should be
+fast-forwardable.
 
 Development Setup
 -----------------
