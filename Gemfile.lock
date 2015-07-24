@@ -44,7 +44,7 @@ GEM
     autoprefixer-rails (5.2.1.1)
       execjs
       json
-    aws-sdk-core (2.1.7)
+    aws-sdk-core (2.1.8)
       jmespath (~> 1.0)
     bcrypt (3.1.10)
     bourne (1.6.0)
@@ -313,4 +313,4 @@ DEPENDENCIES
   yajl-ruby
 
 BUNDLED WITH
-   1.10.5
+   1.10.6
