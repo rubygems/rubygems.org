@@ -85,7 +85,6 @@ GEM
     coffee-script-source (1.9.1.1)
     colorize (0.7.7)
     daemons (1.2.3)
-    dalli (2.7.4)
     delayed_job (4.0.6)
       activesupport (>= 3.0, < 5.0)
     delayed_job_active_record (4.0.3)
@@ -269,7 +268,6 @@ DEPENDENCIES
   clearance-deprecated_password_strategies
   coffee-rails (~> 4.1)
   daemons
-  dalli
   delayed_job
   delayed_job_active_record
   dynamic_form
