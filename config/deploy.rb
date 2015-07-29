@@ -5,6 +5,7 @@ set :application, 'rubygems'
 set :deploy_to, '/applications/rubygems'
 set :repo_url, 'https://github.com/rubygems/rubygems.org.git'
 set :scm, :git
+set :branch, ENV['SHA'] || 'master'
 set :git_strategy, Capistrano::Git::SubmoduleStrategy
 set :pty, true
 set :assets_roles, [:app]
