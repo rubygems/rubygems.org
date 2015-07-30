@@ -44,7 +44,7 @@ GEM
     autoprefixer-rails (5.2.1.1)
       execjs
       json
-    aws-sdk-core (2.1.9)
+    aws-sdk-core (2.1.10)
       jmespath (~> 1.0)
     bcrypt (3.1.10)
     bourne (1.6.0)
@@ -189,7 +189,6 @@ GEM
     raindrops (0.15.0)
     rake (10.4.2)
     rdoc (4.2.0)
-      json (~> 1.4)
     redis (3.2.1)
     rest-client (1.8.0)
       http-cookie (>= 1.0.2, < 2.0)
