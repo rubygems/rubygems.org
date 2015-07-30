@@ -31,7 +31,7 @@ module RubygemFs
   end
 
   class Local
-    def store(key, body)
+    def store(key, body, _metadata = {})
       FileUtils.mkdir_p File.dirname("#{base_dir}/#{key}")
       File.open("#{base_dir}/#{key}", 'wb') do |f|
         f.write(body)
@@ -60,8 +60,8 @@ module RubygemFs
       @config = config
     end
 
-    def store(key, body)
-      s3.put_object(key: key, body: body, bucket: bucket, acl: 'public-read')
+    def store(key, body, metadata = {})
+      s3.put_object(key: key, body: body, bucket: bucket, acl: 'public-read', metadata: metadata)
     end
 
     def get(key)

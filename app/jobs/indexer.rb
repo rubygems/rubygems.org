@@ -32,7 +32,7 @@ class Indexer
   end
 
   def upload(key, value)
-    RubygemFs.instance.store(key, stringify(value))
+    RubygemFs.instance.store(key, stringify(value), 'surrogate-key' => 'full-index')
   end
 
   def update_index
