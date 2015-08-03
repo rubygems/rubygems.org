@@ -2,7 +2,7 @@ en:
   title: "RubyGems.org"
   subtitle: "your community gem host"
   help_url: "http://help.rubygems.org"
-  please_sign_up: "Access Denied. Please sign up for an account at http://rubygems.org"
+  please_sign_up: "Access Denied. Please sign up for an account at https://rubygems.org"
   feed_subscribed: "RubyGems.org | Subscribed Gems"
   feed_latest: "RubyGems.org | Latest Gems"
   time_ago: "%{duration} ago"

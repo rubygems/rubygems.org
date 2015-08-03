@@ -1,5 +1,6 @@
 class Mailer < ActionMailer::Base
   default_url_options[:host] = Gemcutter::HOST
+  default_url_options[:protocol] = Gemcutter::PROTOCOL
 
   def email_reset(user)
     @user = user

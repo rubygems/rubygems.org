@@ -104,7 +104,7 @@ nl:
       latest: Laatste wijzigingen
       my_subscriptions: Mijn abonnementen
       no_owned: Je hebt nog geen gems gepubliceerd. Bekijk de instructies voor het %{creating_link} van een gem of het  %{migrating_link} van een gem vanaf RubyForge.
-  please_sign_up: Toegang geweigerd. Schrijf je in voor een account op http://rubygems.org
+  please_sign_up: Toegang geweigerd. Schrijf je in voor een account op https://rubygems.org
   feed_latest: RubyGems.org | Recente Gems
   sessions:
     new:
@@ -138,7 +138,7 @@ nl:
     show:
       exact_match: Exacte match
       subtitle: voor %{query}
-  url: http://rubygems.org
+  url: https://rubygems.org
   versions:
     index:
       title: alle versies van %{name}

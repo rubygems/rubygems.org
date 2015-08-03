@@ -15,8 +15,8 @@ class WebHook < ActiveRecord::Base
     where("rubygem_id is not null")
   end
 
-  def fire(host_with_port, deploy_gem, version, delayed = true)
-    job = Notifier.new(url, host_with_port, deploy_gem, version, user.api_key)
+  def fire(protocol, host_with_port, deploy_gem, version, delayed = true)
+    job = Notifier.new(url, protocol, host_with_port, deploy_gem, version, user.api_key)
     if delayed
       Delayed::Job.enqueue job, priority: PRIORITIES[:web_hook]
     else

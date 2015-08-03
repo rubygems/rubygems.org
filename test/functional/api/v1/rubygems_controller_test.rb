@@ -250,7 +250,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
       should "deny access" do
         assert_response 401
-        assert_equal "Access Denied. Please sign up for an account at http://rubygems.org",
+        assert_equal "Access Denied. Please sign up for an account at https://rubygems.org",
           @response.body
       end
     end

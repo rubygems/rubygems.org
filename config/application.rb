@@ -34,5 +34,6 @@ module Gemcutter
     Rails.application.config.rubygems
   end
 
+  PROTOCOL = config['protocol']
   HOST = config['host']
 end

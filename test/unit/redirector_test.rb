@@ -20,7 +20,8 @@ class RedirectorTest < ActiveSupport::TestCase
     get path, {}, "HTTP_HOST" => "gems.rubyforge.org"
 
     assert_equal 301, last_response.status
-    assert_equal "http://#{Gemcutter::HOST}#{path}", last_response.headers["Location"]
+    assert_equal "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}#{path}",
+      last_response.headers["Location"]
   end
 
   should "redirect requests from a non-HOST domain with query string" do
@@ -28,7 +29,8 @@ class RedirectorTest < ActiveSupport::TestCase
     get path, { "query" => "rush" }, "HTTP_HOST" => "gems.rubyforge.org"
 
     assert_equal 301, last_response.status
-    assert_equal "http://#{Gemcutter::HOST}#{path}?query=rush", last_response.headers["Location"]
+    assert_equal "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}#{path}?query=rush",
+      last_response.headers["Location"]
   end
 
   should "not redirect requests to the API from a non-HOST domain" do
