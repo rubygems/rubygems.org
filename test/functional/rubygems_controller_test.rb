@@ -411,6 +411,30 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  context "On GET to show for a gem with dependencies that have missing rubygem" do
+    setup do
+      @version = create(:version)
+
+      @runtime = create(:runtime_dependency, version: @version)
+      @runtime.update_attribute(:requirements, '= 1.0.0')
+      @runtime.rubygem.update_column(:name, 'foo')
+
+      @missing_dependency = create(:runtime_dependency, version: @version)
+      @missing_dependency.update_attribute(:requirements, '= 1.2.0')
+      @missing_dependency.rubygem.update_column(:name, 'missing')
+      @missing_dependency.update_column(:rubygem_id, nil)
+
+      get :show, id: @version.rubygem.to_param
+    end
+
+    should respond_with :success
+    should render_template :show
+    should "show only dependencies that have rubygem" do
+      assert page.has_content?(@runtime.rubygem.name)
+      assert page.has_no_content?('1.2.0')
+    end
+  end
+
   context "On GET to show for a gem with runtime dependencies that have a bad link" do
     setup do
       @version = create(:version)
