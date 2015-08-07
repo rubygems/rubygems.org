@@ -16,7 +16,10 @@ class Api::V1::VersionsController < Api::BaseController
 
   def latest
     rubygem = Rubygem.find_by_name(params[:id])
-    version = rubygem.versions.latest.first if rubygem
+    version = nil
+    if rubygem && rubygem.public_versions.indexed.count.nonzero?
+      version = rubygem.versions.most_recent
+    end
     number  = version.number if version
     render json: { "version" => number || "unknown" }, callback: params['callback']
   end

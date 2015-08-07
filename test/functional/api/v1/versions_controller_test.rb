@@ -211,6 +211,19 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to of latest for a gem with different platform versions" do
+    setup do
+      @rubygem = create(:rubygem)
+      @version_one = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86-linux")
+      @version_two = create(:version, rubygem: @rubygem, number: "2.0.0", platform: "ruby")
+    end
+
+    should "return most recent version" do
+      get :latest, id: @rubygem.name, format: "json"
+      assert_equal "2.0.0", MultiJson.load(@response.body)['version']
+    end
+  end
+
   context "on GET to show for a gem with a license" do
     setup do
       @rubygem = create(:rubygem)
