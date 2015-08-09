@@ -6,42 +6,52 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
     sign_in_as(@user)
   end
 
-  context "on GET to show with id" do
-    setup do
-      get :show, id: @user.id, format: :json
+  def self.should_respond_to(format)
+    context "on GET to show with id" do
+      setup do
+        get :show, id: @user.id, format: format
+      end
+
+      should respond_with :success
     end
 
-    should respond_with :success
+    context "on GET to show with handle" do
+      setup do
+        get :show, id: @user.handle, format: format
+      end
+
+      should respond_with :success
+      should "include the user email" do
+        response = yield @response.body
+        assert response.key?("email")
+        assert_equal @user.email, response["email"]
+      end
+    end
+
+    context "on GET to show when hide email" do
+      setup do
+        @user.update(hide_email: true)
+        get :show, id: @user.handle, format: format
+      end
+
+      should respond_with :success
+      should "hide the user email" do
+        response = yield @response.body
+        refute response.key?("email")
+      end
+
+      should "shows the handle" do
+        response = yield @response.body
+        assert_equal @user.handle, response["handle"]
+      end
+    end
   end
 
-  context "on GET to show with handle" do
-    setup do
-      get :show, id: @user.handle, format: :json
-    end
-
-    should respond_with :success
-    should "include the user email" do
-      json = JSON.parse @response.body
-      assert json.key?("email")
-      assert_equal @user.email, json["email"]
-    end
+  should_respond_to :json do |body|
+    JSON.parse body
   end
 
-  context "on GET to show when hide email" do
-    setup do
-      @user.update(hide_email: true)
-      get :show, id: @user.handle, format: :json
-    end
-
-    should respond_with :success
-    should "hide the user email" do
-      json = JSON.parse @response.body
-      refute json.key?("email")
-    end
-
-    should "shows the handle" do
-      json = JSON.parse @response.body
-      assert_equal @user.handle, json["handle"]
-    end
+  should_respond_to :yaml do |body|
+    YAML.load body
   end
 end
