@@ -5,10 +5,7 @@ class Api::V1::VersionsController < Api::BaseController
     return unless stale?(@rubygem)
 
     if @rubygem.public_versions.count.nonzero?
-      respond_to do |format|
-        format.json { render json: @rubygem.public_versions }
-        format.yaml { render yaml: @rubygem.public_versions }
-      end
+      render_as @rubygem.public_versions
     else
       render text: "This rubygem could not be found.", status: 404
     end
@@ -23,9 +20,6 @@ class Api::V1::VersionsController < Api::BaseController
 
   def reverse_dependencies
     names = Version.reverse_dependencies(params[:id]).pluck(:full_name)
-    respond_to do |format|
-      format.json { render json: names }
-      format.yaml { render yaml: names }
-    end
+    render_as names
   end
 end

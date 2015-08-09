@@ -5,10 +5,7 @@ class Api::V1::WebHooksController < Api::BaseController
   before_action :find_rubygem_by_name, except: :index
 
   def index
-    respond_to do |format|
-      format.json { render json: current_user.all_hooks }
-      format.yaml { render yaml: current_user.all_hooks }
-    end
+    render_as current_user.all_hooks
   end
 
   def create

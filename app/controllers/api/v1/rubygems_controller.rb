@@ -7,18 +7,12 @@ class Api::V1::RubygemsController < Api::BaseController
 
   def index
     @rubygems = current_user.rubygems.with_versions
-    respond_to do |format|
-      format.json { render json: @rubygems }
-      format.yaml { render yaml: @rubygems }
-    end
+    render_as @rubygems
   end
 
   def show
     if @rubygem.hosted? && @rubygem.public_versions.indexed.count.nonzero?
-      respond_to do |format|
-        format.json { render json: @rubygem }
-        format.yaml { render yaml: @rubygem }
-      end
+      render_as @rubygem
     else
       render text: "This gem does not exist.", status: :not_found
     end
@@ -33,9 +27,6 @@ class Api::V1::RubygemsController < Api::BaseController
   def reverse_dependencies
     names = Rubygem.reverse_dependencies(params[:id]).pluck(:name)
 
-    respond_to do |format|
-      format.json { render json: names }
-      format.yaml { render yaml: names }
-    end
+    render_as names
   end
 end

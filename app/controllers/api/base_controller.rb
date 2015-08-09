@@ -10,4 +10,11 @@ class Api::BaseController < ApplicationController
     return if @rubygem || @gem_name == WebHook::GLOBAL_PATTERN
     render text: "This gem could not be found", status: :not_found
   end
+
+  def render_as value
+    respond_to do |format|
+      format.json { render json: value }
+      format.yaml { render yaml: value }
+    end
+  end
 end
