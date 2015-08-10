@@ -13,7 +13,9 @@ class Fastly
                                            url: url,
                                            timeout: 10,
                                            headers: headers)
-    JSON.parse(response)
+    json = JSON.parse(response)
+    Rails.logger.debug "Fastly purge url=#{url} status=#{json['status']} id=#{json['id']}"
+    json
   end
   def self.purge_key(key, soft = false)
     headers = { 'Fastly-Key' => ENV['FASTLY_API_KEY'] }
@@ -23,6 +25,8 @@ class Fastly
                                            url: url,
                                            timeout: 10,
                                            headers: headers)
-    JSON.parse(response)
+    json = JSON.parse(response)
+    Rails.logger.debug "Fastly purge url=#{url} status=#{json['status']} id=#{json['id']}"
+    json
   end
 end
