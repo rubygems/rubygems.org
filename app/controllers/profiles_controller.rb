@@ -18,7 +18,7 @@ class ProfilesController < ApplicationController
         flash[:notice] = "You will receive an email within the next few " \
                          "minutes. It contains instructions for reconfirming " \
                          "your account with your new email address."
-        redirect_to root_path
+        redirect_to_root
       else
         flash[:notice] = "Your profile was updated."
         redirect_to edit_profile_path
