@@ -12,7 +12,7 @@ class WebHook < ActiveRecord::Base
   end
 
   def self.specific
-    where("rubygem_id is not null")
+    where.not(rubygem_id: nil)
   end
 
   def fire(protocol, host_with_port, deploy_gem, version, delayed = true)
