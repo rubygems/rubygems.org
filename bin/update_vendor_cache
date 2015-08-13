@@ -5,6 +5,7 @@ git submodule update -f
 cd vendor/cache
 git checkout master
 git clean -xfd
+git pull origin master
 cd -
 
 bundle install
