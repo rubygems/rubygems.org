@@ -1,6 +1,8 @@
 inherit_from: .rubocop_todo.yml
 
 AllCops:
+  Include:
+    - .simplecov
   Exclude:
     - config/initializers/forbidden_yaml.rb
     - !ruby/regexp /(vendor|bundle|bin|db)\/.*/

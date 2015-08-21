@@ -61,6 +61,8 @@ group :test do
   gem 'bourne', require: false
   gem 'shoulda', require: false
   gem 'timecop'
+  gem 'simplecov', '~> 0.10', require: false
+  gem "codeclimate-test-reporter", require: false
 end
 
 group :development, :deploy do
