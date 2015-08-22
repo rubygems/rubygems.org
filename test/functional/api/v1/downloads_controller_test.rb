@@ -60,7 +60,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
 
   context "on GET to show" do
     setup do
-      rubygem  = create(:rubygem)
+      rubygem = create(:rubygem)
       @version1 = create(:version, rubygem: rubygem, number: '1.0.0')
       @version2 = create(:version, rubygem: rubygem, number: '2.0.0')
 

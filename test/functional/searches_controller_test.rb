@@ -27,7 +27,7 @@ class SearchesControllerTest < ActionController::TestCase
     setup do
       @sinatra = create(:rubygem, name: "sinatra")
       @sinatra_redux = create(:rubygem, name: "sinatra-redux")
-      @brando  = create(:rubygem, name: "brando")
+      @brando = create(:rubygem, name: "brando")
       create(:version, rubygem: @sinatra)
       create(:version, rubygem: @sinatra_redux)
       create(:version, rubygem: @brando)

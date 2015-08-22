@@ -20,7 +20,7 @@ class Api::V1::VersionsController < Api::BaseController
     if rubygem && rubygem.public_versions.indexed.count.nonzero?
       version = rubygem.versions.most_recent
     end
-    number  = version.number if version
+    number = version.number if version
     render json: { "version" => number || "unknown" }, callback: params['callback']
   end
 

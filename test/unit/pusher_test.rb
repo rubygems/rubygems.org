@@ -127,7 +127,7 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal "test",  params["name"]
       assert_equal "0.0.0", params["version"]
       assert_equal "x86-java-1.6", params["platform"]
-      assert_equal false,   params["prerelease"]
+      assert_equal false, params["prerelease"]
     end
 
     context "initialize new gem with find if one does not exist" do
@@ -148,7 +148,7 @@ class PusherTest < ActiveSupport::TestCase
       end
 
       should "set version" do
-        assert_equal '1.3.3.7',  @cutter.version.number
+        assert_equal '1.3.3.7', @cutter.version.number
       end
 
       should "set gem version size" do

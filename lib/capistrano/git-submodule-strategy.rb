@@ -1,5 +1,4 @@
 module Capistrano::SubmoduleStrategy
-
   def test
     test! " [ -f #{repo_path}/HEAD ] "
   end
@@ -43,15 +42,15 @@ end
 
 # shit hack to execute command only in specified directory
 module SSHKit
-module Backend
-  class Abstract
-    def within_only(directory, &block)
-      pwd = @pwd
-      @pwd = []
-      within directory, &block
-    ensure
-      @pwd = pwd
+  module Backend
+    class Abstract
+      def within_only(directory, &block)
+        pwd = @pwd
+        @pwd = []
+        within directory, &block
+      ensure
+        @pwd = pwd
+      end
     end
   end
-end
 end

@@ -62,7 +62,7 @@ class RubygemTest < ActiveSupport::TestCase
         rubygem: @rubygem,
         number: "1.4.2.1",
         platform: "x86-mingw32")
-      win  = create(:version,
+      win = create(:version,
         rubygem: @rubygem,
         number: "1.4.2.1",
         platform: "x86-mswin32")
@@ -74,7 +74,7 @@ class RubygemTest < ActiveSupport::TestCase
         rubygem: @rubygem,
         number: "1.4.2",
         platform: "java")
-      old  = create(:version,
+      old = create(:version,
         rubygem: @rubygem,
         number: "1.4.1",
         platform: "ruby")
@@ -109,7 +109,7 @@ class RubygemTest < ActiveSupport::TestCase
         number: "3.0.0",
         platform: "mswin",
         built_at: 1.year.from_now)
-      version3_ruby  = create(:version, rubygem: @rubygem, number: "3.0.0", platform: "ruby")
+      version3_ruby = create(:version, rubygem: @rubygem, number: "3.0.0", platform: "ruby")
 
       @rubygem.reorder_versions
 

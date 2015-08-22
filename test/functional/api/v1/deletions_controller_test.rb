@@ -124,7 +124,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
     context "for a gem SomeGem with a deleted version 0.1.0 and indexed version 0.1.1" do
       setup do
-        @rubygem  = create(:rubygem, name: "SomeGem")
+        @rubygem = create(:rubygem, name: "SomeGem")
         @v1 = create(:version,
           rubygem: @rubygem,
           number: "0.1.0",

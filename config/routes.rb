@@ -108,9 +108,9 @@ Rails.application.routes.draw do
   scope constraints: { format: :html }, defaults: { format: 'html' } do
     resource :search,    only: :show
     resource :dashboard, only: :show, constraints: { format: /html|atom/ }
-    resources :profiles,  only: :show
-    resource :profile,   only: [:edit, :update]
-    resources :stats,     only: :index
+    resources :profiles, only: :show
+    resource :profile, only: [:edit, :update]
+    resources :stats, only: :index
 
     resources :rubygems,
       only: [:index, :show, :edit, :update],

@@ -608,11 +608,11 @@ class VersionTest < ActiveSupport::TestCase
         rubygem: @first_rubygem,
         number: "0.0.2",
         platform: "ruby")
-      @other_version  = create(:version,
+      @other_version = create(:version,
         rubygem: @second_rubygem,
         number: "0.0.2",
         platform: "java")
-      @pre_version    = create(:version,
+      @pre_version = create(:version,
         rubygem: @second_rubygem,
         number: "0.0.2.pre",
         platform: "java",

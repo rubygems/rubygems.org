@@ -242,7 +242,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       @gem_one = create(:rubygem)
       @gem_two = create(:rubygem)
       @gem_three = create(:rubygem)
-      @version_one_latest  = create(:version,
+      @version_one_latest = create(:version,
         rubygem: @gem_one,
         number: '0.2',
         full_name: "gem_one-0.2")
@@ -250,7 +250,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
         rubygem: @gem_one,
         number: '0.1',
         full_name: "gem_one-0.1")
-      @version_two_latest  = create(:version,
+      @version_two_latest = create(:version,
         rubygem: @gem_two,
         number: '1.0',
         full_name: "gem_two-1.0")

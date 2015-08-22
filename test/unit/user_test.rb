@@ -156,7 +156,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "have all gems for hooks" do
-      global_hook  = create(:global_web_hook, user: @user)
+      global_hook = create(:global_web_hook, user: @user)
       all_hooks = @user.all_hooks
       assert_equal global_hook, all_hooks["all gems"].first
       assert_equal 1, all_hooks.keys.size

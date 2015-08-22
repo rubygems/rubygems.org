@@ -128,7 +128,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
           @rubygem_hook = create(:web_hook,
             user: @user,
             rubygem: @rubygem)
-          @global_hook  = create(:global_web_hook,
+          @global_hook = create(:global_web_hook,
             user: @user)
         end
 
