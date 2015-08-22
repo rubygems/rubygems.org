@@ -148,7 +148,7 @@ GEM
       rails (~> 4.0)
     pg (0.18.2)
     powerpack (0.1.1)
-    psych (2.0.13)
+    psych (2.0.15)
     quiet_assets (1.1.0)
       railties (>= 3.1, < 5.0)
     rack (1.6.4)
