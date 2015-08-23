@@ -27,5 +27,9 @@
     <%= form.label :bugs, :class => 'form__label' %>
     <%= form.text_field :bugs, :class => 'form__input' %>
   </div>
+  <div class="url_field">
+    <%= form.label :changelog, class: 'form__label' %>
+    <%= form.text_field :changelog, class: 'form__input' %>
+  </div>
   <%= form.submit t('update'), :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
 <% end %>

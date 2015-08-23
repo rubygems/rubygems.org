@@ -149,7 +149,7 @@
 
         <% if @latest_version.indexed %>
           <% if @rubygem.linkset.present? %>
-            <%- %i{home code docs wiki mail bugs}.each do |link| %>
+            <%- %i{home code docs wiki mail bugs changelog}.each do |link| %>
               <%= link_to_page t("rubygems.show.links.#{link}"), @rubygem.linkset.public_send(link) %>
             <%- end %>
           <% end %>

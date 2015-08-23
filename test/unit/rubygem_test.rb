@@ -435,6 +435,7 @@ class RubygemTest < ActiveSupport::TestCase
         assert_equal @rubygem.linkset.mail, hash["mailing_list_uri"]
         assert_equal @rubygem.linkset.code, hash["source_code_uri"]
         assert_equal @rubygem.linkset.bugs, hash["bug_tracker_uri"]
+        assert_equal @rubygem.linkset.changelog, hash["changelog_uri"]
       end
 
       should "return version documentation url if linkset docs is empty" do
@@ -454,6 +455,7 @@ class RubygemTest < ActiveSupport::TestCase
         assert_equal @rubygem.linkset.mail, doc.at_css("mailing-list-uri").content
         assert_equal @rubygem.linkset.code, doc.at_css("source-code-uri").content
         assert_equal @rubygem.linkset.bugs, doc.at_css("bug-tracker-uri").content
+        assert_equal @rubygem.linkset.changelog, doc.at_css("changelog-uri").content
       end
     end
   end
