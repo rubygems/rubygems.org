@@ -178,6 +178,9 @@ GEM
       ruby-graphviz (~> 1.2)
     rails-html-sanitizer (1.0.2)
       loofah (~> 2.0)
+    rails-i18n (4.0.4)
+      i18n (~> 0.6)
+      railties (~> 4.0)
     railties (4.2.4)
       actionpack (= 4.2.4)
       activesupport (= 4.2.4)
@@ -292,6 +295,7 @@ DEPENDENCIES
   rack-test
   rails (~> 4.2.4)
   rails-erd
+  rails-i18n
   rdoc
   redis
   rest-client

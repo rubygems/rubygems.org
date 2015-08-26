@@ -1,4 +1,4 @@
-en:
+zh-CN:
   title: "RubyGems.org"
   subtitle: "Ruby 社区 Gem 托管"
   help_url: "http://help.rubygems.org"
@@ -9,6 +9,8 @@ en:
   form_disable_with: "请稍后..."
   update: 更新
   edit: 编辑
+  sign_in: "登录"
+  sign_up: "注册"
   footer_about: "RubyGems.org 是 Ruby 社区的 Gem 托管服务。<br />让你能便捷、快速的发布、管理你的 Gem 以及安装它们。提供 API 查阅可用 Gem 的详细资料。<br />参与进来成为一个贡献者，用你的能力推动社区进步。"
 
   dashboards:
@@ -147,7 +149,15 @@ en:
     version:
       yanked: "已废弃"
 
+  flashes:
+    failure_after_create: 创建失败
   activerecord:
+    errors:
+      template:
+        body: '下面的字段存在问题：'
+        header:
+          one: 1 错误导致 %{model} 保存失败
+          other: "%{count} 个错误导致 %{model} 保存失败"
     attributes:
       user:
         avatar: 头像

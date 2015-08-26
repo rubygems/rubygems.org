@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails', '~> 4.2.4'
+gem 'rails-i18n'
 
 gem 'autoprefixer-rails'
 gem 'aws-sdk-core'

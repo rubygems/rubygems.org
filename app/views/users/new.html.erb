@@ -1,4 +1,4 @@
-<% @title = "Sign up" %>
+<% @title = t('sign_up') %>
 
 <div class="form_links sign_up_links t-body">
   <p><%= link_to t('.have_account'), sign_in_path %></p>
@@ -6,5 +6,5 @@
 
 <%= form_for @user do |form| %>
   <%= render :partial => '/users/form', :object => form %>
-  <%= form.submit 'Sign up', :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
+  <%= form.submit t('sign_up'), :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
 <% end %>

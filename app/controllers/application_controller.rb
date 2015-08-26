@@ -12,7 +12,10 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
 
   def set_locale
-    I18n.locale = params[:locale] || I18n.default_locale
+    I18n.locale = user_locale
+
+    # after store current locale
+    session[:locale] = params[:locale] if params[:locale]
   rescue I18n::InvalidLocale
     I18n.locale = I18n.default_locale
   end
@@ -59,5 +62,17 @@ class ApplicationController < ActionController::Base
 
   def set_page
     @page = [1, params[:page].to_i].max
+  end
+
+  def user_locale
+    params[:locale] || session[:locale] || http_head_locale  || I18n.default_locale
+  end
+
+  def http_head_locale
+    lang = request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z\-]{5}/i).first
+    case lang
+    when 'zh-cn' then 'zh-CN'
+    else lang
+    end
   end
 end

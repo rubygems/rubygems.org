@@ -1,5 +1,7 @@
 nl:
   update: Wijzig
+  sign_in: "Sign in"
+  sign_up: "Sign up"
   home:
     index:
       downloads_counting: 'downloads &amp; counting'
