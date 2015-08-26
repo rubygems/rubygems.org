@@ -9,6 +9,7 @@ en:
   form_disable_with: "Please wait..."
   update: Update
   edit: Edit
+  footer_about: "RubyGems.org is the Ruby community&rsquo;s gem hosting service. Instantly publish your gems and install them. Use the API to interact and find out more information about available gems. Become a contributor and enhance the site with your own changes."
 
   dashboards:
     show:
@@ -24,6 +25,7 @@ en:
 
   home:
     index:
+      downloads_counting: 'downloads &amp; counting'
       find_blurb: "Find, install, and publish RubyGems."
       learn:
         install_rubygems: "Install RubyGems"
@@ -72,6 +74,7 @@ en:
   profiles:
     edit:
       title: Edit profile
+      hide_email: Hide email in public profile
       reset_password:
         title: Reset password
         text: "Need a new password? No problem. %{link}"
