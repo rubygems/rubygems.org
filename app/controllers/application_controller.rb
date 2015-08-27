@@ -69,10 +69,6 @@ class ApplicationController < ActionController::Base
   end
 
   def http_head_locale
-    lang = request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z\-]{5}/i).first
-    case lang
-    when 'zh-cn' then 'zh-CN'
-    else lang
-    end
+    http_accept_language.compatible_language_from(I18n.available_locales)
   end
 end
