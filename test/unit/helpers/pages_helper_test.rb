@@ -1,10 +1,7 @@
 require 'test_helper'
 
 class PagesHelperTest < ActionView::TestCase
-  include Rails.application.routes.url_helpers
-  include ApplicationHelper
   include RubygemsHelper
-  include ERB::Util
 
   context "downloads" do
     setup do
