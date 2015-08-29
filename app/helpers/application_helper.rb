@@ -1,11 +1,7 @@
 module ApplicationHelper
   def page_title
     combo = "#{t :title} | #{t :subtitle}"
-    if @title
-      "#{@title} | #{combo}"
-    else
-      combo
-    end
+    @title.present? ? "#{@title} | #{combo}" : combo
   end
 
   def atom_feed_link(title, url)
