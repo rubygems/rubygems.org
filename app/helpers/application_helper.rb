@@ -1,11 +1,7 @@
 module ApplicationHelper
   def page_title
     combo = "#{t :title} | #{t :subtitle}"
-    if @title
-      "#{@title} | #{combo}"
-    else
-      combo
-    end
+    @title.present? ? "#{@title} | #{combo}" : combo
   end
 
   def atom_feed_link(title, url)
@@ -32,7 +28,6 @@ module ApplicationHelper
   end
 
   def stats_graph_meter(gem, count)
-    decimal = gem.downloads * 1.0 / count
-    decimal * 100
+    gem.downloads * 1.0 / count * 100
   end
 end
