@@ -6,10 +6,7 @@ class Api::V1::OwnersController < Api::BaseController
   before_action :verify_gem_ownership, except: [:show, :gems]
 
   def show
-    respond_to do |format|
-      format.json { render json: @rubygem.owners }
-      format.yaml { render yaml: @rubygem.owners }
-    end
+    render_as @rubygem.owners
   end
 
   def create
@@ -39,10 +36,7 @@ class Api::V1::OwnersController < Api::BaseController
     user = User.find_by_slug!(params[:handle])
     if user
       rubygems = user.rubygems.with_versions
-      respond_to do |format|
-        format.json { render json: rubygems }
-        format.yaml { render yaml: rubygems }
-      end
+      render_as rubygems
     else
       render text: "Owner could not be found.", status: :not_found
     end
