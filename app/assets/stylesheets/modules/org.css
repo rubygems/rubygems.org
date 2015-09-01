@@ -124,13 +124,11 @@
     width: 70%; } }
 
 .profile__header__name {
-  word-break: break-word; }
+  overflow-x: scroll; }
   @media (min-width: 780px) {
     .profile__header__name {
       padding-top: 16px; } }
-  @media (min-width: 780px) {
-    .profile__header__name {
-      padding-left: 195px; } }
+
 
 @media (max-width: 779px) {
   .profile__header__avatar {
