@@ -1,10 +1,9 @@
 nl:
   update: Wijzig
-  sign_in: "Sign in"
-  sign_up: "Sign up"
+  sign_in: Inloggen
+  sign_up: Inschrijven
   home:
     index:
-      downloads_counting: 'downloads &amp; counting'
       share:
         update: Bijwerken naar de laatste RubyGems versie
         deploy: Eenvoudig je gem deployen
@@ -152,11 +151,9 @@ nl:
   feed_subscribed: RubyGems.org | Geabonneerde Gems
   subtitle: De gem host voor de community
   help_url: http://help.rubygems.org
-  footer_about: "RubyGems.org is the Ruby community&rsquo;s gem hosting service. Instantly publish your gems and install them. Use the API to interact and find out more information about available gems. Become a contributor and enhance the site with your own changes."
   profiles:
     edit:
       title: Wijzig profiel
-      hide_email: Hide email in public profile
       api_access:
         confirm_reset: Weet je het zeker? Dit kan niet ongedaan worden gemaakt.
         title: API toegang
