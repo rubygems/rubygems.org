@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails', '~> 4.2.4'
+gem 'rails-i18n'
 
 gem 'autoprefixer-rails'
 gem 'aws-sdk-core'
@@ -38,6 +39,7 @@ gem 'validates_formatting_of'
 gem 'will_paginate'
 gem 'xml-simple'
 gem 'yajl-ruby', require: 'yajl'
+gem 'http_accept_language'
 
 group :development, :test do
   gem 'rubocop', '~> 0.33.0'

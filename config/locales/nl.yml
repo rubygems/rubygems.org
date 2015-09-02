@@ -1,5 +1,7 @@
 nl:
   update: Wijzig
+  sign_in: Inloggen
+  sign_up: Inschrijven
   home:
     index:
       share:
@@ -48,7 +50,7 @@ nl:
   activerecord:
     errors:
       messages:
-        record_invalid: 
+        record_invalid:
     attributes:
       session:
         password: Wachtwoord

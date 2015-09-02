@@ -7,7 +7,7 @@
     <%= form.label :avatar, :class => 'form__label'  %>
     <div class="l-overflow">
       <%= gravatar(160) %>
-      <%= link_to 'Change', 'https://www.gravatar.com', :class => 't-text t-link' %>
+      <%= link_to t('.change'), 'https://www.gravatar.com', :class => 't-text t-link' %>
     </div>
   </div>
 
@@ -23,7 +23,7 @@
 
   <div class="profile-checkbox form__checkbox">
     <%= form.check_box :hide_email, :class => 'form__checkbox__input' %>
-    <%= form.label :hide_email, "Hide email in public profile", :class => 'form__checkbox__label' %>
+    <%= form.label :hide_email, t('.hide_email'), :class => 'form__checkbox__label' %>
   </div>
 
   <div class="submit_field">

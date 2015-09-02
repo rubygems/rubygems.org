@@ -1,4 +1,4 @@
-<% @title = "Sign in" %>
+<% @title = t('sign_in') %>
 
 <div class="form_links sign_in_links t-body">
   <p><%= link_to t('.forgot_password'), new_password_url %></p>
@@ -14,6 +14,6 @@
     <%= form.password_field :password, :class => 'form__input' %>
   </div>
   <div class="form_bottom">
-    <%= form.submit "Sign in", :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
+    <%= form.submit t('sign_in'), :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
   </div>
 <% end %>
