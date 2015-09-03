@@ -63,7 +63,7 @@ zh-CN:
         better_api: 提供更好的 API 来为 Gems 服务
         transparent_pages: 构建更透明以及便于浏览的项目页面
         enable_community: 可以让社区来改善本站
-      founding: "此项目创立由 %{founder} 于2009年8月，发展过程中有超过 %{contributors} 贡献者以及 %{downloads}。自从 RubyGems 1.3.6 发布以后，本站名称由 Gemcutter 改名为 %{title}，从而巩固在 Ruby 社区网站中和核心作用。"
+      founding: "此项目创立由 %{founder} 于2009年4月，发展过程中有超过 %{contributors} 贡献者以及 %{downloads}。自从 RubyGems 1.3.6 发布以后，本站名称由 Gemcutter 改名为 %{title}，从而巩固在 Ruby 社区网站中和核心作用。"
       support: "虽然 Gemcutter 不是由一个具体的公司来运作，但也有很多的帮助让我们走出了这么远。目前的设计、插画、以及网站的前端开发都是由 %{dockyard} 提供支持。%{github} 帮助我们轻松的协助和共享代码。本站最初部署在 %{heroku}，其一流的服务，有助于证明 Gemcutter 是可以依赖、可行的解决方案。"
       technical: "关于本站的一些技术方案：100% Ruby。主站基于 %{rails}，RubyGem 服务通过 %{sinatra} 提供服务。Gems 文件放在 %{s3} 上面，它能缩短在 Gem 提交到可以下载之间的耗时。更多的信息可以在 GitHub 上阅读 %{source_code}，基于 %{license} 协议。"
 
