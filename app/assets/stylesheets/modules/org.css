@@ -124,7 +124,7 @@
     width: 70%; } }
 
 .profile__header__name {
-  overflow-x: scroll; }
+  overflow-x: auto; }
   @media (min-width: 780px) {
     .profile__header__name {
       padding-top: 16px; } }
