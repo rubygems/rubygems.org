@@ -65,7 +65,7 @@ class ApplicationController < ActionController::Base
   end
 
   def user_locale
-    params[:locale] || session[:locale] || http_head_locale  || I18n.default_locale
+    params[:locale] || session[:locale] || http_head_locale || I18n.default_locale
   end
 
   def http_head_locale

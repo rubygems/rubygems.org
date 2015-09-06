@@ -17,6 +17,7 @@ class Fastly
     Rails.logger.debug "Fastly purge url=#{url} status=#{json['status']} id=#{json['id']}"
     json
   end
+
   def self.purge_key(key, soft = false)
     headers = { 'Fastly-Key' => ENV['FASTLY_API_KEY'] }
     headers['Fastly-Soft-Purge'] = 1 if soft

@@ -42,7 +42,7 @@ gem 'yajl-ruby', require: 'yajl'
 gem 'http_accept_language'
 
 group :development, :test do
-  gem 'rubocop', '~> 0.33.0'
+  gem 'rubocop', '~> 0.34.0'
   gem 'toxiproxy', '~> 0.1.3'
 end
 

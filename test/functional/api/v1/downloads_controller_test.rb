@@ -27,7 +27,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
       YAML.load(body)[:total]
     end
 
-    should_respond_to(:text) { |body| body.to_i }
+    should_respond_to(:text, &:to_i)
   end
 
   def get_show(version, format = 'json')

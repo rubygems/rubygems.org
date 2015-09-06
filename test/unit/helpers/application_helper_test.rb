@@ -12,8 +12,8 @@ class ApplicationHelperTest < ActionView::TestCase
   end
 
   should "return gemcutter atom feed link" do
-    feed_link = '<link rel="alternate" type="application/atom+xml" ' +
-                'href="http://feeds.feedburner.com/gemcutter-latest" ' +
+    feed_link = '<link rel="alternate" type="application/atom+xml" ' \
+                'href="http://feeds.feedburner.com/gemcutter-latest" ' \
                 'title="RubyGems.org | Latest Gems" />'
     assert_equal atom_feed_link(t(:feed_latest), 'http://feeds.feedburner.com/gemcutter-latest'), feed_link
   end
@@ -31,14 +31,14 @@ class ApplicationHelperTest < ActionView::TestCase
   context "rubygem" do
     setup do
       @rubygem = create(:rubygem)
-      @rubygem.stubs(:downloads).returns(1000000)
+      @rubygem.stubs(:downloads).returns(1_000_000)
     end
     should "downloads count with delimeter" do
       assert_equal download_count(@rubygem), "1,000,000"
     end
 
     should "stats graph meter" do
-      most_downloaded_count = 8000000
+      most_downloaded_count = 8_000_000
       assert_equal stats_graph_meter(@rubygem, most_downloaded_count), 12.5
     end
   end
