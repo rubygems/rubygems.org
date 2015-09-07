@@ -5,10 +5,10 @@ Doorkeeper.configure do
   # called in the AuthorizedApplicationsController by `before_action :authenticate_resource_owner!`
   resource_owner_authenticator do
     clearance_session = env[:clearance] # session = Clearance::Session.new(env)
-    @user = clearance_session && clearance_session.current_user
+    user = clearance_session && clearance_session.current_user
 
-    if @user
-      @user
+    if user
+      user
     else
       session[:return_to] = request.fullpath
       redirect_to(sign_in_url)
@@ -18,7 +18,12 @@ Doorkeeper.configure do
   # Restrict access to the web interface for adding oauth authorized applications, you need to declare the block below.
   # called in the ApplicationsController by `before_action :authenticate_admin!`
   admin_authenticator do
-    authenticate_resource_owner!
+    user = authenticate_resource_owner!
+    if ACL.admin?(user)
+      user
+    else
+      fail Doorkeeper::Errors::DoorkeeperError, 'Not an admin'
+    end
   end
 
   default_scopes  :public
