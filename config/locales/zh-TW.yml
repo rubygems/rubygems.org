@@ -31,6 +31,9 @@ zh-TW:
       find_blurb: "搜尋、安裝以及發佈 RubyGems"
       learn:
         install_rubygems: "安裝 RubyGems"
+      footer:
+        status: "狀態"
+        uptime: "上線時間"
 
   layouts:
     application:
