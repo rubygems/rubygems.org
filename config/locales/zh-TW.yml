@@ -1,0 +1,166 @@
+zh-TW:
+  title: "RubyGems.org"
+  subtitle: "Ruby 社群 Gem 套件管理平台"
+  help_url: "http://help.rubygems.org"
+  please_sign_up: "無法存取，請先在 https://rubygems.org 上註冊帳號"
+  feed_subscribed: "RubyGems.org | 訂閱 Gems"
+  feed_latest: "RubyGems.org | 最新 Gems"
+  time_ago: "%{duration} 前"
+  form_disable_with: "請稍候..."
+  update: "更新"
+  edit: "編輯"
+  sign_in: "登入"
+  sign_up: "註冊"
+  footer_about: "RubyGems.org 是 Ruby 社群的 Gem 套件管理服務，讓你能立即地發佈及安裝你的 Gem 套件，並且利用 API 查詢及操作可用 Gem 的詳細資訊。<br />現在就成為貢獻者，貢獻一己之力來改善本站。"
+
+  dashboards:
+    show:
+      latest: "最近更新"
+      latest_title: "最新的 RSS Feed"
+      no_subscriptions: "你還沒有訂閱過 Gem，前往 %{gem_link} 來訂閱！"
+      gem_link_text: "Gem 頁面"
+      mine: "我的 Gems"
+      no_owned: "你尚未發佈任何 Gem。可以閱讀 %{creating_link} 教學，或參考 %{migrating_link} 教學來將你的 Gem 從 RubyForge 遷移過來。"
+      creating_link_text: 'Gem 建立'
+      migrating_link_text: 'Gem 轉移'
+      my_subscriptions: '我的訂閱'
+
+  home:
+    index:
+      downloads_counting: '總下載次數'
+      find_blurb: "搜尋、安裝以及發佈 RubyGems"
+      learn:
+        install_rubygems: "安裝 RubyGems"
+      footer:
+        status: "狀態"
+        uptime: "上線時間"
+
+  layouts:
+    application:
+      header:
+        dashboard: "控制台"
+        sign_in: "登入"
+        sign_up: "註冊"
+        sign_out: "登出"
+      footer:
+        about: "關於"
+        blog: "部落格"
+        guides: "教學文件"
+        contribute: "貢獻"
+        help: "說明"
+        status: "狀態"
+        uptime: "上線時間"
+        source_code: "原始碼"
+        data: "資料"
+        discussion_forum: "討論群組"
+        statistics: "統計"
+
+  pages:
+    about:
+      title: 關於
+      purpose:
+        header: "歡迎來到 %{site}，這裡是 Ruby 社群 Gem 套件管理服務。此專案的建立有以下三個目的："
+        better_api: "提供更好的 Gem API"
+        transparent_pages: "建立更透明、更易於瀏覽的 Gem 專案頁面"
+        enable_community: "讓社群能透過眾人的力量來改善本站"
+      founding: "本專案由 %{founder} 於 2009 年 4 月創立，發展過程中有超過 %{contributors} 貢獻者以及 %{downloads}。自 RubyGems 1.3.6 發佈以來，本站名稱由 Gemcutter 更名為 %{title}，本站自此之後成為 Ruby 社群的核心網站。"
+      support: "雖然 Gemcutter 並不是由一個特定的公司運作，但在發展過程中接受了許多來源的幫助。目前的設計、圖像以及網站的前端開發是由 %{dockyard} 提供。%{github} 也幫助我們能更容易地協作和分享原始碼。本站部署在 %{heroku} 上，其一流的服務，更有助於證明 Gemcutter 是一個可以穩定、可行的解決方案。"
+      technical: "關於本站的技術資訊：100% Ruby。主站是一個 %{rails} 應用程式，RubyGem 則是透過 %{sinatra} 提供服務。Gems 架設在 %{s3} 上，使得 Gem 從發佈到提供下載的時間大幅縮短。詳細資訊可從 GitHub 上的 %{source_code} 查看（遵守 %{license} 協議）。"
+
+  passwords:
+    edit:
+      title: "重設密碼"
+      submit: "更新密碼"
+    new:
+      title: "修改密碼"
+      will_email_notice: "系統將會寄一封包含重設密碼連結的電子郵件給你"
+      submit: "更新密碼"
+
+  profiles:
+    edit:
+      title: "編輯個人檔案"
+      hide_email: "在公開的個人頁面中隱藏 email"
+      reset_password:
+        title: "重設密碼"
+        text: "需要重設密碼？沒問題。 %{link}"
+        link_text: "從這裡設定新密碼"
+      api_access:
+        title: API 存取
+        key_is: "你的 API key 是 %{key}。"
+        credentials: "如果你需要從 command line 中執行 %{gem_commands_link}，你需要先準備 %{gem_credentials_file} 這個檔案，用以下的指令可以產生："
+        link_text: "Gem 指令"
+        reset: "重設 API key"
+        confirm_reset: "確定要重設嗎？此動作無法還原"
+
+  rubygems:
+    dependencies:
+      header: "%{title} 相依性套件"
+    edit:
+      title: "編輯連結"
+      subtitle: "%{gem}"
+      other_fields_notice: "其他設定欄位只能透過發佈一個新版本的 Gem 來修改"
+    index:
+      title: 'Gems'
+    show:
+      not_hosted_notice: "這個 Gem 目前沒有在 Gemcutter 上"
+      install: "安裝"
+      yanked_notice: "這個 Gem 版本已被移除，因此無法提供下載，也無法被其他的 Gem 相依。"
+      authors_header: "作者"
+      downloads_for_this_version: "這個版本"
+      owners_header: "擁有者"
+      links:
+        header: "相關連結"
+        home: "首頁"
+        code: "原始碼"
+        docs: "文件"
+        wiki: "Wiki"
+        mail: "郵件群組"
+        bugs: "Bug 追蹤"
+      versions_header: "版本列表"
+      bundler_header: Gemfile
+      show_all_versions: "顯示所有版本（共 %{count}）"
+      licenses_header: License
+      no_licenses: N/A
+      requirements_header: "必填"
+
+  searches:
+    show:
+      subtitle: "%{query}"
+      exact_match: "完全符合"
+
+  sessions:
+    new:
+      forgot_password: "忘記密碼？"
+
+  stats:
+    show:
+      total_downloads: "總下載次數"
+
+  users:
+    new:
+      have_account: "已經註冊過了？"
+
+  versions:
+    index:
+      title: "%{name} 的所有版本"
+      versions_since: "自從 %{since} 以來，有 %{count} 個版本"
+      not_hosted_notice: "這個 Gem 目前沒有在 Gemcutter 上"
+    version:
+      yanked: "已被移除"
+
+  activerecord:
+    attributes:
+      user:
+        avatar: "頭像"
+        email: "Email"
+        handle: "帳號"
+        password: "密碼"
+      linkset:
+        bugs: "Bug 追蹤 URL"
+        code: "原始碼 URL"
+        docs: "文件 URL"
+        mail: "郵件群組 URL"
+        wiki: "Wiki URL"
+      session:
+        who: "Email / 帳號"
+        password: "密碼"
