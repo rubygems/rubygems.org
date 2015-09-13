@@ -8,9 +8,6 @@ Bundler.require(*Rails.groups)
 
 module Gemcutter
   class Application < Rails::Application
-    def config_for(name, env = Rails.env)
-      YAML.load_file(Rails.root.join("config/#{name}.yml"))[env]
-    end
     config.rubygems = Application.config_for :rubygems
 
     config.time_zone = "UTC"
