@@ -35,7 +35,7 @@
         <div class="header__nav-links-wrap">
           <% if request.path_info == "/" %>
             <%= form_tag search_url, :id => "main-search", :class => "header__search-wrap--home", :method => :get do %>
-              <%= search_field_tag :query, params[:query], :placeholder => "Search Gems&hellip;".html_safe, :class => "header__search" %>
+              <%= search_field_tag :query, params[:query], :placeholder => "Search Gems&hellip;".html_safe, :class => "header__search st-search-box" %>
               <%= label_tag :query do %>
                 <span class="t-hidden">Search gems</span>
               <% end %>
@@ -43,7 +43,7 @@
             <% end %>
           <% else %>
             <%= form_tag search_url, :id => "main-search", :class => "header__search-wrap", :method => :get do %>
-              <%= search_field_tag :query, params[:query], :placeholder => "Search Gems&hellip;".html_safe, :class => "header__search" %>
+              <%= search_field_tag :query, params[:query], :placeholder => "Search Gems&hellip;".html_safe, :class => "header__search st-search-box" %>
               <%= label_tag :query do %>
                 <span class="t-hidden">Search gems</span>
               <% end %>
@@ -191,6 +191,30 @@
      ZeroClipboard.config( { swfPath: "<%= asset_path 'ZeroClipboard.swf' %>", cacheBust: false  } );
     </script>
     <%= yield :javascript %>
+
+    <script type="text/javascript">
+      $(function() {
+        var customOnComplete = function(name) {
+          window.location = '/gems' + name;
+        }
+        var customRenderFunction = function(document_type, item) {
+          var out = [
+            "<div>",
+              "<div class='downloads'><p class='downloads_number'>" + item['downloads'] + "</p><p class='downloads_label'>downloads</p></div>",
+              "<p class='name'>" + item['name'] + "</p>",
+              "<p class='version'>" + item['version'] + "</p>",
+              "<p class='summary'>" + item['summary'] + "</p>",
+            "</div>"
+          ].join('');
+          return out;
+        };
+        $('.st-search-box').swiftype({
+          renderFunction: customRenderFunction,
+          engineKey: "<%= ENV['SWIFTYPE_ENGINE_KEY'] %>",
+          fetchFields: ['name','authors','summary','downloads','version']
+        });
+      });
+    </script>
 
     <script type="text/javascript">
       var _gauges = _gauges || [];

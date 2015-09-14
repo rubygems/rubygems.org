@@ -1,5 +1,6 @@
 class Rubygem < ActiveRecord::Base
   include Patterns
+  include SwiftypeSearch
 
   has_many :owners, through: :ownerships, source: :user
   has_many :ownerships, dependent: :destroy

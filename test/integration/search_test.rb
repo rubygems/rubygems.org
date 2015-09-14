@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class SearchTest < SystemTest
+  setup do
+    SwiftypeSearch.stubs(:search).with("LDAP").returns(Rubygem.search("LDAP"))
+  end
+
   test "searching for a gem" do
     create(:rubygem, name: "LDAP", number: "1.0.0")
     create(:rubygem, name: "LDAP-PLUS", number: "1.0.0")
