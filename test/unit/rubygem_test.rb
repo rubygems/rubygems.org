@@ -358,6 +358,11 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal @rubygem.name, @rubygem.to_s
     end
 
+    should "return name as slug with only allowed characters" do
+      @rubygem.name = "rails?!"
+      assert_equal "rails", @rubygem.to_param
+    end
+
     should "return name with downloads for #with_downloads" do
       assert_equal "#{@rubygem.name} (#{@rubygem.downloads})", @rubygem.with_downloads
     end
