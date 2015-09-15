@@ -200,7 +200,7 @@ class Version < ActiveRecord::Base
   end
 
   def slug
-    full_name.gsub(/^#{rubygem.name}-/, '')
+    full_name.remove(/^#{rubygem.name}-/)
   end
 
   def downloads_count
