@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  use_doorkeeper scope: 'oauth'
+
   ################################################################################
   # Root
 
