@@ -702,6 +702,31 @@ class RubygemTest < ActiveSupport::TestCase
     end
   end
 
+  context "find by letter method" do
+    setup do
+      @gem1 = create(:rubygem, name: "apple", downloads: 1)
+      create(:version, description: 'pie', rubygem: @gem1)
+
+      @gem2 = create(:rubygem, name: "aka", downloads: 2)
+      create(:version, description: 'pie', rubygem: @gem2)
+
+      @gem3 = create(:rubygem, name: "ask", downloads: 0)
+      create(:version, description: 'pie', rubygem: @gem3)
+
+      @gem4 = create(:rubygem, name: "ask-foo", downloads: 0)
+    end
+
+    should 'sort by downloads desc' do
+      letter = Rubygem.letterize('A')
+      gems   = Rubygem.letter(letter)
+
+      assert_equal 3, gems.size
+      assert_equal @gem2.id, gems[0].id
+      assert_equal @gem1.id, gems[1].id
+      assert_equal @gem3.id, gems[2].id
+    end
+  end
+
   context "downloads" do
     setup do
       @rubygem = create(:rubygem)
