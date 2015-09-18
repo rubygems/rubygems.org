@@ -178,7 +178,7 @@ class UserTest < ActiveSupport::TestCase
       @ownership = create(:ownership, rubygem: @rubygem, user: @user)
       @version   = create(:version, rubygem: @rubygem)
 
-      Timecop.freeze(1.day.ago) do
+      travel_to 1.day.ago do
         Download.incr(@version.rubygem.name, @version.full_name)
       end
       2.times { Download.incr(@version.rubygem.name, @version.full_name) }

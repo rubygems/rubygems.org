@@ -42,7 +42,7 @@ class DownloadTest < ActiveSupport::TestCase
     @rubygem_3 = create(:rubygem)
     @version_4 = create(:version, rubygem: @rubygem_3)
 
-    Timecop.freeze(1.day.ago) do
+    travel_to 1.day.ago do
       Download.incr(@rubygem_1.name, @version_1.full_name)
       Download.incr(@rubygem_1.name, @version_2.full_name)
       Download.incr(@rubygem_2.name, @version_3.full_name)
@@ -107,7 +107,7 @@ class DownloadTest < ActiveSupport::TestCase
     @rubygem_3 = create(:rubygem)
     @version_4 = create(:version, rubygem: @rubygem_3)
 
-    Timecop.freeze(1.day.ago) do
+    travel_to 1.day.ago do
       Download.incr(@rubygem_1, @version_1.full_name)
       Download.incr(@rubygem_1, @version_2.full_name)
       Download.incr(@rubygem_2, @version_3.full_name)
@@ -149,7 +149,7 @@ class DownloadTest < ActiveSupport::TestCase
     @rubygem_3 = create(:rubygem)
     @version_4 = create(:version, rubygem: @rubygem_3)
 
-    Timecop.freeze(1.day.ago) do
+    travel_to 1.day.ago do
       create :version_history, version: @version_1, count: 5
       create :version_history, version: @version_2
       create :version_history, version: @version_3
@@ -181,35 +181,36 @@ class DownloadTest < ActiveSupport::TestCase
   end
 
   should "find counts per day for versions in range across month boundary" do
-    Timecop.freeze(Time.zone.parse("2012-10-01")) do
-      @rubygem_1 = create(:rubygem)
-      @version_1 = create(:version, rubygem: @rubygem_1)
+    initial_time = Time.zone.parse("2012-10-01")
+    travel_to initial_time
+    @rubygem_1 = create(:rubygem)
+    @version_1 = create(:version, rubygem: @rubygem_1)
 
-      Timecop.freeze(1.day.ago) do
-        create :version_history, version: @version_1, count: 5
-      end
-
-      Download.incr(@rubygem_1, @version_1.full_name)
-
-      start = 2.days.ago.to_date
-      fin = Time.zone.today
-
-      downloads = ActiveSupport::OrderedHash.new.tap do |d|
-        d[start.to_s] = 0
-        d["#{Time.zone.yesterday}"] = 5
-        d[fin.to_s] = 1
-      end
-
-      assert_equal downloads,
-        Download.counts_by_day_for_version_in_date_range(@version_1, start, fin)
+    travel_to 1.day.ago do
+      create :version_history, version: @version_1, count: 5
     end
+
+    travel_to initial_time
+    Download.incr(@rubygem_1, @version_1.full_name)
+
+    start = 2.days.ago.to_date
+    fin = Time.zone.today
+
+    downloads = ActiveSupport::OrderedHash.new.tap do |d|
+      d[start.to_s] = 0
+      d["#{Time.zone.yesterday}"] = 5
+      d[fin.to_s] = 1
+    end
+
+    assert_equal downloads,
+      Download.counts_by_day_for_version_in_date_range(@version_1, start, fin)
   end
 
   should "find counts per day for versions in range" do
     @rubygem_1 = create(:rubygem)
     @version_1 = create(:version, rubygem: @rubygem_1)
 
-    Timecop.freeze(1.day.ago) do
+    travel_to 1.day.ago do
       create :version_history, version: @version_1, count: 5
     end
 
@@ -248,7 +249,7 @@ class DownloadTest < ActiveSupport::TestCase
     rubygem = create(:rubygem)
     version = create(:version, rubygem: rubygem)
     10.times do |n|
-      Timecop.freeze(n.days.ago) do
+      travel_to n.days.ago do
         3.times { Download.incr(rubygem.name, version.full_name) }
       end
     end
@@ -283,7 +284,7 @@ class DownloadTest < ActiveSupport::TestCase
     version = create(:version, rubygem: rubygem)
 
     10.times do |n|
-      Timecop.freeze(n.days.ago) do
+      travel_to n.days.ago do
         3.times { Download.incr(rubygem.name, version.full_name) }
       end
     end
@@ -299,7 +300,7 @@ class DownloadTest < ActiveSupport::TestCase
     version = create(:version, rubygem: rubygem)
 
     10.times do |n|
-      Timecop.freeze(n.days.ago) do
+      travel_to n.days.ago do
         3.times { Download.incr(rubygem.name, version.full_name) }
       end
     end

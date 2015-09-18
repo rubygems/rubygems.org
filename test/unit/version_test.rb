@@ -113,7 +113,7 @@ class VersionTest < ActiveSupport::TestCase
 
   context "updated gems" do
     setup do
-      Timecop.freeze Time.zone.today
+      travel_to Time.zone.today
       @existing_gem = create(:rubygem)
       @second = create(:version, rubygem: @existing_gem, created_at: 1.day.ago)
       @fourth = create(:version, rubygem: @existing_gem, created_at: 4.days.ago)
@@ -128,7 +128,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     teardown do
-      Timecop.return
+      travel_back
     end
 
     should "order gems by created at and show only gems that have more than one version" do
