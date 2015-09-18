@@ -15,7 +15,8 @@ class ApplicationHelperTest < ActionView::TestCase
     feed_link = '<link rel="alternate" type="application/atom+xml" ' \
                 'href="http://feeds.feedburner.com/gemcutter-latest" ' \
                 'title="RubyGems.org | Latest Gems" />'
-    assert_equal atom_feed_link(t(:feed_latest), 'http://feeds.feedburner.com/gemcutter-latest'), feed_link
+    atom_feed_link_result = atom_feed_link(t(:feed_latest), 'http://feeds.feedburner.com/gemcutter-latest')
+    assert_equal feed_link, atom_feed_link_result
   end
 
   should 'sanitize descriptions' do

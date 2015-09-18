@@ -55,7 +55,9 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.summary.to_s, xml.at_css("summary").content
       assert_equal @version.licenses, xml.at_css("licenses").content
       assert_equal @version.requirements, xml.at_css("requirements").content
-      assert_equal @version.created_at.to_i, xml.at_css("created-at").content.to_time.to_i
+      assert_equal(
+        @version.created_at.to_i,
+        xml.at_css("created-at").content.to_time(:utc).to_i)
     end
   end
 
