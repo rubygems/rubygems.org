@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  use_doorkeeper scope: 'oauth'
-
   ################################################################################
   # Root
 
@@ -152,4 +150,6 @@ Rails.application.routes.draw do
     get 'background_job_stats', to: Internal::BackgroundJobStatsController.action(:stats)
     get 'ping' => 'ping#index'
   end
+
+  use_doorkeeper scope: 'oauth'
 end
