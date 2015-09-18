@@ -31,9 +31,8 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_with_api_key
-    if api_key = request.headers["Authorization"] || params[:api_key]
-      sign_in User.find_by_api_key(api_key)
-    end
+    api_key = request.headers["Authorization"] || params[:api_key]
+    sign_in User.find_by_api_key(api_key)
   end
 
   def verify_authenticated_user
