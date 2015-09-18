@@ -97,7 +97,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       assert_response :success
       set_cache_header
 
-      travel 1.second do
+      Timecop.travel(Time.zone.now + 1) do
         @rubygem.public_versions.each { |v| v.update!(indexed: false) }
       end
 

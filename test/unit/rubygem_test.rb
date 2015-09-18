@@ -117,7 +117,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "can find when the first built date was" do
-      travel_to Time.zone.now do
+      Timecop.travel(Time.zone.now) do
         create(:version, rubygem: @rubygem, number: "3.0.0", built_at: 1.day.ago)
         create(:version, rubygem: @rubygem, number: "2.0.0", built_at: 2.days.ago)
         create(:version, rubygem: @rubygem, number: "1.0.0", built_at: 3.days.ago)
@@ -707,25 +707,25 @@ class RubygemTest < ActiveSupport::TestCase
       @rubygem = create(:rubygem)
       @version = create(:version, rubygem: @rubygem)
 
-      travel_to Date.parse("2010-10-02") do
+      Timecop.freeze Date.parse("2010-10-02") do
         1.times { Download.incr(@rubygem.name, @version.full_name) }
       end
 
-      travel_to Date.parse("2010-10-03") do
+      Timecop.freeze Date.parse("2010-10-03") do
         6.times { Download.incr(@rubygem.name, @version.full_name) }
       end
 
-      travel_to Date.parse("2010-10-16") do
+      Timecop.freeze Date.parse("2010-10-16") do
         4.times { Download.incr(@rubygem.name, @version.full_name) }
       end
 
-      travel_to Date.parse("2010-11-01") do
+      Timecop.freeze Date.parse("2010-11-01") do
         2.times { Download.incr(@rubygem.name, @version.full_name) }
       end
     end
 
     should "give counts from the past 30 days starting with the day before yesterday" do
-      travel_to Date.parse("2010-11-03") do
+      Timecop.freeze Date.parse("2010-11-03") do
         downloads = @rubygem.monthly_downloads
 
         assert_equal 30, downloads.size
@@ -742,7 +742,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "give the monthly dates back" do
-      travel_to Time.utc(2010, 11, 01) do
+      Timecop.freeze Time.utc(2010, 11, 01) do
         assert_equal(("01".."30").map { |date| "10/#{date}" }, Rubygem.monthly_short_dates)
       end
     end
