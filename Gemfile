@@ -40,6 +40,7 @@ gem 'will_paginate'
 gem 'xml-simple'
 gem 'yajl-ruby', require: 'yajl'
 gem 'http_accept_language'
+gem 'swiftype'
 
 group :development, :test do
   gem 'rubocop', '~> 0.34.0'

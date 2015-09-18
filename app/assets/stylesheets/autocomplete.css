@@ -1,0 +1,140 @@
+.swiftype-widget .autocomplete {
+  display: block;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  text-align: left;
+  -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
+  -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
+}
+
+.swiftype-widget .autocomplete ul {
+  background-color: #fff;
+  display: block;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  text-align: left;
+}
+
+.swiftype-widget .autocomplete li {
+  border-bottom: 1px solid #e5e5e5;
+  cursor: pointer;
+  padding: 16px;
+  font-size: 13px;
+  list-style-type: none;
+  background-image: none;
+  margin: 0;
+}
+
+.swiftype-widget .autocomplete li:first-child {
+  -webkit-border-radius: 5px 5px 0 0;
+  -moz-border-radius: 5px 5px 0 0;
+  -ms-border-radius: 5px 5px 0 0;
+  -o-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+}
+
+.swiftype-widget .autocomplete li:last-child {
+  -webkit-border-radius: 0 0 5px 5px;
+  -moz-border-radius: 0 0 5px 5px;
+  -ms-border-radius: 0 0 5px 5px;
+  -o-border-radius: 0 0 5px 5px;
+  border-radius: 0 0 5px 5px;
+  border-bottom: none;
+}
+
+.swiftype-widget .autocomplete li.active {
+  background-color: #074e72;
+  color: #fff;
+  border-bottom: 1px solid #074e72;
+}
+
+.swiftype-widget .autocomplete li p {
+  font-size: 13px;
+  line-height: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+.swiftype-widget .autocomplete li p.name {
+  font-weight: bold;
+  float: left;
+  color: #333;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  font-size: 18px;
+  line-height: 18px;
+}
+
+.swiftype-widget .autocomplete li p.version {
+  float: left;
+  color: #aaa;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.swiftype-widget .autocomplete li.active p.version {
+  color: rgba(255,255,255,0.5);
+}
+
+.swiftype-widget .autocomplete li div.downloads {
+  float: right;
+  text-align: right;
+}
+
+.swiftype-widget .autocomplete li div.downloads p.downloads_number {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.swiftype-widget .autocomplete li.active div.downloads p.downloads_number {
+  color: #fff;
+}
+
+.swiftype-widget .autocomplete li div.downloads p.downloads_label {
+  font-weight: normal;
+  font-size: 10px;
+  text-transform: uppercase;
+  color: #777;
+}
+.swiftype-widget .autocomplete li.active div.downloads p.downloads_label {
+  color: rgba(255,255,255,0.7);
+}
+
+.swiftype-widget .autocomplete li p.summary {
+  clear: left;
+  color: #777;
+}
+
+.swiftype-widget .autocomplete li.active p.summary {
+  color: rgba(255,255,255,0.7);
+}
+
+.swiftype-widget .autocomplete li p.name em {
+  color: #0b2644;
+  font-style: normal;
+  font-weight: bold;
+}
+
+.swiftype-widget .autocomplete li.active p.name {
+  color: #fff;
+}
+
+.swiftype-widget .autocomplete li.active p.name em {
+  color: #fff;
+  font-style: normal;
+}

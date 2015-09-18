@@ -9,6 +9,9 @@ class Version < ActiveRecord::Base
   after_create :full_nameify!
   after_save :reorder_versions
 
+  after_commit :update_swiftype_index
+  delegate :update_swiftype_index, :to => :rubygem
+
   serialize :licenses
   serialize :requirements
 
