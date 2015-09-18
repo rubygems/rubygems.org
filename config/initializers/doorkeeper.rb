@@ -25,7 +25,7 @@ Doorkeeper.configure do
   grant_flows %w(authorization_code)
 
   # All applications are trusted!
-  skip_authorization do |resource_owner, client|
+  skip_authorization do
     true
   end
 end
