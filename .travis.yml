@@ -40,6 +40,5 @@ env:
 matrix:
   allow_failures:
     - env: "RUBYGEMS_VERSION=latest"
-    - rvm: 2.2
     - rvm: ruby-head
   fast_finish: true
