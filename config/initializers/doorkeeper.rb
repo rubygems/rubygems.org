@@ -35,7 +35,7 @@ Doorkeeper.configure do
 
   # Forces the usage of the HTTPS protocol in non-native redirect uris.
   # OAuth2 delegates security in communication to the HTTPS protocol so it is wise to keep this enabled.
-  force_ssl_in_redirect_uri !Rails.env.development?
+  force_ssl_in_redirect_uri SimpleSSLRequirement::SSL_ENVIRONMENTS.include?(Rails.env)
 
   # implicit and password grant flows have risks that you should understand before enabling:
   #   http://tools.ietf.org/html/rfc6819#section-4.4.2
