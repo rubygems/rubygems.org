@@ -204,6 +204,7 @@ class DownloadTest < ActiveSupport::TestCase
 
     assert_equal downloads,
       Download.counts_by_day_for_version_in_date_range(@version_1, start, fin)
+    travel_back
   end
 
   should "find counts per day for versions in range" do
