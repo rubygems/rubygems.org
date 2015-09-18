@@ -106,7 +106,7 @@ GEM
       activesupport (>= 4.1.0)
     gravtastic (3.2.6)
     high_voltage (2.4.0)
-    highline (1.7.5)
+    highline (1.7.6)
     honeybadger (2.1.4)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
