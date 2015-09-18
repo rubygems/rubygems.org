@@ -19,7 +19,7 @@ Doorkeeper.configure do
   # called in the ApplicationsController by `before_action :authenticate_admin!`
   admin_authenticator do
     user = authenticate_resource_owner!
-    if ACL.admin?(user)
+    if Gemcutter.admins.include? user.email
       user
     else
       fail Doorkeeper::Errors::DoorkeeperError, 'Not an admin'

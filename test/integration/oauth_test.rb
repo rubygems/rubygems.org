@@ -1,21 +1,13 @@
 require 'test_helper'
 
 class OauthTest < SystemTest
-
   setup do
     ensure_site_host_setup
-    # Create admin user
-    @user = create(:user, email: "nick@example.com", password: "secret123", handle: "nick1")
-    # Sign in user
-    sign_in
   end
 
   test "admin users may create applications" do
-    # Give current user admin rights
-    refute ACL.admin?(@user)
-    ENV['ADMIN_USERS'] = "#{@user.handle}=#{@user.email}"
-    ACL.load_admin_users!
-    assert ACL.admin?(@user)
+    user = create(:user, email: Gemcutter.admins.first, password: "secret123", handle: "nick1")
+    sign_in(user)
 
     oauth_path = url_helpers.new_oauth_application_path
     params = {}
@@ -44,10 +36,7 @@ class OauthTest < SystemTest
   end
 
   test "non-admin users may not create applications" do
-    # Ensure current user lacks admin rights
-    ENV['ADMIN_USERS'] = ""
-    ACL.load_admin_users!
-    refute ACL.admin?(@user)
+    sign_in(create(:user))
 
     oauth_path = url_helpers.new_oauth_application_path
     params = {}
@@ -60,10 +49,10 @@ class OauthTest < SystemTest
 
   private
 
-  def sign_in
+  def sign_in(user)
     visit sign_in_path
-    fill_in "Email or Handle", with: @user.reload.email
-    fill_in "Password", with: @user.password
+    fill_in "Email or Handle", with: user.reload.email
+    fill_in "Password", with: user.password
     click_button "Sign in"
   end
 
