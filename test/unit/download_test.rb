@@ -182,31 +182,29 @@ class DownloadTest < ActiveSupport::TestCase
 
   should "find counts per day for versions in range across month boundary" do
     initial_time = Time.zone.parse("2012-10-01")
-    travel_to initial_time
-    @rubygem_1 = create(:rubygem)
-    @version_1 = create(:version, rubygem: @rubygem_1)
+    travel_to initial_time do
+      @rubygem_1 = create(:rubygem)
+      @version_1 = create(:version, rubygem: @rubygem_1)
+    end
 
-    travel_to 1.day.ago do
+    travel_to initial_time.yesterday do
       create :version_history, version: @version_1, count: 5
     end
 
-    travel_to initial_time
-    Download.incr(@rubygem_1, @version_1.full_name)
+    travel_to initial_time do
+      Download.incr(@rubygem_1, @version_1.full_name)
 
-    start = 2.days.ago.to_date
-    fin = Time.zone.today
+      start = 2.days.ago.to_date
+      fin = Time.zone.today
 
-    downloads = ActiveSupport::OrderedHash.new.tap do |d|
-      d[start.to_s] = 0
-      d["#{Time.zone.yesterday}"] = 5
-      d[fin.to_s] = 1
-    end
+      downloads = ActiveSupport::OrderedHash.new.tap do |d|
+        d[start.to_s] = 0
+        d["#{Time.zone.yesterday}"] = 5
+        d[fin.to_s] = 1
+      end
 
-    begin
       assert_equal downloads,
         Download.counts_by_day_for_version_in_date_range(@version_1, start, fin)
-    ensure
-      travel_back
     end
   end
 
