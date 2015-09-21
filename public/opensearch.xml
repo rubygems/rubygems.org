@@ -7,9 +7,7 @@
   <OutputEncoding>UTF-8</OutputEncoding>
   <SearchForm>https://rubygems.org/search</SearchForm>
   <ShortName>RubyGems.org</ShortName>
-  <Url type="text/html" rel="results" method="GET" template="https://rubygems.org/search">
-    <Param name="query" value="{searchTerms}"/>
-  </Url>
+  <Url type="text/html" rel="results" method="GET" template="https://rubygems.org/search?query={searchTerms}"/>
   <Url type="application/opensearchdescription+xml" rel="self" method="GET" template="https://rubygems.org/opensearch.xml"/>
   <moz:SearchForm>https://rubygems.org/search</moz:SearchForm>
 </OpenSearchDescription>
