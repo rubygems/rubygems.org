@@ -60,7 +60,6 @@ group :test do
   gem 'mocha', require: false
   gem 'bourne', require: false
   gem 'shoulda', require: false
-  gem 'timecop'
 end
 
 group :development, :deploy do

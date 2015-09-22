@@ -52,9 +52,8 @@ class RubygemsHelperTest < ActionView::TestCase
   end
 
   should "show a nice formatted date" do
-    Timecop.travel(Time.zone.parse("2011-03-18T00:00:00-00:00")) do
-      assert_equal "March 18, 2011", nice_date_for(Time.zone.now)
-    end
+    time = Time.zone.parse("2011-03-18T00:00:00-00:00")
+    assert_equal "March 18, 2011", nice_date_for(time)
   end
 
   should "link to docs if no docs link is set" do
