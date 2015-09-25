@@ -2,7 +2,15 @@ Doorkeeper.configure do
   orm :active_record
 
   resource_owner_authenticator do
-    env[:clearance].try(:current_user)
+    clearance_session = env[:clearance] # session = Clearance::Session.new(env)
+    user = clearance_session && clearance_session.current_user
+
+    if user
+      user
+    else
+      session[:return_to] = request.fullpath
+      redirect_to(sign_in_url)
+    end
   end
 
   admin_authenticator do
