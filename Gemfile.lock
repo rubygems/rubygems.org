@@ -134,7 +134,7 @@ GEM
     multi_json (1.11.2)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
-    net-ssh (2.9.2)
+    net-ssh (3.0.1)
     netrc (0.10.3)
     newrelic-redis (2.0.2)
       newrelic_rpm (~> 3.11)
