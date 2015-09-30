@@ -7,7 +7,7 @@
 <%= form_for :session, :url => session_path do |form| %>
   <div class="text_field">
     <%= form.label :who, t('activerecord.attributes.session.who'), :class => 'form__label' %>
-    <%= form.text_field :who, :class => 'form__input' %>
+    <%= form.text_field :who, :autofocus => true, :class => 'form__input' %>
   </div>
   <div class="password_field">
     <%= form.label :password, t('activerecord.attributes.session.password'), :class => 'form__label' %>
