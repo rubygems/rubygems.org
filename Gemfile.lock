@@ -1,3 +1,28 @@
+GIT
+  remote: git://github.com/ai/autoprefixer-rails.git
+  revision: 9a3ef7bc1200d3967fe02a2f070f8701cfe47076
+  specs:
+    autoprefixer-rails (6.0.3)
+      execjs
+      json
+
+GIT
+  remote: git://github.com/rails/sass-rails.git
+  revision: a3b25261a3d31ed9ff5dd6e841b777790fc86c55
+  specs:
+    sass-rails (6.0.0)
+      railties (>= 4.0.0, < 5.0)
+      sass (~> 3.4)
+      sprockets (>= 4.0)
+      sprockets-rails (< 4.0)
+
+GIT
+  remote: git://github.com/rails/sprockets.git
+  revision: 60e7d8ed69ed3bb45880b9bf6ac37a457eb45c4a
+  specs:
+    sprockets (4.0.0)
+      rack (>= 1, < 3)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -41,9 +66,6 @@ GEM
     ast (2.1.0)
     astrolabe (1.3.1)
       parser (~> 2.2)
-    autoprefixer-rails (6.0.3)
-      execjs
-      json
     aws-sdk-core (2.1.26)
       jmespath (~> 1.0)
     bcrypt (3.1.10)
@@ -204,24 +226,16 @@ GEM
     ruby-graphviz (1.2.2)
     ruby-progressbar (1.7.5)
     sass (3.4.18)
-    sass-rails (5.0.4)
-      railties (>= 4.0.0, < 5.0)
-      sass (~> 3.1)
-      sprockets (>= 2.8, < 4.0)
-      sprockets-rails (>= 2.0, < 4.0)
-      tilt (>= 1.1, < 3)
     shoulda (3.5.0)
       shoulda-context (~> 1.0, >= 1.0.1)
       shoulda-matchers (>= 1.4.1, < 3.0)
     shoulda-context (1.2.1)
     shoulda-matchers (2.8.0)
       activesupport (>= 3.0.0)
-    sprockets (3.3.5)
-      rack (> 1, < 3)
-    sprockets-rails (2.3.3)
-      actionpack (>= 3.0)
-      activesupport (>= 3.0)
-      sprockets (>= 2.8, < 4.0)
+    sprockets-rails (3.0.0.beta2)
+      actionpack (>= 4.0)
+      activesupport (>= 4.0)
+      sprockets (>= 3.0.0)
     sshkit (1.7.1)
       colorize (>= 0.7.0)
       net-scp (>= 1.1.2)
@@ -229,7 +243,6 @@ GEM
     statsd-instrument (2.0.10)
     thor (0.19.1)
     thread_safe (0.3.5)
-    tilt (2.0.1)
     toxiproxy (0.1.3)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
@@ -255,7 +268,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  autoprefixer-rails
+  autoprefixer-rails!
   aws-sdk-core
   bourne
   builder
@@ -300,8 +313,10 @@ DEPENDENCIES
   redis
   rest-client
   rubocop (~> 0.34.0)
-  sass-rails (~> 5.0.0)
+  sass-rails!
   shoulda
+  sprockets!
+  sprockets-rails (~> 3.0.0.beta2)
   statsd-instrument (~> 2.0.6)
   toxiproxy (~> 0.1.3)
   uglifier (>= 1.0.3)
