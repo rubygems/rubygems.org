@@ -104,25 +104,7 @@
         </div>
       <% end %>
 
-      <h2 class="gem__ruby-version__heading t-list__heading">
-        Required Ruby Version:
-        <i class="gem__ruby-version">
-          <% if @latest_version.ruby_version %>
-            <%= @latest_version.ruby_version %>
-          <% else %>
-            None
-          <% end %>
-        </i>
-      </h2>
-
       <% if @latest_version.indexed %>
-        <h2 class="gem__ruby-version__heading t-list__heading">
-          <%= pluralized_licenses_header @latest_version %>:
-          <span class="gem__ruby-version">
-            <p><%= formatted_licenses @latest_version.licenses %></p>
-          </span>
-        </h2>
-
         <h2 class="gem__ruby-version__heading t-list__heading">
           <%= t '.bundler_header' %>:
           <div class="gem__code-wrap">
@@ -141,7 +123,24 @@
             <span class="gem__code__tooltip--copied">Copied!</span>
           </div>
         </h2>
+        <h2 class="gem__ruby-version__heading t-list__heading">
+          <%= pluralized_licenses_header @latest_version %>:
+          <span class="gem__ruby-version">
+            <p><%= formatted_licenses @latest_version.licenses %></p>
+          </span>
+        </h2>
       <% end %>
+
+      <h2 class="gem__ruby-version__heading t-list__heading">
+        Required Ruby Version:
+        <i class="gem__ruby-version">
+          <% if @latest_version.ruby_version %>
+            <%= @latest_version.ruby_version %>
+          <% else %>
+            None
+          <% end %>
+        </i>
+      </h2>
 
       <h3 class="t-list__heading"><%= t '.links.header' %>:</h3>
       <div class="t-list__items">
