@@ -72,7 +72,7 @@ nl:
       title: alle gems
       subtitle: die beginnen met %{prefix}
     dependencies:
-      header: afhankelijkheden
+      header: "%{title} afhankelijkheden"
     edit:
       title: Wijzig gem links
       other_fields_notice: Alle andere velden kunnen alleen gewijzigd worden door een nieuwe versie van de gem te publiceren.
