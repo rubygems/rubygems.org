@@ -184,6 +184,13 @@
           </a>
         </div>
       </div>
+      <div class="footer__language_selector">
+        <% I18n.available_locales.each do |language| %>
+          <div class="footer__language">
+            <%= link_to I18n.t(:locale_name, locale: language), url_for(locale: language), class: "nav--v__link--footer" %>
+          </div>
+        <% end %>
+      </div>
     </footer>
 
     <%= javascript_include_tag "application" %>

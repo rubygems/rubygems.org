@@ -2,6 +2,7 @@ nl:
   update: Wijzig
   sign_in: Inloggen
   sign_up: Inschrijven
+  locale_name: "Nederlands"
   home:
     index:
       share:
