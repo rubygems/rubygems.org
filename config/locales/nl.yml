@@ -1,8 +1,20 @@
 nl:
   update: Wijzig
   sign_in: Inloggen
-  sign_up: Inschrijven
   locale_name: "Nederlands"
+  sign_up: Aanmelden
+  footer_about: "RubyGems.org is de gem hosting service van de Ruby community. Publiceer and installeer je gems direct. Gebruik de API om meer informatie van beschikbare gems te vinden. Wordt een deelnemer en verbeter de site met jouw aanpassingen."
+  time_ago: ! '%{duration} geleden'
+  download_count: ! '%{count} downloads'
+  title: RubyGems.org
+  please_sign_up: Toegang geweigerd. Schrijf je in voor een account op https://rubygems.org
+  feed_latest: RubyGems.org | Recente Gems
+  form_disable_with: Een moment geduld...
+  edit: Wijzig
+  url: https://rubygems.org
+  feed_subscribed: RubyGems.org | Geabonneerde Gems
+  subtitle: De gem host voor de community
+  help_url: http://help.rubygems.org
   home:
     index:
       share:
@@ -45,9 +57,6 @@ nl:
       for: Statistieken voor %{for}
       total_downloads: ! 'Downloads totaal'
       daily_downloads: ! '%{count} downloads vandaag'
-  time_ago: ! '%{duration} ago'
-  download_count: ! '%{count} downloads'
-  please_confirm: Toegang geweigerd. Controleer je RubyGems.org account.
   activerecord:
     errors:
       messages:
@@ -55,7 +64,7 @@ nl:
     attributes:
       session:
         password: Wachtwoord
-        who: Email of handle
+        who: Email of Gebruikersnaam
       linkset:
         mail: Mailing-list-URL
         bugs: Bugtracker-URL
@@ -63,11 +72,10 @@ nl:
         code: source code URL
         wiki: Wiki URL
       user:
-        handle: Handle
+        handle: Gebruikersnaam
         email: Emailadres
         avatar: Avatar
         password: Wachtwoord
-  title: RubyGems.org
   rubygems:
     index:
       title: alle gems
@@ -107,16 +115,13 @@ nl:
       latest: Laatste wijzigingen
       my_subscriptions: Mijn abonnementen
       no_owned: Je hebt nog geen gems gepubliceerd. Bekijk de instructies voor het %{creating_link} van een gem of het  %{migrating_link} van een gem vanaf RubyForge.
-  please_sign_up: Toegang geweigerd. Schrijf je in voor een account op https://rubygems.org
-  feed_latest: RubyGems.org | Recente Gems
   sessions:
     new:
       forgot_password: Wachtwoord vergeten?
-  form_disable_with: Een moment geduld...
   passwords:
     new:
       title: wachtwoord wijzigen
-      submit: Reset wachtwoord
+      submit: Wachtwoord wijzigen
       will_email_notice: We sturen een link om je wachtwoord te wijzigen.
     edit:
       title: reset wachtwoord
@@ -136,12 +141,10 @@ nl:
     create:
       title: aanmaken
       notice: Deze pagaina is verplaatst naar the nieuwe rubygems.org support site.
-  edit: Wijzig
   searches:
     show:
       exact_match: Exacte match
       subtitle: voor %{query}
-  url: https://rubygems.org
   versions:
     index:
       title: alle versies van %{name}
@@ -149,9 +152,6 @@ nl:
       versions_since: ! '%{count} versies sinds %{since}'
     version:
       yanked: verwijderd
-  feed_subscribed: RubyGems.org | Geabonneerde Gems
-  subtitle: De gem host voor de community
-  help_url: http://help.rubygems.org
   profiles:
     edit:
       title: Wijzig profiel
@@ -171,30 +171,26 @@ nl:
       footer:
         status: Status
         discussion_forum: Forum
-        hosted_by: hosting door %{supporter}
-        resolved_with_title: DNS van %{resolver}
+        hosted_by: Hosting
         about: Over
         uptime: Uptime
-        optimized_by: Optimalisatie door %{optimizer}
-        optimized_by_title: Optimalisatie door %{optimizer}
+        optimized_by: Optimalisatie
         contribute: Bijdragen
         blog: Blog
         guides: Leren
-        designed_by: ontwerp door %{designer}
+        designed_by: Ontwerp
         statistics: Stats
         source_code: Code
         help: Help
-        supported_by: hosting door %{supporter}
-        tracking_by: tracking door %{tracker}
-        supported_by_title: Hosting door %{supporter}
-        resolved_with: DNS van %{resolver}
-        tracking_by_title: Tracking door %{tracker}
-        designed_by_title: Ontwerp van %{designer}
+        supported_by: Ondersteunding
+        tracking_by: Tracking
+        resolved_with: DNS
+        monitored_by: Monitoring
         mobile: Mobiel
-        hosted_by_title: hosting door %{supporter}
       header:
         sign_in: inloggen
         sign_out: uitloggen
         dashboard: dashboard
-        sign_up: inschrijven
+        sign_up: aanmelden
         all_gems: alle gems
+        search_gem: "Gems Zoeken&hellip;"
