@@ -12,6 +12,7 @@ en:
   sign_in: "Sign in"
   sign_up: "Sign up"
   footer_about: "RubyGems.org is the Ruby community&rsquo;s gem hosting service. Instantly publish your gems and install them. Use the API to interact and find out more information about available gems. Become a contributor and enhance the site with your own changes."
+  locale_name: "English"
 
   dashboards:
     show:

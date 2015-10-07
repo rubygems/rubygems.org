@@ -37,6 +37,17 @@
     .footer__about {
       min-height: 222px; } }
 
+.footer__language_selector {
+  clear: both;
+  max-width: 940px;
+  margin: 0 auto;
+  text-align: center;
+  color: #6c767e; }
+  .footer__language {
+    width: 100px;
+    display: inline-block;
+  }
+
 .footer__sponsors-wrap {
   margin-top: 60px;
   padding-top: 45px;
