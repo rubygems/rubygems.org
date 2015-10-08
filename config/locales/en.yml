@@ -40,6 +40,7 @@ en:
         sign_in: "Sign in"
         sign_up: "Sign up"
         sign_out: "Sign out"
+        search_gem: "Search Gems&hellip;"
       footer:
         about: "About"
         blog: "Blog"
@@ -52,6 +53,14 @@ en:
         data: "Data"
         discussion_forum: "Discuss"
         statistics: "Stats"
+        supported_by: "Supported by"
+        hosted_by: "Hosted by"
+        designed_by: "Designed by"
+        resolved_with: "Resolved with"
+        optimized_by: "Optimized by"
+        tracking_by: "Tracking by"
+        monitored_by: "Monitored by"
+        gems_served_by: "Gems served by"
 
   pages:
     about:

@@ -43,7 +43,7 @@
             <% end %>
           <% else %>
             <%= form_tag search_url, :id => "main-search", :class => "header__search-wrap", :method => :get do %>
-              <%= search_field_tag :query, params[:query], :placeholder => "Search Gems&hellip;".html_safe, :class => "header__search" %>
+              <%= search_field_tag :query, params[:query], :placeholder => t("layouts.application.header.search_gem").html_safe, :class => "header__search" %>
               <%= label_tag :query do %>
                 <span class="t-hidden">Search gems</span>
               <% end %>
@@ -151,35 +151,35 @@
       <div class="footer__sponsors-wrap">
         <div class="footer__sponsors">
           <a class="footer__sponsor" href="http://rubycentral.org/" target="_blank">
-            Supported by
+            <%= t("layouts.application.footer.supported_by") %>
             <span class="t-hidden">Ruby Central</span>
           </a>
           <a class="footer__sponsor" href="https://www.bluebox.net/" target="_blank">
-            Hosted by
+            <%= t("layouts.application.footer.hosted_by") %>
             <span class="t-hidden">Blue Box</span>
           </a>
           <a class="footer__sponsor" href="https://dockyard.com/" target="_blank">
-            Designed by
+            <%= t("layouts.application.footer.designed_by") %>
             <span class="t-hidden">DockYard</span>
           </a>
           <a class="footer__sponsor" href="https://dnsimple.com/" target="_blank">
-            Resolved with
+            <%= t("layouts.application.footer.resolved_with") %>
             <span class="t-hidden">DNSimple</span>
           </a>
           <a class="footer__sponsor" href="https://newrelic.com/" target="_blank">
-            Optimized by
+            <%= t("layouts.application.footer.optimized_by") %>
             <span class="t-hidden">New Relic</span>
           </a>
           <a class="footer__sponsor" href="http://get.gaug.es/" target="_blank">
-            Tracking by
+            <%= t("layouts.application.footer.tracking_by") %>
             <span class="t-hidden">Gauges</span>
           </a>
           <a class="footer__sponsor" href="https://www.runscope.com/" target="_blank">
-            Monitored by
+            <%= t("layouts.application.footer.monitored_by") %>
             <span class="t-hidden">Runscope</span>
           </a>
           <a class="footer__sponsor" href="https://www.fastly.com/" target="_blank">
-            Gems served by
+            <%= t("layouts.application.footer.gems_served_by") %>
             <span class="t-hidden">Fastly</span>
           </a>
         </div>
