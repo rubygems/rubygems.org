@@ -31,6 +31,10 @@ Metrics/PerceivedComplexity:
 Style/AlignParameters:
   EnforcedStyle: with_fixed_indentation
 
+Style/AndOr:
+  Exclude:
+    - app/controllers/internal/ping_controller.rb
+
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
 
