@@ -3,9 +3,7 @@ require 'test_helper'
 class DeletionTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = false # Disabled to test after_commit
 
-  def setup
-    super
-
+  setup do
     @user = create(:user)
     Pusher.new(@user, gem_file).process
     @version = Version.last
@@ -43,8 +41,7 @@ class DeletionTest < ActiveSupport::TestCase
     assert_nil RubygemFs.instance.get("gems/#{@version.full_name}.gem"), "Rubygem still exists!"
   end
 
-  def teardown
-    super
+  teardown do
     # This is necessary due to after_commit not cleaning up for us
     [Rubygem, Version, User, Deletion].each(&:delete_all)
   end
