@@ -163,6 +163,10 @@ directory. The proper directory will be full of .gem files.
 #### Getting the data dumps
 * You can use rubygems.org data [dumps](https://rubygems.org/pages/data) to test
 application in development environment especially for performance related issues.
+To use redis data dumps, you should check redis configuration file to make sure
+configuration of the filename where to dump the db and it's directory point to the
+location of the redis dump file you have just downloaded from rubygems.org
+[(See more detail about redis data import)](http://stackoverflow.com/questions/14497234/how-to-recover-redis-data-from-snapshotrdb-file-copied-from-another-machine)
 
 #### Pushing gems
 
