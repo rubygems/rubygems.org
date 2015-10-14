@@ -163,6 +163,8 @@ directory. The proper directory will be full of .gem files.
 #### Getting the data dumps
 * You can use rubygems.org data [dumps](https://rubygems.org/pages/data) to test
 application in development environment especially for performance related issues.
+* To load the main database dump into Postgres, use [`pg_restore`](http://www.postgresql.org/docs/9.2/static/app-pgrestore.html).
+* To load the Redis dump, edit the `dbfilename` and `dir` configuration values in `redis.conf` to point to your downloaded dump file. [Example](http://stackoverflow.com/a/14506986).
 
 #### Pushing gems
 
