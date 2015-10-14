@@ -11,7 +11,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150407012331) do
+ActiveRecord::Schema.define(version: 20150821091456) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
@@ -71,6 +72,7 @@ ActiveRecord::Schema.define(version: 20150407012331) do
     t.string   "bugs"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "changelog"
   end
 
   add_index "linksets", ["rubygem_id"], name: "index_linksets_on_rubygem_id", using: :btree
@@ -185,4 +187,5 @@ ActiveRecord::Schema.define(version: 20150407012331) do
     t.datetime "updated_at"
     t.integer  "rubygem_id"
   end
+
 end

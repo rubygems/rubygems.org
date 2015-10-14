@@ -48,6 +48,6 @@ class RubygemsController < ApplicationController
   private
 
   def params_linkset
-    params.require(:linkset).permit(:code, :docs, :wiki, :mail, :bugs)
+    params.require(:linkset).permit(:code, :docs, :wiki, :mail, :bugs, :changelog)
   end
 end

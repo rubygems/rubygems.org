@@ -168,6 +168,7 @@ class Rubygem < ActiveRecord::Base
       'mailing_list_uri'  => linkset.try(:mail),
       'source_code_uri'   => linkset.try(:code),
       'bug_tracker_uri'   => linkset.try(:bugs),
+      'changelog_uri'   => linkset.try(:changelog),
       'dependencies'      => {
         'development' => version.dependencies.development.to_a,
         'runtime'     => version.dependencies.runtime.to_a
