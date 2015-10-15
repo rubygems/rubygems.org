@@ -1,6 +1,4 @@
 class UsersController < Clearance::UsersController
-  ssl_required
-
   def new
     redirect_to sign_up_path
   end
