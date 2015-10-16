@@ -66,7 +66,19 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.downloaded(limit = 5)
+    if Rails.application.config.stats_page_top_10_from_redis
+      most_downloaded_by_redis(limit)
+    else
+      most_downloaded_by_db(limit)
+    end
+  end
+
+  def self.most_downloaded_by_db(limit = 5)
     with_versions.by_downloads.limit(limit)
+  end
+
+  def self.most_downloaded_by_redis(limit = 5)
+    Download.most_downloaded_gems_all_time(limit)
   end
 
   def self.letter(letter)

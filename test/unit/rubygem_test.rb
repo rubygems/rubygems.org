@@ -746,5 +746,44 @@ class RubygemTest < ActiveSupport::TestCase
         assert_equal(("01".."30").map { |date| "10/#{date}" }, Rubygem.monthly_short_dates)
       end
     end
+
+    context "give most downloaded gems" do
+      setup do
+        @thin = create(:rubygem, name: 'thin', downloads: 76)
+        @rake = create(:rubygem, name: 'rake', downloads: 45)
+        @json = create(:rubygem, name: 'json', downloads: 32)
+        @thor = create(:rubygem, name: 'thor', downloads: 20)
+        @rack = create(:rubygem, name: 'rack', downloads: 13)
+        @dust = create(:rubygem, name: 'dust', downloads: 0)
+        @haml = create(:rubygem, name: 'haml', downloads: 0)
+        @chronic = create(:rubygem, name: 'chronic', downloads: 0)
+
+        @gems = [@thin, @rake, @json, @thor, @rack, @dust, @haml, @chronic]
+        @gems.each do |g|
+          create(:version, rubygem: g)
+          g[:downloads].times { Download.incr(g.name, @version.full_name) }
+        end
+      end
+
+      should "by db" do
+        Rails.application.config.stubs(:stats_page_top_10_from_redis).returns false
+        assert_equal [@thin, @rake, @json, @thor, @rack], Rubygem.downloaded(5)
+        assert_equal Rubygem.downloaded(5), Rubygem.most_downloaded_by_db(5)
+      end
+
+      should "by redis" do
+        Rails.application.config.stubs(:stats_page_top_10_from_redis).returns true
+        expected_downloaded = [@thin, @rake, @json, @thor, @rack].map { |g| [g, g.downloads] }
+        assert_equal expected_downloaded, Rubygem.downloaded(5)
+        assert_equal Rubygem.downloaded(5), Rubygem.most_downloaded_by_redis(5)
+      end
+
+      should "differentiate if the ranking is not the same for redis and postgres" do
+        version = @thin.versions.last
+        version.indexed = false
+        version.save
+        assert_not_equal Rubygem.most_downloaded_by_db(5), Rubygem.most_downloaded_by_redis(5)
+      end
+    end
   end
 end
