@@ -1,11 +1,14 @@
 class Download
   COUNT_KEY     = "downloads"
   ALL_KEY       = "downloads:all"
+  GEM_KEY       = "downloads:all:rubygem"
 
   def self.incr(name, full_name)
     today = Time.zone.today.to_s
     Redis.current.incr(COUNT_KEY)
-    Redis.current.incr(rubygem_key(name))
+    Redis.current.incr(rubygem_key(name)).tap do |count|
+      Redis.current.zadd(GEM_KEY, count, name)
+    end
     Redis.current.incr(version_key(full_name))
     Redis.current.zincrby(today_key, 1, full_name)
     Redis.current.zincrby(ALL_KEY, 1, full_name)
@@ -50,6 +53,14 @@ class Download
     items.collect do |full_name, downloads|
       version = Version.find_by_full_name(full_name)
       [version, downloads.to_i]
+    end
+  end
+
+  def self.most_downloaded_gems_all_time(n = 10)
+    items = Redis.current.zrevrange(GEM_KEY, 0, (n - 1), with_scores: true)
+    items.collect do |name, downloads|
+      rubygem = Rubygem.find_by(name: name)
+      [rubygem, downloads.to_i]
     end
   end
 
