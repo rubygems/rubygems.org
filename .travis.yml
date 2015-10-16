@@ -6,7 +6,6 @@ cache:
 
 rvm:
   - 2.2.3
-  - ruby-head
 
 services:
   - redis-server
