@@ -28,7 +28,7 @@ Doorkeeper.configure do
 
   native_redirect_uri 'urn:ietf:wg:oauth:2.0:oob'
 
-  force_ssl_in_redirect_uri SimpleSSLRequirement::SSL_ENVIRONMENTS.include?(Rails.env)
+  force_ssl_in_redirect_uri Rails.application.config.force_ssl
 
   grant_flows %w(authorization_code)
 

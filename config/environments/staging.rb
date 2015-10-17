@@ -39,8 +39,9 @@ Rails.application.configure do
   # Specifies the header that your server uses for sending files.
   config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect'
 
-  # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  # Force all access to the app over SSL and use secure cookies.
+  config.force_ssl = true
+  config.ssl_options = { hsts: false }
 
   # Set to :debug to see everything in the log.
   config.log_level = :debug

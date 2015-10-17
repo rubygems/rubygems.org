@@ -1,13 +1,11 @@
 class ApplicationController < ActionController::Base
   include Clearance::Authentication
   include Clearance::Authorization
-  include SimpleSSLRequirement
 
   helper :announcements
   helper ActiveSupport::NumberHelper
 
   protect_from_forgery only: [:create, :update, :destroy]
-  ssl_required
 
   before_action :set_locale
 

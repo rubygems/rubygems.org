@@ -1,6 +1,4 @@
 class SessionsController < Clearance::SessionsController
-  ssl_required
-
   def create
     @user = User.authenticate(params[:session][:who],
       params[:session][:password])
