@@ -46,7 +46,7 @@ class DashboardTest < ActionDispatch::IntegrationTest
 
   test "shows announcements on dashboard" do
     Announcement.create!(body: "hello w.")
-    visit dashboard_path
+    get dashboard_path
     assert page.has_content?('hello w.')
   end
 end
