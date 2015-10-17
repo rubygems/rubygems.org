@@ -8,4 +8,5 @@
 //= require jquery_ujs
 //= require jquery.color
 //= require ZeroClipboard
+//= require announcements
 //= require_tree .
