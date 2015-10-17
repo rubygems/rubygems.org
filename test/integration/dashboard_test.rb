@@ -43,4 +43,10 @@ class DashboardTest < ActionDispatch::IntegrationTest
     assert_equal :atom, response.content_type.symbol
     assert page.has_content? "sandworm"
   end
+
+  test "shows announcements on dashboard" do
+    Announcement.create!(body: "hello w.")
+    visit dashboard_path
+    assert page.has_content?('hello w.')
+  end
 end
