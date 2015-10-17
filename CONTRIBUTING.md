@@ -87,7 +87,7 @@ than Rubygems and may suit your organization’s needs better.**
 * Rubygems is configured to use PostgreSQL (>= 8.4.x).
   * Install with: `brew install postgres`
   * Initialize the database and start the DB server
-    ```shell
+   ```shell
    initdb /usr/local/var/postgres -E utf8
    pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
    ```
