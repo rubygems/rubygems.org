@@ -156,12 +156,12 @@ class Rubygem < ActiveRecord::Base
       'sha'               => version.sha256_hex,
       'project_uri'       => "#{protocol}://#{host_with_port}/gems/#{name}",
       'gem_uri'           => "#{protocol}://#{host_with_port}/gems/#{version.full_name}.gem",
-      'homepage_uri'      => linkset.try(:home),
-      'wiki_uri'          => linkset.try(:wiki),
-      'documentation_uri' => linkset.try(:docs).presence || version.documentation_path,
-      'mailing_list_uri'  => linkset.try(:mail),
-      'source_code_uri'   => linkset.try(:code),
-      'bug_tracker_uri'   => linkset.try(:bugs),
+      'homepage_uri'      => version.link_uri(:homepage_uri, linkset),
+      'wiki_uri'          => version.link_uri(:wiki_uri, linkset),
+      'documentation_uri' => version.link_uri(:documentation_uri, linkset).presence || version.documentation_path,
+      'mailing_list_uri'  => version.link_uri(:mailing_list_uri, linkset),
+      'source_code_uri'   => version.link_uri(:source_code_uri, linkset),
+      'bug_tracker_uri'   => version.link_uri(:bug_tracker_uri, linkset),
       'dependencies'      => {
         'development' => deps.select { |r| r.rubygem && 'development' == r.scope },
         'runtime'     => deps.select { |r| r.rubygem && 'runtime' == r.scope }
