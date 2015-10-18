@@ -318,8 +318,51 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal "#{@version.rubygem.name} (#{@version})", @version.to_title
     end
 
-    should "give version with twiddle-wakka for #to_bundler" do
-      assert_equal %(gem '#{@version.rubygem.name}', '~> #{@version}'), @version.to_bundler
+    context "#to_bundler" do
+      should "give feature release version and bugfix up to current version for patched versions" do
+        patched_version = create(:version, number: "1.0.3")
+        name = patched_version.rubygem.name
+        actual = patched_version.to_bundler
+        expected = %(gem '#{name}', '~> 1.0', '>= 1.0.3')
+
+        assert_equal expected, actual
+      end
+
+      should "give only feature release version if no bug fix" do
+        no_bugfix = create(:version, number: "1.0")
+        name = no_bugfix.rubygem.name
+        actual = no_bugfix.to_bundler
+        expected = %(gem '#{name}', '~> 1.0')
+
+        assert_equal expected, actual
+      end
+
+      should "give only feature release version if long version specified with no bugfix" do
+        long_version = create(:version, number: "1.0.0.0")
+        name = long_version.rubygem.name
+        actual = long_version.to_bundler
+        expected = %(gem '#{name}', '~> 1.0')
+
+        assert_equal expected, actual
+      end
+
+      should "give feature release version up to current version if long version specified with bugfix" do
+        long_version = create(:version, number: "1.0.3.0")
+        name = long_version.rubygem.name
+        actual = long_version.to_bundler
+        expected = %(gem '#{name}', '~> 1.0', '>= 1.0.3.0')
+
+        assert_equal expected, actual
+      end
+
+      should "give bugfix version if < 1.0.0" do
+        early_version = create(:version, number: "0.1.2")
+        name = early_version.rubygem.name
+        actual = early_version.to_bundler
+        expected = %(gem '#{name}', '~> 0.1.2')
+
+        assert_equal expected, actual
+      end
     end
 
     should "give title and platform for #to_title" do
