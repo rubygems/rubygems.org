@@ -345,7 +345,7 @@ class Version < ActiveRecord::Base
   end
 
   def feature_release(number)
-    feature_version = Gem::Version.new(number).segments[0,2].join('.')
+    feature_version = Gem::Version.new(number).segments[0, 2].join('.')
     Gem::Version.new(feature_version)
   end
 end
