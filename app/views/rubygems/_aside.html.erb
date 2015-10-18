@@ -62,11 +62,9 @@
     <%= link_to t('edit'), edit_rubygem_path(@rubygem), :class => "gem__link t-list__item", :id => "edit" if @rubygem.owned_by?(current_user) %>
 
     <% if @latest_version.indexed %>
-      <% if @rubygem.linkset.present? %>
-        <%- Linkset::LINKS.keys.each do |link| %>
-          <%= link_to_page link, @rubygem.linkset.public_send(link) %>
-        <%- end %>
-      <% end %>
+      <%- Linkset::LINKS.each do |link, attribute| %>
+        <%= link_to_page link, @latest_version.link_uri(attribute, @rubygem.linkset) %>
+      <%- end %>
 
       <%= download_link(@latest_version) %>
     <% end %>
