@@ -83,7 +83,7 @@ class Indexer
   end
 
   def self.indexer
-    # TODO: remove this after we upgrade rubygems client
+    # TODO: remove this after we upgrade rubygems client to 2.5.0+
     @indexer ||=
       begin
         indexer = Gem::Indexer.new(Rails.root.join("server"), build_legacy: false)
