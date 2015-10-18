@@ -158,7 +158,7 @@ class Rubygem < ActiveRecord::Base
       'gem_uri'           => "#{protocol}://#{host_with_port}/gems/#{version.full_name}.gem",
       'homepage_uri'      => version.link_uri(:homepage_uri, linkset),
       'wiki_uri'          => version.link_uri(:wiki_uri, linkset),
-      'documentation_uri' => version.link_uri(:documentation_uri, linkset).presence || version.documentation_path,
+      'documentation_uri' => version.link_uri(:documentation_uri, linkset),
       'mailing_list_uri'  => version.link_uri(:mailing_list_uri, linkset),
       'source_code_uri'   => version.link_uri(:source_code_uri, linkset),
       'bug_tracker_uri'   => version.link_uri(:bug_tracker_uri, linkset),

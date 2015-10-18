@@ -351,7 +351,8 @@ class Version < ActiveRecord::Base
   end
 
   def link_uri(name, linkset = nil)
-    metadata[name.to_s].presence || linkset.try(name).presence
+    metadata[name.to_s].presence || linkset.try(name).presence ||
+      (name.to_s == "documentation_uri" ? documentation_path : nil)
   end
 
   def documentation_path

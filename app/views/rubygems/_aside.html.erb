@@ -69,7 +69,6 @@
       <%= download_link(@latest_version) %>
     <% end %>
 
-    <%= documentation_link(@latest_version, @rubygem.linkset) %>
     <%= badge_link(@rubygem) %>
     <%= subscribe_link(@rubygem) if @latest_version.indexed %>
     <%= unsubscribe_link(@rubygem) %>
