@@ -170,18 +170,20 @@ nl:
     application:
       footer:
         status: Status
-        discussion_forum: Forum
-        hosted_by: Hosting
-        about: Over
         uptime: Uptime
+        source_code: code
+        data: Data
+        discussion_forum: Forum
+        statistics: Stats
+        blog: Blog
+        about: Over
+        help: Help
+        api: API
+        hosted_by: Hosting
         optimized_by: Optimalisatie
         contribute: Bijdragen
-        blog: Blog
         guides: Leren
         designed_by: Ontwerp
-        statistics: Stats
-        source_code: Code
-        help: Help
         supported_by: Ondersteunding
         tracking_by: Tracking
         resolved_with: DNS

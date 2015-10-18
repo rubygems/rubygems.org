@@ -44,17 +44,18 @@ zh-CN:
         sign_up: "注册"
         sign_out: "退出"
       footer:
-        about: "关于"
-        blog: "博客"
-        guides: "教程"
-        contribute: "贡献"
-        help: "帮助"
         status: "状态"
         uptime: "服务状况"
         source_code: "源代码"
         data: "数据"
         discussion_forum: "讨论"
         statistics: "统计"
+        blog: "博客"
+        about: "关于"
+        help: "帮助"
+        api: "API"
+        guides: "教程"
+        contribute: "贡献"
 
   pages:
     about:

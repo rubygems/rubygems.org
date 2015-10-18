@@ -44,17 +44,18 @@ zh-TW:
         sign_up: "註冊"
         sign_out: "登出"
       footer:
-        about: "關於"
-        blog: "部落格"
-        guides: "教學文件"
-        contribute: "貢獻"
-        help: "說明"
         status: "狀態"
         uptime: "上線時間"
         source_code: "原始碼"
         data: "資料"
         discussion_forum: "討論群組"
         statistics: "統計"
+        blog: "部落格"
+        about: "關於"
+        help: "說明"
+        api: "API"
+        guides: "教學文件"
+        contribute: "貢獻"
 
   pages:
     about:
