@@ -42,7 +42,9 @@ class Links
   # or if linksets has it defined, use that
   # else, generate one from gem name and version number
   def documentation_uri
-    (linkset && linkset.docs.presence) || "http://www.rubydoc.info/gems/#{rubygem.name}/#{version.number}"
+    (version.metadata && version.metadata["documentation_uri"].presence) ||
+      (linkset && linkset.docs.presence) ||
+      "http://www.rubydoc.info/gems/#{rubygem.name}/#{version.number}"
   end
 
   # technically this is a path
@@ -59,7 +61,7 @@ class Links
   LINKS.each do |short, long|
     unless method_defined?(long)
       define_method(long) do
-        linkset && linkset.public_send(short)
+        (version.metadata && version.metadata[long].presence) || (linkset && linkset.public_send(short))
       end
     end
     alias_method short, long
