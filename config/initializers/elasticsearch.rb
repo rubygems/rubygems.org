@@ -1,3 +1,7 @@
+require 'uri'
+require 'typhoeus'
+require 'typhoeus/adapters/faraday'
+
 if Rails.env.test? || Rails.env.development?
   port = Toxiproxy.running? ? 22_221 : 9200
   if Toxiproxy.running?
@@ -13,8 +17,13 @@ if Rails.env.test? || Rails.env.development?
   end
 end
 
-url = ENV['ELASTICSEARCH_URL'] || "http://localhost:#{port}"
-Elasticsearch::Model.client = Elasticsearch::Client.new(host: url)
+uri = URI(ENV['ELASTICSEARCH_URL'] || "http://localhost:#{port || 9200}")
+
+transport = Elasticsearch::Transport::Transport::HTTP::Faraday.new(hosts: [{ host: uri.host, port: uri.port }]) do |config|
+  config.adapter :typhoeus
+end
+
+Elasticsearch::Model.client = Elasticsearch::Client.new(transport: transport, reload_on_failure: true)
 
 if Rails.env.development?
   tracer = ActiveSupport::Logger.new('log/elasticsearch.log')
