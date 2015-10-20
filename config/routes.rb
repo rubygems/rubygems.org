@@ -55,8 +55,6 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :dependencies, only: :index
-
       resources :rubygems,
         path: 'gems',
         only: [:create, :show, :index],
