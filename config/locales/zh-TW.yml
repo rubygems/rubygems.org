@@ -56,6 +56,14 @@ zh-TW:
         api: "API"
         guides: "教學文件"
         contribute: "貢獻"
+        supported_by: "支持"
+        hosted_by: "托管"
+        designed_by: "設計"
+        resolved_with: "解析"
+        optimized_by: "優化"
+        tracking_by: "追蹤"
+        monitored_by: "監控"
+        gems_served_by: "服務"
 
   pages:
     about:
