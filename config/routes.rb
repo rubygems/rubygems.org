@@ -147,7 +147,6 @@ Rails.application.routes.draw do
   # Internal Routes
 
   namespace :internal do
-    get 'background_job_stats', to: Internal::BackgroundJobStatsController.action(:stats)
     get 'ping' => 'ping#index'
   end
 
