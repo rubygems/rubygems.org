@@ -56,6 +56,14 @@ zh-CN:
         api: "API"
         guides: "教程"
         contribute: "贡献"
+        supported_by: "支持"
+        hosted_by: "托管"
+        designed_by: "设计"
+        resolved_with: "解析"
+        optimized_by: "优化"
+        tracking_by: "追踪"
+        monitored_by: "监控"
+        gems_served_by: "服务"
 
   pages:
     about:
