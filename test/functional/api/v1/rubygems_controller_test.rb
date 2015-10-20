@@ -74,8 +74,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
 
       should respond_with :not_found
-      should "say not be found" do
-        assert_match(/does not exist/, @response.body)
+      should "say gem could not be found" do
+        assert_equal "This rubygem could not be found.", @response.body
       end
     end
 
@@ -100,8 +100,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
 
       should respond_with :not_found
-      should "say the rubygem was not found" do
-        assert_match(/does not exist/, @response.body)
+      should "say gem could not be found" do
+        assert_equal "This rubygem could not be found.", @response.body
       end
     end
   end
