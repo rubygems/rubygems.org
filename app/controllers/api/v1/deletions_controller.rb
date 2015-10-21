@@ -27,7 +27,7 @@ class Api::V1::DeletionsController < Api::BaseController
 
   def validate_gem_and_version
     if !@rubygem.hosted?
-      render text: "This gem does not exist.",
+      render text: t(:this_rubygem_could_not_be_found),
              status: :not_found
     elsif !@rubygem.owned_by?(current_user)
       render text: "You do not have permission to delete this gem.",

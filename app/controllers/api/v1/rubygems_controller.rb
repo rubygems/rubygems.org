@@ -20,7 +20,7 @@ class Api::V1::RubygemsController < Api::BaseController
         format.yaml { render yaml: @rubygem }
       end
     else
-      render text: "This rubygem could not be found.", status: :not_found
+      render text: t(:this_rubygem_could_not_be_found), status: :not_found
     end
   end
 
