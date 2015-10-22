@@ -33,34 +33,6 @@ class Dependency < ActiveRecord::Base
     "rd:#{full_name}"
   end
 
-  # rails,rack,bundler
-  def self.for(gem_list)
-    versions = Redis.current.pipelined do
-      gem_list.each do |rubygem_name|
-        Redis.current.lrange(Rubygem.versions_key(rubygem_name), 0, -1)
-      end
-    end || []
-    versions.flatten!
-
-    return [] if versions.blank?
-
-    data = Redis.current.pipelined do
-      versions.each do |version|
-        Redis.current.hvals(Version.info_key(version))
-        Redis.current.lrange(Dependency.runtime_key(version), 0, -1)
-      end
-    end
-
-    data.in_groups_of(2).map do |(name, number, platform), deps|
-      {
-        name: name,
-        number: number,
-        platform: platform,
-        dependencies: deps.map { |dep| dep.split(" ", 2) }
-      }
-    end
-  end
-
   def name
     unresolved_name || rubygem.try(:name)
   end
