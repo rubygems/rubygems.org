@@ -4,6 +4,7 @@ class UserTest < ActiveSupport::TestCase
   should have_many(:ownerships)
   should have_many(:rubygems).through(:ownerships)
   should have_many(:subscribed_gems).through(:subscriptions)
+  should have_many(:deletions)
   should have_many(:subscriptions)
   should have_many(:web_hooks)
 
