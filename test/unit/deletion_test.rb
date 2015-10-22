@@ -3,6 +3,8 @@ require 'test_helper'
 class DeletionTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = false # Disabled to test after_commit
 
+  should belong_to :user
+
   setup do
     @user = create(:user)
     Pusher.new(@user, gem_file).process
@@ -28,6 +30,13 @@ class DeletionTest < ActiveSupport::TestCase
   test "no longer be latest" do
     delete_gem
     assert !@version.reload.latest?
+  end
+
+  test "record version metadata" do
+    deletion = Deletion.new(version: @version, user: @user)
+    assert_nil deletion.rubygem
+    deletion.valid?
+    assert_equal deletion.rubygem, @version.rubygem.name
   end
 
   test "not appear in the version list" do
