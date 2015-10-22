@@ -11,7 +11,7 @@ class DeletionTest < ActiveSupport::TestCase
     @version = Version.last
   end
 
-  should "must be indexed" do
+  should "be indexed" do
     @version.indexed = false
     assert Deletion.new(version: @version, user: @user).invalid?,
       "Deletion should only work on indexed gems"
