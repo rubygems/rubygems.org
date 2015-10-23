@@ -1,5 +1,6 @@
 class Rubygem < ActiveRecord::Base
   include Patterns
+  include Rubygem::Searchable
 
   has_many :owners, through: :ownerships, source: :user
   has_many :ownerships, dependent: :destroy
@@ -31,22 +32,6 @@ class Rubygem < ActiveRecord::Base
     return sensitive unless sensitive.empty?
 
     where("UPPER(name) = UPPER(?)", name.strip).limit(1)
-  end
-
-  def self.search(query)
-    conditions = <<-SQL
-      versions.indexed and
-        (UPPER(name) LIKE UPPER(:query) OR
-         UPPER(TRANSLATE(name,
-                         '#{SPECIAL_CHARACTERS}',
-                         '#{' ' * SPECIAL_CHARACTERS.length}')
-              ) LIKE UPPER(:query))
-    SQL
-
-    where(conditions, query: "%#{query.strip}%")
-      .includes(:versions)
-      .references(:versions)
-      .by_downloads
   end
 
   def self.name_starts_with(letter)

@@ -122,6 +122,7 @@ class Pusher
   def after_write
     @version_id = version.id
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
+    rubygem.delay.index_document
     enqueue_web_hook_jobs
     update_remote_bundler_api
     StatsD.increment 'push.success'
