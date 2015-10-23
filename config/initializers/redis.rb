@@ -13,5 +13,5 @@ if Rails.env.test?
   end
   Redis.current = Redis.new(db: 1, port: port)
 else
-  Redis.current = Redis.new(url: ENV['REDISTOGO_URL'])
+  Redis.current = Redis.new(url: ENV['REDIS_URL'])
 end
