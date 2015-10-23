@@ -5,7 +5,7 @@ class SearchesController < ApplicationController
     return unless params[:query] && params[:query].is_a?(String)
     begin
       @gems = Rubygem.search(params[:query], es: params[:es] == 'true', page: @page)
-    rescue Rubygem::Searchable::SearchDownError
+    rescue RubygemSearchable::SearchDownError
       @fallback = true
       @gems = Rubygem.search(params[:query], es: false, page: @page)
     end
