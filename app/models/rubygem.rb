@@ -1,6 +1,6 @@
 class Rubygem < ActiveRecord::Base
   include Patterns
-  include Rubygem::Searchable
+  include RubygemSearchable
 
   has_many :owners, through: :ownerships, source: :user
   has_many :ownerships, dependent: :destroy

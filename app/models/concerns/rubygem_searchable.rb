@@ -1,4 +1,4 @@
-module Rubygem::Searchable
+module RubygemSearchable
   include Patterns
   extend ActiveSupport::Concern
 
