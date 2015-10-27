@@ -81,4 +81,11 @@ class RedirectorTest < ActiveSupport::TestCase
     assert_equal 301, last_response.status
     assert_equal "http://guides.rubygems.org/rubygems-org-api", last_response.headers["Location"]
   end
+
+  should "allow fastly domains" do
+    get "/", {}, "HTTP_HOST" => 'index.rubygems.org'
+    assert_equal 200, last_response.status
+    get "/", {}, "HTTP_HOST" => 'fastly.rubygems.org'
+    assert_equal 200, last_response.status
+  end
 end
