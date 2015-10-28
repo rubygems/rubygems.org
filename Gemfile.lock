@@ -122,7 +122,7 @@ GEM
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     gravtastic (3.2.6)
-    hashie (3.4.2)
+    hashie (3.4.3)
     high_voltage (2.4.0)
     highline (1.7.8)
     honeybadger (2.1.5)
