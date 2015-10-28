@@ -18,7 +18,7 @@ class Api::V1::DownloadsController < Api::BaseController
       }
       respond_with_data(data)
     else
-      render text: "This rubygem could not be found.", status: :not_found
+      render text: t(:this_rubygem_could_not_be_found), status: :not_found
     end
   end
 

@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
     return if @rubygem
     respond_to do |format|
       format.any do
-        render text: "This rubygem could not be found.", status: :not_found
+        render text: t(:this_rubygem_could_not_be_found), status: :not_found
       end
       format.html do
         render file: "public/404", status: :not_found, layout: false, formats: [:html]
