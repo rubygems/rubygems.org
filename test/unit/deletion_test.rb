@@ -23,7 +23,7 @@ class DeletionTest < ActiveSupport::TestCase
     end
 
     should "unindexes" do
-      assert !@version.indexed?
+      refute @version.indexed?
     end
 
     should "be considered deleted" do
@@ -31,11 +31,11 @@ class DeletionTest < ActiveSupport::TestCase
     end
 
     should "no longer be latest" do
-      assert !@version.reload.latest?
+      refute @version.reload.latest?
     end
 
     should "not appear in the version list" do
-      assert !Redis.current.exists(Rubygem.versions_key(@version.rubygem.name)),
+      refute Redis.current.exists(Rubygem.versions_key(@version.rubygem.name)),
         "Version still in list!"
     end
 
