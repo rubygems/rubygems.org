@@ -3,42 +3,52 @@ require 'test_helper'
 class DeletionTest < ActiveSupport::TestCase
   self.use_transactional_fixtures = false # Disabled to test after_commit
 
+  should belong_to :user
+
   setup do
     @user = create(:user)
     Pusher.new(@user, gem_file).process
     @version = Version.last
   end
 
-  test "must be indexed" do
+  should "be indexed" do
     @version.indexed = false
     assert Deletion.new(version: @version, user: @user).invalid?,
       "Deletion should only work on indexed gems"
   end
 
-  test "unindexes" do
-    delete_gem
-    assert !@version.indexed?
+  context "with deleted gem" do
+    setup do
+      delete_gem
+    end
+
+    should "unindexes" do
+      refute @version.indexed?
+    end
+
+    should "be considered deleted" do
+      assert Version.yanked.include?(@version)
+    end
+
+    should "no longer be latest" do
+      refute @version.reload.latest?
+    end
+
+    should "not appear in the version list" do
+      refute Redis.current.exists(Rubygem.versions_key(@version.rubygem.name)),
+        "Version still in list!"
+    end
+
+    should "delete the .gem file" do
+      assert_nil RubygemFs.instance.get("gems/#{@version.full_name}.gem"), "Rubygem still exists!"
+    end
   end
 
-  test "be considered deleted" do
-    delete_gem
-    assert Version.yanked.include?(@version)
-  end
-
-  test "no longer be latest" do
-    delete_gem
-    assert !@version.reload.latest?
-  end
-
-  test "not appear in the version list" do
-    delete_gem
-    assert !Redis.current.exists(Rubygem.versions_key(@version.rubygem.name)),
-      "Version still in list!"
-  end
-
-  test "delete the .gem file" do
-    delete_gem
-    assert_nil RubygemFs.instance.get("gems/#{@version.full_name}.gem"), "Rubygem still exists!"
+  should "record version metadata" do
+    deletion = Deletion.new(version: @version, user: @user)
+    assert_nil deletion.rubygem
+    deletion.valid?
+    assert_equal deletion.rubygem, @version.rubygem.name
   end
 
   teardown do

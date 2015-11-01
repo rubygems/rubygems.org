@@ -127,7 +127,7 @@ class DependencyTest < ActiveSupport::TestCase
         dependency = Dependency.create(gem_dependency: @gem_dependency, version: @version)
         assert !dependency.new_record?
         assert !dependency.errors[:base].present?
-        assert_nil Rubygem.find_by_name(@rubygem_name)
+        assert_nil Rubygem.find_by(name: @rubygem_name)
 
         assert_equal "other-name", dependency.unresolved_name
         assert_equal "other-name", dependency.name
@@ -152,7 +152,7 @@ class DependencyTest < ActiveSupport::TestCase
       dependency = Dependency.create(gem_dependency: @gem_dependency)
       assert dependency.new_record?
       assert dependency.errors[:rubygem].present?
-      assert_nil Rubygem.find_by_name("")
+      assert_nil Rubygem.find_by(name: "")
     end
   end
 
