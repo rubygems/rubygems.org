@@ -261,6 +261,23 @@ class Rubygem < ActiveRecord::Base
     versions.by_earliest_built_at.limit(1).last.built_at
   end
 
+  def self.compact_index_versions(date)
+    gems = Rubygem.joins(:versions)
+      .select("name, versions.created_at, number, platform, info_checksum")
+      .where("indexed = true and versions.created_at > ?", date)
+      .order("created_at, versions.number, platform")
+
+    gems.map do |gem|
+      CompactIndex::Gem.new(gem.name, [
+        CompactIndex::GemVersion.new(
+          gem.number,
+          gem.platform,
+          gem.info_checksum
+        )
+      ])
+    end
+  end
+
   def compact_index_info
     group_by_columns =
       "number, platform, sha256, info_checksum, ruby_version, rubygems_version, versions.created_at"
