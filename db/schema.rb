@@ -12,7 +12,6 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 20160329184508) do
-
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
@@ -227,6 +226,8 @@ ActiveRecord::Schema.define(version: 20160329184508) do
     t.string   "ruby_version"
     t.string   "sha256"
     t.hstore   "metadata",          default: {},   null: false
+    t.string   "rubygems_version"
+    t.string   "info_checksum"
   end
 
   add_index "versions", ["built_at"], name: "index_versions_on_built_at", using: :btree
