@@ -39,4 +39,20 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal "---\ngemA\ngemA1\ngemA2\ngemB\n", @response.body
   end
+
+  test "/info with existing gem" do
+    get api_v2_info_path(gem_name: @rubygem.name)
+    assert_response :success
+    assert_equal "---\n" \
+      "1.0.0 |checksum:checksum1\n" \
+      "1.2.0 |checksum:checksum1,ruby:>= 2.0.0,rubygems:>1.9\n" \
+      "2.0.0 gemA1:= 1.0.0|checksum:checksum2\n" \
+      "2.1.0 gemA1:= 1.0.0,gemA2:= 1.0.0|checksum:checksum2,ruby:>= 2.0.0,rubygems:>=2.0\n",
+      @response.body
+  end
+
+  test "/info with unexisting gem" do
+    get api_v2_info_path(gem_name: 'donotexist')
+    assert_response :not_found
+  end
 end
