@@ -1,3 +1,4 @@
+require 'tempfile'
 require 'test_helper'
 
 class CompactIndexTest < ActionDispatch::IntegrationTest
@@ -38,6 +39,37 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     get api_v2_names_path
     assert_response :success
     assert_equal "---\ngemA\ngemA1\ngemA2\ngemB\n", @response.body
+  end
+
+  test "/versions output" do
+    get api_v2_versions_path
+    assert_response :success
+
+    file_contents = File.open("config/versions.list").read
+    assert_match file_contents, @response.body
+    gem_a_match = /gemA 1.0.0 \w+\ngemA 1.2.0 \w+\ngemA 2.0.0 \w+\ngemA 2.1.0 \w+\n/
+    gem_b_match = /gemB 1.0.0 \w+\n/
+    assert_match(/#{gem_a_match}#{gem_b_match}/, @response.body)
+  end
+
+  test "/versions with new gem" do
+    rubygem = create(:rubygem, name: 'gemC')
+    create(:version, rubygem: rubygem, number: '1.0.0')
+    get api_v2_versions_path
+    assert_response :success
+    assert_match(/gemC 1.0.0 \w+\n$/, @response.body)
+  end
+
+  test "/versions extra gems are ordered by creation time" do
+    rubygem = create(:rubygem, name: 'ZZZ')
+    create(:version, rubygem: rubygem, number: '1.0.0')
+
+    rubygem = create(:rubygem, name: 'AAA')
+    create(:version, rubygem: rubygem, number: '1.0.0')
+
+    get api_v2_versions_path
+    assert_response :success
+    assert_match(/ZZZ 1.0.0 \w+\nAAA/, @response.body)
   end
 
   test "/info with existing gem" do
