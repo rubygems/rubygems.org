@@ -42,6 +42,14 @@ class Rubygem < ActiveRecord::Base
     where(id: Version.reverse_dependencies(name).select(:rubygem_id))
   end
 
+  def self.reverse_development_dependencies(name)
+    where(id: Version.reverse_development_dependencies(name).select(:rubygem_id))
+  end
+
+  def self.reverse_runtime_dependencies(name)
+    where(id: Version.reverse_runtime_dependencies(name).select(:rubygem_id))
+  end
+
   def self.total_count
     with_versions.count
   end

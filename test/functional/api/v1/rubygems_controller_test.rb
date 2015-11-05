@@ -307,12 +307,14 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       @gem_two = create(:rubygem)
       @gem_three = create(:rubygem)
       @gem_four = create(:rubygem)
+      @gem_five = create(:rubygem)
       @version_one_latest  = create(:version, rubygem: @gem_one, number: '0.2')
       @version_one_earlier = create(:version, rubygem: @gem_one, number: '0.1')
       @version_two_latest  = create(:version, rubygem: @gem_two, number: '1.0')
       @version_two_earlier = create(:version, rubygem: @gem_two, number: '0.5')
       @version_three = create(:version, rubygem: @gem_three, number: '1.7')
       @version_four = create(:version, rubygem: @gem_four, number: '3.9')
+      @version_five = create(:version, rubygem: @gem_five, number: '4.5')
 
       @version_one_latest.dependencies << create(:dependency,
         version: @version_one_latest,
@@ -323,18 +325,53 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       @version_three.dependencies << create(:dependency,
         version: @version_three,
         rubygem: @dep_rubygem)
+      @version_five.dependencies << create(:development_dependency,
+        version: @version_five,
+        rubygem: @dep_rubygem)
     end
 
     should "return names of reverse dependencies" do
       get :reverse_dependencies, id: @dep_rubygem.to_param, format: "json"
       gems = MultiJson.load(@response.body)
 
-      assert_equal 3, gems.size
+      assert_equal 4, gems.size
 
       assert gems.include?(@gem_one.name)
       assert gems.include?(@gem_two.name)
       assert gems.include?(@gem_three.name)
       assert !gems.include?(@gem_four.name)
+    end
+
+    context "with only=development" do
+      should "only return names of reverse development dependencies" do
+        get :reverse_dependencies,
+          id: @dep_rubygem.to_param,
+          only: "development",
+          format: "json"
+
+        gems = MultiJson.load(@response.body)
+
+        assert_equal 1, gems.size
+
+        assert gems.include?(@gem_five.name)
+      end
+    end
+
+    context "with only=runtime" do
+      should "only return names of reverse development dependencies" do
+        get :reverse_dependencies,
+          id: @dep_rubygem.to_param,
+          only: "runtime",
+          format: "json"
+
+        gems = MultiJson.load(@response.body)
+
+        assert_equal 3, gems.size
+
+        assert gems.include?(@gem_one.name)
+        assert gems.include?(@gem_two.name)
+        assert gems.include?(@gem_three.name)
+      end
     end
   end
 end

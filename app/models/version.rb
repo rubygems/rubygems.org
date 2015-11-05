@@ -24,6 +24,18 @@ class Version < ActiveRecord::Base
       .where(rubygems: { name: name })
   end
 
+  def self.reverse_runtime_dependencies(name)
+    joins(dependencies: :rubygem)
+      .merge(Dependency.runtime)
+      .where(rubygems: { name: name })
+  end
+
+  def self.reverse_development_dependencies(name)
+    joins(dependencies: :rubygem)
+      .merge(Dependency.development)
+      .where(rubygems: { name: name })
+  end
+
   def self.owned_by(user)
     where(rubygem_id: user.rubygem_ids)
   end
