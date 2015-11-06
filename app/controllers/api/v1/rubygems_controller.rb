@@ -35,7 +35,15 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   def reverse_dependencies
-    names = Rubygem.reverse_dependencies(params[:id]).pluck(:name)
+    names = begin
+      if params[:only] == "development"
+        Rubygem.reverse_development_dependencies(params[:id]).pluck(:name)
+      elsif params[:only] == "runtime"
+        Rubygem.reverse_runtime_dependencies(params[:id]).pluck(:name)
+      else
+        Rubygem.reverse_dependencies(params[:id]).pluck(:name)
+      end
+    end
 
     respond_to do |format|
       format.json { render json: names }
