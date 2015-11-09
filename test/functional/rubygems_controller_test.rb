@@ -381,8 +381,8 @@ class RubygemsControllerTest < ActionController::TestCase
     setup do
       @version = create(:version)
 
-      @development = create(:development_dependency, version: @version)
-      @runtime     = create(:runtime_dependency,     version: @version)
+      @development = create(:dependency, :development, version: @version)
+      @runtime     = create(:dependency, :runtime,     version: @version)
 
       get :show, id: @version.rubygem.to_param
     end
@@ -399,7 +399,7 @@ class RubygemsControllerTest < ActionController::TestCase
     setup do
       @version = create(:version)
 
-      @unresolved = create(:unresolved_dependency, version: @version)
+      @unresolved = create(:dependency, :unresolved, version: @version)
 
       get :show, id: @version.rubygem.to_param
     end
@@ -414,7 +414,7 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to show for a gem with runtime dependencies that have a bad link" do
     setup do
       @version = create(:version)
-      @runtime = create(:runtime_dependency, version: @version)
+      @runtime = create(:dependency, :runtime, version: @version)
       @runtime.rubygem.update_column(:name, 'foo>0.1.1')
       get :show, id: @version.rubygem.to_param
     end

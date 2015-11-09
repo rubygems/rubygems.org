@@ -325,7 +325,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       @version_three.dependencies << create(:dependency,
         version: @version_three,
         rubygem: @dep_rubygem)
-      @version_five.dependencies << create(:development_dependency,
+      @version_five.dependencies << create(:dependency, :development,
         version: @version_five,
         rubygem: @dep_rubygem)
     end
