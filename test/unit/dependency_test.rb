@@ -50,7 +50,7 @@ class DependencyTest < ActiveSupport::TestCase
     end
 
     should "not push development dependency onto the redis list" do
-      @dependency = create(:development_dependency)
+      @dependency = create(:dependency, :development)
 
       assert !Redis.current.exists(Dependency.runtime_key(@dependency.version.full_name))
     end

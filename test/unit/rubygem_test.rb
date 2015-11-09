@@ -370,8 +370,8 @@ class RubygemTest < ActiveSupport::TestCase
 
     should "return a bunch of json" do
       version = create(:version, rubygem: @rubygem)
-      run_dep = create(:runtime_dependency, version: version)
-      dev_dep = create(:development_dependency, version: version)
+      run_dep = create(:dependency, :runtime, version: version)
+      dev_dep = create(:dependency, :development, version: version)
 
       hash = MultiJson.load(@rubygem.to_json)
 
@@ -394,8 +394,8 @@ class RubygemTest < ActiveSupport::TestCase
 
     should "return a bunch of xml" do
       version = create(:version, rubygem: @rubygem)
-      run_dep = create(:runtime_dependency, version: version)
-      dev_dep = create(:development_dependency, version: version)
+      run_dep = create(:dependency, :runtime, version: version)
+      dev_dep = create(:dependency, :development, version: version)
 
       doc = Nokogiri.parse(@rubygem.to_xml)
 
