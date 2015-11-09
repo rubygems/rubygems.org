@@ -209,12 +209,15 @@ class RubygemTest < ActiveSupport::TestCase
       @version_five = create(:version, :yanked, rubygem: @gem_five, number: '6.66')
 
       @version_one_latest.dependencies << create(:dependency,
+        :runtime,
         version: @version_one_latest,
         rubygem: @dep_rubygem)
       @version_two_earlier.dependencies << create(:dependency,
+        :development,
         version: @version_two_earlier,
         rubygem: @dep_rubygem)
       @version_three.dependencies << create(:dependency,
+        :runtime,
         version: @version_three,
         rubygem: @dep_rubygem)
       @version_five.dependencies << create(:dependency,
@@ -230,64 +233,26 @@ class RubygemTest < ActiveSupport::TestCase
       assert gem_list.include?(@gem_one)
       assert gem_list.include?(@gem_two)
       assert gem_list.include?(@gem_three)
-      assert !gem_list.include?(@gem_four)
-      assert !gem_list.include?(@gem_five)
-    end
-  end
-
-  context ".reverse_runtime_dependencies" do
-    setup do
-      @dep_rubygem = create(:rubygem)
-      @gem_one = create(:rubygem)
-      @gem_two = create(:rubygem)
-      @version_one  = create(:version, rubygem: @gem_one, number: '0.2')
-      @version_two  = create(:version, rubygem: @gem_two, number: '1.0')
-
-      @version_one.dependencies << create(:dependency,
-        :runtime,
-        version: @version_one,
-        rubygem: @dep_rubygem)
-      @version_two.dependencies << create(:dependency,
-        :development,
-        version: @version_two,
-        rubygem: @dep_rubygem)
+      refute gem_list.include?(@gem_four)
+      refute gem_list.include?(@gem_five)
     end
 
-    should "return all runtime depended rubygems" do
+    should "return runtime dependend rubygems" do
       gem_list = Rubygem.reverse_runtime_dependencies(@dep_rubygem.name)
 
-      assert_equal 1, gem_list.size
+      assert_equal 2, gem_list.size
 
       assert gem_list.include?(@gem_one)
-      assert !gem_list.include?(@gem_two)
-    end
-  end
-
-  context ".reverse_development_dependencies" do
-    setup do
-      @dep_rubygem = create(:rubygem)
-      @gem_one = create(:rubygem)
-      @gem_two = create(:rubygem)
-      @version_one  = create(:version, rubygem: @gem_one, number: '0.2')
-      @version_two  = create(:version, rubygem: @gem_two, number: '1.0')
-
-      @version_one.dependencies << create(:dependency,
-        :development,
-        version: @version_one,
-        rubygem: @dep_rubygem)
-      @version_two.dependencies << create(:dependency,
-        :runtime,
-        version: @version_two,
-        rubygem: @dep_rubygem)
+      refute gem_list.include?(@gem_two)
     end
 
-    should "return all development depended rubygems" do
+    should "return development dependend rubygems" do
       gem_list = Rubygem.reverse_development_dependencies(@dep_rubygem.name)
 
       assert_equal 1, gem_list.size
 
-      assert gem_list.include?(@gem_one)
-      assert !gem_list.include?(@gem_two)
+      assert gem_list.include?(@gem_two)
+      refute gem_list.include?(@gem_one)
     end
   end
 
