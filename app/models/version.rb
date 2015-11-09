@@ -25,15 +25,13 @@ class Version < ActiveRecord::Base
   end
 
   def self.reverse_runtime_dependencies(name)
-    joins(dependencies: :rubygem)
+    reverse_dependencies(name)
       .merge(Dependency.runtime)
-      .where(rubygems: { name: name })
   end
 
   def self.reverse_development_dependencies(name)
-    joins(dependencies: :rubygem)
+    reverse_dependencies(name)
       .merge(Dependency.development)
-      .where(rubygems: { name: name })
   end
 
   def self.owned_by(user)
