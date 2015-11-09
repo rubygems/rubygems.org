@@ -21,6 +21,7 @@ pt-BR:
     attributes:
       linkset:
         bugs: URL do Bug Tracker
+        changelog:
         code: URL do Código Fonte
         docs: URL da Documentação
         mail: URL da Lista de Emails
@@ -154,6 +155,7 @@ pt-BR:
       links:
         badge: Badge
         bugs:
+        changelog:
         code: Código Fonte
         docs: Documentação
         download: Download

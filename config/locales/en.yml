@@ -21,6 +21,7 @@ en:
     attributes:
       linkset:
         bugs: Bug Tracker URL
+        changelog: Changelog URL
         code: Source Code URL
         docs: Documentation URL
         mail: Mailing List URL
@@ -154,6 +155,7 @@ en:
       links:
         badge: Badge
         bugs: Bug Tracker
+        changelog: Changelog
         code: Source Code
         docs: Documentation
         download: Download
