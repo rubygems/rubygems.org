@@ -21,6 +21,7 @@ class Version < ActiveRecord::Base
 
   def self.reverse_dependencies(name)
     joins(dependencies: :rubygem)
+      .indexed
       .where(rubygems: { name: name })
   end
 
