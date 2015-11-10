@@ -6,7 +6,7 @@ $(function() {
   var main             = $('main');
   var footer           = $('.footer');
   var signUpLink       = $('.header__nav-link.js-sign-up-trigger');
-  var signInLink       = $('.hader__nav-link.js-sign-in-trigger');
+  var signInLink       = $('.header__nav-link.js-sign-in-trigger');
   var navExpandedClass = 'mobile-nav-is-expanded';
   var headerSeach      = $('.header__search');
   var headerLogo       = $('.header__logo-wrap');
