@@ -8,6 +8,7 @@ require 'capybara/rails'
 require 'clearance/test_unit'
 require 'shoulda'
 require 'helpers/gem_helpers'
+require 'minitest/reporters'
 
 RubygemFs.mock!
 
@@ -44,3 +45,5 @@ Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
 class SystemTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
 end
+
+Minitest::Reporters.use! Minitest::Reporters::DefaultReporter.new

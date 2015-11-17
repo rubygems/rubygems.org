@@ -56,6 +56,7 @@ end
 
 group :test do
   gem 'minitest', require: false
+  gem 'minitest-reporters', require: false
   gem 'capybara'
   gem 'factory_girl_rails'
   gem 'launchy'
