@@ -146,7 +146,7 @@ GEM
     metaclass (0.0.4)
     mime-types (2.6.2)
     mini_portile (0.6.2)
-    minitest (5.8.2)
+    minitest (5.8.3)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     multi_json (1.11.2)
