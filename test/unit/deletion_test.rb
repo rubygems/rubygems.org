@@ -34,6 +34,10 @@ class DeletionTest < ActiveSupport::TestCase
       refute @version.reload.latest?
     end
 
+    should "keep the yanked time" do
+      assert @version.reload.yanked_at
+    end
+
     should "not appear in the version list" do
       refute Redis.current.exists(Rubygem.versions_key(@version.rubygem.name)),
         "Version still in list!"

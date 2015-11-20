@@ -28,7 +28,7 @@ class Deletion < ActiveRecord::Base
   end
 
   def remove_from_index
-    @version.update!(indexed: false)
+    @version.update!(indexed: false, yanked_at: Time.now.utc)
     Redis.current.lrem(Rubygem.versions_key(rubygem_name), 1, @version.full_name)
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
   end

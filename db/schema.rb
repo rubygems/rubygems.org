@@ -228,6 +228,7 @@ ActiveRecord::Schema.define(version: 20160329184508) do
     t.hstore   "metadata",          default: {},   null: false
     t.string   "rubygems_version"
     t.string   "info_checksum"
+    t.datetime "yanked_at"
   end
 
   add_index "versions", ["built_at"], name: "index_versions_on_built_at", using: :btree
