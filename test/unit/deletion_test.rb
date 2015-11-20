@@ -34,6 +34,10 @@ class DeletionTest < ActiveSupport::TestCase
       refute @version.reload.latest?
     end
 
+    should "keep the yanked time" do
+      assert @version.reload.yanked_at
+    end
+
     should "delete the .gem file" do
       assert_nil RubygemFs.instance.get("gems/#{@version.full_name}.gem"), "Rubygem still exists!"
     end

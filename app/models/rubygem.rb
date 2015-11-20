@@ -262,10 +262,20 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.compact_index_versions(date)
-    gems = Rubygem.joins(:versions)
-      .select("name, versions.created_at, number, platform, info_checksum")
-      .where("indexed = true and versions.created_at > ?", date)
-      .order("created_at, versions.number, platform")
+    created_gems = Rubygem.joins(:versions)
+      .select("name, versions.created_at as date, number, platform, info_checksum")
+      .where("versions.created_at > ?", date)
+      .order("versions.created_at, versions.number, platform")
+
+    yanked_gems = Rubygem.joins(:versions)
+      .select("name, versions.yanked_at as date, '-'||number, platform, info_checksum")
+      .where("indexed is false and versions.created_at > ?", date)
+      .order("versions.created_at, versions.number, platform")
+
+    # Arel don't support yet order on unions :(
+    # https://github.com/rails/arel/issues/98
+    sql = "(#{created_gems.to_sql}) UNION (#{yanked_gems.to_sql}) ORDER BY date"
+    gems = Rubygem.find_by_sql(sql)
 
     gems.map do |gem|
       CompactIndex::Gem.new(gem.name, [
