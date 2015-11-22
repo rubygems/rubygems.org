@@ -144,7 +144,7 @@ GEM
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     metaclass (0.0.4)
-    mime-types (2.6.2)
+    mime-types (2.99)
     mini_portile (0.6.2)
     minitest (5.8.3)
     mocha (1.1.0)
