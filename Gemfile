@@ -45,7 +45,7 @@ gem 'xml-simple'
 gem 'yajl-ruby', require: 'yajl'
 
 group :development, :test do
-  gem 'rubocop', '~> 0.34.0'
+  gem 'rubocop'
   gem 'toxiproxy', '~> 0.1.3'
 end
 
