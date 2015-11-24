@@ -9,7 +9,6 @@
   border: none;
   border-radius: 5px;
   font-weight: 300;
-  font-family: "aktiv-grotesk-std", sans-serif;
   color: #141c22;
   outline: none; }
   .header__search::-webkit-input-placeholder, .home__search::-webkit-input-placeholder {
