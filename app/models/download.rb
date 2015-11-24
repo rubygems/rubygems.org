@@ -138,7 +138,7 @@ class Download
 
     dates = Redis.current.hkeys(key)
 
-    back = 1.days.ago.to_date
+    back = 1.day.ago.to_date
 
     dates.delete_if { |e| Date.parse(e) >= back }
 
