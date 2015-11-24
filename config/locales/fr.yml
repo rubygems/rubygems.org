@@ -1,4 +1,4 @@
-en:
+fr:
   title: "RubyGems.org"
   subtitle: "votre communauté d'hébergement des gems"
   help_url: "http://help.rubygems.org"
@@ -20,16 +20,16 @@ en:
       latest: "Dernières mises à jour"
       latest_title: "Flux RSS des dernières mises à jour"
       no_subscriptions: "Vous ne vous êtes abonné à aucun email. Visitez %{gem_link} pour vous y abonner !"
-      gem_link_text: "une page de gem"
+      gem_link_text: "la page d'un gem"
       mine: "Mes Gems"
       no_owned: "Vous n'avez pas encore publié de gem. Vous pouvez vérifier les guides de %{creating_link} ou de %{migrating_link} de gems depuis RubyForge."
-      creating_link_text: 'création'
-      migrating_link_text: 'migration'
-      my_subscriptions: 'Abonnements'
+      creating_link_text: "création"
+      migrating_link_text: "migration"
+      my_subscriptions: "Abonnements"
 
   home:
     index:
-      downloads_counting: 'téléchargements &amp; comptages'
+      downloads_counting: "téléchargements &amp; comptages"
       find_blurb: "Trouvez, installez et publiez des RubyGems."
       learn:
         install_rubygems: "Installez RubyGems"
@@ -62,7 +62,7 @@ en:
         optimized_by: "Optimisé par"
         tracking_by: "Tracking par"
         monitored_by: "Monitoring par"
-        gems_served_by: "Gems disponibles par"
+        gems_served_by: "Gems mis à disposition par"
 
   pages:
     about:
@@ -109,7 +109,7 @@ en:
       subtitle: "pour %{gem}"
       other_fields_notice: "Tous les autres champs ne sont modifiables qu'en soumettant une nouvelle version de votre gem."
     index:
-      title: 'Gems'
+      title: "Gems"
     show:
       not_hosted_notice: "Ce gem n'est pas hébergé sur Gemcutter pour le moment."
       install: "installation"
@@ -118,7 +118,7 @@ en:
       downloads_for_this_version: "Pour cette version"
       owners_header: "Propriétaires"
       links:
-        header: Liens
+        header: "Liens"
         home: "Page d'accueil"
         code: "Code Source"
         docs: "Documentation"
