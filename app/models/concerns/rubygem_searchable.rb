@@ -21,7 +21,8 @@ module RubygemSearchable
       {
         name: name,
         indexed: versions.any?(&:indexed?),
-        info: most_recent_version.try(:description) || most_recent_version.try(:summary)
+        summary: most_recent_version.try(:summary),
+        description: most_recent_version.try(:description)
       }
     end
 
@@ -39,7 +40,8 @@ module RubygemSearchable
     mapping do
       indexes :name, analyzer: 'rubygem'
       indexes :indexed, type: 'boolean'
-      indexes :info, analyzer: 'english'
+      indexes :summary, analyzer: 'english'
+      indexes :description, analyzer: 'english'
     end
 
     def self.search(query, es: false, page: 1)
@@ -64,7 +66,7 @@ module RubygemSearchable
               multi_match: {
                 query: query,
                 operator: 'and',
-                fields: ['name^3', 'info']
+                fields: ['name^3', 'summary^1', 'description']
               }
             },
             filter: {
@@ -76,7 +78,7 @@ module RubygemSearchable
             }
           }
         },
-        _source: %w(name info)
+        _source: %w(name summary description)
       )
     end
 
