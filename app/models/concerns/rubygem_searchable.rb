@@ -20,7 +20,7 @@ module RubygemSearchable
       most_recent_version = versions.most_recent
       {
         name: name,
-        indexed: versions.any?(&:indexed?),
+        yanked: !versions.any?(&:indexed?),
         summary: most_recent_version.try(:summary),
         description: most_recent_version.try(:description)
       }
@@ -39,7 +39,7 @@ module RubygemSearchable
 
     mapping do
       indexes :name, analyzer: 'rubygem'
-      indexes :indexed, type: 'boolean'
+      indexes :yanked, type: 'boolean'
       indexes :summary, analyzer: 'english'
       indexes :description, analyzer: 'english'
     end
@@ -72,7 +72,7 @@ module RubygemSearchable
             filter: {
               bool: {
                 must: {
-                  term: { indexed: true }
+                  term: { yanked: false }
                 }
               }
             }
