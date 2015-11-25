@@ -19,7 +19,7 @@ fr:
     show:
       latest: "Dernières mises à jour"
       latest_title: "Flux RSS des dernières mises à jour"
-      no_subscriptions: "Vous ne vous êtes abonné à aucun email. Visitez %{gem_link} pour vous y abonner !"
+      no_subscriptions: "Vous n'avez pas encore d'abonnements. Visitez %{gem_link} pour vous y abonner !"
       gem_link_text: "la page d'un gem"
       mine: "Mes Gems"
       no_owned: "Vous n'avez pas encore publié de gem. Vous pouvez vérifier les guides de %{creating_link} ou de %{migrating_link} de gems depuis RubyForge."
@@ -29,7 +29,7 @@ fr:
 
   home:
     index:
-      downloads_counting: "téléchargements &amp; comptages"
+      downloads_counting: "téléchargements à ce jour"
       find_blurb: "Trouvez, installez et publiez des RubyGems."
       learn:
         install_rubygems: "Installez RubyGems"
@@ -72,13 +72,13 @@ fr:
         better_api: "Fournir une meilleure API pour gérer les gems"
         transparent_pages: "Créer des pages de projet plus accessibles et transparentes"
         enable_community: "Permettre à la communauté d'améliorer ce site"
-      founding: "Le projet a commencé en avril 2009 par %{founder}, et a grandi avec les contribution de %{contributors} et %{downloads}. À la sortie de RubyGems 1.3.6, ce site a été renommé de Gemcutter à %{title} from Gemcutter pour ancrer son rôle central dans la communauté Ruby."
+      founding: "Le projet a commencé en avril 2009 par %{founder}, et a grandi avec les contribution de %{contributors} et %{downloads}. À la sortie de RubyGems 1.3.6, ce site a été renommé de Gemcutter à %{title} pour ancrer son rôle central dans la communauté Ruby."
       support: "Bien que Gemcutter n'appartienne à aucune entreprise en particulier, il a reçu l'aide de nombreuses d'entre elles. Le design actuel, les illustrations, et développement front-end de ce site nous ont été offerts par %{dockyard}. Nous n'aurions pas pu collaborer et partager de code facilement sans %{github}. Ce site s'est lancé sur %{heroku}, dont l'excellent service a fait de Gemcutter une solution viable pour que la communauté s'y appuie en toute confiance."
-      technical: "Quelques informations sur les aspects techniques de ce site : il est en Ruby à 100%. Le site principal est une application %{rails}, et la mise à disposition des RubyGems est gérée avec %{sinatra}. Les Gems sont hébergés sur %{s3}, permettant un record de vitesse entre le moment de publication et de mise à disposition d'un gem. Poru davantage d'informations, le %{source_code} est disponible sous licence %{license} sur GitHub."
+      technical: "Quelques informations sur les aspects techniques de ce site : il est en Ruby à 100%. Le site principal est une application %{rails}, et la mise à disposition des RubyGems est gérée avec %{sinatra}. Les Gems sont hébergés sur %{s3}, permettant un record de vitesse entre le moment de publication et de mise à disposition d'un gem. Pour davantage d'informations, le %{source_code} est disponible sous licence %{license} sur GitHub."
 
   passwords:
     edit:
-      title: "Renvoi de mot de passe"
+      title: "Nouveau mot de passe"
       submit: "Enregistrer ce mot de passe"
     new:
       title: "Changement de mot de passe"
