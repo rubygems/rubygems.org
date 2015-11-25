@@ -140,8 +140,8 @@ class Api::V1::Versions::DownloadsControllerTest < ActionController::TestCase
     setup do
       @one_hundred_days_ago = 100.days.ago.to_date.to_s
       @one_hundred_one_days_ago = 101.days.ago.to_date.to_s
-      @one_hundred_eighty_nine_days_ago = 189.day.ago.to_date.to_s
-      @one_hundred_ninety_days_ago = 190.day.ago.to_date.to_s
+      @one_hundred_eighty_nine_days_ago = 189.days.ago.to_date.to_s
+      @one_hundred_ninety_days_ago = 190.days.ago.to_date.to_s
     end
 
     context "happy path" do

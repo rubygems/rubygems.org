@@ -44,7 +44,7 @@
   text-align: center;
   color: #6c767e; }
   .footer__language {
-    width: 100px;
+    margin: 0 14px;
     display: inline-block;
   }
 
