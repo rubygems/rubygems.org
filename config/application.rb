@@ -13,7 +13,7 @@ module Gemcutter
 
     config.time_zone = "UTC"
     config.encoding  = "utf-8"
-    config.i18n.available_locales = [:en, :nl, 'zh-CN', 'zh-TW', 'pt-BR', :fr]
+    config.i18n.available_locales = [:en, :nl, 'zh-CN', 'zh-TW', 'pt-BR', :fr, :es]
     config.i18n.fallbacks = true
 
     config.middleware.use "Redirector" unless Rails.env.development?

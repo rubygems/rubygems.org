@@ -4,7 +4,7 @@
 <h1 class="home__heading"><%= t '.find_blurb' %></h1>
 <div class="home__search-wrap">
   <%= form_tag search_url, :id => "main-search", :method => :get do %>
-    <%= search_field_tag :query, params[:query], :placeholder => "Search Gems&hellip;".html_safe, autofocus: current_page?(root_url), :id => 'home_query', :class => "home__search" %>
+    <%= search_field_tag :query, params[:query], :placeholder => t('layouts.application.header.search_gem').html_safe, autofocus: current_page?(root_url), :id => 'home_query', :class => "home__search" %>
     <%= label_tag :home_query do %>
     <span class="t-hidden">Search gems</span>
     <% end %>
