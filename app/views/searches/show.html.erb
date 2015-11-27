@@ -24,6 +24,17 @@
     <p class="gems__meter"><%= page_entries_info(@gems, :entry_name => 'gem', :model => 'gem').html_safe %></p>
   </header>
 
+  <% if suggestions = es_suggestions(@gems)  %>
+    <div class='search__suggestions'>
+      <p>
+        Maybe you mean
+        <%= suggestions.map do |term|
+          link_to term, search_path(params.except(:controller, :action).merge query: term)
+        end.to_sentence(last_word_connector: ' or ').html_safe %>?
+      </p>
+    </div>
+  <% end %>
+
   <% if @gems.present? %>
     <%= render @gems %>
     <%= will_paginate @gems %>
