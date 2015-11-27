@@ -104,6 +104,27 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         assert_equal "This rubygem could not be found.", @response.body
       end
     end
+
+    context "On GET to show for a gem with dependencies that have missing rubygem" do
+      setup do
+        @rubygem = create(:rubygem)
+        @version = create(:version, rubygem: @rubygem)
+        
+        @runtime_dependency = create(:runtime_dependency, version: @version)
+        @runtime_dependency.rubygem.update_column(:name, 'foo')
+        @missing_dependency = create(:runtime_dependency, version: @version)
+        @missing_dependency.rubygem.update_column(:name, 'missing')
+        @missing_dependency.update_column(:rubygem_id, nil)
+
+        get :show, id: @rubygem.to_param, format: "json"
+      end
+
+      should respond_with :success
+      should "show only dependencies that have rubygem" do
+        assert_match(/foo/, @response.body)
+        assert_no_match(/missing/, @response.body)
+      end
+    end
   end
 
   def self.should_respond_to(format)

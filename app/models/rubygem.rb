@@ -161,8 +161,8 @@ class Rubygem < ActiveRecord::Base
       'source_code_uri'   => linkset.try(:code),
       'bug_tracker_uri'   => linkset.try(:bugs),
       'dependencies'      => {
-        'development' => version.dependencies.development.to_a,
-        'runtime'     => version.dependencies.runtime.to_a
+        'development' => version.dependencies.development.to_a.reject { |r| r.rubygem.nil? },
+        'runtime'     => version.dependencies.runtime.to_a.reject { |r| r.rubygem.nil? }
       }
     }
   end
