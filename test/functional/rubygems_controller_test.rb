@@ -415,11 +415,11 @@ class RubygemsControllerTest < ActionController::TestCase
     setup do
       @version = create(:version)
 
-      @runtime = create(:runtime_dependency, version: @version)
+      @runtime = create(:dependency, :runtime, version: @version)
       @runtime.update_attribute(:requirements, '= 1.0.0')
       @runtime.rubygem.update_column(:name, 'foo')
 
-      @missing_dependency = create(:runtime_dependency, version: @version)
+      @missing_dependency = create(:dependency, :runtime, version: @version)
       @missing_dependency.update_attribute(:requirements, '= 1.2.0')
       @missing_dependency.rubygem.update_column(:name, 'missing')
       @missing_dependency.update_column(:rubygem_id, nil)
