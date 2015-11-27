@@ -13,13 +13,7 @@ staging:
   host: staging.rubygems.org
   s3_bucket: staging.s3.rubygems.org
 
-live: &LIVE
+production:
   protocol: https
   host: rubygems.org
   s3_bucket: production.s3.rubygems.org
-
-production:
-  <<: *LIVE
-
-recovery:
-  <<: *LIVE
