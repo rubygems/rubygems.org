@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class SearchesControllerTest < ActionController::TestCase
+  setup do
+    Rubygem.__elasticsearch__.create_index! force: true
+  end
+
   context 'on GET to show with no search parameters' do
     setup { get :show }
 
@@ -49,6 +53,40 @@ class SearchesControllerTest < ActionController::TestCase
     end
   end
 
+  context 'on GET to show with search parameters and ES enabled' do
+    setup do
+      @sinatra = create(:rubygem, name: 'sinatra')
+      @sinatra_redux = create(:rubygem, name: 'sinatra-redux')
+      @brando = create(:rubygem, name: 'brando')
+      create(:version, rubygem: @sinatra)
+      create(:version, rubygem: @sinatra_redux)
+      create(:version, rubygem: @brando)
+      @sinatra.index_document
+      @sinatra_redux.index_document
+      @brando.index_document
+      Rubygem.__elasticsearch__.refresh_index!
+      get :show, query: 'sinatra', es: 'true'
+    end
+
+    should respond_with :success
+    should render_template :show
+    should "see sinatra on the page in the results" do
+      page.assert_text(@sinatra.name)
+      page.assert_selector("a[href='#{rubygem_path(@sinatra)}']")
+    end
+    should "not see brando on the page in the results" do
+      page.assert_no_text(@brando.name)
+      page.assert_no_selector("a[href='#{rubygem_path(@brando)}']")
+    end
+    should "display pagination summary" do
+      page.assert_text('all 2 gems')
+    end
+    should "not see suggestions" do
+      page.assert_no_text('Maybe you mean')
+      page.assert_no_selector('.search-suggestions')
+    end
+  end
+
   context 'on GET to show with search parameters with a single exact match' do
     setup do
       @sinatra = create(:rubygem, name: "sinatra")
@@ -67,6 +105,38 @@ class SearchesControllerTest < ActionController::TestCase
 
     should respond_with :success
     should render_template :show
+  end
+
+  context 'on GET to show with search parameters and no results' do
+    setup do
+      @sinatra = create(:rubygem, name: "sinatra")
+      @sinatra_redux = create(:rubygem, name: "sinatra-redux")
+      @brando = create(:rubygem, name: "brando")
+      create(:version, rubygem: @sinatra)
+      create(:version, rubygem: @sinatra_redux)
+      create(:version, rubygem: @brando)
+      @sinatra.index_document
+      @sinatra_redux.index_document
+      @brando.index_document
+      Rubygem.__elasticsearch__.refresh_index!
+      get :show, query: "sinatre", es: 'true'
+    end
+
+    should respond_with :success
+    should render_template :show
+    should "see sinatra on the page in the suggestions" do
+      page.assert_text('Maybe you mean')
+      # assert page.find('.search-suggestions').has_content?(@sinatra.name)
+      # assert page.has_content?(@sinatra.name)
+      # assert page.has_selector?("a[href='#{search_path(q: @sinatra.name)}']")
+    end
+    should "not see sinatra on the page in the results" do
+      page.assert_no_selector("a[href='#{rubygem_path(@sinatra)}']")
+    end
+    should "not see brando on the page in the results" do
+      page.assert_no_text(@brando.name)
+      page.assert_no_selector("a[href='#{rubygem_path(@brando)}']")
+    end
   end
 
   context "with elasticsearch down" do
