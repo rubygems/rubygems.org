@@ -391,10 +391,6 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal "rails", @rubygem.to_param
     end
 
-    should "return name with downloads for #with_downloads" do
-      assert_equal "#{@rubygem.name} (#{@rubygem.downloads})", @rubygem.with_downloads
-    end
-
     should "return a bunch of json" do
       version = create(:version, rubygem: @rubygem)
       run_dep = create(:dependency, :runtime, version: version)
@@ -751,29 +747,6 @@ class RubygemTest < ActiveSupport::TestCase
 
       travel_to Date.parse("2010-11-01") do
         2.times { Download.incr(@rubygem.name, @version.full_name) }
-      end
-    end
-
-    should "give counts from the past 30 days starting with the day before yesterday" do
-      travel_to Date.parse("2010-11-03") do
-        downloads = @rubygem.monthly_downloads
-
-        assert_equal 30, downloads.size
-        assert_equal 6, downloads.first
-        (3..14).each do |n|
-          assert_equal 0, downloads[n.to_i - 2]
-        end
-        assert_equal 4, downloads[13]
-        (16..30).each do |n|
-          assert_equal 0, downloads[n.to_i - 2]
-        end
-        assert_equal 2, downloads.last
-      end
-    end
-
-    should "give the monthly dates back" do
-      travel_to Time.utc(2010, 11, 01) do
-        assert_equal(("01".."30").map { |date| "10/#{date}" }, Rubygem.monthly_short_dates)
       end
     end
   end
