@@ -125,7 +125,7 @@ GEM
     hashie (3.4.3)
     high_voltage (2.4.0)
     highline (1.7.8)
-    honeybadger (2.1.5)
+    honeybadger (2.3.1)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     http_accept_language (2.0.5)
@@ -300,7 +300,7 @@ DEPENDENCIES
   gravtastic
   high_voltage
   highline
-  honeybadger (~> 2.1.0)
+  honeybadger (~> 2.3.1)
   http_accept_language
   jquery-rails
   jruby-openssl
