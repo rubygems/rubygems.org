@@ -300,7 +300,7 @@ DEPENDENCIES
   gravtastic
   high_voltage
   highline
-  honeybadger (~> 2.3.1)
+  honeybadger
   http_accept_language
   jquery-rails
   jruby-openssl
