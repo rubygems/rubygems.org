@@ -144,7 +144,7 @@ zh-CN:
       forgot_password: "忘记了密码？"
 
   stats:
-    show:
+    index:
       total_downloads: "下载总次数"
 
   users:
