@@ -141,6 +141,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def payload(version = versions.most_recent, protocol = Gemcutter::PROTOCOL, host_with_port = Gemcutter::HOST)
+    deps = version.dependencies.to_a
     {
       'name'              => name,
       'downloads'         => downloads,
@@ -161,8 +162,8 @@ class Rubygem < ActiveRecord::Base
       'source_code_uri'   => linkset.try(:code),
       'bug_tracker_uri'   => linkset.try(:bugs),
       'dependencies'      => {
-        'development' => version.dependencies.development.to_a.reject { |r| r.rubygem.nil? },
-        'runtime'     => version.dependencies.runtime.to_a.reject { |r| r.rubygem.nil? }
+        'development' => deps.select { |r| r.rubygem && 'development' == r.scope },
+        'runtime'     => deps.select { |r| r.rubygem && 'runtime' == r.scope }
       }
     }
   end
