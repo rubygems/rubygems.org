@@ -163,7 +163,7 @@ class Rubygem < ActiveRecord::Base
       'bug_tracker_uri'   => linkset.try(:bugs),
       'dependencies'      => {
         'development' => deps.select { |r| r.rubygem && 'development' == r.scope },
-        'runtime'     => deps.select { |r| r.rubygem && 'runtime' == r.scope },
+        'runtime'     => deps.select { |r| r.rubygem && 'runtime' == r.scope }
       }
     }
   end

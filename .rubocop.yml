@@ -12,7 +12,7 @@ Metrics/AbcSize:
   Max: 42 # TODO: Lower to 15
 
 Metrics/ClassLength:
-  Max: 300 # TODO: Lower to 100
+  Max: 350 # TODO: Lower to 100
   Exclude:
     - test/**/*.rb
 
