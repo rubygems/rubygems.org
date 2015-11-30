@@ -1,20 +1,24 @@
 class Api::V1::ActivitiesController < Api::BaseController
   def latest
-    @rubygems = Rubygem.latest(50)
-    render_rubygems
+    versions = Version.new_pushed_versions(50)
+    render_rubygems(versions)
   end
 
   def just_updated
-    @rubygems = Version.just_updated(50).map(&:rubygem)
-    render_rubygems
+    versions = Version.just_updated(50)
+    render_rubygems(versions)
   end
 
   private
 
-  def render_rubygems
+  def render_rubygems(versions)
+    rubygems = versions.includes(:dependencies, rubygem: :linkset).map do |version|
+      version.rubygem.payload(version)
+    end
+
     respond_to do |format|
-      format.json { render json: @rubygems }
-      format.yaml { render yaml: @rubygems }
+      format.json { render json: rubygems }
+      format.yaml { render yaml: rubygems }
     end
   end
 end
