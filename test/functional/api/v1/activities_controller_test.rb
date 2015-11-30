@@ -1,71 +1,81 @@
 require 'test_helper'
 
 class Api::V1::ActivitiesControllerTest < ActionController::TestCase
-  def should_return_latest_gems(gems)
-    assert_equal 2, gems.length
-    gems.each { |g| assert g.is_a?(Hash) }
-    assert_equal @rubygem_2.attributes['name'], gems[0]['name']
-    assert_equal @rubygem_3.attributes['name'], gems[1]['name']
-  end
-
-  def should_return_just_updated_gems(gems)
-    assert_equal 3, gems.length
-    gems.each { |g| assert g.is_a?(Hash) }
-    assert_equal @rubygem_1.attributes['name'], gems[0]['name']
-    assert_equal @rubygem_2.attributes['name'], gems[1]['name']
-    assert_equal @rubygem_3.attributes['name'], gems[2]['name']
-  end
-
   context "No signed in-user" do
     context "On GET to latest" do
       setup do
-        @rubygem_1 = create(:rubygem)
-        @version_1 = create(:version, rubygem: @rubygem_1)
-        @version_2 = create(:version, rubygem: @rubygem_1)
+        @rails = create(:rubygem, name: 'rails')
+        create(:version, rubygem: @rails)
+        create(:version, rubygem: @rails)
 
-        @rubygem_2 = create(:rubygem)
-        @version_3 = create(:version, rubygem: @rubygem_2)
+        @sinatra = create(:rubygem, name: 'sinatra')
+        create(:version, rubygem: @sinatra)
 
-        @rubygem_3 = create(:rubygem)
-        @version_4 = create(:version, rubygem: @rubygem_3)
-
-        Rubygem.stubs(:latest).with(50).returns [@rubygem_2, @rubygem_3]
+        @foobar = create(:rubygem, name: 'foobar')
+        create(:version, rubygem: @foobar)
       end
 
       should "return correct JSON for latest gems" do
         get :latest, format: :json
-        should_return_latest_gems MultiJson.load(@response.body)
+        gems = JSON.load @response.body
+
+        assert_equal 2, gems.length
+        assert_equal 'foobar', gems[0]['name']
+        assert_equal 'sinatra', gems[1]['name']
       end
 
       should "return correct YAML for latest gems" do
         get :latest, format: :yaml
-        should_return_latest_gems YAML.load(@response.body)
+        gems = YAML.load(@response.body)
+
+        assert_equal 2, gems.length
+        assert_equal 'foobar', gems[0]['name']
+        assert_equal 'sinatra', gems[1]['name']
       end
     end
 
     context "On GET to just_updated" do
       setup do
-        @rubygem_1 = create(:rubygem)
-        @version_1 = create(:version, rubygem: @rubygem_1)
-        @version_2 = create(:version, rubygem: @rubygem_1)
+        rails = create(:rubygem, name: 'rails')
+        create(:version, rubygem: rails)
+        create(:version, rubygem: rails)
+        @rails_version = create(:version, rubygem: rails)
 
-        @rubygem_2 = create(:rubygem)
-        @version_3 = create(:version, rubygem: @rubygem_2)
+        sinatra = create(:rubygem, name: 'sinatra')
+        create(:version, rubygem: sinatra)
+        @sinatra_version = create(:version, rubygem: sinatra)
 
-        @rubygem_3 = create(:rubygem)
-        @version_4 = create(:version, rubygem: @rubygem_3)
+        foo = create(:rubygem, name: 'foo')
+        create(:version, rubygem: foo)
+        @foo_version = create(:version, rubygem: foo)
 
-        Version.stubs(:just_updated).with(50).returns([@version_2, @version_3, @version_4])
+        # wont show this, as it only has one version
+        bar = create(:rubygem, name: 'bar')
+        create(:version, rubygem: bar)
       end
 
       should "return correct JSON for just_updated gems" do
         get :just_updated, format: :json
-        should_return_just_updated_gems MultiJson.load(@response.body)
+        gems = JSON.load @response.body
+        assert_equal 7, gems.length
+        assert_equal 'foo', gems[0]['name']
+        assert_equal @foo_version.number, gems[0]['version'], 'should have the latest version'
+        assert_equal 'sinatra', gems[2]['name']
+        assert_equal @sinatra_version.number, gems[2]['version'], 'should have the latest version'
+        assert_equal 'rails', gems[6]['name']
+        assert_equal @rails_version.number, gems[6]['version'], 'should have the latest version'
       end
 
       should "return correct YAML for just_updated gems" do
         get :just_updated, format: :yaml
-        should_return_just_updated_gems YAML.load(@response.body)
+        gems = YAML.load(@response.body)
+        assert_equal 7, gems.length
+        assert_equal 'foo', gems[0]['name']
+        assert_equal @foo_version.number, gems[0]['version'], 'should have the latest version'
+        assert_equal 'sinatra', gems[2]['name']
+        assert_equal @sinatra_version.number, gems[2]['version'], 'should have the latest version'
+        assert_equal 'rails', gems[6]['name']
+        assert_equal @rails_version.number, gems[6]['version'], 'should have the latest version'
       end
     end
   end
