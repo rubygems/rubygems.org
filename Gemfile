@@ -7,6 +7,7 @@ gem 'mime-types', '~> 2.99', require: 'mime/types/columnar'
 gem 'rails', '~> 4.2.7'
 gem 'rails-i18n'
 
+gem 'active_model_serializers', '0.10.0.rc3'
 gem 'autoprefixer-rails'
 gem 'aws-sdk', '~> 2.2'
 gem 'builder'
@@ -50,6 +51,7 @@ gem 'sprockets-rails', '~> 3.1.0'
 
 group :development, :test do
   gem 'rubocop', require: false
+  gem 'pry'
   gem 'toxiproxy', '~> 0.1.3'
 end
 
