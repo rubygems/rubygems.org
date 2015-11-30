@@ -28,6 +28,8 @@ module Gemcutter
     config.plugins = [:dynamic_form]
 
     config.autoload_paths << Rails.root.join('lib')
+
+    config.stats_page_top_10_from_redis = false
   end
 
   def self.config

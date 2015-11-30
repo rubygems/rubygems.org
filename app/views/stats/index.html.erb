@@ -17,13 +17,27 @@
 
 <h2 class="stats__graph__heading">All Time Most Downloaded</h2>
 
-<% @most_downloaded.each do |gem| %>
-  <div class="stats__graph__gem">
-    <h3 class="stats__graph__gem__name"><%= link_to gem.name, rubygem_path(gem) %></h3>
-    <div class="stats__graph__gem__meter-wrap">
-      <div class="stats__graph__gem__meter" style="width: <%= stats_graph_meter(gem, @most_downloaded_count) %>%">
-        <span class="stats__graph__gem__count"><%= number_to_delimited gem.downloads %></span>
+<% if Rails.application.config.stats_page_top_10_from_redis %>
+  <% @most_downloaded.each do |(gem, downloads)| %>
+    <div class="stats__graph__gem">
+      <h3 class="stats__graph__gem__name"><%= link_to gem.name, rubygem_path(gem) %></h3>
+      <div class="stats__graph__gem__meter-wrap">
+        <div class="stats__graph__gem__meter" style="width: <%= stats_graph_meter(gem, @most_downloaded_count) %>%">
+          <span class="stats__graph__gem__count"><%= number_to_delimited downloads %></span>
+        </div>
       </div>
     </div>
-  </div>
+  <% end %>
+
+<% else %>
+  <% @most_downloaded.each do |gem| %>
+    <div class="stats__graph__gem">
+      <h3 class="stats__graph__gem__name"><%= link_to gem.name, rubygem_path(gem) %></h3>
+      <div class="stats__graph__gem__meter-wrap">
+        <div class="stats__graph__gem__meter" style="width: <%= stats_graph_meter(gem, @most_downloaded_count) %>%">
+          <span class="stats__graph__gem__count"><%= number_to_delimited gem.downloads %></span>
+        </div>
+      </div>
+    </div>
+  <% end %>
 <% end %>

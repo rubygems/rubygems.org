@@ -96,6 +96,32 @@ class DownloadTest < ActiveSupport::TestCase
     assert_equal 3, Download.rank(@version_1)
   end
 
+  should "find most downloaded gems all time" do
+    @rubygem_1 = create(:rubygem)
+    @version_1 = create(:version, rubygem: @rubygem_1)
+    @version_2 = create(:version, rubygem: @rubygem_1)
+
+    @rubygem_2 = create(:rubygem)
+    @version_3 = create(:version, rubygem: @rubygem_2)
+
+    @rubygem_3 = create(:rubygem)
+    @version_4 = create(:version, rubygem: @rubygem_3)
+
+    Download.incr(@rubygem_1.name, @version_1.full_name)
+    Download.incr(@rubygem_1.name, @version_2.full_name)
+    Download.incr(@rubygem_2.name, @version_3.full_name)
+    Download.incr(@rubygem_1.name, @version_1.full_name)
+    3.times { Download.incr(@rubygem_2.name, @version_3.full_name) }
+    2.times { Download.incr(@rubygem_1.name, @version_2.full_name) }
+    1.times { Download.incr(@rubygem_3.name, @version_4.full_name) }
+
+    assert_equal [[@rubygem_1, 5], [@rubygem_2, 4], [@rubygem_3, 1]],
+      Download.most_downloaded_gems_all_time
+
+    assert_equal [[@rubygem_1, 5], [@rubygem_2, 4]],
+      Download.most_downloaded_gems_all_time(2)
+  end
+
   should "find counts per day for versions" do
     @rubygem_1 = create(:rubygem)
     @version_1 = create(:version, rubygem: @rubygem_1)
