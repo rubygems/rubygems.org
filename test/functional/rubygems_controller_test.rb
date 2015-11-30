@@ -373,7 +373,7 @@ class RubygemsControllerTest < ActionController::TestCase
     should respond_with :success
     should render_template :show
     should "render info about the gem" do
-      assert page.has_content?("This gem is not currently hosted on Gemcutter.")
+      assert page.has_content?("This gem is not currently hosted on RubyGems.org.")
     end
   end
 
