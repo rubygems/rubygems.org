@@ -7,8 +7,8 @@ class Api::V1::OwnersController < Api::BaseController
 
   def show
     respond_to do |format|
-      format.json { render json: @rubygem.owners }
-      format.yaml { render yaml: @rubygem.owners }
+      format.json { render json: @rubygem.owners, each_serializer: UserSerializer }
+      format.yaml { render yaml: @rubygem.owners, each_serializer: UserSerializer }
     end
   end
 

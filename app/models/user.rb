@@ -76,30 +76,6 @@ class User < ActiveRecord::Base
     all
   end
 
-  def payload
-    attrs = { "id" => id, "handle" => handle }
-    attrs["email"] = email unless hide_email
-    attrs
-  end
-
-  def as_json(*)
-    payload
-  end
-
-  def to_xml(options = {})
-    payload.to_xml(options.merge(root: 'user'))
-  end
-
-  def to_yaml(*args)
-    payload.to_yaml(*args)
-  end
-
-  def encode_with(coder)
-    coder.tag = nil
-    coder.implicit = true
-    coder.map = payload
-  end
-
   def regenerate_token
     generate_confirmation_token
   end
