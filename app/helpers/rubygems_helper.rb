@@ -38,11 +38,11 @@ module RubygemsHelper
               else
                 'display:inline-block'
               end
-      link_to 'Subscribe', rubygem_subscription_path(rubygem),
+      link_to t('.links.subscribe'), rubygem_subscription_path(rubygem),
         class: ['toggler', 'gem__link', 't-list__item'], id: 'subscribe',
         method: :post, remote: true, style: style
     else
-      link_to 'Subscribe', sign_in_path,
+      link_to t('.links.subscribe'), sign_in_path,
         class: [:toggler, 'gem__link', 't-list__item'], id: :subscribe
     end
   end
@@ -54,36 +54,36 @@ module RubygemsHelper
             else
               'display:none'
             end
-    link_to 'Unsubscribe', rubygem_subscription_path(rubygem),
+    link_to t('.links.unsubscribe'), rubygem_subscription_path(rubygem),
       class: [:toggler, 'gem__link', 't-list__item'], id: 'unsubscribe',
       method: :delete, remote: true, style: style
   end
 
   def atom_link(rubygem)
-    link_to 'RSS', rubygem_versions_path(rubygem, format: 'atom'),
+    link_to t(".links.rss"), rubygem_versions_path(rubygem, format: 'atom'),
       class: 'gem__link t-list__item', id: :rss
   end
 
   def download_link(version)
-    link_to "Download", "/downloads/#{version.full_name}.gem",
+    link_to t('.links.download'), "/downloads/#{version.full_name}.gem",
       class: 'gem__link t-list__item', id: :download
   end
 
   def documentation_link(version, linkset)
     return unless linkset.nil? || linkset.docs.blank?
-    link_to 'Documentation', version.documentation_path,
+    link_to t('.links.docs'), version.documentation_path,
       class: 'gem__link t-list__item', id: :docs
   end
 
   def badge_link(rubygem)
     badge_url = "https://badge.fury.io/rb/#{rubygem.name}/install"
-    link_to "Badge", badge_url, class: "gem__link t-list__item", id: :badge
+    link_to t(".links.badge"), badge_url, class: "gem__link t-list__item", id: :badge
   end
 
   def report_abuse_link(rubygem)
     encoded_title = URI.encode("Reporting Abuse on #{rubygem.name}")
     report_abuse_url = "http://help.rubygems.org/discussion/new?discussion[private]=1&discussion[title]=" + encoded_title # rubocop:disable Metrics/LineLength
-    link_to 'Report Abuse', report_abuse_url.html_safe, class: 'gem__link t-list__item'
+    link_to t(".links.report_abuse"), report_abuse_url.html_safe, class: 'gem__link t-list__item'
   end
 
   def links_to_owners(rubygem)

@@ -142,7 +142,7 @@ pt-BR:
       forgot_password: "Esqueceu sua Senha?"
 
   stats:
-    show:
+    index:
       total_downloads: "Total de downloads"
 
   users:

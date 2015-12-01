@@ -143,7 +143,7 @@ zh-TW:
       forgot_password: "忘記密碼？"
 
   stats:
-    show:
+    index:
       total_downloads: "總下載次數"
 
   users:

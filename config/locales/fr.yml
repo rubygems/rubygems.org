@@ -110,6 +110,7 @@ fr:
       other_fields_notice: "Tous les autres champs ne sont modifiables qu'en soumettant une nouvelle version de votre gem."
     index:
       title: "Gems"
+      downloads: Téléchargements
     show:
       not_hosted_notice: "Gem non hébergé sur Rubygems pour le moment."
       install: "installation"
@@ -125,12 +126,22 @@ fr:
         wiki: "Wiki"
         mail: "Liste de diffusion"
         bugs: "Suivi de bugs"
+        download: "Télécharger"
+        subscribe: "Abonnement"
+        unsubscribe: "Désabonement"
+        report_abuse: Signaler un abus
+        badge: Badge
+        rss: RSS
       versions_header: "Versions"
       bundler_header: "Gemfile"
       show_all_versions: "Voir toutes les versions (%{count})"
       licenses_header: "Licence"
       no_licenses: "aucune"
       requirements_header: "Dépendances"
+      sha_256_checksum: Total de contrôle SHA 256
+      copy_to_clipboard: Copier
+      copied: Copié!
+      required_ruby_version: Version de Ruby requise
 
   searches:
     show:
@@ -142,8 +153,11 @@ fr:
       forgot_password: "Mot de passe oublié ?"
 
   stats:
-    show:
-      total_downloads: "Nombre de téléchargements"
+    index:
+      total_downloads: "Total de téléchargements"
+      total_gems: "Total de gems"
+      total_users: "Total d'utilisateurs"
+      all_time_most_downloaded: "Gems les plus téléchargés"
 
   users:
     new:
@@ -173,3 +187,21 @@ fr:
       session:
         who: "Email ou pseudonyme"
         password: "Mot de passe"
+
+  will_paginate:
+      previous_label: "Précédent"
+      next_label: "Suivant"
+      page_gap: "…"
+      page_entries_info:
+        single_page:
+          zero:  "Aucun %{model} trouvé"
+          one:   "1 %{model} affiché"
+          other: "Les %{count} %{model} affichés"
+        single_page_html:
+          zero:  "Aucun %{model} trouvé"
+          one:   "<b>1</b> %{model} affiché"
+          other: "Les <b>%{count}</b> %{model} affichés"
+
+        multi_page: "%{model} de %{from} à %{to} parmis %{count} au total"
+        multi_page_html: "%{model} de <b>%{from}</b> à <b>%{to}</b> parmis <b>%{count}</b> au total"
+

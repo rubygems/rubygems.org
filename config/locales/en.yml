@@ -110,6 +110,7 @@ en:
       other_fields_notice: All other fields can only be edited by pushing an updated version of your gem.
     index:
       title: 'Gems'
+      downloads: Downloads
     show:
       not_hosted_notice: This gem is not currently hosted on RubyGems.org.
       install: install
@@ -125,12 +126,22 @@ en:
         wiki: Wiki
         mail: Mailing List
         bugs: Bug Tracker
+        download: Download
+        subscribe: Subscribe
+        unsubscribe: Unsubscribe
+        report_abuse: Report Abuse
+        badge: Badge
+        rss: RSS
       versions_header: Versions
       bundler_header: Gemfile
       show_all_versions: "Show all versions (%{count} total)"
       licenses_header: License
       no_licenses: N/A
       requirements_header: Requirements
+      sha_256_checksum: SHA 256 checksum
+      copy_to_clipboard: Copy to clipboard
+      copied: Copied!
+      required_ruby_version: Required Ruby Version
 
   searches:
     show:
@@ -142,8 +153,11 @@ en:
       forgot_password: "Forgot Password?"
 
   stats:
-    show:
-      total_downloads: "Total downloads"
+    index:
+      total_downloads: Total downloads
+      total_gems: Total gems
+      total_users: Total gems
+      all_time_most_downloaded: All Time Most Downloaded
 
   users:
     new:
@@ -173,3 +187,21 @@ en:
       session:
         who: Email or Handle
         password: Password
+
+  will_paginate:
+    previous_label: "Previous"
+    next_label: "Next"
+    page_gap: "…"
+    page_entries_info:
+      single_page:
+        zero:  "No %{model} found"
+        one:   "Displaying 1 %{model}"
+        other: "Displaying all %{count} %{model}"
+      single_page_html:
+        zero:  "No %{model} found"
+        one:   "Displaying <b>1</b> %{model}"
+        other: "Displaying <b>all&nbsp;%{count}</b> %{model}"
+
+      multi_page: "Displaying %{model} %{from} - %{to} of %{count} in total"
+      multi_page_html: "Displaying %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> of <b>%{count}</b> in total"
+

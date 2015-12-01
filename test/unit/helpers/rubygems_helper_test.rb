@@ -60,6 +60,7 @@ class RubygemsHelperTest < ActionView::TestCase
     version = build(:version)
     linkset = build(:linkset, docs: nil)
 
+    @virtual_path = "rubygems.show"
     link = documentation_link(version, linkset)
     assert link.include?(version.documentation_path)
   end
@@ -75,12 +76,16 @@ class RubygemsHelperTest < ActionView::TestCase
   should "link to the badge" do
     rubygem = create(:rubygem)
     url = "https://badge.fury.io/rb/#{rubygem.name}/install"
+
+    @virtual_path = "rubygems.show"
     assert_match url, badge_link(rubygem)
   end
 
   should "link to report abuse" do
     rubygem = create(:rubygem, name: 'my_gem')
     url = "http://help.rubygems.org/discussion/new?discussion[private]=1&discussion[title]=Reporting%20Abuse%20on%20my_gem" # rubocop:disable Metrics/LineLength
+
+    @virtual_path = "rubygems.show"
     assert_match url, report_abuse_link(rubygem)
   end
 
