@@ -60,6 +60,10 @@ class UserSerializerTest < ActiveSupport::TestCase
     should 'have proper hash keys' do
       @serializer = UserSerializer.new(@user)
       @yaml_user = @serializer.to_yaml
+
+      yaml = YAML.load(@yaml_user)
+
+      assert_equal %w(email handle id), yaml.keys.sort
     end
 
     should 'display correct data' do
