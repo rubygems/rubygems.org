@@ -26,8 +26,8 @@ class WebHookSerializerTest < ActiveSupport::TestCase
       assert_equal(
         @json_webhook,
         {
-          :url => @url,
-          :failure_count => @webhook.failure_count
+          url: @url,
+          failure_count: @webhook.failure_count
         }
       )
     end
