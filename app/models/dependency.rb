@@ -32,31 +32,6 @@ class Dependency < ActiveRecord::Base
     unresolved_name || rubygem.try(:name)
   end
 
-  def payload
-    {
-      'name'         => name,
-      'requirements' => clean_requirements
-    }
-  end
-
-  def as_json(*)
-    payload
-  end
-
-  def to_xml(options = {})
-    payload.to_xml(options.merge(root: 'dependency'))
-  end
-
-  def to_yaml(*args)
-    payload.to_yaml(*args)
-  end
-
-  def encode_with(coder)
-    coder.tag = nil
-    coder.implicit = true
-    coder.map = payload
-  end
-
   def to_s
     "#{name} #{clean_requirements}"
   end

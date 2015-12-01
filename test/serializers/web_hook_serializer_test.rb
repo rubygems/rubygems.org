@@ -60,6 +60,10 @@ class WebHookSerializerTest < ActiveSupport::TestCase
     should 'have proper hash keys' do
       @serializer = WebHookSerializer.new(@webhook)
       @yaml_webhook = @serializer.to_yaml
+
+      yaml = YAML.load(@yaml_webhook)
+
+      assert_equal %w(failure_count url), yaml.keys.sort
     end
 
     should 'display correct data' do
