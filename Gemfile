@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '~> 4.2.5'
 gem 'rails-i18n'
 
+gem 'active_model_serializers', '0.10.0.rc3'
 gem 'autoprefixer-rails'
 gem 'aws-sdk-core'
 gem 'builder'
@@ -45,6 +46,7 @@ gem 'xml-simple'
 gem 'yajl-ruby', require: 'yajl'
 
 group :development, :test do
+  gem 'pry'
   gem 'rubocop'
   gem 'toxiproxy', '~> 0.1.3'
 end

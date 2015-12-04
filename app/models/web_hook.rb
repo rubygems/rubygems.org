@@ -52,31 +52,6 @@ class WebHook < ActiveRecord::Base
     end
   end
 
-  def payload
-    {
-      'failure_count' => failure_count,
-      'url'           => url
-    }
-  end
-
-  def as_json(*)
-    payload
-  end
-
-  def to_xml(options = {})
-    payload.to_xml(options.merge(root: 'web_hook'))
-  end
-
-  def to_yaml(*args)
-    payload.to_yaml(*args)
-  end
-
-  def encode_with(coder)
-    coder.tag = nil
-    coder.implicit = true
-    coder.map = payload
-  end
-
   private
 
   def unique_hook

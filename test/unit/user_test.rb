@@ -75,20 +75,30 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "have email and handle on JSON" do
-      json = JSON.parse(@user.to_json)
-      hash = { "id" => @user.id, "email" => @user.email, 'handle' => @user.handle }
-      assert_equal hash, json
+      @serializer = UserSerializer.new(@user)
+      @json_user = MultiJson.dump(@serializer.attributes)
+
+      assert_equal(
+        {
+          'id'           => @user.id,
+          'email' => @user.email,
+          'handle' => @user.handle
+        }, MultiJson.load(@json_user))
     end
 
     should "have email and handle on XML" do
-      xml = Nokogiri.parse(@user.to_xml)
+      @serializer = UserSerializer.new(@user)
+      xml = Nokogiri.parse(@serializer.to_xml)
       assert_equal "user", xml.root.name
-      assert_equal %w(id handle email), xml.root.children.select(&:element?).map(&:name)
+      assert_equal %w(id email handle), xml.root.children.select(&:element?).map(&:name)
       assert_equal @user.email, xml.at_css("email").content
+      assert_equal @user.handle, xml.at_css("handle").content
     end
 
     should "have email and handle on YAML" do
-      yaml = YAML.load(@user.to_yaml)
+      @serializer = UserSerializer.new(@user)
+      @yaml_user = @serializer.to_yaml
+      yaml = YAML.load(@yaml_user)
       hash = { 'id' => @user.id, 'email' => @user.email, 'handle' => @user.handle }
       assert_equal hash, yaml
     end
@@ -221,14 +231,17 @@ class UserTest < ActiveSupport::TestCase
   context "yaml" do
     setup do
       @user = create(:user)
+      @serializer = UserSerializer.new(@user)
+      @hwia_attributes = ActiveSupport::HashWithIndifferentAccess.new(@serializer.attributes)
+      @yaml_user = @serializer.to_yaml
     end
 
     should "return its payload" do
-      assert_equal @user.payload, YAML.load(@user.to_yaml)
+      assert_equal @hwia_attributes, YAML.load(@yaml_user)
     end
 
     should "nest properly" do
-      assert_equal [@user.payload], YAML.load([@user].to_yaml)
+      assert_equal [@hwia_attributes], [YAML.load([@serializer].first.to_yaml)]
     end
   end
 end

@@ -66,29 +66,36 @@ class WebHookTest < ActiveSupport::TestCase
       @webhook = create(:web_hook, user: @user, rubygem: @rubygem, url: @url)
     end
 
-    should "show limited attributes for to_json" do
+    should "show limited attributes for as_json" do
+      @serializer = WebHookSerializer.new(@webhook)
+      @json_webhook = MultiJson.dump(@serializer.attributes)
+
       assert_equal(
         {
           'url'           => @url,
           'failure_count' => @webhook.failure_count
-        }, MultiJson.load(@webhook.to_json))
+        }, MultiJson.load(@json_webhook))
     end
 
     should "show limited attributes for to_xml" do
-      xml = Nokogiri.parse(@webhook.to_xml)
+      @serializer = WebHookSerializer.new(@webhook)
+      @xml_webhook = Nokogiri.parse(@serializer.to_xml)
 
-      assert_equal "web-hook", xml.root.name
-      assert_equal %w(failure-count url), xml.root.children.select(&:element?).map(&:name).sort
-      assert_equal @webhook.url, xml.at_css("url").content
-      assert_equal @webhook.failure_count, xml.at_css("failure-count").content.to_i
+      assert_equal "web-hook", @xml_webhook.root.name
+      assert_equal %w(failure-count url), @xml_webhook.root.children.select(&:element?).map(&:name).sort
+      assert_equal @webhook.url, @xml_webhook.at_css("url").content
+      assert_equal @webhook.failure_count, @xml_webhook.at_css("failure-count").content.to_i
     end
 
     should "show limited attributes for to_yaml" do
+      @serializer = WebHookSerializer.new(@webhook)
+      @yaml_webhook = @serializer.to_yaml
+
       assert_equal(
         {
-          'url'           => @url,
-          'failure_count' => @webhook.failure_count
-        }, YAML.load(@webhook.to_yaml))
+          'failure_count' => @webhook.failure_count,
+          'url'           => @url
+        }, YAML.load(@yaml_webhook))
     end
 
     should "not be able to create a webhook under this user, gem, and url" do
@@ -220,14 +227,17 @@ class WebHookTest < ActiveSupport::TestCase
   context "yaml" do
     setup do
       @webhook = create(:web_hook)
+      @serializer = WebHookSerializer.new(@webhook)
+      @hwia_attributes = ActiveSupport::HashWithIndifferentAccess.new(@serializer.attributes)
+      @yaml_webhook = @serializer.to_yaml
     end
 
     should "return its payload" do
-      assert_equal @webhook.payload, YAML.load(@webhook.to_yaml)
+      assert_equal @hwia_attributes, YAML.load(@yaml_webhook)
     end
 
     should "nest properly" do
-      assert_equal [@webhook.payload], YAML.load([@webhook].to_yaml)
+      assert_equal [@hwia_attributes], [YAML.load([@serializer].first.to_yaml)]
     end
   end
 end
