@@ -70,14 +70,6 @@ class Rubygem < ActiveRecord::Base
     letter =~ /\A[A-Za-z]\z/ ? letter.upcase : 'A'
   end
 
-  def self.monthly_dates
-    (2..31).map { |n| n.days.ago.to_date }.reverse
-  end
-
-  def self.monthly_short_dates
-    monthly_dates.map { |date| date.strftime("%m/%d") }
-  end
-
   def self.versions_key(name)
     "r:#{name}"
   end
@@ -180,10 +172,6 @@ class Rubygem < ActiveRecord::Base
     name.remove(/[^#{Patterns::ALLOWED_CHARACTERS}]/)
   end
 
-  def with_downloads
-    "#{name} (#{downloads})"
-  end
-
   def pushable?
     new_record? || versions.indexed.count.zero?
   end
@@ -260,11 +248,6 @@ class Rubygem < ActiveRecord::Base
                                              platform: spec.original_platform.to_s)
     version.rubygem = self
     version
-  end
-
-  def monthly_downloads
-    key_dates = self.class.monthly_dates.map(&:to_s)
-    Redis.current.hmget(Download.history_key(self), *key_dates).map(&:to_i)
   end
 
   def first_built_date
