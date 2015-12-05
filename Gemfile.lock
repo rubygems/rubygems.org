@@ -94,17 +94,17 @@ GEM
     doorkeeper (3.0.1)
       railties (>= 3.2)
     dynamic_form (1.1.4)
-    elasticsearch (1.0.14)
-      elasticsearch-api (= 1.0.14)
-      elasticsearch-transport (= 1.0.14)
-    elasticsearch-api (1.0.14)
+    elasticsearch (1.0.15)
+      elasticsearch-api (= 1.0.15)
+      elasticsearch-transport (= 1.0.15)
+    elasticsearch-api (1.0.15)
       multi_json
     elasticsearch-model (0.1.8)
       activesupport (> 3)
       elasticsearch (> 0.4)
       hashie
     elasticsearch-rails (0.1.8)
-    elasticsearch-transport (1.0.14)
+    elasticsearch-transport (1.0.15)
       faraday
       multi_json
     email_validator (1.6.0)
