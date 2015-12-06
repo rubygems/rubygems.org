@@ -1,0 +1,203 @@
+de:
+  title: "RubyGems.org"
+  subtitle: "Ihre Community des Gem-Hostingservices"
+  help_url: "http://help.rubygems.org"
+  please_sign_up: "Zugriff verweigert. Bitte melden Sie sich unter https://rubygems.org mit einem Konto an"
+  feed_subscribed: "RubyGems.org | Abonnierte Gems"
+  feed_latest: "RubyGems.org | Neueste Gems"
+  time_ago: "seit %{duration}"
+  form_disable_with: "Bitte warten..."
+  update: Aktualisieren
+  edit: Bearbeiten
+  sign_in: "Anmelden"
+  sign_up: "Registrieren"
+  locale_name: "German"
+  this_rubygem_could_not_be_found: "Dieses Ruby Gem konnte nicht gefunden werden."
+
+  dashboards:
+    show:
+      latest: "Letzte Aktualisierungen"
+      latest_title: "Neueste Aktualisierungen RSS Feed"
+      no_subscriptions: "Du hast noch keine Gems abonniert. Besuche %{gem_link} um das Gem zu abonnieren!"
+      gem_link_text: "Gem-Seite"
+      mine: "Meine Gems"
+      no_owned: "Du hast noch keine Gems gepusht. Schau doch vielleicht die Dokumentation auf %{creating_link} an und %{migrating_link} ein Gem from RubyForge."
+      creating_link_text: 'Erstellen'
+      migrating_link_text: 'Migrieren'
+      my_subscriptions: 'Abonnements'
+
+  home:
+    index:
+      downloads_counting: 'Gezählte Downloads'
+      find_blurb: "Finde, installiere und veröffentliche RubyGems."
+      learn:
+        install_rubygems: "Installiere RubyGems"
+
+  layouts:
+    application:
+      header:
+        dashboard: "Dashboard"
+        sign_in: "Anmelden"
+        sign_up: "Registrieren"
+        sign_out: "Abmelden"
+        search_gem: "Suche Gems&hellip;"
+      footer:
+        status: "Status"
+        uptime: "Betriebszeit"
+        source_code: "Code"
+        data: "Daten"
+        discussion_forum: "Diskussion"
+        statistics: "Statistiken"
+        blog: "Blog"
+        about: "Über uns"
+        help: "Hilfe"
+        guides: "Dokumentation"
+        contribute: "Beitragen"
+        supported_by: "Unterstützt von"
+        hosted_by: "Gehostet von"
+        designed_by: "Design von"
+        resolved_with: "Aufgelöst mit"
+        optimized_by: "Optimiert mit"
+        tracking_by: "Getrackt von"
+        monitored_by: "Überwacht von"
+        gems_served_by: "Gems angeboten von"
+
+  pages:
+    about:
+      title: Über uns
+      purpose:
+        header: "Willkommen in %{site}, die Community für Ruby Gem-Hostingservice. Die Gründe sind vielfältig:"
+        better_api: Bereitstellen eines besseren APIs für den Umgang mit Gems
+        transparent_pages: Erstellen transparenter und zugänglicher Projektseiten
+        enable_community: Der Gemeinschaft ermöglichen, die Webseite zu verbessern und zu erweitern
+      founding: "Das Projekt wurde im April 2009 von %{founder} gestartet und hat seitdem über %{contributors} und %{downloads}. Ab dem Release von RubyGems 1.3.6 wurde die Website von Gemcutter zu %{title} umbenannt, um eine zentrale Rolle in der Ruby-Community zu verfestigen."
+      support: "Obwohl RubyGems.org nicht von einem bestimmten Unternehmen ausgeführt wird, haben viele Unternehmen uns bereits unterstützt. Das aktuelle Design, die Illustrationen und die Front-End-Entwicklung für dieser Webseite wurden von %{dockyard} erstellt. %{github} hat auch von unschätzbarem Wert uns geholfen den Code mit anderen Entwicklern zuteilen, um an dem Code leichter zusammenarbeiten. Die Website wurde mit %{heroku} gestartet, dessen großen Dienst uns geholfen, RubyGems als eine praktikable Lösung zu erweisen, wo die ganze Gemeinschaft darauf verlassen kann."
+      technical: "Einige Einblicke in die technischen Aspekte dieser Webseite: Es ist 100% in Ruby geschrieben. Die Hauptseite ist verwendet die %{rails}-Software. RubyGem nutzt %{sinatra}, um die Gems bereitzustellen. Die Gems werden in %{s3} gehostet und die Zeit zwischen der Veröffentlichung eines neuen Gems und nachdem er bereit zur Installation freigegeben ist, ist minimal. Für mehr Informationen siehe %{source_code} (%{license}) auf GitHub."
+
+  passwords:
+    edit:
+      title: Zurücksetzen des Passworts
+      submit: Speichern dieses Passworts
+    new:
+      title: Ändere dein Passwort
+      will_email_notice: Wir senden dir einen Link damit du dein Passwort ändern kannst.
+      submit: Zurücksetzen des Passworts
+
+  profiles:
+    edit:
+      title: Bearbeite Profil
+      hide_email: Verberge E-Mails in öffentlichem Profil
+      reset_password:
+        title: Zurücksetzen des Passworts
+        text: "Brauchst du ein neues Passwort? Kein Problem. %{link}"
+        link_text: Jetzt ein neues Passwort zuschicken lassen.
+      api_access:
+        title: API-Zugang
+        key_is: "Dein API-Schlüssel ist %{key}."
+        credentials: "Wenn du %{gem_commands_link} über das Terminal oder über die Kommandozeile verwenden möchtest, dann brauchst du die %{gem_credentials_file}-Datei, die du mit dem folgenden Befehl erzeugen kannst:"
+        link_text: Gem-Befehle
+        reset: Zurücksetzen meines API-Schlüssels
+        confirm_reset: Sind Sie sicher? Das kann nicht rückgängig gemacht werden.
+
+  rubygems:
+    dependencies:
+      header: "%{title} Abhängigkeiten"
+    edit:
+      title: "Bearbeite Links"
+      subtitle: "für %{gem}"
+      other_fields_notice: Alle anderen Felder können nur durch eine gepushte, aktualisierte Version deines Gems bearbeitet werden.
+    index:
+      title: 'Gems'
+      downloads: Downloads
+    show:
+      not_hosted_notice: Dieses Gem wird aktuell nicht auf RubyGems.org gehostet.
+      install: installieren
+      authors_header: Autoren
+      downloads_for_this_version: "Für diese Version"
+      owners_header: Besitzer
+      links:
+        header: Links
+        home: Startseite
+        code: Quellcode
+        docs: Dokumentation
+        wiki: Wiki
+        mail: Mailingliste
+        bugs: Bug Tracker
+        download: Download
+        subscribe: Abonniere
+        unsubscribe: Storniere
+        report_abuse: Missbrauch melden
+        badge: Abzeichen
+        rss: RSS
+      versions_header: Versionen
+      bundler_header: Gemfile
+      show_all_versions: "Zeige alle Versionen (%{count} total)"
+      licenses_header: Lizenz
+      no_licenses: k.A.
+      requirements_header: Anforderungen
+      sha_256_checksum: SHA 256-Prüfsumme
+      copy_to_clipboard: In die Zwischenablage kopieren
+      copied: Kopiert!
+      required_ruby_version: Erforderliche Ruby-Version
+
+  searches:
+    show:
+      subtitle: "für %{query}"
+      exact_match: Exakte Übereinstimmung
+
+  sessions:
+    new:
+      forgot_password: "Passwort vergessen?"
+
+  stats:
+    index:
+      total_downloads: Downloads insgesamt
+      total_gems: Gems insgesamt
+      total_users: Benutzer insgesamt
+      all_time_most_downloaded: Am meisten Heruntergeladen in der gesamten Zeit
+
+  users:
+    new:
+      have_account: "Haben Sie schon einen Account?"
+
+  versions:
+    index:
+      title: "Alle Versionen von %{name}"
+      versions_since: "%{count} Versionen seit %{since}"
+      not_hosted_notice: Dieses Gem wird nicht gerade von RubyGems.org gehostet.
+    version:
+      yanked: "yanked"
+
+  activerecord:
+    attributes:
+      user:
+        avatar: Avatar
+        email: E-Mail-Adresse
+        handle: Benutzername
+        password: Passwort
+      linkset:
+        bugs: Bug Tracker URL
+        code: Quellcode URL
+        docs: Dokumentation URL
+        mail: Mailingliste URL
+        wiki: Wiki URL
+      session:
+        who: E-Mail oder Benutzername
+        password: Passwort
+
+  will_paginate:
+    previous_label: "Zurück"
+    next_label: "Nächstes"
+    page_gap: "…"
+    page_entries_info:
+      single_page:
+        zero:  "Kein %{model} gefunden"
+        one:   "Zeige 1 %{model}"
+        other: "Zeige alle %{count} %{model}"
+      single_page_html:
+        zero:  "Kein %{model} gefunden"
+        one:   "Zeige <b>1</b> %{model}"
+        other: "Zeige <b>alle&nbsp;%{count}</b> %{model}"
+
+      multi_page: "Zeige %{model} %{from} - %{to} von %{count} insgesamt"
+      multi_page_html: "Zeige %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> von <b>%{count}</b> insgesamt"
