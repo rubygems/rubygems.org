@@ -266,13 +266,16 @@ es:
       install: instalar
       licenses_header: Licencia
       links:
-        bugs: Registro de bugs
-        code: Código fuente
-        docs: Documentación
-        header: Ligas
+        header: Enlaces
         home: Sitio
-        mail: Lista de correo
+        code: Código de fuente
+        docs: Documentación
         wiki: Wiki
+        mail: Lista de correo
+        bugs: Registro de bugs
+        download: Descargar
+        subscribe: Suscribirse
+        report_abuse: Reportar abuso
       no_licenses: N/D
       not_hosted_notice: Esta gema no se encuentra alojada en Gemcutter.
       owners_header: Administradores
