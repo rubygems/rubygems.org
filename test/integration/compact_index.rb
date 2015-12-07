@@ -26,13 +26,13 @@ class CompactIndex < ActionDispatch::IntegrationTest
     json_response["ruby_version"]
   end
 
-  test "version do not exist" do
+  test "version does not exist" do
     request_endpoint(@rubygem, '1.2.3')
     assert_response :not_found
     assert_equal "This version could not be found.", @response.body
   end
 
-  test "gem do not exist" do
+  test "gem does not exist" do
     request_endpoint(Rubygem.new(name: "nonexistent_gem"), '2.0.0')
     assert_response :not_found
     assert_equal "This gem could not be found", @response.body
