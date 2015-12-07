@@ -1,0 +1,79 @@
+<div class="gem__aside l-col--r--pad">
+  <% if @latest_version.indexed %>
+    <div class="gem__downloads-wrap" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
+      <h2 class="gem__downloads__heading t-text--s">
+        <%= t('stats.index.total_downloads') %>
+        <span class="gem__downloads"><%= number_with_delimiter(@rubygem.downloads) %></span>
+      </h2>
+      <h2 class="gem__downloads__heading t-text--s">
+        <%= t('rubygems.show.downloads_for_this_version') %>
+        <span class="gem__downloads"><%= number_with_delimiter(@latest_version.downloads_count) %></span>
+      </h2>
+      <% if @versions.present? %>
+        <% if show_all_versions_link?(@rubygem) %>
+          <%= link_to t('rubygems.show.show_all_versions', :count => @rubygem.versions.count), rubygem_versions_url(@rubygem), :class => "gem__see-all-versions t-link--gray t-link--has-arrow" %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @latest_version.indexed %>
+    <h2 class="gem__ruby-version__heading t-list__heading">
+      <%= t 'rubygems.show.bundler_header' %>:
+      <div class="gem__code-wrap">
+        <input type="text" class="gem__code" value="<%= @latest_version.to_bundler %>" readonly="readonly">
+        <span class="gem__code__icon" id="js-gem__code--gemfile" data-clipboard-text="<%= @latest_version.to_bundler %>">=</span>
+        <span class="gem__code__tooltip--copy"><%= t('rubygems.show.copy_to_clipboard') %></span>
+        <span class="gem__code__tooltip--copied"><%= t('rubygems.show.copied') %></span>
+      </div>
+    </h2>
+    <h2 class="gem__ruby-version__heading t-list__heading">
+      <%= t 'rubygems.show.install' %>:
+      <div class="gem__code-wrap">
+        <input type="text" class="gem__code" value="<%= @latest_version.to_install %>" readonly="readonly">
+        <span class="gem__code__icon" id="js-gem__code--install" data-clipboard-text="<%= @latest_version.to_install %>">=</span>
+        <span class="gem__code__tooltip--copy"><%= t('rubygems.show.copy_to_clipboard') %></span>
+        <span class="gem__code__tooltip--copied"><%= t('rubygems.show.copied') %></span>
+      </div>
+    </h2>
+    <h2 class="gem__ruby-version__heading t-list__heading">
+      <%= pluralized_licenses_header @latest_version %>:
+      <span class="gem__ruby-version">
+        <p><%= formatted_licenses @latest_version.licenses %></p>
+      </span>
+    </h2>
+  <% end %>
+
+  <h2 class="gem__ruby-version__heading t-list__heading">
+    <%= t('rubygems.show.required_ruby_version') %>:
+    <i class="gem__ruby-version">
+      <% if @latest_version.ruby_version %>
+        <%= @latest_version.ruby_version %>
+      <% else %>
+        <%= t('none') %>
+      <% end %>
+    </i>
+  </h2>
+
+  <h3 class="t-list__heading"><%= t 'rubygems.show.links.header' %>:</h3>
+  <div class="t-list__items">
+    <%= link_to t('edit'), edit_rubygem_path(@rubygem), :class => "gem__link t-list__item", :id => "edit" if @rubygem.owned_by?(current_user) %>
+
+    <% if @latest_version.indexed %>
+      <% if @rubygem.linkset.present? %>
+        <%- Linkset::LINKS.each do |link| %>
+          <%= link_to_page t("rubygems.show.links.#{link}"), @rubygem.linkset.public_send(link) %>
+        <%- end %>
+      <% end %>
+
+      <%= download_link(@latest_version) %>
+    <% end %>
+
+    <%= documentation_link(@latest_version, @rubygem.linkset) %>
+    <%= badge_link(@rubygem) %>
+    <%= subscribe_link(@rubygem) if @latest_version.indexed %>
+    <%= unsubscribe_link(@rubygem) %>
+    <%= atom_link(@rubygem) %>
+    <%= report_abuse_link(@rubygem) %>
+  </div>
+</div>
