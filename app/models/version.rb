@@ -118,11 +118,10 @@ class Version < ActiveRecord::Base
       versions.id IN (SELECT max(versions.id)
                                 FROM versions
                             GROUP BY versions.rubygem_id
-                              HAVING COUNT(versions.rubygem_id) = 1
-                              LIMIT #{limit})
+                              HAVING COUNT(versions.rubygem_id) = 1)
     SQL
 
-    Version.where(subquery).by_created_at
+    Version.where(subquery).by_created_at.limit limit
   end
 
   def self.just_updated(limit = 5)
