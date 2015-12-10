@@ -171,6 +171,7 @@ GEM
     quiet_assets (1.1.0)
       railties (>= 3.1, < 5.0)
     rack (1.6.4)
+    rack-rewrite (1.5.1)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.5)
@@ -316,6 +317,7 @@ DEPENDENCIES
   psych (~> 2.0.12)
   quiet_assets
   rack
+  rack-rewrite
   rack-test
   rails (~> 4.2.5)
   rails-erd
