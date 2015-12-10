@@ -1,23 +1,188 @@
 es:
+  subtitle: "alojamiento de gemas para la comunidad"
+  please_sign_up: "Acceso negado. Por favor, primero crea una cuenta en https://rubygems.org"
+  feed_subscribed: "RubyGems.org | Subscripciones de Gemas"
+  feed_latest: "RubyGems.org | Gemas Nuevas"
+  time_ago: "hace %{duration}"
+  form_disable_with: "Un momento por favor..."
+  update: "Actualizar"
+  edit: "Editar"
+  sign_in: "Ingresar"
+  sign_up: "Registro"
+  footer_about: "RubyGems.org es el servicio de alojamiento de gemas de la comunidad de Ruby. Publica tus gemas de manera instantánea e instalalas. Usa la API para interactuar y buscar información de las gemas disponibles. Conviértete en contribuidor y mejora este sitio con tus cambios."
+  locale_name: "Español"
+  this_rubygem_could_not_be_found: "La gema no ha sido encontrada."
+  none: "Ninguno"
+
+  dashboards:
+    show:
+      latest: "Últimas Actualizaciones"
+      latest_title: "Feed RSS con últimas actualizaciones"
+      no_subscriptions: "Aún no te has subscrito a ningua gema. ¡Visita la %{gem_link} para subscribirte!"
+      gem_link_text: "página de alguna gema"
+      mine: "Mis Gemas"
+      no_owned: "Aún no has registrado ninguna gema. Tal vez puedes revisar las guías para %{creating_link} una gema o %{migrating_link} una gema de RubyForge."
+      creating_link_text: "creando"
+      migrating_link_text: "migrando"
+      my_subscriptions: "Subscripciones"
+
+  home:
+    index:
+      downloads_counting: "descargas y contando"
+      find_blurb: "Encuentra, instala, y publíca RubyGems."
+      learn:
+        install_rubygems: "Instalar RubyGems"
+
+  layouts:
+    application:
+      header:
+        dashboard: "Dashboard"
+        sign_in: "Ingresar"
+        sign_up: "Registro"
+        sign_out: "Cerrar sesión"
+        search_gem: "Buscar gemas&hellip;"
+      footer:
+        status: "Estado"
+        uptime: "Uptime"
+        source_code: "Código de fuente"
+        data: "Datos"
+        discussion_forum: "Foro de discusión"
+        statistics: "Estadísticas"
+        blog: "Blog"
+        about: "Acerca de"
+        help: "Ayuda"
+        guides: "Guías"
+        contribute: "Contribuye"
+        supported_by: "Soporte"
+        hosted_by: "Alojamiento"
+        designed_by: "Diseño"
+        resolved_with: "DNS"
+        optimized_by: "Optimización"
+        tracking_by: "Rastreo"
+        monitored_by: "Monitoreo"
+        gems_served_by: "Distribución"
+
+  pages:
+    about:
+      title: "Acerca de"
+      purpose:
+        header: "Bienvenido a %{site}, el servicio de alojamiento de gemas para la comunidad de Ruby. Este proyecto tiene 3 objetivos:"
+        better_api: "Otorgar una mejor API para manejar las gemas"
+        transparent_pages: "Crear páginas de proyecto más accesibles y transparentes"
+        enable_community: "Permitirle a la comunidad contribuir para mejorar este sitio"
+      founding: "El proyecto comenzó en Abril del 2009 por %{founder}, y desde entonces ha crecido para incluir las contribuciones de %{contributors} y %{downloads}. A partir de RubyGems 1.3.6 el sitio se renombró de Gemcutter a %{title} para hacer más claro el rol del mismo en la comunidad de Ruby."
+      support: "A pesar de que RubyGems.org no es mantenido por una compañía en específico, muchas de ellas nos han ayudado. El diseño actual, las ilustraciones y el desarrollo de front-end del sitio fue cortesía de %{dockyard}. %{github} también ha sido invaluable por ayudarnos a colaborar y compartir código de manera sencilla. El sitio comenzó en %{heroku}, cuyo excelente servicio ayudó a probar que RubyGems es una solución viable en la que toda la comunidad puede confiar."
+      technical: "Algunos aspectos técnicos del sitio: Es 100% Ruby. El sitio principal es una aplicación de %{rails}, y la transferencia de gemas se hace a través de %{sinatra}. Las gemas se almacenan en %{s3} y el tiempo entre que se publica una gema y que está lista para instalarse es mínimo. Para más información, %{source_code}, cuya licencia es %{license} en GitHub."
+
+  passwords:
+    edit:
+      title: "Reestablecer contraseña"
+      submit: "Guardar esta contraseña"
+    new:
+      title: "Cambiar contraseña"
+      will_email_notice: "Te enviaremos un email con un enlace para cambiar tu contraseña."
+      submit: "Reestablecer contraseña"
+
+  profiles:
+    edit:
+      title: "Editar perfil"
+      hide_email: "Esconder email en perfil público"
+      reset_password:
+        title: "Reestablecer contraseña"
+        text: "¿Necesitas otra contraseña? No hay problema. %{link}"
+        link_text: "Pide una nueva aquí."
+      api_access:
+        title: "Acceso a API"
+        key_is: "Tu llave de API es %{key}."
+        credentials: "Si quieres usar %{gem_commands_link} desde la línea de comandos, vas a necesitar un archivo llamado %{gem_credentials_file}, el cual puedes generar usando el siguiente comando:"
+        link_text: "comandos de gem"
+        reset: "Reestablecer llave API"
+        confirm_reset: "¿Estás seguro? Este cambio no puede deshacerse."
+
+  rubygems:
+    dependencies:
+      header: "dependencias de %{title}"
+    edit:
+      title: "Editar enlaces"
+      subtitle: "para %{gem}"
+      other_fields_notice: "Los otros campos solo pueden ser editados al envíar una versión nueva de tu gema."
+    index:
+      title: "Gemas"
+      downloads: "Descargas"
+    show:
+      not_hosted_notice: "Esta gema no se encuentra alojada en RubyGems.org."
+      install: "instalar"
+      yanked_notice: "Esta gema ya no está disponible para descarga directa o para otras gemas que dependan de ella."
+      authors_header: "Autores"
+      downloads_for_this_version: "Para esta versión"
+      owners_header: "Administradores"
+      links:
+        header: "Enlaces"
+        home: "Sitio"
+        code: "Código de fuente"
+        docs: "Documentación"
+        wiki: "Wiki"
+        mail: "Lista de correo"
+        bugs: "Registro de bugs"
+        download: "Descargar"
+        subscribe: "Suscribirse"
+        report_abuse: "Reportar abuso"
+      versions_header: "Versiones"
+      show_all_versions: "Muestra todas las versiones (%{count} total)"
+      licenses_header: "Licencia"
+      no_licenses: "N/D"
+      requirements_header: "Requerimientos"
+      copy_to_clipboard: "Copiar al portapapeles"
+      copied: "Copiado!"
+      required_ruby_version: "Version de Ruby requerida"
+
+  searches:
+    show:
+      subtitle: "por %{query}"
+      exact_match: "Resultado exacto"
+
+  sessions:
+    new:
+      forgot_password: "¿Olvidaste tu contraseña?"
+
+  stats:
+    index:
+      total_downloads: "Descargas totales"
+      total_gems: "Gemas en total"
+      total_users: "Gemas en total"
+      all_time_most_downloaded: "Las Más Descargadas"
+
+  users:
+    new:
+      have_account: "¿Ya estás registrado?"
+
+  versions:
+    index:
+      title: "Todas las versiones de %{name}"
+      versions_since: "%{count} versiones desde %{since}"
+      not_hosted_notice: "Esta gema no está alojada en RubyGems.org."
+    version:
+      yanked: "eliminada"
+
   activerecord:
     attributes:
-      doorkeeper/application:
-        name: Nombre
-        redirect_uri:
-      linkset:
-        bugs: URL del registro de Bugs
-        code: URL del código fuente
-        docs: URL de la documentación
-        mail: URL de la lista de correo
-        wiki: URL del Wiki
-      session:
-        password: Contraseña
-        who: Email o usuario
       user:
-        avatar: Avatar
-        email: Dirección email
-        handle: Usuario
-        password: Contraseña
+        avatar: "Avatar"
+        email: "Dirección email"
+        handle: "Usuario"
+        password: "Contraseña"
+      linkset:
+        bugs: "URL del registro de Bugs"
+        code: "URL del código de fuente"
+        docs: "URL de la documentación"
+        mail: "URL de la lista de correo"
+        wiki: "URL del Wiki"
+      session:
+        password: "Contraseña"
+        who: "Email o usuario"
+      doorkeeper/application:
+        name: "Nombre"
+        redirect_uri:
     errors:
       messages:
         record_invalid:
@@ -25,297 +190,122 @@ es:
         doorkeeper/application:
           attributes:
             redirect_uri:
-              fragment_present: no puede contener un fragmento.
-              invalid_uri: tiene que tener un URI válido.
-              relative_uri: tiene que tener un URI absoluto.
-              secured_uri: el URI tiene que ser HTTPS/SSL.
+              fragment_present: "no puede contener un fragmento."
+              invalid_uri: "tiene que tener un URI válido."
+              relative_uri: "tiene que tener un URI absoluto."
+              secured_uri: "el URI tiene que ser HTTPS/SSL."
       template:
         body:
         header:
-  dashboards:
-    show:
-      creating_link_text: crear
-      gem_link_text: página de alguna gema
-      latest: "Últimas Actualizaciones"
-      latest_title: Feed RSS con últimas actualizaciones
-      migrating_link_text: migrar
-      mine: Mis Gemas
-      my_subscriptions: Subscripciones
-      no_owned: Aún no has registrado ninguna gema. Tal vez puedes revisar las guías para %{creating_link} una gema o %{migrating_link} una gema de RubyForge.
-      no_subscriptions: Aún no te has subscrito a ningua gema. ¡Visita la %{gem_link} para subscribirte!
   doorkeeper:
     applications:
       buttons:
-        authorize: Autorizar
-        cancel: Cancelar
-        destroy: Destruir
-        edit: Editar
-        submit: Enviar
+        authorize: "Autorizar"
+        cancel: "Cancelar"
+        destroy: "Destruir"
+        edit: "Editar"
+        submit: "Enviar"
       confirmations:
         destroy: "¿Estás seguro?"
       edit:
-        title: Editar aplicación
+        title: "Editar aplicación"
       form:
-        error: Ups! Checa la forma por posible errores
+        error: "Ups! Revisa la forma por posible errores"
       help:
-        native_redirect_uri: Usa %{native_redirect_uri} para pruebas locales
-        redirect_uri: Use una línea por URI
+        native_redirect_uri: "Usa %{native_redirect_uri} para pruebas locales"
+        redirect_uri: "Use una línea por URI"
         scopes:
       index:
         callback_url:
-        name: Nombre
-        new: Nueva Aplicación
-        title: Tus aplicaciones
+        name: "Nombre"
+        new: "Nueva Aplicación"
+        title: "Tus aplicaciones"
       new:
-        title: Nueva Aplicación
+        title: "Nueva Aplicación"
       show:
-        actions: Acciones
+        actions: "Acciones"
         application_id:
         callback_urls:
         scopes:
-        secret: Secreto
-        title: 'Aplicación: %{name}'
+        secret: "Secreto"
+        title: "Aplicación: %{name}"
     authorizations:
       buttons:
-        authorize: Autorizar
-        deny: Denegar
+        authorize: "Autorizar"
+        deny: "Denegar"
       error:
-        title: Un error ha ocurrido
+        title: "Un error ha ocurrido"
       new:
-        able_to: Esta aplicación podrá
+        able_to: "Esta aplicación podrá"
         prompt: "¿Autorizas a %{client_name} a usar tu cuenta?"
-        title: Autorización requerida
+        title: "Autorización requerida"
       show:
-        title: Código de autorización
+        title: "Código de autorización"
     authorized_applications:
       buttons:
-        revoke: Revocar
+        revoke: "Revocar"
       confirmations:
         revoke: "¿Estás seguro?"
       index:
-        application: Aplicación
-        created_at: Creado a las
+        application: "Aplicación"
+        created_at: "Creado a las"
         date_format: "%Y-%m-%d %H:%M:%S"
-        title: Tus aplicaciones autorizadas
+        title: "Tus aplicaciones autorizadas"
     errors:
       messages:
-        access_denied: El dueño de los recursos o el servidor de autorización ha denegado la solicitud.
+        access_denied: "El dueño de los recursos o el servidor de autorización ha denegado la solicitud."
         credential_flow_not_configured:
         invalid_client:
         invalid_grant:
         invalid_redirect_uri:
         invalid_request:
-        invalid_resource_owner: Las credenciales del dueño del recurso que proveíste son invalidas o el dueño no se pudo encontrar
+        invalid_resource_owner: "Las credenciales del dueño del recurso que proveíste son invalidas o el dueño no se pudo encontrar."
         invalid_scope:
         invalid_token:
-          expired: El token de acceso a expirado
-          revoked: El token de acceso fue revocado
-          unknown: El token de acceso es invalido
+          expired: "El token de acceso a expirado"
+          revoked: "El token de acceso fue revocado"
+          unknown: "El token de acceso es invalido"
         resource_owner_authenticator_not_configured:
-        server_error: El servidor de autorización ha encontrado una condición inesperada que le impidió cumplir con la solicitud.
-        temporarily_unavailable: El servidor de autorización no pudo manejar la solicitud debido a una sobrecarga temporal o mantenimiento al servidor.
-        unauthorized_client: El cliente no está autorizado para realizar esta solicitud utilizando este método.
+        server_error: "El servidor de autorización ha encontrado una condición inesperada que le impidió cumplir con la solicitud."
+        temporarily_unavailable: "El servidor de autorización no pudo manejar la solicitud debido a una sobrecarga temporal o mantenimiento al servidor."
+        unauthorized_client: "El cliente no está autorizado para realizar esta solicitud utilizando este método."
         unsupported_grant_type:
-        unsupported_response_type: El servidor de autorización no soporta este tipo de respuesta.
+        unsupported_response_type: "El servidor de autorización no soporta este tipo de respuesta."
     flash:
       applications:
         create:
-          notice: Aplicación creada.
+          notice: "Aplicación creada."
         destroy:
-          notice: Aplicación borrada.
+          notice: "Aplicación borrada."
         update:
-          notice: Aplicación actualizada.
+          notice: "Aplicación actualizada."
       authorized_applications:
         destroy:
-          notice: Aplicación revocada.
+          notice: "Aplicación revocada."
     layouts:
       admin:
         nav:
-          applications: Aplicaciones
-          oauth2_provider: Provedor OAuth2
+          applications: "Aplicaciones"
+          oauth2_provider: "Provedor OAuth2"
       application:
-        title: Autorización OAuth es requerida
+        title: "Autorización OAuth es requerida"
   download_count:
-  edit: Editar
-  feed_latest: RubyGems.org | Gemas Nuevas
-  feed_subscribed: RubyGems.org | Subscripciones de Gemas
   flashes:
     failure_after_create:
-  footer_about: RubyGems.org es el servicio de alojamiento de gemas de la comunidad de Ruby. Publica tus gemas de manera instantánea e instalalas. Usa la API para interactuar y buscar información de las gemas disponibles. Conviértete en contribuidor y mejora este sitio con tus cambios.
-  form_disable_with: Un momento por favor...
-  help_url: http://help.rubygems.org
-  home:
-    index:
-      downloads_counting: descargas y contando
-      find_blurb: Encuentra, instala, y publíca RubyGems.
-      footer:
-        status: Estado
-        uptime:
-      gems_header:
-      leaderboards:
-        downloaded:
-        header:
-        new:
-        no_downloaded:
-        updated:
-      learn:
-        browse_docs:
-        docs_subtitle:
-        gem_specification:
-        header:
-        install_rubygems: Instalar RubyGems
-        rubygems_subtitle:
-        spec_subtitle:
-      pitch:
-        api:
-        content:
-        contribute:
-        publish:
-      share:
-        build:
-        deploy:
-        header:
-        update:
-      welcome_blurb:
-  layouts:
-    application:
-      footer:
-        about: Acerca de
-        api: API
-        blog: Blog
-        contribute: Contribuye
-        data: Datos
-        designed_by: Diseño
-        discussion_forum: Foro de discusión
-        gems_served_by: Distribución
-        guides: Guías
-        help: Ayuda
-        hosted_by: Alojamiento
-        mobile:
-        monitored_by: Monitoreo
-        optimized_by: Optimización
-        resolved_with: DNS
-        source_code: Código fuente
-        statistics: Estadísticas
-        status: Estado
-        supported_by: Soporte
-        tracking_by: Rastreo
-        uptime: Uptime
-      header:
-        all_gems:
-        dashboard: Dashboard
-        search_gem: Buscar gemas&hellip;
-        sign_in: Ingresar
-        sign_out: Cerrar sesión
-        sign_up: Registro
-  locale_name: Español
-  pages:
-    about:
-      founding: El proyecto comenzó en Abril del 2009 por %{founder}, y desde entonces ha crecido para incluir las contribuciones de %{contributors} y %{downloads}. A partir de RubyGems 1.3.6 el sitio se renombró de Gemcutter a %{title} para hacer más claro el rol del mismo en la comunidad de Ruby.
-      purpose:
-        better_api: Otorgar una mejor API para manejar las gemas
-        enable_community: Permitirle a la comunidad contribuir para mejorar este sitio
-        header: 'Bienvenido a %{site}, el servicio de alojamiento de gemas para la comunidad de Ruby. Este proyecto tiene 3 objetivos:'
-        transparent_pages: Crear páginas de proyecto más accesibles y transparentes
-      subtitle:
-      support: A pesar de que Gemcutter no es mantenido por una compañía en específico, muchas de ellas nos han ayudado. El diseño actual, las ilustraciones y el desarrollo de front-end del sitio fue cortesía de %{dockyard}. %{github} también ha sido invaluable por ayudarnos a colaborar y compartir código de manera sencilla. El sitio comenzó en %{heroku}, cuyo excelente servicio ayudó a probar que Gemcutter es una solución viable en la que toda la comunidad puede confiar.
-      technical: 'Algunos aspectos técnicos del sitio: Es 100% Ruby. El sitio principal es una aplicación de %{rails}, y la transferencia de gemas se hace a través de %{sinatra}. Las gemas se almacenan en %{s3} y el tiempo entre que se publica una gema y que está lista para instalarse es mínimo. Para más información, %{source_code}, cuya licencia es %{license} en GitHub.'
-      title: Acerca de
-    create:
-      notice:
-      title:
-  passwords:
-    edit:
-      submit: Guardar esta contraseña
-      title: Reestablecer contraseña
-    new:
-      submit: Reestablecer contraseña
-      title: Cambiar contraseña
-      will_email_notice: Te enviaremos un email con un enlace para cambiar tu contraseña.
-  please_sign_up: Acceso negado. Por favor, primero crea una cuenta en https://rubygems.org
-  profiles:
-    edit:
-      api_access:
-        confirm_reset: "¿Estás seguro? Este cambio no puede deshacerse."
-        credentials: 'Si quieres usar %{gem_commands_link} desde la línea de comandos, vas a necesitar un archivo llamado %{gem_credentials_file}, el cual puedes generar usando el siguiente comando:'
-        key_is: Tu llave de API es %{key}.
-        link_text: comandos de gem
-        reset: Reestablecer llave API
-        title: Acceso a API
-      change: Cambiar
-      hide_email: Esconder email en perfil público
-      reset_password:
-        link_text: Pide una nueva aquí.
-        text: "¿Necesitas otra contraseña? No hay problema. %{link}"
-        title: Reestablecer contraseña
-      title: Editar perfil
-  rubygems:
-    dependencies:
-      header: dependencias de %{title}
-    edit:
-      other_fields_notice: Los otros campos solo pueden ser editados al envíar una versión nueva de tu gema.
-      subtitle: para %{gem}
-      title: Editar ligas
-    index:
-      subtitle:
-      title: Gemas
-    show:
-      authors_header: Autores
-      bundler_header: Gemfile
-      downloads_for_this_version: Para esta versión
-      install: instalar
-      licenses_header: Licencia
-      links:
-        header: Enlaces
-        home: Sitio
-        code: Código de fuente
-        docs: Documentación
-        wiki: Wiki
-        mail: Lista de correo
-        bugs: Registro de bugs
-        download: Descargar
-        subscribe: Suscribirse
-        report_abuse: Reportar abuso
-      no_licenses: N/D
-      not_hosted_notice: Esta gema no se encuentra alojada en Gemcutter.
-      owners_header: Administradores
-      requirements_header: Requerimientos
-      show_all_versions: Muestra todas las versiones (%{count} total)
-      stats_header:
-      versions_header: Versiones
-      yanked_notice: Esta gema ya no está disponible para descarga directa o para otras gemas que dependan de ella.
-  searches:
-    show:
-      exact_match: Resultado exacto
-      subtitle: por %{query}
-  sessions:
-    new:
-      forgot_password: "¿Olvidaste tu contraseña?"
-  sign_in: Ingresar
-  sign_up: Registro
-  stats:
-    index:
-      gem_count:
-      user_count:
-    show:
-      current_rank:
-      daily_downloads:
-      for:
-      overview:
-      total_downloads: Descargas totales
-  subtitle: alojamiento de gemas para la comunidad
-  this_rubygem_could_not_be_found: La gema no ha sido encontrada.
-  time_ago: hace %{duration}
-  title: RubyGems.org
-  update: Actualizar
-  url:
-  users:
-    new:
-      have_account: "¿Ya estás registrado?"
-  versions:
-    index:
-      not_hosted_notice: Esta gema no está alojada en Gemcutter.
-      title: Todas las versiones de %{name}
-      versions_since: "%{count} versiones desde %{since}"
-    version:
-      yanked: eliminada
+
+  will_paginate:
+    previous_label: "Anterior"
+    next_label: "Siguiente"
+    page_gap: "…"
+    page_entries_info:
+      single_page:
+        zero:  "No %{model} encontrado"
+        one:   "Mostrando 1 %{model}"
+        other: "Mostrando todos %{count} %{model}"
+      single_page_html:
+        zero:  "No %{model} encontrado"
+        one:   "Mostrando <b>1</b> %{model}"
+        other: "Mostrando <b>todos&nbsp;%{count}</b> %{model}"
+
+      multi_page: "Mostrando %{model} %{from} - %{to} de %{count} en total"
+      multi_page_html: "Mostrando %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> de <b>%{count}</b> en total"
