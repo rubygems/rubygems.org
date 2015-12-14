@@ -146,6 +146,7 @@ Rails.application.routes.draw do
 
   namespace :internal do
     get 'ping' => 'ping#index'
+    get 'revision' => 'ping#revision'
   end
 
   use_doorkeeper scope: 'oauth'
