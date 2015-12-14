@@ -157,7 +157,7 @@ en:
     index:
       total_downloads: Total downloads
       total_gems: Total gems
-      total_users: Total gems
+      total_users: Total users
       all_time_most_downloaded: All Time Most Downloaded
 
   users:
