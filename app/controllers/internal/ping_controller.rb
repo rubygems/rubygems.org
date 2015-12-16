@@ -6,4 +6,8 @@ class Internal::PingController < ApplicationController
       fail StandardError, 'Failed to write PING=1 to redis'
     render text: 'PONG'
   end
+
+  def revision
+    render text: AppRevision.version
+  end
 end
