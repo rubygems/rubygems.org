@@ -44,7 +44,7 @@ es:
       footer:
         status: "Estado"
         uptime: "Uptime"
-        source_code: "Código de fuente"
+        source_code: "Código fuente"
         data: "Datos"
         discussion_forum: "Foro de discusión"
         statistics: "Estadísticas"
@@ -119,7 +119,7 @@ es:
       links:
         header: "Enlaces"
         home: "Sitio"
-        code: "Código de fuente"
+        code: "Código fuente"
         docs: "Documentación"
         wiki: "Wiki"
         mail: "Lista de correo"
@@ -173,7 +173,7 @@ es:
         password: "Contraseña"
       linkset:
         bugs: "URL del registro de Bugs"
-        code: "URL del código de fuente"
+        code: "URL del código fuente"
         docs: "URL de la documentación"
         mail: "URL de la lista de correo"
         wiki: "URL del Wiki"
