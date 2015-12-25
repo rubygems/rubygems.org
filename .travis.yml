@@ -6,6 +6,7 @@ cache:
 
 rvm:
   - 2.2.3
+  - 2.3.0
   - ruby-head
 
 services:
