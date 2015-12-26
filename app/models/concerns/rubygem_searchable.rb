@@ -7,6 +7,8 @@ module RubygemSearchable
   included do
     include Elasticsearch::Model
 
+    index_name "rubygems-#{Rails.env}"
+
     delegate :index_document, to: :__elasticsearch__
     delegate :update_document, to: :__elasticsearch__
     delegate :delete_document, to: :__elasticsearch__
@@ -20,8 +22,9 @@ module RubygemSearchable
       most_recent_version = versions.most_recent
       {
         name: name,
-        indexed: versions.any?(&:indexed?),
-        info: most_recent_version.try(:description) || most_recent_version.try(:summary)
+        yanked: !versions.any?(&:indexed?),
+        summary: most_recent_version.try(:summary),
+        description: most_recent_version.try(:description)
       }
     end
 
@@ -37,9 +40,13 @@ module RubygemSearchable
              }
 
     mapping do
-      indexes :name, analyzer: 'rubygem'
-      indexes :indexed, type: 'boolean'
-      indexes :info, analyzer: 'english'
+      indexes :name, type: 'multi_field' do
+        indexes :name, analyzer: 'rubygem'
+        indexes :suggest, analyzer: 'simple'
+      end
+      indexes :yanked, type: 'boolean'
+      indexes :summary, analyzer: 'english'
+      indexes :description, analyzer: 'english'
     end
 
     def self.search(query, es: false, page: 1)
@@ -54,30 +61,42 @@ module RubygemSearchable
       end
     rescue Faraday::ConnectionFailed
       raise SearchDownError
+    rescue Elasticsearch::Transport::Transport::Error
+      raise SearchDownError
     end
 
-    def self.elastic_search(query)
-      __elasticsearch__.search(
-        query: {
-          filtered: {
-            query: {
-              multi_match: {
-                query: query,
-                operator: 'and',
-                fields: ['name^3', 'info']
-              }
-            },
-            filter: {
-              bool: {
-                must: {
-                  term: { indexed: true }
-                }
-              }
-            }
-          }
-        },
-        _source: %w(name info)
-      )
+    def self.elastic_search(q)
+      search_definition = Elasticsearch::DSL::Search.search do
+        query do
+          filtered do
+            # Main query, search in name, summary, description
+            query do
+              multi_match do
+                query q
+                fields ['name^3', 'summary^1', 'description']
+                operator 'and'
+              end
+            end
+
+            # only return gems that are not yanked
+            filter do
+              bool :yanked do
+                must do
+                  term yanked: false
+                end
+              end
+            end
+          end
+        end
+
+        source %w(name summary description)
+
+        # Return suggestions unless there's no query from the user
+        unless q.blank?
+          suggest :suggest_name, text: q, term: { field: 'name.suggest', suggest_mode: 'always' }
+        end
+      end
+      __elasticsearch__.search(search_definition)
     end
 
     def self.legacy_search(query)

@@ -99,6 +99,7 @@ GEM
       elasticsearch-transport (= 1.0.15)
     elasticsearch-api (1.0.15)
       multi_json
+    elasticsearch-dsl (0.1.2)
     elasticsearch-model (0.1.8)
       activesupport (> 3)
       elasticsearch (> 0.4)
@@ -294,6 +295,7 @@ DEPENDENCIES
   delayed_job_active_record
   doorkeeper
   dynamic_form
+  elasticsearch-dsl (~> 0.1.2)
   elasticsearch-model (~> 0.1.7)
   elasticsearch-rails (~> 0.1.7)
   factory_girl_rails

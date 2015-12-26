@@ -41,6 +41,7 @@ gem 'validates_formatting_of'
 gem 'will_paginate'
 gem 'elasticsearch-model', '~> 0.1.7'
 gem 'elasticsearch-rails', '~> 0.1.7'
+gem 'elasticsearch-dsl', '~> 0.1.2'
 gem 'xml-simple'
 gem 'yajl-ruby', require: 'yajl'
 
