@@ -25,6 +25,10 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Max: 30 # TODO: Lower to 10
 
+Metrics/ModuleLength:
+  Exclude:
+    - lib/patterns.rb
+
 Metrics/PerceivedComplexity:
   Max: 10 # TODO: Lower to 7
 
