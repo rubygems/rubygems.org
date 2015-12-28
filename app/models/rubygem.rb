@@ -11,7 +11,10 @@ class Rubygem < ActiveRecord::Base
   has_one :linkset, dependent: :destroy
 
   validate :ensure_name_format, if: :needs_name_validation?
-  validates :name, presence: true, uniqueness: true
+  validates :name,
+    presence: true,
+    uniqueness: true,
+    exclusion: { in: GEM_NAME_BLACKLIST, message: "'%{value}' is a reserved gem name." }
 
   after_create :update_unresolved
   before_destroy :mark_unresolved
