@@ -69,10 +69,12 @@ module Patterns
     pstore
     pty
     rational
+    rbconfig
     resolv
     rexml
     rinda
     rss
+    rubygems
     scanf
     securerandom
     set
@@ -88,14 +90,19 @@ module Patterns
     thwait
     time
     timeout
+    tk
     tmpdir
     tsort
     un
+    unicode_normalize
     uri
     weakref
     webrick
+    win32ole
     xmlrpc
     yaml
     zlib
+    rubygems
+    ubygems
   )
 end
