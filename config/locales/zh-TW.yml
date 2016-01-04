@@ -126,6 +126,12 @@ zh-TW:
         wiki: "Wiki"
         mail: "郵件群組"
         bugs: "Bug 追蹤"
+        download: "下載"
+        subscribe: "訂閱"
+        unsubscribe: "取消訂閱"
+        report_abuse: "舉報投訴"
+        badge: "徽章"
+        rss: RSS
       versions_header: "版本列表"
       bundler_header: Gemfile
       show_all_versions: "顯示所有版本（共 %{count}）"
