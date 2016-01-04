@@ -34,7 +34,7 @@ zh-CN:
         status: "状态"
         uptime: "服务状况"
       learn:
-        install_rubygems: "Install RubyGems"
+        install_rubygems: "安装 RubyGems"
 
   layouts:
     application:
@@ -120,13 +120,19 @@ zh-CN:
       downloads_for_this_version: "这个版本"
       owners_header: 所有者
       links:
-        header: 相关连接
+        header: 相关链接
         home: 主页
         code: 源代码
         docs: 文档
         wiki: Wiki
         mail: 邮件列表
         bugs: Bug Tracker
+        download: 下载
+        subscribe: 订阅
+        unsubscribe: 取消订阅
+        report_abuse: 举报投诉
+        badge: 徽章
+        rss: RSS
       versions_header: 版本列表
       bundler_header: Gemfile
       show_all_versions: "显示所有 (%{count} 个版本)"
