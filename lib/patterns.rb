@@ -102,7 +102,6 @@ module Patterns
     xmlrpc
     yaml
     zlib
-    rubygems
     ubygems
   )
 end
