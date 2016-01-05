@@ -13,7 +13,8 @@ class Indexer
   def write_gem(body, spec)
     RubygemFs.instance.store("gems/#{spec.original_name}.gem", body.string)
 
-    self.class.sanitize_spec(spec)
+    self.class.indexer.abbreviate spec
+    self.class.indexer.sanitize spec
 
     RubygemFs.instance.store(
       "quick/Marshal.4.8/#{spec.original_name}.gemspec.rz",
@@ -81,25 +82,13 @@ class Indexer
     Rails.logger.info "[GEMCUTTER:#{Time.zone.now}] #{message}"
   end
 
-  # TODO: remove this after we upgrade rubygems client to 2.5.0+
-  if Gem::VERSION < '2.5.0'
-    def self.indexer
-      @indexer ||=
-        begin
-          indexer = Gem::Indexer.new(Rails.root.join("server"), build_legacy: false)
-          def indexer.say(_) end
-          indexer
-        end
-    end
-
-    def self.sanitize_spec(spec)
-      indexer.abbreviate spec
-      indexer.sanitize spec
-    end
-  else # >= 2.5.0
-    def self.sanitize_spec(spec)
-      spec.abbreviate
-      spec.sanitize
-    end
+  def self.indexer
+    # TODO: remove this after we upgrade rubygems client to 2.5.0+
+    @indexer ||=
+      begin
+        indexer = Gem::Indexer.new(Rails.root.join("server"), build_legacy: false)
+        def indexer.say(_) end
+        indexer
+      end
   end
 end

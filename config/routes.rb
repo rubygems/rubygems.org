@@ -81,9 +81,6 @@ Rails.application.routes.draw do
 
       resource :search, only: :show
 
-      resources :dependencies, only: :index,
-                               format: /(|json)/
-
       resources :web_hooks, only: [:create, :index] do
         collection do
           delete :remove
