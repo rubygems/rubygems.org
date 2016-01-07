@@ -536,10 +536,10 @@ class VersionTest < ActiveSupport::TestCase
       @fake = create(:version, authors: %w(fake), indexed: false, built_at: 1.minute.ago)
     end
 
-    should "get the latest versions up to today" do
-      assert_equal [@haml, @rack, @thor, @json, @rake].map(&:authors),
+    should "get the latest versions" do
+      assert_equal [@dust, @haml, @rack, @thor, @json].map(&:authors),
         Version.published(5).map(&:authors)
-      assert_equal [@haml, @rack, @thor, @json, @rake, @thin].map(&:authors),
+      assert_equal [@dust, @haml, @rack, @thor, @json, @rake].map(&:authors),
         Version.published(6).map(&:authors)
     end
   end

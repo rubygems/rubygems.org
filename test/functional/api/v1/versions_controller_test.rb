@@ -22,14 +22,15 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     context "with #{format.to_s.upcase}" do
       should "have a list of versions for the first gem" do
         get_show(@rubygem, format)
-        assert_equal 2, yield(@response.body).size
+        assert_equal 3, yield(@response.body).size
       end
 
       should "be ordered by position with prereleases" do
         get_show(@rubygem, format)
         arr = yield(@response.body)
-        assert_equal "2.0.0", arr.first["number"]
-        assert_equal "1.0.0.pre", arr.second["number"]
+        assert_equal "4.0.0", arr.first["number"]
+        assert_equal "2.0.0", arr.second["number"]
+        assert_equal "1.0.0.pre", arr.third["number"]
       end
 
       should "be ordered by position" do
@@ -53,6 +54,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       create(:version, rubygem: @rubygem, number: '2.0.0')
       create(:version, rubygem: @rubygem, number: '1.0.0.pre', prerelease: true)
       create(:version, rubygem: @rubygem, number: '3.0.0', indexed: false)
+      create(:version, rubygem: @rubygem, number: '4.0.0', built_at: 2.days.from_now)
 
       @rubygem2 = create(:rubygem)
       create(:version, rubygem: @rubygem2, number: '3.0.0')
