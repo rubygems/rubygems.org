@@ -80,20 +80,14 @@ than Rubygems and may suit your organization’s needs better.**
 * Use Ruby 2.2.3
 * Use Rubygems 2.4.5
 * Install bundler: `gem install bundler`
-* Install [redis](https://github.com/antirez/redis),
-    **version 2.0 or higher**. If you have homebrew,
-    do `brew install redis -H`, if you use macports,
-    do `sudo port install redis`.
-* Rubygems is configured to use PostgreSQL (>= 8.4.x).
-  * Install with: `brew install postgres`
-  * Initialize the database and start the DB server
-   ```shell
-   initdb /usr/local/var/postgres -E utf8
-   pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
-   ```
-* If you want to use MySQL instead
-  * Install with: `brew install mysql`
-  * Start the DB server with: `sudo /usr/local/mysql/support-files/mysql.server start`
+* Install Redis (>= 2.0): `brew install redis -H`
+  * Setup information: `brew info redis`
+* Install Elastic Search: `brew install elasticsearch`
+  * Setup information: `brew info elasticsearch`
+* (Suggested) Install PostgreSQL (>= 8.4.x): `brew install postgres`
+  * Setup information: `brew info postgresql`
+* (Alternate) install MySQL: `brew install mysql`
+  * Setup information: `brew info mysql`
 
 #### Environment (Linux - Debian/Ubuntu)
 
@@ -110,7 +104,7 @@ than Rubygems and may suit your organization’s needs better.**
 * Clone the repo: `git clone git://github.com/rubygems/rubygems.org`
 * Move into your cloned rubygems directory if you haven’t already:
     `cd rubygems.org`
-* If you're using MySQL - replace `pg` with `mysql2` in the Gemfile
+* If you're using MySQL - replace `pg` with `mysql2` in the Gemfile:
   * `sed -i "s/gem 'pg'/gem 'mysql2'/" Gemfile`
 * Install dependencies:
     `bundle install`
@@ -124,6 +118,7 @@ than Rubygems and may suit your organization’s needs better.**
 #### Running tests
 
 * Start redis: `redis-server`
+* Start elastic search: `elasticsearch`
 * Run the tests: `bundle exec rake`
 
 #### Running RuboCop
