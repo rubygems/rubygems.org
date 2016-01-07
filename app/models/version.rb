@@ -140,10 +140,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.published(limit)
-    where("built_at <= ?", Time.zone.now)
-      .indexed
-      .by_built_at
-      .limit(limit)
+    indexed.by_built_at.limit(limit)
   end
 
   def self.find_from_slug!(rubygem_id, slug)
