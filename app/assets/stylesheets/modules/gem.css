@@ -135,15 +135,15 @@
     left: -10px;
     height: 100%;
     width: 10px;
-    background-image: linear-gradient(to right, transparent 0%, white 100%); }
+  }
 
 .gem__code__tooltip--copy,
-.gem__code__tooltip--copied,
-.zeroclipboard-is-hover.zeroclipboard-is-active ~ .gem__code__tooltip--copy {
-  display: none; }
+.gem__code__tooltip--copied {
+  display: none;
+}
 
-.zeroclipboard-is-hover ~ .gem__code__tooltip--copy,
-.zeroclipboard-is-active ~ .gem__code__tooltip--copied {
+.gem__code__clipboard:hover ~ .gem__code__tooltip--copy,
+.clipboard-is-active ~ .gem__code__tooltip--copied {
   display: block;
   position: absolute;
   top: 45px;
@@ -155,8 +155,8 @@
   line-height: 30px;
   text-align: center;
   color: #ffffff; }
-  .zeroclipboard-is-hover ~ .gem__code__tooltip--copy:before,
-  .zeroclipboard-is-active ~ .gem__code__tooltip--copied:before {
+  .gem__code__clipboard:hover ~ .gem__code__tooltip--copy:before,
+  .clipboard-is-active ~ .gem__code__tooltip--copied:before {
     content: "";
     position: absolute;
     top: -4px;

@@ -74,6 +74,7 @@ GEM
     clearance-deprecated_password_strategies (1.10.1)
       activesupport
       clearance (>= 1.10)
+    clipboard-rails (1.5.5)
     coffee-rails (4.1.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.1.x)
@@ -288,6 +289,7 @@ DEPENDENCIES
   capybara
   clearance
   clearance-deprecated_password_strategies
+  clipboard-rails
   coffee-rails (~> 4.1)
   daemons
   dalli

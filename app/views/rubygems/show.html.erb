@@ -108,8 +108,8 @@
         <h2 class="gem__ruby-version__heading t-list__heading">
           <%= t '.bundler_header' %>:
           <div class="gem__code-wrap">
-            <input type="text" class="gem__code" value="<%= @latest_version.to_bundler %>" readonly="readonly">
-            <span class="gem__code__icon" id="js-gem__code--gemfile" data-clipboard-text="<%= @latest_version.to_bundler %>">=</span>
+            <input type="text" class="gem__code" id="js-gem__code--gemfile" value="<%= @latest_version.to_bundler %>" readonly="readonly">
+            <span class="gem__code__icon gem__code__clipboard" data-clipboard-target="#js-gem__code--gemfile">=</span>
             <span class="gem__code__tooltip--copy"><%= t('.copy_to_clipboard') %></span>
             <span class="gem__code__tooltip--copied"><%= t('.copied') %></span>
           </div>
@@ -117,8 +117,8 @@
         <h2 class="gem__ruby-version__heading t-list__heading">
           <%= t '.install' %>:
           <div class="gem__code-wrap">
-            <input type="text" class="gem__code" value="<%= @latest_version.to_install %>" readonly="readonly">
-            <span class="gem__code__icon" id="js-gem__code--install" data-clipboard-text="<%= @latest_version.to_install %>">=</span>
+            <input type="text" class="gem__code" id="js-gem__code--install" value="<%= @latest_version.to_install %>" readonly="readonly">
+            <span class="gem__code__icon gem__code__clipboard" data-clipboard-target="#js-gem__code--install">=</span>
             <span class="gem__code__tooltip--copy"><%= t('.copy_to_clipboard') %></span>
             <span class="gem__code__tooltip--copied"><%= t('.copied') %></span>
           </div>
@@ -165,24 +165,4 @@
       </div>
     </div>
   </div>
-<% end %>
-
-<% content_for :javascript do %>
-  <script>
-    var gemfileCopyButton = document.getElementById("js-gem__code--gemfile");
-    var installCopyButton = document.getElementById("js-gem__code--install");
-
-    var client   = new ZeroClipboard( gemfileCopyButton );
-    var client2  = new ZeroClipboard( installCopyButton );
-
-    client.on("error", function() {
-      client.destroy();
-      gemfileCopyButton.style.display = "none";
-    });
-
-    client2.on("error", function() {
-      client2.destroy();
-      installCopyButton.style.display = "none";
-    });
-  </script>
 <% end %>
