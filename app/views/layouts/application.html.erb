@@ -195,9 +195,6 @@
     </footer>
 
     <%= javascript_include_tag "application" %>
-    <script type="text/javascript">
-     ZeroClipboard.config( { swfPath: "<%= asset_path 'ZeroClipboard.swf' %>", cacheBust: false  } );
-    </script>
     <%= yield :javascript %>
     <script type="text/javascript" async defer id="gauges-tracker" data-site-id="4eab0ac8613f5d1583000005" src="//secure.gaug.es/track.js"></script>
   </body>
