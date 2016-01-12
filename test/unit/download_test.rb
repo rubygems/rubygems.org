@@ -1,18 +1,47 @@
 require 'test_helper'
 
 class DownloadTest < ActiveSupport::TestCase
-  should "load up all downloads with just raw strings and process them" do
-    rubygem = create(:rubygem, name: "some-stupid13-gem42-9000")
-    version = create(:version, rubygem: rubygem)
 
-    3.times do
-      Download.incr(rubygem.name, version.full_name)
+  context "#incr" do
+    should "load up all downloads with just raw strings and process them" do
+      rubygem = create(:rubygem, name: "some-stupid13-gem42-9000")
+      version = create(:version, rubygem: rubygem)
+
+      3.times do
+        Download.incr(rubygem.name, version.full_name)
+      end
+
+      assert_equal 3, version.downloads_count
+      assert_equal 3, rubygem.downloads
+      assert_equal 3, Download.count
+      assert_equal 3, Download.today(version)
     end
 
-    assert_equal 3, version.downloads_count
-    assert_equal 3, rubygem.downloads
-    assert_equal 3, Download.count
-    assert_equal 3, Download.today(version)
+    should "take optional count kwarg" do
+      version = create(:version)
+      rubygem = version.rubygem
+
+      Download.incr(rubygem.name, version.full_name, count: 100)
+
+      assert_equal 100, version.downloads_count
+      assert_equal 100, rubygem.downloads
+    end
+  end
+
+  context "#bulk_update" do
+    should "write the proper values" do
+      versions = 2.times.map { create(:version) }
+      gems     = versions.map(&:rubygem)
+      counts   = 2.times.map { rand(100) }
+      data     = gems.map(&:name).zip(versions.map(&:full_name), counts)
+
+      Download.bulk_update(data)
+
+      2.times.each do |i|
+        assert_equal counts[i], versions[i].downloads_count
+        assert_equal counts[i], gems[i].downloads
+      end
+    end
   end
 
   should "track platform gem downloads correctly" do

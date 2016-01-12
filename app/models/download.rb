@@ -2,15 +2,31 @@ class Download
   COUNT_KEY     = "downloads".freeze
   ALL_KEY       = "downloads:all".freeze
 
-  def self.incr(name, full_name)
+  def self.incr(name, full_name, count: 1)
     today = Time.zone.today.to_s
-    Redis.current.incr(COUNT_KEY)
-    Redis.current.incr(rubygem_key(name))
-    Redis.current.incr(version_key(full_name))
-    Redis.current.zincrby(today_key, 1, full_name)
-    Redis.current.zincrby(ALL_KEY, 1, full_name)
-    Redis.current.hincrby(version_history_key(full_name), today, 1)
-    Redis.current.hincrby(rubygem_history_key(name), today, 1)
+    redis = Redis.current
+
+    redis.incrby(COUNT_KEY, count)
+    redis.incrby(rubygem_key(name), count)
+    redis.incrby(version_key(full_name), count)
+    redis.zincrby(today_key, count, full_name)
+    redis.zincrby(ALL_KEY, count, full_name)
+    redis.hincrby(version_history_key(full_name), today, count)
+    redis.hincrby(rubygem_history_key(name), today, count)
+  end
+
+  # Takes an array where members have the form
+  #   [name, full_name, count]
+  # E.g.:
+  #   ['rake', 'rake-10.4.2', 1]
+  def self.bulk_update(ary)
+    Redis.current.multi do
+      Redis.current.pipelined do
+        ary.each do |name, full_name, count|
+          incr(name, full_name, count: count)
+        end
+      end
+    end
   end
 
   def self.count
