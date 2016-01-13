@@ -55,6 +55,8 @@ end
 group :development do
   gem 'quiet_assets'
   gem 'rails-erd'
+  gem 'guard'
+  gem 'guard-minitest'
 end
 
 group :test do
