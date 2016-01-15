@@ -1,0 +1,14 @@
+# Shoryuken config for processing AWS SQS messages
+# See https://github.com/phstc/shoryuken#configuration
+aws:
+  receive_message:              # See http://docs.aws.amazon.com/sdkforruby/api/Aws/SQS/Client.html#receive_message-instance_method
+    wait_time_seconds: 10      # The number of seconds to wait for new messages when polling.
+    attribute_names:
+      - ApproximateReceiveCount
+      - SentTimestamp
+concurrency: 1  # The number of allocated threads to process messages. Default 25
+delay: 30       # The delay in seconds to pause a queue when it's empty. Default 0
+queues:
+  # TODO: add real queues for staging, prod
+  - [replace-me-with-real-queue, 1]
+  - [replace-me-with-real-queue, 1]
