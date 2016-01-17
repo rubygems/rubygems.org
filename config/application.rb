@@ -54,6 +54,8 @@ module Gemcutter
     config.i18n.fallbacks = true
 
     config.middleware.use "Redirector" unless Rails.env.development?
+    require "http_accept_language"
+    config.middleware.use HttpAcceptLanguage::Middleware
 
     config.active_record.include_root_in_json = false
     config.active_record.raise_in_transactional_callbacks = true

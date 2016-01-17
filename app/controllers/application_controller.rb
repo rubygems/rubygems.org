@@ -1,8 +1,11 @@
 require 'dynamic_form'
+require 'http_accept_language'
 
 class ApplicationController < ActionController::Base
   include Clearance::Authentication
   include Clearance::Authorization
+
+  include HttpAcceptLanguage::EasyAccess
 
   helper :announcements
   helper ActiveSupport::NumberHelper

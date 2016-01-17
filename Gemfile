@@ -25,7 +25,7 @@ gem 'gravtastic', require: false
 gem 'high_voltage', require: false
 gem 'highline', require: false
 gem 'honeybadger', require: false
-gem 'http_accept_language'
+gem 'http_accept_language', require: false
 gem 'jquery-rails', require: false
 gem 'mail', require: false
 gem 'multi_json', require: false
