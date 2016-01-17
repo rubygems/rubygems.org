@@ -23,7 +23,7 @@ gem 'gchartrb', require: 'google_chart'
 gem 'gravtastic'
 gem 'high_voltage'
 gem 'highline', require: false
-gem 'honeybadger'
+gem 'honeybadger', require: false
 gem 'http_accept_language'
 gem 'jquery-rails', require: false
 gem 'mail', require: false
