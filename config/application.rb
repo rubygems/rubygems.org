@@ -10,8 +10,6 @@ require 'uglifier'
 # This can be removed once all gems depend on > 3.0
 require 'mime/types/columnar'
 
-require 'elasticsearch/rails/instrumentation'
-
 # Engines
 require 'rails-i18n'
 require 'clearance'
@@ -23,6 +21,12 @@ require 'will_paginate'
 require 'statsd-instrument'
 require 'high_voltage'
 require 'gravtastic'
+
+## TODO: Elasctic search, should probably be lazy loaded
+require 'elasticsearch/rails/instrumentation'
+require 'elasticsearch/model'
+require 'elasticsearch/rails'
+require 'elasticsearch/dsl'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.

@@ -42,9 +42,9 @@ gem 'uglifier', '>= 1.0.3', require: false
 gem 'unicorn', require: false
 gem 'validates_formatting_of'
 gem 'will_paginate', require: false
-gem 'elasticsearch-model', '~> 0.1.7'
-gem 'elasticsearch-rails', '~> 0.1.7'
-gem 'elasticsearch-dsl', '~> 0.1.2'
+gem 'elasticsearch-model', '~> 0.1.7', require: false
+gem 'elasticsearch-rails', '~> 0.1.7', require: false
+gem 'elasticsearch-dsl', '~> 0.1.2', require: false
 gem 'yajl-ruby', require: 'yajl'
 
 group :development, :test do
