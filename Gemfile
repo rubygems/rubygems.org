@@ -2,55 +2,55 @@ source 'https://rubygems.org'
 
 # https://github.com/mime-types/ruby-mime-types/issues/94
 # This can be removed once all gems depend on > 3.0
-gem 'mime-types', '~> 2.6', require: false
+gem 'mime-types', '~> 2.6'
 
-gem 'rails', '~> 4.2.5', require: false
-gem 'rails-i18n', require: false
+gem 'rails', '~> 4.2.5'
+gem 'rails-i18n'
 
-gem 'autoprefixer-rails', require: false
-gem 'aws-sdk-core', require: false
-gem 'bootscale', require: false
-gem 'clearance', require: false
-gem 'clearance-deprecated_password_strategies', require: false
+gem 'autoprefixer-rails'
+gem 'aws-sdk-core'
+gem 'bootscale'
+gem 'clearance'
+gem 'clearance-deprecated_password_strategies'
 ## TODO maybe remove deamons?
-gem 'daemons', require: false
-gem 'dalli', require: false
-gem 'delayed_job', require: false
-gem 'delayed_job_active_record', require: false
-gem 'doorkeeper', require: false
-gem 'dynamic_form', require: false
+gem 'daemons'
+gem 'dalli'
+gem 'delayed_job'
+gem 'delayed_job_active_record'
+gem 'doorkeeper'
+gem 'dynamic_form'
 ## TODO maybe remove deamons?
-gem 'gchartrb', require: false
-gem 'gravtastic', require: false
-gem 'high_voltage', require: false
-gem 'highline', require: false
-gem 'honeybadger', require: false
-gem 'http_accept_language', require: false
-gem 'jquery-rails', require: false
-gem 'mail', require: false
-gem 'multi_json', require: false
-gem 'newrelic-redis', require: false
-gem 'newrelic_rpm', require: false
-gem 'paul_revere', '~> 2.0', require: false
-gem 'pg', require: false
-gem 'psych', '~> 2.0.12', require: false
-gem 'rack', require: false
-gem 'rdoc', require: false
-gem 'redis', require: false
-gem 'rest-client', require: false
-gem 'statsd-instrument', '~> 2.0.6', require: false
-gem 'uglifier', '>= 1.0.3', require: false
-gem 'unicorn', require: false
-gem 'validates_formatting_of', require: false
-gem 'will_paginate', require: false
-gem 'elasticsearch-model', '~> 0.1.7', require: false
-gem 'elasticsearch-rails', '~> 0.1.7', require: false
-gem 'elasticsearch-dsl', '~> 0.1.2', require: false
-gem 'yajl-ruby', require: false
+gem 'gchartrb'
+gem 'gravtastic'
+gem 'high_voltage'
+gem 'highline'
+gem 'honeybadger'
+gem 'http_accept_language'
+gem 'jquery-rails'
+gem 'mail'
+gem 'multi_json'
+gem 'newrelic-redis'
+gem 'newrelic_rpm'
+gem 'paul_revere', '~> 2.0'
+gem 'pg'
+gem 'psych', '~> 2.0.12'
+gem 'rack'
+gem 'rdoc'
+gem 'redis'
+gem 'rest-client'
+gem 'statsd-instrument', '~> 2.0.6'
+gem 'uglifier', '>= 1.0.3'
+gem 'unicorn'
+gem 'validates_formatting_of'
+gem 'will_paginate'
+gem 'elasticsearch-model', '~> 0.1.7'
+gem 'elasticsearch-rails', '~> 0.1.7'
+gem 'elasticsearch-dsl', '~> 0.1.2'
+gem 'yajl-ruby'
 
 group :development, :test do
-  gem 'rubocop', require: false
-  gem 'toxiproxy', '~> 0.1.3', require: false
+  gem 'rubocop'
+  gem 'toxiproxy', '~> 0.1.3'
 end
 
 group :development do
@@ -59,19 +59,19 @@ group :development do
 end
 
 group :test do
-  gem 'minitest', require: false
-  gem 'capybara', require: false
-  gem 'factory_girl_rails', require: false
-  gem 'rack-test', require: false
-  gem 'mocha', require: false
-  gem 'bourne', require: false
-  gem 'shoulda', require: false
+  gem 'minitest'
+  gem 'capybara'
+  gem 'factory_girl_rails'
+  gem 'rack-test'
+  gem 'mocha'
+  gem 'bourne'
+  gem 'shoulda'
 end
 
 group :development, :deploy do
-  gem 'capistrano', '~> 3.0', require: false
-  gem 'capistrano-rails', '~> 1.1', require: false
-  gem 'capistrano-bundler', '~> 1.1', require: false
+  gem 'capistrano', '~> 3.0'
+  gem 'capistrano-rails', '~> 1.1'
+  gem 'capistrano-bundler', '~> 1.1'
 end
 
 platforms :jruby do

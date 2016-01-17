@@ -32,12 +32,6 @@ require 'elasticsearch/dsl'
 require 'newrelic-redis'
 require 'newrelic_rpm'
 
-# Require the gems listed in Gemfile, including any gems
-# you've limited to :test, :development, or :production.
-RailsApplicationInstrumentation.instrument("Bundler.require") do
-  Bundler.require(*Rails.groups)
-end
-
 module Gemcutter
   class Application < Rails::Application
     include RailsApplicationInstrumentation
