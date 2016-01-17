@@ -27,7 +27,7 @@ gem 'honeybadger'
 gem 'http_accept_language'
 gem 'jquery-rails'
 gem 'mail', require: false
-gem 'multi_json'
+gem 'multi_json', require: false
 gem 'newrelic-redis'
 gem 'newrelic_rpm'
 gem 'paul_revere', '~> 2.0'

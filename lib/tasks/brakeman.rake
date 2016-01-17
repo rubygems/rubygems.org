@@ -38,6 +38,7 @@ task :brakeman do
   STDERR.puts report.generate
   # https://github.com/presidentbeef/brakeman/blob/3.0_branch/lib/brakeman.rb
   if diff_reports
+    require 'multi_json'
     Brakeman.load_brakeman_dependency 'multi_json'
     require 'brakeman/report/initializers/multi_json'
     require 'brakeman/differ'

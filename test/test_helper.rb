@@ -8,6 +8,7 @@ require 'capybara/rails'
 require 'clearance/test_unit'
 require 'shoulda'
 require 'helpers/gem_helpers'
+require 'multi_json'
 
 RubygemFs.mock!
 
