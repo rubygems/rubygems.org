@@ -18,6 +18,7 @@ end
 require 'rails-i18n'
 require 'clearance'
 require 'clearance-deprecated_password_strategies'
+require 'doorkeeper'
 
 module Gemcutter
   class Application < Rails::Application

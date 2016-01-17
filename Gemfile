@@ -17,7 +17,7 @@ gem 'daemons'
 gem 'dalli', require: false
 gem 'delayed_job', require: false
 gem 'delayed_job_active_record', require: false
-gem 'doorkeeper'
+gem 'doorkeeper', require: false
 gem 'dynamic_form', require: false
 gem 'gchartrb', require: 'google_chart'
 gem 'gravtastic'
