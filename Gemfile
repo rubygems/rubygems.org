@@ -12,7 +12,8 @@ gem 'aws-sdk-core', require: false
 gem 'bootscale', require: false
 gem 'clearance', require: false
 gem 'clearance-deprecated_password_strategies', require: false
-gem 'daemons'
+## TODO maybe remove deamons?
+gem 'daemons', require: false
 gem 'dalli', require: false
 gem 'delayed_job', require: false
 gem 'delayed_job_active_record', require: false
