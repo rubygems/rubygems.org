@@ -29,7 +29,7 @@ gem 'mail', require: false
 gem 'multi_json', require: false
 gem 'newrelic-redis'
 gem 'newrelic_rpm'
-gem 'paul_revere', '~> 2.0'
+gem 'paul_revere', '~> 2.0', require: false
 gem 'pg', require: false
 gem 'psych', '~> 2.0.12', require: false
 gem 'rack', require: false
@@ -40,7 +40,7 @@ gem 'statsd-instrument', '~> 2.0.6'
 gem 'uglifier', '>= 1.0.3'
 gem 'unicorn', require: false
 gem 'validates_formatting_of'
-gem 'will_paginate'
+gem 'will_paginate', require: false
 gem 'elasticsearch-model', '~> 0.1.7'
 gem 'elasticsearch-rails', '~> 0.1.7'
 gem 'elasticsearch-dsl', '~> 0.1.2'

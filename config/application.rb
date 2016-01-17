@@ -20,6 +20,8 @@ require 'clearance'
 require 'clearance-deprecated_password_strategies'
 require 'doorkeeper'
 require 'autoprefixer-rails'
+require 'paul_revere'
+require 'will_paginate'
 
 module Gemcutter
   class Application < Rails::Application
