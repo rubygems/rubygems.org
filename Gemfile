@@ -40,7 +40,7 @@ gem 'rest-client', require: false
 gem 'statsd-instrument', '~> 2.0.6', require: false
 gem 'uglifier', '>= 1.0.3', require: false
 gem 'unicorn', require: false
-gem 'validates_formatting_of'
+gem 'validates_formatting_of', require: false
 gem 'will_paginate', require: false
 gem 'elasticsearch-model', '~> 0.1.7', require: false
 gem 'elasticsearch-rails', '~> 0.1.7', require: false

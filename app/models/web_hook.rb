@@ -1,7 +1,11 @@
 require 'delayed_job_active_record'
+require 'validates_formatting_of'
 
 class WebHook < ActiveRecord::Base
   GLOBAL_PATTERN = '*'
+
+  extend ValidatesFormattingOf::ModelAdditions
+  include ValidatesFormattingOf::Validations
 
   belongs_to :user
   belongs_to :rubygem
