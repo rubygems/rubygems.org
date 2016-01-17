@@ -22,6 +22,7 @@ require 'paul_revere'
 require 'will_paginate'
 require 'statsd-instrument'
 require 'high_voltage'
+require 'gravtastic'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.

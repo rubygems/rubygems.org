@@ -20,7 +20,7 @@ gem 'delayed_job_active_record', require: false
 gem 'doorkeeper', require: false
 gem 'dynamic_form', require: false
 gem 'gchartrb', require: 'google_chart'
-gem 'gravtastic'
+gem 'gravtastic', require: false
 gem 'high_voltage', require: false
 gem 'highline', require: false
 gem 'honeybadger', require: false
