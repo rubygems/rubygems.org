@@ -147,7 +147,7 @@ es:
   home:
     index:
       downloads_counting: descargas y contando
-      find_blurb: Encuentra, instala, y publíca RubyGems.
+      find_blurb: Encuentra, instala, y publica RubyGems.
       footer:
         status: Estado
         uptime:
