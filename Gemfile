@@ -49,7 +49,7 @@ gem 'yajl-ruby', require: 'yajl'
 
 group :development, :test do
   gem 'rubocop', require: false
-  gem 'toxiproxy', '~> 0.1.3'
+  gem 'toxiproxy', '~> 0.1.3', require: false
 end
 
 group :development do

@@ -28,6 +28,7 @@ class ActiveSupport::TestCase
   end
 
   def requires_toxiproxy
+    require 'toxiproxy'
     skip("Toxiproxy is not running, but was required for this test.") unless Toxiproxy.running?
   end
 
