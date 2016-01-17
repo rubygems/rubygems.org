@@ -29,8 +29,8 @@ gem 'http_accept_language'
 gem 'jquery-rails', require: false
 gem 'mail', require: false
 gem 'multi_json', require: false
-gem 'newrelic-redis'
-gem 'newrelic_rpm'
+gem 'newrelic-redis', require: false
+gem 'newrelic_rpm', require: false
 gem 'paul_revere', '~> 2.0', require: false
 gem 'pg', require: false
 gem 'psych', '~> 2.0.12', require: false

@@ -28,6 +28,10 @@ require 'elasticsearch/model'
 require 'elasticsearch/rails'
 require 'elasticsearch/dsl'
 
+## TODO: new relic probably should be only required on production
+require 'newrelic-redis'
+require 'newrelic_rpm'
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 RailsApplicationInstrumentation.instrument("Bundler.require") do
