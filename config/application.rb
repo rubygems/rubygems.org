@@ -8,12 +8,6 @@ require 'jquery-rails'
 
 require 'elasticsearch/rails/instrumentation'
 
-# Require the gems listed in Gemfile, including any gems
-# you've limited to :test, :development, or :production.
-RailsApplicationInstrumentation.instrument("Bundler.require") do
-  Bundler.require(*Rails.groups)
-end
-
 # Engines
 require 'rails-i18n'
 require 'clearance'
@@ -22,6 +16,12 @@ require 'doorkeeper'
 require 'autoprefixer-rails'
 require 'paul_revere'
 require 'will_paginate'
+
+# Require the gems listed in Gemfile, including any gems
+# you've limited to :test, :development, or :production.
+RailsApplicationInstrumentation.instrument("Bundler.require") do
+  Bundler.require(*Rails.groups)
+end
 
 module Gemcutter
   class Application < Rails::Application
