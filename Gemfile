@@ -8,7 +8,7 @@ gem 'rails', '~> 4.2.5', require: false
 gem 'rails-i18n'
 
 gem 'autoprefixer-rails'
-gem 'aws-sdk-core'
+gem 'aws-sdk-core', require: false
 gem 'bootscale', require: false
 gem 'builder'
 gem 'clearance'
