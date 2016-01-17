@@ -10,7 +10,6 @@ gem 'rails-i18n', require: false
 gem 'autoprefixer-rails'
 gem 'aws-sdk-core', require: false
 gem 'bootscale', require: false
-gem 'builder'
 gem 'clearance', require: false
 gem 'clearance-deprecated_password_strategies', require: false
 gem 'daemons'
@@ -45,7 +44,6 @@ gem 'will_paginate'
 gem 'elasticsearch-model', '~> 0.1.7'
 gem 'elasticsearch-rails', '~> 0.1.7'
 gem 'elasticsearch-dsl', '~> 0.1.2'
-gem 'xml-simple'
 gem 'yajl-ruby', require: 'yajl'
 
 group :development, :test do
