@@ -22,7 +22,7 @@ gem 'dynamic_form', require: false
 gem 'gchartrb', require: 'google_chart'
 gem 'gravtastic'
 gem 'high_voltage'
-gem 'highline'
+gem 'highline', require: false
 gem 'honeybadger'
 gem 'http_accept_language'
 gem 'jquery-rails', require: false
