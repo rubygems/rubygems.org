@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 # This can be removed once all gems depend on > 3.0
 gem 'mime-types', '~> 2.6', require: 'mime/types/columnar'
 
-gem 'rails', '~> 4.2.5'
+gem 'rails', '~> 4.2.5', require: false
 gem 'rails-i18n'
 
 gem 'autoprefixer-rails'
@@ -14,7 +14,7 @@ gem 'builder'
 gem 'clearance'
 gem 'clearance-deprecated_password_strategies'
 gem 'daemons'
-gem 'dalli'
+gem 'dalli', require: false
 gem 'delayed_job'
 gem 'delayed_job_active_record'
 gem 'doorkeeper'
@@ -26,14 +26,14 @@ gem 'highline'
 gem 'honeybadger'
 gem 'http_accept_language'
 gem 'jquery-rails'
-gem 'mail'
+gem 'mail', require: false
 gem 'multi_json'
 gem 'newrelic-redis'
 gem 'newrelic_rpm'
 gem 'paul_revere', '~> 2.0'
-gem 'pg'
-gem 'psych', '~> 2.0.12'
-gem 'rack'
+gem 'pg', require: false
+gem 'psych', '~> 2.0.12', require: false
+gem 'rack', require: false
 gem 'rdoc'
 gem 'redis'
 gem 'rest-client', require: 'rest_client'
