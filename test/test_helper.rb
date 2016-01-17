@@ -6,10 +6,12 @@ require 'mocha/mini_test'
 require 'bourne'
 require 'capybara'
 require 'capybara/rails'
+require 'factory_girl_rails'
 require 'clearance/test_unit'
 require 'shoulda'
 require 'helpers/gem_helpers'
 require 'multi_json'
+require 'rack/test'
 
 RubygemFs.mock!
 

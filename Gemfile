@@ -61,8 +61,8 @@ end
 group :test do
   gem 'minitest', require: false
   gem 'capybara', require: false
-  gem 'factory_girl_rails'
-  gem 'rack-test', require: 'rack/test'
+  gem 'factory_girl_rails', require: false
+  gem 'rack-test', require: false
   gem 'mocha', require: false
   gem 'bourne', require: false
   gem 'shoulda', require: false
