@@ -18,3 +18,5 @@ tmp/
 tags
 .idea
 chef
+Gemfile.dev
+Gemfile.dev.lock

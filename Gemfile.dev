@@ -1,0 +1,6 @@
+# This file is .gitignored, add any gems you want for dev here.
+# To use this Gemfile locally: $ bundle config --local gemfile Gemfile.dev
+eval_gemfile(File.expand_path("Gemfile", __dir__))
+
+# Example:
+# gem "guard", group: :development
