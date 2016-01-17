@@ -39,7 +39,7 @@ gem 'redis', require: false
 gem 'rest-client', require: false
 gem 'statsd-instrument', '~> 2.0.6'
 gem 'uglifier', '>= 1.0.3'
-gem 'unicorn'
+gem 'unicorn', require: false
 gem 'validates_formatting_of'
 gem 'will_paginate'
 gem 'elasticsearch-model', '~> 0.1.7'
