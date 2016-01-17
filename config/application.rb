@@ -5,6 +5,10 @@ RailsApplicationInstrumentation.instrument("rails/all require") do
   require 'rails/all'
 end
 require 'jquery-rails'
+require 'uglifier'
+# https://github.com/mime-types/ruby-mime-types/issues/94
+# This can be removed once all gems depend on > 3.0
+require 'mime/types/columnar'
 
 require 'elasticsearch/rails/instrumentation'
 
