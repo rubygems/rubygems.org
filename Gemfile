@@ -33,7 +33,7 @@ gem 'paul_revere', '~> 2.0'
 gem 'pg', require: false
 gem 'psych', '~> 2.0.12', require: false
 gem 'rack', require: false
-gem 'rdoc'
+gem 'rdoc', require: false
 gem 'redis', require: false
 gem 'rest-client', require: false
 gem 'statsd-instrument', '~> 2.0.6'
