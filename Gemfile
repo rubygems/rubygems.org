@@ -62,7 +62,6 @@ group :test do
   gem 'minitest', require: false
   gem 'capybara'
   gem 'factory_girl_rails'
-  gem 'launchy'
   gem 'rack-test', require: 'rack/test'
   gem 'mocha', require: false
   gem 'bourne', require: false
