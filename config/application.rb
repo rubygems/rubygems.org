@@ -47,4 +47,6 @@ module Gemcutter
 
   PROTOCOL = config['protocol']
   HOST = config['host']
+
+  JOB_PRIORITIES = { push: 1, download: 2, web_hook: 3 }
 end

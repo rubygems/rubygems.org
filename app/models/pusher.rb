@@ -1,4 +1,5 @@
 require 'digest/sha2'
+require 'delayed_job_active_record'
 
 class Pusher
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
@@ -121,7 +122,7 @@ class Pusher
 
   def after_write
     @version_id = version.id
-    Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
+    Delayed::Job.enqueue Indexer.new, priority: Gemcutter::JOB_PRIORITIES[:push]
     rubygem.delay.index_document
     enqueue_web_hook_jobs
     update_remote_bundler_api

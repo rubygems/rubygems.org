@@ -15,8 +15,8 @@ gem 'clearance'
 gem 'clearance-deprecated_password_strategies'
 gem 'daemons'
 gem 'dalli', require: false
-gem 'delayed_job'
-gem 'delayed_job_active_record'
+gem 'delayed_job', require: false
+gem 'delayed_job_active_record', require: false
 gem 'doorkeeper'
 gem 'dynamic_form'
 gem 'gchartrb', require: 'google_chart'

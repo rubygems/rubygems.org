@@ -1,3 +1,5 @@
+require 'delayed_job_active_record'
+
 class WebHook < ActiveRecord::Base
   GLOBAL_PATTERN = '*'
 
@@ -18,7 +20,7 @@ class WebHook < ActiveRecord::Base
   def fire(protocol, host_with_port, deploy_gem, version, delayed = true)
     job = Notifier.new(url, protocol, host_with_port, deploy_gem, version, user.api_key)
     if delayed
-      Delayed::Job.enqueue job, priority: PRIORITIES[:web_hook]
+      Delayed::Job.enqueue job, priority: Gemcutter::JOB_PRIORITIES[:web_hook]
     else
       job.perform
     end
