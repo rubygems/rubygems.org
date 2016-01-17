@@ -21,7 +21,7 @@ gem 'doorkeeper', require: false
 gem 'dynamic_form', require: false
 gem 'gchartrb', require: 'google_chart'
 gem 'gravtastic'
-gem 'high_voltage'
+gem 'high_voltage', require: false
 gem 'highline', require: false
 gem 'honeybadger', require: false
 gem 'http_accept_language'
