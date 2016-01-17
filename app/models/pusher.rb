@@ -1,5 +1,6 @@
 require 'digest/sha2'
 require 'delayed_job_active_record'
+require 'rest_client'
 
 class Pusher
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size

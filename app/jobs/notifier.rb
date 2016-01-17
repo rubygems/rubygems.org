@@ -1,4 +1,5 @@
 require 'timeout'
+require 'rest_client'
 
 Notifier = Struct.new(:url, :protocol, :host_with_port, :rubygem, :version, :api_key) do
   extend StatsD::Instrument

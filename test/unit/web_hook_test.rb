@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'rest_client'
 
 class WebHookTest < ActiveSupport::TestCase
   should belong_to :user

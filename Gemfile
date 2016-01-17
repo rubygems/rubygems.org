@@ -36,7 +36,7 @@ gem 'psych', '~> 2.0.12', require: false
 gem 'rack', require: false
 gem 'rdoc'
 gem 'redis'
-gem 'rest-client', require: 'rest_client'
+gem 'rest-client', require: false
 gem 'statsd-instrument', '~> 2.0.6'
 gem 'uglifier', '>= 1.0.3'
 gem 'unicorn'

@@ -1,4 +1,5 @@
 require 'net/http'
+require 'rest_client'
 
 class Net::HTTP::Purge < Net::HTTPRequest
   METHOD = 'PURGE'
