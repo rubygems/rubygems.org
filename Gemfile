@@ -60,7 +60,7 @@ end
 
 group :test do
   gem 'minitest', require: false
-  gem 'capybara'
+  gem 'capybara', require: false
   gem 'factory_girl_rails'
   gem 'rack-test', require: 'rack/test'
   gem 'mocha', require: false
