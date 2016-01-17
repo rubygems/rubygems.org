@@ -47,6 +47,7 @@ GEM
     aws-sdk-core (2.2.10)
       jmespath (~> 1.0)
     bcrypt (3.1.10)
+    bootscale (0.5.1)
     bourne (1.6.0)
       mocha (~> 1.1)
     builder (3.2.2)
@@ -265,6 +266,7 @@ PLATFORMS
 DEPENDENCIES
   autoprefixer-rails
   aws-sdk-core
+  bootscale
   bourne
   builder
   capistrano (~> 3.0)

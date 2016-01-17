@@ -16,6 +16,10 @@ module Gemcutter
   class Application < Rails::Application
     include RailsApplicationInstrumentation
 
+    initializer :regenerate_require_cache, before: :load_environment_config do
+      Bootscale.regenerate
+    end
+
     config.rubygems = Application.config_for :rubygems
 
     config.time_zone = "UTC"

@@ -9,6 +9,7 @@ gem 'rails-i18n'
 
 gem 'autoprefixer-rails'
 gem 'aws-sdk-core'
+gem 'bootscale', require: false
 gem 'builder'
 gem 'clearance'
 gem 'clearance-deprecated_password_strategies'
