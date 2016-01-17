@@ -37,7 +37,7 @@ gem 'rack', require: false
 gem 'rdoc', require: false
 gem 'redis', require: false
 gem 'rest-client', require: false
-gem 'statsd-instrument', '~> 2.0.6'
+gem 'statsd-instrument', '~> 2.0.6', require: false
 gem 'uglifier', '>= 1.0.3'
 gem 'unicorn', require: false
 gem 'validates_formatting_of'
