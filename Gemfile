@@ -46,7 +46,7 @@ gem 'will_paginate', require: false
 gem 'elasticsearch-model', '~> 0.1.7', require: false
 gem 'elasticsearch-rails', '~> 0.1.7', require: false
 gem 'elasticsearch-dsl', '~> 0.1.2', require: false
-gem 'yajl-ruby', require: 'yajl'
+gem 'yajl-ruby', require: false
 
 group :development, :test do
   gem 'rubocop', require: false
