@@ -11,8 +11,8 @@ gem 'autoprefixer-rails'
 gem 'aws-sdk-core', require: false
 gem 'bootscale', require: false
 gem 'builder'
-gem 'clearance'
-gem 'clearance-deprecated_password_strategies'
+gem 'clearance', require: false
+gem 'clearance-deprecated_password_strategies', require: false
 gem 'daemons'
 gem 'dalli', require: false
 gem 'delayed_job', require: false
