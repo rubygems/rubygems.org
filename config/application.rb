@@ -4,6 +4,8 @@ require_relative 'initializer_instrumentation'
 RailsApplicationInstrumentation.instrument("rails/all require") do
   require 'rails/all'
 end
+require 'jquery-rails'
+
 require 'elasticsearch/rails/instrumentation'
 
 # Require the gems listed in Gemfile, including any gems

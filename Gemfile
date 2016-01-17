@@ -25,7 +25,7 @@ gem 'high_voltage'
 gem 'highline'
 gem 'honeybadger'
 gem 'http_accept_language'
-gem 'jquery-rails'
+gem 'jquery-rails', require: false
 gem 'mail', require: false
 gem 'multi_json', require: false
 gem 'newrelic-redis'
