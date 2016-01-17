@@ -1,14 +1,21 @@
 require File.expand_path('../boot', __FILE__)
+require_relative 'initializer_instrumentation'
 
-require 'rails/all'
+RailsApplicationInstrumentation.instrument("rails/all require") do
+  require 'rails/all'
+end
 require 'elasticsearch/rails/instrumentation'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
-Bundler.require(*Rails.groups)
+RailsApplicationInstrumentation.instrument("Bundler.require") do
+  Bundler.require(*Rails.groups)
+end
 
 module Gemcutter
   class Application < Rails::Application
+    include RailsApplicationInstrumentation
+
     config.rubygems = Application.config_for :rubygems
 
     config.time_zone = "UTC"
