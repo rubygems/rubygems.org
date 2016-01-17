@@ -35,7 +35,7 @@ gem 'pg', require: false
 gem 'psych', '~> 2.0.12', require: false
 gem 'rack', require: false
 gem 'rdoc'
-gem 'redis'
+gem 'redis', require: false
 gem 'rest-client', require: false
 gem 'statsd-instrument', '~> 2.0.6'
 gem 'uglifier', '>= 1.0.3'
