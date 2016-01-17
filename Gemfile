@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 gem 'mime-types', '~> 2.6', require: 'mime/types/columnar'
 
 gem 'rails', '~> 4.2.5', require: false
-gem 'rails-i18n'
+gem 'rails-i18n', require: false
 
 gem 'autoprefixer-rails'
 gem 'aws-sdk-core', require: false

@@ -12,6 +12,9 @@ RailsApplicationInstrumentation.instrument("Bundler.require") do
   Bundler.require(*Rails.groups)
 end
 
+# Engines
+require 'rails-i18n'
+
 module Gemcutter
   class Application < Rails::Application
     include RailsApplicationInstrumentation
