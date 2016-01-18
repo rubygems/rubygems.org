@@ -21,7 +21,6 @@ git:
   submodules: false
 
 before_install:
-  - git submodule update --init --depth 1
   - sh -c "if [ '$RUBYGEMS_VERSION' != 'latest' ]; then gem update --system $RUBYGEMS_VERSION; fi"
   - gem --version
   - script/install_toxiproxy.sh
