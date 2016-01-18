@@ -1,3 +1,5 @@
+require 'aws-sdk-core'
+
 module RubygemFs
   def self.instance
     @fs ||=

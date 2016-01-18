@@ -1,4 +1,6 @@
 if Rails.env.test? || Rails.env.development?
+  require 'toxiproxy'
+
   port = Toxiproxy.running? ? 22_221 : 9200
   if Toxiproxy.running?
     Toxiproxy.populate(

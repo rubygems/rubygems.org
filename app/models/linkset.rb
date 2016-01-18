@@ -1,5 +1,10 @@
+require 'validates_formatting_of'
+
 class Linkset < ActiveRecord::Base
   belongs_to :rubygem
+
+  extend ValidatesFormattingOf::ModelAdditions
+  include ValidatesFormattingOf::Validations
 
   LINKS = %w(home code docs wiki mail bugs).freeze
 

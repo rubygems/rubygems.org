@@ -4,10 +4,14 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'mocha/mini_test'
 require 'bourne'
+require 'capybara'
 require 'capybara/rails'
+require 'factory_girl_rails'
 require 'clearance/test_unit'
 require 'shoulda'
 require 'helpers/gem_helpers'
+require 'multi_json'
+require 'rack/test'
 
 RubygemFs.mock!
 
@@ -24,6 +28,7 @@ class ActiveSupport::TestCase
   end
 
   def requires_toxiproxy
+    require 'toxiproxy'
     skip("Toxiproxy is not running, but was required for this test.") unless Toxiproxy.running?
   end
 

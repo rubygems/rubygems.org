@@ -1,3 +1,7 @@
+require 'rdoc'
+require 'rdoc/markup'
+require 'rdoc/markup/to_html'
+
 module RubygemsHelper
   def pluralized_licenses_header(version)
     t("rubygems.show.licenses_header").pluralize(version.try(:licenses).try(:length) || 0)

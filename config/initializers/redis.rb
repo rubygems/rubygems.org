@@ -1,4 +1,9 @@
+## TODO: wrap better our client and lazy load the redis require
+require 'redis'
+
 if Rails.env.test?
+  require 'toxiproxy'
+
   port = Toxiproxy.running? ? 22_220 : 6379
   if Toxiproxy.running?
     Toxiproxy.populate(

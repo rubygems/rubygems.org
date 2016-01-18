@@ -1,3 +1,5 @@
+require 'delayed_job_active_record'
+
 class Deletion < ActiveRecord::Base
   belongs_to :user
 
@@ -30,7 +32,7 @@ class Deletion < ActiveRecord::Base
   def remove_from_index
     @version.update!(indexed: false)
     Redis.current.lrem(Rubygem.versions_key(rubygem_name), 1, @version.full_name)
-    Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
+    Delayed::Job.enqueue Indexer.new, priority: Gemcutter::JOB_PRIORITIES[:push]
   end
 
   def remove_from_storage

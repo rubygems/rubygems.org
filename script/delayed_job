@@ -1,5 +1,12 @@
 #!/usr/bin/env ruby
 
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'config', 'environment'))
+
+require 'delayed_job_active_record'
 require 'delayed/command'
+
+Delayed::Worker.max_attempts = 3
+Delayed::Worker.max_run_time = 5.minutes
+Delayed::Worker.logger = Logger.new(Rails.root.join('log/delayed_job.log'))
+
 Delayed::Command.new(ARGV).daemonize

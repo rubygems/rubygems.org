@@ -3,6 +3,7 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   Exclude:
     - config/initializers/forbidden_yaml.rb
+    - config/initializer_instrumentation.rb
     - !ruby/regexp /(vendor|bundle|bin|db)\/.*/
   RunRailsCops: true
   DisplayCopNames: true

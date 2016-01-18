@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'rest_client'
 
 class Api::V1::WebHooksControllerTest < ActionController::TestCase
   def self.should_not_find_it
