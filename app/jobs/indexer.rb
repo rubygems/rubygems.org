@@ -1,6 +1,16 @@
 class Indexer
   extend StatsD::Instrument
 
+  def self.indexer
+    # TODO: remove this after we upgrade rubygems client to 2.5.0+
+    @indexer ||=
+      begin
+        indexer = Gem::Indexer.new(Rails.root.join("server"), build_legacy: false)
+        indexer.define_singleton_method(:say) { |_| }
+        indexer
+      end
+  end
+
   def perform
     log "Updating the index"
     update_index
@@ -80,15 +90,5 @@ class Indexer
 
   def log(message)
     Rails.logger.info "[GEMCUTTER:#{Time.zone.now}] #{message}"
-  end
-
-  def self.indexer
-    # TODO: remove this after we upgrade rubygems client to 2.5.0+
-    @indexer ||=
-      begin
-        indexer = Gem::Indexer.new(Rails.root.join("server"), build_legacy: false)
-        def indexer.say(_) end
-        indexer
-      end
   end
 end

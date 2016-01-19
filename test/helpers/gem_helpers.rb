@@ -21,22 +21,22 @@ module GemHelpers
     gemspec = Gem::Specification.new do |s|
       s.name = name
       s.platform = platform
-      s.version = "#{version}"
+      s.version = version.to_s
       s.authors = ["Someone"]
       s.date = Time.zone.now.strftime('%Y-%m-%d')
-      s.description = "#{summary}"
+      s.description = summary.to_s
       s.email = "someone@example.com"
       s.files = []
       s.homepage = "http://example.com/#{name}"
       s.require_paths = ["lib"]
-      s.summary = "#{summary}"
+      s.summary = summary.to_s
       s.test_files = []
       s.licenses = []
       s.metadata = { "foo" => "bar" }
       yield s if block_given?
     end
 
-    def gemspec.validate
+    gemspec.define_singleton_method(:validate) do
       "not validating on purpose"
     end
 

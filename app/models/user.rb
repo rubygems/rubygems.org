@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   include Gravtastic
   is_gravtastic default: "retro"
 
-  PERMITTED_ATTRS = [:bio, :email, :handle, :hide_email, :location, :password, :website]
+  PERMITTED_ATTRS = [:bio, :email, :handle, :hide_email, :location, :password, :website].freeze
 
   has_many :rubygems, through: :ownerships
 

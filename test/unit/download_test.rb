@@ -199,7 +199,7 @@ class DownloadTest < ActiveSupport::TestCase
 
       downloads = ActiveSupport::OrderedHash.new.tap do |d|
         d[start.to_s] = 0
-        d["#{Time.zone.yesterday}"] = 5
+        d[Time.zone.yesterday.to_s] = 5
         d[fin.to_s] = 1
       end
 
@@ -223,7 +223,7 @@ class DownloadTest < ActiveSupport::TestCase
 
     downloads = ActiveSupport::OrderedHash.new.tap do |d|
       d[start.to_s] = 0
-      d["#{Time.zone.yesterday}"] = 5
+      d[Time.zone.yesterday.to_s] = 5
       d[fin.to_s] = 1
     end
 
