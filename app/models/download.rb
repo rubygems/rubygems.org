@@ -1,6 +1,6 @@
 class Download
-  COUNT_KEY     = "downloads"
-  ALL_KEY       = "downloads:all"
+  COUNT_KEY     = "downloads".freeze
+  ALL_KEY       = "downloads:all".freeze
 
   def self.incr(name, full_name)
     today = Time.zone.today.to_s
@@ -61,12 +61,13 @@ class Download
       key = history_key(version)
 
       Redis.current.hmget(key, *dates).zip(dates).each do |count, date|
-        if count
-          count = count.to_i
-        else
-          vh = VersionHistory.find_by(version_id: version.id, day: date)
-
-          count = vh ? vh.count : 0
+        count = begin
+          if count
+            count.to_i
+          else
+            vh = VersionHistory.find_by(version_id: version.id, day: date)
+            vh ? vh.count : 0
+          end
         end
 
         downloads["#{version.id}-#{date}"] = count
@@ -83,22 +84,19 @@ class Download
     dates = (start..stop).map(&:to_s)
 
     Redis.current.hmget(history_key(version), *dates).zip(dates).each do |count, date|
-      if count
-        count = count.to_i
-      else
-        vh = VersionHistory.find_by(version_id: version.id, day: date)
-
-        if vh
-          count = vh.count
+      count = begin
+        if count
+          count.to_i
         else
-          count = 0
+          vh = VersionHistory.find_by(version_id: version.id, day: date)
+          vh ? vh.count : 0
         end
       end
 
       downloads[date] = count
     end
 
-    downloads["#{Time.zone.today}"] = today(version) if stop == Time.zone.today
+    downloads[Time.zone.today.to_s] = today(version) if stop == Time.zone.today
 
     downloads
   end

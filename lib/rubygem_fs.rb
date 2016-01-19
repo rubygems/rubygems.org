@@ -13,7 +13,7 @@ module RubygemFs
 
   def self.mock!
     @fs = RubygemFs::Local.new
-    def @fs.base_dir
+    @fs.define_singleton_method(:base_dir) do
       @dir ||= Dir.mktmpdir
     end
   end
@@ -24,7 +24,7 @@ module RubygemFs
                             region: 'us-east-1',
                             endpoint: host,
                             force_path_style: true)
-    def @fs.init
+    @fs.define_singleton_method(:init) do
       s3.create_bucket(bucket: bucket)
     end
     @fs.init

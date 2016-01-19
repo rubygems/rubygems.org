@@ -4,9 +4,11 @@ AllCops:
   Exclude:
     - config/initializers/forbidden_yaml.rb
     - !ruby/regexp /(vendor|bundle|bin|db)\/.*/
-  RunRailsCops: true
   DisplayCopNames: true
   DisplayStyleGuide: true
+
+Rails:
+  Enabled: true
 
 Metrics/AbcSize:
   Max: 42 # TODO: Lower to 15
@@ -44,6 +46,12 @@ Style/ClassAndModuleChildren:
 
 Style/Documentation:
   Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
 
 Style/MultilineOperationIndentation:
   EnforcedStyle: indented
