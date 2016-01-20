@@ -1,6 +1,5 @@
 require 'zlib'
 FastlyLogProcessor = Struct.new(:bucket, :key) do
-
   def perform
     counts = download_counts
 
@@ -12,7 +11,7 @@ FastlyLogProcessor = Struct.new(:bucket, :key) do
 
     # Check if this log has already been processed by another job
     unless Redis.current.setnx(redis_key, 'processing')
-      raise FastlyLogProcessor::AlreadyProcessedError.new("Already processed bucket: #{bucket} key: #{key}")
+      raise FastlyLogProcessor::AlreadyProcessedError, "Already processed bucket: #{bucket} key: #{key}"
     end
 
     # Set a short expiry while updating
@@ -31,7 +30,7 @@ FastlyLogProcessor = Struct.new(:bucket, :key) do
   #     'rails-4.2.0' => 50
   #   }
   def download_counts(enumerator = log_lines)
-    enumerator.reduce(Hash.new(0)) do |accum, log_line|
+    enumerator.each_with_object(Hash.new(0)) do |log_line, accum|
       path, response_code = log_line.split[10, 2]
       # Only count successful downloads
       # TODO: should we count 304 not modified responses?

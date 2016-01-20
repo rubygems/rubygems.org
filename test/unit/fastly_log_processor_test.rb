@@ -1,16 +1,15 @@
 require 'test_helper'
 
 class FastlyLogProcessorTest < ActiveSupport::TestCase
-
   setup do
     @sample_log = File.read(Rails.root.join('test/sample_logs/fastly-fake.log'))
 
     @sample_log_counts = {
-      "bundler-1.10.6"=>2,
-      "json-1.8.3-java"=>2,
-      "json-1.8.3"=>1,
-      "json-1.8.2"=>3,
-      "no-such-gem-1.2.3"=>1
+      "bundler-1.10.6" => 2,
+      "json-1.8.3-java" => 2,
+      "json-1.8.3" => 1,
+      "json-1.8.2" => 3,
+      "no-such-gem-1.2.3" => 1
     }
 
     Aws.config[:s3] = {
@@ -59,7 +58,6 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
     end
 
     context "#munge_for_bulk_update" do
-
       should "exclude missing gems" do
         expected = [
           ["bundler", "bundler-1.10.6", 2],
@@ -77,14 +75,13 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
       should "update download counts" do
         @job.perform
 
-        @sample_log_counts.
-          reject{|k,_| k == "no-such-gem-1.2.3"}.
-          each do |name, expected_count|
+        @sample_log_counts
+          .reject { |k, _| k == "no-such-gem-1.2.3" }
+          .each do |name, expected_count|
           assert_equal expected_count, Version.find_by_full_name(name).downloads_count
         end
 
         assert_equal 6, Rubygem.find_by_name('json').downloads
-
       end
 
       should 'set the redis key' do
@@ -99,5 +96,4 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
       end
     end
   end
-
 end

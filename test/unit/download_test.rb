@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class DownloadTest < ActiveSupport::TestCase
-
   context "#incr" do
     should "load up all downloads with just raw strings and process them" do
       rubygem = create(:rubygem, name: "some-stupid13-gem42-9000")
@@ -30,9 +29,9 @@ class DownloadTest < ActiveSupport::TestCase
 
   context "#bulk_update" do
     should "write the proper values" do
-      versions = 2.times.map { create(:version) }
+      versions = Array.new(2) { create(:version) }
       gems     = versions.map(&:rubygem)
-      counts   = 2.times.map { rand(100) }
+      counts   = Array.new(2) { rand(100) }
       data     = gems.map(&:name).zip(versions.map(&:full_name), counts)
 
       Download.bulk_update(data)
