@@ -4,7 +4,8 @@ FastlyLogProcessor = Struct.new(:bucket, :key) do
   def perform
     counts = download_counts
 
-    unless true # TODO: add feature toggle
+    unless Gemcutter::ENABLE_FASTLY_LOG_PROCESSOR
+      # Just log & exit w/out updating stats
       Delayed::Worker.logger.info "Processed Fastly log counts: #{counts.inspect}"
       return
     end
