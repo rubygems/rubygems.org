@@ -152,7 +152,7 @@ GEM
       newrelic_rpm (~> 3.11)
       redis (< 4.0)
     newrelic_rpm (3.14.1.311)
-    nokogiri (1.6.7.1)
+    nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
     parser (2.3.0.1)
       ast (~> 2.2)
