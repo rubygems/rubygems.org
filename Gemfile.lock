@@ -42,7 +42,7 @@ GEM
     autoprefixer-rails (6.3.1)
       execjs
       json
-    aws-sdk-core (2.2.12)
+    aws-sdk-core (2.2.13)
       jmespath (~> 1.0)
     bcrypt (3.1.10)
     bourne (1.6.0)
