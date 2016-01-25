@@ -24,7 +24,7 @@ class ApplicationHelperTest < ActionView::TestCase
     rubygem = create(:rubygem, name: "SomeGem")
     create(:version, rubygem: rubygem, number: "3.0.0", platform: "ruby", description: text)
 
-    assert_equal 'Rails authentication &amp; authorization',
+    assert_equal 'alert(&quot;foo&quot;);Rails authentication &amp; authorization',
       short_info(rubygem.versions.most_recent)
     assert short_info(rubygem.versions.most_recent).html_safe?
   end
