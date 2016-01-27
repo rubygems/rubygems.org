@@ -13,6 +13,7 @@ $(function() {
 
   clipboard.on('success', function(e) {
     hide_copy_show_copied_tooltips(e);
+    e.clearSelection();
   });
 
   clipboard.on('error', function(e) {
