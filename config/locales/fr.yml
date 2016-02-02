@@ -202,6 +202,6 @@ fr:
           one:   "<b>1</b> %{model} affiché"
           other: "Les <b>%{count}</b> %{model} affichés"
 
-        multi_page: "%{model} de %{from} à %{to} parmis %{count} au total"
-        multi_page_html: "%{model} de <b>%{from}</b> à <b>%{to}</b> parmis <b>%{count}</b> au total"
+        multi_page: "%{model} de %{from} à %{to} parmi %{count} au total"
+        multi_page_html: "%{model} de <b>%{from}</b> à <b>%{to}</b> parmi <b>%{count}</b> au total"
 
