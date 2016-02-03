@@ -11,7 +11,7 @@ test:
 staging:
   protocol: https
   host: staging.rubygems.org
-  s3_bucket: staging.s3.rubygems.org
+  s3_bucket: oregon.staging.s3.rubygems.org
 
 production:
   protocol: https
