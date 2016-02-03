@@ -32,7 +32,8 @@ class Pusher
     @indexer.write_gem @body, @spec
   rescue StandardError => e
     @version.destroy
-    notify("There was a problem saving your gem: #{e}", 403)
+    Honeybadger.notify(e)
+    notify("There was a problem saving your gem. Please try again.", 500)
   else
     if update
       after_write
