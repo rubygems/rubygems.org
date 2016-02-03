@@ -6,8 +6,8 @@ module RubygemFs
       else
         RubygemFs::S3.new(access_key_id: ENV['S3_KEY'],
                           secret_access_key: ENV['S3_SECRET'],
-                          region: 'us-east-1',
-                          endpoint: "https://s3.amazonaws.com")
+                          region: Gemcutter.config['s3_region'],
+                          endpoint: "https://#{Gemcutter.config['s3_endpoint']}")
       end
   end
 
@@ -21,7 +21,7 @@ module RubygemFs
   def self.s3!(host)
     @fs = RubygemFs::S3.new(access_key_id: 'k',
                             secret_access_key: 's',
-                            region: 'us-east-1',
+                            region: Gemcutter.config['s3_region'],
                             endpoint: host,
                             force_path_style: true)
     @fs.define_singleton_method(:init) do
