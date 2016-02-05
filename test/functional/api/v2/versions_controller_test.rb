@@ -60,7 +60,7 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
       assert_response :success
       set_cache_header
 
-      @rubygem[:updated_at] = Time.zone.now + 1
+      @rubygem.update(updated_at: Time.zone.now + 1)
       get_show(@rubygem, '2.0.0')
       assert_response :success
     end
