@@ -33,24 +33,32 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
-    should "reorder versions with platforms properly" do
-      version3_ruby  = create(:version, rubygem: @rubygem, number: "3.0.0", platform: "ruby")
-      version3_mswin = create(:version, rubygem: @rubygem, number: "3.0.0", platform: "mswin")
-      version2_ruby  = create(:version, rubygem: @rubygem, number: "2.0.0", platform: "ruby")
-      version1_linux = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "linux")
+    context "with many versions" do
+      setup do
+        @version3_ruby  = create(:version, rubygem: @rubygem, number: "3.0.0", platform: "ruby")
+        @version3_mswin = create(:version, rubygem: @rubygem, number: "3.0.0", platform: "mswin")
+        @version2_ruby  = create(:version, rubygem: @rubygem, number: "2.0.0", platform: "ruby")
+        @version1_linux = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "linux")
+      end
 
-      @rubygem.reorder_versions
+      should "reorder versions with platforms properly" do
+        @rubygem.reorder_versions
 
-      assert_equal 0, version3_ruby.reload.position
-      assert_equal 0, version3_mswin.reload.position
-      assert_equal 1, version2_ruby.reload.position
-      assert_equal 2, version1_linux.reload.position
+        assert_equal 0, @version3_ruby.reload.position
+        assert_equal 0, @version3_mswin.reload.position
+        assert_equal 1, @version2_ruby.reload.position
+        assert_equal 2, @version1_linux.reload.position
 
-      latest_versions = Version.latest
-      assert latest_versions.include?(version3_ruby)
-      assert latest_versions.include?(version3_mswin)
+        latest_versions = Version.latest
+        assert latest_versions.include?(@version3_ruby)
+        assert latest_versions.include?(@version3_mswin)
 
-      assert_equal version3_ruby, @rubygem.versions.most_recent
+        assert_equal @version3_ruby, @rubygem.versions.most_recent
+      end
+
+      should "return the correct value for most recent version" do
+        assert_equal @version3_ruby, @rubygem.most_recent_version
+      end
     end
 
     should "order latest platform gems with latest uniquely" do
