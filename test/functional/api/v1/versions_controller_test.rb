@@ -89,7 +89,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       assert_response :success
       set_cache_header
 
-      @rubygem.update(updated_at: Time.zone.now + 1)
+      @rubygem[:updated_at] = Time.zone.now + 1
       get_show(@rubygem)
       assert_response :success
     end
@@ -285,8 +285,8 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       assert ret_versions.include?(@version_one_latest.full_name)
       assert ret_versions.include?(@version_two_earlier.full_name)
       assert ret_versions.include?(@version_three.full_name)
-      assert !ret_versions.include?(@version_one_earlier.full_name)
-      assert !ret_versions.include?(@version_two_latest.full_name)
+      refute ret_versions.include?(@version_one_earlier.full_name)
+      refute ret_versions.include?(@version_two_latest.full_name)
     end
   end
 end

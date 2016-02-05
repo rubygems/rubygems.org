@@ -106,8 +106,8 @@ class VersionTest < ActiveSupport::TestCase
       assert version_list.include?(@version_one_latest)
       assert version_list.include?(@version_two_earlier)
       assert version_list.include?(@version_three)
-      assert !version_list.include?(@version_one_earlier)
-      assert !version_list.include?(@version_two_latest)
+      refute version_list.include?(@version_one_earlier)
+      refute version_list.include?(@version_two_latest)
     end
   end
 
@@ -147,14 +147,14 @@ class VersionTest < ActiveSupport::TestCase
       assert @version.save
       assert @number_version.save
       assert @platform_version.save
-      assert ! @dup_version.valid?
+      refute @dup_version.valid?
     end
 
     should "be able to find dependencies" do
       @dependency = create(:rubygem)
       @version = build(:version, rubygem: @rubygem, number: "1.0.0", platform: "ruby")
       @version.dependencies << create(:dependency, version: @version, rubygem: @dependency)
-      assert !Version.with_deps.first.dependencies.empty?
+      refute Version.with_deps.first.dependencies.empty?
     end
 
     should "sort dependencies alphabetically" do
@@ -232,7 +232,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "not be platformed" do
-      assert ! @version.platformed?
+      refute @version.platformed?
     end
 
     should "save full name" do
@@ -306,7 +306,7 @@ class VersionTest < ActiveSupport::TestCase
         number: "0.2.0")
 
       assert @version.prerelease
-      assert !old_version.prerelease
+      refute old_version.prerelease
 
       @version.rubygem.reorder_versions
 
@@ -463,7 +463,7 @@ class VersionTest < ActiveSupport::TestCase
 
     should "know if it is a prelease version" do
       assert @prerelease.prerelease?
-      assert !@release.prerelease?
+      refute @release.prerelease?
     end
 
     should "return prerelease gems from the prerelease named scope" do

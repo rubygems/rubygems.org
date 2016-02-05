@@ -46,7 +46,7 @@ class RubygemsControllerTest < ActionController::TestCase
       should respond_with :success
       should render_template :show
       should "not render edit link" do
-        assert !page.has_selector?("a[href='#{edit_rubygem_path(@rubygem)}']")
+        refute page.has_selector?("a[href='#{edit_rubygem_path(@rubygem)}']")
       end
     end
 
@@ -471,7 +471,7 @@ class RubygemsControllerTest < ActionController::TestCase
         assert page.has_selector?("a[href='#{sign_in_path}']")
       end
       should "not have an unsubscribe link" do
-        assert !page.has_selector?("a#unsubscribe")
+        refute page.has_selector?("a#unsubscribe")
       end
     end
 

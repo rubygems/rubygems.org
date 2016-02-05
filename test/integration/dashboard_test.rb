@@ -15,7 +15,7 @@ class DashboardTest < ActionDispatch::IntegrationTest
     get dashboard_path
 
     assert page.has_content? "sandworm"
-    assert !page.has_content?("arrakis")
+    refute page.has_content?("arrakis")
   end
 
   test "gems I have subscribed to show on my dashboard" do
@@ -25,7 +25,7 @@ class DashboardTest < ActionDispatch::IntegrationTest
     get dashboard_path
 
     assert page.has_content? "sandworm"
-    assert !page.has_content?("arrakis")
+    refute page.has_content?("arrakis")
   end
 
   test "dashboard with a non valid format" do

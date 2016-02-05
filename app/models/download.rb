@@ -176,7 +176,7 @@ class Download
     when Rubygem
       rubygem_key(what.name)
     else
-      fail TypeError, "Unknown type for key - #{what.class}"
+      raise TypeError, "Unknown type for key - #{what.class}"
     end
   end
 
@@ -187,7 +187,7 @@ class Download
     when Rubygem
       rubygem_history_key(what.name)
     else
-      fail TypeError, "Unknown type for history_key - #{what.class}"
+      raise TypeError, "Unknown type for history_key - #{what.class}"
     end
   end
 

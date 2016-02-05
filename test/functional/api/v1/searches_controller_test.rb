@@ -55,12 +55,12 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
 
     should "default to first page when page is 0" do
       get :show, query: "match", page: 0, format: :json
-      assert JSON.parse(response.body).size > 0
+      refute JSON.parse(response.body).empty?
     end
 
     should "default to first page when page is not a number" do
       get :show, query: "match", page: "foo", format: :json
-      assert JSON.parse(response.body).size > 0
+      refute JSON.parse(response.body).empty?
     end
   end
 end

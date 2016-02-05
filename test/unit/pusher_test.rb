@@ -186,7 +186,7 @@ class PusherTest < ActiveSupport::TestCase
         spec.expects(:version).returns "1.3.3.7"
         spec.expects(:original_platform).returns "ruby"
         @cutter.stubs(:spec).returns spec
-        assert !@cutter.find
+        refute @cutter.find
 
         assert_match(/Unable to change case/, @cutter.message)
       end
@@ -232,7 +232,7 @@ class PusherTest < ActiveSupport::TestCase
 
         should "be false if not owned by user and an indexed version exists" do
           create(:version, rubygem: @rubygem, number: '0.1.1')
-          assert ! @cutter.authorize
+          refute @cutter.authorize
           assert_equal "You do not have permission to push to this gem.", @cutter.message
           assert_equal 403, @cutter.code
         end
