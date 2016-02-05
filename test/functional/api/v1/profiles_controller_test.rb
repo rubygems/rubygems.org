@@ -46,7 +46,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
 
       context "on GET to show when hide email" do
         setup do
-          @user[:hide_email] = true
+          @user.update(hide_email: true)
           get :show, id: @user.handle, format: format
         end
 
