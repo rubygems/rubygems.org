@@ -13,7 +13,7 @@ class LinksetTest < ActiveSupport::TestCase
     end
 
     should "not be empty with some links filled out" do
-      assert !@linkset.empty?
+      refute @linkset.empty?
     end
 
     should "be empty with no links filled out" do

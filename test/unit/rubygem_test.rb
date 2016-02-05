@@ -82,8 +82,8 @@ class RubygemTest < ActiveSupport::TestCase
 
       @rubygem.reorder_versions
 
-      assert !pre.reload.latest
-      assert !old.reload.latest
+      refute pre.reload.latest
+      refute old.reload.latest
       assert ming.reload.latest
       assert win.reload.latest
       assert ruby.reload.latest
@@ -264,14 +264,14 @@ class RubygemTest < ActiveSupport::TestCase
     ['1337', 'Snakes!'].each do |bad_name|
       should "not accept #{bad_name.inspect} as a name" do
         @rubygem.name = bad_name
-        assert ! @rubygem.valid?
+        refute @rubygem.valid?
         assert_match(/Name/, @rubygem.all_errors)
       end
     end
 
     should "not accept an Array as name" do
       @rubygem.name = ['zomg']
-      assert !@rubygem.valid?
+      refute @rubygem.valid?
     end
 
     should "return linkset errors in #all_errors" do
@@ -307,7 +307,7 @@ class RubygemTest < ActiveSupport::TestCase
       @specification.homepage = "badurl.com"
       @rubygem.name = "1337"
 
-      assert ! @rubygem.valid?
+      refute @rubygem.valid?
       assert_raise ActiveRecord::RecordInvalid do
         @rubygem.update_linkset!(@specification)
       end
@@ -344,12 +344,12 @@ class RubygemTest < ActiveSupport::TestCase
       should "be owned by a user in ownership" do
         create(:ownership, user: @user, rubygem: @rubygem)
         assert @rubygem.owned_by?(@user)
-        assert !@rubygem.unowned?
+        refute @rubygem.unowned?
       end
 
       should "be not owned if no ownerships" do
         assert @rubygem.ownerships.empty?
-        assert !@rubygem.owned_by?(@user)
+        refute @rubygem.owned_by?(@user)
         assert @rubygem.unowned?
       end
 
@@ -502,19 +502,19 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "return only gems with one version" do
-      assert !Rubygem.with_one_version.include?(@rubygem_without_version)
+      refute Rubygem.with_one_version.include?(@rubygem_without_version)
       assert Rubygem.with_one_version.include?(@rubygem_with_version)
-      assert !Rubygem.with_one_version.include?(@rubygem_with_versions)
+      refute Rubygem.with_one_version.include?(@rubygem_with_versions)
     end
 
     should "return only gems with versions for #with_versions" do
-      assert !Rubygem.with_versions.include?(@rubygem_without_version)
+      refute Rubygem.with_versions.include?(@rubygem_without_version)
       assert Rubygem.with_versions.include?(@rubygem_with_version)
       assert Rubygem.with_versions.include?(@rubygem_with_versions)
     end
 
     should "be hosted or not" do
-      assert ! @rubygem_without_version.hosted?
+      refute @rubygem_without_version.hosted?
       assert @rubygem_with_version.hosted?
     end
 
@@ -537,7 +537,7 @@ class RubygemTest < ActiveSupport::TestCase
         @rubygem_with_versions.versions.first.update! indexed: false
       end
       should "remain owned" do
-        assert !@rubygem_with_versions.reload.unowned?
+        refute @rubygem_with_versions.reload.unowned?
       end
       should "then know there is a yanked version" do
         assert @rubygem_with_versions.yanked_versions?
@@ -569,7 +569,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "not be pushable if it has versions" do
-      assert ! @thin.pushable?
+      refute @thin.pushable?
     end
 
     should "give a count of only rubygems with versions" do
@@ -604,8 +604,8 @@ class RubygemTest < ActiveSupport::TestCase
         assert Rubygem.legacy_search('apple').include?(@apple_pie)
         assert Rubygem.legacy_search('orange').include?(@orange_julius)
 
-        assert !Rubygem.legacy_search('apple').include?(@orange_julius)
-        assert !Rubygem.legacy_search('orange').include?(@apple_pie)
+        refute Rubygem.legacy_search('apple').include?(@orange_julius)
+        refute Rubygem.legacy_search('orange').include?(@apple_pie)
       end
 
       should "find rubygems by name with extra spaces" do
@@ -613,8 +613,8 @@ class RubygemTest < ActiveSupport::TestCase
         assert Rubygem.legacy_search('orange   ').include?(@orange_julius)
         assert_equal Rubygem.legacy_search('apple'), Rubygem.legacy_search('apple ')
 
-        assert !Rubygem.legacy_search('apple  ').include?(@orange_julius)
-        assert !Rubygem.legacy_search('orange   ').include?(@apple_pie)
+        refute Rubygem.legacy_search('apple  ').include?(@orange_julius)
+        refute Rubygem.legacy_search('orange   ').include?(@apple_pie)
       end
 
       should "find rubygems case insensitively" do
@@ -623,7 +623,7 @@ class RubygemTest < ActiveSupport::TestCase
 
       should "find rubygems with missing punctuation" do
         assert Rubygem.legacy_search('apple crisp').include?(@apple_crisp)
-        assert !Rubygem.legacy_search('apple crisp').include?(@apple_pie)
+        refute Rubygem.legacy_search('apple crisp').include?(@apple_pie)
       end
 
       should "sort results by number of downloads, descending" do
@@ -651,7 +651,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "create a rubygem and associated records" do
-        assert ! @rubygem.new_record?
+        refute @rubygem.new_record?
         assert @rubygem.versions.present?
       end
 
@@ -717,8 +717,8 @@ class RubygemTest < ActiveSupport::TestCase
           @rubygem.update_attributes_from_gem_specification!(@version, @specification)
         end
 
-        assert ! @rubygem.new_record?
-        assert ! @version.new_record?
+        refute @rubygem.new_record?
+        refute @version.new_record?
         assert_equal 1, @rubygem.versions.count
         assert_equal 1, @rubygem.versions_count
         assert_equal 2, @version.dependencies.count

@@ -11,7 +11,7 @@ class SearchesControllerTest < ActionController::TestCase
     should respond_with :success
     should render_template :show
     should "see no results" do
-      assert !page.has_content?("Results")
+      refute page.has_content?("Results")
     end
   end
 
@@ -45,8 +45,8 @@ class SearchesControllerTest < ActionController::TestCase
       assert page.has_selector?("a[href='#{rubygem_path(@sinatra)}']")
     end
     should "not see brando on the page in the results" do
-      assert !page.has_content?(@brando.name)
-      assert !page.has_selector?("a[href='#{rubygem_path(@brando)}']")
+      refute page.has_content?(@brando.name)
+      refute page.has_selector?("a[href='#{rubygem_path(@brando)}']")
     end
     should "display 'gems' in pagination summary" do
       assert page.has_content?("all 2 gems")

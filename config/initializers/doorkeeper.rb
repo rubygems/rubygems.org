@@ -15,7 +15,7 @@ Doorkeeper.configure do
 
   admin_authenticator do
     user = authenticate_resource_owner!
-    fail(Doorkeeper::Errors::DoorkeeperError, 'Not an admin') unless Gemcutter.admins.include? user.try(:email)
+    raise(Doorkeeper::Errors::DoorkeeperError, 'Not an admin') unless Gemcutter.admins.include? user.try(:email)
     user
   end
 

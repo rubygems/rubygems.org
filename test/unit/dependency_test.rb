@@ -52,7 +52,7 @@ class DependencyTest < ActiveSupport::TestCase
     should "not push development dependency onto the redis list" do
       @dependency = create(:dependency, :development)
 
-      assert !Redis.current.exists(Dependency.runtime_key(@dependency.version.full_name))
+      refute Redis.current.exists(Dependency.runtime_key(@dependency.version.full_name))
     end
   end
 
@@ -125,8 +125,8 @@ class DependencyTest < ActiveSupport::TestCase
 
       should "create a Dependency but not a rubygem" do
         dependency = Dependency.create(gem_dependency: @gem_dependency, version: @version)
-        assert !dependency.new_record?
-        assert !dependency.errors[:base].present?
+        refute dependency.new_record?
+        refute dependency.errors[:base].present?
         assert_nil Rubygem.find_by(name: @rubygem_name)
 
         assert_equal "other-name", dependency.unresolved_name

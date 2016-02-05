@@ -46,7 +46,7 @@ class RubygemsHelperTest < ActionView::TestCase
     assert show_all_versions_link?(rubygem)
     rubygem.stubs(:versions_count).returns 1
     rubygem.stubs(:yanked_versions?).returns false
-    assert !show_all_versions_link?(rubygem)
+    refute show_all_versions_link?(rubygem)
     rubygem.stubs(:yanked_versions?).returns true
     assert show_all_versions_link?(rubygem)
   end

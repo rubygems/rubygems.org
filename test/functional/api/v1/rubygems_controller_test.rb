@@ -82,7 +82,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "On GET to show for a gem that doesn't exist" do
       setup do
         @name = generate(:name)
-        assert !Rubygem.exists?(name: @name)
+        refute Rubygem.exists?(name: @name)
         get :show, id: @name, format: "json"
       end
 
@@ -372,7 +372,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       assert gems.include?(@gem_one.name)
       assert gems.include?(@gem_two.name)
       assert gems.include?(@gem_three.name)
-      assert !gems.include?(@gem_four.name)
+      refute gems.include?(@gem_four.name)
     end
 
     context "with only=development" do

@@ -61,6 +61,6 @@ class ProfileTest < SystemTest
     click_button "Update"
 
     visit profile_path("nick1")
-    assert !page.has_content?("Email Me")
+    refute page.has_content?("Email Me")
   end
 end
