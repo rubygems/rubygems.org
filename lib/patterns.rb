@@ -83,7 +83,6 @@ module Patterns
     socket
     stringio
     strscan
-    sync
     syslog
     tempfile
     thread
@@ -104,4 +103,10 @@ module Patterns
     zlib
     ubygems
   ).freeze
+
+  # see https://github.com/rubygems/rubygems.org/issues/1190
+  if Time.zone.now > Time.zone.parse('2016-05-01 00:00:00') &&
+      !GEM_NAME_BLACKLIST.include?('sync')
+    warn "Sync gem should be back to the blacklist of game names by now."
+  end
 end
