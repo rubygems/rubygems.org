@@ -201,7 +201,7 @@ GEM
     rainbow (2.1.0)
     raindrops (0.15.0)
     rake (10.5.0)
-    rdoc (4.2.1)
+    rdoc (4.2.2)
       json (~> 1.4)
     redis (3.2.2)
     rest-client (1.8.0)
