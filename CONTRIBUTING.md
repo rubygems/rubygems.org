@@ -84,10 +84,8 @@ than Rubygems and may suit your organization’s needs better.**
   * Setup information: `brew info redis`
 * Install Elastic Search: `brew install elasticsearch`
   * Setup information: `brew info elasticsearch`
-* (Suggested) Install PostgreSQL (>= 8.4.x): `brew install postgres`
+* Install PostgreSQL (>= 8.4.x): `brew install postgres`
   * Setup information: `brew info postgresql`
-* (Alternate) install MySQL: `brew install mysql`
-  * Setup information: `brew info mysql`
 
 #### Environment (Linux - Debian/Ubuntu)
 
@@ -104,8 +102,6 @@ than Rubygems and may suit your organization’s needs better.**
 * Clone the repo: `git clone git://github.com/rubygems/rubygems.org`
 * Move into your cloned rubygems directory if you haven’t already:
     `cd rubygems.org`
-* If you're using MySQL - replace `pg` with `mysql2` in the Gemfile:
-  * `sed -i "s/gem 'pg'/gem 'mysql2'/" Gemfile`
 * Install dependencies:
     `bundle install`
 
