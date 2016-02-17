@@ -138,12 +138,11 @@
     background-image: linear-gradient(to right, transparent 0%, white 100%); }
 
 .gem__code__tooltip--copy,
-.gem__code__tooltip--copied,
-.zeroclipboard-is-hover.zeroclipboard-is-active ~ .gem__code__tooltip--copy {
+.gem__code__tooltip--copied {
   display: none; }
 
-.zeroclipboard-is-hover ~ .gem__code__tooltip--copy,
-.zeroclipboard-is-active ~ .gem__code__tooltip--copied {
+.clipboard-is-hover,
+.clipboard-is-active {
   display: block;
   position: absolute;
   top: 45px;
@@ -155,8 +154,8 @@
   line-height: 30px;
   text-align: center;
   color: #ffffff; }
-  .zeroclipboard-is-hover ~ .gem__code__tooltip--copy:before,
-  .zeroclipboard-is-active ~ .gem__code__tooltip--copied:before {
+  .clipboard-is-hover:before,
+  .clipboard-is-active:before {
     content: "";
     position: absolute;
     top: -4px;
