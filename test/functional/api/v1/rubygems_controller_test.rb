@@ -58,7 +58,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to show" do
       should_respond_to(:json) do |body|
-        MultiJson.load body
+        JSON.load body
       end
 
       should_respond_to(:yaml) do |body|
@@ -163,7 +163,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to index" do
       should_respond_to :json do |body|
-        MultiJson.load body
+        JSON.load body
       end
 
       should_respond_to :yaml do |body|
@@ -365,7 +365,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     should "return names of reverse dependencies" do
       get :reverse_dependencies, id: @dep_rubygem.to_param, format: "json"
-      gems = MultiJson.load(@response.body)
+      gems = JSON.load(@response.body)
 
       assert_equal 4, gems.size
 
@@ -382,7 +382,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           only: "development",
           format: "json"
 
-        gems = MultiJson.load(@response.body)
+        gems = JSON.load(@response.body)
 
         assert_equal 1, gems.size
 
@@ -397,7 +397,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           only: "runtime",
           format: "json"
 
-        gems = MultiJson.load(@response.body)
+        gems = JSON.load(@response.body)
 
         assert_equal 3, gems.size
 

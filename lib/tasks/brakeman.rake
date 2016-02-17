@@ -41,8 +41,8 @@ task :brakeman do
     Brakeman.load_brakeman_dependency 'multi_json'
     require 'brakeman/report/initializers/multi_json'
     require 'brakeman/differ'
-    previous_results = MultiJson.load(File.read(previous_report), symbolize_keys: true)[:warnings]
-    new_results = MultiJson.load(tracker.report.to_json, symbolize_keys: true)[:warnings]
+    previous_results = JSON.load(File.read(previous_report))['warnings']
+    new_results = JSON.load(tracker.report.to_json)['warnings']
     STDERR.puts Brakeman::Differ.new(new_results, previous_results).diff
   end
   if report.all_warnings.any?

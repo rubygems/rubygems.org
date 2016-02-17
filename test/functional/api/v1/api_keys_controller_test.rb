@@ -70,7 +70,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
   context "on GET to show" do
     should_respond_to(:json) do |body|
-      MultiJson.load body
+      JSON.load body
     end
 
     should_respond_to(:yaml, :to_sym) do |body|
