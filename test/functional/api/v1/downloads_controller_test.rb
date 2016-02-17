@@ -20,7 +20,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:json) do |body|
-      MultiJson.load(body)['total']
+      JSON.load(body)['total']
     end
 
     should_respond_to(:yaml) do |body|
@@ -70,7 +70,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:json) do |body|
-      MultiJson.load body
+      JSON.load body
     end
 
     should_respond_to(:yaml, :to_sym) do |body|
@@ -155,7 +155,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:json) do |body|
-      MultiJson.load(body)['gems']
+      JSON.load(body)['gems']
     end
 
     should_respond_to(:yaml) do |body|
@@ -185,7 +185,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:json) do |body|
-      MultiJson.load(body)['gems']
+      JSON.load(body)['gems']
     end
 
     should_respond_to(:yaml) do |body|

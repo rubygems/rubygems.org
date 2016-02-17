@@ -122,7 +122,7 @@ class PusherTest < ActiveSupport::TestCase
 
       _, payload = post_data
 
-      params = MultiJson.load payload
+      params = JSON.load payload
 
       assert_equal "test",  params["name"]
       assert_equal "0.0.0", params["version"]

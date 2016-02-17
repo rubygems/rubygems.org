@@ -63,7 +63,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:json) do |body|
-      MultiJson.load(body)
+      JSON.load(body)
     end
 
     should_respond_to(:yaml) do |body|
@@ -155,7 +155,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "give all releases" do
       get_show(@rubygem)
-      assert_equal 12, MultiJson.load(@response.body).size
+      assert_equal 12, JSON.load(@response.body).size
     end
   end
 
@@ -169,7 +169,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return latest version" do
       get_latest @rubygem
-      assert_equal "3.0.0", MultiJson.load(@response.body)['version']
+      assert_equal "3.0.0", JSON.load(@response.body)['version']
     end
   end
 
@@ -197,7 +197,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return latest version" do
       get :latest, id: "blah", format: "json"
-      assert_equal "unknown", MultiJson.load(@response.body)['version']
+      assert_equal "unknown", JSON.load(@response.body)['version']
     end
   end
 
@@ -209,7 +209,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return latest version" do
       get :latest, id: @rubygem.name, format: "json"
-      assert_equal "unknown", MultiJson.load(@response.body)['version']
+      assert_equal "unknown", JSON.load(@response.body)['version']
     end
   end
 
@@ -222,7 +222,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return most recent version" do
       get :latest, id: @rubygem.name, format: "json"
-      assert_equal "2.0.0", MultiJson.load(@response.body)['version']
+      assert_equal "2.0.0", JSON.load(@response.body)['version']
     end
   end
 
@@ -234,7 +234,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return license info" do
       get :show, id: @rubygem.name, format: "json"
-      assert_equal "MIT", MultiJson.load(@response.body).first['licenses']
+      assert_equal "MIT", JSON.load(@response.body).first['licenses']
     end
   end
 
@@ -278,7 +278,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return names of reverse dependencies" do
       get_reverse_dependencies(@dep_rubygem, format: "json")
-      ret_versions = MultiJson.load(@response.body)
+      ret_versions = JSON.load(@response.body)
 
       assert_equal 3, ret_versions.size
 

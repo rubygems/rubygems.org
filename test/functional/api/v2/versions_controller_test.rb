@@ -34,7 +34,7 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:json) do |body|
-      MultiJson.load(body)
+      JSON.load(body)
     end
 
     should_respond_to(:yaml) do |body|
@@ -126,8 +126,8 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
 
     should "gives one specific version" do
       get_show(@rubygem, '4.0.0')
-      assert_kind_of Hash, MultiJson.load(@response.body)
-      assert_equal "4.0.0", MultiJson.load(@response.body)["number"]
+      assert_kind_of Hash, JSON.load(@response.body)
+      assert_equal "4.0.0", JSON.load(@response.body)["number"]
     end
 
     context "expected attributes by compact index" do
@@ -141,7 +141,7 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
       @rubygem = create(:rubygem)
       create(:version, rubygem: @rubygem, number: "2.0.0")
       get_show(@rubygem, '2.0.0')
-      @response = MultiJson.load(@response.body)
+      @response = JSON.load(@response.body)
     end
 
     should("have sha") { assert @response["sha"] }

@@ -13,14 +13,14 @@ class CompactIndex < ActionDispatch::IntegrationTest
   test "return gem version" do
     request_endpoint(@rubygem, '2.0.0')
     assert_response :success
-    json_response = MultiJson.load(@response.body)
+    json_response = JSON.load(@response.body)
     assert_kind_of Hash, json_response
     assert_equal '2.0.0', json_response["number"]
   end
 
   test "has required fields" do
     request_endpoint(@rubygem, '2.0.0')
-    json_response = MultiJson.load(@response.body)
+    json_response = JSON.load(@response.body)
     json_response["sha"]
     json_response["platform"]
     json_response["ruby_version"]

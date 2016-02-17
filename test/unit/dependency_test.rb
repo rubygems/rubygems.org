@@ -16,7 +16,7 @@ class DependencyTest < ActiveSupport::TestCase
 
     should "return JSON" do
       @dependency.save
-      json = MultiJson.load(@dependency.to_json)
+      json = JSON.load(@dependency.to_json)
 
       assert_equal %w(name requirements), json.keys.sort
       assert_equal @dependency.rubygem.name, json["name"]
