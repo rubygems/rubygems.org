@@ -291,7 +291,7 @@ DEPENDENCIES
   jruby-openssl
   launchy
   mail
-  mime-types (~> 2.6)
+  mime-types (~> 2.99)
   minitest
   mocha
   multi_json
