@@ -1,5 +1,14 @@
 require 'zlib'
-FastlyLogProcessor = Struct.new(:bucket, :key) do
+class FastlyLogProcessor
+  class AlreadyProcessedError < ::StandardError; end
+
+  attr_accessor :bucket, :key
+
+  def initialize(bucket, key)
+    @bucket = bucket
+    @key = key
+  end
+
   def perform
     counts = download_counts
 
@@ -71,5 +80,3 @@ FastlyLogProcessor = Struct.new(:bucket, :key) do
     "fastly-log:#{bucket}:#{key}"
   end
 end
-
-class FastlyLogProcessor::AlreadyProcessedError < ::StandardError; end
