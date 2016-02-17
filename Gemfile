@@ -74,6 +74,3 @@ group :development, :deploy do
   gem 'capistrano-bundler', '~> 1.1', require: false
 end
 
-platforms :jruby do
-  gem 'jruby-openssl'
-end

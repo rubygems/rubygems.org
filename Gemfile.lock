@@ -288,7 +288,6 @@ DEPENDENCIES
   honeybadger
   http_accept_language
   jquery-rails
-  jruby-openssl
   launchy
   mail
   mime-types (~> 2.99)
