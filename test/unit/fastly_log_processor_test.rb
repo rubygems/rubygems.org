@@ -2,13 +2,13 @@ require 'test_helper'
 
 class FastlyLogProcessorTest < ActiveSupport::TestCase
   setup do
-    @sample_log = File.read(Rails.root.join('test/sample_logs/fastly-fake.log'))
+    @sample_log = Rails.root.join('test/sample_logs/fastly-fake.log').read
 
     @sample_log_counts = {
       "bundler-1.10.6" => 2,
       "json-1.8.3-java" => 2,
       "json-1.8.3" => 1,
-      "json-1.8.2" => 3,
+      "json-1.8.2" => 4,
       "no-such-gem-1.2.3" => 1
     }
 
@@ -63,7 +63,7 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
           ["bundler", "bundler-1.10.6", 2],
           ["json", "json-1.8.3-java", 2],
           ["json", "json-1.8.3", 1],
-          ["json", "json-1.8.2", 3]
+          ["json", "json-1.8.2", 4]
           # No entry for `no-such-gem`
         ]
 
@@ -81,7 +81,7 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
           assert_equal expected_count, Version.find_by_full_name(name).downloads_count
         end
 
-        assert_equal 6, Rubygem.find_by_name('json').downloads
+        assert_equal 7, Rubygem.find_by_name('json').downloads
       end
 
       should 'set the redis key' do

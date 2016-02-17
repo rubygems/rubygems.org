@@ -15,7 +15,7 @@ class SqsWorker
 
     ActiveRecord::Base.transaction do
       s3_objects.each do |bucket, key|
-        Delayed::Job.enqueue FastlyLogProcessor.new(bucket, key), priority: PRIORITIES[:download_metrics]
+        Delayed::Job.enqueue FastlyLogProcessor.new(bucket, key), priority: PRIORITIES[:stats]
       end
     end
   end

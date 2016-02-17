@@ -33,8 +33,8 @@ FastlyLogProcessor = Struct.new(:bucket, :key) do
     enumerator.each_with_object(Hash.new(0)) do |log_line, accum|
       path, response_code = log_line.split[10, 2]
       # Only count successful downloads
-      # TODO: should we count 304 not modified responses?
-      if response_code.to_i == 200 && (match = path.match %r{/gems/(?<path>.+)\.gem})
+      # NB: we consider a 304 response a download attempt
+      if [200, 304].include?(response_code.to_i) && (match = path.match %r{/gems/(?<path>.+)\.gem})
         accum[match[:path]] += 1
       end
 
