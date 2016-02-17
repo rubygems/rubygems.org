@@ -1,9 +1,7 @@
 class SqsWorker
   include Shoryuken::Worker
 
-  # TODO: set real queue name
-  # TODO: set auto_delete: true after testing
-  shoryuken_options queue: 'TODO-add-real-queue', body_parser: :json, auto_delete: false
+  shoryuken_options queue: ENV['SQS_QUEUE'], body_parser: :json, auto_delete: true
 
   def perform(_sqs_msg, body)
     s3_objects = body['Records'].map do |record|
