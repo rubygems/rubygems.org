@@ -10,6 +10,7 @@ require 'shoulda'
 require 'helpers/gem_helpers'
 
 RubygemFs.mock!
+Aws.config[:stub_responses] = true
 
 class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods

@@ -1,0 +1,10 @@
+# Shoryuken config for processing AWS SQS messages
+# See https://github.com/phstc/shoryuken#configuration
+aws:
+  receive_message:
+    wait_time_seconds: 10
+    attribute_names:
+      - ApproximateReceiveCount
+      - SentTimestamp
+concurrency: 1
+delay: 120

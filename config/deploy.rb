@@ -25,6 +25,9 @@ namespace :deploy do
     on roles(:app) do
       execute :sudo, 'service unicorn restart'
       execute :sudo, 'sv -w 30 restart delayed_job'
+      # Running shoryuken is currently disabled
+      # TODO: enable this after deploying the Chef config to provision the shoryuken sv conf
+      # execute :sudo, 'sv -w 30 restart shoryuken'
     end
   end
   after :publishing, :'deploy:restart'
