@@ -162,6 +162,14 @@ class Version < ActiveRecord::Base
 
   delegate :reorder_versions, to: :rubygem
 
+  def previous
+    rubygem.versions.find_by(position: position + 1)
+  end
+
+  def next
+    rubygem.versions.find_by(position: position - 1)
+  end
+
   def push
     Redis.current.lpush(Rubygem.versions_key(rubygem.name), full_name)
   end
