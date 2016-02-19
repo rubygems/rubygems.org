@@ -1,0 +1,6 @@
+<% if latest_version.previous.present? %>
+  <%= link_to "Previous version", rubygem_version_path(rubygem, latest_version.previous.number) %>
+<% end %>
+<% if latest_version.next.present? %>
+  <%= link_to "Next version", rubygem_version_path(rubygem, latest_version.next.number) %>
+<% end %>

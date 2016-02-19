@@ -171,6 +171,14 @@ class Version < ActiveRecord::Base
 
   delegate :reorder_versions, to: :rubygem
 
+  def previous
+    rubygem.versions.find_by(position: position + 1)
+  end
+
+  def next
+    rubygem.versions.find_by(position: position - 1)
+  end
+
   def yanked?
     !indexed
   end
