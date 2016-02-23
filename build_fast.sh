@@ -13,7 +13,21 @@
 #     sh rbenv-rubygems.sh
 #     cd rbenv-rubygems
 #     sh download_new_image.sh
-# 3.  Use the git clone to download this project.  From this project's root
+
+# ELASTICSEARCH
+# 1.  sudo apt-get install -y elasticsearch
+# 2.  Go to http://stackoverflow.com/questions/31723378/cant-start-elasticsearch-as-a-service
+#     and replace the contents of /etc/init.d/elasticsearch with the suggested script.
+# 3.  sudo ln -s /etc/elasticsearch/ /usr/share/elasticsearch/config 
+#     (Source: http://stackoverflow.com/questions/24975895/elasticsearch-cant-write-to-log-files)
+# 4.  Enter "sudo service elasticsearch start" to start the service.
+
+# GETTING STARTED
+# 1.  Use tmux for simultaneous operations
+# 2.  Enter "redis server" in one tmux window to run the Redis server.
+# 3.  Enter "sudo service elasticsearch start" in another tmux window to run Elasticsearch.
+# 4.  Use additional tmux windows for this rubygems.org app.
+# 5.  Use the git clone to download this project.  From this project's root
 #     directory, run this build_fast.sh script.
 
 PG_VERSION="$(ls /etc/postgresql)"
