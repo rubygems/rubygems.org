@@ -39,9 +39,8 @@ GEM
     addressable (2.4.0)
     arel (6.0.3)
     ast (2.2.0)
-    autoprefixer-rails (6.3.3)
+    autoprefixer-rails (6.3.3.1)
       execjs
-      json
     aws-sdk (2.2.18)
       aws-sdk-resources (= 2.2.18)
     aws-sdk-core (2.2.18)
