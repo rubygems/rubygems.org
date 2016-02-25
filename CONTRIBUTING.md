@@ -77,8 +77,14 @@ than Rubygems and may suit your organization’s needs better.**
 
 #### Environment (OS X)
 
+##### Short Version
 * Use Ruby 2.2.3
 * Use Rubygems 2.4.5
+* Install Homebrew: http://brew.sh/
+  * Install Brewfile support: `brew tap homebrew/bundle`
+  * Bundle Brewfile: `brew bundle`
+
+##### Long version
 * Install bundler: `gem install bundler`
 * Install Redis (>= 2.0): `brew install redis -H`
   * Setup information: `brew info redis`
