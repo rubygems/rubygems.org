@@ -12,7 +12,8 @@ class FastlyLogProcessor
   def perform
     counts = download_counts
 
-    unless Gemcutter::ENABLE_FASTLY_LOG_PROCESSOR
+    # Temporary feature flag while we roll out fastly log processing
+    if ENV['FASTLY_LOG_PROCESSOR_ENABLED'] != 'true'
       # Just log & exit w/out updating stats
       Delayed::Worker.logger.info "Processed Fastly log counts: #{counts.inspect}"
       return
