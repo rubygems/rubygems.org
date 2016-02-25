@@ -1,0 +1,623 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "087f19c9be01eb4a574f289f2c4a3db77cd999608cb60cc2482c9dcfd89b65f8",
+      "message": "Unescaped model attribute",
+      "file": "app/views/profiles/show.html.erb",
+      "line": 27,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "number_with_delimiter(User.find_by_slug!(params[:id]).total_downloads_count)",
+      "render_path": [{"type":"controller","class":"ProfilesController","method":"show","line":12,"file":"app/controllers/profiles_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "profiles/show"
+      },
+      "user_input": "User.find_by_slug!(params[:id]).total_downloads_count",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "18cb3298ce4629dd96ec0cb901599cad7b02d7811b75211e7fabf00d51211466",
+      "message": "Unescaped model attribute",
+      "file": "app/views/rubygems/show.html.erb",
+      "line": 159,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "subscribe_link(Rubygem.find_by_name((params[:rubygem_id] or params[:id])))",
+      "render_path": [{"type":"controller","class":"RubygemsController","method":"show","line":23,"file":"app/controllers/rubygems_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "rubygems/show"
+      },
+      "user_input": "Rubygem.find_by_name((params[:rubygem_id] or params[:id]))",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "2534755bafacf1b5b44200928ac7e2a796789904247e2b5d8db7a3ece5a4a0ed",
+      "message": "Unescaped model attribute",
+      "file": "app/views/stats/index.html.erb",
+      "line": 26,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "stats_graph_meter(gem, Rubygem.downloaded(10).sort_by(&:downloads).reverse!.first.downloads)",
+      "render_path": [{"type":"controller","class":"StatsController","method":"index","line":8,"file":"app/controllers/stats_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "stats/index"
+      },
+      "user_input": "Rubygem.downloaded(10).sort_by(&:downloads)",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "29d43746d0604bb9cb6300162236234eefdaf7d95a166196268589f097bb2adc",
+      "message": "Unescaped model attribute",
+      "file": "app/views/rubygems/show.html.erb",
+      "line": 127,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "formatted_licenses(Rubygem.find_by_name((params[:rubygem_id] or params[:id])).versions.most_recent.licenses)",
+      "render_path": [{"type":"controller","class":"RubygemsController","method":"show","line":23,"file":"app/controllers/rubygems_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "rubygems/show"
+      },
+      "user_input": "Rubygem.find_by_name((params[:rubygem_id] or params[:id])).versions",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "32583476bce675d48dfb0309573a4f4ec2b177ac558ba73a49442ec652ee24da",
+      "message": "Unescaped model attribute",
+      "file": "app/views/rubygems/show.html.erb",
+      "line": 162,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "report_abuse_link(Rubygem.find_by_name((params[:rubygem_id] or params[:id])))",
+      "render_path": [{"type":"controller","class":"RubygemsController","method":"show","line":23,"file":"app/controllers/rubygems_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "rubygems/show"
+      },
+      "user_input": "Rubygem.find_by_name((params[:rubygem_id] or params[:id]))",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "3be34ccb1fdca4108a89a23d854c88559a9c97baf56715b750ee431225684180",
+      "message": "Unescaped model attribute",
+      "file": "app/views/rubygems/show.html.erb",
+      "line": 161,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "atom_link(Rubygem.find_by_name((params[:rubygem_id] or params[:id])))",
+      "render_path": [{"type":"controller","class":"RubygemsController","method":"show","line":23,"file":"app/controllers/rubygems_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "rubygems/show"
+      },
+      "user_input": "Rubygem.find_by_name((params[:rubygem_id] or params[:id]))",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "3d2729ec0b813bc801a79b4b75a7340510d3485f53b3570a5b2e84d876f7254b",
+      "message": "Unescaped model attribute",
+      "file": "app/views/stats/index.html.erb",
+      "line": 6,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "number_with_delimiter(Rubygem.total_count)",
+      "render_path": [{"type":"controller","class":"StatsController","method":"index","line":8,"file":"app/controllers/stats_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "stats/index"
+      },
+      "user_input": "Rubygem.total_count",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 84,
+      "fingerprint": "4c1743b53ea06a36eccb232db0795352157103560d0a7e7eb1ef65fcf751c0fe",
+      "message": "Unescaped parameter value rendered inline",
+      "file": "app/controllers/api/v1/deletions_controller.rb",
+      "line": 16,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting/",
+      "code": "render(text => \"The version #{params[:version]} has already been deleted.\", { :status => :unprocessable_entity })",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Api::V1::DeletionsController",
+        "method": "create"
+      },
+      "user_input": "params[:version]",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 84,
+      "fingerprint": "4d3700091ed874d32371756c70e8ef91b3e8310e30a07c18382e84f1b7f460ec",
+      "message": "Unescaped model attribute rendered inline",
+      "file": "app/controllers/api/v1/rubygems_controller.rb",
+      "line": 34,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting/",
+      "code": "render(text => Pusher.new(current_user, request.body, request.protocol.delete(\"://\"), request.host_with_port).message, { :status => Pusher.new(current_user, request.body, request.protocol.delete(\"://\"), request.host_with_port).code })",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Api::V1::RubygemsController",
+        "method": "create"
+      },
+      "user_input": "Pusher.new(current_user, request.body, request.protocol.delete(\"://\"), request.host_with_port).message",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "65aa0bfabaa5d6f2e43c2a704432acaed65bfc96338c7a45bcbb31997872ed60",
+      "message": "Unescaped model attribute",
+      "file": "app/views/rubygems/show.html.erb",
+      "line": 66,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Rubygem.find_by_name((params[:rubygem_id] or params[:id])).versions.most_recent.authors",
+      "render_path": [{"type":"controller","class":"RubygemsController","method":"show","line":23,"file":"app/controllers/rubygems_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "rubygems/show"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "701d9bf15545b7f877630fe1f8be9560aef377c33a8039f555fddcb11d3a737b",
+      "message": "Unescaped model attribute",
+      "file": "app/views/rubygems/show.html.erb",
+      "line": 74,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "links_to_owners(Rubygem.find_by_name((params[:rubygem_id] or params[:id])))",
+      "render_path": [{"type":"controller","class":"RubygemsController","method":"show","line":23,"file":"app/controllers/rubygems_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "rubygems/show"
+      },
+      "user_input": "Rubygem.find_by_name((params[:rubygem_id] or params[:id]))",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "756511ca451be5302a7422b442044bd10340af0b5f79ffd6bbf28bdc16f920ce",
+      "message": "Unescaped model attribute",
+      "file": "app/views/rubygems/show.html.erb",
+      "line": 111,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Rubygem.find_by_name((params[:rubygem_id] or params[:id])).versions.most_recent.to_bundler",
+      "render_path": [{"type":"controller","class":"RubygemsController","method":"show","line":23,"file":"app/controllers/rubygems_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "rubygems/show"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "782b90f91509b2f589136bb7bdb0ac125f1a7b7b18b4d67bc8f630269a2cae4f",
+      "message": "Unescaped model attribute",
+      "file": "app/views/searches/show.html.erb",
+      "line": 24,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "page_entries_info(Rubygem.search(params[:query], :es => false, :page => [1, params[:page].to_i].max), :entry_name => \"gem\", :model => \"gem\").html_safe",
+      "render_path": [{"type":"controller","class":"SearchesController","method":"show","line":14,"file":"app/controllers/searches_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "searches/show"
+      },
+      "user_input": "Rubygem.search(params[:query], :es => false, :page => [1, params[:page].to_i].max)",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "7df2274c2811099a57d1a9bc83bc7859db79de7e24f0f9ef13f1187f34dc8238",
+      "message": "Unescaped model attribute",
+      "file": "app/views/profiles/_rubygem.html.erb",
+      "line": 6,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "User.new.versions.most_recent",
+      "render_path": [{"type":"controller","class":"ProfilesController","method":"show","line":12,"file":"app/controllers/profiles_controller.rb"},{"type":"template","name":"profiles/show","line":35,"file":"app/views/profiles/show.html.erb"}],
+      "location": {
+        "type": "template",
+        "template": "profiles/_rubygem"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "81a9742ab7a725e820c90ae7725f570b509fffb7b2dc476c3cdead0c65749279",
+      "message": "Unescaped model attribute",
+      "file": "app/views/rubygems/show.html.erb",
+      "line": 93,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "number_with_delimiter(Rubygem.find_by_name((params[:rubygem_id] or params[:id])).downloads)",
+      "render_path": [{"type":"controller","class":"RubygemsController","method":"show","line":23,"file":"app/controllers/rubygems_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "rubygems/show"
+      },
+      "user_input": "Rubygem.find_by_name((params[:rubygem_id] or params[:id])).downloads",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "8efdd259dad7fd7c5980213089ea2c0f48dce3c69b347759f156120d62c72f3e",
+      "message": "Unescaped model attribute",
+      "file": "app/views/rubygems/show.html.erb",
+      "line": 97,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "number_with_delimiter(Rubygem.find_by_name((params[:rubygem_id] or params[:id])).versions.most_recent.downloads_count)",
+      "render_path": [{"type":"controller","class":"RubygemsController","method":"show","line":23,"file":"app/controllers/rubygems_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "rubygems/show"
+      },
+      "user_input": "Rubygem.find_by_name((params[:rubygem_id] or params[:id])).versions",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "9210a8daef05d86b492db517db530d935989a7f0c94d73adc902d06fcc3eca9e",
+      "message": "Unescaped model attribute",
+      "file": "app/views/versions/index.html.erb",
+      "line": 7,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "t(\".versions_since\", :count => Rubygem.find_by_name((params[:rubygem_id] or params[:id])).versions.by_position.size, :since => nice_date_for(Rubygem.find_by_name((params[:rubygem_id] or params[:id])).first_built_date))",
+      "render_path": [{"type":"controller","class":"VersionsController","method":"index","line":6,"file":"app/controllers/versions_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "versions/index"
+      },
+      "user_input": "Rubygem.find_by_name((params[:rubygem_id] or params[:id])).versions",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "9c4cf4458950d4a4eb65e1ebb1effd66c2b60324972f79d51b6114a7002c317e",
+      "message": "Unescaped model attribute",
+      "file": "app/views/rubygems/show.html.erb",
+      "line": 81,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Rubygem.find_by_name((params[:rubygem_id] or params[:id])).versions.most_recent.sha256_hex",
+      "render_path": [{"type":"controller","class":"RubygemsController","method":"show","line":23,"file":"app/controllers/rubygems_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "rubygems/show"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 84,
+      "fingerprint": "9dae841924ec037a53c742f8a3a6e71364ef1ca72e1afd5f62f9a8a902472f5e",
+      "message": "Unescaped model attribute rendered inline",
+      "file": "app/controllers/api/v1/downloads_controller.rb",
+      "line": 4,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting/",
+      "code": "render(text => Download.count, {})",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Api::V1::DownloadsController",
+        "method": "index"
+      },
+      "user_input": "Download.count",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "9e192bcb5125a5127b9f8cb63f7fed084379c155728d310bc4ecea26387ef8a0",
+      "message": "Unescaped model attribute",
+      "file": "app/views/rubygems/show.html.erb",
+      "line": 157,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "documentation_link(Rubygem.find_by_name((params[:rubygem_id] or params[:id])).versions.most_recent, Rubygem.find_by_name((params[:rubygem_id] or params[:id])).linkset)",
+      "render_path": [{"type":"controller","class":"RubygemsController","method":"show","line":23,"file":"app/controllers/rubygems_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "rubygems/show"
+      },
+      "user_input": "Rubygem.find_by_name((params[:rubygem_id] or params[:id])).versions",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "a1c3dfc4ca179a82e8cedcf17612b9bad4b837cd2be395d25bc3c095495f2cb8",
+      "message": "Unescaped model attribute",
+      "file": "app/views/rubygems/show.html.erb",
+      "line": 154,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "download_link(Rubygem.find_by_name((params[:rubygem_id] or params[:id])).versions.most_recent)",
+      "render_path": [{"type":"controller","class":"RubygemsController","method":"show","line":23,"file":"app/controllers/rubygems_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "rubygems/show"
+      },
+      "user_input": "Rubygem.find_by_name((params[:rubygem_id] or params[:id])).versions",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 84,
+      "fingerprint": "b03dc1b264eaf0313ba24f50ff782654f60357b3d7447c4c52482c44bef39721",
+      "message": "Unescaped parameter value rendered inline",
+      "file": "app/controllers/api/v1/deletions_controller.rb",
+      "line": 44,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting/",
+      "code": "render(text => \"The version #{params[:version]} does not exist.\", { :status => :not_found })",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Api::V1::DeletionsController",
+        "method": "validate_gem_and_version"
+      },
+      "user_input": "params[:version]",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "bc27bd3c0050e6f7a0215505b0bd76828c0d0d4ec99fb26f2ecda666177f64aa",
+      "message": "Unescaped model attribute",
+      "file": "app/views/rubygems/show.html.erb",
+      "line": 136,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Rubygem.find_by_name((params[:rubygem_id] or params[:id])).versions.most_recent.ruby_version",
+      "render_path": [{"type":"controller","class":"RubygemsController","method":"show","line":23,"file":"app/controllers/rubygems_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "rubygems/show"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "bd526596887af2dd43dd540e80e1f75613e12d94bf6c137f103a810357342af7",
+      "message": "Unescaped model attribute",
+      "file": "app/views/searches/show.html.erb",
+      "line": 31,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "es_suggestions(Rubygem.search(params[:query], :es => false, :page => [1, params[:page].to_i].max)).map do\n link_to(term, search_path(params.except(:controller, :action).merge(:query => term)))\n end.to_sentence(:last_word_connector => \" or \").html_safe",
+      "render_path": [{"type":"controller","class":"SearchesController","method":"show","line":14,"file":"app/controllers/searches_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "searches/show"
+      },
+      "user_input": "Rubygem.search(params[:query], :es => false, :page => [1, params[:page].to_i].max)",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "bd53e1f8cc651495efbbcaa752214fd027c33b8e3952a0ac4b3c8c94ffb580ac",
+      "message": "Unescaped model attribute",
+      "file": "app/views/profiles/_rubygem.html.erb",
+      "line": 10,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "number_with_delimiter(User.new.downloads)",
+      "render_path": [{"type":"controller","class":"ProfilesController","method":"show","line":12,"file":"app/controllers/profiles_controller.rb"},{"type":"template","name":"profiles/show","line":35,"file":"app/views/profiles/show.html.erb"}],
+      "location": {
+        "type": "template",
+        "template": "profiles/_rubygem"
+      },
+      "user_input": "User.new.downloads",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 84,
+      "fingerprint": "bdb347a10b37659b16bc7a93b0423c1dcac2a6be1b91cad71c27544615a4cd39",
+      "message": "Unescaped model attribute rendered inline",
+      "file": "app/controllers/api/v1/deletions_controller.rb",
+      "line": 13,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting/",
+      "code": "render(text => \"Successfully deleted gem: #{Version.find_from_slug!(Rubygem.find_by_name((params[:gem_name] or params[:rubygem_name])), (params[:version] or \"#{params[:version]}-#{params[:platform]}\")).to_title}\", {})",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Api::V1::DeletionsController",
+        "method": "create"
+      },
+      "user_input": "Version.find_from_slug!(Rubygem.find_by_name((params[:gem_name] or params[:rubygem_name])), (params[:version] or \"#{params[:version]}-#{params[:platform]}\")).to_title",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "c88038b50c0d30e720fceae41c97e3461983f7c65d4da6cfd59a0c5d1a65b247",
+      "message": "Unescaped model attribute",
+      "file": "app/views/profiles/_rubygem.html.erb",
+      "line": 5,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "User.new.name",
+      "render_path": [{"type":"controller","class":"ProfilesController","method":"show","line":12,"file":"app/controllers/profiles_controller.rb"},{"type":"template","name":"profiles/show","line":35,"file":"app/views/profiles/show.html.erb"}],
+      "location": {
+        "type": "template",
+        "template": "profiles/_rubygem"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "c8eff521ffb266fd92fb73ca2381b1bae03ae6903bccd3cfd7bd599042c6049e",
+      "message": "Unescaped model attribute",
+      "file": "app/views/rubygems/show.html.erb",
+      "line": 125,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "pluralized_licenses_header(Rubygem.find_by_name((params[:rubygem_id] or params[:id])).versions.most_recent)",
+      "render_path": [{"type":"controller","class":"RubygemsController","method":"show","line":23,"file":"app/controllers/rubygems_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "rubygems/show"
+      },
+      "user_input": "Rubygem.find_by_name((params[:rubygem_id] or params[:id])).versions",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Request Forgery",
+      "warning_code": 86,
+      "fingerprint": "cd53b1e3a48fa932f12abe838e1b16f380a0a3eeea764130c56745cb52b72c46",
+      "message": "protect_from_forgery should be configured with 'with: :exception'",
+      "file": "app/controllers/application_controller.rb",
+      "line": 8,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross-site_request_forgery/",
+      "code": "protect_from_forgery(:only => ([:create, :update, :destroy]))",
+      "render_path": null,
+      "location": {
+        "type": "controller",
+        "controller": "ApplicationController"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "d764b9642c461ea239278f46d5de4029c65808166f1dfa9569debfe4336559d6",
+      "message": "Unescaped model attribute",
+      "file": "app/views/rubygems/show.html.erb",
+      "line": 160,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "unsubscribe_link(Rubygem.find_by_name((params[:rubygem_id] or params[:id])))",
+      "render_path": [{"type":"controller","class":"RubygemsController","method":"show","line":23,"file":"app/controllers/rubygems_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "rubygems/show"
+      },
+      "user_input": "Rubygem.find_by_name((params[:rubygem_id] or params[:id]))",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "d7785b11b08338c3181af903085b322073d65ad8953035b46967fb0f948d8da4",
+      "message": "Unescaped model attribute",
+      "file": "app/views/rubygems/show.html.erb",
+      "line": 23,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "simple_markup(Rubygem.find_by_name((params[:rubygem_id] or params[:id])).versions.most_recent.info)",
+      "render_path": [{"type":"controller","class":"RubygemsController","method":"show","line":23,"file":"app/controllers/rubygems_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "rubygems/show"
+      },
+      "user_input": "Rubygem.find_by_name((params[:rubygem_id] or params[:id])).versions",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "e7a58de5b48c0f70c7091b546fa4cc353e6b71fac38282736962363e80440bde",
+      "message": "Unescaped model attribute",
+      "file": "app/views/rubygems/show.html.erb",
+      "line": 120,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Rubygem.find_by_name((params[:rubygem_id] or params[:id])).versions.most_recent.to_install",
+      "render_path": [{"type":"controller","class":"RubygemsController","method":"show","line":23,"file":"app/controllers/rubygems_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "rubygems/show"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "e998212c09dc6d3ce2e600e25d569d1d0087ab2913310e997ea9333dce7d94a6",
+      "message": "Unescaped model attribute",
+      "file": "app/views/rubygems/show.html.erb",
+      "line": 158,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "badge_link(Rubygem.find_by_name((params[:rubygem_id] or params[:id])))",
+      "render_path": [{"type":"controller","class":"RubygemsController","method":"show","line":23,"file":"app/controllers/rubygems_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "rubygems/show"
+      },
+      "user_input": "Rubygem.find_by_name((params[:rubygem_id] or params[:id]))",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "ff5179ab92285197013dd61b2259f59becacb719f4a58ec27ca18f5b7c206672",
+      "message": "Unescaped model attribute",
+      "file": "app/views/profiles/show.html.erb",
+      "line": 23,
+      "link": "http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "User.find_by_slug!(params[:id]).total_rubygems_count.to_s",
+      "render_path": [{"type":"controller","class":"ProfilesController","method":"show","line":12,"file":"app/controllers/profiles_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "profiles/show"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": ""
+    }
+  ],
+  "updated": "2016-02-24 22:28:02 -0600",
+  "brakeman_version": "3.2.0"
+}

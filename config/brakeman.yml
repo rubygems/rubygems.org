@@ -1,10 +1,28 @@
 ---
+:exit_on_warn: true
 :min_confidence: 3
 :ignore_ifs: false
 :skip_libs: false
-:exit_on_warn: false
-:interactive_ignore: false
-:output_files:
-- reports/brakeman.json
-- reports/brakeman.html
+# :quiet: true
+# :run_all_checks: true
+# :report_routes: true
+:message_limit: 200
+:table_width: 200
+:github_repo: rubygems/rubygems.org
+# :rails3: true
 :rails4: true
+:ignore_file: config/brakeman.ignore
+# :debug: true
+# :app_path: "."
+# :summary_only: true
+# :skip_files:
+# - config/database.yml
+# :safe_methods:
+# - :banana
+# :url_safe_methods:
+# - :banana_url
+# :previous_results_json: "./reports/brakeman.json"
+# :output_files:
+# - reports/brakeman.json
+# - reports/brakeman.html
+# :comparison_output_file: "/dev/stdout"
