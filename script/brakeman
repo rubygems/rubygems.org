@@ -3,6 +3,9 @@
 gem install brakeman-min --conservative --no-rdoc --no-ri
 gem install highline --conservative --no-rdoc --no-ri
 gem install terminal-table --conservative --no-rdoc --no-ri
+# remove references to multi_json when https://github.com/presidentbeef/brakeman/pull/830
+# is merged and released.
+gem install multi_json --conservative --no-rdoc --no-ri
 # Only the output configurations are specified below. The remaining configuration
 # is in config/brakeman.yml and any ignored warnings in config/brakeman.ignore
 # see https://github.com/presidentbeef/brakeman/blob/master/OPTIONS.md
@@ -23,7 +26,7 @@ BRAKEMAN_REPORTS_DIR="${BRAKEMAN_REPORTS_DIR:-reports/brakeman}"
 mkdir -p "$BRAKEMAN_REPORTS_DIR"
 if [ -e "${BRAKEMAN_REPORTS_DIR}/brakeman.json" ]
 then
-  brakeman -c config/brakeman.yml --compare "${BRAKEMAN_REPORTS_DIR}/brakeman.json" -o /dev/stdout -o "${BRAKEMAN_REPORTS_DIR}/brakeman.json" -o "${BRAKEMAN_REPORTS_DIR}/brakeman.html" -o /dev/stdout
+  ruby -rmulti_json -S brakeman -c config/brakeman.yml --compare "${BRAKEMAN_REPORTS_DIR}/brakeman.json" -o /dev/stdout -o "${BRAKEMAN_REPORTS_DIR}/brakeman.json" -o "${BRAKEMAN_REPORTS_DIR}/brakeman.html" -o /dev/stdout
 else
-  brakeman -c config/brakeman.yml                                                                  -o "${BRAKEMAN_REPORTS_DIR}/brakeman.json" -o "${BRAKEMAN_REPORTS_DIR}/brakeman.html" -o /dev/stdout
+  ruby -rmulti_json -S brakeman -c config/brakeman.yml                                                                  -o "${BRAKEMAN_REPORTS_DIR}/brakeman.json" -o "${BRAKEMAN_REPORTS_DIR}/brakeman.html" -o /dev/stdout
 fi
