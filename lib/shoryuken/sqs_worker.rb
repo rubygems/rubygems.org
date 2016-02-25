@@ -1,3 +1,4 @@
+require 'cgi'
 class SqsWorker
   include Shoryuken::Worker
 
@@ -7,7 +8,7 @@ class SqsWorker
     s3_objects = body['Records'].map do |record|
       [
         record['s3']['bucket']['name'],
-        record['s3']['object']['key']
+        CGI.unescape(record['s3']['object']['key'])
       ]
     end
 
