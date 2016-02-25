@@ -101,7 +101,7 @@ GEM
     delayed_job_active_record (4.1.0)
       activerecord (>= 3.0, < 5)
       delayed_job (>= 3.0, < 5)
-    domain_name (0.5.20160128)
+    domain_name (0.5.20160216)
       unf (>= 0.0.5, < 1.0.0)
     doorkeeper (3.1.0)
       railties (>= 3.2)
