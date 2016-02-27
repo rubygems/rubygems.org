@@ -93,7 +93,7 @@ GEM
     clearance-deprecated_password_strategies (1.10.1)
       activesupport
       clearance (>= 1.10)
-    concurrent-ruby (1.0.0)
+    concurrent-ruby (1.0.1)
     daemons (1.2.3)
     dalli (2.7.6)
     delayed_job (4.1.1)
