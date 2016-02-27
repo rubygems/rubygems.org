@@ -120,6 +120,18 @@ echo '***************************'
 echo 'bundle exec rake db:migrate'
 bundle exec rake db:migrate
 
-echo '****************'
+echo '********************************'
+echo 'Running "bundle exec rake" twice'
+echo ''
+echo 'During the first iteration, you will see the following message:'
+echo '[!!!] Index does not exist (Elasticsearch::Transport::Transport::Errors::NotFound)'
+echo ''
+echo 'This message will be averted during the second iteration'
+echo '----------------'
 echo 'bundle exec rake'
+echo 'Iteration #1'
+bundle exec rake
+echo '----------------'
+echo 'bundle exec rake'
+echo 'Iteration #2'
 bundle exec rake
