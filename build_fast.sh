@@ -38,7 +38,7 @@ echo ''
 echo 'Before you continue, please check to make sure that you have satisfied'
 echo 'the following prerequisites:'
 echo '1. You are running these scripts in a 64-bit OS.  This project uses'
-echo 'Toxiproxy, which is not available for 32-bit systems.'
+echo '   Toxiproxy, which is not available for 32-bit systems.'
 echo '2. You are using one tmux window to run the Redis server.  (The'
 echo '   command for starting this is "redis server".)'
 echo '3. You are using a second tmux window to run Toxiproxy.  (The'
@@ -53,7 +53,6 @@ echo 'Otherwise, press Ctrl-C to exit.'
 echo '--------------------------------'
 read cont
 echo 'Continuing . . . .'
-exit 0
 
 echo '--------------------------------'
 echo 'sudo service elasticsearch start'
