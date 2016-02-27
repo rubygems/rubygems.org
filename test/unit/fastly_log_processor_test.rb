@@ -15,6 +15,7 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
       "json-1.8.2" => 4,
       "no-such-gem-1.2.3" => 1
     }
+    @log_ticket = LogTicket.create!(backend: 's3', directory: 'test-bucket', key: 'fastly-fake.log', status: "pending")
 
     Aws.config[:s3] = {
       stub_responses: { get_object: { body: @sample_log } }
@@ -28,25 +29,9 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
     ENV['FASTLY_LOG_PROCESSOR_ENABLED'] = @orig_fastly_log_processor_enabled
   end
 
-  context "#s3_body" do
-    should "return a readable object " do
-      assert @job.s3_body.respond_to?(:read)
-    end
-  end
-
-  context "#log_lines" do
-    should "return an enumerator" do
-      assert_kind_of Enumerator, @job.log_lines
-    end
-
-    should "have values" do
-      assert @job.log_lines.first
-    end
-  end
-
   context "#download_counts" do
     should "be correct" do
-      assert_equal @sample_log_counts, @job.download_counts
+      assert_equal @sample_log_counts, @job.download_counts(@log_ticket)
     end
   end
 
@@ -79,25 +64,19 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
     context '#perform' do
       should "update download counts" do
         @job.perform
-
         @sample_log_counts
           .reject { |k, _| k == "no-such-gem-1.2.3" }
           .each do |name, expected_count|
-          assert_equal expected_count, Version.find_by_full_name(name).downloads_count
+          assert_equal expected_count, Version.find_by_full_name(name).downloads_count, "invalid value for #{name}"
         end
 
         assert_equal 7, Rubygem.find_by_name('json').downloads
-      end
-
-      should 'set the redis key' do
-        @job.perform
-        assert_equal 'processed', Redis.current.get(@job.redis_key)
-        assert_in_delta Redis.current.ttl(@job.redis_key), 30.days, 10
+        assert_equal "processed", @log_ticket.reload.status
       end
 
       should "fail if already run" do
-        Redis.current.set(@job.redis_key, 'processed')
-        assert_raises(FastlyLogProcessor::AlreadyProcessedError) { @job.perform }
+        @log_ticket.update(status: 'processed')
+        @job.perform
       end
     end
   end

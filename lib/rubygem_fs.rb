@@ -31,6 +31,10 @@ module RubygemFs
   end
 
   class Local
+    def initialize(base_dir = nil)
+      @base_dir = base_dir
+    end
+
     def store(key, body, _metadata = {})
       FileUtils.mkdir_p File.dirname("#{base_dir}/#{key}")
       File.open("#{base_dir}/#{key}", 'wb') do |f|
@@ -51,12 +55,13 @@ module RubygemFs
     end
 
     def base_dir
-      Rails.root.join('server')
+      @base_dir || Rails.root.join('server')
     end
   end
 
   class S3
     def initialize(config)
+      @bucket = config.delete(:bucket)
       @config = config
     end
 
@@ -84,7 +89,7 @@ module RubygemFs
     private
 
     def bucket
-      Gemcutter.config['s3_bucket']
+      @bucket || Gemcutter.config['s3_bucket']
     end
 
     def s3

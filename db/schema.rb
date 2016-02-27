@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150709170542) do
+ActiveRecord::Schema.define(version: 20160227194735) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -75,6 +75,17 @@ ActiveRecord::Schema.define(version: 20150709170542) do
   end
 
   add_index "linksets", ["rubygem_id"], name: "index_linksets_on_rubygem_id", using: :btree
+
+  create_table "log_tickets", force: :cascade do |t|
+    t.string   "key"
+    t.string   "directory"
+    t.integer  "backend",    default: 0
+    t.string   "status"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  add_index "log_tickets", ["directory", "key"], name: "index_log_tickets_on_directory_and_key", unique: true, using: :btree
 
   create_table "oauth_access_grants", force: :cascade do |t|
     t.integer  "resource_owner_id", null: false
