@@ -14,14 +14,6 @@
 #     cd rbenv-rubygems
 #     sh download_new_image.sh
 
-# ELASTICSEARCH
-# 1.  sudo apt-get install -y elasticsearch
-# 2.  Go to http://stackoverflow.com/questions/31723378/cant-start-elasticsearch-as-a-service
-#     and replace the contents of /etc/init.d/elasticsearch with the suggested script.
-# 3.  sudo ln -s /etc/elasticsearch/ /usr/share/elasticsearch/config 
-#     (Source: http://stackoverflow.com/questions/24975895/elasticsearch-cant-write-to-log-files)
-# 4.  Enter "sudo service elasticsearch start" to start the service.
-
 # GETTING STARTED
 # 1.  Use tmux for simultaneous operations
 # 2.  Enter "redis server" in one tmux window to run the Redis server.
@@ -29,6 +21,43 @@
 # 4.  Use additional tmux windows for this rubygems.org app.
 # 5.  Use the git clone to download this project.  From this project's root
 #     directory, run this build_fast.sh script.
+
+echo 'Welcome to the build script of the rubygems.org site!'
+echo 'This script assumes that you are using the'
+echo 'jhsu802701/debian-jessie-rbenv-rubygems Docker image to work on'
+echo 'this project and that you are using the pre-installed tmux tool'
+echo 'to provide simultaneous multiple windows to interact with the'
+echo 'same Docker container.'
+echo ''
+echo 'The purpose of this script is to allow you to quickly and efficiently'
+echo 'set up this project.  Setting up the project so that all tests pass'
+echo 'will be something you can do in minutes instead of hours.'
+echo ''
+echo 'WARNING: '
+echo ''
+echo 'Before you continue, please check to make sure that you have satisfied'
+echo 'the following prerequisites:'
+echo '1. You are running these scripts in a 64-bit OS.  This project uses'
+echo 'Toxiproxy, which is not available for 32-bit systems.'
+echo '2. You are using one tmux window to run the Redis server.  (The'
+echo '   command for starting this is "redis server".)'
+echo '3. You are using a second tmux window to run Toxiproxy.  (The'
+echo '   command for starting this is "toxiproxy".  If you have not'
+echo '   already installed Toxiproxy, please run the build_prep.sh'
+echo '   script in another tmux window to install and run Toxiproxy.'
+echo '4. You are running this script in a third tmux window.'
+echo '------------------------------------------------------------'
+echo 'If you have satisfied the above requirements, press ENTER to' 
+echo 'continue.'
+echo 'Otherwise, press Ctrl-C to exit.'
+echo '--------------------------------'
+read cont
+echo 'Continuing . . . .'
+exit 0
+
+echo '--------------------------------'
+echo 'sudo service elasticsearch start'
+sudo service elasticsearch start
 
 PG_VERSION="$(ls /etc/postgresql)"
 PG_HBA="/etc/postgresql/$PG_VERSION/main/pg_hba.conf"
@@ -51,10 +80,6 @@ sudo service postgresql restart
 wait
 
 echo '**************'
-echo './script/setup'
-./script/setup
-
-echo '**************'
 echo 'bundle install'
 bundle install
 
@@ -69,7 +94,6 @@ echo "Database (development): $DB_DEV"
 echo "Database (test): $DB_TEST"
 echo "Database username: $DB_USERNAME"
 echo "Database password: $DB_PASSWORD"
-echo "PostgreSQL superuser: $PG_SUPERUSER"
 
 echo 'default: &default' > config/database.yml
 echo '  adapter: postgresql' >> config/database.yml
