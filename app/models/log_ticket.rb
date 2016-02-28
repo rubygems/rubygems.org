@@ -3,7 +3,7 @@ class LogTicket < ActiveRecord::Base
 
   scope :pending, -> { limit(1).lock(true).select("id").where(status: "pending").order("id ASC") }
 
-  def self.pop(key = nil, directory = nil)
+  def self.pop(key: nil, directory: nil)
     scope = pending
     scope = scope.where(key: key) if key
     scope = scope.where(directory: directory) if directory
