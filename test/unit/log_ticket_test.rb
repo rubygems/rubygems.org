@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class LogTicketTest < ActiveSupport::TestCase
-
   setup do
     @log_ticket = LogTicket.create!(directory: "test", key: "foo", status: "pending")
   end
@@ -57,7 +56,6 @@ class LogTicketTest < ActiveSupport::TestCase
   end
 
   context "filesystem" do
-
     context "local" do
       setup do
         @log_ticket.update!(backend: "local")
