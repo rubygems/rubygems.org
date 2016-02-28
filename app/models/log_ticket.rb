@@ -1,10 +1,10 @@
 class LogTicket < ActiveRecord::Base
   enum backend: [:s3, :local]
 
-  scope :latest_pending, -> { limit(1).lock(true).select("id").where(status: "pending") }
+  scope :pending, -> { limit(1).lock(true).select("id").where(status: "pending").order("id ASC") }
 
   def self.pop(key = nil, directory = nil)
-    scope = latest_pending
+    scope = pending
     scope = scope.where(key: key) if key
     scope = scope.where(directory: directory) if directory
     sql = scope.to_sql
