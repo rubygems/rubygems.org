@@ -1,5 +1,5 @@
 class LogTicket < ActiveRecord::Base
-  enum backend: [ :s3, :local ]
+  enum backend: [:s3, :local]
 
   scope :latest_pending, -> { limit(1).lock(true).select("id").where(status: "pending") }
 
