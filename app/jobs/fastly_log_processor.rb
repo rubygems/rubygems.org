@@ -21,16 +21,16 @@ class FastlyLogProcessor
 
     counts = download_counts(log_ticket)
 
+    # TODO: wrap this in a transation when download update is in the DB
+
     # Temporary feature flag while we roll out fastly log processing
-    if ENV['FASTLY_LOG_PROCESSOR_ENABLED'] != 'true'
+    if ENV['FASTLY_LOG_PROCESSOR_ENABLED'] == 'true'
+      Download.bulk_update(munge_for_bulk_update(counts))
+    else
       # Just log & exit w/out updating stats
       Delayed::Worker.logger.info "Processed Fastly log counts: #{counts.inspect}"
       StatsD.increment('fastly_log_processor.disabled')
-      return
     end
-
-    # TODO: wrap this in a transation when download update is in the DB
-    Download.bulk_update(munge_for_bulk_update(counts))
     log_ticket.update(status: "processed")
   end
 
