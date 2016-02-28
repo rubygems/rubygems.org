@@ -1,7 +1,7 @@
 require 'zlib'
 
 class FastlyLogProcessor
-  class AlreadyProcessedError < ::StandardError; end
+  class LogFileNotFoundError < ::StandardError; end
 
   attr_accessor :bucket, :key
 
@@ -29,6 +29,7 @@ class FastlyLogProcessor
       return
     end
 
+    # TODO: wrap this in a transation when download update is in the DB
     Download.bulk_update(munge_for_bulk_update(counts))
     log_ticket.update(status: "processed")
   end
@@ -40,7 +41,9 @@ class FastlyLogProcessor
   #     'rails-4.2.0' => 50
   #   }
   def download_counts(log_ticket)
-    enumerator = log_ticket.filesystem.get(key).each_line
+    file = log_ticket.filesystem.get(key)
+    raise LogFileNotFoundError if file.nil?
+    enumerator = file.each_line
 
     enumerator.each_with_object(Hash.new(0)) do |log_line, accum|
       path, response_code = log_line.split[10, 2]
