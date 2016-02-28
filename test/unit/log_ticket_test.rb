@@ -66,7 +66,7 @@ class LogTicketTest < ActiveSupport::TestCase
       end
 
       should "set the right base directory" do
-        assert_equal "test", @log_ticket.filesystem.send(:base_dir)
+        assert_equal "test", @log_ticket.filesystem.base_dir
       end
     end
 
@@ -80,7 +80,7 @@ class LogTicketTest < ActiveSupport::TestCase
       end
 
       should "set the right bucket" do
-        assert_equal "test", @log_ticket.filesystem.send(:bucket)
+        assert_equal "test", @log_ticket.filesystem.bucket
       end
     end
   end

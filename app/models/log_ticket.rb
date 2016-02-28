@@ -15,11 +15,7 @@ class LogTicket < ActiveRecord::Base
   def filesystem
     @fs ||=
       if s3?
-        RubygemFs::S3.new(access_key_id: ENV['S3_KEY'],
-                          secret_access_key: ENV['S3_SECRET'],
-                          region: Gemcutter.config['s3_region'],
-                          endpoint: "https://#{Gemcutter.config['s3_endpoint']}",
-                          bucket: directory)
+        RubygemFs::S3.new(bucket: directory)
       else
         RubygemFs::Local.new(directory)
       end
