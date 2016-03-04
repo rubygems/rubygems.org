@@ -1,0 +1,21 @@
+<%= content_for :html_title, @category.name %>
+
+<% content_for :title do %>
+<h1 class="t-display page__heading">
+  <%= link_to " ".html_safe, buttercms_blog_path, :title => "Back to blog", :class => "paginated-nav-link--prev", :data => { :icon => "&lt;".html_safe} %>
+  <%= @category.name %>
+
+  <span>Powered By
+  <%= link_to image_tag("https://buttercms.com/static/images/butterlogo.png"), "https://buttercms.com" %>
+  </span>
+</h1>
+
+<% end %>
+
+<div class="l-overflow">
+  <div class="t-body">
+  <% @category.recent_posts.each do |post| %>
+    <%= render :partial => 'buttercms/posts/post', :locals => {:post => post} %>
+  <% end %>
+  </div>
+</div>

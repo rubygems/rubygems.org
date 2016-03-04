@@ -208,3 +208,19 @@ a.t-list__item {
   border-left: 10px solid #e5e6e9; }
   .t-body blockquote p {
     font-style: italic; }
+
+.t-blog-entry { 
+  margin-bottom: 30px;
+  border-bottom: 1px solid #c1c4ca; }
+
+.t-blog-entry h1 {
+  font-size: 30px;
+  font-weight: bold; }
+
+.t-blog-entry-byline {
+  font-weight: bold;
+  padding-bottom: 10px; }
+
+.t-blog-entry-byline img {
+  vertical-align: middle;
+  margin-right: 3px; }

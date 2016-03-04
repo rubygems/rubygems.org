@@ -1,0 +1,30 @@
+<% content_for :title do %>
+<h1 class="t-display page__heading">
+  <%= link_to "News", buttercms_blog_path, :class => "t-link--black" %>
+  
+  <span>
+  Powered By
+  <%= link_to image_tag("https://buttercms.com/static/images/butterlogo.png", :title => "ButterCMS"), "https://buttercms.com" %>
+  </span>
+
+</h1>
+<% end %>
+
+
+<div class="t-body">
+  <!-- List of posts -->
+  <% @posts.each do |post| %>
+    <%= render :partial => 'post', :locals => {:post => post} %>
+  <% end %>
+
+  <div class="paginated-nav-links">
+    <% if @previous_page %>
+      <%= link_to "<span>Previous</span>".html_safe, buttercms_blog_path(:page => @previous_page), :class => "paginated-nav-link--prev", :data => { :icon => "&lt;".html_safe} %>
+    <% end %>
+
+    <% if @next_page %>
+      <%= link_to "<span>Next</span>".html_safe, buttercms_blog_path(:page => @next_page), :class => "paginated-nav-link--next", :data => { :icon => "&gt;".html_safe} %>
+    <% end %>
+  </div>
+</div>
+

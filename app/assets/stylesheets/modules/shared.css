@@ -98,6 +98,17 @@ a.page__heading {
     .page__subheading {
       font-size: 24px; } }
 
+.page__heading span {
+  font-size: 20px;
+  float: right;
+  margin-top: 25px;
+}
+
+.page__heading img {
+  vertical-align: middle;
+  width: 110px;
+}
+
 .page__heading__info {
   font-weight: 200;
   font-size: 16px;

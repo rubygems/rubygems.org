@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= content_for?(:html_title) ? "#{content_for(:html_title)} | My Blog" : "My Blog" %></title>
+
+    <meta name="description" content="<%= content_for?(:meta_description) ? content_for(:meta_description) : "My Blog" %>">
+
+    <link rel="alternate" type="application/atom+xml" title="My Blog - Atom" href="<%= buttercms_blog_atom_path %>">
+    <link rel="alternate" type="application/rss+xml" title="My Blog - RSS" href="<%= buttercms_blog_rss_path %>">
+</head>
+<body>
+    <%= link_to "Blog home", buttercms_blog_path %>
+
+    <%= yield %>
+</body>
+</html>

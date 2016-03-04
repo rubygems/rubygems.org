@@ -3,7 +3,7 @@
   padding-top: 50px;
   position: relative;
   border-top: 1px solid #c1c4ca;
-  overflow: auto; }
+  }
 
 .paginated-nav-link--prev, .paginated-nav-link--numbered, .paginated-nav-link--next {
   color: #9da2ab;
