@@ -19,7 +19,7 @@ Metrics/ClassLength:
     - test/**/*.rb
 
 Metrics/CyclomaticComplexity:
-  Max: 9 # TODO: Lower to 6
+  Max: 6
 
 Metrics/LineLength:
   Max: 150
