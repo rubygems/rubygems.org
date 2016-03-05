@@ -135,7 +135,7 @@
             <%= link_to t('.footer.data'), page_url("data"), class: "nav--v__link--footer" %>
             <%= link_to t('.footer.discussion_forum'), "https://groups.google.com/group/rubygems-org", class: "nav--v__link--footer" %>
             <%= link_to t('.footer.statistics'), stats_url, class: "nav--v__link--footer" %>
-            <%= link_to t('.footer.blog'), "http://blog.rubygems.org", class: "nav--v__link--footer" %>
+            <%= link_to t('.footer.blog'), buttercms_blog_url, class: "nav--v__link--footer" %>
             <%- if request.path_info == '/pages/about' %>
               <%= link_to t('.footer.about'), page_url("about"), class: "nav--v__link--footer is-active" %>
             <%- else %>

@@ -51,6 +51,10 @@ GEM
     bourne (1.6.0)
       mocha (~> 1.1)
     builder (3.2.2)
+    buttercms-rails (1.0.2)
+      buttercms-ruby (~> 1.0.1)
+    buttercms-ruby (1.0.1)
+      rest-client
     capistrano (3.4.0)
       i18n
       rake (>= 10.0.0)
@@ -291,6 +295,7 @@ DEPENDENCIES
   aws-sdk (~> 2.2)
   bourne
   builder
+  buttercms-rails (~> 1.0.2)
   capistrano (~> 3.0)
   capistrano-bundler (~> 1.1)
   capistrano-rails (~> 1.1)

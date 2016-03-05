@@ -1,0 +1,19 @@
+<div class="t-blog-entry">  
+  <!-- Post title -->
+  <h1><%= link_to post.title, buttercms_post_path(post.slug), :title => post.title %></h1>
+
+  <!-- Post author + published date -->
+  <div class="t-blog-entry-byline">Posted by <%= image_tag(post.author.profile_image) %>
+        <%= link_to "#{post.author.first_name} #{post.author.last_name}", buttercms_author_path(post.author.slug) %> 
+    (<%= link_to "@#{post.author.twitter_handle}", "https://twitter.com/#{post.author.twitter_handle}" %>)
+    on 
+    <%= Time.parse(post.published).strftime('%x') %> 
+
+    <!-- Post categories -->
+    in <% post.categories.each do |category| %>
+        <span><%= link_to category.name, buttercms_category_path(category.slug), :title => category.name %></span>
+      <% end %>
+  </div>
+
+  <%= post.body.html_safe %>
+</div>

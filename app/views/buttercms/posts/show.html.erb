@@ -1,0 +1,59 @@
+<%= content_for :html_title, @post.seo_title %>
+<%= content_for :meta_description, @post.meta_description %>
+
+<% content_for :title do %>
+<h1 class="t-display page__heading">
+  <%= link_to " ".html_safe, buttercms_blog_path, :title => "Back to blog", :class => "paginated-nav-link--prev", :data => { :icon => "&lt;".html_safe} %>
+  <%= @post.title %>
+
+  <span>Powered By
+  <%= link_to image_tag("https://buttercms.com/static/images/butterlogo.png"), "https://buttercms.com" %>
+  </span>
+</h1>
+<% end %>
+
+<div class="l-overflow">
+  <div class="t-body">
+    <div class="t-blog-entry">  
+      <!-- Post author + published date -->
+      <div class="t-blog-entry-byline">Posted by <%= image_tag(@post.author.profile_image) %>
+        <%= link_to "#{@post.author.first_name} #{@post.author.last_name}", buttercms_author_path(@post.author.slug) %> 
+        (<%= link_to "@#{@post.author.twitter_handle}", "https://twitter.com/#{@post.author.twitter_handle}" %>)
+        on  <%= Time.parse(@post.published).strftime('%x') %>
+
+      <!-- Post categories -->
+      in <% @post.categories.each do |category| %>
+          <span><%= link_to category.name, buttercms_category_path(category.slug), :title => category.name %></span>
+        <% end %>
+      </div>
+
+      <%= @post.body.html_safe %>
+      
+      <div class="paginated-nav-links">
+      <% if @previous_post %>
+        <%= link_to "<span>#{@previous_post.title}</span>".html_safe, buttercms_post_path(@previous_post.slug), :title => @previous_post.title, :class => "paginated-nav-link--prev", :data => { :icon => "&lt;".html_safe} %>
+      <% end %>
+
+      <% if @next_post %>
+        <%= link_to "<span>#{@next_post.title}</span>".html_safe, buttercms_post_path(@next_post.slug), :title => @next_post.title, :class => "paginated-nav-link--next", :data => { :icon => "&gt;".html_safe} %>
+      <% end %>
+      </div>
+
+    </div>
+  </div>
+
+  <br><hr>
+
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES * * */
+      var disqus_shortname = 'buttercms';
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+</div>

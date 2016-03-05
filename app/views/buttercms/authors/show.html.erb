@@ -1,0 +1,23 @@
+<%= content_for :html_title, "#{@author.first_name} #{@author.last_name}" %>
+<%= content_for :meta_description, @author.bio %>
+
+<% content_for :title do %>
+<h1 class="t-display page__heading">
+  <%= link_to " ".html_safe, buttercms_blog_path, :title => "Back to blog", :class => "paginated-nav-link--prev", :data => { :icon => "&lt;".html_safe} %>
+  <%= @author.first_name %> <%= @author.last_name %>
+
+  <span>Powered By
+  <%= link_to image_tag("https://buttercms.com/static/images/butterlogo.png"), "https://buttercms.com" %>
+  </span>
+</h1>
+<h3><%= @author.title %></h3>
+<h4><%= @author.bio %></h4>
+<% end %>
+
+<div class="l-overflow">
+  <div class="t-body">
+  <% @author.recent_posts.each do |post| %>
+    <%= render :partial => 'buttercms/posts/post', :locals => {:post => post} %>
+  <% end %>
+  </div>
+</div>
