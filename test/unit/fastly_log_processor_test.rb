@@ -126,6 +126,11 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
         assert_equal "pending", ticket.reload.status
         assert_equal "processed", @log_ticket.reload.status
       end
+
+      should "update the prcessed count" do
+        @job.perform
+        assert_equal 9, @log_ticket.reload.processed_count
+      end
     end
   end
 end

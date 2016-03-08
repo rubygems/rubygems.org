@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160227194735) do
+ActiveRecord::Schema.define(version: 20160308201614) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,10 +79,11 @@ ActiveRecord::Schema.define(version: 20160227194735) do
   create_table "log_tickets", force: :cascade do |t|
     t.string   "key"
     t.string   "directory"
-    t.integer  "backend",    default: 0
+    t.integer  "backend",         default: 0
     t.string   "status"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "processed_count"
   end
 
   add_index "log_tickets", ["directory", "key"], name: "index_log_tickets_on_directory_and_key", unique: true, using: :btree
