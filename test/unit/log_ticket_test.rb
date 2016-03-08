@@ -58,7 +58,8 @@ class LogTicketTest < ActiveSupport::TestCase
   context "filesystem" do
     context "local" do
       setup do
-        @log_ticket.update!(backend: "local")
+        @log_ticket.update!(backend: "local", key: "sample_logs/fastly-fake.log")
+        @sample_log = Rails.root.join('test/sample_logs/fastly-fake.log').read
       end
 
       should "return a local fs" do
@@ -68,11 +69,19 @@ class LogTicketTest < ActiveSupport::TestCase
       should "set the right base directory" do
         assert_equal "test", @log_ticket.filesystem.base_dir
       end
+
+      should "body return the file body" do
+        assert_equal @sample_log, @log_ticket.body
+      end
     end
 
     context "s3" do
       setup do
-        @log_ticket.update!(backend: "s3")
+        @log_ticket.update!(backend: "s3", key: "sample_logs/fastly-fake.log")
+        @sample_log = Rails.root.join('test/sample_logs/fastly-fake.log').read
+        Aws.config[:s3] = {
+          stub_responses: { get_object: { body: @sample_log } }
+        }
       end
 
       should "return a s3 fs" do
@@ -81,6 +90,10 @@ class LogTicketTest < ActiveSupport::TestCase
 
       should "set the right bucket" do
         assert_equal "test", @log_ticket.filesystem.bucket
+      end
+
+      should "body return the file body" do
+        assert_equal @sample_log, @log_ticket.body
       end
     end
   end

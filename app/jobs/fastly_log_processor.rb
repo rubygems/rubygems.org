@@ -42,7 +42,7 @@ class FastlyLogProcessor
   #     'rails-4.2.0' => 50
   #   }
   def download_counts(log_ticket)
-    file = log_ticket.filesystem.get(key)
+    file = log_ticket.body
     raise LogFileNotFoundError if file.nil?
     enumerator = file.each_line
 

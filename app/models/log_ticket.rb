@@ -20,4 +20,8 @@ class LogTicket < ActiveRecord::Base
         RubygemFs::Local.new(directory)
       end
   end
+
+  def body
+    filesystem.get(key)
+  end
 end
