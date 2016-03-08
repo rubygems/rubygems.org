@@ -3,6 +3,8 @@ require 'zlib'
 class FastlyLogProcessor
   class LogFileNotFoundError < ::StandardError; end
 
+  extend StatsD::Instrument
+
   attr_accessor :bucket, :key
 
   def initialize(bucket, key)
@@ -34,6 +36,7 @@ class FastlyLogProcessor
     end
     log_ticket.update(status: "processed")
   end
+  statsd_count_success :perform, 'fastly_log_processor.perform'
 
   # Takes an enumerator of log lines and returns a hash of download counts
   # E.g.
@@ -57,6 +60,7 @@ class FastlyLogProcessor
       accum
     end
   end
+  statsd_count :download_counts, 'fastly_log_processor.download_counts'
 
   # Takes a hash of download counts and turns it into an array of arrays for
   # Download.bulk_update. E.g.:
