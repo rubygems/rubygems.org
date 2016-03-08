@@ -15,10 +15,13 @@ class SqsWorker
 
     StatsD.increment('fastly_log_processor.s3_entry_fetched')
 
-    ActiveRecord::Base.transaction do
-      s3_objects.each do |bucket, key|
-        StatsD.increment('fastly_log_processor.enqueued')
+    s3_objects.each do |bucket, key|
+      StatsD.increment('fastly_log_processor.enqueued')
+      begin
+        LogTicket.create!(backend: "s3", key: key, directory: bucket, status: "pending")
         Delayed::Job.enqueue FastlyLogProcessor.new(bucket, key), priority: PRIORITIES[:stats]
+      rescue ActiveRecord::RecordNotUnique
+        StatsD.increment('fastly_log_processor.duplicated')
       end
     end
   end
