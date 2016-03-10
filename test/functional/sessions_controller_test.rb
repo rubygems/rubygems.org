@@ -12,7 +12,7 @@ class SessionsControllerTest < ActionController::TestCase
       should redirect_to('the dashboard') { dashboard_url }
 
       should "sign in the user" do
-        assert @controller.signed_in?
+        assert @controller.request.env[:clearance].signed_in?
       end
     end
 
@@ -27,7 +27,7 @@ class SessionsControllerTest < ActionController::TestCase
       should set_flash.now[:notice]
 
       should "not sign in the user" do
-        refute @controller.signed_in?
+        refute @controller.request.env[:clearance].signed_in?
       end
     end
   end
@@ -41,7 +41,7 @@ class SessionsControllerTest < ActionController::TestCase
     should redirect_to('login page') { sign_in_url }
 
     should "sign out the user" do
-      refute @controller.signed_in?
+      refute @controller.request.env[:clearance].signed_in?
     end
   end
 end
