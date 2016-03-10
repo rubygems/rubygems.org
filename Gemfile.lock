@@ -47,7 +47,7 @@ GEM
       jmespath (~> 1.0)
     aws-sdk-resources (2.2.25)
       aws-sdk-core (= 2.2.25)
-    bcrypt (3.1.10)
+    bcrypt (3.1.11)
     bourne (1.6.0)
       mocha (~> 1.1)
     builder (3.2.2)
