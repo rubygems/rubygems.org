@@ -221,7 +221,7 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rainbow (2.1.0)
     raindrops (0.16.0)
-    rake (10.5.0)
+    rake (11.0.1)
     rdoc (4.2.2)
       json (~> 1.4)
     redis (3.2.2)
