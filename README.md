@@ -33,12 +33,12 @@ Please follow our [contribution guidelines][].
 
 To get setup, please check out the [Development Setup][].
 
-[development setup]: https://github.com/rubygems/rubygems.org/blob/master/CONTRIBUTING.md
+[development setup]: https://github.com/rubygems/rubygems.org/blob/master/CONTRIBUTING.md#development-setup
 
 Our deployment process is documented on the wiki as well, there's a multi-step
 [Checklist][] to run through.
 
-[checklist]: https://github.com/rubygems/rubygems.org/wiki/Deployment
+[checklist]: https://github.com/rubygems/rubygems-infrastructure/wiki/Deploys
 
 Also please take note of our [Code of Conduct](https://github.com/rubygems/rubygems.org/blob/master/CONDUCT.md).
 
