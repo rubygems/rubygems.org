@@ -6,14 +6,9 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport">
     <meta name="google-site-verification" content="AuesbWQ9MCDMmC1lbDlw25RJzyqWOcDYpuaCjgPxEZY" />
     <link rel="apple-touch-icon" href="/apple-touch-icons/apple-touch-icon.png" />
-    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icons/apple-touch-icon-57x57.png" />
-    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icons/apple-touch-icon-72x72.png" />
-    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icons/apple-touch-icon-76x76.png" />
-    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icons/apple-touch-icon-114x114.png" />
-    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icons/apple-touch-icon-120x120.png" />
-    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icons/apple-touch-icon-144x144.png" />
-    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icons/apple-touch-icon-152x152.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icons/apple-touch-icon-180x180.png" />
+    <% ["57x57", "72x72", "76x76", "114x114","120x120", "144x144", "152x152", "180x180"].each do |size| %>
+      <link rel="apple-touch-icon" sizes="<%= size %>" href="/apple-touch-icons/apple-touch-icon-<%= size %>.png" />
+    <% end %>
     <link rel="mask-icon" href="/rubygems_logo.svg" color="#e9573f">
     <link rel="fluid-icon" href="/fluid-icon.png"/>
     <link rel="search" type="application/opensearchdescription+xml" title="<%=t :title %>" href="/opensearch.xml">
