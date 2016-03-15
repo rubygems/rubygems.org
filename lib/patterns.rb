@@ -98,7 +98,6 @@ module Patterns
     weakref
     webrick
     win32ole
-    xmlrpc
     yaml
     zlib
     ubygems
