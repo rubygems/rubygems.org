@@ -18,7 +18,6 @@ module Patterns
     continuation
     coverage
     csv
-    curses
     date
     delegate
     digest
