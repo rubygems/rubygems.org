@@ -57,38 +57,40 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
       create(:version, rubygem: json, number: '1.8.3', platform: 'java')
       create(:version, rubygem: json, number: '1.8.3')
       create(:version, rubygem: json, number: '1.8.2')
-    end
 
-    context "#munge_for_bulk_update" do
-      should "exclude missing gems" do
-        expected = [
-          ["bundler", "bundler-1.10.6", 2],
-          ["json", "json-1.8.3-java", 2],
-          ["json", "json-1.8.3", 1],
-          ["json", "json-1.8.2", 4]
-          # No entry for `no-such-gem`
-        ]
-
-        assert_equal expected, @job.munge_for_bulk_update(@sample_log_counts)
+      GemDownload.create!(rubygem_id: 0, version_id: 0, count: 0)
+      @sample_log_counts.each do |k, _|
+        if v = Version.find_by(full_name: k)
+          begin
+            GemDownload.create!(rubygem_id: v.rubygem.id, version_id: 0, count: 0)
+          rescue ActiveRecord::RecordNotUnique
+          end
+          GemDownload.create!(rubygem_id: v.rubygem.id, version_id: v.id, count: 0)
+        end
       end
     end
 
     context '#perform' do
       should "not double count" do
-        assert_equal 0, Rubygem.find_by_name('json').downloads
+        json = Rubygem.find_by_name('json')
+        assert_equal 0, GemDownload.count_for_rubygem(json.id)
         3.times { @job.perform }
-        assert_equal 7, Rubygem.find_by_name('json').downloads
+        assert_equal 7, GemDownload.count_for_rubygem(json.id)
       end
 
       should "update download counts" do
         @job.perform
         @sample_log_counts
-          .reject { |k, _| k == "no-such-gem-1.2.3" }
           .each do |name, expected_count|
-          assert_equal expected_count, Version.find_by_full_name(name).downloads_count, "invalid value for #{name}"
+          version = Version.find_by(full_name: name)
+          if version
+            count = GemDownload.find_by(rubygem_id: version.rubygem.id, version_id: version.id).count
+            assert_equal expected_count, count, "invalid value for #{name}"
+          end
         end
 
-        assert_equal 7, Rubygem.find_by_name('json').downloads
+        json = Rubygem.find_by_name('json')
+        assert_equal 7, GemDownload.count_for_rubygem(json.id)
         assert_equal "processed", @log_ticket.reload.status
       end
 
@@ -127,9 +129,15 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
         assert_equal "processed", @log_ticket.reload.status
       end
 
-      should "update the prcessed count" do
+      should "update the processed count" do
         @job.perform
-        assert_equal 9, @log_ticket.reload.processed_count
+        assert_equal 10, @log_ticket.reload.processed_count
+      end
+
+      should "update the total gem count" do
+        assert_equal 0, GemDownload.total_count
+        @job.perform
+        assert_equal 10, GemDownload.total_count
       end
     end
   end

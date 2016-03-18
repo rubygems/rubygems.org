@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160308201614) do
+ActiveRecord::Schema.define(version: 20160318213755) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,6 +61,14 @@ ActiveRecord::Schema.define(version: 20160308201614) do
   add_index "dependencies", ["rubygem_id"], name: "index_dependencies_on_rubygem_id", using: :btree
   add_index "dependencies", ["unresolved_name"], name: "index_dependencies_on_unresolved_name", using: :btree
   add_index "dependencies", ["version_id"], name: "index_dependencies_on_version_id", using: :btree
+
+  create_table "gem_downloads", force: :cascade do |t|
+    t.integer "rubygem_id",           null: false
+    t.integer "version_id"
+    t.integer "count",      limit: 8
+  end
+
+  add_index "gem_downloads", ["rubygem_id", "version_id"], name: "index_gem_downloads_on_rubygem_id_and_version_id", unique: true, using: :btree
 
   create_table "linksets", force: :cascade do |t|
     t.integer  "rubygem_id"
