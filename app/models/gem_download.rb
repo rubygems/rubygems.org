@@ -3,7 +3,8 @@ class GemDownload < ActiveRecord::Base
   belongs_to :version
 
   def self.count_for_rubygem(id)
-    if download = GemDownload.find_by(rubygem_id: id, version_id: 0)
+    download = GemDownload.find_by(rubygem_id: id, version_id: 0)
+    if download
       download.count
     else
       0
@@ -11,20 +12,17 @@ class GemDownload < ActiveRecord::Base
   end
 
   def self.total_count
-    if download =  GemDownload.find_by(rubygem_id: 0, version_id: 0)
+    download = GemDownload.find_by(rubygem_id: 0, version_id: 0)
+    if download
       download.count
     else
       0
     end
   end
 
-  def self.increment(count, rubygem_id:, version_id: nil)
+  def self.increment(count, rubygem_id:, version_id: 0)
     scope = GemDownload.where(rubygem_id: rubygem_id).select("id").lock(true)
-    if version_id
-      scope = scope.where(version_id: version_id)
-    else
-      scope = scope.where(version_id: 0)
-    end
+    scope = scope.where(version_id: version_id)
     sql = scope.to_sql
     find_by_sql(["UPDATE #{quoted_table_name} SET count = count + ? WHERE id = (#{sql}) RETURNING *", count]).first
   end

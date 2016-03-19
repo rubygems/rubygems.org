@@ -60,13 +60,12 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
 
       GemDownload.create!(rubygem_id: 0, version_id: 0, count: 0)
       @sample_log_counts.each do |k, _|
-        if v = Version.find_by(full_name: k)
-          begin
-            GemDownload.create!(rubygem_id: v.rubygem.id, version_id: 0, count: 0)
-          rescue ActiveRecord::RecordNotUnique
-          end
-          GemDownload.create!(rubygem_id: v.rubygem.id, version_id: v.id, count: 0)
+        v = Version.find_by(full_name: k)
+        next unless v
+        unless GemDownload.exists?(rubygem_id: v.rubygem.id, version_id: 0)
+          GemDownload.create!(rubygem_id: v.rubygem.id, version_id: 0, count: 0)
         end
+        GemDownload.create!(rubygem_id: v.rubygem.id, version_id: v.id, count: 0)
       end
     end
 
