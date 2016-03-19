@@ -44,27 +44,26 @@ class GemDownload < ActiveRecord::Base
     find_by_sql([update, count]).first
   end
 
-  def self.increment(name, full_name, count: 1)
+  def self.increment(full_name, count: 1)
     transaction do
-      gem = Rubygem.find_by(name: name)
       version = Version.find_by(full_name: full_name)
-      return unless gem && version
+      return unless version
       # Total count
       update_count_by(count, rubygem_id: 0, version_id: 0)
       # Gem count
-      update_count_by(count, rubygem_id: gem.id, version_id: 0)
+      update_count_by(count, rubygem_id: version.rubygem_id, version_id: 0)
       # Gem version count
-      update_count_by(count, rubygem_id: gem.id, version_id: version.id)
+      update_count_by(count, rubygem_id: version.rubygem_id, version_id: version.id)
     end
   end
 
   # Takes an array where members have the form
-  #   [name, full_name, count]
+  #   [full_name, count]
   # E.g.:
-  #   ['rake', 'rake-10.4.2', 1]
+  #   ['rake-10.4.2', 1]
   def self.bulk_update(ary)
-    ary.each do |name, full_name, count|
-      increment(name, full_name, count: count)
+    ary.each do |full_name, count|
+      increment(full_name, count: count)
     end
   end
 end

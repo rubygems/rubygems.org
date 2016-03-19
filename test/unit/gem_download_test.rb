@@ -41,7 +41,7 @@ class GemDownloadTest < ActiveSupport::TestCase
 
   context "#increment" do
     should "dont increment if entry doesnt exists" do
-      assert_nil GemDownload.increment("rails", "rails-3.2.22")
+      assert_nil GemDownload.increment("rails-3.2.22")
     end
 
     should "load up all downloads with just raw strings and process them" do
@@ -49,7 +49,7 @@ class GemDownloadTest < ActiveSupport::TestCase
       version = create(:version, rubygem: rubygem)
 
       3.times do
-        GemDownload.increment(rubygem.name, version.full_name)
+        GemDownload.increment(version.full_name)
       end
 
       assert_equal 3, GemDownload.count_for_version(version.id)
@@ -61,7 +61,7 @@ class GemDownloadTest < ActiveSupport::TestCase
       version = create(:version)
       rubygem = version.rubygem
 
-      GemDownload.increment(rubygem.name, version.full_name, count: 100)
+      GemDownload.increment(version.full_name, count: 100)
 
       assert_equal 100, GemDownload.count_for_version(version.id)
       assert_equal 100, GemDownload.count_for_rubygem(rubygem.id)
@@ -73,7 +73,7 @@ class GemDownloadTest < ActiveSupport::TestCase
       versions = Array.new(2) { create(:version) }
       gems     = versions.map(&:rubygem)
       counts   = Array.new(2) { rand(100) }
-      data     = gems.map(&:name).zip(versions.map(&:full_name), counts)
+      data     = versions.map.with_index { |v, i| [v.full_name, counts[i]] }
 
       GemDownload.bulk_update(data)
 
@@ -89,7 +89,7 @@ class GemDownloadTest < ActiveSupport::TestCase
     version = create(:version, rubygem: rubygem, platform: "mswin32-60")
     other_platform_version = create(:version, rubygem: rubygem, platform: "mswin32")
 
-    GemDownload.increment(rubygem.name, version.full_name)
+    GemDownload.increment(version.full_name)
 
     assert_equal 1, GemDownload.count_for_version(version.id)
     assert_equal 1, GemDownload.count_for_rubygem(rubygem.id)
@@ -110,12 +110,12 @@ class GemDownloadTest < ActiveSupport::TestCase
     @rubygem_3 = create(:rubygem)
     @version_4 = create(:version, rubygem: @rubygem_3)
 
-    GemDownload.increment(@rubygem_1.name, @version_1.full_name)
-    GemDownload.increment(@rubygem_1.name, @version_2.full_name)
-    GemDownload.increment(@rubygem_2.name, @version_3.full_name)
-    GemDownload.increment(@rubygem_1.name, @version_1.full_name)
-    3.times { GemDownload.increment(@rubygem_2.name, @version_3.full_name) }
-    2.times { GemDownload.increment(@rubygem_1.name, @version_2.full_name) }
+    GemDownload.increment(@version_1.full_name)
+    GemDownload.increment(@version_2.full_name)
+    GemDownload.increment(@version_3.full_name)
+    GemDownload.increment(@version_1.full_name)
+    3.times { GemDownload.increment(@version_3.full_name) }
+    2.times { GemDownload.increment(@version_2.full_name) }
 
     assert_equal [[@version_3, 4], [@version_2, 3], [@version_1, 2]],
       Download.most_downloaded_all_time
@@ -134,8 +134,8 @@ class GemDownloadTest < ActiveSupport::TestCase
     version1 = create(:version, rubygem: rubygem)
     version2 = create(:version, rubygem: rubygem)
 
-    3.times { GemDownload.increment(rubygem.name, version1.full_name) }
-    2.times { GemDownload.increment(rubygem.name, version2.full_name) }
+    3.times { GemDownload.increment(version1.full_name) }
+    2.times { GemDownload.increment(version2.full_name) }
 
     assert_equal 5, GemDownload.count_for_rubygem(rubygem.id)
     assert_equal 3, GemDownload.count_for_version(version1.id)
