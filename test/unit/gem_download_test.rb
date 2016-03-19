@@ -29,7 +29,7 @@ class GemDownloadTest < ActiveSupport::TestCase
     create(:gem_download, rubygem_id: 1, version_id: 1, count: 0)
 
     25.times do
-      4.times.map do
+      Array.new(4) do
         Thread.new { GemDownload.update_count_by(1, rubygem_id: 1, version_id: 1) }
       end.each(&:join)
     end

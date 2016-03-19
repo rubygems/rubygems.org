@@ -22,7 +22,7 @@ class Version < ActiveRecord::Base
   # TODO: Remove this once we move to GemDownload only
   after_create :create_gem_download
   def create_gem_download
-    GemDownload.create!(count: 0, rubygem_id: self.rubygem_id, version_id: self.id)
+    GemDownload.create!(count: 0, rubygem_id: rubygem_id, version_id: id)
   end
 
   def self.reverse_dependencies(name)

@@ -22,7 +22,7 @@ class Rubygem < ActiveRecord::Base
   # TODO: Remove this once we move to GemDownload only
   after_create :create_gem_download
   def create_gem_download
-    GemDownload.create!(count: 0, rubygem_id: self.id, version_id: 0)
+    GemDownload.create!(count: 0, rubygem_id: id, version_id: 0)
   end
 
   def self.with_versions
