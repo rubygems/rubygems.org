@@ -17,6 +17,7 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
       stub_responses: { get_object: { body: @sample_log } }
     }
     @job = FastlyLogProcessor.new('test-bucket', 'fastly-fake.log')
+    GemDownload.create!(count: 0, rubygem_id: 0, version_id: 0)
   end
 
   teardown do
@@ -52,16 +53,6 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
       create(:version, rubygem: json, number: '1.8.3', platform: 'java')
       create(:version, rubygem: json, number: '1.8.3')
       create(:version, rubygem: json, number: '1.8.2')
-
-      GemDownload.create!(rubygem_id: 0, version_id: 0, count: 0)
-      @sample_log_counts.each do |k, _|
-        v = Version.find_by(full_name: k)
-        next unless v
-        unless GemDownload.exists?(rubygem_id: v.rubygem.id, version_id: 0)
-          GemDownload.create!(rubygem_id: v.rubygem.id, version_id: 0, count: 0)
-        end
-        GemDownload.create!(rubygem_id: v.rubygem.id, version_id: v.id, count: 0)
-      end
     end
 
     context '#perform' do
@@ -131,7 +122,7 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
       should "update the total gem count" do
         assert_equal 0, GemDownload.total_count
         @job.perform
-        assert_equal 10, GemDownload.total_count
+        assert_equal 9, GemDownload.total_count
       end
     end
   end

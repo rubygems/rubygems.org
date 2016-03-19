@@ -19,6 +19,12 @@ class Version < ActiveRecord::Base
   validate :authors_format, on: :create
   attribute :authors, Type::Value.new
 
+  # TODO: Remove this once we move to GemDownload only
+  after_create :create_gem_download
+  def create_gem_download
+    GemDownload.create!(count: 0, rubygem_id: self.rubygem_id, version_id: self.id)
+  end
+
   def self.reverse_dependencies(name)
     joins(dependencies: :rubygem)
       .indexed
