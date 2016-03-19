@@ -64,7 +64,7 @@ ActiveRecord::Schema.define(version: 20160318213755) do
 
   create_table "gem_downloads", force: :cascade do |t|
     t.integer "rubygem_id",           null: false
-    t.integer "version_id"
+    t.integer "version_id",           null: false
     t.integer "count",      limit: 8
   end
 
