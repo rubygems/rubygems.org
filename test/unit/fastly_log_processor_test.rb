@@ -2,10 +2,6 @@ require 'test_helper'
 
 class FastlyLogProcessorTest < ActiveSupport::TestCase
   setup do
-    # Enable fastly log processing
-    @orig_fastly_log_processor_enabled = ENV['FASTLY_LOG_PROCESSOR_ENABLED']
-    ENV['FASTLY_LOG_PROCESSOR_ENABLED'] = 'true'
-
     @sample_log = Rails.root.join('test/sample_logs/fastly-fake.log').read
 
     @sample_log_counts = {
@@ -26,7 +22,6 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
   teardown do
     # Remove stubbed response
     Aws.config.delete(:s3)
-    ENV['FASTLY_LOG_PROCESSOR_ENABLED'] = @orig_fastly_log_processor_enabled
   end
 
   context "#download_counts" do

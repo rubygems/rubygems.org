@@ -26,13 +26,7 @@ class FastlyLogProcessor
     updates = munge_for_bulk_update(counts)
 
     ActiveRecord::Base.connection.transaction do
-      # Temporary feature flag while we roll out fastly log processing
-      if ENV['FASTLY_LOG_PROCESSOR_ENABLED'] == 'true'
-        GemDownload.bulk_update(updates)
-      else
-        # Just log & exit w/out updating stats
-        StatsD.increment('fastly_log_processor.disabled')
-      end
+      GemDownload.bulk_update(updates)
       processed_count = updates.sum { |_, _, v| v }
       log_ticket.update(status: "processed", processed_count: processed_count)
     end
