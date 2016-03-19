@@ -32,7 +32,7 @@ class GemDownload < ActiveRecord::Base
   end
 
   def self.update_count_by(count, rubygem_id:, version_id: 0)
-    scope = GemDownload.where(rubygem_id: rubygem_id).select("id").lock(true)
+    scope = GemDownload.where(rubygem_id: rubygem_id).select("id")
     scope = scope.where(version_id: version_id)
     sql = scope.to_sql
 
