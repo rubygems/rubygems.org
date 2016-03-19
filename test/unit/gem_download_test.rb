@@ -2,10 +2,48 @@ require 'test_helper'
 
 class GemDownloadTest < ActiveSupport::TestCase
   setup do
-    GemDownload.create!(count: 0, rubygem_id: 0, version_id: 0)
+    create(:gem_download, count: 0)
+  end
+
+  context "update_count_by" do
+    should "not update if download doesnt exist" do
+      assert_nil GemDownload.update_count_by(1, rubygem_id: 1)
+    end
+
+    should "not update if download count is nil" do
+      GemDownload.create!(rubygem_id: 1, version_id: 0)
+      download = GemDownload.update_count_by(1, rubygem_id: 1)
+      assert_nil download.count
+    end
+
+    should "update the count" do
+      GemDownload.create!(rubygem_id: 1, version_id: 1, count: 0)
+      GemDownload.update_count_by(1, rubygem_id: 1, version_id: 1)
+
+      assert_equal 1, GemDownload.where(rubygem_id: 1, version_id: 1).first.count
+    end
+  end
+
+  uses_transaction :test_update_the_count_atomically
+  def test_update_the_count_atomically
+    create(:gem_download, rubygem_id: 1, version_id: 1, count: 0)
+
+    25.times do
+      4.times.map do
+        Thread.new { GemDownload.update_count_by(1, rubygem_id: 1, version_id: 1) }
+      end.each(&:join)
+    end
+
+    assert_equal 100, GemDownload.where(rubygem_id: 1, version_id: 1).first.count
+  ensure
+    GemDownload.delete_all
   end
 
   context "#increment" do
+    should "dont increment if entry doesnt exists" do
+      assert_nil GemDownload.increment("rails", "rails-3.2.22")
+    end
+
     should "load up all downloads with just raw strings and process them" do
       rubygem = create(:rubygem, name: "gem123")
       version = create(:version, rubygem: rubygem)

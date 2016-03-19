@@ -132,4 +132,9 @@ FactoryGirl.define do
     expires_in 90.days.from_now
     scopes "public"
   end
+
+  factory :gem_download do
+    rubygem_id 0
+    version_id 0
+  end
 end
