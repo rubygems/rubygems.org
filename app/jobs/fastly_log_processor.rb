@@ -31,6 +31,7 @@ class FastlyLogProcessor
     end
   end
   statsd_count_success :perform, 'fastly_log_processor.perform'
+  statsd_measure :perform, 'fastly_log_processor.job_performance'
 
   # Takes an enumerator of log lines and returns a hash of download counts
   # E.g.
