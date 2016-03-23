@@ -32,6 +32,9 @@ class Api::V1::RubygemsController < Api::BaseController
       request.host_with_port)
     gemcutter.process
     render text: gemcutter.message, status: gemcutter.code
+  rescue => e
+    Honeybadger.notify(e)
+    render text: "Server error. Please try again.", status: 500
   end
 
   def reverse_dependencies

@@ -19,6 +19,16 @@ class PushTest < ActionDispatch::IntegrationTest
     assert page.has_content?("1.0.0")
   end
 
+  test "pushing a gem when redis is down" do
+    requires_toxiproxy
+    Toxiproxy[:redis].down do
+      build_gem "sandworm", "1.0.0"
+      push_gem "sandworm-1.0.0.gem"
+      assert_response 500
+      assert_equal "Server error. Please try again.", response.body
+    end
+  end
+
   test "push a new version of a gem" do
     rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
     create(:ownership, rubygem: rubygem, user: @user)
