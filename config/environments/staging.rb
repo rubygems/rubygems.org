@@ -80,6 +80,12 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  config.cache_store = :dalli_store, ENV['MEMCACHED_ENDPOINT'], {
+    failover: true,
+    socket_timeout: 1.5,
+    socket_failure_delay: 0.2
+  }
 end
 
 require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?
