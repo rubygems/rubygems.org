@@ -12,6 +12,7 @@ rvm:
 services:
   - redis-server
   - elasticsearch
+  - memcached
 
 sudo: false
 
