@@ -7,6 +7,7 @@ class Deletion < ActiveRecord::Base
 
   before_validation :record_metadata
   after_create :remove_from_index
+  after_commit :expire_api_memcached
   after_commit :remove_from_storage
 
   attr_accessor :version
@@ -25,6 +26,10 @@ class Deletion < ActiveRecord::Base
     self.rubygem = rubygem_name
     self.number = @version.number
     self.platform = @version.platform
+  end
+
+  def expire_api_memcached
+    Rails.cache.delete("deps/v1/#{@version.rubygem.name}")
   end
 
   def remove_from_index

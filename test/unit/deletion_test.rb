@@ -51,6 +51,15 @@ class DeletionTest < ActiveSupport::TestCase
     assert_equal deletion.rubygem, @version.rubygem.name
   end
 
+  test "expire API memcached" do
+    Rails.cache.write("deps/v1/#{@version.rubygem.name}", "omg!")
+    refute_nil Rails.cache.fetch("deps/v1/#{@version.rubygem.name}")
+
+    delete_gem
+
+    assert_nil Rails.cache.fetch("deps/v1/#{@version.rubygem.name}")
+  end
+
   teardown do
     # This is necessary due to after_commit not cleaning up for us
     [Rubygem, Version, User, Deletion].each(&:delete_all)

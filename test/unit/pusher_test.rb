@@ -268,6 +268,16 @@ class PusherTest < ActiveSupport::TestCase
       should "set success code" do
         assert_equal 200, @cutter.code
       end
+
+      should "expire API memcached" do
+        Rails.cache.write("deps/v1/#{@rubygem.name}", "omg!")
+        refute_nil Rails.cache.fetch("deps/v1/#{@rubygem.name}")
+
+        create(:version, rubygem: @rubygem, number: '0.1.2')
+        @cutter.save
+
+        assert_nil Rails.cache.fetch("deps/v1/#{@rubygem.name}")
+      end
     end
   end
 end
