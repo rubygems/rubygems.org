@@ -1,7 +1,7 @@
 $(function() {
   var clipboard = new Clipboard('.gem__code__icon'),
       copy_tooltip = $('.gem__code__tooltip--copy'),
-      copied_tooltip = $('.gem__code__tooltip--copied');
+      copied_tooltip = $('.gem__code__tooltip--copied'),
       copy_buttons = $('.gem__code__icon'),
       gem_install_button = $('#js-gem__code--install');
 
