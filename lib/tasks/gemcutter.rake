@@ -62,7 +62,6 @@ namespace :gemcutter do
     desc "Update the db download count with the redis value"
     task update_download_counts: :environment do
       Version.find_in_batches do |group|
-        sleep(2) # Make sure it doesn't get too crowded in there!
         group.each do |version|
           rubygem = version.rubygem
           begin
