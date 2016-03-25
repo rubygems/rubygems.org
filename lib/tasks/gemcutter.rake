@@ -65,12 +65,16 @@ namespace :gemcutter do
         group.each do |version|
           rubygem = version.rubygem
           begin
-            GemDownload.create!(rubygem_id: version.rubygem_id, version_id: 0, count: rubygem.downloads || 0)
+            unless GemDownload.exists?(rubygem_id: version.rubygem_id, version_id: 0)
+              GemDownload.create!(rubygem_id: version.rubygem_id, version_id: 0, count: rubygem.downloads || 0)
+            end
           rescue ActiveRecord::RecordNotUnique
             p "Skipping #{version.full_name}"
           end
           begin
-            GemDownload.create!(rubygem_id: version.rubygem_id, version_id: version.id, count: version.downloads_count || 0)
+            unless GemDownload.exists?(rubygem_id: version.rubygem_id, version_id: version.id)
+              GemDownload.create!(rubygem_id: version.rubygem_id, version_id: version.id, count: version.downloads_count || 0)
+            end
           rescue ActiveRecord::RecordNotUnique
             p "Skipping #{version.full_name}"
           end
