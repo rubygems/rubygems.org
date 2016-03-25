@@ -146,4 +146,11 @@ class GemDownloadTest < ActiveSupport::TestCase
     skip "fixme"
     assert_equal 0, Download.rank(build(:version))
   end
+
+  should "not allow the same gemdownload twice" do
+    GemDownload.create!(rubygem_id: 1, version_id: 0)
+    assert_raises(ActiveRecord::RecordNotUnique) do
+      GemDownload.create!(rubygem_id: 1, version_id: 0)
+    end
+  end
 end
