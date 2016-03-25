@@ -14,19 +14,30 @@ class GemcutterTest < ActiveSupport::TestCase
 
   context "rubygems" do
     setup do
-      @rubygems = create_list(:rubygem, 3, downloads: 0)
+      @versions = create_list(:version, 3)
+      @rubygems = @versions.map(&:rubygem)
     end
 
-    should "update download counts for all gems" do
+    should "not change already created downloads" do
+      GemDownload.increment(@versions.first.full_name, count: 100)
+
+      silence_stream(STDOUT) do
+        run_rake_task("rubygems:update_download_counts")
+      end
+      assert_equal 100, GemDownload.count_for_rubygem(@rubygems.first)
+    end
+
+    should "create download counts for all gems" do
+      GemDownload.delete_all
       @rubygems.each_with_index do |rubygem, download_count|
         Redis.current.incrby "downloads:rubygem:#{rubygem.name}", download_count
       end
 
       run_rake_task("rubygems:update_download_counts")
 
-      assert_equal 0, @rubygems[0].reload["downloads"]
-      assert_equal 1, @rubygems[1].reload["downloads"]
-      assert_equal 2, @rubygems[2].reload["downloads"]
+      assert_equal 0, GemDownload.count_for_rubygem(@rubygems[0].id)
+      assert_equal 1, GemDownload.count_for_rubygem(@rubygems[1].id)
+      assert_equal 2, GemDownload.count_for_rubygem(@rubygems[2].id)
     end
   end
 end

@@ -68,12 +68,12 @@ namespace :gemcutter do
           begin
             GemDownload.create!(rubygem_id: version.rubygem_id, version_id: 0, count: rubygem.downloads || 0)
           rescue ActiveRecord::RecordNotUnique
-            p "Skipping #{version.full_nam}"
+            p "Skipping #{version.full_name}"
           end
           begin
             GemDownload.create!(rubygem_id: version.rubygem_id, version_id: version.id, count: version.downloads_count || 0)
           rescue ActiveRecord::RecordNotUnique
-            p "Skipping #{version.full_nam}"
+            p "Skipping #{version.full_name}"
           end
         end
       end
