@@ -59,19 +59,24 @@ namespace :gemcutter do
   end
 
   namespace :rubygems do
-    desc "Update the download counts for all gems."
+    desc "Update the db download count with the redis value"
     task update_download_counts: :environment do
-      case_query = Rubygem
-        .pluck(:name)
-        .map { |name| "WHEN '#{name}' THEN #{Redis.current["downloads:rubygem:#{name}"].to_i}" }
-        .join("\n            ")
-
-      ActiveRecord::Base.connection.execute <<-SQL.strip_heredoc
-        UPDATE rubygems
-          SET downloads = CASE name
-            #{case_query}
-          END
-      SQL
+      Version.find_in_batches do |group|
+        sleep(2) # Make sure it doesn't get too crowded in there!
+        group.each do |version|
+          rubygem = version.rubygem
+          begin
+            GemDownload.create!(rubygem_id: version.rubygem_id, version_id: 0, count: rubygem.downloads || 0)
+          rescue ActiveRecord::RecordNotUnique
+            # Should not create same download entry
+          end
+          begin
+            GemDownload.create!(rubygem_id: version.rubygem_id, version_id: version.id, count: version.downloads_count || 0)
+          rescue ActiveRecord::RecordNotUnique
+            # Should not create same download entry
+          end
+        end
+      end
     end
   end
 
