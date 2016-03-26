@@ -95,6 +95,13 @@ class GemDownloadTest < ActiveSupport::TestCase
     assert_equal 1, GemDownload.total_count
   end
 
+  should "track version count" do
+    version = create(:version)
+    counts = Array.new(3) { |n| [version.full_name, n + 1] }
+    GemDownload.bulk_update(counts)
+    assert_equal 6, GemDownload.count_for_version(version.id)
+  end
+
   should "find most downloaded all time" do
     skip "fixme"
     @rubygem_1 = create(:rubygem)

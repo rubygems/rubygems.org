@@ -54,8 +54,8 @@ class GemDownload < ActiveRecord::Base
 
     ary.each do |full_name, count|
       if updates_by_version.key?(full_name)
-        version, count = updates_by_version[full_name]
-        updates_by_version[full_name] = [version, count + 1]
+        version, old_count = updates_by_version[full_name]
+        updates_by_version[full_name] = [version, old_count + count]
       else
         version = Version.find_by(full_name: full_name)
         updates_by_version[full_name] = [version, count] if version
