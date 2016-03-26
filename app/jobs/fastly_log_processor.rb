@@ -13,7 +13,7 @@ class FastlyLogProcessor
   end
 
   def perform
-    StatsD.increment('fastly_log_processor.processed')
+    StatsD.increment('fastly_log_processor.started')
 
     log_ticket = LogTicket.pop(key: key, directory: bucket)
     if log_ticket.nil?
