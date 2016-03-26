@@ -31,7 +31,7 @@ class GemDownload < ActiveRecord::Base
     end
   end
 
-  def self.increment(count, rubygem_id:, version_id: 0)
+  def self.update_count_by(count, rubygem_id:, version_id: 0)
     scope = GemDownload.where(rubygem_id: rubygem_id).select("id")
     scope = scope.where(version_id: version_id)
     sql = scope.to_sql
@@ -44,34 +44,26 @@ class GemDownload < ActiveRecord::Base
     find_by_sql([update, count]).first
   end
 
+  def self.increment(full_name, count: 1)
+    transaction do
+      version = Version.find_by(full_name: full_name)
+      return unless version
+      # Total count
+      update_count_by(count, rubygem_id: 0, version_id: 0)
+      # Gem count
+      update_count_by(count, rubygem_id: version.rubygem_id, version_id: 0)
+      # Gem version count
+      update_count_by(count, rubygem_id: version.rubygem_id, version_id: version.id)
+    end
+  end
+
   # Takes an array where members have the form
   #   [full_name, count]
   # E.g.:
   #   ['rake-10.4.2', 1]
   def self.bulk_update(ary)
-    arr = []
-
     ary.each do |full_name, count|
-      version = Version.find_by(full_name: full_name)
-      next unless version
-
-      # Gem version count
-      increment(count, rubygem_id: version.rubygem_id, version_id: version.id)
-
-      arr << [version, full_name, count]
+      increment(full_name, count: count)
     end
-
-    grouped_gems = arr.group_by do |version, _, _|
-      version.rubygem_id
-    end
-    grouped_gems.each do |rubygem_id, counts|
-      count = counts.sum { |_, _, c| c }
-      # Gem count
-      increment(count, rubygem_id: rubygem_id, version_id: 0)
-    end
-
-    total_count = arr.sum { |_, _, c| c }
-    # Total count
-    increment(total_count, rubygem_id: 0, version_id: 0)
   end
 end

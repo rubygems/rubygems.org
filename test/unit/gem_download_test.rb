@@ -5,33 +5,22 @@ class GemDownloadTest < ActiveSupport::TestCase
     create(:gem_download, count: 0)
   end
 
-  context "#increment" do
+  context "update_count_by" do
     should "not update if download doesnt exist" do
-      assert_nil GemDownload.increment(1, rubygem_id: 1)
+      assert_nil GemDownload.update_count_by(1, rubygem_id: 1)
     end
 
     should "not update if download count is nil" do
       GemDownload.create!(rubygem_id: 1, version_id: 0)
-      download = GemDownload.increment(1, rubygem_id: 1)
+      download = GemDownload.update_count_by(1, rubygem_id: 1)
       assert_nil download.count
     end
 
     should "update the count" do
       GemDownload.create!(rubygem_id: 1, version_id: 1, count: 0)
-      GemDownload.increment(1, rubygem_id: 1, version_id: 1)
+      GemDownload.update_count_by(1, rubygem_id: 1, version_id: 1)
 
       assert_equal 1, GemDownload.where(rubygem_id: 1, version_id: 1).first.count
-    end
-
-    should "take optional count warg" do
-      version = create(:version)
-      rubygem = version.rubygem
-
-      GemDownload.increment(100, rubygem_id: version.rubygem_id, version_id: version.id)
-      GemDownload.increment(100, rubygem_id: version.rubygem_id)
-
-      assert_equal 100, GemDownload.count_for_version(version.id)
-      assert_equal 100, GemDownload.count_for_rubygem(rubygem.id)
     end
   end
 
@@ -41,13 +30,42 @@ class GemDownloadTest < ActiveSupport::TestCase
 
     25.times do
       Array.new(4) do
-        Thread.new { GemDownload.increment(1, rubygem_id: 1, version_id: 1) }
+        Thread.new { GemDownload.update_count_by(1, rubygem_id: 1, version_id: 1) }
       end.each(&:join)
     end
 
     assert_equal 100, GemDownload.where(rubygem_id: 1, version_id: 1).first.count
   ensure
     GemDownload.delete_all
+  end
+
+  context "#increment" do
+    should "dont increment if entry doesnt exists" do
+      assert_nil GemDownload.increment("rails-3.2.22")
+    end
+
+    should "load up all downloads with just raw strings and process them" do
+      rubygem = create(:rubygem, name: "gem123")
+      version = create(:version, rubygem: rubygem)
+
+      3.times do
+        GemDownload.increment(version.full_name)
+      end
+
+      assert_equal 3, GemDownload.count_for_version(version.id)
+      assert_equal 3, GemDownload.count_for_rubygem(rubygem.id)
+      assert_equal 3, GemDownload.total_count
+    end
+
+    should "take optional count kwarg" do
+      version = create(:version)
+      rubygem = version.rubygem
+
+      GemDownload.increment(version.full_name, count: 100)
+
+      assert_equal 100, GemDownload.count_for_version(version.id)
+      assert_equal 100, GemDownload.count_for_rubygem(rubygem.id)
+    end
   end
 
   context "#bulk_update" do
@@ -66,27 +84,12 @@ class GemDownloadTest < ActiveSupport::TestCase
     end
   end
 
-  should "not count, wrong named versions" do
-    GemDownload.bulk_update([['foonotexists', 100]])
-    assert_equal 0, GemDownload.total_count
-
-    version = create(:version)
-    GemDownload.bulk_update([['foonotexists', 100], ['dddd', 50], [version.full_name, 2]])
-    assert_equal 2, GemDownload.total_count
-  end
-
-  should "write global downloads count" do
-    counts = Array.new(3) { [create(:version).full_name, 2] }
-    GemDownload.bulk_update(counts)
-    assert_equal 6, GemDownload.total_count
-  end
-
   should "track platform gem downloads correctly" do
     rubygem = create(:rubygem)
     version = create(:version, rubygem: rubygem, platform: "mswin32-60")
     other_platform_version = create(:version, rubygem: rubygem, platform: "mswin32")
 
-    GemDownload.bulk_update([[version.full_name, 1]])
+    GemDownload.increment(version.full_name)
 
     assert_equal 1, GemDownload.count_for_version(version.id)
     assert_equal 1, GemDownload.count_for_rubygem(rubygem.id)
@@ -130,11 +133,18 @@ class GemDownloadTest < ActiveSupport::TestCase
     rubygem = create(:rubygem)
     version1 = create(:version, rubygem: rubygem)
     version2 = create(:version, rubygem: rubygem)
-    GemDownload.bulk_update([[version1.full_name, 3], [version2.full_name, 2]])
+
+    3.times { GemDownload.increment(version1.full_name) }
+    2.times { GemDownload.increment(version2.full_name) }
 
     assert_equal 5, GemDownload.count_for_rubygem(rubygem.id)
     assert_equal 3, GemDownload.count_for_version(version1.id)
     assert_equal 2, GemDownload.count_for_version(version2.id)
+  end
+
+  should "return zero for rank if no downloads exist" do
+    skip "fixme"
+    assert_equal 0, Download.rank(build(:version))
   end
 
   should "not allow the same gemdownload twice" do
