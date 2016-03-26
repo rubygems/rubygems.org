@@ -49,28 +49,35 @@ class GemDownload < ActiveRecord::Base
   # E.g.:
   #   ['rake-10.4.2', 1]
   def self.bulk_update(ary)
-    arr = []
+    updates_by_version = {}
+    updates_by_gem = {}
 
     ary.each do |full_name, count|
-      version = Version.find_by(full_name: full_name)
-      next unless version
+      if updates_by_version.key?(full_name)
+        version, count = updates_by_version[full_name]
+        updates_by_version[full_name] = [version, count + 1]
+      else
+        version = Version.find_by(full_name: full_name)
+        updates_by_version[full_name] = [version, count] if version
+      end
+    end
 
+    updates_by_version.values.each do |version, version_count|
+      updates_by_gem[version.rubygem_id] ||= 0
+      updates_by_gem[version.rubygem_id] += version_count
+    end
+
+    updates_by_version.values.each do |version, count|
       # Gem version count
       increment(count, rubygem_id: version.rubygem_id, version_id: version.id)
-
-      arr << [version, full_name, count]
     end
 
-    grouped_gems = arr.group_by do |version, _, _|
-      version.rubygem_id
-    end
-    grouped_gems.each do |rubygem_id, counts|
-      count = counts.sum { |_, _, c| c }
+    updates_by_gem.each do |rubygem_id, count|
       # Gem count
       increment(count, rubygem_id: rubygem_id, version_id: 0)
     end
 
-    total_count = arr.sum { |_, _, c| c }
+    total_count = updates_by_gem.values.sum
     # Total count
     increment(total_count, rubygem_id: 0, version_id: 0)
   end
