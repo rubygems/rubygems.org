@@ -24,6 +24,8 @@ namespace :deploy do
   task :restart do
     on roles(:app) do
       execute :sudo, 'service unicorn restart'
+    end
+    on roles(:jobs) do
       execute :sudo, 'sv -w 30 restart delayed_job'
       execute :sudo, 'sv -w 30 restart shoryuken'
     end
