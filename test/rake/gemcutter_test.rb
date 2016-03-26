@@ -19,7 +19,7 @@ class GemcutterTest < ActiveSupport::TestCase
     end
 
     should "not change already created downloads" do
-      GemDownload.increment(@versions.first.full_name, count: 100)
+      GemDownload.increment(100, version_id: 0, rubygem_id: @versions.first.rubygem_id)
 
       silence_stream(STDOUT) do
         run_rake_task("rubygems:update_download_counts")
