@@ -31,6 +31,10 @@ class FastlyLogProcessor
       log_ticket.update(status: "processed", processed_count: processed_count)
       StatsD.gauge('fastly_log_processor.processed_count', processed_count)
     end
+  rescue
+    log_ticket.update(status: "failed") if log_ticket
+    StatsD.increment('fastly_log_processor.perform.failed')
+    raise
   end
   statsd_count_success :perform, 'fastly_log_processor.perform'
   statsd_measure :perform, 'fastly_log_processor.job_performance'

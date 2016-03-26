@@ -93,6 +93,7 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
         end
         assert_raises { @job.perform }
         refute_equal "processed", @log_ticket.reload.status
+        assert_equal "failed", @log_ticket.reload.status
       end
 
       should "not re-process if it failed" do
