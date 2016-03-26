@@ -45,16 +45,14 @@ class GemDownload < ActiveRecord::Base
   end
 
   def self.increment(full_name, count: 1)
-    transaction do
-      version = Version.find_by(full_name: full_name)
-      return unless version
-      # Total count
-      update_count_by(count, rubygem_id: 0, version_id: 0)
-      # Gem count
-      update_count_by(count, rubygem_id: version.rubygem_id, version_id: 0)
-      # Gem version count
-      update_count_by(count, rubygem_id: version.rubygem_id, version_id: version.id)
-    end
+    version = Version.find_by(full_name: full_name)
+    return unless version
+    # Total count
+    update_count_by(count, rubygem_id: 0, version_id: 0)
+    # Gem count
+    update_count_by(count, rubygem_id: version.rubygem_id, version_id: 0)
+    # Gem version count
+    update_count_by(count, rubygem_id: version.rubygem_id, version_id: version.id)
   end
 
   # Takes an array where members have the form
