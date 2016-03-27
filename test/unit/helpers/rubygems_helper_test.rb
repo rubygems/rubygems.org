@@ -94,22 +94,23 @@ class RubygemsHelperTest < ActionView::TestCase
       @linkset = build(:linkset)
       @linkset.wiki = nil
       @linkset.code = ""
+      @virtual_path = "rubygems.show"
     end
 
     should "create link for homepage" do
-      assert_match @linkset.home, link_to_page("Homepage", @linkset.home)
+      assert_match @linkset.home, link_to_page(:home, @linkset.home)
     end
 
     should "be a nofollow link" do
-      assert_match 'rel="nofollow"', link_to_page("Homepage", @linkset.home)
+      assert_match 'rel="nofollow"', link_to_page(:home, @linkset.home)
     end
 
     should "not create link for wiki" do
-      assert_nil link_to_page("Wiki", @linkset.wiki)
+      assert_nil link_to_page(:wiki, @linkset.wiki)
     end
 
     should "not create link for code" do
-      assert_nil link_to_page("Code", @linkset.code)
+      assert_nil link_to_page(:code, @linkset.code)
     end
   end
 

@@ -11,8 +11,8 @@ module RubygemsHelper
     end
   end
 
-  def link_to_page(text, url)
-    link_to(text, url, rel: 'nofollow', class: ['gem__link', 't-list__item']) if url.present?
+  def link_to_page(id, url)
+    link_to(t(".links.#{id}"), url, rel: 'nofollow', class: ['gem__link', 't-list__item'], id: id) if url.present?
   end
 
   def link_to_directory
@@ -65,14 +65,12 @@ module RubygemsHelper
   end
 
   def download_link(version)
-    link_to t('.links.download'), "/downloads/#{version.full_name}.gem",
-      class: 'gem__link t-list__item', id: :download
+    link_to_page :download, "/downloads/#{version.full_name}.gem"
   end
 
   def documentation_link(version, linkset)
     return unless linkset.nil? || linkset.docs.blank?
-    link_to t('.links.docs'), version.documentation_path,
-      class: 'gem__link t-list__item', id: :docs
+    link_to_page :docs, version.documentation_path
   end
 
   def badge_link(rubygem)
