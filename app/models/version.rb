@@ -157,6 +157,13 @@ class Version < ActiveRecord::Base
       .limit(limit)
   end
 
+  def self.recent_uploads(limit)
+    joins(:rubygem)
+      .indexed
+      .by_created_at
+      .limit(limit)
+  end
+
   def self.published(limit)
     indexed.by_built_at.limit(limit)
   end
