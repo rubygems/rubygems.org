@@ -33,7 +33,6 @@ class FastlyLogProcessor
     end
   rescue
     log_ticket.update(status: "failed") if log_ticket
-    StatsD.increment('fastly_log_processor.perform.failed')
     raise
   end
   statsd_count_success :perform, 'fastly_log_processor.perform'
