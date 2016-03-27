@@ -25,12 +25,12 @@ class FastlyLogProcessor
     StatsD.gauge('fastly_log_processor.processed_versions_count', counts.count)
     Delayed::Worker.logger.info "Processed Fastly log counts: #{counts.inspect}"
 
+    processed_count = counts.sum { |_, v| v }
     ActiveRecord::Base.connection.transaction do
       GemDownload.bulk_update(counts)
-      processed_count = counts.sum { |_, v| v }
       log_ticket.update(status: "processed", processed_count: processed_count)
-      StatsD.gauge('fastly_log_processor.processed_count', processed_count)
     end
+    StatsD.gauge('fastly_log_processor.processed_count', processed_count)
   rescue
     log_ticket.update(status: "failed") if log_ticket
     raise
