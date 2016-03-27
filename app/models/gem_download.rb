@@ -31,7 +31,7 @@ class GemDownload < ActiveRecord::Base
     end
   end
 
-  def self.update_count_by(count, rubygem_id:, version_id: 0)
+  def self.increment(count, rubygem_id:, version_id: 0)
     scope = GemDownload.where(rubygem_id: rubygem_id).select("id")
     scope = scope.where(version_id: version_id)
     sql = scope.to_sql
@@ -44,24 +44,41 @@ class GemDownload < ActiveRecord::Base
     find_by_sql([update, count]).first
   end
 
-  def self.increment(full_name, count: 1)
-    version = Version.find_by(full_name: full_name)
-    return unless version
-    # Total count
-    update_count_by(count, rubygem_id: 0, version_id: 0)
-    # Gem count
-    update_count_by(count, rubygem_id: version.rubygem_id, version_id: 0)
-    # Gem version count
-    update_count_by(count, rubygem_id: version.rubygem_id, version_id: version.id)
-  end
-
   # Takes an array where members have the form
   #   [full_name, count]
   # E.g.:
   #   ['rake-10.4.2', 1]
   def self.bulk_update(ary)
+    updates_by_version = {}
+    updates_by_gem = {}
+
     ary.each do |full_name, count|
-      increment(full_name, count: count)
+      if updates_by_version.key?(full_name)
+        version, old_count = updates_by_version[full_name]
+        updates_by_version[full_name] = [version, old_count + count]
+      else
+        version = Version.find_by(full_name: full_name)
+        updates_by_version[full_name] = [version, count] if version
+      end
     end
+
+    updates_by_version.values.each do |version, version_count|
+      updates_by_gem[version.rubygem_id] ||= 0
+      updates_by_gem[version.rubygem_id] += version_count
+    end
+
+    updates_by_version.values.each do |version, count|
+      # Gem version count
+      increment(count, rubygem_id: version.rubygem_id, version_id: version.id)
+    end
+
+    updates_by_gem.each do |rubygem_id, count|
+      # Gem count
+      increment(count, rubygem_id: rubygem_id, version_id: 0)
+    end
+
+    total_count = updates_by_gem.values.sum
+    # Total count
+    increment(total_count, rubygem_id: 0, version_id: 0)
   end
 end
