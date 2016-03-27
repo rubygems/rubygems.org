@@ -3,6 +3,7 @@ class ReverseDependenciesController < ApplicationController
   before_action :find_rubygem, only: [:index]
   before_action :latest_version, only: [:index]
   before_action :set_page, only: [:index]
+  before_action :find_versioned_links, only: [:index]
 
   def index
     @reverse_dependencies = @rubygem.reverse_dependencies

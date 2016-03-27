@@ -350,10 +350,6 @@ class Version < ActiveRecord::Base
     update_column(:required_rubygems_version, required_rubygems_version.to_s)
   end
 
-  def documentation_path
-    "http://www.rubydoc.info/gems/#{rubygem.name}/#{number}"
-  end
-
   private
 
   def get_spec_attribute(attribute_name)
