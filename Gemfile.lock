@@ -175,7 +175,7 @@ GEM
     newrelic_rpm (3.15.1.316)
     nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
-    parser (2.3.0.6)
+    parser (2.3.0.7)
       ast (~> 2.2)
     paul_revere (2.0.0)
       rails (~> 4.0)
