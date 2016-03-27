@@ -67,12 +67,12 @@ class GemDownload < ActiveRecord::Base
       updates_by_gem[version.rubygem_id] += version_count
     end
 
-    updates_by_version.values.each do |version, count|
+    updates_by_version.values.sort_by { |v, _| v.id }.each do |version, count|
       # Gem version count
       increment(count, rubygem_id: version.rubygem_id, version_id: version.id)
     end
 
-    updates_by_gem.each do |rubygem_id, count|
+    updates_by_gem.sort_by { |id, _| id }.each do |rubygem_id, count|
       # Gem count
       increment(count, rubygem_id: rubygem_id, version_id: 0)
     end
