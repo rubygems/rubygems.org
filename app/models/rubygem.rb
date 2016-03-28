@@ -129,6 +129,19 @@ class Rubygem < ActiveRecord::Base
     ownerships.exists?(user_id: user.id)
   end
 
+  def most_recent_version
+    latest = versions.select(&:latest).sort_by(&:number)
+    latest_for_cruby = latest.select { |v| v.platform == "ruby" }
+
+    if latest_for_cruby.any?
+      latest_for_cruby.last
+    elsif latest.any?
+      latest.last
+    else
+      versions.last
+    end
+  end
+
   def to_s
     versions.most_recent.try(:to_title) || name
   end
