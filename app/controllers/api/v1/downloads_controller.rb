@@ -27,9 +27,10 @@ class Api::V1::DownloadsController < Api::BaseController
   end
 
   def all
+    gems = GemDownload.where("version_id != 0").includes(:version).order(count: :desc).limit(50)
     data = {
-      gems: Download.most_downloaded_all_time(50).map do |version, count|
-        [version.attributes, count]
+      gems: gems.map do |gem|
+        [gem.version.attributes, gem.count]
       end
     }
     respond_with_data(data)

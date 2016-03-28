@@ -118,21 +118,26 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
       @rubygem_3 = create(:rubygem)
       @version_4 = create(:version, rubygem: @rubygem_3)
 
-#      3.times { Download.incr(@rubygem_1.name, @version_1.full_name) }
-#      2.times { Download.incr(@rubygem_1.name, @version_2.full_name) }
-#      Download.incr(@rubygem_2.name, @version_3.full_name)
-
-#      Download.stubs(:most_downloaded_all_time).with(50).returns([[@version_1, 3],
-#                                                                  [@version_2, 2],
-#                                                                  [@version_3, 1]])
+      GemDownload.bulk_update([[@version_1.full_name, 3], [@version_2.full_name, 2], [@version_3.full_name, 1]])
     end
 
-#    should_respond_to(:json) do |body|
-#      JSON.load(body)['gems']
-#    end
-#
-#    should_respond_to(:yaml) do |body|
-#      YAML.load(body)[:gems]
-#    end
+    context "with json" do
+      setup do
+        get :all, format: 'json'
+        @json = JSON.load(@response.body)
+      end
+
+      should "show all latest versions" do
+        assert_equal 4, @json['gems'].count
+      end
+
+      should "have downloads for the top version" do
+        assert_equal 3, @json['gems'].first[1]
+      end
+
+      should "have total downloads for version2" do
+        assert_equal 2, @json['gems'][1][1]
+      end
+    end
   end
 end
