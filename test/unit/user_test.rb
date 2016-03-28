@@ -177,7 +177,7 @@ class UserTest < ActiveSupport::TestCase
       @user     = create(:user)
       @rubygems = [[100, 2000], [200, 1000], [300, 3000]].map do |downloads, real_downloads|
         create(:rubygem, downloads: downloads).tap do |rubygem|
-          #Redis.current[Download.key(rubygem)] = real_downloads
+          GemDownload.find_by(rubygem_id: rubygem.id, version_id: 0).update(count: real_downloads)
           create(:ownership, rubygem: rubygem, user: @user)
           create(:version, rubygem: rubygem)
         end
@@ -185,7 +185,6 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "sort by downloads method" do
-      skip "TODO"
       assert_equal @rubygems.values_at(2, 0, 1), @user.rubygems_downloaded
     end
 
