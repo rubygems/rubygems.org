@@ -11,13 +11,13 @@ class GemDownloadTest < ActiveSupport::TestCase
     end
 
     should "not update if download count is nil" do
-      GemDownload.create!(rubygem_id: 1, version_id: 0)
+      create(:gem_download, rubygem_id: 1, version_id: 0, count: nil)
       download = GemDownload.increment(1, rubygem_id: 1)
       assert_nil download.count
     end
 
     should "update the count" do
-      GemDownload.create!(rubygem_id: 1, version_id: 1, count: 0)
+      create(:gem_download, rubygem_id: 1, version_id: 1, count: 0)
       GemDownload.increment(1, rubygem_id: 1, version_id: 1)
 
       assert_equal 1, GemDownload.where(rubygem_id: 1, version_id: 1).first.count
@@ -145,7 +145,7 @@ class GemDownloadTest < ActiveSupport::TestCase
   end
 
   should "not allow the same gemdownload twice" do
-    GemDownload.create!(rubygem_id: 1, version_id: 0)
+    create(:gem_download, rubygem_id: 1, version_id: 0)
     assert_raises(ActiveRecord::RecordNotUnique) do
       GemDownload.create!(rubygem_id: 1, version_id: 0)
     end
