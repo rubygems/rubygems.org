@@ -10,8 +10,8 @@ class DownloadTest < ActiveSupport::TestCase
         Download.incr(rubygem.name, version.full_name)
       end
 
-      assert_equal 3, version.downloads_count
-      assert_equal 3, rubygem.downloads
+      assert_equal 3, Download.for(version)
+      assert_equal 3, Download.for(rubygem)
       assert_equal 3, Download.count
       assert_equal 3, Download.today(version)
     end
@@ -22,8 +22,8 @@ class DownloadTest < ActiveSupport::TestCase
 
       Download.incr(rubygem.name, version.full_name, count: 100)
 
-      assert_equal 100, version.downloads_count
-      assert_equal 100, rubygem.downloads
+      assert_equal 100, Download.for(version)
+      assert_equal 100, Download.for(rubygem)
     end
   end
 
@@ -37,8 +37,8 @@ class DownloadTest < ActiveSupport::TestCase
       Download.bulk_update(data)
 
       2.times.each do |i|
-        assert_equal counts[i], versions[i].downloads_count
-        assert_equal counts[i], gems[i].downloads
+        assert_equal counts[i], Download.for(versions[i])
+        assert_equal counts[i], Download.for(gems[i])
       end
     end
   end
@@ -50,9 +50,9 @@ class DownloadTest < ActiveSupport::TestCase
 
     Download.incr(rubygem.name, version.full_name)
 
-    assert_equal 1, version.downloads_count
-    assert_equal 1, rubygem.downloads
-    assert_equal 0, other_platform_version.downloads_count
+    assert_equal 1, Download.for(version)
+    assert_equal 1, Download.for(rubygem)
+    assert_equal 0, Download.for(other_platform_version)
 
     assert_equal 1, Download.count
     assert_equal 1, Download.today(version)

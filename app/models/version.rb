@@ -230,7 +230,7 @@ class Version < ActiveRecord::Base
   end
 
   def downloads_count
-    Download.for(self)
+    GemDownload.count_for_version(id)
   end
 
   def payload

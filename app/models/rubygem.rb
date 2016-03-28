@@ -134,11 +134,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def downloads
-    Download.for(self)
-  end
-
-  def downloads_today
-    versions.to_a.sum { |v| Download.today(v) }
+    GemDownload.count_for_rubygem(id)
   end
 
   def payload(version = versions.most_recent, protocol = Gemcutter::PROTOCOL, host_with_port = Gemcutter::HOST)

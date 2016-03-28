@@ -96,10 +96,6 @@ class User < ActiveRecord::Base
     rubygems.to_a.sum(&:downloads)
   end
 
-  def today_downloads_count
-    rubygems.to_a.sum(&:downloads_today)
-  end
-
   def rubygems_downloaded
     rubygems.with_versions.sort_by { |rubygem| -rubygem.downloads }
   end
