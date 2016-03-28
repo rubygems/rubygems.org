@@ -34,7 +34,6 @@ class StatsControllerTest < ActionController::TestCase
     should "load up the number of gems, users, and downloads" do
       assert_received(User, :count)
       assert_received(Rubygem, :total_count)
-      #assert_received(Download, :count)
       assert_received(Rubygem, :downloaded) { |subject| subject.with(10) }
     end
   end
