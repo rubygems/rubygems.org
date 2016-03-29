@@ -3,7 +3,7 @@ require 'digest/sha2'
 class Version < ActiveRecord::Base
   belongs_to :rubygem, touch: true
   has_many :dependencies, -> { order('rubygems.name ASC').includes(:rubygem) }, dependent: :destroy
-  has_one :gem_download, Proc.new { |m| where(rubygem_id: m.rubygem_id) }
+  has_one :gem_download, proc { |m| where(rubygem_id: m.rubygem_id) }
 
   before_save :update_prerelease
   after_validation :join_authors
