@@ -231,7 +231,7 @@ class Version < ActiveRecord::Base
   end
 
   def downloads_count
-    gem_download.count
+    gem_download.try(:count) || 0
   end
 
   def payload

@@ -135,7 +135,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def downloads
-    gem_download.count
+    gem_download.try(:count) || 0
   end
 
   def payload(version = versions.most_recent, protocol = Gemcutter::PROTOCOL, host_with_port = Gemcutter::HOST)
