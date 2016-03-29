@@ -89,7 +89,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.by_downloads
-    order(downloads: :desc)
+    joins(:gem_download).order('gem_downloads.count DESC')
   end
 
   def self.current_rubygems_release
