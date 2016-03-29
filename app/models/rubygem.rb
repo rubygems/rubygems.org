@@ -9,6 +9,7 @@ class Rubygem < ActiveRecord::Base
   has_many :versions, dependent: :destroy, validate: false
   has_many :web_hooks, dependent: :destroy
   has_one :linkset, dependent: :destroy
+  has_one :gem_download, -> { where(version_id: 0) }
 
   validate :ensure_name_format, if: :needs_name_validation?
   validates :name,
@@ -134,7 +135,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def downloads
-    GemDownload.count_for_rubygem(id)
+    gem_download.count
   end
 
   def payload(version = versions.most_recent, protocol = Gemcutter::PROTOCOL, host_with_port = Gemcutter::HOST)
