@@ -27,7 +27,7 @@ class Api::V1::DownloadsController < Api::BaseController
   end
 
   def all
-    gems = GemDownload.where("version_id != 0").includes(:version).order(count: :desc).limit(50)
+    gems = GemDownload.most_downloaded_gems.limit(50)
     gems = gems.map do |gem|
       next unless gem.version
       [gem.version.attributes, gem.count]
