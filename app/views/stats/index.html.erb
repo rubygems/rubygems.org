@@ -41,10 +41,10 @@
       <% @recent_uploads.each do |version| %>
         <tr class="stats__table__row">
           <th class="stats__table__column">
-            <%= version.rubygem.name %>
+            <%= link_to version.rubygem.name, rubygem_path(version.rubygem) %>
           </th>
           <td class="stats__table__column">
-            <%= version.number %>
+            <%= link_to version.number, rubygem_version_path(version.rubygem, version.slug) %>
           </td>
           <td></td>
         </tr>
