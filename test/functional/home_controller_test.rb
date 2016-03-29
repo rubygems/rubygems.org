@@ -3,7 +3,7 @@ require 'test_helper'
 class HomeControllerTest < ActionController::TestCase
   context "on GET to index" do
     setup do
-      Download.stubs(:count).returns 11_000_000
+      create(:gem_download, count: 11_000_000)
       get :index
     end
 
@@ -11,11 +11,7 @@ class HomeControllerTest < ActionController::TestCase
     should render_template :index
 
     should "display counts" do
-      assert page.has_content?("1,000,000")
-    end
-
-    should "load up the downloaded gems count" do
-      assert_received(Download, :count)
+      assert page.has_content?("11,000,000")
     end
   end
 

@@ -172,31 +172,12 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  context "downloads" do
-    setup do
-      @user      = create(:user)
-      @rubygem   = create(:rubygem)
-      @ownership = create(:ownership, rubygem: @rubygem, user: @user)
-      @version   = create(:version, rubygem: @rubygem)
-
-      travel_to 1.day.ago do
-        Download.incr(@version.rubygem.name, @version.full_name)
-      end
-      2.times { Download.incr(@version.rubygem.name, @version.full_name) }
-    end
-
-    should "sum up downloads for this user" do
-      assert_equal 2, @user.today_downloads_count
-      assert_equal 3, @user.total_downloads_count
-    end
-  end
-
   context "rubygems" do
     setup do
       @user     = create(:user)
       @rubygems = [[100, 2000], [200, 1000], [300, 3000]].map do |downloads, real_downloads|
         create(:rubygem, downloads: downloads).tap do |rubygem|
-          Redis.current[Download.key(rubygem)] = real_downloads
+          GemDownload.find_by(rubygem_id: rubygem.id, version_id: 0).update(count: real_downloads)
           create(:ownership, rubygem: rubygem, user: @user)
           create(:version, rubygem: rubygem)
         end

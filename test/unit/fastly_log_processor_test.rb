@@ -17,7 +17,7 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
       stub_responses: { get_object: { body: @sample_log } }
     }
     @job = FastlyLogProcessor.new('test-bucket', 'fastly-fake.log')
-    GemDownload.create!(count: 0, rubygem_id: 0, version_id: 0)
+    create(:gem_download)
   end
 
   teardown do

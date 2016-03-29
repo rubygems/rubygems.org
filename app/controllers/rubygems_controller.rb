@@ -8,7 +8,7 @@ class RubygemsController < ApplicationController
     respond_to do |format|
       format.html do
         @letter = Rubygem.letterize(params[:letter])
-        @gems   = Rubygem.letter(@letter).by_downloads.paginate(page: @page)
+        @gems   = Rubygem.includes(:gem_download).letter(@letter).by_downloads.paginate(page: @page)
       end
       format.atom do
         @versions = Version.published(20)

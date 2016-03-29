@@ -73,7 +73,7 @@ FactoryGirl.define do
       end
 
       if evaluator.downloads
-        Redis.current[Download.key(rubygem)] = evaluator.downloads
+        GemDownload.increment(evaluator.downloads, rubygem_id: rubygem.id, version_id: 0)
       end
     end
   end
@@ -136,5 +136,6 @@ FactoryGirl.define do
   factory :gem_download do
     rubygem_id 0
     version_id 0
+    count 0
   end
 end

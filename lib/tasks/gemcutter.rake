@@ -66,14 +66,16 @@ namespace :gemcutter do
           rubygem = version.rubygem
           begin
             unless GemDownload.exists?(rubygem_id: version.rubygem_id, version_id: 0)
-              GemDownload.create!(rubygem_id: version.rubygem_id, version_id: 0, count: rubygem.downloads || 0)
+              count = Download.for(rubygem) || 0
+              GemDownload.create!(rubygem_id: version.rubygem_id, version_id: 0, count: count)
             end
           rescue ActiveRecord::RecordNotUnique
             p "Skipping #{version.full_name}"
           end
           begin
             unless GemDownload.exists?(rubygem_id: version.rubygem_id, version_id: version.id)
-              GemDownload.create!(rubygem_id: version.rubygem_id, version_id: version.id, count: version.downloads_count || 0)
+              count = Download.for(version) || 0
+              GemDownload.create!(rubygem_id: version.rubygem_id, version_id: version.id, count: count)
             end
           rescue ActiveRecord::RecordNotUnique
             p "Skipping #{version.full_name}"

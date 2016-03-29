@@ -9,7 +9,7 @@ class StatsControllerTest < ActionController::TestCase
       @most_downloaded     = [create(:rubygem)]
 
       Rubygem.stubs(:total_count).returns @number_of_gems
-      Download.stubs(:count).returns @number_of_downloads
+      create(:gem_download, count: @number_of_downloads)
       Rubygem.stubs(:downloaded).returns @most_downloaded
       User.stubs(:count).returns @number_of_users
 
@@ -34,7 +34,6 @@ class StatsControllerTest < ActionController::TestCase
     should "load up the number of gems, users, and downloads" do
       assert_received(User, :count)
       assert_received(Rubygem, :total_count)
-      assert_received(Download, :count)
       assert_received(Rubygem, :downloaded) { |subject| subject.with(10) }
     end
   end

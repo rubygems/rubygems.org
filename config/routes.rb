@@ -45,7 +45,7 @@ Rails.application.routes.draw do
           end
 
           resources :downloads,
-            only: [:index, :show],
+            only: [:index],
             controller: 'versions/downloads',
             format: true do
             collection do
