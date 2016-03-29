@@ -15,17 +15,39 @@
   </h2>
 </div>
 
-<h2 class="stats__graph__heading">
-  <%= t('stats.index.all_time_most_downloaded') %>
-</h2>
+<div class="stats">
+  <h2 class="stats__graph__heading">
+    <%= t('stats.index.all_time_most_downloaded') %>
+  </h2>
 
-<% @most_downloaded.each do |gem| %>
-  <div class="stats__graph__gem">
-    <h3 class="stats__graph__gem__name"><%= link_to gem.name, rubygem_path(gem) %></h3>
-    <div class="stats__graph__gem__meter-wrap">
-      <div class="stats__graph__gem__meter" style="width: <%= stats_graph_meter(gem, @most_downloaded_count) %>%">
-        <span class="stats__graph__gem__count"><%= number_to_delimited gem.downloads %></span>
+  <% @most_downloaded.each do |gem| %>
+    <div class="stats__graph__gem">
+      <h3 class="stats__graph__gem__name"><%= link_to gem.name, rubygem_path(gem) %></h3>
+      <div class="stats__graph__gem__meter-wrap">
+        <div class="stats__graph__gem__meter" style="width: <%= stats_graph_meter(gem, @most_downloaded_count) %>%">
+          <span class="stats__graph__gem__count"><%= number_to_delimited gem.downloads %></span>
+        </div>
       </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
+</div>
+
+<div class="stats">
+  <h2 class="stats__graph__heading">
+    recent uploads
+  </h2>
+
+    <table class="stats__table">
+      <% @recent_uploads.each do |version| %>
+        <tr class="stats__table__row">
+          <th class="stats__table__column">
+            <%= version.rubygem.name %>
+          </th>
+          <td class="stats__table__column">
+            <%= version.number %>
+          </td>
+          <td></td>
+        </tr>
+      <% end %>
+    </table>
+</div>
