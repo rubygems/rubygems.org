@@ -28,12 +28,11 @@ class Api::V1::DownloadsController < Api::BaseController
 
   def all
     gems = GemDownload.where("version_id != 0").includes(:version).order(count: :desc).limit(50)
-    data = {
-      gems: gems.map do |gem|
-        [gem.version.attributes, gem.count]
-      end
-    }
-    respond_with_data(data)
+    gems = gems.map do |gem|
+      next unless gem.version
+      [gem.version.attributes, gem.count]
+    end.compact
+    respond_with_data(gems: gems)
   end
 
   private
