@@ -23,7 +23,7 @@ class Api::V1::DownloadsController < Api::BaseController
   end
 
   def top
-    render text: "This endpoint is not supported anymore", status: :not_found
+    render text: "This endpoint is not supported anymore", status: :gone
   end
 
   def all
