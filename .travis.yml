@@ -22,7 +22,7 @@ git:
 
 cache:
   directories:
-    - $HOME/vendor/cache
+    - vendor/cache
 
 before_install:
   - git submodule update --init
