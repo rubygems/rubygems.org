@@ -7,7 +7,7 @@ class StatsControllerTest < ActionController::TestCase
       @number_of_users     = 101
       @number_of_downloads = 42
       rails_cinco = create(:rubygem, name: 'rails_cinco', number: 1)
-      @recent_uploads      = [create(:version)]
+      @recent_uploads = [create(:version)]
 
       Rubygem.stubs(:total_count).returns @number_of_gems
       User.stubs(:count).returns @number_of_users
