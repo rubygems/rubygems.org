@@ -4,7 +4,7 @@
       <%= rubygem.name %>
       <span class="gems__gem__version"><%= latest_version_number(rubygem) %></span>
     </h2>
-    <p class="gems__gem__desc t-text"><%= short_info(rubygem.versions.most_recent) %></p>
+    <p class="gems__gem__desc t-text"><%= short_info(rubygem.latest_version || rubygem.versions.last) %></p>
   </div>
   <p class="gems__gem__downloads__count">
     <%= download_count rubygem %>
