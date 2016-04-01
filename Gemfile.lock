@@ -272,9 +272,8 @@ GEM
       unf_ext
     unf_ext (0.0.7.2)
     unicode-display_width (1.0.3)
-    unicorn (5.0.1)
+    unicorn (5.1.0)
       kgio (~> 2.6)
-      rack
       raindrops (~> 0.7)
     validates_formatting_of (0.9.0)
       activemodel
