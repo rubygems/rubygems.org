@@ -30,6 +30,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns true
+        @cutter.stubs(:validate).returns true
         @cutter.stubs(:save)
 
         @cutter.process
@@ -52,10 +53,21 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.process
       end
 
-      should "not attempt to save if not authorized" do
+      should "not attempt to validate if not authorized" do
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns false
+        @cutter.stubs(:validate).never
+        @cutter.stubs(:save).never
+
+        @cutter.process
+      end
+
+      should "not attempt to save if not validated" do
+        @cutter.stubs(:pull_spec).returns true
+        @cutter.stubs(:find).returns true
+        @cutter.stubs(:authorize).returns true
+        @cutter.stubs(:validate).returns false
         @cutter.stubs(:save).never
 
         @cutter.process
@@ -78,6 +90,19 @@ class PusherTest < ActiveSupport::TestCase
       assert_match(/RubyGems\.org cannot process this gem/, @cutter.message)
       assert_match(/ActionController::Routing::RouteSet::NamedRouteCollection/, @cutter.message)
       assert_equal @cutter.code, 422
+    end
+
+    should "not be able to save a gem if it is not valid" do
+      legit_gem = create(:rubygem, name: 'legit-gem')
+      create(:version, rubygem: legit_gem, number: '0.0.1')
+      @gem = gem_file("legit-gem-0.0.1.gem.fake")
+      @cutter = Pusher.new(@user, @gem)
+      @cutter.stubs(:save).never
+      @cutter.process
+      assert_equal @cutter.rubygem.name, 'legit'
+      assert_equal @cutter.version.number, 'gem-0.0.1'
+      assert_match(/There was a problem saving your gem: Number is invalid/, @cutter.message)
+      assert_equal @cutter.code, 403
     end
 
     should "not be able to pull spec with metadata containing bad ruby symbols" do

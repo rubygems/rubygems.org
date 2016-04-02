@@ -16,13 +16,17 @@ class Pusher
   end
 
   def process
-    pull_spec && find && authorize && save
+    pull_spec && find && authorize && validate && save
   end
 
   def authorize
     rubygem.pushable? ||
       rubygem.owned_by?(user) ||
       notify("You do not have permission to push to this gem.", 403)
+  end
+
+  def validate
+    (rubygem.valid? && version.valid?) || notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403)
   end
 
   def save
