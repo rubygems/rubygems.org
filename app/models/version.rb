@@ -6,7 +6,6 @@ class Version < ActiveRecord::Base
   has_one :gem_download, proc { |m| where(rubygem_id: m.rubygem_id) }
 
   before_save :update_prerelease
-  after_validation :join_authors
   after_create :full_nameify!
   after_save :reorder_versions
 
@@ -18,7 +17,16 @@ class Version < ActiveRecord::Base
 
   validate :platform_and_number_are_unique, on: :create
   validate :authors_format, on: :create
-  attribute :authors, Type::Value.new
+  class AuthorType < Type::String
+    def cast_value(value)
+      if value.is_a?(Array)
+        value.join(', ')
+      else
+        super
+      end
+    end
+  end
+  attribute :authors, AuthorType.new
 
   # TODO: Remove this once we move to GemDownload only
   after_create :create_gem_download
@@ -348,6 +356,7 @@ class Version < ActiveRecord::Base
   end
 
   def authors_format
+    authors = authors_before_type_cast
     string_authors = authors.is_a?(Array) && authors.grep(String)
     return unless string_authors.blank? || string_authors.size != authors.size
     errors.add :authors, "must be an Array of Strings"
@@ -356,10 +365,6 @@ class Version < ActiveRecord::Base
   def update_prerelease
     self[:prerelease] = !!to_gem_version.prerelease? # rubocop:disable Style/DoubleNegation
     true
-  end
-
-  def join_authors
-    self.authors = authors.join(', ') if authors.is_a?(Array)
   end
 
   def full_nameify!
