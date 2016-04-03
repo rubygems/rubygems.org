@@ -683,6 +683,14 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
+  should "validate authors the same twice" do
+    v = Version.new(authors:  %w(arthurnn dwradcliffe), number: 1, platform: 'ruby')
+    assert_equal "arthurnn, dwradcliffe", v.authors
+    assert v.valid?
+    assert_equal "arthurnn, dwradcliffe", v.authors
+    assert v.valid?
+  end
+
   context "checksums" do
     setup do
       @version = create(:version)
