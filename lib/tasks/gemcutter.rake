@@ -45,16 +45,17 @@ namespace :gemcutter do
     desc "Check existing checksums."
     task check: :environment do
       failed = false
+      i, total = 0, Version.count
       Version.find_each do |version|
         actual_sha256 = version.recalculate_sha256
-        if version.sha256 != actual_sha256
+        if actual_sha256 && version.sha256 != actual_sha256
           puts "#{version.full_name}.gem has sha256 '#{actual_sha256}', " \
             "but '#{version.sha256}' was expected."
           failed = true
         end
+        i += 1
+        print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
       end
-
-      exit 1 if failed
     end
   end
 
