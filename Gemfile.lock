@@ -144,7 +144,7 @@ GEM
       domain_name (~> 0.5)
     http_accept_language (2.0.5)
     i18n (0.7.0)
-    jmespath (1.2.2)
+    jmespath (1.2.3)
       json_pure (>= 1.8.1)
     jquery-rails (4.1.1)
       rails-dom-testing (>= 1, < 3)
