@@ -684,11 +684,21 @@ class VersionTest < ActiveSupport::TestCase
   end
 
   should "validate authors the same twice" do
-    v = Version.new(authors:  %w(arthurnn dwradcliffe), number: 1, platform: 'ruby')
+    g = Rubygem.new(name: 'test-gem')
+    v = Version.new(authors:  %w(arthurnn dwradcliffe), number: 1, platform: 'ruby', rubygem: g)
     assert_equal "arthurnn, dwradcliffe", v.authors
     assert v.valid?
     assert_equal "arthurnn, dwradcliffe", v.authors
     assert v.valid?
+  end
+
+  should "not allow full name collision" do
+    g1 = Rubygem.create(name: 'test-gem-733.t')
+    v1 = Version.create(authors:  %w(arthurnn dwradcliffe), number: '0.0.1', platform: 'ruby', rubygem: g1)
+    g2 = Rubygem.create(name: 'test-gem')
+    v2 = Version.new(authors:  %w(arthurnn dwradcliffe), number: '733.t-0.0.1', platform: 'ruby', rubygem: g2)
+    refute v2.valid?
+    assert_equal [:full_name], v2.errors.keys
   end
 
   context "checksums" do

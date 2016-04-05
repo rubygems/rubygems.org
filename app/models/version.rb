@@ -6,7 +6,8 @@ class Version < ActiveRecord::Base
   has_one :gem_download, proc { |m| where(rubygem_id: m.rubygem_id) }
 
   before_save :update_prerelease
-  after_create :full_nameify!
+  before_validation :full_nameify!
+  after_create :save_full_name_to_redis
   after_save :reorder_versions
 
   serialize :licenses
@@ -14,6 +15,8 @@ class Version < ActiveRecord::Base
 
   validates :number,   format: { with: /\A#{Gem::Version::VERSION_PATTERN}\z/ }
   validates :platform, format: { with: Rubygem::NAME_PATTERN }
+  validates :full_name, presence: true, uniqueness: { case_sensitive: false }
+  validates :rubygem, presence: true
 
   validate :platform_and_number_are_unique, on: :create
   validate :authors_format, on: :create
@@ -369,9 +372,12 @@ class Version < ActiveRecord::Base
   end
 
   def full_nameify!
+    return if rubygem.nil?
     self.full_name = "#{rubygem.name}-#{number}"
     full_name << "-#{platform}" if platformed?
-    update_attributes(full_name: full_name)
+  end
+
+  def save_full_name_to_redis
     Redis.current.hmset(Version.info_key(full_name), :name, rubygem.name,
       :number, number, :platform, platform)
     push
