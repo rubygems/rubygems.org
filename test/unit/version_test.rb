@@ -694,7 +694,7 @@ class VersionTest < ActiveSupport::TestCase
 
   should "not allow full name collision" do
     g1 = Rubygem.create(name: 'test-gem-733.t')
-    v1 = Version.create(authors:  %w(arthurnn dwradcliffe), number: '0.0.1', platform: 'ruby', rubygem: g1)
+    Version.create(authors:  %w(arthurnn dwradcliffe), number: '0.0.1', platform: 'ruby', rubygem: g1)
     g2 = Rubygem.create(name: 'test-gem')
     v2 = Version.new(authors:  %w(arthurnn dwradcliffe), number: '733.t-0.0.1', platform: 'ruby', rubygem: g2)
     refute v2.valid?

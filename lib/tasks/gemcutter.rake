@@ -45,7 +45,8 @@ namespace :gemcutter do
     desc "Check existing checksums."
     task check: :environment do
       failed = false
-      i, total = 0, Version.count
+      i = 0
+      total = Version.count
       Version.find_each do |version|
         actual_sha256 = version.recalculate_sha256
         if actual_sha256 && version.sha256 != actual_sha256
