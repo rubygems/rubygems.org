@@ -51,6 +51,9 @@ GEM
     bourne (1.6.0)
       mocha (~> 1.1)
     builder (3.2.2)
+    bundler-audit (0.5.0)
+      bundler (~> 1.2)
+      thor (~> 0.18)
     capistrano (3.4.0)
       i18n
       rake (>= 10.0.0)
@@ -291,6 +294,7 @@ DEPENDENCIES
   aws-sdk (~> 2.2)
   bourne
   builder
+  bundler-audit (= 0.5.0)
   capistrano (~> 3.0)
   capistrano-bundler (~> 1.1)
   capistrano-rails (~> 1.1)

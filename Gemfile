@@ -51,6 +51,7 @@ gem 'yajl-ruby', require: 'yajl'
 group :development, :test do
   gem 'rubocop', require: false
   gem 'toxiproxy', '~> 0.1.3'
+  gem 'bundler-audit', '0.5.0'
 end
 
 group :development do
