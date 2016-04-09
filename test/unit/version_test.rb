@@ -363,6 +363,15 @@ class VersionTest < ActiveSupport::TestCase
 
         assert_equal expected, actual
       end
+
+      should "not include major version of gem for pre releases" do
+        prerelease_version = create(:version, number: "4.0.0.pre")
+        name = prerelease_version.rubygem.name
+        actual = prerelease_version.to_bundler
+        expected = %(gem '#{name}', '~> 4.0.0.pre')
+
+        assert_equal expected, actual
+      end
     end
 
     should "give title and platform for #to_title" do
