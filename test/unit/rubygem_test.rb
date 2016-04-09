@@ -629,6 +629,14 @@ class RubygemTest < ActiveSupport::TestCase
       should "sort results by number of downloads, descending" do
         assert_equal [@apple_crisp, @apple_pie], Rubygem.legacy_search('apple')
       end
+
+      should "return the latest version among all the platforms" do
+        create(:version, description: 'pie', rubygem: @apple_crisp, platform: "mswin")
+        version = create(:version, description: 'pie', rubygem: @apple_crisp, platform: "ruby")
+
+        gem = Rubygem.legacy_search('apple crisp').first
+        assert_equal version, gem.latest_version
+      end
     end
 
     should "find exact match by name on #name_is" do
