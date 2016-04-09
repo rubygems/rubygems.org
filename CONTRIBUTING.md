@@ -77,7 +77,7 @@ than Rubygems and may suit your organization’s needs better.**
 
 #### Environment (OS X)
 
-* Use Ruby 2.2.3
+* Use Ruby 2.2.4
 * Use Rubygems 2.4.5
 * Install bundler: `gem install bundler`
 * Install Redis (>= 2.0): `brew install redis -H`
@@ -89,7 +89,7 @@ than Rubygems and may suit your organization’s needs better.**
 
 #### Environment (Linux - Debian/Ubuntu)
 
-* Use Ruby 2.2.3 `apt-get install ruby2.2`
+* Use Ruby 2.2.4 `apt-get install ruby2.2`
   * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
 * Use Rubygems 2.4.5
 * Install bundler: `gem install bundler`
