@@ -285,7 +285,7 @@ class Version < ActiveRecord::Base
   end
 
   def to_bundler
-    if number[0] == "0"
+    if number[0] == "0" || prerelease?
       %(gem '#{rubygem.name}', '~> #{number}')
     else
       release = feature_release(number)
