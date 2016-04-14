@@ -51,7 +51,7 @@ GEM
     bourne (1.6.0)
       mocha (~> 1.1)
     builder (3.2.2)
-    capistrano (3.4.0)
+    capistrano (3.4.1)
       i18n
       rake (>= 10.0.0)
       sshkit (~> 1.3)
