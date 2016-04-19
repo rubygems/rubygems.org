@@ -16,10 +16,6 @@ class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
   include GemHelpers
 
-  def setup
-    Redis.current.flushdb
-  end
-
   def page
     Capybara::Node::Simple.new(@response.body)
   end

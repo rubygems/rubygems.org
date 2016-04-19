@@ -240,18 +240,6 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.number, @version.slug
     end
 
-    should "save info into redis" do
-      info = Redis.current.hgetall(Version.info_key(@version.full_name))
-      assert_equal @version.rubygem.name, info["name"]
-      assert_equal @version.number, info["number"]
-      assert_equal @version.platform, info["platform"]
-    end
-
-    should "add version onto redis versions list" do
-      assert_equal @version.full_name,
-        Redis.current.lindex(Rubygem.versions_key(@version.rubygem.name), 0)
-    end
-
     should "raise an ActiveRecord::RecordNotFound if an invalid slug is given" do
       assert_raise ActiveRecord::RecordNotFound do
         Version.find_from_slug!(@version.rubygem_id, "some stupid version 399")

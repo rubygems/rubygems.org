@@ -15,16 +15,6 @@ class HomeControllerTest < ActionController::TestCase
     end
   end
 
-  context "with redis down" do
-    should "render home page" do
-      requires_toxiproxy
-      Toxiproxy[:redis].down do
-        get :index
-        assert_response :success
-      end
-    end
-  end
-
   should "on GET to index with non html accept header" do
     assert_raises(ActionController::UnknownFormat) do
       @request.env['HTTP_ACCEPT'] = "image/gif, image/x-bitmap, image/jpeg, image/pjpeg"

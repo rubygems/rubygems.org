@@ -60,40 +60,6 @@ namespace :gemcutter do
     end
   end
 
-  namespace :rubygems do
-    desc "Update the db download count with the redis value"
-    task update_download_counts: :environment do
-      Version.find_in_batches do |group|
-        group.each do |version|
-          rubygem = version.rubygem
-          begin
-            unless GemDownload.exists?(rubygem_id: version.rubygem_id, version_id: 0)
-              count = Download.for(rubygem) || 0
-              GemDownload.create!(rubygem_id: version.rubygem_id, version_id: 0, count: count)
-            end
-          rescue ActiveRecord::RecordNotUnique
-            p "Skipping #{version.full_name}"
-          end
-          begin
-            unless GemDownload.exists?(rubygem_id: version.rubygem_id, version_id: version.id)
-              count = Download.for(version) || 0
-              GemDownload.create!(rubygem_id: version.rubygem_id, version_id: version.id, count: count)
-            end
-          rescue ActiveRecord::RecordNotUnique
-            p "Skipping #{version.full_name}"
-          end
-        end
-      end
-    end
-  end
-
-  desc "Move all but the last 2 days of version history to SQL"
-  task migrate_history: :environment do
-    Download.copy_all_to_sql do |t, c, v|
-      puts "#{c} of #{t}: #{v.full_name}"
-    end
-  end
-
   namespace :metadata do
     desc "Backfill old gem versions with metadata."
     task backfill: :environment do
