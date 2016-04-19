@@ -38,6 +38,7 @@ script:
   - bundle exec rake
   - bundle exec rake rubocop
   - script/brakeman
+  - bundle exec cap -T > /dev/null
 
 env:
   - RUBYGEMS_VERSION=2.4.5
