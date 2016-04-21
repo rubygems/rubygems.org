@@ -189,6 +189,8 @@ GEM
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
+    rack-utf8_sanitizer (1.3.2)
+      rack (>= 1.0, < 3.0)
     rails (4.2.6)
       actionmailer (= 4.2.6)
       actionpack (= 4.2.6)
@@ -328,6 +330,7 @@ DEPENDENCIES
   quiet_assets
   rack
   rack-test
+  rack-utf8_sanitizer
   rails (~> 4.2.6)
   rails-erd
   rails-i18n
