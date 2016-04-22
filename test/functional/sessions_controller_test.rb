@@ -30,6 +30,17 @@ class SessionsControllerTest < ActionController::TestCase
         refute @controller.request.env[:clearance].signed_in?
       end
     end
+
+    context "when login is an array" do
+      setup do
+        post :create, session: { who: ['1'], password: 'pass' }
+      end
+
+      should respond_with :unauthorized
+      should "not sign in the user" do
+        refute @controller.request.env[:clearance].signed_in?
+      end
+    end
   end
 
   context "on DELETE to destroy" do
