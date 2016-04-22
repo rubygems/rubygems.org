@@ -24,7 +24,8 @@ module RubygemSearchable
         name: name,
         yanked: !versions.any?(&:indexed?),
         summary: most_recent_version.try(:summary),
-        description: most_recent_version.try(:description)
+        description: most_recent_version.try(:description),
+        downloads: downloads
       }
     end
 
@@ -47,6 +48,7 @@ module RubygemSearchable
       indexes :yanked, type: 'boolean'
       indexes :summary, analyzer: 'english'
       indexes :description, analyzer: 'english'
+      indexes :downloads, type: 'integer'
     end
 
     def self.search(query, es: false, page: 1)
@@ -68,28 +70,35 @@ module RubygemSearchable
     def self.elastic_search(q)
       search_definition = Elasticsearch::DSL::Search.search do
         query do
-          filtered do
-            # Main query, search in name, summary, description
+          function_score do
             query do
-              multi_match do
-                query q
-                fields ['name^3', 'summary^1', 'description']
-                operator 'and'
-              end
-            end
+              filtered do
+                # Main query, search in name, summary, description
+                query do
+                  multi_match do
+                    query q
+                    fields ['name^3', 'summary^1', 'description']
+                    operator 'and'
+                  end
+                end
 
-            # only return gems that are not yanked
-            filter do
-              bool :yanked do
-                must do
-                  term yanked: false
+                # only return gems that are not yanked
+                filter do
+                  bool :yanked do
+                    must do
+                      term yanked: false
+                    end
+                  end
                 end
               end
             end
+
+            # Boost the score based on number of downloads
+            functions << { field_value_factor: { field: :downloads, modifier: :log1p } }
           end
         end
 
-        source %w(name summary description)
+        source %w(name summary description downloads)
 
         # Return suggestions unless there's no query from the user
         unless q.blank?
