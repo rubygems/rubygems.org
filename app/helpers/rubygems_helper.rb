@@ -25,7 +25,7 @@ module RubygemsHelper
     if text =~ /^==+ [A-Z]/
       options = RDoc::Options.new
       options.pipe = true
-      RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new(options)).html_safe
+      sanitize RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new(options))
     else
       content_tag :p, escape_once(sanitize(text.strip)), nil, false
     end
