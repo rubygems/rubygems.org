@@ -65,7 +65,8 @@ class SearchesControllerTest < ActionController::TestCase
       @sinatra_redux.index_document
       @brando.index_document
       Rubygem.__elasticsearch__.refresh_index!
-      get :show, query: 'sinatra', es: 'true'
+      @request.cookies['new_search'] = 'true'
+      get :show, query: 'sinatra'
     end
 
     should respond_with :success
@@ -119,7 +120,8 @@ class SearchesControllerTest < ActionController::TestCase
       @sinatra_redux.index_document
       @brando.index_document
       Rubygem.__elasticsearch__.refresh_index!
-      get :show, query: "sinatre", es: 'true'
+      @request.cookies['new_search'] = 'true'
+      get :show, query: "sinatre"
     end
 
     should respond_with :success
@@ -149,7 +151,8 @@ class SearchesControllerTest < ActionController::TestCase
     should "fallback to legacy search" do
       requires_toxiproxy
       Toxiproxy[:elasticsearch].down do
-        get :show, query: 'sinatra', es: 'true'
+        @request.cookies['new_search'] = 'true'
+        get :show, query: 'sinatra'
         assert_response :success
         assert page.has_content?('Advanced search is currently unavailable')
         assert page.has_content?('Displaying')
