@@ -238,7 +238,7 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-graphviz (1.2.2)
-    ruby-progressbar (1.7.5)
+    ruby-progressbar (1.8.0)
     shoryuken (2.0.6)
       aws-sdk-core (~> 2)
       celluloid (~> 0.16)
