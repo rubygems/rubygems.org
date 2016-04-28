@@ -59,7 +59,7 @@ module RubygemSearchable
         result.load
         result
       else
-        legacy_search(query).with_versions.paginate(page: page)
+        legacy_search(query).eager_load(:latest_version, :gem_download).paginate(page: page)
       end
     rescue Faraday::ConnectionFailed
       raise SearchDownError
@@ -119,8 +119,7 @@ module RubygemSearchable
       SQL
 
       where(conditions, query: "%#{query.strip}%")
-        .includes(:versions)
-        .references(:versions)
+        .joins(:versions)
         .by_downloads
     end
   end
