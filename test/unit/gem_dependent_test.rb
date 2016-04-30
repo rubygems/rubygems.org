@@ -29,7 +29,7 @@ class GemDependentTest < ActiveSupport::TestCase
     should "return an array with dependencies" do
       deps = GemDependent.new(["rack"]).to_a
       assert_equal(
-        [[{ name: "rack", number: "0.0.1", platform: "ruby", dependencies: [] }]],
+        [{ name: "rack", number: "0.0.1", platform: "ruby", dependencies: [] }],
         deps
       )
     end

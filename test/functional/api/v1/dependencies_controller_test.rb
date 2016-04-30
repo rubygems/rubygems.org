@@ -102,7 +102,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
         dependencies: []
       }]
 
-      assert_equal result, Marshal.load(response.body) #.should eq(result)
+      assert_equal result, Marshal.load(response.body)
     end
   end
 
