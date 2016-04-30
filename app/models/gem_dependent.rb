@@ -14,7 +14,7 @@ class GemDependent
       if (dependency = memcached_gem_info[cache_key])
         # Fetch the gem's dependencies from the cache
         StatsD.increment 'gem_dependent.memcached.hit'
-        dependencies << dependency
+        dependencies << dependency[0]
       else
         # Fetch the gem's dependencies from the database
         StatsD.increment 'gem_dependent.memcached.miss'

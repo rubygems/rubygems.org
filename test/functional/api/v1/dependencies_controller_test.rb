@@ -1,14 +1,6 @@
 require 'test_helper'
 
 class Api::V1::DependenciesControllerTest < ActionController::TestCase
-  def self.should_respond_to(format)
-    should "return #{format.to_s.upcase} with the dependencies" do
-      @rubygem = create(:rubygem, name: "rack")
-      @version = create(:version, number: "1.0.0", rubygem_id: @rubygem.id)
-      get :index, gems: "rack", format: format
-    end
-  end
-
   ## JSON ENDPOINTS:
   # NO GEMS:
   context "On GET to index --> with no gems --> JSON" do
@@ -22,8 +14,8 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
       assert_response :success
     end
 
-    should_respond_to(:json) do |body| # (Should have an empty body)
-      body.should eq("")
+    should "return an empty body" do
+      assert_empty response.body
     end
   end
 
@@ -39,14 +31,15 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
       assert_response :success
     end
 
-    should_respond_to(:json) do |body|
+    should "return body" do
       result = [{
         "name"         => 'rails',
         "number"       => '1.0.0',
         "platform"     => 'ruby',
         "dependencies" => []
       }]
-      MultiJson.load(body).should eq(result)
+
+      assert_equal result, MultiJson.load(response.body)
     end
   end
 
@@ -61,8 +54,13 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
       assert_response :unprocessable_entity
     end
 
-    should_respond_to(:json) do |body|
-      body.should eq("Too many gems (use --full-index instead)")
+    should "return an error body" do
+      result = {
+        "error" => "Too many gems! (use --full-index instead)",
+        "code" => 422
+      }
+
+      assert_equal result, JSON.load(response.body)
     end
   end
 
@@ -79,8 +77,8 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
       assert_response :success
     end
 
-    should_respond_to(:marshal) do |body| # (Should have an empty body)
-      body.should eq("")
+    should "return an empty body" do
+      assert_empty response.body
     end
   end
 
@@ -96,14 +94,15 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
       assert_response :success
     end
 
-    should_respond_to(:marshal) do |body|
+    should "return body" do
       result = [{
-        name:         'rubygems',
+        name:         'testgem',
         number:       '1.0.0',
         platform:     'ruby',
         dependencies: []
       }]
-      Marshal.load(body).should eq(result)
+
+      assert_equal result, Marshal.load(response.body) #.should eq(result)
     end
   end
 
@@ -118,8 +117,8 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
       assert_response :unprocessable_entity
     end
 
-    should_respond_to(:marshal) do |body|
-      body.should eq("Too many gems (use --full-index instead)")
+    should "return an error body" do
+      assert_equal "Too many gems! (use --full-index instead)", response.body
     end
   end
 end

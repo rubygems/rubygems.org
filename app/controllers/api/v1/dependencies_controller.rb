@@ -18,7 +18,7 @@ class Api::V1::DependenciesController < Api::BaseController
     return if gem_names.size <= GEM_REQUEST_LIMIT
 
     if request.format == :marshal
-      render text: "Too many gems!", status: 422
+      render text: "Too many gems! (use --full-index instead)", status: 422
     elsif request.format == :json
       render json: { error: 'Too many gems! (use --full-index instead)', code: 422 }, status: 422
     end
