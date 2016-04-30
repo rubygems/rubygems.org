@@ -43,6 +43,44 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
     end
   end
 
+  # WITH COMPLEX GEMS:
+  context "on GET to index --> with complex gems --> JSON" do
+    setup do
+      @rubygem1 = create(:rubygem, name: "myrails")
+      @rubygem2 = create(:rubygem, name: "mybundler")
+      @version = create(:version, number: "1.0.0", rubygem_id: @rubygem1.id)
+      @version = create(:version, number: "1.0.0", rubygem_id: @rubygem2.id)
+      @version = create(:version, number: "2.0.0", rubygem_id: @rubygem1.id)
+      @version = create(:version, number: "2.0.0", rubygem_id: @rubygem2.id)
+      @version = create(:version, number: "3.0.0", rubygem_id: @rubygem1.id)
+      @version = create(:version, number: "3.0.0", rubygem_id: @rubygem2.id)
+      get :index, gems: "myrails,mybundler", format: "json"
+    end
+
+    should "return 200" do
+      assert_response :success
+    end
+
+    should "return body" do
+      result = [
+        {
+          "name"         => 'myrails',
+          "number"       => '3.0.0',
+          "platform"     => 'ruby',
+          "dependencies" => []
+        },
+        {
+          "name"         => 'mybundler',
+          "number"       => '3.0.0',
+          "platform"     => 'ruby',
+          "dependencies" => []
+        }
+      ]
+
+      assert_equal result, MultiJson.load(response.body)
+    end
+  end
+
   # TOO MANY GEMS:
   context "On GET to index --> with gems --> JSON" do
     setup do
