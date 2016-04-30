@@ -20,6 +20,7 @@ class GemDependent
         StatsD.increment 'gem_dependent.memcached.miss'
         result = fetch_dependency_from_db(gem_name)
         memcached_client.write(cache_key, result)
+        memcached_gem_info[cache_key] = result
         dependencies << result
       end
     end
