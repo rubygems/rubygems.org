@@ -42,6 +42,14 @@ class StatsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to index with no downloads" do
+    setup do
+      get :index
+    end
+
+    should respond_with :success
+  end
+
   context "on GET to index with multiple gems" do
     setup do
       rg1 = create(:rubygem, downloads: 10, number: "1")
