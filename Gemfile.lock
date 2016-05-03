@@ -86,7 +86,7 @@ GEM
     celluloid-supervision (0.20.5)
       timers (>= 4.1.1)
     choice (0.2.0)
-    clearance (1.13.0)
+    clearance (1.14.0)
       bcrypt
       email_validator (~> 1.4)
       rails (>= 3.1)
