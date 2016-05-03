@@ -138,7 +138,7 @@ GEM
     hashie (3.4.4)
     high_voltage (2.4.0)
     highline (1.7.8)
-    hitimes (1.2.3)
+    hitimes (1.2.4)
     honeybadger (2.6.0)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
