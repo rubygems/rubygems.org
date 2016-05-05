@@ -6,7 +6,7 @@ class Version < ActiveRecord::Base
   has_one :gem_download, proc { |m| where(rubygem_id: m.rubygem_id) }
 
   before_save :update_prerelease
-  before_validation :full_nameify!, :join_authors
+  before_validation :full_nameify!
   after_create :save_full_name_to_redis, :set_info_checksum
   after_save :reorder_versions
 
