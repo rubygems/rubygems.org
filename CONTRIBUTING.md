@@ -94,7 +94,7 @@ than Rubygems and may suit your organization’s needs better.**
 * Use Rubygems 2.4.5
 * Install bundler: `gem install bundler`
 * Install Redis: `apt-get install redis-server`
-* Install Elastic Search: <https://www.elastic.co/guide/en/elasticsearch/reference/current/setup.html#setup-installation>
+* Install Elastic Search 1.5.2: <https://www.elastic.co/downloads/past-releases/elasticsearch-1-5-2>
 * Install PostgreSQL: `apt-get install postgresql postgresql-server-dev-all`
   * Help to setup database <https://wiki.debian.org/PostgreSql>
 
