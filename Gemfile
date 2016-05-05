@@ -45,7 +45,7 @@ gem 'elasticsearch-rails', '~> 0.1.7'
 gem 'elasticsearch-dsl', '~> 0.1.2'
 gem 'xml-simple'
 gem 'yajl-ruby', require: 'yajl'
-gem 'compact_index', '~> 0.9.3'
+gem 'compact_index', '~> 0.10.0'
 
 group :development, :test do
   gem 'rubocop', require: false

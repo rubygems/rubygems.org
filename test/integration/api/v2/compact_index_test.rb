@@ -47,8 +47,8 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
     file_contents = File.open("config/versions.list").read
     assert_match file_contents, @response.body
-    gem_a_match = /gemA 1.0.0 \w+\ngemA 1.2.0 \w+\ngemA 2.0.0 \w+\ngemA 2.1.0 \w+\n/
-    gem_b_match = /gemB 1.0.0 \w+\n/
+    gem_a_match = /gemA 1.0.0 \ngemA 1.2.0 \ngemA 2.0.0 \ngemA 2.1.0 \n/
+    gem_b_match = /gemB 1.0.0 \n/
     assert_match(/#{gem_a_match}#{gem_b_match}/, @response.body)
   end
 
@@ -57,7 +57,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     create(:version, rubygem: rubygem, number: '1.0.0')
     get api_v2_versions_path
     assert_response :success
-    assert_match(/gemC 1.0.0 \w+\n$/, @response.body)
+    assert_match(/gemC 1.0.0 \n$/, @response.body)
   end
 
   test "/versions extra gems are ordered by creation time" do
@@ -69,7 +69,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
     get api_v2_versions_path
     assert_response :success
-    assert_match(/ZZZ 1.0.0 \w+\nAAA/, @response.body)
+    assert_match(/ZZZ 1.0.0 \nAAA/, @response.body)
   end
 
   test "/info with existing gem" do
