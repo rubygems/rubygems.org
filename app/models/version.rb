@@ -7,7 +7,6 @@ class Version < ActiveRecord::Base
 
   before_save :update_prerelease
   before_validation :full_nameify!
-  after_create :save_full_name_to_redis
   after_save :reorder_versions
 
   serialize :licenses
@@ -167,11 +166,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.rubygem_name_for(full_name)
-    Redis.current.hget(info_key(full_name), :name)
-  end
-
-  def self.info_key(full_name)
-    "v:#{full_name}"
+    find_by(full_name: full_name).try(:rubygem).try(:name)
   end
 
   def platformed?
@@ -179,10 +174,6 @@ class Version < ActiveRecord::Base
   end
 
   delegate :reorder_versions, to: :rubygem
-
-  def push
-    Redis.current.lpush(Rubygem.versions_key(rubygem.name), full_name)
-  end
 
   def yanked?
     !indexed
@@ -375,12 +366,6 @@ class Version < ActiveRecord::Base
     return if rubygem.nil?
     self.full_name = "#{rubygem.name}-#{number}"
     full_name << "-#{platform}" if platformed?
-  end
-
-  def save_full_name_to_redis
-    Redis.current.hmset(Version.info_key(full_name), :name, rubygem.name,
-      :number, number, :platform, platform)
-    push
   end
 
   def feature_release(number)

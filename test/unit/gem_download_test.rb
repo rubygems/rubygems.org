@@ -114,12 +114,12 @@ class GemDownloadTest < ActiveSupport::TestCase
     @rubygem_3 = create(:rubygem)
     @version_4 = create(:version, rubygem: @rubygem_3)
 
-    GemDownload.increment(@version_1.full_name)
-    GemDownload.increment(@version_2.full_name)
-    GemDownload.increment(@version_3.full_name)
-    GemDownload.increment(@version_1.full_name)
-    3.times { GemDownload.increment(@version_3.full_name) }
-    2.times { GemDownload.increment(@version_2.full_name) }
+    GemDownload.increment(1, rubygem_id: @rubygem_1, version_id: @version_1.id)
+    GemDownload.increment(1, rubygem_id: @rubygem_1, version_id: @version_2.id)
+    GemDownload.increment(1, rubygem_id: @rubygem_2, version_id: @version_3.id)
+    GemDownload.increment(1, rubygem_id: @rubygem_3, version_id: @version_1.id)
+    3.times { GemDownload.increment(1, rubygem_id: @rubygem_2, version_id: @version_3.id) }
+    2.times { GemDownload.increment(1, rubygem_id: @rubygem_1, version_id: @version_2.id) }
 
     assert_equal [[@version_3, 4], [@version_2, 3], [@version_1, 2]],
       Download.most_downloaded_all_time

@@ -5,7 +5,6 @@ class Dependency < ActiveRecord::Base
   before_validation :use_gem_dependency,
     :use_existing_rubygem,
     :parse_gem_dependency
-  after_create :push_on_to_list
 
   validates :requirements, presence: true
   validates :scope,        inclusion: { in: %w(development runtime) }
@@ -27,10 +26,6 @@ class Dependency < ActiveRecord::Base
 
   def self.runtime
     where(scope: 'runtime')
-  end
-
-  def self.runtime_key(full_name)
-    "rd:#{full_name}"
   end
 
   def name
@@ -111,9 +106,5 @@ class Dependency < ActiveRecord::Base
     self.requirements = clean_requirements(reqs)
 
     self.scope = gem_dependency.type.to_s
-  end
-
-  def push_on_to_list
-    Redis.current.lpush(Dependency.runtime_key(version.full_name), to_s) if scope == 'runtime'
   end
 end

@@ -72,7 +72,6 @@ class HostessTest < ActiveSupport::TestCase
   end
 
   should "not be able to find a bad gemspec" do
-    Redis.current.flushdb
     get "/quick/Marshal.4.8/rails-3.0.0.gemspec.rz"
     assert_equal 404, last_response.status
   end
