@@ -32,8 +32,8 @@ def rubygem_version(name, version, platform)
 end
 
 def fetch(url, redirects = 0, tries = 0)
-  fail "Too many redirects #{url}" if redirects >= 3
-  fail "Could not download #{url}" if tries >= 3
+  raise "Too many redirects #{url}" if redirects >= 3
+  raise "Could not download #{url}" if tries >= 3
 
   uri = URI.parse(url)
   response = nil
