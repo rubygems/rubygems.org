@@ -91,6 +91,7 @@ FactoryGirl.define do
     number
     platform "ruby"
     ruby_version ">= 2.0.0"
+    rubygems_version nil
     licenses "MIT"
     requirements "Opencv"
     rubygem
