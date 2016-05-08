@@ -279,12 +279,12 @@ class Rubygem < ActiveRecord::Base
 
     gems.map do |gem|
       CompactIndex::Gem.new(gem.name, [
-        CompactIndex::GemVersion.new(
-          gem.number,
-          gem.platform,
-          gem.info_checksum
-        )
-      ])
+                              CompactIndex::GemVersion.new(
+                                gem.number,
+                                gem.platform,
+                                gem.info_checksum
+                              )
+                            ])
     end
   end
 
@@ -307,7 +307,7 @@ class Rubygem < ActiveRecord::Base
       if r[7]
         reqs = r[7].split('@')
         dep_names = r[8].split(',')
-        fail 'BUG: different size of reqs and dep_names.' unless reqs.size == dep_names.size
+        raise 'BUG: different size of reqs and dep_names.' unless reqs.size == dep_names.size
         dep_names.zip(reqs).each do |name, req|
           deps << CompactIndex::Dependency.new(name, req)
         end
