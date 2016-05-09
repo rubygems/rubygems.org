@@ -112,11 +112,11 @@ GEM
     elasticsearch-api (1.0.17)
       multi_json
     elasticsearch-dsl (0.1.3)
-    elasticsearch-model (0.1.8)
+    elasticsearch-model (0.1.9)
       activesupport (> 3)
       elasticsearch (> 0.4)
       hashie
-    elasticsearch-rails (0.1.8)
+    elasticsearch-rails (0.1.9)
     elasticsearch-transport (1.0.17)
       faraday
       multi_json
