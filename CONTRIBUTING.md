@@ -107,7 +107,7 @@ than Rubygems and may suit your organization’s needs better.**
 
 * Get set up: `./script/setup`
 * Run the database rake tasks if needed:
-    `bundle exec rake db:create:all db:drop:all db:setup db:test:prepare --trace`
+    `bundle exec rake db:reset db:test:prepare --trace`
 
 #### Running tests
 
