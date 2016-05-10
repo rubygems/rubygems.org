@@ -55,6 +55,11 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :dependencies,
+        only: [:index],
+        format: /marshal|json/,
+        defaults: { format: 'marshal' }
+
       resources :rubygems,
         path: 'gems',
         only: [:create, :show, :index],

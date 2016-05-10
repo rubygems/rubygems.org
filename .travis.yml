@@ -11,6 +11,7 @@ rvm:
 
 services:
   - elasticsearch
+  - memcached
 
 sudo: false
 
