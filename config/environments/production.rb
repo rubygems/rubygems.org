@@ -1,3 +1,5 @@
+require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -87,5 +89,3 @@ Rails.application.configure do
     socket_failure_delay: 0.2
   }
 end
-
-require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?
