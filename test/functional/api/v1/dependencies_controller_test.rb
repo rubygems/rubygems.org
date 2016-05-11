@@ -49,11 +49,8 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
       @rubygem1 = create(:rubygem, name: "myrails")
       @rubygem2 = create(:rubygem, name: "mybundler")
       @version = create(:version, number: "1.0.0", rubygem_id: @rubygem1.id)
-      @version = create(:version, number: "1.0.0", rubygem_id: @rubygem2.id)
-      @version = create(:version, number: "2.0.0", rubygem_id: @rubygem1.id)
       @version = create(:version, number: "2.0.0", rubygem_id: @rubygem2.id)
       @version = create(:version, number: "3.0.0", rubygem_id: @rubygem1.id)
-      @version = create(:version, number: "3.0.0", rubygem_id: @rubygem2.id)
       get :index, gems: "myrails,mybundler", format: "json"
     end
 
@@ -69,9 +66,17 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
           "platform"     => 'ruby',
           "dependencies" => []
         },
+
+        {
+          "name"         => 'myrails',
+          "number"       => '1.0.0',
+          "platform"     => 'ruby',
+          "dependencies" => []
+        },
+
         {
           "name"         => 'mybundler',
-          "number"       => '3.0.0',
+          "number"       => '2.0.0',
           "platform"     => 'ruby',
           "dependencies" => []
         }

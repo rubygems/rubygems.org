@@ -25,7 +25,7 @@ class GemDependent
       end
     end
 
-    dependencies
+    dependencies.flatten
   end
 
   alias to_a fetch_dependencies
@@ -43,7 +43,7 @@ class GemDependent
         platform: version.platform,
         dependencies: version_deps.map { |d| [d.name, d.requirements] }
       }
-    end.first
+    end
   end
 
   def memcached_client
