@@ -19,7 +19,7 @@ class GemDependent
         # Fetch the gem's dependencies from the database
         StatsD.increment 'gem_dependent.memcached.miss'
         result = fetch_dependency_from_db(gem_name)
-        memcached_client.write(cache_key, result)
+        Rails.cache.write(cache_key, result)
         memcached_gem_info[cache_key] = result
         dependencies << result
       end
@@ -46,12 +46,8 @@ class GemDependent
     end.first
   end
 
-  def memcached_client
-    Rails.cache
-  end
-
   # Returns a Hash of the gem's cache key, and its cached dependencies
   def memcached_gem_info
-    @memcached_gem_info ||= memcached_client.read_multi(*@gem_information.values)
+    @memcached_gem_info ||= Rails.cache.read_multi(*@gem_information.values)
   end
 end
