@@ -84,6 +84,8 @@ than Rubygems and may suit your organization’s needs better.**
   * Setup information: `brew info elasticsearch`
 * Install PostgreSQL (>= 8.4.x): `brew install postgres`
   * Setup information: `brew info postgresql`
+* Install memcached: `brew install memcached`
+  * Show all memcached options: `memcached -h`
 
 #### Environment (Linux - Debian/Ubuntu)
 
@@ -94,6 +96,8 @@ than Rubygems and may suit your organization’s needs better.**
 * Install Elastic Search 1.5.2: <https://www.elastic.co/downloads/past-releases/elasticsearch-1-5-2>
 * Install PostgreSQL: `apt-get install postgresql postgresql-server-dev-all`
   * Help to setup database <https://wiki.debian.org/PostgreSql>
+* Install memcached: `apt-get install memcached`
+  * Show all memcached options: `memcached -h`
 
 #### Getting the code
 
