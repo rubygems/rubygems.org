@@ -9,7 +9,7 @@
               <strong><%= rubygem.name %></strong> <%= dependency.clean_requirements %>
             <% end %>
           <% elsif dependency.try(:name) %>
-            <p class="t-list__item">
+            <p class="t-list__item gem__unregistered" title="unregistered gem">
               <strong><%= dependency.name %></strong> <%= dependency.clean_requirements %>
             </p>
           <% end %>
