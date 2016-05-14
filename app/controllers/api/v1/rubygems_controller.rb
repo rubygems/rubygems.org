@@ -29,7 +29,8 @@ class Api::V1::RubygemsController < Api::BaseController
       current_user,
       request.body,
       request.protocol.delete("://"),
-      request.host_with_port)
+      request.host_with_port
+    )
     gemcutter.process
     render text: gemcutter.message, status: gemcutter.code
   rescue => e

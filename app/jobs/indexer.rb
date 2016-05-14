@@ -28,7 +28,8 @@ class Indexer
 
     RubygemFs.instance.store(
       "quick/Marshal.4.8/#{spec.original_name}.gemspec.rz",
-      Gem.deflate(Marshal.dump(spec)))
+      Gem.deflate(Marshal.dump(spec))
+    )
   end
 
   private
