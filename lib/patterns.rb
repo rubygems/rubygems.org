@@ -10,7 +10,6 @@ module Patterns
     abbrev
     base64
     benchmark
-    bigdecimal
     cgi
     cgi-session
     cmath
@@ -34,8 +33,6 @@ module Patterns
     find
     forwardable
     getoptlong
-    gserver
-    io-console
     io-nonblock
     io-wait
     ipaddr
@@ -52,7 +49,6 @@ module Patterns
     net-pop
     net-protocol
     net-smtp
-    net-telnet
     nkf
     observer
     open-uri
