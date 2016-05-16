@@ -193,3 +193,8 @@
     display: inline-block; }
   .gem__version-wrap .gem__version__date {
     font-weight: 400; }
+
+.gem__unregistered {
+  color: #a6aab2;
+  cursor: help;
+}
