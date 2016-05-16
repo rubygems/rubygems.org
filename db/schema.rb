@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160329184508) do
+ActiveRecord::Schema.define(version: 20160516141824) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -196,14 +196,6 @@ ActiveRecord::Schema.define(version: 20160329184508) do
   add_index "users", ["id", "token"], name: "index_users_on_id_and_token", using: :btree
   add_index "users", ["remember_token"], name: "index_users_on_remember_token", using: :btree
   add_index "users", ["token"], name: "index_users_on_token", using: :btree
-
-  create_table "version_histories", force: :cascade do |t|
-    t.integer "version_id"
-    t.date    "day"
-    t.integer "count"
-  end
-
-  add_index "version_histories", ["version_id", "day"], name: "index_version_histories_on_version_id_and_day", unique: true, using: :btree
 
   create_table "versions", force: :cascade do |t|
     t.text     "authors"
