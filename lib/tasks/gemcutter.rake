@@ -79,4 +79,24 @@ namespace :gemcutter do
       puts "Done."
     end
   end
+
+  namespace :rubygems_version do
+    desc "Backfill gem versions with rubygems_version."
+    task backfill: :environment do
+      without_rubygems_version = Version.where(rubygems_version: nil)
+      mod = ENV['shard']
+      without_rubygems_version = without_rubygems_version.where("id % 4 = ?", mod.to_i) if mod
+
+      total = without_rubygems_version.count
+      i = 0
+      puts "Total: #{total}"
+      without_rubygems_version.find_each do |version|
+        version.assign_rubygems_version!
+        i += 1
+        print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
+      end
+      puts
+      puts "Done."
+    end
+  end
 end

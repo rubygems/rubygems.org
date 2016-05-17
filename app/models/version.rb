@@ -329,15 +329,13 @@ class Version < ActiveRecord::Base
   end
 
   def recalculate_metadata!
-    key = "gems/#{full_name}.gem"
-    file = RubygemFs.instance.get(key)
-    if file
-      spec = Gem::Package.new(StringIO.new(file)).spec
-      metadata = spec.metadata
-      update(metadata: metadata || {})
-    end
-  rescue Gem::Package::FormatError
-    nil
+    metadata = get_spec_attribute('metadata')
+    update(metadata: metadata || {})
+  end
+
+  def assign_rubygems_version!
+    rubygems_version = get_spec_attribute('rubygems_version')
+    update(rubygems_version: rubygems_version || '')
   end
 
   def documentation_path
@@ -345,6 +343,16 @@ class Version < ActiveRecord::Base
   end
 
   private
+
+  def get_spec_attribute(attribute_name)
+    key = "gems/#{full_name}.gem"
+    file = RubygemFs.instance.get(key)
+    return nil unless file
+    spec = Gem::Package.new(StringIO.new(file)).spec
+    spec.send(attribute_name)
+  rescue Gem::Package::FormatError
+    nil
+  end
 
   def platform_and_number_are_unique
     return unless Version.exists?(rubygem_id: rubygem_id, number: number, platform: platform)
