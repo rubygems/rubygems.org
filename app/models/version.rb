@@ -204,6 +204,7 @@ class Version < ActiveRecord::Base
       metadata: spec.metadata || {},
       requirements: spec.requirements,
       built_at: spec.date,
+      rubygems_version: spec.required_rubygems_version.to_s,
       ruby_version: spec.required_ruby_version.to_s,
       indexed: true
     )
@@ -238,20 +239,21 @@ class Version < ActiveRecord::Base
 
   def payload
     {
-      'authors'         => authors,
-      'built_at'        => built_at,
-      'created_at'      => created_at,
-      'description'     => description,
-      'downloads_count' => downloads_count,
-      'metadata'        => metadata,
-      'number'          => number,
-      'summary'         => summary,
-      'platform'        => platform,
-      'ruby_version'    => ruby_version,
-      'prerelease'      => prerelease,
-      'licenses'        => licenses,
-      'requirements'    => requirements,
-      'sha'             => sha256_hex
+      'authors'          => authors,
+      'built_at'         => built_at,
+      'created_at'       => created_at,
+      'description'      => description,
+      'downloads_count'  => downloads_count,
+      'metadata'         => metadata,
+      'number'           => number,
+      'summary'          => summary,
+      'platform'         => platform,
+      'rubygems_version' => rubygems_version,
+      'ruby_version'     => ruby_version,
+      'prerelease'       => prerelease,
+      'licenses'         => licenses,
+      'requirements'     => requirements,
+      'sha'              => sha256_hex
     }
   end
 
