@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160329184508) do
+ActiveRecord::Schema.define(version: 20160516144704) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -148,11 +148,6 @@ ActiveRecord::Schema.define(version: 20160329184508) do
   add_index "ownerships", ["rubygem_id"], name: "index_ownerships_on_rubygem_id", using: :btree
   add_index "ownerships", ["user_id"], name: "index_ownerships_on_user_id", using: :btree
 
-  create_table "rubyforgers", force: :cascade do |t|
-    t.string "email"
-    t.string "encrypted_password", limit: 40
-  end
-
   create_table "rubygems", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -212,7 +207,6 @@ ActiveRecord::Schema.define(version: 20160329184508) do
     t.integer  "rubygem_id"
     t.datetime "built_at"
     t.datetime "updated_at"
-    t.string   "rubyforge_project"
     t.text     "summary"
     t.string   "platform"
     t.datetime "created_at"
