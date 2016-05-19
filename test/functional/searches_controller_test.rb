@@ -128,9 +128,8 @@ class SearchesControllerTest < ActionController::TestCase
     should render_template :show
     should "see sinatra on the page in the suggestions" do
       page.assert_text('Maybe you mean')
-      # assert page.find('.search-suggestions').has_content?(@sinatra.name)
-      # assert page.has_content?(@sinatra.name)
-      # assert page.has_selector?("a[href='#{search_path(q: @sinatra.name)}']")
+      assert page.find('.search__suggestions').has_content?(@sinatra.name)
+      assert page.has_selector?("a[href='#{search_path(query: @sinatra.name)}']")
     end
     should "not see sinatra on the page in the results" do
       page.assert_no_selector("a[href='#{rubygem_path(@sinatra)}']")
