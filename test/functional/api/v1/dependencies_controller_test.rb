@@ -3,11 +3,23 @@ require 'test_helper'
 class Api::V1::DependenciesControllerTest < ActionController::TestCase
   ## JSON ENDPOINTS:
   # NO GEMS:
-  context "On GET to index --> with no gems --> JSON" do
+  context "On GET to index --> with empty gems param --> JSON" do
     setup do
-      @rubygem = create(:rubygem, name: "testgem")
-      @version = create(:version, number: "1.0.0", rubygem_id: @rubygem.id)
       get :index, gems: "", format: "json"
+    end
+
+    should "return 200" do
+      assert_response :success
+    end
+
+    should "return an empty body" do
+      assert_empty response.body
+    end
+  end
+
+  context "On GET to index --> with no gems param --> JSON" do
+    setup do
+      get :index, format: "json"
     end
 
     should "return 200" do

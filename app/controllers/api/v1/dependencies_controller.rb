@@ -25,6 +25,6 @@ class Api::V1::DependenciesController < Api::BaseController
   end
 
   def gem_names
-    @gem_names ||= params[:gems].split(",")
+    @gem_names ||= params[:gems].blank? ? [] : params[:gems].split(",".freeze)
   end
 end
