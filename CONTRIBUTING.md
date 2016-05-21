@@ -116,6 +116,7 @@ than Rubygems and may suit your organization’s needs better.**
 #### Running tests
 
 * Start elastic search: `elasticsearch`
+* Start memcached: `memcached`
 * Run the tests: `bundle exec rake`
 
 #### Running RuboCop
