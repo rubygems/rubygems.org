@@ -49,4 +49,10 @@ class GemDependentTest < ActiveSupport::TestCase
       )
     end
   end
+
+  context "with gem_names which do not exist" do
+    should "return empty array" do
+      assert_equal [], GemDependent.new(["does_not_exist"]).to_a
+    end
+  end
 end
