@@ -5,7 +5,7 @@ class GemDownloadTest < ActiveSupport::TestCase
     create(:gem_download, count: 0)
   end
 
-  context "#increment" do
+  context ".increment" do
     should "not update if download doesnt exist" do
       assert_nil GemDownload.increment(1, rubygem_id: 1)
     end
@@ -50,7 +50,7 @@ class GemDownloadTest < ActiveSupport::TestCase
     GemDownload.delete_all
   end
 
-  context "#bulk_update" do
+  context ".bulk_update" do
     should "write the proper values" do
       versions = Array.new(2) { create(:version) }
       gems     = versions.map(&:rubygem)
@@ -63,6 +63,20 @@ class GemDownloadTest < ActiveSupport::TestCase
         assert_equal counts[i], GemDownload.count_for_version(versions[i].id)
         assert_equal counts[i], GemDownload.count_for_rubygem(gems[i].id)
       end
+    end
+  end
+
+  context ".most_downloaded_gem_count" do
+    setup do
+      versions = Array.new(20) { create(:version) }
+      @counts  = Array.new(20) { rand(100) }
+      data     = versions.map.with_index { |v, i| [v.full_name, @counts[i]] }
+
+      GemDownload.bulk_update(data)
+    end
+
+    should "return count of most downloaded gem" do
+      assert_equal @counts.max, GemDownload.most_downloaded_gem_count
     end
   end
 
