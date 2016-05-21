@@ -204,6 +204,7 @@ class Version < ActiveRecord::Base
       metadata: spec.metadata || {},
       requirements: spec.requirements,
       built_at: spec.date,
+      rubygems_version: spec.required_rubygems_version.to_s,
       ruby_version: spec.required_ruby_version.to_s,
       indexed: true
     )
@@ -238,20 +239,21 @@ class Version < ActiveRecord::Base
 
   def payload
     {
-      'authors'         => authors,
-      'built_at'        => built_at,
-      'created_at'      => created_at,
-      'description'     => description,
-      'downloads_count' => downloads_count,
-      'metadata'        => metadata,
-      'number'          => number,
-      'summary'         => summary,
-      'platform'        => platform,
-      'ruby_version'    => ruby_version,
-      'prerelease'      => prerelease,
-      'licenses'        => licenses,
-      'requirements'    => requirements,
-      'sha'             => sha256_hex
+      'authors'          => authors,
+      'built_at'         => built_at,
+      'created_at'       => created_at,
+      'description'      => description,
+      'downloads_count'  => downloads_count,
+      'metadata'         => metadata,
+      'number'           => number,
+      'summary'          => summary,
+      'platform'         => platform,
+      'rubygems_version' => rubygems_version,
+      'ruby_version'     => ruby_version,
+      'prerelease'       => prerelease,
+      'licenses'         => licenses,
+      'requirements'     => requirements,
+      'sha'              => sha256_hex
     }
   end
 
@@ -327,15 +329,13 @@ class Version < ActiveRecord::Base
   end
 
   def recalculate_metadata!
-    key = "gems/#{full_name}.gem"
-    file = RubygemFs.instance.get(key)
-    if file
-      spec = Gem::Package.new(StringIO.new(file)).spec
-      metadata = spec.metadata
-      update(metadata: metadata || {})
-    end
-  rescue Gem::Package::FormatError
-    nil
+    metadata = get_spec_attribute('metadata')
+    update(metadata: metadata || {})
+  end
+
+  def assign_rubygems_version!
+    rubygems_version = get_spec_attribute('rubygems_version')
+    update(rubygems_version: rubygems_version || '')
   end
 
   def documentation_path
@@ -343,6 +343,16 @@ class Version < ActiveRecord::Base
   end
 
   private
+
+  def get_spec_attribute(attribute_name)
+    key = "gems/#{full_name}.gem"
+    file = RubygemFs.instance.get(key)
+    return nil unless file
+    spec = Gem::Package.new(StringIO.new(file)).spec
+    spec.send(attribute_name)
+  rescue Gem::Package::FormatError
+    nil
+  end
 
   def platform_and_number_are_unique
     return unless Version.exists?(rubygem_id: rubygem_id, number: number, platform: platform)
