@@ -103,7 +103,6 @@ class GemDownloadTest < ActiveSupport::TestCase
   end
 
   should "find most downloaded all time" do
-    skip "fixme"
     @rubygem_1 = create(:rubygem)
     @version_1 = create(:version, rubygem: @rubygem_1)
     @version_2 = create(:version, rubygem: @rubygem_1)
@@ -121,16 +120,8 @@ class GemDownloadTest < ActiveSupport::TestCase
     3.times { GemDownload.increment(1, rubygem_id: @rubygem_2, version_id: @version_3.id) }
     2.times { GemDownload.increment(1, rubygem_id: @rubygem_1, version_id: @version_2.id) }
 
-    assert_equal [[@version_3, 4], [@version_2, 3], [@version_1, 2]],
-      Download.most_downloaded_all_time
-
-    assert_equal [[@version_3, 4], [@version_2, 3]],
-      Download.most_downloaded_all_time(2)
-
-    assert_equal 3, Download.cardinality
-    assert_equal 1, Download.rank(@version_3)
-    assert_equal 2, Download.rank(@version_2)
-    assert_equal 3, Download.rank(@version_1)
+    gem_download_order = [@version_3, @version_2, @version_1, @version_4].map(&:gem_download)
+    assert_equal gem_download_order, GemDownload.most_downloaded_gems
   end
 
   should "find download count by gems id" do
