@@ -27,26 +27,32 @@ class GemDependentTest < ActiveSupport::TestCase
       create(:version, number: "0.0.2", rubygem_id: @gem.id)
 
       @gem2 = create(:rubygem, name: "rack2")
-      create(:version, number: "0.0.1", rubygem_id: @gem2.id)
+      create(:version, number: "0.0.1", created_at: Date.new(2016, 05, 24), rubygem_id: @gem2.id)
     end
 
-    should "return an array with dependencies" do
+    should "return rack2" do
+      result = {
+        name:                "rack2",
+        number:              "0.0.1",
+        platform:            "ruby",
+        rubygems_version:    ">= 2.6.3",
+        ruby_version:        ">= 2.0.0",
+        checksum:            "tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=",
+        created_at:          Date.new(2016, 05, 24),
+        dependencies: []
+      }
+
       deps = GemDependent.new(["rack2"]).to_a
-      assert_equal(
-        [{ name: "rack2", number: "0.0.1", platform: "ruby", dependencies: [] }],
-        deps
-      )
+      result.each_pair do |k, v|
+        assert_equal v, deps.first[k]
+      end
     end
 
     should "return all versions for a gem" do
+      result = %w(0.0.2 0.0.1)
+
       deps = GemDependent.new(["rack"]).to_a
-      assert_equal(
-        [
-          { name: "rack", number: "0.0.2", platform: "ruby", dependencies: [] },
-          { name: "rack", number: "0.0.1", platform: "ruby", dependencies: [] }
-        ],
-        deps
-      )
+      assert_equal result, deps.map { |x| x[:number] }
     end
   end
 

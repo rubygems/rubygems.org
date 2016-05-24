@@ -34,8 +34,8 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
   # WITH GEMS:
   context "On GET to index --> with gems --> JSON" do
     setup do
-      @rubygem = create(:rubygem, name: "rails")
-      @version = create(:version, number: "1.0.0", rubygem_id: @rubygem.id)
+      rubygem = create(:rubygem, name: "rails")
+      create(:version, number: "1.0.0", created_at: Date.new(2016, 05, 24), rubygem_id: rubygem.id)
       get :index, gems: "rails", format: "json"
     end
 
@@ -45,10 +45,14 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
 
     should "return body" do
       result = [{
-        "name"         => 'rails',
-        "number"       => '1.0.0',
-        "platform"     => 'ruby',
-        "dependencies" => []
+        'name'              => 'rails',
+        'number'            => '1.0.0',
+        'platform'          => 'ruby',
+        'rubygems_version'  => '>= 2.6.3',
+        'ruby_version'      => '>= 2.0.0',
+        'checksum'          => 'tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=',
+        'created_at'        => '2016-05-24T00:00:00.000Z',
+        'dependencies'      => []
       }]
 
       assert_equal result, MultiJson.load(response.body)
@@ -58,11 +62,11 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
   # WITH COMPLEX GEMS:
   context "on GET to index --> with complex gems --> JSON" do
     setup do
-      @rubygem1 = create(:rubygem, name: "myrails")
-      @rubygem2 = create(:rubygem, name: "mybundler")
-      @version = create(:version, number: "1.0.0", rubygem_id: @rubygem1.id)
-      @version = create(:version, number: "2.0.0", rubygem_id: @rubygem2.id)
-      @version = create(:version, number: "3.0.0", rubygem_id: @rubygem1.id)
+      rubygem1 = create(:rubygem, name: "myrails")
+      rubygem2 = create(:rubygem, name: "mybundler")
+      create(:version, number: "1.0.0", created_at: Date.new(2016, 05, 24), rubygem_id: rubygem1.id)
+      create(:version, number: "2.0.0", created_at: Date.new(2016, 05, 24), rubygem_id: rubygem2.id)
+      create(:version, number: "3.0.0", created_at: Date.new(2016, 05, 24), rubygem_id: rubygem1.id)
       get :index, gems: "myrails,mybundler", format: "json"
     end
 
@@ -73,24 +77,36 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
     should "return body" do
       result = [
         {
-          "name"         => 'myrails',
-          "number"       => '3.0.0',
-          "platform"     => 'ruby',
-          "dependencies" => []
+          'name'              => 'myrails',
+          'number'            => '3.0.0',
+          'platform'          => 'ruby',
+          'rubygems_version'  => '>= 2.6.3',
+          'ruby_version'      => '>= 2.0.0',
+          'checksum'          => 'tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=',
+          'created_at'        => '2016-05-24T00:00:00.000Z',
+          'dependencies'      => []
         },
 
         {
-          "name"         => 'myrails',
-          "number"       => '1.0.0',
-          "platform"     => 'ruby',
-          "dependencies" => []
+          'name'              => 'myrails',
+          'number'            => '1.0.0',
+          'platform'          => 'ruby',
+          'rubygems_version'  => '>= 2.6.3',
+          'ruby_version'      => '>= 2.0.0',
+          'checksum'          => 'tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=',
+          'created_at'        => '2016-05-24T00:00:00.000Z',
+          'dependencies'      => []
         },
 
         {
-          "name"         => 'mybundler',
-          "number"       => '2.0.0',
-          "platform"     => 'ruby',
-          "dependencies" => []
+          'name'              => 'mybundler',
+          'number'            => '2.0.0',
+          'platform'          => 'ruby',
+          'rubygems_version'  => '>= 2.6.3',
+          'ruby_version'      => '>= 2.0.0',
+          'checksum'          => 'tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=',
+          'created_at'        => '2016-05-24T00:00:00.000Z',
+          'dependencies'      => []
         }
       ]
 
@@ -123,8 +139,8 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
   # NO GEMS:
   context "On GET to index --> with no gems --> Marshal" do
     setup do
-      @rubygem = create(:rubygem, name: "testgem")
-      @version = create(:version, number: "1.0.0", rubygem_id: @rubygem.id)
+      rubygem = create(:rubygem, name: "testgem")
+      @version = create(:version, number: "1.0.0", rubygem_id: rubygem.id)
       get :index, gems: "", format: "marshal"
     end
 
@@ -140,8 +156,8 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
   # WITH GEMS:
   context "On GET to index --> with gems --> Marshal" do
     setup do
-      @rubygem = create(:rubygem, name: "testgem")
-      @version = create(:version, number: "1.0.0", rubygem_id: @rubygem.id)
+      rubygem = create(:rubygem, name: "testgem")
+      create(:version, number: "1.0.0", created_at: Date.new(2016, 05, 24), rubygem_id: rubygem.id)
       get :index, gems: "testgem", format: "marshal"
     end
 
@@ -151,10 +167,14 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
 
     should "return body" do
       result = [{
-        name:         'testgem',
-        number:       '1.0.0',
-        platform:     'ruby',
-        dependencies: []
+        name:              'testgem',
+        number:            '1.0.0',
+        platform:          'ruby',
+        rubygems_version:  '>= 2.6.3',
+        ruby_version:      '>= 2.0.0',
+        checksum:          'tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=',
+        created_at:        Date.new(2016, 05, 24),
+        dependencies:      []
       }]
 
       assert_equal result, Marshal.load(response.body)
