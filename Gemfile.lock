@@ -170,7 +170,7 @@ GEM
     minitest (5.9.0)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
-    multi_json (1.12.0)
+    multi_json (1.12.1)
     multipart-post (2.0.0)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
