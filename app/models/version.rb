@@ -335,7 +335,7 @@ class Version < ActiveRecord::Base
 
   def assign_rubygems_version!
     rubygems_version = get_spec_attribute('rubygems_version')
-    update(rubygems_version: rubygems_version || '')
+    update_column(:rubygems_version, rubygems_version || '')
   end
 
   def documentation_path
