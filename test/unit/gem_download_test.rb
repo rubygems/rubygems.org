@@ -1,10 +1,6 @@
 require 'test_helper'
 
 class GemDownloadTest < ActiveSupport::TestCase
-  setup do
-    create(:gem_download, count: 0)
-  end
-
   context "#increment" do
     should "not update if download doesnt exist" do
       assert_nil GemDownload.increment(1, rubygem_id: 1)
@@ -13,7 +9,7 @@ class GemDownloadTest < ActiveSupport::TestCase
     should "not update if download count is nil" do
       create(:gem_download, rubygem_id: 1, version_id: 0, count: nil)
       download = GemDownload.increment(1, rubygem_id: 1)
-      assert_nil download.count
+      assert_nil download
     end
 
     should "update the count" do
