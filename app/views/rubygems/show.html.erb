@@ -96,11 +96,6 @@
             <%= t('.downloads_for_this_version') %>
             <span class="gem__downloads"><%= number_with_delimiter(@latest_version.downloads_count) %></span>
           </h2>
-          <% if @versions.present? %>
-            <% if show_all_versions_link?(@rubygem) %>
-              <%= link_to t('.show_all_versions', :count => @rubygem.versions.count), rubygem_versions_url(@rubygem), :class => "gem__see-all-versions t-link--gray t-link--has-arrow" %>
-            <% end %>
-          <% end %>
         </div>
       <% end %>
 
