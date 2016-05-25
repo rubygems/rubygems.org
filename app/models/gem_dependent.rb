@@ -1,4 +1,6 @@
 class GemDependent
+  extend StatsD::Instrument
+
   attr_reader :gem_names
 
   def initialize(gem_names)
@@ -50,6 +52,7 @@ class GemDependent
       }
     end
   end
+  statsd_measure :fetch_dependency_from_db, 'gem_dependent.fetch_dependency_from_db'
 
   # Returns a Hash of the gem's cache key, and its cached dependencies
   def memcached_gem_info
