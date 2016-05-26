@@ -1,5 +1,6 @@
 class GemDependent
   extend StatsD::Instrument
+  DepKey = Struct.new(:name, :number, :platform, :required_ruby_version, :required_rubygems_version, :sha256, :created_at)
 
   attr_reader :gem_names
 
@@ -35,24 +36,55 @@ class GemDependent
   private
 
   def fetch_dependency_from_db(gem_name)
-    gem_record = Rubygem.includes(:versions).find_by_name(gem_name)
-    return [] unless gem_record
-    gem_record.versions.includes(:dependencies).sort_by(&:number).reverse_each.map do |version|
-      version_deps = version.dependencies.select { |d| d.scope == 'runtime' }
+    sanitize_sql = ActiveRecord::Base.send(:sanitize_sql_array, sql_query(gem_name))
+    dataset = ActiveRecord::Base.connection.execute(sanitize_sql)
+    deps = {}
 
+    dataset.each do |row|
+      key = DepKey.new(
+        row['name'],
+        row['number'],
+        row['platform'],
+        row['required_ruby_version'],
+        row['required_rubygems_version'],
+        row['sha256'],
+        row['created_at']
+      )
+      deps[key] = [] unless deps[key]
+      deps[key] << [row['dep_name'], row['requirements']] if row['dep_name']
+    end
+
+    deps.map do |dep_key, gem_deps|
       {
-        name:                  gem_name,
-        number:                version.number,
-        platform:              version.platform,
-        rubygems_version:      version.required_rubygems_version,
-        ruby_version:          version.required_ruby_version,
-        checksum:              version.sha256,
-        created_at:            version.created_at,
-        dependencies:          version_deps.map { |d| [d.name, d.requirements] }
+        name:                  dep_key.name,
+        number:                dep_key.number,
+        platform:              dep_key.platform,
+        rubygems_version:      dep_key.required_rubygems_version,
+        ruby_version:          dep_key.required_ruby_version,
+        checksum:              dep_key.sha256,
+        created_at:            dep_key.created_at,
+        dependencies:          gem_deps
       }
     end
   end
   statsd_measure :fetch_dependency_from_db, 'gem_dependent.fetch_dependency_from_db'
+
+  def sql_query(gem_name)
+    ["SELECT rv.name, rv.number, rv.platform, rv.required_ruby_version, rv.sha256,
+             rv.required_rubygems_version, d.requirements, rv.created_at, for_dep_name.name dep_name
+      FROM
+        (SELECT r.name, v.number, v.platform,v.required_rubygems_version, v.sha256,
+                v.required_ruby_version, v.created_at, v.id AS version_id
+        FROM rubygems AS r, versions AS v
+        WHERE v.rubygem_id = r.id
+          AND v.indexed is true AND r.name = ?) AS rv
+        LEFT JOIN dependencies AS d ON
+          d.version_id = rv.version_id
+        LEFT JOIN rubygems AS for_dep_name ON
+          d.rubygem_id = for_dep_name.id
+          AND d.scope = 'runtime'
+        ORDER BY rv.created_at, rv.number, rv.platform, for_dep_name.name", gem_name]
+  end
 
   # Returns a Hash of the gem's cache key, and its cached dependencies
   def memcached_gem_info
