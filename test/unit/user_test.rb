@@ -175,9 +175,8 @@ class UserTest < ActiveSupport::TestCase
   context "rubygems" do
     setup do
       @user     = create(:user)
-      @rubygems = [[100, 2000], [200, 1000], [300, 3000]].map do |downloads, real_downloads|
-        create(:rubygem, downloads: downloads).tap do |rubygem|
-          GemDownload.find_by(rubygem_id: rubygem.id, version_id: 0).update(count: real_downloads)
+      @rubygems = [2000, 1000, 3000].map do |download|
+        create(:rubygem, downloads: download).tap do |rubygem|
           create(:ownership, rubygem: rubygem, user: @user)
           create(:version, rubygem: rubygem)
         end
