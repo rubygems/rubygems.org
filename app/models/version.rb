@@ -204,7 +204,7 @@ class Version < ActiveRecord::Base
       metadata: spec.metadata || {},
       requirements: spec.requirements,
       built_at: spec.date,
-      rubygems_version: spec.required_rubygems_version.to_s,
+      required_rubygems_version: spec.required_rubygems_version.to_s,
       ruby_version: spec.required_ruby_version.to_s,
       indexed: true
     )
@@ -248,7 +248,7 @@ class Version < ActiveRecord::Base
       'number'           => number,
       'summary'          => summary,
       'platform'         => platform,
-      'rubygems_version' => rubygems_version,
+      'rubygems_version' => required_rubygems_version,
       'ruby_version'     => ruby_version,
       'prerelease'       => prerelease,
       'licenses'         => licenses,
@@ -333,9 +333,9 @@ class Version < ActiveRecord::Base
     update(metadata: metadata || {})
   end
 
-  def assign_rubygems_version!
-    rubygems_version = get_spec_attribute('rubygems_version')
-    update_column(:rubygems_version, rubygems_version || '')
+  def assign_required_rubygems_version!
+    required_rubygems_version = get_spec_attribute('required_rubygems_version')
+    update_column(:required_rubygems_version, required_rubygems_version.to_s)
   end
 
   def documentation_path

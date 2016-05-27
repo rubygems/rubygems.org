@@ -23,7 +23,7 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.number, json["number"]
       assert_equal @version.platform, json["platform"]
       assert_equal @version.prerelease, json["prerelease"]
-      assert_equal @version.rubygems_version, json["rubygems_version"]
+      assert_equal @version.required_rubygems_version, json["rubygems_version"]
       assert_equal @version.ruby_version, json["ruby_version"]
       assert_equal @version.summary, json["summary"]
       assert_equal @version.licenses, json["licenses"]
@@ -52,7 +52,7 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.number, xml.at_css("number").content
       assert_equal @version.platform, xml.at_css("platform").content
       assert_equal @version.prerelease.to_s, xml.at_css("prerelease").content
-      assert_equal @version.rubygems_version, xml.at_css("rubygems-version").content
+      assert_equal @version.required_rubygems_version, xml.at_css("rubygems-version").content
       assert_equal @version.ruby_version, xml.at_css("ruby-version").content
       assert_equal @version.summary.to_s, xml.at_css("summary").content
       assert_equal @version.licenses, xml.at_css("licenses").content
@@ -185,14 +185,14 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with a rubygems version" do
     setup do
-      @rubygems_version = ">= 2.6.4"
+      @required_rubygems_version = ">= 2.6.4"
       @version = create(:version)
     end
 
     should "have a rubygems version" do
-      @version.update(rubygems_version: @rubygems_version)
+      @version.update(required_rubygems_version: @required_rubygems_version)
       new_version = Version.find(@version.id)
-      assert_equal new_version.rubygems_version, @rubygems_version
+      assert_equal new_version.required_rubygems_version, @required_rubygems_version
     end
   end
 
@@ -202,9 +202,9 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "not have a rubygems version" do
-      @version.update(rubygems_version: nil)
+      @version.update(required_rubygems_version: nil)
       nil_version = Version.find(@version.id)
-      assert_nil nil_version.rubygems_version
+      assert_nil nil_version.required_rubygems_version
     end
   end
 
