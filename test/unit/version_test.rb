@@ -24,7 +24,7 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.platform, json["platform"]
       assert_equal @version.prerelease, json["prerelease"]
       assert_equal @version.required_rubygems_version, json["rubygems_version"]
-      assert_equal @version.ruby_version, json["ruby_version"]
+      assert_equal @version.required_ruby_version, json["ruby_version"]
       assert_equal @version.summary, json["summary"]
       assert_equal @version.licenses, json["licenses"]
       assert_equal @version.requirements, json["requirements"]
@@ -53,7 +53,7 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.platform, xml.at_css("platform").content
       assert_equal @version.prerelease.to_s, xml.at_css("prerelease").content
       assert_equal @version.required_rubygems_version, xml.at_css("rubygems-version").content
-      assert_equal @version.ruby_version, xml.at_css("ruby-version").content
+      assert_equal @version.required_ruby_version, xml.at_css("ruby-version").content
       assert_equal @version.summary.to_s, xml.at_css("summary").content
       assert_equal @version.licenses, xml.at_css("licenses").content
       assert_equal @version.requirements, xml.at_css("requirements").content
@@ -210,16 +210,16 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with a ruby version" do
     setup do
-      @ruby_version = ">= 1.9.3"
+      @required_ruby_version = ">= 1.9.3"
       @version = create(:version)
     end
     subject { @version }
 
     should "have a ruby version" do
-      @version.ruby_version = @ruby_version
+      @version.required_ruby_version = @required_ruby_version
       @version.save!
       new_version = Version.find(@version.id)
-      assert_equal new_version.ruby_version, @ruby_version
+      assert_equal new_version.required_ruby_version, @required_ruby_version
     end
   end
 
@@ -230,10 +230,10 @@ class VersionTest < ActiveSupport::TestCase
     subject { @version }
 
     should "not have a ruby version" do
-      @version.ruby_version = nil
+      @version.required_ruby_version = nil
       @version.save!
       nil_version = Version.find(@version.id)
-      assert_nil nil_version.ruby_version
+      assert_nil nil_version.required_ruby_version
     end
   end
 
