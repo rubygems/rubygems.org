@@ -60,6 +60,9 @@ Rails.application.routes.draw do
         format: /marshal|json/,
         defaults: { format: 'marshal' }
 
+      # for handling preflight request
+      match '/gems/:id' => "rubygems#show", via: :options
+
       resources :rubygems,
         path: 'gems',
         only: [:create, :show, :index],
