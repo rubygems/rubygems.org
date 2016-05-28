@@ -44,7 +44,7 @@ class GemDependent
         name:                  gem_name,
         number:                version.number,
         platform:              version.platform,
-        rubygems_version:      version.rubygems_version,
+        rubygems_version:      version.required_rubygems_version,
         ruby_version:          version.ruby_version,
         checksum:              version.sha256,
         created_at:            version.created_at,
