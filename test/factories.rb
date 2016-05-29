@@ -58,6 +58,7 @@ FactoryGirl.define do
     transient do
       owners []
       number nil
+      downloads 0
     end
 
     linkset

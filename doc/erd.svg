@@ -177,28 +177,26 @@
 </g>
 <!-- m_Rubygem -->
 <g id="node11" class="node"><title>m_Rubygem</title>
-<path fill="none" stroke="black" d="M705,-466C705,-466 825,-466 825,-466 831,-466 837,-472 837,-478 837,-478 837,-523 837,-523 837,-529 831,-535 825,-535 825,-535 705,-535 705,-535 699,-535 693,-529 693,-523 693,-523 693,-478 693,-478 693,-472 699,-466 705,-466"/>
-<text text-anchor="start" x="737.5" y="-522.2" font-family="Arial Bold" font-size="11.00">Rubygem</text>
-<polyline fill="none" stroke="black" points="693,-515 837,-515 "/>
-<text text-anchor="start" x="700" y="-501.5" font-family="Arial" font-size="10.00">downloads </text>
-<text text-anchor="start" x="749" y="-501.5" font-family="Arial Italic" font-size="10.00" fill="#999999">integer</text>
-<text text-anchor="start" x="700" y="-488.5" font-family="Arial" font-size="10.00">name </text>
-<text text-anchor="start" x="728" y="-488.5" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗ U</text>
-<text text-anchor="start" x="700" y="-475.5" font-family="Arial" font-size="10.00">slug </text>
-<text text-anchor="start" x="722" y="-475.5" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
+<path fill="none" stroke="black" d="M705,-472.5C705,-472.5 825,-472.5 825,-472.5 831,-472.5 837,-478.5 837,-484.5 837,-484.5 837,-516.5 837,-516.5 837,-522.5 831,-528.5 825,-528.5 825,-528.5 705,-528.5 705,-528.5 699,-528.5 693,-522.5 693,-516.5 693,-516.5 693,-484.5 693,-484.5 693,-478.5 699,-472.5 705,-472.5"/>
+<text text-anchor="start" x="737.5" y="-515.7" font-family="Arial Bold" font-size="11.00">Rubygem</text>
+<polyline fill="none" stroke="black" points="693,-508.5 837,-508.5 "/>
+<text text-anchor="start" x="700" y="-495.5" font-family="Arial" font-size="10.00">name </text>
+<text text-anchor="start" x="728" y="-495.5" font-family="Arial Italic" font-size="10.00" fill="#999999">string ∗ U</text>
+<text text-anchor="start" x="700" y="-482.5" font-family="Arial" font-size="10.00">slug </text>
+<text text-anchor="start" x="722" y="-482.5" font-family="Arial Italic" font-size="10.00" fill="#999999">string</text>
 </g>
 <!-- m_Rubygem&#45;&gt;m_Dependency -->
 <g id="edge5" class="edge"><title>m_Rubygem&#45;&gt;m_Dependency</title>
-<path fill="none" stroke="black" d="M755.227,-465.76C748.307,-440.043 739.635,-403.617 736,-371 722.956,-253.947 712.319,-221.372 736,-106 737.914,-96.6757 741.124,-87.0599 744.75,-78.0538"/>
+<path fill="none" stroke="black" d="M756.991,-472.227C749.856,-446.418 739.951,-406.458 736,-371 722.956,-253.947 712.319,-221.372 736,-106 737.914,-96.6757 741.124,-87.0599 744.75,-78.0538"/>
 <polygon fill="black" stroke="black" points="747.706,-79.1508 748.324,-69.6355 741.907,-76.6882 747.706,-79.1508"/>
 </g>
 <!-- m_Rubygem&#45;&gt;m_GemDownload -->
 <g id="edge7" class="edge"><title>m_Rubygem&#45;&gt;m_GemDownload</title>
-<path fill="none" stroke="black" d="M820.425,-465.923C852.41,-443.341 890.126,-410.515 910,-371 964.165,-263.305 949.816,-111.378 942.242,-56.6517"/>
+<path fill="none" stroke="black" d="M811.13,-472.316C844.778,-449.766 888.161,-414.422 910,-371 964.165,-263.305 949.816,-111.378 942.242,-56.6517"/>
 </g>
 <!-- m_Rubygem&#45;&gt;m_Linkset -->
 <g id="edge9" class="edge"><title>m_Rubygem&#45;&gt;m_Linkset</title>
-<path fill="none" stroke="black" d="M828.87,-465.758C869.432,-442.455 921.531,-408.91 961,-371 984.984,-347.964 1006.9,-318.078 1023.53,-292.62"/>
+<path fill="none" stroke="black" d="M817.029,-472.459C858.846,-449.145 917.569,-412.715 961,-371 984.984,-347.964 1006.9,-318.078 1023.53,-292.62"/>
 </g>
 <!-- m_Rubygem&#45;&gt;m_Ownership -->
 <g id="edge10" class="edge"><title>m_Rubygem&#45;&gt;m_Ownership</title>
@@ -247,13 +245,13 @@
 </g>
 <!-- m_Rubygem&#45;&gt;m_User -->
 <g id="edge12" class="edge"><title>m_Rubygem&#45;&gt;m_User</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M702.638,-465.92C608.023,-422.283 513.409,-418.824 418.794,-455.545"/>
-<polygon fill="black" stroke="black" points="417.409,-452.706 410.228,-458.979 419.753,-458.554 417.409,-452.706"/>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M716.149,-472.425C616.964,-422.669 517.778,-417.069 418.593,-455.623"/>
+<polygon fill="black" stroke="black" points="417.407,-452.704 410.228,-458.979 419.753,-458.551 417.407,-452.704"/>
 </g>
 <!-- m_Rubygem&#45;&gt;m_User -->
 <g id="edge13" class="edge"><title>m_Rubygem&#45;&gt;m_User</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M702.638,-535.08C608.023,-578.717 513.409,-582.176 418.794,-545.455"/>
-<polygon fill="black" stroke="black" points="419.753,-542.446 410.228,-542.021 417.409,-548.294 419.753,-542.446"/>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M716.149,-528.575C616.964,-578.331 517.778,-583.931 418.593,-545.377"/>
+<polygon fill="black" stroke="black" points="419.753,-542.449 410.228,-542.021 417.407,-548.296 419.753,-542.449"/>
 </g>
 <!-- m_Version -->
 <g id="node14" class="node"><title>m_Version</title>
@@ -299,8 +297,8 @@
 </g>
 <!-- m_Rubygem&#45;&gt;m_Version -->
 <g id="edge15" class="edge"><title>m_Rubygem&#45;&gt;m_Version</title>
-<path fill="none" stroke="black" d="M772.523,-465.776C777.552,-443.232 784.542,-411.9 791.719,-379.727"/>
-<polygon fill="black" stroke="black" points="794.861,-380.107 793.746,-370.637 788.712,-378.735 794.861,-380.107"/>
+<path fill="none" stroke="black" d="M771.097,-472.167C776.178,-449.39 783.834,-415.07 791.717,-379.735"/>
+<polygon fill="black" stroke="black" points="794.839,-380.205 793.724,-370.736 788.69,-378.834 794.839,-380.205"/>
 </g>
 <!-- m_WebHook -->
 <g id="node15" class="node"><title>m_WebHook</title>
@@ -314,8 +312,8 @@
 </g>
 <!-- m_Rubygem&#45;&gt;m_WebHook -->
 <g id="edge16" class="edge"><title>m_Rubygem&#45;&gt;m_WebHook</title>
-<path fill="none" stroke="black" d="M742.431,-465.776C709.35,-416.345 647.995,-324.664 614.431,-274.512"/>
-<polygon fill="black" stroke="black" points="616.915,-272.559 609.291,-266.832 611.679,-276.063 616.915,-272.559"/>
+<path fill="none" stroke="black" d="M746.708,-472.167C714.921,-424.67 649.539,-326.973 614.462,-274.558"/>
+<polygon fill="black" stroke="black" points="616.932,-272.585 609.308,-266.857 611.696,-276.089 616.932,-272.585"/>
 </g>
 <!-- m_User&#45;&gt;m_Deletion -->
 <g id="edge4" class="edge"><title>m_User&#45;&gt;m_Deletion</title>
