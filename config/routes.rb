@@ -100,10 +100,10 @@ Rails.application.routes.draw do
 
   scope to: 'api/deprecated#index' do
     get 'api_key'
-    put 'api_key/reset'
+    put 'api_key/reset', to: 'api/deprecated#index'
 
     post 'gems'
-    get 'gems/:id.json'
+    get 'gems/:id'
 
     scope path: 'gems/:rubygem_id' do
       put 'migrate'
