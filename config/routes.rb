@@ -103,7 +103,7 @@ Rails.application.routes.draw do
     put 'api_key/reset', to: 'api/deprecated#index'
 
     post 'gems'
-    get 'gems/:id'
+    get 'gems/:id.json'
 
     scope path: 'gems/:rubygem_id' do
       put 'migrate'
