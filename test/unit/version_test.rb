@@ -654,13 +654,13 @@ class VersionTest < ActiveSupport::TestCase
       @version.update_attributes_from_gem_specification!(@spec)
 
       assert @version.indexed
-      assert_equal @spec.authors.join(', '),           @version.authors
-      assert_equal @spec.description,                  @version.description
-      assert_equal @spec.summary,                      @version.summary
-      assert_equal @spec.date,                         @version.built_at
-      assert_equal @spec.metadata,                     @version.metadata
-      assert_equal @spec.required_ruby_version.to_s,        @version.ruby_version
-      assert_equal @spec.required_rubygems_version.to_s,    @version.rubygems_version
+      assert_equal @spec.authors.join(', '),              @version.authors
+      assert_equal @spec.description,                     @version.description
+      assert_equal @spec.summary,                         @version.summary
+      assert_equal @spec.date,                            @version.built_at
+      assert_equal @spec.metadata,                        @version.metadata
+      assert_equal @spec.required_ruby_version.to_s,      @version.required_ruby_version
+      assert_equal @spec.required_rubygems_version.to_s,  @version.required_rubygems_version
     end
   end
 

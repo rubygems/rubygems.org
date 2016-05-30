@@ -9,23 +9,23 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
     # minimal version
     create(
-      :version, rubygem: @rubygem, number: '1.0.0', sha256: 'checksum1', ruby_version: nil
+      :version, rubygem: @rubygem, number: '1.0.0', sha256: 'checksum1', required_ruby_version: nil
     )
 
     # version with required ruby and rubygems version
     create(
-      :version, rubygem: @rubygem, number: '1.2.0', sha256: 'checksum1', rubygems_version: ">1.9"
+      :version, rubygem: @rubygem, number: '1.2.0', sha256: 'checksum1', required_rubygems_version: ">1.9"
     )
 
     # version with deps but no ruby or rubygems requirements
     version = create(
-      :version, rubygem: @rubygem, number: '2.0.0', sha256: 'checksum2', ruby_version: nil
+      :version, rubygem: @rubygem, number: '2.0.0', sha256: 'checksum2', required_ruby_version: nil
     )
     create(:dependency, rubygem: @dep1, version: version)
 
     # version with everything
     version = create(
-      :version, rubygem: @rubygem, number: '2.1.0', sha256: 'checksum2', rubygems_version: ">=2.0"
+      :version, rubygem: @rubygem, number: '2.1.0', sha256: 'checksum2', required_rubygems_version: ">=2.0"
     )
     create(:dependency, rubygem: @dep1, version: version)
     create(:dependency, rubygem: @dep2, version: version)
@@ -76,9 +76,9 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     get api_v2_info_path(gem_name: @rubygem.name)
     assert_response :success
     assert_equal "---\n" \
-      "1.0.0 |checksum:checksum1\n" \
+      "1.0.0 |checksum:checksum1,rubygems:>= 2.6.3\n" \
       "1.2.0 |checksum:checksum1,ruby:>= 2.0.0,rubygems:>1.9\n" \
-      "2.0.0 gemA1:= 1.0.0|checksum:checksum2\n" \
+      "2.0.0 gemA1:= 1.0.0|checksum:checksum2,rubygems:>= 2.6.3\n" \
       "2.1.0 gemA1:= 1.0.0,gemA2:= 1.0.0|checksum:checksum2,ruby:>= 2.0.0,rubygems:>=2.0\n",
       @response.body
   end

@@ -290,7 +290,7 @@ class Rubygem < ActiveRecord::Base
 
   def compact_index_info
     group_by_columns =
-      "number, platform, sha256, info_checksum, ruby_version, rubygems_version, versions.created_at"
+      "number, platform, sha256, info_checksum, required_ruby_version, required_rubygems_version, versions.created_at"
     dep_req_agg =
       "string_agg(dependencies.requirements, '@' order by rubygems_dependencies.name)"
     dep_name_agg =
