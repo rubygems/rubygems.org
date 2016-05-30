@@ -29,6 +29,16 @@ class ProfilesController < ApplicationController
     end
   end
 
+  def destroy
+    if current_user.destroy
+      flash[:notice] = "Your account has been successfully deleted. Goodbye!"
+      redirect_to_root
+    else
+      flash[:notice] = "Something went wrong. Please try after some time."
+      render :edit
+    end
+  end
+
   private
 
   def params_user

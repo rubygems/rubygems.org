@@ -128,6 +128,7 @@ Rails.application.routes.draw do
     resource :dashboard, only: :show, constraints: { format: /html|atom/ }
     resources :profiles, only: :show
     resource :profile, only: [:edit, :update]
+    delete 'profile' => 'profiles#destroy', as: 'delete_profile'
     resources :stats, only: :index
 
     resources :rubygems,

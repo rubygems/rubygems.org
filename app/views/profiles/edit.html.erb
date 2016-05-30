@@ -84,3 +84,8 @@
 <% end %>
 
 <%= button_to t('.api_access.reset'), reset_api_v1_api_key_path, :method => :put, :data => {:confirm => t('.api_access.confirm_reset')}, :class => 'form__submit' %>
+
+<div class="t-body">
+  <h2>Delete Profile</h2>
+  <%= button_to 'Delete', delete_profile_path, method: :delete, data: {confirm: 'are you sure?'}, :class => 'form__submit' %>
+</div>
