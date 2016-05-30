@@ -118,6 +118,7 @@ en:
       yanked_notice: "This gem has been yanked, and it is not available for download directly or for other gems that may have depended on it."
       authors_header: Authors
       downloads_for_this_version: "For this version"
+      native_extensions: Native extensions
       owners_header: Owners
       links:
         header: Links

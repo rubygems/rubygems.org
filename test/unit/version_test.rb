@@ -12,7 +12,7 @@ class VersionTest < ActiveSupport::TestCase
     should "only have relevant API fields" do
       json = @version.as_json
       fields = %w(number built_at summary description authors platform
-                  ruby_version rubygems_version prerelease downloads_count licenses
+                  ruby_version rubygems_version extensions prerelease downloads_count licenses
                   requirements sha metadata created_at)
       assert_equal fields.map(&:to_s).sort, json.keys.sort
       assert_equal @version.authors, json["authors"]
@@ -25,6 +25,7 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.prerelease, json["prerelease"]
       assert_equal @version.required_rubygems_version, json["rubygems_version"]
       assert_equal @version.required_ruby_version, json["ruby_version"]
+      assert_equal @version.extensions, json['extensions']
       assert_equal @version.summary, json["summary"]
       assert_equal @version.licenses, json["licenses"]
       assert_equal @version.requirements, json["requirements"]
@@ -40,7 +41,7 @@ class VersionTest < ActiveSupport::TestCase
     should "only have relevant API fields" do
       xml = Nokogiri.parse(@version.to_xml)
       fields = %w(number built-at summary description authors platform
-                  ruby-version rubygems-version prerelease downloads-count licenses
+                  ruby-version rubygems-version extensions prerelease downloads-count licenses
                   requirements sha metadata created-at)
       assert_equal fields.map(&:to_s).sort,
         xml.root.children.map(&:name).reject { |t| t == "text" }.sort
@@ -54,6 +55,7 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.prerelease.to_s, xml.at_css("prerelease").content
       assert_equal @version.required_rubygems_version, xml.at_css("rubygems-version").content
       assert_equal @version.required_ruby_version, xml.at_css("ruby-version").content
+      assert_equal @version.extensions.to_s, xml.at_css("extensions").content,
       assert_equal @version.summary.to_s, xml.at_css("summary").content
       assert_equal @version.licenses, xml.at_css("licenses").content
       assert_equal @version.requirements, xml.at_css("requirements").content

@@ -458,6 +458,32 @@ class RubygemsControllerTest < ActionController::TestCase
     should respond_with :not_found
   end
 
+  context "On GET to show for a gem without extensions" do
+    setup do
+      @version = create(:version, extensions: false)
+      get :show, id: @version.rubygem.to_param
+    end
+
+    should respond_with :success
+    should render_template :show
+    should "not render native extensions block" do
+      assert page.has_no_content?('Native extensions')
+    end
+  end
+
+  context "On GET to show for a gem with extensions" do
+    setup do
+      @version = create(:version, extensions: true)
+      get :show, id: @version.rubygem.to_param
+    end
+
+    should respond_with :success
+    should render_template :show
+    should "render native extensions block" do
+      assert page.has_content?('Native extensions')
+    end  
+  end
+
   context "When not logged in" do
     context "On GET to show for a gem" do
       setup do

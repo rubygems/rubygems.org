@@ -206,6 +206,7 @@ class Version < ActiveRecord::Base
       built_at: spec.date,
       required_rubygems_version: spec.required_rubygems_version.to_s,
       required_ruby_version: spec.required_ruby_version.to_s,
+      extensions: !spec.extensions.empty?,
       indexed: true
     )
   end
@@ -250,6 +251,7 @@ class Version < ActiveRecord::Base
       'platform'         => platform,
       'rubygems_version' => required_rubygems_version,
       'ruby_version'     => required_ruby_version,
+      'extensions'       => extensions,
       'prerelease'       => prerelease,
       'licenses'         => licenses,
       'requirements'     => requirements,

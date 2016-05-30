@@ -98,6 +98,8 @@ FactoryGirl.define do
     rubygem
     size 1024
     sha256 "tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g="
+    extensions false
+  end
 
     trait :yanked do
       indexed false
