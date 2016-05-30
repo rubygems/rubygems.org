@@ -135,16 +135,12 @@
         </i>
       </h2>
 
-      <h2 class="gem__ruby-version__heading t-list__heading">
-        <%= t '.native_extensions' %>:
-        <i class="gem__ruby-version">
-          <% if !@latest_version.extensions.nil? %>
-              <%= @latest_version.extensions ? 'Yes' : 'None' %>
-          <% else %>
-              Unknown
-          <% end %>
-        </i>
-      </h2>
+      <% if @latest_version.extensions %>
+        <h2 class="gem__ruby-version__heading t-list__heading">
+          <%= t('.native_extensions') %>:
+          <i class="gem__ruby-version">Yes</i>
+        </h2>
+      <% end %>
 
       <h3 class="t-list__heading"><%= t '.links.header' %>:</h3>
       <div class="t-list__items">

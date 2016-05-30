@@ -251,6 +251,7 @@ class Version < ActiveRecord::Base
       'platform'         => platform,
       'rubygems_version' => required_rubygems_version,
       'ruby_version'     => required_ruby_version,
+      'extensions'       => extensions,
       'prerelease'       => prerelease,
       'licenses'         => licenses,
       'requirements'     => requirements,

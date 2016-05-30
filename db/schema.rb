@@ -213,7 +213,7 @@ ActiveRecord::Schema.define(version: 20160528065150) do
     t.string   "sha256"
     t.hstore   "metadata",          default: {},   null: false
     t.string   "required_rubygems_version"
-    t.boolean  "extensions"
+    t.boolean  "extensions",        default: false
   end
 
   add_index "versions", ["built_at"], name: "index_versions_on_built_at", using: :btree
