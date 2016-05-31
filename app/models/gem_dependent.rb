@@ -62,7 +62,7 @@ class GemDependent
         rubygems_version:      dep_key.required_rubygems_version,
         ruby_version:          dep_key.required_ruby_version,
         checksum:              dep_key.sha256,
-        created_at:            dep_key.created_at,
+        created_at:            Time.zone.parse(dep_key.created_at).strftime('%Y-%m-%d %H:%M:%S %z'),
         dependencies:          gem_deps
       }
     end

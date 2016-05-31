@@ -34,7 +34,7 @@ class GemDependentTest < ActiveSupport::TestCase
         rubygems_version:    ">= 2.6.3",
         ruby_version:        ">= 2.0.0",
         checksum:            "tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=",
-        created_at:          "2016-05-24 00:00:00",
+        created_at:          "2016-05-24 00:00:00 +0000",
         dependencies: []
       }
 
@@ -103,7 +103,7 @@ class GemDependentTest < ActiveSupport::TestCase
           rubygems_version:    ">= 2.6.3",
           ruby_version:        ">= 2.0.0",
           checksum:            "tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=",
-          created_at:          "2016-05-24 00:00:00",
+          created_at:          "2016-05-24 00:00:00 +0000",
           dependencies: []
         }
 
