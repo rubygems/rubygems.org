@@ -51,7 +51,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
         'rubygems_version'  => '>= 2.6.3',
         'ruby_version'      => '>= 2.0.0',
         'checksum'          => 'tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=',
-        'created_at'        => '2016-05-24T00:00:00.000Z',
+        'created_at'        => '2016-05-24 00:00:00 +0000',
         'dependencies'      => []
       }]
 
@@ -78,23 +78,23 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
       result = [
         {
           'name'              => 'myrails',
-          'number'            => '3.0.0',
-          'platform'          => 'ruby',
-          'rubygems_version'  => '>= 2.6.3',
-          'ruby_version'      => '>= 2.0.0',
-          'checksum'          => 'tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=',
-          'created_at'        => '2016-05-24T00:00:00.000Z',
-          'dependencies'      => []
-        },
-
-        {
-          'name'              => 'myrails',
           'number'            => '1.0.0',
           'platform'          => 'ruby',
           'rubygems_version'  => '>= 2.6.3',
           'ruby_version'      => '>= 2.0.0',
           'checksum'          => 'tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=',
-          'created_at'        => '2016-05-24T00:00:00.000Z',
+          'created_at'        => '2016-05-24 00:00:00 +0000',
+          'dependencies'      => []
+        },
+
+        {
+          'name'              => 'myrails',
+          'number'            => '3.0.0',
+          'platform'          => 'ruby',
+          'rubygems_version'  => '>= 2.6.3',
+          'ruby_version'      => '>= 2.0.0',
+          'checksum'          => 'tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=',
+          'created_at'        => '2016-05-24 00:00:00 +0000',
           'dependencies'      => []
         },
 
@@ -105,7 +105,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
           'rubygems_version'  => '>= 2.6.3',
           'ruby_version'      => '>= 2.0.0',
           'checksum'          => 'tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=',
-          'created_at'        => '2016-05-24T00:00:00.000Z',
+          'created_at'        => '2016-05-24 00:00:00 +0000',
           'dependencies'      => []
         }
       ]
@@ -173,7 +173,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
         rubygems_version:  '>= 2.6.3',
         ruby_version:      '>= 2.0.0',
         checksum:          'tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=',
-        created_at:        Date.new(2016, 05, 24),
+        created_at:        "2016-05-24 00:00:00 +0000",
         dependencies:      []
       }]
 
