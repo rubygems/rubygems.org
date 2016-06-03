@@ -315,7 +315,11 @@ class Version < ActiveRecord::Base
   end
 
   def sha256_hex
-    sha256.unpack("m0").first.unpack("H*").first if sha256
+    Version._sha256_hex(sha256) if sha256
+  end
+
+  def self._sha256_hex(raw)
+    raw.unpack("m0").first.unpack("H*").first
   end
 
   def recalculate_sha256
