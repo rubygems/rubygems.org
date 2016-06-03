@@ -11,12 +11,6 @@ module RubygemSearchable
 
     delegate :index_document, to: :__elasticsearch__
     delegate :update_document, to: :__elasticsearch__
-    delegate :delete_document, to: :__elasticsearch__
-
-    # These are not used, because we trigger the ES index from the Pusher class
-    # after_commit -> { delay.index_document  }, on: :create
-    # after_commit -> { delay.update_document }, on: :update
-    # after_commit -> { delay.delete_document }, on: :destroy
 
     def as_indexed_json(_options = {})
       most_recent_version = versions.most_recent
@@ -83,13 +77,7 @@ module RubygemSearchable
                 end
 
                 # only return gems that are not yanked
-                filter do
-                  bool :yanked do
-                    must do
-                      term yanked: false
-                    end
-                  end
-                end
+                filter { term yanked: false }
               end
             end
 
