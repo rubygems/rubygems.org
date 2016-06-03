@@ -50,7 +50,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
         'platform'          => 'ruby',
         'rubygems_version'  => '>= 2.6.3',
         'ruby_version'      => '>= 2.0.0',
-        'checksum'          => 'tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=',
+        'checksum'          => 'b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78',
         'created_at'        => '2016-05-24 00:00:00 +0000',
         'dependencies'      => []
       }]
@@ -82,7 +82,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
           'platform'          => 'ruby',
           'rubygems_version'  => '>= 2.6.3',
           'ruby_version'      => '>= 2.0.0',
-          'checksum'          => 'tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=',
+          'checksum'          => 'b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78',
           'created_at'        => '2016-05-24 00:00:00 +0000',
           'dependencies'      => []
         },
@@ -93,7 +93,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
           'platform'          => 'ruby',
           'rubygems_version'  => '>= 2.6.3',
           'ruby_version'      => '>= 2.0.0',
-          'checksum'          => 'tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=',
+          'checksum'          => 'b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78',
           'created_at'        => '2016-05-24 00:00:00 +0000',
           'dependencies'      => []
         },
@@ -104,7 +104,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
           'platform'          => 'ruby',
           'rubygems_version'  => '>= 2.6.3',
           'ruby_version'      => '>= 2.0.0',
-          'checksum'          => 'tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=',
+          'checksum'          => 'b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78',
           'created_at'        => '2016-05-24 00:00:00 +0000',
           'dependencies'      => []
         }
@@ -172,7 +172,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
         platform:          'ruby',
         rubygems_version:  '>= 2.6.3',
         ruby_version:      '>= 2.0.0',
-        checksum:          'tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=',
+        checksum:          'b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78',
         created_at:        "2016-05-24 00:00:00 +0000",
         dependencies:      []
       }]
