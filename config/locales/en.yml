@@ -143,6 +143,7 @@ en:
       copy_to_clipboard: Copy to clipboard
       copied: Copied!
       required_ruby_version: Required Ruby Version
+      required_rubygems_version: Required Rubygems Version
 
   searches:
     show:
