@@ -9,6 +9,8 @@ class DeletionTest < ActiveSupport::TestCase
     @user = create(:user)
     Pusher.new(@user, gem_file).process
     @version = Version.last
+    Rubygem.__elasticsearch__.create_index! force: true
+    Rubygem.import
   end
 
   should "be indexed" do
@@ -57,6 +59,19 @@ class DeletionTest < ActiveSupport::TestCase
       assert_received(Fastly, :purge) { |path| path.with("versions") }
       assert_received(Fastly, :purge) { |path| path.with("names") }
     end
+  end
+
+  should "enque job for updating ES index and update index" do
+    assert_difference 'Delayed::Job.count', 2 do
+      delete_gem
+    end
+
+    Delayed::Worker.new.work_off
+
+    response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
+                                                    type: 'rubygem',
+                                                    id: @version.rubygem_id
+    assert_equal true, response['_source']['yanked']
   end
 
   should "record version metadata" do

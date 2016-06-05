@@ -271,9 +271,9 @@ class PusherTest < ActiveSupport::TestCase
 
     context "successfully saving a gemcutter" do
       setup do
-        @rubygem = create(:rubygem)
+        @rubygem = create(:rubygem, name: 'gemsgemsgems')
         @cutter.stubs(:rubygem).returns @rubygem
-        create(:version, rubygem: @rubygem, number: '0.1.1')
+        create(:version, rubygem: @rubygem, number: '0.1.1', summary: 'old summary')
         @cutter.stubs(:version).returns @rubygem.versions[0]
         @rubygem.stubs(:update_attributes_from_gem_specification!)
         Rails.cache.stubs(:delete)
@@ -311,6 +311,51 @@ class PusherTest < ActiveSupport::TestCase
         assert_received(Fastly, :purge) { |path| path.with("info/#{@rubygem.name}") }
         assert_received(Fastly, :purge) { |path| path.with("versions") }
         assert_received(Fastly, :purge) { |path| path.with("names") }
+      end
+
+      should "enque job for updating ES index and spec index" do
+        assert_difference 'Delayed::Job.count', 2 do
+          @cutter.save
+        end
+      end
+
+      should "create rubygem index" do
+        Delayed::Worker.new.work_off
+        response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
+                                                        type:  'rubygem',
+                                                        id:    @rubygem.id
+        expected_response = {
+          'name'                  => 'gemsgemsgems',
+          'yanked'                => false,
+          'summary'               => 'old summary',
+          'description'           => 'Some awesome gem',
+          'downloads'             => 0,
+          'latest_version_number' => '0.1.1'
+        }
+
+        assert_equal expected_response, response['_source']
+      end
+    end
+
+    context 'pushing a new version' do
+      setup do
+        @rubygem = create(:rubygem)
+        @cutter.stubs(:rubygem).returns @rubygem
+        create(:version, rubygem: @rubygem, summary: 'old summary')
+        version = create(:version, rubygem: @rubygem, summary: 'new summary')
+        @cutter.stubs(:version).returns version
+        @rubygem.stubs(:update_attributes_from_gem_specification!)
+        @cutter.stubs(:version).returns version
+        Indexer.any_instance.stubs(:write_gem)
+        @cutter.save
+      end
+
+      should "update rubygem index" do
+        Delayed::Worker.new.work_off
+        response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
+                                                        type:  'rubygem',
+                                                        id:    @rubygem.id
+        assert_equal 'new summary', response['_source']['summary']
       end
     end
   end
