@@ -135,6 +135,15 @@
         </i>
       </h2>
 
+      <% if @latest_version.required_rubygems_version != '>= 0' %>
+        <h2 class="gem__ruby-version__heading t-list__heading">
+          <%= t('.required_rubygems_version') %>:
+          <i class="gem__ruby-version">
+              <%= @latest_version.required_rubygems_version %>
+          </i>
+        </h2>
+      <% end %>
+
       <h3 class="t-list__heading"><%= t '.links.header' %>:</h3>
       <div class="t-list__items">
         <%= link_to t('edit'), edit_rubygem_path(@rubygem), :class => "gem__link t-list__item", :id => "edit" if @rubygem.owned_by?(current_user) %>
