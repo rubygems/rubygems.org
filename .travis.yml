@@ -6,8 +6,7 @@ cache:
     - vendor/cache
 
 rvm:
-  - 2.2.4
-  - 2.3.0
+  - 2.3.1
   - ruby-head
 
 services:
