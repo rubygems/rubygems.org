@@ -17,7 +17,7 @@ HTTP_ERRORS = [Timeout::Error,
                Net::ProtocolError,
                OpenURI::HTTPError].freeze
 
-SMTP_SERVER_ERRORS = [TimeoutError,
+SMTP_SERVER_ERRORS = [Timeout::Error,
                       IOError,
                       Net::SMTPUnknownError,
                       Net::SMTPServerBusy,
