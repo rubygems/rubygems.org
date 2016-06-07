@@ -1,6 +1,20 @@
 require 'test_helper'
 
 class SearchesControllerTest < ActionController::TestCase
+  def seed_es_index
+    @sinatra = create(:rubygem, name: 'sinatra')
+    @sinatra_redux = create(:rubygem, name: 'sinatra-redux')
+    @brando = create(:rubygem, name: 'brando')
+    create(:version, rubygem: @sinatra)
+    create(:version, rubygem: @sinatra_redux)
+    create(:version, rubygem: @brando)
+
+    @sinatra.index_document
+    @sinatra_redux.index_document
+    @brando.index_document
+    Rubygem.__elasticsearch__.refresh_index!
+  end
+
   setup do
     Rubygem.__elasticsearch__.create_index! force: true
   end
@@ -29,12 +43,7 @@ class SearchesControllerTest < ActionController::TestCase
 
   context 'on GET to show with search parameters' do
     setup do
-      @sinatra = create(:rubygem, name: "sinatra")
-      @sinatra_redux = create(:rubygem, name: "sinatra-redux")
-      @brando = create(:rubygem, name: "brando")
-      create(:version, rubygem: @sinatra)
-      create(:version, rubygem: @sinatra_redux)
-      create(:version, rubygem: @brando)
+      seed_es_index
       get :show, query: "sinatra"
     end
 
@@ -55,16 +64,7 @@ class SearchesControllerTest < ActionController::TestCase
 
   context 'on GET to show with search parameters and ES enabled' do
     setup do
-      @sinatra = create(:rubygem, name: 'sinatra')
-      @sinatra_redux = create(:rubygem, name: 'sinatra-redux')
-      @brando = create(:rubygem, name: 'brando')
-      create(:version, rubygem: @sinatra)
-      create(:version, rubygem: @sinatra_redux)
-      create(:version, rubygem: @brando)
-      @sinatra.index_document
-      @sinatra_redux.index_document
-      @brando.index_document
-      Rubygem.__elasticsearch__.refresh_index!
+      seed_es_index
       @request.cookies['new_search'] = 'true'
       get :show, query: 'sinatra'
     end
@@ -110,16 +110,7 @@ class SearchesControllerTest < ActionController::TestCase
 
   context 'on GET to show with search parameters and no results' do
     setup do
-      @sinatra = create(:rubygem, name: "sinatra")
-      @sinatra_redux = create(:rubygem, name: "sinatra-redux")
-      @brando = create(:rubygem, name: "brando")
-      create(:version, rubygem: @sinatra)
-      create(:version, rubygem: @sinatra_redux)
-      create(:version, rubygem: @brando)
-      @sinatra.index_document
-      @sinatra_redux.index_document
-      @brando.index_document
-      Rubygem.__elasticsearch__.refresh_index!
+      seed_es_index
       @request.cookies['new_search'] = 'true'
       get :show, query: "sinatre"
     end
@@ -155,6 +146,29 @@ class SearchesControllerTest < ActionController::TestCase
         assert_response :success
         assert page.has_content?('Advanced search is currently unavailable')
         assert page.has_content?('Displaying')
+      end
+    end
+  end
+
+  context 'GET autocomplete' do
+    setup do
+      seed_es_index
+    end
+
+    should 'return suggestions' do
+      get :autocomplete, format: 'json', query: 'sin'
+      assert_equal json, %w(sinatra sinatra-redux)
+    end
+
+    should 'return empty array on no suggestions' do
+      get :autocomplete, format: 'json', query: 'blabla'
+      assert_equal json, []
+    end
+
+    should 'do not throw on elasticsearch down' do
+      Toxiproxy[:elasticsearch].down do
+        get :autocomplete, format: 'json', query: 'sinatra'
+        assert_equal json, []
       end
     end
   end

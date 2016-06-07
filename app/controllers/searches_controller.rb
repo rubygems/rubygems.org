@@ -13,6 +13,12 @@ class SearchesController < ApplicationController
     redirect_to rubygem_path(@exact_match) if @gems == [@exact_match]
   end
 
+  def autocomplete
+    render json: Rubygem.search(params[:query], es: true).map(&:name)
+  rescue RubygemSearchable::SearchDownError
+    render json: []
+  end
+
   private
 
   def es_enabled?

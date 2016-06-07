@@ -8,4 +8,6 @@
 //= require jquery_ujs
 //= require jquery.color
 //= require clipboard
+//= require twitter/typeahead.min
+//= require search_typeahead
 //= require_tree .

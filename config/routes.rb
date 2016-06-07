@@ -123,7 +123,9 @@ Rails.application.routes.draw do
   ################################################################################
   # UI
   scope constraints: { format: :html }, defaults: { format: 'html' } do
-    resource :search,    only: :show
+    resource :search,    only: :show do
+      get :autocomplete, constraints: { format: 'json' }
+    end
     resource :dashboard, only: :show, constraints: { format: /html|atom/ }
     resources :profiles, only: :show
     resource :profile, only: [:edit, :update]

@@ -20,6 +20,10 @@ class ActiveSupport::TestCase
     Capybara::Node::Simple.new(@response.body)
   end
 
+  def json
+    ActiveSupport::JSON.decode @response.body
+  end
+
   def requires_toxiproxy
     skip("Toxiproxy is not running, but was required for this test.") unless Toxiproxy.running?
   end
