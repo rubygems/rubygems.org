@@ -69,10 +69,10 @@ module RubygemSearchable
               filtered do
                 # Main query, search in name, summary, description
                 query do
-                  multi_match do
+                  query_string do
                     query q
                     fields ['name^3', 'summary^1', 'description']
-                    operator 'and'
+                    default_operator 'and'
                   end
                 end
 
