@@ -19,9 +19,9 @@ class User < ActiveRecord::Base
   has_many :subscribed_gems, -> { order("name ASC") }, through: :subscriptions, source: :rubygem
 
   has_many :deletions
-  has_many :ownerships
-  has_many :subscriptions
-  has_many :web_hooks
+  has_many :ownerships, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
+  has_many :web_hooks, dependent: :destroy
 
   after_validation :set_unconfirmed_email, if: :email_changed?, on: :update
   before_create :generate_api_key, :generate_confirmation_token

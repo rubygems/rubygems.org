@@ -165,6 +165,41 @@ class ProfilesControllerTest < ActionController::TestCase
         end
       end
     end
+    context "on DELETE to destroy" do
+      context "correct password" do
+        should "delete user" do
+          assert_difference 'User.count', -1 do
+            delete :destroy, user: { password: @user.password }
+          end
+        end
+
+        context "redirect path and flash" do
+          setup do
+            delete :destroy, user: { password: @user.password }
+          end
+
+          should redirect_to("the homepage") { root_url }
+          should set_flash.to("Your account has been successfully deleted.")
+        end
+      end
+
+      context "incorrect password" do
+        should "not delete user" do
+          assert_no_difference 'User.count' do
+            post :destroy, user: { password: 'youshallnotpass' }
+          end
+        end
+
+        context "redirect path and flash" do
+          setup do
+            delete :destroy, user: { password: 'youshallnotpass' }
+          end
+
+          should redirect_to('the profile edit page') { edit_profile_path }
+          should set_flash.to("Something went wrong. Please try again after some time.")
+        end
+      end
+    end
   end
 
   context "On GET to edit without being signed in" do

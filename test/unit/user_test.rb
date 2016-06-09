@@ -7,12 +7,12 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  should have_many(:ownerships)
+  should have_many(:ownerships).dependent(:destroy)
   should have_many(:rubygems).through(:ownerships)
   should have_many(:subscribed_gems).through(:subscriptions)
   should have_many(:deletions)
-  should have_many(:subscriptions)
-  should have_many(:web_hooks)
+  should have_many(:subscriptions).dependent(:destroy)
+  should have_many(:web_hooks).dependent(:destroy)
 
   context "validations" do
     context "handle" do
@@ -259,6 +259,11 @@ class UserTest < ActiveSupport::TestCase
     should "total their number of pushed rubygems except yanked gems" do
       @rubygems.first.versions.first.update! indexed: false
       assert_equal @user.total_rubygems_count, 2
+    end
+
+    should "not include gems with more than one owner" do
+      @rubygems.first.owners << create(:user)
+      assert_equal 2, @user.only_owner_gems.count
     end
   end
 
