@@ -14,9 +14,6 @@ Rails.application.routes.draw do
           number: /#{Gem::Version::VERSION_PATTERN}(?=\.json\z)|#{Gem::Version::VERSION_PATTERN}/
         }
       end
-      get '/versions' => 'compact_index#versions'
-      get '/info/:gem_name' => 'compact_index#info', as: :info
-      get '/names' => 'compact_index#names'
     end
 
     namespace :v1 do
@@ -101,6 +98,9 @@ Rails.application.routes.draw do
     end
   end
 
+  get '/versions' => 'api/compact_index#versions'
+  get '/info/:gem_name' => 'api/compact_index#info', as: :info
+  get '/names' => 'api/compact_index#names'
   ################################################################################
   # API v0
 

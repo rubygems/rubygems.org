@@ -36,13 +36,13 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
   end
 
   test "/names output" do
-    get api_v2_names_path
+    get names_path
     assert_response :success
     assert_equal "---\ngemA\ngemA1\ngemA2\ngemB\n", @response.body
   end
 
   test "/versions output" do
-    get api_v2_versions_path
+    get versions_path
     assert_response :success
 
     file_contents = File.open("config/versions.list").read
@@ -55,7 +55,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
   test "/versions with new gem" do
     rubygem = create(:rubygem, name: 'gemC')
     create(:version, rubygem: rubygem, number: '1.0.0')
-    get api_v2_versions_path
+    get versions_path
     assert_response :success
     assert_match(/gemC 1.0.0 \n$/, @response.body)
   end
@@ -67,13 +67,13 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     rubygem = create(:rubygem, name: 'AAA')
     create(:version, rubygem: rubygem, number: '1.0.0')
 
-    get api_v2_versions_path
+    get versions_path
     assert_response :success
     assert_match(/ZZZ 1.0.0 \nAAA/, @response.body)
   end
 
   test "/info with existing gem" do
-    get api_v2_info_path(gem_name: @rubygem.name)
+    get info_path(gem_name: @rubygem.name)
     assert_response :success
     assert_equal "---\n" \
       "1.0.0 |checksum:checksum1,rubygems:>= 2.6.3\n" \
@@ -84,7 +84,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
   end
 
   test "/info with unexisting gem" do
-    get api_v2_info_path(gem_name: 'donotexist')
+    get info_path(gem_name: 'donotexist')
     assert_response :not_found
   end
 end
