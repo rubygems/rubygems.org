@@ -69,6 +69,7 @@ module Patterns
     rexml
     rinda
     rss
+    ruby
     rubygems
     scanf
     securerandom
