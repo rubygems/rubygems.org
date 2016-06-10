@@ -295,10 +295,6 @@ class Version < ActiveRecord::Base
     Gem::Version.new(number)
   end
 
-  def to_index
-    [rubygem.name, to_gem_version, platform]
-  end
-
   def to_install
     command = "gem install #{rubygem.name}"
     latest = if prerelease
