@@ -33,7 +33,7 @@ class Deletion < ActiveRecord::Base
   end
 
   def remove_from_index
-    @version.update!(indexed: false)
+    @version.update!(indexed: false, yanked_at: Time.now.utc)
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
   end
 

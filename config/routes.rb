@@ -98,6 +98,9 @@ Rails.application.routes.draw do
     end
   end
 
+  get '/versions' => 'api/compact_index#versions'
+  get '/info/:gem_name' => 'api/compact_index#info', as: :info
+  get '/names' => 'api/compact_index#names'
   ################################################################################
   # API v0
 

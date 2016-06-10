@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160528065150) do
+ActiveRecord::Schema.define(version: 20160530084904) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -213,6 +213,8 @@ ActiveRecord::Schema.define(version: 20160528065150) do
     t.string   "sha256"
     t.hstore   "metadata",          default: {},   null: false
     t.string   "required_rubygems_version"
+    t.string   "info_checksum"
+    t.datetime "yanked_at"
   end
 
   add_index "versions", ["built_at"], name: "index_versions_on_built_at", using: :btree

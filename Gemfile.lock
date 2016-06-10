@@ -98,6 +98,7 @@ GEM
     clearance-deprecated_password_strategies (1.10.1)
       activesupport
       clearance (>= 1.10)
+    compact_index (0.10.0)
     concurrent-ruby (1.0.2)
     daemons (1.2.3)
     dalli (2.7.6)
@@ -300,6 +301,7 @@ DEPENDENCIES
   capybara
   clearance
   clearance-deprecated_password_strategies
+  compact_index (~> 0.10.0)
   daemons
   dalli
   delayed_job
