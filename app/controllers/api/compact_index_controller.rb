@@ -3,7 +3,7 @@ class Api::CompactIndexController < Api::BaseController
 
   def names
     names = Rubygem.order("name").pluck("name")
-    render text: CompactIndex.names(names)
+    render plain: CompactIndex.names(names)
   end
 
   def versions
@@ -11,12 +11,12 @@ class Api::CompactIndexController < Api::BaseController
     versions_file = CompactIndex::VersionsFile.new(versions_file_location)
     from_date = versions_file.updated_at
     extra_gems = Rubygem.compact_index_versions(from_date)
-    render text: CompactIndex.versions(versions_file, extra_gems)
+    render plain: CompactIndex.versions(versions_file, extra_gems)
   end
 
   def info
     return unless stale?(@rubygem)
     info_params = @rubygem.compact_index_info
-    render text: CompactIndex.info(info_params)
+    render plain: CompactIndex.info(info_params)
   end
 end
