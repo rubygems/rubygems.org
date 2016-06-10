@@ -33,6 +33,6 @@
       <%= form.label :password, "Password", class: 'form__label' %>
       <%= form.password_field :password, placeholder: 'password', class: 'form__input' %>
     </div>
-    <%= form.submit t('.confirm'), class: 'form__submit' %>
+    <%= form.submit t('.confirm'), data: { confirm: "This action can't be UNDONE! Are you sure?" }, class: 'form__submit' %>
   <% end %>
 </div>

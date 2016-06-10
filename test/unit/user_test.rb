@@ -280,4 +280,24 @@ class UserTest < ActiveSupport::TestCase
       assert_equal [@user.payload], YAML.load([@user].to_yaml)
     end
   end
+
+  context "destroy" do
+    setup do
+      @user = create(:user)
+      @rubygem = create(:rubygem)
+      create(:ownership, rubygem: @rubygem, user: @user)
+      @version = create(:version, rubygem: @rubygem)
+    end
+
+    should "record deletion" do
+      assert_difference 'Deletion.count', 1 do
+        @user.destroy
+      end
+    end
+
+    should "unown rubygem" do
+      @user.destroy
+      assert_equal true, @rubygem.unowned?
+    end
+  end
 end

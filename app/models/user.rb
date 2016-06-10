@@ -14,6 +14,7 @@ class User < ActiveRecord::Base
     :twitter_username
   ].freeze
 
+  before_destroy :yank_gems
   has_many :rubygems, through: :ownerships
 
   has_many :subscribed_gems, -> { order("name ASC") }, through: :subscriptions, source: :rubygem
@@ -160,5 +161,12 @@ class User < ActiveRecord::Base
 
   def unconfirmed_email_exists?
     User.where(unconfirmed_email: email).exists?
+  end
+
+  def yank_gems
+    versions_to_yank = only_owner_gems.map(&:versions).flatten
+    versions_to_yank.each do |v|
+      deletions.create(version: v)
+    end
   end
 end
