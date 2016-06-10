@@ -62,10 +62,6 @@ class Version < ActiveRecord::Base
       .by_created_at
   end
 
-  def self.with_deps
-    includes(:dependencies)
-  end
-
   def self.latest
     where(latest: true)
   end

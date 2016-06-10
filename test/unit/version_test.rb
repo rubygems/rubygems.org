@@ -157,7 +157,7 @@ class VersionTest < ActiveSupport::TestCase
       @dependency = create(:rubygem)
       @version = build(:version, rubygem: @rubygem, number: "1.0.0", platform: "ruby")
       @version.dependencies << create(:dependency, version: @version, rubygem: @dependency)
-      refute Version.with_deps.first.dependencies.empty?
+      refute Version.first.dependencies.empty?
     end
 
     should "sort dependencies alphabetically" do
