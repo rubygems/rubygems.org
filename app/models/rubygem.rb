@@ -81,10 +81,6 @@ class Rubygem < ActiveRecord::Base
     letter =~ /\A[A-Za-z]\z/ ? letter.upcase : 'A'
   end
 
-  def self.versions_key(name)
-    "r:#{name}"
-  end
-
   def self.by_name
     order(name: :asc)
   end
