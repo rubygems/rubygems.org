@@ -15,11 +15,12 @@ module RubygemSearchable
     def as_indexed_json(_options = {})
       most_recent_version = versions.most_recent
       {
-        name: name,
-        yanked: !versions.any?(&:indexed?),
-        summary: most_recent_version.try(:summary),
-        description: most_recent_version.try(:description),
-        downloads: downloads
+        name:                  name,
+        yanked:                !versions.any?(&:indexed?),
+        summary:               most_recent_version.try(:summary),
+        description:           most_recent_version.try(:description),
+        downloads:             downloads,
+        latest_version_number: most_recent_version.number
       }
     end
 
@@ -47,10 +48,10 @@ module RubygemSearchable
 
     def self.search(query, es: false, page: 1)
       if es
-        result = elastic_search(query).page(page).records
+        result = elastic_search(query).page(page)
         # Now we need to trigger the ES query so we can fallback if it fails
         # rather than lazy loading from the view
-        result.load
+        result.response
         result
       else
         legacy_search(query).with_versions.paginate(page: page)
@@ -86,7 +87,7 @@ module RubygemSearchable
           end
         end
 
-        source %w(name summary description downloads)
+        source %w(name summary description downloads latest_version_number)
 
         # Return suggestions unless there's no query from the user
         unless q.blank?

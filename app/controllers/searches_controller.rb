@@ -10,7 +10,7 @@ class SearchesController < ApplicationController
       @gems = Rubygem.search(params[:query], es: false, page: @page)
     end
     @exact_match = Rubygem.name_is(params[:query]).with_versions.first
-    redirect_to rubygem_path(@exact_match) if @gems == [@exact_match]
+    redirect_to rubygem_path(@exact_match) if @exact_match && @gems.size == 1
   end
 
   private
