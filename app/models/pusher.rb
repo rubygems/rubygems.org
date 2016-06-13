@@ -110,7 +110,7 @@ class Pusher
     }.to_json
 
     begin
-      timeout(5) do
+      ::Timeout.timeout(5) do
         to.post @bundler_api_url,
           json,
           :timeout        => 5,
