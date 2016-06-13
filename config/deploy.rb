@@ -10,7 +10,7 @@ set :git_strategy, Capistrano::SubmoduleStrategy
 set :pty, true
 set :assets_roles, [:app]
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/cache', 'tmp/sockets')
-set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secret.rb')
+set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secret.rb', 'config/versions.list')
 
 namespace :deploy do
   desc 'Remove git cache for clean deploy'
