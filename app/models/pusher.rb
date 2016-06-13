@@ -98,7 +98,7 @@ class Pusher
     "<Pusher #{attrs.join(' ')}>"
   end
 
-  def update_remote_bundler_api(to = RestClient)
+  def update_remote_bundler_api(to = RestClient::Request)
     return unless @bundler_api_url
 
     json = {
@@ -110,13 +110,12 @@ class Pusher
     }.to_json
 
     begin
-      ::Timeout.timeout(5) do
-        to.post @bundler_api_url,
-          json,
-          :timeout        => 5,
-          :open_timeout   => 5,
-          'Content-Type'  => 'application/json'
-      end
+      to.execute method: :post,
+                 url: @bundler_api_url,
+                 payload: json,
+                 timeout: 5,
+                 open_timeout: 5,
+                 header: { 'Content-Type' => 'application/json' }
     rescue StandardError, Interrupt
       false
     end

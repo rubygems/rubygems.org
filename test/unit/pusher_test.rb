@@ -142,10 +142,10 @@ class PusherTest < ActiveSupport::TestCase
       obj = mock
       post_data = nil
 
-      obj.stubs(:post).with { |*value| post_data = value }
+      obj.stubs(:execute).with { |*value| post_data = value }
       @cutter.update_remote_bundler_api obj
 
-      _, payload = post_data
+      payload = post_data.first[:payload]
 
       params = JSON.load payload
 
