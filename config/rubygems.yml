@@ -20,6 +20,7 @@ staging:
   s3_bucket: oregon.staging.s3.rubygems.org
   s3_region: us-west-2
   s3_endpoint: s3-us-west-2.amazonaws.com
+  versions_file_location: "./config/versions.list"
 
 production:
   protocol: https
@@ -27,3 +28,4 @@ production:
   s3_bucket: oregon.production.s3.rubygems.org
   s3_region: us-west-2
   s3_endpoint: s3-us-west-2.amazonaws.com
+  versions_file_location: "./config/versions.list"
