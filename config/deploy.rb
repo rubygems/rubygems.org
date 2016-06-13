@@ -48,3 +48,14 @@ namespace :maintenance do
     end
   end
 end
+
+namespace :memcached do
+  desc "Flushes memcached instance cache"
+  task :flush do
+    on roles(:app, select: :primary) do
+      within release_path do
+        execute :rake, 'memcached:flush'
+      end
+    end
+  end
+end
