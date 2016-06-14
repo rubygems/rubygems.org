@@ -35,10 +35,15 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     create(:version, rubygem: @rubygem2, number: '1.0.0')
   end
 
+  teardown do
+    Rails.cache.clear
+  end
+
   test "/names output" do
     get names_path
     assert_response :success
     assert_equal "---\ngemA\ngemA1\ngemA2\ngemB\n", @response.body
+    assert_equal %w(gemA gemA1 gemA2 gemB), Rails.cache.read('names')
   end
 
   test "/names partial response" do
@@ -51,11 +56,13 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     get versions_path
     assert_response :success
 
-    file_contents = File.open("config/versions.list").read
+    versions_file_location = Rails.application.config.rubygems['versions_file_location']
+    file_contents = File.open(versions_file_location).read
     assert_match file_contents, @response.body
     gem_a_match = /gemA 1.0.0 \ngemA 1.2.0 \ngemA 2.0.0 \ngemA 2.1.0 \n/
     gem_b_match = /gemB 1.0.0 \n/
     assert_match(/#{gem_a_match}#{gem_b_match}/, @response.body)
+    assert_not_nil Rails.cache.read('versions')
   end
 
   test "/versions with new gem" do
@@ -87,12 +94,15 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
   test "/info with existing gem" do
     get info_path(gem_name: @rubygem.name)
     assert_response :success
-    assert_equal "---\n" \
-      "1.0.0 |checksum:checksum1,rubygems:>= 2.6.3\n" \
-      "1.2.0 |checksum:checksum1,ruby:>= 2.0.0,rubygems:>1.9\n" \
-      "2.0.0 gemA1:= 1.0.0|checksum:checksum2,rubygems:>= 2.6.3\n" \
-      "2.1.0 gemA1:= 1.0.0,gemA2:= 1.0.0|checksum:checksum2,ruby:>= 2.0.0,rubygems:>=2.0\n",
-      @response.body
+    response = <<-eos
+---
+1.0.0 |checksum:checksum1,rubygems:>= 2.6.3
+1.2.0 |checksum:checksum1,ruby:>= 2.0.0,rubygems:>1.9
+2.0.0 gemA1:= 1.0.0|checksum:checksum2,rubygems:>= 2.6.3
+2.1.0 gemA1:= 1.0.0,gemA2:= 1.0.0|checksum:checksum2,ruby:>= 2.0.0,rubygems:>=2.0
+eos
+    assert_equal response, @response.body
+    assert_equal response, CompactIndex.info(Rails.cache.read("info/#{@rubygem.name}"))
   end
 
   test "/info with unexisting gem" do

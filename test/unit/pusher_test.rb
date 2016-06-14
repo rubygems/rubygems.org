@@ -296,12 +296,17 @@ class PusherTest < ActiveSupport::TestCase
 
       should "expire API memcached" do
         Rails.cache.write("deps/v1/#{@rubygem.name}", "omg!")
-        refute_nil Rails.cache.fetch("deps/v1/#{@rubygem.name}")
+        Rails.cache.write("info/#{@rubygem.name}", "It's")
+        Rails.cache.write("versions", "over")
+        Rails.cache.write("names", "9000")
 
         create(:version, rubygem: @rubygem, number: '0.1.2')
         @cutter.save
 
-        assert_nil Rails.cache.fetch("deps/v1/#{@rubygem.name}")
+        assert_nil Rails.cache.read("deps/v1/#{@rubygem.name}")
+        assert_nil Rails.cache.read("info/#{@rubygem.name}")
+        assert_nil Rails.cache.read("versions")
+        assert_nil Rails.cache.read("names")
       end
     end
   end
