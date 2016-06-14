@@ -17,7 +17,7 @@
     <% content_for :head do %>
       <link rel="prerender prefetch" href="<%= rubygem_url(@exact_match) %>">
     <% end %>
-    <%= render @exact_match %>
+    <%= render partial: 'rubygems/rubygem', object: @exact_match %>
   <% end %>
 
   <header class="gems__header push">
@@ -36,7 +36,7 @@
   <% end %>
 
   <% if @gems.present? %>
-    <%= render @gems %>
+    <%= render partial: 'rubygems/rubygem', collection: @gems %>
     <%= will_paginate @gems %>
   <% end %>
 <% end %>

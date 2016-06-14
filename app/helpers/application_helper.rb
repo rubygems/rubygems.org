@@ -11,9 +11,18 @@ module ApplicationHelper
                 title: title
   end
 
-  def short_info(version)
-    info = version.info.strip.truncate(90)
+  def short_info(rubygem)
+    info = gem_info(rubygem).strip.truncate(90)
     escape_once(sanitize(info))
+  end
+
+  def gem_info(rubygem)
+    if rubygem.respond_to?(:description)
+      [rubygem.description, rubygem.summary, "This rubygem does not have a description or summary."].find(&:present?)
+    else
+      version = rubygem.latest_version || rubygem.versions.last
+      version.info
+    end
   end
 
   def gravatar(size, id = "gravatar", user = current_user)
