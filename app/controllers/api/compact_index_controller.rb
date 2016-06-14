@@ -2,7 +2,7 @@ class Api::CompactIndexController < Api::BaseController
   before_action :find_rubygem_by_name, only: [:info]
 
   def names
-    names = Rubygem.order("name").pluck("name")
+    names = Rubygem.ordered_names
     response_body = CompactIndex.names(names)
     requested_range_for(response_body)
   end

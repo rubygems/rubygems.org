@@ -257,59 +257,39 @@ class Rubygem < ActiveRecord::Base
     versions.by_earliest_built_at.limit(1).last.built_at
   end
 
+  def self.ordered_names
+    if (response = Rails.cache.read('names'))
+      StatsD.increment "compact_index.memcached.names.hit"
+      response
+    else
+      StatsD.increment "compact_index.memcached.names.miss"
+      names = order("name").pluck("name")
+      Rails.cache.write('names', names)
+      names
+    end
+  end
+
   def self.compact_index_versions(date)
-    created_gems = Rubygem.joins(:versions)
-      .select("name, versions.created_at as date, number, platform, info_checksum")
-      .where("versions.created_at > ?", date)
-      .order("versions.created_at, versions.number, platform")
-
-    yanked_gems = Rubygem.joins(:versions)
-      .select("name, versions.yanked_at as date, '-'||number, platform, info_checksum")
-      .where("indexed is false and versions.created_at > ?", date)
-      .order("versions.created_at, versions.number, platform")
-
-    # Arel don't support yet order on unions :(
-    # https://github.com/rails/arel/issues/98
-    sql = "(#{created_gems.to_sql}) UNION (#{yanked_gems.to_sql}) ORDER BY date"
-    gems = Rubygem.find_by_sql(sql)
-
-    gems.map do |gem|
-      CompactIndex::Gem.new(gem.name, [
-                              CompactIndex::GemVersion.new(
-                                gem.number,
-                                gem.platform,
-                                gem.info_checksum
-                              )
-                            ])
+    if (response = Rails.cache.read('versions'))
+      StatsD.increment "compact_index.memcached.versions.hit"
+      response
+    else
+      StatsD.increment "compact_index.memcached.versions.miss"
+      versions_after_date = versions_after(date)
+      Rails.cache.write('versions', versions_after_date)
+      versions_after_date
     end
   end
 
   def compact_index_info
-    group_by_columns =
-      "number, platform, sha256, info_checksum, required_ruby_version, required_rubygems_version, versions.created_at"
-    dep_req_agg =
-      "string_agg(dependencies.requirements, '@' order by rubygems_dependencies.name)"
-    dep_name_agg =
-      "string_agg(rubygems_dependencies.name, ',' order by rubygems_dependencies.name) as dep_name"
-
-    result = Rubygem.includes(versions: { dependencies: :rubygem })
-      .where("rubygems.name = ? and indexed = true and (scope = 'runtime' or scope is null)", name)
-      .group(group_by_columns)
-      .order("versions.created_at, number, platform, dep_name")
-      .pluck("#{group_by_columns}, #{dep_req_agg}, #{dep_name_agg}")
-
-    result.map do |r|
-      deps = []
-      if r[7]
-        reqs = r[7].split('@')
-        dep_names = r[8].split(',')
-        raise 'BUG: different size of reqs and dep_names.' unless reqs.size == dep_names.size
-        dep_names.zip(reqs).each do |name, req|
-          deps << CompactIndex::Dependency.new(name, req)
-        end
-      end
-
-      CompactIndex::GemVersion.new(r[0], r[1], r[2], r[3], deps, r[4], r[5])
+    if (response = Rails.cache.read("info/#{name}"))
+      StatsD.increment "compact_index.memcached.info.hit"
+      response
+    else
+      StatsD.increment "compact_index.memcached.info.miss"
+      info = gem_info
+      Rails.cache.write("info/#{name}", info)
+      info
     end
   end
 
@@ -340,5 +320,61 @@ class Rubygem < ActiveRecord::Base
   def mark_unresolved
     Dependency.mark_unresolved_for(self)
     true
+  end
+
+  def gem_info
+    group_by_columns =
+      "number, platform, sha256, info_checksum, required_ruby_version, required_rubygems_version, versions.created_at"
+    dep_req_agg =
+      "string_agg(dependencies.requirements, '@' order by rubygems_dependencies.name)"
+    dep_name_agg =
+      "string_agg(rubygems_dependencies.name, ',' order by rubygems_dependencies.name) as dep_name"
+
+    result = Rubygem.includes(versions: { dependencies: :rubygem })
+      .where("rubygems.name = ? and indexed = true and (scope = 'runtime' or scope is null)", name)
+      .group(group_by_columns)
+      .order("versions.created_at, number, platform, dep_name")
+      .pluck("#{group_by_columns}, #{dep_req_agg}, #{dep_name_agg}")
+
+    result.map do |r|
+      deps = []
+      if r[7]
+        reqs = r[7].split('@')
+        dep_names = r[8].split(',')
+        raise 'BUG: different size of reqs and dep_names.' unless reqs.size == dep_names.size
+        dep_names.zip(reqs).each do |name, req|
+          deps << CompactIndex::Dependency.new(name, req)
+        end
+      end
+
+      CompactIndex::GemVersion.new(r[0], r[1], r[2], r[3], deps, r[4], r[5])
+    end
+  end
+
+  private_class_method def self.versions_after(date)
+    created_gems = Rubygem.joins(:versions)
+      .select("name, versions.created_at as date, number, platform, info_checksum")
+      .where("versions.created_at > ?", date)
+      .order("versions.created_at, versions.number, platform")
+
+    yanked_gems = Rubygem.joins(:versions)
+      .select("name, versions.yanked_at as date, '-'||number, platform, info_checksum")
+      .where("indexed is false and versions.created_at > ?", date)
+      .order("versions.created_at, versions.number, platform")
+
+    # Arel don't support yet order on unions :(
+    # https://github.com/rails/arel/issues/98
+    sql = "(#{created_gems.to_sql}) UNION (#{yanked_gems.to_sql}) ORDER BY date"
+    gems = Rubygem.find_by_sql(sql)
+
+    gems.map do |gem|
+      CompactIndex::Gem.new(gem.name, [
+                              CompactIndex::GemVersion.new(
+                                gem.number,
+                                gem.platform,
+                                gem.info_checksum
+                              )
+                            ])
+    end
   end
 end

@@ -39,5 +39,7 @@ Rails.application.configure do
 
   config.middleware.use "Hostess"
 
-  config.cache_store = :dalli_store, 'localhost:11211'
+  config.cache_store = :dalli_store,
+                       'localhost:11211',
+                       { compress: true, compression_min_size: 524_288 }
 end

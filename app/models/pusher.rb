@@ -159,5 +159,8 @@ class Pusher
 
   def expire_api_memcached
     Rails.cache.delete("deps/v1/#{rubygem.name}")
+    Rails.cache.delete("info/#{rubygem.name}")
+    Rails.cache.delete("versions")
+    Rails.cache.delete("names")
   end
 end
