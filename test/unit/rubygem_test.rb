@@ -154,6 +154,14 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal indexed_v1.reload, @rubygem.reload.versions.most_recent
     end
 
+    should "return latest version on the basis of version number" do
+      version = create(:version, rubygem: @rubygem, number: "0.1.1", platform: 'ruby', latest: true)
+      create(:version, rubygem: @rubygem, number: "0.1.2.rc1", platform: 'ruby')
+      create(:version, rubygem: @rubygem, number: "0.1.0", platform: 'jruby', latest: true)
+
+      assert_equal version, @rubygem.latest_version
+    end
+
     context "#public_versions_with_extra_version" do
       setup do
         @first_version = FactoryGirl.create(:version,
