@@ -61,7 +61,7 @@ class DeletionTest < ActiveSupport::TestCase
 
   teardown do
     # This is necessary due to after_commit not cleaning up for us
-    [Rubygem, Version, User, Deletion].each(&:delete_all)
+    [Rubygem, Version, User, Deletion, Delayed::Job, GemDownload].each(&:delete_all)
   end
 
   private
