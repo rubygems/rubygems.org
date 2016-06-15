@@ -17,3 +17,8 @@ tasks:
     description: Enable access to the rails app and hide the maintenance page
     steps:
       - cap $ENVIRONMENT maintenance:disable
+  clear_cache:
+    action: Clear cache
+    description: Flushes memcached using rails cache clear
+    steps:
+      - cap $ENVIRONMENT memcached:flush
