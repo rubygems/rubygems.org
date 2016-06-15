@@ -41,6 +41,12 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     assert_equal "---\ngemA\ngemA1\ngemA2\ngemB\n", @response.body
   end
 
+  test "/names partial response" do
+    get names_path, nil, range: "bytes=15-"
+    assert_response 206
+    assert_equal "gemA2\ngemB\n", @response.body
+  end
+
   test "/versions output" do
     get versions_path
     assert_response :success
@@ -72,6 +78,12 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     assert_match(/ZZZ 1.0.0 \nAAA/, @response.body)
   end
 
+  test "/versions partial response" do
+    get versions_path, nil, range: "bytes=200-"
+    assert_response 206
+    assert_equal "0.0 \ngemA 1.2.0 \ngemA 2.0.0 \ngemA 2.1.0 \ngemB 1.0.0 \n", @response.body
+  end
+
   test "/info with existing gem" do
     get info_path(gem_name: @rubygem.name)
     assert_response :success
@@ -86,5 +98,11 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
   test "/info with unexisting gem" do
     get info_path(gem_name: 'donotexist')
     assert_response :not_found
+  end
+
+  test "/info partial response" do
+    get info_path(gem_name: @rubygem.name), nil, range: "bytes=159-"
+    assert_response 206
+    assert_equal "2.1.0 gemA1:= 1.0.0,gemA2:= 1.0.0|checksum:checksum2,ruby:>= 2.0.0,rubygems:>=2.0\n", @response.body
   end
 end

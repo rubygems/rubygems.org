@@ -3,7 +3,8 @@ class Api::CompactIndexController < Api::BaseController
 
   def names
     names = Rubygem.order("name").pluck("name")
-    render plain: CompactIndex.names(names)
+    response_body = CompactIndex.names(names)
+    requested_range_for(response_body)
   end
 
   def versions
@@ -11,12 +12,27 @@ class Api::CompactIndexController < Api::BaseController
     versions_file = CompactIndex::VersionsFile.new(versions_file_location)
     from_date = versions_file.updated_at
     extra_gems = Rubygem.compact_index_versions(from_date)
-    render plain: CompactIndex.versions(versions_file, extra_gems)
+    response_body = CompactIndex.versions(versions_file, extra_gems)
+    requested_range_for(response_body)
   end
 
   def info
     return unless stale?(@rubygem)
     info_params = @rubygem.compact_index_info
-    render plain: CompactIndex.info(info_params)
+    response_body = CompactIndex.info(info_params)
+    requested_range_for(response_body)
+  end
+
+  private
+
+  def requested_range_for(response_body)
+    ranges = Rack::Utils.byte_ranges(env, response_body.bytesize)
+
+    if ranges
+      response = ranges.map { |range| response_body.byteslice(range) }.join
+      render status: 206, plain: response
+    else
+      render status: 200, plain: response_body
+    end
   end
 end
