@@ -54,7 +54,9 @@ namespace :memcached do
   task :flush do
     on roles(:app, select: :primary) do
       within release_path do
-        execute :rake, 'memcached:flush'
+        with rails_env: fetch(:rails_env) do
+          execute :rake, 'memcached:flush'
+        end
       end
     end
   end
