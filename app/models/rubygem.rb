@@ -62,7 +62,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.total_count
-    with_versions.count
+    count_by_sql "SELECT COUNT(*) from (SELECT DISTINCT rubygem_id FROM versions WHERE indexed = true) AS v"
   end
 
   def self.latest(limit = 5)

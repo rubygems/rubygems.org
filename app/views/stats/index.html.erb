@@ -20,7 +20,7 @@
 </h2>
 
 <header class="gems__header">
-  <p class="gems__meter"><%= page_entries_info @most_downloaded %></p>
+  <p class="gems__meter"><%= page_entries_info @most_downloaded, model: 'gem' %></p>
 </header>
 
 <% @most_downloaded.each do |gem| %>
