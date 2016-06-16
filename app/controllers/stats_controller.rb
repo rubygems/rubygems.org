@@ -5,5 +5,6 @@ class StatsController < ApplicationController
     @number_of_downloads = GemDownload.total_count
     @most_downloaded     = Rubygem.by_downloads.limit(10).includes(:gem_download).to_a
     @most_downloaded_count = @most_downloaded.first && @most_downloaded.first.gem_download.count
+    @recent_uploads = Version.recent_uploads(10)
   end
 end

@@ -47,7 +47,7 @@
     .stat__count {
       font-size: 24px; } }
 
-.stats__graph__heading {
+.stats__heading {
   margin-bottom: 42px;
   font-weight: 600;
   font-size: 18px;
@@ -205,3 +205,32 @@
   @-moz-document url-prefix() {
     .stats__graph__gem__count {
       top: 8px; } }
+
+.stats__table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 30px 15px;
+  border-left: 3%;
+}
+
+.stats__table__row {
+  height: 30px;
+  width: 100%; }
+
+.stats__table__column {
+  /* Size table columns to contents. */
+  width: 1%;
+  white-space: nowrap;
+
+  font-weight: 400;
+  text-align: right;
+  vertical-align: middle; }
+
+  @media (max-width: 709px) {
+    .stats__table__column {
+      font-size: 13px; } }
+  @media (min-width: 710px) {
+    .stats__table__column {
+      font-size: 15px; } }
+
+.stats__table__column a { color: black; }

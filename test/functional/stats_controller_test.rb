@@ -7,9 +7,11 @@ class StatsControllerTest < ActionController::TestCase
       @number_of_users     = 101
       @number_of_downloads = 42
       rails_cinco = create(:rubygem, name: 'rails_cinco', number: 1)
+      @recent_uploads = [create(:version)]
 
       Rubygem.stubs(:total_count).returns @number_of_gems
       User.stubs(:count).returns @number_of_users
+      Version.stubs(:recent_uploads).returns @recent_uploads
 
       create(:gem_download, count: @number_of_downloads)
       rails_cinco.gem_download.update(count: 1)
@@ -39,6 +41,7 @@ class StatsControllerTest < ActionController::TestCase
     should "load up the number of gems, users, and downloads" do
       assert_received(User, :count)
       assert_received(Rubygem, :total_count)
+      assert_received(Version, :recent_uploads) { |subject| subject.with(10) }
     end
   end
 
