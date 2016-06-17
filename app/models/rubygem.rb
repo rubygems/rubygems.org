@@ -347,7 +347,7 @@ class Rubygem < ActiveRecord::Base
         end
       end
 
-      CompactIndex::GemVersion.new(r[0], r[1], r[2], r[3], deps, r[4], r[5])
+      CompactIndex::GemVersion.new(r[0], r[1], Version._sha256_hex(r[2]), r[3], deps, r[4], r[5])
     end
   end
 
