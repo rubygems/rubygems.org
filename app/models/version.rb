@@ -7,7 +7,7 @@ class Version < ActiveRecord::Base
 
   before_save :update_prerelease
   before_validation :full_nameify!
-  # after_create :set_info_checksum # disabled until we can fix the bug
+  after_create :set_info_checksum
   after_save :reorder_versions
 
   serialize :licenses

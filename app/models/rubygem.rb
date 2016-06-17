@@ -328,7 +328,7 @@ class Rubygem < ActiveRecord::Base
     dep_req_agg =
       "string_agg(dependencies.requirements, '@' order by rubygems_dependencies.name)"
     dep_name_agg =
-      "string_agg(rubygems_dependencies.name, ',' order by rubygems_dependencies.name) as dep_name"
+      "string_agg(coalesce(rubygems_dependencies.name, '0'), ',' order by rubygems_dependencies.name) as dep_name"
 
     result = Rubygem.includes(versions: { dependencies: :rubygem })
       .where("rubygems.name = ? and indexed = true and (scope = 'runtime' or scope is null)", name)
@@ -343,7 +343,7 @@ class Rubygem < ActiveRecord::Base
         dep_names = r[8].split(',')
         raise 'BUG: different size of reqs and dep_names.' unless reqs.size == dep_names.size
         dep_names.zip(reqs).each do |name, req|
-          deps << CompactIndex::Dependency.new(name, req)
+          deps << CompactIndex::Dependency.new(name, req) unless name == '0'
         end
       end
 
