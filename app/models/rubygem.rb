@@ -352,27 +352,27 @@ class Rubygem < ActiveRecord::Base
   end
 
   private_class_method def self.versions_after(date)
-    created_gems = Rubygem.joins(:versions)
-      .select("name, versions.created_at as date, number, platform, info_checksum")
-      .where("versions.created_at > ?", date)
-      .order("versions.created_at, versions.number, platform")
-
-    yanked_gems = Rubygem.joins(:versions)
-      .select("name, versions.yanked_at as date, '-'||number, platform, info_checksum")
-      .where("indexed is false and versions.created_at > ?", date)
-      .order("versions.created_at, versions.number, platform")
-
-    # Arel don't support yet order on unions :(
-    # https://github.com/rails/arel/issues/98
-    sql = "(#{created_gems.to_sql}) UNION (#{yanked_gems.to_sql}) ORDER BY date"
-    gems = Rubygem.find_by_sql(sql)
+    query = ["(SELECT r.name, v.created_at as date, v.info_checksum, v.number, v.platform
+              FROM rubygems AS r, versions AS v
+              WHERE v.rubygem_id = r.id AND
+                    v.created_at > ?)
+              UNION
+              (SELECT r.name, v.yanked_at as date, v.info_checksum, '-'||v.number, v.platform
+              FROM rubygems AS r, versions AS v
+              WHERE v.rubygem_id = r.id AND
+                    v.indexed is false AND
+                    v.yanked_at > ?)
+              ORDER BY date, number, platform, name", date, date]
+    sanitize_sql = ActiveRecord::Base.send(:sanitize_sql_array, query)
+    gems = ActiveRecord::Base.connection.execute(sanitize_sql)
 
     gems.map do |gem|
-      CompactIndex::Gem.new(gem.name, [
+      CompactIndex::Gem.new(gem['name'], [
                               CompactIndex::GemVersion.new(
-                                gem.number,
-                                gem.platform,
-                                gem.info_checksum
+                                gem['number'],
+                                gem['platform'],
+                                nil,
+                                gem['info_checksum']
                               )
                             ])
     end
