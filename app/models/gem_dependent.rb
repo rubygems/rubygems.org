@@ -1,6 +1,6 @@
 class GemDependent
   extend StatsD::Instrument
-  DepKey = Struct.new(:name, :number, :platform, :required_ruby_version, :required_rubygems_version, :sha256, :created_at)
+  DepKey = Struct.new(:name, :number, :platform)
 
   attr_reader :gem_names
 
@@ -41,15 +41,7 @@ class GemDependent
     deps = {}
 
     dataset.each do |row|
-      key = DepKey.new(
-        row['name'],
-        row['number'],
-        row['platform'],
-        row['required_ruby_version'],
-        row['required_rubygems_version'],
-        row['sha256'],
-        row['created_at']
-      )
+      key = DepKey.new(row['name'], row['number'], row['platform'])
       deps[key] = [] unless deps[key]
       deps[key] << [row['dep_name'], row['requirements']] if row['dep_name']
     end
@@ -59,10 +51,6 @@ class GemDependent
         name:                  dep_key.name,
         number:                dep_key.number,
         platform:              dep_key.platform,
-        rubygems_version:      dep_key.required_rubygems_version,
-        ruby_version:          dep_key.required_ruby_version,
-        checksum:              Version._sha256_hex(dep_key.sha256),
-        created_at:            Time.zone.parse(dep_key.created_at).strftime('%Y-%m-%d %H:%M:%S %z'),
         dependencies:          gem_deps
       }
     end
@@ -70,11 +58,9 @@ class GemDependent
   statsd_measure :fetch_dependency_from_db, 'gem_dependent.fetch_dependency_from_db'
 
   def sql_query(gem_name)
-    ["SELECT rv.name, rv.number, rv.platform, rv.required_ruby_version, rv.sha256,
-             rv.required_rubygems_version, d.requirements, rv.created_at, for_dep_name.name dep_name
+    ["SELECT rv.name, rv.number, rv.platform, d.requirements, for_dep_name.name dep_name
       FROM
-        (SELECT r.name, v.number, v.platform,v.required_rubygems_version, v.sha256,
-                v.required_ruby_version, v.created_at, v.id AS version_id
+        (SELECT r.name, v.number, v.platform, v.id AS version_id
         FROM rubygems AS r, versions AS v
         WHERE v.rubygem_id = r.id
           AND v.indexed is true AND r.name = ?) AS rv
@@ -82,8 +68,7 @@ class GemDependent
           d.version_id = rv.version_id
         LEFT JOIN rubygems AS for_dep_name ON
           d.rubygem_id = for_dep_name.id
-          AND d.scope = 'runtime'
-        ORDER BY rv.created_at, rv.number, rv.platform, for_dep_name.name", gem_name]
+          AND d.scope = 'runtime'", gem_name]
   end
 
   # Returns a Hash of the gem's cache key, and its cached dependencies

@@ -35,7 +35,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
   context "On GET to index --> with gems --> JSON" do
     setup do
       rubygem = create(:rubygem, name: "rails")
-      create(:version, number: "1.0.0", created_at: Date.new(2016, 05, 24), rubygem_id: rubygem.id)
+      create(:version, number: "1.0.0", rubygem_id: rubygem.id)
       get :index, gems: "rails", format: "json"
     end
 
@@ -48,10 +48,6 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
         'name'              => 'rails',
         'number'            => '1.0.0',
         'platform'          => 'ruby',
-        'rubygems_version'  => '>= 2.6.3',
-        'ruby_version'      => '>= 2.0.0',
-        'checksum'          => 'b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78',
-        'created_at'        => '2016-05-24 00:00:00 +0000',
         'dependencies'      => []
       }]
 
@@ -64,9 +60,9 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
     setup do
       rubygem1 = create(:rubygem, name: "myrails")
       rubygem2 = create(:rubygem, name: "mybundler")
-      create(:version, number: "1.0.0", created_at: Date.new(2016, 05, 24), rubygem_id: rubygem1.id)
-      create(:version, number: "2.0.0", created_at: Date.new(2016, 05, 24), rubygem_id: rubygem2.id)
-      create(:version, number: "3.0.0", created_at: Date.new(2016, 05, 24), rubygem_id: rubygem1.id)
+      create(:version, number: "1.0.0", rubygem_id: rubygem1.id)
+      create(:version, number: "2.0.0", rubygem_id: rubygem2.id)
+      create(:version, number: "3.0.0", rubygem_id: rubygem1.id)
       get :index, gems: "myrails,mybundler", format: "json"
     end
 
@@ -80,10 +76,6 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
           'name'              => 'myrails',
           'number'            => '1.0.0',
           'platform'          => 'ruby',
-          'rubygems_version'  => '>= 2.6.3',
-          'ruby_version'      => '>= 2.0.0',
-          'checksum'          => 'b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78',
-          'created_at'        => '2016-05-24 00:00:00 +0000',
           'dependencies'      => []
         },
 
@@ -91,10 +83,6 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
           'name'              => 'myrails',
           'number'            => '3.0.0',
           'platform'          => 'ruby',
-          'rubygems_version'  => '>= 2.6.3',
-          'ruby_version'      => '>= 2.0.0',
-          'checksum'          => 'b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78',
-          'created_at'        => '2016-05-24 00:00:00 +0000',
           'dependencies'      => []
         },
 
@@ -102,10 +90,6 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
           'name'              => 'mybundler',
           'number'            => '2.0.0',
           'platform'          => 'ruby',
-          'rubygems_version'  => '>= 2.6.3',
-          'ruby_version'      => '>= 2.0.0',
-          'checksum'          => 'b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78',
-          'created_at'        => '2016-05-24 00:00:00 +0000',
           'dependencies'      => []
         }
       ]
@@ -157,7 +141,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
   context "On GET to index --> with gems --> Marshal" do
     setup do
       rubygem = create(:rubygem, name: "testgem")
-      create(:version, number: "1.0.0", created_at: Date.new(2016, 05, 24), rubygem_id: rubygem.id)
+      create(:version, number: "1.0.0", rubygem_id: rubygem.id)
       get :index, gems: "testgem", format: "marshal"
     end
 
@@ -170,10 +154,6 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
         name:              'testgem',
         number:            '1.0.0',
         platform:          'ruby',
-        rubygems_version:  '>= 2.6.3',
-        ruby_version:      '>= 2.0.0',
-        checksum:          'b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78',
-        created_at:        "2016-05-24 00:00:00 +0000",
         dependencies:      []
       }]
 

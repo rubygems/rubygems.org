@@ -23,7 +23,7 @@ class GemDependentTest < ActiveSupport::TestCase
   context "with gem_names" do
     setup do
       rack2 = create(:rubygem, name: "rack2")
-      create(:version, number: "0.0.1", created_at: Date.new(2016, 05, 24), rubygem: rack2)
+      create(:version, number: "0.0.1", rubygem: rack2)
     end
 
     should "return rack2" do
@@ -31,10 +31,6 @@ class GemDependentTest < ActiveSupport::TestCase
         name:                "rack2",
         number:              "0.0.1",
         platform:            "ruby",
-        rubygems_version:    ">= 2.6.3",
-        ruby_version:        ">= 2.0.0",
-        checksum:            "b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78",
-        created_at:          "2016-05-24 00:00:00 +0000",
         dependencies: []
       }
 
@@ -47,17 +43,19 @@ class GemDependentTest < ActiveSupport::TestCase
     context "multiple versions" do
       setup do
         rack = create(:rubygem, name: "rack")
-        create(:version, number: "0.2.2", created_at: Date.new(2016, 05, 24), rubygem: rack)
-        create(:version, number: "0.1.2", created_at: Date.new(2016, 05, 24), rubygem: rack)
-        create(:version, number: "0.1.2", created_at: Date.new(2016, 05, 24), platform: 'jruby', rubygem: rack)
-        create(:version, number: "0.1.3", created_at: Date.new(2016, 05, 25), rubygem: rack)
+        create(:version, number: "0.2.2", rubygem: rack)
+        create(:version, number: "0.1.2", rubygem: rack)
+        create(:version, number: "0.1.2", platform: 'jruby', rubygem: rack)
+        create(:version, number: "0.1.3", rubygem: rack)
       end
 
-      should "orders versions by created_at, versions and platform" do
-        result = [["0.1.2", "jruby"], ["0.1.2", "ruby"], ["0.2.2", "ruby"], ["0.1.3", "ruby"]]
+      should "return all versions and platform" do
+        result = [["0.1.3", "ruby"], ["0.1.2", "ruby"], ["0.1.2", "jruby"], ["0.2.2", "ruby"]]
 
         deps = GemDependent.new(["rack"]).to_a
-        assert_equal result, deps.map { |x| [x[:number], x[:platform]] }
+        deps.map { |x| [x[:number], x[:platform]] }.each do |dep|
+          assert_includes result, dep
+        end
       end
     end
 
@@ -74,16 +72,15 @@ class GemDependentTest < ActiveSupport::TestCase
         end
       end
 
-      should "return dependencies ordered by name" do
-        result = {
-          name:         'devise',
-          number:       '1.0.0',
-          dependencies: [['bar', '>= 0.0.0'], ['foo', '>= 0.0.0']]
-        }
+      should "return dependencies" do
+        expected_deps = [["foo", ">= 0.0.0"], ["bar", ">= 0.0.0"]]
 
         dep = GemDependent.new(["devise"]).to_a.first
-        result.each_pair do |k, v|
-          assert_equal v, dep[k]
+        assert_equal 'devise', dep[:name]
+        assert_equal '1.0.0', dep[:number]
+
+        expected_deps.each do |expected_dep|
+          assert_includes dep[:dependencies], expected_dep
         end
       end
     end
@@ -91,7 +88,7 @@ class GemDependentTest < ActiveSupport::TestCase
     context "non indexed versions" do
       setup do
         nokogiri = create(:rubygem, name: "nokogiri")
-        create(:version, number: "0.0.1", created_at: Date.new(2016, 05, 24), rubygem: nokogiri)
+        create(:version, number: "0.0.1", rubygem: nokogiri)
         create(:version, number: "0.1.1", rubygem: nokogiri, indexed: false)
       end
 
@@ -100,10 +97,6 @@ class GemDependentTest < ActiveSupport::TestCase
           name: "nokogiri",
           number: "0.0.1",
           platform: "ruby",
-          rubygems_version:    ">= 2.6.3",
-          ruby_version:        ">= 2.0.0",
-          checksum:            "b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78",
-          created_at:          "2016-05-24 00:00:00 +0000",
           dependencies: []
         }
 
