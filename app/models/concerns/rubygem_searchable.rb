@@ -56,9 +56,11 @@ module RubygemSearchable
       else
         legacy_search(query).with_versions.paginate(page: page)
       end
-    rescue Faraday::ConnectionFailed
+    rescue Faraday::ConnectionFailed => e
+      Honeybadger.notify(e)
       raise SearchDownError
-    rescue Elasticsearch::Transport::Transport::Error
+    rescue Elasticsearch::Transport::Transport::Error => e
+      Honeybadger.notify(e)
       raise SearchDownError
     end
 
