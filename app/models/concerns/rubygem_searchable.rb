@@ -20,7 +20,7 @@ module RubygemSearchable
         summary:               most_recent_version.try(:summary),
         description:           most_recent_version.try(:description),
         downloads:             downloads,
-        latest_version_number: most_recent_version.number
+        latest_version_number: most_recent_version.try(:number)
       }
     end
 
