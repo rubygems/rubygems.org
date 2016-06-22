@@ -64,6 +64,8 @@ en:
         tracking_by: "Tracking by"
         monitored_by: "Monitored by"
         gems_served_by: "Gems served by"
+        logging_by: "Logging by"
+        tested_by: "Tested by"
 
   pages:
     about:
