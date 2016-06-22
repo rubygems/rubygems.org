@@ -1,18 +1,37 @@
 namespace :compact_index do
   desc "Fill yanked_at with current time"
-  task migrate_yanked_at: :environment do
-    Version.where(yanked_at: nil).find_in_batches do |versions|
-      versions.each { |v| v.update_attribute :yanked_at, Time.now.utc }
+  task backfill_yanked_at: :environment do
+    without_yanked_at = Version.where(yanked_at: nil)
+    mod = ENV['shard']
+    without_yanked_at = without_yanked_at.where("id % 4 = ?", mod.to_i) if mod
+
+    total = without_yanked_at.count
+    i = 0
+    puts "Total: #{total}"
+    without_yanked_at.find_each do |version|
+      version.update_attribute :yanked_at, Time.now.utc
+      i += 1
+      print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
     end
+    puts
+    puts "Done."
   end
 
   desc "Fill Versions' info_checksum attributes for compact index format"
-  task migrate: :environment do
-    Rubygem.all.find_in_batches.each do |rubygem|
+  task backfill_info_checksum: :environment do
+    total = Version.count
+    i = 0
+    puts "Total: #{total}"
+
+    Rubygem.find_each do |rubygem|
       cs = Digest::MD5.hexdigest(CompactIndex.info(rubygem.compact_index_info))
       rubygem.versions.each do |version|
         version.update_attribute :info_checksum, cs
+        i += 1
+        print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
       end
     end
+    puts
+    puts "Done."
   end
 end
