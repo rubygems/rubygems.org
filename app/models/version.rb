@@ -19,7 +19,7 @@ class Version < ActiveRecord::Base
 
   validate :platform_and_number_are_unique, on: :create
   validate :authors_format, on: :create
-  class AuthorType < Type::String
+  class AuthorType < ActiveModel::Type::String
     def cast_value(value)
       if value.is_a?(Array)
         value.join(', ')
