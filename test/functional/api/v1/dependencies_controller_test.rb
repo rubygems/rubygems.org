@@ -94,7 +94,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
         }
       ]
 
-      assert_equal result, MultiJson.load(response.body)
+      assert_same_elements result, MultiJson.load(response.body)
     end
   end
 
