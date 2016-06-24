@@ -8,7 +8,6 @@ class HomeControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :index
 
     should "display counts" do
       assert page.has_content?("11,000,000")
@@ -23,7 +22,7 @@ class HomeControllerTest < ActionController::TestCase
   end
 
   should "use default locale on GET using invalid one" do
-    get :index, locale: 'foobar'
+    get :index, params: { locale: 'foobar' }
     assert_equal I18n.locale, I18n.default_locale
   end
 end

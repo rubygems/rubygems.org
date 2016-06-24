@@ -20,7 +20,6 @@ class DashboardsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should render_template :show
       should "render links" do
         @gems.each do |g|
           assert page.has_content?(g.name)
@@ -50,7 +49,6 @@ class DashboardsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should render_template 'versions/feed'
 
       should "render posts with platform-specific titles and links of all subscribed versions" do
         @subscribed_versions.each do |v|

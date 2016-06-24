@@ -6,8 +6,8 @@ class VersionInformationTest < ActionDispatch::IntegrationTest
     create(:version, rubygem: @rubygem, number: '2.0.0')
   end
 
-  def request_endpoint(rubygem, version, format = 'json', http_params = {})
-    get api_v2_rubygem_version_path(rubygem.name, version, format: format), {}, http_params
+  def request_endpoint(rubygem, version, format = 'json')
+    get api_v2_rubygem_version_path(rubygem.name, version, format: format)
   end
 
   test "return gem version" do
@@ -41,11 +41,10 @@ class VersionInformationTest < ActionDispatch::IntegrationTest
   test "second get returns not modified" do
     request_endpoint(@rubygem, '2.0.0')
     assert_response :success
-    http_params = {
+    get api_v2_rubygem_version_path(@rubygem.name, '2.0.0', format: 'json'), headers: {
       "HTTP_IF_MODIFIED_SINCE" => @response.headers['Last-Modified'],
       "HTTP_IF_NONE_MATCH" => @response.etag
     }
-    request_endpoint(@rubygem, '2.0.0', 'json', http_params)
     assert_response :not_modified
   end
 end

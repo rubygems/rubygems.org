@@ -2,7 +2,7 @@ require 'test_helper'
 
 class AboutPageTest < ActionDispatch::IntegrationTest
   def assert_about_page_i18n(local)
-    get page_url("about"), locale: local
+    get page_url("about"), params: { locale: local }
 
     assert_response :success
     assert page.has_content? I18n.t('pages.about.title')
