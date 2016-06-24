@@ -28,11 +28,8 @@ class ProfilesControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should "assign the last 10 most downloaded gems" do
-        assert_equal @rubygems[0..9], assigns[:rubygems]
-      end
-      should "assign the extra gems you own" do
-        assert_equal [@rubygems.last], assigns[:extra_rubygems]
+      should "display all gems of user" do
+        11.times { |i| assert page.has_content? @rubygems[i].name }
       end
     end
 
