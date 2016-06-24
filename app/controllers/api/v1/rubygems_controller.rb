@@ -23,7 +23,7 @@ class Api::V1::RubygemsController < Api::BaseController
         format.yaml { render yaml: @rubygem }
       end
     else
-      render text: t(:this_rubygem_could_not_be_found), status: :not_found
+      render plain: t(:this_rubygem_could_not_be_found), status: :not_found
     end
   end
 
@@ -35,10 +35,10 @@ class Api::V1::RubygemsController < Api::BaseController
       request.host_with_port
     )
     gemcutter.process
-    render text: gemcutter.message, status: gemcutter.code
+    render plain: gemcutter.message, status: gemcutter.code
   rescue => e
     Honeybadger.notify(e)
-    render text: "Server error. Please try again.", status: 500
+    render plain: "Server error. Please try again.", status: 500
   end
 
   def reverse_dependencies
@@ -71,7 +71,7 @@ class Api::V1::RubygemsController < Api::BaseController
       cors_set_access_control_headers
       headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-Prototype-Version'
 
-      render text: '', content_type: 'text/plain'
+      render plain: ''
     end
   end
 end
