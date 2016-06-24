@@ -1,7 +1,6 @@
 class Api::BaseController < ApplicationController
   before_action :doorkeeper_authorize!, if: :doorkeeper_token
   before_action :authenticate_with_oauth, if: :doorkeeper_token
-  skip_before_action :require_ssl
 
   private
 
