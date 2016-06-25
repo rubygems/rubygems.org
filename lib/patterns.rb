@@ -37,6 +37,7 @@ module Patterns
     io-wait
     ipaddr
     irb
+    jruby
     logger
     mathn
     matrix
