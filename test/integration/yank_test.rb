@@ -26,7 +26,7 @@ class YankTest < SystemTest
       click_link "Show all versions (2 total)"
     end
     click_link "2.2.2"
-    assert page.has_content? "This gem has been yanked"
+    assert page.has_content? "This version has been yanked"
     assert page.has_css? 'meta[name="robots"][content="noindex"]', visible: false
   end
 
@@ -42,7 +42,7 @@ class YankTest < SystemTest
 
     visit rubygem_path(@rubygem)
     assert page.has_content? "sandworm"
-    assert page.has_content? "This gem has been yanked"
+    assert page.has_content? "This gem is not currently hosted on RubyGems.org"
 
     other_user = create(:user)
 
