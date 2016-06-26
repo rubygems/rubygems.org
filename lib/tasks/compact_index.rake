@@ -1,7 +1,18 @@
 namespace :compact_index do
+  def yanked_at_time(version)
+    query = ["SELECT created_at FROM deletions,
+      (SELECT name, number FROM versions, rubygems WHERE versions.rubygem_id = rubygems.id
+        AND versions.id = ?) AS rv
+      WHERE deletions.number = rv.number AND deletions.rubygem = rv.name", version.id]
+    sanitize_sql = ActiveRecord::Base.send(:sanitize_sql_array, query)
+    pg_result = ActiveRecord::Base.connection.execute(sanitize_sql)
+    return pg_result.first['created_at'] if pg_result.first.present?
+    Time.now.utc
+  end
+
   desc "Fill yanked_at with current time"
   task backfill_yanked_at: :environment do
-    without_yanked_at = Version.where(yanked_at: nil)
+    without_yanked_at = Version.where(indexed: false)
     mod = ENV['shard']
     without_yanked_at = without_yanked_at.where("id % 4 = ?", mod.to_i) if mod
 
@@ -9,7 +20,7 @@ namespace :compact_index do
     i = 0
     puts "Total: #{total}"
     without_yanked_at.find_each do |version|
-      version.update_attribute :yanked_at, Time.now.utc
+      version.update_attribute :yanked_at, yanked_at_time(version)
       i += 1
       print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
     end
