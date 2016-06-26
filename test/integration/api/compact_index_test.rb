@@ -2,6 +2,10 @@ require 'tempfile'
 require 'test_helper'
 
 class CompactIndexTest < ActionDispatch::IntegrationTest
+  def etag(body)
+    '"' << Digest::MD5.hexdigest(body) << '"'
+  end
+
   setup do
     rubygem = create(:rubygem, name: 'gemA')
     dep1 = create(:rubygem, name: 'gemA1')
@@ -40,7 +44,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     create(:dependency, rubygem: dep1, version: version)
     create(:dependency, rubygem: dep2, version: version)
 
-    # other gem
+    # another gem
     @rubygem2 = create(:rubygem, name: 'gemB')
     create(:version, rubygem: @rubygem2, number: '1.0.0', info_checksum: 'qw2dwe')
   end
@@ -51,36 +55,35 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
   test "/names output" do
     get names_path
+
     assert_response :success
-    assert_equal "---\ngemA\ngemA1\ngemA2\ngemB\n", @response.body
+    expected_body = "---\ngemA\ngemA1\ngemA2\ngemB\n"
+    assert_equal expected_body, @response.body
+    assert_equal etag(expected_body), @response.headers['ETag']
     assert_equal %w(gemA gemA1 gemA2 gemB), Rails.cache.read('names')
   end
 
   test "/names partial response" do
     get names_path, nil, range: "bytes=15-"
+
     assert_response 206
+    full_body = "---\ngemA\ngemA1\ngemA2\ngemB\n"
+    assert_equal etag(full_body), @response.headers['ETag']
     assert_equal "gemA2\ngemB\n", @response.body
   end
 
-  test "/versions returns pre-built versions file" do
-    get versions_path
-    assert_response :success
-
+  test "/versions includes pre-built file and new gems" do
     versions_file_location = Rails.application.config.rubygems['versions_file_location']
     file_contents = File.open(versions_file_location).read
-    assert_match file_contents, @response.body
-    gem_a_match = /gemA 1.2.0 13q4es\ngemA 2.0.0 1cf94r\ngemA 2.1.0 e217fz\n/
-    gem_b_match = /gemB 1.0.0 qw2dwe\n/
-    assert_match(/#{gem_a_match}#{gem_b_match}/, @response.body)
-    assert_not_nil Rails.cache.read('versions')
-  end
+    gem_a_match = "gemA 1.2.0 13q4es\ngemA 2.0.0 1cf94r\ngemA 2.1.0 e217fz\n"
+    gem_b_match = "gemB 1.0.0 qw2dwe\n"
 
-  test "/versions with new gem" do
-    rubygem = create(:rubygem, name: 'gemC')
-    create(:version, rubygem: rubygem, number: '1.0.0', info_checksum: '65ea0d')
     get versions_path
     assert_response :success
-    assert_match(/gemC 1.0.0 65ea0d\n$/, @response.body)
+    assert_match file_contents, @response.body
+    assert_match(/#{gem_a_match}#{gem_b_match}/, @response.body)
+    assert_equal etag(@response.body), @response.headers['ETag']
+    assert_not_nil Rails.cache.read('versions')
   end
 
   test "/versions extra gems are ordered by creation time" do
@@ -96,51 +99,68 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
   end
 
   test "/versions partial response" do
+    get versions_path
+    full_response_body = @response.body
+
     get versions_path, nil, range: "bytes=229-"
+
     assert_response 206
-    assert_equal "gemA 2.0.0 1cf94r\ngemA 2.1.0 e217fz\ngemB 1.0.0 qw2dwe\n", @response.body
+    assert_equal "1.2.0 13q4es\ngemA 2.0.0 1cf94r\ngemA 2.1.0 e217fz\ngemB 1.0.0 qw2dwe\n", @response.body
+    assert_equal etag(full_response_body), @response.headers['ETag']
   end
 
   test "/info with existing gem" do
-    get info_path(gem_name: 'gemA')
-    assert_response :success
-    response = <<-eos
+    expected = <<-eos
 ---
 1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
 1.2.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>1.9
 2.0.0 gemA1:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
 2.1.0 gemA1:= 1.0.0,gemA2:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>=2.0
 eos
-    assert_equal response, @response.body
-    assert_equal response, CompactIndex.info(Rails.cache.read("info/gemA"))
+
+    get info_path(gem_name: 'gemA')
+
+    assert_response :success
+    assert_equal expected, @response.body
+    assert_equal etag(expected), @response.headers['ETag']
+    assert_equal expected, CompactIndex.info(Rails.cache.read("info/gemA"))
+  end
+
+  test "/info partial response" do
+    expected = <<-eos
+---
+1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
+1.2.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>1.9
+2.0.0 gemA1:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
+2.1.0 gemA1:= 1.0.0,gemA2:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>=2.0
+eos
+
+    get info_path(gem_name: 'gemA'), nil, range: "bytes=159-"
+
+    assert_response 206
+    assert_equal expected[159..-1], @response.body
   end
 
   test "/info with new gem" do
     rubygem = create(:rubygem, name: 'gemC')
     version = create(:version, rubygem: rubygem, number: '1.0.0', info_checksum: '65ea0d')
     create(:dependency, :development, version: version, rubygem: @rubygem2)
-    get info_path(gem_name: 'gemC')
-    assert_response :success
     expected = <<-END
 ---
 1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>= 2.6.3
 END
+
+    get info_path(gem_name: 'gemC')
+
+    assert_response :success
     assert_equal(expected, @response.body)
+    assert_equal etag(expected), @response.headers['ETag']
   end
 
   test "/info with nonexistent gem" do
     get info_path(gem_name: 'donotexist')
     assert_response :not_found
+    assert_equal nil, @response.headers['ETag']
   end
 
-  test "/info partial response" do
-    get info_path(gem_name: 'gemA'), nil, range: "bytes=159-"
-    assert_response 206
-    response = <<-eos
-04f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>1.9
-2.0.0 gemA1:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
-2.1.0 gemA1:= 1.0.0,gemA2:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>=2.0
-eos
-    assert_equal response, @response.body
-  end
 end

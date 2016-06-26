@@ -27,8 +27,8 @@ class Api::CompactIndexController < Api::BaseController
 
     ranges = Rack::Utils.byte_ranges(env, response_body.bytesize)
     if ranges
-      response = ranges.map { |range| response_body.byteslice(range) }.join
-      render status: 206, plain: response
+      ranged_response = ranges.map { |range| response_body.byteslice(range) }.join
+      render status: 206, plain: ranged_response
     else
       render status: 200, plain: response_body
     end
