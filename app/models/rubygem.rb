@@ -274,13 +274,12 @@ class Rubygem < ActiveRecord::Base
     versions_after_date = Rails.cache.read('versions')
     if versions_after_date
       StatsD.increment "compact_index.memcached.versions.hit"
-      versions_after_date
     else
       StatsD.increment "compact_index.memcached.versions.miss"
       versions_after_date = versions_after(date)
       Rails.cache.write('versions', versions_after_date)
-      versions_after_date
     end
+    versions_after_date
   end
 
   def compact_index_info
@@ -290,8 +289,8 @@ class Rubygem < ActiveRecord::Base
       info
     else
       StatsD.increment "compact_index.memcached.info.miss"
-      compute_compact_index_info.tap do |info|
-        Rails.cache.write("info/#{name}", info)
+      compute_compact_index_info.tap do |compact_index_info|
+        Rails.cache.write("info/#{name}", compact_index_info)
       end
     end
   end
@@ -333,8 +332,12 @@ class Rubygem < ActiveRecord::Base
     dep_name_agg =
       "string_agg(coalesce(rubygems_dependencies.name, '0'), ',' order by rubygems_dependencies.name) as dep_name"
 
-    result = Rubygem.includes(versions: { dependencies: :rubygem })
-      .where("rubygems.name = ? and indexed = true and (scope = 'runtime' or scope is null)", name)
+    result = Rubygem.joins("LEFT JOIN versions ON versions.rubygem_id = rubygems.id
+        LEFT JOIN dependencies ON dependencies.version_id = versions.id
+        LEFT JOIN rubygems rubygems_dependencies
+          ON rubygems_dependencies.id = dependencies.rubygem_id
+          AND dependencies.scope = 'runtime'")
+      .where("rubygems.name = ? and indexed = true", name)
       .group(group_by_columns)
       .order("versions.created_at, number, platform, dep_name")
       .pluck("#{group_by_columns}, #{dep_req_agg}, #{dep_name_agg}")

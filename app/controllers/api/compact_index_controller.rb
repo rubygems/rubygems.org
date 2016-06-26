@@ -10,7 +10,7 @@ class Api::CompactIndexController < Api::BaseController
     versions_path = Rails.application.config.rubygems['versions_file_location']
     versions_file = CompactIndex::VersionsFile.new(versions_path)
     from_date = versions_file.updated_at
-    extra_gems = Rubygem.compact_index_versions(versions_file.updated_at)
+    extra_gems = Rubygem.compact_index_versions(from_date)
     render_range CompactIndex.versions(versions_file, extra_gems)
   end
 
@@ -33,5 +33,4 @@ class Api::CompactIndexController < Api::BaseController
       render status: 200, plain: response_body
     end
   end
-
 end

@@ -151,5 +151,4 @@ END
     assert_response :not_found
     assert_equal nil, @response.headers['ETag']
   end
-
 end
