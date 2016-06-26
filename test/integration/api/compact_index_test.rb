@@ -7,6 +7,10 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
   end
 
   setup do
+    @rubygem2 = create(:rubygem, name: 'gemB')
+    create(:version, rubygem: @rubygem2, number: '1.0.0', info_checksum: 'qw2dwe')
+
+    # another gem
     rubygem = create(:rubygem, name: 'gemA')
     dep1 = create(:rubygem, name: 'gemA1')
     dep2 = create(:rubygem, name: 'gemA2')
@@ -18,14 +22,6 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
       info_checksum: '013we2',
       required_ruby_version: nil)
 
-    # version with required ruby and rubygems version
-    create(:version,
-      rubygem: rubygem,
-      number: '1.2.0',
-      info_checksum: '13q4es',
-      required_rubygems_version: ">1.9",
-      required_ruby_version: ">= 2.0.0")
-
     # version with deps but no ruby or rubygems requirements
     version = create(:version,
       rubygem: rubygem,
@@ -33,6 +29,14 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
       info_checksum: '1cf94r',
       required_ruby_version: nil)
     create(:dependency, rubygem: dep1, version: version)
+
+    # version with required ruby and rubygems version
+    create(:version,
+      rubygem: rubygem,
+      number: '1.2.0',
+      info_checksum: '13q4es',
+      required_rubygems_version: ">1.9",
+      required_ruby_version: ">= 2.0.0")
 
     # version with everything
     version = create(:version,
@@ -43,10 +47,6 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
     create(:dependency, rubygem: dep1, version: version)
     create(:dependency, rubygem: dep2, version: version)
-
-    # another gem
-    @rubygem2 = create(:rubygem, name: 'gemB')
-    create(:version, rubygem: @rubygem2, number: '1.0.0', info_checksum: 'qw2dwe')
   end
 
   teardown do
@@ -75,37 +75,26 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
   test "/versions includes pre-built file and new gems" do
     versions_file_location = Rails.application.config.rubygems['versions_file_location']
     file_contents = File.open(versions_file_location).read
-    gem_a_match = "gemA 1.2.0 13q4es\ngemA 2.0.0 1cf94r\ngemA 2.1.0 e217fz\n"
+    gem_a_match = "gemA 1.0.0 013we2\ngemA 2.0.0 1cf94r\ngemA 1.2.0 13q4es\ngemA 2.1.0 e217fz\n"
     gem_b_match = "gemB 1.0.0 qw2dwe\n"
 
     get versions_path
     assert_response :success
     assert_match file_contents, @response.body
-    assert_match(/#{gem_a_match}#{gem_b_match}/, @response.body)
+    assert_match(/#{gem_b_match}#{gem_a_match}/, @response.body)
     assert_equal etag(@response.body), @response.headers['ETag']
     assert_not_nil Rails.cache.read('versions')
-  end
-
-  test "/versions extra gems are ordered by creation time" do
-    rubygem = create(:rubygem, name: 'ZZZ')
-    create(:version, rubygem: rubygem, number: '1.0.0', info_checksum: 'a8a851')
-
-    rubygem = create(:rubygem, name: 'AAA')
-    create(:version, rubygem: rubygem, number: '1.0.0', info_checksum: '6abdc2')
-
-    get versions_path
-    assert_response :success
-    assert_match(/ZZZ 1.0.0 a8a851\nAAA/, @response.body)
   end
 
   test "/versions partial response" do
     get versions_path
     full_response_body = @response.body
+    partial_body = "1.0.0 013we2\ngemA 2.0.0 1cf94r\ngemA 1.2.0 13q4es\ngemA 2.1.0 e217fz\n"
 
     get versions_path, nil, range: "bytes=229-"
 
     assert_response 206
-    assert_equal "1.2.0 13q4es\ngemA 2.0.0 1cf94r\ngemA 2.1.0 e217fz\ngemB 1.0.0 qw2dwe\n", @response.body
+    assert_equal partial_body, @response.body
     assert_equal etag(full_response_body), @response.headers['ETag']
   end
 
@@ -113,8 +102,8 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     expected = <<-eos
 ---
 1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
-1.2.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>1.9
 2.0.0 gemA1:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
+1.2.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>1.9
 2.1.0 gemA1:= 1.0.0,gemA2:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>=2.0
 eos
 
@@ -130,8 +119,8 @@ eos
     expected = <<-eos
 ---
 1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
-1.2.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>1.9
 2.0.0 gemA1:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
+1.2.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>1.9
 2.1.0 gemA1:= 1.0.0,gemA2:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>=2.0
 eos
 
