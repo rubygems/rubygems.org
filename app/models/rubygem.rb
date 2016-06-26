@@ -287,9 +287,9 @@ class Rubygem < ActiveRecord::Base
       response
     else
       StatsD.increment "compact_index.memcached.info.miss"
-      info = gem_info
-      Rails.cache.write("info/#{name}", info)
-      info
+      compute_compact_index_info.tap do |info|
+        Rails.cache.write("info/#{name}", info)
+      end
     end
   end
 
@@ -322,7 +322,7 @@ class Rubygem < ActiveRecord::Base
     true
   end
 
-  def gem_info
+  def compute_compact_index_info
     group_by_columns =
       "number, platform, sha256, info_checksum, required_ruby_version, required_rubygems_version, versions.created_at"
     dep_req_agg =
