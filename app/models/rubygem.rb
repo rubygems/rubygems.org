@@ -258,7 +258,8 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.ordered_names
-    if (response = Rails.cache.read('names'))
+    names = Rails.cache.read('names')
+    if names
       StatsD.increment "compact_index.memcached.names.hit"
       response
     else
@@ -270,9 +271,10 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.compact_index_versions(date)
-    if (response = Rails.cache.read('versions'))
+    versions_after_date = Rails.cache.read('versions')
+    if versions_after_date
       StatsD.increment "compact_index.memcached.versions.hit"
-      response
+      versions_after_date
     else
       StatsD.increment "compact_index.memcached.versions.miss"
       versions_after_date = versions_after(date)
@@ -282,9 +284,10 @@ class Rubygem < ActiveRecord::Base
   end
 
   def compact_index_info
-    if (response = Rails.cache.read("info/#{name}"))
+    info = Rails.cache.read("info/#{name}")
+    if info
       StatsD.increment "compact_index.memcached.info.hit"
-      response
+      info
     else
       StatsD.increment "compact_index.memcached.info.miss"
       compute_compact_index_info.tap do |info|
