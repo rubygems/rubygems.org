@@ -41,8 +41,8 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     create(:dependency, rubygem: dep2, version: version)
 
     # other gem
-    rubygem2 = create(:rubygem, name: 'gemB')
-    create(:version, rubygem: rubygem2, number: '1.0.0', info_checksum: 'qw2dwe')
+    @rubygem2 = create(:rubygem, name: 'gemB')
+    create(:version, rubygem: @rubygem2, number: '1.0.0', info_checksum: 'qw2dwe')
   end
 
   teardown do
@@ -62,7 +62,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     assert_equal "gemA2\ngemB\n", @response.body
   end
 
-  test "/versions output" do
+  test "/versions returns pre-built versions file" do
     get versions_path
     assert_response :success
 
@@ -115,7 +115,20 @@ eos
     assert_equal response, CompactIndex.info(Rails.cache.read("info/gemA"))
   end
 
-  test "/info with unexisting gem" do
+  test "/info with new gem" do
+    rubygem = create(:rubygem, name: 'gemC')
+    version = create(:version, rubygem: rubygem, number: '1.0.0', info_checksum: '65ea0d')
+    create(:dependency, :development, version: version, rubygem: @rubygem2)
+    get info_path(gem_name: 'gemC')
+    assert_response :success
+    expected = <<-END
+---
+1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>= 2.6.3
+END
+    assert_equal(expected, @response.body)
+  end
+
+  test "/info with nonexistent gem" do
     get info_path(gem_name: 'donotexist')
     assert_response :not_found
   end
