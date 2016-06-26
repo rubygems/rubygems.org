@@ -144,6 +144,7 @@ class Pusher
     rubygem.disown if rubygem.versions.indexed.count.zero?
     rubygem.update_attributes_from_gem_specification!(version, spec)
     rubygem.create_ownership(user)
+    set_info_checksum
 
     true
   rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback
@@ -159,5 +160,14 @@ class Pusher
 
   def expire_api_memcached
     Rails.cache.delete("deps/v1/#{rubygem.name}")
+    Rails.cache.delete("versions")
+    Rails.cache.delete("names")
+  end
+
+  def set_info_checksum
+    # expire info cache of previous version
+    Rails.cache.delete("info/#{rubygem.name}")
+    checksum = Digest::MD5.hexdigest(CompactIndex.info(rubygem.compact_index_info))
+    version.update_attribute :info_checksum, checksum
   end
 end

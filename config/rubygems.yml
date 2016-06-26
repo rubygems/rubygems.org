@@ -12,7 +12,7 @@ test:
   s3_bucket: test.s3.rubygems.org
   s3_region: us-east-1
   s3_endpoint: s3.amazonaws.com
-  versions_file_location: "./config/versions.list"
+  versions_file_location: "./test/helpers/versions.list"
 
 staging:
   protocol: https

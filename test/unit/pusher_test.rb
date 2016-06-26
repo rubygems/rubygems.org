@@ -276,6 +276,7 @@ class PusherTest < ActiveSupport::TestCase
         create(:version, rubygem: @rubygem, number: '0.1.1')
         @cutter.stubs(:version).returns @rubygem.versions[0]
         @rubygem.stubs(:update_attributes_from_gem_specification!)
+        Rails.cache.stubs(:delete)
         Indexer.any_instance.stubs(:write_gem)
         @cutter.save
       end
@@ -294,14 +295,15 @@ class PusherTest < ActiveSupport::TestCase
         assert_equal 200, @cutter.code
       end
 
+      should "set info_checksum" do
+        assert_not_nil @rubygem.versions.last.info_checksum
+      end
+
       should "expire API memcached" do
-        Rails.cache.write("deps/v1/#{@rubygem.name}", "omg!")
-        refute_nil Rails.cache.fetch("deps/v1/#{@rubygem.name}")
-
-        create(:version, rubygem: @rubygem, number: '0.1.2')
-        @cutter.save
-
-        assert_nil Rails.cache.fetch("deps/v1/#{@rubygem.name}")
+        assert_received(Rails.cache, :delete) { |cache| cache.with("info/#{@rubygem.name}") }
+        assert_received(Rails.cache, :delete) { |cache| cache.with("deps/v1/#{@rubygem.name}") }
+        assert_received(Rails.cache, :delete) { |cache| cache.with("versions") }
+        assert_received(Rails.cache, :delete) { |cache| cache.with("names") }
       end
     end
   end

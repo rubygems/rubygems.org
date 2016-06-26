@@ -7,7 +7,6 @@ class Version < ActiveRecord::Base
 
   before_save :update_prerelease
   before_validation :full_nameify!
-  # after_create :set_info_checksum # disabled until we can fix the bug
   after_save :reorder_versions
 
   serialize :licenses
@@ -378,10 +377,5 @@ class Version < ActiveRecord::Base
   def feature_release(number)
     feature_version = Gem::Version.new(number).segments[0, 2].join('.')
     Gem::Version.new(feature_version)
-  end
-
-  def set_info_checksum
-    checksum = Digest::MD5.hexdigest(CompactIndex.info(rubygem.compact_index_info))
-    update_attribute :info_checksum, checksum
   end
 end
