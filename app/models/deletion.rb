@@ -40,9 +40,7 @@ class Deletion < ActiveRecord::Base
   def remove_from_storage
     RubygemFs.instance.remove("gems/#{@version.full_name}.gem")
     RubygemFs.instance.remove("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
-    return unless ENV['FASTLY_DOMAIN']
-    domain = "https://#{ENV['FASTLY_DOMAIN']}"
-    Fastly.purge("#{domain}/gems/#{@version.full_name}.gem")
-    Fastly.purge("#{domain}/quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
+    Fastly.purge("gems/#{@version.full_name}.gem")
+    Fastly.purge("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
   end
 end

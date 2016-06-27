@@ -7,10 +7,13 @@ class Net::HTTP::Purge < Net::HTTPRequest
 end
 
 class Fastly
-  def self.purge(url, soft = false)
+  def self.purge(path, soft = false)
+    return unless ENV['FASTLY_DOMAIN']
+    domain = "https://#{ENV['FASTLY_DOMAIN']}/"
     headers = soft ? { 'Fastly-Soft-Purge' => 1 } : {}
+
     response = RestClient::Request.execute(method: :purge,
-                                           url: url,
+                                           url: domain + path,
                                            timeout: 10,
                                            headers: headers)
     json = JSON.parse(response)
