@@ -12,7 +12,7 @@ namespace :compact_index do
 
   desc "Fill yanked_at with current time"
   task backfill_yanked_at: :environment do
-    without_yanked_at = Version.where(indexed: false)
+    without_yanked_at = Version.where(indexed: false, yanked_at: nil)
     mod = ENV['shard']
     without_yanked_at = without_yanked_at.where("id % 4 = ?", mod.to_i) if mod
 
