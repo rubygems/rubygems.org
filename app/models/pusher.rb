@@ -129,7 +129,7 @@ class Pusher
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
     rubygem.delay.index_document
     expire_api_memcached
-    purge_api_cdn
+    Fastly.purge_api_cdn(rubygem.name)
     enqueue_web_hook_jobs
     update_remote_bundler_api
     StatsD.increment 'push.success'
@@ -170,11 +170,5 @@ class Pusher
     Rails.cache.delete("info/#{rubygem.name}")
     checksum = Digest::MD5.hexdigest(CompactIndex.info(rubygem.compact_index_info))
     version.update_attribute :info_checksum, checksum
-  end
-
-  def purge_api_cdn
-    Fastly.purge("info/#{rubygem.name}")
-    Fastly.purge("versions")
-    Fastly.purge("names")
   end
 end

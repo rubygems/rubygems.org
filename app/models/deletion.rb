@@ -29,7 +29,9 @@ class Deletion < ActiveRecord::Base
   end
 
   def expire_api_memcached
-    Rails.cache.delete("deps/v1/#{@version.rubygem.name}")
+    ["deps/v1/#{rubygem}", "info/#{rubygem}", "versions", "names"].each do |key|
+      Rails.cache.delete key
+    end
   end
 
   def remove_from_index
@@ -42,5 +44,6 @@ class Deletion < ActiveRecord::Base
     RubygemFs.instance.remove("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
     Fastly.purge("gems/#{@version.full_name}.gem")
     Fastly.purge("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
+    Fastly.purge_api_cdn(rubygem)
   end
 end
