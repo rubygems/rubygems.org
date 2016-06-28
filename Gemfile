@@ -46,6 +46,7 @@ gem 'elasticsearch-dsl', '~> 0.1.2'
 gem 'xml-simple'
 gem 'yajl-ruby', require: 'yajl'
 gem 'compact_index', '~> 0.10.0'
+gem 'sprockets-rails', '~> 3.1.0'
 
 group :development, :test do
   gem 'rubocop', require: false
@@ -53,7 +54,6 @@ group :development, :test do
 end
 
 group :development do
-  gem 'quiet_assets'
   gem 'rails-erd'
 end
 
