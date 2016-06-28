@@ -161,4 +161,8 @@ Rails.application.routes.draw do
   end
 
   use_doorkeeper scope: 'oauth'
+
+  unless Clearance.configuration.allow_sign_up?
+    get '/sign_up' => 'users#disabled_signup'
+  end
 end
