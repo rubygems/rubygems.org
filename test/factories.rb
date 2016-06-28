@@ -63,6 +63,7 @@ FactoryGirl.define do
 
     linkset
     name
+    tsv "'rubygem':1"
 
     after(:create) do |rubygem, evaluator|
       evaluator.owners.each do |owner|

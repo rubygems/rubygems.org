@@ -124,10 +124,10 @@ module RubygemSearchable
 
     def self.legacy_search(query)
       conditions = <<-SQL
-          versions.indexed and (name @@ to_tsquery(:query))
+          versions.indexed and (tsv @@ to_tsquery(:query))
       SQL
 
-      parsed_query = query.gsub(/[^a-zA-Z](?!$)/, ':* & ')
+      parsed_query = query.squish.gsub(/[^a-zA-Z](?!$)/, ':* & ')
       sanitize_query = sanitize_sql_for_conditions parsed_query
       where(conditions, query: sanitize_query + ':*')
         .includes(:versions)
