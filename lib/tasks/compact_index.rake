@@ -30,17 +30,23 @@ namespace :compact_index do
 
   desc "Fill Versions' info_checksum attributes for compact index format"
   task backfill_info_checksum: :environment do
-    total = Version.count
+    without_info_checksum = Rubygem.joins('inner join versions on rubygems.id = versions.rubygem_id')
+      .where('versions.info_checksum is null')
+      .distinct
+    mod = ENV['shard']
+    without_info_checksum = without_info_checksum.where("id % 4 = ?", mod.to_i) if mod
+
+    total = without_info_checksum.count
     i = 0
     puts "Total: #{total}"
 
-    Rubygem.find_each do |rubygem|
+    without_info_checksum.find_each do |rubygem|
       cs = Digest::MD5.hexdigest(CompactIndex.info(rubygem.compact_index_info))
       rubygem.versions.each do |version|
         version.update_attribute :info_checksum, cs
-        i += 1
-        print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
       end
+      i += 1
+      print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
     end
     puts
     puts "Done."
