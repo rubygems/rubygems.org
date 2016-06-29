@@ -277,6 +277,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:version).returns @rubygem.versions[0]
         @rubygem.stubs(:update_attributes_from_gem_specification!)
         Rails.cache.stubs(:delete)
+        Fastly.stubs(:purge)
         Indexer.any_instance.stubs(:write_gem)
         @cutter.save
       end
@@ -304,6 +305,12 @@ class PusherTest < ActiveSupport::TestCase
         assert_received(Rails.cache, :delete) { |cache| cache.with("deps/v1/#{@rubygem.name}") }
         assert_received(Rails.cache, :delete) { |cache| cache.with("versions") }
         assert_received(Rails.cache, :delete) { |cache| cache.with("names") }
+      end
+
+      should "purge cdn cache" do
+        assert_received(Fastly, :purge) { |path| path.with("info/#{@rubygem.name}") }
+        assert_received(Fastly, :purge) { |path| path.with("versions") }
+        assert_received(Fastly, :purge) { |path| path.with("names") }
       end
     end
   end
