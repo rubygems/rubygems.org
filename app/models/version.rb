@@ -153,7 +153,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.published(limit)
-    indexed.by_built_at.limit(limit)
+    indexed.by_created_at.limit(limit)
   end
 
   def self.find_from_slug!(rubygem_id, slug)
