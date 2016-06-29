@@ -1,4 +1,5 @@
 Clearance.configure do |config|
+  config.allow_sign_up = ENV['DISABLE_SIGNUP'] ? false : true
   config.mailer_sender = "help@rubygems.org"
   config.secure_cookie = true unless Rails.env.test? || Rails.env.development?
   config.password_strategy = Clearance::PasswordStrategies::BCryptMigrationFromSHA1

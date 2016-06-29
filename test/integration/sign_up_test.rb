@@ -44,4 +44,20 @@ class SignUpTest < SystemTest
 
     assert page.has_content? "error prohibited"
   end
+
+  test "sign up when sign up is disabled" do
+    Clearance.configure { |config| config.allow_sign_up = false }
+    Rails.application.reload_routes!
+
+    visit root_path
+    refute page.has_content? "Sign up"
+    visit sign_up_path
+    assert_equal current_path, "/"
+    assert page.has_content? "Sign up is temporarily disabled."
+  end
+
+  teardown do
+    Clearance.configure { |config| config.allow_sign_up = true }
+    Rails.application.reload_routes!
+  end
 end
