@@ -133,4 +133,50 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       assert_equal suggestions, response.suggestions.terms
     end
   end
+
+  context 'advanced search' do
+    setup do
+      rubygem1 = create(:rubygem, name: 'example', downloads: 101)
+      rubygem2 = create(:rubygem, name: 'web-rubygem', downloads: 99)
+      create(:version, rubygem: rubygem1, summary: 'special word with web-rubygem')
+      create(:version, rubygem: rubygem2, description: 'example special word')
+      import_and_refresh
+    end
+
+    should "filter gems on downloads" do
+      response = Rubygem.elastic_search "downloads:>100"
+      assert_equal 1, response.results.size
+      assert_equal "example", response.results.first.name
+    end
+
+    should "filter gems on name" do
+      response = Rubygem.elastic_search "name:web-rubygem"
+      assert_equal 1, response.results.size
+      assert_equal "web-rubygem", response.results.first.name
+    end
+
+    should "filter gems on summary" do
+      response = Rubygem.elastic_search "summary:special word"
+      assert_equal 1, response.results.size
+      assert_equal "example", response.results.first.name
+    end
+
+    should "filter gems on description" do
+      response = Rubygem.elastic_search "description:example"
+      assert_equal 1, response.results.size
+      assert_equal "web-rubygem", response.results.first.name
+    end
+
+    should "change default operator" do
+      response = Rubygem.elastic_search "example OR web-rubygem"
+      assert_equal 2, response.results.size
+      assert_equal ["web-rubygem", "example"], response.results.map(&:name)
+    end
+
+    should "support wildcards" do
+      response = Rubygem.elastic_search "name:web*"
+      assert_equal 1, response.results.size
+      assert_equal "web-rubygem", response.results.first.name
+    end
+  end
 end
