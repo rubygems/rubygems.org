@@ -15,8 +15,9 @@ class Rubygem < ActiveRecord::Base
   validate :ensure_name_format, if: :needs_name_validation?
   validates :name,
     presence: true,
-    uniqueness: true,
-    exclusion: { in: GEM_NAME_BLACKLIST, message: "'%{value}' is a reserved gem name." }
+    uniqueness: { case_sensitive: false },
+    if: :needs_name_validation?
+  validate :blacklist_names_exclusion
 
   after_create :update_unresolved
   before_destroy :mark_unresolved
@@ -309,6 +310,11 @@ class Rubygem < ActiveRecord::Base
 
   def needs_name_validation?
     new_record? || name_changed?
+  end
+
+  def blacklist_names_exclusion
+    return unless GEM_NAME_BLACKLIST.include? name.downcase
+    errors.add :name, "'#{name}' is a reserved gem name."
   end
 
   def update_unresolved
