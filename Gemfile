@@ -34,7 +34,7 @@ gem 'psych', '~> 2.0.12'
 gem 'rack'
 gem 'rdoc'
 gem 'rest-client', require: 'rest_client'
-gem 'shoryuken', '~> 2.0.2', require: nil
+gem 'shoryuken', '~> 2.0.2', require: false
 gem 'statsd-instrument', '~> 2.0.6'
 gem 'uglifier', '>= 1.0.3'
 gem 'unicorn'
