@@ -14,7 +14,7 @@ class RubygemTest < ActiveSupport::TestCase
     should have_many(:versions).dependent(:destroy)
     should have_many(:web_hooks).dependent(:destroy)
     should have_one(:linkset).dependent(:destroy)
-    should validate_uniqueness_of :name
+    should validate_uniqueness_of(:name).case_insensitive
     should allow_value("rails").for(:name)
     should allow_value("awesome42").for(:name)
     should allow_value("factory_girl").for(:name)
@@ -22,6 +22,7 @@ class RubygemTest < ActiveSupport::TestCase
     should allow_value("perftools.rb").for(:name)
     should_not allow_value("\342\230\203").for(:name)
     should_not allow_value("2.2").for(:name)
+    should_not allow_value("Ruby").for(:name)
 
     context "that has an invalid name already persisted" do
       setup do
