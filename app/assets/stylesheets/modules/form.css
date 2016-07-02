@@ -1,3 +1,9 @@
+.form__field__instructions {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #a6aab2;
+}
+
 .form__legend, .form__label {
   font-weight: 600;
   font-size: 18px; }

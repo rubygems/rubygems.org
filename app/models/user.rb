@@ -24,7 +24,6 @@ class User < ActiveRecord::Base
   has_many :web_hooks
 
   before_validation :regenerate_token, if: :email_changed?, on: :update
-  before_validation :delete_at_symbol, if: :twitter_username, on: :update
   before_create :generate_api_key
 
   validates :handle, uniqueness: true, allow_nil: true
@@ -119,11 +118,5 @@ class User < ActiveRecord::Base
 
   def total_rubygems_count
     rubygems.with_versions.count
-  end
-
-  private
-
-  def delete_at_symbol
-    self.twitter_username = twitter_username.delete('@')
   end
 end
