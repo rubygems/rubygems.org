@@ -157,10 +157,10 @@
     float: left;
     border-radius: 50%; } }
 
-.profile__header__email {
+.profile__header__attribute {
   padding-top: 10px;
   display: inline-block; }
-  .profile__header__email:before {
+  .profile__header__attribute:before {
     margin-right: 9px;
     position: relative;
     top: 1px; }
