@@ -3,6 +3,7 @@ require 'test_helper'
 class GemDownloadTest < ActiveSupport::TestCase
   setup do
     create(:gem_download, count: 0)
+    Rubygem.__elasticsearch__.create_index! force: true
   end
 
   context ".increment" do
@@ -51,17 +52,38 @@ class GemDownloadTest < ActiveSupport::TestCase
   end
 
   context ".bulk_update" do
+    setup do
+      @versions = Array.new(2) { create(:version) }
+      @gems     = @versions.map(&:rubygem)
+      @counts   = Array.new(2) { rand(100) }
+      @data     = @versions.map.with_index { |v, i| [v.full_name, @counts[i]] }
+      Rubygem.import
+    end
+
     should "write the proper values" do
-      versions = Array.new(2) { create(:version) }
-      gems     = versions.map(&:rubygem)
-      counts   = Array.new(2) { rand(100) }
-      data     = versions.map.with_index { |v, i| [v.full_name, counts[i]] }
-
-      GemDownload.bulk_update(data)
-
+      GemDownload.bulk_update(@data)
       2.times.each do |i|
-        assert_equal counts[i], GemDownload.count_for_version(versions[i].id)
-        assert_equal counts[i], GemDownload.count_for_rubygem(gems[i].id)
+        assert_equal @counts[i], GemDownload.count_for_version(@versions[i].id)
+        assert_equal @counts[i], GemDownload.count_for_rubygem(@gems[i].id)
+      end
+    end
+
+    should "update downloads count of ES index" do
+      GemDownload.bulk_update(@data)
+      2.times.each do |i|
+        response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
+                                                        type: 'rubygem',
+                                                        id: @gems[i].id
+        assert_equal @counts[i], response['_source']['downloads']
+      end
+    end
+
+    should "update total_count when elasticsearch is down" do
+      requires_toxiproxy
+      Toxiproxy[:elasticsearch].down do
+        GemDownload.bulk_update(@data)
+        total_count = @counts.inject(0, :+)
+        assert_equal total_count, GemDownload.total_count
       end
     end
   end

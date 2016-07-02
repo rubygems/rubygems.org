@@ -9,6 +9,7 @@ class Deletion < ActiveRecord::Base
   after_create :remove_from_index
   after_commit :expire_api_memcached
   after_commit :remove_from_storage
+  after_commit :update_search_index
 
   attr_accessor :version
 
@@ -45,5 +46,9 @@ class Deletion < ActiveRecord::Base
     Fastly.purge("gems/#{@version.full_name}.gem")
     Fastly.purge("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
     Fastly.purge_api_cdn(rubygem)
+  end
+
+  def update_search_index
+    @version.rubygem.delay.update_document
   end
 end
