@@ -295,7 +295,7 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
-    should "unown rubygem" do
+    should "remove rubygem ownership" do
       @user.destroy
       assert_equal true, @rubygem.unowned?
     end
