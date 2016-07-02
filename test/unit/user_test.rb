@@ -47,6 +47,14 @@ class UserTest < ActiveSupport::TestCase
         assert_equal "bills", user.display_handle
       end
     end
+
+    context 'twitter_username' do
+      should validate_length_of(:twitter_username)
+      should allow_value("user123_32").for(:twitter_username)
+      should_not allow_value("@user").for(:twitter_username)
+      should_not allow_value("user 1").for(:twitter_username)
+      should_not allow_value("user-1").for(:twitter_username)
+    end
   end
 
   context "with a user" do

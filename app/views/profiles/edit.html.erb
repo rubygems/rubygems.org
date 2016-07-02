@@ -17,6 +17,18 @@
   </div>
 
   <div class="text_field">
+    <%= form.label :twitter_username, :class => 'form__label' %>
+
+    <%=
+      form.text_field(
+        :twitter_username,
+        value: twitter_username(current_user),
+        :class => 'form__input'
+      )
+    %>
+  </div>
+
+  <div class="text_field">
     <%= form.label :email, :class => 'form__label' %>
     <%= form.email_field :email, :class => 'form__input' %>
   </div>

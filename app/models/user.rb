@@ -3,7 +3,16 @@ class User < ActiveRecord::Base
   include Gravtastic
   is_gravtastic default: "retro"
 
-  PERMITTED_ATTRS = [:bio, :email, :handle, :hide_email, :location, :password, :website].freeze
+  PERMITTED_ATTRS = [
+    :bio,
+    :email,
+    :handle,
+    :hide_email,
+    :location,
+    :password,
+    :website,
+    :twitter_username
+  ].freeze
 
   has_many :rubygems, through: :ownerships
 
@@ -15,6 +24,7 @@ class User < ActiveRecord::Base
   has_many :web_hooks
 
   before_validation :regenerate_token, if: :email_changed?, on: :update
+  before_validation :delete_at_symbol, if: :twitter_username, on: :update
   before_create :generate_api_key
 
   validates :handle, uniqueness: true, allow_nil: true
@@ -23,6 +33,13 @@ class User < ActiveRecord::Base
     message: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
   }, allow_nil: true
   validates :handle, length: { within: 2..40 }, allow_nil: true
+
+  validates :twitter_username, format: {
+    with: /\A[a-zA-Z0-9_]*\z/,
+    message: "can only contain letters, numbers, and underscores"
+  }, allow_nil: true
+
+  validates :twitter_username, length: { within: 0..15 }, allow_nil: true
 
   def self.authenticate(who, password)
     user = find_by(email: who.downcase) || find_by(handle: who)
@@ -102,5 +119,11 @@ class User < ActiveRecord::Base
 
   def total_rubygems_count
     rubygems.with_versions.count
+  end
+
+  private
+
+  def delete_at_symbol
+    self.twitter_username = twitter_username.delete('@')
   end
 end
