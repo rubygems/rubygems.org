@@ -93,7 +93,6 @@ en:
     edit:
       title: Edit profile
       hide_email: Hide email in public profile
-      twitter_username_format: Do not include "@"
       optional_public_field: Optional. Will be displayed publicly
       reset_password:
         title: Reset password

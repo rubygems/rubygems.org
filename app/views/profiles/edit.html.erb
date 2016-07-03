@@ -17,17 +17,16 @@
   </div>
 
   <div class="text_field">
-    <%= form.label :twitter_username, :class => 'form__label' %>
+    <%= form.label :twitter_username, class: 'form__label' %>
 
     <p class='form__field__instructions'>
       <%= t('.optional_public_field') %>
     </p>
 
-    <%= 
-      form.text_field(:twitter_username,
-        placeholder: t('.twitter_username_format'),
-        :class => 'form__input')
-    %>
+    <div class="form__input__addon-container form__input__addon-left">
+      <span class="form__input__addon">@</span>
+      <%= form.text_field(:twitter_username, class: 'form__input') %>
+    </div>
   </div>
 
   <div class="text_field">

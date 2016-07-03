@@ -15,6 +15,24 @@
   margin-bottom: 10px;
   display: block; }
 
+.form__input__addon-container {
+  position: relative; }
+
+.form__input__addon {
+  position: absolute;
+  padding: 12px;
+  pointer-events: none;
+  border-right: 1px solid #f1f1f1;
+  border-radius: 4px;
+  font-weight: 300;
+  font-size: 18px; }
+
+.form__input__addon-left .form__input__addon {
+  left: 0px; }
+
+.form__input__addon-left .form__input {
+  padding-left: 45px; }
+
 .form__input, .form__textarea, .form__select {
   margin-bottom: 30px; }
 
