@@ -4,11 +4,11 @@
       <div id="avatar-frame">
         <%= 
           image_tag(
-            @user.gravatar_url(:size => 300, :secure => request.ssl?).html_safe,
-            :id => "profile_gravatar",
-            :width => 300,
-            :height => 300,
-            :class => 'profile__header__avatar'
+            @user.gravatar_url(size: 300, secure: request.ssl?).html_safe,
+            id: "profile_gravatar",
+            width: 300,
+            height: 300,
+            class: 'profile__header__avatar'
           )
         %>
       </div>
@@ -28,7 +28,7 @@
             mail_to(
               @user.email,
               "Email Me",
-              :encode => "hex",
+              encode: "hex",
               class: "profile__header__email t-link--black",
               'data-icon' => '✉'
             )
@@ -42,7 +42,7 @@
             link_to(
               "Edit Profile",
               edit_profile_path,
-              :id => "edit-profile",
+              id: "edit-profile",
               class: "profile__header__email t-link--black"
             )
           %>
@@ -75,9 +75,9 @@
     <ul>
       <%=
         render(
-          :partial => 'rubygem',
-          :collection => @rubygems + @extra_rubygems,
-          :locals => {:graph => false}
+          partial: 'rubygem',
+          collection: @rubygems + @extra_rubygems,
+          locals: {graph: false}
         )
       %>
     </ul>
