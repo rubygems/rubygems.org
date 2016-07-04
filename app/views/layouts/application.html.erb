@@ -146,6 +146,11 @@
             <%- end %>
             <%= link_to t('.footer.help'), t(:help_url), class: "nav--v__link--footer" %>
             <%= link_to t('.footer.api'), "http://guides.rubygems.org/rubygems-org-api", class: "nav--v__link--footer" %>
+            <%- if request.path_info == '/pages/security' %>
+              <%= link_to t('.footer.security'), page_url("security"), class: "nav--v__link--footer is-active" %>
+            <%- else %>
+              <%= link_to t('.footer.security'), page_url("security"), class: "nav--v__link--footer" %>
+            <%- end %>
           </div>
           <div class="l-colspan--l colspan--l--has-border">
             <p class="footer__about"><%= raw t('footer_about') %></p>
