@@ -41,7 +41,7 @@ namespace :compact_index do
     puts "Total: #{total}"
 
     without_info_checksum.find_each do |rubygem|
-      cs = Digest::MD5.hexdigest(CompactIndex.info(rubygem.compact_index_info))
+      cs = Digest::MD5.hexdigest(CompactIndex.info(GemInfo.new(rubygem.name).compact_index_info))
       rubygem.versions.each do |version|
         version.update_attribute :info_checksum, cs
       end
