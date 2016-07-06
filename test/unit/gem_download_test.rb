@@ -55,17 +55,20 @@ class GemDownloadTest < ActiveSupport::TestCase
     setup do
       @versions = Array.new(2) { create(:version) }
       @gems     = @versions.map(&:rubygem)
-      @counts   = Array.new(2) { rand(100) }
+      @versions << create(:version, rubygem: @gems[0])
+      @counts   = Array.new(3) { rand(100) }
       @data     = @versions.map.with_index { |v, i| [v.full_name, @counts[i]] }
+      @gem_downloads = [(@counts[0] + @counts[2]), @counts[1]]
       Rubygem.import
     end
 
     should "write the proper values" do
       GemDownload.bulk_update(@data)
-      2.times.each do |i|
+      3.times.each do |i|
         assert_equal @counts[i], GemDownload.count_for_version(@versions[i].id)
-        assert_equal @counts[i], GemDownload.count_for_rubygem(@gems[i].id)
       end
+      assert_equal @gem_downloads[0], GemDownload.count_for_rubygem(@gems[0].id)
+      assert_equal @gem_downloads[1], GemDownload.count_for_rubygem(@gems[1].id)
     end
 
     should "update downloads count of ES index" do
@@ -74,7 +77,8 @@ class GemDownloadTest < ActiveSupport::TestCase
         response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
                                                         type: 'rubygem',
                                                         id: @gems[i].id
-        assert_equal @counts[i], response['_source']['downloads']
+
+        assert_equal @gem_downloads[i], response['_source']['downloads']
       end
     end
 
