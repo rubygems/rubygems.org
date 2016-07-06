@@ -98,7 +98,7 @@ class GemDownload < ActiveRecord::Base
       bulk_update_query = []
 
       gem_ids = gem_downloads.map { |id, _| id }
-      downloads = GemDownload.where(rubygem_id: gem_ids).pluck(:count)
+      downloads = GemDownload.where(rubygem_id: gem_ids, version_id: 0).pluck(:count)
       with_prev_downloads = gem_downloads.zip(downloads).map(&:flatten)
 
       with_prev_downloads.sort_by { |id, _| id }.each do |rubygem_id, count, prev_downloads|
