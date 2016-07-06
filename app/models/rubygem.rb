@@ -262,13 +262,12 @@ class Rubygem < ActiveRecord::Base
     names = Rails.cache.read('names')
     if names
       StatsD.increment "compact_index.memcached.names.hit"
-      response
     else
       StatsD.increment "compact_index.memcached.names.miss"
       names = order("name").pluck("name")
       Rails.cache.write('names', names)
-      names
     end
+    names
   end
 
   def self.compact_index_versions(date)
