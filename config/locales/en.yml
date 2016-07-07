@@ -117,6 +117,7 @@ en:
       downloads: Downloads
     show:
       not_hosted_notice: This gem is not currently hosted on RubyGems.org.
+      reserved_namespace: This namespace is reserved by rubygems.org. %{contact} rubygems team if you would like to take over this namespace.
       install: install
       yanked_notice: "This version has been yanked, and it is not available for download directly or for other gems that may have depended on it."
       authors_header: Authors
