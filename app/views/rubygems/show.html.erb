@@ -10,9 +10,10 @@
   <% end %>
 <% end %>
 
-<% if @rubygem.versions.count.zero? %>
+<% if @rubygem.public_versions.count.zero? %>
   <div class="t-body">
     <p><%= t '.not_hosted_notice' %></p>
+    <%= unsubscribe_link(@rubygem) %>
   </div>
 <% else %>
   <div class="l-overflow">

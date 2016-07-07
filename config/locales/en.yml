@@ -118,7 +118,7 @@ en:
     show:
       not_hosted_notice: This gem is not currently hosted on RubyGems.org.
       install: install
-      yanked_notice: "This gem has been yanked, and it is not available for download directly or for other gems that may have depended on it."
+      yanked_notice: "This version has been yanked, and it is not available for download directly or for other gems that may have depended on it."
       authors_header: Authors
       downloads_for_this_version: "For this version"
       owners_header: Owners
