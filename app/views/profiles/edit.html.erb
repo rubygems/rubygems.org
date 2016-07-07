@@ -17,10 +17,16 @@
   </div>
 
   <div class="text_field">
-    <%= form.label :twitter_username, class: 'form__label' %>
+    <%= form.label :twitter_username, class: 'form__label form__label__icon-container' do %>
+      <%=
+        image_tag("/images/twitter_icon.png", alt: 'Twitter icon', class: 'form__label__icon')
+      %>
+      
+      <span class='form__label__text'>@example</span>
+    <% end %>
 
     <p class='form__field__instructions'>
-      <%= t('.optional_public_field') %>
+      <%= t('.optional_twitter_username') %>
     </p>
 
     <div class="form__input__addon-container form__input__addon-left">

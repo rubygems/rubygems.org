@@ -1,5 +1,6 @@
 .form__field__instructions {
   font-size: 14px;
+  margin-top: 5px;
   margin-bottom: 5px;
   color: #a6aab2;
 }
@@ -11,9 +12,16 @@
 .form__legend {
   margin-bottom: 40px; }
 
-.form__label {
-  margin-bottom: 10px;
-  display: block; }
+.form__label__icon-container {
+  position: relative; }
+
+.form__label__icon {
+  position: absolute;
+  top: -8px;
+  height: 35px; }
+
+.form__label__icon-container .form__label__text {
+  padding-left: 33px;}
 
 .form__input__addon-container {
   position: relative; }
