@@ -88,7 +88,7 @@ GEM
       timers (>= 4.1.1)
     celluloid-pool (0.20.5)
       timers (>= 4.1.1)
-    celluloid-supervision (0.20.5)
+    celluloid-supervision (0.20.6)
       timers (>= 4.1.1)
     choice (0.2.0)
     clearance (1.14.1)
