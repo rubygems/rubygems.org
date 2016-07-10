@@ -69,7 +69,7 @@ class ProfileTest < SystemTest
     visit profile_path("nick1")
 
     click_link "Edit Profile"
-    fill_in "@example", with: "nick1"
+    fill_in "Twitter username", with: "nick1"
     click_button "Update"
 
     visit profile_path("nick1")
