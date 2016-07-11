@@ -93,6 +93,7 @@ en:
     edit:
       title: Edit profile
       hide_email: Hide email in public profile
+      optional_twitter_username: Optional Twitter username. Will be displayed publicly
       reset_password:
         title: Reset password
         text: "Need a new password? No problem. %{link}"

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160530084904) do
+ActiveRecord::Schema.define(version: 20160702034732) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -182,6 +182,7 @@ ActiveRecord::Schema.define(version: 20160530084904) do
     t.boolean  "email_reset"
     t.string   "handle"
     t.boolean  "hide_email"
+    t.string   "twitter_username"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
@@ -201,7 +202,7 @@ ActiveRecord::Schema.define(version: 20160530084904) do
     t.text     "summary"
     t.string   "platform"
     t.datetime "created_at"
-    t.boolean  "indexed",           default: true
+    t.boolean  "indexed",                   default: true
     t.boolean  "prerelease"
     t.integer  "position"
     t.boolean  "latest"
@@ -211,7 +212,7 @@ ActiveRecord::Schema.define(version: 20160530084904) do
     t.text     "requirements"
     t.string   "required_ruby_version"
     t.string   "sha256"
-    t.hstore   "metadata",          default: {},   null: false
+    t.hstore   "metadata",                  default: {},   null: false
     t.string   "required_rubygems_version"
     t.string   "info_checksum"
     t.datetime "yanked_at"
