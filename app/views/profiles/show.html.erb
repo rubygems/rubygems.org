@@ -35,22 +35,24 @@
           %>
         </p>
       <% end %>
-      
-      <%=
-        image_tag(
-          "/images/twitter_icon.png",
-          alt: 'Twitter icon',
-          class: 'profile__header__icon'
-        )
-      %>
 
-      <%=
-        link_to(
-          twitter_username(@user),
-          twitter_url(@user),
-          class: "profile__header__attribute t-link--black"
-        ) unless @user.twitter_username.blank?
-      %>
+      <% if @user.twitter_username.present? %>
+        <%=
+          image_tag(
+            "/images/twitter_icon.png",
+            alt: 'Twitter icon',
+            class: 'profile__header__icon'
+          )
+        %>
+
+        <%=
+          link_to(
+            twitter_username(@user),
+            twitter_url(@user),
+            class: "profile__header__attribute t-link--black"
+          )
+        %>
+      <% end %>
 
       <% if @user == current_user %>
         <div id="downloads-ego">
