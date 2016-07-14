@@ -37,7 +37,7 @@ class GemDownload < ActiveRecord::Base
     # version_id: 0 stores count for total gem downloads
     # we need to find the second maximum
     def most_downloaded_gem_count
-      count_by_sql "SELECT MAX(count) FROM gem_downloads WHERE count NOT IN (#{total_count})"
+      count_by_sql "SELECT MAX(count) FROM gem_downloads WHERE rubygem_id <> 0"
     end
 
     def increment(count, rubygem_id:, version_id: 0)
