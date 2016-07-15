@@ -5,6 +5,6 @@ class Ownership < ActiveRecord::Base
   validates :user_id, uniqueness: { scope: :rubygem_id }
 
   def safe_destroy
-    rubygem.owners.count != 1 && destroy ? true : false
+    rubygem.owners.many? && destroy
   end
 end

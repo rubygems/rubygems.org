@@ -195,7 +195,7 @@ class ProfilesControllerTest < ActionController::TestCase
             delete :destroy, user: { password: 'youshallnotpass' }
           end
 
-          should redirect_to('the profile edit page') { edit_profile_path }
+          should redirect_to('the profile edit page') { delete_profile_path }
           should set_flash.to("Something went wrong. Please try again after some time.")
         end
       end

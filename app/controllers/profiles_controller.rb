@@ -36,11 +36,9 @@ class ProfilesController < ApplicationController
 
   def destroy
     if User.authenticate(current_user.email, params[:user][:password]) && current_user.destroy
-      flash[:notice] = t '.successful_flash'
-      redirect_to_root
+      redirect_to root_path, notice: t('.successful_flash')
     else
-      flash[:notice] = t '.unsuccessful_flash'
-      redirect_to edit_profile_path
+      redirect_to delete_profile_path, notice: t('.unsuccessful_flash')
     end
   end
 

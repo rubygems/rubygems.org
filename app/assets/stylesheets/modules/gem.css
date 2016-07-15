@@ -31,10 +31,9 @@
       overflow: auto;
       border-bottom: 1px solid #c1c4ca; } }
 
-.delete__owners{
+.owners {
   clear: both;
-  margin-bottom: -30px;
-}
+  margin-bottom: -30px; }
 
 .gem__sha {
   margin-top: 16px; }
