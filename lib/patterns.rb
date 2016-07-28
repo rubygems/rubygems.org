@@ -54,7 +54,6 @@ module Patterns
     observer
     open-uri
     open3
-    openssl
     optparse
     ostruct
     pathname
