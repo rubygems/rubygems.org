@@ -296,13 +296,13 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On POST to create with reserved gem name" do
       setup do
-        @request.env["RAW_POST_DATA"] = gem_file("openssl-0.1.0.gem").read
+        @request.env["RAW_POST_DATA"] = gem_file("rubygems-0.1.0.gem").read
         post :create
       end
       should respond_with 403
       should "not register gem" do
         assert Rubygem.count.zero?
-        assert_match(/There was a problem saving your gem: Name 'openssl' is a reserved gem name./, @response.body)
+        assert_match(/There was a problem saving your gem: Name 'rubygems' is a reserved gem name./, @response.body)
       end
     end
 
