@@ -38,7 +38,7 @@ class User < ActiveRecord::Base
     message: "can only contain letters, numbers, and underscores"
   }, allow_nil: true
 
-  validates :twitter_username, length: { within: 0..15 }, allow_nil: true
+  validates :twitter_username, length: { within: 0..20 }, allow_nil: true
 
   def self.authenticate(who, password)
     user = find_by(email: who.downcase) || find_by(handle: who)

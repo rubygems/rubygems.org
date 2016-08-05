@@ -54,6 +54,8 @@ class UserTest < ActiveSupport::TestCase
       should_not allow_value("@user").for(:twitter_username)
       should_not allow_value("user 1").for(:twitter_username)
       should_not allow_value("user-1").for(:twitter_username)
+      should allow_value("01234567890123456789").for(:twitter_username)
+      should_not allow_value("012345678901234567890").for(:twitter_username)
     end
   end
 
