@@ -7,14 +7,20 @@ class Api::V1::DeletionsController < Api::BaseController
   before_action :validate_gem_and_version,  only: [:create]
 
   def create
-    @deletion = current_user.deletions.build(version: @version)
-    if @deletion.save
-      StatsD.increment 'yank.success'
-      render text: "Successfully deleted gem: #{@version.to_title}"
+    if @version.can_yank?
+      @deletion = current_user.deletions.build(version: @version)
+      if @deletion.save
+        StatsD.increment 'yank.success'
+        render text: "Successfully deleted gem: #{@version.to_title}"
+      else
+        StatsD.increment 'yank.failure'
+        render text: "The version #{params[:version]} has already been deleted.",
+               status: :unprocessable_entity
+      end
     else
       StatsD.increment 'yank.failure'
-      render text: "The version #{params[:version]} has already been deleted.",
-             status: :unprocessable_entity
+      render text: "This gem version cannot be deleted. Contact RubyGems for further assistance",
+             status: :bad_request
     end
   end
 

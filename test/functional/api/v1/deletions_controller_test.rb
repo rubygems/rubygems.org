@@ -15,6 +15,22 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         RubygemFs.instance.store("gems/#{@v1.full_name}.gem", "")
       end
 
+      context "ON DELETE for a gem with greater than 15000 downloads" do
+        setup do
+          @v1.gem_download.count = 15_000
+          @v1.gem_download.save
+          delete :create, gem_name: @rubygem.to_param, version: @v1.number
+        end
+        should respond_with :bad_request
+        should "not modify any versions" do
+          assert_equal 1, @rubygem.versions.count
+          assert_equal 1, @rubygem.versions.indexed.count
+        end
+        should "not record the deletion" do
+          assert_equal 0, @user.deletions.count
+        end
+      end
+
       context "ON DELETE to create for existing gem version" do
         setup do
           delete :create, gem_name: @rubygem.to_param, version: @v1.number

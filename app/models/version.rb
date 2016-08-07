@@ -171,6 +171,10 @@ class Version < ActiveRecord::Base
 
   delegate :reorder_versions, to: :rubygem
 
+  def can_yank?
+    gem_download.count < 15_000
+  end
+
   def yanked?
     !indexed
   end
