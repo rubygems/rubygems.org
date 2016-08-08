@@ -86,7 +86,6 @@ module Patterns
     thwait
     time
     timeout
-    tk
     tmpdir
     tsort
     un
