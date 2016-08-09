@@ -43,9 +43,9 @@ class Deletion < ActiveRecord::Base
   def remove_from_storage
     RubygemFs.instance.remove("gems/#{@version.full_name}.gem")
     RubygemFs.instance.remove("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
-    Fastly.purge("gems/#{@version.full_name}.gem")
-    Fastly.purge("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
-    Fastly.purge_api_cdn(rubygem)
+    Fastly.delay.purge("gems/#{@version.full_name}.gem")
+    Fastly.delay.purge("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
+    Fastly.delay.purge_api_cdn(rubygem)
   end
 
   def update_search_index

@@ -308,13 +308,14 @@ class PusherTest < ActiveSupport::TestCase
       end
 
       should "purge cdn cache" do
+        Delayed::Worker.new.work_off
         assert_received(Fastly, :purge) { |path| path.with("info/#{@rubygem.name}") }
         assert_received(Fastly, :purge) { |path| path.with("versions") }
         assert_received(Fastly, :purge) { |path| path.with("names") }
       end
 
-      should "enque job for updating ES index and spec index" do
-        assert_difference 'Delayed::Job.count', 2 do
+      should "enque job for updating ES index, spec index and purging cdn" do
+        assert_difference 'Delayed::Job.count', 3 do
           @cutter.save
         end
       end

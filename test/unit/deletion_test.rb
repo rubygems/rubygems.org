@@ -55,14 +55,15 @@ class DeletionTest < ActiveSupport::TestCase
     end
 
     should "purge cdn cache" do
-      assert_received(Fastly, :purge) { |path| path.with("info/#{@gem_name}") }
-      assert_received(Fastly, :purge) { |path| path.with("versions") }
-      assert_received(Fastly, :purge) { |path| path.with("names") }
+      Delayed::Worker.new.work_off
+      assert_received(Fastly, :purge) { |path| path.with("info/#{@gem_name}").twice }
+      assert_received(Fastly, :purge) { |path| path.with("versions").twice }
+      assert_received(Fastly, :purge) { |path| path.with("names").twice }
     end
   end
 
-  should "enque job for updating ES index and update index" do
-    assert_difference 'Delayed::Job.count', 2 do
+  should "enque job for updating ES index, spec index and purging cdn" do
+    assert_difference 'Delayed::Job.count', 5 do
       delete_gem
     end
 

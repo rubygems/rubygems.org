@@ -225,7 +225,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           updated_at: 1.year.ago,
           created_at: 1.year.ago)
         @request.env["RAW_POST_DATA"] = gem_file("test-1.0.0.gem").read
-        assert_difference 'Delayed::Job.count', 2 do
+        assert_difference 'Delayed::Job.count', 3 do
           post :create
         end
       end
