@@ -32,6 +32,7 @@ gem 'paul_revere', '~> 2.0'
 gem 'pg'
 gem 'psych', '~> 2.0.12'
 gem 'rack'
+gem 'rack-utf8_sanitizer'
 gem 'rdoc'
 gem 'rest-client', require: 'rest_client'
 gem 'shoryuken', '~> 2.0.2', require: false
