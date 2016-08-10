@@ -43,12 +43,16 @@ class DeletionTest < ActiveSupport::TestCase
       assert @version.reload.yanked_at
     end
 
+    should "set the yanked info checksum" do
+      refute_nil @version.reload.yanked_info_checksum
+    end
+
     should "delete the .gem file" do
       assert_nil RubygemFs.instance.get("gems/#{@version.full_name}.gem"), "Rubygem still exists!"
     end
 
     should "expire API memcached" do
-      assert_received(Rails.cache, :delete) { |cache| cache.with("info/#{@gem_name}") }
+      assert_received(Rails.cache, :delete) { |cache| cache.with("info/#{@gem_name}").twice }
       assert_received(Rails.cache, :delete) { |cache| cache.with("deps/v1/#{@gem_name}") }
       assert_received(Rails.cache, :delete) { |cache| cache.with("versions") }
       assert_received(Rails.cache, :delete) { |cache| cache.with("names") }

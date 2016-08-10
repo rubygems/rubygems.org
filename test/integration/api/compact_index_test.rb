@@ -8,7 +8,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
   setup do
     @rubygem2 = create(:rubygem, name: 'gemB')
-    create(:version, rubygem: @rubygem2, number: '1.0.0', info_checksum: 'qw2dwe')
+    @version = create(:version, rubygem: @rubygem2, number: '1.0.0', info_checksum: 'qw2dwe')
 
     # another gem
     rubygem = create(:rubygem, name: 'gemA')
@@ -96,6 +96,24 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     assert_response 206
     assert_equal partial_body, @response.body
     assert_equal etag(full_response_body), @response.headers['ETag']
+  end
+
+  test "/versions updates on gem yank" do
+    Deletion.create!(version: @version, user: create(:user))
+    expected = <<-eos
+gemB 1.0.0 qw2dwe
+gemA 1.0.0 013we2
+gemA 2.0.0 1cf94r
+gemA 1.2.0 13q4es
+gemA 2.1.0 e217fz
+gemB -1.0.0 6105347ebb9825ac754615ca55ff3b0c
+eos
+
+    get versions_path
+    full_response_body = @response.body
+    get versions_path, nil, range: "bytes=206-"
+    assert_equal etag(full_response_body), @response.headers['ETag']
+    assert_equal expected, @response.body
   end
 
   test "/info with existing gem" do
