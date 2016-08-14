@@ -14,6 +14,7 @@ Rails.application.routes.draw do
           number: /#{Gem::Version::VERSION_PATTERN}(?=\.json\z)|#{Gem::Version::VERSION_PATTERN}/
         }
       end
+      resources :metrics, only: :create 
     end
 
     namespace :v1 do
