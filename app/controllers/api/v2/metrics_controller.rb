@@ -6,7 +6,7 @@ class Api::V2::MetricsController < Api::BaseController
   ]
   def create
     METRICS.each do |metric|
-      Metriks.counter("#{metric}/params[:metric]").increment
+      Metriks.counter("#{metric}/#{params[metric]}").increment
     end
   end
 end
