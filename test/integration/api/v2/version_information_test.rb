@@ -48,4 +48,12 @@ class VersionInformationTest < ActionDispatch::IntegrationTest
     request_endpoint(@rubygem, '2.0.0', 'json', http_params)
     assert_response :not_modified
   end
+
+  test "rubygem has .(dot) in name" do
+    @rubygem.update_attribute(:name, "ruby.ruby.ruby")
+    request_endpoint(@rubygem, '2.0.0')
+    assert_response :success
+    json_response = JSON.load(@response.body)
+    assert_equal '2.0.0', json_response["number"]
+  end
 end
