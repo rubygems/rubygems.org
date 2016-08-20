@@ -41,8 +41,11 @@ GEM
       sshkit (>= 1.6.1, != 1.7.0)
     arel (6.0.3)
     ast (2.3.0)
+    atomic (1.1.99)
     autoprefixer-rails (6.3.7)
       execjs
+    avl_tree (1.2.1)
+      atomic (~> 1.1)
     aws-sdk (2.3.21)
       aws-sdk-resources (= 2.3.21)
     aws-sdk-core (2.3.21)
@@ -164,6 +167,12 @@ GEM
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
     metaclass (0.0.4)
+    metriks (0.9.9.7)
+      atomic (~> 1.0)
+      avl_tree (~> 1.2.0)
+      hitimes (~> 1.1)
+    metriks-librato_metrics (1.0.5)
+      metriks (>= 0.9.9.6)
     mime-types (2.99.2)
     mini_portile2 (2.1.0)
     minitest (5.9.0)
@@ -317,6 +326,8 @@ DEPENDENCIES
   jquery-rails
   launchy
   mail
+  metriks
+  metriks-librato_metrics
   mime-types (~> 2.99)
   minitest
   mocha
