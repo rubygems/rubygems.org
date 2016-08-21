@@ -8,7 +8,7 @@ class Api::V2::MetricsController < Api::BaseController
     ruby_engine
     bundler_settings
     ci_information
-  ]
+  ].freeze
   def create
     METRICS.each do |metric|
       Metriks.counter("#{metric}/#{params[metric]}").increment
