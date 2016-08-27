@@ -111,6 +111,11 @@ class Rubygem < ActiveRecord::Base
     versions.uniq.sort_by(&:position)
   end
 
+  def public_version_payload(number)
+    version = public_versions.find_by(number: number)
+    payload(version).merge!(version.as_json) if version
+  end
+
   def hosted?
     versions.count.nonzero?
   end

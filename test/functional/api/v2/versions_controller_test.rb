@@ -147,5 +147,8 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
     should("have sha") { assert @response["sha"] }
     should("have platform") { assert @response["platform"] }
     should("have ruby_version") { assert @response["ruby_version"] }
+    should("have dependencies") { assert @response["dependencies"] }
+    should("have development dependencies") { assert @response["dependencies"]["development"] }
+    should("have runtime dependencies") { assert @response["dependencies"]["runtime"] }
   end
 end
