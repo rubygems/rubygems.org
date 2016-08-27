@@ -573,8 +573,20 @@ class RubygemTest < ActiveSupport::TestCase
       assert @new.pushable?
     end
 
-    should "be pushable if gem has no versions" do
-      assert @haml.pushable?
+    context "gem has no versions" do
+      should "be pushable if gem is less than one month old" do
+        assert @haml.pushable?
+      end
+
+      should "be pushable if gem was yanked more than 100 days ago" do
+        @haml.update_attributes(created_at: 101.days.ago, updated_at: 101.days.ago)
+        assert @haml.pushable?
+      end
+
+      should "not be pushable if gem is older than a month and yanked less than 100 days ago" do
+        @haml.update_attributes(created_at: 99.days.ago, updated_at: 99.days.ago)
+        refute @haml.pushable?
+      end
     end
 
     should "not be pushable if it has versions" do

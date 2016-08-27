@@ -182,7 +182,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def pushable?
-    new_record? || versions.indexed.count.zero?
+    new_record? || (versions.indexed.none? && not_protected?)
   end
 
   def create_ownership(user)
@@ -301,6 +301,12 @@ class Rubygem < ActiveRecord::Base
   end
 
   private
+
+  # a gem namespace is not protected if it is
+  # updated(yanked) in more than 100 days or it is created in last 30 days
+  def not_protected?
+    updated_at < 100.days.ago || created_at > 30.days.ago
+  end
 
   def ensure_name_format
     if name.class != String
