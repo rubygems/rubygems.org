@@ -64,7 +64,12 @@ module RubygemFs
     end
 
     def store(key, body, metadata = {})
-      s3.put_object(key: key, body: body, bucket: bucket, acl: 'public-read', metadata: metadata)
+      s3.put_object(key: key,
+                    body: body,
+                    bucket: bucket,
+                    acl: 'public-read',
+                    metadata: metadata,
+                    cache_control: 'max-age=31536000')
     end
 
     def get(key)
