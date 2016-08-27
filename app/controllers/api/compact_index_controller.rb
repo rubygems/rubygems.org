@@ -2,7 +2,7 @@ class Api::CompactIndexController < Api::BaseController
   before_action :find_rubygem_by_name, only: [:info]
 
   def names
-    names = Rubygem.ordered_names
+    names = GemInfo.ordered_names
     render_range CompactIndex.names(names)
   end
 
@@ -10,13 +10,13 @@ class Api::CompactIndexController < Api::BaseController
     versions_path = Rails.application.config.rubygems['versions_file_location']
     versions_file = CompactIndex::VersionsFile.new(versions_path)
     from_date = versions_file.updated_at
-    extra_gems = Rubygem.compact_index_versions(from_date)
+    extra_gems = GemInfo.compact_index_versions(from_date)
     render_range CompactIndex.versions(versions_file, extra_gems)
   end
 
   def info
     return unless stale?(@rubygem)
-    info_params = @rubygem.compact_index_info
+    info_params = GemInfo.new(@rubygem.name).compact_index_info
     render_range CompactIndex.info(info_params)
   end
 
