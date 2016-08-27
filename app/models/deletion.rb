@@ -6,7 +6,7 @@ class Deletion < ActiveRecord::Base
   validate :version_is_indexed
 
   before_validation :record_metadata
-  after_create :remove_from_index
+  after_create :remove_from_index, :set_yanked_info_checksum
   after_commit :expire_api_memcached
   after_commit :remove_from_storage
   after_commit :update_search_index
@@ -50,5 +50,12 @@ class Deletion < ActiveRecord::Base
 
   def update_search_index
     @version.rubygem.delay.update_document
+  end
+
+  def set_yanked_info_checksum
+    # expire info cache of last version
+    Rails.cache.delete("info/#{rubygem}")
+    checksum = Digest::MD5.hexdigest(CompactIndex.info(version.rubygem.compact_index_info))
+    version.update_attribute :yanked_info_checksum, checksum
   end
 end

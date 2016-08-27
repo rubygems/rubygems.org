@@ -373,7 +373,7 @@ class Rubygem < ActiveRecord::Base
               WHERE v.rubygem_id = r.id AND
                     v.created_at > ?)
               UNION
-              (SELECT r.name, v.yanked_at as date, v.info_checksum, '-'||v.number, v.platform
+              (SELECT r.name, v.yanked_at as date, v.yanked_info_checksum as info_checksum, '-'||v.number, v.platform
               FROM rubygems AS r, versions AS v
               WHERE v.rubygem_id = r.id AND
                     v.indexed is false AND
