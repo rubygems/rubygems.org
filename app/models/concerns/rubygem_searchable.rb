@@ -20,7 +20,8 @@ module RubygemSearchable
         summary:               most_recent_version.try(:summary),
         description:           most_recent_version.try(:description),
         downloads:             downloads,
-        latest_version_number: most_recent_version.try(:number)
+        latest_version_number: most_recent_version.try(:number),
+        updated:               updated_at
       }
     end
 
@@ -41,9 +42,16 @@ module RubygemSearchable
         indexes :suggest, analyzer: 'simple'
       end
       indexes :yanked, type: 'boolean'
-      indexes :summary, analyzer: 'english'
-      indexes :description, analyzer: 'english'
+      indexes :summary, type: 'multi_field' do
+        indexes :summary, analyzer: 'english'
+        indexes :raw, analyzer: 'simple'
+      end
+      indexes :description, type: 'multi_field' do
+        indexes :description, analyzer: 'english'
+        indexes :raw, analyzer: 'simple'
+      end
       indexes :downloads, type: 'integer'
+      indexes :updated, type: 'date'
     end
 
     def self.search(query, es: false, page: 1)
@@ -64,7 +72,7 @@ module RubygemSearchable
       raise SearchDownError
     end
 
-    def self.elastic_search(q)
+    def self.elastic_search(q) # rubocop:disable Metrics/MethodLength
       search_definition = Elasticsearch::DSL::Search.search do
         query do
           function_score do
@@ -86,6 +94,21 @@ module RubygemSearchable
 
             # Boost the score based on number of downloads
             functions << { field_value_factor: { field: :downloads, modifier: :log1p } }
+          end
+        end
+
+        aggregation :matched_field do
+          filters do
+            filters name: { terms: { name: [q] } },
+                    summary: { terms: { 'summary.raw' => [q] } },
+                    description: { terms: { 'description.raw' => [q] } }
+          end
+        end
+
+        aggregation :date_range do
+          date_range do
+            field  'updated'
+            ranges [{ from: 'now-7d/d', to: 'now' }, { from: 'now-30d/d', to: 'now' }]
           end
         end
 

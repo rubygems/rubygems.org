@@ -24,6 +24,8 @@
     <p class="gems__meter"><%= page_entries_info(@gems, :entry_name => 'gem', :model => 'gem').html_safe %></p>
   </header>
 
+  <%= render partial: 'aggregations', locals: { gems: @gems } %>
+
   <% if suggestions = es_suggestions(@gems)  %>
     <div class='search__suggestions'>
       <p>
