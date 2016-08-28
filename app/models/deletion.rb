@@ -4,6 +4,7 @@ class Deletion < ActiveRecord::Base
   validates :user, :rubygem, :number, presence: true
   validates :version, presence: true
   validate :version_is_indexed
+  validate :version_downloads
 
   before_validation :record_metadata
   after_create :remove_from_index
@@ -14,6 +15,10 @@ class Deletion < ActiveRecord::Base
   attr_accessor :version
 
   private
+
+  def version_downloads
+    errors.add(:base, "Gem versions cannot be yanked after they have been downloaded over 15,000 times") unless @version.gem_download.count < 15_000
+  end
 
   def version_is_indexed
     errors.add(:number, "is already deleted") unless @version.indexed?
