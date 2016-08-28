@@ -1,0 +1,13 @@
+<div class="gem__navigation">
+  <% if latest_version.previous.present? %>
+    <%= link_to "Previous version", rubygem_version_path(rubygem, latest_version.previous.number), class: "gem__previous__version"  %>
+  <% else %>
+    <a href="#" class ="gem__previous__version disabled">Previous version</a>
+  <% end %>
+
+  <% if latest_version.next.present? %>
+    <%= link_to "Next version", rubygem_version_path(rubygem, latest_version.next.number), class: "gem__next__version" %>
+  <% else %>
+    <a href="#" class ="gem__next__version disabled">Next version</a>
+  <% end %>
+</div>
