@@ -13,7 +13,7 @@ class Api::V1::DeletionsController < Api::BaseController
       render text: "Successfully deleted gem: #{@version.to_title}"
     else
       StatsD.increment 'yank.failure'
-      render text: "The version #{params[:version]} has already been deleted.",
+      render text: @deletion.errors.full_messages.to_sentence,
              status: :unprocessable_entity
     end
   end

@@ -16,7 +16,7 @@ class Deletion < ActiveRecord::Base
   private
 
   def version_is_indexed
-    errors.add(:number, "is already deleted") unless @version.indexed?
+    errors.add(:base, "#{rubygem_name} #{version} has already been deleted") unless @version.indexed?
   end
 
   def rubygem_name
