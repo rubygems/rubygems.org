@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160827083029) do
+ActiveRecord::Schema.define(version: 20160810082821) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -153,11 +153,9 @@ ActiveRecord::Schema.define(version: 20160827083029) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "slug"
-    t.tsvector "tsv"
   end
 
   add_index "rubygems", ["name"], name: "index_rubygems_on_name", unique: true, using: :btree
-  add_index "rubygems", ["tsv"], name: "index_rubygems_on_tsv", using: :gin
 
   create_table "subscriptions", force: :cascade do |t|
     t.integer  "rubygem_id"
