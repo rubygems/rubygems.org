@@ -5,7 +5,7 @@ class SessionsControllerTest < ActionController::TestCase
     context "when login and password are correct" do
       setup do
         User.expects(:authenticate).with('login', 'pass').returns User.new
-        post :create, session: { who: 'login', password: 'pass' }
+        post :create, params: { session: { who: 'login', password: 'pass' } }
       end
 
       should respond_with :redirect
@@ -19,11 +19,10 @@ class SessionsControllerTest < ActionController::TestCase
     context "when login and password are incorrect" do
       setup do
         User.expects(:authenticate).with('login', 'pass')
-        post :create, session: { who: 'login', password: 'pass' }
+        post :create, params: { session: { who: 'login', password: 'pass' } }
       end
 
       should respond_with :unauthorized
-      should render_template 'sessions/new'
       should set_flash.now[:notice]
 
       should "not sign in the user" do
@@ -33,7 +32,7 @@ class SessionsControllerTest < ActionController::TestCase
 
     context "when login is an array" do
       setup do
-        post :create, session: { who: ['1'], password: 'pass' }
+        post :create, params: { session: { who: ['1'], password: 'pass' } }
       end
 
       should respond_with :unauthorized

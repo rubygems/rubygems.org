@@ -3,6 +3,8 @@ require 'test_helper'
 class PasswordResetTest < SystemTest
   setup do
     @user = create(:user, handle: nil)
+    # Forces Concurrent::ImmediateExecutor in async queue_adapter
+    ActiveJob::Base.queue_adapter.immediate = true
   end
 
   def forgot_password_with(email)

@@ -10,7 +10,7 @@ class Api::V1::VersionsController < Api::BaseController
         format.yaml { render yaml: @rubygem.public_versions }
       end
     else
-      render text: t(:this_rubygem_could_not_be_found), status: :not_found
+      render plain: t(:this_rubygem_could_not_be_found), status: :not_found
     end
   end
 

@@ -1,8 +1,6 @@
 require 'test_helper'
 
 class DeletionTest < ActiveSupport::TestCase
-  self.use_transactional_fixtures = false # Disabled to test after_commit
-
   should belong_to :user
 
   setup do
@@ -93,11 +91,6 @@ class DeletionTest < ActiveSupport::TestCase
     delete_gem
 
     assert_nil Rails.cache.fetch("deps/v1/#{@version.rubygem.name}")
-  end
-
-  teardown do
-    # This is necessary due to after_commit not cleaning up for us
-    [Rubygem, Version, User, Deletion, Delayed::Job, GemDownload].each(&:delete_all)
   end
 
   private

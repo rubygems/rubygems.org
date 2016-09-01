@@ -19,7 +19,7 @@ class SubscriptionsController < ApplicationController
         format.js { render :update }
       end
     else
-      render text: '', status: :forbidden
+      render plain: '', status: :forbidden
     end
   end
 end

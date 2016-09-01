@@ -18,7 +18,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         @rubygem.ownerships.create(user: @user)
 
         @request.env["HTTP_AUTHORIZATION"] = @user.api_key
-        get :show, rubygem_id: @rubygem.to_param, format: format
+        get :show, params: { rubygem_id: @rubygem.to_param }, format: format
       end
 
       should "return an array" do
@@ -51,7 +51,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
   context "on GET to owner gems with handle" do
     setup do
       @user = create(:user)
-      get :gems, handle: @user.handle, format: :json
+      get :gems, params: { handle: @user.handle }, format: :json
     end
 
     should respond_with :success
@@ -60,7 +60,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
   context "on GET to owner gems with id" do
     setup do
       @user = create(:user)
-      get :gems, handle: @user.id, format: :json
+      get :gems, params: { handle: @user.id }, format: :json
     end
 
     should respond_with :success
@@ -85,12 +85,12 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     end
 
     should "add other user as gem owner with email" do
-      post :create, rubygem_id: @rubygem.to_param, email: @second_user.email, format: :json
+      post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
       assert @rubygem.owners.include?(@second_user)
     end
 
     should "add other user as gem owner with handle" do
-      post :create, rubygem_id: @rubygem.to_param, email: @third_user.handle, format: :json
+      post :create, params: { rubygem_id: @rubygem.to_param, email: @third_user.handle }, format: :json
       assert @rubygem.owners.include?(@third_user)
     end
   end
@@ -115,7 +115,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     @user = create(:user)
     @request.env["HTTP_AUTHORIZATION"] = @user.api_key
     @request.accept = '*/*'
-    post :create, rubygem_id: 'bananas'
+    post :create, params: { rubygem_id: 'bananas' }
     assert_equal 'This rubygem could not be found.', @response.body
   end
 end

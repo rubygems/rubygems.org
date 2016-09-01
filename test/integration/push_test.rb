@@ -64,16 +64,15 @@ class PushTest < ActionDispatch::IntegrationTest
 
   test "push errors bubble out" do
     push_gem Rails.root.join("test/gems/bad-characters-1.0.0.gem")
-
     assert_response :unprocessable_entity
     assert_match(/cannot process this gem/, response.body)
   end
 
   def push_gem(path)
     post api_v1_rubygems_path,
-      File.read(path),
-      "CONTENT_TYPE" => "application/octet-stream",
-      "HTTP_AUTHORIZATION" => @user.api_key
+      env: { 'RAW_POST_DATA' => File.read(path) },
+      headers: { "CONTENT_TYPE" => "application/octet-stream",
+                 "HTTP_AUTHORIZATION" => @user.api_key }
   end
 
   teardown do

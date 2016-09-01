@@ -1,4 +1,4 @@
-require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
 require 'rails/all'
 require 'elasticsearch/rails/instrumentation'
@@ -16,10 +16,7 @@ module Gemcutter
     config.i18n.available_locales = [:en, :nl, 'zh-CN', 'zh-TW', 'pt-BR', :fr, :es, :de]
     config.i18n.fallbacks = true
 
-    config.middleware.use "Redirector" unless Rails.env.development?
-
     config.active_record.include_root_in_json = false
-    config.active_record.raise_in_transactional_callbacks = true
 
     config.after_initialize do
       RubygemFs.s3! ENV['S3_PROXY'] if ENV['S3_PROXY']
@@ -28,6 +25,9 @@ module Gemcutter
     config.plugins = [:dynamic_form]
 
     config.autoload_paths << Rails.root.join('lib')
+
+    # halt callback chains when a callback returns false.
+    ActiveSupport.halt_callback_chains_on_return_false = true
   end
 
   def self.config

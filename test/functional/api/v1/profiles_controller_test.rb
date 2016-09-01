@@ -26,7 +26,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
 
       context "on GET to show with id" do
         setup do
-          get :show, id: @user.id, format: format
+          get :show, params: { id: @user.id }, format: format
         end
 
         should respond_with :success
@@ -34,7 +34,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
 
       context "on GET to show with handle" do
         setup do
-          get :show, id: @user.handle, format: format
+          get :show, params: { id: @user.handle }, format: format
         end
 
         should respond_with :success
@@ -47,7 +47,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
       context "on GET to show when hide email" do
         setup do
           @user.update(hide_email: true)
-          get :show, id: @user.handle, format: format
+          get :show, params: { id: @user.handle }, format: format
         end
 
         should respond_with :success

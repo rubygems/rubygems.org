@@ -2,7 +2,7 @@ Doorkeeper.configure do
   orm :active_record
 
   resource_owner_authenticator do
-    clearance_session = env[:clearance] # session = Clearance::Session.new(env)
+    clearance_session = request.env[:clearance] # session = Clearance::Session.new(env)
     user = clearance_session && clearance_session.current_user
 
     if user

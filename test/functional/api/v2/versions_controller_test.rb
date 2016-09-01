@@ -2,7 +2,7 @@ require 'test_helper'
 
 class Api::V2::VersionsControllerTest < ActionController::TestCase
   def get_show(rubygem, version, format = 'json')
-    get :show, rubygem_name: rubygem.name, number: version, format: format
+    get :show, params: { rubygem_name: rubygem.name, number: version, format: format }
   end
 
   def set_cache_header

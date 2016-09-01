@@ -41,6 +41,6 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
   private
 
   def authenticate(authorization = "")
-    get api_v1_rubygems_path(format: :json), {}, "HTTP_AUTHORIZATION" => authorization
+    get api_v1_rubygems_path(format: :json), headers: { "HTTP_AUTHORIZATION" => authorization }
   end
 end

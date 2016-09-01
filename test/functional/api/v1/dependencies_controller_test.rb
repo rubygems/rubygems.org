@@ -5,7 +5,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
   # NO GEMS:
   context "On GET to index --> with empty gems param --> JSON" do
     setup do
-      get :index, gems: "", format: "json"
+      get :index, params: { gems: "" }, format: "json"
     end
 
     should "return 200" do
@@ -36,7 +36,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
     setup do
       rubygem = create(:rubygem, name: "rails")
       create(:version, number: "1.0.0", rubygem_id: rubygem.id)
-      get :index, gems: "rails", format: "json"
+      get :index, params: { gems: "rails" }, format: "json"
     end
 
     should "return 200" do
@@ -63,7 +63,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
       create(:version, number: "1.0.0", rubygem_id: rubygem1.id)
       create(:version, number: "2.0.0", rubygem_id: rubygem2.id)
       create(:version, number: "3.0.0", rubygem_id: rubygem1.id)
-      get :index, gems: "myrails,mybundler", format: "json"
+      get :index, params: { gems: "myrails,mybundler" }, format: "json"
     end
 
     should "return 200" do
@@ -102,7 +102,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
   context "On GET to index --> with gems --> JSON" do
     setup do
       gems = Array.new(300) { create(:rubygem) }.join(',')
-      get :index, gems: gems, format: "json"
+      get :index, params: { gems: gems }, format: "json"
     end
 
     should "return 422" do
@@ -125,7 +125,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
     setup do
       rubygem = create(:rubygem, name: "testgem")
       @version = create(:version, number: "1.0.0", rubygem_id: rubygem.id)
-      get :index, gems: "", format: "marshal"
+      get :index, params: { gems: "" }, format: "marshal"
     end
 
     should "return 200" do
@@ -142,7 +142,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
     setup do
       rubygem = create(:rubygem, name: "testgem")
       create(:version, number: "1.0.0", rubygem_id: rubygem.id)
-      get :index, gems: "testgem", format: "marshal"
+      get :index, params: { gems: "testgem" }, format: "marshal"
     end
 
     should "return 200" do
@@ -165,7 +165,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
   context "On GET to index --> with gems --> Marshal" do
     setup do
       gems = Array.new(300) { create(:rubygem) }.join(',')
-      get :index, gems: gems, format: "marshal"
+      get :index, params: { gems: gems }, format: "marshal"
     end
 
     should "return 422" do

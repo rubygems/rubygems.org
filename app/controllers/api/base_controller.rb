@@ -1,7 +1,6 @@
 class Api::BaseController < ApplicationController
   before_action :doorkeeper_authorize!, if: :doorkeeper_token
   before_action :authenticate_with_oauth, if: :doorkeeper_token
-  skip_before_action :require_ssl
 
   private
 
@@ -14,6 +13,6 @@ class Api::BaseController < ApplicationController
     @gem_name = params[:gem_name] || params[:rubygem_name]
     @rubygem  = Rubygem.find_by_name(@gem_name)
     return if @rubygem || @gem_name == WebHook::GLOBAL_PATTERN
-    render text: "This gem could not be found", status: :not_found
+    render plain: "This gem could not be found", status: :not_found
   end
 end

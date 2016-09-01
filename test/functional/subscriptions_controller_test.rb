@@ -12,7 +12,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
     setup do
       @rubygem = create(:rubygem)
       create(:version, rubygem: @rubygem)
-      post :create, rubygem_id: @rubygem.to_param, format: 'js'
+      post :create, params: { rubygem_id: @rubygem.to_param, format: 'js' }
     end
 
     should respond_with :success
@@ -26,7 +26,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
       @rubygem = create(:rubygem)
       create(:version, rubygem: @rubygem)
       create(:subscription, rubygem: @rubygem, user: @user)
-      post :create, rubygem_id: @rubygem.to_param, format: 'js'
+      post :create, params: { rubygem_id: @rubygem.to_param, format: 'js' }
     end
 
     should respond_with :forbidden
@@ -36,7 +36,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
     setup do
       @rubygem = create(:rubygem)
       create(:version, rubygem: @rubygem)
-      delete :destroy, rubygem_id: @rubygem.to_param, format: 'js'
+      delete :destroy, params: { rubygem_id: @rubygem.to_param, format: 'js' }
     end
 
     should respond_with :forbidden
@@ -47,7 +47,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
       @rubygem = create(:rubygem)
       create(:version, rubygem: @rubygem)
       create(:subscription, rubygem: @rubygem, user: @user)
-      delete :destroy, rubygem_id: @rubygem.to_param, format: 'js'
+      delete :destroy, params: { rubygem_id: @rubygem.to_param, format: 'js' }
     end
 
     should respond_with :success
