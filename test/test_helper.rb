@@ -11,11 +11,12 @@ require 'helpers/gem_helpers'
 
 RubygemFs.mock!
 Aws.config[:stub_responses] = true
-I18n.locale = :en
 
 class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
   include GemHelpers
+
+  setup { I18n.locale = :en }
 
   def page
     Capybara::Node::Simple.new(@response.body)
