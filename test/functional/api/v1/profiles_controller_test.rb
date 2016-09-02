@@ -52,10 +52,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
 
         should respond_with :success
         should "hide the user email" do
-          # This is a bug with YAML format only
-          # Likely casued b/c of special `email` method.
-          # TODO: FIX.
-          # assert_equal nil, response_body['email']
+        assert_equal nil, response_body['email']
         end
 
         should "shows the handle" do
