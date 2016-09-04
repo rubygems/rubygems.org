@@ -62,41 +62,42 @@ class WebHookTest < ActiveSupport::TestCase
     setup do
       @url     = "http://example.org"
       @user    = create(:user)
-      @rubygem = create(:rubygem)
+      @rubygem = create(:rubygem, name: 'rubygem')
       @webhook = create(:web_hook, user: @user, rubygem: @rubygem, url: @url)
     end
 
     should "show limited attributes for as_json" do
-      @serializer = WebHookSerializer.new(@webhook)
-      @json_webhook = MultiJson.dump(@serializer.attributes)
+      serializer = WebHookSerializer.new(@user.web_hooks)
+      json_webhook = MultiJson.dump(serializer.attributes)
 
       assert_equal(
-        {
+        [{
           'url'           => @url,
           'failure_count' => @webhook.failure_count
-        }, JSON.load(@json_webhook)
+        }], JSON.load(json_webhook)['rubygem']
       )
     end
 
     should "show limited attributes for to_xml" do
-      @serializer = WebHookSerializer.new(@webhook)
-      @xml_webhook = Nokogiri.parse(@serializer.to_xml)
+      serializer = WebHookSerializer.new(@user.web_hooks)
+      xml_webhook = Nokogiri.parse(serializer.to_xml)
 
-      assert_equal "web-hook", @xml_webhook.root.name
-      assert_equal %w(failure-count url), @xml_webhook.root.children.select(&:element?).map(&:name).sort
-      assert_equal @webhook.url, @xml_webhook.at_css("url").content
-      assert_equal @webhook.failure_count, @xml_webhook.at_css("failure-count").content.to_i
+      assert_equal "web-hook", xml_webhook.root.name
+      keys = xml_webhook.css('rubygem rubygem').children.select(&:element?).map(&:name)
+      assert_equal %w(failure-count url), keys
+      assert_equal @webhook.url, xml_webhook.at_css("url").content
+      assert_equal @webhook.failure_count, xml_webhook.at_css("failure-count").content.to_i
     end
 
     should "show limited attributes for to_yaml" do
-      @serializer = WebHookSerializer.new(@webhook)
-      @yaml_webhook = @serializer.to_yaml
+      serializer = WebHookSerializer.new(@user.web_hooks)
+      yaml_webhook = serializer.to_yaml
 
       assert_equal(
-        {
-          'url'           => @url,
-          'failure_count' => @webhook.failure_count
-        }, YAML.load(@yaml_webhook)
+        [{
+          'failure_count' => @webhook.failure_count,
+          'url'           => @url
+        }], YAML.load(yaml_webhook)['rubygem']
       )
     end
 
@@ -223,23 +224,6 @@ class WebHookTest < ActiveSupport::TestCase
         assert_equal index + 1, @hook.reload.failure_count
         assert @hook.global?
       end
-    end
-  end
-
-  context "yaml" do
-    setup do
-      @webhook = create(:web_hook)
-      @serializer = WebHookSerializer.new(@webhook)
-      @hwia_attributes = ActiveSupport::HashWithIndifferentAccess.new(@serializer.attributes)
-      @yaml_webhook = @serializer.to_yaml
-    end
-
-    should "return its payload" do
-      assert_equal @hwia_attributes, YAML.load(@yaml_webhook)
-    end
-
-    should "nest properly" do
-      assert_equal [@hwia_attributes], [YAML.load([@serializer].first.to_yaml)]
     end
   end
 end

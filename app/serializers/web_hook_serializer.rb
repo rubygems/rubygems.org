@@ -1,5 +1,4 @@
 class WebHookSerializer < ApplicationSerializer
-
   def attributes(*args)
     data = super
 

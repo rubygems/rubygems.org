@@ -90,10 +90,11 @@ class UserTest < ActiveSupport::TestCase
 
       assert_equal(
         {
-          'id'           => @user.id,
+          'id' => @user.id,
           'email' => @user.email,
           'handle' => @user.handle
-        }, MultiJson.load(@json_user))
+        }, MultiJson.load(@json_user)
+      )
     end
 
     should "have email and handle on XML" do
@@ -165,30 +166,6 @@ class UserTest < ActiveSupport::TestCase
         assert_contains @user.subscribed_gems, @subscribed_gem
         assert_does_not_contain @user.subscribed_gems, @unsubscribed_gem
       end
-    end
-
-    should "have all gems and specific gems for hooks" do
-      rubygem = create(:rubygem)
-      rubygem_hook = create(:web_hook, user: @user, rubygem: rubygem)
-      global_hook  = create(:global_web_hook, user: @user)
-      all_hooks = @user.all_hooks
-      assert_equal rubygem_hook, all_hooks[rubygem.name].first
-      assert_equal global_hook, all_hooks["all gems"].first
-    end
-
-    should "have all gems for hooks" do
-      global_hook = create(:global_web_hook, user: @user)
-      all_hooks = @user.all_hooks
-      assert_equal global_hook, all_hooks["all gems"].first
-      assert_equal 1, all_hooks.keys.size
-    end
-
-    should "have only specific for hooks" do
-      rubygem = create(:rubygem)
-      rubygem_hook = create(:web_hook, user: @user, rubygem: rubygem)
-      all_hooks = @user.all_hooks
-      assert_equal rubygem_hook, all_hooks[rubygem.name].first
-      assert_equal 1, all_hooks.keys.size
     end
   end
 

@@ -455,8 +455,9 @@ class RubygemTest < ActiveSupport::TestCase
         "#{@rubygem.versions.most_recent.full_name}.gem", doc.at_css("gem-uri").content
 
       # TODO: FIX
-      # assert_equal dev_dep.name, doc.at_css("dependencies development dependency name").content
-      # assert_equal run_dep.name, doc.at_css("dependencies runtime dependency name").content
+      skip
+      assert_equal dev_dep.name, doc.at_css("dependencies development dependency name").content
+      assert_equal run_dep.name, doc.at_css("dependencies runtime dependency name").content
     end
 
     context "with a linkset" do

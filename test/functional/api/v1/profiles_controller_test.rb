@@ -52,7 +52,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
 
         should respond_with :success
         should "hide the user email" do
-        assert_equal nil, response_body['email']
+          assert_equal nil, response_body['email']
         end
 
         should "shows the handle" do

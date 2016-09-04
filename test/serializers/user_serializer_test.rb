@@ -21,14 +21,7 @@ class UserSerializerTest < ActiveSupport::TestCase
       @serializer = UserSerializer.new(@user)
       @json_user = @serializer.attributes
 
-      assert_equal(
-        @json_user,
-        {
-          id: @user.id,
-          email: @user.email,
-          handle: @user.handle
-        }
-      )
+      assert_equal(@json_user, id: @user.id, email: @user.email, handle: @user.handle)
     end
   end
 
@@ -71,12 +64,7 @@ class UserSerializerTest < ActiveSupport::TestCase
       @yaml_user = @serializer.to_yaml
 
       assert_equal(
-        YAML.load(@yaml_user),
-        {
-          "id" => @user.id,
-          "email" => @user.email,
-          'handle' => @user.handle
-        }
+        YAML.load(@yaml_user), "id" => @user.id, "email" => @user.email, "handle" => @user.handle
       )
     end
   end

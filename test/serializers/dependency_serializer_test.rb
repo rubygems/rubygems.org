@@ -22,11 +22,7 @@ class DependencySerializerTest < ActiveSupport::TestCase
       @json_dependency = @serializer.attributes
 
       assert_equal(
-        @json_dependency,
-        {
-          name: @dependency.name,
-          requirements: @dependency.requirements
-        }
+        @json_dependency, name: @dependency.name, requirements: @dependency.requirements
       )
     end
   end
@@ -73,11 +69,7 @@ class DependencySerializerTest < ActiveSupport::TestCase
       @yaml_dependency = @serializer.to_yaml
 
       assert_equal(
-        YAML.load(@yaml_dependency),
-        {
-          "name" => @dependency.rubygem.name,
-          'requirements' => @dependency.requirements
-        }
+        YAML.load(@yaml_dependency), "name" => @dependency.rubygem.name, "requirements" => @dependency.requirements
       )
     end
   end

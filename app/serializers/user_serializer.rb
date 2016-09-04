@@ -4,11 +4,8 @@ class UserSerializer < ApplicationSerializer
   def email
     object.reload
 
-    if object.hide_email == true
-      return nil
-    else
-      return object.email
-    end
+    return nil if object.hide_email == true
+    object.email
   end
 
   def to_xml(options = {})
