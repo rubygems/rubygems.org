@@ -241,34 +241,6 @@ class Version < ActiveRecord::Base
     gem_download.try(:count) || 0
   end
 
-  def payload
-    {
-      'authors'          => authors,
-      'built_at'         => built_at,
-      'created_at'       => created_at,
-      'description'      => description,
-      'downloads_count'  => downloads_count,
-      'metadata'         => metadata,
-      'number'           => number,
-      'summary'          => summary,
-      'platform'         => platform,
-      'rubygems_version' => required_rubygems_version,
-      'ruby_version'     => required_ruby_version,
-      'prerelease'       => prerelease,
-      'licenses'         => licenses,
-      'requirements'     => requirements,
-      'sha'              => sha256_hex
-    }
-  end
-
-  def as_json(*)
-    payload
-  end
-
-  def to_xml(options = {})
-    payload.to_xml(options.merge(root: 'version'))
-  end
-
   def to_s
     number
   end

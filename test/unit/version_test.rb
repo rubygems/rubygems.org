@@ -10,25 +10,25 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "only have relevant API fields" do
-      json = @version.as_json
+      json = VersionSerializer.new(@version).as_json
       fields = %w(number built_at summary description authors platform
                   ruby_version rubygems_version prerelease downloads_count licenses
                   requirements sha metadata created_at)
-      assert_equal fields.map(&:to_s).sort, json.keys.sort
-      assert_equal @version.authors, json["authors"]
-      assert_equal @version.built_at, json["built_at"]
-      assert_equal @version.description, json["description"]
-      assert_equal @version.downloads_count, json["downloads_count"]
-      assert_equal @version.metadata, json["metadata"]
-      assert_equal @version.number, json["number"]
-      assert_equal @version.platform, json["platform"]
-      assert_equal @version.prerelease, json["prerelease"]
-      assert_equal @version.required_rubygems_version, json["rubygems_version"]
-      assert_equal @version.required_ruby_version, json["ruby_version"]
-      assert_equal @version.summary, json["summary"]
-      assert_equal @version.licenses, json["licenses"]
-      assert_equal @version.requirements, json["requirements"]
-      assert_equal @version.created_at, json["created_at"]
+      assert_equal fields.map(&:to_sym).sort, json.keys.sort
+      assert_equal @version.authors, json[:authors]
+      assert_equal @version.built_at, json[:built_at]
+      assert_equal @version.description, json[:description]
+      assert_equal @version.downloads_count, json[:downloads_count]
+      assert_equal @version.metadata, json[:metadata]
+      assert_equal @version.number, json[:number]
+      assert_equal @version.platform, json[:platform]
+      assert_equal @version.prerelease, json[:prerelease]
+      assert_equal @version.required_rubygems_version, json[:rubygems_version]
+      assert_equal @version.required_ruby_version, json[:ruby_version]
+      assert_equal @version.summary, json[:summary]
+      assert_equal @version.licenses, json[:licenses]
+      assert_equal @version.requirements, json[:requirements]
+      assert_equal @version.created_at, json[:created_at]
     end
   end
 
@@ -38,7 +38,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "only have relevant API fields" do
-      xml = Nokogiri.parse(@version.to_xml)
+      xml = Nokogiri.parse(VersionSerializer.new(@version).to_xml)
       fields = %w(number built-at summary description authors platform
                   ruby-version rubygems-version prerelease downloads-count licenses
                   requirements sha metadata created-at)

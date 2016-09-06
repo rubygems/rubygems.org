@@ -113,7 +113,8 @@ class Rubygem < ActiveRecord::Base
 
   def public_version_payload(number)
     version = public_versions.find_by(number: number)
-    payload(version).merge!(version.as_json) if version
+    serializable_version = VersionSerializer.new(version)
+    payload(version).merge!(serializable_version.as_json) if version
   end
 
   def hosted?
