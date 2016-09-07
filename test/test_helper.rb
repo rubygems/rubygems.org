@@ -16,7 +16,10 @@ class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
   include GemHelpers
 
-  setup { I18n.locale = :en }
+  setup do
+    I18n.locale = :en
+    Rails.cache.clear
+  end
 
   def page
     Capybara::Node::Simple.new(@response.body)
