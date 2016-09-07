@@ -188,6 +188,8 @@ GEM
     powerpack (0.1.1)
     psych (2.0.17)
     rack (1.6.4)
+    rack-attack (5.0.1)
+      rack
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.7.1)
@@ -326,6 +328,7 @@ DEPENDENCIES
   pg
   psych (~> 2.0.12)
   rack
+  rack-attack
   rack-test
   rails (~> 4.2.7)
   rails-erd

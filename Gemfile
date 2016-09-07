@@ -47,6 +47,7 @@ gem 'xml-simple'
 gem 'yajl-ruby', require: 'yajl'
 gem 'compact_index', '~> 0.11.0'
 gem 'sprockets-rails', '~> 3.1.0'
+gem 'rack-attack'
 
 group :development, :test do
   gem 'rubocop', require: false
