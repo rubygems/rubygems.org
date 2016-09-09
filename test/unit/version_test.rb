@@ -136,6 +136,27 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
+  context "recent uploads" do
+    setup do
+      @gem_1 = create(:rubygem)
+      @second = create(:version, rubygem: @gem_1, created_at: 1.day.ago)
+      @fourth = create(:version, rubygem: @gem_1, created_at: 4.days.ago)
+
+      @gem_2 = create(:rubygem)
+      @first = create(:version, rubygem: @gem_2, created_at: 1.minute.ago)
+      @not_included_fifth = create(:version, rubygem: @gem_2, created_at: 10.days.ago)
+
+      @gem_3 = create(:rubygem)
+      @third = create(:version, rubygem: @gem_3, created_at: 3.days.ago)
+    end
+
+    should "include specified number of versions ordered by created at" do
+      versions = Version.recent_uploads(4)
+      assert_equal 4, versions.size
+      assert_equal [@first, @second, @third, @fourth], versions
+    end
+  end
+
   context "with a rubygem" do
     setup do
       @rubygem = create(:rubygem)
