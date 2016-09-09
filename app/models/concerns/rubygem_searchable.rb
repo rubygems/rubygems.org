@@ -2,8 +2,6 @@ module RubygemSearchable
   include Patterns
   extend ActiveSupport::Concern
 
-  class SearchDownError < StandardError; end
-
   included do
     include Elasticsearch::Model
 
@@ -55,21 +53,15 @@ module RubygemSearchable
     end
 
     def self.search(query, es: false, page: 1)
-      if es
-        result = elastic_search(query).page(page)
-        # Now we need to trigger the ES query so we can fallback if it fails
-        # rather than lazy loading from the view
-        result.response
-        result
-      else
-        legacy_search(query).paginate(page: page)
-      end
-    rescue Faraday::ConnectionFailed => e
-      Honeybadger.notify(e)
-      raise SearchDownError
-    rescue Elasticsearch::Transport::Transport::Error => e
-      Honeybadger.notify(e)
-      raise SearchDownError
+      return [nil, legacy_search(query).page(page)] unless es
+      result = elastic_search(query).page(page)
+      # Now we need to trigger the ES query so we can fallback if it fails
+      # rather than lazy loading from the view
+      result.response
+      [nil, result]
+    rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Elasticsearch::Transport::Transport::Error => e
+      msg = error_msg query, e
+      [msg, legacy_search(query).page(page)]
     end
 
     def self.elastic_search(q) # rubocop:disable Metrics/MethodLength
@@ -136,6 +128,15 @@ module RubygemSearchable
         .includes(:latest_version, :gem_download)
         .references(:versions)
         .by_downloads
+    end
+
+    def self.error_msg(query, error)
+      if error.is_a? Elasticsearch::Transport::Transport::Errors::BadRequest
+        "Failed to parse: '#{query}'. Falling back to legacy search."
+      else
+        Honeybadger.notify(error)
+        "Advanced search is currently unavailable. Falling back to legacy search."
+      end
     end
   end
 end
