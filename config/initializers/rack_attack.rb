@@ -33,7 +33,7 @@ class Rack::Attack
   throttle("logins/handler", limit: 100, period: 10.minutes) do |req|
     if req.path == "/session" && req.post?
       # return the handler if present, nil otherwise
-      req.params['session']['who'].presence
+      req.params['session']['who'].presence if req.params['session']
     end
   end
 
