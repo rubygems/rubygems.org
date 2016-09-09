@@ -1,0 +1,38 @@
+.recent {
+  margin-top: -15px;
+  overflow: auto;
+  border-bottom: 1px solid #c1c4ca; }
+  @media (max-width: 709px) {
+    .stats {
+      margin-bottom: 24px;
+      padding-bottom: 12px; } }
+  @media (min-width: 710px) {
+    .stats {
+      margin-bottom: 60px;
+      padding-bottom: 10px; } }
+
+.recent__table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 30px 15px;
+  border-left: 3%; }
+
+.recent__table__row {
+  height: 30px;
+  width: 100%; }
+
+.recent__table__column {
+  /* Size table columns to contents. */
+  width: 1%;
+  white-space: nowrap;
+
+  font-weight: 400;
+  text-align: left;
+  vertical-align: middle; }
+
+  @media (max-width: 709px) {
+    .recent__table__column {
+      font-size: 13px; } }
+  @media (min-width: 710px) {
+    .recent__table__column {
+      font-size: 15px; } }

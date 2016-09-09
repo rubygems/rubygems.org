@@ -33,4 +33,9 @@
     </div>
   </div>
 <% end %>
+
+<p class="stats__link">
+  <%= link_to t('stats.index.recent_uploads'), recent_uploads_path %>
+</p>
+
 <%= will_paginate @most_downloaded %>
