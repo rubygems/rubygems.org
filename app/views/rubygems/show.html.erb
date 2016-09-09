@@ -86,7 +86,7 @@
           </div>
         <% end %>
 
-        <% if @latest_version && @latest_version.indexed && @latest_version.sha256.present? %>
+        <% if @latest_version && @latest_version.sha256.present? %>
           <h3 class="t-list__heading"><%= t '.sha_256_checksum' %>:</h3>
           <div class="gem__sha">
             <%= @latest_version.sha256_hex %>
