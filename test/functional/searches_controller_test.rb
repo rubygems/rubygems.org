@@ -153,7 +153,7 @@ class SearchesControllerTest < ActionController::TestCase
         @request.cookies['new_search'] = 'true'
         get :show, query: 'sinatra'
         assert_response :success
-        assert page.has_content?('Advanced search is currently unavailable')
+        assert page.has_content?('Advanced search is currently unavailable. Falling back to legacy search.')
         assert page.has_content?('Displaying')
       end
     end
