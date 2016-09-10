@@ -62,7 +62,7 @@ module RubygemSearchable
         result.response
         result
       else
-        legacy_search(query).paginate(page: page)
+        legacy_search(query).with_versions.paginate(page: page)
       end
     rescue Faraday::ConnectionFailed => e
       Honeybadger.notify(e)
@@ -124,12 +124,15 @@ module RubygemSearchable
 
     def self.legacy_search(query)
       conditions = <<-SQL
-          versions.indexed and (tsv @@ to_tsquery(:query))
+        versions.indexed and
+          (UPPER(name) LIKE UPPER(:query) OR
+           UPPER(TRANSLATE(name,
+                           '#{SPECIAL_CHARACTERS}',
+                           '#{' ' * SPECIAL_CHARACTERS.length}')
+                ) LIKE UPPER(:query))
       SQL
 
-      parsed_query = query.squish.gsub(/[^a-zA-Z](?!$)/, ':* & ')
-      sanitize_query = sanitize_sql_for_conditions parsed_query
-      where(conditions, query: sanitize_query + ':*')
+      where(conditions, query: "%#{query.strip}%")
         .includes(:versions)
         .references(:versions)
         .by_downloads
