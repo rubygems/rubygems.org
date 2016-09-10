@@ -20,9 +20,7 @@ class RubygemsController < ApplicationController
   def show
     @latest_version = @rubygem.versions.most_recent
     @versions       = @rubygem.public_versions(5)
-    if @rubygem.public_versions.count.zero?
-      render :show_all_yanked
-    end
+    render :show_all_yanked if @rubygem.public_versions.count.zero?
   end
 
   def edit
