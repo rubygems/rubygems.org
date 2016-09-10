@@ -3,11 +3,7 @@
 
 <% content_for :head do %>
   <%= auto_discovery_link_tag(:atom, rubygem_versions_path(@rubygem, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
-  <% if @rubygem.versions.present? && @latest_version.indexed %>
-    <link rel="canonical" href="<%= rubygem_version_url(@rubygem, @latest_version.slug) %>" />
-  <% else %>
-    <meta name="robots" content="noindex" />
-  <% end %>
+  <link rel="canonical" href="<%= rubygem_version_url(@rubygem, @latest_version.slug) %>" />
 <% end %>
 
 <div class="l-overflow">
