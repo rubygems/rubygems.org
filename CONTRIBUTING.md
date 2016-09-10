@@ -72,8 +72,9 @@ Development Setup
 This page is for setting up Rubygems on a local development machine to
 contribute patches/fixes/awesome stuff. **If you need to host your own
 gem server, please consider checking out
-[Geminabox](https://github.com/geminabox/geminabox). It’s a lot simpler
-than Rubygems and may suit your organization’s needs better.**
+[Gemstash](https://github.com/bundler/gemstash). It's designed to
+provide pass-through caching for RubyGems.org, as well as host private
+gems for your organization..**
 
 #### Environment (OS X)
 

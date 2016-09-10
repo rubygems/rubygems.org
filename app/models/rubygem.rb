@@ -24,8 +24,6 @@ class Rubygem < ActiveRecord::Base
 
   # TODO: Remove this once we move to GemDownload only
   after_create :create_gem_download
-  after_create :set_tsvector
-
   def create_gem_download
     GemDownload.create!(count: 0, rubygem_id: id, version_id: 0)
   end
@@ -303,10 +301,5 @@ class Rubygem < ActiveRecord::Base
   def mark_unresolved
     Dependency.mark_unresolved_for(self)
     true
-  end
-
-  def set_tsvector
-    update_sql = "update rubygems set tsv = to_tsvector(name) where id = #{id}"
-    ActiveRecord::Base.connection.execute(update_sql)
   end
 end
