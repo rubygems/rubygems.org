@@ -49,4 +49,15 @@ class SearchTest < SystemTest
       get search_path(format: :json), query: 'foobar'
     end
   end
+
+  setup { Rubygem.per_page = 2 }
+  teardown { Rubygem.per_page = 30 }
+
+  test "params has non white listed keys" do
+    (1..3).map { |i| create(:rubygem, name: "ruby#{i}", number: '1.0.0') }
+    visit '/search?query=ruby&script_name=javascript:alert(1)//'
+    assert page.has_content? "ruby1"
+    assert page.has_content? "ruby2"
+    assert page.has_link?("Next", href: "/search?page=2&query=ruby")
+  end
 end
