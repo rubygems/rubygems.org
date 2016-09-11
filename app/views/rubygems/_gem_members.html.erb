@@ -1,0 +1,24 @@
+<div class="gem__members">
+  <% if latest_version.authors.present? %>
+    <h3 class="t-list__heading"><%= t '.authors_header' %>:</h3>
+    <ul class="t-list__items">
+      <li class="t-list__item">
+        <p><%= latest_version.authors %></p>
+      </li>
+    </ul>
+  <% end %>
+
+  <% if rubygem.owners.present? %>
+    <h3 class="t-list__heading"><%= t '.owners_header' %>:</h3>
+    <div class="gem__owners">
+      <%= links_to_owners(rubygem) %>
+    </div>
+  <% end %>
+
+  <% if latest_version.sha256.present? %>
+    <h3 class="t-list__heading"><%= t '.sha_256_checksum' %>:</h3>
+    <div class="gem__sha">
+      <%= latest_version.sha256_hex %>
+    </div>
+  <% end %>
+</div>

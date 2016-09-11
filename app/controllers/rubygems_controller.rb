@@ -24,6 +24,11 @@ class RubygemsController < ApplicationController
     else
       @latest_version = @rubygem.versions.most_recent
       @versions       = @rubygem.public_versions(5)
+      if @rubygem.public_versions.any?
+        render 'show'
+      else
+        render 'show_yanked'
+      end
     end
   end
 

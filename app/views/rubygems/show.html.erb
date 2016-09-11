@@ -10,168 +10,132 @@
   <% end %>
 <% end %>
 
-<% if @rubygem.public_versions.count.zero? %>
-  <div class="t-body">
-    <% if @rubygem.pushable? %>
-      <p><%= t '.not_hosted_notice' %></p>
-    <% else %>
-      <p><%= t('.reserved_namespace', count: @rubygem.protected_days).html_safe %></p>
-    <% end %>
-    <%= unsubscribe_link(@rubygem) %>
-  </div>
-<% else %>
-  <div class="l-overflow">
-    <div class="l-colspan--l colspan--l--has-border">
-      <% if @latest_version.indexed %>
-        <div class="gem__intro">
-          <div id="markup" class="gem__desc">
-            <%= simple_markup(@latest_version.info) %>
-          </div>
+
+<div class="l-overflow">
+  <div class="l-colspan--l colspan--l--has-border">
+    <% if @latest_version.indexed %>
+      <div class="gem__intro">
+        <div id="markup" class="gem__desc">
+          <%= simple_markup(@latest_version.info) %>
         </div>
-      <% else %>
-        <div class="t-body">
-          <p><%=t '.yanked_notice' %></p>
-        </div>
-      <% end %>
-
-      <% if @versions.present? %>
-        <div class="l-half--l">
-          <div class="versions">
-            <h3 class="t-list__heading"><%= t '.versions_header' %>:</h3>
-            <ol class="gem__versions t-list__items">
-              <%= render @versions %>
-            </ol>
-            <% if show_all_versions_link?(@rubygem) %>
-              <%= link_to t('.show_all_versions', :count => @rubygem.versions.count), rubygem_versions_url(@rubygem), :class => "gem__see-all-versions t-link--gray t-link--has-arrow" %>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
-
-      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.runtime, :dependencies_count => @latest_version.runtime_dependencies_count } %>
-      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.development, :dependencies_count => @latest_version.development_dependencies_count } %>
-
-      <% if @latest_version.requirements.present? %>
-        <div class="l-half--l">
-          <h3 class="t-list__heading"><%= t '.requirements_header' %>:</h3>
-          <div class="t-list__items">
-            <% Array(@latest_version.requirements).each do |requirement| %>
-              <p><%= requirement %></p>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
-
-      <div class="gem__members">
-        <% if @latest_version.indexed %>
-          <% if @latest_version.authors.present? %>
-            <h3 class="t-list__heading"><%= t '.authors_header' %>:</h3>
-            <ul class="t-list__items">
-              <li class="t-list__item">
-                <p><%= @latest_version.authors %></p>
-              </li>
-            </ul>
-          <% end %>
-
-          <% if @rubygem.owners.present? %>
-            <h3 class="t-list__heading"><%= t '.owners_header' %>:</h3>
-            <div class="gem__owners">
-              <%= links_to_owners(@rubygem) %>
-            </div>
-          <% end %>
-
-          <% if @latest_version.sha256.present? %>
-            <h3 class="t-list__heading"><%= t '.sha_256_checksum' %>:</h3>
-            <div class="gem__sha">
-              <%= @latest_version.sha256_hex %>
-            </div>
-          <% end %>
-        <% end %>
-
-        <%= render partial: "rubygems/version_navigation", locals: { rubygem: @rubygem, latest_version: @latest_version } %>
       </div>
-    </div>
+    <% else %>
+      <div class="t-body">
+        <p><%=t '.yanked_notice' %></p>
+      </div>
+    <% end %>
 
-    <div class="gem__aside l-col--r--pad">
-      <% if @latest_version.indexed %>
-        <div class="gem__downloads-wrap" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
-          <h2 class="gem__downloads__heading t-text--s">
-            <%= t('stats.index.total_downloads') %>
-            <span class="gem__downloads"><%= number_with_delimiter(@rubygem.downloads) %></span>
-          </h2>
-          <h2 class="gem__downloads__heading t-text--s">
-            <%= t('.downloads_for_this_version') %>
-            <span class="gem__downloads"><%= number_with_delimiter(@latest_version.downloads_count) %></span>
-          </h2>
-        </div>
-      <% end %>
-
-      <% if @latest_version.indexed %>
-        <h2 class="gem__ruby-version__heading t-list__heading">
-          <%= t '.bundler_header' %>:
-          <div class="gem__code-wrap">
-            <input type="text" class="gem__code" id="gemfile_text" value="<%= @latest_version.to_bundler %>" readonly="readonly">
-            <span class="gem__code__icon" id="js-gem__code--gemfile" data-clipboard-target="#gemfile_text">=</span>
-            <span class="gem__code__tooltip--copy"><%= t('.copy_to_clipboard') %></span>
-            <span class="gem__code__tooltip--copied"><%= t('.copied') %></span>
-          </div>
-        </h2>
-        <h2 class="gem__ruby-version__heading t-list__heading">
-          <%= t '.install' %>:
-          <div class="gem__code-wrap">
-            <input type="text" class="gem__code" id="install_text" value="<%= @latest_version.to_install %>" readonly="readonly">
-            <span class="gem__code__icon" id="js-gem__code--install" data-clipboard-target="#install_text">=</span>
-          </div>
-        </h2>
-        <h2 class="gem__ruby-version__heading t-list__heading">
-          <%= pluralized_licenses_header @latest_version %>:
-          <span class="gem__ruby-version">
-            <p><%= formatted_licenses @latest_version.licenses %></p>
-          </span>
-        </h2>
-      <% end %>
-
-      <h2 class="gem__ruby-version__heading t-list__heading">
-        <%= t('.required_ruby_version') %>:
-        <i class="gem__ruby-version">
-          <% if @latest_version.required_ruby_version %>
-            <%= @latest_version.required_ruby_version %>
-          <% else %>
-            <%= t('none') %>
+    <% if @versions.present? %>
+      <div class="l-half--l">
+        <div class="versions">
+          <h3 class="t-list__heading"><%= t '.versions_header' %>:</h3>
+          <ol class="gem__versions t-list__items">
+            <%= render @versions %>
+          </ol>
+          <% if show_all_versions_link?(@rubygem) %>
+            <%= link_to t('.show_all_versions', :count => @rubygem.versions.count), rubygem_versions_url(@rubygem), :class => "gem__see-all-versions t-link--gray t-link--has-arrow" %>
           <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.runtime, :dependencies_count => @latest_version.runtime_dependencies_count } %>
+    <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.development, :dependencies_count => @latest_version.development_dependencies_count } %>
+
+    <% if @latest_version.requirements.present? %>
+      <div class="l-half--l">
+        <h3 class="t-list__heading"><%= t '.requirements_header' %>:</h3>
+        <div class="t-list__items">
+          <% Array(@latest_version.requirements).each do |requirement| %>
+            <p><%= requirement %></p>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <%= render partial: "rubygems/gem_members", locals: { latest_version: @latest_version, rubygem: @rubygem } %>
+    <%= render partial: "rubygems/version_navigation", locals: { rubygem: @rubygem, latest_version: @latest_version } %>
+  </div>
+
+  <div class="gem__aside l-col--r--pad">
+    <% if @latest_version.indexed %>
+      <div class="gem__downloads-wrap" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
+        <h2 class="gem__downloads__heading t-text--s">
+          <%= t('stats.index.total_downloads') %>
+          <span class="gem__downloads"><%= number_with_delimiter(@rubygem.downloads) %></span>
+        </h2>
+        <h2 class="gem__downloads__heading t-text--s">
+          <%= t('.downloads_for_this_version') %>
+          <span class="gem__downloads"><%= number_with_delimiter(@latest_version.downloads_count) %></span>
+        </h2>
+      </div>
+    <% end %>
+
+    <% if @latest_version.indexed %>
+      <h2 class="gem__ruby-version__heading t-list__heading">
+        <%= t '.bundler_header' %>:
+        <div class="gem__code-wrap">
+          <input type="text" class="gem__code" id="gemfile_text" value="<%= @latest_version.to_bundler %>" readonly="readonly">
+          <span class="gem__code__icon" id="js-gem__code--gemfile" data-clipboard-target="#gemfile_text">=</span>
+          <span class="gem__code__tooltip--copy"><%= t('.copy_to_clipboard') %></span>
+          <span class="gem__code__tooltip--copied"><%= t('.copied') %></span>
+        </div>
+      </h2>
+      <h2 class="gem__ruby-version__heading t-list__heading">
+        <%= t '.install' %>:
+        <div class="gem__code-wrap">
+          <input type="text" class="gem__code" id="install_text" value="<%= @latest_version.to_install %>" readonly="readonly">
+          <span class="gem__code__icon" id="js-gem__code--install" data-clipboard-target="#install_text">=</span>
+        </div>
+      </h2>
+      <h2 class="gem__ruby-version__heading t-list__heading">
+        <%= pluralized_licenses_header @latest_version %>:
+        <span class="gem__ruby-version">
+          <p><%= formatted_licenses @latest_version.licenses %></p>
+        </span>
+      </h2>
+    <% end %>
+
+    <h2 class="gem__ruby-version__heading t-list__heading">
+      <%= t('.required_ruby_version') %>:
+      <i class="gem__ruby-version">
+        <% if @latest_version.required_ruby_version %>
+          <%= @latest_version.required_ruby_version %>
+        <% else %>
+          <%= t('none') %>
+        <% end %>
+      </i>
+    </h2>
+
+    <% if @latest_version.required_rubygems_version != '>= 0' %>
+      <h2 class="gem__ruby-version__heading t-list__heading">
+        <%= t('.required_rubygems_version') %>:
+        <i class="gem__ruby-version">
+            <%= @latest_version.required_rubygems_version %>
         </i>
       </h2>
+    <% end %>
 
-      <% if @latest_version.required_rubygems_version != '>= 0' %>
-        <h2 class="gem__ruby-version__heading t-list__heading">
-          <%= t('.required_rubygems_version') %>:
-          <i class="gem__ruby-version">
-              <%= @latest_version.required_rubygems_version %>
-          </i>
-        </h2>
-      <% end %>
+    <h3 class="t-list__heading"><%= t '.links.header' %>:</h3>
+    <div class="t-list__items">
+      <%= link_to t('edit'), edit_rubygem_path(@rubygem), :class => "gem__link t-list__item", :id => "edit" if @rubygem.owned_by?(current_user) %>
 
-      <h3 class="t-list__heading"><%= t '.links.header' %>:</h3>
-      <div class="t-list__items">
-        <%= link_to t('edit'), edit_rubygem_path(@rubygem), :class => "gem__link t-list__item", :id => "edit" if @rubygem.owned_by?(current_user) %>
-
-        <% if @latest_version.indexed %>
-          <% if @rubygem.linkset.present? %>
-            <%- Linkset::LINKS.each do |link| %>
-              <%= link_to_page t("rubygems.show.links.#{link}"), @rubygem.linkset.public_send(link) %>
-            <%- end %>
-          <% end %>
-
-          <%= download_link(@latest_version) %>
+      <% if @latest_version.indexed %>
+        <% if @rubygem.linkset.present? %>
+          <%- Linkset::LINKS.each do |link| %>
+            <%= link_to_page t("rubygems.show.links.#{link}"), @rubygem.linkset.public_send(link) %>
+          <%- end %>
         <% end %>
 
-        <%= documentation_link(@latest_version, @rubygem.linkset) %>
-        <%= badge_link(@rubygem) %>
-        <%= subscribe_link(@rubygem) if @latest_version.indexed %>
-        <%= unsubscribe_link(@rubygem) %>
-        <%= atom_link(@rubygem) %>
-        <%= report_abuse_link(@rubygem) %>
-      </div>
+        <%= download_link(@latest_version) %>
+      <% end %>
+
+      <%= documentation_link(@latest_version, @rubygem.linkset) %>
+      <%= badge_link(@rubygem) %>
+      <%= subscribe_link(@rubygem) if @latest_version.indexed %>
+      <%= unsubscribe_link(@rubygem) %>
+      <%= atom_link(@rubygem) %>
+      <%= report_abuse_link(@rubygem) %>
     </div>
   </div>
-<% end %>
+</div>

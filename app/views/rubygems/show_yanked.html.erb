@@ -1,0 +1,22 @@
+<% @title = @rubygem.name %>
+
+<% content_for :head do %>
+  <meta name="robots" content="noindex" />
+<% end %>
+
+<div class="l-overflow">
+  <div class="l-colspan--l">
+    <div id="markup" class="gem__desc">
+      <% if @rubygem.pushable? %>
+        <%= t '.not_hosted_notice' %>
+      <% else %>
+        <%= t('.reserved_namespace', count: @rubygem.protected_days).html_safe %>
+      <% end %>
+      <%= unsubscribe_link(@rubygem) %>
+    </div>
+
+    <% unless @rubygem.pushable? %>
+      <%= render partial: "rubygems/gem_members", locals: { latest_version: @latest_version, rubygem: @rubygem } %>
+    <% end %>
+  </div>
+</div>
