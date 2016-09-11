@@ -1,0 +1,59 @@
+<% @title = @rubygem.name %>
+<% @subtitle = @latest_version.try(:slug) %>
+
+<% content_for :head do %>
+  <%= auto_discovery_link_tag(:atom, rubygem_versions_path(@rubygem, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
+  <meta name="robots" content="noindex" />
+<% end %>
+
+<div class="l-overflow">
+  <div class="l-colspan--l colspan--l--has-border">
+    <div class="t-body">
+      <% if @rubygem.pushable? %>
+        <p><%= t 'rubygems.show.not_hosted_notice' %></p>
+      <% else %>
+        <p><%= t('rubygems.show.reserved_namespace', contact: link_to('Contact', 'http://help.rubygems.org/')).html_safe %></p>
+      <% end %>
+      <%= unsubscribe_link(@rubygem) %>
+    </div>
+
+    <% if @latest_version %>
+      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.runtime } %>
+      <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.development } %>
+    <% end %>
+
+    <div class="gem__members">
+      <% if @rubygem.owners.present? %>
+        <h3 class="t-list__heading"><%= t 'rubygems.show.owners_header' %>:</h3>
+        <div class="gem__owners">
+          <%= links_to_owners(@rubygem) %>
+        </div>
+      <% end %>
+
+      <% if @latest_version && @latest_version.sha256.present? %>
+        <h3 class="t-list__heading"><%= t 'rubygems.show.sha_256_checksum' %>:</h3>
+        <div class="gem__sha">
+          <%= @latest_version.sha256_hex %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="gem__aside l-col--r--pad">
+    <h3 class="t-list__heading"><%= t 'rubygems.show.links.header' %>:</h3>
+    <div class="t-list__items">
+      <%= link_to t('edit'), edit_rubygem_path(@rubygem), :class => "gem__link t-list__item", :id => "edit" if @rubygem.owned_by?(current_user) %>
+
+      <% if @rubygem.linkset.present? %>
+        <%- Linkset::LINKS.each do |link| %>
+          <%= link_to_page t("rubygems.show.links.#{link}"), @rubygem.linkset.public_send(link) %>
+        <%- end %>
+      <% end %>
+      <%= badge_link(@rubygem) %>
+      <%= subscribe_link(@rubygem) %>
+      <%= unsubscribe_link(@rubygem) %>
+      <%= atom_link(@rubygem) %>
+      <%= report_abuse_link(@rubygem) %>
+    </div>
+  </div>
+</div>

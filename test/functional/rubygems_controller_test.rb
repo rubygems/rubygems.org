@@ -44,7 +44,7 @@ class RubygemsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should render_template :show
+      should render_template :show_all_yanked
       should "not render edit link" do
         refute page.has_selector?("a[href='#{edit_rubygem_path(@rubygem)}']")
       end
@@ -346,7 +346,7 @@ class RubygemsControllerTest < ActionController::TestCase
     context 'when signed out' do
       setup { get :show, id: @rubygem.to_param }
       should respond_with :success
-      should render_template :show
+      should render_template :show_all_yanked
       should "render info about the gem" do
         assert page.has_content?("This gem is not currently hosted on RubyGems.org")
         assert page.has_no_content?('Versions')
@@ -371,7 +371,7 @@ class RubygemsControllerTest < ActionController::TestCase
       get :show, id: @rubygem.to_param
     end
     should respond_with :success
-    should render_template :show
+    should render_template :show_all_yanked
     should "render info about the gem" do
       assert page.has_content?("This gem is not currently hosted on RubyGems.org.")
     end
