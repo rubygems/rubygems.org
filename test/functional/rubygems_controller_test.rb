@@ -39,7 +39,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to show for another user's gem" do
       setup do
-        @rubygem = create(:rubygem)
+        @rubygem = create(:rubygem, number: "1.0.0")
         get :show, id: @rubygem.to_param
       end
 
@@ -346,7 +346,7 @@ class RubygemsControllerTest < ActionController::TestCase
     context 'when signed out' do
       setup { get :show, id: @rubygem.to_param }
       should respond_with :success
-      should render_template :show
+      should render_template :show_yanked
       should "render info about the gem" do
         assert page.has_content?("This gem is not currently hosted on RubyGems.org")
         assert page.has_no_content?('Versions')
@@ -363,6 +363,24 @@ class RubygemsControllerTest < ActionController::TestCase
         assert page.has_selector?("a[style='display:inline-block']", text: 'Unsubscribe')
       end
     end
+    context "namespace is reserved" do
+      setup do
+        @rubygem.update_attributes(created_at: 30.days.ago, updated_at: 99.days.ago)
+        @owner = create(:user)
+        @rubygem.owners << @owner
+        get :show, id: @rubygem.to_param
+      end
+
+      should respond_with :success
+      should render_template :show_yanked
+      should "render info about the gem" do
+        assert page.has_content?("The RubyGems.org team has reserved this gem name for 1 more day.")
+        assert page.has_no_content?('Versions')
+      end
+      should "renders owner gems overview link" do
+        assert page.has_selector?("a[href='#{profile_path(@owner.display_id)}']")
+      end
+    end
   end
 
   context "On GET to show for a gem with no versions" do
@@ -371,7 +389,7 @@ class RubygemsControllerTest < ActionController::TestCase
       get :show, id: @rubygem.to_param
     end
     should respond_with :success
-    should render_template :show
+    should render_template :show_yanked
     should "render info about the gem" do
       assert page.has_content?("This gem is not currently hosted on RubyGems.org.")
     end

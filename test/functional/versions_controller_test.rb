@@ -92,4 +92,28 @@ class VersionsControllerTest < ActionController::TestCase
       assert page.has_content?(@latest_version.sha256_hex)
     end
   end
+
+  context "On GET to show with *a* yanked version" do
+    setup do
+      @version = create(:version, number: '1.0.1')
+      @version.rubygem.owners << create(:user, handle: "johndoe")
+      create(:version, number: "1.0.2", rubygem: @version.rubygem, indexed: false)
+      get :show, rubygem_id: @version.rubygem.name, id: "1.0.2"
+    end
+
+    should respond_with :success
+    should render_template "rubygems/show"
+    should "show yanked notice" do
+      assert page.has_content?("This version has been yanked")
+    end
+    should "render other versions" do
+      assert page.has_content?("Versions")
+      assert page.has_content?(@version.number)
+      css = "small:contains('#{@version.built_at.to_date.to_formatted_s(:long)}')"
+      assert page.has_css?(css)
+    end
+    should "renders owner gems overview link" do
+      assert page.has_selector?("a[href='#{profile_path('johndoe')}']")
+    end
+  end
 end
