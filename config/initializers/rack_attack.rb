@@ -22,6 +22,11 @@ class Rack::Attack
     req.ip if req.path =~ paths_regex && req.post?
   end
 
+  # Throttle GET requet for api_key by IP address
+  throttle('api_key/ip', limit: 100, period: 10.minutes) do |req|
+    req.ip if req.path =~ /\A#{Regexp.escape('/api/v1/api_key')}/ && req.get?
+  end
+
   # Throttle POST requests to /login by email param
   #
   # Key: "rack::attack:#{Time.now.to_i/:period}:logins/email:#{req.email}"
