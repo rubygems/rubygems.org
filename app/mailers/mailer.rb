@@ -15,6 +15,7 @@ class Mailer < ActionMailer::Base
     @user = User.find_by_id(user['id'])
     mail from: Clearance.configuration.mailer_sender,
          to: @user.email,
-         subject: "Please confirm your email address with rubygems.org"
+         subject: I18n.t('mailer.confirmation_subject',
+           default: 'Please confirm your email address with rubygems.org')
   end
 end

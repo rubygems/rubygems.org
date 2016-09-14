@@ -3,7 +3,7 @@ class ConfirmedUserGuard < Clearance::SignInGuard
     if user_confirmed?
       next_guard
     else
-      failure I18n.t("flashes.confirm_your_email")
+      failure I18n.t('mailer.confirm_your_email')
     end
   end
 

@@ -181,6 +181,8 @@ en:
   users:
     new:
       have_account: "Already have an account?"
+    create:
+      email_sent: A confirmation mail has been sent to your email address.
 
   versions:
     index:
@@ -223,3 +225,11 @@ en:
 
       multi_page: "Displaying %{model} %{from} - %{to} of %{count} in total"
       multi_page_html: "Displaying %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> of <b>%{count}</b> in total"
+
+  mailer:
+    confirmation_subject: Please confirm your email address with rubygems.org
+    confirmed_email: Your email address have been verified
+    confirm_your_email: Please confirm your email.
+    email_confirmation:
+      welcome_message: Welcome to rubygems.org! Click the link below to verify your email.
+      confirmation_link: Confirm email address
