@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
   has_many :web_hooks
 
   before_validation :regenerate_token, if: :email_changed?, on: :update
-  before_create :generate_api_key
+  before_create :generate_api_key, :generate_confirmation_token
 
   validates :handle, uniqueness: true, allow_nil: true
   validates :handle, format: {
@@ -119,5 +119,9 @@ class User < ActiveRecord::Base
 
   def total_rubygems_count
     rubygems.with_versions.count
+  end
+
+  def confirm_email
+    self.email_confirmed = true
   end
 end

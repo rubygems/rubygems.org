@@ -145,6 +145,7 @@ Rails.application.routes.draw do
   ################################################################################
   # Clearance Overrides
 
+  get "/confirm_email/:token" => "email_confirmations#update", as: "confirm_email"
   resource :session, only: [:create, :destroy]
 
   resources :passwords, only: [:new, :create]

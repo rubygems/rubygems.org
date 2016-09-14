@@ -1,0 +1,6 @@
+<p> Hi <%= @user.handle %> </p>
+<p>
+  Welcome to rubygems.org! Click the link below to verify your email.
+  <%= link_to "Confirm email address",
+    confirm_email_path(@user, token: @user.confirmation_token.html_safe) %>
+</p>

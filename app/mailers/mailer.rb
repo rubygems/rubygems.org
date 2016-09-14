@@ -10,4 +10,11 @@ class Mailer < ActionMailer::Base
            scope: [:clearance, :models, :clearance_mailer],
            default: "Email address confirmation")
   end
+
+  def email_confirmation(user)
+    @user = User.find_by_id(user['id'])
+    mail from: Clearance.configuration.mailer_sender,
+         to: @user.email,
+         subject: "Please confirm your email address with rubygems.org"
+  end
 end
