@@ -11,7 +11,7 @@ en:
   edit: Edit
   sign_in: "Sign in"
   sign_up: "Sign up"
-  footer_about: "RubyGems.org is the Ruby community&rsquo;s gem hosting service. Instantly publish your gems and install them. Use the API to interact and find out more information about available gems. Become a contributor and enhance the site with your own changes."
+  footer_about: 'RubyGems.org is the Ruby community&rsquo;s gem hosting service. Instantly <a href="%{publish_docs}">publish your gems</a> and then <a href="%{install_docs}">install them</a>. Use <a href="%{api_docs}">the API</a> find out more about <a href="%{gem_list}">available gems</a>. <a href="%{contributing_docs}">Become a contributor</a> and improve the site yourself.'
   locale_name: "English"
   this_rubygem_could_not_be_found: "This rubygem could not be found."
   not_found: "Not Found"
