@@ -201,6 +201,19 @@ class UserTest < ActiveSupport::TestCase
       assert_equal rubygem_hook, all_hooks[rubygem.name].first
       assert_equal 1, all_hooks.keys.size
     end
+
+    context '#valid_confirmation_token?' do
+      should 'return false when email confirmation token has expired' do
+        @user.update_attribute(:token_expires_at, 2.minutes.ago)
+        refute @user.valid_confirmation_token?
+      end
+
+      should 'reutrn true when email confirmation token has not expired' do
+        two_minutes_in_future = Time.zone.now + 2.minutes
+        @user.update_attribute(:token_expires_at, two_minutes_in_future)
+        assert @user.valid_confirmation_token?
+      end
+    end
   end
 
   context "rubygems" do

@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
   has_many :web_hooks
 
   before_validation :regenerate_token, if: :email_changed?, on: :update
-  before_create :generate_api_key, :generate_confirmation_token
+  before_create :generate_api_key, :set_confirmation_token
 
   validates :handle, uniqueness: true, allow_nil: true
   validates :handle, format: {
@@ -123,5 +123,16 @@ class User < ActiveRecord::Base
 
   def confirm_email
     self.email_confirmed = true
+    save
+  end
+
+  # confirmation token expires after 15 minutes
+  def valid_confirmation_token?
+    token_expires_at > Time.zone.now
+  end
+
+  def set_confirmation_token
+    self.confirmation_token = Clearance::Token.new
+    self.token_expires_at = Time.zone.now + 15.minutes
   end
 end
