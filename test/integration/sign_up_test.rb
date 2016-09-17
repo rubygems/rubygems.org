@@ -6,7 +6,7 @@ class SignUpTest < SystemTest
 
     fill_in "Email", with: "email@person.com"
     fill_in "Handle", with: "nick"
-    fill_in "Password", with: "password"
+    fill_in "Password", with: "secretpassword"
     click_button "Sign up"
 
     assert page.has_content? "Sign out"
@@ -27,7 +27,7 @@ class SignUpTest < SystemTest
 
     fill_in "Email", with: "email@person.com"
     fill_in "Handle", with: "thisusernameiswaytoolongseriouslywaytoolong"
-    fill_in "Password", with: "password"
+    fill_in "Password", with: "secretpassword"
     click_button "Sign up"
 
     assert page.has_content? "error prohibited"
@@ -39,7 +39,7 @@ class SignUpTest < SystemTest
 
     fill_in "Email", with: "email@person.com"
     fill_in "Handle", with: "nick"
-    fill_in "Password", with: "password"
+    fill_in "Password", with: "secretpassword"
     click_button "Sign up"
 
     assert page.has_content? "error prohibited"

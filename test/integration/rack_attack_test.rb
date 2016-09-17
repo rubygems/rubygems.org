@@ -3,7 +3,7 @@ require 'test_helper'
 ## SLOW TESTS ##
 class RackAttackTest < ActionDispatch::IntegrationTest
   setup do
-    @user = create(:user, email: "nick@example.com", password: "secret123")
+    @user = create(:user, email: "nick@example.com", password: "secret12345")
     @limit = 100
   end
 

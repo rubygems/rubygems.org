@@ -57,6 +57,27 @@ class UserTest < ActiveSupport::TestCase
       should allow_value("01234567890123456789").for(:twitter_username)
       should_not allow_value("012345678901234567890").for(:twitter_username)
     end
+
+    context 'password' do
+      should 'be between 10 and 200 characters' do
+        user = build(:user, password: 'a' * 9)
+        refute user.valid?
+        assert_contains user.errors[:password], 'is too short (minimum is 10 characters)'
+
+        user.password = 'a' * 201
+        refute user.valid?
+        assert_contains user.errors[:password], 'is too long (maximum is 200 characters)'
+
+        user.password = 'secretpassword'
+        user.valid?
+        assert_nil user.errors[:password].first
+      end
+
+      should 'be invalid when an empty string' do
+        user = build(:user, password: '')
+        refute user.valid?
+      end
+    end
   end
 
   context "with a user" do

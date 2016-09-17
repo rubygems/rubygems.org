@@ -2,7 +2,7 @@ require 'test_helper'
 
 class ProfileTest < SystemTest
   setup do
-    @user = create(:user, email: "nick@example.com", password: "secret123", handle: "nick1")
+    @user = create(:user, email: "nick@example.com", password: "password12345", handle: "nick1")
   end
 
   def sign_in

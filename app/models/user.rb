@@ -39,6 +39,7 @@ class User < ActiveRecord::Base
   }, allow_nil: true
 
   validates :twitter_username, length: { within: 0..20 }, allow_nil: true
+  validates :password, length: { within: 10..200 }, allow_nil: true, unless: :skip_password_validation?
 
   def self.authenticate(who, password)
     user = find_by(email: who.downcase) || find_by(handle: who)

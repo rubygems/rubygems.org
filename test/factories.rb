@@ -10,7 +10,7 @@ FactoryGirl.define do
   factory :user do
     email
     handle
-    password "password"
+    password "password12345"
     api_key "secret123"
   end
 

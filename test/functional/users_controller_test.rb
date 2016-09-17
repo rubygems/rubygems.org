@@ -12,7 +12,7 @@ class UsersControllerTest < ActionController::TestCase
   context "on POST to create" do
     context "when email and password are given" do
       should "create a user" do
-        post :create, user: { email: 'foo@bar.com', password: 'secret' }
+        post :create, user: { email: 'foo@bar.com', password: 'secret12345' }
         assert User.find_by(email: 'foo@bar.com')
       end
     end
@@ -27,7 +27,7 @@ class UsersControllerTest < ActionController::TestCase
 
     context "when extra parameters given" do
       should "create a user if parameters are ok" do
-        post :create, user: { email: 'foo@bar.com', password: 'secret', handle: 'foo' }
+        post :create, user: { email: 'foo@bar.com', password: 'secret12345', handle: 'foo' }
         assert_equal "foo", User.where(email: 'foo@bar.com').pluck(:handle).first
       end
 

@@ -6,7 +6,7 @@ class OauthTest < SystemTest
   end
 
   test "admin users may create applications" do
-    user = create(:user, email: Gemcutter.admins.first, password: "secret123", handle: "nick1")
+    user = create(:user, email: Gemcutter.admins.first, password: "secret12345", handle: "nick1")
     sign_in(user)
 
     oauth_path = url_helpers.new_oauth_application_path
