@@ -22,6 +22,7 @@ class User < ActiveRecord::Base
   has_many :ownerships
   has_many :subscriptions
   has_many :web_hooks
+  has_many :advisories
 
   before_validation :unconfirm_email, if: :email_changed?, on: :update
   before_create :generate_api_key, :regenerate_confirmation_token

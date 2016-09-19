@@ -179,6 +179,10 @@ class Version < ActiveRecord::Base
     rubygem.versions.find_by(position: position - 1)
   end
 
+  def vulnerable?
+    Advisory.where(number: number, rubygem: rubygem.name).exists?
+  end
+
   def yanked?
     !indexed
   end

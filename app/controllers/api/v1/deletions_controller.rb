@@ -22,28 +22,4 @@ class Api::V1::DeletionsController < Api::BaseController
     render text: "Unyanking of gems is no longer supported.",
            status: :gone
   end
-
-  private
-
-  def validate_gem_and_version
-    if !@rubygem.hosted?
-      render text: t(:this_rubygem_could_not_be_found),
-             status: :not_found
-    elsif !@rubygem.owned_by?(current_user)
-      render text: "You do not have permission to delete this gem.",
-             status: :forbidden
-    else
-      begin
-        slug = if params[:platform].blank?
-                 params[:version]
-               else
-                 "#{params[:version]}-#{params[:platform]}"
-               end
-        @version = Version.find_from_slug!(@rubygem, slug)
-      rescue ActiveRecord::RecordNotFound
-        render text: "The version #{params[:version]} does not exist.",
-               status: :not_found
-      end
-    end
-  end
 end

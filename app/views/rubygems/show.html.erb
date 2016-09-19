@@ -10,9 +10,14 @@
   <% end %>
 <% end %>
 
-
 <div class="l-overflow">
   <div class="l-colspan--l colspan--l--has-border">
+    <% if @latest_version.vulnerable? %>
+      <div class="gem_warning">
+        <p>This version is known to have security vulnerabilities.</p>
+        <br/>
+      </div>
+    <% end %>
     <% if @latest_version.indexed %>
       <div class="gem__intro">
         <div id="markup" class="gem__desc">
@@ -22,7 +27,7 @@
     <% else %>
       <div class="t-body">
         <p><%=t '.yanked_notice' %></p>
-      </div>
+     </div>
     <% end %>
 
     <% if @versions.present? %>

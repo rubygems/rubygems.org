@@ -10,6 +10,9 @@
       top: 10px;
       font-size: 42px; } }
 
+.gem_warning {
+  color: #D8000C; }
+
 .gem__intro {
   margin-bottom: 32px;
   padding-bottom: 30px;

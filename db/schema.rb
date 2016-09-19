@@ -17,6 +17,17 @@ ActiveRecord::Schema.define(version: 20160929104437) do
   enable_extension "plpgsql"
   enable_extension "hstore"
 
+  create_table "advisories", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "rubygem"
+    t.string   "number"
+    t.string   "platform"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "advisories", ["user_id"], name: "index_advisories_on_user_id", using: :btree
+
   create_table "announcements", force: :cascade do |t|
     t.text     "body"
     t.datetime "created_at"
