@@ -1,17 +1,28 @@
 class Api::V2::MetricsController < Api::BaseController
   METRICS = %I[
-    bundler_version
-    rubygems_version
-    ruby_version
+    bundler
+    rubygems
+    ruby
     ruby_platform
-    bundler_command
+    bundler
     ruby_engine
-    bundler_settings
-    ci_information
+    options
+    ci
   ].freeze
+
+
   def create
-    METRICS.each do |metric|
-      Metriks.counter("#{metric}/#{params[metric]}").increment
+    if params[:ruby_engine] && params[:ruby_engine_version]
+      StatsD.increment("#{params[:ruby_engine]}/#{params[:ruby_engine_version]}")
     end
+
+    METRICS.each do |metric|
+      if params[metric]
+        StatsD.increment("#{metric}/#{params[metric]}")
+      end
+    end
+    head :ok
   end
 end
+
+#
