@@ -230,10 +230,12 @@ en:
 
   mailer:
     confirmation_subject: Please confirm your email address with rubygems.org
-    confirm_your_email: Please confirm your email.
+    confirm_your_email: Please confirm your email address with the link sent to you email.
     email_confirmation:
       welcome_message: Welcome to rubygems.org! Click the link below to verify your email.
       confirmation_link: Confirm email address
+    email_reset:
+      visit_link_instructions: You changed your email address on rubygems.org. Please visit the following url to re-activate your account.
 
   email_confirmations:
     update:
