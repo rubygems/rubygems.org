@@ -3,5 +3,5 @@
   <%= t('.welcome_message') %>
   <br />
   <%= link_to t('.confirmation_link'),
-    confirm_email_path(@user, token: @user.confirmation_token.html_safe) %>
+    confirm_email_url(@user, token: @user.confirmation_token.html_safe) %>
 </p>

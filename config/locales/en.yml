@@ -15,6 +15,7 @@ en:
   locale_name: "English"
   this_rubygem_could_not_be_found: "This rubygem could not be found."
   not_found: "Not Found"
+  failure_when_forbidden: Please double check the URL or try submitting it again.
   none: None
 
   dashboards:

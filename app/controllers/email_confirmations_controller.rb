@@ -10,6 +10,6 @@ class EmailConfirmationsController < ApplicationController
   def validate_confirmation_token
     @user = User.find_by_confirmation_token(params[:token])
     return if @user&.valid_confirmation_token?
-    render text: t(:please_sign_up), status: 401
+    redirect_to root_path, alert: t('failure_when_forbidden')
   end
 end
