@@ -4,7 +4,20 @@ class EmailConfirmationsController < ApplicationController
   def update
     @user.confirm_email
     sign_in @user
-    redirect_to root_path, notice: t('mailer.confirmed_email')
+    redirect_to root_path, notice: t('.confirmed_email')
+  end
+
+  def new
+  end
+
+  # used to resend confirmation mail for email validation
+  def create
+    user = User.find_by_email(params[:email_confirmation][:email])
+    if user
+      user.set_confirmation_token
+      Mailer.delay.email_confirmation(user) if user.save
+    end
+    redirect_to root_path, notice: t('.promise_resend')
   end
 
   def validate_confirmation_token

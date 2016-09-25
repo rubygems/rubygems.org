@@ -170,7 +170,8 @@ en:
 
   sessions:
     new:
-      forgot_password: "Forgot Password?"
+      forgot_password: "Forgot password?"
+      resend_confirmation: Didn't receive confirmation mail?
 
   stats:
     index:
@@ -229,8 +230,17 @@ en:
 
   mailer:
     confirmation_subject: Please confirm your email address with rubygems.org
-    confirmed_email: Your email address have been verified
     confirm_your_email: Please confirm your email.
     email_confirmation:
       welcome_message: Welcome to rubygems.org! Click the link below to verify your email.
       confirmation_link: Confirm email address
+
+  email_confirmations:
+    update:
+      confirmed_email: Your email address have been verified.
+    new:
+      title: Resend confirmation email
+      will_email_notice: We will email you confirmation link to activate your account.
+      submit: Resend Confirmation
+    create:
+      promise_resend: We will email you confirmation link to activate your account if one exists.

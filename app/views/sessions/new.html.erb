@@ -1,7 +1,10 @@
 <% @title = t('sign_in') %>
 
-<div class="form_links sign_in_links t-body">
-  <p><%= link_to t('.forgot_password'), new_password_url %></p>
+<div class="t-body">
+  <p>
+    <%= link_to t('.forgot_password'), new_password_url, class: 't-list__item' %>
+    <%= link_to t('.resend_confirmation'), new_email_confirmations_path, class: 't-list__item' %>
+  </p>
 </div>
 
 <%= form_for :session, :url => session_path do |form| %>
