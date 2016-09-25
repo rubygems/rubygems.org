@@ -1,6 +1,12 @@
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
+  def assert_resetting_email_changes(attr_name)
+    assert_changed(@user, attr_name) do
+      @user.update_attributes(email: 'some@one.com')
+    end
+  end
+
   should have_many(:ownerships)
   should have_many(:rubygems).through(:ownerships)
   should have_many(:subscribed_gems).through(:subscriptions)
@@ -163,6 +169,20 @@ class UserTest < ActiveSupport::TestCase
       my_rubygem = create(:rubygem)
       create(:ownership, user: @user, rubygem: my_rubygem)
       assert_equal [my_rubygem], @user.rubygems
+    end
+
+    context "email change" do
+      should "reset confirmation token" do
+        assert_resetting_email_changes :confirmation_token
+      end
+
+      should "unconfirm email" do
+        assert_resetting_email_changes :unconfirmed?
+      end
+
+      should "reset token_expires_at" do
+        assert_resetting_email_changes :token_expires_at
+      end
     end
 
     context "with subscribed gems" do

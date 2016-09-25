@@ -53,7 +53,7 @@ class ProfileTest < SystemTest
     assert page.has_link?("nick1", href: "/profiles/nick1")
   end
 
-  test "changing email allows signing in with new email" do
+  test "changing email signs out user and asks to confirm email" do
     sign_in
     visit profile_path("nick1")
     click_link "Edit Profile"
@@ -62,10 +62,20 @@ class ProfileTest < SystemTest
     fill_in "Password", with: "password12345"
     click_button "Update"
 
-    click_link "Sign out"
+    assert page.has_content? "Sign in"
+    assert page.has_selector? '#flash_notice', text: "You will receive "\
+      "an email within the next few minutes. It contains instructions "\
+      "for reconfirming your account with your new email address."
 
-    sign_in
+    Delayed::Worker.new.work_off
+    body = ActionMailer::Base.deliveries.last.to_s
+    link = /href="([^"]*)"/.match(body)
+    assert_not_nil link[1]
+
+    visit link[1]
+
     assert page.has_content? "Sign out"
+    assert page.has_selector? "#flash_notice", text: "Your email address have been verified"
   end
 
   test "disabling email on profile" do

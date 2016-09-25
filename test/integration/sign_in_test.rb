@@ -43,6 +43,23 @@ class SignInTest < SystemTest
     assert page.has_content? "Bad email or password"
   end
 
+  test "signing in with unconfirmed email" do
+    visit sign_up_path
+
+    fill_in "Email", with: "email@person.com"
+    fill_in "Handle", with: "nick"
+    fill_in "Password", with: "secretpassword"
+    click_button "Sign up"
+
+    visit sign_in_path
+    fill_in "Email or Handle", with: "email@person.com"
+    fill_in "Password", with: "secretpassword"
+    click_button "Sign in"
+
+    assert page.has_content? "Sign in"
+    assert page.has_content? "Please confirm your email address with the link sent to you email."
+  end
+
   test "signing out" do
     visit sign_in_path
     fill_in "Email or Handle", with: "nick@example.com"

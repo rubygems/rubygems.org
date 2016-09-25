@@ -2,7 +2,7 @@ class EmailConfirmationsController < ApplicationController
   before_action :validate_confirmation_token, only: :update
 
   def update
-    @user.confirm_email
+    @user.confirm_email!
     sign_in @user
     redirect_to root_path, notice: t('.confirmed_email')
   end
@@ -19,6 +19,8 @@ class EmailConfirmationsController < ApplicationController
     end
     redirect_to root_path, notice: t('.promise_resend')
   end
+
+  private
 
   def validate_confirmation_token
     @user = User.find_by_confirmation_token(params[:token])

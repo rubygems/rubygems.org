@@ -4,12 +4,12 @@
   <p><%= t '.will_email_notice' %></p>
 </div>
 
-<%= form_for :email_confirmation, :url => email_confirmations_path do |form| %>
+<%= form_for :email_confirmation, url: email_confirmations_path do |form| %>
   <div class="text_field">
-    <%= form.label :email, t('activerecord.attributes.user.email'), :class => 'form__label' %>
-    <%= form.email_field :email, :size => '25', :class => 'form__input' %>
+    <%= form.label :email, t('activerecord.attributes.user.email'), class: 'form__label' %>
+    <%= form.email_field :email, size: '25', class: 'form__input' %>
   </div>
   <div class="submit_field">
-    <%= form.submit t('.submit'), :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
+    <%= form.submit t('.submit'), data: {disable_with: t('form_disable_with')}, class: 'form__submit' %>
   </div>
 <% end %>

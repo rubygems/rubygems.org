@@ -8,7 +8,7 @@ class PasswordResetTest < SystemTest
   def forgot_password_with(email)
     visit sign_in_path
 
-    click_link "Forgot Password?"
+    click_link "Forgot password?"
     fill_in "Email address", with: email
     click_button "Reset password"
   end

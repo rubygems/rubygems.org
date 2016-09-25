@@ -122,7 +122,7 @@ class User < ActiveRecord::Base
     rubygems.with_versions.count
   end
 
-  def confirm_email
+  def confirm_email!
     self.email_confirmed = true
     save
   end
