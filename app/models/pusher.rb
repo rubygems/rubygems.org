@@ -22,7 +22,7 @@ class Pusher
   def authorize
     rubygem.pushable? ||
       rubygem.owned_by?(user) ||
-      notify("You do not have permission to push to this gem.", 403)
+      notify("You do not have permission to push to this gem. Ask an owner to add you with: gem owner #{rubygem.name} --add #{user.email}", 403)
   end
 
   def validate
