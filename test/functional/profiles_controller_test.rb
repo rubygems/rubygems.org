@@ -83,7 +83,7 @@ class ProfilesControllerTest < ActionController::TestCase
           @handle = "john_m_doe"
           @user = create(:user, handle: "johndoe")
           sign_in_as(@user)
-          put :update, user: { handle: @handle }
+          put :update, user: { handle: @handle, password: @user.password }
         end
 
         should respond_with :redirect
@@ -101,7 +101,7 @@ class ProfilesControllerTest < ActionController::TestCase
           @hide_email = true
           @user = create(:user, handle: "johndoe")
           sign_in_as(@user)
-          put :update, user: { handle: @handle, hide_email: @hide_email }
+          put :update, user: { handle: @handle, hide_email: @hide_email, password: @user.password }
         end
 
         should respond_with :redirect
@@ -110,6 +110,20 @@ class ProfilesControllerTest < ActionController::TestCase
 
         should "update email toggle" do
           assert_equal @hide_email, User.last.hide_email
+        end
+      end
+
+      context "updating without password" do
+        setup do
+          @user = create(:user, handle: "johndoe")
+          sign_in_as(@user)
+          put :update, user: { handle: "doejohn" }
+        end
+
+        should set_flash.to("This request was denied. We could not verify your password.")
+        should redirect_to("the profile edit page") { edit_profile_path }
+        should "not update handle" do
+          assert_equal "johndoe", @user.handle
         end
       end
     end
