@@ -40,6 +40,15 @@
     <%= form.email_field :email, :class => 'form__input' %>
   </div>
 
+  <p class='form__field__instructions'>
+    <%= t('.enter_password') %>
+  </p>
+  <div class="password_field">
+    <%= form.label :password, :class => 'form__label' %>
+    <%= form.password_field :password, :class => 'form__input' %>
+  </div>
+
+
   <div class="profile-checkbox form__checkbox">
     <%= form.check_box :hide_email, :class => 'form__checkbox__input' %>
     <%= form.label :hide_email, t('.hide_email'), :class => 'form__checkbox__label' %>
