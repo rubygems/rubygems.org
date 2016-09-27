@@ -38,6 +38,18 @@ class ProfileTest < SystemTest
     assert page.has_content? "Handle has already been taken"
   end
 
+  test "changing to invalid handle does not affect rendering" do
+    sign_in
+    visit profile_path("nick1")
+    click_link "Edit Profile"
+
+    fill_in "Handle", with: "nick1" * 10
+    click_button "Update"
+
+    assert page.has_content? "Handle is too long (maximum is 40 characters)"
+    assert page.has_link?("nick1", href: "/profiles/nick1")
+  end
+
   test "changing email allows signing in with new email" do
     sign_in
     visit profile_path("nick1")

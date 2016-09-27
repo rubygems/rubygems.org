@@ -2,6 +2,7 @@ class ProfilesController < ApplicationController
   before_action :redirect_to_root, unless: :signed_in?, except: :show
 
   def edit
+    @user = current_user
   end
 
   def show
@@ -12,8 +13,9 @@ class ProfilesController < ApplicationController
   end
 
   def update
-    if current_user.update_attributes(params_user)
-      if current_user.email_reset
+    @user = current_user.clone
+    if @user.update_attributes(params_user)
+      if @user.email_reset
         sign_out
         flash[:notice] = "You will receive an email within the next few " \
                          "minutes. It contains instructions for reconfirming " \
@@ -24,6 +26,7 @@ class ProfilesController < ApplicationController
         redirect_to edit_profile_path
       end
     else
+      current_user.reload
       render :edit
     end
   end

@@ -1,6 +1,6 @@
 <% @title = t('.title') %>
 
-<%= form_for current_user, :url => {:controller => 'profiles', :action => 'update'} do |form| %>
+<%= form_for @user, :url => {:controller => 'profiles', :action => 'update'} do |form| %>
   <%= form.error_messages %>
 
   <div class="avatar_field">
