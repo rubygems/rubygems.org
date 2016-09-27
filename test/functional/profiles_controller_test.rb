@@ -2,10 +2,9 @@ require 'test_helper'
 
 class ProfilesControllerTest < ActionController::TestCase
   context "for a user that doesn't exist" do
-    should "throw a not found" do
-      assert_raise ActiveRecord::RecordNotFound do
-        get :show, id: "unknown"
-      end
+    should "render not found page" do
+      get :show, id: "unknown"
+      assert_response :not_found
     end
   end
 
