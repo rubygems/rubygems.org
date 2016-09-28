@@ -3,7 +3,7 @@ class Mailer < ActionMailer::Base
   default_url_options[:protocol] = Gemcutter::PROTOCOL
 
   def email_reset(user)
-    @user = User.find_by_id(user['id'])
+    @user = User.find(user['id'])
     mail from: Clearance.configuration.mailer_sender,
          to: @user.email,
          subject: I18n.t('mailer.confirmation_subject',
@@ -11,7 +11,7 @@ class Mailer < ActionMailer::Base
   end
 
   def email_confirmation(user)
-    @user = User.find_by_id(user['id'])
+    @user = User.find(user['id'])
     mail from: Clearance.configuration.mailer_sender,
          to: @user.email,
          subject: I18n.t('mailer.confirmation_subject',

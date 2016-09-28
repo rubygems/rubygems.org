@@ -8,6 +8,7 @@ require 'capybara/rails'
 require 'clearance/test_unit'
 require 'shoulda'
 require 'helpers/gem_helpers'
+require 'helpers/email_helpers'
 
 RubygemFs.mock!
 Aws.config[:stub_responses] = true
@@ -15,6 +16,7 @@ Aws.config[:stub_responses] = true
 class ActiveSupport::TestCase
   include FactoryGirl::Syntax::Methods
   include GemHelpers
+  include EmailHelpers
 
   setup do
     I18n.locale = :en

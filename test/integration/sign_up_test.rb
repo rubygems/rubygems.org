@@ -64,12 +64,9 @@ class SignUpTest < SystemTest
     fill_in "Password", with: "secretpassword"
     click_button "Sign up"
 
-    Delayed::Worker.new.work_off
-    body = ActionMailer::Base.deliveries.last.to_s
-    link = /href="([^"]*)"/.match(body)
-    assert_not_nil link[1]
-
-    visit link[1]
+    link = last_email_link
+    assert_not_nil link
+    visit link
 
     assert page.has_content? "Sign out"
     assert page.has_selector? '#flash_notice', text: "Your email address have been verified"
