@@ -1,5 +1,6 @@
 class RubygemsController < ApplicationController
   before_action :redirect_to_root, only: [:edit, :update], unless: :signed_in?
+  before_action :set_blacklisted_gem, only: [:show], if: :blacklisted?
   before_action :find_rubygem, only: [:edit, :update, :show], unless: :blacklisted?
   before_action :load_gem, only: [:edit, :update]
   before_action :set_page, only: :index
@@ -18,12 +19,11 @@ class RubygemsController < ApplicationController
   end
 
   def show
-    if @rubygem
+    if @blacklisted_gem
+      render 'blacklisted'
+    else
       @latest_version = @rubygem.versions.most_recent
       @versions       = @rubygem.public_versions(5)
-    else
-      @blacklisted_name = params[:id].downcase
-      render 'blacklisted'
     end
   end
 
@@ -54,6 +54,10 @@ class RubygemsController < ApplicationController
 
   def blacklisted?
     (Patterns::GEM_NAME_BLACKLIST.include? params[:id].downcase)
+  end
+
+  def set_blacklisted_gem
+    @blacklisted_gem = params[:id].downcase
   end
 
   def params_linkset
