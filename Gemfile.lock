@@ -109,8 +109,6 @@ GEM
       delayed_job (>= 3.0, < 5)
     domain_name (0.5.20160615)
       unf (>= 0.0.5, < 1.0.0)
-    doorkeeper (3.1.0)
-      railties (>= 3.2)
     dynamic_form (1.1.4)
     elasticsearch (1.0.18)
       elasticsearch-api (= 1.0.18)
@@ -304,7 +302,6 @@ DEPENDENCIES
   dalli
   delayed_job
   delayed_job_active_record
-  doorkeeper
   dynamic_form
   elasticsearch-dsl (~> 0.1.2)
   elasticsearch-model (~> 0.1.7)
