@@ -160,8 +160,6 @@ Rails.application.routes.draw do
     get 'revision' => 'ping#revision'
   end
 
-  use_doorkeeper scope: 'oauth'
-
   unless Clearance.configuration.allow_sign_up?
     get '/sign_up' => 'users#disabled_signup'
   end
