@@ -22,7 +22,8 @@ class RubygemsController < ApplicationController
       @latest_version = @rubygem.versions.most_recent
       @versions       = @rubygem.public_versions(5)
     else
-      @blacklisted_name = params[:id]
+      @blacklisted_name = params[:id].downcase
+      render 'blacklisted'
     end
   end
 

@@ -108,6 +108,8 @@ en:
         confirm_reset: Are you sure? This cannot be undone.
 
   rubygems:
+    blacklisted:
+      blacklisted_namespace: This namespace is reserved by rubygems.org.
     dependencies:
       header: "%{title} Dependencies"
     edit:
@@ -118,7 +120,6 @@ en:
       title: 'Gems'
       downloads: Downloads
     show:
-      blacklisted: This namespace is reserved by rubygems.org.
       not_hosted_notice: This gem is not currently hosted on RubyGems.org.
       reserved_namespace: This namespace is reserved by rubygems.org. %{contact} rubygems team if you would like to take over this namespace.
       install: install
