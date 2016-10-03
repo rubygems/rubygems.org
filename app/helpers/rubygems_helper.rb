@@ -64,7 +64,7 @@ module RubygemsHelper
               't-item--hidden'
             end
     link_to t('.links.unsubscribe'), rubygem_subscription_path(rubygem),
-      class: [:toggler, 'gem__link', 't-list__item', "#{style}"], id: 'unsubscribe',
+      class: [:toggler, 'gem__link', 't-list__item', style], id: 'unsubscribe',
       method: :delete, remote: true
   end
 

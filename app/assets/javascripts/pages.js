@@ -53,12 +53,16 @@ $(document).ready(function() {
     return content.join("\n");
   };
 
-  getDumpData('ul.rubygems-dump-listing-postgresql', 'postgresql');
-  getDumpData('ul.rubygems-dump-listing-redis', 'redis');
+  data_title = "RubyGems.org Data Dumps | RubyGems.org | your community gem host";
+  page_title = $(document).find("title").text();
+  if(page_title === data_title){
+    getDumpData('ul.rubygems-dump-listing-postgresql', 'postgresql');
+    getDumpData('ul.rubygems-dump-listing-redis', 'redis');
+  }
 });
 
 //stats page
-$('.stats__graph__gem__meter').each(function(i, obj) {
-    bar_width = $(this).data("bar_width");
-    $(this).animate({ width: bar_width + '%' }, 700).removeClass('t-item--hidden');
+$('.stats__graph__gem__meter').each(function() {
+  bar_width = $(this).data("bar_width");
+  $(this).animate({ width: bar_width + '%' }, 700).removeClass('t-item--hidden');
 });

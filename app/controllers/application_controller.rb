@@ -10,6 +10,16 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
 
   rescue_from ActiveRecord::RecordNotFound, with: :render_404
+  before_action :set_csp
+
+  def set_csp
+    response.headers['Content-Security-Policy-Report-Only'] = "default-src 'self'; "\
+      "script-src 'self' https://secure.gaug.es; "\
+      "style-src 'self' https://fonts.googleapis.com; "\
+      "img-src 'self' https://secure.gaug.es https://gravatar.com; "\
+      "font-src https://fonts.gstatic.com; "\
+      "connect-src https://s3-us-west-2.amazonaws.com/rubygems-dumps/;"
+  end
 
   def set_locale
     I18n.locale = user_locale

@@ -26,7 +26,7 @@ class GemsTest < ActionDispatch::IntegrationTest
     post rubygem_subscription_path(@rubygem, as: @user.id), nil,
       'HTTP_ACCEPT' => 'application/javascript'
 
-    assert_match(/\("\.toggler"\)\.toggle\(\)/, @response.body)
+    assert_includes @response.body, 'Unsubscribe'
     assert_equal @user.subscribed_gems.first, @rubygem
   end
 
@@ -38,7 +38,7 @@ class GemsTest < ActionDispatch::IntegrationTest
 
     delete rubygem_subscription_path(@rubygem, as: @user.id), nil,
       'HTTP_ACCEPT' => 'application/javascript'
-    assert_match(/\("\.toggler"\)\.toggle\(\)/, @response.body)
+    assert_includes @response.body, 'Subscribe'
   end
 
   test "versions with atom format" do

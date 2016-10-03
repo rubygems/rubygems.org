@@ -72,8 +72,9 @@ class RubygemsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should "have a visible unsubscribe link" do
-        assert page.has_selector?("a[style='display:inline-block']", text: 'Unsubscribe')
+      should "have unsubscribe link" do
+        assert page.has_link? 'Unsubscribe'
+        refute page.has_content? 'Subscribe'
       end
     end
 
@@ -85,8 +86,9 @@ class RubygemsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should "have a visible subscribe link" do
-        assert page.has_selector?("a[style='display:inline-block']", text: 'Subscribe')
+      should "have subscribe link" do
+        assert page.has_link? 'Subscribe'
+        refute page.has_content? 'Unsubscribe'
       end
     end
 
@@ -359,8 +361,8 @@ class RubygemsControllerTest < ActionController::TestCase
         create(:subscription, user: @user, rubygem: @rubygem)
         get :show, id: @rubygem.to_param
       end
-      should "have a visible unsubscribe link" do
-        assert page.has_selector?("a[style='display:inline-block']", text: 'Unsubscribe')
+      should "have unsubscribe link" do
+        assert page.has_link? 'Unsubscribe'
       end
     end
     context "namespace is reserved" do
