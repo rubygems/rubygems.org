@@ -27,7 +27,7 @@
   <div class="stats__graph__gem">
     <h3 class="stats__graph__gem__name"><%= link_to gem.name, rubygem_path(gem) %></h3>
     <div class="stats__graph__gem__meter-wrap">
-      <div class="stats__graph__gem__meter" style="width: <%= stats_graph_meter(gem, @most_downloaded_count) %>%">
+      <div class="stats__graph__gem__meter t-item--hidden" data-bar_width="<%= stats_graph_meter(gem, @most_downloaded_count) %>">
         <span class="stats__graph__gem__count"><%= number_to_delimited gem.downloads %></span>
       </div>
     </div>
