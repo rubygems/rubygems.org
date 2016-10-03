@@ -1,9 +1,6 @@
 es:
   activerecord:
     attributes:
-      doorkeeper/application:
-        name: Nombre
-        redirect_uri:
       linkset:
         bugs: URL del registro de Bugs
         code: URL del código fuente
@@ -22,13 +19,6 @@ es:
       messages:
         record_invalid:
       models:
-        doorkeeper/application:
-          attributes:
-            redirect_uri:
-              fragment_present: no puede contener un fragmento.
-              invalid_uri: tiene que tener un URI válido.
-              relative_uri: tiene que tener un URI absoluto.
-              secured_uri: el URI tiene que ser HTTPS/SSL.
       template:
         body:
         header:
@@ -43,98 +33,6 @@ es:
       my_subscriptions: Subscripciones
       no_owned: Aún no has registrado ninguna gema. Tal vez puedes revisar las guías para %{creating_link} una gema o %{migrating_link} una gema de RubyForge.
       no_subscriptions: Aún no te has subscrito a ningua gema. ¡Visita la %{gem_link} para subscribirte!
-  doorkeeper:
-    applications:
-      buttons:
-        authorize: Autorizar
-        cancel: Cancelar
-        destroy: Destruir
-        edit: Editar
-        submit: Enviar
-      confirmations:
-        destroy: "¿Estás seguro?"
-      edit:
-        title: Editar aplicación
-      form:
-        error: Ups! Checa la forma por posible errores
-      help:
-        native_redirect_uri: Usa %{native_redirect_uri} para pruebas locales
-        redirect_uri: Use una línea por URI
-        scopes:
-      index:
-        callback_url:
-        name: Nombre
-        new: Nueva Aplicación
-        title: Tus aplicaciones
-      new:
-        title: Nueva Aplicación
-      show:
-        actions: Acciones
-        application_id:
-        callback_urls:
-        scopes:
-        secret: Secreto
-        title: 'Aplicación: %{name}'
-    authorizations:
-      buttons:
-        authorize: Autorizar
-        deny: Denegar
-      error:
-        title: Un error ha ocurrido
-      new:
-        able_to: Esta aplicación podrá
-        prompt: "¿Autorizas a %{client_name} a usar tu cuenta?"
-        title: Autorización requerida
-      show:
-        title: Código de autorización
-    authorized_applications:
-      buttons:
-        revoke: Revocar
-      confirmations:
-        revoke: "¿Estás seguro?"
-      index:
-        application: Aplicación
-        created_at: Creado a las
-        date_format: "%Y-%m-%d %H:%M:%S"
-        title: Tus aplicaciones autorizadas
-    errors:
-      messages:
-        access_denied: El dueño de los recursos o el servidor de autorización ha denegado la solicitud.
-        credential_flow_not_configured:
-        invalid_client:
-        invalid_grant:
-        invalid_redirect_uri:
-        invalid_request:
-        invalid_resource_owner: Las credenciales del dueño del recurso que proveíste son invalidas o el dueño no se pudo encontrar
-        invalid_scope:
-        invalid_token:
-          expired: El token de acceso a expirado
-          revoked: El token de acceso fue revocado
-          unknown: El token de acceso es invalido
-        resource_owner_authenticator_not_configured:
-        server_error: El servidor de autorización ha encontrado una condición inesperada que le impidió cumplir con la solicitud.
-        temporarily_unavailable: El servidor de autorización no pudo manejar la solicitud debido a una sobrecarga temporal o mantenimiento al servidor.
-        unauthorized_client: El cliente no está autorizado para realizar esta solicitud utilizando este método.
-        unsupported_grant_type:
-        unsupported_response_type: El servidor de autorización no soporta este tipo de respuesta.
-    flash:
-      applications:
-        create:
-          notice: Aplicación creada.
-        destroy:
-          notice: Aplicación borrada.
-        update:
-          notice: Aplicación actualizada.
-      authorized_applications:
-        destroy:
-          notice: Aplicación revocada.
-    layouts:
-      admin:
-        nav:
-          applications: Aplicaciones
-          oauth2_provider: Provedor OAuth2
-      application:
-        title: Autorización OAuth es requerida
   download_count:
   edit: Editar
   feed_latest: RubyGems.org | Gemas Nuevas

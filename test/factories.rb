@@ -120,18 +120,6 @@ FactoryGirl.define do
     end
   end
 
-  factory :oauth_application, class: Doorkeeper::Application do
-    name "Adoption Center"
-    redirect_uri "https://example.org/auth"
-    scopes "public"
-  end
-
-  factory :oauth_access_token, class: Doorkeeper::AccessToken do
-    association :application, factory: :oauth_application
-    expires_in 90.days.from_now
-    scopes "public"
-  end
-
   factory :gem_download do
     rubygem_id 0
     version_id 0
