@@ -3,7 +3,7 @@ require 'test_helper'
 class PusherTest < ActiveSupport::TestCase
   context "creating a new gemcutter" do
     setup do
-      @user = create(:user)
+      @user = create(:user, email: "user@example.com")
       @gem = gem_file
       @cutter = Pusher.new(@user, @gem)
     end
@@ -242,7 +242,7 @@ class PusherTest < ActiveSupport::TestCase
 
       context "with a existing rubygem" do
         setup do
-          @rubygem = create(:rubygem)
+          @rubygem = create(:rubygem, name: "the_gem_name")
           @cutter.stubs(:rubygem).returns @rubygem
         end
 
@@ -258,7 +258,8 @@ class PusherTest < ActiveSupport::TestCase
         should "be false if not owned by user and an indexed version exists" do
           create(:version, rubygem: @rubygem, number: '0.1.1')
           refute @cutter.authorize
-          assert_equal "You do not have permission to push to this gem.", @cutter.message
+          assert_equal "You do not have permission to push to this gem. Ask an owner to add you with: gem owner the_gem_name --add user@example.com",
+            @cutter.message
           assert_equal 403, @cutter.code
         end
 

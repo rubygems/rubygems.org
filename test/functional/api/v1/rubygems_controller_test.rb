@@ -290,7 +290,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         assert_equal 1, @rubygem.ownerships.size
         assert_equal @other_user, @rubygem.ownerships.first.user
         assert_equal 1, @rubygem.versions.size
-        assert_equal "You do not have permission to push to this gem.", @response.body
+        assert_includes @response.body, "You do not have permission to push to this gem."
       end
     end
 
