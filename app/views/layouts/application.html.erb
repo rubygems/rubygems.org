@@ -153,7 +153,23 @@
             <%- end %>
           </div>
           <div class="l-colspan--l colspan--l--has-border">
-            <p class="footer__about"><%= raw t('footer_about') %></p>
+            <div class="footer__about">
+              <p>
+                <%= raw t('footer_about',
+                  publish_docs: "http://guides.rubygems.org/publishing/",
+                  install_docs: "http://guides.rubygems.org/command-reference/#gem-install",
+                  api_docs: "http://guides.rubygems.org/rubygems-org-api/",
+                  gem_list: rubygems_url,
+                  contributing_docs: "http://guides.rubygems.org/contributing/"
+                ) %>
+              </p>
+              <p>
+                RubyGems.org is made possible by <%= link_to "many sponsors", page_path("sponsors") %>, with development funded by <a href="https://rubytogether.org">Ruby Together</a>. Members get access to <a href="https://rubytogether.org/benefits">exclusive benefits</a> and offers from partners (like <a href="http://hired.com">Hired</a>, empowering developers on the <a href="http://hired.com">hunt for a job</a>)</a>.
+              </p>
+              <p>
+                We need your help to keep RubyGems.org running smoothly and free for everyone to use. <a href="https://rubytogether.org/join">Join Ruby Together today.</a>
+              </p>
+            </div>
           </div>
         </div>
       </div>
