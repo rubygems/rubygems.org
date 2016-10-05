@@ -27,20 +27,6 @@ class GemInfoTest < ActiveSupport::TestCase
       info = GemInfo.new('example').compact_index_info
       assert_equal @expected_info, info
     end
-
-    should 'write cache' do
-      Rails.cache.stubs(:write)
-      info = GemInfo.new('example').compact_index_info
-      assert_received(Rails.cache, :write) { |cache| cache.with("info/example", info) }
-    end
-
-    should 'read from cache when cache exists' do
-      GemInfo.new('example').compact_index_info
-      Rails.cache.stubs(:read)
-      info = GemInfo.new('example').compact_index_info
-      assert_received(Rails.cache, :read) { |cache| cache.with("info/example") }
-      assert_equal @expected_info, info
-    end
   end
 
   context '.ordered_names' do

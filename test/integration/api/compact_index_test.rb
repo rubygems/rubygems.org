@@ -130,7 +130,6 @@ eos
     assert_response :success
     assert_equal expected, @response.body
     assert_equal etag(expected), @response.headers['ETag']
-    assert_equal expected, CompactIndex.info(Rails.cache.read("info/gemA"))
   end
 
   test "/info partial response" do
