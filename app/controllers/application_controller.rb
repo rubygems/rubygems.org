@@ -26,6 +26,10 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def fastly_expires_in(seconds)
+    response.headers['Surrogate-Control'] = "max-age=#{seconds}"
+  end
+
   def redirect_to_root
     redirect_to root_path
   end
