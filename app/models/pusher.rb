@@ -161,13 +161,10 @@ class Pusher
 
   def expire_api_memcached
     Rails.cache.delete("deps/v1/#{rubygem.name}")
-    Rails.cache.delete("versions")
     Rails.cache.delete("names")
   end
 
   def set_info_checksum
-    # expire info cache of previous version
-    Rails.cache.delete("info/#{rubygem.name}")
     checksum = Digest::MD5.hexdigest(CompactIndex.info(GemInfo.new(rubygem.name).compact_index_info))
     version.update_attribute :info_checksum, checksum
   end

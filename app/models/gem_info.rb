@@ -4,16 +4,7 @@ class GemInfo
   end
 
   def compact_index_info
-    info = Rails.cache.read("info/#{@rubygem_name}")
-    if info
-      StatsD.increment "compact_index.memcached.info.hit"
-      info
-    else
-      StatsD.increment "compact_index.memcached.info.miss"
-      compute_compact_index_info.tap do |compact_index_info|
-        Rails.cache.write("info/#{@rubygem_name}", compact_index_info)
-      end
-    end
+    compute_compact_index_info
   end
 
   def self.ordered_names
