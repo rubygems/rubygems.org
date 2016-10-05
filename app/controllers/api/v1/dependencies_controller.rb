@@ -5,7 +5,9 @@ class Api::V1::DependenciesController < Api::BaseController
   def index
     deps = GemDependent.new(gem_names).to_a
 
-    response.headers['Surrogate-Control'] = 'max-age=60'
+    expires_in 30, public: true
+    fastly_expires_in 60
+
     respond_to do |format|
       format.json { render json: deps }
       format.marshal { render text: Marshal.dump(deps) }
