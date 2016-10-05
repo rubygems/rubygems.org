@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 20160929104437) do
     t.integer  "user_id"
     t.string   "rubygem"
     t.string   "number"
+    t.string   "message"
     t.string   "platform"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

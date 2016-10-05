@@ -1,7 +1,7 @@
 class Advisory < ActiveRecord::Base
   belongs_to :user
 
-  validates :user, :rubygem, :number, presence: true
+  validates :user, :rubygem, :number, :message, presence: true
   validates :version, presence: true
   validates :rubygem, uniqueness: { scope: :number, message: "^This version is already marked as vulnerable." }
   before_validation :record_metadata

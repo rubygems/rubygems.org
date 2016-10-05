@@ -7,7 +7,7 @@ class Api::V1::AdvisoriesController < Api::BaseController
   before_action :validate_gem_and_version,  only: [:create]
 
   def create
-    @advisory = current_user.advisories.new(version: @version)
+    @advisory = current_user.advisories.new(version: @version, message: params[:message])
     if @advisory.save
       StatsD.increment 'advisory.success'
       render text: "Successfully marked gem: #{@version.to_title} as vulnerable."
