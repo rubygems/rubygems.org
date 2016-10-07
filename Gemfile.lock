@@ -143,7 +143,7 @@ GEM
     high_voltage (2.4.0)
     highline (1.7.8)
     hitimes (1.2.4)
-    honeybadger (2.6.0)
+    honeybadger (2.6.1)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     http_accept_language (2.0.5)
