@@ -71,9 +71,9 @@ class GemsSystemTest < SystemTest
 
   test "version navigation" do
     visit rubygem_version_path(@rubygem, "1.0.0")
-    click_link "Next version"
+    click_link "Next version →"
     assert_equal page.current_path, rubygem_version_path(@rubygem, "1.1.1")
-    click_link "Previous version"
+    click_link "← Previous version"
     assert_equal page.current_path, rubygem_version_path(@rubygem, "1.0.0")
   end
 end

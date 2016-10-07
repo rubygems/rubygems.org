@@ -22,7 +22,6 @@
 <% else %>
   <div class="l-overflow">
     <div class="l-colspan--l colspan--l--has-border">
-      <%= render partial: "rubygems/version_navigation", locals: { rubygem: @rubygem, latest_version: @latest_version } %>
       <% if @latest_version.indexed %>
         <div class="gem__intro">
           <div id="markup" class="gem__desc">
@@ -88,6 +87,8 @@
             </div>
           <% end %>
         <% end %>
+
+        <%= render partial: "rubygems/version_navigation", locals: { rubygem: @rubygem, latest_version: @latest_version } %>
       </div>
     </div>
 
