@@ -4,6 +4,9 @@ class Api::V1::VersionsController < Api::BaseController
   def show
     return unless stale?(@rubygem)
 
+    expires_in 0, public: true
+    fastly_expires_in 60
+
     if @rubygem.public_versions.count.nonzero?
       respond_to do |format|
         format.json { render json: @rubygem.public_versions }
