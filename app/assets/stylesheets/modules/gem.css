@@ -202,11 +202,13 @@
 .gem__navigation {
   display: inline-block;
   width: 100%;
-  margin-bottom: 10px;
+  margin-top: 30px;
 }
 
 .gem__navigation a {
   color: #9da2ab;
+  text-transform: uppercase;
+  font-weight: bold;
   transition-duration: 0.25s;
   transition-property: color;
   outline: none;
@@ -217,7 +219,7 @@
 }
 
 .gem__previous__version.disabled:hover, .gem__next__version.disabled:hover {
-    color: #9da2ab;
+  color: #9da2ab;
 }
 
 .gem__next__version {
