@@ -16,6 +16,7 @@ class Api::CompactIndexController < Api::BaseController
   end
 
   def info
+    set_surrogate_key "info/* gem/#{@rubygem.name}"
     return unless stale?(@rubygem)
     info_params = GemInfo.new(@rubygem.name).compact_index_info
     render_range CompactIndex.info(info_params)
