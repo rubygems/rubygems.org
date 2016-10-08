@@ -302,7 +302,7 @@ class PusherTest < ActiveSupport::TestCase
       end
 
       should "expire API memcached" do
-        assert_received(Rails.cache, :delete) { |cache| cache.with("info/#{@rubygem.name}") }
+        assert_received(Rails.cache, :delete) { |cache| cache.with("info/#{@rubygem.name}").twice }
         assert_received(Rails.cache, :delete) { |cache| cache.with("deps/v1/#{@rubygem.name}") }
         assert_received(Rails.cache, :delete) { |cache| cache.with("names") }
       end
@@ -315,7 +315,7 @@ class PusherTest < ActiveSupport::TestCase
       end
 
       should "enque job for updating ES index, spec index and purging cdn" do
-        assert_difference 'Delayed::Job.count', 3 do
+        assert_difference 'Delayed::Job.count', 6 do
           @cutter.save
         end
       end
