@@ -12,14 +12,15 @@ class GemCachePurgerTest < ActiveSupport::TestCase
 
     should "expire API memcached" do
       assert_received(Rails.cache, :delete) { |cache| cache.with("info/#{@gem_name}") }
-      assert_received(Rails.cache, :delete) { |cache| cache.with("deps/v1/#{@gem_name}") }
       assert_received(Rails.cache, :delete) { |cache| cache.with("names") }
+      assert_received(Rails.cache, :delete) { |cache| cache.with("deps/v1/#{@gem_name}") }
     end
 
     should "purge cdn cache" do
       Delayed::Worker.new.work_off
       assert_received(Fastly, :purge) { |path| path.with("info/#{@gem_name}") }
       assert_received(Fastly, :purge) { |path| path.with("names") }
+      assert_received(Fastly, :purge) { |path| path.with("versions") }
     end
   end
 end
