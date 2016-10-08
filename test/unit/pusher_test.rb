@@ -302,6 +302,7 @@ class PusherTest < ActiveSupport::TestCase
       end
 
       should "expire API memcached" do
+        assert_received(Rails.cache, :delete) { |cache| cache.with("info/#{@rubygem.name}") }
         assert_received(Rails.cache, :delete) { |cache| cache.with("deps/v1/#{@rubygem.name}") }
         assert_received(Rails.cache, :delete) { |cache| cache.with("names") }
       end

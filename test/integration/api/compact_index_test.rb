@@ -83,7 +83,6 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     assert_match file_contents, @response.body
     assert_match(/#{gem_b_match}#{gem_a_match}/, @response.body)
     assert_equal etag(@response.body), @response.headers['ETag']
-    assert_not_nil Rails.cache.read('versions')
   end
 
   test "/versions partial response" do
@@ -130,6 +129,7 @@ eos
     assert_response :success
     assert_equal expected, @response.body
     assert_equal etag(expected), @response.headers['ETag']
+    assert_equal expected, CompactIndex.info(Rails.cache.read("info/gemA"))
   end
 
   test "/info partial response" do

@@ -4,7 +4,16 @@ class GemInfo
   end
 
   def compact_index_info
-    compute_compact_index_info
+    info = Rails.cache.read("info/#{@rubygem_name}")
+    if info
+      StatsD.increment "compact_index.memcached.info.hit"
+      info
+    else
+      StatsD.increment "compact_index.memcached.info.miss"
+      compute_compact_index_info.tap do |compact_index_info|
+        Rails.cache.write("info/#{@rubygem_name}", compact_index_info)
+      end
+    end
   end
 
   def self.ordered_names
@@ -20,15 +29,7 @@ class GemInfo
   end
 
   def self.compact_index_versions(date)
-    versions_after_date = Rails.cache.read('versions')
-    if versions_after_date
-      StatsD.increment "compact_index.memcached.versions.hit"
-    else
-      StatsD.increment "compact_index.memcached.versions.miss"
-      versions_after_date = versions_after(date)
-      Rails.cache.write('versions', versions_after_date)
-    end
-    versions_after_date
+    versions_after(date)
   end
 
   def self.versions_after(date)

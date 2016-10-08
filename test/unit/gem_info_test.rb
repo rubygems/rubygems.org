@@ -27,6 +27,20 @@ class GemInfoTest < ActiveSupport::TestCase
       info = GemInfo.new('example').compact_index_info
       assert_equal @expected_info, info
     end
+
+    should 'write cache' do
+      Rails.cache.stubs(:write)
+      info = GemInfo.new('example').compact_index_info
+      assert_received(Rails.cache, :write) { |cache| cache.with("info/example", info) }
+    end
+
+    should 'read from cache when cache exists' do
+      GemInfo.new('example').compact_index_info
+      Rails.cache.stubs(:read)
+      info = GemInfo.new('example').compact_index_info
+      assert_received(Rails.cache, :read) { |cache| cache.with("info/example") }
+      assert_equal @expected_info, info
+    end
   end
 
   context '.ordered_names' do
@@ -68,20 +82,6 @@ class GemInfoTest < ActiveSupport::TestCase
 
     should "return all versions created after given date and ordered by created_at" do
       versions = GemInfo.compact_index_versions(4.days.ago)
-      assert_equal @expected_versions, versions
-    end
-
-    should 'write cache' do
-      Rails.cache.stubs(:write)
-      versions = GemInfo.compact_index_versions(4.days.ago)
-      assert_received(Rails.cache, :write) { |cache| cache.with("versions", versions) }
-    end
-
-    should 'read from cache when cache exists' do
-      GemInfo.compact_index_versions(4.days.ago)
-      Rails.cache.stubs(:read)
-      versions = GemInfo.compact_index_versions(4.days.ago)
-      assert_received(Rails.cache, :read) { |cache| cache.with("versions") }
       assert_equal @expected_versions, versions
     end
   end
