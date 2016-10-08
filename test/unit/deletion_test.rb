@@ -56,7 +56,7 @@ class DeletionTest < ActiveSupport::TestCase
   end
 
   should "enque job for updating ES index, spec index and purging cdn" do
-    assert_difference 'Delayed::Job.count', 8 do
+    assert_difference 'Delayed::Job.count', 7 do
       delete_gem
     end
 
