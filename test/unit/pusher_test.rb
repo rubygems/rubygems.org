@@ -277,8 +277,7 @@ class PusherTest < ActiveSupport::TestCase
         create(:version, rubygem: @rubygem, number: '0.1.1', summary: 'old summary')
         @cutter.stubs(:version).returns @rubygem.versions[0]
         @rubygem.stubs(:update_attributes_from_gem_specification!)
-        Rails.cache.stubs(:delete)
-        Fastly.stubs(:purge)
+        GemCachePurger.stubs(:call)
         Indexer.any_instance.stubs(:write_gem)
         @cutter.save
       end
@@ -301,21 +300,12 @@ class PusherTest < ActiveSupport::TestCase
         assert_not_nil @rubygem.versions.last.info_checksum
       end
 
-      should "expire API memcached" do
-        assert_received(Rails.cache, :delete) { |cache| cache.with("info/#{@rubygem.name}").twice }
-        assert_received(Rails.cache, :delete) { |cache| cache.with("deps/v1/#{@rubygem.name}") }
-        assert_received(Rails.cache, :delete) { |cache| cache.with("names") }
-      end
-
-      should "purge cdn cache" do
-        Delayed::Worker.new.work_off
-        assert_received(Fastly, :purge) { |path| path.with("info/#{@rubygem.name}") }
-        assert_received(Fastly, :purge) { |path| path.with("versions") }
-        assert_received(Fastly, :purge) { |path| path.with("names") }
+      should "call GemCachePurger" do
+        assert_received(GemCachePurger, :call) { |obj| obj.with(@rubygem.name).once }
       end
 
       should "enque job for updating ES index, spec index and purging cdn" do
-        assert_difference 'Delayed::Job.count', 6 do
+        assert_difference 'Delayed::Job.count', 2 do
           @cutter.save
         end
       end
@@ -349,6 +339,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:version).returns version
         @rubygem.stubs(:update_attributes_from_gem_specification!)
         @cutter.stubs(:version).returns version
+        GemCachePurger.stubs(:call)
         Indexer.any_instance.stubs(:write_gem)
         @cutter.save
       end
