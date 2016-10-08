@@ -84,19 +84,5 @@ class GemInfoTest < ActiveSupport::TestCase
       versions = GemInfo.compact_index_versions(4.days.ago)
       assert_equal @expected_versions, versions
     end
-
-    should 'write cache' do
-      Rails.cache.stubs(:write)
-      versions = GemInfo.compact_index_versions(4.days.ago)
-      assert_received(Rails.cache, :write) { |cache| cache.with("versions", versions) }
-    end
-
-    should 'read from cache when cache exists' do
-      GemInfo.compact_index_versions(4.days.ago)
-      Rails.cache.stubs(:read)
-      versions = GemInfo.compact_index_versions(4.days.ago)
-      assert_received(Rails.cache, :read) { |cache| cache.with("versions") }
-      assert_equal @expected_versions, versions
-    end
   end
 end

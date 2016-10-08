@@ -29,15 +29,7 @@ class GemInfo
   end
 
   def self.compact_index_versions(date)
-    versions_after_date = Rails.cache.read('versions')
-    if versions_after_date
-      StatsD.increment "compact_index.memcached.versions.hit"
-    else
-      StatsD.increment "compact_index.memcached.versions.miss"
-      versions_after_date = versions_after(date)
-      Rails.cache.write('versions', versions_after_date)
-    end
-    versions_after_date
+    versions_after(date)
   end
 
   def self.versions_after(date)
