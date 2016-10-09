@@ -180,7 +180,7 @@ class Version < ActiveRecord::Base
   end
 
   def vulnerable?
-    Advisory.where(version_id: id, rubygem_id: rubygem_id).exists?
+    Advisory.where(version_id: id).exists?
   end
 
   def yanked?

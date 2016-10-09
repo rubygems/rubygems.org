@@ -23,7 +23,6 @@ class Api::V1::AdvisoriesControllerTest < ActionController::TestCase
         should respond_with :success
         should "record the advisory" do
           assert_not_nil Advisory.where(user: @user,
-                                        rubygem: @rubygem,
                                         version: @v1).first
         end
       end
@@ -40,7 +39,6 @@ class Api::V1::AdvisoriesControllerTest < ActionController::TestCase
           should respond_with :success
           should "record the advisory" do
             assert_not_nil Advisory.where(user: @user,
-                                          rubygem: @rubygem,
                                           version: @v2).first
           end
         end
@@ -62,9 +60,7 @@ class Api::V1::AdvisoriesControllerTest < ActionController::TestCase
           should "record the advisory" do
             assert_not_nil Advisory.where(
               user: @user,
-              rubygem: @rubygem,
-              version: @v2,
-              platform: @v2.platform
+              version: @v2
             ).first
           end
         end
@@ -104,7 +100,6 @@ class Api::V1::AdvisoriesControllerTest < ActionController::TestCase
         should respond_with :unprocessable_entity
         should "not re-record the advisory" do
           assert_equal 1, Advisory.where(user: @user,
-                                         rubygem: @rubygem,
                                          version: @v1).count
         end
       end

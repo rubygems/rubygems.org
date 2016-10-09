@@ -7,7 +7,6 @@ class Rubygem < ActiveRecord::Base
   has_many :subscribers, through: :subscriptions, source: :user
   has_many :subscriptions, dependent: :destroy
   has_many :versions, dependent: :destroy, validate: false
-  has_many :advisories, dependent: :destroy
 
   has_one :latest_version, -> { where(latest: true).order(:position) }, class_name: "Version"
   has_many :web_hooks, dependent: :destroy
