@@ -1,5 +1,6 @@
 class Api::CompactIndexController < Api::BaseController
   before_action :find_rubygem_by_name, only: [:info]
+  before_action :set_compact_index_cache_headers
 
   def names
     names = GemInfo.ordered_names
@@ -21,6 +22,11 @@ class Api::CompactIndexController < Api::BaseController
   end
 
   private
+
+  def set_compact_index_cache_headers
+    expires_in 60, public: true
+    fastly_expires_in 3600
+  end
 
   def render_range(response_body)
     headers['ETag'] = '"' << Digest::MD5.hexdigest(response_body) << '"'
