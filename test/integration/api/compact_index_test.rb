@@ -168,4 +168,10 @@ END
     assert_response :not_found
     assert_equal nil, @response.headers['ETag']
   end
+
+  test "/info with gzip" do
+    get info_path(gem_name: 'gemA'), nil, 'Accept-Encoding' => 'gzip'
+    assert_response :success
+    assert_equal('gzip', @response.headers['Content-Encoding'])
+  end
 end

@@ -5,4 +5,10 @@ class EncodingTest < ActionDispatch::IntegrationTest
     get "/api/v1/dependencies?gems=vagrant,vagrant-login,vagrant-share,vagrant%ADvbguest"
     assert_response :success
   end
+
+  test "gzip not supported" do
+    get '/'
+    assert_response :success
+    assert_equal(nil, @response.headers['Content-Encoding'])
+  end
 end
