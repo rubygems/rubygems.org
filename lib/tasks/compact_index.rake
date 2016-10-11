@@ -71,30 +71,29 @@ namespace :compact_index do
     puts "Done."
   end
 
-  # CompactIndex::VersionsFile#create expects that all versions of
-  # a gem are in same array
-  def parse_gems_for_versions_file(gems)
-    gems_hash = {}
-    gems.each do |entry|
-      gems_hash[entry['name']] ||= []
-      gems_hash[entry['name']] << CompactIndex::GemVersion.new(
-        entry['number'],
-        entry['platform'],
-        nil,
-        entry['info_checksum']
-      )
-    end
-
-    gems_hash.map do |gem, versions|
-      CompactIndex::Gem.new(gem, versions)
-    end
-  end
-
   desc "Generate/update the versions.list file"
   task update_versions_file: :environment do
     file_path = Rails.application.config.rubygems['versions_file_location']
-    versions_file = CompactIndex::VersionsFile.new(file_path)
-    versions_data = GemInfo.versions_after(Time.at(0).utc.to_datetime)
-    versions_file.create(versions_data)
+    versions_file = CompactIndex::VersionsFile.new file_path
+
+    gems = GemInfo.compact_index_versions(Time.at(0).utc.to_datetime)
+    gems = gems.group_by(&:name)
+    gems = gems.map do |name, compact_index_gems|
+      versions = compact_index_gems.flat_map(&:versions)
+
+      # Ensure we set the info checksums to be that of the last updated version
+      # because the last version could be yanked
+      info_checksum = versions.last.info_checksum
+
+      # Only indexed versions of a gem go into *new* versions file
+      versions.reject! { |v| v.number.start_with?("-") }
+
+      # Set all versions' info_checksum to work around https://github.com/bundler/compact_index/pull/20
+      versions.each { |v| v.info_checksum = info_checksum }
+
+      CompactIndex::Gem.new(name, versions)
+    end
+
+    versions_file.create gems
   end
 end
