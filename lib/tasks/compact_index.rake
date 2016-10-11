@@ -93,18 +93,8 @@ namespace :compact_index do
   desc "Generate/update the versions.list file"
   task update_versions_file: :environment do
     file_path = Rails.application.config.rubygems['versions_file_location']
-    versions_file = CompactIndex::VersionsFile.new file_path
-
-    # Only indexed versions of a gem go into *new* versions file
-    query = ["SELECT r.name, v.created_at as date, v.info_checksum, v.number, v.platform
-              FROM rubygems AS r, versions AS v
-              WHERE v.rubygem_id = r.id AND
-                    v.indexed is true AND
-                    v.created_at > ?", Time.at(0).utc.to_datetime]
-    sanitize_sql = ActiveRecord::Base.send(:sanitize_sql_array, query)
-    pg_result = ActiveRecord::Base.connection.execute(sanitize_sql)
-
-    formatted_gems = parse_gems_for_versions_file pg_result
-    versions_file.create formatted_gems
+    versions_file = CompactIndex::VersionsFile.new(file_path)
+    versions_data = GemInfo.versions_after(Time.at(0).utc.to_datetime)
+    versions_file.create(versions_data)
   end
 end
