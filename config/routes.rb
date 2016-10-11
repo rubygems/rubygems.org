@@ -99,7 +99,8 @@ Rails.application.routes.draw do
   end
 
   get '/versions' => 'api/compact_index#versions'
-  get '/info/:gem_name' => 'api/compact_index#info', as: :info
+  get '/info/:gem_name' => 'api/compact_index#info', as: :info,
+      constraints: { gem_name: Patterns::ROUTE_PATTERN }
   get '/names' => 'api/compact_index#names'
   ################################################################################
   # API v0
