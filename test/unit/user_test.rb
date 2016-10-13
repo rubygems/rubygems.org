@@ -111,25 +111,6 @@ class UserTest < ActiveSupport::TestCase
       assert_nil User.authenticate(@user.email, "bad")
     end
 
-    should "have email and handle on JSON" do
-      json = JSON.parse(@user.to_json)
-      hash = { "id" => @user.id, "email" => @user.email, 'handle' => @user.handle }
-      assert_equal hash, json
-    end
-
-    should "have email and handle on XML" do
-      xml = Nokogiri.parse(@user.to_xml)
-      assert_equal "user", xml.root.name
-      assert_equal %w(id handle email), xml.root.children.select(&:element?).map(&:name)
-      assert_equal @user.email, xml.at_css("email").content
-    end
-
-    should "have email and handle on YAML" do
-      yaml = YAML.load(@user.to_yaml)
-      hash = { 'id' => @user.id, 'email' => @user.email, 'handle' => @user.handle }
-      assert_equal hash, yaml
-    end
-
     should "create api key" do
       assert_not_nil @user.api_key
     end
@@ -259,20 +240,6 @@ class UserTest < ActiveSupport::TestCase
     should "total their number of pushed rubygems except yanked gems" do
       @rubygems.first.versions.first.update! indexed: false
       assert_equal @user.total_rubygems_count, 2
-    end
-  end
-
-  context "yaml" do
-    setup do
-      @user = create(:user)
-    end
-
-    should "return its payload" do
-      assert_equal @user.payload, YAML.load(@user.to_yaml)
-    end
-
-    should "nest properly" do
-      assert_equal [@user.payload], YAML.load([@user].to_yaml)
     end
   end
 end
