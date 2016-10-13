@@ -2,7 +2,6 @@ require 'digest/sha2'
 
 class Pusher
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
-  attr_accessor :bundler_api_url
 
   def initialize(user, body, protocol = nil, host_with_port = nil)
     @user = user
@@ -11,8 +10,6 @@ class Pusher
     @indexer = Indexer.new
     @protocol = protocol
     @host_with_port = host_with_port
-    @bundler_token = ENV['BUNDLER_TOKEN'] || "tokenmeaway"
-    @bundler_api_url = ENV['BUNDLER_API_URL']
   end
 
   def process
@@ -98,30 +95,6 @@ class Pusher
     "<Pusher #{attrs.join(' ')}>"
   end
 
-  def update_remote_bundler_api(to = RestClient)
-    return unless @bundler_api_url
-
-    json = {
-      "name"           => spec.name,
-      "version"        => spec.version.to_s,
-      "platform"       => spec.platform.to_s,
-      "prerelease"     => !!spec.version.prerelease?, # rubocop:disable Style/DoubleNegation
-      "rubygems_token" => @bundler_token
-    }.to_json
-
-    begin
-      ::Timeout.timeout(5) do
-        to.post @bundler_api_url,
-          json,
-          :timeout        => 5,
-          :open_timeout   => 5,
-          'Content-Type'  => 'application/json'
-      end
-    rescue StandardError, Interrupt
-      false
-    end
-  end
-
   private
 
   def after_write
@@ -131,7 +104,6 @@ class Pusher
     expire_api_memcached
     Fastly.delay.purge_api_cdn(rubygem.name)
     enqueue_web_hook_jobs
-    update_remote_bundler_api
     StatsD.increment 'push.success'
   end
 

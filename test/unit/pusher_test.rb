@@ -132,29 +132,6 @@ class PusherTest < ActiveSupport::TestCase
       assert_includes @cutter.message, %{package content (data.tar.gz) is missing}
     end
 
-    should "post info to the remote bundler API" do
-      @cutter.pull_spec
-
-      @cutter.spec.stubs(:platform).returns Gem::Platform.new("x86-java1.6")
-
-      @cutter.bundler_api_url = "http://test.com"
-
-      obj = mock
-      post_data = nil
-
-      obj.stubs(:post).with { |*value| post_data = value }
-      @cutter.update_remote_bundler_api obj
-
-      _, payload = post_data
-
-      params = JSON.load payload
-
-      assert_equal "test",  params["name"]
-      assert_equal "0.0.0", params["version"]
-      assert_equal "x86-java-1.6", params["platform"]
-      assert_equal false, params["prerelease"]
-    end
-
     context "initialize new gem with find if one does not exist" do
       setup do
         spec = mock
