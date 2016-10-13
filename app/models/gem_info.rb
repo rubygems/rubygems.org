@@ -52,7 +52,7 @@ class GemInfo
                               CompactIndex::GemVersion.new(
                                 gem['number'],
                                 gem['platform'],
-                                nil,
+                                gem['checksum'],
                                 gem['info_checksum']
                               )
                             ])
