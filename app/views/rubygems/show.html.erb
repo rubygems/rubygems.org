@@ -58,6 +58,10 @@
   </div>
 
   <div class="gem__aside l-col--r--pad">
+    <% if @rubygem.linkset.present? && github_link = link_to_github(@rubygem) %>
+      <iframe class="gem__ghbtn" src="https://ghbtns.com/github-btn.html?user=<%= github_link.path.split('/').second %>&repo=<%= github_link.path.split('/').third %>&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+    <% end %>
+
     <% if @latest_version.indexed %>
       <div class="gem__downloads-wrap" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
         <h2 class="gem__downloads__heading t-text--s">
