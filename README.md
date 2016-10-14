@@ -49,7 +49,6 @@ If you have any trouble or questions getting set up please create an issue on th
 RubyGems.org consists of a few major parts:
 
 * Rails app: To manage users and allow others to view gems, etc.
-* Sinatra app (Hostess): the gem server
 * Gem processor: Handles incoming gems and storing them in Amazon S3 (production) or
   on the filesystem in `server/` (development).
 
