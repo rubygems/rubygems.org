@@ -77,7 +77,8 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
               user: @user,
               rubygem: @rubygem.name,
               number: @v2.number,
-              platform: @v2.platform).first
+              platform: @v2.platform
+            ).first
           end
         end
       end

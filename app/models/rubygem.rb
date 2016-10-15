@@ -7,7 +7,7 @@ class Rubygem < ActiveRecord::Base
   has_many :subscribers, through: :subscriptions, source: :user
   has_many :subscriptions, dependent: :destroy
   has_many :versions, dependent: :destroy, validate: false
-  has_one :latest_version, -> { where(latest: true) }, class_name: "Version"
+  has_one :latest_version, -> { where(latest: true).order(:position) }, class_name: "Version"
   has_many :web_hooks, dependent: :destroy
   has_one :linkset, dependent: :destroy
   has_one :gem_download, -> { where(version_id: 0) }
@@ -15,8 +15,9 @@ class Rubygem < ActiveRecord::Base
   validate :ensure_name_format, if: :needs_name_validation?
   validates :name,
     presence: true,
-    uniqueness: true,
-    exclusion: { in: GEM_NAME_BLACKLIST, message: "'%{value}' is a reserved gem name." }
+    uniqueness: { case_sensitive: false },
+    if: :needs_name_validation?
+  validate :blacklist_names_exclusion
 
   after_create :update_unresolved
   before_destroy :mark_unresolved
@@ -62,7 +63,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.total_count
-    with_versions.count
+    count_by_sql "SELECT COUNT(*) from (SELECT DISTINCT rubygem_id FROM versions WHERE indexed = true) AS v"
   end
 
   def self.latest(limit = 5)
@@ -79,10 +80,6 @@ class Rubygem < ActiveRecord::Base
 
   def self.letterize(letter)
     letter =~ /\A[A-Za-z]\z/ ? letter.upcase : 'A'
-  end
-
-  def self.versions_key(name)
-    "r:#{name}"
   end
 
   def self.by_name
@@ -261,6 +258,43 @@ class Rubygem < ActiveRecord::Base
     versions.by_earliest_built_at.limit(1).last.built_at
   end
 
+  def self.ordered_names
+    names = Rails.cache.read('names')
+    if names
+      StatsD.increment "compact_index.memcached.names.hit"
+    else
+      StatsD.increment "compact_index.memcached.names.miss"
+      names = order("name").pluck("name")
+      Rails.cache.write('names', names)
+    end
+    names
+  end
+
+  def self.compact_index_versions(date)
+    versions_after_date = Rails.cache.read('versions')
+    if versions_after_date
+      StatsD.increment "compact_index.memcached.versions.hit"
+    else
+      StatsD.increment "compact_index.memcached.versions.miss"
+      versions_after_date = versions_after(date)
+      Rails.cache.write('versions', versions_after_date)
+    end
+    versions_after_date
+  end
+
+  def compact_index_info
+    info = Rails.cache.read("info/#{name}")
+    if info
+      StatsD.increment "compact_index.memcached.info.hit"
+      info
+    else
+      StatsD.increment "compact_index.memcached.info.miss"
+      compute_compact_index_info.tap do |compact_index_info|
+        Rails.cache.write("info/#{name}", compact_index_info)
+      end
+    end
+  end
+
   private
 
   def ensure_name_format
@@ -277,6 +311,11 @@ class Rubygem < ActiveRecord::Base
     new_record? || name_changed?
   end
 
+  def blacklist_names_exclusion
+    return unless GEM_NAME_BLACKLIST.include? name.downcase
+    errors.add :name, "'#{name}' is a reserved gem name."
+  end
+
   def update_unresolved
     Dependency.where(unresolved_name: name).find_each do |dependency|
       dependency.update_resolved(self)
@@ -288,5 +327,65 @@ class Rubygem < ActiveRecord::Base
   def mark_unresolved
     Dependency.mark_unresolved_for(self)
     true
+  end
+
+  def compute_compact_index_info
+    group_by_columns =
+      "number, platform, sha256, info_checksum, required_ruby_version, required_rubygems_version, versions.created_at"
+    dep_req_agg =
+      "string_agg(dependencies.requirements, '@' order by rubygems_dependencies.name)"
+    dep_name_agg =
+      "string_agg(coalesce(rubygems_dependencies.name, '0'), ',' order by rubygems_dependencies.name) as dep_name"
+
+    result = Rubygem.joins("LEFT JOIN versions ON versions.rubygem_id = rubygems.id
+        LEFT JOIN dependencies ON dependencies.version_id = versions.id
+        LEFT JOIN rubygems rubygems_dependencies
+          ON rubygems_dependencies.id = dependencies.rubygem_id
+          AND dependencies.scope = 'runtime'")
+      .where("rubygems.name = ? and indexed = true", name)
+      .group(group_by_columns)
+      .order("versions.created_at, number, platform, dep_name")
+      .pluck("#{group_by_columns}, #{dep_req_agg}, #{dep_name_agg}")
+
+    result.map do |r|
+      deps = []
+      if r[7]
+        reqs = r[7].split('@')
+        dep_names = r[8].split(',')
+        raise 'BUG: different size of reqs and dep_names.' unless reqs.size == dep_names.size
+        dep_names.zip(reqs).each do |name, req|
+          deps << CompactIndex::Dependency.new(name, req) unless name == '0'
+        end
+      end
+
+      CompactIndex::GemVersion.new(r[0], r[1], Version._sha256_hex(r[2]), r[3], deps, r[4], r[5])
+    end
+  end
+
+  private_class_method def self.versions_after(date)
+    query = ["(SELECT r.name, v.created_at as date, v.info_checksum, v.number, v.platform
+              FROM rubygems AS r, versions AS v
+              WHERE v.rubygem_id = r.id AND
+                    v.created_at > ?)
+              UNION
+              (SELECT r.name, v.yanked_at as date, v.info_checksum, '-'||v.number, v.platform
+              FROM rubygems AS r, versions AS v
+              WHERE v.rubygem_id = r.id AND
+                    v.indexed is false AND
+                    v.yanked_at > ?)
+              ORDER BY date, number, platform, name", date, date]
+    sanitize_sql = ActiveRecord::Base.send(:sanitize_sql_array, query)
+    gems = ActiveRecord::Base.connection.execute(sanitize_sql)
+
+    gems.map do |gem|
+      CompactIndex::Gem.new(gem['name'], [
+                              CompactIndex::GemVersion.new(
+                                gem['number'],
+                                gem['platform'],
+                                nil,
+                                gem['info_checksum']
+                              )
+                            ])
+    end
   end
 end

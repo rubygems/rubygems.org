@@ -43,4 +43,6 @@ Rails.application.configure do
   config.middleware.use ClearanceBackdoor
 
   config.active_support.test_order = :random
+
+  config.cache_store = :dalli_store
 end

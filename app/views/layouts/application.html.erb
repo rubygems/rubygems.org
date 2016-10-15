@@ -83,7 +83,9 @@
               </div>
             <% else %>
               <%= link_to t('.header.sign_in'), sign_in_path, class: "header__nav-link #{'is-active' if request.path_info == '/sign_in'}" %>
-              <%= link_to t('.header.sign_up'), sign_up_path, class: "header__nav-link #{'is-active' if request.path_info == '/sign_up'}" %>
+              <% if Clearance.configuration.allow_sign_up? %>
+                <%= link_to t('.header.sign_up'), sign_up_path, class: "header__nav-link #{'is-active' if request.path_info == '/sign_up'}" %>
+              <% end %>
             <% end %>
           </nav>
         </div>
@@ -144,6 +146,11 @@
             <%- end %>
             <%= link_to t('.footer.help'), t(:help_url), class: "nav--v__link--footer" %>
             <%= link_to t('.footer.api'), "http://guides.rubygems.org/rubygems-org-api", class: "nav--v__link--footer" %>
+            <%- if request.path_info == '/pages/security' %>
+              <%= link_to t('.footer.security'), page_url("security"), class: "nav--v__link--footer is-active" %>
+            <%- else %>
+              <%= link_to t('.footer.security'), page_url("security"), class: "nav--v__link--footer" %>
+            <%- end %>
           </div>
           <div class="l-colspan--l colspan--l--has-border">
             <p class="footer__about"><%= raw t('footer_about') %></p>
@@ -156,9 +163,9 @@
             <%= t("layouts.application.footer.supported_by") %>
             <span class="t-hidden">Ruby Central</span>
           </a>
-          <a class="footer__sponsor" href="https://www.bluebox.net/" target="_blank">
-            <%= t("layouts.application.footer.hosted_by") %>
-            <span class="t-hidden">Blue Box</span>
+          <a class="footer__sponsor" href="https://rubytogether.org/" target="_blank">
+            <%= t("layouts.application.footer.supported_by") %>
+            <span class="t-hidden">Ruby Together</span>
           </a>
           <a class="footer__sponsor" href="https://dockyard.com/" target="_blank">
             <%= t("layouts.application.footer.designed_by") %>
@@ -183,6 +190,14 @@
           <a class="footer__sponsor" href="https://www.fastly.com/" target="_blank">
             <%= t("layouts.application.footer.gems_served_by") %>
             <span class="t-hidden">Fastly</span>
+          </a>
+          <a class="footer__sponsor" href="https://logit.io/" target="_blank">
+            <%= t("layouts.application.footer.logging_by") %>
+            <span class="t-hidden">Logit</span>
+          </a>
+          <a class="footer__sponsor" href="https://travis-ci.org/" target="_blank">
+            <%= t("layouts.application.footer.tested_by") %>
+            <span class="t-hidden">Travis CI</span>
           </a>
         </div>
       </div>

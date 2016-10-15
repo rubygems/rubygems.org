@@ -144,7 +144,14 @@ class RubygemsHelperTest < ActionView::TestCase
 
     should 'work on rdoc strings' do
       text = '== FOO'
-      assert_equal "\n<h2 id=\"label-FOO\">FOO</h2>\n", simple_markup(text)
+      assert_equal "\n<h2>FOO</h2>\n", simple_markup(text)
+      assert simple_markup(text).html_safe?
+    end
+
+    should 'sanitize rdoc strings' do
+      text = "== FOO\nclick[javascript:alert('foo')]"
+      assert_equal "\n<h2>FOO</h2>\n\n<p><a>click</a></p>\n", simple_markup(text)
+
       assert simple_markup(text).html_safe?
     end
   end

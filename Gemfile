@@ -27,16 +27,14 @@ gem 'http_accept_language'
 gem 'jquery-rails'
 gem 'mail'
 gem 'multi_json'
-gem 'newrelic-redis'
 gem 'newrelic_rpm'
 gem 'paul_revere', '~> 2.0'
 gem 'pg'
 gem 'psych', '~> 2.0.12'
 gem 'rack'
 gem 'rdoc'
-gem 'redis'
 gem 'rest-client', require: 'rest_client'
-gem 'shoryuken', '~> 2.0.2', require: nil
+gem 'shoryuken', '~> 2.0.2', require: false
 gem 'statsd-instrument', '~> 2.0.6'
 gem 'uglifier', '>= 1.0.3'
 gem 'unicorn'
@@ -47,6 +45,8 @@ gem 'elasticsearch-rails', '~> 0.1.7'
 gem 'elasticsearch-dsl', '~> 0.1.2'
 gem 'xml-simple'
 gem 'yajl-ruby', require: 'yajl'
+gem 'compact_index', '~> 0.10.0'
+gem 'sprockets-rails', '~> 3.1.0'
 
 group :development, :test do
   gem 'rubocop', require: false
@@ -54,7 +54,6 @@ group :development, :test do
 end
 
 group :development do
-  gem 'quiet_assets'
   gem 'rails-erd'
 end
 

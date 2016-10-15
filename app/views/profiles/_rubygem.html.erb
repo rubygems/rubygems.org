@@ -1,11 +1,11 @@
 <li class="<%= "small" unless graph %>">
   <a href="<%= rubygem_path(rubygem) %>" class="gems__gem">
-    <div class="gems__gem__info">
+    <span class="gems__gem__info">
       <p class="gems__gem__name">
         <%= rubygem.name %>
         <span class="gems__gem__version"><%= rubygem.versions.most_recent %></span>
       </p>
-    </div>
+    </span>
     <p class="gems__gem__downloads__count">
       <%= number_with_delimiter(rubygem.downloads) %>
       <span class="gems__gem__downloads__heading">Downloads</span>

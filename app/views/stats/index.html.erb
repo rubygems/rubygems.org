@@ -19,6 +19,10 @@
   <%= t('stats.index.all_time_most_downloaded') %>
 </h2>
 
+<header class="gems__header">
+  <p class="gems__meter"><%= page_entries_info @most_downloaded, model: 'gem' %></p>
+</header>
+
 <% @most_downloaded.each do |gem| %>
   <div class="stats__graph__gem">
     <h3 class="stats__graph__gem__name"><%= link_to gem.name, rubygem_path(gem) %></h3>
@@ -29,3 +33,4 @@
     </div>
   </div>
 <% end %>
+<%= will_paginate @most_downloaded %>

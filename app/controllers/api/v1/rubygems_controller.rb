@@ -5,6 +5,9 @@ class Api::V1::RubygemsController < Api::BaseController
   before_action :verify_authenticated_user, only: [:index, :create]
   before_action :find_rubygem,              only: [:show]
 
+  before_action :cors_preflight_check, only: :show
+  after_action  :cors_set_access_control_headers, only: :show
+
   def index
     @rubygems = current_user.rubygems.with_versions
     respond_to do |format|
@@ -29,7 +32,8 @@ class Api::V1::RubygemsController < Api::BaseController
       current_user,
       request.body,
       request.protocol.delete("://"),
-      request.host_with_port)
+      request.host_with_port
+    )
     gemcutter.process
     render text: gemcutter.message, status: gemcutter.code
   rescue => e
@@ -51,6 +55,23 @@ class Api::V1::RubygemsController < Api::BaseController
     respond_to do |format|
       format.json { render json: names }
       format.yaml { render yaml: names }
+    end
+  end
+
+  private
+
+  def cors_set_access_control_headers
+    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Allow-Methods'] = 'GET'
+    headers['Access-Control-Max-Age'] = '1728000'
+  end
+
+  def cors_preflight_check
+    if request.method == 'OPTIONS'
+      cors_set_access_control_headers
+      headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-Prototype-Version'
+
+      render text: '', content_type: 'text/plain'
     end
   end
 end

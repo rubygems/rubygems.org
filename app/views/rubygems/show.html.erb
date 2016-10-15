@@ -10,9 +10,10 @@
   <% end %>
 <% end %>
 
-<% if @rubygem.versions.count.zero? %>
+<% if @rubygem.public_versions.count.zero? %>
   <div class="t-body">
     <p><%= t '.not_hosted_notice' %></p>
+    <%= unsubscribe_link(@rubygem) %>
   </div>
 <% else %>
   <div class="l-overflow">
@@ -96,11 +97,6 @@
             <%= t('.downloads_for_this_version') %>
             <span class="gem__downloads"><%= number_with_delimiter(@latest_version.downloads_count) %></span>
           </h2>
-          <% if @versions.present? %>
-            <% if show_all_versions_link?(@rubygem) %>
-              <%= link_to t('.show_all_versions', :count => @rubygem.versions.count), rubygem_versions_url(@rubygem), :class => "gem__see-all-versions t-link--gray t-link--has-arrow" %>
-            <% end %>
-          <% end %>
         </div>
       <% end %>
 
@@ -132,13 +128,22 @@
       <h2 class="gem__ruby-version__heading t-list__heading">
         <%= t('.required_ruby_version') %>:
         <i class="gem__ruby-version">
-          <% if @latest_version.ruby_version %>
-            <%= @latest_version.ruby_version %>
+          <% if @latest_version.required_ruby_version %>
+            <%= @latest_version.required_ruby_version %>
           <% else %>
             <%= t('none') %>
           <% end %>
         </i>
       </h2>
+
+      <% if @latest_version.required_rubygems_version != '>= 0' %>
+        <h2 class="gem__ruby-version__heading t-list__heading">
+          <%= t('.required_rubygems_version') %>:
+          <i class="gem__ruby-version">
+              <%= @latest_version.required_rubygems_version %>
+          </i>
+        </h2>
+      <% end %>
 
       <h3 class="t-list__heading"><%= t '.links.header' %>:</h3>
       <div class="t-list__items">

@@ -42,16 +42,23 @@ class StatsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to index with no downloads" do
+    setup do
+      get :index
+    end
+
+    should respond_with :success
+  end
+
   context "on GET to index with multiple gems" do
     setup do
+      create(:gem_download, count: 0)
       rg1 = create(:rubygem, downloads: 10, number: "1")
       rg2 = create(:rubygem, downloads: 20, number: "1")
       rg3 = create(:rubygem, downloads: 30, number: "1")
       n = 10
-      [rg1, rg2, rg3].each do |rg|
-        rg.versions.last.gem_download.update(count: n)
-        n += 10
-      end
+      data = [rg1, rg2, rg3].map { |r| [r.versions.last.full_name, n += 10] }
+      GemDownload.bulk_update(data)
 
       get :index
     end

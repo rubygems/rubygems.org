@@ -12,8 +12,8 @@ class VersionTest < ActiveSupport::TestCase
     should "only have relevant API fields" do
       json = @version.as_json
       fields = %w(number built_at summary description authors platform
-                  ruby_version prerelease downloads_count licenses requirements
-                  sha metadata created_at)
+                  ruby_version rubygems_version prerelease downloads_count licenses
+                  requirements sha metadata created_at)
       assert_equal fields.map(&:to_s).sort, json.keys.sort
       assert_equal @version.authors, json["authors"]
       assert_equal @version.built_at, json["built_at"]
@@ -23,7 +23,8 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.number, json["number"]
       assert_equal @version.platform, json["platform"]
       assert_equal @version.prerelease, json["prerelease"]
-      assert_equal @version.ruby_version, json["ruby_version"]
+      assert_equal @version.required_rubygems_version, json["rubygems_version"]
+      assert_equal @version.required_ruby_version, json["ruby_version"]
       assert_equal @version.summary, json["summary"]
       assert_equal @version.licenses, json["licenses"]
       assert_equal @version.requirements, json["requirements"]
@@ -39,8 +40,8 @@ class VersionTest < ActiveSupport::TestCase
     should "only have relevant API fields" do
       xml = Nokogiri.parse(@version.to_xml)
       fields = %w(number built-at summary description authors platform
-                  ruby-version prerelease downloads-count licenses requirements
-                  sha metadata created-at)
+                  ruby-version rubygems-version prerelease downloads-count licenses
+                  requirements sha metadata created-at)
       assert_equal fields.map(&:to_s).sort,
         xml.root.children.map(&:name).reject { |t| t == "text" }.sort
       assert_equal @version.authors, xml.at_css("authors").content
@@ -51,13 +52,15 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.number, xml.at_css("number").content
       assert_equal @version.platform, xml.at_css("platform").content
       assert_equal @version.prerelease.to_s, xml.at_css("prerelease").content
-      assert_equal @version.ruby_version, xml.at_css("ruby-version").content
+      assert_equal @version.required_rubygems_version, xml.at_css("rubygems-version").content
+      assert_equal @version.required_ruby_version, xml.at_css("ruby-version").content
       assert_equal @version.summary.to_s, xml.at_css("summary").content
       assert_equal @version.licenses, xml.at_css("licenses").content
       assert_equal @version.requirements, xml.at_css("requirements").content
       assert_equal(
         @version.created_at.to_i,
-        xml.at_css("created-at").content.to_time(:utc).to_i)
+        xml.at_css("created-at").content.to_time(:utc).to_i
+      )
     end
   end
 
@@ -154,7 +157,7 @@ class VersionTest < ActiveSupport::TestCase
       @dependency = create(:rubygem)
       @version = build(:version, rubygem: @rubygem, number: "1.0.0", platform: "ruby")
       @version.dependencies << create(:dependency, version: @version, rubygem: @dependency)
-      refute Version.with_deps.first.dependencies.empty?
+      refute Version.first.dependencies.empty?
     end
 
     should "sort dependencies alphabetically" do
@@ -180,33 +183,57 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
+  context "with a rubygems version" do
+    setup do
+      @required_rubygems_version = ">= 2.6.4"
+      @version = create(:version)
+    end
+
+    should "have a rubygems version" do
+      @version.update(required_rubygems_version: @required_rubygems_version)
+      new_version = Version.find(@version.id)
+      assert_equal new_version.required_rubygems_version, @required_rubygems_version
+    end
+  end
+
+  context "without a rubygems version" do
+    setup do
+      @version = create(:version)
+    end
+
+    should "not have a rubygems version" do
+      @version.update(required_rubygems_version: nil)
+      nil_version = Version.find(@version.id)
+      assert_nil nil_version.required_rubygems_version
+    end
+  end
+
   context "with a ruby version" do
     setup do
-      @ruby_version = ">= 1.9.3"
+      @required_ruby_version = ">= 1.9.3"
       @version = create(:version)
     end
     subject { @version }
 
     should "have a ruby version" do
-      @version.ruby_version = @ruby_version
+      @version.required_ruby_version = @required_ruby_version
       @version.save!
       new_version = Version.find(@version.id)
-      assert_equal new_version.ruby_version, @ruby_version
+      assert_equal new_version.required_ruby_version, @required_ruby_version
     end
   end
 
   context "without a ruby version" do
     setup do
-      @ruby_version = ">= 1.9.3"
       @version = create(:version)
     end
     subject { @version }
 
     should "not have a ruby version" do
-      @version.ruby_version = nil
+      @version.required_ruby_version = nil
       @version.save!
       nil_version = Version.find(@version.id)
-      assert_nil nil_version.ruby_version
+      assert_nil nil_version.required_ruby_version
     end
   end
 
@@ -238,18 +265,6 @@ class VersionTest < ActiveSupport::TestCase
     should "save full name" do
       assert_equal "#{@version.rubygem.name}-#{@version.number}", @version.full_name
       assert_equal @version.number, @version.slug
-    end
-
-    should "save info into redis" do
-      info = Redis.current.hgetall(Version.info_key(@version.full_name))
-      assert_equal @version.rubygem.name, info["name"]
-      assert_equal @version.number, info["number"]
-      assert_equal @version.platform, info["platform"]
-    end
-
-    should "add version onto redis versions list" do
-      assert_equal @version.full_name,
-        Redis.current.lindex(Rubygem.versions_key(@version.rubygem.name), 0)
     end
 
     should "raise an ActiveRecord::RecordNotFound if an invalid slug is given" do
@@ -621,7 +636,8 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with a Gem::Specification" do
     setup do
-      @spec    = new_gemspec "test", "1.0.0", "a test gem", "ruby"
+      @spec = new_gemspec "test", "1.0.0", "a test gem", "ruby",
+        ruby_version: ">= 1.8.7", rubygems_version: ">= 1.3"
       @version = build(:version)
     end
 
@@ -638,11 +654,13 @@ class VersionTest < ActiveSupport::TestCase
       @version.update_attributes_from_gem_specification!(@spec)
 
       assert @version.indexed
-      assert_equal @spec.authors.join(', '),  @version.authors
-      assert_equal @spec.description,         @version.description
-      assert_equal @spec.summary,             @version.summary
-      assert_equal @spec.date,                @version.built_at
-      assert_equal @spec.metadata,            @version.metadata
+      assert_equal @spec.authors.join(', '),              @version.authors
+      assert_equal @spec.description,                     @version.description
+      assert_equal @spec.summary,                         @version.summary
+      assert_equal @spec.date,                            @version.built_at
+      assert_equal @spec.metadata,                        @version.metadata
+      assert_equal @spec.required_ruby_version.to_s,      @version.required_ruby_version
+      assert_equal @spec.required_rubygems_version.to_s,  @version.required_rubygems_version
     end
   end
 

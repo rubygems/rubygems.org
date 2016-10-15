@@ -127,6 +127,35 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  context "CORS" do
+    setup do
+      rubygem = create(:rubygem, name: "ZenTest", slug: "zentest")
+      create(:version, rubygem: rubygem)
+    end
+
+    should "Returns the response CORS headers" do
+      @request.env['HTTP_ORIGIN'] = 'https://pages.github.com/'
+      get :show, id: "ZenTest", format: 'json'
+
+      assert_equal 200, @response.status
+      assert_equal '*', @response.headers['Access-Control-Allow-Origin']
+      assert_equal 'GET', @response.headers['Access-Control-Allow-Methods']
+      assert_equal '1728000', @response.headers['Access-Control-Max-Age']
+    end
+
+    should 'Send the CORS preflight OPTIONS request' do
+      @request.env['HTTP_ORIGIN'] = 'https://pages.github.com/'
+      process :show, 'OPTIONS', id: "ZenTest"
+
+      assert_equal 200, @response.status
+      assert_equal '*', @response.headers['Access-Control-Allow-Origin']
+      assert_equal 'GET', @response.headers['Access-Control-Allow-Methods']
+      assert_equal 'X-Requested-With, X-Prototype-Version', @response.headers['Access-Control-Allow-Headers']
+      assert_equal '1728000', @response.headers['Access-Control-Max-Age']
+      assert_equal '', @response.body
+    end
+  end
+
   def self.should_respond_to(format)
     context "with #{format.to_s.upcase} for a list of gems" do
       setup do

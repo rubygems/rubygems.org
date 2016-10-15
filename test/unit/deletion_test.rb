@@ -9,6 +9,8 @@ class DeletionTest < ActiveSupport::TestCase
     @user = create(:user)
     Pusher.new(@user, gem_file).process
     @version = Version.last
+    Rubygem.__elasticsearch__.create_index! force: true
+    Rubygem.import
   end
 
   should "be indexed" do
@@ -19,7 +21,10 @@ class DeletionTest < ActiveSupport::TestCase
 
   context "with deleted gem" do
     setup do
+      Rails.cache.stubs(:delete)
+      Fastly.stubs(:purge)
       delete_gem
+      @gem_name = @version.rubygem.name
     end
 
     should "unindexes" do
@@ -34,14 +39,39 @@ class DeletionTest < ActiveSupport::TestCase
       refute @version.reload.latest?
     end
 
-    should "not appear in the version list" do
-      refute Redis.current.exists(Rubygem.versions_key(@version.rubygem.name)),
-        "Version still in list!"
+    should "keep the yanked time" do
+      assert @version.reload.yanked_at
     end
 
     should "delete the .gem file" do
       assert_nil RubygemFs.instance.get("gems/#{@version.full_name}.gem"), "Rubygem still exists!"
     end
+
+    should "expire API memcached" do
+      assert_received(Rails.cache, :delete) { |cache| cache.with("info/#{@gem_name}") }
+      assert_received(Rails.cache, :delete) { |cache| cache.with("deps/v1/#{@gem_name}") }
+      assert_received(Rails.cache, :delete) { |cache| cache.with("versions") }
+      assert_received(Rails.cache, :delete) { |cache| cache.with("names") }
+    end
+
+    should "purge cdn cache" do
+      assert_received(Fastly, :purge) { |path| path.with("info/#{@gem_name}") }
+      assert_received(Fastly, :purge) { |path| path.with("versions") }
+      assert_received(Fastly, :purge) { |path| path.with("names") }
+    end
+  end
+
+  should "enque job for updating ES index and update index" do
+    assert_difference 'Delayed::Job.count', 2 do
+      delete_gem
+    end
+
+    Delayed::Worker.new.work_off
+
+    response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
+                                                    type: 'rubygem',
+                                                    id: @version.rubygem_id
+    assert_equal true, response['_source']['yanked']
   end
 
   should "record version metadata" do
@@ -51,9 +81,18 @@ class DeletionTest < ActiveSupport::TestCase
     assert_equal deletion.rubygem, @version.rubygem.name
   end
 
+  test "expire API memcached" do
+    Rails.cache.write("deps/v1/#{@version.rubygem.name}", "omg!")
+    refute_nil Rails.cache.fetch("deps/v1/#{@version.rubygem.name}")
+
+    delete_gem
+
+    assert_nil Rails.cache.fetch("deps/v1/#{@version.rubygem.name}")
+  end
+
   teardown do
     # This is necessary due to after_commit not cleaning up for us
-    [Rubygem, Version, User, Deletion].each(&:delete_all)
+    [Rubygem, Version, User, Deletion, Delayed::Job, GemDownload].each(&:delete_all)
   end
 
   private

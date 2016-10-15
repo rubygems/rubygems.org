@@ -7,7 +7,6 @@ class Version < ActiveRecord::Base
 
   before_save :update_prerelease
   before_validation :full_nameify!
-  after_create :save_full_name_to_redis
   after_save :reorder_versions
 
   serialize :licenses
@@ -60,10 +59,6 @@ class Version < ActiveRecord::Base
   def self.subscribed_to_by(user)
     where(rubygem_id: user.subscribed_gem_ids)
       .by_created_at
-  end
-
-  def self.with_deps
-    includes(:dependencies)
   end
 
   def self.latest
@@ -158,7 +153,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.published(limit)
-    indexed.by_built_at.limit(limit)
+    indexed.by_created_at.limit(limit)
   end
 
   def self.find_from_slug!(rubygem_id, slug)
@@ -167,11 +162,7 @@ class Version < ActiveRecord::Base
   end
 
   def self.rubygem_name_for(full_name)
-    Redis.current.hget(info_key(full_name), :name)
-  end
-
-  def self.info_key(full_name)
-    "v:#{full_name}"
+    find_by(full_name: full_name).try(:rubygem).try(:name)
   end
 
   def platformed?
@@ -179,10 +170,6 @@ class Version < ActiveRecord::Base
   end
 
   delegate :reorder_versions, to: :rubygem
-
-  def push
-    Redis.current.lpush(Rubygem.versions_key(rubygem.name), full_name)
-  end
 
   def yanked?
     !indexed
@@ -213,7 +200,8 @@ class Version < ActiveRecord::Base
       metadata: spec.metadata || {},
       requirements: spec.requirements,
       built_at: spec.date,
-      ruby_version: spec.required_ruby_version.to_s,
+      required_rubygems_version: spec.required_rubygems_version.to_s,
+      required_ruby_version: spec.required_ruby_version.to_s,
       indexed: true
     )
   end
@@ -247,20 +235,21 @@ class Version < ActiveRecord::Base
 
   def payload
     {
-      'authors'         => authors,
-      'built_at'        => built_at,
-      'created_at'      => created_at,
-      'description'     => description,
-      'downloads_count' => downloads_count,
-      'metadata'        => metadata,
-      'number'          => number,
-      'summary'         => summary,
-      'platform'        => platform,
-      'ruby_version'    => ruby_version,
-      'prerelease'      => prerelease,
-      'licenses'        => licenses,
-      'requirements'    => requirements,
-      'sha'             => sha256_hex
+      'authors'          => authors,
+      'built_at'         => built_at,
+      'created_at'       => created_at,
+      'description'      => description,
+      'downloads_count'  => downloads_count,
+      'metadata'         => metadata,
+      'number'           => number,
+      'summary'          => summary,
+      'platform'         => platform,
+      'rubygems_version' => required_rubygems_version,
+      'ruby_version'     => required_ruby_version,
+      'prerelease'       => prerelease,
+      'licenses'         => licenses,
+      'requirements'     => requirements,
+      'sha'              => sha256_hex
     }
   end
 
@@ -301,10 +290,6 @@ class Version < ActiveRecord::Base
     Gem::Version.new(number)
   end
 
-  def to_index
-    [rubygem.name, to_gem_version, platform]
-  end
-
   def to_install
     command = "gem install #{rubygem.name}"
     latest = if prerelease
@@ -322,7 +307,11 @@ class Version < ActiveRecord::Base
   end
 
   def sha256_hex
-    sha256.unpack("m0").first.unpack("H*").first if sha256
+    Version._sha256_hex(sha256) if sha256
+  end
+
+  def self._sha256_hex(raw)
+    raw.unpack("m0").first.unpack("H*").first
   end
 
   def recalculate_sha256
@@ -336,15 +325,13 @@ class Version < ActiveRecord::Base
   end
 
   def recalculate_metadata!
-    key = "gems/#{full_name}.gem"
-    file = RubygemFs.instance.get(key)
-    if file
-      spec = Gem::Package.new(StringIO.new(file)).spec
-      metadata = spec.metadata
-      update(metadata: metadata || {})
-    end
-  rescue Gem::Package::FormatError
-    nil
+    metadata = get_spec_attribute('metadata')
+    update(metadata: metadata || {})
+  end
+
+  def assign_required_rubygems_version!
+    required_rubygems_version = get_spec_attribute('required_rubygems_version')
+    update_column(:required_rubygems_version, required_rubygems_version.to_s)
   end
 
   def documentation_path
@@ -352,6 +339,16 @@ class Version < ActiveRecord::Base
   end
 
   private
+
+  def get_spec_attribute(attribute_name)
+    key = "gems/#{full_name}.gem"
+    file = RubygemFs.instance.get(key)
+    return nil unless file
+    spec = Gem::Package.new(StringIO.new(file)).spec
+    spec.send(attribute_name)
+  rescue Gem::Package::FormatError
+    nil
+  end
 
   def platform_and_number_are_unique
     return unless Version.exists?(rubygem_id: rubygem_id, number: number, platform: platform)
@@ -375,12 +372,6 @@ class Version < ActiveRecord::Base
     return if rubygem.nil?
     self.full_name = "#{rubygem.name}-#{number}"
     full_name << "-#{platform}" if platformed?
-  end
-
-  def save_full_name_to_redis
-    Redis.current.hmset(Version.info_key(full_name), :name, rubygem.name,
-      :number, number, :platform, platform)
-    push
   end
 
   def feature_release(number)

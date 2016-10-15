@@ -10,7 +10,6 @@ module Patterns
     abbrev
     base64
     benchmark
-    bigdecimal
     cgi
     cgi-session
     cmath
@@ -34,12 +33,11 @@ module Patterns
     find
     forwardable
     getoptlong
-    gserver
-    io-console
     io-nonblock
     io-wait
     ipaddr
     irb
+    jruby
     logger
     mathn
     matrix
@@ -52,7 +50,6 @@ module Patterns
     net-pop
     net-protocol
     net-smtp
-    net-telnet
     nkf
     observer
     open-uri
@@ -73,6 +70,7 @@ module Patterns
     rexml
     rinda
     rss
+    ruby
     rubygems
     scanf
     securerandom
@@ -82,6 +80,7 @@ module Patterns
     socket
     stringio
     strscan
+    sync
     syslog
     tempfile
     thread
@@ -97,15 +96,8 @@ module Patterns
     weakref
     webrick
     win32ole
-    xmlrpc
     yaml
     zlib
     ubygems
   ).freeze
-
-  # see https://github.com/rubygems/rubygems.org/issues/1190
-  if Time.zone.now > Time.zone.parse('2016-05-01 00:00:00') &&
-      !GEM_NAME_BLACKLIST.include?('sync')
-    warn "Sync gem should be back to the blacklist of game names by now."
-  end
 end

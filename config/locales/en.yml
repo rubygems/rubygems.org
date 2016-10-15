@@ -56,6 +56,7 @@ en:
         api: "API"
         guides: "Guides"
         contribute: "Contribute"
+        security: "Security"
         supported_by: "Supported by"
         hosted_by: "Hosted by"
         designed_by: "Designed by"
@@ -64,6 +65,8 @@ en:
         tracking_by: "Tracking by"
         monitored_by: "Monitored by"
         gems_served_by: "Gems served by"
+        logging_by: "Logging by"
+        tested_by: "Tested by"
 
   pages:
     about:
@@ -74,8 +77,8 @@ en:
         transparent_pages: Create more transparent and accessible project pages
         enable_community: Enable the community to improve and enhance the site
       founding: "The project was started in April 2009 by %{founder}, and has since grown to include the contributions of over %{contributors} and %{downloads}. As of the RubyGems 1.3.6 release, the site has been renamed to %{title} from Gemcutter to solidify the site's central role in the Ruby community."
-      support: "Although RubyGems.org is not run by one specific company, plenty have helped us out so far. The current design, illustrations, and front-end development of this site were created by %{dockyard}. %{github} has also been invaluable for helping us collaborate and share code easily. The site started on %{heroku}, whose great service helped prove RubyGems as a viable solution that the whole community could rely on."
-      technical: "Some insights into the technical aspects of the site: It's 100% Ruby. The main site is a %{rails} application, and the RubyGem serving is done through %{sinatra}. Gems are hosted on %{s3}, and the time between publishing a new gem and having it ready for installation is minimal. For more info, %{source_code}, which is %{license} over at GitHub."
+      support: "Although RubyGems.org is not run by one specific company, plenty have helped us out so far. The current design, illustrations, and front-end development of this site were created by %{dockyard}. %{github} has also been invaluable for helping us collaborate and share code easily. The site started on %{heroku}, whose great service helped prove RubyGems as a viable solution that the whole community could rely on. Our infrastructure is currently hosted on %{aws}."
+      technical: "Some insights into the technical aspects of the site: It's 100% Ruby. The main site is a %{rails} application. Gems are hosted on %{s3}, served by %{fastly}, and the time between publishing a new gem and having it ready for installation is usually just a few seconds. For more info, %{source_code}, which is %{license} over at GitHub."
 
   passwords:
     edit:
@@ -90,6 +93,7 @@ en:
     edit:
       title: Edit profile
       hide_email: Hide email in public profile
+      optional_twitter_username: Optional Twitter username. Will be displayed publicly
       reset_password:
         title: Reset password
         text: "Need a new password? No problem. %{link}"
@@ -115,7 +119,7 @@ en:
     show:
       not_hosted_notice: This gem is not currently hosted on RubyGems.org.
       install: install
-      yanked_notice: "This gem has been yanked, and it is not available for download directly or for other gems that may have depended on it."
+      yanked_notice: "This version has been yanked, and it is not available for download directly or for other gems that may have depended on it."
       authors_header: Authors
       downloads_for_this_version: "For this version"
       owners_header: Owners
@@ -143,6 +147,7 @@ en:
       copy_to_clipboard: Copy to clipboard
       copied: Copied!
       required_ruby_version: Required Ruby Version
+      required_rubygems_version: Required Rubygems Version
 
   searches:
     show:
@@ -205,4 +210,3 @@ en:
 
       multi_page: "Displaying %{model} %{from} - %{to} of %{count} in total"
       multi_page_html: "Displaying %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> of <b>%{count}</b> in total"
-

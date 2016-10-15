@@ -7,14 +7,17 @@ class Net::HTTP::Purge < Net::HTTPRequest
 end
 
 class Fastly
-  def self.purge(url, soft = false)
+  def self.purge(path, soft = false)
+    return unless ENV['FASTLY_DOMAIN']
+    domain = "https://#{ENV['FASTLY_DOMAIN']}/"
     headers = soft ? { 'Fastly-Soft-Purge' => 1 } : {}
+
     response = RestClient::Request.execute(method: :purge,
-                                           url: url,
+                                           url: domain + path,
                                            timeout: 10,
                                            headers: headers)
     json = JSON.parse(response)
-    Rails.logger.debug "Fastly purge url=#{url} status=#{json['status']} id=#{json['id']}"
+    Rails.logger.debug "Fastly purge url=#{domain + path} status=#{json['status']} id=#{json['id']}"
     json
   end
 
@@ -29,5 +32,11 @@ class Fastly
     json = JSON.parse(response)
     Rails.logger.debug "Fastly purge url=#{url} status=#{json['status']} id=#{json['id']}"
     json
+  end
+
+  def self.purge_api_cdn(gem_name)
+    ["info/#{gem_name}", "versions", "names"].each do |path|
+      purge path
+    end
   end
 end

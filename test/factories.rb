@@ -58,6 +58,7 @@ FactoryGirl.define do
     transient do
       owners []
       number nil
+      downloads 0
     end
 
     linkset
@@ -90,21 +91,19 @@ FactoryGirl.define do
     metadata "foo" => "bar"
     number
     platform "ruby"
-    ruby_version ">= 2.0.0"
+    required_rubygems_version ">= 2.6.3"
+    required_ruby_version ">= 2.0.0"
     licenses "MIT"
     requirements "Opencv"
     rubygem
     size 1024
+    # In reality sha256 is different for different version
+    # sha256 is calculated in Pusher, we don't use pusher to create versions in tests
     sha256 "tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g="
 
     trait :yanked do
       indexed false
     end
-  end
-
-  factory :version_history do
-    day { Time.zone.today.to_s }
-    count 1
   end
 
   sequence :url do |n|

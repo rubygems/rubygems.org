@@ -47,6 +47,14 @@ class UserTest < ActiveSupport::TestCase
         assert_equal "bills", user.display_handle
       end
     end
+
+    context 'twitter_username' do
+      should validate_length_of(:twitter_username)
+      should allow_value("user123_32").for(:twitter_username)
+      should_not allow_value("@user").for(:twitter_username)
+      should_not allow_value("user 1").for(:twitter_username)
+      should_not allow_value("user-1").for(:twitter_username)
+    end
   end
 
   context "with a user" do
@@ -175,9 +183,8 @@ class UserTest < ActiveSupport::TestCase
   context "rubygems" do
     setup do
       @user     = create(:user)
-      @rubygems = [[100, 2000], [200, 1000], [300, 3000]].map do |downloads, real_downloads|
-        create(:rubygem, downloads: downloads).tap do |rubygem|
-          GemDownload.find_by(rubygem_id: rubygem.id, version_id: 0).update(count: real_downloads)
+      @rubygems = [2000, 1000, 3000].map do |download|
+        create(:rubygem, downloads: download).tap do |rubygem|
           create(:ownership, rubygem: rubygem, user: @user)
           create(:version, rubygem: rubygem)
         end

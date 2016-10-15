@@ -47,6 +47,7 @@
     outline: none; }
 
 .gems__gem__info {
+  display: block;
   color: #141c22; }
   @media (min-width: 600px) {
     .gems__gem__info {

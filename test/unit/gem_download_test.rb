@@ -3,9 +3,10 @@ require 'test_helper'
 class GemDownloadTest < ActiveSupport::TestCase
   setup do
     create(:gem_download, count: 0)
+    Rubygem.__elasticsearch__.create_index! force: true
   end
 
-  context "#increment" do
+  context ".increment" do
     should "not update if download doesnt exist" do
       assert_nil GemDownload.increment(1, rubygem_id: 1)
     end
@@ -50,19 +51,58 @@ class GemDownloadTest < ActiveSupport::TestCase
     GemDownload.delete_all
   end
 
-  context "#bulk_update" do
+  context ".bulk_update" do
+    setup do
+      @versions = Array.new(2) { create(:version) }
+      @gems     = @versions.map(&:rubygem)
+      @versions << create(:version, rubygem: @gems[0])
+      @counts   = Array.new(3) { rand(100) }
+      @data     = @versions.map.with_index { |v, i| [v.full_name, @counts[i]] }
+      @gem_downloads = [(@counts[0] + @counts[2]), @counts[1]]
+      Rubygem.import
+    end
+
     should "write the proper values" do
-      versions = Array.new(2) { create(:version) }
-      gems     = versions.map(&:rubygem)
-      counts   = Array.new(2) { rand(100) }
-      data     = versions.map.with_index { |v, i| [v.full_name, counts[i]] }
+      GemDownload.bulk_update(@data)
+      3.times.each do |i|
+        assert_equal @counts[i], GemDownload.count_for_version(@versions[i].id)
+      end
+      assert_equal @gem_downloads[0], GemDownload.count_for_rubygem(@gems[0].id)
+      assert_equal @gem_downloads[1], GemDownload.count_for_rubygem(@gems[1].id)
+    end
+
+    should "update downloads count of ES index" do
+      GemDownload.bulk_update(@data)
+      2.times.each do |i|
+        response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
+                                                        type: 'rubygem',
+                                                        id: @gems[i].id
+
+        assert_equal @gem_downloads[i], response['_source']['downloads']
+      end
+    end
+
+    should "update total_count when elasticsearch is down" do
+      requires_toxiproxy
+      Toxiproxy[:elasticsearch].down do
+        GemDownload.bulk_update(@data)
+        total_count = @counts.inject(0, :+)
+        assert_equal total_count, GemDownload.total_count
+      end
+    end
+  end
+
+  context ".most_downloaded_gem_count" do
+    setup do
+      versions = Array.new(20) { create(:version) }
+      @counts  = Array.new(20) { rand(100) }
+      data     = versions.map.with_index { |v, i| [v.full_name, @counts[i]] }
 
       GemDownload.bulk_update(data)
+    end
 
-      2.times.each do |i|
-        assert_equal counts[i], GemDownload.count_for_version(versions[i].id)
-        assert_equal counts[i], GemDownload.count_for_rubygem(gems[i].id)
-      end
+    should "return count of most downloaded gem" do
+      assert_equal @counts.max, GemDownload.most_downloaded_gem_count
     end
   end
 
@@ -103,7 +143,6 @@ class GemDownloadTest < ActiveSupport::TestCase
   end
 
   should "find most downloaded all time" do
-    skip "fixme"
     @rubygem_1 = create(:rubygem)
     @version_1 = create(:version, rubygem: @rubygem_1)
     @version_2 = create(:version, rubygem: @rubygem_1)
@@ -114,23 +153,15 @@ class GemDownloadTest < ActiveSupport::TestCase
     @rubygem_3 = create(:rubygem)
     @version_4 = create(:version, rubygem: @rubygem_3)
 
-    GemDownload.increment(@version_1.full_name)
-    GemDownload.increment(@version_2.full_name)
-    GemDownload.increment(@version_3.full_name)
-    GemDownload.increment(@version_1.full_name)
-    3.times { GemDownload.increment(@version_3.full_name) }
-    2.times { GemDownload.increment(@version_2.full_name) }
+    GemDownload.increment(1, rubygem_id: @rubygem_1, version_id: @version_1.id)
+    GemDownload.increment(1, rubygem_id: @rubygem_1, version_id: @version_2.id)
+    GemDownload.increment(1, rubygem_id: @rubygem_2, version_id: @version_3.id)
+    GemDownload.increment(1, rubygem_id: @rubygem_3, version_id: @version_1.id)
+    3.times { GemDownload.increment(1, rubygem_id: @rubygem_2, version_id: @version_3.id) }
+    2.times { GemDownload.increment(1, rubygem_id: @rubygem_1, version_id: @version_2.id) }
 
-    assert_equal [[@version_3, 4], [@version_2, 3], [@version_1, 2]],
-      Download.most_downloaded_all_time
-
-    assert_equal [[@version_3, 4], [@version_2, 3]],
-      Download.most_downloaded_all_time(2)
-
-    assert_equal 3, Download.cardinality
-    assert_equal 1, Download.rank(@version_3)
-    assert_equal 2, Download.rank(@version_2)
-    assert_equal 3, Download.rank(@version_1)
+    gem_download_order = [@version_3, @version_2, @version_1, @version_4].map(&:gem_download)
+    assert_equal gem_download_order, GemDownload.most_downloaded_gems
   end
 
   should "find download count by gems id" do

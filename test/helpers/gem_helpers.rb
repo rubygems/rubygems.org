@@ -17,7 +17,9 @@ module GemHelpers
     build_gemspec(new_gemspec(name, version, summary, platform, &block))
   end
 
-  def new_gemspec(name, version, summary, platform)
+  def new_gemspec(name, version, summary, platform, extra_args = {})
+    ruby_version = extra_args[:ruby_version]
+    rubygems_version = extra_args[:rubygems_version]
     gemspec = Gem::Specification.new do |s|
       s.name = name
       s.platform = platform
@@ -32,6 +34,8 @@ module GemHelpers
       s.summary = summary.to_s
       s.test_files = []
       s.licenses = []
+      s.required_ruby_version = ruby_version
+      s.required_rubygems_version = rubygems_version
       s.metadata = { "foo" => "bar" }
       yield s if block_given?
     end

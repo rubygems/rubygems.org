@@ -63,4 +63,17 @@ class ProfileTest < SystemTest
     visit profile_path("nick1")
     refute page.has_content?("Email Me")
   end
+
+  test "adding Twitter username" do
+    sign_in
+    visit profile_path("nick1")
+
+    click_link "Edit Profile"
+    fill_in "Twitter username", with: "nick1"
+    click_button "Update"
+
+    visit profile_path("nick1")
+
+    assert page.has_link?("@nick1", href: "https://twitter.com/nick1")
+  end
 end

@@ -14,7 +14,7 @@ class RubygemTest < ActiveSupport::TestCase
     should have_many(:versions).dependent(:destroy)
     should have_many(:web_hooks).dependent(:destroy)
     should have_one(:linkset).dependent(:destroy)
-    should validate_uniqueness_of :name
+    should validate_uniqueness_of(:name).case_insensitive
     should allow_value("rails").for(:name)
     should allow_value("awesome42").for(:name)
     should allow_value("factory_girl").for(:name)
@@ -22,6 +22,7 @@ class RubygemTest < ActiveSupport::TestCase
     should allow_value("perftools.rb").for(:name)
     should_not allow_value("\342\230\203").for(:name)
     should_not allow_value("2.2").for(:name)
+    should_not allow_value("Ruby").for(:name)
 
     context "that has an invalid name already persisted" do
       setup do
@@ -152,6 +153,14 @@ class RubygemTest < ActiveSupport::TestCase
       indexed_v1 = create(:version, rubygem: @rubygem, number: "0.1.0", indexed: true)
 
       assert_equal indexed_v1.reload, @rubygem.reload.versions.most_recent
+    end
+
+    should "return latest version on the basis of version number" do
+      version = create(:version, rubygem: @rubygem, number: "0.1.1", platform: 'ruby', latest: true)
+      create(:version, rubygem: @rubygem, number: "0.1.2.rc1", platform: 'ruby')
+      create(:version, rubygem: @rubygem, number: "0.1.0", platform: 'jruby', latest: true)
+
+      assert_equal version, @rubygem.latest_version
     end
 
     context "#public_versions_with_extra_version" do

@@ -7,7 +7,9 @@ class Deletion < ActiveRecord::Base
 
   before_validation :record_metadata
   after_create :remove_from_index
+  after_commit :expire_api_memcached
   after_commit :remove_from_storage
+  after_commit :update_search_index
 
   attr_accessor :version
 
@@ -27,18 +29,26 @@ class Deletion < ActiveRecord::Base
     self.platform = @version.platform
   end
 
+  def expire_api_memcached
+    ["deps/v1/#{rubygem}", "info/#{rubygem}", "versions", "names"].each do |key|
+      Rails.cache.delete key
+    end
+  end
+
   def remove_from_index
-    @version.update!(indexed: false)
-    Redis.current.lrem(Rubygem.versions_key(rubygem_name), 1, @version.full_name)
+    @version.update!(indexed: false, yanked_at: Time.now.utc)
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
   end
 
   def remove_from_storage
     RubygemFs.instance.remove("gems/#{@version.full_name}.gem")
     RubygemFs.instance.remove("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
-    return unless ENV['FASTLY_DOMAIN']
-    domain = "https://#{ENV['FASTLY_DOMAIN']}"
-    Fastly.purge("#{domain}/gems/#{@version.full_name}.gem")
-    Fastly.purge("#{domain}/quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
+    Fastly.purge("gems/#{@version.full_name}.gem")
+    Fastly.purge("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
+    Fastly.purge_api_cdn(rubygem)
+  end
+
+  def update_search_index
+    @version.rubygem.delay.update_document
   end
 end

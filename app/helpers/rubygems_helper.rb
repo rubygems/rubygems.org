@@ -25,7 +25,7 @@ module RubygemsHelper
     if text =~ /^==+ [A-Z]/
       options = RDoc::Options.new
       options.pipe = true
-      RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new(options)).html_safe
+      sanitize RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new(options))
     else
       content_tag :p, escape_once(sanitize(text.strip)), nil, false
     end
@@ -82,7 +82,8 @@ module RubygemsHelper
 
   def report_abuse_link(rubygem)
     encoded_title = URI.encode("Reporting Abuse on #{rubygem.name}")
-    report_abuse_url = "http://help.rubygems.org/discussion/new?discussion[private]=1&discussion[title]=" + encoded_title # rubocop:disable Metrics/LineLength
+    report_abuse_url = 'http://help.rubygems.org/discussion/new' \
+      "?discussion[private]=1&discussion[title]=" + encoded_title
     link_to t(".links.report_abuse"), report_abuse_url.html_safe, class: 'gem__link t-list__item'
   end
 
@@ -102,6 +103,7 @@ module RubygemsHelper
   end
 
   def latest_version_number(rubygem)
+    return rubygem.latest_version_number if rubygem.respond_to?(:latest_version_number)
     (rubygem.latest_version || rubygem.versions.last).try(:number)
   end
 end

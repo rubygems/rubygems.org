@@ -77,26 +77,27 @@ than Rubygems and may suit your organization’s needs better.**
 
 #### Environment (OS X)
 
-* Use Ruby 2.2.4
-* Use Rubygems 2.4.5
+* Use Ruby 2.3.1
+* Use Rubygems 2.6.4
 * Install bundler: `gem install bundler`
-* Install Redis (>= 2.0): `brew install redis -H`
-  * Setup information: `brew info redis`
 * Install Elastic Search: `brew install elasticsearch`
   * Setup information: `brew info elasticsearch`
 * Install PostgreSQL (>= 8.4.x): `brew install postgres`
   * Setup information: `brew info postgresql`
+* Install memcached: `brew install memcached`
+  * Show all memcached options: `memcached -h`
 
 #### Environment (Linux - Debian/Ubuntu)
 
-* Use Ruby 2.2.4 `apt-get install ruby2.2`
+* Use Ruby 2.3.1 `apt-get install ruby2.3`
   * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
-* Use Rubygems 2.4.5
+* Use Rubygems 2.6.4
 * Install bundler: `gem install bundler`
-* Install Redis: `apt-get install redis-server`
-* Install Elastic Search: <https://www.elastic.co/guide/en/elasticsearch/reference/current/setup.html#setup-installation>
+* Install Elastic Search 1.5.2: <https://www.elastic.co/downloads/past-releases/elasticsearch-1-5-2>
 * Install PostgreSQL: `apt-get install postgresql postgresql-server-dev-all`
   * Help to setup database <https://wiki.debian.org/PostgreSql>
+* Install memcached: `apt-get install memcached`
+  * Show all memcached options: `memcached -h`
 
 #### Getting the code
 
@@ -110,12 +111,12 @@ than Rubygems and may suit your organization’s needs better.**
 
 * Get set up: `./script/setup`
 * Run the database rake tasks if needed:
-    `bundle exec rake db:create:all db:drop:all db:setup db:test:prepare --trace`
+    `bundle exec rake db:reset db:test:prepare --trace`
 
 #### Running tests
 
-* Start redis: `redis-server`
 * Start elastic search: `elasticsearch`
+* Start memcached: `memcached`
 * Run the tests: `bundle exec rake`
 
 #### Running RuboCop
@@ -156,7 +157,6 @@ directory. The proper directory will be full of .gem files.
 * You can use rubygems.org data [dumps](https://rubygems.org/pages/data) to test
 application in development environment especially for performance related issues.
 * To load the main database dump into Postgres, use `psql` - e.g. `$ psql gemcutter_development < PostgreSQL.sql`.
-* To load the Redis dump, edit the `dbfilename` and `dir` configuration values in `redis.conf` to point to your downloaded dump file. [Example](http://stackoverflow.com/a/14506986).
 
 #### Pushing gems
 

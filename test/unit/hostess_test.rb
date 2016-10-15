@@ -30,8 +30,7 @@ class HostessTest < ActiveSupport::TestCase
      /quick/rubygems-update-1.3.6.gemspec.rz
      /yaml
      /yaml.Z
-     /yaml.z
-  ).each do |index|
+     /yaml.z).each do |index|
     should "serve up #{index} locally" do
       touch index
       get index
@@ -72,7 +71,6 @@ class HostessTest < ActiveSupport::TestCase
   end
 
   should "not be able to find a bad gemspec" do
-    Redis.current.flushdb
     get "/quick/Marshal.4.8/rails-3.0.0.gemspec.rz"
     assert_equal 404, last_response.status
   end

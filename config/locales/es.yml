@@ -218,8 +218,8 @@ es:
         header: 'Bienvenido a %{site}, el servicio de alojamiento de gemas para la comunidad de Ruby. Este proyecto tiene 3 objetivos:'
         transparent_pages: Crear páginas de proyecto más accesibles y transparentes
       subtitle:
-      support: A pesar de que Gemcutter no es mantenido por una compañía en específico, muchas de ellas nos han ayudado. El diseño actual, las ilustraciones y el desarrollo de front-end del sitio fue cortesía de %{dockyard}. %{github} también ha sido invaluable por ayudarnos a colaborar y compartir código de manera sencilla. El sitio comenzó en %{heroku}, cuyo excelente servicio ayudó a probar que Gemcutter es una solución viable en la que toda la comunidad puede confiar.
-      technical: 'Algunos aspectos técnicos del sitio: Es 100% Ruby. El sitio principal es una aplicación de %{rails}, y la transferencia de gemas se hace a través de %{sinatra}. Las gemas se almacenan en %{s3} y el tiempo entre que se publica una gema y que está lista para instalarse es mínimo. Para más información, %{source_code}, cuya licencia es %{license} en GitHub.'
+      support: A pesar de que Gemcutter no es mantenido por una compañía en específico, muchas de ellas nos han ayudado. El diseño actual, las ilustraciones y el desarrollo de front-end del sitio fue cortesía de %{dockyard}. %{github} también ha sido invaluable por ayudarnos a colaborar y compartir código de manera sencilla. El sitio comenzó en %{heroku}, cuyo excelente servicio ayudó a probar que Gemcutter es una solución viable en la que toda la comunidad puede confiar. Our infrastructure is currently hosted on %{aws}.
+      technical: 'Algunos aspectos técnicos del sitio: Es 100% Ruby. El sitio principal es una aplicación de %{rails}. Las gemas se almacenan en %{s3}, served by %{fastly}, y el tiempo entre que se publica una gema y que está lista para instalarse es mínimo. Para más información, %{source_code}, cuya licencia es %{license} en GitHub.'
       title: Acerca de
     create:
       notice:

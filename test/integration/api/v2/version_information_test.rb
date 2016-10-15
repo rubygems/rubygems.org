@@ -1,13 +1,13 @@
 require 'test_helper'
 
-class CompactIndex < ActionDispatch::IntegrationTest
-  def request_endpoint(rubygem, version, format = 'json', http_params = {})
-    get api_v2_rubygem_version_path(rubygem.name, version, format: format), {}, http_params
-  end
-
+class VersionInformationTest < ActionDispatch::IntegrationTest
   setup do
     @rubygem = create(:rubygem)
     create(:version, rubygem: @rubygem, number: '2.0.0')
+  end
+
+  def request_endpoint(rubygem, version, format = 'json', http_params = {})
+    get api_v2_rubygem_version_path(rubygem.name, version, format: format), {}, http_params
   end
 
   test "return gem version" do

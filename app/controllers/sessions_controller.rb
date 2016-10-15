@@ -1,9 +1,6 @@
 class SessionsController < Clearance::SessionsController
   def create
-    params.require(:session)
-    @user = User.authenticate(
-      params[:session][:who], params[:session][:password]
-    )
+    @user = find_user(params.require(:session))
 
     sign_in(@user) do |status|
       if status.success?
@@ -18,6 +15,13 @@ class SessionsController < Clearance::SessionsController
   end
 
   private
+
+  def find_user(session)
+    who = session[:who].is_a?(String) && session.fetch(:who)
+    password = session[:password].is_a?(String) && session.fetch(:password)
+
+    User.authenticate(who, password) if who && password
+  end
 
   def url_after_create
     dashboard_url

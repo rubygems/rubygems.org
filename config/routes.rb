@@ -55,6 +55,14 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :dependencies,
+        only: [:index],
+        format: /marshal|json/,
+        defaults: { format: 'marshal' }
+
+      # for handling preflight request
+      match '/gems/:id' => "rubygems#show", via: :options
+
       resources :rubygems,
         path: 'gems',
         only: [:create, :show, :index],
@@ -90,12 +98,15 @@ Rails.application.routes.draw do
     end
   end
 
+  get '/versions' => 'api/compact_index#versions'
+  get '/info/:gem_name' => 'api/compact_index#info', as: :info
+  get '/names' => 'api/compact_index#names'
   ################################################################################
   # API v0
 
   scope to: 'api/deprecated#index' do
     get 'api_key'
-    put 'api_key/reset'
+    put 'api_key/reset', to: 'api/deprecated#index'
 
     post 'gems'
     get 'gems/:id.json'
@@ -150,4 +161,8 @@ Rails.application.routes.draw do
   end
 
   use_doorkeeper scope: 'oauth'
+
+  unless Clearance.configuration.allow_sign_up?
+    get '/sign_up' => 'users#disabled_signup'
+  end
 end

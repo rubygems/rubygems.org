@@ -348,7 +348,7 @@ class RubygemsControllerTest < ActionController::TestCase
       should respond_with :success
       should render_template :show
       should "render info about the gem" do
-        assert page.has_content?("This gem has been yanked")
+        assert page.has_content?("This gem is not currently hosted on RubyGems.org")
         assert page.has_no_content?('Versions')
       end
     end

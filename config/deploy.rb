@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock '3.4.1'
+lock '3.5.0'
 
 set :application, 'rubygems'
 set :deploy_to, '/applications/rubygems'
@@ -10,7 +10,7 @@ set :git_strategy, Capistrano::SubmoduleStrategy
 set :pty, true
 set :assets_roles, [:app]
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/cache', 'tmp/sockets')
-set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secret.rb')
+set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secret.rb', 'config/versions.list')
 
 namespace :deploy do
   desc 'Remove git cache for clean deploy'
@@ -45,6 +45,19 @@ namespace :maintenance do
   task :disable do
     on roles(:lb) do
       execute :sudo, 'rm /var/www/rubygems/maintenance.html'
+    end
+  end
+end
+
+namespace :memcached do
+  desc "Flushes memcached instance cache"
+  task :flush do
+    on roles(:app, select: :primary) do
+      within release_path do
+        with rails_env: fetch(:rails_env) do
+          execute :rake, 'memcached:flush'
+        end
+      end
     end
   end
 end
