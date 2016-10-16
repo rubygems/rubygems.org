@@ -241,23 +241,32 @@ class Version < ActiveRecord::Base
     gem_download.try(:count) || 0
   end
 
+  def runtime_dependencies_count
+    dependencies.runtime.length
+  end
+
+  def development_dependencies_count
+    dependencies.development.length
+  end
+
   def payload
     {
-      'authors'          => authors,
-      'built_at'         => built_at,
-      'created_at'       => created_at,
-      'description'      => description,
-      'downloads_count'  => downloads_count,
-      'metadata'         => metadata,
-      'number'           => number,
-      'summary'          => summary,
-      'platform'         => platform,
-      'rubygems_version' => required_rubygems_version,
-      'ruby_version'     => required_ruby_version,
-      'prerelease'       => prerelease,
-      'licenses'         => licenses,
-      'requirements'     => requirements,
-      'sha'              => sha256_hex
+      'authors'                    => authors,
+      'built_at'                   => built_at,
+      'created_at'                 => created_at,
+      'description'                => description,
+      'downloads_count'            => downloads_count,
+      'metadata'                   => metadata,
+      'number'                     => number,
+      'summary'                    => summary,
+      'platform'                   => platform,
+      'rubygems_version'           => required_rubygems_version,
+      'ruby_version'               => required_ruby_version,
+      'prerelease'                 => prerelease,
+      'licenses'                   => licenses,
+      'requirements'               => requirements,
+      'runtime_dependencies_count' => runtime_dependencies_count,
+      'sha'                        => sha256_hex
     }
   end
 
