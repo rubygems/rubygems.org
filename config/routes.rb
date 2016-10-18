@@ -129,6 +129,9 @@ Rails.application.routes.draw do
     resources :profiles, only: :show
     resource :profile, only: [:edit, :update]
     resources :stats, only: :index
+    resource :news, path: 'news', only: [:show] do
+      get :popular, on: :collection
+    end
 
     resources :rubygems,
       only: [:index, :show, :edit, :update],

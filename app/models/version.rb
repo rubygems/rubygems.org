@@ -1,6 +1,8 @@
 require 'digest/sha2'
 
 class Version < ActiveRecord::Base
+  RECENT_LIMIT = 7.days
+
   belongs_to :rubygem, touch: true
   has_many :dependencies, -> { order('rubygems.name ASC').includes(:rubygem) }, dependent: :destroy
   has_one :gem_download, proc { |m| where(rubygem_id: m.rubygem_id) }
@@ -119,6 +121,10 @@ class Version < ActiveRecord::Base
       .prerelease
       .order("rubygems.name asc, position desc")
       .pluck('rubygems.name', :number, :platform)
+  end
+
+  def self.recent
+    where(created_at: RECENT_LIMIT.ago.in_time_zone..Time.zone.now)
   end
 
   def self.most_recent
