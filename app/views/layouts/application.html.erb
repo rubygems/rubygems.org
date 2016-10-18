@@ -50,6 +50,12 @@
               </a>
             <% end %>
 
+            <%- if request.path_info == '/news' %>
+              <%= link_to "News", news_url, class: "header__nav-link is-active" %>
+            <%- else %>
+              <%= link_to "News", news_url, class: "header__nav-link" %>
+            <%- end %>
+
             <%- if request.path_info == '/gems' %>
               <%= link_to "Gems", rubygems_url, class: "header__nav-link is-active" %>
             <%- else %>
