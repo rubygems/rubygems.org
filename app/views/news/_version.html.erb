@@ -1,4 +1,4 @@
-<%= link_to rubygem_path(version.rubygem.name), class: 'gems__gem' do %>
+<%= link_to rubygem_version_path(version.rubygem, version.slug), class: 'gems__gem' do %>
   <span class="gems__gem__info">
     <h2 class="gems__gem__name">
       <%= version.rubygem.name %>
