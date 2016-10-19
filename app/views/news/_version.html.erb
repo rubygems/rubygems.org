@@ -7,9 +7,6 @@
     <p class="gems__gem__desc t-text"><%= short_info(version.rubygem) %></p>
   </span>
   <p class="gems__gem__downloads__count">
-    <%= version.downloads_count %>
-    <span class="gems__gem__downloads__heading">
-      <%= t('rubygems.index.downloads') %>
-    </span>
+    <small class="gem__version__date"><%= nice_date_for(version.created_at) %></small>
   </p>
 <% end %>
