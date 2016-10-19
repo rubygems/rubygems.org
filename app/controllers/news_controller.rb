@@ -1,5 +1,5 @@
 class NewsController < ApplicationController
-  before_action :set_page, only: :index
+  before_action :set_page
 
   def show
     @versions = Version.joins(:rubygem)
