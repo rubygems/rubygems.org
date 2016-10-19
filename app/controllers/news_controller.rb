@@ -11,11 +11,12 @@ class NewsController < ApplicationController
 
   def popular
     @title = "New Releases — Popular Gems"
-    @versions = Version.joins(:rubygem)
-      .recent
+    popular_gem_ids = Rubygem.by_downloads.limit(100).pluck(:id).uniq
+
+    @versions = Version.recent
       .indexed
       .by_created_at
-      .merge(Rubygem.by_downloads)
+      .where(rubygem_id: popular_gem_ids)
       .paginate(page: @page, per_page: 10, total_entries: 100)
 
     render :show
