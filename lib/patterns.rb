@@ -33,6 +33,7 @@ module Patterns
     find
     forwardable
     getoptlong
+    install
     io-nonblock
     io-wait
     ipaddr
@@ -90,6 +91,7 @@ module Patterns
     tsort
     un
     unicode_normalize
+    uninstall
     uri
     weakref
     webrick
