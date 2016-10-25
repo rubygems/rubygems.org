@@ -30,6 +30,10 @@ class ApplicationController < ActionController::Base
     response.headers['Surrogate-Control'] = "max-age=#{seconds}"
   end
 
+  def set_surrogate_key(*surrogate_keys)
+    response.headers['Surrogate-Key'] = surrogate_keys.join(' ')
+  end
+
   def redirect_to_root
     redirect_to root_path
   end

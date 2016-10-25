@@ -6,6 +6,7 @@ class Api::V1::VersionsController < Api::BaseController
 
     expires_in 0, public: true
     fastly_expires_in 60
+    set_surrogate_key "gem/#{@rubygem.name}"
 
     if @rubygem.public_versions.count.nonzero?
       respond_to do |format|

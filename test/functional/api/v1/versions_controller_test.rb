@@ -75,6 +75,11 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       assert_equal @response.headers['Last-Modified'], @rubygem.updated_at.httpdate
     end
 
+    should "return surrogate key header" do
+      get_show(@rubygem)
+      assert_equal "gem/#{@rubygem.name}", @response.headers['Surrogate-Key']
+    end
+
     should "return 304 when If-Modified-Since header is satisfied" do
       get_show(@rubygem)
       assert_response :success

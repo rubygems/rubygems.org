@@ -46,6 +46,10 @@ Style/AndOr:
   Exclude:
     - app/controllers/internal/ping_controller.rb
 
+Style/AccessorMethodName:
+  Exclude:
+    - app/controllers/application_controller.rb
+
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
 

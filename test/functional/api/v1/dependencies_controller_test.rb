@@ -70,6 +70,10 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
       assert_response :success
     end
 
+    should "return surrogate key header" do
+      assert_equal "dependencyapi gem/myrails gem/mybundler", @response.headers['Surrogate-Key']
+    end
+
     should "return body" do
       result = [
         {
