@@ -149,7 +149,11 @@ Rails.application.routes.draw do
     get 'confirm/:token', to: 'email_confirmations#update', as: :update
   end
 
-  resource :session, only: [:create, :destroy]
+  # login path is "/session" => "session#create"
+  # and logout path is "/sign_out" => "session#destroy"
+  # Check: https://github.com/thoughtbot/clearance/blob/master/lib/generators/clearance/routes/templates/routes.rb#L2
+  resource :session, only: :create
+  delete '/sign_out' => 'sessions#destroy', as: 'log_out'
 
   resources :passwords, only: [:new, :create]
 
