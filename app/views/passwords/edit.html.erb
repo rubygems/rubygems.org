@@ -1,9 +1,5 @@
 <% @title = t('.title') %>
 
-<% content_for :head do %>
-  <meta name="referrer" content="origin" />
-<% end %>
-
 <%= form_for(:password_reset,
              :url => user_password_path(@user, :token => @user.confirmation_token),
              :html => { :method => :put }) do |form| %>

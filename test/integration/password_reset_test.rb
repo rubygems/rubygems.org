@@ -5,6 +5,9 @@ class PasswordResetTest < SystemTest
     @user = create(:user, handle: nil)
   end
 
+  # clears session[:password_reset_token] set in edit action
+  teardown { reset_session! }
+
   def forgot_password_with(email)
     visit sign_in_path
 
@@ -26,6 +29,9 @@ class PasswordResetTest < SystemTest
     assert_not_nil link
 
     visit link
+    expected_path = "/users/#{@user.id}/password/edit"
+    assert_equal expected_path, page.current_path, "removes confirmation token from url"
+
     fill_in "Password", with: "secret54321"
     click_button "Save this password"
 
