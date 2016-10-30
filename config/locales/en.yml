@@ -229,13 +229,13 @@ en:
       multi_page_html: "Displaying %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> of <b>%{count}</b> in total"
 
   mailer:
-    confirmation_subject: Please confirm your email address with rubygems.org
+    confirmation_subject: Please confirm your email address with RubyGems.org
     confirm_your_email: Please confirm your email address with the link sent to you email.
     email_confirmation:
-      welcome_message: Welcome to rubygems.org! Click the link below to verify your email.
+      welcome_message: Welcome to RubyGems.org! Click the link below to verify your email.
       confirmation_link: Confirm email address
     email_reset:
-      visit_link_instructions: You changed your email address on rubygems.org. Please visit the following url to re-activate your account.
+      visit_link_instructions: You changed your email address on RubyGems.org. Please visit the following url to re-activate your account.
 
   email_confirmations:
     update:

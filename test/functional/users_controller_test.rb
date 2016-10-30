@@ -53,7 +53,7 @@ class UsersControllerTest < ActionController::TestCase
         email = ActionMailer::Base.deliveries.last
         assert_equal ['foo@bar.com'], email.to
         assert_equal ['no-reply@mailer.rubygems.org'], email.from
-        assert_equal 'Please confirm your email address with rubygems.org', email.subject
+        assert_equal 'Please confirm your email address with RubyGems.org', email.subject
       end
     end
   end

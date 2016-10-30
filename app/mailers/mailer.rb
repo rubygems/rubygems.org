@@ -7,7 +7,7 @@ class Mailer < ActionMailer::Base
     mail from: Clearance.configuration.mailer_sender,
          to: @user.email,
          subject: I18n.t('mailer.confirmation_subject',
-           default: 'Please confirm your email address with rubygems.org')
+           default: 'Please confirm your email address with RubyGems.org')
   end
 
   def email_confirmation(user)
@@ -15,6 +15,6 @@ class Mailer < ActionMailer::Base
     mail from: Clearance.configuration.mailer_sender,
          to: @user.email,
          subject: I18n.t('mailer.confirmation_subject',
-           default: 'Please confirm your email address with rubygems.org')
+           default: 'Please confirm your email address with RubyGems.org')
   end
 end
