@@ -16,7 +16,7 @@ class Api::BaseController < ApplicationController
       render text: t(:this_rubygem_could_not_be_found),
              status: :not_found
     elsif !@rubygem.owned_by?(current_user)
-      render text: "You do not have permission to mark this gem as vulnerable.",
+      render text: "You do not have correct permission to perform this action.",
              status: :forbidden
     else
       begin

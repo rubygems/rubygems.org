@@ -12,8 +12,7 @@ class Api::V1::AdvisoriesControllerTest < ActionController::TestCase
         @rubygem  = create(:rubygem, name: "SomeGem")
         @v1       = create(:version, rubygem: @rubygem, number: "0.1.0", platform: "ruby")
         @message  = "Test Message"
-        create(:ownership, user: @user, rubygem: @rubygem)
-        RubygemFs.instance.store("gems/#{@v1.full_name}.gem", "")
+        @ownership = create(:ownership, user: @user, rubygem: @rubygem)
       end
 
       context "ON ADVISORY to create for existing gem version" do
@@ -83,7 +82,8 @@ class Api::V1::AdvisoriesControllerTest < ActionController::TestCase
       context "ON ADVISORY to create for someone else's gem" do
         setup do
           @other_user = create(:user)
-          @request.env["HTTP_AUTHORIZATION"] = @other_user.api_key
+          create(:ownership, user: @other_user, rubygem: @rubygem)
+          @ownership.destroy
           post :create, gem_name: @rubygem.to_param, version: '0.1.0', message: @message
         end
         should respond_with :forbidden
