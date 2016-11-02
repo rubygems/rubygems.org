@@ -62,7 +62,7 @@ module RubygemSearchable
         result.response
         result
       else
-        legacy_search(query).with_versions.paginate(page: page)
+        legacy_search(query).paginate(page: page)
       end
     rescue Faraday::ConnectionFailed => e
       Honeybadger.notify(e)
@@ -133,7 +133,7 @@ module RubygemSearchable
       SQL
 
       where(conditions, query: "%#{query.strip}%")
-        .includes(:versions)
+        .includes(:latest_version, :gem_download)
         .references(:versions)
         .by_downloads
     end
