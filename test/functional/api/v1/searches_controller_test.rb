@@ -62,5 +62,10 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
       get :show, query: "match", page: "foo", format: :json
       refute JSON.parse(response.body).empty?
     end
+
+    should "default to first page when page cannot be converted to a number" do
+      get :show, query: "match", page: { "$acunetix" => "1" }, format: :json
+      refute JSON.parse(response.body).empty?
+    end
   end
 end
