@@ -113,7 +113,10 @@ class Rubygem < ActiveRecord::Base
 
   def public_version_payload(number)
     version = public_versions.find_by(number: number)
-    payload(version).merge!(version.as_json) if version
+    return nil unless version
+    serializable_version = VersionSerializer.new(version)
+    serializable_gem = RubygemSerializer.new(self, version: version)
+    serializable_gem.as_json.merge!(serializable_version.as_json)
   end
 
   def hosted?
@@ -139,42 +142,6 @@ class Rubygem < ActiveRecord::Base
 
   def downloads
     gem_download.try(:count) || 0
-  end
-
-  def payload(version = versions.most_recent, protocol = Gemcutter::PROTOCOL, host_with_port = Gemcutter::HOST)
-    deps = version.dependencies.to_a
-    {
-      'name'              => name,
-      'downloads'         => downloads,
-      'version'           => version.number,
-      'version_downloads' => version.downloads_count,
-      'platform'          => version.platform,
-      'authors'           => version.authors,
-      'info'              => version.info,
-      'licenses'          => version.licenses,
-      'metadata'          => version.metadata,
-      'sha'               => version.sha256_hex,
-      'project_uri'       => "#{protocol}://#{host_with_port}/gems/#{name}",
-      'gem_uri'           => "#{protocol}://#{host_with_port}/gems/#{version.full_name}.gem",
-      'homepage_uri'      => linkset.try(:home),
-      'wiki_uri'          => linkset.try(:wiki),
-      'documentation_uri' => linkset.try(:docs).presence || version.documentation_path,
-      'mailing_list_uri'  => linkset.try(:mail),
-      'source_code_uri'   => linkset.try(:code),
-      'bug_tracker_uri'   => linkset.try(:bugs),
-      'dependencies'      => {
-        'development' => deps.select { |r| r.rubygem && 'development' == r.scope },
-        'runtime'     => deps.select { |r| r.rubygem && 'runtime' == r.scope }
-      }
-    }
-  end
-
-  def as_json(*)
-    payload
-  end
-
-  def to_xml(options = {})
-    payload.to_xml(options.merge(root: 'rubygem'))
   end
 
   def to_param

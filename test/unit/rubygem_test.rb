@@ -405,7 +405,8 @@ class RubygemTest < ActiveSupport::TestCase
       run_dep = create(:dependency, :runtime, version: version)
       dev_dep = create(:dependency, :development, version: version)
 
-      hash = JSON.load(@rubygem.to_json)
+      serializer = RubygemSerializer.new(@rubygem)
+      hash = JSON.load(serializer.to_json)
 
       assert_equal @rubygem.name, hash["name"]
       assert_equal @rubygem.downloads, hash["downloads"]
@@ -420,8 +421,10 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}/gems/"\
         "#{@rubygem.versions.most_recent.full_name}.gem", hash["gem_uri"]
 
-      assert_equal JSON.load(dev_dep.to_json), hash["dependencies"]["development"].first
-      assert_equal JSON.load(run_dep.to_json), hash["dependencies"]["runtime"].first
+      dev_dep_serializer = DependencySerializer.new(dev_dep)
+      run_dep_serializer = DependencySerializer.new(run_dep)
+      assert_equal JSON.load(dev_dep_serializer.to_json), hash["dependencies"]["development"].first
+      assert_equal JSON.load(run_dep_serializer.to_json), hash["dependencies"]["runtime"].first
     end
 
     should "return a bunch of xml" do
@@ -429,7 +432,8 @@ class RubygemTest < ActiveSupport::TestCase
       run_dep = create(:dependency, :runtime, version: version)
       dev_dep = create(:dependency, :development, version: version)
 
-      doc = Nokogiri.parse(@rubygem.to_xml)
+      serializer = RubygemSerializer.new(@rubygem)
+      doc = Nokogiri.parse(serializer.to_xml)
 
       assert_equal "rubygem",
         doc.root.name
@@ -454,8 +458,8 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}/gems/"\
         "#{@rubygem.versions.most_recent.full_name}.gem", doc.at_css("gem-uri").content
 
-      assert_equal dev_dep.name, doc.at_css("dependencies development dependency name").content
-      assert_equal run_dep.name, doc.at_css("dependencies runtime dependency name").content
+      assert_equal dev_dep.name, doc.at_css("dependencies development name").content
+      assert_equal run_dep.name, doc.at_css("dependencies runtime name").content
     end
 
     context "with a linkset" do
@@ -465,7 +469,8 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "return a bunch of JSON" do
-        hash = JSON.load(@rubygem.to_json)
+        serializer = RubygemSerializer.new(@rubygem)
+        hash = JSON.load(serializer.to_json)
 
         assert_equal @rubygem.linkset.home, hash["homepage_uri"]
         assert_equal @rubygem.linkset.wiki, hash["wiki_uri"]
@@ -478,13 +483,16 @@ class RubygemTest < ActiveSupport::TestCase
       should "return version documentation url if linkset docs is empty" do
         @rubygem.linkset.docs = ""
         @rubygem.save
-        hash = JSON.load(@rubygem.to_json)
+
+        serializer = RubygemSerializer.new(@rubygem)
+        hash = JSON.load(serializer.to_json)
 
         assert_equal @version.documentation_path, hash["documentation_uri"]
       end
 
       should "return a bunch of XML" do
-        doc = Nokogiri.parse(@rubygem.to_xml)
+        serializer = RubygemSerializer.new(@rubygem)
+        doc = Nokogiri.parse(serializer.to_xml)
 
         assert_equal @rubygem.linkset.home, doc.at_css("homepage-uri").content
         assert_equal @rubygem.linkset.wiki, doc.at_css("wiki-uri").content

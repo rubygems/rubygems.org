@@ -4,7 +4,10 @@ Notifier = Struct.new(:url, :protocol, :host_with_port, :rubygem, :version, :api
   extend StatsD::Instrument
 
   def payload
-    rubygem.payload(version, protocol, host_with_port).to_json
+    RubygemSerializer.new(rubygem,
+      version: version,
+      protocol: protocol,
+      host_with_port: host_with_port).to_json
   end
 
   def authorization

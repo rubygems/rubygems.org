@@ -13,7 +13,7 @@ class Api::V1::ActivitiesController < Api::BaseController
 
   def render_rubygems(versions)
     rubygems = versions.includes(:dependencies, rubygem: :linkset).map do |version|
-      version.rubygem.payload(version)
+      RubygemSerializer.new(version.rubygem, version: version).as_json
     end
 
     respond_to do |format|

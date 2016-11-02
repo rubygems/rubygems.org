@@ -42,8 +42,10 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
       should respond_with :success
       should "be able to parse body" do
         payload = yield(@response.body)
-        assert_equal @global_hook.payload, payload["all gems"].first
-        assert_equal @rubygem_hook.payload, payload[@rubygem.name].first
+        @global_hook_serializer = WebHookSerializer.new(@user.web_hooks.global).attributes
+        @rubygem_hook_serializer = WebHookSerializer.new(@user.web_hooks.specific).attributes
+        assert_equal @global_hook_serializer["all gems"].first, payload["all gems"].first
+        assert_equal @rubygem_hook_serializer[@rubygem.name].first, payload[@rubygem.name].first
       end
     end
   end

@@ -6,8 +6,8 @@ class Api::V1::WebHooksController < Api::BaseController
 
   def index
     respond_to do |format|
-      format.json { render json: current_user.all_hooks }
-      format.yaml { render yaml: current_user.all_hooks }
+      format.json { render json: current_user.web_hooks, serializer: WebHookSerializer }
+      format.yaml { render yaml: JSON.parse(WebHookSerializer.new(current_user.web_hooks).to_json) }
     end
   end
 

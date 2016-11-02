@@ -16,7 +16,9 @@ class DependencyTest < ActiveSupport::TestCase
 
     should "return JSON" do
       @dependency.save
-      json = JSON.load(@dependency.to_json)
+      @serializer = DependencySerializer.new(@dependency)
+      @json_dependency = MultiJson.dump(@serializer.attributes)
+      json = JSON.load(@json_dependency)
 
       assert_equal %w(name requirements), json.keys.sort
       assert_equal @dependency.rubygem.name, json["name"]
@@ -25,7 +27,8 @@ class DependencyTest < ActiveSupport::TestCase
 
     should "return XML" do
       @dependency.save
-      xml = Nokogiri.parse(@dependency.to_xml)
+      @serializer = DependencySerializer.new(@dependency)
+      xml = Nokogiri.parse(@serializer.to_xml)
 
       assert_equal "dependency", xml.root.name
       assert_equal %w(name requirements), xml.root.children.select(&:element?).map(&:name).sort
@@ -35,7 +38,8 @@ class DependencyTest < ActiveSupport::TestCase
 
     should "return YAML" do
       @dependency.save
-      yaml = YAML.load(@dependency.to_yaml)
+      @serializer = DependencySerializer.new(@dependency)
+      yaml = YAML.load(@serializer.to_yaml)
 
       assert_equal %w(name requirements), yaml.keys.sort
       assert_equal @dependency.rubygem.name, yaml["name"]
@@ -147,14 +151,17 @@ class DependencyTest < ActiveSupport::TestCase
     setup do
       create(:rubygem)
       @dependency = create(:dependency)
+      @serializer = DependencySerializer.new(@dependency)
+      @hwia_attributes = ActiveSupport::HashWithIndifferentAccess.new(@serializer.attributes)
+      @yaml_dependency = @serializer.to_yaml
     end
 
     should "return its payload" do
-      assert_equal @dependency.payload, YAML.load(@dependency.to_yaml)
+      assert_equal @hwia_attributes, YAML.load(@yaml_dependency)
     end
 
     should "nest properly" do
-      assert_equal [@dependency.payload], YAML.load([@dependency].to_yaml)
+      assert_equal [@hwia_attributes], [YAML.load([@serializer].first.to_yaml)]
     end
   end
 end
