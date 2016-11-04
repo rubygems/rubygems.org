@@ -13,7 +13,7 @@ class VersionTest < ActiveSupport::TestCase
       json = @version.as_json
       fields = %w(number built_at summary description authors platform
                   ruby_version rubygems_version prerelease downloads_count licenses
-                  requirements runtime_dependencies_count sha metadata created_at)
+                  requirements sha metadata created_at)
       assert_equal fields.map(&:to_s).sort, json.keys.sort
       assert_equal @version.authors, json["authors"]
       assert_equal @version.built_at, json["built_at"]
@@ -28,7 +28,6 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.summary, json["summary"]
       assert_equal @version.licenses, json["licenses"]
       assert_equal @version.requirements, json["requirements"]
-      assert_equal @version.runtime_dependencies_count, json["runtime_dependencies_count"]
       assert_equal @version.created_at, json["created_at"]
     end
   end
@@ -42,7 +41,7 @@ class VersionTest < ActiveSupport::TestCase
       xml = Nokogiri.parse(@version.to_xml)
       fields = %w(number built-at summary description authors platform
                   ruby-version rubygems-version prerelease downloads-count licenses
-                  requirements runtime-dependencies-count sha metadata created-at)
+                  requirements sha metadata created-at)
       assert_equal fields.map(&:to_s).sort,
         xml.root.children.map(&:name).reject { |t| t == "text" }.sort
       assert_equal @version.authors, xml.at_css("authors").content
@@ -58,7 +57,6 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @version.summary.to_s, xml.at_css("summary").content
       assert_equal @version.licenses, xml.at_css("licenses").content
       assert_equal @version.requirements, xml.at_css("requirements").content
-      assert_equal @version.runtime_dependencies_count, xml.at_css("runtime-dependencies-count").content.to_i
       assert_equal(
         @version.created_at.to_i,
         xml.at_css("created-at").content.to_time(:utc).to_i
