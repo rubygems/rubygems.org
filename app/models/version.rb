@@ -265,7 +265,6 @@ class Version < ActiveRecord::Base
       'prerelease'                 => prerelease,
       'licenses'                   => licenses,
       'requirements'               => requirements,
-      'runtime_dependencies_count' => runtime_dependencies_count,
       'sha'                        => sha256_hex
     }
   end
