@@ -29,10 +29,6 @@ class GemInfo
   end
 
   def self.compact_index_versions(date)
-    versions_after(date)
-  end
-
-  def self.versions_after(date)
     query = ["(SELECT r.name, v.created_at as date, v.info_checksum, v.number, v.platform
               FROM rubygems AS r, versions AS v
               WHERE v.rubygem_id = r.id AND
@@ -44,6 +40,22 @@ class GemInfo
                     v.indexed is false AND
                     v.yanked_at > ?)
               ORDER BY date, number, platform, name", date, date]
+
+    map_gem_version query
+  end
+
+  def self.compact_index_public_versions(date)
+    query = ["SELECT r.name, v.created_at, v.sha256, v.info_checksum, v.number, v.platform
+              FROM rubygems AS r, versions AS v
+              WHERE v.rubygem_id = r.id AND
+                    v.indexed is true AND
+                    v.created_at > ?
+              ORDER BY v.created_at, v.number, v.platform, r.name", date]
+
+    map_gem_version query
+  end
+
+  def self.map_gem_version(query)
     sanitize_sql = ActiveRecord::Base.send(:sanitize_sql_array, query)
     gems = ActiveRecord::Base.connection.execute(sanitize_sql)
 
@@ -52,14 +64,14 @@ class GemInfo
                               CompactIndex::GemVersion.new(
                                 gem['number'],
                                 gem['platform'],
-                                nil,
+                                gem['sha256'],
                                 gem['info_checksum']
                               )
                             ])
     end
   end
 
-  private_class_method :versions_after
+  private_class_method :map_gem_version
 
   private
 

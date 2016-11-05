@@ -71,12 +71,13 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
       setup do
         create(:version,
           rubygem:       @rubygem,
-          created_at:    2.minutes.ago,
+          created_at:    5.minutes.ago,
           number:        "0.0.1",
           info_checksum: "qw212r")
         create(:version,
-          indexed: false,
+          indexed:       false,
           rubygem:       @rubygem,
+          created_at:    3.minutes.ago,
           yanked_at:     1.minute.ago,
           number:        "0.0.2",
           info_checksum: "sd12q")

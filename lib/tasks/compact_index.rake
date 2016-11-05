@@ -76,7 +76,7 @@ namespace :compact_index do
     file_path = Rails.application.config.rubygems['versions_file_location']
     versions_file = CompactIndex::VersionsFile.new file_path
 
-    gems = GemInfo.compact_index_versions(Time.at(0).utc.to_datetime)
+    gems = GemInfo.compact_index_public_versions(Time.at(0).utc.to_datetime)
     gems = gems.group_by(&:name)
     gems = gems.map do |name, compact_index_gems|
       versions = compact_index_gems.flat_map(&:versions)
@@ -84,9 +84,6 @@ namespace :compact_index do
       # Ensure we set the info checksums to be that of the last updated version
       # because the last version could be yanked
       info_checksum = versions.last.info_checksum
-
-      # Only indexed versions of a gem go into *new* versions file
-      versions.reject! { |v| v.number.start_with?("-") }
 
       # Set all versions' info_checksum to work around https://github.com/bundler/compact_index/pull/20
       versions.each { |v| v.info_checksum = info_checksum }
