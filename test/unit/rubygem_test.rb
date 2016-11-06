@@ -771,4 +771,15 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "#protected_days" do
+    setup do
+      @rubygem = create(:rubygem)
+      @rubygem.update_attribute(:updated_at, 99.days.ago)
+    end
+
+    should "return number of days left till the gem namespace is protected" do
+      assert_equal 1, @rubygem.protected_days
+    end
+  end
 end

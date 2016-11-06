@@ -122,14 +122,21 @@ en:
     index:
       title: 'Gems'
       downloads: Downloads
-    show:
+    gem_members:
+      authors_header: Authors
+      owners_header: Owners
+      sha_256_checksum: SHA 256 checksum      
+    show_yanked:
       not_hosted_notice: This gem is not currently hosted on RubyGems.org.
-      reserved_namespace: This namespace is reserved by rubygems.org. %{contact} rubygems team if you would like to take over this namespace.
+      reserved_namespace:
+        one: This gem previously existed, but has been removed by its owner. The RubyGems.org team has reserved this gem name for 1 more day. After that time is up, anyone will be able to claim this gem name using gem push. <br/>
+             If you are the previous owner of this gem, you can change ownership of this gem using the gem owner command. You can also create new versions of this gem using gem push.
+        other: This gem previously existed, but has been removed by its owner. The RubyGems.org team has reserved this gem name for %{count} more days. After that time is up, anyone will be able to claim this gem name using gem push. <br/>
+               If you are the previous owner of this gem, you can change ownership of this gem using the gem owner command. You can also create new versions of this gem using gem push.
+    show:
       install: install
       yanked_notice: "This version has been yanked, and it is not available for download directly or for other gems that may have depended on it."
-      authors_header: Authors
       downloads_for_this_version: "For this version"
-      owners_header: Owners
       links:
         header: Links
         home: Homepage
@@ -150,7 +157,6 @@ en:
       licenses_header: License
       no_licenses: N/A
       requirements_header: Requirements
-      sha_256_checksum: SHA 256 checksum
       copy_to_clipboard: Copy to clipboard
       copied: Copied!
       required_ruby_version: Required Ruby Version
