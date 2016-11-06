@@ -29,10 +29,6 @@ class GemInfo
   end
 
   def self.compact_index_versions(date)
-    versions_after(date)
-  end
-
-  def self.versions_after(date)
     query = ["(SELECT r.name, v.created_at as date, v.info_checksum, v.number, v.platform
               FROM rubygems AS r, versions AS v
               WHERE v.rubygem_id = r.id AND
@@ -44,22 +40,47 @@ class GemInfo
                     v.indexed is false AND
                     v.yanked_at > ?)
               ORDER BY date, number, platform, name", date, date]
-    sanitize_sql = ActiveRecord::Base.send(:sanitize_sql_array, query)
-    gems = ActiveRecord::Base.connection.execute(sanitize_sql)
 
-    gems.map do |gem|
-      CompactIndex::Gem.new(gem['name'], [
-                              CompactIndex::GemVersion.new(
-                                gem['number'],
-                                gem['platform'],
-                                nil,
-                                gem['info_checksum']
-                              )
-                            ])
+    map_gem_versions execute_raw_sql(query).map { |v| [v['name'], [v]] }
+  end
+
+  def self.compact_index_public_versions
+    query = ["SELECT r.name, v.indexed, COALESCE(v.yanked_at, v.created_at) as stamp,
+                     v.sha256, COALESCE(v.yanked_info_checksum, v.info_checksum) as info_checksum,
+                     v.number, v.platform
+              FROM rubygems AS r, versions AS v
+              WHERE v.rubygem_id = r.id
+              ORDER BY r.name, stamp, v.number, v.platform"]
+
+    versions_by_gem = execute_raw_sql(query).group_by { |v| v['name'] }
+    versions_by_gem.each do |_, versions|
+      info_checksum = versions.last['info_checksum']
+      versions.select! { |v| v['indexed'] == 't'.freeze }
+      # Set all versions' info_checksum to work around https://github.com/bundler/compact_index/pull/20
+      versions.each { |v| v['info_checksum'] = info_checksum }
+    end
+
+    map_gem_versions(versions_by_gem)
+  end
+
+  def self.execute_raw_sql(query)
+    sanitized_sql = ActiveRecord::Base.send(:sanitize_sql_array, query)
+    ActiveRecord::Base.connection.execute(sanitized_sql)
+  end
+
+  def self.map_gem_versions(versions_by_gem)
+    versions_by_gem.map do |gem_name, versions|
+      compact_index_versions = versions.map do |version|
+        CompactIndex::GemVersion.new(version['number'],
+          version['platform'],
+          version['sha256'],
+          version['info_checksum'])
+      end
+      CompactIndex::Gem.new(gem_name, compact_index_versions)
     end
   end
 
-  private_class_method :versions_after
+  private_class_method :map_gem_versions, :execute_raw_sql
 
   private
 
