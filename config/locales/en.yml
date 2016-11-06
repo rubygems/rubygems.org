@@ -108,6 +108,8 @@ en:
         confirm_reset: Are you sure? This cannot be undone.
 
   rubygems:
+    blacklisted:
+      blacklisted_namespace: This namespace is reserved by rubygems.org.
     dependencies:
       header: "%{title} Dependencies"
     edit:

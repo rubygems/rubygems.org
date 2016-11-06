@@ -462,6 +462,15 @@ class RubygemsControllerTest < ActionController::TestCase
     should respond_with :not_found
   end
 
+  context "On GET to show for a blacklisted gem" do
+    setup do
+      get :show, id: Patterns::GEM_NAME_BLACKLIST.sample
+    end
+
+    should respond_with :success
+    should render_template :blacklisted
+  end
+
   context "When not logged in" do
     context "On GET to show for a gem" do
       setup do
