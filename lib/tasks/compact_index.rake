@@ -72,9 +72,8 @@ namespace :compact_index do
   end
 
   desc "Generate/update the versions.list file"
-  task update_versions_file: :environment do
-    file_path = Rails.application.config.rubygems['versions_file_location']
-    versions_file = CompactIndex::VersionsFile.new file_path
+  task :update_versions_file, [:file_path] => :environment do |_t, args|
+    versions_file = CompactIndex::VersionsFile.new args[:file_path]
 
     gems = GemInfo.compact_index_versions(Time.at(0).utc.to_datetime)
     gems = gems.group_by(&:name)
