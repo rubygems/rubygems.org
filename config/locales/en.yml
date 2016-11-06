@@ -95,6 +95,7 @@ en:
       title: Edit profile
       hide_email: Hide email in public profile
       optional_twitter_username: Optional Twitter username. Will be displayed publicly
+      enter_password: Please enter your account's password
       reset_password:
         title: Reset password
         text: "Need a new password? No problem. %{link}"
@@ -106,6 +107,8 @@ en:
         link_text: gem commands
         reset: Reset my API key
         confirm_reset: Are you sure? This cannot be undone.
+    update:
+      request_denied: This request was denied. We could not verify your password.
 
   rubygems:
     blacklisted:

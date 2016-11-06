@@ -1,5 +1,6 @@
 class ProfilesController < ApplicationController
   before_action :redirect_to_root, unless: :signed_in?, except: :show
+  before_action :verify_password, only: :update
 
   def edit
     @user = current_user
@@ -35,5 +36,11 @@ class ProfilesController < ApplicationController
 
   def params_user
     params.require(:user).permit(*User::PERMITTED_ATTRS)
+  end
+
+  def verify_password
+    return if current_user.authenticated?(params[:user][:password])
+    flash[:notice] = t('.request_denied')
+    redirect_to edit_profile_path
   end
 end

@@ -20,6 +20,7 @@ class ProfileTest < SystemTest
 
     click_link "Edit Profile"
     fill_in "Handle", with: "nick2"
+    fill_in "Password", with: "password12345"
     click_button "Update"
 
     assert page.has_content? "nick2"
@@ -33,6 +34,7 @@ class ProfileTest < SystemTest
     click_link "Edit Profile"
 
     fill_in "Handle", with: "nick2"
+    fill_in "Password", with: "password12345"
     click_button "Update"
 
     assert page.has_content? "Handle has already been taken"
@@ -44,6 +46,7 @@ class ProfileTest < SystemTest
     click_link "Edit Profile"
 
     fill_in "Handle", with: "nick1" * 10
+    fill_in "Password", with: "password12345"
     click_button "Update"
 
     assert page.has_content? "Handle is too long (maximum is 40 characters)"
@@ -56,6 +59,7 @@ class ProfileTest < SystemTest
     click_link "Edit Profile"
 
     fill_in "Email address", with: "nick2@example.com"
+    fill_in "Password", with: "password12345"
     click_button "Update"
 
     click_link "Sign out"
@@ -69,6 +73,7 @@ class ProfileTest < SystemTest
     visit profile_path("nick1")
     click_link "Edit Profile"
 
+    fill_in "Password", with: "password12345"
     check "Hide email in public profile"
     click_button "Update"
 
@@ -82,6 +87,7 @@ class ProfileTest < SystemTest
 
     click_link "Edit Profile"
     fill_in "Twitter username", with: "nick1"
+    fill_in "Password", with: "password12345"
     click_button "Update"
 
     visit profile_path("nick1")
