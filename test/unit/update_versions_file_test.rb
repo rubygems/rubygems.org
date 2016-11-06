@@ -67,7 +67,7 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
       end
     end
 
-    context "yanked gem" do
+    context "yanked version" do
       setup do
         create(:version,
           rubygem:       @rubygem,
@@ -75,17 +75,47 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
           number:        "0.0.1",
           info_checksum: "qw212r")
         create(:version,
-          indexed:       false,
-          rubygem:       @rubygem,
-          created_at:    3.minutes.ago,
-          yanked_at:     1.minute.ago,
-          number:        "0.0.2",
-          info_checksum: "sd12q")
+          indexed:              false,
+          rubygem:              @rubygem,
+          created_at:           3.minutes.ago,
+          yanked_at:            1.minute.ago,
+          number:               "0.0.2",
+          info_checksum:        "sd12q",
+          yanked_info_checksum: "qw212r")
         Rake::Task["compact_index:update_versions_file"].invoke
       end
 
       should "not include yanked version" do
         expected_output = "rubyrubyruby 0.0.1 qw212r\n"
+        assert_equal expected_output, @tmp_versions_file.readlines[2]
+      end
+    end
+
+    context "yanked version isn't the latest version" do
+      setup do
+        create(:version,
+          rubygem:       @rubygem,
+          created_at:    5.seconds.ago,
+          number:        "0.1.1",
+          info_checksum: "zqw212r")
+        create(:version,
+          indexed:       false,
+          rubygem:       @rubygem,
+          created_at:    4.seconds.ago,
+          yanked_at:     2.seconds.ago,
+          number:        "0.1.2",
+          info_checksum: "zsd12q",
+          yanked_info_checksum: "zab45d")
+        create(:version,
+          rubygem:       @rubygem,
+          created_at:    3.seconds.ago,
+          number:        "0.1.3",
+          info_checksum: "zrt13y")
+        Rake::Task["compact_index:update_versions_file"].invoke
+      end
+
+      should "not include yanked version" do
+        expected_output = "rubyrubyruby 0.1.1,0.1.3 zab45d\n"
         assert_equal expected_output, @tmp_versions_file.readlines[2]
       end
     end
