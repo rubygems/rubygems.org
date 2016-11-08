@@ -7,7 +7,7 @@ class Indexer
     purge_cdn
     log "Finished updating the index"
   end
-  statsd_count_success :perform, 'Indexer.perform.success'
+  statsd_count_success :perform, 'Indexer.perform'
   statsd_measure :perform, 'Indexer.perform'
 
   def write_gem(body, spec)
