@@ -4,7 +4,8 @@ class SessionsControllerTest < ActionController::TestCase
   context "on POST to create" do
     context "when login and password are correct" do
       setup do
-        User.expects(:authenticate).with('login', 'pass').returns User.new
+        user = User.new(email_confirmed: true)
+        User.expects(:authenticate).with('login', 'pass').returns user
         post :create, session: { who: 'login', password: 'pass' }
       end
 

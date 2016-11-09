@@ -23,8 +23,8 @@ class User < ActiveRecord::Base
   has_many :subscriptions
   has_many :web_hooks
 
-  before_validation :regenerate_token, if: :email_changed?, on: :update
-  before_create :generate_api_key
+  before_validation :unconfirm_email, if: :email_changed?, on: :update
+  before_create :generate_api_key, :regenerate_confirmation_token
 
   validates :handle, uniqueness: true, allow_nil: true
   validates :handle, format: {
@@ -101,8 +101,9 @@ class User < ActiveRecord::Base
     coder.map = payload
   end
 
-  def regenerate_token
-    generate_confirmation_token
+  def unconfirm_email
+    self.email_confirmed = false
+    regenerate_confirmation_token
   end
 
   def generate_api_key
@@ -119,5 +120,23 @@ class User < ActiveRecord::Base
 
   def total_rubygems_count
     rubygems.with_versions.count
+  end
+
+  def confirm_email!
+    update(email_confirmed: true)
+  end
+
+  # confirmation token expires after 15 minutes
+  def valid_confirmation_token?
+    token_expires_at > Time.zone.now
+  end
+
+  def regenerate_confirmation_token
+    self.confirmation_token = Clearance::Token.new
+    self.token_expires_at = Time.zone.now + 15.minutes
+  end
+
+  def unconfirmed?
+    !email_confirmed
   end
 end

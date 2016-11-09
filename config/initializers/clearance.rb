@@ -3,4 +3,5 @@ Clearance.configure do |config|
   config.mailer_sender = "RubyGems.org <no-reply@mailer.rubygems.org>"
   config.secure_cookie = true unless Rails.env.test? || Rails.env.development?
   config.password_strategy = Clearance::PasswordStrategies::BCryptMigrationFromSHA1
+  config.sign_in_guards = [ConfirmedUserGuard]
 end

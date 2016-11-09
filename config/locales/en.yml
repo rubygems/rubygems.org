@@ -15,6 +15,7 @@ en:
   locale_name: "English"
   this_rubygem_could_not_be_found: "This rubygem could not be found."
   not_found: "Not Found"
+  failure_when_forbidden: Please double check the URL or try submitting it again.
   none: None
 
   dashboards:
@@ -169,7 +170,8 @@ en:
 
   sessions:
     new:
-      forgot_password: "Forgot Password?"
+      forgot_password: "Forgot password?"
+      resend_confirmation: Didn't receive confirmation mail?
 
   stats:
     index:
@@ -181,6 +183,8 @@ en:
   users:
     new:
       have_account: "Already have an account?"
+    create:
+      email_sent: A confirmation mail has been sent to your email address.
 
   versions:
     index:
@@ -223,3 +227,22 @@ en:
 
       multi_page: "Displaying %{model} %{from} - %{to} of %{count} in total"
       multi_page_html: "Displaying %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> of <b>%{count}</b> in total"
+
+  mailer:
+    confirmation_subject: Please confirm your email address with RubyGems.org
+    confirm_your_email: Please confirm your email address with the link sent to you email.
+    email_confirmation:
+      welcome_message: Welcome to RubyGems.org! Click the link below to verify your email.
+      confirmation_link: Confirm email address
+    email_reset:
+      visit_link_instructions: You changed your email address on RubyGems.org. Please visit the following url to re-activate your account.
+
+  email_confirmations:
+    update:
+      confirmed_email: Your email address have been verified.
+    new:
+      title: Resend confirmation email
+      will_email_notice: We will email you confirmation link to activate your account.
+      submit: Resend Confirmation
+    create:
+      promise_resend: We will email you confirmation link to activate your account if one exists.

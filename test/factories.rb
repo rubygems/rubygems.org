@@ -12,6 +12,7 @@ FactoryGirl.define do
     handle
     password "password12345"
     api_key "secret123"
+    email_confirmed true
   end
 
   factory :dependency do

@@ -16,7 +16,8 @@ class ProfilesController < ApplicationController
   def update
     @user = current_user.clone
     if @user.update_attributes(params_user)
-      if @user.email_reset
+      if @user.unconfirmed?
+        Mailer.delay.email_reset(current_user)
         sign_out
         flash[:notice] = "You will receive an email within the next few " \
                          "minutes. It contains instructions for reconfirming " \

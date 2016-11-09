@@ -36,5 +36,25 @@ class UsersControllerTest < ActionController::TestCase
         assert_not_equal "nonono", User.where(email: 'foo@bar.com').pluck(:api_key).first
       end
     end
+
+    context 'confirmation mail' do
+      setup do
+        post :create, user: { email: 'foo@bar.com', password: 'secretpassword', handle: 'foo' }
+        Delayed::Worker.new.work_off
+      end
+
+      should 'set email_confirmation_token' do
+        user = User.find_by_name('foo')
+        assert_not_nil user.confirmation_token
+      end
+
+      should 'deliver confirmation mail' do
+        refute ActionMailer::Base.deliveries.empty?
+        email = ActionMailer::Base.deliveries.last
+        assert_equal ['foo@bar.com'], email.to
+        assert_equal ['no-reply@mailer.rubygems.org'], email.from
+        assert_equal 'Please confirm your email address with RubyGems.org', email.subject
+      end
+    end
   end
 end
