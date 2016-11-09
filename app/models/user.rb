@@ -123,7 +123,7 @@ class User < ActiveRecord::Base
   end
 
   def confirm_email!
-    update(email_confirmed: true)
+    update!(email_confirmed: true, confirmation_token: nil)
   end
 
   # confirmation token expires after 15 minutes
