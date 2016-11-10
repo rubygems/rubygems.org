@@ -126,7 +126,7 @@ en:
     gem_members:
       authors_header: Authors
       owners_header: Owners
-      sha_256_checksum: SHA 256 checksum      
+      sha_256_checksum: SHA 256 checksum
     show_yanked:
       not_hosted_notice: This gem is not currently hosted on RubyGems.org.
       reserved_namespace:
@@ -239,7 +239,7 @@ en:
 
   email_confirmations:
     update:
-      confirmed_email: Your email address have been verified.
+      confirmed_email: Your email address has been verified.
     new:
       title: Resend confirmation email
       will_email_notice: We will email you confirmation link to activate your account.

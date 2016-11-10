@@ -28,7 +28,7 @@ class EmailConfirmationTest < SystemTest
     visit link
 
     assert page.has_content? 'Sign out'
-    assert page.has_selector? '#flash_notice', text: 'Your email address have been verified'
+    assert page.has_selector? '#flash_notice', text: 'Your email address has been verified'
   end
 
   test 're-using confirmation link does not sign in user' do

@@ -69,7 +69,7 @@ class SignUpTest < SystemTest
     visit link
 
     assert page.has_content? "Sign out"
-    assert page.has_selector? '#flash_notice', text: "Your email address have been verified"
+    assert page.has_selector? '#flash_notice', text: "Your email address has been verified"
   end
 
   teardown do
