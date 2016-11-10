@@ -280,7 +280,7 @@ GEM
       raindrops (~> 0.7)
     validates_formatting_of (0.9.0)
       activemodel
-    will_paginate (3.1.0)
+    will_paginate (3.1.5)
     xml-simple (1.1.5)
     xpath (2.0.0)
       nokogiri (~> 1.3)
