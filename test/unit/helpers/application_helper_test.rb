@@ -13,9 +13,9 @@ class ApplicationHelperTest < ActionView::TestCase
 
   should "return gemcutter atom feed link" do
     feed_link = '<link rel="alternate" type="application/atom+xml" ' \
-                'href="http://feeds.feedburner.com/gemcutter-latest" ' \
+                'href="https://feeds.feedburner.com/gemcutter-latest" ' \
                 'title="RubyGems.org | Latest Gems" />'
-    atom_feed_link_result = atom_feed_link(t(:feed_latest), 'http://feeds.feedburner.com/gemcutter-latest')
+    atom_feed_link_result = atom_feed_link(t(:feed_latest), 'https://feeds.feedburner.com/gemcutter-latest')
     assert_equal feed_link, atom_feed_link_result
   end
 
