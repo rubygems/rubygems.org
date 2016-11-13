@@ -61,6 +61,7 @@ class SearchTest < SystemTest
 
   test "params has non white listed keys" do
     visit '/search?query=ruby&script_name=javascript:alert(1)//'
+    refute page.has_content? "ruby0"
     assert page.has_content? "ruby1"
     assert page.has_content? "ruby2"
     assert page.has_link?("Next", href: "/search?page=2&query=ruby")
