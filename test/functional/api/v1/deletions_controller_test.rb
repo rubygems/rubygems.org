@@ -9,9 +9,9 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
     context "for a gem SomeGem with a version 0.1.0" do
       setup do
-        @rubygem  = create(:rubygem, name: "SomeGem")
-        @v1       = create(:version, rubygem: @rubygem, number: "0.1.0", platform: "ruby")
-        create(:ownership, user: @user, rubygem: @rubygem)
+        @rubygem   = create(:rubygem, name: "SomeGem")
+        @v1        = create(:version, rubygem: @rubygem, number: "0.1.0", platform: "ruby")
+        @ownership = create(:ownership, user: @user, rubygem: @rubygem)
         RubygemFs.instance.store("gems/#{@v1.full_name}.gem", "")
       end
 
@@ -99,9 +99,11 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
       context "ON DELETE to create for someone else's gem" do
         setup do
-          @other_user = create(:user)
-          @request.env["HTTP_AUTHORIZATION"] = @other_user.api_key
-          delete :create, gem_name: @rubygem.to_param, version: '0.1.0'
+          other_user = create(:user)
+          other_rubygem = create(:rubygem, name: "SomeOtherGem")
+          create(:version, rubygem: other_rubygem, number: "0.1.0", platform: "ruby")
+          create(:ownership, user: other_user, rubygem: other_rubygem)
+          delete :create, gem_name: other_rubygem.to_param, version: '0.1.0'
         end
         should respond_with :forbidden
         should "not record the deletion" do
