@@ -59,6 +59,7 @@ class GemInfo
       # Set all versions' info_checksum to work around https://github.com/bundler/compact_index/pull/20
       versions.each { |v| v['info_checksum'] = info_checksum }
     end
+    versions_by_gem.reject! { |_, versions| versions.empty? }
 
     map_gem_versions(versions_by_gem)
   end
