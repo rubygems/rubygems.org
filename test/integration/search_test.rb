@@ -50,12 +50,18 @@ class SearchTest < SystemTest
     end
   end
 
-  setup { Rubygem.per_page = 2 }
+  setup do
+    3.times do |i|
+      rubygem = create(:rubygem, name: "ruby#{i}", number: '1.0.0')
+      rubygem.gem_download.update(count: i)
+    end
+    Rubygem.per_page = 2
+  end
   teardown { Rubygem.per_page = 30 }
 
   test "params has non white listed keys" do
-    (1..3).map { |i| create(:rubygem, name: "ruby#{i}", number: '1.0.0') }
     visit '/search?query=ruby&script_name=javascript:alert(1)//'
+    refute page.has_content? "ruby0"
     assert page.has_content? "ruby1"
     assert page.has_content? "ruby2"
     assert page.has_link?("Next", href: "/search?page=2&query=ruby")
