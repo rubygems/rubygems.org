@@ -119,6 +119,24 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
         assert_equal expected_output, @tmp_versions_file.readlines[2]
       end
     end
+
+    context "no public versions" do
+      setup do
+        create(:version,
+          indexed:       false,
+          rubygem:       @rubygem,
+          created_at:    4.seconds.ago,
+          yanked_at:     2.seconds.ago,
+          number:        "0.1.2",
+          info_checksum: "zsd12q",
+          yanked_info_checksum: "zab45d")
+        Rake::Task["compact_index:update_versions_file"].invoke
+      end
+
+      should "not include yanked version" do
+        refute_includes "rubyrubyruby", @tmp_versions_file.read
+      end
+    end
   end
 
   context "multiple gems" do
