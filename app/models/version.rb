@@ -85,16 +85,12 @@ class Version < ActiveRecord::Base
     order(:position)
   end
 
-  def self.by_built_at
-    order(built_at: :desc)
-  end
-
-  def self.by_earliest_built_at
-    order(built_at: :asc)
-  end
-
   def self.by_created_at
     order(created_at: :desc)
+  end
+
+  def self.by_earliest_created_at
+    order(created_at: :asc)
   end
 
   def self.rows_for_index

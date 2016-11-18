@@ -109,7 +109,7 @@ class VersionsControllerTest < ActionController::TestCase
     should "render other versions" do
       assert page.has_content?("Versions")
       assert page.has_content?(@version.number)
-      css = "small:contains('#{@version.built_at.to_date.to_formatted_s(:long)}')"
+      css = "small:contains('#{@version.created_at.to_date.to_formatted_s(:long)}')"
       assert page.has_css?(css)
     end
     should "renders owner gems overview link" do
