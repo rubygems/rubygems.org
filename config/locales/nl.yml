@@ -86,15 +86,7 @@ nl:
       title: Wijzig gem links
       other_fields_notice: Alle andere velden kunnen alleen gewijzigd worden door een nieuwe versie van de gem te publiceren.
       subtitle: voor %{gem}
-    show:
-      install: Installeer
-      bundler_header: Gemfile
-      downloads_for_this_version: ! 'Voor deze versie'
-      stats_header: Statistieken
-      authors_header: Auteurs
-      versions_header: Versies
-      not_hosted_notice: Deze gem wordt momenteel niet gehost op rubygems.org.
-      owners_header: Eigenaren
+    aside:
       links:
         home: Startpagina
         mail: Mailing-list
@@ -103,6 +95,15 @@ nl:
         code: source code
         wiki: Wiki
         header: Links
+      downloads_for_this_version: ! 'Voor deze versie'
+      bundler_header: Gemfile
+      install: Installeer
+    show:
+      stats_header: Statistieken
+      authors_header: Auteurs
+      versions_header: Versies
+      not_hosted_notice: Deze gem wordt momenteel niet gehost op rubygems.org.
+      owners_header: Eigenaren
       show_all_versions: Toon alle versies (%{count} totaal)
   dashboards:
     show:

@@ -110,13 +110,7 @@ pt-BR:
       other_fields_notice: Os outros campos só podem ser editados quando você submeter uma versão atualizada da sua gem.
     index:
       title: 'Gems'
-    show:
-      not_hosted_notice: Esta gem não está hospedada no Gemcutter.
-      install: instalar
-      yanked_notice: "Esta gem foi removida, e não está mais disponível para download."
-      authors_header: Autores
-      downloads_for_this_version: "Desta versão"
-      owners_header: Donos
+    aside:
       links:
         header: Links
         home: Homepage
@@ -125,8 +119,15 @@ pt-BR:
         wiki: Wiki
         mail: Lista de Emails
         bugs: Bug Tracker
-      versions_header: Versões
+      downloads_for_this_version: "Desta versão"
       bundler_header: Gemfile
+      install: instalar
+    show:
+      not_hosted_notice: Esta gem não está hospedada no Gemcutter.
+      yanked_notice: "Esta gem foi removida, e não está mais disponível para download."
+      authors_header: Autores
+      owners_header: Donos
+      versions_header: Versões
       show_all_versions: "Mostrar todas as versões (%{count})"
       licenses_header: Licença
       no_licenses: N/A
