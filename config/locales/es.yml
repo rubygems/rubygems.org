@@ -157,12 +157,7 @@ es:
     index:
       subtitle:
       title: Gemas
-    show:
-      authors_header: Autores
-      bundler_header: Gemfile
-      downloads_for_this_version: Para esta versión
-      install: instalar
-      licenses_header: Licencia
+    aside:
       links:
         header: Enlaces
         home: Sitio
@@ -174,6 +169,12 @@ es:
         download: Descargar
         subscribe: Suscribirse
         report_abuse: Reportar abuso
+      downloads_for_this_version: Para esta versión
+      bundler_header: Gemfile
+      install: instalar
+    show:
+      authors_header: Autores
+      licenses_header: Licencia
       no_licenses: N/D
       not_hosted_notice: Esta gema no se encuentra alojada en Gemcutter.
       owners_header: Administradores

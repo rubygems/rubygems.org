@@ -111,13 +111,7 @@ zh-TW:
       other_fields_notice: "其他設定欄位只能透過發佈一個新版本的 Gem 來修改"
     index:
       title: 'Gems'
-    show:
-      not_hosted_notice: "這個 Gem 目前沒有在 Gemcutter 上"
-      install: "安裝"
-      yanked_notice: "這個 Gem 版本已被移除，因此無法提供下載，也無法被其他的 Gem 相依。"
-      authors_header: "作者"
-      downloads_for_this_version: "這個版本"
-      owners_header: "擁有者"
+    aside:
       links:
         header: "相關連結"
         home: "首頁"
@@ -132,8 +126,15 @@ zh-TW:
         report_abuse: "舉報投訴"
         badge: "徽章"
         rss: RSS
-      versions_header: "版本列表"
+      downloads_for_this_version: "這個版本"
       bundler_header: Gemfile
+      install: "安裝"
+    show:
+      not_hosted_notice: "這個 Gem 目前沒有在 Gemcutter 上"
+      yanked_notice: "這個 Gem 版本已被移除，因此無法提供下載，也無法被其他的 Gem 相依。"
+      authors_header: "作者"
+      owners_header: "擁有者"
+      versions_header: "版本列表"
       show_all_versions: "顯示所有版本（共 %{count}）"
       licenses_header: License
       no_licenses: N/A

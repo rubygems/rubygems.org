@@ -111,13 +111,7 @@ fr:
     index:
       title: "Gems"
       downloads: Téléchargements
-    show:
-      not_hosted_notice: "Gem non hébergé sur Rubygems pour le moment."
-      install: "installation"
-      yanked_notice: "Retrait de Gem : disponible ni directement, ni pour les gems qui en dépendraient."
-      authors_header: "Auteurs"
-      downloads_for_this_version: "Pour cette version"
-      owners_header: "Propriétaires"
+    aside:
       links:
         header: "Liens"
         home: "Page d'accueil"
@@ -132,16 +126,23 @@ fr:
         report_abuse: Signaler un abus
         badge: Badge
         rss: RSS
-      versions_header: "Versions"
+      downloads_for_this_version: "Pour cette version"
       bundler_header: "Gemfile"
+      copy_to_clipboard: Copier
+      copied: Copié!
+      install: "installation"
+      required_ruby_version: Version de Ruby requise
+    show:
+      not_hosted_notice: "Gem non hébergé sur Rubygems pour le moment."
+      yanked_notice: "Retrait de Gem : disponible ni directement, ni pour les gems qui en dépendraient."
+      authors_header: "Auteurs"
+      owners_header: "Propriétaires"
+      versions_header: "Versions"
       show_all_versions: "Voir toutes les versions (%{count})"
       licenses_header: "Licence"
       no_licenses: "aucune"
       requirements_header: "Dépendances"
       sha_256_checksum: Total de contrôle SHA 256
-      copy_to_clipboard: Copier
-      copied: Copié!
-      required_ruby_version: Version de Ruby requise
 
   searches:
     show:

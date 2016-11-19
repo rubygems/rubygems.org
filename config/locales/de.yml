@@ -109,12 +109,7 @@ de:
     index:
       title: 'Gems'
       downloads: Downloads
-    show:
-      not_hosted_notice: Dieses Gem wird aktuell nicht auf RubyGems.org gehostet.
-      install: installieren
-      authors_header: Autoren
-      downloads_for_this_version: "Für diese Version"
-      owners_header: Besitzer
+    aside:
       links:
         header: Links
         home: Startseite
@@ -129,16 +124,22 @@ de:
         report_abuse: Missbrauch melden
         badge: Abzeichen
         rss: RSS
-      versions_header: Versionen
+      downloads_for_this_version: "Für diese Version"
       bundler_header: Gemfile
+      copy_to_clipboard: In die Zwischenablage kopieren
+      copied: Kopiert!
+      install: installieren
+      required_ruby_version: Erforderliche Ruby-Version
+    show:
+      not_hosted_notice: Dieses Gem wird aktuell nicht auf RubyGems.org gehostet.
+      authors_header: Autoren
+      owners_header: Besitzer
+      versions_header: Versionen
       show_all_versions: "Zeige alle Versionen (%{count} total)"
       licenses_header: Lizenz
       no_licenses: k.A.
       requirements_header: Anforderungen
       sha_256_checksum: SHA 256-Prüfsumme
-      copy_to_clipboard: In die Zwischenablage kopieren
-      copied: Kopiert!
-      required_ruby_version: Erforderliche Ruby-Version
 
   searches:
     show:

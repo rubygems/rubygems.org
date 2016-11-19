@@ -112,13 +112,7 @@ zh-CN:
       other_fields_notice: 其他字段的信息你只能通过发布一个新版本的 Gem 来修改。
     index:
       title: 'Gems'
-    show:
-      not_hosted_notice: 这个 Gem 目前没有托管在 Gemcutter。
-      install: 安装
-      yanked_notice: "这个 Gem 版本已经 yanked（废弃了），他无法提供下载，也无法被其他的 Gem 依赖。"
-      authors_header: 作者
-      downloads_for_this_version: "这个版本"
-      owners_header: 所有者
+    aside:
       links:
         header: 相关链接
         home: 主页
@@ -133,8 +127,15 @@ zh-CN:
         report_abuse: 举报投诉
         badge: 徽章
         rss: RSS
-      versions_header: 版本列表
+      downloads_for_this_version: "这个版本"
       bundler_header: Gemfile
+      install: 安装
+    show:
+      not_hosted_notice: 这个 Gem 目前没有托管在 Gemcutter。
+      yanked_notice: "这个 Gem 版本已经 yanked（废弃了），他无法提供下载，也无法被其他的 Gem 依赖。"
+      authors_header: 作者
+      owners_header: 所有者
+      versions_header: 版本列表
       show_all_versions: "显示所有 (%{count} 个版本)"
       licenses_header: License
       no_licenses: N/A
