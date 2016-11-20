@@ -269,6 +269,10 @@ class Rubygem < ActiveRecord::Base
     (updated_at + 101.days - Time.zone.now).to_i / 1.day
   end
 
+  def reverse_dependencies
+    self.class.reverse_dependencies(name)
+  end
+
   private
 
   # a gem namespace is not protected if it is

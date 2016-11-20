@@ -1,0 +1,12 @@
+<header class="gems__header push">
+  <%= form_tag rubygem_reverse_dependencies_path(@rubygem),
+    :id => "rdeps-search", :class => "header__search-wrap", :method => :get do %>
+    <%= search_field_tag :rdeps_query, params[:rdeps_query], :placeholder => "Search Reverse Deps Gems&hellip;".html_safe, :class => "header__search" %>
+    <%= label_tag :rdeps_query do %>
+      <span class="t-hidden">Search gems</span>
+    <% end %>
+    <%= submit_tag '⌕', :id => 'rdeps_search_submit', :name => nil, :class => "header__search__icon" %>
+  <% end %>
+</header>
+
+<%= render dependencies %>

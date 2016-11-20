@@ -149,6 +149,7 @@ en:
         report_abuse: Report Abuse
         badge: Badge
         rss: RSS
+        reverse_dependencies: Reverse dependencies
       downloads_for_this_version: "For this version"
       bundler_header: Gemfile
       copy_to_clipboard: Copy to clipboard
@@ -163,6 +164,10 @@ en:
       licenses_header: License
       no_licenses: N/A
       requirements_header: Requirements
+
+  reverse_dependencies:
+    index:
+      title: "Reverse dependencies for %{name}"
 
   searches:
     show:
