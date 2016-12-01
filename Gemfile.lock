@@ -165,7 +165,7 @@ GEM
     mime-types (2.99.3)
     mini_portile2 (2.1.0)
     minitest (5.9.1)
-    mocha (1.1.0)
+    mocha (1.2.1)
       metaclass (~> 0.0.1)
     multi_json (1.12.1)
     multipart-post (2.0.0)
