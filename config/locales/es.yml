@@ -39,7 +39,6 @@ es:
   feed_subscribed: RubyGems.org | Subscripciones de Gemas
   flashes:
     failure_after_create:
-  footer_about: RubyGems.org es el servicio de alojamiento de gemas de la comunidad de Ruby. Publica tus gemas de manera instantánea e instalalas. Usa la API para interactuar y buscar información de las gemas disponibles. Conviértete en contribuidor y mejora este sitio con tus cambios.
   form_disable_with: Un momento por favor...
   help_url: http://help.rubygems.org
   home:
@@ -78,6 +77,7 @@ es:
   layouts:
     application:
       footer:
+        about_p1: 'RubyGems.org es el servicio de alojamiento de gemas de la comunidad de Ruby. <a href="%{publish_docs}">Publica</a> e <a href="%{install_docs}">instala</a> tus gemas de manera instantánea. Usa <a href="%{api_docs}">la API</a> para interactuar y buscar información de las <a href="%{gem_list}">gemas disponibles</a>. <a href="%{contributing_docs}">Conviértete en contribuidor</a> y mejora este sitio con tus cambios.'
         about: Acerca de
         api: API
         blog: Blog
