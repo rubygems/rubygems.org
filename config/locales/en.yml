@@ -11,7 +11,6 @@ en:
   edit: Edit
   sign_in: "Sign in"
   sign_up: "Sign up"
-  footer_about: 'RubyGems.org is the Ruby community&rsquo;s gem hosting service. Instantly <a href="%{publish_docs}">publish your gems</a> and then <a href="%{install_docs}">install them</a>. Use <a href="%{api_docs}">the API</a> find out more about <a href="%{gem_list}">available gems</a>. <a href="%{contributing_docs}">Become a contributor</a> and improve the site yourself.'
   locale_name: "English"
   this_rubygem_could_not_be_found: "This rubygem could not be found."
   not_found: "Not Found"
@@ -46,6 +45,9 @@ en:
         sign_out: "Sign out"
         search_gem: "Search Gems&hellip;"
       footer:
+        about_p1: 'RubyGems.org is the Ruby community&rsquo;s gem hosting service. Instantly <a href="%{publish_docs}">publish your gems</a> and then <a href="%{install_docs}">install them</a>. Use <a href="%{api_docs}">the API</a> find out more about <a href="%{gem_list}">available gems</a>. <a href="%{contributing_docs}">Become a contributor</a> and improve the site yourself.'
+        about_p2: 'RubyGems.org is made possible by <a href="%{many_sponsors}">many sponsors</a>, with development funded by the Ruby trade association, <a href="%{ruby_together}">Ruby Together</a>. Members get access to <a href="%{exclusive_benefits}">exclusive benefits</a> and offers from partners (like <a href="%{hired}">Hired</a>, empowering developers on the <a href="%{hunt_for_a_job}">hunt for a job</a>).'
+        about_p3: 'We need your help to keep RubyGems.org running smoothly and free for everyone to use. <a href="%{join_ruby_together}">Join Ruby Together today</a>.'
         status: "Status"
         uptime: "Uptime"
         source_code: "Code"
