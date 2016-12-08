@@ -42,7 +42,7 @@ GEM
       sshkit (>= 1.6.1, != 1.7.0)
     arel (6.0.3)
     ast (2.3.0)
-    autoprefixer-rails (6.5.0.2)
+    autoprefixer-rails (6.5.3.1)
       execjs
     aws-sdk (2.3.21)
       aws-sdk-resources (= 2.3.21)
