@@ -23,7 +23,6 @@ class User < ActiveRecord::Base
   has_many :subscriptions
   has_many :web_hooks
 
-  before_validation :unconfirm_email, if: :email_changed?, on: :update
   before_create :generate_api_key, :regenerate_confirmation_token
 
   validates :handle, uniqueness: true, allow_nil: true
@@ -99,11 +98,6 @@ class User < ActiveRecord::Base
     coder.tag = nil
     coder.implicit = true
     coder.map = payload
-  end
-
-  def unconfirm_email
-    self.email_confirmed = false
-    regenerate_confirmation_token
   end
 
   def generate_api_key

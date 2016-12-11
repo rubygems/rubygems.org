@@ -21,8 +21,7 @@ class DeletionTest < ActiveSupport::TestCase
 
   context "with deleted gem" do
     setup do
-      Rails.cache.stubs(:delete)
-      Fastly.stubs(:purge)
+      GemCachePurger.stubs(:call)
       delete_gem
       @gem_name = @version.rubygem.name
     end
@@ -51,23 +50,13 @@ class DeletionTest < ActiveSupport::TestCase
       assert_nil RubygemFs.instance.get("gems/#{@version.full_name}.gem"), "Rubygem still exists!"
     end
 
-    should "expire API memcached" do
-      assert_received(Rails.cache, :delete) { |cache| cache.with("info/#{@gem_name}").twice }
-      assert_received(Rails.cache, :delete) { |cache| cache.with("deps/v1/#{@gem_name}") }
-      assert_received(Rails.cache, :delete) { |cache| cache.with("versions") }
-      assert_received(Rails.cache, :delete) { |cache| cache.with("names") }
-    end
-
-    should "purge cdn cache" do
-      Delayed::Worker.new.work_off
-      assert_received(Fastly, :purge) { |path| path.with("info/#{@gem_name}").twice }
-      assert_received(Fastly, :purge) { |path| path.with("versions").twice }
-      assert_received(Fastly, :purge) { |path| path.with("names").twice }
+    should "call GemCachePurger" do
+      assert_received(GemCachePurger, :call) { |obj| obj.with(@gem_name).once }
     end
   end
 
   should "enque job for updating ES index, spec index and purging cdn" do
-    assert_difference 'Delayed::Job.count', 5 do
+    assert_difference 'Delayed::Job.count', 7 do
       delete_gem
     end
 
@@ -84,15 +73,6 @@ class DeletionTest < ActiveSupport::TestCase
     assert_nil deletion.rubygem
     deletion.valid?
     assert_equal deletion.rubygem, @version.rubygem.name
-  end
-
-  test "expire API memcached" do
-    Rails.cache.write("deps/v1/#{@version.rubygem.name}", "omg!")
-    refute_nil Rails.cache.fetch("deps/v1/#{@version.rubygem.name}")
-
-    delete_gem
-
-    assert_nil Rails.cache.fetch("deps/v1/#{@version.rubygem.name}")
   end
 
   teardown do
