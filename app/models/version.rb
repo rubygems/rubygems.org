@@ -1,4 +1,5 @@
 require 'digest/sha2'
+require 'acrawriter'
 
 class Version < ActiveRecord::Base
   belongs_to :rubygem, touch: true
@@ -19,16 +20,21 @@ class Version < ActiveRecord::Base
 
   validate :platform_and_number_are_unique, on: :create
   validate :authors_format, on: :create
-  class AuthorType < Type::String
+  class AuthorType < AcraType
     def cast_value(value)
       if value.is_a?(Array)
-        value.join(', ')
+        value = value.join(', ')
+        super(value)
       else
         super
       end
     end
   end
+
   attribute :authors, AuthorType.new
+  attribute :description, AcraType.new
+  attribute :summary, AcraType.new
+
 
   # TODO: Remove this once we move to GemDownload only
   after_create :create_gem_download

@@ -1,3 +1,5 @@
+require 'acrawriter'
+
 class Dependency < ActiveRecord::Base
   belongs_to :rubygem
   belongs_to :version
@@ -10,6 +12,8 @@ class Dependency < ActiveRecord::Base
   validates :scope,        inclusion: { in: %w(development runtime) }
 
   attr_accessor :gem_dependency
+
+  attribute :unresolved_name, AcraType.new
 
   def self.unresolved(rubygem)
     where(unresolved_name: nil, rubygem_id: rubygem.id)
