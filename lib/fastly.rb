@@ -33,10 +33,4 @@ class Fastly
     Rails.logger.debug "Fastly purge url=#{url} status=#{json['status']} id=#{json['id']}"
     json
   end
-
-  def self.purge_api_cdn(gem_name)
-    ["info/#{gem_name}", "versions", "names"].each do |path|
-      purge path
-    end
-  end
 end

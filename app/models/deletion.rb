@@ -7,8 +7,8 @@ class Deletion < ActiveRecord::Base
 
   before_validation :record_metadata
   after_create :remove_from_index, :set_yanked_info_checksum
-  after_commit :expire_api_memcached
   after_commit :remove_from_storage
+  after_commit :expire_cache
   after_commit :update_search_index
 
   attr_accessor :version
@@ -29,10 +29,8 @@ class Deletion < ActiveRecord::Base
     self.platform = @version.platform
   end
 
-  def expire_api_memcached
-    ["deps/v1/#{rubygem}", "info/#{rubygem}", "versions", "names"].each do |key|
-      Rails.cache.delete key
-    end
+  def expire_cache
+    GemCachePurger.call(rubygem)
   end
 
   def remove_from_index
@@ -45,7 +43,6 @@ class Deletion < ActiveRecord::Base
     RubygemFs.instance.remove("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
     Fastly.delay.purge("gems/#{@version.full_name}.gem")
     Fastly.delay.purge("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
-    Fastly.delay.purge_api_cdn(rubygem)
   end
 
   def update_search_index

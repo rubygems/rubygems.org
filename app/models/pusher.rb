@@ -101,8 +101,7 @@ class Pusher
     @version_id = version.id
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
     rubygem.delay.index_document
-    expire_api_memcached
-    Fastly.delay.purge_api_cdn(rubygem.name)
+    GemCachePurger.call(rubygem.name)
     enqueue_web_hook_jobs
     StatsD.increment 'push.success'
   end
@@ -129,11 +128,6 @@ class Pusher
     jobs.each do |job|
       job.fire(@protocol, @host_with_port, rubygem, version)
     end
-  end
-
-  def expire_api_memcached
-    Rails.cache.delete("deps/v1/#{rubygem.name}")
-    Rails.cache.delete("names")
   end
 
   def set_info_checksum
