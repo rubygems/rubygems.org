@@ -36,9 +36,9 @@
         <div class="header__nav-links-wrap">
           <% if request.path_info == "/" %>
             <%= form_tag search_url, :id => "main-search", :class => "header__search-wrap--home", :method => :get do %>
-              <%= search_field_tag :query, params[:query], :placeholder => "Search Gems&hellip;".html_safe, :class => "header__search" %>
+              <%= search_field_tag :query, params[:query], :placeholder => t('layouts.application.header.search_gem').html_safe, :class => "header__search" %>
               <%= label_tag :query do %>
-                <span class="t-hidden">Search gems</span>
+                <span class="t-hidden"><%= t('layouts.application.header.search_gem').html_safe %></span>
               <% end %>
               <%= submit_tag '⌕', :id => 'search_submit', :name => nil, :class => "header__search__icon" %>
             <% end %>
@@ -46,7 +46,7 @@
             <%= form_tag search_url, :id => "main-search", :class => "header__search-wrap", :method => :get do %>
               <%= search_field_tag :query, params[:query], :placeholder => t("layouts.application.header.search_gem").html_safe, :class => "header__search" %>
               <%= label_tag :query do %>
-                <span class="t-hidden">Search gems</span>
+                <span class="t-hidden"><%= t('layouts.application.header.search_gem').html_safe %></span>
               <% end %>
               <%= submit_tag '⌕', :id => 'search_submit', :name => nil, :class => "header__search__icon" %>
             <% end %>
