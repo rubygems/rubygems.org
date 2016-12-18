@@ -168,6 +168,8 @@ en:
   reverse_dependencies:
     index:
       title: "Reverse dependencies for %{name}"
+    reverse_dependencies:
+      search_reverse_dependencies: "Search reverse dependencies Gems&hellip;"
 
   searches:
     show:
