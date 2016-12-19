@@ -35,7 +35,7 @@ gem 'rack-utf8_sanitizer'
 gem 'rdoc'
 gem 'rest-client', require: 'rest_client'
 gem 'sass', require: false
-gem 'shoryuken', '~> 2.0.2', require: false
+gem 'shoryuken', '~> 2.1.0', require: false
 gem 'statsd-instrument', '~> 2.1.0'
 gem 'uglifier', '>= 1.0.3'
 gem 'unicorn'
