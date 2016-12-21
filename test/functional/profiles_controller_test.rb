@@ -126,6 +126,22 @@ class ProfilesControllerTest < ActionController::TestCase
           assert_equal "johndoe", @user.handle
         end
       end
+
+      context "updating with old format password" do
+        setup do
+          @handle = "updated_user"
+          @user = build(:user, handle: "old_user", password: "old")
+          @user.save(validate: false)
+          sign_in_as(@user)
+          put :update, user: { handle: @handle, password: @user.password }
+        end
+
+        should respond_with :redirect
+
+        should "update handle" do
+          assert_equal @handle, @user.handle
+        end
+      end
     end
   end
 
