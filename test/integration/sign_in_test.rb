@@ -46,7 +46,8 @@ class SignInTest < SystemTest
   test "signing in with unconfirmed email" do
     visit sign_up_path
 
-    fill_in "Email", with: "email@person.com"
+    fill_in "Email address", with: "email@person.com"
+    fill_in "Email confirmation", with: "email@person.com"
     fill_in "Handle", with: "nick"
     fill_in "Password", with: "secretpassword"
     click_button "Sign up"
