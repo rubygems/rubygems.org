@@ -307,9 +307,11 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to show with a gem that has multiple versions" do
     setup do
       @rubygem = create(:rubygem)
+      @owner = create(:user)
+      @rubygem.owners << @owner
       @versions = [
         create(:version, number: "2.0.0rc1", rubygem: @rubygem, created_at: 1.day.ago),
-        create(:version, number: "1.9.9", rubygem: @rubygem, created_at: 1.minute.ago),
+        create(:version, number: "1.9.9", rubygem: @rubygem, created_at: 1.minute.ago, pushed_by: @owner.handle),
         create(:version, number: "1.9.9.rc4", rubygem: @rubygem, created_at: 2.days.ago)
       ]
       get :show, id: @rubygem.to_param
@@ -319,14 +321,14 @@ class RubygemsControllerTest < ActionController::TestCase
     should render_template :show
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
-      assert page.has_content?(@versions[0].number)
-      css = "small:contains('#{@versions[0].built_at.to_date.to_formatted_s(:long)}')"
-      assert page.has_css?(css)
-
       assert page.has_content?("Versions")
-      assert page.has_content?(@versions[2].number)
-      css = "small:contains('#{@versions[2].built_at.to_date.to_formatted_s(:long)}')"
-      assert page.has_css?(css)
+
+      @versions.each do |version|
+        assert page.has_content?(version.number)
+        css = "small:contains('#{version.built_at.to_date.to_formatted_s(:long)}')"
+        assert page.has_css?(css)
+        assert page.has_selector?("a[href='#{profile_path(version.pushed_by)}']") if version.pushed_by.present?
+      end
     end
 
     should "render versions in correct order" do

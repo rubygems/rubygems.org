@@ -37,15 +37,15 @@
 .gem__ghbtn {
     margin-bottom: 15px; }
 
-.gem__owners {
+.gem__gravatars {
   margin-top: 16px; }
-  .gem__owners img {
+  .gem__gravatars img {
     margin-right: 12px;
     margin-bottom: 12px;
     height: 32px;
     width: 32px;
     border-radius: 16px; }
-  .gem__owners a:hover:before {
+  .gem__gravatars a:hover:before {
     content: "";
     height: 32px;
     width: 32px;

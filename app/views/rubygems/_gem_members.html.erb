@@ -1,4 +1,11 @@
 <div class="gem__members">
+    <% if latest_version.pushed_by.present? %>
+      <h3 class="t-list__heading"><%= t '.publish_header' %>:</h3>
+      <div class="gem__gravatars">
+        <%= link_to_pusher(latest_version.pushed_by) %>
+      </div>
+    <% end %>
+
   <% if latest_version.authors.present? %>
     <h3 class="t-list__heading"><%= t '.authors_header' %>:</h3>
     <ul class="t-list__items">
@@ -10,7 +17,7 @@
 
   <% if rubygem.owners.present? %>
     <h3 class="t-list__heading"><%= t '.owners_header' %>:</h3>
-    <div class="gem__owners">
+    <div class="gem__gravatars">
       <%= links_to_owners(rubygem) %>
     </div>
   <% end %>

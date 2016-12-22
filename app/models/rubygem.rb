@@ -150,6 +150,7 @@ class Rubygem < ActiveRecord::Base
       'version_downloads' => version.downloads_count,
       'platform'          => version.platform,
       'authors'           => version.authors,
+      'pushed_by'         => version.pushed_by,
       'info'              => version.info,
       'licenses'          => version.licenses,
       'metadata'          => version.metadata,

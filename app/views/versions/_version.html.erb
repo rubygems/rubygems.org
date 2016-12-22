@@ -4,7 +4,6 @@
   <% if version.platformed? %>
     <span class="gem__version__date platform"><%= version.platform %></span>
   <% end %>
-
   <span class="gem__version__date">(<%= number_to_human_size(version.size) %>)</span>
   <% if version.yanked? -%>
     <span class="gem__version__date"><%= t '.yanked' %></span>

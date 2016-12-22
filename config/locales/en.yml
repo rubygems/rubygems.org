@@ -124,6 +124,7 @@ en:
       title: 'Gems'
       downloads: Downloads
     gem_members:
+      publish_header: Published by
       authors_header: Authors
       owners_header: Owners
       sha_256_checksum: SHA 256 checksum

@@ -39,34 +39,6 @@ module RubygemsHelper
     end
   end
 
-  def subscribe_link(rubygem)
-    if signed_in?
-      style = if rubygem.subscribers.find_by_id(current_user.id)
-                'display:none'
-              else
-                'display:inline-block'
-              end
-      link_to t('.links.subscribe'), rubygem_subscription_path(rubygem),
-        class: ['toggler', 'gem__link', 't-list__item'], id: 'subscribe',
-        method: :post, remote: true, style: style
-    else
-      link_to t('.links.subscribe'), sign_in_path,
-        class: [:toggler, 'gem__link', 't-list__item'], id: :subscribe
-    end
-  end
-
-  def unsubscribe_link(rubygem)
-    return unless signed_in?
-    style = if rubygem.subscribers.find_by_id(current_user.id)
-              'display:inline-block'
-            else
-              'display:none'
-            end
-    link_to t('.links.unsubscribe'), rubygem_subscription_path(rubygem),
-      class: [:toggler, 'gem__link', 't-list__item'], id: 'unsubscribe',
-      method: :delete, remote: true, style: style
-  end
-
   def atom_link(rubygem)
     link_to t(".links.rss"), rubygem_versions_path(rubygem, format: 'atom'),
       class: 'gem__link t-list__item', id: :rss
@@ -91,6 +63,12 @@ module RubygemsHelper
     report_abuse_url = 'http://help.rubygems.org/discussion/new' \
       "?discussion[private]=1&discussion[title]=" + encoded_title
     link_to t(".links.report_abuse"), report_abuse_url.html_safe, class: 'gem__link t-list__item'
+  end
+
+  def link_to_pusher(handle)
+    user = User.find_by_slug!(handle)
+    link_to gravatar(48, "gravatar-#{user.id}", user), profile_path(user.display_id),
+      alt: handle, title: handle
   end
 
   def links_to_owners(rubygem)
