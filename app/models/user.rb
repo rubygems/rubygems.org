@@ -4,14 +4,12 @@ class User < ActiveRecord::Base
   is_gravtastic default: "retro"
 
   PERMITTED_ATTRS = [
-    :bio,
     :email,
     :handle,
     :hide_email,
-    :location,
     :password,
-    :website,
-    :twitter_username
+    :twitter_username,
+    :email_confirmation
   ].freeze
 
   has_many :rubygems, through: :ownerships
@@ -40,6 +38,7 @@ class User < ActiveRecord::Base
 
   validates :twitter_username, length: { within: 0..20 }, allow_nil: true
   validates :password, length: { within: 10..200 }, allow_nil: true, unless: :skip_password_validation?
+  validates :email, confirmation: true, if: :email_changed?
 
   def self.authenticate(who, password)
     user = find_by(email: who.downcase) || find_by(handle: who)
