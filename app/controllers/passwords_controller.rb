@@ -6,6 +6,10 @@ class PasswordsController < Clearance::PasswordsController
 
   private
 
+  def url_after_update
+    dashboard_path
+  end
+
   def password_params
     params.require(:password).permit(:email)
   end

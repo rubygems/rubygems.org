@@ -34,6 +34,7 @@ class PasswordResetTest < SystemTest
 
     fill_in "Password", with: "secret54321"
     click_button "Save this password"
+    assert_equal dashboard_path, page.current_path
 
     click_link "Sign out"
 

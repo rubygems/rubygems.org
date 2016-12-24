@@ -40,7 +40,7 @@ class ProfilesController < ApplicationController
   end
 
   def verify_password
-    return if current_user.authenticated?(params[:user][:password])
+    return if current_user.authenticated?(params[:user].delete(:password))
     flash[:notice] = t('.request_denied')
     redirect_to edit_profile_path
   end
