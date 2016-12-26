@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from(ActionController::ParameterMissing) do |e|
-    render text: "Request is missing param '#{e.param}'", status: :bad_request
+    render plain: "Request is missing param '#{e.param}'", status: :bad_request
   end
 
   protected
@@ -52,7 +52,7 @@ class ApplicationController < ActionController::Base
     # This works because request.body is a RewindableInput which will
     # slurp all the socket data into a tempfile, satisfying apache.
     request.body.size if request.body.respond_to? :size
-    render text: t(:please_sign_up), status: 401
+    render plain: t(:please_sign_up), status: 401
   end
 
   def find_rubygem
@@ -60,7 +60,7 @@ class ApplicationController < ActionController::Base
     return if @rubygem
     respond_to do |format|
       format.any do
-        render text: t(:this_rubygem_could_not_be_found), status: :not_found
+        render plain: t(:this_rubygem_could_not_be_found), status: :not_found
       end
       format.html do
         render file: "public/404", status: :not_found, layout: false, formats: [:html]
