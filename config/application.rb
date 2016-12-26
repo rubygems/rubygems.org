@@ -9,6 +9,7 @@ Bundler.require(*Rails.groups)
 
 module Gemcutter
   class Application < Rails::Application
+    config.assets.precompile += %w( foundation_emails.css )
     config.rubygems = Application.config_for :rubygems
 
     config.time_zone = "UTC"
@@ -39,4 +40,5 @@ module Gemcutter
 
   PROTOCOL = config['protocol']
   HOST = config['host']
+
 end

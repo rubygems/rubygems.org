@@ -1,0 +1,25 @@
+<container>
+  <row>
+    <columns class='text-center' small='12' large='12'>
+      <h3>WELCOME TO RUBY GEMS WEBSITE</h3>
+    </columns>
+  </row>
+  <row>
+    <columns>
+      <h4>Hi <%= @user.handle %></h4>
+    </columns>
+  </row>
+  <row>
+    <columns>
+      <%= t('.visit_link_instructions') %>
+    </columns>
+  </row>
+  <row>
+    <columns></columns>
+    <columns small='12' large='6'>
+      <button>  <%= link_to t('.confirmation_link'),
+          update_email_confirmations_url(@user, token: @user.confirmation_token.html_safe) %></button>
+    </columns>
+    <columns></columns>
+  </row>
+</container>

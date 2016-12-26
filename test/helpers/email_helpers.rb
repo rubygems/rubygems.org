@@ -5,4 +5,7 @@ module EmailHelpers
     link = /href="([^"]*)"/.match(body)
     link[1]
   end
+  def email_confirmation
+    Mailer.email_confirmation(User.first)
+  end
 end
