@@ -484,7 +484,7 @@ class RubygemTest < ActiveSupport::TestCase
 
       should "return version documentation url if metadata and linkset docs is empty" do
         @version.update_attributes!(metadata: {})
-        @rubygem.linkset.update_attributes(:docs, "") if @rubygem.linkset
+        @rubygem.linkset&.update_attributes(:docs, "")
         @rubygem.reload
         hash = JSON.load(@rubygem.to_json)
 
