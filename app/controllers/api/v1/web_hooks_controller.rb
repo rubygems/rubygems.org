@@ -14,18 +14,18 @@ class Api::V1::WebHooksController < Api::BaseController
   def create
     webhook = current_user.web_hooks.build(url: @url, rubygem: @rubygem)
     if webhook.save
-      render(text: webhook.success_message, status: :created)
+      render(plain: webhook.success_message, status: :created)
     else
-      render(text: webhook.errors.full_messages, status: :conflict)
+      render(plain: webhook.errors.full_messages, status: :conflict)
     end
   end
 
   def remove
     webhook = current_user.web_hooks.find_by_rubygem_id_and_url(@rubygem.try(:id), @url)
     if webhook.try(:destroy)
-      render(text: webhook.removed_message)
+      render(plain: webhook.removed_message)
     else
-      render(text: "No such webhook exists under your account.", status: :not_found)
+      render(plain: "No such webhook exists under your account.", status: :not_found)
     end
   end
 
@@ -35,9 +35,9 @@ class Api::V1::WebHooksController < Api::BaseController
 
     if webhook.fire(request.protocol.delete("://"), request.host_with_port, @rubygem,
       @rubygem.versions.most_recent, false)
-      render text: webhook.deployed_message(@rubygem)
+      render plain: webhook.deployed_message(@rubygem)
     else
-      render text: webhook.failed_message(@rubygem), status: :bad_request
+      render plain: webhook.failed_message(@rubygem), status: :bad_request
     end
   end
 end

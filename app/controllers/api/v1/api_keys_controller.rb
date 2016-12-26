@@ -7,9 +7,9 @@ class Api::V1::ApiKeysController < Api::BaseController
       sign_in User.authenticate(username, password)
       if current_user
         respond_to do |format|
-          format.any(:all) { render text: current_user.api_key }
+          format.any(:all) { render plain: current_user.api_key }
           format.json { render json: { rubygems_api_key: current_user.api_key } }
-          format.yaml { render text: { rubygems_api_key: current_user.api_key }.to_yaml }
+          format.yaml { render plain: { rubygems_api_key: current_user.api_key }.to_yaml }
         end
       else
         false
