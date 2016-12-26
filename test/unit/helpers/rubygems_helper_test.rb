@@ -56,23 +56,6 @@ class RubygemsHelperTest < ActionView::TestCase
     assert_equal "March 18, 2011", nice_date_for(time)
   end
 
-  should "link to docs if no docs link is set" do
-    version = build(:version)
-    linkset = build(:linkset, docs: nil)
-
-    @virtual_path = "rubygems.show"
-    link = documentation_link(version, linkset)
-    assert link.include?(version.documentation_path)
-  end
-
-  should "not link to docs if docs link is set" do
-    version = build(:version)
-    linkset = build(:linkset)
-
-    link = documentation_link(version, linkset)
-    assert link.blank?
-  end
-
   should "link to the badge" do
     rubygem = create(:rubygem)
     url = "https://badge.fury.io/rb/#{rubygem.name}/install"

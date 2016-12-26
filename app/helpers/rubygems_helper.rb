@@ -76,11 +76,6 @@ module RubygemsHelper
     link_to_page :download, "/downloads/#{version.full_name}.gem"
   end
 
-  def documentation_link(version, linkset)
-    return unless linkset.nil? || linkset.docs.blank?
-    link_to_page :docs, version.documentation_path
-  end
-
   def badge_link(rubygem)
     badge_url = "https://badge.fury.io/rb/#{rubygem.name}/install"
     link_to t(".links.badge"), badge_url, class: "gem__link t-list__item", id: :badge

@@ -350,6 +350,11 @@ class Version < ActiveRecord::Base
     update_column(:required_rubygems_version, required_rubygems_version.to_s)
   end
 
+  def link_uri(name, linkset = nil)
+    metadata[name.to_s].presence || linkset.try(name).presence ||
+      (name.to_s == "documentation_uri" ? documentation_path : nil)
+  end
+
   def documentation_path
     "http://www.rubydoc.info/gems/#{rubygem.name}/#{number}"
   end
