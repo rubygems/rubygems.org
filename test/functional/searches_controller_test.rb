@@ -9,7 +9,6 @@ class SearchesControllerTest < ActionController::TestCase
     setup { get :show }
 
     should respond_with :success
-    should render_template :show
     should "see no results" do
       refute page.has_content?("Results")
     end
@@ -24,7 +23,9 @@ class SearchesControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :show
+    should "see no results" do
+      refute page.has_content?("Results")
+    end
   end
 
   context 'on GET to show with search parameters' do
@@ -39,7 +40,6 @@ class SearchesControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :show
     should "see sinatra on the page in the results" do
       assert page.has_content?(@sinatra.name)
       assert page.has_selector?("a[href='#{rubygem_path(@sinatra)}']")
@@ -70,7 +70,6 @@ class SearchesControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :show
     should "see sinatra on the page in the results" do
       page.assert_text(@sinatra.name)
       page.assert_selector("a[href='#{rubygem_path(@sinatra)}']")
@@ -105,7 +104,9 @@ class SearchesControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :show
+    should "see no results" do
+      refute page.has_content?("Results")
+    end
   end
 
   context 'on GET to show with search parameters and no results' do
@@ -125,7 +126,6 @@ class SearchesControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :show
     should "see sinatra on the page in the suggestions" do
       page.assert_text('Maybe you mean')
       assert page.find('.search__suggestions').has_content?(@sinatra.name)

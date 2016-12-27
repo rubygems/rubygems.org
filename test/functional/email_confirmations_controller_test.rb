@@ -49,7 +49,6 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :new
 
     should 'display resend instructions' do
       assert page.has_content?('We will email you confirmation link to activate your account.')

@@ -12,7 +12,6 @@ class VersionsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :index
 
     should "show all related versions" do
       @versions.each do |version|
@@ -56,7 +55,6 @@ class VersionsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :index
     should "show not hosted notice" do
       assert page.has_content?('This gem is not currently hosted')
     end
@@ -76,7 +74,6 @@ class VersionsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template "rubygems/show"
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
     end
@@ -102,7 +99,6 @@ class VersionsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template "rubygems/show"
     should "show yanked notice" do
       assert page.has_content?("This version has been yanked")
     end

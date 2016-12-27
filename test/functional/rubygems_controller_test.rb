@@ -15,7 +15,6 @@ class RubygemsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should render_template :show
       should "renders owner gems overview links" do
         @owners.each do |owner|
           assert page.has_selector?("a[href='#{profile_path(owner.display_id)}']")
@@ -44,7 +43,6 @@ class RubygemsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should render_template :show
       should "not render edit link" do
         refute page.has_selector?("a[href='#{edit_rubygem_path(@rubygem)}']")
       end
@@ -57,7 +55,6 @@ class RubygemsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should render_template :show
       should "render edit link" do
         assert page.has_selector?("a[href='#{edit_rubygem_path(@rubygem)}']")
       end
@@ -97,7 +94,6 @@ class RubygemsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should render_template :edit
       should "render form" do
         assert page.has_selector?("form")
         assert page.has_selector?("input#linkset_code")
@@ -161,7 +157,6 @@ class RubygemsControllerTest < ActionController::TestCase
         put :update, id: @rubygem.to_param, linkset: { code: @url }
       end
       should respond_with :success
-      should render_template :edit
       should "not update linkset" do
         assert_not_equal @url, Rubygem.last.linkset.code
       end
@@ -183,7 +178,6 @@ class RubygemsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :index
     should "render links" do
       @gems.each do |g|
         assert page.has_content?(g.name)
@@ -235,7 +229,6 @@ class RubygemsControllerTest < ActionController::TestCase
       get :index, letter: "z"
     end
     should respond_with :success
-    should render_template :index
     should "render links" do
       assert page.has_content?(@zgem.name)
       assert page.has_selector?("a[href='#{rubygem_path(@zgem)}']")
@@ -254,7 +247,6 @@ class RubygemsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :index
     should "render links" do
       @gems.each do |g|
         assert page.has_content?(g.name)
@@ -271,7 +263,6 @@ class RubygemsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :show
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
       assert page.has_content?(@latest_version.number)
@@ -316,7 +307,6 @@ class RubygemsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :show
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
       assert page.has_content?(@versions[0].number)
@@ -346,7 +336,6 @@ class RubygemsControllerTest < ActionController::TestCase
     context 'when signed out' do
       setup { get :show, id: @rubygem.to_param }
       should respond_with :success
-      should render_template :show_yanked
       should "render info about the gem" do
         assert page.has_content?("This gem is not currently hosted on RubyGems.org")
         assert page.has_no_content?('Versions')
@@ -372,7 +361,6 @@ class RubygemsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should render_template :show_yanked
       should "render info about the gem" do
         assert page.has_content?("The RubyGems.org team has reserved this gem name for 1 more day.")
         assert page.has_no_content?('Versions')
@@ -389,7 +377,6 @@ class RubygemsControllerTest < ActionController::TestCase
       get :show, id: @rubygem.to_param
     end
     should respond_with :success
-    should render_template :show_yanked
     should "render info about the gem" do
       assert page.has_content?("This gem is not currently hosted on RubyGems.org.")
     end
@@ -406,7 +393,6 @@ class RubygemsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :show
     should "show runtime dependencies and development dependencies" do
       assert page.has_content?(@runtime.rubygem.name)
       assert page.has_content?(@development.rubygem.name)
@@ -427,7 +413,6 @@ class RubygemsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :show
     should "show unresolved dependencies" do
       assert page.has_content?(@unresolved.name)
     end
@@ -450,7 +435,6 @@ class RubygemsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :show
     should "show only dependencies that have rubygem" do
       assert page.has_content?(@runtime.rubygem.name)
       assert page.has_no_content?('1.2.0')
@@ -466,7 +450,6 @@ class RubygemsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :show
     should "show runtime dependencies and development dependencies" do
       assert page.has_content?(@runtime.rubygem.name)
     end
@@ -486,7 +469,9 @@ class RubygemsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :blacklisted
+    should "render blacklisted page" do
+      assert page.has_content? "This namespace is reserved by rubygems.org."
+    end
   end
 
   context "When not logged in" do
