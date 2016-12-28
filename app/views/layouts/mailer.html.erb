@@ -3,19 +3,33 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width" />
-
-    <%= stylesheet_link_tag "foundation_emails" %>
+    <style>
+      body
+      {
+        padding: 0;
+        margin: 0;
+      }
+      .button
+      {
+        text-decoration: none;
+        width: 60px;
+        height: 40px;
+        color: white;
+        background-color:#099ee4;
+        padding: 5px;
+        border: 2px solid white;
+        margin-right: 50px;
+      }
+    </style>
   </head>
 
-  <body>
-    <table class="body" data-made-with-foundation>
-      <tr>
-        <td class="center" align="center" valign="top">
-          <center>
+    <body>
+      <table height="100%";width="100%" style="padding-left:0 20% 0 20%" >
+        <tr>
+          <td>
             <%= yield %>
-          </center>
-        </td>
-      </tr>
-    </table>
+          </td>
+        </tr>
+      </table>
   </body>
 </html>

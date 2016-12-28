@@ -1,0 +1,31 @@
+<table height="20%" width="100%" style='background-color:#e9573f;color:white'>
+  <tr>
+    <td>
+      <h3 style="text-align:center">WELCOME TO RUBY GEMS WEBSITE</h3>
+    </td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <td>
+      <h4 >Hi <%= @user.handle %></h4>
+    </td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <td>
+      <p>
+        <%= t('.welcome_message') %>
+      </p>
+    </td>
+  </tr>
+</table>
+<table align="center">
+  <tr>
+    <td>
+      <%= link_to t('.confirmation_link'),
+        update_email_confirmations_url(@user, token: @user.confirmation_token.html_safe),:class=> 'button' %>
+    </td>
+  </tr>
+</table>
