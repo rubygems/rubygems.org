@@ -17,7 +17,7 @@ class Links
 
   attr_accessor :rubygem, :version, :linkset
 
-  def initialize(rubygem = nil, version = nil)
+  def initialize(rubygem, version)
     self.rubygem = rubygem
     self.version = version
     self.linkset = rubygem.linkset
@@ -42,8 +42,8 @@ class Links
   # or if linksets has it defined, use that
   # else, generate one from gem name and version number
   def documentation_uri
-    (version.metadata && version.metadata["documentation_uri"].presence) ||
-      (linkset && linkset.docs.presence) ||
+    version.metadata["documentation_uri"].presence ||
+      linkset&.docs.presence ||
       "http://www.rubydoc.info/gems/#{rubygem.name}/#{version.number}"
   end
 
@@ -52,16 +52,12 @@ class Links
     "/downloads/#{version.full_name}.gem" if version.indexed
   end
 
-  def badge_uri
-    "https://badge.fury.io/rb/#{rubygem.name}/install"
-  end
-
   # define getters for each of the uris (both short `home` or long `homepage_uri` versions)
   # don't define for download_uri since it has special logic and is already defined
   LINKS.each do |short, long|
     unless method_defined?(long)
       define_method(long) do
-        (version.metadata && version.metadata[long].presence) || (linkset && linkset.public_send(short))
+        version.metadata[long].presence || linkset&.public_send(short)
       end
     end
     alias_method short, long
