@@ -2,9 +2,9 @@ class Api::V1::DownloadsController < Api::BaseController
   def index
     total = GemDownload.total_count
     respond_to do |format|
-      format.any(:all) { render text: total }
+      format.any(:all) { render plain: total }
       format.json { render json: { total: total } }
-      format.yaml { render text: { total: total }.to_yaml }
+      format.yaml { render plain: { total: total }.to_yaml }
     end
   end
 
@@ -18,12 +18,12 @@ class Api::V1::DownloadsController < Api::BaseController
       }
       respond_with_data(data)
     else
-      render text: t(:this_rubygem_could_not_be_found), status: :not_found
+      render plain: t(:this_rubygem_could_not_be_found), status: :not_found
     end
   end
 
   def top
-    render text: "This endpoint is not supported anymore", status: :gone
+    render plain: "This endpoint is not supported anymore", status: :gone
   end
 
   def all
@@ -40,7 +40,7 @@ class Api::V1::DownloadsController < Api::BaseController
   def respond_with_data(data)
     respond_to do |format|
       format.json { render json: data }
-      format.yaml { render text: data.to_yaml }
+      format.yaml { render plain: data.to_yaml }
     end
   end
 end
