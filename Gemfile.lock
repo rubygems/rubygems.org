@@ -185,7 +185,6 @@ GEM
       rails (~> 4.0)
     pg (0.19.0)
     powerpack (0.1.1)
-    psych (2.0.17)
     public_suffix (2.0.4)
     rack (1.6.5)
     rack-attack (5.0.1)
@@ -327,7 +326,6 @@ DEPENDENCIES
   newrelic_rpm
   paul_revere (~> 2.0)
   pg
-  psych (~> 2.0.12)
   rack
   rack-attack
   rack-test
