@@ -76,6 +76,10 @@ module RubygemsHelper
     link_to_page :download, "/downloads/#{version.full_name}.gem"
   end
 
+  def reverse_dependencies_link(rubygem)
+    link_to_page :reverse_dependencies, rubygem_reverse_dependencies_path(rubygem)
+  end
+
   def documentation_link(version, linkset)
     return unless linkset.nil? || linkset.docs.blank?
     link_to_page :docs, version.documentation_path

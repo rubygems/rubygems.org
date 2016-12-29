@@ -139,6 +139,7 @@ Rails.application.routes.draw do
         constraints: { format: :js },
         defaults: { format: :js }
       resources :versions, only: [:show, :index]
+      resources :reverse_dependencies, only: [:index]
     end
   end
 
