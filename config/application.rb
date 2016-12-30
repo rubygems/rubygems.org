@@ -9,7 +9,6 @@ Bundler.require(*Rails.groups)
 
 module Gemcutter
   class Application < Rails::Application
-    
     config.rubygems = Application.config_for :rubygems
     config.time_zone = "UTC"
     config.encoding  = "utf-8"
@@ -39,5 +38,4 @@ module Gemcutter
 
   PROTOCOL = config['protocol']
   HOST = config['host']
-
 end
