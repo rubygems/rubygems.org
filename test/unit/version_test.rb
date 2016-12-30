@@ -6,7 +6,7 @@ class VersionTest < ActiveSupport::TestCase
 
   context "#as_json" do
     setup do
-      @version = create(:version)
+      @version = create(:version, summary: "some words")
     end
 
     should "only have relevant API fields" do

@@ -171,7 +171,7 @@ END
   test "/info with nonexistent gem" do
     get info_path(gem_name: 'donotexist')
     assert_response :not_found
-    assert_equal nil, @response.headers['ETag']
+    assert_nil @response.headers['ETag']
   end
 
   test "/info with gzip" do

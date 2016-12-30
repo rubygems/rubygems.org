@@ -381,10 +381,6 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
-    should "return current version" do
-      assert_equal @rubygem.versions.first, @rubygem.versions.most_recent
-    end
-
     should "return name with version for #to_s" do
       @rubygem.save
       create(:version, number: "0.0.0", rubygem: @rubygem)
