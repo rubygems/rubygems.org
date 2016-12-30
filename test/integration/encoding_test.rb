@@ -9,6 +9,6 @@ class EncodingTest < ActionDispatch::IntegrationTest
   test "gzip not supported" do
     get '/'
     assert_response :success
-    assert_equal(nil, @response.headers['Content-Encoding'])
+    assert_nil @response.headers['Content-Encoding']
   end
 end
