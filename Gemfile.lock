@@ -40,7 +40,7 @@ GEM
       public_suffix (~> 2.0, >= 2.0.2)
     airbrussh (1.0.2)
       sshkit (>= 1.6.1, != 1.7.0)
-    arel (6.0.3)
+    arel (6.0.4)
     ast (2.3.0)
     autoprefixer-rails (6.5.3.1)
       execjs
@@ -211,7 +211,7 @@ GEM
       activesupport (>= 4.2.0.beta, < 5.0)
       nokogiri (~> 1.6.0)
       rails-deprecated_sanitizer (>= 1.0.1)
-    rails-erd (1.4.7)
+    rails-erd (1.5.0)
       activerecord (>= 3.2)
       activesupport (>= 3.2)
       choice (~> 0.2.0)
