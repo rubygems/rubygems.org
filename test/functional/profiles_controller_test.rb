@@ -142,6 +142,30 @@ class ProfilesControllerTest < ActionController::TestCase
           assert_equal @handle, @user.handle
         end
       end
+
+      context "updating email with existing email" do
+        setup do
+          create(:user, email: "cannotchange@tothis.com")
+          put :update, user: { email: "cannotchange@tothis.com", password: @user.password }
+        end
+
+        should "not set unconfirmed_email" do
+          assert page.has_content? "Email address has already been taken"
+          refute_equal "cannotchange@tothis.com", @user.unconfirmed_email
+        end
+      end
+
+      context "updating email with existing unconfirmed_email" do
+        setup do
+          create(:user, unconfirmed_email: "cannotchange@tothis.com")
+          put :update, user: { email: "cannotchange@tothis.com", password: @user.password }
+        end
+
+        should "not set unconfirmed_email" do
+          assert page.has_content? "Email address has already been taken"
+          refute_equal "cannotchange@tothis.com", @user.unconfirmed_email
+        end
+      end
     end
   end
 

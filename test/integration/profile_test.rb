@@ -53,7 +53,7 @@ class ProfileTest < SystemTest
     assert page.has_link?("nick1", href: "/profiles/nick1")
   end
 
-  test "changing email signs out user and asks to confirm email" do
+  test "changing email does not change email and asks to confirm email" do
     sign_in
     visit profile_path("nick1")
     click_link "Edit Profile"
@@ -62,17 +62,18 @@ class ProfileTest < SystemTest
     fill_in "Password", with: "password12345"
     click_button "Update"
 
-    assert page.has_content? "Sign in"
+    assert page.has_selector? "input[value='nick@example.com']"
     assert page.has_selector? '#flash_notice', text: "You will receive "\
       "an email within the next few minutes. It contains instructions "\
-      "for reconfirming your account with your new email address."
+      "for confirming your new email address."
 
     link = last_email_link
     assert_not_nil link
     visit link
 
-    assert page.has_content? "Sign out"
     assert page.has_selector? "#flash_notice", text: "Your email address has been verified"
+    visit edit_profile_path
+    assert page.has_selector? "input[value='nick2@example.com']"
   end
 
   test "disabling email on profile" do
