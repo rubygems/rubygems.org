@@ -1,4 +1,22 @@
 es:
+  edit: Editar
+  failure_when_forbidden:
+  feed_latest: RubyGems.org | Gemas Nuevas
+  feed_subscribed: RubyGems.org | Subscripciones de Gemas
+  footer_about: RubyGems.org es el servicio de alojamiento de gemas de la comunidad de Ruby. Publica tus gemas de manera instantánea e instalalas. Usa la API para interactuar y buscar información de las gemas disponibles. Conviértete en contribuidor y mejora este sitio con tus cambios.
+  form_disable_with: Un momento por favor...
+  help_url: http://help.rubygems.org
+  locale_name: Español
+  none:
+  not_found:
+  please_sign_up: Acceso negado. Por favor, primero crea una cuenta en https://rubygems.org
+  sign_in: Ingresar
+  sign_up: Registro
+  subtitle: alojamiento de gemas para la comunidad
+  this_rubygem_could_not_be_found: La gema no ha sido encontrada.
+  time_ago: hace %{duration}
+  title: RubyGems.org
+  update: Actualizar
   activerecord:
     attributes:
       linkset:
@@ -15,66 +33,34 @@ es:
         email: Dirección email
         handle: Usuario
         password: Contraseña
-    errors:
-      messages:
-        record_invalid:
-      models:
-      template:
-        body:
-        header:
   dashboards:
     show:
       creating_link_text: crear
       gem_link_text: página de alguna gema
-      latest: "Últimas Actualizaciones"
+      latest: Últimas Actualizaciones
       latest_title: Feed RSS con últimas actualizaciones
       migrating_link_text: migrar
       mine: Mis Gemas
       my_subscriptions: Subscripciones
       no_owned: Aún no has registrado ninguna gema. Tal vez puedes revisar las guías para %{creating_link} una gema o %{migrating_link} una gema de RubyForge.
       no_subscriptions: Aún no te has subscrito a ningua gema. ¡Visita la %{gem_link} para subscribirte!
-  download_count:
-  edit: Editar
-  feed_latest: RubyGems.org | Gemas Nuevas
-  feed_subscribed: RubyGems.org | Subscripciones de Gemas
-  flashes:
-    failure_after_create:
-  footer_about: RubyGems.org es el servicio de alojamiento de gemas de la comunidad de Ruby. Publica tus gemas de manera instantánea e instalalas. Usa la API para interactuar y buscar información de las gemas disponibles. Conviértete en contribuidor y mejora este sitio con tus cambios.
-  form_disable_with: Un momento por favor...
-  help_url: http://help.rubygems.org
+  email_confirmations:
+    create:
+      promise_resend:
+    new:
+      submit:
+      title:
+      will_email_notice:
+    unconfirmed_email:
+      try_again:
+    update:
+      confirmed_email:
   home:
     index:
       downloads_counting: descargas y contando
       find_blurb: Encuentra, instala, y publica RubyGems.
-      footer:
-        status: Estado
-        uptime:
-      gems_header:
-      leaderboards:
-        downloaded:
-        header:
-        new:
-        no_downloaded:
-        updated:
       learn:
-        browse_docs:
-        docs_subtitle:
-        gem_specification:
-        header:
         install_rubygems: Instalar RubyGems
-        rubygems_subtitle:
-        spec_subtitle:
-      pitch:
-        api:
-        content:
-        contribute:
-        publish:
-      share:
-        build:
-        deploy:
-        header:
-        update:
-      welcome_blurb:
   layouts:
     application:
       footer:
@@ -89,39 +75,43 @@ es:
         guides: Guías
         help: Ayuda
         hosted_by: Alojamiento
-        mobile:
+        logging_by:
         monitored_by: Monitoreo
         optimized_by: Optimización
         resolved_with: DNS
+        security: Security
         source_code: Código fuente
         statistics: Estadísticas
         status: Estado
         supported_by: Soporte
+        tested_by:
         tracking_by: Rastreo
         uptime: Uptime
       header:
-        all_gems:
         dashboard: Dashboard
         search_gem: Buscar gemas&hellip;
         sign_in: Ingresar
         sign_out: Cerrar sesión
         sign_up: Registro
-  locale_name: Español
+  mailer:
+    confirm_your_email:
+    confirmation_subject:
+    email_confirmation:
+      confirmation_link:
+      welcome_message:
+    email_reset:
+      visit_link_instructions:
   pages:
     about:
       founding: El proyecto comenzó en Abril del 2009 por %{founder}, y desde entonces ha crecido para incluir las contribuciones de %{contributors} y %{downloads}. A partir de RubyGems 1.3.6 el sitio se renombró de Gemcutter a %{title} para hacer más claro el rol del mismo en la comunidad de Ruby.
+      support: A pesar de que Gemcutter no es mantenido por una compañía en específico, muchas de ellas nos han ayudado. El diseño actual, las ilustraciones y el desarrollo de front-end del sitio fue cortesía de %{dockyard}. %{github} también ha sido invaluable por ayudarnos a colaborar y compartir código de manera sencilla. El sitio comenzó en %{heroku}, cuyo excelente servicio ayudó a probar que Gemcutter es una solución viable en la que toda la comunidad puede confiar. Our infrastructure is currently hosted on %{aws}.
+      technical: 'Algunos aspectos técnicos del sitio: Es 100% Ruby. El sitio principal es una aplicación de %{rails}. Las gemas se almacenan en %{s3}, served by %{fastly}, y el tiempo entre que se publica una gema y que está lista para instalarse es mínimo. Para más información, %{source_code}, cuya licencia es %{license} en GitHub.'
+      title: Acerca de
       purpose:
         better_api: Otorgar una mejor API para manejar las gemas
         enable_community: Permitirle a la comunidad contribuir para mejorar este sitio
         header: 'Bienvenido a %{site}, el servicio de alojamiento de gemas para la comunidad de Ruby. Este proyecto tiene 3 objetivos:'
         transparent_pages: Crear páginas de proyecto más accesibles y transparentes
-      subtitle:
-      support: A pesar de que Gemcutter no es mantenido por una compañía en específico, muchas de ellas nos han ayudado. El diseño actual, las ilustraciones y el desarrollo de front-end del sitio fue cortesía de %{dockyard}. %{github} también ha sido invaluable por ayudarnos a colaborar y compartir código de manera sencilla. El sitio comenzó en %{heroku}, cuyo excelente servicio ayudó a probar que Gemcutter es una solución viable en la que toda la comunidad puede confiar. Our infrastructure is currently hosted on %{aws}.
-      technical: 'Algunos aspectos técnicos del sitio: Es 100% Ruby. El sitio principal es una aplicación de %{rails}. Las gemas se almacenan en %{s3}, served by %{fastly}, y el tiempo entre que se publica una gema y que está lista para instalarse es mínimo. Para más información, %{source_code}, cuya licencia es %{license} en GitHub.'
-      title: Acerca de
-    create:
-      notice:
-      title:
   passwords:
     edit:
       submit: Guardar esta contraseña
@@ -130,9 +120,13 @@ es:
       submit: Reestablecer contraseña
       title: Cambiar contraseña
       will_email_notice: Te enviaremos un email con un enlace para cambiar tu contraseña.
-  please_sign_up: Acceso negado. Por favor, primero crea una cuenta en https://rubygems.org
   profiles:
     edit:
+      email_awaiting_confirmation:
+      enter_password:
+      hide_email: Esconder email en perfil público
+      optional_twitter_username:
+      title: Editar perfil
       api_access:
         confirm_reset: "¿Estás seguro? Este cambio no puede deshacerse."
         credentials: 'Si quieres usar %{gem_commands_link} desde la línea de comandos, vas a necesitar un archivo llamado %{gem_credentials_file}, el cual puedes generar usando el siguiente comando:'
@@ -140,49 +134,68 @@ es:
         link_text: comandos de gem
         reset: Reestablecer llave API
         title: Acceso a API
-      change: Cambiar
-      hide_email: Esconder email en perfil público
       reset_password:
         link_text: Pide una nueva aquí.
         text: "¿Necesitas otra contraseña? No hay problema. %{link}"
         title: Reestablecer contraseña
-      title: Editar perfil
+    update:
+      confirmation_mail_sent:
+      request_denied:
+      updated:
   rubygems:
+    aside:
+      bundler_header: Gemfile
+      copied:
+      copy_to_clipboard:
+      downloads_for_this_version: Para esta versión
+      install: instalar
+      required_ruby_version:
+      required_rubygems_version:
+      links:
+        badge: Badge
+        bugs: Registro de bugs
+        code: Código fuente
+        docs: Documentación
+        download: Descargar
+        header: Enlaces
+        home: Sitio
+        mail: Lista de correo
+        report_abuse: Reportar abuso
+        reverse_dependencies:
+        rss: RSS
+        subscribe: Suscribirse
+        unsubscribe: Unsubscribe
+        wiki: Wiki
+    blacklisted:
+      blacklisted_namespace:
     dependencies:
       header: dependencias de %{title}
     edit:
       other_fields_notice: Los otros campos solo pueden ser editados al envíar una versión nueva de tu gema.
       subtitle: para %{gem}
       title: Editar ligas
-    index:
-      subtitle:
-      title: Gemas
-    aside:
-      links:
-        header: Enlaces
-        home: Sitio
-        code: Código fuente
-        docs: Documentación
-        wiki: Wiki
-        mail: Lista de correo
-        bugs: Registro de bugs
-        download: Descargar
-        subscribe: Suscribirse
-        report_abuse: Reportar abuso
-      downloads_for_this_version: Para esta versión
-      bundler_header: Gemfile
-      install: instalar
-    show:
+    gem_members:
       authors_header: Autores
+      owners_header: Administradores
+      sha_256_checksum: SHA 256 checksum
+    index:
+      downloads: Downloads
+      title: Gemas
+    show:
       licenses_header: Licencia
       no_licenses: N/D
-      not_hosted_notice: Esta gema no se encuentra alojada en Gemcutter.
-      owners_header: Administradores
       requirements_header: Requerimientos
       show_all_versions: Muestra todas las versiones (%{count} total)
-      stats_header:
       versions_header: Versiones
       yanked_notice: Esta gema ya no está disponible para descarga directa o para otras gemas que dependan de ella.
+    show_yanked:
+      not_hosted_notice: Esta gema no se encuentra alojada en Gemcutter.
+      reserved_namespace:
+        one:
+        other:
+  reverse_dependencies:
+    index:
+      title:
   searches:
     show:
       exact_match: Resultado exacto
@@ -190,25 +203,16 @@ es:
   sessions:
     new:
       forgot_password: "¿Olvidaste tu contraseña?"
-  sign_in: Ingresar
-  sign_up: Registro
+      resend_confirmation:
   stats:
     index:
-      gem_count:
-      user_count:
-    show:
-      current_rank:
-      daily_downloads:
-      for:
-      overview:
-      total_downloads: Descargas totales
-  subtitle: alojamiento de gemas para la comunidad
-  this_rubygem_could_not_be_found: La gema no ha sido encontrada.
-  time_ago: hace %{duration}
-  title: RubyGems.org
-  update: Actualizar
-  url:
+      all_time_most_downloaded:
+      total_downloads:
+      total_gems:
+      total_users:
   users:
+    create:
+      email_sent:
     new:
       have_account: "¿Ya estás registrado?"
   versions:
@@ -218,3 +222,18 @@ es:
       versions_since: "%{count} versiones desde %{since}"
     version:
       yanked: eliminada
+  will_paginate:
+    next_label:
+    page_gap: "…"
+    previous_label:
+    page_entries_info:
+      multi_page:
+      multi_page_html:
+      single_page:
+        one:
+        other:
+        zero:
+      single_page_html:
+        one:
+        other:
+        zero:
