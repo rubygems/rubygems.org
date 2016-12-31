@@ -3,12 +3,7 @@ class SearchesController < ApplicationController
 
   def show
     return unless params[:query] && params[:query].is_a?(String)
-    begin
-      @gems = Rubygem.search(params[:query], es: es_enabled?, page: @page)
-    rescue RubygemSearchable::SearchDownError
-      @fallback = true
-      @gems = Rubygem.search(params[:query], es: false, page: @page)
-    end
+    @error_msg, @gems = Rubygem.search(params[:query], es: es_enabled?, page: @page)
     @exact_match = Rubygem.name_is(params[:query]).with_versions.first
     redirect_to rubygem_path(@exact_match) if @exact_match && @gems.size == 1
   end

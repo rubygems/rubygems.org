@@ -205,4 +205,57 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       assert_equal 1, buckets[1]['doc_count']
     end
   end
+
+  context "#search" do
+    context "exception handling" do
+      setup { import_and_refresh }
+
+      context "Elasticsearch::Transport::Transport::Errors::BadRequest" do
+        setup do
+          @ill_formated_query = "updated:[2016-08-10 TO }"
+          Rubygem.stubs(:legacy_search).returns Rubygem.all
+          @error_msg, = Rubygem.search(@ill_formated_query, es: true)
+        end
+
+        should "fallback to legacy search" do
+          assert_received(Rubygem, :legacy_search) { |arg| arg.with(@ill_formated_query) }
+        end
+
+        should "give correct error message" do
+          expected_msg = "Failed to parse: '#{@ill_formated_query}'. Falling back to legacy search."
+          assert_equal expected_msg, @error_msg
+        end
+      end
+
+      context "Elasticsearch::Transport::Transport::Errors" do
+        should "fallback to legacy search and give correct error message" do
+          requires_toxiproxy
+          Rubygem.stubs(:legacy_search).returns Rubygem.all
+
+          Toxiproxy[:elasticsearch].down do
+            error_msg, = Rubygem.search("something", es: true)
+            expected_msg = "Advanced search is currently unavailable. Falling back to legacy search."
+            assert_equal expected_msg, error_msg
+            assert_received(Rubygem, :legacy_search) { |arg| arg.with("something") }
+          end
+        end
+      end
+    end
+
+    context "query order" do
+      setup do
+        %w(rails-async async-rails).each do |gem_name|
+          rubygem = create(:rubygem, name: gem_name, downloads: 10)
+          create(:version, rubygem: rubygem)
+        end
+        import_and_refresh
+      end
+
+      should "not affect results" do
+        response1 = Rubygem.elastic_search "async rails"
+        response2 = Rubygem.elastic_search "rails async"
+        assert_equal response1.results.map(&:name), response2.results.map(&:name)
+      end
+    end
+  end
 end

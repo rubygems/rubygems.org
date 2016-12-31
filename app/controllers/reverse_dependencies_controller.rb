@@ -9,7 +9,7 @@ class ReverseDependenciesController < ApplicationController
       .by_downloads
       .includes(:latest_version, :gem_download)
     if params[:rdeps_query] && params[:rdeps_query].is_a?(String)
-      @reverse_dependencies = @reverse_dependencies.search(params[:rdeps_query])
+      _, @reverse_dependencies = @reverse_dependencies.search(params[:rdeps_query])
     end
     @reverse_dependencies = @reverse_dependencies.paginate(page: @page)
   end
