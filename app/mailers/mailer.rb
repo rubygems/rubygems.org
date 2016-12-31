@@ -5,7 +5,7 @@ class Mailer < ActionMailer::Base
   def email_reset(user)
     @user = User.find(user['id'])
     mail from: Clearance.configuration.mailer_sender,
-         to: @user.email,
+         to: @user.unconfirmed_email,
          subject: I18n.t('mailer.confirmation_subject',
            default: 'Please confirm your email address with RubyGems.org')
   end

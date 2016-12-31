@@ -16,17 +16,13 @@ class ProfilesController < ApplicationController
   def update
     @user = current_user.clone
     if @user.update_attributes(params_user)
-      if @user.unconfirmed?
+      if @user.unconfirmed_email
         Mailer.delay.email_reset(current_user)
-        sign_out
-        flash[:notice] = "You will receive an email within the next few " \
-                         "minutes. It contains instructions for reconfirming " \
-                         "your account with your new email address."
-        redirect_to_root
+        flash[:notice] = t('.confirmation_mail_sent')
       else
-        flash[:notice] = "Your profile was updated."
-        redirect_to edit_profile_path
+        flash[:notice] = t('.updated')
       end
+      redirect_to edit_profile_path
     else
       current_user.reload
       render :edit

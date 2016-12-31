@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   has_many :subscriptions
   has_many :web_hooks
 
-  before_validation :unconfirm_email, if: :email_changed?, on: :update
+  after_validation :set_unconfirmed_email, if: :email_changed?, on: :update
   before_create :generate_api_key, :regenerate_confirmation_token
 
   validates :handle, uniqueness: true, allow_nil: true
@@ -40,6 +40,7 @@ class User < ActiveRecord::Base
 
   validates :twitter_username, length: { within: 0..20 }, allow_nil: true
   validates :password, length: { within: 10..200 }, allow_nil: true, unless: :skip_password_validation?
+  validate :unconfirmed_email_uniqueness
 
   def self.authenticate(who, password)
     user = find_by(email: who.downcase) || find_by(handle: who)
@@ -101,8 +102,8 @@ class User < ActiveRecord::Base
     coder.map = payload
   end
 
-  def unconfirm_email
-    self.email_confirmed = false
+  def set_unconfirmed_email
+    self.attributes = { unconfirmed_email: email, email: email_was }
     regenerate_confirmation_token
   end
 
@@ -123,6 +124,7 @@ class User < ActiveRecord::Base
   end
 
   def confirm_email!
+    update_email! if unconfirmed_email
     update!(email_confirmed: true, confirmation_token: nil)
   end
 
@@ -138,5 +140,20 @@ class User < ActiveRecord::Base
 
   def unconfirmed?
     !email_confirmed
+  end
+
+  private
+
+  def update_email!
+    self.attributes = { email: unconfirmed_email, unconfirmed_email: nil }
+    save!(validate: false)
+  end
+
+  def unconfirmed_email_uniqueness
+    errors.add(:email, I18n.t('errors.messages.taken')) if unconfirmed_email_exists?
+  end
+
+  def unconfirmed_email_exists?
+    User.where(unconfirmed_email: email).exists?
   end
 end

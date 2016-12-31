@@ -35,6 +35,12 @@
     </div>
   </div>
 
+  <% if current_user.unconfirmed_email %>
+    <p class='form__field__instructions'>
+      <%= t('.email_awaiting_confirmation', unconfirmed_email: current_user.unconfirmed_email) %>
+    </p>
+  <% end %>
+
   <div class="text_field">
     <%= form.label :email, :class => 'form__label' %>
     <%= form.email_field :email, :class => 'form__input' %>
