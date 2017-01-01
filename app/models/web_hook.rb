@@ -18,12 +18,21 @@ class WebHook < ActiveRecord::Base
   end
 
   def fire(protocol, host_with_port, deploy_gem, version, delayed = true)
+    return if disabled?
     job = Notifier.new(url, protocol, host_with_port, deploy_gem, version, user.api_key)
     if delayed
       Delayed::Job.enqueue job, priority: PRIORITIES[:web_hook]
     else
       job.perform
     end
+  end
+
+  def re_enable
+    update_attributes(failure_count: 0)
+  end
+
+  def disabled?
+    global? ? false : failure_count >= 10
   end
 
   def global?
@@ -44,6 +53,10 @@ class WebHook < ActiveRecord::Base
 
   def failed_message(rubygem)
     "There was a problem deploying webhook for #{what(rubygem)} to #{url}"
+  end
+
+  def re_enable_message
+    "Webhook for #{what(rubygem)} to #{url} has been enabled again \n"
   end
 
   def what(rubygem = self.rubygem)

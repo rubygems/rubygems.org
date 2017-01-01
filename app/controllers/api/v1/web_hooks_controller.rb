@@ -30,14 +30,21 @@ class Api::V1::WebHooksController < Api::BaseController
   end
 
   def fire
-    webhook = current_user.web_hooks.new(url: @url)
-    @rubygem = Rubygem.find_by_name("gemcutter") unless @rubygem
+    rubygem = @rubygem || Rubygem.find_by(name: 'gemcutter')
+    webhook = current_user.web_hooks.find_or_initialize_by(rubygem: rubygem, url: @url)
+    if webhook.disabled?
+      webhook.re_enable
+      message = webhook.re_enable_message
+    end
 
-    if webhook.fire(request.protocol.delete("://"), request.host_with_port, @rubygem,
-      @rubygem.versions.most_recent, false)
-      render plain: webhook.deployed_message(@rubygem)
+    protocol = request.protocol.delete("://")
+    if webhook.fire(protocol, request.host_with_port, rubygem,
+      rubygem.versions.most_recent, false)
+      message = message ? message + webhook.deployed_message(rubygem) : webhook.deployed_message(rubygem)
+      render plain: message
     else
-      render plain: webhook.failed_message(@rubygem), status: :bad_request
+      message = message ? message + webhook.failed_message(rubygem) : webhook.failed_message(rubygem)
+      render plain: message, status: :bad_request
     end
   end
 end
