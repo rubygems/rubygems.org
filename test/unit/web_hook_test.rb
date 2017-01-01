@@ -56,6 +56,12 @@ class WebHookTest < ActiveSupport::TestCase
                             url: @url)
       assert webhook.valid?
     end
+
+    should "not able to create a webhook with an invalid url" do
+      webhook = WebHook.new(user: @user,
+                            url: "invalid-url")
+      refute webhook.valid?
+    end
   end
 
   context "with a webhook for a gem" do
@@ -127,6 +133,12 @@ class WebHookTest < ActiveSupport::TestCase
       webhook = WebHook.new(user: @user,
                             url: @url)
       assert webhook.valid?
+    end
+
+    should "not able to create a webhook with an invalid url" do
+      webhook = WebHook.new(user: @user,
+                            url: "invalid-url")
+      refute webhook.valid?
     end
   end
 
