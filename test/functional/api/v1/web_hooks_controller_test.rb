@@ -96,6 +96,26 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         create(:version, rubygem: @rubygem)
       end
 
+      context "On POST to fire for disabled hook" do
+        setup do
+          RestClient.stubs(:post)
+          @rubygem_hook = create(:web_hook,
+            user: @user,
+            rubygem: @rubygem)
+          @rubygem_hook.failure_count = 10
+          @rubygem_hook.save
+          post :fire, gem_name: @rubygem.name,
+                      url: @rubygem_hook.url
+        end
+        should respond_with :success
+        should "re-enable the webhook" do
+          assert_equal 0, @rubygem_hook.reload.failure_count
+        end
+        should "say hook was enabled" do
+          assert page.has_content?("Webhook for #{@rubygem.name} to #{@rubygem_hook.url} has been enabled again")
+        end
+      end
+
       context "On POST to fire for a specific gem" do
         setup do
           RestClient.stubs(:post)
