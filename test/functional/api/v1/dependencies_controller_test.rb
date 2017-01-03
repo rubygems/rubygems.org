@@ -51,7 +51,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
         'dependencies'      => []
       }]
 
-      assert_equal result, MultiJson.load(response.body)
+      assert_equal result, JSON.load(response.body)
     end
   end
 
@@ -98,7 +98,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
         }
       ]
 
-      assert_same_elements result, MultiJson.load(response.body)
+      assert_same_elements result, JSON.load(response.body)
     end
   end
 

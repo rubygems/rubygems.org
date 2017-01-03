@@ -185,7 +185,6 @@ GEM
       rails (~> 4.0)
     pg (0.19.0)
     powerpack (0.1.1)
-    psych (2.0.17)
     public_suffix (2.0.4)
     rack (1.6.5)
     rack-attack (5.0.1)
@@ -285,7 +284,6 @@ GEM
     xml-simple (1.1.5)
     xpath (2.0.0)
       nokogiri (~> 1.3)
-    yajl-ruby (1.2.1)
 
 PLATFORMS
   ruby
@@ -323,11 +321,9 @@ DEPENDENCIES
   mime-types (~> 2.99)
   minitest
   mocha
-  multi_json
   newrelic_rpm
   paul_revere (~> 2.0)
   pg
-  psych (~> 2.0.12)
   rack
   rack-attack
   rack-test
@@ -349,7 +345,6 @@ DEPENDENCIES
   validates_formatting_of
   will_paginate
   xml-simple
-  yajl-ruby
 
 BUNDLED WITH
    1.13.3
