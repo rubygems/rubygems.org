@@ -25,7 +25,7 @@ class RubygemsController < ApplicationController
       render 'blacklisted'
     else
       @versions = @rubygem.public_versions(5)
-      if @rubygem.public_versions.any?
+      if @versions.to_a.any?
         render 'show'
       else
         render 'show_yanked'
