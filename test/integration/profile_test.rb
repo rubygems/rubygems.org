@@ -59,6 +59,7 @@ class ProfileTest < SystemTest
     click_link "Edit Profile"
 
     fill_in "Email address", with: "nick2@example.com"
+    fill_in "Email confirmation", with: "nick2@example.com"
     fill_in "Password", with: "password12345"
     click_button "Update"
 

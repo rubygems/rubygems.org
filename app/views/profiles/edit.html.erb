@@ -40,6 +40,11 @@
     <%= form.email_field :email, :class => 'form__input' %>
   </div>
 
+  <div class="text_field">
+    <%= form.label :email_confirmation, :class => 'form__label' %>
+    <%= form.email_field :email_confirmation, :class => 'form__input' %>
+  </div>
+
   <p class='form__field__instructions'>
     <%= t('.enter_password') %>
   </p>

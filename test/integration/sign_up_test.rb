@@ -4,7 +4,8 @@ class SignUpTest < SystemTest
   test "sign up" do
     visit sign_up_path
 
-    fill_in "Email", with: "email@person.com"
+    fill_in "Email address", with: "email@person.com"
+    fill_in "Email confirmation", with: "email@person.com"
     fill_in "Handle", with: "nick"
     fill_in "Password", with: "secretpassword"
     click_button "Sign up"
@@ -15,7 +16,8 @@ class SignUpTest < SystemTest
   test "sign up with no handle" do
     visit sign_up_path
 
-    fill_in "Email", with: "email@person.com"
+    fill_in "Email address", with: "email@person.com"
+    fill_in "Email confirmation", with: "email@person.com"
     fill_in "Password", with: "password"
     click_button "Sign up"
 
@@ -25,7 +27,8 @@ class SignUpTest < SystemTest
   test "sign up with bad handle" do
     visit sign_up_path
 
-    fill_in "Email", with: "email@person.com"
+    fill_in "Email address", with: "email@person.com"
+    fill_in "Email confirmation", with: "email@person.com"
     fill_in "Handle", with: "thisusernameiswaytoolongseriouslywaytoolong"
     fill_in "Password", with: "secretpassword"
     click_button "Sign up"
@@ -37,7 +40,8 @@ class SignUpTest < SystemTest
     create(:user, handle: "nick")
     visit sign_up_path
 
-    fill_in "Email", with: "email@person.com"
+    fill_in "Email address", with: "email@person.com"
+    fill_in "Email confirmation", with: "email@person.com"
     fill_in "Handle", with: "nick"
     fill_in "Password", with: "secretpassword"
     click_button "Sign up"
@@ -56,10 +60,34 @@ class SignUpTest < SystemTest
     assert page.has_content? "Sign up is temporarily disabled."
   end
 
-  test "email confirmation" do
+  test "sign up with no email confirmation" do
     visit sign_up_path
 
-    fill_in "Email", with: "email@person.com"
+    fill_in "Email address", with: "email@person.com"
+    fill_in "Handle", with: "nick"
+    fill_in "Password", with: "secretpassword"
+    click_button "Sign up"
+
+    assert page.has_content? "Email confirmation doesn't match Email address"
+  end
+
+  test "sign up with mismatched email confirmation" do
+    visit sign_up_path
+
+    fill_in "Email address", with: "email@person.com"
+    fill_in "Email confirmation", with: "email1@person.com"
+    fill_in "Handle", with: "nick"
+    fill_in "Password", with: "secretpassword"
+    click_button "Sign up"
+
+    assert page.has_content? "Email confirmation doesn't match Email address"
+  end
+
+  test "email verification" do
+    visit sign_up_path
+
+    fill_in "Email address", with: "email@person.com"
+    fill_in "Email confirmation", with: "email@person.com"
     fill_in "Handle", with: "nick"
     fill_in "Password", with: "secretpassword"
     click_button "Sign up"
