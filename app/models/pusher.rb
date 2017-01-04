@@ -134,6 +134,5 @@ class Pusher
     gem_info = GemInfo.new(rubygem.name).compute_compact_index_info
     checksum = Digest::MD5.hexdigest(CompactIndex.info(gem_info))
     version.update_attribute :info_checksum, checksum
-    Rails.cache.delete("info/#{rubygem.name}")
   end
 end
