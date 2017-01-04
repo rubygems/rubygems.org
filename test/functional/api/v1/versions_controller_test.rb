@@ -22,14 +22,15 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     context "with #{format.to_s.upcase}" do
       should "have a list of versions for the first gem" do
         get_show(@rubygem, format)
-        assert_equal 2, yield(@response.body).size
+        assert_equal 3, yield(@response.body).size
       end
 
       should "be ordered by position with prereleases" do
         get_show(@rubygem, format)
         arr = yield(@response.body)
-        assert_equal "2.0.0", arr.first["number"]
-        assert_equal "1.0.0.pre", arr.second["number"]
+        assert_equal "4.0.0", arr.first["number"]
+        assert_equal "2.0.0", arr.second["number"]
+        assert_equal "1.0.0.pre", arr.third["number"]
       end
 
       should "be ordered by position" do
@@ -53,6 +54,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
       create(:version, rubygem: @rubygem, number: '2.0.0')
       create(:version, rubygem: @rubygem, number: '1.0.0.pre', prerelease: true)
       create(:version, rubygem: @rubygem, number: '3.0.0', indexed: false)
+      create(:version, rubygem: @rubygem, number: '4.0.0', built_at: 2.days.from_now)
 
       @rubygem2 = create(:rubygem)
       create(:version, rubygem: @rubygem2, number: '3.0.0')
@@ -61,7 +63,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:json) do |body|
-      MultiJson.load(body)
+      JSON.load(body)
     end
 
     should_respond_to(:yaml) do |body|
@@ -71,6 +73,11 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     should "return Last-Modified header" do
       get_show(@rubygem)
       assert_equal @response.headers['Last-Modified'], @rubygem.updated_at.httpdate
+    end
+
+    should "return surrogate key header" do
+      get_show(@rubygem)
+      assert_equal "gem/#{@rubygem.name}", @response.headers['Surrogate-Key']
     end
 
     should "return 304 when If-Modified-Since header is satisfied" do
@@ -153,7 +160,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "give all releases" do
       get_show(@rubygem)
-      assert_equal 12, MultiJson.load(@response.body).size
+      assert_equal 12, JSON.load(@response.body).size
     end
   end
 
@@ -167,7 +174,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return latest version" do
       get_latest @rubygem
-      assert_equal "3.0.0", MultiJson.load(@response.body)['version']
+      assert_equal "3.0.0", JSON.load(@response.body)['version']
     end
   end
 
@@ -195,7 +202,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return latest version" do
       get :latest, id: "blah", format: "json"
-      assert_equal "unknown", MultiJson.load(@response.body)['version']
+      assert_equal "unknown", JSON.load(@response.body)['version']
     end
   end
 
@@ -207,7 +214,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return latest version" do
       get :latest, id: @rubygem.name, format: "json"
-      assert_equal "unknown", MultiJson.load(@response.body)['version']
+      assert_equal "unknown", JSON.load(@response.body)['version']
     end
   end
 
@@ -220,7 +227,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return most recent version" do
       get :latest, id: @rubygem.name, format: "json"
-      assert_equal "2.0.0", MultiJson.load(@response.body)['version']
+      assert_equal "2.0.0", JSON.load(@response.body)['version']
     end
   end
 
@@ -232,7 +239,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return license info" do
       get :show, id: @rubygem.name, format: "json"
-      assert_equal "MIT", MultiJson.load(@response.body).first['licenses']
+      assert_equal "MIT", JSON.load(@response.body).first['licenses']
     end
   end
 
@@ -276,15 +283,15 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
     should "return names of reverse dependencies" do
       get_reverse_dependencies(@dep_rubygem, format: "json")
-      ret_versions = MultiJson.load(@response.body)
+      ret_versions = JSON.load(@response.body)
 
       assert_equal 3, ret_versions.size
 
       assert ret_versions.include?(@version_one_latest.full_name)
       assert ret_versions.include?(@version_two_earlier.full_name)
       assert ret_versions.include?(@version_three.full_name)
-      assert !ret_versions.include?(@version_one_earlier.full_name)
-      assert !ret_versions.include?(@version_two_latest.full_name)
+      refute ret_versions.include?(@version_one_earlier.full_name)
+      refute ret_versions.include?(@version_two_latest.full_name)
     end
   end
 end

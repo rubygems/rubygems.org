@@ -1,5 +1,5 @@
 class WebHook < ActiveRecord::Base
-  GLOBAL_PATTERN = '*'
+  GLOBAL_PATTERN = '*'.freeze
 
   belongs_to :user
   belongs_to :rubygem

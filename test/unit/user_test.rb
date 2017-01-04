@@ -1,6 +1,12 @@
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
+  def assert_resetting_email_changes(attr_name)
+    assert_changed(@user, attr_name) do
+      @user.update_attributes(email: 'some@one.com')
+    end
+  end
+
   should have_many(:ownerships)
   should have_many(:rubygems).through(:ownerships)
   should have_many(:subscribed_gems).through(:subscriptions)
@@ -17,11 +23,11 @@ class UserTest < ActiveSupport::TestCase
 
       should "be between 2 and 40 characters" do
         user = build(:user, handle: "a")
-        assert !user.valid?
+        refute user.valid?
         assert_contains user.errors[:handle], "is too short (minimum is 2 characters)"
 
         user.handle = "a" * 41
-        assert !user.valid?
+        refute user.valid?
         assert_contains user.errors[:handle], "is too long (maximum is 40 characters)"
 
         user.handle = "abcdef"
@@ -31,7 +37,7 @@ class UserTest < ActiveSupport::TestCase
 
       should "be invalid when an empty string" do
         user = build(:user, handle: "")
-        assert !user.valid?
+        refute user.valid?
       end
 
       should "be valid when nil and other users have a nil handle" do
@@ -45,6 +51,37 @@ class UserTest < ActiveSupport::TestCase
 
         user.handle = "bills"
         assert_equal "bills", user.display_handle
+      end
+    end
+
+    context 'twitter_username' do
+      should validate_length_of(:twitter_username)
+      should allow_value("user123_32").for(:twitter_username)
+      should_not allow_value("@user").for(:twitter_username)
+      should_not allow_value("user 1").for(:twitter_username)
+      should_not allow_value("user-1").for(:twitter_username)
+      should allow_value("01234567890123456789").for(:twitter_username)
+      should_not allow_value("012345678901234567890").for(:twitter_username)
+    end
+
+    context 'password' do
+      should 'be between 10 and 200 characters' do
+        user = build(:user, password: 'a' * 9)
+        refute user.valid?
+        assert_contains user.errors[:password], 'is too short (minimum is 10 characters)'
+
+        user.password = 'a' * 201
+        refute user.valid?
+        assert_contains user.errors[:password], 'is too long (maximum is 200 characters)'
+
+        user.password = 'secretpassword'
+        user.valid?
+        assert_nil user.errors[:password].first
+      end
+
+      should 'be invalid when an empty string' do
+        user = build(:user, password: '')
+        refute user.valid?
       end
     end
   end
@@ -134,6 +171,20 @@ class UserTest < ActiveSupport::TestCase
       assert_equal [my_rubygem], @user.rubygems
     end
 
+    context "email change" do
+      should "reset confirmation token" do
+        assert_resetting_email_changes :confirmation_token
+      end
+
+      should "unconfirm email" do
+        assert_resetting_email_changes :unconfirmed?
+      end
+
+      should "reset token_expires_at" do
+        assert_resetting_email_changes :token_expires_at
+      end
+    end
+
     context "with subscribed gems" do
       setup do
         @subscribed_gem   = create(:rubygem)
@@ -170,33 +221,26 @@ class UserTest < ActiveSupport::TestCase
       assert_equal rubygem_hook, all_hooks[rubygem.name].first
       assert_equal 1, all_hooks.keys.size
     end
-  end
 
-  context "downloads" do
-    setup do
-      @user      = create(:user)
-      @rubygem   = create(:rubygem)
-      @ownership = create(:ownership, rubygem: @rubygem, user: @user)
-      @version   = create(:version, rubygem: @rubygem)
-
-      travel_to 1.day.ago do
-        Download.incr(@version.rubygem.name, @version.full_name)
+    context '#valid_confirmation_token?' do
+      should 'return false when email confirmation token has expired' do
+        @user.update_attribute(:token_expires_at, 2.minutes.ago)
+        refute @user.valid_confirmation_token?
       end
-      2.times { Download.incr(@version.rubygem.name, @version.full_name) }
-    end
 
-    should "sum up downloads for this user" do
-      assert_equal 2, @user.today_downloads_count
-      assert_equal 3, @user.total_downloads_count
+      should 'reutrn true when email confirmation token has not expired' do
+        two_minutes_in_future = Time.zone.now + 2.minutes
+        @user.update_attribute(:token_expires_at, two_minutes_in_future)
+        assert @user.valid_confirmation_token?
+      end
     end
   end
 
   context "rubygems" do
     setup do
       @user     = create(:user)
-      @rubygems = [[100, 2000], [200, 1000], [300, 3000]].map do |downloads, real_downloads|
-        create(:rubygem, downloads: downloads).tap do |rubygem|
-          Redis.current[Download.key(rubygem)] = real_downloads
+      @rubygems = [2000, 1000, 3000].map do |download|
+        create(:rubygem, downloads: download).tap do |rubygem|
           create(:ownership, rubygem: rubygem, user: @user)
           create(:version, rubygem: rubygem)
         end

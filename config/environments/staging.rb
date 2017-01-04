@@ -1,3 +1,5 @@
+require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -44,7 +46,7 @@ Rails.application.configure do
   config.ssl_options = { hsts: false }
 
   # Set to :debug to see everything in the log.
-  config.log_level = :debug
+  config.log_level = :info
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
@@ -61,7 +63,6 @@ Rails.application.configure do
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.delivery_method = :sendmail
   config.action_mailer.default_url_options = { host: Gemcutter::HOST,
                                                protocol: Gemcutter::PROTOCOL }
 
@@ -80,6 +81,12 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
-end
 
-require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?
+  config.cache_store = :dalli_store, ENV['MEMCACHED_ENDPOINT'], {
+    failover: true,
+    socket_timeout: 1.5,
+    socket_failure_delay: 0.2,
+    compress: true,
+    compression_min_size: 524_288
+  }
+end

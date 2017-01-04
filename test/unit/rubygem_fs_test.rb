@@ -1,12 +1,29 @@
 require 'test_helper'
 
 class RubygemFsTest < ActiveSupport::TestCase
+  context "s3 filesystem" do
+    should "use default bucket when not passing as an argument" do
+      fs = RubygemFs::S3.new
+      assert_equal "test.s3.rubygems.org", fs.bucket
+    end
+
+    should "use bucket passed" do
+      fs = RubygemFs::S3.new(bucket: "foo.com")
+      assert_equal "foo.com", fs.bucket
+    end
+
+    should "use a custom config when passed" do
+      fs = RubygemFs::S3.new(access_key_id: 'foo', secret_access_key: 'bar')
+      def fs.s3
+        [@config[:access_key_id], @config[:secret_access_key]]
+      end
+      assert_equal %w(foo bar), fs.s3
+    end
+  end
+
   context "local filesystem" do
     setup do
-      @fs = RubygemFs::Local.new
-      def @fs.base_dir
-        @dir ||= Dir.mktmpdir
-      end
+      @fs = RubygemFs::Local.new(Dir.mktmpdir)
     end
 
     context "#get" do

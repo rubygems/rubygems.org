@@ -9,6 +9,8 @@ class DeletionTest < ActiveSupport::TestCase
     @user = create(:user)
     Pusher.new(@user, gem_file).process
     @version = Version.last
+    Rubygem.__elasticsearch__.create_index! force: true
+    Rubygem.import
   end
 
   should "be indexed" do
@@ -19,7 +21,9 @@ class DeletionTest < ActiveSupport::TestCase
 
   context "with deleted gem" do
     setup do
+      GemCachePurger.stubs(:call)
       delete_gem
+      @gem_name = @version.rubygem.name
     end
 
     should "unindexes" do
@@ -34,14 +38,34 @@ class DeletionTest < ActiveSupport::TestCase
       refute @version.reload.latest?
     end
 
-    should "not appear in the version list" do
-      refute Redis.current.exists(Rubygem.versions_key(@version.rubygem.name)),
-        "Version still in list!"
+    should "keep the yanked time" do
+      assert @version.reload.yanked_at
+    end
+
+    should "set the yanked info checksum" do
+      refute_nil @version.reload.yanked_info_checksum
     end
 
     should "delete the .gem file" do
       assert_nil RubygemFs.instance.get("gems/#{@version.full_name}.gem"), "Rubygem still exists!"
     end
+
+    should "call GemCachePurger" do
+      assert_received(GemCachePurger, :call) { |obj| obj.with(@gem_name).once }
+    end
+  end
+
+  should "enque job for updating ES index, spec index and purging cdn" do
+    assert_difference 'Delayed::Job.count', 7 do
+      delete_gem
+    end
+
+    Delayed::Worker.new.work_off
+
+    response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
+                                                    type: 'rubygem',
+                                                    id: @version.rubygem_id
+    assert_equal true, response['_source']['yanked']
   end
 
   should "record version metadata" do
@@ -53,7 +77,7 @@ class DeletionTest < ActiveSupport::TestCase
 
   teardown do
     # This is necessary due to after_commit not cleaning up for us
-    [Rubygem, Version, User, Deletion].each(&:delete_all)
+    [Rubygem, Version, User, Deletion, Delayed::Job, GemDownload].each(&:delete_all)
   end
 
   private

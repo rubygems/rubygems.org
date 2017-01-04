@@ -3,24 +3,25 @@ cache:
   bundler: true
   directories:
     - reports
+    - vendor/cache
 
 rvm:
-  - 2.2.3
+  - 2.3.1
   - ruby-head
 
 services:
-  - redis-server
   - elasticsearch
+  - memcached
 
 sudo: false
 
 bundler_args: --jobs=3 --retry=3 --without development
 
 git:
-  submodules: false
+  submodules: true
 
 before_install:
-  - git submodule update --init --depth 1
+  - git submodule update --init
   - sh -c "if [ '$RUBYGEMS_VERSION' != 'latest' ]; then gem update --system $RUBYGEMS_VERSION; fi"
   - gem --version
   - script/install_toxiproxy.sh
@@ -33,9 +34,10 @@ script:
   - bundle exec rake
   - bundle exec rake rubocop
   - script/brakeman
+  - bundle exec cap -T > /dev/null
 
 env:
-  - RUBYGEMS_VERSION=2.4.5
+  - RUBYGEMS_VERSION=2.6.4
   - RUBYGEMS_VERSION=latest
 
 matrix:

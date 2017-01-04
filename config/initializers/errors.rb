@@ -15,15 +15,15 @@ HTTP_ERRORS = [Timeout::Error,
                Net::HTTPBadResponse,
                Net::HTTPHeaderSyntaxError,
                Net::ProtocolError,
-               OpenURI::HTTPError]
+               OpenURI::HTTPError].freeze
 
-SMTP_SERVER_ERRORS = [TimeoutError,
+SMTP_SERVER_ERRORS = [Timeout::Error,
                       IOError,
                       Net::SMTPUnknownError,
                       Net::SMTPServerBusy,
-                      Net::SMTPAuthenticationError]
+                      Net::SMTPAuthenticationError].freeze
 
 SMTP_CLIENT_ERRORS = [Net::SMTPFatalError,
-                      Net::SMTPSyntaxError]
+                      Net::SMTPSyntaxError].freeze
 
 SMTP_ERRORS = SMTP_SERVER_ERRORS + SMTP_CLIENT_ERRORS

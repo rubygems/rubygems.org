@@ -7,6 +7,11 @@ The Ruby community's gem host.
 * Create more transparent and accessible project pages
 * Enable the community to improve and enhance the site
 
+## Supporting
+
+<a href="https://rubytogether.org/"><img src="https://rubytogether.org/images/rubies.svg" width=200></a><br/>
+  RubyGems.org is maintained by <a href="https://rubytogether.org/">Ruby Together</a>, a grassroots initiative committed to supporting the critical Ruby infrastructure you rely on. Contribute today <a href="https://rubytogether.org/developers">as an individual</a> or even better, <a href="https://rubytogether.org/companies">as a company</a>, and ensure that RubyGems.org, Bundler, and other shared tooling is around for years to come.
+
 ## Links
 
 * [Mailing List][]
@@ -33,12 +38,12 @@ Please follow our [contribution guidelines][].
 
 To get setup, please check out the [Development Setup][].
 
-[development setup]: https://github.com/rubygems/rubygems.org/blob/master/CONTRIBUTING.md
+[development setup]: https://github.com/rubygems/rubygems.org/blob/master/CONTRIBUTING.md#development-setup
 
 Our deployment process is documented on the wiki as well, there's a multi-step
 [Checklist][] to run through.
 
-[checklist]: https://github.com/rubygems/rubygems.org/wiki/Deployment
+[checklist]: https://github.com/rubygems/rubygems-infrastructure/wiki/Deploys
 
 Also please take note of our [Code of Conduct](https://github.com/rubygems/rubygems.org/blob/master/CONDUCT.md).
 
@@ -50,7 +55,7 @@ RubyGems.org consists of a few major parts:
 
 * Rails app: To manage users and allow others to view gems, etc.
 * Sinatra app (Hostess): the gem server
-* Gem processor: Handles incoming gems and storing them in S3 (production) or
+* Gem processor: Handles incoming gems and storing them in Amazon S3 (production) or
   on the filesystem in `server/` (development).
 
 ## License

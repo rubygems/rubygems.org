@@ -6,7 +6,7 @@ class WebHookTest < ActiveSupport::TestCase
 
   should "be valid for normal hook" do
     hook = create(:web_hook)
-    assert !hook.global?
+    refute hook.global?
     assert WebHook.global.empty?
     assert_equal [hook], WebHook.specific
   end
@@ -21,13 +21,13 @@ class WebHookTest < ActiveSupport::TestCase
 
   should "require user" do
     hook = build(:web_hook, user: nil)
-    assert !hook.valid?
+    refute hook.valid?
   end
 
   ["badurl", "", nil].each do |url|
     should "invalidate with #{url.inspect} as the url" do
       hook = build(:web_hook, url: url)
-      assert !hook.valid?
+      refute hook.valid?
     end
   end
 
@@ -41,7 +41,7 @@ class WebHookTest < ActiveSupport::TestCase
     should "not be able to create a webhook under this user, gem, and url" do
       webhook = WebHook.new(user: @user,
                             url: @url)
-      assert !webhook.valid?
+      refute webhook.valid?
     end
 
     should "be able to create a webhook for a url under this user and gem" do
@@ -71,7 +71,8 @@ class WebHookTest < ActiveSupport::TestCase
         {
           'url'           => @url,
           'failure_count' => @webhook.failure_count
-        }, MultiJson.load(@webhook.to_json))
+        }, JSON.load(@webhook.to_json)
+      )
     end
 
     should "show limited attributes for to_xml" do
@@ -88,14 +89,15 @@ class WebHookTest < ActiveSupport::TestCase
         {
           'url'           => @url,
           'failure_count' => @webhook.failure_count
-        }, YAML.load(@webhook.to_yaml))
+        }, YAML.load(@webhook.to_yaml)
+      )
     end
 
     should "not be able to create a webhook under this user, gem, and url" do
       webhook = WebHook.new(user: @user,
                             rubygem: @rubygem,
                             url: @url)
-      assert !webhook.valid?
+      refute webhook.valid?
     end
 
     should "be able to create a webhook for a url under this user and gem" do
@@ -141,7 +143,7 @@ class WebHookTest < ActiveSupport::TestCase
     end
 
     should "have gem properties encoded in JSON" do
-      payload = MultiJson.load(@job.payload)
+      payload = JSON.load(@job.payload)
       assert_equal "foogem",    payload['name']
       assert_equal "3.2.1",     payload['version']
       assert_equal 'ruby',      payload['platform']
@@ -156,7 +158,7 @@ class WebHookTest < ActiveSupport::TestCase
       new_version = create(:version, number: "2.0.0", rubygem: @rubygem)
       new_hook    = create(:web_hook)
       job         = Notifier.new(new_hook.url, 'http', 'localhost:1234', @rubygem, new_version)
-      payload     = MultiJson.load(job.payload)
+      payload     = JSON.load(job.payload)
 
       assert_equal "foogem", payload['name']
       assert_equal "2.0.0",  payload['version']

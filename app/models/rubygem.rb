@@ -7,14 +7,26 @@ class Rubygem < ActiveRecord::Base
   has_many :subscribers, through: :subscriptions, source: :user
   has_many :subscriptions, dependent: :destroy
   has_many :versions, dependent: :destroy, validate: false
+  has_one :latest_version, -> { where(latest: true).order(:position) }, class_name: "Version"
   has_many :web_hooks, dependent: :destroy
   has_one :linkset, dependent: :destroy
+  has_one :gem_download, -> { where(version_id: 0) }
 
   validate :ensure_name_format, if: :needs_name_validation?
-  validates :name, presence: true, uniqueness: true
+  validates :name,
+    presence: true,
+    uniqueness: { case_sensitive: false },
+    if: :needs_name_validation?
+  validate :blacklist_names_exclusion
 
   after_create :update_unresolved
   before_destroy :mark_unresolved
+
+  # TODO: Remove this once we move to GemDownload only
+  after_create :create_gem_download
+  def create_gem_download
+    GemDownload.create!(count: 0, rubygem_id: id, version_id: 0)
+  end
 
   def self.with_versions
     where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)")
@@ -51,7 +63,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.total_count
-    with_versions.count
+    count_by_sql "SELECT COUNT(*) from (SELECT DISTINCT rubygem_id FROM versions WHERE indexed = true) AS v"
   end
 
   def self.latest(limit = 5)
@@ -70,24 +82,12 @@ class Rubygem < ActiveRecord::Base
     letter =~ /\A[A-Za-z]\z/ ? letter.upcase : 'A'
   end
 
-  def self.monthly_dates
-    (2..31).map { |n| n.days.ago.to_date }.reverse
-  end
-
-  def self.monthly_short_dates
-    monthly_dates.map { |date| date.strftime("%m/%d") }
-  end
-
-  def self.versions_key(name)
-    "r:#{name}"
-  end
-
   def self.by_name
     order(name: :asc)
   end
 
   def self.by_downloads
-    order(downloads: :desc)
+    joins(:gem_download).order('gem_downloads.count DESC')
   end
 
   def self.current_rubygems_release
@@ -109,6 +109,11 @@ class Rubygem < ActiveRecord::Base
     versions = public_versions(5)
     versions << extra_version
     versions.uniq.sort_by(&:position)
+  end
+
+  def public_version_payload(number)
+    version = public_versions.find_by(number: number)
+    payload(version).merge!(version.as_json) if version
   end
 
   def hosted?
@@ -133,14 +138,11 @@ class Rubygem < ActiveRecord::Base
   end
 
   def downloads
-    Download.for(self)
-  end
-
-  def downloads_today
-    versions.to_a.sum { |v| Download.today(v) }
+    gem_download.try(:count) || 0
   end
 
   def payload(version = versions.most_recent, protocol = Gemcutter::PROTOCOL, host_with_port = Gemcutter::HOST)
+    deps = version.dependencies.to_a
     {
       'name'              => name,
       'downloads'         => downloads,
@@ -161,8 +163,8 @@ class Rubygem < ActiveRecord::Base
       'source_code_uri'   => linkset.try(:code),
       'bug_tracker_uri'   => linkset.try(:bugs),
       'dependencies'      => {
-        'development' => version.dependencies.development.to_a.reject { |r| r.rubygem.nil? },
-        'runtime'     => version.dependencies.runtime.to_a.reject { |r| r.rubygem.nil? }
+        'development' => deps.select { |r| r.rubygem && 'development' == r.scope },
+        'runtime'     => deps.select { |r| r.rubygem && 'runtime' == r.scope }
       }
     }
   end
@@ -179,12 +181,8 @@ class Rubygem < ActiveRecord::Base
     name.remove(/[^#{Patterns::ALLOWED_CHARACTERS}]/)
   end
 
-  def with_downloads
-    "#{name} (#{downloads})"
-  end
-
   def pushable?
-    new_record? || versions.indexed.count.zero?
+    new_record? || (versions.indexed.none? && not_protected?)
   end
 
   def create_ownership(user)
@@ -261,16 +259,27 @@ class Rubygem < ActiveRecord::Base
     version
   end
 
-  def monthly_downloads
-    key_dates = self.class.monthly_dates.map(&:to_s)
-    Redis.current.hmget(Download.history_key(self), *key_dates).map(&:to_i)
-  end
-
   def first_built_date
     versions.by_earliest_built_at.limit(1).last.built_at
   end
 
+  # returns days left before the reserved namespace will be released
+  # 100 + 1 days are added so that last_protected_day / 1.day = 1
+  def protected_days
+    (updated_at + 101.days - Time.zone.now).to_i / 1.day
+  end
+
+  def reverse_dependencies
+    self.class.reverse_dependencies(name)
+  end
+
   private
+
+  # a gem namespace is not protected if it is
+  # updated(yanked) in more than 100 days or it is created in last 30 days
+  def not_protected?
+    updated_at < 100.days.ago || created_at > 30.days.ago
+  end
 
   def ensure_name_format
     if name.class != String
@@ -284,6 +293,11 @@ class Rubygem < ActiveRecord::Base
 
   def needs_name_validation?
     new_record? || name_changed?
+  end
+
+  def blacklist_names_exclusion
+    return unless GEM_NAME_BLACKLIST.include? name.downcase
+    errors.add :name, "'#{name}' is a reserved gem name."
   end
 
   def update_unresolved

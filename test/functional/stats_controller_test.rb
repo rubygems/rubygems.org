@@ -6,12 +6,13 @@ class StatsControllerTest < ActionController::TestCase
       @number_of_gems      = 1337
       @number_of_users     = 101
       @number_of_downloads = 42
-      @most_downloaded     = [create(:rubygem)]
+      rails_cinco = create(:rubygem, name: 'rails_cinco', number: 1)
 
       Rubygem.stubs(:total_count).returns @number_of_gems
-      Download.stubs(:count).returns @number_of_downloads
-      Rubygem.stubs(:downloaded).returns @most_downloaded
       User.stubs(:count).returns @number_of_users
+
+      create(:gem_download, count: @number_of_downloads)
+      rails_cinco.gem_download.update(count: 1)
 
       get :index
     end
@@ -31,20 +32,33 @@ class StatsControllerTest < ActionController::TestCase
       assert page.has_content?("42")
     end
 
+    should "display the top gem" do
+      assert page.has_content?("rails_cinco")
+    end
+
     should "load up the number of gems, users, and downloads" do
       assert_received(User, :count)
       assert_received(Rubygem, :total_count)
-      assert_received(Download, :count)
-      assert_received(Rubygem, :downloaded) { |subject| subject.with(10) }
     end
+  end
+
+  context "on GET to index with no downloads" do
+    setup do
+      get :index
+    end
+
+    should respond_with :success
   end
 
   context "on GET to index with multiple gems" do
     setup do
+      create(:gem_download, count: 0)
       rg1 = create(:rubygem, downloads: 10, number: "1")
       rg2 = create(:rubygem, downloads: 20, number: "1")
       rg3 = create(:rubygem, downloads: 30, number: "1")
-      Rubygem.stubs(:downloaded).returns [rg1, rg2, rg3]
+      n = 10
+      data = [rg1, rg2, rg3].map { |r| [r.versions.last.full_name, n += 10] }
+      GemDownload.bulk_update(data)
 
       get :index
     end

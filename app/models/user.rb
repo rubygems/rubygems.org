@@ -3,7 +3,16 @@ class User < ActiveRecord::Base
   include Gravtastic
   is_gravtastic default: "retro"
 
-  PERMITTED_ATTRS = [:bio, :email, :handle, :hide_email, :location, :password, :website]
+  PERMITTED_ATTRS = [
+    :bio,
+    :email,
+    :handle,
+    :hide_email,
+    :location,
+    :password,
+    :website,
+    :twitter_username
+  ].freeze
 
   has_many :rubygems, through: :ownerships
 
@@ -14,8 +23,8 @@ class User < ActiveRecord::Base
   has_many :subscriptions
   has_many :web_hooks
 
-  before_validation :regenerate_token, if: :email_changed?, on: :update
-  before_create :generate_api_key
+  before_validation :unconfirm_email, if: :email_changed?, on: :update
+  before_create :generate_api_key, :regenerate_confirmation_token
 
   validates :handle, uniqueness: true, allow_nil: true
   validates :handle, format: {
@@ -23,6 +32,14 @@ class User < ActiveRecord::Base
     message: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
   }, allow_nil: true
   validates :handle, length: { within: 2..40 }, allow_nil: true
+
+  validates :twitter_username, format: {
+    with: /\A[a-zA-Z0-9_]*\z/,
+    message: "can only contain letters, numbers, and underscores"
+  }, allow_nil: true
+
+  validates :twitter_username, length: { within: 0..20 }, allow_nil: true
+  validates :password, length: { within: 10..200 }, allow_nil: true, unless: :skip_password_validation?
 
   def self.authenticate(who, password)
     user = find_by(email: who.downcase) || find_by(handle: who)
@@ -84,8 +101,9 @@ class User < ActiveRecord::Base
     coder.map = payload
   end
 
-  def regenerate_token
-    generate_confirmation_token
+  def unconfirm_email
+    self.email_confirmed = false
+    regenerate_confirmation_token
   end
 
   def generate_api_key
@@ -96,15 +114,29 @@ class User < ActiveRecord::Base
     rubygems.to_a.sum(&:downloads)
   end
 
-  def today_downloads_count
-    rubygems.to_a.sum(&:downloads_today)
-  end
-
   def rubygems_downloaded
     rubygems.with_versions.sort_by { |rubygem| -rubygem.downloads }
   end
 
   def total_rubygems_count
     rubygems.with_versions.count
+  end
+
+  def confirm_email!
+    update!(email_confirmed: true, confirmation_token: nil)
+  end
+
+  # confirmation token expires after 15 minutes
+  def valid_confirmation_token?
+    token_expires_at > Time.zone.now
+  end
+
+  def regenerate_confirmation_token
+    self.confirmation_token = Clearance::Token.new
+    self.token_expires_at = Time.zone.now + 15.minutes
+  end
+
+  def unconfirmed?
+    !email_confirmed
   end
 end

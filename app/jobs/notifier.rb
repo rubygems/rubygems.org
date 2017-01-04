@@ -25,7 +25,7 @@ Notifier = Struct.new(:url, :protocol, :host_with_port, :rubygem, :version, :api
     WebHook.find_by_url(url).try(:increment!, :failure_count)
     false
   end
-  statsd_count_success :perform, 'Webhook.perform.success'
+  statsd_count_success :perform, 'Webhook.perform'
 
   private
 

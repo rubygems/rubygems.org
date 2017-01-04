@@ -51,7 +51,7 @@ class RedirectorTest < ActiveSupport::TestCase
       get uri, {}, "HTTP_HOST" => Gemcutter::HOST
 
       assert_equal 301, last_response.status
-      assert_equal "http://docs.rubygems.org#{uri}", last_response.headers["Location"]
+      assert_equal "https://docs.rubygems.org#{uri}", last_response.headers["Location"]
     end
   end
 

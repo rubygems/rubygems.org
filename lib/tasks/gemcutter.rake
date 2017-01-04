@@ -3,7 +3,7 @@ namespace :gemcutter do
     desc "Update the index"
     task update: :environment do
       require 'benchmark'
-      Benchmark.bm do|b|
+      Benchmark.bm do |b|
         b.report("update index") { Indexer.new.perform }
       end
     end
@@ -45,40 +45,18 @@ namespace :gemcutter do
     desc "Check existing checksums."
     task check: :environment do
       failed = false
+      i = 0
+      total = Version.count
       Version.find_each do |version|
         actual_sha256 = version.recalculate_sha256
-        if version.sha256 != actual_sha256
+        if actual_sha256 && version.sha256 != actual_sha256
           puts "#{version.full_name}.gem has sha256 '#{actual_sha256}', " \
             "but '#{version.sha256}' was expected."
           failed = true
         end
+        i += 1
+        print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
       end
-
-      exit 1 if failed
-    end
-  end
-
-  namespace :rubygems do
-    desc "Update the download counts for all gems."
-    task update_download_counts: :environment do
-      case_query = Rubygem
-        .pluck(:name)
-        .map { |name| "WHEN '#{name}' THEN #{Redis.current["downloads:rubygem:#{name}"].to_i}" }
-        .join("\n            ")
-
-      ActiveRecord::Base.connection.execute <<-SQL.strip_heredoc
-        UPDATE rubygems
-          SET downloads = CASE name
-            #{case_query}
-          END
-      SQL
-    end
-  end
-
-  desc "Move all but the last 2 days of version history to SQL"
-  task migrate_history: :environment do
-    Download.copy_all_to_sql do |t, c, v|
-      puts "#{c} of #{t}: #{v.full_name}"
     end
   end
 
@@ -94,6 +72,26 @@ namespace :gemcutter do
       puts "Total: #{total}"
       without_metadata.find_each do |version|
         version.recalculate_metadata!
+        i += 1
+        print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
+      end
+      puts
+      puts "Done."
+    end
+  end
+
+  namespace :required_rubygems_version do
+    desc "Backfill gem versions with rubygems_version."
+    task backfill: :environment do
+      without_required_rubygems_version = Version.where(required_rubygems_version: nil)
+      mod = ENV['shard']
+      without_required_rubygems_version = without_required_rubygems_version.where("id % 4 = ?", mod.to_i) if mod
+
+      total = without_required_rubygems_version.count
+      i = 0
+      puts "Total: #{total}"
+      without_required_rubygems_version.find_each do |version|
+        version.assign_required_rubygems_version!
         i += 1
         print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
       end

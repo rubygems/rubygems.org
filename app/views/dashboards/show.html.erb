@@ -12,7 +12,7 @@
     <div class="push--bottom">
       <% if @latest_updates.empty? %>
         <div class="t-body push--s">
-          <i class="t-text"><%= t('.no_subscriptions', :gem_link => link_to(t('.gem_link_text'), rubygem_path("gemcutter"))).html_safe %></i>
+          <i class="t-text"><%= t('.no_subscriptions', :gem_link => link_to(t('.gem_link_text'), rubygem_path("rake"))).html_safe %></i>
         </div>
       <% else %>
         <ol>

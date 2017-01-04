@@ -5,9 +5,11 @@ class ApplicationController < ActionController::Base
   helper :announcements
   helper ActiveSupport::NumberHelper
 
-  protect_from_forgery only: [:create, :update, :destroy]
+  protect_from_forgery only: [:create, :update, :destroy], with: :exception
 
   before_action :set_locale
+
+  rescue_from ActiveRecord::RecordNotFound, with: :render_404
 
   def set_locale
     I18n.locale = user_locale
@@ -19,10 +21,18 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from(ActionController::ParameterMissing) do |e|
-    render text: "Request is missing param '#{e.param}'", status: :bad_request
+    render plain: "Request is missing param '#{e.param}'", status: :bad_request
   end
 
   protected
+
+  def fastly_expires_in(seconds)
+    response.headers['Surrogate-Control'] = "max-age=#{seconds}"
+  end
+
+  def set_surrogate_key(*surrogate_keys)
+    response.headers['Surrogate-Key'] = surrogate_keys.join(' ')
+  end
 
   def redirect_to_root
     redirect_to root_path
@@ -42,7 +52,7 @@ class ApplicationController < ActionController::Base
     # This works because request.body is a RewindableInput which will
     # slurp all the socket data into a tempfile, satisfying apache.
     request.body.size if request.body.respond_to? :size
-    render text: t(:please_sign_up), status: 401
+    render plain: t(:please_sign_up), status: 401
   end
 
   def find_rubygem
@@ -50,7 +60,7 @@ class ApplicationController < ActionController::Base
     return if @rubygem
     respond_to do |format|
       format.any do
-        render text: t(:this_rubygem_could_not_be_found), status: :not_found
+        render plain: t(:this_rubygem_could_not_be_found), status: :not_found
       end
       format.html do
         render file: "public/404", status: :not_found, layout: false, formats: [:html]
@@ -59,7 +69,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_page
-    @page = [1, params[:page].to_i].max
+    @page = params[:page].respond_to?(:to_i) ? [1, params[:page].to_i].max : 1
   end
 
   def user_locale
@@ -68,5 +78,14 @@ class ApplicationController < ActionController::Base
 
   def http_head_locale
     http_accept_language.language_region_compatible_from(I18n.available_locales)
+  end
+
+  def render_404
+    respond_to do |format|
+      format.html { render file: "public/404", status: :not_found, layout: false }
+      format.json { render json: { error: t(:not_found) }, status: :not_found }
+      format.yaml { render yaml: { error: t(:not_found) }, status: :not_found }
+      format.any(:all) { render text: t(:not_found), status: :not_found }
+    end
   end
 end

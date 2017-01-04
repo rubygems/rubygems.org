@@ -2,18 +2,30 @@ development:
   protocol: http
   host: localhost
   s3_bucket: s3bucket
+  s3_region: us-east-1
+  s3_endpoint: s3.amazonaws.com
+  versions_file_location: "./config/versions.list"
 
 test:
   protocol: http
   host: localhost
   s3_bucket: test.s3.rubygems.org
+  s3_region: us-east-1
+  s3_endpoint: s3.amazonaws.com
+  versions_file_location: "./test/helpers/versions.list"
 
 staging:
   protocol: https
   host: staging.rubygems.org
-  s3_bucket: staging.s3.rubygems.org
+  s3_bucket: oregon.staging.s3.rubygems.org
+  s3_region: us-west-2
+  s3_endpoint: s3-us-west-2.amazonaws.com
+  versions_file_location: "./config/versions.list"
 
 production:
   protocol: https
   host: rubygems.org
-  s3_bucket: production.s3.rubygems.org
+  s3_bucket: oregon.production.s3.rubygems.org
+  s3_region: us-west-2
+  s3_endpoint: s3-us-west-2.amazonaws.com
+  versions_file_location: "./config/versions.list"

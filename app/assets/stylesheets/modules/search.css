@@ -102,3 +102,30 @@
   box-sizing: border-box;
   width: 100%;
   font-size: 18px; }
+
+.search__suggestions {
+  color: #8a6d3b;
+  background-color: #fcf8e3;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid #faebcc;
+  border-radius: 4px;
+}
+
+.search__suggestions a {
+  font-weight: bold;
+  color: #e9573f;
+  text-decoration: underline;
+}
+
+.aggregations {
+  font-weight: 800;
+  font-size: 12px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  line-height: 18px;
+}
+
+.aggregations .t-link--black {
+  padding: 4px;
+}

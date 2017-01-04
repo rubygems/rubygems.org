@@ -5,17 +5,18 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport">
     <meta name="google-site-verification" content="AuesbWQ9MCDMmC1lbDlw25RJzyqWOcDYpuaCjgPxEZY" />
-    <link rel="apple-touch-icon" href="/touch-icon-iphone.png" />
-    <link rel="apple-touch-icon" sizes="72x72" href="/touch-icon-ipad.png" />
-    <link rel="apple-touch-icon" sizes="114x114" href="/touch-icon-iphone4.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icons/apple-touch-icon.png" />
+    <% ["57x57", "72x72", "76x76", "114x114","120x120", "144x144", "152x152", "180x180"].each do |size| %>
+      <link rel="apple-touch-icon" sizes="<%= size %>" href="/apple-touch-icons/apple-touch-icon-<%= size %>.png" />
+    <% end %>
     <link rel="mask-icon" href="/rubygems_logo.svg" color="#e9573f">
     <link rel="fluid-icon" href="/fluid-icon.png"/>
     <link rel="search" type="application/opensearchdescription+xml" title="<%=t :title %>" href="/opensearch.xml">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
     <%= stylesheet_link_tag("application") %>
-    <link href="http://fonts.gstatic.com" rel="preconnect" crossorigin>
-    <link href='https://fonts.googleapis.com/css?family=Roboto:100&subset=greek,latin,cyrillic,latin-ext' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:100&amp;subset=greek,latin,cyrillic,latin-ext' rel='stylesheet' type='text/css'>
     <%= render "layouts/feeds" %>
     <%= csrf_meta_tag %>
     <%= yield :head %>
@@ -35,9 +36,9 @@
         <div class="header__nav-links-wrap">
           <% if request.path_info == "/" %>
             <%= form_tag search_url, :id => "main-search", :class => "header__search-wrap--home", :method => :get do %>
-              <%= search_field_tag :query, params[:query], :placeholder => "Search Gems&hellip;".html_safe, :class => "header__search" %>
+              <%= search_field_tag :query, params[:query], :placeholder => t('.header.search_gem').html_safe, :class => "header__search" %>
               <%= label_tag :query do %>
-                <span class="t-hidden">Search gems</span>
+                <span class="t-hidden"><%= t('.header.search_gem').html_safe %></span>
               <% end %>
               <%= submit_tag '⌕', :id => 'search_submit', :name => nil, :class => "header__search__icon" %>
             <% end %>
@@ -45,7 +46,7 @@
             <%= form_tag search_url, :id => "main-search", :class => "header__search-wrap", :method => :get do %>
               <%= search_field_tag :query, params[:query], :placeholder => t("layouts.application.header.search_gem").html_safe, :class => "header__search" %>
               <%= label_tag :query do %>
-                <span class="t-hidden">Search gems</span>
+                <span class="t-hidden"><%= t('.header.search_gem').html_safe %></span>
               <% end %>
               <%= submit_tag '⌕', :id => 'search_submit', :name => nil, :class => "header__search__icon" %>
             <% end %>
@@ -78,11 +79,13 @@
               </a>
               <div class="header__popup__nav-links">
                 <%= link_to t('.header.dashboard'), dashboard_url, class: "header__nav-link" %>
-                <%= link_to t('.header.sign_out'), sign_out_path, method: :delete, class: "header__nav-link" %>
+                <%= link_to t('.header.sign_out'), log_out_path, method: :delete, class: "header__nav-link" %>
               </div>
             <% else %>
               <%= link_to t('.header.sign_in'), sign_in_path, class: "header__nav-link #{'is-active' if request.path_info == '/sign_in'}" %>
-              <%= link_to t('.header.sign_up'), sign_up_path, class: "header__nav-link #{'is-active' if request.path_info == '/sign_up'}" %>
+              <% if Clearance.configuration.allow_sign_up? %>
+                <%= link_to t('.header.sign_up'), sign_up_path, class: "header__nav-link #{'is-active' if request.path_info == '/sign_up'}" %>
+              <% end %>
             <% end %>
           </nav>
         </div>
@@ -143,9 +146,40 @@
             <%- end %>
             <%= link_to t('.footer.help'), t(:help_url), class: "nav--v__link--footer" %>
             <%= link_to t('.footer.api'), "http://guides.rubygems.org/rubygems-org-api", class: "nav--v__link--footer" %>
+            <%- if request.path_info == '/pages/security' %>
+              <%= link_to t('.footer.security'), page_url("security"), class: "nav--v__link--footer is-active" %>
+            <%- else %>
+              <%= link_to t('.footer.security'), page_url("security"), class: "nav--v__link--footer" %>
+            <%- end %>
           </div>
           <div class="l-colspan--l colspan--l--has-border">
-            <p class="footer__about"><%= raw t('footer_about') %></p>
+            <div class="footer__about">
+              <p>
+                <%= raw t('footer_about',
+                  publish_docs: "http://guides.rubygems.org/publishing/",
+                  install_docs: "http://guides.rubygems.org/command-reference/#gem-install",
+                  api_docs: "http://guides.rubygems.org/rubygems-org-api/",
+                  gem_list: rubygems_url,
+                  contributing_docs: "http://guides.rubygems.org/contributing/"
+                ) %>
+              </p>
+              <p>
+                RubyGems.org is made possible by
+                <%= link_to "many sponsors", page_path("sponsors") %>,
+                with development funded by the Ruby trade association,
+                <%= link_to "Ruby Together", "https://rubytogether.org/?source=rubygems" %>.
+                Members get access to
+                <%= link_to "exclusive benefits", "https://rubytogether.org/benefits?source=rubygems" %>
+                and offers from partners (like
+                <%= link_to "Hired", "http://hired.com/?utm_source=sponsor&utm_medium=rubygems&utm_campaign=q4-16-below-fold" %>,
+                empowering developers on the
+                <%= link_to "hunt for a job", "http://hired.com/?utm_source=sponsor&utm_medium=rubygems&utm_campaign=q4-16-below-fold" %>).
+              </p>
+              <p>
+                We need your help to keep RubyGems.org running smoothly and free for everyone to use.
+                <%= link_to "Join Ruby Together today", "https://rubytogether.org/join?source=rubygems" %>.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -155,15 +189,15 @@
             <%= t("layouts.application.footer.supported_by") %>
             <span class="t-hidden">Ruby Central</span>
           </a>
-          <a class="footer__sponsor" href="https://www.bluebox.net/" target="_blank">
-            <%= t("layouts.application.footer.hosted_by") %>
-            <span class="t-hidden">Blue Box</span>
+          <a class="footer__sponsor" href="https://rubytogether.org/" target="_blank">
+            <%= t("layouts.application.footer.supported_by") %>
+            <span class="t-hidden">Ruby Together</span>
           </a>
           <a class="footer__sponsor" href="https://dockyard.com/" target="_blank">
             <%= t("layouts.application.footer.designed_by") %>
             <span class="t-hidden">DockYard</span>
           </a>
-          <a class="footer__sponsor" href="https://dnsimple.com/" target="_blank">
+          <a class="footer__sponsor" href="https://dnsimple.link/resolving-rubygems" target="_blank">
             <%= t("layouts.application.footer.resolved_with") %>
             <span class="t-hidden">DNSimple</span>
           </a>
@@ -183,6 +217,14 @@
             <%= t("layouts.application.footer.gems_served_by") %>
             <span class="t-hidden">Fastly</span>
           </a>
+          <a class="footer__sponsor" href="https://logit.io/" target="_blank">
+            <%= t("layouts.application.footer.logging_by") %>
+            <span class="t-hidden">Logit</span>
+          </a>
+          <a class="footer__sponsor" href="https://travis-ci.org/" target="_blank">
+            <%= t("layouts.application.footer.tested_by") %>
+            <span class="t-hidden">Travis CI</span>
+          </a>
         </div>
       </div>
       <div class="footer__language_selector">
@@ -195,9 +237,6 @@
     </footer>
 
     <%= javascript_include_tag "application" %>
-    <script type="text/javascript">
-     ZeroClipboard.config( { swfPath: "<%= asset_path 'ZeroClipboard.swf' %>", cacheBust: false  } );
-    </script>
     <%= yield :javascript %>
     <script type="text/javascript" async defer id="gauges-tracker" data-site-id="4eab0ac8613f5d1583000005" src="//secure.gaug.es/track.js"></script>
   </body>

@@ -58,7 +58,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to show" do
       should_respond_to(:json) do |body|
-        MultiJson.load body
+        JSON.load body
       end
 
       should_respond_to(:yaml) do |body|
@@ -82,7 +82,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "On GET to show for a gem that doesn't exist" do
       setup do
         @name = generate(:name)
-        assert !Rubygem.exists?(name: @name)
+        refute Rubygem.exists?(name: @name)
         get :show, id: @name, format: "json"
       end
 
@@ -127,6 +127,35 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  context "CORS" do
+    setup do
+      rubygem = create(:rubygem, name: "ZenTest", slug: "zentest")
+      create(:version, rubygem: rubygem)
+    end
+
+    should "Returns the response CORS headers" do
+      @request.env['HTTP_ORIGIN'] = 'https://pages.github.com/'
+      get :show, id: "ZenTest", format: 'json'
+
+      assert_equal 200, @response.status
+      assert_equal '*', @response.headers['Access-Control-Allow-Origin']
+      assert_equal 'GET', @response.headers['Access-Control-Allow-Methods']
+      assert_equal '1728000', @response.headers['Access-Control-Max-Age']
+    end
+
+    should 'Send the CORS preflight OPTIONS request' do
+      @request.env['HTTP_ORIGIN'] = 'https://pages.github.com/'
+      process :show, 'OPTIONS', id: "ZenTest"
+
+      assert_equal 200, @response.status
+      assert_equal '*', @response.headers['Access-Control-Allow-Origin']
+      assert_equal 'GET', @response.headers['Access-Control-Allow-Methods']
+      assert_equal 'X-Requested-With, X-Prototype-Version', @response.headers['Access-Control-Allow-Headers']
+      assert_equal '1728000', @response.headers['Access-Control-Max-Age']
+      assert_equal '', @response.body
+    end
+  end
+
   def self.should_respond_to(format)
     context "with #{format.to_s.upcase} for a list of gems" do
       setup do
@@ -163,7 +192,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On GET to index" do
       should_respond_to :json do |body|
-        MultiJson.load body
+        JSON.load body
       end
 
       should_respond_to :yaml do |body|
@@ -196,7 +225,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           updated_at: 1.year.ago,
           created_at: 1.year.ago)
         @request.env["RAW_POST_DATA"] = gem_file("test-1.0.0.gem").read
-        assert_difference 'Delayed::Job.count', 2 do
+        assert_difference 'Delayed::Job.count', 5 do
           post :create
         end
       end
@@ -261,7 +290,19 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         assert_equal 1, @rubygem.ownerships.size
         assert_equal @other_user, @rubygem.ownerships.first.user
         assert_equal 1, @rubygem.versions.size
-        assert_equal "You do not have permission to push to this gem.", @response.body
+        assert_includes @response.body, "You do not have permission to push to this gem."
+      end
+    end
+
+    context "On POST to create with reserved gem name" do
+      setup do
+        @request.env["RAW_POST_DATA"] = gem_file("rubygems-0.1.0.gem").read
+        post :create
+      end
+      should respond_with 403
+      should "not register gem" do
+        assert Rubygem.count.zero?
+        assert_match(/There was a problem saving your gem: Name 'rubygems' is a reserved gem name./, @response.body)
       end
     end
 
@@ -353,14 +394,14 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     should "return names of reverse dependencies" do
       get :reverse_dependencies, id: @dep_rubygem.to_param, format: "json"
-      gems = MultiJson.load(@response.body)
+      gems = JSON.load(@response.body)
 
       assert_equal 4, gems.size
 
       assert gems.include?(@gem_one.name)
       assert gems.include?(@gem_two.name)
       assert gems.include?(@gem_three.name)
-      assert !gems.include?(@gem_four.name)
+      refute gems.include?(@gem_four.name)
     end
 
     context "with only=development" do
@@ -370,7 +411,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           only: "development",
           format: "json"
 
-        gems = MultiJson.load(@response.body)
+        gems = JSON.load(@response.body)
 
         assert_equal 1, gems.size
 
@@ -385,7 +426,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           only: "runtime",
           format: "json"
 
-        gems = MultiJson.load(@response.body)
+        gems = JSON.load(@response.body)
 
         assert_equal 3, gems.size
 

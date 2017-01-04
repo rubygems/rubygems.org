@@ -1,7 +1,9 @@
 class ProfilesController < ApplicationController
   before_action :redirect_to_root, unless: :signed_in?, except: :show
+  before_action :verify_password, only: :update
 
   def edit
+    @user = current_user
   end
 
   def show
@@ -12,8 +14,10 @@ class ProfilesController < ApplicationController
   end
 
   def update
-    if current_user.update_attributes(params_user)
-      if current_user.email_reset
+    @user = current_user.clone
+    if @user.update_attributes(params_user)
+      if @user.unconfirmed?
+        Mailer.delay.email_reset(current_user)
         sign_out
         flash[:notice] = "You will receive an email within the next few " \
                          "minutes. It contains instructions for reconfirming " \
@@ -24,6 +28,7 @@ class ProfilesController < ApplicationController
         redirect_to edit_profile_path
       end
     else
+      current_user.reload
       render :edit
     end
   end
@@ -32,5 +37,11 @@ class ProfilesController < ApplicationController
 
   def params_user
     params.require(:user).permit(*User::PERMITTED_ATTRS)
+  end
+
+  def verify_password
+    return if current_user.authenticated?(params[:user].delete(:password))
+    flash[:notice] = t('.request_denied')
+    redirect_to edit_profile_path
   end
 end

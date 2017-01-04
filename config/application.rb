@@ -13,10 +13,13 @@ module Gemcutter
 
     config.time_zone = "UTC"
     config.encoding  = "utf-8"
-    config.i18n.available_locales = [:en, :nl, 'zh-CN', 'zh-TW', 'pt-BR', :fr, :es]
+    config.i18n.available_locales = [:en, :nl, 'zh-CN', 'zh-TW', 'pt-BR', :fr, :es, :de]
     config.i18n.fallbacks = true
 
+    config.middleware.insert 0, Rack::UTF8Sanitizer
     config.middleware.use "Redirector" unless Rails.env.development?
+    config.middleware.use Rack::Attack
+    config.middleware.use Rack::Deflater
 
     config.active_record.include_root_in_json = false
     config.active_record.raise_in_transactional_callbacks = true

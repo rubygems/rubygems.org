@@ -46,7 +46,7 @@ class RubygemsHelperTest < ActionView::TestCase
     assert show_all_versions_link?(rubygem)
     rubygem.stubs(:versions_count).returns 1
     rubygem.stubs(:yanked_versions?).returns false
-    assert !show_all_versions_link?(rubygem)
+    refute show_all_versions_link?(rubygem)
     rubygem.stubs(:yanked_versions?).returns true
     assert show_all_versions_link?(rubygem)
   end
@@ -60,6 +60,7 @@ class RubygemsHelperTest < ActionView::TestCase
     version = build(:version)
     linkset = build(:linkset, docs: nil)
 
+    @virtual_path = "rubygems.show"
     link = documentation_link(version, linkset)
     assert link.include?(version.documentation_path)
   end
@@ -75,12 +76,16 @@ class RubygemsHelperTest < ActionView::TestCase
   should "link to the badge" do
     rubygem = create(:rubygem)
     url = "https://badge.fury.io/rb/#{rubygem.name}/install"
+
+    @virtual_path = "rubygems.show"
     assert_match url, badge_link(rubygem)
   end
 
   should "link to report abuse" do
     rubygem = create(:rubygem, name: 'my_gem')
     url = "http://help.rubygems.org/discussion/new?discussion[private]=1&discussion[title]=Reporting%20Abuse%20on%20my_gem" # rubocop:disable Metrics/LineLength
+
+    @virtual_path = "rubygems.show"
     assert_match url, report_abuse_link(rubygem)
   end
 
@@ -89,22 +94,23 @@ class RubygemsHelperTest < ActionView::TestCase
       @linkset = build(:linkset)
       @linkset.wiki = nil
       @linkset.code = ""
+      @virtual_path = "rubygems.show"
     end
 
     should "create link for homepage" do
-      assert_match @linkset.home, link_to_page("Homepage", @linkset.home)
+      assert_match @linkset.home, link_to_page(:home, @linkset.home)
     end
 
     should "be a nofollow link" do
-      assert_match 'rel="nofollow"', link_to_page("Homepage", @linkset.home)
+      assert_match 'rel="nofollow"', link_to_page(:home, @linkset.home)
     end
 
     should "not create link for wiki" do
-      assert_nil link_to_page("Wiki", @linkset.wiki)
+      assert_nil link_to_page(:wiki, @linkset.wiki)
     end
 
     should "not create link for code" do
-      assert_nil link_to_page("Code", @linkset.code)
+      assert_nil link_to_page(:code, @linkset.code)
     end
   end
 
@@ -133,13 +139,20 @@ class RubygemsHelperTest < ActionView::TestCase
   context 'simple_markup' do
     should 'sanitize copy' do
       text = '<script>alert("foo");</script>Rails authentication & authorization'
-      assert_equal '<p>Rails authentication &amp; authorization</p>', simple_markup(text)
+      assert_equal '<p>alert(&quot;foo&quot;);Rails authentication &amp; authorization</p>', simple_markup(text)
       assert simple_markup(text).html_safe?
     end
 
     should 'work on rdoc strings' do
       text = '== FOO'
-      assert_equal "\n<h2 id=\"label-FOO\">FOO</h2>\n", simple_markup(text)
+      assert_equal "\n<h2>FOO</h2>\n", simple_markup(text)
+      assert simple_markup(text).html_safe?
+    end
+
+    should 'sanitize rdoc strings' do
+      text = "== FOO\nclick[javascript:alert('foo')]"
+      assert_equal "\n<h2>FOO</h2>\n\n<p><a>click</a></p>\n", simple_markup(text)
+
       assert simple_markup(text).html_safe?
     end
   end

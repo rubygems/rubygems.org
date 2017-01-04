@@ -1,6 +1,6 @@
 <% @title = t('.title') %>
 
-<%= form_for current_user, :url => {:controller => 'profiles', :action => 'update'} do |form| %>
+<%= form_for @user, :url => {:controller => 'profiles', :action => 'update'} do |form| %>
   <%= form.error_messages %>
 
   <div class="avatar_field">
@@ -17,9 +17,37 @@
   </div>
 
   <div class="text_field">
+    <%= form.label :twitter_username, class: 'form__label form__label__icon-container' do %>
+      <%=
+        image_tag("/images/twitter_icon.png", alt: 'Twitter icon', class: 'form__label__icon')
+      %>
+      
+      <span class='form__label__text'>Twitter username</span>
+    <% end %>
+
+    <p class='form__field__instructions'>
+      <%= t('.optional_twitter_username') %>
+    </p>
+
+    <div class="form__input__addon-container form__input__addon-left">
+      <span class="form__input__addon">@</span>
+      <%= form.text_field(:twitter_username, class: 'form__input') %>
+    </div>
+  </div>
+
+  <div class="text_field">
     <%= form.label :email, :class => 'form__label' %>
     <%= form.email_field :email, :class => 'form__input' %>
   </div>
+
+  <p class='form__field__instructions'>
+    <%= t('.enter_password') %>
+  </p>
+  <div class="password_field">
+    <%= form.label :password, :class => 'form__label' %>
+    <%= form.password_field :password, :class => 'form__input' %>
+  </div>
+
 
   <div class="profile-checkbox form__checkbox">
     <%= form.check_box :hide_email, :class => 'form__checkbox__input' %>

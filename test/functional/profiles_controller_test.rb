@@ -2,10 +2,9 @@ require 'test_helper'
 
 class ProfilesControllerTest < ActionController::TestCase
   context "for a user that doesn't exist" do
-    should "throw a not found" do
-      assert_raise ActiveRecord::RecordNotFound do
-        get :show, id: "unknown"
-      end
+    should "render not found page" do
+      get :show, id: "unknown"
+      assert_response :not_found
     end
   end
 
@@ -84,7 +83,7 @@ class ProfilesControllerTest < ActionController::TestCase
           @handle = "john_m_doe"
           @user = create(:user, handle: "johndoe")
           sign_in_as(@user)
-          put :update, user: { handle: @handle }
+          put :update, user: { handle: @handle, password: @user.password }
         end
 
         should respond_with :redirect
@@ -102,7 +101,7 @@ class ProfilesControllerTest < ActionController::TestCase
           @hide_email = true
           @user = create(:user, handle: "johndoe")
           sign_in_as(@user)
-          put :update, user: { handle: @handle, hide_email: @hide_email }
+          put :update, user: { handle: @handle, hide_email: @hide_email, password: @user.password }
         end
 
         should respond_with :redirect
@@ -111,6 +110,36 @@ class ProfilesControllerTest < ActionController::TestCase
 
         should "update email toggle" do
           assert_equal @hide_email, User.last.hide_email
+        end
+      end
+
+      context "updating without password" do
+        setup do
+          @user = create(:user, handle: "johndoe")
+          sign_in_as(@user)
+          put :update, user: { handle: "doejohn" }
+        end
+
+        should set_flash.to("This request was denied. We could not verify your password.")
+        should redirect_to("the profile edit page") { edit_profile_path }
+        should "not update handle" do
+          assert_equal "johndoe", @user.handle
+        end
+      end
+
+      context "updating with old format password" do
+        setup do
+          @handle = "updated_user"
+          @user = build(:user, handle: "old_user", password: "old")
+          @user.save(validate: false)
+          sign_in_as(@user)
+          put :update, user: { handle: @handle, password: @user.password }
+        end
+
+        should respond_with :redirect
+
+        should "update handle" do
+          assert_equal @handle, @user.handle
         end
       end
     end

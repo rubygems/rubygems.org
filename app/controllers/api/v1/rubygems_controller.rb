@@ -5,6 +5,9 @@ class Api::V1::RubygemsController < Api::BaseController
   before_action :verify_authenticated_user, only: [:index, :create]
   before_action :find_rubygem,              only: [:show]
 
+  before_action :cors_preflight_check, only: :show
+  after_action  :cors_set_access_control_headers, only: :show
+
   def index
     @rubygems = current_user.rubygems.with_versions
     respond_to do |format|
@@ -20,7 +23,7 @@ class Api::V1::RubygemsController < Api::BaseController
         format.yaml { render yaml: @rubygem }
       end
     else
-      render text: t(:this_rubygem_could_not_be_found), status: :not_found
+      render plain: t(:this_rubygem_could_not_be_found), status: :not_found
     end
   end
 
@@ -29,9 +32,13 @@ class Api::V1::RubygemsController < Api::BaseController
       current_user,
       request.body,
       request.protocol.delete("://"),
-      request.host_with_port)
+      request.host_with_port
+    )
     gemcutter.process
-    render text: gemcutter.message, status: gemcutter.code
+    render plain: gemcutter.message, status: gemcutter.code
+  rescue => e
+    Honeybadger.notify(e)
+    render plain: "Server error. Please try again.", status: 500
   end
 
   def reverse_dependencies
@@ -48,6 +55,23 @@ class Api::V1::RubygemsController < Api::BaseController
     respond_to do |format|
       format.json { render json: names }
       format.yaml { render yaml: names }
+    end
+  end
+
+  private
+
+  def cors_set_access_control_headers
+    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Allow-Methods'] = 'GET'
+    headers['Access-Control-Max-Age'] = '1728000'
+  end
+
+  def cors_preflight_check
+    if request.method == 'OPTIONS'
+      cors_set_access_control_headers
+      headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-Prototype-Version'
+
+      render plain: ''
     end
   end
 end

@@ -10,8 +10,9 @@ FactoryGirl.define do
   factory :user do
     email
     handle
-    password "password"
+    password "password12345"
     api_key "secret123"
+    email_confirmed true
   end
 
   factory :dependency do
@@ -58,6 +59,7 @@ FactoryGirl.define do
     transient do
       owners []
       number nil
+      downloads 0
     end
 
     linkset
@@ -73,7 +75,7 @@ FactoryGirl.define do
       end
 
       if evaluator.downloads
-        Redis.current[Download.key(rubygem)] = evaluator.downloads
+        GemDownload.increment(evaluator.downloads, rubygem_id: rubygem.id, version_id: 0)
       end
     end
   end
@@ -90,21 +92,19 @@ FactoryGirl.define do
     metadata "foo" => "bar"
     number
     platform "ruby"
-    ruby_version ">= 2.0.0"
+    required_rubygems_version ">= 2.6.3"
+    required_ruby_version ">= 2.0.0"
     licenses "MIT"
     requirements "Opencv"
     rubygem
     size 1024
+    # In reality sha256 is different for different version
+    # sha256 is calculated in Pusher, we don't use pusher to create versions in tests
     sha256 "tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g="
 
     trait :yanked do
       indexed false
     end
-  end
-
-  factory :version_history do
-    day { Time.zone.today.to_s }
-    count 1
   end
 
   sequence :url do |n|
@@ -121,15 +121,9 @@ FactoryGirl.define do
     end
   end
 
-  factory :oauth_application, class: Doorkeeper::Application do
-    name "Adoption Center"
-    redirect_uri "https://example.org/auth"
-    scopes "public"
-  end
-
-  factory :oauth_access_token, class: Doorkeeper::AccessToken do
-    association :application, factory: :oauth_application
-    expires_in 90.days.from_now
-    scopes "public"
+  factory :gem_download do
+    rubygem_id 0
+    version_id 0
+    count 0
   end
 end

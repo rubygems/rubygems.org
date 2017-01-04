@@ -6,13 +6,13 @@ class Redirector
   def call(env)
     request = Rack::Request.new(env)
 
-    allowed_hosts = [Gemcutter::HOST, 'index.rubygems.org', 'fastly.rubygems.org']
+    allowed_hosts = [Gemcutter::HOST, 'index.rubygems.org', 'fastly.rubygems.org', 'bundler.rubygems.org']
 
     if !allowed_hosts.include?(request.host) && request.path !~ %r{^/api} && request.host !~ /docs/
       fake_request = Rack::Request.new(env.merge("HTTP_HOST" => Gemcutter::HOST))
       redirect_to(fake_request.url)
     elsif request.path =~ %r{^/(book|chapter|export|read|shelf|syndicate)} && request.host !~ /docs/
-      redirect_to("http://docs.rubygems.org#{request.path}")
+      redirect_to("https://docs.rubygems.org#{request.path}")
     elsif request.path =~ %r{^/pages/docs$}
       redirect_to("http://guides.rubygems.org")
     elsif request.path =~ %r{^/pages/gem_docs$}

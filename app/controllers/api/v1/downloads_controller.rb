@@ -1,43 +1,38 @@
 class Api::V1::DownloadsController < Api::BaseController
   def index
+    total = GemDownload.total_count
     respond_to do |format|
-      format.any(:all) { render text: Download.count }
-      format.json { render json: { total: Download.count } }
-      format.yaml { render text: { total: Download.count }.to_yaml }
+      format.any(:all) { render plain: total }
+      format.json { render json: { total: total } }
+      format.yaml { render plain: { total: total }.to_yaml }
     end
   end
 
   def show
     full_name = params[:id]
-    rubygem_name = Version.rubygem_name_for(full_name)
-    rubygem = Rubygem.find_by_name(rubygem_name) if rubygem_name
-    if rubygem && rubygem.public_versions.count.nonzero?
+    version = Version.find_by(full_name: full_name)
+    if version && !version.yanked?
       data = {
-        total_downloads: Download.for_rubygem(rubygem_name),
-        version_downloads: Download.for_version(full_name)
+        total_downloads: GemDownload.count_for_rubygem(version.rubygem_id),
+        version_downloads: GemDownload.count_for_version(version.id)
       }
       respond_with_data(data)
     else
-      render text: t(:this_rubygem_could_not_be_found), status: :not_found
+      render plain: t(:this_rubygem_could_not_be_found), status: :not_found
     end
   end
 
   def top
-    data = {
-      gems: Download.most_downloaded_today(50).map do |version, count|
-        [version.attributes, count]
-      end
-    }
-    respond_with_data(data)
+    render plain: "This endpoint is not supported anymore", status: :gone
   end
 
   def all
-    data = {
-      gems: Download.most_downloaded_all_time(50).map do |version, count|
-        [version.attributes, count]
-      end
-    }
-    respond_with_data(data)
+    gems = GemDownload.most_downloaded_gems.limit(50)
+    gems = gems.map do |gem|
+      next unless gem.version
+      [gem.version.attributes, gem.count]
+    end.compact
+    respond_with_data(gems: gems)
   end
 
   private
@@ -45,7 +40,7 @@ class Api::V1::DownloadsController < Api::BaseController
   def respond_with_data(data)
     respond_to do |format|
       format.json { render json: data }
-      format.yaml { render text: data.to_yaml }
+      format.yaml { render plain: data.to_yaml }
     end
   end
 end

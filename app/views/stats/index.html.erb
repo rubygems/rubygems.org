@@ -2,20 +2,26 @@
 
 <div class="stats">
   <h2 class="stat" data-icon="⟡">
-    Total Gems
+    <%= t('stats.index.total_gems') %>
     <span class="stat__count"><%= number_with_delimiter @number_of_gems %></span>
   </h2>
   <h2 class="stat" data-icon="☺">
-    Total Users
+    <%= t('stats.index.total_users') %>
     <span class="stat__count"><%= number_with_delimiter @number_of_users %></span>
   </h2>
   <h2 class="stat" data-icon="⌄">
-    Total Downloads
+    <%= t('stats.index.total_downloads') %>
     <span class="stat__count"><%= number_with_delimiter @number_of_downloads %></span>
   </h2>
 </div>
 
-<h2 class="stats__graph__heading">All Time Most Downloaded</h2>
+<h2 class="stats__graph__heading">
+  <%= t('stats.index.all_time_most_downloaded') %>
+</h2>
+
+<header class="gems__header">
+  <p class="gems__meter"><%= page_entries_info @most_downloaded, model: 'gem' %></p>
+</header>
 
 <% @most_downloaded.each do |gem| %>
   <div class="stats__graph__gem">
@@ -27,3 +33,4 @@
     </div>
   </div>
 <% end %>
+<%= will_paginate @most_downloaded %>

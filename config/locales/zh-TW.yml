@@ -74,8 +74,8 @@ zh-TW:
         transparent_pages: "建立更透明、更易於瀏覽的 Gem 專案頁面"
         enable_community: "讓社群能透過眾人的力量來改善本站"
       founding: "本專案由 %{founder} 於 2009 年 4 月創立，發展過程中有超過 %{contributors} 貢獻者以及 %{downloads}。自 RubyGems 1.3.6 發佈以來，本站名稱由 Gemcutter 更名為 %{title}，本站自此之後成為 Ruby 社群的核心網站。"
-      support: "雖然 Gemcutter 並不是由一個特定的公司運作，但在發展過程中接受了許多來源的幫助。目前的設計、圖像以及網站的前端開發是由 %{dockyard} 提供。%{github} 也幫助我們能更容易地協作和分享原始碼。本站部署在 %{heroku} 上，其一流的服務，更有助於證明 Gemcutter 是一個可以穩定、可行的解決方案。"
-      technical: "關於本站的技術資訊：100% Ruby。主站是一個 %{rails} 應用程式，RubyGem 則是透過 %{sinatra} 提供服務。Gems 架設在 %{s3} 上，使得 Gem 從發佈到提供下載的時間大幅縮短。詳細資訊可從 GitHub 上的 %{source_code} 查看（遵守 %{license} 協議）。"
+      support: "雖然 Gemcutter 並不是由一個特定的公司運作，但在發展過程中接受了許多來源的幫助。目前的設計、圖像以及網站的前端開發是由 %{dockyard} 提供。%{github} 也幫助我們能更容易地協作和分享原始碼。本站部署在 %{heroku} 上，其一流的服務，更有助於證明 Gemcutter 是一個可以穩定、可行的解決方案。Our infrastructure is currently hosted on %{aws}."
+      technical: "關於本站的技術資訊：100% Ruby。主站是一個 %{rails} 應用程式。Gems 架設在 %{s3} 上, served by %{fastly}, 使得 Gem 從發佈到提供下載的時間大幅縮短。詳細資訊可從 GitHub 上的 %{source_code} 查看（遵守 %{license} 協議）。"
 
   passwords:
     edit:
@@ -111,13 +111,7 @@ zh-TW:
       other_fields_notice: "其他設定欄位只能透過發佈一個新版本的 Gem 來修改"
     index:
       title: 'Gems'
-    show:
-      not_hosted_notice: "這個 Gem 目前沒有在 Gemcutter 上"
-      install: "安裝"
-      yanked_notice: "這個 Gem 版本已被移除，因此無法提供下載，也無法被其他的 Gem 相依。"
-      authors_header: "作者"
-      downloads_for_this_version: "這個版本"
-      owners_header: "擁有者"
+    aside:
       links:
         header: "相關連結"
         home: "首頁"
@@ -126,8 +120,21 @@ zh-TW:
         wiki: "Wiki"
         mail: "郵件群組"
         bugs: "Bug 追蹤"
-      versions_header: "版本列表"
+        download: "下載"
+        subscribe: "訂閱"
+        unsubscribe: "取消訂閱"
+        report_abuse: "舉報投訴"
+        badge: "徽章"
+        rss: RSS
+      downloads_for_this_version: "這個版本"
       bundler_header: Gemfile
+      install: "安裝"
+    show:
+      not_hosted_notice: "這個 Gem 目前沒有在 Gemcutter 上"
+      yanked_notice: "這個 Gem 版本已被移除，因此無法提供下載，也無法被其他的 Gem 相依。"
+      authors_header: "作者"
+      owners_header: "擁有者"
+      versions_header: "版本列表"
       show_all_versions: "顯示所有版本（共 %{count}）"
       licenses_header: License
       no_licenses: N/A
@@ -143,7 +150,7 @@ zh-TW:
       forgot_password: "忘記密碼？"
 
   stats:
-    show:
+    index:
       total_downloads: "總下載次數"
 
   users:

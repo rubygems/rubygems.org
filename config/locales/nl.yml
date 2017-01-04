@@ -86,15 +86,7 @@ nl:
       title: Wijzig gem links
       other_fields_notice: Alle andere velden kunnen alleen gewijzigd worden door een nieuwe versie van de gem te publiceren.
       subtitle: voor %{gem}
-    show:
-      install: Installeer
-      bundler_header: Gemfile
-      downloads_for_this_version: ! 'Voor deze versie'
-      stats_header: Statistieken
-      authors_header: Auteurs
-      versions_header: Versies
-      not_hosted_notice: Deze gem wordt momenteel niet gehost op rubygems.org.
-      owners_header: Eigenaren
+    aside:
       links:
         home: Startpagina
         mail: Mailing-list
@@ -103,6 +95,15 @@ nl:
         code: source code
         wiki: Wiki
         header: Links
+      downloads_for_this_version: ! 'Voor deze versie'
+      bundler_header: Gemfile
+      install: Installeer
+    show:
+      stats_header: Statistieken
+      authors_header: Auteurs
+      versions_header: Versies
+      not_hosted_notice: Deze gem wordt momenteel niet gehost op rubygems.org.
+      owners_header: Eigenaren
       show_all_versions: Toon alle versies (%{count} totaal)
   dashboards:
     show:
@@ -129,7 +130,7 @@ nl:
   pages:
     about:
       title: Over
-      support: Hoewel rubygems.org niet wordt gerund door één specifiek bedrijf, zijn er vele die ons tot hier geholpen hebben. Het huidige design van de site is gesponsord door %{dockyard}. %{github} is van onschatbare waarde geweest om code te delen en er samen aan te werken. De site is begonnen op  %{heroku}, waarvan de geweldige service heeft geholpen om te bewijzen dat rubygems.org een oplossing is waar de hele community op kan bouwen.
+      support: Hoewel rubygems.org niet wordt gerund door één specifiek bedrijf, zijn er vele die ons tot hier geholpen hebben. Het huidige design van de site is gesponsord door %{dockyard}. %{github} is van onschatbare waarde geweest om code te delen en er samen aan te werken. De site is begonnen op  %{heroku}, waarvan de geweldige service heeft geholpen om te bewijzen dat rubygems.org een oplossing is waar de hele community op kan bouwen. Our infrastructure is currently hosted on %{aws}.
       subtitle: wat dit is
       founding: Het project is gestart in april 2009 door %{founder} en is sindsdien uitgegroeid tot een dienst met bijdragen van meer dan %{contributors} en %{downloads}. Sinds de RubyGems 1.3.6 release, is de site hernoemd van Gemcutter naar %{title} om de centrale rol in de Ruby community te verstevigen.
       purpose:
@@ -137,7 +138,7 @@ nl:
         enable_community: De community in staat te stellen de site te verbeteren en uit te breiden.
         better_api: Een betere API ter beschikking te stellen voor het beheren van gems.
         header: ! 'Welkom bij %{site}, dé hosting service voor de Ruby community. Het doel van dit poroject is drieledig:'
-      technical: ! 'Een klein inkijkje in de technische aspecten van de site: Het is 100% Ruby. The main site is a %{rails}-applicatie en het uitserveren van de RubyGem wordt verzorgd door %{sinatra}. Gems worden gehost op %{s3} en de tijd tussen het publiceren van een nieuwe gem en het beschikbaar zijn voor installatie is minimaal. Voor meer informatie, %{source_code} op GitHub. De code is %{license}'
+      technical: ! 'Een klein inkijkje in de technische aspecten van de site: Het is 100% Ruby. The main site is a %{rails}-applicatie. Gems worden gehost op %{s3}, served by %{fastly}, en de tijd tussen het publiceren van een nieuwe gem en het beschikbaar zijn voor installatie is minimaal. Voor meer informatie, %{source_code} op GitHub. De code is %{license}'
     create:
       title: aanmaken
       notice: Deze pagaina is verplaatst naar the nieuwe rubygems.org support site.

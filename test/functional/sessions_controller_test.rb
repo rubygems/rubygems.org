@@ -4,7 +4,8 @@ class SessionsControllerTest < ActionController::TestCase
   context "on POST to create" do
     context "when login and password are correct" do
       setup do
-        User.expects(:authenticate).with('login', 'pass').returns User.new
+        user = User.new(email_confirmed: true)
+        User.expects(:authenticate).with('login', 'pass').returns user
         post :create, session: { who: 'login', password: 'pass' }
       end
 
@@ -12,7 +13,7 @@ class SessionsControllerTest < ActionController::TestCase
       should redirect_to('the dashboard') { dashboard_url }
 
       should "sign in the user" do
-        assert @controller.signed_in?
+        assert @controller.request.env[:clearance].signed_in?
       end
     end
 
@@ -27,7 +28,18 @@ class SessionsControllerTest < ActionController::TestCase
       should set_flash.now[:notice]
 
       should "not sign in the user" do
-        assert !@controller.signed_in?
+        refute @controller.request.env[:clearance].signed_in?
+      end
+    end
+
+    context "when login is an array" do
+      setup do
+        post :create, session: { who: ['1'], password: 'pass' }
+      end
+
+      should respond_with :unauthorized
+      should "not sign in the user" do
+        refute @controller.request.env[:clearance].signed_in?
       end
     end
   end
@@ -41,7 +53,7 @@ class SessionsControllerTest < ActionController::TestCase
     should redirect_to('login page') { sign_in_url }
 
     should "sign out the user" do
-      assert !@controller.signed_in?
+      refute @controller.request.env[:clearance].signed_in?
     end
   end
 end

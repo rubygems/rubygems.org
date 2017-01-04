@@ -11,9 +11,12 @@ en:
   edit: Edit
   sign_in: "Sign in"
   sign_up: "Sign up"
-  footer_about: "RubyGems.org is the Ruby community&rsquo;s gem hosting service. Instantly publish your gems and install them. Use the API to interact and find out more information about available gems. Become a contributor and enhance the site with your own changes."
+  footer_about: 'RubyGems.org is the Ruby community&rsquo;s gem hosting service. Instantly <a href="%{publish_docs}">publish your gems</a> and then <a href="%{install_docs}">install them</a>. Use <a href="%{api_docs}">the API</a> find out more about <a href="%{gem_list}">available gems</a>. <a href="%{contributing_docs}">Become a contributor</a> and improve the site yourself.'
   locale_name: "English"
   this_rubygem_could_not_be_found: "This rubygem could not be found."
+  not_found: "Not Found"
+  failure_when_forbidden: Please double check the URL or try submitting it again.
+  none: None
 
   dashboards:
     show:
@@ -55,6 +58,7 @@ en:
         api: "API"
         guides: "Guides"
         contribute: "Contribute"
+        security: "Security"
         supported_by: "Supported by"
         hosted_by: "Hosted by"
         designed_by: "Designed by"
@@ -63,6 +67,8 @@ en:
         tracking_by: "Tracking by"
         monitored_by: "Monitored by"
         gems_served_by: "Gems served by"
+        logging_by: "Logging by"
+        tested_by: "Tested by"
 
   pages:
     about:
@@ -73,8 +79,8 @@ en:
         transparent_pages: Create more transparent and accessible project pages
         enable_community: Enable the community to improve and enhance the site
       founding: "The project was started in April 2009 by %{founder}, and has since grown to include the contributions of over %{contributors} and %{downloads}. As of the RubyGems 1.3.6 release, the site has been renamed to %{title} from Gemcutter to solidify the site's central role in the Ruby community."
-      support: "Although Gemcutter is not run by one specific company, plenty have helped us out so far. The current design, illustrations, and front-end development of this site were created by %{dockyard}. %{github} has also been invaluable for helping us collaborate and share code easily. The site started on %{heroku}, whose great service helped prove Gemcutter as a viable solution that the whole community could rely on."
-      technical: "Some insights into the technical aspects of the site: It's 100% Ruby. The main site is a %{rails} application, and the RubyGem serving is done through %{sinatra}. Gems are hosted on %{s3}, and the time between publishing a new gem and having it ready for installation is minimal. For more info, %{source_code}, which is %{license} over at GitHub."
+      support: "Although RubyGems.org is not run by one specific company, plenty have helped us out so far. The current design, illustrations, and front-end development of this site were created by %{dockyard}. %{github} has also been invaluable for helping us collaborate and share code easily. The site started on %{heroku}, whose great service helped prove RubyGems as a viable solution that the whole community could rely on. Our infrastructure is currently hosted on %{aws}."
+      technical: "Some insights into the technical aspects of the site: It's 100% Ruby. The main site is a %{rails} application. Gems are hosted on %{s3}, served by %{fastly}, and the time between publishing a new gem and having it ready for installation is usually just a few seconds. For more info, %{source_code}, which is %{license} over at GitHub."
 
   passwords:
     edit:
@@ -89,6 +95,8 @@ en:
     edit:
       title: Edit profile
       hide_email: Hide email in public profile
+      optional_twitter_username: Optional Twitter username. Will be displayed publicly
+      enter_password: Please enter your account's password
       reset_password:
         title: Reset password
         text: "Need a new password? No problem. %{link}"
@@ -100,8 +108,12 @@ en:
         link_text: gem commands
         reset: Reset my API key
         confirm_reset: Are you sure? This cannot be undone.
+    update:
+      request_denied: This request was denied. We could not verify your password.
 
   rubygems:
+    blacklisted:
+      blacklisted_namespace: This namespace is reserved by rubygems.org.
     dependencies:
       header: "%{title} Dependencies"
     edit:
@@ -110,13 +122,19 @@ en:
       other_fields_notice: All other fields can only be edited by pushing an updated version of your gem.
     index:
       title: 'Gems'
-    show:
-      not_hosted_notice: This gem is not currently hosted on Gemcutter.
-      install: install
-      yanked_notice: "This gem has been yanked, and it is not available for download directly or for other gems that may have depended on it."
+      downloads: Downloads
+    gem_members:
       authors_header: Authors
-      downloads_for_this_version: "For this version"
       owners_header: Owners
+      sha_256_checksum: SHA 256 checksum
+    show_yanked:
+      not_hosted_notice: This gem is not currently hosted on RubyGems.org.
+      reserved_namespace:
+        one: This gem previously existed, but has been removed by its owner. The RubyGems.org team has reserved this gem name for 1 more day. After that time is up, anyone will be able to claim this gem name using gem push. <br/>
+             If you are the previous owner of this gem, you can change ownership of this gem using the gem owner command. You can also create new versions of this gem using gem push.
+        other: This gem previously existed, but has been removed by its owner. The RubyGems.org team has reserved this gem name for %{count} more days. After that time is up, anyone will be able to claim this gem name using gem push. <br/>
+               If you are the previous owner of this gem, you can change ownership of this gem using the gem owner command. You can also create new versions of this gem using gem push.
+    aside:
       links:
         header: Links
         home: Homepage
@@ -125,12 +143,33 @@ en:
         wiki: Wiki
         mail: Mailing List
         bugs: Bug Tracker
-      versions_header: Versions
+        download: Download
+        subscribe: Subscribe
+        unsubscribe: Unsubscribe
+        report_abuse: Report Abuse
+        badge: Badge
+        rss: RSS
+        reverse_dependencies: Reverse dependencies
+      downloads_for_this_version: "For this version"
       bundler_header: Gemfile
+      copy_to_clipboard: Copy to clipboard
+      copied: Copied!
+      install: install
+      required_ruby_version: Required Ruby Version
+      required_rubygems_version: Required Rubygems Version
+    show:
+      yanked_notice: "This version has been yanked, and it is not available for download directly or for other gems that may have depended on it."
+      versions_header: Versions
       show_all_versions: "Show all versions (%{count} total)"
       licenses_header: License
       no_licenses: N/A
       requirements_header: Requirements
+
+  reverse_dependencies:
+    index:
+      title: "Reverse dependencies for %{name}"
+    reverse_dependencies:
+      search_reverse_dependencies: "Search reverse dependencies Gems&hellip;"
 
   searches:
     show:
@@ -139,21 +178,27 @@ en:
 
   sessions:
     new:
-      forgot_password: "Forgot Password?"
+      forgot_password: "Forgot password?"
+      resend_confirmation: Didn't receive confirmation mail?
 
   stats:
-    show:
-      total_downloads: "Total downloads"
+    index:
+      total_downloads: Total downloads
+      total_gems: Total gems
+      total_users: Total users
+      all_time_most_downloaded: All Time Most Downloaded
 
   users:
     new:
       have_account: "Already have an account?"
+    create:
+      email_sent: A confirmation mail has been sent to your email address.
 
   versions:
     index:
       title: "All versions of %{name}"
       versions_since: "%{count} versions since %{since}"
-      not_hosted_notice: This gem is not currently hosted on Gemcutter.
+      not_hosted_notice: This gem is not currently hosted on RubyGems.org.
     version:
       yanked: "yanked"
 
@@ -173,3 +218,39 @@ en:
       session:
         who: Email or Handle
         password: Password
+
+  will_paginate:
+    previous_label: "Previous"
+    next_label: "Next"
+    page_gap: "…"
+    page_entries_info:
+      single_page:
+        zero:  "No %{model} found"
+        one:   "Displaying 1 %{model}"
+        other: "Displaying all %{count} %{model}"
+      single_page_html:
+        zero:  "No %{model} found"
+        one:   "Displaying <b>1</b> %{model}"
+        other: "Displaying <b>all&nbsp;%{count}</b> %{model}"
+
+      multi_page: "Displaying %{model} %{from} - %{to} of %{count} in total"
+      multi_page_html: "Displaying %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> of <b>%{count}</b> in total"
+
+  mailer:
+    confirmation_subject: Please confirm your email address with RubyGems.org
+    confirm_your_email: Please confirm your email address with the link sent to you email.
+    email_confirmation:
+      welcome_message: Welcome to RubyGems.org! Click the link below to verify your email.
+      confirmation_link: Confirm email address
+    email_reset:
+      visit_link_instructions: You changed your email address on RubyGems.org. Please visit the following url to re-activate your account.
+
+  email_confirmations:
+    update:
+      confirmed_email: Your email address has been verified.
+    new:
+      title: Resend confirmation email
+      will_email_notice: We will email you confirmation link to activate your account.
+      submit: Resend Confirmation
+    create:
+      promise_resend: We will email you confirmation link to activate your account if one exists.

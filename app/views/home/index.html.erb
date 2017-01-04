@@ -6,7 +6,7 @@
   <%= form_tag search_url, :id => "main-search", :method => :get do %>
     <%= search_field_tag :query, params[:query], :placeholder => t('layouts.application.header.search_gem').html_safe, autofocus: current_page?(root_url), :id => 'home_query', :class => "home__search" %>
     <%= label_tag :home_query do %>
-    <span class="t-hidden">Search gems</span>
+      <span class="t-hidden"><%= t('layouts.application.header.search_gem').html_safe %></span>
     <% end %>
     <%= submit_tag '⌕', :id => 'search_submit', :name => nil, :class => "home__search__icon" %>
   <% end %>

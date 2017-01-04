@@ -1,0 +1,125 @@
+<% @title = "Security" %>
+
+<div class="l-colspan t-body">
+  <p>
+    Found a security issue with RubyGems or RubyGems.org?
+    Please follow these steps to report it.
+  </p>
+
+  <h2>Reporting a security issue</h2>
+
+  <p>
+    Before continuing, please ensure this is a security issue for the RubyGems
+    client or the RubyGems.org service. For all vulnerabilites with individual
+    gems, follow our guide on <a href="http://guides.rubygems.org/security/#reporting-security-vulnerabilities">
+      reporting security issues</a> with others' gems. If it's a security issue
+    with the Ruby on Rails framework, see the <a href="http://rubyonrails.org/security/">
+      Rails Security</a> guide.
+  </p>
+
+  <p>
+    <strong>
+      For any security bug or issue with the RubyGems client or
+      RubyGems.org service, please email <a href="mailto:security@rubygems.org">
+        security@rubygems.org</a> with details about the problem or submit a report
+      using <a href="https://hackerone.com/rubygems">HackerOne</a>.
+      The <a href="https://github.com/rubygems/rubygems">RubyGems</a> client library
+      is in scope for bounty reward. You can read the details of the bounty
+      program on the <a href="https://hackerone.com/rubygems">RubyGems HackerOne page</a>.
+    </strong>
+  </p>
+
+  <p>
+    <small>
+      Please note: the <a href="https://groups.google.com/forum/#!forum/rubygems-developers">
+        rubygems-developers mailing list</a>, the
+      <a href="https://groups.google.com/forum/#!forum/rubygems-org">rubygems.org
+        mailing list</a>, and the <a href="ircs://irc.freenode.net:6697/#rubygems">
+        #rubygems</a> IRC channel are public areas.
+
+      If escalating to these places, please do not discuss your issue,
+      simply say that you’re trying to get a hold of someone from the security
+      team. Thanks in advance for responsibly disclosing your security issue.
+    </small>
+  </p>
+
+  <h2>Reporting RubyGems.org Website Problems</h2>
+  <p>
+    If you're having trouble pushing a gem, or otherwise need help with your
+    RubyGems.org account, please <a href="http://help.rubygems.org">
+      open a new help issue</a>.
+  </p>
+
+  <p>
+    For bugs or other problems with RubyGems.org, please use the
+    <a href="https://github.com/rubygems/rubygems.org/issues">RubyGems.org issue tracker</a>
+    to open a new issue.
+  </p>
+
+  <h2>Disclosure Policy</h2>
+
+  <p>
+    RubyGems and RubyGems.org follow a 5 step disclosure policy:
+  </p>
+
+  <ol>
+    <li>
+      Security report received and is assigned a primary handler. This person
+      will coordinate the fix and release process.
+    </li>
+    <li>
+      Problem is confirmed and, a list of all affected versions is determined.
+      Code is audited to find any potential similar problems.
+    </li>
+    <li>
+      Fixes are prepared for all releases which are still supported. These fixes
+      are not committed to the public repository but rather held locally pending
+      the announcement.
+    </li>
+    <li>
+      A suggested embargo date for this vulnerability is chosen.
+    </li>
+    <li>
+      On the embargo date, the <a href="https://groups.google.com/forum/#!forum/rubygems-developers">
+      rubygems-developers mailing list</a> is sent an announcement. This will
+      include patches for all versions still under support. The changes are
+      pushed to the public repository and new gems released to rubygems. At
+      least 6 hours after the mailing list is notified, a copy of the advisory
+      will be published on the <a href="http://blog.rubygems.org/"> RubyGems.org
+      blog</a>.
+    </li>
+  </ol>
+
+  <p>
+    This process can take some time, especially when coordination is required
+    with maintainers of other projects. Every effort will be made to handle
+    the bug in as timely a manner as possible, however it’s important that
+    we follow the release process above to ensure that the disclosure is
+    handled in a consistent manner.
+  </p>
+
+  <h2>Receiving Security Updates</h2>
+
+  <p>
+    The best way to receive all the security announcements is to subscribe
+    to the <a href="https://groups.google.com/forum/#!forum/rubygems-developers">
+      rubygems-developers mailing list</a>.
+  </p>
+
+  <p>
+    No one outside the core team or the initial reporter will be notified prior
+    to the lifting of the embargo. We regret that we cannot make exceptions to
+    this policy for high traffic or important sites, as any disclosure beyond
+    the minimum required to coordinate a fix could cause an early leak of the
+    vulnerability.
+  </p>
+
+  <h2>Comments on this Policy</h2>
+
+  <p>
+    If you have any suggestions to improve this policy,
+    please send an email to <a href="mailto:security@rubygems.org">
+      security@rubygems.org</a> or <a href="https://github.com/rubygems/rubygems.org/issues">
+      open an issue on GitHub</a>. Thanks!
+  </p>
+</div>

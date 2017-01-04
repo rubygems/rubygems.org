@@ -47,7 +47,7 @@
     margin-top: 18px; }
   .errorExplanation ul li, .errorExplanation p {
     font-weight: 300;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1.66; }
   .errorExplanation ul li {
     padding-left: 23px;
@@ -157,13 +157,19 @@
     float: left;
     border-radius: 50%; } }
 
-.profile__header__email {
+.profile__header__attribute {
   padding-top: 10px;
   display: inline-block; }
-  .profile__header__email:before {
+  .profile__header__attribute:before {
     margin-right: 9px;
     position: relative;
     top: 1px; }
+
+.profile__header__icon {
+  height: 28px;
+  float: left;
+  margin-top: 3px;
+  margin-left: -5px; }
 
 @media (max-width: 599px) {
   .profile__downloads-wrap {

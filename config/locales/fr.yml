@@ -73,8 +73,8 @@ fr:
         transparent_pages: "Créer des pages de projet plus accessibles et transparentes"
         enable_community: "Permettre à la communauté d'améliorer ce site"
       founding: "Le projet a commencé en avril 2009 par %{founder}, et a grandi avec les contribution de %{contributors} et %{downloads}. À la sortie de RubyGems 1.3.6, ce site a été renommé de Gemcutter à %{title} pour ancrer son rôle central dans la communauté Ruby."
-      support: "Bien que Gemcutter n'appartienne à aucune entreprise en particulier, il a reçu l'aide de nombreuses d'entre elles. Le design actuel, les illustrations, et développement front-end de ce site nous ont été offerts par %{dockyard}. Nous n'aurions pas pu collaborer et partager de code facilement sans %{github}. Ce site s'est lancé sur %{heroku}, dont l'excellent service a fait de Gemcutter une solution viable pour que la communauté s'y appuie en toute confiance."
-      technical: "Quelques informations sur les aspects techniques de ce site : il est en Ruby à 100%. Le site principal est une application %{rails}, et la mise à disposition des RubyGems est gérée avec %{sinatra}. Les Gems sont hébergés sur %{s3}, permettant un record de vitesse entre le moment de publication et de mise à disposition de gems. Pour davantage d'informations, le %{source_code} est disponible sous licence %{license} sur GitHub."
+      support: "Bien que Gemcutter n'appartienne à aucune entreprise en particulier, il a reçu l'aide de nombreuses d'entre elles. Le design actuel, les illustrations, et développement front-end de ce site nous ont été offerts par %{dockyard}. Nous n'aurions pas pu collaborer et partager de code facilement sans %{github}. Ce site s'est lancé sur %{heroku}, dont l'excellent service a fait de Gemcutter une solution viable pour que la communauté s'y appuie en toute confiance. Our infrastructure is currently hosted on %{aws}."
+      technical: "Quelques informations sur les aspects techniques de ce site : il est en Ruby à 100%. Le site principal est une application %{rails}. Les Gems sont hébergés sur %{s3}, served by %{fastly}, permettant un record de vitesse entre le moment de publication et de mise à disposition de gems. Pour davantage d'informations, le %{source_code} est disponible sous licence %{license} sur GitHub."
 
   passwords:
     edit:
@@ -110,13 +110,8 @@ fr:
       other_fields_notice: "Tous les autres champs ne sont modifiables qu'en soumettant une nouvelle version de votre gem."
     index:
       title: "Gems"
-    show:
-      not_hosted_notice: "Gem non hébergé sur Rubygems pour le moment."
-      install: "installation"
-      yanked_notice: "Retrait de Gem : disponible ni directement, ni pour les gems qui en dépendraient."
-      authors_header: "Auteurs"
-      downloads_for_this_version: "Pour cette version"
-      owners_header: "Propriétaires"
+      downloads: Téléchargements
+    aside:
       links:
         header: "Liens"
         home: "Page d'accueil"
@@ -125,12 +120,29 @@ fr:
         wiki: "Wiki"
         mail: "Liste de diffusion"
         bugs: "Suivi de bugs"
-      versions_header: "Versions"
+        download: "Télécharger"
+        subscribe: "Abonnement"
+        unsubscribe: "Désabonement"
+        report_abuse: Signaler un abus
+        badge: Badge
+        rss: RSS
+      downloads_for_this_version: "Pour cette version"
       bundler_header: "Gemfile"
+      copy_to_clipboard: Copier
+      copied: Copié!
+      install: "installation"
+      required_ruby_version: Version de Ruby requise
+    show:
+      not_hosted_notice: "Gem non hébergé sur Rubygems pour le moment."
+      yanked_notice: "Retrait de Gem : disponible ni directement, ni pour les gems qui en dépendraient."
+      authors_header: "Auteurs"
+      owners_header: "Propriétaires"
+      versions_header: "Versions"
       show_all_versions: "Voir toutes les versions (%{count})"
       licenses_header: "Licence"
       no_licenses: "aucune"
       requirements_header: "Dépendances"
+      sha_256_checksum: Total de contrôle SHA 256
 
   searches:
     show:
@@ -142,8 +154,11 @@ fr:
       forgot_password: "Mot de passe oublié ?"
 
   stats:
-    show:
-      total_downloads: "Nombre de téléchargements"
+    index:
+      total_downloads: "Total de téléchargements"
+      total_gems: "Total de gems"
+      total_users: "Total d'utilisateurs"
+      all_time_most_downloaded: "Gems les plus téléchargés"
 
   users:
     new:
@@ -173,3 +188,21 @@ fr:
       session:
         who: "Email ou pseudonyme"
         password: "Mot de passe"
+
+  will_paginate:
+      previous_label: "Précédent"
+      next_label: "Suivant"
+      page_gap: "…"
+      page_entries_info:
+        single_page:
+          zero:  "Aucun %{model} trouvé"
+          one:   "1 %{model} affiché"
+          other: "Les %{count} %{model} affichés"
+        single_page_html:
+          zero:  "Aucun %{model} trouvé"
+          one:   "<b>1</b> %{model} affiché"
+          other: "Les <b>%{count}</b> %{model} affichés"
+
+        multi_page: "%{model} de %{from} à %{to} parmi %{count} au total"
+        multi_page_html: "%{model} de <b>%{from}</b> à <b>%{to}</b> parmi <b>%{count}</b> au total"
+

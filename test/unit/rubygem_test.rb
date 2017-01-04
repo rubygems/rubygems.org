@@ -14,7 +14,7 @@ class RubygemTest < ActiveSupport::TestCase
     should have_many(:versions).dependent(:destroy)
     should have_many(:web_hooks).dependent(:destroy)
     should have_one(:linkset).dependent(:destroy)
-    should validate_uniqueness_of :name
+    should validate_uniqueness_of(:name).case_insensitive
     should allow_value("rails").for(:name)
     should allow_value("awesome42").for(:name)
     should allow_value("factory_girl").for(:name)
@@ -22,6 +22,7 @@ class RubygemTest < ActiveSupport::TestCase
     should allow_value("perftools.rb").for(:name)
     should_not allow_value("\342\230\203").for(:name)
     should_not allow_value("2.2").for(:name)
+    should_not allow_value("Ruby").for(:name)
 
     context "that has an invalid name already persisted" do
       setup do
@@ -82,8 +83,8 @@ class RubygemTest < ActiveSupport::TestCase
 
       @rubygem.reorder_versions
 
-      assert !pre.reload.latest
-      assert !old.reload.latest
+      refute pre.reload.latest
+      refute old.reload.latest
       assert ming.reload.latest
       assert win.reload.latest
       assert ruby.reload.latest
@@ -152,6 +153,14 @@ class RubygemTest < ActiveSupport::TestCase
       indexed_v1 = create(:version, rubygem: @rubygem, number: "0.1.0", indexed: true)
 
       assert_equal indexed_v1.reload, @rubygem.reload.versions.most_recent
+    end
+
+    should "return latest version on the basis of version number" do
+      version = create(:version, rubygem: @rubygem, number: "0.1.1", platform: 'ruby', latest: true)
+      create(:version, rubygem: @rubygem, number: "0.1.2.rc1", platform: 'ruby')
+      create(:version, rubygem: @rubygem, number: "0.1.0", platform: 'jruby', latest: true)
+
+      assert_equal version, @rubygem.latest_version
     end
 
     context "#public_versions_with_extra_version" do
@@ -264,14 +273,14 @@ class RubygemTest < ActiveSupport::TestCase
     ['1337', 'Snakes!'].each do |bad_name|
       should "not accept #{bad_name.inspect} as a name" do
         @rubygem.name = bad_name
-        assert ! @rubygem.valid?
+        refute @rubygem.valid?
         assert_match(/Name/, @rubygem.all_errors)
       end
     end
 
     should "not accept an Array as name" do
       @rubygem.name = ['zomg']
-      assert !@rubygem.valid?
+      refute @rubygem.valid?
     end
 
     should "return linkset errors in #all_errors" do
@@ -307,7 +316,7 @@ class RubygemTest < ActiveSupport::TestCase
       @specification.homepage = "badurl.com"
       @rubygem.name = "1337"
 
-      assert ! @rubygem.valid?
+      refute @rubygem.valid?
       assert_raise ActiveRecord::RecordInvalid do
         @rubygem.update_linkset!(@specification)
       end
@@ -344,12 +353,12 @@ class RubygemTest < ActiveSupport::TestCase
       should "be owned by a user in ownership" do
         create(:ownership, user: @user, rubygem: @rubygem)
         assert @rubygem.owned_by?(@user)
-        assert !@rubygem.unowned?
+        refute @rubygem.unowned?
       end
 
       should "be not owned if no ownerships" do
         assert @rubygem.ownerships.empty?
-        assert !@rubygem.owned_by?(@user)
+        refute @rubygem.owned_by?(@user)
         assert @rubygem.unowned?
       end
 
@@ -372,10 +381,6 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
-    should "return current version" do
-      assert_equal @rubygem.versions.first, @rubygem.versions.most_recent
-    end
-
     should "return name with version for #to_s" do
       @rubygem.save
       create(:version, number: "0.0.0", rubygem: @rubygem)
@@ -391,16 +396,12 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal "rails", @rubygem.to_param
     end
 
-    should "return name with downloads for #with_downloads" do
-      assert_equal "#{@rubygem.name} (#{@rubygem.downloads})", @rubygem.with_downloads
-    end
-
     should "return a bunch of json" do
       version = create(:version, rubygem: @rubygem)
       run_dep = create(:dependency, :runtime, version: version)
       dev_dep = create(:dependency, :development, version: version)
 
-      hash = MultiJson.load(@rubygem.to_json)
+      hash = JSON.load(@rubygem.to_json)
 
       assert_equal @rubygem.name, hash["name"]
       assert_equal @rubygem.downloads, hash["downloads"]
@@ -415,8 +416,8 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}/gems/"\
         "#{@rubygem.versions.most_recent.full_name}.gem", hash["gem_uri"]
 
-      assert_equal MultiJson.load(dev_dep.to_json), hash["dependencies"]["development"].first
-      assert_equal MultiJson.load(run_dep.to_json), hash["dependencies"]["runtime"].first
+      assert_equal JSON.load(dev_dep.to_json), hash["dependencies"]["development"].first
+      assert_equal JSON.load(run_dep.to_json), hash["dependencies"]["runtime"].first
     end
 
     should "return a bunch of xml" do
@@ -460,7 +461,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "return a bunch of JSON" do
-        hash = MultiJson.load(@rubygem.to_json)
+        hash = JSON.load(@rubygem.to_json)
 
         assert_equal @rubygem.linkset.home, hash["homepage_uri"]
         assert_equal @rubygem.linkset.wiki, hash["wiki_uri"]
@@ -506,19 +507,19 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "return only gems with one version" do
-      assert !Rubygem.with_one_version.include?(@rubygem_without_version)
+      refute Rubygem.with_one_version.include?(@rubygem_without_version)
       assert Rubygem.with_one_version.include?(@rubygem_with_version)
-      assert !Rubygem.with_one_version.include?(@rubygem_with_versions)
+      refute Rubygem.with_one_version.include?(@rubygem_with_versions)
     end
 
     should "return only gems with versions for #with_versions" do
-      assert !Rubygem.with_versions.include?(@rubygem_without_version)
+      refute Rubygem.with_versions.include?(@rubygem_without_version)
       assert Rubygem.with_versions.include?(@rubygem_with_version)
       assert Rubygem.with_versions.include?(@rubygem_with_versions)
     end
 
     should "be hosted or not" do
-      assert ! @rubygem_without_version.hosted?
+      refute @rubygem_without_version.hosted?
       assert @rubygem_with_version.hosted?
     end
 
@@ -541,7 +542,7 @@ class RubygemTest < ActiveSupport::TestCase
         @rubygem_with_versions.versions.first.update! indexed: false
       end
       should "remain owned" do
-        assert !@rubygem_with_versions.reload.unowned?
+        refute @rubygem_with_versions.reload.unowned?
       end
       should "then know there is a yanked version" do
         assert @rubygem_with_versions.yanked_versions?
@@ -568,12 +569,24 @@ class RubygemTest < ActiveSupport::TestCase
       assert @new.pushable?
     end
 
-    should "be pushable if gem has no versions" do
-      assert @haml.pushable?
+    context "gem has no versions" do
+      should "be pushable if gem is less than one month old" do
+        assert @haml.pushable?
+      end
+
+      should "be pushable if gem was yanked more than 100 days ago" do
+        @haml.update_attributes(created_at: 101.days.ago, updated_at: 101.days.ago)
+        assert @haml.pushable?
+      end
+
+      should "not be pushable if gem is older than a month and yanked less than 100 days ago" do
+        @haml.update_attributes(created_at: 99.days.ago, updated_at: 99.days.ago)
+        refute @haml.pushable?
+      end
     end
 
     should "not be pushable if it has versions" do
-      assert ! @thin.pushable?
+      refute @thin.pushable?
     end
 
     should "give a count of only rubygems with versions" do
@@ -608,8 +621,8 @@ class RubygemTest < ActiveSupport::TestCase
         assert Rubygem.legacy_search('apple').include?(@apple_pie)
         assert Rubygem.legacy_search('orange').include?(@orange_julius)
 
-        assert !Rubygem.legacy_search('apple').include?(@orange_julius)
-        assert !Rubygem.legacy_search('orange').include?(@apple_pie)
+        refute Rubygem.legacy_search('apple').include?(@orange_julius)
+        refute Rubygem.legacy_search('orange').include?(@apple_pie)
       end
 
       should "find rubygems by name with extra spaces" do
@@ -617,8 +630,8 @@ class RubygemTest < ActiveSupport::TestCase
         assert Rubygem.legacy_search('orange   ').include?(@orange_julius)
         assert_equal Rubygem.legacy_search('apple'), Rubygem.legacy_search('apple ')
 
-        assert !Rubygem.legacy_search('apple  ').include?(@orange_julius)
-        assert !Rubygem.legacy_search('orange   ').include?(@apple_pie)
+        refute Rubygem.legacy_search('apple  ').include?(@orange_julius)
+        refute Rubygem.legacy_search('orange   ').include?(@apple_pie)
       end
 
       should "find rubygems case insensitively" do
@@ -627,7 +640,7 @@ class RubygemTest < ActiveSupport::TestCase
 
       should "find rubygems with missing punctuation" do
         assert Rubygem.legacy_search('apple crisp').include?(@apple_crisp)
-        assert !Rubygem.legacy_search('apple crisp').include?(@apple_pie)
+        refute Rubygem.legacy_search('apple crisp').include?(@apple_pie)
       end
 
       should "sort results by number of downloads, descending" do
@@ -655,7 +668,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "create a rubygem and associated records" do
-        assert ! @rubygem.new_record?
+        refute @rubygem.new_record?
         assert @rubygem.versions.present?
       end
 
@@ -721,8 +734,8 @@ class RubygemTest < ActiveSupport::TestCase
           @rubygem.update_attributes_from_gem_specification!(@version, @specification)
         end
 
-        assert ! @rubygem.new_record?
-        assert ! @version.new_record?
+        refute @rubygem.new_record?
+        refute @version.new_record?
         assert_equal 1, @rubygem.versions.count
         assert_equal 1, @rubygem.versions_count
         assert_equal 2, @version.dependencies.count
@@ -753,28 +766,16 @@ class RubygemTest < ActiveSupport::TestCase
         2.times { Download.incr(@rubygem.name, @version.full_name) }
       end
     end
+  end
 
-    should "give counts from the past 30 days starting with the day before yesterday" do
-      travel_to Date.parse("2010-11-03") do
-        downloads = @rubygem.monthly_downloads
-
-        assert_equal 30, downloads.size
-        assert_equal 6, downloads.first
-        (3..14).each do |n|
-          assert_equal 0, downloads[n.to_i - 2]
-        end
-        assert_equal 4, downloads[13]
-        (16..30).each do |n|
-          assert_equal 0, downloads[n.to_i - 2]
-        end
-        assert_equal 2, downloads.last
-      end
+  context "#protected_days" do
+    setup do
+      @rubygem = create(:rubygem)
+      @rubygem.update_attribute(:updated_at, 99.days.ago)
     end
 
-    should "give the monthly dates back" do
-      travel_to Time.utc(2010, 11, 01) do
-        assert_equal(("01".."30").map { |date| "10/#{date}" }, Rubygem.monthly_short_dates)
-      end
+    should "return number of days left till the gem namespace is protected" do
+      assert_equal 1, @rubygem.protected_days
     end
   end
 end

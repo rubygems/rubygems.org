@@ -16,6 +16,6 @@ class Linkset < ActiveRecord::Base
   end
 
   def update_attributes_from_gem_specification!(spec)
-    self.update_attributes!(home: spec.homepage)
+    update_attributes!(home: spec.homepage)
   end
 end

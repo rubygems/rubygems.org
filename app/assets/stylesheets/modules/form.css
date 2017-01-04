@@ -1,3 +1,10 @@
+.form__field__instructions {
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: #a6aab2;
+}
+
 .form__legend, .form__label {
   font-weight: 600;
   font-size: 18px; }
@@ -5,9 +12,34 @@
 .form__legend {
   margin-bottom: 40px; }
 
-.form__label {
-  margin-bottom: 10px;
-  display: block; }
+.form__label__icon-container {
+  position: relative; }
+
+.form__label__icon {
+  position: absolute;
+  top: -4px;
+  height: 30px; }
+
+.form__label__icon-container .form__label__text {
+  padding-left: 33px;}
+
+.form__input__addon-container {
+  position: relative; }
+
+.form__input__addon {
+  position: absolute;
+  padding: 12px;
+  pointer-events: none;
+  border-right: 1px solid #f1f1f1;
+  border-radius: 4px;
+  font-weight: 300;
+  font-size: 18px; }
+
+.form__input__addon-left .form__input__addon {
+  left: 0px; }
+
+.form__input__addon-left .form__input {
+  padding-left: 45px; }
 
 .form__input, .form__textarea, .form__select {
   margin-bottom: 30px; }

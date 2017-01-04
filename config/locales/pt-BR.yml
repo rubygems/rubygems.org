@@ -73,8 +73,8 @@ pt-BR:
         transparent_pages: Criar páginas mais acessíveis e transparentes para os projetos
         enable_community: Empoderar a comunidade para melhorar o site
       founding: "Este projeto foi iniciado em Abril de 2009 por %{founder}, e desde então tem crescido para incluir as contribuições de %{contributors} e %{downloads}. A partir do lançamento do RubyGems 1.3.6 o site foi renomeado de Gemcutter para %{title} para solidificar o papel centra do site na comunidade Ruby."
-      support: "Pelo Gemcutter não ser mantido por uma empresa específica, o projeto contou e conta com a contribuição de muitas pessoas. O design atual, ilustrações e o frontend do site foram criados pela %{dockyard}. Nós também contamos com ajuda do %{github} por nos ajudar a compartilhar código facilmente. Este site foi inicialmente hospedado no %{heroku}, que nos ajudaram a validar o Gemcutter como uma solução viável para toda a comunidade Ruby."
-      technical: "Alguns aspectos técnicos sobre este site: 100% Ruby. A parte principal é um aplicativo %{rails}, e as gem são servidas via %{sinatra}. As gems são hospedadas no %{s3}, e o tempo de espera entre publicar uma nova gem e disponibilidade para instalação é mínimo. Para mais informações, verifique o %{source_code}, com a licença %{license} no GitHub."
+      support: "Pelo Gemcutter não ser mantido por uma empresa específica, o projeto contou e conta com a contribuição de muitas pessoas. O design atual, ilustrações e o frontend do site foram criados pela %{dockyard}. Nós também contamos com ajuda do %{github} por nos ajudar a compartilhar código facilmente. Este site foi inicialmente hospedado no %{heroku}, que nos ajudaram a validar o Gemcutter como uma solução viável para toda a comunidade Ruby.  Our infrastructure is currently hosted on %{aws}."
+      technical: "Alguns aspectos técnicos sobre este site: 100% Ruby. A parte principal é um aplicativo %{rails}. As gems são hospedadas no %{s3}, served by %{fastly}, e o tempo de espera entre publicar uma nova gem e disponibilidade para instalação é mínimo. Para mais informações, verifique o %{source_code}, com a licença %{license} no GitHub."
 
   passwords:
     edit:
@@ -110,13 +110,7 @@ pt-BR:
       other_fields_notice: Os outros campos só podem ser editados quando você submeter uma versão atualizada da sua gem.
     index:
       title: 'Gems'
-    show:
-      not_hosted_notice: Esta gem não está hospedada no Gemcutter.
-      install: instalar
-      yanked_notice: "Esta gem foi removida, e não está mais disponível para download."
-      authors_header: Autores
-      downloads_for_this_version: "Desta versão"
-      owners_header: Donos
+    aside:
       links:
         header: Links
         home: Homepage
@@ -125,8 +119,15 @@ pt-BR:
         wiki: Wiki
         mail: Lista de Emails
         bugs: Bug Tracker
-      versions_header: Versões
+      downloads_for_this_version: "Desta versão"
       bundler_header: Gemfile
+      install: instalar
+    show:
+      not_hosted_notice: Esta gem não está hospedada no Gemcutter.
+      yanked_notice: "Esta gem foi removida, e não está mais disponível para download."
+      authors_header: Autores
+      owners_header: Donos
+      versions_header: Versões
       show_all_versions: "Mostrar todas as versões (%{count})"
       licenses_header: Licença
       no_licenses: N/A
@@ -142,7 +143,7 @@ pt-BR:
       forgot_password: "Esqueceu sua Senha?"
 
   stats:
-    show:
+    index:
       total_downloads: "Total de downloads"
 
   users:

@@ -41,7 +41,11 @@ class Hostess < Rack::Static
 
     download_path = gem_download_path(path)
     name = Version.rubygem_name_for(download_path) if download_path
-    Download.incr(name, download_path) if name
+    if name
+      GemDownload.transaction do
+        GemDownload.bulk_update([[download_path, 1]])
+      end
+    end
     super
   end
 end

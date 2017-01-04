@@ -3,7 +3,7 @@ require 'test_helper'
 class PusherTest < ActiveSupport::TestCase
   context "creating a new gemcutter" do
     setup do
-      @user = create(:user)
+      @user = create(:user, email: "user@example.com")
       @gem = gem_file
       @cutter = Pusher.new(@user, @gem)
     end
@@ -30,6 +30,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns true
+        @cutter.stubs(:validate).returns true
         @cutter.stubs(:save)
 
         @cutter.process
@@ -52,10 +53,21 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.process
       end
 
-      should "not attempt to save if not authorized" do
+      should "not attempt to validate if not authorized" do
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns false
+        @cutter.stubs(:validate).never
+        @cutter.stubs(:save).never
+
+        @cutter.process
+      end
+
+      should "not attempt to save if not validated" do
+        @cutter.stubs(:pull_spec).returns true
+        @cutter.stubs(:find).returns true
+        @cutter.stubs(:authorize).returns true
+        @cutter.stubs(:validate).returns false
         @cutter.stubs(:save).never
 
         @cutter.process
@@ -78,6 +90,19 @@ class PusherTest < ActiveSupport::TestCase
       assert_match(/RubyGems\.org cannot process this gem/, @cutter.message)
       assert_match(/ActionController::Routing::RouteSet::NamedRouteCollection/, @cutter.message)
       assert_equal @cutter.code, 422
+    end
+
+    should "not be able to save a gem if it is not valid" do
+      legit_gem = create(:rubygem, name: 'legit-gem')
+      create(:version, rubygem: legit_gem, number: '0.0.1')
+      @gem = gem_file("legit-gem-0.0.1.gem.fake")
+      @cutter = Pusher.new(@user, @gem)
+      @cutter.stubs(:save).never
+      @cutter.process
+      assert_equal @cutter.rubygem.name, 'legit'
+      assert_equal @cutter.version.number, 'gem-0.0.1'
+      assert_match(/There was a problem saving your gem: Number is invalid/, @cutter.message)
+      assert_equal @cutter.code, 403
     end
 
     should "not be able to pull spec with metadata containing bad ruby symbols" do
@@ -105,29 +130,6 @@ class PusherTest < ActiveSupport::TestCase
       @cutter = Pusher.new(@user, @gem)
       @cutter.pull_spec
       assert_includes @cutter.message, %{package content (data.tar.gz) is missing}
-    end
-
-    should "post info to the remote bundler API" do
-      @cutter.pull_spec
-
-      @cutter.spec.stubs(:platform).returns Gem::Platform.new("x86-java1.6")
-
-      @cutter.bundler_api_url = "http://test.com"
-
-      obj = mock
-      post_data = nil
-
-      obj.stubs(:post).with { |*value| post_data = value }
-      @cutter.update_remote_bundler_api obj
-
-      _, payload = post_data
-
-      params = MultiJson.load payload
-
-      assert_equal "test",  params["name"]
-      assert_equal "0.0.0", params["version"]
-      assert_equal "x86-java-1.6", params["platform"]
-      assert_equal false, params["prerelease"]
     end
 
     context "initialize new gem with find if one does not exist" do
@@ -186,7 +188,7 @@ class PusherTest < ActiveSupport::TestCase
         spec.expects(:version).returns "1.3.3.7"
         spec.expects(:original_platform).returns "ruby"
         @cutter.stubs(:spec).returns spec
-        assert !@cutter.find
+        refute @cutter.find
 
         assert_match(/Unable to change case/, @cutter.message)
       end
@@ -217,7 +219,7 @@ class PusherTest < ActiveSupport::TestCase
 
       context "with a existing rubygem" do
         setup do
-          @rubygem = create(:rubygem)
+          @rubygem = create(:rubygem, name: "the_gem_name")
           @cutter.stubs(:rubygem).returns @rubygem
         end
 
@@ -232,8 +234,9 @@ class PusherTest < ActiveSupport::TestCase
 
         should "be false if not owned by user and an indexed version exists" do
           create(:version, rubygem: @rubygem, number: '0.1.1')
-          assert ! @cutter.authorize
-          assert_equal "You do not have permission to push to this gem.", @cutter.message
+          refute @cutter.authorize
+          assert_equal "You do not have permission to push to this gem. Ask an owner to add you with: gem owner the_gem_name --add user@example.com",
+            @cutter.message
           assert_equal 403, @cutter.code
         end
 
@@ -246,11 +249,12 @@ class PusherTest < ActiveSupport::TestCase
 
     context "successfully saving a gemcutter" do
       setup do
-        @rubygem = create(:rubygem)
+        @rubygem = create(:rubygem, name: 'gemsgemsgems')
         @cutter.stubs(:rubygem).returns @rubygem
-        create(:version, rubygem: @rubygem, number: '0.1.1')
+        create(:version, rubygem: @rubygem, number: '0.1.1', summary: 'old summary')
         @cutter.stubs(:version).returns @rubygem.versions[0]
         @rubygem.stubs(:update_attributes_from_gem_specification!)
+        GemCachePurger.stubs(:call)
         Indexer.any_instance.stubs(:write_gem)
         @cutter.save
       end
@@ -267,6 +271,62 @@ class PusherTest < ActiveSupport::TestCase
 
       should "set success code" do
         assert_equal 200, @cutter.code
+      end
+
+      should "set info_checksum" do
+        assert_not_nil @rubygem.versions.last.info_checksum
+      end
+
+      should "call GemCachePurger" do
+        assert_received(GemCachePurger, :call) { |obj| obj.with(@rubygem.name).once }
+      end
+
+      should "enque job for updating ES index, spec index and purging cdn" do
+        assert_difference 'Delayed::Job.count', 2 do
+          @cutter.save
+        end
+      end
+
+      should "create rubygem index" do
+        @rubygem.update_column('updated_at', Date.new(2016, 07, 04))
+        Delayed::Worker.new.work_off
+        response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
+                                                        type:  'rubygem',
+                                                        id:    @rubygem.id
+        expected_response = {
+          'name'                  => 'gemsgemsgems',
+          'yanked'                => false,
+          'summary'               => 'old summary',
+          'description'           => 'Some awesome gem',
+          'downloads'             => 0,
+          'latest_version_number' => '0.1.1',
+          'updated'               => '2016-07-04T00:00:00.000Z'
+        }
+
+        assert_equal expected_response, response['_source']
+      end
+    end
+
+    context 'pushing a new version' do
+      setup do
+        @rubygem = create(:rubygem)
+        @cutter.stubs(:rubygem).returns @rubygem
+        create(:version, rubygem: @rubygem, summary: 'old summary')
+        version = create(:version, rubygem: @rubygem, summary: 'new summary')
+        @cutter.stubs(:version).returns version
+        @rubygem.stubs(:update_attributes_from_gem_specification!)
+        @cutter.stubs(:version).returns version
+        GemCachePurger.stubs(:call)
+        Indexer.any_instance.stubs(:write_gem)
+        @cutter.save
+      end
+
+      should "update rubygem index" do
+        Delayed::Worker.new.work_off
+        response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
+                                                        type:  'rubygem',
+                                                        id:    @rubygem.id
+        assert_equal 'new summary', response['_source']['summary']
       end
     end
   end

@@ -4,33 +4,30 @@ module RubygemFs
       if Rails.env.development?
         RubygemFs::Local.new
       else
-        RubygemFs::S3.new(access_key_id: ENV['S3_KEY'],
-                          secret_access_key: ENV['S3_SECRET'],
-                          region: 'us-east-1',
-                          endpoint: "https://s3.amazonaws.com")
+        RubygemFs::S3.new
       end
   end
 
   def self.mock!
-    @fs = RubygemFs::Local.new
-    def @fs.base_dir
-      @dir ||= Dir.mktmpdir
-    end
+    @fs = RubygemFs::Local.new(Dir.mktmpdir)
   end
 
   def self.s3!(host)
     @fs = RubygemFs::S3.new(access_key_id: 'k',
                             secret_access_key: 's',
-                            region: 'us-east-1',
                             endpoint: host,
                             force_path_style: true)
-    def @fs.init
+    @fs.define_singleton_method(:init) do
       s3.create_bucket(bucket: bucket)
     end
     @fs.init
   end
 
   class Local
+    def initialize(base_dir = nil)
+      @base_dir = base_dir
+    end
+
     def store(key, body, _metadata = {})
       FileUtils.mkdir_p File.dirname("#{base_dir}/#{key}")
       File.open("#{base_dir}/#{key}", 'wb') do |f|
@@ -51,17 +48,28 @@ module RubygemFs
     end
 
     def base_dir
-      Rails.root.join('server')
+      @base_dir || Rails.root.join('server')
     end
   end
 
   class S3
-    def initialize(config)
-      @config = config
+    def initialize(config = {})
+      @bucket = config.delete(:bucket)
+      @config = {
+        access_key_id: ENV['S3_KEY'],
+        secret_access_key: ENV['S3_SECRET'],
+        region: Gemcutter.config['s3_region'],
+        endpoint: "https://#{Gemcutter.config['s3_endpoint']}"
+      }.merge(config)
     end
 
     def store(key, body, metadata = {})
-      s3.put_object(key: key, body: body, bucket: bucket, acl: 'public-read', metadata: metadata)
+      s3.put_object(key: key,
+                    body: body,
+                    bucket: bucket,
+                    acl: 'public-read',
+                    metadata: metadata,
+                    cache_control: 'max-age=31536000')
     end
 
     def get(key)
@@ -81,11 +89,11 @@ module RubygemFs
       s3.delete_object(key: key, bucket: bucket, version_id: version_id)
     end
 
-    private
-
     def bucket
-      Gemcutter.config['s3_bucket']
+      @bucket || Gemcutter.config['s3_bucket']
     end
+
+    private
 
     def s3
       @s3 ||= Aws::S3::Client.new(@config)
