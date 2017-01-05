@@ -148,6 +148,7 @@ Rails.application.routes.draw do
 
   resource :email_confirmations, only: [:new, :create] do
     get 'confirm/:token', to: 'email_confirmations#update', as: :update
+    patch 'unconfirmed'
   end
 
   # login path is "/session" => "session#create"

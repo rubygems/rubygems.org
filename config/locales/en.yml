@@ -94,6 +94,7 @@ en:
   profiles:
     edit:
       title: Edit profile
+      email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
       hide_email: Hide email in public profile
       optional_twitter_username: Optional Twitter username. Will be displayed publicly
       enter_password: Please enter your account's password
@@ -109,6 +110,8 @@ en:
         reset: Reset my API key
         confirm_reset: Are you sure? This cannot be undone.
     update:
+      confirmation_mail_sent: You will receive an email within the next few minutes. It contains instructions for confirming your new email address.
+      updated: Your profile was updated.
       request_denied: This request was denied. We could not verify your password.
 
   rubygems:
@@ -254,3 +257,5 @@ en:
       submit: Resend Confirmation
     create:
       promise_resend: We will email you confirmation link to activate your account if one exists.
+    unconfirmed_email:
+      try_again: "Something went wrong. Please try again."

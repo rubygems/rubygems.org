@@ -176,8 +176,8 @@ class UserTest < ActiveSupport::TestCase
         assert_resetting_email_changes :confirmation_token
       end
 
-      should "unconfirm email" do
-        assert_resetting_email_changes :unconfirmed?
+      should "store unconfirm email" do
+        assert_resetting_email_changes :unconfirmed_email
       end
 
       should "reset token_expires_at" do
