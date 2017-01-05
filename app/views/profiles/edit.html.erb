@@ -36,9 +36,12 @@
   </div>
 
   <% if current_user.unconfirmed_email %>
-    <p class='form__field__instructions'>
-      <%= t('.email_awaiting_confirmation', unconfirmed_email: current_user.unconfirmed_email) %>
-    </p>
+    <div class="push--bottom-s">
+      <p class='form__field__instructions'>
+        <%= t('.email_awaiting_confirmation', unconfirmed_email: current_user.unconfirmed_email) %>
+      </p>
+      <%= link_to "Resend confirmation", unconfirmed_email_confirmations_path, method: :patch, class: 'form__field__instructions t-link' %>
+    </div>
   <% end %>
 
   <div class="text_field">
