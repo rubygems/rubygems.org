@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta name="viewport" content="width=device-width"/>
+        <link rel="stylesheet" href="css/main.css">
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                background-color: grey;
+                color: black;
+            }
+
+            .container {
+                height: 100%;
+                width: 80%;
+                background-color: white;
+                border: 0;
+            }
+
+            .header {
+                height: 50px;
+                width: 100%;
+                background-color: #e9573f;
+            }
+
+            .padding-15 {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+            .text-center {
+                text-align: center;
+            }
+
+            .no-text-decoration {
+                text-decoration: none;
+            }
+
+            .button {
+                background-color: #25ccf9;
+                border: 1px solid black;
+                color: white;
+                font-size: 16px;
+                padding-top: 10px;
+                margin: 0 0 0 46%;
+                border-radius: 5px;
+                width: 200px;
+                height: 30px;
+                text-align: center;
+                display: inline-block;
+                text-decoration: none;
+                transition: 0.5s ease-in;
+            }
+            .button:hover {
+                background-color: #2598f9;
+            }
+
+            .footer {
+                height: 50px;
+                width: 100%;
+                background-color: #e9573f;
+                color: black;
+                font-size: 10px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <table align='center' border="0" cellspacing="0" cellpadding="0" class="container">
+            <tr class="header">
+                <td>
+                    <h1 class="text-center">RUBY GEMS</h1>
+                </td>
+            </tr>
+            <tr class="body">
+                <td class="padding-15">
+                    <%= yield %>
+                </td>
+            </tr>
+            <tr class="footer">
+                <td>
+                    <p class="text-center">
+                      <a href=<%= root_path %>>rubygems.org</a>
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html

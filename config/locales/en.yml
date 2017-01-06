@@ -247,7 +247,7 @@ en:
       confirmation_link: Confirm email address
     email_reset:
       visit_link_instructions: You changed your email address on RubyGems.org. Please visit the following url to re-activate your account.
-
+      confirmation_link: Confirmation link
   email_confirmations:
     update:
       confirmed_email: Your email address has been verified.
