@@ -2,6 +2,7 @@
 <p>
   <%= t('.visit_link_instructions') %>
   <br />
-  <%= link_to t('.confirmation_link'),
-    update_email_confirmations_url(@user, token: @user.confirmation_token.html_safe) %>
+</p>
+  <p><%= link_to t('.confirmation_link'),
+    update_email_confirmations_url(@user, token: @user.confirmation_token.html_safe),:class=>'button' %>
 </p>
