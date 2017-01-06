@@ -68,6 +68,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def find_versioned_links
+    @versioned_links = @rubygem.links(@latest_version)
+  end
+
   def set_page
     @page = params[:page].respond_to?(:to_i) ? [1, params[:page].to_i].max : 1
   end

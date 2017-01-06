@@ -61,17 +61,9 @@
   <div class="t-list__items">
     <%= link_to t('edit'), edit_rubygem_path(@rubygem), :class => "gem__link t-list__item", :id => "edit" if @rubygem.owned_by?(current_user) %>
 
-    <% if @latest_version.indexed %>
-      <% if @rubygem.linkset.present? %>
-        <%- Linkset::LINKS.each do |link| %>
-          <%= link_to_page link, @rubygem.linkset.public_send(link) %>
-        <%- end %>
-      <% end %>
-
-      <%= download_link(@latest_version) %>
-    <% end %>
-
-    <%= documentation_link(@latest_version, @rubygem.linkset) %>
+    <%- @versioned_links.each do |name, link| %>
+      <%= link_to_page name, link %>
+    <%- end %>
     <%= badge_link(@rubygem) %>
     <%= subscribe_link(@rubygem) if @latest_version.indexed %>
     <%= unsubscribe_link(@rubygem) %>
