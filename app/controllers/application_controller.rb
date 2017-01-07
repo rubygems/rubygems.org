@@ -24,6 +24,10 @@ class ApplicationController < ActionController::Base
     render plain: "Request is missing param '#{e.param}'", status: :bad_request
   end
 
+  rescue_from ActionDispatch::RemoteIp::IpSpoofAttackError do
+    render status: :forbidden
+  end
+
   protected
 
   def fastly_expires_in(seconds)
