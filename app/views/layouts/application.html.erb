@@ -155,7 +155,7 @@
           <div class="l-colspan--l colspan--l--has-border">
             <div class="footer__about">
               <p>
-                <%= raw t('footer_about',
+                <%= raw t('.footer.about_p1',
                   publish_docs: "http://guides.rubygems.org/publishing/",
                   install_docs: "http://guides.rubygems.org/command-reference/#gem-install",
                   api_docs: "http://guides.rubygems.org/rubygems-org-api/",
@@ -164,20 +164,18 @@
                 ) %>
               </p>
               <p>
-                RubyGems.org is made possible by
-                <%= link_to "many sponsors", page_path("sponsors") %>,
-                with development funded by the Ruby trade association,
-                <%= link_to "Ruby Together", "https://rubytogether.org/?source=rubygems" %>.
-                Members get access to
-                <%= link_to "exclusive benefits", "https://rubytogether.org/benefits?source=rubygems" %>
-                and offers from partners (like
-                <%= link_to "Hired", "http://hired.com/?utm_source=sponsor&utm_medium=rubygems&utm_campaign=q4-16-below-fold" %>,
-                empowering developers on the
-                <%= link_to "hunt for a job", "http://hired.com/?utm_source=sponsor&utm_medium=rubygems&utm_campaign=q4-16-below-fold" %>).
+                <%= raw t('.footer.about_p2',
+                  many_sponsors: "http://rubygems.org/pages/sponsors",
+                  ruby_together: "https://rubytogether.org/?source=rubygems",
+                  exclusive_benefits: "https://rubytogether.org/benefits?source=rubygems",
+                  hired: "http://hired.com/?utm_source=sponsor&utm_medium=rubygems&utm_campaign=q4-16-below-fold",
+                  hunt_for_a_job: "http://hired.com/?utm_source=sponsor&utm_medium=rubygems&utm_campaign=q4-16-below-fold"
+                ) %>
               </p>
               <p>
-                We need your help to keep RubyGems.org running smoothly and free for everyone to use.
-                <%= link_to "Join Ruby Together today", "https://rubytogether.org/join?source=rubygems" %>.
+                <%= raw t('.footer.about_p3',
+                  join_ruby_together: "https://rubytogether.org/join?source=rubygems"
+                ) %>
               </p>
             </div>
           </div>

@@ -11,7 +11,6 @@ fr:
   edit: "Modification"
   sign_in: "Connexion"
   sign_up: "Inscription"
-  footer_about: "RubyGems.org est le service d&rsquo;hébergement de la communauté Ruby. Publiez vos gems instantanément et utilisez-les. Utilisez l'API pour interagir et trouver des informations sur les gems disponibles. Contribuez et améliorez ce site avec nous !"
   locale_name: "Français"
   this_rubygem_could_not_be_found: "Rubygem introuvable."
 
@@ -43,6 +42,7 @@ fr:
         sign_out: "Déconnexion"
         search_gem: "Recherche de Gems&hellip;"
       footer:
+        about_p1: RubyGems.org est le service d&rsquo;hébergement de la communauté Ruby. <a href="%{publish_docs}">Publiez</a> vos gems instantanément et <a href="%{install_docs}">utilisez-les</a>. Utilisez <a href="%{api_docs}">l'API</a> pour interagir et trouver des informations sur les <a href="%{gem_list}">gems disponibles</a>. <a href="%{contributing_docs}">Contribuez</a> et améliorez ce site avec nous!
         status: "Statut"
         uptime: "Uptime"
         source_code: "Code"
@@ -205,4 +205,3 @@ fr:
 
         multi_page: "%{model} de %{from} à %{to} parmi %{count} au total"
         multi_page_html: "%{model} de <b>%{from}</b> à <b>%{to}</b> parmi <b>%{count}</b> au total"
-
