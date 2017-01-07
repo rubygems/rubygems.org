@@ -267,7 +267,6 @@ class RubygemsControllerTest < ActionController::TestCase
     setup do
       @latest_version = create(:version, created_at: 1.minute.ago)
       @rubygem = @latest_version.rubygem
-      @versioned_links = @rubygem.links(@latest_version)
       get :show, id: @rubygem.to_param
     end
 
@@ -286,7 +285,6 @@ class RubygemsControllerTest < ActionController::TestCase
     setup do
       @latest_version = create(:version)
       @rubygem = @latest_version.rubygem
-      @versioned_links = @rubygem.links(@latest_version)
     end
     should "render plural licenses header for other than one license" do
       @latest_version.update_attributes(licenses: nil)
