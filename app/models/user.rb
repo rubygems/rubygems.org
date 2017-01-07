@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
   has_many :web_hooks
 
   after_validation :set_unconfirmed_email, if: :email_changed?, on: :update
-  before_create :generate_api_key, :regenerate_confirmation_token
+  before_create :generate_api_key, :generate_confirmation_token
 
   validates :handle, uniqueness: true, allow_nil: true
   validates :handle, format: {
@@ -104,7 +104,7 @@ class User < ActiveRecord::Base
 
   def set_unconfirmed_email
     self.attributes = { unconfirmed_email: email, email: email_was }
-    regenerate_confirmation_token
+    generate_confirmation_token
   end
 
   def generate_api_key
@@ -133,7 +133,7 @@ class User < ActiveRecord::Base
     token_expires_at > Time.zone.now
   end
 
-  def regenerate_confirmation_token
+  def generate_confirmation_token
     self.confirmation_token = Clearance::Token.new
     self.token_expires_at = Time.zone.now + 15.minutes
   end
