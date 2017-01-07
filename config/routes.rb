@@ -129,6 +129,7 @@ Rails.application.routes.draw do
     resources :profiles, only: :show
     resource :profile, only: [:edit, :update]
     resources :stats, only: :index
+    resources :recent_uploads, only: :index
 
     resources :rubygems,
       only: [:index, :show, :edit, :update],

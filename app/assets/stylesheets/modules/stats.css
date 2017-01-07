@@ -47,6 +47,17 @@
     .stat__count {
       font-size: 24px; } }
 
+.stats__link {
+  margin-top: 81px;
+}
+
+.stats__link a {
+  font-weight: 600;
+  font-size: 20px;
+  color: #000000; }
+
+.stats__link a:focus, .stats__link a:hover { color: #e9573f; }
+
 .stats__graph__heading {
   margin-bottom: 42px;
   font-weight: 600;
