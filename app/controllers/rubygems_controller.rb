@@ -4,6 +4,7 @@ class RubygemsController < ApplicationController
   before_action :set_blacklisted_gem, only: [:show], if: :blacklisted?
   before_action :find_rubygem, only: [:edit, :update, :show], unless: :blacklisted?
   before_action :latest_version, only: [:show], unless: :blacklisted?
+  before_action :find_versioned_links, only: [:show], unless: :blacklisted?
   before_action :load_gem, only: [:edit, :update]
   before_action :set_page, only: :index
 

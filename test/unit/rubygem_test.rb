@@ -454,6 +454,44 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal run_dep.name, doc.at_css("dependencies runtime dependency name").content
     end
 
+    context "with metadata" do
+      setup do
+        @version = create(:version, rubygem: @rubygem)
+        @rubygem = build(:rubygem, versions: [@version])
+      end
+
+      should "prefer metadata over links in JSON" do
+        @version.update_attributes!(
+          metadata: {
+            "homepage_uri" => "http://example.com/home",
+            "wiki_uri" => "http://example.com/wiki",
+            "documentation_uri" => "http://example.com/docs",
+            "mailing_list_uri" => "http://example.com/mail",
+            "source_code_uri" => "http://example.com/code",
+            "bug_tracker_uri" => "http://example.com/bugs"
+          }
+        )
+
+        hash = MultiJson.load(@rubygem.to_json)
+
+        assert_equal "http://example.com/home", hash["homepage_uri"]
+        assert_equal "http://example.com/wiki", hash["wiki_uri"]
+        assert_equal "http://example.com/docs", hash["documentation_uri"]
+        assert_equal "http://example.com/mail", hash["mailing_list_uri"]
+        assert_equal "http://example.com/code", hash["source_code_uri"]
+        assert_equal "http://example.com/bugs", hash["bug_tracker_uri"]
+      end
+
+      should "return version documentation url if metadata and linkset docs is empty" do
+        @version.update_attributes!(metadata: {})
+        @rubygem.linkset&.update_attributes(:docs, "")
+        @rubygem.reload
+        hash = JSON.load(@rubygem.to_json)
+
+        assert_equal "http://www.rubydoc.info/gems/#{@rubygem.name}/#{@version.number}", hash["documentation_uri"]
+      end
+    end
+
     context "with a linkset" do
       setup do
         @rubygem = build(:rubygem)
@@ -471,12 +509,11 @@ class RubygemTest < ActiveSupport::TestCase
         assert_equal @rubygem.linkset.bugs, hash["bug_tracker_uri"]
       end
 
-      should "return version documentation url if linkset docs is empty" do
+      should "return version documentation uri if linkset docs is empty" do
         @rubygem.linkset.docs = ""
-        @rubygem.save
         hash = JSON.load(@rubygem.to_json)
 
-        assert_equal @version.documentation_path, hash["documentation_uri"]
+        assert_equal "http://www.rubydoc.info/gems/#{@rubygem.name}/#{@version.number}", hash["documentation_uri"]
       end
 
       should "return a bunch of XML" do

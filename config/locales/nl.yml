@@ -1,199 +1,239 @@
 nl:
-  update: Wijzig
-  sign_in: Inloggen
-  locale_name: "Nederlands"
-  sign_up: Aanmelden
-  footer_about: "RubyGems.org is de gem hosting service van de Ruby community. Publiceer and installeer je gems direct. Gebruik de API om meer informatie van beschikbare gems te vinden. Word een deelnemer en verbeter de site met jouw aanpassingen."
-  time_ago: ! '%{duration} geleden'
-  download_count: ! '%{count} downloads'
-  title: RubyGems.org
-  please_sign_up: Toegang geweigerd. Schrijf je in voor een account op https://rubygems.org
-  feed_latest: RubyGems.org | Recente Gems
-  form_disable_with: Een moment geduld...
   edit: Wijzig
-  url: https://rubygems.org
+  failure_when_forbidden:
+  feed_latest: RubyGems.org | Recente Gems
   feed_subscribed: RubyGems.org | Geabonneerde Gems
-  subtitle: De gem host voor de community
+  footer_about: RubyGems.org is de gem hosting service van de Ruby community. Publiceer and installeer je gems direct. Gebruik de API om meer informatie van beschikbare gems te vinden. Word een deelnemer en verbeter de site met jouw aanpassingen.
+  form_disable_with: Een moment geduld...
   help_url: http://help.rubygems.org
-  home:
-    index:
-      share:
-        update: Bijwerken naar de laatste RubyGems versie
-        deploy: Eenvoudig je gem deployen
-        build: Je gem bouwen
-        header: delen
-      gems_header: van %{gem_count} gems totaal sinds juli 2009
-      welcome_blurb: Welcome bij de RubyGem host voor de community.
-      learn:
-        browse_docs: Bekijk de documentatie
-        gem_specification: Gem Specificatie
-        spec_subtitle: Het gezicht van jouw gem's voor de wereld.
-        header: leren
-        docs_subtitle: Gedetailleerde uitleg, stap voor stap instructies en naslagwerk
-        install_rubygems: Installeer RubyGems
-        rubygems_subtitle: Ruby’s bewezen packaging systeem
-      leaderboards:
-        new: Nieuwe Gems
-        no_downloaded: Geen downloads vandaag
-        updated: Zojuist gewijzigd
-        downloaded: Meest gedownload vandaag
-        header: ranglijsten
-      pitch:
-        content: ! '%{rubygems} is dé hosting service voor de Ruby community. %{publish} je gems kinderlijk eenvoudig. %{api} om informatie over de beschikbare gems op te vragen. %{contribute} en verbeter de site met je eigen wijzigingen.'
-        api: Gebruik de API
-        publish: Publiceer en installeer
-        contribute: Draag je steentje bij
-      find_blurb: Vind je gems makkelijker en publiceer ze sneller.
-  users:
-    new:
-      have_account: Heb je al een account?
-  stats:
-    index:
-      gem_count: ! '%{count} gems'
-      user_count: ! '%{count} gebruikers'
-    show:
-      current_rank: huidige positie
-      overview: Statistiekenoverzicht
-      for: Statistieken voor %{for}
-      total_downloads: ! 'Downloads totaal'
-      daily_downloads: ! '%{count} downloads vandaag'
+  locale_name: Nederlands
+  none:
+  not_found:
+  please_sign_up: Toegang geweigerd. Schrijf je in voor een account op https://rubygems.org
+  sign_in: Inloggen
+  sign_up: Aanmelden
+  subtitle: De gem host voor de community
+  this_rubygem_could_not_be_found: This rubygem could not be found.
+  time_ago: "%{duration} geleden"
+  title: RubyGems.org
+  update: Wijzig
   activerecord:
-    errors:
-      messages:
-        record_invalid:
     attributes:
+      linkset:
+        bugs: Bugtracker-URL
+        code: source code URL
+        docs: Documentatie-URL
+        mail: Mailing-list-URL
+        wiki: Wiki URL
       session:
         password: Wachtwoord
         who: Email of Gebruikersnaam
-      linkset:
-        mail: Mailing-list-URL
-        bugs: Bugtracker-URL
-        docs: Documentatie-URL
-        code: source code URL
-        wiki: Wiki URL
       user:
-        handle: Gebruikersnaam
-        email: Emailadres
         avatar: Avatar
+        email: Emailadres
+        handle: Gebruikersnaam
         password: Wachtwoord
-  rubygems:
+  dashboards:
+    show:
+      creating_link_text: aanmaken
+      gem_link_text: gem pagina
+      latest: Laatste wijzigingen
+      latest_title: RSS Feed met Laatste wijzigingen 
+      migrating_link_text: migreren
+      mine: Mijn Gems
+      my_subscriptions: Mijn abonnementen
+      no_owned: Je hebt nog geen gems gepubliceerd. Bekijk de instructies voor het %{creating_link} van een gem of het  %{migrating_link} van een gem vanaf RubyForge.
+      no_subscriptions: Je bent nog niet geabonneerd op een of meerdere gems. Bezoek een %{gem_link} en abonneer je erop.
+  email_confirmations:
+    create:
+      promise_resend:
+    new:
+      submit:
+      title:
+      will_email_notice:
+    unconfirmed_email:
+      try_again:
+    update:
+      confirmed_email:
+  home:
     index:
-      title: alle gems
-      subtitle: die beginnen met %{prefix}
+      downloads_counting:
+      find_blurb: Vind je gems makkelijker en publiceer ze sneller.
+      learn:
+        install_rubygems: Installeer RubyGems
+  layouts:
+    application:
+      footer:
+        about: Over
+        api: API
+        blog: Blog
+        contribute: Bijdragen
+        data: Data
+        designed_by: Ontwerp
+        discussion_forum: Forum
+        gems_served_by:
+        guides: Leren
+        help: Help
+        hosted_by: Hosting
+        logging_by:
+        monitored_by: Monitoring
+        optimized_by: Optimalisatie
+        resolved_with: DNS
+        security: Security
+        source_code: code
+        statistics: Stats
+        status: Status
+        supported_by: Ondersteunding
+        tested_by:
+        tracking_by: Tracking
+        uptime: Uptime
+      header:
+        dashboard: dashboard
+        search_gem: Gems Zoeken&hellip;
+        sign_in: inloggen
+        sign_out: uitloggen
+        sign_up: aanmelden
+  mailer:
+    confirm_your_email:
+    confirmation_subject:
+    email_confirmation:
+      confirmation_link:
+      welcome_message:
+    email_reset:
+      visit_link_instructions:
+  pages:
+    about:
+      founding: Het project is gestart in april 2009 door %{founder} en is sindsdien uitgegroeid tot een dienst met bijdragen van meer dan %{contributors} en %{downloads}. Sinds de RubyGems 1.3.6 release, is de site hernoemd van Gemcutter naar %{title} om de centrale rol in de Ruby community te verstevigen.
+      support: Hoewel rubygems.org niet wordt gerund door één specifiek bedrijf, zijn er vele die ons tot hier geholpen hebben. Het huidige design van de site is gesponsord door %{dockyard}. %{github} is van onschatbare waarde geweest om code te delen en er samen aan te werken. De site is begonnen op  %{heroku}, waarvan de geweldige service heeft geholpen om te bewijzen dat rubygems.org een oplossing is waar de hele community op kan bouwen. Our infrastructure is currently hosted on %{aws}.
+      technical: 'Een klein inkijkje in de technische aspecten van de site: Het is 100% Ruby. The main site is a %{rails}-applicatie. Gems worden gehost op %{s3}, served by %{fastly}, en de tijd tussen het publiceren van een nieuwe gem en het beschikbaar zijn voor installatie is minimaal. Voor meer informatie, %{source_code} op GitHub. De code is %{license}'
+      title: Over
+      purpose:
+        better_api: Een betere API ter beschikking te stellen voor het beheren van gems.
+        enable_community: De community in staat te stellen de site te verbeteren en uit te breiden.
+        header: 'Welkom bij %{site}, dé hosting service voor de Ruby community. Het doel van dit poroject is drieledig:'
+        transparent_pages: Het maken van meer transparante en toegankelijke projectpagina's.
+  passwords:
+    edit:
+      submit: Sla dit wachtwoord op
+      title: reset wachtwoord
+    new:
+      submit: Wachtwoord wijzigen
+      title: wachtwoord wijzigen
+      will_email_notice: We sturen een link om je wachtwoord te wijzigen.
+  profiles:
+    edit:
+      email_awaiting_confirmation:
+      enter_password:
+      hide_email:
+      optional_twitter_username:
+      title: Wijzig profiel
+      api_access:
+        confirm_reset: Weet je het zeker? Dit kan niet ongedaan worden gemaakt.
+        credentials: 'Als je de %{gem_commands_link} vanaf de command-line wilt gebruiken, heb je een %{gem_credentials_file} bestand nodig. Je kunt deze genereren met het volgende commando:'
+        key_is: Je API key is %{key}
+        link_text: gem commando’s
+        reset: Reset mijn API key
+        title: API toegang
+      reset_password:
+        link_text: Vraag hier een nieuwe aan.
+        text: Nieuw wachtwoord nodig? Geen probleem. %{link}
+        title: Reset wachtwoord
+    update:
+      confirmation_mail_sent:
+      request_denied:
+      updated:
+  rubygems:
+    aside:
+      bundler_header: Gemfile
+      copied:
+      copy_to_clipboard:
+      downloads_for_this_version: Voor deze versie
+      install: Installeer
+      required_ruby_version: Required Ruby Version
+      required_rubygems_version: Required Rubygems Version
+      links:
+        badge: Badge
+        bugs: Bug-tracker
+        code: source code
+        docs: Documentatie
+        download: Download
+        header: Links
+        home: Startpagina
+        mail: Mailing-list
+        report_abuse:
+        reverse_dependencies:
+        rss: RSS
+        subscribe:
+        unsubscribe:
+        wiki: Wiki
+    blacklisted:
+      blacklisted_namespace:
     dependencies:
       header: "%{title} afhankelijkheden"
     edit:
-      title: Wijzig gem links
       other_fields_notice: Alle andere velden kunnen alleen gewijzigd worden door een nieuwe versie van de gem te publiceren.
       subtitle: voor %{gem}
-    aside:
-      links:
-        home: Startpagina
-        mail: Mailing-list
-        bugs: Bug-tracker
-        docs: Documentatie
-        code: source code
-        wiki: Wiki
-        header: Links
-      downloads_for_this_version: ! 'Voor deze versie'
-      bundler_header: Gemfile
-      install: Installeer
-    show:
-      stats_header: Statistieken
-      authors_header: Auteurs
-      versions_header: Versies
-      not_hosted_notice: Deze gem wordt momenteel niet gehost op rubygems.org.
+      title: Wijzig gem links
+    gem_members:
+      authors_header:
       owners_header: Eigenaren
-      show_all_versions: Toon alle versies (%{count} totaal)
-  dashboards:
+      sha_256_checksum: SHA 256 checksum
+    index:
+      downloads: Downloads
+      title: alle gems
     show:
-      gem_link_text: gem pagina
-      latest_title: RSS Feed met Laatste wijzigingen 
-      no_subscriptions: Je bent nog niet geabonneerd op een of meerdere gems. Bezoek een %{gem_link} en abonneer je erop.
-      mine: Mijn Gems
-      creating_link_text: aanmaken
-      migrating_link_text: migreren
-      latest: Laatste wijzigingen
-      my_subscriptions: Mijn abonnementen
-      no_owned: Je hebt nog geen gems gepubliceerd. Bekijk de instructies voor het %{creating_link} van een gem of het  %{migrating_link} van een gem vanaf RubyForge.
-  sessions:
-    new:
-      forgot_password: Wachtwoord vergeten?
-  passwords:
-    new:
-      title: wachtwoord wijzigen
-      submit: Wachtwoord wijzigen
-      will_email_notice: We sturen een link om je wachtwoord te wijzigen.
-    edit:
-      title: reset wachtwoord
-      submit: Sla dit wachtwoord op
-  pages:
-    about:
-      title: Over
-      support: Hoewel rubygems.org niet wordt gerund door één specifiek bedrijf, zijn er vele die ons tot hier geholpen hebben. Het huidige design van de site is gesponsord door %{dockyard}. %{github} is van onschatbare waarde geweest om code te delen en er samen aan te werken. De site is begonnen op  %{heroku}, waarvan de geweldige service heeft geholpen om te bewijzen dat rubygems.org een oplossing is waar de hele community op kan bouwen. Our infrastructure is currently hosted on %{aws}.
-      subtitle: wat dit is
-      founding: Het project is gestart in april 2009 door %{founder} en is sindsdien uitgegroeid tot een dienst met bijdragen van meer dan %{contributors} en %{downloads}. Sinds de RubyGems 1.3.6 release, is de site hernoemd van Gemcutter naar %{title} om de centrale rol in de Ruby community te verstevigen.
-      purpose:
-        transparent_pages: Het maken van meer transparante en toegankelijke projectpagina's.
-        enable_community: De community in staat te stellen de site te verbeteren en uit te breiden.
-        better_api: Een betere API ter beschikking te stellen voor het beheren van gems.
-        header: ! 'Welkom bij %{site}, dé hosting service voor de Ruby community. Het doel van dit poroject is drieledig:'
-      technical: ! 'Een klein inkijkje in de technische aspecten van de site: Het is 100% Ruby. The main site is a %{rails}-applicatie. Gems worden gehost op %{s3}, served by %{fastly}, en de tijd tussen het publiceren van een nieuwe gem en het beschikbaar zijn voor installatie is minimaal. Voor meer informatie, %{source_code} op GitHub. De code is %{license}'
-    create:
-      title: aanmaken
-      notice: Deze pagaina is verplaatst naar the nieuwe rubygems.org support site.
+      licenses_header: License
+      no_licenses: N/A
+      requirements_header: Requirements
+      show_all_versions: Toon alle versies (%{count} totaal)
+      versions_header: Versies
+      yanked_notice:
+    show_yanked:
+      not_hosted_notice: Deze gem wordt momenteel niet gehost op rubygems.org.
+      reserved_namespace:
+        one:
+        other:
+  reverse_dependencies:
+    index:
+      title:
   searches:
     show:
       exact_match: Exacte match
       subtitle: voor %{query}
+  sessions:
+    new:
+      forgot_password: Wachtwoord vergeten?
+      resend_confirmation:
+  stats:
+    index:
+      all_time_most_downloaded:
+      total_downloads:
+      total_gems:
+      total_users:
+  users:
+    create:
+      email_sent:
+    new:
+      have_account: Heb je al een account?
   versions:
     index:
-      title: alle versies van %{name}
       not_hosted_notice: Deze gem wordt momenteel niet gehost op rubygems.org
-      versions_since: ! '%{count} versies sinds %{since}'
+      title: alle versies van %{name}
+      versions_since: "%{count} versies sinds %{since}"
     version:
       yanked: verwijderd
-  profiles:
-    edit:
-      title: Wijzig profiel
-      api_access:
-        confirm_reset: Weet je het zeker? Dit kan niet ongedaan worden gemaakt.
-        title: API toegang
-        key_is: Je API key is %{key}
-        link_text: gem commando’s
-        reset: Reset mijn API key
-        credentials: ! 'Als je de %{gem_commands_link} vanaf de command-line wilt gebruiken, heb je een %{gem_credentials_file} bestand nodig. Je kunt deze genereren met het volgende commando:'
-      reset_password:
-        title: Reset wachtwoord
-        text: Nieuw wachtwoord nodig? Geen probleem. %{link}
-        link_text: Vraag hier een nieuwe aan.
-  layouts:
-    application:
-      footer:
-        status: Status
-        uptime: Uptime
-        source_code: code
-        data: Data
-        discussion_forum: Forum
-        statistics: Stats
-        blog: Blog
-        about: Over
-        help: Help
-        api: API
-        hosted_by: Hosting
-        optimized_by: Optimalisatie
-        contribute: Bijdragen
-        guides: Leren
-        designed_by: Ontwerp
-        supported_by: Ondersteunding
-        tracking_by: Tracking
-        resolved_with: DNS
-        monitored_by: Monitoring
-        mobile: Mobiel
-      header:
-        sign_in: inloggen
-        sign_out: uitloggen
-        dashboard: dashboard
-        sign_up: aanmelden
-        all_gems: alle gems
-        search_gem: "Gems Zoeken&hellip;"
+  will_paginate:
+    next_label:
+    page_gap: "…"
+    previous_label:
+    page_entries_info:
+      multi_page:
+      multi_page_html:
+      single_page:
+        one:
+        other:
+        zero:
+      single_page_html:
+        one:
+        other:
+        zero:

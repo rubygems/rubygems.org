@@ -24,6 +24,10 @@ class ApplicationController < ActionController::Base
     render plain: "Request is missing param '#{e.param}'", status: :bad_request
   end
 
+  rescue_from ActionDispatch::RemoteIp::IpSpoofAttackError do
+    render status: :forbidden
+  end
+
   protected
 
   def fastly_expires_in(seconds)
@@ -66,6 +70,10 @@ class ApplicationController < ActionController::Base
         render file: "public/404", status: :not_found, layout: false, formats: [:html]
       end
     end
+  end
+
+  def find_versioned_links
+    @versioned_links = @rubygem.links(@latest_version)
   end
 
   def set_page
