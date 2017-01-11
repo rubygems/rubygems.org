@@ -92,26 +92,28 @@ class GemDownload < ActiveRecord::Base
 
     private
 
-    # updates the downloads field of rubygem in DB and ES index
-    # input: [rubygem_id, download_count_to_increment]
-    def update_gem_downloads(gem_downloads)
+    # updates the downloads field of rubygems in DB and ES index
+    # input: { rubygem_id => download_count_to_increment }
+    def update_gem_downloads(updates_by_gem)
       bulk_update_query = []
 
-      gem_ids = gem_downloads.map { |id, _| id }
-      downloads = GemDownload.where(rubygem_id: gem_ids, version_id: 0).pluck(:count)
-      with_prev_downloads = gem_downloads.zip(downloads).map(&:flatten)
-
-      with_prev_downloads.sort_by { |id, _| id }.each do |rubygem_id, count, prev_downloads|
-        bulk_update_query << update_query(rubygem_id, count + prev_downloads)
+      downloads_by_gem(updates_by_gem.keys).each do |id, downloads|
+        bulk_update_query << update_query(id, downloads + updates_by_gem[id])
 
         # increment downloads of rubygem in DB
-        increment(count, rubygem_id: rubygem_id, version_id: 0)
+        increment(updates_by_gem[id], rubygem_id: id, version_id: 0)
       end
 
-      # update index of rubygems
+      # update ES index of rubygems
       Rubygem.__elasticsearch__.client.bulk body: bulk_update_query
     rescue Faraday::ConnectionFailed, Elasticsearch::Transport::Transport::Error => e
-      Rails.logger.debug "ES update for rubygem_ids: #{gem_ids} has failed: #{e.message}"
+      Rails.logger.debug "ES update: #{updates_by_gem} has failed: #{e.message}"
+    end
+
+    def downloads_by_gem(rubygem_ids)
+      where(rubygem_id: rubygem_ids, version_id: 0)
+        .order(:rubygem_id)
+        .pluck(:rubygem_id, :count)
     end
 
     def update_query(id, downloads)
