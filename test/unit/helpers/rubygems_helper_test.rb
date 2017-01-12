@@ -139,4 +139,45 @@ class RubygemsHelperTest < ActionView::TestCase
       assert simple_markup(text).html_safe?
     end
   end
+
+  context "link_to_github" do
+    context "with invalid uri" do
+      setup do
+        linkset = build(:linkset, code: "http://github.com/\#{github_username}/\#{project_name}")
+        @rubygem = build(:rubygem, linkset: linkset)
+      end
+
+      should "not raise error" do
+        assert_nothing_raised { link_to_github(@rubygem) }
+      end
+
+      should "return nil" do
+        assert_nil link_to_github(@rubygem)
+      end
+    end
+
+    context "with valid code uri and github as host" do
+      setup do
+        @github_link = "http://github.com/user/project"
+        linkset = build(:linkset, code: @github_link)
+        @rubygem = build(:rubygem, linkset: linkset)
+      end
+
+      should "return parsed uri" do
+        assert_equal URI(@github_link), link_to_github(@rubygem)
+      end
+    end
+
+    context "with valid home uri and github as host" do
+      setup do
+        @github_link = "http://github.com/user/project"
+        linkset = build(:linkset, home: @github_link)
+        @rubygem = build(:rubygem, linkset: linkset)
+      end
+
+      should "return parsed uri" do
+        assert_equal URI(@github_link), link_to_github(@rubygem)
+      end
+    end
+  end
 end

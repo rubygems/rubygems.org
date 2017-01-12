@@ -21,6 +21,8 @@ module RubygemsHelper
     elsif !rubygem.linkset.home.nil? && URI(rubygem.linkset.home).host == "github.com"
       URI(rubygem.linkset.home)
     end
+  rescue URI::InvalidURIError
+    nil
   end
 
   def link_to_directory
