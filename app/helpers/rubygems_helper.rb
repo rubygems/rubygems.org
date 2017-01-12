@@ -15,14 +15,6 @@ module RubygemsHelper
     link_to(t(".links.#{id}"), url, rel: 'nofollow', class: ['gem__link', 't-list__item'], id: id) if url.present?
   end
 
-  def link_to_github(rubygem)
-    if !rubygem.linkset.code.nil? && URI(rubygem.linkset.code).host == "github.com"
-      URI(@rubygem.linkset.code)
-    elsif !rubygem.linkset.home.nil? && URI(rubygem.linkset.home).host == "github.com"
-      URI(rubygem.linkset.home)
-    end
-  end
-
   def link_to_directory
     ("A".."Z").map do |letter|
       link_to(letter, rubygems_path(letter: letter), class: "gems__nav-link")
