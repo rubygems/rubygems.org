@@ -456,8 +456,8 @@ class RubygemTest < ActiveSupport::TestCase
 
     context "with metadata" do
       setup do
+        @rubygem.linkset = build(:linkset)
         @version = create(:version, rubygem: @rubygem)
-        @rubygem = build(:rubygem, versions: [@version])
       end
 
       should "prefer metadata over links in JSON" do
@@ -484,8 +484,8 @@ class RubygemTest < ActiveSupport::TestCase
 
       should "return version documentation url if metadata and linkset docs is empty" do
         @version.update_attributes!(metadata: {})
-        @rubygem.linkset&.update_attributes(:docs, "")
-        @rubygem.reload
+        @rubygem.linkset.update_attribute(:docs, "")
+
         hash = JSON.load(@rubygem.to_json)
 
         assert_equal "http://www.rubydoc.info/gems/#{@rubygem.name}/#{@version.number}", hash["documentation_uri"]

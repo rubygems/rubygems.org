@@ -69,7 +69,6 @@ class VersionsControllerTest < ActionController::TestCase
     setup do
       @latest_version = create(:version, built_at: 1.week.ago, created_at: 1.day.ago)
       @rubygem = @latest_version.rubygem
-      @versioned_links = @rubygem.links(@latest_version)
       @versions = (1..5).map do
         FactoryGirl.create(:version, rubygem: @rubygem)
       end
