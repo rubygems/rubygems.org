@@ -196,6 +196,8 @@ pt-BR:
   reverse_dependencies:
     index:
       title: "Reverse dependencies for %{name}"
+    reverse_dependencies:
+      search_reverse_dependencies:
   searches:
     show:
       exact_match: Busca exata
