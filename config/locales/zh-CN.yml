@@ -196,6 +196,8 @@ zh-CN:
   reverse_dependencies:
     index:
       title:
+    reverse_dependencies:
+      search_reverse_dependencies:
   searches:
     show:
       exact_match: 精确匹配
