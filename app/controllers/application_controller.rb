@@ -96,4 +96,12 @@ class ApplicationController < ActionController::Base
       format.any(:all) { render text: t(:not_found), status: :not_found }
     end
   end
+
+  def append_info_to_payload(payload)
+    super
+    payload[:client_ip] = request.remote_ip
+    payload[:user_agent] = request.user_agent
+    payload[:dest_host] = request.host
+    payload[:request_id] = request.uuid
+  end
 end

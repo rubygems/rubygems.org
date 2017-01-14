@@ -160,6 +160,11 @@ GEM
     kgio (2.11.0)
     launchy (2.4.3)
       addressable (~> 2.3)
+    lograge (0.4.1)
+      actionpack (>= 4, < 5.1)
+      activesupport (>= 4, < 5.1)
+      railties (>= 4, < 5.1)
+    logstash-event (1.2.02)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.4)
@@ -316,6 +321,8 @@ DEPENDENCIES
   http_accept_language
   jquery-rails
   launchy
+  lograge
+  logstash-event
   mail
   mime-types (~> 2.99)
   minitest
@@ -346,4 +353,4 @@ DEPENDENCIES
   xml-simple
 
 BUNDLED WITH
-   1.13.3
+   1.13.7

@@ -46,6 +46,10 @@ gem 'compact_index', '~> 0.11.0'
 gem 'sprockets-rails'
 gem 'rack-attack'
 
+# Logging
+gem 'lograge'
+gem 'logstash-event'
+
 group :development, :test do
   gem 'rubocop', require: false
   gem 'toxiproxy', '~> 0.1.3'
