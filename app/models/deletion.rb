@@ -50,8 +50,7 @@ class Deletion < ActiveRecord::Base
   end
 
   def set_yanked_info_checksum
-    compact_index_info = GemInfo.new(version.rubygem.name).compute_compact_index_info
-    checksum = Digest::MD5.hexdigest(CompactIndex.info(compact_index_info))
+    checksum = GemInfo.new(version.rubygem.name).info_checksum
     version.update_attribute :yanked_info_checksum, checksum
   end
 end

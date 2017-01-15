@@ -16,6 +16,11 @@ class GemInfo
     end
   end
 
+  def info_checksum
+    compact_index_info = CompactIndex.info(compute_compact_index_info)
+    Digest::MD5.hexdigest(compact_index_info)
+  end
+
   def self.ordered_names
     names = Rails.cache.read('names')
     if names
@@ -82,6 +87,8 @@ class GemInfo
   end
 
   private_class_method :map_gem_versions, :execute_raw_sql
+
+  private
 
   def compute_compact_index_info
     group_by_columns =

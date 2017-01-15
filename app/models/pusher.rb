@@ -131,8 +131,7 @@ class Pusher
   end
 
   def set_info_checksum
-    gem_info = GemInfo.new(rubygem.name).compute_compact_index_info
-    checksum = Digest::MD5.hexdigest(CompactIndex.info(gem_info))
+    checksum = GemInfo.new(rubygem.name).info_checksum
     version.update_attribute :info_checksum, checksum
   end
 end
