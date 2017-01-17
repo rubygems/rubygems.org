@@ -46,6 +46,9 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     should "return API key" do
       assert_equal @user.api_key, @response.body
     end
+    should "not sign in user" do
+      refute @controller.request.env[:clearance].signed_in?
+    end
   end
 
   def self.should_respond_to(format, to_meth = :to_s)
