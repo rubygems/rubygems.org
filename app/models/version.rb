@@ -330,37 +330,7 @@ class Version < ActiveRecord::Base
     raw.unpack("m0").first.unpack("H*").first
   end
 
-  def recalculate_sha256
-    key = "gems/#{full_name}.gem"
-    file = RubygemFs.instance.get(key)
-    Digest::SHA2.base64digest(file) if file
-  end
-
-  def recalculate_sha256!
-    update_attributes(sha256: recalculate_sha256)
-  end
-
-  def recalculate_metadata!
-    metadata = get_spec_attribute('metadata')
-    update(metadata: metadata || {})
-  end
-
-  def assign_required_rubygems_version!
-    required_rubygems_version = get_spec_attribute('required_rubygems_version')
-    update_column(:required_rubygems_version, required_rubygems_version.to_s)
-  end
-
   private
-
-  def get_spec_attribute(attribute_name)
-    key = "gems/#{full_name}.gem"
-    file = RubygemFs.instance.get(key)
-    return nil unless file
-    spec = Gem::Package.new(StringIO.new(file)).spec
-    spec.send(attribute_name)
-  rescue Gem::Package::FormatError
-    nil
-  end
 
   def platform_and_number_are_unique
     return unless Version.exists?(rubygem_id: rubygem_id, number: number, platform: platform)
