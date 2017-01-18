@@ -24,8 +24,11 @@ class SessionsControllerTest < ActionController::TestCase
       end
 
       should respond_with :unauthorized
-      should render_template 'sessions/new'
       should set_flash.now[:notice]
+
+      should "render sign in page" do
+        assert page.has_content? "Sign in"
+      end
 
       should "not sign in the user" do
         refute @controller.request.env[:clearance].signed_in?

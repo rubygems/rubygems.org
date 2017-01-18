@@ -27,12 +27,8 @@ class ProfilesControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should render_template :show
-      should "assign the last 10 most downloaded gems" do
-        assert_equal @rubygems[0..9], assigns[:rubygems]
-      end
-      should "assign the extra gems you own" do
-        assert_equal [@rubygems.last], assigns[:extra_rubygems]
+      should "display all gems of user" do
+        11.times { |i| assert page.has_content? @rubygems[i].name }
       end
     end
 
@@ -42,14 +38,15 @@ class ProfilesControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should render_template :show
+      should "render user show page" do
+        assert page.has_content? @user.handle
+      end
     end
 
     context "on GET to show with id" do
       setup { get :show, id: @user.id }
 
       should respond_with :success
-      should render_template :show
       should "render Email link" do
         assert page.has_content?("Email Me")
         assert page.has_selector?("a[href='mailto:#{@user.email}']")
@@ -63,7 +60,6 @@ class ProfilesControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should render_template :show
       should "not render Email link" do
         refute page.has_content?("Email Me")
         refute page.has_selector?("a[href='mailto:#{@user.email}']")
@@ -74,7 +70,9 @@ class ProfilesControllerTest < ActionController::TestCase
       setup { get :edit }
 
       should respond_with :success
-      should render_template :edit
+      should "render user edit page" do
+        assert page.has_content? "Edit profile"
+      end
     end
 
     context "on PUT to update" do
