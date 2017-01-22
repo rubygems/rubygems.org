@@ -9,7 +9,6 @@ gem 'rails-i18n'
 
 gem 'autoprefixer-rails'
 gem 'aws-sdk', '~> 2.2'
-gem 'builder'
 gem 'clearance'
 gem 'clearance-deprecated_password_strategies'
 gem 'daemons'

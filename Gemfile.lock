@@ -292,7 +292,6 @@ DEPENDENCIES
   autoprefixer-rails
   aws-sdk (~> 2.2)
   bourne
-  builder
   capistrano (~> 3.0)
   capistrano-bundler (~> 1.1)
   capistrano-rails (~> 1.1)
