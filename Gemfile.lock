@@ -242,7 +242,7 @@ GEM
     ruby-graphviz (1.2.2)
     ruby-progressbar (1.8.1)
     sass (3.4.23)
-    shoryuken (2.1.1)
+    shoryuken (2.1.2)
       aws-sdk-core (~> 2)
       celluloid (~> 0.16)
     shoulda (3.5.0)
