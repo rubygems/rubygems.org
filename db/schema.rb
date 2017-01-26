@@ -11,8 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151109014752) do
-
+ActiveRecord::Schema.define(version: 20161231080902) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
@@ -62,6 +61,15 @@ ActiveRecord::Schema.define(version: 20151109014752) do
   add_index "dependencies", ["unresolved_name"], name: "index_dependencies_on_unresolved_name", using: :btree
   add_index "dependencies", ["version_id"], name: "index_dependencies_on_version_id", using: :btree
 
+  create_table "gem_downloads", force: :cascade do |t|
+    t.integer "rubygem_id",           null: false
+    t.integer "version_id",           null: false
+    t.integer "count",      limit: 8
+  end
+
+  add_index "gem_downloads", ["rubygem_id", "version_id"], name: "index_gem_downloads_on_rubygem_id_and_version_id", unique: true, using: :btree
+  add_index "gem_downloads", ["version_id", "rubygem_id", "count"], name: "index_gem_downloads_on_version_id_and_rubygem_id_and_count", using: :btree
+
   create_table "linksets", force: :cascade do |t|
     t.integer  "rubygem_id"
     t.string   "home"
@@ -77,45 +85,17 @@ ActiveRecord::Schema.define(version: 20151109014752) do
 
   add_index "linksets", ["rubygem_id"], name: "index_linksets_on_rubygem_id", using: :btree
 
-  create_table "oauth_access_grants", force: :cascade do |t|
-    t.integer  "resource_owner_id", null: false
-    t.integer  "application_id",    null: false
-    t.string   "token",             null: false
-    t.integer  "expires_in",        null: false
-    t.text     "redirect_uri",      null: false
-    t.datetime "created_at",        null: false
-    t.datetime "revoked_at"
-    t.string   "scopes"
+  create_table "log_tickets", force: :cascade do |t|
+    t.string   "key"
+    t.string   "directory"
+    t.integer  "backend",         default: 0
+    t.string   "status"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "processed_count"
   end
 
-  add_index "oauth_access_grants", ["token"], name: "index_oauth_access_grants_on_token", unique: true, using: :btree
-
-  create_table "oauth_access_tokens", force: :cascade do |t|
-    t.integer  "resource_owner_id"
-    t.integer  "application_id"
-    t.string   "token",             null: false
-    t.string   "refresh_token"
-    t.integer  "expires_in"
-    t.datetime "revoked_at"
-    t.datetime "created_at",        null: false
-    t.string   "scopes"
-  end
-
-  add_index "oauth_access_tokens", ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true, using: :btree
-  add_index "oauth_access_tokens", ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id", using: :btree
-  add_index "oauth_access_tokens", ["token"], name: "index_oauth_access_tokens_on_token", unique: true, using: :btree
-
-  create_table "oauth_applications", force: :cascade do |t|
-    t.string   "name",                      null: false
-    t.string   "uid",                       null: false
-    t.string   "secret",                    null: false
-    t.text     "redirect_uri",              null: false
-    t.string   "scopes",       default: "", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
+  add_index "log_tickets", ["directory", "key"], name: "index_log_tickets_on_directory_and_key", unique: true, using: :btree
 
   create_table "ownerships", force: :cascade do |t|
     t.integer  "rubygem_id"
@@ -128,16 +108,10 @@ ActiveRecord::Schema.define(version: 20151109014752) do
   add_index "ownerships", ["rubygem_id"], name: "index_ownerships_on_rubygem_id", using: :btree
   add_index "ownerships", ["user_id"], name: "index_ownerships_on_user_id", using: :btree
 
-  create_table "rubyforgers", force: :cascade do |t|
-    t.string "email"
-    t.string "encrypted_password", limit: 40
-  end
-
   create_table "rubygems", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "downloads",  default: 0
     t.string   "slug"
   end
 
@@ -168,6 +142,8 @@ ActiveRecord::Schema.define(version: 20151109014752) do
     t.boolean  "email_reset"
     t.string   "handle"
     t.boolean  "hide_email"
+    t.string   "twitter_username"
+    t.string   "unconfirmed_email"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
@@ -177,14 +153,6 @@ ActiveRecord::Schema.define(version: 20151109014752) do
   add_index "users", ["remember_token"], name: "index_users_on_remember_token", using: :btree
   add_index "users", ["token"], name: "index_users_on_token", using: :btree
 
-  create_table "version_histories", force: :cascade do |t|
-    t.integer "version_id"
-    t.date    "day"
-    t.integer "count"
-  end
-
-  add_index "version_histories", ["version_id", "day"], name: "index_version_histories_on_version_id_and_day", unique: true, using: :btree
-
   create_table "versions", force: :cascade do |t|
     t.text     "authors"
     t.text     "description"
@@ -192,11 +160,10 @@ ActiveRecord::Schema.define(version: 20151109014752) do
     t.integer  "rubygem_id"
     t.datetime "built_at"
     t.datetime "updated_at"
-    t.string   "rubyforge_project"
     t.text     "summary"
     t.string   "platform"
     t.datetime "created_at"
-    t.boolean  "indexed",           default: true
+    t.boolean  "indexed",                   default: true
     t.boolean  "prerelease"
     t.integer  "position"
     t.boolean  "latest"
@@ -204,9 +171,13 @@ ActiveRecord::Schema.define(version: 20151109014752) do
     t.integer  "size"
     t.string   "licenses"
     t.text     "requirements"
-    t.string   "ruby_version"
+    t.string   "required_ruby_version"
     t.string   "sha256"
-    t.hstore   "metadata",          default: {},   null: false
+    t.hstore   "metadata",                  default: {},   null: false
+    t.datetime "yanked_at"
+    t.string   "required_rubygems_version"
+    t.string   "info_checksum"
+    t.string   "yanked_info_checksum"
   end
 
   add_index "versions", ["built_at"], name: "index_versions_on_built_at", using: :btree

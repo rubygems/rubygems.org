@@ -9,7 +9,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v2 do
-      resources :rubygems, param: :name, only: [] do
+      resources :rubygems, param: :name, only: [], constraints: { name: Patterns::ROUTE_PATTERN } do
         resources :versions, param: :number, only: :show, constraints: {
           number: /#{Gem::Version::VERSION_PATTERN}(?=\.json\z)|#{Gem::Version::VERSION_PATTERN}/
         }
@@ -45,7 +45,7 @@ Rails.application.routes.draw do
           end
 
           resources :downloads,
-            only: [:index, :show],
+            only: [:index],
             controller: 'versions/downloads',
             format: true do
             collection do
@@ -54,6 +54,14 @@ Rails.application.routes.draw do
           end
         end
       end
+
+      resources :dependencies,
+        only: [:index],
+        format: /marshal|json/,
+        defaults: { format: 'marshal' }
+
+      # for handling preflight request
+      match '/gems/:id' => "rubygems#show", via: :options
 
       resources :rubygems,
         path: 'gems',
@@ -90,12 +98,16 @@ Rails.application.routes.draw do
     end
   end
 
+  get '/versions' => 'api/compact_index#versions'
+  get '/info/:gem_name' => 'api/compact_index#info', as: :info,
+      constraints: { gem_name: Patterns::ROUTE_PATTERN }
+  get '/names' => 'api/compact_index#names'
   ################################################################################
   # API v0
 
   scope to: 'api/deprecated#index' do
     get 'api_key'
-    put 'api_key/reset'
+    put 'api_key/reset', to: 'api/deprecated#index'
 
     post 'gems'
     get 'gems/:id.json'
@@ -127,13 +139,23 @@ Rails.application.routes.draw do
         constraints: { format: :js },
         defaults: { format: :js }
       resources :versions, only: [:show, :index]
+      resources :reverse_dependencies, only: [:index]
     end
   end
 
   ################################################################################
-  # Clearance Overrides
+  # Clearance Overrides and Additions
 
-  resource :session, only: [:create, :destroy]
+  resource :email_confirmations, only: [:new, :create] do
+    get 'confirm/:token', to: 'email_confirmations#update', as: :update
+    patch 'unconfirmed'
+  end
+
+  # login path is "/session" => "session#create"
+  # and logout path is "/sign_out" => "session#destroy"
+  # Check: https://github.com/thoughtbot/clearance/blob/master/lib/generators/clearance/routes/templates/routes.rb#L2
+  resource :session, only: :create
+  delete '/sign_out' => 'sessions#destroy', as: 'log_out'
 
   resources :passwords, only: [:new, :create]
 
@@ -149,5 +171,7 @@ Rails.application.routes.draw do
     get 'revision' => 'ping#revision'
   end
 
-  use_doorkeeper scope: 'oauth'
+  unless Clearance.configuration.allow_sign_up?
+    get '/sign_up' => 'users#disabled_signup'
+  end
 end

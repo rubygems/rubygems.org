@@ -11,8 +11,18 @@ module RubygemsHelper
     end
   end
 
-  def link_to_page(text, url)
-    link_to(text, url, rel: 'nofollow', class: ['gem__link', 't-list__item']) if url.present?
+  def link_to_page(id, url)
+    link_to(t(".links.#{id}"), url, rel: 'nofollow', class: ['gem__link', 't-list__item'], id: id) if url.present?
+  end
+
+  def link_to_github(rubygem)
+    if !rubygem.linkset.code.nil? && URI(rubygem.linkset.code).host == "github.com"
+      URI(@rubygem.linkset.code)
+    elsif !rubygem.linkset.home.nil? && URI(rubygem.linkset.home).host == "github.com"
+      URI(rubygem.linkset.home)
+    end
+  rescue URI::InvalidURIError
+    nil
   end
 
   def link_to_directory
@@ -25,7 +35,7 @@ module RubygemsHelper
     if text =~ /^==+ [A-Z]/
       options = RDoc::Options.new
       options.pipe = true
-      RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new(options)).html_safe
+      sanitize RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new(options))
     else
       content_tag :p, escape_once(sanitize(text.strip)), nil, false
     end
@@ -64,15 +74,8 @@ module RubygemsHelper
       class: 'gem__link t-list__item', id: :rss
   end
 
-  def download_link(version)
-    link_to t('.links.download'), "/downloads/#{version.full_name}.gem",
-      class: 'gem__link t-list__item', id: :download
-  end
-
-  def documentation_link(version, linkset)
-    return unless linkset.nil? || linkset.docs.blank?
-    link_to t('.links.docs'), version.documentation_path,
-      class: 'gem__link t-list__item', id: :docs
+  def reverse_dependencies_link(rubygem)
+    link_to_page :reverse_dependencies, rubygem_reverse_dependencies_path(rubygem)
   end
 
   def badge_link(rubygem)
@@ -82,7 +85,8 @@ module RubygemsHelper
 
   def report_abuse_link(rubygem)
     encoded_title = URI.encode("Reporting Abuse on #{rubygem.name}")
-    report_abuse_url = "http://help.rubygems.org/discussion/new?discussion[private]=1&discussion[title]=" + encoded_title # rubocop:disable Metrics/LineLength
+    report_abuse_url = 'http://help.rubygems.org/discussion/new' \
+      "?discussion[private]=1&discussion[title]=" + encoded_title
     link_to t(".links.report_abuse"), report_abuse_url.html_safe, class: 'gem__link t-list__item'
   end
 
@@ -102,6 +106,7 @@ module RubygemsHelper
   end
 
   def latest_version_number(rubygem)
-    rubygem.versions.most_recent.try(:number)
+    return rubygem.latest_version_number if rubygem.respond_to?(:latest_version_number)
+    (rubygem.latest_version || rubygem.versions.last).try(:number)
   end
 end

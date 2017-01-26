@@ -1,191 +1,241 @@
 zh-CN:
-  title: "RubyGems.org"
-  subtitle: "Ruby 社区 Gem 托管"
-  help_url: "http://help.rubygems.org"
-  please_sign_up: "拒绝访问。请先在 https://rubygems.org 上注册一个账号。"
-  feed_subscribed: "RubyGems.org | 订阅 Gems"
-  feed_latest: "RubyGems.org | 最新 Gems"
-  time_ago: "%{duration} 前"
-  form_disable_with: "请稍后..."
-  update: 更新
   edit: 编辑
-  sign_in: "登录"
-  sign_up: "注册"
-  footer_about: "RubyGems.org 是 Ruby 社区的 Gem 托管服务。<br />让你能便捷、快速的发布、管理你的 Gem 以及安装它们。提供 API 查阅可用 Gem 的详细资料。<br />参与进来成为一个贡献者，用你的能力推动社区进步。"
-  locale_name: "简体中文"
-
-  dashboards:
-    show:
-      latest: "最近更新"
-      latest_title: "最近更新 RSS 订阅"
-      no_subscriptions: "你目前没有订阅任何 Gem，访问 %{gem_link} 可以订阅一个！"
-      gem_link_text: "Gem 页面"
-      mine: "我的 Gems"
-      no_owned: "你没有发布过任何一个 Gem。可以尝试阅读 %{creating_link} 教程，或看看 %{migrating_link} 教程。"
-      creating_link_text: '创建'
-      migrating_link_text: '迁移'
-      my_subscriptions: '我的订阅'
-
-  home:
-    index:
-      find_blurb: "寻找、安装以及发布 RubyGems"
-      downloads_counting: '总下载次数'
-      footer:
-        status: "状态"
-        uptime: "服务状况"
-      learn:
-        install_rubygems: "安装 RubyGems"
-
-  layouts:
-    application:
-      header:
-        dashboard: "控制台"
-        sign_in: "登录"
-        sign_up: "注册"
-        sign_out: "退出"
-      footer:
-        status: "状态"
-        uptime: "服务状况"
-        source_code: "源代码"
-        data: "数据"
-        discussion_forum: "讨论"
-        statistics: "统计"
-        blog: "博客"
-        about: "关于"
-        help: "帮助"
-        api: "API"
-        guides: "教程"
-        contribute: "贡献"
-        supported_by: "支持"
-        hosted_by: "托管"
-        designed_by: "设计"
-        resolved_with: "解析"
-        optimized_by: "优化"
-        tracking_by: "追踪"
-        monitored_by: "监控"
-        gems_served_by: "服务"
-
-  pages:
-    about:
-      title: 关于
-      purpose:
-        header: "欢迎来到 %{site}, 这是 Ruby 社区的 Gem 托管服务。此项目有三个目的："
-        better_api: 提供更好的 API 来为 Gems 服务
-        transparent_pages: 构建更透明以及便于浏览的项目页面
-        enable_community: 可以让社区来改善本站
-      founding: "此项目创立由 %{founder} 于2009年4月，发展过程中有超过 %{contributors} 贡献者以及 %{downloads}。自从 RubyGems 1.3.6 发布以后，本站名称由 Gemcutter 改名为 %{title}，从而巩固在 Ruby 社区网站中和核心作用。"
-      support: "虽然 Gemcutter 不是由一个具体的公司来运作，但也有很多的帮助让我们走出了这么远。目前的设计、插画、以及网站的前端开发都是由 %{dockyard} 提供支持。%{github} 帮助我们轻松的协助和共享代码。本站最初部署在 %{heroku}，其一流的服务，有助于证明 Gemcutter 是可以依赖、可行的解决方案。"
-      technical: "关于本站的一些技术方案：100% Ruby。主站基于 %{rails}，RubyGem 服务通过 %{sinatra} 提供服务。Gems 文件放在 %{s3} 上面，它能缩短在 Gem 提交到可以下载之间的耗时。更多的信息可以在 GitHub 上阅读 %{source_code}，基于 %{license} 协议。"
-
-  passwords:
-    edit:
-      title: 重置密码
-      submit: 更新密码
-    new:
-      title: 修改密码
-      will_email_notice: 我们将会通过 Email 发送修改密码的链接给你。
-      submit: 重置密码
-
-  profiles:
-    edit:
-      title: 修改个人资料
-      hide_email: 在公开的个人资料里面隐藏我的 Email
-      change: 更换
-      reset_password:
-        title: 重置密码
-        text: "需要一个新密码？没问题，访问 %{link}"
-        link_text: 这里找回密码
-      api_access:
-        title: API 访问
-        key_is: "你的 API Key：%{key}。"
-        credentials: "如果你希望在命令行中使用 %{gem_commands_link}，你需要一个 %{gem_credentials_file} 文件，可用下面的命令生成："
-        link_text: Gem 命令
-        reset: 重置 API Key
-        confirm_reset: 确定要重置吗？此动作执行后将无法撤销
-
-  rubygems:
-    dependencies:
-      header: "%{title} 依赖关系"
-    edit:
-      title: "编辑链接"
-      subtitle: "%{gem}"
-      other_fields_notice: 其他字段的信息你只能通过发布一个新版本的 Gem 来修改。
-    index:
-      title: 'Gems'
-    show:
-      not_hosted_notice: 这个 Gem 目前没有托管在 Gemcutter。
-      install: 安装
-      yanked_notice: "这个 Gem 版本已经 yanked（废弃了），他无法提供下载，也无法被其他的 Gem 依赖。"
-      authors_header: 作者
-      downloads_for_this_version: "这个版本"
-      owners_header: 所有者
-      links:
-        header: 相关链接
-        home: 主页
-        code: 源代码
-        docs: 文档
-        wiki: Wiki
-        mail: 邮件列表
-        bugs: Bug Tracker
-        download: 下载
-        subscribe: 订阅
-        unsubscribe: 取消订阅
-        report_abuse: 举报投诉
-        badge: 徽章
-        rss: RSS
-      versions_header: 版本列表
-      bundler_header: Gemfile
-      show_all_versions: "显示所有 (%{count} 个版本)"
-      licenses_header: License
-      no_licenses: N/A
-      requirements_header: 要求
-
-  searches:
-    show:
-      subtitle: "%{query}"
-      exact_match: 精确匹配
-
-  sessions:
-    new:
-      forgot_password: "忘记了密码？"
-
-  stats:
-    index:
-      total_downloads: "下载总次数"
-
-  users:
-    new:
-      have_account: "已经有账号了？"
-
-  versions:
-    index:
-      title: "%{name} 的所有版本"
-      versions_since: "自 %{since} 以来有 %{count} 个版本"
-      not_hosted_notice: 此 Gem 目前没有托管在 Gemcutter。
-    version:
-      yanked: "已废弃"
-
-  flashes:
-    failure_after_create: 创建失败
+  failure_when_forbidden:
+  feed_latest: RubyGems.org | 最新 Gems
+  feed_subscribed: RubyGems.org | 订阅 Gems
+  footer_about: RubyGems.org 是 Ruby 社区的 Gem 托管服务。<br />让你能便捷、快速的发布、管理你的 Gem 以及安装它们。提供 API 查阅可用 Gem 的详细资料。<br />参与进来成为一个贡献者，用你的能力推动社区进步。
+  form_disable_with: 请稍后...
+  help_url: http://help.rubygems.org
+  locale_name: 简体中文
+  none:
+  not_found:
+  please_sign_up: 拒绝访问。请先在 https://rubygems.org 上注册一个账号。
+  sign_in: 登录
+  sign_up: 注册
+  subtitle: Ruby 社区 Gem 托管
+  this_rubygem_could_not_be_found:
+  time_ago: "%{duration} 前"
+  title: RubyGems.org
+  update: 更新
   activerecord:
-    errors:
-      template:
-        body: '下面的字段存在问题：'
-        header:
-          one: 1 错误导致 %{model} 保存失败
-          other: "%{count} 个错误导致 %{model} 保存失败"
     attributes:
-      user:
-        avatar: 头像
-        email: Email
-        handle: 账号
-        password: 密码
       linkset:
-        bugs: Bug Tracker URL
+        bugs:
         code: 源代码 URL
         docs: 文档 URL
         mail: 邮件列表 URL
         wiki: Wiki URL
       session:
-        who: Email / 账号
         password: 密码
+        who: Email / 账号
+      user:
+        avatar: 头像
+        email: Email
+        handle: 账号
+        password: 密码
+  dashboards:
+    show:
+      creating_link_text: 创建
+      gem_link_text: Gem 页面
+      latest: 最近更新
+      latest_title: 最近更新 RSS 订阅
+      migrating_link_text: 迁移
+      mine: 我的 Gems
+      my_subscriptions: 我的订阅
+      no_owned: 你没有发布过任何一个 Gem。可以尝试阅读 %{creating_link} 教程，或看看 %{migrating_link} 教程。
+      no_subscriptions: 你目前没有订阅任何 Gem，访问 %{gem_link} 可以订阅一个！
+  email_confirmations:
+    create:
+      promise_resend:
+    new:
+      submit:
+      title:
+      will_email_notice:
+    unconfirmed_email:
+      try_again:
+    update:
+      confirmed_email:
+  home:
+    index:
+      downloads_counting: 总下载次数
+      find_blurb: 寻找、安装以及发布 RubyGems
+      learn:
+        install_rubygems: 安装 RubyGems
+  layouts:
+    application:
+      footer:
+        about: 关于
+        api: API
+        blog: 博客
+        contribute: 贡献
+        data: 数据
+        designed_by: 设计
+        discussion_forum: 讨论
+        gems_served_by: 服务
+        guides: 教程
+        help: 帮助
+        hosted_by: 托管
+        logging_by:
+        monitored_by: 监控
+        optimized_by: 优化
+        resolved_with: 解析
+        security:
+        source_code: 源代码
+        statistics: 统计
+        status: 状态
+        supported_by: 支持
+        tested_by:
+        tracking_by: 追踪
+        uptime: 服务状况
+      header:
+        dashboard: 控制台
+        search_gem:
+        sign_in: 登录
+        sign_out: 退出
+        sign_up: 注册
+  mailer:
+    confirm_your_email:
+    confirmation_subject:
+    email_confirmation:
+      confirmation_link:
+      welcome_message:
+    email_reset:
+      visit_link_instructions:
+  pages:
+    about:
+      founding: 此项目创立由 %{founder} 于2009年4月，发展过程中有超过 %{contributors} 贡献者以及 %{downloads}。自从 RubyGems 1.3.6 发布以后，本站名称由 Gemcutter 改名为 %{title}，从而巩固在 Ruby 社区网站中和核心作用。
+      support: 虽然 Gemcutter 不是由一个具体的公司来运作，但也有很多的帮助让我们走出了这么远。目前的设计、插画、以及网站的前端开发都是由 %{dockyard} 提供支持。%{github} 帮助我们轻松的协助和共享代码。本站最初部署在 %{heroku}，其一流的服务，有助于证明 Gemcutter 是可以依赖、可行的解决方案。Our infrastructure is currently hosted on %{aws}.
+      technical: 关于本站的一些技术方案：100% Ruby。主站基于 %{rails}。Gems 文件放在 %{s3}, served by %{fastly}, 上面，它能缩短在 Gem 提交到可以下载之间的耗时。更多的信息可以在 GitHub 上阅读 %{source_code}，基于 %{license} 协议。
+      title: 关于
+      purpose:
+        better_api: 提供更好的 API 来为 Gems 服务
+        enable_community: 可以让社区来改善本站
+        header: 欢迎来到 %{site}, 这是 Ruby 社区的 Gem 托管服务。此项目有三个目的：
+        transparent_pages: 构建更透明以及便于浏览的项目页面
+  passwords:
+    edit:
+      submit: 更新密码
+      title: 重置密码
+    new:
+      submit: 重置密码
+      title: 修改密码
+      will_email_notice: 我们将会通过 Email 发送修改密码的链接给你。
+  profiles:
+    edit:
+      email_awaiting_confirmation:
+      enter_password:
+      hide_email: 在公开的个人资料里面隐藏我的 Email
+      optional_twitter_username:
+      title: 修改个人资料
+      api_access:
+        confirm_reset: 确定要重置吗？此动作执行后将无法撤销
+        credentials: 如果你希望在命令行中使用 %{gem_commands_link}，你需要一个 %{gem_credentials_file} 文件，可用下面的命令生成：
+        key_is: 你的 API Key：%{key}。
+        link_text: Gem 命令
+        reset: 重置 API Key
+        title: API 访问
+      reset_password:
+        link_text: 这里找回密码
+        text: 需要一个新密码？没问题，访问 %{link}
+        title: 重置密码
+    update:
+      confirmation_mail_sent:
+      request_denied:
+      updated:
+  rubygems:
+    aside:
+      bundler_header: Gemfile
+      copied:
+      copy_to_clipboard:
+      downloads_for_this_version: 这个版本
+      install: 安装
+      required_ruby_version:
+      required_rubygems_version:
+      links:
+        badge: 徽章
+        bugs:
+        code: 源代码
+        docs: 文档
+        download: 下载
+        header: 相关链接
+        home: 主页
+        mail: 邮件列表
+        report_abuse: 举报投诉
+        reverse_dependencies:
+        rss: RSS
+        subscribe: 订阅
+        unsubscribe: 取消订阅
+        wiki: Wiki
+    blacklisted:
+      blacklisted_namespace:
+    dependencies:
+      header: "%{title} 依赖关系"
+    edit:
+      other_fields_notice: 其他字段的信息你只能通过发布一个新版本的 Gem 来修改。
+      subtitle: "%{gem}"
+      title: 编辑链接
+    gem_members:
+      authors_header: 作者
+      owners_header: 所有者
+      sha_256_checksum: SHA 256 checksum
+    index:
+      downloads:
+      title:
+    show:
+      licenses_header:
+      no_licenses:
+      requirements_header: 要求
+      show_all_versions: 显示所有 (%{count} 个版本)
+      versions_header: 版本列表
+      yanked_notice: 这个 Gem 版本已经 yanked（废弃了），他无法提供下载，也无法被其他的 Gem 依赖。
+    show_yanked:
+      not_hosted_notice: 这个 Gem 目前没有托管在 Gemcutter。
+      reserved_namespace:
+        one:
+        other:
+  reverse_dependencies:
+    index:
+      title:
+    reverse_dependencies:
+      search_reverse_dependencies:
+  searches:
+    show:
+      exact_match: 精确匹配
+      subtitle: "%{query}"
+  sessions:
+    new:
+      forgot_password: 忘记了密码？
+      resend_confirmation:
+  stats:
+    index:
+      all_time_most_downloaded:
+      total_downloads: 下载总次数
+      total_gems:
+      total_users:
+  users:
+    create:
+      email_sent:
+    new:
+      have_account: 已经有账号了？
+  versions:
+    index:
+      not_hosted_notice: 此 Gem 目前没有托管在 Gemcutter。
+      title: "%{name} 的所有版本"
+      versions_since: 自 %{since} 以来有 %{count} 个版本
+    version:
+      yanked: 已废弃
+  will_paginate:
+    next_label:
+    page_gap: "…"
+    previous_label:
+    page_entries_info:
+      multi_page:
+      multi_page_html:
+      single_page:
+        one:
+        other:
+        zero:
+      single_page_html:
+        one:
+        other:
+        zero:

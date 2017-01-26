@@ -7,17 +7,26 @@ class Rubygem < ActiveRecord::Base
   has_many :subscribers, through: :subscriptions, source: :user
   has_many :subscriptions, dependent: :destroy
   has_many :versions, dependent: :destroy, validate: false
+  has_one :latest_version, -> { where(latest: true).order(:position) }, class_name: "Version"
   has_many :web_hooks, dependent: :destroy
   has_one :linkset, dependent: :destroy
+  has_one :gem_download, -> { where(version_id: 0) }
 
   validate :ensure_name_format, if: :needs_name_validation?
   validates :name,
     presence: true,
-    uniqueness: true,
-    exclusion: { in: GEM_NAME_BLACKLIST, message: "'%{value}' is a reserved gem name." }
+    uniqueness: { case_sensitive: false },
+    if: :needs_name_validation?
+  validate :blacklist_names_exclusion
 
   after_create :update_unresolved
   before_destroy :mark_unresolved
+
+  # TODO: Remove this once we move to GemDownload only
+  after_create :create_gem_download
+  def create_gem_download
+    GemDownload.create!(count: 0, rubygem_id: id, version_id: 0)
+  end
 
   def self.with_versions
     where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)")
@@ -54,7 +63,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def self.total_count
-    with_versions.count
+    count_by_sql "SELECT COUNT(*) from (SELECT DISTINCT rubygem_id FROM versions WHERE indexed = true) AS v"
   end
 
   def self.latest(limit = 5)
@@ -73,16 +82,12 @@ class Rubygem < ActiveRecord::Base
     letter =~ /\A[A-Za-z]\z/ ? letter.upcase : 'A'
   end
 
-  def self.versions_key(name)
-    "r:#{name}"
-  end
-
   def self.by_name
     order(name: :asc)
   end
 
   def self.by_downloads
-    order(downloads: :desc)
+    joins(:gem_download).order('gem_downloads.count DESC')
   end
 
   def self.current_rubygems_release
@@ -104,6 +109,11 @@ class Rubygem < ActiveRecord::Base
     versions = public_versions(5)
     versions << extra_version
     versions.uniq.sort_by(&:position)
+  end
+
+  def public_version_payload(number)
+    version = public_versions.find_by(number: number)
+    payload(version).merge!(version.as_json) if version
   end
 
   def hosted?
@@ -128,14 +138,15 @@ class Rubygem < ActiveRecord::Base
   end
 
   def downloads
-    Download.for(self)
+    gem_download.try(:count) || 0
   end
 
-  def downloads_today
-    versions.to_a.sum { |v| Download.today(v) }
+  def links(version = versions.most_recent)
+    Links.new(self, version)
   end
 
   def payload(version = versions.most_recent, protocol = Gemcutter::PROTOCOL, host_with_port = Gemcutter::HOST)
+    versioned_links = links(version)
     deps = version.dependencies.to_a
     {
       'name'              => name,
@@ -150,13 +161,13 @@ class Rubygem < ActiveRecord::Base
       'sha'               => version.sha256_hex,
       'project_uri'       => "#{protocol}://#{host_with_port}/gems/#{name}",
       'gem_uri'           => "#{protocol}://#{host_with_port}/gems/#{version.full_name}.gem",
-      'homepage_uri'      => linkset.try(:home),
-      'wiki_uri'          => linkset.try(:wiki),
-      'documentation_uri' => linkset.try(:docs).presence || version.documentation_path,
-      'mailing_list_uri'  => linkset.try(:mail),
-      'source_code_uri'   => linkset.try(:code),
-      'bug_tracker_uri'   => linkset.try(:bugs),
-      'changelog_uri'     => linkset.try(:changelog),
+      'homepage_uri'      => versioned_links.homepage_uri,
+      'wiki_uri'          => versioned_links.wiki_uri,
+      'documentation_uri' => versioned_links.documentation_uri,
+      'mailing_list_uri'  => versioned_links.mailing_list_uri,
+      'source_code_uri'   => versioned_links.source_code_uri,
+      'bug_tracker_uri'   => versioned_links.bug_tracker_uri,
+      'changelog_uri'     => versioned_links.changelog_uri,
       'dependencies'      => {
         'development' => deps.select { |r| r.rubygem && 'development' == r.scope },
         'runtime'     => deps.select { |r| r.rubygem && 'runtime' == r.scope }
@@ -177,7 +188,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def pushable?
-    new_record? || versions.indexed.count.zero?
+    new_record? || (versions.indexed.none? && not_protected?)
   end
 
   def create_ownership(user)
@@ -258,7 +269,23 @@ class Rubygem < ActiveRecord::Base
     versions.by_earliest_built_at.limit(1).last.built_at
   end
 
+  # returns days left before the reserved namespace will be released
+  # 100 + 1 days are added so that last_protected_day / 1.day = 1
+  def protected_days
+    (updated_at + 101.days - Time.zone.now).to_i / 1.day
+  end
+
+  def reverse_dependencies
+    self.class.reverse_dependencies(name)
+  end
+
   private
+
+  # a gem namespace is not protected if it is
+  # updated(yanked) in more than 100 days or it is created in last 30 days
+  def not_protected?
+    updated_at < 100.days.ago || created_at > 30.days.ago
+  end
 
   def ensure_name_format
     if name.class != String
@@ -272,6 +299,11 @@ class Rubygem < ActiveRecord::Base
 
   def needs_name_validation?
     new_record? || name_changed?
+  end
+
+  def blacklist_names_exclusion
+    return unless GEM_NAME_BLACKLIST.include? name.downcase
+    errors.add :name, "'#{name}' is a reserved gem name."
   end
 
   def update_unresolved

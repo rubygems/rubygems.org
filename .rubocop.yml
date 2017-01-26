@@ -6,6 +6,7 @@ AllCops:
     - !ruby/regexp /(vendor|bundle|bin|db)\/.*/
   DisplayCopNames: true
   DisplayStyleGuide: true
+  TargetRubyVersion: 2.3
 
 Rails:
   Enabled: true
@@ -30,6 +31,7 @@ Metrics/MethodLength:
 Metrics/ModuleLength:
   Exclude:
     - lib/patterns.rb
+    - app/models/concerns/rubygem_searchable.rb
 
 Metrics/PerceivedComplexity:
   Max: 10 # TODO: Lower to 7
@@ -43,6 +45,10 @@ Style/AlignParameters:
 Style/AndOr:
   Exclude:
     - app/controllers/internal/ping_controller.rb
+
+Style/AccessorMethodName:
+  Exclude:
+    - app/controllers/application_controller.rb
 
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact

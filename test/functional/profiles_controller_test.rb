@@ -2,10 +2,9 @@ require 'test_helper'
 
 class ProfilesControllerTest < ActionController::TestCase
   context "for a user that doesn't exist" do
-    should "throw a not found" do
-      assert_raise ActiveRecord::RecordNotFound do
-        get :show, id: "unknown"
-      end
+    should "render not found page" do
+      get :show, id: "unknown"
+      assert_response :not_found
     end
   end
 
@@ -28,12 +27,8 @@ class ProfilesControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should render_template :show
-      should "assign the last 10 most downloaded gems" do
-        assert_equal @rubygems[0..9], assigns[:rubygems]
-      end
-      should "assign the extra gems you own" do
-        assert_equal [@rubygems.last], assigns[:extra_rubygems]
+      should "display all gems of user" do
+        11.times { |i| assert page.has_content? @rubygems[i].name }
       end
     end
 
@@ -43,14 +38,15 @@ class ProfilesControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should render_template :show
+      should "render user show page" do
+        assert page.has_content? @user.handle
+      end
     end
 
     context "on GET to show with id" do
       setup { get :show, id: @user.id }
 
       should respond_with :success
-      should render_template :show
       should "render Email link" do
         assert page.has_content?("Email Me")
         assert page.has_selector?("a[href='mailto:#{@user.email}']")
@@ -64,7 +60,6 @@ class ProfilesControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should render_template :show
       should "not render Email link" do
         refute page.has_content?("Email Me")
         refute page.has_selector?("a[href='mailto:#{@user.email}']")
@@ -75,7 +70,9 @@ class ProfilesControllerTest < ActionController::TestCase
       setup { get :edit }
 
       should respond_with :success
-      should render_template :edit
+      should "render user edit page" do
+        assert page.has_content? "Edit profile"
+      end
     end
 
     context "on PUT to update" do
@@ -84,7 +81,7 @@ class ProfilesControllerTest < ActionController::TestCase
           @handle = "john_m_doe"
           @user = create(:user, handle: "johndoe")
           sign_in_as(@user)
-          put :update, user: { handle: @handle }
+          put :update, user: { handle: @handle, password: @user.password }
         end
 
         should respond_with :redirect
@@ -102,7 +99,7 @@ class ProfilesControllerTest < ActionController::TestCase
           @hide_email = true
           @user = create(:user, handle: "johndoe")
           sign_in_as(@user)
-          put :update, user: { handle: @handle, hide_email: @hide_email }
+          put :update, user: { handle: @handle, hide_email: @hide_email, password: @user.password }
         end
 
         should respond_with :redirect
@@ -111,6 +108,60 @@ class ProfilesControllerTest < ActionController::TestCase
 
         should "update email toggle" do
           assert_equal @hide_email, User.last.hide_email
+        end
+      end
+
+      context "updating without password" do
+        setup do
+          @user = create(:user, handle: "johndoe")
+          sign_in_as(@user)
+          put :update, user: { handle: "doejohn" }
+        end
+
+        should set_flash.to("This request was denied. We could not verify your password.")
+        should redirect_to("the profile edit page") { edit_profile_path }
+        should "not update handle" do
+          assert_equal "johndoe", @user.handle
+        end
+      end
+
+      context "updating with old format password" do
+        setup do
+          @handle = "updated_user"
+          @user = build(:user, handle: "old_user", password: "old")
+          @user.save(validate: false)
+          sign_in_as(@user)
+          put :update, user: { handle: @handle, password: @user.password }
+        end
+
+        should respond_with :redirect
+
+        should "update handle" do
+          assert_equal @handle, @user.handle
+        end
+      end
+
+      context "updating email with existing email" do
+        setup do
+          create(:user, email: "cannotchange@tothis.com")
+          put :update, user: { email: "cannotchange@tothis.com", password: @user.password }
+        end
+
+        should "not set unconfirmed_email" do
+          assert page.has_content? "Email address has already been taken"
+          refute_equal "cannotchange@tothis.com", @user.unconfirmed_email
+        end
+      end
+
+      context "updating email with existing unconfirmed_email" do
+        setup do
+          create(:user, unconfirmed_email: "cannotchange@tothis.com")
+          put :update, user: { email: "cannotchange@tothis.com", password: @user.password }
+        end
+
+        should "not set unconfirmed_email" do
+          assert page.has_content? "Email address has already been taken"
+          refute_equal "cannotchange@tothis.com", @user.unconfirmed_email
         end
       end
     end

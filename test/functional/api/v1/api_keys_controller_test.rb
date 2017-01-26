@@ -1,9 +1,6 @@
 require 'test_helper'
 
 class Api::V1::ApiKeysControllerTest < ActionController::TestCase
-  # should_route :get, "/api_key", :action => :show
-  # should_route :put, "/api_key/reset", :action => :reset
-
   should "route new paths to new controller" do
     route = { controller: 'api/v1/api_keys', action: 'show' }
     assert_recognizes(route, '/api/v1/api_key')
@@ -49,6 +46,9 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     should "return API key" do
       assert_equal @user.api_key, @response.body
     end
+    should "not sign in user" do
+      refute @controller.request.env[:clearance].signed_in?
+    end
   end
 
   def self.should_respond_to(format, to_meth = :to_s)
@@ -70,7 +70,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
   context "on GET to show" do
     should_respond_to(:json) do |body|
-      MultiJson.load body
+      JSON.load body
     end
 
     should_respond_to(:yaml, :to_sym) do |body|

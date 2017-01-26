@@ -85,13 +85,16 @@ echo "Creating database $pg_database"
 createdb -U $pg_user $pg_database
 
 echo "Adding hstore extension"
-psql -q -b -U $pg_user -d $pg_database -c "CREATE EXTENSION IF NOT EXISTS hstore;"
+psql -q -U $pg_user -d $pg_database -c "CREATE EXTENSION IF NOT EXISTS hstore;"
+
+echo "Running migrations"
+rake db:migrate
 
 # Extract the single PostgresSQL.sql.gz file from the tar file, pass it through gunzip
 # and load it as quietly as possible into the database
 echo "Loading the data from $public_tar"
 tar xOf $public_tar public_postgresql/databases/PostgreSQL.sql.gz | \
   gunzip -c | \
-  psql --echo-errors --username $pg_user --dbname $pg_database
+  psql --username $pg_user --dbname $pg_database
 
 echo "Done."

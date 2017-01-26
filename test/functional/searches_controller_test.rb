@@ -9,7 +9,6 @@ class SearchesControllerTest < ActionController::TestCase
     setup { get :show }
 
     should respond_with :success
-    should render_template :show
     should "see no results" do
       refute page.has_content?("Results")
     end
@@ -24,7 +23,9 @@ class SearchesControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :show
+    should "see no results" do
+      refute page.has_content?("Results")
+    end
   end
 
   context 'on GET to show with search parameters' do
@@ -39,7 +40,6 @@ class SearchesControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :show
     should "see sinatra on the page in the results" do
       assert page.has_content?(@sinatra.name)
       assert page.has_selector?("a[href='#{rubygem_path(@sinatra)}']")
@@ -65,11 +65,11 @@ class SearchesControllerTest < ActionController::TestCase
       @sinatra_redux.index_document
       @brando.index_document
       Rubygem.__elasticsearch__.refresh_index!
-      get :show, query: 'sinatra', es: 'true'
+      @request.cookies['new_search'] = 'true'
+      get :show, query: 'sinatra'
     end
 
     should respond_with :success
-    should render_template :show
     should "see sinatra on the page in the results" do
       page.assert_text(@sinatra.name)
       page.assert_selector("a[href='#{rubygem_path(@sinatra)}']")
@@ -104,7 +104,9 @@ class SearchesControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :show
+    should "see no results" do
+      refute page.has_content?("Results")
+    end
   end
 
   context 'on GET to show with search parameters and no results' do
@@ -119,16 +121,15 @@ class SearchesControllerTest < ActionController::TestCase
       @sinatra_redux.index_document
       @brando.index_document
       Rubygem.__elasticsearch__.refresh_index!
-      get :show, query: "sinatre", es: 'true'
+      @request.cookies['new_search'] = 'true'
+      get :show, query: "sinatre"
     end
 
     should respond_with :success
-    should render_template :show
     should "see sinatra on the page in the suggestions" do
       page.assert_text('Maybe you mean')
-      # assert page.find('.search-suggestions').has_content?(@sinatra.name)
-      # assert page.has_content?(@sinatra.name)
-      # assert page.has_selector?("a[href='#{search_path(q: @sinatra.name)}']")
+      assert page.find('.search__suggestions').has_content?(@sinatra.name)
+      assert page.has_selector?("a[href='#{search_path(query: @sinatra.name)}']")
     end
     should "not see sinatra on the page in the results" do
       page.assert_no_selector("a[href='#{rubygem_path(@sinatra)}']")
@@ -149,9 +150,10 @@ class SearchesControllerTest < ActionController::TestCase
     should "fallback to legacy search" do
       requires_toxiproxy
       Toxiproxy[:elasticsearch].down do
-        get :show, query: 'sinatra', es: 'true'
+        @request.cookies['new_search'] = 'true'
+        get :show, query: 'sinatra'
         assert_response :success
-        assert page.has_content?('Advanced search is currently unavailable')
+        assert page.has_content?('Advanced search is currently unavailable. Falling back to legacy search.')
         assert page.has_content?('Displaying')
       end
     end

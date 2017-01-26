@@ -1,0 +1,11 @@
+<% @title = t('.title', name: @rubygem.name) %>
+<% @subtitle = @latest_version.try(:slug) %>
+
+<div class="l-overflow">
+  <div class="l-colspan--l colspan--l--has-border">
+    <%= render partial: "reverse_dependencies",
+      locals: { dependencies: @reverse_dependencies } %>
+    <%= will_paginate @reverse_dependencies %>
+  </div>
+  <%= render 'rubygems/aside' %>
+</div>

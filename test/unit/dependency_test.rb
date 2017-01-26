@@ -16,7 +16,7 @@ class DependencyTest < ActiveSupport::TestCase
 
     should "return JSON" do
       @dependency.save
-      json = MultiJson.load(@dependency.to_json)
+      json = JSON.load(@dependency.to_json)
 
       assert_equal %w(name requirements), json.keys.sort
       assert_equal @dependency.rubygem.name, json["name"]
@@ -40,19 +40,6 @@ class DependencyTest < ActiveSupport::TestCase
       assert_equal %w(name requirements), yaml.keys.sort
       assert_equal @dependency.rubygem.name, yaml["name"]
       assert_equal @dependency.requirements, yaml["requirements"]
-    end
-
-    should "be pushed onto a redis list if a runtime dependency" do
-      @dependency.save
-
-      assert_equal "#{@dependency.name} #{@dependency.requirements}",
-        Redis.current.lindex(Dependency.runtime_key(@version.full_name), 0)
-    end
-
-    should "not push development dependency onto the redis list" do
-      @dependency = create(:dependency, :development)
-
-      refute Redis.current.exists(Dependency.runtime_key(@dependency.version.full_name))
     end
   end
 

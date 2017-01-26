@@ -14,7 +14,7 @@ class RubygemTest < ActiveSupport::TestCase
     should have_many(:versions).dependent(:destroy)
     should have_many(:web_hooks).dependent(:destroy)
     should have_one(:linkset).dependent(:destroy)
-    should validate_uniqueness_of :name
+    should validate_uniqueness_of(:name).case_insensitive
     should allow_value("rails").for(:name)
     should allow_value("awesome42").for(:name)
     should allow_value("factory_girl").for(:name)
@@ -22,6 +22,7 @@ class RubygemTest < ActiveSupport::TestCase
     should allow_value("perftools.rb").for(:name)
     should_not allow_value("\342\230\203").for(:name)
     should_not allow_value("2.2").for(:name)
+    should_not allow_value("Ruby").for(:name)
 
     context "that has an invalid name already persisted" do
       setup do
@@ -152,6 +153,14 @@ class RubygemTest < ActiveSupport::TestCase
       indexed_v1 = create(:version, rubygem: @rubygem, number: "0.1.0", indexed: true)
 
       assert_equal indexed_v1.reload, @rubygem.reload.versions.most_recent
+    end
+
+    should "return latest version on the basis of version number" do
+      version = create(:version, rubygem: @rubygem, number: "0.1.1", platform: 'ruby', latest: true)
+      create(:version, rubygem: @rubygem, number: "0.1.2.rc1", platform: 'ruby')
+      create(:version, rubygem: @rubygem, number: "0.1.0", platform: 'jruby', latest: true)
+
+      assert_equal version, @rubygem.latest_version
     end
 
     context "#public_versions_with_extra_version" do
@@ -372,10 +381,6 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
-    should "return current version" do
-      assert_equal @rubygem.versions.first, @rubygem.versions.most_recent
-    end
-
     should "return name with version for #to_s" do
       @rubygem.save
       create(:version, number: "0.0.0", rubygem: @rubygem)
@@ -396,7 +401,7 @@ class RubygemTest < ActiveSupport::TestCase
       run_dep = create(:dependency, :runtime, version: version)
       dev_dep = create(:dependency, :development, version: version)
 
-      hash = MultiJson.load(@rubygem.to_json)
+      hash = JSON.load(@rubygem.to_json)
 
       assert_equal @rubygem.name, hash["name"]
       assert_equal @rubygem.downloads, hash["downloads"]
@@ -411,8 +416,8 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}/gems/"\
         "#{@rubygem.versions.most_recent.full_name}.gem", hash["gem_uri"]
 
-      assert_equal MultiJson.load(dev_dep.to_json), hash["dependencies"]["development"].first
-      assert_equal MultiJson.load(run_dep.to_json), hash["dependencies"]["runtime"].first
+      assert_equal JSON.load(dev_dep.to_json), hash["dependencies"]["development"].first
+      assert_equal JSON.load(run_dep.to_json), hash["dependencies"]["runtime"].first
     end
 
     should "return a bunch of xml" do
@@ -449,6 +454,44 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal run_dep.name, doc.at_css("dependencies runtime dependency name").content
     end
 
+    context "with metadata" do
+      setup do
+        @rubygem.linkset = build(:linkset)
+        @version = create(:version, rubygem: @rubygem)
+      end
+
+      should "prefer metadata over links in JSON" do
+        @version.update_attributes!(
+          metadata: {
+            "homepage_uri" => "http://example.com/home",
+            "wiki_uri" => "http://example.com/wiki",
+            "documentation_uri" => "http://example.com/docs",
+            "mailing_list_uri" => "http://example.com/mail",
+            "source_code_uri" => "http://example.com/code",
+            "bug_tracker_uri" => "http://example.com/bugs"
+          }
+        )
+
+        hash = MultiJson.load(@rubygem.to_json)
+
+        assert_equal "http://example.com/home", hash["homepage_uri"]
+        assert_equal "http://example.com/wiki", hash["wiki_uri"]
+        assert_equal "http://example.com/docs", hash["documentation_uri"]
+        assert_equal "http://example.com/mail", hash["mailing_list_uri"]
+        assert_equal "http://example.com/code", hash["source_code_uri"]
+        assert_equal "http://example.com/bugs", hash["bug_tracker_uri"]
+      end
+
+      should "return version documentation url if metadata and linkset docs is empty" do
+        @version.update_attributes!(metadata: {})
+        @rubygem.linkset.update_attribute(:docs, "")
+
+        hash = JSON.load(@rubygem.to_json)
+
+        assert_equal "http://www.rubydoc.info/gems/#{@rubygem.name}/#{@version.number}", hash["documentation_uri"]
+      end
+    end
+
     context "with a linkset" do
       setup do
         @rubygem = build(:rubygem)
@@ -456,7 +499,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "return a bunch of JSON" do
-        hash = MultiJson.load(@rubygem.to_json)
+        hash = JSON.load(@rubygem.to_json)
 
         assert_equal @rubygem.linkset.home, hash["homepage_uri"]
         assert_equal @rubygem.linkset.wiki, hash["wiki_uri"]
@@ -467,12 +510,11 @@ class RubygemTest < ActiveSupport::TestCase
         assert_equal @rubygem.linkset.bugs, hash["changelog_uri"]
       end
 
-      should "return version documentation url if linkset docs is empty" do
+      should "return version documentation uri if linkset docs is empty" do
         @rubygem.linkset.docs = ""
-        @rubygem.save
         hash = JSON.load(@rubygem.to_json)
 
-        assert_equal @version.documentation_path, hash["documentation_uri"]
+        assert_equal "http://www.rubydoc.info/gems/#{@rubygem.name}/#{@version.number}", hash["documentation_uri"]
       end
 
       should "return a bunch of XML" do
@@ -566,8 +608,20 @@ class RubygemTest < ActiveSupport::TestCase
       assert @new.pushable?
     end
 
-    should "be pushable if gem has no versions" do
-      assert @haml.pushable?
+    context "gem has no versions" do
+      should "be pushable if gem is less than one month old" do
+        assert @haml.pushable?
+      end
+
+      should "be pushable if gem was yanked more than 100 days ago" do
+        @haml.update_attributes(created_at: 101.days.ago, updated_at: 101.days.ago)
+        assert @haml.pushable?
+      end
+
+      should "not be pushable if gem is older than a month and yanked less than 100 days ago" do
+        @haml.update_attributes(created_at: 99.days.ago, updated_at: 99.days.ago)
+        refute @haml.pushable?
+      end
     end
 
     should "not be pushable if it has versions" do
@@ -750,6 +804,17 @@ class RubygemTest < ActiveSupport::TestCase
       travel_to Date.parse("2010-11-01") do
         2.times { Download.incr(@rubygem.name, @version.full_name) }
       end
+    end
+  end
+
+  context "#protected_days" do
+    setup do
+      @rubygem = create(:rubygem)
+      @rubygem.update_attribute(:updated_at, 99.days.ago)
+    end
+
+    should "return number of days left till the gem namespace is protected" do
+      assert_equal 1, @rubygem.protected_days
     end
   end
 end

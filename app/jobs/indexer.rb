@@ -1,34 +1,25 @@
 class Indexer
   extend StatsD::Instrument
 
-  def self.indexer
-    # TODO: remove this after we upgrade rubygems client to 2.5.0+
-    @indexer ||=
-      begin
-        indexer = Gem::Indexer.new(Rails.root.join("server"), build_legacy: false)
-        indexer.define_singleton_method(:say) { |_| }
-        indexer
-      end
-  end
-
   def perform
     log "Updating the index"
     update_index
     purge_cdn
     log "Finished updating the index"
   end
-  statsd_count_success :perform, 'Indexer.perform.success'
+  statsd_count_success :perform, 'Indexer.perform'
   statsd_measure :perform, 'Indexer.perform'
 
   def write_gem(body, spec)
     RubygemFs.instance.store("gems/#{spec.original_name}.gem", body.string)
 
-    self.class.indexer.abbreviate spec
-    self.class.indexer.sanitize spec
+    spec.abbreviate
+    spec.sanitize
 
     RubygemFs.instance.store(
       "quick/Marshal.4.8/#{spec.original_name}.gemspec.rz",
-      Gem.deflate(Marshal.dump(spec)))
+      Gem.deflate(Marshal.dump(spec))
+    )
   end
 
   private

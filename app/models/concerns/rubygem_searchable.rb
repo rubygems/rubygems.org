@@ -2,8 +2,6 @@ module RubygemSearchable
   include Patterns
   extend ActiveSupport::Concern
 
-  class SearchDownError < StandardError; end
-
   included do
     include Elasticsearch::Model
 
@@ -11,20 +9,17 @@ module RubygemSearchable
 
     delegate :index_document, to: :__elasticsearch__
     delegate :update_document, to: :__elasticsearch__
-    delegate :delete_document, to: :__elasticsearch__
-
-    # These are not used, because we trigger the ES index from the Pusher class
-    # after_commit -> { delay.index_document  }, on: :create
-    # after_commit -> { delay.update_document }, on: :update
-    # after_commit -> { delay.delete_document }, on: :destroy
 
     def as_indexed_json(_options = {})
       most_recent_version = versions.most_recent
       {
-        name: name,
-        yanked: !versions.any?(&:indexed?),
-        summary: most_recent_version.try(:summary),
-        description: most_recent_version.try(:description)
+        name:                  name,
+        yanked:                !versions.any?(&:indexed?),
+        summary:               most_recent_version.try(:summary),
+        description:           most_recent_version.try(:description),
+        downloads:             downloads,
+        latest_version_number: most_recent_version.try(:number),
+        updated:               updated_at
       }
     end
 
@@ -45,51 +40,71 @@ module RubygemSearchable
         indexes :suggest, analyzer: 'simple'
       end
       indexes :yanked, type: 'boolean'
-      indexes :summary, analyzer: 'english'
-      indexes :description, analyzer: 'english'
+      indexes :summary, type: 'multi_field' do
+        indexes :summary, analyzer: 'english'
+        indexes :raw, analyzer: 'simple'
+      end
+      indexes :description, type: 'multi_field' do
+        indexes :description, analyzer: 'english'
+        indexes :raw, analyzer: 'simple'
+      end
+      indexes :downloads, type: 'integer'
+      indexes :updated, type: 'date'
     end
 
     def self.search(query, es: false, page: 1)
-      if es
-        result = elastic_search(query).page(page).records
-        # Now we need to trigger the ES query so we can fallback if it fails
-        # rather than lazy loading from the view
-        result.load
-        result
-      else
-        legacy_search(query).with_versions.paginate(page: page)
-      end
-    rescue Faraday::ConnectionFailed
-      raise SearchDownError
-    rescue Elasticsearch::Transport::Transport::Error
-      raise SearchDownError
+      return [nil, legacy_search(query).page(page)] unless es
+      result = elastic_search(query).page(page)
+      # Now we need to trigger the ES query so we can fallback if it fails
+      # rather than lazy loading from the view
+      result.response
+      [nil, result]
+    rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Elasticsearch::Transport::Transport::Error => e
+      msg = error_msg query, e
+      [msg, legacy_search(query).page(page)]
     end
 
-    def self.elastic_search(q)
+    def self.elastic_search(q) # rubocop:disable Metrics/MethodLength
       search_definition = Elasticsearch::DSL::Search.search do
         query do
-          filtered do
-            # Main query, search in name, summary, description
+          function_score do
             query do
-              multi_match do
-                query q
-                fields ['name^3', 'summary^1', 'description']
-                operator 'and'
+              filtered do
+                # Main query, search in name, summary, description
+                query do
+                  query_string do
+                    query q
+                    fields ['name^3', 'summary^1', 'description']
+                    default_operator 'and'
+                  end
+                end
+
+                # only return gems that are not yanked
+                filter { term yanked: false }
               end
             end
 
-            # only return gems that are not yanked
-            filter do
-              bool :yanked do
-                must do
-                  term yanked: false
-                end
-              end
-            end
+            # Boost the score based on number of downloads
+            functions << { field_value_factor: { field: :downloads, modifier: :log1p } }
           end
         end
 
-        source %w(name summary description)
+        aggregation :matched_field do
+          filters do
+            filters name: { terms: { name: [q] } },
+                    summary: { terms: { 'summary.raw' => [q] } },
+                    description: { terms: { 'description.raw' => [q] } }
+          end
+        end
+
+        aggregation :date_range do
+          date_range do
+            field  'updated'
+            ranges [{ from: 'now-7d/d', to: 'now' }, { from: 'now-30d/d', to: 'now' }]
+          end
+        end
+
+        source %w(name summary description downloads latest_version_number)
 
         # Return suggestions unless there's no query from the user
         unless q.blank?
@@ -110,9 +125,18 @@ module RubygemSearchable
       SQL
 
       where(conditions, query: "%#{query.strip}%")
-        .includes(:versions)
+        .includes(:latest_version, :gem_download)
         .references(:versions)
         .by_downloads
+    end
+
+    def self.error_msg(query, error)
+      if error.is_a? Elasticsearch::Transport::Transport::Errors::BadRequest
+        "Failed to parse: '#{query}'. Falling back to legacy search."
+      else
+        Honeybadger.notify(error)
+        "Advanced search is currently unavailable. Falling back to legacy search."
+      end
     end
   end
 end

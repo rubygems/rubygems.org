@@ -1,0 +1,10 @@
+<% if gems.respond_to?(:response) && aggregations = gems.response['aggregations'] %>
+  <div class="aggregations">
+    Filter:
+    <%= aggregation_match_count aggregations['matched_field'], 'name' %>
+    <%= aggregation_match_count aggregations['matched_field'], 'description' %>
+    <%= aggregation_match_count aggregations['matched_field'], 'summary' %>
+    <%= aggregation_week_count aggregations['date_range'] %>
+    <%= aggregation_month_count aggregations['date_range'] %>
+  </div>
+<% end %>

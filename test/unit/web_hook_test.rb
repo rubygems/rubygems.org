@@ -71,7 +71,8 @@ class WebHookTest < ActiveSupport::TestCase
         {
           'url'           => @url,
           'failure_count' => @webhook.failure_count
-        }, MultiJson.load(@webhook.to_json))
+        }, JSON.load(@webhook.to_json)
+      )
     end
 
     should "show limited attributes for to_xml" do
@@ -88,7 +89,8 @@ class WebHookTest < ActiveSupport::TestCase
         {
           'url'           => @url,
           'failure_count' => @webhook.failure_count
-        }, YAML.load(@webhook.to_yaml))
+        }, YAML.load(@webhook.to_yaml)
+      )
     end
 
     should "not be able to create a webhook under this user, gem, and url" do
@@ -141,7 +143,7 @@ class WebHookTest < ActiveSupport::TestCase
     end
 
     should "have gem properties encoded in JSON" do
-      payload = MultiJson.load(@job.payload)
+      payload = JSON.load(@job.payload)
       assert_equal "foogem",    payload['name']
       assert_equal "3.2.1",     payload['version']
       assert_equal 'ruby',      payload['platform']
@@ -156,7 +158,7 @@ class WebHookTest < ActiveSupport::TestCase
       new_version = create(:version, number: "2.0.0", rubygem: @rubygem)
       new_hook    = create(:web_hook)
       job         = Notifier.new(new_hook.url, 'http', 'localhost:1234', @rubygem, new_version)
-      payload     = MultiJson.load(job.payload)
+      payload     = JSON.load(job.payload)
 
       assert_equal "foogem", payload['name']
       assert_equal "2.0.0",  payload['version']

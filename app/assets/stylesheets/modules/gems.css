@@ -46,7 +46,18 @@
   .gems__gem:focus {
     outline: none; }
 
+@media (min-width: 900px) {
+  .reverse__dependencies .gems__gem__info {
+      width: 69%; }
+}
+
+@media (min-width: 600px) and (max-width: 899px) {
+  .reverse__dependencies .gems__gem__info {
+      width: 60%; }
+}
+
 .gems__gem__info {
+  display: block;
   color: #141c22; }
   @media (min-width: 600px) {
     .gems__gem__info {

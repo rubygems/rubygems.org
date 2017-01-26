@@ -62,3 +62,18 @@ class GemsTest < ActionDispatch::IntegrationTest
     assert page.has_css?(css, visible: false)
   end
 end
+
+class GemsSystemTest < SystemTest
+  setup do
+    @rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
+    create(:version, rubygem: @rubygem, number: "1.1.1")
+  end
+
+  test "version navigation" do
+    visit rubygem_version_path(@rubygem, "1.0.0")
+    click_link "Next version →"
+    assert_equal page.current_path, rubygem_version_path(@rubygem, "1.1.1")
+    click_link "← Previous version"
+    assert_equal page.current_path, rubygem_version_path(@rubygem, "1.0.0")
+  end
+end

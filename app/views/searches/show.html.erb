@@ -1,9 +1,8 @@
 <% @title = "search" %>
 
-<% if @fallback %>
+<% if @error_msg %>
   <div class="errorExplanation">
-    <h2>Uh oh...</h2>
-    <ul><li>Advanced search is currently unavailable, sorry!</li></ul>
+    <p><%= @error_msg %></p>
   </div>
 <% end %>
 
@@ -17,12 +16,14 @@
     <% content_for :head do %>
       <link rel="prerender prefetch" href="<%= rubygem_url(@exact_match) %>">
     <% end %>
-    <%= render @exact_match %>
+    <%= render partial: 'rubygems/rubygem', object: @exact_match %>
   <% end %>
 
   <header class="gems__header push">
     <p class="gems__meter"><%= page_entries_info(@gems, :entry_name => 'gem', :model => 'gem').html_safe %></p>
   </header>
+
+  <%= render partial: 'aggregations', locals: { gems: @gems } %>
 
   <% if suggestions = es_suggestions(@gems)  %>
     <div class='search__suggestions'>
@@ -36,7 +37,7 @@
   <% end %>
 
   <% if @gems.present? %>
-    <%= render @gems %>
+    <%= render partial: 'rubygems/rubygem', collection: @gems %>
     <%= will_paginate @gems %>
   <% end %>
 <% end %>

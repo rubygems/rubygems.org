@@ -1,210 +1,243 @@
 en:
-  title: "RubyGems.org"
-  subtitle: "your community gem host"
-  help_url: "http://help.rubygems.org"
-  please_sign_up: "Access Denied. Please sign up for an account at https://rubygems.org"
-  feed_subscribed: "RubyGems.org | Subscribed Gems"
-  feed_latest: "RubyGems.org | Latest Gems"
-  time_ago: "%{duration} ago"
-  form_disable_with: "Please wait..."
-  update: Update
   edit: Edit
-  sign_in: "Sign in"
-  sign_up: "Sign up"
-  footer_about: "RubyGems.org is the Ruby community&rsquo;s gem hosting service. Instantly publish your gems and install them. Use the API to interact and find out more information about available gems. Become a contributor and enhance the site with your own changes."
-  locale_name: "English"
-  this_rubygem_could_not_be_found: "This rubygem could not be found."
+  failure_when_forbidden: Please double check the URL or try submitting it again.
+  feed_latest: RubyGems.org | Latest Gems
+  feed_subscribed: RubyGems.org | Subscribed Gems
+  footer_about: RubyGems.org is the Ruby community&rsquo;s gem hosting service. Instantly <a href="%{publish_docs}">publish your gems</a> and then <a href="%{install_docs}">install them</a>. Use <a href="%{api_docs}">the API</a> find out more about <a href="%{gem_list}">available gems</a>. <a href="%{contributing_docs}">Become a contributor</a> and improve the site yourself.
+  form_disable_with: Please wait...
+  help_url: http://help.rubygems.org
+  locale_name: English
   none: None
-
-  dashboards:
-    show:
-      latest: "Latest Updates"
-      latest_title: "Latest Updates RSS Feed"
-      no_subscriptions: "You're not subscribed to any gems yet. Visit a %{gem_link} to subscribe to one!"
-      gem_link_text: "gem page"
-      mine: "My Gems"
-      no_owned: "You haven't pushed any gems yet. Perhaps check out the guides on %{creating_link} a gem or %{migrating_link} a gem from RubyForge."
-      creating_link_text: 'creating'
-      migrating_link_text: 'migrating'
-      my_subscriptions: 'Subscriptions'
-
-  home:
-    index:
-      downloads_counting: 'downloads &amp; counting'
-      find_blurb: "Find, install, and publish RubyGems."
-      learn:
-        install_rubygems: "Install RubyGems"
-
-  layouts:
-    application:
-      header:
-        dashboard: "Dashboard"
-        sign_in: "Sign in"
-        sign_up: "Sign up"
-        sign_out: "Sign out"
-        search_gem: "Search Gems&hellip;"
-      footer:
-        status: "Status"
-        uptime: "Uptime"
-        source_code: "Code"
-        data: "Data"
-        discussion_forum: "Discuss"
-        statistics: "Stats"
-        blog: "Blog"
-        about: "About"
-        help: "Help"
-        api: "API"
-        guides: "Guides"
-        contribute: "Contribute"
-        supported_by: "Supported by"
-        hosted_by: "Hosted by"
-        designed_by: "Designed by"
-        resolved_with: "Resolved with"
-        optimized_by: "Optimized by"
-        tracking_by: "Tracking by"
-        monitored_by: "Monitored by"
-        gems_served_by: "Gems served by"
-
-  pages:
-    about:
-      title: About
-      purpose:
-        header: "Welcome to %{site}, the Ruby community's gem hosting service. The purpose of this project is three-fold:"
-        better_api: Provide a better API for dealing with gems
-        transparent_pages: Create more transparent and accessible project pages
-        enable_community: Enable the community to improve and enhance the site
-      founding: "The project was started in April 2009 by %{founder}, and has since grown to include the contributions of over %{contributors} and %{downloads}. As of the RubyGems 1.3.6 release, the site has been renamed to %{title} from Gemcutter to solidify the site's central role in the Ruby community."
-      support: "Although RubyGems.org is not run by one specific company, plenty have helped us out so far. The current design, illustrations, and front-end development of this site were created by %{dockyard}. %{github} has also been invaluable for helping us collaborate and share code easily. The site started on %{heroku}, whose great service helped prove RubyGems as a viable solution that the whole community could rely on."
-      technical: "Some insights into the technical aspects of the site: It's 100% Ruby. The main site is a %{rails} application, and the RubyGem serving is done through %{sinatra}. Gems are hosted on %{s3}, and the time between publishing a new gem and having it ready for installation is minimal. For more info, %{source_code}, which is %{license} over at GitHub."
-
-  passwords:
-    edit:
-      title: Reset password
-      submit: Save this password
-    new:
-      title: Change your password
-      will_email_notice: We will email you a link to change your password.
-      submit: Reset password
-
-  profiles:
-    edit:
-      title: Edit profile
-      hide_email: Hide email in public profile
-      reset_password:
-        title: Reset password
-        text: "Need a new password? No problem. %{link}"
-        link_text: Request a new one here.
-      api_access:
-        title: API Access
-        key_is: "Your API key is %{key}."
-        credentials: "If you want to use %{gem_commands_link} from the command line, you'll need a %{gem_credentials_file} file, which you can generate using the following command:"
-        link_text: gem commands
-        reset: Reset my API key
-        confirm_reset: Are you sure? This cannot be undone.
-
-  rubygems:
-    dependencies:
-      header: "%{title} Dependencies"
-    edit:
-      title: "Edit links"
-      subtitle: "for %{gem}"
-      other_fields_notice: All other fields can only be edited by pushing an updated version of your gem.
-    index:
-      title: 'Gems'
-      downloads: Downloads
-    show:
-      not_hosted_notice: This gem is not currently hosted on RubyGems.org.
-      install: install
-      yanked_notice: "This gem has been yanked, and it is not available for download directly or for other gems that may have depended on it."
-      authors_header: Authors
-      downloads_for_this_version: "For this version"
-      owners_header: Owners
-      links:
-        header: Links
-        home: Homepage
-        code: Source Code
-        docs: Documentation
-        wiki: Wiki
-        mail: Mailing List
-        bugs: Bug Tracker
-        download: Download
-        subscribe: Subscribe
-        unsubscribe: Unsubscribe
-        report_abuse: Report Abuse
-        badge: Badge
-        rss: RSS
-        changelog: Change Log
-      versions_header: Versions
-      bundler_header: Gemfile
-      show_all_versions: "Show all versions (%{count} total)"
-      licenses_header: License
-      no_licenses: N/A
-      requirements_header: Requirements
-      sha_256_checksum: SHA 256 checksum
-      copy_to_clipboard: Copy to clipboard
-      copied: Copied!
-      required_ruby_version: Required Ruby Version
-
-  searches:
-    show:
-      subtitle: "for %{query}"
-      exact_match: Exact match
-
-  sessions:
-    new:
-      forgot_password: "Forgot Password?"
-
-  stats:
-    index:
-      total_downloads: Total downloads
-      total_gems: Total gems
-      total_users: Total users
-      all_time_most_downloaded: All Time Most Downloaded
-
-  users:
-    new:
-      have_account: "Already have an account?"
-
-  versions:
-    index:
-      title: "All versions of %{name}"
-      versions_since: "%{count} versions since %{since}"
-      not_hosted_notice: This gem is not currently hosted on RubyGems.org.
-    version:
-      yanked: "yanked"
-
+  not_found: Not Found
+  please_sign_up: Access Denied. Please sign up for an account at https://rubygems.org
+  sign_in: Sign in
+  sign_up: Sign up
+  subtitle: your community gem host
+  this_rubygem_could_not_be_found: This rubygem could not be found.
+  time_ago: "%{duration} ago"
+  title: RubyGems.org
+  update: Update
   activerecord:
     attributes:
-      user:
-        avatar: Avatar
-        email: Email address
-        handle: Handle
-        password: Password
       linkset:
         bugs: Bug Tracker URL
         code: Source Code URL
         docs: Documentation URL
         mail: Mailing List URL
         wiki: Wiki URL
-        changelog: Changelog URL
       session:
-        who: Email or Handle
         password: Password
+        who: Email or Handle
+      user:
+        avatar: Avatar
+        email: Email address
+        handle: Handle
+        password: Password
+  dashboards:
+    show:
+      creating_link_text: creating
+      gem_link_text: gem page
+      latest: Latest Updates
+      latest_title: Latest Updates RSS Feed
+      migrating_link_text: migrating
+      mine: My Gems
+      my_subscriptions: Subscriptions
+      no_owned: You haven't pushed any gems yet. Perhaps check out the guides on %{creating_link} a gem or %{migrating_link} a gem from RubyForge.
+      no_subscriptions: You're not subscribed to any gems yet. Visit a %{gem_link} to subscribe to one!
+  email_confirmations:
+    create:
+      promise_resend: We will email you confirmation link to activate your account if one exists.
+    new:
+      submit: Resend Confirmation
+      title: Resend confirmation email
+      will_email_notice: We will email you confirmation link to activate your account.
+    unconfirmed_email:
+      try_again: Something went wrong. Please try again.
+    update:
+      confirmed_email: Your email address has been verified.
+  home:
+    index:
+      downloads_counting: downloads &amp; counting
+      find_blurb: Find, install, and publish RubyGems.
+      learn:
+        install_rubygems: Install RubyGems
+  layouts:
+    application:
+      footer:
+        about: About
+        api: API
+        blog: Blog
+        contribute: Contribute
+        data: Data
+        designed_by: Designed by
+        discussion_forum: Discuss
+        gems_served_by: Gems served by
+        guides: Guides
+        help: Help
+        hosted_by: Hosted by
+        logging_by: Logging by
+        monitored_by: Monitored by
+        optimized_by: Optimized by
+        resolved_with: Resolved with
+        security: Security
+        source_code: Code
+        statistics: Stats
+        status: Status
+        supported_by: Supported by
+        tested_by: Tested by
+        tracking_by: Tracking by
+        uptime: Uptime
+      header:
+        dashboard: Dashboard
+        search_gem: Search Gems&hellip;
+        sign_in: Sign in
+        sign_out: Sign out
+        sign_up: Sign up
+  mailer:
+    confirm_your_email: Please confirm your email address with the link sent to you email.
+    confirmation_subject: Please confirm your email address with RubyGems.org
+    email_confirmation:
+      confirmation_link: Confirm email address
+      welcome_message: Welcome to RubyGems.org! Click the link below to verify your email.
+    email_reset:
+      visit_link_instructions: You changed your email address on RubyGems.org. Please visit the following url to re-activate your account.
+  pages:
+    about:
+      founding: The project was started in April 2009 by %{founder}, and has since grown to include the contributions of over %{contributors} and %{downloads}. As of the RubyGems 1.3.6 release, the site has been renamed to %{title} from Gemcutter to solidify the site's central role in the Ruby community.
+      support: Although RubyGems.org is not run by one specific company, plenty have helped us out so far. The current design, illustrations, and front-end development of this site were created by %{dockyard}. %{github} has also been invaluable for helping us collaborate and share code easily. The site started on %{heroku}, whose great service helped prove RubyGems as a viable solution that the whole community could rely on. Our infrastructure is currently hosted on %{aws}.
+      technical: 'Some insights into the technical aspects of the site: It''s 100% Ruby. The main site is a %{rails} application. Gems are hosted on %{s3}, served by %{fastly}, and the time between publishing a new gem and having it ready for installation is usually just a few seconds. For more info, %{source_code}, which is %{license} over at GitHub.'
+      title: About
+      purpose:
+        better_api: Provide a better API for dealing with gems
+        enable_community: Enable the community to improve and enhance the site
+        header: 'Welcome to %{site}, the Ruby community''s gem hosting service. The purpose of this project is three-fold:'
+        transparent_pages: Create more transparent and accessible project pages
+  passwords:
+    edit:
+      submit: Save this password
+      title: Reset password
+    new:
+      submit: Reset password
+      title: Change your password
+      will_email_notice: We will email you a link to change your password.
+  profiles:
+    edit:
+      email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
+      enter_password: Please enter your account's password
+      hide_email: Hide email in public profile
+      optional_twitter_username: Optional Twitter username. Will be displayed publicly
+      title: Edit profile
+      api_access:
+        confirm_reset: Are you sure? This cannot be undone.
+        credentials: 'If you want to use %{gem_commands_link} from the command line, you''ll need a %{gem_credentials_file} file, which you can generate using the following command:'
+        key_is: Your API key is %{key}.
+        link_text: gem commands
+        reset: Reset my API key
+        title: API Access
+      reset_password:
+        link_text: Request a new one here.
+        text: Need a new password? No problem. %{link}
+        title: Reset password
+    update:
+      confirmation_mail_sent: You will receive an email within the next few minutes. It contains instructions for confirming your new email address.
+      request_denied: This request was denied. We could not verify your password.
+      updated: Your profile was updated.
+  rubygems:
+    aside:
+      bundler_header: Gemfile
+      copied: Copied!
+      copy_to_clipboard: Copy to clipboard
+      downloads_for_this_version: For this version
+      install: install
+      required_ruby_version: Required Ruby Version
+      required_rubygems_version: Required Rubygems Version
+      links:
+        badge: Badge
+        bugs: Bug Tracker
+        changelog: Change Log
+        code: Source Code
+        docs: Documentation
+        download: Download
+        header: Links
+        home: Homepage
+        mail: Mailing List
+        report_abuse: Report Abuse
+        reverse_dependencies: Reverse dependencies
+        rss: RSS
+        subscribe: Subscribe
+        unsubscribe: Unsubscribe
+        wiki: Wiki
+    blacklisted:
+      blacklisted_namespace: This namespace is reserved by rubygems.org.
+    dependencies:
+      header: "%{title} Dependencies"
+    edit:
+      other_fields_notice: All other fields can only be edited by pushing an updated version of your gem.
+      subtitle: for %{gem}
+      title: Edit links
+    gem_members:
+      authors_header: Authors
+      owners_header: Owners
+      sha_256_checksum: SHA 256 checksum
+    index:
+      downloads: Downloads
+      title: Gems
+    show:
+      licenses_header: License
+      no_licenses: N/A
+      requirements_header: Requirements
+      show_all_versions: Show all versions (%{count} total)
+      versions_header: Versions
+      yanked_notice: This version has been yanked, and it is not available for download directly or for other gems that may have depended on it.
+    show_yanked:
+      not_hosted_notice: This gem is not currently hosted on RubyGems.org.
+      reserved_namespace:
+        one: This gem previously existed, but has been removed by its owner. The RubyGems.org team has reserved this gem name for 1 more day. After that time is up, anyone will be able to claim this gem name using gem push. <br/> If you are the previous owner of this gem, you can change ownership of this gem using the gem owner command. You can also create new versions of this gem using gem push.
+        other: This gem previously existed, but has been removed by its owner. The RubyGems.org team has reserved this gem name for %{count} more days. After that time is up, anyone will be able to claim this gem name using gem push. <br/> If you are the previous owner of this gem, you can change ownership of this gem using the gem owner command. You can also create new versions of this gem using gem push.
+  reverse_dependencies:
+    index:
+      title: "Reverse dependencies for %{name}"
+    reverse_dependencies:
+      search_reverse_dependencies: "Search reverse dependencies Gems&hellip;"
+  searches:
+    show:
+      exact_match: Exact match
+      subtitle: for %{query}
+  sessions:
+    new:
+      forgot_password: Forgot password?
+      resend_confirmation: Didn't receive confirmation mail?
+  stats:
+    index:
+      all_time_most_downloaded: All Time Most Downloaded
+      total_downloads: Total downloads
+      total_gems: Total gems
+      total_users: Total users
+  users:
+    create:
+      email_sent: A confirmation mail has been sent to your email address.
+    new:
+      have_account: Already have an account?
+  versions:
+    index:
+      not_hosted_notice: This gem is not currently hosted on RubyGems.org.
+      title: All versions of %{name}
+      versions_since: "%{count} versions since %{since}"
+    version:
+      yanked: yanked
 
   will_paginate:
-    previous_label: "Previous"
-    next_label: "Next"
+    next_label: Next
     page_gap: "…"
+    previous_label: Previous
     page_entries_info:
+      multi_page: Displaying %{model} %{from} - %{to} of %{count} in total
+      multi_page_html: Displaying %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> of <b>%{count}</b> in total
       single_page:
-        zero:  "No %{model} found"
-        one:   "Displaying 1 %{model}"
-        other: "Displaying all %{count} %{model}"
+        one: Displaying 1 %{model}
+        other: Displaying all %{count} %{model}
+        zero: No %{model} found
       single_page_html:
-        zero:  "No %{model} found"
-        one:   "Displaying <b>1</b> %{model}"
-        other: "Displaying <b>all&nbsp;%{count}</b> %{model}"
-
-      multi_page: "Displaying %{model} %{from} - %{to} of %{count} in total"
-      multi_page_html: "Displaying %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> of <b>%{count}</b> in total"
-
+        one: Displaying <b>1</b> %{model}
+        other: Displaying <b>all&nbsp;%{count}</b> %{model}
+        zero: No %{model} found

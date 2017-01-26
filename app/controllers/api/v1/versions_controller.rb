@@ -4,13 +4,17 @@ class Api::V1::VersionsController < Api::BaseController
   def show
     return unless stale?(@rubygem)
 
+    expires_in 0, public: true
+    fastly_expires_in 60
+    set_surrogate_key "gem/#{@rubygem.name}"
+
     if @rubygem.public_versions.count.nonzero?
       respond_to do |format|
         format.json { render json: @rubygem.public_versions }
         format.yaml { render yaml: @rubygem.public_versions }
       end
     else
-      render text: t(:this_rubygem_could_not_be_found), status: :not_found
+      render plain: t(:this_rubygem_could_not_be_found), status: :not_found
     end
   end
 

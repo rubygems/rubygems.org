@@ -34,6 +34,9 @@
 .gem__sha {
   margin-top: 16px; }
 
+.gem__ghbtn {
+    margin-bottom: 15px; }
+
 .gem__owners {
   margin-top: 16px; }
   .gem__owners img {
@@ -138,12 +141,11 @@
     background-image: linear-gradient(to right, transparent 0%, white 100%); }
 
 .gem__code__tooltip--copy,
-.gem__code__tooltip--copied,
-.zeroclipboard-is-hover.zeroclipboard-is-active ~ .gem__code__tooltip--copy {
+.gem__code__tooltip--copied {
   display: none; }
 
-.zeroclipboard-is-hover ~ .gem__code__tooltip--copy,
-.zeroclipboard-is-active ~ .gem__code__tooltip--copied {
+.clipboard-is-hover,
+.clipboard-is-active {
   display: block;
   position: absolute;
   top: 45px;
@@ -155,8 +157,8 @@
   line-height: 30px;
   text-align: center;
   color: #ffffff; }
-  .zeroclipboard-is-hover ~ .gem__code__tooltip--copy:before,
-  .zeroclipboard-is-active ~ .gem__code__tooltip--copied:before {
+  .clipboard-is-hover:before,
+  .clipboard-is-active:before {
     content: "";
     position: absolute;
     top: -4px;
@@ -194,3 +196,39 @@
     display: inline-block; }
   .gem__version-wrap .gem__version__date {
     font-weight: 400; }
+
+.gem__unregistered {
+  color: #a6aab2;
+  cursor: help;
+}
+
+.gem__navigation {
+  display: inline-block;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.gem__navigation a {
+  color: #9da2ab;
+  text-transform: uppercase;
+  font-weight: bold;
+  transition-duration: 0.25s;
+  transition-property: color;
+  outline: none;
+}
+
+.gem__navigation a:hover, .gem__navigation a:focus, .gem__navigation a:active {
+  color: #141c22;
+}
+
+.gem__previous__version.disabled:hover, .gem__next__version.disabled:hover {
+  color: #9da2ab;
+}
+
+.gem__next__version {
+  float: right;
+}
+
+.gem__previous__version {
+  float: left;
+}

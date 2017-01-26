@@ -2,7 +2,6 @@ require 'digest/sha2'
 
 class Pusher
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
-  attr_accessor :bundler_api_url
 
   def initialize(user, body, protocol = nil, host_with_port = nil)
     @user = user
@@ -11,18 +10,20 @@ class Pusher
     @indexer = Indexer.new
     @protocol = protocol
     @host_with_port = host_with_port
-    @bundler_token = ENV['BUNDLER_TOKEN'] || "tokenmeaway"
-    @bundler_api_url = ENV['BUNDLER_API_URL']
   end
 
   def process
-    pull_spec && find && authorize && save
+    pull_spec && find && authorize && validate && save
   end
 
   def authorize
     rubygem.pushable? ||
       rubygem.owned_by?(user) ||
-      notify("You do not have permission to push to this gem.", 403)
+      notify("You do not have permission to push to this gem. Ask an owner to add you with: gem owner #{rubygem.name} --add #{user.email}", 403)
+  end
+
+  def validate
+    (rubygem.valid? && version.valid?) || notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403)
   end
 
   def save
@@ -94,38 +95,14 @@ class Pusher
     "<Pusher #{attrs.join(' ')}>"
   end
 
-  def update_remote_bundler_api(to = RestClient)
-    return unless @bundler_api_url
-
-    json = {
-      "name"           => spec.name,
-      "version"        => spec.version.to_s,
-      "platform"       => spec.platform.to_s,
-      "prerelease"     => !!spec.version.prerelease?, # rubocop:disable Style/DoubleNegation
-      "rubygems_token" => @bundler_token
-    }.to_json
-
-    begin
-      timeout(5) do
-        to.post @bundler_api_url,
-          json,
-          :timeout        => 5,
-          :open_timeout   => 5,
-          'Content-Type'  => 'application/json'
-      end
-    rescue StandardError, Interrupt
-      false
-    end
-  end
-
   private
 
   def after_write
     @version_id = version.id
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
     rubygem.delay.index_document
+    GemCachePurger.call(rubygem.name)
     enqueue_web_hook_jobs
-    update_remote_bundler_api
     StatsD.increment 'push.success'
   end
 
@@ -139,6 +116,7 @@ class Pusher
     rubygem.disown if rubygem.versions.indexed.count.zero?
     rubygem.update_attributes_from_gem_specification!(version, spec)
     rubygem.create_ownership(user)
+    set_info_checksum
 
     true
   rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback
@@ -150,5 +128,11 @@ class Pusher
     jobs.each do |job|
       job.fire(@protocol, @host_with_port, rubygem, version)
     end
+  end
+
+  def set_info_checksum
+    gem_info = GemInfo.new(rubygem.name).compute_compact_index_info
+    checksum = Digest::MD5.hexdigest(CompactIndex.info(gem_info))
+    version.update_attribute :info_checksum, checksum
   end
 end

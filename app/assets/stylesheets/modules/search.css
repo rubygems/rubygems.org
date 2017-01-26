@@ -117,3 +117,15 @@
   color: #e9573f;
   text-decoration: underline;
 }
+
+.aggregations {
+  font-weight: 800;
+  font-size: 12px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  line-height: 18px;
+}
+
+.aggregations .t-link--black {
+  padding: 4px;
+}

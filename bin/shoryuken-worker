@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Custom script to run shoryuken with our config
+
+if [ -z "$SQS_QUEUE" ];
+then
+  >&2 echo "Error: SQS_QUEUE env var must be set"
+  exit 1
+fi
+
+exec bin/shoryuken --rails --require ./lib/shoryuken/sqs_worker.rb --queue "$SQS_QUEUE"

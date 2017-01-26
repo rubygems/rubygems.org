@@ -6,15 +6,17 @@ class Deletion < ActiveRecord::Base
   validate :version_is_indexed
 
   before_validation :record_metadata
-  after_create :remove_from_index
+  after_create :remove_from_index, :set_yanked_info_checksum
   after_commit :remove_from_storage
+  after_commit :expire_cache
+  after_commit :update_search_index
 
   attr_accessor :version
 
   private
 
   def version_is_indexed
-    errors.add(:number, "is already deleted") unless @version.indexed?
+    errors.add(:base, "#{rubygem_name} #{version} has already been deleted") unless @version.indexed?
   end
 
   def rubygem_name
@@ -27,18 +29,31 @@ class Deletion < ActiveRecord::Base
     self.platform = @version.platform
   end
 
+  def expire_cache
+    GemCachePurger.call(rubygem)
+  end
+
   def remove_from_index
-    @version.update!(indexed: false)
-    Redis.current.lrem(Rubygem.versions_key(rubygem_name), 1, @version.full_name)
+    @version.update!(indexed: false, yanked_at: Time.now.utc)
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
   end
 
   def remove_from_storage
     RubygemFs.instance.remove("gems/#{@version.full_name}.gem")
     RubygemFs.instance.remove("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
-    return unless ENV['FASTLY_DOMAIN']
-    domain = "https://#{ENV['FASTLY_DOMAIN']}"
-    Fastly.purge("#{domain}/gems/#{@version.full_name}.gem")
-    Fastly.purge("#{domain}/quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
+    Fastly.delay.purge("gems/#{@version.full_name}.gem")
+    Fastly.delay.purge("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
+  end
+
+  def update_search_index
+    @version.rubygem.delay.update_document
+  end
+
+  def set_yanked_info_checksum
+    # expire info cache of last version
+    Rails.cache.delete("info/#{rubygem}")
+    gem_info = GemInfo.new(version.rubygem.name)
+    checksum = Digest::MD5.hexdigest(CompactIndex.info(gem_info.compact_index_info))
+    version.update_attribute :yanked_info_checksum, checksum
   end
 end

@@ -13,17 +13,6 @@ class Internal::PingControllerTest < ActionController::TestCase
     end
   end
 
-  context 'with redis down' do
-    should 'not PONG' do
-      requires_toxiproxy
-      Toxiproxy[:redis].down do
-        assert_raises Redis::BaseError do
-          get :index
-        end
-      end
-    end
-  end
-
   context 'with postgres down' do
     should 'not PONG' do
       ActiveRecord::Base.connection.stubs(:select_value).returns(nil)
