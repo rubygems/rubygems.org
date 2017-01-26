@@ -2,6 +2,7 @@ class Links
   # Links available for indexed gems
   LINKS = {
     'home'     => 'homepage_uri',
+    'changelog' => 'changelog_uri',
     'code'     => 'source_code_uri',
     'docs'     => 'documentation_uri',
     'wiki'     => 'wiki_uri',
@@ -54,10 +55,11 @@ class Links
 
   # define getters for each of the uris (both short `home` or long `homepage_uri` versions)
   # don't define for download_uri since it has special logic and is already defined
+  # using a try because linkset does not define all the uri attributes
   LINKS.each do |short, long|
     unless method_defined?(long)
       define_method(long) do
-        version.metadata[long].presence || linkset&.public_send(short)
+        version.metadata[long].presence || linkset.try(short)
       end
     end
     alias_method short, long
