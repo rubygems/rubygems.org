@@ -1,19 +1,19 @@
 class Links
   # Links available for indexed gems
   LINKS = {
-    'home'     => 'homepage_uri',
+    'home'      => 'homepage_uri',
     'changelog' => 'changelog_uri',
-    'code'     => 'source_code_uri',
-    'docs'     => 'documentation_uri',
-    'wiki'     => 'wiki_uri',
-    'mail'     => 'mailing_list_uri',
-    'bugs'     => 'bug_tracker_uri',
-    'download' => 'download_uri'
+    'code'      => 'source_code_uri',
+    'docs'      => 'documentation_uri',
+    'wiki'      => 'wiki_uri',
+    'mail'      => 'mailing_list_uri',
+    'bugs'      => 'bug_tracker_uri',
+    'download'  => 'download_uri'
   }.freeze
 
   # Links available for non-indexed gems
   NON_INDEXED_LINKS = {
-    'docs'     => 'documentation_uri'
+    'docs'      => 'documentation_uri'
   }.freeze
 
   attr_accessor :rubygem, :version, :linkset
