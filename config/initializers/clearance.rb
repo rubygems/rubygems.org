@@ -4,4 +4,5 @@ Clearance.configure do |config|
   config.secure_cookie = true unless Rails.env.test? || Rails.env.development?
   config.password_strategy = Clearance::PasswordStrategies::BCryptMigrationFromSHA1
   config.sign_in_guards = [ConfirmedUserGuard]
+  config.rotate_csrf_on_sign_in = true
 end
