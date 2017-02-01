@@ -254,7 +254,7 @@ GEM
     sprockets (3.7.1)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
-    sprockets-rails (3.1.1)
+    sprockets-rails (3.2.0)
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
@@ -336,7 +336,7 @@ DEPENDENCIES
   sass
   shoryuken (~> 2.1.0)
   shoulda
-  sprockets-rails (~> 3.1.0)
+  sprockets-rails
   statsd-instrument (~> 2.1.0)
   toxiproxy (~> 0.1.3)
   uglifier (>= 1.0.3)
