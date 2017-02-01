@@ -4,7 +4,6 @@ class SessionsController < Clearance::SessionsController
 
     sign_in(@user) do |status|
       if status.success?
-        reset_session
         StatsD.increment 'login.success'
         redirect_back_or(url_after_create)
       else
@@ -13,12 +12,6 @@ class SessionsController < Clearance::SessionsController
         render template: 'sessions/new', status: :unauthorized
       end
     end
-  end
-
-  def destroy
-    reset_session
-    sign_out
-    redirect_to url_after_destroy
   end
 
   private
