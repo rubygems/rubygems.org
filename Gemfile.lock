@@ -55,7 +55,7 @@ GEM
     bcrypt (3.1.11)
     bourne (1.6.0)
       mocha (~> 1.1)
-    builder (3.2.2)
+    builder (3.2.3)
     capistrano (3.5.0)
       airbrussh (>= 1.0.0)
       capistrano-harrow
