@@ -8,7 +8,10 @@ class DeleteUser
   def perform
     profile = User.find(user['id'])
     email = profile.email
-    profile.destroy
-    Mailer.deletion_confirmation(email)
+    if profile.destroy
+      Mailer.deletion_complete(email)
+    else
+      Mailer.deletion_failed(email)
+    end
   end
 end

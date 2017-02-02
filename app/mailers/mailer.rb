@@ -18,9 +18,15 @@ class Mailer < ActionMailer::Base
            default: 'Please confirm your email address with RubyGems.org')
   end
 
-  def deletion_confirmation(email)
+  def deletion_complete(email)
     mail from: Clearance.configuration.mailer_sender,
          to: email,
-         subject: I18n.t('mailer.deletion_confirmation.subject')
+         subject: I18n.t('mailer.deletion_complete.subject')
+  end
+
+  def deletion_failed(email)
+    mail from: Clearance.configuration.mailer_sender,
+         to: email,
+         subject: I18n.t('mailer.deletion_failed.subject')
   end
 end

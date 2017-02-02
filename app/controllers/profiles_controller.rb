@@ -35,7 +35,7 @@ class ProfilesController < ApplicationController
   end
 
   def destroy
-    Delayed::Job.enqueue DeleteUser.new(current_user), priority: PRIORITIES[:web_hook]
+    Delayed::Job.enqueue DeleteUser.new(current_user), priority: PRIORITIES[:profile_deletion]
     sign_out
     redirect_to root_path, notice: t('.request_queued')
   end

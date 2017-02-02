@@ -101,7 +101,10 @@ zh-CN:
       welcome_message:
     email_reset:
       visit_link_instructions:
-    deletion_confirmation:
+    deletion_complete:
+      subject:
+      body:
+    deletion_failed:
       subject:
       body:
   pages:
