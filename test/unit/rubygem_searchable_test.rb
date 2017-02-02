@@ -1,4 +1,5 @@
 require 'test_helper'
+include ESHelper
 
 class RubygemSearchableTest < ActiveSupport::TestCase
   setup do
@@ -36,13 +37,6 @@ class RubygemSearchableTest < ActiveSupport::TestCase
         assert_equal v, json[k]
       end
     end
-  end
-
-  def import_and_refresh
-    Rubygem.import
-    Rubygem.__elasticsearch__.refresh_index!
-    # wait for indexing to finish
-    Rubygem.__elasticsearch__.client.cluster.health wait_for_status: 'yellow'
   end
 
   context 'filter' do
