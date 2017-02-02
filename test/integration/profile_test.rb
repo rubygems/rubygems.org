@@ -112,6 +112,7 @@ class ProfileTest < SystemTest
     fill_in "Password", with: "password12345"
     click_button "Confirm"
 
-    assert page.has_content? "Your account has been successfully deleted."
+    assert page.has_content? "Your account deletion request has been enqueued."\
+      " We will send you a confrimation mail when your request has been processed."
   end
 end

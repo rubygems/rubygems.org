@@ -1,6 +1,6 @@
 class ProfilesController < ApplicationController
   before_action :redirect_to_root, unless: :signed_in?, except: :show
-  before_action :verify_password, only: :update
+  before_action :verify_password, only: [:update, :destroy]
 
   def edit
     @user = current_user
@@ -35,11 +35,9 @@ class ProfilesController < ApplicationController
   end
 
   def destroy
-    if User.authenticate(current_user.email, params[:user][:password]) && current_user.destroy
-      redirect_to root_path, notice: t('.successful_flash')
-    else
-      redirect_to delete_profile_path, notice: t('.unsuccessful_flash')
-    end
+    Delayed::Job.enqueue DeleteUser.new(current_user), priority: PRIORITIES[:web_hook]
+    sign_out
+    redirect_to root_path, notice: t('.request_queued')
   end
 
   private
@@ -50,7 +48,7 @@ class ProfilesController < ApplicationController
 
   def verify_password
     return if current_user.authenticated?(params[:user].delete(:password))
-    flash[:notice] = t('.request_denied')
+    flash[:notice] = t('profiles.request_denied')
     redirect_to edit_profile_path
   end
 end

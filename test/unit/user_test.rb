@@ -289,15 +289,32 @@ class UserTest < ActiveSupport::TestCase
       @version = create(:version, rubygem: @rubygem)
     end
 
-    should "record deletion" do
-      assert_difference 'Deletion.count', 1 do
+    context "user is only owner of gem" do
+      should "record deletion" do
+        assert_difference 'Deletion.count', 1 do
+          @user.destroy
+        end
+      end
+      should "mark rubygem unowned" do
         @user.destroy
+        assert @rubygem.unowned?
       end
     end
 
-    should "remove rubygem ownership" do
-      @user.destroy
-      assert_equal true, @rubygem.unowned?
+    context "user has co-owner of gem" do
+      setup do
+        @rubygem.ownerships.create(user: create(:user))
+      end
+
+      should "not record deletion" do
+        assert_no_difference 'Deletion.count' do
+          @user.destroy
+        end
+      end
+      should "not mark rubygem unowned" do
+        @user.destroy
+        refute @rubygem.unowned?
+      end
     end
   end
 end

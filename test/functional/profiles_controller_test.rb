@@ -167,8 +167,8 @@ class ProfilesControllerTest < ActionController::TestCase
     end
     context "on DELETE to destroy" do
       context "correct password" do
-        should "delete user" do
-          assert_difference 'User.count', -1 do
+        should "enqueue deletion request" do
+          assert_difference 'Delayed::Job.count', 1 do
             delete :destroy, user: { password: @user.password }
           end
         end
@@ -179,13 +179,14 @@ class ProfilesControllerTest < ActionController::TestCase
           end
 
           should redirect_to("the homepage") { root_url }
-          should set_flash.to("Your account has been successfully deleted.")
+          should set_flash.to("Your account deletion request has been enqueued."\
+            " We will send you a confrimation mail when your request has been processed.")
         end
       end
 
       context "incorrect password" do
-        should "not delete user" do
-          assert_no_difference 'User.count' do
+        should "not enqueue deletion request" do
+          assert_no_difference 'Delayed::Job.count' do
             post :destroy, user: { password: 'youshallnotpass' }
           end
         end
@@ -195,8 +196,8 @@ class ProfilesControllerTest < ActionController::TestCase
             delete :destroy, user: { password: 'youshallnotpass' }
           end
 
-          should redirect_to('the profile edit page') { delete_profile_path }
-          should set_flash.to("Something went wrong. Please try again after some time.")
+          should redirect_to('the profile edit page') { edit_profile_path }
+          should set_flash.to("This request was denied. We could not verify your password.")
         end
       end
     end
