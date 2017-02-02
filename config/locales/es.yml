@@ -138,6 +138,21 @@ es:
         link_text: Pide una nueva aquí.
         text: "¿Necesitas otra contraseña? No hay problema. %{link}"
         title: Reestablecer contraseña
+      delete:
+        delete:
+        delete_profile:
+        warning:
+    delete:
+      title:
+      confirm:
+      instructions:
+      list_only_owner:
+      list_multi_owner:
+    rubygem:
+      owners_header:
+    destroy:
+      successful_flash:
+      unsuccessful_flash:
     update:
       confirmation_mail_sent:
       request_denied:

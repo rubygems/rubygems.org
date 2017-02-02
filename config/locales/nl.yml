@@ -138,6 +138,21 @@ nl:
         link_text: Vraag hier een nieuwe aan.
         text: Nieuw wachtwoord nodig? Geen probleem. %{link}
         title: Reset wachtwoord
+      delete:
+        delete:
+        delete_profile:
+        warning:
+    delete:
+      title:
+      confirm:
+      instructions:
+      list_only_owner:
+      list_multi_owner:
+    rubygem:
+      owners_header:
+    destroy:
+      successful_flash:
+      unsuccessful_flash:
     update:
       confirmation_mail_sent:
       request_denied:

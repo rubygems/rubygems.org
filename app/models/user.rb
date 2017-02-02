@@ -142,6 +142,11 @@ class User < ActiveRecord::Base
     !email_confirmed
   end
 
+  def only_owner_gems
+    rubygems.with_versions.where('rubygems.id IN (
+      SELECT rubygem_id FROM ownerships GROUP BY rubygem_id HAVING count(rubygem_id) = 1)')
+  end
+
   private
 
   def update_email!

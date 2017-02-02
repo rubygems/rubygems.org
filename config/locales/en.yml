@@ -138,6 +138,21 @@ en:
         link_text: Request a new one here.
         text: Need a new password? No problem. %{link}
         title: Reset password
+      delete:
+        delete: Delete
+        delete_profile: Delete Profile
+        warning: Deleting your profile is an irreversible action. This can't be undone by contacting support. Please be certain!
+    delete:
+      title: Delete profile
+      confirm: Confirm
+      instructions: We are sorry to see you go. Type your password in the field below and confirm.
+      list_only_owner: These gems will be yanked when you delete your profile. If you would like to add owners before you delete your profile, you can use %{command_link} command.
+      list_multi_owner: You will lose access to these gem but other owners of the gem will continue to have access.
+    rubygem:
+      owners_header: Owners
+    destroy:
+      successful_flash: Your account has been successfully deleted.
+      unsuccessful_flash: Something went wrong. Please try again after some time.
     update:
       confirmation_mail_sent: You will receive an email within the next few minutes. It contains instructions for confirming your new email address.
       request_denied: This request was denied. We could not verify your password.

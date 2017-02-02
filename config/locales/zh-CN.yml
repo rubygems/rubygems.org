@@ -138,6 +138,21 @@ zh-CN:
         link_text: 这里找回密码
         text: 需要一个新密码？没问题，访问 %{link}
         title: 重置密码
+      delete:
+        delete:
+        delete_profile:
+        warning:
+    delete:
+      title:
+      confirm:
+      instructions:
+      list_only_owner:
+      list_multi_owner:
+    rubygem:
+      owners_header:
+    destroy:
+      successful_flash:
+      unsuccessful_flash:
     update:
       confirmation_mail_sent:
       request_denied:

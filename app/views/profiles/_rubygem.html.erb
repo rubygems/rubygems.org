@@ -15,4 +15,10 @@
       </div>
     <% end %>
   </a>
+  <% if local_assigns[:owners] %>
+    <h3 class="t-list__heading"><%= t '.owners_header'%>:</h3>
+    <div class="gem__owners">
+      <%= links_to_owners(rubygem) %>
+    </div>
+  <% end %>
 </li>

@@ -138,6 +138,21 @@ fr:
         link_text: Demandez un nouveau mot de passe ici.
         text: Besoin d'un nouveau mot de passe ? Pas de problème. %{link}
         title: Renvoi de mot de passe
+      delete:
+        delete:
+        delete_profile:
+        warning:
+    delete:
+      title:
+      confirm:
+      instructions:
+      list_only_owner:
+      list_multi_owner:
+    rubygem:
+      owners_header:
+    destroy:
+      successful_flash:
+      unsuccessful_flash:
     update:
       confirmation_mail_sent:
       request_denied:

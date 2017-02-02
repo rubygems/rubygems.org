@@ -138,6 +138,21 @@ zh-TW:
         link_text: 從這裡設定新密碼
         text: 需要重設密碼？沒問題。 %{link}
         title: 重設密碼
+      delete:
+        delete:
+        delete_profile:
+        warning:
+    delete:
+      title:
+      confirm:
+      instructions:
+      list_only_owner:
+      list_multi_owner:
+    rubygem:
+      owners_header:
+    destroy:
+      successful_flash:
+      unsuccessful_flash:
     update:
       confirmation_mail_sent:
       request_denied:
