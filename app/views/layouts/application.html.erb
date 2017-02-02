@@ -79,7 +79,7 @@
               </a>
               <div class="header__popup__nav-links">
                 <%= link_to t('.header.dashboard'), dashboard_url, class: "header__nav-link" %>
-                <%= link_to t('.header.sign_out'), log_out_path, method: :delete, class: "header__nav-link" %>
+                <%= link_to t('.header.sign_out'), sign_out_path, method: :delete, class: "header__nav-link" %>
               </div>
             <% else %>
               <%= link_to t('.header.sign_in'), sign_in_path, class: "header__nav-link #{'is-active' if request.path_info == '/sign_in'}" %>

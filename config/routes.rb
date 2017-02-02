@@ -151,11 +151,7 @@ Rails.application.routes.draw do
     patch 'unconfirmed'
   end
 
-  # login path is "/session" => "session#create"
-  # and logout path is "/sign_out" => "session#destroy"
-  # Check: https://github.com/thoughtbot/clearance/blob/master/lib/generators/clearance/routes/templates/routes.rb#L2
-  resource :session, only: :create
-  delete '/sign_out' => 'sessions#destroy', as: 'log_out'
+  resource :session, only: [:create, :destroy]
 
   resources :passwords, only: [:new, :create]
 
