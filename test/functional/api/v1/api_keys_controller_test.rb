@@ -74,7 +74,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:yaml, :to_sym) do |body|
-      YAML.load body
+      YAML.safe_load(body, [Symbol])
     end
   end
 

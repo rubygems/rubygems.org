@@ -11,6 +11,9 @@ AllCops:
 Rails:
   Enabled: true
 
+Rails/SkipsModelValidations:
+  Enabled: false
+
 Metrics/AbcSize:
   Max: 42 # TODO: Lower to 15
 
@@ -64,3 +67,6 @@ Style/MultilineMethodCallIndentation:
 
 Style/MultilineOperationIndentation:
   EnforcedStyle: indented
+
+Security/MarshalLoad:
+  Enabled: false

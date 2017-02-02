@@ -125,7 +125,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "have email and handle on YAML" do
-      yaml = YAML.load(@user.to_yaml)
+      yaml = YAML.safe_load(@user.to_yaml)
       hash = { 'id' => @user.id, 'email' => @user.email, 'handle' => @user.handle }
       assert_equal hash, yaml
     end
@@ -268,11 +268,11 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "return its payload" do
-      assert_equal @user.payload, YAML.load(@user.to_yaml)
+      assert_equal @user.payload, YAML.safe_load(@user.to_yaml)
     end
 
     should "nest properly" do
-      assert_equal [@user.payload], YAML.load([@user].to_yaml)
+      assert_equal [@user.payload], YAML.safe_load([@user].to_yaml)
     end
   end
 end

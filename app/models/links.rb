@@ -43,7 +43,7 @@ class Links
   # else, generate one from gem name and version number
   def documentation_uri
     version.metadata["documentation_uri"].presence ||
-      linkset&.docs.presence ||
+      linkset&.docs&.presence ||
       "http://www.rubydoc.info/gems/#{rubygem.name}/#{version.number}"
   end
 

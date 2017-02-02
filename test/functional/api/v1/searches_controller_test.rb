@@ -43,7 +43,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:yaml) do |body|
-      YAML.load body
+      YAML.safe_load body
     end
   end
 
