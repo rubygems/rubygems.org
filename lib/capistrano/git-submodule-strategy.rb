@@ -1,30 +1,7 @@
-module Capistrano::SubmoduleStrategy
-  def test
-    test! " [ -f #{repo_path}/HEAD ] "
-  end
+require "capistrano/scm/git"
 
-  def check
-    git :'ls-remote --heads', repo_url
-  end
-
-  def clone
-    if depth = fetch(:git_shallow_clone)
-      git :clone, '--mirror', '--depth', depth, '--no-single-branch', repo_url, repo_path
-    else
-      git :clone, '--mirror', repo_url, repo_path
-    end
-  end
-
-  def update
-    # Note: Requires git version 1.9 or greater
-    if depth = fetch(:git_shallow_clone)
-      git :fetch, '--depth', depth, 'origin', fetch(:branch)
-    else
-      git :remote, :update
-    end
-  end
-
-  def release
+class Capistrano::SubmoduleStrategy < Capistrano::SCM::Git
+  def archive_to_release_path
     context.within_only release_path do
       git :init
       git :remote, 'add', 'origin', "file://#{repo_path}"
