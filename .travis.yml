@@ -37,7 +37,7 @@ script:
   - bundle exec cap -T > /dev/null
 
 env:
-  - RUBYGEMS_VERSION=2.6.4
+  - RUBYGEMS_VERSION=2.6.10
   - RUBYGEMS_VERSION=latest
 
 matrix:

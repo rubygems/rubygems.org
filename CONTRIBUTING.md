@@ -79,7 +79,7 @@ gems for your organization..**
 #### Environment (OS X)
 
 * Use Ruby 2.3.1
-* Use Rubygems 2.6.4
+* Use Rubygems 2.6.10
 * Install bundler: `gem install bundler`
 * Install Elastic Search: `brew install elasticsearch`
   * Setup information: `brew info elasticsearch`
@@ -92,7 +92,7 @@ gems for your organization..**
 
 * Use Ruby 2.3.1 `apt-get install ruby2.3`
   * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
-* Use Rubygems 2.6.4
+* Use Rubygems 2.6.10
 * Install bundler: `gem install bundler`
 * Install Elastic Search 1.5.2: <https://www.elastic.co/downloads/past-releases/elasticsearch-1-5-2>
 * Install PostgreSQL: `apt-get install postgresql postgresql-server-dev-all`
