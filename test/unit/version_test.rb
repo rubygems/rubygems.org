@@ -670,6 +670,29 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @spec.required_ruby_version.to_s,      @version.required_ruby_version
       assert_equal @spec.required_rubygems_version.to_s,  @version.required_rubygems_version
     end
+
+    context "metadata" do
+      should "be invalid with empty string as link" do
+        assert_raise ActiveRecord::RecordInvalid do
+          @spec.metadata = { "home" => "" }
+          @version.update_attributes_from_gem_specification!(@spec)
+        end
+      end
+
+      should "be invalid with invalid link" do
+        assert_raise ActiveRecord::RecordInvalid do
+          @spec.metadata = { "home" => "http:/github.com/bestgemever" }
+          @version.update_attributes_from_gem_specification!(@spec)
+        end
+      end
+
+      should "be valid with valid link" do
+        assert_nothing_raised do
+          @spec.metadata = { "home" => "http://github.com/bestgemever" }
+          @version.update_attributes_from_gem_specification!(@spec)
+        end
+      end
+    end
   end
 
   context "indexes" do
