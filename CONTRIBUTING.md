@@ -140,10 +140,8 @@ can try running:
     * _To import a small set of gems you can point the import process to any
         gems cache directory, like a very small `rvm` gemset for instance, or
 	specifying `GEM_PATH/cache` instead of `vendor/cache`._
-* If you need the index available - needed when working in conjunction
-    with [bundler-api](https://github.com/rubygems/bundler-api) - then run
-    `bundle exec rake gemcutter:index:update`. This primes the filesystem gem index for
-    local use.
+* If you need the index available then run `bundle exec rake gemcutter:index:update`.
+    This primes the filesystem gem index for local use.
 
 #### Getting the test data
 
