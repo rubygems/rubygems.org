@@ -1,4 +1,4 @@
-require 'acrawriter'
+require 'activerecord_acrawriter'
 
 class Dependency < ActiveRecord::Base
   belongs_to :rubygem

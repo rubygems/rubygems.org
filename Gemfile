@@ -49,7 +49,7 @@ gem 'yajl-ruby', require: 'yajl'
 gem 'compact_index', '~> 0.11.0'
 gem 'sprockets-rails', '~> 3.1.0'
 gem 'rack-attack'
-gem 'acrawriter'
+gem 'activerecord_acrawriter'
 
 group :development, :test do
   gem 'rubocop', require: false

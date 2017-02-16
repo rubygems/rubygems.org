@@ -32,6 +32,10 @@ GEM
       activemodel (= 4.2.7.1)
       activesupport (= 4.2.7.1)
       arel (~> 6.0)
+    activerecord_acrawriter (1.0.0)
+      acrawriter
+      activerecord
+      rubythemis
     activesupport (4.2.7.1)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
@@ -140,7 +144,7 @@ GEM
       railties (>= 3.0.0)
     faraday (0.9.2)
       multipart-post (>= 1.2, < 3)
-    ffi (1.9.14)
+    ffi (1.9.17)
     gchartrb (0.8)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
@@ -246,7 +250,7 @@ GEM
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-graphviz (1.2.2)
     ruby-progressbar (1.8.1)
-    rubythemis (0.9.3)
+    rubythemis (0.9.4.1)
       ffi (~> 1.9, >= 1.9.8)
     sass (3.4.22)
     shoryuken (2.0.11)
@@ -297,7 +301,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  acrawriter
+  activerecord_acrawriter
   autoprefixer-rails
   aws-sdk (~> 2.2)
   bourne
@@ -359,4 +363,4 @@ DEPENDENCIES
   yajl-ruby
 
 BUNDLED WITH
-   1.13.6
+   1.14.4

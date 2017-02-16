@@ -1,5 +1,5 @@
 require 'digest/sha2'
-require 'acrawriter'
+require 'activerecord_acrawriter'
 
 class Version < ActiveRecord::Base
   belongs_to :rubygem, touch: true
