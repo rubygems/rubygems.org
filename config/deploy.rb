@@ -12,7 +12,7 @@ set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/
 set :git_wrapper_path, lambda {
   # Try to avoid permissions issues when multiple users deploy the same app
   # by using different file names in the same dir for each deployer and stage.
-  suffix = [:application, :stage, :local_user].map { |key| fetch(key).to_s }.join("-").shellescape
+  suffix = [:application, :stage, :local_user].map { |key| fetch(key).to_s }.join("-").gsub(/[\(\)\s+]/, "-")
   "#{fetch(:tmp_dir)}/git-ssh-#{suffix}.sh"
 }
 
