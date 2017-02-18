@@ -12,11 +12,7 @@ class GemDependent
 
   def fetch_dependencies
     dependencies = []
-    @gem_names.select { |g|
-      @force || !Patterns::GEM_NAME_BLACKLIST.include?(g)
-    }.each { |g|
-      @gem_information[g] = "deps/v1/#{g}"
-    }
+    @gem_names.select { |g| @force || !Patterns::GEM_NAME_BLACKLIST.include?(g) }.each { |g| @gem_information[g] = "deps/v1/#{g}" }
 
     @gem_information.each do |gem_name, cache_key|
       if (dependency = memcached_gem_info[cache_key])
