@@ -17,7 +17,7 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   def show
-    if Patterns::GEM_NAME_BLACKLIST.include?(@rubygem.name)
+    if Patterns::GEM_NAME_BLACKLIST.include?(@rubygem.name) && params[:force] != "true"
       render plain: "This namespace is reserved by rubygems.org.", status: :bad_request
     elsif @rubygem.hosted? && @rubygem.public_versions.indexed.count.nonzero?
       respond_to do |format|
