@@ -7,6 +7,7 @@ gem 'mime-types', '~> 2.99', require: 'mime/types/columnar'
 gem 'rails', '~> 4.2.7'
 gem 'rails-i18n'
 
+gem 'active_model_serializers'
 gem 'autoprefixer-rails'
 gem 'aws-sdk', '~> 2.2'
 gem 'clearance'
