@@ -26,7 +26,7 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
 
       should "return correct YAML for latest gems" do
         get :latest, format: :yaml
-        gems = YAML.load(@response.body)
+        gems = YAML.safe_load(@response.body)
 
         assert_equal 2, gems.length
         assert_equal 'foobar', gems[0]['name']
@@ -66,7 +66,7 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
 
       should "return correct YAML for just_updated gems" do
         get :just_updated, format: :yaml
-        gems = YAML.load(@response.body)
+        gems = YAML.safe_load(@response.body)
 
         assert_equal 6, gems.length
         assert_equal 'rails', gems[0]['name']

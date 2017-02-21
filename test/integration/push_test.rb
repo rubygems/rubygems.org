@@ -63,7 +63,7 @@ class PushTest < ActionDispatch::IntegrationTest
   end
 
   test "push errors bubble out" do
-    push_gem Rails.root.join("test/gems/bad-characters-1.0.0.gem")
+    push_gem Rails.root.join("test", "gems", "bad-characters-1.0.0.gem")
 
     assert_response :unprocessable_entity
     assert_match(/cannot process this gem/, response.body)

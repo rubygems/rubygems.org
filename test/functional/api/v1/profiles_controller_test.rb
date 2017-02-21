@@ -11,7 +11,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
   end
 
   def to_yaml(body)
-    YAML.load body
+    YAML.safe_load body
   end
 
   def response_body

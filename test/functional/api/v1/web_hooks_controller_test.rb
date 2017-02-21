@@ -137,7 +137,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         end
 
         should_respond_to(:yaml) do |body|
-          YAML.load(body)
+          YAML.safe_load(body)
         end
 
         context "On DELETE to remove with owned hook for rubygem" do

@@ -35,7 +35,7 @@ class DependencyTest < ActiveSupport::TestCase
 
     should "return YAML" do
       @dependency.save
-      yaml = YAML.load(@dependency.to_yaml)
+      yaml = YAML.safe_load(@dependency.to_yaml)
 
       assert_equal %w(name requirements), yaml.keys.sort
       assert_equal @dependency.rubygem.name, yaml["name"]
@@ -150,11 +150,11 @@ class DependencyTest < ActiveSupport::TestCase
     end
 
     should "return its payload" do
-      assert_equal @dependency.payload, YAML.load(@dependency.to_yaml)
+      assert_equal @dependency.payload, YAML.safe_load(@dependency.to_yaml)
     end
 
     should "nest properly" do
-      assert_equal [@dependency.payload], YAML.load([@dependency].to_yaml)
+      assert_equal [@dependency.payload], YAML.safe_load([@dependency].to_yaml)
     end
   end
 end
