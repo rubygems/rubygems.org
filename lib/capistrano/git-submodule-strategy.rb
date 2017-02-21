@@ -2,7 +2,7 @@ require "capistrano/scm/git"
 
 class Capistrano::SubmoduleStrategy < Capistrano::SCM::Git
   def archive_to_release_path
-    context.within_only release_path do
+    backend.within_only release_path do
       git :init
       git :remote, 'add', 'origin', "file://#{repo_path}"
       git :fetch
@@ -13,7 +13,7 @@ class Capistrano::SubmoduleStrategy < Capistrano::SCM::Git
   end
 
   def fetch_revision
-    context.capture(:git, "rev-list --max-count=1 --abbrev-commit --abbrev=12 #{fetch(:branch)}")
+    backend.capture(:git, "rev-list --max-count=1 --abbrev-commit --abbrev=12 #{fetch(:branch)}")
   end
 end
 
