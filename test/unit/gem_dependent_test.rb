@@ -1,10 +1,14 @@
 require 'test_helper'
 
 class GemDependentTest < ActiveSupport::TestCase
+  def test_class
+    GemDependent
+  end
+
   context "creating a new dependency_api" do
     setup do
       @gem = create(:rubygem)
-      @gem_dependent = GemDependent.new(@gem.name)
+      @gem_dependent = test_class.new(@gem.name)
     end
 
     should "have some state" do
@@ -15,7 +19,7 @@ class GemDependentTest < ActiveSupport::TestCase
   context "no gem_names" do
     should "return an ArgumentError" do
       assert_raises ArgumentError do
-        GemDependent.new.to_a
+        test_class.new.to_a
       end
     end
   end
@@ -34,7 +38,7 @@ class GemDependentTest < ActiveSupport::TestCase
         dependencies: []
       }
 
-      deps = GemDependent.new(["rack2"]).to_a
+      deps = test_class.new(["rack2"]).to_a
       result.each_pair do |k, v|
         assert_equal v, deps.first[k]
       end
@@ -52,7 +56,7 @@ class GemDependentTest < ActiveSupport::TestCase
       should "return all versions and platform" do
         result = [["0.1.3", "ruby"], ["0.1.2", "ruby"], ["0.1.2", "jruby"], ["0.2.2", "ruby"]]
 
-        deps = GemDependent.new(["rack"]).to_a
+        deps = test_class.new(["rack"]).to_a
         deps.map { |x| [x[:number], x[:platform]] }.each do |dep|
           assert_includes result, dep
         end
@@ -75,7 +79,7 @@ class GemDependentTest < ActiveSupport::TestCase
       should "return dependencies" do
         expected_deps = [["foo", ">= 0.0.0"], ["bar", ">= 0.0.0"]]
 
-        dep = GemDependent.new(["devise"]).to_a.first
+        dep = test_class.new(["devise"]).to_a.first
         assert_equal 'devise', dep[:name]
         assert_equal '1.0.0', dep[:number]
 
@@ -88,27 +92,47 @@ class GemDependentTest < ActiveSupport::TestCase
     context "non indexed versions" do
       setup do
         nokogiri = create(:rubygem, name: "nokogiri")
-        create(:version, number: "0.0.1", rubygem: nokogiri)
+        create(:version, number: "0.0.1", rubygem: nokogiri, info_checksum: 'abc')
         create(:version, number: "0.1.1", rubygem: nokogiri, indexed: false)
       end
 
       should "filter non indexed version" do
-        result = {
-          name: "nokogiri",
-          number: "0.0.1",
-          platform: "ruby",
-          dependencies: []
-        }
-
-        deps = GemDependent.new(["nokogiri"]).to_a
-        assert_equal [result], deps
+        deps = test_class.new(["nokogiri"]).to_a
+        assert_equal [full_result], deps
       end
     end
   end
 
   context "with gem_names which do not exist" do
     should "return empty array" do
-      assert_equal [], GemDependent.new(["does_not_exist"]).to_a
+      assert_equal [], test_class.new(["does_not_exist"]).to_a
     end
+  end
+
+  def full_result
+    {
+      name: "nokogiri",
+      number: "0.0.1",
+      platform: "ruby",
+      dependencies: []
+    }
+  end
+end
+
+class GemDependentV2Test < GemDependentTest
+  def test_class
+    GemDependentV2
+  end
+
+  def full_result
+    {
+      name: "nokogiri",
+      number: "0.0.1",
+      platform: "ruby",
+      required_ruby_version: ">= 2.0.0",
+      required_rubygems_version: ">= 2.6.3",
+      checksum: 'abc',
+      dependencies: []
+    }
   end
 end
