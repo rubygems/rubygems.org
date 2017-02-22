@@ -27,11 +27,11 @@ en:
         wiki: Wiki URL
       session:
         password: Password
-        who: Email or Handle
+        who: Email or Username
       user:
         avatar: Avatar
         email: Email address
-        handle: Handle
+        handle: Username
         password: Password
   dashboards:
     show:

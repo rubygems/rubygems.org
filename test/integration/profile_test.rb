@@ -7,7 +7,7 @@ class ProfileTest < SystemTest
 
   def sign_in
     visit sign_in_path
-    fill_in "Email or Handle", with: @user.reload.email
+    fill_in "Email or Username", with: @user.reload.email
     fill_in "Password", with: @user.password
     click_button "Sign in"
   end
@@ -19,7 +19,7 @@ class ProfileTest < SystemTest
     assert page.has_content? "nick1"
 
     click_link "Edit Profile"
-    fill_in "Handle", with: "nick2"
+    fill_in "Username", with: "nick2"
     fill_in "Password", with: "password12345"
     click_button "Update"
 
@@ -33,11 +33,11 @@ class ProfileTest < SystemTest
     visit profile_path("nick1")
     click_link "Edit Profile"
 
-    fill_in "Handle", with: "nick2"
+    fill_in "Username", with: "nick2"
     fill_in "Password", with: "password12345"
     click_button "Update"
 
-    assert page.has_content? "Handle has already been taken"
+    assert page.has_content? "Username has already been taken"
   end
 
   test "changing to invalid handle does not affect rendering" do
@@ -45,11 +45,11 @@ class ProfileTest < SystemTest
     visit profile_path("nick1")
     click_link "Edit Profile"
 
-    fill_in "Handle", with: "nick1" * 10
+    fill_in "Username", with: "nick1" * 10
     fill_in "Password", with: "password12345"
     click_button "Update"
 
-    assert page.has_content? "Handle is too long (maximum is 40 characters)"
+    assert page.has_content? "Username is too long (maximum is 40 characters)"
     assert page.has_link?("nick1", href: "/profiles/nick1")
   end
 

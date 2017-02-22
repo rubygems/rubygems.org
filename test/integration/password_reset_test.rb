@@ -39,7 +39,7 @@ class PasswordResetTest < SystemTest
     click_link "Sign out"
 
     visit sign_in_path
-    fill_in "Email or Handle", with: @user.email
+    fill_in "Email or Username", with: @user.email
     fill_in "Password", with: "secret54321"
     click_button "Sign in"
 
@@ -64,7 +64,7 @@ class PasswordResetTest < SystemTest
   test "resetting a password when signed in" do
     visit sign_in_path
 
-    fill_in "Email or Handle", with: @user.email
+    fill_in "Email or Username", with: @user.email
     fill_in "Password", with: @user.password
     click_button "Sign in"
 
