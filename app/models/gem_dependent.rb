@@ -1,6 +1,7 @@
 class GemDependent
   extend StatsD::Instrument
   DepKey = Struct.new(:name, :number, :platform, :required_ruby_version, :required_rubygems_version, :info_checksum)
+  DepKey::MEMBERS = DepKey.members.map(&:to_s)
 
   attr_reader :gem_names
 
@@ -49,7 +50,7 @@ class GemDependent
     dataset = ActiveRecord::Base.connection.execute(sanitize_sql)
 
     deps = dataset.group_by do |row|
-      DepKey.new(row['name'], row['number'], row['platform'], row['required_ruby_version'], row['required_rubygems_version'], row['info_checksum'])
+      DepKey.new(*DepKey::MEMBERS.map { |column| row[column] })
     end
 
     deps.map do |dep_key, gem_deps|
