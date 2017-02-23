@@ -14,6 +14,11 @@ Rails.application.routes.draw do
           number: /#{Gem::Version::VERSION_PATTERN}(?=\.json\z)|#{Gem::Version::VERSION_PATTERN}/
         }
       end
+
+      resources :dependencies,
+        only: [:index],
+        format: /marshal|json/,
+        defaults: { format: 'marshal' }
     end
 
     namespace :v1 do
