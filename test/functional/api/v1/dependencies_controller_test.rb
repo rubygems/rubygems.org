@@ -181,7 +181,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
     end
   end
 
-  def expected_results(payload, symbolize = false)
+  def expected_results(payload, _ = false)
     payload
   end
 
@@ -198,13 +198,13 @@ class Api::V2::DependenciesControllerTest < Api::V1::DependenciesControllerTest
   end
 
   def expected_results(payload, symbolize = false)
-    payload.map { |obj|
+    payload.map do |obj|
       v2_info = { "required_ruby_version"     => ">= 2.0.0",
                   "required_rubygems_version" => ">= 2.6.3",
                   "checksum"                  => nil }
       v2_info.symbolize_keys! if symbolize
       obj.merge v2_info
-    }
+    end
   end
 
   def surrogate_key_prefix

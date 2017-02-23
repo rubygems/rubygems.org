@@ -54,9 +54,9 @@ class GemDependent
     end
 
     deps.map do |dep_key, gem_deps|
-      dependencies = gem_deps.select { |row| row['dep_name'] }.map { |row|
+      dependencies = gem_deps.select { |row| row['dep_name'] }.map do |row|
         [row['dep_name'], row['requirements']]
-      }
+      end
 
       build_gem_payload dep_key, dependencies
     end
@@ -73,7 +73,8 @@ class GemDependent
   end
 
   def sql_query(gem_name)
-    ["SELECT rv.name, rv.number, rv.platform, rv.info_checksum, rv.required_ruby_version, rv.required_rubygems_version, d.requirements, for_dep_name.name dep_name
+    ["SELECT rv.name, rv.number, rv.platform, rv.info_checksum, rv.required_ruby_version, rv.required_rubygems_version,
+      d.requirements, for_dep_name.name dep_name
       FROM
         (SELECT r.name, v.number, v.platform, v.info_checksum, v.required_ruby_version, v.required_rubygems_version, v.id AS version_id
         FROM rubygems AS r, versions AS v
