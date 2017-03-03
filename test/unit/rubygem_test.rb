@@ -201,67 +201,56 @@ class RubygemTest < ActiveSupport::TestCase
     end
   end
 
-  context ".reverse_dependencies" do
+  context "with reverse dependencies" do
     setup do
-      @dep_rubygem = create(:rubygem)
-      @gem_one = create(:rubygem)
-      @gem_two = create(:rubygem)
-      @gem_three = create(:rubygem)
-      @gem_four = create(:rubygem)
-      @gem_five = create(:rubygem)
-      @version_one_latest  = create(:version, rubygem: @gem_one, number: '0.2')
-      @version_one_earlier = create(:version, rubygem: @gem_one, number: '0.1')
-      @version_two_latest  = create(:version, rubygem: @gem_two, number: '1.0')
-      @version_two_earlier = create(:version, rubygem: @gem_two, number: '0.5')
-      @version_three = create(:version, rubygem: @gem_three, number: '1.7')
-      @version_four = create(:version, rubygem: @gem_four, number: '3.9')
-      @version_five = create(:version, :yanked, rubygem: @gem_five, number: '6.66')
+      @dependency            = create(:rubygem)
+      @gem_one               = create(:rubygem)
+      @gem_two               = create(:rubygem)
+      gem_three              = create(:rubygem)
+      gem_four               = create(:rubygem)
+      version_one            = create(:version, rubygem: @gem_one)
+      version_two            = create(:version, rubygem: @gem_two)
+      _version_three_latest  = create(:version, rubygem: gem_three, number: '1.0')
+      version_three_earlier  = create(:version, rubygem: gem_three, number: '0.5')
+      yanked_version         = create(:version, :yanked, rubygem: gem_four)
 
-      @version_one_latest.dependencies << create(:dependency,
-        :runtime,
-        version: @version_one_latest,
-        rubygem: @dep_rubygem)
-      @version_two_earlier.dependencies << create(:dependency,
-        :development,
-        version: @version_two_earlier,
-        rubygem: @dep_rubygem)
-      @version_three.dependencies << create(:dependency,
-        :runtime,
-        version: @version_three,
-        rubygem: @dep_rubygem)
-      @version_five.dependencies << create(:dependency,
-        version: @version_five,
-        rubygem: @dep_rubygem)
+      create(:dependency, :runtime, version: version_one, rubygem: @dependency)
+      create(:dependency, :development, version: version_two, rubygem: @dependency)
+      create(:dependency, version: version_three_earlier, rubygem: @dependency)
+      create(:dependency, version: yanked_version, rubygem: @dependency)
     end
 
-    should "return all depended rubygems except yanked versions" do
-      gem_list = Rubygem.reverse_dependencies(@dep_rubygem.name)
+    context "#reverse_dependencies" do
+      should "return dependent gems of latest indexed version" do
+        gem_list = @dependency.reverse_dependencies
 
-      assert_equal 3, gem_list.size
+        assert_equal 2, gem_list.size
 
-      assert gem_list.include?(@gem_one)
-      assert gem_list.include?(@gem_two)
-      assert gem_list.include?(@gem_three)
-      refute gem_list.include?(@gem_four)
-      refute gem_list.include?(@gem_five)
+        assert gem_list.include?(@gem_one)
+        assert gem_list.include?(@gem_two)
+        refute gem_list.include?(@gem_three)
+        refute gem_list.include?(@gem_four)
+      end
     end
 
-    should "return runtime dependend rubygems" do
-      gem_list = Rubygem.reverse_runtime_dependencies(@dep_rubygem.name)
+    context "#reverse_runtime_dependencies" do
+      should "return runtime dependent rubygems" do
+        gem_list = @dependency.reverse_runtime_dependencies
+        assert_equal 1, gem_list.size
 
-      assert_equal 2, gem_list.size
-
-      assert gem_list.include?(@gem_one)
-      refute gem_list.include?(@gem_two)
+        assert gem_list.include?(@gem_one)
+        refute gem_list.include?(@gem_two)
+      end
     end
 
-    should "return development dependend rubygems" do
-      gem_list = Rubygem.reverse_development_dependencies(@dep_rubygem.name)
+    context "#reverse_development_dependencies" do
+      should "return development dependent rubygems" do
+        gem_list = @dependency.reverse_development_dependencies
+        assert_equal 1, gem_list.size
 
-      assert_equal 1, gem_list.size
-
-      assert gem_list.include?(@gem_two)
-      refute gem_list.include?(@gem_one)
+        assert gem_list.include?(@gem_two)
+        refute gem_list.include?(@gem_one)
+      end
     end
   end
 
