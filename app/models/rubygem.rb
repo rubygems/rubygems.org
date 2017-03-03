@@ -50,18 +50,6 @@ class Rubygem < ActiveRecord::Base
     where("UPPER(name) LIKE UPPER(?)", "#{letter}%")
   end
 
-  def self.reverse_dependencies(name)
-    where(id: Version.reverse_dependencies(name).select(:rubygem_id))
-  end
-
-  def self.reverse_development_dependencies(name)
-    where(id: Version.reverse_development_dependencies(name).select(:rubygem_id))
-  end
-
-  def self.reverse_runtime_dependencies(name)
-    where(id: Version.reverse_runtime_dependencies(name).select(:rubygem_id))
-  end
-
   def self.total_count
     count_by_sql "SELECT COUNT(*) from (SELECT DISTINCT rubygem_id FROM versions WHERE indexed = true) AS v"
   end
@@ -275,7 +263,17 @@ class Rubygem < ActiveRecord::Base
   end
 
   def reverse_dependencies
-    self.class.reverse_dependencies(name)
+    self.class.joins("inner join versions as v on v.rubygem_id = rubygems.id
+      inner join dependencies as d on d.version_id = v.id").where("v.indexed = 't'
+      and v.position = 0 and d.rubygem_id = ?", id)
+  end
+
+  def reverse_development_dependencies
+    reverse_dependencies.where("d.scope = 'development'")
+  end
+
+  def reverse_runtime_dependencies
+    reverse_dependencies.where("d.scope ='runtime'")
   end
 
   private
