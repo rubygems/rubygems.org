@@ -89,7 +89,7 @@ class WebHookTest < ActiveSupport::TestCase
         {
           'url'           => @url,
           'failure_count' => @webhook.failure_count
-        }, YAML.load(@webhook.to_yaml)
+        }, YAML.safe_load(@webhook.to_yaml)
       )
     end
 
@@ -225,11 +225,11 @@ class WebHookTest < ActiveSupport::TestCase
     end
 
     should "return its payload" do
-      assert_equal @webhook.payload, YAML.load(@webhook.to_yaml)
+      assert_equal @webhook.payload, YAML.safe_load(@webhook.to_yaml)
     end
 
     should "nest properly" do
-      assert_equal [@webhook.payload], YAML.load([@webhook].to_yaml)
+      assert_equal [@webhook.payload], YAML.safe_load([@webhook].to_yaml)
     end
   end
 end

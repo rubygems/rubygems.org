@@ -8,7 +8,7 @@ class ApiKeyResetTest < SystemTest
   test "reset API key" do
     visit sign_in_path
 
-    fill_in "Email or Handle", with: @user.handle
+    fill_in "Email or Username", with: @user.handle
     fill_in "Password", with: @user.password
     click_button "Sign in"
 

@@ -11,25 +11,22 @@ class GemDependent
   end
 
   def fetch_dependencies
-    dependencies = []
     @gem_names.select { |g| @force || !Patterns::GEM_NAME_BLACKLIST.include?(g) }.each { |g| @gem_information[g] = "deps/v1/#{g}" }
 
-    @gem_information.each do |gem_name, cache_key|
+    @gem_information.flat_map do |gem_name, cache_key|
       if (dependency = memcached_gem_info[cache_key])
         # Fetch the gem's dependencies from the cache
         StatsD.increment 'gem_dependent.memcached.hit'
-        dependencies << dependency
       else
         # Fetch the gem's dependencies from the database
         StatsD.increment 'gem_dependent.memcached.miss'
-        result = fetch_dependency_from_db(gem_name)
-        Rails.cache.write(cache_key, result)
-        memcached_gem_info[cache_key] = result
-        dependencies << result
+        dependency = fetch_dependency_from_db(gem_name)
+        Rails.cache.write(cache_key, dependency)
+        memcached_gem_info[cache_key] = dependency
       end
-    end
 
-    dependencies.flatten
+      dependency
+    end
   end
 
   alias to_a fetch_dependencies

@@ -10,7 +10,7 @@ if Rails.env.production? || Rails.env.staging?
     config.lograge.keep_original_rails_log = true
 
     # The new logs are shipped to the central logging
-    config.lograge.logger = ActiveSupport::Logger.new "#{Rails.root}/log/#{Rails.env}.json.log"
+    config.lograge.logger = ActiveSupport::Logger.new Rails.root.join("log", "#{Rails.env}.json.log")
 
     # Add custom fields
     config.lograge.custom_options = lambda do |event|

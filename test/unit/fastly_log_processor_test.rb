@@ -3,7 +3,7 @@ include ESHelper
 
 class FastlyLogProcessorTest < ActiveSupport::TestCase
   setup do
-    @sample_log = Rails.root.join('test/sample_logs/fastly-fake.log').read
+    @sample_log = Rails.root.join('test', 'sample_logs', 'fastly-fake.log').read
 
     @sample_log_counts = {
       "bundler-1.10.6" => 2,
