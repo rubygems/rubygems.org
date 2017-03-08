@@ -19,6 +19,8 @@ class Version < ActiveRecord::Base
 
   validate :platform_and_number_are_unique, on: :create
   validate :authors_format, on: :create
+  validate :metadata_links_format
+
   class AuthorType < Type::String
     def cast_value(value)
       if value.is_a?(Array)
@@ -359,5 +361,12 @@ class Version < ActiveRecord::Base
   def feature_release(number)
     feature_version = Gem::Version.new(number).segments[0, 2].join('.')
     Gem::Version.new(feature_version)
+  end
+
+  def metadata_links_format
+    Linkset::LINKS.each do |link|
+      errors.add(:metadata, "['#{link}'] does not appear to be a valid URL") if
+        metadata[link] && metadata[link] !~ Patterns::URL_VALIDATION_REGEXP
+    end
   end
 end
