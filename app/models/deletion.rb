@@ -50,10 +50,7 @@ class Deletion < ActiveRecord::Base
   end
 
   def set_yanked_info_checksum
-    # expire info cache of last version
-    Rails.cache.delete("info/#{rubygem}")
-    gem_info = GemInfo.new(version.rubygem.name)
-    checksum = Digest::MD5.hexdigest(CompactIndex.info(gem_info.compact_index_info))
+    checksum = GemInfo.new(version.rubygem.name).info_checksum
     version.update_attribute :yanked_info_checksum, checksum
   end
 end
