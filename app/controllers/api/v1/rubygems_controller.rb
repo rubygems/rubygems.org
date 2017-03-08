@@ -3,7 +3,7 @@ class Api::V1::RubygemsController < Api::BaseController
 
   before_action :authenticate_with_api_key, only: [:index, :create]
   before_action :verify_authenticated_user, only: [:index, :create]
-  before_action :find_rubygem,              only: [:show]
+  before_action :find_rubygem,              only: [:show, :reverse_dependencies]
 
   before_action :cors_preflight_check, only: :show
   after_action  :cors_set_access_control_headers, only: :show
@@ -44,11 +44,11 @@ class Api::V1::RubygemsController < Api::BaseController
   def reverse_dependencies
     names = begin
       if params[:only] == "development"
-        Rubygem.reverse_development_dependencies(params[:id]).pluck(:name)
+        @rubygem.reverse_development_dependencies.pluck(:name)
       elsif params[:only] == "runtime"
-        Rubygem.reverse_runtime_dependencies(params[:id]).pluck(:name)
+        @rubygem.reverse_runtime_dependencies.pluck(:name)
       else
-        Rubygem.reverse_dependencies(params[:id]).pluck(:name)
+        @rubygem.reverse_dependencies.pluck(:name)
       end
     end
 
