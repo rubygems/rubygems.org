@@ -17,7 +17,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should "toggle the subscribe link" do
-      assert_match(/\("\.toggler"\)\.toggle\(\)/, @response.body)
+      assert_includes @response.body, 'Subscribe'
     end
   end
 
@@ -52,7 +52,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should "toggle the subscribe link" do
-      assert_match(/\("\.toggler"\)\.toggle\(\)/, @response.body)
+      assert_includes @response.body, 'Subscribe'
     end
   end
 end
