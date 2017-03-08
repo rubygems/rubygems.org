@@ -75,6 +75,49 @@ class DeletionTest < ActiveSupport::TestCase
     assert_equal deletion.rubygem, @version.rubygem.name
   end
 
+  context "with restored gem" do
+    setup do
+      GemCachePurger.stubs(:call)
+      Fastly.stubs(:purge)
+      RubygemFs.instance.stubs(:restore).returns true
+      @deletion = delete_gem
+      @deletion.restore!
+      @gem_name = @version.rubygem.name
+    end
+
+    should "index version" do
+      assert @version.indexed?
+    end
+
+    should "reorder versions" do
+      assert @version.reload.latest?
+    end
+
+    should "remove the yanked time and yanked_info_checksum" do
+      assert_nil @version.yanked_at
+      assert_nil @version.yanked_info_checksum
+    end
+
+    should "call GemCachePurger" do
+      assert_received(GemCachePurger, :call) { |subject| subject.with(@gem_name).twice }
+    end
+
+    should "purge fastly" do
+      Delayed::Worker.new.work_off
+
+      assert_received(Fastly, :purge) do |subject|
+        subject.with("gems/#{@version.full_name}.gem").twice
+      end
+      assert_received(Fastly, :purge) do |subject|
+        subject.with("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz").twice
+      end
+    end
+
+    should "remove deletion record" do
+      assert @deletion.destroyed?
+    end
+  end
+
   teardown do
     # This is necessary due to after_commit not cleaning up for us
     [Rubygem, Version, User, Deletion, Delayed::Job, GemDownload].each(&:delete_all)
