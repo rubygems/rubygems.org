@@ -81,7 +81,7 @@ gems for your organization..**
 * Use Ruby 2.3.1
 * Use Rubygems 2.6.10
 * Install bundler: `gem install bundler`
-* Install Elastic Search: `brew install elasticsearch`
+* Install Elastic Search(>= 2.0.x): `brew install elasticsearch`
   * Setup information: `brew info elasticsearch`
 * Install PostgreSQL (>= 8.4.x): `brew install postgres`
   * Setup information: `brew info postgresql`
@@ -94,8 +94,8 @@ gems for your organization..**
   * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
 * Use Rubygems 2.6.10
 * Install bundler: `gem install bundler`
-* Install Elastic Search 1.5.2: <https://www.elastic.co/downloads/past-releases/elasticsearch-1-5-2>
-* Install PostgreSQL: `apt-get install postgresql postgresql-server-dev-all`
+* Install Elastic Search(>= 2.0.x): <https://www.elastic.co/guide/en/elasticsearch/reference/current/_installation.html>
+* Install PostgreSQL(>= 8.4.x): `apt-get install postgresql postgresql-server-dev-all`
   * Help to setup database <https://wiki.debian.org/PostgreSql>
 * Install memcached: `apt-get install memcached`
   * Show all memcached options: `memcached -h`
