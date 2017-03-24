@@ -49,4 +49,11 @@ class DashboardTest < ActionDispatch::IntegrationTest
     get dashboard_path
     assert page.has_content?('hello w.')
   end
+
+  test "hides the announcement when the user has hidden it" do
+    announcement = Announcement.create(body: 'Hello World')
+    cookies[announcement.token] = 'hidden'
+    get root_path
+    refute page.has_content?(announcement.body)
+  end
 end
