@@ -1,0 +1,8 @@
+<% if announcement_visible?(current_announcement) %>
+  <div id="announcement">
+    <span><%= current_announcement.body.html_safe %></span>
+    <span class="hide">
+      <%= link_to "hide", "#", onclick: "hideAnnouncement('#{current_announcement.token}')" %>
+    </span>
+  </div>
+<% end %>
