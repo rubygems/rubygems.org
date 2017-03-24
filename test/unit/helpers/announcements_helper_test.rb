@@ -9,7 +9,7 @@ class AnnouncementsHelperTest < ActionView::TestCase
       assert announcement_visible?(announcement)
     end
 
-    should "return false if the user has hidden current announcement" do
+    should "return false if the user has hidden the current announcement" do
       announcement = Announcement.create(body: 'test')
       cookies[announcement.token] = 'hidden'
       refute announcement_visible?(announcement)
@@ -17,7 +17,7 @@ class AnnouncementsHelperTest < ActionView::TestCase
   end
 
   context "current_announcement" do
-    should "reutrn the most recent announcemnt" do
+    should "return the most recent announcement" do
       Announcement.create(body: 'test1')
       announcement2 = Announcement.create(body: 'test2')
 
