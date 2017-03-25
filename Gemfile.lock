@@ -182,7 +182,7 @@ GEM
     net-ssh (4.0.1)
     netrc (0.11.0)
     newrelic_rpm (3.18.1.330)
-    nokogiri (1.7.0.1)
+    nokogiri (1.7.1)
       mini_portile2 (~> 2.1.0)
     parser (2.3.3.1)
       ast (~> 2.2)
