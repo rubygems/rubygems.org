@@ -83,7 +83,7 @@ gems for your organization..**
 * Install bundler: `gem install bundler`
 * Install Elastic Search:
   * ElasticSearch `1.*` is required. There isn't a homebrew package for `elasticsearch@1`, instead it's recommended to use [Docker](https://www.docker.com/)
-  * Pull ElasticSearch `1.7.6` from [hub.docker.com](https://hub.docker.com/_/elasticsearch/) and expose the container ports: `docker run -P elasticsearch:1.7.6`
+  * Pull ElasticSearch `1.5.2` from [hub.docker.com](https://hub.docker.com/_/elasticsearch/) and expose the container ports: `docker run -P elasticsearch:1.5.2`
 * Install PostgreSQL (>= 8.4.x): `brew install postgres`
   * Setup information: `brew info postgresql`
 * Install memcached: `brew install memcached`
