@@ -21,7 +21,7 @@ class OwnershipTest < ActiveSupport::TestCase
     should validate_uniqueness_of(:user_id).scoped_to(:rubygem_id)
   end
 
-  context "with multiple ownerships on the same rubygem" do
+  context "#safe_destroy" do
     setup do
       @rubygem       = create(:rubygem)
       @ownership_one = create(:ownership, rubygem: @rubygem)
@@ -29,15 +29,15 @@ class OwnershipTest < ActiveSupport::TestCase
     end
 
     should "allow deletion of one ownership" do
-      @ownership_one.destroy
+      @ownership_one.safe_destroy
       assert_equal 1, @rubygem.owners.length
     end
 
     should "not allow deletion of both ownerships" do
-      @ownership_one.destroy
-      @ownership_two.destroy
+      @ownership_one.safe_destroy
+      @ownership_two.safe_destroy
       assert_equal 1, @rubygem.owners.length
-      assert_equal "Can't delete last owner of a gem.", @ownership_two.errors[:base].first
+      assert_equal @ownership_two.user, @rubygem.owners.last
     end
   end
 end

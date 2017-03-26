@@ -101,6 +101,12 @@ zh-TW:
       welcome_message:
     email_reset:
       visit_link_instructions:
+    deletion_complete:
+      subject:
+      body:
+    deletion_failed:
+      subject:
+      body:
   pages:
     about:
       founding: 本專案由 %{founder} 於 2009 年 4 月創立，發展過程中有超過 %{contributors} 貢獻者以及 %{downloads}。自 RubyGems 1.3.6 發佈以來，本站名稱由 Gemcutter 更名為 %{title}，本站自此之後成為 Ruby 社群的核心網站。
@@ -138,10 +144,24 @@ zh-TW:
         link_text: 從這裡設定新密碼
         text: 需要重設密碼？沒問題。 %{link}
         title: 重設密碼
+      delete:
+        delete:
+        delete_profile:
+        warning:
+    delete:
+      title:
+      confirm:
+      instructions:
+      list_only_owner:
+      list_multi_owner:
+    rubygem:
+      owners_header:
+    destroy:
+      request_queued:
     update:
       confirmation_mail_sent:
-      request_denied:
       updated:
+    request_denied:
   rubygems:
     aside:
       bundler_header: Gemfile

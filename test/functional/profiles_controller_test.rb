@@ -165,6 +165,42 @@ class ProfilesControllerTest < ActionController::TestCase
         end
       end
     end
+    context "on DELETE to destroy" do
+      context "correct password" do
+        should "enqueue deletion request" do
+          assert_difference 'Delayed::Job.count', 1 do
+            delete :destroy, user: { password: @user.password }
+          end
+        end
+
+        context "redirect path and flash" do
+          setup do
+            delete :destroy, user: { password: @user.password }
+          end
+
+          should redirect_to("the homepage") { root_url }
+          should set_flash.to("Your account deletion request has been enqueued."\
+            " We will send you a confrimation mail when your request has been processed.")
+        end
+      end
+
+      context "incorrect password" do
+        should "not enqueue deletion request" do
+          assert_no_difference 'Delayed::Job.count' do
+            post :destroy, user: { password: 'youshallnotpass' }
+          end
+        end
+
+        context "redirect path and flash" do
+          setup do
+            delete :destroy, user: { password: 'youshallnotpass' }
+          end
+
+          should redirect_to('the profile edit page') { edit_profile_path }
+          should set_flash.to("This request was denied. We could not verify your password.")
+        end
+      end
+    end
   end
 
   context "On GET to edit without being signed in" do

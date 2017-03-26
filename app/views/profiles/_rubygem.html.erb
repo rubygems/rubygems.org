@@ -1,10 +1,10 @@
 <li class="<%= "small" unless graph %>">
-  <a href="<%= rubygem_path(rubygem) %>" class="gems__gem">
+  <div class="gems__gem">
     <span class="gems__gem__info">
-      <p class="gems__gem__name">
+      <a href="<%= rubygem_path(rubygem) %>" class="gems__gem__name">
         <%= rubygem.name %>
         <span class="gems__gem__version"><%= rubygem.versions.most_recent %></span>
-      </p>
+      </a>
     </span>
     <p class="gems__gem__downloads__count">
       <%= number_with_delimiter(rubygem.downloads) %>
@@ -14,5 +14,13 @@
       <div id="graph-<%= rubygem.id %>" class="profile-graph">
       </div>
     <% end %>
-  </a>
+    <% if local_assigns[:owners] %>
+      <div class="owners">
+        <h3 class="t-list__heading"><%= t '.owners_header'%>:</h3>
+        <div class="gem__owners">
+          <%= links_to_owners(rubygem) %>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </li>
