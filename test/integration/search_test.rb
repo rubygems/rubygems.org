@@ -1,9 +1,11 @@
 require 'test_helper'
+include ESHelper
 
 class SearchTest < SystemTest
   test "searching for a gem" do
     create(:rubygem, name: "LDAP", number: "1.0.0")
     create(:rubygem, name: "LDAP-PLUS", number: "1.0.0")
+    import_and_refresh
 
     visit search_path
 
@@ -19,6 +21,7 @@ class SearchTest < SystemTest
   test "searching for a yanked gem" do
     rubygem = create(:rubygem, name: "LDAP")
     create(:version, rubygem: rubygem, indexed: false)
+    import_and_refresh
 
     visit search_path
 
@@ -33,6 +36,7 @@ class SearchTest < SystemTest
     create(:version, rubygem: rubygem, number: "1.1.1", indexed: true)
     create(:version, rubygem: rubygem, number: "2.2.2", indexed: false)
     create(:version, rubygem: rubygem, number: "3.3.3", indexed: true)
+    import_and_refresh
 
     visit search_path
 
@@ -54,6 +58,7 @@ class SearchTest < SystemTest
     Rubygem.per_page = 1
     create(:rubygem, name: "ruby-ruby", number: '1.0.0')
     create(:rubygem, name: "ruby-gems", number: '1.0.0')
+    import_and_refresh
 
     visit '/search?query=ruby&script_name=javascript:alert(1)//'
     assert page.has_content? "ruby-ruby"
