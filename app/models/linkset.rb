@@ -1,7 +1,7 @@
 class Linkset < ActiveRecord::Base
   belongs_to :rubygem
 
-  LINKS = %w(home code docs wiki mail bugs).freeze
+  LINKS = %w(home changelog code docs wiki mail bugs).freeze
 
   LINKS.each do |url|
     validates_formatting_of url.to_sym,
