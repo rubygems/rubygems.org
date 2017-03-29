@@ -274,7 +274,7 @@ GEM
     toxiproxy (0.1.4)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uglifier (3.1.9)
+    uglifier (3.1.11)
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
