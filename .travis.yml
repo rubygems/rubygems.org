@@ -8,6 +8,12 @@ cache:
 rvm:
   - 2.3.3
   - ruby-head
+addons:
+  apt:
+    sources:
+      - elasticsearch-2.x
+    packages:
+      elasticsearch
 
 services:
   - elasticsearch
