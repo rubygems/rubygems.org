@@ -11,9 +11,10 @@ rvm:
 addons:
   apt:
     sources:
-      - elasticsearch-2.x
+      - elasticsearch-5.x
     packages:
-      elasticsearch
+      - elasticsearch
+      - oracle-java8-set-default
 
 services:
   - elasticsearch

@@ -61,9 +61,9 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       example_gem1 = create(:rubygem, name: "keyword", downloads: 1)
       example_gem2 = create(:rubygem, name: "example_gem2", downloads: 1)
       example_gem3 = create(:rubygem, name: "example_gem3", downloads: 1)
-      create(:version, rubygem: example_gem1)
-      create(:version, rubygem: example_gem2, description: 'some text and keyword')
-      create(:version, rubygem: example_gem3, summary: 'some keyword')
+      create(:version, rubygem: example_gem1, description: 'some', summary: 'some')
+      create(:version, rubygem: example_gem2, description: 'keyword', summary: 'some')
+      create(:version, rubygem: example_gem3, summary: 'keyword', description: 'some')
       import_and_refresh
     end
 
