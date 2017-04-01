@@ -30,6 +30,7 @@ module Patterns
     expect
     fcntl
     fiber
+    fiddle
     fileutils
     find
     forwardable
