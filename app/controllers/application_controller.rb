@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
   before_action :set_csp
 
   def set_csp
-    response.headers['Content-Security-Policy-Report-Only'] = "default-src 'self'; "\
+    response.headers['Content-Security-Policy'] = "default-src 'self'; "\
       "script-src 'self' https://secure.gaug.es; "\
       "style-src 'self' https://fonts.googleapis.com; "\
       "img-src 'self' https://secure.gaug.es https://gravatar.com https://secure.gravatar.com; "\
