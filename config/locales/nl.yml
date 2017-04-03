@@ -21,6 +21,7 @@ nl:
     attributes:
       linkset:
         bugs: Bugtracker-URL
+        changelog:
         code: source code URL
         docs: Documentatie-URL
         mail: Mailing-list-URL
@@ -174,6 +175,7 @@ nl:
       links:
         badge: Badge
         bugs: Bug-tracker
+        changelog:
         code: source code
         docs: Documentatie
         download: Download

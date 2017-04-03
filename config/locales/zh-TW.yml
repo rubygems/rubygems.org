@@ -21,6 +21,7 @@ zh-TW:
     attributes:
       linkset:
         bugs: Bug 追蹤 URL
+        changelog:
         code: 原始碼 URL
         docs: 文件 URL
         mail: 郵件群組 URL
@@ -174,6 +175,7 @@ zh-TW:
       links:
         badge: 徽章
         bugs: Bug 追蹤
+        changelog:
         code: 原始碼
         docs: 文件
         download: 下載

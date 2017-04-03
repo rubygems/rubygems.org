@@ -21,6 +21,7 @@ es:
     attributes:
       linkset:
         bugs: URL del registro de Bugs
+        changelog: URL del Changelog
         code: URL del código fuente
         docs: URL de la documentación
         mail: URL de la lista de correo
@@ -174,6 +175,7 @@ es:
       links:
         badge: Badge
         bugs: Registro de bugs
+        changelog: Changelog
         code: Código fuente
         docs: Documentación
         download: Descargar

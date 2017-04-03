@@ -21,6 +21,7 @@ fr:
     attributes:
       linkset:
         bugs: URL du suivi de bugs
+        changelog:
         code: URL du code source
         docs: URL de la documentation
         mail: URL de la liste de diffusion
@@ -174,6 +175,7 @@ fr:
       links:
         badge: Badge
         bugs: Suivi de bugs
+        changelog:
         code: Code Source
         docs: Documentation
         download: Télécharger

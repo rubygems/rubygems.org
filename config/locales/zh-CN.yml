@@ -21,6 +21,7 @@ zh-CN:
     attributes:
       linkset:
         bugs:
+        changelog:
         code: 源代码 URL
         docs: 文档 URL
         mail: 邮件列表 URL
@@ -174,6 +175,7 @@ zh-CN:
       links:
         badge: 徽章
         bugs:
+        changelog:
         code: 源代码
         docs: 文档
         download: 下载
