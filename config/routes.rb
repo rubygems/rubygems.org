@@ -83,7 +83,7 @@ Rails.application.routes.draw do
       resource :activity, only: [], format: /json|yaml/ do
         collection do
           get :latest
-          get :just_updated
+          get "just_updated/(:since)", to: "activities#just_updated"
         end
       end
 

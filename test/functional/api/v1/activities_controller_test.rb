@@ -76,6 +76,20 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
         assert_equal 'sinatra', gems[3]['name']
         assert_equal @sinatra_version.number, gems[3]['version'], 'should have the latest version'
       end
+
+      should "return all gems that have been updated since a given date" do
+        gem = create(:rubygem, name: 'example-gem')
+        create(:version, rubygem: gem)
+
+        travel_to (Time.now + 4.days) do
+          create(:version, rubygem: gem, updated_at: Time.now - 1.day)
+          get :just_updated, format: :json, since: Time.now - 2.day
+          gems = YAML.safe_load(@response.body)
+
+          assert_equal 1, gems.length
+          assert_equal 'example-gem', gems[0]['name']
+        end
+      end
     end
   end
 end

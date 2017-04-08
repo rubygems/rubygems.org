@@ -6,6 +6,9 @@ class Api::V1::ActivitiesController < Api::BaseController
 
   def just_updated
     versions = Version.just_updated(50)
+    if params[:since].present?
+      versions = versions.where("versions.created_at >= ?", params[:since])
+    end
     render_rubygems(versions)
   end
 
