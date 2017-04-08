@@ -81,9 +81,9 @@ class Api::V1::ActivitiesControllerTest < ActionController::TestCase
         gem = create(:rubygem, name: 'example-gem')
         create(:version, rubygem: gem)
 
-        travel_to (Time.now + 4.days) do
-          create(:version, rubygem: gem, updated_at: Time.now - 1.day)
-          get :just_updated, format: :json, since: Time.now - 2.day
+        travel_to Time.current + 4.days do
+          create(:version, rubygem: gem, updated_at: Time.current - 1.day)
+          get :just_updated, format: :json, since: Time.current - 2.days
           gems = YAML.safe_load(@response.body)
 
           assert_equal 1, gems.length
