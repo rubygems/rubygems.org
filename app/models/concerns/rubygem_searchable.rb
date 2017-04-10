@@ -35,19 +35,16 @@ module RubygemSearchable
              }
 
     mapping do
-      indexes :name, type: 'text' do
-        indexes :name, analyzer: 'rubygem'
+      indexes :name, type: 'text', analyzer: 'rubygem' do
         indexes :suggest, analyzer: 'simple'
       end
+      indexes :summary, type: 'text', analyzer: 'english' do
+        indexes :raw, analyzer: 'simple'
+      end
+      indexes :description, type: 'text', analyzer: 'english' do
+        indexes :raw, analyzer: 'simple'
+      end
       indexes :yanked, type: 'boolean'
-      indexes :summary, type: 'text' do
-        indexes :summary, analyzer: 'english'
-        indexes :raw, analyzer: 'simple'
-      end
-      indexes :description, type: 'text' do
-        indexes :description, analyzer: 'english'
-        indexes :raw, analyzer: 'simple'
-      end
       indexes :downloads, type: 'integer'
       indexes :updated, type: 'date'
     end
