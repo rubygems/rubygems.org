@@ -40,4 +40,5 @@ module Gemcutter
   PROTOCOL = config['protocol']
   HOST = config['host']
   DEFAULT_PAGINATION = 20
+  REMEMBER_FOR = 2.weeks
 end
