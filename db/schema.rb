@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161231080902) do
+ActiveRecord::Schema.define(version: 20170414205340) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -144,6 +144,7 @@ ActiveRecord::Schema.define(version: 20161231080902) do
     t.boolean  "hide_email"
     t.string   "twitter_username"
     t.string   "unconfirmed_email"
+    t.datetime "remember_token_expires_at"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
