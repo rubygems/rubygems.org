@@ -138,6 +138,7 @@ GEM
       railties (>= 3.0.0)
     faraday (0.9.2)
       multipart-post (>= 1.2, < 3)
+    ffi (1.9.18)
     gchartrb (0.8)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
@@ -175,6 +176,7 @@ GEM
     minitest (5.10.1)
     mocha (1.2.1)
       metaclass (~> 0.0.1)
+    msgpack (1.1.0)
     multi_json (1.12.1)
     multipart-post (2.0.0)
     net-scp (1.2.1)
@@ -233,6 +235,10 @@ GEM
     rainbow (2.2.1)
     raindrops (0.17.0)
     rake (12.0.0)
+    rbtrace (0.4.8)
+      ffi (>= 1.0.6)
+      msgpack (>= 0.4.3)
+      trollop (>= 1.16.2)
     rdoc (5.1.0)
     rest-client (2.0.1)
       http-cookie (>= 1.0.2, < 2.0)
@@ -272,6 +278,7 @@ GEM
     timers (4.1.2)
       hitimes
     toxiproxy (0.1.4)
+    trollop (2.1.2)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     uglifier (3.1.11)
@@ -337,6 +344,7 @@ DEPENDENCIES
   rails (~> 4.2.7)
   rails-erd
   rails-i18n
+  rbtrace (~> 0.4.8)
   rdoc
   rest-client
   rubocop
@@ -353,4 +361,4 @@ DEPENDENCIES
   xml-simple
 
 BUNDLED WITH
-   1.13.7
+   1.14.6
