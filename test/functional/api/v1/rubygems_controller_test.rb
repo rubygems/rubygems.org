@@ -62,7 +62,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
 
       should_respond_to(:yaml) do |body|
-        YAML.load body
+        YAML.safe_load body
       end
     end
 
@@ -196,7 +196,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
 
       should_respond_to :yaml do |body|
-        YAML.load body
+        YAML.safe_load body
       end
     end
 
@@ -364,50 +364,34 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
   context "on GET to reverse_dependencies" do
     setup do
-      @dep_rubygem = create(:rubygem)
-      @gem_one = create(:rubygem)
-      @gem_two = create(:rubygem)
-      @gem_three = create(:rubygem)
-      @gem_four = create(:rubygem)
-      @gem_five = create(:rubygem)
-      @version_one_latest  = create(:version, rubygem: @gem_one, number: '0.2')
-      @version_one_earlier = create(:version, rubygem: @gem_one, number: '0.1')
-      @version_two_latest  = create(:version, rubygem: @gem_two, number: '1.0')
-      @version_two_earlier = create(:version, rubygem: @gem_two, number: '0.5')
-      @version_three = create(:version, rubygem: @gem_three, number: '1.7')
-      @version_four = create(:version, rubygem: @gem_four, number: '3.9')
-      @version_five = create(:version, rubygem: @gem_five, number: '4.5')
+      @dependency   = create(:rubygem)
+      @gem_one      = create(:rubygem)
+      @gem_two      = create(:rubygem)
+      @gem_three    = create(:rubygem)
+      version_one   = create(:version, rubygem: @gem_one)
+      version_two   = create(:version, rubygem: @gem_two)
+      version_three = create(:version, rubygem: @gem_three)
 
-      @version_one_latest.dependencies << create(:dependency,
-        version: @version_one_latest,
-        rubygem: @dep_rubygem)
-      @version_two_earlier.dependencies << create(:dependency,
-        version: @version_two_earlier,
-        rubygem: @dep_rubygem)
-      @version_three.dependencies << create(:dependency,
-        version: @version_three,
-        rubygem: @dep_rubygem)
-      @version_five.dependencies << create(:dependency, :development,
-        version: @version_five,
-        rubygem: @dep_rubygem)
+      create(:dependency, :runtime, version: version_one, rubygem: @dependency)
+      create(:dependency, :development, version: version_two, rubygem: @dependency)
+      create(:dependency, :runtime, version: version_three, rubygem: @dependency)
     end
 
     should "return names of reverse dependencies" do
-      get :reverse_dependencies, id: @dep_rubygem.to_param, format: "json"
+      get :reverse_dependencies, id: @dependency.to_param, format: "json"
       gems = JSON.load(@response.body)
 
-      assert_equal 4, gems.size
+      assert_equal 3, gems.size
 
       assert gems.include?(@gem_one.name)
       assert gems.include?(@gem_two.name)
       assert gems.include?(@gem_three.name)
-      refute gems.include?(@gem_four.name)
     end
 
     context "with only=development" do
       should "only return names of reverse development dependencies" do
         get :reverse_dependencies,
-          id: @dep_rubygem.to_param,
+          id: @dependency.to_param,
           only: "development",
           format: "json"
 
@@ -415,24 +399,23 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
         assert_equal 1, gems.size
 
-        assert gems.include?(@gem_five.name)
+        assert gems.include?(@gem_two.name)
       end
     end
 
     context "with only=runtime" do
       should "only return names of reverse development dependencies" do
         get :reverse_dependencies,
-          id: @dep_rubygem.to_param,
+          id: @dependency.to_param,
           only: "runtime",
           format: "json"
 
         gems = JSON.load(@response.body)
 
-        assert_equal 3, gems.size
+        assert_equal 2, gems.size
 
         assert gems.include?(@gem_one.name)
-        assert gems.include?(@gem_two.name)
-        assert gems.include?(@gem_three.name)
+        assert gems.include?(@gem_three .name)
       end
     end
   end

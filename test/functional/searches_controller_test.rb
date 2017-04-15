@@ -1,15 +1,11 @@
 require 'test_helper'
+include ESHelper
 
 class SearchesControllerTest < ActionController::TestCase
-  setup do
-    Rubygem.__elasticsearch__.create_index! force: true
-  end
-
   context 'on GET to show with no search parameters' do
     setup { get :show }
 
     should respond_with :success
-    should render_template :show
     should "see no results" do
       refute page.has_content?("Results")
     end
@@ -18,13 +14,16 @@ class SearchesControllerTest < ActionController::TestCase
   context 'on GET to show with search parameters for a rubygem without versions' do
     setup do
       @sinatra = create(:rubygem, name: "sinatra")
+      import_and_refresh
       assert_nil @sinatra.versions.most_recent
       assert @sinatra.reload.versions.count.zero?
       get :show, query: "sinatra"
     end
 
     should respond_with :success
-    should render_template :show
+    should "see no results" do
+      refute page.has_content?("Results")
+    end
   end
 
   context 'on GET to show with search parameters' do
@@ -35,11 +34,11 @@ class SearchesControllerTest < ActionController::TestCase
       create(:version, rubygem: @sinatra)
       create(:version, rubygem: @sinatra_redux)
       create(:version, rubygem: @brando)
+      import_and_refresh
       get :show, query: "sinatra"
     end
 
     should respond_with :success
-    should render_template :show
     should "see sinatra on the page in the results" do
       assert page.has_content?(@sinatra.name)
       assert page.has_selector?("a[href='#{rubygem_path(@sinatra)}']")
@@ -61,16 +60,12 @@ class SearchesControllerTest < ActionController::TestCase
       create(:version, rubygem: @sinatra)
       create(:version, rubygem: @sinatra_redux)
       create(:version, rubygem: @brando)
-      @sinatra.index_document
-      @sinatra_redux.index_document
-      @brando.index_document
-      Rubygem.__elasticsearch__.refresh_index!
+      import_and_refresh
       @request.cookies['new_search'] = 'true'
       get :show, query: 'sinatra'
     end
 
     should respond_with :success
-    should render_template :show
     should "see sinatra on the page in the results" do
       page.assert_text(@sinatra.name)
       page.assert_selector("a[href='#{rubygem_path(@sinatra)}']")
@@ -92,6 +87,7 @@ class SearchesControllerTest < ActionController::TestCase
     setup do
       @sinatra = create(:rubygem, name: "sinatra")
       create(:version, rubygem: @sinatra)
+      import_and_refresh
       get :show, query: "sinatra"
     end
 
@@ -105,7 +101,9 @@ class SearchesControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :show
+    should "see no results" do
+      refute page.has_content?("Results")
+    end
   end
 
   context 'on GET to show with search parameters and no results' do
@@ -116,16 +114,12 @@ class SearchesControllerTest < ActionController::TestCase
       create(:version, rubygem: @sinatra)
       create(:version, rubygem: @sinatra_redux)
       create(:version, rubygem: @brando)
-      @sinatra.index_document
-      @sinatra_redux.index_document
-      @brando.index_document
-      Rubygem.__elasticsearch__.refresh_index!
+      import_and_refresh
       @request.cookies['new_search'] = 'true'
       get :show, query: "sinatre"
     end
 
     should respond_with :success
-    should render_template :show
     should "see sinatra on the page in the suggestions" do
       page.assert_text('Maybe you mean')
       assert page.find('.search__suggestions').has_content?(@sinatra.name)

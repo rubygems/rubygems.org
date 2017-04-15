@@ -9,7 +9,6 @@ gem 'rails-i18n'
 
 gem 'autoprefixer-rails'
 gem 'aws-sdk', '~> 2.2'
-gem 'builder'
 gem 'clearance'
 gem 'clearance-deprecated_password_strategies'
 gem 'daemons'
@@ -44,8 +43,12 @@ gem 'elasticsearch-rails', '~> 0.1.7'
 gem 'elasticsearch-dsl', '~> 0.1.2'
 gem 'xml-simple'
 gem 'compact_index', '~> 0.11.0'
-gem 'sprockets-rails', '~> 3.1.0'
+gem 'sprockets-rails'
 gem 'rack-attack'
+
+# Logging
+gem 'lograge'
+gem 'logstash-event'
 
 group :development, :test do
   gem 'rubocop', require: false

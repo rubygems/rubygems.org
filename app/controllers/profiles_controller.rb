@@ -1,6 +1,6 @@
 class ProfilesController < ApplicationController
   before_action :redirect_to_root, unless: :signed_in?, except: :show
-  before_action :verify_password, only: :update
+  before_action :verify_password, only: [:update, :destroy]
 
   def edit
     @user = current_user
@@ -16,21 +16,28 @@ class ProfilesController < ApplicationController
   def update
     @user = current_user.clone
     if @user.update_attributes(params_user)
-      if @user.unconfirmed?
+      if @user.unconfirmed_email
         Mailer.delay.email_reset(current_user)
-        sign_out
-        flash[:notice] = "You will receive an email within the next few " \
-                         "minutes. It contains instructions for reconfirming " \
-                         "your account with your new email address."
-        redirect_to_root
+        flash[:notice] = t('.confirmation_mail_sent')
       else
-        flash[:notice] = "Your profile was updated."
-        redirect_to edit_profile_path
+        flash[:notice] = t('.updated')
       end
+      redirect_to edit_profile_path
     else
       current_user.reload
       render :edit
     end
+  end
+
+  def delete
+    @only_owner_gems = current_user.only_owner_gems
+    @multi_owner_gems = current_user.rubygems_downloaded - @only_owner_gems
+  end
+
+  def destroy
+    Delayed::Job.enqueue DeleteUser.new(current_user), priority: PRIORITIES[:profile_deletion]
+    sign_out
+    redirect_to root_path, notice: t('.request_queued')
   end
 
   private
@@ -41,7 +48,7 @@ class ProfilesController < ApplicationController
 
   def verify_password
     return if current_user.authenticated?(params[:user].delete(:password))
-    flash[:notice] = t('.request_denied')
+    flash[:notice] = t('profiles.request_denied')
     redirect_to edit_profile_path
   end
 end

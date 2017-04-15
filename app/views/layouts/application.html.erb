@@ -79,7 +79,7 @@
               </a>
               <div class="header__popup__nav-links">
                 <%= link_to t('.header.dashboard'), dashboard_url, class: "header__nav-link" %>
-                <%= link_to t('.header.sign_out'), log_out_path, method: :delete, class: "header__nav-link" %>
+                <%= link_to t('.header.sign_out'), sign_out_path, method: :delete, class: "header__nav-link" %>
               </div>
             <% else %>
               <%= link_to t('.header.sign_in'), sign_in_path, class: "header__nav-link #{'is-active' if request.path_info == '/sign_in'}" %>
@@ -168,15 +168,9 @@
                 <%= link_to "many sponsors", page_path("sponsors") %>,
                 with development funded by the Ruby trade association,
                 <%= link_to "Ruby Together", "https://rubytogether.org/?source=rubygems" %>.
-                Members get access to
-                <%= link_to "exclusive benefits", "https://rubytogether.org/benefits?source=rubygems" %>
-                and offers from partners (like
-                <%= link_to "Hired", "http://hired.com/?utm_source=sponsor&utm_medium=rubygems&utm_campaign=q4-16-below-fold" %>,
-                empowering developers on the
-                <%= link_to "hunt for a job", "http://hired.com/?utm_source=sponsor&utm_medium=rubygems&utm_campaign=q4-16-below-fold" %>).
               </p>
               <p>
-                We need your help to keep RubyGems.org running smoothly and free for everyone to use.
+                We need your help to fund the developer time that keeps RubyGems.org running smoothly for everyone.
                 <%= link_to "Join Ruby Together today", "https://rubytogether.org/join?source=rubygems" %>.
               </p>
             </div>

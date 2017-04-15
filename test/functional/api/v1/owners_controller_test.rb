@@ -45,7 +45,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
   end
 
   should_respond_to :yaml do |body|
-    YAML.load body
+    YAML.safe_load body
   end
 
   context "on GET to owner gems with handle" do
@@ -101,6 +101,29 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
               rubygem_id: "rails",
               format: "json" }
     assert_recognizes(route, path: '/api/v1/gems/rails/owners.json', method: :delete)
+  end
+
+  context "on DELETE to owner gem" do
+    setup do
+      @rubygem = create(:rubygem)
+      @user = create(:user)
+      @second_user = create(:user)
+      @rubygem.ownerships.create(user: @user)
+      @ownership = @rubygem.ownerships.create(user: @second_user)
+      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
+    end
+
+    should "remove user as gem owner" do
+      delete :destroy, rubygem_id: @rubygem.to_param, email: @second_user.email, format: :json
+      refute @rubygem.owners.include?(@second_user)
+    end
+
+    should "not remove last gem owner" do
+      @ownership.destroy
+      delete :destroy, rubygem_id: @rubygem.to_param, email: @user.email, format: :json
+      assert @rubygem.owners.include?(@user)
+      assert_equal 'Unable to remove owner.', @response.body
+    end
   end
 
   should "route GET gems" do

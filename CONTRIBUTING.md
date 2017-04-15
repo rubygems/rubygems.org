@@ -78,11 +78,12 @@ gems for your organization..**
 
 #### Environment (OS X)
 
-* Use Ruby 2.3.1
-* Use Rubygems 2.6.4
+* Use Ruby 2.3.3
+* Use Rubygems 2.6.10
 * Install bundler: `gem install bundler`
-* Install Elastic Search: `brew install elasticsearch`
-  * Setup information: `brew info elasticsearch`
+* Install Elastic Search:
+  * ElasticSearch `1.*` is required. There isn't a homebrew package for `elasticsearch@1`, instead it's recommended to use [Docker](https://www.docker.com/)
+  * Pull ElasticSearch `1.5.2` from [hub.docker.com](https://hub.docker.com/_/elasticsearch/) and expose the container ports: `docker run -P elasticsearch:1.5.2`
 * Install PostgreSQL (>= 8.4.x): `brew install postgres`
   * Setup information: `brew info postgresql`
 * Install memcached: `brew install memcached`
@@ -90,9 +91,9 @@ gems for your organization..**
 
 #### Environment (Linux - Debian/Ubuntu)
 
-* Use Ruby 2.3.1 `apt-get install ruby2.3`
+* Use Ruby 2.3.3 `apt-get install ruby2.3`
   * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
-* Use Rubygems 2.6.4
+* Use Rubygems 2.6.10
 * Install bundler: `gem install bundler`
 * Install Elastic Search 1.5.2: <https://www.elastic.co/downloads/past-releases/elasticsearch-1-5-2>
 * Install PostgreSQL: `apt-get install postgresql postgresql-server-dev-all`
@@ -140,10 +141,8 @@ can try running:
     * _To import a small set of gems you can point the import process to any
         gems cache directory, like a very small `rvm` gemset for instance, or
 	specifying `GEM_PATH/cache` instead of `vendor/cache`._
-* If you need the index available - needed when working in conjunction
-    with [bundler-api](https://github.com/rubygems/bundler-api) - then run
-    `bundle exec rake gemcutter:index:update`. This primes the filesystem gem index for
-    local use.
+* If you need the index available then run `bundle exec rake gemcutter:index:update`.
+    This primes the filesystem gem index for local use.
 
 #### Getting the test data
 

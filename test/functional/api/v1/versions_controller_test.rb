@@ -67,7 +67,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:yaml) do |body|
-      YAML.load(body)
+      YAML.safe_load(body)
     end
 
     should "return Last-Modified header" do

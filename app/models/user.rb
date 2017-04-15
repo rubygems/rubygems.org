@@ -14,17 +14,18 @@ class User < ActiveRecord::Base
     :twitter_username
   ].freeze
 
+  before_destroy :yank_gems
   has_many :rubygems, through: :ownerships
 
   has_many :subscribed_gems, -> { order("name ASC") }, through: :subscriptions, source: :rubygem
 
   has_many :deletions
-  has_many :ownerships
-  has_many :subscriptions
-  has_many :web_hooks
+  has_many :ownerships, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
+  has_many :web_hooks, dependent: :destroy
 
-  before_validation :unconfirm_email, if: :email_changed?, on: :update
-  before_create :generate_api_key, :regenerate_confirmation_token
+  after_validation :set_unconfirmed_email, if: :email_changed?, on: :update
+  before_create :generate_api_key, :generate_confirmation_token
 
   validates :handle, uniqueness: true, allow_nil: true
   validates :handle, format: {
@@ -40,6 +41,7 @@ class User < ActiveRecord::Base
 
   validates :twitter_username, length: { within: 0..20 }, allow_nil: true
   validates :password, length: { within: 10..200 }, allow_nil: true, unless: :skip_password_validation?
+  validate :unconfirmed_email_uniqueness
 
   def self.authenticate(who, password)
     user = find_by(email: who.downcase) || find_by(handle: who)
@@ -101,9 +103,9 @@ class User < ActiveRecord::Base
     coder.map = payload
   end
 
-  def unconfirm_email
-    self.email_confirmed = false
-    regenerate_confirmation_token
+  def set_unconfirmed_email
+    self.attributes = { unconfirmed_email: email, email: email_was }
+    generate_confirmation_token
   end
 
   def generate_api_key
@@ -123,6 +125,7 @@ class User < ActiveRecord::Base
   end
 
   def confirm_email!
+    update_email! if unconfirmed_email
     update!(email_confirmed: true, confirmation_token: nil)
   end
 
@@ -131,12 +134,39 @@ class User < ActiveRecord::Base
     token_expires_at > Time.zone.now
   end
 
-  def regenerate_confirmation_token
+  def generate_confirmation_token
     self.confirmation_token = Clearance::Token.new
     self.token_expires_at = Time.zone.now + 15.minutes
   end
 
   def unconfirmed?
     !email_confirmed
+  end
+
+  def only_owner_gems
+    rubygems.with_versions.where('rubygems.id IN (
+      SELECT rubygem_id FROM ownerships GROUP BY rubygem_id HAVING count(rubygem_id) = 1)')
+  end
+
+  private
+
+  def update_email!
+    self.attributes = { email: unconfirmed_email, unconfirmed_email: nil }
+    save!(validate: false)
+  end
+
+  def unconfirmed_email_uniqueness
+    errors.add(:email, I18n.t('errors.messages.taken')) if unconfirmed_email_exists?
+  end
+
+  def unconfirmed_email_exists?
+    User.where(unconfirmed_email: email).exists?
+  end
+
+  def yank_gems
+    versions_to_yank = only_owner_gems.map(&:versions).flatten
+    versions_to_yank.each do |v|
+      deletions.create(version: v)
+    end
   end
 end

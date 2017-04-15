@@ -9,6 +9,7 @@ require 'clearance/test_unit'
 require 'shoulda'
 require 'helpers/gem_helpers'
 require 'helpers/email_helpers'
+require 'helpers/es_helper'
 
 RubygemFs.mock!
 Aws.config[:stub_responses] = true

@@ -152,5 +152,8 @@ a.page__heading {
 .push--bottom {
   margin-bottom: 60px; }
 
+.push--bottom-s {
+  margin-bottom: 15px; }
+
 .push--s {
   margin-top: 20px; }

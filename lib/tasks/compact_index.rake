@@ -28,22 +28,26 @@ namespace :compact_index do
     puts "Done."
   end
 
-  desc "Fill Versions' info_checksum attributes for compact index format"
-  task backfill_info_checksum: :environment do
-    without_info_checksum = Rubygem.joins('inner join versions on rubygems.id = versions.rubygem_id')
-      .where('versions.info_checksum is null')
-      .distinct
+  desc "Correct Versions' info_checksum attributes for compact index format"
+  task correct_info_checksum: :environment do
+    versions = Version.find_by_sql("SELECT DISTINCT ON(rubygem_id) * FROM versions
+      WHERE rubygem_id NOT IN (SELECT DISTINCT(rubygem_id) FROM versions
+      WHERE created_at > '2016-08-30 05:16:23' OR yanked_at > '2016-08-30 05:16:23')
+      ORDER BY rubygem_id, COALESCE(yanked_at, created_at) DESC, number DESC, platform DESC")
     mod = ENV['shard']
-    without_info_checksum = without_info_checksum.where("id % 4 = ?", mod.to_i) if mod
+    versions = versions.where("id % 4 = ?", mod.to_i) if mod
 
-    total = without_info_checksum.count
+    total = versions.count
     i = 0
     puts "Total: #{total}"
 
-    without_info_checksum.find_each do |rubygem|
-      cs = Digest::MD5.hexdigest(CompactIndex.info(GemInfo.new(rubygem.name).compact_index_info))
-      rubygem.versions.each do |version|
+    versions.each do |version|
+      gem_info = GemInfo.new(version.rubygem.name).compact_index_info
+      cs = Digest::MD5.hexdigest(CompactIndex.info(gem_info))
+      if version.indexed
         version.update_attribute :info_checksum, cs
+      else
+        version.update_attribute :yanked_info_checksum, cs
       end
       i += 1
       print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)

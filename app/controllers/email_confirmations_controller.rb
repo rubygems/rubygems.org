@@ -18,10 +18,21 @@ class EmailConfirmationsController < ApplicationController
     user = User.find_by(email: confirmation_params[:email])
 
     if user
-      user.regenerate_confirmation_token
+      user.generate_confirmation_token
       Mailer.delay.email_confirmation(user) if user.save
     end
     redirect_to root_path, notice: t('.promise_resend')
+  end
+
+  # used to resend confirmation mail for unconfirmed_email validation
+  def unconfirmed
+    if current_user.generate_confirmation_token && current_user.save
+      Mailer.delay.email_reset(current_user)
+      flash[:notice] = t('profiles.update.confirmation_mail_sent')
+    else
+      flash[:notice] = t('.try_again')
+    end
+    redirect_to edit_profile_path
   end
 
   private

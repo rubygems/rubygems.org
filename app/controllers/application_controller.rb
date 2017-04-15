@@ -10,6 +10,17 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
 
   rescue_from ActiveRecord::RecordNotFound, with: :render_404
+  before_action :set_csp
+
+  def set_csp
+    response.headers['Content-Security-Policy'] = "default-src 'self'; "\
+      "script-src 'self' https://secure.gaug.es; "\
+      "style-src 'self' https://fonts.googleapis.com; "\
+      "img-src 'self' https://secure.gaug.es https://gravatar.com https://secure.gravatar.com; "\
+      "font-src 'self' https://fonts.gstatic.com; "\
+      "connect-src https://s3-us-west-2.amazonaws.com/rubygems-dumps/; "\
+      "frame-src https://ghbtns.com"
+  end
 
   def set_locale
     I18n.locale = user_locale
@@ -22,6 +33,10 @@ class ApplicationController < ActionController::Base
 
   rescue_from(ActionController::ParameterMissing) do |e|
     render plain: "Request is missing param '#{e.param}'", status: :bad_request
+  end
+
+  rescue_from ActionDispatch::RemoteIp::IpSpoofAttackError do
+    render status: :forbidden
   end
 
   protected
@@ -68,6 +83,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def find_versioned_links
+    @versioned_links = @rubygem.links(@latest_version)
+  end
+
   def set_page
     @page = params[:page].respond_to?(:to_i) ? [1, params[:page].to_i].max : 1
   end
@@ -87,5 +106,13 @@ class ApplicationController < ActionController::Base
       format.yaml { render yaml: { error: t(:not_found) }, status: :not_found }
       format.any(:all) { render text: t(:not_found), status: :not_found }
     end
+  end
+
+  def append_info_to_payload(payload)
+    super
+    payload[:client_ip] = request.remote_ip
+    payload[:user_agent] = request.user_agent
+    payload[:dest_host] = request.host
+    payload[:request_id] = request.uuid
   end
 end

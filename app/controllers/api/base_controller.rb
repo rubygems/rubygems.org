@@ -1,6 +1,4 @@
 class Api::BaseController < ApplicationController
-  skip_before_action :require_ssl
-
   private
 
   def find_rubygem_by_name

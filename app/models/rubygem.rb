@@ -50,18 +50,6 @@ class Rubygem < ActiveRecord::Base
     where("UPPER(name) LIKE UPPER(?)", "#{letter}%")
   end
 
-  def self.reverse_dependencies(name)
-    where(id: Version.reverse_dependencies(name).select(:rubygem_id))
-  end
-
-  def self.reverse_development_dependencies(name)
-    where(id: Version.reverse_development_dependencies(name).select(:rubygem_id))
-  end
-
-  def self.reverse_runtime_dependencies(name)
-    where(id: Version.reverse_runtime_dependencies(name).select(:rubygem_id))
-  end
-
   def self.total_count
     count_by_sql "SELECT COUNT(*) from (SELECT DISTINCT rubygem_id FROM versions WHERE indexed = true) AS v"
   end
@@ -106,7 +94,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def public_versions_with_extra_version(extra_version)
-    versions = public_versions(5)
+    versions = public_versions(5).to_a
     versions << extra_version
     versions.uniq.sort_by(&:position)
   end
@@ -141,7 +129,12 @@ class Rubygem < ActiveRecord::Base
     gem_download.try(:count) || 0
   end
 
+  def links(version = versions.most_recent)
+    Links.new(self, version)
+  end
+
   def payload(version = versions.most_recent, protocol = Gemcutter::PROTOCOL, host_with_port = Gemcutter::HOST)
+    versioned_links = links(version)
     deps = version.dependencies.to_a
     {
       'name'              => name,
@@ -156,12 +149,13 @@ class Rubygem < ActiveRecord::Base
       'sha'               => version.sha256_hex,
       'project_uri'       => "#{protocol}://#{host_with_port}/gems/#{name}",
       'gem_uri'           => "#{protocol}://#{host_with_port}/gems/#{version.full_name}.gem",
-      'homepage_uri'      => linkset.try(:home),
-      'wiki_uri'          => linkset.try(:wiki),
-      'documentation_uri' => linkset.try(:docs).presence || version.documentation_path,
-      'mailing_list_uri'  => linkset.try(:mail),
-      'source_code_uri'   => linkset.try(:code),
-      'bug_tracker_uri'   => linkset.try(:bugs),
+      'homepage_uri'      => versioned_links.homepage_uri,
+      'wiki_uri'          => versioned_links.wiki_uri,
+      'documentation_uri' => versioned_links.documentation_uri,
+      'mailing_list_uri'  => versioned_links.mailing_list_uri,
+      'source_code_uri'   => versioned_links.source_code_uri,
+      'bug_tracker_uri'   => versioned_links.bug_tracker_uri,
+      'changelog_uri'     => versioned_links.changelog_uri,
       'dependencies'      => {
         'development' => deps.select { |r| r.rubygem && 'development' == r.scope },
         'runtime'     => deps.select { |r| r.rubygem && 'runtime' == r.scope }
@@ -270,7 +264,17 @@ class Rubygem < ActiveRecord::Base
   end
 
   def reverse_dependencies
-    self.class.reverse_dependencies(name)
+    self.class.joins("inner join versions as v on v.rubygem_id = rubygems.id
+      inner join dependencies as d on d.version_id = v.id").where("v.indexed = 't'
+      and v.position = 0 and d.rubygem_id = ?", id)
+  end
+
+  def reverse_development_dependencies
+    reverse_dependencies.where("d.scope = 'development'")
+  end
+
+  def reverse_runtime_dependencies
+    reverse_dependencies.where("d.scope ='runtime'")
   end
 
   private

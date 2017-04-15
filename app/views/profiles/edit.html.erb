@@ -21,7 +21,7 @@
       <%=
         image_tag("/images/twitter_icon.png", alt: 'Twitter icon', class: 'form__label__icon')
       %>
-      
+
       <span class='form__label__text'>Twitter username</span>
     <% end %>
 
@@ -34,6 +34,15 @@
       <%= form.text_field(:twitter_username, class: 'form__input') %>
     </div>
   </div>
+
+  <% if current_user.unconfirmed_email %>
+    <div class="push--bottom-s">
+      <p class='form__field__instructions'>
+        <%= t('.email_awaiting_confirmation', unconfirmed_email: current_user.unconfirmed_email) %>
+      </p>
+      <%= link_to "Resend confirmation", unconfirmed_email_confirmations_path, method: :patch, class: 'form__field__instructions t-link' %>
+    </div>
+  <% end %>
 
   <div class="text_field">
     <%= form.label :email, :class => 'form__label' %>
@@ -75,3 +84,9 @@
 <% end %>
 
 <%= button_to t('.api_access.reset'), reset_api_v1_api_key_path, :method => :put, :data => {:confirm => t('.api_access.confirm_reset')}, :class => 'form__submit' %>
+
+<div class="t-body">
+  <h2><%= t '.delete.delete_profile' %></h2>
+  <p><%= t '.delete.warning' %></p>
+  <%= button_to t('.delete.delete'), delete_profile_path, method: 'get', class: 'form__submit' %>
+</div>

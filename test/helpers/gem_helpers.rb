@@ -4,7 +4,7 @@ module GemHelpers
   end
 
   def gem_file(name = "test-0.0.0.gem")
-    Rails.root.join("test/gems/#{name}").open
+    Rails.root.join("test", "gems", name.to_s).open
   end
 
   def build_gemspec(gemspec)

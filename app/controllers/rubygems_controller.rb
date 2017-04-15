@@ -4,6 +4,7 @@ class RubygemsController < ApplicationController
   before_action :set_blacklisted_gem, only: [:show], if: :blacklisted?
   before_action :find_rubygem, only: [:edit, :update, :show], unless: :blacklisted?
   before_action :latest_version, only: [:show], unless: :blacklisted?
+  before_action :find_versioned_links, only: [:show], unless: :blacklisted?
   before_action :load_gem, only: [:edit, :update]
   before_action :set_page, only: :index
 
@@ -25,7 +26,7 @@ class RubygemsController < ApplicationController
       render 'blacklisted'
     else
       @versions = @rubygem.public_versions(5)
-      if @rubygem.public_versions.any?
+      if @versions.to_a.any?
         render 'show'
       else
         render 'show_yanked'

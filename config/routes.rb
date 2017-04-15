@@ -127,7 +127,12 @@ Rails.application.routes.draw do
     resource :search,    only: :show
     resource :dashboard, only: :show, constraints: { format: /html|atom/ }
     resources :profiles, only: :show
-    resource :profile, only: [:edit, :update]
+    resource :profile, only: [:edit, :update] do
+      member do
+        get :delete
+        delete :destroy, as: :destroy
+      end
+    end
     resources :stats, only: :index
 
     resources :rubygems,
@@ -148,13 +153,10 @@ Rails.application.routes.draw do
 
   resource :email_confirmations, only: [:new, :create] do
     get 'confirm/:token', to: 'email_confirmations#update', as: :update
+    patch 'unconfirmed'
   end
 
-  # login path is "/session" => "session#create"
-  # and logout path is "/sign_out" => "session#destroy"
-  # Check: https://github.com/thoughtbot/clearance/blob/master/lib/generators/clearance/routes/templates/routes.rb#L2
-  resource :session, only: :create
-  delete '/sign_out' => 'sessions#destroy', as: 'log_out'
+  resource :session, only: [:create, :destroy]
 
   resources :passwords, only: [:new, :create]
 

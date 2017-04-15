@@ -19,6 +19,8 @@ class Version < ActiveRecord::Base
 
   validate :platform_and_number_are_unique, on: :create
   validate :authors_format, on: :create
+  validate :metadata_links_format
+
   class AuthorType < Type::String
     def cast_value(value)
       if value.is_a?(Array)
@@ -330,41 +332,7 @@ class Version < ActiveRecord::Base
     raw.unpack("m0").first.unpack("H*").first
   end
 
-  def recalculate_sha256
-    key = "gems/#{full_name}.gem"
-    file = RubygemFs.instance.get(key)
-    Digest::SHA2.base64digest(file) if file
-  end
-
-  def recalculate_sha256!
-    update_attributes(sha256: recalculate_sha256)
-  end
-
-  def recalculate_metadata!
-    metadata = get_spec_attribute('metadata')
-    update(metadata: metadata || {})
-  end
-
-  def assign_required_rubygems_version!
-    required_rubygems_version = get_spec_attribute('required_rubygems_version')
-    update_column(:required_rubygems_version, required_rubygems_version.to_s)
-  end
-
-  def documentation_path
-    "http://www.rubydoc.info/gems/#{rubygem.name}/#{number}"
-  end
-
   private
-
-  def get_spec_attribute(attribute_name)
-    key = "gems/#{full_name}.gem"
-    file = RubygemFs.instance.get(key)
-    return nil unless file
-    spec = Gem::Package.new(StringIO.new(file)).spec
-    spec.send(attribute_name)
-  rescue Gem::Package::FormatError
-    nil
-  end
 
   def platform_and_number_are_unique
     return unless Version.exists?(rubygem_id: rubygem_id, number: number, platform: platform)
@@ -393,5 +361,12 @@ class Version < ActiveRecord::Base
   def feature_release(number)
     feature_version = Gem::Version.new(number).segments[0, 2].join('.')
     Gem::Version.new(feature_version)
+  end
+
+  def metadata_links_format
+    Linkset::LINKS.each do |link|
+      errors.add(:metadata, "['#{link}'] does not appear to be a valid URL") if
+        metadata[link] && metadata[link] !~ Patterns::URL_VALIDATION_REGEXP
+    end
   end
 end
