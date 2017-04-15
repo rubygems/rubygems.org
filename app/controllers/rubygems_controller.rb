@@ -15,7 +15,7 @@ class RubygemsController < ApplicationController
         @gems   = Rubygem.letter(@letter).includes(:latest_version, :gem_download).paginate(page: @page)
       end
       format.atom do
-        @versions = Version.published(20)
+        @versions = Version.published(Gemcutter::DEFAULT_PAGINATION)
         render 'versions/feed'
       end
     end

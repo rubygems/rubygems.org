@@ -39,4 +39,5 @@ module Gemcutter
 
   PROTOCOL = config['protocol']
   HOST = config['host']
+  DEFAULT_PAGINATION = 20
 end
