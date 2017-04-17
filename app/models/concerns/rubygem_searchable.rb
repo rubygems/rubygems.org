@@ -35,19 +35,16 @@ module RubygemSearchable
              }
 
     mapping do
-      indexes :name, type: 'multi_field' do
-        indexes :name, analyzer: 'rubygem'
+      indexes :name, type: 'text', analyzer: 'rubygem' do
         indexes :suggest, analyzer: 'simple'
       end
+      indexes :summary, type: 'text', analyzer: 'english' do
+        indexes :raw, analyzer: 'simple'
+      end
+      indexes :description, type: 'text', analyzer: 'english' do
+        indexes :raw, analyzer: 'simple'
+      end
       indexes :yanked, type: 'boolean'
-      indexes :summary, type: 'multi_field' do
-        indexes :summary, analyzer: 'english'
-        indexes :raw, analyzer: 'simple'
-      end
-      indexes :description, type: 'multi_field' do
-        indexes :description, analyzer: 'english'
-        indexes :raw, analyzer: 'simple'
-      end
       indexes :downloads, type: 'integer'
       indexes :updated, type: 'date'
     end
@@ -69,16 +66,16 @@ module RubygemSearchable
         query do
           function_score do
             query do
-              filtered do
+              bool do
                 # Main query, search in name, summary, description
-                query do
+                should do
                   query_string do
                     query q
-                    fields ['name^3', 'summary^1', 'description']
+                    fields ['name^5', 'summary^3', 'description']
                     default_operator 'and'
                   end
                 end
-
+                minimum_should_match 1
                 # only return gems that are not yanked
                 filter { term yanked: false }
               end

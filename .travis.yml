@@ -8,6 +8,13 @@ cache:
 rvm:
   - 2.3.3
   - ruby-head
+addons:
+  apt:
+    sources:
+      - elasticsearch-5.x
+    packages:
+      - elasticsearch
+      - oracle-java8-set-default
 
 services:
   - elasticsearch

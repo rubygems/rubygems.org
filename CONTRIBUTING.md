@@ -82,8 +82,12 @@ gems for your organization..**
 * Use Rubygems 2.6.10
 * Install bundler: `gem install bundler`
 * Install Elastic Search:
-  * ElasticSearch `1.*` is required. There isn't a homebrew package for `elasticsearch@1`, instead it's recommended to use [Docker](https://www.docker.com/)
-  * Pull ElasticSearch `1.5.2` from [hub.docker.com](https://hub.docker.com/_/elasticsearch/) and expose the container ports: `docker run -P elasticsearch:1.5.2`
+  * Pull ElasticSearch `5.1.2` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:5.1.2`
+  * Running Elasticsearch from the command line:
+  ```
+  docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" docker.elastic.co/elasticsearch/elasticsearch:5.1.2
+  ```
+
 * Install PostgreSQL (>= 8.4.x): `brew install postgres`
   * Setup information: `brew info postgresql`
 * Install memcached: `brew install memcached`
@@ -95,7 +99,12 @@ gems for your organization..**
   * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
 * Use Rubygems 2.6.10
 * Install bundler: `gem install bundler`
-* Install Elastic Search 1.5.2: <https://www.elastic.co/downloads/past-releases/elasticsearch-1-5-2>
+* Install Elastic Search:
+  * Pull ElasticSearch `5.1.2` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:5.1.2`
+  * Running Elasticsearch from the command line:
+  ```
+  docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" docker.elastic.co/elasticsearch/elasticsearch:5.1.2
+  ```
 * Install PostgreSQL: `apt-get install postgresql postgresql-server-dev-all`
   * Help to setup database <https://wiki.debian.org/PostgreSql>
 * Install memcached: `apt-get install memcached`
