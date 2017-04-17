@@ -129,3 +129,17 @@
 .aggregations .t-link--black {
   padding: 4px;
 }
+
+dl {
+  width: 65%;
+}
+
+dt {
+  float: left;
+  padding: 11px 0px;
+  color: #585858;
+}
+
+dd {
+  margin-left: 25%;
+}

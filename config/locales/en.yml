@@ -221,6 +221,8 @@ en:
     reverse_dependencies:
       search_reverse_dependencies: "Search reverse dependencies Gems&hellip;"
   searches:
+    advanced:
+      title: Advanced Search
     show:
       exact_match: Exact match
       subtitle: for %{query}

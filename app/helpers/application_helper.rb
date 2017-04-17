@@ -41,7 +41,7 @@ module ApplicationHelper
   end
 
   def search_form_class
-    if request.path_info == "/"
+    if [root_path, advanced_search_path].include? request.path_info
       "header__search-wrap--home"
     else
       "header__search-wrap"
