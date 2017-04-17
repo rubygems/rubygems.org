@@ -29,6 +29,7 @@ gem 'paul_revere', '~> 2.0'
 gem 'pg'
 gem 'rack'
 gem 'rack-utf8_sanitizer'
+gem 'rbtrace', '~> 0.4.8'
 gem 'rdoc'
 gem 'rest-client', require: 'rest_client'
 gem 'sass', require: false
