@@ -5,7 +5,7 @@
     <p><%= @error_msg %></p>
   </div>
 <% end %>
-
+<%= link_to t("advanced_search"), advanced_search_path, class: "t-link--gray t-link--has-arrow" %>
 <% if @gems %>
   <% @subtitle = t('.subtitle', :query => content_tag(:em, h(params[:query]))) %>
 

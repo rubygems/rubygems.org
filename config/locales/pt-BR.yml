@@ -18,6 +18,7 @@ pt-BR:
   title: RubyGems.org
   update: Atualizar
   try_again:
+  advanced_search:
   activerecord:
     attributes:
       linkset:
@@ -221,6 +222,12 @@ pt-BR:
     reverse_dependencies:
       search_reverse_dependencies:
   searches:
+    advanced:
+      name:
+      summary:
+      description:
+      downloads:
+      updated:
     show:
       exact_match: Busca exata
       subtitle: para %{query}

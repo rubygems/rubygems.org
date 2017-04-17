@@ -18,6 +18,7 @@ zh-CN:
   title: RubyGems.org
   update: 更新
   try_again:
+  advanced_search:
   activerecord:
     attributes:
       linkset:
@@ -221,6 +222,12 @@ zh-CN:
     reverse_dependencies:
       search_reverse_dependencies:
   searches:
+    advanced:
+      name:
+      summary:
+      description:
+      downloads:
+      updated:
     show:
       exact_match: 精确匹配
       subtitle: "%{query}"

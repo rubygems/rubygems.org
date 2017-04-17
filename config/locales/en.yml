@@ -18,6 +18,7 @@ en:
   title: RubyGems.org
   update: Update
   try_again: Something went wrong. Please try again.
+  advanced_search: Advanced Search
   activerecord:
     attributes:
       linkset:
@@ -222,7 +223,11 @@ en:
       search_reverse_dependencies: "Search reverse dependencies Gems&hellip;"
   searches:
     advanced:
-      title: Advanced Search
+      name: Name
+      summary: Summary
+      description: Description
+      downloads: Downloads
+      updated: Updated
     show:
       exact_match: Exact match
       subtitle: for %{query}

@@ -96,7 +96,7 @@
   color: #e9573f; }
 
 .home__search {
-  margin-bottom: 45px;
+  margin-bottom: 5px;
   padding-right: 48px;
   box-shadow: 0 0 0px 5px rgba(20, 28, 34, .1);
   box-sizing: border-box;
@@ -130,8 +130,14 @@
   padding: 4px;
 }
 
+.home__advanced__search {
+  font-weight: 300;
+  font-size: 15px;
+  color: white;
+}
+
 dl {
-  width: 65%;
+  margin: 6% 2%;
 }
 
 dt {
@@ -140,6 +146,13 @@ dt {
   color: #585858;
 }
 
-dd {
-  margin-left: 25%;
+
+@media (min-width: 520px) {
+  dd {
+    margin-left: 25%;
+  }
+}
+
+dd input {
+  max-width: none !important;;
 }

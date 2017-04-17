@@ -18,6 +18,7 @@ nl:
   title: RubyGems.org
   update: Wijzig
   try_again:
+  advanced_search:
   activerecord:
     attributes:
       linkset:
@@ -221,6 +222,12 @@ nl:
     reverse_dependencies:
       search_reverse_dependencies:
   searches:
+    advanced:
+      name:
+      summary:
+      description:
+      downloads:
+      updated:
     show:
       exact_match: Exacte match
       subtitle: voor %{query}
