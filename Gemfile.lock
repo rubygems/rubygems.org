@@ -316,7 +316,7 @@ DEPENDENCIES
   dynamic_form
   elasticsearch-dsl (~> 0.1.2)
   elasticsearch-model (~> 0.1.9)
-  elasticsearch-rails (~> 0.1.7)
+  elasticsearch-rails (~> 0.1.9)
   factory_girl_rails
   gchartrb
   gravtastic
