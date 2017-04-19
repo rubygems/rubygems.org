@@ -21,7 +21,7 @@ nl:
     attributes:
       linkset:
         bugs: Bugtracker-URL
-        changelog:
+        changelog: Changelog
         code: source code URL
         docs: Documentatie-URL
         mail: Mailing-list-URL
@@ -49,9 +49,9 @@ nl:
     create:
       promise_resend:
     new:
-      submit:
-      title:
-      will_email_notice:
+      submit: Bevestiging opnieuw versturen
+      title: Bevestigingsemail opnieuw sturen
+      will_email_notice: We zullen je een nieuwe email sturen met een bevestigingslink
     unconfirmed_email:
       try_again:
     update:
@@ -76,7 +76,7 @@ nl:
         guides: Leren
         help: Help
         hosted_by: Hosting
-        logging_by:
+        logging_by: Logs door
         monitored_by: Monitoring
         optimized_by: Optimalisatie
         resolved_with: DNS
@@ -85,7 +85,7 @@ nl:
         statistics: Stats
         status: Status
         supported_by: Ondersteunding
-        tested_by:
+        tested_by: Getest door
         tracking_by: Tracking
         uptime: Uptime
       header:
@@ -227,7 +227,7 @@ nl:
   sessions:
     new:
       forgot_password: Wachtwoord vergeten?
-      resend_confirmation:
+      resend_confirmation: Geen bevestigingsemail ontvangen?
   stats:
     index:
       all_time_most_downloaded:
@@ -236,7 +236,7 @@ nl:
       total_users:
   users:
     create:
-      email_sent:
+      email_sent: Een bevestigingsemail is naar je e-mailadres gestuurd
     new:
       have_account: Heb je al een account?
   versions:
