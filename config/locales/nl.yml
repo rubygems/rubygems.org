@@ -17,6 +17,7 @@ nl:
   time_ago: "%{duration} geleden"
   title: RubyGems.org
   update: Wijzig
+  try_again:
   activerecord:
     attributes:
       linkset:
@@ -52,8 +53,6 @@ nl:
       submit: Bevestiging opnieuw versturen
       title: Bevestigingsemail opnieuw sturen
       will_email_notice: We zullen je een nieuwe email sturen met een bevestigingslink
-    unconfirmed_email:
-      try_again:
     update:
       confirmed_email:
   home:

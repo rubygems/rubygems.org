@@ -46,11 +46,11 @@ module RubygemsHelper
       if rubygem.subscribers.find_by_id(current_user.id)
         link_to t('.links.unsubscribe'), rubygem_subscription_path(rubygem),
           class: [:toggler, 'gem__link', 't-list__item'], id: 'unsubscribe',
-          method: :delete, remote: true
+          method: :delete
       else
         link_to t('.links.subscribe'), rubygem_subscription_path(rubygem),
           class: ['toggler', 'gem__link', 't-list__item'], id: 'subscribe',
-          method: :post, remote: true
+          method: :post
       end
     else
       link_to t('.links.subscribe'), sign_in_path,

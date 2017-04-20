@@ -17,6 +17,7 @@ en:
   time_ago: "%{duration} ago"
   title: RubyGems.org
   update: Update
+  try_again: Something went wrong. Please try again.
   activerecord:
     attributes:
       linkset:
@@ -52,8 +53,6 @@ en:
       submit: Resend Confirmation
       title: Resend confirmation email
       will_email_notice: We will email you confirmation link to activate your account.
-    unconfirmed_email:
-      try_again: Something went wrong. Please try again.
     update:
       confirmed_email: Your email address has been verified.
   home:
