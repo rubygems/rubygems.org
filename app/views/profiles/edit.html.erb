@@ -21,7 +21,7 @@
       <%=
         image_tag("/images/twitter_icon.png", alt: 'Twitter icon', class: 'form__label__icon')
       %>
-      
+
       <span class='form__label__text'>Twitter username</span>
     <% end %>
 
@@ -84,3 +84,9 @@
 <% end %>
 
 <%= button_to t('.api_access.reset'), reset_api_v1_api_key_path, :method => :put, :data => {:confirm => t('.api_access.confirm_reset')}, :class => 'form__submit' %>
+
+<div class="t-body">
+  <h2><%= t '.delete.delete_profile' %></h2>
+  <p><%= t '.delete.warning' %></p>
+  <%= button_to t('.delete.delete'), delete_profile_path, method: 'get', class: 'form__submit' %>
+</div>

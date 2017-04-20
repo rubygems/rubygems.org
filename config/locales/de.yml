@@ -21,6 +21,7 @@ de:
     attributes:
       linkset:
         bugs: Bug Tracker URL
+        changelog: Changelog
         code: Quellcode URL
         docs: Dokumentation URL
         mail: Mailingliste URL
@@ -101,6 +102,12 @@ de:
       welcome_message:
     email_reset:
       visit_link_instructions:
+    deletion_complete:
+      subject:
+      body:
+    deletion_failed:
+      subject:
+      body:
   pages:
     about:
       founding: Das Projekt wurde im April 2009 von %{founder} gestartet und hat seitdem über %{contributors} und %{downloads}. Ab dem Release von RubyGems 1.3.6 wurde die Website von Gemcutter zu %{title} umbenannt, um eine zentrale Rolle in der Ruby-Community zu verfestigen.
@@ -138,10 +145,24 @@ de:
         link_text: Jetzt ein neues Passwort zuschicken lassen.
         text: Brauchst du ein neues Passwort? Kein Problem. %{link}
         title: Zurücksetzen des Passworts
+      delete:
+        delete:
+        delete_profile:
+        warning:
+    delete:
+      title:
+      confirm:
+      instructions:
+      list_only_owner:
+      list_multi_owner:
+    rubygem:
+      owners_header:
+    destroy:
+      request_queued:
     update:
       confirmation_mail_sent:
-      request_denied:
       updated:
+    request_denied:
   rubygems:
     aside:
       bundler_header: Gemfile
@@ -154,6 +175,7 @@ de:
       links:
         badge: Abzeichen
         bugs: Bug Tracker
+        changelog: Changelog
         code: Quellcode
         docs: Dokumentation
         download: Download

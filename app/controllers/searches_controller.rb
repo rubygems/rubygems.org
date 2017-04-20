@@ -11,6 +11,6 @@ class SearchesController < ApplicationController
   private
 
   def es_enabled?
-    cookies.permanent[:new_search] == 'true'
+    true
   end
 end

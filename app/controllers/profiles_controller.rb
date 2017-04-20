@@ -1,6 +1,6 @@
 class ProfilesController < ApplicationController
   before_action :redirect_to_root, unless: :signed_in?, except: :show
-  before_action :verify_password, only: :update
+  before_action :verify_password, only: [:update, :destroy]
 
   def edit
     @user = current_user
@@ -29,6 +29,17 @@ class ProfilesController < ApplicationController
     end
   end
 
+  def delete
+    @only_owner_gems = current_user.only_owner_gems
+    @multi_owner_gems = current_user.rubygems_downloaded - @only_owner_gems
+  end
+
+  def destroy
+    Delayed::Job.enqueue DeleteUser.new(current_user), priority: PRIORITIES[:profile_deletion]
+    sign_out
+    redirect_to root_path, notice: t('.request_queued')
+  end
+
   private
 
   def params_user
@@ -37,7 +48,7 @@ class ProfilesController < ApplicationController
 
   def verify_password
     return if current_user.authenticated?(params[:user].delete(:password))
-    flash[:notice] = t('.request_denied')
+    flash[:notice] = t('profiles.request_denied')
     redirect_to edit_profile_path
   end
 end

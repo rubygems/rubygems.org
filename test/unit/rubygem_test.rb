@@ -457,7 +457,8 @@ class RubygemTest < ActiveSupport::TestCase
             "documentation_uri" => "http://example.com/docs",
             "mailing_list_uri" => "http://example.com/mail",
             "source_code_uri" => "http://example.com/code",
-            "bug_tracker_uri" => "http://example.com/bugs"
+            "bug_tracker_uri" => "http://example.com/bugs",
+            "changelog_uri" => "http://example.com/change"
           }
         )
 
@@ -469,6 +470,7 @@ class RubygemTest < ActiveSupport::TestCase
         assert_equal "http://example.com/mail", hash["mailing_list_uri"]
         assert_equal "http://example.com/code", hash["source_code_uri"]
         assert_equal "http://example.com/bugs", hash["bug_tracker_uri"]
+        assert_equal "http://example.com/change", hash["changelog_uri"]
       end
 
       should "return version documentation url if metadata and linkset docs is empty" do

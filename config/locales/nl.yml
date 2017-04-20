@@ -21,6 +21,7 @@ nl:
     attributes:
       linkset:
         bugs: Bugtracker-URL
+        changelog: Changelog
         code: source code URL
         docs: Documentatie-URL
         mail: Mailing-list-URL
@@ -48,9 +49,9 @@ nl:
     create:
       promise_resend:
     new:
-      submit:
-      title:
-      will_email_notice:
+      submit: Bevestiging opnieuw versturen
+      title: Bevestigingsemail opnieuw sturen
+      will_email_notice: We zullen je een nieuwe email sturen met een bevestigingslink
     unconfirmed_email:
       try_again:
     update:
@@ -75,7 +76,7 @@ nl:
         guides: Leren
         help: Help
         hosted_by: Hosting
-        logging_by:
+        logging_by: Logs door
         monitored_by: Monitoring
         optimized_by: Optimalisatie
         resolved_with: DNS
@@ -84,7 +85,7 @@ nl:
         statistics: Stats
         status: Status
         supported_by: Ondersteunding
-        tested_by:
+        tested_by: Getest door
         tracking_by: Tracking
         uptime: Uptime
       header:
@@ -101,6 +102,12 @@ nl:
       welcome_message:
     email_reset:
       visit_link_instructions:
+    deletion_complete:
+      subject:
+      body:
+    deletion_failed:
+      subject:
+      body:
   pages:
     about:
       founding: Het project is gestart in april 2009 door %{founder} en is sindsdien uitgegroeid tot een dienst met bijdragen van meer dan %{contributors} en %{downloads}. Sinds de RubyGems 1.3.6 release, is de site hernoemd van Gemcutter naar %{title} om de centrale rol in de Ruby community te verstevigen.
@@ -138,10 +145,24 @@ nl:
         link_text: Vraag hier een nieuwe aan.
         text: Nieuw wachtwoord nodig? Geen probleem. %{link}
         title: Reset wachtwoord
+      delete:
+        delete:
+        delete_profile:
+        warning:
+    delete:
+      title:
+      confirm:
+      instructions:
+      list_only_owner:
+      list_multi_owner:
+    rubygem:
+      owners_header:
+    destroy:
+      request_queued:
     update:
       confirmation_mail_sent:
-      request_denied:
       updated:
+    request_denied:
   rubygems:
     aside:
       bundler_header: Gemfile
@@ -154,6 +175,7 @@ nl:
       links:
         badge: Badge
         bugs: Bug-tracker
+        changelog:
         code: source code
         docs: Documentatie
         download: Download
@@ -205,7 +227,7 @@ nl:
   sessions:
     new:
       forgot_password: Wachtwoord vergeten?
-      resend_confirmation:
+      resend_confirmation: Geen bevestigingsemail ontvangen?
   stats:
     index:
       all_time_most_downloaded:
@@ -214,7 +236,7 @@ nl:
       total_users:
   users:
     create:
-      email_sent:
+      email_sent: Een bevestigingsemail is naar je e-mailadres gestuurd
     new:
       have_account: Heb je al een account?
   versions:

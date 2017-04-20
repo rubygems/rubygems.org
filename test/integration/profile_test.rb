@@ -102,4 +102,17 @@ class ProfileTest < SystemTest
 
     assert page.has_link?("@nick1", href: "https://twitter.com/nick1")
   end
+
+  test "deleting profile" do
+    sign_in
+    visit profile_path("nick1")
+    click_link "Edit Profile"
+
+    click_button "Delete"
+    fill_in "Password", with: "password12345"
+    click_button "Confirm"
+
+    assert page.has_content? "Your account deletion request has been enqueued."\
+      " We will send you a confrimation mail when your request has been processed."
+  end
 end

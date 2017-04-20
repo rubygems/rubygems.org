@@ -94,7 +94,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def public_versions_with_extra_version(extra_version)
-    versions = public_versions(5)
+    versions = public_versions(5).to_a
     versions << extra_version
     versions.uniq.sort_by(&:position)
   end
@@ -155,6 +155,7 @@ class Rubygem < ActiveRecord::Base
       'mailing_list_uri'  => versioned_links.mailing_list_uri,
       'source_code_uri'   => versioned_links.source_code_uri,
       'bug_tracker_uri'   => versioned_links.bug_tracker_uri,
+      'changelog_uri'     => versioned_links.changelog_uri,
       'dependencies'      => {
         'development' => deps.select { |r| r.rubygem && 'development' == r.scope },
         'runtime'     => deps.select { |r| r.rubygem && 'runtime' == r.scope }

@@ -30,7 +30,7 @@
       <p>
         Maybe you mean
         <%= suggestions.map do |term|
-          link_to term, search_path(params.except(:controller, :action).merge query: term)
+          link_to term, search_path(params: { query: term }), only_path: true
         end.to_sentence(last_word_connector: ' or ').html_safe %>?
       </p>
     </div>

@@ -5,4 +5,5 @@ Clearance.configure do |config|
   config.password_strategy = Clearance::PasswordStrategies::BCryptMigrationFromSHA1
   config.sign_in_guards = [ConfirmedUserGuard]
   config.rotate_csrf_on_sign_in = true
+  config.cookie_expiration = ->(_cookies) { 2.weeks.from_now.utc }
 end

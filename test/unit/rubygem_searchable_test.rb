@@ -39,6 +39,22 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
   end
 
+  context 'rubygems analyzer' do
+    setup do
+      create(:rubygem, name: 'example-gem', number: '0.0.1')
+      create(:rubygem, name: 'example_1', number: '0.0.1')
+      create(:rubygem, name: 'example.rb', number: '0.0.1')
+      import_and_refresh
+    end
+
+    should 'find all gems with matching tokens' do
+      response = Rubygem.elastic_search "example"
+      assert_equal 3, response.results.size
+      results = %w(example-gem example_1 example.rb)
+      assert_equal results, response.results.map(&:name)
+    end
+  end
+
   context 'filter' do
     setup do
       example_1 = create(:rubygem, name: "example_1")
@@ -61,9 +77,9 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       example_gem1 = create(:rubygem, name: "keyword", downloads: 1)
       example_gem2 = create(:rubygem, name: "example_gem2", downloads: 1)
       example_gem3 = create(:rubygem, name: "example_gem3", downloads: 1)
-      create(:version, rubygem: example_gem1)
-      create(:version, rubygem: example_gem2, description: 'some text and keyword')
-      create(:version, rubygem: example_gem3, summary: 'some keyword')
+      create(:version, rubygem: example_gem1, description: 'some', summary: 'some')
+      create(:version, rubygem: example_gem2, description: 'keyword', summary: 'some')
+      create(:version, rubygem: example_gem3, summary: 'keyword', description: 'some')
       import_and_refresh
     end
 

@@ -1,0 +1,38 @@
+<% @title = t('.title') %>
+
+<% if @only_owner_gems.any? %>
+  <div class="t-body">
+    <p class="page__subheading"><%= (t '.list_only_owner', command_link: link_to('gem owner', 'http://guides.rubygems.org/command-reference/#gem-owner')).html_safe %></p>
+  </div>
+  <div id="profile">
+    <div class="profile-list">
+      <ul>
+        <%= render partial: 'rubygem', collection: @only_owner_gems, locals: {graph: false, owners: true}  %>
+      </ul>
+    </div>
+  </div>
+<% end %>
+
+<% if @multi_owner_gems.any? %>
+  <div class="t-body">
+    <p class="page__subheading push--s"><%= t '.list_multi_owner' %></p>
+  </div>
+  <div id="profile">
+    <div class="profile-list">
+      <ul>
+        <%= render partial: 'rubygem', collection: @multi_owner_gems, locals: {graph: false, owners: true}  %>
+      </ul>
+    </div>
+  </div>
+<% end %>
+
+<div class="t-body push--s">
+  <p class="page__subheading"><%= t '.instructions' %></p>
+  <%= form_for current_user, url: destroy_profile_path, method: :delete do |form| %>
+    <div class="password_field">
+      <%= form.label :password, "Password", class: 'form__label' %>
+      <%= form.password_field :password, placeholder: 'password', class: 'form__input' %>
+    </div>
+    <%= form.submit t('.confirm'), data: { confirm: "This action can't be UNDONE! Are you sure?" }, class: 'form__submit' %>
+  <% end %>
+</div>
