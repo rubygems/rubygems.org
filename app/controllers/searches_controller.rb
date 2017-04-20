@@ -1,5 +1,7 @@
 class SearchesController < ApplicationController
-  before_action :set_page, only: :show
+  before_action :set_page, :limit_page, only: :show
+  # Limit max page as ES result window is upper bounded by 10_000 records
+  MAX_PAGE = 100
 
   def show
     return unless params[:query] && params[:query].is_a?(String)
@@ -9,6 +11,10 @@ class SearchesController < ApplicationController
   end
 
   private
+
+  def limit_page
+    render_404 if @page > MAX_PAGE
+  end
 
   def es_enabled?
     true
