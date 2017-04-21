@@ -16,7 +16,7 @@
   <tr>
     <td>
       <p>
-        <%= t('.welcome_message') %>
+        <%= t('.visit_link_instructions') %>
       </p>
     </td>
   </tr>
@@ -24,8 +24,8 @@
 <table align="center">
   <tr>
     <td>
-      <%= link_to t('.confirmation_link'),
-        update_email_confirmations_url(@user, token: @user.confirmation_token.html_safe),:class=> 'button' %>
+       <%= link_to t('.confirmation_link'),
+        update_email_confirmations_url(@user, token: @user.confirmation_token.html_safe),:class=>'button' %>
     </td>
   </tr>
 </table>

@@ -10,7 +10,6 @@ Bundler.require(*Rails.groups)
 module Gemcutter
   class Application < Rails::Application
     config.rubygems = Application.config_for :rubygems
-
     config.time_zone = "UTC"
     config.encoding  = "utf-8"
     config.i18n.available_locales = [:en, :nl, 'zh-CN', 'zh-TW', 'pt-BR', :fr, :es, :de]
