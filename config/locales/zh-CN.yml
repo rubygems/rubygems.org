@@ -102,6 +102,7 @@ zh-CN:
       welcome_message:
     email_reset:
       visit_link_instructions:
+      link_expiration_explanation:
     deletion_complete:
       subject:
       body:
