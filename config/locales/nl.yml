@@ -102,6 +102,7 @@ nl:
       welcome_message:
     email_reset:
       visit_link_instructions:
+      link_expiration_explanation: Deze link is 15 minuten geldig.
     deletion_complete:
       subject:
       body:
