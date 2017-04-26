@@ -95,7 +95,6 @@ module Patterns
     uninstall
     uri
     weakref
-    webrick
     win32ole
     yaml
     zlib
