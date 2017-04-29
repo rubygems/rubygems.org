@@ -3,18 +3,11 @@ require 'test_helper'
 class SubscriptionTest < ActiveSupport::TestCase
   should belong_to :rubygem
   should belong_to :user
+  should validate_uniqueness_of(:rubygem_id).scoped_to(:user_id)
+  should validate_presence_of(:rubygem)
+  should validate_presence_of(:user)
 
-  context "with a linkset" do
-    setup do
-      @subscription = create(:subscription)
-    end
-
-    subject { @subscription }
-
-    should validate_uniqueness_of(:rubygem_id).scoped_to(:user_id)
-
-    should "be valid with factory" do
-      assert @subscription.valid?
-    end
+  should "be valid with factory" do
+    assert build(:ownership).valid?
   end
 end
