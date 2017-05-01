@@ -17,6 +17,7 @@ fr:
   time_ago: il y a %{duration}
   title: RubyGems.org
   update: Mise à jour
+  try_again:
   activerecord:
     attributes:
       linkset:
@@ -52,8 +53,6 @@ fr:
       submit:
       title:
       will_email_notice:
-    unconfirmed_email:
-      try_again:
     update:
       confirmed_email:
   home:

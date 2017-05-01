@@ -30,7 +30,7 @@ class EmailConfirmationsController < ApplicationController
       Mailer.delay.email_reset(current_user)
       flash[:notice] = t('profiles.update.confirmation_mail_sent')
     else
-      flash[:notice] = t('.try_again')
+      flash[:notice] = t('try_again')
     end
     redirect_to edit_profile_path
   end
