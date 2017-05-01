@@ -100,7 +100,7 @@ GEM
       activesupport
       clearance (>= 1.10)
     compact_index (0.11.0)
-    concurrent-ruby (1.0.4)
+    concurrent-ruby (1.0.5)
     daemons (1.2.4)
     dalli (2.7.6)
     delayed_job (4.1.2)
