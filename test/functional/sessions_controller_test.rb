@@ -6,7 +6,7 @@ class SessionsControllerTest < ActionController::TestCase
       setup do
         user = User.new(email_confirmed: true)
         User.expects(:authenticate).with('login', 'pass').returns user
-        post :create, session: { who: 'login', password: 'pass' }
+        post :create, params: { session: { who: 'login', password: 'pass' } }
       end
 
       should respond_with :redirect
@@ -20,7 +20,7 @@ class SessionsControllerTest < ActionController::TestCase
     context "when login and password are incorrect" do
       setup do
         User.expects(:authenticate).with('login', 'pass')
-        post :create, session: { who: 'login', password: 'pass' }
+        post :create, params: { session: { who: 'login', password: 'pass' } }
       end
 
       should respond_with :unauthorized
@@ -37,7 +37,7 @@ class SessionsControllerTest < ActionController::TestCase
 
     context "when login is an array" do
       setup do
-        post :create, session: { who: ['1'], password: 'pass' }
+        post :create, params: { session: { who: ['1'], password: 'pass' } }
       end
 
       should respond_with :unauthorized

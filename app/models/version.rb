@@ -21,7 +21,7 @@ class Version < ActiveRecord::Base
   validate :authors_format, on: :create
   validate :metadata_links_format
 
-  class AuthorType < Type::String
+  class AuthorType < ActiveModel::Type::String
     def cast_value(value)
       if value.is_a?(Array)
         value.join(', ')
