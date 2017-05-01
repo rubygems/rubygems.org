@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 # This can be removed once all gems depend on > 3.0
 gem 'mime-types', '~> 2.99', require: 'mime/types/columnar'
 
-gem 'rails', '~> 4.2.7'
+gem 'rails', '~> 5.0.0'
 gem 'rails-i18n'
 
 gem 'autoprefixer-rails'
@@ -25,7 +25,7 @@ gem 'http_accept_language'
 gem 'jquery-rails'
 gem 'mail'
 gem 'newrelic_rpm'
-gem 'paul_revere', '~> 2.0'
+gem 'paul_revere', '~> 2.1.0'
 gem 'pg'
 gem 'rack'
 gem 'rack-utf8_sanitizer'
