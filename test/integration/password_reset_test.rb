@@ -1,4 +1,5 @@
 require 'test_helper'
+include ActiveJob::TestHelper
 
 class PasswordResetTest < SystemTest
   setup do
@@ -13,7 +14,7 @@ class PasswordResetTest < SystemTest
 
     click_link "Forgot password?"
     fill_in "Email address", with: email
-    click_button "Reset password"
+    perform_enqueued_jobs { click_button "Reset password" }
   end
 
   test "reset password form does not tell if a user exists" do
@@ -74,7 +75,7 @@ class PasswordResetTest < SystemTest
     click_link "Request a new one here."
 
     fill_in "Email address", with: @user.email
-    click_button "Reset password"
+    perform_enqueued_jobs { click_button "Reset password" }
 
     body = ActionMailer::Base.deliveries.last.to_s
     link = body.split("\n").find { |line| line =~ /^http/ }

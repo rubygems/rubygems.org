@@ -32,7 +32,7 @@ class Api::CompactIndexController < Api::BaseController
   def render_range(response_body)
     headers['ETag'] = '"' << Digest::MD5.hexdigest(response_body) << '"'
 
-    ranges = Rack::Utils.byte_ranges(env, response_body.bytesize)
+    ranges = Rack::Utils.byte_ranges(request.env, response_body.bytesize)
     if ranges
       ranged_response = ranges.map { |range| response_body.byteslice(range) }.join
       render status: 206, plain: ranged_response
