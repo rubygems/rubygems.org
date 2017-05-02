@@ -105,9 +105,9 @@ Rails.application.routes.draw do
   ################################################################################
   # API v0
 
-  scope to: 'api/deprecated#index' do
+  scope controller: 'api/deprecated', action: 'index' do
     get 'api_key'
-    put 'api_key/reset', to: 'api/deprecated#index'
+    put 'api_key/reset'
 
     post 'gems'
     get 'gems/:id.json'
