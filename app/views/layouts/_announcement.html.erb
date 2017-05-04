@@ -1,0 +1,8 @@
+<% if announcement_visible?(current_announcement) %>
+  <div id="announcement" data-announcement-token="<%= current_announcement.token %>">
+    <span><%= current_announcement.body.html_safe %></span>
+    <span class="hide">
+      <%= link_to "hide", "#" %>
+    </span>
+  </div>
+<% end %>
