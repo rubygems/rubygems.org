@@ -51,7 +51,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
         'dependencies'      => []
       }]
 
-      assert_equal result, JSON.load(response.body)
+      assert_equal expected_results(result), JSON.load(response.body)
     end
   end
 
@@ -71,7 +71,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
     end
 
     should "return surrogate key header" do
-      assert_equal "dependencyapi gem/myrails gem/mybundler", @response.headers['Surrogate-Key']
+      assert_equal "#{surrogate_key_prefix} gem/myrails gem/mybundler", @response.headers['Surrogate-Key']
     end
 
     should "return body" do
@@ -98,7 +98,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
         }
       ]
 
-      assert_same_elements result, JSON.load(response.body)
+      assert_same_elements expected_results(result), JSON.load(response.body)
     end
   end
 
@@ -161,7 +161,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
         dependencies:      []
       }]
 
-      assert_equal result, Marshal.load(response.body)
+      assert_equal expected_results(result, true), Marshal.load(response.body)
     end
   end
 
@@ -179,5 +179,35 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
     should "return an error body" do
       assert_equal "Too many gems! (use --full-index instead)", response.body
     end
+  end
+
+  def expected_results(payload, _ = false)
+    payload
+  end
+
+  def surrogate_key_prefix
+    'dependencyapi'
+  end
+end
+
+class Api::V2::DependenciesControllerTest < Api::V1::DependenciesControllerTest
+  tests Api::V2::DependenciesController
+
+  should "be using v2 controller" do
+    assert_instance_of Api::V2::DependenciesController, @controller
+  end
+
+  def expected_results(payload, symbolize = false)
+    payload.map do |obj|
+      v2_info = { "required_ruby_version"     => ">= 2.0.0",
+                  "required_rubygems_version" => ">= 2.6.3",
+                  "checksum"                  => nil }
+      v2_info.symbolize_keys! if symbolize
+      obj.merge v2_info
+    end
+  end
+
+  def surrogate_key_prefix
+    'dependencyapiv2'
   end
 end
