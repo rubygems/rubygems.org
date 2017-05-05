@@ -15,6 +15,9 @@ Rails.application.configure do
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
+
+  config.action_mailer.perform_caching = false
+
   config.action_mailer.default_url_options = { host: Gemcutter::HOST,
                                                protocol: Gemcutter::PROTOCOL }
   config.action_mailer.preview_path = Rails.root.join("lib")
@@ -35,7 +38,7 @@ Rails.application.configure do
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
 
-  # Do not log asset requests
+  # Suppress logger output for asset requests.
   config.assets.quiet = true
 
   # Raises error for missing translations
@@ -46,4 +49,8 @@ Rails.application.configure do
   config.cache_store = :dalli_store,
                        'localhost:11211',
                        { compress: true, compression_min_size: 524_288 }
+
+  # Use an evented file watcher to asynchronously detect changes in source code,
+  # routes, locales, etc. This feature depends on the listen gem.
+  # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 end

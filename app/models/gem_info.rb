@@ -60,7 +60,7 @@ class GemInfo
     versions_by_gem = execute_raw_sql(query).group_by { |v| v['name'] }
     versions_by_gem.each do |_, versions|
       info_checksum = versions.last['info_checksum']
-      versions.select! { |v| v['indexed'] == 't'.freeze }
+      versions.select! { |v| v['indexed'] == true }
       # Set all versions' info_checksum to work around https://github.com/bundler/compact_index/pull/20
       versions.each { |v| v['info_checksum'] = info_checksum }
     end

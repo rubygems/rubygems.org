@@ -38,7 +38,7 @@ before_script:
   - bundle exec rake db:create db:migrate db:test:prepare
 
 script:
-  - bundle exec rake
+  - bundle exec rails test
   - bundle exec rake rubocop
   - script/brakeman
   - bundle exec cap -T > /dev/null
