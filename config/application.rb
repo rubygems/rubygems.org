@@ -30,7 +30,7 @@ module Gemcutter
 
     config.plugins = [:dynamic_form]
 
-    config.autoload_paths << Rails.root.join('lib')
+    config.eager_load_paths << Rails.root.join('lib')
   end
 
   def self.config
