@@ -83,6 +83,13 @@ class Rubygem < ActiveRecord::Base
     rubygem && rubygem.versions.release.indexed.latest.first
   end
 
+  def self.news(days)
+    includes(:latest_version, :gem_download)
+      .with_versions
+      .where("versions.created_at BETWEEN ? AND ?", days.ago.in_time_zone, Time.zone.now)
+      .order("versions.created_at DESC")
+  end
+
   def all_errors(version = nil)
     [self, linkset, version].compact.map do |ar|
       ar.errors.full_messages
