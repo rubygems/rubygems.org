@@ -1,8 +1,8 @@
-<% @title ||= "New Releases — All Gems" %>
+<% @title ||= t(".title") %>
 
 <div class="news__nav-links">
-  <%= link_to "All Gems", news_url, class: "news__nav-link #{active?(news_path)}" %>
-  <%= link_to "Popular Gems", popular_news_url, class: "news__nav-link #{active?(popular_news_path)}" %>
+  <%= link_to t(".all_gems"), news_url, class: "news__nav-link #{active?(news_path)}" %>
+  <%= link_to t(".popular_gems"), popular_news_url, class: "news__nav-link #{active?(popular_news_path)}" %>
 </div>
 
 <header class="gems__header">

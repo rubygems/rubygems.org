@@ -109,6 +109,13 @@ en:
     deletion_failed:
       subject: Your account deletion request on rubygems.org has failed
       body: You had request for account deletion on rubygems.org. Unfortunately, we were not able to process your request. Please try again after some time or %{contact} us if problem persists.
+  news:
+    show:
+      title: New Releases — All Gems
+      all_gems: All Gems
+      popular_gems: Popular Gems
+    popular:
+      title: New Releases — Popular Gems
   pages:
     about:
       founding: The project was started in April 2009 by %{founder}, and has since grown to include the contributions of over %{contributors} and %{downloads}. As of the RubyGems 1.3.6 release, the site has been renamed to %{title} from Gemcutter to solidify the site's central role in the Ruby community.

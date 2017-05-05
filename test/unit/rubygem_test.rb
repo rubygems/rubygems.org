@@ -806,4 +806,25 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal 1, @rubygem.protected_days
     end
   end
+
+  context ".news" do
+    setup do
+      @rubygem1 = create(:rubygem)
+      @rubygem2 = create(:rubygem)
+      @rubygem3 = create(:rubygem)
+      create(:version, rubygem: @rubygem2, created_at: 5.days.ago)
+      create(:version, rubygem: @rubygem1, created_at: 6.days.ago)
+      create(:version, rubygem: @rubygem3, created_at: 8.days.ago)
+      @news = Rubygem.news(7.days)
+    end
+
+    should "not include gems updated since given days" do
+      assert_not_includes @news, @rubygem3
+    end
+
+    should "order by created_at of gem version" do
+      expected_order = [@rubygem2, @rubygem1]
+      assert_equal expected_order, @news
+    end
+  end
 end

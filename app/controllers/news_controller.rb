@@ -7,7 +7,7 @@ class NewsController < ApplicationController
   end
 
   def popular
-    @title = "New Releases — Popular Gems"
+    @title = t(".title")
 
     @rubgyems = Rubygem.by_downloads
       .news(70.days)

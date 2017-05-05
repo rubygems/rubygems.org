@@ -109,6 +109,13 @@ zh-TW:
     deletion_failed:
       subject:
       body:
+  news:
+    show:
+      title:
+      all_gems:
+      popular_gems:
+    popular:
+      title:
   pages:
     about:
       founding: 本專案由 %{founder} 於 2009 年 4 月創立，發展過程中有超過 %{contributors} 貢獻者以及 %{downloads}。自 RubyGems 1.3.6 發佈以來，本站名稱由 Gemcutter 更名為 %{title}，本站自此之後成為 Ruby 社群的核心網站。

@@ -109,6 +109,13 @@ es:
     deletion_failed:
       subject:
       body:
+  news:
+    show:
+      title:
+      all_gems:
+      popular_gems:
+    popular:
+      title:
   pages:
     about:
       founding: El proyecto comenzó en Abril del 2009 por %{founder}, y desde entonces ha crecido para incluir las contribuciones de %{contributors} y %{downloads}. A partir de RubyGems 1.3.6 el sitio se renombró de Gemcutter a %{title} para hacer más claro el rol del mismo en la comunidad de Ruby.
