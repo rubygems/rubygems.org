@@ -39,4 +39,8 @@ module ApplicationHelper
   def stats_graph_meter(gem, count)
     gem.downloads * 1.0 / count * 100
   end
+
+  def active?(path)
+    "is-active" if request.path_info == path
+  end
 end
