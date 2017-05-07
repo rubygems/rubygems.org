@@ -27,6 +27,8 @@ class User < ActiveRecord::Base
   after_validation :set_unconfirmed_email, if: :email_changed?, on: :update
   before_create :generate_api_key, :generate_confirmation_token
 
+  validates :email, length: { maximum: 254 }
+
   validates :handle, uniqueness: true, allow_nil: true
   validates :handle, format: {
     with: /\A[A-Za-z][A-Za-z_\-0-9]*\z/,

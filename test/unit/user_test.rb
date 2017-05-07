@@ -54,6 +54,14 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
+    context 'email' do
+      should "be less than 255 characters" do
+        user = build(:user, email: ("a" * 255) + "@example.com")
+        refute user.valid?
+        assert_contains user.errors[:email], "is too long (maximum is 254 characters)"
+      end
+    end
+
     context 'twitter_username' do
       should validate_length_of(:twitter_username)
       should allow_value("user123_32").for(:twitter_username)
