@@ -13,7 +13,7 @@ class PasswordsControllerTest < ActionController::TestCase
     context "with valid params" do
       setup do
         @user = create(:user)
-        get :create, password: { email: @user.email }
+        get :create, params: { password: { email: @user.email } }
       end
 
       should "set a valid confirmation_token" do
@@ -30,7 +30,7 @@ class PasswordsControllerTest < ActionController::TestCase
 
     context "with valid confirmation_token" do
       setup do
-        get :edit, token: @user.confirmation_token, user_id: @user.id
+        get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
       end
 
       should redirect_to("password edit page") { edit_user_password_path }
@@ -39,7 +39,7 @@ class PasswordsControllerTest < ActionController::TestCase
     context "with expired confirmation_token" do
       setup do
         @user.update_attribute(:token_expires_at, 1.minute.ago)
-        get :edit, token: @user.confirmation_token, user_id: @user.id
+        get :edit, params: { token: @user.confirmation_token, user_id: @user.id }
       end
 
       should redirect_to("the home page") { root_path }

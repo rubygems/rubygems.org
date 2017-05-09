@@ -23,7 +23,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       setup do
         @rubygem = create(:rubygem)
         create(:version, rubygem: @rubygem)
-        get :show, id: @rubygem.to_param, format: format
+        get :show, params: { id: @rubygem.to_param }, format: format
       end
 
       should_respond_to_show(&block)
@@ -33,7 +33,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       setup do
         @rubygem = create(:rubygem, name: 'foo.rb')
         create(:version, rubygem: @rubygem)
-        get :show, id: @rubygem.to_param, format: format
+        get :show, params: { id: @rubygem.to_param }, format: format
       end
 
       should_respond_to_show(&block)
@@ -43,7 +43,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       setup do
         @rubygem = create(:rubygem, name: "ZenTest", slug: "zentest")
         create(:version, rubygem: @rubygem)
-        get :show, id: "ZenTest", format: format
+        get :show, params: { id: "ZenTest" }, format: format
       end
 
       should_respond_to_show(&block)
@@ -70,7 +70,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       setup do
         @rubygem = create(:rubygem)
         assert @rubygem.versions.count.zero?
-        get :show, id: @rubygem.to_param, format: "json"
+        get :show, params: { id: @rubygem.to_param }, format: "json"
       end
 
       should respond_with :not_found
@@ -83,7 +83,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       setup do
         @name = generate(:name)
         refute Rubygem.exists?(name: @name)
-        get :show, id: @name, format: "json"
+        get :show, params: { id: @name }, format: "json"
       end
 
       should respond_with :not_found
@@ -96,7 +96,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       setup do
         @rubygem = create(:rubygem)
         create(:version, rubygem: @rubygem, number: "1.0.0", indexed: false)
-        get :show, id: @rubygem.to_param, format: "json"
+        get :show, params: { id: @rubygem.to_param }, format: "json"
       end
 
       should respond_with :not_found
@@ -116,7 +116,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         @missing_dependency.rubygem.update_column(:name, 'missing')
         @missing_dependency.update_column(:rubygem_id, nil)
 
-        get :show, id: @rubygem.to_param, format: "json"
+        get :show, params: { id: @rubygem.to_param }, format: "json"
       end
 
       should respond_with :success
@@ -135,7 +135,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     should "Returns the response CORS headers" do
       @request.env['HTTP_ORIGIN'] = 'https://pages.github.com/'
-      get :show, id: "ZenTest", format: 'json'
+      get :show, params: { id: "ZenTest" }, format: 'json'
 
       assert_equal 200, @response.status
       assert_equal '*', @response.headers['Access-Control-Allow-Origin']
@@ -145,7 +145,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     should 'Send the CORS preflight OPTIONS request' do
       @request.env['HTTP_ORIGIN'] = 'https://pages.github.com/'
-      process :show, 'OPTIONS', id: "ZenTest"
+      process :show, method: :options, params: { id: "ZenTest" }
 
       assert_equal 200, @response.status
       assert_equal '*', @response.headers['Access-Control-Allow-Origin']
@@ -348,7 +348,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     %w(json xml yaml).each do |format|
       context "on GET to show for an unknown gem with #{format} format" do
         setup do
-          get :show, id: "rials", format: format
+          get :show, params: { id: "rials" }, format: format
         end
 
         should "return a 404" do
@@ -378,7 +378,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
 
     should "return names of reverse dependencies" do
-      get :reverse_dependencies, id: @dependency.to_param, format: "json"
+      get :reverse_dependencies, params: { id: @dependency.to_param }, format: "json"
       gems = JSON.load(@response.body)
 
       assert_equal 3, gems.size
@@ -391,9 +391,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "with only=development" do
       should "only return names of reverse development dependencies" do
         get :reverse_dependencies,
-          id: @dependency.to_param,
-          only: "development",
-          format: "json"
+          params: { id: @dependency.to_param,
+                    only: "development",
+                    format: "json" }
 
         gems = JSON.load(@response.body)
 
@@ -406,9 +406,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "with only=runtime" do
       should "only return names of reverse development dependencies" do
         get :reverse_dependencies,
-          id: @dependency.to_param,
-          only: "runtime",
-          format: "json"
+          params: { id: @dependency.to_param,
+                    only: "runtime",
+                    format: "json" }
 
         gems = JSON.load(@response.body)
 

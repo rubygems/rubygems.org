@@ -2,15 +2,15 @@ require 'test_helper'
 
 class Api::V1::VersionsControllerTest < ActionController::TestCase
   def get_show(rubygem, format = 'json')
-    get :show, id: rubygem.name, format: format
+    get :show, params: { id: rubygem.name, format: format }
   end
 
   def get_latest(rubygem, format = 'json')
-    get :latest, id: rubygem.name, format: format
+    get :latest, params: { id: rubygem.name, format: format }
   end
 
   def get_reverse_dependencies(rubygem, options = { format: 'json' })
-    get :reverse_dependencies, options.merge(id: rubygem.name)
+    get :reverse_dependencies, options.merge(params: { id: rubygem.name })
   end
 
   def set_cache_header
@@ -115,7 +115,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
   context "on GET to show for an unknown gem" do
     setup do
-      get :show, id: "nonexistent_gem", format: "json"
+      get :show, params: { id: "nonexistent_gem", format: "json" }
     end
 
     should "return a 404" do
@@ -187,7 +187,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
 
     should "return latest version" do
-      get :latest, id: @rubygem.name, format: "js", callback: "blah"
+      get :latest, params: { id: @rubygem.name, format: "js", callback: "blah" }
       assert_match(/blah\(.*\)\Z/, @response.body)
     end
   end
@@ -201,7 +201,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
 
     should "return latest version" do
-      get :latest, id: "blah", format: "json"
+      get :latest, params: { id: "blah", format: "json" }
       assert_equal "unknown", JSON.load(@response.body)['version']
     end
   end
@@ -213,7 +213,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
 
     should "return latest version" do
-      get :latest, id: @rubygem.name, format: "json"
+      get :latest, params: { id: @rubygem.name, format: "json" }
       assert_equal "unknown", JSON.load(@response.body)['version']
     end
   end
@@ -226,7 +226,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
 
     should "return most recent version" do
-      get :latest, id: @rubygem.name, format: "json"
+      get :latest, params: { id: @rubygem.name, format: "json" }
       assert_equal "2.0.0", JSON.load(@response.body)['version']
     end
   end
@@ -238,7 +238,7 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
 
     should "return license info" do
-      get :show, id: @rubygem.name, format: "json"
+      get :show, params: { id: @rubygem.name, format: "json" }
       assert_equal "MIT", JSON.load(@response.body).first['licenses']
     end
   end

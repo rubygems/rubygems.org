@@ -7,8 +7,7 @@ class GemsTest < ActionDispatch::IntegrationTest
   end
 
   test "gem page with a non valid HTTP_ACCEPT header" do
-    get rubygem_path(@rubygem), nil,
-      'HTTP_ACCEPT' => 'application/mercurial-0.1'
+    get rubygem_path(@rubygem), headers: { 'HTTP_ACCEPT' => 'application/mercurial-0.1' }
     assert page.has_content? "1.0.0"
   end
 

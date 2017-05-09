@@ -11,7 +11,7 @@ class RubygemsControllerTest < ActionController::TestCase
       setup do
         @owners = [@user, create(:user)]
         @rubygem = create(:rubygem, owners: @owners, number: "1.0.0")
-        get :show, id: @rubygem.to_param
+        get :show, params: { id: @rubygem.to_param }
       end
 
       should respond_with :success
@@ -27,7 +27,7 @@ class RubygemsControllerTest < ActionController::TestCase
         @owners = [@user, create(:user)]
         @rubygem = create(:rubygem, owners: @owners, number: "1.0.0")
         @rubygem.linkset = nil
-        get :show, id: @rubygem.to_param
+        get :show, params: { id: @rubygem.to_param }
       end
 
       should respond_with :success
@@ -39,7 +39,7 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On GET to show for another user's gem" do
       setup do
         @rubygem = create(:rubygem, number: "1.0.0")
-        get :show, id: @rubygem.to_param
+        get :show, params: { id: @rubygem.to_param }
       end
 
       should respond_with :success
@@ -51,7 +51,7 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On GET to show for this user's gem" do
       setup do
         @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
-        get :show, id: @rubygem.to_param
+        get :show, params: { id: @rubygem.to_param }
       end
 
       should respond_with :success
@@ -65,7 +65,7 @@ class RubygemsControllerTest < ActionController::TestCase
         @rubygem = create(:rubygem)
         create(:version, rubygem: @rubygem)
         create(:subscription, rubygem: @rubygem, user: @user)
-        get :show, id: @rubygem.to_param
+        get :show, params: { id: @rubygem.to_param }
       end
 
       should respond_with :success
@@ -79,7 +79,7 @@ class RubygemsControllerTest < ActionController::TestCase
       setup do
         @rubygem = create(:rubygem)
         create(:version, rubygem: @rubygem)
-        get :show, id: @rubygem.to_param
+        get :show, params: { id: @rubygem.to_param }
       end
 
       should respond_with :success
@@ -92,7 +92,7 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On GET to edit for this user's gem" do
       setup do
         @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
-        get :edit, id: @rubygem.to_param
+        get :edit, params: { id: @rubygem.to_param }
       end
 
       should respond_with :success
@@ -111,7 +111,7 @@ class RubygemsControllerTest < ActionController::TestCase
       setup do
         @other_user = create(:user)
         @rubygem = create(:rubygem, owners: [@other_user], number: "1.0.0")
-        get :edit, id: @rubygem.to_param
+        get :edit, params: { id: @rubygem.to_param }
       end
       should respond_with :redirect
       should redirect_to('the homepage') { root_url }
@@ -123,13 +123,15 @@ class RubygemsControllerTest < ActionController::TestCase
         @url = "https://github.com/qrush/gemcutter"
         @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
         put :update,
-          id: @rubygem.to_param,
-          linkset: {
-            code: @url,
-            docs: 'http://docs.com',
-            wiki: 'http://wiki.com',
-            mail: 'http://mail.com',
-            bugs: 'http://bugs.com'
+          params: {
+            id: @rubygem.to_param,
+            linkset: {
+              code: @url,
+              docs: 'http://docs.com',
+              wiki: 'http://wiki.com',
+              mail: 'http://mail.com',
+              bugs: 'http://bugs.com'
+            }
           }
       end
       should respond_with :redirect
@@ -156,7 +158,7 @@ class RubygemsControllerTest < ActionController::TestCase
       setup do
         @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
         @url = "totally not a url"
-        put :update, id: @rubygem.to_param, linkset: { code: @url }
+        put :update, params: { id: @rubygem.to_param, linkset: { code: @url } }
       end
       should respond_with :success
       should "not update linkset" do
@@ -228,7 +230,7 @@ class RubygemsControllerTest < ActionController::TestCase
       @gems = (1..3).map { |n| create(:rubygem, name: "agem#{n}") }
       @zgem = create(:rubygem, name: "zeta")
       create(:version, rubygem: @zgem)
-      get :index, letter: "z"
+      get :index, params: { letter: "z" }
     end
     should respond_with :success
     should "render links" do
@@ -245,7 +247,7 @@ class RubygemsControllerTest < ActionController::TestCase
         gem
       end
       create(:rubygem, name: "zeta")
-      get :index, letter: "asdf"
+      get :index, params: { letter: "asdf" }
     end
 
     should respond_with :success
@@ -261,7 +263,7 @@ class RubygemsControllerTest < ActionController::TestCase
     setup do
       @latest_version = create(:version, created_at: 1.minute.ago)
       @rubygem = @latest_version.rubygem
-      get :show, id: @rubygem.to_param
+      get :show, params: { id: @rubygem.to_param }
     end
 
     should respond_with :success
@@ -281,17 +283,17 @@ class RubygemsControllerTest < ActionController::TestCase
     end
     should "render plural licenses header for other than one license" do
       @latest_version.update_attributes(licenses: nil)
-      get :show, id: @rubygem.to_param
+      get :show, params: { id: @rubygem.to_param }
       assert page.has_content?("Licenses")
 
       @latest_version.update_attributes(licenses: ["MIT", "GPL-2"])
-      get :show, id: @rubygem.to_param
+      get :show, params: { id: @rubygem.to_param }
       assert page.has_content?("Licenses")
     end
 
     should "render singular license header for one line license" do
       @latest_version.update_attributes(licenses: ["MIT"])
-      get :show, id: @rubygem.to_param
+      get :show, params: { id: @rubygem.to_param }
       assert page.has_content?("License")
       assert page.has_no_content?("Licenses")
     end
@@ -305,7 +307,7 @@ class RubygemsControllerTest < ActionController::TestCase
         create(:version, number: "1.9.9", rubygem: @rubygem, created_at: 1.minute.ago),
         create(:version, number: "1.9.9.rc4", rubygem: @rubygem, created_at: 2.days.ago)
       ]
-      get :show, id: @rubygem.to_param
+      get :show, params: { id: @rubygem.to_param }
     end
 
     should respond_with :success
@@ -336,7 +338,7 @@ class RubygemsControllerTest < ActionController::TestCase
       @rubygem = version.rubygem
     end
     context 'when signed out' do
-      setup { get :show, id: @rubygem.to_param }
+      setup { get :show, params: { id: @rubygem.to_param } }
       should respond_with :success
       should "render info about the gem" do
         assert page.has_content?("This gem is not currently hosted on RubyGems.org")
@@ -348,7 +350,7 @@ class RubygemsControllerTest < ActionController::TestCase
         @user = create(:user)
         sign_in_as @user
         create(:subscription, user: @user, rubygem: @rubygem)
-        get :show, id: @rubygem.to_param
+        get :show, params: { id: @rubygem.to_param }
       end
       should "have unsubscribe link" do
         assert page.has_link? 'Unsubscribe'
@@ -359,7 +361,7 @@ class RubygemsControllerTest < ActionController::TestCase
         @rubygem.update_attributes(created_at: 30.days.ago, updated_at: 99.days.ago)
         @owner = create(:user)
         @rubygem.owners << @owner
-        get :show, id: @rubygem.to_param
+        get :show, params: { id: @rubygem.to_param }
       end
 
       should respond_with :success
@@ -376,7 +378,7 @@ class RubygemsControllerTest < ActionController::TestCase
   context "On GET to show for a gem with no versions" do
     setup do
       @rubygem = create(:rubygem)
-      get :show, id: @rubygem.to_param
+      get :show, params: { id: @rubygem.to_param }
     end
     should respond_with :success
     should "render info about the gem" do
@@ -391,7 +393,7 @@ class RubygemsControllerTest < ActionController::TestCase
       @development = create(:dependency, :development, version: @version)
       @runtime     = create(:dependency, :runtime,     version: @version)
 
-      get :show, id: @version.rubygem.to_param
+      get :show, params: { id: @version.rubygem.to_param }
     end
 
     should respond_with :success
@@ -411,7 +413,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
       @unresolved = create(:dependency, :unresolved, version: @version)
 
-      get :show, id: @version.rubygem.to_param
+      get :show, params: { id: @version.rubygem.to_param }
     end
 
     should respond_with :success
@@ -433,7 +435,7 @@ class RubygemsControllerTest < ActionController::TestCase
       @missing_dependency.rubygem.update_column(:name, 'missing')
       @missing_dependency.update_column(:rubygem_id, nil)
 
-      get :show, id: @version.rubygem.to_param
+      get :show, params: { id: @version.rubygem.to_param }
     end
 
     should respond_with :success
@@ -448,7 +450,7 @@ class RubygemsControllerTest < ActionController::TestCase
       @version = create(:version)
       @runtime = create(:dependency, :runtime, version: @version)
       @runtime.rubygem.update_column(:name, 'foo>0.1.1')
-      get :show, id: @version.rubygem.to_param
+      get :show, params: { id: @version.rubygem.to_param }
     end
 
     should respond_with :success
@@ -459,7 +461,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to show for nonexistent gem" do
     setup do
-      get :show, id: "blahblah"
+      get :show, params: { id: "blahblah" }
     end
 
     should respond_with :not_found
@@ -467,7 +469,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to show for a blacklisted gem" do
     setup do
-      get :show, id: Patterns::GEM_NAME_BLACKLIST.sample
+      get :show, params: { id: Patterns::GEM_NAME_BLACKLIST.sample }
     end
 
     should respond_with :success
@@ -481,7 +483,7 @@ class RubygemsControllerTest < ActionController::TestCase
       setup do
         @rubygem = create(:rubygem)
         create(:version, rubygem: @rubygem)
-        get :show, id: @rubygem.to_param
+        get :show, params: { id: @rubygem.to_param }
       end
 
       should respond_with :success
@@ -496,7 +498,7 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On GET to edit" do
       setup do
         @rubygem = create(:rubygem)
-        get :edit, id: @rubygem.to_param
+        get :edit, params: { id: @rubygem.to_param }
       end
       should respond_with :redirect
       should redirect_to('the homepage') { root_url }
@@ -505,7 +507,7 @@ class RubygemsControllerTest < ActionController::TestCase
     context "On PUT to update" do
       setup do
         @rubygem = create(:rubygem)
-        put :update, id: @rubygem.to_param, linkset: {}
+        put :update, params: { id: @rubygem.to_param, linkset: {} }
       end
       should respond_with :redirect
       should redirect_to('the homepage') { root_url }
