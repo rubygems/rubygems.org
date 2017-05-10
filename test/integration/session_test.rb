@@ -39,7 +39,7 @@ class SessionTest < ActionDispatch::IntegrationTest
     )
 
     assert_raise ActionController::InvalidAuthenticityToken do
-      patch "/profile", user: { handle: "alice" }, authenticity_token: @last_session_token
+      patch "/profile", params: { user: { handle: "alice" }, authenticity_token: @last_session_token }
     end
 
     refute_equal request.session[:_csrf_token], @last_session_token

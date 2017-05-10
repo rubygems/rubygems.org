@@ -8,7 +8,7 @@ class VersionsControllerTest < ActionController::TestCase
         create(:version, rubygem: @rubygem)
       end
 
-      get :index, rubygem_id: @rubygem.name
+      get :index, params: { rubygem_id: @rubygem.name }
     end
 
     should respond_with :success
@@ -28,7 +28,7 @@ class VersionsControllerTest < ActionController::TestCase
       end
       @rubygem.reload
 
-      get :index, rubygem_id: @rubygem.name, format: "atom"
+      get :index, params: { rubygem_id: @rubygem.name, format: "atom" }
     end
 
     should respond_with :success
@@ -51,7 +51,7 @@ class VersionsControllerTest < ActionController::TestCase
   context "GET to index for gem with no versions" do
     setup do
       @rubygem = create(:rubygem)
-      get :index, rubygem_id: @rubygem.name
+      get :index, params: { rubygem_id: @rubygem.name }
     end
 
     should respond_with :success
@@ -70,7 +70,7 @@ class VersionsControllerTest < ActionController::TestCase
       @versions = (1..5).map do
         FactoryGirl.create(:version, rubygem: @rubygem)
       end
-      get :show, rubygem_id: @rubygem.name, id: @latest_version.number
+      get :show, params: { rubygem_id: @rubygem.name, id: @latest_version.number }
     end
 
     should respond_with :success
@@ -95,7 +95,7 @@ class VersionsControllerTest < ActionController::TestCase
       @version = create(:version, number: '1.0.1')
       @version.rubygem.owners << create(:user, handle: "johndoe")
       create(:version, number: "1.0.2", rubygem: @version.rubygem, indexed: false)
-      get :show, rubygem_id: @version.rubygem.name, id: "1.0.2"
+      get :show, params: { rubygem_id: @version.rubygem.name, id: "1.0.2" }
     end
 
     should respond_with :success

@@ -4,7 +4,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
   def self.should_respond_to(format)
     context "with query=match and with #{format.to_s.upcase}" do
       setup do
-        get :show, query: "match", format: format
+        get :show, params: { query: "match" }, format: format
       end
 
       should respond_with :success
@@ -54,17 +54,17 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
     end
 
     should "default to first page when page is 0" do
-      get :show, query: "match", page: 0, format: :json
+      get :show, params: { query: "match", page: 0 }, format: :json
       refute JSON.parse(response.body).empty?
     end
 
     should "default to first page when page is not a number" do
-      get :show, query: "match", page: "foo", format: :json
+      get :show, params: { query: "match", page: "foo" }, format: :json
       refute JSON.parse(response.body).empty?
     end
 
     should "default to first page when page cannot be converted to a number" do
-      get :show, query: "match", page: { "$acunetix" => "1" }, format: :json
+      get :show, params: { query: "match", page: { "$acunetix" => "1" } }, format: :json
       refute JSON.parse(response.body).empty?
     end
   end

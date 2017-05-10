@@ -17,7 +17,7 @@ class SearchesControllerTest < ActionController::TestCase
       import_and_refresh
       assert_nil @sinatra.versions.most_recent
       assert @sinatra.reload.versions.count.zero?
-      get :show, query: "sinatra"
+      get :show, params: { query: "sinatra" }
     end
 
     should respond_with :success
@@ -35,7 +35,7 @@ class SearchesControllerTest < ActionController::TestCase
       create(:version, rubygem: @sinatra_redux)
       create(:version, rubygem: @brando)
       import_and_refresh
-      get :show, query: "sinatra"
+      get :show, params: { query: "sinatra" }
     end
 
     should respond_with :success
@@ -62,7 +62,7 @@ class SearchesControllerTest < ActionController::TestCase
       create(:version, rubygem: @brando)
       import_and_refresh
       @request.cookies['new_search'] = 'true'
-      get :show, query: 'sinatra'
+      get :show, params: { query: 'sinatra' }
     end
 
     should respond_with :success
@@ -88,7 +88,7 @@ class SearchesControllerTest < ActionController::TestCase
       @sinatra = create(:rubygem, name: "sinatra")
       create(:version, rubygem: @sinatra)
       import_and_refresh
-      get :show, query: "sinatra"
+      get :show, params: { query: "sinatra" }
     end
 
     should respond_with :redirect
@@ -97,7 +97,7 @@ class SearchesControllerTest < ActionController::TestCase
 
   context 'on GET to show with non string search parameter' do
     setup do
-      get :show, query: { foo: "bar" }
+      get :show, params: { query: { foo: "bar" } }
     end
 
     should respond_with :success
@@ -116,7 +116,7 @@ class SearchesControllerTest < ActionController::TestCase
       create(:version, rubygem: @brando)
       import_and_refresh
       @request.cookies['new_search'] = 'true'
-      get :show, query: "sinatre"
+      get :show, params: { query: "sinatre" }
     end
 
     should respond_with :success
@@ -145,7 +145,7 @@ class SearchesControllerTest < ActionController::TestCase
       requires_toxiproxy
       Toxiproxy[:elasticsearch].down do
         @request.cookies['new_search'] = 'true'
-        get :show, query: 'sinatra'
+        get :show, params: { query: 'sinatra' }
         assert_response :success
         assert page.has_content?('Advanced search is currently unavailable. Falling back to legacy search.')
         assert page.has_content?('Displaying')

@@ -71,9 +71,9 @@ class PushTest < ActionDispatch::IntegrationTest
 
   def push_gem(path)
     post api_v1_rubygems_path,
-      File.read(path),
-      "CONTENT_TYPE" => "application/octet-stream",
-      "HTTP_AUTHORIZATION" => @user.api_key
+      env: { 'RAW_POST_DATA' => File.read(path) },
+      headers: { "CONTENT_TYPE" => "application/octet-stream",
+                 "HTTP_AUTHORIZATION" => @user.api_key }
   end
 
   teardown do

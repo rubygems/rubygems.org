@@ -9,7 +9,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
 
   context "On POST to create for a gem that the user is not subscribed to" do
     setup do
-      post :create, rubygem_id: @rubygem.to_param
+      post :create, params: { rubygem_id: @rubygem.to_param }
     end
 
     should redirect_to("rubygems show") { rubygem_path(@rubygem) }
@@ -21,7 +21,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
   context "On POST to create for a gem that the user is subscribed to" do
     setup do
       create(:subscription, rubygem: @rubygem, user: @user)
-      post :create, rubygem_id: @rubygem.to_param
+      post :create, params: { rubygem_id: @rubygem.to_param }
     end
 
     should redirect_to("rubygems show") { rubygem_path(@rubygem) }
@@ -32,7 +32,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
 
   context "On DELETE to destroy for a gem that the user is not subscribed to" do
     setup do
-      delete :destroy, rubygem_id: @rubygem.to_param
+      delete :destroy, params: { rubygem_id: @rubygem.to_param }
     end
 
     should redirect_to("rubygems show") { rubygem_path(@rubygem) }
@@ -44,7 +44,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
   context "On DELETE to destroy for a gem that the user is subscribed to" do
     setup do
       create(:subscription, rubygem: @rubygem, user: @user)
-      delete :destroy, rubygem_id: @rubygem.to_param
+      delete :destroy, params: { rubygem_id: @rubygem.to_param }
     end
 
     should redirect_to("rubygems show") { rubygem_path(@rubygem) }

@@ -64,7 +64,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
   end
 
   test "/names partial response" do
-    get names_path, nil, range: "bytes=15-"
+    get names_path, env: { range: "bytes=15-" }
 
     assert_response 206
     full_body = "---\ngemA\ngemA1\ngemA2\ngemB\n"
@@ -90,7 +90,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     full_response_body = @response.body
     partial_body = "1.0.0 013we2\ngemA 2.0.0 1cf94r\ngemA 1.2.0 13q4es\ngemA 2.1.0 e217fz\n"
 
-    get versions_path, nil, range: "bytes=229-"
+    get versions_path, env: { range: "bytes=229-" }
 
     assert_response 206
     assert_equal partial_body, @response.body
@@ -110,7 +110,7 @@ eos
 
     get versions_path
     full_response_body = @response.body
-    get versions_path, nil, range: "bytes=206-"
+    get versions_path, env: { range: "bytes=206-" }
     assert_equal etag(full_response_body), @response.headers['ETag']
     assert_equal expected, @response.body
   end
@@ -146,7 +146,7 @@ eos
 2.1.0 gemA1:= 1.0.0,gemA2:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>=2.0
 eos
 
-    get info_path(gem_name: 'gemA'), nil, range: "bytes=159-"
+    get info_path(gem_name: 'gemA'), env: { range: "bytes=159-" }
 
     assert_response 206
     assert_equal expected[159..-1], @response.body
@@ -175,7 +175,7 @@ END
   end
 
   test "/info with gzip" do
-    get info_path(gem_name: 'gemA'), nil, 'Accept-Encoding' => 'gzip'
+    get info_path(gem_name: 'gemA'), env: { 'Accept-Encoding' => 'gzip' }
     assert_response :success
     assert_equal('gzip', @response.headers['Content-Encoding'])
   end
