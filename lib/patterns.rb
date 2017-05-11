@@ -13,12 +13,9 @@ module Patterns
     benchmark
     cgi
     cgi-session
-    cmath
     complex
     continuation
     coverage
-    csv
-    date
     delegate
     digest
     drb
@@ -26,11 +23,8 @@ module Patterns
     english
     enumerator
     erb
-    etc
     expect
-    fcntl
     fiber
-    fileutils
     find
     forwardable
     getoptlong
@@ -41,7 +35,6 @@ module Patterns
     irb
     jruby
     logger
-    mathn
     matrix
     mkmf
     monitor
@@ -73,7 +66,6 @@ module Patterns
     rss
     ruby
     rubygems
-    scanf
     securerandom
     set
     shellwords
@@ -97,7 +89,6 @@ module Patterns
     weakref
     win32ole
     yaml
-    zlib
     ubygems
   ).freeze
 end
