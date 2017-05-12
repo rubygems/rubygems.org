@@ -154,7 +154,7 @@ class SearchesControllerTest < ActionController::TestCase
   end
 
   context "with page greater than 100" do
-    setup { get :show, page: 204 }
+    setup { get :show, params: { page: 204 } }
 
     should "render 404 page" do
       assert_response :not_found

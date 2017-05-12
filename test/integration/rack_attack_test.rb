@@ -14,7 +14,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
   context 'requests is lower than limit' do
     should 'allow sign in' do
       10.times do
-        post_via_redirect '/session', params: { session: { who: @user.email, password: @user.password } }
+        post '/session', params: { session: { who: @user.email, password: @user.password } }
+        follow_redirect!
         assert_equal 200, @response.status
       end
     end
@@ -22,7 +23,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     should 'allow sign up' do
       10.times do
         user = build(:user)
-        post_via_redirect '/users', params: { user: { email: user.email, password: user.password } }
+        post '/users', params: { user: { email: user.email, password: user.password } }
+        follow_redirect!
         assert_equal 200, @response.status
       end
     end
@@ -43,12 +45,12 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
     context 'params' do
       should 'return 400 for bad request' do
-        post_via_redirect '/session'
+        post '/session'
         assert_equal 400, @response.status
       end
 
       should 'return 401 for unauthorized request' do
-        post_via_redirect '/session', params: { session: { password: @user.password } }
+        post '/session', params: { session: { password: @user.password } }
         assert_equal 401, @response.status
       end
     end
@@ -57,7 +59,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
   context 'requests is higher than limit' do
     should 'throttle sign in' do
       (@limit + 1).times do |i|
-        post_via_redirect '/session', params: { session: { who: @user.email, password: @user.password } }
+        post '/session', params: { session: { who: @user.email, password: @user.password } }
         assert_equal 429, @response.status if i > @limit
       end
     end
@@ -65,7 +67,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     should 'throttle sign up' do
       (@limit + 1).times do |i|
         user = build(:user)
-        post_via_redirect '/users', params: { user: { email: user.email, password: user.password } }
+        post '/users', params: { user: { email: user.email, password: user.password } }
         assert_equal 429, @response.status if i > @limit
       end
     end
