@@ -1,4 +1,4 @@
-class AddPositionIndexToVersions < ActiveRecord::Migration
+class AddPositionIndexToVersions < ActiveRecord::Migration[4.2]
   def self.up
     add_index :versions, :position
   end

@@ -1,4 +1,4 @@
-class CreateLinksets < ActiveRecord::Migration
+class CreateLinksets < ActiveRecord::Migration[4.2]
   def self.up
     create_table :linksets do |table|
       table.integer :rubygem_id

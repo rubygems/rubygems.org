@@ -1,4 +1,4 @@
-class AddMoreMissingIndexes < ActiveRecord::Migration
+class AddMoreMissingIndexes < ActiveRecord::Migration[4.2]
   def self.up
     add_index 'subscriptions', 'rubygem_id'
     add_index 'subscriptions', 'user_id'

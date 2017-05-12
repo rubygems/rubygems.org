@@ -1,4 +1,4 @@
-class CreateOwnerships < ActiveRecord::Migration
+class CreateOwnerships < ActiveRecord::Migration[4.2]
   def self.up
     create_table :ownerships do |table|
       table.belongs_to :rubygem

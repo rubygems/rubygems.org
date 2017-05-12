@@ -1,4 +1,4 @@
-class CreateWebHooks < ActiveRecord::Migration
+class CreateWebHooks < ActiveRecord::Migration[4.2]
   def self.up
     create_table :web_hooks do |table|
       table.string :gem_name

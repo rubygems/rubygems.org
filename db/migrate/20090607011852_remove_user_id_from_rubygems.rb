@@ -1,4 +1,4 @@
-class RemoveUserIdFromRubygems < ActiveRecord::Migration
+class RemoveUserIdFromRubygems < ActiveRecord::Migration[4.2]
   def self.up
     remove_column :rubygems, :user_id
   end
