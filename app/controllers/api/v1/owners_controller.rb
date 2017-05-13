@@ -27,7 +27,7 @@ class Api::V1::OwnersController < Api::BaseController
     if owner
       ownership = @rubygem.ownerships.find_by(user_id: owner.id)
       if ownership.try(:safe_destroy)
-        render text: "Owner removed successfully."
+        render plain: "Owner removed successfully."
       else
         render plain: 'Unable to remove owner.', status: :forbidden
       end
