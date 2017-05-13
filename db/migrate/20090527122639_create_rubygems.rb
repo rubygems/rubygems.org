@@ -1,4 +1,4 @@
-class CreateRubygems < ActiveRecord::Migration
+class CreateRubygems < ActiveRecord::Migration[4.2]
   def self.up
     create_table :rubygems do |table|
       table.string :name

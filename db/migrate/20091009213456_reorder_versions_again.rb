@@ -1,4 +1,4 @@
-class ReorderVersionsAgain < ActiveRecord::Migration
+class ReorderVersionsAgain < ActiveRecord::Migration[4.2]
   def self.up
     Rubygem.all.each(&:reorder_versions)
   end

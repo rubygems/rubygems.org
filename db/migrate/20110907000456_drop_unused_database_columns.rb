@@ -1,4 +1,4 @@
-class DropUnusedDatabaseColumns < ActiveRecord::Migration
+class DropUnusedDatabaseColumns < ActiveRecord::Migration[4.2]
   def self.up
     remove_column :ownerships, :approved
     remove_column :versions, :downloads_count

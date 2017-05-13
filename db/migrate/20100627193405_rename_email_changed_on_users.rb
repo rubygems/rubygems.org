@@ -1,4 +1,4 @@
-class RenameEmailChangedOnUsers < ActiveRecord::Migration
+class RenameEmailChangedOnUsers < ActiveRecord::Migration[4.2]
   def self.up
     rename_column :users, :email_changed, :email_reset
   end

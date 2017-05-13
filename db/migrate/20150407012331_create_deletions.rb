@@ -1,4 +1,4 @@
-class CreateDeletions < ActiveRecord::Migration
+class CreateDeletions < ActiveRecord::Migration[4.2]
   def change
     create_table :deletions do |t|
       t.belongs_to :user, index: true

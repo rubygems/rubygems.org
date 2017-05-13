@@ -1,4 +1,4 @@
-class FixDependencies < ActiveRecord::Migration
+class FixDependencies < ActiveRecord::Migration[4.2]
   def self.up
     # fix bad version reqs
     Dependency.all.each do |dep|

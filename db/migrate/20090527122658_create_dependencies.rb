@@ -1,4 +1,4 @@
-class CreateDependencies < ActiveRecord::Migration
+class CreateDependencies < ActiveRecord::Migration[4.2]
   def self.up
     create_table :dependencies do |table|
       table.string :name

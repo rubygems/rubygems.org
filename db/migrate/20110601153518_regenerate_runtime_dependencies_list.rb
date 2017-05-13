@@ -1,4 +1,4 @@
-class RegenerateRuntimeDependenciesList < ActiveRecord::Migration
+class RegenerateRuntimeDependenciesList < ActiveRecord::Migration[4.2]
   def self.up
   end
 
