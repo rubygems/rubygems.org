@@ -89,7 +89,7 @@ class Pusher
 
   # Overridden so we don't get megabytes of the raw data printing out
   def inspect
-    attrs = [:@rubygem, :@user, :@message, :@code].map do |attr|
+    attrs = %i[@rubygem @user @message @code].map do |attr|
       "#{attr}=#{instance_variable_get(attr).inspect}"
     end
     "<Pusher #{attrs.join(' ')}>"

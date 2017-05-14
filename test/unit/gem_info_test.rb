@@ -45,12 +45,12 @@ class GemInfoTest < ActiveSupport::TestCase
 
   context '.ordered_names' do
     setup do
-      %w(abc bcd abd).each { |name| create(:rubygem, name: name) }
+      %w[abc bcd abd].each { |name| create(:rubygem, name: name) }
     end
 
     should 'order rubygems by name' do
       names = GemInfo.ordered_names
-      assert_equal %w(abc abd bcd), names
+      assert_equal %w[abc abd bcd], names
     end
 
     should 'write cache' do
@@ -64,7 +64,7 @@ class GemInfoTest < ActiveSupport::TestCase
       Rails.cache.stubs(:read)
       names = GemInfo.ordered_names
       assert_received(Rails.cache, :read) { |cache| cache.with("names") }
-      assert_equal %w(abc abd bcd), names
+      assert_equal %w[abc abd bcd], names
     end
   end
 

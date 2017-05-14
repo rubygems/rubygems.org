@@ -150,13 +150,13 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
     end
 
     should "put each gem on new line" do
-      expected_output = <<-eos
-created_at: #{Time.now.iso8601}
----
-rubygem0 0.0.1 13q4e0
-rubygem1 0.0.1 13q4e1
-rubygem2 0.0.1 13q4e2
-eos
+      expected_output = <<~eos
+        created_at: #{Time.now.iso8601}
+        ---
+        rubygem0 0.0.1 13q4e0
+        rubygem1 0.0.1 13q4e1
+        rubygem2 0.0.1 13q4e2
+      eos
       assert_equal expected_output, @tmp_versions_file.read
     end
   end

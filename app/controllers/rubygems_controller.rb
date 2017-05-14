@@ -1,11 +1,11 @@
 class RubygemsController < ApplicationController
   include LatestVersion
-  before_action :redirect_to_root, only: [:edit, :update], unless: :signed_in?
-  before_action :set_blacklisted_gem, only: [:show], if: :blacklisted?
-  before_action :find_rubygem, only: [:edit, :update, :show], unless: :blacklisted?
-  before_action :latest_version, only: [:show], unless: :blacklisted?
-  before_action :find_versioned_links, only: [:show], unless: :blacklisted?
-  before_action :load_gem, only: [:edit, :update]
+  before_action :redirect_to_root, only: %i[edit update], unless: :signed_in?
+  before_action :set_blacklisted_gem, only: %i[show], if: :blacklisted?
+  before_action :find_rubygem, only: %i[edit update show], unless: :blacklisted?
+  before_action :latest_version, only: %i[show], unless: :blacklisted?
+  before_action :find_versioned_links, only: %i[show], unless: :blacklisted?
+  before_action :load_gem, only: %i[edit update]
   before_action :set_page, only: :index
 
   def index

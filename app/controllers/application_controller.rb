@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   helper :announcements
   helper ActiveSupport::NumberHelper
 
-  protect_from_forgery only: [:create, :update, :destroy], with: :exception
+  protect_from_forgery only: %i[create update destroy], with: :exception
 
   before_action :set_locale
 

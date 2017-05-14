@@ -17,7 +17,7 @@ class RubygemFsTest < ActiveSupport::TestCase
       def fs.s3
         [@config[:access_key_id], @config[:secret_access_key]]
       end
-      assert_equal %w(foo bar), fs.s3
+      assert_equal %w[foo bar], fs.s3
     end
   end
 

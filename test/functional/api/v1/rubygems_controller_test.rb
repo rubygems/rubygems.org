@@ -179,7 +179,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
       should "only return my gems" do
         gem_names = yield(@response.body).map { |rubygem| rubygem['name'] }.sort
-        assert_equal %w(AnotherGem SomeGem), gem_names
+        assert_equal %w[AnotherGem SomeGem], gem_names
       end
     end
   end
@@ -345,7 +345,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
-    %w(json xml yaml).each do |format|
+    %w[json xml yaml].each do |format|
       context "on GET to show for an unknown gem with #{format} format" do
         setup do
           get :show, params: { id: "rials" }, format: format

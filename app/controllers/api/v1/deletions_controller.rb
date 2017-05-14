@@ -1,10 +1,10 @@
 class Api::V1::DeletionsController < Api::BaseController
-  skip_before_action :verify_authenticity_token, only: [:create, :destroy]
+  skip_before_action :verify_authenticity_token, only: %i[create destroy]
 
-  before_action :authenticate_with_api_key, only: [:create, :destroy]
-  before_action :verify_authenticated_user, only: [:create, :destroy]
-  before_action :find_rubygem_by_name,      only: [:create, :destroy]
-  before_action :validate_gem_and_version,  only: [:create]
+  before_action :authenticate_with_api_key, only: %i[create destroy]
+  before_action :verify_authenticated_user, only: %i[create destroy]
+  before_action :find_rubygem_by_name,      only: %i[create destroy]
+  before_action :validate_gem_and_version,  only: %i[create]
 
   def create
     @deletion = current_user.deletions.build(version: @version)

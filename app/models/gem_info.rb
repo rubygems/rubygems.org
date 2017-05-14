@@ -46,7 +46,7 @@ class GemInfo
                     v.yanked_at > ?)
               ORDER BY date, number, platform, name", date, date]
 
-    map_gem_versions execute_raw_sql(query).map { |v| [v['name'], [v]] }
+    map_gem_versions(execute_raw_sql(query).map { |v| [v['name'], [v]] })
   end
 
   def self.compact_index_public_versions

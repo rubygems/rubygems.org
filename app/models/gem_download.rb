@@ -2,7 +2,7 @@ class GemDownload < ActiveRecord::Base
   belongs_to :rubygem
   belongs_to :version
 
-  scope :most_downloaded_gems, -> { where("version_id != 0").includes(:version).order(count: :desc) }
+  scope(:most_downloaded_gems, -> { where("version_id != 0").includes(:version).order(count: :desc) })
 
   class << self
     def count_for_version(id)

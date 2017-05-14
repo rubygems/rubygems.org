@@ -18,7 +18,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
     send("to_#{@format}", @response.body)
   end
 
-  [:json, :yaml].each do |format|
+  %i[json yaml].each do |format|
     context "when using #{format}" do
       setup do
         @format = format

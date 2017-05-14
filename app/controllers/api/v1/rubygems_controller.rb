@@ -1,9 +1,9 @@
 class Api::V1::RubygemsController < Api::BaseController
-  skip_before_action :verify_authenticity_token, only: [:create]
+  skip_before_action :verify_authenticity_token, only: %i[create]
 
-  before_action :authenticate_with_api_key, only: [:index, :create]
-  before_action :verify_authenticated_user, only: [:index, :create]
-  before_action :find_rubygem,              only: [:show, :reverse_dependencies]
+  before_action :authenticate_with_api_key, only: %i[index create]
+  before_action :verify_authenticated_user, only: %i[index create]
+  before_action :find_rubygem,              only: %i[show reverse_dependencies]
 
   before_action :cors_preflight_check, only: :show
   after_action  :cors_set_access_control_headers, only: :show

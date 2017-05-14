@@ -10,7 +10,7 @@ class Rubygem < ActiveRecord::Base
   has_one :latest_version, -> { where(latest: true).order(:position) }, class_name: "Version"
   has_many :web_hooks, dependent: :destroy
   has_one :linkset, dependent: :destroy
-  has_one :gem_download, -> { where(version_id: 0) }
+  has_one(:gem_download, -> { where(version_id: 0) })
 
   validate :ensure_name_format, if: :needs_name_validation?
   validates :name,
