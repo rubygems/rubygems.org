@@ -83,8 +83,10 @@ class Dependency < ActiveRecord::Base
 
     if gem_dependency.name.empty?
       errors.add :rubygem, "Blank is not a valid dependency name"
-      throw :abort
+      return :abort
     end
+
+    true
   end
 
   def use_existing_rubygem
