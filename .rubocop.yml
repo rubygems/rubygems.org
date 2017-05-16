@@ -70,3 +70,6 @@ Style/MultilineOperationIndentation:
 
 Security/MarshalLoad:
   Enabled: false
+
+Style/EmptyMethod:
+  EnforcedStyle: expanded

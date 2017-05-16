@@ -39,4 +39,12 @@ module ApplicationHelper
   def stats_graph_meter(gem, count)
     gem.downloads * 1.0 / count * 100
   end
+
+  def search_form_class
+    if [root_path, advanced_search_path].include? request.path_info
+      "header__search-wrap--home"
+    else
+      "header__search-wrap"
+    end
+  end
 end

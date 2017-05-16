@@ -1,0 +1,28 @@
+<% @title = t("advanced_search") %>
+
+<div class="home__search-wrap">
+  <%= form_tag search_url, id: "advanced-search", method: :get do %>
+    <%= search_field_tag :query, params[:query], placeholder: t("layouts.application.header.search_gem").html_safe, autofocus: current_page?(root_url), id: "home_query", class: "home__search" %>
+    <%= label_tag :home_query do %>
+      <span class="t-hidden"><%= t("layouts.application.header.search_gem").html_safe %></span>
+    <% end %>
+    <%= submit_tag "⌕", id: "search_submit", name: nil, class: "home__search__icon" %>
+  <% end %>
+
+  <dl id="search-fields">
+    <dt><%= label_tag :name, t(".name"), class: "form__label" %></dt>
+    <dd><%= text_field_tag :name, "", placeholder: "active OR action", class: "form__input"%></dd>
+
+    <dt><%= label_tag :summary, t(".summary"), class: "form__label" %></dt>
+    <dd><%= text_field_tag :summary, "", placeholder: "ORM, NoSQL", class: "form__input"%></dd>
+
+    <dt><%= label_tag :description, t(".description"), class: "form__label" %></dt>
+    <dd><%= text_field_tag :description, "", placeholder: "associations AND validations", class: "form__input"%></dd>
+
+    <dt><%= label_tag :downloads, t(".downloads"), class: "form__label" %></dt>
+    <dd><%= text_field_tag :downloads, "", placeholder: ">20000", class: "form__input"%></dd>
+
+    <dt><%= label_tag :updated, t(".updated"), class: "form__label" %></dt>
+    <dd><%= text_field_tag :updated, "", placeholder: ">#{1.week.ago.strftime('%F')}", class: "form__input"%></dd>
+  </dl>
+</div>

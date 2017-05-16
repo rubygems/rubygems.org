@@ -18,6 +18,7 @@ de:
   title: RubyGems.org
   update: Aktualisieren
   try_again:
+  advanced_search:
   activerecord:
     attributes:
       linkset:
@@ -221,6 +222,12 @@ de:
     reverse_dependencies:
       search_reverse_dependencies:
   searches:
+    advanced:
+      name:
+      summary:
+      description:
+      downloads:
+      updated:
     show:
       exact_match: Exakte Übereinstimmung
       subtitle: für %{query}

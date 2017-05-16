@@ -10,6 +10,9 @@ class SearchesController < ApplicationController
     redirect_to rubygem_path(@exact_match) if @exact_match && @gems.size == 1
   end
 
+  def advanced
+  end
+
   private
 
   def limit_page
