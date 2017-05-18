@@ -14,7 +14,7 @@ module RubygemSearchable
       most_recent_version = versions.most_recent
       {
         name:                  name,
-        yanked:                !versions.any?(&:indexed?),
+        yanked:                versions.none?(&:indexed?),
         summary:               most_recent_version.try(:summary),
         description:           most_recent_version.try(:description),
         downloads:             downloads,
@@ -101,10 +101,10 @@ module RubygemSearchable
           end
         end
 
-        source %w(name summary description downloads latest_version_number)
+        source %w[name summary description downloads latest_version_number]
 
         # Return suggestions unless there's no query from the user
-        unless q.blank?
+        if q.present?
           suggest :suggest_name, text: q, term: { field: 'name.suggest', suggest_mode: 'always' }
         end
       end

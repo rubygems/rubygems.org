@@ -3,15 +3,15 @@ class User < ActiveRecord::Base
   include Gravtastic
   is_gravtastic default: "retro"
 
-  PERMITTED_ATTRS = [
-    :bio,
-    :email,
-    :handle,
-    :hide_email,
-    :location,
-    :password,
-    :website,
-    :twitter_username
+  PERMITTED_ATTRS = %i[
+    bio
+    email
+    handle
+    hide_email
+    location
+    password
+    website
+    twitter_username
   ].freeze
 
   before_destroy :yank_gems

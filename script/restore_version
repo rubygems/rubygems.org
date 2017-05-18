@@ -11,7 +11,7 @@ require_relative '../config/environment'
 
 rubygem = Rubygem.find_by_name!(gem_name)
 slug = version_number
-slug << "-#{platform}" unless platform.blank?
+slug << "-#{platform}" if platform.present?
 version = Version.find_from_slug!(rubygem, slug)
 raise "Version #{slug} for #{gem_name} was not found" unless version
 

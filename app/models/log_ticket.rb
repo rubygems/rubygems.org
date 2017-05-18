@@ -1,7 +1,7 @@
 class LogTicket < ActiveRecord::Base
-  enum backend: [:s3, :local]
+  enum backend: %i[s3 local]
 
-  scope :pending, -> { limit(1).lock(true).select("id").where(status: "pending").order("id ASC") }
+  scope(:pending, -> { limit(1).lock(true).select("id").where(status: "pending").order("id ASC") })
 
   def self.pop(key: nil, directory: nil)
     scope = pending

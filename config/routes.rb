@@ -65,7 +65,7 @@ Rails.application.routes.draw do
 
       resources :rubygems,
         path: 'gems',
-        only: [:create, :show, :index],
+        only: %i[create show index],
         id: Patterns::LAZY_ROUTE_PATTERN,
         format: /json|yaml/ do
         member do
@@ -76,7 +76,7 @@ Rails.application.routes.draw do
           put :unyank, to: "deletions#destroy"
         end
         constraints rubygem_id: Patterns::ROUTE_PATTERN do
-          resource :owners, only: [:show, :create, :destroy]
+          resource :owners, only: %i[show create destroy]
         end
       end
 
@@ -89,7 +89,7 @@ Rails.application.routes.draw do
 
       resource :search, only: :show
 
-      resources :web_hooks, only: [:create, :index] do
+      resources :web_hooks, only: %i[create index] do
         collection do
           delete :remove
           post :fire
@@ -129,7 +129,7 @@ Rails.application.routes.draw do
     end
     resource :dashboard, only: :show, constraints: { format: /html|atom/ }
     resources :profiles, only: :show
-    resource :profile, only: [:edit, :update] do
+    resource :profile, only: %i[edit update] do
       member do
         get :delete
         delete :destroy, as: :destroy
@@ -138,32 +138,32 @@ Rails.application.routes.draw do
     resources :stats, only: :index
 
     resources :rubygems,
-      only: [:index, :show, :edit, :update],
+      only: %i[index show edit update],
       path: 'gems',
       constraints: { id: Patterns::ROUTE_PATTERN, format: /html|atom/ } do
       resource :subscription,
-        only: [:create, :destroy],
+        only: %i[create destroy],
         constraints: { format: :js },
         defaults: { format: :js }
-      resources :versions, only: [:show, :index]
-      resources :reverse_dependencies, only: [:index]
+      resources :versions, only: %i[show index]
+      resources :reverse_dependencies, only: %i[index]
     end
   end
 
   ################################################################################
   # Clearance Overrides and Additions
 
-  resource :email_confirmations, only: [:new, :create] do
+  resource :email_confirmations, only: %i[new create] do
     get 'confirm/:token', to: 'email_confirmations#update', as: :update
     patch 'unconfirmed'
   end
 
-  resource :session, only: [:create, :destroy]
+  resource :session, only: %i[create destroy]
 
-  resources :passwords, only: [:new, :create]
+  resources :passwords, only: %i[new create]
 
-  resources :users, only: [:new, :create] do
-    resource :password, only: [:create, :edit, :update]
+  resources :users, only: %i[new create] do
+    resource :password, only: %i[create edit update]
   end
 
   ################################################################################

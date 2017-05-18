@@ -2,7 +2,7 @@ class Hostess < Rack::Static
   def initialize(app, options = {})
     options[:root] = RubygemFs.instance.base_dir
 
-    options[:urls] = %w(
+    options[:urls] = %w[
       /specs.4.8.gz
       /latest_specs.4.8.gz
       /prerelease_specs.4.8.gz
@@ -19,7 +19,7 @@ class Hostess < Rack::Static
       /prerelease_specs.4.8
       /quick/index
       /quick/latest_index
-    )
+    ]
 
     super(app, options)
   end

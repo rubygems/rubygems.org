@@ -7,7 +7,7 @@ module Patterns
   LAZY_ROUTE_PATTERN    = /#{ALLOWED_CHARACTERS}?/
   NAME_PATTERN          = /\A#{ALLOWED_CHARACTERS}\Z/
   URL_VALIDATION_REGEXP = %r{\Ahttps?:\/\/([^\s:@]+:[^\s:@]*@)?[A-Za-z\d\-]+(\.[A-Za-z\d\-]+)+\.?(:\d{1,5})?([\/?]\S*)?\z}
-  GEM_NAME_BLACKLIST    = %w(
+  GEM_NAME_BLACKLIST    = %w[
     abbrev
     base64
     benchmark
@@ -90,5 +90,5 @@ module Patterns
     win32ole
     yaml
     ubygems
-  ).freeze
+  ].freeze
 end

@@ -79,7 +79,7 @@ class WebHookTest < ActiveSupport::TestCase
       xml = Nokogiri.parse(@webhook.to_xml)
 
       assert_equal "web-hook", xml.root.name
-      assert_equal %w(failure-count url), xml.root.children.select(&:element?).map(&:name).sort
+      assert_equal %w[failure-count url], xml.root.children.select(&:element?).map(&:name).sort
       assert_equal @webhook.url, xml.at_css("url").content
       assert_equal @webhook.failure_count, xml.at_css("failure-count").content.to_i
     end
@@ -136,7 +136,7 @@ class WebHookTest < ActiveSupport::TestCase
       @version = create(:version,
         rubygem: @rubygem,
         number: "3.2.1",
-        authors: %w(AUTHORS),
+        authors: %w[AUTHORS],
         description: "DESC")
       @hook    = create(:web_hook, rubygem: @rubygem)
       @job     = Notifier.new(@hook.url, 'http', 'localhost:1234', @rubygem, @version)

@@ -1,6 +1,6 @@
 class ProfilesController < ApplicationController
   before_action :redirect_to_root, unless: :signed_in?, except: :show
-  before_action :verify_password, only: [:update, :destroy]
+  before_action :verify_password, only: %i[update destroy]
 
   def edit
     @user = current_user

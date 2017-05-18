@@ -1,5 +1,5 @@
-server 'app01.staging.rubygems.org', user: 'deploy', roles: %w(app jobs db), primary: true
-server 'lb01.staging.rubygems.org', user: 'deploy', roles: %w(lb), no_release: true
+server 'app01.staging.rubygems.org', user: 'deploy', roles: %w[app jobs db], primary: true
+server 'lb01.staging.rubygems.org', user: 'deploy', roles: %w[lb], no_release: true
 set :bundle_flags, ''
 
 namespace :deploy do

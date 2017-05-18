@@ -7,7 +7,7 @@ class Api::V1::DependenciesController < Api::BaseController
 
     expires_in 30, public: true
     fastly_expires_in 60
-    set_surrogate_key 'dependencyapi', gem_names.map { |name| "gem/#{name}" }
+    set_surrogate_key('dependencyapi', gem_names.map { |name| "gem/#{name}" })
 
     respond_to do |format|
       format.json { render json: deps }

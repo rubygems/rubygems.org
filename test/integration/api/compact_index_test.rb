@@ -60,7 +60,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     expected_body = "---\ngemA\ngemA1\ngemA2\ngemB\n"
     assert_equal expected_body, @response.body
     assert_equal etag(expected_body), @response.headers['ETag']
-    assert_equal %w(gemA gemA1 gemA2 gemB), Rails.cache.read('names')
+    assert_equal %w[gemA gemA1 gemA2 gemB], Rails.cache.read('names')
   end
 
   test "/names partial response" do
@@ -99,14 +99,14 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
   test "/versions updates on gem yank" do
     Deletion.create!(version: @version, user: create(:user))
-    expected = <<-eos
-gemB 1.0.0 qw2dwe
-gemA 1.0.0 013we2
-gemA 2.0.0 1cf94r
-gemA 1.2.0 13q4es
-gemA 2.1.0 e217fz
-gemB -1.0.0 6105347ebb9825ac754615ca55ff3b0c
-eos
+    expected = <<~eos
+      gemB 1.0.0 qw2dwe
+      gemA 1.0.0 013we2
+      gemA 2.0.0 1cf94r
+      gemA 1.2.0 13q4es
+      gemA 2.1.0 e217fz
+      gemB -1.0.0 6105347ebb9825ac754615ca55ff3b0c
+    eos
 
     get versions_path
     full_response_body = @response.body
@@ -116,13 +116,13 @@ eos
   end
 
   test "/info with existing gem" do
-    expected = <<-eos
----
-1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
-2.0.0 gemA1:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
-1.2.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>1.9
-2.1.0 gemA1:= 1.0.0,gemA2:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>=2.0
-eos
+    expected = <<~eos
+      ---
+      1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
+      2.0.0 gemA1:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
+      1.2.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>1.9
+      2.1.0 gemA1:= 1.0.0,gemA2:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>=2.0
+    eos
 
     get info_path(gem_name: 'gemA')
 
@@ -138,13 +138,13 @@ eos
   end
 
   test "/info partial response" do
-    expected = <<-eos
----
-1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
-2.0.0 gemA1:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
-1.2.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>1.9
-2.1.0 gemA1:= 1.0.0,gemA2:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>=2.0
-eos
+    expected = <<~eos
+      ---
+      1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
+      2.0.0 gemA1:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
+      1.2.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>1.9
+      2.1.0 gemA1:= 1.0.0,gemA2:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>=2.0
+    eos
 
     get info_path(gem_name: 'gemA'), env: { range: "bytes=159-" }
 
@@ -156,10 +156,10 @@ eos
     rubygem = create(:rubygem, name: 'gemC')
     version = create(:version, rubygem: rubygem, number: '1.0.0', info_checksum: '65ea0d')
     create(:dependency, :development, version: version, rubygem: @rubygem2)
-    expected = <<-END
----
-1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>= 2.6.3
-END
+    expected = <<~END
+      ---
+      1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>= 2.6.3
+    END
 
     get info_path(gem_name: 'gemC')
 

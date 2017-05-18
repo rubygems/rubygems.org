@@ -64,7 +64,7 @@ class GemDependentTest < ActiveSupport::TestCase
         devise = create(:rubygem, name: "devise")
         version = create(:version, number: "1.0.0", rubygem: devise)
 
-        %w(foo bar).map do |gem_name|
+        %w[foo bar].map do |gem_name|
           create(:rubygem, name: gem_name).tap do |rubygem|
             gem_dependency = Gem::Dependency.new(rubygem.name, ['>= 0.0.0'])
             create(:dependency, rubygem: rubygem, version: version, gem_dependency: gem_dependency)
