@@ -90,5 +90,6 @@ module Patterns
     win32ole
     yaml
     ubygems
+    sidekiq-pro
   ].freeze
 end
