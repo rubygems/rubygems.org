@@ -98,4 +98,6 @@ Rails.application.configure do
     compress: true,
     compression_min_size: 524_288
   }
+
+  config.middleware.use Redirector
 end

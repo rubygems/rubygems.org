@@ -308,12 +308,9 @@ class Rubygem < ActiveRecord::Base
     Dependency.where(unresolved_name: name).find_each do |dependency|
       dependency.update_resolved(self)
     end
-
-    true
   end
 
   def mark_unresolved
     Dependency.mark_unresolved_for(self)
-    true
   end
 end
