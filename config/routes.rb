@@ -97,6 +97,7 @@ Rails.application.routes.draw do
         end
       end
 
+      resource :metrics, only: :create
       resources :timeframe_versions, only: :index
     end
   end
