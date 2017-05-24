@@ -6,10 +6,8 @@ class Api::V1::OwnersController < Api::BaseController
   before_action :verify_gem_ownership, except: %i[show gems]
 
   def show
-    respond_to do |format|
-      format.json { render json: @rubygem.owners }
-      format.yaml { render yaml: @rubygem.owners }
-    end
+    owners = @rubygem.owners
+    respond_to_block(owners)
   end
 
   def create
@@ -40,10 +38,7 @@ class Api::V1::OwnersController < Api::BaseController
     user = User.find_by_slug!(params[:handle])
     if user
       rubygems = user.rubygems.with_versions
-      respond_to do |format|
-        format.json { render json: rubygems }
-        format.yaml { render yaml: rubygems }
-      end
+      respond_to_block(rubygems)
     else
       render plain: "Owner could not be found.", status: :not_found
     end
@@ -54,5 +49,14 @@ class Api::V1::OwnersController < Api::BaseController
   def verify_gem_ownership
     return if current_user.rubygems.find_by_name(params[:rubygem_id])
     render plain: 'You do not have permission to manage this gem.', status: :unauthorized
+  end
+
+  private
+
+  def respond_to_block(data)
+    respond_to do |format|
+      format.json { render json: data }
+      format.yaml { render yaml: data }
+    end
   end
 end
