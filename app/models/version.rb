@@ -329,7 +329,7 @@ class Version < ActiveRecord::Base
   end
 
   def self._sha256_hex(raw)
-    raw.unpack("m0").first.unpack("H*").first
+    raw.unpack("m0").first.unpack("H*").first if raw
   end
 
   private

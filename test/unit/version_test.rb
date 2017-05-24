@@ -774,9 +774,13 @@ class VersionTest < ActiveSupport::TestCase
         @version.reload.sha256_hex
     end
 
-    should "should return nil on sha256_hex when sha not avaible" do
+    should "return nil on sha256_hex when sha not avaible" do
       version = create(:version, sha256: nil)
       assert_nil version.sha256_hex
+    end
+
+    should "return nil on _sha256_hex when sha not avaible" do
+      assert_nil Version._sha256_hex(nil)
     end
   end
 end
