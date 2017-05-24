@@ -1,5 +1,6 @@
 class Linkset < ActiveRecord::Base
   belongs_to :rubygem
+  before_save :empty_to_nil
 
   LINKS = %w[home code docs wiki mail bugs].freeze
 
@@ -17,5 +18,13 @@ class Linkset < ActiveRecord::Base
 
   def update_attributes_from_gem_specification!(spec)
     update_attributes!(home: spec.homepage)
+  end
+
+  private
+
+  def empty_to_nil
+    LINKS.each do |url|
+      self[url] = nil if self[url].blank?
+    end
   end
 end
