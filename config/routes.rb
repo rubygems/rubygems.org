@@ -95,6 +95,11 @@ Rails.application.routes.draw do
           post :fire
         end
       end
+
+      # Doorkeeper clients
+      scope module: :doorkeeper, constraints: { format: 'json' } do
+        resource :profile, only: :show
+      end
     end
   end
 
