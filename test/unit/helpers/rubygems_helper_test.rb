@@ -8,6 +8,7 @@ class RubygemsHelperTest < ActionView::TestCase
   context "licenses header" do
     setup do
       @version = build(:version)
+      I18n.locale = :en
     end
     should "singular if version has one license" do
       @version.stubs(:licenses).returns(["MIT"])
