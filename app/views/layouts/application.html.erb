@@ -44,10 +44,10 @@
 
           <nav class="header__nav-links">
             <% if signed_in? %>
-              <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link mobile__header__nav-link">
+              <%= link_to profile_path(current_user.display_id), class: 'header__nav-link mobile__header__nav-link' do %>
                 <%= truncate current_user.name %>
                 <%= gravatar 80, "user_gravatar" %>
-              </a>
+              <% end %>
             <% end %>
 
             <%- if request.path_info == '/gems' %>
@@ -60,13 +60,15 @@
             <%= link_to t('.footer.contribute'), "http://guides.rubygems.org/contributing/", class: "header__nav-link" %>
 
             <% if signed_in? %>
-              <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link desktop__header__nav-link">
+              <%= link_to profile_path(current_user.display_id), class: 'header__nav-link desktop__header__nav-link' do %>
                 <%= truncate current_user.name %>
                 <%= gravatar 80, "user_gravatar" %>
-              </a>
+              <% end %>
+
               <a href="#" class="header__popup-link" data-icon="▼">
                 <span class="t-hidden">More items</span>
               </a>
+
               <div class="header__popup__nav-links">
                 <%= link_to t('.header.dashboard'), dashboard_url, class: "header__nav-link" %>
                 <%= link_to t('.header.sign_out'), sign_out_path, method: :delete, class: "header__nav-link" %>
