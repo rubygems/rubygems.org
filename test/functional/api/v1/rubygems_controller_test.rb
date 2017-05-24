@@ -362,6 +362,25 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to show with a version" do
+    setup do
+      @rubygem = create(:rubygem)
+      create(:version, rubygem: @rubygem, number: '0.1')
+      create(:version, rubygem: @rubygem, number: @ver = '0.2')
+      create(:version, rubygem: @rubygem, number: '0.3')
+      get :show, id: @rubygem.to_param, version: @ver, format: "json"
+      @json = JSON.parse(@response.body)
+    end
+    should respond_with :success
+    should "return the correct rubygem" do
+      assert_not_nil @json
+      assert_equal @ver, @json["version"]
+      assert_not_nil @json["dependencies"]
+      assert_equal [], @json["dependencies"]["development"]
+      assert_equal [], @json["dependencies"]["runtime"]
+    end
+  end
+
   context "on GET to reverse_dependencies" do
     setup do
       @dependency   = create(:rubygem)

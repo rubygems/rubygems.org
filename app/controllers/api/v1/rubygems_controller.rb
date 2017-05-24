@@ -17,7 +17,8 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   def show
-    if @rubygem.hosted? && @rubygem.public_versions.indexed.count.nonzero?
+    if @rubygem.hosted? && @rubygem.public_versions.indexed.count.nonzero? &&
+        rubygem_by_version(params[:version])
       respond_to do |format|
         format.json { render json: @rubygem }
         format.yaml { render yaml: @rubygem }
@@ -59,6 +60,12 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   private
+
+  def rubygem_by_version(ver_slug)
+    return @rubygem if ver_slug.blank?
+    version = Version.find_from_slug!(@rubygem, ver_slug)
+    @rubygem = @rubygem.payload(version)
+  end
 
   def cors_set_access_control_headers
     headers['Access-Control-Allow-Origin'] = '*'
