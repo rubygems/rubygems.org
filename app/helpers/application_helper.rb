@@ -47,4 +47,8 @@ module ApplicationHelper
       "header__search-wrap"
     end
   end
+
+  def active?(path)
+    "is-active" if request.path_info == path
+  end
 end

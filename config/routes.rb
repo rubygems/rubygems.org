@@ -136,6 +136,9 @@ Rails.application.routes.draw do
       end
     end
     resources :stats, only: :index
+    resource :news, path: 'news', only: [:show] do
+      get :popular, on: :collection
+    end
 
     resources :rubygems,
       only: %i[index show edit update],

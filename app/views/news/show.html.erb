@@ -1,0 +1,13 @@
+<% @title ||= t(".title") %>
+
+<div class="news__nav-links">
+  <%= link_to t(".all_gems"), news_url, class: "news__nav-link #{active?(news_path)}" %>
+  <%= link_to t(".popular_gems"), popular_news_url, class: "news__nav-link #{active?(popular_news_path)}" %>
+</div>
+
+<header class="gems__header">
+  <p class="gems__meter"><%= page_entries_info @rubgyems, model: 'gem' %></p>
+</header>
+
+<%= render partial: "news/rubygem", collection: @rubgyems %>
+<%= will_paginate @rubgyems %>
