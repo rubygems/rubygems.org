@@ -2,7 +2,7 @@ require 'test_helper'
 
 class DashboardTest < ActionDispatch::IntegrationTest
   setup do
-    @user = create(:user)
+    @user = create(:user, remember_token_expires_at: Gemcutter::REMEMBER_FOR.from_now)
     cookies[:remember_token] = @user.remember_token
 
     create(:rubygem, name: "arrakis", number: "1.0.0")

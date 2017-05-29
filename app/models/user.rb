@@ -150,6 +150,17 @@ class User < ActiveRecord::Base
       SELECT rubygem_id FROM ownerships GROUP BY rubygem_id HAVING count(rubygem_id) = 1)')
   end
 
+  def remember_me!
+    self.remember_token = Clearance::Token.new
+    self.remember_token_expires_at = Gemcutter::REMEMBER_FOR.from_now
+    save!(validate: false)
+    remember_token
+  end
+
+  def remember_me?
+    remember_token_expires_at && remember_token_expires_at > Time.zone.now
+  end
+
   private
 
   def update_email!
