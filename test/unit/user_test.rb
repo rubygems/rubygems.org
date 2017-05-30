@@ -325,4 +325,38 @@ class UserTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "#remember_me!" do
+    setup do
+      @user = create(:user)
+      @user.remember_me!
+    end
+
+    should "set remember_token" do
+      assert_not_nil @user.remember_token
+    end
+
+    should "set expiry of remember_token to two weeks from now" do
+      expected_expiry = Gemcutter::REMEMBER_FOR.from_now
+      assert_in_delta expected_expiry, @user.remember_token_expires_at, 1.second
+    end
+  end
+
+  context "#remember_me?" do
+    setup { @user = create(:user) }
+
+    should "return false when remember_token_expires_at is not set" do
+      refute @user.remember_me?
+    end
+
+    should "return false when remember_token has expired" do
+      @user.update_attribute(:remember_token_expires_at, 1.second.ago)
+      refute @user.remember_me?
+    end
+
+    should "return true when remember_token has not expired" do
+      @user.update_attribute(:remember_token_expires_at, 1.second.from_now)
+      assert @user.remember_me?
+    end
+  end
 end
