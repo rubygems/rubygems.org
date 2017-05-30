@@ -46,3 +46,33 @@ img {
   max-width: 720px;
   text-align: center;
 }
+
+.error__illustration__bubble {
+  -webkit-animation: bounce 3s infinite;
+  animation: bounce 3s infinite;
+  position: absolute;
+  width: 100%;
+  top: 60px;
+  left: 2%;
+}
+
+@-webkit-keyframes bounce {
+  50% {
+    -webkit-transform: translateY(-8px);
+    -webkit-animation-timing-function: ease-in-out;
+  }
+}
+
+@-ms-keyframes bounce {
+  50% {
+    transform: translateY(-8px);
+    animation-timing-function: ease-in-out;
+  }
+}
+
+@keyframes bounce {
+  50% {
+    transform: translateY(-8px);
+    animation-timing-function: ease-in-out;
+  }
+}
