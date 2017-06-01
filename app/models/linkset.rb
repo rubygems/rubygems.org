@@ -1,4 +1,4 @@
-class Linkset < ActiveRecord::Base
+class Linkset < ApplicationRecord
   belongs_to :rubygem
 
   LINKS = %w[home code docs wiki mail bugs].freeze

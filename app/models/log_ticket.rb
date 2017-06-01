@@ -1,4 +1,4 @@
-class LogTicket < ActiveRecord::Base
+class LogTicket < ApplicationRecord
   enum backend: %i[s3 local]
 
   scope(:pending, -> { limit(1).lock(true).select("id").where(status: "pending").order("id ASC") })

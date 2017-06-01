@@ -1,4 +1,4 @@
-class Rubygem < ActiveRecord::Base
+class Rubygem < ApplicationRecord
   include Patterns
   include RubygemSearchable
 
@@ -164,8 +164,8 @@ class Rubygem < ActiveRecord::Base
       'bug_tracker_uri'   => versioned_links.bug_tracker_uri,
       'changelog_uri'     => versioned_links.changelog_uri,
       'dependencies'      => {
-        'development' => deps.select { |r| r.rubygem && 'development' == r.scope },
-        'runtime'     => deps.select { |r| r.rubygem && 'runtime' == r.scope }
+        'development' => deps.select { |r| r.rubygem && r.scope == 'development' },
+        'runtime'     => deps.select { |r| r.rubygem && r.scope == 'runtime' }
       }
     }
   end

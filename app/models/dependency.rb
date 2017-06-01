@@ -1,4 +1,4 @@
-class Dependency < ActiveRecord::Base
+class Dependency < ApplicationRecord
   belongs_to :rubygem
   belongs_to :version
 
