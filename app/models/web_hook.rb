@@ -1,4 +1,4 @@
-class WebHook < ActiveRecord::Base
+class WebHook < ApplicationRecord
   GLOBAL_PATTERN = '*'.freeze
 
   belongs_to :user

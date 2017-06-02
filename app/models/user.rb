@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   include Clearance::User
   include Gravtastic
   is_gravtastic default: "retro"

@@ -1,4 +1,4 @@
-class Deletion < ActiveRecord::Base
+class Deletion < ApplicationRecord
   belongs_to :user
 
   validates :user, :rubygem, :number, presence: true
