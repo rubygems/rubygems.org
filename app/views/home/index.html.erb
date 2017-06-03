@@ -4,9 +4,9 @@
 <h1 class="home__heading"><%= t '.find_blurb' %></h1>
 <div class="home__search-wrap">
   <%= form_tag search_url, :id => "main-search", :method => :get do %>
-    <%= search_field_tag :query, params[:query], :placeholder => t('layouts.application.header.search_gem').html_safe, autofocus: current_page?(root_url), :id => 'home_query', :class => "home__search" %>
+    <%= search_field_tag :query, params[:query], :placeholder => t('layouts.application.header.search_gem_html'), autofocus: current_page?(root_url), :id => 'home_query', :class => "home__search" %>
     <%= label_tag :home_query do %>
-      <span class="t-hidden"><%= t('layouts.application.header.search_gem').html_safe %></span>
+      <span class="t-hidden"><%= t('layouts.application.header.search_gem_html') %></span>
       <center>
         <%= link_to t("advanced_search"), advanced_search_path, class: "home__advanced__search t-link--has-arrow"%>
       </center>
@@ -18,7 +18,7 @@
   <% if @downloads_count %>
     <h2 class="home__downloads">
       <p><%= number_with_delimiter(@downloads_count) %></p>
-      <span class="home__downloads__desc"><%= raw t('.downloads_counting') %></span>
+      <span class="home__downloads__desc"><%= t('.downloads_counting_html') %></span>
     </h2>
   <% end %>
   <%= link_to t('.learn.install_rubygems'), page_url("download"), :class => "home__join #{@downloads_count.nil? ? 'no-download-count' : ''}", "data-icon" => ">" %>

@@ -3,7 +3,9 @@ fr:
   failure_when_forbidden:
   feed_latest: RubyGems.org | Derniers Gems
   feed_subscribed: RubyGems.org | Gems abonnés
-  footer_about: RubyGems.org est le service d&rsquo;hébergement de la communauté Ruby. Publiez vos gems instantanément et utilisez-les. Utilisez l'API pour interagir et trouver des informations sur les gems disponibles. Contribuez et améliorez ce site avec nous !
+  footer_about_html: RubyGems.org est le service d&rsquo;hébergement de la communauté Ruby. Publiez vos gems instantanément et utilisez-les. Utilisez l'API pour interagir et trouver des informations sur les gems disponibles. Contribuez et améliorez ce site avec nous !
+  footer_sponsors_html: RubyGems.org is made possible by <a href="%{sponsors_list}">many sponsors</a>, with development funded by the Ruby trade association, <a href="%{rubytogether}">Ruby Together</a>.
+  footer_join_html: We need your help to fund the developer time that keeps RubyGems.org running smoothly for everyone. <a href="%{join}">Join Ruby Together today</a>.
   form_disable_with: Veuillez patienter...
   help_url: http://help.rubygems.org
   locale_name: Français
@@ -45,8 +47,9 @@ fr:
       migrating_link_text: migration
       mine: Mes Gems
       my_subscriptions: Abonnements
-      no_owned: Vous n'avez pas encore publié de gem. Vous pouvez vérifier les guides de %{creating_link} ou de %{migrating_link} de gems depuis RubyForge.
-      no_subscriptions: Vous n'avez pas encore d'abonnements. Visitez %{gem_link} pour vous y abonner !
+      no_owned_html: Vous n'avez pas encore publié de gem. Vous pouvez vérifier les guides de %{creating_link} ou de %{migrating_link} de gems depuis RubyForge.
+      no_subscriptions_html: Vous n'avez pas encore d'abonnements. Visitez %{gem_link} pour vous y abonner !
+      title: Dashboard
   email_confirmations:
     create:
       promise_resend:
@@ -58,10 +61,13 @@ fr:
       confirmed_email:
   home:
     index:
-      downloads_counting: téléchargements à ce jour
+      downloads_counting_html: téléchargements à ce jour
       find_blurb: Trouvez, installez et publiez des RubyGems.
       learn:
         install_rubygems: Installez RubyGems
+      footer:
+        status: Statut
+        uptime: Uptime
   layouts:
     application:
       footer:
@@ -90,7 +96,7 @@ fr:
         uptime: Uptime
       header:
         dashboard: Dashboard
-        search_gem: Recherche de Gems&hellip;
+        search_gem_html: Recherche de Gems&hellip;
         sign_in: Connexion
         sign_out: Déconnexion
         sign_up: Inscription
@@ -105,10 +111,10 @@ fr:
       link_expiration_explanation:
     deletion_complete:
       subject:
-      body:
+      body_html:
     deletion_failed:
       subject:
-      body:
+      body_html:
   news:
     show:
       title:
@@ -118,15 +124,27 @@ fr:
       title:
   pages:
     about:
-      founding: Le projet a commencé en avril 2009 par %{founder}, et a grandi avec les contribution de %{contributors} et %{downloads}. À la sortie de RubyGems 1.3.6, ce site a été renommé de Gemcutter à %{title} pour ancrer son rôle central dans la communauté Ruby.
-      support: Bien que Gemcutter n'appartienne à aucune entreprise en particulier, il a reçu l'aide de nombreuses d'entre elles. Le design actuel, les illustrations, et développement front-end de ce site nous ont été offerts par %{dockyard}. Nous n'aurions pas pu collaborer et partager de code facilement sans %{github}. Ce site s'est lancé sur %{heroku}, dont l'excellent service a fait de Gemcutter une solution viable pour que la communauté s'y appuie en toute confiance. Our infrastructure is currently hosted on %{aws}.
-      technical: 'Quelques informations sur les aspects techniques de ce site : il est en Ruby à 100%. Le site principal est une application %{rails}. Les Gems sont hébergés sur %{s3}, served by %{fastly}, permettant un record de vitesse entre le moment de publication et de mise à disposition de gems. Pour davantage d''informations, le %{source_code} est disponible sous licence %{license} sur GitHub.'
+      founding_html: Le projet a commencé en avril 2009 par %{founder}, et a grandi avec les contribution de %{contributors} et %{downloads}. À la sortie de RubyGems 1.3.6, ce site a été renommé de Gemcutter à %{title} pour ancrer son rôle central dans la communauté Ruby.
+      support_html: Bien que Gemcutter n'appartienne à aucune entreprise en particulier, il a reçu l'aide de nombreuses d'entre elles. Le design actuel, les illustrations, et développement front-end de ce site nous ont été offerts par %{dockyard}. Nous n'aurions pas pu collaborer et partager de code facilement sans %{github}. Ce site s'est lancé sur %{heroku}, dont l'excellent service a fait de Gemcutter une solution viable pour que la communauté s'y appuie en toute confiance. Our infrastructure is currently hosted on %{aws}.
+      technical_html: 'Quelques informations sur les aspects techniques de ce site : il est en Ruby à 100%. Le site principal est une application %{rails}. Les Gems sont hébergés sur %{s3}, served by %{fastly}, permettant un record de vitesse entre le moment de publication et de mise à disposition de gems. Pour davantage d''informations, le %{source_code} est disponible sous licence %{license} sur GitHub.'
       title: À propos
       purpose:
         better_api: Fournir une meilleure API pour gérer les gems
         enable_community: Permettre à la communauté d'améliorer ce site
         header: 'Bienvenue sur %{site}, le service d''hébergement des gems de la communauté Ruby. Ce projet a trois objectifs :'
         transparent_pages: Créer des pages de projet plus accessibles et transparentes
+    data:
+      title: RubyGems.org Data Dumps
+    download:
+      title: Download RubyGems
+    faq:
+      title: FAQ
+    migrate:
+      title: Migrate gems
+    security:
+      title: Security
+    sponsors:
+      title: Sponsors
   passwords:
     edit:
       submit: Enregistrer ce mot de passe
@@ -144,14 +162,14 @@ fr:
       title: Modification de profil
       api_access:
         confirm_reset: Êtes-vous sûr ? Cette action ne peut être annulée.
-        credentials: 'Si vous voulez utiliser %{gem_commands_link} de la ligne de commande, vous aurez besoin d''un fichier %{gem_credentials_file}, que vous pouvez générer avec la commande suivante :'
-        key_is: Votre clé API est %{key}.
+        credentials_html: 'Si vous voulez utiliser %{gem_commands_link} de la ligne de commande, vous aurez besoin d''un fichier %{gem_credentials_file}, que vous pouvez générer avec la commande suivante :'
+        key_is_html: Votre clé API est %{key}.
         link_text: des commandes gems
         reset: Remise à zéro de votre clé API
         title: Accès API
       reset_password:
         link_text: Demandez un nouveau mot de passe ici.
-        text: Besoin d'un nouveau mot de passe ? Pas de problème. %{link}
+        text_html: Besoin d'un nouveau mot de passe ? Pas de problème. %{link}
         title: Renvoi de mot de passe
       delete:
         delete:
@@ -161,7 +179,7 @@ fr:
       title:
       confirm:
       instructions:
-      list_only_owner:
+      list_only_owner_html:
       list_multi_owner:
     rubygem:
       owners_header:
@@ -220,14 +238,14 @@ fr:
       yanked_notice: 'Retrait de Gem : disponible ni directement, ni pour les gems qui en dépendraient.'
     show_yanked:
       not_hosted_notice: Gem non hébergé sur Rubygems pour le moment.
-      reserved_namespace:
+      reserved_namespace_html:
         one:
         other:
   reverse_dependencies:
     index:
       title:
     reverse_dependencies:
-      search_reverse_dependencies:
+      search_reverse_dependencies_html:
   searches:
     advanced:
       name:

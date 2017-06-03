@@ -10,7 +10,7 @@
       <% if @rubygem.pushable? %>
         <%= t '.not_hosted_notice' %>
       <% else %>
-        <%= t('.reserved_namespace', count: @rubygem.protected_days).html_safe %>
+        <%= t('.reserved_namespace_html', count: @rubygem.protected_days) %>
       <% end %>
       <%= unsubscribe_link(@rubygem) %>
     </div>

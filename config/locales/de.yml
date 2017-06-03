@@ -3,7 +3,9 @@ de:
   failure_when_forbidden:
   feed_latest: RubyGems.org | Neueste Gems
   feed_subscribed: RubyGems.org | Abonnierte Gems
-  footer_about:
+  footer_about_html:
+  footer_sponsors_html: RubyGems.org is made possible by <a href="%{sponsors_list}">many sponsors</a>, with development funded by the Ruby trade association, <a href="%{rubytogether}">Ruby Together</a>.
+  footer_join_html: We need your help to fund the developer time that keeps RubyGems.org running smoothly for everyone. <a href="%{join}">Join Ruby Together today</a>.
   form_disable_with: Bitte warten...
   help_url: http://help.rubygems.org
   locale_name: Deutsch
@@ -45,8 +47,9 @@ de:
       migrating_link_text: Migrieren
       mine: Meine Gems
       my_subscriptions: Abonnements
-      no_owned: Du hast noch keine Gems gepusht. Schau doch vielleicht die Dokumentation auf %{creating_link} an und %{migrating_link} ein Gem from RubyForge.
-      no_subscriptions: Du hast noch keine Gems abonniert. Besuche %{gem_link} um das Gem zu abonnieren!
+      no_owned_html: Du hast noch keine Gems gepusht. Schau doch vielleicht die Dokumentation auf %{creating_link} an und %{migrating_link} ein Gem from RubyForge.
+      no_subscriptions_html: Du hast noch keine Gems abonniert. Besuche %{gem_link} um das Gem zu abonnieren!
+      title: Dashboard
   email_confirmations:
     create:
       promise_resend:
@@ -58,10 +61,13 @@ de:
       confirmed_email:
   home:
     index:
-      downloads_counting: Gezählte Downloads
+      downloads_counting_html: Gezählte Downloads
       find_blurb: Finde, installiere und veröffentliche RubyGems.
       learn:
         install_rubygems: Installiere RubyGems
+      footer:
+        status: Status
+        uptime: Betriebszeit
   layouts:
     application:
       footer:
@@ -90,7 +96,7 @@ de:
         uptime: Betriebszeit
       header:
         dashboard: Dashboard
-        search_gem: Suche Gems&hellip;
+        search_gem_html: Suche Gems&hellip;
         sign_in: Anmelden
         sign_out: Abmelden
         sign_up: Registrieren
@@ -105,10 +111,10 @@ de:
       link_expiration_explanation:
     deletion_complete:
       subject:
-      body:
+      body_html:
     deletion_failed:
       subject:
-      body:
+      body_html:
   news:
     show:
       title:
@@ -118,15 +124,27 @@ de:
       title:
   pages:
     about:
-      founding: Das Projekt wurde im April 2009 von %{founder} gestartet und hat seitdem über %{contributors} und %{downloads}. Ab dem Release von RubyGems 1.3.6 wurde die Website von Gemcutter zu %{title} umbenannt, um eine zentrale Rolle in der Ruby-Community zu verfestigen.
-      support: Obwohl RubyGems.org nicht von einem bestimmten Unternehmen ausgeführt wird, haben viele Unternehmen uns bereits unterstützt. Das aktuelle Design, die Illustrationen und die Front-End-Entwicklung für dieser Webseite wurden von %{dockyard} erstellt. %{github} hat auch von unschätzbarem Wert uns geholfen den Code mit anderen Entwicklern zuteilen, um an dem Code leichter zusammenarbeiten. Die Website wurde mit %{heroku} gestartet, dessen großen Dienst uns geholfen, RubyGems als eine praktikable Lösung zu erweisen, wo die ganze Gemeinschaft darauf verlassen kann. Our infrastructure is currently hosted on %{aws}.
-      technical: 'Einige Einblicke in die technischen Aspekte dieser Webseite: Es ist 100% in Ruby geschrieben. Die Hauptseite ist verwendet die %{rails}-Software. Die Gems werden in %{s3}, served by %{fastly}, gehostet und die Zeit zwischen der Veröffentlichung eines neuen Gems und nachdem er bereit zur Installation freigegeben ist, ist minimal. Für mehr Informationen siehe %{source_code} (%{license}) auf GitHub.'
+      founding_html: Das Projekt wurde im April 2009 von %{founder} gestartet und hat seitdem über %{contributors} und %{downloads}. Ab dem Release von RubyGems 1.3.6 wurde die Website von Gemcutter zu %{title} umbenannt, um eine zentrale Rolle in der Ruby-Community zu verfestigen.
+      support_html: Obwohl RubyGems.org nicht von einem bestimmten Unternehmen ausgeführt wird, haben viele Unternehmen uns bereits unterstützt. Das aktuelle Design, die Illustrationen und die Front-End-Entwicklung für dieser Webseite wurden von %{dockyard} erstellt. %{github} hat auch von unschätzbarem Wert uns geholfen den Code mit anderen Entwicklern zuteilen, um an dem Code leichter zusammenarbeiten. Die Website wurde mit %{heroku} gestartet, dessen großen Dienst uns geholfen, RubyGems als eine praktikable Lösung zu erweisen, wo die ganze Gemeinschaft darauf verlassen kann. Our infrastructure is currently hosted on %{aws}.
+      technical_html: 'Einige Einblicke in die technischen Aspekte dieser Webseite: Es ist 100% in Ruby geschrieben. Die Hauptseite ist verwendet die %{rails}-Software. Die Gems werden in %{s3}, served by %{fastly}, gehostet und die Zeit zwischen der Veröffentlichung eines neuen Gems und nachdem er bereit zur Installation freigegeben ist, ist minimal. Für mehr Informationen siehe %{source_code} (%{license}) auf GitHub.'
       title: Über uns
       purpose:
         better_api: Bereitstellen eines besseren APIs für den Umgang mit Gems
         enable_community: Der Gemeinschaft ermöglichen, die Webseite zu verbessern und zu erweitern
         header: 'Willkommen in %{site}, die Community für Ruby Gem-Hostingservice. Die Gründe sind vielfältig:'
         transparent_pages: Erstellen transparenter und zugänglicher Projektseiten
+    data:
+      title: RubyGems.org Data Dumps
+    download:
+      title: Download RubyGems
+    faq:
+      title: FAQ
+    migrate:
+      title: Migrate gems
+    security:
+      title: Security
+    sponsors:
+      title: Sponsors
   passwords:
     edit:
       submit: Speichern dieses Passworts
@@ -144,14 +162,14 @@ de:
       title: Bearbeite Profil
       api_access:
         confirm_reset: Sind Sie sicher? Das kann nicht rückgängig gemacht werden.
-        credentials: 'Wenn du %{gem_commands_link} über das Terminal oder über die Kommandozeile verwenden möchtest, dann brauchst du die %{gem_credentials_file}-Datei, die du mit dem folgenden Befehl erzeugen kannst:'
-        key_is: Dein API-Schlüssel ist %{key}.
+        credentials_html: 'Wenn du %{gem_commands_link} über das Terminal oder über die Kommandozeile verwenden möchtest, dann brauchst du die %{gem_credentials_file}-Datei, die du mit dem folgenden Befehl erzeugen kannst:'
+        key_is_html: Dein API-Schlüssel ist %{key}.
         link_text: Gem-Befehle
         reset: Zurücksetzen meines API-Schlüssels
         title: API-Zugang
       reset_password:
         link_text: Jetzt ein neues Passwort zuschicken lassen.
-        text: Brauchst du ein neues Passwort? Kein Problem. %{link}
+        text_html: Brauchst du ein neues Passwort? Kein Problem. %{link}
         title: Zurücksetzen des Passworts
       delete:
         delete:
@@ -161,7 +179,7 @@ de:
       title:
       confirm:
       instructions:
-      list_only_owner:
+      list_only_owner_html:
       list_multi_owner:
     rubygem:
       owners_header:
@@ -220,14 +238,14 @@ de:
       yanked_notice:
     show_yanked:
       not_hosted_notice: Dieses Gem wird aktuell nicht auf RubyGems.org gehostet.
-      reserved_namespace:
+      reserved_namespace_html:
         one:
         other:
   reverse_dependencies:
     index:
       title:
     reverse_dependencies:
-      search_reverse_dependencies:
+      search_reverse_dependencies_html:
   searches:
     advanced:
       name:
