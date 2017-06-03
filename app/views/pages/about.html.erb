@@ -8,24 +8,24 @@
     <li class="t-numbered-item"><%= t '.purpose.enable_community' %></li>
   </ol>
   <p>
-    <%= t('.founding', :founder => link_to('Nick Quaranto', 'https://twitter.com/qrush'),
-                       :contributors => link_to("291 Rubyists", "https://github.com/rubygems/rubygems.org/graphs/contributors"),
-                       :downloads => link_to("millions of gem downloads", stats_path),
-                       :title => t('title')).html_safe %>
+    <%= t('.founding_html', :founder => link_to('Nick Quaranto', 'https://twitter.com/qrush'),
+                            :contributors => link_to("291 Rubyists", "https://github.com/rubygems/rubygems.org/graphs/contributors"),
+                            :downloads => link_to("millions of gem downloads", stats_path),
+                            :title => t('title')) %>
   </p>
   <p>
-    <%= t('.support', :dockyard => link_to("DockYard", "https://www.dockyard.com/"),
-                      :github => link_to("GitHub", "https://github.com"),
-                      :heroku => link_to("Heroku", "https://heroku.com"),
-                      :aws => link_to("AWS", "https://aws.amazon.com")).html_safe %>
+    <%= t('.support_html', :dockyard => link_to("DockYard", "https://www.dockyard.com/"),
+                           :github => link_to("GitHub", "https://github.com"),
+                           :heroku => link_to("Heroku", "https://heroku.com"),
+                           :aws => link_to("AWS", "https://aws.amazon.com")) %>
   </p>
   <p>
-    <%= t('.technical', :rails => link_to("Rails", "http://rubyonrails.org"),
-                        :s3 => link_to("Amazon S3", "https://aws.amazon.com/s3/"),
-                        :fastly => link_to("Fastly", "https://www.fastly.com"),
-                        :source_code => link_to("please check out the code", "https://github.com/rubygems/rubygems.org"),
-                        :license => link_to("MIT licensed", "http://www.opensource.org/licenses/mit-license.php")
-                        ).html_safe %>
+    <%= t('.technical_html', :rails => link_to("Rails", "http://rubyonrails.org"),
+                             :s3 => link_to("Amazon S3", "https://aws.amazon.com/s3/"),
+                             :fastly => link_to("Fastly", "https://www.fastly.com"),
+                             :source_code => link_to("please check out the code", "https://github.com/rubygems/rubygems.org"),
+                             :license => link_to("MIT licensed", "http://www.opensource.org/licenses/mit-license.php")
+                             ) %>
   </p>
 
   <div class="hide-assets">

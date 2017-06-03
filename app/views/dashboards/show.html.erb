@@ -1,4 +1,4 @@
-<h1 class="t-display page__heading">Dashboard</h1>
+<% @title = t('.title') %>
 
 <div class="l-overflow">
   <div class="subscribed l-colspan--l colspan--l--has-border">
@@ -12,7 +12,7 @@
     <div class="push--bottom">
       <% if @latest_updates.empty? %>
         <div class="t-body push--s">
-          <i class="t-text"><%= t('.no_subscriptions', :gem_link => link_to(t('.gem_link_text'), rubygem_path("rake"))).html_safe %></i>
+          <i class="t-text"><%= t('.no_subscriptions_html', :gem_link => link_to(t('.gem_link_text'), rubygem_path("rake"))) %></i>
         </div>
       <% else %>
         <ol>
@@ -38,8 +38,8 @@
       <% if @my_gems.empty? %>
         <div class="t-body push--bottom">
           <p>
-            <%= t('.no_owned', :creating_link => link_to(t('.creating_link_text'), "http://guides.rubygems.org/make-your-own-gem/").html_safe,
-                               :migrating_link => link_to(t('.migrating_link_text'), page_path("migrate"))).html_safe %>
+            <%= t('.no_owned_html', :creating_link => link_to(t('.creating_link_text'), "http://guides.rubygems.org/make-your-own-gem/"),
+                                    :migrating_link => link_to(t('.migrating_link_text'), page_path("migrate"))) %>
           </p>
         </div>
       <% else %>
