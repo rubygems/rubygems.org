@@ -44,10 +44,10 @@
       float: left; } }
   @media (min-width: 1020px) and (max-width: 1139px) {
     .header__search-wrap {
-      width: 260px; } }
+      width: 160px; } }
   @media (min-width: 1140px) {
     .header__search-wrap {
-      width: 360px; } }
+      width: 260px; } }
 
 @media (min-width: 1020px) {
   .header__search-wrap--home {

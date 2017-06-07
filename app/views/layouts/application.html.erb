@@ -45,7 +45,7 @@
           <nav class="header__nav-links">
             <% if signed_in? %>
               <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link mobile__header__nav-link">
-                <%= truncate current_user.name %>
+                <span><%= current_user.name %></span>
                 <%= gravatar 80, "user_gravatar" %>
               </a>
             <% end %>
@@ -63,7 +63,7 @@
 
             <% if signed_in? %>
               <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link desktop__header__nav-link">
-                <%= truncate current_user.name %>
+                <span><%= current_user.name %></span>
                 <%= gravatar 80, "user_gravatar" %>
               </a>
               <a href="#" class="header__popup-link" data-icon="▼">
