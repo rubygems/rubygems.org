@@ -152,18 +152,22 @@
                   install_docs: "http://guides.rubygems.org/command-reference/#gem-install",
                   api_docs: "http://guides.rubygems.org/rubygems-org-api/",
                   gem_list: rubygems_url,
-                  contributing_docs: "http://guides.rubygems.org/contributing/"
+                  contributing_docs: "http://guides.rubygems.org/contributing/",
+                  many_sponsors: page_path("sponsors"),
+                  ruby_together: "https://rubytogether.org/?source=rubygems",
+                  join_ruby_together: "https://rubytogether.org/?source=rubygems"
                 ) %>
               </p>
               <p>
-                RubyGems.org is made possible by
-                <%= link_to "many sponsors", page_path("sponsors") %>,
-                with development funded by the Ruby trade association,
-                <%= link_to "Ruby Together", "https://rubytogether.org/?source=rubygems" %>.
+                <%= raw t('footer_about_sponsors',
+                  many_sponsors: page_path("sponsors"),
+                  ruby_together: "https://rubytogether.org/?source=rubygems"
+                ) %>
               </p>
               <p>
-                We need your help to fund the developer time that keeps RubyGems.org running smoothly for everyone.
-                <%= link_to "Join Ruby Together today", "https://rubytogether.org/join?source=rubygems" %>.
+                <%= raw t('footer_about_together',
+                  join_ruby_together: "https://rubytogether.org/?source=rubygems"
+                ) %>
               </p>
             </div>
           </div>
