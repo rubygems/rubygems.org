@@ -113,18 +113,18 @@ GEM
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
     dynamic_form (1.1.4)
-    elasticsearch (5.0.4)
-      elasticsearch-api (= 5.0.4)
-      elasticsearch-transport (= 5.0.4)
-    elasticsearch-api (5.0.4)
+    elasticsearch (2.0.2)
+      elasticsearch-api (= 2.0.2)
+      elasticsearch-transport (= 2.0.2)
+    elasticsearch-api (2.0.2)
       multi_json
     elasticsearch-dsl (0.1.5)
-    elasticsearch-model (0.1.9)
+    elasticsearch-model (2.0.1)
       activesupport (> 3)
-      elasticsearch (> 0.4)
+      elasticsearch (~> 2)
       hashie
     elasticsearch-rails (0.1.9)
-    elasticsearch-transport (5.0.4)
+    elasticsearch-transport (2.0.2)
       faraday
       multi_json
     email_validator (1.6.0)
@@ -136,7 +136,7 @@ GEM
     factory_girl_rails (4.8.0)
       factory_girl (~> 4.8.0)
       railties (>= 3.0.0)
-    faraday (0.12.0.1)
+    faraday (0.12.1)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.18)
     gchartrb (0.8)
@@ -323,7 +323,7 @@ DEPENDENCIES
   delayed_job_active_record
   dynamic_form
   elasticsearch-dsl (~> 0.1.2)
-  elasticsearch-model (~> 0.1.9)
+  elasticsearch-model (~> 2.0.0)
   elasticsearch-rails (~> 0.1.9)
   factory_girl_rails
   gchartrb
