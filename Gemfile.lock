@@ -58,7 +58,7 @@ GEM
     bourne (1.6.0)
       mocha (~> 1.1)
     builder (3.2.3)
-    capistrano (3.8.0)
+    capistrano (3.8.1)
       airbrussh (>= 1.0.0)
       i18n
       rake (>= 10.0.0)
