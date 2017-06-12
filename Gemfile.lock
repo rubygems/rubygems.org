@@ -123,7 +123,7 @@ GEM
       activesupport (> 3)
       elasticsearch (~> 2)
       hashie
-    elasticsearch-rails (0.1.9)
+    elasticsearch-rails (2.0.1)
     elasticsearch-transport (2.0.2)
       faraday
       multi_json
@@ -324,7 +324,7 @@ DEPENDENCIES
   dynamic_form
   elasticsearch-dsl (~> 0.1.2)
   elasticsearch-model (~> 2.0.0)
-  elasticsearch-rails (~> 0.1.9)
+  elasticsearch-rails (~> 2.0.0)
   factory_girl_rails
   gchartrb
   gravtastic
