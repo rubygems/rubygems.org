@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -44,9 +43,8 @@ ActiveRecord::Schema.define(version: 20170414205340) do
     t.string   "platform"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_deletions_on_user_id", using: :btree
   end
-
-  add_index "deletions", ["user_id"], name: "index_deletions_on_user_id", using: :btree
 
   create_table "dependencies", force: :cascade do |t|
     t.string   "requirements"
@@ -56,20 +54,18 @@ ActiveRecord::Schema.define(version: 20170414205340) do
     t.integer  "version_id"
     t.string   "scope"
     t.string   "unresolved_name"
+    t.index ["rubygem_id"], name: "index_dependencies_on_rubygem_id", using: :btree
+    t.index ["unresolved_name"], name: "index_dependencies_on_unresolved_name", using: :btree
+    t.index ["version_id"], name: "index_dependencies_on_version_id", using: :btree
   end
-
-  add_index "dependencies", ["rubygem_id"], name: "index_dependencies_on_rubygem_id", using: :btree
-  add_index "dependencies", ["unresolved_name"], name: "index_dependencies_on_unresolved_name", using: :btree
-  add_index "dependencies", ["version_id"], name: "index_dependencies_on_version_id", using: :btree
 
   create_table "gem_downloads", force: :cascade do |t|
-    t.integer "rubygem_id",           null: false
-    t.integer "version_id",           null: false
-    t.integer "count",      limit: 8
+    t.integer "rubygem_id", null: false
+    t.integer "version_id", null: false
+    t.bigint  "count"
+    t.index ["rubygem_id", "version_id"], name: "index_gem_downloads_on_rubygem_id_and_version_id", unique: true, using: :btree
+    t.index ["version_id", "rubygem_id", "count"], name: "index_gem_downloads_on_version_id_and_rubygem_id_and_count", using: :btree
   end
-
-  add_index "gem_downloads", ["rubygem_id", "version_id"], name: "index_gem_downloads_on_rubygem_id_and_version_id", unique: true, using: :btree
-  add_index "gem_downloads", ["version_id", "rubygem_id", "count"], name: "index_gem_downloads_on_version_id_and_rubygem_id_and_count", using: :btree
 
   create_table "linksets", force: :cascade do |t|
     t.integer  "rubygem_id"
@@ -81,9 +77,8 @@ ActiveRecord::Schema.define(version: 20170414205340) do
     t.string   "bugs"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["rubygem_id"], name: "index_linksets_on_rubygem_id", using: :btree
   end
-
-  add_index "linksets", ["rubygem_id"], name: "index_linksets_on_rubygem_id", using: :btree
 
   create_table "log_tickets", force: :cascade do |t|
     t.string   "key"
@@ -93,9 +88,8 @@ ActiveRecord::Schema.define(version: 20170414205340) do
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
     t.integer  "processed_count"
+    t.index ["directory", "key"], name: "index_log_tickets_on_directory_and_key", unique: true, using: :btree
   end
-
-  add_index "log_tickets", ["directory", "key"], name: "index_log_tickets_on_directory_and_key", unique: true, using: :btree
 
   create_table "ownerships", force: :cascade do |t|
     t.integer  "rubygem_id"
@@ -103,40 +97,38 @@ ActiveRecord::Schema.define(version: 20170414205340) do
     t.string   "token"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["rubygem_id"], name: "index_ownerships_on_rubygem_id", using: :btree
+    t.index ["user_id"], name: "index_ownerships_on_user_id", using: :btree
   end
-
-  add_index "ownerships", ["rubygem_id"], name: "index_ownerships_on_rubygem_id", using: :btree
-  add_index "ownerships", ["user_id"], name: "index_ownerships_on_user_id", using: :btree
 
   create_table "rubygems", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "slug"
+    t.index "upper((name)::text) varchar_pattern_ops", name: "index_rubygems_upcase", using: :btree
+    t.index ["name"], name: "index_rubygems_on_name", unique: true, using: :btree
   end
-
-  add_index "rubygems", ["name"], name: "index_rubygems_on_name", unique: true, using: :btree
 
   create_table "subscriptions", force: :cascade do |t|
     t.integer  "rubygem_id"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["rubygem_id"], name: "index_subscriptions_on_rubygem_id", using: :btree
+    t.index ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
   end
-
-  add_index "subscriptions", ["rubygem_id"], name: "index_subscriptions_on_rubygem_id", using: :btree
-  add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email"
-    t.string   "encrypted_password", limit: 128
-    t.string   "salt",               limit: 128
-    t.string   "token",              limit: 128
+    t.string   "encrypted_password",        limit: 128
+    t.string   "salt",                      limit: 128
+    t.string   "token",                     limit: 128
     t.datetime "token_expires_at"
-    t.boolean  "email_confirmed",                default: false, null: false
+    t.boolean  "email_confirmed",                       default: false, null: false
     t.string   "api_key"
-    t.string   "confirmation_token", limit: 128
-    t.string   "remember_token",     limit: 128
+    t.string   "confirmation_token",        limit: 128
+    t.string   "remember_token",            limit: 128
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "email_reset"
@@ -145,14 +137,13 @@ ActiveRecord::Schema.define(version: 20170414205340) do
     t.string   "twitter_username"
     t.string   "unconfirmed_email"
     t.datetime "remember_token_expires_at"
+    t.index ["email"], name: "index_users_on_email", using: :btree
+    t.index ["handle"], name: "index_users_on_handle", using: :btree
+    t.index ["id", "confirmation_token"], name: "index_users_on_id_and_confirmation_token", using: :btree
+    t.index ["id", "token"], name: "index_users_on_id_and_token", using: :btree
+    t.index ["remember_token"], name: "index_users_on_remember_token", using: :btree
+    t.index ["token"], name: "index_users_on_token", using: :btree
   end
-
-  add_index "users", ["email"], name: "index_users_on_email", using: :btree
-  add_index "users", ["handle"], name: "index_users_on_handle", using: :btree
-  add_index "users", ["id", "confirmation_token"], name: "index_users_on_id_and_confirmation_token", using: :btree
-  add_index "users", ["id", "token"], name: "index_users_on_id_and_token", using: :btree
-  add_index "users", ["remember_token"], name: "index_users_on_remember_token", using: :btree
-  add_index "users", ["token"], name: "index_users_on_token", using: :btree
 
   create_table "versions", force: :cascade do |t|
     t.text     "authors"
@@ -179,17 +170,16 @@ ActiveRecord::Schema.define(version: 20170414205340) do
     t.string   "required_rubygems_version"
     t.string   "info_checksum"
     t.string   "yanked_info_checksum"
+    t.index ["built_at"], name: "index_versions_on_built_at", using: :btree
+    t.index ["created_at"], name: "index_versions_on_created_at", using: :btree
+    t.index ["full_name"], name: "index_versions_on_full_name", using: :btree
+    t.index ["indexed"], name: "index_versions_on_indexed", using: :btree
+    t.index ["number"], name: "index_versions_on_number", using: :btree
+    t.index ["position"], name: "index_versions_on_position", using: :btree
+    t.index ["prerelease"], name: "index_versions_on_prerelease", using: :btree
+    t.index ["rubygem_id", "number", "platform"], name: "index_versions_on_rubygem_id_and_number_and_platform", unique: true, using: :btree
+    t.index ["rubygem_id"], name: "index_versions_on_rubygem_id", using: :btree
   end
-
-  add_index "versions", ["built_at"], name: "index_versions_on_built_at", using: :btree
-  add_index "versions", ["created_at"], name: "index_versions_on_created_at", using: :btree
-  add_index "versions", ["full_name"], name: "index_versions_on_full_name", using: :btree
-  add_index "versions", ["indexed"], name: "index_versions_on_indexed", using: :btree
-  add_index "versions", ["number"], name: "index_versions_on_number", using: :btree
-  add_index "versions", ["position"], name: "index_versions_on_position", using: :btree
-  add_index "versions", ["prerelease"], name: "index_versions_on_prerelease", using: :btree
-  add_index "versions", ["rubygem_id", "number", "platform"], name: "index_versions_on_rubygem_id_and_number_and_platform", unique: true, using: :btree
-  add_index "versions", ["rubygem_id"], name: "index_versions_on_rubygem_id", using: :btree
 
   create_table "web_hooks", force: :cascade do |t|
     t.integer  "user_id"
