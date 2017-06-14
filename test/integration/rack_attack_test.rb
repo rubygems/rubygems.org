@@ -85,5 +85,23 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         assert_equal 429, @response.status if i > @limit
       end
     end
+
+    should "throttle profile update" do
+      cookies[:remember_token] = @user.remember_token
+
+      (@limit + 1).times do |i|
+        patch "/profile"
+        assert_equal 429, @response.status if i == @limit
+      end
+    end
+
+    should "throttle profile delete" do
+      cookies[:remember_token] = @user.remember_token
+
+      (@limit + 1).times do |i|
+        delete "/profile"
+        assert_equal 429, @response.status if i == @limit
+      end
+    end
   end
 end
