@@ -60,7 +60,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     should 'throttle sign in' do
       (@limit + 1).times do |i|
         post '/session', params: { session: { who: @user.email, password: @user.password } }
-        assert_equal 429, @response.status if i > @limit
+        assert_equal 429, @response.status if i == @limit
       end
     end
 
@@ -68,21 +68,21 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       (@limit + 1).times do |i|
         user = build(:user)
         post '/users', params: { user: { email: user.email, password: user.password } }
-        assert_equal 429, @response.status if i > @limit
+        assert_equal 429, @response.status if i == @limit
       end
     end
 
     should 'throttle forgot password' do
       (@limit + 1).times do |i|
         post '/passwords', params: { password: { email: @user.email } }
-        assert_equal 429, @response.status if i > @limit
+        assert_equal 429, @response.status if i == @limit
       end
     end
 
     should 'throttle api_key show' do
       (@limit + 1).times do |i|
         get '/api/v1/api_key.json', env: { 'HTTP_AUTHORIZATION' => encode(@user.handle, @user.password) }
-        assert_equal 429, @response.status if i > @limit
+        assert_equal 429, @response.status if i == @limit
       end
     end
   end
