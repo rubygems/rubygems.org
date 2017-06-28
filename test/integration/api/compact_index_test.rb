@@ -97,6 +97,19 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     assert_equal etag(full_response_body), @response.headers['ETag']
   end
 
+  test "/versions not modified response" do
+    get versions_path
+    full_response_body = @response.body
+
+    get versions_path, headers: {
+      "HTTP_RANGE" => "bytes=229-",
+      "HTTP_IF_NONE_MATCH" => @response.headers['ETag']
+    }
+
+    assert_response 304
+    assert_equal etag(full_response_body), @response.headers['ETag']
+  end
+
   test "/versions updates on gem yank" do
     Deletion.create!(version: @version, user: create(:user))
     expected = <<~eos
