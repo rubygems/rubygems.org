@@ -53,7 +53,7 @@ gem 'logstash-event'
 
 group :development, :test do
   gem 'rubocop', require: false
-  gem 'toxiproxy', '~> 0.1.3'
+  gem 'toxiproxy', '~> 1.0.0'
 end
 
 group :development do

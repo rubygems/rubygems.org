@@ -280,7 +280,7 @@ GEM
     thread_safe (0.3.6)
     timers (4.1.2)
       hitimes
-    toxiproxy (0.1.4)
+    toxiproxy (1.0.2)
     trollop (2.1.2)
     tzinfo (1.2.3)
       thread_safe (~> 0.1)
@@ -359,7 +359,7 @@ DEPENDENCIES
   shoulda
   sprockets-rails
   statsd-instrument (~> 2.1.0)
-  toxiproxy (~> 0.1.3)
+  toxiproxy (~> 1.0.0)
   uglifier (>= 1.0.3)
   unicorn
   validates_formatting_of
