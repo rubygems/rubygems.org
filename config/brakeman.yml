@@ -7,4 +7,4 @@
 :output_files:
 - reports/brakeman.json
 - reports/brakeman.html
-:rails4: true
+:rails5: true
