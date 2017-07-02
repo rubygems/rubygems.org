@@ -1,20 +1,7 @@
 Contribution Guidelines
 =======================
 
-From the [Rubinius](http://rubini.us/) contribution page:
-
-> Writing code and participating should be fun, not an exercise in
-> perseverance. Stringent commit polices, for whatever their other
-> qualities may bring, also mean longer turnaround times.
-
-Submit a patch and once it’s accepted, you’ll get commit access to the
-repository. Feel free to fork the repository and send a pull request,
-once it’s merged in you’ll get added. If not, feel free to bug
-[qrush](https://github.com/qrush) about it.
-
-Also, if you’re hacking on RubyGems.org, hop in `#rubygems` on
-`irc.freenode.net`! Chances are someone else will be around to answer
-questions or bounce ideas off of.
+Want to get started working on RubyGems.org? Start here!
 
 How To Contribute
 -----------------
@@ -30,17 +17,6 @@ Once you’re ready:
 * Add your repository as a remote: `git remote add your_remote your_repo`
 * Push up your branch: `git push your_remote awesome_feature`
 * Create a Pull Request for the topic branch, asking for review.
-
-Once it’s accepted:
-
-* If you want access to the core repository feel free to ask! Then you
-can change origin to point to the Read+Write URL:
-
-```
-git remote set-url origin git@github.com:rubygems/rubygems.org.git
-```
-
-Otherwise, you can continue to hack away in your own fork.
 
 If you’re looking for things to hack on, please check
 [GitHub Issues](https://github.com/rubygems/rubygems.org/issues). If you’ve
