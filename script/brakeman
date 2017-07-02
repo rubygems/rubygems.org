@@ -6,6 +6,8 @@ gem install terminal-table --conservative --no-rdoc --no-ri
 # remove references to multi_json when https://github.com/presidentbeef/brakeman/pull/830
 # is merged and released.
 gem install multi_json --conservative --no-rdoc --no-ri
+gem install erubis --conservative --no-rdoc --no-ri
+
 # Only the output configurations are specified below. The remaining configuration
 # is in config/brakeman.yml and any ignored warnings in config/brakeman.ignore
 # see https://github.com/presidentbeef/brakeman/blob/master/OPTIONS.md
