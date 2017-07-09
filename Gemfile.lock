@@ -139,7 +139,6 @@ GEM
     faraday (0.12.1)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.18)
-    gchartrb (0.8)
     globalid (0.4.0)
       activesupport (>= 4.2.0)
     gravtastic (3.2.6)
@@ -326,7 +325,6 @@ DEPENDENCIES
   elasticsearch-model (~> 2.0.0)
   elasticsearch-rails (~> 2.0.0)
   factory_girl_rails
-  gchartrb
   gravtastic
   high_voltage
   highline
