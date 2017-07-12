@@ -113,18 +113,18 @@ GEM
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
     dynamic_form (1.1.4)
-    elasticsearch (2.0.2)
-      elasticsearch-api (= 2.0.2)
-      elasticsearch-transport (= 2.0.2)
-    elasticsearch-api (2.0.2)
+    elasticsearch (5.0.4)
+      elasticsearch-api (= 5.0.4)
+      elasticsearch-transport (= 5.0.4)
+    elasticsearch-api (5.0.4)
       multi_json
     elasticsearch-dsl (0.1.5)
-    elasticsearch-model (2.0.1)
+    elasticsearch-model (5.0.1)
       activesupport (> 3)
-      elasticsearch (~> 2)
+      elasticsearch (~> 5)
       hashie
     elasticsearch-rails (2.0.1)
-    elasticsearch-transport (2.0.2)
+    elasticsearch-transport (5.0.4)
       faraday
       multi_json
     email_validator (1.6.0)
@@ -151,7 +151,7 @@ GEM
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     http_accept_language (2.1.1)
-    i18n (0.8.4)
+    i18n (0.8.6)
     jmespath (1.3.1)
     jquery-rails (4.3.1)
       rails-dom-testing (>= 1, < 3)
@@ -323,7 +323,7 @@ DEPENDENCIES
   delayed_job_active_record
   dynamic_form
   elasticsearch-dsl (~> 0.1.2)
-  elasticsearch-model (~> 2.0.0)
+  elasticsearch-model (~> 5.0.0)
   elasticsearch-rails (~> 2.0.0)
   factory_girl_rails
   gchartrb
