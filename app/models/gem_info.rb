@@ -90,29 +90,16 @@ class GemInfo
 
   private
 
+  DEPENDENCY_NAMES_INDEX = 8
+
+  DEPENDENCY_REQUIREMENTS_INDEX = 7
+
   def compute_compact_index_info
-    group_by_columns =
-      "number, platform, sha256, info_checksum, required_ruby_version, required_rubygems_version, versions.created_at"
-    dep_req_agg =
-      "string_agg(dependencies.requirements, '@' order by rubygems_dependencies.name)"
-    dep_name_agg =
-      "string_agg(coalesce(rubygems_dependencies.name, '0'), ',' order by rubygems_dependencies.name) as dep_name"
-
-    result = Rubygem.joins("LEFT JOIN versions ON versions.rubygem_id = rubygems.id
-        LEFT JOIN dependencies ON dependencies.version_id = versions.id
-        LEFT JOIN rubygems rubygems_dependencies
-          ON rubygems_dependencies.id = dependencies.rubygem_id
-          AND dependencies.scope = 'runtime'")
-      .where("rubygems.name = ? and indexed = true", @rubygem_name)
-      .group(group_by_columns)
-      .order("versions.created_at, number, platform, dep_name")
-      .pluck("#{group_by_columns}, #{dep_req_agg}, #{dep_name_agg}")
-
-    result.map do |r|
+    requirements_and_dependencies.map do |r|
       deps = []
-      if r[7]
-        reqs = r[7].split('@')
-        dep_names = r[8].split(',')
+      if r[DEPENDENCY_REQUIREMENTS_INDEX]
+        reqs = r[DEPENDENCY_REQUIREMENTS_INDEX].split('@')
+        dep_names = r[DEPENDENCY_NAMES_INDEX].split(',')
         raise 'BUG: different size of reqs and dep_names.' unless reqs.size == dep_names.size
         dep_names.zip(reqs).each do |name, req|
           deps << CompactIndex::Dependency.new(name, req) unless name == '0'
@@ -121,5 +108,23 @@ class GemInfo
 
       CompactIndex::GemVersion.new(r[0], r[1], Version._sha256_hex(r[2]), r[3], deps, r[4], r[5])
     end
+  end
+
+  def requirements_and_dependencies
+    group_by_columns = "number, platform, sha256, info_checksum, required_ruby_version, required_rubygems_version, versions.created_at"
+
+    dep_req_agg = "string_agg(dependencies.requirements, '@' ORDER BY rubygems_dependencies.name)"
+
+    dep_name_agg = "string_agg(coalesce(rubygems_dependencies.name, '0'), ',' ORDER BY rubygems_dependencies.name) AS dep_name"
+
+    Rubygem.joins("LEFT JOIN versions ON versions.rubygem_id = rubygems.id
+        LEFT JOIN dependencies ON dependencies.version_id = versions.id
+        LEFT JOIN rubygems rubygems_dependencies
+          ON rubygems_dependencies.id = dependencies.rubygem_id
+          AND dependencies.scope = 'runtime'")
+      .where("rubygems.name = ? AND indexed = true", @rubygem_name)
+      .group(group_by_columns)
+      .order("versions.created_at, number, platform, dep_name")
+      .pluck("#{group_by_columns}, #{dep_req_agg}, #{dep_name_agg}")
   end
 end
