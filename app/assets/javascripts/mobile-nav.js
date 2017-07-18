@@ -7,7 +7,7 @@ $(function() {
   var footer           = $('.footer');
   var signUpLink       = $('.header__nav-link.js-sign-up-trigger');
   var navExpandedClass = 'mobile-nav-is-expanded';
-  var headerSeach      = $('.header__search');
+  var headerSearch     = $('.header__search');
   var headerLogo       = $('.header__logo-wrap');
 
   // variable to support mobile nav tab behaviour
@@ -45,7 +45,7 @@ $(function() {
   function handleFocusIn() {
     if (skipSandwichIcon) {
       addNavExpandedClass();
-      headerSeach.focus();
+      headerSearch.focus();
       skipSandwichIcon = false;
     } else {
       removeNavExpandedClass();
