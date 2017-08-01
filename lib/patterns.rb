@@ -31,7 +31,6 @@ module Patterns
     install
     io-nonblock
     io-wait
-    ipaddr
     irb
     jruby
     logger
