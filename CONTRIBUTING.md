@@ -54,7 +54,7 @@ gems for your organization..**
 
 #### Environment (OS X)
 
-* Use Ruby 2.3.3
+* Use Ruby 2.3.4
 * Use Rubygems 2.6.10
 * Install bundler: `gem install bundler`
 * Install Elastic Search:
@@ -71,7 +71,7 @@ gems for your organization..**
 
 #### Environment (Linux - Debian/Ubuntu)
 
-* Use Ruby 2.3.3 `apt-get install ruby2.3`
+* Use Ruby 2.3.4 `apt-get install ruby2.3`
   * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
 * Use Rubygems 2.6.10
 * Install bundler: `gem install bundler`
