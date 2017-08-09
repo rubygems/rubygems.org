@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/BlockLength
 require 'test_helper'
 
 class PusherTest < ActiveSupport::TestCase
@@ -27,6 +28,7 @@ class PusherTest < ActiveSupport::TestCase
 
     context "processing incoming gems" do
       should "work normally when things go well" do
+        @cutter.stubs(:lock_key).returns 'lock_key'
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns true
@@ -250,6 +252,7 @@ class PusherTest < ActiveSupport::TestCase
     context "successfully saving a gemcutter" do
       setup do
         @rubygem = create(:rubygem, name: 'gemsgemsgems')
+        @cutter.stubs(:lock_key).returns 'lock_key'
         @cutter.stubs(:rubygem).returns @rubygem
         create(:version, rubygem: @rubygem, number: '0.1.1', summary: 'old summary')
         @cutter.stubs(:version).returns @rubygem.versions[0]
@@ -307,6 +310,65 @@ class PusherTest < ActiveSupport::TestCase
       end
     end
 
+    context "locking a cutter" do
+      setup do
+        @cutter1 = Pusher.new(@user, gem_file("test-1.0.0.gem"))
+        @cutter2 = Pusher.new(@user, gem_file("test-1.0.0.gem"))
+      end
+
+      should "lock with a spec" do
+        @cutter1.stubs(:spec).returns(OpenStruct.new(name: 'test', version: '1.0.0'))
+        assert @cutter1.with_lock, 'Lock should be obtained'
+      end
+
+      should "not lock without a spec" do
+        @cutter1.stubs(:spec).returns(nil)
+        refute @cutter1.with_lock, 'Lock should not be obtained without a spec'
+      end
+
+      should "409 when lock cannot be obtained" do
+        @cutter1.stubs(:lock_key).returns('lock_key')
+        Rails.cache.write('lock_key', true)
+        @cutter1.with_lock
+        assert_match(/We are already processing this gem with the specified version/, @cutter1.message)
+      end
+
+      should "lock should cause conflict" do
+        lock_key = 'lock_key'
+        @cutter1.stubs(:lock_key).returns(lock_key)
+        @cutter2.stubs(:lock_key).returns(lock_key)
+
+        lock_1_run = false
+        lock_2_run = false
+
+        # Start running lock 1, immediately set lock 1 to run
+        lock1_thread = Thread.new do
+          lock1 = @cutter1.with_lock do
+            lock_1_run = true
+            sleep 0.01 until lock_2_run
+          end
+          assert lock1, 'lock should have succeeded'
+        end
+
+        # Wait until lock 1 has been run - this will mean that the lock
+        # has been claimed
+        sleep 0.01 until lock_1_run
+
+        # Attempt to run lock 2, this should conflict with lock1
+        lock2 = @cutter2.with_lock
+        refute lock2, 'lock should have failed'
+
+        # Allow lock1 to finish, then join the thread
+        lock_2_run = true
+        lock1_thread.join
+
+        # Make sure lock1 released the lock and lock2 returned a proper message
+        refute Rails.cache.exist?(lock_key), 'Lock should have been released'
+        assert_nil @cutter1.message, 'cutter_1 should not have had a message'
+        assert_match(/We are already processing this gem with the specified version/, @cutter2.message)
+      end
+    end
+
     context 'pushing a new version' do
       setup do
         @rubygem = create(:rubygem)
@@ -316,6 +378,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:version).returns version
         @rubygem.stubs(:update_attributes_from_gem_specification!)
         @cutter.stubs(:version).returns version
+        @cutter.stubs(:lock_key).returns 'lock_key'
         GemCachePurger.stubs(:call)
         Indexer.any_instance.stubs(:write_gem)
         @cutter.save
