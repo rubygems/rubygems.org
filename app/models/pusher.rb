@@ -86,7 +86,7 @@ class Pusher
     unless @rubygem.new_record?
       if @rubygem.find_version_from_spec(spec)
         notify("Repushing of gem versions is not allowed.\n" \
-               "Please push a new version.", 409)
+               "Please use `gem yank` to remove bad gem releases.", 409)
 
         return false
       end
