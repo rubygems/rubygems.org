@@ -6,8 +6,8 @@
 </div>
 
 <header class="gems__header">
-  <p class="gems__meter"><%= page_entries_info @rubgyems, model: 'gem' %></p>
+  <p class="gems__meter"><%= page_entries_info @rubygems, model: 'gem' %></p>
 </header>
 
-<%= render partial: "news/rubygem", collection: @rubgyems %>
-<%= will_paginate @rubgyems %>
+<%= render partial: "news/rubygem", collection: @rubygems %>
+<%= will_paginate @rubygems %>
