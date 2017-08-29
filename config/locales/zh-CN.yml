@@ -7,13 +7,13 @@ zh-CN:
   form_disable_with: 请稍后...
   help_url: http://help.rubygems.org
   locale_name: 简体中文
-  none:
-  not_found:
+  none: 无
+  not_found: 内容无法找到
   please_sign_up: 拒绝访问。请先在 https://rubygems.org 上注册一个账号。
   sign_in: 登录
   sign_up: 注册
   subtitle: Ruby 社区 Gem 托管
-  this_rubygem_could_not_be_found:
+  this_rubygem_could_not_be_found: 这个 RubyGem 没有找到
   time_ago: "%{duration} 前"
   title: RubyGems.org
   update: 更新
@@ -22,8 +22,8 @@ zh-CN:
   activerecord:
     attributes:
       linkset:
-        bugs:
-        changelog:
+        bugs: Bugs
+        changelog: Changelog
         code: 源代码 URL
         docs: 文档 URL
         mail: 邮件列表 URL
@@ -90,7 +90,7 @@ zh-CN:
         uptime: 服务状况
       header:
         dashboard: 控制台
-        search_gem:
+        search_gem: 搜索 Gem
         sign_in: 登录
         sign_out: 退出
         sign_up: 注册
@@ -111,11 +111,11 @@ zh-CN:
       body:
   news:
     show:
-      title:
-      all_gems:
-      popular_gems:
+      title: 最近更新
+      all_gems: 所有 Gems
+      popular_gems: 最受欢迎的 Gems
     popular:
-      title:
+      title: 最受欢迎的 Gems
   pages:
     about:
       founding: 此项目创立由 %{founder} 于2009年4月，发展过程中有超过 %{contributors} 贡献者以及 %{downloads}。自从 RubyGems 1.3.6 发布以后，本站名称由 Gemcutter 改名为 %{title}，从而巩固在 Ruby 社区网站中和核心作用。
@@ -137,10 +137,10 @@ zh-CN:
       will_email_notice: 我们将会通过 Email 发送修改密码的链接给你。
   profiles:
     edit:
-      email_awaiting_confirmation:
-      enter_password:
+      email_awaiting_confirmation: Email 等待邮件确认
+      enter_password: 输入密码
       hide_email: 在公开的个人资料里面隐藏我的 Email
-      optional_twitter_username:
+      optional_twitter_username: Twitter 账号（可选）
       title: 修改个人资料
       api_access:
         confirm_reset: 确定要重置吗？此动作执行后将无法撤销
@@ -154,9 +154,9 @@ zh-CN:
         text: 需要一个新密码？没问题，访问 %{link}
         title: 重置密码
       delete:
-        delete:
-        delete_profile:
-        warning:
+        delete: 删除
+        delete_profile: 删除个人资料
+        warning: 警告
     delete:
       title:
       confirm:
@@ -174,16 +174,16 @@ zh-CN:
   rubygems:
     aside:
       bundler_header: Gemfile
-      copied:
-      copy_to_clipboard:
+      copied: 已复制
+      copy_to_clipboard: 复制到剪贴板
       downloads_for_this_version: 这个版本
       install: 安装
-      required_ruby_version:
-      required_rubygems_version:
+      required_ruby_version: 依赖 Ruby 版本
+      required_rubygems_version: 依赖 RubyGems 版本
       links:
         badge: 徽章
-        bugs:
-        changelog:
+        bugs: Bugs
+        changelog: Changelog
         code: 源代码
         docs: 文档
         download: 下载
@@ -191,7 +191,7 @@ zh-CN:
         home: 主页
         mail: 邮件列表
         report_abuse: 举报投诉
-        reverse_dependencies:
+        reverse_dependencies: 反向依赖
         rss: RSS
         subscribe: 订阅
         unsubscribe: 取消订阅
@@ -209,7 +209,7 @@ zh-CN:
       owners_header: 所有者
       sha_256_checksum: SHA 256 checksum
     index:
-      downloads:
+      downloads: 下载
       title:
     show:
       licenses_header:
@@ -219,38 +219,38 @@ zh-CN:
       versions_header: 版本列表
       yanked_notice: 这个 Gem 版本已经 yanked（废弃了），他无法提供下载，也无法被其他的 Gem 依赖。
     show_yanked:
-      not_hosted_notice: 这个 Gem 目前没有托管在 Gemcutter。
+      not_hosted_notice: 这个 Gem 目前没有托管在 RubyGems。
       reserved_namespace:
         one:
         other:
   reverse_dependencies:
     index:
-      title:
+      title: 反向依赖
     reverse_dependencies:
-      search_reverse_dependencies:
+      search_reverse_dependencies: 搜索反向依赖
   searches:
     advanced:
-      name:
-      summary:
-      description:
-      downloads:
-      updated:
+      name: 名称
+      summary: 摘要
+      description: 介绍
+      downloads: 下载
+      updated: 更新
     show:
       exact_match: 精确匹配
       subtitle: "%{query}"
   sessions:
     new:
       forgot_password: 忘记了密码？
-      resend_confirmation:
+      resend_confirmation: 重新发送确认邮件
   stats:
     index:
-      all_time_most_downloaded:
+      all_time_most_downloaded: 历史总下载次数
       total_downloads: 下载总次数
-      total_gems:
-      total_users:
+      total_gems: Gems 总数
+      total_users: 用户总数
   users:
     create:
-      email_sent:
+      email_sent: 邮件已发送
     new:
       have_account: 已经有账号了？
   versions:
@@ -261,9 +261,9 @@ zh-CN:
     version:
       yanked: 已废弃
   will_paginate:
-    next_label:
+    next_label: 下一页
     page_gap: "…"
-    previous_label:
+    previous_label: 上一页
     page_entries_info:
       multi_page:
       multi_page_html:
