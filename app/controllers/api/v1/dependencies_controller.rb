@@ -3,7 +3,7 @@ class Api::V1::DependenciesController < Api::BaseController
   GEM_REQUEST_LIMIT = 200
 
   def index
-    deps = GemDependent.new(gem_names).to_a
+    deps = GemDependent.new(gem_names, params[:force] == "true").to_a
 
     expires_in 30, public: true
     fastly_expires_in 60

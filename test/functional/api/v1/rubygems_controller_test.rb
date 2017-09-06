@@ -419,4 +419,37 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "On GET to show for a gem that blacklisted" do
+    context "without force=true" do
+      setup do
+        name = Patterns::GEM_NAME_BLACKLIST.first
+        @rubygem = Rubygem.new(name: name)
+        @rubygem.save(validate: false)
+        get :show, id: @rubygem.to_param, format: "json"
+      end
+
+      should respond_with :bad_request
+      should "say namespace is reserved" do
+        assert_match(/namespace is reserved/, @response.body)
+      end
+    end
+
+    context "with force=true" do
+      setup do
+        name = Patterns::GEM_NAME_BLACKLIST.first
+        @rubygem = Rubygem.new(name: name)
+        @rubygem.save(validate: false)
+        create(:version, rubygem: @rubygem)
+        get :show, id: @rubygem.to_param, force: "true", format: "json"
+      end
+
+      should respond_with :success
+      should "return a hash" do
+        response = JSON.load @response.body
+        assert_not_nil response
+        assert_kind_of Hash, response
+      end
+    end
+  end
 end

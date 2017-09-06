@@ -104,6 +104,48 @@ class GemDependentTest < ActiveSupport::TestCase
         assert_equal [result], deps
       end
     end
+
+    context "blacklisted gem" do
+      context "without force=true" do
+        setup do
+          rack = create(:rubygem, name: "rack")
+          create(:version, number: "0.2.2", rubygem: rack)
+          @blacklisted_gem_name = Patterns::GEM_NAME_BLACKLIST.first
+          blacklisted = Rubygem.new(name: @blacklisted_gem_name)
+          blacklisted.save(validate: false)
+          create(:version, number: "0.7", rubygem: blacklisted)
+        end
+
+        should "return all versions and platform without blacklisted" do
+          result = [["0.2.2", "ruby"]]
+
+          deps = GemDependent.new(["rack", @blacklisted_gem_name]).to_a
+          deps.map { |x| [x[:number], x[:platform]] }.each do |dep|
+            assert_includes result, dep
+          end
+        end
+      end
+
+      context "with force=true" do
+        setup do
+          rack = create(:rubygem, name: "rack")
+          create(:version, number: "0.2.2", rubygem: rack)
+          @blacklisted_gem_name = Patterns::GEM_NAME_BLACKLIST.first
+          blacklisted = Rubygem.new(name: @blacklisted_gem_name)
+          blacklisted.save(validate: false)
+          create(:version, number: "0.7", rubygem: blacklisted)
+        end
+
+        should "return all versions and platform" do
+          result = [["rack", "0.2.2", "ruby"], [@blacklisted_gem_name, "0.7", "ruby"]]
+
+          deps = GemDependent.new(["rack", @blacklisted_gem_name], true).to_a
+          deps.map { |x| [x[:name], x[:number], x[:platform]] }.each do |dep|
+            assert_includes result, dep
+          end
+        end
+      end
+    end
   end
 
   context "with gem_names which do not exist" do
