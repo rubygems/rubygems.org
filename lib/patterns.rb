@@ -37,6 +37,8 @@ module Patterns
     matrix
     mkmf
     monitor
+    mri
+    mruby
     mutex_m
     net-ftp
     net-http
