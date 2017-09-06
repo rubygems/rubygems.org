@@ -27,21 +27,44 @@ class Pusher
   end
 
   def save
-    # Restructured so that if we fail to write the gem (ie, s3 is down)
-    # can clean things up well.
+    with_lock do
+      begin
+        # Restructured so that if we fail to write the gem (ie, s3 is down)
+        # can clean things up well.
 
-    @indexer.write_gem @body, @spec
-  rescue StandardError => e
-    @version.destroy
-    Honeybadger.notify(e)
-    notify("There was a problem saving your gem. Please try again.", 500)
-  else
-    if update
-      after_write
-      notify("Successfully registered gem: #{version.to_title}", 200)
-    else
-      notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403)
+        @indexer.write_gem @body, @spec
+      rescue StandardError => e
+        @version.destroy
+        Honeybadger.notify(e)
+        notify("There was a problem saving your gem. Please try again.", 500)
+      else
+        if update
+          after_write
+          notify("Successfully registered gem: #{version.to_title}", 200)
+        else
+          notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403)
+        end
+      end
     end
+  end
+
+  def with_lock
+    return false unless lock_key
+
+    if Rails.cache.exist?(lock_key)
+      notify("We are already processing this gem with the specified version.", 409)
+      return false
+    end
+
+    Rails.cache.write(lock_key, true, expires_in: 10.minutes)
+
+    begin
+      yield if block_given?
+    ensure
+      Rails.cache.delete(lock_key)
+    end
+
+    lock_key
   end
 
   def pull_spec
@@ -96,6 +119,11 @@ class Pusher
   end
 
   private
+
+  def lock_key
+    return nil unless spec
+    ['pusher', 'lock', spec.name, spec.version.to_s].join('-')
+  end
 
   def after_write
     @version_id = version.id
