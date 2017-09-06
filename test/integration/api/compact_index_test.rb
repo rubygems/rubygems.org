@@ -168,6 +168,23 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     assert_equal etag(expected), @response.headers['ETag']
   end
 
+  test "/info with multiple ruby & rubygems requirements" do
+    rubygem = create(:rubygem, name: 'gemC')
+    version = create(:version, rubygem: rubygem, number: '1.0.0', info_checksum: '65ea0d',
+                               required_ruby_version: "< 2.5, >=2.2", required_rubygems_version: "~>2,< 5.7")
+    create(:dependency, :development, version: version, rubygem: @rubygem2)
+    expected = <<~END
+      ---
+      1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:< 2.5&>=2.2,rubygems:~>2&< 5.7
+    END
+
+    get info_path(gem_name: 'gemC')
+
+    assert_response :success
+    assert_equal(expected, @response.body)
+    assert_equal etag(expected), @response.headers['ETag']
+  end
+
   test "/info with nonexistent gem" do
     get info_path(gem_name: 'donotexist')
     assert_response :not_found

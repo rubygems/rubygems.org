@@ -105,6 +105,7 @@ class GemInfo
           deps << CompactIndex::Dependency.new(name, req) unless name == '0'
         end
       end
+      [r[4], r[5]].each { |req| req&.gsub!(/,\s*/, '&') }
 
       CompactIndex::GemVersion.new(r[0], r[1], Version._sha256_hex(r[2]), r[3], deps, r[4], r[5])
     end
