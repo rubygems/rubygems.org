@@ -15,13 +15,12 @@ class User < ApplicationRecord
   ].freeze
 
   before_destroy :yank_gems
-  has_many :rubygems, through: :ownerships
-
-  has_many :subscribed_gems, -> { order("name ASC") }, through: :subscriptions, source: :rubygem
 
   has_many :deletions
   has_many :ownerships, dependent: :destroy
+  has_many :rubygems, through: :ownerships
   has_many :subscriptions, dependent: :destroy
+  has_many :subscribed_gems, -> { order("name ASC") }, through: :subscriptions, source: :rubygem
   has_many :web_hooks, dependent: :destroy
 
   after_validation :set_unconfirmed_email, if: :email_changed?, on: :update
