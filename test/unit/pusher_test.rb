@@ -1,13 +1,88 @@
 require 'test_helper'
 
 class PusherTest < ActiveSupport::TestCase
-  context "creating a new gemcutter" do
-    setup do
-      @user = create(:user, email: "user@example.com")
-      @gem = gem_file
-      @cutter = Pusher.new(@user, @gem)
+  setup do
+    @user = create(:user, email: "user@example.com")
+    @gem = gem_file
+    @cutter = Pusher.new(@user, @gem)
+  end
+
+  context "processing incoming gems" do
+    should "work normally when things go well" do
+      @cutter.stubs(:pull_spec).returns true
+      @cutter.stubs(:find).returns true
+      @cutter.stubs(:validate_gem_version).returns true
+      @cutter.stubs(:authorize).returns true
+      @cutter.stubs(:validate).returns true
+      @cutter.stubs(:save)
+
+      legit_gem = create(:rubygem, name: 'legit-gem')
+      @cutter.stubs(:rubygem).returns(legit_gem)
+
+      @cutter.process
     end
 
+    should "not attempt to find rubygem if spec can't be pulled" do
+      @cutter.stubs(:pull_spec).returns false
+      @cutter.stubs(:find).never
+      @cutter.stubs(:authorize).never
+      @cutter.stubs(:save).never
+      @cutter.process
+    end
+
+    should "not attempt to authorize if not found" do
+      @cutter.stubs(:pull_spec).returns true
+      @cutter.stubs(:find)
+      @cutter.stubs(:authorize).never
+      @cutter.stubs(:save).never
+
+      @cutter.process
+    end
+
+    should "not attempt to validate if not authorized" do
+      @cutter.stubs(:pull_spec).returns true
+      @cutter.stubs(:find).returns true
+      @cutter.stubs(:validate_gem_version).returns true
+      @cutter.stubs(:authorize).returns false
+      @cutter.stubs(:validate).never
+      @cutter.stubs(:save).never
+
+      legit_gem = create(:rubygem, name: 'legit-gem')
+      @cutter.stubs(:rubygem).returns(legit_gem)
+
+      @cutter.process
+    end
+
+    should "not attempt to save if not validated" do
+      @cutter.stubs(:pull_spec).returns true
+      @cutter.stubs(:find).returns true
+      @cutter.stubs(:validate_gem_version).returns true
+      @cutter.stubs(:authorize).returns true
+      @cutter.stubs(:validate).returns false
+      @cutter.stubs(:save).never
+
+      legit_gem = create(:rubygem, name: 'legit-gem')
+      @cutter.stubs(:rubygem).returns(legit_gem)
+
+      @cutter.process
+    end
+
+    should "not attempt to save if duplicate gem version" do
+      @cutter.stubs(:pull_spec).returns true
+      @cutter.stubs(:find).returns true
+      @cutter.stubs(:validate_gem_version).returns(false)
+      @cutter.stubs(:authorize).returns false
+      @cutter.stubs(:validate).returns false
+      @cutter.stubs(:save).never
+
+      legit_gem = create(:rubygem, name: 'legit-gem')
+      @cutter.stubs(:rubygem).returns(legit_gem)
+
+      @cutter.process
+    end
+  end
+
+  context "creating a new gemcutter" do
     should "have some state" do
       assert @cutter.respond_to?(:user)
       assert @cutter.respond_to?(:version)
@@ -23,81 +98,6 @@ class PusherTest < ActiveSupport::TestCase
 
     should "initialize size from the gem" do
       assert_equal @gem.size, @cutter.size
-    end
-
-    context "processing incoming gems" do
-      should "work normally when things go well" do
-        @cutter.stubs(:pull_spec).returns true
-        @cutter.stubs(:find).returns true
-        @cutter.stubs(:validate_gem_version).returns true
-        @cutter.stubs(:authorize).returns true
-        @cutter.stubs(:validate).returns true
-        @cutter.stubs(:save)
-
-        legit_gem = create(:rubygem, name: 'legit-gem')
-        @cutter.stubs(:rubygem).returns(legit_gem)
-
-        @cutter.process
-      end
-
-      should "not attempt to find rubygem if spec can't be pulled" do
-        @cutter.stubs(:pull_spec).returns false
-        @cutter.stubs(:find).never
-        @cutter.stubs(:authorize).never
-        @cutter.stubs(:save).never
-        @cutter.process
-      end
-
-      should "not attempt to authorize if not found" do
-        @cutter.stubs(:pull_spec).returns true
-        @cutter.stubs(:find)
-        @cutter.stubs(:authorize).never
-        @cutter.stubs(:save).never
-
-        @cutter.process
-      end
-
-      should "not attempt to validate if not authorized" do
-        @cutter.stubs(:pull_spec).returns true
-        @cutter.stubs(:find).returns true
-        @cutter.stubs(:validate_gem_version).returns true
-        @cutter.stubs(:authorize).returns false
-        @cutter.stubs(:validate).never
-        @cutter.stubs(:save).never
-
-        legit_gem = create(:rubygem, name: 'legit-gem')
-        @cutter.stubs(:rubygem).returns(legit_gem)
-
-        @cutter.process
-      end
-
-      should "not attempt to save if not validated" do
-        @cutter.stubs(:pull_spec).returns true
-        @cutter.stubs(:find).returns true
-        @cutter.stubs(:validate_gem_version).returns true
-        @cutter.stubs(:authorize).returns true
-        @cutter.stubs(:validate).returns false
-        @cutter.stubs(:save).never
-
-        legit_gem = create(:rubygem, name: 'legit-gem')
-        @cutter.stubs(:rubygem).returns(legit_gem)
-
-        @cutter.process
-      end
-
-      should "not attempt to save if duplicate gem version" do
-        @cutter.stubs(:pull_spec).returns true
-        @cutter.stubs(:find).returns true
-        @cutter.stubs(:validate_gem_version).returns(false)
-        @cutter.stubs(:authorize).returns false
-        @cutter.stubs(:validate).returns false
-        @cutter.stubs(:save).never
-
-        legit_gem = create(:rubygem, name: 'legit-gem')
-        @cutter.stubs(:rubygem).returns(legit_gem)
-
-        @cutter.process
-      end
     end
 
     should "not be able to pull spec from a bad path" do
