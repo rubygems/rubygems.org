@@ -2,6 +2,7 @@
 # permanent solution should be pushed upstream into rubygems.
 
 require "rubygems"
+require "rubygems/package"
 
 # Assert we're using Psych
 abort "Use Psych for YAML, install libyaml and reinstall ruby" unless YAML == Psych
@@ -39,6 +40,17 @@ module Gem
       spec.reset_nil_attributes_to_default
 
       spec
+    end
+  end
+  class Package
+    def read_checksums gem
+      Gem.load_yaml
+
+      @checksums = gem.seek 'checksums.yaml.gz' do |entry|
+        Zlib::GzipReader.wrap entry do |gz_io|
+          Psych.safe_load(gz_io.read, Gem::Specification::WHITELISTED_CLASSES, Gem::Specification::WHITELISTED_SYMBOLS, true)
+        end
+      end
     end
   end
 end
