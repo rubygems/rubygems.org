@@ -22,7 +22,7 @@ class PusherTest < ActiveSupport::TestCase
       @cutter.process
     end
 
-    should "not attempt to find rubygem if spec can't be pulled" do
+    should "not attempt to find gem if spec can't be pulled" do
       @cutter.stubs(:pull_spec).returns false
       @cutter.stubs(:find).never
       @cutter.stubs(:authorize).never
