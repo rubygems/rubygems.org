@@ -19,7 +19,7 @@ RUN apk add --no-cache \
 RUN mkdir -p /app
 WORKDIR /app
 
-RUN gem update --system 2.6.10
+RUN gem update --system 2.6.14
 
 COPY . /app
 

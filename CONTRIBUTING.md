@@ -55,7 +55,7 @@ gems for your organization..**
 #### Environment (OS X)
 
 * Use Ruby 2.3.5
-* Use Rubygems 2.6.10
+* Use Rubygems 2.6.14
 * Install bundler: `gem install bundler`
 * Install Elastic Search:
   * Pull ElasticSearch `5.1.2` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:5.1.2`
@@ -73,7 +73,7 @@ gems for your organization..**
 
 * Use Ruby 2.3.5 `apt-get install ruby2.3`
   * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
-* Use Rubygems 2.6.10
+* Use Rubygems 2.6.14
 * Install bundler: `gem install bundler`
 * Install Elastic Search:
   * Pull ElasticSearch `5.1.2` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:5.1.2`
