@@ -140,13 +140,11 @@ application in development environment especially for performance related issues
 
 ### Pushing gems
 
-* In order to push a gem to your local installation use a command like
-    the following:
+* In order to push a gem to your local installation use a command like the following:
 
-    ``` bash
-    $ RUBYGEMS_HOST=http://localhost:3000 gem push hola-0.0.3.gem
-    ```
----
+``` bash
+$ RUBYGEMS_HOST=http://localhost:3000 gem push hola-0.0.3.gem
+```
 
 When everything is set up, start the web server with `$ rails server` and browse to
 [localhost:3000](http://localhost:3000) or use [Pow](http://pow.cx)!
