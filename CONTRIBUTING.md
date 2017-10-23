@@ -7,15 +7,15 @@ How To Contribute
 -----------------
 
 * Follow the steps described in [Development Setup](#development-setup)
-* Create a topic branch: `git checkout -b awesome_feature`
+* Create a topic branch: `$ git checkout -b awesome_feature`
 * Commit your changes
-* Keep up to date: `git fetch && git rebase origin/master`
+* Keep up to date: `$ git fetch && git rebase origin/master`
 
 Once you’re ready:
 
 * Fork the project on GitHub
-* Add your repository as a remote: `git remote add your_remote your_repo`
-* Push up your branch: `git push your_remote awesome_feature`
+* Add your repository as a remote: `$ git remote add your_remote your_repo`
+* Push up your branch: `$ git push your_remote awesome_feature`
 * Create a Pull Request for the topic branch, asking for review.
 
 If you’re looking for things to hack on, please check
@@ -56,55 +56,55 @@ gems for your organization..**
 
 * Use Ruby 2.3.5
 * Use Rubygems 2.6.10
-* Install bundler: `gem install bundler`
+* Install bundler: `$ gem install bundler`
 * Install Elastic Search:
-  * Pull ElasticSearch `5.1.2` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:5.1.2`
+  * Pull ElasticSearch `5.1.2` : `$ docker pull docker.elastic.co/elasticsearch/elasticsearch:5.1.2`
   * Running Elasticsearch from the command line:
   ```
-  docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" docker.elastic.co/elasticsearch/elasticsearch:5.1.2
+  $ docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" docker.elastic.co/elasticsearch/elasticsearch:5.1.2
   ```
 
-* Install PostgreSQL (>= 8.4.x): `brew install postgres`
-  * Setup information: `brew info postgresql`
-* Install memcached: `brew install memcached`
-  * Show all memcached options: `memcached -h`
+* Install PostgreSQL (>= 8.4.x): `$ brew install postgres`
+  * Setup information: `$ brew info postgresql`
+* Install memcached: `$ brew install memcached`
+  * Show all memcached options: `$ memcached -h`
 
 #### Environment (Linux - Debian/Ubuntu)
 
-* Use Ruby 2.3.5 `apt-get install ruby2.3`
+* Use Ruby 2.3.5 `$ apt-get install ruby2.3`
   * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
 * Use Rubygems 2.6.10
-* Install bundler: `gem install bundler`
+* Install bundler: `$ gem install bundler`
 * Install Elastic Search:
-  * Pull ElasticSearch `5.1.2` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:5.1.2`
+  * Pull ElasticSearch `5.1.2` : `$ docker pull docker.elastic.co/elasticsearch/elasticsearch:5.1.2`
   * Running Elasticsearch from the command line:
   ```
-  docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" docker.elastic.co/elasticsearch/elasticsearch:5.1.2
+  $ docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" docker.elastic.co/elasticsearch/elasticsearch:5.1.2
   ```
-* Install PostgreSQL: `apt-get install postgresql postgresql-server-dev-all`
+* Install PostgreSQL: `$ apt-get install postgresql postgresql-server-dev-all`
   * Help to setup database <https://wiki.debian.org/PostgreSql>
-* Install memcached: `apt-get install memcached`
-  * Show all memcached options: `memcached -h`
+* Install memcached: `$ apt-get install memcached`
+  * Show all memcached options: `$ memcached -h`
 
 #### Getting the code
 
-* Clone the repo: `git clone git://github.com/rubygems/rubygems.org`
+* Clone the repo: `$ git clone git://github.com/rubygems/rubygems.org`
 * Move into your cloned rubygems directory if you haven’t already:
-    `cd rubygems.org`
+    `$ cd rubygems.org`
 * Install dependencies:
-    `bundle install`
+    `$ bundle install`
 
 #### Setting up the database
 
-* Get set up: `./script/setup`
+* Get set up: `$ ./script/setup`
 * Run the database rake tasks if needed:
-    `bundle exec rake db:reset db:test:prepare --trace`
+    `$ bundle exec rake db:reset db:test:prepare --trace`
 
 #### Running tests
 
 * Start elastic search: `elasticsearch`
 * Start memcached: `memcached`
-* Run the tests: `bundle exec rake`
+* Run the tests: `$ bundle exec rake`
 
 #### Running RuboCop
 
@@ -112,12 +112,12 @@ We use RuboCop to enforce a consistent coding style throughout the project.
 Please ensure any changes you make conform to our style standards or else the
 build will fail.
 
-    bundle exec rake rubocop
+    $ bundle exec rake rubocop
 
 If you'd like RuboCop to attempt to automatically fix your style offenses, you
 can try running:
 
-    bundle exec rake rubocop:auto_correct
+    $ bundle exec rake rubocop:auto_correct
 
 #### Importing gems into the database
 
@@ -126,14 +126,14 @@ can try running:
     * _To import a small set of gems you can point the import process to any
         gems cache directory, like a very small `rvm` gemset for instance, or
 	specifying `GEM_PATH/cache` instead of `vendor/cache`._
-* If you need the index available then run `bundle exec rake gemcutter:index:update`.
+* If you need the index available then run `$ bundle exec rake gemcutter:index:update`.
     This primes the filesystem gem index for local use.
 
 #### Getting the test data
 
 * A good way to get some test data is to import from a local gem directory.
-`gem env` will tell you where rubygems stores your gems. Run
-`bundle exec rake gemcutter:import:process #{INSTALLATION_DIRECTORY}/cache`
+`$ gem env` will tell you where rubygems stores your gems. Run
+`$ bundle exec rake gemcutter:import:process #{INSTALLATION_DIRECTORY}/cache`
 
 * If you see "Processing 0 gems" you’ve probably specified the wrong
 directory. The proper directory will be full of .gem files.
@@ -149,11 +149,11 @@ application in development environment especially for performance related issues
     the following:
 
     ``` bash
-    RUBYGEMS_HOST=http://localhost:3000 gem push hola-0.0.3.gem
+    $ RUBYGEMS_HOST=http://localhost:3000 gem push hola-0.0.3.gem
     ```
 ---
 
-When everything is set up, start the web server with `rails server` and browse to
+When everything is set up, start the web server with `$ rails server` and browse to
 [localhost:3000](http://localhost:3000) or use [Pow](http://pow.cx)!
 
 Database Layout
