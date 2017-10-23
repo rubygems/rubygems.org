@@ -1,10 +1,8 @@
-Contribution Guidelines
-=======================
+# Contribution Guidelines
 
 Want to get started working on RubyGems.org? Start here!
 
-How To Contribute
------------------
+## How To Contribute
 
 * Follow the steps described in [Development Setup](#development-setup)
 * Create a topic branch: `$ git checkout -b awesome_feature`
@@ -24,8 +22,7 @@ found bugs or have feature ideas don’t be afraid to pipe up and ask the
 [mailing list](https://groups.google.com/group/rubygems-org) or IRC channel
 (`#rubygems` on `irc.freenode.net`) about them.
 
-Acceptance
-----------
+## Acceptance
 
 **Contributions WILL NOT be accepted without tests.**
 
@@ -33,8 +30,7 @@ If you haven't tested before, start reading up in the `test/` directory to see
 what's going on. If you've got good links regarding TDD or testing in general
 feel free to add them here!
 
-Branching
----------
+## Branching
 
 For your own development, use the topic branches. Basically, cut each
 feature into its own branch and send pull requests based off those.
@@ -42,8 +38,7 @@ feature into its own branch and send pull requests based off those.
 The master branch is the main production branch. **Always** should be
 fast-forwardable.
 
-Development Setup
------------------
+## Development Setup
 
 This page is for setting up Rubygems on a local development machine to
 contribute patches/fixes/awesome stuff. **If you need to host your own
@@ -52,7 +47,7 @@ gem server, please consider checking out
 provide pass-through caching for RubyGems.org, as well as host private
 gems for your organization..**
 
-#### Environment (OS X)
+### Environment (OS X)
 
 * Use Ruby 2.3.5
 * Use Rubygems 2.6.10
@@ -69,7 +64,7 @@ gems for your organization..**
 * Install memcached: `$ brew install memcached`
   * Show all memcached options: `$ memcached -h`
 
-#### Environment (Linux - Debian/Ubuntu)
+### Environment (Linux - Debian/Ubuntu)
 
 * Use Ruby 2.3.5 `$ apt-get install ruby2.3`
   * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
@@ -86,7 +81,7 @@ gems for your organization..**
 * Install memcached: `$ apt-get install memcached`
   * Show all memcached options: `$ memcached -h`
 
-#### Getting the code
+### Getting the code
 
 * Clone the repo: `$ git clone git://github.com/rubygems/rubygems.org`
 * Move into your cloned rubygems directory if you haven’t already:
@@ -94,19 +89,19 @@ gems for your organization..**
 * Install dependencies:
     `$ bundle install`
 
-#### Setting up the database
+### Setting up the database
 
 * Get set up: `$ ./script/setup`
 * Run the database rake tasks if needed:
     `$ bundle exec rake db:reset db:test:prepare --trace`
 
-#### Running tests
+### Running tests
 
 * Start elastic search: `elasticsearch`
 * Start memcached: `memcached`
 * Run the tests: `$ bundle exec rake`
 
-#### Running RuboCop
+### Running RuboCop
 
 We use RuboCop to enforce a consistent coding style throughout the project.
 Please ensure any changes you make conform to our style standards or else the
@@ -119,7 +114,7 @@ can try running:
 
     $ bundle exec rake rubocop:auto_correct
 
-#### Importing gems into the database
+### Importing gems into the database
 
 * Import gems into the database with Rake task.
     `bundle exec rake gemcutter:import:process vendor/cache`
@@ -129,7 +124,7 @@ can try running:
 * If you need the index available then run `$ bundle exec rake gemcutter:index:update`.
     This primes the filesystem gem index for local use.
 
-#### Getting the test data
+### Getting the test data
 
 * A good way to get some test data is to import from a local gem directory.
 `$ gem env` will tell you where rubygems stores your gems. Run
@@ -138,12 +133,12 @@ can try running:
 * If you see "Processing 0 gems" you’ve probably specified the wrong
 directory. The proper directory will be full of .gem files.
 
-#### Getting the data dumps
+### Getting the data dumps
 * You can use rubygems.org data [dumps](https://rubygems.org/pages/data) to test
 application in development environment especially for performance related issues.
 * To load the main database dump into Postgres, use `psql` - e.g. `$ psql gemcutter_development < PostgreSQL.sql`.
 
-#### Pushing gems
+### Pushing gems
 
 * In order to push a gem to your local installation use a command like
     the following:
@@ -156,8 +151,7 @@ application in development environment especially for performance related issues
 When everything is set up, start the web server with `$ rails server` and browse to
 [localhost:3000](http://localhost:3000) or use [Pow](http://pow.cx)!
 
-Database Layout
----------------
+### Database Layout
 
 Courtesy of [Rails ERD](https://voormedia.github.io/rails-erd/)
 
