@@ -55,6 +55,8 @@ GEM
       aws-sdk-core (= 2.10.21)
     aws-sigv4 (1.0.1)
     bcrypt (3.1.11)
+    bootsnap (1.1.5)
+      msgpack (~> 1.0)
     bourne (1.6.0)
       mocha (~> 1.1)
     builder (3.2.3)
@@ -309,6 +311,7 @@ PLATFORMS
 DEPENDENCIES
   autoprefixer-rails
   aws-sdk (~> 2.2)
+  bootsnap
   bourne
   capistrano (~> 3.0)
   capistrano-bundler (~> 1.1)

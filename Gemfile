@@ -56,6 +56,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'bootsnap', require: false
   gem 'rails-erd'
 end
 
