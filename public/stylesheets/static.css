@@ -53,7 +53,6 @@ img {
   position: absolute;
   width: 100%;
   top: 60px;
-  left: 2%;
 }
 
 @-webkit-keyframes bounce {
@@ -76,3 +75,31 @@ img {
     animation-timing-function: ease-in-out;
   }
 }
+
+.error__illustration__boat {
+  -webkit-animation: rock 5s infinite;
+  animation: rock 5s infinite;
+  position: absolute;
+  width: 100%;
+  top: 50px;
+}
+
+@-webkit-keyframes rock {
+  50% {
+    -webkit-transform: rotate(-3deg) translateX(3px);
+    -webkit-animation-timing-function: ease-in-out;
+  }
+}
+@-ms-keyframes rock {
+  50% {
+    transform: rotate(-3deg) translateX(3px);
+    animation-timing-function: ease-in-out;
+  }
+}
+@keyframes rock {
+  50% {
+    transform: rotate(-3deg) translateX(3px);
+    animation-timing-function: ease-in-out;
+  }
+}
+
