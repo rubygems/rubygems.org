@@ -9,7 +9,7 @@ if [ "$CI" == "true" ]; then
   echo "Installing toxiproxy binary for Travis CI"
   wget -O /tmp/toxiproxy-1.2.0 https://github.com/Shopify/toxiproxy/releases/download/v1.2.0/toxiproxy-linux-amd64
   chmod +x /tmp/toxiproxy-1.2.0
-  /tmp/toxiproxy-1.2.0 >& /dev/null &
+  /tmp/toxiproxy-1.2.0 &
   exit 0
 fi
 
