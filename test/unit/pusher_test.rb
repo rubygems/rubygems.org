@@ -177,6 +177,21 @@ class PusherTest < ActiveSupport::TestCase
         assert_not_nil @cutter.version
       end
 
+      should "allow fully yanked namespaces to be pushed to" do
+        @rubygem = create(:rubygem, created_at: 2.years.ago, updated_at: 6.months.ago)
+        create(:version, rubygem: @rubygem, indexed: false)
+
+        spec = mock
+        spec.stubs(:name).returns @rubygem.name
+        spec.stubs(:version).returns "1.3.3.7"
+        spec.stubs(:original_platform).returns "ruby"
+        @cutter.stubs(:spec).returns spec
+        @cutter.find
+
+        assert_equal @rubygem, @cutter.rubygem
+        assert_not_nil @cutter.version
+      end
+
       should "error out when changing case with usuable versions" do
         @rubygem = create(:rubygem)
         create(:version, rubygem: @rubygem)
@@ -290,9 +305,7 @@ class PusherTest < ActiveSupport::TestCase
       should "create rubygem index" do
         @rubygem.update_column('updated_at', Date.new(2016, 07, 04))
         Delayed::Worker.new.work_off
-        response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
-                                                        type:  'rubygem',
-                                                        id:    @rubygem.id
+        response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}", type: 'rubygem', id: @rubygem.id
         expected_response = {
           'name'                  => 'gemsgemsgems',
           'yanked'                => false,
@@ -323,9 +336,7 @@ class PusherTest < ActiveSupport::TestCase
 
       should "update rubygem index" do
         Delayed::Worker.new.work_off
-        response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
-                                                        type:  'rubygem',
-                                                        id:    @rubygem.id
+        response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}", type: 'rubygem', id: @rubygem.id
         assert_equal 'new summary', response['_source']['summary']
       end
     end
