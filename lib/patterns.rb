@@ -92,5 +92,6 @@ module Patterns
     yaml
     ubygems
     sidekiq-pro
+    graphql-pro
   ].freeze
 end
