@@ -17,7 +17,6 @@ module Patterns
     continuation
     coverage
     delegate
-    digest
     drb
     e2mmap
     english
@@ -72,8 +71,6 @@ module Patterns
     shellwords
     singleton
     socket
-    stringio
-    strscan
     sync
     syslog
     tempfile
