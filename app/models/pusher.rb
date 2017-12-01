@@ -31,6 +31,10 @@ class Pusher
     # can clean things up well.
 
     @indexer.write_gem @body, @spec
+  rescue ArgumentError => e
+    @version.destroy
+    Honeybadger.notify(e)
+    notify("There was a problem saving your gem. #{e}", 400)
   rescue StandardError => e
     @version.destroy
     Honeybadger.notify(e)

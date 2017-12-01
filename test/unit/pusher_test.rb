@@ -105,6 +105,14 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal @cutter.code, 403
     end
 
+    should "not be able to save a gem if the date is not valid" do
+      @gem = gem_file("bad-date-1.0.0.gem")
+      @cutter = Pusher.new(@user, @gem)
+      @cutter.process
+      assert_match(/There was a problem saving your gem. year too big to marshal: 1017 UTC/, @cutter.message)
+      assert_equal @cutter.code, 400
+    end
+
     should "not be able to pull spec with metadata containing bad ruby symbols" do
       ["1.0.0", "2.0.0", "3.0.0", "4.0.0"].each do |version|
         @gem = gem_file("dos-#{version}.gem")
