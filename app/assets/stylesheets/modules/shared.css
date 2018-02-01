@@ -90,13 +90,13 @@ a.page__heading {
     outline: none; }
 
 .page__subheading {
-  color: #a6aab2; }
+  color: #e9573f; }
   @media (max-width: 929px) {
     .page__subheading {
-      font-size: 18px; } }
+      font-size: 20px; } }
   @media (min-width: 930px) {
     .page__subheading {
-      font-size: 24px; } }
+      font-size: 30px; } }
 
 .page__heading__info {
   font-weight: 200;
