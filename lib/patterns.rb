@@ -72,8 +72,6 @@ module Patterns
     shellwords
     singleton
     socket
-    stringio
-    strscan
     sync
     syslog
     tempfile
