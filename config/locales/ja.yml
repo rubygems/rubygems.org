@@ -1,0 +1,277 @@
+ja:
+  edit: 編集
+  failure_when_forbidden: URLを確認するか、再試行して下さい。
+  feed_latest: RubyGems.org | 最新のGemの一覧
+  feed_subscribed: RubyGems.org | 購読したGemの一覧
+  footer_about: RubyGems.orgはRubyコミュニティのGemホスティングサービスです。簡単にあなたのGemを<a href="%{publish_docs}">公開</a>し、<a href="%{install_docs}">インストール</a>することができます。<a href="%{api_docs}">API</a>で<a href="%{gem_list}">Gemの一覧</a>を取得しましょう。コミュニティに<a href="%{contributing_docs}">寄与</a>することであなたの手でサイトをより良いものにできます。
+  form_disable_with: お待ち下さい...
+  help_url: http://help.rubygems.org
+  locale_name: 日本語
+  none: なし
+  not_found:
+  please_sign_up: アクセスが拒否されました。https://rubygems.org でアカウント登録を行ってください。
+  sign_in: ログイン
+  sign_up: 新規登録
+  subtitle: コミュニティのGemホスティングサービス
+  this_rubygem_could_not_be_found: お探しのGemは見つかりませんでした。
+  time_ago: "%{duration}前"
+  title: RubyGems.org
+  update: 更新
+  try_again: エラーが発生しました。再試行してください。
+  advanced_search: 高度な検索
+  activerecord:
+    attributes:
+      linkset:
+        bugs: バグトラッカーのURL
+        changelog: 更新履歴のURL
+        code: ソースコードのURL
+        docs: ドキュメントのURL
+        mail: メーリングリストのURL
+        wiki: WikiのURL
+      session:
+        password: パスワード
+        who: Email又はユーザー名
+      user:
+        avatar: アバター
+        email: Emailアドレス
+        handle: ユーザー名
+        password: パスワード
+  dashboards:
+    show:
+      creating_link_text: 作成
+      gem_link_text: Gemページ
+      latest: 最近の更新
+      latest_title: 最近の更新のRSSフィード
+      migrating_link_text: 統合
+      mine: あなたのGem
+      my_subscriptions: 購読
+      no_owned: あなたはまだGemを公開していません。よろしければGemの%{creating_link}又はRubyForgeからの%{migrating_link}ガイドをご覧ください。
+      no_subscriptions: あなたはまだGemを購読していません。%{gem_link}から購読を行なってみてください。
+  email_confirmations:
+    create:
+      promise_resend: メールアドレスが登録されている場合には、アカウント有効化のための確認メールを送信しました。
+    new:
+      submit: 再送
+      title: 確認メールを再送する
+      will_email_notice: アカウントを有効化するためのリンクを記載した確認メールを送信します。
+    update:
+      confirmed_email: あなたのメールアドレスの確認が完了しました。
+  home:
+    index:
+      downloads_counting: ダウンロード数
+      find_blurb: Find, install, and publish RubyGems.
+      learn:
+        install_rubygems: RubyGemsをインストール
+  layouts:
+    application:
+      footer:
+        about: 概要
+        api: API
+        blog: ブログ
+        contribute: 寄与
+        data: データ
+        designed_by: Designed by
+        discussion_forum: 議論
+        gems_served_by: Gems served by
+        guides: ガイド
+        help: ヘルプ
+        hosted_by: Hosted by
+        logging_by: Logging by
+        monitored_by: Monitored by
+        optimized_by: Optimized by
+        resolved_with: Resolved with
+        security: セキュリティ
+        source_code: ソースコード
+        statistics: 統計
+        status: ステータス
+        supported_by: Supported by
+        tested_by: Tested by
+        tracking_by: Tracking by
+        uptime: 可用性
+      header:
+        dashboard: ダッシュボード
+        search_gem: 検索…
+        sign_in: ログイン
+        sign_out: ログアウト
+        sign_up: 新規登録
+  mailer:
+    confirm_your_email: あなたのメールアドレスに送信されたURLを確認してください。
+    confirmation_subject: RubyGems.orgに登録されたあなたのメールアドレスを確認してください
+    email_confirmation:
+      confirmation_link: メールアドレスを確認する
+      welcome_message: RubyGems.orgにようこそ! 以下のリンクをクリックしてあなたのメールアドレスを確認してください
+    email_reset:
+      visit_link_instructions: RubyGems.orgでのあなたのメールアドレスが変更されました。以下のURLからメールアドレスを確認してください。
+      link_expiration_explanation: このリンクは15分間のみ有効です。
+    deletion_complete:
+      subject: あなたのアカウントはrubygems.orgから削除されました
+      body: あなたのアカウント削除申請が処理されました。いつでも%{sign_up}ページから再登録をすることができます。
+    deletion_failed:
+      subject: あなたのアカウントはrubygems.orgから削除されませんでした
+      body: あなたのrubygems.orgにおけるアカウント削除申請は処理されませんでした。申し訳ありませんが、現在アカウントを削除することができません。しばらく待ってから再度お試し頂くか、問題が継続するようならば%{contact}をお願いいたします。
+  news:
+    show:
+      title: 新しくリリースされたGem
+      all_gems: 全体
+      popular_gems: 人気
+    popular:
+      title: 新しくリリースされた人気のGem
+  pages:
+    about:
+      founding: 2009年4月に%{founder}の手によって発足したプロジェクトは、現在%{contributors}の貢献を得て%{downloads}に到るまで成長を遂げました。RubyGems 1.3.6 リリースからは、サイト名称をGemcutterから%{title}に変更し、Rubyコミュニティの中におけるサイトの役割を明確化しました。
+      support: Rubygems.orgは特定の企業によって運営されていないにも関わらず、私たちに多大な利益をもたらしています。現行のサイトのデザイン、イラストレーション、そしてフロントエンド開発は%{dockyard}により為されました。%{github}は私たちがコードを共有し協力するために必要不可欠なツールです。当初のサービスが稼働していた%{heroku}のサービスは、プロジェクトをコミュニティ全体が信頼できる持続性のあるものとしました。現在のサービスは%{aws}によりホストされています。
+      technical: このサイトの一つの特徴、それは100% Rubyで構成されているということです。主要部分は%{rails}アプリケーションで、Gemは%{s3}上にホストされ%{fastly}によりサーブされており、 新しく公開したGemがインストール可能になるまでほんの数秒しか要しません。詳細はGitHub上の%{license}の%{source_code}をご確認ください。
+      title: 概要
+      purpose:
+        better_api: Gemを取り扱うより良いAPIを提供すること
+        enable_community: コミュニティがサイトを改善できるようにすること
+        header: 'ようこそRubyコミュニティのGemホスティングサービス %{site}へ。このプロジェクトの目的は以下の3点です:'
+        transparent_pages: 透過的でアクセスしやすいプロジェクトページを作成すること
+  passwords:
+    edit:
+      submit: このパスワードを保存する
+      title: パスワードをリセットする
+    new:
+      submit: パスワードをリセットする
+      title: パスワードを変更する
+      will_email_notice: パスワード変更のためのメールが送信されます。
+  profiles:
+    edit:
+      email_awaiting_confirmation: あなたの新しいメールアドレス%{unconfirmed_email}を確認してください。
+      enter_password: パスワードを入力してください。
+      hide_email: メールアドレスを公開しない
+      optional_twitter_username: Twitterのユーザー名(任意,公開)
+      title: プロフィールを編集する
+      api_access:
+        confirm_reset: この操作は取り消せませんが、本当によろしいですか?
+        credentials: 'もしコマンドラインから%{gem_commands_link}を使いたい場合、%{gem_credentials_file}ファイルが必要になります。このファイルは以下のコマンドで再生成することができます:'
+        key_is: あなたのAPIキーは%{key}です。
+        link_text: Gemコマンド
+        reset: APIキーをリセットする
+        title: APIアクセス
+      reset_password:
+        link_text: ここから新規に発行することができます。
+        text: 新しいパスワードが必要ですか? %{link}
+        title: パスワードのリセット
+      delete:
+        delete: アカウント削除
+        delete_profile: 削除
+        warning: アカウントの削除は不可逆的操作です。これはサポートに連絡しても取り消すことはできません。ご注意ください。
+    delete:
+      title: アカウント削除
+      confirm: 確認
+      instructions: お別れをしなければならないことが残念です...。パスワードを入力して操作を確定してください。
+      list_only_owner: これらのGemはyanked状態になります。もしアカウントの削除前に別のオーナーを追加したい場合は、%{command_link}コマンドを用いてください。
+      list_multi_owner: あなたはこれらのGemへのアクセス権を喪失しますが、他のオーナーがアクセス権を継続します。
+    rubygem:
+      owners_header: オーナー
+    destroy:
+      request_queued: あなたのアカウント削除処理は追って実行されます。削除処理の完了次第、確認のメールを送信します。
+    update:
+      confirmation_mail_sent: 新しいメールアドレスを確認する手順を記載したメールを送信しました。
+      updated: あなたのプロフィールはアップデートされました。
+    request_denied: このリクエストは拒否されました。あなたのパスワードを認証することができませんでした。
+  rubygems:
+    aside:
+      bundler_header: Gemfile
+      copied: コピー完了!
+      copy_to_clipboard: クリップボードにコピー
+      downloads_for_this_version: 現行バージョン
+      install: インストール
+      required_ruby_version: 必要Rubyバージョン
+      required_rubygems_version: 必要Gemバージョン
+      links:
+        badge: バッジ
+        bugs: バグトラッカー
+        changelog: 変更履歴
+        code: ソースコード
+        docs: ドキュメント
+        download: ダウンロード
+        header: リンク集
+        home: ホームページ
+        mail: メーリングリスト
+        report_abuse: 悪用報告
+        reverse_dependencies: 被依存性
+        rss: RSS
+        subscribe: 購読
+        unsubscribe: 購読を解除
+        wiki: Wiki
+    blacklisted:
+      blacklisted_namespace: この名前はRubygems.orgにより保持されています。
+    dependencies:
+      header: "%{title}依存性"
+    edit:
+      other_fields_notice: 他の全ての項目は更新された新しいGemをプッシュすることで編集することができます。
+      subtitle: '%{gem}'
+      title: リンクを編集する
+    gem_members:
+      authors_header: 作者
+      owners_header: オーナー
+      sha_256_checksum: SHA 256チェックサム
+    index:
+      downloads: ダウンロード
+      title: Gems
+    show:
+      licenses_header: ライセンス
+      no_licenses: N/A
+      requirements_header: 必須要件
+      show_all_versions: 全てのバージョンを表示 (全%{count}項目)
+      versions_header: バージョン履歴
+      yanked_notice: このバージョンはyanked状態としてマークされおり、直接のダウンロードや依存性として利用できなくなっています。
+    show_yanked:
+      not_hosted_notice: このGemはRubyGems.org上ではホストされていません。
+      reserved_namespace:
+        one: このGemは以前存在していましたが、オーナーが削除しました。RubyGems.orgチームはこの名前を1日間だけ確保しています。期間終了後、誰でもgem pushによりこの名前は利用可能となります。<br/>もしあなたが以前のオーナーならば、gem ownerコマンドを用いてオーナーを変更することができる他、新しいバージョンをgem pushを用いて公開することができます。
+        other: このGemは以前存在していましたが、オーナーが削除しました。RubyGems.orgチームはこの名前を%{count}日間確保しています。期間終了後、誰でもgem pushによりこの名前は利用可能となります。<br/>もしあなたが以前のオーナーならば、gem ownerコマンドを用いてオーナーを変更することができる他、新しいバージョンをgem pushを用いて公開することができます。
+  reverse_dependencies:
+    index:
+      title: "%{name}の被依存性"
+    reverse_dependencies:
+      search_reverse_dependencies: "被依存性の中から検索…"
+  searches:
+    advanced:
+      name: 名前
+      summary: 概要
+      description: 説明
+      downloads: ダウンロード数
+      updated: 更新日
+    show:
+      exact_match: 完全一致
+      subtitle: '%{query}の検索結果'
+  sessions:
+    new:
+      forgot_password: パスワードをお忘れですか?
+      resend_confirmation: 確認メールが見当たりませんか?
+  stats:
+    index:
+      all_time_most_downloaded: 累計最多ダウンロード数
+      total_downloads: 累計ダウンロード数
+      total_gems: Gem総数
+      total_users: ユーザー総数
+  users:
+    create:
+      email_sent: 確認メールがあなたのメールアドレスに送信されました。
+    new:
+      have_account: すでにアカウントをお持ちですか?
+  versions:
+    index:
+      not_hosted_notice: このGemはRubyGems.org上ではホストされていません。
+      title: '%{name}の全バージョン履歴'
+      versions_since: "%{since}からの%{count}項目"
+    version:
+      yanked: yanked
+  will_paginate:
+    next_label: 次
+    page_gap: "…"
+    previous_label: 前
+    page_entries_info:
+      multi_page: 全%{count}中 %{from}件目から%{to}件目の%{model}を表示中
+      multi_page_html: 全%{count}中 <b>%{from}件目から%{to}件目</b>の%{model}を表示中
+      single_page:
+        one: 全1件の%{model}を表示中
+        other: 全%{count}件の%{model}を表示中
+        zero: '%{model}は見つかりませんでした'
+      single_page_html:
+        one: <b>全1件</b>の%{model}を表示中
+        other: <b>全 %{count}件</b>の%{model}を表示中
+        zero: '%{model}は見つかりませんでした'
