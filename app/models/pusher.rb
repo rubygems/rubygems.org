@@ -65,7 +65,7 @@ class Pusher
     @rubygem = Rubygem.name_is(name).first || Rubygem.new(name: name)
 
     unless @rubygem.new_record?
-      if @rubygem.find_version_from_spec(spec)
+      if @rubygem.find_version_from_spec(spec) && !@rubygem.pushable?
         notify("Repushing of gem versions is not allowed.\n" \
                "Please use `gem yank` to remove bad gem releases.", 409)
 
