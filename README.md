@@ -19,7 +19,7 @@ The Ruby community's gem host.
 * [IRC][]: #rubygems on Freenode
 * [Travis][]: [![Build Status](https://img.shields.io/travis/rubygems/rubygems.org/master.svg)][travis]
 * [Gemnasium][]: [![Dependency Status](https://img.shields.io/gemnasium/rubygems/rubygems.org.svg)][gemnasium]
-* [Code Climate][]: [![Code Climate](https://img.shields.io/codeclimate/github/rubygems/rubygems.org.svg)][code climate]
+* [Code Climate][]: [![Maintainability](https://api.codeclimate.com/v1/badges/7110bb3f9b765042d604/maintainability)](https://codeclimate.com/github/rubygems/rubygems.org/maintainability)
 * [Trello Board][]
 
 [mailing list]: https://groups.google.com/group/rubygems-org
