@@ -152,9 +152,11 @@
   .header__nav-link span {
     display: inline-block;
     position: relative;
-    max-width: 150px;
+    max-width: 145px;
     overflow: hidden;
-    text-overflow: ellipsis; }
+    text-overflow: ellipsis;
+    vertical-align: bottom;
+    white-space: nowrap; }
 
 @media (max-width: 1019px) {
   .mobile__header__nav-link span {
