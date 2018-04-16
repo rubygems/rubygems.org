@@ -115,6 +115,13 @@ Follow the instructions below on how to install Bundler and setup the database.
 * Start memcached: `memcached`
 * Run the tests: `bundle exec rake`
 
+#### Confirmation emails
+
+* Start rails: `rails s`
+* Sign up for a new user: http://localhost:3000/sign_up
+* Account confirmation email: http://localhost:3000/rails/mailers/mailer/email_confirmation
+  A list of all email previews is available at http://localhost:3000/rails/mailers.
+
 #### Running RuboCop
 
 We use RuboCop to enforce a consistent coding style throughout the project.
