@@ -51,7 +51,7 @@ class RubygemsController < ApplicationController
   def load_gem
     unless @rubygem.owned_by?(current_user)
       flash[:warning] = "You do not have permission to edit this gem."
-      redirect_to root_url
+      redirect_to root_path
     end
 
     @linkset = @rubygem.linkset

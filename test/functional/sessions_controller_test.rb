@@ -10,7 +10,7 @@ class SessionsControllerTest < ActionController::TestCase
       end
 
       should respond_with :redirect
-      should redirect_to('the dashboard') { dashboard_url }
+      should redirect_to('the dashboard') { dashboard_path }
 
       should "sign in the user" do
         assert @controller.request.env[:clearance].signed_in?
@@ -53,7 +53,7 @@ class SessionsControllerTest < ActionController::TestCase
     end
 
     should respond_with :redirect
-    should redirect_to('login page') { sign_in_url }
+    should redirect_to('login page') { sign_in_path }
 
     should "sign out the user" do
       refute @controller.request.env[:clearance].signed_in?

@@ -24,6 +24,6 @@ class SessionsController < Clearance::SessionsController
   end
 
   def url_after_create
-    dashboard_url
+    dashboard_path
   end
 end

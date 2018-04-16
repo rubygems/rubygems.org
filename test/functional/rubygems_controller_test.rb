@@ -114,7 +114,7 @@ class RubygemsControllerTest < ActionController::TestCase
         get :edit, params: { id: @rubygem.to_param }
       end
       should respond_with :redirect
-      should redirect_to('the homepage') { root_url }
+      should redirect_to('the homepage') { root_path }
       should set_flash.to("You do not have permission to edit this gem.")
     end
 
@@ -501,7 +501,7 @@ class RubygemsControllerTest < ActionController::TestCase
         get :edit, params: { id: @rubygem.to_param }
       end
       should respond_with :redirect
-      should redirect_to('the homepage') { root_url }
+      should redirect_to('the homepage') { root_path }
     end
 
     context "On PUT to update" do
@@ -510,7 +510,7 @@ class RubygemsControllerTest < ActionController::TestCase
         put :update, params: { id: @rubygem.to_param, linkset: {} }
       end
       should respond_with :redirect
-      should redirect_to('the homepage') { root_url }
+      should redirect_to('the homepage') { root_path }
     end
   end
 end
