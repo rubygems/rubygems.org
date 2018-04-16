@@ -4,6 +4,8 @@ zh-CN:
   feed_latest: RubyGems.org | 最新 Gems
   feed_subscribed: RubyGems.org | 订阅 Gems
   footer_about: RubyGems.org 是 Ruby 社区的 Gem 托管服务。<br />让你能便捷、快速的发布、管理你的 Gem 以及安装它们。提供 API 查阅可用 Gem 的详细资料。<br />参与进来成为一个贡献者，用你的能力推动社区进步。
+  footer_about_sponsors:
+  footer_about_together:
   form_disable_with: 请稍后...
   help_url: http://help.rubygems.org
   locale_name: 简体中文

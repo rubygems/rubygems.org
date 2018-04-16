@@ -4,6 +4,8 @@ es:
   feed_latest: RubyGems.org | Gemas Nuevas
   feed_subscribed: RubyGems.org | Subscripciones de Gemas
   footer_about: RubyGems.org es el servicio de alojamiento de gemas de la comunidad de Ruby. Publica tus gemas de manera instantánea e instalalas. Usa la API para interactuar y buscar información de las gemas disponibles. Conviértete en contribuidor y mejora este sitio con tus cambios.
+  footer_about_sponsors:
+  footer_about_together:
   form_disable_with: Un momento por favor...
   help_url: http://help.rubygems.org
   locale_name: Español

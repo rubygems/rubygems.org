@@ -156,14 +156,15 @@
                 ) %>
               </p>
               <p>
-                RubyGems.org is made possible by
-                <%= link_to "many sponsors", page_path("sponsors") %>,
-                with development funded by the Ruby trade association,
-                <%= link_to "Ruby Together", "https://rubytogether.org/?source=rubygems" %>.
+                <%= raw t('footer_about_sponsors',
+                  many_sponsors: page_path("sponsors"),
+                  ruby_together: "https://rubytogether.org/?source=rubygems"
+                ) %>
               </p>
               <p>
-                We need your help to fund the developer time that keeps RubyGems.org running smoothly for everyone.
-                <%= link_to "Join Ruby Together today", "https://rubytogether.org/join?source=rubygems" %>.
+                <%= raw t('footer_about_together',
+                  join_ruby_together: "https://rubytogether.org/?source=rubygems"
+                ) %>
               </p>
             </div>
           </div>
