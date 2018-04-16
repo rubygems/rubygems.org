@@ -83,6 +83,6 @@ class DashboardsControllerTest < ActionController::TestCase
   context "On GET to show without being signed in" do
     setup { get :show }
     should respond_with :redirect
-    should redirect_to('the homepage') { root_url }
+    should redirect_to('the homepage') { root_path }
   end
 end

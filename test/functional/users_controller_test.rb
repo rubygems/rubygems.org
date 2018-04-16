@@ -6,7 +6,7 @@ class UsersControllerTest < ActionController::TestCase
       get :new
     end
 
-    should redirect_to("sign up page") { sign_up_url }
+    should redirect_to("sign up page") { sign_up_path }
   end
 
   context "on POST to create" do
