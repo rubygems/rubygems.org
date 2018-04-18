@@ -4,6 +4,8 @@ fr:
   feed_latest: RubyGems.org | Derniers Gems
   feed_subscribed: RubyGems.org | Gems abonnés
   footer_about: RubyGems.org est le service d&rsquo;hébergement de la communauté Ruby. Publiez vos gems instantanément et utilisez-les. Utilisez l'API pour interagir et trouver des informations sur les gems disponibles. Contribuez et améliorez ce site avec nous !
+  footer_about_sponsors:
+  footer_about_together:
   form_disable_with: Veuillez patienter...
   help_url: http://help.rubygems.org
   locale_name: Français

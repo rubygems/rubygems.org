@@ -4,6 +4,8 @@ nl:
   feed_latest: RubyGems.org | Recente Gems
   feed_subscribed: RubyGems.org | Geabonneerde Gems
   footer_about: RubyGems.org is de gem hosting service van de Ruby community. Publiceer and installeer je gems direct. Gebruik de API om meer informatie van beschikbare gems te vinden. Word een deelnemer en verbeter de site met jouw aanpassingen.
+  footer_about_sponsors:
+  footer_about_together:
   form_disable_with: Een moment geduld...
   help_url: http://help.rubygems.org
   locale_name: Nederlands

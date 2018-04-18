@@ -3,7 +3,39 @@ en:
   failure_when_forbidden: Please double check the URL or try submitting it again.
   feed_latest: RubyGems.org | Latest Gems
   feed_subscribed: RubyGems.org | Subscribed Gems
-  footer_about: RubyGems.org is the Ruby community&rsquo;s gem hosting service. Instantly <a href="%{publish_docs}">publish your gems</a> and then <a href="%{install_docs}">install them</a>. Use <a href="%{api_docs}">the API</a> to find out more about <a href="%{gem_list}">available gems</a>. <a href="%{contributing_docs}">Become a contributor</a> and improve the site yourself.
+  footer_about:
+    RubyGems.org is the Ruby community&rsquo;s gem hosting service.
+    Instantly <a href="%{publish_docs}">publish your gems</a> and then
+    <a href="%{install_docs}">install them</a>.
+    Use <a href="%{api_docs}">the API</a> find out more about
+    <a href="%{gem_list}">available gems</a>.
+    <a href="%{contributing_docs}">Become a contributor</a>
+    and improve the site yourself.
+  footer_about_sponsors:
+    RubyGems.org is made possible by
+    <a href="%{many_sponsors}">many sponsors</a>.
+    with development funded by the Ruby trade association,
+    <a href="%{ruby_together}">Ruby Together</a>.
+  footer_about_together:
+    We need your help to fund the developer time that keeps RubyGems.org
+    running smoothly for everyone.
+    <a href="%{join_ruby_together}">Join Ruby Together today.</a>.footer_about:
+    RubyGems.org is the Ruby community&rsquo;s gem hosting service.
+    Instantly <a href="%{publish_docs}">publish your gems</a> and then
+    <a href="%{install_docs}">install them</a>.
+    Use <a href="%{api_docs}">the API</a> find out more about
+    <a href="%{gem_list}">available gems</a>.
+    <a href="%{contributing_docs}">Become a contributor</a>
+    and improve the site yourself.
+  footer_about_sponsors:
+    RubyGems.org is made possible by
+    <a href="%{many_sponsors}">many sponsors</a>.
+    with development funded by the Ruby trade association,
+    <a href="%{ruby_together}">Ruby Together</a>.
+  footer_about_together:
+    We need your help to fund the developer time that keeps RubyGems.org
+    running smoothly for everyone.
+    <a href="%{join_ruby_together}">Join Ruby Together today.</a>.
   form_disable_with: Please wait...
   help_url: http://help.rubygems.org
   locale_name: English

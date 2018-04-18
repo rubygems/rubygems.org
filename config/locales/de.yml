@@ -4,6 +4,8 @@ de:
   feed_latest: RubyGems.org | Neueste Gems
   feed_subscribed: RubyGems.org | Abonnierte Gems
   footer_about:
+  footer_about_sponsors:
+  footer_about_together:
   form_disable_with: Bitte warten...
   help_url: http://help.rubygems.org
   locale_name: Deutsch
