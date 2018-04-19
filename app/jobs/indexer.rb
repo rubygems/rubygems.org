@@ -7,17 +7,18 @@ class Indexer
     purge_cdn
     log "Finished updating the index"
   end
+
   statsd_count_success :perform, 'Indexer.perform'
   statsd_measure :perform, 'Indexer.perform'
 
   def write_gem(body, spec)
-    RubygemFs.instance.store("gems/#{spec.original_name}.gem", body.string)
+    RubygemFs.instance.store("gems/#{spec.full_name}.gem", body.string)
 
     spec.abbreviate
     spec.sanitize
 
     RubygemFs.instance.store(
-      "quick/Marshal.4.8/#{spec.original_name}.gemspec.rz",
+      "quick/Marshal.4.8/#{spec.full_name}.gemspec.rz",
       Gem.deflate(Marshal.dump(spec))
     )
   end
