@@ -19,6 +19,19 @@ class PushTest < ActionDispatch::IntegrationTest
     assert page.has_content?("1.0.0")
   end
 
+  test "pushing a jruby gem" do
+    gem_name = build_gem("jruby-gem", "0.1.0", "test java gem", "jruby")
+
+    push_gem(gem_name)
+
+    gem_full_name = gem_name.sub(".gem", "")
+
+    assert RubygemFs.instance.get("gems/#{gem_full_name}.gem")
+    assert RubygemFs.instance.get("quick/Marshal.4.8/#{gem_full_name}.gemspec.rz")
+
+    assert Version.find_by(full_name: gem_full_name)
+  end
+
   test "push a new version of a gem" do
     rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
     create(:ownership, rubygem: rubygem, user: @user)
