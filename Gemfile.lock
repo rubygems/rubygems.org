@@ -147,7 +147,7 @@ GEM
     gravtastic (3.2.6)
     hashie (3.5.5)
     high_voltage (3.0.0)
-    highline (1.7.8)
+    highline (1.7.10)
     hitimes (1.2.5)
     honeybadger (3.1.2)
     http-cookie (1.0.3)
