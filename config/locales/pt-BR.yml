@@ -3,7 +3,23 @@ pt-BR:
   failure_when_forbidden:
   feed_latest: RubyGems.org | Últimas Gems
   feed_subscribed: RubyGems.org | Gems do seu Feed
-  footer_about: RubyGems.org é o serviço de hospedagem de gems da comunidade Ruby. Publique e instale suas gems instantaneamente. Use a API para interagir e encontrar mais informações sobre gems disponíveis. Torne-se um contribuidor e melhore o site com suas mudanças.
+  footer_about:
+    RubyGems.org é o serviço de hospedagem de gems da comunidade Ruby.
+    <a href="%{publish_docs}">Publique suas gems</a> e as
+    <a href="%{install_docs}">Instale</a> instantaneamente. Use
+    <a href="%{api_docs}">a API</a> para interagir e encontrar mais
+    informações sobre <a href="%{gem_list}">gems disponíveis</a>.
+    <a href="%{contributing_docs}">Torne-se um contribuidor</a> e melhore o
+    site com suas mudanças.
+  footer_about_sponsors:
+    RubyGems.org é possível pelo comprometimento de
+    <a href="%{many_sponsors}">muitos patrocinadores</a>.
+    com o desenvolvimento financiado pela associação,
+    <a href="%{ruby_together}">Ruby Together</a>.
+  footer_about_together:
+    Precisamos de sua ajuda para financiar o tempo de desenvolvimento que
+    mantém o RubyGems.org funcionando sem problemas para todos.
+    <a href="%{join_ruby_together}">Junte-se a Ruby Together hoje</a>.
   form_disable_with: Atualizando...
   help_url: http://help.rubygems.org
   locale_name: Português do Brasil
