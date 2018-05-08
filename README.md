@@ -12,14 +12,13 @@ The Ruby community's gem host.
 <a href="https://rubytogether.org/"><img src="https://rubytogether.org/images/rubies.svg" width=200></a>
 <a href="https://rubycentral.org/"><img src="http://rubycentral.org/images/logo.png" width=200></a><br/>
 
-
 http://rubycentral.org/images/logo.png
 
-> [RubyGems.org](RubyGems.org) is managed by [Ruby Central](http://rubycentral.org), a community-funded organization supported by conference participation for [RailsConf](railsconf.org) and [RubyConf](rubyconf.org) through tickets and sponsorships.
->
-> [RubyTogether](rubytogether.org) sponsors individuals to work on development and operations work of RubyGems.org to augment the work of many volunteers. If you are interested in joining, you can do so as a [developer](https://rubytogether.org/developers) or as a [company](https://rubytogether.org/companies). The availability of RubyGems.org is not dependent on these paid contributors and is the sole responsibility of Ruby Central.
->
-> Hosting fees are paid by Ruby Central and CDN fees are generously donated by [Fastly](fastly.com).
+[RubyGems.org](RubyGems.org) is managed by [Ruby Central](http://rubycentral.org), a community-funded organization supported by conference participation for [RailsConf](railsconf.org) and [RubyConf](rubyconf.org) through tickets and sponsorships.
+
+[RubyTogether](rubytogether.org) sponsors individuals to work on development and operations work of RubyGems.org to augment the work of many volunteers. If you are interested in joining, you can do so as a [developer](https://rubytogether.org/developers) or as a [company](https://rubytogether.org/companies). The availability of RubyGems.org is not dependent on these paid contributors and is the sole responsibility of Ruby Central.
+
+Hosting fees are paid by Ruby Central and CDN fees are generously donated by [Fastly](fastly.com).
 
 ## Links
 
