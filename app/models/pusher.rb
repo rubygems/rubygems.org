@@ -29,7 +29,7 @@ class Pusher
   def save
     # Restructured so that if we fail to write the gem (ie, s3 is down)
     # can clean things up well.
-
+    return notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403) unless update
     @indexer.write_gem @body, @spec
   rescue ArgumentError => e
     @version.destroy
@@ -40,12 +40,8 @@ class Pusher
     Honeybadger.notify(e)
     notify("There was a problem saving your gem. Please try again.", 500)
   else
-    if update
-      after_write
-      notify("Successfully registered gem: #{version.to_title}", 200)
-    else
-      notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403)
-    end
+    after_write
+    notify("Successfully registered gem: #{version.to_title}", 200)
   end
 
   def pull_spec
@@ -123,7 +119,7 @@ class Pusher
     set_info_checksum
 
     true
-  rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback, ActiveRecord::RecordNotUnique
     false
   end
 
