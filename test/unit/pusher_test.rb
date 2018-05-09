@@ -338,4 +338,24 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal 'new summary', response['_source']['summary']
     end
   end
+
+  context "pushing to s3 fails" do
+    setup do
+      @gem = gem_file("test-1.0.0.gem")
+      @cutter = Pusher.new(@user, @gem)
+      @fs = RubygemFs.s3!('https://some.host')
+      s3_exception = Aws::S3::Errors::ServiceError.new("stub raises", "something went wrong")
+      Aws::S3::Client.any_instance.stubs(:put_object).with(any_parameters).raises(s3_exception)
+      @cutter.process
+    end
+
+    should "not create version" do
+      rubygem = Rubygem.find_by(name: 'test')
+      expected_message = "There was a problem saving your gem. Please try again."
+      assert_equal expected_message, @cutter.message
+      assert_equal 0, rubygem.versions.count
+    end
+
+    teardown { @fs = nil }
+  end
 end
