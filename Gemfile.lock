@@ -126,7 +126,7 @@ GEM
       activesupport (> 3)
       elasticsearch (~> 5)
       hashie
-    elasticsearch-rails (5.0.1)
+    elasticsearch-rails (5.0.2)
     elasticsearch-transport (5.0.5)
       faraday
       multi_json
