@@ -13,7 +13,11 @@ class Pusher
   end
 
   def process
-    pull_spec && find && authorize && validate && save
+    return false unless pull_spec && find
+
+    rubygem.with_lock do
+      validate_gem_version && authorize && validate && save
+    end
   end
 
   def authorize
@@ -65,12 +69,7 @@ class Pusher
     @rubygem = Rubygem.name_is(name).first || Rubygem.new(name: name)
 
     unless @rubygem.new_record?
-      if @rubygem.find_version_from_spec(spec)
-        notify("Repushing of gem versions is not allowed.\n" \
-               "Please use `gem yank` to remove bad gem releases.", 409)
-
-        return false
-      end
+      return false unless validate_gem_version
 
       if @rubygem.name != name && @rubygem.indexed_versions?
         return notify("Unable to change case of gem name with indexed versions\n" \
@@ -89,6 +88,13 @@ class Pusher
                                      sha256: sha256
 
     true
+  end
+
+  def validate_gem_version
+    return true unless rubygem.find_version_from_spec(spec)
+    notify("Repushing of gem versions is not allowed.\n" \
+           "Please use `gem yank` to remove bad gem releases.", 409)
+    false
   end
 
   # Overridden so we don't get megabytes of the raw data printing out
