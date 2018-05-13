@@ -202,7 +202,7 @@ GEM
     powerpack (0.1.1)
     public_suffix (2.0.5)
     rack (2.0.5)
-    rack-attack (5.0.1)
+    rack-attack (5.2.0)
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
