@@ -15,7 +15,7 @@ RubygemFs.mock!
 Aws.config[:stub_responses] = true
 
 class ActiveSupport::TestCase
-  include FactoryGirl::Syntax::Methods
+  include FactoryBot::Syntax::Methods
   include GemHelpers
   include EmailHelpers
 

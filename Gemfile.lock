@@ -134,10 +134,10 @@ GEM
       activemodel
     erubis (2.7.0)
     execjs (2.7.0)
-    factory_girl (4.8.0)
+    factory_bot (4.8.2)
       activesupport (>= 3.0.0)
-    factory_girl_rails (4.8.0)
-      factory_girl (~> 4.8.0)
+    factory_bot_rails (4.8.2)
+      factory_bot (~> 4.8.2)
       railties (>= 3.0.0)
     faraday (0.12.1)
       multipart-post (>= 1.2, < 3)
@@ -333,7 +333,7 @@ DEPENDENCIES
   elasticsearch-dsl (~> 0.1.2)
   elasticsearch-model (~> 5.0.0)
   elasticsearch-rails (~> 5.0.0)
-  factory_girl_rails
+  factory_bot_rails
   gravtastic
   high_voltage
   highline
