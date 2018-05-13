@@ -141,7 +141,7 @@ GEM
       railties (>= 3.0.0)
     faraday (0.12.1)
       multipart-post (>= 1.2, < 3)
-    ffi (1.9.18)
+    ffi (1.9.23)
     globalid (0.4.0)
       activesupport (>= 4.2.0)
     gravtastic (3.2.6)
@@ -243,7 +243,7 @@ GEM
       rake
     raindrops (0.18.0)
     rake (12.3.1)
-    rbtrace (0.4.8)
+    rbtrace (0.4.10)
       ffi (>= 1.0.6)
       msgpack (>= 0.4.3)
       trollop (>= 1.16.2)
