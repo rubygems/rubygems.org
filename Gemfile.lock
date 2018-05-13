@@ -241,7 +241,7 @@ GEM
     rainbow (2.2.2)
       rake
     raindrops (0.18.0)
-    rake (12.0.0)
+    rake (12.3.1)
     rbtrace (0.4.8)
       ffi (>= 1.0.6)
       msgpack (>= 0.4.3)
