@@ -20,7 +20,6 @@ Support RubyGems ongoing maintenance by <a href="https://rubytogether.org/develo
 * [FAQ][]
 * [IRC][]: #rubygems on Freenode
 * [Travis][]: [![Build Status](https://img.shields.io/travis/rubygems/rubygems.org/master.svg)][travis]
-* [Gemnasium][]: [![Dependency Status](https://img.shields.io/gemnasium/rubygems/rubygems.org.svg)][gemnasium]
 * [Code Climate][]: [![Maintainability](https://api.codeclimate.com/v1/badges/7110bb3f9b765042d604/maintainability)](https://codeclimate.com/github/rubygems/rubygems.org/maintainability)
 * [Trello Board][]
 
@@ -28,7 +27,6 @@ Support RubyGems ongoing maintenance by <a href="https://rubytogether.org/develo
 [faq]: http://help.rubygems.org/kb/gemcutter/faq
 [irc]: https://webchat.freenode.net/?channels=rubygems
 [travis]: https://travis-ci.org/rubygems/rubygems.org
-[gemnasium]: https://gemnasium.com/rubygems/rubygems.org
 [code climate]: https://codeclimate.com/github/rubygems/rubygems.org
 [trello board]: https://trello.com/board/rubygems-org/513f9634a7ed906115000755
 
