@@ -46,6 +46,8 @@ class User < ApplicationRecord
   validates :password, length: { within: 10..200 }, allow_nil: true, unless: :skip_password_validation?
   validate :unconfirmed_email_uniqueness
 
+  enum mfa_level: { no_auth: 0, auth_only: 1, auth_and_write: 2 }
+
   def self.authenticate(who, password)
     user = find_by(email: who.downcase) || find_by(handle: who)
     user if user && user.authenticated?(password)
@@ -160,6 +162,40 @@ class User < ApplicationRecord
 
   def remember_me?
     remember_token_expires_at && remember_token_expires_at > Time.zone.now
+  end
+
+  def mfa_enabled?
+    self.no_auth?
+  end
+
+  def disable_mfa!
+    self.no_auth!
+    self.mfa_seed = ''
+    self.mfa_recovery_codes = []
+    save!(validate: false)
+  end
+
+  def self.generate_mfa
+    [ROTP::Base32.random_base32, Array.new(10).map { SecureRandom.hex(6) }]
+  end
+
+  def enable_mfa!(seed, recovery, level)
+    self.mfa_level = level
+    self.mfa_seed = seed
+    self.mfa_recovery_codes = recovery
+    save!(validate: false)
+  end
+
+  def otp_verified?(otp)
+    if mfa_enabled?
+      true
+    elsif self.mfa_recovery_codes.include?(otp)
+      self.mfa_recovery_codes.delete(otp)
+      save!(validate: false)
+      true
+    else
+      otp == ROTP::TOTP.new(self.mfa_seed).now
+    end
   end
 
   private
