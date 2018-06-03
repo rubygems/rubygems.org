@@ -157,6 +157,26 @@ en:
         delete: Delete
         delete_profile: Delete Profile
         warning: Deleting your profile is an irreversible action. This can't be undone by contacting support. Please be certain!
+      mfa:
+        two_factor_auth: Two factor authentication
+        disabled: You have not yet enabled two factor authentication.
+        go_settings: Go to setting page.
+        enabled: You have enabled two factor authentication. Please input your OTP from your authenticator or one of your active recovery codes to disable it.
+        disable_confirmation: I'm sure to disable 2FA on my account.
+        disable_action: Disable
+    mfa_setting:
+      title: Enabling two factor auth
+      scan_prompt: Please scan the qr-code above with your authenticator app.
+      recovery_codes: Recovery codes
+      recovery_note: "Note: You MUST keep the recovery codes safe to prevent losing your account."
+      input_otp_prompt: Input code from your authenticator app.
+      confirm: I have kept my recovery codes safe.
+      enable_action: Enable
+    mfa_enable:
+      enable_success: You have successfully enabled two factor authentication.
+      otp_auth_failed: You inputed wrong OTP code.
+    mfa_disable:
+      disable_success: You have successfully disabled two factor authentication.
     delete:
       title: Delete profile
       confirm: Confirm

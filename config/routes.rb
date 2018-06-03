@@ -133,6 +133,9 @@ Rails.application.routes.draw do
       member do
         get :delete
         delete :destroy, as: :destroy
+        get 'two_factor_authentication', to: 'profiles#mfa_setting', as: 'mfa_setting'
+        post 'two_factor_authentication', to: 'profiles#mfa_enable', as: 'mfa_enable'
+        delete 'two_factor_authentication', to: 'profiles#mfa_disable', as: 'mfa_disable'
       end
     end
     resources :stats, only: :index
