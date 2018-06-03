@@ -17,11 +17,11 @@
 
 <div class="t-body">
   <h2>Current OTP</h2>
-  <%= form_tag mfa_enable_profile_path, :method => :post do %>
+  <%= form_tag two_factor_auth_path, :method => :post do %>
     <div class="text_field">
       <p class='form__field__instructions'><%= t '.input_otp_prompt' %></p>
       <%= text_field_tag :otp, '', :class => 'form__input' %>
     </div>
-    <%= submit_tag t('.enable_action'), :class => 'form__submit', :disabled => true %>
+    <%= submit_tag t('.enable_action'), :class => 'form__submit' %>
   <% end %>
 </div>

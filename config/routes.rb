@@ -129,13 +129,11 @@ Rails.application.routes.draw do
     end
     resource :dashboard, only: :show, constraints: { format: /html|atom/ }
     resources :profiles, only: :show
+    resource :two_factor_auth, only: %i[new create destroy]
     resource :profile, only: %i[edit update] do
       member do
         get :delete
         delete :destroy, as: :destroy
-        get 'two_factor_authentication', to: 'profiles#mfa_setting', as: 'mfa_setting'
-        post 'two_factor_authentication', to: 'profiles#mfa_enable', as: 'mfa_enable'
-        delete 'two_factor_authentication', to: 'profiles#mfa_disable', as: 'mfa_disable'
       end
     end
     resources :stats, only: :index

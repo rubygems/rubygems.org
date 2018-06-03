@@ -90,11 +90,11 @@
   <% if @user.mfa_enabled? %>
     <p>
       <%= t '.mfa.disabled' %>
-      <%= link_to t('.mfa.go_settings'), mfa_setting_profile_path, :class => 't-text t-link'%>
+      <%= link_to t('.mfa.go_settings'), new_two_factor_auth_path, :class => 't-text t-link'%>
     </p>
   <% else %>
     <p><%= t '.mfa.enabled' %></p>
-    <%= form_tag mfa_disable_profile_path, :method => :delete do %>
+    <%= form_tag two_factor_auth_path, :method => :delete do %>
       <%= text_field_tag :otp, '', :class => 'form__input' %>
       <%= submit_tag t('.mfa.disable_action'), :class => 'form__submit' %>
     <% end %>

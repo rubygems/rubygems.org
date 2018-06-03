@@ -40,38 +40,6 @@ class ProfilesController < ApplicationController
     redirect_to root_path, notice: t('.request_queued')
   end
 
-  def mfa_setting
-    seed, @recovery = User.generate_mfa
-    session[:mfa_seed] = seed
-    session[:mfa_recovery] = @recovery
-    @text = ROTP::TOTP.new(seed, issuer: 'RubyGems.org').provisioning_uri(current_user.email)
-    @qrcode_svg = RQRCode::QRCode.new(@text, level: :l).as_svg
-  end
-
-  def mfa_enable
-    seed = session[:mfa_seed]
-    recovery = session[:mfa_recovery]
-    session[:mfa_seed] = session[:mfa_recovery] = nil
-    totp = ROTP::TOTP.new(seed, issuer: 'RubyGems.org')
-    if totp.verify(params[:otp])
-      current_user.enable_mfa!(seed, recovery, :auth_only)
-      flash[:success] = t('.enable_success')
-    else
-      flash[:error] = t('.otp_auth_failed')
-    end
-    redirect_to edit_profile_url
-  end
-
-  def mfa_disable
-    if current_user.otp_verified?(params[:otp])
-      flash[:success] = t('.disable_success')
-      current_user.disable_mfa!
-    else
-      flash[:error] = t('profiles.mfa_enable.otp_auth_failed')
-    end
-    redirect_to edit_profile_url
-  end
-
   private
 
   def params_user
