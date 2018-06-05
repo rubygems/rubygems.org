@@ -135,6 +135,22 @@ pt-BR:
       submit: Resetar senha
       title: Alterar senha
       will_email_notice: Você vai receber um email com o link para atualizar sua senha.
+  two_factor_auths:
+    authed_no_access:
+    no_auth_no_access:
+    new:
+      title:
+      scan_prompt:
+      recovery_codes:
+      recovery_note:
+      input_otp_prompt:
+      confirm:
+      enable_action:
+    create:
+      enable_success:
+      otp_auth_failed:
+    destroy:
+      disable_success:
   profiles:
     edit:
       email_awaiting_confirmation:
@@ -157,6 +173,13 @@ pt-BR:
         delete:
         delete_profile:
         warning:
+      mfa:
+        two_factor_auth:
+        disabled:
+        go_settings:
+        enabled:
+        disable_confirmation:
+        disable_action:
     delete:
       title:
       confirm:

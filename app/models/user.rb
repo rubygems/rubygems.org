@@ -165,11 +165,11 @@ class User < ApplicationRecord
   end
 
   def mfa_enabled?
-    self.no_auth?
+    no_auth?
   end
 
   def disable_mfa!
-    self.no_auth!
+    no_auth!
     self.mfa_seed = ''
     self.mfa_recovery_codes = []
     save!(validate: false)
@@ -189,12 +189,12 @@ class User < ApplicationRecord
   def otp_verified?(otp)
     if mfa_enabled?
       true
-    elsif self.mfa_recovery_codes.include?(otp)
-      self.mfa_recovery_codes.delete(otp)
+    elsif mfa_recovery_codes.include?(otp)
+      mfa_recovery_codes.delete(otp)
       save!(validate: false)
       true
     else
-      otp == ROTP::TOTP.new(self.mfa_seed).now
+      otp == ROTP::TOTP.new(mfa_seed).now
     end
   end
 
