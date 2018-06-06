@@ -12,6 +12,7 @@ de:
   please_sign_up: Zugriff verweigert. Bitte melden Sie sich unter https://rubygems.org mit einem Konto an
   sign_in: Anmelden
   sign_up: Registrieren
+  two_factor_authentication:
   subtitle: Ihre Community des Gem-Hostingservices
   this_rubygem_could_not_be_found: Dieses Ruby Gem konnte nicht gefunden werden.
   time_ago: seit %{duration}
@@ -136,6 +137,8 @@ de:
       title: Ändere dein Passwort
       will_email_notice: Wir senden dir einen Link damit du dein Passwort ändern kannst.
   two_factor_auths:
+    incorrect_otp:
+    otp_code:
     authed_no_access:
     no_auth_no_access:
     new:

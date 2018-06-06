@@ -12,6 +12,7 @@ en:
   please_sign_up: Access Denied. Please sign up for an account at https://rubygems.org
   sign_in: Sign in
   sign_up: Sign up
+  two_factor_authentication: Two-factor authentication
   subtitle: your community gem host
   this_rubygem_could_not_be_found: This rubygem could not be found.
   time_ago: "%{duration} ago"
@@ -136,6 +137,8 @@ en:
       title: Change your password
       will_email_notice: We will email you a link to change your password.
   two_factor_auths:
+    incorrect_otp: Your OTP code is incorrect.
+    otp_code: OTP code
     authed_no_access: Your two factor authentication has been enabled. You have to disable it first.
     no_auth_no_access: Your two factor authentication has not been enabled. You have to enable it first.
     new:

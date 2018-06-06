@@ -12,6 +12,7 @@ nl:
   please_sign_up: Toegang geweigerd. Schrijf je in voor een account op https://rubygems.org
   sign_in: Inloggen
   sign_up: Aanmelden
+  two_factor_authentication:
   subtitle: De gem host voor de community
   this_rubygem_could_not_be_found: This rubygem could not be found.
   time_ago: "%{duration} geleden"
@@ -136,6 +137,8 @@ nl:
       title: wachtwoord wijzigen
       will_email_notice: We sturen een link om je wachtwoord te wijzigen.
   two_factor_auths:
+    incorrect_otp:
+    otp_code:
     authed_no_access:
     no_auth_no_access:
     new:

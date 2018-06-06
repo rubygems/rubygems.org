@@ -12,6 +12,7 @@ zh-TW:
   please_sign_up: 無法存取，請先在 https://rubygems.org 上註冊帳號
   sign_in: 登入
   sign_up: 註冊
+  two_factor_authentication:
   subtitle: Ruby 社群 Gem 套件管理平台
   this_rubygem_could_not_be_found:
   time_ago: "%{duration} 前"
@@ -136,6 +137,8 @@ zh-TW:
       title: 修改密碼
       will_email_notice: 系統將會寄一封包含重設密碼連結的電子郵件給你
   two_factor_auths:
+    incorrect_otp:
+    otp_code:
     authed_no_access:
     no_auth_no_access:
     new:

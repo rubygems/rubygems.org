@@ -165,7 +165,7 @@ class User < ApplicationRecord
   end
 
   def mfa_enabled?
-    no_auth?
+    !no_auth?
   end
 
   def disable_mfa!
@@ -187,7 +187,7 @@ class User < ApplicationRecord
   end
 
   def otp_verified?(otp)
-    if mfa_enabled?
+    if no_auth?
       true
     elsif mfa_recovery_codes.include?(otp)
       mfa_recovery_codes.delete(otp)

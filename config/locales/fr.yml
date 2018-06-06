@@ -12,6 +12,7 @@ fr:
   please_sign_up: Accès refusé. Inscrivez-vous sur https://rubygems.org
   sign_in: Connexion
   sign_up: Inscription
+  two_factor_authentication:
   subtitle: votre communauté d'hébergement des gems
   this_rubygem_could_not_be_found: Rubygem introuvable.
   time_ago: il y a %{duration}
@@ -136,6 +137,8 @@ fr:
       title: Changement de mot de passe
       will_email_notice: Nous vous enverrons un email pour changer votre mot de passe.
   two_factor_auths:
+    incorrect_otp:
+    otp_code:
     authed_no_access:
     no_auth_no_access:
     new:

@@ -1,0 +1,11 @@
+<% @title = t('two_factor_authentication') %>
+
+<%= form_for :session, :url => session_path do |form| %>
+  <div class="text_field">
+    <%= form.label :otp, t('two_factor_auths.otp_code'), :class => 'form__label' %>
+    <%= form.text_field :otp, :autofocus => true, :class => 'form__input' %>
+  </div>
+  <div class="form_bottom">
+    <%= form.submit t('sign_in'), :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
+  </div>
+<% end %>

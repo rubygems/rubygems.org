@@ -12,6 +12,7 @@ pt-BR:
   please_sign_up: Accesso Negado. Por favor se registre em https://rubygems.org
   sign_in: Fazer Login
   sign_up: Cadastrar
+  two_factor_authentication:
   subtitle: o host de gems da sua comunidade
   this_rubygem_could_not_be_found: A rubygem não foi encontrada.
   time_ago: "%{duration} atrás"
@@ -136,6 +137,8 @@ pt-BR:
       title: Alterar senha
       will_email_notice: Você vai receber um email com o link para atualizar sua senha.
   two_factor_auths:
+    incorrect_otp:
+    otp_code:
     authed_no_access:
     no_auth_no_access:
     new:
