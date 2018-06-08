@@ -1,22 +1,21 @@
 <% @title = t('.title') %>
 
-<div class="t-body">
-  <%= raw @qrcode_svg %>
-  <p><%= t('.scan_prompt') %></p>
+<div class="t-body l-overflow">
+  <div class="l-half--l">
+    <%= raw @qrcode_svg %>
+  </div>
+  <div>
+    <p><%= t('.scan_prompt') %></p>
+    <p>
+      <%= t('.account', :account => "#{issuer}:#{current_user.email}") %><br>
+      <%= t('.key', :key => @seed.chars.each_slice(4).map(&:join).join(' ')) %><br>
+      <%= t('.set_time_based') %>
+    </p>
+  </div>
 </div>
 
 <div class="t-body">
-  <h2><%= t '.recovery_codes' %></h2>
-  <ul>
-    <% @recovery.each do |code| %>
-      <li><%= code %></li>
-    <% end %>
-  </ul>
-  <p><%= t '.recovery_note' %></p>
-</div>
-
-<div class="t-body">
-  <h2>Current OTP</h2>
+  <h2>OTP Code</h2>
   <%= form_tag two_factor_auth_path, :method => :post do %>
     <div class="text_field">
       <p class='form__field__instructions'><%= t '.input_otp_prompt' %></p>

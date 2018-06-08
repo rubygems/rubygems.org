@@ -142,16 +142,21 @@ en:
     authed_no_access: Your two factor authentication has been enabled. You have to disable it first.
     no_auth_no_access: Your two factor authentication has not been enabled. You have to enable it first.
     new:
-      title: Enabling two factor auth
-      scan_prompt: Please scan the qr-code above with your authenticator app.
-      recovery_codes: Recovery codes
-      recovery_note: "Note: You MUST keep the recovery codes safe to prevent losing your account."
-      input_otp_prompt: Input code from your authenticator app.
+      title: Enabling two-factor auth
+      scan_prompt: Please scan the qr-code with your authenticator app. If you cannot scan the code, add information below into your app manually. 
+      input_otp_prompt: Type digit code from auth app to continue.
       confirm: I have kept my recovery codes safe.
       enable_action: Enable
+      account: "Account: %{account}"
+      key: "Key: %{key}"
+      set_time_based: "Time based: Yes"
     create:
-      enable_success: You have successfully enabled two factor authentication.
+      enable_success: You have successfully enabled two-factor authentication.
       otp_auth_failed: You inputed wrong OTP code.
+    recovery:
+      continue: Continue
+      title: Recovery codes
+      note: "You MUST keep the recovery codes safe to prevent losing your account. Each of the code can be used once if you lose your authenticator."
     destroy:
       disable_success: You have successfully disabled two factor authentication.
   profiles:

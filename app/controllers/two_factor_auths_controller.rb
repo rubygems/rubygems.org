@@ -2,27 +2,27 @@ class TwoFactorAuthsController < ApplicationController
   before_action :redirect_to_root, unless: :signed_in?
   before_action :require_no_auth, only: %i[new create]
   before_action :require_auth_set, only: :destroy
+  helper_method :issuer
 
   def new
-    seed, @recovery = User.generate_mfa
-    session[:mfa_seed] = seed
-    session[:mfa_recovery] = @recovery
-    @text = ROTP::TOTP.new(seed, issuer: 'RubyGems.org').provisioning_uri(current_user.email)
-    @qrcode_svg = RQRCode::QRCode.new(@text, level: :l).as_svg
+    @seed = ROTP::Base32.random_base32
+    session[:mfa_seed] = @seed
+    text = ROTP::TOTP.new(@seed, issuer: issuer).provisioning_uri(current_user.email)
+    @qrcode_svg = RQRCode::QRCode.new(text, level: :l).as_svg
   end
 
   def create
     seed = session[:mfa_seed]
-    recovery = session[:mfa_recovery]
-    session[:mfa_seed] = session[:mfa_recovery] = nil
-    totp = ROTP::TOTP.new(seed, issuer: 'RubyGems.org')
+    session[:mfa_seed] = nil
+    totp = ROTP::TOTP.new(seed, issuer: issuer)
     if totp.verify(params[:otp])
-      current_user.enable_mfa!(seed, recovery, :auth_only)
+      current_user.enable_mfa!(seed, :auth_only)
       flash[:success] = t('.enable_success')
+      render :recovery
     else
       flash[:error] = t('.otp_auth_failed')
+      redirect_to edit_profile_url
     end
-    redirect_to edit_profile_url
   end
 
   def destroy
@@ -36,6 +36,10 @@ class TwoFactorAuthsController < ApplicationController
   end
 
   private
+
+  def issuer
+    request.host || 'rubygems.org'
+  end
 
   def require_no_auth
     return if current_user.no_auth?

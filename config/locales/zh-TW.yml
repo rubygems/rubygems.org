@@ -144,14 +144,19 @@ zh-TW:
     new:
       title:
       scan_prompt:
-      recovery_codes:
-      recovery_note:
       input_otp_prompt:
       confirm:
       enable_action:
+      account:
+      key:
+      set_time_based:
     create:
       enable_success:
       otp_auth_failed:
+    recovery:
+      continue:
+      title:
+      note:
     destroy:
       disable_success:
   profiles:

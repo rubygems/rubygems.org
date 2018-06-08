@@ -175,14 +175,10 @@ class User < ApplicationRecord
     save!(validate: false)
   end
 
-  def self.generate_mfa
-    [ROTP::Base32.random_base32, Array.new(10).map { SecureRandom.hex(6) }]
-  end
-
-  def enable_mfa!(seed, recovery, level)
+  def enable_mfa!(seed, level)
     self.mfa_level = level
     self.mfa_seed = seed
-    self.mfa_recovery_codes = recovery
+    self.mfa_recovery_codes = Array.new(10).map { SecureRandom.hex(6) }
     save!(validate: false)
   end
 
