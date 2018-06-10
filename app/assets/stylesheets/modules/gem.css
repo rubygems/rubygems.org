@@ -236,3 +236,7 @@
 .gem__previous__version {
   float: left;
 }
+
+.gem__vulnerable {
+  color: #D8000C;
+}
