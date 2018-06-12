@@ -162,7 +162,9 @@ Rails.application.routes.draw do
     patch 'unconfirmed'
   end
 
-  resource :session, only: %i[create destroy]
+  resource :session, only: %i[create destroy] do
+    post 'mfa_create', to: 'sessions#mfa_create', as: :mfa_create
+  end
 
   resources :passwords, only: %i[new create]
 

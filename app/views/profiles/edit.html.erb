@@ -85,21 +85,23 @@
 
 <%= button_to t('.api_access.reset'), reset_api_v1_api_key_path, :method => :put, :data => {:confirm => t('.api_access.confirm_reset')}, :class => 'form__submit' %>
 
-<div class="t-body">
-  <h2><%= t '.mfa.two_factor_auth' %></h2>
-  <% if @user.mfa_enabled? %>
-    <p><%= t '.mfa.enabled' %></p>
-    <%= form_tag two_factor_auth_path, :method => :delete do %>
-      <%= text_field_tag :otp, '', :class => 'form__input' %>
-      <%= submit_tag t('.mfa.disable_action'), :class => 'form__submit' %>
+<% if mfa_enabled? %>
+  <div class="t-body">
+    <h2><%= t '.mfa.two_factor_auth' %></h2>
+    <% if @user.mfa_enabled? %>
+      <p><%= t '.mfa.enabled' %></p>
+      <%= form_tag two_factor_auth_path, :method => :delete do %>
+        <%= text_field_tag :otp, '', :class => 'form__input' %>
+        <%= submit_tag t('.mfa.disable_action'), :class => 'form__submit' %>
+      <% end %>
+    <% else %>
+      <p>
+        <%= t '.mfa.disabled' %>
+        <%= link_to t('.mfa.go_settings'), new_two_factor_auth_path, :class => 't-text t-link'%>
+      </p>
     <% end %>
-  <% else %>
-    <p>
-      <%= t '.mfa.disabled' %>
-      <%= link_to t('.mfa.go_settings'), new_two_factor_auth_path, :class => 't-text t-link'%>
-    </p>
-  <% end %>
-</div>
+  </div>
+<% end %>
 
 <div class="t-body">
   <h2><%= t '.delete.delete_profile' %></h2>

@@ -1,7 +1,8 @@
 class TwoFactorAuthsController < ApplicationController
+  before_action :check_feature_flag
   before_action :redirect_to_root, unless: :signed_in?
-  before_action :require_no_auth, only: %i[new create]
-  before_action :require_auth_set, only: :destroy
+  before_action :require_mfa_disabled, only: %i[new create]
+  before_action :require_mfa_enabled, only: :destroy
   helper_method :issuer
 
   def new
@@ -13,7 +14,7 @@ class TwoFactorAuthsController < ApplicationController
 
   def create
     seed = session[:mfa_seed]
-    session[:mfa_seed] = nil
+    session.delete(:mfa_seed)
     totp = ROTP::TOTP.new(seed, issuer: issuer)
     if totp.verify(params[:otp])
       current_user.enable_mfa!(seed, :auth_only)
@@ -30,7 +31,7 @@ class TwoFactorAuthsController < ApplicationController
       flash[:success] = t('.disable_success')
       current_user.disable_mfa!
     else
-      flash[:error] = t('profiles.mfa_enable.otp_auth_failed')
+      flash[:error] = t('two_factor_auths.create.otp_auth_failed')
     end
     redirect_to edit_profile_url
   end
@@ -41,15 +42,19 @@ class TwoFactorAuthsController < ApplicationController
     request.host || 'rubygems.org'
   end
 
-  def require_no_auth
-    return if current_user.no_auth?
+  def require_mfa_disabled
+    return unless current_user.mfa_enabled?
     flash[:error] = t('two_factor_auths.authed_no_access')
     redirect_to edit_profile_path
   end
 
-  def require_auth_set
-    return unless current_user.no_auth?
+  def require_mfa_enabled
+    return if current_user.mfa_enabled?
     flash[:error] = t('two_factor_auths.no_auth_no_access')
     redirect_to edit_profile_path
+  end
+
+  def check_feature_flag
+    redirect_to edit_profile_path unless mfa_enabled?
   end
 end

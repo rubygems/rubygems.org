@@ -115,4 +115,8 @@ class ApplicationController < ActionController::Base
     payload[:dest_host] = request.host
     payload[:request_id] = request.uuid
   end
+
+  def mfa_enabled?
+    cookies.permanent[:mfa_feature] == 'true'
+  end
 end
