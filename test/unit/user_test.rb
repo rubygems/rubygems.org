@@ -242,6 +242,44 @@ class UserTest < ActiveSupport::TestCase
         assert @user.valid_confirmation_token?
       end
     end
+
+    context "two factor authentication" do
+      context "when enabled" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :auth_only)
+        end
+
+        should "be able to use a recovery code only once" do
+          code = @user.mfa_recovery_codes.first
+          assert @user.otp_verified?(code)
+          refute @user.otp_verified?(code)
+        end
+
+        should "be able to verify correct OTP" do
+          assert @user.otp_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
+        end
+
+        should "return true for mfa status check" do
+          assert @user.mfa_enabled?
+          refute @user.no_auth?
+        end
+      end
+
+      context "when disabled" do
+        setup do
+          @user.disable_mfa!
+        end
+
+        should "always return true for verifying OTP" do
+          assert @user.otp_verified?('')
+        end
+
+        should "return false for mfa status check" do
+          refute @user.mfa_enabled?
+          assert @user.no_auth?
+        end
+      end
+    end
   end
 
   context "rubygems" do
