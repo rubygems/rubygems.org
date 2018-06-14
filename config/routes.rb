@@ -72,6 +72,9 @@ Rails.application.routes.draw do
           get :reverse_dependencies
         end
         collection do
+          get :audit, to: "audits#check"
+        end
+        collection do
           delete :yank, to: "deletions#create"
           put :unyank, to: "deletions#destroy"
         end
