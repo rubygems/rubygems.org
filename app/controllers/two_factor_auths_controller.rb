@@ -18,20 +18,20 @@ class TwoFactorAuthsController < ApplicationController
     totp = ROTP::TOTP.new(seed, issuer: issuer)
     if totp.verify(params[:otp])
       current_user.enable_mfa!(seed, :auth_only)
-      flash[:success] = t('.enable_success')
+      flash[:success] = t('.success')
       render :recovery
     else
-      flash[:error] = t('.otp_auth_failed')
+      flash[:error] = t('two_factor_auths.incorrect_otp')
       redirect_to edit_profile_url
     end
   end
 
   def destroy
     if current_user.otp_verified?(params[:otp])
-      flash[:success] = t('.disable_success')
+      flash[:success] = t('.success')
       current_user.disable_mfa!
     else
-      flash[:error] = t('two_factor_auths.create.otp_auth_failed')
+      flash[:error] = t('two_factor_auths.incorrect_otp')
     end
     redirect_to edit_profile_url
   end
@@ -44,13 +44,13 @@ class TwoFactorAuthsController < ApplicationController
 
   def require_mfa_disabled
     return unless current_user.mfa_enabled?
-    flash[:error] = t('two_factor_auths.authed_no_access')
+    flash[:error] = t('two_factor_auths.require_mfa_disabled')
     redirect_to edit_profile_path
   end
 
   def require_mfa_enabled
     return if current_user.mfa_enabled?
-    flash[:error] = t('two_factor_auths.no_auth_no_access')
+    flash[:error] = t('two_factor_auths.require_mfa_enabled')
     redirect_to edit_profile_path
   end
 

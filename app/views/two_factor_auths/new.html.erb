@@ -9,7 +9,7 @@
     <p>
       <%= t('.account', :account => "#{issuer}:#{current_user.email}") %><br>
       <%= t('.key', :key => @seed.chars.each_slice(4).map(&:join).join(' ')) %><br>
-      <%= t('.set_time_based') %>
+      <%= t('.time_based') %>
     </p>
   </div>
 </div>
@@ -18,9 +18,9 @@
   <h2>OTP Code</h2>
   <%= form_tag two_factor_auth_path, :method => :post do %>
     <div class="text_field">
-      <p class='form__field__instructions'><%= t '.input_otp_prompt' %></p>
+      <p class='form__field__instructions'><%= t '.otp_prompt' %></p>
       <%= text_field_tag :otp, '', :class => 'form__input' %>
     </div>
-    <%= submit_tag t('.enable_action'), :class => 'form__submit' %>
+    <%= submit_tag t('.enable'), :class => 'form__submit' %>
   <% end %>
 </div>

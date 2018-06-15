@@ -92,7 +92,7 @@
       <p><%= t '.mfa.enabled' %></p>
       <%= form_tag two_factor_auth_path, :method => :delete do %>
         <%= text_field_tag :otp, '', :class => 'form__input' %>
-        <%= submit_tag t('.mfa.disable_action'), :class => 'form__submit' %>
+        <%= submit_tag t('.mfa.disable'), :class => 'form__submit' %>
       <% end %>
     <% else %>
       <p>

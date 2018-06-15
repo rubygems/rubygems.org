@@ -139,26 +139,25 @@ zh-CN:
   two_factor_auths:
     incorrect_otp:
     otp_code:
-    authed_no_access:
-    no_auth_no_access:
+    require_mfa_disabled:
+    require_mfa_enabled:
     new:
       title:
       scan_prompt:
-      input_otp_prompt:
+      otp_prompt:
       confirm:
-      enable_action:
+      enable:
       account:
       key:
-      set_time_based:
+      time_based:
     create:
-      enable_success:
-      otp_auth_failed:
+      success:
     recovery:
       continue:
       title:
       note:
     destroy:
-      disable_success:
+      success:
   profiles:
     edit:
       email_awaiting_confirmation:
@@ -186,8 +185,7 @@ zh-CN:
         disabled:
         go_settings:
         enabled:
-        disable_confirmation:
-        disable_action:
+        disable:
     delete:
       title:
       confirm:

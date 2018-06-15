@@ -34,10 +34,6 @@ class SessionsController < Clearance::SessionsController
     end
   end
 
-  def verifying_otp?
-    session_params[:otp].present? && session[:mfa_user].present?
-  end
-
   def login_failure(message)
     StatsD.increment 'login.failure'
     flash.now.notice = message
