@@ -18,6 +18,7 @@ class MultifactorAuthsController < ApplicationController
     totp = ROTP::TOTP.new(seed, issuer: issuer)
     if totp.verify(params[:otp])
       current_user.enable_mfa!(seed, :mfa_login_only)
+      current_user.update!(last_otp_at: Time.current)
       flash[:success] = t('.success')
       render :recovery
     else

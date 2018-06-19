@@ -172,6 +172,7 @@ class User < ApplicationRecord
     no_mfa!
     self.mfa_seed = ''
     self.mfa_recovery_codes = []
+    self.last_otp_at = nil
     save!(validate: false)
   end
 
@@ -190,7 +191,15 @@ class User < ApplicationRecord
       save!(validate: false)
       true
     else
-      otp == ROTP::TOTP.new(mfa_seed).now
+      totp = ROTP::TOTP.new(mfa_seed)
+      last_verification = totp.verify_with_drift_and_prior(otp, 30, last_otp_at)
+      if last_verification
+        self.last_otp_at = Time.at(last_verification).utc.to_datetime
+        save!(validate: false)
+        true
+      else
+        false
+      end
     end
   end
 
