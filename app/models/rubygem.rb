@@ -215,7 +215,7 @@ class Rubygem < ApplicationRecord
       save!
       update_versions! version, spec
       update_dependencies! version, spec
-      update_linkset! spec
+      update_linkset! spec if version.reload.latest?
     end
   end
 
