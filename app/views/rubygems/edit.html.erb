@@ -8,6 +8,10 @@
 <%= error_messages_for :linkset, :object_name => "gem" %>
 <%= form_for @rubygem.linkset, :url => rubygem_path(@rubygem), :method => :put do |form| %>
   <div class="url_field">
+    <%= form.label :home, :class => 'form__label' %>
+    <%= form.text_field :home, :class => 'form__input' %>
+  </div>
+  <div class="url_field">
     <%= form.label :code, :class => 'form__label' %>
     <%= form.text_field :code, :class => 'form__input' %>
   </div>
