@@ -15,34 +15,34 @@ class SessionsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should "save user id in session" do
-        assert @controller.session[:mfa_user] == @user.id
+      should "save user name in session" do
+        assert @controller.session[:mfa_user] == @user.handle
       end
     end
 
     context "on POST to mfa_create" do
       context "when OTP is correct" do
         setup do
-          @controller.session[:mfa_user] = @user.id
+          @controller.session[:mfa_user] = @user.handle
           post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
         end
 
         should respond_with :redirect
         should redirect_to('the dashboard') { dashboard_path }
-        should "clear user id in session" do
+        should "clear user name in session" do
           assert @controller.session[:mfa_user].nil?
         end
       end
 
       context "when OTP is recovery code" do
         setup do
-          @controller.session[:mfa_user] = @user.id
+          @controller.session[:mfa_user] = @user.handle
           post :mfa_create, params: { otp: @user.mfa_recovery_codes.first }
         end
 
         should respond_with :redirect
         should redirect_to('the dashboard') { dashboard_path }
-        should "clear user id in session" do
+        should "clear user name in session" do
           assert @controller.session[:mfa_user].nil?
         end
       end
@@ -63,7 +63,7 @@ class SessionsControllerTest < ActionController::TestCase
           refute @controller.request.env[:clearance].signed_in?
         end
 
-        should "clear user id in session" do
+        should "clear user name in session" do
           assert_nil @controller.session[:mfa_user]
         end
       end

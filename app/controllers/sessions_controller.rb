@@ -3,7 +3,7 @@ class SessionsController < Clearance::SessionsController
     @user = find_user(params.require(:session))
 
     if mfa_enabled? && @user&.mfa_enabled?
-      session[:mfa_user] = @user.id
+      session[:mfa_user] = @user.handle
       render 'sessions/otp_prompt'
     else
       do_login
@@ -11,7 +11,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def mfa_create
-    @user = User.where(id: session[:mfa_user]).take
+    @user = User.find_by_name(session[:mfa_user])
     session.delete(:mfa_user)
 
     if @user&.mfa_enabled? && @user&.otp_verified?(params[:otp])
