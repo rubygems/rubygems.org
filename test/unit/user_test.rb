@@ -246,7 +246,7 @@ class UserTest < ActiveSupport::TestCase
     context "two factor authentication" do
       context "when enabled" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :auth_only)
+          @user.enable_mfa!(ROTP::Base32.random_base32, :mfa_login_only)
         end
 
         should "be able to use a recovery code only once" do
@@ -261,7 +261,7 @@ class UserTest < ActiveSupport::TestCase
 
         should "return true for mfa status check" do
           assert @user.mfa_enabled?
-          refute @user.no_auth?
+          refute @user.no_mfa?
         end
       end
 
@@ -276,7 +276,7 @@ class UserTest < ActiveSupport::TestCase
 
         should "return false for mfa status check" do
           refute @user.mfa_enabled?
-          assert @user.no_auth?
+          assert @user.no_mfa?
         end
       end
     end

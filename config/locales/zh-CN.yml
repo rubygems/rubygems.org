@@ -12,7 +12,7 @@ zh-CN:
   please_sign_up: 拒绝访问。请先在 https://rubygems.org 上注册一个账号。
   sign_in: 登录
   sign_up: 注册
-  two_factor_authentication:
+  multifactor_authentication:
   subtitle: Ruby 社区 Gem 托管
   this_rubygem_could_not_be_found:
   time_ago: "%{duration} 前"
@@ -136,7 +136,7 @@ zh-CN:
       submit: 重置密码
       title: 修改密码
       will_email_notice: 我们将会通过 Email 发送修改密码的链接给你。
-  two_factor_auths:
+  multifactor_auths:
     incorrect_otp:
     otp_code:
     require_mfa_disabled:
@@ -181,7 +181,7 @@ zh-CN:
         delete_profile:
         warning:
       mfa:
-        two_factor_auth:
+        multifactor_auth:
         disabled:
         go_settings:
         enabled:

@@ -16,7 +16,7 @@
 
 <div class="t-body">
   <h2>OTP Code</h2>
-  <%= form_tag two_factor_auth_path, :method => :post do %>
+  <%= form_tag multifactor_auth_path, :method => :post do %>
     <div class="text_field">
       <p class='form__field__instructions'><%= t '.otp_prompt' %></p>
       <%= text_field_tag :otp, '', :class => 'form__input' %>

@@ -12,7 +12,7 @@ fr:
   please_sign_up: Accès refusé. Inscrivez-vous sur https://rubygems.org
   sign_in: Connexion
   sign_up: Inscription
-  two_factor_authentication:
+  multifactor_authentication:
   subtitle: votre communauté d'hébergement des gems
   this_rubygem_could_not_be_found: Rubygem introuvable.
   time_ago: il y a %{duration}
@@ -136,7 +136,7 @@ fr:
       submit: Réinitialisez votre mot de passe
       title: Changement de mot de passe
       will_email_notice: Nous vous enverrons un email pour changer votre mot de passe.
-  two_factor_auths:
+  multifactor_auths:
     incorrect_otp:
     otp_code:
     require_mfa_disabled:
@@ -181,7 +181,7 @@ fr:
         delete_profile:
         warning:
       mfa:
-        two_factor_auth:
+        multifactor_auth:
         disabled:
         go_settings:
         enabled:

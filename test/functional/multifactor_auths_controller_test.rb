@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TwoFactorAuthsControllerTest < ActionController::TestCase
+class MultifactorAuthsControllerTest < ActionController::TestCase
   context 'when logged in' do
     setup do
       @user = create(:user)
@@ -8,12 +8,16 @@ class TwoFactorAuthsControllerTest < ActionController::TestCase
       @request.cookies[:mfa_feature] = 'true'
     end
 
-    context 'when 2fa already enabled' do
+    should 'disable mfa by default' do
+      refute @user.mfa_enabled?
+    end
+
+    context 'when mfa enabled' do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :auth_only)
+        @user.enable_mfa!(ROTP::Base32.random_base32, :mfa_login_only)
       end
 
-      context 'on GET to new 2fa' do
+      context 'on GET to new mfa' do
         setup do
           get :new
         end
@@ -22,19 +26,19 @@ class TwoFactorAuthsControllerTest < ActionController::TestCase
         should redirect_to('the profile edit page') { edit_profile_path }
       end
 
-      context 'on POST to create 2fa' do
+      context 'on POST to create mfa' do
         setup do
           post :create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
         end
 
         should respond_with :redirect
         should redirect_to('the profile edit page') { edit_profile_path }
-        should 'keep 2fa enabled' do
+        should 'keep mfa enabled' do
           assert @user.reload.mfa_enabled?
         end
       end
 
-      context 'on DELETE to destroy 2fa' do
+      context 'on DELETE to destroy mfa' do
         context 'when otp code is correct' do
           setup do
             delete :destroy, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
@@ -42,7 +46,7 @@ class TwoFactorAuthsControllerTest < ActionController::TestCase
 
           should respond_with :redirect
           should redirect_to('the profile edit page') { edit_profile_path }
-          should 'disable 2fa' do
+          should 'disable mfa' do
             refute @user.reload.mfa_enabled?
           end
         end
@@ -54,7 +58,7 @@ class TwoFactorAuthsControllerTest < ActionController::TestCase
 
           should respond_with :redirect
           should redirect_to('the profile edit page') { edit_profile_path }
-          should 'disable 2fa' do
+          should 'disable mfa' do
             refute @user.reload.mfa_enabled?
           end
         end
@@ -67,19 +71,19 @@ class TwoFactorAuthsControllerTest < ActionController::TestCase
 
           should respond_with :redirect
           should redirect_to('the profile edit page') { edit_profile_path }
-          should 'keep 2fa enabled' do
+          should 'keep mfa enabled' do
             assert @user.reload.mfa_enabled?
           end
         end
       end
     end
 
-    context 'when 2fa not enabled' do
+    context 'when mfa disabled' do
       setup do
         @user.disable_mfa!
       end
 
-      context 'on POST to create 2fa' do
+      context 'on POST to create mfa' do
         setup do
           seed = ROTP::Base32.random_base32
           @controller.session[:mfa_seed] = seed
@@ -92,19 +96,19 @@ class TwoFactorAuthsControllerTest < ActionController::TestCase
             assert page.has_content?(code)
           end
         end
-        should 'enable 2fa' do
+        should 'enable mfa' do
           assert @user.reload.mfa_enabled?
         end
       end
 
-      context 'on DELETE to destroy 2fa' do
+      context 'on DELETE to destroy mfa' do
         setup do
           delete :destroy
         end
 
         should respond_with :redirect
         should redirect_to('the profile edit page') { edit_profile_path }
-        should 'keep 2fa disabled' do
+        should 'keep mfa disabled' do
           refute @user.reload.mfa_enabled?
         end
       end

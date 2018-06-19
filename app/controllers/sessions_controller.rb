@@ -17,7 +17,7 @@ class SessionsController < Clearance::SessionsController
     if @user&.mfa_enabled? && @user&.otp_verified?(params[:otp])
       do_login
     else
-      login_failure(t('two_factor_auths.incorrect_otp'))
+      login_failure(t('multifactor_auths.incorrect_otp'))
     end
   end
 

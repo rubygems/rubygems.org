@@ -12,7 +12,7 @@ en:
   please_sign_up: Access Denied. Please sign up for an account at https://rubygems.org
   sign_in: Sign in
   sign_up: Sign up
-  two_factor_authentication: Two-factor authentication
+  multifactor_authentication: Two-factor authentication
   subtitle: your community gem host
   this_rubygem_could_not_be_found: This rubygem could not be found.
   time_ago: "%{duration} ago"
@@ -136,7 +136,7 @@ en:
       submit: Reset password
       title: Change your password
       will_email_notice: We will email you a link to change your password.
-  two_factor_auths:
+  multifactor_auths:
     incorrect_otp: Your OTP code is incorrect.
     otp_code: OTP code
     require_mfa_disabled: Your two factor authentication has been enabled. You have to disable it first.
@@ -181,7 +181,7 @@ en:
         delete_profile: Delete Profile
         warning: Deleting your profile is an irreversible action. This can't be undone by contacting support. Please be certain!
       mfa:
-        two_factor_auth: Two factor authentication
+        multifactor_auth: Two factor authentication
         disabled: You have not yet enabled two factor authentication.
         go_settings: Go to setting page.
         enabled: You have enabled two factor authentication. Please input your OTP from your authenticator or one of your active recovery codes to disable it.
