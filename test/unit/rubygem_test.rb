@@ -771,6 +771,20 @@ class RubygemTest < ActiveSupport::TestCase
         assert Rubygem.exists?(name: 'rake')
       end
     end
+
+    context "from a Gem:Specification of older version" do
+      setup do
+        linkset  = create(:linkset, home: "http://latest.com")
+        @rubygem = create(:rubygem, name: "test", number: "1.0.0", linkset: linkset)
+        gemspec  = new_gemspec("test", "0.0.1", "test", "ruby") { |spec| spec.homepage = "http://test.com" }
+        version  = @rubygem.find_or_initialize_version_from_spec(gemspec)
+        @rubygem.update_attributes_from_gem_specification!(version, gemspec)
+      end
+
+      should "not update linkset" do
+        assert_equal "http://latest.com", @rubygem.linkset.home
+      end
+    end
   end
 
   context "downloads" do
