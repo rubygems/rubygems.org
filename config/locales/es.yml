@@ -204,6 +204,7 @@ es:
       other_fields_notice: Los otros campos solo pueden ser editados al envíar una versión nueva de tu gema.
       subtitle: para %{gem}
       title: Editar ligas
+      deprecation_message:
     gem_members:
       authors_header: Autores
       owners_header: Administradores

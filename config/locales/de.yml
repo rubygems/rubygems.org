@@ -204,6 +204,7 @@ de:
       other_fields_notice: Alle anderen Felder können nur durch eine gepushte, aktualisierte Version deines Gems bearbeitet werden.
       subtitle: für %{gem}
       title: Bearbeite Links
+      deprecation_message:
     gem_members:
       authors_header: Autoren
       owners_header: Besitzer

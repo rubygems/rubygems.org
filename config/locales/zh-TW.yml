@@ -204,6 +204,7 @@ zh-TW:
       other_fields_notice: 其他設定欄位只能透過發佈一個新版本的 Gem 來修改
       subtitle: "%{gem}"
       title: 編輯連結
+      deprecation_message:
     gem_members:
       authors_header: 作者
       owners_header: 擁有者

@@ -35,6 +35,7 @@ class RubygemsController < ApplicationController
   end
 
   def edit
+    flash[:warning] = t('.deprecation_message').html_safe # rubocop:disable Rails/OutputSafety
   end
 
   def update

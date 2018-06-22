@@ -204,6 +204,7 @@ fr:
       other_fields_notice: Tous les autres champs ne sont modifiables qu'en soumettant une nouvelle version de votre gem.
       subtitle: pour %{gem}
       title: Modifier les liens
+      deprecation_message:
     gem_members:
       authors_header: Auteurs
       owners_header: Propriétaires
