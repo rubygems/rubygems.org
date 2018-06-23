@@ -52,7 +52,7 @@ class Api::V1::OwnersController < Api::BaseController
   protected
 
   def verify_gem_ownership
-    return if current_user.rubygems.find_by_name(params[:rubygem_id])
+    return if @api_user.rubygems.find_by_name(params[:rubygem_id])
     render plain: 'You do not have permission to manage this gem.', status: :unauthorized
   end
 end

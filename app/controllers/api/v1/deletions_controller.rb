@@ -7,7 +7,7 @@ class Api::V1::DeletionsController < Api::BaseController
   before_action :validate_gem_and_version,  only: %i[create]
 
   def create
-    @deletion = current_user.deletions.build(version: @version)
+    @deletion = @api_user.deletions.build(version: @version)
     if @deletion.save
       StatsD.increment 'yank.success'
       render plain: "Successfully deleted gem: #{@version.to_title}"
@@ -29,7 +29,7 @@ class Api::V1::DeletionsController < Api::BaseController
     if !@rubygem.hosted?
       render plain: t(:this_rubygem_could_not_be_found),
              status: :not_found
-    elsif !@rubygem.owned_by?(current_user)
+    elsif !@rubygem.owned_by?(@api_user)
       render plain: "You do not have permission to delete this gem.",
              status: :forbidden
     else

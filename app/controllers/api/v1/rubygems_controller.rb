@@ -9,7 +9,7 @@ class Api::V1::RubygemsController < Api::BaseController
   after_action  :cors_set_access_control_headers, only: :show
 
   def index
-    @rubygems = current_user.rubygems.with_versions
+    @rubygems = @api_user.rubygems.with_versions
     respond_to do |format|
       format.json { render json: @rubygems }
       format.yaml { render yaml: @rubygems }
@@ -29,7 +29,7 @@ class Api::V1::RubygemsController < Api::BaseController
 
   def create
     gemcutter = Pusher.new(
-      current_user,
+      @api_user,
       request.body,
       request.protocol.delete("://"),
       request.host_with_port

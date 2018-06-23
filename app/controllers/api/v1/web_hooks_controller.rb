@@ -6,13 +6,13 @@ class Api::V1::WebHooksController < Api::BaseController
 
   def index
     respond_to do |format|
-      format.json { render json: current_user.all_hooks }
-      format.yaml { render yaml: current_user.all_hooks }
+      format.json { render json: @api_user.all_hooks }
+      format.yaml { render yaml: @api_user.all_hooks }
     end
   end
 
   def create
-    webhook = current_user.web_hooks.build(url: @url, rubygem: @rubygem)
+    webhook = @api_user.web_hooks.build(url: @url, rubygem: @rubygem)
     if webhook.save
       render(plain: webhook.success_message, status: :created)
     else
@@ -21,7 +21,7 @@ class Api::V1::WebHooksController < Api::BaseController
   end
 
   def remove
-    webhook = current_user.web_hooks.find_by_rubygem_id_and_url(@rubygem.try(:id), @url)
+    webhook = @api_user.web_hooks.find_by_rubygem_id_and_url(@rubygem.try(:id), @url)
     if webhook.try(:destroy)
       render(plain: webhook.removed_message)
     else
@@ -30,7 +30,7 @@ class Api::V1::WebHooksController < Api::BaseController
   end
 
   def fire
-    webhook = current_user.web_hooks.new(url: @url)
+    webhook = @api_user.web_hooks.new(url: @url)
     @rubygem = Rubygem.find_by_name("gemcutter") unless @rubygem
 
     if webhook.fire(request.protocol.delete("://"), request.host_with_port, @rubygem,
