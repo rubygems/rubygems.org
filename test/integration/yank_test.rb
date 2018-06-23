@@ -2,10 +2,15 @@ require 'test_helper'
 
 class YankTest < SystemTest
   setup do
-    @user = create(:user)
+    @user = create(:user, password: "password12345")
     @rubygem = create(:rubygem, name: "sandworm")
     create(:ownership, user: @user, rubygem: @rubygem)
     Dir.chdir(Dir.mktmpdir)
+
+    visit sign_in_path
+    fill_in "Email or Username", with: @user.email
+    fill_in "Password", with: "password12345"
+    click_button "Sign in"
   end
 
   test "view yanked gem" do
@@ -54,9 +59,9 @@ class YankTest < SystemTest
     visit rubygem_path(@rubygem)
     assert page.has_content? "sandworm"
     assert page.has_content? "1.0.0"
-    assert page.has_content? other_user.handle
+    assert page.has_selector?("a[alt='#{other_user.handle}']")
     refute page.has_content?("0.0.0")
-    refute page.has_content?(@user.handle)
+    refute page.has_selector?("a[alt='#{@user.handle}']")
   end
 
   test "undo a yank is not supported" do
