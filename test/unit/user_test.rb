@@ -244,6 +244,10 @@ class UserTest < ActiveSupport::TestCase
     end
 
     context "two factor authentication" do
+      should 'disable mfa by default' do
+        refute @user.mfa_enabled?
+      end
+
       context "when enabled" do
         setup do
           @user.enable_mfa!(ROTP::Base32.random_base32, :mfa_login_only)

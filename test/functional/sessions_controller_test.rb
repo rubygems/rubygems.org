@@ -17,6 +17,11 @@ class SessionsControllerTest < ActionController::TestCase
       should respond_with :success
       should "save user name in session" do
         assert @controller.session[:mfa_user] == @user.handle
+        assert page.has_content? "Multifactor authentication"
+      end
+
+      should "show OTP prompt" do
+        assert page.has_content? "Multifactor authentication"
       end
     end
 
@@ -32,6 +37,10 @@ class SessionsControllerTest < ActionController::TestCase
         should "clear user name in session" do
           assert @controller.session[:mfa_user].nil?
         end
+
+        should "make user logged in" do
+          assert @controller.request.env[:clearance].signed_in?
+        end
       end
 
       context "when OTP is recovery code" do
@@ -45,6 +54,10 @@ class SessionsControllerTest < ActionController::TestCase
         should "clear user name in session" do
           assert @controller.session[:mfa_user].nil?
         end
+
+        should "make user logged in" do
+          assert @controller.request.env[:clearance].signed_in?
+        end
       end
 
       context "when OTP is incorrect" do
@@ -53,6 +66,7 @@ class SessionsControllerTest < ActionController::TestCase
           post :mfa_create, params: { otp: wrong_otp }
         end
 
+        should set_flash.now[:notice]
         should respond_with :unauthorized
 
         should "render sign in page" do

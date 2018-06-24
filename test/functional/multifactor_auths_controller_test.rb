@@ -8,10 +8,6 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
       @request.cookies[:mfa_feature] = 'true'
     end
 
-    should 'disable mfa by default' do
-      refute @user.mfa_enabled?
-    end
-
     context 'when mfa enabled' do
       setup do
         @user.enable_mfa!(ROTP::Base32.random_base32, :mfa_login_only)
@@ -71,6 +67,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
           should respond_with :redirect
           should redirect_to('the profile edit page') { edit_profile_path }
+          should set_flash.now[:error]
           should 'keep mfa enabled' do
             assert @user.reload.mfa_enabled?
           end
