@@ -81,12 +81,9 @@ class Dependency < ApplicationRecord
       throw :abort
     end
 
-    if gem_dependency.name.empty?
-      errors.add :rubygem, "Blank is not a valid dependency name"
-      return :abort
-    end
-
-    true
+    return unless gem_dependency.name.empty?
+    errors.add :rubygem, "Blank is not a valid dependency name"
+    throw :abort
   end
 
   def use_existing_rubygem

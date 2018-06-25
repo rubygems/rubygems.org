@@ -349,7 +349,6 @@ class Version < ApplicationRecord
 
   def update_prerelease
     self[:prerelease] = !!to_gem_version.prerelease? # rubocop:disable Style/DoubleNegation
-    true
   end
 
   def full_nameify!
