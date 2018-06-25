@@ -1,6 +1,3 @@
 [submodule "vendor/cache"]
 	path = vendor/cache
 	url = https://github.com/rubygems/rubygems.org-vendor.git
-[submodule "storage/ruby-advisory-db"]
-	path = storage/ruby-advisory-db
-	url = https://github.com/rubysec/ruby-advisory-db
