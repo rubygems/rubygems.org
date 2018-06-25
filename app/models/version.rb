@@ -3,6 +3,8 @@ require 'digest/sha2'
 class Version < ApplicationRecord
   belongs_to :rubygem, touch: true
   has_many :dependencies, -> { order('rubygems.name ASC').includes(:rubygem) }, dependent: :destroy, inverse_of: "version"
+  has_many :advisories
+
   has_one :gem_download, proc { |m| where(rubygem_id: m.rubygem_id) }, inverse_of: :version
 
   before_save :update_prerelease

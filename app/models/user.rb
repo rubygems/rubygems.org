@@ -24,6 +24,7 @@ class User < ApplicationRecord
 
   has_many :deletions, dependent: :nullify
   has_many :web_hooks, dependent: :destroy
+  has_many :advisories
 
   after_validation :set_unconfirmed_email, if: :email_changed?, on: :update
   before_create :generate_api_key, :generate_confirmation_token

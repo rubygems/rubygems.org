@@ -74,6 +74,7 @@ Rails.application.routes.draw do
         collection do
           delete :yank, to: "deletions#create"
           put :unyank, to: "deletions#destroy"
+          post :advisory, to: "advisories#create"
         end
         constraints rubygem_id: Patterns::ROUTE_PATTERN do
           resource :owners, only: %i[show create destroy]

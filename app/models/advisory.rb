@@ -1,4 +1,9 @@
-class Advisory
+class Advisory < ApplicationRecord
+  belongs_to :user
+  belongs_to :version
+
+  validates :user, :version, :message, presence: true
+
   def self.update?
     new_sha = `git ls-remote http://github.com/rubysec/ruby-advisory-db refs/heads/master`.split.first
     if !Dir.exist?('tmp/advisories')
