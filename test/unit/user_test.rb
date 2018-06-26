@@ -290,8 +290,8 @@ class UserTest < ActiveSupport::TestCase
           @user.disable_mfa!
         end
 
-        should "always return true for verifying OTP" do
-          assert @user.otp_verified?('')
+        should "return false for verifying OTP" do
+          refute @user.otp_verified?('')
         end
 
         should "return false for mfa status check" do

@@ -19,10 +19,6 @@ class SessionsControllerTest < ActionController::TestCase
         assert @controller.session[:mfa_user] == @user.handle
         assert page.has_content? "Multifactor authentication"
       end
-
-      should "show OTP prompt" do
-        assert page.has_content? "Multifactor authentication"
-      end
     end
 
     context "on POST to mfa_create" do

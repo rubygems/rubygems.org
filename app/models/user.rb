@@ -184,16 +184,11 @@ class User < ApplicationRecord
   end
 
   def otp_verified?(otp)
-    if no_mfa? || verify_digit_otp(otp)
-      true
-    else
-      is_recovery = mfa_recovery_codes.include?(otp)
-      if is_recovery
-        mfa_recovery_codes.delete(otp)
-        save!(validate: false)
-      end
-      is_recovery
-    end
+    return true if verify_digit_otp(otp)
+
+    return false unless mfa_recovery_codes.include? otp
+    mfa_recovery_codes.delete(otp)
+    save!(validate: false)
   end
 
   private
@@ -201,11 +196,10 @@ class User < ApplicationRecord
   def verify_digit_otp(otp)
     totp = ROTP::TOTP.new(mfa_seed)
     last_success = totp.verify_with_drift_and_prior(otp, 30, last_otp_at)
-    if last_success
-      self.last_otp_at = Time.at(last_success).utc.to_datetime
-      save!(validate: false)
-    end
-    !last_success.nil?
+    return false unless last_success
+
+    self.last_otp_at = Time.at(last_success).utc.to_datetime
+    save!(validate: false)
   end
 
   def update_email!
