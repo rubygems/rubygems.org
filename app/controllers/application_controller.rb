@@ -54,12 +54,12 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_with_api_key
-    api_key = request.headers["Authorization"] || params[:api_key]
-    sign_in User.find_by_api_key(api_key)
+    api_key   = request.headers["Authorization"] || params[:api_key]
+    @api_user = User.find_by_api_key(api_key)
   end
 
   def verify_authenticated_user
-    return if current_user
+    return if @api_user
     # When in passenger, this forces the whole body to be read before
     # we return a 401 and end the request. We need to do this because
     # otherwise apache is confused why we never read the whole body.
