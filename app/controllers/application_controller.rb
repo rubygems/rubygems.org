@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
 
   rescue_from ActiveRecord::RecordNotFound, with: :render_404
-  before_action :set_csp
+  before_action :set_csp unless Rails.env.development?
 
   def set_csp
     response.headers['Content-Security-Policy'] = "default-src 'self'; "\
