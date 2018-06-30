@@ -146,7 +146,7 @@ GEM
       activesupport (>= 4.2.0)
     gravtastic (3.2.6)
     hashie (3.5.7)
-    high_voltage (3.0.0)
+    high_voltage (3.1.0)
     highline (1.7.10)
     hitimes (1.2.5)
     honeybadger (3.1.2)
