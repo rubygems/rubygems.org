@@ -196,8 +196,8 @@ GEM
     parallel (1.11.2)
     parser (2.4.0.0)
       ast (~> 2.2)
-    paul_revere (2.1.0)
-      rails (>= 5.0, < 5.2)
+    paul_revere (3.0.0)
+      rails (>= 5.0, < 6.0)
     pg (0.21.0)
     powerpack (0.1.1)
     public_suffix (3.0.2)
@@ -349,7 +349,7 @@ DEPENDENCIES
   minitest
   mocha
   newrelic_rpm
-  paul_revere (~> 2.1.0)
+  paul_revere (~> 3.0.0)
   pg
   rack
   rack-attack
