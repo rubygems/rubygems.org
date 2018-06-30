@@ -2,7 +2,7 @@ class Api::V1::WebHooksController < Api::BaseController
   skip_before_action :verify_authenticity_token
   before_action :authenticate_with_api_key
   before_action :verify_authenticated_user
-  before_action :find_rubygem_by_name, except: :index
+  before_action :find_rubygem_by_name, :set_url, except: :index
 
   def index
     respond_to do |format|
@@ -39,5 +39,12 @@ class Api::V1::WebHooksController < Api::BaseController
     else
       render plain: webhook.failed_message(@rubygem), status: :bad_request
     end
+  end
+
+  private
+
+  def set_url
+    render plain: "URL was not provided", status: :bad_request unless params[:url]
+    @url = params[:url]
   end
 end
