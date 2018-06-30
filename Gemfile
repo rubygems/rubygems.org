@@ -62,7 +62,7 @@ end
 
 group :test do
   gem 'minitest', require: false
-  gem 'capybara'
+  gem 'capybara', '~> 2.18'
   gem 'factory_bot_rails'
   gem 'launchy'
   gem 'rack-test', require: 'rack/test'
