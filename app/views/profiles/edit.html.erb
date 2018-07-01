@@ -97,7 +97,7 @@
     <% else %>
       <p>
         <%= t '.mfa.disabled' %>
-        <%= link_to t('.mfa.go_settings'), new_multifactor_auth_path, :class => 't-text t-link'%>
+        <%= button_to t('.mfa.go_settings'), new_multifactor_auth_path, :method => 'get', :class => 'form__submit' %>
       </p>
     <% end %>
   </div>

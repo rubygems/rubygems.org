@@ -127,7 +127,7 @@ class ProfileTest < SystemTest
     sign_in
     visit profile_path("nick1")
     click_link "Edit Profile"
-    click_link "Go to setting page"
+    click_button "Register a new device"
 
     assert page.has_content? "Enabling multifactor auth"
 
@@ -148,7 +148,7 @@ class ProfileTest < SystemTest
     sign_in
     visit profile_path("nick1")
     click_link "Edit Profile"
-    click_link "Go to setting page"
+    click_button "Register a new device"
 
     assert page.has_content? "Enabling multifactor auth"
 
@@ -188,7 +188,7 @@ class ProfileTest < SystemTest
     sign_in
     visit profile_path("nick1")
     click_link "Edit Profile"
-    click_link "Go to setting page"
+    click_button "Register a new device"
 
     key_regex = /^Key: (\w{4}) (\w{4}) (\w{4}) (\w{4})/
     key = page.find_by_id("mfa-key").text.match(key_regex)[1..4].join
