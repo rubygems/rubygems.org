@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
 
   def set_csp
     response.headers['Content-Security-Policy'] = "default-src 'self'; "\
-      "script-src 'self' https://secure.gaug.es; "\
+      "script-src 'self' https://secure.gaug.es https://www.fastly-insights.com; "\
       "style-src 'self' https://fonts.googleapis.com; "\
       "img-src 'self' https://secure.gaug.es https://gravatar.com https://secure.gravatar.com; "\
       "font-src 'self' https://fonts.gstatic.com; "\
