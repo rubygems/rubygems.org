@@ -3,6 +3,8 @@ require 'test_helper'
 class ProfileTest < SystemTest
   setup do
     @user = create(:user, email: "nick@example.com", password: "password12345", handle: "nick1")
+
+    page.driver.browser.set_cookie("mfa_feature=true")
   end
 
   def sign_in
@@ -10,6 +12,11 @@ class ProfileTest < SystemTest
     fill_in "Email or Username", with: @user.reload.email
     fill_in "Password", with: @user.password
     click_button "Sign in"
+  end
+
+  def enable_mfa
+    key = ROTP::Base32.random_base32
+    @user.enable_mfa!(key, :mfa_login_only)
   end
 
   test "changing handle" do
@@ -114,5 +121,88 @@ class ProfileTest < SystemTest
 
     assert page.has_content? "Your account deletion request has been enqueued."\
       " We will send you a confrimation mail when your request has been processed."
+  end
+
+  test "enabling multifactor authentication with valid otp" do
+    sign_in
+    visit profile_path("nick1")
+    click_link "Edit Profile"
+    click_button "Register a new device"
+
+    assert page.has_content? "Enabling multifactor auth"
+
+    key_regex = /^Key: (\w{4}) (\w{4}) (\w{4}) (\w{4})/
+    key = page.find_by_id("mfa-key").text.match(key_regex)[1..4].join
+    totp = ROTP::TOTP.new(key)
+    page.fill_in "otp", with: totp.now
+    click_button "Enable"
+
+    assert page.has_content? "Recovery codes"
+
+    click_link "Continue"
+
+    assert page.has_content? "You have enabled multifactor authentication."
+  end
+
+  test "enabling multifactor authentication with invalid otp" do
+    sign_in
+    visit profile_path("nick1")
+    click_link "Edit Profile"
+    click_button "Register a new device"
+
+    assert page.has_content? "Enabling multifactor auth"
+
+    totp = ROTP::TOTP.new(ROTP::Base32.random_base32)
+    page.fill_in "otp", with: totp.now
+    click_button "Enable"
+
+    assert page.has_content? "You have not yet enabled multifactor authentication."
+  end
+
+  test "disabling multifactor authentication with valid otp" do
+    sign_in
+    enable_mfa
+    visit profile_path("nick1")
+    click_link "Edit Profile"
+
+    page.fill_in "otp", with: ROTP::TOTP.new(@user.mfa_seed).now
+    click_button "Disable"
+
+    assert page.has_content? "You have not yet enabled multifactor authentication."
+  end
+
+  test "disabling multifactor authentication with invalid otp" do
+    sign_in
+    enable_mfa
+    visit profile_path("nick1")
+    click_link "Edit Profile"
+
+    key = ROTP::Base32.random_base32
+    page.fill_in "otp", with: ROTP::TOTP.new(key).now
+    click_button "Disable"
+
+    assert page.has_content? "You have enabled multifactor authentication."
+  end
+
+  test "disabling multifactor authentication with recovery code" do
+    sign_in
+    visit profile_path("nick1")
+    click_link "Edit Profile"
+    click_button "Register a new device"
+
+    key_regex = /^Key: (\w{4}) (\w{4}) (\w{4}) (\w{4})/
+    key = page.find_by_id("mfa-key").text.match(key_regex)[1..4].join
+    totp = ROTP::TOTP.new(key)
+    page.fill_in "otp", with: totp.now
+    click_button "Enable"
+
+    assert page.has_content? "Recovery codes"
+
+    recoveries = page.find_by_id("recovery-code-list").text.split
+    click_link "Continue"
+    page.fill_in "otp", with: recoveries.sample
+    click_button "Disable"
+
+    assert page.has_content? "You have not yet enabled multifactor authentication."
   end
 end

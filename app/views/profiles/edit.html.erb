@@ -85,6 +85,24 @@
 
 <%= button_to t('.api_access.reset'), reset_api_v1_api_key_path, :method => :put, :data => {:confirm => t('.api_access.confirm_reset')}, :class => 'form__submit' %>
 
+<% if mfa_enabled? %>
+  <div class="t-body">
+    <h2><%= t '.mfa.multifactor_auth' %></h2>
+    <% if @user.mfa_enabled? %>
+      <p><%= t '.mfa.enabled' %></p>
+      <%= form_tag multifactor_auth_path, :method => :delete do %>
+        <%= text_field_tag :otp, '', :class => 'form__input' %>
+        <%= submit_tag t('.mfa.disable'), :class => 'form__submit' %>
+      <% end %>
+    <% else %>
+      <p>
+        <%= t '.mfa.disabled' %>
+        <%= button_to t('.mfa.go_settings'), new_multifactor_auth_path, :method => 'get', :class => 'form__submit' %>
+      </p>
+    <% end %>
+  </div>
+<% end %>
+
 <div class="t-body">
   <h2><%= t '.delete.delete_profile' %></h2>
   <p><%= t '.delete.warning' %></p>

@@ -129,6 +129,7 @@ Rails.application.routes.draw do
     end
     resource :dashboard, only: :show, constraints: { format: /html|atom/ }
     resources :profiles, only: :show
+    resource :multifactor_auth, only: %i[new create destroy]
     resource :profile, only: %i[edit update] do
       member do
         get :delete
@@ -161,7 +162,9 @@ Rails.application.routes.draw do
     patch 'unconfirmed'
   end
 
-  resource :session, only: %i[create destroy]
+  resource :session, only: %i[create destroy] do
+    post 'mfa_create', to: 'sessions#mfa_create', as: :mfa_create
+  end
 
   resources :passwords, only: %i[new create]
 

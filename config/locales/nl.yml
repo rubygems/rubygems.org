@@ -12,6 +12,7 @@ nl:
   please_sign_up: Toegang geweigerd. Schrijf je in voor een account op https://rubygems.org
   sign_in: Inloggen
   sign_up: Aanmelden
+  multifactor_authentication:
   subtitle: De gem host voor de community
   this_rubygem_could_not_be_found: This rubygem could not be found.
   time_ago: "%{duration} geleden"
@@ -135,6 +136,28 @@ nl:
       submit: Wachtwoord wijzigen
       title: wachtwoord wijzigen
       will_email_notice: We sturen een link om je wachtwoord te wijzigen.
+  multifactor_auths:
+    incorrect_otp:
+    otp_code:
+    require_mfa_disabled:
+    require_mfa_enabled:
+    new:
+      title:
+      scan_prompt:
+      otp_prompt:
+      confirm:
+      enable:
+      account:
+      key:
+      time_based:
+    create:
+      success:
+    recovery:
+      continue:
+      title:
+      note:
+    destroy:
+      success:
   profiles:
     edit:
       email_awaiting_confirmation:
@@ -157,6 +180,12 @@ nl:
         delete:
         delete_profile:
         warning:
+      mfa:
+        multifactor_auth:
+        disabled:
+        go_settings:
+        enabled:
+        disable:
     delete:
       title:
       confirm:

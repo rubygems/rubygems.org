@@ -12,6 +12,7 @@ zh-TW:
   please_sign_up: 無法存取，請先在 https://rubygems.org 上註冊帳號
   sign_in: 登入
   sign_up: 註冊
+  multifactor_authentication:
   subtitle: Ruby 社群 Gem 套件管理平台
   this_rubygem_could_not_be_found:
   time_ago: "%{duration} 前"
@@ -135,6 +136,28 @@ zh-TW:
       submit: 更新密碼
       title: 修改密碼
       will_email_notice: 系統將會寄一封包含重設密碼連結的電子郵件給你
+  multifactor_auths:
+    incorrect_otp:
+    otp_code:
+    require_mfa_disabled:
+    require_mfa_enabled:
+    new:
+      title:
+      scan_prompt:
+      otp_prompt:
+      confirm:
+      enable:
+      account:
+      key:
+      time_based:
+    create:
+      success:
+    recovery:
+      continue:
+      title:
+      note:
+    destroy:
+      success:
   profiles:
     edit:
       email_awaiting_confirmation:
@@ -157,6 +180,12 @@ zh-TW:
         delete:
         delete_profile:
         warning:
+      mfa:
+        multifactor_auth:
+        disabled:
+        go_settings:
+        enabled:
+        disable:
     delete:
       title:
       confirm:

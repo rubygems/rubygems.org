@@ -12,6 +12,7 @@ pt-BR:
   please_sign_up: Accesso Negado. Por favor se registre em https://rubygems.org
   sign_in: Fazer Login
   sign_up: Cadastrar
+  multifactor_authentication:
   subtitle: o host de gems da sua comunidade
   this_rubygem_could_not_be_found: A rubygem não foi encontrada.
   time_ago: "%{duration} atrás"
@@ -135,6 +136,28 @@ pt-BR:
       submit: Resetar senha
       title: Alterar senha
       will_email_notice: Você vai receber um email com o link para atualizar sua senha.
+  multifactor_auths:
+    incorrect_otp:
+    otp_code:
+    require_mfa_disabled:
+    require_mfa_enabled:
+    new:
+      title:
+      scan_prompt:
+      otp_prompt:
+      confirm:
+      enable:
+      account:
+      key:
+      time_based:
+    create:
+      success:
+    recovery:
+      continue:
+      title:
+      note:
+    destroy:
+      success:
   profiles:
     edit:
       email_awaiting_confirmation:
@@ -157,6 +180,12 @@ pt-BR:
         delete:
         delete_profile:
         warning:
+      mfa:
+        multifactor_auth:
+        disabled:
+        go_settings:
+        enabled:
+        disable:
     delete:
       title:
       confirm:

@@ -46,6 +46,8 @@ class User < ApplicationRecord
   validates :password, length: { within: 10..200 }, allow_nil: true, unless: :skip_password_validation?
   validate :unconfirmed_email_uniqueness
 
+  enum mfa_level: { no_mfa: 0, mfa_login_only: 1, mfa_login_and_write: 2 }
+
   def self.authenticate(who, password)
     user = find_by(email: who.downcase) || find_by(handle: who)
     user if user && user.authenticated?(password)
@@ -162,7 +164,43 @@ class User < ApplicationRecord
     remember_token_expires_at && remember_token_expires_at > Time.zone.now
   end
 
+  def mfa_enabled?
+    !no_mfa?
+  end
+
+  def disable_mfa!
+    no_mfa!
+    self.mfa_seed = ''
+    self.mfa_recovery_codes = []
+    self.last_otp_at = nil
+    save!(validate: false)
+  end
+
+  def enable_mfa!(seed, level)
+    self.mfa_level = level
+    self.mfa_seed = seed
+    self.mfa_recovery_codes = Array.new(10).map { SecureRandom.hex(6) }
+    save!(validate: false)
+  end
+
+  def otp_verified?(otp)
+    return true if verify_digit_otp(otp)
+
+    return false unless mfa_recovery_codes.include? otp
+    mfa_recovery_codes.delete(otp)
+    save!(validate: false)
+  end
+
   private
+
+  def verify_digit_otp(otp)
+    totp = ROTP::TOTP.new(mfa_seed)
+    last_success = totp.verify_with_drift_and_prior(otp, 30, last_otp_at)
+    return false unless last_success
+
+    self.last_otp_at = Time.at(last_success).utc.to_datetime
+    save!(validate: false)
+  end
 
   def update_email!
     self.attributes = { email: unconfirmed_email, unconfirmed_email: nil }

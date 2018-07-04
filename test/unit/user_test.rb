@@ -242,6 +242,64 @@ class UserTest < ActiveSupport::TestCase
         assert @user.valid_confirmation_token?
       end
     end
+
+    context "two factor authentication" do
+      should 'disable mfa by default' do
+        refute @user.mfa_enabled?
+      end
+
+      context "when enabled" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :mfa_login_only)
+        end
+
+        should "be able to use a recovery code only once" do
+          code = @user.mfa_recovery_codes.first
+          assert @user.otp_verified?(code)
+          refute @user.otp_verified?(code)
+        end
+
+        should "be able to verify correct OTP" do
+          assert @user.otp_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
+        end
+
+        should "return true for mfa status check" do
+          assert @user.mfa_enabled?
+          refute @user.no_mfa?
+        end
+
+        should "return true for otp in last interval" do
+          last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
+          assert @user.otp_verified?(last_otp)
+        end
+
+        should "return true for otp in next interval" do
+          next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
+          assert @user.otp_verified?(next_otp)
+        end
+
+        should "return false for second attempt for the same otp" do
+          otp = ROTP::TOTP.new(@user.mfa_seed).now
+          assert @user.otp_verified?(otp)
+          refute @user.otp_verified?(otp)
+        end
+      end
+
+      context "when disabled" do
+        setup do
+          @user.disable_mfa!
+        end
+
+        should "return false for verifying OTP" do
+          refute @user.otp_verified?('')
+        end
+
+        should "return false for mfa status check" do
+          refute @user.mfa_enabled?
+          assert @user.no_mfa?
+        end
+      end
+    end
   end
 
   context "rubygems" do

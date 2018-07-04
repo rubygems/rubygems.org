@@ -12,6 +12,7 @@ es:
   please_sign_up: Acceso negado. Por favor, primero crea una cuenta en https://rubygems.org
   sign_in: Ingresar
   sign_up: Registro
+  multifactor_authentication:
   subtitle: alojamiento de gemas para la comunidad
   this_rubygem_could_not_be_found: La gema no ha sido encontrada.
   time_ago: hace %{duration}
@@ -135,6 +136,28 @@ es:
       submit: Reestablecer contraseña
       title: Cambiar contraseña
       will_email_notice: Te enviaremos un email con un enlace para cambiar tu contraseña.
+  multifactor_auths:
+    incorrect_otp:
+    otp_code:
+    require_mfa_disabled:
+    require_mfa_enabled:
+    new:
+      title:
+      scan_prompt:
+      otp_prompt:
+      confirm:
+      enable:
+      account:
+      key:
+      time_based:
+    create:
+      success:
+    recovery:
+      continue:
+      title:
+      note:
+    destroy:
+      success:
   profiles:
     edit:
       email_awaiting_confirmation:
@@ -157,6 +180,12 @@ es:
         delete:
         delete_profile:
         warning:
+      mfa:
+        multifactor_auth:
+        disabled:
+        go_settings:
+        enabled:
+        disable:
     delete:
       title:
       confirm:

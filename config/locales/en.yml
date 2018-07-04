@@ -12,6 +12,7 @@ en:
   please_sign_up: Access Denied. Please sign up for an account at https://rubygems.org
   sign_in: Sign in
   sign_up: Sign up
+  multifactor_authentication: Multifactor authentication
   subtitle: your community gem host
   this_rubygem_could_not_be_found: This rubygem could not be found.
   time_ago: "%{duration} ago"
@@ -135,6 +136,28 @@ en:
       submit: Reset password
       title: Change your password
       will_email_notice: We will email you a link to change your password.
+  multifactor_auths:
+    incorrect_otp: Your OTP code is incorrect.
+    otp_code: OTP code
+    require_mfa_disabled: Your multifactor authentication has been enabled. You have to disable it first.
+    require_mfa_enabled: Your multifactor authentication has not been enabled. You have to enable it first.
+    new:
+      title: Enabling multifactor auth
+      scan_prompt: Please scan the qr-code with your authenticator app. If you cannot scan the code, add information below into your app manually. 
+      otp_prompt: Type digit code from auth app to continue.
+      confirm: I have kept my recovery codes safe.
+      enable: Enable
+      account: "Account: %{account}"
+      key: "Key: %{key}"
+      time_based: "Time based: Yes"
+    create:
+      success: You have successfully enabled multifactor authentication.
+    recovery:
+      continue: Continue
+      title: Recovery codes
+      note: "You MUST keep the recovery codes safe to prevent losing your account. Each of the code can be used once if you lose your authenticator."
+    destroy:
+      success: You have successfully disabled multifactor authentication.
   profiles:
     edit:
       email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
@@ -157,6 +180,12 @@ en:
         delete: Delete
         delete_profile: Delete Profile
         warning: Deleting your profile is an irreversible action. This can't be undone by contacting support. Please be certain!
+      mfa:
+        multifactor_auth: Multifactor authentication
+        disabled: You have not yet enabled multifactor authentication.
+        go_settings: Register a new device
+        enabled: You have enabled multifactor authentication. Please input your OTP from your authenticator or one of your active recovery codes to disable it.
+        disable: Disable
     delete:
       title: Delete profile
       confirm: Confirm
