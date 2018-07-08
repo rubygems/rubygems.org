@@ -55,7 +55,7 @@ class LogTicketTest < ActiveSupport::TestCase
     end
   end
 
-  context "filesystem" do
+  context "fs" do
     context "local" do
       setup do
         @log_ticket.update!(backend: "local", key: "sample_logs/fastly-fake.log")
@@ -63,11 +63,11 @@ class LogTicketTest < ActiveSupport::TestCase
       end
 
       should "return a local fs" do
-        assert_kind_of RubygemFs::Local, @log_ticket.filesystem
+        assert_kind_of RubygemFs::Local, @log_ticket.fs
       end
 
       should "set the right base directory" do
-        assert_equal "test", @log_ticket.filesystem.base_dir
+        assert_equal "test", @log_ticket.fs.base_dir
       end
 
       should "body return the file body" do
@@ -85,11 +85,11 @@ class LogTicketTest < ActiveSupport::TestCase
       end
 
       should "return a s3 fs" do
-        assert_kind_of RubygemFs::S3, @log_ticket.filesystem
+        assert_kind_of RubygemFs::S3, @log_ticket.fs
       end
 
       should "set the right bucket" do
-        assert_equal "test", @log_ticket.filesystem.bucket
+        assert_equal "test", @log_ticket.fs.bucket
       end
 
       should "body return the file body" do

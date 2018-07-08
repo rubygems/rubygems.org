@@ -49,8 +49,8 @@ module RubygemSearchable
       indexes :updated, type: 'date'
     end
 
-    def self.search(query, es: false, page: 1)
-      return [nil, legacy_search(query).page(page)] unless es
+    def self.search(query, elasticsearch: false, page: 1)
+      return [nil, legacy_search(query).page(page)] unless elasticsearch
       result = elastic_search(query).page(page)
       # Now we need to trigger the ES query so we can fallback if it fails
       # rather than lazy loading from the view
@@ -61,7 +61,7 @@ module RubygemSearchable
       [msg, legacy_search(query).page(page)]
     end
 
-    def self.elastic_search(q) # rubocop:disable Metrics/MethodLength
+    def self.elastic_search(query) # rubocop:disable Metrics/MethodLength
       search_definition = Elasticsearch::DSL::Search.search do
         query do
           function_score do
@@ -70,7 +70,7 @@ module RubygemSearchable
                 # Main query, search in name, summary, description
                 should do
                   query_string do
-                    query q
+                    query query
                     fields ['name^5', 'summary^3', 'description']
                     default_operator 'and'
                   end
@@ -88,9 +88,9 @@ module RubygemSearchable
 
         aggregation :matched_field do
           filters do
-            filters name: { terms: { name: [q] } },
-                    summary: { terms: { 'summary.raw' => [q] } },
-                    description: { terms: { 'description.raw' => [q] } }
+            filters name: { terms: { name: [query] } },
+                    summary: { terms: { 'summary.raw' => [query] } },
+                    description: { terms: { 'description.raw' => [query] } }
           end
         end
 
@@ -104,9 +104,7 @@ module RubygemSearchable
         source %w[name summary description downloads latest_version_number]
 
         # Return suggestions unless there's no query from the user
-        if q.present?
-          suggest :suggest_name, text: q, term: { field: 'name.suggest', suggest_mode: 'always' }
-        end
+        suggest :suggest_name, text: query, term: { field: 'name.suggest', suggest_mode: 'always' } if query.present?
       end
       __elasticsearch__.search(search_definition)
     end

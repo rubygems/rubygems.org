@@ -12,7 +12,7 @@ class LogTicket < ApplicationRecord
     find_by_sql(["UPDATE #{quoted_table_name} SET status = ? WHERE id IN (#{sql}) RETURNING *", 'processing']).first
   end
 
-  def filesystem
+  def fs
     @fs ||=
       if s3?
         RubygemFs::S3.new(bucket: directory)
@@ -22,6 +22,6 @@ class LogTicket < ApplicationRecord
   end
 
   def body
-    filesystem.get(key)
+    fs.get(key)
   end
 end

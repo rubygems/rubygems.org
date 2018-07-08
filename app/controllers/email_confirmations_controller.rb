@@ -2,7 +2,7 @@ class EmailConfirmationsController < ApplicationController
   def update
     user = User.find_by(confirmation_token: params[:token])
 
-    if user&.valid_confirmation_token? && user.confirm_email!
+    if user&.valid_confirmation_token? && user&.confirm_email!
       sign_in user
       redirect_to root_path, notice: t('.confirmed_email')
     else

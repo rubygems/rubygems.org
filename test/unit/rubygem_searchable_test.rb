@@ -224,7 +224,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
         setup do
           @ill_formated_query = "updated:[2016-08-10 TO }"
           Rubygem.stubs(:legacy_search).returns Rubygem.all
-          @error_msg, = Rubygem.search(@ill_formated_query, es: true)
+          @error_msg, = Rubygem.search(@ill_formated_query, elasticsearch: true)
         end
 
         should "fallback to legacy search" do
@@ -243,7 +243,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
           Rubygem.stubs(:legacy_search).returns Rubygem.all
 
           Toxiproxy[:elasticsearch].down do
-            error_msg, = Rubygem.search("something", es: true)
+            error_msg, = Rubygem.search("something", elasticsearch: true)
             expected_msg = "Advanced search is currently unavailable. Falling back to legacy search."
             assert_equal expected_msg, error_msg
             assert_received(Rubygem, :legacy_search) { |arg| arg.with("something") }

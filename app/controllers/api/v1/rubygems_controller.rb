@@ -38,7 +38,7 @@ class Api::V1::RubygemsController < Api::BaseController
     render plain: gemcutter.message, status: gemcutter.code
   rescue => e
     Honeybadger.notify(e)
-    render plain: "Server error. Please try again.", status: 500
+    render plain: "Server error. Please try again.", status: :internal_server_error
   end
 
   def reverse_dependencies

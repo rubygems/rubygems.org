@@ -22,9 +22,9 @@ class Api::V1::DependenciesController < Api::BaseController
     return if gem_names.size <= GEM_REQUEST_LIMIT
 
     if request.format == :marshal
-      render plain: "Too many gems! (use --full-index instead)", status: 422
+      render plain: "Too many gems! (use --full-index instead)", status: :unprocessable_entity
     elsif request.format == :json
-      render json: { error: 'Too many gems! (use --full-index instead)', code: 422 }, status: 422
+      render json: { error: 'Too many gems! (use --full-index instead)', code: 422 }, status: :unprocessable_entity
     end
   end
 

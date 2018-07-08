@@ -155,3 +155,12 @@ Naming/VariableNumber:
     - 'test/functional/api/v1/downloads_controller_test.rb'
     - 'test/unit/gem_download_test.rb'
     - 'test/unit/rubygem_searchable_test.rb'
+
+# Offense count: 2
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: implicit, explicit
+Style/RescueStandardError:
+  Exclude:
+    - 'app/controllers/api/v1/rubygems_controller.rb'
+    - 'app/jobs/fastly_log_processor.rb'

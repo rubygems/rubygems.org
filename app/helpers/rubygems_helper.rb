@@ -60,9 +60,8 @@ module RubygemsHelper
 
   def unsubscribe_link(rubygem)
     return unless signed_in?
-    style = unless rubygem.subscribers.find_by_id(current_user.id)
-              't-item--hidden'
-            end
+    style = 't-item--hidden' unless rubygem.subscribers.find_by_id(current_user.id)
+
     link_to t('.links.unsubscribe'), rubygem_subscription_path(rubygem),
       class: [:toggler, 'gem__link', 't-list__item', style], id: 'unsubscribe',
       method: :delete, remote: true
@@ -83,7 +82,7 @@ module RubygemsHelper
   end
 
   def report_abuse_link(rubygem)
-    encoded_title = URI.encode("Reporting Abuse on #{rubygem.name}")
+    encoded_title = CGI.escape("Reporting Abuse on #{rubygem.name}")
     report_abuse_url = 'http://help.rubygems.org/discussion/new' \
       "?discussion[private]=1&discussion[title]=" + encoded_title
     link_to t(".links.report_abuse"), report_abuse_url.html_safe, class: 'gem__link t-list__item'

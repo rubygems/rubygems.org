@@ -3,7 +3,7 @@ require 'digest/sha2'
 class Version < ApplicationRecord
   belongs_to :rubygem, touch: true
   has_many :dependencies, -> { order('rubygems.name ASC').includes(:rubygem) }, dependent: :destroy, inverse_of: "version"
-  has_one(:gem_download, proc { |m| where(rubygem_id: m.rubygem_id) })
+  has_one :gem_download, proc { |m| where(rubygem_id: m.rubygem_id) }, inverse_of: :version
 
   before_save :update_prerelease
   before_validation :full_nameify!
@@ -193,8 +193,8 @@ class Version < ApplicationRecord
     self[:size]
   end
 
-  def byte_size=(bs)
-    self[:size] = bs.to_i
+  def byte_size=(size)
+    self[:size] = size.to_i
   end
 
   def info
@@ -202,7 +202,7 @@ class Version < ApplicationRecord
   end
 
   def update_attributes_from_gem_specification!(spec)
-    update_attributes!(
+    update!(
       authors: spec.authors,
       description: spec.description,
       summary: spec.summary,
