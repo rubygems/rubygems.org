@@ -55,7 +55,7 @@ Style/AndOr:
   Exclude:
     - app/controllers/internal/ping_controller.rb
 
-Style/AccessorMethodName:
+Naming/AccessorMethodName:
   Exclude:
     - app/controllers/application_controller.rb
 

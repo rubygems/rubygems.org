@@ -95,7 +95,7 @@ Layout/ExtraSpacing:
 
 # Offense count: 1
 # Configuration parameters: ExpectMatchingDefinition, Regex, IgnoreExecutableScripts.
-Style/FileName:
+Naming/FileName:
   Exclude:
     - 'lib/capistrano/git-submodule-strategy.rb'
 
@@ -150,7 +150,7 @@ Style/TernaryParentheses:
 # Offense count: 16
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: snake_case, normalcase, non_integer
-Style/VariableNumber:
+Naming/VariableNumber:
   Exclude:
     - 'test/functional/api/v1/downloads_controller_test.rb'
     - 'test/unit/gem_download_test.rb'
