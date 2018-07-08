@@ -77,6 +77,26 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
       get_show(@rubygem, '2.0.0')
       assert_response :not_found
     end
+
+    context "same version with mulitple platform" do
+      setup do
+        create(:version, rubygem: @rubygem, number: '2.0.0', platform: 'jruby')
+      end
+
+      should "return version by position without platform param" do
+        get_show(@rubygem, '2.0.0')
+        assert_response :success
+        response = JSON.load(@response.body)
+        assert_equal 'jruby', response["platform"]
+      end
+
+      should "return platform version with platform param" do
+        get :show, params: { rubygem_name: @rubygem.name, number: '2.0.0', platform: 'ruby', format: 'json' }
+        assert_response :success
+        response = JSON.load(@response.body)
+        assert_equal 'ruby', response["platform"]
+      end
+    end
   end
 
   context "on GET to show for an unknown gem" do
@@ -128,11 +148,6 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
       get_show(@rubygem, '4.0.0')
       assert_kind_of Hash, JSON.load(@response.body)
       assert_equal "4.0.0", JSON.load(@response.body)["number"]
-    end
-
-    context "expected attributes by compact index" do
-      setup do
-      end
     end
   end
 
