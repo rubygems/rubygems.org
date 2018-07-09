@@ -1,11 +1,10 @@
 require 'test_helper'
 
 class DashboardsControllerTest < ActionController::TestCase
-
   context "When not logged in" do
     setup do
       user = create(:user)
-      @subscribed_version = create(:version, created_at: 1.hours.ago)
+      @subscribed_version = create(:version, created_at: 1.hour.ago)
       create(:subscription, rubygem: @subscribed_version.rubygem, user: user)
 
       get :show, params: { api_key: user.api_key }, format: "atom"
