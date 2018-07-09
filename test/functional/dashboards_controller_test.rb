@@ -1,6 +1,25 @@
 require 'test_helper'
 
 class DashboardsControllerTest < ActionController::TestCase
+
+  context "When not logged in" do
+    setup do
+      user = create(:user)
+      @subscribed_version = create(:version, created_at: 1.hours.ago)
+      create(:subscription, rubygem: @subscribed_version.rubygem, user: user)
+
+      get :show, params: { api_key: user.api_key }, format: "atom"
+    end
+
+    context "On GET to show as an atom feed with a working api_key" do
+      should respond_with :success
+
+      should "render an XML feed with subscribed items" do
+        assert_select "entry > title", text: /#{@subscribed_version.rubygem.name}/
+      end
+    end
+  end
+
   context "When logged in" do
     setup do
       @user = create(:user)
