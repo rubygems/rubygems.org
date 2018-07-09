@@ -59,7 +59,7 @@ services that the application depends on such as: postgresql, memcached & elasti
 * Install Docker. See instructions at https://docs.docker.com/engine/installation/ 
 * run `docker-compose up` to start the required services.
 
-Follow the instructions below on how to install Bundler and setup the database.
+Follow [the instructions below](#getting-the-code) on how to install Bundler and setup the database.
 
 #### Environment (OS X)
 
@@ -108,6 +108,7 @@ Follow the instructions below on how to install Bundler and setup the database.
 * Get set up: `./script/setup`
 * Run the database rake tasks if needed:
     `bundle exec rake db:reset db:test:prepare --trace`
+* If you use the docker setup and get `PG::ConnectionBad: FATAL:  role "<username>" does not exist` when running the rake command above add `username: postgres` to the development setup in `config/database.yml` and rerun the DB setup
 
 #### Running tests
 
