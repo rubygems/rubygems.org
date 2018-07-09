@@ -53,6 +53,13 @@ class ApplicationController < ActionController::Base
     redirect_to root_path
   end
 
+  def verify_with_otp
+    return unless @api_user.mfa_login_and_write?
+    otp = request.headers["HTTP_OTP"] || ''
+    return if @api_user&.otp_verified?(otp)
+    render plain: t(:please_send_correct_otp), status: :unauthorized
+  end
+
   def authenticate_with_api_key
     api_key   = request.headers["Authorization"] || params[:api_key]
     @api_user = User.find_by_api_key(api_key)

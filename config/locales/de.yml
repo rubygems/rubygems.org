@@ -10,6 +10,7 @@ de:
   none:
   not_found:
   please_sign_up: Zugriff verweigert. Bitte melden Sie sich unter https://rubygems.org mit einem Konto an
+  please_send_correct_otp:
   sign_in: Anmelden
   sign_up: Registrieren
   multifactor_authentication:

@@ -10,6 +10,7 @@ es:
   none:
   not_found:
   please_sign_up: Acceso negado. Por favor, primero crea una cuenta en https://rubygems.org
+  please_send_correct_otp:
   sign_in: Ingresar
   sign_up: Registro
   multifactor_authentication:

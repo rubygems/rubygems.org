@@ -10,6 +10,7 @@ zh-TW:
   none:
   not_found:
   please_sign_up: 無法存取，請先在 https://rubygems.org 上註冊帳號
+  please_send_correct_otp:
   sign_in: 登入
   sign_up: 註冊
   multifactor_authentication:
