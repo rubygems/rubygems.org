@@ -22,18 +22,46 @@ class Advisory < ApplicationRecord
     end
   end
 
+  def self.find_vulnerability(version, ignored_cves)
+    version_advisory_files = []
+    Dir.chdir(Rails.root.join('tmp', 'advisories', 'ruby-advisory-db'))
+    if Dir.exist?("gems/#{version.rubygem.name}")
+      Dir.glob("gems/#{version.rubygem.name}/*.yml") do |advisory|
+        version_advisory_files << advisory if contain?(advisory, version)
+      end
+    end
+    find_details(version, version_advisory_files, ignored_cves)
+  end
+
+  def self.find_details(_version, version_advisory_files, ignored_cves)
+    details = []
+    version_advisory_files.each do |advisory|
+      File.open(advisory) do |_f|
+        advisory = YAML.load_file(advisory)
+        details << { title: advisory['title'], url: advisory['url'] } unless ignored_cves.include? advisory['cve']
+      end
+    end
+    details
+  end
+
+  def self.contain?(advisory, version)
+    advisory = YAML.load_file(advisory)
+    version_array = Array.new(1, version.number)
+    remove_unaffected_versions(version_array, (advisory['patched_versions'].to_a + advisory['unaffected_versions'].to_a).flatten).present?
+  end
+
   def self.mark_versions
-    vuln = {}
+    advisory = {}
     count = 0
     Dir.chdir(Rails.root.join('tmp', 'advisories', 'ruby-advisory-db'))
     ActiveRecord::Base.transaction do
-      Dir.glob("/gems/**/*.yml") do |gem_name|
-        vuln = YAML.load_file(gem_name)
+      Dir.glob("/gems/**/*.yml") do |advisory_file|
+        advisory = YAML.load_file(advisory_file)
         rubygem = Rubygem.find_by(name: vuln['gem'])
         unless rubygem.nil?
           all_versions = rubygem.versions
           version_number_list = all_versions.pluck(:number)
-          unaffected_versions = (vuln['patched_versions'].to_a + vuln['unaffected_versions'].to_a).flatten
+          unaffected_versions = (advisory['patched_versions'].to_a + advisory['unaffected_versions'].to_a).flatten
           vulnerable_versions = remove_unaffected_versions(version_number_list, unaffected_versions)
           count += all_versions.where(number: vulnerable_versions, vulnerable: false).update_all(vulnerable: true)
         end
