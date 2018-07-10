@@ -16,9 +16,9 @@ class ApplicationController < ActionController::Base
     response.headers['Content-Security-Policy'] = "default-src 'self'; "\
       "script-src 'self' https://secure.gaug.es https://www.fastly-insights.com; "\
       "style-src 'self' https://fonts.googleapis.com; "\
-      "img-src 'self' https://secure.gaug.es https://gravatar.com https://secure.gravatar.com; "\
+      "img-src 'self' https://secure.gaug.es https://gravatar.com https://secure.gravatar.com https://*.fastly-insights.com; "\
       "font-src 'self' https://fonts.gstatic.com; "\
-      "connect-src https://s3-us-west-2.amazonaws.com/rubygems-dumps/; "\
+      "connect-src https://s3-us-west-2.amazonaws.com/rubygems-dumps/ https://*.fastly-insights.com; "\
       "frame-src https://ghbtns.com"
   end
 
