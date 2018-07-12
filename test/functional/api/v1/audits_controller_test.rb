@@ -17,21 +17,21 @@ class Api::V1::AuditsControllerTest < ActionController::TestCase
       context "ON CHECK for a vulnerable gem version" do
         setup do
           @v1.update(vulnerable: true)
-          @h = get :check, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          @h = get :check, params: { gem_name: @rubygem.to_param, version: @v1.number }, format: 'json'
         end
         should respond_with :success
         should "display vulnerability" do
-          assert_equal "#{@v1.number}: This version contains vulnerabilities", response.body
+          assert_equal [], JSON.parse(@response.body)
         end
       end
 
       context "ON CHECK for a non vulnerable gem version" do
         setup do
-          get :check, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          get :check, params: { gem_name: @rubygem.to_param, version: @v1.number }, format: 'json'
         end
         should respond_with :success
         should "display vulnerability notification" do
-          assert_equal "#{@v1.number}: This version does not contain any vulnerabilities", @response.body
+          assert_equal "This version does not contain any vulnerabilities", @response.body
         end
       end
     end
@@ -45,17 +45,18 @@ class Api::V1::AuditsControllerTest < ActionController::TestCase
         @v4        = create(:version, rubygem: @rubygem, number: "0.4.0", platform: "ruby")
         @ownership = create(:ownership, user: @user, rubygem: @rubygem)
         RubygemFs.instance.store("gems/#{@v1.full_name}.gem", "")
-        get :check, params: { gem_name: @rubygem.to_param, version_range: "#{@v1.number}..#{@v3.number}" }
+        get :check, params: { gem_name: @rubygem.to_param, version_range: "#{@v1.number}..#{@v3.number}" }, format: 'json'
       end
 
       should respond_with :success
       should "display vulnerability notification" do
-        expected_v3 = "0.3.0: This version does not contain any vulnerabilities"
-        expected_v2 = "0.2.0: This version does not contain any vulnerabilities"
-        expected_v1 = "0.1.0: This version contains vulnerabilities"
-        assert @response.body.include? expected_v1
-        assert @response.body.include? expected_v2
-        assert @response.body.include? expected_v3
+        not_vulnerable = "This version does not contain any vulnerabilities"
+        response_body  = JSON.parse(@response.body)
+
+        assert response_body['0.3.0'].include? not_vulnerable
+        assert response_body['0.2.0'].include? not_vulnerable
+
+        assert_equal [], response_body['0.1.0']
       end
     end
   end

@@ -7,23 +7,26 @@ class Api::V1::AuditsController < Api::BaseController
   before_action :validate_gem_and_version,  only: [:check]
 
   def check
-  	@response = []
-  	if @version
-      render plain: check_version(@version)  
+    response = {}
+    if @version
+      response = check_version(@version)
     else
-       @versions.compact.each { |version| @response << check_version(version) }
-       render plain: @response
-   	end
+      @versions.compact.each { |version| response[version] = check_version(version) }
+    end
+
+    respond_to do |format|
+      format.json { render json: response }
+    end
   end
 
   private
 
   def check_version(version)
-  	is_vuln = version.vulnerable
-  	if is_vuln
-  	  "#{version.number}: This version contains vulnerabilities"
-  	else
-  	  "#{version.number}: This version does not contain any vulnerabilities"
-  	end
+    if version.vulnerable
+      params[:ignored_cves] = [] if params[:ignored_cves].blank?
+      Advisory.find_vulnerability(version, params[:ignored_cves])
+    else
+      "This version does not contain any vulnerabilities"
+    end
   end
 end

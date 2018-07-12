@@ -13,7 +13,7 @@ class Api::BaseController < ApplicationController
     if !@rubygem.hosted?
       render plain: t(:this_rubygem_could_not_be_found),
              status: :not_found
-    elsif !@rubygem.owned_by?(current_user)
+    elsif !@rubygem.owned_by?(@api_user)
       render plain: "You do not have permission to delete this gem.",
              status: :forbidden
     else
@@ -26,24 +26,28 @@ class Api::BaseController < ApplicationController
                  end
           @version = Version.find_from_slug!(@rubygem, slug)
         else
-          all_versions = @rubygem.versions
-          start_v, end_v = params[:version_range].split('..')
-          @versions = []
-          all_versions.each do |version|
-            @versions << if Gem::Version.new(start_v) <= Gem::Version.new(version) &&
-                Gem::Version.new(end_v) >= Gem::Version.new(version)
-                           slug = if params[:platform].blank?
-                                    version
-                                  else
-                                    "#{version}-#{params[:platform]}"
-                                  end
-                           Version.find_from_slug!(@rubygem, slug)
-                         end
-          end
+          find_versions_by_range
         end
       rescue ActiveRecord::RecordNotFound
         render plain: "The version #{params[:version]} does not exist.",
                status: :not_found
+      end
+    end
+  end
+
+  def find_versions_by_range
+    all_versions = @rubygem.versions
+    start_v, end_v = params[:version_range].split('..')
+    @versions = []
+    all_versions.each do |version|
+      if Gem::Version.new(start_v) <= Gem::Version.new(version) &&
+          Gem::Version.new(end_v) >= Gem::Version.new(version)
+        slug = if params[:platform].blank?
+                 version
+               else
+                 "#{version}-#{params[:platform]}"
+               end
+        @versions << Version.find_from_slug!(@rubygem, slug)
       end
     end
   end
