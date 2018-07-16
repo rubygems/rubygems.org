@@ -2,9 +2,7 @@
 
 from_email, to_email = *ARGV
 
-if from_email.nil? || to_email.nil?
-  abort "Usage: script/change_email [FROM_EMAIL] [TO_EMAIL]"
-end
+abort "Usage: script/change_email [FROM_EMAIL] [TO_EMAIL]" if from_email.nil? || to_email.nil?
 
 ENV['RAILS_ENV'] ||= 'production'
 require_relative '../config/environment'

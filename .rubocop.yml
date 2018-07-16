@@ -20,6 +20,13 @@ Rails/LexicallyScopedActionFilter:
 Rails/RefuteMethods:
   Enabled: false
 
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - development
+    - staging
+    - test
+
 Metrics/AbcSize:
   Max: 42 # TODO: Lower to 15
 
@@ -79,3 +86,6 @@ Security/MarshalLoad:
 
 Style/EmptyMethod:
   EnforcedStyle: expanded
+
+Style/FormatStringToken:
+  Enabled: false

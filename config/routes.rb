@@ -180,7 +180,5 @@ Rails.application.routes.draw do
     get 'revision' => 'ping#revision'
   end
 
-  unless Clearance.configuration.allow_sign_up?
-    get '/sign_up' => 'users#disabled_signup'
-  end
+  get '/sign_up' => 'users#disabled_signup' unless Clearance.configuration.allow_sign_up?
 end

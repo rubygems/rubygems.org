@@ -1,6 +1,6 @@
 class DashboardsController < ApplicationController
   before_action :authenticate_with_api_key, unless: :signed_in?
-  before_action :redirect_to_root, unless: ->() { signed_in? || @api_user }
+  before_action :redirect_to_root, unless: -> { signed_in? || @api_user }
 
   def show
     respond_to do |format|

@@ -99,6 +99,10 @@ Naming/FileName:
   Exclude:
     - 'lib/capistrano/git-submodule-strategy.rb'
 
+Naming/MemoizedInstanceVariableName:
+  Exclude:
+    - 'lib/rubygem_fs.rb'
+
 # Offense count: 5
 # Configuration parameters: MinBodyLength.
 Style/GuardClause:
@@ -164,3 +168,4 @@ Style/RescueStandardError:
   Exclude:
     - 'app/controllers/api/v1/rubygems_controller.rb'
     - 'app/jobs/fastly_log_processor.rb'
+    - 'lib/tasks/linkset.rake'
