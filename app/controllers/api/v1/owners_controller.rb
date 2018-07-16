@@ -4,6 +4,7 @@ class Api::V1::OwnersController < Api::BaseController
   before_action :verify_authenticated_user, except: %i[show gems]
   before_action :find_rubygem, except: :gems
   before_action :verify_gem_ownership, except: %i[show gems]
+  before_action :verify_with_otp, only: %i[create destroy]
 
   def show
     respond_to do |format|
