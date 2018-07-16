@@ -151,6 +151,7 @@ zh-CN:
       key:
       time_based:
     create:
+      qrcode_expired:      
       success:
     recovery:
       continue:

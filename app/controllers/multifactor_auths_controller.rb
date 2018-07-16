@@ -8,15 +8,23 @@ class MultifactorAuthsController < ApplicationController
   def new
     @seed = ROTP::Base32.random_base32
     session[:mfa_seed] = @seed
+    session[:mfa_seed_expire] = (Time.now.utc + 30.minutes).to_i
     text = ROTP::TOTP.new(@seed, issuer: issuer).provisioning_uri(current_user.email)
     @qrcode_svg = RQRCode::QRCode.new(text, level: :l).as_svg
   end
 
   def create
     seed = session[:mfa_seed]
-    session.delete(:mfa_seed)
+    expire = Time.at(session[:mfa_seed_expire] || 0).utc
+    %i[mfa_seed mfa_seed_expire].each do |key|
+      session.delete(key)
+    end
+
     totp = ROTP::TOTP.new(seed, issuer: issuer)
-    if totp.verify(params[:otp])
+    if Time.now.utc > expire
+      flash[:error] = t('.qrcode_expired')
+      redirect_to edit_profile_url
+    elsif totp.verify(params[:otp])
       current_user.enable_mfa!(seed, :mfa_login_only)
       current_user.update!(last_otp_at: Time.current)
       flash[:success] = t('.success')

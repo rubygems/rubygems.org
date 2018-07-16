@@ -151,6 +151,7 @@ es:
       key:
       time_based:
     create:
+      qrcode_expired:      
       success:
     recovery:
       continue:

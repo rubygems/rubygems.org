@@ -82,19 +82,39 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
       context 'on POST to create mfa' do
         setup do
-          seed = ROTP::Base32.random_base32
-          @controller.session[:mfa_seed] = seed
-          post :create, params: { otp: ROTP::TOTP.new(seed).now }
+          @seed = ROTP::Base32.random_base32
+          @controller.session[:mfa_seed] = @seed
         end
 
-        should respond_with :success
-        should 'show recovery codes' do
-          @user.reload.mfa_recovery_codes.each do |code|
-            assert page.has_content?(code)
+        context 'when qr-code is not expired' do
+          setup do
+            @controller.session[:mfa_seed_expire] = (Time.now.utc + 30.minutes).to_i
+            post :create, params: { otp: ROTP::TOTP.new(@seed).now }
+          end
+
+          should respond_with :success
+          should 'show recovery codes' do
+            @user.reload.mfa_recovery_codes.each do |code|
+              assert page.has_content?(code)
+            end
+          end
+          should 'enable mfa' do
+            assert @user.reload.mfa_enabled?
           end
         end
-        should 'enable mfa' do
-          assert @user.reload.mfa_enabled?
+
+        context 'when qr-code is expired' do
+          setup do
+            @controller.session[:mfa_seed_expire] = 0
+            post :create, params: { otp: ROTP::TOTP.new(@seed).now }
+          end
+
+          should respond_with :redirect
+          should redirect_to('the profile edit page') { edit_profile_path }
+          should set_flash.now[:error]
+          should 'keep mfa disabled' do
+            refute @user.reload.mfa_enabled?
+          end
         end
       end
 
