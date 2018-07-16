@@ -3,7 +3,7 @@ require 'test_helper'
 class UserTest < ActiveSupport::TestCase
   def assert_resetting_email_changes(attr_name)
     assert_changed(@user, attr_name) do
-      @user.update_attributes(email: 'some@one.com')
+      @user.update(email: 'some@one.com')
     end
   end
 

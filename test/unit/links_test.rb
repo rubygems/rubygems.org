@@ -23,8 +23,8 @@ class LinksTest < ActiveSupport::TestCase
     rubygem = build(:rubygem, linkset: build(:linkset, docs: nil), versions: [version])
     links = rubygem.links(version)
 
-    assert links.links.keys.include?('home')
-    assert links.links.keys.include?('docs')
+    assert links.links.key?('home')
+    assert links.links.key?('docs')
   end
 
   should "use partial fields when not indexed" do
@@ -32,7 +32,7 @@ class LinksTest < ActiveSupport::TestCase
     rubygem = build(:rubygem, linkset: build(:linkset, docs: nil), versions: [version])
     links = rubygem.links(version)
 
-    refute links.links.keys.include?('home')
-    assert links.links.keys.include?('docs')
+    refute links.links.key?('home')
+    assert links.links.key?('docs')
   end
 end

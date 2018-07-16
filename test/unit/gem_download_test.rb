@@ -1,7 +1,8 @@
 require 'test_helper'
-include ESHelper
 
 class GemDownloadTest < ActiveSupport::TestCase
+  include ESHelper
+
   setup do
     create(:gem_download, count: 0)
     Rubygem.__elasticsearch__.create_index! force: true

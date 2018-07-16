@@ -17,6 +17,9 @@ Rails/SkipsModelValidations:
 Rails/LexicallyScopedActionFilter:
   Enabled: false
 
+Rails/RefuteMethods:
+  Enabled: false
+
 Metrics/AbcSize:
   Max: 42 # TODO: Lower to 15
 

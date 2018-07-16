@@ -70,13 +70,9 @@ FactoryBot.define do
         create(:ownership, rubygem: rubygem, user: owner)
       end
 
-      if evaluator.number
-        create(:version, rubygem: rubygem, number: evaluator.number)
-      end
+      create(:version, rubygem: rubygem, number: evaluator.number) if evaluator.number
 
-      if evaluator.downloads
-        GemDownload.increment(evaluator.downloads, rubygem_id: rubygem.id, version_id: 0)
-      end
+      GemDownload.increment(evaluator.downloads, rubygem_id: rubygem.id, version_id: 0) if evaluator.downloads
     end
   end
 

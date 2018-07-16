@@ -1,7 +1,8 @@
 require 'test_helper'
-include ESHelper
 
 class RubygemSearchableTest < ActiveSupport::TestCase
+  include ESHelper
+
   setup do
     Rubygem.__elasticsearch__.create_index! force: true
   end

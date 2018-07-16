@@ -1,7 +1,8 @@
 require 'test_helper'
-include ActiveJob::TestHelper
 
 class PasswordResetTest < SystemTest
+  include ActiveJob::TestHelper
+
   setup do
     @user = create(:user, handle: nil)
   end

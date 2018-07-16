@@ -1,16 +1,16 @@
 require 'test_helper'
 
 class I18nTest < ActionDispatch::IntegrationTest
-  def collect_combined_keys(hash, ns = nil)
+  def collect_combined_keys(hash, namespace = nil)
     hash.collect do |k, v|
       keys = []
-      keys << collect_combined_keys(v, "#{ns}.#{k}") if v.is_a?(Hash)
-      keys << "#{ns}.#{k}"
+      keys << collect_combined_keys(v, "#{namespace}.#{k}") if v.is_a?(Hash)
+      keys << "#{namespace}.#{k}"
     end.flatten
   end
 
   test "translation consistency" do
-    locales_path = File.expand_path('../../../config/locales', __FILE__)
+    locales_path = File.expand_path('../../config/locales', __dir__)
     locales = Dir.glob("#{locales_path}/*.yml").collect do |file_path|
       File.basename(file_path, '.yml')
     end

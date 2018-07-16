@@ -1,7 +1,8 @@
 require 'test_helper'
-include ESHelper
 
 class SearchesControllerTest < ActionController::TestCase
+  include ESHelper
+
   context 'on GET to show with no search parameters' do
     setup { get :show }
 
