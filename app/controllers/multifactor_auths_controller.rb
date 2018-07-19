@@ -8,7 +8,7 @@ class MultifactorAuthsController < ApplicationController
   def new
     @seed = ROTP::Base32.random_base32
     session[:mfa_seed] = @seed
-    session[:mfa_seed_expire] = (Time.now.utc + 30.minutes).to_i
+    session[:mfa_seed_expire] = Gemcutter::MFA_KEY_EXPIRY.from_now.utc.to_i
     text = ROTP::TOTP.new(@seed, issuer: issuer).provisioning_uri(current_user.email)
     @qrcode_svg = RQRCode::QRCode.new(text, level: :l).as_svg
   end

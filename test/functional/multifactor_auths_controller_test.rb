@@ -88,7 +88,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
         context 'when qr-code is not expired' do
           setup do
-            @controller.session[:mfa_seed_expire] = (Time.now.utc + 30.minutes).to_i
+            @controller.session[:mfa_seed_expire] = Gemcutter::MFA_KEY_EXPIRY.from_now.utc.to_i
             post :create, params: { otp: ROTP::TOTP.new(@seed).now }
           end
 
