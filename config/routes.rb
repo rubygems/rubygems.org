@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       resource :api_key, only: :show do
         put :reset
       end
+      resource :multifactor_auth, only: :show
       resources :profiles, only: :show
       resources :downloads, only: :index do
         get :top, on: :collection
