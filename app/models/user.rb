@@ -176,6 +176,16 @@ class User < ApplicationRecord
     save!(validate: false)
   end
 
+  def verify_and_enable_mfa!(seed, level, otp, expiry)
+    if expiry < Time.now.utc
+      errors.add(:base, I18n.t('multifactor_auths.create.qrcode_expired'))
+    elsif verify_digit_otp(seed, otp)
+      enable_mfa!(seed, level)
+    else
+      errors.add(:base, I18n.t('multifactor_auths.incorrect_otp'))
+    end
+  end
+
   def enable_mfa!(seed, level)
     self.mfa_level = level
     self.mfa_seed = seed
@@ -184,7 +194,7 @@ class User < ApplicationRecord
   end
 
   def otp_verified?(otp)
-    return true if verify_digit_otp(otp)
+    return true if verify_digit_otp(mfa_seed, otp)
 
     return false unless mfa_recovery_codes.include? otp
     mfa_recovery_codes.delete(otp)
@@ -193,8 +203,8 @@ class User < ApplicationRecord
 
   private
 
-  def verify_digit_otp(otp)
-    totp = ROTP::TOTP.new(mfa_seed)
+  def verify_digit_otp(seed, otp)
+    totp = ROTP::TOTP.new(seed)
     last_success = totp.verify_with_drift_and_prior(otp, 30, last_otp_at)
     return false unless last_success
 

@@ -105,7 +105,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
         context 'when qr-code is expired' do
           setup do
-            @controller.session[:mfa_seed_expire] = 0
+            @controller.session[:mfa_seed_expire] = 1.minute.ago
             post :create, params: { otp: ROTP::TOTP.new(@seed).now }
           end
 
