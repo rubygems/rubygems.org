@@ -150,6 +150,7 @@ en:
       key: "Key: %{key}"
       time_based: "Time based: Yes"
     create:
+      qrcode_expired: The QR-code and key is expired. Please try registering a new device again.
       success: You have successfully enabled multifactor authentication.
     recovery:
       continue: Continue

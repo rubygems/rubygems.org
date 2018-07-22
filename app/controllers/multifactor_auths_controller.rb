@@ -3,27 +3,25 @@ class MultifactorAuthsController < ApplicationController
   before_action :redirect_to_root, unless: :signed_in?
   before_action :require_mfa_disabled, only: %i[new create]
   before_action :require_mfa_enabled, only: :destroy
+  before_action :seed_and_expire, only: :create
   helper_method :issuer
 
   def new
     @seed = ROTP::Base32.random_base32
     session[:mfa_seed] = @seed
+    session[:mfa_seed_expire] = Gemcutter::MFA_KEY_EXPIRY.from_now.utc.to_i
     text = ROTP::TOTP.new(@seed, issuer: issuer).provisioning_uri(current_user.email)
     @qrcode_svg = RQRCode::QRCode.new(text, level: :l).as_svg
   end
 
   def create
-    seed = session[:mfa_seed]
-    session.delete(:mfa_seed)
-    totp = ROTP::TOTP.new(seed, issuer: issuer)
-    if totp.verify(params[:otp])
-      current_user.enable_mfa!(seed, :mfa_login_only)
-      current_user.update!(last_otp_at: Time.current)
+    current_user.verify_and_enable_mfa!(@seed, :mfa_login_only, params[:otp], @expire)
+    if current_user.errors.any?
+      flash[:error] = current_user.errors[:base].join
+      redirect_to edit_profile_url
+    else
       flash[:success] = t('.success')
       render :recovery
-    else
-      flash[:error] = t('multifactor_auths.incorrect_otp')
-      redirect_to edit_profile_url
     end
   end
 
@@ -53,6 +51,14 @@ class MultifactorAuthsController < ApplicationController
     return if current_user.mfa_enabled?
     flash[:error] = t('multifactor_auths.require_mfa_enabled')
     redirect_to edit_profile_path
+  end
+
+  def seed_and_expire
+    @seed = session[:mfa_seed]
+    @expire = Time.at(session[:mfa_seed_expire] || 0).utc
+    %i[mfa_seed mfa_seed_expire].each do |key|
+      session.delete(key)
+    end
   end
 
   def check_feature_flag
