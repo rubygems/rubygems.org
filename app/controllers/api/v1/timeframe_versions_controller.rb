@@ -20,7 +20,7 @@ class Api::V1::TimeframeVersionsController < Api::BaseController
   end
 
   def to_time
-    @to_time ||= params[:to].blank? ? Time.now : Time.iso8601(params[:to])
+    @to_time ||= params[:to].blank? ? Time.zone.now : Time.iso8601(params[:to])
   rescue ArgumentError
     return
   end
