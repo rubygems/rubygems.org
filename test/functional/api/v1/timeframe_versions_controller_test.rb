@@ -1,0 +1,77 @@
+require 'test_helper'
+
+class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
+  setup do
+    @rails = create(:rubygem, name: 'rails')
+    @rails_version_1 = create(:version, rubygem: @rails, created_at: Time.parse('2017-10-10'))
+    @rails_version_2 = create(:version, rubygem: @rails, created_at: Time.parse('2017-11-10'))
+
+    @sinatra = create(:rubygem, name: 'sinatra')
+    @sinatra_version = create(:version, rubygem: @sinatra, created_at: Time.parse('2017-11-11'))
+  end
+
+  context 'GET to index' do
+    context 'with valid timeframe params' do
+      should 'return the versions created within the timeframe' do
+        get :index, format: :json, params: {
+          from: Time.parse('2017-11-09').iso8601,
+          to: Time.parse('2017-11-12').iso8601
+        }
+
+        gems = JSON.load @response.body
+        assert_equal 2, gems.length
+        assert_equal 'rails', gems[0]['name']
+        assert_equal @rails_version_2.number, gems[0]['version']
+        assert_equal 'sinatra', gems[1]['name']
+      end
+
+      should 'allow paging through results' do
+        get :index, format: :json, params: {
+          from: Time.parse('2017-11-09').iso8601,
+          to: Time.parse('2017-11-12').iso8601,
+          page: 2
+        }
+
+        gems = JSON.load @response.body
+        assert_equal [], gems
+      end
+    end
+
+    context 'with invalid timeframe params' do
+      should 'return a bad request with message when "to" is invalid' do
+        get :index, format: :json, params: {
+          from: Time.parse('2017-11-09').iso8601,
+          to: '2017-11-12'
+        }
+
+        assert_equal 400, response.status
+        assert response.body.include?('iso8601')
+      end
+
+      should 'return a bad request with message when "from" is invalid' do
+        get :index, format: :json, params: {
+          from: '2017-11-09',
+          to: Time.parse('2017-11-12').iso8601
+        }
+
+        assert_equal 400, response.status
+        assert response.body.include?('iso8601')
+      end
+    end
+
+    context 'with missing params' do
+      should 'return a bad request when "from" is missing' do
+        get :index, format: :json, params: { to: Time.parse('2017-11-12').iso8601 }
+
+        assert_equal 400, response.status
+        assert response.body.include?('missing')
+      end
+
+      should 'default to the current time if "to" is missing' do
+        get :index, format: :json, params: { from: Time.parse('2017-9-9').iso8601 }
+        gems = JSON.load @response.body
+        assert_equal 3, gems.length
+      end
+    end
+  end
+end

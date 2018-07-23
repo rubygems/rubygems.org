@@ -95,6 +95,8 @@ Rails.application.routes.draw do
           post :fire
         end
       end
+      
+      resources :timeframe_versions, only: :index
     end
   end
 
