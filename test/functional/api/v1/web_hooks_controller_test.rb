@@ -82,10 +82,21 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
                                 url: @url }
         end
         should respond_with :bad_request
-        should "say successfully deployed" do
+        should "say there was a problem" do
           content = "There was a problem deploying webhook for #{@gemcutter.name} to #{@url}"
           assert page.has_content?(content)
           assert WebHook.count.zero?
+        end
+      end
+
+      context "On POST to fire with no url" do
+        setup do
+          post :fire, params: { gem_name: WebHook::GLOBAL_PATTERN }
+        end
+        should respond_with :bad_request
+        should "say url was not provided" do
+          content = "URL was not provided"
+          assert page.has_content?(content)
         end
       end
     end
