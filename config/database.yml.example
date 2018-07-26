@@ -1,6 +1,7 @@
 development: &DEVELOPMENT
   adapter: postgresql
   database: gemcutter_development
+  username: postgres
   host: localhost
   pool: 5
   timeout: 5000
