@@ -90,9 +90,17 @@
     <h2><%= t '.mfa.multifactor_auth' %></h2>
     <% if @user.mfa_enabled? %>
       <p><%= t '.mfa.enabled' %></p>
-      <%= form_tag multifactor_auth_path, :method => :delete do %>
-        <%= text_field_tag :otp, '', :class => 'form__input' %>
-        <%= submit_tag t('.mfa.disable'), :class => 'form__submit' %>
+      <%= form_tag multifactor_auth_path, :method => :put, :id => 'mfa-edit' do %>
+        <%= label_tag :level, 'Auth Level', :class => 'form__label' %>
+        <%= select_tag :level, options_for_select([
+          ['Login and Write', 'mfa_login_and_write'],
+          ['Login Only', 'mfa_login_only'],
+          ['Disabled', 'no_mfa']], @user.mfa_level), :class => 'form__input form__select' %>
+        <div class="text_field">
+          <%= label_tag :otp, 'OTP code', :class => 'form__label' %>
+          <%= text_field_tag :otp, '', :class => 'form__input' %>
+        </div>
+        <%= submit_tag t('.mfa.update'), :class => 'form__submit' %>
       <% end %>
     <% else %>
       <p>

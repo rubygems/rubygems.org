@@ -159,6 +159,8 @@ fr:
       note: "Vous DEVEZ garder les codes de récupération en sécurité pour ne pas perdre votre compte. Chacun des codes peut être utilisé une fois si vous perdez votre authentificateur"
     destroy:
       success: Vous avez désactivé l'authentification multifacteur.
+    update:
+      success:
   profiles:
     edit:
       email_awaiting_confirmation: Veuillez confirmer votre nouvelle adresse email %{unconfirmed_email}
@@ -186,7 +188,7 @@ fr:
         disabled: Vous n'avez pas encore activé l'authentification multifacteur.
         go_settings: Enregistrer un nouvel appareil
         enabled: Vous avez activé l'authentification multifacteur. Veuillez entrer l'OTP de votre authentificateur ou un de vos codes de récupération pour le désactiver.
-        disable: Désactiver
+        update:
     delete:
       title: Supprimer le profil
       confirm: Confirmer

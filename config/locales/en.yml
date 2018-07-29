@@ -10,7 +10,7 @@ en:
   none: None
   not_found: Not Found
   please_sign_up: Access Denied. Please sign up for an account at https://rubygems.org
-  please_send_correct_otp: You have enabled multifactor authentication but your request doesn't have the correct OTP code. Please fill it and retry.
+  please_send_correct_otp: You have enabled multifactor authentication but your request doesn't have the correct OTP code. Please check it and retry.
   sign_in: Sign in
   sign_up: Sign up
   multifactor_authentication: Multifactor authentication
@@ -159,6 +159,8 @@ en:
       note: "You MUST keep the recovery codes safe to prevent losing your account. Each of the code can be used once if you lose your authenticator."
     destroy:
       success: You have successfully disabled multifactor authentication.
+    update:
+      success: You have successfully updated your auth level.
   profiles:
     edit:
       email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
@@ -185,8 +187,8 @@ en:
         multifactor_auth: Multifactor authentication
         disabled: You have not yet enabled multifactor authentication.
         go_settings: Register a new device
-        enabled: You have enabled multifactor authentication. Please input your OTP from your authenticator or one of your active recovery codes to disable it.
-        disable: Disable
+        enabled: You have enabled multifactor authentication. Please input your OTP from your authenticator or one of your active recovery codes to change your auth level or disable it.
+        update: Update
     delete:
       title: Delete profile
       confirm: Confirm

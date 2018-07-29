@@ -159,6 +159,8 @@ nl:
       note:
     destroy:
       success:
+    update:
+      success:
   profiles:
     edit:
       email_awaiting_confirmation:
@@ -186,7 +188,7 @@ nl:
         disabled:
         go_settings:
         enabled:
-        disable:
+        update:
     delete:
       title:
       confirm:

@@ -166,7 +166,8 @@ class ProfileTest < SystemTest
     click_link "Edit Profile"
 
     page.fill_in "otp", with: ROTP::TOTP.new(@user.mfa_seed).now
-    click_button "Disable"
+    page.select "Disabled"
+    find('#mfa-edit input[type=submit]').click
 
     assert page.has_content? "You have not yet enabled multifactor authentication."
   end
@@ -179,7 +180,8 @@ class ProfileTest < SystemTest
 
     key = ROTP::Base32.random_base32
     page.fill_in "otp", with: ROTP::TOTP.new(key).now
-    click_button "Disable"
+    page.select "Disabled"
+    find('#mfa-edit input[type=submit]').click
 
     assert page.has_content? "You have enabled multifactor authentication."
   end
@@ -201,7 +203,8 @@ class ProfileTest < SystemTest
     recoveries = page.find_by_id("recovery-code-list").text.split
     click_link "Continue"
     page.fill_in "otp", with: recoveries.sample
-    click_button "Disable"
+    page.select "Disabled"
+    find('#mfa-edit input[type=submit]').click
 
     assert page.has_content? "You have not yet enabled multifactor authentication."
   end

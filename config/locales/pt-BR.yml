@@ -159,6 +159,8 @@ pt-BR:
       note:
     destroy:
       success:
+    update:
+      success:
   profiles:
     edit:
       email_awaiting_confirmation:
@@ -186,7 +188,7 @@ pt-BR:
         disabled:
         go_settings:
         enabled:
-        disable:
+        update:
     delete:
       title:
       confirm:

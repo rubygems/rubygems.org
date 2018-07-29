@@ -159,6 +159,8 @@ zh-CN:
       note:
     destroy:
       success:
+    update:
+      success:
   profiles:
     edit:
       email_awaiting_confirmation: 请验证你的新邮箱地址 %{unconfirmed_email}
@@ -186,7 +188,7 @@ zh-CN:
         disabled:
         go_settings:
         enabled:
-        disable:
+        update:
     delete:
       title:
       confirm:

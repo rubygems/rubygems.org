@@ -132,7 +132,7 @@ Rails.application.routes.draw do
     end
     resource :dashboard, only: :show, constraints: { format: /html|atom/ }
     resources :profiles, only: :show
-    resource :multifactor_auth, only: %i[new create destroy]
+    resource :multifactor_auth, only: %i[new create update]
     resource :profile, only: %i[edit update] do
       member do
         get :delete
