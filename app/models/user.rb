@@ -192,6 +192,11 @@ class User < ApplicationRecord
     save!(validate: false)
   end
 
+  def mfa_write_authorized?(otp)
+    return true unless mfa_login_and_write?
+    otp_verified?(otp || '')
+  end
+
   def otp_verified?(otp)
     return true if verify_digit_otp(mfa_seed, otp)
 

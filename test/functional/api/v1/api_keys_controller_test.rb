@@ -35,6 +35,52 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     end
   end
 
+  context "when user has enabled MFA for write" do
+    setup do
+      @user = create(:user)
+      @user.enable_mfa!(ROTP::Base32.random_base32, :mfa_login_and_write)
+      authorize_with("#{@user.email}:#{@user.password}")
+    end
+
+    context "on GET to show without OTP" do
+      setup do
+        get :show
+      end
+
+      should "deny access" do
+        assert_response 401
+        assert_match "HTTP Basic: Access denied.", @response.body
+      end
+    end
+
+    context "on GET to show with incorrect OTP" do
+      setup do
+        @request.env["HTTP_OTP"] = "11111"
+        get :show
+      end
+
+      should "deny access" do
+        assert_response 401
+        assert_match "HTTP Basic: Access denied.", @response.body
+      end
+    end
+
+    context "on GET to show with correct OTP" do
+      setup do
+        @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+        get :show
+      end
+
+      should respond_with :success
+      should "return API key" do
+        assert_equal @user.api_key, @response.body
+      end
+      should "not sign in user" do
+        refute @controller.request.env[:clearance].signed_in?
+      end
+    end
+  end
+
   # this endpoint is used by rubygems
   context "on GET to show with TEXT and with confirmed user" do
     setup do
