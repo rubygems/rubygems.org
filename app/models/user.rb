@@ -194,10 +194,11 @@ class User < ApplicationRecord
 
   def mfa_write_authorized?(otp)
     return true unless mfa_login_and_write?
-    otp_verified?(otp || '')
+    otp_verified?(otp)
   end
 
   def otp_verified?(otp)
+    otp = otp.to_s
     return true if verify_digit_otp(mfa_seed, otp)
 
     return false unless mfa_recovery_codes.include? otp
