@@ -304,7 +304,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "tack on prerelease flag" do
-      @version.update_attributes(number: "0.3.0.pre")
+      @version.update(number: "0.3.0.pre")
       new_version = create(:version,
         rubygem: @version.rubygem,
         built_at: 1.day.from_now,
@@ -322,7 +322,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "give no version count for the latest prerelease version" do
-      @version.update_attributes(number: "0.3.0.pre")
+      @version.update(number: "0.3.0.pre")
       old_version = create(:version,
         rubygem: @version.rubygem,
         built_at: 1.day.from_now,
@@ -625,10 +625,10 @@ class VersionTest < ActiveSupport::TestCase
       #     jumping around the place
       #  b) people can't hijack the latest gem spot by building in the far
       #     future, but pushing today
-      @subscribed_one.update_attributes(built_at: Time.zone.now - 3.days,
-                                        created_at: Time.zone.now - 1.day)
-      @subscribed_two.update_attributes(built_at: Time.zone.now - 2.days,
-                                        created_at: Time.zone.now - 2.days)
+      @subscribed_one.update(built_at: Time.zone.now - 3.days,
+                             created_at: Time.zone.now - 1.day)
+      @subscribed_two.update(built_at: Time.zone.now - 2.days,
+                             created_at: Time.zone.now - 2.days)
 
       # Even though gem two was build before gem one, it was pushed to gemcutter first
       # Thus, we should have from newest to oldest, gem one, then gem two

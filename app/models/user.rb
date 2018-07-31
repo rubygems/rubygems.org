@@ -22,7 +22,7 @@ class User < ApplicationRecord
   has_many :subscriptions, dependent: :destroy
   has_many :subscribed_gems, -> { order("name ASC") }, through: :subscriptions, source: :rubygem
 
-  has_many :deletions
+  has_many :deletions, dependent: :nullify
   has_many :web_hooks, dependent: :destroy
 
   after_validation :set_unconfirmed_email, if: :email_changed?, on: :update
@@ -50,7 +50,7 @@ class User < ApplicationRecord
 
   def self.authenticate(who, password)
     user = find_by(email: who.downcase) || find_by(handle: who)
-    user if user && user.authenticated?(password)
+    user if user&.authenticated?(password)
   end
 
   def self.find_by_slug!(slug)

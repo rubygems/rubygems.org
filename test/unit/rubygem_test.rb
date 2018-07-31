@@ -450,7 +450,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "prefer metadata over links in JSON" do
-        @version.update_attributes!(
+        @version.update!(
           metadata: {
             "homepage_uri" => "http://example.com/home",
             "wiki_uri" => "http://example.com/wiki",
@@ -474,7 +474,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "return version documentation url if metadata and linkset docs is empty" do
-        @version.update_attributes!(metadata: {})
+        @version.update!(metadata: {})
         @rubygem.linkset.update_attribute(:docs, "")
 
         hash = JSON.load(@rubygem.to_json)
@@ -603,12 +603,12 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "be pushable if gem was yanked more than 100 days ago" do
-        @haml.update_attributes(created_at: 101.days.ago, updated_at: 101.days.ago)
+        @haml.update(created_at: 101.days.ago, updated_at: 101.days.ago)
         assert @haml.pushable?
       end
 
       should "not be pushable if gem is older than a month and yanked less than 100 days ago" do
-        @haml.update_attributes(created_at: 99.days.ago, updated_at: 99.days.ago)
+        @haml.update(created_at: 99.days.ago, updated_at: 99.days.ago)
         refute @haml.pushable?
       end
     end

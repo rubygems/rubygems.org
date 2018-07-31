@@ -1,7 +1,8 @@
 require 'test_helper'
-include ESHelper
 
 class FastlyLogProcessorTest < ActiveSupport::TestCase
+  include ESHelper
+
   setup do
     @sample_log = Rails.root.join('test', 'sample_logs', 'fastly-fake.log').read
 
@@ -97,7 +98,7 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
       end
 
       should "not mark as processed if anything fails" do
-        def @job.download_counts(_)
+        def @job.download_counts(___)
           raise "woops"
         end
         assert_raises { @job.perform }
@@ -106,7 +107,7 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
       end
 
       should "not re-process if it failed" do
-        def @job.download_counts(_)
+        def @job.download_counts(___)
           raise "woops"
         end
         assert_raises { @job.perform }

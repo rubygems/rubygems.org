@@ -9,9 +9,9 @@ class S3Utils
     versions.each do |v|
       last_modified_at = @s3.list_object_versions(bucket: @bucket, prefix: "gems/#{v.full_name}.gem").versions.map { |ve| ve.last_modified.utc }.max
       d = v.created_at.utc
-      if last_modified_at - 5.seconds > d
-        p [v.full_name, v.created_at.to_s, last_modified_at.to_s]
-      end
+
+      p [v.full_name, v.created_at.to_s, last_modified_at.to_s] if last_modified_at - 5.seconds > d
+
       deltas << [(last_modified_at - d).round, v.full_name]
     end
     deltas.sort_by { |d, _| -d }

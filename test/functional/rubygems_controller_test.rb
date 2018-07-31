@@ -282,17 +282,17 @@ class RubygemsControllerTest < ActionController::TestCase
       @rubygem = @latest_version.rubygem
     end
     should "render plural licenses header for other than one license" do
-      @latest_version.update_attributes(licenses: nil)
+      @latest_version.update(licenses: nil)
       get :show, params: { id: @rubygem.to_param }
       assert page.has_content?("Licenses")
 
-      @latest_version.update_attributes(licenses: ["MIT", "GPL-2"])
+      @latest_version.update(licenses: ["MIT", "GPL-2"])
       get :show, params: { id: @rubygem.to_param }
       assert page.has_content?("Licenses")
     end
 
     should "render singular license header for one line license" do
-      @latest_version.update_attributes(licenses: ["MIT"])
+      @latest_version.update(licenses: ["MIT"])
       get :show, params: { id: @rubygem.to_param }
       assert page.has_content?("License")
       assert page.has_no_content?("Licenses")
@@ -358,7 +358,7 @@ class RubygemsControllerTest < ActionController::TestCase
     end
     context "namespace is reserved" do
       setup do
-        @rubygem.update_attributes(created_at: 30.days.ago, updated_at: 99.days.ago)
+        @rubygem.update(created_at: 30.days.ago, updated_at: 99.days.ago)
         @owner = create(:user)
         @rubygem.owners << @owner
         get :show, params: { id: @rubygem.to_param }

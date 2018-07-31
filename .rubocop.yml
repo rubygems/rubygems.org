@@ -14,6 +14,19 @@ Rails:
 Rails/SkipsModelValidations:
   Enabled: false
 
+Rails/LexicallyScopedActionFilter:
+  Enabled: false
+
+Rails/RefuteMethods:
+  Enabled: false
+
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - development
+    - staging
+    - test
+
 Metrics/AbcSize:
   Max: 42 # TODO: Lower to 15
 
@@ -55,7 +68,7 @@ Style/AndOr:
   Exclude:
     - app/controllers/internal/ping_controller.rb
 
-Style/AccessorMethodName:
+Naming/AccessorMethodName:
   Exclude:
     - app/controllers/application_controller.rb
 
@@ -73,3 +86,6 @@ Security/MarshalLoad:
 
 Style/EmptyMethod:
   EnforcedStyle: expanded
+
+Style/FormatStringToken:
+  Enabled: false

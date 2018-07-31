@@ -16,6 +16,6 @@ class Linkset < ApplicationRecord
   end
 
   def update_attributes_from_gem_specification!(spec)
-    update_attributes!(home: spec.homepage)
+    update!(home: spec.homepage)
   end
 end

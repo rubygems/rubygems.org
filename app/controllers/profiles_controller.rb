@@ -16,7 +16,7 @@ class ProfilesController < ApplicationController
 
   def update
     @user = current_user.clone
-    if @user.update_attributes(params_user)
+    if @user.update(params_user)
       if @user.unconfirmed_email
         Mailer.delay.email_reset(current_user)
         flash[:notice] = t('.confirmation_mail_sent')

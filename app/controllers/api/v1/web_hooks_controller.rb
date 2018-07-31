@@ -31,7 +31,7 @@ class Api::V1::WebHooksController < Api::BaseController
 
   def fire
     webhook = @api_user.web_hooks.new(url: @url)
-    @rubygem = Rubygem.find_by_name("gemcutter") unless @rubygem
+    @rubygem ||= Rubygem.find_by_name("gemcutter")
 
     if webhook.fire(request.protocol.delete("://"), request.host_with_port, @rubygem,
       @rubygem.versions.most_recent, false)

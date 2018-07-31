@@ -9,7 +9,7 @@ module GemcutterTaskshelper
 
   def recalculate_sha256!(version)
     sha256 = recalculate_sha256(version.full_name)
-    version.update_attributes(sha256: sha256)
+    version.update(sha256: sha256)
   end
 
   def recalculate_metadata!(version)

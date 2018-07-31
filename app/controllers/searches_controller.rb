@@ -4,8 +4,8 @@ class SearchesController < ApplicationController
   MAX_PAGE = 100
 
   def show
-    return unless params[:query] && params[:query].is_a?(String)
-    @error_msg, @gems = Rubygem.search(params[:query], es: es_enabled?, page: @page)
+    return unless params[:query]&.is_a?(String)
+    @error_msg, @gems = Rubygem.search(params[:query], elasticsearch: es_enabled?, page: @page)
     limit_total_entries if @gems.total_entries > MAX_PAGE * Rubygem.per_page
 
     @exact_match = Rubygem.name_is(params[:query]).with_versions.first

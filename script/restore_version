@@ -2,9 +2,7 @@
 
 gem_name, version_number, platform = *ARGV
 
-if gem_name.nil? || version_number.nil?
-  abort "Usage: script/restore_version GEM_NAME VESRION_NUMBER [PLATFORM]"
-end
+abort "Usage: script/restore_version GEM_NAME VESRION_NUMBER [PLATFORM]" if gem_name.nil? || version_number.nil?
 
 ENV['RAILS_ENV'] ||= 'production'
 require_relative '../config/environment'

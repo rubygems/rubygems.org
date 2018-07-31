@@ -67,7 +67,7 @@ class ApplicationController < ActionController::Base
     # This works because request.body is a RewindableInput which will
     # slurp all the socket data into a tempfile, satisfying apache.
     request.body.size if request.body.respond_to? :size
-    render plain: t(:please_sign_up), status: 401
+    render plain: t(:please_sign_up), status: :unauthorized
   end
 
   def find_rubygem
