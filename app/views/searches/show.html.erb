@@ -37,7 +37,7 @@
   <% end %>
 
   <% if @gems.present? %>
-    <%= render partial: 'rubygems/rubygem', collection: @gems %>
+    <%= render partial: 'rubygems/rubygem', collection: @all_gems %>
     <%= will_paginate @gems %>
   <% end %>
 <% end %>
