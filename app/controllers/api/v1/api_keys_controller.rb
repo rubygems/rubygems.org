@@ -11,6 +11,8 @@ class Api::V1::ApiKeysController < Api::BaseController
           format.json { render json: { rubygems_api_key: user.api_key } }
           format.yaml { render plain: { rubygems_api_key: user.api_key }.to_yaml }
         end
+      elsif user&.mfa_enabled?
+        render plain: t(:please_send_correct_otp), status: :unauthorized
       else
         false
       end
