@@ -122,4 +122,13 @@ FactoryBot.define do
     version_id 0
     count 0
   end
+
+  factory :advisory do
+    title 'Some vulnerable title'
+    description 'description about vulnerability'
+    url 'http://example.com'
+    cve '1234-5678'
+    user
+    version
+  end
 end

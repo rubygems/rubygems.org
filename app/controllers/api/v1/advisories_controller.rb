@@ -7,13 +7,13 @@ class Api::V1::AdvisoriesController < Api::BaseController
   before_action :validate_gem_and_version,  only: [:create]
 
   def create
-    @advisory = current_user.advisories.new(version: @version, description: params[:description], title: params[:title], url: params[:url])
+    @advisory = @version.advisories.new(description: params[:description], title: params[:title], url: params[:url], cve: params[:cve])
     if @advisory.save
       StatsD.increment 'advisory.success'
-      render text: "Successfully record advisory for gem: #{@version.to_title}"
+      render plain: "Successfully recorded advisory for gem: #{@version.to_title}"
     else
       StatsD.increment 'advisory.failure'
-      render text: @advisory.errors.full_messages.to_sentence,
+      render plain: "Failed to add advisory: " + @advisory.errors.full_messages.to_sentence,
              status: :unprocessable_entity
     end
   end
