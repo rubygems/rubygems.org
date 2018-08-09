@@ -91,5 +91,29 @@ module Patterns
     ubygems
     sidekiq-pro
     graphql-pro
+
+    # Blacklisted internal Rails dependency misspellings
+    # which could be used for malicious purposes.
+    action-cable
+    action_cable
+    action-mailer
+    action_mailer
+    action-pack
+    action_pack
+    action-view
+    action_view
+    active-job
+    active_job
+    active-model
+    active_model
+    active-record
+    active_record
+    active-storage
+    active_storage
+    active-support
+    active_support
+    sprockets_rails
+    rail-ties
+    rail_ties
   ].freeze
 end
