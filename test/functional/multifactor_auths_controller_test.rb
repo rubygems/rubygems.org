@@ -48,7 +48,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             end
           end
 
-          context 'when input recovery code' do
+          context 'when otp is recovery code' do
             setup do
               put :update, params: { otp: @user.mfa_recovery_codes.first, level: 'no_mfa' }
             end
