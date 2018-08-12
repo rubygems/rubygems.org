@@ -10,7 +10,7 @@ zh-CN:
   none: 无
   not_found: 未找到
   please_sign_up: 拒绝访问。请先在 https://rubygems.org 上注册一个账号。
-  please_send_correct_otp:
+  otp_incorrect_or_missing:
   sign_in: 登录
   sign_up: 注册
   multifactor_authentication: 多重验证

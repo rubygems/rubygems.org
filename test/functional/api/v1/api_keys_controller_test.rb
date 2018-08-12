@@ -49,7 +49,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
       should "deny access" do
         assert_response 401
-        assert_match I18n.t('please_send_correct_otp'), @response.body
+        assert_match I18n.t('otp_incorrect_or_missing'), @response.body
       end
     end
 
@@ -61,7 +61,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
       should "deny access" do
         assert_response 401
-        assert_match I18n.t('please_send_correct_otp'), @response.body
+        assert_match I18n.t('otp_incorrect_or_missing'), @response.body
       end
     end
 

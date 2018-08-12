@@ -55,7 +55,7 @@ class ApplicationController < ActionController::Base
 
   def verify_with_otp
     return if @api_user.mfa_write_authorized?(request.headers["HTTP_OTP"])
-    render plain: t(:please_send_correct_otp), status: :unauthorized
+    render plain: t(:otp_incorrect_or_missing), status: :unauthorized
   end
 
   def authenticate_with_api_key
