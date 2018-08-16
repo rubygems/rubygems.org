@@ -1,11 +1,6 @@
 require 'test_helper'
 class Api::V1::AuditsControllerTest < ActionController::TestCase
   context "with a confirmed user authenticated" do
-    setup do
-      @user = create(:user)
-      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
-    end
-
     context "for a gem SomeGem with a version 0.1.0" do
       setup do
         @rubygem   = create(:rubygem, name: "SomeGem")
