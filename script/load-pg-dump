@@ -78,12 +78,6 @@ fi
 
 printf 'Loading "%s" into database "%s" as user "%s"\n', "$public_tar", "$pg_database", "$pg_user"
 
-echo "Droppping database $pg_database"
-dropdb -U $pg_user $pg_database
-
-echo "Creating database $pg_database"
-createdb -U $pg_user $pg_database
-
 echo "Adding hstore extension"
 psql -q -U $pg_user -d $pg_database -c "CREATE EXTENSION IF NOT EXISTS hstore;"
 
