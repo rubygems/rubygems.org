@@ -84,9 +84,9 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       @request.env["HTTP_AUTHORIZATION"] = @user.api_key
     end
 
-    context "when mfa login-and-write is enabled" do
+    context "when mfa for UI and API is enabled" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :mfa_login_and_write)
+        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api_mfa)
       end
 
       context "on POST to add other user as gem owner with email without OTP" do
@@ -125,7 +125,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       end
     end
 
-    context "when mfa login-and-write is disabled" do
+    context "when mfa for UI and API is disabled" do
       should "add other user as gem owner with email" do
         post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
         assert @rubygem.owners.include?(@second_user)
@@ -156,9 +156,9 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       @request.env["HTTP_AUTHORIZATION"] = @user.api_key
     end
 
-    context "when mfa login-and-write is enabled" do
+    context "when mfa for UI and API is enabled" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :mfa_login_and_write)
+        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api_mfa)
       end
 
       context "on delete to remove gem owner without OTP" do
@@ -197,7 +197,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       end
     end
 
-    context "when mfa login-and-write is disabled" do
+    context "when mfa for UI and API is disabled" do
       should "remove user as gem owner" do
         delete :destroy,
           params: { rubygem_id: @rubygem.to_param, email: @second_user.email, format: :json }

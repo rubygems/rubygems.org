@@ -250,7 +250,7 @@ class UserTest < ActiveSupport::TestCase
 
       context "when enabled" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :mfa_login_only)
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_mfa_only)
         end
 
         should "be able to use a recovery code only once" do

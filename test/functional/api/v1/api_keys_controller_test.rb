@@ -35,10 +35,10 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     end
   end
 
-  context "when user has enabled MFA for write" do
+  context "when user has enabled MFA for API" do
     setup do
       @user = create(:user)
-      @user.enable_mfa!(ROTP::Base32.random_base32, :mfa_login_and_write)
+      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api_mfa)
       authorize_with("#{@user.email}:#{@user.password}")
     end
 

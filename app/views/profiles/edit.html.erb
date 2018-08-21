@@ -93,8 +93,8 @@
       <%= form_tag multifactor_auth_path, :method => :put, :id => 'mfa-edit' do %>
         <%= label_tag :level, 'Auth Level', :class => 'form__label' %>
         <%= select_tag :level, options_for_select([
-          ['Login and Write', 'mfa_login_and_write'],
-          ['Login Only', 'mfa_login_only'],
+          ['Auth for UI and API', 'ui_and_api_mfa'],
+          ['Auth for UI Only', 'ui_mfa_only'],
           ['Disabled', 'no_mfa']], @user.mfa_level), :class => 'form__input form__select' %>
         <div class="text_field">
           <%= label_tag :otp, 'OTP code', :class => 'form__label' %>

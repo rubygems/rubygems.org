@@ -37,9 +37,9 @@ class Api::V1::MultifactorAuthsControllerTest < ActionController::TestCase
           end
         end
 
-        context "on showing with MFA set to login only" do
+        context "on showing with MFA set to UI only" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :mfa_login_only)
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_mfa_only)
             get :show, format: format
           end
 
@@ -50,13 +50,13 @@ class Api::V1::MultifactorAuthsControllerTest < ActionController::TestCase
                      else
                        parse(format, @response.body)['mfa_level']
                      end
-            assert result == 'mfa_login_only'
+            assert result == 'ui_mfa_only'
           end
         end
 
-        context "on showing with MFA set to login and write" do
+        context "on showing with MFA set to UI and API" do
           setup do
-            @user.enable_mfa!(ROTP::Base32.random_base32, :mfa_login_and_write)
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api_mfa)
             get :show, format: format
           end
 
@@ -67,7 +67,7 @@ class Api::V1::MultifactorAuthsControllerTest < ActionController::TestCase
                      else
                        parse(format, @response.body)['mfa_level']
                      end
-            assert result == 'mfa_login_and_write'
+            assert result == 'ui_and_api_mfa'
           end
         end
       end

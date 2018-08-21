@@ -200,9 +200,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
-    context "When mfa login-and-write is enabled" do
+    context "When mfa for UI and API is enabled" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :mfa_login_and_write)
+        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api_mfa)
         @request.env["RAW_POST_DATA"] = gem_file.read
       end
 
