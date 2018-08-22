@@ -108,6 +108,8 @@ Follow the instructions below on how to install Bundler and setup the database.
 * Get set up: `./script/setup`
 * Run the database rake tasks if needed:
     `bundle exec rake db:reset db:test:prepare --trace`
+* Set up elasticsearch indexes:
+    `bundle exec rake environment elasticsearch:import:all DIR=app/models FORCE=y`
 
 #### Running tests
 
