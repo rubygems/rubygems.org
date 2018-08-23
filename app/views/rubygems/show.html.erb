@@ -39,8 +39,8 @@
       </div>
     <% end %>
 
-    <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.runtime, :dependencies_count => @latest_version.runtime_dependencies_count } %>
-    <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.development, :dependencies_count => @latest_version.development_dependencies_count } %>
+    <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.runtime } %>
+    <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.development } %>
 
     <% if @latest_version.requirements.present? %>
       <div class="l-half--l">

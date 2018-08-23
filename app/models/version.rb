@@ -243,14 +243,6 @@ class Version < ApplicationRecord
     gem_download.try(:count) || 0
   end
 
-  def runtime_dependencies_count
-    dependencies.runtime.length
-  end
-
-  def development_dependencies_count
-    dependencies.development.length
-  end
-
   def payload
     {
       'authors'                    => authors,
