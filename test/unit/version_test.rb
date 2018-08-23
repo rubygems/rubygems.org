@@ -288,14 +288,6 @@ class VersionTest < ActiveSupport::TestCase
       assert @version.downloads_count.zero?
     end
 
-    should "have runtime dependencies count" do
-      assert_equal @version.runtime_dependencies_count, Version.find_by(rubygem: @version.rubygem).dependencies.runtime.count
-    end
-
-    should "have development dependencies count" do
-      assert_equal @version.development_dependencies_count, Version.find_by(rubygem: @version.rubygem).dependencies.development.count
-    end
-
     should "give no version flag for the latest version" do
       new_version = create(:version, rubygem: @version.rubygem, built_at: 1.day.from_now)
 

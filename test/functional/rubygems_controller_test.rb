@@ -402,8 +402,8 @@ class RubygemsControllerTest < ActionController::TestCase
       assert page.has_content?(@development.rubygem.name)
     end
     should "show runtime and development dependencies count" do
-      assert page.has_content?(@version.runtime_dependencies_count)
-      assert page.has_content?(@version.development_dependencies_count)
+      assert page.has_content?(@version.dependencies.runtime.count)
+      assert page.has_content?(@version.dependencies.development.count)
     end
   end
 
