@@ -118,17 +118,6 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal version3_ruby, @rubygem.versions.most_recent
     end
 
-    should "can find when the first built date was" do
-      travel_to Time.zone.now do
-        create(:version, rubygem: @rubygem, number: "3.0.0", built_at: 1.day.ago)
-        create(:version, rubygem: @rubygem, number: "2.0.0", built_at: 2.days.ago)
-        create(:version, rubygem: @rubygem, number: "1.0.0", built_at: 3.days.ago)
-        create(:version, rubygem: @rubygem, number: "1.0.0.beta", built_at: 4.days.ago)
-
-        assert_equal 4.days.ago.to_date, @rubygem.first_built_date.to_date
-      end
-    end
-
     should "have a most_recent version if only a platform version exists" do
       version1 = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "linux")
 
