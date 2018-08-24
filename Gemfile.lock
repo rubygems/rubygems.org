@@ -169,6 +169,10 @@ GEM
     kgio (2.11.0)
     launchy (2.4.3)
       addressable (~> 2.3)
+    listen (3.1.5)
+      rb-fsevent (~> 0.9, >= 0.9.4)
+      rb-inotify (~> 0.9, >= 0.9.7)
+      ruby_dep (~> 1.2)
     lograge (0.10.0)
       actionpack (>= 4)
       activesupport (>= 4)
@@ -252,6 +256,9 @@ GEM
     rainbow (3.0.0)
     raindrops (0.18.0)
     rake (12.3.1)
+    rb-fsevent (0.10.3)
+    rb-inotify (0.9.10)
+      ffi (>= 0.5.0, < 2)
     rbtrace (0.4.10)
       ffi (>= 1.0.6)
       msgpack (>= 0.4.3)
@@ -276,6 +283,7 @@ GEM
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-graphviz (1.2.3)
     ruby-progressbar (1.9.0)
+    ruby_dep (1.5.0)
     sass (3.4.24)
     shoryuken (2.1.3)
       aws-sdk-core (~> 2)
@@ -355,6 +363,7 @@ DEPENDENCIES
   http_accept_language
   jquery-rails
   launchy
+  listen
   lograge
   logstash-event
   mail (= 2.6.6)

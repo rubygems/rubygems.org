@@ -60,6 +60,7 @@ end
 group :development do
   gem 'bootsnap', require: false
   gem 'rails-erd'
+  gem 'listen'
 end
 
 group :test do
