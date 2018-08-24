@@ -64,6 +64,7 @@ GEM
     bourne (1.6.0)
       mocha (~> 1.1)
     builder (3.2.3)
+    byebug (10.0.2)
     capistrano (3.8.1)
       airbrussh (>= 1.0.0)
       i18n
@@ -108,6 +109,7 @@ GEM
     clearance-deprecated_password_strategies (1.10.1)
       activesupport
       clearance (>= 1.10)
+    coderay (1.1.2)
     compact_index (0.11.0)
     concurrent-ruby (1.0.5)
     crass (1.0.4)
@@ -213,6 +215,12 @@ GEM
       rails (>= 5.0, < 6.0)
     pg (0.21.0)
     powerpack (0.1.2)
+    pry (0.11.3)
+      coderay (~> 1.1.0)
+      method_source (~> 0.9.0)
+    pry-byebug (3.6.0)
+      byebug (~> 10.0)
+      pry (~> 0.10)
     public_suffix (3.0.2)
     rack (2.0.5)
     rack-attack (5.3.2)
@@ -373,6 +381,7 @@ DEPENDENCIES
   newrelic_rpm
   paul_revere (~> 3.0.0)
   pg
+  pry-byebug
   rack
   rack-attack
   rack-test
