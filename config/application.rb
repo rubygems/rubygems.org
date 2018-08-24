@@ -9,7 +9,7 @@ Bundler.require(*Rails.groups)
 
 module Gemcutter
   class Application < Rails::Application
-    config.load_defaults 5.0
+    #config.load_defaults 5.0
 
     config.rubygems = Application.config_for :rubygems
 
