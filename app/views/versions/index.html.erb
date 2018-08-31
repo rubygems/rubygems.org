@@ -1,5 +1,5 @@
 <% @title = t('.title', :name => @rubygem.name) %>
-<% if @versions.size.zero? %>
+<% if @versions.load.size.zero? %>
   <div class="t-body">
     <p><%= t('.not_hosted_notice') %></p>
   </div>
