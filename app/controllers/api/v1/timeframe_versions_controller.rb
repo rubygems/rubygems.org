@@ -3,7 +3,7 @@ class Api::V1::TimeframeVersionsController < Api::BaseController
   before_action :set_page, only: :index
 
   MAXIMUM_TIMEFRAME_QUERY_IN_DAYS = 7
-  class InvalidTimeframeParameterError < StandardError ; end
+  class InvalidTimeframeParameterError < StandardError; end
 
   def index
     render_rubygems(Version.created_between(query_time_range).paginate(page: @page))
@@ -17,7 +17,7 @@ class Api::V1::TimeframeVersionsController < Api::BaseController
     parse_time_range_from_params.tap do |range|
       if (range.max - range.min).to_i > MAXIMUM_TIMEFRAME_QUERY_IN_DAYS.days
         raise InvalidTimeframeParameterError,
-              "the supplied query time range cannot exceed #{MAXIMUM_TIMEFRAME_QUERY_IN_DAYS} days"
+          "the supplied query time range cannot exceed #{MAXIMUM_TIMEFRAME_QUERY_IN_DAYS} days"
       end
     end
   end
