@@ -57,6 +57,16 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
         assert_equal 400, response.status
         assert response.body.include?('iso8601')
       end
+
+      should 'return a bad request with message when the range exceeds the max allowed' do
+        get :index, format: :json, params: {
+          from: Time.zone.parse('2017-11-09').iso8601,
+          to: Time.zone.parse('2017-11-17').iso8601
+        }
+
+        assert_equal 400, response.status
+        assert response.body.include?('query time range cannot exceed')
+      end
     end
 
     context 'with missing params' do
@@ -68,9 +78,12 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
       end
 
       should 'default to the current time if "to" is missing' do
-        get :index, format: :json, params: { from: Time.zone.parse('2017-9-9').iso8601 }
+        @sinatra_version.created_at = Time.zone.now.advance(days: -3)
+        @sinatra_version.save!
+        get :index, format: :json, params: { from: Time.zone.now.advance(days: -5).iso8601 }
         gems = JSON.parse @response.body
-        assert_equal 3, gems.length
+        assert_equal 1, gems.length
+        assert_equal 'sinatra', gems[0]['name']
       end
     end
   end
