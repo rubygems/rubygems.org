@@ -7,7 +7,7 @@ class Api::V1::TimeframeVersionsController < Api::BaseController
       render plain: 'timeframe parameters must be iso8601 formatted',
              status: :bad_request
     else
-      render_rubygems(version_timeframe_query)
+      render_rubygems(Version.created_between(from_time..to_time).paginate(page: @page))
     end
   end
 
@@ -23,13 +23,6 @@ class Api::V1::TimeframeVersionsController < Api::BaseController
     @to_time ||= params[:to].blank? ? Time.zone.now : Time.iso8601(params[:to])
   rescue ArgumentError
     return
-  end
-
-  def version_timeframe_query
-    Version
-      .where(created_at: from_time..to_time)
-      .order(:created_at)
-      .paginate(page: @page)
   end
 
   def render_rubygems(versions)
