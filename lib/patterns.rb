@@ -19,27 +19,22 @@ module Patterns
     delegate
     digest
     drb
-    e2mmap
     english
     enumerator
     erb
     expect
     fiber
     find
-    forwardable
     getoptlong
     install
     io-nonblock
     io-wait
-    irb
     jruby
     logger
-    matrix
     mkmf
     monitor
     mri
     mruby
-    mutex_m
     net-ftp
     net-http
     net-imap
@@ -51,10 +46,8 @@ module Patterns
     open-uri
     open3
     optparse
-    ostruct
     pathname
     prettyprint
-    prime
     profile
     profiler
     pstore
@@ -62,9 +55,7 @@ module Patterns
     rational
     rbconfig
     resolv
-    rexml
     rinda
-    rss
     ruby
     rubygems
     securerandom
@@ -72,11 +63,9 @@ module Patterns
     shellwords
     singleton
     socket
-    sync
     syslog
     tempfile
     thread
-    thwait
     time
     timeout
     tmpdir
