@@ -39,8 +39,8 @@ Rails.application.configure do
   # Force all access to the app over SSL and use secure cookies.
   config.force_ssl = true
 
-  # Set HSTS max-age to 2 years
-  config.ssl_options = { hsts: { expires: 730.days } }
+  # Set HSTS max-age to 5 minutes
+  config.ssl_options = { hsts: { expires: 5.minutes } }
 
   # Mount Action Cable outside main process or domain
   # config.action_cable.mount_path = nil
