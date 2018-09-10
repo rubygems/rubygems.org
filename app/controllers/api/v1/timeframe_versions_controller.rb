@@ -1,34 +1,43 @@
 class Api::V1::TimeframeVersionsController < Api::BaseController
+  class InvalidTimeframeParameterError < StandardError; end
+  rescue_from InvalidTimeframeParameterError, with: :bad_request_response
   skip_before_action :verify_authenticity_token
-  before_action :set_page, only: :index
+  before_action :set_page, :ensure_valid_timerange, only: :index
 
   MAXIMUM_TIMEFRAME_QUERY_IN_DAYS = 7
-  class InvalidTimeframeParameterError < StandardError; end
 
   def index
-    render_rubygems(Version.created_between(query_time_range).paginate(page: @page))
-  rescue InvalidTimeframeParameterError => ex
-    render plain: ex.message, status: :bad_request
+    render_rubygems(
+      Version.created_between(from_time, to_time).paginate(page: @page)
+    )
   end
 
   private
 
-  def query_time_range
-    parse_time_range_from_params.tap do |range|
-      if (range.max - range.min).to_i > MAXIMUM_TIMEFRAME_QUERY_IN_DAYS.days
-        raise InvalidTimeframeParameterError,
-          "the supplied query time range cannot exceed #{MAXIMUM_TIMEFRAME_QUERY_IN_DAYS} days"
-      end
+  def bad_request_response(exception)
+    render plain: exception.message, status: :bad_request
+  end
+
+  def ensure_valid_timerange
+    if (to_time - from_time).to_i > MAXIMUM_TIMEFRAME_QUERY_IN_DAYS.days
+      raise InvalidTimeframeParameterError,
+        "the supplied query time range cannot exceed #{MAXIMUM_TIMEFRAME_QUERY_IN_DAYS} days"
+    elsif from_time > to_time
+      raise InvalidTimeframeParameterError,
+        "the starting time parameter must be before the ending time parameter"
     end
   end
 
-  def parse_time_range_from_params
-    from = Time.iso8601(params.require(:from))
-    to = params[:to].blank? ? Time.zone.now : Time.iso8601(params[:to])
-
-    from..to
+  def from_time
+    @from_time ||= Time.iso8601(params.require(:from))
   rescue ArgumentError
-    raise InvalidTimeframeParameterError, "timeframe parameters must be iso8601 formatted"
+    raise InvalidTimeframeParameterError, 'the from parameter must be iso8601 formatted'
+  end
+
+  def to_time
+    @to_time ||= params[:to].blank? ? Time.zone.now : Time.iso8601(params[:to])
+  rescue ArgumentError
+    raise InvalidTimeframeParameterError, 'the "to" parameter must be iso8601 formatted'
   end
 
   def render_rubygems(versions)

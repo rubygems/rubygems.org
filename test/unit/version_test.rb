@@ -783,31 +783,26 @@ class VersionTest < ActiveSupport::TestCase
   context "created_between" do
     setup do
       @version = create(:version)
-      @range = Time.zone.parse('2017-10-10')..Time.zone.parse('2017-11-10')
+      @start_time = Time.zone.parse('2017-10-10')
+      @end_time = Time.zone.parse('2017-11-10')
     end
 
     should "return versions created in the given range" do
       @version.created_at = Time.zone.parse('2017-10-20')
       @version.save!
-      assert_contains Version.created_between(@range), @version
+      assert_contains Version.created_between(@start_time, @end_time), @version
     end
 
     should "NOT return versions created before the range begins" do
       @version.created_at = Time.zone.parse('2017-10-09')
       @version.save!
-      assert_does_not_contain Version.created_between(@range), @version
+      assert_does_not_contain Version.created_between(@start_time, @end_time), @version
     end
 
     should "NOT return versions after the range begins" do
       @version.created_at = Time.zone.parse('2017-11-11')
       @version.save!
-      assert_does_not_contain Version.created_between(@range), @version
-    end
-
-    should "raise an ArgumentError if something other than a range is passed" do
-      assert_raises ArgumentError do
-        Version.created_between(Time.zone.now)
-      end
+      assert_does_not_contain Version.created_between(@start_time, @end_time), @version
     end
   end
 end

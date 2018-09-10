@@ -61,11 +61,21 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
       should 'return a bad request with message when the range exceeds the max allowed' do
         get :index, format: :json, params: {
           from: Time.zone.parse('2017-11-09').iso8601,
-          to: Time.zone.parse('2017-11-17').iso8601
+          to: Time.zone.parse('2017-11-30').iso8601
         }
 
         assert_equal 400, response.status
         assert response.body.include?('query time range cannot exceed')
+      end
+
+      should 'return a bad request with message if from is after to' do
+        get :index, format: :json, params: {
+          from: Time.zone.parse('2017-11-11').iso8601,
+          to: Time.zone.parse('2017-11-09').iso8601
+        }
+
+        assert_equal 400, response.status
+        assert response.body.include?('must be before the ending time parameter')
       end
     end
 

@@ -167,10 +167,8 @@ class Version < ApplicationRecord
     find_by(full_name: full_name).try(:rubygem).try(:name)
   end
 
-  def self.created_between(range)
-    raise ArgumentError unless range.is_a?(Range)
-
-    where(created_at: range).order(:created_at)
+  def self.created_between(start_time, end_time)
+    where(created_at: start_time..end_time).order(:created_at)
   end
 
   def platformed?
