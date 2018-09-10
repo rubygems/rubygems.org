@@ -142,7 +142,7 @@ GEM
       railties (>= 3.0.0)
     faraday (0.15.1)
       multipart-post (>= 1.2, < 3)
-    ffi (1.9.23)
+    ffi (1.9.25)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
     gravtastic (3.2.6)
@@ -195,6 +195,7 @@ GEM
     nio4r (2.3.1)
     nokogiri (1.8.3)
       mini_portile2 (~> 2.3.0)
+    optimist (3.0.0)
     parallel (1.12.1)
     parser (2.5.1.2)
       ast (~> 2.4.0)
@@ -244,10 +245,10 @@ GEM
     rainbow (3.0.0)
     raindrops (0.18.0)
     rake (12.3.1)
-    rbtrace (0.4.10)
+    rbtrace (0.4.11)
       ffi (>= 1.0.6)
       msgpack (>= 0.4.3)
-      trollop (>= 1.16.0)
+      optimist (>= 3.0.0)
     rdoc (6.0.4)
     request_store (1.4.1)
       rack (>= 1.4)
@@ -294,7 +295,6 @@ GEM
     timers (4.1.2)
       hitimes
     toxiproxy (1.0.2)
-    trollop (2.1.2)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     uglifier (3.2.0)
@@ -382,4 +382,4 @@ DEPENDENCIES
   xml-simple
 
 BUNDLED WITH
-   1.16.0
+   1.16.2
