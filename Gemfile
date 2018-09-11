@@ -21,10 +21,10 @@ gem "kaminari"
 gem "mail"
 gem "newrelic_rpm"
 gem "paul_revere", "~> 3.1.0"
-gem "pg"
+gem "pg", platform: :mri
 gem "rack"
 gem "rack-utf8_sanitizer"
-gem "rbtrace", "~> 0.4.8"
+gem "rbtrace", "~> 0.4.8", platform: :mri
 gem "rdoc"
 gem "rest-client", require: "rest_client"
 gem "roadie-rails"
@@ -32,7 +32,7 @@ gem "sass-rails"
 gem "shoryuken", "~> 2.1.0", require: false
 gem "statsd-instrument", "~> 2.3.0"
 gem "uglifier", ">= 1.0.3"
-gem "unicorn", "~> 5.5.0.1.g6836"
+gem "unicorn", "~> 5.5.0.1.g6836", platform: :mri
 gem "validates_formatting_of"
 gem "elasticsearch-model", "~> 5.0.0"
 gem "elasticsearch-rails", "~> 5.0.0"
@@ -46,12 +46,14 @@ gem "rqrcode"
 gem "rotp"
 gem "unpwn", "~> 0.3.0"
 
+# JRuby (unsupported but allows running the app locally)
+gem "activerecord-jdbcpostgresql-adapter", platform: :jruby
 # Logging
 gem "lograge"
 
 group :development, :test do
   gem "m", "~> 1.5", require: false
-  gem "pry-byebug"
+  gem "pry-byebug", platform: :mri
   gem "rubocop", require: false
   gem "rubocop-rails", require: false
   gem "rubocop-performance", require: false
