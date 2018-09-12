@@ -21,7 +21,9 @@ class Pusher
   end
 
   def validate
-    (rubygem.valid? && version.valid?) || notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403)
+    return notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403) if !rubygem.valid? || !version.valid?
+    return notify("There was a problem saving your gem: invalid spec date #{spec.date.inspect}", 403) if spec.date.blank? || spec.date.year < 1900
+    true
   end
 
   def save

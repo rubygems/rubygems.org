@@ -97,7 +97,7 @@ class PusherTest < ActiveSupport::TestCase
       create(:version, rubygem: legit_gem, number: "0.0.1")
       @gem = gem_file("legit-gem-0.0.1.gem.fake")
       @cutter = Pusher.new(@user, @gem)
-      @cutter.stubs(:save).never
+      @cutter.expects(:save).never
       @cutter.process
       assert_equal @cutter.rubygem.name, "legit"
       assert_equal @cutter.version.number, "gem-0.0.1"
@@ -109,9 +109,8 @@ class PusherTest < ActiveSupport::TestCase
       @gem = gem_file("bad-date-1.0.0.gem")
       @cutter = Pusher.new(@user, @gem)
       @cutter.process
-      # TODO: switch regex to use `year too small` only when Ruby 2.6 is the default
-      assert_match(/There was a problem saving your gem. year too (big|small) to marshal: 1017 UTC/, @cutter.message)
-      assert_equal @cutter.code, 400
+      assert_match(/There was a problem saving your gem: invalid .*?date .*?1017-11-09/, @cutter.message)
+      assert_equal @cutter.code, 403
     end
 
     should "not be able to pull spec with metadata containing bad ruby symbols" do
@@ -211,6 +210,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:name).returns @rubygem.name.upcase
       spec.stubs(:version).returns "1.3.3.7"
       spec.stubs(:original_platform).returns "ruby"
+      spec.stubs(:date).returns nil
       @cutter.stubs(:spec).returns spec
       @cutter.find
 
