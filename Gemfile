@@ -48,6 +48,7 @@ gem "unpwn", "~> 0.3.0"
 
 # JRuby (unsupported but allows running the app locally)
 gem "activerecord-jdbcpostgresql-adapter", platform: :jruby
+gem "puma", require: false
 # Logging
 gem "lograge"
 

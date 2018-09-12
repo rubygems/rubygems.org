@@ -267,6 +267,10 @@ GEM
       byebug (~> 11.0)
       pry (~> 0.10)
     public_suffix (4.0.3)
+    puma (4.3.3)
+      nio4r (~> 2.0)
+    puma (4.3.3-java)
+      nio4r (~> 2.0)
     pwned (1.2.1)
     rack (2.1.1)
     rack-attack (6.2.2)
@@ -470,6 +474,7 @@ DEPENDENCIES
   paul_revere (~> 3.1.0)
   pg
   pry-byebug
+  puma
   rack
   rack-attack
   rack-test
