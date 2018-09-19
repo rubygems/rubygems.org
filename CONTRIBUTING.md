@@ -56,14 +56,14 @@ gems for your organization..**
 There is a `docker-compose.yml` file inside the project that easily lets you spin up
 services that the application depends on such as: postgresql, memcached & elasticsearch.
 
-* Install Docker. See instructions at https://docs.docker.com/engine/installation/ 
+* Install Docker. See instructions at https://docs.docker.com/engine/installation/
 * run `docker-compose up` to start the required services.
 
 Follow the instructions below on how to install Bundler and setup the database.
 
 #### Environment (OS X)
 
-* Use Ruby 2.3.5
+* Use Ruby 2.5.x (`.ruby-version` is present and can be used)
 * Use Rubygems 2.6.10
 * Install bundler: `gem install bundler`
 * Install Elastic Search:
@@ -80,7 +80,7 @@ Follow the instructions below on how to install Bundler and setup the database.
 
 #### Environment (Linux - Debian/Ubuntu)
 
-* Use Ruby 2.3.5 `apt-get install ruby2.3`
+* Use Ruby 2.5.x `apt-get install ruby2.5`
   * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
 * Use Rubygems 2.6.10
 * Install bundler: `gem install bundler`
