@@ -49,3 +49,10 @@ Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
 class SystemTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
 end
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :minitest
+    with.library :rails
+  end
+end

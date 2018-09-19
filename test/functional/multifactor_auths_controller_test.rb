@@ -65,9 +65,9 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             delete :destroy, params: { otp: wrong_otp }
           end
 
+          should set_flash[:error]
           should respond_with :redirect
           should redirect_to('the profile edit page') { edit_profile_path }
-          should set_flash.now[:error]
           should 'keep mfa enabled' do
             assert @user.reload.mfa_enabled?
           end
@@ -109,9 +109,9 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             post :create, params: { otp: ROTP::TOTP.new(@seed).now }
           end
 
+          should set_flash[:error]
           should respond_with :redirect
           should redirect_to('the profile edit page') { edit_profile_path }
-          should set_flash.now[:error]
           should 'keep mfa disabled' do
             refute @user.reload.mfa_enabled?
           end
