@@ -70,7 +70,7 @@ group :test do
   gem 'rack-test', require: 'rack/test'
   gem 'mocha', require: false
   gem 'bourne', require: false
-  gem 'shoulda', require: false
+  gem 'shoulda'
 end
 
 group :development, :deploy do
