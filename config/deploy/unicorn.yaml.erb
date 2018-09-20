@@ -1,0 +1,130 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: unicorn
+  annotations:
+    shipit.shopify.io/restart: 'true'
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 0%
+  selector:
+    matchLabels:
+      name: unicorn
+  template:
+    metadata:
+      labels:
+        name: unicorn
+    spec:
+      containers:
+      - name: unicorn
+        image: quay.io/rubygems/rubygems.org:<%= current_sha %>
+        args: ["unicorn_rails", "-E", "staging", "-c", "/app/config/unicorn.conf"]
+        ports:
+        - containerPort: 3000
+          name: http-unicorn
+        # resources:
+        #   requests:
+        #     cpu: 6
+        #     memory: 10Gi
+        #   limits:
+        #     cpu: 7
+        #     memory: 13Gi
+        env:
+          - name: RAILS_ENV
+            value: "staging"
+          - name: ENV
+            value: "staging"
+          - name: STATSD_IMPLEMENTATION
+            value: "datadog"
+          - name: SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: staging
+                key: secret_key_base
+          - name: RAILS_SERVE_STATIC_FILES
+            value: "true"
+          - name: AWS_REGION
+            value: "us-west-2"
+          - name: FASTLY_LOG_PROCESSOR_ENABLED
+            value: "true"
+          - name: S3_KEY
+            valueFrom:
+              secretKeyRef:
+                name: staging
+                key: aws_access_key_id
+          - name: S3_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: staging
+                key: aws_secret_access_key
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: staging
+                key: aws_access_key_id
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: staging
+                key: aws_secret_access_key
+          - name: NEW_RELIC_LICENSE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: staging
+                key: new_relic_license_key
+          - name: HONEYBADGER_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: staging
+                key: honeybadger_api_key
+          - name: FASTLY_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: staging
+                key: fastly_api_key
+          - name: FASTLY_SERVICE_ID
+            valueFrom:
+              secretKeyRef:
+                name: staging
+                key: fastly_service_id
+          - name: FASTLY_DOMAIN
+            valueFrom:
+              secretKeyRef:
+                name: staging
+                key: fastly_domain
+          - name: ELASTICSEARCH_URL
+            valueFrom:
+              secretKeyRef:
+                name: staging
+                key: elasticsearch_url
+          - name: MEMCACHED_ENDPOINT
+            valueFrom:
+              secretKeyRef:
+                name: staging
+                key: memcached_endpoint
+          - name: SENDGRID_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: staging
+                key: sendgrid_username
+          - name: SENDGRID_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: staging
+                key: sendgrid_password
+          - name: DISABLE_SIGNUP
+            value: "true"
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: staging
+                key: database_url
+        securityContext:
+          privileged: false
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sleep", "5"]

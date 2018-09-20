@@ -33,7 +33,7 @@ gem 'rdoc'
 gem 'rest-client', require: 'rest_client'
 gem 'sass', require: false
 gem 'shoryuken', '~> 2.1.0', require: false
-gem 'statsd-instrument', '~> 2.1.0'
+gem 'statsd-instrument', '~> 2.3.0'
 gem 'uglifier', '>= 1.0.3'
 gem 'unicorn'
 gem 'validates_formatting_of'
@@ -77,4 +77,5 @@ group :development, :deploy do
   gem 'capistrano', '~> 3.0', require: false
   gem 'capistrano-rails', '~> 1.1', require: false
   gem 'capistrano-bundler', '~> 1.1', require: false
+  gem 'kubernetes-deploy', '0.20.6', require: false
 end

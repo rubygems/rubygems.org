@@ -1,0 +1,16 @@
+machine:
+  environment:
+    KUBECONFIG: /home/deploy/.kube/config
+
+dependencies:
+  bundler:
+    frozen: false
+
+# kubernetes:
+#   namespace: rubygems-staging
+#   context: rubygems
+
+deploy:
+  override:
+    - bundle exec kubernetes-deploy rubygems-staging rubygems --template-dir config/deploy/staging
+    - cap $ENVIRONMENT deploy

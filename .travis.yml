@@ -1,4 +1,5 @@
 language: ruby
+
 cache:
   bundler: true
   directories:
@@ -8,6 +9,7 @@ cache:
 rvm:
   - 2.3.5
   - ruby-head
+
 addons:
   apt:
     sources:
@@ -19,6 +21,7 @@ addons:
 services:
   - elasticsearch
   - memcached
+  - docker
 
 sudo: false
 
@@ -42,6 +45,7 @@ script:
   - bundle exec rake rubocop
   - script/brakeman
   - bundle exec cap -T > /dev/null
+  - script/build_docker.sh
 
 env:
   - RUBYGEMS_VERSION=2.6.10
