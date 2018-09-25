@@ -1,9 +1,5 @@
 source 'https://rubygems.org'
 
-# https://github.com/mime-types/ruby-mime-types/issues/94
-# This can be removed once all gems depend on > 3.0
-gem 'mime-types', '~> 2.99', require: 'mime/types/columnar'
-
 gem 'rails', '~> 5.2.1'
 gem 'rails-i18n'
 
