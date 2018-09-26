@@ -29,16 +29,16 @@ class GemInfoTest < ActiveSupport::TestCase
     end
 
     should 'write cache' do
-      Rails.cache.stubs(:write)
-      info = GemInfo.new('example').compact_index_info
-      assert_received(Rails.cache, :write) { |cache| cache.with("info/example", info) }
+      Rails.cache.expects(:write).with("info/example", @expected_info)
+
+      GemInfo.new('example').compact_index_info
     end
 
     should 'read from cache when cache exists' do
-      GemInfo.new('example').compact_index_info
-      Rails.cache.stubs(:read)
+      Rails.cache.expects(:read).with("info/example")
+
       info = GemInfo.new('example').compact_index_info
-      assert_received(Rails.cache, :read) { |cache| cache.with("info/example") }
+
       assert_equal @expected_info, info
     end
   end
@@ -46,24 +46,26 @@ class GemInfoTest < ActiveSupport::TestCase
   context '.ordered_names' do
     setup do
       %w[abc bcd abd].each { |name| create(:rubygem, name: name) }
+
+      @ordered_names = %w[abc abd bcd]
     end
 
     should 'order rubygems by name' do
       names = GemInfo.ordered_names
-      assert_equal %w[abc abd bcd], names
+      assert_equal @ordered_names, names
     end
 
     should 'write cache' do
-      Rails.cache.stubs(:write)
-      names = GemInfo.ordered_names
-      assert_received(Rails.cache, :write) { |cache| cache.with("names", names) }
+      Rails.cache.expects(:write).with("names", @ordered_names)
+
+      GemInfo.ordered_names
     end
 
     should 'read from cache when cache exists' do
-      GemInfo.ordered_names
-      Rails.cache.stubs(:read)
+      Rails.cache.expects(:read).with("names")
+
       names = GemInfo.ordered_names
-      assert_received(Rails.cache, :read) { |cache| cache.with("names") }
+
       assert_equal %w[abc abd bcd], names
     end
   end
