@@ -34,6 +34,7 @@ before_install:
   - script/install_toxiproxy.sh
 
 before_script:
+  - psql --version
   - ls /etc/postgresql
   - env
   - cp config/database.yml.example config/database.yml
