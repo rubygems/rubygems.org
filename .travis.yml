@@ -34,9 +34,7 @@ before_install:
   - script/install_toxiproxy.sh
 
 before_script:
-  - PG_VERSION="$(ls /etc/postgresql)"
-  - PG_HBA="/etc/postgresql/$PG_VERSION/main/pg_hba.conf"
-  - cat /etc/postgresql/$PG_VERSION/main/pg_hba.conf
+  - ls /etc/postgresql
   - env
   - cp config/database.yml.example config/database.yml
   - bundle exec rake db:create db:migrate db:test:prepare
