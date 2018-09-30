@@ -260,10 +260,6 @@ class Rubygem < ApplicationRecord
     version
   end
 
-  def first_built_date
-    versions.by_earliest_built_at.limit(1).last.built_at
-  end
-
   # returns days left before the reserved namespace will be released
   # 100 + 1 days are added so that last_protected_day / 1.day = 1
   def protected_days
