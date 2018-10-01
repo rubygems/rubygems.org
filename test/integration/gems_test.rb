@@ -4,6 +4,7 @@ class GemsTest < ActionDispatch::IntegrationTest
   setup do
     @user = create(:user)
     @rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
+    @version = create(:version, rubygem: @rubygem, number: "1.1.1")
   end
 
   test "gem page with a non valid HTTP_ACCEPT header" do
@@ -19,24 +20,32 @@ class GemsTest < ActionDispatch::IntegrationTest
   end
 
   test "versions with atom format" do
-    create(:version, rubygem: @rubygem)
     get rubygem_versions_path(@rubygem, format: :atom)
     assert_equal 'application/atom+xml', response.content_type
     assert page.has_content? "sandworm"
   end
 
   test "canonical url for gem points to most recent version" do
-    create(:version, rubygem: @rubygem, number: "1.1.1")
     get rubygem_path(@rubygem)
     css = %(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.1.1"])
     assert page.has_css?(css, visible: false)
   end
 
   test "canonical url for an old version" do
-    create(:version, rubygem: @rubygem, number: "1.1.1")
     get rubygem_version_path(@rubygem, "1.0.0")
     css = %(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.0.0"])
     assert page.has_css?(css, visible: false)
+  end
+
+  test "gem with vulnerable version" do
+    @version.update(vulnerable: true)
+    get rubygem_version_path(@rubygem, @version.number)
+    assert page.has_content? "This version is known to have security vulnerabilities."
+  end
+
+  test "gem with non vulnerable version" do
+    get rubygem_version_path(@rubygem, '1.0.0')
+    assert_not page.has_content? "This version is known to have security vulnerabilities."
   end
 end
 

@@ -4,7 +4,8 @@ class Api::V1::DeletionsController < Api::BaseController
   before_action :authenticate_with_api_key, only: %i[create destroy]
   before_action :verify_authenticated_user, only: %i[create destroy]
   before_action :find_rubygem_by_name,      only: %i[create destroy]
-  before_action :validate_gem_and_version,  only: %i[create]
+  before_action :validate_rubygem, only: %i[create]
+  before_action :find_version, only: %i[create]
 
   def create
     @deletion = @api_user.deletions.build(version: @version)
@@ -21,29 +22,5 @@ class Api::V1::DeletionsController < Api::BaseController
   def destroy
     render plain: "Unyanking of gems is no longer supported.",
            status: :gone
-  end
-
-  private
-
-  def validate_gem_and_version
-    if !@rubygem.hosted?
-      render plain: t(:this_rubygem_could_not_be_found),
-             status: :not_found
-    elsif !@rubygem.owned_by?(@api_user)
-      render plain: "You do not have permission to delete this gem.",
-             status: :forbidden
-    else
-      begin
-        slug = if params[:platform].blank?
-                 params[:version]
-               else
-                 "#{params[:version]}-#{params[:platform]}"
-               end
-        @version = Version.find_from_slug!(@rubygem, slug)
-      rescue ActiveRecord::RecordNotFound
-        render plain: "The version #{params[:version]} does not exist.",
-               status: :not_found
-      end
-    end
   end
 end
