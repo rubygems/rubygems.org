@@ -1,25 +1,25 @@
 nl:
   edit: Wijzig
-  failure_when_forbidden:
-  feed_latest: RubyGems.org | Recente Gems
+  failure_when_forbidden: Controleer het webadres of probeer het opnieuw.
+  feed_latest: RubyGems.org | Nieuwste Gems
   feed_subscribed: RubyGems.org | Geabonneerde Gems
-  footer_about: RubyGems.org is de gem hosting service van de Ruby community. Publiceer and installeer je gems direct. Gebruik de API om meer informatie van beschikbare gems te vinden. Word een deelnemer en verbeter de site met jouw aanpassingen.
+  footer_about: RubyGems.org is de gem hosting service van de Ruby community. <a href="%{publish_docs}">Publiceer</a> en <a href="%{install_docs}">installeer</a> je gems direct. Gebruik <a href="%{api_docs}">de API</a> om meer informatie over beschikbare gems te vinden. <a href="%{contributing_docs}">Word een deelnemer</a> en verbeter de site met jouw aanpassingen.
   form_disable_with: Een moment geduld...
   help_url: http://help.rubygems.org
   locale_name: Nederlands
-  none:
-  not_found:
+  none: Geen
+  not_found: Niet Gevonden
   please_sign_up: Toegang geweigerd. Schrijf je in voor een account op https://rubygems.org
   sign_in: Inloggen
-  sign_up: Aanmelden
-  multifactor_authentication:
+  sign_up: Registreren
+  multifactor_authentication: Multifactor authenticatie
   subtitle: De gem host voor de community
-  this_rubygem_could_not_be_found: This rubygem could not be found.
+  this_rubygem_could_not_be_found: De gem kon niet gevonden worden.
   time_ago: "%{duration} geleden"
   title: RubyGems.org
   update: Wijzig
-  try_again:
-  advanced_search:
+  try_again: Er is iets fout gegaan. Probeer het opnieuw.
+  advanced_search: Uitgebreid zoeken
   activerecord:
     attributes:
       linkset:
@@ -31,10 +31,10 @@ nl:
         wiki: Wiki URL
       session:
         password: Wachtwoord
-        who: Email of Gebruikersnaam
+        who: E-mail of Gebruikersnaam
       user:
         avatar: Avatar
-        email: Emailadres
+        email: E-mailadres
         handle: Gebruikersnaam
         password: Wachtwoord
   dashboards:
@@ -50,7 +50,7 @@ nl:
       no_subscriptions: Je bent nog niet geabonneerd op een of meerdere gems. Bezoek een %{gem_link} en abonneer je erop.
   email_confirmations:
     create:
-      promise_resend:
+      promise_resend: Als het opgegeven account bestaat, wordt er een activatielink naar je e-mail gestuurd.
     new:
       submit: Bevestiging opnieuw versturen
       title: Bevestigingsemail opnieuw sturen
@@ -66,7 +66,7 @@ nl:
   layouts:
     application:
       footer:
-        about: Over
+        about: Over Ons
         api: API
         blog: Blog
         contribute: Bijdragen
@@ -74,26 +74,26 @@ nl:
         designed_by: Ontwerp
         discussion_forum: Forum
         gems_served_by:
-        guides: Leren
-        help: Help
+        guides: Handleidingen
+        help: Hulp
         hosted_by: Hosting
         monitored_by: Monitoring
         optimized_by: Optimalisatie
         resolved_with: DNS
         security: Security
-        source_code: code
-        statistics: Stats
+        source_code: Code
+        statistics: Statestieken
         status: Status
-        supported_by: Ondersteunding
+        supported_by: Ondersteuning
         tested_by: Getest door
         tracking_by: Tracking
         uptime: Uptime
       header:
-        dashboard: dashboard
+        dashboard: Dashboard
         search_gem: Gems Zoeken&hellip;
-        sign_in: inloggen
-        sign_out: uitloggen
-        sign_up: aanmelden
+        sign_in: Inloggen
+        sign_out: Uitloggen
+        sign_up: Registreren
   mailer:
     confirm_your_email:
     confirmation_subject:
@@ -133,7 +133,7 @@ nl:
       title: reset wachtwoord
     new:
       submit: Wachtwoord wijzigen
-      title: wachtwoord wijzigen
+      title: Wachtwoord wijzigen
       will_email_notice: We sturen een link om je wachtwoord te wijzigen.
   multifactor_auths:
     incorrect_otp:
@@ -286,14 +286,14 @@ nl:
   versions:
     index:
       not_hosted_notice: Deze gem wordt momenteel niet gehost op rubygems.org
-      title: alle versies van %{name}
+      title: Alle versies van %{name}
       versions_since: "%{count} versies sinds %{since}"
     version:
       yanked: verwijderd
   will_paginate:
-    next_label:
+    next_label: Volgende
     page_gap: "…"
-    previous_label:
+    previous_label: Vorige
     page_entries_info:
       multi_page:
       multi_page_html:
