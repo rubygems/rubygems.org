@@ -103,14 +103,6 @@ Naming/MemoizedInstanceVariableName:
   Exclude:
     - 'lib/rubygem_fs.rb'
 
-# Offense count: 5
-# Configuration parameters: MinBodyLength.
-Style/GuardClause:
-  Exclude:
-    - 'app/controllers/api/v1/rubygems_controller.rb'
-    - 'app/helpers/searches_helper.rb'
-    - 'app/jobs/indexer.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedOctalStyle, SupportedOctalStyles.
