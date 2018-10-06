@@ -23,6 +23,9 @@ class RubygemTest < ActiveSupport::TestCase
     should_not allow_value("\342\230\203").for(:name)
     should_not allow_value("2.2").for(:name)
     should_not allow_value("Ruby").for(:name)
+    should_not allow_value(".omghi").for(:name)
+    should_not allow_value("-omghi").for(:name)
+    should_not allow_value("_omghi").for(:name)
 
     context "that has an invalid name already persisted" do
       setup do
