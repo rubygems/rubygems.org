@@ -67,11 +67,10 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   def cors_preflight_check
-    if request.method == 'OPTIONS'
-      cors_set_access_control_headers
-      headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-Prototype-Version'
+    return unless request.method == 'OPTIONS'
 
-      render plain: ''
-    end
+    cors_set_access_control_headers
+    headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-Prototype-Version'
+    render plain: ''
   end
 end
