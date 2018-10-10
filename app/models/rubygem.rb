@@ -299,7 +299,7 @@ class Rubygem < ApplicationRecord
       errors.add :name, "must include at least one letter"
     elsif name !~ NAME_PATTERN
       errors.add :name, "can only include letters, numbers, dashes, and underscores"
-    elsif name =~ /^[#{Regexp.escape(Patterns::SPECIAL_CHARACTERS)}]+/
+    elsif name =~ /\A[#{Regexp.escape(Patterns::SPECIAL_CHARACTERS)}]+/
       errors.add :name, "can not begin with a period, dash, or underscore"
     end
   end
