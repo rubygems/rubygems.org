@@ -135,10 +135,10 @@ GEM
       activemodel
     erubi (1.7.1)
     execjs (2.7.0)
-    factory_bot (4.10.0)
+    factory_bot (4.11.1)
       activesupport (>= 3.0.0)
-    factory_bot_rails (4.10.0)
-      factory_bot (~> 4.10.0)
+    factory_bot_rails (4.11.1)
+      factory_bot (~> 4.11.1)
       railties (>= 3.0.0)
     faraday (0.15.1)
       multipart-post (>= 1.2, < 3)
