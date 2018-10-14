@@ -4,6 +4,7 @@ tmp/*
 doc/*
 server/*
 vendor/cache/*
+config/deploy/*
 Dockerfile
 Capfile
 .gitignore

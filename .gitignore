@@ -8,7 +8,6 @@
 _site/
 bench/
 bin/
-config/database.yml
 config/rubygems.yml
 db/*.sqlite3
 log/*.log

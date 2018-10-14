@@ -1,19 +1,36 @@
-development: &DEVELOPMENT
+default: &default
   adapter: postgresql
-  database: gemcutter_development
+  encoding: utf8
   username: postgres
+
+development:
+  <<: *default
+  database: rubygems_development
   host: localhost
+  password: devpassword
+  pool: 5
+  timeout: 5000
+
+
+test:
+  <<: *default
+  database: rubygems_test
+  host: localhost
+  min_messages: warning
+  password: testpassword
   pool: 5
   timeout: 5000
 
 staging:
-  <<: *DEVELOPMENT
-
-test: &TEST
-  <<: *DEVELOPMENT
-  database: gemcutter_test
-  min_messages: warning
+  <<: *default
+  database: rubygems_staging
+  min_messages: error
+  pool: 30
+  reconnect: true
 
 production:
-  adapter: postgresql
-  database: gemcutter_production
+  <<: *default
+  database: rubygems_production
+  min_messages: error
+  pool: 30
+  reconnect: true
