@@ -13,4 +13,4 @@ dependencies:
 deploy:
   override:
     - bundle exec kubernetes-deploy rubygems-staging rubygems --template-dir config/deploy/staging
-    - cap $ENVIRONMENT deploy
+    - bundle exec cap $ENVIRONMENT deploy
