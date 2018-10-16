@@ -1,4 +1,4 @@
-FROM ruby:2.3.5-alpine
+FROM ruby:2.3.5-alpine as build
 
 RUN apk add --no-cache \
   ruby \
@@ -16,7 +16,7 @@ RUN apk add --no-cache \
   tzdata \
   && rm -rf /var/cache/apk/*
 
-RUN mkdir -p /app /bin /app/config
+RUN mkdir -p /app /app/config
 WORKDIR /app
 
 RUN gem update --system 2.6.10
@@ -30,6 +30,27 @@ RUN mv /app/config/database.yml.example /app/config/database.yml
 RUN gem install bundler io-console --no-ri --no-rdoc && bundle install --jobs 20 --retry 5 --without deploy
 
 RUN RAILS_ENV=production bin/rails assets:precompile
+
+
+
+
+FROM ruby:2.3.5-alpine
+
+RUN apk add --no-cache \
+  ruby \
+  nodejs \
+  postgresql-client \
+  ca-certificates \
+  bash \
+  tzdata \
+  && rm -rf /var/cache/apk/*
+
+RUN mkdir -p /app
+WORKDIR /app
+
+COPY --from=build /usr/local/bin/gem /usr/local/bin/gem
+COPY --from=build /usr/local/bundle/ /usr/local/bundle/
+COPY --from=build /app/ /app/
 
 EXPOSE 3000
 
