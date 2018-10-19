@@ -1,6 +1,6 @@
 fr:
   edit: Modification
-  failure_when_forbidden:
+  failure_when_forbidden: Veuillez vérifier l'URL ou réessayer.
   feed_latest: RubyGems.org | Derniers Gems
   feed_subscribed: RubyGems.org | Gems abonnés
   footer_about: RubyGems.org est le service d&rsquo;hébergement de la communauté Ruby. Publiez vos gems instantanément et utilisez-les. Utilisez l'API pour interagir et trouver des informations sur les gems disponibles. Contribuez et améliorez ce site avec nous !
@@ -8,23 +8,23 @@ fr:
   help_url: http://help.rubygems.org
   locale_name: Français
   none:
-  not_found:
+  not_found: Introuvable
   please_sign_up: Accès refusé. Inscrivez-vous sur https://rubygems.org
   sign_in: Connexion
   sign_up: Inscription
-  multifactor_authentication:
+  multifactor_authentication: Authentification Multifacteur
   subtitle: votre communauté d'hébergement des gems
   this_rubygem_could_not_be_found: Rubygem introuvable.
   time_ago: il y a %{duration}
   title: RubyGems.org
   update: Mise à jour
-  try_again:
-  advanced_search:
+  try_again: Une erreur est survenue. Veuillez réessayer.
+  advanced_search: Recherche avancée
   activerecord:
     attributes:
       linkset:
         bugs: URL du suivi de bugs
-        changelog:
+        changelog: Changelog
         code: URL du code source
         docs: URL de la documentation
         mail: URL de la liste de diffusion
@@ -50,13 +50,13 @@ fr:
       no_subscriptions: Vous n'avez pas encore d'abonnements. Visitez %{gem_link} pour vous y abonner !
   email_confirmations:
     create:
-      promise_resend:
+      promise_resend: Si ce compte existe, vous recevrez un email avec un lien de confirmation pour l'activer.
     new:
-      submit:
-      title:
-      will_email_notice:
+      submit: Renvoyer la confirmation
+      title: Renvoyer l'email de confirmation
+      will_email_notice: Si ce compte existe, vous recevrez un email avec un lien de confirmation pour l'activer.
     update:
-      confirmed_email:
+      confirmed_email: Votre adresse email a été vérifiée.
   home:
     index:
       downloads_counting: téléchargements à ce jour
@@ -85,7 +85,7 @@ fr:
         statistics: Stats
         status: Statut
         supported_by: Soutenu par
-        tested_by:
+        tested_by: Testé par
         tracking_by: Tracking par
         uptime: Uptime
       header:
@@ -95,27 +95,27 @@ fr:
         sign_out: Déconnexion
         sign_up: Inscription
   mailer:
-    confirm_your_email:
-    confirmation_subject:
+    confirm_your_email: Veuillez confirmer votre adresse email avec le lien qui vous a été envoyé par email.
+    confirmation_subject: Veuillez confirmer votre adresse email pour RubyGems.org
     email_confirmation:
-      confirmation_link:
-      welcome_message:
+      confirmation_link: Confirmez l'adresse email
+      welcome_message: Bienvenue sur RubyGems.org! Veuillez cliquer sur le lien ci-dessous pour vérifier votre adresse email.
     email_reset:
-      visit_link_instructions:
-      link_expiration_explanation:
+      visit_link_instructions: Vous avez changé d'adresse email sur RubyGems.org. Veuillez suivre l'URL suivant pour réactiver votre compte.
+      link_expiration_explanation: Veuillez noter que ce lien n'est valide que pendant 15 minutes.
     deletion_complete:
-      subject:
-      body:
+      subject: Votre compte a bien été supprimé de RubyGems.org
+      body: "Votre demande de suppression de compte sur RubyGems.org a bien été prise en compte. Vous pouvez toujours créer un nouveau compte sur la page %{sign_up}"
     deletion_failed:
-      subject:
-      body:
+      subject: Votre demande de suppression de compte sur RubyGems.org a échoué
+      body: "Vous avez effectué une demande de suppression de compte sur RubyGems.org. Malheureusement, votre demande n'a pu aboutir. Veuillez réessayer plus tard ou nous %{contact} si le problème subsiste."
   news:
     show:
-      title:
-      all_gems:
-      popular_gems:
+      title: Nouvelles Versions - Toutes les Gems
+      all_gems: Toutes les Gems
+      popular_gems: Gems populaires
     popular:
-      title:
+      title: Nouvelles Versions - Gems populaires
   pages:
     about:
       founding: Le projet a commencé en avril 2009 par %{founder}, et a grandi avec les contribution de %{contributors} et %{downloads}. À la sortie de RubyGems 1.3.6, ce site a été renommé de Gemcutter à %{title} pour ancrer son rôle central dans la communauté Ruby.
@@ -136,34 +136,34 @@ fr:
       title: Changement de mot de passe
       will_email_notice: Nous vous enverrons un email pour changer votre mot de passe.
   multifactor_auths:
-    incorrect_otp:
-    otp_code:
-    require_mfa_disabled:
-    require_mfa_enabled:
+    incorrect_otp: Votre clé OTP est incorrecte.
+    otp_code: clé OTP
+    require_mfa_disabled: Votre authentification multifacteur a été activée. Vous devez d'abord la désactiver.
+    require_mfa_enabled: Votre authentification multifacteur n'a pas été activée. Vous devez d'abord l'activer.
     new:
-      title:
-      scan_prompt:
-      otp_prompt:
-      confirm:
-      enable:
-      account:
-      key:
+      title: Activer l'authentification multifacteur
+      scan_prompt: Veuillez scanner le QR code avec votre app d'authentification. Si vous ne pouvez pas scanner le code, veuillez saisir manuellement les informations ci-dessous dans votre app.
+      otp_prompt: Veuillez taper le code de l'application d'authentification pour poursuivre.
+      confirm: J'ai gardé mes codes de récupération en sécurité.
+      enable: Activer
+      account: "Compte: %{account}"
+      key: "Clé: %{key}"
       time_based:
     create:
-      qrcode_expired:
-      success:
+      qrcode_expired: Le QR code et la clé sont expirés. Veuillez essayer d'enregistrer un nouvel appareil.
+      success: Vous avez activé l'authentification multifacteur.
     recovery:
-      continue:
-      title:
-      note:
+      continue: Continuer
+      title: Codes de récupération
+      note: "Vous DEVEZ garder les codes de récupération en sécurité pour ne pas perdre votre compte. Chacun des codes peut être utilisé une fois si vous perdez votre authentificateur"
     destroy:
-      success:
+      success: Vous avez désactivé l'authentification multifacteur.
   profiles:
     edit:
-      email_awaiting_confirmation:
-      enter_password:
+      email_awaiting_confirmation: Veuillez confirmer votre nouvelle adresse email %{unconfirmed_email}
+      enter_password: Veuillez entrer le mot de passe de votre compte
       hide_email: Ne pas afficher l'email dans le profil public
-      optional_twitter_username:
+      optional_twitter_username: Nom d'utilisateur Twitter optionnel. Sera affiché publiquement
       title: Modification de profil
       api_access:
         confirm_reset: Êtes-vous sûr ? Cette action ne peut être annulée.
@@ -177,29 +177,29 @@ fr:
         text: Besoin d'un nouveau mot de passe ? Pas de problème. %{link}
         title: Renvoi de mot de passe
       delete:
-        delete:
-        delete_profile:
-        warning:
+        delete: Supprimer
+        delete_profile: Supprimer le profil
+        warning: La suppression de votre profil est une action irréversible. Cela ne peut pas être annulé en contactant le support. Réfléchissez-bien avant de continuer !
       mfa:
-        multifactor_auth:
-        disabled:
-        go_settings:
-        enabled:
-        disable:
+        multifactor_auth: Authentification Multifacteur
+        disabled: Vous n'avez pas encore activé l'authentification multifacteur.
+        go_settings: Enregistrer un nouvel appareil
+        enabled: Vous avez activé l'authentification multifacteur. Veuillez entrer l'OTP de votre authentificateur ou un de vos codes de récupération pour le désactiver.
+        disable: Désactiver
     delete:
-      title:
-      confirm:
-      instructions:
-      list_only_owner:
-      list_multi_owner:
+      title: Supprimer le profil
+      confirm: Confirmer
+      instructions: Nous sommes désolés de vous voir partir. Veuillez entrer votre mot de passe dans le champ et confirmer.
+      list_only_owner: Ces gems seront effacées quand vous effacerez votre profil. Si vous désirez ajouter des propriétaires avant de supprimer votre profil, vous pouvez utiliser la commande %{command_link}.
+      list_multi_owner: Vous allez perdre l'accès à ces gems mais d'autres propriétaires de ces gems y ont toujours accès.
     rubygem:
-      owners_header:
+      owners_header: Propriétaires
     destroy:
-      request_queued:
+      request_queued: Votre demande de suppression de compte a été envoyée. Nous vous enverrons un email de confirmation lorsque votre demande aura été prise en compte.
     update:
-      confirmation_mail_sent:
-      updated:
-    request_denied:
+      confirmation_mail_sent: Vous allez recevoir un email dans quelques minutes. Il contient les instructions pour confirmer votre nouvelle adresse email.
+      updated: Votre profil a été mis à jour.
+    request_denied: Cette demande a été refusée. Nous n'avons pas pu vérifier votre mot de passe.
   rubygems:
     aside:
       bundler_header: Gemfile
@@ -212,7 +212,7 @@ fr:
       links:
         badge: Badge
         bugs: Suivi de bugs
-        changelog:
+        changelog: Changelog
         code: Code Source
         docs: Documentation
         download: Télécharger
@@ -226,14 +226,14 @@ fr:
         unsubscribe: Désabonement
         wiki: Wiki
     blacklisted:
-      blacklisted_namespace:
+      blacklisted_namespace: Ce nom est réservé par rubygems.org.
     dependencies:
       header: Dépendances de %{title}
     edit:
       other_fields_notice: Tous les autres champs ne sont modifiables qu'en soumettant une nouvelle version de votre gem.
       subtitle: pour %{gem}
       title: Modifier les liens
-      deprecation_message:
+      deprecation_message: Cette page est obsolète. Veuillez utiliser Gem::Specification#metadata pour configurer ces liens. (<a href='https://guides.rubygems.org/specification-reference/#metadata' target='_blank'>read more</a>)
     gem_members:
       authors_header: Auteurs
       owners_header: Propriétaires
@@ -251,27 +251,27 @@ fr:
     show_yanked:
       not_hosted_notice: Gem non hébergé sur Rubygems pour le moment.
       reserved_namespace:
-        one:
-        other:
+        one: Cette gem existait, mais a été supprimée par son propriétaire. L'équipe RubyGems.org a réservé ce nom de gem pour un jour supplémentaire. Une fois ce temps écoulé, quiconque pourra utiliser ce nom de gem en utilisant gem push. <br/> Si vous êtes le propriétaire précédent de cette gem, vous pouvez modifier la propriété de cette gem en utilisant la commande de gem owner. Vous pouvez également créer de nouvelles versions de cette gem avec gem push.
+        other: Cette gem existait, mais a été supprimée par son propriétaire. L'équipe RubyGems.org a réservé ce nom de gem pour %{count} jours supplémentaires. Une fois ce temps écoulé, quiconque pourra utiliser ce nom de gem en utilisant gem push. <br/> Si vous êtes le propriétaire précédent de cette gem, vous pouvez modifier la propriété de cette gem en utilisant la commande de gem owner. Vous pouvez également créer de nouvelles versions de cette gem avec gem push.
   reverse_dependencies:
     index:
-      title:
+      title: "Dépendances inversées pour %{name}"
     search:
-      search_reverse_dependencies:
+      search_reverse_dependencies: "Chercher des dépendances inversées Gems&hellip;"
   searches:
     advanced:
-      name:
-      summary:
-      description:
-      downloads:
-      updated:
+      name: Nom
+      summary: Sommaire
+      description: Description
+      downloads: Téléchargements
+      updated: Mis à jour
     show:
       exact_match: Titre exact
       subtitle: pour %{query}
   sessions:
     new:
       forgot_password: Mot de passe oublié ?
-      resend_confirmation:
+      resend_confirmation: Vous n'avez pas reçu l'email de confirmation ?
   stats:
     index:
       all_time_most_downloaded: Gems les plus téléchargés
@@ -280,7 +280,7 @@ fr:
       total_users: Total d'utilisateurs
   users:
     create:
-      email_sent:
+      email_sent: Un email de confirmation a été envoyé sur votre adresse email.
     new:
       have_account: Vous avez déjà un compte ?
   versions:
