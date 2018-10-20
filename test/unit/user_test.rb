@@ -277,12 +277,6 @@ class UserTest < ActiveSupport::TestCase
           next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
           assert @user.otp_verified?(next_otp)
         end
-
-        should "return false for second attempt for the same otp" do
-          otp = ROTP::TOTP.new(@user.mfa_seed).now
-          assert @user.otp_verified?(otp)
-          refute @user.otp_verified?(otp)
-        end
       end
 
       context "when disabled" do
