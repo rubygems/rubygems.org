@@ -3,8 +3,14 @@
 
 <div class="l-overflow">
   <div class="l-colspan--l colspan--l--has-border">
-    <%= render partial: "reverse_dependencies",
-      locals: { dependencies: @reverse_dependencies } %>
+    <header class="gems__header push">
+      <%= render "search", rubygem: @rubygem %>
+    </header>
+
+    <div class="reverse__dependencies">
+      <%= render @reverse_dependencies %>
+    </div>
+
     <%= will_paginate @reverse_dependencies %>
   </div>
   <%= render 'rubygems/aside' %>

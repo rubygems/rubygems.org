@@ -142,7 +142,7 @@ en:
     require_mfa_enabled: Your multifactor authentication has not been enabled. You have to enable it first.
     new:
       title: Enabling multifactor auth
-      scan_prompt: Please scan the qr-code with your authenticator app. If you cannot scan the code, add information below into your app manually. 
+      scan_prompt: Please scan the qr-code with your authenticator app. If you cannot scan the code, add information below into your app manually.
       otp_prompt: Type digit code from auth app to continue.
       confirm: I have kept my recovery codes safe.
       enable: Enable
@@ -256,7 +256,7 @@ en:
   reverse_dependencies:
     index:
       title: "Reverse dependencies for %{name}"
-    reverse_dependencies:
+    search:
       search_reverse_dependencies: "Search reverse dependencies Gems&hellip;"
   searches:
     advanced:

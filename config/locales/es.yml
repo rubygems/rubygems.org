@@ -150,7 +150,7 @@ es:
       key:
       time_based:
     create:
-      qrcode_expired:      
+      qrcode_expired:
       success:
     recovery:
       continue:
@@ -256,7 +256,7 @@ es:
   reverse_dependencies:
     index:
       title:
-    reverse_dependencies:
+    search:
       search_reverse_dependencies:
   searches:
     advanced:
