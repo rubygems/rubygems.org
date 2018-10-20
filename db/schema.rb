@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180525160703) do
+ActiveRecord::Schema.define(version: 20181020173922) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -140,7 +140,6 @@ ActiveRecord::Schema.define(version: 20180525160703) do
     t.string   "mfa_seed"
     t.integer  "mfa_level",                             default: 0
     t.string   "mfa_recovery_codes",                    default: [],                 array: true
-    t.datetime "last_otp_at"
     t.index ["email"], name: "index_users_on_email", using: :btree
     t.index ["handle"], name: "index_users_on_handle", using: :btree
     t.index ["id", "confirmation_token"], name: "index_users_on_id_and_confirmation_token", using: :btree
