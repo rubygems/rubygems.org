@@ -8,7 +8,7 @@ class Api::V1::TimeframeVersionsController < Api::BaseController
 
   def index
     render_rubygems(
-      Version.created_between(from_time, to_time).paginate(page: @page)
+      Version.created_between(from_time, to_time).page(@page)
     )
   end
 

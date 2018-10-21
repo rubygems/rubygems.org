@@ -7,7 +7,7 @@ class StatsController < ApplicationController
     @number_of_downloads = GemDownload.total_count
     @most_downloaded     = Rubygem.by_downloads
       .includes(:gem_download)
-      .paginate(page: @page, per_page: 10, total_entries: 100)
+      .page(@page).per(10).limit(100)
     @most_downloaded_count = GemDownload.most_downloaded_gem_count
   end
 end

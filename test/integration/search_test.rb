@@ -56,7 +56,7 @@ class SearchTest < SystemTest
   end
 
   test "params has non white listed keys" do
-    Rubygem.per_page = 1
+    Kaminari.configure{ |c| c.default_per_page = 1 }
     create(:rubygem, name: "ruby-ruby", number: '1.0.0')
     create(:rubygem, name: "ruby-gems", number: '1.0.0')
     import_and_refresh
@@ -64,6 +64,6 @@ class SearchTest < SystemTest
     visit '/search?query=ruby&script_name=javascript:alert(1)//'
     assert page.has_content? "ruby-ruby"
     assert page.has_link?("Next", href: "/search?page=2&query=ruby")
-    Rubygem.per_page = 30
+    Kaminari.configure{ |c| c.default_per_page = 30 }
   end
 end

@@ -6,10 +6,10 @@
 
 <header class="gems__header">
   <p class="gems__meter">
-    <%= page_entries_info @gems, :entry_name => 'gem', :model => 'gem' %>
+    <%= page_entries_info @gems, :entry_name => 'gem'%>
   </p>
 </header>
 
 <%= render @gems %>
 
-<%= will_paginate @gems %>
+<%= paginate @gems %>
