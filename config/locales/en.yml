@@ -160,7 +160,7 @@ en:
     destroy:
       success: You have successfully disabled multifactor authentication.
     update:
-      success: You have successfully updated your auth level.
+      success: You have successfully updated your MFA level.
   profiles:
     edit:
       email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
@@ -187,7 +187,7 @@ en:
         multifactor_auth: Multifactor authentication
         disabled: You have not yet enabled multifactor authentication.
         go_settings: Register a new device
-        enabled: You have enabled multifactor authentication. Please input your OTP from your authenticator or one of your active recovery codes to change your auth level or disable it.
+        enabled: You have enabled multifactor authentication. Please input your OTP from your authenticator or one of your active recovery codes to change your MFA level or disable it.
         update: Update
     delete:
       title: Delete profile

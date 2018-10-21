@@ -89,7 +89,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api_mfa)
       end
 
-      context "on POST to add other user as gem owner with email without OTP" do
+      context "on POST to add other user as gem owner without OTP" do
         setup do
           post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
         end
@@ -100,7 +100,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         end
       end
 
-      context "on POST to add other user as gem owner with email with incorrect OTP" do
+      context "on POST to add other user as gem owner with incorrect OTP" do
         setup do
           @request.env["HTTP_OTP"] = (ROTP::TOTP.new(@user.mfa_seed).now.to_i.succ % 1_000_000).to_s
           post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
@@ -112,7 +112,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         end
       end
 
-      context "on POST to add other user as gem owner with email with correct OTP" do
+      context "on POST to add other user as gem owner with correct OTP" do
         setup do
           @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
           post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
@@ -126,7 +126,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     end
 
     context "when mfa for UI and API is disabled" do
-      should "add other user as gem owner with email" do
+      should "add other user as gem owner" do
         post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
         assert @rubygem.owners.include?(@second_user)
       end

@@ -91,7 +91,7 @@
     <% if @user.mfa_enabled? %>
       <p><%= t '.mfa.enabled' %></p>
       <%= form_tag multifactor_auth_path, :method => :put, :id => 'mfa-edit' do %>
-        <%= label_tag :level, 'Auth Level', :class => 'form__label' %>
+        <%= label_tag :level, 'MFA Level', :class => 'form__label' %>
         <%= select_tag :level, options_for_select([
           ['Auth for UI and API', 'ui_and_api_mfa'],
           ['Auth for UI Only', 'ui_mfa_only'],
