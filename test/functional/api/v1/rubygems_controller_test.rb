@@ -202,8 +202,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On POST to create for new gem" do
       setup do
-        @request.env["RAW_POST_DATA"] = gem_file.read
-        post :create
+        post :create, body: gem_file.read
       end
       should respond_with :success
       should "register new gem" do
@@ -224,9 +223,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           number: "0.0.0",
           updated_at: 1.year.ago,
           created_at: 1.year.ago)
-        @request.env["RAW_POST_DATA"] = gem_file("test-1.0.0.gem").read
         assert_difference 'Delayed::Job.count', 5 do
-          post :create
+          post :create, body: gem_file("test-1.0.0.gem").read
         end
       end
       should respond_with :success
@@ -253,8 +251,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           authors: ["Geddy Lee"],
           built_at: @date)
 
-        @request.env["RAW_POST_DATA"] = gem_file.read
-        post :create
+        post :create, body: gem_file.read
       end
       should respond_with :conflict
       should "not register new version" do
@@ -267,8 +264,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On POST to create with bad gem" do
       setup do
-        @request.env["RAW_POST_DATA"] = "really bad gem"
-        post :create
+        post :create, body: "really bad gem"
       end
       should respond_with :unprocessable_entity
       should "not register gem" do
@@ -282,8 +278,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         @other_user = create(:user)
         @rubygem = create(:rubygem, name: "test", number: "0.0.0", owners: [@other_user])
 
-        @request.env["RAW_POST_DATA"] = gem_file("test-1.0.0.gem").read
-        post :create
+        post :create, body: gem_file("test-1.0.0.gem").read
       end
       should respond_with 403
       should "not allow new version to be saved" do
@@ -296,8 +291,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On POST to create with reserved gem name" do
       setup do
-        @request.env["RAW_POST_DATA"] = gem_file("rubygems-0.1.0.gem").read
-        post :create
+        post :create, body: gem_file("rubygems-0.1.0.gem").read
       end
       should respond_with 403
       should "not register gem" do
@@ -321,8 +315,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should "POST to create for existing gem should not fail" do
         requires_toxiproxy
         Toxiproxy[:elasticsearch].down do
-          @request.env["RAW_POST_DATA"] = gem_file("test-1.0.0.gem").read
-          post :create
+          post :create, body: gem_file("test-1.0.0.gem").read
           assert_response :success
           assert_equal @user, Rubygem.last.ownerships.first.user
           assert_equal 1, Rubygem.last.ownerships.count

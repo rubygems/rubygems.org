@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 # This can be removed once all gems depend on > 3.0
 gem 'mime-types', '~> 2.99', require: 'mime/types/columnar'
 
-gem 'rails', '~> 5.1.0'
+gem 'rails', '~> 5.2.1'
 gem 'rails-i18n'
 
 gem 'autoprefixer-rails'
@@ -55,11 +55,13 @@ gem 'logstash-event'
 group :development, :test do
   gem 'rubocop', require: false
   gem 'toxiproxy', '~> 1.0.0'
+  gem 'pry-byebug'
 end
 
 group :development do
   gem 'bootsnap', require: false
   gem 'rails-erd'
+  gem 'listen'
 end
 
 group :test do
