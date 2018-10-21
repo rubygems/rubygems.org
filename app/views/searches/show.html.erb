@@ -20,7 +20,7 @@
   <% end %>
 
   <header class="gems__header push">
-    <p class="gems__meter"><%= page_entries_info(@gems, :entry_name => 'gem', :model => 'gem').html_safe %></p>
+    <p class="gems__meter"><%= page_entries_info(@gems, :entry_name => 'gem').html_safe %></p>
   </header>
 
   <%= render partial: 'aggregations', locals: { gems: @gems } %>
@@ -38,6 +38,6 @@
 
   <% if @gems.present? %>
     <%= render partial: 'rubygems/rubygem', collection: @gems %>
-    <%= will_paginate @gems %>
+    <%= paginate @gems %>
   <% end %>
 <% end %>
