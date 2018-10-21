@@ -68,7 +68,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
             should respond_with :redirect
             should redirect_to('the profile edit page') { edit_profile_path }
-            should set_flash.now[:error]
+            should set_flash.to('Your OTP code is incorrect.')
             should 'keep mfa enabled' do
               assert @user.reload.mfa_enabled?
             end
@@ -138,7 +138,9 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
           should respond_with :redirect
           should redirect_to('the profile edit page') { edit_profile_path }
-          should set_flash.now[:error]
+          should 'set error flash message' do
+            refute_empty flash[:error]
+          end
           should 'keep mfa disabled' do
             refute @user.reload.mfa_enabled?
           end
