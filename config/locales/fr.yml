@@ -10,7 +10,8 @@ fr:
   none:
   not_found: Introuvable
   please_sign_up: Accès refusé. Inscrivez-vous sur https://rubygems.org
-  otp_incorrect_or_missing:
+  otp_incorrect:
+  otp_missing:
   sign_in: Connexion
   sign_up: Inscription
   multifactor_authentication: Authentification Multifacteur

@@ -203,12 +203,11 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "When mfa for UI and API is enabled" do
       setup do
         @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api_mfa)
-        @request.env["RAW_POST_DATA"] = gem_file.read
       end
 
       context "On post to create for new gem without OTP" do
         setup do
-          post :create
+          post :create, body: gem_file.read
         end
         should respond_with :unauthorized
       end
@@ -216,7 +215,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       context "On post to creaete for new gem with incorrect OTP" do
         setup do
           @request.env["HTTP_OTP"] = (ROTP::TOTP.new(@user.mfa_seed).now.to_i.succ % 1_000_000).to_s
-          post :create
+          post :create, body: gem_file.read
         end
         should respond_with :unauthorized
       end
@@ -224,7 +223,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       context "On post to create for new gem with correct OTP" do
         setup do
           @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
-          post :create
+          post :create, body: gem_file.read
         end
         should respond_with :success
         should "register new gem" do

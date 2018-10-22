@@ -10,7 +10,8 @@ pt-BR:
   none:
   not_found:
   please_sign_up: Accesso Negado. Por favor se registre em https://rubygems.org
-  otp_incorrect_or_missing:
+  otp_incorrect:
+  otp_missing:
   sign_in: Fazer Login
   sign_up: Cadastrar
   multifactor_authentication:
