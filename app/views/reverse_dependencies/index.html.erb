@@ -10,10 +10,7 @@
     <div class="reverse__dependencies">
       <%= render @reverse_dependencies %>
     </div>
-    <nav class="pagination">
-      <%= link_to_prev_page @reverse_dependencies, '‹ Prev' %>
-      <%= link_to_next_page @reverse_dependencies, 'Next ›' %>
-    </nav>
+    <%= plain_paginate @reverse_dependencies %>
   </div>
   <%= render 'rubygems/aside' %>
 </div>
