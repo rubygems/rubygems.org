@@ -190,6 +190,11 @@ zh-CN:
         go_settings:
         enabled:
         update:
+        level:
+          title:
+          no_mfa:
+          ui_mfa_only:
+          ui_and_api_mfa:
     delete:
       title:
       confirm:

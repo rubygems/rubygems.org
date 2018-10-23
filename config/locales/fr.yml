@@ -190,6 +190,11 @@ fr:
         go_settings: Enregistrer un nouvel appareil
         enabled: Vous avez activé l'authentification multifacteur. Veuillez entrer l'OTP de votre authentificateur ou un de vos codes de récupération pour le désactiver.
         update:
+        level:
+          title:
+          no_mfa:
+          ui_mfa_only:
+          ui_and_api_mfa:
     delete:
       title: Supprimer le profil
       confirm: Confirmer
