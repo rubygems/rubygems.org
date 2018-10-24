@@ -1,4 +1,5 @@
 require 'digest/sha2'
+require 'rubygems/text'
 
 class Pusher
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
@@ -61,11 +62,20 @@ class Pusher
     @rubygem = Rubygem.name_is(name).first || Rubygem.new(name: name)
 
     if @rubygem.new_record?
-      Rubygem.downloaded(50).each do |rubygem|
-        if Gem::Text.levenstein_distance(name.downcase, rubygem.name.downcase) < 3
-          return notify("The name #{name.inspect} is too close to #{rubygem.name.inspect}.\n" \
-                        "Please send an email to xxx@rubygems.org if you believe this is an error.", 409)
-        end
+      downcased_name = name.downcase
+      text = Class.new.extend(Gem::Text)
+      allowed_match_threshold = case downcased_name.size
+                                when 0, 1, 2 then 0
+                                when 3 then 1
+                                else 2
+                                end
+
+      matching_name = Rubygem.downloaded(1000).pluck(:name).first do |_gem_name|
+        text.levenshtein_distance(downcased_name, n.downcase) <= allowed_match_threshold
+      end
+      if matching_name
+        return notify("The name #{name.inspect} is too close to #{matching_name.inspect}.\n" \
+                      "Please send an email to xxx@rubygems.org if you believe this is an error.", 409)
       end
     else
       if @rubygem.find_version_from_spec(spec)
