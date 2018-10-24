@@ -59,7 +59,7 @@ class Rubygem < ApplicationRecord
   end
 
   def self.downloaded(limit = 5)
-    with_versions.by_downloads.limit(limit)
+    by_downloads.limit(limit)
   end
 
   def self.letter(letter)

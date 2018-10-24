@@ -60,7 +60,14 @@ class Pusher
 
     @rubygem = Rubygem.name_is(name).first || Rubygem.new(name: name)
 
-    unless @rubygem.new_record?
+    if @rubygem.new_record?
+      Rubygem.downloaded(50).each do |rubygem|
+        if Gem::Text.levenstein_distance(name.downcase, rubygem.name.downcase) < 3
+          return notify("The name #{name.inspect} is too close to #{rubygem.name.inspect}.\n" \
+                        "Please send an email to xxx@rubygems.org if you believe this is an error.", 409)
+        end
+      end
+    else
       if @rubygem.find_version_from_spec(spec)
         notify("Repushing of gem versions is not allowed.\n" \
                "Please use `gem yank` to remove bad gem releases.", 409)
