@@ -1,30 +1,27 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: unicorn
+  name: jobs
   annotations:
     shipit.shopify.io/restart: 'true'
 spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 100%
-      maxUnavailable: 0%
+      maxSurge: 0%
+      maxUnavailable: 50%
   selector:
     matchLabels:
-      name: unicorn
+      name: jobs
   template:
     metadata:
       labels:
-        name: unicorn
+        name: jobs
     spec:
       containers:
-      - name: unicorn
+      - name: jobs
         image: quay.io/rubygems/rubygems.org:<%= current_sha %>
-        args: ["unicorn_rails", "-E", "<%= environment %>", "-c", "/app/config/unicorn.conf"]
-        ports:
-        - containerPort: 3000
-          name: http-unicorn
+        args: ["rake", "jobs:work"]
         # resources:
         #   requests:
         #     cpu: 6
@@ -44,8 +41,6 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: secret_key_base
-          - name: RAILS_SERVE_STATIC_FILES
-            value: "true"
           - name: AWS_REGION
             value: "us-west-2"
           - name: FASTLY_LOG_PROCESSOR_ENABLED
@@ -115,8 +110,6 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: sendgrid_password
-          - name: DISABLE_SIGNUP
-            value: "true"
           - name: DATABASE_URL
             valueFrom:
               secretKeyRef:
@@ -124,7 +117,3 @@ spec:
                 key: database_url
         securityContext:
           privileged: false
-        lifecycle:
-          preStop:
-            exec:
-              command: ["sleep", "5"]
