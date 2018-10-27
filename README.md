@@ -7,12 +7,18 @@ The Ruby community's gem host.
 * Create more transparent and accessible project pages
 * Enable the community to improve and enhance the site
 
-## Supporting
+## Support
 
-<a href="https://rubytogether.org/"><img src="https://rubytogether.org/images/rubies.svg" width=200></a><br/>
- RubyGems.org is made possible through a partnership with the greater Ruby community. <a href="http://www.rubycentral.org/">Ruby Central</a> covers infrastructure costs, <a href="https://www.fastly.com/">Fastly</a> provides bandwidth and CDN support, and <a href="https://rubytogether.org/">Ruby Together</a> funds ongoing development and maintenance. <a href="https://rubygems.org/pages/sponsors">Learn more about our sponsors and how they work together</a>.
+<a href="https://rubytogether.org/"><img src="https://rubytogether.org/images/rubies.svg" width=200></a>
+<a href="https://rubycentral.org/"><img src="http://rubycentral.org/images/logo.png" width=200></a><br/>
 
-Support RubyGems ongoing maintenance by <a href="https://rubytogether.org/developers">becoming a member</a> of Ruby Together, and ensure that RubyGems.org, Bundler, and other shared tooling is around for years to come.
+[RubyGems.org](https://rubygems.org) is managed by [Ruby Central](http://rubycentral.org), a community-funded organization supported by conference participation for [RailsConf](https://railsconf.org) and [RubyConf](https://rubyconf.org) through tickets and sponsorships.
+
+Hosting fees are paid by Ruby Central and CDN fees are generously donated by [Fastly](https://fastly.com).
+
+Additionally, [RubyTogether](https://rubytogether.org) sponsors individuals to work on development and operations work for RubyGems.org which augments volunteer efforts from the Ruby community. 
+
+[Learn more about our sponsors and how they work together.](https://rubygems.org/pages/sponsors)
 
 ## Links
 
