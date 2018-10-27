@@ -224,15 +224,25 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     context "#reverse_dependencies" do
+      setup do
+        Rails.cache.stubs(:write)
+        @reverse_deps = @dependency.reverse_dependencies
+      end
+
       should "return dependent gems of latest indexed version" do
-        gem_list = @dependency.reverse_dependencies
+        assert_equal 2, @reverse_deps.size
 
-        assert_equal 2, gem_list.size
+        assert @reverse_deps.include?(@gem_one)
+        assert @reverse_deps.include?(@gem_two)
+        refute @reverse_deps.include?(@gem_three)
+        refute @reverse_deps.include?(@gem_four)
+      end
 
-        assert gem_list.include?(@gem_one)
-        assert gem_list.include?(@gem_two)
-        refute gem_list.include?(@gem_three)
-        refute gem_list.include?(@gem_four)
+      should "set cache" do
+        reverse_dep_ids = @reverse_deps.select(:id)
+        assert_received(Rails.cache, :write) do |cache|
+          cache.with("reverse_dep/#{@dependency.name}", reverse_dep_ids, expires_in: Gemcutter::REVERSE_DEP_EXPIRES_IN)
+        end
       end
     end
 
@@ -254,6 +264,10 @@ class RubygemTest < ActiveSupport::TestCase
         assert gem_list.include?(@gem_two)
         refute gem_list.include?(@gem_one)
       end
+    end
+
+    teardown do
+      Rails.cache.clear
     end
   end
 

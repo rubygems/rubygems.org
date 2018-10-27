@@ -270,21 +270,31 @@ class Rubygem < ApplicationRecord
     (updated_at + 101.days - Time.zone.now).to_i / 1.day
   end
 
-  def reverse_dependencies
+  def reverse_dependencies_by_downloads(offset, limit)
+    self.class.find_by_sql( ["SELECT rubygems.* FROM
+      ( SELECT  DISTINCT ON (r.id) r.id, r.name, r.created_at, r.updated_at, r.slug, gd.count FROM rubygems as r
+          INNER JOIN gem_downloads as gd ON gd.rubygem_id = r.id AND gd.version_id = 0
+          INNER JOIN versions AS v ON v.rubygem_id = r.id
+          INNER JOIN dependencies AS d ON d.version_id = v.id
+          WHERE (v.indexed = 't' AND v.position = 0 AND d.rubygem_id = ?)
+      ) AS rubygems ORDER BY count DESC OFFSET ? LIMIT ?", id, offset, limit] )
+  end
+
+  def reverse_development_dependencies
+    legacy_reverse_dependencies.where("d.scope = 'development'")
+  end
+
+  def reverse_runtime_dependencies
+    legacy_reverse_dependencies.where("d.scope ='runtime'")
+  end
+
+  private
+
+  def legacy_reverse_dependencies
     self.class.joins("inner join versions as v on v.rubygem_id = rubygems.id
       inner join dependencies as d on d.version_id = v.id").where("v.indexed = 't'
       and v.position = 0 and d.rubygem_id = ?", id)
   end
-
-  def reverse_development_dependencies
-    reverse_dependencies.where("d.scope = 'development'")
-  end
-
-  def reverse_runtime_dependencies
-    reverse_dependencies.where("d.scope ='runtime'")
-  end
-
-  private
 
   # a gem namespace is not protected if it is
   # updated(yanked) in more than 100 days or it is created in last 30 days
