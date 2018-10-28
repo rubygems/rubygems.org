@@ -44,11 +44,11 @@ class Api::V1::RubygemsController < Api::BaseController
   def reverse_dependencies
     names = begin
       if params[:only] == "development"
-        @rubygem.reverse_development_dependencies.pluck(:name)
+        ReverseDependency.new(@rubygem.id).development.pluck(:name)
       elsif params[:only] == "runtime"
-        @rubygem.reverse_runtime_dependencies.pluck(:name)
+        ReverseDependency.new(@rubygem.id).runtime.pluck(:name)
       else
-        @rubygem.reverse_dependencies.pluck(:name)
+        ReverseDependency.new(@rubygem.id).legacy_find.pluck(:name)
       end
     end
 

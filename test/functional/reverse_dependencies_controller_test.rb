@@ -36,7 +36,7 @@ class ReverseDependenciesControllerTest < ActionController::TestCase
     end
 
     should "search reverse dependencies" do
-      get :index,
+      get :search,
         params: {
           rubygem_id: @rubygem_two.to_param,
           rdeps_query: @rubygem_three.name
@@ -46,7 +46,7 @@ class ReverseDependenciesControllerTest < ActionController::TestCase
     end
 
     should "search only current reverse dependencies" do
-      get :index,
+      get :search,
         params: {
           rubygem_id: @rubygem_two.to_param,
           rdeps_query: @rubygem_one.name

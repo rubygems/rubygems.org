@@ -152,7 +152,9 @@ Rails.application.routes.draw do
         constraints: { format: :js },
         defaults: { format: :js }
       resources :versions, only: %i[show index]
-      resources :reverse_dependencies, only: %i[index]
+      resources :reverse_dependencies, only: %i[index] do
+        get :search, on: :collection
+      end
     end
   end
 
