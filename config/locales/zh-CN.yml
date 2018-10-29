@@ -229,11 +229,6 @@ zh-CN:
       blacklisted_namespace:
     dependencies:
       header: "%{title} 依赖关系"
-    edit:
-      other_fields_notice: 其他字段的信息你只能通过发布一个新版本的 Gem 来修改。
-      subtitle: "%{gem}"
-      title: 编辑链接
-      deprecation_message:
     gem_members:
       authors_header: 作者
       owners_header: 所有者

@@ -229,11 +229,6 @@ fr:
       blacklisted_namespace: Ce nom est réservé par rubygems.org.
     dependencies:
       header: Dépendances de %{title}
-    edit:
-      other_fields_notice: Tous les autres champs ne sont modifiables qu'en soumettant une nouvelle version de votre gem.
-      subtitle: pour %{gem}
-      title: Modifier les liens
-      deprecation_message: Cette page est obsolète. Veuillez utiliser Gem::Specification#metadata pour configurer ces liens. (<a href='https://guides.rubygems.org/specification-reference/#metadata' target='_blank'>read more</a>)
     gem_members:
       authors_header: Auteurs
       owners_header: Propriétaires

@@ -229,11 +229,6 @@ en:
       blacklisted_namespace: This namespace is reserved by rubygems.org.
     dependencies:
       header: "%{title} Dependencies"
-    edit:
-      other_fields_notice: All other fields can only be edited by pushing an updated version of your gem.
-      subtitle: for %{gem}
-      title: Edit links
-      deprecation_message: This page has been deprecated. Please use Gem::Specification#metadata to configure these links. (<a href='https://guides.rubygems.org/specification-reference/#metadata' target='_blank'>read more</a>)
     gem_members:
       authors_header: Authors
       owners_header: Owners

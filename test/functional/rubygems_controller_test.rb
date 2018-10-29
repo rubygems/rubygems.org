@@ -36,30 +36,6 @@ class RubygemsControllerTest < ActionController::TestCase
       end
     end
 
-    context "On GET to show for another user's gem" do
-      setup do
-        @rubygem = create(:rubygem, number: "1.0.0")
-        get :show, params: { id: @rubygem.to_param }
-      end
-
-      should respond_with :success
-      should "not render edit link" do
-        refute page.has_selector?("a[href='#{edit_rubygem_path(@rubygem)}']")
-      end
-    end
-
-    context "On GET to show for this user's gem" do
-      setup do
-        @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
-        get :show, params: { id: @rubygem.to_param }
-      end
-
-      should respond_with :success
-      should "render edit link" do
-        assert page.has_selector?("a[href='#{edit_rubygem_path(@rubygem)}']")
-      end
-    end
-
     context "On GET to show for a gem that the user is subscribed to" do
       setup do
         @rubygem = create(:rubygem)
@@ -86,86 +62,6 @@ class RubygemsControllerTest < ActionController::TestCase
       should "have subscribe link" do
         assert page.has_link? 'Subscribe'
         refute page.has_content? 'Unsubscribe'
-      end
-    end
-
-    context "On GET to edit for this user's gem" do
-      setup do
-        @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
-        get :edit, params: { id: @rubygem.to_param }
-      end
-
-      should respond_with :success
-      should "render form" do
-        assert page.has_selector?("form")
-        assert page.has_selector?("input#linkset_code")
-        assert page.has_selector?("input#linkset_docs")
-        assert page.has_selector?("input#linkset_wiki")
-        assert page.has_selector?("input#linkset_mail")
-        assert page.has_selector?("input#linkset_bugs")
-        assert page.has_selector?("input[type='submit']")
-      end
-    end
-
-    context "On GET to edit for another user's gem" do
-      setup do
-        @other_user = create(:user)
-        @rubygem = create(:rubygem, owners: [@other_user], number: "1.0.0")
-        get :edit, params: { id: @rubygem.to_param }
-      end
-      should respond_with :redirect
-      should redirect_to('the homepage') { root_path }
-      should set_flash.to("You do not have permission to edit this gem.")
-    end
-
-    context "On PUT to update for this user's gem that is successful" do
-      setup do
-        @url = "https://github.com/qrush/gemcutter"
-        @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
-        put :update,
-          params: {
-            id: @rubygem.to_param,
-            linkset: {
-              code: @url,
-              docs: 'http://docs.com',
-              wiki: 'http://wiki.com',
-              mail: 'http://mail.com',
-              bugs: 'http://bugs.com'
-            }
-          }
-      end
-      should respond_with :redirect
-      should redirect_to('the gem') { rubygem_path(@rubygem) }
-      should set_flash.to("Gem links updated.")
-      should "update source code url" do
-        assert_equal @url, Rubygem.last.linkset.code
-      end
-      should "update documentation rul" do
-        assert_equal 'http://docs.com', Rubygem.last.linkset.docs
-      end
-      should "update wiki url" do
-        assert_equal 'http://wiki.com', Rubygem.last.linkset.wiki
-      end
-      should "update mailing list url" do
-        assert_equal 'http://mail.com', Rubygem.last.linkset.mail
-      end
-      should "update bugtracker url" do
-        assert_equal 'http://bugs.com', Rubygem.last.linkset.bugs
-      end
-    end
-
-    context "On PUT to update for this user's gem that fails" do
-      setup do
-        @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
-        @url = "totally not a url"
-        put :update, params: { id: @rubygem.to_param, linkset: { code: @url } }
-      end
-      should respond_with :success
-      should "not update linkset" do
-        assert_not_equal @url, Rubygem.last.linkset.code
-      end
-      should "render error messages" do
-        assert page.has_content?("error prohibited")
       end
     end
   end
@@ -493,24 +389,6 @@ class RubygemsControllerTest < ActionController::TestCase
       should "not have an unsubscribe link" do
         refute page.has_selector?("a#unsubscribe")
       end
-    end
-
-    context "On GET to edit" do
-      setup do
-        @rubygem = create(:rubygem)
-        get :edit, params: { id: @rubygem.to_param }
-      end
-      should respond_with :redirect
-      should redirect_to('the homepage') { root_path }
-    end
-
-    context "On PUT to update" do
-      setup do
-        @rubygem = create(:rubygem)
-        put :update, params: { id: @rubygem.to_param, linkset: {} }
-      end
-      should respond_with :redirect
-      should redirect_to('the homepage') { root_path }
     end
   end
 end
