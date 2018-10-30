@@ -1,0 +1,109 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: db-migrate-<%= deployment_id %>
+  labels:
+    name: db-migrate-<%= deployment_id %>
+spec:
+  activeDeadlineSeconds: 300
+  automountServiceAccountToken: false
+  restartPolicy: Never
+  containers:
+  - name: db-migrate
+    image: quay.io/rubygems/rubygems.org:<%= current_sha %>
+    args: ["rails", "db:migrate"]
+    env:
+      - name: RAILS_ENV
+        value: "<%= environment %>"
+      - name: ENV
+        value: "<%= environment %>"
+      - name: STATSD_IMPLEMENTATION
+        value: "datadog"
+      - name: RAILS_LOG_TO_STDOUT
+        value: "true"
+      - name: SECRET_KEY_BASE
+        valueFrom:
+          secretKeyRef:
+            name: <%= environment %>
+            key: secret_key_base
+      - name: AWS_REGION
+        value: "us-west-2"
+      - name: S3_KEY
+        valueFrom:
+          secretKeyRef:
+            name: <%= environment %>
+            key: aws_access_key_id
+      - name: S3_SECRET
+        valueFrom:
+          secretKeyRef:
+            name: <%= environment %>
+            key: aws_secret_access_key
+      - name: AWS_ACCESS_KEY_ID
+        valueFrom:
+          secretKeyRef:
+            name: <%= environment %>
+            key: aws_access_key_id
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: <%= environment %>
+            key: aws_secret_access_key
+      - name: NEW_RELIC_LICENSE_KEY
+        valueFrom:
+          secretKeyRef:
+            name: <%= environment %>
+            key: new_relic_license_key
+      - name: HONEYBADGER_API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: <%= environment %>
+            key: honeybadger_api_key
+      - name: FASTLY_API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: <%= environment %>
+            key: fastly_api_key
+      - name: FASTLY_SERVICE_ID
+        valueFrom:
+          secretKeyRef:
+            name: <%= environment %>
+            key: fastly_service_id
+      - name: FASTLY_DOMAIN
+        valueFrom:
+          secretKeyRef:
+            name: <%= environment %>
+            key: fastly_domain
+      - name: ELASTICSEARCH_URL
+        valueFrom:
+          secretKeyRef:
+            name: <%= environment %>
+            key: elasticsearch_url
+      - name: MEMCACHED_ENDPOINT
+        valueFrom:
+          secretKeyRef:
+            name: <%= environment %>
+            key: memcached_endpoint
+      - name: SENDGRID_USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: <%= environment %>
+            key: sendgrid_username
+      - name: SENDGRID_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: <%= environment %>
+            key: sendgrid_password
+      - name: DISABLE_SIGNUP
+        value: "true"
+      - name: DATABASE_URL
+        valueFrom:
+          secretKeyRef:
+            name: <%= environment %>
+            key: database_url
+    # resources:
+    #   requests:
+    #     cpu: 500m
+    #   limits:
+    #     cpu: 1000m
+    #     memory: 2Gi
