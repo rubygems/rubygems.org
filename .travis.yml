@@ -43,7 +43,7 @@ before_script:
 script:
   - bundle exec rails test
   - bundle exec rake rubocop
-  - bundle exec bundle audit update && bundle exec bundle audit check
+  - gem install bundle-audit && bundle audit update && bundle audit check
   - script/brakeman
   - bundle exec cap -T > /dev/null
   - script/build_docker.sh
