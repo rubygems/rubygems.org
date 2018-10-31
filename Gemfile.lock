@@ -115,7 +115,7 @@ GEM
     concurrent-ruby (1.0.5)
     crass (1.0.4)
     daemons (1.2.6)
-    dalli (2.7.8)
+    dalli (2.7.9)
     delayed_job (4.1.5)
       activesupport (>= 3.0, < 5.3)
     delayed_job_active_record (4.1.3)
