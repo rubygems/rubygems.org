@@ -55,6 +55,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
       context "ON DELETE to create for existing gem version" do
         setup do
+          create(:global_web_hook, user: @user, url: "http://example.org")
           delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
         end
         should respond_with :success
@@ -66,6 +67,9 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           assert_not_nil Deletion.where(user: @user,
                                         rubygem: @rubygem.name,
                                         number: @v1.number).first
+        end
+        should "have enqueued a webhook" do
+          assert_instance_of Notifier, Delayed::Job.last.payload_object
         end
       end
 

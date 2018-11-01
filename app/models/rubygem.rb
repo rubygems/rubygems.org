@@ -153,6 +153,7 @@ class Rubygem < ApplicationRecord
       'info'              => version.info,
       'licenses'          => version.licenses,
       'metadata'          => version.metadata,
+      'yanked'            => version.yanked?,
       'sha'               => version.sha256_hex,
       'project_uri'       => "#{protocol}://#{host_with_port}/gems/#{name}",
       'gem_uri'           => "#{protocol}://#{host_with_port}/gems/#{version.full_name}.gem",
