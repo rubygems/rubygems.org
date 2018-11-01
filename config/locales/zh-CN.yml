@@ -90,7 +90,7 @@ zh-CN:
         uptime: 服务状况
       header:
         dashboard: 控制台
-        search_gem:
+        search_gem: 搜索 Gems&hellip;
         sign_in: 登录
         sign_out: 退出
         sign_up: 注册
