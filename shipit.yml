@@ -1,6 +1,17 @@
 dependencies:
   bundler:
     frozen: false
+
+deploy:
+  override:
+    - bundle exec kubernetes-deploy rubygems-production rubygems --template-dir config/deploy/production --bindings=environment=$ENVIRONMENT
+    - bundle exec cap $ENVIRONMENT deploy
+
+rollback:
+  override:
+    - bundle exec kubernetes-deploy rubygems-production rubygems --template-dir config/deploy/production --bindings=environment=$ENVIRONMENT
+    - bundle exec cap $ENVIRONMENT deploy:rollback
+
 tasks:
   restart:
     action: Restart application
