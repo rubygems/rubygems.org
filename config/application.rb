@@ -46,4 +46,5 @@ module Gemcutter
   POPULAR_DAYS_LIMIT = 70.days
   # Limit max page as ES result window is upper bounded by 10_000 records
   SEARCH_MAX_PAGES = 100
+  EMAIL_TOKEN_EXPRIES_AFTER = 3.hours
 end
