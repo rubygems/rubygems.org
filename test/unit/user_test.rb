@@ -265,7 +265,7 @@ class UserTest < ActiveSupport::TestCase
 
         should "return true for mfa status check" do
           assert @user.mfa_enabled?
-          refute @user.disabled_mfa?
+          refute @user.mfa_disabled?
         end
 
         should "return true for otp in last interval" do
@@ -290,7 +290,7 @@ class UserTest < ActiveSupport::TestCase
 
         should "return false for mfa status check" do
           refute @user.mfa_enabled?
-          assert @user.disabled_mfa?
+          assert @user.mfa_disabled?
         end
       end
     end

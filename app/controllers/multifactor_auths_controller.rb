@@ -1,5 +1,4 @@
 class MultifactorAuthsController < ApplicationController
-  before_action :check_feature_flag
   before_action :redirect_to_root, unless: :signed_in?
   before_action :require_mfa_disabled, only: %i[new create]
   before_action :require_mfa_enabled, only: :update
@@ -15,7 +14,7 @@ class MultifactorAuthsController < ApplicationController
   end
 
   def create
-    current_user.verify_and_enable_mfa!(@seed, :ui_only, params[:otp], @expire)
+    current_user.verify_and_enable_mfa!(@seed, :ui_only, otp_param, @expire)
     if current_user.errors.any?
       flash[:error] = current_user.errors[:base].join
       redirect_to edit_profile_url
@@ -26,13 +25,13 @@ class MultifactorAuthsController < ApplicationController
   end
 
   def update
-    if current_user.otp_verified?(params[:otp])
-      if params[:level] == 'disabled_mfa'
+    if current_user.otp_verified?(otp_param)
+      if level_param == 'disabled'
         flash[:success] = t('multifactor_auths.destroy.success')
         current_user.disable_mfa!
       else
         flash[:error] = t('.success')
-        current_user.update!(mfa_level: params[:level])
+        current_user.update!(mfa_level: level_param)
       end
     else
       flash[:error] = t('multifactor_auths.incorrect_otp')
@@ -41,6 +40,14 @@ class MultifactorAuthsController < ApplicationController
   end
 
   private
+
+  def otp_param
+    params.permit(:otp).fetch(:otp, '')
+  end
+
+  def level_param
+    params.permit(:level).fetch(:level, '')
+  end
 
   def issuer
     request.host || 'rubygems.org'
@@ -64,9 +71,5 @@ class MultifactorAuthsController < ApplicationController
     %i[mfa_seed mfa_seed_expire].each do |key|
       session.delete(key)
     end
-  end
-
-  def check_feature_flag
-    redirect_to edit_profile_path unless mfa_enabled?
   end
 end
