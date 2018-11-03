@@ -22,13 +22,13 @@ spec:
       - name: shoryuken
         image: quay.io/rubygems/rubygems.org:<%= current_sha %>
         args: ["bin/shoryuken-worker"]
-        # resources:
-        #   requests:
-        #     cpu: 6
-        #     memory: 10Gi
-        #   limits:
-        #     cpu: 7
-        #     memory: 13Gi
+        resources:
+          requests:
+            cpu: 200m
+            memory: 250Mi
+          limits:
+            cpu: 500m
+            memory: 300Mi
         env:
           - name: RAILS_ENV
             value: "<%= environment %>"

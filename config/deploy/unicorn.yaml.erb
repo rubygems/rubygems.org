@@ -25,13 +25,13 @@ spec:
         ports:
         - containerPort: 3000
           name: http-unicorn
-        # resources:
-        #   requests:
-        #     cpu: 6
-        #     memory: 10Gi
-        #   limits:
-        #     cpu: 7
-        #     memory: 13Gi
+        resources:
+          requests:
+            cpu: 200m
+            memory: 1.5Gi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
         env:
           - name: RAILS_ENV
             value: "<%= environment %>"
