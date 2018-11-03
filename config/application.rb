@@ -40,4 +40,10 @@ module Gemcutter
   DEFAULT_PAGINATION = 20
   REMEMBER_FOR = 2.weeks
   MFA_KEY_EXPIRY = 30.minutes
+  NEWS_MAX_PAGES = 10
+  NEWS_PER_PAGE = 10
+  NEWS_DAYS_LIMIT = 7.days
+  POPULAR_DAYS_LIMIT = 70.days
+  # Limit max page as ES result window is upper bounded by 10_000 records
+  SEARCH_MAX_PAGES = 100
 end

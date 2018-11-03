@@ -119,4 +119,8 @@ class ApplicationController < ActionController::Base
   def mfa_enabled?
     cookies.permanent[:mfa_feature] == 'true'
   end
+
+  def limit_page(max_page)
+    render_404 if @page > max_page
+  end
 end
