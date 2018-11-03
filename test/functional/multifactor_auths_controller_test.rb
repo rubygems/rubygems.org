@@ -10,7 +10,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
     context 'when mfa enabled' do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_mfa_only)
+        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
       end
 
       context 'on GET to new mfa' do
@@ -38,7 +38,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         context 'on disabling mfa' do
           context 'when otp code is correct' do
             setup do
-              put :update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now, level: 'no_mfa' }
+              put :update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now, level: 'disabled_mfa' }
             end
 
             should respond_with :redirect
@@ -50,7 +50,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
           context 'when otp is recovery code' do
             setup do
-              put :update, params: { otp: @user.mfa_recovery_codes.first, level: 'no_mfa' }
+              put :update, params: { otp: @user.mfa_recovery_codes.first, level: 'disabled_mfa' }
             end
 
             should respond_with :redirect
@@ -63,7 +63,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           context 'when otp code is incorrect' do
             setup do
               wrong_otp = (ROTP::TOTP.new(@user.mfa_seed).now.to_i.succ % 1_000_000).to_s
-              put :update, params: { otp: wrong_otp, level: 'no_mfa' }
+              put :update, params: { otp: wrong_otp, level: 'disabled_mfa' }
             end
 
             should respond_with :redirect
@@ -75,22 +75,22 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           end
         end
 
-        context 'on updating to ui_mfa_only' do
+        context 'on updating to ui_only' do
           setup do
             @user.ui_and_api_mfa!
-            put :update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now, level: 'ui_mfa_only' }
+            put :update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now, level: 'ui_only' }
           end
 
           should respond_with :redirect
           should redirect_to('the profile edit page') { edit_profile_path }
-          should 'update mfa level to ui_mfa_only now' do
-            assert @user.reload.ui_mfa_only?
+          should 'update mfa level to ui_only_mfa now' do
+            assert @user.reload.ui_only_mfa?
           end
         end
 
         context 'on updating to ui_and_api_mfa' do
           setup do
-            put :update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now, level: 'ui_and_api_mfa' }
+            put :update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now, level: 'ui_and_api' }
           end
 
           should respond_with :redirect
@@ -104,7 +104,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
     context 'when mfa disabled' do
       setup do
-        @user.disable_mfa!
+        @user.disabled_mfa!
       end
 
       context 'on POST to create mfa' do

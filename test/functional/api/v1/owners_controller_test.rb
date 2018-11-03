@@ -86,7 +86,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
     context "when mfa for UI and API is enabled" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api_mfa)
+        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
       end
 
       context "on POST to add other user as gem owner without OTP" do
@@ -158,7 +158,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
     context "when mfa for UI and API is enabled" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api_mfa)
+        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
       end
 
       context "on delete to remove gem owner without OTP" do

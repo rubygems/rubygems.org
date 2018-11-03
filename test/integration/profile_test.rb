@@ -16,7 +16,7 @@ class ProfileTest < SystemTest
 
   def enable_mfa
     key = ROTP::Base32.random_base32
-    @user.enable_mfa!(key, :ui_mfa_only)
+    @user.enable_mfa!(key, :ui_only)
   end
 
   def change_auth_level(type)

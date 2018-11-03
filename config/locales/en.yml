@@ -193,9 +193,9 @@ en:
         update: Update
         level:
           title: MFA Level
-          no_mfa: Disabled
-          ui_mfa_only: UI Only
-          ui_and_api_mfa: UI and API
+          disabled: Disabled
+          ui_only: UI Only
+          ui_and_api: UI and API
     delete:
       title: Delete profile
       confirm: Confirm

@@ -202,7 +202,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "When mfa for UI and API is enabled" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api_mfa)
+        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
       end
 
       context "On post to create for new gem without OTP" do

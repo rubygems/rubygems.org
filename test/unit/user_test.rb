@@ -250,7 +250,7 @@ class UserTest < ActiveSupport::TestCase
 
       context "when enabled" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_mfa_only)
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
         end
 
         should "be able to use a recovery code only once" do
@@ -265,7 +265,7 @@ class UserTest < ActiveSupport::TestCase
 
         should "return true for mfa status check" do
           assert @user.mfa_enabled?
-          refute @user.no_mfa?
+          refute @user.disabled_mfa?
         end
 
         should "return true for otp in last interval" do
@@ -290,7 +290,7 @@ class UserTest < ActiveSupport::TestCase
 
         should "return false for mfa status check" do
           refute @user.mfa_enabled?
-          assert @user.no_mfa?
+          assert @user.disabled_mfa?
         end
       end
     end

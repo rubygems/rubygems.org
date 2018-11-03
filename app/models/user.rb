@@ -46,7 +46,7 @@ class User < ApplicationRecord
   validates :password, length: { within: 10..200 }, allow_nil: true, unless: :skip_password_validation?
   validate :unconfirmed_email_uniqueness
 
-  enum mfa_level: { no_mfa: 0, ui_mfa_only: 1, ui_and_api_mfa: 2 }
+  enum mfa_level: { disabled: 0, ui_only: 1, ui_and_api: 2 }, _suffix: :mfa
 
   def self.authenticate(who, password)
     user = find_by(email: who.downcase) || find_by(handle: who)
@@ -165,11 +165,11 @@ class User < ApplicationRecord
   end
 
   def mfa_enabled?
-    !no_mfa?
+    !disabled_mfa?
   end
 
   def disable_mfa!
-    no_mfa!
+    disabled_mfa!
     self.mfa_seed = ''
     self.mfa_recovery_codes = []
     save!(validate: false)

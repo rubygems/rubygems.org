@@ -15,7 +15,7 @@ class MultifactorAuthsController < ApplicationController
   end
 
   def create
-    current_user.verify_and_enable_mfa!(@seed, :ui_mfa_only, params[:otp], @expire)
+    current_user.verify_and_enable_mfa!(@seed, :ui_only, params[:otp], @expire)
     if current_user.errors.any?
       flash[:error] = current_user.errors[:base].join
       redirect_to edit_profile_url
@@ -27,7 +27,7 @@ class MultifactorAuthsController < ApplicationController
 
   def update
     if current_user.otp_verified?(params[:otp])
-      if params[:level] == 'no_mfa'
+      if params[:level] == 'disabled_mfa'
         flash[:success] = t('multifactor_auths.destroy.success')
         current_user.disable_mfa!
       else

@@ -14,7 +14,7 @@ class SessionsController < Clearance::SessionsController
     @user = User.find_by_name(session[:mfa_user])
     session.delete(:mfa_user)
 
-    if @user&.mfa_enabled? && @user&.otp_verified?(params[:otp])
+    if  @user&.mfa_enabled? && @user&.otp_verified?(params[:otp])
       do_login
     else
       login_failure(t('multifactor_auths.incorrect_otp'))
