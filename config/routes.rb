@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       resource :api_key, only: :show do
         put :reset
       end
+      resource :multifactor_auth, only: :show
       resources :profiles, only: :show
       resources :downloads, only: :index do
         get :top, on: :collection
@@ -131,7 +132,7 @@ Rails.application.routes.draw do
     end
     resource :dashboard, only: :show, constraints: { format: /html|atom/ }
     resources :profiles, only: :show
-    resource :multifactor_auth, only: %i[new create destroy]
+    resource :multifactor_auth, only: %i[new create update]
     resource :profile, only: %i[edit update] do
       member do
         get :delete

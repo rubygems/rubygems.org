@@ -10,6 +10,8 @@ zh-CN:
   none: 无
   not_found: 未找到
   please_sign_up: 拒绝访问。请先在 https://rubygems.org 上注册一个账号。
+  otp_incorrect:
+  otp_missing:
   sign_in: 登录
   sign_up: 注册
   multifactor_authentication: 多重验证
@@ -158,6 +160,8 @@ zh-CN:
       note:
     destroy:
       success:
+    update:
+      success:
   profiles:
     edit:
       email_awaiting_confirmation: 请验证你的新邮箱地址 %{unconfirmed_email}
@@ -185,7 +189,12 @@ zh-CN:
         disabled:
         go_settings:
         enabled:
-        disable:
+        update:
+        level:
+          title:
+          no_mfa:
+          ui_mfa_only:
+          ui_and_api_mfa:
     delete:
       title:
       confirm:

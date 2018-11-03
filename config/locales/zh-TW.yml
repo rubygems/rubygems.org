@@ -10,6 +10,8 @@ zh-TW:
   none:
   not_found:
   please_sign_up: 無法存取，請先在 https://rubygems.org 上註冊帳號
+  otp_incorrect:
+  otp_missing:
   sign_in: 登入
   sign_up: 註冊
   multifactor_authentication:
@@ -158,6 +160,8 @@ zh-TW:
       note:
     destroy:
       success:
+    update:
+      success:
   profiles:
     edit:
       email_awaiting_confirmation:
@@ -185,7 +189,12 @@ zh-TW:
         disabled:
         go_settings:
         enabled:
-        disable:
+        update:
+        level:
+          title:
+          no_mfa:
+          ui_mfa_only:
+          ui_and_api_mfa:
     delete:
       title:
       confirm:
