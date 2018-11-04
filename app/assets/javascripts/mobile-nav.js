@@ -30,18 +30,6 @@ $(function() {
     footer.addClass(navExpandedClass);
   }
 
-  function handleClick(event) {
-    var isMobileNavExpanded = header.hasClass(navExpandedClass);
-
-    event.preventDefault();
-
-    if (isMobileNavExpanded) {
-      removeNavExpandedClass();
-    } else {
-      addNavExpandedClass();
-    }
-  }
-
   function handleFocusIn() {
     if (skipSandwichIcon) {
       addNavExpandedClass();
@@ -54,7 +42,10 @@ $(function() {
     }
   }
 
-  sandwichIcon.click(handleClick);
+  sandwichIcon.click(function(){
+    var nav = {expandedClass: navExpandedClass, popUp: header}
+    handleClick(event, nav, removeNavExpandedClass, addNavExpandedClass);
+  });
 
   sandwichIcon.on('focusin', handleFocusIn);
 

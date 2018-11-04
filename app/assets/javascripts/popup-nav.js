@@ -12,18 +12,9 @@ $(function() {
     popupNav.addClass(navExpandedClass);
   }
 
-  function handleClick(event) {
-    var isPopupNavExpanded = popupNav.hasClass(navExpandedClass);
-
-    event.preventDefault();
-
-    if (isPopupNavExpanded) {
-      removeNavExpandedClass();
-    } else {
-      addNavExpandedClass();
-    }
-  }
-
-  arrowIcon.click(handleClick);
+  arrowIcon.click(function(){
+    var nav = {expandedClass: navExpandedClass, popUp: popupNav}
+    handleClick(event, nav, removeNavExpandedClass, addNavExpandedClass);
+  });
 });
 

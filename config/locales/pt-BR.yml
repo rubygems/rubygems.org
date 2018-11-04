@@ -277,6 +277,9 @@ pt-BR:
     show:
       exact_match: Busca exata
       subtitle: para %{query}
+      month_update:
+      week_update:
+      filter:
   sessions:
     new:
       forgot_password: Esqueceu sua Senha?

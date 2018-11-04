@@ -277,6 +277,9 @@ fr:
     show:
       exact_match: Titre exact
       subtitle: pour %{query}
+      month_update:
+      week_update:
+      filter:
   sessions:
     new:
       forgot_password: Mot de passe oublié ?
