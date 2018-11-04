@@ -12,14 +12,8 @@
  * limitations under the License.
  * 
  * Soure repo: https://github.com/mdo/github-buttons
-*/
-
-body {
-  padding: 0;
-  margin: 0;
-  font: bold 11px/14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  overflow: hidden;
-}
+ * Modification - Removed style on body tag
+ */
 
 .github-btn {
   font: bold 11px/14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
