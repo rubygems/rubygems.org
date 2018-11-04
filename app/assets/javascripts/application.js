@@ -7,6 +7,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require clipboard
+//= require github_buttons
 //= require_tree .
 
 function handleClick(event, nav, removeNavExpandedClass, addNavExpandedClass) {
