@@ -42,6 +42,7 @@ class PushTest < ActionDispatch::IntegrationTest
     end
 
     push_gem "sandworm-1.0.0.gem"
+    assert_response :success
 
     get rubygem_path("sandworm")
     assert_response :success

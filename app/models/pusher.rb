@@ -62,21 +62,7 @@ class Pusher
     @rubygem = Rubygem.name_is(name).first || Rubygem.new(name: name)
 
     if @rubygem.new_record?
-      downcased_name = name.downcase
-      text = Class.new.extend(Gem::Text)
-      allowed_match_threshold = case downcased_name.size
-                                when 0, 1, 2 then 0
-                                when 3 then 1
-                                else 2
-                                end
-
-      matching_name = Rubygem.downloaded(1000).pluck(:name).first do |_gem_name|
-        text.levenshtein_distance(downcased_name, n.downcase) <= allowed_match_threshold
-      end
-      if matching_name
-        return notify("The name #{name.inspect} is too close to #{matching_name.inspect}.\n" \
-                      "Please send an email to xxx@rubygems.org if you believe this is an error.", 409)
-      end
+      return if typosquat?(@rubygem.name)
     else
       if @rubygem.find_version_from_spec(spec)
         notify("Repushing of gem versions is not allowed.\n" \
@@ -150,5 +136,24 @@ class Pusher
   def set_info_checksum
     checksum = GemInfo.new(rubygem.name).info_checksum
     version.update_attribute :info_checksum, checksum
+  end
+
+  def typosquat?(gem_name, top_n_gems: 1_000)
+    downcased_name = gem_name.downcase
+    text = Class.new.extend(Gem::Text)
+    allowed_match_threshold = case downcased_name.size
+                              when 0, 1, 2, 3 then 0
+                              when 4 then 1
+                              else 2
+                              end
+
+    matching_name = Rubygem.downloaded(top_n_gems).pluck(:name).find do |top_gem_name|
+      distance = text.levenshtein_distance(downcased_name, top_gem_name.downcase)
+      distance <= allowed_match_threshold
+    end
+    return unless matching_name
+
+    notify("The name #{gem_name.inspect} is too close to #{matching_name.inspect}.\n" \
+                  "Please send an email to xxx@rubygems.org if you believe this is an error.", 409)
   end
 end
