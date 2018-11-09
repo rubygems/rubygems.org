@@ -92,7 +92,7 @@ zh-TW:
         uptime: 上線時間
       header:
         dashboard: 控制台
-        search_gem:
+        search_gem: 搜尋 Gem&hellip;
         sign_in: 登入
         sign_out: 登出
         sign_up: 註冊
@@ -251,7 +251,7 @@ zh-TW:
       downloads:
       title:
     show:
-      licenses_header:
+      licenses_header: 授權條款
       no_licenses:
       requirements_header: 必填
       show_all_versions: 顯示所有版本（共 %{count}）
