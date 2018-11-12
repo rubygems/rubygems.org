@@ -15,6 +15,44 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         RubygemFs.instance.store("gems/#{@v1.full_name}.gem", "")
       end
 
+      context "when mfa for UI and API is enabled" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api_mfa)
+        end
+
+        context "ON DELETE to create for existing gem version without OTP" do
+          setup do
+            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          end
+          should respond_with :unauthorized
+        end
+
+        context "ON DELETE to create for existing gem version with incorrect OTP" do
+          setup do
+            @request.env["HTTP_OTP"] = (ROTP::TOTP.new(@user.mfa_seed).now.to_i.succ % 1_000_000).to_s
+            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          end
+          should respond_with :unauthorized
+        end
+
+        context "ON DELETE to create for existing gem version with correct OTP" do
+          setup do
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          end
+          should respond_with :success
+          should "keep the gem, deindex, keep owner" do
+            assert_equal 1, @rubygem.versions.count
+            assert @rubygem.versions.indexed.count.zero?
+          end
+          should "record the deletion" do
+            assert_not_nil Deletion.where(user: @user,
+                                          rubygem: @rubygem.name,
+                                          number: @v1.number).first
+          end
+        end
+      end
+
       context "ON DELETE to create for existing gem version" do
         setup do
           delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
