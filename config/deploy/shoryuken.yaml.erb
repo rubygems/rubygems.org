@@ -1,0 +1,121 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: shoryuken
+  annotations:
+    shipit.shopify.io/restart: 'true'
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0%
+      maxUnavailable: 50%
+  selector:
+    matchLabels:
+      name: shoryuken
+  template:
+    metadata:
+      labels:
+        name: shoryuken
+    spec:
+      containers:
+      - name: shoryuken
+        image: quay.io/rubygems/rubygems.org:<%= current_sha %>
+        args: ["bin/shoryuken-worker"]
+        resources:
+          requests:
+            cpu: 200m
+            memory: 250Mi
+          limits:
+            cpu: 500m
+            memory: 300Mi
+        env:
+          - name: RAILS_ENV
+            value: "<%= environment %>"
+          - name: ENV
+            value: "<%= environment %>"
+          - name: STATSD_IMPLEMENTATION
+            value: "datadog"
+          - name: SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: secret_key_base
+          - name: AWS_REGION
+            value: "us-west-2"
+          - name: FASTLY_LOG_PROCESSOR_ENABLED
+            value: "true"
+          - name: S3_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: aws_access_key_id
+          - name: S3_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: aws_secret_access_key
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: aws_access_key_id
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: aws_secret_access_key
+          - name: NEW_RELIC_LICENSE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: new_relic_license_key
+          - name: HONEYBADGER_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: honeybadger_api_key
+          - name: FASTLY_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: fastly_api_key
+          - name: FASTLY_SERVICE_ID
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: fastly_service_id
+          - name: FASTLY_DOMAIN
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: fastly_domain
+          - name: ELASTICSEARCH_URL
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: elasticsearch_url
+          - name: MEMCACHED_ENDPOINT
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: memcached_endpoint
+          - name: SENDGRID_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: sendgrid_username
+          - name: SENDGRID_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: sendgrid_password
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: database_url
+          - name: SQS_QUEUE
+            value: "fastly_logs_<%= environment %>"
+        securityContext:
+          privileged: false

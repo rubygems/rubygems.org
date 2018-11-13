@@ -10,6 +10,8 @@ zh-TW:
   none:
   not_found:
   please_sign_up: 無法存取，請先在 https://rubygems.org 上註冊帳號
+  otp_incorrect:
+  otp_missing:
   sign_in: 登入
   sign_up: 註冊
   multifactor_authentication:
@@ -150,13 +152,15 @@ zh-TW:
       key:
       time_based:
     create:
-      qrcode_expired:      
+      qrcode_expired:
       success:
     recovery:
       continue:
       title:
       note:
     destroy:
+      success:
+    update:
       success:
   profiles:
     edit:
@@ -185,7 +189,12 @@ zh-TW:
         disabled:
         go_settings:
         enabled:
-        disable:
+        update:
+        level:
+          title:
+          no_mfa:
+          ui_mfa_only:
+          ui_and_api_mfa:
     delete:
       title:
       confirm:
@@ -256,7 +265,7 @@ zh-TW:
   reverse_dependencies:
     index:
       title:
-    reverse_dependencies:
+    search:
       search_reverse_dependencies:
   searches:
     advanced:
@@ -268,6 +277,9 @@ zh-TW:
     show:
       exact_match: 完全符合
       subtitle: "%{query}"
+      month_update:
+      week_update:
+      filter:
   sessions:
     new:
       forgot_password: 忘記密碼？

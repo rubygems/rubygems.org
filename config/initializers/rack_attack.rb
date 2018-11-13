@@ -1,5 +1,6 @@
 class Rack::Attack
   REQUEST_LIMIT = 100
+  PASSWORD_UPDATE_LIMIT = 10
   LIMIT_PERIOD = 10.minutes
 
   ### Prevent Brute-Force Login Attacks ###
@@ -47,6 +48,13 @@ class Rack::Attack
     if req.path == "/session" && req.post?
       # return the handler if present, nil otherwise
       req.params['session']['who'].presence if req.params['session']
+    end
+  end
+
+  throttle("password/email", limit: PASSWORD_UPDATE_LIMIT, period: LIMIT_PERIOD) do |req|
+    if req.path == "/passwords" && req.post?
+      # return the email if present, nil otherwise
+      req.params['password']['email'].presence if req.params['password']
     end
   end
 

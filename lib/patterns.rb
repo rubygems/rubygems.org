@@ -92,8 +92,6 @@ module Patterns
     sidekiq-pro
     graphql-pro
 
-    # Blacklisted internal Rails dependency misspellings
-    # which could be used for malicious purposes.
     action-cable
     action_cable
     action-mailer

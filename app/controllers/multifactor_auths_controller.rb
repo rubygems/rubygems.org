@@ -2,7 +2,7 @@ class MultifactorAuthsController < ApplicationController
   before_action :check_feature_flag
   before_action :redirect_to_root, unless: :signed_in?
   before_action :require_mfa_disabled, only: %i[new create]
-  before_action :require_mfa_enabled, only: :destroy
+  before_action :require_mfa_enabled, only: :update
   before_action :seed_and_expire, only: :create
   helper_method :issuer
 
@@ -15,7 +15,7 @@ class MultifactorAuthsController < ApplicationController
   end
 
   def create
-    current_user.verify_and_enable_mfa!(@seed, :mfa_login_only, params[:otp], @expire)
+    current_user.verify_and_enable_mfa!(@seed, :ui_mfa_only, params[:otp], @expire)
     if current_user.errors.any?
       flash[:error] = current_user.errors[:base].join
       redirect_to edit_profile_url
@@ -25,10 +25,15 @@ class MultifactorAuthsController < ApplicationController
     end
   end
 
-  def destroy
+  def update
     if current_user.otp_verified?(params[:otp])
-      flash[:success] = t('.success')
-      current_user.disable_mfa!
+      if params[:level] == 'no_mfa'
+        flash[:success] = t('multifactor_auths.destroy.success')
+        current_user.disable_mfa!
+      else
+        flash[:error] = t('.success')
+        current_user.update!(mfa_level: params[:level])
+      end
     else
       flash[:error] = t('multifactor_auths.incorrect_otp')
     end

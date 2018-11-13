@@ -17,21 +17,13 @@ module SearchesHelper
     link_to "#{field.capitalize} (#{count})", path, class: 't-link--black'
   end
 
-  def aggregation_week_count(aggregration)
-    count = aggregration['buckets'][1]['doc_count']
+  def aggregation_count(aggregration, duration, buckets_pos)
+    count = aggregration['buckets'][buckets_pos]['doc_count']
     return unless count > 0
 
-    week_ago = (Time.zone.today - 7.days).to_s(:db)
-    path = search_path(params: { query: "#{params[:query]} AND updated:[#{week_ago} TO *}" })
-    link_to "Updated last week (#{count})", path, class: 't-link--black'
-  end
-
-  def aggregation_month_count(aggregration)
-    count = aggregration['buckets'][0]['doc_count']
-    return unless count > 0
-
-    month_ago = (Time.zone.today - 30.days).to_s(:db)
-    path = search_path(params: { query: "#{params[:query]} AND updated:[#{month_ago} TO *}" })
-    link_to "Updated last month (#{count})", path, class: 't-link--black'
+    time_ago = (Time.zone.today - duration).to_s(:db)
+    path = search_path(params: { query: "#{params[:query]} AND updated:[#{time_ago} TO *}" })
+    update_info = (duration == 30.days ? t('.month_update', count: count) : t('.week_update', count: count))
+    link_to update_info, path, class: 't-link--black'
   end
 end

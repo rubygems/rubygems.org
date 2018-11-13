@@ -4,7 +4,7 @@ class SessionsControllerTest < ActionController::TestCase
   context "when user has mfa enabled" do
     setup do
       @user = User.new(email_confirmed: true)
-      @user.enable_mfa!(ROTP::Base32.random_base32, :mfa_login_only)
+      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_mfa_only)
       @request.cookies[:mfa_feature] = 'true'
     end
 

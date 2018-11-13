@@ -10,6 +10,8 @@ es:
   none:
   not_found:
   please_sign_up: Acceso negado. Por favor, primero crea una cuenta en https://rubygems.org
+  otp_incorrect:
+  otp_missing:
   sign_in: Ingresar
   sign_up: Registro
   multifactor_authentication:
@@ -150,13 +152,15 @@ es:
       key:
       time_based:
     create:
-      qrcode_expired:      
+      qrcode_expired:
       success:
     recovery:
       continue:
       title:
       note:
     destroy:
+      success:
+    update:
       success:
   profiles:
     edit:
@@ -185,7 +189,12 @@ es:
         disabled:
         go_settings:
         enabled:
-        disable:
+        update:
+        level:
+          title:
+          no_mfa:
+          ui_mfa_only:
+          ui_and_api_mfa:
     delete:
       title:
       confirm:
@@ -256,7 +265,7 @@ es:
   reverse_dependencies:
     index:
       title:
-    reverse_dependencies:
+    search:
       search_reverse_dependencies:
   searches:
     advanced:
@@ -268,6 +277,9 @@ es:
     show:
       exact_match: Resultado exacto
       subtitle: por %{query}
+      month_update:
+      week_update:
+      filter:
   sessions:
     new:
       forgot_password: "¿Olvidaste tu contraseña?"

@@ -250,7 +250,7 @@ class UserTest < ActiveSupport::TestCase
 
       context "when enabled" do
         setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :mfa_login_only)
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_mfa_only)
         end
 
         should "be able to use a recovery code only once" do
@@ -276,12 +276,6 @@ class UserTest < ActiveSupport::TestCase
         should "return true for otp in next interval" do
           next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
           assert @user.otp_verified?(next_otp)
-        end
-
-        should "return false for second attempt for the same otp" do
-          otp = ROTP::TOTP.new(@user.mfa_seed).now
-          assert @user.otp_verified?(otp)
-          refute @user.otp_verified?(otp)
         end
       end
 

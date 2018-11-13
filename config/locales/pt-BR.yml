@@ -10,6 +10,8 @@ pt-BR:
   none:
   not_found:
   please_sign_up: Accesso Negado. Por favor se registre em https://rubygems.org
+  otp_incorrect:
+  otp_missing:
   sign_in: Fazer Login
   sign_up: Cadastrar
   multifactor_authentication:
@@ -150,13 +152,15 @@ pt-BR:
       key:
       time_based:
     create:
-      qrcode_expired:      
+      qrcode_expired:
       success:
     recovery:
       continue:
       title:
       note:
     destroy:
+      success:
+    update:
       success:
   profiles:
     edit:
@@ -185,7 +189,12 @@ pt-BR:
         disabled:
         go_settings:
         enabled:
-        disable:
+        update:
+        level:
+          title:
+          no_mfa:
+          ui_mfa_only:
+          ui_and_api_mfa:
     delete:
       title:
       confirm:
@@ -256,7 +265,7 @@ pt-BR:
   reverse_dependencies:
     index:
       title: "Reverse dependencies for %{name}"
-    reverse_dependencies:
+    search:
       search_reverse_dependencies:
   searches:
     advanced:
@@ -268,6 +277,9 @@ pt-BR:
     show:
       exact_match: Busca exata
       subtitle: para %{query}
+      month_update:
+      week_update:
+      filter:
   sessions:
     new:
       forgot_password: Esqueceu sua Senha?

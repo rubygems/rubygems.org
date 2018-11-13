@@ -1,24 +1,39 @@
+machine:
+  environment:
+    KUBECONFIG: /home/deploy/.kube/config
+
 dependencies:
   bundler:
     frozen: false
+
+deploy:
+  override:
+    - bundle exec kubernetes-deploy rubygems-production rubygems --template-dir config/deploy/production --bindings=environment=$ENVIRONMENT
+    - bundle exec cap $ENVIRONMENT deploy
+
+rollback:
+  override:
+    - bundle exec kubernetes-deploy rubygems-production rubygems --template-dir config/deploy/production --bindings=environment=$ENVIRONMENT
+    - bundle exec cap $ENVIRONMENT deploy:rollback
+
 tasks:
   restart:
     action: Restart application
     description: Trigger the restart of both unicorn and background workers
     steps:
-      - cap $ENVIRONMENT deploy:restart
+      - bundle exec cap $ENVIRONMENT deploy:restart
   enable_maintenance:
     action: Enable maintenance mode
     description: Disable access to the rails app and show the maintenance page
     steps:
-      - cap $ENVIRONMENT maintenance:enable
+      - bundle exec cap $ENVIRONMENT maintenance:enable
   disable_maintenance:
     action: Disable maintenance mode
     description: Enable access to the rails app and hide the maintenance page
     steps:
-      - cap $ENVIRONMENT maintenance:disable
+      - bundle exec cap $ENVIRONMENT maintenance:disable
   clear_cache:
     action: Clear cache
     description: Flushes memcached using rails cache clear
     steps:
-      - cap $ENVIRONMENT memcached:flush
+      - bundle exec cap $ENVIRONMENT memcached:flush

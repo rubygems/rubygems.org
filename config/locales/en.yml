@@ -10,6 +10,8 @@ en:
   none: None
   not_found: Not Found
   please_sign_up: Access Denied. Please sign up for an account at https://rubygems.org
+  otp_incorrect: Your OTP code is incorrect. Please check it and retry.
+  otp_missing: You have enabled multifactor authentication but no OTP code provided. Please fill it and retry.
   sign_in: Sign in
   sign_up: Sign up
   multifactor_authentication: Multifactor authentication
@@ -142,7 +144,7 @@ en:
     require_mfa_enabled: Your multifactor authentication has not been enabled. You have to enable it first.
     new:
       title: Enabling multifactor auth
-      scan_prompt: Please scan the qr-code with your authenticator app. If you cannot scan the code, add information below into your app manually. 
+      scan_prompt: Please scan the qr-code with your authenticator app. If you cannot scan the code, add information below into your app manually.
       otp_prompt: Type digit code from auth app to continue.
       confirm: I have kept my recovery codes safe.
       enable: Enable
@@ -158,6 +160,8 @@ en:
       note: "You MUST keep the recovery codes safe to prevent losing your account. Each of the code can be used once if you lose your authenticator."
     destroy:
       success: You have successfully disabled multifactor authentication.
+    update:
+      success: You have successfully updated your MFA level.
   profiles:
     edit:
       email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
@@ -184,8 +188,13 @@ en:
         multifactor_auth: Multifactor authentication
         disabled: You have not yet enabled multifactor authentication.
         go_settings: Register a new device
-        enabled: You have enabled multifactor authentication. Please input your OTP from your authenticator or one of your active recovery codes to disable it.
-        disable: Disable
+        enabled: You have enabled multifactor authentication. Please input your OTP from your authenticator or one of your active recovery codes to change your MFA level or disable it.
+        update: Update
+        level:
+          title: MFA Level
+          no_mfa: Disabled
+          ui_mfa_only: UI Only
+          ui_and_api_mfa: UI and API
     delete:
       title: Delete profile
       confirm: Confirm
@@ -256,7 +265,7 @@ en:
   reverse_dependencies:
     index:
       title: "Reverse dependencies for %{name}"
-    reverse_dependencies:
+    search:
       search_reverse_dependencies: "Search reverse dependencies Gems&hellip;"
   searches:
     advanced:
@@ -268,6 +277,9 @@ en:
     show:
       exact_match: Exact match
       subtitle: for %{query}
+      month_update: Updated last month (%{count})
+      week_update: Updated last week (%{count})
+      filter: "Filter:"
   sessions:
     new:
       forgot_password: Forgot password?

@@ -62,6 +62,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
     should 'allow forgot password' do
       stay_under_limit_for("clearance/ip")
+      under_limit = (Rack::Attack::PASSWORD_UPDATE_LIMIT * 0.25).to_i
+      under_limit.times { Rack::Attack.cache.count("password/email:#{@email}", limit_period) }
 
       post '/passwords',
         params: { password: { email: @user.email } }
@@ -153,6 +155,26 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         headers: { REMOTE_ADDR: @ip_address }
 
       assert_response :too_many_requests
+    end
+
+    context "password update" do
+      should 'throttle by ip' do
+        exceed_limit_for("clearance/ip")
+
+        post '/passwords',
+          params: { password: { email: @user.email } },
+          headers: { REMOTE_ADDR: @ip_address }
+
+        assert_response :too_many_requests
+      end
+
+      should "throttle by email" do
+        exceed_limit = (Rack::Attack::PASSWORD_UPDATE_LIMIT * 1.25).to_i
+        exceed_limit.times { Rack::Attack.cache.count("password/email:#{@user.email}", limit_period) }
+        post '/passwords', params: { password: { email: @user.email } }
+
+        assert_response :too_many_requests
+      end
     end
   end
 end

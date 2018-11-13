@@ -109,7 +109,8 @@ class PusherTest < ActiveSupport::TestCase
       @gem = gem_file("bad-date-1.0.0.gem")
       @cutter = Pusher.new(@user, @gem)
       @cutter.process
-      assert_match(/There was a problem saving your gem. year too big to marshal: 1017 UTC/, @cutter.message)
+      # TODO: switch regex to use `year too small` only when Ruby 2.6 is the default
+      assert_match(/There was a problem saving your gem. year too (big|small) to marshal: 1017 UTC/, @cutter.message)
       assert_equal @cutter.code, 400
     end
 

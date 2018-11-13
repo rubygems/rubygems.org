@@ -53,6 +53,13 @@ class ApplicationController < ActionController::Base
     redirect_to root_path
   end
 
+  def verify_with_otp
+    otp = request.headers["HTTP_OTP"]
+    return if @api_user.mfa_api_authorized?(otp)
+    prompt_text = otp.present? ? t(:otp_incorrect) : t(:otp_missing)
+    render plain: prompt_text, status: :unauthorized
+  end
+
   def authenticate_with_api_key
     api_key   = request.headers["Authorization"] || params[:api_key]
     @api_user = User.find_by_api_key(api_key)
@@ -118,5 +125,9 @@ class ApplicationController < ActionController::Base
 
   def mfa_enabled?
     cookies.permanent[:mfa_feature] == 'true'
+  end
+
+  def limit_page(max_page)
+    render_404 if @page > max_page
   end
 end

@@ -1,10 +1,6 @@
 source 'https://rubygems.org'
 
-# https://github.com/mime-types/ruby-mime-types/issues/94
-# This can be removed once all gems depend on > 3.0
-gem 'mime-types', '~> 2.99', require: 'mime/types/columnar'
-
-gem 'rails', '~> 5.1.0'
+gem 'rails', '~> 5.2.1'
 gem 'rails-i18n'
 
 gem 'autoprefixer-rails'
@@ -22,6 +18,7 @@ gem 'highline'
 gem 'honeybadger'
 gem 'http_accept_language'
 gem 'jquery-rails'
+gem 'kaminari'
 gem 'mail', '2.6.6'
 gem 'newrelic_rpm'
 gem 'paul_revere', '~> 3.0.0'
@@ -33,11 +30,10 @@ gem 'rdoc'
 gem 'rest-client', require: 'rest_client'
 gem 'sass', require: false
 gem 'shoryuken', '~> 2.1.0', require: false
-gem 'statsd-instrument', '~> 2.1.0'
+gem 'statsd-instrument', '~> 2.3.0'
 gem 'uglifier', '>= 1.0.3'
 gem 'unicorn'
 gem 'validates_formatting_of'
-gem 'will_paginate'
 gem 'elasticsearch-model', '~> 5.0.0'
 gem 'elasticsearch-rails', '~> 5.0.0'
 gem 'elasticsearch-dsl', '~> 0.1.2'
@@ -55,11 +51,13 @@ gem 'logstash-event'
 group :development, :test do
   gem 'rubocop', require: false
   gem 'toxiproxy', '~> 1.0.0'
+  gem 'pry-byebug'
 end
 
 group :development do
   gem 'bootsnap', require: false
   gem 'rails-erd'
+  gem 'listen'
 end
 
 group :test do
@@ -77,4 +75,5 @@ group :development, :deploy do
   gem 'capistrano', '~> 3.0', require: false
   gem 'capistrano-rails', '~> 1.1', require: false
   gem 'capistrano-bundler', '~> 1.1', require: false
+  gem 'kubernetes-deploy', '0.20.6', require: false
 end

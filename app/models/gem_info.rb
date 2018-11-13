@@ -123,8 +123,8 @@ class GemInfo
           ON rubygems_dependencies.id = dependencies.rubygem_id
           AND dependencies.scope = 'runtime'")
       .where("rubygems.name = ? AND indexed = true", @rubygem_name)
-      .group(group_by_columns)
-      .order("versions.created_at, number, platform, dep_name")
-      .pluck("#{group_by_columns}, #{dep_req_agg}, #{dep_name_agg}")
+      .group(Arel.sql(group_by_columns))
+      .order(Arel.sql("versions.created_at, number, platform, dep_name"))
+      .pluck(Arel.sql("#{group_by_columns}, #{dep_req_agg}, #{dep_name_agg}"))
   end
 end

@@ -10,9 +10,9 @@ FactoryBot.define do
   factory :user do
     email
     handle
-    password "password12345"
-    api_key "secret123"
-    email_confirmed true
+    password { "password12345" }
+    api_key { "secret123" }
+    email_confirmed { true }
   end
 
   factory :dependency do
@@ -33,12 +33,12 @@ FactoryBot.define do
   end
 
   factory :linkset do
-    home 'http://example.com'
-    wiki 'http://example.com'
-    docs 'http://example.com'
-    mail 'http://example.com'
-    code 'http://example.com'
-    bugs 'http://example.com'
+    home { 'http://example.com' }
+    wiki { 'http://example.com' }
+    docs { 'http://example.com' }
+    mail { 'http://example.com' }
+    code { 'http://example.com' }
+    bugs { 'http://example.com' }
   end
 
   factory :ownership do
@@ -57,9 +57,9 @@ FactoryBot.define do
 
   factory :rubygem do
     transient do
-      owners []
-      number nil
-      downloads 0
+      owners { [] }
+      number { nil }
+      downloads { 0 }
     end
 
     linkset
@@ -81,25 +81,25 @@ FactoryBot.define do
   end
 
   factory :version do
-    authors ["Joe User"]
-    built_at 1.day.ago
-    description "Some awesome gem"
-    indexed true
-    metadata "foo" => "bar"
+    authors { ["Joe User"] }
+    built_at { 1.day.ago }
+    description { "Some awesome gem" }
+    indexed { true }
+    metadata { { "foo" => "bar" } }
     number
-    platform "ruby"
-    required_rubygems_version ">= 2.6.3"
-    required_ruby_version ">= 2.0.0"
-    licenses "MIT"
-    requirements "Opencv"
+    platform { "ruby" }
+    required_rubygems_version { ">= 2.6.3" }
+    required_ruby_version { ">= 2.0.0" }
+    licenses { "MIT" }
+    requirements { "Opencv" }
     rubygem
-    size 1024
+    size { 1024 }
     # In reality sha256 is different for different version
     # sha256 is calculated in Pusher, we don't use pusher to create versions in tests
-    sha256 "tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g="
+    sha256 { "tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=" }
 
     trait :yanked do
-      indexed false
+      indexed { false }
     end
   end
 
@@ -113,13 +113,13 @@ FactoryBot.define do
     user
 
     factory :global_web_hook do
-      rubygem nil
+      rubygem { nil }
     end
   end
 
   factory :gem_download do
-    rubygem_id 0
-    version_id 0
-    count 0
+    rubygem_id { 0 }
+    version_id { 0 }
+    count { 0 }
   end
 end

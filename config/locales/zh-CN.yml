@@ -1,30 +1,32 @@
 zh-CN:
   edit: 编辑
-  failure_when_forbidden:
+  failure_when_forbidden: 请确认 URL 或再次提交
   feed_latest: RubyGems.org | 最新 Gems
   feed_subscribed: RubyGems.org | 订阅 Gems
   footer_about: RubyGems.org 是 Ruby 社区的 Gem 托管服务。<br />让你能便捷、快速的发布、管理你的 Gem 以及安装它们。提供 API 查阅可用 Gem 的详细资料。<br />参与进来成为一个贡献者，用你的能力推动社区进步。
   form_disable_with: 请稍后...
   help_url: http://help.rubygems.org
   locale_name: 简体中文
-  none:
-  not_found:
+  none: 无
+  not_found: 未找到
   please_sign_up: 拒绝访问。请先在 https://rubygems.org 上注册一个账号。
+  otp_incorrect:
+  otp_missing:
   sign_in: 登录
   sign_up: 注册
-  multifactor_authentication:
+  multifactor_authentication: 多重验证
   subtitle: Ruby 社区 Gem 托管
-  this_rubygem_could_not_be_found:
+  this_rubygem_could_not_be_found: 未找到这个 RubyGem
   time_ago: "%{duration} 前"
   title: RubyGems.org
   update: 更新
-  try_again:
-  advanced_search:
+  try_again: 请重试
+  advanced_search: 高级搜索
   activerecord:
     attributes:
       linkset:
-        bugs:
-        changelog:
+        bugs: Bug 追踪 URL
+        changelog: 更新日志 URL
         code: 源代码 URL
         docs: 文档 URL
         mail: 邮件列表 URL
@@ -52,11 +54,11 @@ zh-CN:
     create:
       promise_resend:
     new:
-      submit:
-      title:
-      will_email_notice:
+      submit: 重新发送
+      title: 重新发送确认邮件
+      will_email_notice: 我们将会通过 Email 发送确认激活账号的链接给你。
     update:
-      confirmed_email:
+      confirmed_email: 邮箱地址验证成功。
   home:
     index:
       downloads_counting: 总下载次数
@@ -80,12 +82,12 @@ zh-CN:
         monitored_by: 监控
         optimized_by: 优化
         resolved_with: 解析
-        security:
+        security: 安全
         source_code: 源代码
         statistics: 统计
         status: 状态
         supported_by: 支持
-        tested_by:
+        tested_by: 测试
         tracking_by: 追踪
         uptime: 服务状况
       header:
@@ -111,11 +113,11 @@ zh-CN:
       body:
   news:
     show:
-      title:
-      all_gems:
-      popular_gems:
+      title: 全部新发布 Gems
+      all_gems: 全部
+      popular_gems: 热门
     popular:
-      title:
+      title: 热门新发布 Gems
   pages:
     about:
       founding: 此项目创立由 %{founder} 于2009年4月，发展过程中有超过 %{contributors} 贡献者以及 %{downloads}。自从 RubyGems 1.3.6 发布以后，本站名称由 Gemcutter 改名为 %{title}，从而巩固在 Ruby 社区网站中和核心作用。
@@ -150,7 +152,7 @@ zh-CN:
       key:
       time_based:
     create:
-      qrcode_expired:      
+      qrcode_expired:
       success:
     recovery:
       continue:
@@ -158,12 +160,14 @@ zh-CN:
       note:
     destroy:
       success:
+    update:
+      success:
   profiles:
     edit:
-      email_awaiting_confirmation:
-      enter_password:
+      email_awaiting_confirmation: 请验证你的新邮箱地址 %{unconfirmed_email}
+      enter_password: 输入密码
       hide_email: 在公开的个人资料里面隐藏我的 Email
-      optional_twitter_username:
+      optional_twitter_username: Twitter 账号（可选）
       title: 修改个人资料
       api_access:
         confirm_reset: 确定要重置吗？此动作执行后将无法撤销
@@ -177,15 +181,20 @@ zh-CN:
         text: 需要一个新密码？没问题，访问 %{link}
         title: 重置密码
       delete:
-        delete:
-        delete_profile:
-        warning:
+        delete: 删除
+        delete_profile: 删除个人资料
+        warning: 警告
       mfa:
         multifactor_auth:
         disabled:
         go_settings:
         enabled:
-        disable:
+        update:
+        level:
+          title:
+          no_mfa:
+          ui_mfa_only:
+          ui_and_api_mfa:
     delete:
       title:
       confirm:
@@ -203,16 +212,16 @@ zh-CN:
   rubygems:
     aside:
       bundler_header: Gemfile
-      copied:
-      copy_to_clipboard:
+      copied: 已复制
+      copy_to_clipboard: 复制到剪贴板
       downloads_for_this_version: 这个版本
       install: 安装
-      required_ruby_version:
-      required_rubygems_version:
+      required_ruby_version: 需要的 Ruby 版本
+      required_rubygems_version: 需要的 RubyGems 版本
       links:
         badge: 徽章
-        bugs:
-        changelog:
+        bugs: Bug 追踪
+        changelog: 更新日志
         code: 源代码
         docs: 文档
         download: 下载
@@ -220,7 +229,7 @@ zh-CN:
         home: 主页
         mail: 邮件列表
         report_abuse: 举报投诉
-        reverse_dependencies:
+        reverse_dependencies: 反向依赖
         rss: RSS
         subscribe: 订阅
         unsubscribe: 取消订阅
@@ -239,11 +248,11 @@ zh-CN:
       owners_header: 所有者
       sha_256_checksum: SHA 256 checksum
     index:
-      downloads:
-      title:
+      downloads: 下载
+      title: Gems
     show:
-      licenses_header:
-      no_licenses:
+      licenses_header: 许可
+      no_licenses: 无
       requirements_header: 要求
       show_all_versions: 显示所有 (%{count} 个版本)
       versions_header: 版本列表
@@ -255,32 +264,35 @@ zh-CN:
         other:
   reverse_dependencies:
     index:
-      title:
-    reverse_dependencies:
-      search_reverse_dependencies:
+      title: "%{name} 的反向依赖"
+    search:
+      search_reverse_dependencies: 搜索反向依赖
   searches:
     advanced:
-      name:
-      summary:
-      description:
-      downloads:
-      updated:
+      name: 名称
+      summary: 摘要
+      description: 描述
+      downloads: 下载数
+      updated: 更新时间
     show:
       exact_match: 精确匹配
       subtitle: "%{query}"
+      month_update:
+      week_update:
+      filter:
   sessions:
     new:
       forgot_password: 忘记了密码？
-      resend_confirmation:
+      resend_confirmation: 没有收到确认邮件？
   stats:
     index:
-      all_time_most_downloaded:
+      all_time_most_downloaded: 历史下载次数排行
       total_downloads: 下载总次数
-      total_gems:
-      total_users:
+      total_gems: Gems 总数
+      total_users: 用户总数
   users:
     create:
-      email_sent:
+      email_sent: 确认邮件已发送到您的电子邮件地址。
     new:
       have_account: 已经有账号了？
   versions:
@@ -291,17 +303,17 @@ zh-CN:
     version:
       yanked: 已废弃
   will_paginate:
-    next_label:
+    next_label: 下一页
     page_gap: "…"
-    previous_label:
+    previous_label: 上一页
     page_entries_info:
-      multi_page:
-      multi_page_html:
+      multi_page: 显示所有 %{count} %{model}中的%{from}-%{to} 条
+      multi_page_html: 显示所有 <b>%{count}</b> %{model}中的<b>%{from}&nbsp;-&nbsp;%{to}</b> 条
       single_page:
-        one:
-        other:
-        zero:
+        one: 显示 1 %{model}
+        other: 显示所有 %{count} %{model}
+        zero: 暂时没有 %{model}
       single_page_html:
-        one:
-        other:
-        zero:
+        one: 显示 <b>1</b> %{model}
+        other: 显示 <b>所有 %{count}</b> %{model}
+        zero: 暂时没有 %{model}
