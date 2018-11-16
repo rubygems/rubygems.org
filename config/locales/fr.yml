@@ -104,7 +104,7 @@ fr:
       welcome_message: Bienvenue sur RubyGems.org! Veuillez cliquer sur le lien ci-dessous pour vérifier votre adresse email.
     email_reset:
       visit_link_instructions: Vous avez changé d'adresse email sur RubyGems.org. Veuillez suivre l'URL suivant pour réactiver votre compte.
-      link_expiration_explanation: Veuillez noter que ce lien n'est valide que pendant 15 minutes.
+      link_expiration_explanation: Veuillez noter que ce lien n'est valide que pendant 3 heures.
     deletion_complete:
       subject: Votre compte a bien été supprimé de RubyGems.org
       body: "Votre demande de suppression de compte sur RubyGems.org a bien été prise en compte. Vous pouvez toujours créer un nouveau compte sur la page %{sign_up}"
