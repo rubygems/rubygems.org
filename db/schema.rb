@@ -16,6 +16,15 @@ ActiveRecord::Schema.define(version: 2019_02_20_164205) do
   enable_extension "hstore"
   enable_extension "plpgsql"
 
+  create_table "adoptions", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "rubygem_id"
+    t.string "note"
+    t.integer "status", null: false
+    t.index ["rubygem_id"], name: "index_adoptions_on_rubygem_id"
+    t.index ["user_id"], name: "index_adoptions_on_user_id"
+  end
+
   create_table "announcements", id: :serial, force: :cascade do |t|
     t.text "body"
     t.datetime "created_at"
@@ -195,4 +204,6 @@ ActiveRecord::Schema.define(version: 2019_02_20_164205) do
     t.index ["user_id", "rubygem_id"], name: "index_web_hooks_on_user_id_and_rubygem_id"
   end
 
+  add_foreign_key "adoptions", "rubygems"
+  add_foreign_key "adoptions", "users"
 end

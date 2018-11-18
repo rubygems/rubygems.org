@@ -2,6 +2,7 @@ class Rubygem < ApplicationRecord
   include Patterns
   include RubygemSearchable
 
+  has_many :adoptions, dependent: :destroy
   has_many :ownerships, dependent: :destroy
   has_many :owners, through: :ownerships, source: :user
   has_many :subscriptions, dependent: :destroy

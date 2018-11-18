@@ -16,6 +16,7 @@ class User < ApplicationRecord
 
   before_destroy :yank_gems
 
+  has_many :adoptions, dependent: :destroy
   has_many :ownerships, dependent: :destroy
   has_many :rubygems, through: :ownerships
 
