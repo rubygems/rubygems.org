@@ -154,7 +154,7 @@ Rails.application.routes.draw do
         defaults: { format: :js }
       resources :versions, only: %i[show index]
       resources :reverse_dependencies, only: %i[index]
-      resources :adoptions, only: %i[list new create update]
+      resources :adoptions, only: %i[index new create update show]
     end
 
     ################################################################################
