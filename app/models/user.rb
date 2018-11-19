@@ -207,6 +207,13 @@ class User < ApplicationRecord
     save!(validate: false)
   end
 
+  def can_cancel?(adoption)
+    return true if adoption.user_id == id
+
+    rubygem = Rubygem.find(adoption.rubygem_id)
+    rubygem.owned_by?(self)
+  end
+
   private
 
   def verify_digit_otp(seed, otp)
