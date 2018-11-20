@@ -280,6 +280,12 @@ class Rubygem < ApplicationRecord
     reverse_dependencies.where("d.scope ='runtime'")
   end
 
+  def approve_adoption!(adoption)
+    ownerships.create(user: adoption.user)
+    adoptions.seeked.map(&:approved!)
+    adoption.update(status: :approved)
+  end
+
   private
 
   # a gem namespace is not protected if it is

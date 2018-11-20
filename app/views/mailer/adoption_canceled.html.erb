@@ -1,0 +1,6 @@
+<p> Hi <%= user.handle %> </p>
+<p>
+  We are sorry to tell you that your request for adoption of <%= rubygem.name %> has been rejected.
+  <br />
+  <%= link_to "#{rubygem.name} adoptions", rubygem_adoptions_path(@rubygem) %>
+</p>

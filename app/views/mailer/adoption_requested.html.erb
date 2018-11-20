@@ -1,0 +1,10 @@
+<p> Hi <%= owner.handle %> </p>
+<p>
+  <%= adoption.user.handle %> has requested adoption of <%= adoption.rubygem.name %>. Please, consider adding
+  <%= adoption.user.handle %> as owner of <%= adoption.rubygem.name %> by approving their adoption request.
+  <br />
+  Adoption note:
+  <%= adoption.note %>
+  <br />
+  <%= link_to "#{adoption.rubygem.name} adoptions", rubygem_adoptions_path(adoption.rubygem) %>
+</p>
