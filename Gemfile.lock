@@ -1,8 +1,8 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    acrawriter (1.0.0)
-      rubythemis
+    acrawriter (1.0.2)
+      rubythemis (~> 0.9.5)
     actioncable (5.2.1)
       actionpack (= 5.2.1)
       nio4r (~> 2.0)
@@ -35,6 +35,10 @@ GEM
       activemodel (= 5.2.1)
       activesupport (= 5.2.1)
       arel (>= 9.0)
+    activerecord_acrawriter (1.0.2)
+      acrawriter (~> 1.0)
+      activerecord
+      rubythemis (~> 0.9)
     activestorage (5.2.1)
       actionpack (= 5.2.1)
       activerecord (= 5.2.1)
@@ -345,6 +349,8 @@ GEM
     ruby-graphviz (1.2.3)
     ruby-progressbar (1.9.0)
     ruby_dep (1.5.0)
+    rubythemis (0.9.5)
+      ffi (~> 1.9, >= 1.9.8)
     sass (3.4.24)
     shoryuken (2.1.3)
       aws-sdk-core (~> 2)

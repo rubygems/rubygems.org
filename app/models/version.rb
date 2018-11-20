@@ -25,8 +25,7 @@ class Version < ApplicationRecord
   class AuthorType < AcraType
     def cast_value(value)
       if value.is_a?(Array)
-        value = value.join(', ')
-        super(value)
+        value.join(', ')
       else
         super
       end
