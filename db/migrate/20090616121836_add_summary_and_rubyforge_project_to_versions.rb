@@ -1,4 +1,4 @@
-class AddSummaryAndRubyforgeProjectToVersions < ActiveRecord::Migration
+class AddSummaryAndRubyforgeProjectToVersions < ActiveRecord::Migration[4.2]
   def self.up
     add_column :versions, :summary, :string
     add_column :versions, :rubyforge_project, :string

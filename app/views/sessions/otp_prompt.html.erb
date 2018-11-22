@@ -1,0 +1,11 @@
+<% @title = t('multifactor_authentication') %>
+
+<%= form_tag mfa_create_session_path, :method => :post do %>
+  <div class="text_field">
+    <%= label_tag :otp, t('multifactor_auths.otp_code'), :class => 'form__label' %>
+    <%= text_field_tag :otp, '', :class => 'form__input', :autofocus => true %>
+  </div>
+  <div class="form_bottom">
+    <%= submit_tag t('sign_in'), :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
+  </div>
+<% end %>

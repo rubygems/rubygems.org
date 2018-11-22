@@ -29,19 +29,19 @@ class Pusher
   def save
     # Restructured so that if we fail to write the gem (ie, s3 is down)
     # can clean things up well.
-
+    return notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403) unless update
     @indexer.write_gem @body, @spec
+  rescue ArgumentError => e
+    @version.destroy
+    Honeybadger.notify(e)
+    notify("There was a problem saving your gem. #{e}", 400)
   rescue StandardError => e
     @version.destroy
     Honeybadger.notify(e)
     notify("There was a problem saving your gem. Please try again.", 500)
   else
-    if update
-      after_write
-      notify("Successfully registered gem: #{version.to_title}", 200)
-    else
-      notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403)
-    end
+    after_write
+    notify("Successfully registered gem: #{version.to_title}", 200)
   end
 
   def pull_spec
@@ -89,7 +89,7 @@ class Pusher
 
   # Overridden so we don't get megabytes of the raw data printing out
   def inspect
-    attrs = [:@rubygem, :@user, :@message, :@code].map do |attr|
+    attrs = %i[@rubygem @user @message @code].map do |attr|
       "#{attr}=#{instance_variable_get(attr).inspect}"
     end
     "<Pusher #{attrs.join(' ')}>"
@@ -101,8 +101,7 @@ class Pusher
     @version_id = version.id
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
     rubygem.delay.index_document
-    expire_api_memcached
-    Fastly.delay.purge_api_cdn(rubygem.name)
+    GemCachePurger.call(rubygem.name)
     enqueue_web_hook_jobs
     StatsD.increment 'push.success'
   end
@@ -120,7 +119,7 @@ class Pusher
     set_info_checksum
 
     true
-  rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback, ActiveRecord::RecordNotUnique
     false
   end
 
@@ -131,15 +130,8 @@ class Pusher
     end
   end
 
-  def expire_api_memcached
-    Rails.cache.delete("deps/v1/#{rubygem.name}")
-    Rails.cache.delete("names")
-  end
-
   def set_info_checksum
-    # expire info cache of previous version
-    Rails.cache.delete("info/#{rubygem.name}")
-    checksum = Digest::MD5.hexdigest(CompactIndex.info(GemInfo.new(rubygem.name).compact_index_info))
+    checksum = GemInfo.new(rubygem.name).info_checksum
     version.update_attribute :info_checksum, checksum
   end
 end

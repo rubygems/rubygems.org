@@ -18,7 +18,6 @@ class StatsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should render_template :index
 
     should "display number of gems" do
       assert page.has_content?("1,337")

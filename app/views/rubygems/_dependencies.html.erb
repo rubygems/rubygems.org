@@ -1,7 +1,7 @@
 <% if dependencies.present? && @latest_version.indexed %>
   <div class="l-half--l">
     <div class="dependencies" id="<%= dependencies.first.scope %>_dependencies">
-      <h3 class="t-list__heading"><%= t '.header', :title => dependencies.first.scope.titleize %> (<%= dependencies_count %>):</h3>
+      <h3 class="t-list__heading"><%= t '.header', :title => dependencies.first.scope.titleize %> (<%= dependencies.size %>):</h3>
       <div class="t-list__items">
         <% dependencies.each do |dependency| %>
           <% if rubygem = dependency.rubygem %>

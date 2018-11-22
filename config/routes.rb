@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       resource :api_key, only: :show do
         put :reset
       end
+      resource :multifactor_auth, only: :show
       resources :profiles, only: :show
       resources :downloads, only: :index do
         get :top, on: :collection
@@ -65,7 +66,7 @@ Rails.application.routes.draw do
 
       resources :rubygems,
         path: 'gems',
-        only: [:create, :show, :index],
+        only: %i[create show index],
         id: Patterns::LAZY_ROUTE_PATTERN,
         format: /json|yaml/ do
         member do
@@ -76,7 +77,7 @@ Rails.application.routes.draw do
           put :unyank, to: "deletions#destroy"
         end
         constraints rubygem_id: Patterns::ROUTE_PATTERN do
-          resource :owners, only: [:show, :create, :destroy]
+          resource :owners, only: %i[show create destroy]
         end
       end
 
@@ -89,12 +90,14 @@ Rails.application.routes.draw do
 
       resource :search, only: :show
 
-      resources :web_hooks, only: [:create, :index] do
+      resources :web_hooks, only: %i[create index] do
         collection do
           delete :remove
           post :fire
         end
       end
+
+      resources :timeframe_versions, only: :index
     end
   end
 
@@ -105,9 +108,9 @@ Rails.application.routes.draw do
   ################################################################################
   # API v0
 
-  scope to: 'api/deprecated#index' do
+  scope controller: 'api/deprecated', action: 'index' do
     get 'api_key'
-    put 'api_key/reset', to: 'api/deprecated#index'
+    put 'api_key/reset'
 
     post 'gems'
     get 'gems/:id.json'
@@ -124,41 +127,52 @@ Rails.application.routes.draw do
   ################################################################################
   # UI
   scope constraints: { format: :html }, defaults: { format: 'html' } do
-    resource :search,    only: :show
+    resource :search, only: :show do
+      get :advanced
+    end
     resource :dashboard, only: :show, constraints: { format: /html|atom/ }
     resources :profiles, only: :show
-    resource :profile, only: [:edit, :update]
+    resource :multifactor_auth, only: %i[new create update]
+    resource :profile, only: %i[edit update] do
+      member do
+        get :delete
+        delete :destroy, as: :destroy
+      end
+    end
     resources :stats, only: :index
+    resource :news, path: 'news', only: [:show] do
+      get :popular, on: :collection
+    end
 
     resources :rubygems,
-      only: [:index, :show, :edit, :update],
+      only: %i[index show edit update],
       path: 'gems',
       constraints: { id: Patterns::ROUTE_PATTERN, format: /html|atom/ } do
       resource :subscription,
-        only: [:create, :destroy],
+        only: %i[create destroy],
         constraints: { format: :js },
         defaults: { format: :js }
-      resources :versions, only: [:show, :index]
+      resources :versions, only: %i[show index]
+      resources :reverse_dependencies, only: %i[index]
     end
   end
 
   ################################################################################
   # Clearance Overrides and Additions
 
-  resource :email_confirmations, only: [:new, :create] do
+  resource :email_confirmations, only: %i[new create] do
     get 'confirm/:token', to: 'email_confirmations#update', as: :update
+    patch 'unconfirmed'
   end
 
-  # login path is "/session" => "session#create"
-  # and logout path is "/sign_out" => "session#destroy"
-  # Check: https://github.com/thoughtbot/clearance/blob/master/lib/generators/clearance/routes/templates/routes.rb#L2
-  resource :session, only: :create
-  delete '/sign_out' => 'sessions#destroy', as: 'log_out'
+  resource :session, only: %i[create destroy] do
+    post 'mfa_create', to: 'sessions#mfa_create', as: :mfa_create
+  end
 
-  resources :passwords, only: [:new, :create]
+  resources :passwords, only: %i[new create]
 
-  resources :users, only: [:new, :create] do
-    resource :password, only: [:create, :edit, :update]
+  resources :users, only: %i[new create] do
+    resource :password, only: %i[create edit update]
   end
 
   ################################################################################
@@ -169,7 +183,5 @@ Rails.application.routes.draw do
     get 'revision' => 'ping#revision'
   end
 
-  unless Clearance.configuration.allow_sign_up?
-    get '/sign_up' => 'users#disabled_signup'
-  end
+  get '/sign_up' => 'users#disabled_signup' unless Clearance.configuration.allow_sign_up?
 end

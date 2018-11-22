@@ -1,4 +1,4 @@
-class MoveDownloadsToRubygems < ActiveRecord::Migration
+class MoveDownloadsToRubygems < ActiveRecord::Migration[4.2]
   def self.up
     remove_column :versions, :downloads
     add_column :rubygems, :downloads, :integer, default: 0

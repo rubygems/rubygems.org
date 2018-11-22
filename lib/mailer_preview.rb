@@ -6,4 +6,8 @@ class MailerPreview < ActionMailer::Preview
   def email_confirmation
     Mailer.email_confirmation(User.last)
   end
+
+  def change_password
+    ClearanceMailer.change_password(User.last)
+  end
 end

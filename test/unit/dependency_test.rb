@@ -18,7 +18,7 @@ class DependencyTest < ActiveSupport::TestCase
       @dependency.save
       json = JSON.load(@dependency.to_json)
 
-      assert_equal %w(name requirements), json.keys.sort
+      assert_equal %w[name requirements], json.keys.sort
       assert_equal @dependency.rubygem.name, json["name"]
       assert_equal @dependency.requirements, json["requirements"]
     end
@@ -28,16 +28,16 @@ class DependencyTest < ActiveSupport::TestCase
       xml = Nokogiri.parse(@dependency.to_xml)
 
       assert_equal "dependency", xml.root.name
-      assert_equal %w(name requirements), xml.root.children.select(&:element?).map(&:name).sort
+      assert_equal %w[name requirements], xml.root.children.select(&:element?).map(&:name).sort
       assert_equal @dependency.rubygem.name, xml.at_css("name").content
       assert_equal @dependency.requirements, xml.at_css("requirements").content
     end
 
     should "return YAML" do
       @dependency.save
-      yaml = YAML.load(@dependency.to_yaml)
+      yaml = YAML.safe_load(@dependency.to_yaml)
 
-      assert_equal %w(name requirements), yaml.keys.sort
+      assert_equal %w[name requirements], yaml.keys.sort
       assert_equal @dependency.rubygem.name, yaml["name"]
       assert_equal @dependency.requirements, yaml["requirements"]
     end
@@ -150,11 +150,11 @@ class DependencyTest < ActiveSupport::TestCase
     end
 
     should "return its payload" do
-      assert_equal @dependency.payload, YAML.load(@dependency.to_yaml)
+      assert_equal @dependency.payload, YAML.safe_load(@dependency.to_yaml)
     end
 
     should "nest properly" do
-      assert_equal [@dependency.payload], YAML.load([@dependency].to_yaml)
+      assert_equal [@dependency.payload], YAML.safe_load([@dependency].to_yaml)
     end
   end
 end

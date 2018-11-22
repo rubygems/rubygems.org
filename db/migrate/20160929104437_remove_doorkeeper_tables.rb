@@ -1,4 +1,4 @@
-class RemoveDoorkeeperTables < ActiveRecord::Migration
+class RemoveDoorkeeperTables < ActiveRecord::Migration[4.2]
   def up
     drop_table :oauth_applications
     drop_table :oauth_access_grants

@@ -1,0 +1,16 @@
+<% @title = t('.title', name: @rubygem.name) %>
+<% @subtitle = @latest_version.try(:slug) %>
+
+<div class="l-overflow">
+  <div class="l-colspan--l colspan--l--has-border">
+    <header class="gems__header push">
+      <%= render "search", rubygem: @rubygem %>
+    </header>
+
+    <div class="reverse__dependencies">
+      <%= render @reverse_dependencies %>
+    </div>
+    <%= plain_paginate @reverse_dependencies %>
+  </div>
+  <%= render 'rubygems/aside' %>
+</div>

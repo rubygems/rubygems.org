@@ -1,6 +1,24 @@
 require 'test_helper'
 
 class DashboardsControllerTest < ActionController::TestCase
+  context "When not logged in" do
+    setup do
+      user = create(:user)
+      @subscribed_version = create(:version, created_at: 1.hour.ago)
+      create(:subscription, rubygem: @subscribed_version.rubygem, user: user)
+
+      get :show, params: { api_key: user.api_key }, format: "atom"
+    end
+
+    context "On GET to show as an atom feed with a working api_key" do
+      should respond_with :success
+
+      should "render an XML feed with subscribed items" do
+        assert_select "entry > title", text: /#{@subscribed_version.rubygem.name}/
+      end
+    end
+  end
+
   context "When logged in" do
     setup do
       @user = create(:user)
@@ -20,7 +38,6 @@ class DashboardsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should render_template :show
       should "render links" do
         @gems.each do |g|
           assert page.has_content?(g.name)
@@ -50,7 +67,6 @@ class DashboardsControllerTest < ActionController::TestCase
       end
 
       should respond_with :success
-      should render_template 'versions/feed'
 
       should "render posts with platform-specific titles and links of all subscribed versions" do
         @subscribed_versions.each do |v|
@@ -85,6 +101,6 @@ class DashboardsControllerTest < ActionController::TestCase
   context "On GET to show without being signed in" do
     setup { get :show }
     should respond_with :redirect
-    should redirect_to('the homepage') { root_url }
+    should redirect_to('the homepage') { root_path }
   end
 end

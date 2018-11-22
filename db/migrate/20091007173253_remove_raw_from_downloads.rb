@@ -1,4 +1,4 @@
-class RemoveRawFromDownloads < ActiveRecord::Migration
+class RemoveRawFromDownloads < ActiveRecord::Migration[4.2]
   def self.up
     remove_column :downloads, :raw
   end

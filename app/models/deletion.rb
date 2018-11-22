@@ -1,4 +1,4 @@
-class Deletion < ActiveRecord::Base
+class Deletion < ApplicationRecord
   belongs_to :user
 
   validates :user, :rubygem, :number, presence: true
@@ -7,11 +7,17 @@ class Deletion < ActiveRecord::Base
 
   before_validation :record_metadata
   after_create :remove_from_index, :set_yanked_info_checksum
-  after_commit :expire_api_memcached
-  after_commit :remove_from_storage
+  after_commit :remove_from_storage, on: :create
+  after_commit :expire_cache
   after_commit :update_search_index
 
   attr_accessor :version
+
+  def restore!
+    restore_to_index
+    restore_to_storage
+    destroy!
+  end
 
   private
 
@@ -29,10 +35,9 @@ class Deletion < ActiveRecord::Base
     self.platform = @version.platform
   end
 
-  def expire_api_memcached
-    ["deps/v1/#{rubygem}", "info/#{rubygem}", "versions", "names"].each do |key|
-      Rails.cache.delete key
-    end
+  def expire_cache
+    purge_fastly
+    GemCachePurger.call(rubygem)
   end
 
   def remove_from_index
@@ -40,12 +45,24 @@ class Deletion < ActiveRecord::Base
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
   end
 
+  def restore_to_index
+    version.update!(indexed: true, yanked_at: nil, yanked_info_checksum: nil)
+    Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
+  end
+
   def remove_from_storage
     RubygemFs.instance.remove("gems/#{@version.full_name}.gem")
     RubygemFs.instance.remove("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
+  end
+
+  def restore_to_storage
+    RubygemFs.instance.restore("gems/#{@version.full_name}.gem")
+    RubygemFs.instance.restore("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
+  end
+
+  def purge_fastly
     Fastly.delay.purge("gems/#{@version.full_name}.gem")
     Fastly.delay.purge("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
-    Fastly.delay.purge_api_cdn(rubygem)
   end
 
   def update_search_index
@@ -53,10 +70,7 @@ class Deletion < ActiveRecord::Base
   end
 
   def set_yanked_info_checksum
-    # expire info cache of last version
-    Rails.cache.delete("info/#{rubygem}")
-    gem_info = GemInfo.new(version.rubygem.name)
-    checksum = Digest::MD5.hexdigest(CompactIndex.info(gem_info.compact_index_info))
+    checksum = GemInfo.new(version.rubygem.name).info_checksum
     version.update_attribute :yanked_info_checksum, checksum
   end
 end

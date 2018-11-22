@@ -3,16 +3,16 @@ require 'test_helper'
 class UserTest < ActiveSupport::TestCase
   def assert_resetting_email_changes(attr_name)
     assert_changed(@user, attr_name) do
-      @user.update_attributes(email: 'some@one.com')
+      @user.update(email: 'some@one.com')
     end
   end
 
-  should have_many(:ownerships)
+  should have_many(:ownerships).dependent(:destroy)
   should have_many(:rubygems).through(:ownerships)
   should have_many(:subscribed_gems).through(:subscriptions)
   should have_many(:deletions)
-  should have_many(:subscriptions)
-  should have_many(:web_hooks)
+  should have_many(:subscriptions).dependent(:destroy)
+  should have_many(:web_hooks).dependent(:destroy)
 
   context "validations" do
     context "handle" do
@@ -51,6 +51,14 @@ class UserTest < ActiveSupport::TestCase
 
         user.handle = "bills"
         assert_equal "bills", user.display_handle
+      end
+    end
+
+    context 'email' do
+      should "be less than 255 characters" do
+        user = build(:user, email: ("a" * 255) + "@example.com")
+        refute user.valid?
+        assert_contains user.errors[:email], "is too long (maximum is 254 characters)"
       end
     end
 
@@ -120,12 +128,12 @@ class UserTest < ActiveSupport::TestCase
     should "have email and handle on XML" do
       xml = Nokogiri.parse(@user.to_xml)
       assert_equal "user", xml.root.name
-      assert_equal %w(id handle email), xml.root.children.select(&:element?).map(&:name)
+      assert_equal %w[id handle email], xml.root.children.select(&:element?).map(&:name)
       assert_equal @user.email, xml.at_css("email").content
     end
 
     should "have email and handle on YAML" do
-      yaml = YAML.load(@user.to_yaml)
+      yaml = YAML.safe_load(@user.to_yaml)
       hash = { 'id' => @user.id, 'email' => @user.email, 'handle' => @user.handle }
       assert_equal hash, yaml
     end
@@ -176,8 +184,8 @@ class UserTest < ActiveSupport::TestCase
         assert_resetting_email_changes :confirmation_token
       end
 
-      should "unconfirm email" do
-        assert_resetting_email_changes :unconfirmed?
+      should "store unconfirm email" do
+        assert_resetting_email_changes :unconfirmed_email
       end
 
       should "reset token_expires_at" do
@@ -234,6 +242,58 @@ class UserTest < ActiveSupport::TestCase
         assert @user.valid_confirmation_token?
       end
     end
+
+    context "two factor authentication" do
+      should 'disable mfa by default' do
+        refute @user.mfa_enabled?
+      end
+
+      context "when enabled" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_mfa_only)
+        end
+
+        should "be able to use a recovery code only once" do
+          code = @user.mfa_recovery_codes.first
+          assert @user.otp_verified?(code)
+          refute @user.otp_verified?(code)
+        end
+
+        should "be able to verify correct OTP" do
+          assert @user.otp_verified?(ROTP::TOTP.new(@user.mfa_seed).now)
+        end
+
+        should "return true for mfa status check" do
+          assert @user.mfa_enabled?
+          refute @user.no_mfa?
+        end
+
+        should "return true for otp in last interval" do
+          last_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current - 30)
+          assert @user.otp_verified?(last_otp)
+        end
+
+        should "return true for otp in next interval" do
+          next_otp = ROTP::TOTP.new(@user.mfa_seed).at(Time.current + 30)
+          assert @user.otp_verified?(next_otp)
+        end
+      end
+
+      context "when disabled" do
+        setup do
+          @user.disable_mfa!
+        end
+
+        should "return false for verifying OTP" do
+          refute @user.otp_verified?('')
+        end
+
+        should "return false for mfa status check" do
+          refute @user.mfa_enabled?
+          assert @user.no_mfa?
+        end
+      end
+    end
   end
 
   context "rubygems" do
@@ -260,6 +320,11 @@ class UserTest < ActiveSupport::TestCase
       @rubygems.first.versions.first.update! indexed: false
       assert_equal @user.total_rubygems_count, 2
     end
+
+    should "not include gems with more than one owner" do
+      @rubygems.first.owners << create(:user)
+      assert_equal 2, @user.only_owner_gems.count
+    end
   end
 
   context "yaml" do
@@ -268,11 +333,82 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "return its payload" do
-      assert_equal @user.payload, YAML.load(@user.to_yaml)
+      assert_equal @user.payload, YAML.safe_load(@user.to_yaml)
     end
 
     should "nest properly" do
-      assert_equal [@user.payload], YAML.load([@user].to_yaml)
+      assert_equal [@user.payload], YAML.safe_load([@user].to_yaml)
+    end
+  end
+
+  context "destroy" do
+    setup do
+      @user = create(:user)
+      @rubygem = create(:rubygem)
+      create(:ownership, rubygem: @rubygem, user: @user)
+      @version = create(:version, rubygem: @rubygem)
+    end
+
+    context "user is only owner of gem" do
+      should "record deletion" do
+        assert_difference 'Deletion.count', 1 do
+          @user.destroy
+        end
+      end
+      should "mark rubygem unowned" do
+        @user.destroy
+        assert @rubygem.unowned?
+      end
+    end
+
+    context "user has co-owner of gem" do
+      setup do
+        @rubygem.ownerships.create(user: create(:user))
+      end
+
+      should "not record deletion" do
+        assert_no_difference 'Deletion.count' do
+          @user.destroy
+        end
+      end
+      should "not mark rubygem unowned" do
+        @user.destroy
+        refute @rubygem.unowned?
+      end
+    end
+  end
+
+  context "#remember_me!" do
+    setup do
+      @user = create(:user)
+      @user.remember_me!
+    end
+
+    should "set remember_token" do
+      assert_not_nil @user.remember_token
+    end
+
+    should "set expiry of remember_token to two weeks from now" do
+      expected_expiry = Gemcutter::REMEMBER_FOR.from_now
+      assert_in_delta expected_expiry, @user.remember_token_expires_at, 1.second
+    end
+  end
+
+  context "#remember_me?" do
+    setup { @user = create(:user) }
+
+    should "return false when remember_token_expires_at is not set" do
+      refute @user.remember_me?
+    end
+
+    should "return false when remember_token has expired" do
+      @user.update_attribute(:remember_token_expires_at, 1.second.ago)
+      refute @user.remember_me?
+    end
+
+    should "return true when remember_token has not expired" do
+      @user.update_attribute(:remember_token_expires_at, 1.second.from_now)
+      assert @user.remember_me?
     end
   end
 end

@@ -1,7 +1,7 @@
-class Linkset < ActiveRecord::Base
+class Linkset < ApplicationRecord
   belongs_to :rubygem
 
-  LINKS = %w(home code docs wiki mail bugs).freeze
+  LINKS = %w[home code docs wiki mail bugs].freeze
 
   LINKS.each do |url|
     validates_formatting_of url.to_sym,
@@ -16,6 +16,6 @@ class Linkset < ActiveRecord::Base
   end
 
   def update_attributes_from_gem_specification!(spec)
-    update_attributes!(home: spec.homepage)
+    update!(home: spec.homepage)
   end
 end

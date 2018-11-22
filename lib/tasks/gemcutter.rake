@@ -1,3 +1,5 @@
+require "tasks/helpers/gemcutter_tasks_helper"
+
 namespace :gemcutter do
   namespace :index do
     desc "Update the index"
@@ -34,7 +36,7 @@ namespace :gemcutter do
       total = without_sha256.count
       i = 0
       without_sha256.find_each do |version|
-        version.recalculate_sha256!
+        GemcutterTaskshelper.recalculate_sha256!(version)
         i += 1
         print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
       end
@@ -48,7 +50,7 @@ namespace :gemcutter do
       i = 0
       total = Version.count
       Version.find_each do |version|
-        actual_sha256 = version.recalculate_sha256
+        actual_sha256 = GemcutterTaskshelper.recalculate_sha256(version.full_name)
         if actual_sha256 && version.sha256 != actual_sha256
           puts "#{version.full_name}.gem has sha256 '#{actual_sha256}', " \
             "but '#{version.sha256}' was expected."
@@ -71,7 +73,7 @@ namespace :gemcutter do
       i = 0
       puts "Total: #{total}"
       without_metadata.find_each do |version|
-        version.recalculate_metadata!
+        GemcutterTaskshelper.recalculate_metadata!(version)
         i += 1
         print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
       end
@@ -91,7 +93,7 @@ namespace :gemcutter do
       i = 0
       puts "Total: #{total}"
       without_required_rubygems_version.find_each do |version|
-        version.assign_required_rubygems_version!
+        GemcutterTaskshelper.assign_required_rubygems_version!(version)
         i += 1
         print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
       end

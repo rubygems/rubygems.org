@@ -1,7 +1,7 @@
-class LogTicket < ActiveRecord::Base
-  enum backend: [:s3, :local]
+class LogTicket < ApplicationRecord
+  enum backend: %i[s3 local]
 
-  scope :pending, -> { limit(1).lock(true).select("id").where(status: "pending").order("id ASC") }
+  scope(:pending, -> { limit(1).lock(true).select("id").where(status: "pending").order("id ASC") })
 
   def self.pop(key: nil, directory: nil)
     scope = pending
@@ -12,7 +12,7 @@ class LogTicket < ActiveRecord::Base
     find_by_sql(["UPDATE #{quoted_table_name} SET status = ? WHERE id IN (#{sql}) RETURNING *", 'processing']).first
   end
 
-  def filesystem
+  def fs
     @fs ||=
       if s3?
         RubygemFs::S3.new(bucket: directory)
@@ -22,6 +22,6 @@ class LogTicket < ActiveRecord::Base
   end
 
   def body
-    filesystem.get(key)
+    fs.get(key)
   end
 end

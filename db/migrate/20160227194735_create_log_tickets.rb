@@ -1,4 +1,4 @@
-class CreateLogTickets < ActiveRecord::Migration
+class CreateLogTickets < ActiveRecord::Migration[4.2]
   def change
     create_table :log_tickets do |t|
       t.string :key

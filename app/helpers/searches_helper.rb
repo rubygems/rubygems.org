@@ -3,35 +3,27 @@ module SearchesHelper
     return false if gems.size >= 1
     return false unless gems.respond_to?(:response)
     suggestions = gems.response['suggest']
-    return false unless suggestions.present?
-    return false unless suggestions['suggest_name'].present?
+    return false if suggestions.blank?
+    return false if suggestions['suggest_name'].blank?
     return false if suggestions['suggest_name'][0]['options'].empty?
     suggestions.map { |_k, v| v.first['options'] }.flatten.map { |v| v['text'] }.uniq
   end
 
   def aggregation_match_count(aggregration, field)
     count = aggregration['buckets'][field]['doc_count']
-    if count > 0
-      path = search_path(params: { query: "#{field}:#{params[:query]}" })
-      link_to "#{field.capitalize} (#{count})", path, class: 't-link--black'
-    end
+    return unless count > 0
+
+    path = search_path(params: { query: "#{field}:#{params[:query]}" })
+    link_to "#{field.capitalize} (#{count})", path, class: 't-link--black'
   end
 
-  def aggregation_week_count(aggregration)
-    count = aggregration['buckets'][1]['doc_count']
-    if count > 0
-      week_ago = (Time.zone.today - 7.days).to_s(:db)
-      path = search_path(params: { query: "#{params[:query]} AND updated:[#{week_ago} TO *}" })
-      link_to "Updated last week (#{count})", path, class: 't-link--black'
-    end
-  end
+  def aggregation_count(aggregration, duration, buckets_pos)
+    count = aggregration['buckets'][buckets_pos]['doc_count']
+    return unless count > 0
 
-  def aggregation_month_count(aggregration)
-    count = aggregration['buckets'][0]['doc_count']
-    if count > 0
-      month_ago = (Time.zone.today - 30.days).to_s(:db)
-      path = search_path(params: { query: "#{params[:query]} AND updated:[#{month_ago} TO *}" })
-      link_to "Updated last month (#{count})", path, class: 't-link--black'
-    end
+    time_ago = (Time.zone.today - duration).to_s(:db)
+    path = search_path(params: { query: "#{params[:query]} AND updated:[#{time_ago} TO *}" })
+    update_info = (duration == 30.days ? t('.month_update', count: count) : t('.week_update', count: count))
+    link_to update_info, path, class: 't-link--black'
   end
 end

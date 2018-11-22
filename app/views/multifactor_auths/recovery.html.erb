@@ -1,0 +1,11 @@
+<% @title = t('.title') %>
+
+<div class="t-body">
+  <ul id="recovery-code-list">
+    <% current_user.mfa_recovery_codes.each do |code| %>
+      <li><%= code %></li>
+    <% end %>
+  </ul>
+  <p><%= t '.note' %></p>
+  <%= link_to t('.continue'), edit_profile_path %>
+</div>

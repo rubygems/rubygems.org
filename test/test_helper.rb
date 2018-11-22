@@ -1,5 +1,5 @@
 ENV["RAILS_ENV"] ||= "test"
-require File.expand_path('../../config/environment', __FILE__)
+require File.expand_path('../config/environment', __dir__)
 
 require 'rails/test_help'
 require 'mocha/mini_test'
@@ -9,12 +9,13 @@ require 'clearance/test_unit'
 require 'shoulda'
 require 'helpers/gem_helpers'
 require 'helpers/email_helpers'
+require 'helpers/es_helper'
 
 RubygemFs.mock!
 Aws.config[:stub_responses] = true
 
 class ActiveSupport::TestCase
-  include FactoryGirl::Syntax::Methods
+  include FactoryBot::Syntax::Methods
   include GemHelpers
   include EmailHelpers
 
@@ -47,4 +48,11 @@ Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
 
 class SystemTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
+end
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :minitest
+    with.library :rails
+  end
 end

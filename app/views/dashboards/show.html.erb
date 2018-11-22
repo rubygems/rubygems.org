@@ -5,7 +5,7 @@
     <h3 class="gems__gem__name">
       <%= t '.latest' %>:
     </h3>
-    <%= link_to dashboard_url(:api_key => current_user.api_key, :format => :atom), :id => 'feed', :title => t('.latest_title'), :class => 'gem__link t-list__item', 'data-icon' => '#' do %>
+    <%= link_to dashboard_path(:api_key => current_user.api_key, :format => :atom), :id => 'feed', :title => t('.latest_title'), :class => 'gem__link t-list__item', 'data-icon' => '#' do %>
       <span class="t-hidden">RSS</span>
     <% end %>
     </a>
@@ -18,7 +18,7 @@
         <ol>
           <% @latest_updates.each do |version| %>
             <li>
-              <a href="<%= rubygem_url(version.rubygem) %>" class="dashboard__gem">
+              <a href="<%= rubygem_path(version.rubygem) %>" class="dashboard__gem">
                 <div class="dashboard__gem__info">
                   <strong class="dashboard__gem__name"><%= version.to_title %></strong>
                   <i class="dashboard__gem__version"><%= t 'time_ago', :duration => time_ago_in_words(version.created_at) %></i>
@@ -39,7 +39,7 @@
         <div class="t-body push--bottom">
           <p>
             <%= t('.no_owned', :creating_link => link_to(t('.creating_link_text'), "http://guides.rubygems.org/make-your-own-gem/").html_safe,
-                               :migrating_link => link_to(t('.migrating_link_text'), page_url("migrate"))).html_safe %>
+                               :migrating_link => link_to(t('.migrating_link_text'), page_path("migrate"))).html_safe %>
           </p>
         </div>
       <% else %>

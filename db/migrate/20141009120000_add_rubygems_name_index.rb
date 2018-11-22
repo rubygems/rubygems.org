@@ -1,4 +1,4 @@
-class AddRubygemsNameIndex < ActiveRecord::Migration
+class AddRubygemsNameIndex < ActiveRecord::Migration[4.2]
   def up
     # add_index :rubygems, 'upper(name) varchar_pattern_ops', :name => :rubygems_name_upcase
     execute "CREATE INDEX index_rubygems_upcase ON rubygems (upper(name) varchar_pattern_ops)"

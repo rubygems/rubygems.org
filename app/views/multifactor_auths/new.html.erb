@@ -1,0 +1,24 @@
+<% @title = t('.title') %>
+
+<div class="t-body l-overflow">
+  <div class="l-half--l">
+    <%= raw @qrcode_svg %>
+  </div>
+  <div>
+    <p><%= t('.scan_prompt') %></p>
+    <p>
+      <span id="mfa-account"><%= t('.account', :account => "#{issuer}:#{current_user.email}") %></span><br>
+      <span id="mfa-key"><%= t('.key', :key => @seed.chars.each_slice(4).map(&:join).join(' ')) %></span><br>
+      <span id="mfa-type"><%= t('.time_based') %></span>
+    </p>
+  </div>
+</div>
+
+<%= form_tag multifactor_auth_path, :method => :post do %>
+  <div class="text_field">
+    <%= label_tag :otp, 'OTP code', :class => 'form__label' %>
+    <p class='form__field__instructions'><%= t '.otp_prompt' %></p>
+    <%= text_field_tag :otp, '', :class => 'form__input' %>
+  </div>
+  <%= submit_tag t('.enable'), :class => 'form__submit' %>
+<% end %>

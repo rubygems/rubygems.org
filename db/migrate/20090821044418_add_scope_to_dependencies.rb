@@ -1,4 +1,4 @@
-class AddScopeToDependencies < ActiveRecord::Migration
+class AddScopeToDependencies < ActiveRecord::Migration[4.2]
   def self.up
     add_column :dependencies, :scope, :string
     Dependency.update_all(scope: 'runtime')

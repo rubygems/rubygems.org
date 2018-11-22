@@ -14,16 +14,15 @@ class Api::V1::VersionsController < Api::BaseController
         format.yaml { render yaml: @rubygem.public_versions }
       end
     else
-      render text: t(:this_rubygem_could_not_be_found), status: :not_found
+      render plain: t(:this_rubygem_could_not_be_found), status: :not_found
     end
   end
 
   def latest
     rubygem = Rubygem.find_by_name(params[:id])
     version = nil
-    if rubygem && rubygem.public_versions.indexed.count.nonzero?
-      version = rubygem.versions.most_recent
-    end
+
+    version = rubygem.versions.most_recent if rubygem&.public_versions&.indexed&.count&.nonzero?
     number = version.number if version
     render json: { "version" => number || "unknown" }, callback: params['callback']
   end

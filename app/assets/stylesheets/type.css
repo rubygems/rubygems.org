@@ -44,7 +44,7 @@ label.t-hidden {
   font-weight: 800;
   font-size: 12px;
   text-transform: uppercase;
-  color: #a6aab2; }
+  color: #e9573f; }
   .t-list__heading:not(:first-child) {
     margin-top: 25px; }
 
@@ -208,3 +208,7 @@ a.t-list__item {
   border-left: 10px solid #e5e6e9; }
   .t-body blockquote p {
     font-style: italic; }
+
+.t-item--hidden {
+  display: none !important;
+}

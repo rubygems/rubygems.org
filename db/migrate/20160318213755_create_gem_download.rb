@@ -1,4 +1,4 @@
-class CreateGemDownload < ActiveRecord::Migration
+class CreateGemDownload < ActiveRecord::Migration[4.2]
   def change
     create_table :gem_downloads do |t|
       t.integer :rubygem_id, null: false

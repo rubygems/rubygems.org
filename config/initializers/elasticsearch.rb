@@ -1,16 +1,15 @@
-if Rails.env.test? || Rails.env.development?
-  port = Toxiproxy.running? ? 22_221 : 9200
-  if Toxiproxy.running?
-    Toxiproxy.populate(
-      [
-        {
-          name: 'elasticsearch',
-          listen: "127.0.0.1:#{port}",
-          upstream: '127.0.0.1:9200'
-        }
-      ]
-    )
-  end
+port = 9200
+if (Rails.env.test? || Rails.env.development?) && Toxiproxy.running?
+  port = 22_221
+  Toxiproxy.populate(
+    [
+      {
+        name: 'elasticsearch',
+        listen: "127.0.0.1:#{port}",
+        upstream: '127.0.0.1:9200'
+      }
+    ]
+  )
 end
 
 url = ENV['ELASTICSEARCH_URL'] || "http://localhost:#{port}"

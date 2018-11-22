@@ -1,4 +1,5 @@
 require 'cgi'
+require 'shoryuken'
 
 class SqsWorker
   include Shoryuken::Worker

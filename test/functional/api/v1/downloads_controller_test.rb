@@ -24,14 +24,14 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:yaml) do |body|
-      YAML.load(body)[:total]
+      YAML.safe_load(body, [Symbol])[:total]
     end
 
     should_respond_to(:text, &:to_i)
   end
 
   def get_show(version, format = 'json')
-    get :show, id: version.full_name, format: format
+    get :show, params: { id: version.full_name }, format: format
   end
 
   def self.should_respond_to(format, to_meth = :to_s)
@@ -72,13 +72,13 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:yaml, :to_sym) do |body|
-      YAML.load(body)
+      YAML.safe_load(body, [Symbol])
     end
   end
 
   context "on GET to show for an unknown gem" do
     setup do
-      get :show, id: "rials", format: 'json'
+      get :show, params: { id: "rials" }, format: 'json'
     end
 
     should "return a 404" do

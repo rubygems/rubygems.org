@@ -1,4 +1,4 @@
-class AddLatestToVersion < ActiveRecord::Migration
+class AddLatestToVersion < ActiveRecord::Migration[4.2]
   def self.up
     add_column :versions, :latest, :boolean
 

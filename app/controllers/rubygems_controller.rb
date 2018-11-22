@@ -1,18 +1,21 @@
 class RubygemsController < ApplicationController
-  before_action :redirect_to_root, only: [:edit, :update], unless: :signed_in?
-  before_action :set_blacklisted_gem, only: [:show], if: :blacklisted?
-  before_action :find_rubygem, only: [:edit, :update, :show], unless: :blacklisted?
-  before_action :load_gem, only: [:edit, :update]
+  include LatestVersion
+  before_action :redirect_to_root, only: %i[edit update], unless: :signed_in?
+  before_action :set_blacklisted_gem, only: %i[show], if: :blacklisted?
+  before_action :find_rubygem, only: %i[edit update show], unless: :blacklisted?
+  before_action :latest_version, only: %i[show], unless: :blacklisted?
+  before_action :find_versioned_links, only: %i[show], unless: :blacklisted?
+  before_action :load_gem, only: %i[edit update]
   before_action :set_page, only: :index
 
   def index
     respond_to do |format|
       format.html do
         @letter = Rubygem.letterize(params[:letter])
-        @gems   = Rubygem.letter(@letter).includes(:latest_version, :gem_download).paginate(page: @page)
+        @gems   = Rubygem.letter(@letter).includes(:latest_version, :gem_download).page(@page)
       end
       format.atom do
-        @versions = Version.published(20)
+        @versions = Version.published(Gemcutter::DEFAULT_PAGINATION)
         render 'versions/feed'
       end
     end
@@ -22,9 +25,8 @@ class RubygemsController < ApplicationController
     if @blacklisted_gem
       render 'blacklisted'
     else
-      @latest_version = @rubygem.versions.most_recent
-      @versions       = @rubygem.public_versions(5)
-      if @rubygem.public_versions.any?
+      @versions = @rubygem.public_versions(5)
+      if @versions.to_a.any?
         render 'show'
       else
         render 'show_yanked'
@@ -33,10 +35,11 @@ class RubygemsController < ApplicationController
   end
 
   def edit
+    flash[:warning] = t('.deprecation_message').html_safe # rubocop:disable Rails/OutputSafety
   end
 
   def update
-    if @linkset.update_attributes(params_linkset)
+    if @linkset.update(params_linkset)
       redirect_to rubygem_path(@rubygem)
       flash[:success] = "Gem links updated."
     else
@@ -49,7 +52,7 @@ class RubygemsController < ApplicationController
   def load_gem
     unless @rubygem.owned_by?(current_user)
       flash[:warning] = "You do not have permission to edit this gem."
-      redirect_to root_url
+      redirect_to root_path
     end
 
     @linkset = @rubygem.linkset

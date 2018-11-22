@@ -1,10 +1,10 @@
 require 'digest/sha2'
 require 'activerecord_acrawriter'
 
-class Version < ActiveRecord::Base
+class Version < ApplicationRecord
   belongs_to :rubygem, touch: true
-  has_many :dependencies, -> { order('rubygems.name ASC').includes(:rubygem) }, dependent: :destroy
-  has_one :gem_download, proc { |m| where(rubygem_id: m.rubygem_id) }
+  has_many :dependencies, -> { order('rubygems.name ASC').includes(:rubygem) }, dependent: :destroy, inverse_of: "version"
+  has_one :gem_download, proc { |m| where(rubygem_id: m.rubygem_id) }, inverse_of: :version
 
   before_save :update_prerelease
   before_validation :full_nameify!
@@ -20,6 +20,8 @@ class Version < ActiveRecord::Base
 
   validate :platform_and_number_are_unique, on: :create
   validate :authors_format, on: :create
+  validate :metadata_links_format
+
   class AuthorType < AcraType
     def cast_value(value)
       if value.is_a?(Array)
@@ -171,6 +173,10 @@ class Version < ActiveRecord::Base
     find_by(full_name: full_name).try(:rubygem).try(:name)
   end
 
+  def self.created_between(start_time, end_time)
+    where(created_at: start_time..end_time).order(:created_at)
+  end
+
   def platformed?
     platform != "ruby"
   end
@@ -197,8 +203,8 @@ class Version < ActiveRecord::Base
     self[:size]
   end
 
-  def byte_size=(bs)
-    self[:size] = bs.to_i
+  def byte_size=(size)
+    self[:size] = size.to_i
   end
 
   def info
@@ -206,7 +212,7 @@ class Version < ActiveRecord::Base
   end
 
   def update_attributes_from_gem_specification!(spec)
-    update_attributes!(
+    update!(
       authors: spec.authors,
       description: spec.description,
       summary: spec.summary,
@@ -245,14 +251,6 @@ class Version < ActiveRecord::Base
 
   def downloads_count
     gem_download.try(:count) || 0
-  end
-
-  def runtime_dependencies_count
-    dependencies.runtime.length
-  end
-
-  def development_dependencies_count
-    dependencies.development.length
   end
 
   def payload
@@ -336,41 +334,7 @@ class Version < ActiveRecord::Base
     raw.unpack("m0").first.unpack("H*").first
   end
 
-  def recalculate_sha256
-    key = "gems/#{full_name}.gem"
-    file = RubygemFs.instance.get(key)
-    Digest::SHA2.base64digest(file) if file
-  end
-
-  def recalculate_sha256!
-    update_attributes(sha256: recalculate_sha256)
-  end
-
-  def recalculate_metadata!
-    metadata = get_spec_attribute('metadata')
-    update(metadata: metadata || {})
-  end
-
-  def assign_required_rubygems_version!
-    required_rubygems_version = get_spec_attribute('required_rubygems_version')
-    update_column(:required_rubygems_version, required_rubygems_version.to_s)
-  end
-
-  def documentation_path
-    "http://www.rubydoc.info/gems/#{rubygem.name}/#{number}"
-  end
-
   private
-
-  def get_spec_attribute(attribute_name)
-    key = "gems/#{full_name}.gem"
-    file = RubygemFs.instance.get(key)
-    return nil unless file
-    spec = Gem::Package.new(StringIO.new(file)).spec
-    spec.send(attribute_name)
-  rescue Gem::Package::FormatError
-    nil
-  end
 
   def platform_and_number_are_unique
     return unless Version.exists?(rubygem_id: rubygem_id, number: number, platform: platform)
@@ -387,7 +351,6 @@ class Version < ActiveRecord::Base
 
   def update_prerelease
     self[:prerelease] = !!to_gem_version.prerelease? # rubocop:disable Style/DoubleNegation
-    true
   end
 
   def full_nameify!
@@ -399,5 +362,12 @@ class Version < ActiveRecord::Base
   def feature_release(number)
     feature_version = Gem::Version.new(number).segments[0, 2].join('.')
     Gem::Version.new(feature_version)
+  end
+
+  def metadata_links_format
+    Linkset::LINKS.each do |link|
+      errors.add(:metadata, "['#{link}'] does not appear to be a valid URL") if
+        metadata[link] && metadata[link] !~ Patterns::URL_VALIDATION_REGEXP
+    end
   end
 end

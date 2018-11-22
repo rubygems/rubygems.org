@@ -1,0 +1,78 @@
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+h1{
+  margin-top: 25px;
+  margin-bottom: 8px;
+  font-weight: 200;
+  font-size: 60px;
+}
+
+p {
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.66;
+}
+
+a {
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.66;
+  text-decoration: none; color: #e9573f;
+}
+
+img {
+  width: 100%;
+}
+
+
+.wrapper {
+  margin-right: auto;
+  margin-left: auto;
+  width: 90%;
+  max-width: 940px;
+}
+
+.image__wrapper {
+  padding-top: 60px;
+  position: relative;
+}
+
+.content {
+  margin-right: auto;
+  margin-bottom: 120px;
+  margin-left: auto;
+  max-width: 720px;
+  text-align: center;
+}
+
+.error__illustration__bubble {
+  -webkit-animation: bounce 3s infinite;
+  animation: bounce 3s infinite;
+  position: absolute;
+  width: 100%;
+  top: 60px;
+  left: 2%;
+}
+
+@-webkit-keyframes bounce {
+  50% {
+    -webkit-transform: translateY(-8px);
+    -webkit-animation-timing-function: ease-in-out;
+  }
+}
+
+@-ms-keyframes bounce {
+  50% {
+    transform: translateY(-8px);
+    animation-timing-function: ease-in-out;
+  }
+}
+
+@keyframes bounce {
+  50% {
+    transform: translateY(-8px);
+    animation-timing-function: ease-in-out;
+  }
+}

@@ -1,0 +1,24 @@
+.news__nav-links {
+  margin-top: -5px;
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #c1c4ca;
+  text-align: center; }
+
+.news__nav-link {
+  margin-right: 10px;
+  margin-left: 10px;
+  padding-right: 20px;
+  padding-left: 20px;
+  display: inline-block;
+  border-radius: 15px;
+  font-weight: 800;
+  line-height: 30px;
+  color: #141c22;
+  transition-duration: 0.25s;
+  transition-property: background-color, color; }
+  .news__nav-link:focus, .news__nav-link:hover, .news__nav-link.is-active {
+    background-color: #e9573f;
+    color: white; }
+  .news__nav-link:focus {
+    outline: none; }

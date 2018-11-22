@@ -1,12 +1,10 @@
 # config valid only for current version of Capistrano
-lock '3.5.0'
+lock '3.8.1'
 
 set :application, 'rubygems'
 set :deploy_to, '/applications/rubygems'
 set :repo_url, 'https://github.com/rubygems/rubygems.org.git'
-set :scm, :git
 set :branch, ENV['SHA'] || ENV['BRANCH'] || 'master'
-set :git_strategy, Capistrano::SubmoduleStrategy
 set :pty, true
 set :assets_roles, [:app]
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/cache', 'tmp/sockets')

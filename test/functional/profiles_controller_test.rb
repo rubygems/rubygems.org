@@ -3,7 +3,7 @@ require 'test_helper'
 class ProfilesControllerTest < ActionController::TestCase
   context "for a user that doesn't exist" do
     should "render not found page" do
-      get :show, id: "unknown"
+      get :show, params: { id: "unknown" }
       assert_response :not_found
     end
   end
@@ -23,33 +23,30 @@ class ProfilesControllerTest < ActionController::TestCase
           end
         end.reverse
 
-        get :show, id: @user.handle
+        get :show, params: { id: @user.handle }
       end
 
       should respond_with :success
-      should render_template :show
-      should "assign the last 10 most downloaded gems" do
-        assert_equal @rubygems[0..9], assigns[:rubygems]
-      end
-      should "assign the extra gems you own" do
-        assert_equal [@rubygems.last], assigns[:extra_rubygems]
+      should "display all gems of user" do
+        11.times { |i| assert page.has_content? @rubygems[i].name }
       end
     end
 
     context "on GET to show with handle" do
       setup do
-        get :show, id: @user.handle
+        get :show, params: { id: @user.handle }
       end
 
       should respond_with :success
-      should render_template :show
+      should "render user show page" do
+        assert page.has_content? @user.handle
+      end
     end
 
     context "on GET to show with id" do
-      setup { get :show, id: @user.id }
+      setup { get :show, params: { id: @user.id } }
 
       should respond_with :success
-      should render_template :show
       should "render Email link" do
         assert page.has_content?("Email Me")
         assert page.has_selector?("a[href='mailto:#{@user.email}']")
@@ -59,11 +56,10 @@ class ProfilesControllerTest < ActionController::TestCase
     context "on GET to show when hide email" do
       setup do
         @user.update(hide_email: true)
-        get :show, id: @user.id
+        get :show, params: { id: @user.id }
       end
 
       should respond_with :success
-      should render_template :show
       should "not render Email link" do
         refute page.has_content?("Email Me")
         refute page.has_selector?("a[href='mailto:#{@user.email}']")
@@ -74,7 +70,9 @@ class ProfilesControllerTest < ActionController::TestCase
       setup { get :edit }
 
       should respond_with :success
-      should render_template :edit
+      should "render user edit page" do
+        assert page.has_content? "Edit profile"
+      end
     end
 
     context "on PUT to update" do
@@ -83,7 +81,7 @@ class ProfilesControllerTest < ActionController::TestCase
           @handle = "john_m_doe"
           @user = create(:user, handle: "johndoe")
           sign_in_as(@user)
-          put :update, user: { handle: @handle, password: @user.password }
+          put :update, params: { user: { handle: @handle, password: @user.password } }
         end
 
         should respond_with :redirect
@@ -101,7 +99,8 @@ class ProfilesControllerTest < ActionController::TestCase
           @hide_email = true
           @user = create(:user, handle: "johndoe")
           sign_in_as(@user)
-          put :update, user: { handle: @handle, hide_email: @hide_email, password: @user.password }
+          put :update,
+            params: { user: { handle: @handle, hide_email: @hide_email, password: @user.password } }
         end
 
         should respond_with :redirect
@@ -117,7 +116,7 @@ class ProfilesControllerTest < ActionController::TestCase
         setup do
           @user = create(:user, handle: "johndoe")
           sign_in_as(@user)
-          put :update, user: { handle: "doejohn" }
+          put :update, params: { user: { handle: "doejohn" } }
         end
 
         should set_flash.to("This request was denied. We could not verify your password.")
@@ -126,12 +125,88 @@ class ProfilesControllerTest < ActionController::TestCase
           assert_equal "johndoe", @user.handle
         end
       end
+
+      context "updating with old format password" do
+        setup do
+          @handle = "updated_user"
+          @user = build(:user, handle: "old_user", password: "old")
+          @user.save(validate: false)
+          sign_in_as(@user)
+          put :update, params: { user: { handle: @handle, password: @user.password } }
+        end
+
+        should respond_with :redirect
+
+        should "update handle" do
+          assert_equal @handle, @user.handle
+        end
+      end
+
+      context "updating email with existing email" do
+        setup do
+          create(:user, email: "cannotchange@tothis.com")
+          put :update, params: { user: { email: "cannotchange@tothis.com", password: @user.password } }
+        end
+
+        should "not set unconfirmed_email" do
+          assert page.has_content? "Email address has already been taken"
+          refute_equal "cannotchange@tothis.com", @user.unconfirmed_email
+        end
+      end
+
+      context "updating email with existing unconfirmed_email" do
+        setup do
+          create(:user, unconfirmed_email: "cannotchange@tothis.com")
+          put :update, params: { user: { email: "cannotchange@tothis.com", password: @user.password } }
+        end
+
+        should "not set unconfirmed_email" do
+          assert page.has_content? "Email address has already been taken"
+          refute_equal "cannotchange@tothis.com", @user.unconfirmed_email
+        end
+      end
+    end
+    context "on DELETE to destroy" do
+      context "correct password" do
+        should "enqueue deletion request" do
+          assert_difference 'Delayed::Job.count', 1 do
+            delete :destroy, params: { user: { password: @user.password } }
+          end
+        end
+
+        context "redirect path and flash" do
+          setup do
+            delete :destroy, params: { user: { password: @user.password } }
+          end
+
+          should redirect_to("the homepage") { root_url }
+          should set_flash.to("Your account deletion request has been enqueued."\
+            " We will send you a confrimation mail when your request has been processed.")
+        end
+      end
+
+      context "incorrect password" do
+        should "not enqueue deletion request" do
+          assert_no_difference 'Delayed::Job.count' do
+            post :destroy, params: { user: { password: 'youshallnotpass' } }
+          end
+        end
+
+        context "redirect path and flash" do
+          setup do
+            delete :destroy, params: { user: { password: 'youshallnotpass' } }
+          end
+
+          should redirect_to('the profile edit page') { edit_profile_path }
+          should set_flash.to("This request was denied. We could not verify your password.")
+        end
+      end
     end
   end
 
   context "On GET to edit without being signed in" do
     setup { get :edit }
     should respond_with :redirect
-    should redirect_to('the homepage') { root_url }
+    should redirect_to('the homepage') { root_path }
   end
 end

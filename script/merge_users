@@ -2,9 +2,7 @@
 
 first, second = *ARGV
 
-if first.nil? || second.nil?
-  abort "Usage: script/merge_users [FIRST_EMAIL] [SECOND_EMAIL]"
-end
+abort "Usage: script/merge_users [FIRST_EMAIL] [SECOND_EMAIL]" if first.nil? || second.nil?
 
 ENV['RAILS_ENV'] ||= 'production'
 require_relative '../config/environment'

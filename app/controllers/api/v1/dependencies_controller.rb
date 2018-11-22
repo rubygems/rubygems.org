@@ -7,24 +7,24 @@ class Api::V1::DependenciesController < Api::BaseController
 
     expires_in 30, public: true
     fastly_expires_in 60
-    set_surrogate_key 'dependencyapi', gem_names.map { |name| "gem/#{name}" }
+    set_surrogate_key('dependencyapi', gem_names.map { |name| "gem/#{name}" })
 
     respond_to do |format|
       format.json { render json: deps }
-      format.marshal { render text: Marshal.dump(deps) }
+      format.marshal { render plain: Marshal.dump(deps) }
     end
   end
 
   private
 
   def check_gem_count
-    return render text: '' if gem_names.empty?
+    return render plain: '' if gem_names.empty?
     return if gem_names.size <= GEM_REQUEST_LIMIT
 
     if request.format == :marshal
-      render text: "Too many gems! (use --full-index instead)", status: 422
+      render plain: "Too many gems! (use --full-index instead)", status: :unprocessable_entity
     elsif request.format == :json
-      render json: { error: 'Too many gems! (use --full-index instead)', code: 422 }, status: 422
+      render json: { error: 'Too many gems! (use --full-index instead)', code: 422 }, status: :unprocessable_entity
     end
   end
 

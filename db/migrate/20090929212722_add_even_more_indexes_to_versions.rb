@@ -1,4 +1,4 @@
-class AddEvenMoreIndexesToVersions < ActiveRecord::Migration
+class AddEvenMoreIndexesToVersions < ActiveRecord::Migration[4.2]
   def self.up
     add_index :versions, :prerelease
     add_index :versions, :indexed

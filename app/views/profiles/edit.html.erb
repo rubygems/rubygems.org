@@ -21,7 +21,7 @@
       <%=
         image_tag("/images/twitter_icon.png", alt: 'Twitter icon', class: 'form__label__icon')
       %>
-      
+
       <span class='form__label__text'>Twitter username</span>
     <% end %>
 
@@ -34,6 +34,15 @@
       <%= form.text_field(:twitter_username, class: 'form__input') %>
     </div>
   </div>
+
+  <% if current_user.unconfirmed_email %>
+    <div class="push--bottom-s">
+      <p class='form__field__instructions'>
+        <%= t('.email_awaiting_confirmation', unconfirmed_email: current_user.unconfirmed_email) %>
+      </p>
+      <%= link_to "Resend confirmation", unconfirmed_email_confirmations_path, method: :patch, class: 'form__field__instructions t-link' %>
+    </div>
+  <% end %>
 
   <div class="text_field">
     <%= form.label :email, :class => 'form__label' %>
@@ -60,7 +69,7 @@
 
   <div class="t-body">
     <h2><%= t '.reset_password.title' %></h2>
-    <p><%= t('.reset_password.text', :link => link_to(t('.reset_password.link_text'), new_password_url)).html_safe %></p>
+    <p><%= t('.reset_password.text', :link => link_to(t('.reset_password.link_text'), new_password_path)).html_safe %></p>
 
     <h2><%= t '.api_access.title' %></h2>
     <p>
@@ -68,10 +77,42 @@
     </p>
     <p>
       <%= t('.api_access.credentials', :gem_credentials_file => content_tag(:code, '~/.gem/credentials'),
-                                       :gem_commands_link => link_to(t('.api_access.link_text'), page_url('gem_docs'))).html_safe %>
+                                       :gem_commands_link => link_to(t('.api_access.link_text'), page_path('gem_docs'))).html_safe %>
     </p>
     <pre><code>curl -u <%= current_user.name %> https://rubygems.org/api/v1/api_key.yaml > ~/.gem/credentials; chmod 0600 ~/.gem/credentials</code></pre>
   </div>
 <% end %>
 
 <%= button_to t('.api_access.reset'), reset_api_v1_api_key_path, :method => :put, :data => {:confirm => t('.api_access.confirm_reset')}, :class => 'form__submit' %>
+
+<% if mfa_enabled? %>
+  <div class="t-body">
+    <h2><%= t '.mfa.multifactor_auth' %></h2>
+    <% if @user.mfa_enabled? %>
+      <p><%= t '.mfa.enabled' %></p>
+      <%= form_tag multifactor_auth_path, :method => :put, :id => 'mfa-edit' do %>
+        <%= label_tag :level, t('.mfa.level.title'), :class => 'form__label' %>
+        <%= select_tag :level, options_for_select([
+          [t('.mfa.level.ui_and_api_mfa'), 'ui_and_api_mfa'],
+          [t('.mfa.level.ui_mfa_only'), 'ui_mfa_only'],
+          [t('.mfa.level.no_mfa'), 'no_mfa']], @user.mfa_level), :class => 'form__input form__select' %>
+        <div class="text_field">
+          <%= label_tag :otp, 'OTP code', :class => 'form__label' %>
+          <%= text_field_tag :otp, '', :class => 'form__input' %>
+        </div>
+        <%= submit_tag t('.mfa.update'), :class => 'form__submit' %>
+      <% end %>
+    <% else %>
+      <p>
+        <%= t '.mfa.disabled' %>
+        <%= button_to t('.mfa.go_settings'), new_multifactor_auth_path, :method => 'get', :class => 'form__submit' %>
+      </p>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="t-body">
+  <h2><%= t '.delete.delete_profile' %></h2>
+  <p><%= t '.delete.warning' %></p>
+  <%= button_to t('.delete.delete'), delete_profile_path, method: 'get', class: 'form__submit' %>
+</div>
