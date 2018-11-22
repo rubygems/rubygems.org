@@ -39,4 +39,22 @@ module ApplicationHelper
   def stats_graph_meter(gem, count)
     gem.downloads * 1.0 / count * 100
   end
+
+  def search_form_class
+    if [root_path, advanced_search_path].include? request.path_info
+      "header__search-wrap--home"
+    else
+      "header__search-wrap"
+    end
+  end
+
+  def active?(path)
+    "is-active" if request.path_info == path
+  end
+
+  # replacement for Kaminari::ActionViewExtension#paginate
+  # only shows `next` and `prev` links and not page numbers, saving a COUNT(DISTINCT ..) query
+  def plain_paginate(items)
+    render "layouts/plain_paginate", items: items
+  end
 end

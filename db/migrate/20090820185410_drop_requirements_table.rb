@@ -1,4 +1,4 @@
-class DropRequirementsTable < ActiveRecord::Migration
+class DropRequirementsTable < ActiveRecord::Migration[4.2]
   def self.up
     add_column :dependencies, :version_id, :integer
     rename_column :dependencies, :name, :requirements

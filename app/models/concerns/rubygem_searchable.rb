@@ -2,8 +2,6 @@ module RubygemSearchable
   include Patterns
   extend ActiveSupport::Concern
 
-  class SearchDownError < StandardError; end
-
   included do
     include Elasticsearch::Model
 
@@ -16,7 +14,7 @@ module RubygemSearchable
       most_recent_version = versions.most_recent
       {
         name:                  name,
-        yanked:                !versions.any?(&:indexed?),
+        yanked:                versions.none?(&:indexed?),
         summary:               most_recent_version.try(:summary),
         description:           most_recent_version.try(:description),
         downloads:             downloads,
@@ -37,56 +35,47 @@ module RubygemSearchable
              }
 
     mapping do
-      indexes :name, type: 'multi_field' do
-        indexes :name, analyzer: 'rubygem'
+      indexes :name, type: 'text', analyzer: 'rubygem' do
         indexes :suggest, analyzer: 'simple'
       end
+      indexes :summary, type: 'text', analyzer: 'english' do
+        indexes :raw, analyzer: 'simple'
+      end
+      indexes :description, type: 'text', analyzer: 'english' do
+        indexes :raw, analyzer: 'simple'
+      end
       indexes :yanked, type: 'boolean'
-      indexes :summary, type: 'multi_field' do
-        indexes :summary, analyzer: 'english'
-        indexes :raw, analyzer: 'simple'
-      end
-      indexes :description, type: 'multi_field' do
-        indexes :description, analyzer: 'english'
-        indexes :raw, analyzer: 'simple'
-      end
       indexes :downloads, type: 'integer'
       indexes :updated, type: 'date'
     end
 
-    def self.search(query, es: false, page: 1)
-      if es
-        result = elastic_search(query).page(page)
-        # Now we need to trigger the ES query so we can fallback if it fails
-        # rather than lazy loading from the view
-        result.response
-        result
-      else
-        legacy_search(query).paginate(page: page)
-      end
-    rescue Faraday::ConnectionFailed => e
-      Honeybadger.notify(e)
-      raise SearchDownError
-    rescue Elasticsearch::Transport::Transport::Error => e
-      Honeybadger.notify(e)
-      raise SearchDownError
+    def self.search(query, elasticsearch: false, page: 1)
+      return [nil, legacy_search(query).page(page)] unless elasticsearch
+      result = elastic_search(query).page(page)
+      # Now we need to trigger the ES query so we can fallback if it fails
+      # rather than lazy loading from the view
+      result.response
+      [nil, result]
+    rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Elasticsearch::Transport::Transport::Error => e
+      msg = error_msg query, e
+      [msg, legacy_search(query).page(page)]
     end
 
-    def self.elastic_search(q) # rubocop:disable Metrics/MethodLength
+    def self.elastic_search(query) # rubocop:disable Metrics/MethodLength
       search_definition = Elasticsearch::DSL::Search.search do
         query do
           function_score do
             query do
-              filtered do
+              bool do
                 # Main query, search in name, summary, description
-                query do
+                should do
                   query_string do
-                    query q
-                    fields ['name^3', 'summary^1', 'description']
+                    query query
+                    fields ['name^5', 'summary^3', 'description']
                     default_operator 'and'
                   end
                 end
-
+                minimum_should_match 1
                 # only return gems that are not yanked
                 filter { term yanked: false }
               end
@@ -99,9 +88,9 @@ module RubygemSearchable
 
         aggregation :matched_field do
           filters do
-            filters name: { terms: { name: [q] } },
-                    summary: { terms: { 'summary.raw' => [q] } },
-                    description: { terms: { 'description.raw' => [q] } }
+            filters name: { terms: { name: [query] } },
+                    summary: { terms: { 'summary.raw' => [query] } },
+                    description: { terms: { 'description.raw' => [query] } }
           end
         end
 
@@ -112,12 +101,10 @@ module RubygemSearchable
           end
         end
 
-        source %w(name summary description downloads latest_version_number)
+        source %w[name summary description downloads latest_version_number]
 
         # Return suggestions unless there's no query from the user
-        unless q.blank?
-          suggest :suggest_name, text: q, term: { field: 'name.suggest', suggest_mode: 'always' }
-        end
+        suggest :suggest_name, text: query, term: { field: 'name.suggest', suggest_mode: 'always' } if query.present?
       end
       __elasticsearch__.search(search_definition)
     end
@@ -136,6 +123,15 @@ module RubygemSearchable
         .includes(:latest_version, :gem_download)
         .references(:versions)
         .by_downloads
+    end
+
+    def self.error_msg(query, error)
+      if error.is_a? Elasticsearch::Transport::Transport::Errors::BadRequest
+        "Failed to parse: '#{query}'. Falling back to legacy search."
+      else
+        Honeybadger.notify(error)
+        "Advanced search is currently unavailable. Falling back to legacy search."
+      end
     end
   end
 end

@@ -11,6 +11,22 @@ AllCops:
 Rails:
   Enabled: true
 
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Rails/LexicallyScopedActionFilter:
+  Enabled: false
+
+Rails/RefuteMethods:
+  Enabled: false
+
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - development
+    - staging
+    - test
+
 Metrics/AbcSize:
   Max: 42 # TODO: Lower to 15
 
@@ -39,14 +55,20 @@ Metrics/PerceivedComplexity:
 Performance/RedundantMerge:
   Enabled: false
 
-Style/AlignParameters:
+Layout/AlignParameters:
   EnforcedStyle: with_fixed_indentation
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Layout/MultilineOperationIndentation:
+  EnforcedStyle: indented
 
 Style/AndOr:
   Exclude:
     - app/controllers/internal/ping_controller.rb
 
-Style/AccessorMethodName:
+Naming/AccessorMethodName:
   Exclude:
     - app/controllers/application_controller.rb
 
@@ -59,8 +81,11 @@ Style/Documentation:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-Style/MultilineMethodCallIndentation:
-  EnforcedStyle: indented
+Security/MarshalLoad:
+  Enabled: false
 
-Style/MultilineOperationIndentation:
-  EnforcedStyle: indented
+Style/EmptyMethod:
+  EnforcedStyle: expanded
+
+Style/FormatStringToken:
+  Enabled: false

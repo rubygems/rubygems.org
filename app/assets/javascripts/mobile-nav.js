@@ -7,7 +7,7 @@ $(function() {
   var footer           = $('.footer');
   var signUpLink       = $('.header__nav-link.js-sign-up-trigger');
   var navExpandedClass = 'mobile-nav-is-expanded';
-  var headerSeach      = $('.header__search');
+  var headerSearch     = $('.header__search');
   var headerLogo       = $('.header__logo-wrap');
 
   // variable to support mobile nav tab behaviour
@@ -30,22 +30,10 @@ $(function() {
     footer.addClass(navExpandedClass);
   }
 
-  function handleClick(event) {
-    var isMobileNavExpanded = header.hasClass(navExpandedClass);
-
-    event.preventDefault();
-
-    if (isMobileNavExpanded) {
-      removeNavExpandedClass();
-    } else {
-      addNavExpandedClass();
-    }
-  }
-
   function handleFocusIn() {
     if (skipSandwichIcon) {
       addNavExpandedClass();
-      headerSeach.focus();
+      headerSearch.focus();
       skipSandwichIcon = false;
     } else {
       removeNavExpandedClass();
@@ -54,7 +42,10 @@ $(function() {
     }
   }
 
-  sandwichIcon.click(handleClick);
+  sandwichIcon.click(function(){
+    var nav = {expandedClass: navExpandedClass, popUp: header}
+    handleClick(event, nav, removeNavExpandedClass, addNavExpandedClass);
+  });
 
   sandwichIcon.on('focusin', handleFocusIn);
 

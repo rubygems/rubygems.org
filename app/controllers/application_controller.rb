@@ -5,11 +5,22 @@ class ApplicationController < ActionController::Base
   helper :announcements
   helper ActiveSupport::NumberHelper
 
-  protect_from_forgery only: [:create, :update, :destroy], with: :exception
+  protect_from_forgery only: %i[create update destroy], with: :exception
 
   before_action :set_locale
 
   rescue_from ActiveRecord::RecordNotFound, with: :render_404
+  before_action :set_csp unless Rails.env.development?
+
+  def set_csp
+    response.headers['Content-Security-Policy'] = "default-src 'self'; "\
+      "script-src 'self' https://secure.gaug.es https://www.fastly-insights.com; "\
+      "style-src 'self' https://fonts.googleapis.com; "\
+      "img-src 'self' https://secure.gaug.es https://gravatar.com https://secure.gravatar.com https://*.fastly-insights.com; "\
+      "font-src 'self' https://fonts.gstatic.com; "\
+      "connect-src https://s3-us-west-2.amazonaws.com/rubygems-dumps/ https://*.fastly-insights.com; "\
+      "frame-src https://ghbtns.com"
+  end
 
   def set_locale
     I18n.locale = user_locale
@@ -21,7 +32,11 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from(ActionController::ParameterMissing) do |e|
-    render text: "Request is missing param '#{e.param}'", status: :bad_request
+    render plain: "Request is missing param '#{e.param}'", status: :bad_request
+  end
+
+  rescue_from ActionDispatch::RemoteIp::IpSpoofAttackError do
+    render status: :forbidden
   end
 
   protected
@@ -38,13 +53,20 @@ class ApplicationController < ActionController::Base
     redirect_to root_path
   end
 
+  def verify_with_otp
+    otp = request.headers["HTTP_OTP"]
+    return if @api_user.mfa_api_authorized?(otp)
+    prompt_text = otp.present? ? t(:otp_incorrect) : t(:otp_missing)
+    render plain: prompt_text, status: :unauthorized
+  end
+
   def authenticate_with_api_key
-    api_key = request.headers["Authorization"] || params[:api_key]
-    sign_in User.find_by_api_key(api_key)
+    api_key   = request.headers["Authorization"] || params[:api_key]
+    @api_user = User.find_by_api_key(api_key)
   end
 
   def verify_authenticated_user
-    return if current_user
+    return if @api_user
     # When in passenger, this forces the whole body to be read before
     # we return a 401 and end the request. We need to do this because
     # otherwise apache is confused why we never read the whole body.
@@ -52,7 +74,7 @@ class ApplicationController < ActionController::Base
     # This works because request.body is a RewindableInput which will
     # slurp all the socket data into a tempfile, satisfying apache.
     request.body.size if request.body.respond_to? :size
-    render text: t(:please_sign_up), status: 401
+    render plain: t(:please_sign_up), status: :unauthorized
   end
 
   def find_rubygem
@@ -60,12 +82,16 @@ class ApplicationController < ActionController::Base
     return if @rubygem
     respond_to do |format|
       format.any do
-        render text: t(:this_rubygem_could_not_be_found), status: :not_found
+        render plain: t(:this_rubygem_could_not_be_found), status: :not_found
       end
       format.html do
         render file: "public/404", status: :not_found, layout: false, formats: [:html]
       end
     end
+  end
+
+  def find_versioned_links
+    @versioned_links = @rubygem.links(@latest_version)
   end
 
   def set_page
@@ -87,5 +113,21 @@ class ApplicationController < ActionController::Base
       format.yaml { render yaml: { error: t(:not_found) }, status: :not_found }
       format.any(:all) { render text: t(:not_found), status: :not_found }
     end
+  end
+
+  def append_info_to_payload(payload)
+    super
+    payload[:client_ip] = request.remote_ip
+    payload[:user_agent] = request.user_agent
+    payload[:dest_host] = request.host
+    payload[:request_id] = request.uuid
+  end
+
+  def mfa_enabled?
+    cookies.permanent[:mfa_feature] == 'true'
+  end
+
+  def limit_page(max_page)
+    render_404 if @page > max_page
   end
 end

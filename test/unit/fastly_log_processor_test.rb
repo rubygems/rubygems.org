@@ -1,8 +1,10 @@
 require 'test_helper'
 
 class FastlyLogProcessorTest < ActiveSupport::TestCase
+  include ESHelper
+
   setup do
-    @sample_log = Rails.root.join('test/sample_logs/fastly-fake.log').read
+    @sample_log = Rails.root.join('test', 'sample_logs', 'fastly-fake.log').read
 
     @sample_log_counts = {
       "bundler-1.10.6" => 2,
@@ -18,6 +20,7 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
     }
     @job = FastlyLogProcessor.new('test-bucket', 'fastly-fake.log')
     create(:gem_download)
+    Rubygem.__elasticsearch__.create_index! force: true
   end
 
   teardown do
@@ -53,6 +56,8 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
       create(:version, rubygem: json, number: '1.8.3', platform: 'java')
       create(:version, rubygem: json, number: '1.8.3')
       create(:version, rubygem: json, number: '1.8.2')
+
+      import_and_refresh
     end
 
     context '#perform' do
@@ -60,6 +65,7 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
         json = Rubygem.find_by_name('json')
         assert_equal 0, GemDownload.count_for_rubygem(json.id)
         3.times { @job.perform }
+        assert_equal 7, es_downloads(json.id)
         assert_equal 7, GemDownload.count_for_rubygem(json.id)
       end
 
@@ -76,19 +82,23 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
 
         json = Rubygem.find_by_name('json')
         assert_equal 7, GemDownload.count_for_rubygem(json.id)
+        assert_equal 7, es_downloads(json.id)
         assert_equal "processed", @log_ticket.reload.status
       end
 
       should "not run if already processed" do
-        assert_equal 0, Rubygem.find_by_name('json').downloads
+        json = Rubygem.find_by_name('json')
+        assert_equal 0, json.downloads
+        assert_equal 0, es_downloads(json.id)
         @log_ticket.update(status: 'processed')
         @job.perform
 
-        assert_equal 0, Rubygem.find_by_name('json').downloads
+        assert_equal 0, es_downloads(json.id)
+        assert_equal 0, json.downloads
       end
 
       should "not mark as processed if anything fails" do
-        def @job.download_counts(_)
+        def @job.download_counts(___)
           raise "woops"
         end
         assert_raises { @job.perform }
@@ -97,14 +107,16 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
       end
 
       should "not re-process if it failed" do
-        def @job.download_counts(_)
+        def @job.download_counts(___)
           raise "woops"
         end
         assert_raises { @job.perform }
 
         @job = FastlyLogProcessor.new('test-bucket', 'fastly-fake.log')
         @job.perform
-        assert_equal 0, Rubygem.find_by_name('json').downloads
+        json = Rubygem.find_by_name('json')
+        assert_equal 0, json.downloads
+        assert_equal 0, es_downloads(json.id)
       end
 
       should "only process the right file" do

@@ -20,17 +20,17 @@
 </h2>
 
 <header class="gems__header">
-  <p class="gems__meter"><%= page_entries_info @most_downloaded, model: 'gem' %></p>
+  <p class="gems__meter"><%= page_entries_info @most_downloaded, entry_name: 'gem' %></p>
 </header>
 
 <% @most_downloaded.each do |gem| %>
   <div class="stats__graph__gem">
     <h3 class="stats__graph__gem__name"><%= link_to gem.name, rubygem_path(gem) %></h3>
     <div class="stats__graph__gem__meter-wrap">
-      <div class="stats__graph__gem__meter" style="width: <%= stats_graph_meter(gem, @most_downloaded_count) %>%">
+      <div class="stats__graph__gem__meter t-item--hidden" data-bar_width="<%= stats_graph_meter(gem, @most_downloaded_count) %>">
         <span class="stats__graph__gem__count"><%= number_to_delimited gem.downloads %></span>
       </div>
     </div>
   </div>
 <% end %>
-<%= will_paginate @most_downloaded %>
+<%= paginate @most_downloaded %>

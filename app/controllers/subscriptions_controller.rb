@@ -3,23 +3,18 @@ class SubscriptionsController < ApplicationController
 
   def create
     subscription = @rubygem.subscriptions.build(user: current_user)
-    render_toggle_or_unacceptable(subscription.try(:save))
+    redirect_to_rubygem(subscription.try(:save))
   end
 
   def destroy
     subscription = @rubygem.subscriptions.find_by_user_id(current_user.try(:id))
-    render_toggle_or_unacceptable(subscription.try(:destroy))
+    redirect_to_rubygem(subscription.try(:destroy))
   end
 
   protected
 
-  def render_toggle_or_unacceptable(success)
-    if success
-      respond_to do |format|
-        format.js { render :update }
-      end
-    else
-      render text: '', status: :forbidden
-    end
+  def redirect_to_rubygem(success)
+    flash[:error] = t('try_again') unless success
+    redirect_to rubygem_path(@rubygem)
   end
 end

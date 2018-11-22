@@ -1,20 +1,7 @@
 Contribution Guidelines
 =======================
 
-From the [Rubinius](http://rubini.us/) contribution page:
-
-> Writing code and participating should be fun, not an exercise in
-> perseverance. Stringent commit polices, for whatever their other
-> qualities may bring, also mean longer turnaround times.
-
-Submit a patch and once it’s accepted, you’ll get commit access to the
-repository. Feel free to fork the repository and send a pull request,
-once it’s merged in you’ll get added. If not, feel free to bug
-[qrush](https://github.com/qrush) about it.
-
-Also, if you’re hacking on RubyGems.org, hop in `#rubygems` on
-`irc.freenode.net`! Chances are someone else will be around to answer
-questions or bounce ideas off of.
+Want to get started working on RubyGems.org? Start here!
 
 How To Contribute
 -----------------
@@ -30,17 +17,6 @@ Once you’re ready:
 * Add your repository as a remote: `git remote add your_remote your_repo`
 * Push up your branch: `git push your_remote awesome_feature`
 * Create a Pull Request for the topic branch, asking for review.
-
-Once it’s accepted:
-
-* If you want access to the core repository feel free to ask! Then you
-can change origin to point to the Read+Write URL:
-
-```
-git remote set-url origin git@github.com:rubygems/rubygems.org.git
-```
-
-Otherwise, you can continue to hack away in your own fork.
 
 If you’re looking for things to hack on, please check
 [GitHub Issues](https://github.com/rubygems/rubygems.org/issues). If you’ve
@@ -76,13 +52,27 @@ gem server, please consider checking out
 provide pass-through caching for RubyGems.org, as well as host private
 gems for your organization..**
 
+#### Environment (Docker)
+There is a `docker-compose.yml` file inside the project that easily lets you spin up
+services that the application depends on such as: postgresql, memcached & elasticsearch.
+
+* Install Docker. See instructions at https://docs.docker.com/engine/installation/ 
+* run `docker-compose up` to start the required services.
+
+Follow the instructions below on how to install Bundler and setup the database.
+
 #### Environment (OS X)
 
-* Use Ruby 2.3.1
-* Use Rubygems 2.6.4
+* Use Ruby 2.3.5
+* Use Rubygems 2.6.10
 * Install bundler: `gem install bundler`
-* Install Elastic Search: `brew install elasticsearch`
-  * Setup information: `brew info elasticsearch`
+* Install Elastic Search:
+  * Pull ElasticSearch `5.1.2` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:5.1.2`
+  * Running Elasticsearch from the command line:
+  ```
+  docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" docker.elastic.co/elasticsearch/elasticsearch:5.1.2
+  ```
+
 * Install PostgreSQL (>= 8.4.x): `brew install postgres`
   * Setup information: `brew info postgresql`
 * Install memcached: `brew install memcached`
@@ -90,11 +80,16 @@ gems for your organization..**
 
 #### Environment (Linux - Debian/Ubuntu)
 
-* Use Ruby 2.3.1 `apt-get install ruby2.3`
+* Use Ruby 2.3.5 `apt-get install ruby2.3`
   * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
-* Use Rubygems 2.6.4
+* Use Rubygems 2.6.10
 * Install bundler: `gem install bundler`
-* Install Elastic Search 1.5.2: <https://www.elastic.co/downloads/past-releases/elasticsearch-1-5-2>
+* Install Elastic Search:
+  * Pull ElasticSearch `5.1.2` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:5.1.2`
+  * Running Elasticsearch from the command line:
+  ```
+  docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" docker.elastic.co/elasticsearch/elasticsearch:5.1.2
+  ```
 * Install PostgreSQL: `apt-get install postgresql postgresql-server-dev-all`
   * Help to setup database <https://wiki.debian.org/PostgreSql>
 * Install memcached: `apt-get install memcached`
@@ -113,12 +108,21 @@ gems for your organization..**
 * Get set up: `./script/setup`
 * Run the database rake tasks if needed:
     `bundle exec rake db:reset db:test:prepare --trace`
+* Set up elasticsearch indexes:
+    `bundle exec rake environment elasticsearch:import:all DIR=app/models FORCE=y`
 
 #### Running tests
 
 * Start elastic search: `elasticsearch`
 * Start memcached: `memcached`
 * Run the tests: `bundle exec rake`
+
+#### Confirmation emails
+
+* Start rails: `rails s`
+* Sign up for a new user: http://localhost:3000/sign_up
+* Account confirmation email: http://localhost:3000/rails/mailers/mailer/email_confirmation
+  A list of all email previews is available at http://localhost:3000/rails/mailers.
 
 #### Running RuboCop
 
@@ -140,10 +144,8 @@ can try running:
     * _To import a small set of gems you can point the import process to any
         gems cache directory, like a very small `rvm` gemset for instance, or
 	specifying `GEM_PATH/cache` instead of `vendor/cache`._
-* If you need the index available - needed when working in conjunction
-    with [bundler-api](https://github.com/rubygems/bundler-api) - then run
-    `bundle exec rake gemcutter:index:update`. This primes the filesystem gem index for
-    local use.
+* If you need the index available then run `bundle exec rake gemcutter:index:update`.
+    This primes the filesystem gem index for local use.
 
 #### Getting the test data
 

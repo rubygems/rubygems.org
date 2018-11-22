@@ -31,6 +31,10 @@
       overflow: auto;
       border-bottom: 1px solid #c1c4ca; } }
 
+.owners {
+  clear: both;
+  margin-bottom: -30px; }
+
 .gem__sha {
   margin-top: 16px; }
 

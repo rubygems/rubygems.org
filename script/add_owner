@@ -2,9 +2,7 @@
 
 name, email = *ARGV
 
-if name.nil? || email.nil?
-  abort "Usage: script/add_owner [GEM_NAME] [USER_EMAIL]"
-end
+abort "Usage: script/add_owner [GEM_NAME] [USER_EMAIL]" if name.nil? || email.nil?
 
 ENV['RAILS_ENV'] ||= 'production'
 require_relative '../config/environment'

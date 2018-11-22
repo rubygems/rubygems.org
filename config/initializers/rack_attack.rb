@@ -1,4 +1,8 @@
 class Rack::Attack
+  REQUEST_LIMIT = 100
+  PASSWORD_UPDATE_LIMIT = 10
+  LIMIT_PERIOD = 10.minutes
+
   ### Prevent Brute-Force Login Attacks ###
 
   # The most common brute-force login attack is a brute-force password
@@ -18,13 +22,18 @@ class Rack::Attack
   ]
   paths_regex = Regexp.union(protected_paths.map { |path| /\A#{Regexp.escape(path)}\z/ })
 
-  throttle('clearance/ip', limit: 100, period: 10.minutes) do |req|
+  throttle('clearance/ip', limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
     req.ip if req.path =~ paths_regex && req.post?
   end
 
-  # Throttle GET requet for api_key by IP address
-  throttle('api_key/ip', limit: 100, period: 10.minutes) do |req|
+  # Throttle GET request for api_key by IP address
+  throttle('api_key/ip', limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
     req.ip if req.path =~ /\A#{Regexp.escape('/api/v1/api_key')}/ && req.get?
+  end
+
+  # Throttle PATCH and DELETE profile requests
+  throttle("clearance/remember_token", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
+    req.ip if req.path == "/profile" && (req.patch? || req.delete?)
   end
 
   # Throttle POST requests to /login by email param
@@ -35,10 +44,17 @@ class Rack::Attack
   # throttle logins for another user and force their login requests to be
   # denied, but that's not very common and shouldn't happen to you. (Knock
   # on wood!)
-  throttle("logins/handler", limit: 100, period: 10.minutes) do |req|
+  throttle("logins/handler", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
     if req.path == "/session" && req.post?
       # return the handler if present, nil otherwise
       req.params['session']['who'].presence if req.params['session']
+    end
+  end
+
+  throttle("password/email", limit: PASSWORD_UPDATE_LIMIT, period: LIMIT_PERIOD) do |req|
+    if req.path == "/passwords" && req.post?
+      # return the email if present, nil otherwise
+      req.params['password']['email'].presence if req.params['password']
     end
   end
 

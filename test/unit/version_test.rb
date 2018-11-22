@@ -6,14 +6,14 @@ class VersionTest < ActiveSupport::TestCase
 
   context "#as_json" do
     setup do
-      @version = create(:version)
+      @version = create(:version, summary: "some words")
     end
 
     should "only have relevant API fields" do
       json = @version.as_json
-      fields = %w(number built_at summary description authors platform
+      fields = %w[number built_at summary description authors platform
                   ruby_version rubygems_version prerelease downloads_count licenses
-                  requirements sha metadata created_at)
+                  requirements sha metadata created_at]
       assert_equal fields.map(&:to_s).sort, json.keys.sort
       assert_equal @version.authors, json["authors"]
       assert_equal @version.built_at, json["built_at"]
@@ -39,9 +39,9 @@ class VersionTest < ActiveSupport::TestCase
 
     should "only have relevant API fields" do
       xml = Nokogiri.parse(@version.to_xml)
-      fields = %w(number built-at summary description authors platform
+      fields = %w[number built-at summary description authors platform
                   ruby-version rubygems-version prerelease downloads-count licenses
-                  requirements sha metadata created-at)
+                  requirements sha metadata created-at]
       assert_equal fields.map(&:to_s).sort,
         xml.root.children.map(&:name).reject { |t| t == "text" }.sort
       assert_equal @version.authors, xml.at_css("authors").content
@@ -273,7 +273,7 @@ class VersionTest < ActiveSupport::TestCase
       end
     end
 
-    %w(x86_64-linux java mswin x86-mswin32-60).each do |platform|
+    %w[x86_64-linux java mswin x86-mswin32-60].each do |platform|
       should "be able to find with platform of #{platform}" do
         version = create(:version, platform: platform)
         slug = "#{version.number}-#{platform}"
@@ -288,14 +288,6 @@ class VersionTest < ActiveSupport::TestCase
       assert @version.downloads_count.zero?
     end
 
-    should "have runtime dependencies count" do
-      assert_equal @version.runtime_dependencies_count, Version.find_by(rubygem: @version.rubygem).dependencies.runtime.count
-    end
-
-    should "have development dependencies count" do
-      assert_equal @version.development_dependencies_count, Version.find_by(rubygem: @version.rubygem).dependencies.development.count
-    end
-
     should "give no version flag for the latest version" do
       new_version = create(:version, rubygem: @version.rubygem, built_at: 1.day.from_now)
 
@@ -304,7 +296,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "tack on prerelease flag" do
-      @version.update_attributes(number: "0.3.0.pre")
+      @version.update(number: "0.3.0.pre")
       new_version = create(:version,
         rubygem: @version.rubygem,
         built_at: 1.day.from_now,
@@ -322,7 +314,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "give no version count for the latest prerelease version" do
-      @version.update_attributes(number: "0.3.0.pre")
+      @version.update(number: "0.3.0.pre")
       old_version = create(:version,
         rubygem: @version.rubygem,
         built_at: 1.day.from_now,
@@ -529,7 +521,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "be in the proper order" do
-      assert_equal %w(0.7 0.5 0.3 0.2), @gem.versions.by_position.map(&:number)
+      assert_equal %w[0.7 0.5 0.3 0.2], @gem.versions.by_position.map(&:number)
     end
 
     should "know its latest version" do
@@ -558,14 +550,14 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with a few versions" do
     setup do
-      @thin = create(:version, authors: %w(thin), built_at: 1.year.ago)
-      @rake = create(:version, authors: %w(rake), built_at: 1.month.ago)
-      @json = create(:version, authors: %w(json), built_at: 1.week.ago)
-      @thor = create(:version, authors: %w(thor), built_at: 2.days.ago)
-      @rack = create(:version, authors: %w(rack), built_at: 1.day.ago)
-      @haml = create(:version, authors: %w(haml), built_at: 1.hour.ago)
-      @dust = create(:version, authors: %w(dust), built_at: 1.day.from_now)
-      @fake = create(:version, authors: %w(fake), indexed: false, built_at: 1.minute.ago)
+      @thin = create(:version, authors: %w[thin], built_at: 1.year.ago)
+      @rake = create(:version, authors: %w[rake], built_at: 1.month.ago)
+      @json = create(:version, authors: %w[json], built_at: 1.week.ago)
+      @thor = create(:version, authors: %w[thor], built_at: 2.days.ago)
+      @rack = create(:version, authors: %w[rack], built_at: 1.day.ago)
+      @haml = create(:version, authors: %w[haml], built_at: 1.hour.ago)
+      @dust = create(:version, authors: %w[dust], built_at: 1.day.from_now)
+      @fake = create(:version, authors: %w[fake], indexed: false, built_at: 1.minute.ago)
     end
 
     should "get the latest versions" do
@@ -625,10 +617,10 @@ class VersionTest < ActiveSupport::TestCase
       #     jumping around the place
       #  b) people can't hijack the latest gem spot by building in the far
       #     future, but pushing today
-      @subscribed_one.update_attributes(built_at: Time.zone.now - 3.days,
-                                        created_at: Time.zone.now - 1.day)
-      @subscribed_two.update_attributes(built_at: Time.zone.now - 2.days,
-                                        created_at: Time.zone.now - 2.days)
+      @subscribed_one.update(built_at: Time.zone.now - 3.days,
+                             created_at: Time.zone.now - 1.day)
+      @subscribed_two.update(built_at: Time.zone.now - 2.days,
+                             created_at: Time.zone.now - 2.days)
 
       # Even though gem two was build before gem one, it was pushed to gemcutter first
       # Thus, we should have from newest to oldest, gem one, then gem two
@@ -669,6 +661,29 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @spec.metadata,                        @version.metadata
       assert_equal @spec.required_ruby_version.to_s,      @version.required_ruby_version
       assert_equal @spec.required_rubygems_version.to_s,  @version.required_rubygems_version
+    end
+
+    context "metadata" do
+      should "be invalid with empty string as link" do
+        assert_raise ActiveRecord::RecordInvalid do
+          @spec.metadata = { "home" => "" }
+          @version.update_attributes_from_gem_specification!(@spec)
+        end
+      end
+
+      should "be invalid with invalid link" do
+        assert_raise ActiveRecord::RecordInvalid do
+          @spec.metadata = { "home" => "http:/github.com/bestgemever" }
+          @version.update_attributes_from_gem_specification!(@spec)
+        end
+      end
+
+      should "be valid with valid link" do
+        assert_nothing_raised do
+          @spec.metadata = { "home" => "http://github.com/bestgemever" }
+          @version.update_attributes_from_gem_specification!(@spec)
+        end
+      end
     end
   end
 
@@ -720,7 +735,7 @@ class VersionTest < ActiveSupport::TestCase
 
   should "validate authors the same twice" do
     g = Rubygem.new(name: 'test-gem')
-    v = Version.new(authors:  %w(arthurnn dwradcliffe), number: 1, platform: 'ruby', rubygem: g)
+    v = Version.new(authors:  %w[arthurnn dwradcliffe], number: 1, platform: 'ruby', rubygem: g)
     assert_equal "arthurnn, dwradcliffe", v.authors
     assert v.valid?
     assert_equal "arthurnn, dwradcliffe", v.authors
@@ -729,9 +744,9 @@ class VersionTest < ActiveSupport::TestCase
 
   should "not allow full name collision" do
     g1 = Rubygem.create(name: 'test-gem-733.t')
-    Version.create(authors:  %w(arthurnn dwradcliffe), number: '0.0.1', platform: 'ruby', rubygem: g1)
+    Version.create(authors:  %w[arthurnn dwradcliffe], number: '0.0.1', platform: 'ruby', rubygem: g1)
     g2 = Rubygem.create(name: 'test-gem')
-    v2 = Version.new(authors:  %w(arthurnn dwradcliffe), number: '733.t-0.0.1', platform: 'ruby', rubygem: g2)
+    v2 = Version.new(authors:  %w[arthurnn dwradcliffe], number: '733.t-0.0.1', platform: 'ruby', rubygem: g2)
     refute v2.valid?
     assert_equal [:full_name], v2.errors.keys
   end
@@ -754,6 +769,32 @@ class VersionTest < ActiveSupport::TestCase
     should "should return nil on sha256_hex when sha not avaible" do
       version = create(:version, sha256: nil)
       assert_nil version.sha256_hex
+    end
+  end
+
+  context "created_between" do
+    setup do
+      @version = create(:version)
+      @start_time = Time.zone.parse('2017-10-10')
+      @end_time = Time.zone.parse('2017-11-10')
+    end
+
+    should "return versions created in the given range" do
+      @version.created_at = Time.zone.parse('2017-10-20')
+      @version.save!
+      assert_contains Version.created_between(@start_time, @end_time), @version
+    end
+
+    should "NOT return versions created before the range begins" do
+      @version.created_at = Time.zone.parse('2017-10-09')
+      @version.save!
+      assert_does_not_contain Version.created_between(@start_time, @end_time), @version
+    end
+
+    should "NOT return versions after the range begins" do
+      @version.created_at = Time.zone.parse('2017-11-11')
+      @version.save!
+      assert_does_not_contain Version.created_between(@start_time, @end_time), @version
     end
   end
 end

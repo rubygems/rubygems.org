@@ -1,4 +1,4 @@
-class AddMoreIndexesToVersions < ActiveRecord::Migration
+class AddMoreIndexesToVersions < ActiveRecord::Migration[4.2]
   def self.up
     add_index :versions, :number
     add_index :versions, :built_at

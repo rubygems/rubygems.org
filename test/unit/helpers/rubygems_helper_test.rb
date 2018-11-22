@@ -56,23 +56,6 @@ class RubygemsHelperTest < ActionView::TestCase
     assert_equal "March 18, 2011", nice_date_for(time)
   end
 
-  should "link to docs if no docs link is set" do
-    version = build(:version)
-    linkset = build(:linkset, docs: nil)
-
-    @virtual_path = "rubygems.show"
-    link = documentation_link(version, linkset)
-    assert link.include?(version.documentation_path)
-  end
-
-  should "not link to docs if docs link is set" do
-    version = build(:version)
-    linkset = build(:linkset)
-
-    link = documentation_link(version, linkset)
-    assert link.blank?
-  end
-
   should "link to the badge" do
     rubygem = create(:rubygem)
     url = "https://badge.fury.io/rb/#{rubygem.name}/install"
@@ -83,7 +66,7 @@ class RubygemsHelperTest < ActionView::TestCase
 
   should "link to report abuse" do
     rubygem = create(:rubygem, name: 'my_gem')
-    url = "http://help.rubygems.org/discussion/new?discussion[private]=1&discussion[title]=Reporting%20Abuse%20on%20my_gem" # rubocop:disable Metrics/LineLength
+    url = "http://help.rubygems.org/discussion/new?discussion[private]=1&discussion[title]=Reporting+Abuse+on+my_gem"
 
     @virtual_path = "rubygems.show"
     assert_match url, report_abuse_link(rubygem)
@@ -154,6 +137,47 @@ class RubygemsHelperTest < ActionView::TestCase
       assert_equal "\n<h2>FOO</h2>\n\n<p><a>click</a></p>\n", simple_markup(text)
 
       assert simple_markup(text).html_safe?
+    end
+  end
+
+  context "link_to_github" do
+    context "with invalid uri" do
+      setup do
+        linkset = build(:linkset, code: "http://github.com/\#{github_username}/\#{project_name}")
+        @rubygem = build(:rubygem, linkset: linkset)
+      end
+
+      should "not raise error" do
+        assert_nothing_raised { link_to_github(@rubygem) }
+      end
+
+      should "return nil" do
+        assert_nil link_to_github(@rubygem)
+      end
+    end
+
+    context "with valid code uri and github as host" do
+      setup do
+        @github_link = "http://github.com/user/project"
+        linkset = build(:linkset, code: @github_link)
+        @rubygem = build(:rubygem, linkset: linkset)
+      end
+
+      should "return parsed uri" do
+        assert_equal URI(@github_link), link_to_github(@rubygem)
+      end
+    end
+
+    context "with valid home uri and github as host" do
+      setup do
+        @github_link = "http://github.com/user/project"
+        linkset = build(:linkset, home: @github_link)
+        @rubygem = build(:rubygem, linkset: linkset)
+      end
+
+      should "return parsed uri" do
+        assert_equal URI(@github_link), link_to_github(@rubygem)
+      end
     end
   end
 end

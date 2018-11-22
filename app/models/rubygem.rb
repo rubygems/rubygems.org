@@ -1,16 +1,16 @@
-class Rubygem < ActiveRecord::Base
+class Rubygem < ApplicationRecord
   include Patterns
   include RubygemSearchable
 
-  has_many :owners, through: :ownerships, source: :user
   has_many :ownerships, dependent: :destroy
-  has_many :subscribers, through: :subscriptions, source: :user
+  has_many :owners, through: :ownerships, source: :user
   has_many :subscriptions, dependent: :destroy
+  has_many :subscribers, through: :subscriptions, source: :user
   has_many :versions, dependent: :destroy, validate: false
-  has_one :latest_version, -> { where(latest: true).order(:position) }, class_name: "Version"
+  has_one :latest_version, -> { where(latest: true).order(:position) }, class_name: "Version", inverse_of: :rubygem
   has_many :web_hooks, dependent: :destroy
   has_one :linkset, dependent: :destroy
-  has_one :gem_download, -> { where(version_id: 0) }
+  has_one :gem_download, -> { where(version_id: 0) }, inverse_of: :rubygem
 
   validate :ensure_name_format, if: :needs_name_validation?
   validates :name,
@@ -50,18 +50,6 @@ class Rubygem < ActiveRecord::Base
     where("UPPER(name) LIKE UPPER(?)", "#{letter}%")
   end
 
-  def self.reverse_dependencies(name)
-    where(id: Version.reverse_dependencies(name).select(:rubygem_id))
-  end
-
-  def self.reverse_development_dependencies(name)
-    where(id: Version.reverse_development_dependencies(name).select(:rubygem_id))
-  end
-
-  def self.reverse_runtime_dependencies(name)
-    where(id: Version.reverse_runtime_dependencies(name).select(:rubygem_id))
-  end
-
   def self.total_count
     count_by_sql "SELECT COUNT(*) from (SELECT DISTINCT rubygem_id FROM versions WHERE indexed = true) AS v"
   end
@@ -95,6 +83,13 @@ class Rubygem < ActiveRecord::Base
     rubygem && rubygem.versions.release.indexed.latest.first
   end
 
+  def self.news(days)
+    includes(:latest_version, :gem_download)
+      .with_versions
+      .where("versions.created_at BETWEEN ? AND ?", days.ago.in_time_zone, Time.zone.now)
+      .order("versions.created_at DESC")
+  end
+
   def all_errors(version = nil)
     [self, linkset, version].compact.map do |ar|
       ar.errors.full_messages
@@ -106,7 +101,7 @@ class Rubygem < ActiveRecord::Base
   end
 
   def public_versions_with_extra_version(extra_version)
-    versions = public_versions(5)
+    versions = public_versions(5).to_a
     versions << extra_version
     versions.uniq.sort_by(&:position)
   end
@@ -141,7 +136,12 @@ class Rubygem < ActiveRecord::Base
     gem_download.try(:count) || 0
   end
 
+  def links(version = versions.most_recent)
+    Links.new(self, version)
+  end
+
   def payload(version = versions.most_recent, protocol = Gemcutter::PROTOCOL, host_with_port = Gemcutter::HOST)
+    versioned_links = links(version)
     deps = version.dependencies.to_a
     {
       'name'              => name,
@@ -156,15 +156,16 @@ class Rubygem < ActiveRecord::Base
       'sha'               => version.sha256_hex,
       'project_uri'       => "#{protocol}://#{host_with_port}/gems/#{name}",
       'gem_uri'           => "#{protocol}://#{host_with_port}/gems/#{version.full_name}.gem",
-      'homepage_uri'      => linkset.try(:home),
-      'wiki_uri'          => linkset.try(:wiki),
-      'documentation_uri' => linkset.try(:docs).presence || version.documentation_path,
-      'mailing_list_uri'  => linkset.try(:mail),
-      'source_code_uri'   => linkset.try(:code),
-      'bug_tracker_uri'   => linkset.try(:bugs),
+      'homepage_uri'      => versioned_links.homepage_uri,
+      'wiki_uri'          => versioned_links.wiki_uri,
+      'documentation_uri' => versioned_links.documentation_uri,
+      'mailing_list_uri'  => versioned_links.mailing_list_uri,
+      'source_code_uri'   => versioned_links.source_code_uri,
+      'bug_tracker_uri'   => versioned_links.bug_tracker_uri,
+      'changelog_uri'     => versioned_links.changelog_uri,
       'dependencies'      => {
-        'development' => deps.select { |r| r.rubygem && 'development' == r.scope },
-        'runtime'     => deps.select { |r| r.rubygem && 'runtime' == r.scope }
+        'development' => deps.select { |r| r.rubygem && r.scope == 'development' },
+        'runtime'     => deps.select { |r| r.rubygem && r.scope == 'runtime' }
       }
     }
   end
@@ -214,7 +215,7 @@ class Rubygem < ActiveRecord::Base
       save!
       update_versions! version, spec
       update_dependencies! version, spec
-      update_linkset! spec
+      update_linkset! spec if version.reload.latest?
     end
   end
 
@@ -239,7 +240,7 @@ class Rubygem < ActiveRecord::Base
       .group_by(&:platform)
 
     versions_of_platforms.each_value do |platforms|
-      Version.find(platforms.sort.last.id).update_column(:latest, true)
+      Version.find(platforms.max.id).update_column(:latest, true)
     end
   end
 
@@ -269,6 +270,20 @@ class Rubygem < ActiveRecord::Base
     (updated_at + 101.days - Time.zone.now).to_i / 1.day
   end
 
+  def reverse_dependencies
+    self.class.joins("inner join versions as v on v.rubygem_id = rubygems.id
+      inner join dependencies as d on d.version_id = v.id").where("v.indexed = 't'
+      and v.position = 0 and d.rubygem_id = ?", id)
+  end
+
+  def reverse_development_dependencies
+    reverse_dependencies.where("d.scope = 'development'")
+  end
+
+  def reverse_runtime_dependencies
+    reverse_dependencies.where("d.scope ='runtime'")
+  end
+
   private
 
   # a gem namespace is not protected if it is
@@ -284,6 +299,8 @@ class Rubygem < ActiveRecord::Base
       errors.add :name, "must include at least one letter"
     elsif name !~ NAME_PATTERN
       errors.add :name, "can only include letters, numbers, dashes, and underscores"
+    elsif name =~ /\A[#{Regexp.escape(Patterns::SPECIAL_CHARACTERS)}]+/
+      errors.add :name, "can not begin with a period, dash, or underscore"
     end
   end
 
@@ -300,12 +317,9 @@ class Rubygem < ActiveRecord::Base
     Dependency.where(unresolved_name: name).find_each do |dependency|
       dependency.update_resolved(self)
     end
-
-    true
   end
 
   def mark_unresolved
     Dependency.mark_unresolved_for(self)
-    true
   end
 end

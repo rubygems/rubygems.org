@@ -1,4 +1,4 @@
-class AddUnresolvedNameToDependencies < ActiveRecord::Migration
+class AddUnresolvedNameToDependencies < ActiveRecord::Migration[4.2]
   def self.up
     add_column :dependencies, :unresolved_name, :string
   end

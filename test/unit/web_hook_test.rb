@@ -79,7 +79,7 @@ class WebHookTest < ActiveSupport::TestCase
       xml = Nokogiri.parse(@webhook.to_xml)
 
       assert_equal "web-hook", xml.root.name
-      assert_equal %w(failure-count url), xml.root.children.select(&:element?).map(&:name).sort
+      assert_equal %w[failure-count url], xml.root.children.select(&:element?).map(&:name).sort
       assert_equal @webhook.url, xml.at_css("url").content
       assert_equal @webhook.failure_count, xml.at_css("failure-count").content.to_i
     end
@@ -89,7 +89,7 @@ class WebHookTest < ActiveSupport::TestCase
         {
           'url'           => @url,
           'failure_count' => @webhook.failure_count
-        }, YAML.load(@webhook.to_yaml)
+        }, YAML.safe_load(@webhook.to_yaml)
       )
     end
 
@@ -136,7 +136,7 @@ class WebHookTest < ActiveSupport::TestCase
       @version = create(:version,
         rubygem: @rubygem,
         number: "3.2.1",
-        authors: %w(AUTHORS),
+        authors: %w[AUTHORS],
         description: "DESC")
       @hook    = create(:web_hook, rubygem: @rubygem)
       @job     = Notifier.new(@hook.url, 'http', 'localhost:1234', @rubygem, @version)
@@ -225,11 +225,11 @@ class WebHookTest < ActiveSupport::TestCase
     end
 
     should "return its payload" do
-      assert_equal @webhook.payload, YAML.load(@webhook.to_yaml)
+      assert_equal @webhook.payload, YAML.safe_load(@webhook.to_yaml)
     end
 
     should "nest properly" do
-      assert_equal [@webhook.payload], YAML.load([@webhook].to_yaml)
+      assert_equal [@webhook.payload], YAML.safe_load([@webhook].to_yaml)
     end
   end
 end

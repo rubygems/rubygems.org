@@ -2,7 +2,7 @@ class Hostess < Rack::Static
   def initialize(app, options = {})
     options[:root] = RubygemFs.instance.base_dir
 
-    options[:urls] = %w(
+    options[:urls] = %w[
       /specs.4.8.gz
       /latest_specs.4.8.gz
       /prerelease_specs.4.8.gz
@@ -19,7 +19,7 @@ class Hostess < Rack::Static
       /prerelease_specs.4.8
       /quick/index
       /quick/latest_index
-    )
+    ]
 
     super(app, options)
   end
@@ -35,9 +35,7 @@ class Hostess < Rack::Static
   def call(env)
     path = env['PATH_INFO']
 
-    if path =~ %r{/downloads/(.*)\.gem}
-      return [302, { 'Location' => "/gems/#{Regexp.last_match(1)}.gem" }, []]
-    end
+    return [302, { 'Location' => "/gems/#{Regexp.last_match(1)}.gem" }, []] if path =~ %r{/downloads/(.*)\.gem}
 
     download_path = gem_download_path(path)
     name = Version.rubygem_name_for(download_path) if download_path

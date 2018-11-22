@@ -1,4 +1,4 @@
-class AddMissingIndicies < ActiveRecord::Migration
+class AddMissingIndicies < ActiveRecord::Migration[4.2]
   def self.up
     add_index 'rubygems', 'name'
     add_index 'linksets', 'rubygem_id'

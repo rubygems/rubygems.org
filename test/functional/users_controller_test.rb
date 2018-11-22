@@ -6,13 +6,13 @@ class UsersControllerTest < ActionController::TestCase
       get :new
     end
 
-    should redirect_to("sign up page") { sign_up_url }
+    should redirect_to("sign up page") { sign_up_path }
   end
 
   context "on POST to create" do
     context "when email and password are given" do
       should "create a user" do
-        post :create, user: { email: 'foo@bar.com', password: 'secret12345' }
+        post :create, params: { user: { email: 'foo@bar.com', password: 'secret12345' } }
         assert User.find_by(email: 'foo@bar.com')
       end
     end
@@ -27,19 +27,19 @@ class UsersControllerTest < ActionController::TestCase
 
     context "when extra parameters given" do
       should "create a user if parameters are ok" do
-        post :create, user: { email: 'foo@bar.com', password: 'secret12345', handle: 'foo' }
+        post :create, params: { user: { email: 'foo@bar.com', password: 'secret12345', handle: 'foo' } }
         assert_equal "foo", User.where(email: 'foo@bar.com').pluck(:handle).first
       end
 
       should "create a user but dont assign not valid parameters" do
-        post :create, user: { email: 'foo@bar.com', password: 'secret', api_key: 'nonono' }
+        post :create, params: { user: { email: 'foo@bar.com', password: 'secret', api_key: 'nonono' } }
         assert_not_equal "nonono", User.where(email: 'foo@bar.com').pluck(:api_key).first
       end
     end
 
     context 'confirmation mail' do
       setup do
-        post :create, user: { email: 'foo@bar.com', password: 'secretpassword', handle: 'foo' }
+        post :create, params: { user: { email: 'foo@bar.com', password: 'secretpassword', handle: 'foo' } }
         Delayed::Worker.new.work_off
       end
 

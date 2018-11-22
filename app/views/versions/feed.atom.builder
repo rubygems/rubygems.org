@@ -4,4 +4,5 @@ render(
     builder: xml,
     versions: @versions,
     title: "Rubygems | Latest Gems"
-})
+  }
+)

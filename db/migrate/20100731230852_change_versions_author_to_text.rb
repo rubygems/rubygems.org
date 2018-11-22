@@ -1,4 +1,4 @@
-class ChangeVersionsAuthorToText < ActiveRecord::Migration
+class ChangeVersionsAuthorToText < ActiveRecord::Migration[4.2]
   def self.up
     change_column :versions, :authors, :text
   end

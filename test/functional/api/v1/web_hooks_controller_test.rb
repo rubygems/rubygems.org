@@ -11,7 +11,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
   context "When not logged in" do
     should "forbid access when creating a web hook" do
       rubygem = create(:rubygem)
-      post :create, gem_name: rubygem.name, url: "http://example.com"
+      post :create, params: { gem_name: rubygem.name, url: "http://example.com" }
       assert @response.body =~ /Access Denied/
       assert WebHook.count.zero?
     end
@@ -22,13 +22,13 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
     end
 
     should "forbid access when firing hooks" do
-      post :fire, gem_name: WebHook::GLOBAL_PATTERN, url: "http://example.com"
+      post :fire, params: { gem_name: WebHook::GLOBAL_PATTERN, url: "http://example.com" }
       assert @response.body =~ /Access Denied/
     end
 
     should "forbid access when removing a web hook" do
       hook = create(:web_hook)
-      delete :remove, gem_name: hook.rubygem.name, url: hook.url
+      delete :remove, params: { gem_name: hook.rubygem.name, url: hook.url }
       assert @response.body =~ /Access Denied/
       assert_equal 1, WebHook.count
     end
@@ -64,8 +64,8 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
       context "On POST to fire for all gems" do
         setup do
           RestClient.stubs(:post)
-          post :fire, gem_name: WebHook::GLOBAL_PATTERN,
-                      url: @url
+          post :fire, params: { gem_name: WebHook::GLOBAL_PATTERN,
+                                url: @url }
         end
         should respond_with :success
         should "say successfully deployed" do
@@ -78,14 +78,25 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
       context "On POST to fire for all gems that fails" do
         setup do
           RestClient.stubs(:post).raises(RestClient::Exception.new)
-          post :fire, gem_name: WebHook::GLOBAL_PATTERN,
-                      url: @url
+          post :fire, params: { gem_name: WebHook::GLOBAL_PATTERN,
+                                url: @url }
         end
         should respond_with :bad_request
-        should "say successfully deployed" do
+        should "say there was a problem" do
           content = "There was a problem deploying webhook for #{@gemcutter.name} to #{@url}"
           assert page.has_content?(content)
           assert WebHook.count.zero?
+        end
+      end
+
+      context "On POST to fire with no url" do
+        setup do
+          post :fire, params: { gem_name: WebHook::GLOBAL_PATTERN }
+        end
+        should respond_with :bad_request
+        should "say url was not provided" do
+          content = "URL was not provided"
+          assert page.has_content?(content)
         end
       end
     end
@@ -99,8 +110,8 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
       context "On POST to fire for a specific gem" do
         setup do
           RestClient.stubs(:post)
-          post :fire, gem_name: @rubygem.name,
-                      url: @url
+          post :fire, params: { gem_name: @rubygem.name,
+                                url: @url }
         end
         should respond_with :success
         should "say successfully deployed" do
@@ -112,8 +123,8 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
       context "On POST to fire for a specific gem that fails" do
         setup do
           RestClient.stubs(:post).raises(RestClient::Exception.new)
-          post :fire, gem_name: @rubygem.name,
-                      url: @url
+          post :fire, params: { gem_name: @rubygem.name,
+                                url: @url }
         end
         should respond_with :bad_request
         should "say there was a problem" do
@@ -137,14 +148,13 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         end
 
         should_respond_to(:yaml) do |body|
-          YAML.load(body)
+          YAML.safe_load(body)
         end
 
         context "On DELETE to remove with owned hook for rubygem" do
           setup do
-            delete :remove,
-              gem_name: @rubygem.name,
-              url: @rubygem_hook.url
+            delete :remove, params: { gem_name: @rubygem.name,
+                                      url: @rubygem_hook.url }
           end
 
           should respond_with :success
@@ -161,9 +171,8 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
         context "On DELETE to remove with owned global hook" do
           setup do
-            delete :remove,
-              gem_name: WebHook::GLOBAL_PATTERN,
-              url: @global_hook.url
+            delete :remove, params: { gem_name: WebHook::GLOBAL_PATTERN,
+                                      url: @global_hook.url }
           end
 
           should respond_with :success
@@ -188,7 +197,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
         context "On DELETE to remove with owned hook for rubygem" do
           setup do
-            delete(:remove, gem_name: @rubygem.name, url: @rubygem_hook.url)
+            delete :remove, params: { gem_name: @rubygem.name, url: @rubygem_hook.url }
           end
 
           should respond_with :not_found
@@ -202,9 +211,8 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
         context "On DELETE to remove with global hook" do
           setup do
-            delete :remove,
-              gem_name: WebHook::GLOBAL_PATTERN,
-              url: @rubygem_hook.url
+            delete :remove, params: { gem_name: WebHook::GLOBAL_PATTERN,
+                                      url: @rubygem_hook.url }
           end
 
           should respond_with :not_found
@@ -219,7 +227,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
       context "On POST to create hook for a gem that's hosted" do
         setup do
-          post :create, gem_name: @rubygem.name, url: @url
+          post :create, params: { gem_name: @rubygem.name, url: @url }
         end
 
         should respond_with :created
@@ -235,7 +243,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
       context "on POST to create hook that already exists" do
         setup do
           create(:web_hook, rubygem: @rubygem, url: @url, user: @user)
-          post :create, gem_name: @rubygem.name, url: @url
+          post :create, params: { gem_name: @rubygem.name, url: @url }
         end
 
         should respond_with :conflict
@@ -247,7 +255,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
       context "On POST to create hook for all gems" do
         setup do
-          post :create, gem_name: WebHook::GLOBAL_PATTERN, url: @url
+          post :create, params: { gem_name: WebHook::GLOBAL_PATTERN, url: @url }
         end
 
         should respond_with :created
@@ -263,7 +271,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
     context "On POST to create a hook for a gem that doesn't exist here" do
       setup do
-        post :create, gem_name: "a gem that doesn't exist", url: @url
+        post :create, params: { gem_name: "a gem that doesn't exist", url: @url }
       end
 
       should_not_find_it
@@ -271,7 +279,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
 
     context "On DELETE to remove a hook for a gem that doesn't exist here" do
       setup do
-        delete :remove, gem_name: "a gem that doesn't exist", url: @url
+        delete :remove, params: { gem_name: "a gem that doesn't exist", url: @url }
       end
 
       should_not_find_it
@@ -280,7 +288,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
     context "on POST to global web hook that already exists" do
       setup do
         create(:global_web_hook, url: @url, user: @user)
-        post :create, gem_name: WebHook::GLOBAL_PATTERN, url: @url
+        post :create, params: { gem_name: WebHook::GLOBAL_PATTERN, url: @url }
       end
 
       should respond_with :conflict

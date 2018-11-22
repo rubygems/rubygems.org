@@ -8,11 +8,10 @@ class VersionsControllerTest < ActionController::TestCase
         create(:version, rubygem: @rubygem)
       end
 
-      get :index, rubygem_id: @rubygem.name
+      get :index, params: { rubygem_id: @rubygem.name }
     end
 
     should respond_with :success
-    should render_template :index
 
     should "show all related versions" do
       @versions.each do |version|
@@ -29,7 +28,7 @@ class VersionsControllerTest < ActionController::TestCase
       end
       @rubygem.reload
 
-      get :index, rubygem_id: @rubygem.name, format: "atom"
+      get :index, params: { rubygem_id: @rubygem.name, format: "atom" }
     end
 
     should respond_with :success
@@ -52,11 +51,10 @@ class VersionsControllerTest < ActionController::TestCase
   context "GET to index for gem with no versions" do
     setup do
       @rubygem = create(:rubygem)
-      get :index, rubygem_id: @rubygem.name
+      get :index, params: { rubygem_id: @rubygem.name }
     end
 
     should respond_with :success
-    should render_template :index
     should "show not hosted notice" do
       assert page.has_content?('This gem is not currently hosted')
     end
@@ -70,13 +68,12 @@ class VersionsControllerTest < ActionController::TestCase
       @latest_version = create(:version, built_at: 1.week.ago, created_at: 1.day.ago)
       @rubygem = @latest_version.rubygem
       @versions = (1..5).map do
-        FactoryGirl.create(:version, rubygem: @rubygem)
+        FactoryBot.create(:version, rubygem: @rubygem)
       end
-      get :show, rubygem_id: @rubygem.name, id: @latest_version.number
+      get :show, params: { rubygem_id: @rubygem.name, id: @latest_version.number }
     end
 
     should respond_with :success
-    should render_template "rubygems/show"
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
     end
@@ -98,11 +95,10 @@ class VersionsControllerTest < ActionController::TestCase
       @version = create(:version, number: '1.0.1')
       @version.rubygem.owners << create(:user, handle: "johndoe")
       create(:version, number: "1.0.2", rubygem: @version.rubygem, indexed: false)
-      get :show, rubygem_id: @version.rubygem.name, id: "1.0.2"
+      get :show, params: { rubygem_id: @version.rubygem.name, id: "1.0.2" }
     end
 
     should respond_with :success
-    should render_template "rubygems/show"
     should "show yanked notice" do
       assert page.has_content?("This version has been yanked")
     end

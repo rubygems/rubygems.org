@@ -15,7 +15,7 @@ class HostessTest < ActiveSupport::TestCase
     RubygemFs.instance.store(path, '')
   end
 
-  %w(/prerelease_specs.4.8.gz
+  %w[/prerelease_specs.4.8.gz
      /latest_specs.4.8.gz
      /specs.4.8.gz
      /Marshal.4.8.Z
@@ -30,7 +30,7 @@ class HostessTest < ActiveSupport::TestCase
      /quick/rubygems-update-1.3.6.gemspec.rz
      /yaml
      /yaml.Z
-     /yaml.z).each do |index|
+     /yaml.z].each do |index|
     should "serve up #{index} locally" do
       touch index
       get index

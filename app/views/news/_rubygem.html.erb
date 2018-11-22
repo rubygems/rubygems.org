@@ -1,0 +1,16 @@
+<%= link_to rubygem_path(rubygem.name), class: 'gems__gem' do %>
+  <span class="gems__gem__info">
+    <h2 class="gems__gem__name">
+      <%= rubygem.name %>
+      <span class="gems__gem__version"><%= latest_version_number(rubygem) %></span>
+      <span class="gems__gem__version"><%= nice_date_for(rubygem.updated_at) %></span>
+    </h2>
+    <p class="gems__gem__desc t-text"><%= short_info(rubygem) %></p>
+  </span>
+  <p class="gems__gem__downloads__count">
+    <%= download_count rubygem %>
+    <span class="gems__gem__downloads__heading">
+      <%= t('rubygems.index.downloads') %>
+    </span>
+  </p>
+<% end %>

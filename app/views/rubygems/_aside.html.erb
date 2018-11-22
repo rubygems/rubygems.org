@@ -1,4 +1,8 @@
 <div class="gem__aside l-col--r--pad">
+  <% if @rubygem.linkset.present? && github_link = link_to_github(@rubygem) %>
+    <iframe class="gem__ghbtn" src="https://ghbtns.com/github-btn.html?user=<%= github_link.path.split('/').second %>&repo=<%= github_link.path.split('/').third %>&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+  <% end %>
+
   <% if @latest_version.indexed %>
     <div class="gem__downloads-wrap" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
       <h2 class="gem__downloads__heading t-text--s">
@@ -61,21 +65,13 @@
   <div class="t-list__items">
     <%= link_to t('edit'), edit_rubygem_path(@rubygem), :class => "gem__link t-list__item", :id => "edit" if @rubygem.owned_by?(current_user) %>
 
-    <% if @latest_version.indexed %>
-      <% if @rubygem.linkset.present? %>
-        <%- Linkset::LINKS.each do |link| %>
-          <%= link_to_page link, @rubygem.linkset.public_send(link) %>
-        <%- end %>
-      <% end %>
-
-      <%= download_link(@latest_version) %>
-    <% end %>
-
-    <%= documentation_link(@latest_version, @rubygem.linkset) %>
+    <%- @versioned_links.each do |name, link| %>
+      <%= link_to_page name, link %>
+    <%- end %>
     <%= badge_link(@rubygem) %>
     <%= subscribe_link(@rubygem) if @latest_version.indexed %>
-    <%= unsubscribe_link(@rubygem) %>
     <%= atom_link(@rubygem) %>
     <%= report_abuse_link(@rubygem) %>
+    <%= reverse_dependencies_link(@rubygem) %>
   </div>
 </div>

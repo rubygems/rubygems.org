@@ -23,6 +23,9 @@ class RubygemTest < ActiveSupport::TestCase
     should_not allow_value("\342\230\203").for(:name)
     should_not allow_value("2.2").for(:name)
     should_not allow_value("Ruby").for(:name)
+    should_not allow_value(".omghi").for(:name)
+    should_not allow_value("-omghi").for(:name)
+    should_not allow_value("_omghi").for(:name)
 
     context "that has an invalid name already persisted" do
       setup do
@@ -165,11 +168,11 @@ class RubygemTest < ActiveSupport::TestCase
 
     context "#public_versions_with_extra_version" do
       setup do
-        @first_version = FactoryGirl.create(:version,
+        @first_version = FactoryBot.create(:version,
           rubygem: @rubygem,
           number: '1.0.0',
           position: 1)
-        @extra_version = FactoryGirl.create(:version,
+        @extra_version = FactoryBot.create(:version,
           rubygem: @rubygem,
           number: '0.1.0',
           position: 2)
@@ -201,67 +204,56 @@ class RubygemTest < ActiveSupport::TestCase
     end
   end
 
-  context ".reverse_dependencies" do
+  context "with reverse dependencies" do
     setup do
-      @dep_rubygem = create(:rubygem)
-      @gem_one = create(:rubygem)
-      @gem_two = create(:rubygem)
-      @gem_three = create(:rubygem)
-      @gem_four = create(:rubygem)
-      @gem_five = create(:rubygem)
-      @version_one_latest  = create(:version, rubygem: @gem_one, number: '0.2')
-      @version_one_earlier = create(:version, rubygem: @gem_one, number: '0.1')
-      @version_two_latest  = create(:version, rubygem: @gem_two, number: '1.0')
-      @version_two_earlier = create(:version, rubygem: @gem_two, number: '0.5')
-      @version_three = create(:version, rubygem: @gem_three, number: '1.7')
-      @version_four = create(:version, rubygem: @gem_four, number: '3.9')
-      @version_five = create(:version, :yanked, rubygem: @gem_five, number: '6.66')
+      @dependency            = create(:rubygem)
+      @gem_one               = create(:rubygem)
+      @gem_two               = create(:rubygem)
+      gem_three              = create(:rubygem)
+      gem_four               = create(:rubygem)
+      version_one            = create(:version, rubygem: @gem_one)
+      version_two            = create(:version, rubygem: @gem_two)
+      _version_three_latest  = create(:version, rubygem: gem_three, number: '1.0')
+      version_three_earlier  = create(:version, rubygem: gem_three, number: '0.5')
+      yanked_version         = create(:version, :yanked, rubygem: gem_four)
 
-      @version_one_latest.dependencies << create(:dependency,
-        :runtime,
-        version: @version_one_latest,
-        rubygem: @dep_rubygem)
-      @version_two_earlier.dependencies << create(:dependency,
-        :development,
-        version: @version_two_earlier,
-        rubygem: @dep_rubygem)
-      @version_three.dependencies << create(:dependency,
-        :runtime,
-        version: @version_three,
-        rubygem: @dep_rubygem)
-      @version_five.dependencies << create(:dependency,
-        version: @version_five,
-        rubygem: @dep_rubygem)
+      create(:dependency, :runtime, version: version_one, rubygem: @dependency)
+      create(:dependency, :development, version: version_two, rubygem: @dependency)
+      create(:dependency, version: version_three_earlier, rubygem: @dependency)
+      create(:dependency, version: yanked_version, rubygem: @dependency)
     end
 
-    should "return all depended rubygems except yanked versions" do
-      gem_list = Rubygem.reverse_dependencies(@dep_rubygem.name)
+    context "#reverse_dependencies" do
+      should "return dependent gems of latest indexed version" do
+        gem_list = @dependency.reverse_dependencies
 
-      assert_equal 3, gem_list.size
+        assert_equal 2, gem_list.size
 
-      assert gem_list.include?(@gem_one)
-      assert gem_list.include?(@gem_two)
-      assert gem_list.include?(@gem_three)
-      refute gem_list.include?(@gem_four)
-      refute gem_list.include?(@gem_five)
+        assert gem_list.include?(@gem_one)
+        assert gem_list.include?(@gem_two)
+        refute gem_list.include?(@gem_three)
+        refute gem_list.include?(@gem_four)
+      end
     end
 
-    should "return runtime dependend rubygems" do
-      gem_list = Rubygem.reverse_runtime_dependencies(@dep_rubygem.name)
+    context "#reverse_runtime_dependencies" do
+      should "return runtime dependent rubygems" do
+        gem_list = @dependency.reverse_runtime_dependencies
+        assert_equal 1, gem_list.size
 
-      assert_equal 2, gem_list.size
-
-      assert gem_list.include?(@gem_one)
-      refute gem_list.include?(@gem_two)
+        assert gem_list.include?(@gem_one)
+        refute gem_list.include?(@gem_two)
+      end
     end
 
-    should "return development dependend rubygems" do
-      gem_list = Rubygem.reverse_development_dependencies(@dep_rubygem.name)
+    context "#reverse_development_dependencies" do
+      should "return development dependent rubygems" do
+        gem_list = @dependency.reverse_development_dependencies
+        assert_equal 1, gem_list.size
 
-      assert_equal 1, gem_list.size
-
-      assert gem_list.include?(@gem_two)
-      refute gem_list.include?(@gem_one)
+        assert gem_list.include?(@gem_two)
+        refute gem_list.include?(@gem_one)
+      end
     end
   end
 
@@ -381,10 +373,6 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
-    should "return current version" do
-      assert_equal @rubygem.versions.first, @rubygem.versions.most_recent
-    end
-
     should "return name with version for #to_s" do
       @rubygem.save
       create(:version, number: "0.0.0", rubygem: @rubygem)
@@ -458,6 +446,46 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal run_dep.name, doc.at_css("dependencies runtime dependency name").content
     end
 
+    context "with metadata" do
+      setup do
+        @rubygem.linkset = build(:linkset)
+        @version = create(:version, rubygem: @rubygem)
+      end
+
+      should "prefer metadata over links in JSON" do
+        @version.update!(
+          metadata: {
+            "homepage_uri" => "http://example.com/home",
+            "wiki_uri" => "http://example.com/wiki",
+            "documentation_uri" => "http://example.com/docs",
+            "mailing_list_uri" => "http://example.com/mail",
+            "source_code_uri" => "http://example.com/code",
+            "bug_tracker_uri" => "http://example.com/bugs",
+            "changelog_uri" => "http://example.com/change"
+          }
+        )
+
+        hash = MultiJson.load(@rubygem.to_json)
+
+        assert_equal "http://example.com/home", hash["homepage_uri"]
+        assert_equal "http://example.com/wiki", hash["wiki_uri"]
+        assert_equal "http://example.com/docs", hash["documentation_uri"]
+        assert_equal "http://example.com/mail", hash["mailing_list_uri"]
+        assert_equal "http://example.com/code", hash["source_code_uri"]
+        assert_equal "http://example.com/bugs", hash["bug_tracker_uri"]
+        assert_equal "http://example.com/change", hash["changelog_uri"]
+      end
+
+      should "return version documentation url if metadata and linkset docs is empty" do
+        @version.update!(metadata: {})
+        @rubygem.linkset.update_attribute(:docs, "")
+
+        hash = JSON.load(@rubygem.to_json)
+
+        assert_equal "http://www.rubydoc.info/gems/#{@rubygem.name}/#{@version.number}", hash["documentation_uri"]
+      end
+    end
+
     context "with a linkset" do
       setup do
         @rubygem = build(:rubygem)
@@ -475,12 +503,11 @@ class RubygemTest < ActiveSupport::TestCase
         assert_equal @rubygem.linkset.bugs, hash["bug_tracker_uri"]
       end
 
-      should "return version documentation url if linkset docs is empty" do
+      should "return version documentation uri if linkset docs is empty" do
         @rubygem.linkset.docs = ""
-        @rubygem.save
         hash = JSON.load(@rubygem.to_json)
 
-        assert_equal @version.documentation_path, hash["documentation_uri"]
+        assert_equal "http://www.rubydoc.info/gems/#{@rubygem.name}/#{@version.number}", hash["documentation_uri"]
       end
 
       should "return a bunch of XML" do
@@ -579,12 +606,12 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "be pushable if gem was yanked more than 100 days ago" do
-        @haml.update_attributes(created_at: 101.days.ago, updated_at: 101.days.ago)
+        @haml.update(created_at: 101.days.ago, updated_at: 101.days.ago)
         assert @haml.pushable?
       end
 
       should "not be pushable if gem is older than a month and yanked less than 100 days ago" do
-        @haml.update_attributes(created_at: 99.days.ago, updated_at: 99.days.ago)
+        @haml.update(created_at: 99.days.ago, updated_at: 99.days.ago)
         refute @haml.pushable?
       end
     end
@@ -747,6 +774,20 @@ class RubygemTest < ActiveSupport::TestCase
         assert Rubygem.exists?(name: 'rake')
       end
     end
+
+    context "from a Gem:Specification of older version" do
+      setup do
+        linkset  = create(:linkset, home: "http://latest.com")
+        @rubygem = create(:rubygem, name: "test", number: "1.0.0", linkset: linkset)
+        gemspec  = new_gemspec("test", "0.0.1", "test", "ruby") { |spec| spec.homepage = "http://test.com" }
+        version  = @rubygem.find_or_initialize_version_from_spec(gemspec)
+        @rubygem.update_attributes_from_gem_specification!(version, gemspec)
+      end
+
+      should "not update linkset" do
+        assert_equal "http://latest.com", @rubygem.linkset.home
+      end
+    end
   end
 
   context "downloads" do
@@ -780,6 +821,27 @@ class RubygemTest < ActiveSupport::TestCase
 
     should "return number of days left till the gem namespace is protected" do
       assert_equal 1, @rubygem.protected_days
+    end
+  end
+
+  context ".news" do
+    setup do
+      @rubygem1 = create(:rubygem)
+      @rubygem2 = create(:rubygem)
+      @rubygem3 = create(:rubygem)
+      create(:version, rubygem: @rubygem2, created_at: 5.days.ago)
+      create(:version, rubygem: @rubygem1, created_at: 6.days.ago)
+      create(:version, rubygem: @rubygem3, created_at: 8.days.ago)
+      @news = Rubygem.news(7.days)
+    end
+
+    should "not include gems updated since given days" do
+      assert_not_includes @news, @rubygem3
+    end
+
+    should "order by created_at of gem version" do
+      expected_order = [@rubygem2, @rubygem1]
+      assert_equal expected_order, @news
     end
   end
 end

@@ -11,7 +11,7 @@ class Api::V2::VersionsController < Api::BaseController
         format.yaml { render yaml: version }
       end
     else
-      render text: "This version could not be found.", status: 404
+      render plain: "This version could not be found.", status: :not_found
     end
   end
 end

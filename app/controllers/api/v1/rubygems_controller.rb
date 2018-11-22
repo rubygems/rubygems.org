@@ -1,15 +1,16 @@
 class Api::V1::RubygemsController < Api::BaseController
-  skip_before_action :verify_authenticity_token, only: [:create]
+  skip_before_action :verify_authenticity_token, only: %i[create]
 
-  before_action :authenticate_with_api_key, only: [:index, :create]
-  before_action :verify_authenticated_user, only: [:index, :create]
-  before_action :find_rubygem,              only: [:show]
+  before_action :authenticate_with_api_key, only: %i[index create]
+  before_action :verify_authenticated_user, only: %i[index create]
+  before_action :find_rubygem,              only: %i[show reverse_dependencies]
 
   before_action :cors_preflight_check, only: :show
+  before_action :verify_with_otp, only: %i[create]
   after_action  :cors_set_access_control_headers, only: :show
 
   def index
-    @rubygems = current_user.rubygems.with_versions
+    @rubygems = @api_user.rubygems.with_versions
     respond_to do |format|
       format.json { render json: @rubygems }
       format.yaml { render yaml: @rubygems }
@@ -23,32 +24,32 @@ class Api::V1::RubygemsController < Api::BaseController
         format.yaml { render yaml: @rubygem }
       end
     else
-      render text: t(:this_rubygem_could_not_be_found), status: :not_found
+      render plain: t(:this_rubygem_could_not_be_found), status: :not_found
     end
   end
 
   def create
     gemcutter = Pusher.new(
-      current_user,
+      @api_user,
       request.body,
       request.protocol.delete("://"),
       request.host_with_port
     )
     gemcutter.process
-    render text: gemcutter.message, status: gemcutter.code
+    render plain: gemcutter.message, status: gemcutter.code
   rescue => e
     Honeybadger.notify(e)
-    render text: "Server error. Please try again.", status: 500
+    render plain: "Server error. Please try again.", status: :internal_server_error
   end
 
   def reverse_dependencies
     names = begin
       if params[:only] == "development"
-        Rubygem.reverse_development_dependencies(params[:id]).pluck(:name)
+        @rubygem.reverse_development_dependencies.pluck(:name)
       elsif params[:only] == "runtime"
-        Rubygem.reverse_runtime_dependencies(params[:id]).pluck(:name)
+        @rubygem.reverse_runtime_dependencies.pluck(:name)
       else
-        Rubygem.reverse_dependencies(params[:id]).pluck(:name)
+        @rubygem.reverse_dependencies.pluck(:name)
       end
     end
 
@@ -67,11 +68,10 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   def cors_preflight_check
-    if request.method == 'OPTIONS'
-      cors_set_access_control_headers
-      headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-Prototype-Version'
+    return unless request.method == 'OPTIONS'
 
-      render text: '', content_type: 'text/plain'
-    end
+    cors_set_access_control_headers
+    headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-Prototype-Version'
+    render plain: ''
   end
 end

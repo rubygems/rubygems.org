@@ -1,8 +1,6 @@
 require 'test_helper'
 
 class DeletionTest < ActiveSupport::TestCase
-  self.use_transactional_fixtures = false # Disabled to test after_commit
-
   should belong_to :user
 
   setup do
@@ -21,8 +19,7 @@ class DeletionTest < ActiveSupport::TestCase
 
   context "with deleted gem" do
     setup do
-      Rails.cache.stubs(:delete)
-      Fastly.stubs(:purge)
+      GemCachePurger.stubs(:call)
       delete_gem
       @gem_name = @version.rubygem.name
     end
@@ -51,23 +48,13 @@ class DeletionTest < ActiveSupport::TestCase
       assert_nil RubygemFs.instance.get("gems/#{@version.full_name}.gem"), "Rubygem still exists!"
     end
 
-    should "expire API memcached" do
-      assert_received(Rails.cache, :delete) { |cache| cache.with("info/#{@gem_name}").twice }
-      assert_received(Rails.cache, :delete) { |cache| cache.with("deps/v1/#{@gem_name}") }
-      assert_received(Rails.cache, :delete) { |cache| cache.with("versions") }
-      assert_received(Rails.cache, :delete) { |cache| cache.with("names") }
-    end
-
-    should "purge cdn cache" do
-      Delayed::Worker.new.work_off
-      assert_received(Fastly, :purge) { |path| path.with("info/#{@gem_name}").twice }
-      assert_received(Fastly, :purge) { |path| path.with("versions").twice }
-      assert_received(Fastly, :purge) { |path| path.with("names").twice }
+    should "call GemCachePurger" do
+      assert_received(GemCachePurger, :call) { |obj| obj.with(@gem_name).once }
     end
   end
 
   should "enque job for updating ES index, spec index and purging cdn" do
-    assert_difference 'Delayed::Job.count', 5 do
+    assert_difference 'Delayed::Job.count', 7 do
       delete_gem
     end
 
@@ -86,18 +73,47 @@ class DeletionTest < ActiveSupport::TestCase
     assert_equal deletion.rubygem, @version.rubygem.name
   end
 
-  test "expire API memcached" do
-    Rails.cache.write("deps/v1/#{@version.rubygem.name}", "omg!")
-    refute_nil Rails.cache.fetch("deps/v1/#{@version.rubygem.name}")
+  context "with restored gem" do
+    setup do
+      GemCachePurger.stubs(:call)
+      Fastly.stubs(:purge)
+      RubygemFs.instance.stubs(:restore).returns true
+      @deletion = delete_gem
+      @deletion.restore!
+      @gem_name = @version.rubygem.name
+    end
 
-    delete_gem
+    should "index version" do
+      assert @version.indexed?
+    end
 
-    assert_nil Rails.cache.fetch("deps/v1/#{@version.rubygem.name}")
-  end
+    should "reorder versions" do
+      assert @version.reload.latest?
+    end
 
-  teardown do
-    # This is necessary due to after_commit not cleaning up for us
-    [Rubygem, Version, User, Deletion, Delayed::Job, GemDownload].each(&:delete_all)
+    should "remove the yanked time and yanked_info_checksum" do
+      assert_nil @version.yanked_at
+      assert_nil @version.yanked_info_checksum
+    end
+
+    should "call GemCachePurger" do
+      assert_received(GemCachePurger, :call) { |subject| subject.with(@gem_name).twice }
+    end
+
+    should "purge fastly" do
+      Delayed::Worker.new.work_off
+
+      assert_received(Fastly, :purge) do |subject|
+        subject.with("gems/#{@version.full_name}.gem").twice
+      end
+      assert_received(Fastly, :purge) do |subject|
+        subject.with("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz").twice
+      end
+    end
+
+    should "remove deletion record" do
+      assert @deletion.destroyed?
+    end
   end
 
   private
