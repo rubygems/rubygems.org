@@ -3,10 +3,10 @@
 
 <div class="l-overflow">
   <div class="l-colspan--l">
-    <% if @seeked_adoption %>
-      <%= render partial: "show", locals: { adoption: @seeked_adoption } %>
+    <% if @opened_adoption %>
+      <%= render partial: "show", locals: { adoption: @opened_adoption } %>
     <% elsif @rubygem.owned_by?(current_user) %>
-      <%= render partial: "create", locals: { status: "seeked", button_text: "Seek" } %>
+      <%= render partial: "create", locals: { status: "opened", button_text: "open" } %>
 
       <% unless @requested_adoptions.empty? %>
         <h3 class="t-list__heading">Requested adoptions :</h3>
@@ -25,22 +25,10 @@
         <%= render partial: "update", locals: { status: "canceled", button_text: "Cancel", adoption: @user_adoption } %>
       </div>
     <% elsif signed_in? %>
-      <div class="t-body gem__intro">
-        <p>Owners of <%= @rubygem.name %> are not looking for maintainers. You can still request an adoption if
-        you feel gem namespace could be of greater service with your ownership and you can convince
-        existing owner(s) of the gem of the same.
-        We will notify owners of <%= @rubygem.name %> with your adoption note, you can fill below.
-        </p>
-      </div>
+      <%= render "no_open_adoption" %>
       <%= render partial: "create", locals: { status: "requested", button_text: "Request" } %>
     <% else %>
-      <div class="t-body gem__intro">
-        <p>Owners of <%= @rubygem.name %> are not looking for maintainers. You can still request an adoption if
-        you feel gem namespace could be of greater service with your ownership and you can convince
-        existing owner(s) of the gem of the same.
-        We will notify owners of <%= @rubygem.name %> with your adoption note, you can fill below.
-        </p>
-      </div>
+      <%= render "no_open_adoption" %>
       <div class="t-body">
         <%= link_to t('.header.sign_in'), sign_in_path, class: "gem__link t-list__item" %>
       </div>

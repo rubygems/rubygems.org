@@ -827,15 +827,15 @@ class RubygemTest < ActiveSupport::TestCase
     setup do
       @rubygem = create(:rubygem)
       @adoption = create(:adoption, rubygem: @rubygem)
-      create(:adoption, rubygem: @rubygem, status: :seeked)
+      create(:adoption, rubygem: @rubygem, status: :opened)
       @rubygem.approve_adoption!(@adoption)
     end
 
     should "add user as owner" do
       assert @rubygem.owned_by?(@adoption.user)
     end
-    should "approve both seeked and requested adoptions" do
-      assert_empty @rubygem.adoptions.seeked
+    should "approve both opened and requested adoptions" do
+      assert_empty @rubygem.adoptions.opened
       assert_equal "approved", @adoption.status
     end
   end

@@ -4,7 +4,7 @@ class ProfilesController < ApplicationController
   before_action :set_cache_headers, only: :edit
 
   def adoptions
-    @seeked_adoptions = current_user.adoptions.seeked
+    @opened_adoptions = current_user.adoptions.opened
     @requested_adoptions = current_user.adoptions.requested
   end
 

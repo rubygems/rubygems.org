@@ -2,18 +2,22 @@
 
 <div class="l-overflow">
   <div class="l-colspan--l">
-    <h3 class="t-list__heading">Seeked adoptions :</h3>
-    <ol class="t-list__items">
-      <% for adoption in @seeked_adoptions do %>
-        <%= render partial: "adoptions/adoption", locals: { adoption: adoption } %>
-      <% end %>
-    </ol>
+    <% unless @opened_adoptions.empty? %>
+      <h3 class="t-list__heading">opened adoptions :</h3>
+      <ol class="t-list__items">
+        <% for adoption in @opened_adoptions do %>
+          <%= render partial: "adoptions/adoption", locals: { adoption: adoption } %>
+        <% end %>
+      </ol>
+    <% end %>
 
-    <h3 class="t-list__heading">Requested adoptions :</h3>
-    <ol class="t-list__items">
-      <% for adoption in @requested_adoptions do %>
-        <%= render partial: "adoptions/adoption", locals: { adoption: adoption } %>
-      <% end %>
-    </ol>
+    <% unless @requested_adoptions.empty? %>
+      <h3 class="t-list__heading">Requested adoptions :</h3>
+      <ol class="t-list__items">
+        <% for adoption in @requested_adoptions do %>
+          <%= render partial: "adoptions/adoption", locals: { adoption: adoption } %>
+        <% end %>
+      </ol>
+    <% end %>
   </div>
 </div>

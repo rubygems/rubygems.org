@@ -282,7 +282,7 @@ class Rubygem < ApplicationRecord
 
   def approve_adoption!(adoption)
     ownerships.create(user: adoption.user)
-    adoptions.seeked.map(&:approved!)
+    adoptions.opened.map(&:approved!)
     adoption.update(status: :approved)
   end
 

@@ -42,25 +42,25 @@ class AdoptionsControllerTest < ActionController::TestCase
         end
       end
 
-      context "with status seeked" do
+      context "with status opened" do
         context "when user is owner of gem" do
           setup do
             @rubygem.ownerships.create(user: @user)
-            post :create, params: { rubygem_id: @rubygem.name, adoption: { note: "example note", status: "seeked" } }
+            post :create, params: { rubygem_id: @rubygem.name, adoption: { note: "example note", status: "opened" } }
           end
 
           should redirect_to("rubygems adoptions index") { rubygem_adoptions_path(@rubygem) }
           should "set flash success" do
             assert_equal flash[:success], "#{@rubygem.name} has been put up for adoption"
           end
-          should "set seeked adoption status" do
-            assert_equal @user.adoptions.find_by(rubygem_id: @rubygem.id).status, "seeked"
+          should "set opened adoption status" do
+            assert_equal @user.adoptions.find_by(rubygem_id: @rubygem.id).status, "opened"
           end
         end
 
         context "when user is not owner of gem" do
           setup do
-            post :create, params: { rubygem_id: @rubygem.name, adoption: { note: "example note", status: "seeked" } }
+            post :create, params: { rubygem_id: @rubygem.name, adoption: { note: "example note", status: "opened" } }
           end
 
           should respond_with :bad_request

@@ -5,14 +5,14 @@ class AdoptionsController < ApplicationController
   before_action :find_rubygem
 
   def index
-    @seeked_adoption = @rubygem.adoptions.seeked.first
+    @opened_adoption = @rubygem.adoptions.opened.first
 
     @requested_adoptions = @rubygem.adoptions.requested if @rubygem.owned_by?(current_user)
     @user_adoption = current_user&.adoptions&.find_by(rubygem_id: @rubygem.id, status: :requested)
   end
 
   def create
-    if params[:adoption][:status] == "seeked" && @rubygem.owned_by?(current_user)
+    if params[:adoption][:status] == "opened" && @rubygem.owned_by?(current_user)
       create_adoption "#{@rubygem.name} has been put up for adoption"
     elsif params[:adoption][:status] == "requested"
       create_adoption "Adoption request sent to owner of #{@rubygem.name}"
