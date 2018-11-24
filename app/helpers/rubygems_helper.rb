@@ -72,6 +72,10 @@ module RubygemsHelper
       class: 'gem__link t-list__item', id: :rss
   end
 
+  def adoptions_link(rubygem)
+    link_to_page :adoptions, rubygem_adoptions_path(rubygem)
+  end
+
   def reverse_dependencies_link(rubygem)
     link_to_page :reverse_dependencies, rubygem_reverse_dependencies_path(rubygem)
   end

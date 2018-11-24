@@ -1,0 +1,52 @@
+<% @title = 'Adoptions' %>
+<% @subtitle = @rubygem.name %>
+
+<div class="l-overflow">
+  <div class="l-colspan--l">
+    <% if @seeked_adoption %>
+      <div class="gem__intro">
+        <div id="markup" class="gem__desc">
+          <%= simple_markup(@seeked_adoption.note) %>
+        </div>
+        <%= render partial: "adoptions/update", locals: { status: "canceled", button_text: "Cancel", adoption: @seeked_adoption } if @rubygem.owned_by?(current_user)
+%>
+      </div>
+    <% elsif @rubygem.owned_by?(current_user)%>
+      <%= render partial: "adoptions/create", locals: { status: "seeked", button_text: "Seek" } %>
+    <% else %>
+      <div class="t-body gem__intro">
+        <p>Owners of <%= @rubygem.name %> are not looking for maintainers. You can still request an adoption if
+        you feel gem namespace could be of greater service with your ownership and you can convince
+        existing owner(s) of the gem of the same.
+        We will notify owners of <%= @rubygem.name %> with your adoption note, you can fill below.
+        </p>
+      </div>
+    <% end %>
+
+    <% if @user_adoption %>
+      <div class="gem__intro">
+        <div id="markup" class="gem__desc">
+          <%= simple_markup(@user_adoption.note) %>
+        </div>
+        <%= render partial: "adoptions/update", locals: { status: "canceled", button_text: "Cancel", adoption: @user_adoption } %>
+      </div>
+    <% elsif @rubygem.owned_by?(current_user)%>
+      <h3 class="t-list__heading">Adoptions reqeusts :</h3>
+      <div class="gem__intro">
+        <% for adoption in @requested_adoptions do %>
+          <div id="markup" class="gem__desc">
+            <%= simple_markup(adoption.note) %>
+          </div>
+          <%= render partial: "adoptions/update", locals: { status: "approved", button_text: "Approve", adoption: adoption } %>
+          <%= render partial: "adoptions/update", locals: { status: "canceled", button_text: "Cancel", adoption: adoption } %>
+        <% end %>
+      </div>
+    <% elsif signed_in? %>
+      <%= render partial: "adoptions/create", locals: { status: "requested", button_text: "Request" } %>
+    <% else %>
+      <div class="t-body">
+        <%= link_to t('.header.sign_in'), sign_in_path, class: "gem__link t-list__item" %>
+      </div>
+    <% end %>
+  </div>
+</div>
