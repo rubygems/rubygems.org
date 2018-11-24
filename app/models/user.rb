@@ -208,7 +208,7 @@ class User < ApplicationRecord
   end
 
   def can_cancel?(adoption)
-    return true if adoption.user_id == id
+    return true if adoption.user == self
 
     rubygem = Rubygem.find(adoption.rubygem_id)
     rubygem.owned_by?(self)

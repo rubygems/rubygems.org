@@ -13,6 +13,7 @@ class UserTest < ActiveSupport::TestCase
   should have_many(:deletions)
   should have_many(:subscriptions).dependent(:destroy)
   should have_many(:web_hooks).dependent(:destroy)
+  should have_many(:adoptions).dependent(:destroy)
 
   context "validations" do
     context "handle" do
@@ -409,6 +410,28 @@ class UserTest < ActiveSupport::TestCase
     should "return true when remember_token has not expired" do
       @user.update_attribute(:remember_token_expires_at, 1.second.from_now)
       assert @user.remember_me?
+    end
+  end
+
+  context "#can_cancel?" do
+    setup do
+      @user = create(:user)
+      @rubygem = create(:rubygem)
+      @adoption = create(:adoption, rubygem: @rubygem)
+    end
+
+    should "return true when user is owner of gem" do
+      @rubygem.ownerships.create(user: @user)
+      assert @user.can_cancel?(@adoption)
+    end
+
+    should "return true when user is adoption requester" do
+      @adoption.update(user_id: @user.id)
+      assert @user.can_cancel?(@adoption)
+    end
+
+    should "return false when user is neither owner nor requester" do
+      refute @user.can_cancel?(@adoption)
     end
   end
 end

@@ -13,6 +13,7 @@ class RubygemTest < ActiveSupport::TestCase
     should have_many(:subscriptions).dependent(:destroy)
     should have_many(:versions).dependent(:destroy)
     should have_many(:web_hooks).dependent(:destroy)
+    should have_many(:adoptions).dependent(:destroy)
     should have_one(:linkset).dependent(:destroy)
     should validate_uniqueness_of(:name).case_insensitive
     should allow_value("rails").for(:name)
@@ -819,6 +820,23 @@ class RubygemTest < ActiveSupport::TestCase
     should "order by created_at of gem version" do
       expected_order = [@rubygem2, @rubygem1]
       assert_equal expected_order, @news
+    end
+  end
+
+  context "#approve_adoption!" do
+    setup do
+      @rubygem = create(:rubygem)
+      @adoption = create(:adoption, rubygem: @rubygem)
+      create(:adoption, rubygem: @rubygem, status: :seeked)
+      @rubygem.approve_adoption!(@adoption)
+    end
+
+    should "add user as owner" do
+      assert @rubygem.owned_by?(@adoption.user)
+    end
+    should "approve both seeked and requested adoptions" do
+      assert_empty @rubygem.adoptions.seeked
+      assert_equal "approved", @adoption.status
     end
   end
 end
