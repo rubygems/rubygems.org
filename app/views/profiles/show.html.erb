@@ -2,7 +2,7 @@
   <header class="profile__header">
     <div class="profile__header__name-wrap">
       <div id="avatar-frame">
-        <%= 
+        <%=
           image_tag(
             @user.gravatar_url(size: 300, secure: request.ssl?).html_safe,
             id: "profile_gravatar",
@@ -14,7 +14,7 @@
       </div>
 
       <h1 id="profile-name" class="profile__header__name t-display">
-        <%= 
+        <%=
           link_to(
             @user.display_handle, profile_path(@user.display_id),
             class: "t-link--black"
@@ -24,7 +24,7 @@
 
       <% unless @user.hide_email %>
         <p id="profile-email">
-          <%= 
+          <%=
             mail_to(
               @user.email,
               "Email Me",
@@ -58,10 +58,18 @@
         <div id="downloads-ego">
           <%=
             link_to(
-              "Edit Profile",
+              "Edit Profile ",
               edit_profile_path,
               id: "edit-profile",
               class: "profile__header__attribute t-link--black"
+            )
+          %>
+          |
+          <%=
+            link_to(
+              " Adoptions",
+              adoptions_profile_path,
+              class: "t-link--black"
             )
           %>
         </div>

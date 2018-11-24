@@ -134,6 +134,7 @@ Rails.application.routes.draw do
     resources :profiles, only: :show
     resource :multifactor_auth, only: %i[new create update]
     resource :profile, only: %i[edit update] do
+      get :adoptions
       member do
         get :delete
         delete :destroy, as: :destroy

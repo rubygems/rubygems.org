@@ -1,0 +1,10 @@
+<div class="gem__intro">
+  <div id="markup" class="gem__desc">
+    <%= simple_markup(adoption.note) %>
+  </div>
+  <%= render(
+    partial: "adoptions/update",
+    locals: { status: "canceled", button_text: "Cancel", adoption: adoption }
+   ) if current_user.can_cancel?(adoption)
+  %>
+</div>

@@ -3,6 +3,11 @@ class ProfilesController < ApplicationController
   before_action :verify_password, only: %i[update destroy]
   before_action :set_cache_headers, only: :edit
 
+  def adoptions
+    @seeked_adoptions = current_user.adoptions.seeked
+    @requested_adoptions = current_user.adoptions.requested
+  end
+
   def edit
     @user = current_user
   end

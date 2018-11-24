@@ -1,0 +1,9 @@
+<li>
+  <h2 class="gems__gem__name">
+    <%= link_to rubygem_path(adoption.rubygem.name), class: 't-link--black t-list__item' do %>
+      <strong><%= adoption.rubygem.name %></strong>
+    <% end %>
+  </h2>
+  <strong>Note:</strong>
+  <%= render partial: "adoptions/show", locals: { adoption: adoption } %>
+</li>
