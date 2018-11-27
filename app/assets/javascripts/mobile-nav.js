@@ -42,9 +42,9 @@ $(function() {
     }
   }
 
-  sandwichIcon.click(function(){
+  sandwichIcon.click(function(e){
     var nav = {expandedClass: navExpandedClass, popUp: header}
-    handleClick(event, nav, removeNavExpandedClass, addNavExpandedClass);
+    handleClick(e, nav, removeNavExpandedClass, addNavExpandedClass);
   });
 
   sandwichIcon.on('focusin', handleFocusIn);
