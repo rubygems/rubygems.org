@@ -6,9 +6,7 @@ class AdoptionsController < ApplicationController
 
   def index
     @opened_adoption = @rubygem.adoptions.opened.first
-
-    @requested_adoptions = @rubygem.adoptions.requested if @rubygem.owned_by?(current_user)
-    @user_adoption = current_user&.adoptions&.find_by(rubygem_id: @rubygem.id, status: :requested)
+    @user_requested_adoption = current_user&.adoptions&.find_by(rubygem_id: @rubygem.id, status: :requested)
   end
 
   def create

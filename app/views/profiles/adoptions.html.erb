@@ -2,22 +2,12 @@
 
 <div class="l-overflow">
   <div class="l-colspan--l">
-    <% unless @opened_adoptions.empty? %>
-      <h3 class="t-list__heading">opened adoptions :</h3>
-      <ol class="t-list__items">
-        <% for adoption in @opened_adoptions do %>
-          <%= render partial: "adoptions/adoption", locals: { adoption: adoption } %>
-        <% end %>
-      </ol>
+    <%= render layout: "adoptions/adoptions", locals: { adoptions: @opened_adoptions, heading: "Opened adoptions:" } do |adoption| %>
+      <%= link_to adoption.rubygem.name, rubygem_path(adoption.rubygem.name), class: 't-link--black t-list__item' %>
     <% end %>
 
-    <% unless @requested_adoptions.empty? %>
-      <h3 class="t-list__heading">Requested adoptions :</h3>
-      <ol class="t-list__items">
-        <% for adoption in @requested_adoptions do %>
-          <%= render partial: "adoptions/adoption", locals: { adoption: adoption } %>
-        <% end %>
-      </ol>
+    <%= render layout: "adoptions/adoptions", locals: { adoptions: @requested_adoptions, heading: "Requested adoptions:" } do |adoption| %>
+      <%= link_to adoption.rubygem.name, rubygem_path(adoption.rubygem.name), class: 't-link--black t-list__item' %>
     <% end %>
   </div>
 </div>

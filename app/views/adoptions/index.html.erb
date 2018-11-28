@@ -4,34 +4,21 @@
 <div class="l-overflow">
   <div class="l-colspan--l">
     <% if @opened_adoption %>
-      <%= render partial: "show", locals: { adoption: @opened_adoption } %>
+      <%= render layout: "adoptions", locals: { adoptions: [@opened_adoption] } do |adoption| %>
+        <%= link_to(adoption.user.display_handle, profile_path(adoption.user.display_id), class: "t-link--black") %>
+      <% end %>
     <% elsif @rubygem.owned_by?(current_user) %>
       <%= render partial: "create", locals: { status: "opened", button_text: "open" } %>
-
-      <% unless @requested_adoptions.empty? %>
-        <h3 class="t-list__heading">Requested adoptions :</h3>
-        <div class="gem__intro">
-          <% for adoption in @requested_adoptions do %>
-            <%= render partial: "show", locals: { adoption: adoption } %>
-            <%= render partial: "update", locals: { status: "approved", button_text: "Approve", adoption: adoption } %>
-          <% end %>
-        </div>
-      <% end %>
-    <% elsif @user_adoption %>
-      <div class="gem__intro">
-        <div id="markup" class="gem__desc">
-          <%= simple_markup(@user_adoption.note) %>
-        </div>
-        <%= render partial: "update", locals: { status: "canceled", button_text: "Cancel", adoption: @user_adoption } %>
-      </div>
-    <% elsif signed_in? %>
-      <%= render "no_open_adoption" %>
-      <%= render partial: "create", locals: { status: "requested", button_text: "Request" } %>
     <% else %>
-      <%= render "no_open_adoption" %>
-      <div class="t-body">
-        <%= link_to t('.header.sign_in'), sign_in_path, class: "gem__link t-list__item" %>
-      </div>
+      <%= render "default" %>
+    <% end %>
+
+    <% if @rubygem.owned_by? current_user %>
+      <%= render layout: "adoptions", locals: { adoptions: @rubygem.adoptions.requested, heading: "Adoption requests:" } do |adoption| %>
+        <%= link_to(adoption.user.display_handle, profile_path(adoption.user.display_id), class: "t-link--black") %>
+      <% end %>
+    <% else %>
+      <%= render partial: "request", locals: { adoption: @user_requested_adoption } %>
     <% end %>
   </div>
 </div>

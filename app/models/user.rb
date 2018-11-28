@@ -208,11 +208,16 @@ class User < ApplicationRecord
   end
 
   def can_cancel?(adoption)
-    return false unless adoption.status == "opened" || adoption.status == "requested"
+    return false unless adoption.status =~ /^opened|requested$/
     return true if adoption.user == self
 
     rubygem = Rubygem.find(adoption.rubygem_id)
     rubygem.owned_by?(self)
+  end
+
+  def can_approve?(adoption)
+    return false unless adoption.status == "requested"
+    adoption.rubygem.owned_by? self
   end
 
   private

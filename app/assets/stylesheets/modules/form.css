@@ -210,3 +210,12 @@
 .form__label + .t-link, .t-body .form__label + a {
   margin-bottom: 10px;
   display: inline-block; }
+
+.form__submit--small {
+  margin: 5% 6% 10% 1%;
+  width: 43%;
+}
+
+.form__submit--left {
+  float: left;
+}

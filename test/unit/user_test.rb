@@ -420,18 +420,66 @@ class UserTest < ActiveSupport::TestCase
       @adoption = create(:adoption, rubygem: @rubygem)
     end
 
-    should "return true when user is owner of gem" do
-      @rubygem.ownerships.create(user: @user)
-      assert @user.can_cancel?(@adoption)
+    context "when user is owner of gem" do
+      setup { @rubygem.ownerships.create(user: @user) }
+      should "return true" do
+        assert @user.can_cancel?(@adoption)
+      end
     end
 
-    should "return true when user is adoption requester" do
-      @adoption.update(user_id: @user.id)
-      assert @user.can_cancel?(@adoption)
+    context "when user is adoption requester" do
+      setup { @adoption.update(user_id: @user.id) }
+      should "return true" do
+        assert @user.can_cancel?(@adoption)
+      end
     end
 
-    should "return false when user is neither owner nor requester" do
-      refute @user.can_cancel?(@adoption)
+    context "when user is neither owner nor requester" do
+      should "return false" do
+        refute @user.can_cancel?(@adoption)
+      end
+    end
+
+    context "when adoption is canceled" do
+      setup { @adoption.canceled! }
+      should "return false" do
+        refute @user.can_cancel?(@adoption)
+      end
+    end
+
+    context "when adoption is approved" do
+      setup { @adoption.approved! }
+      should "return false" do
+        refute @user.can_cancel?(@adoption)
+      end
+    end
+  end
+
+  context "#can_approve?" do
+    setup do
+      @rubygem = create(:rubygem)
+      @adoption = create(:adoption, rubygem: @rubygem)
+    end
+
+    context "when user is owner of gem" do
+      setup do
+        @user = create(:user)
+        @rubygem.ownerships.create(user: @user)
+      end
+
+      context "adoption status is requested" do
+        setup { @adoption.requested! }
+        should "return true" do
+          assert @user.can_approve?(@adoption)
+        end
+      end
+
+      context "adoption status is canceled" do
+        setup { @adoption.canceled! }
+        should "return false" do
+          refute @user.can_approve?(@adoption)
+        end
+      end
     end
   end
 end
