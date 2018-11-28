@@ -64,7 +64,8 @@ class User < ApplicationRecord
   has_many :oidc_pending_trusted_publishers, class_name: "OIDC::PendingTrustedPublisher", inverse_of: :user, dependent: :destroy
   has_many :oidc_rubygem_trusted_publishers, through: :rubygems, class_name: "OIDC::RubygemTrustedPublisher"
 
-  validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true
+  validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true,
+uniqueness: { case_sensitive: false }
   validates :unconfirmed_email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
 
   validates :handle, uniqueness: { case_sensitive: false }, allow_nil: true, if: :handle_changed?
@@ -96,10 +97,14 @@ class User < ApplicationRecord
     # to UTF-8.
     who = who.encode(Encoding::UTF_8)
 
-    user = find_by(email: who.downcase) || find_by(handle: who)
+    user = find_by_email(who) || find_by(handle: who)
     user if user&.authenticated?(password)
   rescue BCrypt::Errors::InvalidHash, Encoding::UndefinedConversionError
     nil
+  end
+
+  def self.find_by_email(email)
+    find_by("lower(email) = ?", email.downcase)
   end
 
   def self.find_by_slug!(slug)
@@ -114,7 +119,7 @@ class User < ApplicationRecord
 
   def self.find_by_name(name)
     return if name.blank?
-    find_by(email: name) || find_by(handle: name)
+    find_by_email(name) || find_by(handle: name)
   end
 
   def self.find_by_blocked(slug)
@@ -135,7 +140,7 @@ class User < ApplicationRecord
   end
 
   def self.normalize_email(email)
-    super
+    email.to_s.gsub(/\s+/, "")
   rescue ArgumentError => e
     Rails.error.report(e, handled: true)
     ""
