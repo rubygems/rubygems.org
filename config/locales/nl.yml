@@ -1,6 +1,6 @@
 nl:
   edit: Wijzig
-  failure_when_forbidden: Controleer het webadres of probeer het opnieuw.
+  failure_when_forbidden: Controleer het webadres, en probeer het opnieuw.
   feed_latest: RubyGems.org | Nieuwste Gems
   feed_subscribed: RubyGems.org | Geabonneerde Gems
   footer_about: RubyGems.org is de gem hosting service van de Ruby community. <a href="%{publish_docs}">Publiceer</a> en <a href="%{install_docs}">installeer</a> je gems direct. Gebruik <a href="%{api_docs}">de API</a> om meer informatie over beschikbare gems te vinden. <a href="%{contributing_docs}">Word een deelnemer</a> en verbeter de site met jouw aanpassingen.
@@ -8,7 +8,7 @@ nl:
   help_url: http://help.rubygems.org
   locale_name: Nederlands
   none: Geen
-  not_found: Niet Gevonden
+  not_found: Niet gevonden
   please_sign_up: Toegang geweigerd. Schrijf je in voor een account op https://rubygems.org
   sign_in: Inloggen
   sign_up: Registreren
@@ -66,7 +66,7 @@ nl:
   layouts:
     application:
       footer:
-        about: Over Ons
+        about: Over ons
         api: API
         blog: Blog
         contribute: Bijdragen
@@ -82,7 +82,7 @@ nl:
         resolved_with: DNS
         security: Security
         source_code: Code
-        statistics: Statestieken
+        statistics: Statistieken
         status: Status
         supported_by: Ondersteuning
         tested_by: Getest door
