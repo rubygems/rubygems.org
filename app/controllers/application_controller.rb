@@ -61,7 +61,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_with_api_key
-    api_key   = request.headers["Authorization"] || params[:api_key]
+    api_key   = request.headers["Authorization"] || params.permit(:api_key).fetch(:api_key, "")
     @api_user = User.find_by_api_key(api_key)
   end
 
