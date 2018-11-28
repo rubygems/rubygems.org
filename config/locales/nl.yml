@@ -18,7 +18,7 @@ nl:
   time_ago: "%{duration} geleden"
   title: RubyGems.org
   update: Wijzig
-  try_again: Er is iets fout gegaan. Probeer het opnieuw.
+  try_again: Er is iets fout gegaan, probeer het opnieuw.
   advanced_search: Uitgebreid zoeken
   activerecord:
     attributes:
