@@ -12,8 +12,8 @@ class UsersControllerTest < ActionController::TestCase
   context "on POST to create" do
     context "when email and password are given" do
       should "create a user" do
-        post :create, params: { user: { email: 'foo@bar.com', password: 'secret12345' } }
-        assert User.find_by(email: 'foo@bar.com')
+        post :create, params: { user: { email: 'Foo@bar.com', password: 'secret12345' } }
+        assert User.find_by(email: 'Foo@bar.com')
       end
     end
 
@@ -39,7 +39,7 @@ class UsersControllerTest < ActionController::TestCase
 
     context 'confirmation mail' do
       setup do
-        post :create, params: { user: { email: 'foo@bar.com', password: 'secretpassword', handle: 'foo' } }
+        post :create, params: { user: { email: 'Foo@bar.com', password: 'secretpassword', handle: 'foo' } }
         Delayed::Worker.new.work_off
       end
 
@@ -51,7 +51,7 @@ class UsersControllerTest < ActionController::TestCase
       should 'deliver confirmation mail' do
         refute ActionMailer::Base.deliveries.empty?
         email = ActionMailer::Base.deliveries.last
-        assert_equal ['foo@bar.com'], email.to
+        assert_equal ['Foo@bar.com'], email.to
         assert_equal ['no-reply@mailer.rubygems.org'], email.from
         assert_equal 'Please confirm your email address with RubyGems.org', email.subject
       end

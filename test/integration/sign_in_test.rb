@@ -2,7 +2,7 @@ require 'test_helper'
 
 class SignInTest < SystemTest
   setup do
-    create(:user, email: "nick@example.com", password: "secret12345")
+    create(:user, email: "Nick@Example.com", password: "secret12345")
     create(:user, email: "john@example.com", password: "secret12345",
                   mfa_level: :ui_mfa_only, mfa_seed: 'thisisonemfaseed',
                   mfa_recovery_codes: %w[0123456789ab ba9876543210])
