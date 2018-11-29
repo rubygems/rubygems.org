@@ -18,8 +18,7 @@ class ApplicationController < ActionController::Base
       "style-src 'self' https://fonts.googleapis.com; "\
       "img-src 'self' https://secure.gaug.es https://gravatar.com https://secure.gravatar.com https://*.fastly-insights.com; "\
       "font-src 'self' https://fonts.gstatic.com; "\
-      "connect-src https://s3-us-west-2.amazonaws.com/rubygems-dumps/ https://*.fastly-insights.com; "\
-      "frame-src https://ghbtns.com"
+      "connect-src https://s3-us-west-2.amazonaws.com/rubygems-dumps/ https://*.fastly-insights.com https://api.github.com;"
   end
 
   def set_locale
