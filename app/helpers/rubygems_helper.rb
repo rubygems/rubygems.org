@@ -107,4 +107,8 @@ module RubygemsHelper
     return rubygem.latest_version_number if rubygem.respond_to?(:latest_version_number)
     (rubygem.latest_version || rubygem.versions.last).try(:number)
   end
+
+  def github_params(link)
+    "user=#{link.path.split('/').second}&repo=#{link.path.split('/').third}&type=star&count=true&size=large"
+  end
 end

@@ -1,6 +1,6 @@
 <div class="gem__aside l-col--r--pad">
   <% if @rubygem.linkset.present? && github_link = link_to_github(@rubygem) %>
-    <iframe class="gem__ghbtn" src="https://ghbtns.com/github-btn.html?user=<%= github_link.path.split('/').second %>&repo=<%= github_link.path.split('/').third %>&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+    <%= render partial: "rubygems/github_button", locals: { github_link: github_link } %>
   <% end %>
 
   <% if @latest_version.indexed %>
