@@ -1,6 +1,7 @@
 class ProfilesController < ApplicationController
   before_action :redirect_to_root, unless: :signed_in?, except: :show
   before_action :verify_password, only: %i[update destroy]
+  before_action :set_cache_headers, only: :edit
   helper_method :mfa_enabled?
 
   def edit
@@ -51,5 +52,11 @@ class ProfilesController < ApplicationController
     return if current_user.authenticated?(params[:user].delete(:password))
     flash[:notice] = t('profiles.request_denied')
     redirect_to edit_profile_path
+  end
+
+  def set_cache_headers
+    response.headers["Cache-Control"] = "no-cache, no-store"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
   end
 end
