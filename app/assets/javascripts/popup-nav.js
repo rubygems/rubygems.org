@@ -12,9 +12,9 @@ $(function() {
     popupNav.addClass(navExpandedClass);
   }
 
-  arrowIcon.click(function(){
+  arrowIcon.click(function(e){
     var nav = {expandedClass: navExpandedClass, popUp: popupNav}
-    handleClick(event, nav, removeNavExpandedClass, addNavExpandedClass);
+    handleClick(e, nav, removeNavExpandedClass, addNavExpandedClass);
   });
 });
 
