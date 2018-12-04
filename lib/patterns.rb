@@ -30,7 +30,6 @@ module Patterns
     io-nonblock
     io-wait
     jruby
-    logger
     mkmf
     monitor
     mri
