@@ -48,6 +48,7 @@ module Patterns
     pathname
     pp
     prettyprint
+    prime
     profile
     profiler
     pstore
