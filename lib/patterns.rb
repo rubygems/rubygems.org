@@ -70,6 +70,7 @@ module Patterns
     time
     timeout
     tmpdir
+    tracer
     tsort
     un
     unicode_normalize
