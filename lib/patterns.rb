@@ -47,6 +47,7 @@ module Patterns
     open3
     optparse
     pathname
+    pp
     prettyprint
     profile
     profiler
@@ -55,6 +56,7 @@ module Patterns
     rational
     rbconfig
     resolv
+    resolv-replace
     rinda
     ruby
     rubygems
