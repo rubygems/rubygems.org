@@ -107,6 +107,26 @@ class RubygemsControllerTest < ActionController::TestCase
       end
     end
 
+    context "On GET to edit for this user's gem that is missing a linkset" do
+      setup do
+        @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
+        @rubygem.linkset = nil
+
+        get :edit, params: { id: @rubygem.to_param }
+      end
+
+      should respond_with :success
+      should "render form" do
+        assert page.has_selector?("form")
+        assert page.has_selector?("input#linkset_code")
+        assert page.has_selector?("input#linkset_docs")
+        assert page.has_selector?("input#linkset_wiki")
+        assert page.has_selector?("input#linkset_mail")
+        assert page.has_selector?("input#linkset_bugs")
+        assert page.has_selector?("input[type='submit']")
+      end
+    end
+
     context "On GET to edit for another user's gem" do
       setup do
         @other_user = create(:user)
