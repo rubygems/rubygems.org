@@ -1,17 +1,13 @@
 require 'test_helper'
 
 class ProfileTest < SystemTest
+  include EmailHelpers
+  include ProfileHelpers
+
   setup do
     @user = create(:user, email: "nick@example.com", password: "password12345", handle: "nick1")
 
     page.driver.browser.set_cookie("mfa_feature=true")
-  end
-
-  def sign_in
-    visit sign_in_path
-    fill_in "Email or Username", with: @user.reload.email
-    fill_in "Password", with: @user.password
-    click_button "Sign in"
   end
 
   def enable_mfa
@@ -25,7 +21,7 @@ class ProfileTest < SystemTest
   end
 
   test "changing handle" do
-    sign_in
+    sign_in @user
 
     visit profile_path("nick1")
     assert page.has_content? "nick1"
@@ -41,7 +37,7 @@ class ProfileTest < SystemTest
   test "changing to an existing handle" do
     create(:user, email: "nick2@example.com", handle: "nick2")
 
-    sign_in
+    sign_in @user
     visit profile_path("nick1")
     click_link "Edit Profile"
 
@@ -53,7 +49,7 @@ class ProfileTest < SystemTest
   end
 
   test "changing to invalid handle does not affect rendering" do
-    sign_in
+    sign_in @user
     visit profile_path("nick1")
     click_link "Edit Profile"
 
@@ -66,7 +62,7 @@ class ProfileTest < SystemTest
   end
 
   test "changing email does not change email and asks to confirm email" do
-    sign_in
+    sign_in @user
     visit profile_path("nick1")
     click_link "Edit Profile"
 
@@ -89,7 +85,7 @@ class ProfileTest < SystemTest
   end
 
   test "disabling email on profile" do
-    sign_in
+    sign_in @user
     visit profile_path("nick1")
     click_link "Edit Profile"
 
@@ -102,7 +98,7 @@ class ProfileTest < SystemTest
   end
 
   test "adding Twitter username" do
-    sign_in
+    sign_in @user
     visit profile_path("nick1")
 
     click_link "Edit Profile"
@@ -116,7 +112,7 @@ class ProfileTest < SystemTest
   end
 
   test "deleting profile" do
-    sign_in
+    sign_in @user
     visit profile_path("nick1")
     click_link "Edit Profile"
 
@@ -129,7 +125,7 @@ class ProfileTest < SystemTest
   end
 
   test "enabling multifactor authentication with valid otp" do
-    sign_in
+    sign_in @user
     visit profile_path("nick1")
     click_link "Edit Profile"
     click_button "Register a new device"
@@ -150,7 +146,7 @@ class ProfileTest < SystemTest
   end
 
   test "enabling multifactor authentication with invalid otp" do
-    sign_in
+    sign_in @user
     visit profile_path("nick1")
     click_link "Edit Profile"
     click_button "Register a new device"
@@ -165,7 +161,7 @@ class ProfileTest < SystemTest
   end
 
   test "disabling multifactor authentication with valid otp" do
-    sign_in
+    sign_in @user
     enable_mfa
     visit profile_path("nick1")
     click_link "Edit Profile"
@@ -177,7 +173,7 @@ class ProfileTest < SystemTest
   end
 
   test "disabling multifactor authentication with invalid otp" do
-    sign_in
+    sign_in @user
     enable_mfa
     visit profile_path("nick1")
     click_link "Edit Profile"
@@ -190,7 +186,7 @@ class ProfileTest < SystemTest
   end
 
   test "disabling multifactor authentication with recovery code" do
-    sign_in
+    sign_in @user
     visit profile_path("nick1")
     click_link "Edit Profile"
     click_button "Register a new device"
@@ -209,5 +205,19 @@ class ProfileTest < SystemTest
     change_auth_level "Disabled"
 
     assert page.has_content? "You have not yet enabled multifactor authentication."
+  end
+
+  test "listing open and requested adoptions" do
+    create(:adoption, user: @user, status: "requested", note: "example request")
+    create(:adoption, user: @user, status: "opened", note: "example adoption note")
+
+    sign_in @user
+    visit profile_path("nick1")
+    click_link "Adoptions"
+
+    assert page.has_content? "example request"
+    assert page.has_content? "example adoption note"
+    assert page.has_button? "Cancel"
+    assert page.has_no_button? "Approve"
   end
 end

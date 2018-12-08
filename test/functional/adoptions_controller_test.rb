@@ -24,7 +24,7 @@ class AdoptionsControllerTest < ActionController::TestCase
 
         should redirect_to("rubygems adoptions index") { rubygem_adoptions_path(@rubygem) }
         should "set flash success" do
-          assert_equal flash[:success], "Adoption request sent to owner of #{@rubygem.name}"
+          assert_equal flash[:success], "Adoption request sent to owner(s) of #{@rubygem.name}"
         end
         should "set requested adoption status" do
           assert_equal @user.adoptions.find_by(rubygem_id: @rubygem.id).status, "requested"

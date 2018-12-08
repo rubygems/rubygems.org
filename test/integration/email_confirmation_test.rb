@@ -2,6 +2,8 @@ require 'test_helper'
 require 'helpers/email_helpers'
 
 class EmailConfirmationTest < SystemTest
+  include EmailHelpers
+
   setup do
     @user = create(:user)
   end

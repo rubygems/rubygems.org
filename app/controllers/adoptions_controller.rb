@@ -14,7 +14,6 @@ class AdoptionsController < ApplicationController
       create_adoption t(".opened", gem: @rubygem.name)
     elsif params[:adoption][:status] == "requested"
       create_adoption t(".requested", gem: @rubygem.name)
-      Mailer.delay.adoption_requested(@adoption)
     else
       render_bad_request
     end
@@ -44,6 +43,7 @@ class AdoptionsController < ApplicationController
 
   def create_adoption(message)
     @adoption = @rubygem.adoptions.create(adoption_params)
+    Mailer.delay.adoption_requested(@adoption) if @adoption.status == "requested"
     redirect_to rubygem_adoptions_path(@rubygem), flash: { success: message }
   end
 

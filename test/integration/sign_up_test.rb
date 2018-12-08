@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class SignUpTest < SystemTest
+  include EmailHelpers
+
   test "sign up" do
     visit sign_up_path
 

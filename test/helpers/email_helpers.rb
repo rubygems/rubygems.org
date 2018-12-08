@@ -1,7 +1,11 @@
 module EmailHelpers
-  def last_email_link
+  def last_email
     Delayed::Worker.new.work_off
-    body = ActionMailer::Base.deliveries.last.body.decoded.to_s
+    ActionMailer::Base.deliveries.last
+  end
+
+  def last_email_link
+    body = last_email.body.decoded.to_s
     link = %r{http://localhost/email_confirmations([^";]*)}.match(body)
     link[0]
   end

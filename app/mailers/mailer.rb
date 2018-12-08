@@ -33,6 +33,7 @@ class Mailer < ActionMailer::Base
   end
 
   def adoption_requested(adoption)
+    adoption = Adoption.find(adoption['id'])
     adoption.rubygem.owners.each do |owner|
       mail from: Clearance.configuration.mailer_sender,
            to: owner.email,
@@ -43,6 +44,9 @@ class Mailer < ActionMailer::Base
   end
 
   def adoption_canceled(rubygem, user)
+    user = User.find(user['id'])
+    rubygem = Rubygem.find(rubygem['id'])
+
     mail from: Clearance.configuration.mailer_sender,
          to: user.email,
          subject: I18n.t('mailer.adoption_canceled.subject', gem: rubygem.name) do |format|
@@ -51,6 +55,9 @@ class Mailer < ActionMailer::Base
   end
 
   def adoption_approved(rubygem, user)
+    user = User.find(user['id'])
+    rubygem = Rubygem.find(rubygem['id'])
+
     mail from: Clearance.configuration.mailer_sender,
          to: user.email,
          subject: I18n.t('mailer.adoption_approved.subject', gem: rubygem.name) do |format|
