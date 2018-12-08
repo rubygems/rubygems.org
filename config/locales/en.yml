@@ -50,6 +50,27 @@ en:
         email: Email address
         handle: Username
         password: Password
+  adoptions:
+    create:
+      opened: '%{gem} has been put up for adoption'
+      requested: Adoption request sent to owner(s) of %{gem}
+    default:
+      no_open_adoption: Owner(s) of %{gem} are not looking for maintainers. You can still request an adoption if
+        you feel this gem could be of greater service with your ownership and you can convince
+        existing owner(s) of the gem of the same.
+        We will notify owner(s) of %{gem} with your adoption note, which you can fill out below.
+    index:
+      adoptions: Adoptions
+      adoption_requests: 'Adoption requests:'
+      approve: Approve
+      cancel: Cancel
+      open: Open
+    update:
+      message: '%{user}''s adoption request for %{gem} has been %{status}'
+    request:
+      requested: 'You have requested adoption of %{gem}:'
+      request_heading: 'Request adoption:'
+      request: Request
   dashboards:
     show:
       creating_link_text: creating
@@ -109,6 +130,17 @@ en:
         sign_out: Sign out
         sign_up: Sign up
   mailer:
+    adoption_approved:
+      congratulations: Congratulations! Your request for adoption of %{gem} has been approved.
+      subject: Adoption request approved for %{gem}
+    adoption_canceled:
+      sorry: We are sorry to tell you that your request for adoption of %{gem} has been rejected.
+      subject: Adoption request rejected for %{gem}
+    adoption_requested:
+      note: 'Adoption note:'
+      request: '%{user} has requested adoption of %{gem}. Please, consider adding
+        %{user} as owner of %{gem} by approving their adoption request.'
+      subject: Adoption request for %{gem}
     confirm_your_email: Please confirm your email address with the link sent to you email.
     confirmation_subject: Please confirm your email address with RubyGems.org
     email_confirmation:
@@ -123,6 +155,7 @@ en:
     deletion_failed:
       subject: Your account deletion request on rubygems.org has failed
       body_html: You had request for account deletion on rubygems.org. Unfortunately, we were not able to process your request. Please try again after some time or %{contact} us if problem persists.
+    hi: Hi %{user}
   news:
     show:
       title: New Releases — All Gems
@@ -189,6 +222,9 @@ en:
     update:
       success: You have successfully updated your MFA level.
   profiles:
+    adoptions:
+      open_adoptions: 'Opened adoptions:'
+      requested_adoptions: 'Requested adoptions:'
     edit:
       email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
       enter_password: Please enter your account's password
@@ -235,6 +271,10 @@ en:
       confirmation_mail_sent: You will receive an email within the next few minutes. It contains instructions for confirming your new email address.
       updated: Your profile was updated.
     request_denied: This request was denied. We could not verify your password.
+    show:
+      adoptions: ' Adoptions'
+      edit: Edit Profile
+      email: Email Me
   rubygems:
     aside:
       bundler_header: Gemfile

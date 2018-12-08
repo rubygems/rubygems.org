@@ -7,12 +7,12 @@
     partial: "adoptions/edit",
     locals: {
       status: "approved",
-      button_text: "Approve",
+      button_text: t("adoptions.index.approve"),
       adoption: adoption
     }) if current_user&.can_approve? adoption %>
 
   <%= render(
     partial: "adoptions/edit",
-    locals: { status: "canceled", button_text: "Cancel", adoption: adoption }
+    locals: { status: "canceled", button_text: t("adoptions.index.cancel"), adoption: adoption }
     ) if current_user&.can_cancel?(adoption) %>
 </div>

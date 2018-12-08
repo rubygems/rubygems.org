@@ -42,6 +42,24 @@ fr:
         email: Adresse e-mail
         handle: Pseudonyme
         password: Mot de passe
+  adoptions:
+    create:
+      opened:
+      requested:
+    default:
+      no_open_adoption:
+    index:
+      adoptions:
+      adoption_requests:
+      approve:
+      cancel:
+      open:
+    update:
+      message:
+    request:
+      requested:
+      request_heading:
+      request:
   dashboards:
     show:
       creating_link_text: création
@@ -101,6 +119,16 @@ fr:
         sign_out: Déconnexion
         sign_up: Inscription
   mailer:
+    adoption_approved:
+      congratulations:
+      subject:
+    adoption_canceled:
+      sorry:
+      subject:
+    adoption_requested:
+      note:
+      request:
+      subject:
     confirm_your_email: Veuillez confirmer votre adresse email avec le lien qui vous a été envoyé par email.
     confirmation_subject: Veuillez confirmer votre adresse email pour RubyGems.org
     email_confirmation:
@@ -115,6 +143,7 @@ fr:
     deletion_failed:
       subject: Votre demande de suppression de compte sur RubyGems.org a échoué
       body_html: "Vous avez effectué une demande de suppression de compte sur RubyGems.org. Malheureusement, votre demande n'a pu aboutir. Veuillez réessayer plus tard ou nous %{contact} si le problème subsiste."
+    hi:
   news:
     show:
       title: Nouvelles Versions - Toutes les Gems
@@ -181,6 +210,9 @@ fr:
     update:
       success:
   profiles:
+    adoptions:
+      open_adoptions:
+      requested_adoptions:
     edit:
       email_awaiting_confirmation: Veuillez confirmer votre nouvelle adresse email %{unconfirmed_email}
       enter_password: Veuillez entrer le mot de passe de votre compte
@@ -227,6 +259,10 @@ fr:
       confirmation_mail_sent: Vous allez recevoir un email dans quelques minutes. Il contient les instructions pour confirmer votre nouvelle adresse email.
       updated: Votre profil a été mis à jour.
     request_denied: Cette demande a été refusée. Nous n'avons pas pu vérifier votre mot de passe.
+    show:
+      adoptions:
+      edit:
+      email:
   rubygems:
     aside:
       bundler_header: Gemfile

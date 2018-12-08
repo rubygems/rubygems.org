@@ -42,6 +42,24 @@ nl:
         email: E-mailadres
         handle: Gebruikersnaam
         password: Wachtwoord
+  adoptions:
+    create:
+      opened:
+      requested:
+    default:
+      no_open_adoption:
+    index:
+      adoptions:
+      adoption_requests:
+      approve:
+      cancel:
+      open:
+    update:
+      message:
+    request:
+      requested:
+      request_heading:
+      request:
   dashboards:
     show:
       creating_link_text: aanmaken
@@ -101,6 +119,16 @@ nl:
         sign_out: Uitloggen
         sign_up: Registreren
   mailer:
+    adoption_approved:
+      congratulations:
+      subject:
+    adoption_canceled:
+      sorry:
+      subject:
+    adoption_requested:
+      note:
+      request:
+      subject:
     confirm_your_email:
     confirmation_subject:
     email_confirmation:
@@ -115,6 +143,7 @@ nl:
     deletion_failed:
       subject:
       body_html:
+    hi:
   news:
     show:
       title:
@@ -181,6 +210,9 @@ nl:
     update:
       success:
   profiles:
+    adoptions:
+      open_adoptions:
+      requested_adoptions:
     edit:
       email_awaiting_confirmation:
       enter_password:
@@ -227,6 +259,10 @@ nl:
       confirmation_mail_sent:
       updated:
     request_denied:
+    show:
+      adoptions:
+      edit:
+      email:
   rubygems:
     aside:
       bundler_header: Gemfile

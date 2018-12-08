@@ -1,13 +1,13 @@
-<% @title = 'Adoptions' %>
+<% @title = t("adoptions.index.adoptions") %>
 
 <div class="l-overflow">
   <div class="l-colspan--l">
-    <%= render layout: "adoptions/adoptions", locals: { adoptions: @opened_adoptions, heading: "Opened adoptions:" } do |adoption| %>
-      <%= link_to adoption.rubygem.name, rubygem_path(adoption.rubygem.name), class: 't-link--black t-list__item' %>
+    <%= render layout: "adoptions/adoptions", locals: { adoptions: @opened_adoptions, heading: t(".open_adoptions") } do |adoption| %>
+      <%= link_to adoption.rubygem.name, rubygem_path(adoption.rubygem.name), class: "t-link--black t-list__item" %>
     <% end %>
 
-    <%= render layout: "adoptions/adoptions", locals: { adoptions: @requested_adoptions, heading: "Requested adoptions:" } do |adoption| %>
-      <%= link_to adoption.rubygem.name, rubygem_path(adoption.rubygem.name), class: 't-link--black t-list__item' %>
+    <%= render layout: "adoptions/adoptions", locals: { adoptions: @requested_adoptions, heading: t(".requested_adoptions") } do |adoption| %>
+      <%= link_to adoption.rubygem.name, rubygem_path(adoption.rubygem.name), class: "t-link--black t-list__item" %>
     <% end %>
   </div>
 </div>

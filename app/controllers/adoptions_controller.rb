@@ -11,9 +11,9 @@ class AdoptionsController < ApplicationController
 
   def create
     if params[:adoption][:status] == "opened" && @rubygem.owned_by?(current_user)
-      create_adoption "#{@rubygem.name} has been put up for adoption"
+      create_adoption t(".opened", gem: @rubygem.name)
     elsif params[:adoption][:status] == "requested"
-      create_adoption "Adoption request sent to owner of #{@rubygem.name}"
+      create_adoption t(".requested", gem: @rubygem.name)
       Mailer.delay.adoption_requested(@adoption)
     else
       render_bad_request
@@ -48,7 +48,7 @@ class AdoptionsController < ApplicationController
   end
 
   def redirect_to_adoptions_path
-    message = "#{@adoption_user.name}'s adoption request for #{@rubygem.name} has been #{@adoption.status}"
+    message = t(".message", user: @adoption_user.name, gem: @rubygem.name, status: @adoption.status)
     redirect_to rubygem_adoptions_path(@rubygem), flash: { success: message }
   end
 

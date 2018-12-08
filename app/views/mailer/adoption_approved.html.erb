@@ -1,6 +1,6 @@
-<p> Hi <%= user.handle %> </p>
+<p> <%= t("hi", user: user.handle) %> </p>
 <p>
-  Congratulations! Your request for adoption of <%= rubygem.name %> has been approved.
+  <%= t(".congratulations", gem: rubygem.name)%>
   <br />
-  <%= link_to "#{rubygem.name}", rubygem_path(@rubygem) %>
+  <%= link_to "#{rubygem.name}", rubygem_url(rubygem) %>
 </p>

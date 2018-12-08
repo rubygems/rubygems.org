@@ -1,4 +1,4 @@
-<% @title = 'Adoptions' %>
+<% @title = t(".adoptions") %>
 <% @subtitle = @rubygem.name %>
 
 <div class="l-overflow">
@@ -8,13 +8,13 @@
         <%= link_to(adoption.user.display_handle, profile_path(adoption.user.display_id), class: "t-link--black") %>
       <% end %>
     <% elsif @rubygem.owned_by?(current_user) %>
-      <%= render partial: "create", locals: { status: "opened", button_text: "open" } %>
+      <%= render partial: "create", locals: { status: "opened", button_text: t(".open") } %>
     <% else %>
       <%= render "default" %>
     <% end %>
 
     <% if @rubygem.owned_by? current_user %>
-      <%= render layout: "adoptions", locals: { adoptions: @rubygem.adoptions.requested, heading: "Adoption requests:" } do |adoption| %>
+      <%= render layout: "adoptions", locals: { adoptions: @rubygem.adoptions.requested, heading: t(".adoption_requests") } do |adoption| %>
         <%= link_to(adoption.user.display_handle, profile_path(adoption.user.display_id), class: "t-link--black") %>
       <% end %>
     <% else %>

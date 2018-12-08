@@ -27,7 +27,7 @@
           <%=
             mail_to(
               @user.email,
-              "Email Me",
+              t(".email"),
               encode: "hex",
               class: "profile__header__attribute t-link--black",
               'data-icon' => '✉'
@@ -58,7 +58,7 @@
         <div id="downloads-ego">
           <%=
             link_to(
-              "Edit Profile ",
+              t(".edit"),
               edit_profile_path,
               id: "edit-profile",
               class: "profile__header__attribute t-link--black"
@@ -67,7 +67,7 @@
           |
           <%=
             link_to(
-              " Adoptions",
+              " #{t("adoptions.index.adoptions")}",
               adoptions_profile_path,
               class: "t-link--black"
             )
