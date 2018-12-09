@@ -8,20 +8,20 @@ es:
   help_url: http://help.rubygems.org
   locale_name: Español
   none:
-  not_found:
+  not_found: No se encontró
   please_sign_up: Acceso negado. Por favor, primero crea una cuenta en https://rubygems.org
-  otp_incorrect:
-  otp_missing:
+  otp_incorrect: Su código OTP es incorrecto. Por favor, reviselo y vuelta a intentar
+  otp_missing: Habilito la autentificación multifactor pero no especificó un código OTP. Complete el código OTP y vuelva a instentar.
   sign_in: Ingresar
   sign_up: Registro
-  multifactor_authentication:
+  multifactor_authentication: Autentificación multifactor
   subtitle: alojamiento de gemas para la comunidad
   this_rubygem_could_not_be_found: La gema no ha sido encontrada.
   time_ago: hace %{duration}
   title: RubyGems.org
   update: Actualizar
-  try_again:
-  advanced_search:
+  try_again: Algo salio mal. Por favor reintente.
+  advanced_search: Búsqueda avanzada
   activerecord:
     attributes:
       linkset:
@@ -52,17 +52,17 @@ es:
       no_subscriptions: Aún no te has subscrito a ningua gema. ¡Visita la %{gem_link} para subscribirte!
   email_confirmations:
     create:
-      promise_resend:
+      promise_resend: Te enviaremos por correo eléctronico el enlace de confirmación para activar tu cuenta, si la habias creado.
     new:
-      submit:
-      title:
-      will_email_notice:
+      submit: Reenviar confirmación
+      title: Reenviar email de confirmación
+      will_email_notice: Te enviaremos por correo eléctronico el enlace de confirmación para activar tu cuenta.
     update:
-      confirmed_email:
+      confirmed_email: Su dirección de correo eléctronico ha sido verificada.
   home:
     index:
       downloads_counting: descargas y contando
-      find_blurb: Encuentra, instala, y publica RubyGems.
+      find_blurb: Encuentra, instala, y publica en RubyGems.
       learn:
         install_rubygems: Instalar RubyGems
   layouts:
@@ -91,33 +91,33 @@ es:
         tracking_by: Rastreo
         uptime: Uptime
       header:
-        dashboard: Dashboard
+        dashboard: Escritorio
         search_gem: Buscar gemas&hellip;
         sign_in: Ingresar
         sign_out: Cerrar sesión
         sign_up: Registro
   mailer:
-    confirm_your_email:
-    confirmation_subject:
+    confirm_your_email: Por favor confirme su dirección de correo eléctronico desde el enlace que le hemos enviado.
+    confirmation_subject: Por favor confirme su dirección de correo eléctronico en RubyGems.org
     email_confirmation:
-      confirmation_link:
-      welcome_message:
+      confirmation_link: Confirmar correo eléctronico
+      welcome_message: Bienvenido a RubyGems.org! Haga click en el siguiente enlace para verificar su dirección de correo eléctronico.
     email_reset:
-      visit_link_instructions:
-      link_expiration_explanation:
+      visit_link_instructions: Ha solicitado cambiar su dirección de correo eléctronico en RubyGems.org. Por favor haga click en el siguiente enlace para re-activar su cuenta.
+      link_expiration_explanation: Tenga en cuenta que el enlace solo será valido por las siguentes 3 horas.
     deletion_complete:
-      subject:
-      body:
+      subject: Su cuenta ha sido eliminada de RubyGems.org
+      body: Su solicitud de eliminación de su cuenta ha sido procesada. Usted puede crear una nueva cuenta, usando nuestra pagina de registro %{sign_up}
     deletion_failed:
-      subject:
-      body:
+      subject: Su solicitud de eliminación de RubyGems.org ha fallado.
+      body: Su solicitud de eliminación de su cuenta en RubyGems.org ha fallado. Desafortunadametne, no hemos podido procesar su pedido. Por favor re-intente en otro momento o contactenos a %{contact} si el problema continua.
   news:
     show:
-      title:
-      all_gems:
-      popular_gems:
+      title: Nuevos lanzamientos - Todas las gemas
+      all_gems: Todas las gemas
+      popular_gems: Gemas populares
     popular:
-      title:
+      title: Nuevos lanzamientos - Gemas populares
   pages:
     about:
       founding: El proyecto comenzó en Abril del 2009 por %{founder}, y desde entonces ha crecido para incluir las contribuciones de %{contributors} y %{downloads}. A partir de RubyGems 1.3.6 el sitio se renombró de Gemcutter a %{title} para hacer más claro el rol del mismo en la comunidad de Ruby.
@@ -138,12 +138,12 @@ es:
       title: Cambiar contraseña
       will_email_notice: Te enviaremos un email con un enlace para cambiar tu contraseña.
   multifactor_auths:
-    incorrect_otp:
-    otp_code:
-    require_mfa_disabled:
-    require_mfa_enabled:
+    incorrect_otp: Su código OTP es incorrecto.
+    otp_code: código OTP
+    require_mfa_disabled: Su autentificación multi-factor esta habilitada. Debe desabilitarla primero.
+    require_mfa_enabled: Su autentificación multi-factor esta deshabilitada. Debe habilitarla primero.
     new:
-      title:
+      title: Habilitar autentificación multifactor
       scan_prompt:
       otp_prompt:
       confirm:
