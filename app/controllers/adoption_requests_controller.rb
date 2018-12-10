@@ -1,17 +1,16 @@
 class AdoptionRequestsController < ApplicationController
   before_action :redirect_to_root, unless: :signed_in?
   before_action :find_rubygem
-  before_action :find_adoption_request, only: :update
-  before_action :find_requester, only: :update
+  before_action :find_adoption_request_and_requester, only: :update
 
   def create
-    @adoption_request = @rubygem.adoption_requests.create(adoption_request_params)
+    adoption_request = @rubygem.adoption_requests.build(adoption_request_params)
 
-    if @adoption_request
-      Mailer.delay.adoption_requested(@adoption_request)
+    if adoption_request.save
+      Mailer.delay.adoption_requested(adoption_request)
       redirect_to rubygem_adoptions_path(@rubygem), flash: { success: t(".success", gem: @rubygem.name) }
     else
-      render_bad_request
+      redirect_to rubygem_adoptions_path(@rubygem), flash: { error: adoption_request.errors.full_messages.to_sentence }
     end
   end
 
@@ -41,20 +40,13 @@ class AdoptionRequestsController < ApplicationController
     params[:adoption_request][:status]
   end
 
-  def find_adoption_request
+  def find_adoption_request_and_requester
     @adoption_request = AdoptionRequest.find(params[:id])
-  end
-
-  def find_requester
     @requester = User.find(@adoption_request.user_id)
   end
 
   def redirect_to_adoptions_path
     message = t(".success", user: @requester.name, gem: @rubygem.name, status: @adoption_request.status)
     redirect_to rubygem_adoptions_path(@rubygem), flash: { success: message }
-  end
-
-  def render_bad_request
-    render plain: "Invalid adoption request", status: :bad_request
   end
 end

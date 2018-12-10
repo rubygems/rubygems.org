@@ -9,16 +9,30 @@ class AdoptionRequestsControllerTest < ActionController::TestCase
     end
 
     context "on POST to create" do
-      setup do
-        post :create, params: { rubygem_id: @rubygem.name, adoption_request: { note: "example note" } }
+      context "when save passes" do
+        setup do
+          post :create, params: { rubygem_id: @rubygem.name, adoption_request: { note: "example note" } }
+        end
+
+        should redirect_to("rubygems adoptions index") { rubygem_adoptions_path(@rubygem) }
+        should "set flash success" do
+          assert_equal "Adoption request sent to owner(s) of #{@rubygem.name}", flash[:success]
+        end
+        should "set adoption request with status opened" do
+          assert_equal "opened", @user.adoption_requests.find_by(rubygem_id: @rubygem.id).status
+        end
       end
 
-      should redirect_to("rubygems adoptions index") { rubygem_adoptions_path(@rubygem) }
-      should "set flash success" do
-        assert_equal "Adoption request sent to owner(s) of #{@rubygem.name}", flash[:success]
-      end
-      should "set opened adoption_request status" do
-        assert_equal "opened", @user.adoption_requests.find_by(rubygem_id: @rubygem.id).status
+      context "when save fails" do
+        setup do
+          AdoptionRequest.any_instance.stubs(:save).returns(false)
+          post :create, params: { rubygem_id: @rubygem.name, adoption_request: { note: "example note" } }
+        end
+
+        should redirect_to("rubygems adoptions index") { rubygem_adoptions_path(@rubygem) }
+        should "not create adoption request" do
+          assert_empty @rubygem.adoption_requests
+        end
       end
     end
 

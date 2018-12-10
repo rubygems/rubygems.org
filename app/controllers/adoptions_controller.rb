@@ -1,7 +1,7 @@
 class AdoptionsController < ApplicationController
   before_action :redirect_to_root, unless: :signed_in?, except: :index
   before_action :find_rubygem
-  before_action :find_adoption, only: :destroy
+  before_action :render_bad_request, unless: :user_is_owner?, only: %i[create destroy]
 
   def index
     @adoption = @rubygem.adoptions.first
@@ -9,20 +9,21 @@ class AdoptionsController < ApplicationController
   end
 
   def create
-    if @rubygem.owned_by?(current_user)
-      @rubygem.adoptions.create(adoption_params)
+    adoption = @rubygem.adoptions.build(adoption_params)
+
+    if adoption.save
       redirect_to rubygem_adoptions_path(@rubygem), flash: { success: t(".success", gem: @rubygem.name) }
     else
-      render_bad_request
+      redirect_to rubygem_adoptions_path(@rubygem), flash: { error: adoption.errors.full_messages.to_sentence }
     end
   end
 
   def destroy
-    if @rubygem.owned_by? current_user
-      @adoption.destroy
+    adoption = Adoption.find(params[:id])
+    if adoption.destroy
       redirect_to rubygem_adoptions_path(@rubygem), flash: { success: t(".success", gem: @rubygem.name) }
     else
-      render_bad_request
+      redirect_to rubygem_adoptions_path(@rubygem), flash: { error: adoption.errors.full_messages.to_sentence }
     end
   end
 
@@ -32,11 +33,7 @@ class AdoptionsController < ApplicationController
     params.require(:adoption).permit(:note).merge(user_id: current_user.id)
   end
 
-  def find_adoption
-    @adoption = Adoption.find(params[:id])
-  end
-
-  def render_bad_request
-    render plain: "Invalid adoption request", status: :bad_request
+  def user_is_owner?
+    @rubygem.owned_by?(current_user)
   end
 end

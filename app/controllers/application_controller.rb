@@ -139,6 +139,10 @@ class ApplicationController < ActionController::Base
   end
 
   def reject_null_char_param
-    render plain: "bad request", status: :bad_request if params.to_s.include?("\\u0000")
+    render_bad_request if params.to_s.include?("\\u0000")
+  end
+
+  def render_bad_request
+    render plain: "bad request", status: :bad_request
   end
 end
