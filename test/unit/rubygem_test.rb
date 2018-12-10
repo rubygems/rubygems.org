@@ -823,20 +823,28 @@ class RubygemTest < ActiveSupport::TestCase
     end
   end
 
-  context "#approve_adoption!" do
+  context "#approve_adoption_request!" do
     setup do
       @rubygem = create(:rubygem)
+      @user = create(:user)
+      @rubygem.create_ownership(@user)
+
       @adoption = create(:adoption, rubygem: @rubygem)
-      create(:adoption, rubygem: @rubygem, status: :opened)
-      @rubygem.approve_adoption!(@adoption)
+      @adoption_request = create(:adoption_request, rubygem: @rubygem, status: :opened)
+      @rubygem.approve_adoption_request!(@adoption_request, @user.id)
     end
 
     should "add user as owner" do
-      assert @rubygem.owned_by?(@adoption.user)
+      assert @rubygem.owned_by?(@adoption_request.user)
     end
-    should "approve both opened and requested adoptions" do
-      assert_empty @rubygem.adoptions.opened
-      assert_equal "approved", @adoption.status
+    should "approve adoption request" do
+      assert_equal "approved", @adoption_request.status
+    end
+    should "delete rubygem adoption" do
+      assert_empty @rubygem.adoptions
+    end
+    should "save approver user id" do
+      assert_equal @user.id, @adoption_request.approver_id
     end
   end
 end

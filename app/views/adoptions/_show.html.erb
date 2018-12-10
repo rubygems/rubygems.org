@@ -1,18 +1,12 @@
-<div clas="t-body">
-  <div id="markup" class="gem__desc">
-    <%= simple_markup(adoption.note) %>
-  </div>
-
-  <%= render(
-    partial: "adoptions/edit",
-    locals: {
-      status: "approved",
-      button_text: t("adoptions.index.approve"),
-      adoption: adoption
-    }) if current_user&.can_approve? adoption %>
-
-  <%= render(
-    partial: "adoptions/edit",
-    locals: { status: "canceled", button_text: t("adoptions.index.cancel"), adoption: adoption }
-    ) if current_user&.can_cancel?(adoption) %>
-</div>
+<ol class="t-list__items">
+  <li class="t-list__item">
+    <h3 class="gems__gem__name">
+      <%= yield adoption %>
+    </h3>
+    <div clas="t-body">
+      <div id="markup" class="gem__desc">
+        <%= simple_markup(adoption.note) %>
+      </div>
+    </div>
+  </li>
+</ol>

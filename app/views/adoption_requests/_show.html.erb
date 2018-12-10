@@ -1,0 +1,15 @@
+<div clas="t-body">
+  <div id="markup" class="gem__desc">
+    <%= simple_markup(adoption_request.note) %>
+  </div>
+  <%= current_user&.can_cancel?(adoption_request) %>
+  <%= render(
+    partial: "adoption_requests/edit",
+    locals: { status: "approved", button_text: t("adoption_requests.approve"), adoption_request: adoption_request }
+  ) if current_user&.can_approve?(adoption_request) %>
+
+  <%= render(
+    partial: "adoption_requests/edit",
+    locals: { status: "canceled", button_text: t("adoption_requests.cancel"), adoption_request: adoption_request }
+  ) if current_user&.can_cancel?(adoption_request) %>
+</div>

@@ -1,9 +1,7 @@
 <%= form_for @rubygem.adoptions.build, url: rubygem_adoptions_path(@rubygem), method: :post do |form| %>
-  <%= form.hidden_field :status, value: status %>
-
   <div class="url_field">
-    <%= form.label :note, class: 'form__label' %>
-    <%= form.text_area :note, class: 'form__input' %>
+    <%= form.label :note, class: "form__label" %>
+    <%= form.text_area :note, class: "form__input" %>
   </div>
-  <%= form.submit button_text, class: 'form__submit' %>
+  <%= form.submit t(".create"), class: "form__submit" %>
 <% end %>

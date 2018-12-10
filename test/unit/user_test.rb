@@ -417,40 +417,40 @@ class UserTest < ActiveSupport::TestCase
     setup do
       @user = create(:user)
       @rubygem = create(:rubygem)
-      @adoption = create(:adoption, rubygem: @rubygem)
+      @adoption_request = create(:adoption_request, rubygem: @rubygem)
     end
 
     context "when user is owner of gem" do
       setup { @rubygem.ownerships.create(user: @user) }
       should "return true" do
-        assert @user.can_cancel?(@adoption)
+        assert @user.can_cancel?(@adoption_request)
       end
     end
 
     context "when user is adoption requester" do
-      setup { @adoption.update(user_id: @user.id) }
+      setup { @adoption_request.update(user_id: @user.id) }
       should "return true" do
-        assert @user.can_cancel?(@adoption)
+        assert @user.can_cancel?(@adoption_request)
       end
     end
 
     context "when user is neither owner nor requester" do
       should "return false" do
-        refute @user.can_cancel?(@adoption)
+        refute @user.can_cancel?(@adoption_request)
       end
     end
 
-    context "when adoption is canceled" do
-      setup { @adoption.canceled! }
+    context "when adoption_request is canceled" do
+      setup { @adoption_request.canceled! }
       should "return false" do
-        refute @user.can_cancel?(@adoption)
+        refute @user.can_cancel?(@adoption_request)
       end
     end
 
     context "when adoption is approved" do
-      setup { @adoption.approved! }
+      setup { @adoption_request.approved! }
       should "return false" do
-        refute @user.can_cancel?(@adoption)
+        refute @user.can_cancel?(@adoption_request)
       end
     end
   end
@@ -458,7 +458,7 @@ class UserTest < ActiveSupport::TestCase
   context "#can_approve?" do
     setup do
       @rubygem = create(:rubygem)
-      @adoption = create(:adoption, rubygem: @rubygem)
+      @adoption_request = create(:adoption_request, rubygem: @rubygem)
     end
 
     context "when user is owner of gem" do
@@ -467,17 +467,17 @@ class UserTest < ActiveSupport::TestCase
         @rubygem.ownerships.create(user: @user)
       end
 
-      context "adoption status is requested" do
-        setup { @adoption.requested! }
+      context "adoption status is opened" do
+        setup { @adoption_request.opened! }
         should "return true" do
-          assert @user.can_approve?(@adoption)
+          assert @user.can_approve?(@adoption_request)
         end
       end
 
       context "adoption status is canceled" do
-        setup { @adoption.canceled! }
+        setup { @adoption_request.canceled! }
         should "return false" do
-          refute @user.can_approve?(@adoption)
+          refute @user.can_approve?(@adoption_request)
         end
       end
     end

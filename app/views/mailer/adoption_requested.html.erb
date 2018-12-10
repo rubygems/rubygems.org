@@ -1,9 +1,9 @@
 <p> <%= t(".hi", user: owner.handle) %> </p>
 <p>
-  <%= t(".request", user: adoption.user.name, gem: adoption.rubygem.name)%>
+  <%= t(".request", user: adoption_request.user.name, gem: adoption_request.rubygem.name)%>
   <br />
   <%= t(".note") %>
-  <%= adoption.note %>
+  <%= adoption_request.note %>
   <br />
-  <%= link_to "#{adoption.rubygem.name} adoptions", rubygem_adoptions_url(adoption.rubygem) %>
+  <%= link_to "#{adoption_request.rubygem.name} adoptions", rubygem_adoptions_url(adoption_request.rubygem) %>
 </p>

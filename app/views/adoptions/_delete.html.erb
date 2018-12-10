@@ -1,0 +1,5 @@
+<% if rubygem.owned_by? current_user %>
+  <%= form_for adoption, url: rubygem_adoption_path(rubygem, adoption), method: :delete do |form| %>
+    <%= form.submit t(".delete"), class: "form__submit form__submit--small" %>
+  <% end %>
+<% end %>

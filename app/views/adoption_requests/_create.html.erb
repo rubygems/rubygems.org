@@ -1,0 +1,7 @@
+<%= form_for @rubygem.adoption_requests.build, url: rubygem_adoption_requests_path(@rubygem), method: :post do |form| %>
+  <div class="url_field">
+    <%= form.label :note, class: "form__label" %>
+    <%= form.text_area :note, class: "form__input" %>
+  </div>
+  <%= form.submit button_text, class: "form__submit" %>
+<% end %>

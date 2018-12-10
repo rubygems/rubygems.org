@@ -3,22 +3,24 @@
 
 <div class="l-overflow">
   <div class="l-colspan--l">
-    <% if @opened_adoption %>
-      <%= render layout: "adoptions", locals: { adoptions: [@opened_adoption] } do |adoption| %>
+    <% if @adoption %>
+      <%= render layout: "adoptions/show", locals: { adoption: @adoption } do |adoption| %>
         <%= link_to(adoption.user.display_handle, profile_path(adoption.user.display_id), class: "t-link--black") %>
       <% end %>
+      <%= render partial: "delete", locals: { adoption: @adoption, rubygem: @rubygem } %>
+      <hr />
     <% elsif @rubygem.owned_by?(current_user) %>
-      <%= render partial: "create", locals: { status: "opened", button_text: t(".open") } %>
+      <%= render partial: "create" %>
     <% else %>
       <%= render "default" %>
     <% end %>
 
     <% if @rubygem.owned_by? current_user %>
-      <%= render layout: "adoptions", locals: { adoptions: @rubygem.adoptions.requested, heading: t(".adoption_requests") } do |adoption| %>
-        <%= link_to(adoption.user.display_handle, profile_path(adoption.user.display_id), class: "t-link--black") %>
+      <%= render layout: "adoption_requests/list", locals: { adoption_requests: @rubygem.adoption_requests.opened, heading: t(".adoption_requests") } do |adoption_request| %>
+        <%= link_to(adoption_request.user.display_handle, profile_path(adoption_request.user.display_id), class: "t-link--black") %>
       <% end %>
     <% else %>
-      <%= render partial: "request", locals: { adoption: @user_requested_adoption } %>
+      <%= render partial: "adoption_requests/index", locals: { adoption_request: @user_adoption_request } %>
     <% end %>
   </div>
 </div>

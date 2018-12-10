@@ -51,10 +51,15 @@ FactoryBot.define do
     user
   end
 
+  factory :adoption_request do
+    rubygem
+    user
+    status { "opened" }
+  end
+
   factory :adoption do
     rubygem
     user
-    status { "requested" }
   end
 
   sequence :name do |n|

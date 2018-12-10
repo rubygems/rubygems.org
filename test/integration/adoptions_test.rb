@@ -15,13 +15,13 @@ class AdoptionsTest < SystemTest
     assert page.has_link?("Sign in", href: "/sign_in")
   end
 
-  test "opening adoption by owner" do
+  test "creating adoption by owner" do
     @rubygem.ownerships.create(user: @user)
     sign_in @user
 
     visit rubygem_adoptions_path(@rubygem)
     fill_in "Note", with: "example note"
-    click_button "Open"
+    click_button "Create"
 
     assert page.has_content? "example note"
     assert page.has_selector? "#flash_success", text: "#{@rubygem.name} has been put up for adoption"
@@ -48,7 +48,7 @@ class AdoptionsTest < SystemTest
   end
 
   test "canceling adoption by requester" do
-    create(:adoption, rubygem: @rubygem, user: @user, note: "example note")
+    create(:adoption_request, rubygem: @rubygem, user: @user, note: "example note")
     sign_in @user
 
     visit rubygem_adoptions_path(@rubygem)
@@ -59,7 +59,7 @@ class AdoptionsTest < SystemTest
   end
 
   test "canceling adoption by owner" do
-    adoption = create(:adoption, rubygem: @rubygem, note: "example note")
+    adoption_request = create(:adoption_request, rubygem: @rubygem, note: "example note")
     @rubygem.ownerships.create(user: @user)
     sign_in @user
 
@@ -67,18 +67,18 @@ class AdoptionsTest < SystemTest
     click_button "Cancel"
 
     mail = last_email
-    assert mail.to.include? adoption.user.email
+    assert mail.to.include? adoption_request.user.email
     expected_subject = "Adoption request rejected for #{@rubygem.name}"
     assert_equal expected_subject, mail.subject
     expected_body = "We are sorry to tell you that your request for adoption of #{@rubygem.name} has been rejected."
     assert mail.to_s.include? expected_body
 
-    assert page.has_selector? "#flash_success", text: "#{adoption.user.name}'s adoption request for #{@rubygem.name} has been canceled"
+    assert page.has_selector? "#flash_success", text: "#{adoption_request.user.name}'s adoption request for #{@rubygem.name} has been canceled"
     assert page.has_no_content? "example note"
   end
 
   test "approving adoption by owner" do
-    adoption = create(:adoption, rubygem: @rubygem, note: "example note")
+    adoption_request = create(:adoption_request, rubygem: @rubygem, note: "example note")
     @rubygem.ownerships.create(user: @user)
     sign_in @user
 
@@ -86,12 +86,12 @@ class AdoptionsTest < SystemTest
     click_button "Approve"
 
     mail = last_email
-    assert mail.to.include? adoption.user.email
+    assert mail.to.include? adoption_request.user.email
     expected_subject = "Adoption request approved for #{@rubygem.name}"
     assert_equal expected_subject, mail.subject
 
-    assert page.has_selector? "#flash_success", text: "#{adoption.user.name}'s adoption request for #{@rubygem.name} has been approved"
+    assert page.has_selector? "#flash_success", text: "#{adoption_request.user.name}'s adoption request for #{@rubygem.name} has been approved"
     assert page.has_no_content? "example note"
-    assert @rubygem.owned_by? adoption.user
+    assert @rubygem.owned_by? adoption_request.user
   end
 end

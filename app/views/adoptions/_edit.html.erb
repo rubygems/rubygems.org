@@ -1,4 +1,0 @@
-<%= form_for adoption, url: rubygem_adoption_path(adoption.rubygem, adoption), method: :patch do |form| %>
-  <%= form.hidden_field :status, value: status %>
-  <%= form.submit button_text , class: "form__submit form__submit--small #{'form__submit--left' if status == 'approved'}" %>
-<% end %>

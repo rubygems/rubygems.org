@@ -1,10 +1,11 @@
 <% unless adoptions.empty? %>
-  <h3 class="t-list__heading"><%= heading unless local_assigns[:heading].nil? %></h3>
+  <h3 class="t-list__heading"><%= heading %></h3>
   <ol class="t-list__items">
     <% for adoption in adoptions do %>
       <li class="t-list__item">
         <h3 class="gems__gem__name"><%= yield adoption %></h3>
         <%= render partial: "adoptions/show", locals: { adoption: adoption } %>
+        <%= render partial: "adoptions/delete", locals: { adoption: adoption, rubygem: adoption.rubygem } %>
       </li>
     <% end %>
   </ol>

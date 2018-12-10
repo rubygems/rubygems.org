@@ -7,14 +7,5 @@ class AdoptionTest < ActiveSupport::TestCase
   should belong_to :rubygem
   should validate_presence_of(:rubygem)
   should validate_presence_of(:user)
-
-  context "validation" do
-    should "not allow unspecified status" do
-      assert_raises(ArgumentError) { build(:adoption, status: "unknown") }
-
-      adoption = build(:adoption, status: "requested")
-      assert adoption.valid?
-      assert_nil adoption.errors[:handle].first
-    end
-  end
+  should validate_uniqueness_of(:user_id).scoped_to(:rubygem_id)
 end

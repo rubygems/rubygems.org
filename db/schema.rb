@@ -10,17 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_20_164205) do
+ActiveRecord::Schema.define(version: 2019_04_08_043837) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "plpgsql"
 
+  create_table "adoption_requests", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "rubygem_id"
+    t.integer "approver_id"
+    t.string "note"
+    t.integer "status", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["rubygem_id"], name: "index_adoption_requests_on_rubygem_id"
+    t.index ["user_id"], name: "index_adoption_requests_on_user_id"
+  end
+
   create_table "adoptions", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "rubygem_id"
     t.string "note"
-    t.integer "status", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["rubygem_id"], name: "index_adoptions_on_rubygem_id"
     t.index ["user_id"], name: "index_adoptions_on_user_id"
   end
@@ -204,6 +217,8 @@ ActiveRecord::Schema.define(version: 2019_02_20_164205) do
     t.index ["user_id", "rubygem_id"], name: "index_web_hooks_on_user_id_and_rubygem_id"
   end
 
+  add_foreign_key "adoption_requests", "rubygems"
+  add_foreign_key "adoption_requests", "users"
   add_foreign_key "adoptions", "rubygems"
   add_foreign_key "adoptions", "users"
 end

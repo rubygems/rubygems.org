@@ -42,24 +42,29 @@ zh-TW:
         email: Email
         handle: 帳號
         password: 密碼
+  adoption_requests:
+    approve:
+    cancel:
+    create:
+      success:
+    request:
+    heading:
+    requested:
+    update:
+      success:
   adoptions:
     create:
-      opened:
-      requested:
+      create:
+      success:
     default:
       no_open_adoption:
+    delete:
+      delete:
+    destroy:
+      success:
     index:
       adoptions:
       adoption_requests:
-      approve:
-      cancel:
-      open:
-    update:
-      message:
-    request:
-      requested:
-      request_heading:
-      request:
   dashboards:
     show:
       creating_link_text: Gem 建立
@@ -119,10 +124,10 @@ zh-TW:
         sign_out: 登出
         sign_up: 註冊
   mailer:
-    adoption_approved:
+    adoption_request_approved:
       congratulations:
       subject:
-    adoption_canceled:
+    adoption_request_canceled:
       sorry:
       subject:
     adoption_requested:

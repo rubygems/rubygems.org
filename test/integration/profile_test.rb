@@ -208,8 +208,8 @@ class ProfileTest < SystemTest
   end
 
   test "listing open and requested adoptions" do
-    create(:adoption, user: @user, status: "requested", note: "example request")
-    create(:adoption, user: @user, status: "opened", note: "example adoption note")
+    create(:adoption_request, user: @user, status: "opened", note: "example request")
+    create(:adoption, user: @user, note: "example adoption note")
 
     sign_in @user
     visit profile_path("nick1")
