@@ -44,7 +44,7 @@ pt-BR:
         password: Senha
   adoption_requests:
     approve:
-    cancel:
+    close:
     create:
       success:
     request:
@@ -127,7 +127,7 @@ pt-BR:
     adoption_request_approved:
       congratulations:
       subject:
-    adoption_request_canceled:
+    adoption_request_closed:
       sorry:
       subject:
     adoption_requested:

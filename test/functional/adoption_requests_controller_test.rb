@@ -72,20 +72,20 @@ class AdoptionRequestsControllerTest < ActionController::TestCase
         end
       end
 
-      context "with status canceled" do
+      context "with status closed" do
         context "when user created adoption request" do
           setup do
             @adoption_request = create(:adoption_request, user: @user)
-            put :update, params: { rubygem_id: @rubygem.name, id: @adoption_request.id, adoption_request: { status: "canceled" } }
+            put :update, params: { rubygem_id: @rubygem.name, id: @adoption_request.id, adoption_request: { status: "closed" } }
           end
 
           should redirect_to("rubygems adoptions index") { rubygem_adoptions_path(@rubygem) }
           should "set flash success" do
-            assert_equal "#{@user.name}'s adoption request for #{@rubygem.name} has been canceled", flash[:success]
+            assert_equal "#{@user.name}'s adoption request for #{@rubygem.name} has been closed", flash[:success]
           end
-          should "set canceled adoption_request status" do
+          should "set closed adoption_request status" do
             @adoption_request.reload
-            assert_equal "canceled", @adoption_request.status
+            assert_equal "closed", @adoption_request.status
           end
         end
 
@@ -93,29 +93,29 @@ class AdoptionRequestsControllerTest < ActionController::TestCase
           setup do
             @adoption_request = create(:adoption_request, rubygem: @rubygem)
             @rubygem.ownerships.create(user: @user)
-            put :update, params: { rubygem_id: @rubygem.name, id: @adoption_request.id, adoption_request: { status: "canceled" } }
+            put :update, params: { rubygem_id: @rubygem.name, id: @adoption_request.id, adoption_request: { status: "closed" } }
           end
 
           should redirect_to("rubygems adoptions index") { rubygem_adoptions_path(@rubygem) }
           should "set flash success" do
-            assert_equal "#{@adoption_request.user.name}'s adoption request for #{@rubygem.name} has been canceled", flash[:success]
+            assert_equal "#{@adoption_request.user.name}'s adoption request for #{@rubygem.name} has been closed", flash[:success]
           end
-          should "set canceled adoption request status" do
+          should "set closed adoption request status" do
             @adoption_request.reload
-            assert_equal "canceled", @adoption_request.status
+            assert_equal "closed", @adoption_request.status
           end
         end
 
         context "when user is neither owner nor adoption request requester" do
           setup do
             @adoption_request = create(:adoption_request, rubygem: @rubygem)
-            put :update, params: { rubygem_id: @rubygem.name, id: @adoption_request.id, adoption_request: { status: "canceled" } }
+            put :update, params: { rubygem_id: @rubygem.name, id: @adoption_request.id, adoption_request: { status: "closed" } }
           end
 
           should respond_with :bad_request
-          should "not set canceled adoption request status" do
+          should "not set closed adoption request status" do
             @adoption_request.reload
-            assert_not_equal "canceled", @adoption_request.status
+            assert_not_equal "closed", @adoption_request.status
           end
         end
       end

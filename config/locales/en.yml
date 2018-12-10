@@ -52,7 +52,7 @@ en:
         password: Password
   adoption_requests:
     approve: Approve
-    cancel: Cancel
+    close: Close
     create:
       success: Adoption request sent to owner(s) of %{gem}
     request: Request
@@ -138,7 +138,7 @@ en:
     adoption_request_approved:
       congratulations: Congratulations! Your request for adoption of %{gem} has been approved.
       subject: Adoption request approved for %{gem}
-    adoption_request_canceled:
+    adoption_request_closed:
       sorry: We are sorry to tell you that your request for adoption of %{gem} has been rejected.
       subject: Adoption request rejected for %{gem}
     adoption_requested:

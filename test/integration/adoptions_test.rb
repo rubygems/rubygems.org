@@ -47,24 +47,24 @@ class AdoptionsTest < SystemTest
     assert page.has_selector? "#flash_success", text: "Adoption request sent to owner(s) of #{@rubygem.name}"
   end
 
-  test "canceling adoption by requester" do
+  test "closeing adoption by requester" do
     create(:adoption_request, rubygem: @rubygem, user: @user, note: "example note")
     sign_in @user
 
     visit rubygem_adoptions_path(@rubygem)
-    click_button "Cancel"
+    click_button "Close"
 
-    assert page.has_selector? "#flash_success", text: "#{@user.name}'s adoption request for #{@rubygem.name} has been canceled"
+    assert page.has_selector? "#flash_success", text: "#{@user.name}'s adoption request for #{@rubygem.name} has been closed"
     assert page.has_no_content? "example note"
   end
 
-  test "canceling adoption by owner" do
+  test "closeing adoption by owner" do
     adoption_request = create(:adoption_request, rubygem: @rubygem, note: "example note")
     @rubygem.ownerships.create(user: @user)
     sign_in @user
 
     visit rubygem_adoptions_path(@rubygem)
-    click_button "Cancel"
+    click_button "Close"
 
     mail = last_email
     assert mail.to.include? adoption_request.user.email
@@ -73,7 +73,7 @@ class AdoptionsTest < SystemTest
     expected_body = "We are sorry to tell you that your request for adoption of #{@rubygem.name} has been rejected."
     assert mail.to_s.include? expected_body
 
-    assert page.has_selector? "#flash_success", text: "#{adoption_request.user.name}'s adoption request for #{@rubygem.name} has been canceled"
+    assert page.has_selector? "#flash_success", text: "#{adoption_request.user.name}'s adoption request for #{@rubygem.name} has been closed"
     assert page.has_no_content? "example note"
   end
 

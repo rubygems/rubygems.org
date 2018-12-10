@@ -20,9 +20,9 @@ class AdoptionRequestsController < ApplicationController
       Mailer.delay.adoption_request_approved(@rubygem, @requester)
 
       redirect_to_adoptions_path
-    elsif params_status == "canceled" && current_user.can_cancel?(@adoption_request)
-      @adoption_request.canceled!
-      Mailer.delay.adoption_request_canceled(@rubygem, @requester) unless @requester == current_user
+    elsif params_status == "closed" && current_user.can_close?(@adoption_request)
+      @adoption_request.closed!
+      Mailer.delay.adoption_request_closed(@rubygem, @requester) unless @requester == current_user
 
       redirect_to_adoptions_path
     else
@@ -42,7 +42,7 @@ class AdoptionRequestsController < ApplicationController
 
   def find_adoption_request_and_requester
     @adoption_request = AdoptionRequest.find(params[:id])
-    @requester = User.find(@adoption_request.user_id)
+    @requester = @adoption_request.user
   end
 
   def redirect_to_adoptions_path

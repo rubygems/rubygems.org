@@ -413,7 +413,7 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  context "#can_cancel?" do
+  context "#can_close?" do
     setup do
       @user = create(:user)
       @rubygem = create(:rubygem)
@@ -423,34 +423,34 @@ class UserTest < ActiveSupport::TestCase
     context "when user is owner of gem" do
       setup { @rubygem.ownerships.create(user: @user) }
       should "return true" do
-        assert @user.can_cancel?(@adoption_request)
+        assert @user.can_close?(@adoption_request)
       end
     end
 
     context "when user is adoption requester" do
       setup { @adoption_request.update(user_id: @user.id) }
       should "return true" do
-        assert @user.can_cancel?(@adoption_request)
+        assert @user.can_close?(@adoption_request)
       end
     end
 
     context "when user is neither owner nor requester" do
       should "return false" do
-        refute @user.can_cancel?(@adoption_request)
+        refute @user.can_close?(@adoption_request)
       end
     end
 
-    context "when adoption_request is canceled" do
-      setup { @adoption_request.canceled! }
+    context "when adoption_request is closed" do
+      setup { @adoption_request.closed! }
       should "return false" do
-        refute @user.can_cancel?(@adoption_request)
+        refute @user.can_close?(@adoption_request)
       end
     end
 
     context "when adoption is approved" do
       setup { @adoption_request.approved! }
       should "return false" do
-        refute @user.can_cancel?(@adoption_request)
+        refute @user.can_close?(@adoption_request)
       end
     end
   end
@@ -474,8 +474,8 @@ class UserTest < ActiveSupport::TestCase
         end
       end
 
-      context "adoption status is canceled" do
-        setup { @adoption_request.canceled! }
+      context "adoption status is closed" do
+        setup { @adoption_request.closed! }
         should "return false" do
           refute @user.can_approve?(@adoption_request)
         end

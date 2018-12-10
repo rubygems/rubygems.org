@@ -217,7 +217,7 @@ class ProfileTest < SystemTest
 
     assert page.has_content? "example request"
     assert page.has_content? "example adoption note"
-    assert page.has_button? "Cancel"
+    assert page.has_button? "Close"
     assert page.has_no_button? "Approve"
   end
 end

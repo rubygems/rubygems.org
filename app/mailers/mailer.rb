@@ -43,13 +43,13 @@ class Mailer < ActionMailer::Base
     end
   end
 
-  def adoption_request_canceled(rubygem, user)
+  def adoption_request_closed(rubygem, user)
     user = User.find(user['id'])
     rubygem = Rubygem.find(rubygem['id'])
 
     mail from: Clearance.configuration.mailer_sender,
          to: user.email,
-         subject: I18n.t('mailer.adoption_request_canceled.subject', gem: rubygem.name) do |format|
+         subject: I18n.t('mailer.adoption_request_closed.subject', gem: rubygem.name) do |format|
       format.html { render locals: { rubygem: rubygem, user: user } }
     end
   end

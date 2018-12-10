@@ -4,5 +4,5 @@ class AdoptionRequest < ApplicationRecord
   validates :rubygem, :user, :status, presence: true
   validates :user_id, uniqueness: { scope: :rubygem_id }
 
-  enum status: { opened: 0, approved: 1, canceled: 2 }
+  enum status: { opened: 0, approved: 1, closed: 2 }
 end
