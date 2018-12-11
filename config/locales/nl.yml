@@ -238,11 +238,6 @@ nl:
       blacklisted_namespace:
     dependencies:
       header: "%{title} afhankelijkheden"
-    edit:
-      other_fields_notice: Alle andere velden kunnen alleen gewijzigd worden door een nieuwe versie van de gem te publiceren.
-      subtitle: voor %{gem}
-      title: Wijzig gem links
-      deprecation_message:
     gem_members:
       authors_header:
       owners_header: Eigenaren

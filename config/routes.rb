@@ -145,7 +145,7 @@ Rails.application.routes.draw do
     end
 
     resources :rubygems,
-      only: %i[index show edit update],
+      only: %i[index show update],
       path: 'gems',
       constraints: { id: Patterns::ROUTE_PATTERN, format: /html|atom/ } do
       resource :subscription,
