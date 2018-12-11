@@ -52,13 +52,13 @@ es:
       no_subscriptions: Aún no te has subscrito a ningua gema. ¡Visita la %{gem_link} para subscribirte!
   email_confirmations:
     create:
-      promise_resend: Te enviaremos por correo eléctronico el enlace de confirmación para activar tu cuenta, si la habias creado.
+      promise_resend: Te enviaremos por correo electrónico el enlace de confirmación para activar tu cuenta, si la habias creado.
     new:
       submit: Reenviar confirmación
       title: Reenviar email de confirmación
-      will_email_notice: Te enviaremos por correo eléctronico el enlace de confirmación para activar tu cuenta.
+      will_email_notice: Te enviaremos por correo electrónico el enlace de confirmación para activar tu cuenta.
     update:
-      confirmed_email: Su dirección de correo eléctronico ha sido verificada.
+      confirmed_email: Su dirección de correo electrónico ha sido verificada.
   home:
     index:
       downloads_counting: descargas y contando
@@ -97,13 +97,13 @@ es:
         sign_out: Cerrar sesión
         sign_up: Registro
   mailer:
-    confirm_your_email: Por favor confirme su dirección de correo eléctronico desde el enlace que le hemos enviado.
-    confirmation_subject: Por favor confirme su dirección de correo eléctronico en RubyGems.org
+    confirm_your_email: Por favor confirme su dirección de correo electrónico desde el enlace que le hemos enviado.
+    confirmation_subject: Por favor confirme su dirección de correo electrónico en RubyGems.org
     email_confirmation:
-      confirmation_link: Confirmar correo eléctronico
-      welcome_message: Bienvenido a RubyGems.org! Haga click en el siguiente enlace para verificar su dirección de correo eléctronico.
+      confirmation_link: Confirmar correo electrónico
+      welcome_message: Bienvenido a RubyGems.org! Haga click en el siguiente enlace para verificar su dirección de correo electrónico.
     email_reset:
-      visit_link_instructions: Ha solicitado cambiar su dirección de correo eléctronico en RubyGems.org. Por favor haga click en el siguiente enlace para re-activar su cuenta.
+      visit_link_instructions: Ha solicitado cambiar su dirección de correo electrónico en RubyGems.org. Por favor haga click en el siguiente enlace para re-activar su cuenta.
       link_expiration_explanation: Tenga en cuenta que el enlace solo será valido por las siguentes 3 horas.
     deletion_complete:
       subject: Su cuenta ha sido eliminada de RubyGems.org
@@ -144,30 +144,30 @@ es:
     require_mfa_enabled: Su autentificación multi-factor esta deshabilitada. Debe habilitarla primero.
     new:
       title: Habilitar autentificación multifactor
-      scan_prompt:
-      otp_prompt:
-      confirm:
-      enable:
-      account:
-      key:
-      time_based:
+      scan_prompt: Por favor escanear el códgo QR con su aplicación de autentificación. Sino puede escanear el código, agregue la siguiente información en su aplicación manualmente.
+      otp_prompt: Ingrese el código numerico que aparece en la aplicación de autenticación para continuar.
+      confirm: He guardado mis códigos de recuperación de forma segura.
+      enable: Habilitado
+      account: "Cuenta: %{account}"
+      key: "Clave: %{key}"
+      time_based: "Basada en tiempo: Si"
     create:
-      qrcode_expired:
-      success:
+      qrcode_expired: El código QR y la clave han expirado. Por favor trate de registrar un nuevo dispositivo nuevamente.
+      success: Ha habilitado éxitosamente la autentificación multifactor.
     recovery:
-      continue:
-      title:
-      note:
+      continue: Continuar
+      title: Códigos de recuperación
+      note: "Ustede DEBE almacenar los códigos de recuperación en en lugar seguro para prevenir la perdida de su cuenta. Cada código podrá usarse por una unica vez si usted pierde su autenticador."
     destroy:
-      success:
+      success: Ha deshabilitado éxitosamente la autentificación multifactor.
     update:
-      success:
+      success: Ha actualizado éxitosamente su nivel MFA.
   profiles:
     edit:
-      email_awaiting_confirmation:
-      enter_password:
-      hide_email: Esconder email en perfil público
-      optional_twitter_username:
+      email_awaiting_confirmation: Por favor confirme su dirección de correo electrónico %{unconfirmed_email}
+      enter_password: Por favor ingrese su clave
+      hide_email: Esconder email en su perfil público
+      optional_twitter_username: Opcional nombre de usuario en Twitter. Se mostrará públicamente.
       title: Editar perfil
       api_access:
         confirm_reset: "¿Estás seguro? Este cambio no puede deshacerse."
@@ -181,43 +181,43 @@ es:
         text: "¿Necesitas otra contraseña? No hay problema. %{link}"
         title: Reestablecer contraseña
       delete:
-        delete:
-        delete_profile:
-        warning:
+        delete: Eliminar
+        delete_profile: Eliminar Perfil
+        warning: Eliminar tu perfil es una acción irreversible. Esto no podrá ser deshecho contactando a nuestro soporte. Este seguro de la decisión antes de continuar.
       mfa:
-        multifactor_auth:
-        disabled:
-        go_settings:
-        enabled:
-        update:
+        multifactor_auth: Autentificación Multi-factor
+        disabled: Todavía no ha habilitado la autentificación multifactor.
+        go_settings: Registrar un nuevo dispositivo
+        enabled: Usted ha habilitado la autenticación multifactor. Ingrese su código OTP desde su autenticador o uno de sus códigos de recuperación activos para cambiar su nivel de MFA o deshabilitarlo.
+        update: Actualizar
         level:
-          title:
-          no_mfa:
-          ui_mfa_only:
-          ui_and_api_mfa:
+          title: Nivel MFA
+          no_mfa: Deshabilitado
+          ui_mfa_only: Solo Interfaz de Usuario
+          ui_and_api_mfa: Interfaz de Usuario y API
     delete:
-      title:
-      confirm:
-      instructions:
-      list_only_owner:
-      list_multi_owner:
+      title: Eliminar perfil
+      confirm: Confirmar
+      instructions: Lamentamos que te vayas. Ingresa tu clave en el campo de abajo y confirma.
+      list_only_owner: Estas gemas se eliminarán cuando elimines tu perfil. Si desea agregar propietarios antes de eliminar su perfil, puede usar el comando %{command_link}.
+      list_multi_owner: Usted perderá el acceso a estas gemas, pero otros propietarios de la gema seguirán teniendo acceso.
     rubygem:
-      owners_header:
+      owners_header: Propietarios
     destroy:
-      request_queued:
+      request_queued: Su solicitud de eliminación de cuenta ha sido puesta en cola de espera. Le enviaremos un correo electrónico de confirmación cuando su solicitud haya sido procesada.
     update:
-      confirmation_mail_sent:
-      updated:
-    request_denied:
+      confirmation_mail_sent: Recibirá un correo electrónico en los próximos minutos. Este contiene las instrucciones para confirmar su nueva dirección de correo electrónico.
+      updated: Su perfil ha sido actualizado.
+    request_denied: Esta solicitud fue denegada. No pudimos verificar su contraseña.
   rubygems:
     aside:
       bundler_header: Gemfile
-      copied:
-      copy_to_clipboard:
+      copied: Copiado!
+      copy_to_clipboard: Copiar al portapapeles
       downloads_for_this_version: Para esta versión
       install: instalar
-      required_ruby_version:
-      required_rubygems_version:
+      required_ruby_version: Versión de Ruby requerida
+      required_rubygems_version: Versión de Rubygems requerida
       links:
         badge: Badge
         bugs: Registro de bugs
@@ -229,26 +229,26 @@ es:
         home: Sitio
         mail: Lista de correo
         report_abuse: Reportar abuso
-        reverse_dependencies:
+        reverse_dependencies: Dependencias inversas
         rss: RSS
         subscribe: Suscribirse
-        unsubscribe: Unsubscribe
+        unsubscribe: Desuscribirse
         wiki: Wiki
     blacklisted:
-      blacklisted_namespace:
+      blacklisted_namespace: Este espacio de nombres (namespace) esta reservado por rubygems.org.
     dependencies:
-      header: dependencias de %{title}
+      header: "Dependencias de %{title}"
     edit:
-      other_fields_notice: Los otros campos solo pueden ser editados al envíar una versión nueva de tu gema.
+      other_fields_notice: Todos los otros campos solo pueden ser editados al envíar una nueva versión de tu gema.
       subtitle: para %{gem}
-      title: Editar ligas
-      deprecation_message:
+      title: Editar enlaces
+      deprecation_message: Esta página ya no se utiliza. Utilice Gem::Specification#metadata para configurar esos enlaces. (<a href='https://guides.rubygems.org/specification-reference/#metadata' target='_blank'>leer más</a>)
     gem_members:
       authors_header: Autores
       owners_header: Administradores
       sha_256_checksum: SHA 256 checksum
     index:
-      downloads: Downloads
+      downloads: Descargas
       title: Gemas
     show:
       licenses_header: Licencia
@@ -258,62 +258,62 @@ es:
       versions_header: Versiones
       yanked_notice: Esta gema ya no está disponible para descarga directa o para otras gemas que dependan de ella.
     show_yanked:
-      not_hosted_notice: Esta gema no se encuentra alojada en Gemcutter.
+      not_hosted_notice: Esta gema no se encuentra alojada en RubyGems.org.
       reserved_namespace:
-        one:
-        other:
+        one: Esta gema existía anteriormente, pero ha sido eliminada por su propietario. El equipo de RubyGems.org ha reservado este nombre de gema por 1 día más. Después de que se acabe el tiempo, cualquiera podrá reclamar este nombre de gema usando 'gem push'. <br/> Si usted es el propietario anterior de esta gema, puede cambiar la propiedad de esta gema usando el comando de propietario de gema. También puedes crear nuevas versiones de esta gema usando 'gem push'.
+        other: Esta gema existía anteriormente, pero ha sido eliminada por su propietario. El equipo de RubyGems.org ha reservado este nombre de gema por % {count} días más. Después de que se acabe el tiempo, cualquiera podrá reclamar este nombre de gema usando 'gem push'. <br/> Si usted es el propietario anterior de esta gema, puede cambiar la propiedad de esta gema usando el comando de propietario de gema 'gem owner'. También puedes crear nuevas versiones de esta gema usando 'gem push'.
   reverse_dependencies:
     index:
-      title:
+      title: "Dependencias inversas para %{name}"
     search:
-      search_reverse_dependencies:
+      search_reverse_dependencies: Buscar dependencias inversas  Gems&hellip;"
   searches:
     advanced:
-      name:
-      summary:
-      description:
-      downloads:
-      updated:
+      name: Nombre
+      summary: Resumén
+      description: Descripción
+      downloads: Descargas
+      updated: Actualización
     show:
       exact_match: Resultado exacto
       subtitle: por %{query}
-      month_update:
-      week_update:
-      filter:
+      month_update: Actualizada en el último mes %{count})
+      week_update: Actualizada en la última semana %{count})
+      filter: "Filtro:"
   sessions:
     new:
       forgot_password: "¿Olvidaste tu contraseña?"
-      resend_confirmation:
+      resend_confirmation: No ha recibido el correo electrónico de confirmación?
   stats:
     index:
-      all_time_most_downloaded:
-      total_downloads:
-      total_gems:
-      total_users:
+      all_time_most_downloaded: Más descargada de todos los tiempos
+      total_downloads: Tota de descargas
+      total_gems: Total de gemas
+      total_users: Total de usuarios
   users:
     create:
-      email_sent:
+      email_sent: Un email de confirmación ha sido enviado a tu dirección de correo electrónico.
     new:
       have_account: "¿Ya estás registrado?"
   versions:
     index:
-      not_hosted_notice: Esta gema no está alojada en Gemcutter.
+      not_hosted_notice: Esta gema no está alojada en RubyGems.org.
       title: Todas las versiones de %{name}
       versions_since: "%{count} versiones desde %{since}"
     version:
       yanked: eliminada
   will_paginate:
-    next_label:
+    next_label: Siguiente
     page_gap: "…"
-    previous_label:
+    previous_label: Anterior
     page_entries_info:
-      multi_page:
-      multi_page_html:
+      multi_page: Mostrando %{model} %{from} - %{to} de %{count} en total
+      multi_page_html: Mostrando %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> de <b>%{count}</b> en total
       single_page:
-        one:
-        other:
-        zero:
+        one: Mostrando 1 %{model}
+        other: Mostrando todo %{count} %{model}
+        zero: No se encontro %{model}
       single_page_html:
-        one:
-        other:
-        zero:
+        one: Mostrando <b>1</b> %{model}
+        other: Mostrando <b>todo&nbsp;%{count}</b> %{model}
+        zero: No se encontró %{model}
