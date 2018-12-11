@@ -238,11 +238,6 @@ pt-BR:
       blacklisted_namespace: This namespace is reserved by rubygems.org.
     dependencies:
       header:
-    edit:
-      other_fields_notice: Os outros campos só podem ser editados quando você submeter uma versão atualizada da sua gem.
-      subtitle: "%{gem}"
-      title: Editar links
-      deprecation_message:
     gem_members:
       authors_header: Autores
       owners_header: Donos
