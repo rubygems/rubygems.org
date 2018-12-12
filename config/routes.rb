@@ -159,6 +159,11 @@ Rails.application.routes.draw do
     ################################################################################
     # Clearance Overrides and Additions
 
+    resource :email_confirmations, only: %i[new create] do
+      get 'confirm/:token', to: 'email_confirmations#update', as: :update
+      patch 'unconfirmed'
+    end
+
     resources :passwords, only: %i[new create]
 
     resource :session, only: %i[create destroy] do
@@ -173,12 +178,6 @@ Rails.application.routes.draw do
     delete '/sign_out' => 'clearance/sessions#destroy', as: 'sign_out'
 
     get '/sign_up' => 'clearance/users#new', as: 'sign_up' if Clearance.configuration.allow_sign_up?
-  end
-
-  # TODO: Move to UI routes (will apply format constrains)
-  resource :email_confirmations, only: %i[new create] do
-    get 'confirm/:token', to: 'email_confirmations#update', as: :update
-    patch 'unconfirmed'
   end
 
   ################################################################################

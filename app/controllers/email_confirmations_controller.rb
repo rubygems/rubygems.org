@@ -1,4 +1,6 @@
 class EmailConfirmationsController < ApplicationController
+  before_action :redirect_to_root, unless: :signed_in?, only: :unconfirmed
+
   def update
     user = User.find_by(confirmation_token: params[:token])
 
@@ -15,7 +17,7 @@ class EmailConfirmationsController < ApplicationController
 
   # used to resend confirmation mail for email validation
   def create
-    user = User.find_by(email: confirmation_params[:email])
+    user = User.find_by(email: email_params)
 
     if user
       user.generate_confirmation_token
@@ -37,7 +39,7 @@ class EmailConfirmationsController < ApplicationController
 
   private
 
-  def confirmation_params
-    params[:email_confirmation]
+  def email_params
+    params.require(:email_confirmation).permit(:email).fetch(:email, "")
   end
 end

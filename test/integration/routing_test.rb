@@ -2,7 +2,7 @@ require "test_helper"
 
 class RoutingTest < ActionDispatch::IntegrationTest
   def contoller_in_ui?(controller)
-    !controller.nil? && controller !~ /^api|internal|email_confirmations.*$/
+    !controller.nil? && controller !~ /^api|internal.*$/
   end
 
   setup do
@@ -23,6 +23,7 @@ class RoutingTest < ActionDispatch::IntegrationTest
       next if path == "/" # adding random format after root (/) gives 404
 
       assert_raises(ActionController::RoutingError) do
+        # ex: get(/password/new.json)
         send(verb.downcase, path.gsub("(.:format)", ".something"))
       end
     end
@@ -30,7 +31,7 @@ class RoutingTest < ActionDispatch::IntegrationTest
 
   test "adding format param to UI routes doesn't break the app" do
     @ui_paths_verb.each do |path, verb|
-      next if path == "/" # adding random format after root (/) gives 404
+      next if path == "/"
 
       format_path = path.gsub("(.:format)", "?format=something")
       format_path.gsub!(":rubygem_id", "someid")
@@ -38,6 +39,7 @@ class RoutingTest < ActionDispatch::IntegrationTest
       format_path.gsub!("*id", "about") # used in high voltage route
 
       assert_nothing_raised do
+        # ex: get(/password/new?format=json)
         send(verb.downcase, format_path)
       end
     end
