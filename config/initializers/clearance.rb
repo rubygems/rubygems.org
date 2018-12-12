@@ -6,6 +6,7 @@ Clearance.configure do |config|
   config.sign_in_guards = [ConfirmedUserGuard]
   config.rotate_csrf_on_sign_in = true
   config.cookie_expiration = ->(_cookies) { 2.weeks.from_now.utc }
+  config.routes = false
 end
 
 class Clearance::Session

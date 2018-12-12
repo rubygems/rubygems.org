@@ -145,7 +145,7 @@ Rails.application.routes.draw do
     end
 
     resources :rubygems,
-      only: %i[index show update],
+      only: %i[index show],
       path: 'gems',
       constraints: { id: Patterns::ROUTE_PATTERN, format: /html|atom/ } do
       resource :subscription,
@@ -155,24 +155,30 @@ Rails.application.routes.draw do
       resources :versions, only: %i[show index]
       resources :reverse_dependencies, only: %i[index]
     end
+
+    ################################################################################
+    # Clearance Overrides and Additions
+
+    resources :passwords, only: %i[new create]
+
+    resource :session, only: %i[create destroy] do
+      post 'mfa_create', to: 'sessions#mfa_create', as: :mfa_create
+    end
+
+    resources :users, only: %i[new create] do
+      resource :password, only: %i[create edit update]
+    end
+
+    get '/sign_in' => 'clearance/sessions#new', as: 'sign_in'
+    delete '/sign_out' => 'clearance/sessions#destroy', as: 'sign_out'
+
+    get '/sign_up' => 'clearance/users#new', as: 'sign_up' if Clearance.configuration.allow_sign_up?
   end
 
-  ################################################################################
-  # Clearance Overrides and Additions
-
+  # TODO: Move to UI routes (will apply format constrains)
   resource :email_confirmations, only: %i[new create] do
     get 'confirm/:token', to: 'email_confirmations#update', as: :update
     patch 'unconfirmed'
-  end
-
-  resource :session, only: %i[create destroy] do
-    post 'mfa_create', to: 'sessions#mfa_create', as: :mfa_create
-  end
-
-  resources :passwords, only: %i[new create]
-
-  resources :users, only: %i[new create] do
-    resource :password, only: %i[create edit update]
   end
 
   ################################################################################
@@ -182,6 +188,4 @@ Rails.application.routes.draw do
     get 'ping' => 'ping#index'
     get 'revision' => 'ping#revision'
   end
-
-  get '/sign_up' => 'users#disabled_signup' unless Clearance.configuration.allow_sign_up?
 end

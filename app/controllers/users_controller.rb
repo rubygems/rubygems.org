@@ -3,11 +3,6 @@ class UsersController < Clearance::UsersController
     redirect_to sign_up_path
   end
 
-  def disabled_signup
-    flash[:notice] = "Sign up is temporarily disabled."
-    redirect_to root_path
-  end
-
   def create
     @user = user_from_params
     if @user.save
