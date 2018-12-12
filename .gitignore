@@ -18,3 +18,4 @@ tmp/
 tags
 .idea
 chef
+.DS_Store
