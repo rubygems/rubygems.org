@@ -94,7 +94,10 @@ class ApplicationController < ActionController::Base
   end
 
   def set_page
-    @page = params[:page].respond_to?(:to_i) ? [1, params[:page].to_i].max : 1
+    @page = Gemcutter::DEFAULT_PAGE && return unless params.key?(:page)
+    redirect_to url_for(page: Gemcutter::DEFAULT_PAGE) unless valid_page_param?
+
+    @page = params[:page].to_i
   end
 
   def user_locale
@@ -128,5 +131,9 @@ class ApplicationController < ActionController::Base
 
   def limit_page(max_page)
     render_404 if @page > max_page
+  end
+
+  def valid_page_param?
+    params[:page].respond_to?(:to_i) && params[:page].to_i.between?(Gemcutter::DEFAULT_PAGE, Gemcutter::MAX_PAGES)
   end
 end
