@@ -6,6 +6,7 @@ nl:
   footer_about: RubyGems.org is de gem hosting service van de Ruby community. <a href="%{publish_docs}">Publiceer</a> en <a href="%{install_docs}">installeer</a> je gems direct. Gebruik <a href="%{api_docs}">de API</a> om meer informatie over beschikbare gems te vinden. <a href="%{contributing_docs}">Word een deelnemer</a> en verbeter de site met jouw aanpassingen.
   form_disable_with: Een moment geduld...
   help_url: http://help.rubygems.org
+  invalid_page:
   locale_name: Nederlands
   none: Geen
   not_found: Niet gevonden

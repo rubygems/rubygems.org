@@ -1,6 +1,5 @@
 class NewsController < ApplicationController
-  before_action :set_page
-  before_action -> { limit_page Gemcutter::NEWS_MAX_PAGES }
+  before_action -> { set_page Gemcutter::NEWS_MAX_PAGES }
 
   def show
     @rubygems = Rubygem.news(Gemcutter::NEWS_DAYS_LIMIT).page(@page).per(Gemcutter::NEWS_PER_PAGE)

@@ -93,9 +93,9 @@ class ApplicationController < ActionController::Base
     @versioned_links = @rubygem.links(@latest_version)
   end
 
-  def set_page
+  def set_page(max_page = Gemcutter::MAX_PAGES)
     @page = Gemcutter::DEFAULT_PAGE && return unless params.key?(:page)
-    redirect_to url_for(page: Gemcutter::DEFAULT_PAGE) unless valid_page_param?
+    redirect_to_page_with_error unless valid_page_param?(max_page)
 
     @page = params[:page].to_i
   end
@@ -129,11 +129,15 @@ class ApplicationController < ActionController::Base
     cookies.permanent[:mfa_feature] == 'true'
   end
 
-  def limit_page(max_page)
-    render_404 if @page > max_page
+  def redirect_to_page_with_error
+    flash[:error] = t('invalid_page') unless controller_path.starts_with? "api"
+    page_params = params.except(:controller, :action)
+      .permit(:query, :to, :from, :format)
+      .merge(page: Gemcutter::DEFAULT_PAGE)
+    redirect_to url_for(page_params)
   end
 
-  def valid_page_param?
-    params[:page].respond_to?(:to_i) && params[:page].to_i.between?(Gemcutter::DEFAULT_PAGE, Gemcutter::MAX_PAGES)
+  def valid_page_param?(max_page)
+    params[:page].respond_to?(:to_i) && params[:page].to_i.between?(Gemcutter::DEFAULT_PAGE, max_page)
   end
 end

@@ -6,6 +6,7 @@ de:
   footer_about:
   form_disable_with: Bitte warten...
   help_url: http://help.rubygems.org
+  invalid_page:
   locale_name: Deutsch
   none:
   not_found:

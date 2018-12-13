@@ -6,6 +6,7 @@ es:
   footer_about: RubyGems.org es el servicio de alojamiento de gemas de la comunidad de Ruby. Publica tus gemas de manera instantánea e instalalas. Usa la API para interactuar y buscar información de las gemas disponibles. Conviértete en contribuidor y mejora este sitio con tus cambios.
   form_disable_with: Un momento por favor...
   help_url: http://help.rubygems.org
+  invalid_page:
   locale_name: Español
   none:
   not_found:

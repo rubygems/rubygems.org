@@ -6,6 +6,7 @@ zh-CN:
   footer_about: RubyGems.org 是 Ruby 社区的 Gem 托管服务。<br />让你能便捷、快速的发布、管理你的 Gem 以及安装它们。提供 API 查阅可用 Gem 的详细资料。<br />参与进来成为一个贡献者，用你的能力推动社区进步。
   form_disable_with: 请稍后...
   help_url: http://help.rubygems.org
+  invalid_page:
   locale_name: 简体中文
   none: 无
   not_found: 未找到

@@ -1,20 +1,6 @@
 require 'test_helper'
 
 class NewsControllerTest < ActionController::TestCase
-  def self.should_paginate(action)
-    should "display entries and total in page info" do
-      assert_select "header > p.gems__meter", text: /.*10 of 100 in total/
-    end
-
-    context "with page greater than 10" do
-      setup { get action, params: { page: 11 } }
-
-      should "render 404 page" do
-        assert_response :not_found
-      end
-    end
-  end
-
   setup do
     @rubygem1 = create(:rubygem, downloads: 10)
     @rubygem2 = create(:rubygem, downloads: 20)
@@ -41,7 +27,9 @@ class NewsControllerTest < ActionController::TestCase
       end
     end
 
-    should_paginate :show
+    should "display entries and total in page info" do
+      assert_select "header > p.gems__meter", text: /.*10 of 100 in total/
+    end
   end
 
   context "on GET to popular" do
@@ -63,6 +51,8 @@ class NewsControllerTest < ActionController::TestCase
       end
     end
 
-    should_paginate :popular
+    should "display entries and total in page info" do
+      assert_select "header > p.gems__meter", text: /.*10 of 100 in total/
+    end
   end
 end
