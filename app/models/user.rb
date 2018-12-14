@@ -28,7 +28,7 @@ class User < ApplicationRecord
   after_validation :set_unconfirmed_email, if: :email_changed?, on: :update
   before_create :generate_api_key, :generate_confirmation_token
 
-  validates :email, length: { maximum: 254 }
+  validates :email, length: { maximum: 254 }, uniqueness: { case_sensitive: false }
 
   validates :handle, uniqueness: true, allow_nil: true
   validates :handle, format: {
@@ -49,7 +49,7 @@ class User < ApplicationRecord
   enum mfa_level: { no_mfa: 0, ui_mfa_only: 1, ui_and_api_mfa: 2 }
 
   def self.authenticate(who, password)
-    user = find_by(email: who.downcase) || find_by(handle: who)
+    user = find_by('lower(email) = ?', who.downcase) || find_by(handle: who)
     user if user&.authenticated?(password)
   end
 
@@ -59,6 +59,10 @@ class User < ApplicationRecord
 
   def self.find_by_name(name)
     find_by(email: name) || find_by(handle: name)
+  end
+
+  def self.normalize_email(email)
+    email.to_s.gsub(/\s+/, "")
   end
 
   def name
