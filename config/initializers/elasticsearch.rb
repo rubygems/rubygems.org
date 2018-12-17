@@ -1,3 +1,5 @@
+require 'faraday_middleware/aws_sigv4'
+
 port = 9200
 if (Rails.env.test? || Rails.env.development?) && Toxiproxy.running?
   port = 22_221
@@ -13,7 +15,16 @@ if (Rails.env.test? || Rails.env.development?) && Toxiproxy.running?
 end
 
 url = ENV['ELASTICSEARCH_URL'] || "http://localhost:#{port}"
-Elasticsearch::Model.client = Elasticsearch::Client.new(host: url)
+
+Elasticsearch::Model.client = Elasticsearch::Client.new(url: url) do |f|
+  if Rails.env.staging?
+    f.request :aws_sigv4,
+      service: 'es',
+      region: ENV['AWS_REGION'],
+      access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+      secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
+  end
+end
 
 if Rails.env.development?
   tracer = ActiveSupport::Logger.new('log/elasticsearch.log')
