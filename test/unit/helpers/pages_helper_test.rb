@@ -27,13 +27,7 @@ class PagesHelperTest < ActionView::TestCase
     end
 
     should "return subtitle with release date and version number if both exist" do
-      assert_equal "v#{@version_last.number} - #{nice_date_for(@version_last.built_at)}", subtitle
-    end
-
-    should "return subtitle with release date and version number if built_at doesn't exist" do
-      @version_last.built_at = nil
-      @version_last.save
-      assert_equal "v#{@version_last.number}", subtitle
+      assert_equal "v#{@version_last.number} - #{nice_date_for(@version_last.created_at)}", subtitle
     end
   end
 end

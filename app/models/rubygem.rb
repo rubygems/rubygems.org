@@ -260,8 +260,8 @@ class Rubygem < ApplicationRecord
     version
   end
 
-  def first_built_date
-    versions.by_earliest_built_at.limit(1).last.built_at
+  def first_created_date
+    versions.by_earliest_created_at.first.created_at
   end
 
   # returns days left before the reserved namespace will be released

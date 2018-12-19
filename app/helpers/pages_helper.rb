@@ -9,7 +9,7 @@ module PagesHelper
 
   def subtitle
     subtitle = "v#{version_number}"
-    subtitle += " - #{nice_date_for(version.built_at)}" if version.try(:built_at)
+    subtitle += " - #{nice_date_for(version.created_at)}"
     subtitle
   end
 end

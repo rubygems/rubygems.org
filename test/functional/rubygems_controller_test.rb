@@ -166,7 +166,7 @@ class RubygemsControllerTest < ActionController::TestCase
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
       assert page.has_content?(@latest_version.number)
-      css = "small:contains('#{@latest_version.built_at.to_date.to_formatted_s(:long)}')"
+      css = "small:contains('#{@latest_version.created_at.to_date.to_formatted_s(:long)}')"
       assert page.has_css?(css)
       assert page.has_content?("Links")
     end
