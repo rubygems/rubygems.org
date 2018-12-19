@@ -6,6 +6,7 @@ fr:
   footer_about: RubyGems.org est le service d&rsquo;hébergement de la communauté Ruby. Publiez vos gems instantanément et utilisez-les. Utilisez l'API pour interagir et trouver des informations sur les gems disponibles. Contribuez et améliorez ce site avec nous !
   form_disable_with: Veuillez patienter...
   help_url: http://help.rubygems.org
+  invalid_page:
   locale_name: Français
   none:
   not_found: Introuvable

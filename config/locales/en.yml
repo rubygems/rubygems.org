@@ -6,6 +6,7 @@ en:
   footer_about: RubyGems.org is the Ruby community&rsquo;s gem hosting service. Instantly <a href="%{publish_docs}">publish your gems</a> and then <a href="%{install_docs}">install them</a>. Use <a href="%{api_docs}">the API</a> to find out more about <a href="%{gem_list}">available gems</a>. <a href="%{contributing_docs}">Become a contributor</a> and improve the site yourself.
   form_disable_with: Please wait...
   help_url: http://help.rubygems.org
+  invalid_page: Page number is out of range. Redirected to default page.
   locale_name: English
   none: None
   not_found: Not Found

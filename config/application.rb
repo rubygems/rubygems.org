@@ -53,4 +53,6 @@ module Gemcutter
   # Limit max page as ES result window is upper bounded by 10_000 records
   SEARCH_MAX_PAGES = 100
   EMAIL_TOKEN_EXPRIES_AFTER = 3.hours
+  MAX_PAGES = 1000
+  DEFAULT_PAGE = 1
 end

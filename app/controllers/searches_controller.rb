@@ -1,6 +1,5 @@
 class SearchesController < ApplicationController
-  before_action :set_page, only: :show
-  before_action -> { limit_page Gemcutter::SEARCH_MAX_PAGES }, only: :show
+  before_action -> { set_page Gemcutter::SEARCH_MAX_PAGES }, only: :show
 
   def show
     return unless params[:query]&.is_a?(String)

@@ -46,26 +46,4 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
       YAML.safe_load body
     end
   end
-
-  context "on GET passing a page" do
-    setup do
-      @match = create(:rubygem, name: "match")
-      create(:version, rubygem: @match)
-    end
-
-    should "default to first page when page is 0" do
-      get :show, params: { query: "match", page: 0 }, format: :json
-      refute JSON.parse(response.body).empty?
-    end
-
-    should "default to first page when page is not a number" do
-      get :show, params: { query: "match", page: "foo" }, format: :json
-      refute JSON.parse(response.body).empty?
-    end
-
-    should "default to first page when page cannot be converted to a number" do
-      get :show, params: { query: "match", page: { "$acunetix" => "1" } }, format: :json
-      refute JSON.parse(response.body).empty?
-    end
-  end
 end
