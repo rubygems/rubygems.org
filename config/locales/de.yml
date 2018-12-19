@@ -175,7 +175,7 @@ de:
         credentials: 'Wenn du %{gem_commands_link} über das Terminal oder über die Kommandozeile verwenden möchtest, dann brauchst du die %{gem_credentials_file}-Datei, die du mit dem folgenden Befehl erzeugen kannst:'
         key_is: Dein API-Schlüssel ist %{key}.
         link_text: Gem-Befehle
-        reset: Zurücksetzen meines API-Schlüssels
+        reset: Zurücksetzen des API-Schlüssels
         title: API-Zugang
       reset_password:
         link_text: Jetzt ein neues Passwort zuschicken lassen.
