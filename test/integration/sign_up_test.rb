@@ -51,9 +51,9 @@ class SignUpTest < SystemTest
 
     visit root_path
     refute page.has_content? "Sign up"
-    visit sign_up_path
-    assert_equal current_path, "/"
-    assert page.has_content? "Sign up is temporarily disabled."
+    assert_raises(ActionController::RoutingError) do
+      visit '/sign_up'
+    end
   end
 
   test "email confirmation" do

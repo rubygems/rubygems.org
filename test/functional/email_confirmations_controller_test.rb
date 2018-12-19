@@ -87,4 +87,44 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context 'on POST to unconfirmed' do
+    context 'user is not signed in' do
+      should 'not send confirmation mail' do
+        Mailer.expects(:email_reset).times(0)
+        post :unconfirmed
+        Delayed::Worker.new.work_off
+      end
+
+      should 'redirect to root' do
+        post :unconfirmed
+        assert_redirected_to root_path
+      end
+    end
+
+    context 'user is signed in' do
+      setup do
+        @user = create(:user, confirmation_token: 'something')
+        sign_in_as(@user)
+      end
+
+      should 'regenerate confirmation token' do
+        post :unconfirmed
+        assert_not_equal 'something', @user.reload.confirmation_token
+      end
+
+      should 'send confirmation mail' do
+        Mailer.expects(:email_reset).times(1)
+        post :unconfirmed
+        Delayed::Worker.new.work_off
+      end
+
+      should 'set success flash and redirect to edit path' do
+        post :unconfirmed
+        assert_redirected_to edit_profile_path
+        expected_notice = 'You will receive an email within the next few minutes. It contains instructions for confirming your new email address.'
+        assert_equal expected_notice, flash[:notice]
+      end
+    end
+  end
 end

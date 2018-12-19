@@ -3,6 +3,6 @@
   <%= t('.visit_link_instructions') %>
   <br />
   <%= link_to t('.confirmation_link'),
-    update_email_confirmations_url(@user, token: @user.confirmation_token.html_safe) %>
+    update_email_confirmations_url(token: @user.confirmation_token.html_safe) %>
 </p>
 <p><%= t('.link_expiration_explanation') %></p>
