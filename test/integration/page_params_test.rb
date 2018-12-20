@@ -7,8 +7,8 @@ class PageParamsTest < SystemTest
     assert page.has_content? "Stats"
   end
 
-  test "stats with page param more than 1000" do
-    visit stats_path(page: "553402322211286548480")
+  test "stats with page param more than 10" do
+    visit stats_path(page: "11")
     assert redirect_to(stats_path(page: "1"))
     assert page.has_content? "Stats"
     assert page.has_content? "Page number is out of range. Redirected to default page."
