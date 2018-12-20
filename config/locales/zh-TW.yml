@@ -193,9 +193,9 @@ zh-TW:
         update:
         level:
           title:
-          no_mfa:
-          ui_mfa_only:
-          ui_and_api_mfa:
+          disabled:
+          ui_only:
+          ui_and_api:
     delete:
       title:
       confirm:

@@ -2,7 +2,6 @@ class ProfilesController < ApplicationController
   before_action :redirect_to_root, unless: :signed_in?, except: :show
   before_action :verify_password, only: %i[update destroy]
   before_action :set_cache_headers, only: :edit
-  helper_method :mfa_enabled?
 
   def edit
     @user = current_user

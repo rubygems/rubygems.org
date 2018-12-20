@@ -125,10 +125,6 @@ class ApplicationController < ActionController::Base
     payload[:request_id] = request.uuid
   end
 
-  def mfa_enabled?
-    cookies.permanent[:mfa_feature] == 'true'
-  end
-
   def redirect_to_page_with_error
     flash[:error] = t('invalid_page') unless controller_path.starts_with? "api"
     page_params = params.except(:controller, :action)

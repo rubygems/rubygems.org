@@ -2,7 +2,7 @@ class SessionsController < Clearance::SessionsController
   def create
     @user = find_user(params.require(:session))
 
-    if mfa_enabled? && @user&.mfa_enabled?
+    if @user&.mfa_enabled?
       session[:mfa_user] = @user.handle
       render 'sessions/otp_prompt'
     else

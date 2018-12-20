@@ -85,31 +85,30 @@
 
 <%= button_to t('.api_access.reset'), reset_api_v1_api_key_path, :method => :put, :data => {:confirm => t('.api_access.confirm_reset')}, :class => 'form__submit' %>
 
-<% if mfa_enabled? %>
-  <div class="t-body">
-    <h2><%= t '.mfa.multifactor_auth' %></h2>
-    <% if @user.mfa_enabled? %>
-      <p><%= t '.mfa.enabled' %></p>
-      <%= form_tag multifactor_auth_path, :method => :put, :id => 'mfa-edit' do %>
-        <%= label_tag :level, t('.mfa.level.title'), :class => 'form__label' %>
-        <%= select_tag :level, options_for_select([
-          [t('.mfa.level.ui_and_api_mfa'), 'ui_and_api_mfa'],
-          [t('.mfa.level.ui_mfa_only'), 'ui_mfa_only'],
-          [t('.mfa.level.no_mfa'), 'no_mfa']], @user.mfa_level), :class => 'form__input form__select' %>
-        <div class="text_field">
-          <%= label_tag :otp, 'OTP code', :class => 'form__label' %>
-          <%= text_field_tag :otp, '', :class => 'form__input' %>
-        </div>
-        <%= submit_tag t('.mfa.update'), :class => 'form__submit' %>
-      <% end %>
-    <% else %>
-      <p>
-        <%= t '.mfa.disabled' %>
-        <%= button_to t('.mfa.go_settings'), new_multifactor_auth_path, :method => 'get', :class => 'form__submit' %>
-      </p>
+
+<div class="t-body">
+  <h2><%= t '.mfa.multifactor_auth' %></h2>
+  <% if @user.mfa_enabled? %>
+    <p><%= t '.mfa.enabled' %></p>
+    <%= form_tag multifactor_auth_path, :method => :put, :id => 'mfa-edit' do %>
+      <%= label_tag :level, t('.mfa.level.title'), :class => 'form__label' %>
+      <%= select_tag :level, options_for_select([
+        [t('.mfa.level.ui_and_api'), 'ui_and_api'],
+        [t('.mfa.level.ui_only'), 'ui_only'],
+        [t('.mfa.level.disabled'), 'disabled']], @user.mfa_level), :class => 'form__input form__select' %>
+      <div class="text_field">
+        <%= label_tag :otp, 'OTP code', :class => 'form__label' %>
+        <%= text_field_tag :otp, '', :class => 'form__input' %>
+      </div>
+      <%= submit_tag t('.mfa.update'), :class => 'form__submit' %>
     <% end %>
-  </div>
-<% end %>
+  <% else %>
+    <p>
+      <%= t '.mfa.disabled' %>
+      <%= button_to t('.mfa.go_settings'), new_multifactor_auth_path, :method => 'get', :class => 'form__submit' %>
+    </p>
+  <% end %>
+</div>
 
 <div class="t-body">
   <h2><%= t '.delete.delete_profile' %></h2>
