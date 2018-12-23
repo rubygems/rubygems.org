@@ -17,7 +17,7 @@ end
 url = ENV['ELASTICSEARCH_URL'] || "http://localhost:#{port}"
 
 Elasticsearch::Model.client = Elasticsearch::Client.new(url: url) do |f|
-  if Rails.env.staging?
+  if Rails.env.staging? || Rails.env.production?
     f.request :aws_sigv4,
       service: 'es',
       region: ENV['AWS_REGION'],
