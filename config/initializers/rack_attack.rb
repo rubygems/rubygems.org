@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rack::Attack
   REQUEST_LIMIT = 100
   REQUEST_LIMIT_PER_EMAIL = 10

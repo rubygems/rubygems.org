@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SessionsController < Clearance::SessionsController
   def create
     @user = find_user(params.require(:session))

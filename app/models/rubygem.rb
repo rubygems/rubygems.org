@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rubygem < ApplicationRecord
   include Patterns
   include RubygemSearchable

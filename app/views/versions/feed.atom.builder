@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 render(
   partial: 'versions/versions_feed',
   locals: {

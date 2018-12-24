@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UsersController < Clearance::UsersController
   def new
     redirect_to sign_up_path

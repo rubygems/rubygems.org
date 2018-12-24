@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Internal::PingController < ApplicationController
   def index
     ActiveRecord::Base.connection.select_value('SELECT 1') == 1 or \

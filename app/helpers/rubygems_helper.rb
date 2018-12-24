@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RubygemsHelper
   def pluralized_licenses_header(version)
     t("rubygems.show.licenses_header").pluralize(version.try(:licenses).try(:length) || 0)

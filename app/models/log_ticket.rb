@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LogTicket < ApplicationRecord
   enum backend: %i[s3 local]
 

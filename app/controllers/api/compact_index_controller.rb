@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::CompactIndexController < Api::BaseController
   before_action :find_rubygem_by_name, only: [:info]
   before_action :set_compact_index_cache_headers
@@ -30,7 +32,7 @@ class Api::CompactIndexController < Api::BaseController
   end
 
   def render_range(response_body)
-    headers['ETag'] = '"' << Digest::MD5.hexdigest(response_body) << '"'
+    headers['ETag'] = '"' << Digest::MD5.hexdigest(response_body) << '"'.dup
 
     ranges = Rack::Utils.byte_ranges(request.env, response_body.bytesize)
     if ranges

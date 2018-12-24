@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ClearanceBackdoor
   def initialize(app)
     @app = app

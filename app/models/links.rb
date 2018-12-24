@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Links
   # Links available for indexed gems
   LINKS = {

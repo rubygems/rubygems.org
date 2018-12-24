@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SearchesController < ApplicationController
   before_action -> { set_page Gemcutter::SEARCH_MAX_PAGES }, only: :show
 

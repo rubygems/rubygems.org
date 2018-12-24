@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SearchesHelper
   def es_suggestions(gems)
     return false if gems.size >= 1

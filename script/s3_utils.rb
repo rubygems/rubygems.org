@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class S3Utils
   def initialize(bucket, credentials)
     @bucket = bucket

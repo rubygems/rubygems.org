@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Deletion < ApplicationRecord
   belongs_to :user
 

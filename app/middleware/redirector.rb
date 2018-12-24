@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Redirector
   def initialize(app)
     @app = app

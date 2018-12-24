@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'digest/sha2'
 
 class Version < ApplicationRecord
@@ -301,7 +303,7 @@ class Version < ApplicationRecord
   end
 
   def to_install
-    command = "gem install #{rubygem.name}"
+    command = "gem install #{rubygem.name}".dup
     latest = if prerelease
                rubygem.versions.by_position.prerelease.first
              else

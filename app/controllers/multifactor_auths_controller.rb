@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MultifactorAuthsController < ApplicationController
   before_action :redirect_to_root, unless: :signed_in?
   before_action :require_mfa_disabled, only: %i[new create]

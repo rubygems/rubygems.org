@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RubygemSearchable
   include Patterns
   extend ActiveSupport::Concern

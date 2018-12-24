@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PagesHelper
   def version_number
     version.try(:number) || "0.0.0"

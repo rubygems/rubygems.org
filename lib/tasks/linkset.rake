@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :linkset do
   def invalid_links
     Linkset.where.not("home ~* ? or home = ''",
