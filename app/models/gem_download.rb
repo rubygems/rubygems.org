@@ -8,30 +8,16 @@ class GemDownload < ApplicationRecord
     def count_for_version(id)
       v = Version.find(id)
       return 0 unless v
-      download = GemDownload.find_by(rubygem_id: v.rubygem_id, version_id: v.id)
-      if download
-        download.count
-      else
-        0
-      end
+
+      count_for(rubygem_id: v.rubygem_id, version_id: v.id)
     end
 
     def count_for_rubygem(id)
-      download = GemDownload.find_by(rubygem_id: id, version_id: 0)
-      if download
-        download.count
-      else
-        0
-      end
+      count_for(rubygem_id: id)
     end
 
     def total_count
-      download = GemDownload.find_by(rubygem_id: 0, version_id: 0)
-      if download
-        download.count
-      else
-        0
-      end
+      count_for
     end
 
     # version_id: 0 stores count for total gem downloads
@@ -91,6 +77,11 @@ class GemDownload < ApplicationRecord
     end
 
     private
+
+    def count_for(rubygem_id: 0, version_id: 0)
+      count = GemDownload.where(rubygem_id: rubygem_id, version_id: version_id).pluck(:count).first
+      count || 0
+    end
 
     # updates the downloads field of rubygems in DB and ES index
     # input: { rubygem_id => download_count_to_increment }
