@@ -15,10 +15,10 @@ module RubygemSearchable
       {
         name:                  name,
         yanked:                versions.none?(&:indexed?),
-        summary:               most_recent_version.try(:summary),
-        description:           most_recent_version.try(:description),
+        summary:               most_recent_version&.summary,
+        description:           most_recent_version&.description,
         downloads:             downloads,
-        latest_version_number: most_recent_version.try(:number),
+        latest_version_number: most_recent_version&.number,
         updated:               updated_at
       }
     end

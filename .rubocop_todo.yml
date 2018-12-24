@@ -121,13 +121,6 @@ Style/NumericPredicate:
     - 'app/helpers/searches_helper.rb'
     - 'app/models/rubygem.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: ConvertCodeThatCanStartToReturnNil.
-Style/SafeNavigation:
-  Exclude:
-    - 'app/jobs/fastly_log_processor.rb'
-
 # Offense count: 2442
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, ConsistentQuotesInMultiline.

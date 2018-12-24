@@ -1,6 +1,6 @@
 module RubygemsHelper
   def pluralized_licenses_header(version)
-    t("rubygems.show.licenses_header").pluralize(version.try(:licenses).try(:length) || 0)
+    t("rubygems.show.licenses_header").pluralize(version&.licenses&.length || 0)
   end
 
   def formatted_licenses(license_names)
@@ -105,7 +105,7 @@ module RubygemsHelper
 
   def latest_version_number(rubygem)
     return rubygem.latest_version_number if rubygem.respond_to?(:latest_version_number)
-    (rubygem.latest_version || rubygem.versions.last).try(:number)
+    (rubygem.latest_version || rubygem.versions.last)&.number
   end
 
   def github_params(link)

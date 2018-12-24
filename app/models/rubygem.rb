@@ -129,11 +129,11 @@ class Rubygem < ApplicationRecord
   end
 
   def to_s
-    versions.most_recent.try(:to_title) || name
+    versions.most_recent&.to_title || name
   end
 
   def downloads
-    gem_download.try(:count) || 0
+    gem_download&.count || 0
   end
 
   def links(version = versions.most_recent)

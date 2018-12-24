@@ -1,5 +1,5 @@
 <% @title = t('.title', name: @rubygem.name) %>
-<% @subtitle = @latest_version.try(:slug) %>
+<% @subtitle = @latest_version&.slug %>
 
 <div class="l-overflow">
   <div class="l-colspan--l colspan--l--has-border">

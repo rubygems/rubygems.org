@@ -29,7 +29,7 @@ class Dependency < ApplicationRecord
   end
 
   def name
-    unresolved_name || rubygem.try(:name)
+    unresolved_name || rubygem&.name
   end
 
   def payload
