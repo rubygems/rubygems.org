@@ -224,30 +224,35 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       context "Elasticsearch::Transport::Transport::Errors::BadRequest" do
         setup do
           @ill_formated_query = "updated:[2016-08-10 TO }"
-          Rubygem.stubs(:legacy_search).returns Rubygem.all
-          @error_msg, = Rubygem.search(@ill_formated_query, elasticsearch: true)
         end
 
         should "fallback to legacy search" do
-          assert_received(Rubygem, :legacy_search) { |arg| arg.with(@ill_formated_query) }
+          Rubygem.expects(:legacy_search).with(@ill_formated_query).returns(Rubygem.all)
+
+          Rubygem.search(@ill_formated_query, elasticsearch: true)
         end
 
         should "give correct error message" do
           expected_msg = "Failed to parse: '#{@ill_formated_query}'. Falling back to legacy search."
+
+          @error_msg, = Rubygem.search(@ill_formated_query, elasticsearch: true)
+
           assert_equal expected_msg, @error_msg
         end
       end
 
       context "Elasticsearch::Transport::Transport::Errors" do
+        setup do
+          Rubygem.expects(:legacy_search).with("something").returns(Rubygem.all)
+        end
+
         should "fallback to legacy search and give correct error message" do
           requires_toxiproxy
-          Rubygem.stubs(:legacy_search).returns Rubygem.all
 
           Toxiproxy[:elasticsearch].down do
             error_msg, = Rubygem.search("something", elasticsearch: true)
             expected_msg = "Advanced search is currently unavailable. Falling back to legacy search."
             assert_equal expected_msg, error_msg
-            assert_received(Rubygem, :legacy_search) { |arg| arg.with("something") }
           end
         end
       end

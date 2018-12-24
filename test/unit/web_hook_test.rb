@@ -173,20 +173,18 @@ class WebHookTest < ActiveSupport::TestCase
       @rubygem = create(:rubygem)
       @version = create(:version, rubygem: @rubygem)
       @hook    = create(:web_hook, rubygem: @rubygem, url: @url)
-
-      RestClient.stubs(:post)
-      @hook.fire('https', 'rubygems.org', @rubygem, @version, false)
     end
 
     should "include an Authorization header" do
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number + @hook.user.api_key)
+      RestClient.expects(:post).with(anything, anything, has_entries("Authorization" => authorization))
 
-      assert_received(RestClient, :post) do |client|
-        client.with(anything, anything, has_entries("Authorization" => authorization))
-      end
+      @hook.fire('https', 'rubygems.org', @rubygem, @version, false)
     end
 
     should "not increment failure count for hook" do
+      @hook.fire('https', 'rubygems.org', @rubygem, @version, false)
+
       assert @hook.failure_count.zero?
     end
   end

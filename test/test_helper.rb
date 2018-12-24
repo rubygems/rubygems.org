@@ -3,7 +3,6 @@ require File.expand_path('../config/environment', __dir__)
 
 require 'rails/test_help'
 require 'mocha/mini_test'
-require 'bourne'
 require 'capybara/rails'
 require 'clearance/test_unit'
 require 'shoulda'

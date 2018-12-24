@@ -68,7 +68,6 @@ group :test do
   gem 'launchy'
   gem 'rack-test', require: 'rack/test'
   gem 'mocha', require: false
-  gem 'bourne', require: false
   gem 'shoulda'
 end
 

@@ -262,58 +262,64 @@ class PusherTest < ActiveSupport::TestCase
       @rubygem = create(:rubygem, name: 'gemsgemsgems')
       @cutter.stubs(:rubygem).returns @rubygem
       create(:version, rubygem: @rubygem, number: '0.1.1', summary: 'old summary')
+      @spec = mock
       @cutter.stubs(:version).returns @rubygem.versions[0]
+      @cutter.stubs(:spec).returns(@spec)
       @rubygem.stubs(:update_attributes_from_gem_specification!)
-      GemCachePurger.stubs(:call)
       Indexer.any_instance.stubs(:write_gem)
+    end
+
+    context "when cutter is saved" do
+      setup do
+        @cutter.save
+      end
+
+      should "set gem file size" do
+        assert_equal @gem.size, @cutter.size
+      end
+
+      should "set success code" do
+        assert_equal 200, @cutter.code
+      end
+
+      should "set info_checksum" do
+        assert_not_nil @rubygem.versions.last.info_checksum
+      end
+
+      should "create rubygem index" do
+        @rubygem.update_column('updated_at', Date.new(2016, 07, 04))
+        Delayed::Worker.new.work_off
+        response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
+                                                        type:  'rubygem',
+                                                        id:    @rubygem.id
+        expected_response = {
+          'name'                  => 'gemsgemsgems',
+          'yanked'                => false,
+          'summary'               => 'old summary',
+          'description'           => 'Some awesome gem',
+          'downloads'             => 0,
+          'latest_version_number' => '0.1.1',
+          'updated'               => '2016-07-04T00:00:00.000Z'
+        }
+
+        assert_equal expected_response, response['_source']
+      end
+    end
+
+    should "purge gem cache" do
+      GemCachePurger.expects(:call).with(@rubygem.name).at_least_once
       @cutter.save
     end
 
-    should "update rubygem attributes" do
-      assert_received(@rubygem, :update_attributes_from_gem_specification!) do |rubygem|
-        rubygem.with(@cutter.version, @cutter.spec)
-      end
+    should "update rubygem attributes when saved" do
+      @rubygem.expects(:update_attributes_from_gem_specification!).with(@cutter.version, @spec)
+      @cutter.save
     end
 
-    should "set gem file size" do
-      assert_equal @gem.size, @cutter.size
-    end
-
-    should "set success code" do
-      assert_equal 200, @cutter.code
-    end
-
-    should "set info_checksum" do
-      assert_not_nil @rubygem.versions.last.info_checksum
-    end
-
-    should "call GemCachePurger" do
-      assert_received(GemCachePurger, :call) { |obj| obj.with(@rubygem.name).once }
-    end
-
-    should "enque job for updating ES index, spec index and purging cdn" do
-      assert_difference 'Delayed::Job.count', 2 do
+    should "enqueue job for updating ES index, spec index and purging cdn" do
+      assert_difference 'Delayed::Job.count', 5 do
         @cutter.save
       end
-    end
-
-    should "create rubygem index" do
-      @rubygem.update_column('updated_at', Date.new(2016, 07, 04))
-      Delayed::Worker.new.work_off
-      response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
-                                                      type:  'rubygem',
-                                                      id:    @rubygem.id
-      expected_response = {
-        'name'                  => 'gemsgemsgems',
-        'yanked'                => false,
-        'summary'               => 'old summary',
-        'description'           => 'Some awesome gem',
-        'downloads'             => 0,
-        'latest_version_number' => '0.1.1',
-        'updated'               => '2016-07-04T00:00:00.000Z'
-      }
-
-      assert_equal expected_response, response['_source']
     end
   end
 
