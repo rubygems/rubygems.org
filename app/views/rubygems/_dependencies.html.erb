@@ -8,7 +8,7 @@
             <%= link_to rubygem_path(rubygem), :class => 't-list__item' do %>
               <strong><%= rubygem.name %></strong> <%= dependency.clean_requirements %>
             <% end %>
-          <% elsif dependency.try(:name) %>
+          <% elsif dependency&.name %>
             <p class="t-list__item gem__unregistered" title="unregistered gem">
               <strong><%= dependency.name %></strong> <%= dependency.clean_requirements %>
             </p>

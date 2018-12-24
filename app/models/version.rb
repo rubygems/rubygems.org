@@ -161,7 +161,7 @@ class Version < ApplicationRecord
   end
 
   def self.rubygem_name_for(full_name)
-    find_by(full_name: full_name).try(:rubygem).try(:name)
+    find_by(full_name: full_name)&.rubygem&.name
   end
 
   def self.created_between(start_time, end_time)
@@ -241,7 +241,7 @@ class Version < ApplicationRecord
   end
 
   def downloads_count
-    gem_download.try(:count) || 0
+    gem_download&.count || 0
   end
 
   def payload

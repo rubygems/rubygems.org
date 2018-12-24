@@ -1,6 +1,6 @@
 module PagesHelper
   def version_number
-    version.try(:number) || "0.0.0"
+    version&.number || "0.0.0"
   end
 
   def version
