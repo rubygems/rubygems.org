@@ -1,8 +1,8 @@
 <%= form_tag rubygem_reverse_dependencies_path(rubygem),
   id: "rdeps-search", class: "header__search-wrap", method: :get do %>
-  <%= search_field_tag :rdeps_query, params[:rdeps_query], placeholder: t('.search_reverse_dependencies').html_safe, class: "header__search" %>
+  <%= search_field_tag :rdeps_query, params[:rdeps_query], placeholder: t('.search_reverse_dependencies_html'), class: "header__search" %>
   <%= label_tag :rdeps_query do %>
-    <span class="t-hidden"><%= t('.search_reverse_dependencies').html_safe %></span>
+    <span class="t-hidden"><%= t('.search_reverse_dependencies_html') %></span>
   <% end %>
   <%= submit_tag '⌕', id: 'rdeps_search_submit', name: nil, class: "header__search__icon" %>
 <% end %>
