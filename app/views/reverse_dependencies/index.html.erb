@@ -8,7 +8,7 @@
     </header>
 
     <div class="reverse__dependencies">
-      <%= render @reverse_dependencies %>
+      <%= render partial: "rubygems/rubygem", collection: @reverse_dependencies %>
     </div>
     <%= plain_paginate @reverse_dependencies %>
   </div>

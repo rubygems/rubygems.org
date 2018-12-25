@@ -2,9 +2,10 @@
 :min_confidence: 3
 :ignore_ifs: false
 :skip_libs: false
-:exit_on_warn: false
+:exit_on_warn: true
 :interactive_ignore: false
 :output_files:
-- reports/brakeman.json
-- reports/brakeman.html
+- reports/brakeman/brakeman.json
+- reports/brakeman/brakeman.html
 :rails5: true
+:github_repo: rubygems/rubygems.org

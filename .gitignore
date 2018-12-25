@@ -13,6 +13,7 @@ config/rubygems.yml
 db/*.sqlite3
 log/*.log
 pkg/
+reports/brakeman/*
 server/
 tmp/
 tags
