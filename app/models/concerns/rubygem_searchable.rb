@@ -113,13 +113,11 @@ module RubygemSearchable
       conditions = <<-SQL
         versions.indexed and
           (UPPER(name) LIKE UPPER(:query) OR
-           UPPER(TRANSLATE(name,
-                           '#{SPECIAL_CHARACTERS}',
-                           '#{' ' * SPECIAL_CHARACTERS.length}')
-                ) LIKE UPPER(:query))
+           UPPER(TRANSLATE(name, :match, :replace)) LIKE UPPER(:query))
       SQL
 
-      where(conditions, query: "%#{query.strip}%")
+      replace_characters = ' ' * SPECIAL_CHARACTERS.length
+      where(conditions, query: "%#{query.strip}%", match: SPECIAL_CHARACTERS, replace: replace_characters)
         .includes(:latest_version, :gem_download)
         .references(:versions)
         .by_downloads

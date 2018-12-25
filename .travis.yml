@@ -37,14 +37,16 @@ before_install:
   - script/install_toxiproxy.sh
 
 before_script:
+  - gem install bundler-audit brakeman
+  - bundle audit update
   - cp config/database.yml.example config/database.yml
   - bundle exec rake db:create db:migrate db:test:prepare
 
 script:
   - bundle exec rails test
   - bundle exec rake rubocop
-  - gem install bundle-audit && bundle audit update && bundle audit check
-  - script/brakeman
+  - bundle audit check
+  - brakeman -c config/brakeman.yml -o /dev/stdout
   - bundle exec cap -T > /dev/null
   - script/build_docker.sh
 
