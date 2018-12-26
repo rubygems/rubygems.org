@@ -73,3 +73,5 @@
   .pagination .next_page {
     position: absolute;
     right: 0; }
+  .pagination .current {
+    margin: 0 8px; }
