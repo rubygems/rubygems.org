@@ -1,6 +1,6 @@
 class Rack::Attack
   REQUEST_LIMIT = 100
-  PASSWORD_UPDATE_LIMIT = 10
+  REQUEST_LIMIT_PER_EMAIL = 10
   LIMIT_PERIOD = 10.minutes
 
   ### Prevent Brute-Force Login Attacks ###
@@ -12,13 +12,15 @@ class Rack::Attack
   # Another common method of attack is to use a swarm of computers with
   # different IPs to try brute-forcing a password for a specific account.
 
+  ############################# rate limit per ip ############################
   # Throttle POST requests to /login by IP address
   #
   # Key: "rack::attack:#{Time.now.to_i/:period}:logins/ip:#{req.ip}"
   protected_paths = [
-    "/users", # sign up
-    "/session", # sign in
-    "/passwords" # forgot password
+    "/users",              # sign up
+    "/session",            # sign in
+    "/passwords",          # forgot password
+    "/email_confirmations" # resend email confirmation
   ]
   paths_regex = Regexp.union(protected_paths.map { |path| /\A#{Regexp.escape(path)}\z/ })
 
@@ -36,6 +38,7 @@ class Rack::Attack
     req.ip if req.path == "/profile" && (req.patch? || req.delete?)
   end
 
+  ############################# rate limit per handle ############################
   # Throttle POST requests to /login by email param
   #
   # Key: "rack::attack:#{Time.now.to_i/:period}:logins/email:#{req.email}"
@@ -51,10 +54,18 @@ class Rack::Attack
     end
   end
 
-  throttle("password/email", limit: PASSWORD_UPDATE_LIMIT, period: LIMIT_PERIOD) do |req|
+  ############################# rate limit per email ############################
+  throttle("password/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
     if req.path == "/passwords" && req.post?
       # return the email if present, nil otherwise
       req.params['password']['email'].presence if req.params['password']
+    end
+  end
+
+  throttle("email_confirmations/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
+    if req.path == "/email_confirmations" && req.post?
+      # return the email if present, nil otherwise
+      req.params['email_confirmation']['email'].presence if req.params['email_confirmation']
     end
   end
 
