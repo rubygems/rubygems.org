@@ -98,7 +98,7 @@
         [t('.mfa.level.disabled'), 'disabled']], @user.mfa_level), :class => 'form__input form__select' %>
       <div class="text_field">
         <%= label_tag :otp, 'OTP code', :class => 'form__label' %>
-        <%= text_field_tag :otp, '', :class => 'form__input' %>
+        <%= text_field_tag :otp, '', :class => 'form__input', :autocomplete => :off %>
       </div>
       <%= submit_tag t('.mfa.update'), :class => 'form__submit' %>
     <% end %>
