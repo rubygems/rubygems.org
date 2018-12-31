@@ -23,12 +23,21 @@ spec:
         image: quay.io/rubygems/rubygems.org:<%= current_sha %>
         args: ["rake", "jobs:work"]
         resources:
+          <% if environment == 'production' %>
+          requests:
+            cpu: 400m
+            memory: 1Gi
+          limits:
+            cpu: 1000m
+            memory: 1.5Gi
+          <% else %>
           requests:
             cpu: 200m
             memory: 250Mi
           limits:
             cpu: 500m
             memory: 300Mi
+          <% end %>
         env:
           - name: RAILS_ENV
             value: "<%= environment %>"
