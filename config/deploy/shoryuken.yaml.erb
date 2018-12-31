@@ -23,12 +23,21 @@ spec:
         image: quay.io/rubygems/rubygems.org:<%= current_sha %>
         args: ["bin/shoryuken-worker"]
         resources:
+          <% if environment == 'production' %>
           requests:
-            cpu: 200m
+            cpu: 100m
+            memory: 300Mi
+          limits:
+            cpu: 400m
+            memory: 500Mi
+          <% else %>
+          requests:
+            cpu: 100m
             memory: 250Mi
           limits:
-            cpu: 500m
+            cpu: 400m
             memory: 300Mi
+          <% end %>
         env:
           - name: RAILS_ENV
             value: "<%= environment %>"
