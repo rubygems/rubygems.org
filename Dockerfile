@@ -21,9 +21,9 @@ WORKDIR /app
 
 RUN gem update --system 2.6.10
 
-ADD https://github.com/bundler/bundler-api/raw/master/versions.list /app/config/versions.list
-
 COPY . /app
+
+ADD https://github.com/bundler/bundler-api/raw/master/versions.list /app/config/versions.list
 
 RUN mv /app/config/database.yml.example /app/config/database.yml
 
