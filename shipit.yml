@@ -8,32 +8,15 @@ dependencies:
 
 deploy:
   override:
-    - bundle exec kubernetes-deploy rubygems-production rubygems --template-dir config/deploy/production --bindings=environment=$ENVIRONMENT
-    - bundle exec cap $ENVIRONMENT deploy
+    - bundle exec kubernetes-deploy rubygems-$ENVIRONMENT rubygems --template-dir config/deploy/$ENVIRONMENT --bindings=environment=$ENVIRONMENT
 
 rollback:
   override:
-    - bundle exec kubernetes-deploy rubygems-production rubygems --template-dir config/deploy/production --bindings=environment=$ENVIRONMENT
-    - bundle exec cap $ENVIRONMENT deploy:rollback
+    - bundle exec kubernetes-deploy rubygems-$ENVIRONMENT rubygems --template-dir config/deploy/$ENVIRONMENT --bindings=environment=$ENVIRONMENT
 
 tasks:
   restart:
     action: Restart application
     description: Trigger the restart of both unicorn and background workers
     steps:
-      - bundle exec cap $ENVIRONMENT deploy:restart
-  enable_maintenance:
-    action: Enable maintenance mode
-    description: Disable access to the rails app and show the maintenance page
-    steps:
-      - bundle exec cap $ENVIRONMENT maintenance:enable
-  disable_maintenance:
-    action: Disable maintenance mode
-    description: Enable access to the rails app and hide the maintenance page
-    steps:
-      - bundle exec cap $ENVIRONMENT maintenance:disable
-  clear_cache:
-    action: Clear cache
-    description: Flushes memcached using rails cache clear
-    steps:
-      - bundle exec cap $ENVIRONMENT memcached:flush
+      - bundle exec kubernetes-restart rubygems-$ENVIRONMENT rubygems
