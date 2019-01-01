@@ -28,11 +28,11 @@ spec:
         resources:
           <% if environment == 'production' %>
           requests:
-            cpu: 2500m
-            memory: 3Gi
-          limits:
-            cpu: 3500m
+            cpu: 3000m
             memory: 4Gi
+          limits:
+            cpu: 4000m
+            memory: 5Gi
           <% else %>
           requests:
             cpu: 200m
