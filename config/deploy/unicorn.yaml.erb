@@ -26,12 +26,21 @@ spec:
         - containerPort: 3000
           name: http-unicorn
         resources:
+          <% if environment == 'production' %>
+          requests:
+            cpu: 2500m
+            memory: 3Gi
+          limits:
+            cpu: 3500m
+            memory: 4Gi
+          <% else %>
           requests:
             cpu: 200m
             memory: 1.5Gi
           limits:
             cpu: 1000m
             memory: 2Gi
+          <% end %>
         env:
           - name: RAILS_ENV
             value: "<%= environment %>"
@@ -115,8 +124,10 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: sendgrid_password
+          <% if environment == 'staging' %>
           - name: DISABLE_SIGNUP
             value: "true"
+          <% end %>
           - name: DATABASE_URL
             valueFrom:
               secretKeyRef:
