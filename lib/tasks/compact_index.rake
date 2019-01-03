@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :compact_index do
   def yanked_at_time(version)
     query = ["SELECT created_at FROM deletions,

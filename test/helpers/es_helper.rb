@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ESHelper
   def import_and_refresh
     Rubygem.import force: true

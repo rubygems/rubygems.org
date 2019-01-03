@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EmailConfirmationsController < ApplicationController
   before_action :redirect_to_root, unless: :signed_in?, only: :unconfirmed
 

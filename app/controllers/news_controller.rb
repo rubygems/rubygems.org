@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NewsController < ApplicationController
   before_action -> { set_page Gemcutter::NEWS_MAX_PAGES }
 

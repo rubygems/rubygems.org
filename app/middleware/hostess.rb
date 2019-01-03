@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Hostess < Rack::Static
   def initialize(app, options = {})
     options[:root] = RubygemFs.instance.base_dir

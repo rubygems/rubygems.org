@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::DependenciesController < Api::BaseController
   before_action :check_gem_count
   GEM_REQUEST_LIMIT = 200
@@ -29,6 +31,6 @@ class Api::V1::DependenciesController < Api::BaseController
   end
 
   def gem_names
-    @gem_names ||= params[:gems].blank? ? [] : params[:gems].split(",".freeze)
+    @gem_names ||= params[:gems].blank? ? [] : params[:gems].split(",")
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::OwnersController < Api::BaseController
   skip_before_action :verify_authenticity_token, only: %i[create destroy]
   before_action :authenticate_with_api_key, except: %i[show gems]

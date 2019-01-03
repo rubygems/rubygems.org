@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'net/http'
 
 class Net::HTTP::Purge < Net::HTTPRequest
-  METHOD = 'PURGE'.freeze
+  METHOD = 'PURGE'
   REQUEST_HAS_BODY = false
   RESPONSE_HAS_BODY = true
 end

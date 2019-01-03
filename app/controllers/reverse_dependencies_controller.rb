@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReverseDependenciesController < ApplicationController
   include LatestVersion
   before_action :find_rubygem, only: [:index]

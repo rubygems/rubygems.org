@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PasswordsController < Clearance::PasswordsController
   before_action :validate_confirmation_token, only: :edit
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Linkset < ApplicationRecord
   belongs_to :rubygem
 

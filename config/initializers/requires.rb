@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rubygems/package'
 require 'rubygems/indexer'
 require 'rdoc/markup'

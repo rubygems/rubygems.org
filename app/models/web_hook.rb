@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class WebHook < ApplicationRecord
-  GLOBAL_PATTERN = '*'.freeze
+  GLOBAL_PATTERN = '*'
 
   belongs_to :user
   belongs_to :rubygem

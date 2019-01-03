@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::ApiKeysController < Api::BaseController
   before_action :verify_authenticity_token, only: :reset
   before_action :redirect_to_root, unless: :signed_in?, only: [:reset]

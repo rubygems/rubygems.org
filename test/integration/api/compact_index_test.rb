@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'tempfile'
 require 'test_helper'
 
 class CompactIndexTest < ActionDispatch::IntegrationTest
   def etag(body)
-    '"' << Digest::MD5.hexdigest(body) << '"'
+    '"'.dup << Digest::MD5.hexdigest(body) << '"'
   end
 
   setup do
