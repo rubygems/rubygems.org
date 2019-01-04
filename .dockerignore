@@ -6,7 +6,6 @@ server/*
 vendor/cache/*
 config/deploy/*
 Dockerfile
-Capfile
 .gitignore
 .gitmodules
 .travis.yml

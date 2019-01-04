@@ -14,12 +14,6 @@ Bundler/OrderedGems:
     - 'Gemfile'
 
 # Offense count: 2
-# Configuration parameters: AllowSafeAssignment.
-Lint/AssignmentInCondition:
-  Exclude:
-    - 'lib/capistrano/git-submodule-strategy.rb'
-
-# Offense count: 2
 Lint/DuplicateMethods:
   Exclude:
     - 'test/functional/api/v1/downloads_controller_test.rb'
@@ -70,13 +64,6 @@ Security/JSONLoad:
     - 'test/unit/web_hook_test.rb'
 
 # Offense count: 2
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: nested, compact
-Style/ClassAndModuleChildren:
-  Exclude:
-    - 'lib/capistrano/git-submodule-strategy.rb'
-
-# Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: compact, expanded
@@ -92,12 +79,6 @@ Layout/ExtraSpacing:
   Exclude:
     - 'script/s3_utils.rb'
     - 'test/unit/version_test.rb'
-
-# Offense count: 1
-# Configuration parameters: ExpectMatchingDefinition, Regex, IgnoreExecutableScripts.
-Naming/FileName:
-  Exclude:
-    - 'lib/capistrano/git-submodule-strategy.rb'
 
 Naming/MemoizedInstanceVariableName:
   Exclude:
