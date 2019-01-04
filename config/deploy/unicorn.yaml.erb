@@ -25,6 +25,16 @@ spec:
         ports:
         - containerPort: 3000
           name: http-unicorn
+        readinessProbe:
+          httpGet:
+            path: /internal/ping
+            port: 3000
+            httpHeaders:
+            - name: X-Forwarded-Proto
+              value: https
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 5
         resources:
           <% if environment == 'production' %>
           requests:
