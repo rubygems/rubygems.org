@@ -36,7 +36,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from ActionDispatch::RemoteIp::IpSpoofAttackError do
-    render status: :forbidden
+    render_bad_request
   end
 
   protected
@@ -124,6 +124,8 @@ class ApplicationController < ActionController::Base
     payload[:user_agent] = request.user_agent
     payload[:dest_host] = request.host
     payload[:request_id] = request.uuid
+  rescue ActionDispatch::RemoteIp::IpSpoofAttackError
+    Rails.logger.info "Could not append info to payload. Possible IpSpoofed request: #{request.headers}"
   end
 
   def redirect_to_page_with_error
@@ -139,6 +141,10 @@ class ApplicationController < ActionController::Base
   end
 
   def reject_null_char_param
-    render plain: "bad request", status: :bad_request if params.values.any? { |v| v.to_s.include?("\u0000") }
+    render_bad_request if params.values.any? { |v| v.to_s.include?("\u0000") }
+  end
+
+  def render_bad_request
+    render plain: "bad request", status: :bad_request
   end
 end
