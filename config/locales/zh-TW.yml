@@ -1,6 +1,6 @@
 zh-TW:
   edit: 編輯
-  failure_when_forbidden:
+  failure_when_forbidden: 請確認 URL 或再次提交
   feed_latest: RubyGems.org | 最新 Gems
   feed_subscribed: RubyGems.org | 訂閱 Gems
   footer_about_html: RubyGems.org 是 Ruby 社群的 Gem 套件管理服務，讓你能立即地發佈及安裝你的 Gem 套件，並且利用 API 查詢及操作可用 Gem 的詳細資訊。<br />現在就成為貢獻者，貢獻一己之力來改善本站。
@@ -10,26 +10,26 @@ zh-TW:
   help_url: http://help.rubygems.org
   invalid_page:
   locale_name: 正體中文
-  none:
-  not_found:
+  none: 無
+  not_found: 沒有找到
   please_sign_up: 無法存取，請先在 https://rubygems.org 上註冊帳號
   otp_incorrect:
   otp_missing:
   sign_in: 登入
   sign_up: 註冊
-  multifactor_authentication:
+  multifactor_authentication: MFA 驗證
   subtitle: Ruby 社群 Gem 套件管理平台
-  this_rubygem_could_not_be_found:
+  this_rubygem_could_not_be_found: 找不到這個 gem
   time_ago: "%{duration} 前"
   title: RubyGems.org
   update: 更新
-  try_again:
-  advanced_search:
+  try_again: 請再試一次
+  advanced_search: 進階搜尋
   activerecord:
     attributes:
       linkset:
         bugs: Bug 追蹤 URL
-        changelog:
+        changelog: 更新日誌
         code: 原始碼 URL
         docs: 文件 URL
         mail: 郵件群組 URL
@@ -58,11 +58,11 @@ zh-TW:
     create:
       promise_resend:
     new:
-      submit:
-      title:
-      will_email_notice:
+      submit: 重新發送
+      title: 重新發送確認信
+      will_email_notice: 我們將會通過 Email 發送帳號認證信連結給你。
     update:
-      confirmed_email:
+      confirmed_email: Email 驗證成功。
   home:
     index:
       downloads_counting_html: 總下載次數
@@ -86,17 +86,17 @@ zh-TW:
         monitored_by: 監控
         optimized_by: 優化
         resolved_with: 解析
-        security:
+        security: 安全
         source_code: 原始碼
         statistics: 統計
         status: 狀態
         supported_by: 支持
-        tested_by:
+        tested_by: 測試
         tracking_by: 追蹤
         uptime: 上線時間
       header:
         dashboard: 控制台
-        search_gem_html:
+        search_gem_html: 搜尋 Gems&hellip;
         sign_in: 登入
         sign_out: 登出
         sign_up: 註冊
@@ -117,11 +117,11 @@ zh-TW:
       body_html:
   news:
     show:
-      title:
-      all_gems:
-      popular_gems:
+      title: 最新發佈
+      all_gems: 全部
+      popular_gems: 熱門
     popular:
-      title:
+      title: 熱門新發佈
   pages:
     about:
       founding_html: 本專案由 %{founder} 於 2009 年 4 月創立，發展過程中有超過 %{contributors} 貢獻者以及 %{downloads}。自 RubyGems 1.3.6 發佈以來，本站名稱由 Gemcutter 更名為 %{title}，本站自此之後成為 Ruby 社群的核心網站。
@@ -180,10 +180,10 @@ zh-TW:
       success:
   profiles:
     edit:
-      email_awaiting_confirmation:
-      enter_password:
+      email_awaiting_confirmation: 請驗證你的新 Email %{unconfirmed_email}
+      enter_password: 輸入密碼
       hide_email: 在公開的個人頁面中隱藏 email
-      optional_twitter_username:
+      optional_twitter_username: Twitter 帳號（可選）
       title: 編輯個人檔案
       api_access:
         confirm_reset: 確定要重設嗎？此動作無法還原
@@ -197,9 +197,9 @@ zh-TW:
         text_html: 需要重設密碼？沒問題。 %{link}
         title: 重設密碼
       delete:
-        delete:
-        delete_profile:
-        warning:
+        delete: 刪除
+        delete_profile: 刪除個人資料
+        warning: 警告
       mfa:
         multifactor_auth:
         disabled:
@@ -228,16 +228,16 @@ zh-TW:
   rubygems:
     aside:
       bundler_header: Gemfile
-      copied:
-      copy_to_clipboard:
+      copied: 已複製
+      copy_to_clipboard: 複製
       downloads_for_this_version: 這個版本
       install: 安裝
-      required_ruby_version:
-      required_rubygems_version:
+      required_ruby_version: Ruby 版本需求
+      required_rubygems_version: RubyGems 版本需求
       links:
         badge: 徽章
         bugs: Bug 追蹤
-        changelog:
+        changelog: 更新日誌
         code: 原始碼
         docs: 文件
         download: 下載
@@ -245,7 +245,7 @@ zh-TW:
         home: 首頁
         mail: 郵件群組
         report_abuse: 舉報投訴
-        reverse_dependencies:
+        reverse_dependencies: 反向依賴
         rss: RSS
         subscribe: 訂閱
         unsubscribe: 取消訂閱
@@ -259,11 +259,11 @@ zh-TW:
       owners_header: 擁有者
       sha_256_checksum: SHA 256 checksum
     index:
-      downloads:
-      title:
+      downloads: 下載
+      title: Gems
     show:
-      licenses_header:
-      no_licenses:
+      licenses_header: License
+      no_licenses: 無
       requirements_header: 必填
       show_all_versions: 顯示所有版本（共 %{count}）
       versions_header: 版本列表
@@ -280,11 +280,11 @@ zh-TW:
       search_reverse_dependencies_html:
   searches:
     advanced:
-      name:
-      summary:
-      description:
-      downloads:
-      updated:
+      name: 名稱
+      summary: 摘要
+      description: 描述
+      downloads: 下載數
+      updated: 最後更新時間
     show:
       exact_match: 完全符合
       subtitle: "%{query}"
@@ -294,16 +294,16 @@ zh-TW:
   sessions:
     new:
       forgot_password: 忘記密碼？
-      resend_confirmation:
+      resend_confirmation: 沒收到確認信？
   stats:
     index:
-      all_time_most_downloaded:
+      all_time_most_downloaded: 歷史下載次數排行
       total_downloads: 總下載次數
-      total_gems:
-      total_users:
+      total_gems: Gems 總數
+      total_users: 總使用者數量
   users:
     create:
-      email_sent:
+      email_sent: 已發送確認信到你的信箱地址。
     new:
       have_account: 已經註冊過了？
   versions:
@@ -314,17 +314,17 @@ zh-TW:
     version:
       yanked: 已被移除
   will_paginate:
-    next_label:
+    next_label: 下一頁
     page_gap: "…"
-    previous_label:
+    previous_label: 上一頁
     page_entries_info:
-      multi_page:
-      multi_page_html:
+      multi_page: 顯示所有 %{count} %{model}中的%{from}-%{to} 條
+      multi_page_html: 顯示所有 <b>%{count}</b> %{model}中的<b>%{from}&nbsp;-&nbsp;%{to}</b> 條
       single_page:
-        one:
-        other:
-        zero:
+        one: 顯示 1 %{model}
+        other: 顯示所有 %{count} %{model}
+        zero: 找不到 %{model}
       single_page_html:
-        one:
-        other:
-        zero:
+        one: 顯示 <b>1</b> %{model}
+        other: 顯示 <b>所有 %{count}</b> %{model}
+        zero: 找不到 %{model}
