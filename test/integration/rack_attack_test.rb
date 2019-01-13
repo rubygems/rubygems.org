@@ -1,57 +1,15 @@
 require "test_helper"
+require "helpers/rate_limit_helpers"
 
 class RackAttackTest < ActionDispatch::IntegrationTest
+  include RateLimitHelper
+
   setup do
     Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
     Rails.cache.clear
 
     @ip_address = "1.2.3.4"
     @user = create(:user, email: "nick@example.com", password: "secret12345")
-  end
-
-  def exceeding_limit
-    (Rack::Attack::REQUEST_LIMIT * 1.25).to_i
-  end
-
-  def exceeding_email_limit
-    (Rack::Attack::REQUEST_LIMIT_PER_EMAIL * 1.25).to_i
-  end
-
-  def under_limit
-    (Rack::Attack::REQUEST_LIMIT * 0.5).to_i
-  end
-
-  def under_email_limit
-    (Rack::Attack::REQUEST_LIMIT_PER_EMAIL * 0.5).to_i
-  end
-
-  def limit_period
-    Rack::Attack::LIMIT_PERIOD
-  end
-
-  def exceed_limit_for(scope)
-    update_limit_for("#{scope}:#{@ip_address}", exceeding_limit)
-  end
-
-  def exceed_email_limit_for(scope)
-    update_limit_for("#{scope}:#{@user.email}", exceeding_email_limit)
-  end
-
-  def stay_under_limit_for(scope)
-    update_limit_for("#{scope}:#{@ip_address}", under_limit)
-  end
-
-  def stay_under_email_limit_for(scope)
-    update_limit_for("#{scope}:#{@user.email}", under_email_limit)
-  end
-
-  def update_limit_for(key, limit)
-    limit.times { Rack::Attack.cache.count(key, limit_period) }
-  end
-
-  def encode(username, password)
-    ActionController::HttpAuthentication::Basic
-      .encode_credentials(username, password)
   end
 
   context "requests is lower than limit" do
@@ -220,6 +178,26 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         exceed_email_limit_for("password/email")
 
         post "/passwords", params: { password: { email: @user.email } }
+        assert_response :too_many_requests
+      end
+    end
+
+    context "gem push" do
+      should "throttle by ip" do
+        exceed_ip_push_limit
+
+        post "/api/v1/gems",
+          headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key },
+          env: { 'RAW_POST_DATA' => gem_file("test-1.0.0.gem").read }
+        assert_response :too_many_requests
+      end
+
+      should "throttle by api key" do
+        exceed_key_push_limit
+
+        post "/api/v1/gems",
+          headers: { HTTP_AUTHORIZATION: @user.api_key },
+          env: { 'RAW_POST_DATA' => gem_file("test-1.0.0.gem").read }
         assert_response :too_many_requests
       end
     end

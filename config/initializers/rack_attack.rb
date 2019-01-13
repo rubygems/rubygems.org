@@ -1,8 +1,6 @@
 class Rack::Attack
-  REQUEST_LIMIT = 100
-  REQUEST_LIMIT_PER_EMAIL = 10
-  LIMIT_PERIOD = 10.minutes
-
+  DEFAULT_LIMIT = 100
+  DEFAULT_PERIOD = 10.minutes
   ### Prevent Brute-Force Login Attacks ###
 
   # The most common brute-force login attack is a brute-force password
@@ -24,17 +22,17 @@ class Rack::Attack
   ]
   paths_regex = Regexp.union(protected_paths.map { |path| /\A#{Regexp.escape(path)}\z/ })
 
-  throttle('clearance/ip', limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
+  throttle('clearance/ip', limit: DEFAULT_LIMIT, period: DEFAULT_PERIOD) do |req|
     req.ip if req.path =~ paths_regex && req.post?
   end
 
   # Throttle GET request for api_key by IP address
-  throttle('api_key/ip', limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
+  throttle('api_key/ip', limit: DEFAULT_LIMIT, period: DEFAULT_PERIOD) do |req|
     req.ip if req.path =~ /\A#{Regexp.escape('/api/v1/api_key')}/ && req.get?
   end
 
   # Throttle PATCH and DELETE profile requests
-  throttle("clearance/remember_token", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
+  throttle("clearance/remember_token", limit: DEFAULT_LIMIT, period: DEFAULT_PERIOD) do |req|
     req.ip if req.path == "/profile" && (req.patch? || req.delete?)
   end
 
@@ -47,7 +45,7 @@ class Rack::Attack
   # throttle logins for another user and force their login requests to be
   # denied, but that's not very common and shouldn't happen to you. (Knock
   # on wood!)
-  throttle("logins/handler", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
+  throttle("logins/handler", limit: DEFAULT_LIMIT, period: DEFAULT_PERIOD) do |req|
     if req.path == "/session" && req.post?
       # return the handler if present, nil otherwise
       req.params['session']['who'].presence if req.params['session']
@@ -55,18 +53,32 @@ class Rack::Attack
   end
 
   ############################# rate limit per email ############################
-  throttle("password/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
+  EMAIL_LIMIT = 10
+
+  throttle("password/email", limit: EMAIL_LIMIT, period: DEFAULT_PERIOD) do |req|
     if req.path == "/passwords" && req.post?
       # return the email if present, nil otherwise
       req.params['password']['email'].presence if req.params['password']
     end
   end
 
-  throttle("email_confirmations/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
+  throttle("email_confirmations/email", limit: EMAIL_LIMIT, period: DEFAULT_PERIOD) do |req|
     if req.path == "/email_confirmations" && req.post?
       # return the email if present, nil otherwise
       req.params['email_confirmation']['email'].presence if req.params['email_confirmation']
     end
+  end
+
+  ############################ gem push rate limits ##############################
+  GEM_PUSH_LIMIT = 20
+  KEY_LIMIT_PERIOD = 1.hour
+
+  throttle("gem_push/api_key", limit: GEM_PUSH_LIMIT, period: KEY_LIMIT_PERIOD) do |req|
+    (req.env["HTTP_AUTHORIZATION"] || req.params["api_key"]) if req.path == "/api/v1/gems" && req.post?
+  end
+
+  throttle("gem_push/ip", limit: GEM_PUSH_LIMIT, period: DEFAULT_PERIOD) do |req|
+    req.ip if req.path == "/api/v1/gems" && req.post?
   end
 
   ### Custom Throttle Response ###
