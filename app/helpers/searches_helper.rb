@@ -23,7 +23,7 @@ module SearchesHelper
 
     time_ago = (Time.zone.today - duration).to_s(:db)
     path = search_path(params: { query: "#{params[:query]} AND updated:[#{time_ago} TO *}" })
-    update_info = (duration == 30.days ? t('.month_update', count: count) : t('.week_update', count: count))
+    update_info = (duration == 30.days ? t('searches.show.month_update', count: count) : t('searches.show.week_update', count: count))
     link_to update_info, path, class: 't-link--black'
   end
 end
