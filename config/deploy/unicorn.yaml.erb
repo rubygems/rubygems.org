@@ -58,6 +58,13 @@ spec:
             value: "<%= environment %>"
           - name: STATSD_IMPLEMENTATION
             value: "datadog"
+          - name: STATSD_HOST
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.hostIP
+          - name: STATSD_ADDR
+            value: $(STATSD_HOST):8125
           - name: SECRET_KEY_BASE
             valueFrom:
               secretKeyRef:
