@@ -1,3 +1,13 @@
+# TODO: add feature to statsd-instrument for default tags
+class StatsD::Instrument::Metric
+  def self.normalize_tags(tags)
+    tags ||= []
+    tags = tags.map { |k, v| k.to_s + ":".freeze + v.to_s } if tags.is_a?(Hash)
+    tags.map { |tag| tag.tr('|,'.freeze, ''.freeze) }
+    tags << "env:#{Rails.env}" # Added to allow default env tag on all metrics
+  end
+end
+
 ActiveSupport::Notifications.subscribe(/process_action.action_controller/) do |*args|
   event = ActiveSupport::Notifications::Event.new(*args)
   event.payload[:format] = event.payload[:format] || 'all'
