@@ -96,7 +96,7 @@ class ApplicationController < ActionController::Base
 
   def set_page(max_page = Gemcutter::MAX_PAGES)
     @page = Gemcutter::DEFAULT_PAGE && return unless params.key?(:page)
-    redirect_to_page_with_error unless valid_page_param?(max_page)
+    redirect_to_page_with_error && return unless valid_page_param?(max_page)
 
     @page = params[:page].to_i
   end
@@ -128,8 +128,8 @@ class ApplicationController < ActionController::Base
 
   def redirect_to_page_with_error
     flash[:error] = t('invalid_page') unless controller_path.starts_with? "api"
-    page_params = params.except(:controller, :action)
-      .permit(:query, :to, :from, :format)
+    page_params = params.except(:controller, :action, :page)
+      .permit(:query, :to, :from, :format, :letter)
       .merge(page: Gemcutter::DEFAULT_PAGE)
     redirect_to url_for(page_params)
   end
