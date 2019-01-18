@@ -37,7 +37,8 @@ before_install:
   - script/install_toxiproxy.sh
 
 before_script:
-  - gem install bundler-audit brakeman
+  - gem install bundler-audit -v 0.6.1
+  - gem install brakeman -v 4.3.1
   - bundle audit update
   - cp config/database.yml.example config/database.yml
   - bundle exec rake db:create db:migrate db:test:prepare
