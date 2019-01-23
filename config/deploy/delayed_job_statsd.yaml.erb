@@ -1,0 +1,52 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: delayed-jobs-statsd
+  annotations:
+    shipit.shopify.io/restart: 'true'
+spec:
+  selector:
+    matchLabels:
+      name: delayed-jobs-statsd
+  template:
+    metadata:
+      labels:
+        name: delayed-jobs-statsd
+    spec:
+      containers:
+      - name: delayed-jobs-statsd
+        image: dwradcliffe/delayed_job_statsd@sha256:cf94a0a92e794b4ae9a7a9dbc87e4472f5d38e066a1c5bc3ba123e7ad576fc6f
+        env:
+          - name: ENV
+            value: "<%= environment %>"
+          - name: STATSD_IMPLEMENTATION
+            value: "datadog"
+          - name: STATSD_HOST
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.hostIP
+          - name: STATSD_ADDR
+            value: $(STATSD_HOST):8125
+          - name: PG_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: database_name
+          - name: PG_HOST
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: database_host
+          - name: PG_USER
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: database_user
+          - name: PG_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: database_password
+        securityContext:
+          privileged: false
