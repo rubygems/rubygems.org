@@ -73,4 +73,9 @@ group :test do
   gem "shoulda"
   gem "selenium-webdriver"
   gem "webdrivers"
+  gem "simplecov", require: false
+end
+
+group :development, :deploy do
+  gem "kubernetes-deploy", ">= 0.20.6", require: false
 end
