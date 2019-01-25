@@ -293,13 +293,30 @@ class PusherTest < ActiveSupport::TestCase
                                                         type:  'rubygem',
                                                         id:    @rubygem.id
         expected_response = {
-          'name'                  => 'gemsgemsgems',
-          'yanked'                => false,
-          'summary'               => 'old summary',
-          'description'           => 'Some awesome gem',
-          'downloads'             => 0,
-          'latest_version_number' => '0.1.1',
-          'updated'               => '2016-07-04T00:00:00.000Z'
+          "name"              => "gemsgemsgems",
+          "downloads"         => 0,
+          "version"           => "0.1.1",
+          "version_downloads" => 0,
+          "platform"          => "ruby",
+          "authors"           => "Joe User",
+          "info"              => "Some awesome gem",
+          "licenses"          => "MIT",
+          "metadata"          => { "foo" => "bar" },
+          "sha"               => "b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78",
+          "project_uri"       => "http://localhost/gems/gemsgemsgems",
+          "gem_uri"           => "http://localhost/gems/gemsgemsgems-0.1.1.gem",
+          "homepage_uri"      => "http://example.com",
+          "wiki_uri"          => "http://example.com",
+          "documentation_uri" => "http://example.com",
+          "mailing_list_uri"  => "http://example.com",
+          "source_code_uri"   => "http://example.com",
+          "bug_tracker_uri"   => "http://example.com",
+          "changelog_uri"     => nil,
+          "yanked"            => false,
+          "summary"           => "old summary",
+          "description"       => "Some awesome gem",
+          "updated"           => "2016-07-04T00:00:00.000Z",
+          "dependencies"      => { "development" => [], "runtime" => [] }
         }
 
         assert_equal expected_response, response['_source']
