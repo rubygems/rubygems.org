@@ -10,7 +10,7 @@ class ReverseDependenciesController < ApplicationController
       .by_downloads
       .preload(:gem_download, :latest_version)
 
-    _, @reverse_dependencies = @reverse_dependencies.search(params[:rdeps_query]) if params[:rdeps_query]&.is_a?(String)
+    @reverse_dependencies = @reverse_dependencies.legacy_search(params[:rdeps_query]) if params[:rdeps_query]&.is_a?(String)
     @reverse_dependencies = @reverse_dependencies.page(@page).without_count
   end
 end
