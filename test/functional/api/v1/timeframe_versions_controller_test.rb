@@ -22,7 +22,9 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
         assert_equal 2, gems.length
         assert_equal 'rails', gems[0]['name']
         assert_equal @rails_version2.number, gems[0]['version']
+        assert_equal Time.zone.iso8601('2017-11-10'), gems[0]['created_at']
         assert_equal 'sinatra', gems[1]['name']
+        assert_equal Time.zone.iso8601('2017-11-11'), gems[1]['created_at']
       end
 
       should 'allow paging through results' do
