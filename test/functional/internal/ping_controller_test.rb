@@ -3,6 +3,7 @@ require 'test_helper'
 class Internal::PingControllerTest < ActionController::TestCase
   context 'on GET to index' do
     setup do
+      ActiveRecord::Base.connection.stubs(:select_value).returns(nil)
       get :index
     end
 
@@ -10,15 +11,6 @@ class Internal::PingControllerTest < ActionController::TestCase
 
     should 'PONG' do
       assert page.has_content?('PONG')
-    end
-  end
-
-  context 'with postgres down' do
-    should 'not PONG' do
-      ActiveRecord::Base.connection.stubs(:select_value).returns(nil)
-      assert_raises StandardError do
-        get :index
-      end
     end
   end
 
