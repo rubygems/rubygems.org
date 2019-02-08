@@ -9,15 +9,8 @@ if Rails.env.production? || Rails.env.staging?
     # Keep the verbose logs for full debugging (locally)
     config.lograge.keep_original_rails_log = true
 
-    if Rails.env.production?
-      # The new logs are shipped to the central logging
-      config.lograge.logger = ActiveSupport::Logger.new Rails.root.join("log", "#{Rails.env}.json.log")
-    end
-
-    if Rails.env.staging?
-      # The new logs are shipped to stdout for collection
-      config.lograge.logger = ActiveSupport::Logger.new(STDOUT)
-    end
+    # The new logs are shipped to stdout for collection
+    config.lograge.logger = ActiveSupport::Logger.new(STDOUT)
 
     # Add custom fields
     config.lograge.custom_options = lambda do |event|
