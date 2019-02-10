@@ -118,14 +118,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def append_info_to_payload(payload)
-    super
-    payload[:client_ip] = request.remote_ip
-    payload[:user_agent] = request.user_agent
-    payload[:dest_host] = request.host
-    payload[:request_id] = request.uuid
-  end
-
   def redirect_to_page_with_error
     flash[:error] = t('invalid_page') unless controller_path.starts_with? "api"
     page_params = params.except(:controller, :action, :page)
