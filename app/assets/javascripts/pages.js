@@ -1,5 +1,4 @@
 //data page
-
 $(document).ready(function() {
   var getDumpData = function(target, type) {
     return $.get('https://s3-us-west-2.amazonaws.com/rubygems-dumps/?prefix=production/public_' + type).done(function(data) {
@@ -53,9 +52,7 @@ $(document).ready(function() {
     return content.join("\n");
   };
 
-  data_title = "RubyGems.org Data Dumps | RubyGems.org | your community gem host";
-  page_title = $(document).find("title").text();
-  if(page_title === data_title){
+  if($("#data-dump").length) {
     getDumpData('ul.rubygems-dump-listing-postgresql', 'postgresql');
     getDumpData('ul.rubygems-dump-listing-redis', 'redis');
   }
