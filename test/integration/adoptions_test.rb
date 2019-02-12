@@ -9,8 +9,16 @@ class AdoptionsTest < SystemTest
     @rubygem = create(:rubygem)
   end
 
-  test "listing gem with no open adoptions and no signed in user" do
-    visit rubygem_adoptions_path(@rubygem)
+  test "visting adoptions path" do
+    @adoption = create(:adoption, rubygem: @rubygem)
+
+    visit adoptions_path
+    assert page.has_content? "Displaying 1 adoptions"
+    assert page.has_link?(@rubygem.name, href: rubygem_adoption_path(@rubygem))
+  end
+
+  test "visting gem adoptions path with no adoptions and no signed in user" do
+    visit rubygem_adoption_path(@rubygem)
     assert page.has_content? "Owner(s) of #{@rubygem.name} are not looking for maintainers."
     assert page.has_link?("Sign in", href: "/sign_in")
   end
@@ -19,7 +27,7 @@ class AdoptionsTest < SystemTest
     @rubygem.ownerships.create(user: @user)
     sign_in @user
 
-    visit rubygem_adoptions_path(@rubygem)
+    visit rubygem_adoption_path(@rubygem)
     fill_in "Note", with: "example note"
     click_button "Create"
 
@@ -32,7 +40,7 @@ class AdoptionsTest < SystemTest
     @rubygem.ownerships.create(user: owner)
     sign_in @user
 
-    visit rubygem_adoptions_path(@rubygem)
+    visit rubygem_adoption_path(@rubygem)
     fill_in "Note", with: "example note"
     click_button "Request"
 
@@ -47,23 +55,23 @@ class AdoptionsTest < SystemTest
     assert page.has_selector? "#flash_success", text: "Adoption request sent to owner(s) of #{@rubygem.name}"
   end
 
-  test "closeing adoption by requester" do
+  test "closing adoption by requester" do
     create(:adoption_request, rubygem: @rubygem, user: @user, note: "example note")
     sign_in @user
 
-    visit rubygem_adoptions_path(@rubygem)
+    visit rubygem_adoption_path(@rubygem)
     click_button "Close"
 
     assert page.has_selector? "#flash_success", text: "#{@user.name}'s adoption request for #{@rubygem.name} has been closed"
-    assert page.has_no_content? "example note"
+    assert page.has_content? "Status: Closed"
   end
 
-  test "closeing adoption by owner" do
+  test "closing adoption by owner" do
     adoption_request = create(:adoption_request, rubygem: @rubygem, note: "example note")
     @rubygem.ownerships.create(user: @user)
     sign_in @user
 
-    visit rubygem_adoptions_path(@rubygem)
+    visit rubygem_adoption_path(@rubygem)
     click_button "Close"
 
     mail = last_email
@@ -82,7 +90,7 @@ class AdoptionsTest < SystemTest
     @rubygem.ownerships.create(user: @user)
     sign_in @user
 
-    visit rubygem_adoptions_path(@rubygem)
+    visit rubygem_adoption_path(@rubygem)
     click_button "Approve"
 
     mail = last_email

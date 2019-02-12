@@ -4,7 +4,7 @@
     <% for adoption in adoptions do %>
       <li class="t-list__item">
         <h3 class="gems__gem__name"><%= yield adoption %></h3>
-        <%= render partial: "adoptions/show", locals: { adoption: adoption } %>
+        <%= render partial: "adoptions/adoption", locals: { adoption: adoption } %>
         <%= render partial: "adoptions/delete", locals: { adoption: adoption, rubygem: adoption.rubygem } %>
       </li>
     <% end %>

@@ -10,7 +10,15 @@ class AdoptionsControllerTest < ActionController::TestCase
 
     context "on GET to index" do
       setup do
-        get :index, params: { rubygem_id: @rubygem.name }
+        get :index
+      end
+
+      should respond_with :success
+    end
+
+    context "on GET to show" do
+      setup do
+        get :show, params: { rubygem_id: @rubygem.name }
       end
 
       should respond_with :success
@@ -26,7 +34,7 @@ class AdoptionsControllerTest < ActionController::TestCase
             post :create, params: { rubygem_id: @rubygem.name, adoption: { note: "example note" } }
           end
 
-          should redirect_to("rubygems adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("rubygems adoptions index") { rubygem_adoption_path(@rubygem) }
           should "set flash success" do
             assert_equal "#{@rubygem.name} has been put up for adoption", flash[:success]
           end
@@ -41,7 +49,7 @@ class AdoptionsControllerTest < ActionController::TestCase
             post :create, params: { rubygem_id: @rubygem.name, adoption: { note: "example note" } }
           end
 
-          should redirect_to("rubygems adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("rubygems adoptions index") { rubygem_adoption_path(@rubygem) }
           should "not create adoption request" do
             assert_empty @rubygem.adoptions
           end
@@ -73,7 +81,7 @@ class AdoptionsControllerTest < ActionController::TestCase
             delete :destroy, params: { rubygem_id: @rubygem.name, id: @adoption.id }
           end
 
-          should redirect_to("rubygems adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("rubygems adoptions index") { rubygem_adoption_path(@rubygem) }
           should "set flash success" do
             assert_equal "Adoption for #{@rubygem.name} has been deleted", flash[:success]
           end
@@ -88,7 +96,7 @@ class AdoptionsControllerTest < ActionController::TestCase
             delete :destroy, params: { rubygem_id: @rubygem.name, id: @adoption.id }
           end
 
-          should redirect_to("rubygems adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("rubygems adoptions index") { rubygem_adoption_path(@rubygem) }
           should "not create adoption request" do
             assert_not_empty @rubygem.adoptions
           end

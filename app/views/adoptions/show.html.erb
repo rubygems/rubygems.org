@@ -1,0 +1,26 @@
+<% @title = t(".adoptions") %>
+<% @subtitle = @rubygem.name %>
+
+<div class="l-overflow">
+  <div class="l-colspan--l">
+    <% if @adoption %>
+      <%= render layout: "adoptions/adoption", locals: { adoption: @adoption } do |adoption| %>
+        <%= link_to(adoption.user.display_handle, profile_path(adoption.user.display_id), class: "t-link--black") %>
+      <% end %>
+      <%= render partial: "delete", locals: { adoption: @adoption, rubygem: @rubygem } %>
+      <hr />
+    <% elsif @rubygem.owned_by?(current_user) %>
+      <%= render partial: "create" %>
+    <% else %>
+      <%= render "default" %>
+    <% end %>
+
+    <% if @rubygem.owned_by? current_user %>
+      <%= render layout: "adoption_requests/list", locals: { adoption_requests: @rubygem.adoption_requests.opened, heading: t(".adoption_requests") } do |adoption_request| %>
+        <%= link_to(adoption_request.user.display_handle, profile_path(adoption_request.user.display_id), class: "t-link--black") %>
+      <% end %>
+    <% else %>
+      <%= render partial: "adoption_requests/show", locals: { adoption_request: @user_adoption_request } %>
+    <% end %>
+  </div>
+</div>

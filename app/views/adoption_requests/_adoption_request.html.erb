@@ -1,0 +1,21 @@
+<div clas="t-body">
+  <div id="markup" class="gem__desc">
+    <%= simple_markup(adoption_request.note) %>
+  </div>
+
+  <% if adoption_request.closed? %>
+    <p class="push--s">
+      <strong><%= t("layout.application.status") %>:</strong> <%= t("adoption_requests.closed") %>
+    </p>
+  <% else %>
+    <%= render(
+      partial: "adoption_requests/edit",
+      locals: { status: "approved", button_text: t("adoption_requests.approve"), adoption_request: adoption_request }
+    ) if current_user&.can_approve?(adoption_request) %>
+
+    <%= render(
+      partial: "adoption_requests/edit",
+      locals: { status: "closed", button_text: t("adoption_requests.close"), adoption_request: adoption_request }
+    ) if current_user&.can_close?(adoption_request) %>
+  <% end %>
+</div>

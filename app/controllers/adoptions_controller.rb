@@ -1,29 +1,34 @@
 class AdoptionsController < ApplicationController
-  before_action :redirect_to_root, unless: :signed_in?, except: :index
-  before_action :find_rubygem
+  before_action :redirect_to_root, unless: :signed_in?, only: %i[create destroy]
+  before_action :find_rubygem, except: :index
+  before_action :set_page, only: :index
   before_action :render_bad_request, unless: :user_is_owner?, only: %i[create destroy]
 
   def index
+    @adoptions = Adoption.order(created_at: :desc).page(@page)
+  end
+
+  def show
     @adoption = @rubygem.adoptions.first
-    @user_adoption_request = current_user&.adoption_requests&.find_by(rubygem_id: @rubygem.id, status: :opened)
+    @user_adoption_request = current_user&.adoption_requests&.find_by(rubygem_id: @rubygem.id)
   end
 
   def create
     adoption = @rubygem.adoptions.build(adoption_params)
 
     if adoption.save
-      redirect_to rubygem_adoptions_path(@rubygem), flash: { success: t(".success", gem: @rubygem.name) }
+      redirect_to rubygem_adoption_path(@rubygem), flash: { success: t(".success", gem: @rubygem.name) }
     else
-      redirect_to rubygem_adoptions_path(@rubygem), flash: { error: adoption.errors.full_messages.to_sentence }
+      redirect_to rubygem_adoption_path(@rubygem), flash: { error: adoption.errors.full_messages.to_sentence }
     end
   end
 
   def destroy
-    adoption = Adoption.find(params[:id])
+    adoption = @rubygem.adoptions.first
     if adoption.destroy
-      redirect_to rubygem_adoptions_path(@rubygem), flash: { success: t(".success", gem: @rubygem.name) }
+      redirect_to rubygem_adoption_path(@rubygem), flash: { success: t(".success", gem: @rubygem.name) }
     else
-      redirect_to rubygem_adoptions_path(@rubygem), flash: { error: adoption.errors.full_messages.to_sentence }
+      redirect_to rubygem_adoption_path(@rubygem), flash: { error: adoption.errors.full_messages.to_sentence }
     end
   end
 

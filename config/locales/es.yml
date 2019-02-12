@@ -45,6 +45,7 @@ es:
   adoption_requests:
     approve:
     close:
+    closed:
     create:
       success:
     request:
@@ -62,7 +63,7 @@ es:
       delete:
     destroy:
       success:
-    index:
+    show:
       adoptions:
       adoption_requests:
   dashboards:

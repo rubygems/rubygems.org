@@ -53,6 +53,7 @@ en:
   adoption_requests:
     approve: Approve
     close: Close
+    closed: Closed
     create:
       success: Adoption request sent to owner(s) of %{gem}
     request: Request
@@ -73,7 +74,7 @@ en:
       delete: Delete
     destroy:
       success: Adoption for %{gem} has been deleted
-    index:
+    show:
       adoptions: Adoptions
       adoption_requests: 'Adoption requests:'
   dashboards:

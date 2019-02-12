@@ -131,18 +131,11 @@
             <%= link_to t('.footer.discussion_forum'), "https://groups.google.com/group/rubygems-org", class: "nav--v__link--footer" %>
             <%= link_to t('.footer.statistics'), stats_path, class: "nav--v__link--footer" %>
             <%= link_to t('.footer.blog'), "http://blog.rubygems.org", class: "nav--v__link--footer" %>
-            <%- if request.path_info == '/pages/about' %>
-              <%= link_to t('.footer.about'), page_path("about"), class: "nav--v__link--footer is-active" %>
-            <%- else %>
-              <%= link_to t('.footer.about'), page_path("about"), class: "nav--v__link--footer" %>
-            <%- end %>
+            <%= link_to t('.footer.about'), page_path("about"), class: "nav--v__link--footer" %>
             <%= link_to t('.footer.help'), t(:help_url), class: "nav--v__link--footer" %>
             <%= link_to t('.footer.api'), "http://guides.rubygems.org/rubygems-org-api", class: "nav--v__link--footer" %>
-            <%- if request.path_info == '/pages/security' %>
-              <%= link_to t('.footer.security'), page_path("security"), class: "nav--v__link--footer is-active" %>
-            <%- else %>
-              <%= link_to t('.footer.security'), page_path("security"), class: "nav--v__link--footer" %>
-            <%- end %>
+            <%= link_to t('.footer.security'), page_path("security"), class: "nav--v__link--footer" %>
+            <%= link_to t('.footer.adoptions'), adoptions_path, class: "nav--v__link--footer" %>
           </div>
           <div class="l-colspan--l colspan--l--has-border">
             <div class="footer__about">

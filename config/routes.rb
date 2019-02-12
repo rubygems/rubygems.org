@@ -155,9 +155,11 @@ Rails.application.routes.draw do
         defaults: { format: :js }
       resources :versions, only: %i[show index]
       resources :reverse_dependencies, only: %i[index]
-      resources :adoptions, only: %i[index create destroy]
+      resource :adoption, only: %i[show create destroy]
       resources :adoption_requests, only: %i[create update]
     end
+
+    get 'adoptions', to: 'adoptions#index'
 
     ################################################################################
     # Clearance Overrides and Additions

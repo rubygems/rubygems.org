@@ -213,7 +213,7 @@ class ProfileTest < SystemTest
 
     sign_in @user
     visit profile_path("nick1")
-    click_link "Adoptions"
+    within("//div[@id='downloads-ego']") { click_link "Adoptions" }
 
     assert page.has_content? "example request"
     assert page.has_content? "example adoption note"

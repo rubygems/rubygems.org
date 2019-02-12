@@ -8,9 +8,9 @@ class AdoptionRequestsController < ApplicationController
 
     if adoption_request.save
       Mailer.delay.adoption_requested(adoption_request)
-      redirect_to rubygem_adoptions_path(@rubygem), flash: { success: t(".success", gem: @rubygem.name) }
+      redirect_to rubygem_adoption_path(@rubygem), flash: { success: t(".success", gem: @rubygem.name) }
     else
-      redirect_to rubygem_adoptions_path(@rubygem), flash: { error: adoption_request.errors.full_messages.to_sentence }
+      redirect_to rubygem_adoption_path(@rubygem), flash: { error: adoption_request.errors.full_messages.to_sentence }
     end
   end
 
@@ -19,12 +19,12 @@ class AdoptionRequestsController < ApplicationController
       @rubygem.approve_adoption_request!(@adoption_request, current_user.id)
       Mailer.delay.adoption_request_approved(@rubygem, @requester)
 
-      redirect_to_adoptions_path
+      redirect_to_adoption_path
     elsif params_status == "closed" && current_user.can_close?(@adoption_request)
       @adoption_request.closed!
       Mailer.delay.adoption_request_closed(@rubygem, @requester) unless @requester == current_user
 
-      redirect_to_adoptions_path
+      redirect_to_adoption_path
     else
       render_bad_request
     end
@@ -45,8 +45,8 @@ class AdoptionRequestsController < ApplicationController
     @requester = @adoption_request.user
   end
 
-  def redirect_to_adoptions_path
+  def redirect_to_adoption_path
     message = t(".success", user: @requester.name, gem: @rubygem.name, status: @adoption_request.status)
-    redirect_to rubygem_adoptions_path(@rubygem), flash: { success: message }
+    redirect_to rubygem_adoption_path(@rubygem), flash: { success: message }
   end
 end

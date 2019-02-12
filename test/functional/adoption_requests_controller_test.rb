@@ -14,7 +14,7 @@ class AdoptionRequestsControllerTest < ActionController::TestCase
           post :create, params: { rubygem_id: @rubygem.name, adoption_request: { note: "example note" } }
         end
 
-        should redirect_to("rubygems adoptions index") { rubygem_adoptions_path(@rubygem) }
+        should redirect_to("rubygems adoptions index") { rubygem_adoption_path(@rubygem) }
         should "set flash success" do
           assert_equal "Adoption request sent to owner(s) of #{@rubygem.name}", flash[:success]
         end
@@ -29,7 +29,7 @@ class AdoptionRequestsControllerTest < ActionController::TestCase
           post :create, params: { rubygem_id: @rubygem.name, adoption_request: { note: "example note" } }
         end
 
-        should redirect_to("rubygems adoptions index") { rubygem_adoptions_path(@rubygem) }
+        should redirect_to("rubygems adoptions index") { rubygem_adoption_path(@rubygem) }
         should "not create adoption request" do
           assert_empty @rubygem.adoption_requests
         end
@@ -45,7 +45,7 @@ class AdoptionRequestsControllerTest < ActionController::TestCase
             put :update, params: { rubygem_id: @rubygem.name, id: @adoption_request.id, adoption_request: { status: "approved" } }
           end
 
-          should redirect_to("rubygems adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("rubygems adoptions index") { rubygem_adoption_path(@rubygem) }
           should "set flash success" do
             assert_equal "#{@adoption_request.user.name}'s adoption request for #{@rubygem.name} has been approved", flash[:success]
           end
@@ -79,7 +79,7 @@ class AdoptionRequestsControllerTest < ActionController::TestCase
             put :update, params: { rubygem_id: @rubygem.name, id: @adoption_request.id, adoption_request: { status: "closed" } }
           end
 
-          should redirect_to("rubygems adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("rubygems adoptions index") { rubygem_adoption_path(@rubygem) }
           should "set flash success" do
             assert_equal "#{@user.name}'s adoption request for #{@rubygem.name} has been closed", flash[:success]
           end
@@ -96,7 +96,7 @@ class AdoptionRequestsControllerTest < ActionController::TestCase
             put :update, params: { rubygem_id: @rubygem.name, id: @adoption_request.id, adoption_request: { status: "closed" } }
           end
 
-          should redirect_to("rubygems adoptions index") { rubygem_adoptions_path(@rubygem) }
+          should redirect_to("rubygems adoptions index") { rubygem_adoption_path(@rubygem) }
           should "set flash success" do
             assert_equal "#{@adoption_request.user.name}'s adoption request for #{@rubygem.name} has been closed", flash[:success]
           end

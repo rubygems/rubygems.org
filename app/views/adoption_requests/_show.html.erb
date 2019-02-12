@@ -1,15 +1,11 @@
-<div clas="t-body">
-  <div id="markup" class="gem__desc">
-    <%= simple_markup(adoption_request.note) %>
+<% if adoption_request %>
+  <h3 class="t-list__heading form__field__instructions"> <%= t("adoption_requests.requested", gem: @rubygem.name) %> </h3>
+  <%= render partial: "adoption_requests/adoption_request", locals: { adoption_request: adoption_request } %>
+<% elsif signed_in? %>
+  <h3 class="t-list__heading form__field__instructions"> <%= t("adoption_requests.heading") %> </h3>
+  <%= render partial: "adoption_requests/create", locals: { status: "requested", button_text: t("adoption_requests.request") } %>
+<% else %>
+  <div class="t-body">
+    <%= link_to t(".header.sign_in"), sign_in_path, class: "gem__link t-list__item" %>
   </div>
-  <%= current_user&.can_close?(adoption_request) %>
-  <%= render(
-    partial: "adoption_requests/edit",
-    locals: { status: "approved", button_text: t("adoption_requests.approve"), adoption_request: adoption_request }
-  ) if current_user&.can_approve?(adoption_request) %>
-
-  <%= render(
-    partial: "adoption_requests/edit",
-    locals: { status: "closed", button_text: t("adoption_requests.close"), adoption_request: adoption_request }
-  ) if current_user&.can_close?(adoption_request) %>
-</div>
+<% end %>

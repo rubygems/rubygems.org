@@ -7,6 +7,8 @@ class AdoptionRequestTest < ActiveSupport::TestCase
   should belong_to :rubygem
   should validate_presence_of(:rubygem)
   should validate_presence_of(:user)
+  should validate_presence_of(:status)
+  should validate_presence_of(:note)
 
   context "validation" do
     should "not allow unspecified status" do

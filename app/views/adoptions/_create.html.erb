@@ -1,4 +1,4 @@
-<%= form_for @rubygem.adoptions.build, url: rubygem_adoptions_path(@rubygem), method: :post do |form| %>
+<%= form_for @rubygem.adoptions.build, url: rubygem_adoption_path(@rubygem), method: :post do |form| %>
   <div class="url_field">
     <%= form.label :note, class: "form__label" %>
     <%= form.text_area :note, class: "form__input" %>

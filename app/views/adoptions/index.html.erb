@@ -1,26 +1,28 @@
-<% @title = t(".adoptions") %>
-<% @subtitle = @rubygem.name %>
+<% @title = t("adoptions.show.adoptions") %>
 
-<div class="l-overflow">
-  <div class="l-colspan--l">
-    <% if @adoption %>
-      <%= render layout: "adoptions/show", locals: { adoption: @adoption } do |adoption| %>
-        <%= link_to(adoption.user.display_handle, profile_path(adoption.user.display_id), class: "t-link--black") %>
-      <% end %>
-      <%= render partial: "delete", locals: { adoption: @adoption, rubygem: @rubygem } %>
-      <hr />
-    <% elsif @rubygem.owned_by?(current_user) %>
-      <%= render partial: "create" %>
-    <% else %>
-      <%= render "default" %>
-    <% end %>
+<header class="gems__header">
+  <p class="gems__meter">
+    <%= page_entries_info @adoptions, entry_name: 'adoptions'%>
+  </p>
+</header>
 
-    <% if @rubygem.owned_by? current_user %>
-      <%= render layout: "adoption_requests/list", locals: { adoption_requests: @rubygem.adoption_requests.opened, heading: t(".adoption_requests") } do |adoption_request| %>
-        <%= link_to(adoption_request.user.display_handle, profile_path(adoption_request.user.display_id), class: "t-link--black") %>
-      <% end %>
-    <% else %>
-      <%= render partial: "adoption_requests/index", locals: { adoption_request: @user_adoption_request } %>
-    <% end %>
-  </div>
-</div>
+<% for adoption in @adoptions do %>
+  <%= link_to rubygem_adoption_path(adoption.rubygem), class: 'gems__gem' do %>
+    <span class="gems__gem__info">
+      <h2 class="gems__gem__name">
+        <%= adoption.rubygem.name %>
+        <span class="gems__gem__version"><%= time_ago_in_words(adoption.created_at) %> ago</span>
+      </h2>
+      <p class="gems__gem__desc t-text"><%= adoption.note.strip.truncate(90) %></p>
+    </span>
+    <p class="gems__gem__downloads__count">
+      <%= download_count adoption.rubygem %>
+      <span class="gems__gem__downloads__heading">
+        <%= t('rubygems.index.downloads') %>
+      </span>
+    </p>
+  <% end %>
+<% end %>
+
+<%= paginate @adoptions %>
+
