@@ -164,3 +164,23 @@ span#github-btn {
   margin-bottom: 15px;
   margin-top: 5px;
 }
+
+.adoption-tag {
+  display: inline-block;
+  font-size: 0.4em;
+  font-weight: 800;
+  color: #e9573f;
+  border: 1px solid #e9573f;
+  border-radius: 8px;
+  padding: 0.25em 1em;
+  margin-left: 0.75em;
+  vertical-align: 0.3em;
+  transition: color 0.25s ease-in,
+    background-color 0.25s ease-in,
+    transform 0.3s ease-out;
+}
+
+.adoption-tag:hover{
+  color: white;
+  background-color: #e9573f;
+}

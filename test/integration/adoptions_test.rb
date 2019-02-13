@@ -33,6 +33,7 @@ class AdoptionsTest < SystemTest
 
     assert page.has_content? "example note"
     assert page.has_selector? "#flash_success", text: "#{@rubygem.name} has been put up for adoption"
+    assert page.has_selector? ".adoption-tag"
   end
 
   test "requesting adoption" do

@@ -108,7 +108,11 @@
               <%= link_to @title, @title_url, class: "t-link--black" %>
 
               <% if @subtitle %>
-                <i class="page__subheading"><%= @subtitle.html_safe %></i>
+                <i class="page__subheading"><%= @subtitle.html_safe %>
+                  <% if @adoption %>
+                    <%= link_to "adoption", rubygem_adoption_path(@rubygem), class: "adoption-tag" %>
+                  <% end %>
+                </i>
               <% end %>
             </h1>
           <% end %>

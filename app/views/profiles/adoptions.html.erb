@@ -3,11 +3,11 @@
 <div class="l-overflow">
   <div class="l-colspan--l">
     <%= render layout: "adoptions/list", locals: { adoptions: @adoptions, heading: t(".open_adoptions") } do |adoption| %>
-      <%= link_to adoption.rubygem.name, rubygem_path(adoption.rubygem.name), class: "t-link--black t-list__item" %>
+      <%= link_to adoption.rubygem.name, rubygem_adoption_path(adoption.rubygem), class: "t-link--black t-list__item" %>
     <% end %>
 
     <%= render layout: "adoption_requests/list", locals: { adoption_requests: @adoption_requests, heading: t(".requested_adoptions") } do |adoption_request| %>
-      <%= link_to adoption_request.rubygem.name, rubygem_path(adoption_request.rubygem.name), class: "t-link--black t-list__item" %>
+      <%= link_to adoption_request.rubygem.name, rubygem_adoption_path(adoption_request.rubygem), class: "t-link--black t-list__item" %>
     <% end %>
   </div>
 </div>
