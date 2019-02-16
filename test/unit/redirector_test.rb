@@ -65,27 +65,32 @@ class RedirectorTest < ActiveSupport::TestCase
     get "/pages/docs", {}, "HTTP_HOST" => Gemcutter::HOST
 
     assert_equal 301, last_response.status
-    assert_equal "http://guides.rubygems.org", last_response.headers["Location"]
+    assert_equal "https://guides.rubygems.org", last_response.headers["Location"]
   end
 
   should "redirect request to gem docs to guides " do
     get "/pages/gem_docs", {}, "HTTP_HOST" => Gemcutter::HOST
 
     assert_equal 301, last_response.status
-    assert_equal "http://guides.rubygems.org/command-reference", last_response.headers["Location"]
+    assert_equal "https://guides.rubygems.org/command-reference", last_response.headers["Location"]
   end
 
   should "redirect request to api docs to guides " do
     get "/pages/api_docs", {}, "HTTP_HOST" => Gemcutter::HOST
 
     assert_equal 301, last_response.status
-    assert_equal "http://guides.rubygems.org/rubygems-org-api", last_response.headers["Location"]
+    assert_equal "https://guides.rubygems.org/rubygems-org-api", last_response.headers["Location"]
   end
 
   should "allow fastly domains" do
     get "/", {}, "HTTP_HOST" => 'index.rubygems.org'
     assert_equal 200, last_response.status
     get "/", {}, "HTTP_HOST" => 'fastly.rubygems.org'
+    assert_equal 200, last_response.status
+  end
+
+  should "allow healthcheck" do
+    get "/internal/ping", {}, "HTTP_HOST" => "localhost"
     assert_equal 200, last_response.status
   end
 end
