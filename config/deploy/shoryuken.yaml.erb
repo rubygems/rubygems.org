@@ -101,11 +101,11 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: fastly_service_id
-          - name: FASTLY_DOMAIN
+          - name: FASTLY_DOMAINS
             valueFrom:
               secretKeyRef:
                 name: <%= environment %>
-                key: fastly_domain
+                key: fastly_domains
           - name: ELASTICSEARCH_URL
             valueFrom:
               secretKeyRef:
