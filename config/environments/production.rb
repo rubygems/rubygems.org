@@ -55,7 +55,7 @@ Rails.application.configure do
   config.ssl_options = {
     hsts: false,
     redirect: {
-      exclude: ->(request) { request.path.start_with?('internal') }
+      exclude: ->(request) { request.path.start_with?('/internal') }
     }
   }
 
