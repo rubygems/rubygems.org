@@ -7,7 +7,7 @@ class Version < ApplicationRecord
 
   before_save :update_prerelease
   before_validation :full_nameify!
-  after_save :reorder_versions
+  after_save :reorder_versions, if: -> { saved_change_to_indexed? || saved_change_to_id? }
 
   serialize :licenses
   serialize :requirements
