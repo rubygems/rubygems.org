@@ -27,11 +27,29 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       json = @rubygem.as_indexed_json
 
       expected_hash = {
-        name: 'example_gem',
-        yanked: false,
-        downloads: 10,
-        summary: 'some summary',
-        description: 'some description'
+        name:              "example_gem",
+        downloads:         10,
+        version:           "1.0.1",
+        version_downloads: 0,
+        platform:          "ruby",
+        authors:           "Joe User",
+        info:              "some description",
+        licenses:          "MIT",
+        metadata:          { "foo" => "bar" },
+        sha:               "b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78",
+        project_uri:       "http://localhost/gems/example_gem",
+        gem_uri:           "http://localhost/gems/example_gem-1.0.1.gem",
+        homepage_uri:      "http://example.com",
+        wiki_uri:          "http://example.com",
+        documentation_uri: "http://example.com",
+        mailing_list_uri:  "http://example.com",
+        source_code_uri:   "http://example.com",
+        bug_tracker_uri:   "http://example.com",
+        yanked:            false,
+        summary:           "some summary",
+        description:       "some description",
+        updated:           @rubygem.updated_at,
+        dependencies:      { development: [], runtime: [] }
       }
 
       expected_hash.each do |k, v|
@@ -49,10 +67,10 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
 
     should 'find all gems with matching tokens' do
-      response = Rubygem.elastic_search "example"
-      assert_equal 3, response.results.size
+      _, response = ElasticSearcher.new("example").search
+      assert_equal 3, response.size
       results = %w[example-gem example_1 example.rb]
-      assert_equal results, response.results.map(&:name)
+      assert_equal results, response.map(&:name)
     end
   end
 
@@ -66,9 +84,9 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
 
     should "filter yanked gems from the result" do
-      response = Rubygem.elastic_search "example"
-      assert_equal 1, response.results.size
-      assert_equal "example_2", response.results.first.name
+      _, response = ElasticSearcher.new("example").search
+      assert_equal 1, response.size
+      assert_equal "example_2", response.first.name
     end
   end
 
@@ -85,7 +103,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
 
     should "look for keyword in name, summary and description and order them in same priority order" do
-      response = Rubygem.elastic_search "keyword"
+      _, response = ElasticSearcher.new("keyword").search
       names_order = %w[keyword example_gem3 example_gem2]
       assert_equal names_order, response.results.map(&:name)
     end
@@ -101,7 +119,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
 
     should "boost score of result by downloads count" do
-      response = Rubygem.elastic_search "gem"
+      _, response = ElasticSearcher.new("gem").search
       names_order = %w[gem_30 gem_20 gem_10]
       assert_equal names_order, response.results.map(&:name)
     end
@@ -115,7 +133,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
 
     should "return all terms of source" do
-      response = Rubygem.elastic_search "example_gem"
+      _, response = ElasticSearcher.new("example_gem").search
       hash = {
         name: 'example_gem',
         downloads: 10,
@@ -139,7 +157,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
 
     should "suggest names of possible gems" do
-      response = Rubygem.elastic_search "keywor"
+      _, response = ElasticSearcher.new("keywor").search
       suggestions = %w[keyword keywo keywordo]
       assert_equal suggestions, response.suggestions.terms
     end
@@ -155,39 +173,39 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
 
     should "filter gems on downloads" do
-      response = Rubygem.elastic_search "downloads:>100"
-      assert_equal 1, response.results.size
-      assert_equal "example", response.results.first.name
+      _, response = ElasticSearcher.new("downloads:>100").search
+      assert_equal 1, response.size
+      assert_equal "example", response.first.name
     end
 
     should "filter gems on name" do
-      response = Rubygem.elastic_search "name:web-rubygem"
-      assert_equal 1, response.results.size
-      assert_equal "web-rubygem", response.results.first.name
+      _, response = ElasticSearcher.new("name:web-rubygem").search
+      assert_equal 1, response.size
+      assert_equal "web-rubygem", response.first.name
     end
 
     should "filter gems on summary" do
-      response = Rubygem.elastic_search "summary:special word"
-      assert_equal 1, response.results.size
-      assert_equal "example", response.results.first.name
+      _, response = ElasticSearcher.new("summary:special word").search
+      assert_equal 1, response.size
+      assert_equal "example", response.first.name
     end
 
     should "filter gems on description" do
-      response = Rubygem.elastic_search "description:example"
-      assert_equal 1, response.results.size
-      assert_equal "web-rubygem", response.results.first.name
+      _, response = ElasticSearcher.new("description:example").search
+      assert_equal 1, response.size
+      assert_equal "web-rubygem", response.first.name
     end
 
     should "change default operator" do
-      response = Rubygem.elastic_search "example OR web-rubygem"
-      assert_equal 2, response.results.size
-      assert_equal ["web-rubygem", "example"], response.results.map(&:name)
+      _, response = ElasticSearcher.new("example OR web-rubygem").search
+      assert_equal 2, response.size
+      assert_equal ["web-rubygem", "example"], response.map(&:name)
     end
 
     should "support wildcards" do
-      response = Rubygem.elastic_search "name:web*"
-      assert_equal 1, response.results.size
-      assert_equal "web-rubygem", response.results.first.name
+      _, response = ElasticSearcher.new("name:web*").search
+      assert_equal 1, response.size
+      assert_equal "web-rubygem", response.first.name
     end
   end
 
@@ -200,7 +218,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       rubygem1.update_column('updated_at', 2.days.ago)
       rubygem2.update_column('updated_at', 10.days.ago)
       import_and_refresh
-      @response = Rubygem.elastic_search "example"
+      _, @response = ElasticSearcher.new("example").search
     end
 
     should "aggregate matched fields" do
@@ -229,13 +247,13 @@ class RubygemSearchableTest < ActiveSupport::TestCase
         should "fallback to legacy search" do
           Rubygem.expects(:legacy_search).with(@ill_formated_query).returns(Rubygem.all)
 
-          Rubygem.search(@ill_formated_query, elasticsearch: true)
+          ElasticSearcher.new(@ill_formated_query).search
         end
 
         should "give correct error message" do
           expected_msg = "Failed to parse: '#{@ill_formated_query}'. Falling back to legacy search."
 
-          @error_msg, = Rubygem.search(@ill_formated_query, elasticsearch: true)
+          @error_msg, = ElasticSearcher.new(@ill_formated_query).search
 
           assert_equal expected_msg, @error_msg
         end
@@ -250,7 +268,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
           requires_toxiproxy
 
           Toxiproxy[:elasticsearch].down do
-            error_msg, = Rubygem.search("something", elasticsearch: true)
+            error_msg, = ElasticSearcher.new("something").search
             expected_msg = "Advanced search is currently unavailable. Falling back to legacy search."
             assert_equal expected_msg, error_msg
           end
@@ -268,8 +286,8 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       end
 
       should "not affect results" do
-        response1 = Rubygem.elastic_search "async rails"
-        response2 = Rubygem.elastic_search "rails async"
+        _, response1 = ElasticSearcher.new("async rails").search
+        _, response2 = ElasticSearcher.new("rails async").search
         assert_equal response1.results.map(&:name), response2.results.map(&:name)
       end
     end

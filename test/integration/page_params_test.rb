@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class PageParamsTest < SystemTest
+  include ESHelper
+
   test "stats with page param more than 10" do
     visit stats_path(page: "11")
     assert redirect_to(stats_path(page: "1"))
@@ -31,6 +33,7 @@ class PageParamsTest < SystemTest
 
   test "api search with page smaller than 1" do
     create(:rubygem, name: "some", number: "1.0.0")
+    import_and_refresh
     visit api_v1_search_path(page: "0", query: "some", format: :json)
     assert redirect_to(api_v1_search_path(page: "1", query: "some", format: :json))
     refute JSON.parse(page.body).empty?
@@ -38,6 +41,7 @@ class PageParamsTest < SystemTest
 
   test "api search with page is not a numer" do
     create(:rubygem, name: "some", number: "1.0.0")
+    import_and_refresh
     visit api_v1_search_path(page: "foo", query: "some", format: :json)
     assert redirect_to(api_v1_search_path(page: "1", query: "some", format: :json))
     refute JSON.parse(page.body).empty?
@@ -46,6 +50,7 @@ class PageParamsTest < SystemTest
   test "api search with page that can't be converted to a number" do
     create(:rubygem, name: "some", number: "1.0.0")
     visit api_v1_search_path(page: { "$acunetix" => "1" }, query: "some", format: :json)
+    import_and_refresh
     assert redirect_to(api_v1_search_path(page: "1", query: "some", format: :json))
     refute JSON.parse(page.body).empty?
   end
