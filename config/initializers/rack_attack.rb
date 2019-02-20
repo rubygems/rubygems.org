@@ -38,6 +38,11 @@ class Rack::Attack
     req.ip if req.path == "/profile" && (req.patch? || req.delete?)
   end
 
+  # Throttle yank requests
+  throttle("yank/ip", limit: 1, period: LIMIT_PERIOD) do |req|
+    req.ip if req.path == "/api/v1/gems/yank"
+  end
+
   ############################# rate limit per handle ############################
   # Throttle POST requests to /login by email param
   #
