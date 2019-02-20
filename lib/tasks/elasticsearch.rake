@@ -11,7 +11,7 @@ namespace :elasticsearch do
 
   task :import_alias do
     old_idx = Rubygem.__elasticsearch__.client.cat.aliases(name: Rubygem.index_name, h: ['index']).strip
-    new_idx = "#{Rubygem.index_name}-#{Time.zone.today.strftime('%Y%m%d%H%M')}"
+    new_idx = "#{Rubygem.index_name}-#{Time.zone.now.strftime('%Y%m%d%H%M')}"
 
     res = Rubygem.__elasticsearch__.client.count index: old_idx
     puts "Count before import: #{res['count']}"
