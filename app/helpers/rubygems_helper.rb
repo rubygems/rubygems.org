@@ -105,6 +105,7 @@ module RubygemsHelper
 
   def latest_version_number(rubygem)
     return rubygem.version if rubygem.respond_to?(:version)
+    return rubygem.latest_version_number if rubygem.respond_to?(:latest_version_number)
     (rubygem.latest_version || rubygem.versions.last).try(:number)
   end
 
