@@ -797,4 +797,26 @@ class VersionTest < ActiveSupport::TestCase
       assert_does_not_contain Version.created_between(@start_time, @end_time), @version
     end
   end
+
+  context "after_save" do
+    context "reorder versions" do
+      setup do
+        @version = create(:version)
+      end
+
+      context "indexed is updated" do
+        should "reorder versions" do
+          @version.expects(:reorder_versions).times(1)
+          @version.update(indexed: false)
+        end
+      end
+
+      context "info checksum is updated" do
+        should "not reorder versions" do
+          @version.expects(:reorder_versions).times(0)
+          @version.update(info_checksum: "lala")
+        end
+      end
+    end
+  end
 end
