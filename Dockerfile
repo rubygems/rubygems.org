@@ -19,19 +19,16 @@ RUN apk add --no-cache \
 RUN mkdir -p /app /app/config
 WORKDIR /app
 
-RUN gem update --system 2.6.10
+ADD Gemfile* /app/
+RUN gem update --system 2.6.10 && gem install bundler io-console --no-ri --no-rdoc && bundle install --jobs 20 --retry 5 --without deploy
+
+ADD https://github.com/bundler/bundler-api/raw/master/versions.list /app/config/versions.list.bk
 
 COPY . /app
 
-ADD https://github.com/bundler/bundler-api/raw/master/versions.list /app/config/versions.list
-
-RUN mv /app/config/database.yml.example /app/config/database.yml
-
-RUN gem install bundler io-console --no-ri --no-rdoc && bundle install --jobs 20 --retry 5 --without deploy
+RUN mv /app/config/database.yml.example /app/config/database.yml && mv /app/config/versions.list.bk /app/config/versions.list
 
 RUN RAILS_ENV=production SECRET_KEY_BASE=1234 bin/rails assets:precompile
-
-
 
 
 FROM ruby:2.5-alpine

@@ -3,8 +3,7 @@ language: ruby
 cache:
   bundler: true
   directories:
-    - reports
-    - vendor/cache
+    - $HOME/docker
 
 rvm:
   - 2.5.3
