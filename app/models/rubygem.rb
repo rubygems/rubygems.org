@@ -226,13 +226,7 @@ class Rubygem < ApplicationRecord
   end
 
   def reorder_versions
-    numbers = reload.versions.sort.reverse.map(&:number).uniq
-
-    versions.each do |version|
-      Version.find(version.id).update_column(:position, numbers.index(version.number))
-    end
-
-    versions.update_all(latest: false)
+    bulk_reorder_versions
 
     versions_of_platforms = versions
       .release
@@ -321,5 +315,23 @@ class Rubygem < ApplicationRecord
 
   def mark_unresolved
     Dependency.mark_unresolved_for(self)
+  end
+
+  def bulk_reorder_versions
+    numbers = reload.versions.sort.reverse.map(&:number).uniq
+
+    ids = []
+    positions = []
+    versions.each do |version|
+      ids << version.id
+      positions << numbers.index(version.number)
+    end
+
+    update_query = ["update versions set position = positions_data.position, latest = false
+      from (select unnest(array[?]) as id, unnest(array[?]) as position) as positions_data
+      where versions.id = positions_data.id", ids, positions]
+
+    sanitized_query = ActiveRecord::Base.send(:sanitize_sql_array, update_query)
+    ActiveRecord::Base.connection.execute(sanitized_query)
   end
 end
