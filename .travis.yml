@@ -26,11 +26,7 @@ sudo: false
 
 bundler_args: --jobs=3 --retry=3 --without development
 
-git:
-  submodules: true
-
 before_install:
-  - git submodule update --init
   - sh -c "if [ '$RUBYGEMS_VERSION' != 'latest' ]; then gem update --system $RUBYGEMS_VERSION; fi"
   - gem --version
   - script/install_toxiproxy.sh
