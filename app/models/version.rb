@@ -324,6 +324,10 @@ class Version < ApplicationRecord
     raw.unpack("m0").first.unpack("H*").first
   end
 
+  def metadata_uri_set?
+    Links::LINKS.any? { |_, long| metadata.key? long }
+  end
+
   private
 
   def platform_and_number_are_unique

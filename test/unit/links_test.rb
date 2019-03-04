@@ -35,4 +35,15 @@ class LinksTest < ActiveSupport::TestCase
     refute links.links.key?('home')
     assert links.links.key?('docs')
   end
+
+  should "not use linkset value when any metadta uri attribute is set" do
+    version = build(:version, metadata: { "wiki_uri" => "https://example.wiki" })
+    linkset = build(:linkset, docs: "https://herebe.docs", code: "https://source.code")
+    rubygem = build(:rubygem, linkset: linkset, versions: [version])
+    links = rubygem.links(version)
+
+    refute links.documentation_uri
+    refute links.source_code_uri
+    assert links.wiki_uri
+  end
 end
