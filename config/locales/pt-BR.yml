@@ -153,6 +153,8 @@ pt-BR:
       submit: Resetar senha
       title: Alterar senha
       will_email_notice: Você vai receber um email com o link para atualizar sua senha.
+    otp_prompt:
+      authenticate:
   multifactor_auths:
     incorrect_otp:
     otp_code:

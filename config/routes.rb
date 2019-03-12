@@ -171,7 +171,9 @@ Rails.application.routes.draw do
     end
 
     resources :users, only: %i[new create] do
-      resource :password, only: %i[create edit update]
+      resource :password, only: %i[create edit update] do
+        post 'mfa_edit', to: 'passwords#mfa_edit', as: :mfa_edit
+      end
     end
 
     get '/sign_in' => 'clearance/sessions#new', as: 'sign_in'

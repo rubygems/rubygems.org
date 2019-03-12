@@ -153,6 +153,8 @@ es:
       submit: Reestablecer contraseña
       title: Cambiar contraseña
       will_email_notice: Te enviaremos un email con un enlace para cambiar tu contraseña.
+    otp_prompt:
+      authenticate:
   multifactor_auths:
     incorrect_otp:
     otp_code:

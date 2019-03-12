@@ -161,6 +161,8 @@ en:
       submit: Reset password
       title: Change your password
       will_email_notice: We will email you a link to change your password.
+    otp_prompt:
+      authenticate: Authenticate
   multifactor_auths:
     incorrect_otp: Your OTP code is incorrect.
     otp_code: OTP code

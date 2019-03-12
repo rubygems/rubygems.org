@@ -153,6 +153,8 @@ de:
       submit: Zurücksetzen des Passworts
       title: Ändere dein Passwort
       will_email_notice: Wir senden dir einen Link damit du dein Passwort ändern kannst.
+    otp_prompt:
+      authenticate:
   multifactor_auths:
     incorrect_otp:
     otp_code:
