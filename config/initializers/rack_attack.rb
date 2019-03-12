@@ -39,7 +39,8 @@ class Rack::Attack
   end
 
   # Throttle yank requests
-  throttle("yank/ip", limit: 1, period: LIMIT_PERIOD) do |req|
+  YANK_LIMIT = 10
+  throttle("yank/ip", limit: YANK_LIMIT, period: LIMIT_PERIOD) do |req|
     req.ip if req.path == "/api/v1/gems/yank"
   end
 
