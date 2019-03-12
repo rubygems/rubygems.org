@@ -14,7 +14,6 @@ class YankTest < SystemTest
   end
 
   test "view yanked gem" do
-    skip "This needs to be rewritten to yank in setup"
     create(:version, rubygem: @rubygem, number: "1.1.1")
     create(:version, rubygem: @rubygem, number: "2.2.2")
 
@@ -37,7 +36,6 @@ class YankTest < SystemTest
   end
 
   test "yanked gem entirely then someone else pushes a new version" do
-    skip "This needs to be rewritten to yank in setup"
     create(:version, rubygem: @rubygem, number: "0.0.0")
 
     visit rubygem_path(@rubygem)
@@ -67,7 +65,6 @@ class YankTest < SystemTest
   end
 
   test "undo a yank is not supported" do
-    skip "This doesn't actually test undoing yank"
     create(:version, rubygem: @rubygem, number: "1.0.0", indexed: true)
     create(:version, rubygem: @rubygem, number: "0.0.0", indexed: false)
 
