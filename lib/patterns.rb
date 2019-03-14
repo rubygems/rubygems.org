@@ -17,6 +17,7 @@ module Patterns
     continuation
     coverage
     delegate
+    digest
     drb
     english
     enumerator
