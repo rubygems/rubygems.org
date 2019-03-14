@@ -57,7 +57,6 @@ module Patterns
     resolv
     resolv-replace
     rinda
-    ruby
     rubygems
     securerandom
     set
