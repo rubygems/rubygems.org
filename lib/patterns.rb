@@ -17,7 +17,6 @@ module Patterns
     continuation
     coverage
     delegate
-    digest
     drb
     english
     enumerator
@@ -48,7 +47,6 @@ module Patterns
     pathname
     pp
     prettyprint
-    prime
     profile
     profiler
     pstore
@@ -71,7 +69,6 @@ module Patterns
     time
     timeout
     tmpdir
-    tracer
     tsort
     un
     unicode_normalize
