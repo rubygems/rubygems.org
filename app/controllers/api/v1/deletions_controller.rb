@@ -11,7 +11,7 @@ class Api::V1::DeletionsController < Api::BaseController
     @deletion = @api_user.deletions.build(version: @version)
     if @deletion.save
       StatsD.increment 'yank.success'
-      enqueue_web_hook_jobs
+      enqueue_web_hook_jobs(@version)
       render plain: "Successfully deleted gem: #{@version.to_title}"
     else
       StatsD.increment 'yank.failure'
@@ -46,18 +46,6 @@ class Api::V1::DeletionsController < Api::BaseController
         render plain: "The version #{params[:version]} does not exist.",
                status: :not_found
       end
-    end
-  end
-
-  def enqueue_web_hook_jobs
-    jobs = @version.rubygem.web_hooks + WebHook.global
-    jobs.each do |job|
-      job.fire(
-        request.protocol.delete("://"),
-        request.host_with_port,
-        @version.rubygem,
-        @version
-      )
     end
   end
 end

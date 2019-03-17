@@ -141,4 +141,16 @@ class ApplicationController < ActionController::Base
   def reject_null_char_param
     render plain: "bad request", status: :bad_request if params.to_s.include?("\\u0000")
   end
+
+  def enqueue_web_hook_jobs(version)
+    jobs = version.rubygem.web_hooks + WebHook.global
+    jobs.each do |job|
+      job.fire(
+        request.protocol.delete("://"),
+        request.host_with_port,
+        version.rubygem,
+        version
+      )
+    end
+  end
 end

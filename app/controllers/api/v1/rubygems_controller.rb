@@ -36,6 +36,7 @@ class Api::V1::RubygemsController < Api::BaseController
       request.host_with_port
     )
     gemcutter.process
+    enqueue_web_hook_jobs(gemcutter.version) if gemcutter.version
     render plain: gemcutter.message, status: gemcutter.code
   rescue => e
     Honeybadger.notify(e)

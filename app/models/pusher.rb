@@ -102,7 +102,6 @@ class Pusher
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
     rubygem.delay.index_document
     GemCachePurger.call(rubygem.name)
-    enqueue_web_hook_jobs
     StatsD.increment 'push.success'
   end
 
@@ -121,13 +120,6 @@ class Pusher
     true
   rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback, ActiveRecord::RecordNotUnique
     false
-  end
-
-  def enqueue_web_hook_jobs
-    jobs = rubygem.web_hooks + WebHook.global
-    jobs.each do |job|
-      job.fire(@protocol, @host_with_port, rubygem, version)
-    end
   end
 
   def set_info_checksum
