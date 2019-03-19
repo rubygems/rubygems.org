@@ -153,6 +153,8 @@ zh-TW:
       submit: 更新密碼
       title: 修改密碼
       will_email_notice: 系統將會寄一封包含重設密碼連結的電子郵件給你
+    otp_prompt:
+      authenticate:
   multifactor_auths:
     incorrect_otp:
     otp_code:

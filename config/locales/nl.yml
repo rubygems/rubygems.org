@@ -153,6 +153,8 @@ nl:
       submit: Wachtwoord wijzigen
       title: Wachtwoord wijzigen
       will_email_notice: We sturen een link om je wachtwoord te wijzigen.
+    otp_prompt:
+      authenticate:
   multifactor_auths:
     incorrect_otp:
     otp_code:

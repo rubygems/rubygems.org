@@ -153,6 +153,8 @@ fr:
       submit: Réinitialisez votre mot de passe
       title: Changement de mot de passe
       will_email_notice: Nous vous enverrons un email pour changer votre mot de passe.
+    otp_prompt:
+      authenticate:
   multifactor_auths:
     incorrect_otp: Votre clé OTP est incorrecte.
     otp_code: clé OTP

@@ -82,7 +82,26 @@ class PasswordResetTest < SystemTest
     link = body.split("\n").find { |line| line =~ /^http/ }
     visit link
 
-    fill_in "Password", with: "secret321"
+    fill_in "Password", with: "secret54321"
+    click_button "Save this password"
+
+    assert @user.reload.authenticated? "secret54321"
+  end
+
+  test "restting password when mfa is enabled" do
+    @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+    forgot_password_with @user.email
+
+    body = ActionMailer::Base.deliveries.last.to_s
+    link = body.split("\n").find { |line| line =~ /^http/ }
+    assert_not_nil link
+
+    visit link
+
+    fill_in "otp", with: ROTP::TOTP.new(@user.mfa_seed).now
+    click_button "Authenticate"
+
+    fill_in "Password", with: "secret3210"
     click_button "Save this password"
 
     assert page.has_content?("Sign out")
