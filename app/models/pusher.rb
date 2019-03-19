@@ -3,13 +3,11 @@ require 'digest/sha2'
 class Pusher
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
 
-  def initialize(user, body, protocol = nil, host_with_port = nil)
+  def initialize(user, body)
     @user = user
     @body = StringIO.new(body.read)
     @size = @body.size
     @indexer = Indexer.new
-    @protocol = protocol
-    @host_with_port = host_with_port
   end
 
   def process

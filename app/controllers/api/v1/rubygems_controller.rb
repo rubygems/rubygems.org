@@ -29,12 +29,7 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   def create
-    gemcutter = Pusher.new(
-      @api_user,
-      request.body,
-      request.protocol.delete("://"),
-      request.host_with_port
-    )
+    gemcutter = Pusher.new(@api_user, request.body)
     gemcutter.process
     enqueue_web_hook_jobs(gemcutter.version) if gemcutter.version
     render plain: gemcutter.message, status: gemcutter.code
