@@ -3,13 +3,11 @@ require 'digest/sha2'
 class Pusher
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
 
-  def initialize(user, body, protocol = nil, host_with_port = nil)
+  def initialize(user, body)
     @user = user
     @body = StringIO.new(body.read)
     @size = @body.size
     @indexer = Indexer.new
-    @protocol = protocol
-    @host_with_port = host_with_port
   end
 
   def process
@@ -102,7 +100,6 @@ class Pusher
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
     rubygem.delay.index_document
     GemCachePurger.call(rubygem.name)
-    enqueue_web_hook_jobs
     StatsD.increment 'push.success'
   end
 
@@ -121,13 +118,6 @@ class Pusher
     true
   rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback, ActiveRecord::RecordNotUnique
     false
-  end
-
-  def enqueue_web_hook_jobs
-    jobs = rubygem.web_hooks + WebHook.global
-    jobs.each do |job|
-      job.fire(@protocol, @host_with_port, rubygem, version)
-    end
   end
 
   def set_info_checksum

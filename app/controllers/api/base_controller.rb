@@ -7,4 +7,16 @@ class Api::BaseController < ApplicationController
     return if @rubygem || @gem_name == WebHook::GLOBAL_PATTERN
     render plain: "This gem could not be found", status: :not_found
   end
+
+  def enqueue_web_hook_jobs(version)
+    jobs = version.rubygem.web_hooks + WebHook.global
+    jobs.each do |job|
+      job.fire(
+        request.protocol.delete("://"),
+        request.host_with_port,
+        version.rubygem,
+        version
+      )
+    end
+  end
 end

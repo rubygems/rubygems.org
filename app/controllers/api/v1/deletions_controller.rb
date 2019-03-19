@@ -11,6 +11,7 @@ class Api::V1::DeletionsController < Api::BaseController
     @deletion = @api_user.deletions.build(version: @version)
     if @deletion.save
       StatsD.increment 'yank.success'
+      enqueue_web_hook_jobs(@version)
       render plain: "Successfully deleted gem: #{@version.to_title}"
     else
       StatsD.increment 'yank.failure'
