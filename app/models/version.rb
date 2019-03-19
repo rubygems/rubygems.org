@@ -127,13 +127,12 @@ class Version < ApplicationRecord
   # This method returns the new versions for brand new rubygems
   def self.new_pushed_versions(limit = 5)
     subquery = <<-SQL
-      versions.id IN (SELECT max(versions.id)
-                                FROM versions
-                            GROUP BY versions.rubygem_id
-                              HAVING COUNT(versions.rubygem_id) = 1)
+      versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions
+        GROUP BY versions.rubygem_id HAVING COUNT(versions.rubygem_id) = 1
+        ORDER BY versions.rubygem_id DESC LIMIT :limit)
     SQL
 
-    Version.where(subquery).by_created_at.limit limit
+    where(subquery, limit: limit).by_created_at
   end
 
   def self.just_updated(limit = 5)
