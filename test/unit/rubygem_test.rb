@@ -790,29 +790,6 @@ class RubygemTest < ActiveSupport::TestCase
     end
   end
 
-  context "downloads" do
-    setup do
-      @rubygem = create(:rubygem)
-      @version = create(:version, rubygem: @rubygem)
-
-      travel_to Date.parse("2010-10-02") do
-        1.times { Download.incr(@rubygem.name, @version.full_name) }
-      end
-
-      travel_to Date.parse("2010-10-03") do
-        6.times { Download.incr(@rubygem.name, @version.full_name) }
-      end
-
-      travel_to Date.parse("2010-10-16") do
-        4.times { Download.incr(@rubygem.name, @version.full_name) }
-      end
-
-      travel_to Date.parse("2010-11-01") do
-        2.times { Download.incr(@rubygem.name, @version.full_name) }
-      end
-    end
-  end
-
   context "#protected_days" do
     setup do
       @rubygem = create(:rubygem)
