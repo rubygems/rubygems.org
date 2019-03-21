@@ -110,7 +110,6 @@ GEM
       delayed_job (>= 3.0, < 5)
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
-    dynamic_form (1.1.4)
     ejson (1.2.0)
     elasticsearch (5.0.5)
       elasticsearch-api (= 5.0.5)
@@ -398,7 +397,6 @@ DEPENDENCIES
   dalli
   delayed_job
   delayed_job_active_record
-  dynamic_form
   elasticsearch-dsl (~> 0.1.2)
   elasticsearch-model (~> 5.0.0)
   elasticsearch-rails (~> 5.0.0)
