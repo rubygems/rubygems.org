@@ -3,6 +3,7 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   Exclude:
     - config/initializers/forbidden_yaml.rb
+    - app/helpers/dynamic_errors_helper.rb
     - !ruby/regexp /(vendor|bundle|bin|db)\/.*/
   DisplayCopNames: true
   DisplayStyleGuide: true
