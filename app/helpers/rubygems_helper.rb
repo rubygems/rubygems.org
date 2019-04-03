@@ -17,9 +17,9 @@ module RubygemsHelper
 
   def link_to_github(rubygem)
     results = [rubygem.linkset.code, rubygem.linkset.home].map do |linkset|
-      if !linkset.nil? && URI(linkset).host == "github.com"
-        URI(linkset)
-      end
+      uri = URI(linkset.to_s)
+
+      uri.host == "github.com" ? uri : nil
     end
 
     results.reject(&:blank?).first
