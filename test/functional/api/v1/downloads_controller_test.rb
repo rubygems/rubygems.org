@@ -97,13 +97,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
       get_show(@version)
     end
 
-    should "return a 404" do
-      assert_response :not_found
-    end
-
-    should "say gem could not be found" do
-      assert_equal "This rubygem could not be found.", @response.body
-    end
+    should respond_with :success
   end
 
   context "On GET to all" do

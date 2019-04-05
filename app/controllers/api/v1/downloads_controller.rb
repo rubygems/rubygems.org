@@ -11,7 +11,7 @@ class Api::V1::DownloadsController < Api::BaseController
   def show
     full_name = params[:id]
     version = Version.find_by(full_name: full_name)
-    if version && !version.yanked?
+    if version
       data = {
         total_downloads: GemDownload.count_for_rubygem(version.rubygem_id),
         version_downloads: GemDownload.count_for_version(version.id)
