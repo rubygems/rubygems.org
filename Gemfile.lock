@@ -370,7 +370,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.4)
     unicode-display_width (1.4.1)
-    unicorn (5.5.0)
+    unicorn (5.5.0.1.g6836)
       kgio (~> 2.6)
       raindrops (~> 0.7)
     validates_formatting_of (0.9.0)
@@ -441,7 +441,7 @@ DEPENDENCIES
   statsd-instrument (~> 2.3.0)
   toxiproxy (~> 1.0.0)
   uglifier (>= 1.0.3)
-  unicorn
+  unicorn (~> 5.5.0.1.g6836)
   validates_formatting_of
   xml-simple
 

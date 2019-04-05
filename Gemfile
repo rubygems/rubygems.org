@@ -31,7 +31,7 @@ gem 'sass', require: false
 gem 'shoryuken', '~> 2.1.0', require: false
 gem 'statsd-instrument', '~> 2.3.0'
 gem 'uglifier', '>= 1.0.3'
-gem 'unicorn'
+gem 'unicorn', '~> 5.5.0.1.g6836'
 gem 'validates_formatting_of'
 gem 'elasticsearch-model', '~> 5.0.0'
 gem 'elasticsearch-rails', '~> 5.0.0'
