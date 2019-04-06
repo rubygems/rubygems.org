@@ -4,15 +4,15 @@ dependencies:
 
 deploy:
   override:
-    - KUBECONFIG=/kubeconfig bundle exec kubernetes-deploy rubygems-$ENVIRONMENT rubygems --template-dir config/deploy/$ENVIRONMENT --bindings=environment=$ENVIRONMENT
+    - KUBECONFIG=/kubeconfig.yml bundle exec kubernetes-deploy rubygems-$ENVIRONMENT rubygems --template-dir config/deploy/$ENVIRONMENT --bindings=environment=$ENVIRONMENT
 
 rollback:
   override:
-    - KUBECONFIG=/kubeconfig bundle exec kubernetes-deploy rubygems-$ENVIRONMENT rubygems --template-dir config/deploy/$ENVIRONMENT --bindings=environment=$ENVIRONMENT
+    - KUBECONFIG=/kubeconfig.yml bundle exec kubernetes-deploy rubygems-$ENVIRONMENT rubygems --template-dir config/deploy/$ENVIRONMENT --bindings=environment=$ENVIRONMENT
 
 tasks:
   restart:
     action: Restart application
     description: Trigger the restart of both unicorn and background workers
     steps:
-      - KUBECONFIG=/kubeconfig bundle exec kubernetes-restart rubygems-$ENVIRONMENT rubygems
+      - KUBECONFIG=/kubeconfig.yml bundle exec kubernetes-restart rubygems-$ENVIRONMENT rubygems
