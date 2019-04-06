@@ -1,0 +1,31 @@
+<p>
+  This confirms you successfully changed your email notification settings on RubyGems.org.
+</p>
+<p>
+  Here are your email notification settings for each gem you are responsible for:
+</p>
+<ul>
+  <% @ownerships.each do |ownership| %>
+    <li>
+      <%= ownership.rubygem.name %> emails:
+      <%= ownership.notifier? ? 'ON' : '<strong>OFF</strong>'.html_safe %>
+    </li>
+  <% end %>
+</ul>
+<p>If this change to your settings is expected, you do not need to take further action.</p>
+<p>
+  <strong>Only if this change to your settings is unexpected</strong>
+  please take immediate steps to secure your account and gems:
+</p>
+<ol>
+  <li>If you suspect your account was compromised:
+    <ol>
+      <li>Change your password: <%= link_to(new_password_url, new_password_url) %></li>
+      <li>Reset your API key: <%= link_to(edit_profile_url, edit_profile_url) %></li>
+      <li>Enable multifactor authentication: <%= link_to(edit_profile_url, edit_profile_url) %></li>
+      <li>Enable email notifications for all of your gems: <%= link_to(edit_profile_url, edit_profile_url) %></li>
+    </ol>
+  </li>
+  <li>Look out for unexpected changes to your gems on RubyGems.org</li>
+  <li>Report this incident to RubyGems.org: <%= link_to(page_url("security"), page_url("security")) %></li>
+</ol>

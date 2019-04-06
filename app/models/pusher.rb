@@ -99,6 +99,7 @@ class Pusher
 
   def after_write
     @version_id = version.id
+    Mailer.delay.gem_pushed(user.id, @version_id) if user
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
     rubygem.delay.index_document
     GemCachePurger.call(rubygem.name)

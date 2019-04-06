@@ -128,6 +128,10 @@ es:
       subtitle:
       subject:
       body_html:
+    notifiers_changed:
+      subject:
+    gem_pushed:
+      subject:
   news:
     show:
       title:
@@ -193,6 +197,9 @@ es:
       success:
     update:
       success:
+  notifier:
+    update:
+      success:
   profiles:
     edit:
       email_awaiting_confirmation:
@@ -226,6 +233,9 @@ es:
           disabled:
           ui_only:
           ui_and_api:
+      notifier:
+        email_notifications:
+        update:
     delete:
       title:
       confirm:

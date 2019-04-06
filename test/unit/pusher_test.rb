@@ -333,8 +333,8 @@ class PusherTest < ActiveSupport::TestCase
       @cutter.save
     end
 
-    should "enqueue job for updating ES index, spec index and purging cdn" do
-      assert_difference "Delayed::Job.count", 5 do
+    should "enqueue job for email, updating ES index, spec index and purging cdn" do
+      assert_difference "Delayed::Job.count", 6 do
         @cutter.save
       end
     end
@@ -345,10 +345,10 @@ class PusherTest < ActiveSupport::TestCase
       @rubygem = create(:rubygem)
       @cutter.stubs(:rubygem).returns @rubygem
       create(:version, rubygem: @rubygem, summary: "old summary")
-      version = create(:version, rubygem: @rubygem, summary: "new summary")
-      @cutter.stubs(:version).returns version
+      @version = create(:version, rubygem: @rubygem, summary: "new summary")
+      @cutter.stubs(:version).returns @version
       @rubygem.stubs(:update_attributes_from_gem_specification!)
-      @cutter.stubs(:version).returns version
+      @cutter.stubs(:version).returns @version
       GemCachePurger.stubs(:call)
       Indexer.any_instance.stubs(:write_gem)
       @cutter.save
@@ -360,6 +360,14 @@ class PusherTest < ActiveSupport::TestCase
                                                       type:  "rubygem",
                                                       id:    @rubygem.id
       assert_equal "new summary", response["_source"]["summary"]
+    end
+
+    should "send gem pushed email" do
+      Delayed::Worker.new.work_off
+
+      email = ActionMailer::Base.deliveries.last
+      assert_equal "Gem #{@version.to_title} pushed to RubyGems.org", email.subject
+      assert_equal [@user.email], email.bcc
     end
   end
 
