@@ -15,7 +15,7 @@ Bundler.require(*Rails.groups)
 
 module Gemcutter
   class Application < Rails::Application
-    config.load_defaults 5.0
+    config.load_defaults 5.1
 
     # Using true enables origin-checking CSRF mitigation. Our API can't use this check.
     config.action_controller.forgery_protection_origin_check = false
