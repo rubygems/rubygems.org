@@ -2,7 +2,7 @@ class WebHook < ApplicationRecord
   GLOBAL_PATTERN = '*'.freeze
 
   belongs_to :user
-  belongs_to :rubygem
+  belongs_to :rubygem, optional: true
 
   validates_formatting_of :url, using: :url, message: "does not appear to be a valid URL"
   validate :unique_hook, on: :create
