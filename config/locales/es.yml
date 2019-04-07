@@ -352,7 +352,9 @@ es:
       downloads: Descargas
       title: Gemas
     show:
-      licenses_header: Licencia
+      licenses_header:
+        one: Licencia
+        other: Licencias
       no_licenses: N/A
       requirements_header: Requerimientos
       show_all_versions: Mostrar todas las versiones (%{count} total)

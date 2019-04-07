@@ -344,7 +344,9 @@ zh-CN:
       downloads: 下载
       title: Gems
     show:
-      licenses_header: 许可
+      licenses_header:
+        one: 许可
+        other: 许可
       no_licenses: 无
       requirements_header: 要求
       show_all_versions: 显示所有 (%{count} 个版本)

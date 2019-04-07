@@ -344,7 +344,9 @@ nl:
       downloads: Downloads
       title: alle gems
     show:
-      licenses_header: License
+      licenses_header:
+        one: Licentie
+        other: Licenties
       no_licenses: N/A
       requirements_header: Requirements
       show_all_versions: Toon alle versies (%{count} totaal)

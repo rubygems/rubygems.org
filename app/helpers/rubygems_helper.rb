@@ -1,6 +1,6 @@
 module RubygemsHelper
   def pluralized_licenses_header(version)
-    t("rubygems.show.licenses_header").pluralize(version&.licenses&.length || 0)
+    t("rubygems.show.licenses_header", count: version&.licenses&.length || 0)
   end
 
   def formatted_licenses(license_names)

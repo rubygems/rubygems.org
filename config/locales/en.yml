@@ -379,7 +379,9 @@ en:
       downloads: Downloads
       title: Gems
     show:
-      licenses_header: License
+      licenses_header:
+        one: License
+        other: Licenses
       no_licenses: N/A
       requirements_header: Requirements
       show_all_versions: Show all versions (%{count} total)

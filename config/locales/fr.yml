@@ -344,7 +344,9 @@ fr:
       downloads: Téléchargements
       title: Gems
     show:
-      licenses_header: Licence
+      licenses_header:
+        one: License
+        other: Licenses
       no_licenses: aucune
       requirements_header: Dépendances
       show_all_versions: Voir toutes les versions (%{count})
