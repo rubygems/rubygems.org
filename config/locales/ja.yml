@@ -42,6 +42,30 @@ ja:
         email: Emailアドレス
         handle: ユーザー名
         password: パスワード
+  adoption_requests:
+    approve:
+    close:
+    closed:
+    create:
+      success:
+    request:
+    heading:
+    requested:
+    update:
+      success:
+  adoptions:
+    create:
+      create:
+      success:
+    default:
+      no_open_adoption:
+    delete:
+      delete:
+    destroy:
+      success:
+    show:
+      adoptions:
+      adoption_requests:
   dashboards:
     show:
       creating_link_text: 作成
@@ -101,6 +125,16 @@ ja:
         sign_out: ログアウト
         sign_up: 新規登録
   mailer:
+    adoption_request_approved:
+      congratulations:
+      subject:
+    adoption_request_closed:
+      sorry:
+      subject:
+    adoption_requested:
+      note:
+      request:
+      subject:
     confirm_your_email: あなたのメールアドレスに送信されたURLを確認してください。
     confirmation_subject: RubyGems.orgに登録されたあなたのメールアドレスを確認してください
     email_confirmation:
@@ -115,6 +149,7 @@ ja:
     deletion_failed:
       subject: あなたのアカウントはrubygems.orgから削除されませんでした
       body_html: あなたのrubygems.orgにおけるアカウント削除申請は処理されませんでした。申し訳ありませんが、現在アカウントを削除することができません。しばらく待ってから再度お試し頂くか、問題が継続するようならば%{contact}をお願いいたします。
+    hi:
   news:
     show:
       title: 新しくリリースされたGem
@@ -181,6 +216,9 @@ ja:
     update:
       success:
   profiles:
+    adoptions:
+      open_adoptions:
+      requested_adoptions:
     edit:
       email_awaiting_confirmation: あなたの新しいメールアドレス%{unconfirmed_email}を確認してください。
       enter_password: パスワードを入力してください。
@@ -227,6 +265,10 @@ ja:
       confirmation_mail_sent: 新しいメールアドレスを確認する手順を記載したメールを送信しました。
       updated: あなたのプロフィールはアップデートされました。
     request_denied: このリクエストは拒否されました。あなたのパスワードを認証することができませんでした。
+    show:
+      adoptions:
+      edit:
+      email:
   rubygems:
     aside:
       bundler_header: Gemfile
