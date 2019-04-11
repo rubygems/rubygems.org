@@ -10,4 +10,9 @@ class MailerPreview < ActionMailer::Preview
   def change_password
     ClearanceMailer.change_password(User.last)
   end
+
+  def gem_yanked
+    ownership = Ownership.where.not(user: nil).last
+    Mailer.gem_yanked(ownership.user.id, ownership.rubygem.versions.last.id)
+  end
 end

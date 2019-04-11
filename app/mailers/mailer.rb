@@ -31,4 +31,14 @@ class Mailer < ActionMailer::Base
          to: email,
          subject: I18n.t('mailer.deletion_failed.subject')
   end
+
+  def gem_yanked(yanked_by_user_id, version_id)
+    @yanked_by_user = User.find(yanked_by_user_id)
+    @version = Version.find(version_id)
+    owner_emails = @version.rubygem.owners.pluck(:email)
+
+    mail from: Clearance.configuration.mailer_sender,
+         bcc: owner_emails,
+         subject: "Gem #{@version.to_title} yanked from RubyGems.org"
+  end
 end

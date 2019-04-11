@@ -1,0 +1,26 @@
+<p>
+  A gem you are responsible for was recently yanked (deleted) from RubyGems.org.
+</p>
+<p>
+  Gem: <strong><%= @version.to_title %></strong>
+  <br>
+  Yanked by user:
+  <strong>
+    <%= @yanked_by_user.handle %> <%= mail_to(@yanked_by_user.email) unless @yanked_by_user.hide_email? %>
+  </strong>
+</p>
+<p>If this yank is expected, you do not need to take further action.</p>
+<p>
+  <strong>Only if this yank is unexpected</strong>
+  please take immediate steps to secure your account and gems:
+</p>
+<ol>
+  <li>If you suspect your account was compromised:
+    <ol>
+      <li>Change your password: <%= link_to(new_password_url, new_password_url) %></li>
+      <li>Reset your API key: <%= link_to(edit_profile_url, edit_profile_url) %></li>
+      <li>Enable multifactor authentication: <%= link_to(edit_profile_url, edit_profile_url) %></li>
+    </ol>
+  </li>
+  <li>Report this incident to RubyGems.org: <%= link_to(page_url("security"), page_url("security")) %></li>
+</ol>
