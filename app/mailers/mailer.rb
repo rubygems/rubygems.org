@@ -55,4 +55,14 @@ class Mailer < ApplicationMailer
     mail to: @user.email,
       subject: "Please consider enabling MFA for your account"
   end
+
+  def gem_yanked(yanked_by_user_id, version_id)
+    @yanked_by_user = User.find(yanked_by_user_id)
+    @version = Version.find(version_id)
+    owner_emails = @version.rubygem.owners.pluck(:email)
+
+    mail from: Clearance.configuration.mailer_sender,
+         bcc: owner_emails,
+         subject: "Gem #{@version.to_title} yanked from RubyGems.org"
+  end
 end
