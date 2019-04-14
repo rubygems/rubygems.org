@@ -89,10 +89,12 @@ module RubygemsHelper
   end
 
   def links_to_owners(rubygem)
-    rubygem.owners.sort_by(&:id).map do |owner|
-      link_to gravatar(48, "gravatar-#{owner.id}", owner), profile_path(owner.display_id),
-        alt: owner.display_handle, title: owner.display_handle
-    end.join.html_safe
+    rubygem.owners.sort_by(&:id).inject("") { |link, owner| link << link_to_user(owner) }.html_safe
+  end
+
+  def link_to_user(user)
+    link_to gravatar(48, "gravatar-#{user.id}", user), profile_path(user.display_id),
+      alt: user.display_handle, title: user.display_handle
   end
 
   def nice_date_for(time)

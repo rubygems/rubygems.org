@@ -4,6 +4,7 @@ class Version < ApplicationRecord
   belongs_to :rubygem, touch: true
   has_many :dependencies, -> { order('rubygems.name ASC').includes(:rubygem) }, dependent: :destroy, inverse_of: "version"
   has_one :gem_download, proc { |m| where(rubygem_id: m.rubygem_id) }, inverse_of: :version
+  belongs_to :pusher, class_name: "User", foreign_key: "pusher_id"
 
   before_save :update_prerelease
   before_validation :full_nameify!
