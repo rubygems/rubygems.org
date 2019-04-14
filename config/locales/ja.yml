@@ -221,6 +221,8 @@ ja:
       list_multi_owner: あなたはこれらのGemへのアクセス権を喪失しますが、他のオーナーがアクセス権を継続します。
     rubygem:
       owners_header: オーナー
+      pushed_by:
+      yanked_by:
     destroy:
       request_queued: あなたのアカウント削除処理は追って実行されます。削除処理の完了次第、確認のメールを送信します。
     update:

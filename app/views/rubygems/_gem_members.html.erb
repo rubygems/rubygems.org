@@ -1,4 +1,11 @@
 <div class="gem__members">
+  <% if rubygem.owners.present? %>
+    <h3 class="t-list__heading"><%= t '.owners_header' %>:</h3>
+    <div class="gem__users">
+      <%= links_to_owners(rubygem) %>
+    </div>
+  <% end %>
+
   <% if latest_version.pusher.present? %>
     <h3 class="t-list__heading"><%= t '.pushed_by' %>:</h3>
     <div class="gem__users">
@@ -6,10 +13,10 @@
     </div>
   <% end %>
 
-  <% if rubygem.owners.present? %>
-    <h3 class="t-list__heading"><%= t '.owners_header' %>:</h3>
+  <% if latest_version.yanker.present? %>
+    <h3 class="t-list__heading"><%= t '.yanked_by' %>:</h3>
     <div class="gem__users">
-      <%= links_to_owners(rubygem) %>
+      <%= link_to_user(latest_version.yanker) %>
     </div>
   <% end %>
 

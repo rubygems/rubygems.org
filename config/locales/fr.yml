@@ -221,6 +221,8 @@ fr:
       list_multi_owner: Vous allez perdre l'accès à ces gems mais d'autres propriétaires de ces gems y ont toujours accès.
     rubygem:
       owners_header: Propriétaires
+      pushed_by:
+      yanked_by:
     destroy:
       request_queued: Votre demande de suppression de compte a été envoyée. Nous vous enverrons un email de confirmation lorsque votre demande aura été prise en compte.
     update:
