@@ -93,6 +93,7 @@
 .home__downloads__desc {
   font-weight: 300;
   font-size: 12px;
+  white-space: nowrap;
   text-transform: uppercase; }
   @media (max-width: 379px) {
     .home__downloads__desc {
