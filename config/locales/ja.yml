@@ -68,7 +68,7 @@ ja:
       downloads_counting_html: ダウンロード数
       find_blurb:
       learn:
-        install_rubygems: RubyGemsをインストール
+        install_rubygems: Install RubyGems
   layouts:
     application:
       footer:
