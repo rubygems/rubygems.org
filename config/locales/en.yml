@@ -19,6 +19,7 @@ en:
   locale_name: English
   none: None
   not_found: Not Found
+  api_key_forbidden: The API key doesn't have access
   please_sign_up: Access Denied. Please sign up for an account at https://rubygems.org
   please_sign_in: Please sign in to continue.
   otp_incorrect: Your OTP code is incorrect. Please check it and retry.
@@ -55,6 +56,39 @@ en:
     errors:
       messages:
         unpwn: has previously appeared in a data breach and should not be used
+  api_keys:
+    create:
+      success: "Created new API key"
+    destroy:
+      success: "Successfully deleted API key: %{name}"
+    index:
+      api_keys: API keys
+      name: Name
+      scopes: Scopes
+      age: Age
+      last_access: Last access
+      action: Action
+      delete: Delete
+      confirm: The API key will become invalid. Are you sure?
+      confirm_all: All API keys will become invalid. Are you sure?
+      new_key: New API key
+      index_rubygems: Index rubygems
+      push_rubygem: Push rubygem
+      yank_rubygem: Yank rubygem
+      add_owner: Add owner
+      remove_owner: Remove owner
+      access_webhooks: Access webhooks
+      show_dashboard: Show dashboard
+      reset: Reset
+      save_key: "Note that we won't be able to show the key to you again. New API key:"
+    new:
+      new_api_key: New API key
+    reset:
+      success: "Deleted all API keys"
+    update:
+      success: "Successfully updated API key"
+    edit:
+      edit_api_key: "Edit API key"
   clearance_mailer:
     change_password:
       title: CHANGE PASSWORD
@@ -294,8 +328,6 @@ en:
         reset: Reset my API key
         title: API Access
       reset_password:
-        link_text: Request a new one here.
-        text_html: Need a new password? No problem. %{link}
         title: Reset password
       mfa:
         multifactor_auth: Multifactor authentication
@@ -326,6 +358,7 @@ en:
       instructions: We are sorry to see you go. Type your password in the field below and confirm.
       list_only_owner_html: These gems will be yanked when you delete your profile. If you would like to add owners before you delete your profile, you can use %{command_link} command.
       list_multi_owner: You will lose access to these gem but other owners of the gem will continue to have access.
+      warning: Deleting your profile is an irreversible action. This can't be undone by contacting support. Please be certain!
     rubygem:
       owners_header: Owners
     destroy:

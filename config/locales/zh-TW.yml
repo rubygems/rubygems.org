@@ -11,6 +11,7 @@ zh-TW:
   locale_name: 正體中文
   none: 無
   not_found: 沒有找到
+  api_key_forbidden:
   please_sign_up: 無法存取，請先在 https://rubygems.org 上註冊帳號
   please_sign_in:
   otp_incorrect:
@@ -47,6 +48,39 @@ zh-TW:
     errors:
       messages:
         unpwn:
+  api_keys:
+    create:
+      success:
+    destroy:
+      success:
+    index:
+      api_keys:
+      name:
+      scopes:
+      age:
+      last_access:
+      action:
+      delete:
+      confirm:
+      confirm_all:
+      new_key:
+      index_rubygems:
+      push_rubygem:
+      yank_rubygem:
+      add_owner:
+      remove_owner:
+      access_webhooks:
+      show_dashboard:
+      reset:
+      save_key:
+    new:
+      new_api_key:
+    reset:
+      success:
+    update:
+      success:
+    edit:
+      edit_api_key:
   clearance_mailer:
     change_password:
       title:
@@ -284,8 +318,6 @@ zh-TW:
         reset: 重設 API key
         title: API 存取
       reset_password:
-        link_text: 從這裡設定新密碼
-        text_html: 需要重設密碼？沒問題。 %{link}
         title: 重設密碼
       mfa:
         multifactor_auth:
@@ -316,6 +348,7 @@ zh-TW:
       instructions:
       list_only_owner_html:
       list_multi_owner:
+      warning: 警告
     rubygem:
       owners_header:
     destroy:

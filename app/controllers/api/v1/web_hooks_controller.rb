@@ -1,16 +1,17 @@
 class Api::V1::WebHooksController < Api::BaseController
   before_action :authenticate_with_api_key
+  before_action :render_api_key_forbidden, if: :api_key_unauthorized?
   before_action :find_rubygem_by_name, :set_url, except: :index
 
   def index
     respond_to do |format|
-      format.json { render json: @api_user.all_hooks }
-      format.yaml { render yaml: @api_user.all_hooks }
+      format.json { render json: @api_key.user.all_hooks }
+      format.yaml { render yaml: @api_key.user.all_hooks }
     end
   end
 
   def create
-    webhook = @api_user.web_hooks.build(url: @url, rubygem: @rubygem)
+    webhook = @api_key.user.web_hooks.build(url: @url, rubygem: @rubygem)
     if webhook.save
       render(plain: webhook.success_message, status: :created)
     else
@@ -19,7 +20,7 @@ class Api::V1::WebHooksController < Api::BaseController
   end
 
   def remove
-    webhook = @api_user.web_hooks.find_by_rubygem_id_and_url(@rubygem&.id, @url)
+    webhook = @api_key.user.web_hooks.find_by_rubygem_id_and_url(@rubygem&.id, @url)
     if webhook&.destroy
       render(plain: webhook.removed_message)
     else
@@ -28,7 +29,7 @@ class Api::V1::WebHooksController < Api::BaseController
   end
 
   def fire
-    webhook = @api_user.web_hooks.new(url: @url)
+    webhook = @api_key.user.web_hooks.new(url: @url)
     @rubygem ||= Rubygem.find_by_name("gemcutter")
 
     if webhook.fire(request.protocol.delete("://"), request.host_with_port, @rubygem,
@@ -50,5 +51,9 @@ class Api::V1::WebHooksController < Api::BaseController
   def set_url
     render plain: "URL was not provided", status: :bad_request unless params[:url]
     @url = params[:url]
+  end
+
+  def api_key_unauthorized?
+    !@api_key.can_access_webhooks?
   end
 end

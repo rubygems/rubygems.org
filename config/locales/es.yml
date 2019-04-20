@@ -19,6 +19,7 @@ es:
   locale_name: Español
   none: Ninguno
   not_found: No encontrado
+  api_key_forbidden:
   please_sign_up: Acceso denegado. Por favor regístrate en https://rubygems.org
   please_sign_in: Por favor, ingresa en tu cuenta para continuar.
   otp_incorrect: Tu código OTP es incorrecto. Por favor verifícalo y prueba nuevamente.
@@ -55,6 +56,39 @@ es:
     errors:
       messages:
         unpwn:
+  api_keys:
+    create:
+      success:
+    destroy:
+      success:
+    index:
+      api_keys:
+      name:
+      scopes:
+      age:
+      last_access:
+      action:
+      delete:
+      confirm:
+      confirm_all:
+      new_key:
+      index_rubygems:
+      push_rubygem:
+      yank_rubygem:
+      add_owner:
+      remove_owner:
+      access_webhooks:
+      show_dashboard:
+      reset:
+      save_key:
+    new:
+      new_api_key:
+    reset:
+      success:
+    update:
+      success:
+    edit:
+      edit_api_key:
   clearance_mailer:
     change_password:
       title: CAMBIAR CONTRASEÑA
@@ -267,8 +301,6 @@ es:
         reset: Reestablecer mi clave de API
         title: Acceso por API
       reset_password:
-        link_text: Solicitar aquí una nueva.
-        text_html: '¿Necesitas una nueva contraseña? Sin problemas. %{link}'
         title: Reestablecer contraseña
       mfa:
         multifactor_auth: Autenticación de múltiples factores
@@ -299,6 +331,7 @@ es:
       instructions: Lamentamos ver que te vas. Ingresa tu contraseña abajo y confírmalo.
       list_only_owner_html: Estas gemas serán borradas cuando elimines tu cuenta. Si quieres agregar propietarios antes de eliminar tu cuenta, puedes usar el comando %{command_link}.
       list_multi_owner: Perderás acceso a estas gemas, pero otros propietarios podrán seguir accediendo a ellas.
+      warning: Eliminar tu perfil es una acción irreversible. No puede deshacerse contactando a soporte. ¡Por favor hazlo solo si estás seguro!
     rubygem:
       owners_header: Propietarios
     destroy:

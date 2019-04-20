@@ -1,9 +1,3 @@
-@media screen and (max-width: 580px) {
-  .owners__table {
-    display: block;
-  }
-}
-
 .owners__row {
     background: #f6f6f6;
 }
@@ -64,3 +58,15 @@ span.owners__icon img {
 
 .owner__profile:focus, .owner__profile:hover {
     color: #e9573f; }
+
+table tr:first-child th:first-child {
+  border-top-left-radius: 4px;
+}
+
+table tr:first-child th:last-child {
+  border-top-right-radius: 4px;
+}
+
+.t-body ul.scopes__list {
+  margin: 3px 0px;
+}

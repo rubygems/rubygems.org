@@ -11,6 +11,7 @@ de:
   locale_name: Deutsch
   none:
   not_found:
+  api_key_forbidden:
   please_sign_up: Zugriff verweigert. Bitte melden Sie sich unter https://rubygems.org mit einem Konto an
   please_sign_in:
   otp_incorrect:
@@ -47,6 +48,39 @@ de:
     errors:
       messages:
         unpwn:
+  api_keys:
+    create:
+      success:
+    destroy:
+      success:
+    index:
+      api_keys:
+      name:
+      scopes:
+      age:
+      last_access:
+      action:
+      delete:
+      confirm:
+      confirm_all:
+      new_key:
+      index_rubygems:
+      push_rubygem:
+      yank_rubygem:
+      add_owner:
+      remove_owner:
+      access_webhooks:
+      show_dashboard:
+      reset:
+      save_key:
+    new:
+      new_api_key:
+    reset:
+      success:
+    update:
+      success:
+    edit:
+      edit_api_key:
   clearance_mailer:
     change_password:
       title:
@@ -259,8 +293,6 @@ de:
         reset: Zurücksetzen meines API-Schlüssels
         title: API-Zugang
       reset_password:
-        link_text: Jetzt ein neues Passwort zuschicken lassen.
-        text_html: Brauchst du ein neues Passwort? Kein Problem. %{link}
         title: Zurücksetzen des Passworts
       mfa:
         multifactor_auth:
@@ -291,6 +323,7 @@ de:
       instructions:
       list_only_owner_html:
       list_multi_owner:
+      warning:
     rubygem:
       owners_header:
     destroy:

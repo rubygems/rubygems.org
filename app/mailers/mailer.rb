@@ -77,4 +77,11 @@ class Mailer < ApplicationMailer
          subject: I18n.t("mailer.reset_api_key.subject"),
          template_name: template_name
   end
+
+  def api_key_created(api_key_id)
+    @api_key = ApiKey.find(api_key_id)
+
+    mail to: @api_key.user.email,
+      subject: I18n.t("mail.api_key_created.subject", default: "New API key created for rubygems.org")
+  end
 end

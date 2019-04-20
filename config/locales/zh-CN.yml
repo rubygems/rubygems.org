@@ -11,6 +11,7 @@ zh-CN:
   locale_name: 简体中文
   none: 无
   not_found: 未找到
+  api_key_forbidden:
   please_sign_up: 拒绝访问。请先在 https://rubygems.org 上注册一个账号。
   please_sign_in:
   otp_incorrect:
@@ -47,6 +48,39 @@ zh-CN:
     errors:
       messages:
         unpwn:
+  api_keys:
+    create:
+      success:
+    destroy:
+      success:
+    index:
+      api_keys:
+      name:
+      scopes:
+      age:
+      last_access:
+      action:
+      delete:
+      confirm:
+      confirm_all:
+      new_key:
+      index_rubygems:
+      push_rubygem:
+      yank_rubygem:
+      add_owner:
+      remove_owner:
+      access_webhooks:
+      show_dashboard:
+      reset:
+      save_key:
+    new:
+      new_api_key:
+    reset:
+      success:
+    update:
+      success:
+    edit:
+      edit_api_key:
   clearance_mailer:
     change_password:
       title:
@@ -259,8 +293,6 @@ zh-CN:
         reset: 重置 API Key
         title: API 访问
       reset_password:
-        link_text: 这里找回密码
-        text_html: 需要一个新密码？没问题，访问 %{link}
         title: 重置密码
       mfa:
         multifactor_auth:
@@ -291,6 +323,7 @@ zh-CN:
       instructions:
       list_only_owner_html:
       list_multi_owner:
+      warning: 警告
     rubygem:
       owners_header:
     destroy:

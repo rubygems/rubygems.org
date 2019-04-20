@@ -8,29 +8,42 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
     end
   end
 
-  context "When not logged in" do
-    should "forbid access when creating a web hook" do
-      rubygem = create(:rubygem)
-      post :create, params: { gem_name: rubygem.name, url: "http://example.com" }
-      assert @response.body.include? "Access Denied"
-      assert WebHook.count.zero?
+  context "with incorrect api key" do
+    context "no api key" do
+      should "forbid access when creating a web hook" do
+        rubygem = create(:rubygem)
+        post :create, params: { gem_name: rubygem.name, url: "http://example.com" }
+        assert @response.body.include? "Access Denied"
+        assert WebHook.count.zero?
+      end
+
+      should "forbid access when listing hooks" do
+        get :index
+        assert @response.body.include? "Access Denied"
+      end
+
+      should "forbid access when firing hooks" do
+        post :fire, params: { gem_name: WebHook::GLOBAL_PATTERN, url: "http://example.com" }
+        assert @response.body.include? "Access Denied"
+      end
+
+      should "forbid access when removing a web hook" do
+        hook = create(:web_hook)
+        delete :remove, params: { gem_name: hook.rubygem.name, url: hook.url }
+        assert @response.body.include? "Access Denied"
+        assert_equal 1, WebHook.count
+      end
     end
 
-    should "forbid access when listing hooks" do
-      get :index
-      assert @response.body.include? "Access Denied"
-    end
+    context "no webhook actions scope" do
+      setup do
+        create(:api_key, key: "12442")
+        @request.env["HTTP_AUTHORIZATION"] = "12442"
 
-    should "forbid access when firing hooks" do
-      post :fire, params: { gem_name: WebHook::GLOBAL_PATTERN, url: "http://example.com" }
-      assert @response.body.include? "Access Denied"
-    end
+        get :index
+      end
 
-    should "forbid access when removing a web hook" do
-      hook = create(:web_hook)
-      delete :remove, params: { gem_name: hook.rubygem.name, url: hook.url }
-      assert @response.body.include? "Access Denied"
-      assert_equal 1, WebHook.count
+      should respond_with :forbidden
     end
   end
 
@@ -48,11 +61,12 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
     end
   end
 
-  context "When logged in" do
+  context "with webhook actions api key scope" do
     setup do
       @url = "http://example.org"
-      @user = create(:user)
-      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
+      @user = create(:api_key, key: "12342", access_webhooks: true).user
+
+      @request.env["HTTP_AUTHORIZATION"] = "12342"
     end
 
     context "with the gemcutter gem" do

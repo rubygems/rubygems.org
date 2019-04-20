@@ -1,25 +1,6 @@
 <% @title = t(".title") %>
 
 <div class="t-body">
-  <h2><%= t ".reset_password.title" %></h2>
-  <p><%= t(".reset_password.text_html", link: link_to(t(".reset_password.link_text"), new_password_path)) %></p>
-</div>
-
-<div class="t-body">
-  <h2><%= t ".api_access.title" %></h2>
-  <p>
-    <%= t(".api_access.key_is_html", key: content_tag(:strong, current_user.api_key)) %>
-  </p>
-  <p>
-    <%= t(".api_access.credentials_html", gem_credentials_file: content_tag(:code, "~/.gem/credentials"),
-          gem_commands_link: link_to(t(".api_access.link_text"), "https://guides.rubygems.org/command-reference/", target: "blank")) %>
-  </p>
-  <pre><code>gem signin</code></pre>
-</div>
-
-<%= button_to t(".api_access.reset"), reset_api_v1_api_key_path, method: :put, data: {confirm: t(".api_access.confirm_reset")}, class: "form__submit" %>
-
-<div class="t-body">
   <h2><%= t ".mfa.multifactor_auth" %></h2>
   <% if @user.mfa_enabled? %>
     <p><%= t ".mfa.enabled" %></p>
@@ -41,6 +22,14 @@
       <%= button_to t(".mfa.go_settings"), new_multifactor_auth_path, method: "get", class: "form__submit" %>
     </p>
   <% end %>
+</div>
+
+<div class="t-body">
+  <h2><%= link_to t('.reset_password.title'), new_password_path %></h2>
+</div>
+
+<div class="t-body">
+  <h2><%= link_to t('.api_keys'), profile_api_keys_path %></h2>
 </div>
 
 <% if @user.ownerships.any? %>

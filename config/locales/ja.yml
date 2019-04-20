@@ -11,6 +11,7 @@ ja:
   locale_name: 日本語
   none: なし
   not_found:
+  api_key_forbidden:
   please_sign_up: アクセスが拒否されました。https://rubygems.org でアカウント登録を行ってください。
   please_sign_in:
   otp_incorrect:
@@ -47,6 +48,39 @@ ja:
     errors:
       messages:
         unpwn:
+  api_keys:
+    create:
+      success:
+    destroy:
+      success:
+    index:
+      api_keys:
+      name:
+      scopes:
+      age:
+      last_access:
+      action:
+      delete:
+      confirm:
+      confirm_all:
+      new_key:
+      index_rubygems:
+      push_rubygem:
+      yank_rubygem:
+      add_owner:
+      remove_owner:
+      access_webhooks:
+      show_dashboard:
+      reset:
+      save_key:
+    new:
+      new_api_key:
+    reset:
+      success:
+    update:
+      success:
+    edit:
+      edit_api_key:
   clearance_mailer:
     change_password:
       title:
@@ -259,8 +293,6 @@ ja:
         reset: APIキーをリセットする
         title: APIアクセス
       reset_password:
-        link_text: ここから新規に発行することができます。
-        text_html: 新しいパスワードが必要ですか? %{link}
         title: パスワードのリセット
       mfa:
         multifactor_auth:
@@ -291,6 +323,7 @@ ja:
       instructions: お別れをしなければならないことが残念です...。パスワードを入力して操作を確定してください。
       list_only_owner_html: これらのGemはyanked状態になります。もしアカウントの削除前に別のオーナーを追加したい場合は、%{command_link}コマンドを用いてください。
       list_multi_owner: あなたはこれらのGemへのアクセス権を喪失しますが、他のオーナーがアクセス権を継続します。
+      warning: アカウントの削除は不可逆的操作です。これはサポートに連絡しても取り消すことはできません。ご注意ください。
     rubygem:
       owners_header: オーナー
     destroy:

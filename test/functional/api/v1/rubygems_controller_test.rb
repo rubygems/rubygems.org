@@ -184,10 +184,11 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
   end
 
-  context "with a confirmed user authenticated" do
+  context "with index and push rubygem api key scope" do
     setup do
-      @user = create(:user)
-      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
+      @user = create(:api_key, key: "12345", push_rubygem: true, index_rubygems: true).user
+
+      @request.env["HTTP_AUTHORIZATION"] = "12345"
     end
 
     context "On GET to index" do
@@ -398,8 +399,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
   end
 
-  context "No signed in-user" do
-    context "On GET to index with JSON for a list of gems" do
+  context "with incorrect api key" do
+    context "on GET to index with JSON for a list of gems without api key" do
       setup do
         get :index, format: "json"
       end
@@ -410,19 +411,39 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
-    %w[json xml yaml].each do |format|
-      context "on GET to show for an unknown gem with #{format} format" do
-        setup do
-          get :show, params: { id: "rials" }, format: format
-        end
+    context "on GET to index without index rubygem scope" do
+      setup do
+        create(:api_key, key: "12345", index_rubygems: false, push_rubygem: true)
+        @request.env["HTTP_AUTHORIZATION"] = "12345"
+        get :index, format: :json
+      end
 
-        should "return a 404" do
-          assert_response :not_found
-        end
+      should respond_with :forbidden
+    end
 
-        should "say gem could not be found" do
-          assert_equal "This rubygem could not be found.", @response.body
-        end
+    context "on POST to create without push rubygem scope" do
+      setup do
+        create(:api_key, key: "12343")
+        @request.env["HTTP_AUTHORIZATION"] = "12343"
+
+        post :create, body: gem_file("test-1.0.0.gem").read
+      end
+      should respond_with :forbidden
+    end
+  end
+
+  %w[json xml yaml].each do |format|
+    context "on GET to show for an unknown gem with #{format} format" do
+      setup do
+        get :show, params: { id: "rials" }, format: format
+      end
+
+      should "return a 404" do
+        assert_response :not_found
+      end
+
+      should "say gem could not be found" do
+        assert_equal "This rubygem could not be found.", @response.body
       end
     end
   end

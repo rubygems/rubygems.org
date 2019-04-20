@@ -27,18 +27,27 @@ class Api::BaseController < ApplicationController
 
   def verify_with_otp
     otp = request.headers["HTTP_OTP"]
-    return if @api_user.mfa_api_authorized?(otp)
+    return if @api_key.user.mfa_api_authorized?(otp)
     prompt_text = otp.present? ? t(:otp_incorrect) : t(:otp_missing)
     render plain: prompt_text, status: :unauthorized
   end
 
   def authenticate_with_api_key
-    api_key   = request.headers["Authorization"]
-    @api_user = User.find_by_api_key(api_key)
-    render_unauthorized unless @api_user
+    params_key = request.headers["Authorization"] || ""
+    hashed_key = Digest::SHA256.hexdigest(params_key)
+    @api_key   = ApiKey.find_by_hashed_key(hashed_key)
+    render_unauthorized unless @api_key
   end
 
   def render_unauthorized
     render plain: t(:please_sign_up), status: :unauthorized
+  end
+
+  def render_api_key_forbidden
+    respond_to do |format|
+      format.any(:all) { render plain: t(:api_key_forbidden), status: :forbidden }
+      format.json { render json: { error: t(:api_key_forbidden) }, status: :forbidden }
+      format.yaml { render yaml: { error: t(:api_key_forbidden) }, status: :forbidden }
+    end
   end
 end

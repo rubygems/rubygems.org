@@ -11,6 +11,7 @@ fr:
   locale_name: Français
   none:
   not_found: Introuvable
+  api_key_forbidden:
   please_sign_up: Accès refusé. Inscrivez-vous sur https://rubygems.org
   please_sign_in:
   otp_incorrect:
@@ -47,6 +48,39 @@ fr:
     errors:
       messages:
         unpwn:
+  api_keys:
+    create:
+      success:
+    destroy:
+      success:
+    index:
+      api_keys:
+      name:
+      scopes:
+      age:
+      last_access:
+      action:
+      delete:
+      confirm:
+      confirm_all:
+      new_key:
+      index_rubygems:
+      push_rubygem:
+      yank_rubygem:
+      add_owner:
+      remove_owner:
+      access_webhooks:
+      show_dashboard:
+      reset:
+      save_key:
+    new:
+      new_api_key:
+    reset:
+      success:
+    update:
+      success:
+    edit:
+      edit_api_key:
   clearance_mailer:
     change_password:
       title:
@@ -259,8 +293,6 @@ fr:
         reset: Remise à zéro de votre clé API
         title: Accès API
       reset_password:
-        link_text: Demandez un nouveau mot de passe ici.
-        text_html: Besoin d'un nouveau mot de passe ? Pas de problème. %{link}
         title: Renvoi de mot de passe
       mfa:
         multifactor_auth: Authentification Multifacteur
@@ -291,6 +323,7 @@ fr:
       instructions: Nous sommes désolés de vous voir partir. Veuillez entrer votre mot de passe dans le champ et confirmer.
       list_only_owner_html: Ces gems seront effacées quand vous effacerez votre profil. Si vous désirez ajouter des propriétaires avant de supprimer votre profil, vous pouvez utiliser la commande %{command_link}.
       list_multi_owner: Vous allez perdre l'accès à ces gems mais d'autres propriétaires de ces gems y ont toujours accès.
+      warning: La suppression de votre profil est une action irréversible. Cela ne peut pas être annulé en contactant le support. Réfléchissez-bien avant de continuer !
     rubygem:
       owners_header: Propriétaires
     destroy:
