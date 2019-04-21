@@ -16,7 +16,7 @@ addons:
       - elasticsearch-5.x
     packages:
       - elasticsearch
-      - oracle-java8-set-default
+      - openjdk-8-jre-headless
 
 services:
   - elasticsearch
