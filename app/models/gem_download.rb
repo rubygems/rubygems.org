@@ -1,6 +1,6 @@
 class GemDownload < ApplicationRecord
-  belongs_to :rubygem
-  belongs_to :version
+  belongs_to :rubygem, optional: true
+  belongs_to :version, optional: true
 
   scope(:most_downloaded_gems, -> { where("version_id != 0").includes(:version).order(count: :desc) })
 
