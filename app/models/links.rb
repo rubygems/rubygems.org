@@ -52,6 +52,11 @@ class Links
     "/downloads/#{version.full_name}.gem" if version.indexed
   end
 
+  # excluded from metadata_uri_set? check
+  def homepage_uri
+    version.metadata['homepage_uri'].presence || linkset.try(:home)
+  end
+
   # define getters for each of the uris (both short `home` or long `homepage_uri` versions)
   # don't define for download_uri since it has special logic and is already defined
   # using a try because linkset does not define all the uri attributes
