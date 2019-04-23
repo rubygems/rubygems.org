@@ -14,8 +14,8 @@ zh-CN:
   api_key_forbidden:
   please_sign_up: 拒绝访问。请先在 https://rubygems.org 上注册一个账号。
   please_sign_in:
-  otp_incorrect:
-  otp_missing:
+  otp_incorrect: 你的 OTP 码 不正确。请检查后再试一次。
+  otp_missing: 你已启用多重要素验证，但是没有输入 OTP 码。请输入后再试一次。
   sign_in: 登录
   sign_up: 注册
   dependency_list:
@@ -250,32 +250,32 @@ zh-CN:
       will_email_notice: 我们将会通过 Email 发送修改密码的链接给你。
   multifactor_auths:
     recovery_code_html:
-    incorrect_otp:
-    otp_code:
-    require_mfa_disabled:
-    require_mfa_enabled:
+    incorrect_otp: 你的 OTP 码 不正确。
+    otp_code: OTP 码
+    require_mfa_disabled: 你的多重要素验证已启用，请先停用。
+    require_mfa_enabled: 你的多重要素验证已停用，请先启用。
     new:
-      title:
-      scan_prompt:
-      otp_prompt:
-      confirm:
-      enable:
-      account:
-      key:
-      time_based:
+      title: 启用多重要素验证
+      scan_prompt: 请用你的验证装置扫描 QR-code。如果你没办法扫描，手动输入下面的资料。
+      otp_prompt: 输入验证装置上的数字来继续。
+      confirm: 我已把复原码收在安全的地方。
+      enable: 启用
+      account: "帐号: %{account}"
+      key: "金钥: %{key}"
+      time_based: "基于时间的: 是"
     create:
-      qrcode_expired:
-      success:
+      qrcode_expired: 二维码和密钥已过期。请再重新注册装置。
+      success: 你已成功启用多重要素验证。
     recovery:
-      continue:
-      title:
+      continue: 继续
+      title: 复原码
       copy:
       saved:
       note_html:
     destroy:
-      success:
+      success: 你已成功停用多重要素验证。
     update:
-      success:
+      success: 你已成功修改多重验证等级。
   notifiers:
     update:
       success:
@@ -301,16 +301,16 @@ zh-CN:
       reset_password:
         title: 重置密码
       mfa:
-        multifactor_auth:
+        multifactor_auth: 多重要素验证
         disabled_html:
-        go_settings:
+        go_settings: 注册新装置
         enabled_html:
-        update:
+        update: 更新
         level:
-          title:
-          disabled:
-          ui_only:
-          ui_and_api:
+          title: 多重验证等级
+          disabled: 停用
+          ui_only: 只有使用者介面
+          ui_and_api: 使用者介面与API
           ui_and_gem_signin:
   profiles:
     edit:
