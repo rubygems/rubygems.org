@@ -16,13 +16,11 @@ module RubygemsHelper
   end
 
   def link_to_github(rubygem)
-    results = [rubygem.linkset.code, rubygem.linkset.home].map do |linkset|
-      uri = URI(linkset.to_s)
-
-      uri.host == "github.com" ? uri : nil
+    result = [rubygem.linkset.code, rubygem.linkset.home].detect do |linkset|
+      URI(linkset.to_s).host == "github.com"
     end
 
-    results.reject(&:blank?).first
+    URI(result.to_s)
   rescue URI::InvalidURIError
     nil
   end
