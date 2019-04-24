@@ -9,9 +9,9 @@ class ElasticSearcher
     result = Rubygem.__elasticsearch__.search(search_definition).page(@page)
     result.response # ES query is triggered here to allow fallback. avoids lazy loading done in the view
     @api ? result.map(&:_source) : [nil, result]
-  rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Elasticsearch::Transport::Transport::Error => err
+  rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Elasticsearch::Transport::Transport::Error => e
     result = Rubygem.legacy_search(@query).page(@page)
-    @api ? result : [error_msg(err), result]
+    @api ? result : [error_msg(e), result]
   end
 
   private
