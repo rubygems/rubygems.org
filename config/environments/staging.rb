@@ -104,7 +104,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.cache_store = :dalli_store, ENV['MEMCACHED_ENDPOINT'], {
+  config.cache_store = :mem_cache_store, ENV['MEMCACHED_ENDPOINT'], {
     failover: true,
     socket_timeout: 1.5,
     socket_failure_delay: 0.2,

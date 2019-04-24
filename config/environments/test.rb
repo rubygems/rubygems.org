@@ -48,7 +48,7 @@ Rails.application.configure do
 
   config.active_support.test_order = :random
 
-  config.cache_store = :dalli_store
+  config.cache_store = :mem_cache_store
 
   config.active_job.queue_adapter = :test
 end
