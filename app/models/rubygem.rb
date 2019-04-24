@@ -199,10 +199,10 @@ class Rubygem < ApplicationRecord
     spec.dependencies.each do |dependency|
       version.dependencies.create!(gem_dependency: dependency)
     end
-  rescue ActiveRecord::RecordInvalid => ex
+  rescue ActiveRecord::RecordInvalid => e
     # ActiveRecord can't chain a nested error here, so we have to add and reraise
-    errors[:base] << ex.message
-    raise ex
+    errors[:base] << e.message
+    raise e
   end
 
   def update_linkset!(spec)

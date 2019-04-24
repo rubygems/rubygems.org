@@ -21,7 +21,7 @@ Notifier = Struct.new(:url, :protocol, :host_with_port, :rubygem, :version, :api
         'Authorization' => authorization
     end
     true
-  rescue *(HTTP_ERRORS + [RestClient::Exception, SocketError, SystemCallError])
+  rescue *(HTTP_ERRORS + [RestClient::Exception, SocketError, SystemCallError]) => _e
     WebHook.find_by_url(url).try(:increment!, :failure_count)
     false
   end

@@ -1,16 +1,22 @@
 inherit_from: .rubocop_todo.yml
+require:
+  - rubocop-performance
 
 AllCops:
   Exclude:
     - config/initializers/forbidden_yaml.rb
     - app/helpers/dynamic_errors_helper.rb
-    - !ruby/regexp /(vendor|bundle|bin|db)\/.*/
+    - !ruby/regexp /(vendor|bundle|bin|db|tmp)\/.*/
   DisplayCopNames: true
   DisplayStyleGuide: true
   TargetRubyVersion: 2.3
 
 Rails:
   Enabled: true
+
+# TODO: Enable on rubocop 0.67.3
+Rails/ActiveRecordOverride:
+  Enabled: false
 
 Rails/SkipsModelValidations:
   Enabled: false
@@ -52,6 +58,11 @@ Metrics/ModuleLength:
 
 Metrics/PerceivedComplexity:
   Max: 10 # TODO: Lower to 7
+
+# TODO: Enable on rubocop 0.67.3
+Naming/RescuedExceptionsVariableName:
+  Exclude:
+    - app/jobs/notifier.rb
 
 Performance/RedundantMerge:
   Enabled: false
