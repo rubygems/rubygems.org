@@ -17,7 +17,7 @@ Rails.application.configure do
   if Rails.root.join('tmp', 'caching-dev.txt').exist?
     config.action_controller.perform_caching = true
 
-    config.cache_store = :dalli_store,
+    config.cache_store = :mem_cache_store,
                          'localhost:11211',
                          { compress: true, compression_min_size: 524_288 }
     config.public_file_server.headers = {
