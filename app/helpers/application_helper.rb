@@ -57,4 +57,9 @@ module ApplicationHelper
   def plain_paginate(items)
     render "layouts/plain_paginate", items: items
   end
+
+  def content_for_title(title, title_url)
+    return title unless title_url
+    link_to title, title_url, class: "t-link--black"
+  end
 end
