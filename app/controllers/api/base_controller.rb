@@ -19,4 +19,21 @@ class Api::BaseController < ApplicationController
       )
     end
   end
+
+  def verify_with_otp
+    otp = request.headers["HTTP_OTP"]
+    return if @api_user.mfa_api_authorized?(otp)
+    prompt_text = otp.present? ? t(:otp_incorrect) : t(:otp_missing)
+    render plain: prompt_text, status: :unauthorized
+  end
+
+  def authenticate_with_api_key
+    api_key   = request.headers["Authorization"] || params.permit(:api_key).fetch(:api_key, "")
+    @api_user = User.find_by_api_key(api_key)
+    render_unauthorized unless @api_user
+  end
+
+  def render_unauthorized
+    render plain: t(:please_sign_up), status: :unauthorized
+  end
 end
