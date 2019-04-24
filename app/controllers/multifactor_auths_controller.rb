@@ -14,7 +14,7 @@ class MultifactorAuthsController < ApplicationController
   end
 
   def create
-    current_user.verify_and_enable_mfa!(@seed, :ui_only, otp_param, @expire)
+    current_user.verify_and_enable_mfa!(@seed, :ui_and_api, otp_param, @expire)
     if current_user.errors.any?
       flash[:error] = current_user.errors[:base].join
       redirect_to edit_profile_url
