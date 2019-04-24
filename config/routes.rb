@@ -74,7 +74,6 @@ Rails.application.routes.draw do
         end
         collection do
           delete :yank, to: "deletions#create"
-          put :unyank, to: "deletions#destroy"
         end
         constraints rubygem_id: Patterns::ROUTE_PATTERN do
           resource :owners, only: %i[show create destroy]
@@ -111,6 +110,7 @@ Rails.application.routes.draw do
   scope controller: 'api/deprecated', action: 'index' do
     get 'api_key'
     put 'api_key/reset'
+    put 'api/v1/gems/unyank'
 
     post 'gems'
     get 'gems/:id.json'

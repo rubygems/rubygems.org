@@ -19,11 +19,6 @@ class Api::V1::DeletionsController < Api::BaseController
     end
   end
 
-  def destroy
-    render plain: "Unyanking of gems is no longer supported.",
-           status: :gone
-  end
-
   private
 
   def validate_gem_and_version

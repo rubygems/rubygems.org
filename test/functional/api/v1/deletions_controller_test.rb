@@ -166,47 +166,5 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         end
       end
     end
-
-    context "for a gem SomeGem with a deleted version 0.1.0 and indexed version 0.1.1" do
-      setup do
-        @rubygem = create(:rubygem, name: "SomeGem")
-        @v1 = create(:version,
-          rubygem: @rubygem,
-          number: "0.1.0",
-          platform: "ruby",
-          indexed: false)
-        @v2 = create(:version,
-          rubygem: @rubygem,
-          number: "0.1.1",
-          platform: "ruby")
-        @v3 = create(:version,
-          rubygem: @rubygem,
-          number: "0.1.2",
-          platform: "x86-darwin-10",
-          indexed: false)
-        create(:ownership, user: @user, rubygem: @rubygem)
-      end
-
-      context "ON PUT to destroy for version 0.1.0" do
-        setup do
-          put :destroy, params: { gem_name: @rubygem.to_param, version: @v1.number }
-        end
-        should respond_with :gone
-      end
-
-      context "ON PUT to destroy for version 0.1.2 and platform x86-darwin-10" do
-        setup do
-          put :destroy, params: { gem_name: @rubygem.to_param, version: @v3.number, platform: @v3.platform }
-        end
-        should respond_with :gone
-      end
-
-      context "ON PUT to destroy for version 0.1.1" do
-        setup do
-          put :destroy, params: { gem_name: @rubygem.to_param, version: @v2.number }
-        end
-        should respond_with :gone
-      end
-    end
   end
 end

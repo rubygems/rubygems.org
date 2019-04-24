@@ -18,5 +18,7 @@ class Api::DeprecatedControllerTest < ActionController::TestCase
 
     route = { controller: "api/deprecated" }
     assert_recognizes(route.merge(action: "index"), path: '/gems', method: :post)
+
+    assert_recognizes(route.merge(action: "index"), path: "api/v1/gems/unyank", method: :put)
   end
 end
