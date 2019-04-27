@@ -190,4 +190,8 @@ Rails.application.routes.draw do
     get 'ping' => 'ping#index'
     get 'revision' => 'ping#revision'
   end
+
+  ################################################################################
+  # Incoming Webhook Endpoint
+  resources :sendgrid_events, only: :create, format: false, defaults: { format: :json }
 end

@@ -2,7 +2,7 @@ require "test_helper"
 
 class ProfileTest < SystemTest
   setup do
-    @user = create(:user, email: "nick@example.com", password: "password12345", handle: "nick1")
+    @user = create(:user, email: "nick@example.com", password: "password12345", handle: "nick1", mail_fails: 1)
 
     page.driver.browser.set_cookie("mfa_feature=true")
   end
@@ -77,6 +77,7 @@ class ProfileTest < SystemTest
 
     fill_in "Email address", with: "nick2@example.com"
     fill_in "Password", with: "password12345"
+
     click_button "Update"
 
     assert page.has_selector? "input[value='nick@example.com']"
@@ -86,11 +87,14 @@ class ProfileTest < SystemTest
 
     link = last_email_link
     assert_not_nil link
-    visit link
 
-    assert page.has_selector? "#flash_notice", text: "Your email address has been verified"
-    visit edit_profile_path
-    assert page.has_selector? "input[value='nick2@example.com']"
+    assert_changes -> { @user.reload.mail_fails }, from: 1, to: 0 do
+      visit link
+
+      assert page.has_selector? "#flash_notice", text: "Your email address has been verified"
+      visit edit_profile_path
+      assert page.has_selector? "input[value='nick2@example.com']"
+    end
   end
 
   test "disabling email on profile" do
