@@ -1,5 +1,4 @@
 class Api::V1::SearchesController < Api::BaseController
-  skip_before_action :verify_authenticity_token
   before_action :set_page, only: :show
   before_action :verify_query_string, only: :show
 

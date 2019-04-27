@@ -5,12 +5,11 @@ class ApplicationController < ActionController::Base
   helper :announcements
   helper ActiveSupport::NumberHelper
 
-  protect_from_forgery only: %i[create update destroy], with: :exception
+  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
+  rescue_from ActionController::InvalidAuthenticityToken, with: :render_forbidden
 
-  before_action :set_locale
-
-  rescue_from ActiveRecord::RecordNotFound, with: :render_404
   before_action :set_csp unless Rails.env.development?
+  before_action :set_locale
   before_action :reject_null_char_param
 
   def set_csp
@@ -33,10 +32,6 @@ class ApplicationController < ActionController::Base
 
   rescue_from(ActionController::ParameterMissing) do |e|
     render plain: "Request is missing param '#{e.param}'", status: :bad_request
-  end
-
-  rescue_from ActionDispatch::RemoteIp::IpSpoofAttackError do
-    render status: :forbidden
   end
 
   protected
@@ -109,13 +104,17 @@ class ApplicationController < ActionController::Base
     http_accept_language.language_region_compatible_from(I18n.available_locales)
   end
 
-  def render_404
+  def render_not_found
     respond_to do |format|
       format.html { render file: "public/404", status: :not_found, layout: false }
       format.json { render json: { error: t(:not_found) }, status: :not_found }
       format.yaml { render yaml: { error: t(:not_found) }, status: :not_found }
       format.any(:all) { render text: t(:not_found), status: :not_found }
     end
+  end
+
+  def render_forbidden
+    render plain: "forbidden", status: :forbidden
   end
 
   def redirect_to_page_with_error

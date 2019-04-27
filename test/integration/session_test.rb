@@ -18,13 +18,12 @@ class SessionTest < ActionDispatch::IntegrationTest
   end
 
   test "authenticity_token of guest session should be invalid in authenticated session" do
-    assert_raise ActionController::InvalidAuthenticityToken do
-      post session_path(
-        session: { who: "johndoe", password: "chunkybacon" },
-        authenticity_token: @last_session_token
-      )
-    end
+    post session_path(
+      session: { who: "johndoe", password: "chunkybacon" },
+      authenticity_token: @last_session_token
+    )
 
+    assert_response :forbidden
     refute_equal request.session[:_csrf_token], @last_session_token
   end
 
@@ -38,10 +37,8 @@ class SessionTest < ActionDispatch::IntegrationTest
       authenticity_token: request.session[:_csrf_token]
     )
 
-    assert_raise ActionController::InvalidAuthenticityToken do
-      patch "/profile", params: { user: { handle: "alice" }, authenticity_token: @last_session_token }
-    end
-
+    patch "/profile", params: { user: { handle: "alice" }, authenticity_token: @last_session_token }
+    assert_response :forbidden
     refute_equal request.session[:_csrf_token], @last_session_token
   end
 end
