@@ -214,7 +214,7 @@ GEM
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
       ruby_dep (~> 1.2)
-    lograge (0.10.0)
+    lograge (0.11.0)
       actionpack (>= 4)
       activesupport (>= 4)
       railties (>= 4)
