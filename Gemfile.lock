@@ -313,7 +313,7 @@ GEM
       ffi (>= 1.0.6)
       msgpack (>= 0.4.3)
       optimist (>= 3.0.0)
-    rdoc (6.0.4)
+    rdoc (6.1.1)
     recursive-open-struct (1.1.0)
     request_store (1.4.1)
       rack (>= 1.4)
