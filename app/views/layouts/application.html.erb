@@ -105,7 +105,7 @@
         <div class="l-wrap--b">
           <% if @title %>
             <h1 class="t-display page__heading">
-              <%= link_to @title, @title_url, class: "t-link--black" %>
+              <%= content_for_title @title, @title_url %>
 
               <% if @subtitle %>
                 <i class="page__subheading"><%= @subtitle.html_safe %></i>

@@ -181,7 +181,7 @@ en:
       qrcode_expired: The QR-code and key is expired. Please try registering a new device again.
       success: You have successfully enabled multifactor authentication.
     recovery:
-      continue: Continue
+      continue: Continue 🡒
       title: Recovery codes
       note: "You MUST keep the recovery codes safe to prevent losing your account. Each of the code can be used once if you lose your authenticator."
     destroy:
