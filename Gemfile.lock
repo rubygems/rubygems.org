@@ -371,7 +371,7 @@ GEM
     timers (4.1.2)
       hitimes
     to_regexp (0.2.1)
-    toxiproxy (1.0.2)
+    toxiproxy (1.0.3)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     uglifier (3.2.0)
