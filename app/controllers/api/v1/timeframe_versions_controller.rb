@@ -1,7 +1,6 @@
 class Api::V1::TimeframeVersionsController < Api::BaseController
   class InvalidTimeframeParameterError < StandardError; end
   rescue_from InvalidTimeframeParameterError, with: :bad_request_response
-  skip_before_action :verify_authenticity_token
   before_action :set_page, :ensure_valid_timerange, only: :index
 
   MAXIMUM_TIMEFRAME_QUERY_IN_DAYS = 7
