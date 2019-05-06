@@ -89,27 +89,25 @@ class Rack::Attack
 
   ### Logging ###
 
-  ActiveSupport::Notifications.subscribe('rack.attack') do |_name, _start, _finish, _request_id, payload|
+  ActiveSupport::Notifications.subscribe('throttle.rack_attack') do |_name, _start, _finish, _request_id, payload|
     request = payload[:request]
 
-    if request.env['rack.attack.match_type'] == :throttle
-      data = {
-        status: 429,
-        request_id: request.env["action_dispatch.request_id"],
-        client_ip: request.ip.to_s,
-        method: request.env["REQUEST_METHOD"],
-        path: request.env["REQUEST_PATH"],
-        user_agent: request.user_agent,
-        dest_host: request.host,
-        throttle: {
-          matched: request.env["rack.attack.matched"],
-          discriminator: request.env["rack.attack.match_discriminator"],
-          match_data: request.env["rack.attack.match_data"]
-        }
+    data = {
+      status: 429,
+      request_id: request.env["action_dispatch.request_id"],
+      client_ip: request.ip.to_s,
+      method: request.env["REQUEST_METHOD"],
+      path: request.env["REQUEST_PATH"],
+      user_agent: request.user_agent,
+      dest_host: request.host,
+      throttle: {
+        matched: request.env["rack.attack.matched"],
+        discriminator: request.env["rack.attack.match_discriminator"],
+        match_data: request.env["rack.attack.match_data"]
       }
-      event = LogStash::Event.new(data)
-      event['message'] = "[#{data[:status]}] #{data[:method]} #{data[:path]}"
-      Rails.logger.info event.to_json
-    end
+    }
+    event = LogStash::Event.new(data)
+    event['message'] = "[#{data[:status]}] #{data[:method]} #{data[:path]}"
+    Rails.logger.info event.to_json
   end
 end
