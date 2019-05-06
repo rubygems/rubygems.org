@@ -90,19 +90,21 @@ class Rack::Attack
   ### Logging ###
 
   ActiveSupport::Notifications.subscribe('rack.attack') do |_name, _start, _finish, _request_id, payload|
-    if payload.env['rack.attack.match_type'] == :throttle
+    request = payload[:request]
+
+    if request.env['rack.attack.match_type'] == :throttle
       data = {
         status: 429,
-        request_id: payload.env["action_dispatch.request_id"],
-        client_ip: payload.ip.to_s,
-        method: payload.env["REQUEST_METHOD"],
-        path: payload.env["REQUEST_PATH"],
-        user_agent: payload.user_agent,
-        dest_host: payload.host,
+        request_id: request.env["action_dispatch.request_id"],
+        client_ip: request.ip.to_s,
+        method: request.env["REQUEST_METHOD"],
+        path: request.env["REQUEST_PATH"],
+        user_agent: request.user_agent,
+        dest_host: request.host,
         throttle: {
-          matched: payload.env["rack.attack.matched"],
-          discriminator: payload.env["rack.attack.match_discriminator"],
-          match_data: payload.env["rack.attack.match_data"]
+          matched: request.env["rack.attack.matched"],
+          discriminator: request.env["rack.attack.match_discriminator"],
+          match_data: request.env["rack.attack.match_data"]
         }
       }
       event = LogStash::Event.new(data)
