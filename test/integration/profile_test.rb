@@ -24,6 +24,11 @@ class ProfileTest < SystemTest
     find('#mfa-edit input[type=submit]').click
   end
 
+  def mfa_key
+    key_regex = /( (\w{4})){8}/
+    page.find_by_id("mfa-key").text.match(key_regex)[0].delete("\s")
+  end
+
   test "changing handle" do
     sign_in
 
@@ -136,9 +141,7 @@ class ProfileTest < SystemTest
 
     assert page.has_content? "Enabling multifactor auth"
 
-    key_regex = /^Key: (\w{4}) (\w{4}) (\w{4}) (\w{4})/
-    key = page.find_by_id("mfa-key").text.match(key_regex)[1..4].join
-    totp = ROTP::TOTP.new(key)
+    totp = ROTP::TOTP.new(mfa_key)
     page.fill_in "otp", with: totp.now
     click_button "Enable"
 
@@ -195,9 +198,7 @@ class ProfileTest < SystemTest
     click_link "Edit Profile"
     click_button "Register a new device"
 
-    key_regex = /^Key: (\w{4}) (\w{4}) (\w{4}) (\w{4})/
-    key = page.find_by_id("mfa-key").text.match(key_regex)[1..4].join
-    totp = ROTP::TOTP.new(key)
+    totp = ROTP::TOTP.new(mfa_key)
     page.fill_in "otp", with: totp.now
     click_button "Enable"
 
