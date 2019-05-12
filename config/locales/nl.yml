@@ -13,6 +13,7 @@ nl:
   none: Geen
   not_found: Niet gevonden
   please_sign_up: Toegang geweigerd. Schrijf je in voor een account op https://rubygems.org
+  please_sign_in:
   otp_incorrect:
   otp_missing:
   sign_in: Inloggen

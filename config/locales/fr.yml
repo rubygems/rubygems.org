@@ -13,6 +13,7 @@ fr:
   none:
   not_found: Introuvable
   please_sign_up: Accès refusé. Inscrivez-vous sur https://rubygems.org
+  please_sign_in:
   otp_incorrect:
   otp_missing:
   sign_in: Connexion

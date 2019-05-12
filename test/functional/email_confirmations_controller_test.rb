@@ -96,9 +96,11 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         Delayed::Worker.new.work_off
       end
 
-      should 'redirect to root' do
+      should 'redirect to sign in page' do
         post :unconfirmed
-        assert_redirected_to root_path
+
+        assert_redirected_to sign_in_path
+        assert_equal 'Please sign in to continue.', flash[:alert]
       end
     end
 

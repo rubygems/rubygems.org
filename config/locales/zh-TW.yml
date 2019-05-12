@@ -13,6 +13,7 @@ zh-TW:
   none: 無
   not_found: 沒有找到
   please_sign_up: 無法存取，請先在 https://rubygems.org 上註冊帳號
+  please_sign_in:
   otp_incorrect:
   otp_missing:
   sign_in: 登入

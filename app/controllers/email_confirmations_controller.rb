@@ -1,5 +1,5 @@
 class EmailConfirmationsController < ApplicationController
-  before_action :redirect_to_root, unless: :signed_in?, only: :unconfirmed
+  before_action :redirect_to_signin, unless: :signed_in?, only: :unconfirmed
 
   def update
     user = User.find_by(confirmation_token: params[:token])

@@ -13,6 +13,7 @@ es:
   none:
   not_found:
   please_sign_up: Acceso negado. Por favor, primero crea una cuenta en https://rubygems.org
+  please_sign_in:
   otp_incorrect:
   otp_missing:
   sign_in: Ingresar

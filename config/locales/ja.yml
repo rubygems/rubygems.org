@@ -13,6 +13,7 @@ ja:
   none: なし
   not_found:
   please_sign_up: アクセスが拒否されました。https://rubygems.org でアカウント登録を行ってください。
+  please_sign_in:
   otp_incorrect:
   otp_missing:
   sign_in: ログイン
