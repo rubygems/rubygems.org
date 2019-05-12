@@ -30,8 +30,8 @@ class Api::V1::RubygemsController < Api::BaseController
 
   def create
     gemcutter = Pusher.new(@api_user, request.body)
-    gemcutter.process
-    enqueue_web_hook_jobs(gemcutter.version) if gemcutter.version
+    enqueue_web_hook_jobs(gemcutter.version) if gemcutter.process
+
     render plain: gemcutter.message, status: gemcutter.code
   rescue => e
     Honeybadger.notify(e)
