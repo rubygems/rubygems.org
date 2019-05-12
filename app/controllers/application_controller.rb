@@ -50,6 +50,7 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_to_root
+    response.headers["Cache-Control"] = "private, max-age=60"
     redirect_to root_path
   end
 
