@@ -96,7 +96,7 @@ GEM
       bcrypt
       email_validator (~> 1.4)
       railties (>= 3.1)
-    clearance-deprecated_password_strategies (1.10.1)
+    clearance-deprecated_password_strategies (1.10.2)
       activesupport
       clearance (>= 1.10)
     coderay (1.1.2)
