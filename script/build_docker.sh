@@ -16,6 +16,16 @@ echo "$TRAVIS_COMMIT" > REVISION
 
 docker build -t quay.io/$TRAVIS_REPO_SLUG:$TRAVIS_COMMIT .
 
+docker run --net host quay.io/$TRAVIS_REPO_SLUG:$TRAVIS_COMMIT rake db:create db:migrate
+docker run -d --net host quay.io/$TRAVIS_REPO_SLUG:$TRAVIS_COMMIT
+sleep 10
+curl http://localhost:3000/internal/ping | grep PONG
+
+if [ $? -eq 1 ]; then
+  echo "Internal ping api test didn't pass."
+  exit 1
+fi
+
 if [ -z "$DOCKER_USERNAME" ] || [ -z "$DOCKER_PASSWORD" ]
 then
   exit 0
