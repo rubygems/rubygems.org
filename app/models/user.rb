@@ -210,7 +210,7 @@ class User < ApplicationRecord
 
   def verify_digit_otp(seed, otp)
     totp = ROTP::TOTP.new(seed)
-    return false unless totp.verify_with_drift_and_prior(otp, 30)
+    return false unless totp.verify(otp, drift_behind: 30, drift_ahead: 30)
 
     save!(validate: false)
   end
