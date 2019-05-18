@@ -311,6 +311,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       setup do
         @other_user = create(:user)
         @rubygem = create(:rubygem, name: "test", number: "0.0.0", owners: [@other_user])
+        create(:global_web_hook, user: @user, url: "http://example.org")
 
         post :create, body: gem_file("test-1.0.0.gem").read
       end
@@ -319,6 +320,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         assert_equal 1, @rubygem.ownerships.size
         assert_equal @other_user, @rubygem.ownerships.first.user
         assert_equal 1, @rubygem.versions.size
+        assert_equal 0, Delayed::Job.count
         assert_includes @response.body, "You do not have permission to push to this gem."
       end
     end
