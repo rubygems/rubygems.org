@@ -40,6 +40,7 @@ class Pusher
   else
     after_write
     notify("Successfully registered gem: #{version.to_title}", 200)
+    true
   end
 
   def pull_spec

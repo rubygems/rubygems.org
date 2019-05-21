@@ -271,7 +271,7 @@ class PusherTest < ActiveSupport::TestCase
 
     context "when cutter is saved" do
       setup do
-        @cutter.save
+        assert_equal true, @cutter.save
       end
 
       should "set gem file size" do
