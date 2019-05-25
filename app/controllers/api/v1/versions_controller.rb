@@ -1,5 +1,6 @@
 class Api::V1::VersionsController < Api::BaseController
-  before_action :find_rubygem, only: :show
+  skip_before_action :verify_authenticity_token, only: :latest
+  before_action      :find_rubygem, only: :show
 
   def show
     return unless stale?(@rubygem)
