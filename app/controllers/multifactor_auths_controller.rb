@@ -1,5 +1,5 @@
 class MultifactorAuthsController < ApplicationController
-  before_action :redirect_to_root, unless: :signed_in?
+  before_action :redirect_to_signin, unless: :signed_in?
   before_action :require_mfa_disabled, only: %i[new create]
   before_action :require_mfa_enabled, only: :update
   before_action :seed_and_expire, only: :create

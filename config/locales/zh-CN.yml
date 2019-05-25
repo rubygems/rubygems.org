@@ -13,6 +13,7 @@ zh-CN:
   none: 无
   not_found: 未找到
   please_sign_up: 拒绝访问。请先在 https://rubygems.org 上注册一个账号。
+  please_sign_in:
   otp_incorrect:
   otp_missing:
   sign_in: 登录

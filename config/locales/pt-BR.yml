@@ -13,6 +13,7 @@ pt-BR:
   none: Nenhum
   not_found: Não encontrado
   please_sign_up: Accesso Negado. Por favor se registre em https://rubygems.org
+  please_sign_in:
   otp_incorrect: Seu código OTP está incorreto. Por favor, verifique-o e tente novamente.
   otp_missing: Você habilitou a autenticação multifator mas nenhum código OTP foi fornecido. Por favor, preencha-o e tente novamente.
   sign_in: Fazer Login

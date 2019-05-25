@@ -1,6 +1,6 @@
 class Api::V1::ApiKeysController < Api::BaseController
   before_action :verify_authenticity_token, only: :reset
-  before_action :redirect_to_root, unless: :signed_in?, only: [:reset]
+  before_action :redirect_to_signin, unless: :signed_in?, only: [:reset]
 
   def show
     authenticate_or_request_with_http_basic do |username, password|

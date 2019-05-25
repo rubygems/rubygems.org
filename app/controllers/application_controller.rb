@@ -49,8 +49,9 @@ class ApplicationController < ActionController::Base
     response.headers['Surrogate-Key'] = surrogate_keys.join(' ')
   end
 
-  def redirect_to_root
-    redirect_to root_path
+  def redirect_to_signin
+    response.headers["Cache-Control"] = "private, max-age=0"
+    redirect_to sign_in_path, alert: t("please_sign_in")
   end
 
   def verify_with_otp

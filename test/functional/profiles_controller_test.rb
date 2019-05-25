@@ -206,7 +206,6 @@ class ProfilesControllerTest < ActionController::TestCase
 
   context "On GET to edit without being signed in" do
     setup { get :edit }
-    should respond_with :redirect
-    should redirect_to('the homepage') { root_path }
+    should redirect_to("the sign in page") { sign_in_path }
   end
 end
