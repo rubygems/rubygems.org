@@ -18,7 +18,7 @@ namespace :gemcutter do
       puts "Processing #{gems.size} gems..."
       gems.each do |path|
         puts "Processing #{path}"
-        cutter = Pusher.new(nil, File.open(path))
+        cutter = Pusher.new(User.new, File.open(path))
 
         cutter.process
         puts cutter.message unless cutter.code == 200
