@@ -11,7 +11,7 @@ Rails.application.routes.draw do
     namespace :v2 do
       resources :rubygems, param: :name, only: [], constraints: { name: Patterns::ROUTE_PATTERN } do
         resources :versions, param: :number, only: :show, constraints: {
-          number: /#{Gem::Version::VERSION_PATTERN}(?=\.json\z)|#{Gem::Version::VERSION_PATTERN}/
+          number: /#{Gem::Version::VERSION_PATTERN}(?=\.json\z)|#{Gem::Version::VERSION_PATTERN}(?=\.yaml\z)|#{Gem::Version::VERSION_PATTERN}/
         }
       end
     end

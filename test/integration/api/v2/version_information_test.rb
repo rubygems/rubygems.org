@@ -18,6 +18,11 @@ class VersionInformationTest < ActionDispatch::IntegrationTest
     assert_equal '2.0.0', json_response["number"]
   end
 
+  test "return success for yaml extension api call" do
+    request_endpoint(@rubygem, '2.0.0', 'yaml')
+    assert_response :success
+  end
+
   test "has required fields" do
     request_endpoint(@rubygem, '2.0.0')
     json_response = JSON.load(@response.body)
