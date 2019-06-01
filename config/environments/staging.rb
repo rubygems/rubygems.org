@@ -80,7 +80,8 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: Gemcutter::HOST,
                                                protocol: Gemcutter::PROTOCOL }
 
-  config.action_mailer.asset_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
+  # roadie-rails recommends not setting action_mailer.asset_host and use its own configuration for URL options
+  config.roadie.url_options = { host: "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}" }
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = [:en]
