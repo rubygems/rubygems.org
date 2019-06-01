@@ -223,8 +223,8 @@ GEM
     loofah (2.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
-    mail (2.6.6)
-      mime-types (>= 1.16, < 4)
+    mail (2.7.1)
+      mini_mime (>= 0.1.1)
     marcel (0.3.3)
       mimemagic (~> 0.3.2)
     memoist (0.16.0)
@@ -424,7 +424,7 @@ DEPENDENCIES
   listen
   lograge
   logstash-event
-  mail (= 2.6.6)
+  mail
   minitest
   mocha
   newrelic_rpm
