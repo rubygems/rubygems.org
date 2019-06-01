@@ -104,7 +104,7 @@ GEM
     compact_index (0.11.0)
     concurrent-ruby (1.1.5)
     crass (1.0.4)
-    css_parser (1.6.0)
+    css_parser (1.7.0)
       addressable
     daemons (1.3.1)
     dalli (2.7.9)
@@ -263,7 +263,7 @@ GEM
       byebug (~> 11.0)
       pry (~> 0.10)
     psych (3.1.0)
-    public_suffix (3.0.3)
+    public_suffix (3.1.0)
     rack (2.0.7)
     rack-attack (6.0.0)
       rack (>= 1.0, < 3)
@@ -321,11 +321,11 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
-    roadie (3.4.0)
+    roadie (3.5.0)
       css_parser (~> 1.4)
-      nokogiri (~> 1.5)
-    roadie-rails (1.3.0)
-      railties (>= 3.0, < 5.3)
+      nokogiri (~> 1.8)
+    roadie-rails (2.1.0)
+      railties (>= 5.1, < 6.1)
       roadie (~> 3.1)
     rotp (4.1.0)
       addressable (~> 2.5)
@@ -441,7 +441,7 @@ DEPENDENCIES
   rbtrace (~> 0.4.8)
   rdoc
   rest-client
-  roadie-rails (~> 1.3.0)
+  roadie-rails
   rotp
   rqrcode
   rubocop
