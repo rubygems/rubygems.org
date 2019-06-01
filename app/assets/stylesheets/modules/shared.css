@@ -168,3 +168,20 @@ span#github-btn {
 .recovery-code-list__item {
   font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
+
+.t-link--arrow {
+  font-weight: bold;
+}
+
+.t-link--arrow:after {
+  content: "";
+  display: inline-block;
+  margin-left: 5px;
+  padding: 5px;
+  box-shadow: 3px -3px 0 0 #e9573f inset;
+  transform: rotate(225deg);
+}
+
+.t-link--arrow:hover:after {
+  box-shadow: 3px -3px 0 0 rgba(233, 87, 63, 0.7) inset;
+}
