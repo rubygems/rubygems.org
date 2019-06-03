@@ -8,6 +8,7 @@ require 'active_job/railtie'
 require 'rails/test_unit/railtie'
 require 'sprockets/railtie'
 require 'elasticsearch/rails/instrumentation'
+require 'sassc-rails' if ENV['RAILS_ENV'] != 'production' || ENV['PRECOMPILE']
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.

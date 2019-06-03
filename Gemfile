@@ -27,7 +27,7 @@ gem "rbtrace", "~> 0.4.8"
 gem "rdoc"
 gem "rest-client", require: "rest_client"
 gem "roadie-rails"
-gem "sass", require: false
+gem "sassc-rails", require: false
 gem "shoryuken", "~> 2.1.0", require: false
 gem "statsd-instrument", "~> 2.3.0"
 gem "uglifier", ">= 1.0.3"
