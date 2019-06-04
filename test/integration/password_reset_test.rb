@@ -3,6 +3,12 @@ require 'test_helper'
 class PasswordResetTest < SystemTest
   include ActiveJob::TestHelper
 
+  def password_reset_link
+    body = ActionMailer::Base.deliveries.last.body.decoded.to_s
+    link = %r{http://localhost/users([^";]*)}.match(body)
+    link[0]
+  end
+
   setup do
     @user = create(:user, handle: nil)
   end
@@ -26,11 +32,8 @@ class PasswordResetTest < SystemTest
 
   test "resetting password without handle" do
     forgot_password_with @user.email
-    body = ActionMailer::Base.deliveries.last.to_s
-    link = body.split("\n").find { |line| line =~ /^http/ }
-    assert_not_nil link
 
-    visit link
+    visit password_reset_link
     expected_path = "/users/#{@user.id}/password/edit"
     assert_equal expected_path, page.current_path, "removes confirmation token from url"
 
@@ -51,11 +54,8 @@ class PasswordResetTest < SystemTest
   test "resetting a password with a blank password" do
     forgot_password_with @user.email
 
-    body = ActionMailer::Base.deliveries.last.to_s
-    link = body.split("\n").find { |line| line =~ /^http/ }
-    assert_not_nil link
+    visit password_reset_link
 
-    visit link
     fill_in "Password", with: ""
     click_button "Save this password"
 
@@ -78,9 +78,7 @@ class PasswordResetTest < SystemTest
     fill_in "Email address", with: @user.email
     perform_enqueued_jobs { click_button "Reset password" }
 
-    body = ActionMailer::Base.deliveries.last.to_s
-    link = body.split("\n").find { |line| line =~ /^http/ }
-    visit link
+    visit password_reset_link
 
     fill_in "Password", with: "secret54321"
     click_button "Save this password"
@@ -92,11 +90,7 @@ class PasswordResetTest < SystemTest
     @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
     forgot_password_with @user.email
 
-    body = ActionMailer::Base.deliveries.last.to_s
-    link = body.split("\n").find { |line| line =~ /^http/ }
-    assert_not_nil link
-
-    visit link
+    visit password_reset_link
 
     fill_in "otp", with: ROTP::TOTP.new(@user.mfa_seed).now
     click_button "Authenticate"
