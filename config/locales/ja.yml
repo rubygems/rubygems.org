@@ -43,6 +43,10 @@ ja:
         email: Emailアドレス
         handle: ユーザー名
         password: パスワード
+  clearance_mailer:
+    change_password:
+      title:
+      subtitle:
   dashboards:
     show:
       creating_link_text: 作成
@@ -105,15 +109,23 @@ ja:
     confirm_your_email: あなたのメールアドレスに送信されたURLを確認してください。
     confirmation_subject: RubyGems.orgに登録されたあなたのメールアドレスを確認してください
     email_confirmation:
+      title:
+      subtitle:
       confirmation_link: メールアドレスを確認する
       welcome_message: RubyGems.orgにようこそ! 以下のリンクをクリックしてあなたのメールアドレスを確認してください
     email_reset:
+      title:
+      subtitle:
       visit_link_instructions: RubyGems.orgでのあなたのメールアドレスが変更されました。以下のURLからメールアドレスを確認してください。
       link_expiration_explanation: このリンクは15分間のみ有効です。
     deletion_complete:
+      title:
+      subtitle:
       subject: あなたのアカウントはrubygems.orgから削除されました
       body_html: あなたのアカウント削除申請が処理されました。いつでも%{sign_up}ページから再登録をすることができます。
     deletion_failed:
+      title:
+      subtitle:
       subject: あなたのアカウントはrubygems.orgから削除されませんでした
       body_html: あなたのrubygems.orgにおけるアカウント削除申請は処理されませんでした。申し訳ありませんが、現在アカウントを削除することができません。しばらく待ってから再度お試し頂くか、問題が継続するようならば%{contact}をお願いいたします。
   news:

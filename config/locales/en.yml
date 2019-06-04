@@ -51,6 +51,10 @@ en:
         email: Email address
         handle: Username
         password: Password
+  clearance_mailer:
+    change_password:
+      title: CHANGE PASSWORD
+      subtitle: Hi %{handle}!
   dashboards:
     show:
       creating_link_text: creating
@@ -113,15 +117,23 @@ en:
     confirm_your_email: Please confirm your email address with the link sent to you email.
     confirmation_subject: Please confirm your email address with RubyGems.org
     email_confirmation:
+      title: EMAIL CONFIRMATION
+      subtitle: Almost done!
       confirmation_link: Confirm email address
       welcome_message: Welcome to RubyGems.org! Click the link below to verify your email.
     email_reset:
+      title: EMAIL RESET
+      subtitle: Hi %{handle}!
       visit_link_instructions: You changed your email address on RubyGems.org. Please visit the following url to re-activate your account.
       link_expiration_explanation: Please keep in mind that this link is only valid for 3 hours.
     deletion_complete:
+      title: DELETION COMPLETE
+      subtitle: Bye!
       subject: Your account has been deleted from rubygems.org
       body_html: Your request for account deletion on rubygems.org has been processed. You can always create a new account using our %{sign_up} page.
     deletion_failed:
+      title: DELETION FAILED
+      subtitle: Sorry!
       subject: Your account deletion request on rubygems.org has failed
       body_html: You had request for account deletion on rubygems.org. Unfortunately, we were not able to process your request. Please try again after some time or %{contact} us if problem persists.
   news:

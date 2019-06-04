@@ -43,6 +43,10 @@ de:
         email: E-Mail-Adresse
         handle: Benutzername
         password: Passwort
+  clearance_mailer:
+    change_password:
+      title:
+      subtitle:
   dashboards:
     show:
       creating_link_text: Erstellen
@@ -105,15 +109,23 @@ de:
     confirm_your_email:
     confirmation_subject:
     email_confirmation:
+      title:
+      subtitle:
       confirmation_link:
       welcome_message:
     email_reset:
+      title:
+      subtitle:
       visit_link_instructions:
       link_expiration_explanation:
     deletion_complete:
+      title:
+      subtitle:
       subject:
       body_html:
     deletion_failed:
+      title:
+      subtitle:
       subject:
       body_html:
   news:
