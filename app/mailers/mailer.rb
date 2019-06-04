@@ -1,4 +1,5 @@
 class Mailer < ActionMailer::Base
+  layout 'mailer'
   include Roadie::Rails::Automatic
 
   default_url_options[:host] = Gemcutter::HOST
