@@ -1,3 +1,4 @@
 User-agent: *
 Disallow: /downloads/
 Disallow: /gems?letter=*
+Disallow: /search?*
