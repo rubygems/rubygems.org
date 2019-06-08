@@ -39,6 +39,7 @@ module RubygemSearchable
         summary:           latest_version.try(:summary),
         description:       latest_version.try(:description),
         updated:           updated_at,
+        suggest:           name,
         dependencies: {
           development: deps.try(:select) { |r| r.rubygem && r.scope == 'development' },
           runtime: deps.try(:select) { |r| r.rubygem && r.scope == 'runtime' }
@@ -67,6 +68,7 @@ module RubygemSearchable
       indexes :description, type: 'text', analyzer: 'english' do
         indexes :raw, analyzer: 'simple'
       end
+      indexes :suggest, type: 'completion'
       indexes :yanked, type: 'boolean'
       indexes :downloads, type: 'integer'
       indexes :updated, type: 'date'
