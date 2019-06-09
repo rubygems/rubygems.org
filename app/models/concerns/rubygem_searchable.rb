@@ -55,6 +55,7 @@ module RubygemSearchable
                    max_gram: 20,
                    min_gram: 2,
                    type: 'edge_ngram'
+                 }
                },
                tokenizer: {
                  special_characters: {
@@ -75,7 +76,6 @@ module RubygemSearchable
                  }
                }
              }
-
     mapping do
       indexes :name, type: 'text', analyzer: 'rubygem' do
         indexes :suggest, analyzer: 'simple'
