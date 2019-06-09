@@ -60,7 +60,7 @@ module RubygemSearchable
                tokenizer: {
                  special_characters: {
                    type: 'pattern',
-                   pattern: "[\s#{Regexp.escape(SPECIAL_CHARACTERS)}]+"
+                   pattern: "[\s#{Regexp.escape(Patterns::SPECIAL_CHARACTERS)}]+"
                  }
                },
                analyzer: {
@@ -77,9 +77,8 @@ module RubygemSearchable
                }
              }
     mapping do
-      indexes :name, type: 'text', analyzer: 'rubygem' do
+      indexes :name, type: 'text', analyzer: 'rubygem', search_analyzer: 'default_analyzer' do
         indexes :suggest, analyzer: 'simple'
-        indexes :name, search_analyzer: 'default_analyzer'
       end
       indexes :summary, type: 'text', analyzer: 'english' do
         indexes :raw, analyzer: 'simple'
