@@ -67,12 +67,12 @@ module RubygemSearchable
                  rubygem: {
                    type: 'custom',
                    tokenizer: 'special_characters',
-                   filter: %w(lowercase autocomplete_ngram)
+                   filter: %w[lowercase autocomplete_ngram]
                  },
                  default_analyzer: {
                    type: 'custom',
                    tokenizer: 'special_characters',
-                   filter: %w(lowercase)
+                   filter: %w[lowercase]
                  }
                }
              }
