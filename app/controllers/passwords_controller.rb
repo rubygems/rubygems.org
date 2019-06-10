@@ -9,6 +9,20 @@ class PasswordsController < Clearance::PasswordsController
     end
   end
 
+  def update
+    @user = find_user_for_update
+
+    if @user.update_password password_reset_params
+      @user.reset_api_key! if params[:password_reset] && params[:password_reset][:reset_api_key].in?([true, '1', 1])
+      sign_in @user
+      redirect_to url_after_update
+      session[:password_reset_token] = nil
+    else
+      flash_failure_after_update
+      render template: "passwords/edit"
+    end
+  end
+
   def mfa_edit
     if @user.mfa_enabled? && @user.otp_verified?(params[:otp])
       render template: 'passwords/edit'
