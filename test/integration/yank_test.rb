@@ -64,21 +64,6 @@ class YankTest < SystemTest
     refute page.has_selector?("a[alt='#{@user.handle}']")
   end
 
-  test "undo a yank is not supported" do
-    create(:version, rubygem: @rubygem, number: "1.0.0", indexed: true)
-    create(:version, rubygem: @rubygem, number: "0.0.0", indexed: false)
-
-    page.driver.browser.header("Authorization", @user.api_key)
-    page.driver.put unyank_api_v1_rubygems_path(gem_name: @rubygem.name, version: "0.0.0")
-
-    visit dashboard_path
-    assert page.has_content? "sandworm"
-
-    click_link "sandworm"
-    assert page.has_content?("1.0.0")
-    refute page.has_content?("0.0.0")
-  end
-
   teardown do
     Dir.chdir(Rails.root)
   end

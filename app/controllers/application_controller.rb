@@ -39,30 +39,6 @@ class ApplicationController < ActionController::Base
     redirect_to sign_in_path, alert: t("please_sign_in")
   end
 
-  def verify_with_otp
-    otp = request.headers["HTTP_OTP"]
-    return if @api_user.mfa_api_authorized?(otp)
-    prompt_text = otp.present? ? t(:otp_incorrect) : t(:otp_missing)
-    render plain: prompt_text, status: :unauthorized
-  end
-
-  def authenticate_with_api_key
-    api_key   = request.headers["Authorization"] || params.permit(:api_key).fetch(:api_key, "")
-    @api_user = User.find_by_api_key(api_key)
-  end
-
-  def verify_authenticated_user
-    return if @api_user
-    # When in passenger, this forces the whole body to be read before
-    # we return a 401 and end the request. We need to do this because
-    # otherwise apache is confused why we never read the whole body.
-    #
-    # This works because request.body is a RewindableInput which will
-    # slurp all the socket data into a tempfile, satisfying apache.
-    request.body.size if request.body.respond_to? :size
-    render plain: t(:please_sign_up), status: :unauthorized
-  end
-
   def find_rubygem
     @rubygem = Rubygem.find_by_name(params[:rubygem_id] || params[:id])
     return if @rubygem
