@@ -106,8 +106,13 @@ class Rubygem < ApplicationRecord
     versions.uniq.sort_by(&:position)
   end
 
-  def public_version_payload(number)
-    version = public_versions.find_by(number: number)
+  def public_version_payload(number, platform = nil)
+    version =
+      if platform
+        public_versions.find_by(number: number, platform: platform)
+      else
+        public_versions.find_by(number: number)
+      end
     payload(version).merge!(version.as_json) if version
   end
 
