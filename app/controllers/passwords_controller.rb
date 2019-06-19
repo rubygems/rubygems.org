@@ -13,7 +13,7 @@ class PasswordsController < Clearance::PasswordsController
     @user = find_user_for_update
 
     if @user.update_password password_reset_params
-      @user.reset_api_key! if reset_params[:reset_api_key].in?([true, '1', 1])
+      @user.reset_api_key! if reset_params[:reset_api_key] == 'true'
       sign_in @user
       redirect_to url_after_update
       session[:password_reset_token] = nil

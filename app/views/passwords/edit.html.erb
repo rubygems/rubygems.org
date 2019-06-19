@@ -9,7 +9,7 @@
     <%= form.password_field :password, :class => 'form__input' %>
   </div>
   <div class="form__checkbox">
-    <%= form.check_box :reset_api_key, :class => 'form__checkbox__input' %>
+    <%= form.check_box :reset_api_key, { :class => 'form__checkbox__input' } , 'true', 'false' %>
     <%= form.label :reset_api_key, t('profiles.edit.api_access.reset'), :class => 'form__checkbox__label' %>
   </div>
 

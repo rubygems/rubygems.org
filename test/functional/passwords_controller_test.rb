@@ -109,7 +109,7 @@ class PasswordsControllerTest < ActionController::TestCase
         put :update, params: {
           user_id: @user.id,
           token: @user.confirmation_token,
-          password_reset: { reset_api_key: '1', password: 'pass' }
+          password_reset: { reset_api_key: 'true', password: 'pass' }
         }
       end
 
@@ -140,12 +140,30 @@ class PasswordsControllerTest < ActionController::TestCase
       end
     end
 
+    context "with reset_api_key false and valid password" do
+      setup do
+        put :update, params: {
+          user_id: @user.id,
+          token: @user.confirmation_token,
+          password_reset: { reset_api_key: 'false', password: 'password1234' }
+        }
+      end
+
+      should respond_with :found
+      should "not change api_key" do
+        assert(@user.reload.api_key == @api_key)
+      end
+      should "change password" do
+        assert(@user.reload.encrypted_password != @old_encrypted_password)
+      end
+    end
+
     context "with reset_api_key and valid password" do
       setup do
         put :update, params: {
           user_id: @user.id,
           token: @user.confirmation_token,
-          password_reset: { reset_api_key: '1', password: 'password1234' }
+          password_reset: { reset_api_key: 'true', password: 'password1234' }
         }
       end
 
