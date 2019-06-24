@@ -13,6 +13,12 @@ class SearchesController < ApplicationController
   def advanced
   end
 
+  def autocomplete
+    return unless params[:query]&.is_a?(String)
+    names = ElasticSearcher.new(params[:query], page: @page).suggest
+    render json: names
+  end
+
   private
 
   def limit_total_count

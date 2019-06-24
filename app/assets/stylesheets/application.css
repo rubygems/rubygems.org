@@ -5,4 +5,6 @@
  *= require_self
  *= require github_buttons
  *= require_tree .
+ *= require jquery-ui/autocomplete
+ *= require jquery-ui-custom
 */

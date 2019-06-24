@@ -14,6 +14,15 @@ class ElasticSearcher
     @api ? result : [error_msg(e), result]
   end
 
+  def suggest
+    suggest_key = search
+    names = []
+    suggest_key[1].each do |response|
+      names.push(response.name)
+    end
+    names
+  end
+
   private
 
   def search_definition # rubocop:disable Metrics/MethodLength
