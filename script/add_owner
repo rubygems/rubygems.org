@@ -4,8 +4,8 @@ name, email = *ARGV
 
 abort "Usage: script/add_owner [GEM_NAME] [USER_EMAIL]" if name.nil? || email.nil?
 
-ENV['RAILS_ENV'] ||= 'production'
-require_relative '../config/environment'
+ENV["RAILS_ENV"] ||= "production"
+require_relative "../config/environment"
 
 user    = User.find_by_email!(email)
 rubygem = Rubygem.find_by_name!(name)

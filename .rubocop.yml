@@ -98,6 +98,8 @@ Style/Documentation:
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
+  Exclude:
+    - config/**/*
 
 Style/FrozenStringLiteralComment:
   Enabled: false

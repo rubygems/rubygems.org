@@ -4,8 +4,8 @@ rubygem_name = *ARGV
 
 abort "Usage: script/release_reserved_namespace [GEM_NAME]" if rubygem_name.nil?
 
-ENV['RAILS_ENV'] ||= 'production'
-require_relative '../config/environment'
+ENV["RAILS_ENV"] ||= "production"
+require_relative "../config/environment"
 
 rubygem = Rubygem.find_by_name!(rubygem_name)
 rubygem.update_attribute(:updated_at, 101.days.ago)

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-ENV['RAILS_ENV'] ||= 'production'
-require_relative '../config/environment'
+ENV["RAILS_ENV"] ||= "production"
+require_relative "../config/environment"
 
 name, number, email = ARGV
 

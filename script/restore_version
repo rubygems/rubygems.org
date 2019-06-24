@@ -4,8 +4,8 @@ gem_name, version_number, platform = *ARGV
 
 abort "Usage: script/restore_version GEM_NAME VESRION_NUMBER [PLATFORM]" if gem_name.nil? || version_number.nil?
 
-ENV['RAILS_ENV'] ||= 'production'
-require_relative '../config/environment'
+ENV["RAILS_ENV"] ||= "production"
+require_relative "../config/environment"
 
 rubygem = Rubygem.find_by_name!(gem_name)
 slug = version_number
