@@ -96,6 +96,9 @@ Style/ClassAndModuleChildren:
 Style/Documentation:
   Enabled: false
 
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
 Style/FrozenStringLiteralComment:
   Enabled: false
 
