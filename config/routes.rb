@@ -126,6 +126,7 @@ Rails.application.routes.draw do
 
   ################################################################################
   # UI
+  get 'search/autocomplete', to: 'searches#autocomplete', defaults: { format: 'json' }
   scope constraints: { format: :html }, defaults: { format: 'html' } do
     resource :search, only: :show do
       get :advanced
