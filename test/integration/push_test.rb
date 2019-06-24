@@ -17,6 +17,10 @@ class PushTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert page.has_content?("sandworm")
     assert page.has_content?("1.0.0")
+    assert page.has_content?("Pushed By")
+
+    css = %(div.gem__users a[alt=#{@user.handle}])
+    assert page.has_css?(css, count: 2)
   end
 
   test "push a new version of a gem" do

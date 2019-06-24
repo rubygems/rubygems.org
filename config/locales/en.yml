@@ -242,6 +242,8 @@ en:
       list_multi_owner: You will lose access to these gem but other owners of the gem will continue to have access.
     rubygem:
       owners_header: Owners
+      pushed_by: Pushed by
+      yanked_by: Yanked by
     destroy:
       request_queued: Your account deletion request has been enqueued. We will send you a confirmation mail when your request has been processed.
     update:

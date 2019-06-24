@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_20_164205) do
+ActiveRecord::Schema.define(version: 2019_04_11_065002) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -173,6 +173,7 @@ ActiveRecord::Schema.define(version: 2019_02_20_164205) do
     t.string "required_rubygems_version"
     t.string "info_checksum"
     t.string "yanked_info_checksum"
+    t.bigint "pusher_id"
     t.index "lower((full_name)::text)", name: "index_versions_on_lower_full_name"
     t.index ["built_at"], name: "index_versions_on_built_at"
     t.index ["created_at"], name: "index_versions_on_created_at"
@@ -181,6 +182,7 @@ ActiveRecord::Schema.define(version: 2019_02_20_164205) do
     t.index ["number"], name: "index_versions_on_number"
     t.index ["position"], name: "index_versions_on_position"
     t.index ["prerelease"], name: "index_versions_on_prerelease"
+    t.index ["pusher_id"], name: "index_versions_on_pusher_id"
     t.index ["rubygem_id", "number", "platform"], name: "index_versions_on_rubygem_id_and_number_and_platform", unique: true
     t.index ["rubygem_id"], name: "index_versions_on_rubygem_id"
   end

@@ -81,7 +81,8 @@ class Pusher
     @version = @rubygem.versions.new number: spec.version.to_s,
                                      platform: spec.original_platform.to_s,
                                      size: size,
-                                     sha256: sha256
+                                     sha256: sha256,
+                                     pusher: user
 
     true
   end

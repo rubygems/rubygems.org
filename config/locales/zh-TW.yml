@@ -234,6 +234,8 @@ zh-TW:
       list_multi_owner:
     rubygem:
       owners_header:
+      pushed_by:
+      yanked_by:
     destroy:
       request_queued:
     update:
