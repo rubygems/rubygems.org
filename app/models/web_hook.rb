@@ -1,5 +1,5 @@
 class WebHook < ApplicationRecord
-  GLOBAL_PATTERN = '*'.freeze
+  GLOBAL_PATTERN = "*".freeze
 
   belongs_to :user
   belongs_to :rubygem, optional: true
@@ -54,8 +54,8 @@ class WebHook < ApplicationRecord
 
   def payload
     {
-      'failure_count' => failure_count,
-      'url'           => url
+      "failure_count" => failure_count,
+      "url"           => url
     }
   end
 
@@ -64,7 +64,7 @@ class WebHook < ApplicationRecord
   end
 
   def to_xml(options = {})
-    payload.to_xml(options.merge(root: 'web_hook'))
+    payload.to_xml(options.merge(root: "web_hook"))
   end
 
   def to_yaml(*args)

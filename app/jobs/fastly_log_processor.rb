@@ -1,4 +1,4 @@
-require 'zlib'
+require "zlib"
 
 class FastlyLogProcessor
   class LogFileNotFoundError < ::StandardError; end
@@ -13,16 +13,16 @@ class FastlyLogProcessor
   end
 
   def perform
-    StatsD.increment('fastly_log_processor.started')
+    StatsD.increment("fastly_log_processor.started")
 
     log_ticket = LogTicket.pop(key: key, directory: bucket)
     if log_ticket.nil?
-      StatsD.increment('fastly_log_processor.extra')
+      StatsD.increment("fastly_log_processor.extra")
       return
     end
 
     counts = download_counts(log_ticket)
-    StatsD.gauge('fastly_log_processor.processed_versions_count', counts.count)
+    StatsD.gauge("fastly_log_processor.processed_versions_count", counts.count)
     Delayed::Worker.logger.info "Processed Fastly log counts: #{counts.inspect}"
 
     processed_count = counts.sum { |_, v| v }
@@ -30,13 +30,13 @@ class FastlyLogProcessor
       GemDownload.bulk_update(counts)
       log_ticket.update(status: "processed", processed_count: processed_count)
     end
-    StatsD.gauge('fastly_log_processor.processed_count', processed_count)
+    StatsD.gauge("fastly_log_processor.processed_count", processed_count)
   rescue
     log_ticket.update(status: "failed") if log_ticket
     raise
   end
-  statsd_count_success :perform, 'fastly_log_processor.perform'
-  statsd_measure :perform, 'fastly_log_processor.job_performance'
+  statsd_count_success :perform, "fastly_log_processor.perform"
+  statsd_measure :perform, "fastly_log_processor.job_performance"
 
   # Takes an enumerator of log lines and returns a hash of download counts
   # E.g.

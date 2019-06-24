@@ -15,9 +15,9 @@ class Api::V1::OwnersController < Api::BaseController
     owner = User.find_by_name(params[:email])
     if owner
       @rubygem.ownerships.create(user: owner)
-      render plain: 'Owner added successfully.'
+      render plain: "Owner added successfully."
     else
-      render plain: 'Owner could not be found.', status: :not_found
+      render plain: "Owner could not be found.", status: :not_found
     end
   end
 
@@ -28,10 +28,10 @@ class Api::V1::OwnersController < Api::BaseController
       if ownership.try(:safe_destroy)
         render plain: "Owner removed successfully."
       else
-        render plain: 'Unable to remove owner.', status: :forbidden
+        render plain: "Unable to remove owner.", status: :forbidden
       end
     else
-      render plain: 'Owner could not be found.', status: :not_found
+      render plain: "Owner could not be found.", status: :not_found
     end
   end
 
@@ -52,6 +52,6 @@ class Api::V1::OwnersController < Api::BaseController
 
   def verify_gem_ownership
     return if @api_user.rubygems.find_by_name(params[:rubygem_id])
-    render plain: 'You do not have permission to manage this gem.', status: :unauthorized
+    render plain: "You do not have permission to manage this gem.", status: :unauthorized
   end
 end

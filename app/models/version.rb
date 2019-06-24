@@ -1,8 +1,8 @@
-require 'digest/sha2'
+require "digest/sha2"
 
 class Version < ApplicationRecord
   belongs_to :rubygem, touch: true
-  has_many :dependencies, -> { order('rubygems.name ASC').includes(:rubygem) }, dependent: :destroy, inverse_of: "version"
+  has_many :dependencies, -> { order("rubygems.name ASC").includes(:rubygem) }, dependent: :destroy, inverse_of: "version"
   has_one :gem_download, proc { |m| where(rubygem_id: m.rubygem_id) }, inverse_of: :version
 
   before_save :update_prerelease
@@ -24,7 +24,7 @@ class Version < ApplicationRecord
   class AuthorType < ActiveModel::Type::String
     def cast_value(value)
       if value.is_a?(Array)
-        value.join(', ')
+        value.join(", ")
       else
         super
       end
@@ -100,7 +100,7 @@ class Version < ApplicationRecord
       .indexed
       .release
       .order("rubygems.name asc, position desc")
-      .pluck('rubygems.name', :number, :platform)
+      .pluck("rubygems.name", :number, :platform)
   end
 
   def self.rows_for_latest_index
@@ -108,7 +108,7 @@ class Version < ApplicationRecord
       .indexed
       .latest
       .order("rubygems.name asc, position desc")
-      .pluck('rubygems.name', :number, :platform)
+      .pluck("rubygems.name", :number, :platform)
   end
 
   def self.rows_for_prerelease_index
@@ -116,11 +116,11 @@ class Version < ApplicationRecord
       .indexed
       .prerelease
       .order("rubygems.name asc, position desc")
-      .pluck('rubygems.name', :number, :platform)
+      .pluck("rubygems.name", :number, :platform)
   end
 
   def self.most_recent
-    latest.find_by(platform: 'ruby') || latest.order(number: :desc).first || last
+    latest.find_by(platform: "ruby") || latest.order(number: :desc).first || last
   end
 
   # This method returns the new versions for brand new rubygems
@@ -186,7 +186,7 @@ class Version < ApplicationRecord
   end
 
   def size
-    self[:size] || 'N/A'
+    self[:size] || "N/A"
   end
 
   def byte_size
@@ -245,21 +245,21 @@ class Version < ApplicationRecord
 
   def payload
     {
-      'authors'                    => authors,
-      'built_at'                   => built_at,
-      'created_at'                 => created_at,
-      'description'                => description,
-      'downloads_count'            => downloads_count,
-      'metadata'                   => metadata,
-      'number'                     => number,
-      'summary'                    => summary,
-      'platform'                   => platform,
-      'rubygems_version'           => required_rubygems_version,
-      'ruby_version'               => required_ruby_version,
-      'prerelease'                 => prerelease,
-      'licenses'                   => licenses,
-      'requirements'               => requirements,
-      'sha'                        => sha256_hex
+      "authors"                    => authors,
+      "built_at"                   => built_at,
+      "created_at"                 => created_at,
+      "description"                => description,
+      "downloads_count"            => downloads_count,
+      "metadata"                   => metadata,
+      "number"                     => number,
+      "summary"                    => summary,
+      "platform"                   => platform,
+      "rubygems_version"           => required_rubygems_version,
+      "ruby_version"               => required_ruby_version,
+      "prerelease"                 => prerelease,
+      "licenses"                   => licenses,
+      "requirements"               => requirements,
+      "sha"                        => sha256_hex
     }
   end
 
@@ -268,7 +268,7 @@ class Version < ApplicationRecord
   end
 
   def to_xml(options = {})
-    payload.to_xml(options.merge(root: 'version'))
+    payload.to_xml(options.merge(root: "version"))
   end
 
   def to_s
@@ -313,7 +313,7 @@ class Version < ApplicationRecord
   end
 
   def authors_array
-    authors.split(',').flatten
+    authors.split(",").flatten
   end
 
   def sha256_hex
@@ -354,7 +354,7 @@ class Version < ApplicationRecord
   end
 
   def feature_release(number)
-    feature_version = Gem::Version.new(number).segments[0, 2].join('.')
+    feature_version = Gem::Version.new(number).segments[0, 2].join(".")
     Gem::Version.new(feature_version)
   end
 

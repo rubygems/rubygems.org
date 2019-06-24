@@ -21,11 +21,11 @@ class Dependency < ApplicationRecord
   end
 
   def self.development
-    where(scope: 'development')
+    where(scope: "development")
   end
 
   def self.runtime
-    where(scope: 'runtime')
+    where(scope: "runtime")
   end
 
   def name
@@ -34,8 +34,8 @@ class Dependency < ApplicationRecord
 
   def payload
     {
-      'name'         => name,
-      'requirements' => clean_requirements
+      "name"         => name,
+      "requirements" => clean_requirements
     }
   end
 
@@ -44,7 +44,7 @@ class Dependency < ApplicationRecord
   end
 
   def to_xml(options = {})
-    payload.to_xml(options.merge(root: 'dependency'))
+    payload.to_xml(options.merge(root: "dependency"))
   end
 
   def to_yaml(*args)
@@ -97,7 +97,7 @@ class Dependency < ApplicationRecord
   def parse_gem_dependency
     return if requirements
 
-    reqs = gem_dependency.requirements_list.join(', ')
+    reqs = gem_dependency.requirements_list.join(", ")
     self.requirements = clean_requirements(reqs)
 
     self.scope = gem_dependency.type.to_s

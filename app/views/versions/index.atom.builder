@@ -1,5 +1,5 @@
 render(
-  partial: 'versions/versions_feed',
+  partial: "versions/versions_feed",
   locals: {
     builder: xml,
     versions: @versions,

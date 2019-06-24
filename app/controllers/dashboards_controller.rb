@@ -11,7 +11,7 @@ class DashboardsController < ApplicationController
       end
       format.atom do
         @versions = Version.subscribed_to_by(api_or_logged_in_user).published(Gemcutter::DEFAULT_PAGINATION)
-        render 'versions/feed'
+        render "versions/feed"
       end
     end
   end

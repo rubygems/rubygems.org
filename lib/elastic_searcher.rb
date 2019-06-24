@@ -29,8 +29,8 @@ class ElasticSearcher
               should do
                 query_string do
                   query query_str
-                  fields ['name^5', 'summary^3', 'description']
-                  default_operator 'and'
+                  fields ["name^5", "summary^3", "description"]
+                  default_operator "and"
                 end
               end
               minimum_should_match 1
@@ -47,21 +47,21 @@ class ElasticSearcher
       aggregation :matched_field do
         filters do
           filters name: { terms: { name: [query_str] } },
-                  summary: { terms: { 'summary.raw' => [query_str] } },
-                  description: { terms: { 'description.raw' => [query_str] } }
+                  summary: { terms: { "summary.raw" => [query_str] } },
+                  description: { terms: { "description.raw" => [query_str] } }
         end
       end
 
       aggregation :date_range do
         date_range do
-          field  'updated'
-          ranges [{ from: 'now-7d/d', to: 'now' }, { from: 'now-30d/d', to: 'now' }]
+          field  "updated"
+          ranges [{ from: "now-7d/d", to: "now" }, { from: "now-30d/d", to: "now" }]
         end
       end
 
       source source_array
       # Return suggestions unless there's no query from the user
-      suggest :suggest_name, text: query_str, term: { field: 'name.suggest', suggest_mode: 'always' } if query_str.present?
+      suggest :suggest_name, text: query_str, term: { field: "name.suggest", suggest_mode: "always" } if query_str.present?
     end
   end
 

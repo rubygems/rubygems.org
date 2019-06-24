@@ -1,4 +1,4 @@
-require 'digest/sha2'
+require "digest/sha2"
 
 class Pusher
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
@@ -101,7 +101,7 @@ class Pusher
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
     rubygem.delay.index_document
     GemCachePurger.call(rubygem.name)
-    StatsD.increment 'push.success'
+    StatsD.increment "push.success"
   end
 
   def notify(message, code)

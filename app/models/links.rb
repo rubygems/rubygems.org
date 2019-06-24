@@ -1,19 +1,19 @@
 class Links
   # Links available for indexed gems
   LINKS = {
-    'home'      => 'homepage_uri',
-    'changelog' => 'changelog_uri',
-    'code'      => 'source_code_uri',
-    'docs'      => 'documentation_uri',
-    'wiki'      => 'wiki_uri',
-    'mail'      => 'mailing_list_uri',
-    'bugs'      => 'bug_tracker_uri',
-    'download'  => 'download_uri'
+    "home"      => "homepage_uri",
+    "changelog" => "changelog_uri",
+    "code"      => "source_code_uri",
+    "docs"      => "documentation_uri",
+    "wiki"      => "wiki_uri",
+    "mail"      => "mailing_list_uri",
+    "bugs"      => "bug_tracker_uri",
+    "download"  => "download_uri"
   }.freeze
 
   # Links available for non-indexed gems
   NON_INDEXED_LINKS = {
-    'docs'      => 'documentation_uri'
+    "docs"      => "documentation_uri"
   }.freeze
 
   attr_accessor :rubygem, :version, :linkset
@@ -54,7 +54,7 @@ class Links
 
   # excluded from metadata_uri_set? check
   def homepage_uri
-    version.metadata['homepage_uri'].presence || linkset.try(:home)
+    version.metadata["homepage_uri"].presence || linkset.try(:home)
   end
 
   # define getters for each of the uris (both short `home` or long `homepage_uri` versions)

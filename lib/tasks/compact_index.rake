@@ -6,14 +6,14 @@ namespace :compact_index do
       WHERE deletions.number = rv.number AND deletions.rubygem = rv.name", version.id]
     sanitize_sql = ActiveRecord::Base.send(:sanitize_sql_array, query)
     pg_result = ActiveRecord::Base.connection.execute(sanitize_sql)
-    return pg_result.first['created_at'] if pg_result.first.present?
+    return pg_result.first["created_at"] if pg_result.first.present?
     Time.now.utc
   end
 
   desc "Fill yanked_at with current time"
   task backfill_yanked_at: :environment do
     without_yanked_at = Version.where(indexed: false, yanked_at: nil)
-    mod = ENV['shard']
+    mod = ENV["shard"]
     without_yanked_at = without_yanked_at.where("id % 4 = ?", mod.to_i) if mod
 
     total = without_yanked_at.count
@@ -34,7 +34,7 @@ namespace :compact_index do
       WHERE rubygem_id NOT IN (SELECT DISTINCT(rubygem_id) FROM versions
       WHERE created_at > '2016-08-30 05:16:23' OR yanked_at > '2016-08-30 05:16:23')
       ORDER BY rubygem_id, COALESCE(yanked_at, created_at) DESC, number DESC, platform DESC")
-    mod = ENV['shard']
+    mod = ENV["shard"]
     versions = versions.where("id % 4 = ?", mod.to_i) if mod
 
     total = versions.count
@@ -59,7 +59,7 @@ namespace :compact_index do
   desc "Fill Versions' yanked_info_checksum attributes for compact index format"
   task backfill_yanked_info_checksum: :environment do
     without_yanked_info_checksum = Version.where(indexed: false, yanked_info_checksum: nil)
-    mod = ENV['shard']
+    mod = ENV["shard"]
     without_yanked_info_checksum = without_yanked_info_checksum.where("id % 4 = ?", mod.to_i) if mod
 
     total = without_yanked_info_checksum.count
@@ -77,7 +77,7 @@ namespace :compact_index do
 
   desc "Generate/update the versions.list file"
   task update_versions_file: :environment do
-    file_path = Rails.application.config.rubygems['versions_file_location']
+    file_path = Rails.application.config.rubygems["versions_file_location"]
     versions_file = CompactIndex::VersionsFile.new file_path
     gems = GemInfo.compact_index_public_versions
 

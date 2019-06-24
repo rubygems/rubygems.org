@@ -109,7 +109,7 @@ class GemDownload < ApplicationRecord
 
     def update_query(id, downloads)
       { update: { _index: "rubygems-#{Rails.env}",
-                  _type: 'rubygem',
+                  _type: "rubygem",
                   _id: id,
                   data: { doc: { downloads: downloads } } } }
     end

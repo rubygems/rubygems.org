@@ -15,10 +15,10 @@ class GemDependent
     @gem_information.flat_map do |gem_name, cache_key|
       if (dependency = memcached_gem_info[cache_key])
         # Fetch the gem's dependencies from the cache
-        StatsD.increment 'gem_dependent.memcached.hit'
+        StatsD.increment "gem_dependent.memcached.hit"
       else
         # Fetch the gem's dependencies from the database
-        StatsD.increment 'gem_dependent.memcached.miss'
+        StatsD.increment "gem_dependent.memcached.miss"
         dependency = fetch_dependency_from_db(gem_name)
         Rails.cache.write(cache_key, dependency)
         memcached_gem_info[cache_key] = dependency
@@ -38,9 +38,9 @@ class GemDependent
     deps = {}
 
     dataset.each do |row|
-      key = DepKey.new(row['name'], row['number'], row['platform'])
+      key = DepKey.new(row["name"], row["number"], row["platform"])
       deps[key] = [] unless deps[key]
-      deps[key] << [row['dep_name'], row['requirements']] if row['dep_name']
+      deps[key] << [row["dep_name"], row["requirements"]] if row["dep_name"]
     end
 
     deps.map do |dep_key, gem_deps|
@@ -52,7 +52,7 @@ class GemDependent
       }
     end
   end
-  statsd_measure :fetch_dependency_from_db, 'gem_dependent.fetch_dependency_from_db'
+  statsd_measure :fetch_dependency_from_db, "gem_dependent.fetch_dependency_from_db"
 
   def sql_query(gem_name)
     ["SELECT rv.name, rv.number, rv.platform, d.requirements, for_dep_name.name dep_name

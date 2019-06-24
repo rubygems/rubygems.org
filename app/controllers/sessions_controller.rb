@@ -4,7 +4,7 @@ class SessionsController < Clearance::SessionsController
 
     if @user&.mfa_enabled?
       session[:mfa_user] = @user.handle
-      render 'sessions/otp_prompt'
+      render "sessions/otp_prompt"
     else
       do_login
     end
@@ -17,7 +17,7 @@ class SessionsController < Clearance::SessionsController
     if @user&.mfa_enabled? && @user&.otp_verified?(params[:otp])
       do_login
     else
-      login_failure(t('multifactor_auths.incorrect_otp'))
+      login_failure(t("multifactor_auths.incorrect_otp"))
     end
   end
 
@@ -26,7 +26,7 @@ class SessionsController < Clearance::SessionsController
   def do_login
     sign_in(@user) do |status|
       if status.success?
-        StatsD.increment 'login.success'
+        StatsD.increment "login.success"
         redirect_back_or(url_after_create)
       else
         login_failure(status.failure_message)
@@ -35,9 +35,9 @@ class SessionsController < Clearance::SessionsController
   end
 
   def login_failure(message)
-    StatsD.increment 'login.failure'
+    StatsD.increment "login.failure"
     flash.now.notice = message
-    render template: 'sessions/new', status: :unauthorized
+    render template: "sessions/new", status: :unauthorized
   end
 
   def find_user(session)

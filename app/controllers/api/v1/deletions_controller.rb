@@ -7,11 +7,11 @@ class Api::V1::DeletionsController < Api::BaseController
   def create
     @deletion = @api_user.deletions.build(version: @version)
     if @deletion.save
-      StatsD.increment 'yank.success'
+      StatsD.increment "yank.success"
       enqueue_web_hook_jobs(@version)
       render plain: "Successfully deleted gem: #{@version.to_title}"
     else
-      StatsD.increment 'yank.failure'
+      StatsD.increment "yank.failure"
       render plain: @deletion.errors.full_messages.to_sentence,
              status: :unprocessable_entity
     end

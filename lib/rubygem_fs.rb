@@ -13,8 +13,8 @@ module RubygemFs
   end
 
   def self.s3!(host)
-    @fs = RubygemFs::S3.new(access_key_id: 'k',
-                            secret_access_key: 's',
+    @fs = RubygemFs::S3.new(access_key_id: "k",
+                            secret_access_key: "s",
                             endpoint: host,
                             force_path_style: true)
     @fs.define_singleton_method(:init) do
@@ -30,7 +30,7 @@ module RubygemFs
 
     def store(key, body, _metadata = {})
       FileUtils.mkdir_p File.dirname("#{base_dir}/#{key}")
-      File.open("#{base_dir}/#{key}", 'wb') do |f|
+      File.open("#{base_dir}/#{key}", "wb") do |f|
         f.write(body)
       end
     end
@@ -48,7 +48,7 @@ module RubygemFs
     end
 
     def base_dir
-      @base_dir || Rails.root.join('server')
+      @base_dir || Rails.root.join("server")
     end
   end
 
@@ -56,9 +56,9 @@ module RubygemFs
     def initialize(config = {})
       @bucket = config.delete(:bucket)
       @config = {
-        access_key_id: ENV['S3_KEY'],
-        secret_access_key: ENV['S3_SECRET'],
-        region: Gemcutter.config['s3_region'],
+        access_key_id: ENV["S3_KEY"],
+        secret_access_key: ENV["S3_SECRET"],
+        region: Gemcutter.config["s3_region"],
         endpoint: "https://#{Gemcutter.config['s3_endpoint']}"
       }.merge(config)
     end
@@ -67,9 +67,9 @@ module RubygemFs
       s3.put_object(key: key,
                     body: body,
                     bucket: bucket,
-                    acl: 'public-read',
+                    acl: "public-read",
                     metadata: metadata,
-                    cache_control: 'max-age=31536000')
+                    cache_control: "max-age=31536000")
     end
 
     def get(key)
@@ -90,7 +90,7 @@ module RubygemFs
     end
 
     def bucket
-      @bucket || Gemcutter.config['s3_bucket']
+      @bucket || Gemcutter.config["s3_bucket"]
     end
 
     private

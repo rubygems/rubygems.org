@@ -7,8 +7,8 @@ class Indexer
     purge_cdn
     log "Finished updating the index"
   end
-  statsd_count_success :perform, 'Indexer.perform'
-  statsd_measure :perform, 'Indexer.perform'
+  statsd_count_success :perform, "Indexer.perform"
+  statsd_measure :perform, "Indexer.perform"
 
   def write_gem(body, spec)
     RubygemFs.instance.store("gems/#{spec.original_name}.gem", body.string)
@@ -34,7 +34,7 @@ class Indexer
   end
 
   def upload(key, value)
-    RubygemFs.instance.store(key, stringify(value), 'surrogate-key' => 'full-index')
+    RubygemFs.instance.store(key, stringify(value), "surrogate-key" => "full-index")
   end
 
   def update_index
@@ -47,10 +47,10 @@ class Indexer
   end
 
   def purge_cdn
-    return unless ENV['FASTLY_SERVICE_ID'] && ENV['FASTLY_API_KEY']
+    return unless ENV["FASTLY_SERVICE_ID"] && ENV["FASTLY_API_KEY"]
 
-    Fastly.purge_key('full-index')
-    log 'Purged index urls from fastly'
+    Fastly.purge_key("full-index")
+    log "Purged index urls from fastly"
   end
 
   def minimize_specs(data)

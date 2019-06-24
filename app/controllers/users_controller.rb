@@ -7,10 +7,10 @@ class UsersController < Clearance::UsersController
     @user = user_from_params
     if @user.save
       Mailer.delay.email_confirmation(@user)
-      flash[:notice] = t('.email_sent')
+      flash[:notice] = t(".email_sent")
       redirect_back_or url_after_create
     else
-      render template: 'users/new'
+      render template: "users/new"
     end
   end
 

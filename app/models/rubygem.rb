@@ -33,10 +33,10 @@ class Rubygem < ApplicationRecord
   end
 
   def self.with_one_version
-    select('rubygems.*')
+    select("rubygems.*")
       .joins(:versions)
-      .group(column_names.map { |name| "rubygems.#{name}" }.join(', '))
-      .having('COUNT(versions.id) = 1')
+      .group(column_names.map { |name| "rubygems.#{name}" }.join(", "))
+      .having("COUNT(versions.id) = 1")
   end
 
   def self.name_is(name)
@@ -67,7 +67,7 @@ class Rubygem < ApplicationRecord
   end
 
   def self.letterize(letter)
-    letter =~ /\A[A-Za-z]\z/ ? letter.upcase : 'A'
+    letter =~ /\A[A-Za-z]\z/ ? letter.upcase : "A"
   end
 
   def self.by_name
@@ -75,7 +75,7 @@ class Rubygem < ApplicationRecord
   end
 
   def self.by_downloads
-    joins(:gem_download).order('gem_downloads.count DESC')
+    joins(:gem_download).order("gem_downloads.count DESC")
   end
 
   def self.current_rubygems_release
@@ -149,29 +149,29 @@ class Rubygem < ApplicationRecord
     versioned_links = links(version)
     deps = version.dependencies.to_a
     {
-      'name'              => name,
-      'downloads'         => downloads,
-      'version'           => version.number,
-      'version_downloads' => version.downloads_count,
-      'platform'          => version.platform,
-      'authors'           => version.authors,
-      'info'              => version.info,
-      'licenses'          => version.licenses,
-      'metadata'          => version.metadata,
-      'yanked'            => version.yanked?,
-      'sha'               => version.sha256_hex,
-      'project_uri'       => "#{protocol}://#{host_with_port}/gems/#{name}",
-      'gem_uri'           => "#{protocol}://#{host_with_port}/gems/#{version.full_name}.gem",
-      'homepage_uri'      => versioned_links.homepage_uri,
-      'wiki_uri'          => versioned_links.wiki_uri,
-      'documentation_uri' => versioned_links.documentation_uri,
-      'mailing_list_uri'  => versioned_links.mailing_list_uri,
-      'source_code_uri'   => versioned_links.source_code_uri,
-      'bug_tracker_uri'   => versioned_links.bug_tracker_uri,
-      'changelog_uri'     => versioned_links.changelog_uri,
-      'dependencies'      => {
-        'development' => deps.select { |r| r.rubygem && r.scope == 'development' },
-        'runtime'     => deps.select { |r| r.rubygem && r.scope == 'runtime' }
+      "name"              => name,
+      "downloads"         => downloads,
+      "version"           => version.number,
+      "version_downloads" => version.downloads_count,
+      "platform"          => version.platform,
+      "authors"           => version.authors,
+      "info"              => version.info,
+      "licenses"          => version.licenses,
+      "metadata"          => version.metadata,
+      "yanked"            => version.yanked?,
+      "sha"               => version.sha256_hex,
+      "project_uri"       => "#{protocol}://#{host_with_port}/gems/#{name}",
+      "gem_uri"           => "#{protocol}://#{host_with_port}/gems/#{version.full_name}.gem",
+      "homepage_uri"      => versioned_links.homepage_uri,
+      "wiki_uri"          => versioned_links.wiki_uri,
+      "documentation_uri" => versioned_links.documentation_uri,
+      "mailing_list_uri"  => versioned_links.mailing_list_uri,
+      "source_code_uri"   => versioned_links.source_code_uri,
+      "bug_tracker_uri"   => versioned_links.bug_tracker_uri,
+      "changelog_uri"     => versioned_links.changelog_uri,
+      "dependencies"      => {
+        "development" => deps.select { |r| r.rubygem && r.scope == "development" },
+        "runtime"     => deps.select { |r| r.rubygem && r.scope == "runtime" }
       }
     }
   end
@@ -181,7 +181,7 @@ class Rubygem < ApplicationRecord
   end
 
   def to_xml(options = {})
-    payload.to_xml(options.merge(root: 'rubygem'))
+    payload.to_xml(options.merge(root: "rubygem"))
   end
 
   def to_param
