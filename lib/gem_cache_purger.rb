@@ -7,6 +7,6 @@ class GemCachePurger
     end
 
     Rails.cache.delete("deps/v1/#{gem_name}")
-    Fastly.delay.purge("versions")
+    Fastly.delay.purge("versions", true)
   end
 end
