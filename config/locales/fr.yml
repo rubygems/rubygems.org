@@ -43,6 +43,10 @@ fr:
         email: Adresse e-mail
         handle: Pseudonyme
         password: Mot de passe
+  clearance_mailer:
+    change_password:
+      title:
+      subtitle:
   dashboards:
     show:
       creating_link_text: création
@@ -105,15 +109,23 @@ fr:
     confirm_your_email: Veuillez confirmer votre adresse email avec le lien qui vous a été envoyé par email.
     confirmation_subject: Veuillez confirmer votre adresse email pour RubyGems.org
     email_confirmation:
+      title:
+      subtitle:
       confirmation_link: Confirmez l'adresse email
       welcome_message: Bienvenue sur RubyGems.org! Veuillez cliquer sur le lien ci-dessous pour vérifier votre adresse email.
     email_reset:
+      title:
+      subtitle:
       visit_link_instructions: Vous avez changé d'adresse email sur RubyGems.org. Veuillez suivre l'URL suivant pour réactiver votre compte.
       link_expiration_explanation: Veuillez noter que ce lien n'est valide que pendant 3 heures.
     deletion_complete:
+      title:
+      subtitle:
       subject: Votre compte a bien été supprimé de RubyGems.org
       body_html: "Votre demande de suppression de compte sur RubyGems.org a bien été prise en compte. Vous pouvez toujours créer un nouveau compte sur la page %{sign_up}"
     deletion_failed:
+      title:
+      subtitle:
       subject: Votre demande de suppression de compte sur RubyGems.org a échoué
       body_html: "Vous avez effectué une demande de suppression de compte sur RubyGems.org. Malheureusement, votre demande n'a pu aboutir. Veuillez réessayer plus tard ou nous %{contact} si le problème subsiste."
   news:

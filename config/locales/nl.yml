@@ -43,6 +43,10 @@ nl:
         email: E-mailadres
         handle: Gebruikersnaam
         password: Wachtwoord
+  clearance_mailer:
+    change_password:
+      title:
+      subtitle:
   dashboards:
     show:
       creating_link_text: aanmaken
@@ -105,15 +109,23 @@ nl:
     confirm_your_email:
     confirmation_subject:
     email_confirmation:
+      title:
+      subtitle:
       confirmation_link:
       welcome_message:
     email_reset:
+      title:
+      subtitle:
       visit_link_instructions:
       link_expiration_explanation: Deze link is 3 uur geldig.
     deletion_complete:
+      title:
+      subtitle:
       subject:
       body_html:
     deletion_failed:
+      title:
+      subtitle:
       subject:
       body_html:
   news:
