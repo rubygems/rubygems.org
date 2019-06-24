@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class GemsTest < ActionDispatch::IntegrationTest
   setup do
@@ -7,21 +7,21 @@ class GemsTest < ActionDispatch::IntegrationTest
   end
 
   test "gem page with a non valid HTTP_ACCEPT header" do
-    get rubygem_path(@rubygem), headers: { 'HTTP_ACCEPT' => 'application/mercurial-0.1' }
+    get rubygem_path(@rubygem), headers: { "HTTP_ACCEPT" => "application/mercurial-0.1" }
     assert page.has_content? "1.0.0"
   end
 
   test "gems page with atom format" do
     get rubygems_path(format: :atom)
     assert_response :success
-    assert_equal 'application/atom+xml', response.content_type
+    assert_equal "application/atom+xml", response.content_type
     assert page.has_content? "sandworm"
   end
 
   test "versions with atom format" do
     create(:version, rubygem: @rubygem)
     get rubygem_versions_path(@rubygem, format: :atom)
-    assert_equal 'application/atom+xml', response.content_type
+    assert_equal "application/atom+xml", response.content_type
     assert page.has_content? "sandworm"
   end
 
@@ -57,7 +57,7 @@ class GemsSystemTest < SystemTest
 
   test "subscribe to a gem" do
     visit rubygem_path(@rubygem, as: @user.id)
-    assert page.has_css?('a#subscribe')
+    assert page.has_css?("a#subscribe")
 
     click_link "Subscribe"
 
@@ -69,7 +69,7 @@ class GemsSystemTest < SystemTest
     create(:subscription, rubygem: @rubygem, user: @user)
 
     visit rubygem_path(@rubygem, as: @user.id)
-    assert page.has_css?('a#unsubscribe')
+    assert page.has_css?("a#unsubscribe")
 
     click_link "Unsubscribe"
 

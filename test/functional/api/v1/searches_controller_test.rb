@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class Api::V1::SearchesControllerTest < ActionController::TestCase
   include ESHelper
@@ -16,7 +16,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
       should "only include matching gems" do
         gems = yield(@response.body)
         assert_equal 1, gems.size
-        assert_equal "match", gems.first['name']
+        assert_equal "match", gems.first["name"]
       end
     end
 

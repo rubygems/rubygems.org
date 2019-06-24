@@ -1,7 +1,7 @@
-require 'test_helper'
+require "test_helper"
 
 class VersionsControllerTest < ActionController::TestCase
-  context 'GET to index' do
+  context "GET to index" do
     setup do
       @rubygem = create(:rubygem)
       @versions = (1..5).map do
@@ -20,7 +20,7 @@ class VersionsControllerTest < ActionController::TestCase
     end
   end
 
-  context 'GET to index as an atom feed' do
+  context "GET to index as an atom feed" do
     setup do
       @rubygem = create(:rubygem)
       @versions = (1..5).map do
@@ -56,10 +56,10 @@ class VersionsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should "show not hosted notice" do
-      assert page.has_content?('This gem is not currently hosted')
+      assert page.has_content?("This gem is not currently hosted")
     end
     should "not show checksum" do
-      assert page.has_no_content?('Sha 256 checksum')
+      assert page.has_no_content?("Sha 256 checksum")
     end
   end
 
@@ -92,7 +92,7 @@ class VersionsControllerTest < ActionController::TestCase
 
   context "On GET to show with *a* yanked version" do
     setup do
-      @version = create(:version, number: '1.0.1')
+      @version = create(:version, number: "1.0.1")
       @version.rubygem.owners << create(:user, handle: "johndoe")
       create(:version, number: "1.0.2", rubygem: @version.rubygem, indexed: false)
       get :show, params: { rubygem_id: @version.rubygem.name, id: "1.0.2" }

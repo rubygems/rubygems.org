@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class OwnershipTest < ActiveSupport::TestCase
   should "be valid with factory" do

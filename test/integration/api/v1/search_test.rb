@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class Api::V1::Search < ActionDispatch::IntegrationTest
   test "request with non-string query shows bad request" do

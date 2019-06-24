@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class DashboardTest < ActionDispatch::IntegrationTest
   setup do
@@ -40,13 +40,13 @@ class DashboardTest < ActionDispatch::IntegrationTest
 
     get dashboard_path(format: :atom)
     assert_response :success
-    assert_equal 'application/atom+xml', response.content_type
+    assert_equal "application/atom+xml", response.content_type
     assert page.has_content? "sandworm"
   end
 
   test "shows announcements on dashboard" do
     Announcement.create!(body: "hello w.")
     get dashboard_path
-    assert page.has_content?('hello w.')
+    assert page.has_content?("hello w.")
   end
 end

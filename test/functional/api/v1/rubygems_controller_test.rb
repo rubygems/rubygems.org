@@ -1,12 +1,12 @@
-require 'test_helper'
+require "test_helper"
 
 class Api::V1::RubygemsControllerTest < ActionController::TestCase
   should "route old paths to new controller" do
-    get_route = { controller: 'api/v1/rubygems', action: 'show', id: "rails", format: "json" }
-    assert_recognizes(get_route, '/api/v1/gems/rails.json')
+    get_route = { controller: "api/v1/rubygems", action: "show", id: "rails", format: "json" }
+    assert_recognizes(get_route, "/api/v1/gems/rails.json")
 
-    post_route = { controller: 'api/v1/rubygems', action: 'create' }
-    assert_recognizes(post_route, path: '/api/v1/gems', method: :post)
+    post_route = { controller: "api/v1/rubygems", action: "create" }
+    assert_recognizes(post_route, path: "/api/v1/gems", method: :post)
   end
 
   def self.should_respond_to_show
@@ -31,7 +31,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "with #{format.to_s.upcase} for a hosted gem with a period in its name" do
       setup do
-        @rubygem = create(:rubygem, name: 'foo.rb')
+        @rubygem = create(:rubygem, name: "foo.rb")
         create(:version, rubygem: @rubygem)
         get :show, params: { id: @rubygem.to_param }, format: format
       end
@@ -111,9 +111,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         @version = create(:version, rubygem: @rubygem)
 
         @runtime_dependency = create(:dependency, :runtime, version: @version)
-        @runtime_dependency.rubygem.update_column(:name, 'foo')
+        @runtime_dependency.rubygem.update_column(:name, "foo")
         @missing_dependency = create(:dependency, :runtime, version: @version)
-        @missing_dependency.rubygem.update_column(:name, 'missing')
+        @missing_dependency.rubygem.update_column(:name, "missing")
         @missing_dependency.update_column(:rubygem_id, nil)
 
         get :show, params: { id: @rubygem.to_param }, format: "json"
@@ -134,25 +134,25 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
 
     should "Returns the response CORS headers" do
-      @request.env['HTTP_ORIGIN'] = 'https://pages.github.com/'
-      get :show, params: { id: "ZenTest" }, format: 'json'
+      @request.env["HTTP_ORIGIN"] = "https://pages.github.com/"
+      get :show, params: { id: "ZenTest" }, format: "json"
 
       assert_equal 200, @response.status
-      assert_equal '*', @response.headers['Access-Control-Allow-Origin']
-      assert_equal 'GET', @response.headers['Access-Control-Allow-Methods']
-      assert_equal '1728000', @response.headers['Access-Control-Max-Age']
+      assert_equal "*", @response.headers["Access-Control-Allow-Origin"]
+      assert_equal "GET", @response.headers["Access-Control-Allow-Methods"]
+      assert_equal "1728000", @response.headers["Access-Control-Max-Age"]
     end
 
-    should 'Send the CORS preflight OPTIONS request' do
-      @request.env['HTTP_ORIGIN'] = 'https://pages.github.com/'
+    should "Send the CORS preflight OPTIONS request" do
+      @request.env["HTTP_ORIGIN"] = "https://pages.github.com/"
       process :show, method: :options, params: { id: "ZenTest" }
 
       assert_equal 200, @response.status
-      assert_equal '*', @response.headers['Access-Control-Allow-Origin']
-      assert_equal 'GET', @response.headers['Access-Control-Allow-Methods']
-      assert_equal 'X-Requested-With, X-Prototype-Version', @response.headers['Access-Control-Allow-Headers']
-      assert_equal '1728000', @response.headers['Access-Control-Max-Age']
-      assert_equal '', @response.body
+      assert_equal "*", @response.headers["Access-Control-Allow-Origin"]
+      assert_equal "GET", @response.headers["Access-Control-Allow-Methods"]
+      assert_equal "X-Requested-With, X-Prototype-Version", @response.headers["Access-Control-Allow-Headers"]
+      assert_equal "1728000", @response.headers["Access-Control-Max-Age"]
+      assert_equal "", @response.body
     end
   end
 
@@ -178,7 +178,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         assert_not_nil yield(@response.body)
       end
       should "only return my gems" do
-        gem_names = yield(@response.body).map { |rubygem| rubygem['name'] }.sort
+        gem_names = yield(@response.body).map { |rubygem| rubygem["name"] }.sort
         assert_equal %w[AnotherGem SomeGem], gem_names
       end
     end
@@ -258,7 +258,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           number: "0.0.0",
           updated_at: 1.year.ago,
           created_at: 1.year.ago)
-        assert_difference 'Delayed::Job.count', 6 do
+        assert_difference "Delayed::Job.count", 6 do
           post :create, body: gem_file("test-1.0.0.gem").read
         end
       end
@@ -292,8 +292,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should "not register new version" do
         version = Rubygem.last.reload.versions.most_recent
         assert_equal @date.to_s(:db), version.built_at.to_s(:db), "(date)"
-        assert_equal "Freewill", version.summary, '(summary)'
-        assert_equal "Geddy Lee", version.authors, '(authors)'
+        assert_equal "Freewill", version.summary, "(summary)"
+        assert_equal "Geddy Lee", version.authors, "(authors)"
       end
     end
 

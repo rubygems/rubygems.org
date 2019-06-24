@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class UsersControllerTest < ActionController::TestCase
   context "on GET to new" do
@@ -12,8 +12,8 @@ class UsersControllerTest < ActionController::TestCase
   context "on POST to create" do
     context "when email and password are given" do
       should "create a user" do
-        post :create, params: { user: { email: 'foo@bar.com', password: 'secret12345' } }
-        assert User.find_by(email: 'foo@bar.com')
+        post :create, params: { user: { email: "foo@bar.com", password: "secret12345" } }
+        assert User.find_by(email: "foo@bar.com")
       end
     end
 
@@ -27,33 +27,33 @@ class UsersControllerTest < ActionController::TestCase
 
     context "when extra parameters given" do
       should "create a user if parameters are ok" do
-        post :create, params: { user: { email: 'foo@bar.com', password: 'secret12345', handle: 'foo' } }
-        assert_equal "foo", User.where(email: 'foo@bar.com').pluck(:handle).first
+        post :create, params: { user: { email: "foo@bar.com", password: "secret12345", handle: "foo" } }
+        assert_equal "foo", User.where(email: "foo@bar.com").pluck(:handle).first
       end
 
       should "create a user but dont assign not valid parameters" do
-        post :create, params: { user: { email: 'foo@bar.com', password: 'secret', api_key: 'nonono' } }
-        assert_not_equal "nonono", User.where(email: 'foo@bar.com').pluck(:api_key).first
+        post :create, params: { user: { email: "foo@bar.com", password: "secret", api_key: "nonono" } }
+        assert_not_equal "nonono", User.where(email: "foo@bar.com").pluck(:api_key).first
       end
     end
 
-    context 'confirmation mail' do
+    context "confirmation mail" do
       setup do
-        post :create, params: { user: { email: 'foo@bar.com', password: 'secretpassword', handle: 'foo' } }
+        post :create, params: { user: { email: "foo@bar.com", password: "secretpassword", handle: "foo" } }
         Delayed::Worker.new.work_off
       end
 
-      should 'set email_confirmation_token' do
-        user = User.find_by_name('foo')
+      should "set email_confirmation_token" do
+        user = User.find_by_name("foo")
         assert_not_nil user.confirmation_token
       end
 
-      should 'deliver confirmation mail' do
+      should "deliver confirmation mail" do
         refute ActionMailer::Base.deliveries.empty?
         email = ActionMailer::Base.deliveries.last
-        assert_equal ['foo@bar.com'], email.to
-        assert_equal ['no-reply@mailer.rubygems.org'], email.from
-        assert_equal 'Please confirm your email address with RubyGems.org', email.subject
+        assert_equal ["foo@bar.com"], email.to
+        assert_equal ["no-reply@mailer.rubygems.org"], email.from
+        assert_equal "Please confirm your email address with RubyGems.org", email.subject
       end
     end
   end

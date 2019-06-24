@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class LogTicketTest < ActiveSupport::TestCase
   setup do
@@ -59,7 +59,7 @@ class LogTicketTest < ActiveSupport::TestCase
     context "local" do
       setup do
         @log_ticket.update!(backend: "local", key: "sample_logs/fastly-fake.log")
-        @sample_log = Rails.root.join('test', 'sample_logs', 'fastly-fake.log').read
+        @sample_log = Rails.root.join("test", "sample_logs", "fastly-fake.log").read
       end
 
       should "return a local fs" do
@@ -78,7 +78,7 @@ class LogTicketTest < ActiveSupport::TestCase
     context "s3" do
       setup do
         @log_ticket.update!(backend: "s3", key: "sample_logs/fastly-fake.log")
-        @sample_log = Rails.root.join('test', 'sample_logs', 'fastly-fake.log').read
+        @sample_log = Rails.root.join("test", "sample_logs", "fastly-fake.log").read
         Aws.config[:s3] = {
           stub_responses: { get_object: { body: @sample_log } }
         }

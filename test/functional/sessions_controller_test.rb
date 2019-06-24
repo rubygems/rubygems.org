@@ -1,17 +1,17 @@
-require 'test_helper'
+require "test_helper"
 
 class SessionsControllerTest < ActionController::TestCase
   context "when user has mfa enabled" do
     setup do
       @user = User.new(email_confirmed: true)
       @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
-      @request.cookies[:mfa_feature] = 'true'
+      @request.cookies[:mfa_feature] = "true"
     end
 
     context "on POST to create" do
       setup do
-        User.expects(:authenticate).with('login', 'pass').returns @user
-        post :create, params: { session: { who: 'login', password: 'pass' } }
+        User.expects(:authenticate).with("login", "pass").returns @user
+        post :create, params: { session: { who: "login", password: "pass" } }
       end
 
       should respond_with :success
@@ -29,7 +29,7 @@ class SessionsControllerTest < ActionController::TestCase
         end
 
         should respond_with :redirect
-        should redirect_to('the dashboard') { dashboard_path }
+        should redirect_to("the dashboard") { dashboard_path }
         should "clear user name in session" do
           assert @controller.session[:mfa_user].nil?
         end
@@ -46,7 +46,7 @@ class SessionsControllerTest < ActionController::TestCase
         end
 
         should respond_with :redirect
-        should redirect_to('the dashboard') { dashboard_path }
+        should redirect_to("the dashboard") { dashboard_path }
         should "clear user name in session" do
           assert @controller.session[:mfa_user].nil?
         end
@@ -84,12 +84,12 @@ class SessionsControllerTest < ActionController::TestCase
     context "when login and password are correct" do
       setup do
         user = User.new(email_confirmed: true)
-        User.expects(:authenticate).with('login', 'pass').returns user
-        post :create, params: { session: { who: 'login', password: 'pass' } }
+        User.expects(:authenticate).with("login", "pass").returns user
+        post :create, params: { session: { who: "login", password: "pass" } }
       end
 
       should respond_with :redirect
-      should redirect_to('the dashboard') { dashboard_path }
+      should redirect_to("the dashboard") { dashboard_path }
 
       should "sign in the user" do
         assert @controller.request.env[:clearance].signed_in?
@@ -98,8 +98,8 @@ class SessionsControllerTest < ActionController::TestCase
 
     context "when login and password are incorrect" do
       setup do
-        User.expects(:authenticate).with('login', 'pass')
-        post :create, params: { session: { who: 'login', password: 'pass' } }
+        User.expects(:authenticate).with("login", "pass")
+        post :create, params: { session: { who: "login", password: "pass" } }
       end
 
       should respond_with :unauthorized
@@ -116,7 +116,7 @@ class SessionsControllerTest < ActionController::TestCase
 
     context "when login is an array" do
       setup do
-        post :create, params: { session: { who: ['1'], password: 'pass' } }
+        post :create, params: { session: { who: ["1"], password: "pass" } }
       end
 
       should respond_with :unauthorized
@@ -132,7 +132,7 @@ class SessionsControllerTest < ActionController::TestCase
     end
 
     should respond_with :redirect
-    should redirect_to('login page') { sign_in_path }
+    should redirect_to("login page") { sign_in_path }
 
     should "sign out the user" do
       refute @controller.request.env[:clearance].signed_in?

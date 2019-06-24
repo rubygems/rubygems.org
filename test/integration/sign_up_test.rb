@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class SignUpTest < SystemTest
   test "sign up" do
@@ -9,7 +9,7 @@ class SignUpTest < SystemTest
     fill_in "Password", with: "secretpassword"
     click_button "Sign up"
 
-    assert page.has_selector? '#flash_notice', text: "A confirmation mail has been sent to your email address."
+    assert page.has_selector? "#flash_notice", text: "A confirmation mail has been sent to your email address."
   end
 
   test "sign up with no handle" do
@@ -52,7 +52,7 @@ class SignUpTest < SystemTest
     visit root_path
     refute page.has_content? "Sign up"
     assert_raises(ActionController::RoutingError) do
-      visit '/sign_up'
+      visit "/sign_up"
     end
   end
 
@@ -69,7 +69,7 @@ class SignUpTest < SystemTest
     visit link
 
     assert page.has_content? "Sign out"
-    assert page.has_selector? '#flash_notice', text: "Your email address has been verified"
+    assert page.has_selector? "#flash_notice", text: "Your email address has been verified"
   end
 
   teardown do

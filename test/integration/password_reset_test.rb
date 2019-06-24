@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class PasswordResetTest < SystemTest
   include ActiveJob::TestHelper

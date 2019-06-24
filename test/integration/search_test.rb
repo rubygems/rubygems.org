@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class SearchTest < SystemTest
   include ESHelper
@@ -51,17 +51,17 @@ class SearchTest < SystemTest
 
   test "search page with a non valid format" do
     assert_raises(ActionController::RoutingError) do
-      get search_path(format: :json), params: { query: 'foobar' }
+      get search_path(format: :json), params: { query: "foobar" }
     end
   end
 
   test "params has non white listed keys" do
     Kaminari.configure { |c| c.default_per_page = 1 }
-    create(:rubygem, name: "ruby-ruby", number: '1.0.0')
-    create(:rubygem, name: "ruby-gems", number: '1.0.0')
+    create(:rubygem, name: "ruby-ruby", number: "1.0.0")
+    create(:rubygem, name: "ruby-gems", number: "1.0.0")
     import_and_refresh
 
-    visit '/search?query=ruby&script_name=javascript:alert(1)//'
+    visit "/search?query=ruby&script_name=javascript:alert(1)//"
     assert page.has_content? "ruby-ruby"
     assert page.has_link?("Next", href: "/search?page=2&query=ruby")
     Kaminari.configure { |c| c.default_per_page = 30 }

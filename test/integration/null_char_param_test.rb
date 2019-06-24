@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class NullCharParamTest < ActionDispatch::IntegrationTest
   test "params with null character respond with bad request" do

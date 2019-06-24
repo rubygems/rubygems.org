@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class RedirectorTest < ActiveSupport::TestCase
   include Rack::Test::Methods
@@ -56,7 +56,7 @@ class RedirectorTest < ActiveSupport::TestCase
   end
 
   should "not redirect docs.rubygems.org to a url that redirects back to docs.rubygems.org" do
-    get '/read/book/2', {}, "HTTP_HOST" => 'docs.rubygems.org'
+    get "/read/book/2", {}, "HTTP_HOST" => "docs.rubygems.org"
 
     assert_equal 200, last_response.status
   end
@@ -83,9 +83,9 @@ class RedirectorTest < ActiveSupport::TestCase
   end
 
   should "allow fastly domains" do
-    get "/", {}, "HTTP_HOST" => 'index.rubygems.org'
+    get "/", {}, "HTTP_HOST" => "index.rubygems.org"
     assert_equal 200, last_response.status
-    get "/", {}, "HTTP_HOST" => 'fastly.rubygems.org'
+    get "/", {}, "HTTP_HOST" => "fastly.rubygems.org"
     assert_equal 200, last_response.status
   end
 

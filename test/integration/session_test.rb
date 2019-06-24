@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class SessionTest < ActionDispatch::IntegrationTest
   def retrive_authenticity_token(path)

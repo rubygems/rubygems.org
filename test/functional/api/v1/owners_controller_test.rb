@@ -1,10 +1,10 @@
-require 'test_helper'
+require "test_helper"
 
 class Api::V1::OwnersControllerTest < ActionController::TestCase
   def self.should_respond_to(format)
     should "route GET show with #{format.to_s.upcase}" do
-      route = { controller: 'api/v1/owners',
-                action: 'show',
+      route = { controller: "api/v1/owners",
+                action: "show",
                 rubygem_id: "rails",
                 format: format.to_s }
       assert_recognizes(route, "/api/v1/gems/rails/owners.#{format}")
@@ -27,15 +27,15 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       end
 
       should "return correct owner email" do
-        assert_equal @user.email, yield(@response.body)[0]['email']
+        assert_equal @user.email, yield(@response.body)[0]["email"]
       end
 
       should "return correct owner handle" do
-        assert_equal @user.handle, yield(@response.body)[0]['handle']
+        assert_equal @user.handle, yield(@response.body)[0]["handle"]
       end
 
       should "not return other owner email" do
-        assert yield(@response.body).map { |owner| owner['email'] }.exclude?(@other_user.email)
+        assert yield(@response.body).map { |owner| owner["email"] }.exclude?(@other_user.email)
       end
     end
   end
@@ -67,11 +67,11 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
   end
 
   should "route POST" do
-    route = { controller: 'api/v1/owners',
-              action: 'create',
+    route = { controller: "api/v1/owners",
+              action: "create",
               rubygem_id: "rails",
               format: "json" }
-    assert_recognizes(route, path: '/api/v1/gems/rails/owners.json', method: :post)
+    assert_recognizes(route, path: "/api/v1/gems/rails/owners.json", method: :post)
   end
 
   context "on POST to owner gem" do
@@ -139,11 +139,11 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
   end
 
   should "route DELETE" do
-    route = { controller: 'api/v1/owners',
-              action: 'destroy',
+    route = { controller: "api/v1/owners",
+              action: "destroy",
               rubygem_id: "rails",
               format: "json" }
-    assert_recognizes(route, path: '/api/v1/gems/rails/owners.json', method: :delete)
+    assert_recognizes(route, path: "/api/v1/gems/rails/owners.json", method: :delete)
   end
 
   context "on DELETE to owner gem" do
@@ -208,24 +208,24 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         @ownership.destroy
         delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @user.email, format: :json }
         assert @rubygem.owners.include?(@user)
-        assert_equal 'Unable to remove owner.', @response.body
+        assert_equal "Unable to remove owner.", @response.body
       end
     end
   end
 
   should "route GET gems" do
-    route = { controller: 'api/v1/owners',
-              action: 'gems',
-              handle: 'example',
-              format: 'json' }
-    assert_recognizes(route, path: '/api/v1/owners/example/gems.json', method: :get)
+    route = { controller: "api/v1/owners",
+              action: "gems",
+              handle: "example",
+              format: "json" }
+    assert_recognizes(route, path: "/api/v1/owners/example/gems.json", method: :get)
   end
 
   should "return plain text 404 error" do
     @user = create(:user)
     @request.env["HTTP_AUTHORIZATION"] = @user.api_key
-    @request.accept = '*/*'
-    post :create, params: { rubygem_id: 'bananas' }
-    assert_equal 'This rubygem could not be found.', @response.body
+    @request.accept = "*/*"
+    post :create, params: { rubygem_id: "bananas" }
+    assert_equal "This rubygem could not be found.", @response.body
   end
 end

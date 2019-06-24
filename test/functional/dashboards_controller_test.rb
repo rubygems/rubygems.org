@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class DashboardsControllerTest < ActionController::TestCase
   context "When not logged in" do

@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class ReverseDependenciesControllerTest < ActionController::TestCase
   context "On GET to show for a gem reverse dependencies" do

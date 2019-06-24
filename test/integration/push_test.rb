@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class PushTest < ActionDispatch::IntegrationTest
   setup do
@@ -38,7 +38,7 @@ class PushTest < ActionDispatch::IntegrationTest
     rubygem = create(:rubygem, name: "crysknife", number: "1.0.0")
 
     build_gem "sandworm", "1.0.0" do |gemspec|
-      gemspec.add_runtime_dependency(rubygem.name, '> 0')
+      gemspec.add_runtime_dependency(rubygem.name, "> 0")
     end
 
     push_gem "sandworm-1.0.0.gem"
@@ -51,7 +51,7 @@ class PushTest < ActionDispatch::IntegrationTest
 
   test "pushing a gem with an unknown dependency" do
     build_gem "sandworm", "1.0.0" do |gemspec|
-      gemspec.add_runtime_dependency("mauddib", '> 1')
+      gemspec.add_runtime_dependency("mauddib", "> 1")
     end
 
     push_gem "sandworm-1.0.0.gem"
@@ -71,7 +71,7 @@ class PushTest < ActionDispatch::IntegrationTest
 
   def push_gem(path)
     post api_v1_rubygems_path,
-      env: { 'RAW_POST_DATA' => File.read(path) },
+      env: { "RAW_POST_DATA" => File.read(path) },
       headers: { "CONTENT_TYPE" => "application/octet-stream",
                  "HTTP_AUTHORIZATION" => @user.api_key }
   end

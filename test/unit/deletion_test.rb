@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class DeletionTest < ActiveSupport::TestCase
   should belong_to :user
@@ -61,16 +61,16 @@ class DeletionTest < ActiveSupport::TestCase
   end
 
   should "enque job for updating ES index, spec index and purging cdn" do
-    assert_difference 'Delayed::Job.count', 7 do
+    assert_difference "Delayed::Job.count", 7 do
       delete_gem
     end
 
     Delayed::Worker.new.work_off
 
     response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
-                                                    type: 'rubygem',
+                                                    type: "rubygem",
                                                     id: @version.rubygem_id
-    assert_equal true, response['_source']['yanked']
+    assert_equal true, response["_source"]["yanked"]
   end
 
   should "record version metadata" do

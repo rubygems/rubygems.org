@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class RubygemSearchableTest < ActiveSupport::TestCase
   include ESHelper
@@ -7,15 +7,15 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     Rubygem.__elasticsearch__.create_index! force: true
   end
 
-  context '#as_indexed_json' do
+  context "#as_indexed_json" do
     setup do
       @rubygem = create(:rubygem, name: "example_gem", downloads: 10)
-      create(:version, number: '1.0.0', rubygem: @rubygem)
+      create(:version, number: "1.0.0", rubygem: @rubygem)
       create(:version,
-        number: '1.0.1',
+        number: "1.0.1",
         rubygem: @rubygem,
-        summary: 'some summary',
-        description: 'some description')
+        summary: "some summary",
+        description: "some description")
     end
 
     should "return a hash" do
@@ -58,15 +58,15 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
   end
 
-  context 'rubygems analyzer' do
+  context "rubygems analyzer" do
     setup do
-      create(:rubygem, name: 'example-gem', number: '0.0.1')
-      create(:rubygem, name: 'example_1', number: '0.0.1')
-      create(:rubygem, name: 'example.rb', number: '0.0.1')
+      create(:rubygem, name: "example-gem", number: "0.0.1")
+      create(:rubygem, name: "example_1", number: "0.0.1")
+      create(:rubygem, name: "example.rb", number: "0.0.1")
       import_and_refresh
     end
 
-    should 'find all gems with matching tokens' do
+    should "find all gems with matching tokens" do
       _, response = ElasticSearcher.new("example").search
       assert_equal 3, response.size
       results = %w[example-gem example_1 example.rb]
@@ -74,7 +74,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
   end
 
-  context 'filter' do
+  context "filter" do
     setup do
       example_1 = create(:rubygem, name: "example_1")
       example_2 = create(:rubygem, name: "example_2")
@@ -90,15 +90,15 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
   end
 
-  context 'multi_match' do
+  context "multi_match" do
     setup do
       # without download, _score is calculated to 0.0
       example_gem1 = create(:rubygem, name: "keyword", downloads: 1)
       example_gem2 = create(:rubygem, name: "example_gem2", downloads: 1)
       example_gem3 = create(:rubygem, name: "example_gem3", downloads: 1)
-      create(:version, rubygem: example_gem1, description: 'some', summary: 'some')
-      create(:version, rubygem: example_gem2, description: 'keyword', summary: 'some')
-      create(:version, rubygem: example_gem3, summary: 'keyword', description: 'some')
+      create(:version, rubygem: example_gem1, description: "some", summary: "some")
+      create(:version, rubygem: example_gem2, description: "keyword", summary: "some")
+      create(:version, rubygem: example_gem3, summary: "keyword", description: "some")
       import_and_refresh
     end
 
@@ -109,7 +109,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
   end
 
-  context 'function_score' do
+  context "function_score" do
     setup do
       (10..30).step(10) do |downloads|
         rubygem = create(:rubygem, name: "gem_#{downloads}", downloads: downloads)
@@ -125,20 +125,20 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
   end
 
-  context 'source' do
+  context "source" do
     setup do
       rubygem = create(:rubygem, name: "example_gem", downloads: 10)
-      create(:version, rubygem: rubygem, summary: 'some summary', description: 'some description')
+      create(:version, rubygem: rubygem, summary: "some summary", description: "some description")
       import_and_refresh
     end
 
     should "return all terms of source" do
       _, response = ElasticSearcher.new("example_gem").search
       hash = {
-        name: 'example_gem',
+        name: "example_gem",
         downloads: 10,
-        summary: 'some summary',
-        description: 'some description'
+        summary: "some summary",
+        description: "some description"
       }
 
       hash.each do |k, v|
@@ -147,11 +147,11 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
   end
 
-  context 'suggest' do
+  context "suggest" do
     setup do
-      example1 = create(:rubygem, name: 'keyword')
-      example2 = create(:rubygem, name: 'keywordo')
-      example3 = create(:rubygem, name: 'keywo')
+      example1 = create(:rubygem, name: "keyword")
+      example2 = create(:rubygem, name: "keywordo")
+      example3 = create(:rubygem, name: "keywo")
       [example1, example2, example3].each { |gem| create(:version, rubygem: gem) }
       import_and_refresh
     end
@@ -163,12 +163,12 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
   end
 
-  context 'advanced search' do
+  context "advanced search" do
     setup do
-      rubygem1 = create(:rubygem, name: 'example', downloads: 101)
-      rubygem2 = create(:rubygem, name: 'web-rubygem', downloads: 99)
-      create(:version, rubygem: rubygem1, summary: 'special word with web-rubygem')
-      create(:version, rubygem: rubygem2, description: 'example special word')
+      rubygem1 = create(:rubygem, name: "example", downloads: 101)
+      rubygem2 = create(:rubygem, name: "web-rubygem", downloads: 99)
+      create(:version, rubygem: rubygem1, summary: "special word with web-rubygem")
+      create(:version, rubygem: rubygem2, description: "example special word")
       import_and_refresh
     end
 
@@ -209,29 +209,29 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
   end
 
-  context 'aggregations' do
+  context "aggregations" do
     setup do
-      rubygem1 = create(:rubygem, name: 'example')
-      rubygem2 = create(:rubygem, name: 'rubygem')
-      create(:version, rubygem: rubygem1, summary: 'gemest of all gems')
-      create(:version, rubygem: rubygem2, description: 'example gems set the example')
-      rubygem1.update_column('updated_at', 2.days.ago)
-      rubygem2.update_column('updated_at', 10.days.ago)
+      rubygem1 = create(:rubygem, name: "example")
+      rubygem2 = create(:rubygem, name: "rubygem")
+      create(:version, rubygem: rubygem1, summary: "gemest of all gems")
+      create(:version, rubygem: rubygem2, description: "example gems set the example")
+      rubygem1.update_column("updated_at", 2.days.ago)
+      rubygem2.update_column("updated_at", 10.days.ago)
       import_and_refresh
       _, @response = ElasticSearcher.new("example").search
     end
 
     should "aggregate matched fields" do
-      buckets = @response.response['aggregations']['matched_field']['buckets']
-      assert_equal 1, buckets['name']['doc_count']
-      assert_equal 0, buckets['summary']['doc_count']
-      assert_equal 1, buckets['description']['doc_count']
+      buckets = @response.response["aggregations"]["matched_field"]["buckets"]
+      assert_equal 1, buckets["name"]["doc_count"]
+      assert_equal 0, buckets["summary"]["doc_count"]
+      assert_equal 1, buckets["description"]["doc_count"]
     end
 
     should "aggregate date range" do
-      buckets = @response.response['aggregations']['date_range']['buckets']
-      assert_equal 2, buckets[0]['doc_count']
-      assert_equal 1, buckets[1]['doc_count']
+      buckets = @response.response["aggregations"]["date_range"]["buckets"]
+      assert_equal 2, buckets[0]["doc_count"]
+      assert_equal 1, buckets[1]["doc_count"]
     end
   end
 

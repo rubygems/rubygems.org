@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class EncodingTest < ActionDispatch::IntegrationTest
   test "invalid utf-8 characters should be sanitized" do
@@ -7,8 +7,8 @@ class EncodingTest < ActionDispatch::IntegrationTest
   end
 
   test "gzip not supported" do
-    get '/'
+    get "/"
     assert_response :success
-    assert_nil @response.headers['Content-Encoding']
+    assert_nil @response.headers["Content-Encoding"]
   end
 end
