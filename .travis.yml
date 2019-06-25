@@ -17,6 +17,7 @@ addons:
     packages:
       - elasticsearch
       - openjdk-8-jre-headless
+  postgresql: "9.6"
 
 services:
   - elasticsearch

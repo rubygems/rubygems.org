@@ -73,7 +73,7 @@ Follow the instructions below on how to install Bundler and setup the database.
   docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" docker.elastic.co/elasticsearch/elasticsearch:5.1.2
   ```
 
-* Install PostgreSQL (>= 8.4.x): `brew install postgres`
+* Install PostgreSQL (>= 9.6.x): `brew install postgres`
   * Setup information: `brew info postgresql`
 * Install memcached: `brew install memcached`
   * Show all memcached options: `memcached -h`
@@ -117,12 +117,10 @@ Follow the instructions below on how to install Bundler and setup the database.
 * Start memcached: `memcached`
 * Run the tests: `bundle exec rake`
 
-#### Confirmation emails
+#### Confirmation emails links
 
-* Start rails: `rails s`
-* Sign up for a new user: http://localhost:3000/sign_up
-* Account confirmation email: http://localhost:3000/rails/mailers/mailer/email_confirmation
-  A list of all email previews is available at http://localhost:3000/rails/mailers.
+* [Account confirmation email](http://localhost:3000/rails/mailers/mailer/email_confirmation)
+* [A list of all email previews](http://localhost:3000/rails/mailers)
 
 #### Running RuboCop
 
@@ -159,7 +157,11 @@ directory. The proper directory will be full of .gem files.
 #### Getting the data dumps
 * You can use rubygems.org data [dumps](https://rubygems.org/pages/data) to test
 application in development environment especially for performance related issues.
-* To load the main database dump into Postgres, use `psql` - e.g. `$ psql gemcutter_development < PostgreSQL.sql`.
+* To load the main database dump into Postgres, use `script/load-pg-dump`. e.g.
+
+    ``` bash
+    $ ./script/load-pg-dump -d rubygems_development
+    ```
 
 #### Pushing gems
 
