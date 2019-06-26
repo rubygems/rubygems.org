@@ -206,6 +206,7 @@
   - removed not so useful header and footer
   - updated links and text in context of email confirmation and rubygems.org website
   - move body section to seperate file
+  - add rubygems.org icon to header
   GITHUB REPO: https://github.com/sendwithus/templates (template: goldstar/progress.html)
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -289,7 +290,22 @@
 									<td>
 										<table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="30" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
 
-										<div class="h3-2-center" style="color:#1e1e1e; font-family:Arial, sans-serif; min-width:auto !important; font-size:20px; line-height:26px; text-align:center; letter-spacing:5px">RUBYGEMS&#65279.ORG</div>
+										<table width="100%" border="0" cellspacing="0" cellpadding="0">
+										  <tr>
+										    <td align="center">
+										        <table border="0" cellspacing="0" cellpadding="0">
+										          <tr>
+										            <td class="img-center" style="font-size:0pt; line-height:0pt; text-align:center" width="60">
+										              <img src="<%= image_url("rubygems_logo_black.png") %>" border="0" width="40" height="40" alt="" />
+										            </td>
+										            <td class="img-center" style="font-size:0pt; line-height:0pt; text-align:center" width="60">
+										              <div class="h3-2-center" style="color:#1e1e1e; font-family:Arial, sans-serif; min-width:auto !important; font-size:25px; line-height:46px; text-align:center; letter-spacing:5px">RUBYGEMS&#65279.ORG</div>
+										            </td>
+										          </tr>
+										        </table>
+										    </td>
+										  </tr>
+										</table>
                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="30" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
 
 
@@ -322,7 +338,7 @@
 												<td>
 													<table width="100%" border="0" cellspacing="0" cellpadding="0">
 														<tr>
-															<td class="img" style="font-size:0pt; line-height:0pt; text-align:left" bgcolor="#ffffff" width="27"><img src=<%= image_url("top_left.jpg") %> border="0" width="27" height="27" alt="" /></td>
+															<td class="img" style="font-size:0pt; line-height:0pt; text-align:left" bgcolor="#ffffff" width="27"><img src="<%= image_url("top_left.jpg") %>" border="0" width="28" height="27" alt="" /></td>
 															<td>
 																<table width="100%" border="0" cellspacing="0" cellpadding="0">
 																	<tr>
@@ -332,7 +348,7 @@
 																<table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="24" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
 
 															</td>
-															<td class="img" style="font-size:0pt; line-height:0pt; text-align:left" bgcolor="#ffffff" width="27"><img src=<%= image_url("top_right.jpg") %> border="0" width="27" height="27" alt="" /></td>
+															<td class="img" style="font-size:0pt; line-height:0pt; text-align:left" bgcolor="#ffffff" width="27"><img src="<%= image_url("top_right.jpg") %>" border="0" width="27" height="27" alt="" /></td>
 														</tr>
 													</table>
 													<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -387,9 +403,9 @@
 																		<td align="center">
 																			<table border="0" cellspacing="0" cellpadding="0">
 																				<tr>
-																					<td class="img-center" style="font-size:0pt; line-height:0pt; text-align:center" width="38"><a href="https://twitter.com/rubygems_status" target="_blank"><img src=<%= image_url("twitter_mail_icon.png") %> border="0" width="34" height="34" alt="" /></a></td>
-																					<td class="img-center" style="font-size:0pt; line-height:0pt; text-align:center" width="38"><a href="https://github.com/rubygems" target="_blank"><img src=<%= image_url("github_icon.png") %> border="0" width="28" height="28" alt="" /></a></td>
-																					<td class="img-center" style="font-size:0pt; line-height:0pt; text-align:center" width="38"><a href="https://groups.google.com/forum/#!forum/rubygems-org" target="_blank"><img src=<%= image_url("google_group_icon.png") %> border="0" width="28" height="28" alt="" /></a></td>
+																					<td class="img-center" style="font-size:0pt; line-height:0pt; text-align:center" width="38"><a href="https://twitter.com/rubygems_status" target="_blank"><img src="<%= image_url("twitter_mail_icon.png") %>" border="0" width="34" height="34" alt="" /></a></td>
+																					<td class="img-center" style="font-size:0pt; line-height:0pt; text-align:center" width="38"><a href="https://github.com/rubygems" target="_blank"><img src="<%= image_url("github_icon.png") %>" border="0" width="28" height="28" alt="" /></a></td>
+																					<td class="img-center" style="font-size:0pt; line-height:0pt; text-align:center" width="38"><a href="https://groups.google.com/forum/#!forum/rubygems-org" target="_blank"><img src="<%= image_url("google_group_icon.png") %>" border="0" width="28" height="28" alt="" /></a></td>
 																				</tr>
 																			</table>
 																		</td>
@@ -404,7 +420,7 @@
 													</table>
 													<table width="100%" border="0" cellspacing="0" cellpadding="0">
 														<tr>
-															<td class="img" style="font-size:0pt; line-height:0pt; text-align:left" bgcolor="#ffffff" width="27"><img src=<%= image_url("bot_left.jpg") %> border="0" width="27" height="27" alt="" /></td>
+															<td class="img" style="font-size:0pt; line-height:0pt; text-align:left" bgcolor="#ffffff" width="27"><img src="<%= image_url("bot_left.jpg") %>" border="0" width="28" height="27" alt="" /></td>
 															<td>
 																<table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="24" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
 
@@ -414,7 +430,7 @@
 																	</tr>
 																</table>
 															</td>
-															<td class="img" style="font-size:0pt; line-height:0pt; text-align:left" bgcolor="#ffffff" width="27"><img src=<%= image_url("bot_right.jpg") %> border="0" width="27" height="27" alt="" /></td>
+															<td class="img" style="font-size:0pt; line-height:0pt; text-align:left" bgcolor="#ffffff" width="27"><img src="<%= image_url("bot_right.jpg") %>" border="0" width="27" height="27" alt="" /></td>
 														</tr>
 													</table>
 												</td>
@@ -443,7 +459,7 @@
 						</td>
 					</tr>
 				</table>
-				<div class="wgmail" style="font-size:0pt; line-height:0pt; text-align:center"><img src=<%= image_url("gmail_fix.gif") %> width="600" height="1" style="min-width:600px" alt="" border="0" /></div>
+				<div class="wgmail" style="font-size:0pt; line-height:0pt; text-align:center"><img src="<%= image_url("gmail_fix.gif") %>" width="600" height="1" style="min-width:600px" alt="" border="0" /></div>
 			</td>
 		</tr>
 	</table>
