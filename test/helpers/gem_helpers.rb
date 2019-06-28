@@ -1,6 +1,6 @@
 module GemHelpers
   def gem_specification_from_gem_fixture(name)
-    Gem::Package.new(File.join('test', 'gems', "#{name}.gem")).spec
+    Gem::Package.new(File.join("test", "gems", "#{name}.gem")).spec
   end
 
   def gem_file(name = "test-0.0.0.gem")
@@ -25,7 +25,7 @@ module GemHelpers
       s.platform = platform
       s.version = version.to_s
       s.authors = ["Someone"]
-      s.date = Time.zone.now.strftime('%Y-%m-%d')
+      s.date = Time.zone.now.strftime("%Y-%m-%d")
       s.description = summary.to_s
       s.email = "someone@example.com"
       s.files = []

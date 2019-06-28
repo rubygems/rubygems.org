@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class RubygemsControllerTest < ActionController::TestCase
   context "When logged in" do
@@ -46,8 +46,8 @@ class RubygemsControllerTest < ActionController::TestCase
 
       should respond_with :success
       should "have unsubscribe link" do
-        assert page.has_link? 'Unsubscribe'
-        refute page.has_content? 'Subscribe'
+        assert page.has_link? "Unsubscribe"
+        refute page.has_content? "Subscribe"
       end
     end
 
@@ -60,8 +60,8 @@ class RubygemsControllerTest < ActionController::TestCase
 
       should respond_with :success
       should "have subscribe link" do
-        assert page.has_link? 'Subscribe'
-        refute page.has_content? 'Unsubscribe'
+        assert page.has_link? "Subscribe"
+        refute page.has_content? "Unsubscribe"
       end
     end
   end
@@ -233,15 +233,15 @@ class RubygemsControllerTest < ActionController::TestCase
       version = create(:version, created_at: 1.minute.ago, indexed: false)
       @rubygem = version.rubygem
     end
-    context 'when signed out' do
+    context "when signed out" do
       setup { get :show, params: { id: @rubygem.to_param } }
       should respond_with :success
       should "render info about the gem" do
         assert page.has_content?("This gem is not currently hosted on RubyGems.org")
-        assert page.has_no_content?('Versions')
+        assert page.has_no_content?("Versions")
       end
     end
-    context 'with a signed in user subscribed to the gem' do
+    context "with a signed in user subscribed to the gem" do
       setup do
         @user = create(:user)
         sign_in_as @user
@@ -249,7 +249,7 @@ class RubygemsControllerTest < ActionController::TestCase
         get :show, params: { id: @rubygem.to_param }
       end
       should "have unsubscribe link" do
-        assert page.has_link? 'Unsubscribe'
+        assert page.has_link? "Unsubscribe"
       end
     end
     context "namespace is reserved" do
@@ -263,7 +263,7 @@ class RubygemsControllerTest < ActionController::TestCase
       should respond_with :success
       should "render info about the gem" do
         assert page.has_content?("The RubyGems.org team has reserved this gem name for 1 more day.")
-        assert page.has_no_content?('Versions')
+        assert page.has_no_content?("Versions")
       end
       should "renders owner gems overview link" do
         assert page.has_selector?("a[href='#{profile_path(@owner.display_id)}']")
@@ -323,12 +323,12 @@ class RubygemsControllerTest < ActionController::TestCase
       @version = create(:version)
 
       @runtime = create(:dependency, :runtime, version: @version)
-      @runtime.update_attribute(:requirements, '= 1.0.0')
-      @runtime.rubygem.update_column(:name, 'foo')
+      @runtime.update_attribute(:requirements, "= 1.0.0")
+      @runtime.rubygem.update_column(:name, "foo")
 
       @missing_dependency = create(:dependency, :runtime, version: @version)
-      @missing_dependency.update_attribute(:requirements, '= 1.2.0')
-      @missing_dependency.rubygem.update_column(:name, 'missing')
+      @missing_dependency.update_attribute(:requirements, "= 1.2.0")
+      @missing_dependency.rubygem.update_column(:name, "missing")
       @missing_dependency.update_column(:rubygem_id, nil)
 
       get :show, params: { id: @version.rubygem.to_param }
@@ -337,7 +337,7 @@ class RubygemsControllerTest < ActionController::TestCase
     should respond_with :success
     should "show only dependencies that have rubygem" do
       assert page.has_content?(@runtime.rubygem.name)
-      assert page.has_no_content?('1.2.0')
+      assert page.has_no_content?("1.2.0")
     end
   end
 
@@ -345,7 +345,7 @@ class RubygemsControllerTest < ActionController::TestCase
     setup do
       @version = create(:version)
       @runtime = create(:dependency, :runtime, version: @version)
-      @runtime.rubygem.update_column(:name, 'foo>0.1.1')
+      @runtime.rubygem.update_column(:name, "foo>0.1.1")
       get :show, params: { id: @version.rubygem.to_param }
     end
 

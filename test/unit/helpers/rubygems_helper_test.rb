@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class RubygemsHelperTest < ActionView::TestCase
   include Rails.application.routes.url_helpers
@@ -65,7 +65,7 @@ class RubygemsHelperTest < ActionView::TestCase
   end
 
   should "link to report abuse" do
-    rubygem = create(:rubygem, name: 'my_gem')
+    rubygem = create(:rubygem, name: "my_gem")
     url = "http://help.rubygems.org/discussion/new?discussion[private]=1&discussion[title]=Reporting+Abuse+on+my_gem"
 
     @virtual_path = "rubygems.show"
@@ -119,20 +119,20 @@ class RubygemsHelperTest < ActionView::TestCase
     end
   end
 
-  context 'simple_markup' do
-    should 'sanitize copy' do
+  context "simple_markup" do
+    should "sanitize copy" do
       text = '<script>alert("foo");</script>Rails authentication & authorization'
-      assert_equal '<p>alert(&quot;foo&quot;);Rails authentication &amp; authorization</p>', simple_markup(text)
+      assert_equal "<p>alert(&quot;foo&quot;);Rails authentication &amp; authorization</p>", simple_markup(text)
       assert simple_markup(text).html_safe?
     end
 
-    should 'work on rdoc strings' do
-      text = '== FOO'
+    should "work on rdoc strings" do
+      text = "== FOO"
       assert_equal "\n<h2>FOO</h2>\n", simple_markup(text)
       assert simple_markup(text).html_safe?
     end
 
-    should 'sanitize rdoc strings' do
+    should "sanitize rdoc strings" do
       text = "== FOO\nclick[javascript:alert('foo')]"
       assert_equal "\n<h2>FOO</h2>\n\n<p><a>click</a></p>\n", simple_markup(text)
 

@@ -1,10 +1,10 @@
-require 'test_helper'
+require "test_helper"
 
 class FastlyLogProcessorTest < ActiveSupport::TestCase
   include ESHelper
 
   setup do
-    @sample_log = Rails.root.join('test', 'sample_logs', 'fastly-fake.log').read
+    @sample_log = Rails.root.join("test", "sample_logs", "fastly-fake.log").read
 
     @sample_log_counts = {
       "bundler-1.10.6" => 2,
@@ -13,12 +13,12 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
       "json-1.8.2" => 4,
       "no-such-gem-1.2.3" => 1
     }
-    @log_ticket = LogTicket.create!(backend: 's3', directory: 'test-bucket', key: 'fastly-fake.log', status: "pending")
+    @log_ticket = LogTicket.create!(backend: "s3", directory: "test-bucket", key: "fastly-fake.log", status: "pending")
 
     Aws.config[:s3] = {
       stub_responses: { get_object: { body: @sample_log } }
     }
-    @job = FastlyLogProcessor.new('test-bucket', 'fastly-fake.log')
+    @job = FastlyLogProcessor.new("test-bucket", "fastly-fake.log")
     create(:gem_download)
     Rubygem.__elasticsearch__.create_index! force: true
   end
@@ -34,12 +34,12 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
     end
 
     should "process file from local fs" do
-      @log_ticket.update(backend: 'local', directory: 'test/sample_logs')
+      @log_ticket.update(backend: "local", directory: "test/sample_logs")
       assert_equal @sample_log_counts, @job.download_counts(@log_ticket)
     end
 
     should "fail if dont find the file" do
-      @log_ticket.update(backend: 'local', directory: 'foobar')
+      @log_ticket.update(backend: "local", directory: "foobar")
       assert_raises FastlyLogProcessor::LogFileNotFoundError do
         @job.download_counts(@log_ticket)
       end
@@ -49,20 +49,20 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
   context "with gem data" do
     setup do
       # Create some gems to match the values in the sample log
-      bundler = create(:rubygem, name: 'bundler')
-      json = create(:rubygem, name: 'json')
+      bundler = create(:rubygem, name: "bundler")
+      json = create(:rubygem, name: "json")
 
-      create(:version, rubygem: bundler, number: '1.10.6')
-      create(:version, rubygem: json, number: '1.8.3', platform: 'java')
-      create(:version, rubygem: json, number: '1.8.3')
-      create(:version, rubygem: json, number: '1.8.2')
+      create(:version, rubygem: bundler, number: "1.10.6")
+      create(:version, rubygem: json, number: "1.8.3", platform: "java")
+      create(:version, rubygem: json, number: "1.8.3")
+      create(:version, rubygem: json, number: "1.8.2")
 
       import_and_refresh
     end
 
-    context '#perform' do
+    context "#perform" do
       should "not double count" do
-        json = Rubygem.find_by_name('json')
+        json = Rubygem.find_by_name("json")
         assert_equal 0, GemDownload.count_for_rubygem(json.id)
         3.times { @job.perform }
         assert_equal 7, es_downloads(json.id)
@@ -80,17 +80,17 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
           end
         end
 
-        json = Rubygem.find_by_name('json')
+        json = Rubygem.find_by_name("json")
         assert_equal 7, GemDownload.count_for_rubygem(json.id)
         assert_equal 7, es_downloads(json.id)
         assert_equal "processed", @log_ticket.reload.status
       end
 
       should "not run if already processed" do
-        json = Rubygem.find_by_name('json')
+        json = Rubygem.find_by_name("json")
         assert_equal 0, json.downloads
         assert_equal 0, es_downloads(json.id)
-        @log_ticket.update(status: 'processed')
+        @log_ticket.update(status: "processed")
         @job.perform
 
         assert_equal 0, es_downloads(json.id)
@@ -109,15 +109,15 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
         @job.stubs(:download_counts).raises("woops")
         assert_raises { @job.perform }
 
-        @job = FastlyLogProcessor.new('test-bucket', 'fastly-fake.log')
+        @job = FastlyLogProcessor.new("test-bucket", "fastly-fake.log")
         @job.perform
-        json = Rubygem.find_by_name('json')
+        json = Rubygem.find_by_name("json")
         assert_equal 0, json.downloads
         assert_equal 0, es_downloads(json.id)
       end
 
       should "only process the right file" do
-        ticket = LogTicket.create!(backend: 's3', directory: 'test-bucket', key: 'fastly-fake.2.log', status: "pending")
+        ticket = LogTicket.create!(backend: "s3", directory: "test-bucket", key: "fastly-fake.2.log", status: "pending")
 
         @job.perform
         assert_equal "pending", ticket.reload.status

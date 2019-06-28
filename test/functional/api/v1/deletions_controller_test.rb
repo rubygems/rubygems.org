@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class Api::V1::DeletionsControllerTest < ActionController::TestCase
   context "with a confirmed user authenticated" do

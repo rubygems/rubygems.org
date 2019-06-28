@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class HomeControllerTest < ActionController::TestCase
   context "on GET to index" do
@@ -16,13 +16,13 @@ class HomeControllerTest < ActionController::TestCase
 
   should "on GET to index with non html accept header" do
     assert_raises(ActionController::UnknownFormat) do
-      @request.env['HTTP_ACCEPT'] = "image/gif, image/x-bitmap, image/jpeg, image/pjpeg"
+      @request.env["HTTP_ACCEPT"] = "image/gif, image/x-bitmap, image/jpeg, image/pjpeg"
       get :index
     end
   end
 
   should "use default locale on GET using invalid one" do
-    get :index, params: { locale: 'foobar' }
+    get :index, params: { locale: "foobar" }
     assert_equal I18n.locale, I18n.default_locale
   end
 end

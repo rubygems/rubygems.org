@@ -1,6 +1,6 @@
 class Internal::PingController < ApplicationController
   def index
-    render plain: 'PONG'
+    render plain: "PONG"
   end
 
   def revision

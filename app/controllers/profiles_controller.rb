@@ -19,9 +19,9 @@ class ProfilesController < ApplicationController
     if @user.update(params_user)
       if @user.unconfirmed_email
         Mailer.delay.email_reset(current_user)
-        flash[:notice] = t('.confirmation_mail_sent')
+        flash[:notice] = t(".confirmation_mail_sent")
       else
-        flash[:notice] = t('.updated')
+        flash[:notice] = t(".updated")
       end
       redirect_to edit_profile_path
     else
@@ -38,7 +38,7 @@ class ProfilesController < ApplicationController
   def destroy
     Delayed::Job.enqueue DeleteUser.new(current_user), priority: PRIORITIES[:profile_deletion]
     sign_out
-    redirect_to root_path, notice: t('.request_queued')
+    redirect_to root_path, notice: t(".request_queued")
   end
 
   private
@@ -49,7 +49,7 @@ class ProfilesController < ApplicationController
 
   def verify_password
     return if current_user.authenticated?(params[:user].delete(:password))
-    flash[:notice] = t('profiles.request_denied')
+    flash[:notice] = t("profiles.request_denied")
     redirect_to edit_profile_path
   end
 

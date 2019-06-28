@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class ProfilesControllerTest < ActionController::TestCase
   context "for a user that doesn't exist" do
@@ -85,7 +85,7 @@ class ProfilesControllerTest < ActionController::TestCase
         end
 
         should respond_with :redirect
-        should redirect_to('the profile edit page') { edit_profile_path }
+        should redirect_to("the profile edit page") { edit_profile_path }
         should set_flash.to("Your profile was updated.")
 
         should "update handle" do
@@ -104,7 +104,7 @@ class ProfilesControllerTest < ActionController::TestCase
         end
 
         should respond_with :redirect
-        should redirect_to('the profile edit page') { edit_profile_path }
+        should redirect_to("the profile edit page") { edit_profile_path }
         should set_flash.to("Your profile was updated.")
 
         should "update email toggle" do
@@ -169,7 +169,7 @@ class ProfilesControllerTest < ActionController::TestCase
     context "on DELETE to destroy" do
       context "correct password" do
         should "enqueue deletion request" do
-          assert_difference 'Delayed::Job.count', 1 do
+          assert_difference "Delayed::Job.count", 1 do
             delete :destroy, params: { user: { password: @user.password } }
           end
         end
@@ -187,17 +187,17 @@ class ProfilesControllerTest < ActionController::TestCase
 
       context "incorrect password" do
         should "not enqueue deletion request" do
-          assert_no_difference 'Delayed::Job.count' do
-            post :destroy, params: { user: { password: 'youshallnotpass' } }
+          assert_no_difference "Delayed::Job.count" do
+            post :destroy, params: { user: { password: "youshallnotpass" } }
           end
         end
 
         context "redirect path and flash" do
           setup do
-            delete :destroy, params: { user: { password: 'youshallnotpass' } }
+            delete :destroy, params: { user: { password: "youshallnotpass" } }
           end
 
-          should redirect_to('the profile edit page') { edit_profile_path }
+          should redirect_to("the profile edit page") { edit_profile_path }
           should set_flash.to("This request was denied. We could not verify your password.")
         end
       end

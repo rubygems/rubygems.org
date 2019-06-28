@@ -9,7 +9,7 @@ class LogTicket < ApplicationRecord
     scope = scope.where(directory: directory) if directory
     sql = scope.to_sql
 
-    find_by_sql(["UPDATE #{quoted_table_name} SET status = ? WHERE id IN (#{sql}) RETURNING *", 'processing']).first
+    find_by_sql(["UPDATE #{quoted_table_name} SET status = ? WHERE id IN (#{sql}) RETURNING *", "processing"]).first
   end
 
   def fs

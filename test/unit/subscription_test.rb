@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class SubscriptionTest < ActiveSupport::TestCase
   should belong_to :rubygem

@@ -24,7 +24,7 @@ class Api::V1::VersionsController < Api::BaseController
 
     version = rubygem.versions.most_recent if rubygem&.public_versions&.indexed&.count&.nonzero?
     number = version.number if version
-    render json: { "version" => number || "unknown" }, callback: params['callback']
+    render json: { "version" => number || "unknown" }, callback: params["callback"]
   end
 
   def reverse_dependencies

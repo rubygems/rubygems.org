@@ -1,9 +1,9 @@
-require 'test_helper'
+require "test_helper"
 
 class SearchesControllerTest < ActionController::TestCase
   include ESHelper
 
-  context 'on GET to show with no search parameters' do
+  context "on GET to show with no search parameters" do
     setup { get :show }
 
     should respond_with :success
@@ -12,7 +12,7 @@ class SearchesControllerTest < ActionController::TestCase
     end
   end
 
-  context 'on GET to show with search parameters for a rubygem without versions' do
+  context "on GET to show with search parameters for a rubygem without versions" do
     setup do
       @sinatra = create(:rubygem, name: "sinatra")
       import_and_refresh
@@ -27,7 +27,7 @@ class SearchesControllerTest < ActionController::TestCase
     end
   end
 
-  context 'on GET to show with search parameters' do
+  context "on GET to show with search parameters" do
     setup do
       @sinatra = create(:rubygem, name: "sinatra")
       @sinatra_redux = create(:rubygem, name: "sinatra-redux")
@@ -53,17 +53,17 @@ class SearchesControllerTest < ActionController::TestCase
     end
   end
 
-  context 'on GET to show with search parameters and ES enabled' do
+  context "on GET to show with search parameters and ES enabled" do
     setup do
-      @sinatra = create(:rubygem, name: 'sinatra')
-      @sinatra_redux = create(:rubygem, name: 'sinatra-redux')
-      @brando = create(:rubygem, name: 'brando')
+      @sinatra = create(:rubygem, name: "sinatra")
+      @sinatra_redux = create(:rubygem, name: "sinatra-redux")
+      @brando = create(:rubygem, name: "brando")
       create(:version, rubygem: @sinatra)
       create(:version, rubygem: @sinatra_redux)
       create(:version, rubygem: @brando)
       import_and_refresh
-      @request.cookies['new_search'] = 'true'
-      get :show, params: { query: 'sinatra' }
+      @request.cookies["new_search"] = "true"
+      get :show, params: { query: "sinatra" }
     end
 
     should respond_with :success
@@ -76,15 +76,15 @@ class SearchesControllerTest < ActionController::TestCase
       page.assert_no_selector("a[href='#{rubygem_path(@brando)}']")
     end
     should "display pagination summary" do
-      page.assert_text('all 2 gems')
+      page.assert_text("all 2 gems")
     end
     should "not see suggestions" do
-      page.assert_no_text('Maybe you mean')
-      page.assert_no_selector('.search-suggestions')
+      page.assert_no_text("Maybe you mean")
+      page.assert_no_selector(".search-suggestions")
     end
   end
 
-  context 'on GET to show with search parameters with a single exact match' do
+  context "on GET to show with search parameters with a single exact match" do
     setup do
       @sinatra = create(:rubygem, name: "sinatra")
       create(:version, rubygem: @sinatra)
@@ -93,10 +93,10 @@ class SearchesControllerTest < ActionController::TestCase
     end
 
     should respond_with :redirect
-    should redirect_to('the gem') { rubygem_path(@sinatra) }
+    should redirect_to("the gem") { rubygem_path(@sinatra) }
   end
 
-  context 'on GET to show with non string search parameter' do
+  context "on GET to show with non string search parameter" do
     setup do
       get :show, params: { query: { foo: "bar" } }
     end
@@ -107,7 +107,7 @@ class SearchesControllerTest < ActionController::TestCase
     end
   end
 
-  context 'on GET to show with search parameters and no results' do
+  context "on GET to show with search parameters and no results" do
     setup do
       @sinatra = create(:rubygem, name: "sinatra")
       @sinatra_redux = create(:rubygem, name: "sinatra-redux")
@@ -116,14 +116,14 @@ class SearchesControllerTest < ActionController::TestCase
       create(:version, rubygem: @sinatra_redux)
       create(:version, rubygem: @brando)
       import_and_refresh
-      @request.cookies['new_search'] = 'true'
+      @request.cookies["new_search"] = "true"
       get :show, params: { query: "sinatre" }
     end
 
     should respond_with :success
     should "see sinatra on the page in the suggestions" do
-      page.assert_text('Maybe you mean')
-      assert page.find('.search__suggestions').has_content?(@sinatra.name)
+      page.assert_text("Maybe you mean")
+      assert page.find(".search__suggestions").has_content?(@sinatra.name)
       assert page.has_selector?("a[href='#{search_path(query: @sinatra.name)}']")
     end
     should "not see sinatra on the page in the results" do
@@ -145,11 +145,11 @@ class SearchesControllerTest < ActionController::TestCase
     should "fallback to legacy search" do
       requires_toxiproxy
       Toxiproxy[:elasticsearch].down do
-        @request.cookies['new_search'] = 'true'
-        get :show, params: { query: 'sinatra' }
+        @request.cookies["new_search"] = "true"
+        get :show, params: { query: "sinatra" }
         assert_response :success
-        assert page.has_content?('Advanced search is currently unavailable. Falling back to legacy search.')
-        assert page.has_content?('Displaying')
+        assert page.has_content?("Advanced search is currently unavailable. Falling back to legacy search.")
+        assert page.has_content?("Displaying")
       end
     end
   end

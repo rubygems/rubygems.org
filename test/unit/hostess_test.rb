@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class HostessTest < ActiveSupport::TestCase
   include Rack::Test::Methods
@@ -8,11 +8,11 @@ class HostessTest < ActiveSupport::TestCase
   end
 
   def app
-    Hostess.new(-> { [200, {}, ''] })
+    Hostess.new(-> { [200, {}, ""] })
   end
 
   def touch(path)
-    RubygemFs.instance.store(path, '')
+    RubygemFs.instance.store(path, "")
   end
 
   %w[/prerelease_specs.4.8.gz

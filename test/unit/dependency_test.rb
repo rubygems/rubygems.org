@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class DependencyTest < ActiveSupport::TestCase
   should belong_to :rubygem
@@ -47,13 +47,13 @@ class DependencyTest < ActiveSupport::TestCase
     context "that refers to a Rubygem that exists with a malformed dependency" do
       setup do
         @rubygem        = create(:rubygem)
-        @requirements   = ['= 0.0.0']
+        @requirements   = ["= 0.0.0"]
         @gem_dependency = Gem::Dependency.new(@rubygem.name, @requirements)
       end
 
       should "correctly create a Dependency referring to the existing Rubygem" do
         @gem_dependency.stubs(:requirements_list)
-          .returns(['#<YAML::Syck::DefaultKey:0x0000000> 0.0.0'])
+          .returns(["#<YAML::Syck::DefaultKey:0x0000000> 0.0.0"])
         @dependency = create(:dependency, rubygem: @rubygem, gem_dependency: @gem_dependency)
 
         assert_equal @rubygem, @dependency.rubygem
@@ -62,7 +62,7 @@ class DependencyTest < ActiveSupport::TestCase
 
       should "correctly display a malformed Dependency referring to the existing Rubygem" do
         @dependency = create(:dependency, rubygem: @rubygem, gem_dependency: @gem_dependency)
-        @dependency.stubs(:requirements).returns '#<YAML::Syck::DefaultKey:0x0000000> 0.0.0'
+        @dependency.stubs(:requirements).returns "#<YAML::Syck::DefaultKey:0x0000000> 0.0.0"
 
         assert_equal @rubygem, @dependency.rubygem
         assert_equal @requirements[0].to_s, @dependency.clean_requirements
@@ -72,7 +72,7 @@ class DependencyTest < ActiveSupport::TestCase
     context "that refers to a Rubygem that exists" do
       setup do
         @rubygem        = create(:rubygem)
-        @requirements   = ['>= 0.0.0']
+        @requirements   = [">= 0.0.0"]
         @gem_dependency = Gem::Dependency.new(@rubygem.name, @requirements)
         @dependency     = create(:dependency, rubygem: @rubygem, gem_dependency: @gem_dependency)
       end
@@ -86,27 +86,27 @@ class DependencyTest < ActiveSupport::TestCase
     context "that refers to a Rubygem that exists and has multiple requirements" do
       setup do
         @rubygem        = create(:rubygem)
-        @requirements   = ['< 1.0.0', '>= 0.0.0']
+        @requirements   = ["< 1.0.0", ">= 0.0.0"]
         @gem_dependency = Gem::Dependency.new(@rubygem.name, @requirements)
         @dependency     = create(:dependency, rubygem: @rubygem, gem_dependency: @gem_dependency)
       end
 
       should "create a Dependency referring to the existing Rubygem" do
         assert_equal @rubygem, @dependency.rubygem
-        assert_equal @requirements.join(', '), @dependency.requirements
+        assert_equal @requirements.join(", "), @dependency.requirements
       end
     end
 
     context "that refers to a Rubygem that does not exist" do
       setup do
-        @specification = gem_specification_from_gem_fixture('with_dependencies-0.0.0')
+        @specification = gem_specification_from_gem_fixture("with_dependencies-0.0.0")
         @rubygem       = Rubygem.new(name: @specification.name)
         @version       = @rubygem.find_or_initialize_version_from_spec(@specification)
         @version.sha256 = "dummy"
 
         @rubygem.update_attributes_from_gem_specification!(@version, @specification)
 
-        @rubygem_name   = 'other-name'
+        @rubygem_name   = "other-name"
         @gem_dependency = Gem::Dependency.new(@rubygem_name, "= 1.0.0")
       end
 

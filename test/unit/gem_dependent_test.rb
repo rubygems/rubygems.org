@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class GemDependentTest < ActiveSupport::TestCase
   context "creating a new dependency_api" do
@@ -45,7 +45,7 @@ class GemDependentTest < ActiveSupport::TestCase
         rack = create(:rubygem, name: "rack")
         create(:version, number: "0.2.2", rubygem: rack)
         create(:version, number: "0.1.2", rubygem: rack)
-        create(:version, number: "0.1.2", platform: 'jruby', rubygem: rack)
+        create(:version, number: "0.1.2", platform: "jruby", rubygem: rack)
         create(:version, number: "0.1.3", rubygem: rack)
       end
 
@@ -66,7 +66,7 @@ class GemDependentTest < ActiveSupport::TestCase
 
         %w[foo bar].map do |gem_name|
           create(:rubygem, name: gem_name).tap do |rubygem|
-            gem_dependency = Gem::Dependency.new(rubygem.name, ['>= 0.0.0'])
+            gem_dependency = Gem::Dependency.new(rubygem.name, [">= 0.0.0"])
             create(:dependency, rubygem: rubygem, version: version, gem_dependency: gem_dependency)
           end
         end
@@ -76,8 +76,8 @@ class GemDependentTest < ActiveSupport::TestCase
         expected_deps = [["foo", ">= 0.0.0"], ["bar", ">= 0.0.0"]]
 
         dep = GemDependent.new(["devise"]).to_a.first
-        assert_equal 'devise', dep[:name]
-        assert_equal '1.0.0', dep[:number]
+        assert_equal "devise", dep[:name]
+        assert_equal "1.0.0", dep[:number]
 
         expected_deps.each do |expected_dep|
           assert_includes dep[:dependencies], expected_dep

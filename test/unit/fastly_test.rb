@@ -1,12 +1,12 @@
-require 'test_helper'
+require "test_helper"
 
 class FastlyTest < ActiveSupport::TestCase
   setup do
-    ENV['FASTLY_DOMAINS'] = "domain1.example.com,domain2.example.com"
+    ENV["FASTLY_DOMAINS"] = "domain1.example.com,domain2.example.com"
   end
 
   teardown do
-    ENV['FASTLY_DOMAINS'] = nil
+    ENV["FASTLY_DOMAINS"] = nil
   end
 
   context ".purge" do

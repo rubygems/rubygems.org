@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class ProfileTest < SystemTest
   setup do
@@ -21,7 +21,7 @@ class ProfileTest < SystemTest
 
   def change_auth_level(type)
     page.select type
-    find('#mfa-edit input[type=submit]').click
+    find("#mfa-edit input[type=submit]").click
   end
 
   def mfa_key
@@ -80,7 +80,7 @@ class ProfileTest < SystemTest
     click_button "Update"
 
     assert page.has_selector? "input[value='nick@example.com']"
-    assert page.has_selector? '#flash_notice', text: "You will receive "\
+    assert page.has_selector? "#flash_notice", text: "You will receive "\
       "an email within the next few minutes. It contains instructions "\
       "for confirming your new email address."
 

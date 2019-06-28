@@ -1,4 +1,4 @@
-require 'timeout'
+require "timeout"
 
 Notifier = Struct.new(:url, :protocol, :host_with_port, :rubygem, :version, :api_key) do
   extend StatsD::Instrument
@@ -17,15 +17,15 @@ Notifier = Struct.new(:url, :protocol, :host_with_port, :rubygem, :version, :api
         payload,
         :timeout        => 5,
         :open_timeout   => 5,
-        'Content-Type'  => 'application/json',
-        'Authorization' => authorization
+        "Content-Type"  => "application/json",
+        "Authorization" => authorization
     end
     true
   rescue *(HTTP_ERRORS + [RestClient::Exception, SocketError, SystemCallError]) => _e
     WebHook.find_by_url(url).try(:increment!, :failure_count)
     false
   end
-  statsd_count_success :perform, 'Webhook.perform'
+  statsd_count_success :perform, "Webhook.perform"
 
   private
 

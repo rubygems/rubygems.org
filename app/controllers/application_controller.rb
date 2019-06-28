@@ -27,11 +27,11 @@ class ApplicationController < ActionController::Base
   protected
 
   def fastly_expires_in(seconds)
-    response.headers['Surrogate-Control'] = "max-age=#{seconds}"
+    response.headers["Surrogate-Control"] = "max-age=#{seconds}"
   end
 
   def set_surrogate_key(*surrogate_keys)
-    response.headers['Surrogate-Key'] = surrogate_keys.join(' ')
+    response.headers["Surrogate-Key"] = surrogate_keys.join(" ")
   end
 
   def redirect_to_signin
@@ -85,7 +85,7 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_to_page_with_error
-    flash[:error] = t('invalid_page') unless controller_path.starts_with? "api"
+    flash[:error] = t("invalid_page") unless controller_path.starts_with? "api"
     page_params = params.except(:controller, :action, :page)
       .permit(:query, :to, :from, :format, :letter)
       .merge(page: Gemcutter::DEFAULT_PAGE)

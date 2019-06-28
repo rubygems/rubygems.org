@@ -13,12 +13,12 @@ module GemcutterTaskshelper
   end
 
   def recalculate_metadata!(version)
-    metadata = get_spec_attribute(version.full_name, 'metadata')
+    metadata = get_spec_attribute(version.full_name, "metadata")
     version.update(metadata: metadata || {})
   end
 
   def assign_required_rubygems_version!(version)
-    required_rubygems_version = get_spec_attribute(version.full_name, 'required_rubygems_version')
+    required_rubygems_version = get_spec_attribute(version.full_name, "required_rubygems_version")
     version.update_column(:required_rubygems_version, required_rubygems_version.to_s)
   end
 

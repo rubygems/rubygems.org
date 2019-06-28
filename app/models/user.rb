@@ -95,7 +95,7 @@ class User < ApplicationRecord
   end
 
   def to_xml(options = {})
-    payload.to_xml(options.merge(root: 'user'))
+    payload.to_xml(options.merge(root: "user"))
   end
 
   def to_yaml(*args)
@@ -170,18 +170,18 @@ class User < ApplicationRecord
 
   def disable_mfa!
     mfa_disabled!
-    self.mfa_seed = ''
+    self.mfa_seed = ""
     self.mfa_recovery_codes = []
     save!(validate: false)
   end
 
   def verify_and_enable_mfa!(seed, level, otp, expiry)
     if expiry < Time.now.utc
-      errors.add(:base, I18n.t('multifactor_auths.create.qrcode_expired'))
+      errors.add(:base, I18n.t("multifactor_auths.create.qrcode_expired"))
     elsif verify_digit_otp(seed, otp)
       enable_mfa!(seed, level)
     else
-      errors.add(:base, I18n.t('multifactor_auths.incorrect_otp'))
+      errors.add(:base, I18n.t("multifactor_auths.incorrect_otp"))
     end
   end
 
@@ -221,7 +221,7 @@ class User < ApplicationRecord
   end
 
   def unconfirmed_email_uniqueness
-    errors.add(:email, I18n.t('errors.messages.taken')) if unconfirmed_email_exists?
+    errors.add(:email, I18n.t("errors.messages.taken")) if unconfirmed_email_exists?
   end
 
   def unconfirmed_email_exists?

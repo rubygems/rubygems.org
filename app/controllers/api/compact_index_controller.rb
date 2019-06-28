@@ -8,7 +8,7 @@ class Api::CompactIndexController < Api::BaseController
   end
 
   def versions
-    versions_path = Rails.application.config.rubygems['versions_file_location']
+    versions_path = Rails.application.config.rubygems["versions_file_location"]
     versions_file = CompactIndex::VersionsFile.new(versions_path)
     from_date = versions_file.updated_at
     extra_gems = GemInfo.compact_index_versions(from_date)
@@ -30,7 +30,7 @@ class Api::CompactIndexController < Api::BaseController
   end
 
   def render_range(response_body)
-    headers['ETag'] = '"' << Digest::MD5.hexdigest(response_body) << '"'
+    headers["ETag"] = '"' << Digest::MD5.hexdigest(response_body) << '"'
 
     ranges = Rack::Utils.byte_ranges(request.env, response_body.bytesize)
     if ranges

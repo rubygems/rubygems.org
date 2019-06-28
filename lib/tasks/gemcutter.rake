@@ -4,7 +4,7 @@ namespace :gemcutter do
   namespace :index do
     desc "Update the index"
     task update: :environment do
-      require 'benchmark'
+      require "benchmark"
       Benchmark.bm do |b|
         b.report("update index") { Indexer.new.perform }
       end
@@ -12,7 +12,7 @@ namespace :gemcutter do
   end
 
   namespace :import do
-    desc 'Bring the gems through the gemcutter process'
+    desc "Bring the gems through the gemcutter process"
     task process: :environment do
       gems = Dir[File.join(ARGV[1] || "#{Gem.path.first}/cache", "*.gem")].sort.reverse
       puts "Processing #{gems.size} gems..."
@@ -30,7 +30,7 @@ namespace :gemcutter do
     desc "Initialize missing checksums."
     task init: :environment do
       without_sha256 = Version.where(sha256: nil)
-      mod = ENV['shard']
+      mod = ENV["shard"]
       without_sha256.where("id % 4 = ?", mod.to_i) if mod
 
       total = without_sha256.count
@@ -66,7 +66,7 @@ namespace :gemcutter do
     desc "Backfill old gem versions with metadata."
     task backfill: :environment do
       without_metadata = Version.where("metadata = ''")
-      mod = ENV['shard']
+      mod = ENV["shard"]
       without_metadata = without_metadata.where("id % 4 = ?", mod.to_i) if mod
 
       total = without_metadata.count
@@ -86,7 +86,7 @@ namespace :gemcutter do
     desc "Backfill gem versions with rubygems_version."
     task backfill: :environment do
       without_required_rubygems_version = Version.where(required_rubygems_version: nil)
-      mod = ENV['shard']
+      mod = ENV["shard"]
       without_required_rubygems_version = without_required_rubygems_version.where("id % 4 = ?", mod.to_i) if mod
 
       total = without_required_rubygems_version.count

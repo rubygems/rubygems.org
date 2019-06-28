@@ -1,9 +1,9 @@
-require 'test_helper'
+require "test_helper"
 
 class GemCachePurgerTest < ActiveSupport::TestCase
   context "#call" do
     setup do
-      @gem_name = 'test123'
+      @gem_name = "test123"
     end
 
     should "expire API memcached" do

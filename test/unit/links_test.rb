@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class LinksTest < ActiveSupport::TestCase
   # #documentation_uri
@@ -23,8 +23,8 @@ class LinksTest < ActiveSupport::TestCase
     rubygem = build(:rubygem, linkset: build(:linkset, docs: nil), versions: [version])
     links = rubygem.links(version)
 
-    assert links.links.key?('home')
-    assert links.links.key?('docs')
+    assert links.links.key?("home")
+    assert links.links.key?("docs")
   end
 
   should "use partial fields when not indexed" do
@@ -32,8 +32,8 @@ class LinksTest < ActiveSupport::TestCase
     rubygem = build(:rubygem, linkset: build(:linkset, docs: nil), versions: [version])
     links = rubygem.links(version)
 
-    refute links.links.key?('home')
-    assert links.links.key?('docs')
+    refute links.links.key?("home")
+    assert links.links.key?("docs")
   end
 
   should "not use linkset value when any metadata uri attribute is set" do

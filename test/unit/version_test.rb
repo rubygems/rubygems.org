@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class VersionTest < ActiveSupport::TestCase
   should belong_to :rubygem
@@ -70,9 +70,9 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "return most recently created version for versions with multiple non-ruby platforms" do
-      create(:version, rubygem: @gem, number: '0.1', platform: 'linux')
-      @most_recent = create(:version, rubygem: @gem, number: '0.2', platform: 'universal-rubinius')
-      create(:version, rubygem: @gem, number: '0.1', platform: 'mswin32')
+      create(:version, rubygem: @gem, number: "0.1", platform: "linux")
+      @most_recent = create(:version, rubygem: @gem, number: "0.2", platform: "universal-rubinius")
+      create(:version, rubygem: @gem, number: "0.1", platform: "mswin32")
 
       assert_equal @most_recent, Version.most_recent
     end
@@ -84,11 +84,11 @@ class VersionTest < ActiveSupport::TestCase
       @gem_one = create(:rubygem)
       @gem_two = create(:rubygem)
       @gem_three = create(:rubygem)
-      @version_one_latest  = create(:version, rubygem: @gem_one, number: '0.2')
-      @version_one_earlier = create(:version, rubygem: @gem_one, number: '0.1')
-      @version_two_latest  = create(:version, rubygem: @gem_two, number: '1.0')
-      @version_two_earlier = create(:version, rubygem: @gem_two, number: '0.5')
-      @version_three = create(:version, rubygem: @gem_three, number: '1.7')
+      @version_one_latest  = create(:version, rubygem: @gem_one, number: "0.2")
+      @version_one_earlier = create(:version, rubygem: @gem_one, number: "0.1")
+      @version_two_latest  = create(:version, rubygem: @gem_two, number: "1.0")
+      @version_two_earlier = create(:version, rubygem: @gem_two, number: "0.5")
+      @version_three = create(:version, rubygem: @gem_three, number: "1.7")
 
       @version_one_latest.dependencies << create(:dependency,
         version: @version_one_latest,
@@ -163,9 +163,9 @@ class VersionTest < ActiveSupport::TestCase
     should "sort dependencies alphabetically" do
       @version = build(:version, rubygem: @rubygem, number: "1.0.0", platform: "ruby")
 
-      @first_dependency_by_alpha = create(:rubygem, name: 'acts_as_indexed')
-      @second_dependency_by_alpha = create(:rubygem, name: 'friendly_id')
-      @third_dependency_by_alpha = create(:rubygem, name: 'refinerycms')
+      @first_dependency_by_alpha = create(:rubygem, name: "acts_as_indexed")
+      @second_dependency_by_alpha = create(:rubygem, name: "friendly_id")
+      @third_dependency_by_alpha = create(:rubygem, name: "refinerycms")
 
       @version.dependencies << create(:dependency,
         version: @version,
@@ -419,7 +419,7 @@ class VersionTest < ActiveSupport::TestCase
 
     should "give 'N/A' for size when size not available" do
       @version.size = nil
-      assert_equal 'N/A', @version.size
+      assert_equal "N/A", @version.size
     end
   end
 
@@ -481,8 +481,8 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with mixed release and prerelease versions" do
     setup do
-      @prerelease = create(:version, number: '1.0.rc1')
-      @release    = create(:version, number: '1.0')
+      @prerelease = create(:version, number: "1.0.rc1")
+      @release    = create(:version, number: "1.0")
     end
 
     should "know if it is a prelease version" do
@@ -499,9 +499,9 @@ class VersionTest < ActiveSupport::TestCase
   context "with only prerelease versions" do
     setup do
       @rubygem = create(:rubygem)
-      @one = create(:version, rubygem: @rubygem, number: '1.0.0.pre')
-      @two = create(:version, rubygem: @rubygem, number: '1.0.1.pre')
-      @three = create(:version, rubygem: @rubygem, number: '1.0.2.pre')
+      @one = create(:version, rubygem: @rubygem, number: "1.0.0.pre")
+      @two = create(:version, rubygem: @rubygem, number: "1.0.1.pre")
+      @three = create(:version, rubygem: @rubygem, number: "1.0.2.pre")
       @rubygem.reload
     end
 
@@ -513,10 +513,10 @@ class VersionTest < ActiveSupport::TestCase
   context "with versions created out of order" do
     setup do
       @gem = create(:rubygem)
-      create(:version, rubygem: @gem, number: '0.5')
-      create(:version, rubygem: @gem, number: '0.3')
-      create(:version, rubygem: @gem, number: '0.7')
-      create(:version, rubygem: @gem, number: '0.2')
+      create(:version, rubygem: @gem, number: "0.5")
+      create(:version, rubygem: @gem, number: "0.3")
+      create(:version, rubygem: @gem, number: "0.7")
+      create(:version, rubygem: @gem, number: "0.2")
       @gem.reload # make sure to reload the versions just created
     end
 
@@ -525,7 +525,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "know its latest version" do
-      assert_equal '0.7', @gem.versions.most_recent.number
+      assert_equal "0.7", @gem.versions.most_recent.number
     end
   end
 
@@ -533,10 +533,10 @@ class VersionTest < ActiveSupport::TestCase
     setup do
       @gem_one = create(:rubygem)
       @gem_two = create(:rubygem)
-      @version_one_latest  = create(:version, rubygem: @gem_one, number: '0.2')
-      @version_one_earlier = create(:version, rubygem: @gem_one, number: '0.1')
-      @version_two_latest  = create(:version, rubygem: @gem_two, number: '1.0')
-      @version_two_earlier = create(:version, rubygem: @gem_two, number: '0.5')
+      @version_one_latest  = create(:version, rubygem: @gem_one, number: "0.2")
+      @version_one_earlier = create(:version, rubygem: @gem_one, number: "0.1")
+      @version_two_latest  = create(:version, rubygem: @gem_two, number: "1.0")
+      @version_two_earlier = create(:version, rubygem: @gem_two, number: "0.5")
     end
 
     should "be able to fetch the latest versions" do
@@ -654,7 +654,7 @@ class VersionTest < ActiveSupport::TestCase
       @version.update_attributes_from_gem_specification!(@spec)
 
       assert @version.indexed
-      assert_equal @spec.authors.join(', '),              @version.authors
+      assert_equal @spec.authors.join(", "),              @version.authors
       assert_equal @spec.description,                     @version.description
       assert_equal @spec.summary,                         @version.summary
       assert_equal @spec.date,                            @version.built_at
@@ -734,8 +734,8 @@ class VersionTest < ActiveSupport::TestCase
   end
 
   should "validate authors the same twice" do
-    g = Rubygem.new(name: 'test-gem')
-    v = Version.new(authors:  %w[arthurnn dwradcliffe], number: 1, platform: 'ruby', rubygem: g)
+    g = Rubygem.new(name: "test-gem")
+    v = Version.new(authors:  %w[arthurnn dwradcliffe], number: 1, platform: "ruby", rubygem: g)
     assert_equal "arthurnn, dwradcliffe", v.authors
     assert v.valid?
     assert_equal "arthurnn, dwradcliffe", v.authors
@@ -743,10 +743,10 @@ class VersionTest < ActiveSupport::TestCase
   end
 
   should "not allow full name collision" do
-    g1 = Rubygem.create(name: 'test-gem-733.t')
-    Version.create(authors:  %w[arthurnn dwradcliffe], number: '0.0.1', platform: 'ruby', rubygem: g1)
-    g2 = Rubygem.create(name: 'test-gem')
-    v2 = Version.new(authors:  %w[arthurnn dwradcliffe], number: '733.t-0.0.1', platform: 'ruby', rubygem: g2)
+    g1 = Rubygem.create(name: "test-gem-733.t")
+    Version.create(authors:  %w[arthurnn dwradcliffe], number: "0.0.1", platform: "ruby", rubygem: g1)
+    g2 = Rubygem.create(name: "test-gem")
+    v2 = Version.new(authors:  %w[arthurnn dwradcliffe], number: "733.t-0.0.1", platform: "ruby", rubygem: g2)
     refute v2.valid?
     assert_equal [:full_name], v2.errors.keys
   end
@@ -775,24 +775,24 @@ class VersionTest < ActiveSupport::TestCase
   context "created_between" do
     setup do
       @version = create(:version)
-      @start_time = Time.zone.parse('2017-10-10')
-      @end_time = Time.zone.parse('2017-11-10')
+      @start_time = Time.zone.parse("2017-10-10")
+      @end_time = Time.zone.parse("2017-11-10")
     end
 
     should "return versions created in the given range" do
-      @version.created_at = Time.zone.parse('2017-10-20')
+      @version.created_at = Time.zone.parse("2017-10-20")
       @version.save!
       assert_contains Version.created_between(@start_time, @end_time), @version
     end
 
     should "NOT return versions created before the range begins" do
-      @version.created_at = Time.zone.parse('2017-10-09')
+      @version.created_at = Time.zone.parse("2017-10-09")
       @version.save!
       assert_does_not_contain Version.created_between(@start_time, @end_time), @version
     end
 
     should "NOT return versions after the range begins" do
-      @version.created_at = Time.zone.parse('2017-11-11')
+      @version.created_at = Time.zone.parse("2017-11-11")
       @version.save!
       assert_does_not_contain Version.created_between(@start_time, @end_time), @version
     end

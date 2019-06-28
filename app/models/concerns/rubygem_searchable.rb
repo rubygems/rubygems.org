@@ -40,8 +40,8 @@ module RubygemSearchable
         description:       latest_version.try(:description),
         updated:           updated_at,
         dependencies: {
-          development: deps.try(:select) { |r| r.rubygem && r.scope == 'development' },
-          runtime: deps.try(:select) { |r| r.rubygem && r.scope == 'runtime' }
+          development: deps.try(:select) { |r| r.rubygem && r.scope == "development" },
+          runtime: deps.try(:select) { |r| r.rubygem && r.scope == "runtime" }
         }
       }
     end
@@ -51,25 +51,25 @@ module RubygemSearchable
              analysis: {
                analyzer: {
                  rubygem: {
-                   type: 'pattern',
+                   type: "pattern",
                    pattern: "[\s#{Regexp.escape(Patterns::SPECIAL_CHARACTERS)}]+"
                  }
                }
              }
 
     mapping do
-      indexes :name, type: 'text', analyzer: 'rubygem' do
-        indexes :suggest, analyzer: 'simple'
+      indexes :name, type: "text", analyzer: "rubygem" do
+        indexes :suggest, analyzer: "simple"
       end
-      indexes :summary, type: 'text', analyzer: 'english' do
-        indexes :raw, analyzer: 'simple'
+      indexes :summary, type: "text", analyzer: "english" do
+        indexes :raw, analyzer: "simple"
       end
-      indexes :description, type: 'text', analyzer: 'english' do
-        indexes :raw, analyzer: 'simple'
+      indexes :description, type: "text", analyzer: "english" do
+        indexes :raw, analyzer: "simple"
       end
-      indexes :yanked, type: 'boolean'
-      indexes :downloads, type: 'integer'
-      indexes :updated, type: 'date'
+      indexes :yanked, type: "boolean"
+      indexes :downloads, type: "integer"
+      indexes :updated, type: "date"
     end
 
     def self.legacy_search(query)
@@ -79,7 +79,7 @@ module RubygemSearchable
            UPPER(TRANSLATE(name, :match, :replace)) LIKE UPPER(:query))
       SQL
 
-      replace_characters = ' ' * Patterns::SPECIAL_CHARACTERS.length
+      replace_characters = " " * Patterns::SPECIAL_CHARACTERS.length
       where(conditions, query: "%#{query.strip}%", match: Patterns::SPECIAL_CHARACTERS, replace: replace_characters)
         .includes(:latest_version, :gem_download)
         .references(:versions)

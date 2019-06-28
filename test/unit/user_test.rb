@@ -1,9 +1,9 @@
-require 'test_helper'
+require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
   def assert_resetting_email_changes(attr_name)
     assert_changed(@user, attr_name) do
-      @user.update(email: 'some@one.com')
+      @user.update(email: "some@one.com")
     end
   end
 
@@ -54,7 +54,7 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
-    context 'email' do
+    context "email" do
       should "be less than 255 characters" do
         user = build(:user, email: ("a" * 255) + "@example.com")
         refute user.valid?
@@ -62,7 +62,7 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
-    context 'twitter_username' do
+    context "twitter_username" do
       should validate_length_of(:twitter_username)
       should allow_value("user123_32").for(:twitter_username)
       should_not allow_value("@user").for(:twitter_username)
@@ -72,23 +72,23 @@ class UserTest < ActiveSupport::TestCase
       should_not allow_value("012345678901234567890").for(:twitter_username)
     end
 
-    context 'password' do
-      should 'be between 10 and 200 characters' do
-        user = build(:user, password: 'a' * 9)
+    context "password" do
+      should "be between 10 and 200 characters" do
+        user = build(:user, password: "a" * 9)
         refute user.valid?
-        assert_contains user.errors[:password], 'is too short (minimum is 10 characters)'
+        assert_contains user.errors[:password], "is too short (minimum is 10 characters)"
 
-        user.password = 'a' * 201
+        user.password = "a" * 201
         refute user.valid?
-        assert_contains user.errors[:password], 'is too long (maximum is 200 characters)'
+        assert_contains user.errors[:password], "is too long (maximum is 200 characters)"
 
-        user.password = 'secretpassword'
+        user.password = "secretpassword"
         user.valid?
         assert_nil user.errors[:password].first
       end
 
-      should 'be invalid when an empty string' do
-        user = build(:user, password: '')
+      should "be invalid when an empty string" do
+        user = build(:user, password: "")
         refute user.valid?
       end
     end
@@ -121,7 +121,7 @@ class UserTest < ActiveSupport::TestCase
 
     should "have email and handle on JSON" do
       json = JSON.parse(@user.to_json)
-      hash = { "id" => @user.id, "email" => @user.email, 'handle' => @user.handle }
+      hash = { "id" => @user.id, "email" => @user.email, "handle" => @user.handle }
       assert_equal hash, json
     end
 
@@ -134,7 +134,7 @@ class UserTest < ActiveSupport::TestCase
 
     should "have email and handle on YAML" do
       yaml = YAML.safe_load(@user.to_yaml)
-      hash = { 'id' => @user.id, 'email' => @user.email, 'handle' => @user.handle }
+      hash = { "id" => @user.id, "email" => @user.email, "handle" => @user.handle }
       assert_equal hash, yaml
     end
 
@@ -230,13 +230,13 @@ class UserTest < ActiveSupport::TestCase
       assert_equal 1, all_hooks.keys.size
     end
 
-    context '#valid_confirmation_token?' do
-      should 'return false when email confirmation token has expired' do
+    context "#valid_confirmation_token?" do
+      should "return false when email confirmation token has expired" do
         @user.update_attribute(:token_expires_at, 2.minutes.ago)
         refute @user.valid_confirmation_token?
       end
 
-      should 'reutrn true when email confirmation token has not expired' do
+      should "reutrn true when email confirmation token has not expired" do
         two_minutes_in_future = Time.zone.now + 2.minutes
         @user.update_attribute(:token_expires_at, two_minutes_in_future)
         assert @user.valid_confirmation_token?
@@ -244,7 +244,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     context "two factor authentication" do
-      should 'disable mfa by default' do
+      should "disable mfa by default" do
         refute @user.mfa_enabled?
       end
 
@@ -285,7 +285,7 @@ class UserTest < ActiveSupport::TestCase
         end
 
         should "return false for verifying OTP" do
-          refute @user.otp_verified?('')
+          refute @user.otp_verified?("")
         end
 
         should "return false for mfa status check" do
@@ -351,7 +351,7 @@ class UserTest < ActiveSupport::TestCase
 
     context "user is only owner of gem" do
       should "record deletion" do
-        assert_difference 'Deletion.count', 1 do
+        assert_difference "Deletion.count", 1 do
           @user.destroy
         end
       end
@@ -367,7 +367,7 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should "not record deletion" do
-        assert_no_difference 'Deletion.count' do
+        assert_no_difference "Deletion.count" do
           @user.destroy
         end
       end

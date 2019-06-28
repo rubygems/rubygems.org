@@ -19,22 +19,22 @@ class MultifactorAuthsController < ApplicationController
       flash[:error] = current_user.errors[:base].join
       redirect_to edit_profile_url
     else
-      flash[:success] = t('.success')
+      flash[:success] = t(".success")
       render :recovery
     end
   end
 
   def update
     if current_user.otp_verified?(otp_param)
-      if level_param == 'disabled'
-        flash[:success] = t('multifactor_auths.destroy.success')
+      if level_param == "disabled"
+        flash[:success] = t("multifactor_auths.destroy.success")
         current_user.disable_mfa!
       else
-        flash[:error] = t('.success')
+        flash[:error] = t(".success")
         current_user.update!(mfa_level: level_param)
       end
     else
-      flash[:error] = t('multifactor_auths.incorrect_otp')
+      flash[:error] = t("multifactor_auths.incorrect_otp")
     end
     redirect_to edit_profile_url
   end
@@ -42,26 +42,26 @@ class MultifactorAuthsController < ApplicationController
   private
 
   def otp_param
-    params.permit(:otp).fetch(:otp, '')
+    params.permit(:otp).fetch(:otp, "")
   end
 
   def level_param
-    params.permit(:level).fetch(:level, '')
+    params.permit(:level).fetch(:level, "")
   end
 
   def issuer
-    request.host || 'rubygems.org'
+    request.host || "rubygems.org"
   end
 
   def require_mfa_disabled
     return unless current_user.mfa_enabled?
-    flash[:error] = t('multifactor_auths.require_mfa_disabled')
+    flash[:error] = t("multifactor_auths.require_mfa_disabled")
     redirect_to edit_profile_path
   end
 
   def require_mfa_enabled
     return if current_user.mfa_enabled?
-    flash[:error] = t('multifactor_auths.require_mfa_enabled')
+    flash[:error] = t("multifactor_auths.require_mfa_enabled")
     redirect_to edit_profile_path
   end
 

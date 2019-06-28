@@ -4,8 +4,8 @@ first, second = *ARGV
 
 abort "Usage: script/merge_users [FIRST_EMAIL] [SECOND_EMAIL]" if first.nil? || second.nil?
 
-ENV['RAILS_ENV'] ||= 'production'
-require_relative '../config/environment'
+ENV["RAILS_ENV"] ||= "production"
+require_relative "../config/environment"
 
 first_user  = User.find_by_email!(first)
 second_user = User.find_by_email!(second)
@@ -19,16 +19,16 @@ end
 
 def choose_one(first, second)
   case $stdin.gets.chomp
-  when '1' then first
-  when '2' then second
+  when "1" then first
+  when "2" then second
   else
-    puts 'You must choose 1 or 2'
+    puts "You must choose 1 or 2"
     choose_one(first, second)
   end
 end
 
-email = choose_from_two(first_user.email, second_user.email, term: 'email')
-handle = choose_from_two(first_user.handle, second_user.handle, term: 'handle')
+email = choose_from_two(first_user.email, second_user.email, term: "email")
+handle = choose_from_two(first_user.handle, second_user.handle, term: "handle")
 
 if email == first_user.email
   chosen_user = first_user

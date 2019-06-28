@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'concurrent/atomics'
+require "test_helper"
+require "concurrent/atomics"
 
 class ParallelPusherTest < ActiveSupport::TestCase
   self.use_transactional_tests = false
@@ -12,7 +12,7 @@ class ParallelPusherTest < ActiveSupport::TestCase
 
     teardown do
       @user.destroy
-      @rubygem = Rubygem.find_by(name: 'hola')
+      @rubygem = Rubygem.find_by(name: "hola")
       @rubygem.versions.destroy_all
       @rubygem.destroy
       Delayed::Job.delete_all
@@ -40,7 +40,7 @@ class ParallelPusherTest < ActiveSupport::TestCase
       end
 
       latch.wait
-      expected_sha = Digest::SHA2.base64digest(@fs.get('gems/hola-0.0.0.gem'))
+      expected_sha = Digest::SHA2.base64digest(@fs.get("gems/hola-0.0.0.gem"))
       assert_equal expected_sha, Version.last.sha256
     end
   end

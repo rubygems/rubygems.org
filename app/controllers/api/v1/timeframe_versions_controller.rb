@@ -30,7 +30,7 @@ class Api::V1::TimeframeVersionsController < Api::BaseController
   def from_time
     @from_time ||= Time.iso8601(params.require(:from))
   rescue ArgumentError
-    raise InvalidTimeframeParameterError, 'the from parameter must be iso8601 formatted'
+    raise InvalidTimeframeParameterError, "the from parameter must be iso8601 formatted"
   end
 
   def to_time

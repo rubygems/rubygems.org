@@ -14,20 +14,20 @@ class RubygemsController < ApplicationController
       end
       format.atom do
         @versions = Version.published(Gemcutter::DEFAULT_PAGINATION)
-        render 'versions/feed'
+        render "versions/feed"
       end
     end
   end
 
   def show
     if @blacklisted_gem
-      render 'blacklisted'
+      render "blacklisted"
     else
       @versions = @rubygem.public_versions(5)
       if @versions.to_a.any?
-        render 'show'
+        render "show"
       else
-        render 'show_yanked'
+        render "show_yanked"
       end
     end
   end

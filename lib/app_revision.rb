@@ -12,6 +12,6 @@ class AppRevision
   end
 
   def self.revision_file
-    Rails.root.join('REVISION')
+    Rails.root.join("REVISION")
   end
 end

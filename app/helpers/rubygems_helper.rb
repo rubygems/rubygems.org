@@ -12,7 +12,7 @@ module RubygemsHelper
   end
 
   def link_to_page(id, url)
-    link_to(t(".links.#{id}"), url, rel: 'nofollow', class: ['gem__link', 't-list__item'], id: id) if url.present?
+    link_to(t(".links.#{id}"), url, rel: "nofollow", class: ["gem__link", "t-list__item"], id: id) if url.present?
   end
 
   def link_to_github(rubygem)
@@ -44,32 +44,32 @@ module RubygemsHelper
   def subscribe_link(rubygem)
     if signed_in?
       if rubygem.subscribers.find_by_id(current_user.id)
-        link_to t('.links.unsubscribe'), rubygem_subscription_path(rubygem),
-          class: [:toggler, 'gem__link', 't-list__item'], id: 'unsubscribe',
+        link_to t(".links.unsubscribe"), rubygem_subscription_path(rubygem),
+          class: [:toggler, "gem__link", "t-list__item"], id: "unsubscribe",
           method: :delete
       else
-        link_to t('.links.subscribe'), rubygem_subscription_path(rubygem),
-          class: ['toggler', 'gem__link', 't-list__item'], id: 'subscribe',
+        link_to t(".links.subscribe"), rubygem_subscription_path(rubygem),
+          class: ["toggler", "gem__link", "t-list__item"], id: "subscribe",
           method: :post
       end
     else
-      link_to t('.links.subscribe'), sign_in_path,
-        class: [:toggler, 'gem__link', 't-list__item'], id: :subscribe
+      link_to t(".links.subscribe"), sign_in_path,
+        class: [:toggler, "gem__link", "t-list__item"], id: :subscribe
     end
   end
 
   def unsubscribe_link(rubygem)
     return unless signed_in?
-    style = 't-item--hidden' unless rubygem.subscribers.find_by_id(current_user.id)
+    style = "t-item--hidden" unless rubygem.subscribers.find_by_id(current_user.id)
 
-    link_to t('.links.unsubscribe'), rubygem_subscription_path(rubygem),
-      class: [:toggler, 'gem__link', 't-list__item', style], id: 'unsubscribe',
+    link_to t(".links.unsubscribe"), rubygem_subscription_path(rubygem),
+      class: [:toggler, "gem__link", "t-list__item", style], id: "unsubscribe",
       method: :delete, remote: true
   end
 
   def atom_link(rubygem)
-    link_to t(".links.rss"), rubygem_versions_path(rubygem, format: 'atom'),
-      class: 'gem__link t-list__item', id: :rss
+    link_to t(".links.rss"), rubygem_versions_path(rubygem, format: "atom"),
+      class: "gem__link t-list__item", id: :rss
   end
 
   def reverse_dependencies_link(rubygem)
@@ -83,9 +83,9 @@ module RubygemsHelper
 
   def report_abuse_link(rubygem)
     encoded_title = CGI.escape("Reporting Abuse on #{rubygem.name}")
-    report_abuse_url = 'http://help.rubygems.org/discussion/new' \
+    report_abuse_url = "http://help.rubygems.org/discussion/new" \
       "?discussion[private]=1&discussion[title]=" + encoded_title
-    link_to t(".links.report_abuse"), report_abuse_url.html_safe, class: 'gem__link t-list__item'
+    link_to t(".links.report_abuse"), report_abuse_url.html_safe, class: "gem__link t-list__item"
   end
 
   def links_to_owners(rubygem)

@@ -4,8 +4,8 @@ from_email, to_email = *ARGV
 
 abort "Usage: script/change_email [FROM_EMAIL] [TO_EMAIL]" if from_email.nil? || to_email.nil?
 
-ENV['RAILS_ENV'] ||= 'production'
-require_relative '../config/environment'
+ENV["RAILS_ENV"] ||= "production"
+require_relative "../config/environment"
 
 from_user = User.find_by_email!(from_email)
 from_user.email = to_email

@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class Api::V1::DownloadsControllerTest < ActionController::TestCase
   def self.should_respond_to(format)
@@ -20,7 +20,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:json) do |body|
-      JSON.load(body)['total']
+      JSON.load(body)["total"]
     end
 
     should_respond_to(:yaml) do |body|
@@ -30,7 +30,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     should_respond_to(:text, &:to_i)
   end
 
-  def get_show(version, format = 'json')
+  def get_show(version, format = "json")
     get :show, params: { id: version.full_name }, format: format
   end
 
@@ -38,22 +38,22 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     context "with #{format.to_s.upcase}" do
       should "have total downloads for version1" do
         get_show(@version1, format)
-        assert_equal 3, yield(@response.body)['total_downloads'.send(to_meth)]
+        assert_equal 3, yield(@response.body)["total_downloads".send(to_meth)]
       end
 
       should "have downloads for the most recent version of version1" do
         get_show(@version1, format)
-        assert_equal 1, yield(@response.body)['version_downloads'.send(to_meth)]
+        assert_equal 1, yield(@response.body)["version_downloads".send(to_meth)]
       end
 
       should "have total downloads for version2" do
         get_show(@version2, format)
-        assert_equal 3, yield(@response.body)['total_downloads'.send(to_meth)]
+        assert_equal 3, yield(@response.body)["total_downloads".send(to_meth)]
       end
 
       should "have downloads for the most recent version of version2" do
         get_show(@version2, format)
-        assert_equal 2, yield(@response.body)['version_downloads'.send(to_meth)]
+        assert_equal 2, yield(@response.body)["version_downloads".send(to_meth)]
       end
     end
   end
@@ -61,8 +61,8 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
   context "on GET to show" do
     setup do
       rubygem = create(:rubygem)
-      @version1 = create(:version, rubygem: rubygem, number: '1.0.0')
-      @version2 = create(:version, rubygem: rubygem, number: '2.0.0')
+      @version1 = create(:version, rubygem: rubygem, number: "1.0.0")
+      @version2 = create(:version, rubygem: rubygem, number: "2.0.0")
 
       GemDownload.bulk_update([[@version1.full_name, 1], [@version2.full_name, 2]])
     end
@@ -78,7 +78,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
 
   context "on GET to show for an unknown gem" do
     setup do
-      get :show, params: { id: "rials" }, format: 'json'
+      get :show, params: { id: "rials" }, format: "json"
     end
 
     should "return a 404" do
@@ -117,20 +117,20 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
 
     context "with json" do
       setup do
-        get :all, format: 'json'
+        get :all, format: "json"
         @json = JSON.load(@response.body)
       end
 
       should "show all latest versions" do
-        assert_equal 4, @json['gems'].count
+        assert_equal 4, @json["gems"].count
       end
 
       should "have downloads for the top version" do
-        assert_equal 3, @json['gems'].first[1]
+        assert_equal 3, @json["gems"].first[1]
       end
 
       should "have total downloads for version2" do
-        assert_equal 2, @json['gems'][1][1]
+        assert_equal 2, @json["gems"][1][1]
       end
     end
   end

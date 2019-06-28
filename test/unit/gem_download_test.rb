@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class GemDownloadTest < ActiveSupport::TestCase
   include ESHelper
@@ -128,11 +128,11 @@ class GemDownloadTest < ActiveSupport::TestCase
   end
 
   should "not count, wrong named versions" do
-    GemDownload.bulk_update([['foonotexists', 100]])
+    GemDownload.bulk_update([["foonotexists", 100]])
     assert_equal 0, GemDownload.total_count
 
     version = create(:version)
-    GemDownload.bulk_update([['foonotexists', 100], ['dddd', 50], [version.full_name, 2]])
+    GemDownload.bulk_update([["foonotexists", 100], ["dddd", 50], [version.full_name, 2]])
     assert_equal 2, GemDownload.total_count
   end
 
