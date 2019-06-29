@@ -5,7 +5,6 @@
 // the compiled file.
 //
 //= require jquery
-//= require jquery-ui//widgets/autocomplete
 //= require jquery_ujs
 //= require clipboard
 //= require github_buttons
