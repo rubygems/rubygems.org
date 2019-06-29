@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+
+if ARGV.empty?
+  puts "Yanks all of the gems that a user has push access to."
+  puts "USAGE: script/yank_user USERNAME"
+  exit
+end
+
+handle = ARGV.first
+puts "Locking user #{handle}..."
+
+ENV["RAILS_ENV"] ||= "production"
+require_relative "../config/environment"
+
+user = User.where(handle: handle).first
+
+user.rubygems.each do |rubygem|
+  puts "Yanking #{rubygem.name}"
+  rubygem.versions.each do |version|
+    puts "  #{version}"
+    user.deletions.create!(version: version) unless version.yanked?
+  end
+end
+
+puts "Done."
