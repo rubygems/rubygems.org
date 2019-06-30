@@ -316,6 +316,7 @@ class PusherTest < ActiveSupport::TestCase
           "summary"           => "old summary",
           "description"       => "Some awesome gem",
           "updated"           => "2016-07-04T00:00:00.000Z",
+          "suggest"           => "gemsgemsgems",
           "dependencies"      => { "development" => [], "runtime" => [] }
         }
 
