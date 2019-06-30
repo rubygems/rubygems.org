@@ -17,4 +17,5 @@ begin
   puts "Done."
 rescue ActiveRecord::RecordNotFound
   puts "User #{handle} not found."
+  exit 1 # return non-zero on fail
 end
