@@ -1,0 +1,27 @@
+#!/usr/bin/env ruby
+
+if ARGV.empty?
+  puts "Yanks a given gem, or all versions if none is given"
+  puts "USAGE: script/yank_gem GEMNAME [VERSION]"
+  exit
+end
+
+gemname, version = *ARGV
+puts "Yanking #{gemname} #{' ' + version if version}"
+
+ENV["RAILS_ENV"] ||= "production"
+require_relative "../config/environment"
+
+rubygem = Rubygem.where(name: gemname).first
+
+to_yank = version ? rubygem.versions.where(number: version) : rubygem.versions
+
+user = User.where(email: "security@rubygems.org").first
+
+puts "Yanking #{rubygem.name}"
+to_yank.each do |v|
+  puts "  #{v}"
+  user.deletions.create!(version: v) unless v.yanked?
+end
+
+puts "Done."
