@@ -10,6 +10,7 @@ $(function(){
 
 
 $(document).on('keyup', '#home_query', function(e){
+  var result = $('<ul>').addClass('suggest-list');
   e.preventDefault();
   var input = $.trim($(this).val());
   if (input.length >=2){
@@ -20,8 +21,13 @@ $(document).on('keyup', '#home_query', function(e){
       processData: false,
       contentType: false,
       dataType: 'json'
-    }).done({
-    })
+    }).done(function(data){
+      for(var i = 0; i < data.length; i++){
+        var newLi = $('<li>').text(data[i]);
+        result.append(newLi);
+      }
+      $('#home_query').append(result);
+    });
   }else{
     data = nil;
   }
