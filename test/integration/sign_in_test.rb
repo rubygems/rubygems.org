@@ -143,4 +143,15 @@ class SignInTest < SystemTest
       assert page.has_content? "Sign in"
     end
   end
+
+  test "sign in to locked account" do
+    User.find_by!(email: "nick@example.com").lock!
+
+    visit sign_in_path
+    fill_in "Email or Username", with: "nick@example.com"
+    fill_in "Password", with: "secret12345"
+    click_button "Sign in"
+
+    assert page.has_content? "Sign in"
+  end
 end

@@ -206,6 +206,19 @@ class User < ApplicationRecord
     save!(validate: false)
   end
 
+  def lock!
+    transaction do
+      update_attribute(:email, "security+locked-#{handle}@rubygems.org")
+      disable_mfa!
+      update!(
+        password: SecureRandom.alphanumeric,
+        remember_token: nil,
+        remember_token_expires_at: nil,
+        api_key: nil
+      )
+    end
+  end
+
   private
 
   def verify_digit_otp(seed, otp)

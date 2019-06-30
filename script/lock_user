@@ -2,7 +2,7 @@
 
 if ARGV.empty?
   puts "Locks a user account so it can't be used."
-  puts "USAGE: script/malicious_user USERNAME"
+  puts "USAGE: script/lock_user USERNAME"
   exit
 end
 
@@ -12,15 +12,9 @@ puts "Locking user #{handle}..."
 ENV["RAILS_ENV"] ||= "production"
 require_relative "../config/environment"
 
-user = User.where(handle: handle).first
-
-user.update_attribute(:email, "security+locked-#{handle}@rubygems.org")
-user.disable_mfa!
-user.update!(
-  password: SecureRandom.alphanumeric,
-  remember_token: nil,
-  remember_token_expires_at: nil,
-  api_key: nil
-)
-
-puts "Done."
+begin
+  User.find_by!(handle: handle).lock!
+  puts "Done."
+rescue ActiveRecord::RecordNotFound
+  puts "User #{handle} not found."
+end
