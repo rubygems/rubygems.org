@@ -12,7 +12,7 @@ class Api::V1::ActivitiesController < Api::BaseController
   private
 
   def render_rubygems(versions)
-    rubygems = versions.includes(:dependencies, rubygem: :linkset).map do |version|
+    rubygems = versions.includes(:dependencies, rubygem: %i[linkset gem_download]).map do |version|
       version.rubygem.payload(version)
     end
 
