@@ -3,12 +3,12 @@ class SubscriptionsController < ApplicationController
 
   def create
     subscription = @rubygem.subscriptions.build(user: current_user)
-    redirect_to_rubygem(subscription.try(:save))
+    redirect_to_rubygem(subscription&.save)
   end
 
   def destroy
-    subscription = @rubygem.subscriptions.find_by_user_id(current_user.try(:id))
-    redirect_to_rubygem(subscription.try(:destroy))
+    subscription = @rubygem.subscriptions.find_by_user_id(current_user&.id)
+    redirect_to_rubygem(subscription&.destroy)
   end
 
   protected

@@ -19,8 +19,8 @@ class Api::V1::WebHooksController < Api::BaseController
   end
 
   def remove
-    webhook = @api_user.web_hooks.find_by_rubygem_id_and_url(@rubygem.try(:id), @url)
-    if webhook.try(:destroy)
+    webhook = @api_user.web_hooks.find_by_rubygem_id_and_url(@rubygem&.id, @url)
+    if webhook&.destroy
       render(plain: webhook.removed_message)
     else
       render(plain: "No such webhook exists under your account.", status: :not_found)

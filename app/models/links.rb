@@ -54,7 +54,7 @@ class Links
 
   # excluded from metadata_uri_set? check
   def homepage_uri
-    version.metadata["homepage_uri"].presence || linkset.try(:home)
+    version.metadata["homepage_uri"].presence || linkset&.home
   end
 
   # define getters for each of the uris (both short `home` or long `homepage_uri` versions)

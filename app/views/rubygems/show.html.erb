@@ -1,5 +1,5 @@
 <% @title = @rubygem.name %>
-<% @subtitle = @latest_version.try(:slug) %>
+<% @subtitle = @latest_version&.slug %>
 
 <% content_for :head do %>
   <%= auto_discovery_link_tag(:atom, rubygem_versions_path(@rubygem, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>

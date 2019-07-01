@@ -104,13 +104,6 @@ Style/NumericPredicate:
 
 # Offense count: 1
 # Cop supports --auto-correct.
-# Configuration parameters: ConvertCodeThatCanStartToReturnNil.
-Style/SafeNavigation:
-  Exclude:
-    - 'app/jobs/fastly_log_processor.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, AllowSafeAssignment.
 # SupportedStyles: require_parentheses, require_no_parentheses, require_parentheses_when_complex
 Style/TernaryParentheses:
