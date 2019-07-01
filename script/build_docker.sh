@@ -16,9 +16,14 @@ echo "$TRAVIS_COMMIT" > REVISION
 
 docker build -t quay.io/$TRAVIS_REPO_SLUG:$TRAVIS_COMMIT .
 
-docker run --net host quay.io/$TRAVIS_REPO_SLUG:$TRAVIS_COMMIT rake db:create db:migrate
-docker run -d --net host quay.io/$TRAVIS_REPO_SLUG:$TRAVIS_COMMIT
-sleep 10
+docker run -e RAILS_ENV=production -e SECRET_KEY_BASE=1234 -e DATABASE_URL=postgresql://localhost \
+  --net host quay.io/$TRAVIS_REPO_SLUG:$TRAVIS_COMMIT \
+  -- rake db:create db:migrate
+docker run -d -e RAILS_ENV=production -e SECRET_KEY_BASE=1234 -e DATABASE_URL=postgresql://localhost \
+  --net host quay.io/$TRAVIS_REPO_SLUG:$TRAVIS_COMMIT \
+  -- unicorn_rails -E production -c /app/config/unicorn.conf
+
+sleep 5
 curl http://localhost:3000/internal/ping | grep PONG
 
 if [ $? -eq 1 ]; then
