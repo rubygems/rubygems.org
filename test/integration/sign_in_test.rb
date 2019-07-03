@@ -144,8 +144,8 @@ class SignInTest < SystemTest
     end
   end
 
-  test "sign in to locked account" do
-    User.find_by!(email: "nick@example.com").lock!
+  test "sign in to blocked account" do
+    User.find_by!(email: "nick@example.com").block!
 
     visit sign_in_path
     fill_in "Email or Username", with: "nick@example.com"

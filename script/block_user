@@ -2,7 +2,7 @@
 
 if ARGV.empty?
   puts "Locks a user account so it can't be used."
-  puts "USAGE: script/lock_user USERNAME"
+  puts "USAGE: script/block_user USERNAME"
   exit
 end
 
@@ -13,7 +13,7 @@ ENV["RAILS_ENV"] ||= "production"
 require_relative "../config/environment"
 
 begin
-  User.find_by!(handle: handle).lock!
+  User.find_by!(handle: handle).block!
   puts "Done."
 rescue ActiveRecord::RecordNotFound
   puts "User #{handle} not found."

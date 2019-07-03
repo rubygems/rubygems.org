@@ -278,12 +278,13 @@ class UserTest < ActiveSupport::TestCase
           assert @user.otp_verified?(next_otp)
         end
 
-        should "can be locked" do
+        should "can be blocked" do
           assert_changed(@user, :email, :password, :api_key, :mfa_seed, :remember_token) do
-            @user.lock!
+            @user.block!
           end
 
           assert @user.email.start_with?("security+locked-")
+          assert @user.email.end_with?("@rubygems.org")
           assert @user.mfa_recovery_codes.empty?
           assert @user.mfa_disabled?
         end
