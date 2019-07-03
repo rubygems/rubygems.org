@@ -90,6 +90,20 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
   end
 
+  context "skip exact match" do
+    setup do
+      create(:rubygem, name: "example", number: "0.0.1")
+      create(:rubygem, name: "example-ng", number: "0.0.1")
+      import_and_refresh
+    end
+
+    should "not return gem with 100% name match" do
+      _, response = ElasticSearcher.new("example", skip_exact_match: true).search
+      assert_equal 1, response.size
+      assert_equal "example-ng", response.first.name
+    end
+  end
+
   context "multi_match" do
     setup do
       # without download, _score is calculated to 0.0

@@ -1,8 +1,9 @@
 class ElasticSearcher
-  def initialize(query, page: 1, api: false)
+  def initialize(query, page: 1, api: false, skip_exact_match: false)
     @query  = query
     @page   = page
     @api    = api
+    @skip_exact_match = skip_exact_match
   end
 
   def search
@@ -11,6 +12,7 @@ class ElasticSearcher
     @api ? result.map(&:_source) : [nil, result]
   rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Elasticsearch::Transport::Transport::Error => e
     result = Rubygem.legacy_search(@query).page(@page)
+    result = result.where.not(name: @query) if @skip_exact_match
     @api ? result : [error_msg(e), result]
   end
 
@@ -18,6 +20,7 @@ class ElasticSearcher
 
   def search_definition # rubocop:disable Metrics/MethodLength
     query_str = @query
+    skip_exact_match = @skip_exact_match
     source_array = @api ? api_source : ui_source
 
     Elasticsearch::DSL::Search.search do
@@ -33,6 +36,13 @@ class ElasticSearcher
                   default_operator "and"
                 end
               end
+
+              if skip_exact_match
+                must_not do
+                  term exact_name: query_str
+                end
+              end
+
               minimum_should_match 1
               # only return gems that are not yanked
               filter { term yanked: false }

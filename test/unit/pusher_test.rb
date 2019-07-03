@@ -294,6 +294,7 @@ class PusherTest < ActiveSupport::TestCase
                                                         id:    @rubygem.id
         expected_response = {
           "name"              => "gemsgemsgems",
+          "exact_name"        => "gemsgemsgems",
           "downloads"         => 0,
           "version"           => "0.1.1",
           "version_downloads" => 0,

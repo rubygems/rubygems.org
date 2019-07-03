@@ -49,7 +49,7 @@ class SearchesControllerTest < ActionController::TestCase
       refute page.has_selector?("a[href='#{rubygem_path(@brando)}']")
     end
     should "display 'gems' in pagination summary" do
-      assert page.has_content?("all 2 gems")
+      assert page.has_content?("Displaying 1 gem")
     end
   end
 
@@ -76,7 +76,7 @@ class SearchesControllerTest < ActionController::TestCase
       page.assert_no_selector("a[href='#{rubygem_path(@brando)}']")
     end
     should "display pagination summary" do
-      page.assert_text("all 2 gems")
+      page.assert_text("Displaying 1 gem")
     end
     should "not see suggestions" do
       page.assert_no_text("Maybe you mean")

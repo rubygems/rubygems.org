@@ -17,6 +17,7 @@ module RubygemSearchable
 
       {
         name:              name,
+        exact_name:        name,
         downloads:         downloads,
         version:           latest_version&.number,
         version_downloads: latest_version&.downloads_count,
@@ -58,6 +59,7 @@ module RubygemSearchable
              }
 
     mapping do
+      indexes :exact_name, type: "text", analyzer: "keyword"
       indexes :name, type: "text", analyzer: "rubygem" do
         indexes :suggest, analyzer: "simple"
       end
