@@ -1,6 +1,6 @@
 inherit_from: .rubocop_todo.yml
 require:
-  - ./lib/safe_navigation_cop.rb
+  - ./test/safe_navigation_cop.rb
   - rubocop-performance
 
 AllCops:
