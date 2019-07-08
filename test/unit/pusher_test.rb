@@ -320,7 +320,8 @@ class PusherTest < ActiveSupport::TestCase
           "summary"           => "old summary",
           "description"       => "Some awesome gem",
           "updated"           => "2016-07-04T00:00:00.000Z",
-          "dependencies"      => { "development" => [], "runtime" => [] }
+          "dependencies"      => { "development" => [], "runtime" => [] },
+          "suggest"           => { "input" => "gemsgemsgems", "weight" => 0, "contexts" => { "yanked" => false } }
         }
 
         assert_equal expected_response, response["_source"]

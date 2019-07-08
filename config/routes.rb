@@ -89,7 +89,9 @@ Rails.application.routes.draw do
         end
       end
 
-      resource :search, only: :show
+      resource :search, only: :show do
+        get :autocomplete
+      end
 
       resources :web_hooks, only: %i[create index] do
         collection do

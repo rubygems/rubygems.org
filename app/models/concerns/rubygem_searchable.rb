@@ -40,6 +40,13 @@ module RubygemSearchable
         summary:           latest_version&.summary,
         description:       latest_version&.description,
         updated:           updated_at,
+        suggest: {
+          input: name,
+          weight: downloads,
+          contexts: {
+            yanked: versions.none?(&:indexed?)
+          }
+        },
         dependencies: {
           development: deps&.select { |r| r.rubygem && r.scope == "development" },
           runtime: deps&.select { |r| r.rubygem && r.scope == "runtime" }
@@ -68,6 +75,10 @@ module RubygemSearchable
       end
       indexes :description, type: "text", analyzer: "english" do
         indexes :raw, analyzer: "simple"
+      end
+      instance_eval do
+        context = { name: "yanked", type: "category" }
+        @mapping[:suggest] = { type: "completion", contexts: context }
       end
       indexes :yanked, type: "boolean"
       indexes :downloads, type: "integer"

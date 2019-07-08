@@ -1,0 +1,23 @@
+.suggest-list {
+  position: absolute;
+  z-index: 1000;
+  width: 100%;
+  padding: 0;
+  list-style: none;
+  color: #ffffff;
+  background-color: rgba(20, 28, 34, 0.8);
+  border-radius: 5px;
+}
+.suggest-list > li{
+  margin-bottom: 2px;
+  padding: 4px;
+}
+.suggest-list > .selected{
+  background-color: rgba(233, 87, 63, 0.8);
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.mobile-nav-is-expanded .suggest-list {
+  width: calc(100% - 24px);
+}
