@@ -1,4 +1,5 @@
 require "test_helper"
+require_relative "../../lib/middleware/hostess"
 
 class HostessTest < ActiveSupport::TestCase
   include Rack::Test::Methods
