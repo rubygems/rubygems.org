@@ -5,6 +5,7 @@ gem "rails-i18n"
 
 gem "autoprefixer-rails"
 gem "aws-sdk", "~> 2.2"
+gem "bootsnap"
 gem "clearance"
 gem "clearance-deprecated_password_strategies"
 gem "daemons"
@@ -56,7 +57,6 @@ group :development, :test do
 end
 
 group :development do
-  gem "bootsnap", require: false
   gem "rails-erd"
   gem "listen"
 end
