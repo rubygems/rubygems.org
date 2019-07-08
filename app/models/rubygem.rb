@@ -18,6 +18,7 @@ class Rubygem < ApplicationRecord
     uniqueness: { case_sensitive: false },
     if: :needs_name_validation?
   validate :blacklist_names_exclusion
+  validate :protected_gem_typo, on: :create
 
   after_create :update_unresolved
   before_destroy :mark_unresolved
@@ -311,6 +312,13 @@ class Rubygem < ApplicationRecord
   def blacklist_names_exclusion
     return unless GEM_NAME_BLACKLIST.include? name.downcase
     errors.add :name, "'#{name}' is a reserved gem name."
+  end
+
+  def protected_gem_typo
+    gem_typo = GemTypo.new(name)
+
+    return unless gem_typo.protected_typo?
+    errors.add :name, "'#{name}' is too close to typo-protected gem: #{gem_typo.protected_gem}"
   end
 
   def update_unresolved
