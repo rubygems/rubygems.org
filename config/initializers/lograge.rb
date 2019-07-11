@@ -9,7 +9,7 @@ if Rails.env.production? || Rails.env.staging?
     # Add custom fields
     config.lograge.custom_payload do |controller|
       {
-        params: controller.request.params.except('controller', 'action', 'format', 'utf8'),
+        params: controller.request.filtered_parameters.except('controller', 'action', 'format', 'utf8'),
         client_ip: controller.request.ip,
         user_agent: controller.request.user_agent,
         dest_host: controller.request.host,
