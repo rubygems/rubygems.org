@@ -18,4 +18,14 @@ class MailerPreview < ActionMailer::Preview
   def deletion_failed
     Mailer.deletion_failed(User.last)
   end
+
+  def notifiers_changed
+    ownership = Ownership.where.not(user: nil).last
+    Mailer.notifiers_changed(ownership.user_id)
+  end
+
+  def gem_pushed
+    ownership = Ownership.where.not(user: nil).where(notifier: true).last
+    Mailer.gem_pushed(ownership.user_id, ownership.rubygem.versions.last.id)
+  end
 end

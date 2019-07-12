@@ -136,6 +136,10 @@ en:
       subtitle: Sorry!
       subject: Your account deletion request on rubygems.org has failed
       body_html: You had request for account deletion on rubygems.org. Unfortunately, we were not able to process your request. Please try again after some time or %{contact} us if problem persists.
+    notifiers_changed:
+      subject: You changed your RubyGems.org email notification settings
+    gem_pushed:
+      subject: Gem %{gem} pushed to RubyGems.org
   news:
     show:
       title: New Releases — All Gems
@@ -201,6 +205,9 @@ en:
       success: You have successfully disabled multifactor authentication.
     update:
       success: You have successfully updated your MFA level.
+  notifier:
+    update:
+      success: You have successfully updated your email notification settings.
   profiles:
     edit:
       email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
@@ -234,6 +241,9 @@ en:
           disabled: Disabled
           ui_only: UI Only
           ui_and_api: UI and API
+      notifier:
+        email_notifications: Email Notifications
+        update: Update notifications
     delete:
       title: Delete profile
       confirm: Confirm

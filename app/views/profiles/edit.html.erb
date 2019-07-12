@@ -110,6 +110,34 @@
   <% end %>
 </div>
 
+<% if @ownerships.any? %>
+  <div class="t-body">
+    <h2><%= t '.notifier.email_notifications' %></h2>
+    <%= form_tag notifier_path, method: :put do %>
+      <p>
+        To aid detection of unauthorized gem changes, we email you each time a new version of a
+        gem you own is pushed. By receiving and reading these emails, you help protect the Ruby
+        ecosystem.
+      </p>
+      <% @ownerships.each do |ownership| %>
+        <h4><%= ownership.rubygem.name %></h4>
+        <p>
+          <%= label_tag do %>
+            <%= radio_button_tag "ownerships[#{ownership.id}]", :on, ownership.notifier? %>
+            On <em>(recommended)</em>
+          <% end %>
+          <br>
+          <%= label_tag do %>
+            <%= radio_button_tag "ownerships[#{ownership.id}]", :off, !ownership.notifier? %>
+            Off
+          <% end %>
+        </p>
+      <% end %>
+      <%= submit_tag t('.notifier.update'), class: 'form__submit' %>
+    <% end %>
+  </div>
+<% end %>
+
 <div class="t-body">
   <h2><%= t '.delete.delete_profile' %></h2>
   <p><%= t '.delete.warning' %></p>

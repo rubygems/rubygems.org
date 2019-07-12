@@ -128,6 +128,10 @@ fr:
       subtitle:
       subject: Votre demande de suppression de compte sur RubyGems.org a échoué
       body_html: "Vous avez effectué une demande de suppression de compte sur RubyGems.org. Malheureusement, votre demande n'a pu aboutir. Veuillez réessayer plus tard ou nous %{contact} si le problème subsiste."
+    notifiers_changed:
+      subject:
+    gem_pushed:
+      subject:
   news:
     show:
       title: Nouvelles Versions - Toutes les Gems
@@ -193,6 +197,9 @@ fr:
       success: Vous avez désactivé l'authentification multifacteur.
     update:
       success:
+  notifier:
+    update:
+      success:
   profiles:
     edit:
       email_awaiting_confirmation: Veuillez confirmer votre nouvelle adresse email %{unconfirmed_email}
@@ -226,6 +233,9 @@ fr:
           disabled:
           ui_only:
           ui_and_api:
+      notifier:
+        email_notifications:
+        update:
     delete:
       title: Supprimer le profil
       confirm: Confirmer
