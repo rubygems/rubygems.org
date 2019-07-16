@@ -130,8 +130,11 @@ fr:
       body_html: "Vous avez effectué une demande de suppression de compte sur RubyGems.org. Malheureusement, votre demande n'a pu aboutir. Veuillez réessayer plus tard ou nous %{contact} si le problème subsiste."
     notifiers_changed:
       subject:
+      title:
+      subtitle:
     gem_pushed:
       subject:
+      title:
   news:
     show:
       title: Nouvelles Versions - Toutes les Gems

@@ -138,8 +138,11 @@ en:
       body_html: You had request for account deletion on rubygems.org. Unfortunately, we were not able to process your request. Please try again after some time or %{contact} us if problem persists.
     notifiers_changed:
       subject: You changed your RubyGems.org email notification settings
+      title: EMAIL NOTIFICATIONS
+      subtitle: Hi %{handle}
     gem_pushed:
       subject: Gem %{gem} pushed to RubyGems.org
+      title: GEM PUSHED
   news:
     show:
       title: New Releases — All Gems

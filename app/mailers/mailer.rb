@@ -32,10 +32,10 @@ class Mailer < ActionMailer::Base
   end
 
   def notifiers_changed(user_id)
-    user = User.find(user_id)
-    @ownerships = user.ownerships.by_gem_name
+    @user = User.find(user_id)
+    @ownerships = @user.ownerships.by_gem_name
 
-    mail to: user.email,
+    mail to: @user.email,
          subject: I18n.t("mailer.notifiers_changed.subject",
            default: "You changed your RubyGems.org email notification settings")
   end

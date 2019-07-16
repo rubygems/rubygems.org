@@ -130,8 +130,11 @@ nl:
       body_html:
     notifiers_changed:
       subject:
+      title:
+      subtitle:
     gem_pushed:
       subject:
+      title:
   news:
     show:
       title:

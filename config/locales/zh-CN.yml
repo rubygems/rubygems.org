@@ -130,8 +130,11 @@ zh-CN:
       body_html:
     notifiers_changed:
       subject:
+      title:
+      subtitle:
     gem_pushed:
       subject:
+      title:
   news:
     show:
       title: 全部新发布 Gems
