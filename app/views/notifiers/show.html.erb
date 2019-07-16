@@ -1,0 +1,24 @@
+<% @title = t('.title') %>
+
+<% if @ownerships.any? %>
+  <div class="t-body">
+    <%= form_tag notifier_path, method: :put do %>
+      <p><%= t('.info') %></p>
+      <% @ownerships.each do |ownership| %>
+        <h4><%= ownership.rubygem.name %></h4>
+        <p>
+          <%= label_tag do %>
+            <%= radio_button_tag "ownerships[#{ownership.id}]", :on, ownership.notifier? %>
+            <%= t('.on') %> <em>(<%= t('.recommended') %>)</em>
+          <% end %>
+          <br>
+          <%= label_tag do %>
+            <%= radio_button_tag "ownerships[#{ownership.id}]", :off, !ownership.notifier? %>
+            <%= t('.off') %>
+          <% end %>
+        </p>
+      <% end %>
+      <%= submit_tag t('.update'), class: 'form__submit' %>
+    <% end %>
+  </div>
+<% end %>

@@ -130,8 +130,11 @@ pt-BR:
       body_html:
     notifiers_changed:
       subject:
+      title:
+      subtitle:
     gem_pushed:
       subject:
+      title:
   news:
     show:
       title:
@@ -197,9 +200,16 @@ pt-BR:
       success:
     update:
       success:
-  notifier:
+  notifiers:
     update:
       success:
+    show:
+      info:
+      on:
+      off:
+      recommended:
+      title:
+      update:
   profiles:
     edit:
       email_awaiting_confirmation:
@@ -233,9 +243,6 @@ pt-BR:
           disabled:
           ui_only:
           ui_and_api:
-      notifier:
-        email_notifications:
-        update:
     delete:
       title:
       confirm:

@@ -143,7 +143,7 @@ Rails.application.routes.draw do
     resource :news, path: 'news', only: [:show] do
       get :popular, on: :collection
     end
-    resource :notifier, only: :update
+    resource :notifier, only: %i[update show]
 
     resources :rubygems,
       only: %i[index show],

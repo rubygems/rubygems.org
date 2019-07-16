@@ -138,8 +138,11 @@ en:
       body_html: You had request for account deletion on rubygems.org. Unfortunately, we were not able to process your request. Please try again after some time or %{contact} us if problem persists.
     notifiers_changed:
       subject: You changed your RubyGems.org email notification settings
+      title: EMAIL NOTIFICATIONS
+      subtitle: Hi %{handle}
     gem_pushed:
       subject: Gem %{gem} pushed to RubyGems.org
+      title: GEM PUSHED
   news:
     show:
       title: New Releases — All Gems
@@ -205,9 +208,18 @@ en:
       success: You have successfully disabled multifactor authentication.
     update:
       success: You have successfully updated your MFA level.
-  notifier:
+  notifiers:
     update:
       success: You have successfully updated your email notification settings.
+    show:
+      info: To aid detection of unauthorized gem changes, we email you each time a new version of a
+        gem you own is pushed. By receiving and reading these emails, you help protect the Ruby
+        ecosystem.
+      on: On
+      off: Off
+      recommended: recommended
+      title: Email notifications
+      update: Update
   profiles:
     edit:
       email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
@@ -241,9 +253,6 @@ en:
           disabled: Disabled
           ui_only: UI Only
           ui_and_api: UI and API
-      notifier:
-        email_notifications: Email Notifications
-        update: Update notifications
     delete:
       title: Delete profile
       confirm: Confirm
