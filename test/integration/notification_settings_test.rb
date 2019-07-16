@@ -10,7 +10,7 @@ class NoticationSettings < SystemTest
 
     visit edit_profile_path(as: user)
 
-    assert_text I18n.t("profiles.edit.notifier.email_notifications")
+    click_link I18n.t("notifiers.show.title")
 
     notifier_form_selector = "form[action='/notifier']"
 
@@ -22,7 +22,7 @@ class NoticationSettings < SystemTest
 
       choose notifier_off_radio(ownership1)
 
-      click_button I18n.t("profiles.edit.notifier.update")
+      click_button I18n.t("notifiers.show.update")
     end
 
     assert_changes :mails_count, from: 0, to: 1 do
@@ -31,7 +31,7 @@ class NoticationSettings < SystemTest
 
     assert_equal I18n.t("mailer.notifiers_changed.subject"), last_email.subject
 
-    assert_selector "#flash_notice", text: I18n.t("notifier.update.success")
+    assert_selector "#flash_notice", text: I18n.t("notifiers.update.success")
 
     within_element notifier_form_selector do
       assert_unchecked_field notifier_on_radio(ownership1)

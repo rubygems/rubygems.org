@@ -197,9 +197,16 @@ fr:
       success: Vous avez désactivé l'authentification multifacteur.
     update:
       success:
-  notifier:
+  notifiers:
     update:
       success:
+    show:
+      info:
+      on:
+      off:
+      recommended:
+      title:
+      update:
   profiles:
     edit:
       email_awaiting_confirmation: Veuillez confirmer votre nouvelle adresse email %{unconfirmed_email}
@@ -233,9 +240,6 @@ fr:
           disabled:
           ui_only:
           ui_and_api:
-      notifier:
-        email_notifications:
-        update:
     delete:
       title: Supprimer le profil
       confirm: Confirmer

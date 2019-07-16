@@ -197,9 +197,16 @@ zh-CN:
       success:
     update:
       success:
-  notifier:
+  notifiers:
     update:
       success:
+    show:
+      info:
+      on:
+      off:
+      recommended:
+      title:
+      update:
   profiles:
     edit:
       email_awaiting_confirmation: 请验证你的新邮箱地址 %{unconfirmed_email}
@@ -233,9 +240,6 @@ zh-CN:
           disabled:
           ui_only:
           ui_and_api:
-      notifier:
-        email_notifications:
-        update:
     delete:
       title:
       confirm:

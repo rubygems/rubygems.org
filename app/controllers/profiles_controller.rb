@@ -5,7 +5,6 @@ class ProfilesController < ApplicationController
 
   def edit
     @user = current_user
-    @ownerships = @user.ownerships.by_gem_name
   end
 
   def show
@@ -27,7 +26,6 @@ class ProfilesController < ApplicationController
       redirect_to edit_profile_path
     else
       current_user.reload
-      @ownerships = current_user.ownerships.by_gem_name
       render :edit
     end
   end
