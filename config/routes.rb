@@ -98,6 +98,8 @@ Rails.application.routes.draw do
 
       resources :timeframe_versions, only: :index
     end
+
+    resource :metrics, only: :create
   end
 
   get '/versions' => 'api/compact_index#versions'
