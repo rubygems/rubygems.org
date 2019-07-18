@@ -821,4 +821,26 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal expected_order, @news
     end
   end
+
+  context "#notifiable_owners" do
+    setup do
+      @rubygem = create(:rubygem)
+    end
+
+    should "only include owners with notifier" do
+      with_notifier = create(:ownership, notifier: true, rubygem: @rubygem).user
+      without_notifier = create(:ownership, notifier: false, rubygem: @rubygem).user
+
+      assert_equal [with_notifier], @rubygem.notifiable_owners
+    end
+
+    should "only include owners with ok deliverability" do
+      without_ok_deliverability = create(:user, mail_fails: 4)
+      with_ok_deliverability = create(:user, mail_fails: 3)
+      create(:ownership, user: without_ok_deliverability, notifier: true, rubygem: @rubygem)
+      create(:ownership, user: with_ok_deliverability, notifier: true, rubygem: @rubygem)
+
+      assert_equal [with_ok_deliverability], @rubygem.notifiable_owners
+    end
+  end
 end

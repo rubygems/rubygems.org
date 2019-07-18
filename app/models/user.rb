@@ -14,6 +14,8 @@ class User < ApplicationRecord
     twitter_username
   ].freeze
 
+  MAX_MAIL_FAILS = 3
+
   before_destroy :yank_gems
 
   has_many :ownerships, dependent: :destroy
@@ -62,7 +64,11 @@ class User < ApplicationRecord
   end
 
   def self.notifiable_owners
-    where(ownerships: { notifier: true })
+    where(ownerships: { notifier: true }).ok_deliverability
+  end
+
+  def self.ok_deliverability
+    where("mail_fails <= ?", MAX_MAIL_FAILS)
   end
 
   def name
