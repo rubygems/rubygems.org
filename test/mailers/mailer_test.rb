@@ -9,7 +9,7 @@ class MailerTest < ActionMailer::TestCase
     message_delivery = Mailer.gem_pushed(owner_without_notifier.id, rubygem.versions.last.id)
 
     assert_instance_of Mail::Message, message_delivery.message
-    assert_equal [owner_with_notifier.email], message_delivery.bcc
+    assert_equal [owner_with_notifier.email], message_delivery.to
   end
 
   test "gem pushed mail will not send when all owners disable notifiers" do
