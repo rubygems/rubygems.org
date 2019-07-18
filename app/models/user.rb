@@ -229,7 +229,7 @@ class User < ApplicationRecord
   end
 
   def update_email!
-    self.attributes = { email: unconfirmed_email, unconfirmed_email: nil }
+    self.attributes = { email: unconfirmed_email, unconfirmed_email: nil, mail_fails: 0 }
     save!(validate: false)
   end
 
