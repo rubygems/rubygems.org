@@ -47,8 +47,10 @@ class Mailer < ActionMailer::Base
 
     @pushed_by_user = User.find(pushed_by_user_id)
 
-    mail bcc: owners_to_notify,
-         subject: I18n.t("mailer.gem_pushed.subject", gem: @version.to_title,
-           default: "Gem %{gem} pushed to RubyGems.org")
+    owners_to_notify.each do |owner|
+      mail to: owner,
+          subject: I18n.t("mailer.gem_pushed.subject", gem: @version.to_title,
+            default: "Gem %{gem} pushed to RubyGems.org")
+    end
   end
 end

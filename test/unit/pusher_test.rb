@@ -367,7 +367,7 @@ class PusherTest < ActiveSupport::TestCase
 
       email = ActionMailer::Base.deliveries.last
       assert_equal "Gem #{@version.to_title} pushed to RubyGems.org", email.subject
-      assert_equal [@user.email], email.bcc
+      assert_equal [@user.email], email.to
     end
   end
 
