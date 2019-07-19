@@ -26,6 +26,6 @@ class MailerPreview < ActionMailer::Preview
 
   def gem_pushed
     ownership = Ownership.where.not(user: nil).where(notifier: true).last
-    Mailer.gem_pushed(ownership.user_id, ownership.rubygem.versions.last.id)
+    Mailer.gem_pushed(ownership.user_id, ownership.rubygem.versions.last.id, ownership.user_id)
   end
 end

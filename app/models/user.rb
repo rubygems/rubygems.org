@@ -61,6 +61,10 @@ class User < ApplicationRecord
     find_by(email: name) || find_by(handle: name)
   end
 
+  def self.notifiable_owners
+    where(ownerships: { notifier: true })
+  end
+
   def name
     handle || email
   end

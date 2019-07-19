@@ -40,17 +40,13 @@ class Mailer < ActionMailer::Base
            default: "You changed your RubyGems.org email notification settings")
   end
 
-  def gem_pushed(pushed_by_user_id, version_id)
+  def gem_pushed(pushed_by_user_id, version_id, notified_user_id)
     @version = Version.find(version_id)
-    owners_to_notify = @version.rubygem.owners.where(ownerships: { notifier: true }).pluck(:email)
-    return if owners_to_notify.empty?
-
+    notified_user = User.find(notified_user_id)
     @pushed_by_user = User.find(pushed_by_user_id)
 
-    owners_to_notify.each do |owner|
-      mail to: owner,
-          subject: I18n.t("mailer.gem_pushed.subject", gem: @version.to_title,
-            default: "Gem %{gem} pushed to RubyGems.org")
-    end
+    mail to: notified_user.email,
+      subject: I18n.t("mailer.gem_pushed.subject", gem: @version.to_title,
+                      default: "Gem %{gem} pushed to RubyGems.org")
   end
 end
