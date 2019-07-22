@@ -93,7 +93,7 @@ class DependencyTest < ActiveSupport::TestCase
 
       should "create a Dependency referring to the existing Rubygem" do
         assert_equal @rubygem, @dependency.rubygem
-        assert_equal @requirements.join(", "), @dependency.requirements
+        assert_equal @requirements.sort, @dependency.requirements.split(", ").sort
       end
     end
 
