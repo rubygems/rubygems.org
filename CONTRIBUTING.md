@@ -63,7 +63,7 @@ Follow the instructions below on how to install Bundler and setup the database.
 
 #### Environment (OS X)
 
-* Use Ruby 2.5.x (`.ruby-version` is present and can be used)
+* Use Ruby 2.6.x (`.ruby-version` is present and can be used)
 * Use Rubygems 2.6.10
 * Install bundler: `gem install bundler`
 * Install Elastic Search:
@@ -80,7 +80,7 @@ Follow the instructions below on how to install Bundler and setup the database.
 
 #### Environment (Linux - Debian/Ubuntu)
 
-* Use Ruby 2.5.x `apt-get install ruby2.5`
+* Use Ruby 2.6.x `apt-get install ruby2.6`
   * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
 * Use Rubygems 2.6.10
 * Install bundler: `gem install bundler`
