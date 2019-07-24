@@ -3,19 +3,36 @@ require "test_helper"
 class Api::MetricsControllerTest < ActionController::TestCase
   setup do
     StatsD.stubs(:increment)
-    @id = "8b837d26ba400285"
-    @metric = { bundler_version:  "2.1.0.pre.1",
-                rubygems_version: "3.0.3",
-                ruby_version:     "2.6.2",
-                host:     "x86_64-pc-linux-gnu",
-                command:  "install",
-                git_version: "2.20.1",
-                rbenv_version: "1.1.2-2-g4e92322",
-                rvm_version: "1.1.0",
-                chruby_version: "1.0",
-                options:  "jobs,without,build.mysql",
-                ci:       "jenkins,travis",
-                request_id:    @id }
+    @id = "d0d733adace7e1a8"
+    @metrics = "[
+              {
+                \"time_to_download\":0.303,
+                \"time_to_resolve_gemfile\":2.205,
+                \"command\":\"outdated\",
+                \"timestamp\":\"2019-07-24T12:27:55Z\",
+                \"command_time_taken\":2.401,
+                \"options\":\"jobs,without,build.mysql\",
+                \"ci\":\"jenkins,travis\"
+              },
+              {
+                \"request_id\":\"d0d733adace7e1a8\",
+                \"origin\":\"2c1ff14a7ac6b6b150e1f2aaf25f87ea\",
+                \"git_version\":\"2.20.1\",
+                \"rbenv_version\":\"1.1.2-2-g4e92322\",
+                \"rvm_version\":\"1.1.0\",
+                \"chruby_version\":\"1.0\",
+                \"host\":\"x86_64-pc-linux-gnu\",
+                \"ruby_version\":\"2.6.2\",
+                \"bundler_version\":\"2.1.0.pre.1\",
+                \"rubygems_version\":\"3.0.3\",
+                \"gemfile_gem_count\":4,
+                \"installed_gem_count\":42,
+                \"git_gem_count\":0,
+                \"path_gem_count\":0,
+                \"gem_source_count\":1,
+                \"gem_sources\":[\"63ce7be7e747a374ed4f503489c9f8b2\"]
+              }
+            ]"
   end
 
   context "reporting metrics once" do
@@ -34,7 +51,7 @@ class Api::MetricsControllerTest < ActionController::TestCase
       StatsD.expects(:increment) { |metric| metric.with("option.build.mysql") }
       StatsD.expects(:increment) { |metric| metric.with("ci.jenkins") }
       StatsD.expects(:increment) { |metric| metric.with("ci.travis") }
-      post :create, params: @metric
+      post :create, body: @metrics, as: :json
     end
   end
 
@@ -45,7 +62,7 @@ class Api::MetricsControllerTest < ActionController::TestCase
 
     should "not increment the metrics again" do
       StatsD.expects(:increment) { |metric| metric.with("bundler_version.2.1.0.pre.1") }.never
-      post :create, params: @metric
+      post :create, body: @metrics, as: :json
     end
   end
 end
