@@ -13,13 +13,15 @@ class Api::MetricsController < Api::BaseController
   ].freeze
 
   def create
-    head :ok && return if known_id?(params[:request_id])
+    head :ok && return if known_id?(params[:_json].last[:request_id])
 
-    METRIC_KEYS.each do |metric|
-      StatsD.increment("#{metric}.#{params[metric]}") if params[metric]
+    params[:_json].each do |hash|
+      METRIC_KEYS.each do |metric|
+        StatsD.increment("#{metric}.#{hash[metric]}") if hash[metric]
+      end
+      split_increment("options", hash[:options]) if hash[:options]
+      split_increment("ci", hash[:ci]) if hash[:ci]
     end
-    split_increment("options", params[:options]) if params[:options]
-    split_increment("ci", params[:ci]) if params[:ci]
   end
 
   def split_increment(type, comma_string)
