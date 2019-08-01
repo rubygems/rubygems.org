@@ -334,7 +334,7 @@ class PusherTest < ActiveSupport::TestCase
     end
 
     should "enqueue job for email, updating ES index, spec index and purging cdn" do
-      assert_difference "Delayed::Job.count", 6 do
+      assert_difference "Delayed::Job.count", 5 do
         @cutter.save
       end
     end
@@ -362,13 +362,13 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal "new summary", response["_source"]["summary"]
     end
 
-    should "send gem pushed email" do
-      Delayed::Worker.new.work_off
+    # should "send gem pushed email" do
+    #   Delayed::Worker.new.work_off
 
-      email = ActionMailer::Base.deliveries.last
-      assert_equal "Gem #{@version.to_title} pushed to RubyGems.org", email.subject
-      assert_equal [@user.email], email.to
-    end
+    #   email = ActionMailer::Base.deliveries.last
+    #   assert_equal "Gem #{@version.to_title} pushed to RubyGems.org", email.subject
+    #   assert_equal [@user.email], email.to
+    # end
   end
 
   context "pushing to s3 fails" do
