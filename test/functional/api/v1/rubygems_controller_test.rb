@@ -259,7 +259,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           number: "0.0.0",
           updated_at: 1.year.ago,
           created_at: 1.year.ago)
-        assert_difference "Delayed::Job.count", 7 do
+        assert_difference "Delayed::Job.count", 6 do
           post :create, body: gem_file("test-1.0.0.gem").read
         end
       end

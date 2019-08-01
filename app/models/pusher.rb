@@ -99,9 +99,10 @@ class Pusher
 
   def after_write
     @version_id = version.id
-    version.rubygem.notifiable_owners.each do |notified_user|
-      Mailer.delay.gem_pushed(user.id, @version_id, notified_user.id)
-    end
+    # disabled until we upgrade our sendgrid account
+    # version.rubygem.notifiable_owners.each do |notified_user|
+    #   Mailer.delay.gem_pushed(user.id, @version_id, notified_user.id)
+    # end
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
     rubygem.delay.index_document
     GemCachePurger.call(rubygem.name)
