@@ -49,6 +49,12 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     limit.times { Rack::Attack.cache.count(key, limit_period) }
   end
 
+  def exceed_exponential_limit_for(scope, level)
+    expo_exceeding_limit = exceeding_limit * level
+    expo_limit_period = limit_period**level
+    expo_exceeding_limit.times { Rack::Attack.cache.count("#{scope}:#{@ip_address}", expo_limit_period) }
+  end
+
   def encode(username, password)
     ActionController::HttpAuthentication::Basic
       .encode_credentials(username, password)
@@ -56,7 +62,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
   context "requests is lower than limit" do
     should "allow sign in" do
-      stay_under_limit_for("clearance/ip")
+      stay_under_limit_for("clearance/ip/1")
 
       post "/session",
         params: { session: { who: @user.email, password: @user.password } },
@@ -67,7 +73,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     should "allow sign up" do
-      stay_under_limit_for("clearance/ip")
+      stay_under_limit_for("clearance/ip/1")
 
       user = build(:user)
       post "/users",
@@ -79,7 +85,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     should "allow forgot password" do
-      stay_under_limit_for("clearance/ip")
+      stay_under_limit_for("clearance/ip/1")
       stay_under_email_limit_for("password/email")
 
       post "/passwords",
@@ -100,7 +106,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     should "allow email confirmation resend" do
-      stay_under_limit_for("clearance/ip")
+      stay_under_limit_for("clearance/ip/1")
       stay_under_email_limit_for("email_confirmations/email")
 
       post "/email_confirmations",
@@ -108,6 +114,51 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         headers: { REMOTE_ADDR: @ip_address }
       follow_redirect!
       assert_response :success
+    end
+
+    context "api requests" do
+      setup do
+        @rubygem = create(:rubygem, name: "test", number: "0.0.1")
+        @rubygem.ownerships.create(user: @user)
+        stay_under_limit_for("clearance/ip/api/1")
+      end
+
+      should "allow gem yank by ip" do
+        delete "/api/v1/gems/yank",
+          params: { gem_name: @rubygem.to_param, version: @rubygem.latest_version.number },
+          headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key }
+
+        assert_response :success
+      end
+
+      should "allow gem push by ip" do
+        post "/api/v1/gems",
+          params: gem_file("test-1.0.0.gem").read,
+          headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
+
+        assert_response :success
+      end
+
+      should "allow owner add by ip" do
+        second_user = create(:user)
+
+        post "/api/v1/gems/#{@rubygem.name}/owners",
+          params: { rubygem_id: @rubygem.to_param, email: second_user.email },
+          headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key }
+
+        assert_response :success
+      end
+
+      should "allow owner remove by ip" do
+        second_user = create(:user)
+        @rubygem.ownerships.create(user: second_user)
+
+        delete "/api/v1/gems/#{@rubygem.name}/owners",
+          params: { rubygem_id: @rubygem.to_param, email: second_user.email },
+          headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key }
+
+        assert_response :success
+      end
     end
 
     context "params" do
@@ -127,7 +178,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
   context "requests is higher than limit" do
     should "throttle sign in" do
-      exceed_limit_for("clearance/ip")
+      exceed_limit_for("clearance/ip/1")
 
       post "/session",
         params: { session: { who: @user.email, password: @user.password } },
@@ -136,8 +187,19 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       assert_response :too_many_requests
     end
 
+    should "throttle mfa sign in" do
+      exceed_limit_for("clearance/ip/1")
+      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+
+      post "/session/mfa_create",
+        params: { otp: ROTP::TOTP.new(@user.mfa_seed).now },
+        headers: { REMOTE_ADDR: @ip_address }
+
+      assert_response :too_many_requests
+    end
+
     should "throttle sign up" do
-      exceed_limit_for("clearance/ip")
+      exceed_limit_for("clearance/ip/1")
 
       user = build(:user)
       post "/users",
@@ -148,10 +210,23 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     should "throttle forgot password" do
-      exceed_limit_for("clearance/ip")
+      exceed_limit_for("clearance/ip/1")
 
       post "/passwords",
         params: { password: { email: @user.email } },
+        headers: { REMOTE_ADDR: @ip_address }
+
+      assert_response :too_many_requests
+    end
+
+    should "throttle mfa forgot password" do
+      exceed_limit_for("clearance/ip/1")
+
+      @user.forgot_password!
+      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+
+      post "/users/#{@user.id}/password/mfa_edit",
+        params: { user_id: @user.id, token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.mfa_seed).now },
         headers: { REMOTE_ADDR: @ip_address }
 
       assert_response :too_many_requests
@@ -189,7 +264,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
     context "email confirmation" do
       should "throttle by ip" do
-        exceed_limit_for("clearance/ip")
+        exceed_limit_for("clearance/ip/1")
 
         post "/email_confirmations",
           params: { email_confirmation: { email: @user.email } },
@@ -207,7 +282,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
     context "password update" do
       should "throttle by ip" do
-        exceed_limit_for("clearance/ip")
+        exceed_limit_for("clearance/ip/1")
 
         post "/passwords",
           params: { password: { email: @user.email } },
@@ -221,6 +296,67 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         post "/passwords", params: { password: { email: @user.email } }
         assert_response :too_many_requests
+      end
+    end
+
+    context "api requests" do
+      setup do
+        @rubygem = create(:rubygem, name: "test", number: "0.0.1")
+        @rubygem.ownerships.create(user: @user)
+        exceed_limit_for("clearance/ip/api/1")
+      end
+
+      should "throttle gem yank by ip" do
+        delete "/api/v1/gems/yank",
+          params: { gem_name: @rubygem.to_param, version: @rubygem.latest_version.number },
+          headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key }
+
+        assert_response :too_many_requests
+      end
+
+      should "throttle gem push by ip" do
+        post "/api/v1/gems",
+          params: gem_file("test-1.0.0.gem").read,
+          headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
+
+        assert_response :too_many_requests
+      end
+
+      should "throttle owner add by ip" do
+        second_user = create(:user)
+
+        post "/api/v1/gems/#{@rubygem.name}/owners",
+          params: { rubygem_id: @rubygem.to_param, email: second_user.email },
+          headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key }
+
+        assert_response :too_many_requests
+      end
+
+      should "throttle owner remove by ip" do
+        second_user = create(:user)
+        @rubygem.ownerships.create(user: second_user)
+
+        delete "/api/v1/gems/#{@rubygem.name}/owners",
+          params: { rubygem_id: @rubygem.to_param, email: second_user.email },
+          headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key }
+
+        assert_response :too_many_requests
+      end
+    end
+
+    context "exponential backoff" do
+      setup { @level = 2 }
+
+      (2..4).each do |level|
+        should "throttle for mfa sign in at level #{level}" do
+          exceed_exponential_limit_for("clearance/ip/#{level}", level)
+
+          post "/users",
+            params: { user: { email: @user.email, password: @user.password } },
+            headers: { REMOTE_ADDR: @ip_address }
+
+          assert_response :too_many_requests
+        end
       end
     end
   end

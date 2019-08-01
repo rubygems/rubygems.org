@@ -17,15 +17,37 @@ class Rack::Attack
   #
   # Key: "rack::attack:#{Time.now.to_i/:period}:logins/ip:#{req.ip}"
   protected_paths = [
-    "/users",              # sign up
-    "/session",            # sign in
-    "/passwords",          # forgot password
-    "/email_confirmations" # resend email confirmation
+    "/users",               # sign up
+    "/session",             # sign in
+    "/passwords",           # forgot password
+    "/email_confirmations", # resend email confirmation
+    "/session/mfa_create"   # mfa sign in
   ]
-  paths_regex = Regexp.union(protected_paths.map { |path| /\A#{Regexp.escape(path)}\z/ })
 
-  throttle('clearance/ip', limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
-    req.ip if req.path =~ paths_regex && req.post?
+  mfa_forgot_password_regex = Regexp.new("\/users\/\\d+\/password\/mfa_edit")
+  paths_regex = Regexp.union(protected_paths.map { |path| /\A#{Regexp.escape(path)}\z/ }.append(mfa_forgot_password_regex))
+
+  # 100 req in 10 min
+  # 200 req in 100 min
+  # 300 req in 1000 min (0.7 days)
+  # 400 req in 10000 min (6.9 days)
+  (1..4).each do |level|
+    throttle("clearance/ip/#{level}", limit: REQUEST_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
+      req.ip if req.path =~ paths_regex && req.post?
+    end
+  end
+
+  protected_api_paths = [
+    "/api/v1/gems/yank",  # gem yank
+    "/api/v1/gems"        # gem push
+  ]
+  add_owner_regex = Regexp.new("\/api\/v1\/gems\/\\w+\/owners")
+  api_paths_regex = Regexp.union(protected_api_paths.map { |path| /\A#{Regexp.escape(path)}\z/ }.append(add_owner_regex))
+
+  (1..4).each do |level|
+    throttle("clearance/ip/api/#{level}", limit: REQUEST_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
+      req.ip if req.path =~ api_paths_regex && (req.post? || req.delete?)
+    end
   end
 
   # Throttle GET request for api_key by IP address
