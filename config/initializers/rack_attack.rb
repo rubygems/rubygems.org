@@ -16,16 +16,30 @@ class Rack::Attack
   # Throttle POST requests to /login by IP address
   #
   # Key: "rack::attack:#{Time.now.to_i/:period}:logins/ip:#{req.ip}"
-  protected_paths = [
-    "/users",               # sign up
-    "/session",             # sign in
-    "/passwords",           # forgot password
-    "/email_confirmations", # resend email confirmation
-    "/session/mfa_create"   # mfa sign in
+
+  protected_ui_actions = [
+    { controller: "sessions",            action: "create" },
+    { controller: "sessions",            action: "mfa_create" },
+    { controller: "users",               action: "create" },
+    { controller: "passwords",           action: "mfa_edit" },
+    { controller: "passwords",           action: "edit" },
+    { controller: "passwords",           action: "create" },
+    { controller: "profiles",            action: "update" },
+    { controller: "profiles",            action: "destroy" },
+    { controller: "email_confirmations", action: "create" }
   ]
 
-  mfa_forgot_password_regex = Regexp.new("\/users\/\\d+\/password\/mfa_edit")
-  paths_regex = Regexp.union(protected_paths.map { |path| /\A#{Regexp.escape(path)}\z/ }.append(mfa_forgot_password_regex))
+  protected_api_actions = [
+    { controller: "api/v1/deletions", action: "create" },
+    { controller: "api/v1/rubygems",  action: "create" },
+    { controller: "api/v1/owners",    action: "create" },
+    { controller: "api/v1/owners",    action: "destroy" }
+  ]
+
+  def self.protected_route?(protected_actions, path, method)
+    route_params = Rails.application.routes.recognize_path(path, method: method)
+    protected_actions.any? { |hash| hash[:controller] == route_params[:controller] && hash[:action] == route_params[:action] }
+  end
 
   # 100 req in 10 min
   # 200 req in 100 min
@@ -33,37 +47,29 @@ class Rack::Attack
   # 400 req in 10000 min (6.9 days)
   (1..4).each do |level|
     throttle("clearance/ip/#{level}", limit: REQUEST_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
-      req.ip if req.path =~ paths_regex && req.post?
+      req.ip if protected_route?(protected_ui_actions, req.path, req.request_method)
     end
   end
-
-  protected_api_paths = [
-    "/api/v1/gems/yank",  # gem yank
-    "/api/v1/gems"        # gem push
-  ]
-  add_owner_regex = Regexp.new("\/api\/v1\/gems\/\\w+\/owners")
-  api_paths_regex = Regexp.union(protected_api_paths.map { |path| /\A#{Regexp.escape(path)}\z/ }.append(add_owner_regex))
 
   (1..4).each do |level|
-    throttle("clearance/ip/api/#{level}", limit: REQUEST_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
-      req.ip if req.path =~ api_paths_regex && (req.post? || req.delete?)
+    throttle("api/ip/#{level}", limit: REQUEST_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
+      req.ip if protected_route?(protected_api_actions, req.path, req.request_method)
     end
   end
 
-  # Throttle GET request for api_key by IP address
-  throttle('api_key/ip', limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
-    req.ip if req.path =~ /\A#{Regexp.escape('/api/v1/api_key')}/ && req.get?
-  end
+  protected_api_key_action = [{ controller: "api/v1/api_keys", action: "show" }]
 
-  # Throttle PATCH and DELETE profile requests
-  throttle("clearance/remember_token", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
-    req.ip if req.path == "/profile" && (req.patch? || req.delete?)
+  # Throttle GET request for api_key by IP address
+  throttle("api_key/ip", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
+    req.ip if protected_route?(protected_api_key_action, req.path, req.request_method)
   end
 
   # Throttle yank requests
   YANK_LIMIT = 10
+  protected_yank_action = [{ controller: "api/v1/deletions", action: "create" }]
+
   throttle("yank/ip", limit: YANK_LIMIT, period: LIMIT_PERIOD) do |req|
-    req.ip if req.path == "/api/v1/gems/yank"
+    req.ip if protected_route?(protected_yank_action, req.path, req.request_method)
   end
 
   ############################# rate limit per handle ############################

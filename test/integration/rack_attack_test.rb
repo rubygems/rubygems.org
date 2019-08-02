@@ -120,7 +120,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       setup do
         @rubygem = create(:rubygem, name: "test", number: "0.0.1")
         @rubygem.ownerships.create(user: @user)
-        stay_under_limit_for("clearance/ip/api/1")
+        stay_under_limit_for("api/ip/1")
       end
 
       should "allow gem yank by ip" do
@@ -245,7 +245,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     should "throttle profile update" do
       cookies[:remember_token] = @user.remember_token
 
-      exceed_limit_for("clearance/remember_token")
+      exceed_limit_for("clearance/ip/1")
       patch "/profile",
         headers: { REMOTE_ADDR: @ip_address }
 
@@ -255,7 +255,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     should "throttle profile delete" do
       cookies[:remember_token] = @user.remember_token
 
-      exceed_limit_for("clearance/remember_token")
+      exceed_limit_for("clearance/ip/1")
       delete "/profile",
         headers: { REMOTE_ADDR: @ip_address }
 
@@ -303,7 +303,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       setup do
         @rubygem = create(:rubygem, name: "test", number: "0.0.1")
         @rubygem.ownerships.create(user: @user)
-        exceed_limit_for("clearance/ip/api/1")
+        exceed_limit_for("api/ip/1")
       end
 
       should "throttle gem yank by ip" do
