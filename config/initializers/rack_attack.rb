@@ -68,9 +68,9 @@ class Rack::Attack
     end
   end
 
+  # Throttle GET request for api_key by IP address
   protected_api_key_action = [{ controller: "api/v1/api_keys", action: "show" }]
 
-  # Throttle GET request for api_key by IP address
   throttle("api_key/ip", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
     req.ip if protected_route?(protected_api_key_action, req.path, req.request_method)
   end
@@ -92,25 +92,35 @@ class Rack::Attack
   # throttle logins for another user and force their login requests to be
   # denied, but that's not very common and shouldn't happen to you. (Knock
   # on wood!)
-  throttle("logins/handler", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
-    if req.path == "/session" && req.post?
-      # return the handler if present, nil otherwise
-      req.params['session']['who'].presence if req.params['session']
+  protected_sessions_action = [{ controller: "sessions", action: "create" }]
+
+  throttle("logins/handle", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
+    protected_route = protected_route?(protected_sessions_action, req.path, req.request_method)
+    User.normalize_email(req.params['session']['who']).presence if protected_route && req.params['session']
+  end
+
+  throttle("api_key/basic_auth", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
+    if protected_route?(protected_api_key_action, req.path, req.request_method)
+      action_dispatch_req = ActionDispatch::Request.new(req.env)
+      who = ActionController::HttpAuthentication::Basic.user_name_and_password(action_dispatch_req).first
+      User.normalize_email(who).presence
     end
   end
 
   ############################# rate limit per email ############################
+  protected_passwords_action = [{ controller: "passwords", action: "create" }]
+
   throttle("password/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
-    if req.path == "/passwords" && req.post?
-      # return the email if present, nil otherwise
-      req.params['password']['email'].presence if req.params['password']
+    if protected_route?(protected_passwords_action, req.path, req.request_method) && req.params['password']
+      User.normalize_email(req.params['password']['email']).presence
     end
   end
 
+  protected_confirmation_action = [{ controller: "email_confirmations", action: "create" }]
+
   throttle("email_confirmations/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
-    if req.path == "/email_confirmations" && req.post?
-      # return the email if present, nil otherwise
-      req.params['email_confirmation']['email'].presence if req.params['email_confirmation']
+    if protected_route?(protected_confirmation_action, req.path, req.request_method) && req.params['email_confirmation']
+      User.normalize_email(req.params['email_confirmation']['email']).presence
     end
   end
 

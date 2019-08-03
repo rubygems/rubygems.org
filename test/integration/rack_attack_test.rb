@@ -379,5 +379,23 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         end
       end
     end
+
+    context "with per email limits" do
+      setup { update_limit_for("password/email:#{@user.email}", exceeding_limit) }
+
+      should "throttle for sign in ignoring case" do
+        post "/passwords",
+          params: { password: { email: "Nick@example.com" } }
+
+        assert_response :too_many_requests
+      end
+
+      should "throttle for sign in ignoring spaces" do
+        post "/passwords",
+          params: { password: { email: "n ick@example.com" } }
+
+        assert_response :too_many_requests
+      end
+    end
   end
 end

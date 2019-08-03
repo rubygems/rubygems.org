@@ -17,7 +17,7 @@ class EmailConfirmationsController < ApplicationController
 
   # used to resend confirmation mail for email validation
   def create
-    user = User.find_by(email: email_params)
+    user = find_user_for_create
 
     if user
       user.generate_confirmation_token
@@ -38,6 +38,10 @@ class EmailConfirmationsController < ApplicationController
   end
 
   private
+
+  def find_user_for_create
+    Clearance.configuration.user_model.find_by_normalized_email email_params
+  end
 
   def email_params
     params.require(:email_confirmation).permit(:email).fetch(:email, "")
