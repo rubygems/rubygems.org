@@ -51,6 +51,8 @@ class NotPwnedValidator < ActiveModel::EachValidator
   # @param value [String] The value of the attribute on the record that is the
   #   subject of the validation
   def validate_each(record, attribute, value)
+    # Short circuit the validation for tests, unless explicitly enabled
+    return if Rails.env.test? && !options[:enable_in_testing]
     return if value.blank?
     begin
       pwned_count = pwned_check(value)
@@ -83,10 +85,6 @@ class NotPwnedValidator < ActiveModel::EachValidator
     else
       0
     end
-  end
-
-  def on_error
-    options[:on_error] || DEFAULT_ON_ERROR
   end
 
   def threshold
