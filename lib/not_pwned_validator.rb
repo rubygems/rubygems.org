@@ -73,9 +73,15 @@ class NotPwnedValidator < ActiveModel::EachValidator
   # @return [Integer] The number of times that the password has been compromised
   def pwned_check(password)
     hash = Digest::SHA1.hexdigest(password).upcase
-    response = RestClient.get("https://api.pwnedpasswords.com/range/#{hash.first(5)}", {
-      user_agent: "RubyGems.org"
-    })
+
+    response = RestClient::Request.execute(
+      method: :get,
+      url: "https://api.pwnedpasswords.com/range/#{hash.first(5)}",
+      timeout: 3,
+      headers: {
+        user_agent: "RubyGems.org"
+      }
+    )
 
     hits = response.body.split("\r\n").map { |line| line.split(":") }
     hit = hits.find {|hit| "#{hash.first(5)}#{hit.first}" == hash }
