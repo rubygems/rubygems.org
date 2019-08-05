@@ -13,6 +13,8 @@ class Api::MetricsController < Api::BaseController
   ].freeze
 
   def create
+    return unless params[:_json]
+
     head :ok && return if known_id?(params[:_json].last[:request_id])
 
     params[:_json].each do |hash|
