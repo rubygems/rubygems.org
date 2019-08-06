@@ -21,6 +21,9 @@ class ActiveSupport::TestCase
   setup do
     I18n.locale = :en
     Rails.cache.clear
+
+    # Don't connect to the Pwned Passwords API in tests
+    Pwned.stubs(:pwned?).returns(false)
   end
 
   def page
