@@ -56,11 +56,9 @@ class NotPwnedValidator < ActiveModel::EachValidator
     return if value.blank?
     begin
       pwned_count = pwned_check(value)
-      if pwned_count > threshold
-        record.errors.add(attribute, :not_pwned, options.merge(count: pwned_count))
-      end
-    rescue RestClient::ExceptionWithResponse => error
-      # Do nothing, consider the record valid
+      record.errors.add(attribute, :not_pwned, options.merge(count: pwned_count)) if pwned_count > threshold
+    rescue RestClient::ExceptionWithResponse # rubocop:disable Lint/HandleExceptions
+      # Do nothing if the HTTP call fails, consider the record valid
     end
   end
 
@@ -73,10 +71,11 @@ class NotPwnedValidator < ActiveModel::EachValidator
   # @return [Integer] The number of times that the password has been compromised
   def pwned_check(password)
     hash = Digest::SHA1.hexdigest(password).upcase
+    prefix = hash.first(5)
 
     response = RestClient::Request.execute(
       method: :get,
-      url: "https://api.pwnedpasswords.com/range/#{hash.first(5)}",
+      url: "https://api.pwnedpasswords.com/range/#{prefix}",
       timeout: 3,
       headers: {
         user_agent: "RubyGems.org"
@@ -84,10 +83,10 @@ class NotPwnedValidator < ActiveModel::EachValidator
     )
 
     hits = response.body.split("\r\n").map { |line| line.split(":") }
-    hit = hits.find {|hit| "#{hash.first(5)}#{hit.first}" == hash }
+    found = hits.find { |hit| hash = "#{prefix}#{hit.first}" }
 
-    if hit
-      hit.last.to_i
+    if found
+      found.last.to_i
     else
       0
     end
@@ -95,7 +94,7 @@ class NotPwnedValidator < ActiveModel::EachValidator
 
   def threshold
     threshold = options[:threshold] || DEFAULT_THRESHOLD
-    raise TypeError, "#{self.class.to_s} option 'threshold' must be of type Integer" unless threshold.is_a? Integer
+    raise TypeError, "#{self.class} option 'threshold' must be of type Integer" unless threshold.is_a? Integer
     threshold
   end
 end

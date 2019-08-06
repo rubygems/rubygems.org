@@ -26,7 +26,7 @@ class NotPwnedValidatorTest < ActiveSupport::TestCase
   context "when pwned" do
     should "marks the model as invalid" do
       Model.validates :password, not_pwned: { message: "has previously appeared in a data breach", enable_in_testing: true }
-      model = create_model('1234567890')
+      model = create_model("1234567890")
 
       RestClient::Request.expects(:execute).at_least_once.returns(stub(body: "7ACBA4F54F55AAFC33BB06BBBF6CA803E9A:2250015"))
 
