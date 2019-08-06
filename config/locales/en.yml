@@ -51,6 +51,9 @@ en:
         email: Email address
         handle: Username
         password: Password
+    errors:
+      messages:
+        unpwn: has previously appeared in a data breach and should not be used
   clearance_mailer:
     change_password:
       title: CHANGE PASSWORD

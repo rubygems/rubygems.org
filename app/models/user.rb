@@ -45,7 +45,7 @@ class User < ApplicationRecord
   validates :twitter_username, length: { within: 0..20 }, allow_nil: true
   validates :password,
     length: { within: 10..200 },
-    unpwn: { message: "has previously appeared in a data breach and should not be used" },
+    unpwn: true,
     allow_nil: true,
     unless: :skip_password_validation?
   validate :unconfirmed_email_uniqueness
