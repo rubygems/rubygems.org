@@ -71,7 +71,8 @@ class NotPwnedValidator < ActiveModel::EachValidator
   # @return [Integer] The number of times that the password has been compromised
   def pwned_check(password)
     hash = Digest::SHA1.hexdigest(password).upcase
-    prefix = hash.first(5)
+    prefix = hash[0..4]
+    suffix = hash[5..-1]
 
     response = RestClient::Request.execute(
       method: :get,
@@ -83,7 +84,7 @@ class NotPwnedValidator < ActiveModel::EachValidator
     )
 
     hits = response.body.split("\r\n").map { |line| line.split(":") }
-    found = hits.find { |hit| hash = "#{prefix}#{hit.first}" }
+    found = hits.find { |hit| hit[0] == suffix }
 
     if found
       found.last.to_i

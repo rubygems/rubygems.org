@@ -12,7 +12,7 @@ class NotPwnedValidatorTest < ActiveSupport::TestCase
   end
 
   context "when not pwned" do
-    should "reports the model as valid" do
+    should "report the model as valid" do
       Model.validates :password, not_pwned: { message: "has previously appeared in a data breach", enable_in_testing: true }
       model = create_model("this is totally not pwned")
 
