@@ -127,7 +127,7 @@ class PasswordsControllerTest < ActionController::TestCase
         put :update, params: {
           user_id: @user.id,
           token: @user.confirmation_token,
-          password_reset: { password: "password1234" }
+          password_reset: { password: "@61:details:THOSE:present:71@" }
         }
       end
 
@@ -145,7 +145,7 @@ class PasswordsControllerTest < ActionController::TestCase
         put :update, params: {
           user_id: @user.id,
           token: @user.confirmation_token,
-          password_reset: { reset_api_key: "false", password: "password1234" }
+          password_reset: { reset_api_key: "false", password: "@61:details:THOSE:present:71@" }
         }
       end
 
@@ -163,7 +163,7 @@ class PasswordsControllerTest < ActionController::TestCase
         put :update, params: {
           user_id: @user.id,
           token: @user.confirmation_token,
-          password_reset: { reset_api_key: "true", password: "password1234" }
+          password_reset: { reset_api_key: "true", password: "@61:details:THOSE:present:71@" }
         }
       end
 

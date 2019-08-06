@@ -2,14 +2,14 @@ require "test_helper"
 
 class YankTest < SystemTest
   setup do
-    @user = create(:user, password: "password12345")
+    @user = create(:user, password: "?98,TUESDAY,SHOWN,exactly,56?")
     @rubygem = create(:rubygem, name: "sandworm")
     create(:ownership, user: @user, rubygem: @rubygem)
     Dir.chdir(Dir.mktmpdir)
 
     visit sign_in_path
     fill_in "Email or Username", with: @user.email
-    fill_in "Password", with: "password12345"
+    fill_in "Password", with: "?98,TUESDAY,SHOWN,exactly,56?"
     click_button "Sign in"
   end
 

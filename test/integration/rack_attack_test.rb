@@ -6,7 +6,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     Rails.cache.clear
 
     @ip_address = "1.2.3.4"
-    @user = create(:user, email: "nick@example.com", password: "secret12345")
+    @user = create(:user, email: "nick@example.com", password: "@61:details:THOSE:present:71@")
   end
 
   def exceeding_limit

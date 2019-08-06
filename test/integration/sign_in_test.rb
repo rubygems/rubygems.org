@@ -2,8 +2,8 @@ require "test_helper"
 
 class SignInTest < SystemTest
   setup do
-    create(:user, email: "nick@example.com", password: "secret12345")
-    create(:user, email: "john@example.com", password: "secret12345",
+    create(:user, email: "nick@example.com", password: "?98,TUESDAY,SHOWN,exactly,56?")
+    create(:user, email: "john@example.com", password: "?98,TUESDAY,SHOWN,exactly,56?",
                   mfa_level: :ui_only, mfa_seed: "thisisonemfaseed",
                   mfa_recovery_codes: %w[0123456789ab ba9876543210])
 
@@ -13,7 +13,7 @@ class SignInTest < SystemTest
   test "signing in" do
     visit sign_in_path
     fill_in "Email or Username", with: "nick@example.com"
-    fill_in "Password", with: "secret12345"
+    fill_in "Password", with: "?98,TUESDAY,SHOWN,exactly,56?"
     click_button "Sign in"
 
     assert page.has_content? "Sign out"
@@ -22,7 +22,7 @@ class SignInTest < SystemTest
   test "signing in with uppercase email" do
     visit sign_in_path
     fill_in "Email or Username", with: "Nick@example.com"
-    fill_in "Password", with: "secret12345"
+    fill_in "Password", with: "?98,TUESDAY,SHOWN,exactly,56?"
     click_button "Sign in"
 
     assert page.has_content? "Sign out"
@@ -41,7 +41,7 @@ class SignInTest < SystemTest
   test "signing in with wrong email" do
     visit sign_in_path
     fill_in "Email or Username", with: "someone@example.com"
-    fill_in "Password", with: "secret12345"
+    fill_in "Password", with: "?98,TUESDAY,SHOWN,exactly,56?"
     click_button "Sign in"
 
     assert page.has_content? "Sign in"
@@ -53,12 +53,12 @@ class SignInTest < SystemTest
 
     fill_in "Email", with: "email@person.com"
     fill_in "Username", with: "nick"
-    fill_in "Password", with: "secretpassword"
+    fill_in "Password", with: "@61:details:THOSE:present:71@"
     click_button "Sign up"
 
     visit sign_in_path
     fill_in "Email or Username", with: "email@person.com"
-    fill_in "Password", with: "secretpassword"
+    fill_in "Password", with: "@61:details:THOSE:present:71@"
     click_button "Sign in"
 
     assert page.has_content? "Sign in"
@@ -68,7 +68,7 @@ class SignInTest < SystemTest
   test "signing in with current valid otp when mfa enabled" do
     visit sign_in_path
     fill_in "Email or Username", with: "john@example.com"
-    fill_in "Password", with: "secret12345"
+    fill_in "Password", with: "?98,TUESDAY,SHOWN,exactly,56?"
     click_button "Sign in"
 
     assert page.has_content? "Multifactor authentication"
@@ -82,7 +82,7 @@ class SignInTest < SystemTest
   test "signing in with invalid otp when mfa enabled" do
     visit sign_in_path
     fill_in "Email or Username", with: "john@example.com"
-    fill_in "Password", with: "secret12345"
+    fill_in "Password", with: "?98,TUESDAY,SHOWN,exactly,56?"
     click_button "Sign in"
 
     assert page.has_content? "Multifactor authentication"
@@ -96,7 +96,7 @@ class SignInTest < SystemTest
   test "signing in with valid recovery code when mfa enabled" do
     visit sign_in_path
     fill_in "Email or Username", with: "john@example.com"
-    fill_in "Password", with: "secret12345"
+    fill_in "Password", with: "?98,TUESDAY,SHOWN,exactly,56?"
     click_button "Sign in"
 
     assert page.has_content? "Multifactor authentication"
@@ -110,7 +110,7 @@ class SignInTest < SystemTest
   test "signing in with invalid recovery code when mfa enabled" do
     visit sign_in_path
     fill_in "Email or Username", with: "john@example.com"
-    fill_in "Password", with: "secret12345"
+    fill_in "Password", with: "?98,TUESDAY,SHOWN,exactly,56?"
     click_button "Sign in"
 
     assert page.has_content? "Multifactor authentication"
@@ -124,7 +124,7 @@ class SignInTest < SystemTest
   test "signing out" do
     visit sign_in_path
     fill_in "Email or Username", with: "nick@example.com"
-    fill_in "Password", with: "secret12345"
+    fill_in "Password", with: "?98,TUESDAY,SHOWN,exactly,56?"
     click_button "Sign in"
 
     click_link "Sign out"
@@ -135,7 +135,7 @@ class SignInTest < SystemTest
   test "session expires in two weeks" do
     visit sign_in_path
     fill_in "Email or Username", with: "nick@example.com"
-    fill_in "Password", with: "secret12345"
+    fill_in "Password", with: "?98,TUESDAY,SHOWN,exactly,56?"
     click_button "Sign in"
 
     travel 15.days do
@@ -149,7 +149,7 @@ class SignInTest < SystemTest
 
     visit sign_in_path
     fill_in "Email or Username", with: "nick@example.com"
-    fill_in "Password", with: "secret12345"
+    fill_in "Password", with: "?98,TUESDAY,SHOWN,exactly,56?"
     click_button "Sign in"
 
     assert page.has_content? "Sign in"

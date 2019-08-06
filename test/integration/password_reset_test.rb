@@ -37,7 +37,7 @@ class PasswordResetTest < SystemTest
     expected_path = "/users/#{@user.id}/password/edit"
     assert_equal expected_path, page.current_path, "removes confirmation token from url"
 
-    fill_in "Password", with: "secret54321"
+    fill_in "Password", with: "@61:details:THOSE:present:71@"
     click_button "Save this password"
     assert_equal dashboard_path, page.current_path
 
@@ -45,7 +45,7 @@ class PasswordResetTest < SystemTest
 
     visit sign_in_path
     fill_in "Email or Username", with: @user.email
-    fill_in "Password", with: "secret54321"
+    fill_in "Password", with: "@61:details:THOSE:present:71@"
     click_button "Sign in"
 
     assert page.has_content? "Sign out"
@@ -80,10 +80,10 @@ class PasswordResetTest < SystemTest
 
     visit password_reset_link
 
-    fill_in "Password", with: "secret54321"
+    fill_in "Password", with: "@61:details:THOSE:present:71@"
     click_button "Save this password"
 
-    assert @user.reload.authenticated? "secret54321"
+    assert @user.reload.authenticated? "@61:details:THOSE:present:71@"
   end
 
   test "restting password when mfa is enabled" do
@@ -95,7 +95,7 @@ class PasswordResetTest < SystemTest
     fill_in "otp", with: ROTP::TOTP.new(@user.mfa_seed).now
     click_button "Authenticate"
 
-    fill_in "Password", with: "secret3210"
+    fill_in "Password", with: "@61:details:THOSE:present:71@"
     click_button "Save this password"
 
     assert page.has_content?("Sign out")

@@ -74,15 +74,15 @@ class UserTest < ActiveSupport::TestCase
 
     context "password" do
       should "be between 10 and 200 characters" do
-        user = build(:user, password: "a" * 9)
+        user = build(:user, password: "%5a&12ed/")
         refute user.valid?
         assert_contains user.errors[:password], "is too short (minimum is 10 characters)"
 
-        user.password = "a" * 201
+        user.password = "#{"a8b5d2d451" * 20}a"
         refute user.valid?
         assert_contains user.errors[:password], "is too long (maximum is 200 characters)"
 
-        user.password = "secretpassword"
+        user.password = "633!cdf7b3426c9%f6dd1a0b62d4ce44c4f544e%"
         user.valid?
         assert_nil user.errors[:password].first
       end

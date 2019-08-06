@@ -10,7 +10,7 @@ FactoryBot.define do
   factory :user do
     email
     handle
-    password { "password12345" }
+    password { "?98,TUESDAY,SHOWN,exactly,56?" }
     api_key { "secret123" }
     email_confirmed { true }
   end
