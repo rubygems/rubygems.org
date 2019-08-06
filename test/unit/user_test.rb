@@ -91,6 +91,12 @@ class UserTest < ActiveSupport::TestCase
         user = build(:user, password: "")
         refute user.valid?
       end
+
+      should "be invalid when it's found in a data breach" do
+        user = build(:user, password: "1234567890")
+        refute user.valid?
+        assert_contains user.errors[:password], "has previously appeared in a data breach and should not be used"
+      end
     end
   end
 
