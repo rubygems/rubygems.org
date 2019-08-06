@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/indirect/unpwn.git
+  revision: c38cdced1c65b8df024aeb1dca86a06db945b75a
+  specs:
+    unpwn (0.1.0)
+      bloomer (~> 1.0)
+      pwned (~> 1.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -59,6 +67,10 @@ GEM
     aws-sigv4 (1.1.0)
       aws-eventstream (~> 1.0, >= 1.0.2)
     bcrypt (3.1.12)
+    bitarray (1.2.0)
+    bloomer (1.0.0)
+      bitarray
+      msgpack
     bootsnap (1.4.3)
       msgpack (~> 1.0)
     builder (3.2.3)
@@ -264,6 +276,7 @@ GEM
       pry (~> 0.10)
     psych (3.1.0)
     public_suffix (3.1.0)
+    pwned (1.2.1)
     rack (2.0.7)
     rack-attack (6.0.0)
       rack (>= 1.0, < 3)
@@ -454,6 +467,7 @@ DEPENDENCIES
   toxiproxy (~> 1.0.0)
   uglifier (>= 1.0.3)
   unicorn (~> 5.5.0.1.g6836)
+  unpwn!
   validates_formatting_of
   xml-simple
 

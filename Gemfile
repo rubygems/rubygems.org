@@ -44,6 +44,7 @@ gem "sprockets-rails"
 gem "rack-attack"
 gem "rqrcode"
 gem "rotp"
+gem "unpwn", git: "https://github.com/indirect/unpwn.git"
 
 # Logging
 gem "lograge"
