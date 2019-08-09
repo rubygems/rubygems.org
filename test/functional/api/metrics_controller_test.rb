@@ -55,6 +55,22 @@ class Api::MetricsControllerTest < ActionController::TestCase
     end
   end
 
+  context "input is garbage" do
+    should "ignore garbage values and not increment for them" do
+      StatsD.expects(:increment) { |metric| metric.with("bundler_version.ae4wt4et") }.never
+      StatsD.expects(:increment) { |metric| metric.with("rubygems_version.ae44aswe6") }.never
+      StatsD.expects(:increment) { |metric| metric.with("ruby_version.68df68fd86") }.never
+      StatsD.expects(:increment) { |metric| metric.with("command.???????????????????") }.never
+      StatsD.expects(:increment) { |metric| metric.with("git_version.5f67mdr7msr7s") }.never
+      StatsD.expects(:increment) { |metric| metric.with("rbenv_version.wz3so;8rnzw73rgiznb") }.never
+      StatsD.expects(:increment) { |metric| metric.with("rvm_version.2222222222") }.never
+      StatsD.expects(:increment) { |metric| metric.with("chruby_version.515151...") }.never
+      StatsD.expects(:increment) { |metric| metric.with("options.this is a very long option") }.never
+      StatsD.expects(:increment) { |metric| metric.with("ci.and this is a very long ci") }.never
+      post :create, body: @metrics, as: :json
+    end
+  end
+
   context "reporting metrics second time" do
     setup do
       Rails.cache.stubs(:read).with(@id).returns(true)
