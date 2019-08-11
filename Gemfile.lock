@@ -245,7 +245,7 @@ GEM
     netrc (0.11.0)
     newrelic_rpm (6.3.0.355)
     nio4r (2.3.1)
-    nokogiri (1.10.3)
+    nokogiri (1.10.4)
       mini_portile2 (~> 2.4.0)
     oj (3.7.12)
     optimist (3.0.0)
