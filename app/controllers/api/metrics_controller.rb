@@ -16,7 +16,9 @@ class Api::MetricsController < Api::BaseController
     return unless params[:_json]
 
     validate_data
-    head :ok && return if known_id?(params[:_json].last[:request_id])
+    if params[:_json].last
+      head :ok && return if known_id?(params[:_json].last[:request_id])
+    end
 
     params[:_json].each do |hash|
       METRIC_KEYS.each do |metric|
@@ -61,6 +63,7 @@ class Api::MetricsController < Api::BaseController
   end
 
   def known_id?(id)
+    return false unless id
     return true if Rails.cache.read(id)
 
     Rails.cache.write(id, true, expires_in: 120)
