@@ -13,7 +13,7 @@ class Api::MetricsController < Api::BaseController
   ].freeze
 
   def create
-    return unless params[:_json]
+    return unless params.require(:_json)
 
     validate_data
     if params[:_json].last

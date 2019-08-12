@@ -71,6 +71,14 @@ class Api::MetricsControllerTest < ActionController::TestCase
     end
   end
 
+  context "when the metrics array doesn't exist" do
+    should "do nothing and not crash" do
+      expects(:validate_data).never
+      expects(:split_increment).never
+      post :create, body: nil
+    end
+  end
+
   context "reporting metrics second time" do
     setup do
       Rails.cache.stubs(:read).with(@id).returns(true)
@@ -78,6 +86,7 @@ class Api::MetricsControllerTest < ActionController::TestCase
 
     should "not increment the metrics again" do
       StatsD.expects(:increment) { |metric| metric.with("bundler_version.2.1.0.pre.1") }.never
+      StatsD.expects(:increment) { |metric| metric.with("chruby_version.1.0") }.never
       post :create, body: @metrics, as: :json
     end
   end
