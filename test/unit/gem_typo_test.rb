@@ -35,6 +35,13 @@ class GemTypoTest < ActiveSupport::TestCase
         assert_equal true, gem_typo.protected_typo?
       end
 
+      should "return false for exceptions" do
+        GemTypo::EXCEPTIONS.push("fourss")
+        gem_typo = GemTypo.new("fourss")
+        assert_equal false, gem_typo.protected_typo?
+        GemTypo::EXCEPTIONS.delete("fourss")
+      end
+
       should "return false for three characher distance" do
         gem_typo = GemTypo.new("foursss")
         assert_equal false, gem_typo.protected_typo?

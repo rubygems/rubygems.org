@@ -7,6 +7,7 @@ class GemTypo
 
   DOWNLOADS_THRESHOLD = 10_000_000
   SIZE_THRESHOLD = 4
+  EXCEPTIONS = %w[strait]
 
   def initialize(rubygem_name)
     @rubygem_name       = rubygem_name.downcase
@@ -15,6 +16,7 @@ class GemTypo
 
   def protected_typo?
     return false if @rubygem_name.size < GemTypo::SIZE_THRESHOLD
+    return false if GemTypo::EXCEPTIONS.include?(@rubygem_name)
 
     protected_gems.each do |protected_gem|
       distance = levenshtein_distance(@rubygem_name, protected_gem)
