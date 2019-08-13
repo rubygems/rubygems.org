@@ -99,7 +99,7 @@ class Rubygem < ApplicationRecord
   end
 
   def public_versions(limit = nil)
-    versions.by_position.published(limit)
+    versions.includes(:joined_gem_downloads).by_position.published(limit)
   end
 
   def public_versions_with_extra_version(extra_version)
