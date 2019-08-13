@@ -223,6 +223,9 @@ GEM
     loofah (2.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
+    m (1.5.1)
+      method_source (>= 0.6.7)
+      rake (>= 0.9.2.2)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
     marcel (0.3.3)
@@ -424,6 +427,7 @@ DEPENDENCIES
   listen
   lograge
   logstash-event
+  m (~> 1.5)
   mail
   minitest
   mocha
