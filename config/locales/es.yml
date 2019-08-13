@@ -282,8 +282,8 @@ es:
     gem_members:
       authors_header: Autores
       owners_header: Administradores
-      pushed_by:
-      yanked_by:
+      pushed_by: Subida por
+      yanked_by: Borrada por
       sha_256_checksum: SHA 256 checksum
     index:
       downloads: Downloads
