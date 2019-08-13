@@ -37,12 +37,22 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     update_limit_for("#{scope}:#{@user.email}", exceeding_email_limit)
   end
 
+  def exceed_push_limit_for(scope)
+    exceeding_push_limit = (Rack::Attack::PUSH_LIMIT * 1.25).to_i
+    update_limit_for("#{scope}:#{@ip_address}", exceeding_push_limit)
+  end
+
   def stay_under_limit_for(scope)
     update_limit_for("#{scope}:#{@ip_address}", under_limit)
   end
 
   def stay_under_email_limit_for(scope)
     update_limit_for("#{scope}:#{@user.email}", under_email_limit)
+  end
+
+  def stay_under_push_limit_for(scope)
+    under_push_limit = (Rack::Attack::PUSH_LIMIT * 0.5).to_i
+    update_limit_for("#{scope}:#{@user.email}", under_push_limit)
   end
 
   def update_limit_for(key, limit)
@@ -120,10 +130,11 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       setup do
         @rubygem = create(:rubygem, name: "test", number: "0.0.1")
         @rubygem.ownerships.create(user: @user)
-        stay_under_limit_for("api/ip/1")
       end
 
       should "allow gem yank by ip" do
+        stay_under_limit_for("api/ip/1")
+
         delete "/api/v1/gems/yank",
           params: { gem_name: @rubygem.to_param, version: @rubygem.latest_version.number },
           headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key }
@@ -132,6 +143,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       end
 
       should "allow gem push by ip" do
+        stay_under_push_limit_for("api/push/ip/1")
+
         post "/api/v1/gems",
           params: gem_file("test-1.0.0.gem").read,
           headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
@@ -141,6 +154,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
       should "allow owner add by ip" do
         second_user = create(:user)
+        stay_under_limit_for("api/ip/1")
 
         post "/api/v1/gems/#{@rubygem.name}/owners",
           params: { rubygem_id: @rubygem.to_param, email: second_user.email },
@@ -152,6 +166,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       should "allow owner remove by ip" do
         second_user = create(:user)
         @rubygem.ownerships.create(user: second_user)
+        stay_under_limit_for("api/ip/1")
 
         delete "/api/v1/gems/#{@rubygem.name}/owners",
           params: { rubygem_id: @rubygem.to_param, email: second_user.email },
@@ -303,10 +318,11 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       setup do
         @rubygem = create(:rubygem, name: "test", number: "0.0.1")
         @rubygem.ownerships.create(user: @user)
-        exceed_limit_for("api/ip/1")
       end
 
       should "throttle gem yank by ip" do
+        exceed_limit_for("api/ip/1")
+
         delete "/api/v1/gems/yank",
           params: { gem_name: @rubygem.to_param, version: @rubygem.latest_version.number },
           headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key }
@@ -315,6 +331,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       end
 
       should "throttle gem push by ip" do
+        exceed_push_limit_for("api/push/ip/1")
+
         post "/api/v1/gems",
           params: gem_file("test-1.0.0.gem").read,
           headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
@@ -324,6 +342,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
       should "throttle owner add by ip" do
         second_user = create(:user)
+        exceed_limit_for("api/ip/1")
 
         post "/api/v1/gems/#{@rubygem.name}/owners",
           params: { rubygem_id: @rubygem.to_param, email: second_user.email },
@@ -335,6 +354,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       should "throttle owner remove by ip" do
         second_user = create(:user)
         @rubygem.ownerships.create(user: second_user)
+        exceed_limit_for("api/ip/1")
 
         delete "/api/v1/gems/#{@rubygem.name}/owners",
           params: { rubygem_id: @rubygem.to_param, email: second_user.email },
