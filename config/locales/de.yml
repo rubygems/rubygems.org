@@ -251,8 +251,6 @@ de:
       list_multi_owner:
     rubygem:
       owners_header:
-      pushed_by:
-      yanked_by:
     destroy:
       request_queued:
     update:
@@ -291,6 +289,8 @@ de:
     gem_members:
       authors_header: Autoren
       owners_header: Besitzer
+      pushed_by:
+      yanked_by:
       sha_256_checksum: SHA 256-Prüfsumme
     index:
       downloads: Downloads
