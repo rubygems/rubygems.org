@@ -33,6 +33,35 @@ class Api::MetricsControllerTest < ActionController::TestCase
                 \"gem_sources\":[\"63ce7be7e747a374ed4f503489c9f8b2\"]
               }
             ]"
+    @garbage_metrics = "[
+              {
+                \"time_to_download\":0.303,
+                \"time_to_resolve_gemfile\":2.205,
+                \"command\":\"???????????????????\",
+                \"timestamp\":\"2019-07-24T12:27:55Z\",
+                \"command_time_taken\":2.401,
+                \"options\":\"this is a very long option,this is another very long option\",
+                \"ci\":\"and this is a very long ci,and this is another very long ci\"
+              },
+              {
+                \"request_id\":\"d0d733adace7e1a8\",
+                \"origin\":\"2c1ff14a7ac6b6b150e1f2aaf25f87ea\",
+                \"git_version\":\"5f67mdr7msr7s\",
+                \"rbenv_version\":\"wz3so;8rnzw73rgiznb\",
+                \"rvm_version\":\"2222222222\",
+                \"chruby_version\":\"515151...\",
+                \"host\":\"aaaaaavvvvveryyyyylongggghostttttttttt\",
+                \"ruby_version\":\"68df68fd86\",
+                \"bundler_version\":\"ae4wt4et\",
+                \"rubygems_version\":\"ae44aswe6\",
+                \"gemfile_gem_count\":4,
+                \"installed_gem_count\":42,
+                \"git_gem_count\":0,
+                \"path_gem_count\":0,
+                \"gem_source_count\":1,
+                \"gem_sources\":[\"63ce7be7e747a374ed4f503489c9f8b2\"]
+              }
+            ]"
   end
 
   context "reporting metrics once" do
@@ -61,13 +90,16 @@ class Api::MetricsControllerTest < ActionController::TestCase
       StatsD.expects(:increment) { |metric| metric.with("rubygems_version.ae44aswe6") }.never
       StatsD.expects(:increment) { |metric| metric.with("ruby_version.68df68fd86") }.never
       StatsD.expects(:increment) { |metric| metric.with("command.???????????????????") }.never
+      StatsD.expects(:increment) { |metric| metric.with("host.aaaaaavvvvveryyyyylongggghostttttttttt") }.never
       StatsD.expects(:increment) { |metric| metric.with("git_version.5f67mdr7msr7s") }.never
       StatsD.expects(:increment) { |metric| metric.with("rbenv_version.wz3so;8rnzw73rgiznb") }.never
       StatsD.expects(:increment) { |metric| metric.with("rvm_version.2222222222") }.never
       StatsD.expects(:increment) { |metric| metric.with("chruby_version.515151...") }.never
       StatsD.expects(:increment) { |metric| metric.with("options.this is a very long option") }.never
+      StatsD.expects(:increment) { |metric| metric.with("options.this is another very long option") }.never
       StatsD.expects(:increment) { |metric| metric.with("ci.and this is a very long ci") }.never
-      post :create, body: @metrics, as: :json
+      StatsD.expects(:increment) { |metric| metric.with("ci.and this is another very long ci") }.never
+      post :create, body: @garbage_metrics, as: :json
     end
   end
 

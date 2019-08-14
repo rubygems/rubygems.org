@@ -41,24 +41,25 @@ class Api::MetricsController < Api::BaseController
     params[:_json].each_index do |idx|
       validate_ruby_bundler_version(idx)
       validate_env_managers(idx)
+      params[:_json][idx].delete_if { |key, val| key == "host" && val.length > 20 }
       params[:_json][idx].delete_if { |key, val| key == "command" && val.length > 9 }
     end
   end
 
   def validate_ruby_bundler_version(idx)
     params[:_json][idx].delete_if do |key, val|
-      key == "bundler_version" && !val.match?(/\d\.\d{1,2}\.{0,1}\d{0,1}\.{0,1}(preview|pre){0,1}\.{0,1}\d{0,1}/) ||
-        key == "rubygems_version" && !val.match?(/\d\.\d{1,2}\.{0,1}\d{0,1}\.{0,1}(preview|pre){0,1}\.{0,1}\d{0,1}/) ||
-        key == "ruby_version" && !val.match?(/\d\.\d{1,2}\.{0,1}\d{0,1}\.{0,1}(preview|pre){0,1}\.{0,1}\d{0,1}/)
+      key == "bundler_version" && !Gem::Version::ANCHORED_VERSION_PATTERN.match?(val) ||
+        key == "rubygems_version" && !Gem::Version::ANCHORED_VERSION_PATTERN.match?(val) ||
+        key == "ruby_version" && !Gem::Version::ANCHORED_VERSION_PATTERN.match?(val)
     end
   end
 
   def validate_env_managers(idx)
     params[:_json][idx].delete_if do |key, val|
-      key == "git_version" && !val.match?(/([0-9].){1,4}([\w]*)/) ||
-        key == "rvm_version" && !val.match?(/([0-9].){1,4}([\w]*)/) ||
-        key == "rbenv_version" && !val.match?(/([0-9].){1,4}([\w]*)/) ||
-        key == "chruby_version" && !val.match?(/([0-9].){1,4}([\w]*)/)
+      key == "git_version" && !Gem::Version::ANCHORED_VERSION_PATTERN.match?(val) ||
+        key == "rvm_version" && !Gem::Version::ANCHORED_VERSION_PATTERN.match?(val) ||
+        key == "rbenv_version" && !Gem::Version::ANCHORED_VERSION_PATTERN.match?(val) ||
+        key == "chruby_version" && !Gem::Version::ANCHORED_VERSION_PATTERN.match?(val)
     end
   end
 
