@@ -129,4 +129,10 @@ FactoryBot.define do
     version_id { 0 }
     count { 0 }
   end
+
+  factory :sendgrid_event do
+    sequence(:sendgrid_id) { |n| "TestSendgridId#{n}" }
+    status { "pending" }
+    payload { {} }
+  end
 end

@@ -16,32 +16,60 @@ class Rack::Attack
   # Throttle POST requests to /login by IP address
   #
   # Key: "rack::attack:#{Time.now.to_i/:period}:logins/ip:#{req.ip}"
-  protected_paths = [
-    "/users",              # sign up
-    "/session",            # sign in
-    "/passwords",          # forgot password
-    "/email_confirmations" # resend email confirmation
-  ]
-  paths_regex = Regexp.union(protected_paths.map { |path| /\A#{Regexp.escape(path)}\z/ })
 
-  throttle('clearance/ip', limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
-    req.ip if req.path =~ paths_regex && req.post?
+  protected_ui_actions = [
+    { controller: "sessions",            action: "create" },
+    { controller: "sessions",            action: "mfa_create" },
+    { controller: "users",               action: "create" },
+    { controller: "passwords",           action: "mfa_edit" },
+    { controller: "passwords",           action: "edit" },
+    { controller: "passwords",           action: "create" },
+    { controller: "profiles",            action: "update" },
+    { controller: "profiles",            action: "destroy" },
+    { controller: "email_confirmations", action: "create" }
+  ]
+
+  protected_api_actions = [
+    { controller: "api/v1/deletions", action: "create" },
+    { controller: "api/v1/rubygems",  action: "create" },
+    { controller: "api/v1/owners",    action: "create" },
+    { controller: "api/v1/owners",    action: "destroy" }
+  ]
+
+  def self.protected_route?(protected_actions, path, method)
+    route_params = Rails.application.routes.recognize_path(path, method: method)
+    protected_actions.any? { |hash| hash[:controller] == route_params[:controller] && hash[:action] == route_params[:action] }
   end
+
+  # 100 req in 10 min
+  # 200 req in 100 min
+  # 300 req in 1000 min (0.7 days)
+  # 400 req in 10000 min (6.9 days)
+  (1..4).each do |level|
+    throttle("clearance/ip/#{level}", limit: REQUEST_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
+      req.ip if protected_route?(protected_ui_actions, req.path, req.request_method)
+    end
+  end
+
+  (1..4).each do |level|
+    throttle("api/ip/#{level}", limit: REQUEST_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
+      req.ip if protected_route?(protected_api_actions, req.path, req.request_method)
+    end
+  end
+
+  protected_api_key_action = [{ controller: "api/v1/api_keys", action: "show" }]
 
   # Throttle GET request for api_key by IP address
-  throttle('api_key/ip', limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
-    req.ip if req.path =~ /\A#{Regexp.escape('/api/v1/api_key')}/ && req.get?
-  end
-
-  # Throttle PATCH and DELETE profile requests
-  throttle("clearance/remember_token", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
-    req.ip if req.path == "/profile" && (req.patch? || req.delete?)
+  throttle("api_key/ip", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
+    req.ip if protected_route?(protected_api_key_action, req.path, req.request_method)
   end
 
   # Throttle yank requests
   YANK_LIMIT = 10
+  protected_yank_action = [{ controller: "api/v1/deletions", action: "create" }]
+
   throttle("yank/ip", limit: YANK_LIMIT, period: LIMIT_PERIOD) do |req|
-    req.ip if req.path == "/api/v1/gems/yank"
+    req.ip if protected_route?(protected_yank_action, req.path, req.request_method)
   end
 
   ############################# rate limit per handle ############################

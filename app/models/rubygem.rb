@@ -4,6 +4,7 @@ class Rubygem < ApplicationRecord
 
   has_many :ownerships, dependent: :destroy
   has_many :owners, through: :ownerships, source: :user
+  has_many :notifiable_owners, ->(gem) { gem.owners.notifiable_owners }, through: :ownerships, source: :user
   has_many :subscriptions, dependent: :destroy
   has_many :subscribers, through: :subscriptions, source: :user
   has_many :versions, dependent: :destroy, validate: false

@@ -130,8 +130,11 @@ zh-TW:
       body_html:
     notifiers_changed:
       subject:
+      title:
+      subtitle:
     gem_pushed:
       subject:
+      title:
   news:
     show:
       title: 最新發佈
@@ -197,9 +200,16 @@ zh-TW:
       success:
     update:
       success:
-  notifier:
+  notifiers:
     update:
       success:
+    show:
+      info:
+      on:
+      off:
+      recommended:
+      title:
+      update:
   profiles:
     edit:
       email_awaiting_confirmation: 請驗證你的新 Email %{unconfirmed_email}
@@ -233,9 +243,6 @@ zh-TW:
           disabled:
           ui_only:
           ui_and_api:
-      notifier:
-        email_notifications:
-        update:
     delete:
       title:
       confirm:

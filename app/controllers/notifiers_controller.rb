@@ -1,6 +1,10 @@
 class NotifiersController < ApplicationController
   before_action :redirect_to_signin, unless: :signed_in?
 
+  def show
+    @ownerships = current_user.ownerships.by_gem_name
+  end
+
   def update
     to_enable = []
     to_disable = []
@@ -14,6 +18,6 @@ class NotifiersController < ApplicationController
       Mailer.delay.notifiers_changed(current_user.id)
     end
 
-    redirect_to edit_profile_url, notice: t("notifier.update.success")
+    redirect_to notifier_path, notice: t(".update.success")
   end
 end

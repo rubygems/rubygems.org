@@ -141,6 +141,16 @@ spec:
               secretKeyRef:
                 name: <%= environment %>
                 key: sendgrid_password
+          - name: SENDGRID_WEBHOOK_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: sendgrid_webhook_username
+          - name: SENDGRID_WEBHOOK_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: sendgrid_webhook_password
           <% if environment == 'staging' %>
           - name: DISABLE_SIGNUP
             value: "true"
