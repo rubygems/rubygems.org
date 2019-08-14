@@ -46,20 +46,24 @@ class Api::MetricsController < Api::BaseController
     end
   end
 
+  def valid_version?(val)
+    Gem::Version::ANCHORED_VERSION_PATTERN.match?(val)
+  end
+
   def validate_ruby_bundler_version(idx)
     params[:_json][idx].delete_if do |key, val|
-      key == "bundler_version" && !Gem::Version::ANCHORED_VERSION_PATTERN.match?(val) ||
-        key == "rubygems_version" && !Gem::Version::ANCHORED_VERSION_PATTERN.match?(val) ||
-        key == "ruby_version" && !Gem::Version::ANCHORED_VERSION_PATTERN.match?(val)
+      key == "ruby_version" && !valid_version?(val) ||
+        key == "bundler_version" && !valid_version?(val) ||
+        key == "rubygems_version" && !valid_version?(val)
     end
   end
 
   def validate_env_managers(idx)
     params[:_json][idx].delete_if do |key, val|
-      key == "git_version" && !Gem::Version::ANCHORED_VERSION_PATTERN.match?(val) ||
-        key == "rvm_version" && !Gem::Version::ANCHORED_VERSION_PATTERN.match?(val) ||
-        key == "rbenv_version" && !Gem::Version::ANCHORED_VERSION_PATTERN.match?(val) ||
-        key == "chruby_version" && !Gem::Version::ANCHORED_VERSION_PATTERN.match?(val)
+      key == "git_version" && !valid_version?(val) ||
+        key == "rvm_version" && !valid_version?(val) ||
+        key == "rbenv_version" && !valid_version?(val) ||
+        key == "chruby_version" && !valid_version?(val)
     end
   end
 
