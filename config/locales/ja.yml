@@ -130,8 +130,11 @@ ja:
       body_html: あなたのrubygems.orgにおけるアカウント削除申請は処理されませんでした。申し訳ありませんが、現在アカウントを削除することができません。しばらく待ってから再度お試し頂くか、問題が継続するようならば%{contact}をお願いいたします。
     notifiers_changed:
       subject:
+      title:
+      subtitle:
     gem_pushed:
       subject:
+      title:
   news:
     show:
       title: 新しくリリースされたGem
@@ -197,9 +200,16 @@ ja:
       success:
     update:
       success:
-  notifier:
+  notifiers:
     update:
       success:
+    show:
+      info:
+      on:
+      off:
+      recommended:
+      title:
+      update:
   profiles:
     edit:
       email_awaiting_confirmation: あなたの新しいメールアドレス%{unconfirmed_email}を確認してください。
@@ -233,9 +243,6 @@ ja:
           disabled:
           ui_only:
           ui_and_api:
-      notifier:
-        email_notifications:
-        update:
     delete:
       title: アカウント削除
       confirm: 確認

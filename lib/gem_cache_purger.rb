@@ -3,7 +3,7 @@ class GemCachePurger
     # We need to purge from Fastly and from Memcached
     ["info/#{gem_name}", "names"].each do |path|
       Rails.cache.delete(path)
-      Fastly.delay.purge(path)
+      Fastly.delay.purge(path, true)
     end
 
     Rails.cache.delete("deps/v1/#{gem_name}")

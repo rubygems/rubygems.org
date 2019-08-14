@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_19_175448) do
+ActiveRecord::Schema.define(version: 2019_04_26_190518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -111,6 +111,19 @@ ActiveRecord::Schema.define(version: 2019_04_19_175448) do
     t.index ["name"], name: "index_rubygems_on_name", unique: true
   end
 
+  create_table "sendgrid_events", force: :cascade do |t|
+    t.string "sendgrid_id", null: false
+    t.string "email"
+    t.string "event_type"
+    t.datetime "occurred_at"
+    t.jsonb "payload", null: false
+    t.string "status", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_sendgrid_events_on_email"
+    t.index ["sendgrid_id"], name: "index_sendgrid_events_on_sendgrid_id", unique: true
+  end
+
   create_table "subscriptions", id: :serial, force: :cascade do |t|
     t.integer "rubygem_id"
     t.integer "user_id"
@@ -141,6 +154,7 @@ ActiveRecord::Schema.define(version: 2019_04_19_175448) do
     t.string "mfa_seed"
     t.integer "mfa_level", default: 0
     t.string "mfa_recovery_codes", default: [], array: true
+    t.integer "mail_fails", default: 0
     t.index ["email"], name: "index_users_on_email"
     t.index ["handle"], name: "index_users_on_handle"
     t.index ["id", "confirmation_token"], name: "index_users_on_id_and_confirmation_token"

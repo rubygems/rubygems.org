@@ -70,3 +70,13 @@
 @media (min-width: 960px) {
   .l-half--r {
     float: right; } }
+
+.l-half--l--center {
+  text-align: center;
+}
+
+@media (min-width: 960px) {
+  .l-half--l--center {
+    width: 33%;
+  }
+}

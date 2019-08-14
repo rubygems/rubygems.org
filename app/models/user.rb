@@ -61,6 +61,10 @@ class User < ApplicationRecord
     find_by(email: name) || find_by(handle: name)
   end
 
+  def self.notifiable_owners
+    where(ownerships: { notifier: true })
+  end
+
   def name
     handle || email
   end
@@ -229,7 +233,7 @@ class User < ApplicationRecord
   end
 
   def update_email!
-    self.attributes = { email: unconfirmed_email, unconfirmed_email: nil }
+    self.attributes = { email: unconfirmed_email, unconfirmed_email: nil, mail_fails: 0 }
     save!(validate: false)
   end
 

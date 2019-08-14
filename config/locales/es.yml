@@ -1,79 +1,87 @@
 es:
   edit: Editar
-  failure_when_forbidden:
-  feed_latest: RubyGems.org | Gemas Nuevas
-  feed_subscribed: RubyGems.org | Subscripciones de Gemas
-  footer_about_html: RubyGems.org es el servicio de alojamiento de gemas de la comunidad de Ruby. Publica tus gemas de manera instantánea e instalalas. Usa la API para interactuar y buscar información de las gemas disponibles. Conviértete en contribuidor y mejora este sitio con tus cambios.
-  footer_sponsors_html:
-  footer_join_rt_html:
+  failure_when_forbidden: Por favor verifica la URL o inténtalo nuevamente.
+  feed_latest: RubyGems.org | Gemas más recientes
+  feed_subscribed: RubyGems.org | Suscripciones a gemas
+  footer_about_html: RubyGems.org es el servicio de alojamiento de Gemas de la comunidad de Ruby. 
+    <a href="%{publish_docs}">Publica tus gemas</a> instantáneamente y luego <a href="%{install_docs}">instálalas</a>. 
+    Usa <a href="%{api_docs}">la API</a> para saber más sobre <a href="%{gem_list}">las gemas disponibles</a>. 
+    <a href="%{contributing_docs}">Conviértete en colaborador</a> y mejora este sitio con tus cambios.
+  footer_sponsors_html: RubyGems.org es posible gracias la colaboración de la fantástica comunidad de Ruby.
+    <a href="https://www.fastly.com/">Fastly</a> provee ancho de banda y soporte de CDN
+    <a href="http://www.rubycentral.org/">Ruby Central</a> cubre los costos de infraestructura y
+    <a href="https://rubytogether.org/?source=rubygems">Ruby Together</a> financia el desarrollo y el trabajo en los servidores.
+    <a href="%{sponsors_page}">Aprende más sobre nuestros sponsors y cómo trabajan en conjunto</a>
+  footer_join_rt_html: Necesitamos tu ayuda para financiar el tiempo de los desarrolladores que mantienen RubyGems.org funcionando correctamente para todo el mundo.
+    <a href="https://rubytogether.org/join?source=rubygems">Únete a Ruby Together hoy</a>.
   form_disable_with: Un momento por favor...
   help_url: http://help.rubygems.org
-  invalid_page:
+  invalid_page: Número de página inexistente. Redireccionando a la página por defecto.
   locale_name: Español
-  none:
-  not_found:
-  please_sign_up: Acceso negado. Por favor, primero crea una cuenta en https://rubygems.org
-  please_sign_in:
-  otp_incorrect:
-  otp_missing:
-  sign_in: Ingresar
-  sign_up: Registro
-  multifactor_authentication:
-  subtitle: alojamiento de gemas para la comunidad
-  this_rubygem_could_not_be_found: La gema no ha sido encontrada.
-  time_ago: hace %{duration}
+  none: Ninguno
+  not_found: No encontrado
+  please_sign_up: Acceso denegado. Por favor regístrate en https://rubygems.org
+  please_sign_in: Por favor, ingresa en tu cuenta para continuar.
+  otp_incorrect: Tu código OTP es incorrecto. Por favor verifícalo y prueba nuevamente.
+  otp_missing: Activaste autenticación con múltiples factores, pero no suministraste un código OTP. Por favor ingrésalo y prueba nuevamente.
+  sign_in: Ingresa
+  sign_up: Regístrate
+  multifactor_authentication: Autenticación de múltiples factores
+  subtitle: el alojamiento de gemas de tu comunidad
+  this_rubygem_could_not_be_found: Esta gema no pudo encontrarse.
+  time_ago: "hace %{duration}"
   title: RubyGems.org
-  update: Actualizar
-  try_again:
-  advanced_search:
+  update: actualiza
+  try_again: Algo salió mal. Por favor inténtalo nuevamente.
+  advanced_search: Búsqueda avanzada
   activerecord:
     attributes:
       linkset:
-        bugs: URL del registro de Bugs
-        changelog: URL del Changelog
+        bugs: URL del seguimiento de bugs
+        changelog: URL de registro de cambios
         code: URL del código fuente
         docs: URL de la documentación
         mail: URL de la lista de correo
-        wiki: URL del Wiki
+        wiki: URL de la Wiki
       session:
         password: Contraseña
-        who: Email o usuario
+        who: Correo electrónico o usuario
       user:
         avatar: Avatar
-        email: Dirección email
+        email: Dirección de correo
         handle: Usuario
         password: Contraseña
   clearance_mailer:
     change_password:
-      title:
-      subtitle:
+      title: CAMBIAR CONTRASEÑA
+      subtitle: ¡Hola %{handle}!
   dashboards:
     show:
       creating_link_text: crear
       gem_link_text: página de alguna gema
-      latest: Últimas Actualizaciones
+      latest: Últimas actualizaciones
       latest_title: Feed RSS con últimas actualizaciones
       migrating_link_text: migrar
       mine: Mis Gemas
-      my_subscriptions: Subscripciones
-      no_owned_html: Aún no has registrado ninguna gema. Tal vez puedes revisar las guías para %{creating_link} una gema o %{migrating_link} una gema de RubyForge.
-      no_subscriptions_html: Aún no te has subscrito a ningua gema. ¡Visita la %{gem_link} para subscribirte!
+      my_subscriptions: Suscripciones
+      no_owned_html: Todavía no publicaste ninguna gema. Prueba a ver las guías sobre cómo %{creating_link} o %{migrating_link} una gema en rubygems.org.
+      no_subscriptions_html: Aún no te suscribiste a ninguna gema. ¡Visita la %{gem_link} para suscribirte!
       title: Dashboard
   email_confirmations:
     create:
-      promise_resend:
+      promise_resend: Te enviaremos un correo con el enlace de confirmación para activar tu cuenta si esta existe.
     new:
-      submit:
-      title:
-      will_email_notice:
+      submit: Re-enviar Confirmación
+      title: Re-enviar correo de confirmación
+      will_email_notice: Te enviaremos un correo con el enlace de confirmación para activar tu cuenta.
     update:
-      confirmed_email:
+      confirmed_email: Tu dirección de correo se ha verificado.
   home:
     index:
       downloads_counting_html: descargas y contando
       find_blurb: Encuentra, instala, y publica RubyGems.
       learn:
-        install_rubygems: Instalar RubyGems
+        install_rubygems: Instala RubyGems
   layouts:
     application:
       footer:
@@ -82,203 +90,212 @@ es:
         blog: Blog
         contribute: Contribuye
         data: Datos
-        designed_by: Diseño
-        discussion_forum: Foro de discusión
-        gems_served_by: Distribución
+        designed_by: Diseñado por
+        discussion_forum: Foro de Discusión
+        gems_served_by: Distribuida por
         guides: Guías
         help: Ayuda
-        hosted_by: Alojamiento
-        monitored_by: Monitoreo
-        optimized_by: Optimización
+        hosted_by: Alojado por
+        monitored_by: Monitoreado por
+        optimized_by: Optimizado por
         resolved_with: DNS
-        security: Security
+        security: Seguridad
         source_code: Código fuente
         statistics: Estadísticas
         status: Estado
-        supported_by: Soporte
-        tested_by:
-        tracking_by: Rastreo
+        supported_by: Con el apoyo de
+        tested_by: Probado por
+        tracking_by: Seguimiento con
         uptime: Uptime
       header:
         dashboard: Dashboard
         search_gem_html: Buscar gemas&hellip;
         sign_in: Ingresar
-        sign_out: Cerrar sesión
-        sign_up: Registro
+        sign_out: Salir
+        sign_up: Registrarte
   mailer:
-    confirm_your_email:
-    confirmation_subject:
+    confirm_your_email: Por favor confirma tu dirección de correo con el enlace enviado.
+    confirmation_subject: Por favor confirma tu dirección de correo con RubyGems.org
     email_confirmation:
-      title:
-      subtitle:
-      confirmation_link:
-      welcome_message:
+      title: CONFIRMACIÓN DE EMAIL
+      subtitle: ¡Último paso!
+      confirmation_link: Confirma dirección de correo
+      welcome_message: Bienvenidos a RubyGems.org! Haz clic en el enlace de abajo para verificar tu dirección de correo.
     email_reset:
-      title:
-      subtitle:
-      visit_link_instructions:
-      link_expiration_explanation:
+      title: CAMBIO DE EMAIL
+      subtitle: ¡Hola %{handle}!
+      visit_link_instructions: Cambiaste tu dirección de correo en RubyGems.org. Por favor visita el siguiente enlace para re-activar tu cuenta.
+      link_expiration_explanation: Por favor ten en cuenta que el enlace tiene una validez de 3 horas.
     deletion_complete:
-      title:
-      subtitle:
-      subject:
-      body_html:
+      title: ELIMINACIÓN COMPLETADA
+      subtitle: ¡Adiós!
+      subject: Tu cuenta se ha eliminado de rubygems.org
+      body_html: Se ha procesado tu solicitud para eliminar tu cuenta de rubygems.org. Siempre puedes crear una nueva cuenta en nuestra página %{sign_up}.
     deletion_failed:
-      title:
-      subtitle:
-      subject:
-      body_html:
+      title: ELIMINACIÓN FALLIDA
+      subtitle: ¡Lo sentimos!
+      subject: Tu solicitud para eliminar tu cuenta de rubygems.org ha fallado
+      body_html: Has solicitado eliminar tu cuenta de rubygems.org. Lamentablemente, no hemos podido procesar tu pedido. Por favor inténtalo de nuevo más adelante o %{contact} si el problema persiste.
     notifiers_changed:
-      subject:
+      subject: Cambiaste la configuración de tus notificaciones por email de RubyGems.org
+      title: NOTIFICACIONES POR EMAIL
+      subtitle: ¡Hola %{handle}!
     gem_pushed:
-      subject:
+      subject: Gema %{gem} subida a RubyGems.org
+      title: GEMA SUBIDA
   news:
     show:
-      title:
-      all_gems:
-      popular_gems:
+      title: Nuevos lanzamientos — Todas las Gemas
+      all_gems: Todas las Gemas
+      popular_gems: Gemas más populares
     popular:
-      title:
+      title: Nuevos lanzamientos — Gemas más populares
   pages:
     about:
-      founding_html: El proyecto comenzó en Abril del 2009 por %{founder}, y desde entonces ha crecido para incluir las contribuciones de %{contributors} y %{downloads}. A partir de RubyGems 1.3.6 el sitio se renombró de Gemcutter a %{title} para hacer más claro el rol del mismo en la comunidad de Ruby.
-      support_html: A pesar de que Gemcutter no es mantenido por una compañía en específico, muchas de ellas nos han ayudado. El diseño actual, las ilustraciones y el desarrollo de front-end del sitio fue cortesía de %{dockyard}. %{github} también ha sido invaluable por ayudarnos a colaborar y compartir código de manera sencilla. El sitio comenzó en %{heroku}, cuyo excelente servicio ayudó a probar que Gemcutter es una solución viable en la que toda la comunidad puede confiar. Our infrastructure is currently hosted on %{aws}.
-      technical_html: 'Algunos aspectos técnicos del sitio: Es 100% Ruby. El sitio principal es una aplicación de %{rails}. Las gemas se almacenan en %{s3}, served by %{fastly}, y el tiempo entre que se publica una gema y que está lista para instalarse es mínimo. Para más información, %{source_code}, cuya licencia es %{license} en GitHub.'
+      founding_html: El proyecto comenzó en abril del 2009 por %{founder}, y desde entonces ha crecido para incluir las contribuciones de %{contributors} y %{downloads}. A partir de RubyGems 1.3.6 el sitio se renombró de Gemcutter a %{title} para hacer más claro el rol del mismo en la comunidad de Ruby.
+      support_html: A pesar de que RubyGems.org no es mantenido por una compañía en concreto, muchas nos han ayudado. El diseño actual, las ilustraciones y el desarrollo de front-end del sitio fue cortesía de %{dockyard}. %{github} también ha sido importante por ayudarnos a colaborar y compartir código de manera sencilla. El sitio comenzó en %{heroku}, cuyo excelente servicio ayudó a probar que RubyGems es una solución viable en la que toda la comunidad puede confiar. Nuestra infraestructura está alojada actualmente en %{aws}.
+      technical_html: 'Algunos aspectos técnicos del sitio: Es 100% Ruby. El sitio principal es una aplicación %{rails}. Las gemas se almacenan en %{s3}, son servidas por %{fastly}, y el tiempo entre que se publica una gema y que está lista para instalarse es mínimo. Para más información, %{source_code}, cuya licencia es %{license} en GitHub.'
       title: Acerca de
       purpose:
-        better_api: Otorgar una mejor API para manejar las gemas
+        better_api: Ofrecer una mejor API para manejar gemas
         enable_community: Permitirle a la comunidad contribuir para mejorar este sitio
         header: 'Bienvenido a %{site}, el servicio de alojamiento de gemas para la comunidad de Ruby. Este proyecto tiene 3 objetivos:'
         transparent_pages: Crear páginas de proyecto más accesibles y transparentes
     data:
-      title:
+      title: RubyGems.org Data
     download:
-      title:
+      title: Descargar RubyGems
     faq:
-      title:
+      title: Preguntas Frecuentes
     migrate:
-      title:
+      title: Migrar Gemas
     security:
-      title:
+      title: Seguridad
     sponsors:
-      title:
+      title: Sponsors
   passwords:
     edit:
       submit: Guardar esta contraseña
-      title: Reestablecer contraseña
+      title: Restablecer contraseña
     new:
-      submit: Reestablecer contraseña
-      title: Cambiar contraseña
-      will_email_notice: Te enviaremos un email con un enlace para cambiar tu contraseña.
+      submit: Restablecer contraseña
+      title: Cambiar tu contraseña
+      will_email_notice: Te enviaremos el enlace para cambiar tu contraseña por correo electrónico.
     otp_prompt:
-      authenticate:
+      authenticate: Autenticar
   multifactor_auths:
-    incorrect_otp:
-    otp_code:
-    require_mfa_disabled:
-    require_mfa_enabled:
+    incorrect_otp: Tu código OTP no es correcto.
+    otp_code: código OTP
+    require_mfa_disabled: Se ha activado la autenticación de múltiples factores. Primero tienes que desactivarla.
+    require_mfa_enabled: No se ha activado la autenticación de múltiples factores. Primero tienes que activarla.
     new:
-      title:
-      scan_prompt:
-      otp_prompt:
-      confirm:
-      enable:
-      account:
-      key:
-      time_based:
+      title: Activando autenticación de múltiples factores
+      scan_prompt: Por favor escanea el código QR con tu aplicación de Autenticación. Si no puedes escanear el código, agrega manualmente información abajo en tu aplicación.
+      otp_prompt: Escribe el código de la aplicación de Autenticación para continuar.
+      confirm: He mantenido seguros mis códigos de recuperación.
+      enable: Activar
+      account: "Cuenta: %{account}"
+      key: "Clave: %{key}"
+      time_based: "Basado en tiempo: Sí"
     create:
-      qrcode_expired:
-      success:
+      qrcode_expired: El código QR y la clave han vencido. Por favor intenta nuevamente registrar un nuevo dispositivo.
+      success: Has activado exitosamente la autenticación de múltiples factores.
     recovery:
-      continue:
-      title:
-      note:
+      continue: Continuar
+      title: Códigos de recuperación
+      note: "DEBES mantener seguros los códigos de recuperación para prevenir la pérdida de tu cuenta. Cada código puede ser usado una vez si pierdes tu Autenticador."
     destroy:
-      success:
+      success: Has desactivado exitosamente la autenticación de múltiples factores.
     update:
-      success:
-  notifier:
+      success: Has actualizado exitosamente la autenticación de múltiples factores.
+  notifiers:
     update:
-      success:
+      success: Has actualizado exitosamente la configuración de tus notificaciones por email.
+    show:
+      info: Para facilitar la detección de cambios no autorizados en tus gemas, te enviamos un email
+        cada vez que una nueva versión es subida a RubyGems.org. Recibiendo y leyendo estos emails 
+        ayudas a proteger el ecosistema de Ruby.
+      on: Activado
+      off: Desactivado
+      recommended: recomendado
+      title: Notificación de email
+      update: Actualizar
   profiles:
     edit:
-      email_awaiting_confirmation:
-      enter_password:
-      hide_email: Esconder email en perfil público
-      optional_twitter_username:
+      email_awaiting_confirmation: Por favor confirma tu nueva dirección de correo %{unconfirmed_email}
+      enter_password: Por favor introduce tu contraseña
+      hide_email: Ocultar correo electrónico en perfil público
+      optional_twitter_username: Usuario de Twitter opcional. Será mostrado en tu perfil público
       title: Editar perfil
       api_access:
-        confirm_reset: "¿Estás seguro? Este cambio no puede deshacerse."
+        confirm_reset: '¿Seguro? Este cambio no puede deshacerse.'
         credentials_html: 'Si quieres usar %{gem_commands_link} desde la línea de comandos, vas a necesitar un archivo llamado %{gem_credentials_file}, el cual puedes generar usando el siguiente comando:'
-        key_is_html: Tu llave de API es %{key}.
-        link_text: comandos de gem
-        reset: Reestablecer llave API
-        title: Acceso a API
+        key_is_html: Tu clave de API es %{key}.
+        link_text: Comandos de la gema
+        reset: Reestablecer mi clave de API
+        title: Acceso por API
       reset_password:
-        link_text: Pide una nueva aquí.
-        text_html: "¿Necesitas otra contraseña? No hay problema. %{link}"
+        link_text: Solicitar aquí una nueva.
+        text_html: '¿Necesitas una nueva contraseña? Sin problemas. %{link}'
         title: Reestablecer contraseña
       delete:
-        delete:
-        delete_profile:
-        warning:
+        delete: Eliminar
+        delete_profile: Eliminar Perfil
+        warning: Eliminar tu perfil es una acción irreversible. No puede deshacerse contactando a soporte. ¡Por favor hazlo solo si estás seguro!
       mfa:
-        multifactor_auth:
-        disabled:
-        go_settings:
-        enabled:
-        update:
+        multifactor_auth: Autenticación de múltiples factores
+        disabled: Todavía no activaste la Autenticación de Múltiples Factores.
+        go_settings: Registrar un nuevo dispositivo
+        enabled: Has activado la Autenticación de Múltiples Factores. Por favor ingresa el código OTP desde tu autenticador o alguna de tus claves de recuperación para cambiar tu nivel de Autenticación de Múltiples Factores para desactivarla.
+        update: Actualizar
         level:
-          title:
-          disabled:
-          ui_only:
-          ui_and_api:
-      notifier:
-        email_notifications:
-        update:
+          title: Nivel de Autenticación de Múltiples Factores
+          disabled: Desactivada
+          ui_only: Solo Interfaz de Usuario
+          ui_and_api: Interfaz de Usuario y API
     delete:
-      title:
-      confirm:
-      instructions:
-      list_only_owner_html:
-      list_multi_owner:
+      title: Eliminar perfil
+      confirm: Confirmar
+      instructions: Lamentamos ver que te vas. Ingresa tu contraseña abajo y confírmalo.
+      list_only_owner_html: Estas gemas serán borradas cuando elimines tu cuenta. Si quieres agregar propietarios antes de eliminar tu cuenta, puedes usar el comando %{command_link}.
+      list_multi_owner: Perderás acceso a estas gemas, pero otros propietarios podrán seguir accediendo a ellas.
     rubygem:
       owners_header:
     destroy:
-      request_queued:
+      request_queued: Tu solicitud de eliminación de cuenta se ha puesto en cola. Te enviaremos un email de confirmación cuando haya sido procesada.
     update:
-      confirmation_mail_sent:
-      updated:
-    request_denied:
+      confirmation_mail_sent: Recibirás un correo electrónico en los próximos minutos. Contiene instrucciones para confirmar tu nueva dirección de correo.
+      updated: Tu perfil se a actualizado.
+    request_denied: La solicitud fue denegada. No pudimos verificar tu contraseña.
   rubygems:
     aside:
       bundler_header: Gemfile
-      copied:
-      copy_to_clipboard:
+      copied: ¡Copiado!
+      copy_to_clipboard: Copiar al portapapeles
       downloads_for_this_version: Para esta versión
       install: instalar
-      required_ruby_version:
-      required_rubygems_version:
+      required_ruby_version: Versión de Ruby requerida
+      required_rubygems_version: Versión de Rubygems requerida
       links:
         badge: Badge
-        bugs: Registro de bugs
-        changelog: Changelog
+        bugs: Seguimiento de Bugs
+        changelog: Registro de cambios
         code: Código fuente
         docs: Documentación
-        download: Descargar
-        header: Enlaces
-        home: Sitio
-        mail: Lista de correo
-        report_abuse: Reportar abuso
-        reverse_dependencies:
+        download: Descarga
+        header: Enlace
+        home: Página
+        mail: Lista de Correo
+        report_abuse: Reportar abusos
+        reverse_dependencies: Dependencias inversas
         rss: RSS
         subscribe: Suscribirse
-        unsubscribe: Unsubscribe
+        unsubscribe: Desuscribirse
         wiki: Wiki
     blacklisted:
-      blacklisted_namespace:
+      blacklisted_namespace: Este namespace está reservado por rubygems.org.
     dependencies:
-      header: dependencias de %{title}
+      header: "dependencias de %{title}"
     gem_members:
       authors_header: Autores
       owners_header: Administradores
@@ -286,72 +303,72 @@ es:
       yanked_by: Borrada por
       sha_256_checksum: SHA 256 checksum
     index:
-      downloads: Downloads
+      downloads: Descargas
       title: Gemas
     show:
       licenses_header: Licencia
-      no_licenses: N/D
+      no_licenses: N/A
       requirements_header: Requerimientos
-      show_all_versions: Muestra todas las versiones (%{count} total)
+      show_all_versions: Mostrar todas las versiones (%{count} total)
       versions_header: Versiones
-      yanked_notice: Esta gema ya no está disponible para descarga directa o para otras gemas que dependan de ella.
+      yanked_notice: Esta versión fue borrada, y no está disponible para su descarga directa ni por otras gemas que puedan haber dependido de la misma.
     show_yanked:
-      not_hosted_notice: Esta gema no se encuentra alojada en Gemcutter.
+      not_hosted_notice: Esta gema no está alojada actualmente en RubyGems.org.
       reserved_namespace_html:
-        one:
-        other:
+        one: Esta gema existió previamente, pero fue eliminada por sus propietarios. El equipo de RubyGems.org ha reservado este nombre por un día más. Luego cualquiera podrá solicitar este nombre de gema usando `gem push`. <br/> Si eres el anterior propietario, puedes cambiar la propiedad de esta gema usando el comando `gem owner`. También puedes crear nuevas versiones de esta gema usando `gem push`.
+        other: Esta gema existió previamente, pero fue eliminada por sus propietarios. El equipo de RubyGems.org ha reservado este nombre por %{count} días más. Luego cualquiera podrá solicitar este nombre de gema usando `gem push`. <br/> Si eres el anterior propietario, puedes cambiar la propiedad de esta gema usando el comando `gem owner`. También puedes crear nuevas versiones de esta gema usando `gem push`.
   reverse_dependencies:
     index:
-      title:
+      title: "Dependencias inversas para %{name}"
     search:
-      search_reverse_dependencies_html:
+      search_reverse_dependencies_html: "Buscar dependencias inversas Gems&hellip;"
   searches:
     advanced:
-      name:
-      summary:
-      description:
-      downloads:
-      updated:
+      name: Nombre
+      summary: Resumen
+      description: Descripción
+      downloads: Descargas
+      updated: Actualizada
     show:
-      exact_match: Resultado exacto
-      subtitle: por %{query}
-      month_update:
-      week_update:
-      filter:
+      exact_match: Coincidencia exacta
+      subtitle: para %{query}
+      month_update: Actualizadas en el último mes (%{count})
+      week_update: Actualizadas en la última semana (%{count})
+      filter: "Filtro:"
   sessions:
     new:
-      forgot_password: "¿Olvidaste tu contraseña?"
-      resend_confirmation:
+      forgot_password: ¿Olvidaste tu contraseña?
+      resend_confirmation: ¿No recibiste tu correo electrónico de confirmación?
   stats:
     index:
-      all_time_most_downloaded:
-      total_downloads:
-      total_gems:
-      total_users:
+      all_time_most_downloaded: Más descargadas
+      total_downloads: Total de descargas
+      total_gems: Gemas totales
+      total_users: Usuarios totales
   users:
     create:
-      email_sent:
+      email_sent: Se ha enviado un correo de confirmación a tu casilla de correo electrónico.
     new:
-      have_account: "¿Ya estás registrado?"
+      have_account: ¿Ya tienes una cuenta?
   versions:
     index:
-      not_hosted_notice: Esta gema no está alojada en Gemcutter.
+      not_hosted_notice: Esta gema no está alojada actualmente en RubyGems.org.
       title: Todas las versiones de %{name}
       versions_since: "%{count} versiones desde %{since}"
     version:
-      yanked: eliminada
+      yanked: borrada
   will_paginate:
-    next_label:
+    next_label: Siguiente
     page_gap: "…"
-    previous_label:
+    previous_label: Previa
     page_entries_info:
-      multi_page:
-      multi_page_html:
+      multi_page: Mostrando %{model} %{from} - %{to} sobre un total de %{count}
+      multi_page_html: Mostrando %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> de un total de <b>%{count}</b>
       single_page:
-        one:
-        other:
-        zero:
+        one: Mostrando 1 %{model}
+        other: Mostrando todos los %{count} %{model}
+        zero: No se encontró ningún %{model}
       single_page_html:
-        one:
-        other:
-        zero:
+        one: Mostrando <b>1</b> %{model}
+        other: Mostrando <b>todos los&nbsp;%{count}</b> %{model}
+        zero: No se encontró ningún %{model}

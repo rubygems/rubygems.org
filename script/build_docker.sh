@@ -24,10 +24,11 @@ docker run -d -e RAILS_ENV=production -e SECRET_KEY_BASE=1234 -e DATABASE_URL=po
   -- unicorn_rails -E production -c /app/config/unicorn.conf
 
 sleep 5
-curl http://localhost:3000/internal/ping | grep PONG
+curl -m 5 http://localhost:3000/internal/ping | grep PONG
 
 if [ $? -eq 1 ]; then
   echo "Internal ping api test didn't pass."
+  docker ps -aqf "ancestor=quay.io/$TRAVIS_REPO_SLUG:$TRAVIS_COMMIT" | xargs -Iid docker logs id
   exit 1
 fi
 
