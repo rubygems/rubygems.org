@@ -426,7 +426,7 @@ class UserTest < ActiveSupport::TestCase
   context ".ok_deliverability" do
     should "only include owners with no more than 3 mail fails" do
       with_ok_deliverability = create(:user, mail_fails: 3)
-      without_ok_deliverability = create(:user, mail_fails: 4)
+      _without_ok_deliverability = create(:user, mail_fails: 4)
 
       assert_equal [with_ok_deliverability], User.ok_deliverability
     end

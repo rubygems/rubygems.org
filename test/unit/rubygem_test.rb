@@ -829,7 +829,7 @@ class RubygemTest < ActiveSupport::TestCase
 
     should "only include owners with notifier" do
       with_notifier = create(:ownership, notifier: true, rubygem: @rubygem).user
-      without_notifier = create(:ownership, notifier: false, rubygem: @rubygem).user
+      _without_notifier = create(:ownership, notifier: false, rubygem: @rubygem).user
 
       assert_equal [with_notifier], @rubygem.notifiable_owners
     end
