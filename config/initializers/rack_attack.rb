@@ -31,7 +31,6 @@ class Rack::Attack
 
   protected_api_actions = [
     { controller: "api/v1/deletions", action: "create" },
-    { controller: "api/v1/rubygems",  action: "create" },
     { controller: "api/v1/owners",    action: "create" },
     { controller: "api/v1/owners",    action: "destroy" }
   ]
@@ -54,6 +53,18 @@ class Rack::Attack
   (1..4).each do |level|
     throttle("api/ip/#{level}", limit: REQUEST_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
       req.ip if protected_route?(protected_api_actions, req.path, req.request_method)
+    end
+  end
+
+  PUSH_LIMIT = 150
+  protected_push_action = [{ controller: "api/v1/rubygems", action: "create" }]
+
+  # 150 push in 10 min
+  # 450 push in 1000 min
+  # 600 push in 10000 min
+  [1, 3, 4].each do |level|
+    throttle("api/push/ip/#{level}", limit: PUSH_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
+      req.ip if protected_route?(protected_push_action, req.path, req.request_method)
     end
   end
 
