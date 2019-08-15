@@ -43,6 +43,9 @@ pt-BR:
         email: Email
         handle: Usuário
         password: Senha
+    errors:
+      messages:
+        unpwn:
   clearance_mailer:
     change_password:
       title:

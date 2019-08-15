@@ -43,6 +43,9 @@ nl:
         email: E-mailadres
         handle: Gebruikersnaam
         password: Wachtwoord
+    errors:
+      messages:
+        unpwn:
   clearance_mailer:
     change_password:
       title:

@@ -43,6 +43,9 @@ de:
         email: E-Mail-Adresse
         handle: Benutzername
         password: Passwort
+    errors:
+      messages:
+        unpwn:
   clearance_mailer:
     change_password:
       title:

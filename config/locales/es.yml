@@ -43,6 +43,9 @@ es:
         email: Dirección email
         handle: Usuario
         password: Contraseña
+    errors:
+      messages:
+        unpwn:
   clearance_mailer:
     change_password:
       title:

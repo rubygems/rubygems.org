@@ -43,6 +43,9 @@ zh-CN:
         email: Email
         handle: 账号
         password: 密码
+    errors:
+      messages:
+        unpwn:
   clearance_mailer:
     change_password:
       title:
