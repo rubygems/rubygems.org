@@ -251,8 +251,6 @@ pt-BR:
       list_multi_owner:
     rubygem:
       owners_header:
-      pushed_by:
-      yanked_by:
     destroy:
       request_queued:
     update:
@@ -291,6 +289,8 @@ pt-BR:
     gem_members:
       authors_header: Autores
       owners_header: Donos
+      pushed_by:
+      yanked_by:
       sha_256_checksum: SHA 256 checksum
     index:
       downloads: Downloads

@@ -17,7 +17,7 @@ class PushTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert page.has_content?("sandworm")
     assert page.has_content?("1.0.0")
-    assert page.has_content?("Pushed By")
+    assert page.has_content?("Pushed by")
 
     css = %(div.gem__users a[alt=#{@user.handle}])
     assert page.has_css?(css, count: 2)

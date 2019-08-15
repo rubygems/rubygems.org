@@ -261,8 +261,6 @@ es:
       list_multi_owner: Perderás acceso a estas gemas, pero otros propietarios podrán seguir accediendo a ellas.
     rubygem:
       owners_header: Propietarios
-      pushed_by: Subida por
-      yanked_by: Borrada por
     destroy:
       request_queued: Tu solicitud de eliminación de cuenta se ha puesto en cola. Te enviaremos un email de confirmación cuando haya sido procesada.
     update:
@@ -301,6 +299,8 @@ es:
     gem_members:
       authors_header: Autores
       owners_header: Propietarios
+      pushed_by: Subida por
+      yanked_by: Borrada por
       sha_256_checksum: SHA 256 checksum
     index:
       downloads: Descargas

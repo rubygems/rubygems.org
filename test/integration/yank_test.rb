@@ -34,7 +34,7 @@ class YankTest < SystemTest
     assert page.has_content? "This version has been yanked"
     assert page.has_css? 'meta[name="robots"][content="noindex"]', visible: false
 
-    assert page.has_content?("Yanked By")
+    assert page.has_content?("Yanked by")
 
     css = %(div.gem__users a[alt=#{@user.handle}])
     assert page.has_css?(css, count: 2)
