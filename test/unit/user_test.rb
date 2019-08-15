@@ -78,7 +78,7 @@ class UserTest < ActiveSupport::TestCase
         refute user.valid?
         assert_contains user.errors[:password], "is too short (minimum is 10 characters)"
 
-        user.password = "#{"a8b5d2d451" * 20}a"
+        user.password = "#{'a8b5d2d451' * 20}a"
         refute user.valid?
         assert_contains user.errors[:password], "is too long (maximum is 200 characters)"
 
