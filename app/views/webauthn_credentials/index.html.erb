@@ -1,0 +1,12 @@
+<% @title = 'WebAuthn credentials' %>
+
+<% if @user.webauthn_enabled? %>
+  <% @user.credentials.each do |credential| %>
+    Credential: <%= credential.external_id %>
+  <% end %>
+<% else %>
+  <p>
+    <%= t('.disabled') %>
+    <%= button_to t('.go_settings'), create_options_webauthn_credentials_path, method: 'get', class: 'form__submit js-webauthn-credential-create' %>
+  </p>
+<% end %>

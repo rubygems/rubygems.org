@@ -110,4 +110,12 @@ class ApplicationController < ActionController::Base
   def reject_null_char_param
     render plain: "bad request", status: :bad_request if params.to_s.include?("\\u0000")
   end
+
+  def bin_to_str(bin)
+    Base64.urlsafe_encode64(bin, padding: false)
+  end
+
+  def str_to_bin(str)
+    Base64.urlsafe_decode64(str)
+  end
 end

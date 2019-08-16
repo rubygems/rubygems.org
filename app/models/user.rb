@@ -25,6 +25,8 @@ class User < ApplicationRecord
   has_many :deletions, dependent: :nullify
   has_many :web_hooks, dependent: :destroy
 
+  has_many :credentials, dependent: :destroy
+
   after_validation :set_unconfirmed_email, if: :email_changed?, on: :update
   before_create :generate_api_key, :generate_confirmation_token
 
@@ -172,11 +174,20 @@ class User < ApplicationRecord
     !mfa_disabled?
   end
 
+  def webauthn_enabled?
+    credentials.any?
+  end
+
   def disable_mfa!
     mfa_disabled!
     self.mfa_seed = ""
     self.mfa_recovery_codes = []
     save!(validate: false)
+  end
+
+  def disable_webauthn!
+    credentials.first.destroy!
+    save!
   end
 
   def verify_and_enable_mfa!(seed, level, otp, expiry)
@@ -208,6 +219,15 @@ class User < ApplicationRecord
     return false unless mfa_recovery_codes.include? otp
     mfa_recovery_codes.delete(otp)
     save!(validate: false)
+  end
+
+  def webauthn_verified?(current_challenge, public_key_credential)
+    credential = credentials.find_by!(external_id: public_key_credential.id)
+    begin
+      public_key_credential.verify(str_to_bin(current_challenge), public_key: str_to_bin(credential.public_key))
+    rescue WebAuthn::Error
+      false
+    end
   end
 
   def block!
@@ -250,5 +270,9 @@ class User < ApplicationRecord
     versions_to_yank.each do |v|
       deletions.create(version: v)
     end
+  end
+
+  def str_to_bin(str)
+    Base64.urlsafe_decode64(str)
   end
 end

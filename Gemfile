@@ -44,6 +44,7 @@ gem "sprockets-rails"
 gem "rack-attack"
 gem "rqrcode"
 gem "rotp"
+gem "webauthn", git: "https://github.com/cedarcode/webauthn-ruby"
 
 # Logging
 gem "lograge"

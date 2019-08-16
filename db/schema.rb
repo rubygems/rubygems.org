@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_26_190518) do
+ActiveRecord::Schema.define(version: 2019_08_14_131051) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -20,6 +20,15 @@ ActiveRecord::Schema.define(version: 2019_04_26_190518) do
     t.text "body"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "credentials", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "external_id", null: false
+    t.text "public_key", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_credentials_on_user_id"
   end
 
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
@@ -212,4 +221,5 @@ ActiveRecord::Schema.define(version: 2019_04_26_190518) do
     t.index ["user_id", "rubygem_id"], name: "index_web_hooks_on_user_id_and_rubygem_id"
   end
 
+  add_foreign_key "credentials", "users"
 end

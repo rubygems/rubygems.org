@@ -27,6 +27,7 @@ en:
   sign_in: Sign in
   sign_up: Sign up
   multifactor_authentication: Multifactor authentication
+  webauthn_authentication: WebAuthn authentication
   subtitle: your community gem host
   this_rubygem_could_not_be_found: This rubygem could not be found.
   time_ago: "%{duration} ago"
@@ -373,3 +374,13 @@ en:
         one: Displaying <b>1</b> %{model}
         other: Displaying <b>all&nbsp;%{count}</b> %{model}
         zero: No %{model} found
+  webauthn_credentials:
+    incorrect_credentials: Your credentials are incorrect.
+    index:
+      go_settings: Register a WebAuthn credential
+      disabled: You have no WebAuthn credentials registered yet
+    create:
+      success: You have successfully enabled multifactor authentication using WebAuthn.
+      problem: There was a problem verifying your credentials.
+    sign_in_prompt: Use your authenticator to sign in
+    require_webauthn_disabled: You have already enabled WebAuthn authentication.

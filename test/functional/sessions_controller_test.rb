@@ -1,4 +1,6 @@
 require "test_helper"
+require "webauthn/fake_client"
+require "securerandom"
 
 class SessionsControllerTest < ActionController::TestCase
   context "when user has mfa enabled" do
@@ -136,6 +138,90 @@ class SessionsControllerTest < ActionController::TestCase
 
     should "sign out the user" do
       refute @controller.request.env[:clearance].signed_in?
+    end
+  end
+
+  context "when user has webauthn enabled" do
+    setup do
+      @user = User.new(email_confirmed: true)
+      @user.save!(validate: false)
+      @encoder = WebAuthn::Encoder.new
+      @fake_client = WebAuthn::FakeClient.new("http://test.host", encoding: :base64url)
+      public_key_credential = WebAuthn::PublicKeyCredential.from_create(@fake_client.create)
+      @user.credentials.create(
+        external_id: public_key_credential.id,
+        public_key: @encoder.encode(public_key_credential.public_key)
+      )
+    end
+
+    context "on POST to create" do
+      setup do
+        User.expects(:authenticate).with("login", "pass").returns @user
+        post :create, params: { session: { who: "login", password: "pass" } }
+      end
+
+      should respond_with :success
+      should "save user name in session" do
+        assert @controller.session[:mfa_user] == @user.handle
+        assert page.has_content? "WebAuthn authentication"
+      end
+      should "allow to sign in using webauthn device" do
+        assert page.has_content? "Use your authenticator to sign in"
+        assert page.has_button? "Sign in"
+      end
+    end
+
+    context "on POST to webauthn_authentication" do
+      context "when authentication succeeds" do
+        setup do
+          @controller.session[:mfa_user] = @user.handle
+
+          challenge = SecureRandom.random_bytes(32)
+          @controller.session[:webauthn_challenge] = @encoder.encode(challenge)
+          client_credential = @fake_client.get(challenge: challenge)
+
+          post :webauthn_authentication, params: client_credential
+        end
+
+        should respond_with :success
+        should "redirec to the dashboard" do
+          assert_equal JSON.parse(response.body)["redirect_path"], "/"
+        end
+        should "clear user name in session" do
+          assert @controller.session[:mfa_user].nil?
+        end
+        should "make user logged in" do
+          assert @controller.request.env[:clearance].signed_in?
+        end
+      end
+
+      context "when authentication fails" do
+        setup do
+          @controller.session[:mfa_user] = @user.handle
+
+          challenge = SecureRandom.random_bytes(32)
+          @controller.session[:webauthn_challenge] = @encoder.encode(challenge)
+          wrong_challenge = SecureRandom.random_bytes(32)
+          client_credential = @fake_client.get(challenge: wrong_challenge)
+
+          post :webauthn_authentication, params: client_credential
+        end
+
+        should set_flash.now[:notice]
+        should respond_with :unauthorized
+
+        should "render sign in page" do
+          assert page.has_content? "Sign in"
+        end
+
+        should "not sign in the user" do
+          refute @controller.request.env[:clearance].signed_in?
+        end
+
+        should "clear user name in session" do
+          assert_nil @controller.session[:mfa_user]
+        end
+      end
     end
   end
 end

@@ -1,0 +1,10 @@
+<% @title = t('webauthn_authentication') %>
+
+<%= form_tag webauthn_authentication_options_session_path, method: :post, id: 'webauthn-sign-in' do %>
+  <div class="text_field">
+    <%= label_tag :webauthn, t('webauthn_credentials.sign_in_prompt'), class: 'form__label' %>
+  </div>
+  <div class="form_bottom">
+    <%= submit_tag t('sign_in'), data: {disable_with: t('form_disable_with')}, class: 'form__submit' %>
+  </div>
+<% end %>

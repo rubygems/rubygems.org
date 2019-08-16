@@ -126,6 +126,13 @@ Rails.application.routes.draw do
 
   ################################################################################
   # UI
+
+  resources :webauthn_credentials, only: %i[index create] do # :destroy
+    collection do
+      get :create_options
+    end
+  end
+
   scope constraints: { format: :html }, defaults: { format: 'html' } do
     resource :search, only: :show do
       get :advanced
@@ -169,6 +176,10 @@ Rails.application.routes.draw do
 
     resource :session, only: %i[create destroy] do
       post 'mfa_create', to: 'sessions#mfa_create', as: :mfa_create
+      collection do
+        get :webauthn_authentication_options, constraints: { format: :json }, defaults: { format: :json }
+        post :webauthn_authentication, constraints: { format: :json }, defaults: { format: :json }
+      end
     end
 
     resources :users, only: %i[new create] do
