@@ -3,8 +3,7 @@ require "digest/sha2"
 class Version < ApplicationRecord
   belongs_to :rubygem, touch: true
   has_many :dependencies, -> { order("rubygems.name ASC").includes(:rubygem) }, dependent: :destroy, inverse_of: "version"
-  has_one :gem_download, proc { |m| where(rubygem_id: m.rubygem_id) }, inverse_of: :version
-  has_one :joined_gem_downloads, class_name: "GemDownload"
+  has_one :gem_download, inverse_of: :version
   belongs_to :pusher, class_name: "User", foreign_key: "pusher_id", inverse_of: false, optional: true
 
   before_save :update_prerelease
@@ -241,7 +240,7 @@ class Version < ApplicationRecord
   end
 
   def downloads_count
-    joined_gem_downloads&.count || 0
+    gem_download&.count || 0
   end
 
   def payload
