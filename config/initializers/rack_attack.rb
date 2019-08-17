@@ -40,6 +40,10 @@ class Rack::Attack
     protected_actions.any? { |hash| hash[:controller] == route_params[:controller] && hash[:action] == route_params[:action] }
   end
 
+  safelist("assets path") do |req|
+    req.path.starts_with?("/assets") && req.request_method == "GET"
+  end
+
   # 100 req in 10 min
   # 200 req in 100 min
   # 300 req in 1000 min (0.7 days)
