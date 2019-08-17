@@ -70,16 +70,6 @@
   transition: 0.3s;
 }
 
-.deps_item--title{
-  color: #060606;
-}
-
-.deps_item--dup{
-  padding-top: 4px;
-  padding-left: 25px;
-  color: #e9000f;
-}
-
 .deps_expanded{
   cursor: pointer;
   user-select: none;
