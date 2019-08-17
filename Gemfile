@@ -71,6 +71,8 @@ group :test do
   gem "rack-test", require: "rack/test"
   gem "mocha", require: false
   gem "shoulda"
+  gem "selenium-webdriver"
+  gem "webdrivers"
 end
 
 group :development, :deploy do

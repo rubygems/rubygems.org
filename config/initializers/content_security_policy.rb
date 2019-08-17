@@ -5,7 +5,7 @@
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
 
 Rails.application.config.content_security_policy do |policy|
-  unless Rails.env.development?
+  unless Rails.env.development? || Rails.env.test?
     policy.default_src :self
     policy.font_src    :self, "https://fonts.gstatic.com"
     policy.img_src     :self, "https://secure.gaug.es", "https://gravatar.com", "https://secure.gravatar.com", "https://*.fastly-insights.com"

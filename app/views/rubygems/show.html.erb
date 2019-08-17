@@ -41,6 +41,13 @@
 
     <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.runtime } %>
     <%= render :partial => "rubygems/dependencies", :locals => { :dependencies => @latest_version.dependencies.development } %>
+    <% if @latest_version.dependencies.present? && @latest_version.indexed %>
+      <div class = "l-half--r">
+        <div class="dependencies_list">
+          <%= link_to "Dependency List", rubygem_version_dependencies_path(@rubygem, @latest_version.number), class: "gem__see-all-versions t-link--gray t-link--has-arrow"%>
+        </div>
+      </div>
+    <% end %>
 
     <% if @latest_version.requirements.present? %>
       <div class="l-half--l">

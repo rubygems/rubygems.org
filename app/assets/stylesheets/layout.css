@@ -4,6 +4,7 @@
 .l-wrap--b {
   margin-right: auto;
   margin-left: auto;
+  overflow: auto;
   width: 90%; }
 
 .l-overflow {

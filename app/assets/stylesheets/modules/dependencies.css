@@ -1,0 +1,119 @@
+.deps{
+  padding-left: 25px;
+  padding-top: 6px;
+  display: block;
+}
+
+.scope{
+  color: grey;
+  font-size: 15px;
+  font-weight: bold;
+  font-style: italic;
+  padding-left: 13px;
+  padding-top: 5px;
+  display: block;
+  cursor: pointer;
+  user-select: none;
+}
+
+.scope::before {
+  position: relative;
+    /* top: 3pt; Uncomment this to lower the icons as requested in comments*/
+    content: "";
+    display: inline-block;
+    /* By using an em scale, the arrows will size with the font */
+    width: 0.4em;
+    height: 0.4em;
+    border-right: 0.2em solid grey;
+    border-top: 0.2em solid grey;
+    transform: rotate(45deg);
+    margin-right: 0.5em;
+}
+
+.scope--expanded::before {
+  transform: rotate(135deg);
+}
+
+.scope:hover {
+  color: #e9573f;
+  transition: 0.3s;
+}
+
+.scope:hover::before {
+  color: #e9573f;
+  transition: 0.3s;
+  border-color: #e9573f;
+}
+
+.deps_toggle{
+  display: none;
+}
+
+.deps_item{
+  font-weight: bold;
+  font-size: 16px;
+  color: black;
+  cursor: pointer;
+  transition-duration: 1s;
+  transition-property: color;
+  display: inline-block;
+}
+
+.deps_item--details{
+  font-weight: normal;
+  font-style: italic;
+  font-size: 15px;
+}
+
+.deps_item:hover {
+  color: #e9573f;
+  transition: 0.3s;
+}
+
+.deps_item--title{
+  color: #060606;
+}
+
+.deps_item--dup{
+  padding-top: 4px;
+  padding-left: 25px;
+  color: #e9000f;
+}
+
+.deps_expanded{
+  cursor: pointer;
+  user-select: none;
+}
+
+.deps_expanded::before{
+  content: "\25B6";
+  color: #e9573f;
+  display: inline-block;
+  margin-right: 3px;
+  transition: 0.3s;
+}
+.deps_expanded-down::before{
+  transform: rotate(90deg);
+  transition: 0.3s;
+}
+
+.caret {
+  cursor: pointer;
+  user-select: none;
+}
+
+.caret::before {
+  border-radius:5px 0 0 0;
+  content: "\25B6";
+  color: black;
+  display: inline-block;
+  margin-right: 3px;
+  transition: 0.3s;
+}
+
+.gem_name{
+  font-weight: bold;
+  font-size: 14px;
+  color: black;
+  cursor: pointer;
+}

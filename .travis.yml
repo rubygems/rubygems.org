@@ -18,6 +18,7 @@ addons:
       - elasticsearch
       - openjdk-8-jre-headless
   postgresql: "9.6"
+  chrome: stable
 
 services:
   - elasticsearch
