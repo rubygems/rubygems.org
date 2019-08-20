@@ -101,6 +101,7 @@ ja:
         uptime: 可用性
       header:
         dashboard: ダッシュボード
+        edit_profile:
         search_gem_html: 検索…
         sign_in: ログイン
         sign_out: ログアウト

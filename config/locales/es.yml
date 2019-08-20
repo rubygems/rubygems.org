@@ -109,6 +109,7 @@ es:
         uptime: Uptime
       header:
         dashboard: Dashboard
+        edit_profile:
         search_gem_html: Buscar gemas&hellip;
         sign_in: Ingresar
         sign_out: Salir

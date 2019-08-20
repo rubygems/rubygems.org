@@ -101,6 +101,7 @@ nl:
         uptime: Uptime
       header:
         dashboard: Dashboard
+        edit_profile:
         search_gem_html: Gems Zoeken&hellip;
         sign_in: Inloggen
         sign_out: Uitloggen

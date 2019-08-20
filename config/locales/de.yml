@@ -101,6 +101,7 @@ de:
         uptime: Betriebszeit
       header:
         dashboard: Dashboard
+        edit_profile:
         search_gem_html: Suche Gems&hellip;
         sign_in: Anmelden
         sign_out: Abmelden
