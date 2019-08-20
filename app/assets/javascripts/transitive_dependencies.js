@@ -16,17 +16,8 @@ function ajaxDepActions(resp,gem_id,current) {
   // when we have gems like http_parser.rb, we need to replace . with \. to access any ids with the name
   gem_id = gem_id.replace(/\./, "\\.")
 
-  if (resp.run_deps.length != 0){
-    var new_gems = current.parent().next().next().find(".deps_scope")
-    new_gems.before("<span class='scope scope--expanded'>Runtime :</span>");
-    deps_display(resp.run_deps,gem_id,"runtime",new_gems)
-  }
-
-  if (resp.dev_deps.length != 0){
-    var new_gems = current.parent().next().next().next().find(".deps_scope")
-    new_gems.before("<span class='scope'>Development :</span>");
-    deps_display(resp.dev_deps,gem_id,"development",new_gems)
-  }
+  scope_display(current,gem_id,resp.run_deps,"runtime")
+  scope_display(current,gem_id,resp.dev_deps,"development")
 
   var toggler = "<span class='deps_expanded deps_expanded-down'></span>";
 
@@ -38,23 +29,34 @@ function ajaxDepActions(resp,gem_id,current) {
   current.parent().html(toggler);
 }
 
+function scope_display(current,gem_id,deps,scope) {
+  if (deps.length != 0){
+    var new_gems = current.parent().next().next()
+    if (scope == "development") { new_gems = new_gems.next() }
+    deps_display(deps,gem_id,scope,new_gems.find(".deps_scope"))
+  }
+}
+
 function deps_display(deps_names,gem_id,scope,new_gems) {
+  new_gems.before("<span class='scope scope--expanded'>"+scope+" :</span>");
   $.each(deps_names, function (idx,dep_details) {
     dep = dep_details[0]
     ver_num = dep_details[1]
     req = dep_details[2]
-      var link = "<span class='caret'  data-gem_id='"+dep+"' data-ver='"+ver_num+"'></span>";
-      var value = "<span class='deps_item'>"+dep+" "+ver_num+"<span class='deps_item--details'> "+req+"</span></span>";
 
-      var toggle_link = "<span>"+link+"</span>";
-      var link_to_gem = " <a href='/gems/"+dep+"/versions/"+ver_num+"' target='_blank'>"+value+"</a>";
-      var deps_run = "<div><div class='deps_scope'></div></div>"
-      var deps_dev = "<div><div class='deps_scope'></div></div>"
-      var deps_list = deps_run+deps_dev;
-      new_gems.append("<ul class='deps'><li>"+toggle_link+link_to_gem+deps_list+"</li></ul>");
+    var link = "<span class='caret'  data-gem_id='"+dep+"' data-ver='"+ver_num+"'></span>";
+    var value = "<span class='deps_item'>"+dep+" "+ver_num+"<span class='deps_item--details'> "+req+"</span></span>";
+
+    var toggle_link = "<span>"+link+"</span>";
+    var link_to_gem = " <a href='/gems/"+dep+"/versions/"+ver_num+"' target='_blank'>"+value+"</a>";
+    var deps_run = "<div><div class='deps_scope'></div></div>"
+    var deps_dev = "<div><div class='deps_scope'></div></div>"
+    var deps_list = deps_run+deps_dev;
+    new_gems.append("<ul class='deps'><li>"+toggle_link+link_to_gem+deps_list+"</li></ul>");
   });
   if (scope == "development"){
     new_gems.toggleClass("deps_toggle")
+    new_gems.parent().find(".scope").first().removeClass("scope--expanded")
   }
 }
 
