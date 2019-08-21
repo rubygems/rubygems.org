@@ -302,7 +302,7 @@ ja:
       requirements_header: 必須要件
       show_all_versions: 全てのバージョンを表示 (全%{count}項目)
       versions_header: バージョン履歴
-      yanked_notice: このバージョンはyanked状態としてマークされおり、直接のダウンロードや依存性として利用できなくなっています。
+      yanked_notice: このバージョンはyanked状態としてマークされており、直接のダウンロードや依存性として利用できなくなっています。
     show_yanked:
       not_hosted_notice: このGemはRubyGems.org上ではホストされていません。
       reserved_namespace_html:
