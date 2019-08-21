@@ -353,8 +353,8 @@ ja:
     page_gap: "…"
     previous_label: 前
     page_entries_info:
-      multi_page: 全%{count}中 %{from}件目から%{to}件目の%{model}を表示中
-      multi_page_html: 全%{count}中 <b>%{from}件目から%{to}件目</b>の%{model}を表示中
+      multi_page: 全%{count}件中 %{from}件目から%{to}件目の%{model}を表示中
+      multi_page_html: 全%{count}件中 <b>%{from}件目から%{to}件目</b>の%{model}を表示中
       single_page:
         one: 全1件の%{model}を表示中
         other: 全%{count}件の%{model}を表示中
