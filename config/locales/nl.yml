@@ -213,6 +213,7 @@ nl:
       update:
   profiles:
     edit:
+      change_avatar:
       email_awaiting_confirmation:
       enter_password:
       hide_email:
