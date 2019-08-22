@@ -8,8 +8,12 @@ if($("#webauthn-sign-in").length) {
 
 function registrationHandler(event) {
   event.preventDefault();
-  getAttestationOptions().then(options => {
-    registerWebauthnDevice(options).then(credential => {
+
+  $.get({
+    url: "/webauthn_credentials/create_options",
+    dataType: "json",
+  }).done(options => {
+    webauthnJSON.create({ "publicKey": options }).then(credential => {
       callback("/webauthn_credentials", credential);
     });
   })
@@ -17,16 +21,19 @@ function registrationHandler(event) {
 
 function signInHandler(event) {
   event.preventDefault();
-  getAssertionOptions().then(options => {
-    verifyWebauthnDevice(options).then(credential => {
+
+  $.get({
+    url: "/session/webauthn_authentication_options",
+    dataType: "json"
+  }).done(options => {
+    webauthnJSON.get({ "publicKey": options }).then(credential => {
       callback("session/webauthn_authentication", credential);
     });
   })
 }
 
-function callback(url, body, type = "POST") {
-  $.ajax({
-    type: type,
+function callback(url, body) {
+  $.post({
     url: url,
     data: JSON.stringify(body),
     dataType: "json",
