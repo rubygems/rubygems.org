@@ -1,14 +1,16 @@
-if($(".js-webauthn-credential-create").length) {
-  $(".js-webauthn-credential-create").click(registrationHandler);
+var registerCredentialsButton = $(".js-webauthn-credential-create");
+if(registerCredentialsButton.length) {
+  registerCredentialsButton.parent().submit(event => { event.preventDefault() });
+  registerCredentialsButton.click(registrationHandler);
 }
 
-if($("#webauthn-sign-in").length) {
-  $("#webauthn-sign-in").submit(signInHandler);
+var signInButton = $(".js-webauthn-credential-authenticate");
+if(signInButton.length) {
+  signInButton.parent().submit(event => { event.preventDefault() });
+  signInButton.click(signInHandler);
 }
 
 function registrationHandler(event) {
-  event.preventDefault();
-
   $.get({
     url: "/webauthn_credentials/create_options",
     dataType: "json",
@@ -20,8 +22,6 @@ function registrationHandler(event) {
 }
 
 function signInHandler(event) {
-  event.preventDefault();
-
   $.get({
     url: "/session/webauthn_authentication_options",
     dataType: "json"

@@ -7,6 +7,6 @@
 <% else %>
   <p>
     <%= t('.disabled') %>
-    <%= button_to t('.go_settings'), create_options_webauthn_credentials_path, method: 'get', class: 'form__submit js-webauthn-credential-create' %>
+    <%= button_to t('.go_settings'), create_options_webauthn_credentials_path, method: 'get', class: 'form__submit js-webauthn-credential-create', data: { disable_with: 'Please wait...' } %>
   </p>
 <% end %>
