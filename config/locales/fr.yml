@@ -18,6 +18,7 @@ fr:
   otp_missing:
   sign_in: Connexion
   sign_up: Inscription
+  dependency_list:
   multifactor_authentication: Authentification Multifacteur
   subtitle: votre communauté d'hébergement des gems
   this_rubygem_could_not_be_found: Rubygem introuvable.

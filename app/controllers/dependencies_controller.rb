@@ -8,12 +8,26 @@ class DependenciesController < ApplicationController
 
     @latest_version.dependencies.each do |dependency|
       gem_name = dependency.rubygem.name
-      gem_details = [gem_name, dep_resolver(
+      version = dep_resolver(
         gem_name,
         dependency["requirements"],
         dependency.rubygem.public_versions.pluck(:number)
-      ), dependency.requirements]
-      @dependencies[dependency.scope] << gem_details
+      )
+      @dependencies[dependency.scope] << [gem_name, version, dependency.requirements]
     end
+
+    respond_to do |format|
+      format.json { render json: json_return }
+      format.html
+    end
+  end
+
+  private
+
+  def json_return
+    {
+      run_deps: @dependencies["runtime"],
+      dev_deps: @dependencies["development"]
+    }
   end
 end

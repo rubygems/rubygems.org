@@ -26,6 +26,7 @@ en:
   otp_missing: You have enabled multifactor authentication but no OTP code provided. Please fill it and retry.
   sign_in: Sign in
   sign_up: Sign up
+  dependency_list: Show all transitive dependencies
   multifactor_authentication: Multifactor authentication
   subtitle: your community gem host
   this_rubygem_could_not_be_found: This rubygem could not be found.

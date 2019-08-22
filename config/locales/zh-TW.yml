@@ -18,6 +18,7 @@ zh-TW:
   otp_missing:
   sign_in: 登入
   sign_up: 註冊
+  dependency_list:
   multifactor_authentication: MFA 驗證
   subtitle: Ruby 社群 Gem 套件管理平台
   this_rubygem_could_not_be_found: 找不到這個 gem

@@ -1,54 +1,59 @@
 $(document).on('click', '.caret', function () {
   var current = $(this)
   var gem_id = $(this).attr('data-gem_id');
-  var ver_id = $(this).attr('data-ver');
+  var version_id = $(this).attr('data-version');
   $.ajax({
     type: "get",
-    url: "/gems/"+gem_id+"/versions/"+ver_id+"/transitive_dependencies.json",
+    url: "/gems/"+gem_id+"/versions/"+version_id+"/dependencies.json",
     success: function(resp) {
-      ajaxDepActions(resp,gem_id,current)
+      renderDependencies(resp, gem_id, current)
+    },
+    error: function(jqXHR, exception) {
+      errorHandler(jqXHR, exception)
     }
   });
 })
 
-function ajaxDepActions(resp,gem_id,current) {
+function renderDependencies(resp, gem_id, current) {
 
-  // when we have gems like http_parser.rb, we need to replace . with \. to access any ids with the name
-  gem_id = gem_id.replace(/\./, "\\.")
+  scope_display(current, gem_id, resp.run_deps, "runtime")
+  scope_display(current, gem_id, resp.dev_deps, "development")
 
-  scope_display(current,gem_id,resp.run_deps,"runtime")
-  scope_display(current,gem_id,resp.dev_deps,"development")
+  arrow_toggler(current)
+}
 
+function arrow_toggler(current) {
   var toggler = "<span class='deps_expanded deps_expanded-down'></span>";
 
   current.parent().click(function() {
-    $(this).parent().parent().find('div').first().toggleClass('deps_toggle');
-    $(this).parent().parent().find('div').first().next().toggleClass('deps_toggle');
+    var runtime_div = $(this).parent().find('div').first()
+    runtime_div.toggleClass('deps_toggle');
+    runtime_div.next().toggleClass('deps_toggle');
     $(this).find('span').first().toggleClass('deps_expanded-down');
   });
   current.parent().html(toggler);
 }
 
-function scope_display(current,gem_id,deps,scope) {
+function scope_display(current, gem_id, deps,scope) {
   if (deps.length != 0){
     var new_gems = current.parent().next().next()
     if (scope == "development") { new_gems = new_gems.next() }
-    deps_display(deps,gem_id,scope,new_gems.find(".deps_scope"))
+    deps_display(deps, gem_id, scope, new_gems.find(".deps_scope"))
   }
 }
 
-function deps_display(deps_names,gem_id,scope,new_gems) {
+function deps_display(deps_names, gem_id, scope, new_gems) {
   new_gems.before("<span class='scope scope--expanded'>"+scope+" :</span>");
   $.each(deps_names, function (idx,dep_details) {
     dep = dep_details[0]
-    ver_num = dep_details[1]
+    version = dep_details[1]
     req = dep_details[2]
 
-    var link = "<span class='caret'  data-gem_id='"+dep+"' data-ver='"+ver_num+"'></span>";
-    var value = "<span class='deps_item'>"+dep+" "+ver_num+"<span class='deps_item--details'> "+req+"</span></span>";
+    var link = "<span class='caret'  data-gem_id='"+dep+"' data-version='"+version+"'></span>";
+    var value = "<span class='deps_item'>"+dep+" "+version+"<span class='deps_item--details'> "+req+"</span></span>";
 
     var toggle_link = "<span>"+link+"</span>";
-    var link_to_gem = " <a href='/gems/"+dep+"/versions/"+ver_num+"' target='_blank'>"+value+"</a>";
+    var link_to_gem = " <a href='/gems/"+dep+"/versions/"+version+"' target='_blank'>"+value+"</a>";
     var deps_run = "<div><div class='deps_scope'></div></div>"
     var deps_dev = "<div><div class='deps_scope'></div></div>"
     var deps_list = deps_run+deps_dev;
@@ -65,3 +70,21 @@ $(document).on('click', '.scope', function () {
   $(this).next().toggleClass("deps_toggle")
   $(this).next().next().toggleClass("deps_toggle")
 })
+
+function errorHandler(jqXHR, exception) {
+  if (jqXHR.status === 0) {
+      alert('Not connect.\n Verify Network.');
+  } else if (jqXHR.status == 404) {
+      alert('Requested page not found. [404]');
+  } else if (jqXHR.status == 500) {
+      alert('Internal Server Error [500].');
+  } else if (exception === 'parsererror') {
+      alert('Requested JSON parse failed.');
+  } else if (exception === 'timeout') {
+      alert('Time out error.');
+  } else if (exception === 'abort') {
+      alert('Ajax request aborted.');
+  } else {
+      alert('Uncaught Error.\n' + jqXHR.responseText);
+  }
+}

@@ -36,12 +36,7 @@ class Rack::Attack
   ]
 
   def self.protected_route?(protected_actions, path, method)
-    begin
-      route_params = Rails.application.routes.recognize_path(path, method: method)
-    rescue ActionController::RoutingError => e
-      return true if path =~ /\.js$|\.css$/
-      raise e
-    end
+    route_params = Rails.application.routes.recognize_path(path, method: method)
     protected_actions.any? { |hash| hash[:controller] == route_params[:controller] && hash[:action] == route_params[:action] }
   end
 

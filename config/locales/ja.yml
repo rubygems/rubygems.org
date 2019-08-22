@@ -18,6 +18,7 @@ ja:
   otp_missing:
   sign_in: ログイン
   sign_up: 新規登録
+  dependency_list:
   multifactor_authentication:
   subtitle: コミュニティのGemホスティングサービス
   this_rubygem_could_not_be_found: お探しのGemは見つかりませんでした。

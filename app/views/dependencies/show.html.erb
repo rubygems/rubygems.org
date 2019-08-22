@@ -4,8 +4,8 @@
 <% if @dependencies.present? && @latest_version.indexed %>
   <div class="l-full--l">
 
-  	<%= render :partial => "dependencies/dependencies", :locals => { :scope => "runtime" } %>
-    <%= render :partial => "dependencies/dependencies", :locals => { :scope => "development" } %>
+    <%= render partial: "dependencies/dependencies", locals: { scope: "runtime" } %>
+    <%= render partial: "dependencies/dependencies", locals: { scope: "development" } %>
 
   </div>
 <% end %>

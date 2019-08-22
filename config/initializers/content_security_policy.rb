@@ -5,14 +5,14 @@
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
 
 Rails.application.config.content_security_policy do |policy|
-  unless Rails.env.development? || Rails.env.test?
+  unless Rails.env.development?
     policy.default_src :self
     policy.font_src    :self, "https://fonts.gstatic.com"
     policy.img_src     :self, "https://secure.gaug.es", "https://gravatar.com", "https://secure.gravatar.com", "https://*.fastly-insights.com"
     policy.object_src  :none
     policy.script_src  :self, "https://secure.gaug.es", "https://www.fastly-insights.com"
     policy.style_src   :self, "https://fonts.googleapis.com"
-    policy.connect_src "https://s3-us-west-2.amazonaws.com/rubygems-dumps/", "https://*.fastly-insights.com", "https://api.github.com"
+    policy.connect_src :self, "https://s3-us-west-2.amazonaws.com/rubygems-dumps/", "https://*.fastly-insights.com", "https://api.github.com"
   end
 
   # Specify URI for violation reports
