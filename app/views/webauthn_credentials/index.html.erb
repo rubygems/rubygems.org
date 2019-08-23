@@ -1,12 +1,28 @@
 <% @title = 'WebAuthn credentials' %>
 
-<% if @user.webauthn_enabled? %>
-  <% @user.webauthn_credentials.each do |credential| %>
-    Credential: <%= credential.external_id %>
+<div class="t-body l-overflow">
+  <% if @user.webauthn_enabled? %>
+    <ul>
+      <% @user.webauthn_credentials.each do |credential| %>
+        <li>
+          <strong><%= credential.nickname %></strong> - <%= "#{t('.registered_on')} #{credential.created_at.to_date.to_s(:long)}" %>
+          <%= link_to t('.delete'), credential, method: :delete, class: 'l-col--r--pad', data: { confirm: t('.confirm') } %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <div class="push--bottom-s text_field">
+      <%= t('.disabled') %>
+    </div>
   <% end %>
-<% else %>
-  <p>
-    <%= t('.disabled') %>
-    <%= button_to t('.go_settings'), create_options_webauthn_credentials_path, method: 'get', class: 'form__submit js-webauthn-credential-create', data: { disable_with: 'Please wait...' } %>
-  </p>
-<% end %>
+
+  <%= form_tag create_options_webauthn_credentials_path, method: 'get', id: 'webauthn-credential-create' do %>
+    <div class="text_field">
+      <%= label_tag :nickname, t('.nickname'), class: 'form__label' %>
+      <%= text_field_tag :nickname, '', class: 'form__input', autofocus: true, autocomplete: :off, required: true %>
+    </div>
+    <div class="form_bottom">
+      <%= submit_tag t('.go_settings'), class: 'form__submit', data: { disable_with: t('form_disable_with') } %>
+    </div>
+  <% end %>
+</div>

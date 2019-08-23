@@ -377,10 +377,16 @@ en:
   webauthn_credentials:
     incorrect_credentials: Your credentials are incorrect.
     index:
-      go_settings: Register a WebAuthn credential
+      go_settings: Add a new WebAuthn credential
       disabled: You have no WebAuthn credentials registered yet
+      registered_on: registered on
+      delete: Delete
+      confirm: Are you sure?
     create:
-      success: You have successfully enabled multifactor authentication using WebAuthn.
+      success: You have successfully added a new WebAuthn credential.
       problem: There was a problem verifying your credentials.
+    destroy:
+      success: Your credential was successfully deleted.
+      not_found: We couldn't find a credential with the specified id.
     sign_in_prompt: Use your authenticator to sign in
     require_webauthn_disabled: You have already enabled WebAuthn authentication.

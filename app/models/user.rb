@@ -185,11 +185,6 @@ class User < ApplicationRecord
     save!(validate: false)
   end
 
-  def disable_webauthn!
-    webauthn_credentials.first.destroy!
-    save!
-  end
-
   def verify_and_enable_mfa!(seed, level, otp, expiry)
     if expiry < Time.now.utc
       errors.add(:base, I18n.t("multifactor_auths.create.qrcode_expired"))
@@ -224,7 +219,9 @@ class User < ApplicationRecord
   def webauthn_verified?(current_challenge, public_key_credential)
     credential = webauthn_credentials.find_by!(external_id: public_key_credential.id)
     begin
-      public_key_credential.verify(str_to_bin(current_challenge), public_key: str_to_bin(credential.public_key))
+      public_key_credential.verify(str_to_bin(current_challenge),
+        public_key: str_to_bin(credential.public_key),
+        sign_count: credential.sign_count)
     rescue WebAuthn::Error
       false
     end

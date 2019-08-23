@@ -127,7 +127,7 @@ Rails.application.routes.draw do
   ################################################################################
   # UI
 
-  resources :webauthn_credentials, only: %i[index create] do # :destroy
+  resources :webauthn_credentials, only: %i[index create destroy] do
     collection do
       get :create_options
     end

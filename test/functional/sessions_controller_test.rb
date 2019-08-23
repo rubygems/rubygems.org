@@ -151,7 +151,8 @@ class SessionsControllerTest < ActionController::TestCase
       @user.webauthn_credentials.create!(
         external_id: public_key_credential.id,
         public_key: @encoder.encode(public_key_credential.public_key),
-        nickname: "A nickname"
+        nickname: "A nickname",
+        sign_count: 0
       )
     end
 
@@ -173,44 +174,49 @@ class SessionsControllerTest < ActionController::TestCase
     end
 
     context "on POST to webauthn_authentication" do
+      setup do
+        @controller.session[:mfa_user] = @user.handle
+        @challenge = SecureRandom.random_bytes(32)
+        @controller.session[:webauthn_challenge] = @encoder.encode(@challenge)
+      end
+
       context "when authentication succeeds" do
         setup do
-          @controller.session[:mfa_user] = @user.handle
+          @sign_count = 1234
+          @client_credential = @fake_client.get(challenge: @challenge, sign_count: @sign_count)
 
-          challenge = SecureRandom.random_bytes(32)
-          @controller.session[:webauthn_challenge] = @encoder.encode(challenge)
-          client_credential = @fake_client.get(challenge: challenge)
-
-          post :webauthn_authentication, params: client_credential
+          post :webauthn_authentication, params: @client_credential
         end
 
         should respond_with :success
-        should "redirec to the dashboard" do
+        should "redirect to the dashboard" do
           assert_equal JSON.parse(response.body)["redirect_path"], "/"
         end
+
         should "clear user name in session" do
           assert @controller.session[:mfa_user].nil?
         end
+
         should "make user logged in" do
           assert @controller.request.env[:clearance].signed_in?
+        end
+
+        should "update sign count" do
+          actual_sign_count = WebauthnCredential.find_by(external_id: @client_credential["id"]).sign_count
+          assert_equal @sign_count, actual_sign_count
         end
       end
 
       context "when authentication fails" do
         setup do
-          @controller.session[:mfa_user] = @user.handle
-
-          challenge = SecureRandom.random_bytes(32)
-          @controller.session[:webauthn_challenge] = @encoder.encode(challenge)
           wrong_challenge = SecureRandom.random_bytes(32)
-          client_credential = @fake_client.get(challenge: wrong_challenge)
+          @client_credential = @fake_client.get(challenge: wrong_challenge, sign_count: 1)
 
-          post :webauthn_authentication, params: client_credential
+          post :webauthn_authentication, params: @client_credential
         end
 
         should set_flash.now[:notice]
         should respond_with :unauthorized
-
         should "render sign in page" do
           assert page.has_content? "Sign in"
         end
@@ -221,6 +227,32 @@ class SessionsControllerTest < ActionController::TestCase
 
         should "clear user name in session" do
           assert_nil @controller.session[:mfa_user]
+        end
+
+        should "not update sign count" do
+          actual_sign_count = WebauthnCredential.find_by(external_id: @client_credential["id"]).sign_count
+          assert_equal 0, actual_sign_count
+        end
+      end
+
+      context "when sign count is missing" do
+        setup do
+          @client_credential = @fake_client.get(challenge: @challenge)
+
+          post :webauthn_authentication, params: @client_credential
+        end
+
+        should respond_with :success
+        should "redirect to the dashboard" do
+          assert_equal JSON.parse(response.body)["redirect_path"], "/"
+        end
+
+        should "clear user name in session" do
+          assert @controller.session[:mfa_user].nil?
+        end
+
+        should "make user logged in" do
+          assert @controller.request.env[:clearance].signed_in?
         end
       end
     end

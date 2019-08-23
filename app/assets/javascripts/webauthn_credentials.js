@@ -1,7 +1,6 @@
-var registerCredentialsButton = $(".js-webauthn-credential-create");
-if(registerCredentialsButton.length) {
-  registerCredentialsButton.parent().submit(event => { event.preventDefault() });
-  registerCredentialsButton.click(registrationHandler);
+var registerCredentialForm = $("#webauthn-credential-create");
+if(registerCredentialForm.length) {
+  registerCredentialForm.submit(registrationHandler);
 }
 
 var signInButton = $(".js-webauthn-credential-authenticate");
@@ -11,12 +10,14 @@ if(signInButton.length) {
 }
 
 function registrationHandler(event) {
+  event.preventDefault();
+
   $.get({
     url: "/webauthn_credentials/create_options",
     dataType: "json",
   }).done(options => {
     webauthnJSON.create({ "publicKey": options }).then(credential => {
-      callback("/webauthn_credentials", credential);
+      callback("/webauthn_credentials", $.extend(credential, { "nickname": $("#nickname").val() }));
     });
   })
 }

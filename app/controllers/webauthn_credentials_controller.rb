@@ -1,6 +1,5 @@
 class WebauthnCredentialsController < ApplicationController
   before_action :redirect_to_signin, unless: :signed_in?
-  before_action :require_webauthn_disabled, only: %i[create_options create]
 
   def index
     @user = current_user
@@ -26,11 +25,13 @@ class WebauthnCredentialsController < ApplicationController
     public_key_credential = WebAuthn::PublicKeyCredential.from_create(params, encoding: :base64url)
 
     if public_key_credential.verify(str_to_bin(current_challenge))
-      if current_user.webauthn_credentials.create(
+      credential = current_user.webauthn_credentials.build(
         external_id: bin_to_str(public_key_credential.raw_id),
         public_key: bin_to_str(public_key_credential.public_key),
-        nickname: "Default nickname"
+        nickname: params[:nickname],
+        sign_count: public_key_credential.sign_count
       )
+      if credential.save
         flash[:success] = t(".success")
         status = :ok
       else
@@ -45,11 +46,13 @@ class WebauthnCredentialsController < ApplicationController
     render json: { status: status, redirect_path: webauthn_credentials_path }, status: status
   end
 
-  private
-
-  def require_webauthn_disabled
-    return unless current_user.webauthn_enabled?
-    flash[:error] = t(".require_webauthn_disabled")
-    render json: { status: :unprocessable_entity, redirect_path: webauthn_credentials_path }, status: status
+  def destroy
+    begin
+      current_user.webauthn_credentials.find(params[:id]).destroy
+      flash[:success] = t(".success")
+    rescue ActiveRecord::RecordNotFound
+      flash[:error] = t(".not_found")
+    end
+    redirect_to webauthn_credentials_url
   end
 end

@@ -54,6 +54,10 @@ class SessionsController < Clearance::SessionsController
     current_challenge = session[:webauthn_challenge]
 
     if @user&.webauthn_enabled? && @user&.webauthn_verified?(current_challenge, public_key_credential)
+      credential = @user.webauthn_credentials.find_by(external_id: public_key_credential.id)
+      new_sign_count = public_key_credential.sign_count
+      credential.update!(sign_count: new_sign_count) if new_sign_count
+
       sign_in(@user) do |status|
         if status.success?
           render json: { status: "ok", redirect_path: "/" }, status: :ok
