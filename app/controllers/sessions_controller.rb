@@ -29,7 +29,7 @@ class SessionsController < Clearance::SessionsController
 
     if user&.webauthn_enabled?
       credentials_request_options = WebAuthn.credential_request_options
-      credentials_request_options[:allowCredentials] = user.credentials.map do |cred|
+      credentials_request_options[:allowCredentials] = user.webauthn_credentials.map do |cred|
         { id: cred.external_id, type: "public-key" }
       end
 

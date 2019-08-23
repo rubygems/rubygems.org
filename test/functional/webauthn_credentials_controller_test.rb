@@ -14,7 +14,7 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
         @fake_client = WebAuthn::FakeClient.new("http://test.host", encoding: :base64url)
         public_key_credential = WebAuthn::PublicKeyCredential.from_create(@fake_client.create)
         encoder = WebAuthn::Encoder.new
-        @user.credentials.create(
+        @user.webauthn_credentials.create(
           external_id: public_key_credential.id,
           public_key: encoder.encode(public_key_credential.public_key)
         )
@@ -27,7 +27,7 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
 
         should respond_with :success
         should "list credential" do
-          assert page.has_content? "Credential: #{@user.credentials.take.external_id}"
+          assert page.has_content? "Credential: #{@user.webauthn_credentials.take.external_id}"
         end
       end
     end
@@ -61,8 +61,8 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
 
         should respond_with :success
         should "create a credential" do
-          assert_equal 1, @user.credentials.count
-          credential = @user.credentials.take
+          assert_equal 1, @user.webauthn_credentials.count
+          credential = @user.webauthn_credentials.take
           assert_equal @client_credential["rawId"], credential.external_id
           assert credential.public_key
         end

@@ -148,9 +148,10 @@ class SessionsControllerTest < ActionController::TestCase
       @encoder = WebAuthn::Encoder.new
       @fake_client = WebAuthn::FakeClient.new("http://test.host", encoding: :base64url)
       public_key_credential = WebAuthn::PublicKeyCredential.from_create(@fake_client.create)
-      @user.credentials.create(
+      @user.webauthn_credentials.create!(
         external_id: public_key_credential.id,
-        public_key: @encoder.encode(public_key_credential.public_key)
+        public_key: @encoder.encode(public_key_credential.public_key),
+        nickname: "A nickname"
       )
     end
 

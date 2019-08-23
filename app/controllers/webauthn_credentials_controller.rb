@@ -26,9 +26,10 @@ class WebauthnCredentialsController < ApplicationController
     public_key_credential = WebAuthn::PublicKeyCredential.from_create(params, encoding: :base64url)
 
     if public_key_credential.verify(str_to_bin(current_challenge))
-      if current_user.credentials.create(
+      if current_user.webauthn_credentials.create(
         external_id: bin_to_str(public_key_credential.raw_id),
-        public_key: bin_to_str(public_key_credential.public_key)
+        public_key: bin_to_str(public_key_credential.public_key),
+        nickname: "Default nickname"
       )
         flash[:success] = t(".success")
         status = :ok

@@ -25,7 +25,7 @@ class User < ApplicationRecord
   has_many :deletions, dependent: :nullify
   has_many :web_hooks, dependent: :destroy
 
-  has_many :credentials, dependent: :destroy
+  has_many :webauthn_credentials, dependent: :destroy
 
   after_validation :set_unconfirmed_email, if: :email_changed?, on: :update
   before_create :generate_api_key, :generate_confirmation_token
@@ -175,7 +175,7 @@ class User < ApplicationRecord
   end
 
   def webauthn_enabled?
-    credentials.any?
+    webauthn_credentials.any?
   end
 
   def disable_mfa!
@@ -186,7 +186,7 @@ class User < ApplicationRecord
   end
 
   def disable_webauthn!
-    credentials.first.destroy!
+    webauthn_credentials.first.destroy!
     save!
   end
 
@@ -222,7 +222,7 @@ class User < ApplicationRecord
   end
 
   def webauthn_verified?(current_challenge, public_key_credential)
-    credential = credentials.find_by!(external_id: public_key_credential.id)
+    credential = webauthn_credentials.find_by!(external_id: public_key_credential.id)
     begin
       public_key_credential.verify(str_to_bin(current_challenge), public_key: str_to_bin(credential.public_key))
     rescue WebAuthn::Error
