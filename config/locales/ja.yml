@@ -12,7 +12,7 @@ ja:
     <a href="http://www.rubycentral.org/">Ruby Central</a>がインフラの費用を賄ってくださり、
     <a href="https://rubytogether.org/?source=rubygems">Ruby Together</a>が開発や運用の費用を出資してくださっています。
     <a href="%{sponsors_page}">スポンサーや一緒に働く方法について詳細を確認する</a>。
-  footer_join_rt_html: RubyGems.orgをスムースにさせるようにする開発者の時間に資金を提供するために、あなたの助けが必要です。
+  footer_join_rt_html: RubyGems.orgをすべての人がスムーズに使えるよう続けていくために、開発者の時間を賄うためのあなたの援助が必要です。
     <a href="https://rubytogether.org/join?source=rubygems">Ruby Togetherに参加する</a>。
   form_disable_with: お待ち下さい...
   help_url: http://help.rubygems.org
