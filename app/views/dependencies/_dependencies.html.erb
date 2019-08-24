@@ -10,12 +10,12 @@
     <ul class="deps">
       <li>
         <span>
-            <span class="caret" data-gem_id="<%=name%>" data-version="<%=version%>"></span>
+          <span class="caret" data-gem_id="<%=name%>" data-version="<%=version%>"></span>
         </span>
         <%= link_to rubygem_version_path(rubygem_id: name, id: version), target: :_blank do %>
           <span class="deps_item"><%= name %> <%= version %>
           <span class='deps_item--details'> <%=req%></span></span>
-        <%end%>
+        <% end %>
 
         <div><div class="deps_scope"></div></div>
         <div><div class="deps_scope"></div></div>

@@ -3,9 +3,7 @@
 <span id="deps_all"></span>
 <% if @dependencies.present? && @latest_version.indexed %>
   <div class="l-full--l">
-
     <%= render partial: "dependencies/dependencies", locals: { scope: "runtime" } %>
     <%= render partial: "dependencies/dependencies", locals: { scope: "development" } %>
-
   </div>
 <% end %>

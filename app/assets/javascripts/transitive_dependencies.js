@@ -8,17 +8,16 @@ $(document).on('click', '.caret', function () {
     success: function(resp) {
       renderDependencies(resp, gem_id, current)
     },
-    error: function(jqXHR, exception) {
-      errorHandler(jqXHR, exception)
+    error: function() {
+      var error_message = "<ul class='deps_item--error'>Request failed. please reload the page and try again</ul>"
+      current.parent().next().next().html(error_message)
     }
   });
 })
 
 function renderDependencies(resp, gem_id, current) {
-
   scope_display(current, gem_id, resp.run_deps, "runtime")
   scope_display(current, gem_id, resp.dev_deps, "development")
-
   arrow_toggler(current)
 }
 
@@ -70,21 +69,3 @@ $(document).on('click', '.scope', function () {
   $(this).next().toggleClass("deps_toggle")
   $(this).next().next().toggleClass("deps_toggle")
 })
-
-function errorHandler(jqXHR, exception) {
-  if (jqXHR.status === 0) {
-      alert('Not connect.\n Verify Network.');
-  } else if (jqXHR.status == 404) {
-      alert('Requested page not found. [404]');
-  } else if (jqXHR.status == 500) {
-      alert('Internal Server Error [500].');
-  } else if (exception === 'parsererror') {
-      alert('Requested JSON parse failed.');
-  } else if (exception === 'timeout') {
-      alert('Time out error.');
-  } else if (exception === 'abort') {
-      alert('Ajax request aborted.');
-  } else {
-      alert('Uncaught Error.\n' + jqXHR.responseText);
-  }
-}
