@@ -1,10 +1,10 @@
-.deps{
+.deps {
   padding-left: 25px;
   padding-top: 6px;
   display: block;
 }
 
-.scope{
+.scope {
   color: grey;
   font-size: 15px;
   font-weight: bold;
@@ -43,11 +43,11 @@
   border-color: #e9573f;
 }
 
-.deps_toggle{
+.deps_toggle {
   display: none;
 }
 
-.deps_item{
+.deps_item {
   font-weight: bold;
   font-size: 16px;
   color: black;
@@ -57,14 +57,14 @@
   display: inline-block;
 }
 
-.deps_item--error{
+.deps_item--error {
   font-weight: normal;
   font-style: italic;
   color: red;
   font-size: 15px;
 }
 
-.deps_item--details{
+.deps_item--details {
   font-weight: normal;
   font-style: italic;
   font-size: 15px;
@@ -75,40 +75,24 @@
   transition: 0.3s;
 }
 
-.deps_expanded{
+.deps_expanded {
   cursor: pointer;
   user-select: none;
 }
 
-.deps_expanded::before{
+.deps_expanded::before {
   content: "\25B6";
   color: #e9573f;
   display: inline-block;
   margin-right: 3px;
   transition: 0.3s;
 }
-.deps_expanded-down::before{
+
+.deps_expanded-down::before {
   transform: rotate(90deg);
   transition: 0.3s;
 }
 
-.caret {
-  cursor: pointer;
-  user-select: none;
-}
-
-.caret::before {
-  border-radius:5px 0 0 0;
-  content: "\25B6";
+.deps_expanded-link::before {
   color: black;
-  display: inline-block;
-  margin-right: 3px;
-  transition: 0.3s;
-}
-
-.gem_name{
-  font-weight: bold;
-  font-size: 14px;
-  color: black;
-  cursor: pointer;
 }

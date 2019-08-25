@@ -1,20 +1,15 @@
 <% if @dependencies.key?(scope) %>
-  <% if scope == "development" %>
-    <div id="<%=@latest_version.rubygem.name+scope%>"><span class="scope"><%= scope.titlecase %> :</span>
-    <div class="deps_scope deps_toggle">
-  <% else %>
-    <div id="<%=@latest_version.rubygem.name+scope%>"><span class="scope scope--expanded"><%= scope.titlecase %> :</span>
-    <div class="deps_scope">
-  <% end %>
+  <div id="<%= @latest_version.rubygem.name+scope %>"><span class="scope <%= "scope--expaned" if scope == "runtime" %>"><%= scope.titlecase %> :</span>
+  <div class="deps_scope <%= "deps_toggle" if scope == "development" %>">
   <% @dependencies[scope].each do |name,version,req| %>
     <ul class="deps">
       <li>
         <span>
-          <span class="caret" data-gem_id="<%=name%>" data-version="<%=version%>"></span>
+          <span class="deps_expanded deps_expanded-link" data-gem_id="<%= name %>" data-version="<%= version %>"></span>
         </span>
         <%= link_to rubygem_version_path(rubygem_id: name, id: version), target: :_blank do %>
           <span class="deps_item"><%= name %> <%= version %>
-          <span class='deps_item--details'> <%=req%></span></span>
+          <span class='deps_item--details'> <%= req %></span></span>
         <% end %>
 
         <div><div class="deps_scope"></div></div>

@@ -240,25 +240,3 @@
 .gem__previous__version {
   float: left;
 }
-
-.gem__dependency__list {
-  display: inline-block;
-  width: 100%;
-  margin-top: 0px;
-  margin-bottom: 20px;
-}
-
-.gem__dependency__list a {
-  color: #9da2ab;
-  text-transform: uppercase;
-  font-weight: bold;
-  transition-duration: 0.25s;
-  transition-property: color;
-  outline: none;
-}
-.gem__dependency__list a:hover, .gem__navigation a:focus, .gem__navigation a:active {
-  color: #141c22;
-}
-.dependency__list__button.disabled:hover {
-  color: #9da2ab
-}

@@ -53,7 +53,7 @@ class TransitiveDependenciesTest < SystemTest
     assert page.has_content?(@version_one.number)
     assert page.has_content?(@rubygem_two.name)
     assert page.has_content?(@version_two[2].number)
-    find("span.caret").click
+    find("span.deps_expanded-link").click
     assert page.has_content?(@rubygem_three.name)
     assert page.has_content?(@version_three.number)
     assert page.has_content?(@rubygem_four.name)

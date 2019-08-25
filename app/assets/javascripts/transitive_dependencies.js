@@ -1,4 +1,4 @@
-$(document).on('click', '.caret', function () {
+$(document).on('click', '.deps_expanded-link', function () {
   var current = $(this)
   var gem_id = $(this).attr('data-gem_id');
   var version_id = $(this).attr('data-version');
@@ -22,14 +22,7 @@ function renderDependencies(resp, gem_id, current) {
 }
 
 function arrow_toggler(current) {
-  var toggler = "<span class='deps_expanded deps_expanded-down'></span>";
-
-  current.parent().click(function() {
-    var runtime_div = $(this).parent().find('div').first()
-    runtime_div.toggleClass('deps_toggle');
-    runtime_div.next().toggleClass('deps_toggle');
-    $(this).find('span').first().toggleClass('deps_expanded-down');
-  });
+  var toggler = "<span class='deps_expanded arrow_toggle deps_expanded-down'></span>";
   current.parent().html(toggler);
 }
 
@@ -48,7 +41,7 @@ function deps_display(deps_names, gem_id, scope, new_gems) {
     version = dep_details[1]
     req = dep_details[2]
 
-    var link = "<span class='caret'  data-gem_id='"+dep+"' data-version='"+version+"'></span>";
+    var link = "<span class='deps_expanded deps_expanded-link'  data-gem_id='"+dep+"' data-version='"+version+"'></span>";
     var value = "<span class='deps_item'>"+dep+" "+version+"<span class='deps_item--details'> "+req+"</span></span>";
 
     var toggle_link = "<span>"+link+"</span>";
@@ -67,5 +60,11 @@ function deps_display(deps_names, gem_id, scope, new_gems) {
 $(document).on('click', '.scope', function () {
   $(this).toggleClass("scope--expanded")
   $(this).next().toggleClass("deps_toggle")
-  $(this).next().next().toggleClass("deps_toggle")
+})
+
+$(document).on('click', '.arrow_toggle', function () {
+  var runtime_div = $(this).parent().next().next()
+  runtime_div.toggleClass('deps_toggle');
+  runtime_div.next().toggleClass('deps_toggle');
+  $(this).toggleClass('deps_expanded-down');
 })
