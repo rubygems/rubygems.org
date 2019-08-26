@@ -213,6 +213,7 @@ zh-CN:
       update:
   profiles:
     edit:
+      change_avatar:
       email_awaiting_confirmation: 请验证你的新邮箱地址 %{unconfirmed_email}
       enter_password: 输入密码
       hide_email: 在公开的个人资料里面隐藏我的 Email
