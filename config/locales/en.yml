@@ -388,5 +388,6 @@ en:
     destroy:
       success: Your credential was successfully deleted.
       not_found: We couldn't find a credential with the specified id.
+    unsupported: Your browser does not support WebAuthn at the moment.
     sign_in_prompt: Use your authenticator to sign in
     require_webauthn_disabled: You have already enabled WebAuthn authentication.

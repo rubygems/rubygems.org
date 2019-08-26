@@ -1,4 +1,13 @@
 <% @title = t('webauthn_authentication') %>
 
-<%= label_tag :webauthn_prompt, t('webauthn_credentials.sign_in_prompt'), class: 'form__label' %>
-<%= button_to t('sign_in'), webauthn_authentication_options_session_path, method: 'get', class: 'form__submit js-webauthn-credential-authenticate', data: { disable_with: 'Please wait...' } %>
+<div id="webauthn-prompt" class="t-body">
+  <p>
+    <strong id="unsupported-browser-message" class="t-red t--hidden">
+      <%= t('webauthn_credentials.unsupported') %>
+    </strong>
+    <div class="text_field">
+      <%= t('webauthn_credentials.sign_in_prompt') %>
+    </div>
+  </p>
+  <%= button_to t('sign_in'), webauthn_authentication_options_session_path, id: "sign-in-button", method: 'get', class: 'form__submit js-webauthn-credential-authenticate', data: { disable_with: 'Please wait...' } %>
+</div>
