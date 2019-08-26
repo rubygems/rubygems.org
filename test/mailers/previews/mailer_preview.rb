@@ -28,4 +28,8 @@ class MailerPreview < ActionMailer::Preview
     ownership = Ownership.where.not(user: nil).where(notifier: true).last
     Mailer.gem_pushed(ownership.user_id, ownership.rubygem.versions.last.id, ownership.user_id)
   end
+
+  def mfa_notification
+    Mailer.mfa_notification(User.last.id)
+  end
 end
