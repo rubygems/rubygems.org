@@ -6,10 +6,11 @@ class WebauthnCredentialsController < ApplicationController
   end
 
   def create_options
+    current_user.update(webauthn_handle: bin_to_str(SecureRandom.random_bytes(64))) unless current_user.webauthn_handle
     credential_options = WebAuthn.credential_creation_options(
       user_name: current_user.handle,
       display_name: current_user.handle,
-      user_id: bin_to_str(current_user.handle)
+      user_id: current_user.webauthn_handle
     )
 
     credential_options[:challenge] = bin_to_str(credential_options[:challenge])

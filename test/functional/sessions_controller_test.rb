@@ -143,9 +143,10 @@ class SessionsControllerTest < ActionController::TestCase
 
   context "when user has webauthn enabled" do
     setup do
-      @user = User.new(email_confirmed: true)
-      @user.save!(validate: false)
       @encoder = WebAuthn::Encoder.new
+      @user = User.new(email_confirmed: true)
+      @user.webauthn_handle = @encoder.encode(SecureRandom.random_bytes(64))
+      @user.save!(validate: false)
       @fake_client = WebAuthn::FakeClient.new("http://test.host", encoding: :base64url)
       public_key_credential = WebAuthn::PublicKeyCredential.from_create(@fake_client.create)
       @user.webauthn_credentials.create!(
@@ -233,6 +234,17 @@ class SessionsControllerTest < ActionController::TestCase
           actual_sign_count = WebauthnCredential.find_by(external_id: @client_credential["id"]).sign_count
           assert_equal 0, actual_sign_count
         end
+      end
+
+      context "when webauthn user handle is incorrect" do
+        setup do
+          credentials = @fake_client.get(challenge: @challenge)
+          credentials["response"]["userHandle"] = @encoder.encode(SecureRandom.random_bytes(64))
+
+          post :webauthn_authentication, params: credentials
+        end
+
+        should respond_with :unauthorized
       end
 
       context "when sign count is missing" do

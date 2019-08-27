@@ -218,6 +218,11 @@ class User < ApplicationRecord
 
   def webauthn_verified?(current_challenge, public_key_credential)
     credential = webauthn_credentials.find_by!(external_id: public_key_credential.id)
+
+    if public_key_credential.user_handle
+      return false unless str_to_bin(webauthn_handle) == public_key_credential.user_handle
+    end
+
     begin
       public_key_credential.verify(str_to_bin(current_challenge),
         public_key: str_to_bin(credential.public_key),

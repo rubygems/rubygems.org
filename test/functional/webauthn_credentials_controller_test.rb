@@ -19,6 +19,20 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
           public_key: encoder.encode(public_key_credential.public_key),
           nickname: "USB key"
         )
+        @user.webauthn_handle = encoder.encode(SecureRandom.random_bytes(64))
+        @user.save!(validate: false)
+      end
+
+      context "on GET to /webauthn_credentials/create_options" do
+        setup do
+          @previous_webauthn_handle = @user.webauthn_handle
+          get :create_options
+        end
+
+        should respond_with :success
+        should "not change webauthn handle" do
+          assert_equal @previous_webauthn_handle, @user.webauthn_handle
+        end
       end
 
       context "on GET to /webauthn_credentials" do
@@ -75,6 +89,16 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
     end
 
     context "when webauthn disabled" do
+      context "on GET to /webauthn_credentials/create_options" do
+        setup do
+          get :create_options
+        end
+
+        should "set webauthn handle to user" do
+          assert @user.webauthn_handle
+        end
+      end
+
       context "on GET to /webauthn_credentials" do
         setup do
           get :index
@@ -92,10 +116,12 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
       context "on POST to /webauthn_credentials" do
         setup do
           challenge = SecureRandom.random_bytes(32)
-          encoder = WebAuthn::Encoder.new
+          @encoder = WebAuthn::Encoder.new
           fake_client = WebAuthn::FakeClient.new("http://test.host", encoding: :base64url)
-          @controller.session[:webauthn_challenge] = encoder.encode(challenge)
+          @controller.session[:webauthn_challenge] = @encoder.encode(challenge)
 
+          @handle = SecureRandom.random_bytes(64)
+          @user.update(webauthn_handle: @encoder.encode(@handle))
           @client_credential = fake_client.create(challenge: challenge)
           params = @client_credential
           params["nickname"] = "A nickname"
