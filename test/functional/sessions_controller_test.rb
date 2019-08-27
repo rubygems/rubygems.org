@@ -215,10 +215,10 @@ class SessionsControllerTest < ActionController::TestCase
           post :webauthn_authentication, params: @client_credential
         end
 
-        should set_flash.now[:notice]
+        should set_flash[:error]
         should respond_with :unauthorized
-        should "render sign in page" do
-          assert page.has_content? "Sign in"
+        should "attempt to redirect to sign in page" do
+          assert_equal JSON.parse(response.body)["redirect_path"], "/sign_in"
         end
 
         should "not sign in the user" do

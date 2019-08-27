@@ -36,13 +36,10 @@ class SessionsController < Clearance::SessionsController
       credentials_request_options[:challenge] = bin_to_str(credentials_request_options[:challenge])
       session[:webauthn_challenge] = credentials_request_options[:challenge]
 
-      respond_to do |format|
-        format.json { render json: credentials_request_options }
-      end
+      render json: credentials_request_options, status: :ok
     else
-      respond_to do |format|
-        format.json { render json: { errors: ["Unprocessable request"] }, status: :unprocessable_entity }
-      end
+      flash[:error] = t("webauthn_credentials.not_enabled")
+      render json: { redirect_path: sign_in_path }, status: :unauthorized
     end
   end
 
@@ -60,13 +57,15 @@ class SessionsController < Clearance::SessionsController
 
       sign_in(@user) do |status|
         if status.success?
-          render json: { status: "ok", redirect_path: "/" }, status: :ok
+          render json: { redirect_path: root_path }, status: :ok
         else
-          login_failure(status.failure_message)
+          flash[:notice] = status.failure_message
+          render json: { redirect_path: sign_in_path }
         end
       end
     else
-      login_failure(t("webauthn_credentials.incorrect_credentials"))
+      flash[:error] = t("webauthn_credentials.incorrect_credentials")
+      render json: { redirect_path: sign_in_path }, status: :unauthorized
     end
   end
 

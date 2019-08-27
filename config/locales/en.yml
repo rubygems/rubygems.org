@@ -375,7 +375,8 @@ en:
         other: Displaying <b>all&nbsp;%{count}</b> %{model}
         zero: No %{model} found
   webauthn_credentials:
-    incorrect_credentials: Your credentials are incorrect.
+    not_enabled: Please enable WebAuthn first.
+    incorrect_credentials: It looks like your credentials are incorrect.
     index:
       go_settings: Add a new WebAuthn credential
       disabled: You have no WebAuthn credentials registered yet

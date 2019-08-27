@@ -28,7 +28,7 @@
         <%= text_field_tag :nickname, '', class: 'form__input', autofocus: true, autocomplete: :off, required: true %>
       </div>
       <div class="form_bottom">
-        <%= submit_tag t('.go_settings'), class: 'form__submit', id: 'register-credential-button',  data: { disable_with: t('form_disable_with') } %>
+        <%= submit_tag t('.go_settings'), class: 'form__submit', id: 'register-credential-button',  data: { disable_with: t('form_disable_with'), enable_with: t('.go_settings') } %>
       </div>
     </div>
   <% end %>

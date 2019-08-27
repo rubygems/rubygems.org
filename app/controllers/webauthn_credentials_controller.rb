@@ -15,9 +15,7 @@ class WebauthnCredentialsController < ApplicationController
     credential_options[:challenge] = bin_to_str(credential_options[:challenge])
     session[:webauthn_challenge] = credential_options[:challenge]
 
-    respond_to do |format|
-      format.json { render json: credential_options }
-    end
+    render json: credential_options, status: :ok
   end
 
   def create
@@ -39,11 +37,11 @@ class WebauthnCredentialsController < ApplicationController
         status = :internal_server_error
       end
     else
-      flash[:error] = t(".problem")
-      status = :unprocessable_entity
+      flash[:error] = t(".incorrect_credentials")
+      status = :unauthorized
     end
 
-    render json: { status: status, redirect_path: webauthn_credentials_path }, status: status
+    render json: { redirect_path: webauthn_credentials_path }, status: status
   end
 
   def destroy

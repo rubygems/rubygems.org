@@ -30,10 +30,16 @@ function registrationHandler(event) {
     url: "/webauthn_credentials/create_options",
     dataType: "json",
   }).done(options => {
-    webauthnJSON.create({ "publicKey": options }).then(credential => {
-      callback("/webauthn_credentials", $.extend(credential, { "nickname": $("#nickname").val() }));
-    });
-  })
+    webauthnJSON.create({ "publicKey": options }).then(
+      credential => {
+        callback("/webauthn_credentials", $.extend(credential, { "nickname": $("#nickname").val() }));
+      },
+      reason => {
+        var registerButton = registerCredentialForm.find("input.form__submit");
+        registerButton.attr('value', registerButton.attr('data-enable-with'));
+        registerButton.prop('disabled', false);
+      });
+  }).fail(response => { console.log(response) })
 }
 
 function signInHandler(event) {
@@ -41,10 +47,15 @@ function signInHandler(event) {
     url: "/session/webauthn_authentication_options",
     dataType: "json"
   }).done(options => {
-    webauthnJSON.get({ "publicKey": options }).then(credential => {
-      callback("session/webauthn_authentication", credential);
-    });
-  })
+    webauthnJSON.get({ "publicKey": options }).then(
+      credential => {
+        callback("session/webauthn_authentication", credential);
+      },
+      reason => {
+        signInButton.attr('value', signInButton.attr('data-enable-with'));
+        signInButton.prop('disabled', false);
+      });
+  }).fail(response => { window.location.replace(response.responseJSON["redirect_path"]) })
 }
 
 function callback(url, body) {
@@ -58,6 +69,6 @@ function callback(url, body) {
   }).done(function(response) {
     window.location.replace(response["redirect_path"]);
   }).error(function(response) {
-    console.log("WebAuthn callback error");
+    window.location.replace(response.responseJSON["redirect_path"]);
   });
 }
