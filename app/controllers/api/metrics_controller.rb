@@ -1,5 +1,6 @@
 class Api::MetricsController < Api::BaseController
-  METRIC_KEYS = %i[
+  # high cardinality metrics are currently uninstrumented
+  METRIC_KEYS = %w[
     host
     ruby_version
     bundler_version
@@ -12,20 +13,26 @@ class Api::MetricsController < Api::BaseController
     chruby_version
   ].freeze
 
+  # takes a YAMLed array of metric hashes,
+  # and increment Datadog counter for all low cardinality metrics
   def create
-    return unless params.require(:_json)
+    return unless request.raw_post
 
+    require "psych"
+    @metrics = Psych.safe_load(request.raw_post)
+    # input is at least of length 2, so it must be an array
+    return unless @metrics.is_a?(Array)
+
+    # discard data if its a duplicate
+    head :ok && return if known_id?(@metrics.last["request_id"])
     validate_data
-    if params[:_json].last
-      head :ok && return if known_id?(params[:_json].last[:request_id])
-    end
 
-    params[:_json].each do |hash|
+    @metrics.each do |hash|
       METRIC_KEYS.each do |metric|
         StatsD.increment("#{metric}.#{hash[metric]}") if hash[metric]
       end
-      split_increment("options", hash[:options]) if hash[:options]
-      split_increment("ci", hash[:ci]) if hash[:ci]
+      split_increment("options", hash["options"]) if hash["options"]
+      split_increment("ci", hash["ci"]) if hash["ci"]
     end
   end
 
@@ -38,11 +45,12 @@ class Api::MetricsController < Api::BaseController
   end
 
   def validate_data
-    params[:_json].each_index do |idx|
+    @metrics.delete_if { |ele| !ele.is_a?(Hash) }
+    @metrics.each_index do |idx|
       validate_ruby_bundler_version(idx)
       validate_env_managers(idx)
-      params[:_json][idx].delete_if { |key, val| key == "host" && val.length > 20 }
-      params[:_json][idx].delete_if { |key, val| key == "command" && val.length > 9 }
+      @metrics[idx].delete_if { |key, val| key == "host" && val.length > 20 }
+      @metrics[idx].delete_if { |key, val| key == "command" && val.length > 9 }
     end
   end
 
@@ -51,7 +59,7 @@ class Api::MetricsController < Api::BaseController
   end
 
   def validate_ruby_bundler_version(idx)
-    params[:_json][idx].delete_if do |key, val|
+    @metrics[idx].delete_if do |key, val|
       key == "ruby_version" && !valid_version?(val) ||
         key == "bundler_version" && !valid_version?(val) ||
         key == "rubygems_version" && !valid_version?(val)
@@ -59,7 +67,7 @@ class Api::MetricsController < Api::BaseController
   end
 
   def validate_env_managers(idx)
-    params[:_json][idx].delete_if do |key, val|
+    @metrics[idx].delete_if do |key, val|
       key == "git_version" && !valid_version?(val) ||
         key == "rvm_version" && !valid_version?(val) ||
         key == "rbenv_version" && !valid_version?(val) ||
