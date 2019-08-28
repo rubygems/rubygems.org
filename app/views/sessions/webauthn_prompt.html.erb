@@ -6,8 +6,8 @@
       <%= t('webauthn_credentials.unsupported') %>
     </strong>
     <div class="text_field">
-      <%= t('webauthn_credentials.sign_in_prompt') %>
+      <%= t('internal.webauthn_sessions.sign_in_prompt') %>
     </div>
   </p>
-  <%= button_to t('sign_in'), webauthn_authentication_options_session_path, id: "sign-in-button", method: 'get', class: 'form__submit js-webauthn-credential-authenticate', data: { disable_with: t('form_disable_with'), enable_with: t('sign_in') } %>
+  <%= button_to t('sign_in'), internal_webauthn_session_options_path, id: "sign-in-button", method: 'get', class: 'form__submit js-webauthn-credential-authenticate', data: { disable_with: t('form_disable_with'), enable_with: t('sign_in') } %>
 </div>

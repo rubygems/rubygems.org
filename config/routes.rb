@@ -127,12 +127,6 @@ Rails.application.routes.draw do
   ################################################################################
   # UI
 
-  resources :webauthn_credentials, only: %i[index create destroy] do
-    collection do
-      get :create_options
-    end
-  end
-
   scope constraints: { format: :html }, defaults: { format: 'html' } do
     resource :search, only: :show do
       get :advanced
@@ -151,6 +145,7 @@ Rails.application.routes.draw do
       get :popular, on: :collection
     end
     resource :notifier, only: %i[update show]
+    resources :webauthn_credentials, only: %i[index destroy]
 
     resources :rubygems,
       only: %i[index show],
@@ -176,10 +171,6 @@ Rails.application.routes.draw do
 
     resource :session, only: %i[create destroy] do
       post 'mfa_create', to: 'sessions#mfa_create', as: :mfa_create
-      collection do
-        get :webauthn_authentication_options, constraints: { format: :json }, defaults: { format: :json }
-        post :webauthn_authentication, constraints: { format: :json }, defaults: { format: :json }
-      end
     end
 
     resources :users, only: %i[new create] do
@@ -200,6 +191,12 @@ Rails.application.routes.draw do
   namespace :internal do
     get 'ping' => 'ping#index'
     get 'revision' => 'ping#revision'
+
+    get '/webauthn_session/options' => 'webauthn_sessions#options'
+    post '/webauthn_session' => 'webauthn_sessions#create'
+
+    get '/webauthn_registration/options' => 'webauthn_registrations#options'
+    post '/webauthn_registration' => 'webauthn_registrations#create'
   end
 
   ################################################################################

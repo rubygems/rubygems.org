@@ -27,12 +27,12 @@ function registrationHandler(event) {
   event.preventDefault();
 
   $.get({
-    url: "/webauthn_credentials/create_options",
+    url: "/internal/webauthn_registration/options",
     dataType: "json",
   }).done(options => {
     webauthnJSON.create({ "publicKey": options }).then(
       credential => {
-        callback("/webauthn_credentials", $.extend(credential, { "nickname": $("#nickname").val() }));
+        callback("/internal/webauthn_registration", $.extend(credential, { "nickname": $("#nickname").val() }));
       },
       reason => {
         var registerButton = registerCredentialForm.find("input.form__submit");
@@ -44,12 +44,12 @@ function registrationHandler(event) {
 
 function signInHandler(event) {
   $.get({
-    url: "/session/webauthn_authentication_options",
+    url: "/internal/webauthn_session/options",
     dataType: "json"
   }).done(options => {
     webauthnJSON.get({ "publicKey": options }).then(
       credential => {
-        callback("session/webauthn_authentication", credential);
+        callback("/internal/webauthn_session", credential);
       },
       reason => {
         signInButton.attr('value', signInButton.attr('data-enable-with'));
