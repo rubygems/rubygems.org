@@ -28,11 +28,11 @@ class Internal::WebauthnRegistrationsController < ApplicationController
         flash[:success] = t(".success")
         status = :ok
       else
-        flash[:error] = t(".problem")
+        flash[:error] = t(".fail")
         status = :internal_server_error
       end
     else
-      flash[:error] = t("internal.webauthn_sessions.incorrect_credentials")
+      flash[:error] = t("internal.webauthn_sessions.incorrect_security_key")
       status = :unauthorized
     end
 

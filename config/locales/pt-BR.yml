@@ -16,9 +16,11 @@ pt-BR:
   please_sign_in:
   otp_incorrect: Seu código OTP está incorreto. Por favor, verifique-o e tente novamente.
   otp_missing: Você habilitou a autenticação multifator mas nenhum código OTP foi fornecido. Por favor, preencha-o e tente novamente.
+  use_key: Use security key!
   sign_in: Fazer Login
   sign_up: Cadastrar
   multifactor_authentication: Autenticação Multifator
+  webauthn_authentication: Security key authentication
   subtitle: o host de gems da sua comunidade
   this_rubygem_could_not_be_found: A rubygem não foi encontrada.
   time_ago: "%{duration} atrás"
@@ -363,3 +365,24 @@ pt-BR:
         one:
         other:
         zero:
+  internal:
+    webauthn_registrations:
+      create:
+        success: You have successfully added a new security key.
+        fail: There was a problem verifying your security key.
+    webauthn_sessions:
+      incorrect_security_key: Incorrect security key.
+      sign_in_prompt: Please use one of your registered security keys to sign in
+  webauthn_credentials:
+    not_enabled: Please add a security key first.
+    index:
+      title: Security keys
+      go_settings: Add new security key
+      disabled: You don't have any security keys yet
+      registered_on: registered on
+      delete: Delete
+      confirm: Are you sure?
+    destroy:
+      success: Your security key was successfully deleted.
+      not_found: We couldn't find a security key with the specified id.
+    unsupported: Your browser does not support security keys at the moment.

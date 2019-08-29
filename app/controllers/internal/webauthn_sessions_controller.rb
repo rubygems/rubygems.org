@@ -39,7 +39,7 @@ class Internal::WebauthnSessionsController < Clearance::SessionsController
         end
       end
     else
-      flash[:error] = t("internal.webauthn_sessions.incorrect_credentials")
+      flash[:error] = t("internal.webauthn_sessions.incorrect_security_key")
       render json: { redirect_path: sign_in_path }, status: :unauthorized
     end
   end

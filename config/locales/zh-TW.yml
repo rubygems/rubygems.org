@@ -16,9 +16,11 @@ zh-TW:
   please_sign_in:
   otp_incorrect:
   otp_missing:
+  use_key: Use security key!
   sign_in: 登入
   sign_up: 註冊
   multifactor_authentication: MFA 驗證
+  webauthn_authentication: Security key authentication
   subtitle: Ruby 社群 Gem 套件管理平台
   this_rubygem_could_not_be_found: 找不到這個 gem
   time_ago: "%{duration} 前"
@@ -363,3 +365,24 @@ zh-TW:
         one: 顯示 <b>1</b> %{model}
         other: 顯示 <b>所有 %{count}</b> %{model}
         zero: 找不到 %{model}
+  internal:
+    webauthn_registrations:
+      create:
+        success: You have successfully added a new security key.
+        fail: There was a problem verifying your security key.
+    webauthn_sessions:
+      incorrect_security_key: Incorrect security key.
+      sign_in_prompt: Please use one of your registered security keys to sign in
+  webauthn_credentials:
+    not_enabled: Please add a security key first.
+    index:
+      title: Security keys
+      go_settings: Add new security key
+      disabled: You don't have any security keys yet
+      registered_on: registered on
+      delete: Delete
+      confirm: Are you sure?
+    destroy:
+      success: Your security key was successfully deleted.
+      not_found: We couldn't find a security key with the specified id.
+    unsupported: Your browser does not support security keys at the moment.

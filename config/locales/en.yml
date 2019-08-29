@@ -24,10 +24,11 @@ en:
   please_sign_in: Please sign in to continue.
   otp_incorrect: Your OTP code is incorrect. Please check it and retry.
   otp_missing: You have enabled multifactor authentication but no OTP code provided. Please fill it and retry.
+  use_key: Use security key!
   sign_in: Sign in
   sign_up: Sign up
   multifactor_authentication: Multifactor authentication
-  webauthn_authentication: WebAuthn authentication
+  webauthn_authentication: Security key authentication
   subtitle: your community gem host
   this_rubygem_could_not_be_found: This rubygem could not be found.
   time_ago: "%{duration} ago"
@@ -377,21 +378,21 @@ en:
   internal:
     webauthn_registrations:
       create:
-        success: You have successfully added a new WebAuthn credential.
-        problem: There was a problem verifying your credentials.
+        success: You have successfully added a new security key.
+        fail: There was a problem verifying your security key.
     webauthn_sessions:
-      incorrect_credentials: It looks like your credentials are incorrect.
-      sign_in_prompt: Use your authenticator to sign in
+      incorrect_security_key: Incorrect security key.
+      sign_in_prompt: Please use one of your registered security keys to sign in
   webauthn_credentials:
-    not_enabled: Please enable WebAuthn first.
+    not_enabled: Please add a security key first.
     index:
-      go_settings: Add a new WebAuthn credential
-      disabled: You have no WebAuthn credentials registered yet
+      title: Security keys
+      go_settings: Add new security key
+      disabled: You don't have any security keys yet
       registered_on: registered on
       delete: Delete
       confirm: Are you sure?
     destroy:
-      success: Your credential was successfully deleted.
-      not_found: We couldn't find a credential with the specified id.
-    unsupported: Your browser does not support WebAuthn at the moment.
-    require_webauthn_disabled: You have already enabled WebAuthn authentication.
+      success: Your security key was successfully deleted.
+      not_found: We couldn't find a security key with the specified id.
+    unsupported: Your browser does not support security keys at the moment.

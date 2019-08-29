@@ -68,7 +68,7 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
 
           should respond_with :redirect
           should set_flash[:error]
-          should set_flash.to("We couldn't find a credential with the specified id.")
+          should set_flash.to(I18n.t("webauthn_credentials.destroy.not_found"))
           should "have not deleted credential" do
             assert @user.webauthn_credentials.any?
           end
@@ -84,10 +84,10 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
 
         should respond_with :success
         should "list no credential" do
-          assert page.has_content? "You have no WebAuthn credentials registered yet"
+          assert page.has_content? I18n.t("webauthn_credentials.index.disabled")
         end
         should "offer to add credentials" do
-          assert page.has_button? "Add a new WebAuthn credential"
+          assert page.has_button? I18n.t("webauthn_credentials.index.go_settings")
         end
       end
     end
