@@ -33,6 +33,10 @@ class Internal::WebauthnRegistrationsControllerTest < ActionController::TestCase
         should "not change webauthn handle" do
           assert_equal @previous_webauthn_handle, @user.webauthn_handle
         end
+        should "not allow to add existing credential" do
+          credential_id = JSON.parse(@response.body)["excludeCredentials"][0]["id"]
+          assert_equal credential_id, @user.webauthn_credentials.take.external_id
+        end
       end
     end
 

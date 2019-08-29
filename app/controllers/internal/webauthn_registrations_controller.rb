@@ -7,6 +7,10 @@ class Internal::WebauthnRegistrationsController < ApplicationController
       user_id: current_user.webauthn_handle
     )
 
+    credential_options[:excludeCredentials] = current_user.webauthn_credentials.map do |credential|
+      { id: credential.external_id, type: "public-key" }
+    end
+
     credential_options[:challenge] = bin_to_str(credential_options[:challenge])
     session[:webauthn_challenge] = credential_options[:challenge]
 
