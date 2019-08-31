@@ -101,4 +101,16 @@ namespace :gemcutter do
       puts "Done."
     end
   end
+
+  namespace :typo do
+    desc "Add names to gem typo exception list\nUsage: rake gemcutter:typo:exception[<gem_name>,<info>]"
+    task :exception, [:name, :info] => [:environment] do |_task, args|
+      typo_exception = GemTypoException.new(name: args[:name], info: args[:info])
+      if typo_exception.save
+        puts "Added #{args[:name]} to gem typo exception"
+      else
+        puts "Error while adding typo exception: #{typo_exception.errors.full_messages}"
+      end
+    end
+  end
 end
