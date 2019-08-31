@@ -49,4 +49,11 @@ class Mailer < ActionMailer::Base
       subject: I18n.t("mailer.gem_pushed.subject", gem: @version.to_title,
                       default: "Gem %{gem} pushed to RubyGems.org")
   end
+
+  def mfa_notification(user_id)
+    @user = User.find(user_id)
+
+    mail to: @user.email,
+      subject: "Please consider enabling MFA for your account"
+  end
 end
