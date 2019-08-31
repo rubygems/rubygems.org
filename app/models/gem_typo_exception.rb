@@ -6,6 +6,6 @@ class GemTypoException < ApplicationRecord
 
   def rubygems_name
     gem = Rubygem.new(name: name)
-    errors.add :name, "Rubygem validation failed: #{gem.errors.full_messages}" if gem.invalid?
+    errors.add :name, "Rubygem validation failed: #{gem.errors.full_messages}" if gem.invalid?(:typo_exception)
   end
 end
