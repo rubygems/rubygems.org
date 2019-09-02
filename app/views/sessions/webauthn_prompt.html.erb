@@ -1,4 +1,4 @@
-<% @title = t('webauthn_authentication') %>
+<% @title = t('multifactor_authentication') %>
 
 <div id="webauthn-prompt" class="t-body">
   <p>
@@ -9,5 +9,5 @@
       <%= t('internal.webauthn_sessions.sign_in_prompt') %>
     </div>
   </p>
-  <%= button_to t('use_key'), internal_webauthn_session_options_path, id: "sign-in-button", method: 'get', class: 'form__submit js-webauthn-credential-authenticate', data: { disable_with: t('form_disable_with'), enable_with: t('sign_in') } %>
+  <%= button_to t('use_key'), internal_webauthn_session_options_path, id: "sign-in-button", method: 'get', class: 'form__submit js-webauthn-credential-authenticate', data: { disable_with: t('form_disable_with'), enable_with: t('use_key') } %>
 </div>

@@ -24,11 +24,10 @@ en:
   please_sign_in: Please sign in to continue.
   otp_incorrect: Your OTP code is incorrect. Please check it and retry.
   otp_missing: You have enabled multifactor authentication but no OTP code provided. Please fill it and retry.
-  use_key: Use security key!
+  use_key: Use security key
   sign_in: Sign in
   sign_up: Sign up
   multifactor_authentication: Multifactor authentication
-  webauthn_authentication: Security key authentication
   subtitle: your community gem host
   this_rubygem_could_not_be_found: This rubygem could not be found.
   time_ago: "%{duration} ago"
@@ -382,14 +381,14 @@ en:
         fail: There was a problem verifying your security key.
     webauthn_sessions:
       incorrect_security_key: Incorrect security key.
-      sign_in_prompt: Please use one of your registered security keys to sign in
+      sign_in_prompt: Please use one of your security keys to continue
   webauthn_credentials:
     not_enabled: Please add a security key first.
     index:
       title: Security keys
       go_settings: Add new security key
       disabled: You don't have any security keys yet
-      registered_on: registered on
+      registered_on: added on
       delete: Delete
       confirm: Are you sure?
     destroy:

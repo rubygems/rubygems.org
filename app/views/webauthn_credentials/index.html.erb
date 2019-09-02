@@ -2,7 +2,7 @@
 
 <div class="t-body l-overflow">
   <% if @user.webauthn_enabled? %>
-    <div id="credentials-list">
+    <div id="credentials-list" class="t-credentials-list">
       <ul>
         <% @user.webauthn_credentials.each do |credential| %>
           <li>
@@ -21,6 +21,7 @@
         </div>
       </p>
     <% end %>
+    </div>
 
     <%= form_tag internal_webauthn_registration_options_path, method: 'get', id: 'webauthn-credential-create' do %>
       <div class="text_field">
@@ -30,6 +31,5 @@
       <div class="form_bottom">
         <%= submit_tag t('.go_settings'), class: 'form__submit', id: 'register-credential-button',  data: { disable_with: t('form_disable_with'), enable_with: t('.go_settings') } %>
       </div>
-    </div>
-  <% end %>
+    <% end %>
 </div>

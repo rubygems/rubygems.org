@@ -43,6 +43,9 @@ label.t-hidden {
 .t-uppercase {
   text-transform: uppercase; }
 
+.t-credentials-list {
+  margin-bottom: 70px; }
+
 .t-list__heading {
   font-weight: 800;
   font-size: 12px;
