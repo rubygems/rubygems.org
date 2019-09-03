@@ -379,6 +379,8 @@ nl:
       go_settings: Add new security key
       disabled: You don't have any security keys yet
       registered_on: added on
+      last_used_on: Last used on
+      never_used: never used
       delete: Delete
       confirm: Are you sure?
     destroy:

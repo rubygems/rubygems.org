@@ -14,10 +14,12 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
         @fake_client = WebAuthn::FakeClient.new("http://test.host", encoding: :base64url)
         public_key_credential = WebAuthn::PublicKeyCredential.from_create(@fake_client.create)
         encoder = WebAuthn::Encoder.new
+        @now = Time.now.in_time_zone
         @user.webauthn_credentials.create(
           external_id: public_key_credential.id,
           public_key: encoder.encode(public_key_credential.public_key),
-          nickname: "USB key"
+          nickname: "USB key",
+          last_used_on: @now
         )
         @user.webauthn_handle = encoder.encode(SecureRandom.random_bytes(64))
         @user.save!(validate: false)
@@ -31,7 +33,7 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
         should respond_with :success
         should "list credential" do
           credential = @user.webauthn_credentials.take
-          assert page.has_content? "#{credential.nickname} - registered on #{credential.created_at.to_date.to_s(:long)}"
+          assert page.has_content? "#{credential.nickname} - #{I18n.t('webauthn_credentials.index.last_used_on')}: #{@now.strftime('%b %d, %Y')}"
         end
       end
 

@@ -15,7 +15,8 @@ class Internal::WebauthnSessionsControllerTest < ActionController::TestCase
         external_id: public_key_credential.id,
         public_key: @encoder.encode(public_key_credential.public_key),
         nickname: "A nickname",
-        sign_count: 0
+        sign_count: 0,
+        last_used_on: Time.now.in_time_zone
       )
     end
 
@@ -50,6 +51,11 @@ class Internal::WebauthnSessionsControllerTest < ActionController::TestCase
         should "update sign count" do
           actual_sign_count = WebauthnCredential.find_by(external_id: @client_credential["id"]).sign_count
           assert_equal @sign_count, actual_sign_count
+        end
+
+        should "set 'last used on'" do
+          last_used_on = WebauthnCredential.find_by(external_id: @client_credential["id"]).last_used_on
+          assert last_used_on
         end
       end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_27_135430) do
+ActiveRecord::Schema.define(version: 2019_09_02_174702) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -221,6 +221,7 @@ ActiveRecord::Schema.define(version: 2019_08_27_135430) do
     t.datetime "updated_at", null: false
     t.string "nickname", null: false
     t.integer "sign_count", default: 0, null: false
+    t.datetime "last_used_on"
     t.index ["user_id"], name: "index_webauthn_credentials_on_user_id"
   end
 

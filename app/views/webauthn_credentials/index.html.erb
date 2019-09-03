@@ -6,7 +6,7 @@
       <ul>
         <% @user.webauthn_credentials.each do |credential| %>
           <li>
-            <strong><%= credential.nickname %></strong> - <%= "#{t('.registered_on')} #{credential.created_at.to_date.to_s(:long)}" %>
+            <strong><%= credential.nickname %></strong> - <%= t('.last_used_on') %>: <%- if credential.last_used_on -%> <%= credential.last_used_on.strftime('%b %d, %Y') %> <%- else -%> <%= t('.never_used') %> <%- end -%>
           <%= link_to t('.delete'), credential, method: :delete, class: 'l-col--r--pad', data: { confirm: t('.confirm') } %>
           </li>
         <% end %>
