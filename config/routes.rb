@@ -145,7 +145,7 @@ Rails.application.routes.draw do
       get :popular, on: :collection
     end
     resource :notifier, only: %i[update show]
-    resources :webauthn_credentials, only: %i[index destroy]
+    resources :webauthn_credentials, only: %i[index destroy], path: 'security_keys'
 
     resources :rubygems,
       only: %i[index show],
