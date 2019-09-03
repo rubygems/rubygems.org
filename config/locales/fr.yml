@@ -385,5 +385,6 @@ fr:
       confirm: Are you sure?
     destroy:
       success: Your security key was successfully deleted.
+      fail: Your security key couldn't be deleted.
       not_found: We couldn't find a security key with the specified id.
     unsupported: Your browser does not support security keys at the moment.

@@ -6,10 +6,15 @@ class WebauthnCredentialsController < ApplicationController
   end
 
   def destroy
-    begin
-      current_user.webauthn_credentials.find(params[:id]).destroy
-      flash[:success] = t(".success")
-    rescue ActiveRecord::RecordNotFound
+    credential = current_user.webauthn_credentials.find_by(id: params[:id])
+    if credential
+      credential.destroy
+      if credential.destroyed?
+        flash[:success] = t(".success")
+      else
+        flash[:error] = t(".fail")
+      end
+    else
       flash[:error] = t(".not_found")
     end
     redirect_to webauthn_credentials_url
