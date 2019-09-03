@@ -35,6 +35,13 @@ class Rack::Attack
     { controller: "api/v1/owners",    action: "destroy" }
   ]
 
+  protected_internal_actions = [
+    { controller: "internal/webauthn_registrations", action: "options" },
+    { controller: "internal/webauthn_registrations", action: "create" },
+    { controller: "internal/webauthn_sessions", action: "options" },
+    { controller: "internal/webauthn_sessions", action: "create" }
+  ]
+
   def self.protected_route?(protected_actions, path, method)
     route_params = Rails.application.routes.recognize_path(path, method: method)
     protected_actions.any? { |hash| hash[:controller] == route_params[:controller] && hash[:action] == route_params[:action] }
@@ -57,6 +64,12 @@ class Rack::Attack
   (1..4).each do |level|
     throttle("api/ip/#{level}", limit: REQUEST_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
       req.ip if protected_route?(protected_api_actions, req.path, req.request_method)
+    end
+  end
+
+  (1..4).each do |level|
+    throttle("internal/ip/#{level}", limit: REQUEST_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
+      req.ip if protected_route?(protected_internal_actions, req.path, req.request_method)
     end
   end
 
