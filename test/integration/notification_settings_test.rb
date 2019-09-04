@@ -1,7 +1,7 @@
 require "test_helper"
 require "capybara/minitest"
 
-class NoticationSettings < SystemTest
+class NotificationSettingsTest < SystemTest
   include Capybara::Minitest::Assertions
 
   test "changing email notification settings" do
