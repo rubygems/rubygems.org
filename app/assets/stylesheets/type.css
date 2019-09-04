@@ -212,3 +212,7 @@ a.t-list__item {
 .t-item--hidden {
   display: none !important;
 }
+
+h1 + .t-body h2 {
+  border-top: none;
+}

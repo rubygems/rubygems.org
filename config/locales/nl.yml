@@ -106,6 +106,7 @@ nl:
       header:
         dashboard: Dashboard
         edit_profile:
+        edit_settings:
         search_gem_html: Gems Zoeken&hellip;
         sign_in: Inloggen
         sign_out: Uitloggen
@@ -215,14 +216,9 @@ nl:
       recommended:
       title:
       update:
-  profiles:
+  settings:
     edit:
-      change_avatar:
-      email_awaiting_confirmation:
-      enter_password:
-      hide_email:
-      optional_twitter_username:
-      title: Wijzig profiel
+      title:
       api_access:
         confirm_reset: Weet je het zeker? Dit kan niet ongedaan worden gemaakt.
         credentials_html: 'Als je de %{gem_commands_link} vanaf de command-line wilt gebruiken, heb je een %{gem_credentials_file} bestand nodig. Je kunt deze genereren met het volgende commando:'
@@ -234,10 +230,6 @@ nl:
         link_text: Vraag hier een nieuwe aan.
         text_html: Nieuw wachtwoord nodig? Geen probleem. %{link}
         title: Reset wachtwoord
-      delete:
-        delete:
-        delete_profile:
-        warning:
       mfa:
         multifactor_auth:
         disabled:
@@ -249,6 +241,18 @@ nl:
           disabled:
           ui_only:
           ui_and_api:
+  profiles:
+    edit:
+      change_avatar:
+      email_awaiting_confirmation:
+      enter_password:
+      hide_email:
+      optional_twitter_username:
+      title: Wijzig profiel
+      delete:
+        delete:
+        delete_profile:
+        warning:
     delete:
       title:
       confirm:

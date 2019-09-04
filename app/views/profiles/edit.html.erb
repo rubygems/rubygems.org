@@ -66,54 +66,6 @@
   <div class="submit_field">
     <%= form.submit 'Update', :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
   </div>
-
-  <div class="t-body">
-    <h2><%= t '.reset_password.title' %></h2>
-    <p><%= t('.reset_password.text_html', :link => link_to(t('.reset_password.link_text'), new_password_path)) %></p>
-
-    <h2><%= t '.api_access.title' %></h2>
-    <p>
-      <%= t('.api_access.key_is_html', :key => content_tag(:strong, current_user.api_key)) %>
-    </p>
-    <p>
-      <%= t('.api_access.credentials_html', :gem_credentials_file => content_tag(:code, '~/.gem/credentials'),
-                                            :gem_commands_link => link_to(t('.api_access.link_text'), page_path('gem_docs'))) %>
-    </p>
-    <pre><code>curl -u <%= current_user.name %> https://rubygems.org/api/v1/api_key.yaml > ~/.gem/credentials; chmod 0600 ~/.gem/credentials</code></pre>
-  </div>
-<% end %>
-
-<%= button_to t('.api_access.reset'), reset_api_v1_api_key_path, :method => :put, :data => {:confirm => t('.api_access.confirm_reset')}, :class => 'form__submit' %>
-
-
-<div class="t-body">
-  <h2><%= t '.mfa.multifactor_auth' %></h2>
-  <% if @user.mfa_enabled? %>
-    <p><%= t '.mfa.enabled' %></p>
-    <%= form_tag multifactor_auth_path, :method => :put, :id => 'mfa-edit' do %>
-      <%= label_tag :level, t('.mfa.level.title'), :class => 'form__label' %>
-      <%= select_tag :level, options_for_select([
-        [t('.mfa.level.ui_and_api'), 'ui_and_api'],
-        [t('.mfa.level.ui_only'), 'ui_only'],
-        [t('.mfa.level.disabled'), 'disabled']], @user.mfa_level), :class => 'form__input form__select' %>
-      <div class="text_field">
-        <%= label_tag :otp, 'OTP code', :class => 'form__label' %>
-        <%= text_field_tag :otp, '', :class => 'form__input', :autocomplete => :off %>
-      </div>
-      <%= submit_tag t('.mfa.update'), :class => 'form__submit' %>
-    <% end %>
-  <% else %>
-    <p>
-      <%= t '.mfa.disabled' %>
-      <%= button_to t('.mfa.go_settings'), new_multifactor_auth_path, :method => 'get', :class => 'form__submit' %>
-    </p>
-  <% end %>
-</div>
-
-<% if @user.ownerships.any? %>
-  <div class="t-body">
-    <h2><%= link_to t('notifiers.show.title'), notifier_path %></h2>
-  </div>
 <% end %>
 
 <div class="t-body">

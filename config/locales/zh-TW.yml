@@ -106,6 +106,7 @@ zh-TW:
       header:
         dashboard: 控制台
         edit_profile:
+        edit_settings:
         search_gem_html: 搜尋 Gems&hellip;
         sign_in: 登入
         sign_out: 登出
@@ -215,14 +216,9 @@ zh-TW:
       recommended:
       title:
       update:
-  profiles:
+  settings:
     edit:
-      change_avatar:
-      email_awaiting_confirmation: 請驗證你的新 Email %{unconfirmed_email}
-      enter_password: 輸入密碼
-      hide_email: 在公開的個人頁面中隱藏 email
-      optional_twitter_username: Twitter 帳號（可選）
-      title: 編輯個人檔案
+      title:
       api_access:
         confirm_reset: 確定要重設嗎？此動作無法還原
         credentials_html: 如果你需要從 command line 中執行 %{gem_commands_link}，你需要先準備 %{gem_credentials_file} 這個檔案，用以下的指令可以產生：
@@ -234,10 +230,6 @@ zh-TW:
         link_text: 從這裡設定新密碼
         text_html: 需要重設密碼？沒問題。 %{link}
         title: 重設密碼
-      delete:
-        delete: 刪除
-        delete_profile: 刪除個人資料
-        warning: 警告
       mfa:
         multifactor_auth:
         disabled:
@@ -249,6 +241,18 @@ zh-TW:
           disabled:
           ui_only:
           ui_and_api:
+  profiles:
+    edit:
+      change_avatar:
+      email_awaiting_confirmation: 請驗證你的新 Email %{unconfirmed_email}
+      enter_password: 輸入密碼
+      hide_email: 在公開的個人頁面中隱藏 email
+      optional_twitter_username: Twitter 帳號（可選）
+      title: 編輯個人檔案
+      delete:
+        delete: 刪除
+        delete_profile: 刪除個人資料
+        warning: 警告
     delete:
       title:
       confirm:

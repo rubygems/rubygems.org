@@ -12,8 +12,7 @@ class ApiKeyResetTest < SystemTest
     fill_in "Password", with: @user.password
     click_button "Sign in"
 
-    visit profile_path(@user.handle)
-    click_link "Edit Profile"
+    visit edit_settings_path
 
     old_api_key = @user.api_key
     click_button "Reset my API key"

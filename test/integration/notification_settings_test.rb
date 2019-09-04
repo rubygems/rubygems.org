@@ -8,7 +8,7 @@ class NotificationSettingsTest < SystemTest
     user = create(:user)
     ownership1, ownership2 = create_list(:ownership, 2, user: user)
 
-    visit edit_profile_path(as: user)
+    visit edit_settings_path(as: user)
 
     click_link I18n.t("notifiers.show.title")
 
@@ -44,7 +44,7 @@ class NotificationSettingsTest < SystemTest
   test "email notification settings not shown to user who owns no gems" do
     user = create(:user)
 
-    visit edit_profile_path(as: user)
+    visit edit_settings_path(as: user)
 
     assert_no_text I18n.t("notifiers.show.title")
   end
