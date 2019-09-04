@@ -114,6 +114,7 @@ en:
       header:
         dashboard: Dashboard
         edit_profile: Edit profile
+        edit_settings: Edit settings
         search_gem_html: Search Gems&hellip;
         sign_in: Sign in
         sign_out: Sign out
@@ -282,14 +283,9 @@ en:
     destroy:
       removed_notice: "%{owner_name} was removed from the owners successfully"
       failed_notice: Can't remove the only owner of the gem
-  profiles:
+  settings:
     edit:
-      change_avatar: Change Avatar
-      email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
-      enter_password: Please enter your account's password
-      hide_email: Hide email in public profile
-      optional_twitter_username: Optional Twitter username. Will be displayed publicly
-      title: Edit profile
+      title: Edit settings
       api_access:
         confirm_reset: Are you sure? This cannot be undone.
         credentials_html: 'If you want to use %{gem_commands_link} from the command line, you''ll need a %{gem_credentials_file} file, which you can generate using the following command:'
@@ -301,10 +297,6 @@ en:
         link_text: Request a new one here.
         text_html: Need a new password? No problem. %{link}
         title: Reset password
-      delete:
-        delete: Delete
-        delete_profile: Delete Profile
-        warning: Deleting your profile is an irreversible action. This can't be undone by contacting support. Please be certain!
       mfa:
         multifactor_auth: Multifactor authentication
         disabled: You have not yet enabled multifactor authentication.
@@ -316,6 +308,18 @@ en:
           disabled: Disabled
           ui_only: UI Only
           ui_and_api: UI and API
+  profiles:
+    edit:
+      change_avatar: Change Avatar
+      email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
+      enter_password: Please enter your account's password
+      hide_email: Hide email in public profile
+      optional_twitter_username: Optional Twitter username. Will be displayed publicly
+      title: Edit profile
+      delete:
+        delete: Delete
+        delete_profile: Delete Profile
+        warning: Deleting your profile is an irreversible action. This can't be undone by contacting support. Please be certain!
     delete:
       title: Delete profile
       confirm: Confirm

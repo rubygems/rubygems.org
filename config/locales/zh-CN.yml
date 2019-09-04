@@ -106,6 +106,7 @@ zh-CN:
       header:
         dashboard: 控制台
         edit_profile:
+        edit_settings:
         search_gem_html: 搜索 Gems&hellip;
         sign_in: 登录
         sign_out: 退出
@@ -247,14 +248,9 @@ zh-CN:
       update:
       push_heading:
       owner_heading:
-  profiles:
+  settings:
     edit:
-      change_avatar:
-      email_awaiting_confirmation: 请验证你的新邮箱地址 %{unconfirmed_email}
-      enter_password: 输入密码
-      hide_email: 在公开的个人资料里面隐藏我的 Email
-      optional_twitter_username: Twitter 账号（可选）
-      title: 修改个人资料
+      title:
       api_access:
         confirm_reset: 确定要重置吗？此动作执行后将无法撤销
         credentials_html: 如果你希望在命令行中使用 %{gem_commands_link}，你需要一个 %{gem_credentials_file} 文件，可用下面的命令生成：
@@ -266,10 +262,6 @@ zh-CN:
         link_text: 这里找回密码
         text_html: 需要一个新密码？没问题，访问 %{link}
         title: 重置密码
-      delete:
-        delete: 删除
-        delete_profile: 删除个人资料
-        warning: 警告
       mfa:
         multifactor_auth:
         disabled:
@@ -281,6 +273,18 @@ zh-CN:
           disabled:
           ui_only:
           ui_and_api:
+  profiles:
+    edit:
+      change_avatar:
+      email_awaiting_confirmation: 请验证你的新邮箱地址 %{unconfirmed_email}
+      enter_password: 输入密码
+      hide_email: 在公开的个人资料里面隐藏我的 Email
+      optional_twitter_username: Twitter 账号（可选）
+      title: 修改个人资料
+      delete:
+        delete: 删除
+        delete_profile: 删除个人资料
+        warning: 警告
     delete:
       title:
       confirm:

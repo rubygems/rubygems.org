@@ -70,8 +70,7 @@ class PasswordResetTest < SystemTest
     fill_in "Password", with: @user.password
     click_button "Sign in"
 
-    visit profile_path(@user)
-    click_link "Edit Profile"
+    visit edit_settings_path
 
     click_link "Request a new one here."
 

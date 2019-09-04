@@ -105,7 +105,7 @@ pt-BR:
         uptime: Uptime
       header:
         dashboard: Painel de Controle
-        edit_profile: Editar perfil
+        edit_settings:
         search_gem_html: Buscar Gems&hellip;
         sign_in: Fazer Login
         sign_out: Sair
@@ -247,14 +247,9 @@ pt-BR:
       update:
       push_heading:
       owner_heading:
-  profiles:
+  settings:
     edit:
-      change_avatar:
-      email_awaiting_confirmation:
-      enter_password:
-      hide_email: Não mostrar meu email
-      optional_twitter_username:
-      title: Editar Perfil
+      title:
       api_access:
         confirm_reset: Tem certeza?
         credentials_html: 'Se você quiser usar %{gem_commands_link} pela linha comando, você vai precisar de um arquivo %{gem_credentials_file}. Para gerar este arquivo rode o seguinte comando:'
@@ -266,10 +261,6 @@ pt-BR:
         link_text: Solicitar uma nova senha.
         text_html: Esqueceu sua senha? Sem problema. %{link}
         title: Resetar senha
-      delete:
-        delete:
-        delete_profile:
-        warning:
       mfa:
         multifactor_auth:
         disabled:
@@ -281,6 +272,18 @@ pt-BR:
           disabled:
           ui_only:
           ui_and_api:
+  profiles:
+    edit:
+      change_avatar:
+      email_awaiting_confirmation:
+      enter_password:
+      hide_email: Não mostrar meu email
+      optional_twitter_username:
+      title: Editar Perfil
+      delete:
+        delete:
+        delete_profile:
+        warning:
     delete:
       title:
       confirm:
