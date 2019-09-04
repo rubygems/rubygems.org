@@ -3,13 +3,11 @@ class Internal::WebauthnSessionsController < Clearance::SessionsController
     user = User.find_by(handle: session[:mfa_user])
 
     if user&.webauthn_enabled?
-      credentials_request_options = WebAuthn.credential_request_options
-      credentials_request_options[:allowCredentials] = user.webauthn_credentials.map do |cred|
-        { id: cred.external_id, type: "public-key" }
-      end
+      credentials_request_options = WebAuthn::PublicKeyCredential.get_options(
+        allow: user.webauthn_credentials.pluck(:external_id)
+      )
 
-      credentials_request_options[:challenge] = bin_to_str(credentials_request_options[:challenge])
-      session[:webauthn_challenge] = credentials_request_options[:challenge]
+      session[:webauthn_challenge] = credentials_request_options.challenge
 
       render json: credentials_request_options, status: :ok
     else

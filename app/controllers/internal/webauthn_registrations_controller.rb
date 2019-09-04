@@ -1,18 +1,17 @@
 class Internal::WebauthnRegistrationsController < ApplicationController
   def options
     current_user.update(webauthn_handle: bin_to_str(SecureRandom.random_bytes(64))) unless current_user.webauthn_handle
-    credential_options = WebAuthn.credential_creation_options(
-      user_name: current_user.handle,
-      display_name: current_user.handle,
-      user_id: current_user.webauthn_handle
+
+    credential_options = WebAuthn::PublicKeyCredential.create_options(
+      user: {
+        name: current_user.handle,
+        display_name: current_user.handle,
+        id: current_user.webauthn_handle
+      },
+      exclude: current_user.webauthn_credentials.pluck(:external_id)
     )
 
-    credential_options[:excludeCredentials] = current_user.webauthn_credentials.map do |credential|
-      { id: credential.external_id, type: "public-key" }
-    end
-
-    credential_options[:challenge] = bin_to_str(credential_options[:challenge])
-    session[:webauthn_challenge] = credential_options[:challenge]
+    session[:webauthn_challenge] = credential_options.challenge
 
     render json: credential_options, status: :ok
   end

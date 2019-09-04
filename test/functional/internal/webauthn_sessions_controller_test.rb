@@ -20,6 +20,18 @@ class Internal::WebauthnSessionsControllerTest < ActionController::TestCase
       )
     end
 
+    context "on GET to /webauthn_session/options" do
+      setup do
+        get :options
+      end
+
+      should respond_with :success
+      should "only allow existing credentials" do
+        credential_id = JSON.parse(@response.body)["allowCredentials"][0]["id"]
+        assert_equal credential_id, @user.webauthn_credentials.take.external_id
+      end
+    end
+
     context "on POST to /webauthn_session" do
       setup do
         @controller.session[:mfa_user] = @user.handle
@@ -37,7 +49,7 @@ class Internal::WebauthnSessionsControllerTest < ActionController::TestCase
 
         should respond_with :success
         should "redirect to the dashboard" do
-          assert_equal JSON.parse(response.body)["redirect_path"], "/"
+          assert_equal "/", JSON.parse(response.body)["redirect_path"]
         end
 
         should "clear user name in session" do

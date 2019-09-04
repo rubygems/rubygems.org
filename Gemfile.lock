@@ -1,8 +1,9 @@
 GIT
   remote: https://github.com/cedarcode/webauthn-ruby
-  revision: 4b86238aafb51d492b08cfdc0e8c1b296e02849f
+  revision: 17943c90df423651faf490c7ebf33c35dcfed0c1
   specs:
     webauthn (1.18.0)
+      awrence (~> 1.1)
       bindata (~> 2.4)
       cbor (~> 0.5.9)
       cose (~> 0.8.0)
@@ -60,6 +61,7 @@ GEM
     ast (2.4.0)
     autoprefixer-rails (9.6.1)
       execjs
+    awrence (1.1.0)
     aws-eventstream (1.0.3)
     aws-sdk (2.11.263)
       aws-sdk-resources (= 2.11.263)
