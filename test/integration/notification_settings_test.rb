@@ -46,7 +46,7 @@ class NoticationSettings < SystemTest
 
     visit edit_profile_path(as: user)
 
-    assert_no_text I18n.t("profiles.edit.notifier.email_notifications")
+    assert_no_text I18n.t("notifiers.show.title")
   end
 
   def notifier_on_radio(ownership)
