@@ -3,9 +3,9 @@ es:
   failure_when_forbidden: Por favor verifica la URL o inténtalo nuevamente.
   feed_latest: RubyGems.org | Gemas más recientes
   feed_subscribed: RubyGems.org | Suscripciones a gemas
-  footer_about_html: RubyGems.org es el servicio de alojamiento de Gemas de la comunidad de Ruby. 
-    <a href="%{publish_docs}">Publica tus gemas</a> instantáneamente y luego <a href="%{install_docs}">instálalas</a>. 
-    Usa <a href="%{api_docs}">la API</a> para saber más sobre <a href="%{gem_list}">las gemas disponibles</a>. 
+  footer_about_html: RubyGems.org es el servicio de alojamiento de Gemas de la comunidad de Ruby.
+    <a href="%{publish_docs}">Publica tus gemas</a> instantáneamente y luego <a href="%{install_docs}">instálalas</a>.
+    Usa <a href="%{api_docs}">la API</a> para saber más sobre <a href="%{gem_list}">las gemas disponibles</a>.
     <a href="%{contributing_docs}">Conviértete en colaborador</a> y mejora este sitio con tus cambios.
   footer_sponsors_html: RubyGems.org es posible gracias la colaboración de la fantástica comunidad de Ruby.
     <a href="https://www.fastly.com/">Fastly</a> provee ancho de banda y soporte de CDN
@@ -215,7 +215,7 @@ es:
       success: Has actualizado exitosamente la configuración de tus notificaciones por email.
     show:
       info: Para facilitar la detección de cambios no autorizados en tus gemas, te enviamos un email
-        cada vez que una nueva versión es subida a RubyGems.org. Recibiendo y leyendo estos emails 
+        cada vez que una nueva versión es subida a RubyGems.org. Recibiendo y leyendo estos emails
         ayudas a proteger el ecosistema de Ruby.
       on: Activado
       off: Desactivado
@@ -224,6 +224,7 @@ es:
       update: Actualizar
   profiles:
     edit:
+      change_avatar:
       email_awaiting_confirmation: Por favor confirma tu nueva dirección de correo %{unconfirmed_email}
       enter_password: Por favor introduce tu contraseña
       hide_email: Ocultar correo electrónico en perfil público

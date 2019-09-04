@@ -14,11 +14,12 @@
         </p>
         <p>
           Gem: <strong><%= @version.to_title %></strong>
-          <br>
+          <br/>
           Pushed by user:
           <strong>
             <%= @pushed_by_user.handle %> <%= mail_to(@pushed_by_user.email) unless @pushed_by_user.hide_email? %>
           </strong>
+          <br/>
           Pushed at: <strong><%= @version.created_at.to_formatted_s(:rfc822) %></strong>
         </p>
         <br/>

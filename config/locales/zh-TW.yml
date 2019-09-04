@@ -214,6 +214,7 @@ zh-TW:
       update:
   profiles:
     edit:
+      change_avatar:
       email_awaiting_confirmation: 請驗證你的新 Email %{unconfirmed_email}
       enter_password: 輸入密碼
       hide_email: 在公開的個人頁面中隱藏 email

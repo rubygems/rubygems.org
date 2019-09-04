@@ -224,6 +224,7 @@ en:
       update: Update
   profiles:
     edit:
+      change_avatar: Change Avatar
       email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
       enter_password: Please enter your account's password
       hide_email: Hide email in public profile

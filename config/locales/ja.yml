@@ -214,6 +214,7 @@ ja:
       update:
   profiles:
     edit:
+      change_avatar:
       email_awaiting_confirmation: あなたの新しいメールアドレス%{unconfirmed_email}を確認してください。
       enter_password: パスワードを入力してください。
       hide_email: メールアドレスを公開しない

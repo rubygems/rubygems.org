@@ -214,6 +214,7 @@ fr:
       update:
   profiles:
     edit:
+      change_avatar:
       email_awaiting_confirmation: Veuillez confirmer votre nouvelle adresse email %{unconfirmed_email}
       enter_password: Veuillez entrer le mot de passe de votre compte
       hide_email: Ne pas afficher l'email dans le profil public
