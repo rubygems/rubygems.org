@@ -14,6 +14,7 @@ RUN apk add --no-cache \
   libxml2-dev \
   libxslt-dev \
   tzdata \
+  git \
   && rm -rf /var/cache/apk/*
 
 RUN mkdir -p /app /app/config
