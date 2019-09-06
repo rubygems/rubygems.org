@@ -16,7 +16,7 @@ class Internal::WebauthnRegistrationsControllerTest < ActionController::TestCase
         encoder = WebAuthn::Encoder.new
         @user.webauthn_credentials.create(
           external_id: public_key_credential.id,
-          public_key: encoder.encode(public_key_credential.public_key),
+          public_key: public_key_credential.public_key,
           nickname: "USB key"
         )
         @user.webauthn_handle = encoder.encode(SecureRandom.random_bytes(64))
