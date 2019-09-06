@@ -224,8 +224,8 @@ class User < ApplicationRecord
     end
 
     begin
-      public_key_credential.verify(str_to_bin(current_challenge),
-        public_key: str_to_bin(credential.public_key),
+      public_key_credential.verify(current_challenge,
+        public_key: credential.public_key,
         sign_count: credential.sign_count)
     rescue WebAuthn::Error
       false

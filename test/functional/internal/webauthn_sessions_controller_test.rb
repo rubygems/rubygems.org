@@ -13,7 +13,7 @@ class Internal::WebauthnSessionsControllerTest < ActionController::TestCase
       public_key_credential = WebAuthn::PublicKeyCredential.from_create(@fake_client.create)
       @user.webauthn_credentials.create!(
         external_id: public_key_credential.id,
-        public_key: @encoder.encode(public_key_credential.public_key),
+        public_key: public_key_credential.public_key,
         nickname: "A nickname",
         sign_count: 0,
         last_used_on: Time.now.in_time_zone
