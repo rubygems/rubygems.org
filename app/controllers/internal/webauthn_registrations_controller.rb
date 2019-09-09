@@ -1,6 +1,6 @@
 class Internal::WebauthnRegistrationsController < ApplicationController
   def options
-    current_user.update(webauthn_handle: bin_to_str(SecureRandom.random_bytes(64))) unless current_user.webauthn_handle
+    current_user.update(webauthn_handle: WebAuthn.generate_user_id) unless current_user.webauthn_handle
 
     credential_options = WebAuthn::PublicKeyCredential.create_options(
       user: {

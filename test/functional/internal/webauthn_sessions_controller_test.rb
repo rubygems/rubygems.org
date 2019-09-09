@@ -7,7 +7,7 @@ class Internal::WebauthnSessionsControllerTest < ActionController::TestCase
     setup do
       @encoder = WebAuthn::Encoder.new
       @user = User.new(email_confirmed: true)
-      @user.webauthn_handle = @encoder.encode(SecureRandom.random_bytes(64))
+      @user.webauthn_handle = WebAuthn.generate_user_id
       @user.save!(validate: false)
       @fake_client = WebAuthn::FakeClient.new("http://test.host", encoding: :base64url)
       public_key_credential = WebAuthn::PublicKeyCredential.from_create(@fake_client.create)
@@ -102,7 +102,7 @@ class Internal::WebauthnSessionsControllerTest < ActionController::TestCase
       context "when webauthn user handle is incorrect" do
         setup do
           credentials = @fake_client.get(challenge: @challenge)
-          credentials["response"]["userHandle"] = @encoder.encode(SecureRandom.random_bytes(64))
+          credentials["response"]["userHandle"] = WebAuthn.generate_user_id
 
           post :create, params: credentials
         end

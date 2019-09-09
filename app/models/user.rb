@@ -220,7 +220,7 @@ class User < ApplicationRecord
     credential = webauthn_credentials.find_by!(external_id: public_key_credential.id)
 
     if public_key_credential.user_handle.present?
-      return false unless str_to_bin(webauthn_handle) == public_key_credential.user_handle
+      return false unless webauthn_handle == public_key_credential.user_handle
     end
 
     begin
@@ -272,9 +272,5 @@ class User < ApplicationRecord
     versions_to_yank.each do |v|
       deletions.create(version: v)
     end
-  end
-
-  def str_to_bin(str)
-    Base64.urlsafe_decode64(str)
   end
 end
