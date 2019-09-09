@@ -370,9 +370,11 @@ pt-BR:
       create:
         success: You have successfully added a new security key.
         fail: There was a problem verifying your security key.
+      security_key_error:
     webauthn_sessions:
       incorrect_security_key: Incorrect security key.
       sign_in_prompt: Please use one of your security keys to continue
+      security_key_error:
   webauthn_credentials:
     not_enabled: Please add a security key first.
     index:

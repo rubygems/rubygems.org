@@ -25,6 +25,7 @@ if(signInButton.length) {
 
 function registrationHandler(event) {
   event.preventDefault();
+  $("#security-key-error-message").hide();
 
   $.get({
     url: "/internal/webauthn_registration/options",
@@ -35,6 +36,7 @@ function registrationHandler(event) {
         callback("/internal/webauthn_registration", $.extend(credential, { "nickname": $("#nickname").val() }));
       },
       function(reason) {
+        $("#security-key-error-message").show();
         var registerButton = registerCredentialForm.find("input.form__submit");
         registerButton.attr('value', registerButton.attr('data-enable-with'));
         registerButton.prop('disabled', false);
@@ -43,6 +45,8 @@ function registrationHandler(event) {
 }
 
 function signInHandler(event) {
+  $("#security-key-error-message").hide();
+
   $.get({
     url: "/internal/webauthn_session/options",
     dataType: "json"
@@ -52,6 +56,7 @@ function signInHandler(event) {
         callback("/internal/webauthn_session", credential);
       },
       function(reason) {
+        $("#security-key-error-message").show();
         signInButton.attr('value', signInButton.attr('data-enable-with'));
         signInButton.prop('disabled', false);
       });

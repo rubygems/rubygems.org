@@ -9,5 +9,8 @@
       <%= t('internal.webauthn_sessions.sign_in_prompt') %>
     </div>
   </p>
+    <strong id="security-key-error-message" class="t-red t--hidden">
+      <%= t('internal.webauthn_sessions.security_key_error') %>
+    </strong>
   <%= button_to t('use_key'), internal_webauthn_session_options_path, id: "sign-in-button", method: 'get', class: 'form__submit js-webauthn-credential-authenticate', data: { disable_with: t('form_disable_with'), enable_with: t('use_key') } %>
 </div>
