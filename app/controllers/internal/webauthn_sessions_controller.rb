@@ -20,7 +20,7 @@ class Internal::WebauthnSessionsController < Clearance::SessionsController
     user = User.find_by(handle: session[:mfa_user])
     session.delete(:mfa_user)
 
-    public_key_credential = WebAuthn::PublicKeyCredential.from_get(params, encoding: :base64url)
+    public_key_credential = WebAuthn::PublicKeyCredential.from_get(params)
     current_challenge = session[:webauthn_challenge]
 
     if user&.webauthn_enabled? && user&.webauthn_verified?(current_challenge, public_key_credential)
