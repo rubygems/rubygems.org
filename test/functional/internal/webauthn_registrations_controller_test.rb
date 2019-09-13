@@ -11,8 +11,8 @@ class Internal::WebauthnRegistrationsControllerTest < ActionController::TestCase
 
     context "when webauthn enabled" do
       setup do
-        @fake_client = WebAuthn::FakeClient.new("http://test.host", encoding: :base64url)
-        public_key_credential = WebAuthn::PublicKeyCredential.from_create(@fake_client.create)
+        @fake_client = WebAuthn::FakeClient.new("http://test.host")
+        public_key_credential = WebAuthn::Credential.from_create(@fake_client.create)
         @user.webauthn_credentials.create(
           external_id: public_key_credential.id,
           public_key: public_key_credential.public_key,
@@ -52,10 +52,11 @@ class Internal::WebauthnRegistrationsControllerTest < ActionController::TestCase
 
       context "on POST to /webauthn_registration" do
         setup do
-          challenge = SecureRandom.random_bytes(32)
-          encoder = WebAuthn::Encoder.new
-          fake_client = WebAuthn::FakeClient.new("http://test.host", encoding: :base64url)
-          @controller.session[:webauthn_challenge] = encoder.encode(challenge)
+          challenge = WebAuthn::Credential.create_options(
+            user: { id: "1", name: "User", display_name: "User" }
+          ).challenge
+          fake_client = WebAuthn::FakeClient.new("http://test.host")
+          @controller.session[:webauthn_challenge] = challenge
 
           @user.update(webauthn_handle: WebAuthn.generate_user_id)
           @client_credential = fake_client.create(challenge: challenge)

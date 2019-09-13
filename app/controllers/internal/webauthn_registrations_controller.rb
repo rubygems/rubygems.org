@@ -2,7 +2,7 @@ class Internal::WebauthnRegistrationsController < ApplicationController
   def options
     current_user.update(webauthn_handle: WebAuthn.generate_user_id) unless current_user.webauthn_handle
 
-    credential_options = WebAuthn::PublicKeyCredential.create_options(
+    credential_options = WebAuthn::Credential.create_options(
       user: {
         name: current_user.handle,
         display_name: current_user.handle,
@@ -18,7 +18,7 @@ class Internal::WebauthnRegistrationsController < ApplicationController
 
   def create
     current_challenge = session[:webauthn_challenge]
-    public_key_credential = WebAuthn::PublicKeyCredential.from_create(params)
+    public_key_credential = WebAuthn::Credential.from_create(params)
 
     if public_key_credential.verify(current_challenge)
       credential = current_user.webauthn_credentials.build(

@@ -5,12 +5,11 @@ require "securerandom"
 class Internal::WebauthnSessionsControllerTest < ActionController::TestCase
   context "when user has webauthn enabled" do
     setup do
-      @encoder = WebAuthn::Encoder.new
       @user = User.new(email_confirmed: true)
       @user.webauthn_handle = WebAuthn.generate_user_id
       @user.save!(validate: false)
-      @fake_client = WebAuthn::FakeClient.new("http://test.host", encoding: :base64url)
-      public_key_credential = WebAuthn::PublicKeyCredential.from_create(@fake_client.create)
+      @fake_client = WebAuthn::FakeClient.new("http://test.host")
+      public_key_credential = WebAuthn::Credential.from_create(@fake_client.create)
       @user.webauthn_credentials.create!(
         external_id: public_key_credential.id,
         public_key: public_key_credential.public_key,
@@ -34,9 +33,9 @@ class Internal::WebauthnSessionsControllerTest < ActionController::TestCase
 
     context "on POST to /webauthn_session" do
       setup do
+        @challenge = WebAuthn::Credential.get_options.challenge
+        @controller.session[:webauthn_challenge] = @challenge
         @controller.session[:mfa_user] = @user.handle
-        @challenge = SecureRandom.random_bytes(32)
-        @controller.session[:webauthn_challenge] = @encoder.encode(@challenge)
       end
 
       context "when authentication succeeds" do
@@ -73,8 +72,7 @@ class Internal::WebauthnSessionsControllerTest < ActionController::TestCase
 
       context "when authentication fails" do
         setup do
-          wrong_challenge = SecureRandom.random_bytes(32)
-          @client_credential = @fake_client.get(challenge: wrong_challenge, sign_count: 1)
+          @client_credential = @fake_client.get(sign_count: 1)
 
           post :create, params: @client_credential
         end

@@ -11,17 +11,16 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
 
     context "when webauthn enabled" do
       setup do
-        @fake_client = WebAuthn::FakeClient.new("http://test.host", encoding: :base64url)
-        public_key_credential = WebAuthn::PublicKeyCredential.from_create(@fake_client.create)
-        encoder = WebAuthn::Encoder.new
+        @fake_client = WebAuthn::FakeClient.new("http://test.host")
+        public_key_credential = WebAuthn::Credential.from_create(@fake_client.create)
         @now = Time.now.in_time_zone
         @user.webauthn_credentials.create(
           external_id: public_key_credential.id,
-          public_key: encoder.encode(public_key_credential.public_key),
+          public_key: public_key_credential.public_key,
           nickname: "USB key",
           last_used_on: @now
         )
-        @user.webauthn_handle = encoder.encode(SecureRandom.random_bytes(64))
+        @user.webauthn_handle = WebAuthn.generate_user_id
         @user.save!(validate: false)
       end
 
@@ -57,11 +56,10 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
         context "when the user does not have a credential with said id" do
           setup do
             @user2 = create(:user)
-            public_key_credential = WebAuthn::PublicKeyCredential.from_create(@fake_client.create)
-            encoder = WebAuthn::Encoder.new
+            public_key_credential = WebAuthn::Credential.from_create(@fake_client.create)
             @user2.webauthn_credentials.create(
               external_id: public_key_credential.id,
-              public_key: encoder.encode(public_key_credential.public_key),
+              public_key: public_key_credential.public_key,
               nickname: "USB key"
             )
 

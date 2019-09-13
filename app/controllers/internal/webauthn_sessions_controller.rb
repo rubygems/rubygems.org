@@ -3,7 +3,7 @@ class Internal::WebauthnSessionsController < Clearance::SessionsController
     user = User.find_by(handle: session[:mfa_user])
 
     if user&.webauthn_enabled?
-      credentials_request_options = WebAuthn::PublicKeyCredential.get_options(
+      credentials_request_options = WebAuthn::Credential.get_options(
         allow: user.webauthn_credentials.pluck(:external_id)
       )
 
@@ -20,7 +20,7 @@ class Internal::WebauthnSessionsController < Clearance::SessionsController
     user = User.find_by(handle: session[:mfa_user])
     session.delete(:mfa_user)
 
-    public_key_credential = WebAuthn::PublicKeyCredential.from_get(params)
+    public_key_credential = WebAuthn::Credential.from_get(params)
     current_challenge = session[:webauthn_challenge]
 
     if user&.webauthn_enabled? && user&.webauthn_verified?(current_challenge, public_key_credential)
