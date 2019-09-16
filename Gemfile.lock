@@ -243,7 +243,7 @@ GEM
     minitest (5.11.3)
     mocha (1.2.1)
       metaclass (~> 0.0.1)
-    msgpack (1.2.10)
+    msgpack (1.3.1)
     multi_json (1.13.1)
     multipart-post (2.0.0)
     netrc (0.11.0)
@@ -389,7 +389,7 @@ GEM
     unicorn (5.5.0.1.g6836)
       kgio (~> 2.6)
       raindrops (~> 0.7)
-    unpwn (0.2.0)
+    unpwn (0.3.0)
       bloomer (~> 1.0)
       pwned (~> 1.2)
     validates_formatting_of (0.9.0)
@@ -462,7 +462,7 @@ DEPENDENCIES
   toxiproxy (~> 1.0.0)
   uglifier (>= 1.0.3)
   unicorn (~> 5.5.0.1.g6836)
-  unpwn (~> 0.2.0)
+  unpwn (~> 0.3.0)
   validates_formatting_of
   xml-simple
 

@@ -44,7 +44,7 @@ gem "sprockets-rails"
 gem "rack-attack"
 gem "rqrcode"
 gem "rotp"
-gem "unpwn", "~> 0.2.0"
+gem "unpwn", "~> 0.3.0"
 
 # Logging
 gem "lograge"
