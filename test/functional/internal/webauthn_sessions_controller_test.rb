@@ -33,7 +33,7 @@ class Internal::WebauthnSessionsControllerTest < ActionController::TestCase
 
     context "on POST to /webauthn_session" do
       setup do
-        @challenge = WebAuthn::Credential.get_options.challenge
+        @challenge = WebAuthn::Credential.options_for_get.challenge
         @controller.session[:webauthn_challenge] = @challenge
         @controller.session[:mfa_user] = @user.handle
       end

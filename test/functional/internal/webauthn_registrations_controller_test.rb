@@ -52,7 +52,7 @@ class Internal::WebauthnRegistrationsControllerTest < ActionController::TestCase
 
       context "on POST to /webauthn_registration" do
         setup do
-          challenge = WebAuthn::Credential.create_options(
+          challenge = WebAuthn::Credential.options_for_create(
             user: { id: "1", name: "User", display_name: "User" }
           ).challenge
           fake_client = WebAuthn::FakeClient.new("http://test.host")

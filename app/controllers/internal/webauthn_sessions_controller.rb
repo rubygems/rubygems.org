@@ -3,7 +3,7 @@ class Internal::WebauthnSessionsController < Clearance::SessionsController
     user = User.find_by(handle: session[:mfa_user])
 
     if user&.webauthn_enabled?
-      credentials_request_options = WebAuthn::Credential.get_options(
+      credentials_request_options = WebAuthn::Credential.options_for_get(
         allow: user.webauthn_credentials.pluck(:external_id)
       )
 
