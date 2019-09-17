@@ -21,9 +21,8 @@ class Internal::WebauthnSessionsController < Clearance::SessionsController
     session.delete(:mfa_user)
 
     public_key_credential = WebAuthn::Credential.from_get(params)
-    current_challenge = session[:webauthn_challenge]
 
-    if user&.webauthn_enabled? && user&.webauthn_verified?(current_challenge, public_key_credential)
+    if user&.webauthn_enabled? && user&.webauthn_verified?(session[:webauthn_challenge], public_key_credential)
       credential = user.webauthn_credentials.find_by(external_id: public_key_credential.id)
       new_sign_count = public_key_credential.sign_count
       attributes_to_update = { last_used_on: Time.now.in_time_zone }
