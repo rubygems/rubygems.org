@@ -300,6 +300,8 @@ es:
       header: "dependencias de %{title}"
     gem_members:
       authors_header: Autores
+      not_using_mfa_warning_show:
+      not_using_mfa_warning_hide:
       owners_header: Propietarios
       pushed_by: Subida por
       yanked_by: Borrada por

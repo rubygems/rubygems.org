@@ -63,3 +63,11 @@ $('.stats__graph__gem__meter').each(function() {
   bar_width = $(this).data("bar_width");
   $(this).animate({ width: bar_width + '%' }, 700).removeClass('t-item--hidden');
 });
+
+//gem page
+$('.gem__users__mfa-text').on('click', function() {
+  $('.gem__users__mfa-text').toggleClass('t-item--hidden');
+
+  $owners = $('.gem__users__mfa-disabled');
+  $owners.toggleClass('t-item--hidden');
+});

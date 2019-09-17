@@ -290,6 +290,8 @@ zh-CN:
       header: "%{title} 依赖关系"
     gem_members:
       authors_header: 作者
+      not_using_mfa_warning_show:
+      not_using_mfa_warning_hide:
       owners_header: 所有者
       pushed_by:
       yanked_by:

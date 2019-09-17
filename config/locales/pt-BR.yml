@@ -290,6 +290,8 @@ pt-BR:
       header:
     gem_members:
       authors_header: Autores
+      not_using_mfa_warning_show: "* Alguns donos não estão usando MFA. Clique para a lista completa."
+      not_using_mfa_warning_hide: "* Os seguintes donos não estão usando MFA. Clique para esconder."
       owners_header: Donos
       pushed_by:
       yanked_by:

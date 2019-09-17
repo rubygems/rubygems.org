@@ -291,6 +291,8 @@ nl:
     gem_members:
       authors_header:
       owners_header: Eigenaren
+      not_using_mfa_warning_show:
+      not_using_mfa_warning_hide:
       pushed_by:
       yanked_by:
       sha_256_checksum: SHA 256 checksum

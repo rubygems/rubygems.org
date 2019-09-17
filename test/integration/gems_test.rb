@@ -76,4 +76,26 @@ class GemsSystemTest < SystemTest
     assert page.has_content? "Subscribe"
     assert_empty @user.subscribed_gems
   end
+
+  test "shows owners without mfa when logged in as owner" do
+    @user.enable_mfa!("some-seed", "ui_and_api")
+    user_without_mfa = create(:user, mfa_level: "disabled")
+
+    @rubygem.owners << [@user, user_without_mfa]
+
+    visit rubygem_path(@rubygem, as: @user.id)
+
+    assert page.has_selector?(".gem__users__mfa-disabled .gem__users a")
+  end
+
+  test "does not show owners without mfa when not logged in as owner" do
+    @user.enable_mfa!("some-seed", "ui_and_api")
+    user_without_mfa = create(:user, mfa_level: "disabled")
+
+    @rubygem.owners << [@user, user_without_mfa]
+
+    visit rubygem_path(@rubygem)
+
+    assert page.has_no_selector?(".gem__users__mfa-disabled .gem__users a")
+  end
 end

@@ -290,6 +290,8 @@ fr:
       header: Dépendances de %{title}
     gem_members:
       authors_header: Auteurs
+      not_using_mfa_warning_show:
+      not_using_mfa_warning_hide:
       owners_header: Propriétaires
       pushed_by:
       yanked_by:

@@ -290,6 +290,8 @@ de:
       header: "%{title} Abhängigkeiten"
     gem_members:
       authors_header: Autoren
+      not_using_mfa_warning_show:
+      not_using_mfa_warning_hide:
       owners_header: Besitzer
       pushed_by:
       yanked_by:
