@@ -92,6 +92,10 @@ module RubygemsHelper
     rubygem.owners.sort_by(&:id).inject("") { |link, owner| link << link_to_user(owner) }.html_safe
   end
 
+  def links_to_owners_without_mfa(rubygem)
+    rubygem.owners.without_mfa.sort_by(&:id).inject("") { |link, owner| link << link_to_user(owner) }.html_safe
+  end
+
   def link_to_user(user)
     link_to gravatar(48, "gravatar-#{user.id}", user), profile_path(user.display_id),
       alt: user.display_handle, title: user.display_handle
