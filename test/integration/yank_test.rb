@@ -37,7 +37,7 @@ class YankTest < SystemTest
     assert page.has_content?("Yanked by")
 
     css = %(div.gem__users a[alt=#{@user.handle}])
-    assert page.has_css?(css, count: 2)
+    assert page.has_css?(css, count: 3)
   end
 
   test "yanked gem entirely then someone else pushes a new version" do
