@@ -65,6 +65,10 @@ class User < ApplicationRecord
     where(ownerships: { notifier: true })
   end
 
+  def self.without_mfa
+    where(mfa_level: "disabled")
+  end
+
   def name
     handle || email
   end

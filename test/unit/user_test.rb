@@ -307,6 +307,20 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context ".without_mfa" do
+    setup do
+      create(:user, handle: "has_mfa", mfa_level: "ui_and_api")
+      create(:user, handle: "no_mfa", mfa_level: "disabled")
+    end
+
+    should "return only users without mfa" do
+      users_without_mfa = User.without_mfa
+
+      assert_equal 1, users_without_mfa.size
+      assert_equal "no_mfa", users_without_mfa.first.handle
+    end
+  end
+
   context "rubygems" do
     setup do
       @user     = create(:user)
