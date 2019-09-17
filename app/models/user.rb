@@ -216,17 +216,19 @@ class User < ApplicationRecord
     save!(validate: false)
   end
 
-  def webauthn_verified?(current_challenge, public_key_credential)
-    credential = webauthn_credentials.find_by!(external_id: public_key_credential.id)
+  def webauthn_verified?(current_challenge, webauthn_credential)
+    user_credential = webauthn_credentials.find_by!(external_id: webauthn_credential.id)
 
-    if public_key_credential.user_handle.present?
-      return false unless webauthn_handle == public_key_credential.user_handle
+    if webauthn_credential.user_handle.present?
+      return false unless webauthn_handle == webauthn_credential.user_handle
     end
 
     begin
-      public_key_credential.verify(current_challenge,
-        public_key: credential.public_key,
-        sign_count: credential.sign_count)
+      webauthn_credential.verify(
+        current_challenge,
+        public_key: user_credential.public_key,
+        sign_count: user_credential.sign_count
+      )
     rescue WebAuthn::Error
       false
     end

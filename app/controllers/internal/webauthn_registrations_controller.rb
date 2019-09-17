@@ -2,7 +2,7 @@ class Internal::WebauthnRegistrationsController < ApplicationController
   def options
     current_user.update(webauthn_handle: WebAuthn.generate_user_id) unless current_user.webauthn_handle
 
-    credential_options = WebAuthn::Credential.options_for_create(
+    options_for_create = WebAuthn::Credential.options_for_create(
       user: {
         name: current_user.handle,
         display_name: current_user.handle,
@@ -11,22 +11,23 @@ class Internal::WebauthnRegistrationsController < ApplicationController
       exclude: current_user.webauthn_credentials.pluck(:external_id)
     )
 
-    session[:webauthn_challenge] = credential_options.challenge
+    session[:webauthn_challenge] = options_for_create.challenge
 
-    render json: credential_options, status: :ok
+    render json: options_for_create, status: :ok
   end
 
   def create
-    public_key_credential = WebAuthn::Credential.from_create(params)
+    webauthn_credential = WebAuthn::Credential.from_create(params)
 
-    if public_key_credential.verify(session[:webauthn_challenge])
-      credential = current_user.webauthn_credentials.build(
-        external_id: public_key_credential.id,
-        public_key: public_key_credential.public_key,
+    if webauthn_credential.verify(session[:webauthn_challenge])
+      user_credential = current_user.webauthn_credentials.build(
+        external_id: webauthn_credential.id,
+        public_key: webauthn_credential.public_key,
         nickname: params[:nickname],
-        sign_count: public_key_credential.sign_count
+        sign_count: webauthn_credential.sign_count
       )
-      if credential.save
+
+      if user_credential.save
         flash[:success] = t(".success")
         status = :ok
       else
