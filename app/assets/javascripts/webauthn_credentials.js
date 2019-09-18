@@ -10,10 +10,7 @@ $(function(){
   }
 });
 
-$(".js-webauthn-registration-form").submit(registrationHandler);
-$(".js-webauthn-authentication-form").submit(signInHandler);
-
-function registrationHandler(event) {
+$(".js-webauthn-registration-form").submit(function(event) {
   event.preventDefault();
   $("#security-key-error-message").hide();
   var $form = $(this);
@@ -33,9 +30,9 @@ function registrationHandler(event) {
         registerButton.prop('disabled', false);
       });
   }).fail(function(response) { console.log(response) })
-}
+});
 
-function signInHandler(event) {
+$(".js-webauthn-authentication-form").submit(function(event) {
   event.preventDefault();
   $("#security-key-error-message").hide();
   var $form = $(this);
@@ -55,7 +52,7 @@ function signInHandler(event) {
         signInButton.prop('disabled', false);
       });
   }).fail(function(response) { window.location.replace(response.responseJSON["redirect_path"]) })
-}
+});
 
 function callback(url, body) {
   $.post({
