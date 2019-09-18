@@ -15,7 +15,7 @@ class Internal::WebauthnSessionsControllerTest < ActionController::TestCase
         public_key: public_key_credential.public_key,
         nickname: "A nickname",
         sign_count: 0,
-        last_used_on: Time.now.in_time_zone
+        last_used_on: Time.current
       )
     end
 

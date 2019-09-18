@@ -13,7 +13,7 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
       setup do
         @fake_client = WebAuthn::FakeClient.new("http://test.host")
         public_key_credential = WebAuthn::Credential.from_create(@fake_client.create)
-        @now = Time.now.in_time_zone
+        @now = Time.current
         @user.webauthn_credentials.create(
           external_id: public_key_credential.id,
           public_key: public_key_credential.public_key,
