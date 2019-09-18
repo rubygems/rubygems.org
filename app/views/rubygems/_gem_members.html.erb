@@ -5,15 +5,19 @@
       <%= links_to_owners(rubygem) %>
     </div>
 
-    <% if rubygem.owned_by?(current_user) && rubygem.owners.without_mfa.present? %>
-      <span class="gem__users__mfa-text"><%= t '.not_using_mfa_warning_show' %></span>
+    <% if  rubygem.owned_by?(current_user) %>
+      <% if rubygem.owners.without_mfa.present? %>
+        <span class="gem__users__mfa-text mfa-warn"><%= t '.not_using_mfa_warning_show' %></span>
 
-      <div class="gem__users__mfa-disabled t-item--hidden">
-        <span class="gem__users__mfa-text t-item--hidden"><%= t '.not_using_mfa_warning_hide' %></span>
-        <div class="gem__users">
-          <%= links_to_owners_without_mfa(rubygem) %>
+        <div class="gem__users__mfa-disabled t-item--hidden">
+          <span class="gem__users__mfa-text mfa-warn t-item--hidden"><%= t '.not_using_mfa_warning_hide' %></span>
+          <div class="gem__users">
+            <%= links_to_owners_without_mfa(rubygem) %>
+          </div>
         </div>
-      </div>
+      <% else %>
+          <span class="gem__users__mfa-text mfa-info"><%= t '.using_mfa_info' %></span>
+      <% end %>
     <% end %>
   <% end %>
 

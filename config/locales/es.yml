@@ -304,6 +304,7 @@ es:
       not_using_mfa_warning_hide:
       owners_header: Propietarios
       pushed_by: Subida por
+      using_mfa_info:
       yanked_by: Borrada por
       sha_256_checksum: SHA 256 checksum
     index:

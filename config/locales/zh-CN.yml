@@ -294,6 +294,7 @@ zh-CN:
       not_using_mfa_warning_hide:
       owners_header: 所有者
       pushed_by:
+      using_mfa_info:
       yanked_by:
       sha_256_checksum: SHA 256 checksum
     index:
