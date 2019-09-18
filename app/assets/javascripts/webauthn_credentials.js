@@ -10,8 +10,8 @@ $(function(){
   }
 });
 
-$("#webauthn-credential-create").submit(registrationHandler);
-$(".js-webauthn-credential-authenticate").submit(signInHandler);
+$(".js-webauthn-registration-form").submit(registrationHandler);
+$(".js-webauthn-authentication-form").submit(signInHandler);
 
 function registrationHandler(event) {
   event.preventDefault();
