@@ -65,9 +65,11 @@ $('.stats__graph__gem__meter').each(function() {
 });
 
 //gem page
-$('.gem__users__mfa-text').on('click', function() {
-  $('.gem__users__mfa-text').toggleClass('t-item--hidden');
+$(document).ready(function() {
+  $('.gem__users__mfa-text.mfa-warn').on('click', function() {
+    $('.gem__users__mfa-text.mfa-warn').toggleClass('t-item--hidden');
 
-  $owners = $('.gem__users__mfa-disabled');
-  $owners.toggleClass('t-item--hidden');
+    $owners = $('.gem__users__mfa-disabled');
+    $owners.toggleClass('t-item--hidden');
+  });
 });
