@@ -16,7 +16,8 @@ zh-TW:
   please_sign_in:
   otp_incorrect:
   otp_missing:
-  use_key: Use security key
+  use_key: Sign in with Security Key
+  sign_in_otp: Sign in with OTP
   sign_in: 登入
   sign_up: 註冊
   multifactor_authentication: MFA 驗證

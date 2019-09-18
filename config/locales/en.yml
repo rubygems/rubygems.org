@@ -24,7 +24,8 @@ en:
   please_sign_in: Please sign in to continue.
   otp_incorrect: Your OTP code is incorrect. Please check it and retry.
   otp_missing: You have enabled multifactor authentication but no OTP code provided. Please fill it and retry.
-  use_key: Use security key
+  use_key: Sign in with Security Key
+  sign_in_otp: Sign in with OTP
   sign_in: Sign in
   sign_up: Sign up
   multifactor_authentication: Multifactor authentication

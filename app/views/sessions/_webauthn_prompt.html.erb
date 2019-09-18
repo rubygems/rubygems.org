@@ -1,5 +1,3 @@
-<% @title = t('multifactor_authentication') %>
-
 <div id="webauthn-prompt" class="t-body">
   <p>
     <strong id="unsupported-browser-message" class="t-red t--hidden">
@@ -12,5 +10,5 @@
     <strong id="security-key-error-message" class="t-red t--hidden">
       <%= t('internal.webauthn_sessions.security_key_error') %>
     </strong>
-  <%= button_to t('use_key'), internal_webauthn_session_options_path, id: "sign-in-button", method: 'get', class: 'form__submit js-webauthn-credential-authenticate', data: { disable_with: t('form_disable_with'), enable_with: t('use_key') } %>
+  <%= button_to t('use_key'), internal_webauthn_session_options_path, id: "sign-in-button", method: 'get', class: 'form__submit js-webauthn-credential-authenticate', autofocus: true, data: { disable_with: t('form_disable_with'), enable_with: t('use_key') } %>
 </div>

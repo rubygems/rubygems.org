@@ -24,7 +24,8 @@ es:
   please_sign_in: Por favor, ingresa en tu cuenta para continuar.
   otp_incorrect: Tu código OTP es incorrecto. Por favor verifícalo y prueba nuevamente.
   otp_missing: Activaste autenticación con múltiples factores, pero no suministraste un código OTP. Por favor ingrésalo y prueba nuevamente.
-  use_key: Use security key
+  use_key: Sign in with Security Key
+  sign_in_otp: Sign in with OTP
   sign_in: Ingresa
   sign_up: Regístrate
   multifactor_authentication: Autenticación de múltiples factores

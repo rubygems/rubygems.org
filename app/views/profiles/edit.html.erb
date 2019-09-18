@@ -102,13 +102,14 @@
       </div>
       <%= submit_tag t('.mfa.update'), :class => 'form__submit' %>
     <% end %>
+
+    <h2><%= link_to t('webauthn_credentials.index.title'), webauthn_credentials_path %></h2>
   <% else %>
     <p>
       <%= t '.mfa.disabled' %>
       <%= button_to t('.mfa.go_settings'), new_multifactor_auth_path, :method => 'get', :class => 'form__submit' %>
     </p>
   <% end %>
-  <h2><%= link_to t('webauthn_credentials.index.title'), webauthn_credentials_path%></h2>
 </div>
 
 <div class="t-body">

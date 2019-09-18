@@ -16,7 +16,8 @@ pt-BR:
   please_sign_in:
   otp_incorrect: Seu código OTP está incorreto. Por favor, verifique-o e tente novamente.
   otp_missing: Você habilitou a autenticação multifator mas nenhum código OTP foi fornecido. Por favor, preencha-o e tente novamente.
-  use_key: Use security key
+  use_key: Sign in with Security Key
+  sign_in_otp: Sign in with OTP
   sign_in: Fazer Login
   sign_up: Cadastrar
   multifactor_authentication: Autenticação Multifator

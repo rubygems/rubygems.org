@@ -2,12 +2,9 @@ class SessionsController < Clearance::SessionsController
   def create
     @user = find_user(params.require(:session))
 
-    if @user&.webauthn_enabled?
+    if @user&.mfa_enabled?
       session[:mfa_user] = @user.handle
-      render "sessions/webauthn_prompt"
-    elsif @user&.mfa_enabled?
-      session[:mfa_user] = @user.handle
-      render "sessions/otp_prompt"
+      render "sessions/mfa_prompt"
     else
       do_login
     end
