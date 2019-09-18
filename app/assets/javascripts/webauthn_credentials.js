@@ -10,10 +10,7 @@ $(function(){
   }
 });
 
-var registerCredentialForm = $("#webauthn-credential-create");
-if(registerCredentialForm.length) {
-  registerCredentialForm.submit(registrationHandler);
-}
+$("#webauthn-credential-create").submit(registrationHandler);
 
 var signInButton = $(".js-webauthn-credential-authenticate");
 if(signInButton.length) {
@@ -24,6 +21,7 @@ if(signInButton.length) {
 function registrationHandler(event) {
   event.preventDefault();
   $("#security-key-error-message").hide();
+  var $form = $(this);
 
   $.get({
     url: "/internal/webauthn_registration/options",
@@ -35,7 +33,7 @@ function registrationHandler(event) {
       },
       function(reason) {
         $("#security-key-error-message").show();
-        var registerButton = registerCredentialForm.find("input.form__submit");
+        var registerButton = $form.find("input.form__submit");
         registerButton.attr('value', registerButton.attr('data-enable-with'));
         registerButton.prop('disabled', false);
       });
