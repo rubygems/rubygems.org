@@ -99,10 +99,10 @@ class Internal::WebauthnSessionsControllerTest < ActionController::TestCase
 
       context "when webauthn user handle is incorrect" do
         setup do
-          credentials = @fake_client.get(challenge: @challenge)
-          credentials["response"]["userHandle"] = WebAuthn.generate_user_id
+          client_credential = @fake_client.get(challenge: @challenge)
+          client_credential["response"]["userHandle"] = WebAuthn.generate_user_id
 
-          post :create, params: { credential: credentials }
+          post :create, params: { credential: client_credential }
         end
 
         should respond_with :unauthorized
