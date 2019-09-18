@@ -6,33 +6,38 @@
       <ul>
         <% @user.webauthn_credentials.each do |credential| %>
           <li>
-            <strong><%= credential.nickname %></strong> - <%= t('.last_used_on') %>: <%- if credential.last_used_on -%> <%= credential.last_used_on.strftime('%b %d, %Y') %> <%- else -%> <%= t('.never_used') %> <%- end -%>
-          <%= link_to t('.delete'), credential, method: :delete, class: 'l-col--r--pad', data: { confirm: t('.confirm') } %>
+            <strong>
+              <%= credential.nickname %>
+            </strong>
+            -
+            <%= t('.last_used_on') %>:
+            <%= credential.last_used_on&.strftime('%b %d, %Y') || t('.never_used') %>
+            <%= link_to t('.delete'), credential, method: :delete, class: 'l-col--r--pad', data: { confirm: t('.confirm') } %>
           </li>
         <% end %>
       </ul>
-    <% else %>
-      <p>
-        <strong id="unsupported-browser-message" class="t-red t--hidden">
-          <%= t('webauthn_credentials.unsupported') %>
-        </strong>
-        <div>
-          <%= t('.disabled') %>
-        </div>
-      </p>
-    <% end %>
     </div>
+  <% else %>
+    <p>
+      <strong id="unsupported-browser-message" class="t-red t--hidden">
+        <%= t('webauthn_credentials.unsupported') %>
+      </strong>
+      <div>
+        <%= t('.disabled') %>
+      </div>
+    </p>
+  <% end %>
 
-    <%= form_tag internal_webauthn_registration_options_path, method: 'get', id: 'webauthn-credential-create' do %>
-      <div class="text_field">
-        <%= label_tag :nickname, t('.nickname'), class: 'form__label' %>
-        <%= text_field_tag :nickname, '', class: 'form__input', autofocus: true, autocomplete: :off, required: true %>
-        <strong id="security-key-error-message" class="t-red t--hidden">
-          <%= t('internal.webauthn_registrations.security_key_error') %>
-        </strong>
-      </div>
-      <div class="form_bottom">
-        <%= submit_tag t('.go_settings'), class: 'form__submit', id: 'register-credential-button',  data: { disable_with: t('form_disable_with'), enable_with: t('.go_settings') } %>
-      </div>
-    <% end %>
+  <%= form_tag internal_webauthn_registration_options_path, method: 'get', id: 'webauthn-credential-create' do %>
+    <div class="text_field">
+      <%= label_tag :nickname, t('.nickname'), class: 'form__label' %>
+      <%= text_field_tag :nickname, '', class: 'form__input', autofocus: true, autocomplete: :off, required: true %>
+      <strong id="security-key-error-message" class="t-red t--hidden">
+        <%= t('internal.webauthn_registrations.security_key_error') %>
+      </strong>
+    </div>
+    <div class="form_bottom">
+      <%= submit_tag t('.go_settings'), class: 'form__submit', id: 'register-credential-button',  data: { disable_with: t('form_disable_with'), enable_with: t('.go_settings') } %>
+    </div>
+  <% end %>
 </div>
