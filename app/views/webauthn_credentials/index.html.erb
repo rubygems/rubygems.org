@@ -28,7 +28,7 @@
     </p>
   <% end %>
 
-  <%= form_tag internal_webauthn_registration_options_path, method: 'get', class: 'js-webauthn-registration-form' do %>
+  <%= form_tag internal_webauthn_registration_options_path, class: 'js-webauthn-registration-form' do %>
     <div class="text_field">
       <%= label_tag :nickname, t('.nickname'), class: 'form__label' %>
       <%= text_field_tag :nickname, '', class: 'form__input', autofocus: true, autocomplete: :off, required: true %>
