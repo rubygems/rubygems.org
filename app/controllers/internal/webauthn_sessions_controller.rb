@@ -23,9 +23,6 @@ class Internal::WebauthnSessionsController < Clearance::SessionsController
     webauthn_credential = WebAuthn::Credential.from_get(params)
 
     if user&.webauthn_enabled? && user&.webauthn_verified?(session[:webauthn_challenge], webauthn_credential)
-      user_credential = user.webauthn_credentials.find_by(external_id: webauthn_credential.id)
-      user_credential.update!(sign_count: webauthn_credential.sign_count, last_used_on: Time.current)
-
       sign_in(user) do |status|
         if status.success?
           render json: { redirect_path: root_path }, status: :ok

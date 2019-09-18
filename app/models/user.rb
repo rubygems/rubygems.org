@@ -229,6 +229,8 @@ class User < ApplicationRecord
         public_key: user_credential.public_key,
         sign_count: user_credential.sign_count
       )
+
+      user_credential.update!(sign_count: webauthn_credential.sign_count, last_used_on: Time.current)
     rescue WebAuthn::Error
       false
     end
