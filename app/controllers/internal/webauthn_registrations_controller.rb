@@ -17,7 +17,7 @@ class Internal::WebauthnRegistrationsController < ApplicationController
   end
 
   def create
-    webauthn_credential = WebAuthn::Credential.from_create(params)
+    webauthn_credential = WebAuthn::Credential.from_create(params[:credential])
 
     if webauthn_credential.verify(session[:webauthn_challenge])
       user_credential = current_user.webauthn_credentials.build(

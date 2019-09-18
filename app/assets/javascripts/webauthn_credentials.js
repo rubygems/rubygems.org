@@ -21,7 +21,13 @@ $(".js-webauthn-registration-form").submit(function(event) {
   }).done(function(options) {
     webauthnJSON.create({ "publicKey": options }).then(
       function(credential) {
-        callback("/internal/webauthn_registration", $.extend(credential, { "nickname": $("#nickname").val() }));
+        callback(
+          "/internal/webauthn_registration",
+          {
+            "credential": credential,
+            "nickname": $("#nickname").val()
+          }
+        );
       },
       function(reason) {
         $("#security-key-error-message").show();
@@ -43,7 +49,7 @@ $(".js-webauthn-authentication-form").submit(function(event) {
   }).done(function(options) {
     webauthnJSON.get({ "publicKey": options }).then(
       function(credential) {
-        callback("/internal/webauthn_session", credential);
+        callback("/internal/webauthn_session", { "credential": credential });
       },
       function(reason) {
         $("#security-key-error-message").show();

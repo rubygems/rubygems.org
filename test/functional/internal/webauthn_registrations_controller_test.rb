@@ -60,10 +60,8 @@ class Internal::WebauthnRegistrationsControllerTest < ActionController::TestCase
 
           @user.update(webauthn_handle: WebAuthn.generate_user_id)
           @client_credential = fake_client.create(challenge: challenge)
-          params = @client_credential
-          params["nickname"] = "A nickname"
 
-          post :create, params: params
+          post :create, params: { credential: @client_credential, nickname: "A nickname" }
         end
 
         should respond_with :success

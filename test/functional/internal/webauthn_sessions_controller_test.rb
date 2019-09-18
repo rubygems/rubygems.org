@@ -43,7 +43,7 @@ class Internal::WebauthnSessionsControllerTest < ActionController::TestCase
           @sign_count = 1234
           @client_credential = @fake_client.get(challenge: @challenge, sign_count: @sign_count)
 
-          post :create, params: @client_credential
+          post :create, params: { credential: @client_credential }
         end
 
         should respond_with :success
@@ -74,7 +74,7 @@ class Internal::WebauthnSessionsControllerTest < ActionController::TestCase
         setup do
           @client_credential = @fake_client.get(sign_count: 1)
 
-          post :create, params: @client_credential
+          post :create, params: { credential: @client_credential }
         end
 
         should set_flash[:error]
@@ -102,7 +102,7 @@ class Internal::WebauthnSessionsControllerTest < ActionController::TestCase
           credentials = @fake_client.get(challenge: @challenge)
           credentials["response"]["userHandle"] = WebAuthn.generate_user_id
 
-          post :create, params: credentials
+          post :create, params: { credential: credentials }
         end
 
         should respond_with :unauthorized
@@ -112,7 +112,7 @@ class Internal::WebauthnSessionsControllerTest < ActionController::TestCase
         setup do
           @client_credential = @fake_client.get(challenge: @challenge)
 
-          post :create, params: @client_credential
+          post :create, params: { credential: @client_credential }
         end
 
         should respond_with :success
