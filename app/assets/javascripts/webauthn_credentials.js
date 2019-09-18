@@ -3,11 +3,9 @@ $(function(){
     if($("#unsupported-browser-message").length) {
       $("#unsupported-browser-message").show();
 
-      if($("#sign-in-button").length) {
-        $("#sign-in-button").prop("disabled", true);
-      } else if($("#register-credential-button").length) {
-        $("#register-credential-button").prop("disabled", true);
-      }
+      $(".js-webauthn-button").each(function() {
+        $(this).prop("disabled", true);
+      });
     }
   }
 });

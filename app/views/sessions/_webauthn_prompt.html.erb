@@ -12,5 +12,5 @@
     <%= t('internal.webauthn_sessions.security_key_error') %>
   </strong>
 
-  <%= button_to t('use_key'), internal_webauthn_session_options_path, id: "sign-in-button", method: 'get', class: 'form__submit js-webauthn-credential-authenticate', autofocus: true, data: { disable_with: t('form_disable_with'), enable_with: t('use_key') } %>
+  <%= button_to t('use_key'), internal_webauthn_session_options_path, method: 'get', class: 'form__submit js-webauthn-button js-webauthn-credential-authenticate', autofocus: true, data: { disable_with: t('form_disable_with'), enable_with: t('use_key') } %>
 </div>
