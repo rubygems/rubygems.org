@@ -24,10 +24,7 @@ class Internal::WebauthnSessionsController < Clearance::SessionsController
 
     if user&.webauthn_enabled? && user&.webauthn_verified?(session[:webauthn_challenge], webauthn_credential)
       user_credential = user.webauthn_credentials.find_by(external_id: webauthn_credential.id)
-      new_sign_count = webauthn_credential.sign_count
-      attributes_to_update = { last_used_on: Time.now.in_time_zone }
-      attributes_to_update[:sign_count] = new_sign_count if new_sign_count
-      user_credential.update!(attributes_to_update)
+      user_credential.update!(sign_count: webauthn_credential.sign_count, last_used_on: Time.now.in_time_zone)
 
       sign_in(user) do |status|
         if status.success?
