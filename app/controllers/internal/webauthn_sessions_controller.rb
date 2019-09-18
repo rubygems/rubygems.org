@@ -17,9 +17,7 @@ class Internal::WebauthnSessionsController < Clearance::SessionsController
   end
 
   def create
-    user = User.find_by(handle: session[:mfa_user])
-    session.delete(:mfa_user)
-
+    user = User.find_by(handle: session.delete(:mfa_user))
     webauthn_credential = WebAuthn::Credential.from_get(params)
 
     if user&.webauthn_enabled? && user&.webauthn_verified?(session[:webauthn_challenge], webauthn_credential)
