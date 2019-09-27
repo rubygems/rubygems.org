@@ -7,7 +7,7 @@ class GemTypo
 
   DOWNLOADS_THRESHOLD = 10_000_000
   SIZE_THRESHOLD = 4
-  EXCEPTIONS = %w[strait upguard].freeze
+  EXCEPTIONS = %w[ruolo strait upguard].freeze
 
   def initialize(rubygem_name)
     @rubygem_name       = rubygem_name.downcase
