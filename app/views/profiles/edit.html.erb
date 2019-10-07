@@ -110,9 +110,11 @@
   <% end %>
 </div>
 
-<div class="t-body">
-  <h2><%= link_to t('notifiers.show.title'), notifier_path %></h2>
-</div>
+<% if @user.ownerships.any? %>
+  <div class="t-body">
+    <h2><%= link_to t('notifiers.show.title'), notifier_path %></h2>
+  </div>
+<% end %>
 
 <div class="t-body">
   <h2><%= t '.delete.delete_profile' %></h2>

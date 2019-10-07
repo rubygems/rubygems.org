@@ -1,7 +1,7 @@
 require "test_helper"
 require "capybara/minitest"
 
-class NoticationSettings < SystemTest
+class NotificationSettingsTest < SystemTest
   include Capybara::Minitest::Assertions
 
   test "changing email notification settings" do
@@ -46,7 +46,7 @@ class NoticationSettings < SystemTest
 
     visit edit_profile_path(as: user)
 
-    assert_no_text I18n.t("profiles.edit.notifier.email_notifications")
+    assert_no_text I18n.t("notifiers.show.title")
   end
 
   def notifier_on_radio(ownership)
