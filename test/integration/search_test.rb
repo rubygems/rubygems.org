@@ -14,7 +14,6 @@ class SearchTest < SystemTest
     click_button "search_submit"
 
     assert page.has_content? "LDAP"
-    assert page.has_content? "Exact match"
 
     assert page.has_content? "LDAP-PLUS"
   end
@@ -36,7 +35,6 @@ class SearchTest < SystemTest
     rubygem = create(:rubygem, name: "LDAP")
     create(:version, rubygem: rubygem, number: "1.1.1", indexed: true)
     create(:version, rubygem: rubygem, number: "2.2.2", indexed: false)
-    create(:version, rubygem: rubygem, number: "3.3.3", indexed: true)
     import_and_refresh
 
     visit search_path
@@ -46,7 +44,6 @@ class SearchTest < SystemTest
 
     assert page.has_content?("1.1.1")
     refute page.has_content?("2.2.2")
-    assert page.has_content?("3.3.3")
   end
 
   test "search page with a non valid format" do

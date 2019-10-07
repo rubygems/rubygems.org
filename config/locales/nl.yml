@@ -322,7 +322,6 @@ nl:
       downloads:
       updated:
     show:
-      exact_match: Exacte match
       subtitle: voor %{query}
       month_update:
       week_update:

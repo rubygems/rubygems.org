@@ -84,18 +84,6 @@ class SearchesControllerTest < ActionController::TestCase
     end
   end
 
-  context "on GET to show with search parameters with a single exact match" do
-    setup do
-      @sinatra = create(:rubygem, name: "sinatra")
-      create(:version, rubygem: @sinatra)
-      import_and_refresh
-      get :show, params: { query: "sinatra" }
-    end
-
-    should respond_with :redirect
-    should redirect_to("the gem") { rubygem_path(@sinatra) }
-  end
-
   context "on GET to show with non string search parameter" do
     setup do
       get :show, params: { query: { foo: "bar" } }
