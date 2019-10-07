@@ -332,7 +332,6 @@ es:
       downloads: Descargas
       updated: Actualizada
     show:
-      exact_match: Coincidencia exacta
       subtitle: para %{query}
       month_update: Actualizadas en el último mes (%{count})
       week_update: Actualizadas en la última semana (%{count})

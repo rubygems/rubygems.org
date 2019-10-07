@@ -332,7 +332,6 @@ en:
       downloads: Downloads
       updated: Updated
     show:
-      exact_match: Exact match
       subtitle: for %{query}
       month_update: Updated last month (%{count})
       week_update: Updated last week (%{count})

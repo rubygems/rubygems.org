@@ -322,7 +322,6 @@ de:
       downloads:
       updated:
     show:
-      exact_match: Exakte Übereinstimmung
       subtitle: für %{query}
       month_update:
       week_update:
