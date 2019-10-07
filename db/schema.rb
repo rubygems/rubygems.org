@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_26_190518) do
+ActiveRecord::Schema.define(version: 2019_08_31_172741) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -65,6 +65,13 @@ ActiveRecord::Schema.define(version: 2019_04_26_190518) do
     t.bigint "count"
     t.index ["rubygem_id", "version_id"], name: "index_gem_downloads_on_rubygem_id_and_version_id", unique: true
     t.index ["version_id", "rubygem_id", "count"], name: "index_gem_downloads_on_version_id_and_rubygem_id_and_count"
+  end
+
+  create_table "gem_typo_exceptions", force: :cascade do |t|
+    t.string "name"
+    t.text "info"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "linksets", id: :serial, force: :cascade do |t|

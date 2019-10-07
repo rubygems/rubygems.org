@@ -135,4 +135,8 @@ FactoryBot.define do
     status { "pending" }
     payload { {} }
   end
+
+  factory :gem_typo_exception do
+    name
+  end
 end
