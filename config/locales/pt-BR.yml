@@ -278,11 +278,11 @@ pt-BR:
         header: Links
         home: Homepage
         mail: Lista de Emails
-        report_abuse: Report Abuse
-        reverse_dependencies:
+        report_abuse: Denunciar Abuso
+        reverse_dependencies: Dependências Reversas
         rss: RSS
-        subscribe: Subscribe
-        unsubscribe: Unsubscribe
+        subscribe: Inscrever-se
+        unsubscribe: Desinscrever-se
         wiki: Wiki
     blacklisted:
       blacklisted_namespace: This namespace is reserved by rubygems.org.
