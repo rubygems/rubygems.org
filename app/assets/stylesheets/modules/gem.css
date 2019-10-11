@@ -133,7 +133,6 @@
   font-size: 14px;
   line-height: 32px;
   text-align: center;
-  z-index: 5;
   color: #ffffff;
   cursor: pointer; }
   .gem__code__icon:before {
@@ -154,7 +153,10 @@
   position: absolute;
   top: 45px;
   right: 0;
-  width: 120px;
+  width: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+  z-index: 1;
   border-radius: 6px;
   background-color: #141c22;
   text-transform: none;
