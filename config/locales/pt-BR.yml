@@ -266,8 +266,8 @@ pt-BR:
       copy_to_clipboard:
       downloads_for_this_version: Desta versão
       install: instalar
-      required_ruby_version:
-      required_rubygems_version:
+      required_ruby_version: Versão Requerida do Ruby
+      required_rubygems_version: Versão Requerida do RubyGems
       links:
         badge: Badge
         bugs:
