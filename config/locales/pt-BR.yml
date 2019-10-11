@@ -329,7 +329,7 @@ pt-BR:
   sessions:
     new:
       forgot_password: Esqueceu sua Senha?
-      resend_confirmation:
+      resend_confirmation: Não recebi o email de confirmação?
   stats:
     index:
       all_time_most_downloaded:
