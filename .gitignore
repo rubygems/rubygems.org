@@ -19,4 +19,5 @@ tmp/
 tags
 .idea
 chef
+.byebug_history
 public/assets
