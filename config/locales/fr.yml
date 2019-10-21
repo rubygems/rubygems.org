@@ -322,7 +322,6 @@ fr:
       downloads: Téléchargements
       updated: Mis à jour
     show:
-      exact_match: Titre exact
       subtitle: pour %{query}
       month_update:
       week_update:

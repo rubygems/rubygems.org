@@ -322,7 +322,6 @@ zh-CN:
       downloads: 下载数
       updated: 更新时间
     show:
-      exact_match: 精确匹配
       subtitle: "%{query}"
       month_update:
       week_update:

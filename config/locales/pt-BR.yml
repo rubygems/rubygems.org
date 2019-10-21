@@ -322,7 +322,6 @@ pt-BR:
       downloads:
       updated:
     show:
-      exact_match: Busca exata
       subtitle: para %{query}
       month_update:
       week_update:

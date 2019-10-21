@@ -9,17 +9,7 @@
 <% if @gems %>
   <% @subtitle = t('.subtitle', :query => content_tag(:em, h(params[:query]))) %>
 
-  <% if @exact_match %>
-    <header class="gems__header">
-      <p class="gems__meter"><%= t '.exact_match' %></p>
-    </header>
-    <% content_for :head do %>
-      <link rel="prerender prefetch" href="<%= rubygem_url(@exact_match) %>">
-    <% end %>
-    <%= render partial: 'rubygems/rubygem', object: @exact_match %>
-  <% end %>
-
-  <header class="gems__header push">
+  <header class="gems__header push--s">
     <p class="gems__meter"><%= page_entries_info(@gems, :entry_name => 'gem').html_safe %></p>
   </header>
 

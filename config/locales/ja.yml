@@ -322,7 +322,6 @@ ja:
       downloads: ダウンロード数
       updated: 更新日
     show:
-      exact_match: 完全一致
       subtitle: '%{query}の検索結果'
       month_update:
       week_update:
