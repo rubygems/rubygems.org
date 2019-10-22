@@ -332,10 +332,11 @@ pt-BR:
       resend_confirmation: Não recebi o email de confirmação?
   stats:
     index:
-      all_time_most_downloaded:
+      title: Estatísticas
+      all_time_most_downloaded: Mais baixadas de todos os tempos
       total_downloads: Total de downloads
-      total_gems: Total gems
-      total_users: Total users
+      total_gems: Total de gems
+      total_users: Total de usuários
   users:
     create:
       email_sent:

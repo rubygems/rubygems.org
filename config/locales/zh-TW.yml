@@ -332,6 +332,7 @@ zh-TW:
       resend_confirmation: 沒收到確認信？
   stats:
     index:
+      title: 
       all_time_most_downloaded: 歷史下載次數排行
       total_downloads: 總下載次數
       total_gems: Gems 總數
