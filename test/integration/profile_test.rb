@@ -2,7 +2,7 @@ require "test_helper"
 
 class ProfileTest < SystemTest
   setup do
-    @user = create(:user, email: "nick@example.com", password: "?98,TUESDAY,SHOWN,exactly,56?", handle: "nick1", mail_fails: 1)
+    @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "nick1", mail_fails: 1)
 
     page.driver.browser.set_cookie("mfa_feature=true")
   end
@@ -37,7 +37,7 @@ class ProfileTest < SystemTest
 
     click_link "Edit Profile"
     fill_in "Username", with: "nick2"
-    fill_in "Password", with: "?98,TUESDAY,SHOWN,exactly,56?"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
     assert page.has_content? "nick2"
@@ -51,7 +51,7 @@ class ProfileTest < SystemTest
     click_link "Edit Profile"
 
     fill_in "Username", with: "nick2"
-    fill_in "Password", with: "?98,TUESDAY,SHOWN,exactly,56?"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
     assert page.has_content? "Username has already been taken"
@@ -63,7 +63,7 @@ class ProfileTest < SystemTest
     click_link "Edit Profile"
 
     fill_in "Username", with: "nick1" * 10
-    fill_in "Password", with: "?98,TUESDAY,SHOWN,exactly,56?"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
     assert page.has_content? "Username is too long (maximum is 40 characters)"
@@ -76,7 +76,7 @@ class ProfileTest < SystemTest
     click_link "Edit Profile"
 
     fill_in "Email address", with: "nick2@example.com"
-    fill_in "Password", with: "?98,TUESDAY,SHOWN,exactly,56?"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
 
     click_button "Update"
 
@@ -102,7 +102,7 @@ class ProfileTest < SystemTest
     visit profile_path("nick1")
     click_link "Edit Profile"
 
-    fill_in "Password", with: "?98,TUESDAY,SHOWN,exactly,56?"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     check "Hide email in public profile"
     click_button "Update"
 
@@ -116,7 +116,7 @@ class ProfileTest < SystemTest
 
     click_link "Edit Profile"
     fill_in "Twitter username", with: "nick1"
-    fill_in "Password", with: "?98,TUESDAY,SHOWN,exactly,56?"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
     visit profile_path("nick1")
@@ -130,7 +130,7 @@ class ProfileTest < SystemTest
     click_link "Edit Profile"
 
     click_button "Delete"
-    fill_in "Password", with: "?98,TUESDAY,SHOWN,exactly,56?"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Confirm"
 
     assert page.has_content? "Your account deletion request has been enqueued."\

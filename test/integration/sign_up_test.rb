@@ -6,7 +6,7 @@ class SignUpTest < SystemTest
 
     fill_in "Email", with: "email@person.com"
     fill_in "Username", with: "nick"
-    fill_in "Password", with: "@61:details:THOSE:present:71@"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign up"
 
     assert page.has_selector? "#flash_notice", text: "A confirmation mail has been sent to your email address."
@@ -16,7 +16,7 @@ class SignUpTest < SystemTest
     visit sign_up_path
 
     fill_in "Email", with: "email@person.com"
-    fill_in "Password", with: "@61:details:THOSE:present:71@"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign up"
 
     assert page.has_content? "errors prohibited"
@@ -27,7 +27,7 @@ class SignUpTest < SystemTest
 
     fill_in "Email", with: "email@person.com"
     fill_in "Username", with: "thisusernameiswaytoolongseriouslywaytoolong"
-    fill_in "Password", with: "@61:details:THOSE:present:71@"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign up"
 
     assert page.has_content? "error prohibited"
@@ -39,7 +39,7 @@ class SignUpTest < SystemTest
 
     fill_in "Email", with: "email@person.com"
     fill_in "Username", with: "nick"
-    fill_in "Password", with: "@61:details:THOSE:present:71@"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign up"
 
     assert page.has_content? "error prohibited"
@@ -61,7 +61,7 @@ class SignUpTest < SystemTest
 
     fill_in "Email", with: "email@person.com"
     fill_in "Username", with: "nick"
-    fill_in "Password", with: "@61:details:THOSE:present:71@"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign up"
 
     link = last_email_link

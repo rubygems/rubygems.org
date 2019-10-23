@@ -7,9 +7,9 @@ class SessionTest < ActionDispatch::IntegrationTest
   end
 
   setup do
-    create(:user, handle: "johndoe", password: "!01-WITHIN-HEALTH-india-33!")
+    create(:user, handle: "johndoe", password: PasswordHelpers::SECURE_TEST_PASSWORD)
     @last_session_token = retrive_authenticity_token sign_in_path
-    post session_path(session: { who: "johndoe", password: "!01-WITHIN-HEALTH-india-33!" })
+    post session_path(session: { who: "johndoe", password: PasswordHelpers::SECURE_TEST_PASSWORD })
     ActionController::Base.allow_forgery_protection = true # default is false
   end
 
@@ -19,7 +19,7 @@ class SessionTest < ActionDispatch::IntegrationTest
 
   test "authenticity_token of guest session should be invalid in authenticated session" do
     post session_path(
-      session: { who: "johndoe", password: "!01-WITHIN-HEALTH-india-33!" },
+      session: { who: "johndoe", password: PasswordHelpers::SECURE_TEST_PASSWORD },
       authenticity_token: @last_session_token
     )
 
@@ -31,9 +31,9 @@ class SessionTest < ActionDispatch::IntegrationTest
     @last_session_token = retrive_authenticity_token edit_profile_path
     delete sign_out_path(authenticity_token: request.session[:_csrf_token])
 
-    create(:user, handle: "bob", password: "!01-WITHIN-HEALTH-india-33!")
+    create(:user, handle: "bob", password: PasswordHelpers::SECURE_TEST_PASSWORD)
     post session_path(
-      session: { who: "bob", password: "!01-WITHIN-HEALTH-india-33!" },
+      session: { who: "bob", password: PasswordHelpers::SECURE_TEST_PASSWORD },
       authenticity_token: request.session[:_csrf_token]
     )
 
