@@ -10,10 +10,13 @@ module Patterns
   GEM_NAME_BLACKLIST    = %w[
     abbrev
     base64
+    benchmark
+    cgi
     cgi-session
     complex
     continuation
     coverage
+    delegate
     digest
     drb
     english
@@ -22,6 +25,7 @@ module Patterns
     expect
     fiber
     find
+    getoptlong
     install
     io-nonblock
     io-wait
@@ -32,15 +36,19 @@ module Patterns
     net-ftp
     net-http
     net-imap
+    net-pop
     net-protocol
+    net-smtp
     nkf
     open-uri
+    open3
     optparse
     pathname
     pp
     prettyprint
     profile
     profiler
+    pstore
     pty
     rational
     rbconfig
@@ -51,6 +59,7 @@ module Patterns
     securerandom
     set
     shellwords
+    singleton
     socket
     syslog
     tempfile
