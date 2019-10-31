@@ -9,6 +9,7 @@ require "shoulda"
 require "helpers/gem_helpers"
 require "helpers/email_helpers"
 require "helpers/es_helper"
+require "helpers/password_helpers"
 
 RubygemFs.mock!
 Aws.config[:stub_responses] = true
@@ -17,10 +18,14 @@ class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
   include GemHelpers
   include EmailHelpers
+  include PasswordHelpers
 
   setup do
     I18n.locale = :en
     Rails.cache.clear
+
+    # Don't connect to the Pwned Passwords API in tests
+    Pwned.stubs(:pwned?).returns(false)
   end
 
   def page

@@ -43,7 +43,11 @@ class User < ApplicationRecord
   }, allow_nil: true
 
   validates :twitter_username, length: { within: 0..20 }, allow_nil: true
-  validates :password, length: { within: 10..200 }, allow_nil: true, unless: :skip_password_validation?
+  validates :password,
+    length: { within: 10..200 },
+    unpwn: true,
+    allow_nil: true,
+    unless: :skip_password_validation?
   validate :unconfirmed_email_uniqueness
 
   enum mfa_level: { disabled: 0, ui_only: 1, ui_and_api: 2 }, _prefix: :mfa

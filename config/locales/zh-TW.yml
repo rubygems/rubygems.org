@@ -43,6 +43,9 @@ zh-TW:
         email: Email
         handle: 帳號
         password: 密碼
+    errors:
+      messages:
+        unpwn:
   clearance_mailer:
     change_password:
       title:

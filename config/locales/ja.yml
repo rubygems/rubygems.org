@@ -43,6 +43,9 @@ ja:
         email: Emailアドレス
         handle: ユーザー名
         password: パスワード
+    errors:
+      messages:
+        unpwn:
   clearance_mailer:
     change_password:
       title:
