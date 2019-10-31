@@ -69,7 +69,7 @@ FactoryBot.define do
       if evaluator.linkset
         rubygem.linkset = evaluator.linkset
       else
-        create(:linkset, rubygem: rubygem)
+        build(:linkset, rubygem: rubygem)
       end
     end
 
