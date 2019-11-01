@@ -6,7 +6,7 @@ class VersionTest < ActiveSupport::TestCase
 
   context "#as_json" do
     setup do
-      @version = build(:version, summary: "some words")
+      @version = build(:version, summary: "some words", created_at: Time.now)
     end
 
     should "only have relevant API fields" do
@@ -19,6 +19,7 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal fields.map(&:to_s).sort, json.keys.sort
       assert_equal @version.authors, json["authors"]
       assert_equal @version.built_at, json["built_at"]
+      assert_equal @version.created_at, json["created_at"]
       assert_equal @version.description, json["description"]
       assert_equal @version.downloads_count, json["downloads_count"]
       assert_equal @version.metadata, json["metadata"]
