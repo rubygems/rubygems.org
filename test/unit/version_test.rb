@@ -305,6 +305,7 @@ class VersionTest < ActiveSupport::TestCase
         number: "0.4.0.pre")
 
       assert @version.prerelease
+      assert @version.read_attribute(:prerelease) # This checks to see if the callback worked
       assert new_version.prerelease
 
       @version.rubygem.reorder_versions
@@ -483,8 +484,8 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with mixed release and prerelease versions" do
     setup do
-      @prerelease = create(:version, number: "1.0.rc1")
-      @release    = create(:version, number: "1.0")
+      @prerelease = build(:version, number: "1.0.rc1")
+      @release    = build(:version, number: "1.0")
     end
 
     should "know if it is a prelease version" do
@@ -493,6 +494,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "return prerelease gems from the prerelease named scope" do
+      [@prerelease, @release].each(&:save!)
       assert_equal [@prerelease], Version.prerelease
       assert_equal [@release],    Version.release
     end

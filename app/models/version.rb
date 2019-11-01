@@ -333,7 +333,7 @@ class Version < ApplicationRecord
   end
 
   def prerelease
-    self[:prerelease] || !!to_gem_version.prerelease?
+    self[:prerelease] ||= !!to_gem_version.prerelease?
   end
 
   private
@@ -349,10 +349,6 @@ class Version < ApplicationRecord
     string_authors = authors.is_a?(Array) && authors.grep(String)
     return unless string_authors.blank? || string_authors.size != authors.size
     errors.add :authors, "must be an Array of Strings"
-  end
-
-  def update_prerelease
-    self[:prerelease] = prerelease
   end
 
   def full_nameify!
