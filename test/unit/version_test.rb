@@ -755,11 +755,6 @@ class VersionTest < ActiveSupport::TestCase
       @version = build(:version)
     end
 
-    should "be available from the database" do
-      assert_equal "tdQEXD9Gb6kf4sxqvnkjKhpXzfEE96JucW4KHieJ33g=",
-        @version.sha256
-    end
-
     should "convert to hex on sha256_hex" do
       assert_equal "b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78",
         @version.sha256_hex
