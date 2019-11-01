@@ -332,6 +332,10 @@ class Version < ApplicationRecord
     Deletion.find_by(rubygem: rubygem.name, number: number, platform: platform)&.user unless indexed
   end
 
+  def prerelease
+    self[:prerelease] || !!to_gem_version.prerelease?
+  end
+
   private
 
   def platform_and_number_are_unique
@@ -348,7 +352,7 @@ class Version < ApplicationRecord
   end
 
   def update_prerelease
-    self[:prerelease] = !!to_gem_version.prerelease? # rubocop:disable Style/DoubleNegation
+    self[:prerelease] = prerelease
   end
 
   def full_nameify!

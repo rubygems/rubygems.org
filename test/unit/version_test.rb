@@ -10,7 +10,6 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "only have relevant API fields" do
-      @version.send(:update_prerelease) # called usually on save, calling here to set prerelease properly
       json = @version.as_json
 
       fields = %w[number built_at summary description authors platform
