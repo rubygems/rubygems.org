@@ -6,7 +6,7 @@ class VersionTest < ActiveSupport::TestCase
 
   context "#as_json" do
     setup do
-      @version = build(:version, summary: "some words", created_at: Time.now)
+      @version = build(:version, summary: "some words", created_at: Time.now.in_time_zone)
     end
 
     should "only have relevant API fields" do

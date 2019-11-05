@@ -6,7 +6,7 @@ class Version < ApplicationRecord
   has_one :gem_download, inverse_of: :version, dependent: :destroy
   belongs_to :pusher, class_name: "User", foreign_key: "pusher_id", inverse_of: false, optional: true
 
-  before_save :update_prerelease
+  before_save :update_prerelease, if: :number_changed?
   before_validation :full_nameify!
   after_save :reorder_versions, if: -> { saved_change_to_indexed? || saved_change_to_id? }
 
@@ -333,10 +333,15 @@ class Version < ApplicationRecord
   end
 
   def prerelease
-    self[:prerelease] ||= !!to_gem_version.prerelease?
+    !!to_gem_version.prerelease? # rubocop:disable Style/DoubleNegation
   end
+  alias prerelease? prerelease
 
   private
+
+  def update_prerelease
+    self[:prerelease] = prerelease
+  end
 
   def platform_and_number_are_unique
     return unless Version.exists?(rubygem_id: rubygem_id, number: number, platform: platform)
