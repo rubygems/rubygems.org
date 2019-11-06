@@ -1,20 +1,13 @@
-require_relative "boot"
+require_relative 'boot'
 
-require "rails"
-# Pick the frameworks you want:
-# require "active_model/railtie"
-require "active_job/railtie"
-require "active_record/railtie"
-# require "active_storage/engine"
-require "action_controller/railtie"
-require "action_mailer/railtie"
-# require "action_mailbox/engine"
-# require "action_text/engine"
-require "action_view/railtie"
-# require "action_cable/engine"
-require "sprockets/railtie"
-require "rails/test_unit/railtie"
-require "elasticsearch/rails/instrumentation"
+require 'active_record/railtie'
+require 'action_controller/railtie'
+require 'action_view/railtie'
+require 'action_mailer/railtie'
+require 'active_job/railtie'
+require 'rails/test_unit/railtie'
+require 'sprockets/railtie'
+require 'elasticsearch/rails/instrumentation'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -22,22 +15,16 @@ Bundler.require(*Rails.groups)
 
 module Gemcutter
   class Application < Rails::Application
-    # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
 
-    # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration can go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded after loading
-    # the framework and any gems in your application.
-
-    # Using true enables origin-checking CSRF mitigation. Our API can"t use this check.
+    # Using true enables origin-checking CSRF mitigation. Our API can't use this check.
     config.action_controller.forgery_protection_origin_check = false
 
     config.rubygems = Application.config_for :rubygems
 
     config.time_zone = "UTC"
     config.encoding  = "utf-8"
-    config.i18n.available_locales = [:en, :nl, "zh-CN", "zh-TW", "pt-BR", :fr, :es, :de, :ja]
+    config.i18n.available_locales = [:en, :nl, 'zh-CN', 'zh-TW', 'pt-BR', :fr, :es, :de, :ja]
     config.i18n.fallbacks = [:en]
 
     config.middleware.insert 0, Rack::UTF8Sanitizer
@@ -47,12 +34,12 @@ module Gemcutter
     config.active_record.include_root_in_json = false
 
     config.after_initialize do
-      RubygemFs.s3! ENV["S3_PROXY"] if ENV["S3_PROXY"]
+      RubygemFs.s3! ENV['S3_PROXY'] if ENV['S3_PROXY']
     end
 
     config.plugins = [:dynamic_form]
 
-    config.eager_load_paths << Rails.root.join("lib")
+    config.eager_load_paths << Rails.root.join('lib')
   end
 
   def self.config
@@ -62,14 +49,14 @@ module Gemcutter
   DEFAULT_PAGE = 1
   DEFAULT_PAGINATION = 20
   EMAIL_TOKEN_EXPRIES_AFTER = 3.hours
-  HOST = config["host"]
+  HOST = config['host']
   NEWS_DAYS_LIMIT = 7.days
   NEWS_MAX_PAGES = 10
   NEWS_PER_PAGE = 10
   MAX_PAGES = 1000
   MFA_KEY_EXPIRY = 30.minutes
   POPULAR_DAYS_LIMIT = 70.days
-  PROTOCOL = config["protocol"]
+  PROTOCOL = config['protocol']
   REMEMBER_FOR = 2.weeks
   SEARCH_MAX_PAGES = 100 # Limit max page as ES result window is upper bounded by 10_000 records
   STATS_MAX_PAGES = 10
