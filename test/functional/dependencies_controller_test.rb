@@ -10,6 +10,11 @@ class DependenciesControllerTest < ActionController::TestCase
     get :show, params: { rubygem_id: rubygem, version_id: version, format: format }
   end
 
+  def render_str_call(scope)
+    local_var = { scope: scope, dependencies: @dependencies, gem_name: @rubygem.name }
+    ActionController::Base.new.render_to_string(partial: "dependencies/dependencies", formats: [:html], locals: local_var)
+  end
+
   context "GET to show in html" do
     setup do
       @latest_version.dependencies << create(:dependency,
@@ -63,8 +68,14 @@ class DependenciesControllerTest < ActionController::TestCase
 
     should respond_with :success
     should "return json with valid response" do
-      assert_equal @response["run_deps"], [[@rubygem_two.name, "2.4.3", "<= 4.0.0"]]
-      assert_equal @response["dev_deps"], [[@rubygem_three.name, "1.2.3", ">= 0"]]
+      @dependencies = {
+        "runtime" => [[@rubygem_two.name, "2.4.3", "<= 4.0.0"]],
+        "development" => [[@rubygem_three.name, "1.2.3", ">= 0"]]
+      }
+      run = render_str_call("runtime")
+      dev = render_str_call("development")
+      assert_equal @response["run_html"], run
+      assert_equal @response["dev_html"], dev
     end
   end
 end

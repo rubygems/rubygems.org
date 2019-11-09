@@ -26,8 +26,13 @@ class DependenciesController < ApplicationController
 
   def json_return
     {
-      run_deps: @dependencies["runtime"],
-      dev_deps: @dependencies["development"]
+      run_html: render_str_call("runtime"),
+      dev_html: render_str_call("development")
     }
+  end
+
+  def render_str_call(scope)
+    local_var = { scope: scope, dependencies: @dependencies, gem_name: @latest_version.rubygem.name }
+    ActionController::Base.new.render_to_string(partial: "dependencies/dependencies", formats: [:html], locals: local_var)
   end
 end
