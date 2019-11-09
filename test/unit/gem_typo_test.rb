@@ -3,8 +3,7 @@ require "test_helper"
 class GemTypoTest < ActiveSupport::TestCase
   context "with above downloads threshold gem" do
     setup do
-      above_downloads_thres = GemTypo::DOWNLOADS_THRESHOLD + 1
-      create(:rubygem, name: "four", downloads: above_downloads_thres)
+      create(:rubygem, :protected, name: "four")
     end
 
     should "return false for exact match" do

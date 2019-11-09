@@ -218,9 +218,9 @@ class Rubygem < ApplicationRecord
     self.linkset.save!
   end
 
-  def update_attributes_from_gem_specification!(version, spec)
+  def update_attributes_from_gem_specification!(version, spec, context: nil)
     Rubygem.transaction do
-      save!
+      save!(context: context)
       update_versions! version, spec
       update_dependencies! version, spec
       update_linkset! spec if version.reload.latest?

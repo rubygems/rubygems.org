@@ -1,10 +1,11 @@
 require "digest/sha2"
 
 class Pusher
-  attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
+  attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size, :gem_context
 
   def initialize(user, body)
     @user = user
+    @gem_context = user.gem_context
     @body = StringIO.new(body.read)
     @size = @body.size
     @indexer = Indexer.new
@@ -21,7 +22,7 @@ class Pusher
   end
 
   def validate
-    (rubygem.valid? && version.valid?) || notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403)
+    (rubygem.valid?(gem_context) && version.valid?(gem_context)) || notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403)
   end
 
   def save
@@ -116,7 +117,7 @@ class Pusher
 
   def update
     rubygem.disown if rubygem.versions.indexed.count.zero?
-    rubygem.update_attributes_from_gem_specification!(version, spec)
+    rubygem.update_attributes_from_gem_specification!(version, spec, context: gem_context)
     rubygem.create_ownership(user)
     set_info_checksum
 

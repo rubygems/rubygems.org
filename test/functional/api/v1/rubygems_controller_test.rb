@@ -311,15 +311,31 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
     context "On POST to create with a protected gem name" do
       setup do
-        above_downloads_thres = GemTypo::DOWNLOADS_THRESHOLD + 1
-        create(:rubygem, name: "best", downloads: above_downloads_thres)
-        post :create, body: gem_file("test-1.0.0.gem").read
+        create(:rubygem, :protected, name: "best")
       end
 
-      should respond_with :forbidden
-      should "not register new gem" do
-        assert_equal 1, Rubygem.count
-        assert_equal "There was a problem saving your gem: Name 'test' is too close to typo-protected gem: best", @response.body
+      context "for unverified user" do
+        setup do
+          post :create, body: gem_file("test-1.0.0.gem").read
+        end
+
+        should respond_with :forbidden
+        should "not register new gem" do
+          assert_equal 1, Rubygem.count
+          assert_equal "There was a problem saving your gem: Name 'test' is too close to typo-protected gem: best", @response.body
+        end
+      end
+
+      context "for verified user" do
+        setup do
+          @user.verify!
+          post :create, body: gem_file("test-1.0.0.gem").read
+        end
+
+        should respond_with :success
+        should "register new gem" do
+          assert_equal 2, Rubygem.count
+        end
       end
     end
 

@@ -329,7 +329,7 @@ class PusherTest < ActiveSupport::TestCase
     end
 
     should "update rubygem attributes when saved" do
-      @rubygem.expects(:update_attributes_from_gem_specification!).with(@cutter.version, @spec)
+      @rubygem.expects(:update_attributes_from_gem_specification!).with(@cutter.version, @spec, context: @user.gem_context)
       @cutter.save
     end
 

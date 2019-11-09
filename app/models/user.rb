@@ -227,6 +227,14 @@ class User < ApplicationRecord
     end
   end
 
+  def verify!
+    update!(verified: true)
+  end
+
+  def gem_context
+    verified ? :type_exception : nil
+  end
+
   private
 
   def verify_digit_otp(seed, otp)

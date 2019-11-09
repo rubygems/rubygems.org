@@ -81,6 +81,10 @@ FactoryBot.define do
       create(:version, rubygem: rubygem, number: evaluator.number) if evaluator.number
       GemDownload.increment(evaluator.downloads, rubygem_id: rubygem.id, version_id: 0) if evaluator.downloads
     end
+
+    trait(:protected) do
+      downloads { GemTypo::DOWNLOADS_THRESHOLD + 1 }
+    end
   end
 
   sequence :number do |n|
