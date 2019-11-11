@@ -70,8 +70,9 @@ Follow the instructions below on how to install Bundler and setup the database.
   * Pull ElasticSearch `5.1.2` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:5.1.2`
   * Running Elasticsearch from the command line:
   ```
-  docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" docker.elastic.co/elasticsearch/elasticsearch:5.1.2
+  docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" -e "xpack.security.enabled=false" docker.elastic.co/elasticsearch/elasticsearch:5.1.2
   ```
+  * Note that `-e "xpack.security.enabled=false"` disables authentication.
 
 * Install PostgreSQL (>= 9.6.x): `brew install postgres`
   * Setup information: `brew info postgresql`
