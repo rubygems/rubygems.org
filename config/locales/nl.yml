@@ -18,6 +18,7 @@ nl:
   otp_missing:
   sign_in: Inloggen
   sign_up: Registreren
+  dependency_list:
   multifactor_authentication: Multifactor authenticatie
   subtitle: De gem host voor de community
   this_rubygem_could_not_be_found: De gem kon niet gevonden worden.

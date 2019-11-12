@@ -18,6 +18,7 @@ zh-CN:
   otp_missing:
   sign_in: 登录
   sign_up: 注册
+  dependency_list:
   multifactor_authentication: 多重验证
   subtitle: Ruby 社区 Gem 托管
   this_rubygem_could_not_be_found: 未找到这个 RubyGem

@@ -37,6 +37,7 @@ class RoutingTest < ActionDispatch::IntegrationTest
       format_path.gsub!(":rubygem_id", "someid")
       format_path.gsub!(":id", "someid")
       format_path.gsub!("*id", "about") # used in high voltage route
+      format_path.gsub!(":version_id", "someid")
 
       assert_nothing_raised do
         # ex: get(/password/new?format=json)

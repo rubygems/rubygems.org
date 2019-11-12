@@ -18,6 +18,7 @@ de:
   otp_missing:
   sign_in: Anmelden
   sign_up: Registrieren
+  dependency_list:
   multifactor_authentication:
   subtitle: Ihre Community des Gem-Hostingservices
   this_rubygem_could_not_be_found: Dieses Ruby Gem konnte nicht gefunden werden.

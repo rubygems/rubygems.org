@@ -26,6 +26,7 @@ es:
   otp_missing: Activaste autenticación con múltiples factores, pero no suministraste un código OTP. Por favor ingrésalo y prueba nuevamente.
   sign_in: Ingresa
   sign_up: Regístrate
+  dependency_list:
   multifactor_authentication: Autenticación de múltiples factores
   subtitle: el alojamiento de gemas de tu comunidad
   this_rubygem_could_not_be_found: Esta gema no pudo encontrarse.

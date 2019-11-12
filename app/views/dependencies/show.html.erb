@@ -1,0 +1,9 @@
+<% @title = params[:rubygem_id] %>
+<% @subtitle = @latest_version.try(:slug) %>
+
+<% if @dependencies.present? && @latest_version.indexed %>
+  <div class="l-full--l">
+    <%= render partial: "dependencies/dependencies", locals: { scope: "runtime", dependencies: @dependencies, gem_name: @latest_version.rubygem.name } %>
+    <%= render partial: "dependencies/dependencies", locals: { scope: "development", dependencies: @dependencies, gem_name: @latest_version.rubygem.name } %>
+  </div>
+<% end %>

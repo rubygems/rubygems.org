@@ -71,7 +71,9 @@
   font-size: 24px; }
 
 .gem__see-all-versions {
-  font-style: italic; }
+  font-style: italic;
+  display: inline-block;
+  padding-bottom: 10px; }
 
 .gem__ruby-version__heading {
   margin-bottom: 10px; }

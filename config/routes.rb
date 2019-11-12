@@ -153,7 +153,9 @@ Rails.application.routes.draw do
         only: %i[create destroy],
         constraints: { format: :js },
         defaults: { format: :js }
-      resources :versions, only: %i[show index]
+      resources :versions, only: %i[show index] do
+        get '/dependencies', to: 'dependencies#show', constraints: { format: /json|html/ }
+      end
       resources :reverse_dependencies, only: %i[index]
     end
 

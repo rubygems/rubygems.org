@@ -18,6 +18,7 @@ pt-BR:
   otp_missing: Você habilitou a autenticação multifator mas nenhum código OTP foi fornecido. Por favor, preencha-o e tente novamente.
   sign_in: Fazer Login
   sign_up: Cadastrar
+  dependency_list:
   multifactor_authentication: Autenticação Multifator
   subtitle: o host de gems da sua comunidade
   this_rubygem_could_not_be_found: A rubygem não foi encontrada.
