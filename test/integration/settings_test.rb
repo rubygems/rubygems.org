@@ -2,7 +2,7 @@ require "test_helper"
 
 class SettingsTest < SystemTest
   setup do
-    @user = create(:user, email: "nick@example.com", password: "password12345", handle: "nick1", mail_fails: 1)
+    @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "nick1", mail_fails: 1)
 
     page.driver.browser.set_cookie("mfa_feature=true")
   end
