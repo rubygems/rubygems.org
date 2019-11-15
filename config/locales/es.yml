@@ -258,7 +258,7 @@ es:
       owner_heading:
   settings:
     edit:
-      title:
+      title: Editar configuración
       api_access:
         confirm_reset: '¿Seguro? Este cambio no puede deshacerse.'
         credentials_html: 'Si quieres usar %{gem_commands_link} desde la línea de comandos, vas a necesitar un archivo llamado %{gem_credentials_file}, el cual puedes generar usando el siguiente comando:'
