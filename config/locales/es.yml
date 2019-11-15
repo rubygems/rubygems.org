@@ -114,7 +114,7 @@ es:
       header:
         dashboard: Dashboard
         edit_profile:
-        edit_settings:
+        edit_settings: Configuración
         search_gem_html: Buscar gemas&hellip;
         sign_in: Ingresar
         sign_out: Salir
