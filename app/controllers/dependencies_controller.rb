@@ -5,12 +5,14 @@ class DependenciesController < ApplicationController
   def show
     latest_version_by_slug
     @dependencies = Hash.new { |h, k| h[k] = [] }
+    resolvable_dependencies = @latest_version.dependencies.where(unresolved_name: nil)
 
-    @latest_version.dependencies.each do |dependency|
+    resolvable_dependencies.each do |dependency|
       gem_name = dependency.rubygem.name
+
       version = dep_resolver(
         gem_name,
-        dependency["requirements"],
+        dependency.clean_requirements,
         dependency.rubygem.public_versions.pluck(:number)
       )
       @dependencies[dependency.scope] << [gem_name, version, dependency.requirements]
