@@ -304,8 +304,11 @@ en:
       header: "%{title} Dependencies"
     gem_members:
       authors_header: Authors
+      not_using_mfa_warning_show: "* Some owners are not using MFA. Click for the complete list."
+      not_using_mfa_warning_hide: "* The following owners are not using MFA. Click to hide."
       owners_header: Owners
       pushed_by: Pushed by
+      using_mfa_info: "* All owners are using MFA."
       yanked_by: Yanked by
       sha_256_checksum: SHA 256 checksum
     index:

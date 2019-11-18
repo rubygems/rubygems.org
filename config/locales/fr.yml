@@ -294,8 +294,11 @@ fr:
       header: Dépendances de %{title}
     gem_members:
       authors_header: Auteurs
+      not_using_mfa_warning_show:
+      not_using_mfa_warning_hide:
       owners_header: Propriétaires
       pushed_by:
+      using_mfa_info:
       yanked_by:
       sha_256_checksum: Total de contrôle SHA 256
     index:

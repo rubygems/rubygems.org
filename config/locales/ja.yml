@@ -294,8 +294,11 @@ ja:
       header: "%{title}依存性"
     gem_members:
       authors_header: 作者
+      not_using_mfa_warning_show:
+      not_using_mfa_warning_hide:
       owners_header: オーナー
       pushed_by:
+      using_mfa_info:
       yanked_by:
       sha_256_checksum: SHA 256チェックサム
     index:

@@ -117,6 +117,21 @@ class RubygemsHelperTest < ActionView::TestCase
       assert_equal expected_links, links_to_owners(@rubygem)
       assert links_to_owners(@rubygem).html_safe?
     end
+
+    should "create links to gem owners without mfa" do
+      with_mfa = create(:user, mfa_level: "ui_and_api")
+      without_mfa = create_list(:user, 2, mfa_level: "disabled")
+      rubygem = create(:rubygem, owners: [*without_mfa, with_mfa])
+
+      expected_links = without_mfa.sort_by(&:id).map do |u|
+        link_to gravatar(48, "gravatar-#{u.id}", u),
+          profile_path(u.display_id),
+          alt: u.display_handle,
+          title: u.display_handle
+      end.join
+      assert_equal expected_links, links_to_owners_without_mfa(rubygem)
+      assert links_to_owners_without_mfa(rubygem).html_safe?
+    end
   end
 
   context "simple_markup" do

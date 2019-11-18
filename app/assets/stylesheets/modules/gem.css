@@ -58,6 +58,10 @@
     background-color: #e9573f;
     opacity: .5; }
 
+.gem__users__mfa-text {
+  font-size: 9px;
+  color: #e9573f;
+}
 .gem__downloads-wrap {
   margin-bottom: 30px; }
 
