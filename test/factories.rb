@@ -29,6 +29,7 @@ FactoryBot.define do
 
     trait :unresolved do
       gem_dependency { Gem::Dependency.new("unresolved-gem-nothere", "1.0.0") }
+      rubygem { nil }
     end
   end
 
