@@ -58,7 +58,7 @@ class ApplicationController < ActionController::Base
         render plain: t(:this_rubygem_could_not_be_found), status: :not_found
       end
       format.html do
-        render file: Rails.root.join("public", "404"), status: :not_found, layout: false, formats: [:html]
+        render file: Rails.root.join("public", "404.html"), status: :not_found, layout: false, formats: [:html]
       end
     end
   end
@@ -84,7 +84,7 @@ class ApplicationController < ActionController::Base
 
   def render_not_found
     respond_to do |format|
-      format.html { render file: Rails.root.join("public", "404"), status: :not_found, layout: false }
+      format.html { render file: Rails.root.join("public", "404.html"), status: :not_found, layout: false }
       format.json { render json: { error: t(:not_found) }, status: :not_found }
       format.yaml { render yaml: { error: t(:not_found) }, status: :not_found }
       format.any(:all) { render text: t(:not_found), status: :not_found }
