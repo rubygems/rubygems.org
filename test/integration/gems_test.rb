@@ -14,14 +14,14 @@ class GemsTest < ActionDispatch::IntegrationTest
   test "gems page with atom format" do
     get rubygems_path(format: :atom)
     assert_response :success
-    assert_equal "application/atom+xml", response.content_type
+    assert_equal "application/atom+xml", response.media_type
     assert page.has_content? "sandworm"
   end
 
   test "versions with atom format" do
     create(:version, rubygem: @rubygem)
     get rubygem_versions_path(@rubygem, format: :atom)
-    assert_equal "application/atom+xml", response.content_type
+    assert_equal "application/atom+xml", response.media_type
     assert page.has_content? "sandworm"
   end
 
