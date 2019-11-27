@@ -40,7 +40,7 @@ class DashboardTest < ActionDispatch::IntegrationTest
 
     get dashboard_path(format: :atom)
     assert_response :success
-    assert_equal "application/atom+xml", response.content_type
+    assert_equal "application/atom+xml", response.media_type
     assert page.has_content? "sandworm"
   end
 
