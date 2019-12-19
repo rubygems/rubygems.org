@@ -165,7 +165,7 @@ GEM
       activesupport (>= 4.2.0)
     gravtastic (3.2.6)
     hashie (3.5.7)
-    high_voltage (3.1.0)
+    high_voltage (3.1.2)
     hitimes (1.2.5)
     honeybadger (3.1.2)
     http-cookie (1.0.3)
