@@ -22,3 +22,4 @@ chef
 .byebug_history
 public/assets
 latest_dump
+coverage

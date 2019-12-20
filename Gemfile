@@ -73,4 +73,5 @@ group :test do
   gem "shoulda"
   gem "selenium-webdriver"
   gem "webdrivers"
+  gem "simplecov", require: false
 end

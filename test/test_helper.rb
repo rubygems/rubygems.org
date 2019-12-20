@@ -11,6 +11,9 @@ require "helpers/gem_helpers"
 require "helpers/email_helpers"
 require "helpers/es_helper"
 require "helpers/password_helpers"
+require "simplecov"
+
+SimpleCov.start "rails"
 
 RubygemFs.mock!
 Aws.config[:stub_responses] = true
