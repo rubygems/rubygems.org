@@ -45,12 +45,12 @@ class Pusher
 
   def pull_spec
     @spec = Gem::Package.new(body).spec
-  rescue StandardError => error
+  rescue StandardError => e
     notify <<-MSG.strip_heredoc, 422
       RubyGems.org cannot process this gem.
       Please try rebuilding it and installing it locally to make sure it's valid.
       Error:
-      #{error.message}
+      #{e.message}
     MSG
   end
 

@@ -35,6 +35,9 @@ Rails/UnknownEnv:
     - staging
     - test
 
+Layout/AlignArguments:
+  Enabled: false
+
 Metrics/AbcSize:
   Max: 42 # TODO: Lower to 15
 

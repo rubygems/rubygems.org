@@ -53,7 +53,7 @@ gem "logstash-event"
 group :development, :test do
   gem "m", "~> 1.5", require: false
   gem "pry-byebug"
-  gem "rubocop", require: false
+  gem "rubocop", "~> 0.68.0", require: false
   gem "rubocop-performance", require: false
   gem "toxiproxy", "~> 1.0.0"
 end
