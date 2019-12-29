@@ -1,5 +1,4 @@
-class ClearanceMailer < ActionMailer::Base
-  layout "mailer"
+class ClearanceMailer < ApplicationMailer
   include Roadie::Rails::Automatic
 
   default_url_options[:host] = Gemcutter::HOST

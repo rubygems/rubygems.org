@@ -199,7 +199,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     should "change default operator" do
       _, response = ElasticSearcher.new("example OR web-rubygem").search
       assert_equal 2, response.size
-      assert_equal ["web-rubygem", "example"], response.map(&:name)
+      assert_equal %w[web-rubygem example], response.map(&:name)
     end
 
     should "support wildcards" do

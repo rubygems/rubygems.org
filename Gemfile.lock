@@ -318,15 +318,18 @@ GEM
       addressable (~> 2.5)
     rqrcode (0.10.1)
       chunky_png (~> 1.0)
-    rubocop (0.68.1)
+    rubocop (0.72.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
-      parser (>= 2.5, != 2.5.1.1)
+      parser (>= 2.6)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 1.4.0, < 1.6)
+      unicode-display_width (>= 1.4.0, < 1.7)
     rubocop-performance (1.1.0)
       rubocop (>= 0.67.0)
+    rubocop-rails (2.4.1)
+      rack (>= 1.1)
+      rubocop (>= 0.72.0)
     ruby-graphviz (1.2.4)
     ruby-progressbar (1.10.1)
     ruby_dep (1.5.0)
@@ -373,7 +376,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.6)
-    unicode-display_width (1.5.0)
+    unicode-display_width (1.6.0)
     unicorn (5.5.0.1.g6836)
       kgio (~> 2.6)
       raindrops (~> 0.7)
@@ -445,8 +448,9 @@ DEPENDENCIES
   roadie-rails
   rotp
   rqrcode
-  rubocop (~> 0.68.0)
+  rubocop (~> 0.72.0)
   rubocop-performance
+  rubocop-rails
   sass
   selenium-webdriver
   shoryuken (~> 2.1.0)

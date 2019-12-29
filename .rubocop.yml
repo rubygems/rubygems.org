@@ -2,6 +2,7 @@ inherit_from: .rubocop_todo.yml
 require:
   - ./test/safe_navigation_cop.rb
   - rubocop-performance
+  - rubocop-rails
 
 AllCops:
   Exclude:
@@ -27,6 +28,17 @@ Rails/LexicallyScopedActionFilter:
 
 Rails/RefuteMethods:
   Enabled: false
+
+Rails/HelperInstanceVariable:
+  Enabled: false
+
+Rails/FilePath:
+  Enabled: false
+
+Rails/RakeEnvironment:
+  Exclude:
+    - lib/tasks/gen_erd.rake
+    - lib/tasks/elasticsearch.rake
 
 Rails/UnknownEnv:
   Environments:

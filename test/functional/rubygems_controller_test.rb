@@ -182,7 +182,7 @@ class RubygemsControllerTest < ActionController::TestCase
       get :show, params: { id: @rubygem.to_param }
       assert page.has_content?("Licenses")
 
-      @latest_version.update(licenses: ["MIT", "GPL-2"])
+      @latest_version.update(licenses: %w[MIT GPL-2])
       get :show, params: { id: @rubygem.to_param }
       assert page.has_content?("Licenses")
     end

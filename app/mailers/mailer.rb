@@ -1,5 +1,4 @@
-class Mailer < ActionMailer::Base
-  layout "mailer"
+class Mailer < ApplicationMailer
   include Roadie::Rails::Automatic
 
   default from: Clearance.configuration.mailer_sender

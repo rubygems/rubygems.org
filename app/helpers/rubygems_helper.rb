@@ -12,7 +12,7 @@ module RubygemsHelper
   end
 
   def link_to_page(id, url)
-    link_to(t(".links.#{id}"), url, rel: "nofollow", class: ["gem__link", "t-list__item"], id: id) if url.present?
+    link_to(t(".links.#{id}"), url, rel: "nofollow", class: %w[gem__link t-list__item], id: id) if url.present?
   end
 
   def link_to_github(rubygem)
@@ -49,7 +49,7 @@ module RubygemsHelper
           method: :delete
       else
         link_to t(".links.subscribe"), rubygem_subscription_path(rubygem),
-          class: ["toggler", "gem__link", "t-list__item"], id: "subscribe",
+          class: %w[toggler gem__link t-list__item], id: "subscribe",
           method: :post
       end
     else
