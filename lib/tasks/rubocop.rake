@@ -1,7 +1,7 @@
 begin
   require "rubocop"
   require "rubocop/rake_task"
-rescue LoadError # rubocop:disable Lint/HandleExceptions
+rescue LoadError # rubocop:disable Lint/SuppressedException
 else
   Rake::Task[:rubocop].clear if Rake::Task.task_defined?(:rubocop)
   desc "Execute rubocop"

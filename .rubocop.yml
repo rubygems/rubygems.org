@@ -47,7 +47,7 @@ Rails/UnknownEnv:
     - staging
     - test
 
-Layout/AlignArguments:
+Layout/ArgumentAlignment:
   Enabled: false
 
 Metrics/AbcSize:
@@ -61,7 +61,7 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Max: 9 # TODO: Lower to 6
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 150
 
 Metrics/MethodLength:
@@ -83,10 +83,10 @@ Naming/RescuedExceptionsVariableName:
 Performance/RedundantMerge:
   Enabled: false
 
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
 
-Layout/AlignHash:
+Layout/HashAlignment:
   Enabled: false
 
 Layout/EmptyLineAfterGuardClause:
