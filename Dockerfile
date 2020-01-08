@@ -43,6 +43,7 @@ RUN apk add --no-cache \
   ca-certificates \
   bash \
   tzdata \
+  xz-libs \
   && rm -rf /var/cache/apk/*
 
 RUN mkdir -p /app
