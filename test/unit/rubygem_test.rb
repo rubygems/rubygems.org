@@ -723,7 +723,7 @@ class RubygemTest < ActiveSupport::TestCase
         assert_nil Rubygem.find_by_name("thoughtbot-shoulda")
         assert_nil Rubygem.find_by_name("rake")
 
-        assert_equal ["rake", "thoughtbot-shoulda"],
+        assert_equal %w[rake thoughtbot-shoulda],
           @version.dependencies.map(&:unresolved_name).sort
       end
     end

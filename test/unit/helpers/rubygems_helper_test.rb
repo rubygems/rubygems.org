@@ -17,7 +17,7 @@ class RubygemsHelperTest < ActionView::TestCase
       @version.stubs(:licenses)
       assert_equal "Licenses", pluralized_licenses_header(@version)
 
-      @version.stubs(:licenses).returns(["MIT", "GPL-2"])
+      @version.stubs(:licenses).returns(%w[MIT GPL-2])
       assert_equal "Licenses", pluralized_licenses_header(@version)
     end
   end
@@ -28,7 +28,7 @@ class RubygemsHelperTest < ActionView::TestCase
     end
 
     should "be combined with comma if there are licenses" do
-      assert_equal "MIT, GPL-2", formatted_licenses(["MIT", "GPL-2"])
+      assert_equal "MIT, GPL-2", formatted_licenses(%w[MIT GPL-2])
     end
   end
 

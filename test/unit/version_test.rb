@@ -85,9 +85,9 @@ class VersionTest < ActiveSupport::TestCase
       @gem_one = create(:rubygem)
       @gem_two = create(:rubygem)
       @gem_three = create(:rubygem)
-      @version_one_latest  = create(:version, rubygem: @gem_one, number: "0.2")
+      @version_one_latest = create(:version, rubygem: @gem_one, number: "0.2")
       @version_one_earlier = create(:version, rubygem: @gem_one, number: "0.1")
-      @version_two_latest  = create(:version, rubygem: @gem_two, number: "1.0")
+      @version_two_latest = create(:version, rubygem: @gem_two, number: "1.0")
       @version_two_earlier = create(:version, rubygem: @gem_two, number: "0.5")
       @version_three = create(:version, rubygem: @gem_three, number: "1.7")
 
@@ -122,8 +122,8 @@ class VersionTest < ActiveSupport::TestCase
       @fourth = create(:version, rubygem: @existing_gem, created_at: 4.days.ago)
 
       @another_gem = create(:rubygem)
-      @third  = create(:version, rubygem: @another_gem, created_at: 3.days.ago)
-      @first  = create(:version, rubygem: @another_gem, created_at: 1.minute.ago)
+      @third = create(:version, rubygem: @another_gem, created_at: 3.days.ago)
+      @first = create(:version, rubygem: @another_gem, created_at: 1.minute.ago)
       @yanked = create(:version, rubygem: @another_gem, created_at: 30.seconds.ago, indexed: false)
 
       @bad_gem = create(:rubygem)
@@ -457,7 +457,7 @@ class VersionTest < ActiveSupport::TestCase
   context "when indexing" do
     setup do
       @rubygem = build(:rubygem)
-      @first_version  = build(:version, rubygem: @rubygem, number: "0.0.1", built_at: 7.days.ago)
+      @first_version = build(:version, rubygem: @rubygem, number: "0.0.1", built_at: 7.days.ago)
       @second_version = build(:version, rubygem: @rubygem, number: "0.0.2", built_at: 6.days.ago)
       @third_version  = build(:version, rubygem: @rubygem, number: "0.0.3", built_at: 5.days.ago)
       @fourth_version = build(:version, rubygem: @rubygem, number: "0.0.4", built_at: 5.days.ago)
@@ -535,7 +535,7 @@ class VersionTest < ActiveSupport::TestCase
     context "with multiple rubygems and versions created out of order" do
       setup do
         @gem_two = create(:rubygem)
-        @version_two_latest  = create(:version, rubygem: @gem_two, number: "1.0")
+        @version_two_latest = create(:version, rubygem: @gem_two, number: "1.0")
         @version_two_earlier = create(:version, rubygem: @gem_two, number: "0.5")
       end
 
