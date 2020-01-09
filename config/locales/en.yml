@@ -349,6 +349,7 @@ en:
       resend_confirmation: Didn't receive confirmation mail?
   stats:
     index:
+      title: Stats
       all_time_most_downloaded: All Time Most Downloaded
       total_downloads: Total downloads
       total_gems: Total gems

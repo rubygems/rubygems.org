@@ -339,6 +339,7 @@ de:
       resend_confirmation:
   stats:
     index:
+      title: 
       all_time_most_downloaded: Am meisten Heruntergeladen in der gesamten Zeit
       total_downloads: Downloads insgesamt
       total_gems: Gems insgesamt
