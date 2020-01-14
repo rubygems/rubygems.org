@@ -3,16 +3,16 @@ if Rails.env.production? || Rails.env.staging?
     # Enable lograge
     config.lograge.enabled = true
 
-    # Use (Logstash flavored) JSON
-    config.lograge.formatter = Lograge::Formatters::Logstash.new
+    # Use (Datadog flavored) JSON
+    config.lograge.formatter = Lograge::Formatters::Datadog.new
 
     # Add custom fields
     config.lograge.custom_payload do |controller|
       {
+        url: controller.request.url,
         params: controller.request.filtered_parameters.except('controller', 'action', 'format', 'utf8'),
         client_ip: controller.request.ip,
         user_agent: controller.request.user_agent,
-        dest_host: controller.request.host,
         request_id: controller.request.uuid
       }
     end

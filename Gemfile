@@ -48,7 +48,6 @@ gem "unpwn", "~> 0.3.0"
 
 # Logging
 gem "lograge"
-gem "logstash-event"
 
 group :development, :test do
   gem "m", "~> 1.5", require: false

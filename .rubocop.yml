@@ -112,6 +112,8 @@ Style/CustomSafeNavigationCop:
 
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
+  Exclude:
+    - lib/lograge/formatters/datadog.rb
 
 Style/Documentation:
   Enabled: false

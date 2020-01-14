@@ -145,22 +145,30 @@ class Rack::Attack
   ActiveSupport::Notifications.subscribe('throttle.rack_attack') do |_name, _start, _finish, _request_id, payload|
     request = payload[:request]
 
-    data = {
-      status: 429,
-      request_id: request.env["action_dispatch.request_id"],
-      client_ip: request.ip.to_s,
-      method: request.env["REQUEST_METHOD"],
-      path: request.env["REQUEST_PATH"],
-      user_agent: request.user_agent,
-      dest_host: request.host,
+    method = request.env["REQUEST_METHOD"]
+
+    event = {
+      timestamp: ::Time.now.utc,
+      env: Rails.env,
+      message: "[429] #{method} #{request.env['REQUEST_PATH']}",
+      http: {
+        request_id: request.env["action_dispatch.request_id"],
+        method: method,
+        status_code: 429,
+        useragent: request.user_agent,
+        url: request.url
+      },
       throttle: {
         matched: request.env["rack.attack.matched"],
         discriminator: request.env["rack.attack.match_discriminator"],
         match_data: request.env["rack.attack.match_data"]
+      },
+      network: {
+        client: {
+          ip: request.ip.to_s
+        }
       }
     }
-    event = LogStash::Event.new(data)
-    event['message'] = "[#{data[:status]}] #{data[:method]} #{data[:path]}"
     Rails.logger.info event.to_json
   end
 end

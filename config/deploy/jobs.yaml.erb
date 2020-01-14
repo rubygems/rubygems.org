@@ -15,6 +15,8 @@ spec:
       name: jobs
   template:
     metadata:
+      annotations:
+        ad.datadoghq.com/unicorn.logs: '[{"source":"rails","service":"rubygems.org"}]'
       labels:
         name: jobs
     spec:
