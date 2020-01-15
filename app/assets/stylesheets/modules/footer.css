@@ -79,7 +79,7 @@
   float: left;
   height: 100px;
   width: 90px;
-  background-image: url(/sponsors.png);
+  background-image: url(/sponsors.png?v2);
   background-size: 100%;
   font-style: italic;
   font-weight: 300;
