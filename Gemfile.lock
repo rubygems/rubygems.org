@@ -78,6 +78,7 @@ GEM
       msgpack
     bootsnap (1.4.5)
       msgpack (~> 1.0)
+    brakeman (4.7.2)
     builder (3.2.3)
     byebug (11.0.1)
     capybara (2.18.0)
@@ -403,6 +404,7 @@ DEPENDENCIES
   autoprefixer-rails
   aws-sdk (~> 2.2)
   bootsnap
+  brakeman
   capybara (~> 2.18)
   clearance
   clearance-deprecated_password_strategies

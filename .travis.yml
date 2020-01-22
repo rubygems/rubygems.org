@@ -38,7 +38,6 @@ before_install:
 
 before_script:
   - gem install bundler-audit -v 0.6.1
-  - gem install brakeman -v 4.3.1
   - bundle audit update
   - cp config/database.yml.example config/database.yml
   - bundle exec rake db:create db:migrate db:test:prepare
@@ -47,7 +46,7 @@ script:
   - bundle exec rails test
   - bundle exec rake rubocop
   - bundle audit check
-  - brakeman -c config/brakeman.yml -o /dev/stdout
+  - bundle exec brakeman
   - script/build_docker.sh
 
 env:
