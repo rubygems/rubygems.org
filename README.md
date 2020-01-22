@@ -25,7 +25,7 @@ Additionally, [RubyTogether](https://rubytogether.org) sponsors individuals to w
 * [Mailing List][]
 * [FAQ][]
 * [IRC][]: #rubygems on Freenode
-* [Travis][]: [![Build Status](https://img.shields.io/travis/rubygems/rubygems.org/master.svg)][travis]
+* [Github Actions][]: [![Build Status](https://github.com/rubygems/rubygems.org/workflows/Application%20Tests/badge.svg)][github-actions]
 * [Code Climate][]: [![Maintainability](https://api.codeclimate.com/v1/badges/7110bb3f9b765042d604/maintainability)](https://codeclimate.com/github/rubygems/rubygems.org/maintainability)
 * [Code Climate][]: [![Test Coverage](https://api.codeclimate.com/v1/badges/7110bb3f9b765042d604/test_coverage)](https://codeclimate.com/github/rubygems/rubygems.org/test_coverage)
 * [Trello Board][]
@@ -33,7 +33,7 @@ Additionally, [RubyTogether](https://rubytogether.org) sponsors individuals to w
 [mailing list]: https://groups.google.com/group/rubygems-org
 [faq]: http://help.rubygems.org/kb/gemcutter/faq
 [irc]: https://webchat.freenode.net/?channels=rubygems
-[travis]: https://travis-ci.org/rubygems/rubygems.org
+[Github Actions]: https://github.com/rubygems/rubygems.org/actions
 [code climate]: https://codeclimate.com/github/rubygems/rubygems.org
 [trello board]: https://trello.com/board/rubygems-org/513f9634a7ed906115000755
 
