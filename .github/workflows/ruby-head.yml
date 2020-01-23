@@ -1,13 +1,11 @@
-name: Application Tests
+name: Application Tests (ruby-head)
 on: [push,pull_request]
 env:
-  BUNDLE_PATH: vendor/bundle
+  BUNDLE_ENV: vendor/bundle
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        rubygems: [2.6.10, latest]
+    container: rubylang/ruby:master-nightly-bionic
     services:
       database:
         image: postgres:9.6
@@ -34,38 +32,29 @@ jobs:
     steps:
       - name: Checkout Project
         uses: actions/checkout@v1
-      - name: Set Up Ruby
-        uses: eregon/use-ruby-action@v1
-        with:
-          ruby-version: 2.6.5
       - name: Download Cached Gems
         uses: actions/cache@v1
         with:
           path: vendor/bundle
-          key: bundler-cache-${{ hashFiles('**/Gemfile.lock') }}
+          key: bundler-cache-ruby-dev-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
-            bundler-cache-
+            bundler-cache-ruby-dev-
       - name: Setup Application
         run: |
-          sudo apt-get update -qq
-          sudo apt-get -yqq install libpq-dev chromium-chromedriver
-          sh -c "if [ '${{ matrix.rubygems }}' != 'latest' ]; then gem update --system=${{ matrix.rubygems }}; fi"
+          apt-get update -qq
+          apt-get -yqq install libpq-dev chromium-chromedriver build-essential nodejs
           gem install bundler-audit:0.6.1 bundler --no-doc
           bundle install --jobs=3 --retry=3
           bundle audit update
           cp config/database.yml.example config/database.yml
           bundle exec rake db:create db:migrate db:test:prepare
       - name: Run Linting
+        continue-on-error: true
         run: |
           bundle audit check
           bundle exec brakeman
           bundle exec rake rubocop
       - name: Run Tests
+        continue-on-error: true
         run: |
           bundle exec rake test
-      - name: Deploy Docker Image
-        env:
-          RUBYGEMS_VERSION: ${{ matrix.rubygems }}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: script/build_docker.sh
