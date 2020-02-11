@@ -1,7 +1,7 @@
 name: Application Tests (ruby-head)
 on: [push,pull_request]
 env:
-  BUNDLE_ENV: vendor/bundle
+  BUNDLE_ENV: /usr/local/bundle
 jobs:
   build:
     runs-on: ubuntu-latest

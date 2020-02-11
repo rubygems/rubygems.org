@@ -1,7 +1,7 @@
 name: Application Tests
 on: [push,pull_request]
 env:
-  BUNDLE_PATH: vendor/bundle
+  BUNDLE_PATH: /usr/local/bundle
 jobs:
   build:
     runs-on: ubuntu-latest
