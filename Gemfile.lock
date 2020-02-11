@@ -370,7 +370,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    statsd-instrument (2.3.2)
+    statsd-instrument (2.3.5)
     thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
