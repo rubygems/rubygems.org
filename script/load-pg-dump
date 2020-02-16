@@ -1,105 +1,88 @@
 #!/bin/sh
 
-##############################################################################
-# This script will download the most recently weekly dump listed on
-# https://rubygems.org/pages/data and load it into a postgresql database.
-#
-# Assumptions:
-#
-# 1) a 'postgres' user exists your postgresql instance
-#    The dump script explicitly assigns ownership to the 'postgres' user, and
-#    so the 'postgres' user should exist
-# 2) the user you pass with the -u option is a postgres super user
-#
-# Notes:
-#
-#  * This script will drop and create the database, so buyer beware.
-#
-##############################################################################
+[ -n "$DEBUG" ] && set -x
 
-# variables
-public_tar=
-pg_database=rubygems
-pg_user=postgres
-download=false
+set -e
 
+file="tmp/rubygems-dump.sql.gz"
 
-## For downloading
-base_url="https://s3-us-west-2.amazonaws.com/rubygems-dumps/"
-prefix="production/public_postgresql"
-
-## Usage info
 show_help() {
   cat << EOF
-Usage: ${0##*/} [-h] [-c] [-d DATABASE] [-u USER] FILE
+Usage: ${0##*/} <command> [args] [-h] [-e]
 
-Load a rubygems.org postgresql dump into a datatbase.
+Download and load a rubygems.org PostgreSQL dump into current rails database
 
     -h          display this help and exit
-    -c          download the latest file to FILE
-    -d DATABASE load the data into this database (default: rubygems)
-    -u USER     connect to postgresql using this username (default: postgres)
+    -e          Rails environment to import rubygems.org dump
 
-Example: ./load-pg-dump -d rubygems_development ~/Downloads/public_postgresql.tar
+Available Commands
+
+  import        Download and restore the latest rubygems.org to PostgreSQL
+  fetch         Download the latest rubygems.org dump
+  load          Restore a rubygems.org dump to PostgreSQL
+
 EOF
+
+exit 0
 }
 
-OPTIND=1
-while getopts "hcd:u:" opt; do
-    case "$opt" in
-        h)
-            show_help
-            exit 0
-            ;;
-        c)  download=true
-            ;;
-        d)  pg_database=$OPTARG
-            ;;
-        u)  pg_user=$OPTARG
-            ;;
-        '?')
-            show_help >&2
-            exit 1
-            ;;
-    esac
+[ -z $1 ] && show_help
+
+cmdname=$1; shift
+
+while getopts 'he:' opt; do
+  case "${opt}" in
+    h) show_help ;;
+    e) environment=$OPTARG ;;
+    \?)
+      echo "Unexpected option ${flag}"
+      exit 1
+      ;;
+  esac
 done
-shift "$((OPTIND-1))" # Shift off the options and optional
+shift $((OPTIND -1))
 
-public_tar=$1
-if [ -z "$public_tar" ]; then
-  show_help >&2
-  exit 1
-fi
+dump__load() {
+  [ -n "$1" ] && file=$1
+  [ -z "$environment" ] && environment=development
 
-if $download; then
+  if [[ ! -f "${file}" ]]; then
+    echo "Could not read ${file}"
+    exit 1
+  fi
+
+  echo "Running migrations"
+  bundle exec rake db:migrate
+
+  echo "Droppping gem tables"
+  echo "DROP TABLE IF EXISTS dependencies, gem_downloads, linksets, rubygems, versions CASCADE; CREATE EXTENSION IF NOT EXISTS hstore;" | bundle exec rails db -e "${environment}"
+
+  echo "Importing ${file}"
+  tar xOf "${file}" | gunzip -c | bundle exec rails db -e "${environment}"
+
+  echo "Succesfully restored dump file."
+}
+
+dump__fetch() {
+  local base_url="https://s3-us-west-2.amazonaws.com/rubygems-dumps/"
+  local prefix="production/public_postgresql"
+
+  [ -n "$1" ] && file=$1
+
   key=$(curl -s "${base_url}?prefix=${prefix}" | sed -ne 's/.*<Key>\(.*\)<\/Key>.*/\1/p')
   latest_url="${base_url}${key}"
-  echo "Downloading ${latest_url} to ${public_tar}"
-  curl --progress-bar "${latest_url}" > ${public_tar}
+  echo "Downloading ${latest_url} to ${file}"
+  curl --progress-bar "${latest_url}" > ${file}
+}
+
+dump__import() {
+  dump__fetch
+  dump__load
+}
+
+if type "dump__$cmdname" >/dev/null 2>&1; then
+  "dump__$cmdname" "$@"
+else
+  echo "command $cmdname not recognized. See '${0##*/} -h'" >&2
+  exit 1
 fi
-
-printf 'Loading "%s" into database "%s" as user "%s"\n', "$public_tar", "$pg_database", "$pg_user"
-
-echo "Droppping database $pg_database"
-dropdb -U $pg_user $pg_database
-
-echo "Creating database $pg_database"
-createdb -U $pg_user $pg_database
-
-echo "Adding hstore extension"
-psql -q -U $pg_user -d $pg_database -c "CREATE EXTENSION IF NOT EXISTS hstore;"
-
-echo "Running migrations"
-rake db:migrate
-
-echo "Droppping tables in $pg_database that we're going to load in"
-psql -q -U $pg_user -d $pg_database -c "DROP TABLE IF EXISTS dependencies, gem_downloads, linksets, rubygems, versions CASCADE;"
-
-# Extract the single PostgresSQL.sql.gz file from the tar file, pass it through gunzip
-# and load it as quietly as possible into the database
-echo "Loading the data from $public_tar"
-tar xOf "$public_tar" public_postgresql/databases/PostgreSQL.sql.gz | \
-  gunzip -c | \
-  psql --username $pg_user --dbname $pg_database
-
-echo "Done."

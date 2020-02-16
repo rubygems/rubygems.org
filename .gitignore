@@ -15,7 +15,8 @@ log/*.log
 pkg/
 reports/brakeman/*
 server/
-tmp/
+tmp/*
+!tmp/.keep
 tags
 .idea
 chef
