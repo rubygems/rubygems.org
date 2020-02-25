@@ -28,7 +28,7 @@ class NewsControllerTest < ActionController::TestCase
     end
 
     should "display entries and total in page info" do
-      assert_select "header > p.gems__meter", text: /.*10 of 100 in total/
+      assert_select "header > p.gems__meter", text: /.*2 of 100 in total/
     end
   end
 
@@ -52,7 +52,7 @@ class NewsControllerTest < ActionController::TestCase
     end
 
     should "display entries and total in page info" do
-      assert_select "header > p.gems__meter", text: /.*10 of 100 in total/
+      assert_select "header > p.gems__meter", text: /.*3 of 100 in total/
     end
   end
 end
