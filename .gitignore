@@ -7,7 +7,6 @@
 .sass-cache/
 _site/
 bench/
-bin/
 config/database.yml
 config/rubygems.yml
 db/*.sqlite3
