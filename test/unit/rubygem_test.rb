@@ -360,19 +360,6 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
-    context "with subscribed users" do
-      setup do
-        @subscribed_user   = create(:user)
-        @unsubscribed_user = create(:user)
-        create(:subscription, rubygem: @rubygem, user: @subscribed_user)
-      end
-
-      should "only fetch the subscribed users with #subscribers" do
-        assert_contains @rubygem.subscribers, @subscribed_user
-        assert_does_not_contain @rubygem.subscribers, @unsubscribed_user
-      end
-    end
-
     should "return name with version for #to_s" do
       @rubygem.save
       create(:version, number: "0.0.0", rubygem: @rubygem)
