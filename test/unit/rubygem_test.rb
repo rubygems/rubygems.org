@@ -3,7 +3,7 @@ require "test_helper"
 class RubygemTest < ActiveSupport::TestCase
   context "with a saved rubygem" do
     setup do
-      @rubygem = create(:rubygem, name: "SomeGem")
+      @rubygem = Rubygem.new(name: "SomeGem")
     end
     subject { @rubygem }
 
@@ -29,6 +29,7 @@ class RubygemTest < ActiveSupport::TestCase
 
     context "that has an invalid name already persisted" do
       setup do
+        subject.save!
         subject.update_column(:name, "_")
       end
 
@@ -194,6 +195,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "update references in dependencies when destroyed" do
+      @rubygem.save!
       dependency = create(:dependency, rubygem: @rubygem)
 
       @rubygem.destroy
