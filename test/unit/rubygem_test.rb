@@ -338,24 +338,23 @@ class RubygemTest < ActiveSupport::TestCase
 
     context "with a user" do
       setup do
-        @rubygem.save
-        @user = create(:user)
+        @user = build(:user)
       end
 
       should "be owned by a user in ownership" do
-        create(:ownership, user: @user, rubygem: @rubygem)
+        @rubygem.ownerships.new(user: @user)
         assert @rubygem.owned_by?(@user)
         refute @rubygem.unowned?
       end
 
       should "be not owned if no ownerships" do
-        assert @rubygem.ownerships.empty?
+        assert_empty @rubygem.ownerships
         refute @rubygem.owned_by?(@user)
         assert @rubygem.unowned?
       end
 
       should "be not owned if no user" do
-        assert_equal false, @rubygem.owned_by?(nil)
+        refute @rubygem.owned_by?(nil)
         assert @rubygem.unowned?
       end
     end

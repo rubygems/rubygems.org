@@ -123,7 +123,7 @@ class Rubygem < ApplicationRecord
   end
 
   def unowned?
-    ownerships.blank?
+    ownerships.empty?
   end
 
   def indexed_versions?
@@ -132,7 +132,7 @@ class Rubygem < ApplicationRecord
 
   def owned_by?(user)
     return false unless user
-    ownerships.exists?(user_id: user.id)
+    ownerships.any? { |o| o.user_id == user.id }
   end
 
   def to_s
