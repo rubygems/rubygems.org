@@ -803,24 +803,48 @@ class RubygemTest < ActiveSupport::TestCase
     end
   end
 
-  context ".news" do
+  context "with downloaded gems and versions created at specific times" do
     setup do
-      @rubygem1 = create(:rubygem)
-      @rubygem2 = create(:rubygem)
-      @rubygem3 = create(:rubygem)
+      @rubygem1 = create(:rubygem, downloads: 10)
+      @rubygem2 = create(:rubygem, downloads: 20)
+      @rubygem3 = create(:rubygem, downloads: 30)
+      @rubygem4 = create(:rubygem, downloads: 40)
+      @rubygem5 = create(:rubygem, downloads: 50)
       create(:version, rubygem: @rubygem2, created_at: 5.days.ago)
       create(:version, rubygem: @rubygem1, created_at: 6.days.ago)
       create(:version, rubygem: @rubygem3, created_at: 8.days.ago)
-      @news = Rubygem.news(7.days)
+      create(:version, rubygem: @rubygem4, created_at: 30.days.ago)
+      create(:version, rubygem: @rubygem5, created_at: 71.days.ago)
     end
 
-    should "not include gems updated since given days" do
-      assert_not_includes @news, @rubygem3
+    context ".news" do
+      setup do
+        @news = Rubygem.news(7.days)
+      end
+
+      should "not include gems updated since given days" do
+        assert_not_includes @news, @rubygem3
+      end
+
+      should "order by created_at of gem version" do
+        expected_order = [@rubygem2, @rubygem1]
+        assert_equal expected_order, @news
+      end
     end
 
-    should "order by created_at of gem version" do
-      expected_order = [@rubygem2, @rubygem1]
-      assert_equal expected_order, @news
+    context ".popular" do
+      setup do
+        @popular_gems = Rubygem.popular(70.days)
+      end
+
+      should "not include gems updated prior to certain date" do
+        assert_not_includes @popular_gems, @rubygem5
+      end
+
+      should "order by created_at of gem version" do
+        expected_order = [@rubygem4, @rubygem3, @rubygem2, @rubygem1]
+        assert_equal expected_order, @popular_gems
+      end
     end
   end
 end
