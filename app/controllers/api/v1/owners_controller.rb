@@ -2,6 +2,7 @@ class Api::V1::OwnersController < Api::BaseController
   before_action :authenticate_with_api_key, except: %i[show gems]
   before_action :find_rubygem, except: :gems
   before_action :verify_gem_ownership, except: %i[show gems]
+  before_action :verify_mfa_requirement, except: %i[show gems]
   before_action :verify_with_otp, except: %i[show gems]
 
   def show
@@ -15,7 +16,7 @@ class Api::V1::OwnersController < Api::BaseController
     return render_api_key_forbidden unless @api_key.can_add_owner?
 
     owner = User.find_by_name(params[:email])
-    if owner
+    if owner && @rubygem.mfa_requirement_satisfied_for?(owner)
       ownership = @rubygem.ownerships.new(user: owner, authorizer: @api_key.user)
       if ownership.save
         Delayed::Job.enqueue(OwnershipConfirmationMailer.new(ownership.id))
@@ -24,6 +25,8 @@ class Api::V1::OwnersController < Api::BaseController
       else
         render plain: ownership.errors.full_messages.to_sentence, status: :unprocessable_entity
       end
+    elsif owner
+      render plain: "Owner could not be added; gem requires MFA enabled for each owner.", status: :forbidden
     else
       render plain: "Owner could not be found.", status: :not_found
     end

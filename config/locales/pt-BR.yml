@@ -358,6 +358,8 @@ pt-BR:
       install: instalar
       required_ruby_version: Versão Requerida do Ruby
       required_rubygems_version: Versão Requerida do RubyGems
+      requires_mfa:
+      since: "%{version}"
       links:
         badge: Badge
         bugs:

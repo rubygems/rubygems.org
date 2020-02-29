@@ -127,6 +127,10 @@ FactoryBot.define do
     trait :yanked do
       indexed { false }
     end
+
+    trait :mfa_required do
+      metadata { { "rubygems_mfa_required" => "true" } }
+    end
   end
 
   sequence :url do |n|

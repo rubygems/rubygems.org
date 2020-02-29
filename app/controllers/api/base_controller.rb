@@ -32,6 +32,11 @@ class Api::BaseController < ApplicationController
     render plain: prompt_text, status: :unauthorized
   end
 
+  def verify_mfa_requirement
+    return if @rubygem.mfa_requirement_satisfied_for?(@api_key.user)
+    render plain: "Gem requires MFA enabled; You do not have MFA enabled yet.", status: :forbidden
+  end
+
   def authenticate_with_api_key
     params_key = request.headers["Authorization"] || ""
     hashed_key = Digest::SHA256.hexdigest(params_key)

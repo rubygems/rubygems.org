@@ -52,6 +52,15 @@
     </i>
   </h2>
 
+  <% if @rubygem.mfa_required? %>
+    <h2 class="gem__ruby-version__heading t-list__heading">
+      <%= t('.requires_mfa') %>:
+      <span class="gem__ruby-version">
+        <%= t('.since', version: @rubygem.mfa_required_since_version) %>
+      </span>
+    </h2>
+  <% end %>
+
   <% if @latest_version.required_rubygems_version != '>= 0' %>
     <h2 class="gem__ruby-version__heading t-list__heading">
       <%= t('.required_rubygems_version') %>:

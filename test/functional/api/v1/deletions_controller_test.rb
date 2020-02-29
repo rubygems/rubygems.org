@@ -54,6 +54,38 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         end
       end
 
+      context "when mfa is required" do
+        setup do
+          @v1.metadata = { "rubygems_mfa_required" => "true" }
+          @v1.save!
+        end
+
+        context "when user has mfa enabled" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          end
+          should respond_with :success
+          should "keep the gem, deindex, keep owner" do
+            assert_equal 1, @rubygem.versions.count
+            assert @rubygem.versions.indexed.count.zero?
+          end
+          should "record the deletion" do
+            assert_not_nil Deletion.where(user: @user,
+                                          rubygem: @rubygem.name,
+                                          number: @v1.number).first
+          end
+        end
+
+        context "when user has not mfa enabled" do
+          setup do
+            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          end
+          should respond_with :forbidden
+        end
+      end
+
       context "ON DELETE to create for existing gem version" do
         setup do
           create(:global_web_hook, user: @user, url: "http://example.org")

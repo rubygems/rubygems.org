@@ -308,6 +308,24 @@ class Rubygem < ApplicationRecord
     reverse_dependencies.where("d.scope ='runtime'")
   end
 
+  def mfa_required?
+    (latest_version || versions.last)&.rubygems_mfa_required?
+  end
+
+  def mfa_requirement_satisfied_for?(user)
+    user.mfa_enabled? || !mfa_required?
+  end
+
+  def mfa_required_since_version
+    return unless mfa_required?
+    non_mfa_version = public_versions.find { |v| !v.rubygems_mfa_required? }
+    if non_mfa_version
+      non_mfa_version.next.number
+    else
+      public_versions.last.number
+    end
+  end
+
   private
 
   # a gem namespace is not protected if it is

@@ -12,11 +12,16 @@ class Pusher
   end
 
   def process
-    pull_spec && find && authorize && validate && save
+    pull_spec && find && authorize && verify_mfa_requirement && validate && save
   end
 
   def authorize
     rubygem.pushable? || rubygem.owned_by?(user) || notify_unauthorized
+  end
+
+  def verify_mfa_requirement
+    rubygem.mfa_requirement_satisfied_for?(user) ||
+      notify("Rubygem requires owners to enable MFA. You must enable MFA before pushing new version.", 403)
   end
 
   def validate
