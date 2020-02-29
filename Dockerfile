@@ -16,7 +16,7 @@ RUN apk add --no-cache \
   tzdata \
   && rm -rf /var/cache/apk/*
 
-RUN mkdir -p /app /app/config
+RUN mkdir -p /app /app/config /app/log/
 WORKDIR /app
 
 RUN gem update --system 2.6.10
