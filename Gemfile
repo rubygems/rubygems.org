@@ -57,6 +57,8 @@ group :development, :test do
   gem "rubocop-performance", require: false
   gem "brakeman", require: false
   gem "toxiproxy", "~> 1.0.0"
+  gem "better_errors"
+  gem "binding_of_caller"
 end
 
 group :development do
