@@ -1,9 +1,6 @@
 require "test_helper"
 
 class VersionTest < ActiveSupport::TestCase
-  should belong_to :rubygem
-  should have_many :dependencies
-
   context "#as_json" do
     setup do
       @version = build(:version, summary: "some words", created_at: Time.now.in_time_zone)

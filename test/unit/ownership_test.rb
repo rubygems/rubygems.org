@@ -5,9 +5,7 @@ class OwnershipTest < ActiveSupport::TestCase
     assert build(:ownership).valid?
   end
 
-  should belong_to :rubygem
   should have_db_index :rubygem_id
-  should belong_to :user
   should have_db_index :user_id
 
   context "with ownership" do

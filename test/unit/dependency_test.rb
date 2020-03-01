@@ -1,9 +1,6 @@
 require "test_helper"
 
 class DependencyTest < ActiveSupport::TestCase
-  should belong_to :rubygem
-  should belong_to :version
-
   context "with dependency" do
     setup do
       @version = create(:version)

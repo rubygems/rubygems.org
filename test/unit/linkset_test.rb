@@ -1,8 +1,6 @@
 require "test_helper"
 
 class LinksetTest < ActiveSupport::TestCase
-  should belong_to :rubygem
-
   context "with a linkset" do
     setup do
       @linkset = build(:linkset)

@@ -1,9 +1,6 @@
 require "test_helper"
 
 class WebHookTest < ActiveSupport::TestCase
-  should belong_to :user
-  should belong_to :rubygem
-
   should "be valid for normal hook" do
     hook = create(:web_hook)
     refute hook.global?

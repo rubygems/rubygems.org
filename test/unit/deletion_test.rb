@@ -1,8 +1,6 @@
 require "test_helper"
 
 class DeletionTest < ActiveSupport::TestCase
-  should belong_to :user
-
   setup do
     @user = create(:user)
     Pusher.new(@user, gem_file).process
