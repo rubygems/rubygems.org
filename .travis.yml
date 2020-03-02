@@ -9,8 +9,6 @@ cache:
 rvm:
   - 2.6.5
   - ruby-head
-  - jruby-9.2.7.0
-  - jruby-head
 
 addons:
   apt:
@@ -59,6 +57,4 @@ matrix:
   allow_failures:
     - env: "RUBYGEMS_VERSION=latest"
     - rvm: ruby-head
-    - rvm: jruby-9.2.7.0
-    - rvm: jruby-head
   fast_finish: true
