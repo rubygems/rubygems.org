@@ -240,7 +240,7 @@ GEM
       ast (~> 2.4.0)
     paul_revere (3.1.0)
       rails (>= 5.0, < 6.1)
-    pg (0.21.0)
+    pg (1.2.2)
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
