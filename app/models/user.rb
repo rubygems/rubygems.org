@@ -257,7 +257,7 @@ class User < ApplicationRecord
   def yank_gems
     versions_to_yank = only_owner_gems.map(&:versions).flatten
     versions_to_yank.each do |v|
-      deletions.create(version: v)
+      deletions.create!(version: v)
     end
   end
 end
