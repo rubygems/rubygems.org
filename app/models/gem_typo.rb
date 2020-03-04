@@ -14,8 +14,6 @@ class GemTypo
   end
 
   def protected_typo?
-    return false
-
     return false if @rubygem_name.size < GemTypo::SIZE_THRESHOLD
 
     gem_typo_exceptions = GemTypoException.all.pluck(:name)
