@@ -19,7 +19,7 @@ class Rubygem < ApplicationRecord
     uniqueness: { case_sensitive: false },
     if: :needs_name_validation?
   validate :blacklist_names_exclusion
-  validate :protected_gem_typo, on: :create, unless: -> { Array(validation_context).include?(:typo_exception) }
+  # validate :protected_gem_typo, on: :create, unless: -> { Array(validation_context).include?(:typo_exception) }
 
   after_create :update_unresolved
   before_destroy :mark_unresolved
