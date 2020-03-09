@@ -4,5 +4,5 @@ Honeybadger.exception_filter do |notice|
 end
 
 Honeybadger.configure do |config|
-  config.disabled = true if Rails.env.development?
+  config.report_data = false if Rails.env.development?
 end
