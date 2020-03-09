@@ -195,11 +195,24 @@ class VersionTest < ActiveSupport::TestCase
       new_version = Version.find(@version.id)
       assert_equal new_version.required_rubygems_version, @required_rubygems_version
     end
+
+    should "limit the character length" do
+      @version.required_rubygems_version = ">=" + '0' * 2 * 1024 * 1024 * 100
+      @version.validate
+      assert_equal @version.errors.messages[:required_rubygems_version], ["is too long (maximum is 255 characters)"]
+    end
   end
 
   context "without a rubygems version" do
     setup do
       @version = build(:version)
+    end
+
+    should "allow empty value" do
+      @version.required_rubygems_version = ""
+      @version.validate
+
+      assert_equal @version.errors.messages[:required_rubygems_version], []
     end
 
     should "not have a rubygems version" do
@@ -208,6 +221,60 @@ class VersionTest < ActiveSupport::TestCase
       assert_nil nil_version.required_rubygems_version
     end
   end
+
+  context "with authors" do
+    setup do
+      @version = build(:version)
+    end
+
+    should "validate maxiumum author field length" do
+      @version.authors = Array.new(6000) { "test author" }
+      @version.validate
+
+      assert_equal @version.errors.messages[:authors], ["is too long (maximum is 64000 characters)"]
+    end
+  end
+
+  context "with a description" do
+    setup do
+      @version = build(:version)
+    end
+    
+    should "validate description length" do
+      @version.description = "test description" * 6000
+      @version.validate
+
+      assert_equal @version.errors.messages[:description], ["is too long (maximum is 64000 characters)"]
+    end
+
+    should "allow empty description" do
+      @version.description = ""
+      @version.validate
+
+      assert_equal @version.errors.messages[:description], []
+    end
+  end
+
+  context "with a summary" do
+    setup do
+      @version = build(:version)
+    end
+    
+    should "validate summary length" do
+      @version.summary = "test description" * 6000
+      @version.validate
+
+      assert_equal @version.errors.messages[:summary], ["is too long (maximum is 64000 characters)"]
+    end
+
+    should "allow empty summary" do
+      @version.summary = ""
+      @version.validate
+
+      assert_equal @version.errors.messages[:summary], []
+    end
+  end
+
 
   context "with a ruby version" do
     setup do
@@ -682,6 +749,13 @@ class VersionTest < ActiveSupport::TestCase
       should "be valid with valid link" do
         assert_nothing_raised do
           @spec.metadata = { "home" => "http://github.com/bestgemever" }
+          @version.update_attributes_from_gem_specification!(@spec)
+        end
+      end
+
+      should "be invalid with maxiumum length" do
+        assert_raise ActiveRecord::RecordInvalid do
+          @spec.metadata = { "home" => ("hello" * 2000) }
           @version.update_attributes_from_gem_specification!(@spec)
         end
       end
