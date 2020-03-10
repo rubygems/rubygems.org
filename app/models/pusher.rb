@@ -117,7 +117,7 @@ class Pusher
   def update
     rubygem.disown if rubygem.versions.indexed.count.zero?
     rubygem.update_attributes_from_gem_specification!(version, spec)
-    rubygem.create_ownership(user)
+    rubygem.create_ownership!(user)
     set_info_checksum
 
     true

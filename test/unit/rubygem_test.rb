@@ -326,14 +326,14 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "be able to assign ownership when no owners exist" do
-        @rubygem.create_ownership(@user)
+        @rubygem.create_ownership!(@user)
         assert_equal @rubygem.reload.owners, [@user]
       end
 
       should "not be able to assign ownership when owners exist" do
         @new_user = create(:user)
         @rubygem.ownerships.create(user: @new_user)
-        @rubygem.create_ownership(@user)
+        @rubygem.create_ownership!(@user)
         assert_equal @rubygem.reload.owners, [@new_user]
       end
     end
