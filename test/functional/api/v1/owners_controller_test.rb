@@ -137,6 +137,14 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       end
     end
 
+    context "when adding the same owner" do
+      should "respond with correct message" do
+        @rubygem.ownerships.create(user: @second_user)
+        post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+        assert_equal "Owner already exists.", @response.body
+      end
+    end
+
     context "when creating ownership fails" do
       should "respond with error" do
         error_type = ActiveRecord::RecordInvalid
