@@ -139,8 +139,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
     context "when creating ownership fails" do
       should "respond with error" do
-        error_type = ActiveRecord::ConnectionTimeoutError
-        ActiveRecord::Associations::CollectionProxy.any_instance.stubs(:create!).raises(error_type, "timed out")
+        error_type = ActiveRecord::RecordInvalid
+        ActiveRecord::Associations::CollectionProxy.any_instance.stubs(:create!).raises(error_type, Ownership.new)
         assert_raises error_type do
           post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
         end
