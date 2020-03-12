@@ -383,7 +383,7 @@ class Version < ApplicationRecord
   def metadata_attribute_length
     return if metadata.blank?
     metadata.each do |key, value|
-      errors.add(:metadata, "metadata field ['#{key}'] is too long (maximum is 255 characters)") if value.length > MAX_FIELD_LENGTH
+      errors.add(:metadata, "metadata field ['#{key}'] is too long (maximum is #{MAX_FIELD_LENGTH} characters)") if value.length > MAX_FIELD_LENGTH
     end
   end
 end
