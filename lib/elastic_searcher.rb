@@ -101,6 +101,7 @@ class ElasticSearcher
        summary
        description
        downloads
-       version]
+       version
+       yanked]
   end
 end

@@ -83,10 +83,12 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       import_and_refresh
     end
 
-    should "filter yanked gems from the result" do
+    should "show yanked gems in the result" do
       _, response = ElasticSearcher.new("example").search
-      assert_equal 1, response.size
-      assert_equal "example_2", response.first.name
+      assert_equal 2, response.size
+      names_order = %w[example_1 example_2]
+      assert_equal names_order, response.results.map(&:name)
+      assert_equal true, response.first.yanked
     end
   end
 

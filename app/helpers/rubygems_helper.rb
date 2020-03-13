@@ -114,6 +114,10 @@ module RubygemsHelper
     (rubygem.latest_version || rubygem.versions.last)&.number
   end
 
+  def is_yanked?(rubygem)
+    rubygem.yanked if rubygem.respond_to?(:yanked)
+  end
+
   def github_params(link)
     "user=#{link.path.split('/').second}&repo=#{link.path.split('/').third}&type=star&count=true&size=large"
   end

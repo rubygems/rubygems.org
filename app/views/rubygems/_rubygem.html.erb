@@ -3,6 +3,9 @@
     <h2 class="gems__gem__name">
       <%= rubygem.name %>
       <span class="gems__gem__version"><%= latest_version_number(rubygem) %></span>
+      <% if is_yanked?(rubygem) %>
+        <span class="gems__gem__badge">Yanked</span>
+      <% end %>
     </h2>
     <p class="gems__gem__desc t-text"><%= short_info(rubygem) %></p>
   </span>
