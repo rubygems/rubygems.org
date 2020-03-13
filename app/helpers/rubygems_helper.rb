@@ -114,7 +114,7 @@ module RubygemsHelper
     (rubygem.latest_version || rubygem.versions.last)&.number
   end
 
-  def is_yanked?(rubygem)
+  def yanked?(rubygem)
     rubygem.yanked if rubygem.respond_to?(:yanked)
   end
 
