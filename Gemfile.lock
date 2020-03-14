@@ -334,7 +334,7 @@ GEM
       rubocop (>= 0.72.0)
     ruby-graphviz (1.2.4)
     ruby-progressbar (1.10.1)
-    rubyzip (2.0.0)
+    rubyzip (2.2.0)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.2.1)
@@ -345,7 +345,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    selenium-webdriver (3.142.6)
+    selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
     shoryuken (2.1.3)
