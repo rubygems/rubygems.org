@@ -17,6 +17,10 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     (Rack::Attack::REQUEST_LIMIT_PER_EMAIL * 1.25).to_i
   end
 
+  def exceeding_exp_base_limit
+    (Rack::Attack::EXP_BASE_REQUEST_LIMIT * 1.25).to_i
+  end
+
   def under_limit
     (Rack::Attack::REQUEST_LIMIT * 0.5).to_i
   end
@@ -33,6 +37,10 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     Rack::Attack::PUSH_LIMIT_PERIOD
   end
 
+  def exp_base_limit_period
+    Rack::Attack::EXP_BASE_LIMIT_PERIOD
+  end
+
   def exceed_limit_for(scope)
     update_limit_for("#{scope}:#{@ip_address}", exceeding_limit)
   end
@@ -44,6 +52,10 @@ class RackAttackTest < ActionDispatch::IntegrationTest
   def exceed_push_limit_for(scope)
     exceeding_push_limit = (Rack::Attack::PUSH_LIMIT * 1.25).to_i
     update_limit_for("#{scope}:#{@ip_address}", exceeding_push_limit, push_limit_period)
+  end
+
+  def exceed_exp_base_limit_for(scope)
+    update_limit_for("#{scope}:#{@ip_address}", exceeding_exp_base_limit, exp_base_limit_period)
   end
 
   def stay_under_limit_for(scope)
@@ -59,13 +71,18 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     update_limit_for("#{scope}:#{@user.email}", under_push_limit)
   end
 
+  def stay_under_exp_base_limit_for(scope)
+    under_exp_base_limit = (Rack::Attack::EXP_BASE_REQUEST_LIMIT * 0.5).to_i
+    update_limit_for("#{scope}:#{@user.email}", under_exp_base_limit, exp_base_limit_period)
+  end
+
   def update_limit_for(key, limit, period = limit_period)
     limit.times { Rack::Attack.cache.count(key, period) }
   end
 
   def exceed_exponential_limit_for(scope, level)
-    expo_exceeding_limit = exceeding_limit * level
-    expo_limit_period = limit_period**level
+    expo_exceeding_limit = exceeding_exp_base_limit * level
+    expo_limit_period = exp_base_limit_period**level
     expo_exceeding_limit.times { Rack::Attack.cache.count("#{scope}:#{@ip_address}", expo_limit_period) }
   end
 
@@ -137,7 +154,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       end
 
       should "allow gem yank by ip" do
-        stay_under_limit_for("api/ip/1")
+        stay_under_exp_base_limit_for("api/ip/1")
 
         delete "/api/v1/gems/yank",
           params: { gem_name: @rubygem.to_param, version: @rubygem.latest_version.number },
@@ -158,7 +175,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
       should "allow owner add by ip" do
         second_user = create(:user)
-        stay_under_limit_for("api/ip/1")
+        stay_under_exp_base_limit_for("api/ip/1")
 
         post "/api/v1/gems/#{@rubygem.name}/owners",
           params: { rubygem_id: @rubygem.to_param, email: second_user.email },
@@ -170,7 +187,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       should "allow owner remove by ip" do
         second_user = create(:user)
         @rubygem.ownerships.create(user: second_user)
-        stay_under_limit_for("api/ip/1")
+        stay_under_exp_base_limit_for("api/ip/1")
 
         delete "/api/v1/gems/#{@rubygem.name}/owners",
           params: { rubygem_id: @rubygem.to_param, email: second_user.email },
@@ -197,7 +214,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
   context "requests is higher than limit" do
     should "throttle sign in" do
-      exceed_limit_for("clearance/ip/1")
+      exceed_exp_base_limit_for("clearance/ip/1")
 
       post "/session",
         params: { session: { who: @user.email, password: @user.password } },
@@ -207,7 +224,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     should "throttle mfa sign in" do
-      exceed_limit_for("clearance/ip/1")
+      exceed_exp_base_limit_for("clearance/ip/1")
       @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
 
       post "/session/mfa_create",
@@ -218,7 +235,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     should "throttle sign up" do
-      exceed_limit_for("clearance/ip/1")
+      exceed_exp_base_limit_for("clearance/ip/1")
 
       user = build(:user)
       post "/users",
@@ -229,7 +246,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     should "throttle forgot password" do
-      exceed_limit_for("clearance/ip/1")
+      exceed_exp_base_limit_for("clearance/ip/1")
 
       post "/passwords",
         params: { password: { email: @user.email } },
@@ -239,7 +256,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     should "throttle mfa forgot password" do
-      exceed_limit_for("clearance/ip/1")
+      exceed_exp_base_limit_for("clearance/ip/1")
 
       @user.forgot_password!
       @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
@@ -264,7 +281,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     should "throttle profile update" do
       cookies[:remember_token] = @user.remember_token
 
-      exceed_limit_for("clearance/ip/1")
+      exceed_exp_base_limit_for("clearance/ip/1")
       patch "/profile",
         headers: { REMOTE_ADDR: @ip_address }
 
@@ -274,7 +291,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     should "throttle profile delete" do
       cookies[:remember_token] = @user.remember_token
 
-      exceed_limit_for("clearance/ip/1")
+      exceed_exp_base_limit_for("clearance/ip/1")
       delete "/profile",
         headers: { REMOTE_ADDR: @ip_address }
 
@@ -283,7 +300,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
     context "email confirmation" do
       should "throttle by ip" do
-        exceed_limit_for("clearance/ip/1")
+        exceed_exp_base_limit_for("clearance/ip/1")
 
         post "/email_confirmations",
           params: { email_confirmation: { email: @user.email } },
@@ -301,7 +318,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
     context "password update" do
       should "throttle by ip" do
-        exceed_limit_for("clearance/ip/1")
+        exceed_exp_base_limit_for("clearance/ip/1")
 
         post "/passwords",
           params: { password: { email: @user.email } },
@@ -325,7 +342,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       end
 
       should "throttle gem yank by ip" do
-        exceed_limit_for("api/ip/1")
+        exceed_exp_base_limit_for("api/ip/1")
 
         delete "/api/v1/gems/yank",
           params: { gem_name: @rubygem.to_param, version: @rubygem.latest_version.number },
@@ -346,7 +363,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
       should "throttle owner add by ip" do
         second_user = create(:user)
-        exceed_limit_for("api/ip/1")
+        exceed_exp_base_limit_for("api/ip/1")
 
         post "/api/v1/gems/#{@rubygem.name}/owners",
           params: { rubygem_id: @rubygem.to_param, email: second_user.email },
@@ -358,7 +375,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       should "throttle owner remove by ip" do
         second_user = create(:user)
         @rubygem.ownerships.create(user: second_user)
-        exceed_limit_for("api/ip/1")
+        exceed_exp_base_limit_for("api/ip/1")
 
         delete "/api/v1/gems/#{@rubygem.name}/owners",
           params: { rubygem_id: @rubygem.to_param, email: second_user.email },
@@ -371,7 +388,9 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     context "exponential backoff" do
       setup { @level = 2 }
 
-      (2..4).each do |level|
+      exp_back_off_levels = { 2 => "10000", 3 => "1000000" }
+
+      exp_back_off_levels.each do |level, expected_retry_after|
         should "throttle for mfa sign in at level #{level}" do
           exceed_exponential_limit_for("clearance/ip/#{level}", level)
 
@@ -380,6 +399,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
             headers: { REMOTE_ADDR: @ip_address }
 
           assert_response :too_many_requests
+          assert_equal expected_retry_after, @response.headers["Retry-After"]
         end
       end
     end
