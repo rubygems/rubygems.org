@@ -1,7 +1,9 @@
 class Rack::Attack
   REQUEST_LIMIT = 100
+  PUSH_LIMIT = 150
   REQUEST_LIMIT_PER_EMAIL = 10
   LIMIT_PERIOD = 10.minutes
+  PUSH_LIMIT_PERIOD = 60.minutes
 
   ### Prevent Brute-Force Login Attacks ###
 
@@ -60,16 +62,10 @@ class Rack::Attack
     end
   end
 
-  PUSH_LIMIT = 150
   protected_push_action = [{ controller: "api/v1/rubygems", action: "create" }]
 
-  # 150 push in 10 min
-  # 450 push in 1000 min
-  # 600 push in 10000 min
-  [1, 3, 4].each do |level|
-    throttle("api/push/ip/#{level}", limit: PUSH_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
-      req.ip if protected_route?(protected_push_action, req.path, req.request_method)
-    end
+  throttle("api/push/ip", limit: PUSH_LIMIT, period: PUSH_LIMIT_PERIOD) do |req|
+    req.ip if protected_route?(protected_push_action, req.path, req.request_method)
   end
 
   # Throttle GET request for api_key by IP address

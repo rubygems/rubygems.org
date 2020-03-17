@@ -29,6 +29,10 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     Rack::Attack::LIMIT_PERIOD
   end
 
+  def push_limit_period
+    Rack::Attack::PUSH_LIMIT_PERIOD
+  end
+
   def exceed_limit_for(scope)
     update_limit_for("#{scope}:#{@ip_address}", exceeding_limit)
   end
@@ -39,7 +43,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
   def exceed_push_limit_for(scope)
     exceeding_push_limit = (Rack::Attack::PUSH_LIMIT * 1.25).to_i
-    update_limit_for("#{scope}:#{@ip_address}", exceeding_push_limit)
+    update_limit_for("#{scope}:#{@ip_address}", exceeding_push_limit, push_limit_period)
   end
 
   def stay_under_limit_for(scope)
@@ -55,8 +59,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     update_limit_for("#{scope}:#{@user.email}", under_push_limit)
   end
 
-  def update_limit_for(key, limit)
-    limit.times { Rack::Attack.cache.count(key, limit_period) }
+  def update_limit_for(key, limit, period = limit_period)
+    limit.times { Rack::Attack.cache.count(key, period) }
   end
 
   def exceed_exponential_limit_for(scope, level)
@@ -143,7 +147,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       end
 
       should "allow gem push by ip" do
-        stay_under_push_limit_for("api/push/ip/1")
+        stay_under_push_limit_for("api/push/ip")
 
         post "/api/v1/gems",
           params: gem_file("test-1.0.0.gem").read,
@@ -331,7 +335,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       end
 
       should "throttle gem push by ip" do
-        exceed_push_limit_for("api/push/ip/1")
+        exceed_push_limit_for("api/push/ip")
 
         post "/api/v1/gems",
           params: gem_file("test-1.0.0.gem").read,
