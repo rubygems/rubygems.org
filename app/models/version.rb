@@ -98,10 +98,6 @@ class Version < ApplicationRecord
     order(created_at: :desc)
   end
 
-  def self.by_earliest_created_at
-    order(created_at: :asc)
-  end
-
   def self.rows_for_index
     joins(:rubygem)
       .indexed
