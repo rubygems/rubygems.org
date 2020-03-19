@@ -2,7 +2,7 @@ ENV["RAILS_ENV"] ||= "test"
 require File.expand_path("../config/environment", __dir__)
 
 require "rails/test_help"
-require "mocha/mini_test"
+require "mocha/minitest"
 require "capybara/rails"
 require "capybara/minitest"
 require "clearance/test_unit"
