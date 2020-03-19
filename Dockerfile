@@ -19,8 +19,6 @@ RUN apk add --no-cache \
 RUN mkdir -p /app /app/config /app/log/
 WORKDIR /app
 
-RUN gem update --system 2.6.10
-
 COPY . /app
 
 ADD https://github.com/bundler/bundler-api/raw/master/versions.list /app/config/versions.list
