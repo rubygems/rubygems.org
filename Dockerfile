@@ -25,7 +25,7 @@ ADD https://github.com/bundler/bundler-api/raw/master/versions.list /app/config/
 
 RUN mv /app/config/database.yml.example /app/config/database.yml
 
-RUN gem install bundler io-console --no-ri --no-rdoc && bundle install --jobs 20 --retry 5 --without deploy
+RUN gem install bundler io-console --no-doc && bundle install --jobs 20 --retry 5 --without deploy
 
 RUN RAILS_ENV=production SECRET_KEY_BASE=1234 bin/rails assets:precompile
 
