@@ -1,18 +1,25 @@
 <%= link_to rubygem_path(rubygem.name), :class => 'gems__gem' do %>
-  <span class="gems__gem__info">
+  <% if yanked?(rubygem) %>
+    <span class="gems__gem__info">
+    <h2 class="gems__gem__name">
+      <%= rubygem.name %>
+      <span class="gems__gem__badge">Yanked</span>
+    </h2>
+    <p class="gems__gem__desc t-text"><%= t('rubygems.show_yanked.not_hosted_notice') %></p>
+  </span>
+  <% else %>
+    <span class="gems__gem__info">
     <h2 class="gems__gem__name">
       <%= rubygem.name %>
       <span class="gems__gem__version"><%= latest_version_number(rubygem) %></span>
-      <% if yanked?(rubygem) %>
-        <span class="gems__gem__badge">Yanked</span>
-      <% end %>
     </h2>
     <p class="gems__gem__desc t-text"><%= short_info(rubygem) %></p>
   </span>
-  <p class="gems__gem__downloads__count">
-    <%= download_count rubygem %>
-    <span class="gems__gem__downloads__heading">
+    <p class="gems__gem__downloads__count">
+      <%= download_count rubygem %>
+      <span class="gems__gem__downloads__heading">
       <%= t('rubygems.index.downloads') %>
     </span>
-  </p>
+    </p>
+  <% end %>
 <% end %>

@@ -34,8 +34,8 @@ class ElasticSearcher
                 end
               end
               minimum_should_match 1
-              # only return gems that are not yanked
-              # filter { term yanked: false }
+              # only return gems that are not yanked unless filter is used
+              filter { term yanked: false } unless query_str.include? "yanked"
             end
           end
 

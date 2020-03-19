@@ -28,8 +28,7 @@ class SearchTest < SystemTest
     fill_in "query", with: "LDAP"
     click_button "search_submit"
 
-    assert page.has_content? "LDAP"
-    assert page.has_content? "Yanked"
+    assert page.has_content? "No gems found"
   end
 
   test "searching for a gem with yanked versions" do
