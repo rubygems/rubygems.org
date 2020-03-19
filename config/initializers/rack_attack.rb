@@ -39,7 +39,7 @@ class Rack::Attack
     route_params = Rails.application.routes.recognize_path(path, method: method)
     protected_actions.any? { |hash| hash[:controller] == route_params[:controller] && hash[:action] == route_params[:action] }
   rescue ActionController::RoutingError # raised for routes with a redirect
-    false if method == "GET" && path.match(%r{/users/(.)*}) # allow /users/<username> to redirect to /profile/<username>
+    false
   end
 
   safelist("assets path") do |req|

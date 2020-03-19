@@ -215,4 +215,10 @@ class ProfileTest < SystemTest
 
     assert page.has_content? "You have not yet enabled multifactor authentication."
   end
+
+  test "/users/<username> redirects to /profiles/<username>" do
+    get "/users/nick1"
+    assert_response 301
+    assert_redirected_to profile_path("nick1")
+  end
 end
