@@ -1,6 +1,7 @@
 require "test_helper"
 
 class PagesHelperTest < ActionView::TestCase
+  include ApplicationHelper
   include RubygemsHelper
 
   context "downloads" do

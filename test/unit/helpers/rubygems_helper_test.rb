@@ -3,6 +3,7 @@ require "test_helper"
 class RubygemsHelperTest < ActionView::TestCase
   include Rails.application.routes.url_helpers
   include ApplicationHelper
+  include LinksHelper
   include ERB::Util
 
   context "licenses header" do

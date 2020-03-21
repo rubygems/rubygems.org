@@ -62,4 +62,18 @@ module ApplicationHelper
     return title unless title_url
     link_to title, title_url, class: "t-link--black"
   end
+
+  def nice_date_for(time)
+    time.to_date.to_formatted_s(:long)
+  end
+
+  def simple_markup(text)
+    if text =~ /^==+ [A-Z]/
+      options = RDoc::Options.new
+      options.pipe = true
+      sanitize RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new(options))
+    else
+      content_tag :p, escape_once(sanitize(text.strip)), nil, false
+    end
+  end
 end
