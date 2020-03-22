@@ -169,7 +169,7 @@ GEM
     hashie (3.5.7)
     high_voltage (3.1.2)
     hitimes (1.2.5)
-    honeybadger (4.5.6)
+    honeybadger (4.6.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     http_accept_language (2.1.1)
