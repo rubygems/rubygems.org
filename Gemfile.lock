@@ -251,7 +251,7 @@ GEM
       rack (>= 1.0, < 3)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
-    rack-utf8_sanitizer (1.6.0)
+    rack-utf8_sanitizer (1.7.0)
       rack (>= 1.0, < 3.0)
     rails (6.0.2.2)
       actioncable (= 6.0.2.2)
