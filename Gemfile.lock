@@ -139,7 +139,7 @@ GEM
       elasticsearch-transport (= 5.0.5)
     elasticsearch-api (5.0.5)
       multi_json
-    elasticsearch-dsl (0.1.8)
+    elasticsearch-dsl (0.1.9)
     elasticsearch-model (5.0.2)
       activesupport (> 3)
       elasticsearch (~> 5)
