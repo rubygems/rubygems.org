@@ -1,1 +1,238 @@
-../unicorn.yaml.erb
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: unicorn
+  annotations:
+    shipit.shopify.io/restart: 'true'
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 0%
+  selector:
+    matchLabels:
+      name: unicorn
+  template:
+    metadata:
+      annotations:
+        ad.datadoghq.com/unicorn.logs: '[{"source":"rails","service":"rubygems.org"}]'
+      labels:
+        name: unicorn
+    spec:
+      containers:
+      - name: unicorn
+        image: quay.io/rubygems/rubygems.org:<%= current_sha %>
+        args: ["unicorn_rails", "-E", "<%= environment %>", "-c", "/app/config/unicorn.conf"]
+        ports:
+        - containerPort: 3000
+          name: http-unicorn
+        readinessProbe:
+          httpGet:
+            path: /internal/ping
+            port: 3000
+            httpHeaders:
+            - name: X-Forwarded-Proto
+              value: https
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 5
+        resources:
+          <% if environment == 'production' %>
+          requests:
+            cpu: 4000m
+            memory: 4Gi
+          limits:
+            cpu: 5000m
+            memory: 5Gi
+          <% else %>
+          requests:
+            cpu: 200m
+            memory: 1.5Gi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+          <% end %>
+        env:
+          - name: RAILS_ENV
+            value: "<%= environment %>"
+          - name: ENV
+            value: "<%= environment %>"
+          - name: STATSD_IMPLEMENTATION
+            value: "datadog"
+          - name: STATSD_HOST
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.hostIP
+          - name: STATSD_ADDR
+            value: $(STATSD_HOST):8125
+          - name: SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: secret_key_base
+          - name: RAILS_SERVE_STATIC_FILES
+            value: "true"
+          - name: AWS_REGION
+            value: "us-west-2"
+          - name: FASTLY_LOG_PROCESSOR_ENABLED
+            value: "true"
+          - name: S3_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: aws_access_key_id
+          - name: S3_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: aws_secret_access_key
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: aws_access_key_id
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: aws_secret_access_key
+          - name: NEW_RELIC_LICENSE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: new_relic_license_key
+          - name: HONEYBADGER_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: honeybadger_api_key
+          - name: FASTLY_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: fastly_api_key
+          - name: FASTLY_SERVICE_ID
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: fastly_service_id
+          - name: FASTLY_DOMAINS
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: fastly_domains
+          - name: ELASTICSEARCH_URL
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: elasticsearch_url
+          - name: MEMCACHED_ENDPOINT
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: memcached_endpoint
+          - name: SENDGRID_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: sendgrid_username
+          - name: SENDGRID_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: sendgrid_password
+          - name: SENDGRID_WEBHOOK_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: sendgrid_webhook_username
+          - name: SENDGRID_WEBHOOK_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: sendgrid_webhook_password
+          <% if environment == 'staging' %>
+          - name: DISABLE_SIGNUP
+            value: "true"
+          <% end %>
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: <%= environment %>
+                key: database_url
+        securityContext:
+          privileged: false
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sleep", "5"]
+      - image: nginx:1.11.10
+        imagePullPolicy: IfNotPresent
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sleep", "5"]
+        name: nginx
+        ports:
+        - containerPort: 8080
+          name: http-nginx
+          protocol: TCP
+        resources:
+          <% if environment == 'production' %>
+          requests:
+            cpu: 400m
+            memory: 1Gi
+          limits:
+            cpu: 2000m
+            memory: 2Gi
+          <% else %>
+          requests:
+            cpu: 20m
+            memory: 500Gi
+          limits:
+            cpu: 500m
+            memory: 1Gi
+          <% end %>
+        volumeMounts:
+          - name: nginxconfig
+            mountPath: /etc/nginx
+            readOnly: true
+          - name: nginxlog
+            mountPath: /var/log/nginx
+          - name: nginxcache
+            mountPath: /var/lib/nginx/cache
+        livenessProbe:
+          httpGet:
+            path: /nginx_health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /nginx_health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      volumes:
+        - name: nginxconfig
+          configMap:
+            name: nginx-configmap
+            items:
+              - key: default
+                path: nginx.conf
+              - key: filters
+                path: conf.d/filters.conf
+              - key: blacklist
+                path: conf.d/blacklist.conf
+              - key: logging
+                path: conf.d/logging.conf
+              - key: rubygems
+                path: sites-enabled/staging.ruybgems.org.conf
+              - key: legacy
+                path: sites-enabled/legacy.conf
+        - name: nginxlog
+          emptyDir: {}
+        - name: nginxcache
+          emptyDir: {}

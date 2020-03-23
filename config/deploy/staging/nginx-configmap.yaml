@@ -1,0 +1,240 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-configmap
+  namespace: rubygems-staging
+data:
+  default: |
+    user nginx;
+    worker_processes  3;
+    events {
+      worker_connections  5120;
+    }
+    http {
+      server {
+          listen       80;
+          server_name  _;
+          location / {
+              root   html;
+              index  index.html index.htm;
+          }
+
+          location /nginx_health {
+            access_log off;
+            return 200 "healthy\n";
+          }
+      }
+
+      include /etc/nginx/conf.d/logging.conf;
+      include /etc/nginx/sites-enabled/*;
+    }
+  rubygems: |
+    limit_req_status 429;
+    limit_req_zone  $binary_remote_addr  zone=abusers:10m  rate=10r/s;
+    limit_req_zone  $binary_remote_addr  zone=dependencyapi:10m  rate=15r/s;
+
+    proxy_cache_path  /var/lib/nginx/cache  levels=1:2 keys_zone=cache-versions:10m inactive=24h  max_size=100m;
+
+    server {
+        listen       8080;
+        server_name  staging.rubygems.org;
+
+        set_real_ip_from '23.235.32.0/20';
+        set_real_ip_from '43.249.72.0/22';
+        set_real_ip_from '103.244.50.0/24';
+        set_real_ip_from '103.245.222.0/23';
+        set_real_ip_from '103.245.224.0/24';
+        set_real_ip_from '104.156.80.0/20';
+        set_real_ip_from '151.101.0.0/16';
+        set_real_ip_from '157.52.64.0/18';
+        set_real_ip_from '172.111.64.0/18';
+        set_real_ip_from '185.31.16.0/22';
+        set_real_ip_from '199.27.72.0/21';
+        set_real_ip_from '199.232.0.0/16';
+        set_real_ip_from '202.21.128.11/32';
+        set_real_ip_from '202.21.128.12/32';
+        set_real_ip_from '203.57.145.11/32';
+        set_real_ip_from '203.57.145.12/32';
+        real_ip_header Fastly-Client-IP;
+
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Client-IP "";
+        proxy_set_header Host $host:$server_port;
+        proxy_redirect off;
+
+        location /nginx_status {
+          stub_status on;
+          allow 127.0.0.1;
+          deny all;
+          access_log off;
+        }
+
+        include conf.d/filters.conf;
+        include conf.d/blacklist.conf;
+
+        location ~ /rubygems/rubygems(.*)\.(tgz|zip|gem)$ {
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        }
+
+        location ~ /gems/(.*)\.gem$ {
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        }
+
+        location ~ /downloads/(.*)\.gem {
+          set $gem $1;
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net/gems/$gem.gem redirect;
+        }
+
+        location /api/v1/dependencies {
+          limit_req zone=dependencyapi burst=10 nodelay;
+          proxy_set_header Host $host;
+          proxy_set_header X-Forwarded-Proto https;
+          proxy_pass http://127.0.0.1:3000;
+        }
+
+        location /versions {
+          proxy_cache cache-versions;
+          proxy_cache_background_update on;
+          proxy_cache_key "/versions";
+          proxy_cache_lock on;
+          proxy_cache_use_stale updating;
+          proxy_cache_valid 200 60s;
+          proxy_set_header Host $host;
+          proxy_set_header X-Forwarded-Proto https;
+          proxy_pass http://127.0.0.1:3000/versions;
+        }
+
+        location /quick/Marshal.4.8/ {
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        }
+
+        location = /specs.4.8.gz {
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        }
+
+        location = /latest_specs.4.8.gz {
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        }
+
+        location = /prerelease_specs.4.8.gz {
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        }
+
+        # Crufty old redirects
+        location = /specs.4.8 {
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        }
+
+        location = /latest_specs.4.8 {
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        }
+
+        location = /prerelease_specs.4.8 {
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        }
+
+        location = /quick/rubygems-update-1.3.6.gemspec.rz {
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        }
+
+        location = /yaml.Z {
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        }
+
+        location = /yaml.z {
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        }
+
+        location = /yaml {
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        }
+
+        location = /Marshal.4.8.Z {
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        }
+
+        location = /Marshal.4.8 {
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        }
+
+        location = /quick/index.rz {
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        }
+
+        location = /quick/index {
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        }
+
+        location = /quick/latest_index.rz {
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        }
+
+        location = /quick/latest_index {
+          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        }
+
+
+        location / {
+          root /var/www/rubygems;
+          try_files /maintenance.html @app;
+        }
+
+        location @app {
+          limit_req zone=abusers burst=10;
+          proxy_pass http://127.0.0.1:3000;
+        }
+    }
+  legacy: |
+    server {
+      listen 80;
+
+      server_name gemcutter.org gems.rubyforge.org;
+
+      rewrite ^(.*) http://staging.rubygems.org$1 permanent;
+    }
+  filters: |
+    location /com/ { return 404; }
+    location /org/ { return 404; }
+    location /.meta/ { return 404; }
+    location ~ ^((?!opensearch).)*\.(jar|xml|pom)$ { return 404; }
+
+    if ($http_user_agent ~* (AhrefsBot) ) {
+      return 404;
+    }
+  blacklist: |
+    deny 58.218.199.250;
+  logging: |
+    map $http_x_forwarded_proto $scheme_from_fastly {
+      "" $scheme;
+      default $http_x_forwarded_proto;
+    }
+
+    log_format json '{'
+      '"host": "${HOSTNAME}", '
+      '"@timestamp": "$time_iso8601", '
+      '"status": "$status", '
+      '"scheme": "$scheme_from_fastly", '
+      '"uri": "$request_uri", '
+      '"args": "$args", '
+      '"dest_host": "$http_host", '
+      '"content_type": "$sent_http_content_type", '
+      '"protocol": "$server_protocol", '
+      '"referer": "$http_referer", '
+      '"user_agent": "$http_user_agent", '
+      '"client_ip": "$remote_addr", '
+      '"remote_user": "$remote_user", '
+      '"body_bytes": "$body_bytes_sent", '
+      '"upstream_x_runtime": "$upstream_http_x_runtime", '
+      '"processing_time": "$request_time", '
+      '"upstream_processing_time": "$upstream_response_time", '
+      '"method": "$request_method", '
+      '"request": "$request", '
+      '"request_id": "$upstream_http_x_request_id", '
+      '"upstream": "$upstream_addr", '
+      '"ssl_protocol": "$ssl_protocol", '
+      '"ssl_cipher": "$ssl_cipher"'
+    '}';
+    access_log  /var/log/nginx/access.json.log json;
+    access_log  /dev/stdout json;
+    error_log	/dev/stdout;
