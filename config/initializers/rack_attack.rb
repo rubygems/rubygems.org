@@ -1,9 +1,11 @@
 class Rack::Attack
   REQUEST_LIMIT = 100
+  EXP_BASE_REQUEST_LIMIT = 200
   PUSH_LIMIT = 150
   REQUEST_LIMIT_PER_EMAIL = 10
   LIMIT_PERIOD = 10.minutes
   PUSH_LIMIT_PERIOD = 60.minutes
+  EXP_BASE_LIMIT_PERIOD = 100.seconds
 
   ### Prevent Brute-Force Login Attacks ###
 
@@ -46,18 +48,17 @@ class Rack::Attack
     req.path.starts_with?("/assets") && req.request_method == "GET"
   end
 
-  # 100 req in 10 min
-  # 200 req in 100 min
-  # 300 req in 1000 min (0.7 days)
-  # 400 req in 10000 min (6.9 days)
-  (1..4).each do |level|
-    throttle("clearance/ip/#{level}", limit: REQUEST_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
+  # 200 req in 100 seconds
+  # 400 req in 10000 seconds (2.7 hours)
+  # 600 req in 1000000 seconds (277.7 hours)
+  (1..3).each do |level|
+    throttle("clearance/ip/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
       req.ip if protected_route?(protected_ui_actions, req.path, req.request_method)
     end
   end
 
-  (1..4).each do |level|
-    throttle("api/ip/#{level}", limit: REQUEST_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
+  (1..3).each do |level|
+    throttle("api/ip/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
       req.ip if protected_route?(protected_api_actions, req.path, req.request_method)
     end
   end
