@@ -3,11 +3,12 @@ require "digest/sha2"
 class Pusher
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
 
-  def initialize(user, body)
+  def initialize(user, body, remote_ip = "")
     @user = user
     @body = StringIO.new(body.read)
     @size = @body.size
     @indexer = Indexer.new
+    @remote_ip = remote_ip
   end
 
   def process
@@ -105,6 +106,7 @@ class Pusher
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
     rubygem.delay.index_document
     GemCachePurger.call(rubygem.name)
+    RackAttackReset.gem_push_backoff(@remote_ip)
     StatsD.increment "push.success"
   end
 

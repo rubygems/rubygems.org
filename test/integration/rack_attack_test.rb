@@ -210,6 +210,37 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         assert_response :unauthorized
       end
     end
+
+    context "expontential backoff" do
+      context "with successful gem push" do
+        setup do
+          Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
+            under_backoff_limit = (Rack::Attack::EXP_BASE_REQUEST_LIMIT * level) - 1
+            push_exp_throttle_level_key = "#{Rack::Attack::PUSH_EXP_THROTTLE_KEY}/#{level}:#{@ip_address}"
+            under_backoff_limit.times { Rack::Attack.cache.count(push_exp_throttle_level_key, exp_base_limit_period**level) }
+          end
+
+          post "/api/v1/gems",
+            params: gem_file("test-0.0.0.gem").read,
+            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
+        end
+
+        should "reset gem push rate limit rack attack key" do
+          Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
+            push_exp_throttle_level_key = "#{Rack::Attack::PUSH_EXP_THROTTLE_KEY}/#{level}:#{@ip_address}"
+            assert_equal 1, Rack::Attack.cache.count(push_exp_throttle_level_key, exp_base_limit_period**level)
+          end
+        end
+
+        should "not rate limit successive requests" do
+          post "/api/v1/gems",
+            params: gem_file("test-1.0.0.gem").read,
+            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
+
+          assert_response :ok
+        end
+      end
+    end
   end
 
   context "requests is higher than limit" do
