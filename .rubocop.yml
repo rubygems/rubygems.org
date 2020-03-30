@@ -11,7 +11,7 @@ AllCops:
     - !ruby/regexp /(vendor|bundle|bin|db|tmp)\/.*/
   DisplayCopNames: true
   DisplayStyleGuide: true
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.6
 
 Rails:
   Enabled: true

@@ -69,7 +69,7 @@ class Rubygem < ApplicationRecord
   end
 
   def self.letterize(letter)
-    letter =~ /\A[A-Za-z]\z/ ? letter.upcase : "A"
+    /\A[A-Za-z]\z/.match?(letter) ? letter.upcase : "A"
   end
 
   def self.by_name
@@ -293,11 +293,11 @@ class Rubygem < ApplicationRecord
   def ensure_name_format
     if name.class != String
       errors.add :name, "must be a String"
-    elsif name !~ /[a-zA-Z]+/
+    elsif !/[a-zA-Z]+/.match?(name)
       errors.add :name, "must include at least one letter"
-    elsif name !~ NAME_PATTERN
+    elsif !NAME_PATTERN.match?(name)
       errors.add :name, "can only include letters, numbers, dashes, and underscores"
-    elsif name =~ /\A[#{Regexp.escape(Patterns::SPECIAL_CHARACTERS)}]+/
+    elsif /\A[#{Regexp.escape(Patterns::SPECIAL_CHARACTERS)}]+/.match?(name)
       errors.add :name, "can not begin with a period, dash, or underscore"
     end
   end

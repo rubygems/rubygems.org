@@ -32,7 +32,7 @@ module RubygemsHelper
   end
 
   def simple_markup(text)
-    if text =~ /^==+ [A-Z]/
+    if /^==+ [A-Z]/.match?(text)
       options = RDoc::Options.new
       options.pipe = true
       sanitize RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new(options))
