@@ -323,7 +323,7 @@ class Version < ApplicationRecord
   end
 
   def self._sha256_hex(raw)
-    raw.unpack("m0").first.unpack("H*").first
+    raw.unpack1("m0").unpack1("H*")
   end
 
   def metadata_uri_set?

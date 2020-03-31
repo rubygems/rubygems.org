@@ -22,7 +22,7 @@ owner = User.find_by_email!(email)
 puts "Permanently delete #{name} with #{versions.size} versions? (y/N)"
 confirm = $stdin.gets.chomp
 
-if confirm =~ /^y(es)?$/i
+if /^y(es)?$/i.match?(confirm)
   versions.each do |version|
     owner.deletions.create!(version: version)
   end

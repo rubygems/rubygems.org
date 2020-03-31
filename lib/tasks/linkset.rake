@@ -6,17 +6,15 @@ namespace :linkset do
 
   desc "Remove invalid URLs in linkset"
   task clean: :environment do
-    begin
-      Linkset.transaction do
-        puts "Removing invalid home urls..."
-        invalid_links.each do |link|
-          link.update_attribute("home", link.home.strip.to_s)
-        end
-        affected = invalid_links.update_all(["home = ?", nil])
-        puts "Successfully removed #{affected} urls in home"
+    Linkset.transaction do
+      puts "Removing invalid home urls..."
+      invalid_links.each do |link|
+        link.update_attribute("home", link.home.strip.to_s)
       end
-    rescue
-      puts "Error: Couldn't update urls"
+      affected = invalid_links.update_all(["home = ?", nil])
+      puts "Successfully removed #{affected} urls in home"
     end
+  rescue
+    puts "Error: Couldn't update urls"
   end
 end
