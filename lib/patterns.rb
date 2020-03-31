@@ -30,7 +30,6 @@ module Patterns
     pathname
     pp
     prettyprint
-    profile
     profiler
     pty
     rational
