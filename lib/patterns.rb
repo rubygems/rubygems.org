@@ -16,7 +16,6 @@ module Patterns
     coverage
     digest
     drb
-    english
     enumerator
     erb
     expect
@@ -27,21 +26,14 @@ module Patterns
     io-wait
     jruby
     mkmf
-    monitor
     mri
     mruby
-    net-ftp
-    net-http
-    net-imap
-    net-protocol
     nkf
-    observer
     open-uri
     optparse
     pathname
     pp
     prettyprint
-    prime
     profile
     profiler
     pty
@@ -57,20 +49,13 @@ module Patterns
     shellwords
     socket
     syslog
-    tempfile
     thread
     time
-    timeout
-    tmpdir
-    tracer
     tsort
     un
     unicode_normalize
     uninstall
-    uri
-    weakref
     win32ole
-    yaml
     ubygems
     sidekiq-pro
     graphql-pro
