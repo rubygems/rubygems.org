@@ -21,13 +21,9 @@ module Patterns
     expect
     fiber
     find
-    install
     io-nonblock
     io-wait
-    jruby
     mkmf
-    mri
-    mruby
     nkf
     open-uri
     optparse
@@ -42,8 +38,6 @@ module Patterns
     resolv
     resolv-replace
     rinda
-    ruby
-    rubygems
     securerandom
     set
     shellwords
@@ -54,9 +48,16 @@ module Patterns
     tsort
     un
     unicode_normalize
-    uninstall
     win32ole
     ubygems
+
+    jruby
+    mri
+    mruby
+    ruby
+    rubygems
+    install
+    uninstall
     sidekiq-pro
     graphql-pro
 
