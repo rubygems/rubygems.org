@@ -78,6 +78,7 @@ Follow the instructions below on how to install Bundler and setup the database.
   * Setup information: `brew info postgresql`
 * Install memcached: `brew install memcached`
   * Show all memcached options: `memcached -h`
+* Install Google-Chrome: `brew cask install google-chrome`
 
 #### Environment (Linux - Debian/Ubuntu)
 
@@ -95,6 +96,9 @@ Follow the instructions below on how to install Bundler and setup the database.
   * Help to setup database <https://wiki.debian.org/PostgreSql>
 * Install memcached: `apt-get install memcached`
   * Show all memcached options: `memcached -h`
+* Install Google-Chrome:
+  * Download latest stable: `wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb`
+  * Install chrome: sudo dpkg -i google-chrome-stable_current_amd64.deb
 
 #### Getting the code
 
