@@ -808,41 +808,37 @@ class RubygemTest < ActiveSupport::TestCase
       @rubygem1 = create(:rubygem, downloads: 10)
       @rubygem2 = create(:rubygem, downloads: 20)
       @rubygem3 = create(:rubygem, downloads: 30)
-      @rubygem4 = create(:rubygem, downloads: 40)
-      @rubygem5 = create(:rubygem, downloads: 50)
-      create(:version, rubygem: @rubygem2, created_at: 5.days.ago)
-      create(:version, rubygem: @rubygem1, created_at: 6.days.ago)
-      create(:version, rubygem: @rubygem3, created_at: 8.days.ago)
-      create(:version, rubygem: @rubygem4, created_at: 30.days.ago)
-      create(:version, rubygem: @rubygem5, created_at: 71.days.ago)
+      create(:version, rubygem: @rubygem1, created_at: (Gemcutter::NEWS_DAYS_LIMIT - 2.days).ago)
+      create(:version, rubygem: @rubygem2, created_at: (Gemcutter::NEWS_DAYS_LIMIT - 1.day).ago)
+      create(:version, rubygem: @rubygem3, created_at: (Gemcutter::POPULAR_DAYS_LIMIT + 1.day).ago)
     end
 
     context ".news" do
       setup do
-        @news = Rubygem.news(7.days)
+        @news = Rubygem.news(Gemcutter::NEWS_DAYS_LIMIT)
       end
 
-      should "not include gems updated since given days" do
+      should "not include gems updated prior to Gemcutter::NEWS_DAYS_LIMIT days ago" do
         assert_not_includes @news, @rubygem3
       end
 
       should "order by created_at of gem version" do
-        expected_order = [@rubygem2, @rubygem1]
+        expected_order = [@rubygem1, @rubygem2]
         assert_equal expected_order, @news
       end
     end
 
     context ".popular" do
       setup do
-        @popular_gems = Rubygem.popular(70.days)
+        @popular_gems = Rubygem.popular(Gemcutter::POPULAR_DAYS_LIMIT)
       end
 
-      should "not include gems updated prior to certain date" do
-        assert_not_includes @popular_gems, @rubygem5
+      should "not include gems updated prior to Gemcutter::POPULAR_DAYS_LIMIT days ago" do
+        assert_not_includes @popular_gems, @rubygem3
       end
 
-      should "order by created_at of gem version" do
-        expected_order = [@rubygem4, @rubygem3, @rubygem2, @rubygem1]
+      should "order by number of downloads" do
+        expected_order = [@rubygem2, @rubygem1]
         assert_equal expected_order, @popular_gems
       end
     end
