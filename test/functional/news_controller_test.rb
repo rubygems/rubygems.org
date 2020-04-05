@@ -67,13 +67,18 @@ class NewsControllerTest < ActionController::TestCase
       get :show
     end
 
-    should "display expected entries" do
+    should "order by created_at of gem version" do
       expected_order = [@rubygem2, @rubygem3].map(&:name)
       actual_order = assert_select("h2.gems__gem__name").map(&:text)
 
       expected_order.each_with_index do |expected_gem_name, i|
         assert_match(/#{expected_gem_name}/, actual_order[i])
       end
+    end
+
+    should "display correct number of entries" do
+      entries = assert_select("h2.gems__gem__name")
+      assert_equal(entries.size, 2)
     end
   end
 end
