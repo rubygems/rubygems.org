@@ -33,6 +33,7 @@ class ElasticSearcher
                   default_operator "and"
                 end
               end
+
               minimum_should_match 1
               # only return gems that are not yanked
               filter { term yanked: false }
