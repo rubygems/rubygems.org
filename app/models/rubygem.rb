@@ -86,10 +86,14 @@ class Rubygem < ApplicationRecord
   end
 
   def self.news(days)
-    includes(:latest_version, :gem_download)
-      .with_versions
+    joins(:latest_version)
       .where("versions.created_at BETWEEN ? AND ?", days.ago.in_time_zone, Time.zone.now)
-      .order("versions.created_at DESC")
+      .group(:id)
+      .order("MAX(versions.created_at) DESC")
+  end
+
+  def self.popular(days)
+    joins(:gem_download).order("MAX(gem_downloads.count) DESC").news(days)
   end
 
   def all_errors(version = nil)
