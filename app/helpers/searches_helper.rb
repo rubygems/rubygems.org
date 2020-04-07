@@ -26,4 +26,12 @@ module SearchesHelper
     update_info = (duration == 30.days ? t("searches.show.month_update", count: count) : t("searches.show.week_update", count: count))
     link_to update_info, path, class: "t-link--black"
   end
+
+  def aggregation_bool_count(aggregration, field, filter)
+    count = aggregration["buckets"][field]["doc_count"]
+    return unless count > 0 && !params[:query].include?("#{field}:#{filter}")
+
+    path = search_path(params: { query: "#{params[:query]} AND #{field}:#{filter}" })
+    link_to "#{field.capitalize} (#{count})", path, class: "t-link--black"
+  end
 end

@@ -328,6 +328,7 @@ fr:
       description: Description
       downloads: Téléchargements
       updated: Mis à jour
+      yanked: ""
     show:
       subtitle: pour %{query}
       month_update:

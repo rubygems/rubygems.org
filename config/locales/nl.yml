@@ -328,6 +328,7 @@ nl:
       description:
       downloads:
       updated:
+      yanked: ""
     show:
       subtitle: voor %{query}
       month_update:

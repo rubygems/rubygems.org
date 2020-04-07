@@ -338,7 +338,7 @@ en:
       description: Description
       downloads: Downloads
       updated: Updated
-      include_yanked: Include Yanked?
+      yanked: Yanked
     show:
       subtitle: for %{query}
       month_update: Updated last month (%{count})
