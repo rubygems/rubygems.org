@@ -73,6 +73,17 @@ class PushTest < ActionDispatch::IntegrationTest
     assert_match(/cannot process this gem/, response.body)
   end
 
+  test "republish a yanked version" do
+    rubygem = create(:rubygem, name: "sandworm")
+    create(:version, number: "1.0.0", indexed: false, rubygem: rubygem)
+
+    build_gem "sandworm", "1.0.0"
+
+    push_gem "sandworm-1.0.0.gem"
+    assert_response :conflict
+    assert_match(/A yanked version already exists \(sandworm-1.0.0\)/, response.body)
+  end
+
   def push_gem(path)
     post api_v1_rubygems_path,
       env: { "RAW_POST_DATA" => File.read(path) },

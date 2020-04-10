@@ -60,10 +60,8 @@ class Pusher
     @rubygem = Rubygem.name_is(name).first || Rubygem.new(name: name)
 
     unless @rubygem.new_record?
-      if @rubygem.find_version_from_spec(spec)
-        notify("Repushing of gem versions is not allowed.\n" \
-               "Please use `gem yank` to remove bad gem releases.", 409)
-
+      if (version = @rubygem.find_version_from_spec spec)
+        republish_notification(version)
         return false
       end
 
@@ -128,5 +126,15 @@ class Pusher
   def set_info_checksum
     checksum = GemInfo.new(rubygem.name).info_checksum
     version.update_attribute :info_checksum, checksum
+  end
+
+  def republish_notification(version)
+    if version.indexed?
+      notify("Repushing of gem versions is not allowed.\n" \
+            "Please use `gem yank` to remove bad gem releases.", 409)
+    else
+      notify("A yanked version already exists (#{version.full_name}).\n" \
+            "Repushing of gem versions is not allowed. Please use a new version and retry", 409)
+    end
   end
 end
