@@ -140,7 +140,8 @@ Rails.application.routes.draw do
       end
     end
     resources :stats, only: :index
-    resource :news, path: 'news', only: [:show] do
+    get "/news" => 'news#show', as: 'legacy_news_path'
+    resource :news, path: 'releases', only: [:show] do
       get :popular, on: :collection
     end
     resource :notifier, only: %i[update show]
