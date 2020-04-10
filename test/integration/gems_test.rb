@@ -113,4 +113,20 @@ class GemsSystemTest < SystemTest
     assert page.has_no_selector?(".gem__users__mfa-text.mfa-warn")
     assert page.has_no_selector?(".gem__users__mfa-text.mfa-info")
   end
+
+  test "shows github link when source_code_uri is set" do
+    github_link = "http://github.com/user/project"
+    create(:version, number: "3.0.1", rubygem: @rubygem, metadata: { "source_code_uri" => github_link })
+
+    visit rubygem_path(@rubygem)
+    assert page.has_selector?(".github-btn")
+  end
+
+  test "shows github link when homepage_uri is set" do
+    github_link = "http://github.com/user/project"
+    create(:version, number: "3.0.1", rubygem: @rubygem, metadata: { "homepage_uri" => github_link })
+
+    visit rubygem_path(@rubygem)
+    assert page.has_selector?(".github-btn")
+  end
 end
