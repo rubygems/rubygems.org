@@ -129,4 +129,12 @@ class GemsSystemTest < SystemTest
     visit rubygem_path(@rubygem)
     assert page.has_selector?(".github-btn")
   end
+
+  test "does not show github link when homepage_uri is not github" do
+    notgithub_link = "http://notgithub.com/user/project"
+    create(:version, number: "3.0.1", rubygem: @rubygem, metadata: { "homepage_uri" => notgithub_link })
+
+    visit rubygem_path(@rubygem)
+    assert page.has_no_selector?(".github-btn")
+  end
 end
