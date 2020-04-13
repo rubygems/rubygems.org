@@ -7,7 +7,7 @@ if($("#advanced-search").length){
   var $updated     = $('input#updated');
   var $yanked      = $('input#yanked');
 
-    $name.add($summary)
+  $name.add($summary)
     .add($description)
     .add($downloads)
     .add($updated)
@@ -20,6 +20,6 @@ if($("#advanced-search").length){
       var updated     = $updated.val().length > 0 ? 'updated: ' + $updated.val() : '';
       var yanked      = $yanked.is(":checked") ? 'yanked: true' : '';
 
-        $main.val($.trim(name + ' ' + summary + ' ' + description + ' ' + downloads + ' ' + updated + ' ' + yanked));
+      $main.val($.trim(name + ' ' + summary + ' ' + description + ' ' + downloads + ' ' + updated + ' ' + yanked));
   });
 }
