@@ -106,7 +106,7 @@ class Pusher
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
     rubygem.delay.index_document
     GemCachePurger.call(rubygem.name)
-    RackAttackReset.gem_push_backoff(@remote_ip)
+    RackAttackReset.gem_push_backoff(@remote_ip) if @remote_ip.present?
     StatsD.increment "push.success"
   end
 
