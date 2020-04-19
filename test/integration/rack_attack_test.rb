@@ -216,8 +216,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         setup do
           Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
             under_backoff_limit = (Rack::Attack::EXP_BASE_REQUEST_LIMIT * level) - 1
-            push_exp_throttle_level_key = "#{Rack::Attack::PUSH_EXP_THROTTLE_KEY}/#{level}:#{@ip_address}"
-            under_backoff_limit.times { Rack::Attack.cache.count(push_exp_throttle_level_key, exp_base_limit_period**level) }
+            @push_exp_throttle_level_key = "#{Rack::Attack::PUSH_EXP_THROTTLE_KEY}/#{level}:#{@ip_address}"
+            under_backoff_limit.times { Rack::Attack.cache.count(@push_exp_throttle_level_key, exp_base_limit_period**level) }
           end
 
           post "/api/v1/gems",
@@ -227,8 +227,10 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         should "reset gem push rate limit rack attack key" do
           Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
-            push_exp_throttle_level_key = "#{Rack::Attack::PUSH_EXP_THROTTLE_KEY}/#{level}:#{@ip_address}"
-            assert_equal 1, Rack::Attack.cache.count(push_exp_throttle_level_key, exp_base_limit_period**level)
+            period = exp_base_limit_period**level
+            period_throttle_key = "#{Time.now.to_i / period}:#{@push_exp_throttle_level_key}"
+
+            assert_nil Rack::Attack.cache.read(period_throttle_key)
           end
         end
 
@@ -428,6 +430,17 @@ class RackAttackTest < ActionDispatch::IntegrationTest
           post "/users",
             params: { user: { email: @user.email, password: @user.password } },
             headers: { REMOTE_ADDR: @ip_address }
+
+          assert_response :too_many_requests
+          assert_equal expected_retry_after, @response.headers["Retry-After"]
+        end
+
+        should "throttle gem push at level #{level}" do
+          exceed_exponential_limit_for("#{Rack::Attack::PUSH_EXP_THROTTLE_KEY}/#{level}", level)
+
+          post "/api/v1/gems",
+            params: gem_file("test-0.0.0.gem").read,
+            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
 
           assert_response :too_many_requests
           assert_equal expected_retry_after, @response.headers["Retry-After"]
