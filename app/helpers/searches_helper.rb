@@ -29,9 +29,9 @@ module SearchesHelper
 
   def aggregation_bool_count(aggregration, field, filter)
     count = aggregration["buckets"][field]["doc_count"]
-    return unless count > 0 && !params[:query].include?("#{field}:#{filter}")
+    return unless count > 0
 
-    path = search_path(params: { query: "#{params[:query]} AND #{field}:#{filter}" })
+    path = search_path(params: { query: "#{params[:query]} #{field}: #{filter}" })
     link_to "#{field.capitalize} (#{count})", path, class: "t-link--black"
   end
 end
