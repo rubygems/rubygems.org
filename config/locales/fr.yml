@@ -272,6 +272,8 @@ fr:
       install: installation
       required_ruby_version: Version de Ruby requise
       required_rubygems_version:
+      requires_mfa:
+      since: "%{version}"
       links:
         badge: Badge
         bugs: Suivi de bugs
@@ -339,7 +341,7 @@ fr:
       resend_confirmation: Vous n'avez pas reçu l'email de confirmation ?
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded: Gems les plus téléchargés
       total_downloads: Total de téléchargements
       total_gems: Total de gems

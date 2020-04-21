@@ -11,13 +11,18 @@ class Pusher
   end
 
   def process
-    pull_spec && find && authorize && validate && save
+    pull_spec && find && authorize && verify_mfa_requirement && validate && save
   end
 
   def authorize
     rubygem.pushable? ||
       rubygem.owned_by?(user) ||
       notify("You do not have permission to push to this gem. Ask an owner to add you with: gem owner #{rubygem.name} --add #{user.email}", 403)
+  end
+
+  def verify_mfa_requirement
+    rubygem.mfa_requirement_satisfied_for?(user) ||
+      notify("Rubygem requires owners to enable MFA. You must enable MFA before pushing new version.", 403)
   end
 
   def validate
@@ -78,6 +83,7 @@ class Pusher
 
     @version = @rubygem.versions.new number: spec.version.to_s,
                                      platform: spec.original_platform.to_s,
+                                     metadata: spec.metadata,
                                      size: size,
                                      sha256: sha256,
                                      pusher: user

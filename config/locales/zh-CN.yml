@@ -272,6 +272,8 @@ zh-CN:
       install: 安装
       required_ruby_version: 需要的 Ruby 版本
       required_rubygems_version: 需要的 RubyGems 版本
+      requires_mfa:
+      since: "%{version}"
       links:
         badge: 徽章
         bugs: Bug 追踪
@@ -339,7 +341,7 @@ zh-CN:
       resend_confirmation: 没有收到确认邮件？
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded: 历史下载次数排行
       total_downloads: 下载总次数
       total_gems: Gems 总数

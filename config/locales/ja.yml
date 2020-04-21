@@ -272,6 +272,8 @@ ja:
       install: インストール
       required_ruby_version: 必要Rubyバージョン
       required_rubygems_version: 必要Gemバージョン
+      requires_mfa:
+      since: "%{version}"
       links:
         badge: バッジ
         bugs: バグトラッカー
@@ -339,7 +341,7 @@ ja:
       resend_confirmation: 確認メールが見当たりませんか?
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded: 累計最多ダウンロード数
       total_downloads: 累計ダウンロード数
       total_gems: Gem総数

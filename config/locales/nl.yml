@@ -272,6 +272,8 @@ nl:
       install: Installeer
       required_ruby_version: Required Ruby Version
       required_rubygems_version: Required Rubygems Version
+      requires_mfa:
+      since: "%{version}"
       links:
         badge: Badge
         bugs: Bug-tracker
@@ -339,7 +341,7 @@ nl:
       resend_confirmation: Geen bevestigingsemail ontvangen?
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded:
       total_downloads:
       total_gems:
