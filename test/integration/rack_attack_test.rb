@@ -228,9 +228,12 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         should "reset gem push rate limit rack attack key" do
           Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
             period = exp_base_limit_period**level
-            period_throttle_key = "#{Time.now.to_i / period}:#{@push_exp_throttle_level_key}"
 
-            assert_nil Rack::Attack.cache.read(period_throttle_key)
+            time_counter = (Time.now.to_i / period).to_i
+            prev_time_counter = time_counter - 1
+
+            assert_nil Rack::Attack.cache.read("#{time_counter}:#{@push_exp_throttle_level_key}")
+            assert_nil Rack::Attack.cache.read("#{prev_time_counter}:#{@push_exp_throttle_level_key}")
           end
         end
 
