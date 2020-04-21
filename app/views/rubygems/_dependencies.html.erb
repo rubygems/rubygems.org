@@ -5,9 +5,12 @@
       <div class="t-list__items">
         <% dependencies.each do |dependency| %>
           <% if rubygem = dependency.rubygem %>
-            <%= link_to rubygem_path(rubygem), :class => 't-list__item push--s' do %>
-              <strong><%= rubygem.name %></strong> <%= dependency.clean_requirements %>
-            <% end %>
+            <li class="gem__requirement-wrap">
+              <%= link_to rubygem_path(rubygem), :class => 't-list__item push--top-s' do %>
+                <strong><%= rubygem.name %></strong>
+              <% end %>
+              <%= dependency.clean_requirements %>
+            </li>
           <% elsif dependency&.name %>
             <p class="t-list__item gem__unregistered" title="unregistered gem">
               <strong><%= dependency.name %></strong> <%= dependency.clean_requirements %>
