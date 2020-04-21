@@ -54,7 +54,7 @@ class Rubygem < ApplicationRecord
 
   def self.total_count
     Rails.cache.fetch("gem/total_count", expires_in: 6.hours) do
-      count_by_sql "SELECT COUNT(*) from (SELECT DISTINCT rubygem_id FROM versions WHERE indexed = true) AS v"
+      Version.indexed.distinct.count(:rubygem_id)
     end
   end
 

@@ -622,7 +622,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     context ".total_count" do
-      setup {  @expected_total = 6 }
+      setup { @expected_total = 6 }
 
       should "give a count of only rubygems with versions" do
         assert_equal @expected_total, Rubygem.total_count
@@ -637,7 +637,7 @@ class RubygemTest < ActiveSupport::TestCase
         setup { Rubygem.total_count }
 
         should "not use sql to get result" do
-          Rubygem.expects(:count_by_sql).never
+          Version.expects(:where).never
           assert_equal @expected_total, Rubygem.total_count
         end
       end
