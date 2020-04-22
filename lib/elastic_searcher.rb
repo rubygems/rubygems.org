@@ -59,7 +59,7 @@ class ElasticSearcher
       end
 
       # only return gems that are not yanked unless filter is used
-      post_filter { term yanked: false } unless query_str.delete(" ").include? "yanked:true"
+      post_filter { term yanked: false } unless query_str.gsub(/[[:space:]]/, "").include? "yanked:true"
 
       source source_array
       # Return suggestions unless there's no query from the user
