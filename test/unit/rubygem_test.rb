@@ -611,10 +611,6 @@ class RubygemTest < ActiveSupport::TestCase
       refute @thin.pushable?
     end
 
-    should "give a count of only rubygems with versions" do
-      assert_equal 6, Rubygem.total_count
-    end
-
     should "only return the latest gems with versions" do
       assert_equal [@rack, @thor, @dust, @json, @rake],        Rubygem.latest
       assert_equal [@rack, @thor, @dust, @json, @rake, @thin], Rubygem.latest(6)
@@ -623,6 +619,28 @@ class RubygemTest < ActiveSupport::TestCase
     should "only latest downloaded versions" do
       assert_equal [@thin, @rake, @json, @thor, @rack],        Rubygem.downloaded
       assert_equal [@thin, @rake, @json, @thor, @rack, @dust], Rubygem.downloaded(6)
+    end
+
+    context ".total_count" do
+      setup { @expected_total = 6 }
+
+      should "give a count of only rubygems with versions" do
+        assert_equal @expected_total, Rubygem.total_count
+      end
+
+      should "write to cache" do
+        Rails.cache.expects(:write).with("gem/total_count", @expected_total, { expires_in: 6.hours })
+        Rubygem.total_count
+      end
+
+      context "cache hit" do
+        setup { Rubygem.total_count }
+
+        should "not use sql to get result" do
+          Version.expects(:where).never
+          assert_equal @expected_total, Rubygem.total_count
+        end
+      end
     end
   end
 
