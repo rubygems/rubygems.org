@@ -159,7 +159,7 @@ class RubygemsHelperTest < ActionView::TestCase
     context "with invalid uri" do
       setup do
         linkset = build(:linkset, code: "http://github.com/\#{github_username}/\#{project_name}")
-        @rubygem = build(:rubygem, linkset: linkset)
+        @rubygem = create(:rubygem, linkset: linkset, number: "0.0.1")
       end
 
       should "not raise error" do
@@ -175,7 +175,7 @@ class RubygemsHelperTest < ActionView::TestCase
       setup do
         @github_link = "http://github.com/user/project"
         linkset = build(:linkset, code: @github_link)
-        @rubygem = build(:rubygem, linkset: linkset)
+        @rubygem = create(:rubygem, linkset: linkset, number: "0.0.1")
       end
 
       should "return parsed uri" do
@@ -187,7 +187,7 @@ class RubygemsHelperTest < ActionView::TestCase
       setup do
         @github_link = "http://github.com/user/project"
         linkset = build(:linkset, home: @github_link)
-        @rubygem = build(:rubygem, linkset: linkset)
+        @rubygem = create(:rubygem, linkset: linkset, number: "0.0.1")
       end
 
       should "return parsed uri" do
