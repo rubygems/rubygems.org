@@ -84,6 +84,32 @@ class SearchesControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to show with search parameters with yanked gems and ES enabled" do
+    setup do
+      @sinatra = create(:rubygem, name: "sinatra")
+      @brando = create(:rubygem, name: "brando")
+      create(:version, :yanked, rubygem: @sinatra)
+      create(:version, rubygem: @brando)
+      import_and_refresh
+      @request.cookies["new_search"] = "true"
+      get :show, params: { query: "sinatra" }
+    end
+
+    should respond_with :success
+    should "not see sinatra on the page in the results" do
+      aggregations_div = page.find(".aggregations")
+      aggregations_div.assert_no_text(@sinatra.name)
+      aggregations_div.assert_no_selector("a[href='#{rubygem_path(@sinatra)}']")
+    end
+    should "not see suggestions" do
+      page.assert_no_text("Maybe you mean")
+      page.assert_no_selector(".search-suggestions")
+    end
+    should "see yanked filter" do
+      page.assert_text("Yanked (1)")
+    end
+  end
+
   context "on GET to show with non string search parameter" do
     setup do
       get :show, params: { query: { foo: "bar" } }

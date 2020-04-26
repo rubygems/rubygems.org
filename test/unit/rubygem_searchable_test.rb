@@ -167,8 +167,11 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     setup do
       rubygem1 = create(:rubygem, name: "example", downloads: 101)
       rubygem2 = create(:rubygem, name: "web-rubygem", downloads: 99)
+      rubygem3 = create(:rubygem, name: "yanked-gem", downloads: 500)
       create(:version, rubygem: rubygem1, summary: "special word with web-rubygem")
       create(:version, rubygem: rubygem2, description: "example special word")
+      create(:version, rubygem: rubygem3, indexed: false)
+
       import_and_refresh
     end
 
@@ -206,6 +209,12 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       _, response = ElasticSearcher.new("name:web*").search
       assert_equal 1, response.size
       assert_equal "web-rubygem", response.first.name
+    end
+
+    should "show yanked on filter true" do
+      _, response = ElasticSearcher.new("yanked:true").search
+      assert_equal 1, response.size
+      assert_equal "yanked-gem", response.first.name
     end
   end
 

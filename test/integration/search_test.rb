@@ -18,7 +18,7 @@ class SearchTest < SystemTest
     assert page.has_content? "LDAP-PLUS"
   end
 
-  test "searching for a yanked gem" do
+  test "searching for a yanked gem without yanked filter" do
     rubygem = create(:rubygem, name: "LDAP")
     create(:version, rubygem: rubygem, indexed: false)
     import_and_refresh
@@ -29,6 +29,19 @@ class SearchTest < SystemTest
     click_button "search_submit"
 
     assert page.has_content? "No gems found"
+  end
+
+  test "searching for a yanked gem with yanked filter" do
+    rubygem = create(:rubygem, name: "LDAP")
+    create(:version, :yanked, rubygem: rubygem)
+    import_and_refresh
+
+    visit search_path
+
+    fill_in "query", with: "LDAP yanked:true"
+    click_button "search_submit"
+
+    assert page.has_content? "Displaying 1 gem"
   end
 
   test "searching for a gem with yanked versions" do

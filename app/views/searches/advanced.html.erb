@@ -24,5 +24,8 @@
 
     <dt><%= label_tag :updated, t(".updated"), class: "form__label" %></dt>
     <dd><%= text_field_tag :updated, "", placeholder: ">#{1.week.ago.strftime('%F')}", class: "form__input"%></dd>
+
+    <dt><%= label_tag :yanked, t("searches.advanced.yanked"), class: "form__label" %></dt>
+    <dd><%= check_box_tag :yanked, "true", false, class: "form__checkbox__input" %></dd>
   </dl>
 </div>
