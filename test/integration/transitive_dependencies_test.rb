@@ -2,23 +2,7 @@ require "test_helper"
 require "capybara/minitest"
 
 class TransitiveDependenciesTest < SystemTest
-  setup do
-    Selenium::WebDriver.logger.level = :error
-    Capybara.app_host = "http://localhost:3000"
-    Capybara.server_host = "localhost"
-    Capybara.server_port = "3000"
-
-    Capybara.register_driver :chrome do |app|
-      options = Selenium::WebDriver::Chrome::Options.new(args: %w[no-sandbox headless disable-gpu])
-      client = Selenium::WebDriver::Remote::Http::Default.new
-      client.read_timeout = 120
-      Capybara::Selenium::Driver.new(app, browser: :chrome, options: options, http_client: client)
-    end
-
-    Capybara.javascript_driver = :chrome
-    Capybara.current_driver = Capybara.javascript_driver
-    Capybara.default_max_wait_time = 4
-  end
+  setup { headless_chrome_driver }
 
   test "loading transitive dependencies using ajax" do
     @version_one = create(:version)

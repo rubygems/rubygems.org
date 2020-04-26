@@ -51,12 +51,19 @@ class ActiveSupport::TestCase
         "Expected #{object.class} #{attribute} to change but still #{latest}"
     end
   end
+
+  def headless_chrome_driver
+    Capybara.current_driver = :selenium_chrome_headless
+    Capybara.default_max_wait_time = 2
+    Selenium::WebDriver.logger.level = :error
+  end
 end
 
 class ActionDispatch::IntegrationTest
   setup { host! Gemcutter::HOST }
 end
 Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
+Capybara.always_include_port = true
 
 class SystemTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
