@@ -328,7 +328,6 @@ ja:
       description: 説明
       downloads: ダウンロード数
       updated: 更新日
-      yanked: ""
     show:
       subtitle: '%{query}の検索結果'
       month_update:

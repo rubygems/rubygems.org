@@ -106,12 +106,3 @@
   font-size: 12px;
   line-height: 1.66;
   text-transform: uppercase; }
-
-.gems__gem__badge {
-    padding: 2px 3px; /* pixel unit */
-    border-radius: 10%;
-    font-size: 15px;
-    text-align: center;
-    background: #e9573f;
-    color: #fefefe;
-}

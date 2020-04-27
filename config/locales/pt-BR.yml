@@ -328,7 +328,6 @@ pt-BR:
       description:
       downloads:
       updated:
-      yanked: ""
     show:
       subtitle: para %{query}
       month_update:

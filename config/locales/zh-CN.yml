@@ -328,7 +328,6 @@ zh-CN:
       description: 描述
       downloads: 下载数
       updated: 更新时间
-      yanked: ""
     show:
       subtitle: "%{query}"
       month_update:

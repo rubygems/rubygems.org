@@ -42,6 +42,8 @@ class ElasticSearcher
               end
 
               minimum_should_match 1
+              # only return gems that are not yanked
+              filter { term yanked: false }
             end
           end
 
@@ -54,8 +56,7 @@ class ElasticSearcher
         filters do
           filters name: { terms: { name: [query_str] } },
                   summary: { terms: { "summary.raw" => [query_str] } },
-                  description: { terms: { "description.raw" => [query_str] } },
-                  yanked: { terms: { yanked: [true] } }
+                  description: { terms: { "description.raw" => [query_str] } }
         end
       end
 
@@ -65,9 +66,6 @@ class ElasticSearcher
           ranges [{ from: "now-7d/d", to: "now" }, { from: "now-30d/d", to: "now" }]
         end
       end
-
-      # only return gems that are not yanked unless filter is used
-      post_filter { term yanked: false } unless query_str.gsub(/[[:space:]]/, "").include? "yanked:true"
 
       source source_array
       # Return suggestions unless there's no query from the user
@@ -111,7 +109,6 @@ class ElasticSearcher
        summary
        description
        downloads
-       version
-       yanked]
+       version]
   end
 end

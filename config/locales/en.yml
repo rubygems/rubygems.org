@@ -338,7 +338,6 @@ en:
       description: Description
       downloads: Downloads
       updated: Updated
-      yanked: Yanked
     show:
       subtitle: for %{query}
       month_update: Updated last month (%{count})

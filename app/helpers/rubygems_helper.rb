@@ -104,10 +104,6 @@ module RubygemsHelper
     (rubygem.latest_version || rubygem.versions.last)&.number
   end
 
-  def yanked?(rubygem)
-    rubygem.yanked if rubygem.respond_to?(:yanked)
-  end
-
   def link_to_github(rubygem)
     if rubygem.links.source_code_uri.present? && URI(rubygem.links.source_code_uri).host == "github.com"
       URI(rubygem.links.source_code_uri)

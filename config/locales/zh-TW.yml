@@ -328,7 +328,6 @@ zh-TW:
       description: 描述
       downloads: 下載數
       updated: 最後更新時間
-      yanked: ""
     show:
       subtitle: "%{query}"
       month_update:
