@@ -26,4 +26,11 @@ module SearchesHelper
     update_info = (duration == 30.days ? t("searches.show.month_update", count: count) : t("searches.show.week_update", count: count))
     link_to update_info, path, class: "t-link--black"
   end
+
+  def aggregation_yanked(yanked_gem)
+    return unless yanked_gem
+
+    path = search_path(params: { query: params[:query], yanked: true })
+    link_to t("versions.version.yanked") + " (1)", path, class: "t-link--black"
+  end
 end

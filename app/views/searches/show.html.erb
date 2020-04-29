@@ -6,28 +6,44 @@
   </div>
 <% end %>
 <%= link_to t("advanced_search"), advanced_search_path, class: "t-link--gray t-link--has-arrow" %>
-<% if @gems %>
+<% if params[:yanked] %>
   <% @subtitle = t('.subtitle', :query => content_tag(:em, h(params[:query]))) %>
 
-  <header class="gems__header push--s">
-    <p class="gems__meter"><%= page_entries_info(@gems, :entry_name => 'gem').html_safe %></p>
-  </header>
-
-  <%= render partial: 'aggregations', locals: { gems: @gems } %>
-
-  <% if suggestions = es_suggestions(@gems)  %>
-    <div class='search__suggestions'>
-      <p>
-        Maybe you mean
-        <%= suggestions.map do |term|
-          link_to term, search_path(params: { query: term }), only_path: true
-        end.to_sentence(last_word_connector: ' or ').html_safe %>?
-      </p>
-    </div>
+  <% if @yanked_gem.present? %>
+    <%= link_to rubygem_path(@yanked_gem.name), :class => 'gems__gem' do %>
+      <span class="gems__gem__info">
+        <h2 class="gems__gem__name">
+          <%= @yanked_gem.name %>
+          <span class="gems__gem__badge"><%= t('searches.advanced.yanked') %></span>
+        </h2>
+        <p class="gems__gem__desc t-text"><%= t('rubygems.show_yanked.not_hosted_notice') %></p>
+      </span>
+    <% end %>
   <% end %>
+<% else %>
+  <% if @gems %>
+    <% @subtitle = t('.subtitle', :query => content_tag(:em, h(params[:query]))) %>
 
-  <% if @gems.present? %>
-    <%= render partial: 'rubygems/rubygem', collection: @gems %>
-    <%= paginate @gems %>
+    <header class="gems__header push--s">
+      <p class="gems__meter"><%= page_entries_info(@gems, :entry_name => 'gem').html_safe %></p>
+    </header>
+
+    <%= render partial: 'aggregations', locals: { gems: @gems } %>
+
+    <% if suggestions = es_suggestions(@gems)  %>
+      <div class='search__suggestions'>
+        <p>
+          Maybe you mean
+          <%= suggestions.map do |term|
+            link_to term, search_path(params: { query: term }), only_path: true
+          end.to_sentence(last_word_connector: ' or ').html_safe %>?
+        </p>
+      </div>
+    <% end %>
+
+    <% if @gems.present? %>
+      <%= render partial: 'rubygems/rubygem', collection: @gems %>
+      <%= paginate @gems %>
+    <% end %>
   <% end %>
 <% end %>
