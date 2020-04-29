@@ -1,0 +1,19 @@
+#
+# Create a PostgreSQL functional index on all Gem's names with - and _ charcters removed.
+# This index is used by GemTypo to rapidly check newly uploaded Gems for matches against
+# other Gems that are variations of another already published Gem simply by the variation in
+# - and _ characters.
+#
+# This simple rule would have stopped the vast majority of typo squat attacks observed in
+# 2019 and 2020 according to an analysis of the SQL database.
+#
+class AddDashUnderscoreTypoDetectionIndexToRubygems < ActiveRecord::Migration[6.0]
+  def up
+    execute 'DROP INDEX IF EXISTS dashunderscore_typos_idx;'
+    execute "CREATE INDEX dashunderscore_typos_idx ON rubygems (regexp_replace(upper(name), '[_-]', '', 'g'));"
+  end
+
+  def down
+    execute 'DROP INDEX IF EXISTS dashunderscore_typos_idx;'
+  end
+end

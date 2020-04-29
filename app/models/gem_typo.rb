@@ -5,41 +5,37 @@ class GemTypo
 
   include Gem::Text
 
-  DOWNLOADS_THRESHOLD = 10_000_000
-  SIZE_THRESHOLD = 4
-
   def initialize(rubygem_name)
-    @rubygem_name       = rubygem_name.downcase
-    @distance_threshold = distance_threshold
+    @rubygem_name = rubygem_name
   end
 
   def protected_typo?
-    return false if @rubygem_name.size < GemTypo::SIZE_THRESHOLD
+    return false if published_exact_name_matches.any?
 
-    gem_typo_exceptions = GemTypoException.all.pluck(:name)
-    return false if gem_typo_exceptions.include?(@rubygem_name)
+    match = matched_protected_gem_names.select(:id, :name).first
+    return false unless match
 
-    protected_gems.each do |protected_gem|
-      distance = levenshtein_distance(@rubygem_name, protected_gem)
-      if distance <= @distance_threshold
-        @protected_gem = protected_gem
-        return true
-      end
-    end
-
-    false
+    @protected_gem = match.name
+    true
   end
 
   private
 
-  def distance_threshold
-    @rubygem_name.size == GemTypo::SIZE_THRESHOLD ? 1 : 2
+  def published_exact_name_matches
+    Rubygem.joins(:versions).where(
+      'versions.yanked_at IS NULL AND upper(rubygems.name) = upper(?)',
+      @rubygem_name
+    )
   end
 
-  def protected_gems
-    Rubygem.joins(:gem_download)
-      .where("gem_downloads.count > ?", GemTypo::DOWNLOADS_THRESHOLD)
-      .where.not(name: @rubygem_name)
-      .pluck(:name)
+  # This SQL query uses an index and thus does not induce a full table
+  # scan in PostgreSQL. See
+  # 20200429005140_add_dash_underscore_typo_detection_index_to_rubygems.rb
+  def matched_protected_gem_names
+    Rubygem.where(
+      "upper(name) != upper(?) AND regexp_replace(upper(name), '[_-]', '', 'g') = regexp_replace(upper(?), '[_-]', '', 'g')",
+      @rubygem_name,
+      @rubygem_name
+    )
   end
 end
