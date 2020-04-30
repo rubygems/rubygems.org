@@ -23,7 +23,7 @@ class GemTypo
 
   def published_exact_name_matches
     Rubygem.joins(:versions).where(
-      'versions.yanked_at IS NULL AND upper(rubygems.name) = upper(?)',
+      "versions.yanked_at IS NULL AND upper(rubygems.name) = upper(?)",
       @rubygem_name
     )
   end
