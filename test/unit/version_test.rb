@@ -730,33 +730,37 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @spec.required_rubygems_version.to_s,  @version.required_rubygems_version
     end
 
-    context "metadata" do
+    context "with metadata" do
       should "be invalid with empty string as link" do
-        assert_raise ActiveRecord::RecordInvalid do
-          @spec.metadata = { "home" => "" }
-          @version.update_attributes_from_gem_specification!(@spec)
-        end
+        @version.metadata = { "home" => "" }
+        @version.validate
+        assert_equal @version.errors.messages[:metadata], ["['home'] does not appear to be a valid URL"]
       end
 
       should "be invalid with invalid link" do
-        assert_raise ActiveRecord::RecordInvalid do
-          @spec.metadata = { "home" => "http:/github.com/bestgemever" }
-          @version.update_attributes_from_gem_specification!(@spec)
-        end
+        @version.metadata = { "home" => "http:/github.com/bestgemever" }
+        @version.validate
+        assert_equal @version.errors.messages[:metadata], ["['home'] does not appear to be a valid URL"]
       end
 
       should "be valid with valid link" do
-        assert_nothing_raised do
-          @spec.metadata = { "home" => "http://github.com/bestgemever" }
-          @version.update_attributes_from_gem_specification!(@spec)
-        end
+        @version.metadata = { "home" => "http://github.com/bestgemever" }
+        assert @version.validate
+        assert_equal @version.errors.messages[:metadata], []
       end
 
-      should "be invalid with maxiumum length" do
-        assert_raise ActiveRecord::RecordInvalid do
-          @spec.metadata = { "home" => ("hello" * 2000) }
-          @version.update_attributes_from_gem_specification!(@spec)
-        end
+      should "be invalid with value larger than 1024 bytes" do
+        large_value = "v" * 1025
+        @version.metadata = { "key" => large_value }
+        @version.validate
+        assert_equal @version.errors.messages[:metadata], ["metadata value ['#{large_value}'] is too large (maximum is 1024 bytes)"]
+      end
+
+      should "be invalid with key larger than 251 bytes" do
+        large_key = "h" * 129
+        @version.metadata = { large_key => "value" }
+        @version.validate
+        assert_equal @version.errors.messages[:metadata], ["metadata key ['#{large_key}'] is too large (maximum is 128 bytes)"]
       end
     end
   end

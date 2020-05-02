@@ -378,8 +378,12 @@ class Version < ApplicationRecord
 
   def metadata_attribute_length
     return if metadata.blank?
+
+    max_key_size = 128
+    max_value_size = 1024
     metadata.each do |key, value|
-      errors.add(:metadata, "metadata field ['#{key}'] is too long (maximum is #{MAX_FIELD_LENGTH} characters)") if value.length > MAX_FIELD_LENGTH
+      errors.add(:metadata, "metadata key ['#{key}'] is too large (maximum is #{max_key_size} bytes)") if key.size > max_key_size
+      errors.add(:metadata, "metadata value ['#{value}'] is too large (maximum is #{max_value_size} bytes)") if value.size > max_value_size
     end
   end
 end
