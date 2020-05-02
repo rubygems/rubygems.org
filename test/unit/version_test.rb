@@ -321,6 +321,24 @@ class VersionTest < ActiveSupport::TestCase
     should allow_value("x86_64-linux").for(:platform)
     should_not allow_value("Gem::Platform::Ruby").for(:platform)
 
+    should "be invalid with platform longer than maximum field length" do
+      @version.platform = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
+      refute @version.valid?
+      assert_equal @version.errors.messages[:platform], ["is too long (maximum is 255 characters)"]
+    end
+
+    should "be invalid with number longer than maximum field length" do
+      long_number_suffix = ".1" * (Gemcutter::MAX_FIELD_LENGTH + 1)
+      @version.number = "1#{long_number_suffix}"
+      refute @version.valid?
+      assert_equal @version.errors.messages[:number], ["is too long (maximum is 255 characters)"]
+    end
+    should "be invalid with licenses longer than maximum field length" do
+      @version.licenses = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
+      refute @version.valid?
+      assert_equal @version.errors.messages[:licenses], ["is too long (maximum is 255 characters)"]
+    end
+
     should "give number for #to_s" do
       assert_equal @version.number, @version.to_s
     end

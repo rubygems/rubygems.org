@@ -5,6 +5,7 @@ class WebHook < ApplicationRecord
   belongs_to :rubygem, optional: true
 
   validates_formatting_of :url, using: :url, message: "does not appear to be a valid URL"
+  validates :url, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, presence: true
   validate :unique_hook, on: :create
 
   def self.global

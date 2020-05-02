@@ -1,7 +1,6 @@
 require "digest/sha2"
 
 class Version < ApplicationRecord
-  MAX_FIELD_LENGTH = 255
   MAX_TEXT_FIELD_LENGTH = 64_000
 
   belongs_to :rubygem, touch: true
@@ -16,11 +15,11 @@ class Version < ApplicationRecord
   serialize :licenses
   serialize :requirements
 
-  validates :number,   format: { with: /\A#{Gem::Version::VERSION_PATTERN}\z/ }
-  validates :platform, format: { with: Rubygem::NAME_PATTERN }
+  validates :number, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: /\A#{Gem::Version::VERSION_PATTERN}\z/ }
+  validates :platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Rubygem::NAME_PATTERN }
   validates :full_name, presence: true, uniqueness: { case_sensitive: false }
   validates :rubygem, presence: true
-  validates :required_rubygems_version, length: { minimum: 1, maximum: MAX_FIELD_LENGTH }, allow_blank: true
+  validates :required_rubygems_version, :licenses, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, allow_blank: true
   validates :description, :summary, :authors, :requirements, length: { minimum: 0, maximum: MAX_TEXT_FIELD_LENGTH }, allow_blank: true
 
   validate :platform_and_number_are_unique, on: :create

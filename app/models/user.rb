@@ -28,7 +28,7 @@ class User < ApplicationRecord
   after_validation :set_unconfirmed_email, if: :email_changed?, on: :update
   before_create :generate_api_key, :generate_confirmation_token
 
-  validates :email, length: { maximum: 254 }
+  validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, presence: true
 
   validates :handle, uniqueness: true, allow_nil: true
   validates :handle, format: {
