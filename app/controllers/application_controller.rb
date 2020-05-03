@@ -31,6 +31,15 @@ class ApplicationController < ActionController::Base
     super
   end
 
+  def render_not_found
+    respond_to do |format|
+      format.html { render file: Rails.root.join("public", "404.html"), status: :not_found, layout: false }
+      format.json { render json: { error: t(:not_found) }, status: :not_found }
+      format.yaml { render yaml: { error: t(:not_found) }, status: :not_found }
+      format.any(:all) { render text: t(:not_found), status: :not_found }
+    end
+  end
+
   protected
 
   def http_basic_authentication_options_valid?(options)
@@ -80,15 +89,6 @@ class ApplicationController < ActionController::Base
 
   def http_head_locale
     http_accept_language.language_region_compatible_from(I18n.available_locales)
-  end
-
-  def render_not_found
-    respond_to do |format|
-      format.html { render file: Rails.root.join("public", "404.html"), status: :not_found, layout: false }
-      format.json { render json: { error: t(:not_found) }, status: :not_found }
-      format.yaml { render yaml: { error: t(:not_found) }, status: :not_found }
-      format.any(:all) { render text: t(:not_found), status: :not_found }
-    end
   end
 
   def render_forbidden

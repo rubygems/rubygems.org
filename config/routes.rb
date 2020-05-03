@@ -197,4 +197,6 @@ Rails.application.routes.draw do
   ################################################################################
   # Incoming Webhook Endpoint
   resources :sendgrid_events, only: :create, format: false, defaults: { format: :json }
+
+  get '*unmatched_route', to: 'application#render_not_found'
 end
