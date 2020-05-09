@@ -738,6 +738,7 @@ class VersionTest < ActiveSupport::TestCase
     should "have attributes set properly from the specification" do
       @version.update_attributes_from_gem_specification!(@spec)
 
+      assert @version.rubygem.indexed
       assert @version.indexed
       assert_equal @spec.authors.join(", "),              @version.authors
       assert_equal @spec.description,                     @version.description

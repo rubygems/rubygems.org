@@ -11,6 +11,7 @@ class Version < ApplicationRecord
   before_save :update_prerelease, if: :number_changed?
   before_validation :full_nameify!
   after_save :reorder_versions, if: -> { saved_change_to_indexed? || saved_change_to_id? }
+  after_save :refresh_rubygem_indexed, if: -> { saved_change_to_indexed? || saved_change_to_id? }
 
   serialize :licenses
   serialize :requirements
@@ -174,6 +175,10 @@ class Version < ApplicationRecord
 
   delegate :reorder_versions, to: :rubygem
 
+  def refresh_rubygem_indexed
+    rubygem.refresh_indexed!
+  end
+
   def previous
     rubygem.versions.find_by(position: position + 1)
   end
@@ -203,18 +208,21 @@ class Version < ApplicationRecord
   end
 
   def update_attributes_from_gem_specification!(spec)
-    update!(
-      authors: spec.authors,
-      description: spec.description,
-      summary: spec.summary,
-      licenses: spec.licenses,
-      metadata: spec.metadata || {},
-      requirements: spec.requirements,
-      built_at: spec.date,
-      required_rubygems_version: spec.required_rubygems_version.to_s,
-      required_ruby_version: spec.required_ruby_version.to_s,
-      indexed: true
-    )
+    transaction do
+      update!(
+        authors: spec.authors,
+        description: spec.description,
+        summary: spec.summary,
+        licenses: spec.licenses,
+        metadata: spec.metadata || {},
+        requirements: spec.requirements,
+        built_at: spec.date,
+        required_rubygems_version: spec.required_rubygems_version.to_s,
+        required_ruby_version: spec.required_ruby_version.to_s,
+        indexed: true
+      )
+      rubygem.update!(indexed: true)
+    end
   end
 
   def platform_as_number

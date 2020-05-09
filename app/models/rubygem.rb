@@ -253,6 +253,10 @@ class Rubygem < ApplicationRecord
     end
   end
 
+  def refresh_indexed!
+    update!(indexed: versions.indexed.any?)
+  end
+
   def disown
     ownerships.each(&:delete)
     ownerships.clear
