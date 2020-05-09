@@ -38,7 +38,8 @@ before_install:
 
 before_script:
   - cp config/database.yml.example config/database.yml
-  - bundle exec rake db:create db:migrate db:test:prepare
+  - bundle exec rake db:create db:migrate
+  - bundle exec rake db:test:prepare
 
 script:
   - bundle exec rails test
