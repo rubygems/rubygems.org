@@ -12,13 +12,15 @@ puts "Locking user #{handle}..."
 ENV["RAILS_ENV"] ||= "production"
 require_relative "../config/environment"
 
-user = User.where(handle: handle).first
+user = User.find_by!(handle: handle)
+
+security_user = User.find_by!(email: "security@rubygems.org")
 
 user.rubygems.each do |rubygem|
   puts "Yanking #{rubygem.name}"
   rubygem.versions.each do |version|
     puts "  #{version}"
-    user.deletions.create!(version: version) unless version.yanked?
+    security_user.deletions.create!(version: version) unless version.yanked?
   end
 end
 

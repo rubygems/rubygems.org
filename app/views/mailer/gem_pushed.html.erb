@@ -13,11 +13,11 @@
           A gem you have push access to has recently released a new version.
         </p>
         <p>
-          Gem: <strong><%= @version.to_title %></strong>
+          Gem: <strong><%= link_to @version.to_title, rubygem_version_url(@version.rubygem, @version.slug), target: "_blank" %></strong>
           <br/>
           Pushed by user:
           <strong>
-            <%= @pushed_by_user.handle %> <%= mail_to(@pushed_by_user.email) unless @pushed_by_user.hide_email? %>
+            <%= link_to @pushed_by_user.handle, profile_url(@pushed_by_user.display_id), target: "_blank" %> <%= mail_to(@pushed_by_user.email) unless @pushed_by_user.hide_email? %>
           </strong>
           <br/>
           Pushed at: <strong><%= @version.created_at.to_formatted_s(:rfc822) %></strong>

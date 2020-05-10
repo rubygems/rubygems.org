@@ -3,7 +3,7 @@ require "test_helper"
 class RubygemTest < ActiveSupport::TestCase
   context "with a saved rubygem" do
     setup do
-      @rubygem = create(:rubygem, name: "SomeGem")
+      @rubygem = Rubygem.new(name: "SomeGem")
     end
     subject { @rubygem }
 
@@ -29,6 +29,7 @@ class RubygemTest < ActiveSupport::TestCase
 
     context "that has an invalid name already persisted" do
       setup do
+        subject.save!
         subject.update_column(:name, "_")
       end
 
@@ -121,17 +122,6 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal version3_ruby, @rubygem.versions.most_recent
     end
 
-    should "can find when the first created date was" do
-      travel_to Time.zone.now do
-        create(:version, rubygem: @rubygem, number: "3.0.0", created_at: 1.day.ago)
-        create(:version, rubygem: @rubygem, number: "2.0.0", created_at: 2.days.ago)
-        create(:version, rubygem: @rubygem, number: "1.0.0", created_at: 3.days.ago)
-        create(:version, rubygem: @rubygem, number: "1.0.0.beta", created_at: 4.days.ago)
-
-        assert_equal 4.days.ago.to_date, @rubygem.first_created_date.to_date
-      end
-    end
-
     should "have a most_recent version if only a platform version exists" do
       version1 = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "linux")
 
@@ -194,6 +184,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "update references in dependencies when destroyed" do
+      @rubygem.save!
       dependency = create(:dependency, rubygem: @rubygem)
 
       @rubygem.destroy
@@ -620,10 +611,6 @@ class RubygemTest < ActiveSupport::TestCase
       refute @thin.pushable?
     end
 
-    should "give a count of only rubygems with versions" do
-      assert_equal 6, Rubygem.total_count
-    end
-
     should "only return the latest gems with versions" do
       assert_equal [@rack, @thor, @dust, @json, @rake],        Rubygem.latest
       assert_equal [@rack, @thor, @dust, @json, @rake, @thin], Rubygem.latest(6)
@@ -632,6 +619,28 @@ class RubygemTest < ActiveSupport::TestCase
     should "only latest downloaded versions" do
       assert_equal [@thin, @rake, @json, @thor, @rack],        Rubygem.downloaded
       assert_equal [@thin, @rake, @json, @thor, @rack, @dust], Rubygem.downloaded(6)
+    end
+
+    context ".total_count" do
+      setup { @expected_total = 6 }
+
+      should "give a count of only rubygems with versions" do
+        assert_equal @expected_total, Rubygem.total_count
+      end
+
+      should "write to cache" do
+        Rails.cache.expects(:write).with("gem/total_count", @expected_total, { expires_in: 6.hours })
+        Rubygem.total_count
+      end
+
+      context "cache hit" do
+        setup { Rubygem.total_count }
+
+        should "not use sql to get result" do
+          Version.expects(:where).never
+          assert_equal @expected_total, Rubygem.total_count
+        end
+      end
     end
   end
 
@@ -723,7 +732,7 @@ class RubygemTest < ActiveSupport::TestCase
         assert_nil Rubygem.find_by_name("thoughtbot-shoulda")
         assert_nil Rubygem.find_by_name("rake")
 
-        assert_equal ["rake", "thoughtbot-shoulda"],
+        assert_equal %w[rake thoughtbot-shoulda],
           @version.dependencies.map(&:unresolved_name).sort
       end
     end
@@ -801,24 +810,44 @@ class RubygemTest < ActiveSupport::TestCase
     end
   end
 
-  context ".news" do
+  context "with downloaded gems and versions created at specific times" do
     setup do
-      @rubygem1 = create(:rubygem)
-      @rubygem2 = create(:rubygem)
-      @rubygem3 = create(:rubygem)
-      create(:version, rubygem: @rubygem2, created_at: 5.days.ago)
-      create(:version, rubygem: @rubygem1, created_at: 6.days.ago)
-      create(:version, rubygem: @rubygem3, created_at: 8.days.ago)
-      @news = Rubygem.news(7.days)
+      @rubygem1 = create(:rubygem, downloads: 10)
+      @rubygem2 = create(:rubygem, downloads: 20)
+      @rubygem3 = create(:rubygem, downloads: 30)
+      create(:version, rubygem: @rubygem1, created_at: (Gemcutter::NEWS_DAYS_LIMIT - 2.days).ago)
+      create(:version, rubygem: @rubygem2, created_at: (Gemcutter::NEWS_DAYS_LIMIT - 1.day).ago)
+      create(:version, rubygem: @rubygem3, created_at: (Gemcutter::POPULAR_DAYS_LIMIT + 1.day).ago)
     end
 
-    should "not include gems updated since given days" do
-      assert_not_includes @news, @rubygem3
+    context ".news" do
+      setup do
+        @news = Rubygem.news(Gemcutter::NEWS_DAYS_LIMIT)
+      end
+
+      should "not include gems updated prior to Gemcutter::NEWS_DAYS_LIMIT days ago" do
+        assert_not_includes @news, @rubygem3
+      end
+
+      should "order by created_at of gem version" do
+        expected_order = [@rubygem1, @rubygem2]
+        assert_equal expected_order, @news
+      end
     end
 
-    should "order by created_at of gem version" do
-      expected_order = [@rubygem2, @rubygem1]
-      assert_equal expected_order, @news
+    context ".popular" do
+      setup do
+        @popular_gems = Rubygem.popular(Gemcutter::POPULAR_DAYS_LIMIT)
+      end
+
+      should "not include gems updated prior to Gemcutter::POPULAR_DAYS_LIMIT days ago" do
+        assert_not_includes @popular_gems, @rubygem3
+      end
+
+      should "order by number of downloads" do
+        expected_order = [@rubygem2, @rubygem1]
+        assert_equal expected_order, @popular_gems
+      end
     end
   end
 end

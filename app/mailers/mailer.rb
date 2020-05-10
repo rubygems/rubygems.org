@@ -1,5 +1,4 @@
-class Mailer < ActionMailer::Base
-  layout "mailer"
+class Mailer < ApplicationMailer
   include Roadie::Rails::Automatic
 
   default from: Clearance.configuration.mailer_sender
@@ -33,7 +32,7 @@ class Mailer < ActionMailer::Base
 
   def notifiers_changed(user_id)
     @user = User.find(user_id)
-    @ownerships = @user.ownerships.by_gem_name
+    @ownerships = @user.ownerships.by_indexed_gem_name
 
     mail to: @user.email,
          subject: I18n.t("mailer.notifiers_changed.subject",

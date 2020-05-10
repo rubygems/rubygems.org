@@ -58,7 +58,7 @@ class GemDownload < ApplicationRecord
       end
 
       return if updates_by_version.empty?
-      updates_by_version.values.each do |version, version_count|
+      updates_by_version.each_value do |version, version_count|
         updates_by_gem[version.rubygem_id] ||= 0
         updates_by_gem[version.rubygem_id] += version_count
       end

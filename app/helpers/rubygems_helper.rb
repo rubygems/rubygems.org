@@ -12,17 +12,7 @@ module RubygemsHelper
   end
 
   def link_to_page(id, url)
-    link_to(t(".links.#{id}"), url, rel: "nofollow", class: ["gem__link", "t-list__item"], id: id) if url.present?
-  end
-
-  def link_to_github(rubygem)
-    if !rubygem.linkset.code.nil? && URI(rubygem.linkset.code).host == "github.com"
-      URI(@rubygem.linkset.code)
-    elsif !rubygem.linkset.home.nil? && URI(rubygem.linkset.home).host == "github.com"
-      URI(rubygem.linkset.home)
-    end
-  rescue URI::InvalidURIError
-    nil
+    link_to(t(".links.#{id}"), url, rel: "nofollow", class: %w[gem__link t-list__item], id: id) if url.present?
   end
 
   def link_to_directory
@@ -32,7 +22,7 @@ module RubygemsHelper
   end
 
   def simple_markup(text)
-    if text =~ /^==+ [A-Z]/
+    if /^==+ [A-Z]/.match?(text)
       options = RDoc::Options.new
       options.pipe = true
       sanitize RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new(options))
@@ -49,7 +39,7 @@ module RubygemsHelper
           method: :delete
       else
         link_to t(".links.subscribe"), rubygem_subscription_path(rubygem),
-          class: ["toggler", "gem__link", "t-list__item"], id: "subscribe",
+          class: %w[toggler gem__link t-list__item], id: "subscribe",
           method: :post
       end
     else
@@ -92,6 +82,10 @@ module RubygemsHelper
     rubygem.owners.sort_by(&:id).inject("") { |link, owner| link << link_to_user(owner) }.html_safe
   end
 
+  def links_to_owners_without_mfa(rubygem)
+    rubygem.owners.without_mfa.sort_by(&:id).inject("") { |link, owner| link << link_to_user(owner) }.html_safe
+  end
+
   def link_to_user(user)
     link_to gravatar(48, "gravatar-#{user.id}", user), profile_path(user.display_id),
       alt: user.display_handle, title: user.display_handle
@@ -110,7 +104,18 @@ module RubygemsHelper
     (rubygem.latest_version || rubygem.versions.last)&.number
   end
 
-  def github_params(link)
-    "user=#{link.path.split('/').second}&repo=#{link.path.split('/').third}&type=star&count=true&size=large"
+  def link_to_github(rubygem)
+    if rubygem.links.source_code_uri.present? && URI(rubygem.links.source_code_uri).host == "github.com"
+      URI(rubygem.links.source_code_uri)
+    elsif rubygem.links.homepage_uri.present? && URI(rubygem.links.homepage_uri).host == "github.com"
+      URI(rubygem.links.homepage_uri)
+    end
+  rescue URI::InvalidURIError
+    nil
+  end
+
+  def github_params(rubygem)
+    link = link_to_github(rubygem)
+    "user=#{link.path.split('/').second}&repo=#{link.path.split('/').third}&type=star&count=true&size=large" if link
   end
 end

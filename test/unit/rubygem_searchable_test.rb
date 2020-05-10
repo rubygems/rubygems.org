@@ -199,7 +199,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     should "change default operator" do
       _, response = ElasticSearcher.new("example OR web-rubygem").search
       assert_equal 2, response.size
-      assert_equal ["web-rubygem", "example"], response.map(&:name)
+      assert_equal %w[web-rubygem example], response.map(&:name)
     end
 
     should "support wildcards" do
@@ -290,6 +290,22 @@ class RubygemSearchableTest < ActiveSupport::TestCase
         _, response2 = ElasticSearcher.new("rails async").search
         assert_equal response1.results.map(&:name), response2.results.map(&:name)
       end
+    end
+  end
+
+  context "query matches gem name prefix" do
+    setup do
+      %w[term-ansicolor term-an].each do |gem_name|
+        create(:rubygem, name: gem_name, number: "0.0.1", downloads: 10)
+      end
+      import_and_refresh
+    end
+
+    should "return results" do
+      _, response = ElasticSearcher.new("term-ans").search
+
+      assert_equal 1, response.size
+      assert_equal "term-ansicolor", response.first.name
     end
   end
 end

@@ -50,7 +50,8 @@
               </a>
             <% end %>
 
-            <%= link_to "News", news_url, class: "header__nav-link #{active?(news_path)}" %>
+            <%= link_to "Releases", news_url, class: "header__nav-link #{active?(news_path)}" %>
+            <%= link_to t('.footer.blog'), "http://blog.rubygems.org", class: "header__nav-link" %>
 
             <%- if request.path_info == '/gems' %>
               <%= link_to "Gems", rubygems_path, class: "header__nav-link is-active" %>
@@ -59,7 +60,6 @@
             <%- end %>
 
             <%= link_to t('.footer.guides'), "http://guides.rubygems.org", class: "header__nav-link" %>
-            <%= link_to t('.footer.contribute'), "http://guides.rubygems.org/contributing/", class: "header__nav-link" %>
 
             <% if signed_in? %>
               <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link desktop__header__nav-link">
@@ -131,7 +131,7 @@
             <%= link_to t('.footer.data'), page_path("data"), class: "nav--v__link--footer" %>
             <%= link_to t('.footer.discussion_forum'), "https://groups.google.com/group/rubygems-org", class: "nav--v__link--footer" %>
             <%= link_to t('.footer.statistics'), stats_path, class: "nav--v__link--footer" %>
-            <%= link_to t('.footer.blog'), "http://blog.rubygems.org", class: "nav--v__link--footer" %>
+            <%= link_to t('.footer.contribute'), "http://guides.rubygems.org/contributing/", class: "nav--v__link--footer" %>
             <%- if request.path_info == '/pages/about' %>
               <%= link_to t('.footer.about'), page_path("about"), class: "nav--v__link--footer is-active" %>
             <%- else %>
@@ -207,6 +207,10 @@
           <a class="footer__sponsor" href="https://travis-ci.org/" target="_blank">
             <%= t("layouts.application.footer.tested_by") %>
             <span class="t-hidden">Travis CI</span>
+          </a>
+          <a class="footer__sponsor" href="https://www.honeybadger.io/" target="_blank">
+            <%= t("layouts.application.footer.monitored_by") %>
+            <span class="t-hidden">Honeybadger</span>
           </a>
         </div>
       </div>

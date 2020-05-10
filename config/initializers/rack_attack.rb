@@ -1,7 +1,11 @@
 class Rack::Attack
   REQUEST_LIMIT = 100
+  EXP_BASE_REQUEST_LIMIT = 200
+  PUSH_LIMIT = 150
   REQUEST_LIMIT_PER_EMAIL = 10
   LIMIT_PERIOD = 10.minutes
+  PUSH_LIMIT_PERIOD = 60.minutes
+  EXP_BASE_LIMIT_PERIOD = 100.seconds
 
   ### Prevent Brute-Force Login Attacks ###
 
@@ -51,18 +55,17 @@ class Rack::Attack
     req.path.starts_with?("/assets") && req.request_method == "GET"
   end
 
-  # 100 req in 10 min
-  # 200 req in 100 min
-  # 300 req in 1000 min (0.7 days)
-  # 400 req in 10000 min (6.9 days)
-  (1..4).each do |level|
-    throttle("clearance/ip/#{level}", limit: REQUEST_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
+  # 200 req in 100 seconds
+  # 400 req in 10000 seconds (2.7 hours)
+  # 600 req in 1000000 seconds (277.7 hours)
+  (1..3).each do |level|
+    throttle("clearance/ip/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
       req.ip if protected_route?(protected_ui_actions, req.path, req.request_method)
     end
   end
 
-  (1..4).each do |level|
-    throttle("api/ip/#{level}", limit: REQUEST_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
+  (1..3).each do |level|
+    throttle("api/ip/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
       req.ip if protected_route?(protected_api_actions, req.path, req.request_method)
     end
   end
@@ -73,16 +76,10 @@ class Rack::Attack
     end
   end
 
-  PUSH_LIMIT = 150
   protected_push_action = [{ controller: "api/v1/rubygems", action: "create" }]
 
-  # 150 push in 10 min
-  # 450 push in 1000 min
-  # 600 push in 10000 min
-  [1, 3, 4].each do |level|
-    throttle("api/push/ip/#{level}", limit: PUSH_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
-      req.ip if protected_route?(protected_push_action, req.path, req.request_method)
-    end
+  throttle("api/push/ip", limit: PUSH_LIMIT, period: PUSH_LIMIT_PERIOD) do |req|
+    req.ip if protected_route?(protected_push_action, req.path, req.request_method)
   end
 
   # Throttle GET request for api_key by IP address
@@ -158,22 +155,30 @@ class Rack::Attack
   ActiveSupport::Notifications.subscribe('throttle.rack_attack') do |_name, _start, _finish, _request_id, payload|
     request = payload[:request]
 
-    data = {
-      status: 429,
-      request_id: request.env["action_dispatch.request_id"],
-      client_ip: request.ip.to_s,
-      method: request.env["REQUEST_METHOD"],
-      path: request.env["REQUEST_PATH"],
-      user_agent: request.user_agent,
-      dest_host: request.host,
+    method = request.env["REQUEST_METHOD"]
+
+    event = {
+      timestamp: ::Time.now.utc,
+      env: Rails.env,
+      message: "[429] #{method} #{request.env['REQUEST_PATH']}",
+      http: {
+        request_id: request.env["action_dispatch.request_id"],
+        method: method,
+        status_code: 429,
+        useragent: request.user_agent,
+        url: request.url
+      },
       throttle: {
         matched: request.env["rack.attack.matched"],
         discriminator: request.env["rack.attack.match_discriminator"],
         match_data: request.env["rack.attack.match_data"]
+      },
+      network: {
+        client: {
+          ip: request.ip.to_s
+        }
       }
     }
-    event = LogStash::Event.new(data)
-    event['message'] = "[#{data[:status]}] #{data[:method]} #{data[:path]}"
     Rails.logger.info event.to_json
   end
 end

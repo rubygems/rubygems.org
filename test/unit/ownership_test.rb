@@ -21,6 +21,36 @@ class OwnershipTest < ActiveSupport::TestCase
     should validate_uniqueness_of(:user_id).scoped_to(:rubygem_id)
   end
 
+  context "by_indexed_gem_name" do
+    setup do
+      @ownership = create(:ownership)
+      create_list(:version, 5, rubygem: @ownership.rubygem)
+      @user = @ownership.user
+    end
+
+    should "return only one ownership" do
+      assert_equal 1, @user.ownerships.by_indexed_gem_name.size
+    end
+  end
+
+  context "by_indexed_gen_name order matters" do
+    setup do
+      @user = create(:user)
+      @gems = %w[zork asf medium]
+      @gems.each do |gem_name|
+        created_gem = create(:rubygem, name: gem_name)
+        create_list(:version, 3, rubygem: created_gem)
+        create(:ownership, rubygem: created_gem, user: @user)
+      end
+
+      @ownerships = @user.ownerships.by_indexed_gem_name
+    end
+
+    should "ownwerships should be sorted by rubygem name ascedent order" do
+      assert_equal @gems.sort, (@ownerships.map { |own| own.rubygem.name })
+    end
+  end
+
   context "#safe_destroy" do
     setup do
       @rubygem       = create(:rubygem)

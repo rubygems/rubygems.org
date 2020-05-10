@@ -90,7 +90,7 @@ class GemDownloadTest < ActiveSupport::TestCase
     context "with initial downloads" do
       setup do
         @gem_downloads = Array.new(3) { rand(100) }
-        @gems  = Array.new(3) { |i| create(:rubygem, downloads: @gem_downloads[i]) }
+        @gems = Array.new(3) { |i| create(:rubygem, downloads: @gem_downloads[i]) }
         counts = Array.new(3) { rand(100) }
         @data  = []
 

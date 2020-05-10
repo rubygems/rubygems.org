@@ -10,7 +10,7 @@ FactoryBot.define do
   factory :user do
     email
     handle
-    password { "password12345" }
+    password { PasswordHelpers::SECURE_TEST_PASSWORD }
     api_key { "secret123" }
     email_confirmed { true }
   end
@@ -29,6 +29,7 @@ FactoryBot.define do
 
     trait :unresolved do
       gem_dependency { Gem::Dependency.new("unresolved-gem-nothere", "1.0.0") }
+      rubygem { nil }
     end
   end
 
@@ -69,7 +70,7 @@ FactoryBot.define do
       if evaluator.linkset
         rubygem.linkset = evaluator.linkset
       else
-        create(:linkset, rubygem: rubygem)
+        build(:linkset, rubygem: rubygem)
       end
     end
 
@@ -134,5 +135,9 @@ FactoryBot.define do
     sequence(:sendgrid_id) { |n| "TestSendgridId#{n}" }
     status { "pending" }
     payload { {} }
+  end
+
+  factory :gem_typo_exception do
+    name
   end
 end

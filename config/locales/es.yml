@@ -28,6 +28,7 @@ es:
   sign_in_otp: Sign in with OTP
   sign_in: Ingresa
   sign_up: Regístrate
+  dependency_list:
   multifactor_authentication: Autenticación de múltiples factores
   subtitle: el alojamiento de gemas de tu comunidad
   this_rubygem_could_not_be_found: Esta gema no pudo encontrarse.
@@ -53,6 +54,9 @@ es:
         email: Dirección de correo
         handle: Usuario
         password: Contraseña
+    errors:
+      messages:
+        unpwn:
   clearance_mailer:
     change_password:
       title: CAMBIAR CONTRASEÑA
@@ -302,8 +306,11 @@ es:
       header: "dependencias de %{title}"
     gem_members:
       authors_header: Autores
+      not_using_mfa_warning_show: "* Algunos propietarios no están usando MFA. Haga click para ver la lista completa."
+      not_using_mfa_warning_hide: "* Los siguientes propietarios no están usando MFA. Haga click para ocultar."
       owners_header: Propietarios
       pushed_by: Subida por
+      using_mfa_info: "* Todos los propietarios están usando MFA."
       yanked_by: Borrada por
       sha_256_checksum: SHA 256 checksum
     index:
@@ -334,7 +341,6 @@ es:
       downloads: Descargas
       updated: Actualizada
     show:
-      exact_match: Coincidencia exacta
       subtitle: para %{query}
       month_update: Actualizadas en el último mes (%{count})
       week_update: Actualizadas en la última semana (%{count})
@@ -345,6 +351,7 @@ es:
       resend_confirmation: ¿No recibiste tu correo electrónico de confirmación?
   stats:
     index:
+      title: 
       all_time_most_downloaded: Más descargadas
       total_downloads: Total de descargas
       total_gems: Gemas totales

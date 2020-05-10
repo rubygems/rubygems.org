@@ -20,6 +20,7 @@ zh-TW:
   sign_in_otp: Sign in with OTP
   sign_in: 登入
   sign_up: 註冊
+  dependency_list:
   multifactor_authentication: MFA 驗證
   subtitle: Ruby 社群 Gem 套件管理平台
   this_rubygem_could_not_be_found: 找不到這個 gem
@@ -45,6 +46,9 @@ zh-TW:
         email: Email
         handle: 帳號
         password: 密碼
+    errors:
+      messages:
+        unpwn:
   clearance_mailer:
     change_password:
       title:
@@ -292,8 +296,11 @@ zh-TW:
       header: "%{title} 相依性套件"
     gem_members:
       authors_header: 作者
+      not_using_mfa_warning_show:
+      not_using_mfa_warning_hide:
       owners_header: 擁有者
       pushed_by:
+      using_mfa_info:
       yanked_by:
       sha_256_checksum: SHA 256 checksum
     index:
@@ -324,7 +331,6 @@ zh-TW:
       downloads: 下載數
       updated: 最後更新時間
     show:
-      exact_match: 完全符合
       subtitle: "%{query}"
       month_update:
       week_update:
@@ -335,6 +341,7 @@ zh-TW:
       resend_confirmation: 沒收到確認信？
   stats:
     index:
+      title: 
       all_time_most_downloaded: 歷史下載次數排行
       total_downloads: 總下載次數
       total_gems: Gems 總數

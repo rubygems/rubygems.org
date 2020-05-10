@@ -12,7 +12,7 @@ Rails.application.config.content_security_policy do |policy|
     policy.object_src  :none
     policy.script_src  :self, "https://secure.gaug.es", "https://www.fastly-insights.com"
     policy.style_src   :self, "https://fonts.googleapis.com"
-    policy.connect_src "https://s3-us-west-2.amazonaws.com/rubygems-dumps/", "https://*.fastly-insights.com", "https://api.github.com"
+    policy.connect_src :self, "https://s3-us-west-2.amazonaws.com/rubygems-dumps/", "https://*.fastly-insights.com", "https://fastly-insights.com", "https://api.github.com"
   end
 
   # Specify URI for violation reports

@@ -45,12 +45,12 @@ class Pusher
 
   def pull_spec
     @spec = Gem::Package.new(body).spec
-  rescue StandardError => error
+  rescue StandardError => e
     notify <<-MSG.strip_heredoc, 422
       RubyGems.org cannot process this gem.
       Please try rebuilding it and installing it locally to make sure it's valid.
       Error:
-      #{error.message}
+      #{e.message}
     MSG
   end
 
@@ -60,10 +60,8 @@ class Pusher
     @rubygem = Rubygem.name_is(name).first || Rubygem.new(name: name)
 
     unless @rubygem.new_record?
-      if @rubygem.find_version_from_spec(spec)
-        notify("Repushing of gem versions is not allowed.\n" \
-               "Please use `gem yank` to remove bad gem releases.", 409)
-
+      if (version = @rubygem.find_version_from_spec spec)
+        republish_notification(version)
         return false
       end
 
@@ -128,5 +126,16 @@ class Pusher
   def set_info_checksum
     checksum = GemInfo.new(rubygem.name).info_checksum
     version.update_attribute :info_checksum, checksum
+  end
+
+  def republish_notification(version)
+    if version.indexed?
+      notify("Repushing of gem versions is not allowed.\n" \
+            "Please use `gem yank` to remove bad gem releases.", 409)
+    else
+      different_owner = "pushed by a previous owner of this gem " unless version.rubygem.owners.include?(@user)
+      notify("A yanked version #{different_owner}already exists (#{version.full_name}).\n" \
+            "Repushing of gem versions is not allowed. Please use a new version and retry", 409)
+    end
   end
 end

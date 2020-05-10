@@ -20,6 +20,7 @@ nl:
   sign_in_otp: Sign in with OTP
   sign_in: Inloggen
   sign_up: Registreren
+  dependency_list:
   multifactor_authentication: Multifactor authenticatie
   subtitle: De gem host voor de community
   this_rubygem_could_not_be_found: De gem kon niet gevonden worden.
@@ -45,6 +46,9 @@ nl:
         email: E-mailadres
         handle: Gebruikersnaam
         password: Wachtwoord
+    errors:
+      messages:
+        unpwn:
   clearance_mailer:
     change_password:
       title:
@@ -293,7 +297,10 @@ nl:
     gem_members:
       authors_header:
       owners_header: Eigenaren
+      not_using_mfa_warning_show:
+      not_using_mfa_warning_hide:
       pushed_by:
+      using_mfa_info:
       yanked_by:
       sha_256_checksum: SHA 256 checksum
     index:
@@ -324,7 +331,6 @@ nl:
       downloads:
       updated:
     show:
-      exact_match: Exacte match
       subtitle: voor %{query}
       month_update:
       week_update:
@@ -335,6 +341,7 @@ nl:
       resend_confirmation: Geen bevestigingsemail ontvangen?
   stats:
     index:
+      title: 
       all_time_most_downloaded:
       total_downloads:
       total_gems:

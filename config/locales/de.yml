@@ -20,6 +20,7 @@ de:
   sign_in_otp: Sign in with OTP
   sign_in: Anmelden
   sign_up: Registrieren
+  dependency_list:
   multifactor_authentication:
   subtitle: Ihre Community des Gem-Hostingservices
   this_rubygem_could_not_be_found: Dieses Ruby Gem konnte nicht gefunden werden.
@@ -45,6 +46,9 @@ de:
         email: E-Mail-Adresse
         handle: Benutzername
         password: Passwort
+    errors:
+      messages:
+        unpwn:
   clearance_mailer:
     change_password:
       title:
@@ -292,8 +296,11 @@ de:
       header: "%{title} Abhängigkeiten"
     gem_members:
       authors_header: Autoren
+      not_using_mfa_warning_show:
+      not_using_mfa_warning_hide:
       owners_header: Besitzer
       pushed_by:
+      using_mfa_info:
       yanked_by:
       sha_256_checksum: SHA 256-Prüfsumme
     index:
@@ -324,7 +331,6 @@ de:
       downloads:
       updated:
     show:
-      exact_match: Exakte Übereinstimmung
       subtitle: für %{query}
       month_update:
       week_update:
@@ -335,6 +341,7 @@ de:
       resend_confirmation:
   stats:
     index:
+      title: 
       all_time_most_downloaded: Am meisten Heruntergeladen in der gesamten Zeit
       total_downloads: Downloads insgesamt
       total_gems: Gems insgesamt

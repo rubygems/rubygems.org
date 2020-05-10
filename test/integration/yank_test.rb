@@ -2,14 +2,14 @@ require "test_helper"
 
 class YankTest < SystemTest
   setup do
-    @user = create(:user, password: "password12345")
+    @user = create(:user, password: PasswordHelpers::SECURE_TEST_PASSWORD)
     @rubygem = create(:rubygem, name: "sandworm")
     create(:ownership, user: @user, rubygem: @rubygem)
     Dir.chdir(Dir.mktmpdir)
 
     visit sign_in_path
     fill_in "Email or Username", with: @user.email
-    fill_in "Password", with: "password12345"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
   end
 
@@ -37,7 +37,7 @@ class YankTest < SystemTest
     assert page.has_content?("Yanked by")
 
     css = %(div.gem__users a[alt=#{@user.handle}])
-    assert page.has_css?(css, count: 2)
+    assert page.has_css?(css, count: 3)
   end
 
   test "yanked gem entirely then someone else pushes a new version" do

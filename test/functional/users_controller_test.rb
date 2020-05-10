@@ -12,7 +12,7 @@ class UsersControllerTest < ActionController::TestCase
   context "on POST to create" do
     context "when email and password are given" do
       should "create a user" do
-        post :create, params: { user: { email: "foo@bar.com", password: "secret12345" } }
+        post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
         assert User.find_by(email: "foo@bar.com")
       end
     end
@@ -27,7 +27,7 @@ class UsersControllerTest < ActionController::TestCase
 
     context "when extra parameters given" do
       should "create a user if parameters are ok" do
-        post :create, params: { user: { email: "foo@bar.com", password: "secret12345", handle: "foo" } }
+        post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "foo" } }
         assert_equal "foo", User.where(email: "foo@bar.com").pluck(:handle).first
       end
 
@@ -39,7 +39,7 @@ class UsersControllerTest < ActionController::TestCase
 
     context "confirmation mail" do
       setup do
-        post :create, params: { user: { email: "foo@bar.com", password: "secretpassword", handle: "foo" } }
+        post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "foo" } }
         Delayed::Worker.new.work_off
       end
 

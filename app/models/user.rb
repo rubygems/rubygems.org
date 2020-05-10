@@ -45,7 +45,11 @@ class User < ApplicationRecord
   }, allow_nil: true
 
   validates :twitter_username, length: { within: 0..20 }, allow_nil: true
-  validates :password, length: { within: 10..200 }, allow_nil: true, unless: :skip_password_validation?
+  validates :password,
+    length: { within: 10..200 },
+    unpwn: true,
+    allow_nil: true,
+    unless: :skip_password_validation?
   validate :unconfirmed_email_uniqueness
 
   enum mfa_level: { disabled: 0, ui_only: 1, ui_and_api: 2 }, _prefix: :mfa
@@ -65,6 +69,10 @@ class User < ApplicationRecord
 
   def self.notifiable_owners
     where(ownerships: { notifier: true })
+  end
+
+  def self.without_mfa
+    where(mfa_level: "disabled")
   end
 
   def name
@@ -239,6 +247,7 @@ class User < ApplicationRecord
   def block!
     transaction do
       update_attribute(:email, "security+locked-#{SecureRandom.hex(4)}-#{id}-#{handle}@rubygems.org")
+      confirm_email!
       disable_mfa!
       update!(
         password: SecureRandom.alphanumeric,

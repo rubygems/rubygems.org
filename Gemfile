@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "~> 5.2.1"
+gem "rails", "~> 6.0.0"
 gem "rails-i18n"
 
 gem "autoprefixer-rails"
@@ -20,7 +20,7 @@ gem "jquery-rails"
 gem "kaminari"
 gem "mail"
 gem "newrelic_rpm"
-gem "paul_revere", "~> 3.0.0"
+gem "paul_revere", "~> 3.1.0"
 gem "pg"
 gem "rack"
 gem "rack-utf8_sanitizer"
@@ -28,7 +28,7 @@ gem "rbtrace", "~> 0.4.8"
 gem "rdoc"
 gem "rest-client", require: "rest_client"
 gem "roadie-rails"
-gem "sass", require: false
+gem "sass-rails"
 gem "shoryuken", "~> 2.1.0", require: false
 gem "statsd-instrument", "~> 2.3.0"
 gem "uglifier", ">= 1.0.3"
@@ -44,17 +44,19 @@ gem "sprockets-rails"
 gem "rack-attack"
 gem "rqrcode"
 gem "rotp"
+gem "unpwn", "~> 0.3.0"
 gem "webauthn", "~> 2.0"
 
 # Logging
 gem "lograge"
-gem "logstash-event"
 
 group :development, :test do
   gem "m", "~> 1.5", require: false
   gem "pry-byebug"
   gem "rubocop", require: false
+  gem "rubocop-rails", require: false
   gem "rubocop-performance", require: false
+  gem "brakeman", require: false
   gem "toxiproxy", "~> 1.0.0"
 end
 
@@ -71,8 +73,7 @@ group :test do
   gem "rack-test", require: "rack/test"
   gem "mocha", require: false
   gem "shoulda"
-end
-
-group :development, :deploy do
-  gem "kubernetes-deploy", ">= 0.20.6", require: false
+  gem "selenium-webdriver"
+  gem "webdrivers"
+  gem "simplecov", require: false
 end

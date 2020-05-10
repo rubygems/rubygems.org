@@ -28,6 +28,7 @@ en:
   sign_in_otp: Sign in with OTP
   sign_in: Sign in
   sign_up: Sign up
+  dependency_list: Show all transitive dependencies
   multifactor_authentication: Multifactor authentication
   subtitle: your community gem host
   this_rubygem_could_not_be_found: This rubygem could not be found.
@@ -53,6 +54,9 @@ en:
         email: Email address
         handle: Username
         password: Password
+    errors:
+      messages:
+        unpwn: has previously appeared in a data breach and should not be used
   clearance_mailer:
     change_password:
       title: CHANGE PASSWORD
@@ -302,8 +306,11 @@ en:
       header: "%{title} Dependencies"
     gem_members:
       authors_header: Authors
+      not_using_mfa_warning_show: "* Some owners are not using MFA. Click for the complete list."
+      not_using_mfa_warning_hide: "* The following owners are not using MFA. Click to hide."
       owners_header: Owners
       pushed_by: Pushed by
+      using_mfa_info: "* All owners are using MFA."
       yanked_by: Yanked by
       sha_256_checksum: SHA 256 checksum
     index:
@@ -334,7 +341,6 @@ en:
       downloads: Downloads
       updated: Updated
     show:
-      exact_match: Exact match
       subtitle: for %{query}
       month_update: Updated last month (%{count})
       week_update: Updated last week (%{count})
@@ -345,6 +351,7 @@ en:
       resend_confirmation: Didn't receive confirmation mail?
   stats:
     index:
+      title: Stats
       all_time_most_downloaded: All Time Most Downloaded
       total_downloads: Total downloads
       total_gems: Total gems

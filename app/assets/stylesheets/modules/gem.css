@@ -58,6 +58,10 @@
     background-color: #e9573f;
     opacity: .5; }
 
+.gem__users__mfa-text {
+  font-size: 9px;
+  color: #e9573f;
+}
 .gem__downloads-wrap {
   margin-bottom: 30px; }
 
@@ -71,7 +75,9 @@
   font-size: 24px; }
 
 .gem__see-all-versions {
-  font-style: italic; }
+  font-style: italic;
+  display: inline-block;
+  padding-bottom: 10px; }
 
 .gem__ruby-version__heading {
   margin-bottom: 10px; }
@@ -133,7 +139,6 @@
   font-size: 14px;
   line-height: 32px;
   text-align: center;
-  z-index: 5;
   color: #ffffff;
   cursor: pointer; }
   .gem__code__icon:before {
@@ -154,7 +159,10 @@
   position: absolute;
   top: 45px;
   right: 0;
-  width: 120px;
+  width: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+  z-index: 1;
   border-radius: 6px;
   background-color: #141c22;
   text-transform: none;
@@ -200,6 +208,9 @@
     display: inline-block; }
   .gem__version-wrap .gem__version__date {
     font-weight: 400; }
+
+.gem__requirement-wrap a.t-list__item {
+    display: inline-block; }
 
 .gem__unregistered {
   color: #a6aab2;

@@ -2,6 +2,7 @@ inherit_from: .rubocop_todo.yml
 require:
   - ./test/safe_navigation_cop.rb
   - rubocop-performance
+  - rubocop-rails
 
 AllCops:
   Exclude:
@@ -10,7 +11,7 @@ AllCops:
     - !ruby/regexp /(vendor|bundle|bin|db|tmp)\/.*/
   DisplayCopNames: true
   DisplayStyleGuide: true
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.6
 
 Rails:
   Enabled: true
@@ -28,12 +29,26 @@ Rails/LexicallyScopedActionFilter:
 Rails/RefuteMethods:
   Enabled: false
 
+Rails/HelperInstanceVariable:
+  Enabled: false
+
+Rails/FilePath:
+  Enabled: false
+
+Rails/RakeEnvironment:
+  Exclude:
+    - lib/tasks/gen_erd.rake
+    - lib/tasks/elasticsearch.rake
+
 Rails/UnknownEnv:
   Environments:
     - production
     - development
     - staging
     - test
+
+Layout/ArgumentAlignment:
+  Enabled: false
 
 Metrics/AbcSize:
   Max: 42 # TODO: Lower to 15
@@ -46,7 +61,7 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Max: 9 # TODO: Lower to 6
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 150
 
 Metrics/MethodLength:
@@ -68,10 +83,10 @@ Naming/RescuedExceptionsVariableName:
 Performance/RedundantMerge:
   Enabled: false
 
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
 
-Layout/AlignHash:
+Layout/HashAlignment:
   Enabled: false
 
 Layout/EmptyLineAfterGuardClause:
@@ -97,6 +112,8 @@ Style/CustomSafeNavigationCop:
 
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
+  Exclude:
+    - lib/lograge/formatters/datadog.rb
 
 Style/Documentation:
   Enabled: false
@@ -117,3 +134,18 @@ Style/EmptyMethod:
 
 Style/FormatStringToken:
   Enabled: false
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true

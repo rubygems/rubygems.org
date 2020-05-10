@@ -17,7 +17,7 @@ class RubygemsHelperTest < ActionView::TestCase
       @version.stubs(:licenses)
       assert_equal "Licenses", pluralized_licenses_header(@version)
 
-      @version.stubs(:licenses).returns(["MIT", "GPL-2"])
+      @version.stubs(:licenses).returns(%w[MIT GPL-2])
       assert_equal "Licenses", pluralized_licenses_header(@version)
     end
   end
@@ -28,7 +28,7 @@ class RubygemsHelperTest < ActionView::TestCase
     end
 
     should "be combined with comma if there are licenses" do
-      assert_equal "MIT, GPL-2", formatted_licenses(["MIT", "GPL-2"])
+      assert_equal "MIT, GPL-2", formatted_licenses(%w[MIT GPL-2])
     end
   end
 
@@ -117,6 +117,21 @@ class RubygemsHelperTest < ActionView::TestCase
       assert_equal expected_links, links_to_owners(@rubygem)
       assert links_to_owners(@rubygem).html_safe?
     end
+
+    should "create links to gem owners without mfa" do
+      with_mfa = create(:user, mfa_level: "ui_and_api")
+      without_mfa = create_list(:user, 2, mfa_level: "disabled")
+      rubygem = create(:rubygem, owners: [*without_mfa, with_mfa])
+
+      expected_links = without_mfa.sort_by(&:id).map do |u|
+        link_to gravatar(48, "gravatar-#{u.id}", u),
+          profile_path(u.display_id),
+          alt: u.display_handle,
+          title: u.display_handle
+      end.join
+      assert_equal expected_links, links_to_owners_without_mfa(rubygem)
+      assert links_to_owners_without_mfa(rubygem).html_safe?
+    end
   end
 
   context "simple_markup" do
@@ -144,7 +159,7 @@ class RubygemsHelperTest < ActionView::TestCase
     context "with invalid uri" do
       setup do
         linkset = build(:linkset, code: "http://github.com/\#{github_username}/\#{project_name}")
-        @rubygem = build(:rubygem, linkset: linkset)
+        @rubygem = create(:rubygem, linkset: linkset, number: "0.0.1")
       end
 
       should "not raise error" do
@@ -160,7 +175,7 @@ class RubygemsHelperTest < ActionView::TestCase
       setup do
         @github_link = "http://github.com/user/project"
         linkset = build(:linkset, code: @github_link)
-        @rubygem = build(:rubygem, linkset: linkset)
+        @rubygem = create(:rubygem, linkset: linkset, number: "0.0.1")
       end
 
       should "return parsed uri" do
@@ -172,7 +187,7 @@ class RubygemsHelperTest < ActionView::TestCase
       setup do
         @github_link = "http://github.com/user/project"
         linkset = build(:linkset, home: @github_link)
-        @rubygem = build(:rubygem, linkset: linkset)
+        @rubygem = create(:rubygem, linkset: linkset, number: "0.0.1")
       end
 
       should "return parsed uri" do

@@ -158,6 +158,9 @@ a.page__heading {
 .push--s {
   margin-top: 20px; }
 
+.push--top-s {
+  margin-top: 15px; }
+
 /* style used to be applied on iframe of github_buttons */
 span#github-btn {
   display: block;

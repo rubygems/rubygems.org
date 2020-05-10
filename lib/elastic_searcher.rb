@@ -29,10 +29,18 @@ class ElasticSearcher
               should do
                 query_string do
                   query query_str
-                  fields ["name^5", "summary^3", "description"]
+                  fields ["name^5", "summary^2", "description"]
                   default_operator "and"
                 end
               end
+
+              should do
+                prefix "name.unanalyzed" do
+                  value query_str
+                  boost 7
+                end
+              end
+
               minimum_should_match 1
               # only return gems that are not yanked
               filter { term yanked: false }

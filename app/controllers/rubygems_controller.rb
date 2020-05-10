@@ -9,7 +9,7 @@ class RubygemsController < ApplicationController
   def index
     respond_to do |format|
       format.html do
-        @letter = Rubygem.letterize(params[:letter])
+        @letter = Rubygem.letterize(gem_params[:letter])
         @gems   = Rubygem.letter(@letter).includes(:latest_version, :gem_download).page(@page)
       end
       format.atom do
@@ -40,5 +40,9 @@ class RubygemsController < ApplicationController
 
   def set_blacklisted_gem
     @blacklisted_gem = params[:id].downcase
+  end
+
+  def gem_params
+    params.permit(:letter, :format, :page)
   end
 end

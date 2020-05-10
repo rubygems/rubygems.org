@@ -5,9 +5,6 @@ class SearchesController < ApplicationController
     return unless params[:query]&.is_a?(String)
     @error_msg, @gems = ElasticSearcher.new(params[:query], page: @page).search
     limit_total_count if @gems.total_count > Gemcutter::SEARCH_MAX_PAGES * Rubygem.default_per_page
-
-    @exact_match = Rubygem.name_is(params[:query]).with_versions.first
-    redirect_to rubygem_path(@exact_match) if @exact_match && @gems.size == 1
   end
 
   def advanced

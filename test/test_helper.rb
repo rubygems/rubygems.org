@@ -3,13 +3,18 @@ ENV["WEBAUTHN_ORIGIN"] ||= "http://test.host"
 require File.expand_path("../config/environment", __dir__)
 
 require "rails/test_help"
-require "mocha/mini_test"
+require "mocha/minitest"
 require "capybara/rails"
+require "capybara/minitest"
 require "clearance/test_unit"
 require "shoulda"
 require "helpers/gem_helpers"
 require "helpers/email_helpers"
 require "helpers/es_helper"
+require "helpers/password_helpers"
+require "simplecov"
+
+SimpleCov.start "rails"
 
 RubygemFs.mock!
 Aws.config[:stub_responses] = true
@@ -18,10 +23,14 @@ class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
   include GemHelpers
   include EmailHelpers
+  include PasswordHelpers
 
   setup do
     I18n.locale = :en
     Rails.cache.clear
+
+    # Don't connect to the Pwned Passwords API in tests
+    Pwned.stubs(:pwned?).returns(false)
   end
 
   def page
@@ -43,12 +52,19 @@ class ActiveSupport::TestCase
         "Expected #{object.class} #{attribute} to change but still #{latest}"
     end
   end
+
+  def headless_chrome_driver
+    Capybara.current_driver = :selenium_chrome_headless
+    Capybara.default_max_wait_time = 2
+    Selenium::WebDriver.logger.level = :error
+  end
 end
 
 class ActionDispatch::IntegrationTest
   setup { host! Gemcutter::HOST }
 end
 Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
+Capybara.always_include_port = true
 
 class SystemTest < ActionDispatch::IntegrationTest
   include Capybara::DSL

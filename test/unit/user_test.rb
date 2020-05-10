@@ -74,15 +74,15 @@ class UserTest < ActiveSupport::TestCase
 
     context "password" do
       should "be between 10 and 200 characters" do
-        user = build(:user, password: "a" * 9)
+        user = build(:user, password: "%5a&12ed/")
         refute user.valid?
         assert_contains user.errors[:password], "is too short (minimum is 10 characters)"
 
-        user.password = "a" * 201
+        user.password = "#{'a8b5d2d451' * 20}a"
         refute user.valid?
         assert_contains user.errors[:password], "is too long (maximum is 200 characters)"
 
-        user.password = "secretpassword"
+        user.password = "633!cdf7b3426c9%f6dd1a0b62d4ce44c4f544e%"
         user.valid?
         assert_nil user.errors[:password].first
       end
@@ -90,6 +90,12 @@ class UserTest < ActiveSupport::TestCase
       should "be invalid when an empty string" do
         user = build(:user, password: "")
         refute user.valid?
+      end
+
+      should "be invalid when it's found in a data breach" do
+        user = build(:user, password: "1234567890")
+        refute user.valid?
+        assert_contains user.errors[:password], "has previously appeared in a data breach and should not be used"
       end
     end
   end
@@ -304,6 +310,20 @@ class UserTest < ActiveSupport::TestCase
           assert @user.mfa_disabled?
         end
       end
+    end
+  end
+
+  context ".without_mfa" do
+    setup do
+      create(:user, handle: "has_mfa", mfa_level: "ui_and_api")
+      create(:user, handle: "no_mfa", mfa_level: "disabled")
+    end
+
+    should "return only users without mfa" do
+      users_without_mfa = User.without_mfa
+
+      assert_equal 1, users_without_mfa.size
+      assert_equal "no_mfa", users_without_mfa.first.handle
     end
   end
 
