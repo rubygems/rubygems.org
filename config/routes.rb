@@ -126,6 +126,7 @@ Rails.application.routes.draw do
 
   ################################################################################
   # UI
+
   scope constraints: { format: :html }, defaults: { format: 'html' } do
     resource :search, only: :show do
       get :advanced
@@ -145,6 +146,7 @@ Rails.application.routes.draw do
       get :popular, on: :collection
     end
     resource :notifier, only: %i[update show]
+    resources :webauthn_credentials, only: %i[index destroy], path: 'security_keys'
 
     resources :rubygems,
       only: %i[index show],
@@ -192,6 +194,12 @@ Rails.application.routes.draw do
   namespace :internal do
     get 'ping' => 'ping#index'
     get 'revision' => 'ping#revision'
+
+    get '/webauthn_session/options' => 'webauthn_sessions#options'
+    post '/webauthn_session' => 'webauthn_sessions#create'
+
+    get '/webauthn_registration/options' => 'webauthn_registrations#options'
+    post '/webauthn_registration' => 'webauthn_registrations#create'
   end
 
   ################################################################################

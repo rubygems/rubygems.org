@@ -1,4 +1,5 @@
 ENV["RAILS_ENV"] ||= "test"
+ENV["WEBAUTHN_ORIGIN"] ||= "http://test.host"
 require File.expand_path("../config/environment", __dir__)
 
 require "rails/test_help"

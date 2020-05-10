@@ -4,7 +4,7 @@ class SessionsController < Clearance::SessionsController
 
     if @user&.mfa_enabled?
       session[:mfa_user] = @user.handle
-      render "sessions/otp_prompt"
+      render "sessions/mfa_prompt"
     else
       do_login
     end

@@ -34,11 +34,17 @@ label.t-hidden {
   overflow: visible\0;
   clip: auto\0; }
 
+.t-red {
+  color: red; }
+
 .t-gray {
   color: #9da2ab; }
 
 .t-uppercase {
   text-transform: uppercase; }
+
+.t-credentials-list {
+  margin-bottom: 70px; }
 
 .t-list__heading {
   font-weight: 800;
@@ -211,4 +217,8 @@ a.t-list__item {
 
 .t-item--hidden {
   display: none !important;
+}
+
+.t--hidden {
+  display: none;
 }

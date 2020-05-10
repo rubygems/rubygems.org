@@ -63,6 +63,10 @@
   transition-property: opacity; }
   .form__submit:hover {
     opacity: .7; }
+  .form__submit:disabled {
+    opacity: .5;
+    cursor: default;
+  }
 
 .download__format {
   margin-bottom: 24px;

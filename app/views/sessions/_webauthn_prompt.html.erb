@@ -1,0 +1,16 @@
+<div id="webauthn-prompt" class="t-body">
+  <p>
+    <strong id="unsupported-browser-message" class="t-red t--hidden">
+      <%= t('webauthn_credentials.unsupported') %>
+    </strong>
+    <div class="text_field">
+      <%= t('internal.webauthn_sessions.sign_in_prompt') %>
+    </div>
+  </p>
+
+  <strong id="security-key-error-message" class="t-red t--hidden">
+    <%= t('internal.webauthn_sessions.security_key_error') %>
+  </strong>
+
+  <%= button_to t('use_key'), internal_webauthn_session_options_path, form_class: "js-webauthn-authentication-form", class: 'form__submit js-webauthn-button', autofocus: true, data: { disable_with: t('form_disable_with'), enable_with: t('use_key') } %>
+</div>

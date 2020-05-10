@@ -1,0 +1,7 @@
+<% @title = t('multifactor_authentication') %>
+
+<% if @user&.webauthn_enabled? %>
+  <%= render "sessions/webauthn_prompt" %>
+<% end %>
+
+<%= render "sessions/otp_prompt" %>

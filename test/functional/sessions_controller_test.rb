@@ -1,4 +1,6 @@
 require "test_helper"
+require "webauthn/fake_client"
+require "securerandom"
 
 class SessionsControllerTest < ActionController::TestCase
   context "when user has mfa enabled" do

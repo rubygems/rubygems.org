@@ -16,6 +16,8 @@ de:
   please_sign_in:
   otp_incorrect:
   otp_missing:
+  use_key: Sign in with Security Key
+  sign_in_otp: Sign in with OTP
   sign_in: Anmelden
   sign_up: Registrieren
   dependency_list:
@@ -371,3 +373,29 @@ de:
         one: Zeige <b>1</b> %{model}
         other: Zeige <b>alle&nbsp;%{count}</b> %{model}
         zero: Kein %{model} gefunden
+  internal:
+    webauthn_registrations:
+      create:
+        success: You have successfully added a new security key.
+        fail: There was a problem verifying your security key.
+      security_key_error:
+    webauthn_sessions:
+      incorrect_security_key: Incorrect security key.
+      sign_in_prompt: Please use one of your security keys to continue
+      security_key_error:
+  webauthn_credentials:
+    not_enabled: Please add a security key first.
+    index:
+      title: Security keys
+      go_settings: Add new security key
+      disabled: You don't have any security keys yet
+      registered_on: added on
+      last_used_on: Last used on
+      never_used: never used
+      delete: Delete
+      confirm: Are you sure?
+    destroy:
+      success: Your security key was successfully deleted.
+      fail: Your security key couldn't be deleted.
+      not_found: We couldn't find a security key with the specified id.
+    unsupported: Your browser does not support security keys at the moment.
