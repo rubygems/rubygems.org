@@ -44,7 +44,7 @@ gem "sprockets-rails"
 gem "rack-attack"
 gem "rqrcode"
 gem "rotp"
-gem "webauthn", "~> 2.0.0.a"
+gem "webauthn", "~> 2.0"
 
 # Logging
 gem "lograge"
