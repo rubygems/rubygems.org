@@ -41,7 +41,7 @@ class ActiveSupport::TestCase
   end
 
   def assert_changed(object, *attributes)
-    original_attributes = attributes.map { |a| [a, object.send(a)] }.to_h
+    original_attributes = attributes.index_with { |a| object.send(a) }
     yield if block_given?
     reloaded_object = object.reload
     attributes.each do |attribute|
