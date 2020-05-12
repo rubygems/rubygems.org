@@ -47,6 +47,9 @@ Rails/UnknownEnv:
     - staging
     - test
 
+Rails/UniqueValidationWithoutIndex:
+  Enabled: false
+
 Layout/ArgumentAlignment:
   Enabled: false
 
