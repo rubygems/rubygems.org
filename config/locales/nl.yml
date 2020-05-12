@@ -333,6 +333,7 @@ nl:
       month_update:
       week_update:
       filter:
+      yanked:
   sessions:
     new:
       forgot_password: Wachtwoord vergeten?

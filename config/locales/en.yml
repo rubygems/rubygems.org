@@ -343,6 +343,7 @@ en:
       month_update: Updated last month (%{count})
       week_update: Updated last week (%{count})
       filter: "Filter:"
+      yanked: Yanked (%{count})
   sessions:
     new:
       forgot_password: Forgot password?

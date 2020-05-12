@@ -31,6 +31,6 @@ module SearchesHelper
     return unless yanked_gem
 
     path = search_path(params: { query: params[:query], yanked: true })
-    link_to t("versions.version.yanked") + " (1)", path, class: "t-link--black"
+    link_to t("searches.show.yanked", count: 1), path, class: "t-link--black"
   end
 end

@@ -123,6 +123,27 @@ class SearchesControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to show with search parameters with yanked gems" do
+    setup do
+      @sinatra = create(:rubygem, name: "sinatra")
+      @sinatra_redux = create(:rubygem, name: "sinatra-redux")
+      create(:version, rubygem: @sinatra)
+      create(:version, :yanked, rubygem: @sinatra_redux)
+      import_and_refresh
+      @request.cookies["new_search"] = "true"
+      get :show, params: { query: @sinatra_redux.name.to_s }
+    end
+
+    should respond_with :success
+    should "not see sinatra_redux on the page in the results" do
+      page.assert_no_selector("a[href='#{rubygem_path(@sinatra_redux)}']")
+    end
+    should "see yanked filter" do
+      page.assert_text("Yanked (1)")
+      page.assert_selector("a[href='#{search_path(params: { query: @sinatra_redux.name, yanked: true })}']")
+    end
+  end
+
   context "with elasticsearch down" do
     setup do
       @sinatra = create(:rubygem, name: "sinatra")

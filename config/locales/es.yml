@@ -343,6 +343,7 @@ es:
       month_update: Actualizadas en el último mes (%{count})
       week_update: Actualizadas en la última semana (%{count})
       filter: "Filtro:"
+      yanked:
   sessions:
     new:
       forgot_password: ¿Olvidaste tu contraseña?
