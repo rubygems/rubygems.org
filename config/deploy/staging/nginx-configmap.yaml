@@ -30,8 +30,8 @@ data:
     }
   rubygems: |
     limit_req_status 429;
-    limit_req_zone  $binary_remote_addr  zone=abusers:10m  rate=10r/s;
-    limit_req_zone  $binary_remote_addr  zone=dependencyapi:10m  rate=15r/s;
+    limit_req_zone  $binary_remote_addr  zone=abusers:10m  rate=100r/s;
+    limit_req_zone  $binary_remote_addr  zone=dependencyapi:10m  rate=100r/s;
 
     proxy_cache_path  /var/lib/nginx/cache  levels=1:2 keys_zone=cache-versions:10m inactive=24h  max_size=100m;
 
@@ -70,22 +70,6 @@ data:
           access_log off;
         }
 
-        include conf.d/filters.conf;
-        include conf.d/blacklist.conf;
-
-        location ~ /rubygems/rubygems(.*)\.(tgz|zip|gem)$ {
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
-        }
-
-        location ~ /gems/(.*)\.gem$ {
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
-        }
-
-        location ~ /downloads/(.*)\.gem {
-          set $gem $1;
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net/gems/$gem.gem redirect;
-        }
-
         location /api/v1/dependencies {
           limit_req zone=dependencyapi burst=10 nodelay;
           proxy_set_header Host $host;
@@ -105,105 +89,15 @@ data:
           proxy_pass http://127.0.0.1:3000/versions;
         }
 
-        location /quick/Marshal.4.8/ {
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
+        location /info {
+          proxy_pass http://127.0.0.1:3000;
         }
-
-        location = /specs.4.8.gz {
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
-        }
-
-        location = /latest_specs.4.8.gz {
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
-        }
-
-        location = /prerelease_specs.4.8.gz {
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
-        }
-
-        # Crufty old redirects
-        location = /specs.4.8 {
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
-        }
-
-        location = /latest_specs.4.8 {
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
-        }
-
-        location = /prerelease_specs.4.8 {
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
-        }
-
-        location = /quick/rubygems-update-1.3.6.gemspec.rz {
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
-        }
-
-        location = /yaml.Z {
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
-        }
-
-        location = /yaml.z {
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
-        }
-
-        location = /yaml {
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
-        }
-
-        location = /Marshal.4.8.Z {
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
-        }
-
-        location = /Marshal.4.8 {
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
-        }
-
-        location = /quick/index.rz {
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
-        }
-
-        location = /quick/index {
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
-        }
-
-        location = /quick/latest_index.rz {
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
-        }
-
-        location = /quick/latest_index {
-          rewrite ^ http://rubygems-staging.global.ssl.fastly.net$request_uri redirect;
-        }
-
 
         location / {
-          root /var/www/rubygems;
-          try_files /maintenance.html @app;
-        }
-
-        location @app {
           limit_req zone=abusers burst=10;
           proxy_pass http://127.0.0.1:3000;
         }
     }
-  legacy: |
-    server {
-      listen 80;
-
-      server_name gemcutter.org gems.rubyforge.org;
-
-      rewrite ^(.*) http://staging.rubygems.org$1 permanent;
-    }
-  filters: |
-    location /com/ { return 404; }
-    location /org/ { return 404; }
-    location /.meta/ { return 404; }
-    location ~ ^((?!opensearch).)*\.(jar|xml|pom)$ { return 404; }
-
-    if ($http_user_agent ~* (AhrefsBot) ) {
-      return 404;
-    }
-  blacklist: |
-    deny 58.218.199.250;
   logging: |
     map $http_x_forwarded_proto $scheme_from_fastly {
       "" $scheme;
