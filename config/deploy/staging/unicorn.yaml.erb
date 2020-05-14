@@ -222,16 +222,10 @@ spec:
             items:
               - key: default
                 path: nginx.conf
-              - key: filters
-                path: conf.d/filters.conf
-              - key: blacklist
-                path: conf.d/blacklist.conf
               - key: logging
                 path: conf.d/logging.conf
               - key: rubygems
                 path: sites-enabled/staging.ruybgems.org.conf
-              - key: legacy
-                path: sites-enabled/legacy.conf
         - name: nginxlog
           emptyDir: {}
         - name: nginxcache
