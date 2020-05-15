@@ -8,12 +8,12 @@
         <h4><%= ownership.rubygem.name %></h4>
         <p>
           <%= label_tag do %>
-            <%= radio_button_tag "ownerships[#{ownership.id}]", :on, ownership.notifier? %>
+            <%= radio_button_tag "ownerships[#{ownership.id}]", :on, ownership.push_notifier? %>
             <%= t('.on') %> <em>(<%= t('.recommended') %>)</em>
           <% end %>
           <br>
           <%= label_tag do %>
-            <%= radio_button_tag "ownerships[#{ownership.id}]", :off, !ownership.notifier? %>
+            <%= radio_button_tag "ownerships[#{ownership.id}]", :off, !ownership.push_notifier? %>
             <%= t('.off') %>
           <% end %>
         </p>

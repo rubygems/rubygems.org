@@ -13,8 +13,8 @@ class NotifiersController < ApplicationController
     end
 
     current_user.transaction do
-      current_user.ownerships.where(id: to_enable).update_all(notifier: true) if to_enable.any?
-      current_user.ownerships.where(id: to_disable).update_all(notifier: false) if to_disable.any?
+      current_user.ownerships.where(id: to_enable).update_all(push_notifier: true) if to_enable.any?
+      current_user.ownerships.where(id: to_disable).update_all(push_notifier: false) if to_disable.any?
       Mailer.delay.notifiers_changed(current_user.id)
     end
 

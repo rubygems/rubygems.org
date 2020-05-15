@@ -70,7 +70,7 @@ class User < ApplicationRecord
   end
 
   def self.notifiable_owners
-    where(ownerships: { notifier: true })
+    where(ownerships: { push_notifier: true })
   end
 
   def self.without_mfa
