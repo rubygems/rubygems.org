@@ -11,3 +11,9 @@ Kaminari.configure do |config|
   # config.param_name = :page
   # config.params_on_first_page = false
 end
+
+module Kaminari
+  module Helpers
+    PARAM_KEY_EXCEPT_LIST = [:authenticity_token, :commit, :utf8, :_method, :script_name, :original_script_name].freeze
+  end
+end
