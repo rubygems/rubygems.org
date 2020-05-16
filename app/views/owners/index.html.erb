@@ -1,0 +1,37 @@
+<% @title = @rubygem.name %>
+
+<% content_for :head do %>
+  <meta name="robots" content="noindex"/>
+<% end %>
+
+
+<div class="row">
+  <div class="column l-column">
+
+    <div class="owners__navigation">
+      <%= link_to "← Back", rubygem_path(@rubygem), class: "owners__back__navigation" %>
+    </div>
+
+    <div class="owners__wrapper">
+      <%= render 'owners_table' %>
+    </div>
+  </div>
+
+  <div class="column r-column">
+    <div class="right_wrapper">
+      <div class="t-body">
+        <h2>ADD OWNER</h2>
+      </div>
+      <br>
+      <%= form_for rubygems_path, method: :get do |form| %>
+        <%= text_field_tag :owner, nil, placeholder: "Name of user", class: "add_owner__field" %>
+        <%= label_tag :owner do %>
+          <span class="t-hidden">Name of user</span>
+        <% end %>
+        <div class="submit_field">
+          <%= form.submit 'Add Owner', :data => {:disable_with => t('form_disable_with')}, :class => 'add__owners__button' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

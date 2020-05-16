@@ -4,6 +4,7 @@ class Rubygem < ApplicationRecord
 
   has_many :ownerships, dependent: :destroy
   has_many :owners, through: :ownerships, source: :user
+  has_many :confirmed_owners, ->(gem) { gem.owners.confirmed_owners }, through: :ownerships, source: :user
   has_many :notifiable_owners, ->(gem) { gem.owners.notifiable_owners }, through: :ownerships, source: :user
   has_many :subscriptions, dependent: :destroy
   has_many :subscribers, through: :subscriptions, source: :user
@@ -137,7 +138,12 @@ class Rubygem < ApplicationRecord
 
   def owned_by?(user)
     return false unless user
-    ownerships.exists?(user_id: user.id)
+    ownerships.exists?(user_id: user.id, confirmed: true)
+  end
+
+  def unconfirmed_ownership?(user)
+    return false unless user
+    ownerships.exists?(user_id: user.id, confirmed: false)
   end
 
   def to_s

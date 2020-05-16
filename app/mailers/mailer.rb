@@ -77,4 +77,22 @@ class Mailer < ApplicationMailer
          subject: I18n.t("mailer.reset_api_key.subject"),
          template_name: template_name
   end
+
+  def ownership_confirmation(ownership_id)
+    @ownership = Ownership.find(ownership_id)
+    @user = @ownership.user
+    @rubygem = @ownership.rubygem
+    mail to: @user.email,
+         subject: I18n.t("mailer.ownership_confirmation.subject", gem: @rubygem.name,
+                         default: "Please confirm the ownership of %{gem} gem on RubyGems.org")
+  end
+
+  def owners_update(owner_id, user_id, status, gem_id)
+    @user = User.find(user_id)
+    @owner = User.find(owner_id)
+    @rubygem = Rubygem.find(gem_id)
+    @status = status
+    mail to: @user.email,
+         subject: @owner.id == @user.id ? I18n.t("mailer.owners_update.subject_self", status: status, gem: @rubygem.name) : I18n.t("mailer.owners_update.subject_others", status: status, gem: @rubygem.name, owner_handle: @owner.handle)
+  end
 end

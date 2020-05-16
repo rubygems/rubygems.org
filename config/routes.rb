@@ -180,6 +180,10 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :owners, only: %i[] do
+      get 'confirm/:token', to: 'owners#confirm', as: :confirm, on: :collection
+    end
+
     get '/sign_in' => 'clearance/sessions#new', as: 'sign_in'
     delete '/sign_out' => 'clearance/sessions#destroy', as: 'sign_out'
 

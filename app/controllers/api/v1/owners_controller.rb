@@ -6,16 +6,23 @@ class Api::V1::OwnersController < Api::BaseController
 
   def show
     respond_to do |format|
-      format.json { render json: @rubygem.owners }
-      format.yaml { render yaml: @rubygem.owners }
+      format.json { render json: @rubygem.confirmed_owners }
+      format.yaml { render yaml: @rubygem.confirmed_owners }
     end
   end
 
   def create
     owner = User.find_by_name(params[:email])
+    return if verify_ownership_exists(owner)
     if owner
-      @rubygem.ownerships.create(user: owner)
-      render plain: "Owner added successfully."
+      ownership = @rubygem.ownerships.first_or_initialize(user: owner)
+      ownership.generate_confirmation_token
+      if ownership.save
+        Mailer.delay.ownership_confirmation(ownership.id)
+        render plain: "Owner added successfully. A confirmation mail has been sent to #{owner.email}"
+      else
+        render plain: "Failed to add owner", status: :forbidden
+      end
     else
       render plain: "Owner could not be found.", status: :not_found
     end
@@ -53,5 +60,9 @@ class Api::V1::OwnersController < Api::BaseController
   def verify_gem_ownership
     return if @api_user.rubygems.find_by_name(params[:rubygem_id])
     render plain: "You do not have permission to manage this gem.", status: :unauthorized
+  end
+
+  def verify_ownership_exists(owner)
+    render plain: "The user is already an owner.", status: :forbidden if @rubygem.owned_by?(owner)
   end
 end

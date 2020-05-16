@@ -78,6 +78,10 @@ module RubygemsHelper
     link_to t(".links.report_abuse"), report_abuse_url.html_safe, class: "gem__link t-list__item"
   end
 
+  def ownership_link(rubygem)
+    link_to "Ownership", rubygem_owners_path(rubygem), class: "gem__link t-list__item"
+  end
+
   def links_to_owners(rubygem)
     rubygem.owners.sort_by(&:id).inject("") { |link, owner| link << link_to_user(owner) }.html_safe
   end

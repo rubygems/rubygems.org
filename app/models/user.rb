@@ -73,6 +73,10 @@ class User < ApplicationRecord
     where(ownerships: { push_notifier: true })
   end
 
+  def self.confirmed_owners
+    where(ownerships: { confirmed: true })
+  end
+
   def self.without_mfa
     where(mfa_level: "disabled")
   end

@@ -1,0 +1,155 @@
+.owners__wrapper {
+    margin: 0 auto;
+    padding: 10px 0 10px 10px;
+    max-width: 800px;
+}
+.owners__navigation {
+    display: inline-block;
+    width: 100%;
+}
+.owners__navigation a {
+    color: #9da2ab;
+    text-transform: uppercase;
+    font-weight: bold;
+    transition-duration: 0.25s;
+    transition-property: color;
+    outline: none;
+}
+.owners__navigation a:hover, .owners__navigation a:focus, .owners__navigation a:active {
+    color: #141c22;
+}
+.owners__back__navigation.disabled:hover {
+    color: #9da2ab;
+}
+.owners__back__navigation {
+    float: left;
+}
+.owners__table {
+    width: 100%;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+    border-spacing: 0;
+}
+@media screen and (max-width: 580px) {
+    .owners__table {
+        display: block;
+    }
+}
+.owners__tbody {
+    display: block;
+}
+.owners__row {
+    background: #ffffff;
+}
+.owners__row:nth-of-type(odd) {
+    background: #f6f6f6;
+}
+.owners__row.owners__header {
+    font-weight: 900;
+    color: #ffffff;
+    background: #e9573f;
+}
+@media screen and (max-width: 580px) {
+    .owners__row {
+        padding: 14px 0 7px;
+        display: block;
+    }
+    .owners__row.owners__header {
+        padding: 0;
+        height: 6px;
+    }
+    .owners__row.owners__header .owners__cell {
+        display: none;
+    }
+    .owners__row .owners__cell {
+        margin-bottom: 10px;
+    }
+    .owners__row .owners__cell:before {
+        margin-bottom: 3px;
+        content: attr(data-title);
+        min-width: 98px;
+        font-size: 10px;
+        line-height: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: #969696;
+        display: block;
+    }
+}
+.owners__cell {
+    padding: 13px 12px;
+    text-align: center;
+}
+@media screen and (max-width: 580px) {
+    .owners__cell {
+        padding: 2px 16px;
+        display: block;
+    }
+}
+.remove__owners__button {
+    -webkit-appearance: none;
+    position: relative;
+    display: inline-block;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    outline: none;
+    transition-duration: 0.25s;
+    transition-property: border-color, background-color;
+    width: 100%;
+    max-width: 320px;
+    background-color: #e9573f;
+    color: #ffffff;
+}
+.remove__owners__button:hover {
+    opacity: .7;
+}
+.add__owners__button {
+    -webkit-appearance: none;
+    position: relative;
+    display: block;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    outline: none;
+    transition-duration: 0.25s;
+    margin-top: 22px;
+    margin-bottom: 80px;
+    width: 100%;
+    max-width: 320px;
+    background-color: #e9573f;
+    color: #ffffff;
+    transition-property: opacity;
+    padding: 8px 0;
+}
+.add__owners__button:hover {
+    opacity: .7;
+}
+
+.add_owner__field {
+    max-width: 160px;
+}
+/* Container for flex box */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.column {
+    padding: 20px;
+}
+/* On screens that are 992px wide or less */
+@media screen and (max-width: 992px) {
+    .l-column {
+        flex: 75%;
+        border-right: 5px;
+    }
+    .r-column {
+        flex: 25%;
+    }
+}
+/* On screens that are 600px wide or less, make the columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+    .row {
+        flex-direction: column;
+    }
+}

@@ -51,4 +51,15 @@ class MailerPreview < ActionMailer::Preview
     user = User.last
     Mailer.reset_api_key(user, "honeycomb_reset_api_key")
   end
+
+  def ownership_confirmation
+    Mailer.ownership_confirmation(Ownership.last.id)
+  end
+
+  def owners_update
+    gem = Rubygem.last
+    owner = gem.owners.first
+    user = User.last
+    Mailer.owners_update(owner.id, user.id, "added", gem.id)
+  end
 end
