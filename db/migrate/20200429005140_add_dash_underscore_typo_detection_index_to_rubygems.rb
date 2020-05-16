@@ -8,9 +8,11 @@
 # 2019 and 2020 according to an analysis of the SQL database.
 #
 class AddDashUnderscoreTypoDetectionIndexToRubygems < ActiveRecord::Migration[6.0]
+  disable_ddl_transaction!
+
   def up
     execute 'DROP INDEX IF EXISTS dashunderscore_typos_idx;'
-    execute "CREATE INDEX dashunderscore_typos_idx ON rubygems (regexp_replace(upper(name), '[_-]', '', 'g'));"
+    execute "CREATE INDEX CONCURRENTLY dashunderscore_typos_idx ON rubygems (regexp_replace(upper(name), '[_-]', '', 'g'));"
   end
 
   def down
