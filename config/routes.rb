@@ -188,7 +188,7 @@ Rails.application.routes.draw do
 
   ################################################################################
   # high_voltage static routes
-  get 'pages/*id' => 'high_voltage/pages#show', constraints: { id: /(about|data|download|faq|migrate|security|sponsors)/ }, as: :page
+  get 'pages/*id' => 'high_voltage/pages#show', constraints: { id: /(#{HighVoltage.page_ids.join("|")})/ }, as: :page
 
   ################################################################################
   # Internal Routes
