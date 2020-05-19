@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: staging
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-west-2:048268392960:certificate/db5c9b3c-40b8-4d75-bbe8-886c6c220b4b
+    alb.ingress.kubernetes.io/scheme: internet-facing
+spec:
+  rules:
+    - host: staging.rubygems.org
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: unicorn
+              servicePort: 80
+    - host: staging-origin.rubygems.org
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: unicorn
+              servicePort: 80

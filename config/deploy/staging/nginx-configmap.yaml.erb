@@ -42,6 +42,9 @@ data:
         server_name  staging.rubygems.org;
         <% end %>
 
+        real_ip_recursive on;
+
+        # Fastly
         set_real_ip_from '23.235.32.0/20';
         set_real_ip_from '43.249.72.0/22';
         set_real_ip_from '103.244.50.0/24';
@@ -58,7 +61,11 @@ data:
         set_real_ip_from '202.21.128.12/32';
         set_real_ip_from '203.57.145.11/32';
         set_real_ip_from '203.57.145.12/32';
-        real_ip_header Fastly-Client-IP;
+
+        # AWS
+        set_real_ip_from '172.30.0.0/16';
+
+        real_ip_header X-Forwarded-For;
 
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -108,6 +115,7 @@ data:
       '"referer": "$http_referer", '
       '"user_agent": "$http_user_agent", '
       '"client_ip": "$remote_addr", '
+      '"http_x_forwarded_for": "$http_x_forwarded_for", '
       '"remote_user": "$remote_user", '
       '"body_bytes": "$body_bytes_sent", '
       '"upstream_x_runtime": "$upstream_http_x_runtime", '
@@ -120,6 +128,5 @@ data:
       '"ssl_protocol": "$ssl_protocol", '
       '"ssl_cipher": "$ssl_cipher"'
     '}';
-    access_log  /var/log/nginx/access.json.log json;
     access_log  /dev/stdout json;
     error_log	/dev/stdout;
