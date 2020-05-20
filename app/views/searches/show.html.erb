@@ -6,7 +6,7 @@
   </div>
 <% end %>
 <%= link_to t("advanced_search"), advanced_search_path, class: "t-link--gray t-link--has-arrow" %>
-<% if params[:yanked] %>
+<% if @yanked_filter %>
   <% @subtitle = t('.subtitle', :query => content_tag(:em, h(params[:query]))) %>
 
   <% if @yanked_gem.present? %>
@@ -30,7 +30,8 @@
 
     <%= render partial: 'aggregations', locals: { gems: @gems } %>
 
-    <% if suggestions = es_suggestions(@gems)  %>
+    <% suggestions = es_suggestions(@gems) %>
+    <% if suggestions %>
       <div class='search__suggestions'>
         <p>
           Maybe you mean
