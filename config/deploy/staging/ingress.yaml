@@ -22,3 +22,10 @@ spec:
             backend:
               serviceName: unicorn
               servicePort: 80
+    - host: fastly.rubygems.org
+      http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: unicorn
+              servicePort: 80
