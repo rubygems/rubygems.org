@@ -8,7 +8,7 @@ class SearchesController < ApplicationController
 
     exact_match = Rubygem.name_is(params[:query]).first
     @yanked_gem = exact_match unless exact_match&.indexed_versions?
-    @yanked_filter = params[:yanked]
+    @yanked_filter = true if params[:yanked] == "true"
   end
 
   def advanced
