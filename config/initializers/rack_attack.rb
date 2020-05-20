@@ -168,4 +168,6 @@ class Rack::Attack
     }
     Rails.logger.info event.to_json
   end
+
+  self.throttled_response_retry_after_header = true
 end
