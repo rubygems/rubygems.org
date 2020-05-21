@@ -1,3 +1,5 @@
+require "tasks/helpers/compact_index_tasks_helper"
+
 namespace :extraneous_dependencies do
   def fetch_spec_deps(full_name)
     spec_uri = URI("https://rubygems.org/quick/Marshal.4.8/#{full_name}.gemspec.rz")
@@ -23,8 +25,9 @@ namespace :extraneous_dependencies do
   end
 
   desc "Remove dependencies from DB where it doesn't match the gemspec"
-  task clean: :environment do
-    ActiveRecord::Base.logger.level = 1
+  task clean: :environment do |task|
+    ActiveRecord::Base.logger.level = 1 if Rails.env.development?
+
     versions = Version.joins("inner join dependencies on versions.id = dependencies.version_id")
       .where("date_trunc('day', dependencies.created_at) = '2009-09-02 00:00:00'::timestamp")
       .where("versions.indexed = 'true'")
@@ -36,6 +39,7 @@ namespace :extraneous_dependencies do
     dev_mis_match      = 0
     run_mis_match      = 0
     mis_match_versions = 0
+    total_deleted_deps = 0
 
     Rails.logger.info "[extraneous_dependencies:clean] found #{total} versions for clean up"
     versions.each do |version|
@@ -79,8 +83,11 @@ namespace :extraneous_dependencies do
 
       if deps_to_delete.present?
         mis_match_versions += 1
+        total_deleted_deps += deps_to_delete.count
         Rails.logger.info("[extraneous_dependencies:clean] deleting dependencies with ids: #{deps_to_delete}")
         Dependency.destroy(deps_to_delete)
+
+        CompactIndexTasksHelper.update_last_checksum(version.rubygem, task)
       end
     rescue StandardError => e
       errored += 1
