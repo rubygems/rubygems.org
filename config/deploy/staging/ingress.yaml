@@ -6,6 +6,10 @@ metadata:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-west-2:048268392960:certificate/db5c9b3c-40b8-4d75-bbe8-886c6c220b4b
     alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/target-group-attributes: load_balancing.algorithm.type=least_outstanding_requests
+    alb.ingress.kubernetes.io/tags: Env=staging,Service=rubygems.org
+    alb.ingress.kubernetes.io/healthcheck-path: /internal/ping
 spec:
   rules:
     - host: staging.rubygems.org
