@@ -187,6 +187,10 @@ Rails.application.routes.draw do
   end
 
   ################################################################################
+  # high_voltage static routes
+  get 'pages/*id' => 'high_voltage/pages#show', constraints: { id: /(#{HighVoltage.page_ids.join("|")})/ }, as: :page
+
+  ################################################################################
   # Internal Routes
 
   namespace :internal do
