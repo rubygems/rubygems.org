@@ -168,7 +168,6 @@ spec:
           preStop:
             exec:
               command: ["sleep", "5"]
-<% if environment == 'staging' %>
       - name: nginx
         image: nginx:1.11.10
         imagePullPolicy: IfNotPresent
@@ -216,8 +215,6 @@ spec:
             port: 80
           initialDelaySeconds: 5
           periodSeconds: 5
-<% end %>
-<% if environment == 'staging' %>
       volumes:
         - name: nginxconfig
           configMap:
@@ -233,4 +230,3 @@ spec:
           emptyDir: {}
         - name: nginxcache
           emptyDir: {}
-<% end %>
