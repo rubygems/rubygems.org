@@ -6,6 +6,8 @@ class Rack::Attack
   LIMIT_PERIOD = 10.minutes
   PUSH_LIMIT_PERIOD = 60.minutes
   EXP_BASE_LIMIT_PERIOD = 100.seconds
+  EXP_BACKOFF_LEVELS = [1, 2, 3].freeze
+  PUSH_EXP_THROTTLE_KEY = "api/exp/push/ip".freeze
 
   ### Prevent Brute-Force Login Attacks ###
 
@@ -51,19 +53,25 @@ class Rack::Attack
   # 200 req in 100 seconds
   # 400 req in 10000 seconds (2.7 hours)
   # 600 req in 1000000 seconds (277.7 hours)
-  (1..3).each do |level|
+  EXP_BACKOFF_LEVELS.each do |level|
     throttle("clearance/ip/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
       req.ip if protected_route?(protected_ui_actions, req.path, req.request_method)
     end
   end
 
-  (1..3).each do |level|
+  EXP_BACKOFF_LEVELS.each do |level|
     throttle("api/ip/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
       req.ip if protected_route?(protected_api_actions, req.path, req.request_method)
     end
   end
 
   protected_push_action = [{ controller: "api/v1/rubygems", action: "create" }]
+
+  EXP_BACKOFF_LEVELS.each do |level|
+    throttle("#{PUSH_EXP_THROTTLE_KEY}/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
+      req.ip if protected_route?(protected_push_action, req.path, req.request_method)
+    end
+  end
 
   throttle("api/push/ip", limit: PUSH_LIMIT, period: PUSH_LIMIT_PERIOD) do |req|
     req.ip if protected_route?(protected_push_action, req.path, req.request_method)
