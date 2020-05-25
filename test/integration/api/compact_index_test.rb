@@ -149,7 +149,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     get info_path(gem_name: "gemA"), env: { range: "bytes=159-" }
 
     assert_response 206
-    assert_equal expected[159..-1], @response.body
+    assert_equal expected[159..], @response.body
   end
 
   test "/info with new gem" do
