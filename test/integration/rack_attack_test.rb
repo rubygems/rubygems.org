@@ -424,18 +424,24 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     context "exponential backoff" do
       setup { @level = 2 }
 
-      exp_back_off_levels = { 2 => "10000", 3 => "1000000" }
+      exp_back_off_levels = [2, 3]
 
-      exp_back_off_levels.each do |level, expected_retry_after|
+      exp_back_off_levels.each do |level|
         should "throttle for mfa sign in at level #{level}" do
-          exceed_exponential_limit_for("clearance/ip/#{level}", level)
+          freeze_time do
+            exceed_exponential_limit_for("clearance/ip/#{level}", level)
 
-          post "/users",
-            params: { user: { email: @user.email, password: @user.password } },
-            headers: { REMOTE_ADDR: @ip_address }
+            post "/users",
+              params: { user: { email: @user.email, password: @user.password } },
+              headers: { REMOTE_ADDR: @ip_address }
 
-          assert_response :too_many_requests
-          assert_equal expected_retry_after, @response.headers["Retry-After"]
+            assert_response :too_many_requests
+
+            now = Time.now.to_i
+            period = Rack::Attack::EXP_BASE_LIMIT_PERIOD**level
+            expected_retry_after = (period - (now % period)).to_s
+            assert_equal expected_retry_after, @response.headers["Retry-After"]
+          end
         end
 
         should "throttle gem push at level #{level}" do
