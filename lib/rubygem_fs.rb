@@ -1,3 +1,5 @@
+require "aws-sdk-s3"
+
 module RubygemFs
   def self.instance
     @fs ||=
