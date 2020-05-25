@@ -118,10 +118,10 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
   test "/info with existing gem" do
     expected = <<~VERSIONS_FILE
       ---
-      1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>=2.6.3
-      2.0.0 gemA1:=1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>=2.6.3
-      1.2.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>=2.0.0,rubygems:>1.9
-      2.1.0 gemA1:=1.0.0,gemA2:=1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>=2.0.0,rubygems:>=2.0
+      1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
+      2.0.0 gemA1:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
+      1.2.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>1.9
+      2.1.0 gemA1:= 1.0.0,gemA2:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>=2.0
     VERSIONS_FILE
 
     get info_path(gem_name: "gemA")
@@ -140,10 +140,10 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
   test "/info partial response" do
     expected = <<~VERSIONS_FILE
       ---
-      1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>=2.6.3
-      2.0.0 gemA1:=1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>=2.6.3
-      1.2.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>=2.0.0,rubygems:>1.9
-      2.1.0 gemA1:=1.0.0,gemA2:=1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>=2.0.0,rubygems:>=2.0
+      1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
+      2.0.0 gemA1:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,rubygems:>= 2.6.3
+      1.2.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>1.9
+      2.1.0 gemA1:= 1.0.0,gemA2:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>=2.0
     VERSIONS_FILE
 
     get info_path(gem_name: "gemA"), env: { range: "bytes=159-" }
@@ -158,7 +158,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     create(:dependency, :development, version: version, rubygem: @rubygem2)
     expected = <<~VERSIONS_FILE
       ---
-      1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>=2.0.0,rubygems:>=2.6.3
+      1.0.0 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>= 2.6.3
     VERSIONS_FILE
 
     get info_path(gem_name: "gemC")
