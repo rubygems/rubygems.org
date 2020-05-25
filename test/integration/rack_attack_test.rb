@@ -91,6 +91,12 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       .encode_credentials(username, password)
   end
 
+  def expected_retry_after(level)
+    now = Time.now.to_i
+    period = Rack::Attack::EXP_BASE_LIMIT_PERIOD**level
+    (period - (now % period)).to_s
+  end
+
   context "requests is lower than limit" do
     should "allow sign in" do
       stay_under_limit_for("clearance/ip/1")
@@ -422,11 +428,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     context "exponential backoff" do
-      setup { @level = 2 }
-
-      exp_back_off_levels = [2, 3]
-
-      exp_back_off_levels.each do |level|
+      Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
         should "throttle for mfa sign in at level #{level}" do
           freeze_time do
             exceed_exponential_limit_for("clearance/ip/#{level}", level)
@@ -436,23 +438,21 @@ class RackAttackTest < ActionDispatch::IntegrationTest
               headers: { REMOTE_ADDR: @ip_address }
 
             assert_response :too_many_requests
-
-            now = Time.now.to_i
-            period = Rack::Attack::EXP_BASE_LIMIT_PERIOD**level
-            expected_retry_after = (period - (now % period)).to_s
-            assert_equal expected_retry_after, @response.headers["Retry-After"]
+            assert_equal expected_retry_after(level), @response.headers["Retry-After"]
           end
         end
 
         should "throttle gem push at level #{level}" do
-          exceed_exponential_limit_for("#{Rack::Attack::PUSH_EXP_THROTTLE_KEY}/#{level}", level)
+          freeze_time do
+            exceed_exponential_limit_for("#{Rack::Attack::PUSH_EXP_THROTTLE_KEY}/#{level}", level)
 
-          post "/api/v1/gems",
-            params: gem_file("test-0.0.0.gem").read,
-            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
+            post "/api/v1/gems",
+              params: gem_file("test-0.0.0.gem").read,
+              headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
 
-          assert_response :too_many_requests
-          assert_equal expected_retry_after, @response.headers["Retry-After"]
+            assert_response :too_many_requests
+            assert_equal expected_retry_after(level), @response.headers["Retry-After"]
+          end
         end
       end
     end
