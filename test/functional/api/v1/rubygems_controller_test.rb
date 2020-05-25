@@ -460,7 +460,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         assert_equal 2, gems.size
 
         assert gems.include?(@gem_one.name)
-        assert gems.include?(@gem_three .name)
+        assert gems.include?(@gem_three.name)
       end
     end
   end
