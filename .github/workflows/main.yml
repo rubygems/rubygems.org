@@ -8,6 +8,8 @@ jobs:
     strategy:
       matrix:
         rubygems: [2.6.10, latest]
+        ruby: [2.6.5, head]
+    continue-on-error: ${{ endsWith(matrix.ruby, 'head')
     services:
       database:
         image: postgres:9.6
@@ -34,10 +36,9 @@ jobs:
     steps:
       - name: Checkout Project
         uses: actions/checkout@v1
-      - name: Set Up Ruby
-        uses: eregon/use-ruby-action@v1
+      - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.6.5
+          ruby-version: ${{ matrix.ruby }}
       - name: Download Cached Gems
         uses: actions/cache@v1
         with:
@@ -54,7 +55,7 @@ jobs:
           bundle install --jobs=3 --retry=3
           bundle audit update
           cp config/database.yml.example config/database.yml
-          bundle exec rake db:create db:migrate db:test:prepare
+          bundle exec rake db:setup
       - name: Run Linting
         run: |
           bundle audit check
