@@ -130,17 +130,15 @@ class SearchesControllerTest < ActionController::TestCase
       create(:version, rubygem: @sinatra)
       create(:version, :yanked, rubygem: @sinatra_redux)
       import_and_refresh
-      @request.cookies["new_search"] = "true"
-      get :show, params: { query: @sinatra_redux.name.to_s }
+      get :show, params: { query: @sinatra_redux.name.to_s, yanked: true }
     end
 
     should respond_with :success
-    should "not see sinatra_redux on the page in the results" do
-      page.assert_no_selector("a[href='#{rubygem_path(@sinatra_redux)}']")
+    should "see sinatra_redux on the page in the results" do
+      page.assert_selector("a[href='#{rubygem_path(@sinatra_redux)}']")
     end
-    should "see yanked filter" do
-      page.assert_text("Yanked (1)")
-      page.assert_selector("a[href='#{search_path(params: { query: @sinatra_redux.name, yanked: true })}']")
+    should "not see sinatra on the page in the results" do
+      page.assert_no_selector("a[href='#{rubygem_path(@sinatra)}']")
     end
   end
 
