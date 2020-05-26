@@ -14,11 +14,11 @@ namespace :extraneous_dependencies do
     spec_obj = Marshal.load(Gem::Util.inflate(res.body))
 
     spec_run_deps = spec_obj.dependencies.map do |s|
-      s.name.downcase if s.type == :runtime && Rubygem.where(name: s.name).present?
+      s.name.to_s.downcase if s.type == :runtime && Rubygem.where(name: s.name.to_s).present?
     end.compact.sort
 
     spec_dev_deps = spec_obj.dependencies.map do |s|
-      s.name.downcase if s.type == :development && Rubygem.where(name: s.name).present?
+      s.name.to_s.downcase if s.type == :development && Rubygem.where(name: s.name.to_s).present?
     end.compact.sort
 
     [spec_run_deps, spec_dev_deps]
