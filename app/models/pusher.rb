@@ -3,11 +3,12 @@ require "digest/sha2"
 class Pusher
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
 
-  def initialize(user, body)
+  def initialize(user, body, remote_ip = "")
     @user = user
     @body = StringIO.new(body.read)
     @size = @body.size
     @indexer = Indexer.new
+    @remote_ip = remote_ip
   end
 
   def process
@@ -60,10 +61,8 @@ class Pusher
     @rubygem = Rubygem.name_is(name).first || Rubygem.new(name: name)
 
     unless @rubygem.new_record?
-      if @rubygem.find_version_from_spec(spec)
-        notify("Repushing of gem versions is not allowed.\n" \
-               "Please use `gem yank` to remove bad gem releases.", 409)
-
+      if (version = @rubygem.find_version_from_spec spec)
+        republish_notification(version)
         return false
       end
 
@@ -105,6 +104,7 @@ class Pusher
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
     rubygem.delay.index_document
     GemCachePurger.call(rubygem.name)
+    RackAttackReset.gem_push_backoff(@remote_ip) if @remote_ip.present?
     StatsD.increment "push.success"
   end
 
@@ -128,5 +128,16 @@ class Pusher
   def set_info_checksum
     checksum = GemInfo.new(rubygem.name).info_checksum
     version.update_attribute :info_checksum, checksum
+  end
+
+  def republish_notification(version)
+    if version.indexed?
+      notify("Repushing of gem versions is not allowed.\n" \
+            "Please use `gem yank` to remove bad gem releases.", 409)
+    else
+      different_owner = "pushed by a previous owner of this gem " unless version.rubygem.owners.include?(@user)
+      notify("A yanked version #{different_owner}already exists (#{version.full_name}).\n" \
+            "Repushing of gem versions is not allowed. Please use a new version and retry", 409)
+    end
   end
 end

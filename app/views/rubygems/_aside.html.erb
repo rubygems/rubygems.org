@@ -1,6 +1,7 @@
 <div class="gem__aside l-col--r--pad">
-  <% if @rubygem.linkset.present? && github_link = link_to_github(@rubygem) %>
-    <%= render partial: "rubygems/github_button", locals: { github_link: github_link } %>
+
+  <% if github_data_params = github_params(@rubygem) %>
+    <%= render partial: "rubygems/github_button", locals: { github_data_params: github_data_params } %>
   <% end %>
 
   <div class="gem__downloads-wrap" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">

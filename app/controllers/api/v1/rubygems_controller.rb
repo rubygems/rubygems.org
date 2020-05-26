@@ -26,7 +26,7 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   def create
-    gemcutter = Pusher.new(@api_user, request.body)
+    gemcutter = Pusher.new(@api_user, request.body, request.remote_ip)
     enqueue_web_hook_jobs(gemcutter.version) if gemcutter.process
 
     render plain: gemcutter.message, status: gemcutter.code

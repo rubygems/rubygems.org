@@ -16,33 +16,20 @@ module Patterns
     coverage
     digest
     drb
-    english
     enumerator
     erb
     expect
     fiber
     find
-    install
     io-nonblock
     io-wait
-    jruby
     mkmf
-    monitor
-    mri
-    mruby
-    net-ftp
-    net-http
-    net-imap
-    net-protocol
     nkf
-    observer
     open-uri
     optparse
     pathname
     pp
     prettyprint
-    prime
-    profile
     profiler
     pty
     rational
@@ -50,28 +37,26 @@ module Patterns
     resolv
     resolv-replace
     rinda
-    ruby
-    rubygems
     securerandom
     set
     shellwords
     socket
     syslog
-    tempfile
     thread
     time
-    timeout
-    tmpdir
-    tracer
     tsort
     un
     unicode_normalize
-    uninstall
-    uri
-    weakref
     win32ole
-    yaml
     ubygems
+
+    jruby
+    mri
+    mruby
+    ruby
+    rubygems
+    install
+    uninstall
     sidekiq-pro
     graphql-pro
 

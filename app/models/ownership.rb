@@ -4,8 +4,12 @@ class Ownership < ApplicationRecord
 
   validates :user_id, uniqueness: { scope: :rubygem_id }
 
-  def self.by_gem_name
-    joins(:rubygem).order("rubygems.name ASC")
+  def self.by_indexed_gem_name
+    select("ownerships.*, rubygems.name")
+      .left_joins(rubygem: :versions)
+      .where(versions: { indexed: true })
+      .distinct
+      .order("rubygems.name ASC")
   end
 
   def safe_destroy

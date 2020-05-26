@@ -3,3 +3,4 @@ Disallow: /downloads/
 Disallow: /gems?letter=*
 Disallow: /search?*
 Disallow: /names
+Disallow: /news

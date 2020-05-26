@@ -15,16 +15,6 @@ module RubygemsHelper
     link_to(t(".links.#{id}"), url, rel: "nofollow", class: %w[gem__link t-list__item], id: id) if url.present?
   end
 
-  def link_to_github(rubygem)
-    if !rubygem.linkset.code.nil? && URI(rubygem.linkset.code).host == "github.com"
-      URI(@rubygem.linkset.code)
-    elsif !rubygem.linkset.home.nil? && URI(rubygem.linkset.home).host == "github.com"
-      URI(rubygem.linkset.home)
-    end
-  rescue URI::InvalidURIError
-    nil
-  end
-
   def link_to_directory
     ("A".."Z").map do |letter|
       link_to(letter, rubygems_path(letter: letter), class: "gems__nav-link")
@@ -32,7 +22,7 @@ module RubygemsHelper
   end
 
   def simple_markup(text)
-    if text =~ /^==+ [A-Z]/
+    if /^==+ [A-Z]/.match?(text)
       options = RDoc::Options.new
       options.pipe = true
       sanitize RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new(options))
@@ -114,7 +104,18 @@ module RubygemsHelper
     (rubygem.latest_version || rubygem.versions.last)&.number
   end
 
-  def github_params(link)
-    "user=#{link.path.split('/').second}&repo=#{link.path.split('/').third}&type=star&count=true&size=large"
+  def link_to_github(rubygem)
+    if rubygem.links.source_code_uri.present? && URI(rubygem.links.source_code_uri).host == "github.com"
+      URI(rubygem.links.source_code_uri)
+    elsif rubygem.links.homepage_uri.present? && URI(rubygem.links.homepage_uri).host == "github.com"
+      URI(rubygem.links.homepage_uri)
+    end
+  rescue URI::InvalidURIError
+    nil
+  end
+
+  def github_params(rubygem)
+    link = link_to_github(rubygem)
+    "user=#{link.path.split('/').second}&repo=#{link.path.split('/').third}&type=star&count=true&size=large" if link
   end
 end

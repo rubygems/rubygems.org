@@ -20,7 +20,7 @@ namespace :mfa_notification do
   task :send, %i[login_start login_end] => [:environment] do |_task, args|
     args.with_defaults(login_start: "2019-01-01", login_end: Time.now.utc.strftime("%Y-%m-%d"))
 
-    mfa_disabled_users = User.where.not(mfa_level: :ui_and_api)
+    mfa_disabled_users = User.where.not(mfa_level: :ui_and_api).where(email_confirmed: "true")
     notify_users = mfa_disabled_users.where("updated_at BETWEEN ? AND ?", args[:login_start], args[:login_end])
     total = notify_users.count
     puts "Sending #{total} mfa notifications for login between #{args[:login_start]}..#{args[:login_end]}"

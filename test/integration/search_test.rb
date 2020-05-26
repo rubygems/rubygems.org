@@ -58,7 +58,7 @@ class SearchTest < SystemTest
     create(:rubygem, name: "ruby-gems", number: "1.0.0")
     import_and_refresh
 
-    visit "/search?query=ruby&script_name=javascript:alert(1)//"
+    visit "/search?query=ruby&original_script_name=javascript:alert(1)//&script_name=javascript:alert(1)//"
     assert page.has_content? "ruby-ruby"
     assert page.has_link?("Next", href: "/search?page=2&query=ruby")
     Kaminari.configure { |c| c.default_per_page = 30 }

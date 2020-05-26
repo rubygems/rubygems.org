@@ -1,6 +1,9 @@
 require "digest/sha2"
 
 class Version < ApplicationRecord
+  MAX_FIELD_LENGTH = 255
+  MAX_TEXT_FIELD_LENGTH = 64_000
+
   belongs_to :rubygem, touch: true
   has_many :dependencies, -> { order("rubygems.name ASC").includes(:rubygem) }, dependent: :destroy, inverse_of: "version"
   has_one :gem_download, inverse_of: :version, dependent: :destroy
@@ -17,10 +20,13 @@ class Version < ApplicationRecord
   validates :platform, format: { with: Rubygem::NAME_PATTERN }
   validates :full_name, presence: true, uniqueness: { case_sensitive: false }
   validates :rubygem, presence: true
+  validates :required_rubygems_version, length: { minimum: 1, maximum: MAX_FIELD_LENGTH }, allow_blank: true
+  validates :description, :summary, :authors, :requirements, length: { minimum: 0, maximum: MAX_TEXT_FIELD_LENGTH }, allow_blank: true
 
   validate :platform_and_number_are_unique, on: :create
   validate :authors_format, on: :create
   validate :metadata_links_format
+  validate :metadata_attribute_length
 
   class AuthorType < ActiveModel::Type::String
     def cast_value(value)
@@ -90,10 +96,6 @@ class Version < ApplicationRecord
 
   def self.by_created_at
     order(created_at: :desc)
-  end
-
-  def self.by_earliest_created_at
-    order(created_at: :asc)
   end
 
   def self.rows_for_index
@@ -321,7 +323,7 @@ class Version < ApplicationRecord
   end
 
   def self._sha256_hex(raw)
-    raw.unpack("m0").first.unpack("H*").first
+    raw.unpack1("m0").unpack1("H*")
   end
 
   def metadata_uri_set?
@@ -333,7 +335,7 @@ class Version < ApplicationRecord
   end
 
   def prerelease
-    !!to_gem_version.prerelease? # rubocop:disable Style/DoubleNegation
+    !!to_gem_version.prerelease?
   end
   alias prerelease? prerelease
 
@@ -371,6 +373,13 @@ class Version < ApplicationRecord
     Linkset::LINKS.each do |link|
       errors.add(:metadata, "['#{link}'] does not appear to be a valid URL") if
         metadata[link] && metadata[link] !~ Patterns::URL_VALIDATION_REGEXP
+    end
+  end
+
+  def metadata_attribute_length
+    return if metadata.blank?
+    metadata.each do |key, value|
+      errors.add(:metadata, "metadata field ['#{key}'] is too long (maximum is #{MAX_FIELD_LENGTH} characters)") if value.length > MAX_FIELD_LENGTH
     end
   end
 end

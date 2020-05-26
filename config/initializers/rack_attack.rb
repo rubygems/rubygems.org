@@ -1,7 +1,13 @@
 class Rack::Attack
   REQUEST_LIMIT = 100
+  EXP_BASE_REQUEST_LIMIT = 200
+  PUSH_LIMIT = 150
   REQUEST_LIMIT_PER_EMAIL = 10
   LIMIT_PERIOD = 10.minutes
+  PUSH_LIMIT_PERIOD = 60.minutes
+  EXP_BASE_LIMIT_PERIOD = 100.seconds
+  EXP_BACKOFF_LEVELS = [1, 2, 3].freeze
+  PUSH_EXP_THROTTLE_KEY = "api/exp/push/ip".freeze
 
   ### Prevent Brute-Force Login Attacks ###
 
@@ -44,32 +50,31 @@ class Rack::Attack
     req.path.starts_with?("/assets") && req.request_method == "GET"
   end
 
-  # 100 req in 10 min
-  # 200 req in 100 min
-  # 300 req in 1000 min (0.7 days)
-  # 400 req in 10000 min (6.9 days)
-  (1..4).each do |level|
-    throttle("clearance/ip/#{level}", limit: REQUEST_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
+  # 200 req in 100 seconds
+  # 400 req in 10000 seconds (2.7 hours)
+  # 600 req in 1000000 seconds (277.7 hours)
+  EXP_BACKOFF_LEVELS.each do |level|
+    throttle("clearance/ip/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
       req.ip if protected_route?(protected_ui_actions, req.path, req.request_method)
     end
   end
 
-  (1..4).each do |level|
-    throttle("api/ip/#{level}", limit: REQUEST_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
+  EXP_BACKOFF_LEVELS.each do |level|
+    throttle("api/ip/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
       req.ip if protected_route?(protected_api_actions, req.path, req.request_method)
     end
   end
 
-  PUSH_LIMIT = 150
   protected_push_action = [{ controller: "api/v1/rubygems", action: "create" }]
 
-  # 150 push in 10 min
-  # 450 push in 1000 min
-  # 600 push in 10000 min
-  [1, 3, 4].each do |level|
-    throttle("api/push/ip/#{level}", limit: PUSH_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
+  EXP_BACKOFF_LEVELS.each do |level|
+    throttle("#{PUSH_EXP_THROTTLE_KEY}/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
       req.ip if protected_route?(protected_push_action, req.path, req.request_method)
     end
+  end
+
+  throttle("api/push/ip", limit: PUSH_LIMIT, period: PUSH_LIMIT_PERIOD) do |req|
+    req.ip if protected_route?(protected_push_action, req.path, req.request_method)
   end
 
   # Throttle GET request for api_key by IP address
@@ -171,4 +176,6 @@ class Rack::Attack
     }
     Rails.logger.info event.to_json
   end
+
+  self.throttled_response_retry_after_header = true
 end

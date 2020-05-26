@@ -19,7 +19,7 @@ class Rubygem < ApplicationRecord
     uniqueness: { case_sensitive: false },
     if: :needs_name_validation?
   validate :blacklist_names_exclusion
-  validate :protected_gem_typo, on: :create, unless: -> { Array(validation_context).include?(:typo_exception) }
+  # validate :protected_gem_typo, on: :create, unless: -> { Array(validation_context).include?(:typo_exception) }
 
   after_create :update_unresolved
   before_destroy :mark_unresolved
@@ -53,7 +53,9 @@ class Rubygem < ApplicationRecord
   end
 
   def self.total_count
-    count_by_sql "SELECT COUNT(*) from (SELECT DISTINCT rubygem_id FROM versions WHERE indexed = true) AS v"
+    Rails.cache.fetch("gem/total_count", expires_in: 6.hours) do
+      Version.indexed.distinct.count(:rubygem_id)
+    end
   end
 
   def self.latest(limit = 5)
@@ -69,7 +71,7 @@ class Rubygem < ApplicationRecord
   end
 
   def self.letterize(letter)
-    letter =~ /\A[A-Za-z]\z/ ? letter.upcase : "A"
+    /\A[A-Za-z]\z/.match?(letter) ? letter.upcase : "A"
   end
 
   def self.by_name
@@ -86,10 +88,14 @@ class Rubygem < ApplicationRecord
   end
 
   def self.news(days)
-    includes(:latest_version, :gem_download)
-      .with_versions
+    joins(:latest_version)
       .where("versions.created_at BETWEEN ? AND ?", days.ago.in_time_zone, Time.zone.now)
-      .order("versions.created_at DESC")
+      .group(:id)
+      .order("MAX(versions.created_at) DESC")
+  end
+
+  def self.popular(days)
+    joins(:gem_download).order("MAX(gem_downloads.count) DESC").news(days)
   end
 
   def all_errors(version = nil)
@@ -262,10 +268,6 @@ class Rubygem < ApplicationRecord
     version
   end
 
-  def first_created_date
-    versions.by_earliest_created_at.first.created_at
-  end
-
   # returns days left before the reserved namespace will be released
   # 100 + 1 days are added so that last_protected_day / 1.day = 1
   def protected_days
@@ -297,11 +299,11 @@ class Rubygem < ApplicationRecord
   def ensure_name_format
     if name.class != String
       errors.add :name, "must be a String"
-    elsif name !~ /[a-zA-Z]+/
+    elsif !/[a-zA-Z]+/.match?(name)
       errors.add :name, "must include at least one letter"
-    elsif name !~ NAME_PATTERN
+    elsif !NAME_PATTERN.match?(name)
       errors.add :name, "can only include letters, numbers, dashes, and underscores"
-    elsif name =~ /\A[#{Regexp.escape(Patterns::SPECIAL_CHARACTERS)}]+/
+    elsif /\A[#{Regexp.escape(Patterns::SPECIAL_CHARACTERS)}]+/.match?(name)
       errors.add :name, "can not begin with a period, dash, or underscore"
     end
   end

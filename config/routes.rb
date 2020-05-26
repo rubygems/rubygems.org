@@ -140,7 +140,8 @@ Rails.application.routes.draw do
       end
     end
     resources :stats, only: :index
-    resource :news, path: 'news', only: [:show] do
+    get "/news" => 'news#show', as: 'legacy_news_path'
+    resource :news, path: 'releases', only: [:show] do
       get :popular, on: :collection
     end
     resource :notifier, only: %i[update show]
@@ -184,6 +185,10 @@ Rails.application.routes.draw do
 
     get '/sign_up' => 'clearance/users#new', as: 'sign_up' if Clearance.configuration.allow_sign_up?
   end
+
+  ################################################################################
+  # high_voltage static routes
+  get 'pages/*id' => 'high_voltage/pages#show', constraints: { id: /(#{HighVoltage.page_ids.join("|")})/ }, as: :page
 
   ################################################################################
   # Internal Routes

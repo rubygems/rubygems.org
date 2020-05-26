@@ -1,0 +1,132 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-configmap
+data:
+  default: |
+    user nginx;
+    worker_processes  3;
+    events {
+      worker_connections  5120;
+    }
+    http {
+      server {
+          listen       80;
+          server_name  _;
+          location /nginx_health {
+            access_log off;
+            return 200 "healthy\n";
+          }
+      }
+
+      map $http_x_forwarded_proto $scheme_from_fastly {
+        "" $scheme;
+        default $http_x_forwarded_proto;
+      }
+
+      limit_req_status 429;
+      limit_req_zone  $binary_remote_addr  zone=abusers:10m  rate=100r/s;
+      limit_req_zone  $binary_remote_addr  zone=dependencyapi:10m  rate=100r/s;
+
+      proxy_cache_path  /var/lib/nginx/cache  levels=1:2 keys_zone=cache-versions:10m inactive=24h  max_size=100m;
+
+      include /etc/nginx/conf.d/logging.conf;
+      include /etc/nginx/sites-enabled/*;
+    }
+  rubygems: |
+    server {
+        listen       8080;
+        server_name _;
+
+        real_ip_recursive on;
+
+        # Fastly
+        set_real_ip_from '23.235.32.0/20';
+        set_real_ip_from '43.249.72.0/22';
+        set_real_ip_from '103.244.50.0/24';
+        set_real_ip_from '103.245.222.0/23';
+        set_real_ip_from '103.245.224.0/24';
+        set_real_ip_from '104.156.80.0/20';
+        set_real_ip_from '151.101.0.0/16';
+        set_real_ip_from '157.52.64.0/18';
+        set_real_ip_from '172.111.64.0/18';
+        set_real_ip_from '185.31.16.0/22';
+        set_real_ip_from '199.27.72.0/21';
+        set_real_ip_from '199.232.0.0/16';
+        set_real_ip_from '202.21.128.11/32';
+        set_real_ip_from '202.21.128.12/32';
+        set_real_ip_from '203.57.145.11/32';
+        set_real_ip_from '203.57.145.12/32';
+
+        # AWS
+        set_real_ip_from '172.30.0.0/16';
+
+        real_ip_header X-Forwarded-For;
+
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Client-IP "";
+        proxy_set_header Host $host:$server_port;
+        proxy_redirect off;
+
+        location /api/v1/dependencies {
+          limit_req zone=dependencyapi burst=10 nodelay;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_pass http://127.0.0.1:3000;
+          proxy_buffer_size          128k;
+          proxy_buffers              4 256k;
+          proxy_busy_buffers_size    256k;
+        }
+
+        location /versions {
+          proxy_cache cache-versions;
+          proxy_cache_background_update on;
+          proxy_cache_key "/versions";
+          proxy_cache_lock on;
+          proxy_cache_use_stale updating;
+          proxy_cache_valid 200 60s;
+          proxy_pass http://127.0.0.1:3000/versions;
+        }
+
+        location /info {
+          proxy_pass http://127.0.0.1:3000;
+        }
+
+        location / {
+          limit_req zone=abusers burst=10;
+          proxy_pass http://127.0.0.1:3000;
+        }
+    }
+  logging: |
+    log_format json '{'
+      '"host": "${HOSTNAME}", '
+      '"@timestamp": "$time_iso8601", '
+      '"service": "rubygems.org", '
+      '"env": "<%= environment %>", '
+      '"processing_time_milliseconds": "$request_time", '
+      '"forwarded_for": "$http_x_forwarded_for", '
+      '"upstream_x_runtime": "$upstream_http_x_runtime", '
+      '"upstream_processing_time": "$upstream_response_time", '
+      '"upstream": "$upstream_addr", '
+      '"http": {'
+        '"status_code": $status, '
+        '"scheme": "$scheme_from_fastly", '
+        '"url": "$scheme_from_fastly://$http_host$request_uri", '
+        '"args": "$args", '
+        '"dest_host": "$http_host", '
+        '"content_type": "$sent_http_content_type", '
+        '"protocol": "$server_protocol", '
+        '"referer": "$http_referer", '
+        '"useragent": "$http_user_agent", '
+        '"method": "$request_method", '
+        '"request": "$request", '
+        '"request_id": "$upstream_http_x_request_id", '
+        '"ssl_protocol": "$ssl_protocol", '
+        '"ssl_cipher": "$ssl_cipher"'
+      '},'
+      '"network": {'
+        '"client": {"ip": "$remote_addr"} '
+      '}'
+    '}';
+    access_log  /dev/stdout json;
+    error_log	/dev/stdout;

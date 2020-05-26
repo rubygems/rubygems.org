@@ -292,4 +292,20 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "query matches gem name prefix" do
+    setup do
+      %w[term-ansicolor term-an].each do |gem_name|
+        create(:rubygem, name: gem_name, number: "0.0.1", downloads: 10)
+      end
+      import_and_refresh
+    end
+
+    should "return results" do
+      _, response = ElasticSearcher.new("term-ans").search
+
+      assert_equal 1, response.size
+      assert_equal "term-ansicolor", response.first.name
+    end
+  end
 end

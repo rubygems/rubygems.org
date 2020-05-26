@@ -11,7 +11,7 @@ AllCops:
     - !ruby/regexp /(vendor|bundle|bin|db|tmp)\/.*/
   DisplayCopNames: true
   DisplayStyleGuide: true
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.6
 
 Rails:
   Enabled: true
@@ -46,6 +46,9 @@ Rails/UnknownEnv:
     - development
     - staging
     - test
+
+Rails/UniqueValidationWithoutIndex:
+  Enabled: false
 
 Layout/ArgumentAlignment:
   Enabled: false
@@ -98,6 +101,12 @@ Layout/MultilineMethodCallIndentation:
 Layout/MultilineOperationIndentation:
   EnforcedStyle: indented
 
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
 Style/AndOr:
   Exclude:
     - app/controllers/internal/ping_controller.rb
@@ -134,3 +143,27 @@ Style/EmptyMethod:
 
 Style/FormatStringToken:
   Enabled: false
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
+Style/ExponentialNotation:
+  Enabled: true
+
+Style/SlicingWithRange:
+  Enabled: true
