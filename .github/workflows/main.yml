@@ -12,7 +12,6 @@ jobs:
     strategy:
       matrix:
         rubygems: [2.6.10, latest]
-        ruby: [2.6.5, head]
     continue-on-error: ${{ endsWith(matrix.ruby, 'head') }}
     services:
       database:
@@ -43,8 +42,6 @@ jobs:
       - name: Checkout Project
         uses: actions/checkout@v1
       - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ matrix.ruby }}
       - name: Download Cached Gems
         uses: actions/cache@v1
         with:
