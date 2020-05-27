@@ -19,7 +19,7 @@ jobs:
         image: postgres:9.6
         ports:
           - "5432:5432"
-        environment:
+        env:
           - POSTGRES_HOST_AUTH_METHOD=trust
       cache:
         image: memcached
