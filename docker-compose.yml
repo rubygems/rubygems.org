@@ -1,11 +1,29 @@
 version: '3'
 services:
+  app:
+    build: .
+    depends_on:
+      - db
+      - cache
+      - search
+    environment:
+      # Name of the docker-compose service for the database
+      - POSTGRES_HOST=db
+    ports:
+      - "3000:3000"
+    # Create files as the current user to avoid permission issues
+    user: "${UID:-1000}:${GID:-100}"
+    volumes:
+      - .:/app
   db:
     image: postgres:9.6
     ports:
       - "5432:5432"
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
+      # Same as in config/database.yml.example
+      - POSTGRES_DB=rubygems_development
+      - POSTGRES_PASSWORD=devpassword
   cache:
     image: memcached
     ports:

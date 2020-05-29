@@ -6,7 +6,7 @@ default: &default
 development:
   <<: *default
   database: rubygems_development
-  host: localhost
+  host: <%= ENV.fetch('POSTGRES_HOST', 'localhost') %>
   password: devpassword
   pool: 5
   timeout: 5000
@@ -15,7 +15,7 @@ development:
 test:
   <<: *default
   database: rubygems_test
-  host: localhost
+  host: <%= ENV.fetch('POSTGRES_HOST', 'localhost') %>
   min_messages: warning
   password: testpassword
   pool: 5

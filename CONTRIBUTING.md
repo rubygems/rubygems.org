@@ -59,7 +59,9 @@ services that the application depends on such as: postgresql, memcached & elasti
 * Install Docker. See instructions at https://docs.docker.com/engine/installation/
 * run `docker-compose up` to start the required services.
 
-Follow the instructions below on how to install Bundler and setup the database.
+FIXME: Create Dockerfile for development (the current Dockerfile is precompiling
+assets)
+FIXME: Run ./script/setup and run migrations, then everything works.
 
 #### Environment (OS X)
 
