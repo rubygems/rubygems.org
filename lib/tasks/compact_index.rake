@@ -1,3 +1,5 @@
+require "tasks/helpers/compact_index_tasks_helper"
+
 namespace :compact_index do
   def yanked_at_time(version)
     query = ["SELECT created_at FROM deletions,
@@ -82,5 +84,21 @@ namespace :compact_index do
     gems = GemInfo.compact_index_public_versions
 
     versions_file.create gems
+  end
+
+  desc "Update info checksum for multiple ruby or rubygems requirements"
+  task multi_req_checksum: :environment do |task|
+    ActiveRecord::Base.logger.level = 1 if Rails.env.development?
+
+    versions_multi_req = Version.where("required_ruby_version like '%,%' or required_rubygems_version like '%,%'")
+
+    total = versions_multi_req.count
+    i = 0
+    puts "Total: #{total}"
+    versions_multi_req.each do |version|
+      CompactIndexTasksHelper.update_last_checksum(version.rubygem, task)
+      i += 1
+      print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
+    end
   end
 end
