@@ -84,6 +84,9 @@ namespace :compact_index do
     gems = GemInfo.compact_index_public_versions
 
     versions_file.create gems
+
+    version_file_content = File.read(file_path)
+    RubygemFs.instance.store("versions/versions.list", version_file_content)
   end
 
   desc "Update info checksum for multiple ruby or rubygems requirements"
