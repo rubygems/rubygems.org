@@ -31,31 +31,29 @@ namespace :compact_index do
   end
 
   desc "Correct Versions' info_checksum attributes for compact index format"
-  task correct_info_checksum: :environment do
-    versions = Version.find_by_sql("SELECT DISTINCT ON(rubygem_id) * FROM versions
-      WHERE rubygem_id NOT IN (SELECT DISTINCT(rubygem_id) FROM versions
-      WHERE created_at > '2016-08-30 05:16:23' OR yanked_at > '2016-08-30 05:16:23')
-      ORDER BY rubygem_id, COALESCE(yanked_at, created_at) DESC, number DESC, platform DESC")
-    mod = ENV["shard"]
-    versions = versions.where("id % 4 = ?", mod.to_i) if mod
+  task correct_info_checksum: :environment do |task|
+    compact_index_versions = GemInfo.compact_index_public_versions
 
-    total = versions.count
-    i = 0
+    i        = 0
+    mismatch = 0
+    total    = compact_index_versions.count
+
     puts "Total: #{total}"
+    compact_index_versions.each do |compact_index_gem|
+      gem_name = compact_index_gem.name
+      gem_info_checksum = compact_index_gem.versions.last.info_checksum
 
-    versions.each do |version|
-      gem_info = GemInfo.new(version.rubygem.name).compact_index_info
-      cs = Digest::MD5.hexdigest(CompactIndex.info(gem_info))
-      if version.indexed
-        version.update_attribute :info_checksum, cs
-      else
-        version.update_attribute :yanked_info_checksum, cs
+      cur_info_checksum = Digest::MD5.hexdigest(CompactIndex.info(GemInfo.new(gem_name).compact_index_info))
+
+      if cur_info_checksum != gem_info_checksum
+        mismatch += 1
+        rubygem = Rubygem.find_by(name: gem_name)
+        CompactIndexTasksHelper.update_last_checksum(rubygem, task)
       end
       i += 1
       print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
     end
-    puts
-    puts "Done."
+    Rails.logger.info("[compact_index:correct_info_checksum] #{mismatch}/#{total} gems had info mismatch")
   end
 
   desc "Fill Versions' yanked_info_checksum attributes for compact index format"
