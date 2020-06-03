@@ -57,8 +57,15 @@ namespace :extraneous_dependencies do
 
       deps_to_delete = []
       if spec_run_deps != db_run_deps.values.sort
+        unique_run_devs = []
         db_run_deps.each do |id, name|
           deps_to_delete << id unless spec_run_deps.include?(name)
+
+          if unique_run_devs.include?(name)
+            deps_to_delete << id
+          else
+            unique_run_devs << name
+          end
         end
 
         run_mis_match += 1
