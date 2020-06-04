@@ -333,6 +333,7 @@ zh-TW:
       month_update:
       week_update:
       filter:
+      yanked:
   sessions:
     new:
       forgot_password: 忘記密碼？

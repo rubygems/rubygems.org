@@ -333,6 +333,7 @@ pt-BR:
       month_update:
       week_update:
       filter:
+      yanked:
   sessions:
     new:
       forgot_password: Esqueceu sua Senha?

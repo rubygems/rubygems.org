@@ -29,6 +29,11 @@ class SearchTest < SystemTest
     click_button "search_submit"
 
     assert page.has_content? "No gems found"
+    assert page.has_content? "Yanked (1)"
+
+    click_link "Yanked (1)"
+    assert page.has_content? "LDAP"
+    assert page.has_selector? "a[href='#{rubygem_path('LDAP')}']"
   end
 
   test "searching for a gem with yanked versions" do
