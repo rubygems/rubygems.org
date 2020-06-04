@@ -43,7 +43,7 @@ namespace :compact_index do
       gem_name = compact_index_gem.name
       gem_info_checksum = compact_index_gem.versions.last.info_checksum
 
-      cur_info_checksum = Digest::MD5.hexdigest(CompactIndex.info(GemInfo.new(gem_name).compact_index_info))
+      cur_info_checksum = GemInfo.new(gem_name).info_checksum
 
       if cur_info_checksum != gem_info_checksum
         mismatch += 1
@@ -66,7 +66,7 @@ namespace :compact_index do
     i = 0
     puts "Total: #{total}"
     without_yanked_info_checksum.find_each do |version|
-      cs = Digest::MD5.hexdigest(CompactIndex.info(GemInfo.new(version.rubygem.name).compact_index_info))
+      cs = GemInfo.new(version.rubygem.name).info_checksum
       version.update_attribute :yanked_info_checksum, cs
       i += 1
       print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)

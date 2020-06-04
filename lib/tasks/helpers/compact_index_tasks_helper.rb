@@ -3,9 +3,7 @@ module CompactIndexTasksHelper
 
   def update_last_checksum(rubygem, task)
     last_version = rubygem.versions.order(Arel.sql("COALESCE(yanked_at, created_at) desc, number desc, platform desc")).first
-
-    gem_info = GemInfo.new(last_version.rubygem.name).compact_index_info
-    cs = Digest::MD5.hexdigest(CompactIndex.info(gem_info))
+    cs = GemInfo.new(last_version.rubygem.name).info_checksum
 
     if last_version.indexed
       Rails.logger.info("[#{task}] version: #{last_version.full_name} old_checksum: #{last_version.info_checksum} new_checksum: #{cs}")
