@@ -41,10 +41,10 @@ spec:
           <% if environment == 'production' %>
           requests:
             cpu: 4000m
-            memory: 4Gi
+            memory: 5Gi
           limits:
             cpu: 5000m
-            memory: 5Gi
+            memory: 6Gi
           <% else %>
           requests:
             cpu: 200m
@@ -186,14 +186,14 @@ spec:
             memory: 20Mi
           limits:
             cpu: 300m
-            memory: 1Gi
+            memory: 200Mi
           <% else %>
           requests:
             cpu: 20m
             memory: 10Mi
           limits:
             cpu: 60m
-            memory: 500Mi
+            memory: 100Mi
           <% end %>
         volumeMounts:
           - name: nginxconfig
