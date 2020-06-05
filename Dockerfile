@@ -1,5 +1,7 @@
 FROM ruby:2.6-alpine as build
 
+ARG RUBYGEMS_VESION
+
 RUN apk add --no-cache \
   ruby \
   nodejs \
@@ -19,7 +21,7 @@ RUN apk add --no-cache \
 RUN mkdir -p /app /app/config /app/log/
 WORKDIR /app
 
-RUN gem update --system 2.6.10
+RUN gem update --system $RUBYGEMS_VERSION
 
 COPY . /app
 
@@ -27,7 +29,7 @@ ADD https://s3-us-west-2.amazonaws.com/oregon.production.s3.rubygems.org/version
 
 RUN mv /app/config/database.yml.example /app/config/database.yml
 
-RUN gem install bundler io-console --no-ri --no-rdoc && bundle install --jobs 20 --retry 5 --without deploy
+RUN gem install bundler io-console --no-doc && bundle install --jobs 20 --retry 5 --without deploy
 
 RUN RAILS_ENV=production SECRET_KEY_BASE=1234 bin/rails assets:precompile
 
@@ -35,6 +37,8 @@ RUN RAILS_ENV=production SECRET_KEY_BASE=1234 bin/rails assets:precompile
 
 
 FROM ruby:2.6-alpine
+
+ARG RUBYGEMS_VERSION
 
 RUN apk add --no-cache \
   ruby \
@@ -45,6 +49,8 @@ RUN apk add --no-cache \
   tzdata \
   xz-libs \
   && rm -rf /var/cache/apk/*
+
+RUN gem update --system $RUBYGEMS_VERSION
 
 RUN mkdir -p /app
 WORKDIR /app

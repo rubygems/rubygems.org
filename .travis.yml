@@ -47,7 +47,7 @@ script:
   - script/build_docker.sh
 
 env:
-  - RUBYGEMS_VERSION=2.6.10
+  - RUBYGEMS_VERSION=3.1.4
   - RUBYGEMS_VERSION=latest
 
 matrix:
