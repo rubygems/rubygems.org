@@ -46,7 +46,7 @@ jobs:
       DATABASE_URL: postgres://postgres@127.0.0.1/rubygems_development
     steps:
       - name: Checkout Project
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1
       - name: Download Cached Gems
         uses: actions/cache@v1
@@ -79,5 +79,7 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     steps:
+      - name: Checkout Project
+        uses: actions/checkout@v2
       - name: Deploy Docker Image
         run: ./script/build_docker.sh
