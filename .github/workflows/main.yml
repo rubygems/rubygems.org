@@ -9,11 +9,6 @@ env:
   BUNDLE_PATH: /usr/local/bundle
   BUNDLE_JOBS: 3
   BUNDLE_RETRY: 3
-  RAILS_ENV: test
-  DATABASE_URL: postgres://postgres@127.0.0.1/rubygems_development
-  RUBYGEMS_VERSION: ${{ matrix.rubygems }}
-  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 jobs:
   build:
     name: Test + Deploy
@@ -21,7 +16,6 @@ jobs:
     strategy:
       matrix:
         rubygems: [2.6.10, latest]
-    continue-on-error: ${{ endsWith(matrix.ruby, 'head') }}
     services:
       database:
         image: postgres:9.6
@@ -47,6 +41,9 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres@127.0.0.1/rubygems_development
     steps:
       - name: Checkout Project
         uses: actions/checkout@v1
@@ -77,6 +74,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploy Docker Image
     needs: build
+    env:
+      RUBYGEMS_VERSION: ${{ matrix.rubygems }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     steps:
       - name: Deploy Docker Image
         run: script/build_docker.sh
