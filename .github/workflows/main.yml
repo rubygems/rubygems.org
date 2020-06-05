@@ -11,7 +11,7 @@ env:
   BUNDLE_RETRY: 3
 jobs:
   build:
-    name: Test + Deploy
+    name: Test Application
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -80,4 +80,4 @@ jobs:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     steps:
       - name: Deploy Docker Image
-        run: script/build_docker.sh
+        run: ./script/build_docker.sh
