@@ -1,13 +1,22 @@
 name: Application Tests
-on: [push,pull_request]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
 env:
   BUNDLE_PATH: /usr/local/bundle
   BUNDLE_JOBS: 3
   BUNDLE_RETRY: 3
   RAILS_ENV: test
-  DATABASE_URL: "postgres://postgres@127.0.0.1/rubygems_development"
+  DATABASE_URL: postgres://postgres@127.0.0.1/rubygems_development
+  RUBYGEMS_VERSION: ${{ matrix.rubygems }}
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 jobs:
   build:
+    name: Test + Deploy
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -64,9 +73,10 @@ jobs:
       - name: Run Tests
         run: |
           bundle exec rake test
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy Docker Image
+    needs: build
+    steps:
       - name: Deploy Docker Image
-        env:
-          RUBYGEMS_VERSION: ${{ matrix.rubygems }}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: script/build_docker.sh
