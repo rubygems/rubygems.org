@@ -2,11 +2,6 @@
 
 set -ex
 
-if [ -z "$RUBYGEMS_VERSION" ] || [ $RUBYGEMS_VERSION == 'latest' ]
-then
-  exit 0
-fi
-
 echo "$GITHUB_SHA" > REVISION
 
 docker build -t quay.io/rubygems/rubygems.org:$GITHUB_SHA .
