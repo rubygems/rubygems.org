@@ -42,4 +42,15 @@ class EmailConfirmationTest < SystemTest
     assert page.has_content? "Sign in"
     assert page.has_selector? "#flash_alert", text: "Please double check the URL or try submitting it again."
   end
+
+  test "requesting multiple confirmation email" do
+    request_confirmation_mail @user.email
+    request_confirmation_mail @user.email
+
+    link = confirmation_link_from(Delayed::Job.first)
+    visit link
+
+    Delayed::Worker.new.work_off
+    assert_empty Delayed::Job.all
+  end
 end

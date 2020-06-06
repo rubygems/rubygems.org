@@ -7,17 +7,17 @@ class Mailer < ApplicationMailer
   default_url_options[:protocol] = Gemcutter::PROTOCOL
 
   def email_reset(user)
-    @user = User.find(user["id"])
+    @user = user
     mail to: @user.unconfirmed_email,
-         subject: I18n.t("mailer.confirmation_subject",
-           default: "Please confirm your email address with RubyGems.org")
+        subject: I18n.t("mailer.confirmation_subject",
+          default: "Please confirm your email address with RubyGems.org")
   end
 
   def email_confirmation(user)
-    @user = User.find(user["id"])
+    @user = user
     mail to: @user.email,
-         subject: I18n.t("mailer.confirmation_subject",
-           default: "Please confirm your email address with RubyGems.org")
+        subject: I18n.t("mailer.confirmation_subject",
+          default: "Please confirm your email address with RubyGems.org")
   end
 
   def deletion_complete(email)
