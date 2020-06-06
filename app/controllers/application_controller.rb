@@ -68,6 +68,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_page(max_page = Gemcutter::MAX_PAGES)
+    sanitize_params
     @page = Gemcutter::DEFAULT_PAGE && return unless params.key?(:page)
     redirect_to_page_with_error && return unless valid_page_param?(max_page)
 
@@ -109,5 +110,9 @@ class ApplicationController < ActionController::Base
 
   def reject_null_char_param
     render plain: "bad request", status: :bad_request if params.to_s.include?("\\u0000")
+  end
+
+  def sanitize_params
+    params.delete(:params)
   end
 end
