@@ -319,6 +319,7 @@ ja:
   reverse_dependencies:
     index:
       title: "%{name}の被依存性"
+      subtitle:
     search:
       search_reverse_dependencies_html: "被依存性の中から検索…"
   searches:
@@ -340,7 +341,7 @@ ja:
       resend_confirmation: 確認メールが見当たりませんか?
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded: 累計最多ダウンロード数
       total_downloads: 累計ダウンロード数
       total_gems: Gem総数

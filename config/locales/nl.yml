@@ -319,6 +319,7 @@ nl:
   reverse_dependencies:
     index:
       title:
+      subtitle:
     search:
       search_reverse_dependencies_html:
   searches:
@@ -340,7 +341,7 @@ nl:
       resend_confirmation: Geen bevestigingsemail ontvangen?
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded:
       total_downloads:
       total_gems:

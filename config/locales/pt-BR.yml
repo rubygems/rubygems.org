@@ -319,6 +319,7 @@ pt-BR:
   reverse_dependencies:
     index:
       title: "Dependências Reversas para %{name}"
+      subtitle:
     search:
       search_reverse_dependencies_html: "Buscar Gems com dependências&hellip;"
   searches:
