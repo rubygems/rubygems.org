@@ -99,6 +99,7 @@ class ElasticSearcher
        wiki_uri
        documentation_uri
        mailing_list_uri
+       funding_uri
        source_code_uri
        bug_tracker_uri
        changelog_uri]

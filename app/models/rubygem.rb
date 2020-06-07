@@ -187,6 +187,7 @@ class Rubygem < ApplicationRecord
       "source_code_uri"   => versioned_links.source_code_uri,
       "bug_tracker_uri"   => versioned_links.bug_tracker_uri,
       "changelog_uri"     => versioned_links.changelog_uri,
+      "funding_uri"       => versioned_links.funding_uri,
       "dependencies"      => {
         "development" => deps.select { |r| r.rubygem && r.scope == "development" },
         "runtime"     => deps.select { |r| r.rubygem && r.scope == "runtime" }

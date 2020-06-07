@@ -36,6 +36,7 @@ ja:
         docs: ドキュメントのURL
         mail: メーリングリストのURL
         wiki: WikiのURL
+        funding:
       session:
         password: パスワード
         who: Email又はユーザー名

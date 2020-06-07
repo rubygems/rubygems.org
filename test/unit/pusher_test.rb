@@ -317,6 +317,7 @@ class PusherTest < ActiveSupport::TestCase
           "source_code_uri"   => "http://example.com",
           "bug_tracker_uri"   => "http://example.com",
           "changelog_uri"     => nil,
+          "funding_uri"       => nil,
           "yanked"            => false,
           "summary"           => "old summary",
           "description"       => "Some awesome gem",

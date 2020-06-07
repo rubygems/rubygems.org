@@ -8,7 +8,8 @@ class Links
     "wiki"      => "wiki_uri",
     "mail"      => "mailing_list_uri",
     "bugs"      => "bug_tracker_uri",
-    "download"  => "download_uri"
+    "download"  => "download_uri",
+    "funding"   => "funding_uri"
   }.freeze
 
   # Links available for non-indexed gems

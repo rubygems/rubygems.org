@@ -36,6 +36,7 @@ zh-TW:
         docs: 文件 URL
         mail: 郵件群組 URL
         wiki: Wiki URL
+        funding:
       session:
         password: 密碼
         who: Email / 帳號

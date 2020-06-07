@@ -36,6 +36,7 @@ de:
         docs: Dokumentation URL
         mail: Mailingliste URL
         wiki: Wiki URL
+        funding:
       session:
         password: Passwort
         who: E-Mail oder Benutzername

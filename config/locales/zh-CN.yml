@@ -36,6 +36,7 @@ zh-CN:
         docs: 文档 URL
         mail: 邮件列表 URL
         wiki: Wiki URL
+        funding:
       session:
         password: 密码
         who: Email / 账号

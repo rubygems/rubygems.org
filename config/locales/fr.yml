@@ -36,6 +36,7 @@ fr:
         docs: URL de la documentation
         mail: URL de la liste de diffusion
         wiki: URL du wiki
+        funding:
       session:
         password: Mot de passe
         who: Email ou pseudonyme
