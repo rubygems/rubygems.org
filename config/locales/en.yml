@@ -148,6 +148,9 @@ en:
     gem_pushed:
       subject: Gem %{gem} pushed to RubyGems.org
       title: GEM PUSHED
+    gem_yanked:
+      subject: Gem %{gem} yanked from RubyGems.org
+      title: GEM YANKED
   news:
     show:
       title: New Releases — All Gems
@@ -218,7 +221,7 @@ en:
       success: You have successfully updated your email notification settings.
     show:
       info: To aid detection of unauthorized gem changes, we email you each time a new version of a
-        gem you own is pushed. By receiving and reading these emails, you help protect the Ruby
+        gem you own is pushed or yanked. By receiving and reading these emails, you help protect the Ruby
         ecosystem.
       on: On
       off: Off

@@ -76,6 +76,8 @@ class Deletion < ApplicationRecord
   end
 
   def send_gem_yanked_mail
-    Mailer.delay.gem_yanked(user.id, @version.id)
+    version.rubygem.notifiable_owners.each do |notified_user|
+      Mailer.delay.gem_yanked(user.id, version.id, notified_user.id)
+    end
   end
 end

@@ -140,6 +140,9 @@ zh-CN:
     gem_pushed:
       subject:
       title:
+    gem_yanked:
+      subject:
+      title:
   news:
     show:
       title: 全部新发布 Gems
@@ -340,7 +343,7 @@ zh-CN:
       resend_confirmation: 没有收到确认邮件？
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded: 历史下载次数排行
       total_downloads: 下载总次数
       total_gems: Gems 总数

@@ -140,6 +140,9 @@ fr:
     gem_pushed:
       subject:
       title:
+    gem_yanked:
+      subject:
+      title:
   news:
     show:
       title: Nouvelles Versions - Toutes les Gems
@@ -340,7 +343,7 @@ fr:
       resend_confirmation: Vous n'avez pas reçu l'email de confirmation ?
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded: Gems les plus téléchargés
       total_downloads: Total de téléchargements
       total_gems: Total de gems

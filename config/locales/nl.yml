@@ -140,6 +140,9 @@ nl:
     gem_pushed:
       subject:
       title:
+    gem_yanked:
+      subject:
+      title:
   news:
     show:
       title:
@@ -340,7 +343,7 @@ nl:
       resend_confirmation: Geen bevestigingsemail ontvangen?
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded:
       total_downloads:
       total_gems:

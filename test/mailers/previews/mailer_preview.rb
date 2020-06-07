@@ -35,6 +35,6 @@ class MailerPreview < ActionMailer::Preview
 
   def gem_yanked
     ownership = Ownership.where.not(user: nil).last
-    Mailer.gem_yanked(ownership.user.id, ownership.rubygem.versions.last.id)
+    Mailer.gem_yanked(ownership.user.id, ownership.rubygem.versions.last.id, ownership.user.id)
   end
 end

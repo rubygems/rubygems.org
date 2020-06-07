@@ -140,6 +140,9 @@ pt-BR:
     gem_pushed:
       subject:
       title:
+    gem_yanked:
+      subject:
+      title:
   news:
     show:
       title: Novos Releases - Todas as Gems
