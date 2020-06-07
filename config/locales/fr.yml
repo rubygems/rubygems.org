@@ -147,6 +147,9 @@ fr:
       subject:
       title:
       subtitle:
+    email_reset_update:
+      subject:
+      title:
   news:
     show:
       title: Nouvelles Versions - Toutes les Gems

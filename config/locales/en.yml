@@ -155,6 +155,9 @@ en:
       subject: RubyGems.org API key was reset
       title: API KEY RESET
       subtitle: Hi %{handle}
+    email_reset_update:
+      subject: You have requested email address update on RubyGems.org
+      title: EMAIL UPDATE REQUESTED
   news:
     show:
       title: New Releases — All Gems

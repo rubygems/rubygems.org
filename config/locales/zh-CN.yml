@@ -147,6 +147,9 @@ zh-CN:
       subject:
       title:
       subtitle:
+    email_reset_update:
+      subject:
+      title:
   news:
     show:
       title: 全部新发布 Gems

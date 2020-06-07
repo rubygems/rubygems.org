@@ -165,7 +165,40 @@ class ProfilesControllerTest < ActionController::TestCase
           refute_equal "cannotchange@tothis.com", @user.unconfirmed_email
         end
       end
+
+      context "updating email" do
+        context "yet to verify the updated email" do
+          setup do
+            @current_email = "john@doe.com"
+            @user = create(:user, email: @current_email)
+            sign_in_as(@user)
+            @new_email = "change@tothis.com"
+          end
+
+          should "set unconfirmed email and confirmation token" do
+            put :update, params: { user: { email: @new_email, password: @user.password } }
+            assert_equal @new_email, @user.unconfirmed_email
+            assert @user.confirmation_token
+          end
+
+          should "not update the current email" do
+            put :update, params: { user: { email: @new_email, password: @user.password } }
+            assert_equal @current_email, @user.email
+          end
+
+          should "send email reset mails to new and current email addresses" do
+            mailer = mock
+            mailer.stubs(:deliver)
+
+            Mailer.expects(:email_reset).returns(mailer).times(1)
+            Mailer.expects(:email_reset_update).returns(mailer).times(1)
+            put :update, params: { user: { email: @new_email, password: @user.password } }
+            Delayed::Worker.new.work_off
+          end
+        end
+      end
     end
+
     context "on DELETE to destroy" do
       context "correct password" do
         should "enqueue deletion request" do
