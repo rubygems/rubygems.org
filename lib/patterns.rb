@@ -6,7 +6,7 @@ module Patterns
   ROUTE_PATTERN         = /#{ALLOWED_CHARACTERS}/.freeze
   LAZY_ROUTE_PATTERN    = /#{ALLOWED_CHARACTERS}?/.freeze
   NAME_PATTERN          = /\A#{ALLOWED_CHARACTERS}\Z/.freeze
-  URL_VALIDATION_REGEXP = %r{\Ahttps?:\/\/([^\s:@]+:[^\s:@]*@)?[A-Za-z\d\-]+(\.[A-Za-z\d\-]+)+\.?(:\d{1,5})?([\/?]\S*)?\z}.freeze
+  URL_VALIDATION_REGEXP = %r{\Ahttps?://([^\s:@]+:[^\s:@]*@)?[A-Za-z\d\-]+(\.[A-Za-z\d\-]+)+\.?(:\d{1,5})?([/?]\S*)?\z}.freeze
   GEM_NAME_BLACKLIST    = %w[
     abbrev
     base64
