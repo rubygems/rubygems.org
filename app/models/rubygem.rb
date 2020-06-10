@@ -321,7 +321,7 @@ class Rubygem < ApplicationRecord
     gem_typo = GemTypo.new(name)
 
     return unless gem_typo.protected_typo?
-    errors.add :name, "'#{name}' is too close to typo-protected gem: #{gem_typo.protected_gem}"
+    errors.add :name, "Your gem name '#{name}' is too similar to typo-protected gem named '#{gem_typo.protected_gem}'"
   end
 
   def update_unresolved
