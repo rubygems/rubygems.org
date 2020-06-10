@@ -10,6 +10,9 @@ class GemTypo
   end
 
   def protected_typo?
+    gem_typo_exceptions = GemTypoException.all.pluck(:name)
+    return false if gem_typo_exceptions.include?(@rubygem_name)
+    
     return false if published_exact_name_matches.any?
 
     match = matched_protected_gem_names.select(:id, :name).first
