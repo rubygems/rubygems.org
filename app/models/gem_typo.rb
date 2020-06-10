@@ -26,8 +26,8 @@ class GemTypo
   end
 
   def matched_protected_gem_names
-    Rubygem.with_versions.where(
-      "upper(name) != upper(?) AND regexp_replace(upper(name), '[_-]', '', 'g') = regexp_replace(upper(?), '[_-]', '', 'g')",
+    Rubygem.with_versions.joins(:versions).where(
+      "versions.yanked_at IS NULL AND upper(name) != upper(?) AND regexp_replace(upper(name), '[_-]', '', 'g') = regexp_replace(upper(?), '[_-]', '', 'g')",
       @rubygem_name,
       @rubygem_name
     )
