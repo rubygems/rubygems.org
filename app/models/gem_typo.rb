@@ -8,9 +8,8 @@ class GemTypo
   end
 
   def protected_typo?
-    gem_typo_exceptions = GemTypoException.all.pluck(:name)
-    return false if gem_typo_exceptions.include?(@rubygem_name)
-    
+    return false if GemTypoException.where('upper(name) = upper(?)', @rubygem_name).any?
+
     return false if published_exact_name_matches.any?
 
     match = matched_protected_gem_names.select(:id, :name).first
@@ -23,10 +22,7 @@ class GemTypo
   private
 
   def published_exact_name_matches
-    Rubygem.joins(:versions).where(
-      "versions.yanked_at IS NULL AND upper(rubygems.name) = upper(?)",
-      @rubygem_name
-    )
+    RubyGem.with_versions.where('upper(rubygems.name) = upper(?)', @rubygem_name)
   end
 
   def matched_protected_gem_names
