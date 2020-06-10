@@ -2,7 +2,7 @@ require "rubygems/text"
 
 class GemTypo
   attr_reader :protected_gem
-  
+
   def initialize(rubygem_name)
     @rubygem_name = rubygem_name
   end
@@ -29,9 +29,6 @@ class GemTypo
     )
   end
 
-  # This SQL query uses an index and thus does not induce a full table
-  # scan in PostgreSQL. See
-  # 20200429005140_add_dash_underscore_typo_detection_index_to_rubygems.rb
   def matched_protected_gem_names
     Rubygem.where(
       "upper(name) != upper(?) AND regexp_replace(upper(name), '[_-]', '', 'g') = regexp_replace(upper(?), '[_-]', '', 'g')",

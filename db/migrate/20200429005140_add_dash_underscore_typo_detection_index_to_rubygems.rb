@@ -4,9 +4,7 @@
 # other Gems that are variations of another already published Gem simply by the variation in
 # - and _ characters.
 #
-# This simple rule would have stopped the vast majority of typo squat attacks observed in
-# 2019 and 2020 according to an analysis of the SQL database.
-#
+
 class AddDashUnderscoreTypoDetectionIndexToRubygems < ActiveRecord::Migration[6.0]
   disable_ddl_transaction!
 
