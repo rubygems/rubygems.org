@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_31_172741) do
+ActiveRecord::Schema.define(version: 2020_04_29_005140) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -114,6 +114,7 @@ ActiveRecord::Schema.define(version: 2019_08_31_172741) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string "slug"
+    t.index "regexp_replace(upper((name)::text), '[_-]'::text, ''::text, 'g'::text)", name: "dashunderscore_typos_idx"
     t.index "upper((name)::text) varchar_pattern_ops", name: "index_rubygems_upcase"
     t.index ["name"], name: "index_rubygems_on_name", unique: true
   end
