@@ -22,11 +22,11 @@ class GemTypo
   private
 
   def published_exact_name_matches
-    RubyGem.with_versions.where('upper(rubygems.name) = upper(?)', @rubygem_name)
+    Rubygem.with_versions.where('upper(rubygems.name) = upper(?)', @rubygem_name)
   end
 
   def matched_protected_gem_names
-    Rubygem.where(
+    Rubygem.with_versions.where(
       "upper(name) != upper(?) AND regexp_replace(upper(name), '[_-]', '', 'g') = regexp_replace(upper(?), '[_-]', '', 'g')",
       @rubygem_name,
       @rubygem_name
