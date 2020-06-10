@@ -2,9 +2,7 @@ require "rubygems/text"
 
 class GemTypo
   attr_reader :protected_gem
-
-  include Gem::Text
-
+  
   def initialize(rubygem_name)
     @rubygem_name = rubygem_name
   end
