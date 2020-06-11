@@ -3,7 +3,6 @@ require "test_helper"
 class GemTypoTest < ActiveSupport::TestCase
   setup do
     existing = create(:rubygem, name: "delayed_job_active_record")
-    create(:version, rubygem: existing, created_at: 30.seconds.ago)
     create(:version, rubygem: existing, created_at: Time.now.utc)
 
     deleted = create(:rubygem, name: "deleted_job_active_record")
@@ -16,6 +15,10 @@ class GemTypoTest < ActiveSupport::TestCase
   end
 
   should "return false for any exact match so that owner of the delayed_job_active_record Gem can push an update with existing typosquat" do
+    existing_typo = build(:rubygem, name: "delayed-job-active-record")
+    existing_typo.save(validate: false)
+    create(:version, rubygem: existing_typo, created_at: Time.now.utc)
+
     gem_typo = GemTypo.new("delayed_job_active_record")
     refute gem_typo.protected_typo?
   end
