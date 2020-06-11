@@ -91,6 +91,12 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       .encode_credentials(username, password)
   end
 
+  def expected_retry_after(level)
+    now = Time.now.to_i
+    period = Rack::Attack::EXP_BASE_LIMIT_PERIOD**level
+    (period - (now % period)).to_s
+  end
+
   context "requests is lower than limit" do
     should "allow sign in" do
       stay_under_limit_for("clearance/ip/1")
@@ -208,6 +214,42 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         post "/session", params: { session: { password: @user.password } }
 
         assert_response :unauthorized
+      end
+    end
+
+    context "expontential backoff" do
+      context "with successful gem push" do
+        setup do
+          Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
+            under_backoff_limit = (Rack::Attack::EXP_BASE_REQUEST_LIMIT * level) - 1
+            @push_exp_throttle_level_key = "#{Rack::Attack::PUSH_EXP_THROTTLE_KEY}/#{level}:#{@ip_address}"
+            under_backoff_limit.times { Rack::Attack.cache.count(@push_exp_throttle_level_key, exp_base_limit_period**level) }
+          end
+
+          post "/api/v1/gems",
+            params: gem_file("test-0.0.0.gem").read,
+            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
+        end
+
+        should "reset gem push rate limit rack attack key" do
+          Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
+            period = exp_base_limit_period**level
+
+            time_counter = (Time.now.to_i / period).to_i
+            prev_time_counter = time_counter - 1
+
+            assert_nil Rack::Attack.cache.read("#{time_counter}:#{@push_exp_throttle_level_key}")
+            assert_nil Rack::Attack.cache.read("#{prev_time_counter}:#{@push_exp_throttle_level_key}")
+          end
+        end
+
+        should "not rate limit successive requests" do
+          post "/api/v1/gems",
+            params: gem_file("test-1.0.0.gem").read,
+            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
+
+          assert_response :ok
+        end
       end
     end
   end
@@ -386,20 +428,31 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     context "exponential backoff" do
-      setup { @level = 2 }
-
-      exp_back_off_levels = { 2 => "10000", 3 => "1000000" }
-
-      exp_back_off_levels.each do |level, expected_retry_after|
+      Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
         should "throttle for mfa sign in at level #{level}" do
-          exceed_exponential_limit_for("clearance/ip/#{level}", level)
+          freeze_time do
+            exceed_exponential_limit_for("clearance/ip/#{level}", level)
 
-          post "/users",
-            params: { user: { email: @user.email, password: @user.password } },
-            headers: { REMOTE_ADDR: @ip_address }
+            post "/users",
+              params: { user: { email: @user.email, password: @user.password } },
+              headers: { REMOTE_ADDR: @ip_address }
 
-          assert_response :too_many_requests
-          assert_equal expected_retry_after, @response.headers["Retry-After"]
+            assert_response :too_many_requests
+            assert_equal expected_retry_after(level), @response.headers["Retry-After"]
+          end
+        end
+
+        should "throttle gem push at level #{level}" do
+          freeze_time do
+            exceed_exponential_limit_for("#{Rack::Attack::PUSH_EXP_THROTTLE_KEY}/#{level}", level)
+
+            post "/api/v1/gems",
+              params: gem_file("test-0.0.0.gem").read,
+              headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
+
+            assert_response :too_many_requests
+            assert_equal expected_retry_after(level), @response.headers["Retry-After"]
+          end
         end
       end
     end

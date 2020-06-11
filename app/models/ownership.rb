@@ -5,9 +5,10 @@ class Ownership < ApplicationRecord
   validates :user_id, uniqueness: { scope: :rubygem_id }
 
   def self.by_indexed_gem_name
-    joins(:rubygem)
-      .joins("LEFT JOIN versions ON versions.rubygem_id = rubygems.id")
-      .where("indexed = true")
+    select("ownerships.*, rubygems.name")
+      .left_joins(rubygem: :versions)
+      .where(versions: { indexed: true })
+      .distinct
       .order("rubygems.name ASC")
   end
 

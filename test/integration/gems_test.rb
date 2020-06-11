@@ -38,6 +38,11 @@ class GemsTest < ActionDispatch::IntegrationTest
     css = %(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.0.0"])
     assert page.has_css?(css, visible: false)
   end
+
+  test "letter param is not string" do
+    get rubygems_path(letter: ["S"])
+    assert_response :success
+  end
 end
 
 class GemsSystemTest < SystemTest

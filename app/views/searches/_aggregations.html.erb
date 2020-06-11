@@ -6,5 +6,6 @@
     <%= aggregation_match_count aggregations['matched_field'], 'summary' %>
     <%= aggregation_count aggregations['date_range'], 7.days, 1 %>
     <%= aggregation_count aggregations['date_range'], 30.days, 0 %>
+    <%= aggregation_yanked @yanked_gem %>
   </div>
 <% end %>

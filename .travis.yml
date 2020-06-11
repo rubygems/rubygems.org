@@ -7,7 +7,7 @@ cache:
     - vendor/cache
 
 rvm:
-  - 2.6.5
+  - 2.6.6
   - ruby-head
 
 addons:
@@ -38,7 +38,7 @@ before_install:
 
 before_script:
   - cp config/database.yml.example config/database.yml
-  - bundle exec rake db:create db:migrate db:test:prepare
+  - bundle exec rake db:setup
 
 script:
   - bundle exec rails test
