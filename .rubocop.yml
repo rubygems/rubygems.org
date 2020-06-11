@@ -47,6 +47,9 @@ Rails/UnknownEnv:
     - staging
     - test
 
+Rails/UniqueValidationWithoutIndex:
+  Enabled: false
+
 Layout/ArgumentAlignment:
   Enabled: false
 
@@ -98,6 +101,12 @@ Layout/MultilineMethodCallIndentation:
 Layout/MultilineOperationIndentation:
   EnforcedStyle: indented
 
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
 Style/AndOr:
   Exclude:
     - app/controllers/internal/ping_controller.rb
@@ -148,4 +157,22 @@ Lint/RaiseException:
   Enabled: true
 
 Lint/StructNewOverride:
+  Enabled: true
+
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
+Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+
+Style/ExponentialNotation:
+  Enabled: true
+
+Style/SlicingWithRange:
+  Enabled: true
+
+Style/RedundantRegexpCharacterClass:
+  Enabled: true
+
+Style/RedundantRegexpEscape:
   Enabled: true

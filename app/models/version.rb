@@ -335,7 +335,7 @@ class Version < ApplicationRecord
   end
 
   def prerelease
-    !!to_gem_version.prerelease? # rubocop:disable Style/DoubleNegation
+    !!to_gem_version.prerelease?
   end
   alias prerelease? prerelease
 

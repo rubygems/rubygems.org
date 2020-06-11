@@ -23,7 +23,7 @@ RUN gem update --system 2.6.10
 
 COPY . /app
 
-ADD https://github.com/bundler/bundler-api/raw/master/versions.list /app/config/versions.list
+ADD https://s3-us-west-2.amazonaws.com/oregon.production.s3.rubygems.org/versions/versions.list /app/config/versions.list
 
 RUN mv /app/config/database.yml.example /app/config/database.yml
 

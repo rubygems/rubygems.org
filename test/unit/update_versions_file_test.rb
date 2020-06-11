@@ -44,7 +44,7 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
       end
 
       should "include platform release" do
-        expected_output = "rubyrubyruby 0.0.1-jruby,0.0.1 qw212r\n"
+        expected_output = "rubyrubyruby 0.0.1,0.0.1-jruby qw212r\n"
         assert_equal expected_output, @tmp_versions_file.readlines[2]
       end
     end

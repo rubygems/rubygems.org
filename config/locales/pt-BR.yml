@@ -105,7 +105,7 @@ pt-BR:
         uptime: Uptime
       header:
         dashboard: Painel de Controle
-        edit_profile:
+        edit_profile: Editar perfil
         search_gem_html: Buscar Gems&hellip;
         sign_in: Fazer Login
         sign_out: Sair
@@ -333,6 +333,7 @@ pt-BR:
       month_update:
       week_update:
       filter:
+      yanked:
   sessions:
     new:
       forgot_password: Esqueceu sua Senha?

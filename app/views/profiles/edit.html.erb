@@ -77,7 +77,7 @@
     </p>
     <p>
       <%= t('.api_access.credentials_html', :gem_credentials_file => content_tag(:code, '~/.gem/credentials'),
-                                            :gem_commands_link => link_to(t('.api_access.link_text'), page_path('gem_docs'))) %>
+                                            :gem_commands_link => link_to(t('.api_access.link_text'), 'https://guides.rubygems.org/command-reference/', target: 'blank')) %>
     </p>
     <pre><code>gem signin</code></pre>
   </div>

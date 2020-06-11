@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: <%= environment %>
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS-1-2-2017-01
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/target-group-attributes: load_balancing.algorithm.type=least_outstanding_requests
+    alb.ingress.kubernetes.io/tags: Env=<%= environment %>,Service=rubygems.org
+    alb.ingress.kubernetes.io/healthcheck-path: /internal/ping
+spec:
+  tls:
+  - hosts:
+    - <%= environment %>-origin.rubygems.org
+  backend:
+    serviceName: unicorn
+    servicePort: 80

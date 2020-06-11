@@ -41,10 +41,10 @@ spec:
           <% if environment == 'production' %>
           requests:
             cpu: 4000m
-            memory: 4Gi
+            memory: 5Gi
           limits:
             cpu: 5000m
-            memory: 5Gi
+            memory: 6Gi
           <% else %>
           requests:
             cpu: 200m
@@ -168,3 +168,65 @@ spec:
           preStop:
             exec:
               command: ["sleep", "5"]
+      - name: nginx
+        image: nginx:1.11.10
+        imagePullPolicy: IfNotPresent
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sleep", "5"]
+        ports:
+        - containerPort: 8080
+          name: http-nginx
+          protocol: TCP
+        resources:
+          <% if environment == 'production' %>
+          requests:
+            cpu: 100m
+            memory: 20Mi
+          limits:
+            cpu: 300m
+            memory: 200Mi
+          <% else %>
+          requests:
+            cpu: 20m
+            memory: 10Mi
+          limits:
+            cpu: 60m
+            memory: 100Mi
+          <% end %>
+        volumeMounts:
+          - name: nginxconfig
+            mountPath: /etc/nginx
+            readOnly: true
+          - name: nginxlog
+            mountPath: /var/log/nginx
+          - name: nginxcache
+            mountPath: /var/lib/nginx/cache
+        livenessProbe:
+          httpGet:
+            path: /nginx_health
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /nginx_health
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+        - name: nginxconfig
+          configMap:
+            name: nginx-configmap
+            items:
+              - key: default
+                path: nginx.conf
+              - key: logging
+                path: conf.d/logging.conf
+              - key: rubygems
+                path: sites-enabled/<%= environment %>.ruybgems.conf
+        - name: nginxlog
+          emptyDir: {}
+        - name: nginxcache
+          emptyDir: {}
