@@ -9,11 +9,11 @@ class AddDashUnderscoreTypoDetectionIndexToRubygems < ActiveRecord::Migration[6.
   disable_ddl_transaction!
 
   def up
-    execute 'DROP INDEX IF EXISTS dashunderscore_typos_idx;'
+    execute "DROP INDEX IF EXISTS dashunderscore_typos_idx;"
     execute "CREATE INDEX CONCURRENTLY dashunderscore_typos_idx ON rubygems (regexp_replace(upper(name), '[_-]', '', 'g'));"
   end
 
   def down
-    execute 'DROP INDEX IF EXISTS dashunderscore_typos_idx;'
+    execute "DROP INDEX IF EXISTS dashunderscore_typos_idx;"
   end
 end

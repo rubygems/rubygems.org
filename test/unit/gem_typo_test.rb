@@ -7,7 +7,7 @@ class GemTypoTest < ActiveSupport::TestCase
     existing.versions.create(number: "1.0.1", platform: "ruby")
 
     deleted = create(:rubygem, name: "deleted_job_active_record")
-    deleted.versions.create(number: "1.0.0", platform: "ruby",yanked_at: Time.now.utc)
+    deleted.versions.create(number: "1.0.0", platform: "ruby", yanked_at: Time.now.utc)
   end
 
   should "return false for exact match" do
@@ -16,8 +16,8 @@ class GemTypoTest < ActiveSupport::TestCase
   end
 
   should "return false for any exact match so that owner of the existing delayed_job_active_record Gem can push an update even though there is an existing typo squat delayed-job-active-record that would otherwise block the update" do
-   gem_typo = GemTypo.new("delayed_job_active_record")
-   refute gem_typo.protected_typo?
+    gem_typo = GemTypo.new("delayed_job_active_record")
+    refute gem_typo.protected_typo?
   end
 
   should "return false for an exact match of a yanked gem so a gem with an identical name can be published in the future" do
