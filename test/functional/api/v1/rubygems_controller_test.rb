@@ -319,7 +319,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should respond_with :forbidden
       should "not register new gem" do
         assert_equal 1, Rubygem.count
-        assert_equal "There was a problem saving your gem: Name Your gem name 'test' is too similar to typo-protected gem named 't_es-t'", @response.body
+        assert_equal "There was a problem saving your gem: Name Your gem 'test' is too similar to typo-protected gem named 't_es-t'", @response.body
       end
     end
 
