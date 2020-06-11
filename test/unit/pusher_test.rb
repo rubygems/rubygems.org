@@ -234,7 +234,7 @@ class PusherTest < ActiveSupport::TestCase
       end
 
       should "be true if owned by the user" do
-        @rubygem.ownerships.create(user: @user)
+        create(:ownership, rubygem: @rubygem, user: @user)
         assert @cutter.authorize
       end
 

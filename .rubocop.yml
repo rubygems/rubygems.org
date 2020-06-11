@@ -74,6 +74,7 @@ Metrics/ModuleLength:
   Exclude:
     - lib/patterns.rb
     - app/models/concerns/rubygem_searchable.rb
+    - app/helpers/rubygems_helper.rb
 
 Metrics/PerceivedComplexity:
   Max: 10 # TODO: Lower to 7

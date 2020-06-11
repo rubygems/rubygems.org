@@ -87,12 +87,27 @@ class Mailer < ApplicationMailer
                          default: "Please confirm the ownership of %{gem} gem on RubyGems.org")
   end
 
-  def owners_update(owner_id, user_id, status, gem_id)
+  def owner_removed(owner_id, user_id, gem_id)
     @user = User.find(user_id)
     @owner = User.find(owner_id)
     @rubygem = Rubygem.find(gem_id)
-    @status = status
     mail to: @user.email,
-         subject: @owner.id == @user.id ? I18n.t("mailer.owners_update.subject_self", status: status, gem: @rubygem.name) : I18n.t("mailer.owners_update.subject_others", status: status, gem: @rubygem.name, owner_handle: @owner.handle)
+         subject: if @owner.id == @user.id
+                    I18n.t("mailer.owners_update.subject_self", gem: @rubygem.name, status: "removed")
+                  else
+                    I18n.t("mailer.owners_update.subject_others", gem: @rubygem.name, status: "removed", owner_handle: @owner.handle)
+                  end
+  end
+
+  def owner_added(owner_id, user_id, gem_id)
+    @user = User.find(user_id)
+    @owner = User.find(owner_id)
+    @rubygem = Rubygem.find(gem_id)
+    mail to: @user.email,
+         subject: if @owner.id == @user.id
+                    I18n.t("mailer.owners_update.subject_self", gem: @rubygem.name, status: "added")
+                  else
+                    I18n.t("mailer.owners_update.subject_others", gem: @rubygem.name, status: "added", owner_handle: @owner.handle)
+                  end
   end
 end

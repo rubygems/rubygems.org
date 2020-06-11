@@ -1,6 +1,7 @@
 class Ownership < ApplicationRecord
   belongs_to :rubygem
   belongs_to :user
+  belongs_to :authorizer, class_name: "User", optional: true
 
   validates :user_id, uniqueness: { scope: :rubygem_id }
 
@@ -10,6 +11,13 @@ class Ownership < ApplicationRecord
       .where(versions: { indexed: true })
       .distinct
       .order("rubygems.name ASC")
+  end
+
+  def self.create_unconfirmed(rubygem, owner, authorizer)
+    ownership = rubygem.ownerships.new(user: owner)
+    ownership.generate_confirmation_token
+    ownership.authorizer_id = authorizer.id
+    ownership
   end
 
   def valid_confirmation_token?
@@ -22,18 +30,48 @@ class Ownership < ApplicationRecord
   end
 
   def confirm_ownership!
-    update(confirmed: true)
+    update(confirmed_at: Time.current)
   end
 
-  def notify_ownership_change(status)
+  def confirmed?
+    return false if confirmed_at.nil?
+
+    true
+  end
+
+  def unconfirmed?
+    return true if confirmed_at.nil?
+
+    false
+  end
+
+  def notify_owner_removed
     rubygem.notifiable_owners.each do |notified_user|
-      Mailer.delay.owners_update(user_id, notified_user.id, status, rubygem_id)
+      Mailer.delay.owner_removed(user_id, notified_user.id, rubygem_id)
     end
   end
 
+  def notify_owner_added
+    rubygem.notifiable_owners.each do |notified_user|
+      Mailer.delay.owner_added(user_id, notified_user.id, rubygem_id)
+    end
+  end
+
+  def confirm_and_notify
+    confirm_ownership! && notify_owner_added
+  end
+
   def safe_destroy
+    return destroy if unconfirmed?
     rubygem.owners.many? && destroy
-    Mailer.delay.owners_update(user_id, user_id, "removed", rubygem_id)
-    notify_ownership_change("removed")
+  end
+
+  def destroy_and_notify
+    if safe_destroy
+      Mailer.delay.owner_removed(user_id, user_id, rubygem_id)
+      notify_owner_removed
+    else
+      false
+    end
   end
 end

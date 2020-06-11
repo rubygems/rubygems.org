@@ -61,7 +61,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     context "api requests" do
       setup do
         @rubygem = create(:rubygem, name: "test", number: "0.0.1")
-        @rubygem.ownerships.create(user: @user)
+        create(:ownership, rubygem: @rubygem, user: @user)
       end
 
       should "allow gem push by ip" do
@@ -70,6 +70,29 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         post "/api/v1/gems",
           params: gem_file("test-1.0.0.gem").read,
           headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
+
+        assert_response :success
+      end
+
+      should "allow owner add by ip" do
+        second_user = create(:user)
+        stay_under_exp_base_limit_for("api/ip/1")
+
+        post "/api/v1/gems/#{@rubygem.name}/owners",
+          params: { rubygem_id: @rubygem.to_param, email: second_user.email },
+          headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key }
+
+        assert_response :success
+      end
+
+      should "allow owner remove by ip" do
+        second_user = create(:user)
+        create(:ownership, rubygem: @rubygem, user: second_user)
+        stay_under_exp_base_limit_for("api/ip/1")
+
+        delete "/api/v1/gems/#{@rubygem.name}/owners",
+          params: { rubygem_id: @rubygem.to_param, email: second_user.email },
+          headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key }
 
         assert_response :success
       end
@@ -283,7 +306,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     context "api requests" do
       setup do
         @rubygem = create(:rubygem, name: "test", number: "0.0.1")
-        @rubygem.ownerships.create(user: @user)
+        create(:ownership, rubygem: @rubygem, user: @user)
       end
 
       should "throttle gem push by ip" do
@@ -292,6 +315,29 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         post "/api/v1/gems",
           params: gem_file("test-1.0.0.gem").read,
           headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
+
+        assert_response :too_many_requests
+      end
+
+      should "throttle owner add by ip" do
+        second_user = create(:user)
+        exceed_exp_base_limit_for("api/ip/1")
+
+        post "/api/v1/gems/#{@rubygem.name}/owners",
+          params: { rubygem_id: @rubygem.to_param, email: second_user.email },
+          headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key }
+
+        assert_response :too_many_requests
+      end
+
+      should "throttle owner remove by ip" do
+        second_user = create(:user)
+        create(:ownership, rubygem: @rubygem, user: second_user)
+        exceed_exp_base_limit_for("api/ip/1")
+
+        delete "/api/v1/gems/#{@rubygem.name}/owners",
+          params: { rubygem_id: @rubygem.to_param, email: second_user.email },
+          headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key }
 
         assert_response :too_many_requests
       end

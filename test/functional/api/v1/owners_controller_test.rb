@@ -15,7 +15,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         @rubygem = create(:rubygem)
         @user = create(:user)
         @other_user = create(:user)
-        @rubygem.ownerships.create(user: @user)
+        create(:ownership, rubygem: @rubygem, user: @user)
 
         @request.env["HTTP_AUTHORIZATION"] = @user.api_key
         get :show, params: { rubygem_id: @rubygem.to_param }, format: format
@@ -105,7 +105,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       @user = create(:user)
       @second_user = create(:user)
       @third_user = create(:user)
-      @rubygem.ownerships.create(user: @user)
+      create(:ownership, rubygem: @rubygem, user: @user)
       @request.env["HTTP_AUTHORIZATION"] = @user.api_key
     end
 
@@ -145,7 +145,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
         should respond_with :success
         should "succeed to add new owner" do
-          assert @rubygem.owners.include?(@second_user)
+          assert @rubygem.owners_including_unconfirmed.include?(@second_user)
         end
       end
     end
@@ -153,12 +153,12 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     context "when mfa for UI and API is disabled" do
       should "add other user as gem owner" do
         post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
-        assert @rubygem.owners.include?(@second_user)
+        assert @rubygem.owners_including_unconfirmed.include?(@second_user)
       end
 
       should "add other user as gem owner with handle" do
         post :create, params: { rubygem_id: @rubygem.to_param, email: @third_user.handle }, format: :json
-        assert @rubygem.owners.include?(@third_user)
+        assert @rubygem.owners_including_unconfirmed.include?(@third_user)
       end
     end
   end
@@ -176,8 +176,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       @rubygem = create(:rubygem)
       @user = create(:user)
       @second_user = create(:user)
-      @rubygem.ownerships.create(user: @user)
-      @ownership = @rubygem.ownerships.create(user: @second_user)
+      create(:ownership, rubygem: @rubygem, user: @user)
+      @ownership = create(:ownership, rubygem: @rubygem, user: @second_user)
       @request.env["HTTP_AUTHORIZATION"] = @user.api_key
     end
 

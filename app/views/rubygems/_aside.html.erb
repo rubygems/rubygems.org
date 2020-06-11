@@ -71,6 +71,7 @@
     <%= atom_link(@rubygem) %>
     <%= report_abuse_link(@rubygem) %>
     <%= reverse_dependencies_link(@rubygem) %>
-    <%= ownership_link(@rubygem) %>
+    <%= ownership_link(@rubygem) if current_user && @rubygem.owned_by?(current_user) %>
+    <%= resend_owner_confirmation_link(@rubygem) if current_user&.unconfirmed_ownership(@rubygem) %>
   </div>
 </div>

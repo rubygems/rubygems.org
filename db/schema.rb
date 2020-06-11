@@ -47,13 +47,13 @@ ActiveRecord::Schema.define(version: 2020_05_16_071636) do
   end
 
   create_table "dependencies", id: :serial, force: :cascade do |t|
-    t.string "requirements", limit: 255
+    t.string "requirements"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "rubygem_id"
     t.integer "version_id"
-    t.string "scope", limit: 255
-    t.string "unresolved_name", limit: 255
+    t.string "scope"
+    t.string "unresolved_name"
     t.index ["rubygem_id"], name: "index_dependencies_on_rubygem_id"
     t.index ["unresolved_name"], name: "index_dependencies_on_unresolved_name"
     t.index ["version_id"], name: "index_dependencies_on_version_id"
@@ -76,12 +76,12 @@ ActiveRecord::Schema.define(version: 2020_05_16_071636) do
 
   create_table "linksets", id: :serial, force: :cascade do |t|
     t.integer "rubygem_id"
-    t.string "home", limit: 255
-    t.string "wiki", limit: 255
-    t.string "docs", limit: 255
-    t.string "mail", limit: 255
-    t.string "code", limit: 255
-    t.string "bugs", limit: 255
+    t.string "home"
+    t.string "wiki"
+    t.string "docs"
+    t.string "mail"
+    t.string "code"
+    t.string "bugs"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["rubygem_id"], name: "index_linksets_on_rubygem_id"
@@ -105,18 +105,19 @@ ActiveRecord::Schema.define(version: 2020_05_16_071636) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean "push_notifier", default: true, null: false
-    t.boolean "confirmed", default: false, null: false
+    t.datetime "confirmed_at"
     t.datetime "token_expires_at"
     t.boolean "owner_notifier", default: true, null: false
+    t.integer "authorizer_id"
     t.index ["rubygem_id"], name: "index_ownerships_on_rubygem_id"
     t.index ["user_id"], name: "index_ownerships_on_user_id"
   end
 
   create_table "rubygems", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 255
+    t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string "slug", limit: 255
+    t.string "slug"
     t.index "upper((name)::text) varchar_pattern_ops", name: "index_rubygems_upcase"
     t.index ["indexed"], name: "index_rubygems_on_indexed"
     t.index ["name"], name: "index_rubygems_on_name", unique: true
@@ -177,23 +178,23 @@ ActiveRecord::Schema.define(version: 2020_05_16_071636) do
   create_table "versions", id: :serial, force: :cascade do |t|
     t.text "authors"
     t.text "description"
-    t.string "number", limit: 255
+    t.string "number"
     t.integer "rubygem_id"
     t.datetime "built_at"
     t.datetime "updated_at"
     t.text "summary"
-    t.string "platform", limit: 255
+    t.string "platform"
     t.datetime "created_at"
     t.boolean "indexed", default: true
     t.boolean "prerelease"
     t.integer "position"
     t.boolean "latest"
-    t.string "full_name", limit: 255
-    t.string "licenses", limit: 255
+    t.string "full_name"
     t.integer "size"
+    t.string "licenses"
     t.text "requirements"
-    t.string "required_ruby_version", limit: 255
-    t.string "sha256", limit: 255
+    t.string "required_ruby_version"
+    t.string "sha256"
     t.hstore "metadata", default: {}, null: false
     t.datetime "yanked_at"
     t.string "required_rubygems_version", limit: 255

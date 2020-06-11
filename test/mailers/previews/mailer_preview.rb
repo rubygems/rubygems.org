@@ -56,10 +56,17 @@ class MailerPreview < ActionMailer::Preview
     Mailer.ownership_confirmation(Ownership.last.id)
   end
 
-  def owners_update
-    gem = Rubygem.last
+  def owner_removed
+    gem = Rubygem.order(updated_at: :desc).last
     owner = gem.owners.first
     user = User.last
-    Mailer.owners_update(owner.id, user.id, "added", gem.id)
+    Mailer.owner_removed(owner.id, user.id, gem.id)
+  end
+
+  def owner_added
+    gem = Rubygem.order(updated_at: :desc).last
+    owner = gem.owners.first
+    user = User.last
+    Mailer.owner_added(owner.id, user.id, gem.id)
   end
 end

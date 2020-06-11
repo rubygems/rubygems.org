@@ -22,8 +22,7 @@
       <div class="t-body">
         <h2>ADD OWNER</h2>
       </div>
-      <br>
-      <%= form_for rubygems_path, method: :get do |form| %>
+      <%= form_for rubygem_owners_path, method: :post do |form| %>
         <%= text_field_tag :owner, nil, placeholder: "Name of user", class: "add_owner__field" %>
         <%= label_tag :owner do %>
           <span class="t-hidden">Name of user</span>

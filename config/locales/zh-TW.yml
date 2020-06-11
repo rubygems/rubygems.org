@@ -150,6 +150,19 @@ zh-TW:
     email_reset_update:
       subject:
       title:
+    ownership_confirmation:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      link_expiration_explanation:
+    owners_update:
+      subject_self:
+      subject_others:
+      title:
+      subtitle:
+      body_self:
+      body_others:
   news:
     show:
       title: 最新發佈
@@ -219,12 +232,16 @@ zh-TW:
     update:
       success:
     show:
-      info:
+      push_info:
       on:
       off:
       recommended:
       title:
       update:
+      owner_info:
+  owners:
+    confirm:
+      confirmed_email:
   profiles:
     edit:
       change_avatar:
@@ -383,3 +400,4 @@ zh-TW:
         one: 顯示 <b>1</b> %{model}
         other: 顯示 <b>所有 %{count}</b> %{model}
         zero: 找不到 %{model}
+  token_expired: ""

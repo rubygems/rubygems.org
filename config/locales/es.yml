@@ -153,6 +153,17 @@ es:
       title:
     reset_api_key:
       subject:
+    ownership_confirmation:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      link_expiration_explanation:
+    owners_update:
+      subject_self:
+      subject_others:
+      body_self:
+      body_others:
       title:
       subtitle:
     email_reset_update:
@@ -227,7 +238,7 @@ es:
     update:
       success: Has actualizado exitosamente la configuración de tus notificaciones por email.
     show:
-      info: Para facilitar la detección de cambios no autorizados en tus gemas, te enviamos un email
+      push_info: Para facilitar la detección de cambios no autorizados en tus gemas, te enviamos un email
         cada vez que una nueva versión es subida a RubyGems.org. Recibiendo y leyendo estos emails
         ayudas a proteger el ecosistema de Ruby.
       on: Activado
@@ -235,6 +246,7 @@ es:
       recommended: recomendado
       title: Notificación de email
       update: Actualizar
+      owner_info: ""
   profiles:
     edit:
       change_avatar:
@@ -393,3 +405,7 @@ es:
         one: Mostrando <b>1</b> %{model}
         other: Mostrando <b>todos los&nbsp;%{count}</b> %{model}
         zero: No se encontró ningún %{model}
+  owners:
+    confirm:
+      confirmed_email:
+  token_expired: ""

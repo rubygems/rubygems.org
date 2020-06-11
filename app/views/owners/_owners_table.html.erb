@@ -21,130 +21,27 @@
     </th>
   </tr>
 
-  <tr class="owners__row">
-    <td class="owners__cell" data-title="Name">
-      Luke Peters
-    </td>
-    <td class="owners__cell" data-title="MFA">
-      ✔
-    </td>
-    <td class="owners__cell" data-title="Confirmed">
-      ✔
-    </td>
-    <td class="owners__cell" data-title="Added On">
-      <%= nice_date_for(Time.now) %>
-    </td>
-    <td class="owners__cell" data-title="Added By">
-      Joseph Smith
-    </td>
-    <td class="owners__cell" data-title="Action">
-      <%= button_to "Remove", rubygem_path(@rubygem), :method => 'get', :class => 'remove__owners__button' %>
-    </td>
-  </tr>
-
-  <tr class="owners__row">
-    <td class="owners__cell" data-title="Name">
-      Luke Peters
-    </td>
-    <td class="owners__cell" data-title="MFA">
-      ✔
-    </td>
-    <td class="owners__cell" data-title="Confirmed">
-      ✔
-    </td>
-    <td class="owners__cell" data-title="Added On">
-      <%= nice_date_for(Time.now) %>
-    </td>
-    <td class="owners__cell" data-title="Added By">
-      Joseph Smith
-    </td>
-    <td class="owners__cell" data-title="Action">
-      <%= button_to "Remove", rubygem_path(@rubygem), :method => 'get', :class => 'remove__owners__button' %>
-    </td>
-  </tr>
-
-  <tr class="owners__row">
-    <td class="owners__cell" data-title="Name">
-      Luke Peters
-    </td>
-    <td class="owners__cell" data-title="MFA">
-
-    </td>
-    <td class="owners__cell" data-title="Confirmed">
-      ✔
-    </td>
-    <td class="owners__cell" data-title="Added On">
-      <%= nice_date_for(Time.now) %>
-    </td>
-    <td class="owners__cell" data-title="Added By">
-      Joseph Smith
-    </td>
-    <td class="owners__cell" data-title="Action">
-      <%= button_to "Remove", rubygem_path(@rubygem), :method => 'get', :class => 'remove__owners__button' %>
-    </td>
-  </tr>
-
-  <tr class="owners__row">
-    <td class="owners__cell" data-title="Name">
-      Joseph Smith
-    </td>
-    <td class="owners__cell" data-title="MFA">
-
-    </td>
-    <td class="owners__cell" data-title="Confirmed">
-      ✔
-    </td>
-    <td class="owners__cell" data-title="Added On">
-      <%= nice_date_for(Time.now) %>
-    </td>
-    <td class="owners__cell" data-title="Added By">
-      Original Author
-    </td>
-    <td class="owners__cell" data-title="Action">
-      <%= button_to "Remove", rubygem_path(@rubygem), :method => 'get', :class => 'remove__owners__button' %>
-    </td>
-  </tr>
-
-  <tr class="owners__row">
-    <td class="owners__cell" data-title="Name">
-      Maxwell Johnson
-    </td>
-    <td class="owners__cell" data-title="MFA">
-      ✔
-    </td>
-    <td class="owners__cell" data-title="Confirmed">
-
-    </td>
-    <td class="owners__cell" data-title="Added On">
-      <%= nice_date_for(Time.now) %>
-    </td>
-    <td class="owners__cell" data-title="Added By">
-      Maxwell Johnson
-    </td>
-    <td class="owners__cell" data-title="Action">
-      <%= button_to "Remove", rubygem_path(@rubygem), :method => 'get', :class => 'remove__owners__button' %>
-    </td>
-  </tr>
-
-  <tr class="owners__row">
-    <td class="owners__cell" data-title="Name">
-      Harry Harrison
-    </td>
-    <td class="owners__cell" data-title="MFA">
-
-    </td>
-    <td class="owners__cell" data-title="Confirmed">
-
-    </td>
-    <td class="owners__cell" data-title="Added On">
-      <%= nice_date_for(Time.now) %>
-    </td>
-    <td class="owners__cell" data-title="Added By">
-      Maxwell Johnson
-    </td>
-    <td class="owners__cell" data-title="Action">
-      <%= button_to "Remove", rubygem_path(@rubygem), :method => 'get', :class => 'remove__owners__button' %>
-    </td>
-  </tr>
+  <% @ownerships.each do |ownership| %>
+    <tr class="owners__row">
+      <td class="owners__cell" data-title="Name">
+        <%= ownership.user.name %>
+      </td>
+      <td class="owners__cell" data-title="MFA">
+        <%= ownership.user.mfa_level == "disabled" ? "✗" : "✔" %>
+      </td>
+      <td class="owners__cell" data-title="Confirmed">
+        <%= ownership.confirmed? ? "✔" : "✗" %>
+      </td>
+      <td class="owners__cell" data-title="Added On">
+        <%= nice_date_for(ownership.confirmed_at) if ownership.confirmed? %>
+      </td>
+      <td class="owners__cell" data-title="Added By">
+        <%= ownership.authorizer.name %>
+      </td>
+      <td class="owners__cell" data-title="Action">
+        <%= button_to "Remove", rubygem_owner_path(@rubygem, ownership), :method => 'delete', :class => 'remove__owners__button' %>
+      </td>
+    </tr>
+  <% end %>
   </tbody>
 </table>

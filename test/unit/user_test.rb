@@ -405,7 +405,7 @@ class UserTest < ActiveSupport::TestCase
 
     context "user has co-owner of gem" do
       setup do
-        @rubygem.ownerships.create(user: create(:user))
+        create(:ownership, rubygem: @rubygem, user: create(:user))
       end
 
       should "not record deletion" do

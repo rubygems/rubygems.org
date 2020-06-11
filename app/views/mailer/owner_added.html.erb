@@ -1,0 +1,44 @@
+<% @title = t("mailer.owners_update.title") %>
+<% @sub_title = t("mailer.owners_update.subtitle", user_handle: @user.handle) %>
+
+<!-- Body -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+  <tr>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+    <td>
+      <div class="h3-1-center" style="color:#1e1e1e; font-family:Georgia, serif; min-width:auto !important; font-size:20px; line-height:26px;">
+        <br>
+        <p>
+          <%= @owner.id == @user.id ? I18n.t("mailer.owners_update.body_self", status: "added", gem: @rubygem.name) : I18n.t("mailer.owners_update.body_others", status: "added", gem: @rubygem.name, owner_handle: @owner.handle) %>
+        </p>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+        <p>
+          Update your notification settings if you want to stop receiving owner change emails
+        </p>
+        <p>If this change is expected, you do not need to take further action.</p>
+        <p>
+          <strong>Only if this change is unexpected</strong>
+          please take immediate steps to secure your account and gems:
+        </p>
+        <ol>
+          <li>If you suspect your account was compromised:
+            <ul>
+              <li><%= link_to("Change your password", new_password_url) %></li>
+              <li><%= link_to("Reset your API key", edit_profile_url) %></li>
+              <li><%= link_to("Enable multifactor authentication", edit_profile_url) %></li>
+              <li><%= link_to("Renable email notification for your gem", notifier_url) %></li>
+            </ul>
+          </li>
+          <li>Look out for unexpected changes to your gems on RubyGems.org</li>
+          <li><%= link_to("Report this", page_url("security")) %> incident to RubyGems.org</li>
+        </ol>
+      </div>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="30" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+    </td>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+  </tr>
+</table>

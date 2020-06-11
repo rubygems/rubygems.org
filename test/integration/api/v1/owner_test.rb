@@ -7,7 +7,7 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
     cookies[:remember_token] = @user.remember_token
 
     @rubygem = create(:rubygem, number: "1.0.0")
-    @ownership = create(:ownership, user: @user, rubygem: @rubygem)
+    create(:ownership, user: @user, rubygem: @rubygem)
   end
 
   test "adding an owner" do
@@ -15,6 +15,9 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
       params: { email: @other_user.email },
       headers: { "HTTP_AUTHORIZATION" => @user.api_key }
     assert_response :success
+
+    @ownership = @other_user.ownerships.find_by(rubygem_id: @rubygem.id)
+    visit confirm_rubygem_owners_url(@rubygem, token: @ownership.token.html_safe)
 
     get rubygem_path(@rubygem)
     assert page.has_selector?("a[alt='#{@user.handle}']")

@@ -35,6 +35,7 @@ en:
   update: Update
   try_again: Something went wrong. Please try again.
   advanced_search: Advanced Search
+  token_expired: The confirmation token has expired. Please try resending the token
   activerecord:
     attributes:
       linkset:
@@ -240,14 +241,17 @@ en:
     update:
       success: You have successfully updated your email notification settings.
     show:
-      info: To aid detection of unauthorized gem changes, we email you each time a new version of a
-        gem you own is pushed or yanked. By receiving and reading these emails, you help protect the Ruby
+      push_info: To aid detection of unauthorized gem changes, we email you each time a new version of a
+        gem you own is pushed. By receiving and reading these emails, you help protect the Ruby
         ecosystem.
       on: On
       off: Off
       recommended: recommended
       title: Email notifications
       update: Update
+      owner_info: To aid detection of unauthorized ownership changes, we email you each time a new owner is
+        added or removed to the gem. By receiving and reading these emails, you help protect the Ruby
+        ecosystem.
   owners:
     confirm:
       confirmed_email: You are added as an owner to %{gem} gem!

@@ -327,7 +327,7 @@ class RubygemTest < ActiveSupport::TestCase
 
       should "not be able to assign ownership when owners exist" do
         @new_user = create(:user)
-        @rubygem.ownerships.create(user: @new_user)
+        create(:ownership, rubygem: @rubygem, user: @new_user)
         @rubygem.create_ownership(@user)
         assert_equal @rubygem.reload.owners, [@new_user]
       end

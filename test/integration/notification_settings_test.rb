@@ -18,12 +18,17 @@ class NotificationSettingsTest < SystemTest
     notifier_form_selector = "form[action='/notifier']"
 
     within_element notifier_form_selector do
-      assert_checked_field notifier_on_radio(ownership1)
-      assert_unchecked_field notifier_off_radio(ownership1)
-      assert_checked_field notifier_on_radio(ownership2)
-      assert_unchecked_field notifier_off_radio(ownership2)
+      assert_checked_field notifier_on_radio(ownership1, "push")
+      assert_unchecked_field notifier_off_radio(ownership1, "push")
+      assert_checked_field notifier_on_radio(ownership2, "push")
+      assert_unchecked_field notifier_off_radio(ownership2, "push")
+      assert_checked_field notifier_on_radio(ownership1, "owner")
+      assert_unchecked_field notifier_off_radio(ownership1, "owner")
+      assert_checked_field notifier_on_radio(ownership2, "owner")
+      assert_unchecked_field notifier_off_radio(ownership2, "owner")
 
-      choose notifier_off_radio(ownership1)
+      choose notifier_off_radio(ownership1, "push")
+      choose notifier_off_radio(ownership2, "owner")
 
       click_button I18n.t("notifiers.show.update")
     end
@@ -37,10 +42,14 @@ class NotificationSettingsTest < SystemTest
     assert_selector "#flash_notice", text: I18n.t("notifiers.update.success")
 
     within_element notifier_form_selector do
-      assert_unchecked_field notifier_on_radio(ownership1)
-      assert_checked_field notifier_off_radio(ownership1)
-      assert_checked_field notifier_on_radio(ownership2)
-      assert_unchecked_field notifier_off_radio(ownership2)
+      assert_unchecked_field notifier_on_radio(ownership1, "push")
+      assert_checked_field notifier_off_radio(ownership1, "push")
+      assert_checked_field notifier_on_radio(ownership2, "push")
+      assert_unchecked_field notifier_off_radio(ownership2, "push")
+      assert_checked_field notifier_on_radio(ownership1, "owner")
+      assert_unchecked_field notifier_off_radio(ownership1, "owner")
+      assert_unchecked_field notifier_on_radio(ownership2, "owner")
+      assert_checked_field notifier_off_radio(ownership2, "owner")
     end
   end
 
@@ -66,11 +75,11 @@ class NotificationSettingsTest < SystemTest
     assert_no_text "yanked-gem"
   end
 
-  def notifier_on_radio(ownership)
-    "ownerships_#{ownership.id}_on"
+  def notifier_on_radio(ownership, type)
+    "ownerships_#{ownership.id}_#{type}_on"
   end
 
-  def notifier_off_radio(ownership)
-    "ownerships_#{ownership.id}_off"
+  def notifier_off_radio(ownership, type)
+    "ownerships_#{ownership.id}_#{type}_off"
   end
 end

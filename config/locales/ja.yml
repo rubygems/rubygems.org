@@ -145,6 +145,17 @@ ja:
       title:
     reset_api_key:
       subject:
+    ownership_confirmation:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      link_expiration_explanation:
+    owners_update:
+      subject_self:
+      subject_others:
+      body_self:
+      body_others:
       title:
       subtitle:
     email_reset_update:
@@ -219,12 +230,13 @@ ja:
     update:
       success:
     show:
-      info:
+      push_info:
       on:
       off:
       recommended:
       title:
       update:
+      owner_info:
   profiles:
     edit:
       change_avatar:
@@ -383,3 +395,7 @@ ja:
         one: <b>全1件</b>の%{model}を表示中
         other: <b>全 %{count}件</b>の%{model}を表示中
         zero: '%{model}は見つかりませんでした'
+  owners:
+    confirm:
+      confirmed_email:
+  token_expired: ""
