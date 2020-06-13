@@ -298,7 +298,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     context "exponential backoff" do
-      setup { @mfa_max_period = { 1 => 100, 2 => 10_000, 3 => 1_000_000 } }
+      setup { @mfa_max_period = { 1 => 300, 2 => 90_000 } }
 
       Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
         should "throttle for mfa sign in at level #{level}" do
