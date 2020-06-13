@@ -25,9 +25,7 @@ class Rack::Attack
 
   protected_ui_actions = [
     { controller: "sessions",            action: "create" },
-    { controller: "sessions",            action: "mfa_create" },
     { controller: "users",               action: "create" },
-    { controller: "passwords",           action: "mfa_edit" },
     { controller: "passwords",           action: "edit" },
     { controller: "passwords",           action: "create" },
     { controller: "profiles",            action: "update" },
@@ -35,10 +33,18 @@ class Rack::Attack
     { controller: "email_confirmations", action: "create" }
   ]
 
-  protected_api_actions = [
+  protected_ui_mfa_actions = [
+    { controller: "sessions",            action: "mfa_create" },
+    { controller: "passwords",           action: "mfa_edit" },
+    { controller: "multifactor_auths",   action: "create" },
+    { controller: "multifactor_auths",   action: "update" }
+  ]
+
+  protected_api_mfa_actions = [
     { controller: "api/v1/deletions", action: "create" },
     { controller: "api/v1/owners",    action: "create" },
-    { controller: "api/v1/owners",    action: "destroy" }
+    { controller: "api/v1/owners",    action: "destroy" },
+    { controller: "api/v1/api_keys",  action: "show" }
   ]
 
   def self.protected_route?(protected_actions, path, method)
@@ -50,18 +56,22 @@ class Rack::Attack
     req.path.starts_with?("/assets") && req.request_method == "GET"
   end
 
+  throttle("clearance/ip", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
+    req.ip if protected_route?(protected_ui_actions, req.path, req.request_method)
+  end
+
   # 200 req in 100 seconds
   # 400 req in 10000 seconds (2.7 hours)
   # 600 req in 1000000 seconds (277.7 hours)
   EXP_BACKOFF_LEVELS.each do |level|
     throttle("clearance/ip/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
-      req.ip if protected_route?(protected_ui_actions, req.path, req.request_method)
+      req.ip if protected_route?(protected_ui_mfa_actions, req.path, req.request_method)
     end
   end
 
   EXP_BACKOFF_LEVELS.each do |level|
     throttle("api/ip/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
-      req.ip if protected_route?(protected_api_actions, req.path, req.request_method)
+      req.ip if protected_route?(protected_api_mfa_actions, req.path, req.request_method)
     end
   end
 

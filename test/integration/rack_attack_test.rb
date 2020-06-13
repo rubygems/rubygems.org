@@ -99,7 +99,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
   context "requests is lower than limit" do
     should "allow sign in" do
-      stay_under_limit_for("clearance/ip/1")
+      stay_under_limit_for("clearance/ip")
 
       post "/session",
         params: { session: { who: @user.email, password: @user.password } },
@@ -110,7 +110,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     should "allow sign up" do
-      stay_under_limit_for("clearance/ip/1")
+      stay_under_limit_for("clearance/ip")
 
       user = build(:user)
       post "/users",
@@ -122,7 +122,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     should "allow forgot password" do
-      stay_under_limit_for("clearance/ip/1")
+      stay_under_limit_for("clearance/ip")
       stay_under_email_limit_for("password/email")
 
       post "/passwords",
@@ -256,7 +256,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
   context "requests is higher than limit" do
     should "throttle sign in" do
-      exceed_exp_base_limit_for("clearance/ip/1")
+      exceed_limit_for("clearance/ip")
 
       post "/session",
         params: { session: { who: @user.email, password: @user.password } },
@@ -265,19 +265,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       assert_response :too_many_requests
     end
 
-    should "throttle mfa sign in" do
-      exceed_exp_base_limit_for("clearance/ip/1")
-      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
-
-      post "/session/mfa_create",
-        params: { otp: ROTP::TOTP.new(@user.mfa_seed).now },
-        headers: { REMOTE_ADDR: @ip_address }
-
-      assert_response :too_many_requests
-    end
-
     should "throttle sign up" do
-      exceed_exp_base_limit_for("clearance/ip/1")
+      exceed_limit_for("clearance/ip")
 
       user = build(:user)
       post "/users",
@@ -288,23 +277,10 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     should "throttle forgot password" do
-      exceed_exp_base_limit_for("clearance/ip/1")
+      exceed_limit_for("clearance/ip")
 
       post "/passwords",
         params: { password: { email: @user.email } },
-        headers: { REMOTE_ADDR: @ip_address }
-
-      assert_response :too_many_requests
-    end
-
-    should "throttle mfa forgot password" do
-      exceed_exp_base_limit_for("clearance/ip/1")
-
-      @user.forgot_password!
-      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
-
-      post "/users/#{@user.id}/password/mfa_edit",
-        params: { user_id: @user.id, token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.mfa_seed).now },
         headers: { REMOTE_ADDR: @ip_address }
 
       assert_response :too_many_requests
@@ -323,7 +299,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     should "throttle profile update" do
       cookies[:remember_token] = @user.remember_token
 
-      exceed_exp_base_limit_for("clearance/ip/1")
+      exceed_limit_for("clearance/ip")
       patch "/profile",
         headers: { REMOTE_ADDR: @ip_address }
 
@@ -333,7 +309,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     should "throttle profile delete" do
       cookies[:remember_token] = @user.remember_token
 
-      exceed_exp_base_limit_for("clearance/ip/1")
+      exceed_limit_for("clearance/ip")
       delete "/profile",
         headers: { REMOTE_ADDR: @ip_address }
 
@@ -342,7 +318,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
     context "email confirmation" do
       should "throttle by ip" do
-        exceed_exp_base_limit_for("clearance/ip/1")
+        exceed_limit_for("clearance/ip")
 
         post "/email_confirmations",
           params: { email_confirmation: { email: @user.email } },
@@ -360,7 +336,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
     context "password update" do
       should "throttle by ip" do
-        exceed_exp_base_limit_for("clearance/ip/1")
+        exceed_limit_for("clearance/ip")
 
         post "/passwords",
           params: { password: { email: @user.email } },
@@ -433,8 +409,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
           freeze_time do
             exceed_exponential_limit_for("clearance/ip/#{level}", level)
 
-            post "/users",
-              params: { user: { email: @user.email, password: @user.password } },
+            post "/session/mfa_create",
               headers: { REMOTE_ADDR: @ip_address }
 
             assert_response :too_many_requests
@@ -449,6 +424,51 @@ class RackAttackTest < ActionDispatch::IntegrationTest
             post "/api/v1/gems",
               params: gem_file("test-0.0.0.gem").read,
               headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
+
+            assert_response :too_many_requests
+            assert_equal expected_retry_after(level), @response.headers["Retry-After"]
+          end
+        end
+
+        should "throttle mfa create at level #{level}" do
+          freeze_time do
+            exceed_exponential_limit_for("clearance/ip/#{level}", level)
+
+            post "/multifactor_auth",
+              headers: { REMOTE_ADDR: @ip_address }
+            assert_response :too_many_requests
+            assert_equal expected_retry_after(level), @response.headers["Retry-After"]
+          end
+        end
+
+        should "throttle mfa update at level #{level}" do
+          freeze_time do
+            exceed_exponential_limit_for("clearance/ip/#{level}", level)
+
+            put "/multifactor_auth",
+              headers: { REMOTE_ADDR: @ip_address }
+            assert_response :too_many_requests
+            assert_equal expected_retry_after(level), @response.headers["Retry-After"]
+          end
+        end
+
+        should "throttle api key show at level #{level}" do
+          freeze_time do
+            exceed_exponential_limit_for("api/ip/#{level}", level)
+
+            get "/api/v1/api_key.json",
+              headers: { REMOTE_ADDR: @ip_address }
+            assert_response :too_many_requests
+            assert_equal expected_retry_after(level), @response.headers["Retry-After"]
+          end
+        end
+
+        should "throttle mfa forgot password at level #{level}" do
+          freeze_time do
+            exceed_exponential_limit_for("clearance/ip/#{level}", level)
+
+            post "/users/#{@user.id}/password/mfa_edit",
+              headers: { REMOTE_ADDR: @ip_address }
 
             assert_response :too_many_requests
             assert_equal expected_retry_after(level), @response.headers["Retry-After"]
