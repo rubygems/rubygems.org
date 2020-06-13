@@ -132,16 +132,6 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       assert_response :success
     end
 
-    should "allow api_key show" do
-      stay_under_limit_for("api_key/ip")
-
-      get "/api/v1/api_key.json",
-        env: { "HTTP_AUTHORIZATION" => encode(@user.handle, @user.password) },
-        headers: { REMOTE_ADDR: @ip_address }
-
-      assert_response :success
-    end
-
     should "allow email confirmation resend" do
       stay_under_limit_for("clearance/ip/1")
       stay_under_email_limit_for("email_confirmations/email")
@@ -281,16 +271,6 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
       post "/passwords",
         params: { password: { email: @user.email } },
-        headers: { REMOTE_ADDR: @ip_address }
-
-      assert_response :too_many_requests
-    end
-
-    should "throttle api_key show" do
-      exceed_limit_for("api_key/ip")
-
-      get "/api/v1/api_key.json",
-        env: { "HTTP_AUTHORIZATION" => encode(@user.handle, @user.password) },
         headers: { REMOTE_ADDR: @ip_address }
 
       assert_response :too_many_requests

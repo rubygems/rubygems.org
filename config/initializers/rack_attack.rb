@@ -87,13 +87,6 @@ class Rack::Attack
     req.ip if protected_route?(protected_push_action, req.path, req.request_method)
   end
 
-  # Throttle GET request for api_key by IP address
-  protected_api_key_action = [{ controller: "api/v1/api_keys", action: "show" }]
-
-  throttle("api_key/ip", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
-    req.ip if protected_route?(protected_api_key_action, req.path, req.request_method)
-  end
-
   # Throttle yank requests
   YANK_LIMIT = 10
   protected_yank_action = [{ controller: "api/v1/deletions", action: "create" }]
@@ -117,6 +110,8 @@ class Rack::Attack
     protected_route = protected_route?(protected_sessions_action, req.path, req.request_method)
     User.normalize_email(req.params['session']['who']).presence if protected_route && req.params['session']
   end
+
+  protected_api_key_action = [{ controller: "api/v1/api_keys", action: "show" }]
 
   throttle("api_key/basic_auth", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
     if protected_route?(protected_api_key_action, req.path, req.request_method)
