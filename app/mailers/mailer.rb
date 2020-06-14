@@ -55,4 +55,13 @@ class Mailer < ApplicationMailer
     mail to: @user.email,
       subject: "Please consider enabling MFA for your account"
   end
+
+  def gem_yanked(yanked_by_user_id, version_id, notified_user_id)
+    @version        = Version.find(version_id)
+    notified_user   = User.find(notified_user_id)
+    @yanked_by_user = User.find(yanked_by_user_id)
+
+    mail to: notified_user.email,
+         subject: I18n.t("mailer.gem_yanked.subject", gem: @version.to_title)
+  end
 end
