@@ -383,6 +383,7 @@ class Version < ApplicationRecord
     metadata.each do |key, value|
       errors.add(:metadata, "metadata key ['#{key}'] is too large (maximum is #{max_key_size} bytes)") if key.size > max_key_size
       errors.add(:metadata, "metadata value ['#{value}'] is too large (maximum is #{max_value_size} bytes)") if value.size > max_value_size
+      errors.add(:metadata, "metadata key is empty") if key.empty?
     end
   end
 end
