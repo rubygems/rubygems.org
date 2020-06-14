@@ -332,6 +332,7 @@ es:
   reverse_dependencies:
     index:
       title: "Dependencias inversas para %{name}"
+      subtitle:
     search:
       search_reverse_dependencies_html: "Buscar dependencias inversas Gems&hellip;"
   searches:

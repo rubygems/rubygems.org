@@ -322,6 +322,7 @@ zh-CN:
   reverse_dependencies:
     index:
       title: "%{name} 的反向依赖"
+      subtitle:
     search:
       search_reverse_dependencies_html:
   searches:
