@@ -113,4 +113,25 @@ namespace :gemcutter do
       end
     end
   end
+
+  namespace :gem_downloads do
+    desc "Add GemDownloads record for tracking total rubygems downloads"
+    task add_rubygems_record: :environment do
+      rubygems_without_total_downloads = Rubygem.where("id not in(select distinct(rubygem_id) from gem_downloads where version_id = 0)")
+
+      total = rubygems_without_total_downloads.count
+      processed = 0
+      puts "Total: #{total}"
+      rubygems_without_total_downloads.each do |rubygem|
+        total_downloads = GemDownload.where(rubygem_id: rubygem.id).sum(:count)
+        GemDownload.create!(count: total_downloads, rubygem_id: rubygem.id, version_id: 0)
+        Rails.logger.info "[gemcutter:gem_downloads:add_rubygems_record] added GemDownloads for rubygem_id: #{rubygem.id} with "\
+          "total downloads: #{total_downloads}"
+        processed += 1
+        print format("\r%.2f%% (%d/%d) complete", processed.to_f / total * 100.0, processed, total)
+      end
+      puts
+      puts "Done."
+    end
+  end
 end
