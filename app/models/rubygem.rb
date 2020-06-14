@@ -15,6 +15,7 @@ class Rubygem < ApplicationRecord
 
   validate :ensure_name_format, if: :needs_name_validation?
   validates :name,
+    length: { maximum: Gemcutter::MAX_FIELD_LENGTH },
     presence: true,
     uniqueness: { case_sensitive: false },
     if: :needs_name_validation?

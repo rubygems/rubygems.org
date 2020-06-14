@@ -38,6 +38,12 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
+    should "be invalid with name longer than maximum field length" do
+      @rubygem.name = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
+      refute @rubygem.valid?
+      assert_equal @rubygem.errors.messages[:name], ["is too long (maximum is 255 characters)"]
+    end
+
     should "reorder versions with platforms properly" do
       version3_ruby  = create(:version, rubygem: @rubygem, number: "3.0.0", platform: "ruby")
       version3_mswin = create(:version, rubygem: @rubygem, number: "3.0.0", platform: "mswin")

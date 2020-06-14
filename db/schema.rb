@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_31_172741) do
+ActiveRecord::Schema.define(version: 2020_05_02_214958) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -192,7 +192,7 @@ ActiveRecord::Schema.define(version: 2019_08_31_172741) do
     t.string "sha256"
     t.hstore "metadata", default: {}, null: false
     t.datetime "yanked_at"
-    t.string "required_rubygems_version"
+    t.string "required_rubygems_version", limit: 255
     t.string "info_checksum"
     t.string "yanked_info_checksum"
     t.bigint "pusher_id"
