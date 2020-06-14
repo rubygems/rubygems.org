@@ -1,0 +1,95 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: versions-list-update-monthly
+  labels:
+    name: versions-list-update-monthly
+spec:
+  concurrencyPolicy: Forbid
+  schedule: "0 0 1 * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            name: versions-list-update-monthly
+        spec:
+          restartPolicy: "OnFailure"
+          containers:
+          - name: versions-list-update-monthly
+            image: quay.io/rubygems/rubygems.org:<%= current_sha %>
+            args: ["rake", "compact_index:update_versions_file"]
+            resources:
+              <% if environment == 'production' %>
+              requests:
+                cpu: 500m
+                memory: 1Gi
+              limits:
+                cpu: 2000m
+                memory: 3Gi
+              <% else %>
+              requests:
+                cpu: 200m
+                memory: 1Gi
+              limits:
+                cpu: 500m
+                memory: 2Gi
+              <% end %>
+            env:
+            - name: RAILS_ENV
+              value: "<%= environment %>"
+            - name: ENV
+              value: "<%= environment %>"
+            - name: STATSD_IMPLEMENTATION
+              value: "datadog"
+            - name: STATSD_HOST
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.hostIP
+            - name: STATSD_ADDR
+              value: $(STATSD_HOST):8125
+            - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: <%= environment %>
+                  key: secret_key_base
+            - name: AWS_REGION
+              value: "us-west-2"
+            - name: S3_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: <%= environment %>
+                  key: aws_access_key_id
+            - name: S3_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: <%= environment %>
+                  key: aws_secret_access_key
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: <%= environment %>
+                  key: aws_access_key_id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: <%= environment %>
+                  key: aws_secret_access_key
+            - name: NEW_RELIC_LICENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: <%= environment %>
+                  key: new_relic_license_key
+            - name: HONEYBADGER_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: <%= environment %>
+                  key: honeybadger_api_key
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: <%= environment %>
+                  key: database_url
+            securityContext:
+              privileged: false
