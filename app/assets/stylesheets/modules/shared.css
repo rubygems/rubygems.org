@@ -98,6 +98,11 @@ a.page__heading {
     .page__subheading {
       font-size: 30px; } }
 
+.page__subheading--block {
+  display: block;
+  margin-top: 3px;
+}
+
 .page__heading__info {
   font-weight: 200;
   font-size: 16px;
