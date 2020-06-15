@@ -11,6 +11,7 @@ class Version < ApplicationRecord
   before_save :update_prerelease, if: :number_changed?
   before_validation :full_nameify!
   after_save :reorder_versions, if: -> { saved_change_to_indexed? || saved_change_to_id? }
+  after_save :refresh_rubygem_indexed, if: -> { saved_change_to_indexed? || saved_change_to_id? }
 
   serialize :licenses
   serialize :requirements
@@ -173,6 +174,10 @@ class Version < ApplicationRecord
   end
 
   delegate :reorder_versions, to: :rubygem
+
+  def refresh_rubygem_indexed
+    rubygem.refresh_indexed!
+  end
 
   def previous
     rubygem.versions.find_by(position: position + 1)

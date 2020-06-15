@@ -633,20 +633,6 @@ class RubygemTest < ActiveSupport::TestCase
       should "give a count of only rubygems with versions" do
         assert_equal @expected_total, Rubygem.total_count
       end
-
-      should "write to cache" do
-        Rails.cache.expects(:write).with("gem/total_count", @expected_total, { expires_in: 6.hours })
-        Rubygem.total_count
-      end
-
-      context "cache hit" do
-        setup { Rubygem.total_count }
-
-        should "not use sql to get result" do
-          Version.expects(:where).never
-          assert_equal @expected_total, Rubygem.total_count
-        end
-      end
     end
   end
 

@@ -30,6 +30,7 @@ class DeletionTest < ActiveSupport::TestCase
 
       should "unindexes" do
         refute @version.indexed?
+        refute @version.rubygem.indexed?
       end
 
       should "be considered deleted" do
@@ -101,7 +102,8 @@ class DeletionTest < ActiveSupport::TestCase
         @deletion.restore!
       end
 
-      should "index version" do
+      should "index rubygem and version" do
+        assert @version.rubygem.indexed?
         assert @version.indexed?
       end
 

@@ -32,7 +32,7 @@ class Rubygem < ApplicationRecord
   end
 
   def self.with_versions
-    where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)")
+    where(indexed: true)
   end
 
   def self.with_one_version
@@ -54,9 +54,7 @@ class Rubygem < ApplicationRecord
   end
 
   def self.total_count
-    Rails.cache.fetch("gem/total_count", expires_in: 6.hours) do
-      Version.indexed.distinct.count(:rubygem_id)
-    end
+    Rubygem.with_versions.count
   end
 
   def self.latest(limit = 5)
@@ -251,6 +249,10 @@ class Rubygem < ApplicationRecord
     versions_of_platforms.each_value do |platforms|
       Version.find(platforms.max.id).update_column(:latest, true)
     end
+  end
+
+  def refresh_indexed!
+    update!(indexed: versions.indexed.any?)
   end
 
   def disown
