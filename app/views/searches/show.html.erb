@@ -7,7 +7,7 @@
 <% end %>
 <%= link_to t("advanced_search"), advanced_search_path, class: "t-link--gray t-link--has-arrow" %>
 <% if @yanked_filter %>
-  <% @subtitle = t('.subtitle', :query => content_tag(:em, h(params[:query]))) %>
+  <% @subtitle = t('.subtitle', :query => tag.em(h(params[:query]))) %>
 
   <% if @yanked_gem.present? %>
     <%= link_to rubygem_path(@yanked_gem.name), :class => 'gems__gem' do %>
@@ -22,7 +22,7 @@
   <% end %>
 <% else %>
   <% if @gems %>
-    <% @subtitle = t('.subtitle', :query => content_tag(:em, h(params[:query]))) %>
+    <% @subtitle = t('.subtitle', :query => tag.em(h(params[:query]))) %>
 
     <header class="gems__header push--s">
       <p class="gems__meter"><%= page_entries_info(@gems, :entry_name => 'gem').html_safe %></p>

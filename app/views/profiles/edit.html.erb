@@ -73,10 +73,10 @@
 
     <h2><%= t '.api_access.title' %></h2>
     <p>
-      <%= t('.api_access.key_is_html', :key => content_tag(:strong, current_user.api_key)) %>
+      <%= t('.api_access.key_is_html', :key => tag.strong(current_user.api_key)) %>
     </p>
     <p>
-      <%= t('.api_access.credentials_html', :gem_credentials_file => content_tag(:code, '~/.gem/credentials'),
+      <%= t('.api_access.credentials_html', :gem_credentials_file => tag.code('~/.gem/credentials'),
                                             :gem_commands_link => link_to(t('.api_access.link_text'), 'https://guides.rubygems.org/command-reference/', target: 'blank')) %>
     </p>
     <pre><code>gem signin</code></pre>
