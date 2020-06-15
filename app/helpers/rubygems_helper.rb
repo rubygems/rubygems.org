@@ -27,7 +27,7 @@ module RubygemsHelper
       options.pipe = true
       sanitize RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new(options))
     else
-      content_tag :p, escape_once(sanitize(text.strip)), nil, false
+      tag.p escape_once(sanitize(text.strip)), nil, false
     end
   end
 

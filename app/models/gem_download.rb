@@ -79,7 +79,7 @@ class GemDownload < ApplicationRecord
     private
 
     def count_for(rubygem_id: 0, version_id: 0)
-      count = GemDownload.where(rubygem_id: rubygem_id, version_id: version_id).pluck(:count).first
+      count = GemDownload.where(rubygem_id: rubygem_id, version_id: version_id).pick(:count)
       count || 0
     end
 

@@ -28,12 +28,12 @@ class UsersControllerTest < ActionController::TestCase
     context "when extra parameters given" do
       should "create a user if parameters are ok" do
         post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "foo" } }
-        assert_equal "foo", User.where(email: "foo@bar.com").pluck(:handle).first
+        assert_equal "foo", User.where(email: "foo@bar.com").pick(:handle)
       end
 
       should "create a user but dont assign not valid parameters" do
         post :create, params: { user: { email: "foo@bar.com", password: "secret", api_key: "nonono" } }
-        assert_not_equal "nonono", User.where(email: "foo@bar.com").pluck(:api_key).first
+        assert_not_equal "nonono", User.where(email: "foo@bar.com").pick(:api_key)
       end
     end
 
