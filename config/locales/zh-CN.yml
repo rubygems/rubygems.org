@@ -143,6 +143,10 @@ zh-CN:
     gem_yanked:
       subject:
       title:
+    reset_api_key:
+      subject:
+      title:
+      subtitle:
   news:
     show:
       title: 全部新发布 Gems

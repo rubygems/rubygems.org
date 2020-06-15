@@ -151,6 +151,10 @@ es:
     gem_yanked:
       subject:
       title:
+    reset_api_key:
+      subject:
+      title:
+      subtitle:
   news:
     show:
       title: Nuevos lanzamientos — Todas las Gemas

@@ -64,4 +64,10 @@ class Mailer < ApplicationMailer
     mail to: notified_user.email,
          subject: I18n.t("mailer.gem_yanked.subject", gem: @version.to_title)
   end
+
+  def reset_api_key(user)
+    @user = user
+    mail to: @user.email,
+         subject: I18n.t("mailer.reset_api_key.subject")
+  end
 end

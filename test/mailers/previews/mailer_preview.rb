@@ -37,4 +37,9 @@ class MailerPreview < ActionMailer::Preview
     ownership = Ownership.where.not(user: nil).last
     Mailer.gem_yanked(ownership.user.id, ownership.rubygem.versions.last.id, ownership.user.id)
   end
+
+  def reset_api_key
+    user = User.last
+    Mailer.reset_api_key(user)
+  end
 end

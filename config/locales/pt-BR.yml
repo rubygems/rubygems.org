@@ -143,6 +143,10 @@ pt-BR:
     gem_yanked:
       subject:
       title:
+    reset_api_key:
+      subject:
+      title:
+      subtitle:
   news:
     show:
       title: Novos Releases - Todas as Gems

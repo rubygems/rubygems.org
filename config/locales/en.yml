@@ -151,6 +151,10 @@ en:
     gem_yanked:
       subject: Gem %{gem} yanked from RubyGems.org
       title: GEM YANKED
+    reset_api_key:
+      subject: RubyGems.org API key was reset
+      title: API KEY RESET
+      subtitle: Hi %{handle}
   news:
     show:
       title: New Releases — All Gems
