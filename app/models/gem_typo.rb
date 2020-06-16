@@ -12,7 +12,7 @@ class GemTypo
 
     return false if published_exact_name_matches.any?
 
-    match = matched_protected_gem_names.select(:id, :name).first
+    match = matched_protected_gem_names.select(:name).first
     return false unless match
 
     @protected_gem = match.name
