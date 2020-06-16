@@ -781,6 +781,12 @@ class VersionTest < ActiveSupport::TestCase
         @version.validate
         assert_equal @version.errors.messages[:metadata], ["metadata key ['#{large_key}'] is too large (maximum is 128 bytes)"]
       end
+
+      should "be invalid with empty key" do
+        @version.metadata = { "" => "value" }
+        @version.validate
+        assert_equal @version.errors.messages[:metadata], ["metadata key is empty"]
+      end
     end
   end
 
