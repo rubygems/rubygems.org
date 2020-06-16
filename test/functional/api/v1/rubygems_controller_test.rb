@@ -309,7 +309,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
-    context "On POST to create with a protected gem name" do
+    context "On POST to create with an underscore or dash variant of an existing gem" do
       setup do
         existing = create(:rubygem, name: "t_es-t", downloads: 3002)
         existing.versions.create(number: "1.0.0", platform: "ruby")
@@ -319,7 +319,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should respond_with :forbidden
       should "not register new gem" do
         assert_equal 1, Rubygem.count
-        assert_equal "There was a problem saving your gem: Name Your gem 'test' is too similar to typo-protected gem named 't_es-t'", @response.body
+        assert_equal "There was a problem saving your gem: Name Your gem 'test' is too similar to an existing gem named 't_es-t'", @response.body
       end
     end
 
