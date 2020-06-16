@@ -54,7 +54,6 @@ class GemTypoTest < ActiveSupport::TestCase
       assert gem_typo.protected_typo?
     end
 
-
     should "return true for three -/_ character change" do
       gem_typo = GemTypo.new("delayed-job-active-record")
       assert gem_typo.protected_typo?
