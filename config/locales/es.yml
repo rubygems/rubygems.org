@@ -148,6 +148,13 @@ es:
     gem_pushed:
       subject: Gema %{gem} subida a RubyGems.org
       title: GEMA SUBIDA
+    gem_yanked:
+      subject:
+      title:
+    reset_api_key:
+      subject:
+      title:
+      subtitle:
   news:
     show:
       title: Nuevos lanzamientos — Todas las Gemas
@@ -329,6 +336,7 @@ es:
   reverse_dependencies:
     index:
       title: "Dependencias inversas para %{name}"
+      subtitle:
     search:
       search_reverse_dependencies_html: "Buscar dependencias inversas Gems&hellip;"
   searches:
@@ -350,7 +358,7 @@ es:
       resend_confirmation: ¿No recibiste tu correo electrónico de confirmación?
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded: Más descargadas
       total_downloads: Total de descargas
       total_gems: Gemas totales

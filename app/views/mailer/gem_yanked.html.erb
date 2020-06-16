@@ -1,0 +1,56 @@
+<% @title = t(".title") %>
+<% @sub_title = @version.rubygem.name %>
+
+<!-- Body -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+  <tr>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+    <td>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+      <div class="h3-1-center" style="color:#1e1e1e; font-family:Georgia, serif; min-width:auto !important; font-size:20px; line-height:26px;">
+        <p>
+          A version of a gem you are an owner of was recently yanked from RubyGems.org.
+        </p>
+        <p>
+          Gem: <strong><%= link_to @version.to_title, rubygem_version_url(@version.rubygem, @version.slug), target: "_blank" %></strong>
+          <br/>
+          Yanked by user:
+          <strong>
+            <%= link_to @yanked_by_user.handle, profile_url(@yanked_by_user.display_id), target: "_blank" %> <%= mail_to(@yanked_by_user.email) unless @yanked_by_user.hide_email? %>
+          </strong>
+          <br/>
+          Yanked at: <strong><%= @version.yanked_at.to_formatted_s(:rfc822) %></strong>
+        </p>
+        <br/>
+        <p>If this yank is expected, you do not need to take further action.</p>
+        <p>
+          <strong>Only if this yank is unexpected</strong>
+          please take immediate steps to secure your account and gems:
+        </p>
+        <ol>
+          <li>If you suspect your account was compromised:
+            <ul>
+              <li><%= link_to("Change your password", new_password_url) %></li>
+              <li><%= link_to("Reset your API key", edit_profile_url) %></li>
+              <li><%= link_to("Enable multifactor authentication", edit_profile_url) %></li>
+            </ul>
+          </li>
+          <li><%= link_to("Report this", page_url("security")) %> incident to RubyGems.org</li>
+        </ol>
+        <p>
+          <em>
+            To stop receiving these messages, update your <%= link_to("email notification settings", notifier_url) %>.
+          </em>
+        </p>
+      </div>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="30" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+    </td>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+  </tr>
+</table>
+<!-- END Body -->

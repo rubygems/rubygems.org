@@ -32,4 +32,14 @@ class MailerPreview < ActionMailer::Preview
   def mfa_notification
     Mailer.mfa_notification(User.last.id)
   end
+
+  def gem_yanked
+    ownership = Ownership.where.not(user: nil).last
+    Mailer.gem_yanked(ownership.user.id, ownership.rubygem.versions.last.id, ownership.user.id)
+  end
+
+  def reset_api_key
+    user = User.last
+    Mailer.reset_api_key(user)
+  end
 end

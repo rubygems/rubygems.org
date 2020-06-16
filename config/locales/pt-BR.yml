@@ -140,6 +140,13 @@ pt-BR:
     gem_pushed:
       subject:
       title:
+    gem_yanked:
+      subject:
+      title:
+    reset_api_key:
+      subject:
+      title:
+      subtitle:
   news:
     show:
       title: Novos Releases - Todas as Gems
@@ -319,6 +326,7 @@ pt-BR:
   reverse_dependencies:
     index:
       title: "Dependências Reversas para %{name}"
+      subtitle:
     search:
       search_reverse_dependencies_html: "Buscar Gems com dependências&hellip;"
   searches:

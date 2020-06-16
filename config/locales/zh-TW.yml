@@ -140,6 +140,13 @@ zh-TW:
     gem_pushed:
       subject:
       title:
+    gem_yanked:
+      subject:
+      title:
+    reset_api_key:
+      subject:
+      title:
+      subtitle:
   news:
     show:
       title: 最新發佈
@@ -319,6 +326,7 @@ zh-TW:
   reverse_dependencies:
     index:
       title:
+      subtitle:
     search:
       search_reverse_dependencies_html:
   searches:
@@ -340,7 +348,7 @@ zh-TW:
       resend_confirmation: 沒收到確認信？
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded: 歷史下載次數排行
       total_downloads: 總下載次數
       total_gems: Gems 總數

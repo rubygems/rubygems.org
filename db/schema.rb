@@ -115,7 +115,9 @@ ActiveRecord::Schema.define(version: 2020_05_08_234114) do
     t.datetime "updated_at"
     t.string "slug"
     t.index "regexp_replace(upper((name)::text), '[_-]'::text, ''::text, 'g'::text)", name: "dashunderscore_typos_idx"
+    t.boolean "indexed", default: false, null: false
     t.index "upper((name)::text) varchar_pattern_ops", name: "index_rubygems_upcase"
+    t.index ["indexed"], name: "index_rubygems_on_indexed"
     t.index ["name"], name: "index_rubygems_on_name", unique: true
   end
 
@@ -193,7 +195,7 @@ ActiveRecord::Schema.define(version: 2020_05_08_234114) do
     t.string "sha256"
     t.hstore "metadata", default: {}, null: false
     t.datetime "yanked_at"
-    t.string "required_rubygems_version"
+    t.string "required_rubygems_version", limit: 255
     t.string "info_checksum"
     t.string "yanked_info_checksum"
     t.bigint "pusher_id"

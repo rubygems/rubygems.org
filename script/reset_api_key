@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+
+if ARGV.empty?
+  puts "Reset api key and updates user using email"
+  puts "USAGE: script/reset_api_key APIKEY"
+  exit
+end
+
+api_key = ARGV.first
+puts "Resetting API key : #{api_key}..."
+
+ENV["RAILS_ENV"] ||= "production"
+require_relative "../config/environment"
+
+begin
+  user = User.find_by!(api_key: api_key)
+  puts "Found user: #{user.handle}"
+  user.reset_api_key!
+  Mailer.reset_api_key(user).deliver
+  puts "Done."
+rescue ActiveRecord::RecordNotFound
+  puts "User #{api_key} not found."
+  exit 1 # return non-zero on fail
+end

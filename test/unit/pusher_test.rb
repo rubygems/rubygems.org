@@ -286,6 +286,11 @@ class PusherTest < ActiveSupport::TestCase
         assert_not_nil @rubygem.versions.last.info_checksum
       end
 
+      should "indexe rubygem and version" do
+        assert @rubygem.indexed?
+        assert @rubygem.versions.last.indexed?
+      end
+
       should "create rubygem index" do
         @rubygem.update_column("updated_at", Date.new(2016, 07, 04))
         Delayed::Worker.new.work_off
