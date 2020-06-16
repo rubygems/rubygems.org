@@ -141,11 +141,13 @@ class Version < ApplicationRecord
     subquery = <<-SQL
       versions.rubygem_id IN (SELECT versions.rubygem_id
                                 FROM versions
+                            WHERE versions.indexed = 'true'
                             GROUP BY versions.rubygem_id
-                              HAVING COUNT(versions.id) > 1)
+                              HAVING COUNT(versions.id) > 1
+                              ORDER BY MAX(created_at) DESC LIMIT :limit)
     SQL
 
-    where(subquery)
+    where(subquery, limit: limit)
       .joins(:rubygem)
       .indexed
       .by_created_at
