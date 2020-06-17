@@ -1,6 +1,8 @@
 class Api::BaseController < ApplicationController
   skip_before_action :verify_authenticity_token
 
+  private
+
   def gem_name
     params[:gem_name] || params[:rubygem_name]
   end
