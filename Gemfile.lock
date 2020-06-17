@@ -433,7 +433,7 @@ DEPENDENCIES
   honeybadger
   http_accept_language
   jquery-rails
-  kaminari
+  kaminari (~> 1.2.1)
   launchy
   listen
   lograge
