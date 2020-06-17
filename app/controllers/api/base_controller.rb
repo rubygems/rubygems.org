@@ -6,7 +6,7 @@ class Api::BaseController < ApplicationController
   end
 
   def find_rubygem_by_name
-    @rubygem  = Rubygem.find_by name: gem_name
+    @rubygem = Rubygem.find_by name: gem_name
     return if @rubygem
     render plain: "This gem could not be found", status: :not_found
   end
