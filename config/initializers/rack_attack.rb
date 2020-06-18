@@ -1,12 +1,12 @@
 class Rack::Attack
   REQUEST_LIMIT = 100
-  EXP_BASE_REQUEST_LIMIT = 200
+  EXP_BASE_REQUEST_LIMIT = 300
   PUSH_LIMIT = 400
   REQUEST_LIMIT_PER_EMAIL = 10
   LIMIT_PERIOD = 10.minutes
   PUSH_LIMIT_PERIOD = 60.minutes
-  EXP_BASE_LIMIT_PERIOD = 100.seconds
-  EXP_BACKOFF_LEVELS = [1, 2, 3].freeze
+  EXP_BASE_LIMIT_PERIOD = 300.seconds
+  EXP_BACKOFF_LEVELS = [1, 2].freeze
   PUSH_EXP_THROTTLE_KEY = "api/exp/push/ip".freeze
 
   ### Prevent Brute-Force Login Attacks ###
@@ -25,9 +25,7 @@ class Rack::Attack
 
   protected_ui_actions = [
     { controller: "sessions",            action: "create" },
-    { controller: "sessions",            action: "mfa_create" },
     { controller: "users",               action: "create" },
-    { controller: "passwords",           action: "mfa_edit" },
     { controller: "passwords",           action: "edit" },
     { controller: "passwords",           action: "create" },
     { controller: "profiles",            action: "update" },
@@ -35,10 +33,18 @@ class Rack::Attack
     { controller: "email_confirmations", action: "create" }
   ]
 
-  protected_api_actions = [
+  protected_ui_mfa_actions = [
+    { controller: "sessions",            action: "mfa_create" },
+    { controller: "passwords",           action: "mfa_edit" },
+    { controller: "multifactor_auths",   action: "create" },
+    { controller: "multifactor_auths",   action: "update" }
+  ]
+
+  protected_api_mfa_actions = [
     { controller: "api/v1/deletions", action: "create" },
     { controller: "api/v1/owners",    action: "create" },
-    { controller: "api/v1/owners",    action: "destroy" }
+    { controller: "api/v1/owners",    action: "destroy" },
+    { controller: "api/v1/api_keys",  action: "show" }
   ]
 
   def self.protected_route?(protected_actions, path, method)
@@ -50,18 +56,21 @@ class Rack::Attack
     req.path.starts_with?("/assets") && req.request_method == "GET"
   end
 
-  # 200 req in 100 seconds
-  # 400 req in 10000 seconds (2.7 hours)
-  # 600 req in 1000000 seconds (277.7 hours)
+  throttle("clearance/ip", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
+    req.ip if protected_route?(protected_ui_actions, req.path, req.request_method)
+  end
+
+  # 300 req in 300 seconds
+  # 600 req in 90000 seconds (25 hours)
   EXP_BACKOFF_LEVELS.each do |level|
     throttle("clearance/ip/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
-      req.ip if protected_route?(protected_ui_actions, req.path, req.request_method)
+      req.ip if protected_route?(protected_ui_mfa_actions, req.path, req.request_method)
     end
   end
 
   EXP_BACKOFF_LEVELS.each do |level|
     throttle("api/ip/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
-      req.ip if protected_route?(protected_api_actions, req.path, req.request_method)
+      req.ip if protected_route?(protected_api_mfa_actions, req.path, req.request_method)
     end
   end
 
@@ -75,13 +84,6 @@ class Rack::Attack
 
   throttle("api/push/ip", limit: PUSH_LIMIT, period: PUSH_LIMIT_PERIOD) do |req|
     req.ip if protected_route?(protected_push_action, req.path, req.request_method)
-  end
-
-  # Throttle GET request for api_key by IP address
-  protected_api_key_action = [{ controller: "api/v1/api_keys", action: "show" }]
-
-  throttle("api_key/ip", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
-    req.ip if protected_route?(protected_api_key_action, req.path, req.request_method)
   end
 
   # Throttle yank requests
@@ -107,6 +109,8 @@ class Rack::Attack
     protected_route = protected_route?(protected_sessions_action, req.path, req.request_method)
     User.normalize_email(req.params['session']['who']).presence if protected_route && req.params['session']
   end
+
+  protected_api_key_action = [{ controller: "api/v1/api_keys", action: "show" }]
 
   throttle("api_key/basic_auth", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
     if protected_route?(protected_api_key_action, req.path, req.request_method)
