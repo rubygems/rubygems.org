@@ -61,6 +61,10 @@ class User < ApplicationRecord
     find_by(id: slug) || find_by!(handle: slug)
   end
 
+  def self.find_by_slug(slug)
+    find_by(id: slug) || find_by(handle: slug)
+  end
+
   def self.find_by_name(name)
     find_by(email: name) || find_by(handle: name)
   end
