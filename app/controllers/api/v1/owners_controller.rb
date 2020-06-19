@@ -36,11 +36,15 @@ class Api::V1::OwnersController < Api::BaseController
   end
 
   def gems
-    user = User.find_by_slug!(params[:handle])
-    rubygems = user.rubygems.with_versions
-    respond_to do |format|
-      format.json { render json: rubygems }
-      format.yaml { render yaml: rubygems }
+    user = User.find_by_slug(params[:handle])
+    if user
+      rubygems = user.rubygems.with_versions
+      respond_to do |format|
+        format.json { render json: rubygems }
+        format.yaml { render yaml: rubygems }
+      end
+    else
+      render plain: "Owner could not be found.", status: :not_found
     end
   end
 

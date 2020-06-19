@@ -62,8 +62,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       get :gems, params: { handle: "imaginary_handler" }, format: :json
     end
 
-    should "return JSON with error message" do
-      assert_equal JSON.parse(@response.body), { "error" => "Not Found" }
+    should "return plaintext with error message" do
+      assert_equal @response.body, "Owner could not be found."
     end
 
     should respond_with :not_found
@@ -84,8 +84,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       get :gems, params: { handle: -9999 }, format: :json
     end
 
-    should "return JSON with error message" do
-      assert_equal JSON.parse(@response.body), { "error" => "Not Found" }
+    should "return plain text with error message" do
+      assert_equal @response.body, "Owner could not be found."
     end
 
     should respond_with :not_found
