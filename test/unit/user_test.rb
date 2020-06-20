@@ -459,7 +459,7 @@ class UserTest < ActiveSupport::TestCase
       refute User.find_by_slug(nil)
     end
     context "foundable" do
-      setup { @user = create(:user, handle: 'findable') }
+      setup { @user = create(:user, handle: "findable") }
       should "return an AR when founded by id" do
         assert User.find_by_slug(@user.id)
       end
