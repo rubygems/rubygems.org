@@ -9,13 +9,13 @@ en:
     <a href="%{contributing_docs}">Become a contributor</a> and improve the site yourself.
   footer_sponsors_html: RubyGems.org is made possible through a partnership with the greater Ruby community.
     <a href="https://www.fastly.com/">Fastly</a> provides bandwidth and CDN support,
-    <a href="http://www.rubycentral.org/">Ruby Central</a> covers infrastructure costs, and
+    <a href="https://www.rubycentral.org/">Ruby Central</a> covers infrastructure costs, and
     <a href="https://rubytogether.org/?source=rubygems">Ruby Together</a> funds ongoing development and ops work.
     <a href="%{sponsors_page}">Learn more about our sponsors and how they work together</a>.
   footer_join_rt_html: We need your help to fund the developer time that keeps RubyGems.org running smoothly for everyone.
     <a href="https://rubytogether.org/join?source=rubygems">Join Ruby Together today</a>.
   form_disable_with: Please wait...
-  help_url: http://help.rubygems.org
+  help_url: https://help.rubygems.org
   invalid_page: Page number is out of range. Redirected to default page.
   locale_name: English
   none: None
