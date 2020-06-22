@@ -88,6 +88,7 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (>= 2.0, < 4.0)
+    castle-rb (4.3.0)
     celluloid (0.17.3)
       celluloid-essentials
       celluloid-extras
@@ -416,6 +417,7 @@ DEPENDENCIES
   bootsnap
   brakeman
   capybara (~> 2.18)
+  castle-rb
   clearance
   clearance-deprecated_password_strategies
   compact_index (~> 0.13.0)

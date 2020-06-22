@@ -45,6 +45,7 @@ gem "rack-attack"
 gem "rqrcode"
 gem "rotp"
 gem "unpwn", "~> 0.3.0"
+gem "castle-rb"
 
 # Logging
 gem "lograge"
