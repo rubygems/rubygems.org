@@ -24,7 +24,7 @@
   <% @ownerships.each do |ownership| %>
     <tr class="owners__row">
       <td class="owners__cell" data-title="Name">
-        <%= ownership.user.name %>
+        <%= link_to(ownership.user.name, profile_path(ownership.user), class: "owner_profile") %>
       </td>
       <td class="owners__cell" data-title="MFA">
         <%= ownership.user.mfa_level == "disabled" ? "✗" : "✔" %>

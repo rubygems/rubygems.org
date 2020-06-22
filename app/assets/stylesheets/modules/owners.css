@@ -28,6 +28,7 @@
     width: 100%;
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
     border-spacing: 0;
+    font-size: 16px;
 }
 @media screen and (max-width: 580px) {
     .owners__table {
@@ -67,9 +68,6 @@
         margin-bottom: 3px;
         content: attr(data-title);
         min-width: 98px;
-        font-size: 10px;
-        line-height: 10px;
-        font-weight: bold;
         text-transform: uppercase;
         color: #969696;
         display: block;
@@ -126,7 +124,7 @@
 }
 
 .add_owner__field {
-    max-width: 160px;
+    max-width: 320px;
 }
 /* Container for flex box */
 .row {
@@ -137,6 +135,12 @@
 .column {
     padding: 20px;
 }
+
+.owner_profile:visited, .owner_profile {
+    color: #000000; }
+.owner_profile:focus, .owner_profile:hover {
+    color: #e9573f; }
+
 /* On screens that are 992px wide or less */
 @media screen and (max-width: 992px) {
     .l-column {

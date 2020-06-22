@@ -9,6 +9,7 @@ class OwnershipTest < ActiveSupport::TestCase
   should have_db_index :rubygem_id
   should belong_to :user
   should have_db_index :user_id
+  should belong_to :authorizer
 
   context "with ownership" do
     setup do
@@ -33,7 +34,7 @@ class OwnershipTest < ActiveSupport::TestCase
     end
   end
 
-  context "by_indexed_gen_name order matters" do
+  context "by_indexed_gem_name order matters" do
     setup do
       @user = create(:user)
       @gems = %w[zork asf medium]
@@ -46,7 +47,7 @@ class OwnershipTest < ActiveSupport::TestCase
       @ownerships = @user.ownerships.by_indexed_gem_name
     end
 
-    should "ownwerships should be sorted by rubygem name ascedent order" do
+    should "ownerships should be sorted by rubygem name ascendant order" do
       assert_equal @gems.sort, (@ownerships.map { |own| own.rubygem.name })
     end
   end
@@ -56,11 +57,18 @@ class OwnershipTest < ActiveSupport::TestCase
       @rubygem       = create(:rubygem)
       @ownership_one = create(:ownership, rubygem: @rubygem)
       @ownership_two = create(:ownership, rubygem: @rubygem)
+      @ownership_three = create(:ownership, :unconfirmed, rubygem: @rubygem)
     end
 
     should "allow deletion of one ownership" do
       @ownership_one.safe_destroy
       assert_equal 1, @rubygem.owners.length
+      assert_equal 2, @rubygem.owners_including_unconfirmed.length
+    end
+
+    should "allow deletion of unconfirmed ownership" do
+      @ownership_three.safe_destroy
+      assert_equal 2, @rubygem.owners_including_unconfirmed.length
     end
 
     should "not allow deletion of both ownerships" do
@@ -68,6 +76,39 @@ class OwnershipTest < ActiveSupport::TestCase
       @ownership_two.safe_destroy
       assert_equal 1, @rubygem.owners.length
       assert_equal @ownership_two.user, @rubygem.owners.last
+    end
+  end
+
+  context "#create" do
+    setup do
+      @authorizer = create(:user)
+      @new_owner = create(:user)
+      @rubygem = create(:rubygem)
+      @ownership = @rubygem.ownerships.create(user: @new_owner, authorizer: @authorizer)
+    end
+    should "create unconfirmed ownership" do
+      assert_nil @ownership.confirmed_at
+    end
+
+    should "generate 20 char hex confirmation token" do
+      assert_match(/[0-9a-f]{20}/, @ownership.token)
+    end
+  end
+
+  context "#valid_confirmation_token?" do
+    setup do
+      @ownership = create(:ownership)
+    end
+
+    should "return false when email confirmation token has expired" do
+      @ownership.update_attribute(:token_expires_at, 2.minutes.ago)
+      refute @ownership.valid_confirmation_token?
+    end
+
+    should "return true when email confirmation token has not expired" do
+      two_minutes_in_future = Time.zone.now + 2.minutes
+      @ownership.update_attribute(:token_expires_at, two_minutes_in_future)
+      assert @ownership.valid_confirmation_token?
     end
   end
 end

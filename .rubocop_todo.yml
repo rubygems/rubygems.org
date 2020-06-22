@@ -47,6 +47,7 @@ Rails/OutputSafety:
   Exclude:
     - 'app/helpers/application_helper.rb'
     - 'app/helpers/rubygems_helper.rb'
+    - 'test/integration/owner_test.rb'
 
 # Offense count: 38
 # Cop supports --auto-correct.

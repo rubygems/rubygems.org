@@ -5,6 +5,8 @@ class Ownership < ApplicationRecord
 
   validates :user_id, uniqueness: { scope: :rubygem_id }
 
+  before_create :generate_confirmation_token
+
   def self.by_indexed_gem_name
     select("ownerships.*, rubygems.name")
       .left_joins(rubygem: :versions)
@@ -13,12 +15,12 @@ class Ownership < ApplicationRecord
       .order("rubygems.name ASC")
   end
 
-  def self.create_unconfirmed(rubygem, owner, authorizer)
-    ownership = rubygem.ownerships.new(user: owner)
-    ownership.generate_confirmation_token
-    ownership.authorizer_id = authorizer.id
-    ownership
-  end
+  # def self.create_unconfirmed(rubygem, owner, authorizer)
+  #   ownership = rubygem.ownerships.new(user: owner)
+  #   ownership.generate_confirmation_token
+  #   ownership.authorizer_id = authorizer.id
+  #   ownership
+  # end
 
   def valid_confirmation_token?
     token_expires_at > Time.zone.now
@@ -34,15 +36,13 @@ class Ownership < ApplicationRecord
   end
 
   def confirmed?
-    return false if confirmed_at.nil?
+    return true if confirmed_at.present?
 
-    true
+    false
   end
 
   def unconfirmed?
-    return true if confirmed_at.nil?
-
-    false
+    !confirmed?
   end
 
   def notify_owner_removed

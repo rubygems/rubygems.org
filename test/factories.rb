@@ -51,7 +51,6 @@ FactoryBot.define do
     trait :unconfirmed do
       confirmed_at { nil }
     end
-
   end
 
   factory :subscription do
