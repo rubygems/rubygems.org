@@ -24,6 +24,10 @@ Lint/DuplicateMethods:
 Metrics/BlockLength:
   Max: 284
 
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'app/models/concerns/rubygem_searchable.rb'
+
 # Offense count: 43
 # Cop supports --auto-correct.
 # Configuration parameters: Whitelist.
