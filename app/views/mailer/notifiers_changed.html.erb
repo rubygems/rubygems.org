@@ -32,6 +32,7 @@
         </p>
 
         <%= render "compromised_instructions" do %>
+          <li><%= link_to("Renable email notification for your gem", notifier_url) %></li>
           <li>Look out for unexpected changes to your gems on RubyGems.org</li>
         <% end %>
 
