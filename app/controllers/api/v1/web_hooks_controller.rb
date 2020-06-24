@@ -41,6 +41,12 @@ class Api::V1::WebHooksController < Api::BaseController
 
   private
 
+  def find_rubygem_by_name
+    @rubygem = Rubygem.find_by name: gem_name
+    return if @rubygem || gem_name == WebHook::GLOBAL_PATTERN
+    render plain: "This gem could not be found", status: :not_found
+  end
+
   def set_url
     render plain: "URL was not provided", status: :bad_request unless params[:url]
     @url = params[:url]
