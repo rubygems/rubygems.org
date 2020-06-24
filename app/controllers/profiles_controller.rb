@@ -18,7 +18,7 @@ class ProfilesController < ApplicationController
     @user = current_user.clone
     if @user.update(params_user)
       if @user.unconfirmed_email
-        Mailer.delay.email_reset(current_user)
+        Delayed::Job.enqueue EmailResetMailer.new(current_user.id)
         flash[:notice] = t(".confirmation_mail_sent")
       else
         flash[:notice] = t(".updated")
