@@ -47,7 +47,7 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
   config.ssl_options = {
-    hsts: { expires: 2.minutes, subdomains: false },
+    hsts: { expires: 24.hours, subdomains: false },
     redirect: {
       exclude: ->(request) { request.path.start_with?('/internal') }
     }
