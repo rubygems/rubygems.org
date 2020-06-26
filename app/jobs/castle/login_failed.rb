@@ -1,12 +1,7 @@
 module Castle
   class LoginFailed < TrackEvent
     def perform
-      castle_client
-        .track(
-          event: '$login.failed',
-          user_id: user_id,
-          user_traits: user_traits
-        ).freeze
+      track(::Castle::Events::LOGIN_FAILED)
     end
   end
 end

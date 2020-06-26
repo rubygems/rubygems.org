@@ -20,6 +20,13 @@ class SessionsController < Clearance::SessionsController
     end
   end
 
+  def destroy
+    Delayed::Job.enqueue(
+      Castle::LogoutSucceeded.new(current_user, castle_context), priority: PRIORITIES[:stats]
+    )
+    super
+  end
+
   private
 
   def do_login
@@ -39,7 +46,6 @@ class SessionsController < Clearance::SessionsController
 
   def login_success
     StatsD.increment "login.success"
-    Castle::LoginSucceeded.new(@user, castle_context).perform
     Delayed::Job.enqueue(
       Castle::LoginSucceeded.new(@user, castle_context), priority: PRIORITIES[:stats]
     )

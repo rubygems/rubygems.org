@@ -10,8 +10,20 @@ module Castle
       @context = context
     end
 
-    def castle_client
-      ::Castle::Client.new(@context)
+    def track(event_name)
+      ::Castle::Client
+        .new(@context)
+        .track(track_params(event_name))
+    end
+
+    private
+
+    def track_params(event_name)
+      {
+        event: event_name,
+        user_id: user_id,
+        user_traits: user_traits
+      }
     end
 
     def user_traits
