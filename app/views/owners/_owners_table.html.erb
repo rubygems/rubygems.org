@@ -2,29 +2,29 @@
   <tbody class="owners__tbody">
   <tr class="owners__row owners__header">
     <th class="owners__cell">
-      NAME
+      <%= t("owners.index.name") %>
     </th>
     <th class="owners__cell">
-      MFA
+      <%= t("owners.index.mfa") %>
     </th>
     <th class="owners__cell">
-      CONFIRMED
+      <%= t("owners.index.confirmed") %>
     </th>
     <th class="owners__cell">
-      ADDED ON
+      <%= t("owners.index.added_on") %>
     </th>
     <th class="owners__cell">
-      ADDED BY
+      <%= t("owners.index.added_by") %>
     </th>
     <th class="owners__cell">
-      ACTION
+      <%= t("owners.index.action") %>
     </th>
   </tr>
 
   <% @ownerships.each do |ownership| %>
     <tr class="owners__row">
       <td class="owners__cell" data-title="Name">
-        <%= link_to(ownership.user.name, profile_path(ownership.user), class: "owner_profile") %>
+        <%= link_to(ownership.owner_name, profile_path(ownership.user), class: "owner_profile") %>
       </td>
       <td class="owners__cell" data-title="MFA">
         <%= ownership.user.mfa_level == "disabled" ? "✗" : "✔" %>
@@ -36,10 +36,10 @@
         <%= nice_date_for(ownership.confirmed_at) if ownership.confirmed? %>
       </td>
       <td class="owners__cell" data-title="Added By">
-        <%= ownership.authorizer.name %>
+        <%= ownership.authorizer_name %>
       </td>
       <td class="owners__cell" data-title="Action">
-        <%= button_to "Remove", rubygem_owner_path(@rubygem, ownership), :method => 'delete', :class => 'remove__owners__button' %>
+        <%= button_to "Remove", rubygem_owner_path(@rubygem, ownership), method: "delete", class: "form__submit form__submit--small" %>
       </td>
     </tr>
   <% end %>

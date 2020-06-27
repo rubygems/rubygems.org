@@ -83,48 +83,9 @@
         display: block;
     }
 }
-.remove__owners__button {
-    -webkit-appearance: none;
-    position: relative;
-    display: inline-block;
-    border-radius: 20px;
-    border: 1px solid transparent;
-    cursor: pointer;
-    outline: none;
-    transition-duration: 0.25s;
-    transition-property: border-color, background-color;
-    width: 100%;
-    max-width: 320px;
-    background-color: #e9573f;
-    color: #ffffff;
-}
-.remove__owners__button:hover {
-    opacity: .7;
-}
-.add__owners__button {
-    -webkit-appearance: none;
-    position: relative;
-    display: block;
-    border-radius: 20px;
-    border: 1px solid transparent;
-    cursor: pointer;
-    outline: none;
-    transition-duration: 0.25s;
-    margin-top: 22px;
-    margin-bottom: 80px;
-    width: 100%;
-    max-width: 320px;
-    background-color: #e9573f;
-    color: #ffffff;
-    transition-property: opacity;
-    padding: 8px 0;
-}
-.add__owners__button:hover {
-    opacity: .7;
-}
 
-.add_owner__field {
-    max-width: 320px;
+.right_wrapper {
+    max-width: 260px;
 }
 /* Container for flex box */
 .row {

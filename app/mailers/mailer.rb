@@ -77,37 +77,4 @@ class Mailer < ApplicationMailer
          subject: I18n.t("mailer.reset_api_key.subject"),
          template_name: template_name
   end
-
-  def ownership_confirmation(ownership_id)
-    @ownership = Ownership.find(ownership_id)
-    @user = @ownership.user
-    @rubygem = @ownership.rubygem
-    mail to: @user.email,
-         subject: I18n.t("mailer.ownership_confirmation.subject", gem: @rubygem.name,
-                         default: "Please confirm the ownership of %{gem} gem on RubyGems.org")
-  end
-
-  def owner_removed(owner_id, user_id, gem_id)
-    @user = User.find(user_id)
-    @owner = User.find(owner_id)
-    @rubygem = Rubygem.find(gem_id)
-    mail to: @user.email,
-         subject: if @owner.id == @user.id
-                    I18n.t("mailer.owners_update.subject_self", gem: @rubygem.name, status: "removed")
-                  else
-                    I18n.t("mailer.owners_update.subject_others", gem: @rubygem.name, status: "removed", owner_handle: @owner.handle)
-                  end
-  end
-
-  def owner_added(owner_id, user_id, gem_id)
-    @user = User.find(user_id)
-    @owner = User.find(owner_id)
-    @rubygem = Rubygem.find(gem_id)
-    mail to: @user.email,
-         subject: if @owner.id == @user.id
-                    I18n.t("mailer.owners_update.subject_self", gem: @rubygem.name, status: "added")
-                  else
-                    I18n.t("mailer.owners_update.subject_others", gem: @rubygem.name, status: "added", owner_handle: @owner.handle)
-                  end
-  end
 end

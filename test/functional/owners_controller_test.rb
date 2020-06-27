@@ -1,13 +1,12 @@
 require "test_helper"
 
 class OwnersControllerTest < ActionController::TestCase
-
   context "When logged in" do
     setup do
-      @user = create(:user)
+      user = create(:user)
       @rubygem = create(:rubygem)
-      create(:ownership, user: @user, rubygem: @rubygem)
-      sign_in_as(@user)
+      create(:ownership, user: user, rubygem: @rubygem)
+      sign_in_as(user)
     end
 
     context "on GET to index" do
@@ -19,7 +18,7 @@ class OwnersControllerTest < ActionController::TestCase
         should respond_with :success
         should "render all gem owners in owners table" do
           @rubygem.ownerships.each do |o|
-            assert page.has_content?(o.user.name)
+            assert page.has_content?(o.owner_name)
           end
         end
       end
@@ -44,7 +43,7 @@ class OwnersControllerTest < ActionController::TestCase
       should redirect_to("ownerships index") { rubygem_owners_path(@rubygem) }
       should "add unconfirmed ownership record" do
         assert @rubygem.owners_including_unconfirmed.include?(@new_owner)
-        assert_nil @rubygem.ownerships.find_by(user: @new_owner).confirmed_at
+        assert_nil @rubygem.ownerships_including_unconfirmed.find_by(user: @new_owner).confirmed_at
       end
       should "set success notice flash" do
         expected_notice = "Owner added successfully. A confirmation mail has been sent to #{@new_owner.handle}'s email"

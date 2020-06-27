@@ -119,40 +119,45 @@ es:
         sign_out: Salir
         sign_up: Registrarte
   mailer:
-    confirm_your_email: Por favor confirma tu dirección de correo con el enlace enviado.
-    confirmation_subject: Por favor confirma tu dirección de correo con RubyGems.org
+    confirm_your_email:
+    confirmation_subject:
     email_confirmation:
-      title: CONFIRMACIÓN DE EMAIL
-      subtitle: ¡Último paso!
-      confirmation_link: Confirma dirección de correo
-      welcome_message: Bienvenidos a RubyGems.org! Haz clic en el enlace de abajo para verificar tu dirección de correo.
+      title:
+      subtitle:
+      confirmation_link:
+      welcome_message:
     email_reset:
-      title: CAMBIO DE EMAIL
-      subtitle: ¡Hola %{handle}!
-      visit_link_instructions: Cambiaste tu dirección de correo en RubyGems.org. Por favor visita el siguiente enlace para re-activar tu cuenta.
-      link_expiration_explanation: Por favor ten en cuenta que el enlace tiene una validez de 3 horas.
+      title:
+      subtitle:
+      visit_link_instructions:
+      link_expiration_explanation:
     deletion_complete:
-      title: ELIMINACIÓN COMPLETADA
-      subtitle: ¡Adiós!
-      subject: Tu cuenta se ha eliminado de rubygems.org
-      body_html: Se ha procesado tu solicitud para eliminar tu cuenta de rubygems.org. Siempre puedes crear una nueva cuenta en nuestra página %{sign_up}.
+      title:
+      subtitle:
+      subject:
+      body_html:
     deletion_failed:
-      title: ELIMINACIÓN FALLIDA
-      subtitle: ¡Lo sentimos!
-      subject: Tu solicitud para eliminar tu cuenta de rubygems.org ha fallado
-      body_html: Has solicitado eliminar tu cuenta de rubygems.org. Lamentablemente, no hemos podido procesar tu pedido. Por favor inténtalo de nuevo más adelante o %{contact} si el problema persiste.
+      title:
+      subtitle:
+      subject:
+      body_html:
     notifiers_changed:
-      subject: Cambiaste la configuración de tus notificaciones por email de RubyGems.org
-      title: NOTIFICACIONES POR EMAIL
-      subtitle: ¡Hola %{handle}!
+      subject:
+      title:
+      subtitle:
     gem_pushed:
-      subject: Gema %{gem} subida a RubyGems.org
-      title: GEMA SUBIDA
+      subject:
+      title:
     gem_yanked:
       subject:
       title:
     reset_api_key:
       subject:
+      title:
+      subtitle:
+    email_reset_update:
+      subject:
+      title:
     ownership_confirmation:
       subject:
       title:
@@ -162,13 +167,10 @@ es:
     owners_update:
       subject_self:
       subject_others:
-      body_self:
-      body_others:
       title:
       subtitle:
-    email_reset_update:
-      subject:
-      title:
+      body_self:
+      body_others:
   news:
     show:
       title: Nuevos lanzamientos — Todas las Gemas
@@ -246,7 +248,7 @@ es:
       recommended: recomendado
       title: Notificación de email
       update: Actualizar
-      owner_info: ""
+      owner_info:
   profiles:
     edit:
       change_avatar:
@@ -408,4 +410,13 @@ es:
   owners:
     confirm:
       confirmed_email:
-  token_expired: ""
+    index:
+      add_owner:
+      name:
+      mfa:
+      confirmed:
+      added_on:
+      added_by:
+      action:
+  token_expired:
+  resend_ownership_confirmation: ""

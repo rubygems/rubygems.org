@@ -156,7 +156,14 @@ zh-TW:
       subtitle:
       body_html:
       link_expiration_explanation:
-    owners_update:
+    owner_added:
+      subject_self:
+      subject_others:
+      title:
+      subtitle:
+      body_self:
+      body_others:
+    owner_removed:
       subject_self:
       subject_others:
       title:
@@ -242,6 +249,14 @@ zh-TW:
   owners:
     confirm:
       confirmed_email:
+    index:
+      add_owner:
+      name:
+      mfa:
+      confirmed:
+      added_on:
+      added_by:
+      action:
   profiles:
     edit:
       change_avatar:
@@ -400,4 +415,5 @@ zh-TW:
         one: 顯示 <b>1</b> %{model}
         other: 顯示 <b>所有 %{count}</b> %{model}
         zero: 找不到 %{model}
-  token_expired: ""
+  token_expired:
+  resend_ownership_confirmation: ""

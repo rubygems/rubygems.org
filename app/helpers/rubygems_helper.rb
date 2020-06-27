@@ -83,7 +83,7 @@ module RubygemsHelper
   end
 
   def resend_owner_confirmation_link(rubygem)
-    link_to "Resend Ownership Confirmation", resend_confirmation_rubygem_owners_url(rubygem), class: "gem__link t-list__item"
+    link_to I18n.t("resend_ownership_confirmation"), resend_confirmation_rubygem_owners_url(rubygem), class: "gem__link t-list__item"
   end
 
   def links_to_owners(rubygem)

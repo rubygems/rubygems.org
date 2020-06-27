@@ -42,7 +42,7 @@ puts "Merging #{chosen_user.email}/#{handle}..."
 
 (other_user.rubygems - chosen_user.rubygems).each do |rubygem|
   puts "Merging ownership for #{rubygem.name}..."
-  ownership = rubygem.ownerships.find_by_user_id(other_user.id)
+  ownership = rubygem.ownerships_including_unconfirmed.find_by_user_id(other_user.id)
   ownership.user = chosen_user
   ownership.save!
 end

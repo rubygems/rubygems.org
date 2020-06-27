@@ -2,10 +2,12 @@ class Rubygem < ApplicationRecord
   include Patterns
   include RubygemSearchable
 
-  has_many :ownerships, dependent: :destroy
-  has_many :owners_including_unconfirmed, through: :ownerships, source: :user
-  has_many :owners, ->(gem) { gem.owners_including_unconfirmed.confirmed_owners }, through: :ownerships, source: :user
-  has_many :notifiable_owners, ->(gem) { gem.owners.notifiable_owners }, through: :ownerships, source: :user
+  has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :rubygem
+  has_many :ownerships_including_unconfirmed, dependent: :destroy, class_name: "Ownership"
+  has_many :owners, through: :ownerships, source: :user
+  has_many :owners_including_unconfirmed, through: :ownerships_including_unconfirmed, source: :user
+  has_many :push_notifiable_owners, ->(gem) { gem.owners.push_notifiable_owners }, through: :ownerships, source: :user
+  has_many :ownership_notifiable_owners, ->(gem) { gem.owners.ownership_notifiable_owners }, through: :ownerships, source: :user
   has_many :subscriptions, dependent: :destroy
   has_many :subscribers, through: :subscriptions, source: :user
   has_many :versions, dependent: :destroy, validate: false
@@ -137,13 +139,11 @@ class Rubygem < ApplicationRecord
   end
 
   def owned_by?(user)
-    return false unless user
-    ownerships.where(user_id: user.id).where.not(confirmed_at: nil).exists?
+    owners.include? user
   end
 
   def unconfirmed_ownership?(user)
-    return false unless user
-    ownerships.where(user_id: user.id, confirmed_at: nil).exists?
+    ownerships_including_unconfirmed.unconfirmed(user).exists?
   end
 
   def to_s
@@ -206,7 +206,11 @@ class Rubygem < ApplicationRecord
   end
 
   def create_ownership(user)
-    ownerships.create(user: user, confirmed_at: Time.current, authorizer: user) if unowned?
+    return unless unowned?
+
+    ownership = ownerships.create(user: user, authorizer: user)
+    ownership.confirm_ownership!
+    ownership
   end
 
   def update_versions!(version, spec)
@@ -262,8 +266,8 @@ class Rubygem < ApplicationRecord
   end
 
   def disown
-    ownerships.each(&:delete)
-    ownerships.clear
+    ownerships_including_unconfirmed.each(&:delete)
+    ownerships_including_unconfirmed.clear
   end
 
   def find_version_from_spec(spec)

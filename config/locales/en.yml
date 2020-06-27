@@ -165,13 +165,20 @@ en:
       subtitle: Hi %{handle}!
       body_html: You were added as an owner for <strong>%{gem}</strong> gem on RubyGems.org. Please click on the link below to confirm your ownership.
       link_expiration_explanation: Please keep in mind that this link is only valid for 48 hours.
-    owners_update:
-      subject_self: You were %{status} as an owner to %{gem} gem
-      subject_others: User %{owner_handle} was %{status} as an owner to %{gem} gem
-      title: OWNERS UPDATED
+    owner_added:
+      subject_self: You were added as an owner to %{gem} gem
+      subject_others: User %{owner_handle} was added as an owner to %{gem} gem
+      title: OWNER ADDED
       subtitle: Hi %{user_handle}!
-      body_self: You were %{status} as an owner for <strong>%{gem}</strong> gem on RubyGems.org.
-      body_others: User %{owner_handle} was %{status} as an owner for %{gem} gem on RubyGems.org.
+      body_self: You were added as an owner for <strong>%{gem}</strong> gem on RubyGems.org.
+      body_others: User %{owner_handle} was added as an owner for %{gem} gem on RubyGems.org.
+    owner_removed:
+      subject_self: You were removed as an owner to %{gem} gem
+      subject_others: User %{owner_handle} was removed as an owner to %{gem} gem
+      title: OWNER REMOVED
+      subtitle: Hi %{user_handle}!
+      body_self: You were removed as an owner for <strong>%{gem}</strong> gem on RubyGems.org.
+      body_others: User %{owner_handle} was removed as an owner for %{gem} gem on RubyGems.org.
   news:
     show:
       title: New Releases — All Gems
@@ -242,7 +249,7 @@ en:
       success: You have successfully updated your email notification settings.
     show:
       push_info: To aid detection of unauthorized gem changes, we email you each time a new version of a
-        gem you own is pushed. By receiving and reading these emails, you help protect the Ruby
+        gem you own is pushed or yanked. By receiving and reading these emails, you help protect the Ruby
         ecosystem.
       on: On
       off: Off
@@ -255,6 +262,14 @@ en:
   owners:
     confirm:
       confirmed_email: You are added as an owner to %{gem} gem!
+    index:
+      add_owner: "ADD OWNER"
+      name: "NAME"
+      mfa: "MFA"
+      confirmed: "CONFIRMED"
+      added_on: "ADDED ON"
+      added_by: "ADDED BY"
+      action: "ACTION"
   profiles:
     edit:
       change_avatar: Change Avatar
@@ -413,3 +428,4 @@ en:
         one: Displaying <b>1</b> %{model}
         other: Displaying <b>all&nbsp;%{count}</b> %{model}
         zero: No %{model} found
+  resend_ownership_confirmation: "Resend Ownership Confirmation"

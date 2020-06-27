@@ -5,7 +5,13 @@ class Ownership < ApplicationRecord
 
   validates :user_id, uniqueness: { scope: :rubygem_id }
 
+  delegate :name, to: :user, prefix: :owner
+  delegate :name, to: :authorizer, prefix: true
+
   before_create :generate_confirmation_token
+
+  scope :confirmed, -> { where("confirmed_at IS NOT NULL") }
+  scope :unconfirmed, ->(user) { where("confirmed_at IS NULL").where(user: user) }
 
   def self.by_indexed_gem_name
     select("ownerships.*, rubygems.name")
@@ -14,13 +20,6 @@ class Ownership < ApplicationRecord
       .distinct
       .order("rubygems.name ASC")
   end
-
-  # def self.create_unconfirmed(rubygem, owner, authorizer)
-  #   ownership = rubygem.ownerships.new(user: owner)
-  #   ownership.generate_confirmation_token
-  #   ownership.authorizer_id = authorizer.id
-  #   ownership
-  # end
 
   def valid_confirmation_token?
     token_expires_at > Time.zone.now
@@ -36,42 +35,38 @@ class Ownership < ApplicationRecord
   end
 
   def confirmed?
-    return true if confirmed_at.present?
-
-    false
+    confirmed_at.present?
   end
 
   def unconfirmed?
     !confirmed?
   end
 
-  def notify_owner_removed
-    rubygem.notifiable_owners.each do |notified_user|
-      Mailer.delay.owner_removed(user_id, notified_user.id, rubygem_id)
-    end
-  end
-
-  def notify_owner_added
-    rubygem.notifiable_owners.each do |notified_user|
-      Mailer.delay.owner_added(user_id, notified_user.id, rubygem_id)
-    end
-  end
-
   def confirm_and_notify
     confirm_ownership! && notify_owner_added
   end
 
-  def safe_destroy
-    return destroy if unconfirmed?
-    rubygem.owners.many? && destroy
+  def destroy_and_notify
+    return false unless safe_destroy
+    notify_owner_removed
   end
 
-  def destroy_and_notify
-    if safe_destroy
-      Mailer.delay.owner_removed(user_id, user_id, rubygem_id)
-      notify_owner_removed
-    else
-      false
+  private
+
+  def safe_destroy
+    destroy if unconfirmed? || rubygem.owners.many?
+  end
+
+  def notify_owner_removed
+    OwnersMailer.delay.owner_removed(user_id, user_id, rubygem_id)
+    rubygem.ownership_notifiable_owners.each do |notified_user|
+      OwnersMailer.delay.owner_removed(user_id, notified_user.id, rubygem_id)
+    end
+  end
+
+  def notify_owner_added
+    rubygem.ownership_notifiable_owners.each do |notified_user|
+      OwnersMailer.delay.owner_added(user_id, notified_user.id, rubygem_id)
     end
   end
 end

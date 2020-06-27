@@ -145,22 +145,31 @@ pt-BR:
       title:
     reset_api_key:
       subject:
+      title:
+      subtitle:
+    email_reset_update:
+      subject:
+      title:
     ownership_confirmation:
       subject:
       title:
       subtitle:
       body_html:
       link_expiration_explanation:
-    owners_update:
+    owner_added:
       subject_self:
       subject_others:
-      body_self:
-      body_others:
       title:
       subtitle:
-    email_reset_update:
-      subject:
+      body_self:
+      body_others:
+    owner_removed:
+      subject_self:
+      subject_others:
       title:
+      subtitle:
+      body_self:
+      body_others:
   news:
     show:
       title: Novos Releases - Todas as Gems
@@ -398,4 +407,13 @@ pt-BR:
   owners:
     confirm:
       confirmed_email:
-  token_expired: ""
+    index:
+      add_owner:
+      name:
+      mfa:
+      confirmed:
+      added_on:
+      added_by:
+      action:
+  token_expired:
+  resend_ownership_confirmation: ""
