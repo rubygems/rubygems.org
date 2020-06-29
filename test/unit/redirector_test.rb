@@ -61,27 +61,6 @@ class RedirectorTest < ActiveSupport::TestCase
     assert_equal 200, last_response.status
   end
 
-  should "redirect request to docs to guides " do
-    get "/pages/docs", {}, "HTTP_HOST" => Gemcutter::HOST
-
-    assert_equal 301, last_response.status
-    assert_equal "https://guides.rubygems.org", last_response.headers["Location"]
-  end
-
-  should "redirect request to gem docs to guides " do
-    get "/pages/gem_docs", {}, "HTTP_HOST" => Gemcutter::HOST
-
-    assert_equal 301, last_response.status
-    assert_equal "https://guides.rubygems.org/command-reference", last_response.headers["Location"]
-  end
-
-  should "redirect request to api docs to guides " do
-    get "/pages/api_docs", {}, "HTTP_HOST" => Gemcutter::HOST
-
-    assert_equal 301, last_response.status
-    assert_equal "https://guides.rubygems.org/rubygems-org-api", last_response.headers["Location"]
-  end
-
   should "allow fastly domains" do
     get "/", {}, "HTTP_HOST" => "index.rubygems.org"
     assert_equal 200, last_response.status

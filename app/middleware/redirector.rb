@@ -13,12 +13,6 @@ class Redirector
       redirect_to(fake_request.url)
     elsif request.path =~ %r{^/(book|chapter|export|read|shelf|syndicate)} && request.host !~ /docs/
       redirect_to("https://docs.rubygems.org#{request.path}")
-    elsif %r{^/pages/docs$}.match?(request.path)
-      redirect_to("https://guides.rubygems.org")
-    elsif %r{^/pages/gem_docs$}.match?(request.path)
-      redirect_to("https://guides.rubygems.org/command-reference")
-    elsif %r{^/pages/api_docs$}.match?(request.path)
-      redirect_to("https://guides.rubygems.org/rubygems-org-api")
     else
       @app.call(env)
     end
