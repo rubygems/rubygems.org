@@ -479,7 +479,7 @@ class RubygemTest < ActiveSupport::TestCase
 
         hash = JSON.load(@rubygem.to_json)
 
-        assert_equal "http://www.rubydoc.info/gems/#{@rubygem.name}/#{@version.number}", hash["documentation_uri"]
+        assert_equal "https://www.rubydoc.info/gems/#{@rubygem.name}/#{@version.number}", hash["documentation_uri"]
       end
     end
 
@@ -504,7 +504,7 @@ class RubygemTest < ActiveSupport::TestCase
         @rubygem.linkset.docs = ""
         hash = JSON.load(@rubygem.to_json)
 
-        assert_equal "http://www.rubydoc.info/gems/#{@rubygem.name}/#{@version.number}", hash["documentation_uri"]
+        assert_equal "https://www.rubydoc.info/gems/#{@rubygem.name}/#{@version.number}", hash["documentation_uri"]
       end
 
       should "return a bunch of XML" do
