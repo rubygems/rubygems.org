@@ -24,6 +24,10 @@ class ActiveSupport::TestCase
   include EmailHelpers
   include PasswordHelpers
 
+  parallelize_setup { |worker| ENV["WORKER_NUMBER"] = worker.to_s }
+  
+  parallelize(workers: :number_of_processors)
+
   setup do
     I18n.locale = :en
     Rails.cache.clear

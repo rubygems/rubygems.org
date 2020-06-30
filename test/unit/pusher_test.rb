@@ -294,7 +294,7 @@ class PusherTest < ActiveSupport::TestCase
       should "create rubygem index" do
         @rubygem.update_column("updated_at", Date.new(2016, 07, 04))
         Delayed::Worker.new.work_off
-        response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
+        response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}-#{ENV["WORKER_NUMBER"]}",
                                                         type:  "rubygem",
                                                         id:    @rubygem.id
         expected_response = {
@@ -361,7 +361,7 @@ class PusherTest < ActiveSupport::TestCase
 
     should "update rubygem index" do
       Delayed::Worker.new.work_off
-      response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
+      response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}-#{ENV["WORKER_NUMBER"]}",
                                                       type:  "rubygem",
                                                       id:    @rubygem.id
       assert_equal "new summary", response["_source"]["summary"]

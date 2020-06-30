@@ -3,8 +3,10 @@ module RubygemSearchable
 
   included do
     include Elasticsearch::Model
-
-    index_name "rubygems-#{Rails.env}"
+  
+    index_name do
+      "rubygems-#{Rails.env}-#{ENV["WORKER_NUMBER"]}"
+    end
 
     delegate :index_document, to: :__elasticsearch__
     delegate :update_document, to: :__elasticsearch__

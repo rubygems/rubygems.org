@@ -7,7 +7,7 @@ module ESHelper
   end
 
   def es_downloads(id)
-    response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
+    response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}-#{ENV["WORKER_NUMBER"]}",
                                                     type: "rubygem",
                                                     id: id
     response["_source"]["downloads"]

@@ -76,7 +76,7 @@ class DeletionTest < ActiveSupport::TestCase
 
     Delayed::Worker.new.work_off
 
-    response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
+    response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}-#{ENV["WORKER_NUMBER"]}",
                                                     type: "rubygem",
                                                     id: @version.rubygem_id
     assert_equal true, response["_source"]["yanked"]
