@@ -38,7 +38,7 @@ module Castle
     end
 
     def user_id
-      @user ? @user.id : false
+      @user&.id ? @user.id : false
     end
   end
 end

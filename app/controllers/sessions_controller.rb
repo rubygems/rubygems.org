@@ -4,6 +4,7 @@ class SessionsController < Clearance::SessionsController
 
     if @user&.mfa_enabled?
       session[:mfa_user] = @user.handle
+      track_castle_event(Castle::ChallengeRequested, @user)
       render "sessions/otp_prompt"
     else
       do_login
@@ -14,16 +15,16 @@ class SessionsController < Clearance::SessionsController
     @user = User.find_by_name(session[:mfa_user])
     session.delete(:mfa_user)
     if @user&.mfa_enabled? && @user&.otp_verified?(params[:otp])
+      track_castle_event(Castle::ChallengeSucceeded, @user)
       do_login
     else
+      track_castle_event(Castle::ChallengeFailed, @user)
       login_failure(t("multifactor_auths.incorrect_otp"), @user)
     end
   end
 
   def destroy
-    Delayed::Job.enqueue(
-      Castle::LogoutSucceeded.new(current_user, castle_context), priority: PRIORITIES[:stats]
-    )
+    track_castle_event(Castle::LogoutSucceeded, current_user)
     super
   end
 
@@ -40,23 +41,20 @@ class SessionsController < Clearance::SessionsController
     end
   end
 
-  def castle_context
-    ::Castle::Client.to_context(request)
+  def track_castle_event(castle_event, user)
+    context = ::Castle::Client.to_context(request)
+    Delayed::Job.enqueue(castle_event.new(user, context), priority: PRIORITIES[:stats])
   end
 
   def login_success
     StatsD.increment "login.success"
-    Delayed::Job.enqueue(
-      Castle::LoginSucceeded.new(@user, castle_context), priority: PRIORITIES[:stats]
-    )
+    track_castle_event(Castle::LoginSucceeded, @user)
     redirect_back_or(url_after_create)
   end
 
   def login_failure(message, failed_user)
     StatsD.increment "login.failure"
-    Delayed::Job.enqueue(
-      Castle::LoginFailed.new(failed_user, castle_context), priority: PRIORITIES[:stats]
-    )
+    track_castle_event(Castle::LoginFailed, failed_user)
     flash.now.notice = message
     render template: "sessions/new", status: :unauthorized
   end

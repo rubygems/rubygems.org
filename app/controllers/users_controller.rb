@@ -20,6 +20,12 @@ class UsersController < Clearance::UsersController
     end
   end
 
+  private
+
+  def castle_context
+    ::Castle::Client.to_context(request)
+  end
+
   def user_params
     params.require(:user).permit(*User::PERMITTED_ATTRS)
   end

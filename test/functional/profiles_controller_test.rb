@@ -82,6 +82,13 @@ class ProfilesControllerTest < ActionController::TestCase
           @user = create(:user, handle: "johndoe")
           sign_in_as(@user)
           put :update, params: { user: { handle: @handle, password: @user.password } }
+          @expected_jobs = Set[Castle::ProfileUpdateSucceeded]
+          @actual_jobs =
+            Delayed::Job
+              .all
+              .pluck(:handler)
+              .map { |handler| YAML.load(handler).class }
+              .to_set
         end
 
         should respond_with :redirect
@@ -90,6 +97,10 @@ class ProfilesControllerTest < ActionController::TestCase
 
         should "update handle" do
           assert_equal @handle, User.last.handle
+        end
+
+        should "enqueue profile update succeeded job" do
+          assert_equal @expected_jobs, @actual_jobs
         end
       end
 
@@ -101,6 +112,13 @@ class ProfilesControllerTest < ActionController::TestCase
           sign_in_as(@user)
           put :update,
             params: { user: { handle: @handle, hide_email: @hide_email, password: @user.password } }
+          @expected_jobs = Set[Castle::ProfileUpdateSucceeded]
+          @actual_jobs =
+            Delayed::Job
+              .all
+              .pluck(:handler)
+              .map { |handler| YAML.load(handler).class }
+              .to_set
         end
 
         should respond_with :redirect
@@ -110,6 +128,10 @@ class ProfilesControllerTest < ActionController::TestCase
         should "update email toggle" do
           assert_equal @hide_email, User.last.hide_email
         end
+
+        should "enqueue profile update succeeded job" do
+          assert_equal @expected_jobs, @actual_jobs
+        end
       end
 
       context "updating without password" do
@@ -117,12 +139,23 @@ class ProfilesControllerTest < ActionController::TestCase
           @user = create(:user, handle: "johndoe")
           sign_in_as(@user)
           put :update, params: { user: { handle: "doejohn" } }
+          @expected_jobs = Set[Castle::ProfileUpdateFailed]
+          @actual_jobs =
+            Delayed::Job
+              .all
+              .pluck(:handler)
+              .map { |handler| YAML.load(handler).class }
+              .to_set
         end
 
         should set_flash.to("This request was denied. We could not verify your password.")
         should redirect_to("the profile edit page") { edit_profile_path }
         should "not update handle" do
           assert_equal "johndoe", @user.handle
+        end
+
+        should "enqueue profile update failed job" do
+          assert_equal @expected_jobs, @actual_jobs
         end
       end
 
@@ -133,6 +166,13 @@ class ProfilesControllerTest < ActionController::TestCase
           @user.save(validate: false)
           sign_in_as(@user)
           put :update, params: { user: { handle: @handle, password: @user.password } }
+          @expected_jobs = Set[Castle::ProfileUpdateSucceeded]
+          @actual_jobs =
+            Delayed::Job
+              .all
+              .pluck(:handler)
+              .map { |handler| YAML.load(handler).class }
+              .to_set
         end
 
         should respond_with :redirect
@@ -140,17 +180,32 @@ class ProfilesControllerTest < ActionController::TestCase
         should "update handle" do
           assert_equal @handle, @user.handle
         end
+
+        should "enqueue profile update succeeded job" do
+          assert_equal @expected_jobs, @actual_jobs
+        end
       end
 
       context "updating email with existing email" do
         setup do
           create(:user, email: "cannotchange@tothis.com")
           put :update, params: { user: { email: "cannotchange@tothis.com", password: @user.password } }
+          @expected_jobs = Set[Castle::ProfileUpdateFailed]
+          @actual_jobs =
+            Delayed::Job
+              .all
+              .pluck(:handler)
+              .map { |handler| YAML.load(handler).class }
+              .to_set
         end
 
         should "not set unconfirmed_email" do
           assert page.has_content? "Email address has already been taken"
           refute_equal "cannotchange@tothis.com", @user.unconfirmed_email
+        end
+
+        should "enqueue profile update failed job" do
+          assert_equal @expected_jobs, @actual_jobs
         end
       end
 
@@ -158,27 +213,44 @@ class ProfilesControllerTest < ActionController::TestCase
         setup do
           create(:user, unconfirmed_email: "cannotchange@tothis.com")
           put :update, params: { user: { email: "cannotchange@tothis.com", password: @user.password } }
+          @expected_jobs = Set[Castle::ProfileUpdateFailed]
+          @actual_jobs =
+            Delayed::Job
+              .all
+              .pluck(:handler)
+              .map { |handler| YAML.load(handler).class }
+              .to_set
         end
 
         should "not set unconfirmed_email" do
           assert page.has_content? "Email address has already been taken"
           refute_equal "cannotchange@tothis.com", @user.unconfirmed_email
         end
+
+        should "enqueue profile update failed job" do
+          assert_equal @expected_jobs, @actual_jobs
+        end
       end
     end
+
     context "on DELETE to destroy" do
       context "correct password" do
-        should "enqueue deletion request" do
-          assert_difference "Delayed::Job.count", 1 do
-            delete :destroy, params: { user: { password: @user.password } }
-          end
+        setup do
+          delete :destroy, params: { user: { password: @user.password } }
+          @expected_jobs = Set[Castle::ProfileUpdateSucceeded, DeleteUser]
+          @actual_jobs =
+            Delayed::Job
+              .all
+              .pluck(:handler)
+              .map { |handler| YAML.load(handler).class }
+              .to_set
+        end
+
+        should "enqueue delete user and profile update succeeded jobs" do
+          assert_equal @expected_jobs, @actual_jobs
         end
 
         context "redirect path and flash" do
-          setup do
-            delete :destroy, params: { user: { password: @user.password } }
-          end
-
           should redirect_to("the homepage") { root_url }
           should set_flash.to("Your account deletion request has been enqueued."\
             " We will send you a confirmation mail when your request has been processed.")
@@ -186,17 +258,22 @@ class ProfilesControllerTest < ActionController::TestCase
       end
 
       context "incorrect password" do
-        should "not enqueue deletion request" do
-          assert_no_difference "Delayed::Job.count" do
-            post :destroy, params: { user: { password: "youshallnotpass" } }
-          end
+        setup do
+          post :destroy, params: { user: { password: "youshallnotpass" } }
+          @expected_jobs = Set[Castle::ProfileUpdateFailed]
+          @actual_jobs =
+            Delayed::Job
+              .all
+              .pluck(:handler)
+              .map { |handler| YAML.load(handler).class }
+              .to_set
+        end
+
+        should "enqueue profile update failed job and not delete user job" do
+          assert_equal @expected_jobs, @actual_jobs
         end
 
         context "redirect path and flash" do
-          setup do
-            delete :destroy, params: { user: { password: "youshallnotpass" } }
-          end
-
           should redirect_to("the profile edit page") { edit_profile_path }
           should set_flash.to("This request was denied. We could not verify your password.")
         end
