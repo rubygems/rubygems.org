@@ -15,7 +15,7 @@ class LinksTest < ActiveSupport::TestCase
     rubygem = build(:rubygem, linkset: build(:linkset, docs: nil), versions: [version])
     links = rubygem.links(version)
 
-    assert_equal "http://www.rubydoc.info/gems/#{rubygem.name}/#{version.number}", links.documentation_uri
+    assert_equal "https://www.rubydoc.info/gems/#{rubygem.name}/#{version.number}", links.documentation_uri
   end
 
   should "use all fields when indexed" do
