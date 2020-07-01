@@ -8,22 +8,22 @@ class UsersController < Clearance::UsersController
     if @user.save
       Mailer.delay.email_confirmation(@user)
       flash[:notice] = t(".email_sent")
-      Delayed::Job.enqueue(
-        Castle::RegistrationSucceeded.new(@user, castle_context), priority: PRIORITIES[:stats]
-      )
+      track_castle_event(Castle::RegistrationSucceeded, @user)
       redirect_back_or url_after_create
     else
-      Delayed::Job.enqueue(
-        Castle::RegistrationFailed.new(@user, castle_context), priority: PRIORITIES[:stats]
-      )
+      track_castle_event(Castle::RegistrationFailed, @user)
       render template: "users/new"
     end
+  rescue ActionController::ParameterMissing => e
+    track_castle_event(Castle::RegistrationFailed, nil)
+    render plain: "Request is missing param '#{e.param}'", status: :bad_request
   end
 
   private
 
-  def castle_context
-    ::Castle::Client.to_context(request)
+  def track_castle_event(castle_event, user)
+    context = ::Castle::Client.to_context(request)
+    Delayed::Job.enqueue(castle_event.new(user, context), priority: PRIORITIES[:stats])
   end
 
   def user_params

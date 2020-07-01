@@ -13,22 +13,66 @@ class UsersControllerTest < ActionController::TestCase
     context "when email and password are given" do
       should "create a user" do
         post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+        @expected_jobs = Set[Castle::RegistrationSucceeded, Delayed::PerformableMailer]
+        @actual_jobs =
+          Delayed::Job
+            .all
+            .pluck(:handler)
+            .map { |handler| YAML.load(handler).class }
+            .to_set
+        
         assert User.find_by(email: "foo@bar.com")
+        assert_equal @expected_jobs, @actual_jobs
+      end
+    end
+
+    context "when email is taken" do
+      should "not create a user" do
+        create(:user, email: "foo@bar.com")
+        post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+        @expected_jobs = Set[Castle::RegistrationFailed]
+        @actual_jobs =
+          Delayed::Job
+            .all
+            .pluck(:handler)
+            .map { |handler| YAML.load(handler).class }
+            .to_set
+
+        assert_equal User.where(email: "foo@bar.com").count, 1
+        assert_equal @expected_jobs, @actual_jobs
       end
     end
 
     context "when missing a parameter" do
       should "raises parameter missing" do
         post :create
+        @expected_jobs = Set[Castle::RegistrationFailed]
+        @actual_jobs =
+          Delayed::Job
+            .all
+            .pluck(:handler)
+            .map { |handler| YAML.load(handler).class }
+            .to_set
+
         assert_response :bad_request
         assert page.has_content?("Request is missing param 'user'")
+        assert_equal @expected_jobs, @actual_jobs
       end
     end
 
     context "when extra parameters given" do
       should "create a user if parameters are ok" do
         post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "foo" } }
+        @expected_jobs = Set[Castle::RegistrationSucceeded, Delayed::PerformableMailer]
+        @actual_jobs =
+          Delayed::Job
+            .all
+            .pluck(:handler)
+            .map { |handler| YAML.load(handler).class }
+            .to_set
+
         assert_equal "foo", User.where(email: "foo@bar.com").pluck(:handle).first
+        assert_equal @expected_jobs, @actual_jobs
       end
 
       should "create a user but dont assign not valid parameters" do
