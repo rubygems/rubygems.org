@@ -10,6 +10,22 @@ env:
   BUNDLE_JOBS: 3
   BUNDLE_RETRY: 3
 jobs:
+  linting:
+    - name: Checkout Project
+      uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+    - name: Download Cached Gems
+      uses: actions/cache@v1
+      with:
+        path: vendor/bundle
+        key: bundler-cache-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: |
+          bundler-cache-
+    - name: Run Linting
+      run: |
+        bundle install
+        bundle exec brakeman
+        bundle exec rake rubocop
   build:
     name: Test Application
     runs-on: ubuntu-latest
@@ -64,13 +80,8 @@ jobs:
           bundle install
           cp config/database.yml.example config/database.yml
           bundle exec rake db:setup
-      - name: Run Linting
-        run: |
-          bundle exec brakeman
-          bundle exec rake rubocop
       - name: Run Tests
-        run: |
-          bundle exec rake test
+        run: bundle exec rake test
   deploy:
     runs-on: ubuntu-latest
     name: Deploy Docker Image
