@@ -5,8 +5,6 @@ updates:
   schedule:
     interval: daily
   open-pull-requests-limit: 99
-  reviewers:
-  - dwradcliffe
   versioning-strategy: lockfile-only
   ignore:
   - dependency-name: aws-sdk
