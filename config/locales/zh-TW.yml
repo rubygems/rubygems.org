@@ -7,7 +7,7 @@ zh-TW:
   footer_sponsors_html:
   footer_join_rt_html:
   form_disable_with: 請稍候...
-  help_url: http://help.rubygems.org
+  help_url: https://help.rubygems.org
   invalid_page:
   locale_name: 正體中文
   none: 無
@@ -140,6 +140,13 @@ zh-TW:
     gem_pushed:
       subject:
       title:
+    gem_yanked:
+      subject:
+      title:
+    reset_api_key:
+      subject:
+      title:
+      subtitle:
   news:
     show:
       title: 最新發佈
@@ -319,6 +326,7 @@ zh-TW:
   reverse_dependencies:
     index:
       title:
+      subtitle:
     search:
       search_reverse_dependencies_html:
   searches:
@@ -333,13 +341,14 @@ zh-TW:
       month_update:
       week_update:
       filter:
+      yanked:
   sessions:
     new:
       forgot_password: 忘記密碼？
       resend_confirmation: 沒收到確認信？
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded: 歷史下載次數排行
       total_downloads: 總下載次數
       total_gems: Gems 總數

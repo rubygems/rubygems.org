@@ -1,7 +1,6 @@
 require "digest/sha2"
 
 class Version < ApplicationRecord
-  MAX_FIELD_LENGTH = 255
   MAX_TEXT_FIELD_LENGTH = 64_000
 
   belongs_to :rubygem, touch: true
@@ -12,15 +11,16 @@ class Version < ApplicationRecord
   before_save :update_prerelease, if: :number_changed?
   before_validation :full_nameify!
   after_save :reorder_versions, if: -> { saved_change_to_indexed? || saved_change_to_id? }
+  after_save :refresh_rubygem_indexed, if: -> { saved_change_to_indexed? || saved_change_to_id? }
 
   serialize :licenses
   serialize :requirements
 
-  validates :number,   format: { with: /\A#{Gem::Version::VERSION_PATTERN}\z/ }
-  validates :platform, format: { with: Rubygem::NAME_PATTERN }
+  validates :number, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: /\A#{Gem::Version::VERSION_PATTERN}\z/ }
+  validates :platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Rubygem::NAME_PATTERN }
   validates :full_name, presence: true, uniqueness: { case_sensitive: false }
   validates :rubygem, presence: true
-  validates :required_rubygems_version, length: { minimum: 1, maximum: MAX_FIELD_LENGTH }, allow_blank: true
+  validates :required_rubygems_version, :licenses, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, allow_blank: true
   validates :description, :summary, :authors, :requirements, length: { minimum: 0, maximum: MAX_TEXT_FIELD_LENGTH }, allow_blank: true
 
   validate :platform_and_number_are_unique, on: :create
@@ -141,11 +141,13 @@ class Version < ApplicationRecord
     subquery = <<-SQL
       versions.rubygem_id IN (SELECT versions.rubygem_id
                                 FROM versions
+                            WHERE versions.indexed = 'true'
                             GROUP BY versions.rubygem_id
-                              HAVING COUNT(versions.id) > 1)
+                              HAVING COUNT(versions.id) > 1
+                              ORDER BY MAX(created_at) DESC LIMIT :limit)
     SQL
 
-    where(subquery)
+    where(subquery, limit: limit)
       .joins(:rubygem)
       .indexed
       .by_created_at
@@ -174,6 +176,10 @@ class Version < ApplicationRecord
   end
 
   delegate :reorder_versions, to: :rubygem
+
+  def refresh_rubygem_indexed
+    rubygem.refresh_indexed!
+  end
 
   def previous
     rubygem.versions.find_by(position: position + 1)
@@ -378,8 +384,13 @@ class Version < ApplicationRecord
 
   def metadata_attribute_length
     return if metadata.blank?
+
+    max_key_size = 128
+    max_value_size = 1024
     metadata.each do |key, value|
-      errors.add(:metadata, "metadata field ['#{key}'] is too long (maximum is #{MAX_FIELD_LENGTH} characters)") if value.length > MAX_FIELD_LENGTH
+      errors.add(:metadata, "metadata key ['#{key}'] is too large (maximum is #{max_key_size} bytes)") if key.size > max_key_size
+      errors.add(:metadata, "metadata value ['#{value}'] is too large (maximum is #{max_value_size} bytes)") if value.size > max_value_size
+      errors.add(:metadata, "metadata key is empty") if key.empty?
     end
   end
 end

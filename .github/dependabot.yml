@@ -1,0 +1,12 @@
+version: 2
+updates:
+- package-ecosystem: bundler
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 99
+  versioning-strategy: lockfile-only
+  ignore:
+  - dependency-name: aws-sdk
+    versions:
+    - "> 2.11.473, < 2.12"

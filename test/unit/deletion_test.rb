@@ -30,6 +30,7 @@ class DeletionTest < ActiveSupport::TestCase
 
       should "unindexes" do
         refute @version.indexed?
+        refute @version.rubygem.indexed?
       end
 
       should "be considered deleted" do
@@ -51,6 +52,14 @@ class DeletionTest < ActiveSupport::TestCase
       should "delete the .gem file" do
         assert_nil RubygemFs.instance.get("gems/#{@version.full_name}.gem"), "Rubygem still exists!"
       end
+
+      should "send gem yanked email" do
+        Delayed::Worker.new.work_off
+
+        email = ActionMailer::Base.deliveries.last
+        assert_equal "Gem #{@version.to_title} yanked from RubyGems.org", email.subject
+        assert_equal [@user.email], email.to
+      end
     end
 
     should "call GemCachePurger" do
@@ -61,7 +70,7 @@ class DeletionTest < ActiveSupport::TestCase
   end
 
   should "enque job for updating ES index, spec index and purging cdn" do
-    assert_difference "Delayed::Job.count", 7 do
+    assert_difference "Delayed::Job.count", 8 do
       delete_gem
     end
 
@@ -93,7 +102,8 @@ class DeletionTest < ActiveSupport::TestCase
         @deletion.restore!
       end
 
-      should "index version" do
+      should "index rubygem and version" do
+        assert @version.rubygem.indexed?
         assert @version.indexed?
       end
 

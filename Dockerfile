@@ -32,7 +32,7 @@ RUN bundle install
 
 COPY . ./
 
-ADD https://github.com/bundler/bundler-api/raw/master/versions.list config/versions.list
+ADD https://s3-us-west-2.amazonaws.com/oregon.production.s3.rubygems.org/versions/versions.list config/versions.list
 
 RUN mv config/database.yml.example config/database.yml
 

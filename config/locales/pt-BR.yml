@@ -7,7 +7,7 @@ pt-BR:
   footer_sponsors_html:
   footer_join_rt_html:
   form_disable_with: Atualizando...
-  help_url: http://help.rubygems.org
+  help_url: https://help.rubygems.org
   invalid_page: Número da página está fora do limite. Redirecionado para página padrão.
   locale_name: Português do Brasil
   none: Nenhum
@@ -140,6 +140,13 @@ pt-BR:
     gem_pushed:
       subject:
       title:
+    gem_yanked:
+      subject:
+      title:
+    reset_api_key:
+      subject:
+      title:
+      subtitle:
   news:
     show:
       title: Novos Releases - Todas as Gems
@@ -319,6 +326,7 @@ pt-BR:
   reverse_dependencies:
     index:
       title: "Dependências Reversas para %{name}"
+      subtitle:
     search:
       search_reverse_dependencies_html: "Buscar Gems com dependências&hellip;"
   searches:
@@ -333,6 +341,7 @@ pt-BR:
       month_update:
       week_update:
       filter:
+      yanked:
   sessions:
     new:
       forgot_password: Esqueceu sua Senha?

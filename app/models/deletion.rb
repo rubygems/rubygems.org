@@ -10,6 +10,7 @@ class Deletion < ApplicationRecord
   after_commit :remove_from_storage, on: :create
   after_commit :expire_cache
   after_commit :update_search_index
+  after_commit :send_gem_yanked_mail
 
   attr_accessor :version
 
@@ -72,5 +73,11 @@ class Deletion < ApplicationRecord
   def set_yanked_info_checksum
     checksum = GemInfo.new(version.rubygem.name).info_checksum
     version.update_attribute :yanked_info_checksum, checksum
+  end
+
+  def send_gem_yanked_mail
+    version.rubygem.notifiable_owners.each do |notified_user|
+      Mailer.delay.gem_yanked(user.id, version.id, notified_user.id)
+    end
   end
 end

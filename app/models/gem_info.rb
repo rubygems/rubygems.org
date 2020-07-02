@@ -113,7 +113,7 @@ class GemInfo
   def requirements_and_dependencies
     group_by_columns = "number, platform, sha256, info_checksum, required_ruby_version, required_rubygems_version, versions.created_at"
 
-    dep_req_agg = "string_agg(dependencies.requirements, '@' ORDER BY rubygems_dependencies.name)"
+    dep_req_agg = "string_agg(dependencies.requirements, '@' ORDER BY rubygems_dependencies.name, dependencies.id)"
 
     dep_name_agg = "string_agg(coalesce(rubygems_dependencies.name, '0'), ',' ORDER BY rubygems_dependencies.name) AS dep_name"
 
@@ -122,7 +122,7 @@ class GemInfo
         LEFT JOIN rubygems rubygems_dependencies
           ON rubygems_dependencies.id = dependencies.rubygem_id
           AND dependencies.scope = 'runtime'")
-      .where("rubygems.name = ? AND indexed = true", @rubygem_name)
+      .where("rubygems.name = ? AND versions.indexed = true", @rubygem_name)
       .group(Arel.sql(group_by_columns))
       .order(Arel.sql("versions.created_at, number, platform, dep_name"))
       .pluck(Arel.sql("#{group_by_columns}, #{dep_req_agg}, #{dep_name_agg}"))

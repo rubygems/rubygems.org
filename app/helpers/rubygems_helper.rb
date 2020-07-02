@@ -73,7 +73,7 @@ module RubygemsHelper
 
   def report_abuse_link(rubygem)
     encoded_title = CGI.escape("Reporting Abuse on #{rubygem.name}")
-    report_abuse_url = "http://help.rubygems.org/discussion/new" \
+    report_abuse_url = "https://help.rubygems.org/discussion/new" \
       "?discussion[private]=1&discussion[title]=" + encoded_title
     link_to t(".links.report_abuse"), report_abuse_url.html_safe, class: "gem__link t-list__item"
   end

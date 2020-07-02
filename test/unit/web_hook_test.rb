@@ -19,6 +19,13 @@ class WebHookTest < ActiveSupport::TestCase
     assert WebHook.specific.empty?
   end
 
+  should "be invalid with url longer than maximum field length" do
+    long_domain = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
+    hook = build(:web_hook, url: "https://#{long_domain}.com")
+    refute hook.valid?
+    assert_equal hook.errors.messages[:url], ["is too long (maximum is 255 characters)"]
+  end
+
   should "require user" do
     hook = build(:web_hook, user: nil)
     refute hook.valid?

@@ -58,7 +58,18 @@ class UserTest < ActiveSupport::TestCase
       should "be less than 255 characters" do
         user = build(:user, email: ("a" * 255) + "@example.com")
         refute user.valid?
-        assert_contains user.errors[:email], "is too long (maximum is 254 characters)"
+        assert_contains user.errors[:email], "is too long (maximum is 255 characters)"
+      end
+
+      should "be valid when it matches URI mail email regex" do
+        user = build(:user, email: "mail@example.com")
+        assert user.valid?
+      end
+
+      should "be invalid when it doesn't match URI mail email regex" do
+        user = build(:user, email: "random[a..z]mdhlwqui@163.com")
+        refute user.valid?
+        assert_contains user.errors[:email], "is invalid"
       end
     end
 

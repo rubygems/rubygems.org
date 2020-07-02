@@ -51,7 +51,7 @@
             <% end %>
 
             <%= link_to "Releases", news_url, class: "header__nav-link #{active?(news_path)}" %>
-            <%= link_to t('.footer.blog'), "http://blog.rubygems.org", class: "header__nav-link" %>
+            <%= link_to t('.footer.blog'), "https://blog.rubygems.org", class: "header__nav-link" %>
 
             <%- if request.path_info == '/gems' %>
               <%= link_to "Gems", rubygems_path, class: "header__nav-link is-active" %>
@@ -59,7 +59,7 @@
               <%= link_to "Gems", rubygems_path, class: "header__nav-link" %>
             <%- end %>
 
-            <%= link_to t('.footer.guides'), "http://guides.rubygems.org", class: "header__nav-link" %>
+            <%= link_to t('.footer.guides'), "https://guides.rubygems.org", class: "header__nav-link" %>
 
             <% if signed_in? %>
               <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link desktop__header__nav-link">
@@ -111,6 +111,10 @@
               <% if @subtitle %>
                 <i class="page__subheading"><%= @subtitle.html_safe %></i>
               <% end %>
+
+              <% if @subtitle_block %>
+                <i class="page__subheading page__subheading--block"><%= @subtitle_block.html_safe %></i>
+              <% end %>
             </h1>
           <% end %>
           <%= yield :title %>
@@ -131,14 +135,14 @@
             <%= link_to t('.footer.data'), page_path("data"), class: "nav--v__link--footer" %>
             <%= link_to t('.footer.discussion_forum'), "https://groups.google.com/group/rubygems-org", class: "nav--v__link--footer" %>
             <%= link_to t('.footer.statistics'), stats_path, class: "nav--v__link--footer" %>
-            <%= link_to t('.footer.contribute'), "http://guides.rubygems.org/contributing/", class: "nav--v__link--footer" %>
+            <%= link_to t('.footer.contribute'), "https://guides.rubygems.org/contributing/", class: "nav--v__link--footer" %>
             <%- if request.path_info == '/pages/about' %>
               <%= link_to t('.footer.about'), page_path("about"), class: "nav--v__link--footer is-active" %>
             <%- else %>
               <%= link_to t('.footer.about'), page_path("about"), class: "nav--v__link--footer" %>
             <%- end %>
             <%= link_to t('.footer.help'), t(:help_url), class: "nav--v__link--footer" %>
-            <%= link_to t('.footer.api'), "http://guides.rubygems.org/rubygems-org-api", class: "nav--v__link--footer" %>
+            <%= link_to t('.footer.api'), "https://guides.rubygems.org/rubygems-org-api", class: "nav--v__link--footer" %>
             <%- if request.path_info == '/pages/security' %>
               <%= link_to t('.footer.security'), page_path("security"), class: "nav--v__link--footer is-active" %>
             <%- else %>
@@ -149,11 +153,11 @@
             <div class="footer__about">
               <p>
                 <%= t('footer_about_html',
-                  publish_docs: "http://guides.rubygems.org/publishing/",
-                  install_docs: "http://guides.rubygems.org/command-reference/#gem-install",
-                  api_docs: "http://guides.rubygems.org/rubygems-org-api/",
+                  publish_docs: "https://guides.rubygems.org/publishing/",
+                  install_docs: "https://guides.rubygems.org/command-reference/#gem-install",
+                  api_docs: "https://guides.rubygems.org/rubygems-org-api/",
                   gem_list: rubygems_path,
-                  contributing_docs: "http://guides.rubygems.org/contributing/"
+                  contributing_docs: "https://guides.rubygems.org/contributing/"
                   ) %>
               </p>
               <p>
@@ -168,7 +172,7 @@
       </div>
       <div class="footer__sponsors-wrap">
         <div class="footer__sponsors">
-          <a class="footer__sponsor" href="http://rubycentral.org/" target="_blank">
+          <a class="footer__sponsor" href="https://rubycentral.org/" target="_blank">
             <%= t("layouts.application.footer.supported_by") %>
             <span class="t-hidden">Ruby Central</span>
           </a>
@@ -188,7 +192,7 @@
             <%= t("layouts.application.footer.optimized_by") %>
             <span class="t-hidden">New Relic</span>
           </a>
-          <a class="footer__sponsor" href="http://get.gaug.es/" target="_blank">
+          <a class="footer__sponsor" href="https://get.gaug.es/" target="_blank">
             <%= t("layouts.application.footer.tracking_by") %>
             <span class="t-hidden">Gauges</span>
           </a>

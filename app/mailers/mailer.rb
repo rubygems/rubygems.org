@@ -7,17 +7,17 @@ class Mailer < ApplicationMailer
   default_url_options[:protocol] = Gemcutter::PROTOCOL
 
   def email_reset(user)
-    @user = User.find(user["id"])
+    @user = user
     mail to: @user.unconfirmed_email,
-         subject: I18n.t("mailer.confirmation_subject",
-           default: "Please confirm your email address with RubyGems.org")
+        subject: I18n.t("mailer.confirmation_subject",
+          default: "Please confirm your email address with RubyGems.org")
   end
 
   def email_confirmation(user)
-    @user = User.find(user["id"])
+    @user = user
     mail to: @user.email,
-         subject: I18n.t("mailer.confirmation_subject",
-           default: "Please confirm your email address with RubyGems.org")
+        subject: I18n.t("mailer.confirmation_subject",
+          default: "Please confirm your email address with RubyGems.org")
   end
 
   def deletion_complete(email)
@@ -54,5 +54,20 @@ class Mailer < ApplicationMailer
 
     mail to: @user.email,
       subject: "Please consider enabling MFA for your account"
+  end
+
+  def gem_yanked(yanked_by_user_id, version_id, notified_user_id)
+    @version        = Version.find(version_id)
+    notified_user   = User.find(notified_user_id)
+    @yanked_by_user = User.find(yanked_by_user_id)
+
+    mail to: notified_user.email,
+         subject: I18n.t("mailer.gem_yanked.subject", gem: @version.to_title)
+  end
+
+  def reset_api_key(user)
+    @user = user
+    mail to: @user.email,
+         subject: I18n.t("mailer.reset_api_key.subject")
   end
 end
