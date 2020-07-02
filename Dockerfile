@@ -1,5 +1,9 @@
 FROM ruby:2.6-alpine as build
 
+ARG BUNDLE_DEPLOYMENT=true
+ARG BUNDLE_JOBS=4
+ARG BUNDLE_RETRY=5
+
 RUN apk add --no-cache \
   ruby \
   nodejs \
@@ -20,14 +24,17 @@ RUN mkdir -p /app /app/config /app/log/
 WORKDIR /app
 
 RUN gem update --system 2.6.10
+RUN gem install bundler
 
-COPY . /app
+COPY Gemfile* ./
 
-ADD https://github.com/bundler/bundler-api/raw/master/versions.list /app/config/versions.list
+RUN bundle install
 
-RUN mv /app/config/database.yml.example /app/config/database.yml
+COPY . ./
 
-RUN gem install bundler io-console --no-ri --no-rdoc && bundle install --jobs 20 --retry 5 --without deploy
+ADD https://github.com/bundler/bundler-api/raw/master/versions.list config/versions.list
+
+RUN mv config/database.yml.example config/database.yml
 
 RUN RAILS_ENV=production SECRET_KEY_BASE=1234 bin/rails assets:precompile
 
@@ -46,11 +53,11 @@ RUN apk add --no-cache \
   xz-libs \
   && rm -rf /var/cache/apk/*
 
+RUN gem install bundler
+
 RUN mkdir -p /app
 WORKDIR /app
 
-COPY --from=build /usr/local/bin/gem /usr/local/bin/gem
-COPY --from=build /usr/local/bundle/ /usr/local/bundle/
 COPY --from=build /app/ /app/
 
 EXPOSE 3000
