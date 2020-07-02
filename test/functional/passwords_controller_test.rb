@@ -5,10 +5,8 @@ class PasswordsControllerTest < ActionController::TestCase
 
   context "on POST to create" do
     context "when missing a parameter" do
-      setup do
-        post :create
-      end
       should "raises parameter missing" do
+        post :create
         assert_response :bad_request
         assert page.has_content?("Request is missing param 'password'")
         assert_equal Set[Castle::ProfileUpdateFailed], queued_job_classes
@@ -140,6 +138,7 @@ class PasswordsControllerTest < ActionController::TestCase
       should "not change api_key" do
         assert(@user.reload.api_key == @api_key)
       end
+
       should "not change password" do
         assert(@user.reload.encrypted_password == @old_encrypted_password)
       end
@@ -162,6 +161,7 @@ class PasswordsControllerTest < ActionController::TestCase
       should "not change api_key" do
         assert(@user.reload.api_key == @api_key)
       end
+
       should "change password" do
         assert(@user.reload.encrypted_password != @old_encrypted_password)
       end
@@ -176,7 +176,9 @@ class PasswordsControllerTest < ActionController::TestCase
         put :update, params: {
           user_id: @user.id,
           token: @user.confirmation_token,
-          password_reset: { reset_api_key: "false", password: PasswordHelpers::SECURE_TEST_PASSWORD }
+          password_reset: {
+            reset_api_key: "false", password: PasswordHelpers::SECURE_TEST_PASSWORD
+          }
         }
       end
 
@@ -184,6 +186,7 @@ class PasswordsControllerTest < ActionController::TestCase
       should "not change api_key" do
         assert(@user.reload.api_key == @api_key)
       end
+
       should "change password" do
         assert(@user.reload.encrypted_password != @old_encrypted_password)
       end
@@ -198,7 +201,9 @@ class PasswordsControllerTest < ActionController::TestCase
         put :update, params: {
           user_id: @user.id,
           token: @user.confirmation_token,
-          password_reset: { reset_api_key: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
+          password_reset: {
+            reset_api_key: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD
+          }
         }
       end
 
@@ -206,6 +211,7 @@ class PasswordsControllerTest < ActionController::TestCase
       should "change api_key" do
         assert(@user.reload.api_key != @api_key)
       end
+
       should "change password" do
         assert(@user.reload.encrypted_password != @old_encrypted_password)
       end

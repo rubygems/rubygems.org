@@ -162,7 +162,6 @@ class SessionsControllerTest < ActionController::TestCase
   context "on DELETE to destroy" do
     setup do
       delete :destroy
-      @expected_job_classes = Set[Castle::LogoutSucceeded]
     end
 
     should respond_with :redirect

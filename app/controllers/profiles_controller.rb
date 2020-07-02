@@ -1,4 +1,6 @@
 class ProfilesController < ApplicationController
+  include CastleTrack
+
   before_action :redirect_to_signin, unless: :signed_in?, except: :show
   before_action :verify_password, only: %i[update destroy]
   before_action :set_cache_headers, only: :edit
@@ -22,12 +24,12 @@ class ProfilesController < ApplicationController
         flash[:notice] = t(".confirmation_mail_sent")
       else
         flash[:notice] = t(".updated")
-        profile_update_succeeded
+        track_castle_event(Castle::ProfileUpdateSucceeded, @user)
       end
       redirect_to edit_profile_path
     else
       current_user.reload
-      profile_update_failed
+      track_castle_event(Castle::ProfileUpdateFailed, current_user)
       render :edit
     end
   end
@@ -38,31 +40,13 @@ class ProfilesController < ApplicationController
   end
 
   def destroy
-    profile_update_succeeded
+    track_castle_event(Castle::ProfileUpdateSucceeded, current_user)
     Delayed::Job.enqueue DeleteUser.new(current_user), priority: PRIORITIES[:profile_deletion]
     sign_out
     redirect_to root_path, notice: t(".request_queued")
   end
 
   private
-
-  def castle_context
-    ::Castle::Client.to_context(request)
-  end
-
-  def profile_update_succeeded
-    Delayed::Job.enqueue(
-      Castle::ProfileUpdateSucceeded.new(current_user, castle_context),
-      priority: PRIORITIES[:stats]
-    )
-  end
-
-  def profile_update_failed
-    Delayed::Job.enqueue(
-      Castle::ProfileUpdateFailed.new(current_user, castle_context),
-      priority: PRIORITIES[:stats]
-    )
-  end
 
   def params_user
     params.require(:user).permit(*User::PERMITTED_ATTRS)
@@ -71,7 +55,7 @@ class ProfilesController < ApplicationController
   def verify_password
     return if current_user.authenticated?(params[:user].delete(:password))
     flash[:notice] = t("profiles.request_denied")
-    profile_update_failed
+    track_castle_event(Castle::ProfileUpdateFailed, current_user)
     redirect_to edit_profile_path
   end
 
