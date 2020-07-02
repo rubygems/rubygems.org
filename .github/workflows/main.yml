@@ -75,13 +75,17 @@ jobs:
           key: bundler-cache-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
             bundler-cache-
-      - name: Setup Application
+      - name: Install RubyGems
+        if: matrix.rubygems != 'latest'
+        run: gem update --system=${{ matrix.rubygems }}
+      - name: Install Dependencies
         run: |
           sudo apt-get update -qq
           sudo apt-get -yqq install libpq-dev chromium-chromedriver
-          sh -c "if [ '${{ matrix.rubygems }}' != 'latest' ]; then gem update --system=${{ matrix.rubygems }}; fi"
-          ./script/install_toxiproxy.sh
           bundle install
+          ./script/install_toxiproxy.sh
+      - name: Setup Application
+        run: |
           cp config/database.yml.example config/database.yml
           bundle exec rake db:setup
       - name: Run Tests
