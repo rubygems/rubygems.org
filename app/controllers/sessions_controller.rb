@@ -1,4 +1,6 @@
 class SessionsController < Clearance::SessionsController
+  include CastleTrack
+
   def create
     @user = find_user
 
@@ -39,11 +41,6 @@ class SessionsController < Clearance::SessionsController
         login_failure(status.failure_message, failed_user)
       end
     end
-  end
-
-  def track_castle_event(castle_event, user)
-    context = ::Castle::Client.to_context(request)
-    Delayed::Job.enqueue(castle_event.new(user, context), priority: PRIORITIES[:stats])
   end
 
   def login_success

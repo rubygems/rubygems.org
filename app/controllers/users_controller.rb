@@ -1,4 +1,6 @@
 class UsersController < Clearance::UsersController
+  include CastleTrack
+
   def new
     redirect_to sign_up_path
   end
@@ -20,11 +22,6 @@ class UsersController < Clearance::UsersController
   end
 
   private
-
-  def track_castle_event(castle_event, user)
-    context = ::Castle::Client.to_context(request)
-    Delayed::Job.enqueue(castle_event.new(user, context), priority: PRIORITIES[:stats])
-  end
 
   def user_params
     params.require(:user).permit(*User::PERMITTED_ATTRS)

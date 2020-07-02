@@ -1,12 +1,17 @@
 require "test_helper"
 
 class PasswordsControllerTest < ActionController::TestCase
+  include DelayedJobHelpers
+
   context "on POST to create" do
     context "when missing a parameter" do
-      should "raises parameter missing" do
+      setup do
         post :create
+      end
+      should "raises parameter missing" do
         assert_response :bad_request
         assert page.has_content?("Request is missing param 'password'")
+        assert_equal Set[Castle::ProfileUpdateFailed], queued_job_classes
       end
     end
 
@@ -18,6 +23,10 @@ class PasswordsControllerTest < ActionController::TestCase
 
       should "set a valid confirmation_token" do
         assert @user.valid_confirmation_token?
+      end
+
+      should "enqueue profile update succeeded job" do
+        assert_equal Set[Castle::ProfileUpdateSucceeded], queued_job_classes
       end
     end
   end
@@ -75,23 +84,37 @@ class PasswordsControllerTest < ActionController::TestCase
 
       context "when OTP is correct" do
         setup do
-          post :mfa_edit, params: { user_id: @user.id, token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.mfa_seed).now }
+          post :mfa_edit, params: {
+            user_id: @user.id,
+            token: @user.confirmation_token,
+            otp: ROTP::TOTP.new(@user.mfa_seed).now
+          }
         end
 
         should respond_with :success
         should "display edit form" do
           assert page.has_content?("Reset password")
         end
+
+        should "enqueue profile update succeeded job" do
+          assert_equal Set[Castle::ProfileUpdateSucceeded], queued_job_classes
+        end
       end
 
       context "when OTP is incorrect" do
         setup do
-          post :mfa_edit, params: { user_id: @user.id, token: @user.confirmation_token, otp: "eatthis" }
+          post :mfa_edit, params: {
+            user_id: @user.id, token: @user.confirmation_token, otp: "youshallnotpass"
+          }
         end
 
         should respond_with :unauthorized
         should "alert about otp being incorrect" do
           assert_equal flash[:alert], "Your OTP code is incorrect."
+        end
+
+        should "enqueue profile update failed job" do
+          assert_equal Set[Castle::ProfileUpdateFailed], queued_job_classes
         end
       end
     end
@@ -120,6 +143,10 @@ class PasswordsControllerTest < ActionController::TestCase
       should "not change password" do
         assert(@user.reload.encrypted_password == @old_encrypted_password)
       end
+
+      should "enqueue profile update failed job" do
+        assert_equal Set[Castle::ProfileUpdateFailed], queued_job_classes
+      end
     end
 
     context "without reset_api_key and valid password" do
@@ -137,6 +164,10 @@ class PasswordsControllerTest < ActionController::TestCase
       end
       should "change password" do
         assert(@user.reload.encrypted_password != @old_encrypted_password)
+      end
+
+      should "enqueue profile update succeeded job" do
+        assert_equal Set[Castle::ProfileUpdateSucceeded], queued_job_classes
       end
     end
 
@@ -156,6 +187,10 @@ class PasswordsControllerTest < ActionController::TestCase
       should "change password" do
         assert(@user.reload.encrypted_password != @old_encrypted_password)
       end
+
+      should "enqueue profile update succeeded job" do
+        assert_equal Set[Castle::ProfileUpdateSucceeded], queued_job_classes
+      end
     end
 
     context "with reset_api_key and valid password" do
@@ -173,6 +208,10 @@ class PasswordsControllerTest < ActionController::TestCase
       end
       should "change password" do
         assert(@user.reload.encrypted_password != @old_encrypted_password)
+      end
+
+      should "enqueue profile update succeeded job" do
+        assert_equal Set[Castle::ProfileUpdateSucceeded], queued_job_classes
       end
     end
   end

@@ -1,6 +1,8 @@
 require "test_helper"
 
 class SessionsControllerTest < ActionController::TestCase
+  include DelayedJobHelpers
+
   context "when user has mfa enabled" do
     setup do
       @user = User.new(email_confirmed: true)
@@ -12,13 +14,6 @@ class SessionsControllerTest < ActionController::TestCase
       setup do
         User.expects(:authenticate).with("login", "pass").returns @user
         post :create, params: { session: { who: "login", password: "pass" } }
-        @expected_jobs = Set[Castle::ChallengeRequested]
-        @actual_jobs =
-          Delayed::Job
-            .all
-            .pluck(:handler)
-            .map { |handler| YAML.load(handler).class }
-            .to_set
       end
 
       should respond_with :success
@@ -28,7 +23,7 @@ class SessionsControllerTest < ActionController::TestCase
       end
 
       should "enqueue challenge requested job" do
-        assert_equal @expected_jobs, @actual_jobs
+        assert_equal Set[Castle::ChallengeRequested], queued_job_classes
       end
     end
 
@@ -37,13 +32,7 @@ class SessionsControllerTest < ActionController::TestCase
         setup do
           @controller.session[:mfa_user] = @user.handle
           post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
-          @expected_jobs = Set[Castle::ChallengeSucceeded, Castle::LoginSucceeded]
-          @actual_jobs =
-            Delayed::Job
-              .all
-              .pluck(:handler)
-              .map { |handler| YAML.load(handler).class }
-              .to_set
+          @expected_job_classes = Set[Castle::ChallengeSucceeded, Castle::LoginSucceeded]
         end
 
         should respond_with :redirect
@@ -57,7 +46,7 @@ class SessionsControllerTest < ActionController::TestCase
         end
 
         should "enqueue challenge succeeded and login succeeded jobs" do
-          assert_equal @expected_jobs, @actual_jobs
+          assert_equal @expected_job_classes, queued_job_classes
         end
       end
 
@@ -65,13 +54,7 @@ class SessionsControllerTest < ActionController::TestCase
         setup do
           @controller.session[:mfa_user] = @user.handle
           post :mfa_create, params: { otp: @user.mfa_recovery_codes.first }
-          @expected_jobs = Set[Castle::ChallengeSucceeded, Castle::LoginSucceeded]
-          @actual_jobs =
-            Delayed::Job
-              .all
-              .pluck(:handler)
-              .map { |handler| YAML.load(handler).class }
-              .to_set
+          @expected_job_classes = Set[Castle::ChallengeSucceeded, Castle::LoginSucceeded]
         end
 
         should respond_with :redirect
@@ -85,7 +68,7 @@ class SessionsControllerTest < ActionController::TestCase
         end
 
         should "enqueue challenge succeeded and login succeeded jobs" do
-          assert_equal @expected_jobs, @actual_jobs
+          assert_equal @expected_job_classes, queued_job_classes
         end
       end
 
@@ -93,13 +76,7 @@ class SessionsControllerTest < ActionController::TestCase
         setup do
           wrong_otp = (ROTP::TOTP.new(@user.mfa_seed).now.to_i.succ % 1_000_000).to_s
           post :mfa_create, params: { otp: wrong_otp }
-          @expected_jobs = Set[Castle::ChallengeFailed, Castle::LoginFailed]
-          @actual_jobs =
-            Delayed::Job
-              .all
-              .pluck(:handler)
-              .map { |handler| YAML.load(handler).class }
-              .to_set
+          @expected_job_classes = Set[Castle::ChallengeFailed, Castle::LoginFailed]
         end
 
         should set_flash.now[:notice]
@@ -118,7 +95,7 @@ class SessionsControllerTest < ActionController::TestCase
         end
 
         should "enqueue challenge failed and login failed jobs" do
-          assert_equal @expected_jobs, @actual_jobs
+          assert_equal @expected_job_classes, queued_job_classes
         end
       end
     end
@@ -130,13 +107,6 @@ class SessionsControllerTest < ActionController::TestCase
         user = User.new(email_confirmed: true)
         User.expects(:authenticate).with("login", "pass").returns user
         post :create, params: { session: { who: "login", password: "pass" } }
-        @expected_jobs = Set[Castle::LoginSucceeded]
-        @actual_jobs =
-          Delayed::Job
-            .all
-            .pluck(:handler)
-            .map { |handler| YAML.load(handler).class }
-            .to_set
       end
 
       should respond_with :redirect
@@ -147,7 +117,7 @@ class SessionsControllerTest < ActionController::TestCase
       end
 
       should "enqueue login succeeded job" do
-        assert_equal @expected_jobs, @actual_jobs
+        assert_equal Set[Castle::LoginSucceeded], queued_job_classes
       end
     end
 
@@ -155,13 +125,6 @@ class SessionsControllerTest < ActionController::TestCase
       setup do
         User.expects(:authenticate).with("login", "pass")
         post :create, params: { session: { who: "login", password: "pass" } }
-        @expected_jobs = Set[Castle::LoginFailed]
-        @actual_jobs =
-          Delayed::Job
-            .all
-            .pluck(:handler)
-            .map { |handler| YAML.load(handler).class }
-            .to_set
       end
 
       should respond_with :unauthorized
@@ -176,20 +139,13 @@ class SessionsControllerTest < ActionController::TestCase
       end
 
       should "enqueue login failed job" do
-        assert_equal @expected_jobs, @actual_jobs
+        assert_equal Set[Castle::LoginFailed], queued_job_classes
       end
     end
 
     context "when login is an array" do
       setup do
         post :create, params: { session: { who: ["1"], password: "pass" } }
-        @expected_jobs = Set[Castle::LoginFailed]
-        @actual_jobs =
-          Delayed::Job
-            .all
-            .pluck(:handler)
-            .map { |handler| YAML.load(handler).class }
-            .to_set
       end
 
       should respond_with :unauthorized
@@ -198,7 +154,7 @@ class SessionsControllerTest < ActionController::TestCase
       end
 
       should "enqueue login failed job" do
-        assert_equal @expected_jobs, @actual_jobs
+        assert_equal Set[Castle::LoginFailed], queued_job_classes
       end
     end
   end
@@ -206,13 +162,7 @@ class SessionsControllerTest < ActionController::TestCase
   context "on DELETE to destroy" do
     setup do
       delete :destroy
-      @expected_jobs = Set[Castle::LogoutSucceeded]
-      @actual_jobs =
-        Delayed::Job
-          .all
-          .pluck(:handler)
-          .map { |handler| YAML.load(handler).class }
-          .to_set
+      @expected_job_classes = Set[Castle::LogoutSucceeded]
     end
 
     should respond_with :redirect
@@ -223,7 +173,7 @@ class SessionsControllerTest < ActionController::TestCase
     end
 
     should "enqueue logout succeeded job" do
-      assert_equal @expected_jobs, @actual_jobs
+      assert_equal Set[Castle::LogoutSucceeded], queued_job_classes
     end
   end
 end
