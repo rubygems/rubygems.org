@@ -24,9 +24,10 @@ jobs:
           key: bundler-cache-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
             bundler-cache-
+      - name: Install Dependencies
+        run: bundle install
       - name: Run Linting
         run: |
-          bundle install
           bundle exec brakeman
           bundle exec rake rubocop
   build:
