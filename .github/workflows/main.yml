@@ -11,21 +11,24 @@ env:
   BUNDLE_RETRY: 3
 jobs:
   linting:
-    - name: Checkout Project
-      uses: actions/checkout@v2
-    - uses: ruby/setup-ruby@v1
-    - name: Download Cached Gems
-      uses: actions/cache@v1
-      with:
-        path: vendor/bundle
-        key: bundler-cache-${{ hashFiles('**/Gemfile.lock') }}
-        restore-keys: |
-          bundler-cache-
-    - name: Run Linting
-      run: |
-        bundle install
-        bundle exec brakeman
-        bundle exec rake rubocop
+    name: Run Linting
+    runs-on: ubunut-latest
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+      - name: Download Cached Gems
+        uses: actions/cache@v1
+        with:
+          path: vendor/bundle
+          key: bundler-cache-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            bundler-cache-
+      - name: Run Linting
+        run: |
+          bundle install
+          bundle exec brakeman
+          bundle exec rake rubocop
   build:
     name: Test Application
     runs-on: ubuntu-latest
