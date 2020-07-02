@@ -12,7 +12,7 @@ env:
 jobs:
   linting:
     name: Run Linting
-    runs-on: ubunut-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Project
         uses: actions/checkout@v2
