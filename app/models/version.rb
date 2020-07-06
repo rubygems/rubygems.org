@@ -3,6 +3,14 @@ require "digest/sha2"
 class Version < ApplicationRecord
   MAX_TEXT_FIELD_LENGTH = 64_000
 
+  scope :latest, -> { where(latest: true) }
+  scope :prerelease, -> { where(prerelease: true) }
+  scope :release, -> { where(prerelease: false) }
+  scope :indexed, -> { where(indexed: true) }
+  scope :yanked, -> { where(indexed: false) }
+  scope :by_position, -> { order(:position) }
+  scope :by_created_at, -> { order(created_at: :desc) }
+
   belongs_to :rubygem, touch: true
   has_many :dependencies, -> { order("rubygems.name ASC").includes(:rubygem) }, dependent: :destroy, inverse_of: "version"
   has_one :gem_download, inverse_of: :version, dependent: :destroy
@@ -68,34 +76,6 @@ class Version < ApplicationRecord
   def self.subscribed_to_by(user)
     where(rubygem_id: user.subscribed_gem_ids)
       .by_created_at
-  end
-
-  def self.latest
-    where(latest: true)
-  end
-
-  def self.prerelease
-    where(prerelease: true)
-  end
-
-  def self.release
-    where(prerelease: false)
-  end
-
-  def self.indexed
-    where(indexed: true)
-  end
-
-  def self.yanked
-    where(indexed: false)
-  end
-
-  def self.by_position
-    order(:position)
-  end
-
-  def self.by_created_at
-    order(created_at: :desc)
   end
 
   def self.rows_for_index
