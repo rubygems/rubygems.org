@@ -113,6 +113,14 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal @cutter.code, 422
     end
 
+    should "not be able to save a gem if it is signed and has been tampered with" do
+      @gem = gem_file("valid_signature_tampered-0.0.1.gem")
+      @cutter = Pusher.new(@user, @gem)
+      @cutter.process
+      assert_includes @cutter.message, %(RubyGems.org cannot process this gem)
+      assert_equal @cutter.code, 422
+    end
+
     should "not be able to pull spec with metadata containing bad ruby symbols" do
       ["1.0.0", "2.0.0", "3.0.0", "4.0.0"].each do |version|
         @gem = gem_file("dos-#{version}.gem")
@@ -147,6 +155,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.expects(:name).returns "some name"
       spec.expects(:version).times(2).returns Gem::Version.new("1.3.3.7")
       spec.expects(:original_platform).returns "ruby"
+      spec.expects(:cert_chain).returns nil
       @cutter.stubs(:spec).returns spec
       @cutter.stubs(:size).returns 5
       @cutter.stubs(:body).returns StringIO.new("dummy body")
@@ -179,6 +188,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:name).returns @rubygem.name
       spec.stubs(:version).returns Gem::Version.new("1.3.3.7")
       spec.stubs(:original_platform).returns "ruby"
+      spec.stubs(:cert_chain).returns nil
       @cutter.stubs(:spec).returns spec
       @cutter.find
 
@@ -210,6 +220,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:name).returns @rubygem.name.upcase
       spec.stubs(:version).returns Gem::Version.new("1.3.3.7")
       spec.stubs(:original_platform).returns "ruby"
+      spec.stubs(:cert_chain).returns nil
       @cutter.stubs(:spec).returns spec
       @cutter.find
 
