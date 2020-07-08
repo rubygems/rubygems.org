@@ -48,7 +48,9 @@ class Pusher
     # Verify that the gem signatures match the certificate chain (if present)
     policy = Gem::Security::LowSecurity.dup
     # Silence warnings from the verification
-    policy.ui = Gem::StreamUI.new(File.open(IO::NULL, 'r'), File.open(IO::NULL, 'w'), File.open(IO::NULL, 'w'), false)
+    null_in = File.open(IO::NULL, "r")
+    null_out = File.open(IO::NULL, "w")
+    policy.ui = Gem::StreamUI.new(null_in, null_out, null_out, false)
     package.security_policy = policy
 
     @spec = package.spec
