@@ -218,6 +218,7 @@ ActiveRecord::Schema.define(version: 2021_03_07_101812) do
     t.string "yanked_info_checksum"
     t.bigint "pusher_id"
     t.string "canonical_number"
+    t.text "cert_chain"
     t.index "lower((full_name)::text)", name: "index_versions_on_lower_full_name"
     t.index ["built_at"], name: "index_versions_on_built_at"
     t.index ["created_at"], name: "index_versions_on_created_at"

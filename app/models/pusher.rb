@@ -88,7 +88,8 @@ class Pusher
                                      platform: spec.original_platform.to_s,
                                      size: size,
                                      sha256: sha256,
-                                     pusher: user
+                                     pusher: user,
+                                     cert_chain: spec.cert_chain
 
     true
   end

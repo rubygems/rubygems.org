@@ -405,4 +405,20 @@ class PusherTest < ActiveSupport::TestCase
 
     teardown { RubygemFs.mock! }
   end
+
+  context "the gem has been signed and not tampered with" do
+    setup do
+      @gem = gem_file("valid_signature-0.0.0.gem")
+      @cutter = Pusher.new(@user, @gem)
+      @cutter.process
+    end
+
+    should "store the cert chain in the database" do
+      rubygem = Rubygem.find_by!(name: "valid_signature")
+      version = rubygem.versions.last
+      assert_not_nil version.cert_chain
+    end
+
+    teardown { RubygemFs.mock! }
+  end
 end
