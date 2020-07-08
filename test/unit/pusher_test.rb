@@ -413,10 +413,8 @@ class PusherTest < ActiveSupport::TestCase
       @cutter.process
     end
 
-    should "store the cert chain in the database" do
-      rubygem = Rubygem.find_by!(name: "valid_signature")
-      version = rubygem.versions.last
-      assert_not_nil version.cert_chain
+    should "extracts the certificate chain to the version" do
+      assert_not_nil @cutter.version.cert_chain
     end
 
     teardown { RubygemFs.mock! }

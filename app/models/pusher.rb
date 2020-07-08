@@ -43,16 +43,14 @@ class Pusher
   end
 
   def pull_spec
-    package = Gem::Package.new(body)
-
     # Verify that the gem signatures match the certificate chain (if present)
     policy = Gem::Security::LowSecurity.dup
     # Silence warnings from the verification
     null_in = File.open(IO::NULL, "r")
     null_out = File.open(IO::NULL, "w")
     policy.ui = Gem::StreamUI.new(null_in, null_out, null_out, false)
-    package.security_policy = policy
 
+    package = Gem::Package.new(body, policy)
     @spec = package.spec
   rescue StandardError => e
     notify <<-MSG.strip_heredoc, 422
