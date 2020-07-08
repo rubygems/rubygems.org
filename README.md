@@ -10,7 +10,7 @@ The Ruby community's gem host.
 ## Support
 
 <a href="https://rubytogether.org/"><img src="https://rubytogether.org/images/rubies.svg" width=200></a>
-<a href="https://rubycentral.org/"><img src="https://gist.githubusercontent.com/sonalkr132/52a23481c0765b36ce1e909ba678c51a/raw/78e47c9ec77b690322040d4b9b8f460f58196182/Ruby-Central-Logo.png" width=160></a><br/>
+<a href="https://rubycentral.org/"><img src="public/images/ruby_central_logo.png" height=110></a><br/>
 
 [RubyGems.org](https://rubygems.org) is managed by [Ruby Central](https://rubycentral.org), a community-funded organization supported by conference participation for [RailsConf](https://railsconf.org) and [RubyConf](https://rubyconf.org) through tickets and sponsorships.
 

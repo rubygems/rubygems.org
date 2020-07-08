@@ -98,6 +98,8 @@
   @media (max-width: 1039px) {
     .footer__sponsor {
       width: 100px; }
+    .footer__sponsor:nth-child(1) {
+      background-position: 0 -6px; }
     .footer__sponsor:nth-child(2) {
       background-position: 0 -119px; }
     .footer__sponsor:nth-child(3) {
