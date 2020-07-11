@@ -79,11 +79,11 @@ module RubygemsHelper
   end
 
   def ownership_link(rubygem)
-    link_to "Ownership", rubygem_owners_path(rubygem), class: "gem__link t-list__item"
+    link_to I18n.t("rubygems.aside.links.ownership"), rubygem_owners_path(rubygem), class: "gem__link t-list__item"
   end
 
   def resend_owner_confirmation_link(rubygem)
-    link_to I18n.t("resend_ownership_confirmation"), resend_confirmation_rubygem_owners_url(rubygem), class: "gem__link t-list__item"
+    link_to I18n.t("rubygems.aside.links.resend_ownership_confirmation"), resend_confirmation_rubygem_owners_url(rubygem), class: "gem__link t-list__item"
   end
 
   def links_to_owners(rubygem)

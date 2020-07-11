@@ -35,7 +35,6 @@ en:
   update: Update
   try_again: Something went wrong. Please try again.
   advanced_search: Advanced Search
-  token_expired: The confirmation token has expired. Please try resending the token
   activerecord:
     attributes:
       linkset:
@@ -262,14 +261,24 @@ en:
   owners:
     confirm:
       confirmed_email: You are added as an owner to %{gem} gem!
+      token_expired: The confirmation token has expired. Please try resending the token
     index:
-      add_owner: "ADD OWNER"
-      name: "NAME"
-      mfa: "MFA"
-      confirmed: "CONFIRMED"
-      added_on: "ADDED ON"
-      added_by: "ADDED BY"
-      action: "ACTION"
+      add_owner: ADD OWNER
+      name: OWNER
+      mfa: MFA
+      confirmed: CONFIRMED
+      added_on: ADDED ON
+      added_by: ADDED BY
+      action: ACTION
+      info: Use this page to control which Rubygems users can help you to manage %{gem}
+    resend_confirmation:
+      resent_notice: A confirmation mail has been re-sent to %{handle}'s email
+    create:
+      success_notice: Owner added successfully. A confirmation mail has been sent to %{handle}'s email
+      not_found_notice: "Owner could not be found."
+    destroy:
+      removed_notice: "Owner %{owner_name} removed successfully!"
+      failed_notice: "Owner cannot be removed!"
   profiles:
     edit:
       change_avatar: Change Avatar
@@ -343,6 +352,8 @@ en:
         subscribe: Subscribe
         unsubscribe: Unsubscribe
         wiki: Wiki
+        resend_ownership_confirmation: Resend Ownership Confirmation
+        ownership: Ownership
     blacklisted:
       blacklisted_namespace: This namespace is reserved by rubygems.org.
     dependencies:
@@ -428,4 +439,3 @@ en:
         one: Displaying <b>1</b> %{model}
         other: Displaying <b>all&nbsp;%{count}</b> %{model}
         zero: No %{model} found
-  resend_ownership_confirmation: "Resend Ownership Confirmation"

@@ -319,6 +319,8 @@ pt-BR:
         subscribe: Inscrever-se
         unsubscribe: Desinscrever-se
         wiki: Wiki
+        ownership:
+        resend_ownership_confirmation:
     blacklisted:
       blacklisted_namespace: This namespace is reserved by rubygems.org.
     dependencies:
@@ -407,6 +409,7 @@ pt-BR:
   owners:
     confirm:
       confirmed_email:
+      token_expired:
     index:
       add_owner:
       name:
@@ -415,5 +418,12 @@ pt-BR:
       added_on:
       added_by:
       action:
-  token_expired:
-  resend_ownership_confirmation: ""
+      info:
+    resend_confirmation:
+      resent_notice:
+    create:
+      success_notice:
+      not_found_notice:
+    destroy:
+      removed_notice:
+      failed_notice:

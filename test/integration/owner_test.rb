@@ -17,11 +17,12 @@ class OwnerTest < SystemTest
 
     fill_in "Email / Handle", with: @other_user.email
     click_button "Add Owner"
-    within(".owners__table") do
-      assert page.has_content? @other_user.handle
+    owners_table = page.find(:css, ".owners__table")
+    within_element owners_table do
+      assert_selector(:css, "a[href='#{profile_path(@other_user)}']")
     end
 
-    assert_cell(@other_user, "Confirmed", "✗")
+    assert_cell(@other_user, "Confirmed", "\u274C")
     assert_cell(@other_user, "Added By", @user.handle)
     assert_cell(@other_user, "Added On", "")
 
@@ -37,7 +38,7 @@ class OwnerTest < SystemTest
     fill_in "Email / Handle", with: @other_user.handle
     click_button "Add Owner"
 
-    assert_cell(@other_user, "Confirmed", "✗")
+    assert_cell(@other_user, "Confirmed", "\u274C")
     assert_cell(@other_user, "Added By", @user.handle)
 
     assert_changes :mails_count, from: 0, to: 1 do
@@ -52,11 +53,11 @@ class OwnerTest < SystemTest
 
     visit_ownerships_page
 
-    assert_cell(@other_user, "Confirmed", "✗")
-    assert_cell(@other_user, "MFA", "✔")
+    assert_cell(@other_user, "Confirmed", "\u274C")
+    assert_cell(@other_user, "MFA", "\u2705")
 
-    assert_cell(@user, "Confirmed", "✔")
-    assert_cell(@user, "MFA", "✗")
+    assert_cell(@user, "Confirmed", "\u2705")
+    assert_cell(@user, "MFA", "\u274C")
     assert_cell(@user, "Added On", nice_date_for(@ownership.confirmed_at))
   end
 
@@ -69,7 +70,10 @@ class OwnerTest < SystemTest
       click_button "Remove"
     end
 
-    refute page.has_selector?("a[href='#{profile_path(@other_user)}']")
+    owners_table = page.find(:css, ".owners__table")
+    within_element owners_table do
+      refute_selector(:css, "a[href='#{profile_path(@other_user)}']")
+    end
 
     assert_changes :mails_count, from: 0, to: 2 do
       Delayed::Worker.new.work_off
@@ -83,8 +87,7 @@ class OwnerTest < SystemTest
   test "removing last owner shows error message" do
     visit_ownerships_page
 
-    tr = owner_row(@user)
-    within_element tr do
+    within_element owner_row(@user) do
       click_button "Remove"
     end
 

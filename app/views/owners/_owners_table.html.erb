@@ -24,13 +24,13 @@
   <% @ownerships.each do |ownership| %>
     <tr class="owners__row">
       <td class="owners__cell" data-title="Name">
-        <%= link_to(ownership.owner_name, profile_path(ownership.user), class: "owner_profile") %>
+        <%= link_to(ownership.owner_name, profile_path(ownership.user), class: "owner__profile") %>
       </td>
       <td class="owners__cell" data-title="MFA">
-        <%= ownership.user.mfa_level == "disabled" ? "✗" : "✔" %>
+        <%= mfa_status(ownership.user) %>
       </td>
       <td class="owners__cell" data-title="Confirmed">
-        <%= ownership.confirmed? ? "✔" : "✗" %>
+        <%= confirmation_status(ownership) %>
       </td>
       <td class="owners__cell" data-title="Added On">
         <%= nice_date_for(ownership.confirmed_at) if ownership.confirmed? %>

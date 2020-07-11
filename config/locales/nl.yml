@@ -319,6 +319,8 @@ nl:
         subscribe:
         unsubscribe:
         wiki: Wiki
+        ownership:
+        resend_ownership_confirmation:
     blacklisted:
       blacklisted_namespace:
     dependencies:
@@ -407,6 +409,7 @@ nl:
   owners:
     confirm:
       confirmed_email:
+      token_expired:
     index:
       add_owner:
       name:
@@ -415,5 +418,12 @@ nl:
       added_on:
       added_by:
       action:
-  token_expired:
-  resend_ownership_confirmation: ""
+      info:
+    resend_confirmation:
+      resent_notice:
+    create:
+      success_notice:
+      not_found_notice:
+    destroy:
+      removed_notice:
+      failed_notice:

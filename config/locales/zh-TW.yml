@@ -249,6 +249,7 @@ zh-TW:
   owners:
     confirm:
       confirmed_email:
+      token_expired:
     index:
       add_owner:
       name:
@@ -257,6 +258,15 @@ zh-TW:
       added_on:
       added_by:
       action:
+      info:
+    resend_confirmation:
+      resent_notice:
+    create:
+      success_notice:
+      not_found_notice:
+    destroy:
+      removed_notice:
+      failed_notice:
   profiles:
     edit:
       change_avatar:
@@ -330,6 +340,8 @@ zh-TW:
         subscribe: 訂閱
         unsubscribe: 取消訂閱
         wiki: Wiki
+        ownership:
+        resend_ownership_confirmation:
     blacklisted:
       blacklisted_namespace:
     dependencies:
@@ -415,5 +427,3 @@ zh-TW:
         one: 顯示 <b>1</b> %{model}
         other: 顯示 <b>所有 %{count}</b> %{model}
         zero: 找不到 %{model}
-  token_expired:
-  resend_ownership_confirmation: ""

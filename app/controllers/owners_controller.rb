@@ -9,7 +9,7 @@ class OwnersController < ApplicationController
       ownership.confirm_and_notify
       redirect_to rubygem_path(ownership.rubygem), notice: t(".confirm.confirmed_email", gem: ownership.rubygem.name)
     else
-      redirect_to root_path, alert: t("token_expired")
+      redirect_to root_path, alert: t(".confirm.token_expired")
     end
   end
 
@@ -17,7 +17,7 @@ class OwnersController < ApplicationController
     ownership = @rubygem.ownerships_including_unconfirmed.find_by!(user: current_user)
     ownership.generate_confirmation_token && ownership.save
     OwnersMailer.delay.ownership_confirmation(ownership.id)
-    redirect_to rubygem_path(ownership.rubygem), notice: "A confirmation mail has been re-sent to #{ownership.user.handle}'s email"
+    redirect_to rubygem_path(ownership.rubygem), notice: t("owners.resend_confirmation.resent_notice", handle: ownership.user.handle)
   end
 
   def index
@@ -30,21 +30,21 @@ class OwnersController < ApplicationController
       ownership = @rubygem.ownerships.new(user: owner, authorizer: current_user)
       if ownership.save
         OwnersMailer.delay.ownership_confirmation(ownership.id)
-        redirect_to rubygem_owners_path(@rubygem), notice: "Owner added successfully. A confirmation mail has been sent to #{owner.handle}'s email"
+        redirect_to rubygem_owners_path(@rubygem), notice: t("owners.create.success_notice", handle: owner.handle)
       else
         redirect_to rubygem_owners_path(@rubygem), alert: ownership.errors.full_messages.to_sentence
       end
     else
-      redirect_to rubygem_owners_path(@rubygem), alert: "Owner could not be found."
+      redirect_to rubygem_owners_path(@rubygem), alert: t("owners.create.not_found_notice")
     end
   end
 
   def destroy
     @ownership = Ownership.find_by!(id: params[:id])
     if @ownership.destroy_and_notify
-      redirect_to rubygem_owners_path(@ownership.rubygem), notice: "Owner #{@ownership.owner_name} removed successfully!"
+      redirect_to rubygem_owners_path(@ownership.rubygem), notice: t("owners.destroy.removed_notice", owner_name: @ownership.owner_name)
     else
-      redirect_to rubygem_owners_path(@ownership.rubygem), alert: "Owner cannot be removed!"
+      redirect_to rubygem_owners_path(@ownership.rubygem), alert: t("owners.destroy.failed_notice")
     end
   end
 

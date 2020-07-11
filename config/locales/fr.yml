@@ -317,6 +317,8 @@ fr:
         subscribe: Abonnement
         unsubscribe: Désabonement
         wiki: Wiki
+        ownership:
+        resend_ownership_confirmation:
     blacklisted:
       blacklisted_namespace: Ce nom est réservé par rubygems.org.
     dependencies:
@@ -405,6 +407,7 @@ fr:
   owners:
     confirm:
       confirmed_email:
+      token_expired:
     index:
       add_owner:
       name:
@@ -413,5 +416,12 @@ fr:
       added_on:
       added_by:
       action:
-  token_expired:
-  resend_ownership_confirmation: ""
+      info:
+    resend_confirmation:
+      resent_notice:
+    create:
+      success_notice:
+      not_found_notice:
+    destroy:
+      removed_notice:
+      failed_notice:

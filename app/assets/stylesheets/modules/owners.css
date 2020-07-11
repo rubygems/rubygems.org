@@ -1,8 +1,3 @@
-.owners__wrapper {
-    margin: 0 auto;
-    padding: 10px 0 10px 10px;
-    max-width: 800px;
-}
 .owners__navigation {
     display: inline-block;
     width: 100%;
@@ -25,12 +20,10 @@
     float: left;
 }
 .owners__table {
-    width: 100%;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
     border-spacing: 0;
     font-size: 16px;
 }
-@media screen and (max-width: 580px) {
+@media screen and (max-width: 640px) {
     .owners__table {
         display: block;
     }
@@ -40,6 +33,7 @@
 }
 .owners__row {
     background: #ffffff;
+    margin: 5px;
 }
 .owners__row:nth-of-type(odd) {
     background: #f6f6f6;
@@ -49,7 +43,11 @@
     color: #ffffff;
     background: #e9573f;
 }
-@media screen and (max-width: 580px) {
+.owners__cell {
+    padding: 13px 12px;
+    text-align: center;
+}
+@media screen and (max-width: 640px) {
     .owners__row {
         padding: 14px 0 7px;
         display: block;
@@ -61,60 +59,34 @@
     .owners__row.owners__header .owners__cell {
         display: none;
     }
-    .owners__row .owners__cell {
-        margin-bottom: 10px;
-    }
     .owners__row .owners__cell:before {
-        margin-bottom: 3px;
         content: attr(data-title);
-        min-width: 98px;
         text-transform: uppercase;
         color: #969696;
         display: block;
     }
-}
-.owners__cell {
-    padding: 13px 12px;
-    text-align: center;
-}
-@media screen and (max-width: 580px) {
     .owners__cell {
-        padding: 2px 16px;
+        padding: 3px 16px;
         display: block;
+        margin: auto;
     }
 }
 
-.right_wrapper {
-    max-width: 260px;
-}
-/* Container for flex box */
-.row {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.column {
-    padding: 20px;
-}
-
-.owner_profile:visited, .owner_profile {
+.owner__profile:visited, .owner__profile {
     color: #000000; }
-.owner_profile:focus, .owner_profile:hover {
+.owner__profile:focus, .owner__profile:hover {
     color: #e9573f; }
 
-/* On screens that are 992px wide or less */
-@media screen and (max-width: 992px) {
-    .l-column {
-        flex: 75%;
-        border-right: 5px;
-    }
-    .r-column {
-        flex: 25%;
-    }
+.owners__intro {
+    margin: 10px 0 32px 0;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #c1c4ca;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.5;
 }
-/* On screens that are 600px wide or less, make the columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 600px) {
-    .row {
-        flex-direction: column;
-    }
-}
+
+.owners__span--success {
+    color: green; }
+.owners__span--danger {
+    color: red; }
