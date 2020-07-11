@@ -35,7 +35,7 @@ FROM ruby:2.6-alpine
 RUN apk add --no-cache \
   ruby \
   nodejs \
-  postgresql-client \
+  libpq \
   ca-certificates \
   bash \
   tzdata \
