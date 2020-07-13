@@ -1,4 +1,9 @@
-FROM ruby:2.6-alpine as build
+FROM ruby:2.7-alpine as build
+
+ARG BUNDLE_DEPLOYMENT=true
+ARG BUNDLE_JOBS=4
+ARG BUNDLE_RETRY=5
+ARG BUNDLE_WITHOUT="development:test"
 
 RUN apk add --no-cache \
   ruby \
@@ -12,18 +17,17 @@ RUN apk add --no-cache \
   tzdata \
   && rm -rf /var/cache/apk/*
 
-RUN mkdir -p /app /app/config /app/log/
 WORKDIR /app
 
-RUN gem update --system 2.6.10
+COPY Gemfile* ./
 
-COPY . /app
+RUN bundle install
 
-ADD https://s3-us-west-2.amazonaws.com/oregon.production.s3.rubygems.org/versions/versions.list /app/config/versions.list
+COPY . ./
 
-RUN mv /app/config/database.yml.example /app/config/database.yml
+ADD https://s3-us-west-2.amazonaws.com/oregon.production.s3.rubygems.org/versions/versions.list config/versions.list
 
-RUN gem install bundler io-console --no-ri --no-rdoc && bundle install --jobs 20 --retry 5 --without development test
+RUN mv config/database.yml.example config/database.yml
 
 RUN RAILS_ENV=production SECRET_KEY_BASE=1234 bin/rails assets:precompile
 
@@ -42,11 +46,8 @@ RUN apk add --no-cache \
   xz-libs \
   && rm -rf /var/cache/apk/*
 
-RUN mkdir -p /app
 WORKDIR /app
 
-COPY --from=build /usr/local/bin/gem /usr/local/bin/gem
-COPY --from=build /usr/local/bundle/ /usr/local/bundle/
 COPY --from=build /app/ /app/
 
 EXPOSE 3000
