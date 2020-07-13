@@ -167,14 +167,14 @@ spec:
         lifecycle:
           preStop:
             exec:
-              command: ["sleep", "5"]
+              command: ["sleep", "25"]
       - name: nginx
         image: nginx:1.11.10
         imagePullPolicy: IfNotPresent
         lifecycle:
           preStop:
             exec:
-              command: ["sleep", "5"]
+              command: ["sleep", "20"]
         ports:
         - containerPort: 8080
           name: http-nginx
