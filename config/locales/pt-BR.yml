@@ -147,6 +147,9 @@ pt-BR:
       subject:
       title:
       subtitle:
+    email_reset_update:
+      subject:
+      title:
   news:
     show:
       title: Novos Releases - Todas as Gems

@@ -147,6 +147,9 @@ de:
       subject:
       title:
       subtitle:
+    email_reset_update:
+      subject:
+      title:
   news:
     show:
       title:

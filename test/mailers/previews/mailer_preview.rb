@@ -3,6 +3,10 @@ class MailerPreview < ActionMailer::Preview
     Mailer.email_reset(User.last)
   end
 
+  def email_reset_update
+    Mailer.email_reset_update(User.last)
+  end
+
   def email_confirmation
     Mailer.email_confirmation(User.last)
   end

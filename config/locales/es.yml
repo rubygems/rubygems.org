@@ -155,6 +155,9 @@ es:
       subject:
       title:
       subtitle:
+    email_reset_update:
+      subject:
+      title:
   news:
     show:
       title: Nuevos lanzamientos — Todas las Gemas

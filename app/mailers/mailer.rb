@@ -13,6 +13,12 @@ class Mailer < ApplicationMailer
           default: "Please confirm your email address with RubyGems.org")
   end
 
+  def email_reset_update(user)
+    @user = user
+    mail to: @user.email,
+         subject: I18n.t("mailer.email_reset_update.subject")
+  end
+
   def email_confirmation(user)
     @user = user
     mail to: @user.email,
