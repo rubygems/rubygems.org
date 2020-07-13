@@ -21,7 +21,7 @@
           <% @ownerships.each do |ownership| %>
             <li>
               <%= ownership.rubygem.name %> emails:
-              <%= ownership.push_notifier? ? "ON" : "<strong>OFF</strong>".html_safe %>
+              <%= ownership.push_notifier? ? t("mailer.notifiers_changed.on") : t("mailer.notifiers_changed.off") %>
             </li>
           <% end %>
         </ul>

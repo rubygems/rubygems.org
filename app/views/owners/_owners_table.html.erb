@@ -5,16 +5,16 @@
       <%= t("owners.index.name") %>
     </th>
     <th class="owners__cell">
-      <%= t("owners.index.mfa") %>
-    </th>
-    <th class="owners__cell">
       <%= t("owners.index.confirmed") %>
     </th>
     <th class="owners__cell">
-      <%= t("owners.index.added_on") %>
+      <%= t("owners.index.mfa") %>
     </th>
     <th class="owners__cell">
       <%= t("owners.index.added_by") %>
+    </th>
+    <th class="owners__cell">
+      <%= t("owners.index.added_on") %>
     </th>
     <th class="owners__cell">
       <%= t("owners.index.action") %>
@@ -26,20 +26,20 @@
       <td class="owners__cell" data-title="Name">
         <%= link_to(ownership.owner_name, profile_path(ownership.user), class: "owner__profile") %>
       </td>
-      <td class="owners__cell" data-title="MFA">
-        <%= mfa_status(ownership.user) %>
-      </td>
       <td class="owners__cell" data-title="Confirmed">
         <%= confirmation_status(ownership) %>
       </td>
-      <td class="owners__cell" data-title="Added On">
-        <%= nice_date_for(ownership.confirmed_at) if ownership.confirmed? %>
+      <td class="owners__cell" data-title="MFA">
+        <%= mfa_status(ownership.user) %>
       </td>
       <td class="owners__cell" data-title="Added By">
         <%= ownership.authorizer_name %>
       </td>
+      <td class="owners__cell" data-title="Added On">
+        <%= nice_date_for(ownership.confirmed_at) if ownership.confirmed? %>
+      </td>
       <td class="owners__cell" data-title="Action">
-        <%= button_to "Remove", rubygem_owner_path(@rubygem, ownership), method: "delete", class: "form__submit form__submit--small" %>
+        <%= button_to "Remove", rubygem_owner_path(@rubygem, ownership.user.display_id), method: "delete", class: "form__submit form__submit--small" %>
       </td>
     </tr>
   <% end %>

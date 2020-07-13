@@ -9,7 +9,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     Rails.cache.clear
 
     @ip_address = "1.2.3.4"
-    @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD)
+    @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD,
+                   remember_token_expires_at: Gemcutter::REMEMBER_FOR.from_now)
   end
 
   context "requests is lower than limit" do
@@ -56,6 +57,28 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         headers: { REMOTE_ADDR: @ip_address }
       follow_redirect!
       assert_response :success
+    end
+
+    context "owners requests" do
+      setup do
+        cookies[:remember_token] = @user.remember_token
+        @rubygem = create(:rubygem)
+        create(:ownership, :unconfirmed, rubygem: @rubygem, user: @user)
+      end
+
+      teardown do
+        cookies[:remember_token] = nil
+      end
+
+      should "allow resending ownership confirmation" do
+        stay_under_limit_for("owners/ip")
+        stay_under_email_limit_for("owners/email")
+
+        get "/gems/#{@rubygem.name}/owners/#{@user.display_id}/resend_confirmation",
+            headers: { REMOTE_ADDR: @ip_address }
+        follow_redirect!
+        assert_response :success
+      end
     end
 
     context "api requests" do
@@ -243,6 +266,41 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       assert_response :too_many_requests
     end
 
+    context "owners requests" do
+      setup do
+        cookies[:remember_token] = @user.remember_token
+        @rubygem = create(:rubygem)
+        create(:ownership, :unconfirmed, rubygem: @rubygem, user: @user)
+      end
+
+      teardown do
+        cookies[:remember_token] = nil
+      end
+
+      should "throttle ownership confirmation resend at level" do
+        exceed_limit_for("owners/ip")
+        get "/gems/#{@rubygem.name}/owners/#{@user.display_id}/resend_confirmation", headers: { REMOTE_ADDR: @ip_address }
+
+        assert_response :too_many_requests
+      end
+
+      should "throttle adding owner at level" do
+        exceed_limit_for("owners/ip")
+        new_user = create(:user)
+        post "/gems/#{@rubygem.name}/owners", params: { owner: new_user.name },
+             headers: { REMOTE_ADDR: @ip_address }
+
+        assert_response :too_many_requests
+      end
+
+      should "throttle removing owner at level" do
+        exceed_limit_for("owners/ip")
+        delete "/gems/#{@rubygem.name}/owners/#{@user.id}", headers: { REMOTE_ADDR: @ip_address }
+
+        assert_response :too_many_requests
+      end
+    end
+
     context "email confirmation" do
       should "throttle by ip" do
         exceed_limit_for("clearance/ip")
@@ -388,20 +446,58 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     context "with per email limits" do
-      setup { update_limit_for("password/email:#{@user.email}", exceeding_limit) }
+      context "for sign in" do
+        setup { update_limit_for("password/email:#{@user.email}", exceeding_limit) }
 
-      should "throttle for sign in ignoring case" do
-        post "/passwords",
-          params: { password: { email: "Nick@example.com" } }
+        should "throttle for sign in ignoring case" do
+          post "/passwords",
+               params: { password: { email: "Nick@example.com" } }
 
-        assert_response :too_many_requests
+          assert_response :too_many_requests
+        end
+
+        should "throttle for sign in ignoring spaces" do
+          post "/passwords",
+               params: { password: { email: "n ick@example.com" } }
+
+          assert_response :too_many_requests
+        end
       end
 
-      should "throttle for sign in ignoring spaces" do
-        post "/passwords",
-          params: { password: { email: "n ick@example.com" } }
+      context "for ownerships" do
+        setup do
+          cookies[:remember_token] = @user.remember_token
+          @rubygem = create(:rubygem)
+          create(:ownership, rubygem: @rubygem, user: @user)
+        end
 
-        assert_response :too_many_requests
+        teardown do
+          cookies[:remember_token] = nil
+        end
+
+        should "throttle resending ownership confirmation" do
+          other_user = create(:user)
+          create(:ownership, :unconfirmed, rubygem: @rubygem, user: other_user)
+          exceed_handle_limit_for("owners/email", other_user)
+          get "/gems/#{@rubygem.name}/owners/#{other_user.display_id}/resend_confirmation"
+
+          assert_response :too_many_requests
+        end
+
+        should "throttle adding owner" do
+          new_user = create(:user)
+          exceed_handle_limit_for("owners/email", new_user)
+          post "/gems/#{@rubygem.name}/owners", params: { handle: new_user.display_id }
+
+          assert_response :too_many_requests
+        end
+
+        should "throttle removing owner" do
+          exceed_handle_limit_for("owners/email", @user)
+          delete "/gems/#{@rubygem.name}/owners/#{@user.display_id}"
+
+          assert_response :too_many_requests
+        end
       end
     end
   end

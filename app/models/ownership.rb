@@ -6,7 +6,7 @@ class Ownership < ApplicationRecord
   validates :user_id, uniqueness: { scope: :rubygem_id }
 
   delegate :name, to: :user, prefix: :owner
-  delegate :name, to: :authorizer, prefix: true
+  delegate :name, to: :authorizer, prefix: true, allow_nil: true
 
   before_create :generate_confirmation_token
 
@@ -21,6 +21,15 @@ class Ownership < ApplicationRecord
       .order("rubygems.name ASC")
   end
 
+  def self.find_by_owner_handle(handle)
+    joins(:user).find_by(users: { handle: handle }) || joins(:user).find_by!(users: { id: handle })
+  end
+
+  def self.create_first(rubygem, user)
+    ownership = rubygem.ownerships.create(user: user, authorizer: user)
+    ownership.confirm!
+  end
+
   def valid_confirmation_token?
     token_expires_at > Time.zone.now
   end
@@ -30,8 +39,8 @@ class Ownership < ApplicationRecord
     self.token_expires_at = Time.zone.now + Gemcutter::OWNERSHIP_TOKEN_EXPIRES_AFTER
   end
 
-  def confirm_ownership!
-    update(confirmed_at: Time.current)
+  def confirm!
+    update(confirmed_at: Time.current, token: nil) if unconfirmed?
   end
 
   def confirmed?
@@ -43,7 +52,7 @@ class Ownership < ApplicationRecord
   end
 
   def confirm_and_notify
-    confirm_ownership! && notify_owner_added
+    confirm! && notify_owner_added
   end
 
   def destroy_and_notify

@@ -15,9 +15,13 @@ class OwnersController < ApplicationController
 
   def resend_confirmation
     ownership = @rubygem.ownerships_including_unconfirmed.find_by!(user: current_user)
-    ownership.generate_confirmation_token && ownership.save
-    OwnersMailer.delay.ownership_confirmation(ownership.id)
-    redirect_to rubygem_path(ownership.rubygem), notice: t("owners.resend_confirmation.resent_notice", handle: ownership.user.handle)
+    if ownership.generate_confirmation_token && ownership.save
+      OwnersMailer.delay.ownership_confirmation(ownership.id)
+      flash[:notice] = t("owners.resend_confirmation.resent_notice", handle: ownership.owner_name)
+    else
+      flash[:alert] = t("try_again")
+    end
+    redirect_to rubygem_path(ownership.rubygem)
   end
 
   def index
@@ -25,22 +29,18 @@ class OwnersController < ApplicationController
   end
 
   def create
-    owner = User.find_by_name(params[:owner])
-    if owner
-      ownership = @rubygem.ownerships.new(user: owner, authorizer: current_user)
-      if ownership.save
-        OwnersMailer.delay.ownership_confirmation(ownership.id)
-        redirect_to rubygem_owners_path(@rubygem), notice: t("owners.create.success_notice", handle: owner.handle)
-      else
-        redirect_to rubygem_owners_path(@rubygem), alert: ownership.errors.full_messages.to_sentence
-      end
+    owner = User.find_by_name(params[:handle])
+    ownership = @rubygem.ownerships.new(user: owner, authorizer: current_user)
+    if ownership.save
+      OwnersMailer.delay.ownership_confirmation(ownership.id)
+      redirect_to rubygem_owners_path(@rubygem), notice: t("owners.create.success_notice", handle: owner.name)
     else
-      redirect_to rubygem_owners_path(@rubygem), alert: t("owners.create.not_found_notice")
+      redirect_to rubygem_owners_path(@rubygem), alert: ownership.errors.full_messages.to_sentence
     end
   end
 
   def destroy
-    @ownership = Ownership.find_by!(id: params[:id])
+    @ownership = @rubygem.ownerships_including_unconfirmed.find_by_owner_handle(params[:handle])
     if @ownership.destroy_and_notify
       redirect_to rubygem_owners_path(@ownership.rubygem), notice: t("owners.destroy.removed_notice", owner_name: @ownership.owner_name)
     else

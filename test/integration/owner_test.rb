@@ -22,7 +22,7 @@ class OwnerTest < SystemTest
       assert_selector(:css, "a[href='#{profile_path(@other_user)}']")
     end
 
-    assert_cell(@other_user, "Confirmed", "\u274C")
+    assert_cell(@other_user, "Confirmed", "Pending")
     assert_cell(@other_user, "Added By", @user.handle)
     assert_cell(@other_user, "Added On", "")
 
@@ -38,7 +38,7 @@ class OwnerTest < SystemTest
     fill_in "Email / Handle", with: @other_user.handle
     click_button "Add Owner"
 
-    assert_cell(@other_user, "Confirmed", "\u274C")
+    assert_cell(@other_user, "Confirmed", "Pending")
     assert_cell(@other_user, "Added By", @user.handle)
 
     assert_changes :mails_count, from: 0, to: 1 do
@@ -53,11 +53,19 @@ class OwnerTest < SystemTest
 
     visit_ownerships_page
 
-    assert_cell(@other_user, "Confirmed", "\u274C")
-    assert_cell(@other_user, "MFA", "\u2705")
+    assert_cell(@other_user, "Confirmed", "Pending")
+    within_element owner_row(@other_user) do
+      within_element "td[data-title='MFA']" do
+        assert_selector "img[src='/images/check.svg']"
+      end
+    end
 
-    assert_cell(@user, "Confirmed", "\u2705")
-    assert_cell(@user, "MFA", "\u274C")
+    assert_cell(@user, "Confirmed", "Confirmed")
+    within_element owner_row(@user) do
+      within_element "td[data-title='MFA']" do
+        assert_selector "img[src='/images/x.svg']"
+      end
+    end
     assert_cell(@user, "Added On", nice_date_for(@ownership.confirmed_at))
   end
 
@@ -151,7 +159,7 @@ class OwnerTest < SystemTest
     sign_in_as(@other_user)
     visit rubygem_path(@rubygem)
     refute page.has_selector?("a[href='#{rubygem_owners_path(@rubygem)}']")
-    assert page.has_selector?("a[href='#{resend_confirmation_rubygem_owners_url(@rubygem)}']")
+    assert page.has_selector?("a[href='#{resend_confirmation_rubygem_owner_path(@rubygem, @other_user.display_id)}']")
   end
 
   private

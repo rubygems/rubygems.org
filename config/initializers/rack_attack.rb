@@ -47,6 +47,12 @@ class Rack::Attack
     { controller: "api/v1/api_keys",  action: "show" }
   ]
 
+  protected_ui_owners_actions = [
+    { controller: "owners", action: "resend_confirmation" },
+    { controller: "owners", action: "create" },
+    { controller: "owners", action: "destroy" }
+  ]
+
   def self.protected_route?(protected_actions, path, method)
     route_params = Rails.application.routes.recognize_path(path, method: method)
     protected_actions.any? { |hash| hash[:controller] == route_params[:controller] && hash[:action] == route_params[:action] }
@@ -72,6 +78,10 @@ class Rack::Attack
     throttle("api/ip/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
       req.ip if protected_route?(protected_api_mfa_actions, req.path, req.request_method)
     end
+  end
+
+  throttle("owners/ip", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
+    req.ip if protected_route?(protected_ui_owners_actions, req.path, req.request_method)
   end
 
   protected_push_action = [{ controller: "api/v1/rubygems", action: "create" }]
@@ -134,6 +144,18 @@ class Rack::Attack
   throttle("email_confirmations/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
     if protected_route?(protected_confirmation_action, req.path, req.request_method) && req.params['email_confirmation']
       User.normalize_email(req.params['email_confirmation']['email']).presence
+    end
+  end
+
+  protected_owners_actions = [
+    { controller: "owners", action: "create" },
+    { controller: "owners", action: "resend_confirmation" },
+    { controller: "owners", action: "destroy" }
+  ]
+
+  throttle("owners/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
+    if protected_route?(protected_owners_actions, req.path, req.request_method)
+      req.params["handle"].presence || Rails.application.routes.recognize_path(req.path, method: req.request_method)[:handle].presence
     end
   end
 

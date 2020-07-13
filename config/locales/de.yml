@@ -137,6 +137,8 @@ de:
       subject:
       title:
       subtitle:
+      on:
+      off:
     gem_pushed:
       subject:
       title:
@@ -156,7 +158,14 @@ de:
       subtitle:
       body_html:
       link_expiration_explanation:
-    owners_update:
+    owner_added:
+      subject_self:
+      subject_others:
+      title:
+      subtitle:
+      body_self:
+      body_others:
+    owner_removed:
       subject_self:
       subject_others:
       title:
@@ -412,11 +421,12 @@ de:
       added_by:
       action:
       info:
+      email_field:
+      submit_button:
     resend_confirmation:
       resent_notice:
     create:
       success_notice:
-      not_found_notice:
     destroy:
       removed_notice:
       failed_notice:

@@ -145,6 +145,8 @@ en:
       subject: You changed your RubyGems.org email notification settings
       title: EMAIL NOTIFICATIONS
       subtitle: Hi %{handle}
+      on: ON
+      off: <b>OFF</b>
     gem_pushed:
       subject: Gem %{gem} pushed to RubyGems.org
       title: GEM PUSHED
@@ -265,17 +267,18 @@ en:
     index:
       add_owner: ADD OWNER
       name: OWNER
-      mfa: MFA
-      confirmed: CONFIRMED
+      mfa: MFA STATUS
+      confirmed: STATUS
       added_on: ADDED ON
       added_by: ADDED BY
       action: ACTION
-      info: Use this page to control which Rubygems users can help you to manage %{gem}
+      info: Use this page to control which Rubygems users can help you to manage %{gem}.
+      email_field: Email / Handle
+      submit_button: Add Owner
     resend_confirmation:
       resent_notice: A confirmation mail has been re-sent to %{handle}'s email
     create:
       success_notice: Owner added successfully. A confirmation mail has been sent to %{handle}'s email
-      not_found_notice: "Owner could not be found."
     destroy:
       removed_notice: "Owner %{owner_name} removed successfully!"
       failed_notice: "Owner cannot be removed!"

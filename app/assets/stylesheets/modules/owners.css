@@ -47,6 +47,20 @@
     padding: 13px 12px;
     text-align: center;
 }
+.owners__cell[data-title="Confirmed"] {
+    white-space: nowrap;
+}
+.owners__icon {
+    display: inline-flex;
+}
+
+.owners__icon img {
+    width: 1em;
+    height: 1em;
+    position: relative;
+    padding-right: 2px;
+}
+
 @media screen and (max-width: 640px) {
     .owners__row {
         padding: 14px 0 7px;
@@ -86,7 +100,3 @@
     line-height: 1.5;
 }
 
-.owners__span--success {
-    color: green; }
-.owners__span--danger {
-    color: red; }

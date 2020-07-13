@@ -35,19 +35,37 @@ class OwnersControllerTest < ActionController::TestCase
     end
 
     context "on POST to create ownership" do
-      setup do
-        @new_owner = create(:user)
-        post :create, params: { owner: @new_owner.handle, rubygem_id: @rubygem.name }
+      context "with correct params" do
+        setup do
+          @new_owner = create(:user)
+          post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name }
+        end
+
+        should redirect_to("ownerships index") { rubygem_owners_path(@rubygem) }
+        should "add unconfirmed ownership record" do
+          assert @rubygem.owners_including_unconfirmed.include?(@new_owner)
+          assert_nil @rubygem.ownerships_including_unconfirmed.find_by(user: @new_owner).confirmed_at
+        end
+        should "set success notice flash" do
+          expected_notice = "Owner added successfully. A confirmation mail has been sent to #{@new_owner.handle}'s email"
+          assert_equal expected_notice, flash[:notice]
+        end
       end
 
-      should redirect_to("ownerships index") { rubygem_owners_path(@rubygem) }
-      should "add unconfirmed ownership record" do
-        assert @rubygem.owners_including_unconfirmed.include?(@new_owner)
-        assert_nil @rubygem.ownerships_including_unconfirmed.find_by(user: @new_owner).confirmed_at
-      end
-      should "set success notice flash" do
-        expected_notice = "Owner added successfully. A confirmation mail has been sent to #{@new_owner.handle}'s email"
-        assert_equal expected_notice, flash[:notice]
+      context "with incorrect params" do
+        should "show error message if user not found" do
+          post :create, params: { handle: "no_user", rubygem_id: @rubygem.name }
+          expected_alert = "User must exist"
+          assert_equal expected_alert, flash[:alert]
+        end
+
+        should "show error message if ownership exists" do
+          @new_owner = create(:user)
+          create(:ownership, rubygem: @rubygem, user: @new_owner)
+          post :create, params: { handle: @new_owner.handle, rubygem_id: @rubygem.name }
+          expected_alert = "User has already been taken"
+          assert_equal expected_alert, flash[:alert]
+        end
       end
     end
 
@@ -59,7 +77,7 @@ class OwnersControllerTest < ActionController::TestCase
 
       context "remove user as gem owner" do
         setup do
-          delete :destroy, params: { rubygem_id: @rubygem.name, id: @ownership.id }
+          delete :destroy, params: { rubygem_id: @rubygem.name, handle: @owner.display_id }
         end
         should redirect_to("ownership index") { rubygem_owners_path(@rubygem) }
         should "remove the ownership record" do
@@ -71,7 +89,7 @@ class OwnersControllerTest < ActionController::TestCase
         setup do
           @ownership.destroy
           @last_ownership = @rubygem.ownerships.last
-          delete :destroy, params: { rubygem_id: @rubygem.name, id: @last_ownership.id }
+          delete :destroy, params: { rubygem_id: @rubygem.name, handle: @last_ownership.user.display_id }
         end
         should redirect_to("ownership index") { rubygem_owners_path(@rubygem) }
         should "remove the ownership record" do
@@ -88,13 +106,39 @@ class OwnersControllerTest < ActionController::TestCase
         @new_owner = create(:user)
         @ownership = create(:ownership, :unconfirmed, rubygem: @rubygem, user: @new_owner)
         sign_in_as(@new_owner)
-        get :resend_confirmation, params: { rubygem_id: @rubygem.name }
+      end
+      context "with correct params" do
+        setup do
+          get :resend_confirmation, params: { rubygem_id: @rubygem.name, handle: @new_owner.display_id }
+        end
+
+        should redirect_to("rubygem show") { rubygem_path(@rubygem) }
+        should "set success notice flash" do
+          success_flash = "A confirmation mail has been re-sent to #{@new_owner.handle}'s email"
+          assert_equal success_flash, flash[:notice]
+        end
       end
 
-      should redirect_to("rubygem show") { rubygem_path(@rubygem) }
-      should "set success notice flash" do
-        success_flash = "A confirmation mail has been re-sent to #{@new_owner.handle}'s email"
-        assert_equal success_flash, flash[:notice]
+      context "with incorrect params" do
+        should "show 404 error page if gem not found" do
+          get :resend_confirmation, params: { rubygem_id: "no_gem", handle: @new_owner.display_id }
+          assert_response :not_found
+        end
+
+        should "resend to signed in user irrespective of handle" do
+          get :resend_confirmation, params: { rubygem_id: @rubygem.name, handle: "no_handle" }
+          assert_redirected_to @rubygem
+          success_flash = "A confirmation mail has been re-sent to #{@new_owner.handle}'s email"
+          assert_equal success_flash, flash[:notice]
+        end
+
+        should "show alert if save failed" do
+          Ownership.any_instance.stubs(:save).returns(false)
+          get :resend_confirmation, params: { rubygem_id: @rubygem.name, handle: @new_owner.display_id }
+          assert_redirected_to @rubygem
+          success_flash = "Something went wrong. Please try again."
+          assert_equal success_flash, flash[:alert]
+        end
       end
     end
   end
@@ -137,6 +181,28 @@ class OwnersControllerTest < ActionController::TestCase
     context "on GET to index" do
       setup do
         get :index, params: { rubygem_id: @rubygem.name }
+      end
+
+      should "redirect to sign in path" do
+        assert redirect_to("sign in") { sign_in_path }
+      end
+    end
+
+    context "on POST to add owners" do
+      setup do
+        new_owner = create(:user)
+        post :create, params: { handle: new_owner.display_id, rubygem_id: @rubygem.name }
+      end
+
+      should "redirect to sign in path" do
+        assert redirect_to("sign in") { sign_in_path }
+      end
+    end
+
+    context "on DELETE to remove owner" do
+      setup do
+        create(:ownership, rubygem: @rubygem, user: @user)
+        delete :destroy, params: { rubygem_id: @rubygem.name, handle: @user.display_id }
       end
 
       should "redirect to sign in path" do

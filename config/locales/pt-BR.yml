@@ -137,6 +137,8 @@ pt-BR:
       subject:
       title:
       subtitle:
+      on:
+      off:
     gem_pushed:
       subject:
       title:
@@ -419,11 +421,12 @@ pt-BR:
       added_by:
       action:
       info:
+      email_field:
+      submit_button:
     resend_confirmation:
       resent_notice:
     create:
       success_notice:
-      not_found_notice:
     destroy:
       removed_notice:
       failed_notice:

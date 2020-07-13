@@ -208,9 +208,7 @@ class Rubygem < ApplicationRecord
   def create_ownership(user)
     return unless unowned?
 
-    ownership = ownerships.create(user: user, authorizer: user)
-    ownership.confirm_ownership!
-    ownership
+    Ownership.create_first(self, user)
   end
 
   def update_versions!(version, spec)

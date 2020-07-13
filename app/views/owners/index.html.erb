@@ -5,10 +5,12 @@
 
     <div class="t-body">
       <%= link_to "Back", rubygem_path(@rubygem), class: "t-link--arrow t-link--arrow-left" %>
-    </div>
-
-    <div class="owners__intro">
-      <%= t("owners.index.info", gem: @rubygem.name) %>
+      <div class="t-list__heading">
+        GEM OWNERS
+      </div>
+      <div class="owners__intro">
+        <%= t("owners.index.info", gem: @rubygem.name) %>
+      </div>
     </div>
 
     <%= render "owners_table" %>
@@ -18,13 +20,13 @@
     <div class="t-body">
       <h2><%= t("owners.index.add_owner") %></h2>
     </div>
-    <%= form_tag url: rubygem_owners_path, method: :post, html: { class: "new_ownership", id: "new_ownership" } do %>
+    <%= form_tag rubygem_owners_path, method: :post, class: "new_ownership", id: "new_ownership" do %>
       <div class="text_field">
-        <%= label_tag :owner, "Email / Handle", class: "form__label" %>
-        <%= text_field_tag :owner, nil, class: "form__input", required: true %>
+        <%= label_tag :handle, t("owners.index.email_field"), class: "form__label" %>
+        <%= text_field_tag :handle, nil, class: "form__input", required: true %>
       </div>
       <div class="submit_field">
-        <%= submit_tag "Add Owner", data: {disable_with: t("form_disable_with")}, class: "form__submit" %>
+        <%= submit_tag t("owners.index.submit_button"), data: {disable_with: t("form_disable_with")}, class: "form__submit" %>
       </div>
     <% end %>
   </div>

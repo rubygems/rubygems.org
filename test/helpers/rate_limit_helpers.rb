@@ -39,6 +39,10 @@ module RateLimitHelpers
     update_limit_for("#{scope}:#{@user.email}", exceeding_email_limit)
   end
 
+  def exceed_handle_limit_for(scope, user)
+    update_limit_for("#{scope}:#{user.handle}", exceeding_email_limit)
+  end
+
   def exceed_push_limit_for(scope)
     exceeding_push_limit = (Rack::Attack::PUSH_LIMIT * 1.25).to_i
     update_limit_for("#{scope}:#{@ip_address}", exceeding_push_limit, push_limit_period)
