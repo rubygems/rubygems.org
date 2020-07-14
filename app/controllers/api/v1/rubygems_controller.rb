@@ -37,9 +37,10 @@ class Api::V1::RubygemsController < Api::BaseController
 
   def reverse_dependencies
     names = begin
-      if params[:only] == "development"
+      case params[:only]
+      when "development"
         @rubygem.reverse_development_dependencies.pluck(:name)
-      elsif params[:only] == "runtime"
+      when "runtime"
         @rubygem.reverse_runtime_dependencies.pluck(:name)
       else
         @rubygem.reverse_dependencies.pluck(:name)
