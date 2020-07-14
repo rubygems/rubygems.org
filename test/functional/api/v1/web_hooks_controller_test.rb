@@ -12,24 +12,24 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
     should "forbid access when creating a web hook" do
       rubygem = create(:rubygem)
       post :create, params: { gem_name: rubygem.name, url: "http://example.com" }
-      assert @response.body =~ /Access Denied/
+      assert @response.body.include? "Access Denied"
       assert WebHook.count.zero?
     end
 
     should "forbid access when listing hooks" do
       get :index
-      assert @response.body =~ /Access Denied/
+      assert @response.body.include? "Access Denied"
     end
 
     should "forbid access when firing hooks" do
       post :fire, params: { gem_name: WebHook::GLOBAL_PATTERN, url: "http://example.com" }
-      assert @response.body =~ /Access Denied/
+      assert @response.body.include? "Access Denied"
     end
 
     should "forbid access when removing a web hook" do
       hook = create(:web_hook)
       delete :remove, params: { gem_name: hook.rubygem.name, url: hook.url }
-      assert @response.body =~ /Access Denied/
+      assert @response.body.include? "Access Denied"
       assert_equal 1, WebHook.count
     end
   end
