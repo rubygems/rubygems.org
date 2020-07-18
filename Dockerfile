@@ -47,8 +47,6 @@ COPY --from=build /usr/local/bin/gem /usr/local/bin/gem
 COPY --from=build /usr/local/bundle/ /usr/local/bundle/
 COPY --from=build /app/ /app/
 
-RUN bundle config set without 'development test assets'
-
 EXPOSE 3000
 
 ENTRYPOINT ["bundle", "exec"]
