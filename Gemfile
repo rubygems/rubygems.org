@@ -3,7 +3,6 @@ source "https://rubygems.org"
 gem "rails", "~> 6.0.0"
 gem "rails-i18n"
 
-gem "autoprefixer-rails"
 gem "aws-sdk", "~> 2.2"
 gem "bootsnap"
 gem "clearance"
@@ -31,7 +30,6 @@ gem "roadie-rails"
 gem "sass-rails"
 gem "shoryuken", "~> 2.1.0", require: false
 gem "statsd-instrument", "~> 2.3.0"
-gem "uglifier", ">= 1.0.3"
 gem "unicorn", "~> 5.5.0.1.g6836"
 gem "validates_formatting_of"
 gem "elasticsearch-model", "~> 5.0.0"
@@ -48,6 +46,11 @@ gem "unpwn", "~> 0.3.0"
 
 # Logging
 gem "lograge"
+
+group :assets do
+  gem "uglifier", ">= 1.0.3"
+  gem "autoprefixer-rails"
+end
 
 group :development, :test do
   gem "m", "~> 1.5", require: false

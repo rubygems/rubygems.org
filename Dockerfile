@@ -22,17 +22,17 @@ ADD https://s3-us-west-2.amazonaws.com/oregon.production.s3.rubygems.org/version
 
 RUN mv /app/config/database.yml.example /app/config/database.yml
 
-RUN gem install bundler io-console --no-ri --no-rdoc && bundle install --jobs 20 --retry 5 --without development test
+
+RUN gem install bundler io-console --no-ri --no-rdoc && \
+  bundle config set without 'development test' && \
+  bundle install --jobs 20 --retry 5
 
 RUN RAILS_ENV=production SECRET_KEY_BASE=1234 bin/rails assets:precompile
-
-
 
 
 FROM ruby:2.6-alpine
 
 RUN apk add --no-cache \
-  nodejs \
   libpq \
   ca-certificates \
   bash \
@@ -46,6 +46,8 @@ WORKDIR /app
 COPY --from=build /usr/local/bin/gem /usr/local/bin/gem
 COPY --from=build /usr/local/bundle/ /usr/local/bundle/
 COPY --from=build /app/ /app/
+
+RUN bundle config set without 'development test assets'
 
 EXPOSE 3000
 
