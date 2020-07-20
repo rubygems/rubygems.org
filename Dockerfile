@@ -1,7 +1,6 @@
 FROM ruby:2.6-alpine as build
 
 RUN apk add --no-cache \
-  ruby \
   nodejs \
   postgresql-dev \
   ca-certificates \
@@ -33,7 +32,6 @@ RUN RAILS_ENV=production SECRET_KEY_BASE=1234 bin/rails assets:precompile
 FROM ruby:2.6-alpine
 
 RUN apk add --no-cache \
-  ruby \
   nodejs \
   libpq \
   ca-certificates \
