@@ -27,7 +27,7 @@ RUN gem install bundler io-console --no-ri --no-rdoc && \
   bundle config set without 'development test' && \
   bundle install --jobs 20 --retry 5
 
-RUN RAILS_ENV=production SECRET_KEY_BASE=1234 bin/rails assets:precompile
+RUN RAILS_ENV=production RAILS_GROUPS=assets SECRET_KEY_BASE=1234 bin/rails assets:precompile
 
 
 FROM ruby:2.6-alpine
