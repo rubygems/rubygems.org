@@ -15,7 +15,6 @@ gem "gravtastic"
 gem "high_voltage"
 gem "honeybadger"
 gem "http_accept_language"
-gem "jquery-rails"
 gem "kaminari"
 gem "mail"
 gem "newrelic_rpm"
@@ -27,7 +26,6 @@ gem "rbtrace", "~> 0.4.8"
 gem "rdoc"
 gem "rest-client", require: "rest_client"
 gem "roadie-rails"
-gem "sass-rails"
 gem "shoryuken", "~> 2.1.0", require: false
 gem "statsd-instrument", "~> 2.3.0"
 gem "unicorn", "~> 5.5.0.1.g6836"
@@ -50,6 +48,8 @@ gem "lograge"
 group :assets do
   gem "uglifier", ">= 1.0.3"
   gem "autoprefixer-rails"
+  gem "sass-rails"
+  gem "jquery-rails"
 end
 
 group :development, :test do
