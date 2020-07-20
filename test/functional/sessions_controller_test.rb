@@ -128,9 +128,9 @@ class SessionsControllerTest < ActionController::TestCase
     context "when user has old SHA1 password" do
       setup do
         @user = create(:user, encrypted_password: "b35e3b6e1b3021e71645b4df8e0a3c7fd98a95fa")
-        get :create,  params: { session: { who: @user.handle, password: "pass" } }
+        get :create, params: { session: { who: @user.handle, password: "pass" } }
       end
-      
+
       should respond_with :unauthorized
     end
   end
