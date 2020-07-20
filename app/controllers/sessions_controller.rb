@@ -68,6 +68,8 @@ class SessionsController < Clearance::SessionsController
     password = session[:password].is_a?(String) && session.fetch(:password)
 
     User.authenticate(who, password) if who && password
+  rescue BCrypt::Errors::InvalidHash
+    nil
   end
 
   def url_after_create
