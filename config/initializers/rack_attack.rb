@@ -156,6 +156,16 @@ class Rack::Attack
     end
   end
 
+  rate_limited_ownership_request_action = [{ controller: "ownership_requests", action: "create" }]
+  REQUEST_LIMIT_PERIOD = 2.days
+
+  throttle("ownership_requests/email", limit: REQUEST_LIMIT_PER_EMAIL, period: REQUEST_LIMIT_PERIOD) do |req|
+    if protected_route?(rate_limited_ownership_request_action, req.path, req.request_method)
+      action_dispatch_req = ActionDispatch::Request.new(req.env)
+      User.find_by_remember_token(action_dispatch_req.cookie_jar.signed["remember_token"])&.email.presence
+    end
+  end
+
   ### Custom Throttle Response ###
 
   # By default, Rack::Attack returns an HTTP 429 for throttled responses,

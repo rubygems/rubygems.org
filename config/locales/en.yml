@@ -223,6 +223,17 @@ en:
       title: OWNER REMOVED
       subtitle: Hi %{user_handle}!
       body_html: <b>You</b> were removed as an owner for <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on RubyGems.org by <b>%{remover}</b>.
+    ownerhip_request_closed:
+      title: OWNERSHIP REQUEST
+      subtitle: Hi %{handle}!
+      body_html: Thank you for applying for ownership of <strong>%{gem}</strong>. We regret to inform you that your ownership request was closed by the gem owner.
+    ownerhip_request_approved:
+      body_html: Congratulations! Your ownership request for <strong>%{gem}</strong> was approved. You were added as an owner to the gem.
+    new_opwnership_requests:
+      body_html: There are <em>%{count}</em> new ownership requests for <strong>%{gem}</strong>. Please click on the button below to see all requests.
+      button: OWNERSHIP REQUESTS
+      disable_notifications: To stop receiving these messages, update your
+      owners_page: OWNERSHIPS
   news:
     show:
       title: New Releases — All Gems
@@ -355,6 +366,9 @@ en:
           ui_and_api: UI and API (Recommended)
           ui_and_gem_signin: UI and gem signin
   profiles:
+    adoptions:
+      no_ownership_calls: You have not created any ownership call for any of your gems.
+      no_ownership_requests: You have not created any ownership request.
     edit:
       change_avatar: Change Avatar
       email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
@@ -508,3 +522,34 @@ en:
         one: Displaying <b>1</b> %{model}
         other: Displaying <b>all&nbsp;%{count}</b> %{model}
         zero: No %{model} found
+  adoptions:
+    index:
+      title: Adoptions
+      ownership_calls: Ownership Calls
+      no_ownership_calls: There are no ownership calls for %{gem}
+  ownership_calls:
+    update:
+      success_notice: The ownership call for %{gem} was closed.
+    create:
+      success_notice: Created ownership call for %{gem}.
+    created_by: Created by
+    details: Details
+    apply: Apply
+    close: Close
+    markdown_supported: Markdown supported
+    create_btn: Create
+  ownership_requests:
+    create:
+      success_notice: Your ownership request was submitted.
+    update:
+      approved_notice: Ownership request was approved. %{name} is added as an owner.
+      closed_notice: Ownership request was closed.
+    close:
+      success_notice: All open ownership requests for %{gem} were closed.
+    ownership_requests: Ownership Requests
+    your_ownership_requests: Your ownership requests
+    close_all: Close all
+    approve: Approve
+    gems_published: Gems published
+    created_at: Created at
+    no_ownership_requests: No ownership requests for %{gem}

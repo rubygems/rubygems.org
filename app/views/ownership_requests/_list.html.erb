@@ -1,0 +1,17 @@
+<% if @rubygem.owned_by?(current_user) %>
+  <h3 class="t-list__heading"><%= t("ownership_requests.ownership_requests") %>:</h3>
+
+  <div class="t-list__items">
+    <%= render(partial: "ownership_requests/owner", layout: "ownership_requests/ownership_request", collection: @ownership_requests, as: :ownership_request, locals: { show_user: true, show_gem: false }) || t("ownership_requests.no_ownership_requests", gem: @rubygem.name) %>
+  </div>
+
+  <%= button_to t("ownership_requests.close_all"), close_all_rubygem_ownership_requests_path(@rubygem), method: :patch, class: "form__submit" unless  @ownership_requests.empty?%>
+<% elsif @user_request %>
+  <h3 class="t-list__heading"><%= t("ownership_requests.your_ownership_requests") %>: </h3>
+  <%= render "ownership_requests/ownership_request", ownership_request: @user_request, show_user: false, show_gem: false do %>
+    <%= button_to t("ownership_calls.close"), rubygem_ownership_request_path(@user_request.rubygem, @user_request), params: { status: "close" }, method: :patch, class: "form__submit form__submit--medium" %>
+  <% end %>
+
+<% elsif current_user %>
+  <%= render "ownership_requests/form" %>
+<% end %>

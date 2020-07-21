@@ -41,6 +41,11 @@ class ProfilesController < ApplicationController
     redirect_to root_path, notice: t(".request_queued")
   end
 
+  def adoptions
+    @ownership_calls = current_user.ownership_calls.includes(:user, rubygem: %i[latest_version gem_download])
+    @ownership_requests = current_user.ownership_requests.includes(:rubygem)
+  end
+
   private
 
   def params_user

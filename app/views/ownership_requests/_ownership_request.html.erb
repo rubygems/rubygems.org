@@ -1,0 +1,42 @@
+<li class="small">
+  <div class="gems__gem">
+    <% if show_user %>
+      <div class="gems__gem__info">
+        <%= link_to ownership_request.user_name, profile_path(ownership_request.user.display_id), class: "gems__gem__name" %>
+      </div>
+      <p class="gems__gem__downloads__count">
+        <%= ownership_request.user.total_rubygems_count.to_s %>
+        <span class="gems__gem__downloads__heading"><%= t("ownership_reqeusts.gems_published") %></span>
+      </p>
+    <% elsif show_gem %>
+      <div class="gems__gem__info">
+        <a href="<%= rubygem_path(ownership_request.rubygem) %>" class="gems__gem__name">
+          <%= ownership_request.rubygem_name %>
+        </a>
+        <p class="gems__gem__desc t-text">
+          <%= short_info(ownership_request.rubygem) %>
+        </p>
+      </div>
+       <p class="gems__gem__downloads__count">
+        <%= download_count ownership_request.rubygem %>
+        <span class="gems__gem__downloads__heading">
+          <%= t("rubygems.index.downloads") %>
+        </span>
+      </p>
+    <% end %>
+
+    <div class="ownership__details">
+      <p class="gems__gem__desc t-text">
+        <strong><%= t("ownership_calls.details") %>:</strong>
+      </p>
+      <p class="gems__gem__desc t-text">
+        <%= sanitize_note(ownership_request.note) %>
+      </p>
+      <p class="gems__gem__desc t-text">
+        <strong><%= t("ownership_reqeusts.created_at") %>:</strong>
+        <%= time_ago_in_words ownership_request.created_at %> ago
+      </p>
+      <%= yield %>
+    </div>
+  </div>
+</li>

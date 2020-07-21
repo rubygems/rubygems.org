@@ -137,4 +137,18 @@ class ProfileTest < SystemTest
     Delayed::Worker.new.work_off
     assert_empty Delayed::Job.all
   end
+
+  test "seeing ownership calls and requests" do
+    rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
+    create(:ownership_call, rubygem: rubygem, user: @user, note: "special note")
+    create(:ownership_request, rubygem: rubygem, user: @user, note: "request note")
+
+    sign_in
+    visit profile_path("nick1")
+    click_link "Adoptions"
+
+    assert page.has_link?(rubygem.name, href: "/gems/#{rubygem.name}")
+    assert page.has_content? "special note"
+    assert page.has_content? "request note"
+  end
 end

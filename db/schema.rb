@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_09_134738) do
+ActiveRecord::Schema.define(version: 2021_11_30_050124) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -111,6 +111,31 @@ ActiveRecord::Schema.define(version: 2021_10_09_134738) do
     t.index ["directory", "key"], name: "index_log_tickets_on_directory_and_key", unique: true
   end
 
+  create_table "ownership_calls", force: :cascade do |t|
+    t.bigint "rubygem_id"
+    t.bigint "user_id"
+    t.text "note"
+    t.boolean "status", default: true, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["rubygem_id"], name: "index_ownership_calls_on_rubygem_id"
+    t.index ["user_id"], name: "index_ownership_calls_on_user_id"
+  end
+
+  create_table "ownership_requests", force: :cascade do |t|
+    t.bigint "rubygem_id"
+    t.bigint "ownership_call_id"
+    t.bigint "user_id"
+    t.text "note"
+    t.integer "status", limit: 2, default: 0, null: false
+    t.integer "approver_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["ownership_call_id"], name: "index_ownership_requests_on_ownership_call_id"
+    t.index ["rubygem_id"], name: "index_ownership_requests_on_rubygem_id"
+    t.index ["user_id"], name: "index_ownership_requests_on_user_id"
+  end
+
   create_table "ownerships", id: :serial, force: :cascade do |t|
     t.integer "rubygem_id"
     t.integer "user_id"
@@ -122,6 +147,7 @@ ActiveRecord::Schema.define(version: 2021_10_09_134738) do
     t.datetime "token_expires_at"
     t.boolean "owner_notifier", default: true, null: false
     t.integer "authorizer_id"
+    t.boolean "ownership_request_notifier", default: true, null: false
     t.index ["rubygem_id"], name: "index_ownerships_on_rubygem_id"
     t.index ["user_id", "rubygem_id"], name: "index_ownerships_on_user_id_and_rubygem_id", unique: true
     t.index ["user_id"], name: "index_ownerships_on_user_id"

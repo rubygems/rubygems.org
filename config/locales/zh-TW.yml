@@ -215,6 +215,17 @@ zh-TW:
       title:
       subtitle:
       body_html:
+    ownerhip_request_closed:
+      title:
+      subtitle:
+      body_html:
+    ownerhip_request_approved:
+      body_html:
+    new_opwnership_requests:
+      body_html:
+      button:
+      disable_notifications:
+      owners_page:
   news:
     show:
       title: 最新發佈
@@ -344,6 +355,9 @@ zh-TW:
           ui_and_api: 使用者介面與API
           ui_and_gem_signin:
   profiles:
+    adoptions:
+      no_ownership_calls:
+      no_ownership_requests:
     edit:
       change_avatar:
       email_awaiting_confirmation: 請驗證你的新 Email %{unconfirmed_email}
@@ -497,3 +511,34 @@ zh-TW:
         one: 顯示 <b>1</b> %{model}
         other: 顯示 <b>所有 %{count}</b> %{model}
         zero: 找不到 %{model}
+  adoptions:
+    index:
+      title:
+      ownership_calls:
+      no_ownership_calls:
+  ownership_calls:
+    update:
+      success_notice:
+    create:
+      success_notice:
+    created_by:
+    details:
+    apply:
+    close:
+    markdown_supported:
+    create_btn:
+  ownership_requests:
+    create:
+      success_notice:
+    update:
+      approved_notice:
+      closed_notice:
+    close:
+      success_notice:
+    ownership_requests:
+    your_ownership_requests:
+    close_all:
+    approve:
+    gems_published:
+    created_at:
+    no_ownership_requests:

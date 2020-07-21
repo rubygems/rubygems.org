@@ -1,0 +1,2 @@
+<%= button_to t("ownership_requests.approve"), rubygem_ownership_request_path(@rubygem, ownership_request), params: { status: "approve" }, method: :patch, class: "form__submit form__submit--medium", form_class: "form--inline", id: "owner_approve_request" %>
+<%= button_to t("ownership_calls.close"), rubygem_ownership_request_path(@rubygem, ownership_request), params: { status: "close" }, method: :patch, class: "form__submit form__submit--medium", form_class: "form--inline", id: "owner_close_request" %>

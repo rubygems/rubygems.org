@@ -4,6 +4,10 @@
     <%= render partial: "rubygems/github_button", locals: { github_data_params: github_data_params } %>
   <% end %>
 
+  <% if @adoption %>
+    <%= link_to "adoption", rubygem_adoptions_path(@rubygem), class: "adoption__tag" %>
+  <% end %>
+
   <div class="gem__downloads-wrap" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
     <h2 class="gem__downloads__heading t-text--s">
       <%= t('stats.index.total_downloads') %>
@@ -83,5 +87,6 @@
     <%= reverse_dependencies_link(@rubygem) %>
     <%= ownership_link(@rubygem) if @rubygem.owned_by?(current_user) %>
     <%= resend_owner_confirmation_link(@rubygem) if @rubygem.unconfirmed_ownership?(current_user) %>
+    <%= rubygem_adoptions_link(@rubygem) if @rubygem.owned_by?(current_user) || @rubygem.ownership_requestable?%>
   </div>
 </div>

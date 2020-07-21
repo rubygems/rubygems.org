@@ -1,0 +1,19 @@
+<% @title = t("mailer.ownerhip_request_closed.title") %>
+<% @sub_title = t("mailer.ownerhip_request_closed.subtitle", handle: @user.display_handle) %>
+
+<!-- Body -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+  <tr>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+    <td>
+      <div class="h3-1-center" style="color:#1e1e1e; font-family:Georgia, serif; min-width:auto !important; font-size:20px; line-height:26px;">
+        <br />
+        <p>
+          <%= t("mailer.ownerhip_request_closed.body_html", gem: @rubygem.name) %>
+        </p>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+      </div>
+    </td>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+  </tr>
+</table>

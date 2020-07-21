@@ -1,0 +1,12 @@
+<div class="t-body">
+  <%= form_tag rubygem_ownership_calls_path, method: :post, class: "ownership_call_form", id: "new_ownership_call" do %>
+    <div class="text_field">
+      <%= label_tag :note, "Note for applicants:", class: "form__label" %>
+      <span class="gem__users__mfa-text"><%= t("ownership_calls.markdown_supported") %></span>
+      <%= text_area_tag :note, nil, class: "form__input form__textarea", required: true %>
+    </div>
+    <div class="submit_field">
+      <%= submit_tag t("ownership_calls.create_btn"), data: { disable_with: t("form_disable_with") }, class: "form__submit" %>
+    </div>
+  <% end %>
+</div>

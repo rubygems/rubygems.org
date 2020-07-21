@@ -80,4 +80,20 @@ class MailerPreview < ActionMailer::Preview
     api_key = ApiKey.last
     Mailer.api_key_revoked(api_key.user.id, api_key.name, api_key.enabled_scopes.join(", "), "https://example.com")
   end
+
+  def new_ownership_requests
+    gem = Rubygem.order(updated_at: :desc).last
+    user = gem.owners.last
+    OwnersMailer.new_ownership_requests(gem.id, user.id)
+  end
+
+  def ownership_request_closed
+    ownership_request = OwnershipRequest.last
+    OwnersMailer.ownership_request_closed(ownership_request.id)
+  end
+
+  def ownership_request_approved
+    ownership_request = OwnershipRequest.last
+    OwnersMailer.ownership_request_approved(ownership_request.id)
+  end
 end

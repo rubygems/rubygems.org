@@ -70,3 +70,17 @@ table tr:first-child th:last-child {
 .t-body ul.scopes__list {
   margin: 3px 0px;
 }
+
+.ownership__details {
+  display: inline-block;
+}
+
+.ownership__header {
+  border-bottom-style: solid;
+  border-color: #c1c4ca;
+  border-bottom-width: 5px;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  text-transform: uppercase;
+  color: #e9573f;
+}

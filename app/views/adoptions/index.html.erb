@@ -1,0 +1,22 @@
+<% @title = t(".title") %>
+<% @subtitle = @rubygem.name %>
+
+<h3 class="t-list__heading"><%= t(".ownership_calls") %></h3>
+<% if @ownership_call %>
+  <%= render "ownership_calls/ownership_call", ownership_call: @ownership_call do %>
+    <% if @ownership_call.rubygem.owned_by?(current_user) %>
+      <%= button_to t("ownership_calls.close"), close_rubygem_ownership_calls_path(@ownership_call.rubygem), method: :patch, class: "form__submit form__submit--medium" %>
+    <% end %>
+  <% end %>
+
+<% elsif @rubygem.owned_by?(current_user) %>
+  <br />
+  <%= render partial: "ownership_calls/form" %>
+<% else %>
+  <div class="t-list__item">
+    <p><%= t(".no_ownership_calls", gem: @rubygem.name) %></p>
+  </div>
+
+<% end %>
+
+<%= render "ownership_requests/list" %>

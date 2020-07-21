@@ -24,6 +24,7 @@ class RubygemsController < ApplicationController
       render "blacklisted"
     else
       @versions = @rubygem.public_versions(5)
+      @adoption = @rubygem.ownership_call
       if @versions.to_a.any?
         render "show"
       else

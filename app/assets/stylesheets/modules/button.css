@@ -85,6 +85,20 @@
   }
 }
 
+.form__submit--medium {
+    padding: 4px 25px 6px 25px;
+    font-weight: 600;
+    text-align: center;
+    margin: 20px 20px 0 0;
+    float: left;
+    width: auto;
+    min-width: 150px;
+}
+
+.form--inline {
+  display: inline;
+}
+
 .download__format {
   margin-bottom: 24px;
   padding-top: 10px;
