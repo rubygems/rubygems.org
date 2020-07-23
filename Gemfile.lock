@@ -152,10 +152,10 @@ GEM
       activemodel
     erubi (1.9.0)
     execjs (2.7.0)
-    factory_bot (6.0.0)
+    factory_bot (6.1.0)
       activesupport (>= 5.0.0)
-    factory_bot_rails (6.0.0)
-      factory_bot (~> 6.0.0)
+    factory_bot_rails (6.1.0)
+      factory_bot (~> 6.1.0)
       railties (>= 5.0.0)
     faraday (0.14.0)
       multipart-post (>= 1.2, < 3)
@@ -174,7 +174,7 @@ GEM
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     http_accept_language (2.1.1)
-    i18n (1.8.3)
+    i18n (1.8.4)
       concurrent-ruby (~> 1.0)
     jmespath (1.4.0)
     jquery-rails (4.4.0)
@@ -229,7 +229,7 @@ GEM
     netrc (0.11.0)
     newrelic_rpm (6.12.0.367)
     nio4r (2.5.2)
-    nokogiri (1.10.9)
+    nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
     optimist (3.0.1)
     parallel (1.19.2)
@@ -405,7 +405,7 @@ GEM
     xml-simple (1.1.5)
     xpath (3.1.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.3.0)
+    zeitwerk (2.4.0)
 
 PLATFORMS
   ruby
