@@ -453,4 +453,32 @@ class UserTest < ActiveSupport::TestCase
       assert @user.remember_me?
     end
   end
+
+  context ".find_by_slug" do
+    should "return nil if using a falsy value" do
+      refute User.find_by_slug(nil)
+    end
+
+    context "foundable" do
+      setup { @user = create(:user, handle: "findable") }
+
+      should "return an AR when founded by id" do
+        assert_equal User.find_by_slug(@user.id), @user
+      end
+
+      should "return an AR when founded by handle" do
+        assert_equal User.find_by_slug(@user.handle), @user
+      end
+    end
+
+    context "not founded" do
+      should "return nil when using id" do
+        refute User.find_by_slug(-9999)
+      end
+
+      should "return nil when not founded by handle" do
+        refute User.find_by_slug("notfoundable")
+      end
+    end
+  end
 end
