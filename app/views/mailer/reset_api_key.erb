@@ -10,8 +10,15 @@
 
       <div class="h3-1-center" style="color:#1e1e1e; font-family:Georgia, serif; min-width:auto !important; font-size:20px; line-height:26px;">
         <p>
-          Unfortunately, your RubyGems.org API key was leaked. To protect your account, we have reset your API key to a new, random value.
-          Please check the gems you own to ensure that they were not modified without your permission while your API key was public.
+          Your API key has been reset because it was present in the URL of the request to your
+          dashboard atom feed. RubyGem.org logs have been a public dataset on <%= link_to("Honeycomb since November 2018", "https://www.honeycomb.io/blog/explore-rubygems-data-with-honeycomb/") %>
+          as part of our effort to help the wider community learn more about our ecosystem.
+          We do not have any record of your key being abused. However, we have reset your key
+          as a precautionary step. To be completely sure, please double-check any gems published
+          by your RubyGems.org account between 6 November 2018 and 19 July 2019.
+          Note that if you had enabled MFA for  <%= link_to("UI and API", "https://guides.rubygems.org/setting-up-multifactor-authentication/#authentication-levels") %>
+          gem push, yank, owner (-a/r) operations were not compromised.
+          For complete information about the issue, please  <%= link_to("read our blog post", "https://blog.rubygems.org") %>.
         </p>
         <p>
           You can find your new API key on <%= link_to("your RubyGems.org profile page", "https://rubygems.org/profile/edit") %>. You will also need to run <strong>gem signin</strong> again before you can push new gems.
