@@ -277,14 +277,14 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         cookies[:remember_token] = nil
       end
 
-      should "throttle ownership confirmation resend at level" do
+      should "throttle ownership confirmation resend" do
         exceed_limit_for("owners/ip")
         get "/gems/#{@rubygem.name}/owners/#{@user.display_id}/resend_confirmation", headers: { REMOTE_ADDR: @ip_address }
 
         assert_response :too_many_requests
       end
 
-      should "throttle adding owner at level" do
+      should "throttle adding owner" do
         exceed_limit_for("owners/ip")
         new_user = create(:user)
         post "/gems/#{@rubygem.name}/owners", params: { owner: new_user.name },
@@ -293,7 +293,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         assert_response :too_many_requests
       end
 
-      should "throttle removing owner at level" do
+      should "throttle removing owner" do
         exceed_limit_for("owners/ip")
         delete "/gems/#{@rubygem.name}/owners/#{@user.id}", headers: { REMOTE_ADDR: @ip_address }
 

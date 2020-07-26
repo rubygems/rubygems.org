@@ -27,10 +27,14 @@
         <%= link_to(ownership.owner_name, profile_path(ownership.user), class: "owner__profile") %>
       </td>
       <td class="owners__cell" data-title="Confirmed">
-        <%= confirmation_status(ownership) %>
+        <span class="owners__icon">
+          <%= confirmation_status(ownership) %>
+        </span>
       </td>
       <td class="owners__cell" data-title="MFA">
-        <%= mfa_status(ownership.user) %>
+        <span class="owners__icon">
+          <%= mfa_status(ownership.user) %>
+        </span>
       </td>
       <td class="owners__cell" data-title="Added By">
         <%= ownership.authorizer_name %>

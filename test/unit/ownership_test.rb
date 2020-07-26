@@ -97,17 +97,20 @@ class OwnershipTest < ActiveSupport::TestCase
     end
 
     should "not create without a user" do
-      ownership = @rubygem.ownerships.create(authorizer: @authorizer)
-      assert_equal ["must exist"], ownership.errors[:user]
+      ownership = build(:ownership, user: nil)
+      refute ownership.valid?
+      assert_contains ownership.errors[:user], "must exist"
     end
 
     should "not create without a rubygem" do
-      ownership = Ownership.create(user: @new_owner)
-      assert_equal ["must exist"], ownership.errors[:rubygem]
+      ownership = build(:ownership, rubygem: nil)
+      refute ownership.valid?
+      assert_contains ownership.errors[:rubygem], "must exist"
     end
 
     should "allow creation without authorizer" do
-      ownership = Ownership.create(user: @new_owner, rubygem: @rubygem)
+      ownership = build(:ownership, authorizer: nil)
+      assert ownership.valid?
       assert_empty ownership.errors.full_messages
     end
   end
@@ -133,13 +136,13 @@ class OwnershipTest < ActiveSupport::TestCase
     setup do
       @rubygem = create(:rubygem)
       @user = create(:user)
-      Ownership.create_first(@rubygem, @user)
+      Ownership.create_confirmed(@rubygem, @user)
     end
 
     should "create confirmed ownership" do
       ownership = Ownership.last
       assert_nil ownership.token
-      assert_not_nil ownership.confirmed_at
+      assert ownership.confirmed?
     end
   end
 
@@ -151,13 +154,13 @@ class OwnershipTest < ActiveSupport::TestCase
     end
 
     should "find owner by matching handle/id" do
-      assert_equal @ownership, @rubygem.ownerships.find_by_owner_handle(@user.handle)
-      assert_equal @ownership, @rubygem.ownerships.find_by_owner_handle(@user)
+      assert_equal @ownership, @rubygem.ownerships.find_by_owner_handle!(@user.handle)
+      assert_equal @ownership, @rubygem.ownerships.find_by_owner_handle!(@user)
     end
 
     should "raise not found" do
       assert_raise ActiveRecord::RecordNotFound do
-        @rubygem.ownerships.find_by_owner_handle("wrong user")
+        @rubygem.ownerships.find_by_owner_handle!("wrong user")
       end
     end
   end
@@ -169,31 +172,36 @@ class OwnershipTest < ActiveSupport::TestCase
       @ownership = create(:ownership, :unconfirmed, rubygem: @rubygem, user: user)
     end
 
-    should "update token to nil if unconfirmed" do
-      assert_changes -> { @ownership.token }, to: nil do
-        @ownership.confirm!
+    context "ownership is unconfirmed" do
+      should "update token to nil" do
+        assert_changes -> { @ownership.token }, to: nil do
+          @ownership.confirm!
+        end
+      end
+
+      should "update confirmed_at" do
+        freeze_time do
+          @ownership.confirm!
+          assert_equal Time.current, @ownership.confirmed_at
+        end
+        assert_includes @rubygem.ownerships, @ownership
       end
     end
 
-    should "update confirmed_at if unconfirmed" do
-      assert_changes -> { @ownership.confirmed_at } do
+    context "ownership is confirmed" do
+      should "not update if confirmed" do
         @ownership.confirm!
-      end
-      assert_includes @rubygem.ownerships, @ownership
-    end
-
-    should "not update if confirmed" do
-      @ownership.confirm!
-      assert_no_changes -> { @ownership.confirmed_at } do
-        @ownership.confirm!
-      end
-      assert_no_changes -> { @ownership.token } do
-        @ownership.confirm!
+        assert_no_changes -> { @ownership.confirmed_at } do
+          @ownership.confirm!
+        end
+        assert_no_changes -> { @ownership.token } do
+          @ownership.confirm!
+        end
       end
     end
   end
 
-  context "#confirmed? and unconfirmed?" do
+  context "#confirmed?" do
     setup do
       @rubygem = create(:rubygem)
       user = create(:user)
@@ -202,13 +210,28 @@ class OwnershipTest < ActiveSupport::TestCase
 
     should "return false if not confirmed" do
       refute @ownership.confirmed?
+    end
+
+    should "return true if confirmed" do
+      @ownership.confirm!
+      assert @ownership.confirmed?
+    end
+  end
+
+  context "#unconfirmed?" do
+    setup do
+      @rubygem = create(:rubygem)
+      user = create(:user)
+      @ownership = create(:ownership, :unconfirmed, rubygem: @rubygem, user: user)
+    end
+
+    should "return false if not confirmed" do
       assert @ownership.unconfirmed?
     end
 
     should "return true if confirmed" do
       @ownership.confirm!
       refute @ownership.unconfirmed?
-      assert @ownership.confirmed?
     end
   end
 end

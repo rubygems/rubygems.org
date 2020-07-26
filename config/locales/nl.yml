@@ -138,7 +138,7 @@ nl:
       title:
       subtitle:
       on:
-      off:
+      off_html:
     gem_pushed:
       subject:
       title:
@@ -157,21 +157,21 @@ nl:
       title:
       subtitle:
       body_html:
-      link_expiration_explanation:
+      link_expiration_explanation_html:
     owner_added:
       subject_self:
       subject_others:
       title:
       subtitle:
-      body_self:
-      body_others:
+      body_self_html:
+      body_others_html:
     owner_removed:
       subject_self:
       subject_others:
       title:
       subtitle:
-      body_self:
-      body_others:
+      body_self_html:
+      body_others_html:
   news:
     show:
       title:
@@ -243,7 +243,7 @@ nl:
     show:
       push_info:
       on:
-      off:
+      off_html:
       recommended:
       title:
       update:

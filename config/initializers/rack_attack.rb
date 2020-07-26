@@ -147,14 +147,8 @@ class Rack::Attack
     end
   end
 
-  protected_owners_actions = [
-    { controller: "owners", action: "create" },
-    { controller: "owners", action: "resend_confirmation" },
-    { controller: "owners", action: "destroy" }
-  ]
-
   throttle("owners/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
-    if protected_route?(protected_owners_actions, req.path, req.request_method)
+    if protected_route?(protected_ui_owners_actions, req.path, req.request_method)
       req.params["handle"].presence || Rails.application.routes.recognize_path(req.path, method: req.request_method)[:handle].presence
     end
   end

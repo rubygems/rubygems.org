@@ -10,6 +10,7 @@ class OwnerTest < SystemTest
     @ownership = create(:ownership, user: @user, rubygem: @rubygem)
 
     sign_in_as(@user)
+    ActionMailer::Base.deliveries.clear
   end
 
   test "adding owner via UI with email" do
@@ -26,9 +27,8 @@ class OwnerTest < SystemTest
     assert_cell(@other_user, "Added By", @user.handle)
     assert_cell(@other_user, "Added On", "")
 
-    assert_changes :mails_count, from: 0, to: 1 do
-      Delayed::Worker.new.work_off
-    end
+    Delayed::Worker.new.work_off
+    assert_emails 1
     assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
   end
 
@@ -41,9 +41,8 @@ class OwnerTest < SystemTest
     assert_cell(@other_user, "Confirmed", "Pending")
     assert_cell(@other_user, "Added By", @user.handle)
 
-    assert_changes :mails_count, from: 0, to: 1 do
-      Delayed::Worker.new.work_off
-    end
+    Delayed::Worker.new.work_off
+    assert_emails 1
     assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
   end
 
@@ -83,13 +82,12 @@ class OwnerTest < SystemTest
       refute_selector(:css, "a[href='#{profile_path(@other_user)}']")
     end
 
-    assert_changes :mails_count, from: 0, to: 2 do
-      Delayed::Worker.new.work_off
-    end
+    Delayed::Worker.new.work_off
+    assert_emails 2
 
-    owner_removed_emails = ActionMailer::Base.deliveries.last(2)
-    assert_equal "You were removed as an owner to #{@rubygem.name} gem", owner_removed_emails.first.subject
-    assert_equal "User #{@other_user.handle} was removed as an owner to #{@rubygem.name} gem", owner_removed_emails.second.subject
+    owner_removed_email_subjects = ActionMailer::Base.deliveries.map(&:subject)
+    assert_contains owner_removed_email_subjects, "You were removed as an owner to #{@rubygem.name} gem"
+    assert_contains owner_removed_email_subjects, "User #{@other_user.handle} was removed as an owner to #{@rubygem.name} gem"
   end
 
   test "removing last owner shows error message" do
@@ -102,9 +100,8 @@ class OwnerTest < SystemTest
     assert page.has_selector?("a[href='#{profile_path(@user)}']")
     assert page.has_selector? "#flash_alert", text: "Owner cannot be removed!"
 
-    assert_no_changes :mails_count do
-      Delayed::Worker.new.work_off
-    end
+    Delayed::Worker.new.work_off
+    assert_no_emails
   end
 
   test "clicking on confirmation link confirms the account" do
@@ -115,13 +112,12 @@ class OwnerTest < SystemTest
     assert_equal page.current_path, rubygem_path(@rubygem)
     assert page.has_selector? "#flash_notice", text: "You are added as an owner to #{@rubygem.name} gem!"
 
-    assert_changes :mails_count, from: 0, to: 2 do
-      Delayed::Worker.new.work_off
-    end
+    Delayed::Worker.new.work_off
+    assert_emails 2
 
-    owner_added_emails = ActionMailer::Base.deliveries.last(2)
-    assert_equal "You were added as an owner to #{@rubygem.name} gem", owner_added_emails.second.subject
-    assert_equal "User #{@unconfirmed_ownership.user.handle} was added as an owner to #{@rubygem.name} gem", owner_added_emails.first.subject
+    owner_added_email_subjects = ActionMailer::Base.deliveries.map(&:subject)
+    assert_contains owner_added_email_subjects, "You were added as an owner to #{@rubygem.name} gem"
+    assert_contains owner_added_email_subjects, "User #{@unconfirmed_ownership.user.handle} was added as an owner to #{@rubygem.name} gem"
   end
 
   test "clicking on incorrect link shows error" do
@@ -130,9 +126,7 @@ class OwnerTest < SystemTest
 
     assert page.has_content? "Page not found."
 
-    assert_no_changes :mails_count do
-      Delayed::Worker.new.work_off
-    end
+    assert_no_emails
   end
 
   test "shows ownership link when is owner" do

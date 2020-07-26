@@ -143,7 +143,7 @@ class Rubygem < ApplicationRecord
   end
 
   def unconfirmed_ownership?(user)
-    ownerships_including_unconfirmed.unconfirmed(user).exists?
+    ownerships_including_unconfirmed.unconfirmed.where(user: user).exists?
   end
 
   def to_s
@@ -208,7 +208,7 @@ class Rubygem < ApplicationRecord
   def create_ownership(user)
     return unless unowned?
 
-    Ownership.create_first(self, user)
+    Ownership.create_confirmed(self, user)
   end
 
   def update_versions!(version, spec)

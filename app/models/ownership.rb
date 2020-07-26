@@ -11,7 +11,7 @@ class Ownership < ApplicationRecord
   before_create :generate_confirmation_token
 
   scope :confirmed, -> { where("confirmed_at IS NOT NULL") }
-  scope :unconfirmed, ->(user) { where("confirmed_at IS NULL").where(user: user) }
+  scope :unconfirmed, -> { where("confirmed_at IS NULL") }
 
   def self.by_indexed_gem_name
     select("ownerships.*, rubygems.name")
@@ -21,11 +21,11 @@ class Ownership < ApplicationRecord
       .order("rubygems.name ASC")
   end
 
-  def self.find_by_owner_handle(handle)
+  def self.find_by_owner_handle!(handle)
     joins(:user).find_by(users: { handle: handle }) || joins(:user).find_by!(users: { id: handle })
   end
 
-  def self.create_first(rubygem, user)
+  def self.create_confirmed(rubygem, user)
     ownership = rubygem.ownerships.create(user: user, authorizer: user)
     ownership.confirm!
   end

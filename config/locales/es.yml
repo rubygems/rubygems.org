@@ -146,7 +146,7 @@ es:
       title: NOTIFICACIONES POR EMAIL
       subtitle: ¡Hola %{handle}!
       on:
-      off:
+      off_html:
     gem_pushed:
       subject: Gema %{gem} subida a RubyGems.org
       title: GEMA SUBIDA
@@ -165,21 +165,21 @@ es:
       title:
       subtitle:
       body_html:
-      link_expiration_explanation:
+      link_expiration_explanation_html:
     owner_added:
       subject_self:
       subject_others:
       title:
       subtitle:
-      body_self:
-      body_others:
+      body_self_html:
+      body_others_html:
     owner_removed:
       subject_self:
       subject_others:
       title:
       subtitle:
-      body_self:
-      body_others:
+      body_self_html:
+      body_others_html:
   news:
     show:
       title: Nuevos lanzamientos — Todas las Gemas
@@ -253,7 +253,7 @@ es:
         cada vez que una nueva versión es subida a RubyGems.org. Recibiendo y leyendo estos emails
         ayudas a proteger el ecosistema de Ruby.
       on: Activado
-      off: Desactivado
+      off_html: Desactivado
       recommended: recomendado
       title: Notificación de email
       update: Actualizar

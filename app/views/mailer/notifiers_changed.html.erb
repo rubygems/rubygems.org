@@ -1,5 +1,3 @@
-
-
 <% @title = t(".title") %>
 <% @sub_title = t(".subtitle", handle: @user.handle) %>
 
@@ -21,7 +19,10 @@
           <% @ownerships.each do |ownership| %>
             <li>
               <%= ownership.rubygem.name %> emails:
-              <%= ownership.push_notifier? ? t("mailer.notifiers_changed.on") : t("mailer.notifiers_changed.off") %>
+              <ul>
+                <li>Gem Push Notifications: <%= ownership.push_notifier? ? t("mailer.notifiers_changed.on") : t("mailer.notifiers_changed.off_html") %></li>
+                <li>Ownership Notifications: <%= ownership.owner_notifier? ? t("mailer.notifiers_changed.on") : t("mailer.notifiers_changed.off_html") %></li>
+              </ul>
             </li>
           <% end %>
         </ul>

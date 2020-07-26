@@ -17,7 +17,6 @@ class User < ApplicationRecord
   before_destroy :yank_gems
 
   has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :user
-  has_many :ownerships_including_unconfirmed, dependent: :destroy, inverse_of: :user, class_name: "Ownership"
 
   has_many :rubygems, through: :ownerships, source: :rubygem
   has_many :subscriptions, dependent: :destroy
