@@ -42,8 +42,13 @@ class MailerPreview < ActionMailer::Preview
     Mailer.gem_yanked(ownership.user.id, ownership.rubygem.versions.last.id, ownership.user.id)
   end
 
-  def reset_api_key
+  def public_gem_reset_api_key
     user = User.last
-    Mailer.reset_api_key(user)
+    Mailer.reset_api_key(user, "public_gem_reset_api_key")
+  end
+
+  def honeycomb_reset_api_key
+    user = User.last
+    Mailer.reset_api_key(user, "honeycomb_reset_api_key")
   end
 end

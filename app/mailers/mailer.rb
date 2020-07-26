@@ -71,9 +71,10 @@ class Mailer < ApplicationMailer
          subject: I18n.t("mailer.gem_yanked.subject", gem: @version.to_title)
   end
 
-  def reset_api_key(user)
+  def reset_api_key(user, template_name)
     @user = user
     mail to: @user.email,
-         subject: I18n.t("mailer.reset_api_key.subject")
+         subject: I18n.t("mailer.reset_api_key.subject"),
+         template_name: template_name
   end
 end
