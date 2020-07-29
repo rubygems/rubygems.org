@@ -1,6 +1,6 @@
 require "test_helper"
 
-class OwnerTest < ActionDispatch::IntegrationTest
+class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
   setup do
     @user = create(:user)
     @other_user = create(:user)
