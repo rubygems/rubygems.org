@@ -33,7 +33,7 @@ class Api::BaseController < ApplicationController
   end
 
   def authenticate_with_api_key
-    api_key   = request.headers["Authorization"] || params.permit(:api_key).fetch(:api_key, "")
+    api_key   = request.headers["Authorization"]
     @api_user = User.find_by_api_key(api_key)
     render_unauthorized unless @api_user
   end
