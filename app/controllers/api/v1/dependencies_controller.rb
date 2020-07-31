@@ -1,6 +1,6 @@
 class Api::V1::DependenciesController < Api::BaseController
   before_action :check_gem_count
-  GEM_REQUEST_LIMIT = 200
+  GEM_REQUEST_LIMIT = 275
 
   def index
     deps = GemDependent.new(gem_names).to_a
