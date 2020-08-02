@@ -115,6 +115,7 @@ ActiveRecord::Schema.define(version: 2020_05_08_234114) do
     t.datetime "updated_at"
     t.string "slug"
     t.boolean "indexed", default: false, null: false
+    t.index "regexp_replace(upper((name)::text), '[_-]'::text, ''::text, 'g'::text)", name: "dashunderscore_typos_idx"
     t.index "upper((name)::text) varchar_pattern_ops", name: "index_rubygems_upcase"
     t.index ["indexed"], name: "index_rubygems_on_indexed"
     t.index ["name"], name: "index_rubygems_on_name", unique: true

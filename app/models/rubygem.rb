@@ -20,7 +20,7 @@ class Rubygem < ApplicationRecord
     uniqueness: { case_sensitive: false },
     if: :needs_name_validation?
   validate :blacklist_names_exclusion
-  # validate :protected_gem_typo, on: :create, unless: -> { Array(validation_context).include?(:typo_exception) }
+  validate :protected_gem_typo, on: :create, unless: -> { Array(validation_context).include?(:typo_exception) }
 
   after_create :update_unresolved
   before_destroy :mark_unresolved
@@ -324,7 +324,7 @@ class Rubygem < ApplicationRecord
     gem_typo = GemTypo.new(name)
 
     return unless gem_typo.protected_typo?
-    errors.add :name, "'#{name}' is too close to typo-protected gem: #{gem_typo.protected_gem}"
+    errors.add :name, "'#{name}' is too similar to an existing gem named '#{gem_typo.protected_gem}'"
   end
 
   def update_unresolved
