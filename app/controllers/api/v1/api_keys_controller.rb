@@ -41,6 +41,8 @@ class Api::V1::ApiKeysController < Api::BaseController
           respond_with "Failed to update scopes for the API key #{api_key.name}: #{errors}", status: :unprocessable_entity
         end
       end
+    rescue BCrypt::Errors::InvalidHash
+      false
     end
   end
 
