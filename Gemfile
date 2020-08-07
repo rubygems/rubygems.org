@@ -26,7 +26,7 @@ gem "rbtrace", "~> 0.4.8"
 gem "rdoc"
 gem "rest-client", require: "rest_client"
 gem "roadie-rails"
-gem "sass-rails"
+gem "sassc-rails"
 gem "shoryuken", "~> 2.1.0", require: false
 gem "statsd-instrument", "~> 2.3.0"
 gem "unicorn", "~> 5.5.0.1.g6836"
