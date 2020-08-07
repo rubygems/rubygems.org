@@ -24,10 +24,13 @@ RUN mv /app/config/database.yml.example /app/config/database.yml
 
 
 RUN gem install bundler io-console --no-ri --no-rdoc && \
-  bundle config set without 'development test' && \
+  bundle config set --local without 'development test' && \
   bundle install --jobs 20 --retry 5
 
-RUN RAILS_ENV=production RAILS_GROUPS=js SECRET_KEY_BASE=1234 bin/rails assets:precompile
+RUN RAILS_ENV=production RAILS_GROUPS=assets SECRET_KEY_BASE=1234 bin/rails assets:precompile
+
+RUN bundle config set --local without 'development test assets' && \
+  bundle clean --force
 
 
 FROM ruby:2.6-alpine
