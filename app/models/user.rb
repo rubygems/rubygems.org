@@ -227,8 +227,8 @@ class User < ApplicationRecord
       update_attribute(:email, "security+locked-#{SecureRandom.hex(4)}-#{id}-#{handle}@rubygems.org")
       confirm_email!
       disable_mfa!
+      update_attribute(:password, SecureRandom.alphanumeric)
       update!(
-        password: SecureRandom.alphanumeric,
         remember_token: nil,
         remember_token_expires_at: nil,
         api_key: nil
