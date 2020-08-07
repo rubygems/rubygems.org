@@ -17,6 +17,6 @@ class UsersController < Clearance::UsersController
   private
 
   def user_params
-    params.permit(user: [*User::PERMITTED_ATTRS]).fetch(:user, {})
+    params.permit(user: Array(User::PERMITTED_ATTRS)).fetch(:user, {})
   end
 end
