@@ -153,6 +153,9 @@ Style/HashTransformKeys:
 Style/HashTransformValues:
   Enabled: true
 
+Lint/DuplicateElsifCondition:
+  Enabled: true
+
 Lint/RaiseException:
   Enabled: true
 
@@ -203,4 +206,28 @@ Style/RedundantRegexpEscape:
   Enabled: true
 
 Style/RedundantFetchBlock:
+  Enabled: true
+
+Style/AccessorGrouping:
+  Enabled: true
+
+Style/ArrayCoercion:
+  Enabled: true
+
+Style/BisectedAttrAccessor:
+  Enabled: true
+
+Style/CaseLikeIf:
+  Enabled: true
+
+Style/HashAsLastArrayItem:
+  Enabled: true
+
+Style/HashLikeCase:
+  Enabled: true
+
+Style/RedundantAssignment:
+  Enabled: true
+
+Style/RedundantFileExtensionInRequire:
   Enabled: true
