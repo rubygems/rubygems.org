@@ -19,7 +19,9 @@ class DashboardsController < ApplicationController
   private
 
   def authenticate_with_api_key
-    api_key   = request.headers["Authorization"] || params.permit(:api_key).fetch(:api_key, "")
+    api_key = request.headers["Authorization"] || params.permit(:api_key).fetch(:api_key, "")
+    return head(:not_acceptable) if api_key.size > 32
+
     @api_user = User.find_by_api_key(api_key)
   end
 

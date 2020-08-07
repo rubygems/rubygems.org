@@ -8,6 +8,20 @@ class DashboardTest < ActionDispatch::IntegrationTest
     create(:rubygem, name: "arrakis", number: "1.0.0")
   end
 
+  test "request with long api_key should be rejected" do
+    cookies[:remember_token] = nil
+    get dashboard_path(api_key: ("x" * 40))
+
+    assert_response 406
+  end
+
+  test "request with long Authorization header should be rejected" do
+    cookies[:remember_token] = nil
+    get dashboard_path, headers: { "Authorization" => ("x" * 40) }
+
+    assert_response 406
+  end
+
   test "request with array of api keys does not pass autorization" do
     cookies[:remember_token] = nil
     rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
