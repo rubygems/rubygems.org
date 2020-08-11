@@ -24,7 +24,7 @@
   <% @ownerships.each do |ownership| %>
     <tr class="owners__row">
       <td class="owners__cell" data-title="Name">
-        <%= link_to(ownership.owner_name, profile_path(ownership.user), class: "owner__profile") %>
+        <%= link_to(ownership.owner_name, profile_path(ownership.user.display_id), class: "owner__profile") %>
       </td>
       <td class="owners__cell" data-title="Confirmed">
         <span class="owners__icon">

@@ -165,21 +165,21 @@ en:
       title: OWNERSHIP CONFIRMATION
       subtitle: Hi %{handle}!
       body_html: You were added as an owner for <strong>%{gem}</strong> gem on RubyGems.org. Please click on the link below to confirm your ownership.
-      link_expiration_explanation_html: Please keep in mind that this link is only valid for <em>48 hours</em>.
+      link_expiration_explanation_html: Please note that this link is only valid for 24 hours. You can resend confirmation mail from the  <a href="https://rubygems.org/gems/%{gem}">%{gem}</a> gem page after sign in.
     owner_added:
       subject_self: You were added as an owner to %{gem} gem
       subject_others: User %{owner_handle} was added as an owner to %{gem} gem
       title: OWNER ADDED
       subtitle: Hi %{user_handle}!
-      body_self_html: You were added as an owner for <strong>%{gem}</strong> gem on RubyGems.org.
-      body_others_html: User %{owner_handle} was added as an owner for <strong>%{gem}</strong> gem on RubyGems.org.
+      body_self_html: <b>You</b> were added as an owner for <strong>%{gem}</strong> gem on RubyGems.org.
+      body_others_html: <b>%{owner_handle}</b> was added as an owner for <strong>%{gem}</strong> gem by <b>%{authorizer}</b>. You are receiving these notifications because you are an existing owner of %{gem}.
     owner_removed:
       subject_self: You were removed as an owner to %{gem} gem
       subject_others: User %{owner_handle} was removed as an owner to %{gem} gem
       title: OWNER REMOVED
       subtitle: Hi %{user_handle}!
-      body_self_html: <em>You</em> were removed as an owner for <strong>%{gem}</strong> gem on RubyGems.org.
-      body_others_html: User <em>%{owner_handle}</em> was removed as an owner for <strong>%{gem}</strong> gem on RubyGems.org.
+      body_self_html: <b>You</b> were removed as an owner for <strong>%{gem}</strong> gem on RubyGems.org.
+      body_others_html: <b>%{owner_handle}</b> was removed as an owner for <strong>%{gem}</strong> gem on RubyGems.org.
   news:
     show:
       title: New Releases — All Gems
@@ -272,9 +272,9 @@ en:
       added_on: ADDED ON
       added_by: ADDED BY
       action: ACTION
-      info: Use this page to control which Rubygems users can help you to manage %{gem}.
       email_field: Email / Handle
       submit_button: Add Owner
+      info: add or remove owners
     resend_confirmation:
       resent_notice: A confirmation mail has been re-sent to %{handle}'s email
     create:
@@ -349,13 +349,13 @@ en:
         header: Links
         home: Homepage
         mail: Mailing List
-        report_abuse: Report Abuse
+        report_abuse: Report abuse
         reverse_dependencies: Reverse dependencies
         rss: RSS
         subscribe: Subscribe
         unsubscribe: Unsubscribe
         wiki: Wiki
-        resend_ownership_confirmation: Resend Ownership Confirmation
+        resend_ownership_confirmation: Resend confirmation
         ownership: Ownership
     blacklisted:
       blacklisted_namespace: This namespace is reserved by rubygems.org.

@@ -26,9 +26,10 @@ class OwnersMailer < ApplicationMailer
          subject: I18n.t("mailer.owner_removed.subject_#{owner_i18n_key(@owner, @user)}", gem: @rubygem.name, owner_handle: @owner.display_handle)
   end
 
-  def owner_added(owner_id, user_id, gem_id)
+  def owner_added(owner_id, user_id, authorizer_id, gem_id)
     @user = User.find(user_id)
     @owner = User.find(owner_id)
+    @authorizer = User.find(authorizer_id)
     @rubygem = Rubygem.find(gem_id)
     mail to: @user.email,
          subject: I18n.t("mailer.owner_added.subject_#{owner_i18n_key(@owner, @user)}", gem: @rubygem.name, owner_handle: @owner.display_handle)

@@ -192,14 +192,9 @@ a.t-list__item {
 .t-body th, .t-body td {
   padding-right: 16px; }
 .t-body th {
-  padding-bottom: 16px;
-  text-align: left;
   text-transform: uppercase; }
 .t-body tbody tr {
   border-bottom: 1px solid #e5e6e9; }
-.t-body td {
-  padding-top: 16px;
-  padding-bottom: 28px; }
   .t-body td code {
     font-weight: normal;
     font-size: 13px; }

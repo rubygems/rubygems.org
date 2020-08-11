@@ -67,6 +67,6 @@ class MailerPreview < ActionMailer::Preview
     gem = Rubygem.order(updated_at: :desc).last
     owner = gem.owners.first
     user = User.last
-    OwnersMailer.owner_added(owner.id, user.id, gem.id)
+    OwnersMailer.owner_added(owner.id, user.id, user.id, gem.id)
   end
 end

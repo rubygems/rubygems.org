@@ -75,7 +75,7 @@ class Ownership < ApplicationRecord
 
   def notify_owner_added
     rubygem.ownership_notifiable_owners.each do |notified_user|
-      OwnersMailer.delay.owner_added(user_id, notified_user.id, rubygem_id)
+      OwnersMailer.delay.owner_added(user_id, notified_user.id, authorizer.id, rubygem_id)
     end
   end
 end

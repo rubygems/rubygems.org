@@ -20,7 +20,7 @@ class OwnerTest < SystemTest
     click_button "Add Owner"
     owners_table = page.find(:css, ".owners__table")
     within_element owners_table do
-      assert_selector(:css, "a[href='#{profile_path(@other_user)}']")
+      assert_selector(:css, "a[href='#{profile_path(@other_user.display_id)}']")
     end
 
     assert_cell(@other_user, "Confirmed", "Pending")
@@ -97,7 +97,7 @@ class OwnerTest < SystemTest
       click_button "Remove"
     end
 
-    assert page.has_selector?("a[href='#{profile_path(@user)}']")
+    assert page.has_selector?("a[href='#{profile_path(@user.display_id)}']")
     assert page.has_selector? "#flash_alert", text: "Owner cannot be removed!"
 
     Delayed::Worker.new.work_off

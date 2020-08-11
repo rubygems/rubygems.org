@@ -142,14 +142,14 @@ de:
     gem_pushed:
       subject:
       title:
-    gem_yanked:
-      subject:
-      title:
     reset_api_key:
       subject:
       title:
       subtitle:
     email_reset_update:
+      subject:
+      title:
+    gem_yanked:
       subject:
       title:
     ownership_confirmation:

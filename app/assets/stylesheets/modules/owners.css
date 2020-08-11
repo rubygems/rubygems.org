@@ -1,39 +1,16 @@
-.owners__navigation {
-    display: inline-block;
-    width: 100%;
-}
-.owners__navigation a {
-    color: #9da2ab;
-    text-transform: uppercase;
-    font-weight: bold;
-    transition-duration: 0.25s;
-    transition-property: color;
-    outline: none;
-}
-.owners__navigation a:hover, .owners__navigation a:focus, .owners__navigation a:active {
-    color: #141c22;
-}
-.owners__back__navigation.disabled:hover {
-    color: #9da2ab;
-}
-.owners__back__navigation {
-    float: left;
-}
 .owners__table {
-    border-spacing: 0;
-    font-size: 16px;
+  border-spacing: 0;
+  font-size: 16px;
 }
-@media screen and (max-width: 640px) {
-    .owners__table {
-        display: block;
-    }
-}
-.owners__tbody {
+
+@media screen and (max-width: 580px) {
+  .owners__table {
     display: block;
+  }
 }
+
 .owners__row {
     background: #ffffff;
-    margin: 5px;
 }
 .owners__row:nth-of-type(odd) {
     background: #f6f6f6;
@@ -44,7 +21,7 @@
     background: #e9573f;
 }
 .owners__cell {
-    padding: 13px 12px;
+    padding: 15px 12px;
     text-align: center;
 }
 .owners__cell[data-title="Confirmed"] {
@@ -55,48 +32,41 @@
 }
 
 .owners__icon img {
-    width: 1em;
-    height: 1em;
+    width: 1em !important;
+    height: 1em !important;
     position: relative;
     padding-right: 2px;
 }
 
 @media screen and (max-width: 640px) {
+    .owners__tbody {
+        display: block;
+    }
     .owners__row {
         padding: 14px 0 7px;
         display: block;
     }
     .owners__row.owners__header {
-        padding: 0;
-        height: 6px;
+        display: none;
     }
     .owners__row.owners__header .owners__cell {
         display: none;
     }
     .owners__row .owners__cell:before {
+        margin-bottom: 8px;
         content: attr(data-title);
         text-transform: uppercase;
         color: #969696;
         display: block;
+        font-size: 12px;
+        font-weight: bold;
     }
     .owners__cell {
-        padding: 3px 16px;
+        padding: 12px 10px !important;
         display: block;
         margin: auto;
     }
 }
 
-.owner__profile:visited, .owner__profile {
-    color: #000000; }
 .owner__profile:focus, .owner__profile:hover {
     color: #e9573f; }
-
-.owners__intro {
-    margin: 10px 0 32px 0;
-    padding-bottom: 30px;
-    border-bottom: 1px solid #c1c4ca;
-    font-size: 16px;
-    font-weight: 300;
-    line-height: 1.5;
-}
-
