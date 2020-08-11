@@ -17,9 +17,9 @@ module GemcutterTaskshelper
     version.update(metadata: metadata || {})
   end
 
-  def assign_required_rubygems_version!(version)
-    required_rubygems_version = get_spec_attribute(version.full_name, "required_rubygems_version")
-    version.update_column(:required_rubygems_version, required_rubygems_version.to_s)
+  def assign_required_ruby_version!(version)
+    required_ruby_version = get_spec_attribute(version.full_name, "required_ruby_version")
+    version.update_column(:required_ruby_version, required_ruby_version.to_s)
   end
 
   def get_spec_attribute(version_full_name, attribute_name)
