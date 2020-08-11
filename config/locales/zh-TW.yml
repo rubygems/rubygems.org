@@ -166,12 +166,10 @@ zh-TW:
       body_self_html:
       body_others_html:
     owner_removed:
-      subject_self:
-      subject_others:
+      subject:
       title:
       subtitle:
-      body_self_html:
-      body_others_html:
+      body_html:
   news:
     show:
       title: 最新發佈
@@ -248,6 +246,8 @@ zh-TW:
       title:
       update:
       owner_info:
+      push_heading:
+      owner_heading:
   owners:
     confirm:
       confirmed_email:

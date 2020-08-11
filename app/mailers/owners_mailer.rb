@@ -14,16 +14,16 @@ class OwnersMailer < ApplicationMailer
     @user = @ownership.user
     @rubygem = @ownership.rubygem
     mail to: @user.email,
-         subject: I18n.t("mailer.ownership_confirmation.subject", gem: @rubygem.name,
+         subject: t("mailer.ownership_confirmation.subject", gem: @rubygem.name,
                          default: "Please confirm the ownership of %{gem} gem on RubyGems.org")
   end
 
-  def owner_removed(owner_id, user_id, gem_id)
+  def owner_removed(user_id, authorizer_id, gem_id)
     @user = User.find(user_id)
-    @owner = User.find(owner_id)
+    @authorizer = User.find(authorizer_id)
     @rubygem = Rubygem.find(gem_id)
     mail to: @user.email,
-         subject: I18n.t("mailer.owner_removed.subject_#{owner_i18n_key(@owner, @user)}", gem: @rubygem.name, owner_handle: @owner.display_handle)
+         subject: t("mailer.owner_removed.subject", gem: @rubygem.name)
   end
 
   def owner_added(owner_id, user_id, authorizer_id, gem_id)
@@ -32,6 +32,6 @@ class OwnersMailer < ApplicationMailer
     @authorizer = User.find(authorizer_id)
     @rubygem = Rubygem.find(gem_id)
     mail to: @user.email,
-         subject: I18n.t("mailer.owner_added.subject_#{owner_i18n_key(@owner, @user)}", gem: @rubygem.name, owner_handle: @owner.display_handle)
+         subject: t("mailer.owner_added.subject_#{owner_i18n_key(@owner, @user)}", gem: @rubygem.name, owner_handle: @owner.display_handle)
   end
 end

@@ -62,7 +62,7 @@
         font-weight: bold;
     }
     .owners__cell {
-        padding: 12px 10px !important;
+        padding: 12px 10px;
         display: block;
         margin: auto;
     }

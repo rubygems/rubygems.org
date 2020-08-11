@@ -174,12 +174,10 @@ es:
       body_self_html:
       body_others_html:
     owner_removed:
-      subject_self:
-      subject_others:
+      subject:
       title:
       subtitle:
-      body_self_html:
-      body_others_html:
+      body_html:
   news:
     show:
       title: Nuevos lanzamientos — Todas las Gemas
@@ -258,6 +256,8 @@ es:
       title: Notificación de email
       update: Actualizar
       owner_info:
+      push_heading:
+      owner_heading:
   profiles:
     edit:
       change_avatar:

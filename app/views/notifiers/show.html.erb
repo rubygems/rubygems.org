@@ -6,6 +6,7 @@
 
       <% @ownerships.each do |ownership| %>
         <h2><%= ownership.rubygem.name %></h2>
+        <h3 class="t-list__heading"><%= t('notifiers.show.push_heading') %></h3>
         <p><%= t('.push_info') %></p>
         <p>
           <%= label_tag do %>
@@ -19,6 +20,7 @@
           <% end %>
         </p>
 
+        <h3 class="t-list__heading"><%= t('notifiers.show.owner_heading') %></h3>
         <p><%= t('.owner_info') %></p>
         <p>
           <%= label_tag do %>

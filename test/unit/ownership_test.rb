@@ -61,19 +61,19 @@ class OwnershipTest < ActiveSupport::TestCase
     end
 
     should "allow deletion of one ownership" do
-      @ownership_one.destroy_and_notify
+      @ownership_one.destroy_and_notify(@ownership_two.user)
       assert_equal 1, @rubygem.owners.length
       assert_equal 2, @rubygem.owners_including_unconfirmed.length
     end
 
     should "allow deletion of unconfirmed ownership" do
-      @ownership_three.destroy_and_notify
+      @ownership_three.destroy_and_notify(@ownership_two.user)
       assert_equal 2, @rubygem.owners_including_unconfirmed.length
     end
 
     should "not allow deletion of both ownerships" do
-      @ownership_one.destroy_and_notify
-      @ownership_two.destroy_and_notify
+      @ownership_one.destroy_and_notify(@ownership_two.user)
+      @ownership_two.destroy_and_notify(@ownership_one.user)
       assert_equal 1, @rubygem.owners.length
       assert_equal @ownership_two.user, @rubygem.owners.last
     end

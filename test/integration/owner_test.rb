@@ -82,12 +82,12 @@ class OwnerTest < SystemTest
       refute_selector(:css, "a[href='#{profile_path(@other_user)}']")
     end
 
+    ActionMailer::Base.deliveries.clear
     Delayed::Worker.new.work_off
-    assert_emails 2
 
-    owner_removed_email_subjects = ActionMailer::Base.deliveries.map(&:subject)
-    assert_contains owner_removed_email_subjects, "You were removed as an owner to #{@rubygem.name} gem"
-    assert_contains owner_removed_email_subjects, "User #{@other_user.handle} was removed as an owner to #{@rubygem.name} gem"
+    assert_emails 1
+    assert_contains last_email.subject, "You were removed as an owner to #{@rubygem.name} gem"
+    assert_equal [@other_user.email], last_email.to
   end
 
   test "removing last owner shows error message" do

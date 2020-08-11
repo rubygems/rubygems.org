@@ -174,12 +174,10 @@ en:
       body_self_html: <b>You</b> were added as an owner for <strong>%{gem}</strong> gem on RubyGems.org.
       body_others_html: <b>%{owner_handle}</b> was added as an owner for <strong>%{gem}</strong> gem by <b>%{authorizer}</b>. You are receiving these notifications because you are an existing owner of %{gem}.
     owner_removed:
-      subject_self: You were removed as an owner to %{gem} gem
-      subject_others: User %{owner_handle} was removed as an owner to %{gem} gem
+      subject: You were removed as an owner to %{gem} gem
       title: OWNER REMOVED
       subtitle: Hi %{user_handle}!
-      body_self_html: <b>You</b> were removed as an owner for <strong>%{gem}</strong> gem on RubyGems.org.
-      body_others_html: <b>%{owner_handle}</b> was removed as an owner for <strong>%{gem}</strong> gem on RubyGems.org.
+      body_html: <b>You</b> were removed as an owner for <strong>%{gem}</strong> gem on RubyGems.org by <b>%{authorizer}</b>.
   news:
     show:
       title: New Releases — All Gems
@@ -260,6 +258,8 @@ en:
       owner_info: To aid detection of unauthorized ownership changes, we email you each time a new owner is
         added or removed to the gem. By receiving and reading these emails, you help protect the Ruby
         ecosystem.
+      owner_heading: Ownership Notifications
+      push_heading: Push Notifications
   owners:
     confirm:
       confirmed_email: You are added as an owner to %{gem} gem!

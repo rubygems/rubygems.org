@@ -109,12 +109,9 @@ class OwnersControllerTest < ActionController::TestCase
           ActionMailer::Base.deliveries.clear
           Delayed::Worker.new.work_off
 
-          owner_removed_email_subjects = ActionMailer::Base.deliveries.map(&:subject)
-          assert_contains owner_removed_email_subjects, "You were removed as an owner to #{@rubygem.name} gem"
-          assert_contains owner_removed_email_subjects, "User #{@second_user.handle} was removed as an owner to #{@rubygem.name} gem"
-
-          owner_removed_email_to = ActionMailer::Base.deliveries.map(&:to).flatten
-          assert_same_elements @rubygem.owners.map(&:email) << @second_user.email, owner_removed_email_to
+          assert_emails 1
+          assert_contains last_email.subject, "You were removed as an owner to #{@rubygem.name} gem"
+          assert_equal [@second_user.email], last_email.to
         end
       end
 

@@ -41,7 +41,7 @@ class OwnersController < ApplicationController
 
   def destroy
     @ownership = @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(params[:handle])
-    if @ownership.destroy_and_notify
+    if @ownership.destroy_and_notify(current_user)
       redirect_to rubygem_owners_path(@ownership.rubygem), notice: t("owners.destroy.removed_notice", owner_name: @ownership.owner_name)
     else
       redirect_to rubygem_owners_path(@ownership.rubygem), alert: t("owners.destroy.failed_notice")
