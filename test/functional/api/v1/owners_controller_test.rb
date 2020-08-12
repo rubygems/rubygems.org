@@ -161,6 +161,24 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         assert @rubygem.owners.include?(@third_user)
       end
     end
+
+    context "when adding the same owner" do
+      should "respond with correct message" do
+        @rubygem.ownerships.create(user: @second_user)
+        post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+        assert_equal "Owner already exists.", @response.body
+      end
+    end
+
+    context "when creating ownership fails" do
+      should "respond with error" do
+        error_type = ActiveRecord::RecordInvalid
+        ActiveRecord::Associations::CollectionProxy.any_instance.stubs(:create!).raises(error_type, Ownership.new)
+        assert_raises error_type do
+          post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+        end
+      end
+    end
   end
 
   should "route DELETE" do

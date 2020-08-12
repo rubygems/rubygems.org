@@ -199,8 +199,8 @@ class Rubygem < ApplicationRecord
     new_record? || (versions.indexed.none? && not_protected?)
   end
 
-  def create_ownership(user)
-    ownerships.create(user: user) if unowned?
+  def create_ownership!(user)
+    ownerships.create!(user: user) if unowned?
   end
 
   def update_versions!(version, spec)
