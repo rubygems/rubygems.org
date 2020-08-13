@@ -203,6 +203,11 @@ spec:
             mountPath: /var/log/nginx
           - name: nginxcache
             mountPath: /var/lib/nginx/cache
+          <% if environment == 'staging' %>
+          - name: nginxbasicauth
+            mountPath: /etc/nginxbasicauth
+            readOnly: true
+          <% end %>
         livenessProbe:
           httpGet:
             path: /nginx_health
@@ -230,3 +235,8 @@ spec:
           emptyDir: {}
         - name: nginxcache
           emptyDir: {}
+        <% if environment == 'staging' %>
+        - name: nginxbasicauth
+          secret:
+            secretName: nginx-basic-auth
+        <% end %>
