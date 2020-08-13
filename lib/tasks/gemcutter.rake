@@ -85,7 +85,9 @@ namespace :gemcutter do
   namespace :required_ruby_version do
     desc "Backfill gem versions with rubygems_version."
     task backfill: :environment do
-      without_required_ruby_version = Version.where("created_at < '2014-03-21' and required_ruby_version is null")
+      ActiveRecord::Base.logger.level = 1 if Rails.env.development?
+
+      without_required_ruby_version = Version.where("created_at < '2014-03-21' and required_ruby_version is null and indexed = true")
       mod = ENV["shard"]
       without_required_ruby_version = without_required_ruby_version.where("id % 4 = ?", mod.to_i) if mod
 
