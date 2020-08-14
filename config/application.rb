@@ -68,7 +68,7 @@ module Gemcutter
   NEWS_PER_PAGE = 10
   MAX_PAGES = 1000
   MFA_KEY_EXPIRY = 30.minutes
-  OWNERSHIP_TOKEN_EXPIRES_AFTER = 24.hours
+  OWNERSHIP_TOKEN_EXPIRES_AFTER = 48.hours
   POPULAR_DAYS_LIMIT = 70.days
   PROTOCOL = config["protocol"]
   REMEMBER_FOR = 2.weeks
@@ -76,4 +76,5 @@ module Gemcutter
   STATS_MAX_PAGES = 10
   STATS_PER_PAGE = 10
   MAX_FIELD_LENGTH = 255
+  PASSWORD_VERIFICATION_EXPIRY = 10.minutes
 end

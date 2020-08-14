@@ -210,6 +210,10 @@ nl:
       will_email_notice: We sturen een link om je wachtwoord te wijzigen.
     otp_prompt:
       authenticate:
+    show:
+      title:
+      confirm:
+      notice:
   multifactor_auths:
     incorrect_otp:
     otp_code:

@@ -13,6 +13,8 @@ class OwnerTest < SystemTest
     ActionMailer::Base.deliveries.clear
   end
 
+  teardown { reset_session! }
+
   test "adding owner via UI with email" do
     visit_ownerships_page
 
@@ -104,6 +106,25 @@ class OwnerTest < SystemTest
     assert_no_emails
   end
 
+  test "verify password again after 10 minutes" do
+    visit_ownerships_page
+    travel 15.minutes
+    visit rubygem_path(@rubygem)
+    click_link "Ownership"
+    assert page.has_field? "Password"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Confirm"
+  end
+
+  test "incorrect password on verify shows error" do
+    visit rubygem_path(@rubygem)
+    click_link "Ownership"
+    assert page.has_css? "#verify_password_password"
+    fill_in "Password", with: "wrong password"
+    click_button "Confirm"
+    assert page.has_selector? "#flash_alert", text: "This request was denied. We could not verify your password."
+  end
+
   test "clicking on confirmation link confirms the account" do
     @unconfirmed_ownership = create(:ownership, :unconfirmed, rubygem: @rubygem)
     confirmation_link = confirm_rubygem_owners_url(@rubygem, token: @unconfirmed_ownership.token)
@@ -173,6 +194,10 @@ class OwnerTest < SystemTest
   def visit_ownerships_page
     visit rubygem_path(@rubygem)
     click_link "Ownership"
+    return unless page.has_css? "#verify_password_password"
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Confirm"
   end
 
   def sign_in_as(user)

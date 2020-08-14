@@ -1,6 +1,7 @@
 class OwnersController < ApplicationController
   before_action :find_rubygem, except: :confirm
   before_action :redirect_to_signin, unless: :owner?, except: %i[confirm resend_confirmation]
+  before_action :redirect_to_verify, unless: :password_session_active?, only: %i[index create destroy]
 
   def confirm
     ownership = Ownership.includes(:rubygem).find_by!(token: params[:token])
@@ -52,5 +53,14 @@ class OwnersController < ApplicationController
 
   def owner?
     @rubygem.owned_by?(current_user)
+  end
+
+  def password_session_active?
+    session[:verification] && session[:verification] > Time.current
+  end
+
+  def redirect_to_verify
+    session[:redirect_uri] = rubygem_owners_url(@rubygem)
+    redirect_to user_password_path(current_user)
   end
 end

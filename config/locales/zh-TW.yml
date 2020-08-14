@@ -210,6 +210,10 @@ zh-TW:
       will_email_notice: 系統將會寄一封包含重設密碼連結的電子郵件給你
     otp_prompt:
       authenticate:
+    show:
+      title:
+      confirm:
+      notice:
   multifactor_auths:
     incorrect_otp:
     otp_code:

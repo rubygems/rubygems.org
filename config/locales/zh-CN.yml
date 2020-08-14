@@ -210,6 +210,10 @@ zh-CN:
       will_email_notice: 我们将会通过 Email 发送修改密码的链接给你。
     otp_prompt:
       authenticate:
+    show:
+      title:
+      confirm:
+      notice:
   multifactor_auths:
     incorrect_otp:
     otp_code:

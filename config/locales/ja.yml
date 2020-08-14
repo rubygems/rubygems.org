@@ -210,6 +210,10 @@ ja:
       will_email_notice: パスワード変更のためのメールが送信されます。
     otp_prompt:
       authenticate:
+    show:
+      title:
+      confirm:
+      notice:
   multifactor_auths:
     incorrect_otp:
     otp_code:

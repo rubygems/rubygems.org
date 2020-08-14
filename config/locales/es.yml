@@ -218,6 +218,10 @@ es:
       will_email_notice: Te enviaremos el enlace para cambiar tu contraseña por correo electrónico.
     otp_prompt:
       authenticate: Autenticar
+    show:
+      title:
+      confirm:
+      notice:
   multifactor_auths:
     incorrect_otp: Tu código OTP no es correcto.
     otp_code: código OTP

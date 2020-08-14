@@ -176,8 +176,9 @@ Rails.application.routes.draw do
     end
 
     resources :users, only: %i[new create] do
-      resource :password, only: %i[create edit update] do
+      resource :password, only: %i[create edit update show] do
         post 'mfa_edit', to: 'passwords#mfa_edit', as: :mfa_edit
+        post 'verify', to: 'passwords#verify', as: :verify
       end
     end
 

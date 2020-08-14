@@ -1,5 +1,6 @@
 class PasswordsController < Clearance::PasswordsController
   before_action :validate_confirmation_token, only: %i[edit mfa_edit]
+  before_action :redirect_to_signin, unless: :signed_in?, only: %i[show verify]
 
   def edit
     if @user.mfa_enabled?
@@ -32,7 +33,23 @@ class PasswordsController < Clearance::PasswordsController
     end
   end
 
+  def show
+  end
+
+  def verify
+    if verify_user
+      session[:verification] = Time.current + Gemcutter::PASSWORD_VERIFICATION_EXPIRY
+      redirect_to session[:redirect_uri] || root_path
+    else
+      redirect_to user_password_path(current_user), alert: t("profiles.request_denied")
+    end
+  end
+
   private
+
+  def verify_user
+    current_user.authenticated? verify_password_params[:password]
+  end
 
   def find_user_for_create
     Clearance.configuration.user_model
@@ -45,6 +62,10 @@ class PasswordsController < Clearance::PasswordsController
 
   def password_params
     params.require(:password).permit(:email)
+  end
+
+  def verify_password_params
+    params.require(:verify_password).permit(:password)
   end
 
   def reset_params

@@ -176,4 +176,72 @@ class PasswordsControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "on GET to show" do
+    setup do
+      rubygem = create(:rubygem)
+      session[:redirect_uri] = rubygem_owners_url(rubygem)
+    end
+
+    context "when signed in" do
+      setup do
+        user = create(:user)
+        sign_in_as(user)
+        get :show, params: { user_id: user.id }
+      end
+      should respond_with :success
+      should "render password verification form" do
+        assert page.has_css? "#verify_password_password"
+      end
+    end
+
+    context "when not signed in" do
+      setup do
+        user = create(:user)
+        get :show, params: { user_id: user.id }
+      end
+      should redirect_to("sign in") { sign_in_path }
+    end
+  end
+
+  context "on POST to verify" do
+    setup do
+      rubygem = create(:rubygem)
+      session[:redirect_uri] = rubygem_owners_url(rubygem)
+    end
+
+    context "when signed in" do
+      context "on correct password" do
+        setup do
+          user = create(:user)
+          @rubygem = create(:rubygem)
+          sign_in_as(user)
+          session[:redirect_uri] = rubygem_owners_url(@rubygem)
+          post :verify, params: { user_id: user.id, verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+        end
+        should redirect_to("redirect uri") { rubygem_owners_path(@rubygem) }
+      end
+      context "on incorrect password" do
+        setup do
+          @user = create(:user)
+          @rubygem = create(:rubygem)
+          sign_in_as(@user)
+          session[:redirect_uri] = rubygem_owners_url(@rubygem)
+          post :verify, params: { user_id: @user.id, verify_password: { password: "wrong password" } }
+        end
+        should redirect_to("form") { user_password_path(@user) }
+        should "show error flash" do
+          assert_equal flash[:alert], "This request was denied. We could not verify your password."
+        end
+      end
+    end
+
+    context "when not signed in" do
+      setup do
+        user = create(:user)
+        post :verify, params: { user_id: user.id, verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+      end
+      should redirect_to("sign in") { sign_in_path }
+    end
+  end
 end

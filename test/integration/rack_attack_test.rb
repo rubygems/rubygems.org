@@ -246,6 +246,16 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       assert_response :too_many_requests
     end
 
+    should "throttle verify password" do
+      exceed_limit_for("clearance/ip")
+
+      post "/users/#{@user.id}/password/verify",
+           params: { verify_password: { password: "password" } },
+           headers: { REMOTE_ADDR: @ip_address }
+
+      assert_response :too_many_requests
+    end
+
     should "throttle profile update" do
       cookies[:remember_token] = @user.remember_token
 

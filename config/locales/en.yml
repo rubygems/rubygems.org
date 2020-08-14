@@ -218,6 +218,10 @@ en:
       will_email_notice: We will email you a link to change your password.
     otp_prompt:
       authenticate: Authenticate
+    show:
+      title: Confirm Password
+      confirm: Confirm
+      notice: The page you are trying to access has sensitive data. Please confirm your password to continue.
   multifactor_auths:
     incorrect_otp: Your OTP code is incorrect.
     otp_code: OTP code
