@@ -181,7 +181,7 @@ span#github-btn {
   font-weight: bold;
 }
 
-.t-link--arrow-right:after, .t-link--arrow-left:before {
+.t-link--arrow:after {
   content: "";
   display: inline-block;
   padding: 5px;
@@ -189,15 +189,6 @@ span#github-btn {
   margin-left: 5px;
 }
 
-.t-link--arrow-right:after {
-    transform: rotate(225deg);
-}
-
-.t-link--arrow:hover:after, .t-link--arrow:hover:before {
+.t-link--arrow:hover:after {
   box-shadow: 3px -3px 0 0 rgba(233, 87, 63, 0.7) inset;
-}
-
-.t-link--arrow-left:before {
-    margin-right: 5px;
-    transform: rotate(45deg);
 }

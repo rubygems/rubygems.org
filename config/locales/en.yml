@@ -164,20 +164,20 @@ en:
       subject: Please confirm the ownership of %{gem} gem on RubyGems.org
       title: OWNERSHIP CONFIRMATION
       subtitle: Hi %{handle}!
-      body_html: You were added as an owner for <strong>%{gem}</strong> gem on RubyGems.org. Please click on the link below to confirm your ownership.
+      body_html: You were added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <strong>%{authorizer}</strong>. Please click on the link below to confirm your ownership.
       link_expiration_explanation_html: Please note that this link is only valid for 24 hours. You can resend confirmation mail from the  <a href="https://rubygems.org/gems/%{gem}">%{gem}</a> gem page after sign in.
     owner_added:
       subject_self: You were added as an owner to %{gem} gem
       subject_others: User %{owner_handle} was added as an owner to %{gem} gem
       title: OWNER ADDED
       subtitle: Hi %{user_handle}!
-      body_self_html: <b>You</b> were added as an owner for <strong>%{gem}</strong> gem on RubyGems.org.
-      body_others_html: <b>%{owner_handle}</b> was added as an owner for <strong>%{gem}</strong> gem by <b>%{authorizer}</b>. You are receiving these notifications because you are an existing owner of %{gem}.
+      body_self_html: <b>You</b> were added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on RubyGems.org.
+      body_others_html: <b>%{owner_handle}</b> was added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <b>%{authorizer}</b>. You are receiving these notifications because you are an existing owner of %{gem}.
     owner_removed:
       subject: You were removed as an owner to %{gem} gem
       title: OWNER REMOVED
       subtitle: Hi %{user_handle}!
-      body_html: <b>You</b> were removed as an owner for <strong>%{gem}</strong> gem on RubyGems.org by <b>%{authorizer}</b>.
+      body_html: <b>You</b> were removed as an owner for <strong>%{gem}</strong> gem on RubyGems.org by <b>%{remover}</b>.
   news:
     show:
       title: New Releases — All Gems
@@ -221,7 +221,7 @@ en:
     show:
       title: Confirm Password
       confirm: Confirm
-      notice: The page you are trying to access has sensitive data. Please confirm your password to continue.
+      notice: Please confirm your password to continue.
   multifactor_auths:
     incorrect_otp: Your OTP code is incorrect.
     otp_code: OTP code

@@ -33,7 +33,7 @@ class OwnersControllerTest < ActionController::TestCase
           get :index, params: { rubygem_id: @rubygem.name }
         end
 
-        should redirect_to("the sign in page") { sign_in_path }
+        should respond_with :forbidden
       end
     end
 
@@ -59,6 +59,19 @@ class OwnersControllerTest < ActionController::TestCase
           assert_emails 1
           assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
           assert_equal [@new_owner.email], last_email.to
+        end
+      end
+
+      context "when user does not own the gem" do
+        setup do
+          @other_user = create(:user)
+          sign_in_as(@other_user)
+          post :create, params: { handle: @other_user.display_id, rubygem_id: @rubygem.name }
+        end
+
+        should respond_with :forbidden
+        should "not add other user as owner" do
+          refute @rubygem.owners_including_unconfirmed.include? @other_user
         end
       end
 
@@ -118,12 +131,12 @@ class OwnersControllerTest < ActionController::TestCase
 
       context "gem has only one owner" do
         setup do
-          @last_ownership = @rubygem.ownerships.last
-          delete :destroy, params: { rubygem_id: @rubygem.name, handle: @last_ownership.user.display_id }
+          @last_owner = @rubygem.owners.last
+          delete :destroy, params: { rubygem_id: @rubygem.name, handle: @last_owner.display_id }
         end
         should redirect_to("ownership index") { rubygem_owners_path(@rubygem) }
         should "not remove the ownership record" do
-          assert @rubygem.owners_including_unconfirmed.include?(@last_ownership.user)
+          assert @rubygem.owners_including_unconfirmed.include?(@last_owner)
         end
         should "should flash error" do
           assert_equal "Owner cannot be removed!", flash[:alert]
@@ -132,6 +145,21 @@ class OwnersControllerTest < ActionController::TestCase
           ActionMailer::Base.deliveries.clear
           Delayed::Worker.new.work_off
           assert_emails 0
+        end
+      end
+
+      context "when user does not own the gem" do
+        setup do
+          @other_user = create(:user)
+          sign_in_as(@other_user)
+
+          @last_owner = @rubygem.owners.last
+          delete :destroy, params: { rubygem_id: @rubygem.name, handle: @last_owner.display_id }
+        end
+
+        should respond_with :forbidden
+        should "not remove user as owner" do
+          assert @rubygem.owners.include? @last_owner
         end
       end
     end

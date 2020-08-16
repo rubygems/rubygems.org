@@ -1,6 +1,6 @@
 class OwnersController < ApplicationController
   before_action :find_rubygem, except: :confirm
-  before_action :redirect_to_signin, unless: :owner?, except: %i[confirm resend_confirmation]
+  before_action :render_forbidden, unless: :owner?, except: %i[confirm resend_confirmation]
   before_action :redirect_to_verify, unless: :password_session_active?, only: %i[index create destroy]
 
   def confirm

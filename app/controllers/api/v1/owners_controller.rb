@@ -17,7 +17,8 @@ class Api::V1::OwnersController < Api::BaseController
       ownership = @rubygem.ownerships.new(user: owner, authorizer: @api_user)
       if ownership.save
         OwnersMailer.delay.ownership_confirmation(ownership.id)
-        render plain: "Owner added successfully. A confirmation mail has been sent to #{owner.display_handle}'s email"
+        render plain: "A confirmation mail has been sent to #{owner.display_handle}'s email. "\
+         "The user will be added as an owner when they click on the confirmation link."
       else
         render plain: ownership.errors.full_messages.to_sentence, status: :unprocessable_entity
       end
