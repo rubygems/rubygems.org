@@ -98,14 +98,26 @@ data:
           proxy_pass http://127.0.0.1:3000;
         }
 
-        location / {
-        <% if environment == 'staging' %>
-          auth_basic           "Restricted Access!";
-          auth_basic_user_file /etc/nginxbasicauth/.htpasswd;
-        <% end %>
+         <% if environment == 'staging' %>
+        location /api {
           limit_req zone=abusers burst=10;
           proxy_pass http://127.0.0.1:3000;
         }
+
+        location / {
+          auth_basic           "Restricted Access!";
+          auth_basic_user_file /etc/nginxbasicauth/.htpasswd;
+          limit_req zone=abusers burst=10;
+          proxy_pass http://127.0.0.1:3000;
+        }
+        <% else %>
+        location / {
+          limit_req zone=abusers burst=10;
+          proxy_pass http://127.0.0.1:3000;
+        }
+        <% end %>
+
+
     }
   logging: |
     log_format json '{'
