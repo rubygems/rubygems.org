@@ -55,6 +55,8 @@ Layout/ArgumentAlignment:
 
 Metrics/AbcSize:
   Max: 42 # TODO: Lower to 15
+  Exclude:
+    - test/functional/api/v1/owners_controller_test.rb
 
 Metrics/ClassLength:
   Max: 350 # TODO: Lower to 100
