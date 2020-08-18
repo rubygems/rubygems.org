@@ -174,7 +174,7 @@ class OwnerTest < SystemTest
     sign_in_as(@other_user)
     visit rubygem_path(@rubygem)
     refute page.has_selector?("a[href='#{rubygem_owners_path(@rubygem)}']")
-    assert page.has_selector?("a[href='#{resend_confirmation_rubygem_owner_path(@rubygem, @other_user.display_id)}']")
+    assert page.has_selector?("a[href='#{resend_confirmation_rubygem_owners_path(@rubygem)}']")
   end
 
   private

@@ -74,7 +74,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         stay_under_limit_for("owners/ip")
         stay_under_email_limit_for("owners/email")
 
-        get "/gems/#{@rubygem.name}/owners/#{@user.display_id}/resend_confirmation",
+        get "/gems/#{@rubygem.name}/owners/resend_confirmation",
             headers: { REMOTE_ADDR: @ip_address }
         follow_redirect!
         assert_response :success
@@ -289,7 +289,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
       should "throttle ownership confirmation resend" do
         exceed_limit_for("owners/ip")
-        get "/gems/#{@rubygem.name}/owners/#{@user.display_id}/resend_confirmation", headers: { REMOTE_ADDR: @ip_address }
+        get "/gems/#{@rubygem.name}/owners/resend_confirmation", headers: { REMOTE_ADDR: @ip_address }
 
         assert_response :too_many_requests
       end
@@ -488,8 +488,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         should "throttle resending ownership confirmation" do
           other_user = create(:user)
           create(:ownership, :unconfirmed, rubygem: @rubygem, user: other_user)
-          exceed_handle_limit_for("owners/email", other_user)
-          get "/gems/#{@rubygem.name}/owners/#{other_user.display_id}/resend_confirmation"
+          update_limit_for("owners/email:#{cookies['remember_token']}", exceeding_email_limit)
+          get "/gems/#{@rubygem.name}/owners/resend_confirmation"
 
           assert_response :too_many_requests
         end

@@ -148,9 +148,16 @@ class Rack::Attack
     end
   end
 
+  protected_owners_action_by_token = [{ controller: "owners", action: "resend_confirmation" }]
+  protected_owners_actions_by_handle = [
+    { controller: "owners", action: "create" },
+    { controller: "owners", action: "destroy" }
+  ]
   throttle("owners/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
-    if protected_route?(protected_ui_owners_actions, req.path, req.request_method)
+    if protected_route?(protected_owners_actions_by_handle, req.path, req.request_method)
       req.params["handle"].presence || Rails.application.routes.recognize_path(req.path, method: req.request_method)[:handle].presence
+    elsif protected_route?(protected_owners_action_by_token, req.path, req.request_method)
+      req.cookies["remember_token"].presence
     end
   end
 

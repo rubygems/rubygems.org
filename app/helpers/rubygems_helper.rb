@@ -84,7 +84,7 @@ module RubygemsHelper
 
   def resend_owner_confirmation_link(rubygem)
     link_to I18n.t("rubygems.aside.links.resend_ownership_confirmation"),
-            resend_confirmation_rubygem_owner_path(rubygem, current_user.display_id), class: "gem__link t-list__item"
+            resend_confirmation_rubygem_owners_path(rubygem), class: "gem__link t-list__item"
   end
 
   def links_to_owners(rubygem)
