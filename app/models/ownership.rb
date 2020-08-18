@@ -1,7 +1,7 @@
 class Ownership < ApplicationRecord
   belongs_to :rubygem
   belongs_to :user
-  belongs_to :authorizer, class_name: "User", optional: true
+  belongs_to :authorizer, class_name: "User"
 
   validates :user_id, uniqueness: { scope: :rubygem_id }
 

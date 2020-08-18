@@ -107,12 +107,6 @@ class OwnershipTest < ActiveSupport::TestCase
       refute ownership.valid?
       assert_contains ownership.errors[:rubygem], "must exist"
     end
-
-    should "allow creation without authorizer" do
-      ownership = build(:ownership, authorizer: nil)
-      assert ownership.valid?
-      assert_empty ownership.errors.full_messages
-    end
   end
 
   context "#valid_confirmation_token?" do

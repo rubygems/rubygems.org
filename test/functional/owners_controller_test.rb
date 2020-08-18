@@ -15,12 +15,14 @@ class OwnersControllerTest < ActionController::TestCase
     context "on GET to index" do
       context "when user owns the gem" do
         setup do
+          unconfirmed_owner = create(:user)
+          create(:ownership, :unconfirmed, user: unconfirmed_owner, rubygem: @rubygem)
           get :index, params: { rubygem_id: @rubygem.name }
         end
 
         should respond_with :success
-        should "render all gem owners in owners table" do
-          @rubygem.ownerships.each do |o|
+        should "render gem owners including unconfirmed in owners table" do
+          @rubygem.ownerships_including_unconfirmed.each do |o|
             assert page.has_content?(o.owner_name)
           end
         end
@@ -38,45 +40,8 @@ class OwnersControllerTest < ActionController::TestCase
     end
 
     context "on POST to create ownership" do
-      context "with correct params" do
-        setup do
-          @new_owner = create(:user)
-          post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name }
-        end
-
-        should redirect_to("ownerships index") { rubygem_owners_path(@rubygem) }
-        should "add unconfirmed ownership record" do
-          assert @rubygem.owners_including_unconfirmed.include?(@new_owner)
-          assert_nil @rubygem.ownerships_including_unconfirmed.find_by(user: @new_owner).confirmed_at
-        end
-        should "set success notice flash" do
-          expected_notice = "Owner added successfully. A confirmation mail has been sent to #{@new_owner.handle}'s email"
-          assert_equal expected_notice, flash[:notice]
-        end
-        should "send confirmation email" do
-          ActionMailer::Base.deliveries.clear
-          Delayed::Worker.new.work_off
-          assert_emails 1
-          assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
-          assert_equal [@new_owner.email], last_email.to
-        end
-      end
-
-      context "when user does not own the gem" do
-        setup do
-          @other_user = create(:user)
-          sign_in_as(@other_user)
-          post :create, params: { handle: @other_user.display_id, rubygem_id: @rubygem.name }
-        end
-
-        should respond_with :forbidden
-        should "not add other user as owner" do
-          refute @rubygem.owners_including_unconfirmed.include? @other_user
-        end
-      end
-
-      context "with incorrect params" do
-        context "user doesn't exist" do
+      context "when user owns the gem" do
+        context "with invalid handle" do
           setup do
             post :create, params: { handle: "no_user", rubygem_id: @rubygem.name }
           end
@@ -93,58 +58,111 @@ class OwnersControllerTest < ActionController::TestCase
           end
         end
 
-        context "ownership exists" do
+        context "with valid handle" do
           setup do
             @new_owner = create(:user)
-            create(:ownership, rubygem: @rubygem, user: @new_owner)
-            post :create, params: { handle: @new_owner.handle, rubygem_id: @rubygem.name }
+            post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name }
           end
 
-          should "show error message" do
-            expected_alert = "User has already been taken"
-            assert_equal expected_alert, flash[:alert]
+          should redirect_to("ownerships index") { rubygem_owners_path(@rubygem) }
+          should "add unconfirmed ownership record" do
+            assert @rubygem.owners_including_unconfirmed.include?(@new_owner)
+            assert_nil @rubygem.ownerships_including_unconfirmed.find_by(user: @new_owner).confirmed_at
           end
+          should "set success notice flash" do
+            expected_notice = "Owner added successfully. A confirmation mail has been sent to #{@new_owner.handle}'s email"
+            assert_equal expected_notice, flash[:notice]
+          end
+          should "send confirmation email" do
+            ActionMailer::Base.deliveries.clear
+            Delayed::Worker.new.work_off
+            assert_emails 1
+            assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
+            assert_equal [@new_owner.email], last_email.to
+          end
+        end
+      end
+
+      context "when user does not own the gem" do
+        setup do
+          @other_user = create(:user)
+          sign_in_as(@other_user)
+          post :create, params: { handle: @other_user.display_id, rubygem_id: @rubygem.name }
+        end
+
+        should respond_with :forbidden
+        should "not add other user as owner" do
+          refute @rubygem.owners_including_unconfirmed.include? @other_user
         end
       end
     end
 
     context "on DELETE to owners" do
-      context "gem has more than one owners" do
-        setup do
-          @second_user = create(:user)
-          @ownership = create(:ownership, rubygem: @rubygem, user: @second_user)
-          delete :destroy, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
+      context "when user owns the gem" do
+        context "with invalid handle" do
+          setup do
+            delete :destroy, params: { rubygem_id: @rubygem.name, handle: "no_handle" }
+          end
+          should respond_with :not_found
         end
-        should redirect_to("ownership index") { rubygem_owners_path(@rubygem) }
-        should "remove the ownership record" do
-          refute @rubygem.owners_including_unconfirmed.include?(@second_user)
-        end
-        should "send email notifications about owner removal" do
-          ActionMailer::Base.deliveries.clear
-          Delayed::Worker.new.work_off
 
-          assert_emails 1
-          assert_contains last_email.subject, "You were removed as an owner to #{@rubygem.name} gem"
-          assert_equal [@second_user.email], last_email.to
-        end
-      end
+        context "with handle of confirmed owner" do
+          setup do
+            @second_user = create(:user)
+            @ownership = create(:ownership, rubygem: @rubygem, user: @second_user)
+            delete :destroy, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
+          end
+          should redirect_to("ownership index") { rubygem_owners_path(@rubygem) }
+          should "remove the ownership record" do
+            refute @rubygem.owners_including_unconfirmed.include?(@second_user)
+          end
+          should "send email notifications about owner removal" do
+            ActionMailer::Base.deliveries.clear
+            Delayed::Worker.new.work_off
 
-      context "gem has only one owner" do
-        setup do
-          @last_owner = @rubygem.owners.last
-          delete :destroy, params: { rubygem_id: @rubygem.name, handle: @last_owner.display_id }
+            assert_emails 1
+            assert_contains last_email.subject, "You were removed as an owner to #{@rubygem.name} gem"
+            assert_equal [@second_user.email], last_email.to
+          end
         end
-        should redirect_to("ownership index") { rubygem_owners_path(@rubygem) }
-        should "not remove the ownership record" do
-          assert @rubygem.owners_including_unconfirmed.include?(@last_owner)
+
+        context "with handle of unconfirmed owner" do
+          setup do
+            @second_user = create(:user)
+            @ownership = create(:ownership, :unconfirmed, rubygem: @rubygem, user: @second_user)
+            delete :destroy, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
+          end
+          should redirect_to("ownership index") { rubygem_owners_path(@rubygem) }
+          should "remove the ownership record" do
+            refute @rubygem.owners_including_unconfirmed.include?(@second_user)
+          end
+          should "send email notifications about owner removal" do
+            ActionMailer::Base.deliveries.clear
+            Delayed::Worker.new.work_off
+
+            assert_emails 1
+            assert_contains last_email.subject, "You were removed as an owner to #{@rubygem.name} gem"
+            assert_equal [@second_user.email], last_email.to
+          end
         end
-        should "should flash error" do
-          assert_equal "Owner cannot be removed!", flash[:alert]
-        end
-        should "not send email notifications about owner removal" do
-          ActionMailer::Base.deliveries.clear
-          Delayed::Worker.new.work_off
-          assert_emails 0
+
+        context "with handle of last owner" do
+          setup do
+            @last_owner = @rubygem.owners.last
+            delete :destroy, params: { rubygem_id: @rubygem.name, handle: @last_owner.display_id }
+          end
+          should redirect_to("ownership index") { rubygem_owners_path(@rubygem) }
+          should "not remove the ownership record" do
+            assert @rubygem.owners_including_unconfirmed.include?(@last_owner)
+          end
+          should "should flash error" do
+            assert_equal "Owner cannot be removed!", flash[:alert]
+          end
+          should "not send email notifications about owner removal" do
+            ActionMailer::Base.deliveries.clear
+            Delayed::Worker.new.work_off
+            assert_emails 0
+          end
         end
       end
 
@@ -167,12 +185,13 @@ class OwnersControllerTest < ActionController::TestCase
     context "on GET to resend confirmation" do
       setup do
         @new_owner = create(:user)
-        @ownership = create(:ownership, :unconfirmed, rubygem: @rubygem, user: @new_owner)
         sign_in_as(@new_owner)
       end
-      context "with correct params" do
+
+      context "when confirmed ownership exists" do
         setup do
-          get :resend_confirmation, params: { rubygem_id: @rubygem.name, handle: @new_owner.display_id }
+          create(:ownership, rubygem: @rubygem, user: @new_owner)
+          get :resend_confirmation, params: { rubygem_id: @rubygem.name }
         end
 
         should redirect_to("rubygem show") { rubygem_path(@rubygem) }
@@ -189,60 +208,36 @@ class OwnersControllerTest < ActionController::TestCase
         end
       end
 
-      context "with incorrect params" do
-        context "gem not found" do
-          setup do
-            get :resend_confirmation, params: { rubygem_id: "no_gem", handle: @new_owner.display_id }
-          end
-
-          should "show 404 error page" do
-            assert_response :not_found
-          end
-
-          should "not resend confirmation email" do
-            ActionMailer::Base.deliveries.clear
-            Delayed::Worker.new.work_off
-            assert_emails 0
-          end
+      context "when unconfirmed ownership exists" do
+        setup do
+          create(:ownership, :unconfirmed, rubygem: @rubygem, user: @new_owner)
+          get :resend_confirmation, params: { rubygem_id: @rubygem.name }
         end
 
-        context "with incorrect handle" do
-          setup do
-            get :resend_confirmation, params: { rubygem_id: @rubygem.name, handle: "no_handle" }
-          end
+        should redirect_to("rubygem show") { rubygem_path(@rubygem) }
+        should "set success notice flash" do
+          success_flash = "A confirmation mail has been re-sent to #{@new_owner.handle}'s email"
+          assert_equal success_flash, flash[:notice]
+        end
+        should "resend confirmation email" do
+          ActionMailer::Base.deliveries.clear
+          Delayed::Worker.new.work_off
+          assert_emails 1
+          assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
+          assert_equal [@new_owner.email], last_email.to
+        end
+      end
 
-          should "resend to signed in user irrespective of handle" do
-            assert_redirected_to @rubygem
-            success_flash = "A confirmation mail has been re-sent to #{@new_owner.handle}'s email"
-            assert_equal success_flash, flash[:notice]
-          end
-
-          should "resend confirmation email to signed in" do
-            ActionMailer::Base.deliveries.clear
-            Delayed::Worker.new.work_off
-            assert_emails 1
-            assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
-            assert_equal [@new_owner.email], last_email.to
-          end
+      context "when ownership doesn't exist" do
+        setup do
+          get :resend_confirmation, params: { rubygem_id: @rubygem.name }
         end
 
-        context "save failed" do
-          setup do
-            Ownership.any_instance.stubs(:save).returns(false)
-            get :resend_confirmation, params: { rubygem_id: @rubygem.name, handle: @new_owner.display_id }
-          end
-
-          should "show alert" do
-            assert_redirected_to @rubygem
-            success_flash = "Something went wrong. Please try again."
-            assert_equal success_flash, flash[:alert]
-          end
-
-          should "not resend confirmation email" do
-            ActionMailer::Base.deliveries.clear
-            Delayed::Worker.new.work_off
-            assert_emails 0
-          end
+        should respond_with :not_found
+        should "not resend confirmation email" do
+          ActionMailer::Base.deliveries.clear
+          Delayed::Worker.new.work_off
+          assert_emails 0
         end
       end
     end
