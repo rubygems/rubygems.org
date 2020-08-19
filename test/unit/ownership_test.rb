@@ -126,11 +126,11 @@ class OwnershipTest < ActiveSupport::TestCase
     end
   end
 
-  context "#create_first" do
+  context "#create_confirmed" do
     setup do
-      @rubygem = create(:rubygem)
-      @user = create(:user)
-      Ownership.create_confirmed(@rubygem, @user)
+      rubygem = create(:rubygem)
+      user = create(:user)
+      Ownership.create_confirmed(rubygem, user)
     end
 
     should "create confirmed ownership" do
@@ -197,9 +197,9 @@ class OwnershipTest < ActiveSupport::TestCase
 
   context "#confirmed?" do
     setup do
-      @rubygem = create(:rubygem)
+      rubygem = create(:rubygem)
       user = create(:user)
-      @ownership = create(:ownership, :unconfirmed, rubygem: @rubygem, user: user)
+      @ownership = create(:ownership, :unconfirmed, rubygem: rubygem, user: user)
     end
 
     should "return false if not confirmed" do
@@ -214,9 +214,9 @@ class OwnershipTest < ActiveSupport::TestCase
 
   context "#unconfirmed?" do
     setup do
-      @rubygem = create(:rubygem)
+      rubygem = create(:rubygem)
       user = create(:user)
-      @ownership = create(:ownership, :unconfirmed, rubygem: @rubygem, user: user)
+      @ownership = create(:ownership, :unconfirmed, rubygem: rubygem, user: user)
     end
 
     should "return false if not confirmed" do
