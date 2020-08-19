@@ -10,6 +10,7 @@ class OwnershipTest < ActiveSupport::TestCase
   should belong_to :user
   should have_db_index :user_id
   should belong_to :authorizer
+  should have_db_index [:user_id, :rubygem_id]
 
   context "with ownership" do
     setup do

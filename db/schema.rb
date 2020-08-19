@@ -110,6 +110,7 @@ ActiveRecord::Schema.define(version: 2020_05_16_071636) do
     t.boolean "owner_notifier", default: true, null: false
     t.integer "authorizer_id"
     t.index ["rubygem_id"], name: "index_ownerships_on_rubygem_id"
+    t.index ["user_id", "rubygem_id"], name: "index_ownerships_on_user_id_and_rubygem_id", unique: true
     t.index ["user_id"], name: "index_ownerships_on_user_id"
   end
 
