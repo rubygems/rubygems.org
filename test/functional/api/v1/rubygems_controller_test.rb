@@ -260,16 +260,22 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
                  number: "0.0.0",
                  updated_at: 1.year.ago,
                  created_at: 1.year.ago)
-          assert_difference "Delayed::Job.count", 7 do
-            post :create, body: gem_file("test-1.0.0.gem").read
-          end
         end
-        should respond_with :success
+        should "respond_with success" do
+          post :create, body: gem_file("test-1.0.0.gem").read
+          assert_response :success
+        end
         should "register new version" do
+          post :create, body: gem_file("test-1.0.0.gem").read
           assert_equal @user, Rubygem.last.ownerships.first.user
           assert_equal 1, Rubygem.last.ownerships.count
           assert_equal 2, Rubygem.last.versions.count
           assert_equal "Successfully registered gem: test (1.0.0)", @response.body
+        end
+        should "enqueue jobs" do
+          assert_difference "Delayed::Job.count", 7 do
+            post :create, body: gem_file("test-1.0.0.gem").read
+          end
         end
       end
 

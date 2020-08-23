@@ -156,9 +156,11 @@ class Rack::Attack
   throttle("owners/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
     if protected_route?(protected_owners_actions_by_handle, req.path, req.request_method)
       req.params["handle"].presence || Rails.application.routes.recognize_path(req.path, method: req.request_method)[:handle].presence
-    elsif protected_route?(protected_owners_action_by_token, req.path, req.request_method)
-      req.cookies["remember_token"].presence
     end
+  end
+
+  throttle("owners/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
+    req.cookies["remember_token"].presence if protected_route?(protected_owners_action_by_token, req.path, req.request_method)
   end
 
   ### Custom Throttle Response ###
