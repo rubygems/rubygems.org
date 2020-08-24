@@ -10,3 +10,4 @@ updates:
   - dependency-name: aws-sdk
     versions:
     - "> 2.11.473, < 2.12"
+  - dependency-name: "rubocop*"
