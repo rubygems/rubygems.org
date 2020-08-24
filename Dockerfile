@@ -21,7 +21,7 @@ RUN apk add --no-cache \
 RUN mkdir -p /app /app/config /app/log/
 WORKDIR /app
 
-RUN gem update --system $RUBYGEMS_VERSION
+RUN if [[ $(cat .rubygems-version) != $(gem --version) ]]; then gem update --system $RUBYGEMS_VERSION; fi
 
 COPY . /app
 
@@ -50,7 +50,7 @@ RUN apk add --no-cache \
   xz-libs \
   && rm -rf /var/cache/apk/*
 
-RUN gem update --system $RUBYGEMS_VERSION
+RUN if [[ $(cat .rubygems-version) != $(gem --version) ]]; then gem update --system $RUBYGEMS_VERSION; fi
 
 RUN mkdir -p /app
 WORKDIR /app
