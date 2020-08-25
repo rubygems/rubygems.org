@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: unicorn
@@ -167,14 +167,14 @@ spec:
         lifecycle:
           preStop:
             exec:
-              command: ["sleep", "5"]
+              command: ["sleep", "25"]
       - name: nginx
         image: nginx:1.11.10
         imagePullPolicy: IfNotPresent
         lifecycle:
           preStop:
             exec:
-              command: ["sleep", "5"]
+              command: ["sleep", "20"]
         ports:
         - containerPort: 8080
           name: http-nginx
@@ -203,6 +203,11 @@ spec:
             mountPath: /var/log/nginx
           - name: nginxcache
             mountPath: /var/lib/nginx/cache
+          <% if environment == 'staging' %>
+          - name: nginxbasicauth
+            mountPath: /etc/nginxbasicauth
+            readOnly: true
+          <% end %>
         livenessProbe:
           httpGet:
             path: /nginx_health
@@ -230,3 +235,8 @@ spec:
           emptyDir: {}
         - name: nginxcache
           emptyDir: {}
+        <% if environment == 'staging' %>
+        - name: nginxbasicauth
+          secret:
+            secretName: nginx-basic-auth
+        <% end %>

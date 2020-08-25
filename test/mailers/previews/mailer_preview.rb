@@ -3,6 +3,10 @@ class MailerPreview < ActionMailer::Preview
     Mailer.email_reset(User.last)
   end
 
+  def email_reset_update
+    Mailer.email_reset_update(User.last)
+  end
+
   def email_confirmation
     Mailer.email_confirmation(User.last)
   end
@@ -31,5 +35,20 @@ class MailerPreview < ActionMailer::Preview
 
   def mfa_notification
     Mailer.mfa_notification(User.last.id)
+  end
+
+  def gem_yanked
+    ownership = Ownership.where.not(user: nil).last
+    Mailer.gem_yanked(ownership.user.id, ownership.rubygem.versions.last.id, ownership.user.id)
+  end
+
+  def public_gem_reset_api_key
+    user = User.last
+    Mailer.reset_api_key(user, "public_gem_reset_api_key")
+  end
+
+  def honeycomb_reset_api_key
+    user = User.last
+    Mailer.reset_api_key(user, "honeycomb_reset_api_key")
   end
 end

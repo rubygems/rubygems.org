@@ -3,10 +3,13 @@ class Api::BaseController < ApplicationController
 
   private
 
+  def gem_name
+    params[:gem_name] || params[:rubygem_name]
+  end
+
   def find_rubygem_by_name
-    @gem_name = params[:gem_name] || params[:rubygem_name]
-    @rubygem  = Rubygem.find_by_name(@gem_name)
-    return if @rubygem || @gem_name == WebHook::GLOBAL_PATTERN
+    @rubygem = Rubygem.find_by name: gem_name
+    return if @rubygem
     render plain: "This gem could not be found", status: :not_found
   end
 
@@ -30,7 +33,7 @@ class Api::BaseController < ApplicationController
   end
 
   def authenticate_with_api_key
-    api_key   = request.headers["Authorization"] || params.permit(:api_key).fetch(:api_key, "")
+    api_key   = request.headers["Authorization"]
     @api_user = User.find_by_api_key(api_key)
     render_unauthorized unless @api_user
   end

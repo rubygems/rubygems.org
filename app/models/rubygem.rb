@@ -15,11 +15,12 @@ class Rubygem < ApplicationRecord
 
   validate :ensure_name_format, if: :needs_name_validation?
   validates :name,
+    length: { maximum: Gemcutter::MAX_FIELD_LENGTH },
     presence: true,
     uniqueness: { case_sensitive: false },
     if: :needs_name_validation?
   validate :blacklist_names_exclusion
-  # validate :protected_gem_typo, on: :create, unless: -> { Array(validation_context).include?(:typo_exception) }
+  validate :protected_gem_typo, on: :create, unless: -> { Array(validation_context).include?(:typo_exception) }
 
   after_create :update_unresolved
   before_destroy :mark_unresolved
@@ -31,7 +32,7 @@ class Rubygem < ApplicationRecord
   end
 
   def self.with_versions
-    where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)")
+    where(indexed: true)
   end
 
   def self.with_one_version
@@ -53,9 +54,7 @@ class Rubygem < ApplicationRecord
   end
 
   def self.total_count
-    Rails.cache.fetch("gem/total_count", expires_in: 6.hours) do
-      Version.indexed.distinct.count(:rubygem_id)
-    end
+    Rubygem.with_versions.count
   end
 
   def self.latest(limit = 5)
@@ -252,6 +251,10 @@ class Rubygem < ApplicationRecord
     end
   end
 
+  def refresh_indexed!
+    update!(indexed: versions.indexed.any?)
+  end
+
   def disown
     ownerships.each(&:delete)
     ownerships.clear
@@ -321,7 +324,7 @@ class Rubygem < ApplicationRecord
     gem_typo = GemTypo.new(name)
 
     return unless gem_typo.protected_typo?
-    errors.add :name, "'#{name}' is too close to typo-protected gem: #{gem_typo.protected_gem}"
+    errors.add :name, "'#{name}' is too similar to an existing gem named '#{gem_typo.protected_gem}'"
   end
 
   def update_unresolved

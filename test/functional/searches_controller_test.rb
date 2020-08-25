@@ -62,7 +62,6 @@ class SearchesControllerTest < ActionController::TestCase
       create(:version, rubygem: @sinatra_redux)
       create(:version, rubygem: @brando)
       import_and_refresh
-      @request.cookies["new_search"] = "true"
       get :show, params: { query: "sinatra" }
     end
 
@@ -104,7 +103,6 @@ class SearchesControllerTest < ActionController::TestCase
       create(:version, rubygem: @sinatra_redux)
       create(:version, rubygem: @brando)
       import_and_refresh
-      @request.cookies["new_search"] = "true"
       get :show, params: { query: "sinatre" }
     end
 
@@ -152,7 +150,6 @@ class SearchesControllerTest < ActionController::TestCase
     should "fallback to legacy search" do
       requires_toxiproxy
       Toxiproxy[:elasticsearch].down do
-        @request.cookies["new_search"] = "true"
         get :show, params: { query: "sinatra" }
         assert_response :success
         assert page.has_content?("Advanced search is currently unavailable. Falling back to legacy search.")

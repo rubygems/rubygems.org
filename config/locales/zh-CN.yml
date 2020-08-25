@@ -7,7 +7,7 @@ zh-CN:
   footer_sponsors_html:
   footer_join_rt_html:
   form_disable_with: 请稍后...
-  help_url: http://help.rubygems.org
+  help_url: https://help.rubygems.org
   invalid_page:
   locale_name: 简体中文
   none: 无
@@ -138,6 +138,16 @@ zh-CN:
       title:
       subtitle:
     gem_pushed:
+      subject:
+      title:
+    gem_yanked:
+      subject:
+      title:
+    reset_api_key:
+      subject:
+      title:
+      subtitle:
+    email_reset_update:
       subject:
       title:
   news:
@@ -319,6 +329,7 @@ zh-CN:
   reverse_dependencies:
     index:
       title: "%{name} 的反向依赖"
+      subtitle:
     search:
       search_reverse_dependencies_html:
   searches:
@@ -340,7 +351,7 @@ zh-CN:
       resend_confirmation: 没有收到确认邮件？
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded: 历史下载次数排行
       total_downloads: 下载总次数
       total_gems: Gems 总数

@@ -137,6 +137,23 @@ class ProfileTest < SystemTest
       " We will send you a confirmation mail when your request has been processed."
   end
 
+  test "deleting profile multiple times" do
+    sign_in
+    visit delete_profile_path
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Confirm"
+
+    sign_in
+    visit delete_profile_path
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Confirm"
+
+    Delayed::Worker.new.work_off
+    assert_empty Delayed::Job.all
+  end
+
   test "enabling multifactor authentication with valid otp" do
     sign_in
     visit profile_path("nick1")

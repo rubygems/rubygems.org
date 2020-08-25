@@ -36,7 +36,7 @@ class Api::V1::OwnersController < Api::BaseController
   end
 
   def gems
-    user = User.find_by_slug!(params[:handle])
+    user = User.find_by_slug(params[:handle])
     if user
       rubygems = user.rubygems.with_versions
       respond_to do |format|

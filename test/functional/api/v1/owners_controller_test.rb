@@ -57,6 +57,18 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     should respond_with :success
   end
 
+  context "on GET to owner gems with nonexistent handle" do
+    setup do
+      get :gems, params: { handle: "imaginary_handler" }, format: :json
+    end
+
+    should "return plaintext with error message" do
+      assert_equal @response.body, "Owner could not be found."
+    end
+
+    should respond_with :not_found
+  end
+
   context "on GET to owner gems with id" do
     setup do
       @user = create(:user)
@@ -64,6 +76,19 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
+  end
+
+  context "on GET to owner gems with nonexistent id" do
+    setup do
+      @user = create(:user)
+      get :gems, params: { handle: -9999 }, format: :json
+    end
+
+    should "return plain text with error message" do
+      assert_equal @response.body, "Owner could not be found."
+    end
+
+    should respond_with :not_found
   end
 
   should "route POST" do

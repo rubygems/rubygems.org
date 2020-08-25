@@ -65,6 +65,12 @@ class RoutingTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "any page with pagination doesn't raise TypeError when params exists in url" do
+    assert_nothing_raised do
+      get "/releases?page=2&params=thing"
+    end
+  end
+
   teardown do
     ENV["RAILS_ENV"] = @prev_env
   end

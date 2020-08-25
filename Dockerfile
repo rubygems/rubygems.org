@@ -3,18 +3,13 @@ FROM ruby:2.6-alpine as build
 ARG RUBYGEMS_VERSION
 
 RUN apk add --no-cache \
-  ruby \
   nodejs \
-  postgresql-client \
   postgresql-dev \
   ca-certificates \
-  ruby-dev \
   build-base \
   bash \
   linux-headers \
   zlib-dev \
-  libxml2-dev \
-  libxslt-dev \
   tzdata \
   && rm -rf /var/cache/apk/*
 
@@ -31,19 +26,17 @@ ADD https://s3-us-west-2.amazonaws.com/oregon.production.s3.rubygems.org/version
 
 RUN mv /app/config/database.yml.example /app/config/database.yml
 
-RUN gem install bundler io-console --no-doc && bundle install --jobs 20 --retry 5 --without deploy
+RUN gem install bundler io-console --no-ri --no-rdoc && \
+  bundle config set without 'development test' && \
+  bundle install --jobs 20 --retry 5
 
-RUN RAILS_ENV=production SECRET_KEY_BASE=1234 bin/rails assets:precompile
-
-
+RUN RAILS_ENV=production RAILS_GROUPS=js SECRET_KEY_BASE=1234 bin/rails assets:precompile
 
 
 FROM ruby:2.6-alpine
 
 RUN apk add --no-cache \
-  ruby \
-  nodejs \
-  postgresql-client \
+  libpq \
   ca-certificates \
   bash \
   tzdata \

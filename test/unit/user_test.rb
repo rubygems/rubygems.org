@@ -58,7 +58,18 @@ class UserTest < ActiveSupport::TestCase
       should "be less than 255 characters" do
         user = build(:user, email: ("a" * 255) + "@example.com")
         refute user.valid?
-        assert_contains user.errors[:email], "is too long (maximum is 254 characters)"
+        assert_contains user.errors[:email], "is too long (maximum is 255 characters)"
+      end
+
+      should "be valid when it matches URI mail email regex" do
+        user = build(:user, email: "mail@example.com")
+        assert user.valid?
+      end
+
+      should "be invalid when it doesn't match URI mail email regex" do
+        user = build(:user, email: "random[a..z]mdhlwqui@163.com")
+        refute user.valid?
+        assert_contains user.errors[:email], "is invalid"
       end
     end
 
@@ -440,6 +451,34 @@ class UserTest < ActiveSupport::TestCase
     should "return true when remember_token has not expired" do
       @user.update_attribute(:remember_token_expires_at, 1.second.from_now)
       assert @user.remember_me?
+    end
+  end
+
+  context ".find_by_slug" do
+    should "return nil if using a falsy value" do
+      refute User.find_by_slug(nil)
+    end
+
+    context "foundable" do
+      setup { @user = create(:user, handle: "findable") }
+
+      should "return an AR when founded by id" do
+        assert_equal User.find_by_slug(@user.id), @user
+      end
+
+      should "return an AR when founded by handle" do
+        assert_equal User.find_by_slug(@user.handle), @user
+      end
+    end
+
+    context "not founded" do
+      should "return nil when using id" do
+        refute User.find_by_slug(-9999)
+      end
+
+      should "return nil when not founded by handle" do
+        refute User.find_by_slug("notfoundable")
+      end
     end
   end
 end

@@ -82,18 +82,20 @@ namespace :gemcutter do
     end
   end
 
-  namespace :required_rubygems_version do
+  namespace :required_ruby_version do
     desc "Backfill gem versions with rubygems_version."
     task backfill: :environment do
-      without_required_rubygems_version = Version.where(required_rubygems_version: nil)
-      mod = ENV["shard"]
-      without_required_rubygems_version = without_required_rubygems_version.where("id % 4 = ?", mod.to_i) if mod
+      ActiveRecord::Base.logger.level = 1 if Rails.env.development?
 
-      total = without_required_rubygems_version.count
+      without_required_ruby_version = Version.where("created_at < '2014-03-21' and required_ruby_version is null and indexed = true")
+      mod = ENV["shard"]
+      without_required_ruby_version = without_required_ruby_version.where("id % 4 = ?", mod.to_i) if mod
+
+      total = without_required_ruby_version.count
       i = 0
       puts "Total: #{total}"
-      without_required_rubygems_version.find_each do |version|
-        GemcutterTaskshelper.assign_required_rubygems_version!(version)
+      without_required_ruby_version.find_each do |version|
+        GemcutterTaskshelper.assign_required_ruby_version!(version)
         i += 1
         print format("\r%.2f%% (%d/%d) complete", i.to_f / total * 100.0, i, total)
       end
@@ -111,6 +113,27 @@ namespace :gemcutter do
       else
         puts "Error while adding typo exception: #{typo_exception.errors.full_messages}"
       end
+    end
+  end
+
+  namespace :gem_downloads do
+    desc "Add GemDownloads record for tracking total rubygems downloads"
+    task add_rubygems_record: :environment do
+      rubygems_without_total_downloads = Rubygem.where("id not in(select distinct(rubygem_id) from gem_downloads where version_id = 0)")
+
+      total = rubygems_without_total_downloads.count
+      processed = 0
+      puts "Total: #{total}"
+      rubygems_without_total_downloads.each do |rubygem|
+        total_downloads = GemDownload.where(rubygem_id: rubygem.id).sum(:count)
+        GemDownload.create!(count: total_downloads, rubygem_id: rubygem.id, version_id: 0)
+        Rails.logger.info "[gemcutter:gem_downloads:add_rubygems_record] added GemDownloads for rubygem_id: #{rubygem.id} with "\
+          "total downloads: #{total_downloads}"
+        processed += 1
+        print format("\r%.2f%% (%d/%d) complete", processed.to_f / total * 100.0, processed, total)
+      end
+      puts
+      puts "Done."
     end
   end
 end

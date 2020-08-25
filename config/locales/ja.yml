@@ -7,7 +7,7 @@ ja:
   footer_sponsors_html:
   footer_join_rt_html:
   form_disable_with: お待ち下さい...
-  help_url: http://help.rubygems.org
+  help_url: https://help.rubygems.org
   invalid_page:
   locale_name: 日本語
   none: なし
@@ -138,6 +138,16 @@ ja:
       title:
       subtitle:
     gem_pushed:
+      subject:
+      title:
+    gem_yanked:
+      subject:
+      title:
+    reset_api_key:
+      subject:
+      title:
+      subtitle:
+    email_reset_update:
       subject:
       title:
   news:
@@ -319,6 +329,7 @@ ja:
   reverse_dependencies:
     index:
       title: "%{name}の被依存性"
+      subtitle:
     search:
       search_reverse_dependencies_html: "被依存性の中から検索…"
   searches:
@@ -340,7 +351,7 @@ ja:
       resend_confirmation: 確認メールが見当たりませんか?
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded: 累計最多ダウンロード数
       total_downloads: 累計ダウンロード数
       total_gems: Gem総数

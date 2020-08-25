@@ -7,7 +7,7 @@ nl:
   footer_sponsors_html:
   footer_join_rt_html:
   form_disable_with: Een moment geduld...
-  help_url: http://help.rubygems.org
+  help_url: https://help.rubygems.org
   invalid_page:
   locale_name: Nederlands
   none: Geen
@@ -138,6 +138,16 @@ nl:
       title:
       subtitle:
     gem_pushed:
+      subject:
+      title:
+    gem_yanked:
+      subject:
+      title:
+    reset_api_key:
+      subject:
+      title:
+      subtitle:
+    email_reset_update:
       subject:
       title:
   news:
@@ -319,6 +329,7 @@ nl:
   reverse_dependencies:
     index:
       title:
+      subtitle:
     search:
       search_reverse_dependencies_html:
   searches:
@@ -340,7 +351,7 @@ nl:
       resend_confirmation: Geen bevestigingsemail ontvangen?
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded:
       total_downloads:
       total_gems:

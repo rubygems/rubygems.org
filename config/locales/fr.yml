@@ -7,7 +7,7 @@ fr:
   footer_sponsors_html:
   footer_join_rt_html:
   form_disable_with: Veuillez patienter...
-  help_url: http://help.rubygems.org
+  help_url: https://help.rubygems.org
   invalid_page:
   locale_name: Français
   none:
@@ -138,6 +138,16 @@ fr:
       title:
       subtitle:
     gem_pushed:
+      subject:
+      title:
+    gem_yanked:
+      subject:
+      title:
+    reset_api_key:
+      subject:
+      title:
+      subtitle:
+    email_reset_update:
       subject:
       title:
   news:
@@ -319,6 +329,7 @@ fr:
   reverse_dependencies:
     index:
       title: "Dépendances inversées pour %{name}"
+      subtitle:
     search:
       search_reverse_dependencies_html: "Chercher des dépendances inversées Gems&hellip;"
   searches:
@@ -340,7 +351,7 @@ fr:
       resend_confirmation: Vous n'avez pas reçu l'email de confirmation ?
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded: Gems les plus téléchargés
       total_downloads: Total de téléchargements
       total_gems: Total de gems

@@ -7,7 +7,7 @@ de:
   footer_sponsors_html:
   footer_join_rt_html:
   form_disable_with: Bitte warten...
-  help_url: http://help.rubygems.org
+  help_url: https://help.rubygems.org
   invalid_page:
   locale_name: Deutsch
   none:
@@ -138,6 +138,16 @@ de:
       title:
       subtitle:
     gem_pushed:
+      subject:
+      title:
+    gem_yanked:
+      subject:
+      title:
+    reset_api_key:
+      subject:
+      title:
+      subtitle:
+    email_reset_update:
       subject:
       title:
   news:
@@ -319,6 +329,7 @@ de:
   reverse_dependencies:
     index:
       title:
+      subtitle:
     search:
       search_reverse_dependencies_html:
   searches:
@@ -340,7 +351,7 @@ de:
       resend_confirmation:
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded: Am meisten Heruntergeladen in der gesamten Zeit
       total_downloads: Downloads insgesamt
       total_gems: Gems insgesamt

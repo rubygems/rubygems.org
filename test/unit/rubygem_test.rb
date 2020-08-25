@@ -38,6 +38,12 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
 
+    should "be invalid with name longer than maximum field length" do
+      @rubygem.name = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
+      refute @rubygem.valid?
+      assert_equal @rubygem.errors.messages[:name], ["is too long (maximum is 255 characters)"]
+    end
+
     should "reorder versions with platforms properly" do
       version3_ruby  = create(:version, rubygem: @rubygem, number: "3.0.0", platform: "ruby")
       version3_mswin = create(:version, rubygem: @rubygem, number: "3.0.0", platform: "mswin")
@@ -473,7 +479,7 @@ class RubygemTest < ActiveSupport::TestCase
 
         hash = JSON.load(@rubygem.to_json)
 
-        assert_equal "http://www.rubydoc.info/gems/#{@rubygem.name}/#{@version.number}", hash["documentation_uri"]
+        assert_equal "https://www.rubydoc.info/gems/#{@rubygem.name}/#{@version.number}", hash["documentation_uri"]
       end
     end
 
@@ -498,7 +504,7 @@ class RubygemTest < ActiveSupport::TestCase
         @rubygem.linkset.docs = ""
         hash = JSON.load(@rubygem.to_json)
 
-        assert_equal "http://www.rubydoc.info/gems/#{@rubygem.name}/#{@version.number}", hash["documentation_uri"]
+        assert_equal "https://www.rubydoc.info/gems/#{@rubygem.name}/#{@version.number}", hash["documentation_uri"]
       end
 
       should "return a bunch of XML" do
@@ -626,20 +632,6 @@ class RubygemTest < ActiveSupport::TestCase
 
       should "give a count of only rubygems with versions" do
         assert_equal @expected_total, Rubygem.total_count
-      end
-
-      should "write to cache" do
-        Rails.cache.expects(:write).with("gem/total_count", @expected_total, { expires_in: 6.hours })
-        Rubygem.total_count
-      end
-
-      context "cache hit" do
-        setup { Rubygem.total_count }
-
-        should "not use sql to get result" do
-          Version.expects(:where).never
-          assert_equal @expected_total, Rubygem.total_count
-        end
       end
     end
   end

@@ -28,7 +28,7 @@ class User < ApplicationRecord
   after_validation :set_unconfirmed_email, if: :email_changed?, on: :update
   before_create :generate_api_key, :generate_confirmation_token
 
-  validates :email, length: { maximum: 254 }
+  validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true
 
   validates :handle, uniqueness: true, allow_nil: true
   validates :handle, format: {
@@ -59,6 +59,10 @@ class User < ApplicationRecord
 
   def self.find_by_slug!(slug)
     find_by(id: slug) || find_by!(handle: slug)
+  end
+
+  def self.find_by_slug(slug)
+    find_by(id: slug) || find_by(handle: slug)
   end
 
   def self.find_by_name(name)
@@ -223,8 +227,8 @@ class User < ApplicationRecord
       update_attribute(:email, "security+locked-#{SecureRandom.hex(4)}-#{id}-#{handle}@rubygems.org")
       confirm_email!
       disable_mfa!
+      update_attribute(:password, SecureRandom.alphanumeric)
       update!(
-        password: SecureRandom.alphanumeric,
         remember_token: nil,
         remember_token_expires_at: nil,
         api_key: nil

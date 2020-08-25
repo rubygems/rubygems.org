@@ -6,7 +6,7 @@ class UsersControllerTest < ActionController::TestCase
       get :new
     end
 
-    should redirect_to("sign up page") { sign_up_path }
+    render_template(:new)
   end
 
   context "on POST to create" do
@@ -19,9 +19,11 @@ class UsersControllerTest < ActionController::TestCase
 
     context "when missing a parameter" do
       should "raises parameter missing" do
-        post :create
-        assert_response :bad_request
-        assert page.has_content?("Request is missing param 'user'")
+        assert_no_changes -> { User.count } do
+          post :create
+        end
+        assert_response :ok
+        assert page.has_content?("Email address is not a valid email")
       end
     end
 

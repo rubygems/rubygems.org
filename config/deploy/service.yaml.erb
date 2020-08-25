@@ -10,10 +10,6 @@ spec:
   type: LoadBalancer
   ports:
   - port: 80
-    <% if environment == 'staging' %>
     targetPort: 8080
-    <% else %>
-    targetPort: 3000
-    <% end %>
   selector:
     name: unicorn
