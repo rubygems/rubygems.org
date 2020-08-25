@@ -26,7 +26,7 @@ ADD https://s3-us-west-2.amazonaws.com/oregon.production.s3.rubygems.org/version
 
 RUN mv /app/config/database.yml.example /app/config/database.yml
 
-RUN gem install bundler io-console --no-ri --no-rdoc && \
+RUN gem install bundler io-console --no-doc && \
   bundle config set without 'development test' && \
   bundle install --jobs 20 --retry 5
 
