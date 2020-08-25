@@ -2,11 +2,6 @@
 
 set -ex
 
-if [ -z "$RUBYGEMS_VERSION" ] || [ $RUBYGEMS_VERSION == 'latest' ]
-then
-  exit 0
-fi
-
 if [ -z "$TRAVIS_RUBY_VERSION" ] || [ $TRAVIS_RUBY_VERSION == 'ruby-head' ]
 then
   exit 0
@@ -18,11 +13,9 @@ docker build -t quay.io/$TRAVIS_REPO_SLUG:$TRAVIS_COMMIT .
 
 docker run -e RAILS_ENV=production -e SECRET_KEY_BASE=1234 -e DATABASE_URL=postgresql://localhost \
   --net host quay.io/$TRAVIS_REPO_SLUG:$TRAVIS_COMMIT \
-  --build-arg RUBYGEMS_VERSION=$(cat .rubygems-version)
   -- rake db:create db:migrate
 docker run -d -e RAILS_ENV=production -e SECRET_KEY_BASE=1234 -e DATABASE_URL=postgresql://localhost \
   --net host quay.io/$TRAVIS_REPO_SLUG:$TRAVIS_COMMIT \
-  --build-arg RUBYGEMS_VERSION=$(cat .rubygems-version)
   -- unicorn_rails -E production -c /app/config/unicorn.conf
 
 sleep 5
