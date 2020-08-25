@@ -40,8 +40,6 @@ RUN RAILS_ENV=production SECRET_KEY_BASE=1234 bin/rails assets:precompile
 
 FROM ruby:2.6-alpine
 
-ARG RUBYGEMS_VERSION
-
 RUN apk add --no-cache \
   ruby \
   nodejs \
