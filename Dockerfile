@@ -1,6 +1,6 @@
 FROM ruby:2.6-alpine as build
 
-ARG RUBYGEMS_VESION
+ARG RUBYGEMS_VERSION
 
 RUN apk add --no-cache \
   ruby \
@@ -21,7 +21,9 @@ RUN apk add --no-cache \
 RUN mkdir -p /app /app/config /app/log/
 WORKDIR /app
 
-RUN if [[ $(cat .rubygems-version) != $(gem --version) ]]; then gem update --system $RUBYGEMS_VERSION; fi
+COPY .rubygems-version .
+
+RUN [[ -z "$RUBYGEMS_VERSION" ]] && gem update --system $(cat .rubygems-version) || gem update --system "$RUBYGEMS_VERSION"
 
 COPY . /app
 
@@ -50,7 +52,9 @@ RUN apk add --no-cache \
   xz-libs \
   && rm -rf /var/cache/apk/*
 
-RUN if [[ $(cat .rubygems-version) != $(gem --version) ]]; then gem update --system $RUBYGEMS_VERSION; fi
+COPY .rubygems-version .
+
+RUN [[ -z "$RUBYGEMS_VERSION" ]] && gem update --system $(cat .rubygems-version) || gem update --system "$RUBYGEMS_VERSION"
 
 RUN mkdir -p /app
 WORKDIR /app
