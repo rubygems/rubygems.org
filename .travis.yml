@@ -46,10 +46,6 @@ script:
   - bundle exec brakeman
   - script/build_docker.sh
 
-env:
-  - RUBYGEMS_VERSION=3.1.4
-  - RUBYGEMS_VERSION=latest
-
 matrix:
   allow_failures:
     - env: "RUBYGEMS_VERSION=latest"
