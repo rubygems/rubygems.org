@@ -99,7 +99,7 @@ data:
         }
 
          <% if environment == 'staging' %>
-        location /api {
+        location ~ ^/(api|internal) {
           limit_req zone=abusers burst=10;
           proxy_pass http://127.0.0.1:3000;
         }
