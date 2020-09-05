@@ -14,8 +14,7 @@ class OwnersMailer < ApplicationMailer
     @user = @ownership.user
     @rubygem = @ownership.rubygem
     mail to: @user.email,
-         subject: t("mailer.ownership_confirmation.subject", gem: @rubygem.name,
-                         default: "Please confirm the ownership of %{gem} gem on RubyGems.org")
+         subject: t("mailer.ownership_confirmation.subject", gem: @rubygem.name)
   end
 
   def owner_removed(user_id, remover_id, gem_id)

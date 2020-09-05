@@ -156,7 +156,7 @@ Rails.application.routes.draw do
       end
       resources :reverse_dependencies, only: %i[index]
       resources :owners, only: %i[index destroy create], param: :handle do
-        get 'confirm/:token', to: 'owners#confirm', as: :confirm, on: :collection
+        get 'confirm', to: 'owners#confirm', as: :confirm, on: :collection
         get 'resend_confirmation', to: 'owners#resend_confirmation', as: :resend_confirmation, on: :collection
       end
     end

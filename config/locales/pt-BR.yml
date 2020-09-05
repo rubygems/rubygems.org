@@ -137,7 +137,7 @@ pt-BR:
       subject:
       title:
       subtitle:
-      on:
+      'on':
       off_html:
     gem_pushed:
       subject:
@@ -243,13 +243,12 @@ pt-BR:
     update:
       success:
     show:
-      push_info:
-      on:
-      off_html:
+      info:
+      'on':
+      'off':
       recommended:
       title:
       update:
-      owner_info:
       push_heading:
       owner_heading:
   profiles:
@@ -421,12 +420,15 @@ pt-BR:
       name:
       mfa:
       confirmed:
-      added_on:
+      confirmed_at:
       added_by:
       action:
       info:
       email_field:
       submit_button:
+      confirmed:
+      pending:
+      confirm_remove:
     resend_confirmation:
       resent_notice:
     create:

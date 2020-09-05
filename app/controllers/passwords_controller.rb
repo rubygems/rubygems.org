@@ -39,7 +39,7 @@ class PasswordsController < Clearance::PasswordsController
   def verify
     if verify_user
       session[:verification] = Time.current + Gemcutter::PASSWORD_VERIFICATION_EXPIRY
-      redirect_to session[:redirect_uri] || root_path
+      redirect_to session.delete(:redirect_uri) || root_path
     else
       redirect_to user_password_path(current_user), alert: t("profiles.request_denied")
     end

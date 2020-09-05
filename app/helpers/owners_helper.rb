@@ -5,9 +5,9 @@ module OwnersHelper
 
   def confirmation_status(ownership)
     if ownership.confirmed?
-      image_tag("/images/check.svg") + "Confirmed"
+      image_tag("/images/check.svg") + t("owners.index.confirmed")
     else
-      image_tag("/images/clock.svg") + "Pending"
+      image_tag("/images/clock.svg") + t("owners.index.pending")
     end
   end
 

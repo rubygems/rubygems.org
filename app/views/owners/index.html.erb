@@ -1,5 +1,5 @@
 <% @title = @rubygem.name %>
-<% @subtitle = t("owners.index.info", gem: @rubygem.name) %>
+<% @subtitle = t(".info", gem: @rubygem.name) %>
 
 <div class="t-body">
   <%= render "owners_table" %>
@@ -7,15 +7,15 @@
 
 <div class="l-overflow">
   <div class="t-body">
-    <h2><%= t("owners.index.add_owner") %></h2>
+    <h2><%= t(".add_owner") %></h2>
   </div>
   <%= form_tag rubygem_owners_path, method: :post, class: "new_ownership", id: "new_ownership" do %>
     <div class="text_field">
-      <%= label_tag :handle, t("owners.index.email_field"), class: "form__label" %>
+      <%= label_tag :handle, t(".email_field"), class: "form__label" %>
       <%= text_field_tag :handle, nil, class: "form__input", required: true %>
     </div>
     <div class="submit_field">
-      <%= submit_tag t("owners.index.submit_button"), data: {disable_with: t("form_disable_with")}, class: "form__submit" %>
+      <%= submit_tag t(".submit_button"), data: {disable_with: t("form_disable_with")}, class: "form__submit" %>
     </div>
   <% end %>
 </div>

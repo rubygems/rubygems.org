@@ -27,7 +27,7 @@ class OwnerTest < SystemTest
 
     assert_cell(@other_user, "Confirmed", "Pending")
     assert_cell(@other_user, "Added By", @user.handle)
-    assert_cell(@other_user, "Added On", "")
+    assert_cell(@other_user, "Confirmed At", "")
 
     Delayed::Worker.new.work_off
     assert_emails 1
@@ -67,7 +67,7 @@ class OwnerTest < SystemTest
         assert_selector "img[src='/images/x.svg']"
       end
     end
-    assert_cell(@user, "Added On", nice_date_for(@ownership.confirmed_at))
+    assert_cell(@user, "Confirmed At", nice_date_for(@ownership.confirmed_at))
   end
 
   test "removing owner" do

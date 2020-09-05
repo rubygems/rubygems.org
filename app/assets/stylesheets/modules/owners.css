@@ -31,9 +31,9 @@
     display: inline-flex;
 }
 
-.owners__icon img {
-    width: 1em !important;
-    height: 1em !important;
+span.owners__icon img {
+    width: 1em;
+    height: 1em;
     position: relative;
     padding-right: 2px;
 }

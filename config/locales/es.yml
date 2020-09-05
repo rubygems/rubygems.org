@@ -145,7 +145,7 @@ es:
       subject: Cambiaste la configuración de tus notificaciones por email de RubyGems.org
       title: NOTIFICACIONES POR EMAIL
       subtitle: ¡Hola %{handle}!
-      on:
+      'on':
       off_html:
     gem_pushed:
       subject: Gema %{gem} subida a RubyGems.org
@@ -251,15 +251,12 @@ es:
     update:
       success: Has actualizado exitosamente la configuración de tus notificaciones por email.
     show:
-      push_info: Para facilitar la detección de cambios no autorizados en tus gemas, te enviamos un email
-        cada vez que una nueva versión es subida a RubyGems.org. Recibiendo y leyendo estos emails
-        ayudas a proteger el ecosistema de Ruby.
-      on: Activado
-      off_html: Desactivado
+      info:
+      'on': Activado
+      'off': Desactivado
       recommended: recomendado
       title: Notificación de email
       update: Actualizar
-      owner_info:
       push_heading:
       owner_heading:
   profiles:
@@ -431,12 +428,15 @@ es:
       name:
       mfa:
       confirmed:
-      added_on:
+      confirmed_at:
       added_by:
       action:
       info:
       email_field:
       submit_button:
+      confirmed:
+      pending:
+      confirm_remove:
     resend_confirmation:
       resent_notice:
     create:

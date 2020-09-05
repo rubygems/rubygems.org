@@ -145,7 +145,7 @@ en:
       subject: You changed your RubyGems.org email notification settings
       title: EMAIL NOTIFICATIONS
       subtitle: Hi %{handle}
-      on: ON
+      'on': 'ON'
       off_html: <b>OFF</b>
     gem_pushed:
       subject: Gem %{gem} pushed to RubyGems.org
@@ -165,19 +165,19 @@ en:
       title: OWNERSHIP CONFIRMATION
       subtitle: Hi %{handle}!
       body_html: You were added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <strong>%{authorizer}</strong>. Please click on the link below to confirm your ownership.
-      link_expiration_explanation_html: Please note that this link is only valid for 24 hours. You can resend confirmation mail from the  <a href="https://rubygems.org/gems/%{gem}">%{gem}</a> gem page after sign in.
+      link_expiration_explanation_html: Please note that this link is only valid for %{expiry_hours}. You can resend confirmation mail from the  <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem page after sign in.
     owner_added:
       subject_self: You were added as an owner to %{gem} gem
       subject_others: User %{owner_handle} was added as an owner to %{gem} gem
       title: OWNER ADDED
       subtitle: Hi %{user_handle}!
       body_self_html: <b>You</b> were added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on RubyGems.org.
-      body_others_html: <b>%{owner_handle}</b> was added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <b>%{authorizer}</b>. You are receiving these notifications because you are an existing owner of %{gem}.
+      body_others_html: <b>%{owner_handle}</b> was added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <b>%{authorizer}</b>. You are receiving these notifications because you are an owner of %{gem}.
     owner_removed:
       subject: You were removed as an owner to %{gem} gem
       title: OWNER REMOVED
       subtitle: Hi %{user_handle}!
-      body_html: <b>You</b> were removed as an owner for <strong>%{gem}</strong> gem on RubyGems.org by <b>%{remover}</b>.
+      body_html: <b>You</b> were removed as an owner for <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on RubyGems.org by <b>%{remover}</b>.
   news:
     show:
       title: New Releases — All Gems
@@ -251,17 +251,14 @@ en:
     update:
       success: You have successfully updated your email notification settings.
     show:
-      push_info: To aid detection of unauthorized gem changes, we email you each time a new version of a
-        gem you own is pushed or yanked. By receiving and reading these emails, you help protect the Ruby
+      info: To aid detection of unauthorized gem or ownership changes, we email you each time a new version of a
+        gem you own is pushed, yanked or a new owner was added. By receiving and reading these emails, you help protect the Ruby
         ecosystem.
-      on: On
-      off_html: Off
+      'on': 'On'
+      'off': 'Off'
       recommended: recommended
       title: Email notifications
       update: Update
-      owner_info: To aid detection of unauthorized ownership changes, we email you each time a new owner is
-        added or removed to the gem. By receiving and reading these emails, you help protect the Ruby
-        ecosystem.
       owner_heading: Ownership Notifications
       push_heading: Push Notifications
   owners:
@@ -273,16 +270,19 @@ en:
       name: OWNER
       mfa: MFA STATUS
       confirmed: STATUS
-      added_on: ADDED ON
+      confirmed_at: CONFIRMED AT
       added_by: ADDED BY
       action: ACTION
       email_field: Email / Handle
       submit_button: Add Owner
       info: add or remove owners
+      confirmed: Confirmed
+      pending: Pending
+      confirm_remove: Are you sure you want to remove this user from owners?
     resend_confirmation:
       resent_notice: A confirmation mail has been re-sent to %{handle}'s email
     create:
-      success_notice: Owner added successfully. A confirmation mail has been sent to %{handle}'s email
+      success_notice: "%{handle} added as unconfirmed owner. Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
     destroy:
       removed_notice: "Owner %{owner_name} removed successfully!"
       failed_notice: "Owner cannot be removed!"

@@ -4,7 +4,7 @@ class OwnersController < ApplicationController
   before_action :redirect_to_verify, unless: :password_session_active?, only: %i[index create destroy]
 
   def confirm
-    ownership = Ownership.includes(:rubygem).find_by!(token: params[:token])
+    ownership = Ownership.includes(:rubygem).find_by!(token: token_params)
 
     if ownership.valid_confirmation_token?
       ownership.confirm_and_notify
@@ -30,7 +30,7 @@ class OwnersController < ApplicationController
   end
 
   def create
-    owner = User.find_by_name(params[:handle])
+    owner = User.find_by_name(handle_params)
     ownership = @rubygem.ownerships.new(user: owner, authorizer: current_user)
     if ownership.save
       OwnersMailer.delay.ownership_confirmation(ownership.id)
@@ -41,7 +41,7 @@ class OwnersController < ApplicationController
   end
 
   def destroy
-    @ownership = @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(params[:handle])
+    @ownership = @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(handle_params)
     if @ownership.destroy_and_notify(current_user)
       redirect_to rubygem_owners_path(@ownership.rubygem), notice: t("owners.destroy.removed_notice", owner_name: @ownership.owner_name)
     else
@@ -62,5 +62,13 @@ class OwnersController < ApplicationController
   def redirect_to_verify
     session[:redirect_uri] = rubygem_owners_url(@rubygem)
     redirect_to user_password_path(current_user)
+  end
+
+  def token_params
+    params.require(:token)
+  end
+
+  def handle_params
+    params.require(:handle)
   end
 end

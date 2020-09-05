@@ -20,7 +20,7 @@
         </p>
 
         <%= render "mailer/compromised_instructions" do %>
-          <li>Remove <%= @owner.display_handle %> as an owner from <%= @rubygem.name %> gem using <code>gem owner -r <%= @owner.display_handle %></code> or <%= link_to "Ownership Page", rubygem_owners_url(@rubygem) %></li>
+          <li>Remove <%= @owner.display_handle %> as an owner from <%= @rubygem.name %> gem using <code>gem owner -r <%= @owner.display_handle %></code> or <%= link_to "ownership page", rubygem_owners_url(@rubygem) %></li>
           <li>Look out for unexpected changes to your gems on RubyGems.org</li>
         <% end %>
 

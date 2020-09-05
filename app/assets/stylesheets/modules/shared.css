@@ -184,9 +184,10 @@ span#github-btn {
 .t-link--arrow:after {
   content: "";
   display: inline-block;
+  margin-left: 5px;
   padding: 5px;
   box-shadow: 3px -3px 0 0 #e9573f inset;
-  margin-left: 5px;
+  transform: rotate(225deg);
 }
 
 .t-link--arrow:hover:after {

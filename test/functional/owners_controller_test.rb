@@ -70,7 +70,8 @@ class OwnersControllerTest < ActionController::TestCase
             assert_nil @rubygem.ownerships_including_unconfirmed.find_by(user: @new_owner).confirmed_at
           end
           should "set success notice flash" do
-            expected_notice = "Owner added successfully. A confirmation mail has been sent to #{@new_owner.handle}'s email"
+            expected_notice = "#{@new_owner.handle} added as unconfirmed owner. "\
+              "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
             assert_equal expected_notice, flash[:notice]
           end
           should "send confirmation email" do
