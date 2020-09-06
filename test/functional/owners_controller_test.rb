@@ -70,7 +70,7 @@ class OwnersControllerTest < ActionController::TestCase
             assert_nil @rubygem.ownerships_including_unconfirmed.find_by(user: @new_owner).confirmed_at
           end
           should "set success notice flash" do
-            expected_notice = "#{@new_owner.handle} added as unconfirmed owner. "\
+            expected_notice = "#{@new_owner.handle} was added as an unconfirmed owner. "\
               "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
             assert_equal expected_notice, flash[:notice]
           end
@@ -157,7 +157,7 @@ class OwnersControllerTest < ActionController::TestCase
             assert @rubygem.owners_including_unconfirmed.include?(@last_owner)
           end
           should "should flash error" do
-            assert_equal "Owner cannot be removed!", flash[:alert]
+            assert_equal "Owner could not be removed", flash[:alert]
           end
           should "not send email notifications about owner removal" do
             ActionMailer::Base.deliveries.clear
@@ -197,7 +197,7 @@ class OwnersControllerTest < ActionController::TestCase
 
         should redirect_to("rubygem show") { rubygem_path(@rubygem) }
         should "set success notice flash" do
-          success_flash = "A confirmation mail has been re-sent to #{@new_owner.handle}'s email"
+          success_flash = "A confirmation mail has been re-sent to your email"
           assert_equal success_flash, flash[:notice]
         end
         should "resend confirmation email" do
@@ -217,7 +217,7 @@ class OwnersControllerTest < ActionController::TestCase
 
         should redirect_to("rubygem show") { rubygem_path(@rubygem) }
         should "set success notice flash" do
-          success_flash = "A confirmation mail has been re-sent to #{@new_owner.handle}'s email"
+          success_flash = "A confirmation mail has been re-sent to your email"
           assert_equal success_flash, flash[:notice]
         end
         should "resend confirmation email" do
@@ -309,7 +309,7 @@ class OwnersControllerTest < ActionController::TestCase
         should "confirm ownership" do
           assert @ownership.confirmed?
           assert redirect_to("rubygem show") { rubygem_path(@rubygem) }
-          assert_equal flash[:notice], "You are added as an owner to #{@rubygem.name} gem!"
+          assert_equal "You were added as an owner to #{@rubygem.name} gem", flash[:notice]
         end
 
         should "not sign in the user" do
@@ -337,7 +337,7 @@ class OwnersControllerTest < ActionController::TestCase
 
         should "warn about invalid token" do
           assert respond_with :success
-          assert_equal flash[:alert], "The confirmation token has expired. Please try resending the token"
+          assert_equal "The confirmation token has expired. Please try resending the token from the gem page.", flash[:alert]
           assert @ownership.unconfirmed?
         end
 

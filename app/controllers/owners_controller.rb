@@ -4,13 +4,13 @@ class OwnersController < ApplicationController
   before_action :redirect_to_verify, unless: :password_session_active?, only: %i[index create destroy]
 
   def confirm
-    ownership = Ownership.includes(:rubygem).find_by!(token: token_params)
+    ownership = Ownership.find_by!(token: token_params)
 
-    if ownership.valid_confirmation_token?
-      ownership.confirm_and_notify
-      redirect_to rubygem_path(ownership.rubygem), notice: t(".confirm.confirmed_email", gem: ownership.rubygem.name)
+    if ownership.valid_confirmation_token? && ownership.confirm!
+      notify_owner_added(ownership)
+      redirect_to rubygem_path(ownership.rubygem), notice: t(".confirmed_email", gem: ownership.rubygem.name)
     else
-      redirect_to root_path, alert: t(".confirm.token_expired")
+      redirect_to root_path, alert: t(".token_expired")
     end
   end
 
@@ -18,7 +18,7 @@ class OwnersController < ApplicationController
     ownership = @rubygem.ownerships_including_unconfirmed.find_by!(user: current_user)
     if ownership.generate_confirmation_token && ownership.save
       OwnersMailer.delay.ownership_confirmation(ownership.id)
-      flash[:notice] = t("owners.resend_confirmation.resent_notice", handle: ownership.owner_name)
+      flash[:notice] = t(".resent_notice")
     else
       flash[:alert] = t("try_again")
     end
@@ -34,7 +34,7 @@ class OwnersController < ApplicationController
     ownership = @rubygem.ownerships.new(user: owner, authorizer: current_user)
     if ownership.save
       OwnersMailer.delay.ownership_confirmation(ownership.id)
-      redirect_to rubygem_owners_path(@rubygem), notice: t("owners.create.success_notice", handle: owner.name)
+      redirect_to rubygem_owners_path(@rubygem), notice: t(".success_notice", handle: owner.name)
     else
       redirect_to rubygem_owners_path(@rubygem), alert: ownership.errors.full_messages.to_sentence
     end
@@ -43,9 +43,9 @@ class OwnersController < ApplicationController
   def destroy
     @ownership = @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(handle_params)
     if @ownership.destroy_and_notify(current_user)
-      redirect_to rubygem_owners_path(@ownership.rubygem), notice: t("owners.destroy.removed_notice", owner_name: @ownership.owner_name)
+      redirect_to rubygem_owners_path(@ownership.rubygem), notice: t(".removed_notice", owner_name: @ownership.owner_name)
     else
-      redirect_to rubygem_owners_path(@ownership.rubygem), alert: t("owners.destroy.failed_notice")
+      redirect_to rubygem_owners_path(@ownership.rubygem), alert: t(".failed_notice")
     end
   end
 
@@ -70,5 +70,14 @@ class OwnersController < ApplicationController
 
   def handle_params
     params.require(:handle)
+  end
+
+  def notify_owner_added(ownership)
+    ownership.rubygem.ownership_notifiable_owners.each do |notified_user|
+      OwnersMailer.delay.owner_added(notified_user.id,
+        ownership.user_id,
+        ownership.authorizer.id,
+        ownership.rubygem_id)
+    end
   end
 end

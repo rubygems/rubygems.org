@@ -25,7 +25,7 @@ class OwnersMailer < ApplicationMailer
          subject: t("mailer.owner_removed.subject", gem: @rubygem.name)
   end
 
-  def owner_added(owner_id, user_id, authorizer_id, gem_id)
+  def owner_added(user_id, owner_id, authorizer_id, gem_id)
     @user = User.find(user_id)
     @owner = User.find(owner_id)
     @authorizer = User.find(authorizer_id)

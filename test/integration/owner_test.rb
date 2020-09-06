@@ -100,7 +100,7 @@ class OwnerTest < SystemTest
     end
 
     assert page.has_selector?("a[href='#{profile_path(@user.display_id)}']")
-    assert page.has_selector? "#flash_alert", text: "Owner cannot be removed!"
+    assert page.has_selector? "#flash_alert", text: "Owner could not be removed"
 
     Delayed::Worker.new.work_off
     assert_no_emails
@@ -131,7 +131,7 @@ class OwnerTest < SystemTest
     visit confirmation_link
 
     assert_equal page.current_path, rubygem_path(@rubygem)
-    assert page.has_selector? "#flash_notice", text: "You are added as an owner to #{@rubygem.name} gem!"
+    assert page.has_selector? "#flash_notice", text: "You were added as an owner to #{@rubygem.name} gem"
 
     Delayed::Worker.new.work_off
     assert_emails 2

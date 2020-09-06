@@ -51,10 +51,6 @@ class Ownership < ApplicationRecord
     !confirmed?
   end
 
-  def confirm_and_notify
-    confirm! && notify_owner_added
-  end
-
   def destroy_and_notify(remover)
     return false unless safe_destroy
     OwnersMailer.delay.owner_removed(user_id, remover.id, rubygem_id)
@@ -64,11 +60,5 @@ class Ownership < ApplicationRecord
 
   def safe_destroy
     destroy if unconfirmed? || rubygem.owners.many?
-  end
-
-  def notify_owner_added
-    rubygem.ownership_notifiable_owners.each do |notified_user|
-      OwnersMailer.delay.owner_added(user_id, notified_user.id, authorizer.id, rubygem_id)
-    end
   end
 end
