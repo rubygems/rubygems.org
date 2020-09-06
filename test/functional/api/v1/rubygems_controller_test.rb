@@ -252,14 +252,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         setup do
           create(:global_web_hook, user: @user, url: "http://example.org")
           rubygem = create(:rubygem, name: "test")
-          create(:ownership,
-                 rubygem: rubygem,
-                 user: @user)
-          create(:version,
-                 rubygem: rubygem,
-                 number: "0.0.0",
-                 updated_at: 1.year.ago,
-                 created_at: 1.year.ago)
+          create(:ownership, rubygem: rubygem, user: @user)
+          create(:version, rubygem: rubygem, number: "0.0.0", updated_at: 1.year.ago, created_at: 1.year.ago)
         end
         should "respond_with success" do
           post :create, body: gem_file("test-1.0.0.gem").read
@@ -283,14 +277,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         setup do
           create(:global_web_hook, user: @user, url: "http://example.org")
           rubygem = create(:rubygem, name: "test")
-          create(:ownership, :unconfirmed,
-                 rubygem: rubygem,
-                 user: @user)
-          create(:version,
-                 rubygem: rubygem,
-                 number: "0.0.0",
-                 updated_at: 1.year.ago,
-                 created_at: 1.year.ago)
+          create(:ownership, :unconfirmed, rubygem: rubygem, user: @user)
+          create(:version, rubygem: rubygem, number: "0.0.0", updated_at: 1.year.ago, created_at: 1.year.ago)
           assert_difference "Delayed::Job.count", 0 do
             post :create, body: gem_file("test-1.0.0.gem").read
           end
@@ -300,30 +288,28 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
 
     context "On POST to create for a repush" do
-      context "with confirmed ownership" do
-        setup do
-          rubygem = create(:rubygem, name: "test")
-          create(:ownership, rubygem: rubygem, user: @user)
+      setup do
+        rubygem = create(:rubygem, name: "test")
+        create(:ownership, rubygem: rubygem, user: @user)
 
-          @date = 1.year.ago
-          @version = create(:version,
-                            rubygem: rubygem,
-                            number: "0.0.0",
-                            updated_at: @date,
-                            created_at: @date,
-                            summary: "Freewill",
-                            authors: ["Geddy Lee"],
-                            built_at: @date)
+        @date = 1.year.ago
+        @version = create(:version,
+          rubygem: rubygem,
+          number: "0.0.0",
+          updated_at: @date,
+          created_at: @date,
+          summary: "Freewill",
+          authors: ["Geddy Lee"],
+          built_at: @date)
 
-          post :create, body: gem_file.read
-        end
-        should respond_with :conflict
-        should "not register new version" do
-          version = Rubygem.last.reload.versions.most_recent
-          assert_equal @date.to_s(:db), version.built_at.to_s(:db), "(date)"
-          assert_equal "Freewill", version.summary, "(summary)"
-          assert_equal "Geddy Lee", version.authors, "(authors)"
-        end
+        post :create, body: gem_file.read
+      end
+      should respond_with :conflict
+      should "not register new version" do
+        version = Rubygem.last.reload.versions.most_recent
+        assert_equal @date.to_s(:db), version.built_at.to_s(:db), "(date)"
+        assert_equal "Freewill", version.summary, "(summary)"
+        assert_equal "Geddy Lee", version.authors, "(authors)"
       end
     end
 

@@ -104,7 +104,6 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       @rubygem = create(:rubygem)
       @user = create(:user)
       @second_user = create(:user)
-      @third_user = create(:user)
       create(:ownership, rubygem: @rubygem, user: @user)
       @request.env["HTTP_AUTHORIZATION"] = @user.api_key
     end
@@ -151,14 +150,51 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     end
 
     context "when mfa for UI and API is disabled" do
-      should "add other user as gem owner" do
-        post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
-        assert @rubygem.owners_including_unconfirmed.include?(@second_user)
+      context "add user with email" do
+        setup do
+          post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+          Delayed::Worker.new.work_off
+        end
+
+        should "add second user as unconfrimed owner" do
+          assert @rubygem.owners_including_unconfirmed.include?(@second_user)
+          assert_equal "#{@second_user.handle} was added as an unconfirmed owner. "\
+            "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email.", @response.body
+        end
+
+        should "send confirmation mail to second user" do
+          assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
+          assert_equal [@second_user.email], last_email.to
+        end
       end
 
-      should "add other user as gem owner with handle" do
-        post :create, params: { rubygem_id: @rubygem.to_param, email: @third_user.handle }, format: :json
-        assert @rubygem.owners_including_unconfirmed.include?(@third_user)
+      context "add user with handler" do
+        setup do
+          post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.handle }, format: :json
+        end
+
+        should "add other user as gem owner" do
+          assert @rubygem.owners_including_unconfirmed.include?(@second_user)
+        end
+      end
+    end
+
+    context "user is not found" do
+      setup do
+        post :create, params: { rubygem_id: @rubygem.to_param, email: "doesnot@exist.com" }
+      end
+
+      should respond_with :not_found
+    end
+
+    context "owner already exists" do
+      setup do
+        post :create, params: { rubygem_id: @rubygem.to_param, email: @user.email }
+      end
+
+      should respond_with :unprocessable_entity
+      should "respond with error message" do
+        assert_equal "User has already been taken", @response.body
       end
     end
   end
@@ -223,17 +259,33 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     end
 
     context "when mfa for UI and API is disabled" do
-      should "remove user as gem owner" do
-        delete :destroy,
-          params: { rubygem_id: @rubygem.to_param, email: @second_user.email, format: :json }
-        refute @rubygem.owners.include?(@second_user)
+      context "user is not the only confirmed owner" do
+        setup do
+          delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @second_user.email, format: :json }
+          Delayed::Worker.new.work_off
+        end
+
+        should "remove user as gem owner" do
+          refute @rubygem.owners.include?(@second_user)
+          assert_equal "Owner removed successfully.", @response.body
+        end
+
+        should "send email notification to user being removed" do
+          assert_equal "You were removed as an owner from #{@rubygem.name} gem", last_email.subject
+          assert_equal [@second_user.email], last_email.to
+        end
       end
 
-      should "not remove last gem owner" do
-        @ownership.destroy
-        delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @user.email, format: :json }
-        assert @rubygem.owners.include?(@user)
-        assert_equal "Unable to remove owner.", @response.body
+      context "user is the only confirmed owner" do
+        setup do
+          @ownership.destroy
+          delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @user.email, format: :json }
+        end
+
+        should "not remove last gem owner" do
+          assert @rubygem.owners.include?(@user)
+          assert_equal "Unable to remove owner.", @response.body
+        end
       end
     end
   end

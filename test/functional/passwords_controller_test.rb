@@ -231,7 +231,7 @@ class PasswordsControllerTest < ActionController::TestCase
         end
         should redirect_to("form") { user_password_path(@user) }
         should "show error flash" do
-          assert_equal flash[:alert], "This request was denied. We could not verify your password."
+          assert_equal "This request was denied. We could not verify your password.", flash[:alert]
         end
       end
     end

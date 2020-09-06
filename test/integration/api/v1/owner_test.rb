@@ -12,8 +12,8 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
 
   test "adding an owner" do
     post api_v1_rubygem_owners_path(@rubygem),
-         params: { email: @other_user.email },
-         headers: { "HTTP_AUTHORIZATION" => @user.api_key }
+      params: { email: @other_user.email },
+      headers: { "HTTP_AUTHORIZATION" => @user.api_key }
     assert_response :success
 
     @ownership = @rubygem.ownerships_including_unconfirmed.find_by(user: @other_user)
@@ -27,8 +27,8 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
   test "removing an owner" do
     create(:ownership, user: @other_user, rubygem: @rubygem)
     delete api_v1_rubygem_owners_path(@rubygem),
-           params: { email: @other_user.email },
-           headers: { "HTTP_AUTHORIZATION" => @user.api_key }
+      params: { email: @other_user.email },
+      headers: { "HTTP_AUTHORIZATION" => @user.api_key }
 
     get rubygem_path(@rubygem)
     assert page.has_selector?("a[alt='#{@user.handle}']")
@@ -39,8 +39,8 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
     create(:ownership, user: @other_user, rubygem: @rubygem)
 
     delete api_v1_rubygem_owners_path(@rubygem),
-           params: { email: @user.email },
-           headers: { "HTTP_AUTHORIZATION" => @user.api_key }
+      params: { email: @user.email },
+      headers: { "HTTP_AUTHORIZATION" => @user.api_key }
 
     get rubygem_path(@rubygem)
     refute page.has_selector?("a[alt='#{@user.handle}']")
@@ -49,13 +49,13 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
 
   test "adding ownership without permission" do
     post api_v1_rubygem_owners_path(@rubygem),
-         params: { email: @other_user.email },
-         headers: { "HTTP_AUTHORIZATION" => @other_user.api_key }
+      params: { email: @other_user.email },
+      headers: { "HTTP_AUTHORIZATION" => @other_user.api_key }
     assert_response :unauthorized
 
     delete api_v1_rubygem_owners_path(@rubygem),
-           params: { email: @other_user.email },
-           headers: { "HTTP_AUTHORIZATION" => @other_user.api_key }
+      params: { email: @other_user.email },
+      headers: { "HTTP_AUTHORIZATION" => @other_user.api_key }
     assert_response :unauthorized
   end
 end

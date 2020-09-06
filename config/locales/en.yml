@@ -174,7 +174,7 @@ en:
       body_self_html: <b>You</b> were added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on RubyGems.org.
       body_others_html: <b>%{owner_handle}</b> was added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <b>%{authorizer}</b>. You are receiving these notifications because you are an owner of %{gem}.
     owner_removed:
-      subject: You were removed as an owner to %{gem} gem
+      subject: You were removed as an owner from %{gem} gem
       title: OWNER REMOVED
       subtitle: Hi %{user_handle}!
       body_html: <b>You</b> were removed as an owner for <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on RubyGems.org by <b>%{remover}</b>.
@@ -278,7 +278,7 @@ en:
       info: add or remove owners
       confirmed: Confirmed
       pending: Pending
-      confirm_remove: Are you sure you want to remove this user from owners?
+      confirm_remove: Are you sure you want to remove this user from the owners?
     resend_confirmation:
       resent_notice: A confirmation mail has been re-sent to your email
     create:

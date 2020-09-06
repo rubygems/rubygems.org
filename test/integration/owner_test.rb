@@ -88,7 +88,7 @@ class OwnerTest < SystemTest
     Delayed::Worker.new.work_off
 
     assert_emails 1
-    assert_contains last_email.subject, "You were removed as an owner to #{@rubygem.name} gem"
+    assert_contains last_email.subject, "You were removed as an owner from #{@rubygem.name} gem"
     assert_equal [@other_user.email], last_email.to
   end
 
