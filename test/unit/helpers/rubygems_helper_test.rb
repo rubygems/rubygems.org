@@ -197,10 +197,6 @@ class RubygemsHelperTest < ActionView::TestCase
   end
 
   context "change_diff_link" do
-    setup do
-      @virtual_path = "rubygems.aside"
-    end
-
     context "with yanked version" do
       setup do
         @version = create(:version, indexed: false)
@@ -214,6 +210,7 @@ class RubygemsHelperTest < ActionView::TestCase
 
     context "with available version" do
       setup do
+        @virtual_path = "rubygems.aside"
         @version = create(:version)
         @rubygem = @version.rubygem
       end
