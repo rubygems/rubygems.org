@@ -195,4 +195,37 @@ class RubygemsHelperTest < ActionView::TestCase
       end
     end
   end
+
+  context "change_diff_link" do
+    setup do
+      @virtual_path = "rubygems.aside"
+    end
+
+    context "with yanked version" do
+      setup do
+        @version = create(:version, indexed: false)
+        @rubygem = @version.rubygem
+      end
+
+      should "return nil" do
+        assert_nil change_diff_link(@rubygem, @version)
+      end
+    end
+
+    context "with available version" do
+      setup do
+        @version = create(:version)
+        @rubygem = @version.rubygem
+      end
+
+      should "generate a correct link to the gem versions diff" do
+        diff_url = "https://my.diffend.io/gems/#{@rubygem.name}/prev/#{@version.slug}"
+
+        expected_link = link_to "Review changes", diff_url,
+                          class: "gem__link t-list__item"
+
+        assert_equal expected_link, change_diff_link(@rubygem, @version)
+      end
+    end
+  end
 end

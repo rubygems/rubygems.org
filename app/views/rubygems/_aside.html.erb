@@ -66,6 +66,7 @@
     <%- @versioned_links.each do |name, link| %>
       <%= link_to_page name, link %>
     <%- end %>
+    <%= change_diff_link(@rubygem, @latest_version) %>
     <%= badge_link(@rubygem) %>
     <%= subscribe_link(@rubygem) if @latest_version.indexed %>
     <%= atom_link(@rubygem) %>
