@@ -294,6 +294,7 @@ fr:
         mail: Liste de diffusion
         report_abuse: Signaler un abus
         reverse_dependencies:
+        review_changes:
         rss: RSS
         subscribe: Abonnement
         unsubscribe: Désabonement

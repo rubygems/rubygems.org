@@ -304,6 +304,7 @@ es:
         mail: Lista de Correo
         report_abuse: Reportar abusos
         reverse_dependencies: Dependencias inversas
+        review_changes:
         rss: RSS
         subscribe: Suscribirse
         unsubscribe: Desuscribirse

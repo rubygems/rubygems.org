@@ -294,6 +294,7 @@ zh-TW:
         mail: 郵件群組
         report_abuse: 舉報投訴
         reverse_dependencies: 反向依賴
+        review_changes:
         rss: RSS
         subscribe: 訂閱
         unsubscribe: 取消訂閱

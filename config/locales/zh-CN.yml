@@ -294,6 +294,7 @@ zh-CN:
         mail: 邮件列表
         report_abuse: 举报投诉
         reverse_dependencies: 反向依赖
+        review_changes:
         rss: RSS
         subscribe: 订阅
         unsubscribe: 取消订阅
