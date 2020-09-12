@@ -15,7 +15,7 @@ class OwnersController < ApplicationController
   end
 
   def resend_confirmation
-    ownership = @rubygem.ownerships_including_unconfirmed.find_by!(user: current_user)
+    ownership = @rubygem.unconfirmed_ownerships.find_by!(user: current_user)
     if ownership.generate_confirmation_token && ownership.save
       OwnersMailer.delay.ownership_confirmation(ownership.id)
       flash[:notice] = t(".resent_notice")
@@ -36,13 +36,14 @@ class OwnersController < ApplicationController
       OwnersMailer.delay.ownership_confirmation(ownership.id)
       redirect_to rubygem_owners_path(@rubygem), notice: t(".success_notice", handle: owner.name)
     else
-      redirect_to rubygem_owners_path(@rubygem), alert: ownership.errors.full_messages.to_sentence
+      redirect_to rubygem_owners_path(@rubygem), alert: ownership.errors.full_messages.to_sentence, status: :unprocessable_entity
     end
   end
 
   def destroy
     @ownership = @rubygem.ownerships_including_unconfirmed.find_by_owner_handle!(handle_params)
-    if @ownership.destroy_and_notify(current_user)
+    if @ownership.safe_destroy
+      OwnersMailer.delay.owner_removed(@ownership.user_id, current_user.id, @ownership.rubygem_id)
       redirect_to rubygem_owners_path(@ownership.rubygem), notice: t(".removed_notice", owner_name: @ownership.owner_name)
     else
       redirect_to rubygem_owners_path(@ownership.rubygem), alert: t(".failed_notice")

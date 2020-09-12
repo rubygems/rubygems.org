@@ -143,8 +143,12 @@ class Rubygem < ApplicationRecord
     ownerships.exists?(user_id: user.id)
   end
 
+  def unconfirmed_ownerships
+    ownerships_including_unconfirmed.unconfirmed
+  end
+
   def unconfirmed_ownership?(user)
-    ownerships_including_unconfirmed.unconfirmed.where(user: user).exists?
+    unconfirmed_ownerships.where(user: user).exists?
   end
 
   def to_s

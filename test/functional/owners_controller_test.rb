@@ -46,6 +46,8 @@ class OwnersControllerTest < ActionController::TestCase
             post :create, params: { handle: "no_user", rubygem_id: @rubygem.name }
           end
 
+          should respond_with :unprocessable_entity
+
           should "show error message" do
             expected_alert = "User must exist"
             assert_equal expected_alert, flash[:alert]
@@ -189,26 +191,6 @@ class OwnersControllerTest < ActionController::TestCase
         sign_in_as(@new_owner)
       end
 
-      context "when confirmed ownership exists" do
-        setup do
-          create(:ownership, rubygem: @rubygem, user: @new_owner)
-          get :resend_confirmation, params: { rubygem_id: @rubygem.name }
-        end
-
-        should redirect_to("rubygem show") { rubygem_path(@rubygem) }
-        should "set success notice flash" do
-          success_flash = "A confirmation mail has been re-sent to your email"
-          assert_equal success_flash, flash[:notice]
-        end
-        should "resend confirmation email" do
-          ActionMailer::Base.deliveries.clear
-          Delayed::Worker.new.work_off
-          assert_emails 1
-          assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
-          assert_equal [@new_owner.email], last_email.to
-        end
-      end
-
       context "when unconfirmed ownership exists" do
         setup do
           create(:ownership, :unconfirmed, rubygem: @rubygem, user: @new_owner)
@@ -231,6 +213,20 @@ class OwnersControllerTest < ActionController::TestCase
 
       context "when ownership doesn't exist" do
         setup do
+          get :resend_confirmation, params: { rubygem_id: @rubygem.name }
+        end
+
+        should respond_with :not_found
+        should "not resend confirmation email" do
+          ActionMailer::Base.deliveries.clear
+          Delayed::Worker.new.work_off
+          assert_emails 0
+        end
+      end
+
+      context "when confirmed ownership exists" do
+        setup do
+          create(:ownership, rubygem: @rubygem, user: @new_owner)
           get :resend_confirmation, params: { rubygem_id: @rubygem.name }
         end
 

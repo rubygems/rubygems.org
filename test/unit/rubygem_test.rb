@@ -842,4 +842,31 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "unconfirmed ownership" do
+    setup do
+      @rubygem               = create(:rubygem)
+      @confirmed_owner       = create(:user)
+      @unconfirmed_owner     = create(:user)
+      @unconfirmed_ownership = create(:ownership, :unconfirmed, rubygem: @rubygem, user: @unconfirmed_owner)
+
+      create(:ownership, rubygem: @rubygem, user: @confirmed_owner)
+    end
+
+    context "#unconfirmed_ownerships" do
+      should "return only unconfirmed ownerships" do
+        assert_equal [@unconfirmed_ownership], @rubygem.unconfirmed_ownerships
+      end
+    end
+
+    context "#unconfirmed_ownership?" do
+      should "return false when user is confirmed owner" do
+        refute @rubygem.unconfirmed_ownership?(@confirmed_owner)
+      end
+
+      should "return true when user is unconfirmed owner" do
+        assert @rubygem.unconfirmed_ownership?(@unconfirmed_owner)
+      end
+    end
+  end
 end

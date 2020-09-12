@@ -31,7 +31,8 @@ class Api::V1::OwnersController < Api::BaseController
     owner = @rubygem.owners_including_unconfirmed.find_by_name(params[:email])
     if owner
       ownership = @rubygem.ownerships_including_unconfirmed.find_by(user_id: owner.id)
-      if ownership.destroy_and_notify(@api_user)
+      if ownership.safe_destroy
+        OwnersMailer.delay.owner_removed(ownership.user_id, @api_user.id, ownership.rubygem_id)
         render plain: "Owner removed successfully."
       else
         render plain: "Unable to remove owner.", status: :forbidden

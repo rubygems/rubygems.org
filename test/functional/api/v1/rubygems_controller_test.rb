@@ -241,9 +241,14 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should respond_with :success
       should "register new gem" do
         assert_equal 1, Rubygem.count
-        assert_equal @user, Rubygem.last.ownerships.first.user
         assert_equal @user, Rubygem.last.versions.first.pusher
         assert_equal "Successfully registered gem: test (0.0.0)", @response.body
+      end
+      should "add user as confirmed owner" do
+        ownership = Rubygem.last.ownerships.first
+
+        assert_equal @user, ownership.user
+        assert ownership.confirmed?
       end
     end
 
