@@ -36,7 +36,7 @@ class OwnersController < ApplicationController
       OwnersMailer.delay.ownership_confirmation(ownership.id)
       redirect_to rubygem_owners_path(@rubygem), notice: t(".success_notice", handle: owner.name)
     else
-      redirect_to rubygem_owners_path(@rubygem), alert: ownership.errors.full_messages.to_sentence, status: :unprocessable_entity
+      index_with_error ownership.errors.full_messages.to_sentence, :unprocessable_entity
     end
   end
 
@@ -46,7 +46,7 @@ class OwnersController < ApplicationController
       OwnersMailer.delay.owner_removed(@ownership.user_id, current_user.id, @ownership.rubygem_id)
       redirect_to rubygem_owners_path(@ownership.rubygem), notice: t(".removed_notice", owner_name: @ownership.owner_name)
     else
-      redirect_to rubygem_owners_path(@ownership.rubygem), alert: t(".failed_notice")
+      index_with_error t(".failed_notice"), :forbidden
     end
   end
 
@@ -80,5 +80,11 @@ class OwnersController < ApplicationController
         ownership.authorizer.id,
         ownership.rubygem_id)
     end
+  end
+
+  def index_with_error(msg, status)
+    @ownerships = @rubygem.ownerships_including_unconfirmed.includes(:user, :authorizer)
+    flash[:alert] = msg
+    render :index, status: status
   end
 end

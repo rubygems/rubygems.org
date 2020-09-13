@@ -100,7 +100,7 @@ class OwnerTest < SystemTest
     end
 
     assert page.has_selector?("a[href='#{profile_path(@user.display_id)}']")
-    assert page.has_selector? "#flash_alert", text: "Owner could not be removed"
+    assert page.has_selector? "#flash_alert", text: "Can't remove the only owner of the gem"
 
     Delayed::Worker.new.work_off
     assert_no_emails

@@ -154,12 +154,12 @@ class OwnersControllerTest < ActionController::TestCase
             @last_owner = @rubygem.owners.last
             delete :destroy, params: { rubygem_id: @rubygem.name, handle: @last_owner.display_id }
           end
-          should redirect_to("ownership index") { rubygem_owners_path(@rubygem) }
+          should respond_with :forbidden
           should "not remove the ownership record" do
             assert @rubygem.owners_including_unconfirmed.include?(@last_owner)
           end
           should "should flash error" do
-            assert_equal "Owner could not be removed", flash[:alert]
+            assert_equal "Can't remove the only owner of the gem", flash[:alert]
           end
           should "not send email notifications about owner removal" do
             ActionMailer::Base.deliveries.clear
