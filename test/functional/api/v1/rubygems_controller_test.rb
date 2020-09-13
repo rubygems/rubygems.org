@@ -212,7 +212,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         should respond_with :unauthorized
       end
 
-      context "On post to creaete for new gem with incorrect OTP" do
+      context "On post to create for new gem with incorrect OTP" do
         setup do
           @request.env["HTTP_OTP"] = (ROTP::TOTP.new(@user.mfa_seed).now.to_i.succ % 1_000_000).to_s
           post :create, body: gem_file.read
@@ -241,34 +241,54 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should respond_with :success
       should "register new gem" do
         assert_equal 1, Rubygem.count
-        assert_equal @user, Rubygem.last.ownerships.first.user
         assert_equal @user, Rubygem.last.versions.first.pusher
         assert_equal "Successfully registered gem: test (0.0.0)", @response.body
+      end
+      should "add user as confirmed owner" do
+        ownership = Rubygem.last.ownerships.first
+
+        assert_equal @user, ownership.user
+        assert ownership.confirmed?
       end
     end
 
     context "On POST to create for existing gem" do
-      setup do
-        create(:global_web_hook, user: @user, url: "http://example.org")
-        rubygem = create(:rubygem, name: "test")
-        create(:ownership,
-          rubygem: rubygem,
-          user: @user)
-        create(:version,
-          rubygem: rubygem,
-          number: "0.0.0",
-          updated_at: 1.year.ago,
-          created_at: 1.year.ago)
-        assert_difference "Delayed::Job.count", 7 do
+      context "with confirmed ownership" do
+        setup do
+          create(:global_web_hook, user: @user, url: "http://example.org")
+          rubygem = create(:rubygem, name: "test")
+          create(:ownership, rubygem: rubygem, user: @user)
+          create(:version, rubygem: rubygem, number: "0.0.0", updated_at: 1.year.ago, created_at: 1.year.ago)
+        end
+        should "respond_with success" do
           post :create, body: gem_file("test-1.0.0.gem").read
+          assert_response :success
+        end
+        should "register new version" do
+          post :create, body: gem_file("test-1.0.0.gem").read
+          assert_equal @user, Rubygem.last.ownerships.first.user
+          assert_equal 1, Rubygem.last.ownerships.count
+          assert_equal 2, Rubygem.last.versions.count
+          assert_equal "Successfully registered gem: test (1.0.0)", @response.body
+        end
+        should "enqueue jobs" do
+          assert_difference "Delayed::Job.count", 7 do
+            post :create, body: gem_file("test-1.0.0.gem").read
+          end
         end
       end
-      should respond_with :success
-      should "register new version" do
-        assert_equal @user, Rubygem.last.ownerships.first.user
-        assert_equal 1, Rubygem.last.ownerships.count
-        assert_equal 2, Rubygem.last.versions.count
-        assert_equal "Successfully registered gem: test (1.0.0)", @response.body
+
+      context "with unconfirmed ownership" do
+        setup do
+          create(:global_web_hook, user: @user, url: "http://example.org")
+          rubygem = create(:rubygem, name: "test")
+          create(:ownership, :unconfirmed, rubygem: rubygem, user: @user)
+          create(:version, rubygem: rubygem, number: "0.0.0", updated_at: 1.year.ago, created_at: 1.year.ago)
+          assert_difference "Delayed::Job.count", 0 do
+            post :create, body: gem_file("test-1.0.0.gem").read
+          end
+        end
+        should respond_with :forbidden
       end
     end
 

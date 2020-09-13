@@ -64,6 +64,13 @@
   .form__submit:hover {
     opacity: .7; }
 
+.form__submit--small {
+    margin: auto;
+    padding: 4px 25px 4px 25px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
 .download__format {
   margin-bottom: 24px;
   padding-top: 10px;

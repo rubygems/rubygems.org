@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_08_234114) do
+ActiveRecord::Schema.define(version: 2020_05_16_071636) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -104,8 +104,13 @@ ActiveRecord::Schema.define(version: 2020_05_08_234114) do
     t.string "token"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean "notifier", default: true, null: false
+    t.boolean "push_notifier", default: true, null: false
+    t.datetime "confirmed_at"
+    t.datetime "token_expires_at"
+    t.boolean "owner_notifier", default: true, null: false
+    t.integer "authorizer_id"
     t.index ["rubygem_id"], name: "index_ownerships_on_rubygem_id"
+    t.index ["user_id", "rubygem_id"], name: "index_ownerships_on_user_id_and_rubygem_id", unique: true
     t.index ["user_id"], name: "index_ownerships_on_user_id"
   end
 

@@ -137,10 +137,9 @@ de:
       subject:
       title:
       subtitle:
+      'on':
+      off_html:
     gem_pushed:
-      subject:
-      title:
-    gem_yanked:
       subject:
       title:
     reset_api_key:
@@ -150,6 +149,27 @@ de:
     email_reset_update:
       subject:
       title:
+    gem_yanked:
+      subject:
+      title:
+    ownership_confirmation:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      link_expiration_explanation_html:
+    owner_added:
+      subject_self:
+      subject_others:
+      title:
+      subtitle:
+      body_self_html:
+      body_others_html:
+    owner_removed:
+      subject:
+      title:
+      subtitle:
+      body_html:
   news:
     show:
       title:
@@ -190,6 +210,10 @@ de:
       will_email_notice: Wir senden dir einen Link damit du dein Passwort ändern kannst.
     otp_prompt:
       authenticate:
+    show:
+      title:
+      confirm:
+      notice:
   multifactor_auths:
     incorrect_otp:
     otp_code:
@@ -220,11 +244,13 @@ de:
       success:
     show:
       info:
-      on:
-      off:
+      'on':
+      'off':
       recommended:
       title:
       update:
+      push_heading:
+      owner_heading:
   profiles:
     edit:
       change_avatar:
@@ -298,6 +324,8 @@ de:
         subscribe: Abonniere
         unsubscribe: Storniere
         wiki: Wiki
+        ownership:
+        resend_ownership_confirmation:
     blacklisted:
       blacklisted_namespace:
     dependencies:
@@ -383,3 +411,28 @@ de:
         one: Zeige <b>1</b> %{model}
         other: Zeige <b>alle&nbsp;%{count}</b> %{model}
         zero: Kein %{model} gefunden
+  owners:
+    confirm:
+      confirmed_email:
+      token_expired:
+    index:
+      add_owner:
+      name:
+      mfa:
+      confirmed:
+      confirmed_at:
+      added_by:
+      action:
+      info:
+      email_field:
+      submit_button:
+      confirmed:
+      pending:
+      confirm_remove:
+    resend_confirmation:
+      resent_notice:
+    create:
+      success_notice:
+    destroy:
+      removed_notice:
+      failed_notice:

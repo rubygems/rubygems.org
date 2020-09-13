@@ -145,6 +145,8 @@ en:
       subject: You changed your RubyGems.org email notification settings
       title: EMAIL NOTIFICATIONS
       subtitle: Hi %{handle}
+      'on': 'ON'
+      off_html: <b>OFF</b>
     gem_pushed:
       subject: Gem %{gem} pushed to RubyGems.org
       title: GEM PUSHED
@@ -158,6 +160,24 @@ en:
     email_reset_update:
       subject: You have requested email address update on RubyGems.org
       title: EMAIL UPDATE REQUESTED
+    ownership_confirmation:
+      subject: Please confirm the ownership of %{gem} gem on RubyGems.org
+      title: OWNERSHIP CONFIRMATION
+      subtitle: Hi %{handle}!
+      body_html: You were added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <strong>%{authorizer}</strong>. Please click on the link below to confirm your ownership.
+      link_expiration_explanation_html: Please note that this link is valid for only %{expiry_hours}. You can resend confirmation mail from the  <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem page after sign in.
+    owner_added:
+      subject_self: You were added as an owner to %{gem} gem
+      subject_others: User %{owner_handle} was added as an owner to %{gem} gem
+      title: OWNER ADDED
+      subtitle: Hi %{user_handle}!
+      body_self_html: <b>You</b> were added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on RubyGems.org.
+      body_others_html: <b>%{owner_handle}</b> was added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <b>%{authorizer}</b>. You are receiving this notification because you are an owner of %{gem}.
+    owner_removed:
+      subject: You were removed as an owner from %{gem} gem
+      title: OWNER REMOVED
+      subtitle: Hi %{user_handle}!
+      body_html: <b>You</b> were removed as an owner for <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem on RubyGems.org by <b>%{remover}</b>.
   news:
     show:
       title: New Releases — All Gems
@@ -198,6 +218,10 @@ en:
       will_email_notice: We will email you a link to change your password.
     otp_prompt:
       authenticate: Authenticate
+    show:
+      title: Confirm Password
+      confirm: Confirm
+      notice: Please confirm your password to continue.
   multifactor_auths:
     incorrect_otp: Your OTP code is incorrect.
     otp_code: OTP code
@@ -227,14 +251,41 @@ en:
     update:
       success: You have successfully updated your email notification settings.
     show:
-      info: To aid detection of unauthorized gem changes, we email you each time a new version of a
-        gem you own is pushed or yanked. By receiving and reading these emails, you help protect the Ruby
+      info: To aid detection of unauthorized gem or ownership changes, we email you each time a new version of a
+        gem you own is pushed, yanked or a new owner was added. By receiving and reading these emails, you help protect the Ruby
         ecosystem.
-      on: On
-      off: Off
+      'on': 'On'
+      'off': 'Off'
       recommended: recommended
       title: Email notifications
       update: Update
+      owner_heading: Ownership Notifications
+      push_heading: Push Notifications
+  owners:
+    confirm:
+      confirmed_email: You were added as an owner to %{gem} gem
+      token_expired: The confirmation token has expired. Please try resending the token from the gem page.
+    index:
+      add_owner: ADD OWNER
+      name: OWNER
+      mfa: MFA STATUS
+      confirmed: STATUS
+      confirmed_at: CONFIRMED AT
+      added_by: ADDED BY
+      action: ACTION
+      email_field: Email / Handle
+      submit_button: Add Owner
+      info: add or remove owners
+      confirmed: Confirmed
+      pending: Pending
+      confirm_remove: Are you sure you want to remove this user from the owners?
+    resend_confirmation:
+      resent_notice: A confirmation mail has been re-sent to your email
+    create:
+      success_notice: "%{handle} was added as an unconfirmed owner. Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
+    destroy:
+      removed_notice: "%{owner_name} was removed from the owners successfully"
+      failed_notice: Can't remove the only owner of the gem
   profiles:
     edit:
       change_avatar: Change Avatar
@@ -302,12 +353,14 @@ en:
         header: Links
         home: Homepage
         mail: Mailing List
-        report_abuse: Report Abuse
+        report_abuse: Report abuse
         reverse_dependencies: Reverse dependencies
         rss: RSS
         subscribe: Subscribe
         unsubscribe: Unsubscribe
         wiki: Wiki
+        resend_ownership_confirmation: Resend confirmation
+        ownership: Ownership
     blacklisted:
       blacklisted_namespace: This namespace is reserved by rubygems.org.
     dependencies:

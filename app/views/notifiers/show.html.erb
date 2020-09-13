@@ -4,16 +4,31 @@
   <div class="t-body">
     <%= form_tag notifier_path, method: :put do %>
       <p><%= t('.info') %></p>
+
       <% @ownerships.each do |ownership| %>
-        <h4><%= ownership.rubygem.name %></h4>
-        <p>
+        <h2><%= ownership.rubygem.name %></h2>
+        <h4 class="t-list__heading"><%= t('.push_heading') %></h3>
+        <div class="push--s">
           <%= label_tag do %>
-            <%= radio_button_tag "ownerships[#{ownership.id}]", :on, ownership.notifier? %>
+            <%= radio_button_tag "ownerships[#{ownership.id}][push]", :on, ownership.push_notifier? %>
             <%= t('.on') %> <em>(<%= t('.recommended') %>)</em>
           <% end %>
           <br>
           <%= label_tag do %>
-            <%= radio_button_tag "ownerships[#{ownership.id}]", :off, !ownership.notifier? %>
+            <%= radio_button_tag "ownerships[#{ownership.id}][push]", :off, !ownership.push_notifier? %>
+            <%= t('.off') %>
+          <% end %>
+        </div>
+
+        <h4 class="t-list__heading"><%= t('.owner_heading') %></h3>
+        <div class="push--s">
+          <%= label_tag do %>
+            <%= radio_button_tag "ownerships[#{ownership.id}][owner]", :on, ownership.owner_notifier? %>
+            <%= t('.on') %> <em>(<%= t('.recommended') %>)</em>
+          <% end %>
+          <br>
+          <%= label_tag do %>
+            <%= radio_button_tag "ownerships[#{ownership.id}][owner]", :off, !ownership.owner_notifier? %>
             <%= t('.off') %>
           <% end %>
         </p>

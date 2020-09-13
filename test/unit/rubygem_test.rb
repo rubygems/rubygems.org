@@ -327,7 +327,7 @@ class RubygemTest < ActiveSupport::TestCase
 
       should "not be able to assign ownership when owners exist" do
         @new_user = create(:user)
-        @rubygem.ownerships.create(user: @new_user)
+        create(:ownership, rubygem: @rubygem, user: @new_user)
         @rubygem.create_ownership(@user)
         assert_equal @rubygem.reload.owners, [@new_user]
       end
@@ -839,6 +839,33 @@ class RubygemTest < ActiveSupport::TestCase
       should "order by number of downloads" do
         expected_order = [@rubygem2, @rubygem1]
         assert_equal expected_order, @popular_gems
+      end
+    end
+  end
+
+  context "unconfirmed ownership" do
+    setup do
+      @rubygem               = create(:rubygem)
+      @confirmed_owner       = create(:user)
+      @unconfirmed_owner     = create(:user)
+      @unconfirmed_ownership = create(:ownership, :unconfirmed, rubygem: @rubygem, user: @unconfirmed_owner)
+
+      create(:ownership, rubygem: @rubygem, user: @confirmed_owner)
+    end
+
+    context "#unconfirmed_ownerships" do
+      should "return only unconfirmed ownerships" do
+        assert_equal [@unconfirmed_ownership], @rubygem.unconfirmed_ownerships
+      end
+    end
+
+    context "#unconfirmed_ownership?" do
+      should "return false when user is confirmed owner" do
+        refute @rubygem.unconfirmed_ownership?(@confirmed_owner)
+      end
+
+      should "return true when user is unconfirmed owner" do
+        assert @rubygem.unconfirmed_ownership?(@unconfirmed_owner)
       end
     end
   end

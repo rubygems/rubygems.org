@@ -1,0 +1,41 @@
+<% @title = t("mailer.owner_added.title") %>
+<% @sub_title = t("mailer.owner_added.subtitle", user_handle: @user.handle) %>
+
+<!-- Body -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+  <tr>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+    <td>
+      <div class="h3-1-center" style="color:#1e1e1e; font-family:Georgia, serif; min-width:auto !important; font-size:20px; line-height:26px;">
+        <br>
+        <p>
+          <%= t("mailer.owner_added.body_#{owner_i18n_key(@owner, @user)}_html", gem: @rubygem.name, owner_handle: @owner.display_handle, authorizer: @authorizer.display_handle) %>
+        </p>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+        <p>If this change is expected, you do not need to take further action.</p>
+        <p>
+          <strong>Only if this change is unexpected</strong>
+          please take immediate steps to secure your account and gems:
+        </p>
+
+        <%= render "mailer/compromised_instructions" do %>
+          <li>Remove <%= @owner.display_handle %> as an owner from <%= @rubygem.name %> gem using <code>gem owner -r <%= @owner.display_handle %></code> or <%= link_to "ownership page", rubygem_owners_url(@rubygem) %></li>
+          <li>Look out for unexpected changes to your gems on RubyGems.org</li>
+        <% end %>
+
+        <p>
+          <em>
+            To stop receiving these messages, update your <%= link_to("email notification settings", notifier_url) %>.
+          </em>
+        </p>
+      </div>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="30" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+    </td>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+  </tr>
+</table>

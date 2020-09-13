@@ -30,7 +30,7 @@ class DashboardsControllerTest < ActionController::TestCase
         3.times { create(:rubygem) }
         @gems = (1..3).map do
           rubygem = create(:rubygem)
-          rubygem.ownerships.create(user: @user)
+          create(:ownership, rubygem: rubygem, user: @user)
           create(:version, rubygem: rubygem)
           rubygem
         end

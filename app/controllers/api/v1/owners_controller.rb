@@ -14,18 +14,25 @@ class Api::V1::OwnersController < Api::BaseController
   def create
     owner = User.find_by_name(params[:email])
     if owner
-      @rubygem.ownerships.create(user: owner)
-      render plain: "Owner added successfully."
+      ownership = @rubygem.ownerships.new(user: owner, authorizer: @api_user)
+      if ownership.save
+        OwnersMailer.delay.ownership_confirmation(ownership.id)
+        render plain: "#{owner.display_handle} was added as an unconfirmed owner. "\
+         "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
+      else
+        render plain: ownership.errors.full_messages.to_sentence, status: :unprocessable_entity
+      end
     else
       render plain: "Owner could not be found.", status: :not_found
     end
   end
 
   def destroy
-    owner = @rubygem.owners.find_by_name(params[:email])
+    owner = @rubygem.owners_including_unconfirmed.find_by_name(params[:email])
     if owner
-      ownership = @rubygem.ownerships.find_by(user_id: owner.id)
-      if ownership&.safe_destroy
+      ownership = @rubygem.ownerships_including_unconfirmed.find_by(user_id: owner.id)
+      if ownership.safe_destroy
+        OwnersMailer.delay.owner_removed(ownership.user_id, @api_user.id, ownership.rubygem_id)
         render plain: "Owner removed successfully."
       else
         render plain: "Unable to remove owner.", status: :forbidden

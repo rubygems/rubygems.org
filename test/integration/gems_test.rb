@@ -86,7 +86,8 @@ class GemsSystemTest < SystemTest
     @user.enable_mfa!("some-seed", "ui_and_api")
     user_without_mfa = create(:user, mfa_level: "disabled")
 
-    @rubygem.owners << [@user, user_without_mfa]
+    create(:ownership, rubygem: @rubygem, user: @user)
+    create(:ownership, rubygem: @rubygem, user: user_without_mfa)
 
     visit rubygem_path(@rubygem, as: @user.id)
 
@@ -98,7 +99,8 @@ class GemsSystemTest < SystemTest
     @user.enable_mfa!("some-seed", "ui_and_api")
     user_with_mfa = create(:user, mfa_level: "ui_only")
 
-    @rubygem.owners << [@user, user_with_mfa]
+    create(:ownership, rubygem: @rubygem, user: @user)
+    create(:ownership, rubygem: @rubygem, user: user_with_mfa)
 
     visit rubygem_path(@rubygem, as: @user.id)
 
@@ -110,7 +112,8 @@ class GemsSystemTest < SystemTest
     @user.enable_mfa!("some-seed", "ui_and_api")
     user_without_mfa = create(:user, mfa_level: "disabled")
 
-    @rubygem.owners << [@user, user_without_mfa]
+    create(:ownership, rubygem: @rubygem, user: @user)
+    create(:ownership, rubygem: @rubygem, user: user_without_mfa)
 
     visit rubygem_path(@rubygem)
 

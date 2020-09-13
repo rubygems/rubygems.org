@@ -145,6 +145,8 @@ es:
       subject: Cambiaste la configuración de tus notificaciones por email de RubyGems.org
       title: NOTIFICACIONES POR EMAIL
       subtitle: ¡Hola %{handle}!
+      'on':
+      off_html:
     gem_pushed:
       subject: Gema %{gem} subida a RubyGems.org
       title: GEMA SUBIDA
@@ -158,6 +160,24 @@ es:
     email_reset_update:
       subject:
       title:
+    ownership_confirmation:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      link_expiration_explanation_html:
+    owner_added:
+      subject_self:
+      subject_others:
+      title:
+      subtitle:
+      body_self_html:
+      body_others_html:
+    owner_removed:
+      subject:
+      title:
+      subtitle:
+      body_html:
   news:
     show:
       title: Nuevos lanzamientos — Todas las Gemas
@@ -198,6 +218,10 @@ es:
       will_email_notice: Te enviaremos el enlace para cambiar tu contraseña por correo electrónico.
     otp_prompt:
       authenticate: Autenticar
+    show:
+      title:
+      confirm:
+      notice:
   multifactor_auths:
     incorrect_otp: Tu código OTP no es correcto.
     otp_code: código OTP
@@ -227,14 +251,14 @@ es:
     update:
       success: Has actualizado exitosamente la configuración de tus notificaciones por email.
     show:
-      info: Para facilitar la detección de cambios no autorizados en tus gemas, te enviamos un email
-        cada vez que una nueva versión es subida a RubyGems.org. Recibiendo y leyendo estos emails
-        ayudas a proteger el ecosistema de Ruby.
-      on: Activado
-      off: Desactivado
+      info:
+      'on': Activado
+      'off': Desactivado
       recommended: recomendado
       title: Notificación de email
       update: Actualizar
+      push_heading:
+      owner_heading:
   profiles:
     edit:
       change_avatar:
@@ -308,6 +332,8 @@ es:
         subscribe: Suscribirse
         unsubscribe: Desuscribirse
         wiki: Wiki
+        ownership:
+        resend_ownership_confirmation:
     blacklisted:
       blacklisted_namespace: Este namespace está reservado por rubygems.org.
     dependencies:
@@ -393,3 +419,28 @@ es:
         one: Mostrando <b>1</b> %{model}
         other: Mostrando <b>todos los&nbsp;%{count}</b> %{model}
         zero: No se encontró ningún %{model}
+  owners:
+    confirm:
+      confirmed_email:
+      token_expired:
+    index:
+      add_owner:
+      name:
+      mfa:
+      confirmed:
+      confirmed_at:
+      added_by:
+      action:
+      info:
+      email_field:
+      submit_button:
+      confirmed:
+      pending:
+      confirm_remove:
+    resend_confirmation:
+      resent_notice:
+    create:
+      success_notice:
+    destroy:
+      removed_notice:
+      failed_notice:

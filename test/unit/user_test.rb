@@ -364,7 +364,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "not include gems with more than one owner" do
-      @rubygems.first.owners << create(:user)
+      create(:ownership, rubygem: @rubygems.first)
       assert_equal 2, @user.only_owner_gems.count
     end
   end
@@ -405,7 +405,7 @@ class UserTest < ActiveSupport::TestCase
 
     context "user has co-owner of gem" do
       setup do
-        @rubygem.ownerships.create(user: create(:user))
+        create(:ownership, rubygem: @rubygem, user: create(:user))
       end
 
       should "not record deletion" do

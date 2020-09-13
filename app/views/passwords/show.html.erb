@@ -1,0 +1,15 @@
+<% @title = t(".title") %>
+
+<div class="t-body">
+  <p><%= t(".notice") %></p>
+</div>
+
+<%= form_for :verify_password, url: verify_user_password_path(current_user), method: :post do |form| %>
+  <div class="password_field">
+    <%= form.label :password, t("activerecord.attributes.session.password"), class: "form__label" %>
+    <%= form.password_field :password, class: "form__input" %>
+  </div>
+  <div class="form_bottom">
+    <%= form.submit t(".confirm"), data: {disable_with: t("form_disable_with")}, class: "form__submit" %>
+  </div>
+<% end %>

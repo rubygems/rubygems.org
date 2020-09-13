@@ -118,9 +118,6 @@ Rails.application.routes.draw do
     scope path: 'gems/:rubygem_id' do
       put 'migrate'
       post 'migrate'
-      get 'owners(.:format)'
-      post 'owners(.:format)'
-      delete 'owners(.:format)'
     end
   end
 
@@ -158,6 +155,10 @@ Rails.application.routes.draw do
         get '/dependencies', to: 'dependencies#show', constraints: { format: /json|html/ }
       end
       resources :reverse_dependencies, only: %i[index]
+      resources :owners, only: %i[index destroy create], param: :handle do
+        get 'confirm', to: 'owners#confirm', as: :confirm, on: :collection
+        get 'resend_confirmation', to: 'owners#resend_confirmation', as: :resend_confirmation, on: :collection
+      end
     end
 
     ################################################################################
@@ -175,8 +176,9 @@ Rails.application.routes.draw do
     end
 
     resources :users, only: %i[new create] do
-      resource :password, only: %i[create edit update] do
+      resource :password, only: %i[create edit update show] do
         post 'mfa_edit', to: 'passwords#mfa_edit', as: :mfa_edit
+        post 'verify', to: 'passwords#verify', as: :verify
       end
     end
 

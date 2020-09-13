@@ -256,7 +256,7 @@ class RubygemsControllerTest < ActionController::TestCase
       setup do
         @rubygem.update(created_at: 30.days.ago, updated_at: 99.days.ago)
         @owner = create(:user)
-        @rubygem.owners << @owner
+        create(:ownership, user: @owner, rubygem: @rubygem)
         get :show, params: { id: @rubygem.to_param }
       end
 

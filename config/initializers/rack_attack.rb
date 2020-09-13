@@ -27,6 +27,7 @@ class Rack::Attack
     { controller: "sessions",            action: "create" },
     { controller: "users",               action: "create" },
     { controller: "passwords",           action: "edit" },
+    { controller: "passwords",           action: "verify" },
     { controller: "passwords",           action: "create" },
     { controller: "profiles",            action: "update" },
     { controller: "profiles",            action: "destroy" },
@@ -45,6 +46,12 @@ class Rack::Attack
     { controller: "api/v1/owners",    action: "create" },
     { controller: "api/v1/owners",    action: "destroy" },
     { controller: "api/v1/api_keys",  action: "show" }
+  ]
+
+  protected_ui_owners_actions = [
+    { controller: "owners", action: "resend_confirmation" },
+    { controller: "owners", action: "create" },
+    { controller: "owners", action: "destroy" }
   ]
 
   def self.protected_route?(protected_actions, path, method)
@@ -72,6 +79,10 @@ class Rack::Attack
     throttle("api/ip/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
       req.ip if protected_route?(protected_api_mfa_actions, req.path, req.request_method)
     end
+  end
+
+  throttle("owners/ip", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
+    req.ip if protected_route?(protected_ui_owners_actions, req.path, req.request_method)
   end
 
   protected_push_action = [{ controller: "api/v1/rubygems", action: "create" }]
@@ -134,6 +145,12 @@ class Rack::Attack
   throttle("email_confirmations/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
     if protected_route?(protected_confirmation_action, req.path, req.request_method) && req.params['email_confirmation']
       User.normalize_email(req.params['email_confirmation']['email']).presence
+    end
+  end
+
+  throttle("owners/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
+    if protected_route?(protected_ui_owners_actions, req.path, req.request_method)
+      User.find_by_remember_token(req.cookies["remember_token"])&.email.presence
     end
   end
 

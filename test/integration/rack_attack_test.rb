@@ -9,7 +9,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     Rails.cache.clear
 
     @ip_address = "1.2.3.4"
-    @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD)
+    @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD,
+                   remember_token_expires_at: Gemcutter::REMEMBER_FOR.from_now)
   end
 
   context "requests is lower than limit" do
@@ -58,10 +59,32 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       assert_response :success
     end
 
+    context "owners requests" do
+      setup do
+        cookies[:remember_token] = @user.remember_token
+        @rubygem = create(:rubygem)
+        create(:ownership, :unconfirmed, rubygem: @rubygem, user: @user)
+      end
+
+      teardown do
+        cookies[:remember_token] = nil
+      end
+
+      should "allow resending ownership confirmation" do
+        stay_under_limit_for("owners/ip")
+        stay_under_email_limit_for("owners/email")
+
+        get "/gems/#{@rubygem.name}/owners/resend_confirmation",
+            headers: { REMOTE_ADDR: @ip_address }
+        follow_redirect!
+        assert_response :success
+      end
+    end
+
     context "api requests" do
       setup do
         @rubygem = create(:rubygem, name: "test", number: "0.0.1")
-        @rubygem.ownerships.create(user: @user)
+        create(:ownership, user: @user, rubygem: @rubygem)
       end
 
       should "allow gem push by ip" do
@@ -156,7 +179,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
           stay_under_exponential_limit("api/ip")
 
           @rubygem = create(:rubygem, name: "test", number: "0.0.1")
-          @rubygem.ownerships.create(user: @user)
+          create(:ownership, user: @user, rubygem: @rubygem)
         end
 
         should "allow gem yank by ip" do
@@ -179,7 +202,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         should "allow owner remove by ip" do
           second_user = create(:user)
-          @rubygem.ownerships.create(user: second_user)
+          create(:ownership, user: second_user, rubygem: @rubygem)
 
           delete "/api/v1/gems/#{@rubygem.name}/owners",
             params: { rubygem_id: @rubygem.to_param, email: second_user.email },
@@ -223,6 +246,16 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       assert_response :too_many_requests
     end
 
+    should "throttle verify password" do
+      exceed_limit_for("clearance/ip")
+
+      post "/users/#{@user.id}/password/verify",
+           params: { verify_password: { password: "password" } },
+           headers: { REMOTE_ADDR: @ip_address }
+
+      assert_response :too_many_requests
+    end
+
     should "throttle profile update" do
       cookies[:remember_token] = @user.remember_token
 
@@ -241,6 +274,41 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         headers: { REMOTE_ADDR: @ip_address }
 
       assert_response :too_many_requests
+    end
+
+    context "owners requests" do
+      setup do
+        cookies[:remember_token] = @user.remember_token
+        @rubygem = create(:rubygem)
+        create(:ownership, :unconfirmed, rubygem: @rubygem, user: @user)
+      end
+
+      teardown do
+        cookies[:remember_token] = nil
+      end
+
+      should "throttle ownership confirmation resend" do
+        exceed_limit_for("owners/ip")
+        get "/gems/#{@rubygem.name}/owners/resend_confirmation", headers: { REMOTE_ADDR: @ip_address }
+
+        assert_response :too_many_requests
+      end
+
+      should "throttle adding owner" do
+        exceed_limit_for("owners/ip")
+        new_user = create(:user)
+        post "/gems/#{@rubygem.name}/owners", params: { owner: new_user.name },
+             headers: { REMOTE_ADDR: @ip_address }
+
+        assert_response :too_many_requests
+      end
+
+      should "throttle removing owner" do
+        exceed_limit_for("owners/ip")
+        delete "/gems/#{@rubygem.name}/owners/#{@user.id}", headers: { REMOTE_ADDR: @ip_address }
+
+        assert_response :too_many_requests
+      end
     end
 
     context "email confirmation" do
@@ -388,21 +456,66 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     context "with per email limits" do
-      setup { update_limit_for("password/email:#{@user.email}", exceeding_limit) }
+      context "for sign in" do
+        setup { update_limit_for("password/email:#{@user.email}", exceeding_limit) }
 
-      should "throttle for sign in ignoring case" do
-        post "/passwords",
-          params: { password: { email: "Nick@example.com" } }
+        should "throttle for sign in ignoring case" do
+          post "/passwords",
+               params: { password: { email: "Nick@example.com" } }
 
-        assert_response :too_many_requests
+          assert_response :too_many_requests
+        end
+
+        should "throttle for sign in ignoring spaces" do
+          post "/passwords",
+               params: { password: { email: "n ick@example.com" } }
+
+          assert_response :too_many_requests
+        end
       end
 
-      should "throttle for sign in ignoring spaces" do
-        post "/passwords",
-          params: { password: { email: "n ick@example.com" } }
+      context "for ownerships" do
+        setup do
+          @rubygem = create(:rubygem)
+          create(:ownership, rubygem: @rubygem, user: @user)
+        end
 
-        assert_response :too_many_requests
+        teardown do
+          cookies[:remember_token] = nil
+        end
+
+        should "throttle resending ownership confirmation" do
+          other_user = create(:user)
+          set_owners_session(@rubygem, other_user)
+          create(:ownership, :unconfirmed, rubygem: @rubygem, user: other_user)
+          update_limit_for("owners/email:#{other_user.email}", exceeding_email_limit)
+          get "/gems/#{@rubygem.name}/owners/resend_confirmation"
+
+          assert_response :too_many_requests
+        end
+
+        should "throttle adding owner" do
+          set_owners_session(@rubygem, @user)
+          new_user = create(:user)
+          exceed_email_limit_for("owners/email")
+          post "/gems/#{@rubygem.name}/owners", params: { handle: new_user.display_id }
+
+          assert_response :too_many_requests
+        end
+
+        should "throttle removing owner" do
+          set_owners_session(@rubygem, @user)
+          exceed_email_limit_for("owners/email")
+          delete "/gems/#{@rubygem.name}/owners/#{@user.display_id}"
+
+          assert_response :too_many_requests
+        end
       end
     end
+  end
+
+  def set_owners_session(_rubygem, user)
+    cookies[:remember_token] = user.remember_token
+    post verify_user_password_path(user_id: user.id, verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD })
   end
 end

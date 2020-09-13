@@ -93,7 +93,7 @@ class VersionsControllerTest < ActionController::TestCase
   context "On GET to show with *a* yanked version" do
     setup do
       @version = create(:version, number: "1.0.1")
-      @version.rubygem.owners << create(:user, handle: "johndoe")
+      create(:ownership, rubygem: @version.rubygem, user: create(:user, handle: "johndoe"))
       create(:version, number: "1.0.2", rubygem: @version.rubygem, indexed: false)
       get :show, params: { rubygem_id: @version.rubygem.name, id: "1.0.2" }
     end

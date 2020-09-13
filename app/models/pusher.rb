@@ -16,9 +16,7 @@ class Pusher
   end
 
   def authorize
-    rubygem.pushable? ||
-      rubygem.owned_by?(user) ||
-      notify("You do not have permission to push to this gem. Ask an owner to add you with: gem owner #{rubygem.name} --add #{user.email}", 403)
+    rubygem.pushable? || rubygem.owned_by?(user) || notify_unauthorized
   end
 
   def validate
@@ -98,7 +96,7 @@ class Pusher
 
   def after_write
     @version_id = version.id
-    version.rubygem.notifiable_owners.each do |notified_user|
+    version.rubygem.push_notifiable_owners.each do |notified_user|
       Mailer.delay.gem_pushed(user.id, @version_id, notified_user.id)
     end
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
@@ -138,6 +136,15 @@ class Pusher
       different_owner = "pushed by a previous owner of this gem " unless version.rubygem.owners.include?(@user)
       notify("A yanked version #{different_owner}already exists (#{version.full_name}).\n" \
             "Repushing of gem versions is not allowed. Please use a new version and retry", 409)
+    end
+  end
+
+  def notify_unauthorized
+    if rubygem.unconfirmed_ownership?(user)
+      notify("You do not have permission to push to this gem. "\
+        "Please confirm the ownership by clicking on the confirmation link sent your email #{user.email}", 403)
+    else
+      notify("You do not have permission to push to this gem. Ask an owner to add you with: gem owner #{rubygem.name} --add #{user.email}", 403)
     end
   end
 end

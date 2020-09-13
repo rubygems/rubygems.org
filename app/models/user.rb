@@ -16,9 +16,9 @@ class User < ApplicationRecord
 
   before_destroy :yank_gems
 
-  has_many :ownerships, dependent: :destroy
-  has_many :rubygems, through: :ownerships
+  has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :user
 
+  has_many :rubygems, through: :ownerships, source: :rubygem
   has_many :subscriptions, dependent: :destroy
   has_many :subscribed_gems, -> { order("name ASC") }, through: :subscriptions, source: :rubygem
 
@@ -69,8 +69,12 @@ class User < ApplicationRecord
     find_by(email: name) || find_by(handle: name)
   end
 
-  def self.notifiable_owners
-    where(ownerships: { notifier: true })
+  def self.push_notifiable_owners
+    where(ownerships: { push_notifier: true })
+  end
+
+  def self.ownership_notifiable_owners
+    where(ownerships: { owner_notifier: true })
   end
 
   def self.without_mfa
