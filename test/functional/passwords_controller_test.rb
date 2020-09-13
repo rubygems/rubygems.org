@@ -229,7 +229,7 @@ class PasswordsControllerTest < ActionController::TestCase
           session[:redirect_uri] = rubygem_owners_url(@rubygem)
           post :verify, params: { user_id: @user.id, verify_password: { password: "wrong password" } }
         end
-        should redirect_to("form") { user_password_path(@user) }
+        should respond_with :unauthorized
         should "show error flash" do
           assert_equal "This request was denied. We could not verify your password.", flash[:alert]
         end

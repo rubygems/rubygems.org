@@ -50,7 +50,7 @@ class OwnersController < ApplicationController
     end
   end
 
-  protected
+  private
 
   def owner?
     @rubygem.owned_by?(current_user)

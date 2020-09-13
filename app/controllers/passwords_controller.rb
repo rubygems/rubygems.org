@@ -41,7 +41,8 @@ class PasswordsController < Clearance::PasswordsController
       session[:verification] = Time.current + Gemcutter::PASSWORD_VERIFICATION_EXPIRY
       redirect_to session.delete(:redirect_uri) || root_path
     else
-      redirect_to user_password_path(current_user), alert: t("profiles.request_denied")
+      flash[:alert] = t("profiles.request_denied")
+      render :show, status: :unauthorized
     end
   end
 
