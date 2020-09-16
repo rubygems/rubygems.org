@@ -27,7 +27,7 @@ class Rack::Attack
     { controller: "sessions",            action: "create" },
     { controller: "users",               action: "create" },
     { controller: "passwords",           action: "edit" },
-    { controller: "passwords",           action: "verify" },
+    { controller: "sessions",            action: "authenticate" },
     { controller: "passwords",           action: "create" },
     { controller: "profiles",            action: "update" },
     { controller: "profiles",            action: "destroy" },

@@ -249,7 +249,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     should "throttle verify password" do
       exceed_limit_for("clearance/ip")
 
-      post "/users/#{@user.id}/password/verify",
+      post "/session/authenticate",
            params: { verify_password: { password: "password" } },
            headers: { REMOTE_ADDR: @ip_address }
 
@@ -516,6 +516,6 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
   def set_owners_session(_rubygem, user)
     cookies[:remember_token] = user.remember_token
-    post verify_user_password_path(user_id: user.id, verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD })
+    post authenticate_session_path(verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD })
   end
 end

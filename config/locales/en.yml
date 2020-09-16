@@ -218,10 +218,6 @@ en:
       will_email_notice: We will email you a link to change your password.
     otp_prompt:
       authenticate: Authenticate
-    show:
-      title: Confirm Password
-      confirm: Confirm
-      notice: Please confirm your password to continue.
   multifactor_auths:
     incorrect_otp: Your OTP code is incorrect.
     otp_code: OTP code
@@ -269,7 +265,7 @@ en:
       add_owner: ADD OWNER
       name: OWNER
       mfa: MFA STATUS
-      confirmed: STATUS
+      status: STATUS
       confirmed_at: CONFIRMED AT
       added_by: ADDED BY
       action: ACTION
@@ -412,6 +408,10 @@ en:
     new:
       forgot_password: Forgot password?
       resend_confirmation: Didn't receive confirmation mail?
+    verify:
+      title: Confirm Password
+      confirm: Confirm
+      notice: Please confirm your password to continue.
   stats:
     index:
       title: Stats

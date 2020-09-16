@@ -210,10 +210,6 @@ de:
       will_email_notice: Wir senden dir einen Link damit du dein Passwort ändern kannst.
     otp_prompt:
       authenticate:
-    show:
-      title:
-      confirm:
-      notice:
   multifactor_auths:
     incorrect_otp:
     otp_code:
@@ -377,6 +373,10 @@ de:
     new:
       forgot_password: Passwort vergessen?
       resend_confirmation:
+    verify:
+      title:
+      confirm:
+      notice:
   stats:
     index:
       title:
@@ -419,7 +419,7 @@ de:
       add_owner:
       name:
       mfa:
-      confirmed:
+      status:
       confirmed_at:
       added_by:
       action:

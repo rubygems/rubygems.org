@@ -210,10 +210,6 @@ ja:
       will_email_notice: パスワード変更のためのメールが送信されます。
     otp_prompt:
       authenticate:
-    show:
-      title:
-      confirm:
-      notice:
   multifactor_auths:
     incorrect_otp:
     otp_code:
@@ -377,6 +373,10 @@ ja:
     new:
       forgot_password: パスワードをお忘れですか?
       resend_confirmation: 確認メールが見当たりませんか?
+    verify:
+      title:
+      confirm:
+      notice:
   stats:
     index:
       title:
@@ -419,7 +419,7 @@ ja:
       add_owner:
       name:
       mfa:
-      confirmed:
+      status:
       confirmed_at:
       added_by:
       action:
