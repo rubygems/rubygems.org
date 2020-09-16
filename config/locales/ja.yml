@@ -113,6 +113,7 @@ ja:
   mailer:
     confirm_your_email: あなたのメールアドレスに送信されたURLを確認してください。
     confirmation_subject: RubyGems.orgに登録されたあなたのメールアドレスを確認してください
+    link_expiration_explanation_html:
     email_confirmation:
       title:
       subtitle:
@@ -122,7 +123,6 @@ ja:
       title:
       subtitle:
       visit_link_instructions: RubyGems.orgでのあなたのメールアドレスが変更されました。以下のURLからメールアドレスを確認してください。
-      link_expiration_explanation: このリンクは15分間のみ有効です。
     deletion_complete:
       title:
       subtitle:

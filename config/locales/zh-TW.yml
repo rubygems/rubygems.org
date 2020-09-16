@@ -113,6 +113,7 @@ zh-TW:
   mailer:
     confirm_your_email:
     confirmation_subject:
+    link_expiration_explanation_html:
     email_confirmation:
       title:
       subtitle:
@@ -122,7 +123,6 @@ zh-TW:
       title:
       subtitle:
       visit_link_instructions:
-      link_expiration_explanation:
     deletion_complete:
       title:
       subtitle:
