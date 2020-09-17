@@ -210,10 +210,6 @@ nl:
       will_email_notice: We sturen een link om je wachtwoord te wijzigen.
     otp_prompt:
       authenticate:
-    show:
-      title:
-      confirm:
-      notice:
   multifactor_auths:
     incorrect_otp:
     otp_code:
@@ -377,6 +373,10 @@ nl:
     new:
       forgot_password: Wachtwoord vergeten?
       resend_confirmation: Geen bevestigingsemail ontvangen?
+    verify:
+      title:
+      confirm:
+      notice:
   stats:
     index:
       title:
@@ -419,7 +419,7 @@ nl:
       add_owner:
       name:
       mfa:
-      confirmed:
+      status:
       confirmed_at:
       added_by:
       action:

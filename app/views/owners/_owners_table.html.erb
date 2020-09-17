@@ -5,7 +5,7 @@
       <%= t("owners.index.name") %>
     </th>
     <th class="owners__cell">
-      <%= t("owners.index.confirmed") %>
+      <%= t("owners.index.status") %>
     </th>
     <th class="owners__cell">
       <%= t("owners.index.mfa") %>
@@ -41,7 +41,7 @@
         <%= ownership.authorizer_name %>
       </td>
       <td class="owners__cell" data-title="Confirmed At">
-        <%= nice_date_for(ownership.confirmed_at) if ownership.confirmed? %>
+        <%= ownership.confirmed_at.strftime("%Y-%m-%d %H:%M %Z") if ownership.confirmed? %>
       </td>
       <td class="owners__cell" data-title="Action">
         <%= button_to "Remove",

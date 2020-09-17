@@ -62,7 +62,7 @@ class OwnersController < ApplicationController
 
   def redirect_to_verify
     session[:redirect_uri] = rubygem_owners_url(@rubygem)
-    redirect_to user_password_path(current_user)
+    redirect_to verify_session_path
   end
 
   def token_params

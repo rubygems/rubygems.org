@@ -67,7 +67,7 @@ class OwnerTest < SystemTest
         assert_selector "img[src='/images/x.svg']"
       end
     end
-    assert_cell(@user, "Confirmed At", nice_date_for(@ownership.confirmed_at))
+    assert_cell(@user, "Confirmed At", @ownership.confirmed_at.strftime("%Y-%m-%d %H:%M %Z"))
   end
 
   test "removing owner" do

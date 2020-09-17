@@ -173,12 +173,13 @@ Rails.application.routes.draw do
 
     resource :session, only: %i[create destroy] do
       post 'mfa_create', to: 'sessions#mfa_create', as: :mfa_create
+      get 'verify', to: 'sessions#verify', as: :verify
+      post 'authenticate', to: 'sessions#authenticate', as: :authenticate
     end
 
     resources :users, only: %i[new create] do
-      resource :password, only: %i[create edit update show] do
+      resource :password, only: %i[create edit update] do
         post 'mfa_edit', to: 'passwords#mfa_edit', as: :mfa_edit
-        post 'verify', to: 'passwords#verify', as: :verify
       end
     end
 

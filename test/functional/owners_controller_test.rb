@@ -253,7 +253,7 @@ class OwnersControllerTest < ActionController::TestCase
         get :index, params: { rubygem_id: @rubygem.name }
       end
 
-      should redirect_to("show#passwords") { user_password_path(@user) }
+      should redirect_to("sessions#verify") { verify_session_path }
       should use_before_action(:redirect_to_verify)
     end
 
@@ -263,7 +263,7 @@ class OwnersControllerTest < ActionController::TestCase
         post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name }
       end
 
-      should redirect_to("show#passwords") { user_password_path(@user) }
+      should redirect_to("sessions#verify") { verify_session_path }
       should use_before_action(:redirect_to_verify)
       should "not add unconfirmed ownership record" do
         refute @rubygem.owners_including_unconfirmed.include?(@new_owner)
@@ -276,7 +276,7 @@ class OwnersControllerTest < ActionController::TestCase
         @ownership = create(:ownership, rubygem: @rubygem, user: @second_user)
         delete :destroy, params: { rubygem_id: @rubygem.name, handle: @second_user.display_id }
       end
-      should redirect_to("show#passwords") { user_password_path(@user) }
+      should redirect_to("sessions#verify") { verify_session_path }
       should use_before_action(:redirect_to_verify)
       should "remove the ownership record" do
         assert @rubygem.owners_including_unconfirmed.include?(@second_user)

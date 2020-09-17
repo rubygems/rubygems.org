@@ -1,8 +1,3 @@
-.owners__table {
-  border-spacing: 0;
-  font-size: 16px;
-}
-
 @media screen and (max-width: 580px) {
   .owners__table {
     display: block;
@@ -10,10 +5,10 @@
 }
 
 .owners__row {
-    background: #ffffff;
+    background: #f6f6f6;
 }
 .owners__row:nth-of-type(odd) {
-    background: #f6f6f6;
+    background: #e9e9e9;
 }
 .owners__row.owners__header {
     font-weight: 900;
@@ -21,7 +16,7 @@
     background: #e9573f;
 }
 .owners__cell {
-    padding: 15px 12px;
+    padding: 10px;
     text-align: center;
 }
 .owners__cell[data-title="Confirmed"] {
@@ -55,7 +50,6 @@ span.owners__icon img {
     .owners__row .owners__cell:before {
         margin-bottom: 8px;
         content: attr(data-title);
-        text-transform: uppercase;
         color: #969696;
         display: block;
         font-size: 12px;

@@ -4,7 +4,7 @@
   <p><%= t(".notice") %></p>
 </div>
 
-<%= form_for :verify_password, url: verify_user_password_path(current_user), method: :post do |form| %>
+<%= form_for :verify_password, url: authenticate_session_path, method: :post do |form| %>
   <div class="password_field">
     <%= form.label :password, t("activerecord.attributes.session.password"), class: "form__label" %>
     <%= form.password_field :password, class: "form__input" %>
