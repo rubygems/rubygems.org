@@ -8,8 +8,6 @@ module Patterns
   NAME_PATTERN          = /\A#{ALLOWED_CHARACTERS}\Z/.freeze
   URL_VALIDATION_REGEXP = %r{\Ahttps?://([^\s:@]+:[^\s:@]*@)?[A-Za-z\d\-]+(\.[A-Za-z\d\-]+)+\.?(:\d{1,5})?([/?]\S*)?\z}.freeze
   GEM_NAME_BLACKLIST    = %w[
-    abbrev
-    base64
     cgi-session
     complex
     continuation
@@ -17,34 +15,16 @@ module Patterns
     digest
     drb
     enumerator
-    erb
     expect
     fiber
-    find
-    io-nonblock
-    io-wait
     mkmf
-    nkf
-    open-uri
-    optparse
     pathname
-    pp
-    prettyprint
     profiler
     pty
     rational
     rbconfig
-    resolv
-    resolv-replace
-    rinda
-    securerandom
-    set
-    shellwords
     socket
-    syslog
     thread
-    time
-    tsort
     un
     unicode_normalize
     win32ole
