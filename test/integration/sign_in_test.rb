@@ -62,7 +62,7 @@ class SignInTest < SystemTest
     click_button "Sign in"
 
     assert page.has_content? "Sign in"
-    assert page.has_content? "Please confirm your email address with the link sent to you email."
+    assert page.has_content? "Please confirm your email address with the link sent to your email."
   end
 
   test "signing in with current valid otp when mfa enabled" do

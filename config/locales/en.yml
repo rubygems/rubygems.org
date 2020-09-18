@@ -119,8 +119,9 @@ en:
         sign_out: Sign out
         sign_up: Sign up
   mailer:
-    confirm_your_email: Please confirm your email address with the link sent to you email.
+    confirm_your_email: Please confirm your email address with the link sent to your email.
     confirmation_subject: Please confirm your email address with RubyGems.org
+    link_expiration_explanation_html: Please keep in mind that this link is valid for only 3 hours. You can request the updated link using <a href='https://rubygems.org/email_confirmations/new'>resend confirmation mail</a> page.
     email_confirmation:
       title: EMAIL CONFIRMATION
       subtitle: Almost done!
@@ -130,7 +131,6 @@ en:
       title: EMAIL RESET
       subtitle: Hi %{handle}!
       visit_link_instructions: You changed your email address on RubyGems.org. Please visit the following url to re-activate your account.
-      link_expiration_explanation: Please keep in mind that this link is only valid for 3 hours.
     deletion_complete:
       title: DELETION COMPLETE
       subtitle: Bye!

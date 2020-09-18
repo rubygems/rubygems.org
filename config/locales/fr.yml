@@ -113,6 +113,7 @@ fr:
   mailer:
     confirm_your_email: Veuillez confirmer votre adresse email avec le lien qui vous a été envoyé par email.
     confirmation_subject: Veuillez confirmer votre adresse email pour RubyGems.org
+    link_expiration_explanation_html:
     email_confirmation:
       title:
       subtitle:
@@ -122,7 +123,6 @@ fr:
       title:
       subtitle:
       visit_link_instructions: Vous avez changé d'adresse email sur RubyGems.org. Veuillez suivre l'URL suivant pour réactiver votre compte.
-      link_expiration_explanation: Veuillez noter que ce lien n'est valide que pendant 3 heures.
     deletion_complete:
       title:
       subtitle:
