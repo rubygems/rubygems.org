@@ -210,7 +210,6 @@ class RubygemsHelperTest < ActionView::TestCase
 
     context "with available version" do
       setup do
-        @virtual_path = "rubygems.aside"
         @version = create(:version)
         @rubygem = @version.rubygem
       end
