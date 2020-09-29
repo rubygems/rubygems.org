@@ -192,10 +192,6 @@
             <%= t("layouts.application.footer.optimized_by") %>
             <span class="t-hidden">New Relic</span>
           </a>
-          <a class="footer__sponsor" href="https://get.gaug.es/" target="_blank">
-            <%= t("layouts.application.footer.tracking_by") %>
-            <span class="t-hidden">Gauges</span>
-          </a>
           <a class="footer__sponsor" href="https://www.runscope.com/" target="_blank">
             <%= t("layouts.application.footer.monitored_by") %>
             <span class="t-hidden">Runscope</span>
@@ -229,7 +225,6 @@
 
     <%= javascript_include_tag "application" %>
     <%= yield :javascript %>
-    <script type="text/javascript" async defer id="gauges-tracker" data-site-id="4eab0ac8613f5d1583000005" src="//secure.gaug.es/track.js"></script>
     <script type="text/javascript" defer src="https://www.fastly-insights.com/insights.js?k=3e63c3cd-fc37-4b19-80b9-65ce64af060a"></script>
   </body>
 </html>
