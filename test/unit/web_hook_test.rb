@@ -186,11 +186,11 @@ class WebHookTest < ActiveSupport::TestCase
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number + @hook.user.api_key)
       RestClient.expects(:post).with(anything, anything, has_entries("Authorization" => authorization))
 
-      @hook.fire("https", "rubygems.org", @rubygem, @version, false)
+      @hook.fire("https", "rubygems.org", @rubygem, @version, delayed: false)
     end
 
     should "not increment failure count for hook" do
-      @hook.fire("https", "rubygems.org", @rubygem, @version, false)
+      @hook.fire("https", "rubygems.org", @rubygem, @version, delayed: false)
 
       assert @hook.failure_count.zero?
     end
@@ -216,7 +216,7 @@ class WebHookTest < ActiveSupport::TestCase
        Net::ProtocolError].each_with_index do |exception, index|
         RestClient.stubs(:post).raises(exception)
 
-        @hook.fire("https", "rubygems.org", @rubygem, @version, false)
+        @hook.fire("https", "rubygems.org", @rubygem, @version, delayed: false)
 
         assert_equal index + 1, @hook.reload.failure_count
         assert @hook.global?

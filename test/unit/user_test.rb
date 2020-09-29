@@ -56,7 +56,7 @@ class UserTest < ActiveSupport::TestCase
 
     context "email" do
       should "be less than 255 characters" do
-        user = build(:user, email: ("a" * 255) + "@example.com")
+        user = build(:user, email: format("%s@example.com", "a" * 255))
         refute user.valid?
         assert_contains user.errors[:email], "is too long (maximum is 255 characters)"
       end

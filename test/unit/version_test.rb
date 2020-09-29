@@ -197,7 +197,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "limit the character length" do
-      @version.required_rubygems_version = ">=" + "0" * 2 * 1024 * 1024 * 100
+      @version.required_rubygems_version = format(">=%s", "0" * 2 * 1024 * 1024 * 100)
       @version.validate
       assert_equal @version.errors.messages[:required_rubygems_version], ["is too long (maximum is 255 characters)"]
     end

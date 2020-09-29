@@ -73,7 +73,7 @@ Rails.application.configure do
     config.cache_classes = true
     config.eager_load = true
 
-    config.logger = ActiveSupport::Logger.new(STDOUT)
+    config.logger = ActiveSupport::Logger.new($stdout)
     config.log_level = :info
 
     config.public_file_server.enabled = true
