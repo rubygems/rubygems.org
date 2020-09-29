@@ -44,16 +44,13 @@ class GemDownload < ApplicationRecord
     # E.g.:
     #   ['rake-10.4.2', 1]
     def bulk_update(ary)
-      updates_by_version = {}
       updates_by_gem = {}
+      updates_by_version = init_updates_by_version(ary)
 
       ary.each do |full_name, count|
         if updates_by_version.key?(full_name)
           version, old_count = updates_by_version[full_name]
           updates_by_version[full_name] = [version, old_count + count]
-        else
-          version = Version.find_by(full_name: full_name)
-          updates_by_version[full_name] = [version, count] if version
         end
       end
 
@@ -112,6 +109,15 @@ class GemDownload < ApplicationRecord
                   _type: "rubygem",
                   _id: id,
                   data: { doc: { downloads: downloads } } } }
+    end
+
+    def init_updates_by_version(ary)
+      full_names = ary.map { |full_name, _| full_name }.uniq
+      versions = Version.select(:full_name, :rubygem_id, :id).where(full_name: full_names)
+
+      versions.each_with_object({}) do |version, hash|
+        hash[version.full_name] = [version, 0]
+      end
     end
   end
 end
