@@ -15,7 +15,6 @@ es:
   footer_join_rt_html: Necesitamos tu ayuda para financiar el tiempo de los desarrolladores que mantienen RubyGems.org funcionando correctamente para todo el mundo.
     <a href="https://rubytogether.org/join?source=rubygems">Únete a Ruby Together hoy</a>.
   form_disable_with: Un momento por favor...
-  help_url: https://help.rubygems.org
   invalid_page: Número de página inexistente. Redireccionando a la página por defecto.
   locale_name: Español
   none: Ninguno
