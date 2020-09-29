@@ -124,7 +124,7 @@ GEM
     crass (1.0.6)
     css_parser (1.7.1)
       addressable
-    dalli (2.7.10)
+    dalli (2.7.11)
     delayed_job (4.1.8)
       activesupport (>= 3.0, < 6.1)
     delayed_job_active_record (4.1.4)
