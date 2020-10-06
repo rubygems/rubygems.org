@@ -337,9 +337,7 @@ GEM
     ruby-graphviz (1.2.4)
     ruby-progressbar (1.10.1)
     rubyzip (2.3.0)
-    sass-rails (6.0.0)
-      sassc-rails (~> 2.1, >= 2.1.1)
-    sassc (2.2.1)
+    sassc (2.4.0)
       ffi (~> 1.9)
     sassc-rails (2.1.2)
       railties (>= 4.0.0)
@@ -458,7 +456,7 @@ DEPENDENCIES
   rubocop
   rubocop-performance
   rubocop-rails
-  sass-rails
+  sassc-rails
   selenium-webdriver
   shoryuken (~> 2.1.0)
   shoulda
