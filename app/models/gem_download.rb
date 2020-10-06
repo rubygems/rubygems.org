@@ -84,18 +84,23 @@ class GemDownload < ApplicationRecord
     # input: { rubygem_id => download_count_to_increment }
     def update_gem_downloads(updates_by_gem)
       bulk_update_query = []
-
       downloads_by_gem(updates_by_gem.keys).each do |id, downloads|
         bulk_update_query << update_query(id, downloads + updates_by_gem[id])
-
-        # increment downloads of rubygem in DB
-        increment(updates_by_gem[id], rubygem_id: id, version_id: 0)
       end
+      increment_rubygems(updates_by_gem.keys, updates_by_gem.values)
 
       # update ES index of rubygems
       Rubygem.__elasticsearch__.client.bulk body: bulk_update_query
     rescue Faraday::ConnectionFailed, Elasticsearch::Transport::Transport::Error => e
       Rails.logger.debug "ES update: #{updates_by_gem} has failed: #{e.message}"
+    end
+
+    def increment_rubygems(rubygem_ids, downloads)
+      query = "UPDATE gem_downloads SET count = gem_downloads.count + updates_by_gem.downloads
+        FROM
+          (SELECT UNNEST(ARRAY[?]) AS r_id, UNNEST(ARRAY[?]) AS downloads) AS updates_by_gem
+        WHERE gem_downloads.rubygem_id = updates_by_gem.r_id AND gem_downloads.version_id = 0;"
+      find_by_sql([query, rubygem_ids, downloads])
     end
 
     def downloads_by_gem(rubygem_ids)
