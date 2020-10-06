@@ -43,6 +43,7 @@ es:
         docs: URL de la documentación
         mail: URL de la lista de correo
         wiki: URL de la Wiki
+        funding:
       session:
         password: Contraseña
         who: Correo electrónico o usuario

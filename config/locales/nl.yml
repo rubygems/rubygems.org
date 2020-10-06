@@ -35,6 +35,7 @@ nl:
         docs: Documentatie-URL
         mail: Mailing-list-URL
         wiki: Wiki URL
+        funding:
       session:
         password: Wachtwoord
         who: E-mail of Gebruikersnaam

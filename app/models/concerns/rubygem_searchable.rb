@@ -35,6 +35,7 @@ module RubygemSearchable
         source_code_uri:   versioned_links&.source_code_uri,
         bug_tracker_uri:   versioned_links&.bug_tracker_uri,
         changelog_uri:     versioned_links&.changelog_uri,
+        funding_uri:       versioned_links&.funding_uri,
         yanked:            versions.none?(&:indexed?),
         summary:           latest_version&.summary,
         description:       latest_version&.description,

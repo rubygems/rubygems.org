@@ -15,7 +15,16 @@ class RubygemSearchableTest < ActiveSupport::TestCase
         number: "1.0.1",
         rubygem: @rubygem,
         summary: "some summary",
-        description: "some description")
+        description: "some description",
+        metadata: {
+          "homepage_uri"      => "http://example.com",
+          "source_code_uri"   => "http://example.com",
+          "wiki_uri"          => "http://example.com",
+          "mailing_list_uri"  => "http://example.com",
+          "bug_tracker_uri"   => "http://example.com",
+          "funding_uri"       => "http://example.com",
+          "documentation_uri" => "http://example.com"
+        })
     end
 
     should "return a hash" do
@@ -35,7 +44,15 @@ class RubygemSearchableTest < ActiveSupport::TestCase
         authors:           "Joe User",
         info:              "some description",
         licenses:          "MIT",
-        metadata:          { "foo" => "bar" },
+        metadata:          {
+          "homepage_uri"      => "http://example.com",
+          "source_code_uri"   => "http://example.com",
+          "wiki_uri"          => "http://example.com",
+          "mailing_list_uri"  => "http://example.com",
+          "bug_tracker_uri"   => "http://example.com",
+          "funding_uri"       => "http://example.com",
+          "documentation_uri" => "http://example.com"
+        },
         sha:               "b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78",
         project_uri:       "http://localhost/gems/example_gem",
         gem_uri:           "http://localhost/gems/example_gem-1.0.1.gem",
@@ -45,6 +62,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
         mailing_list_uri:  "http://example.com",
         source_code_uri:   "http://example.com",
         bug_tracker_uri:   "http://example.com",
+        funding_uri:       "http://example.com",
         yanked:            false,
         summary:           "some summary",
         description:       "some description",
@@ -53,7 +71,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       }
 
       expected_hash.each do |k, v|
-        assert_equal v, json[k]
+        assert_equal v, json[k], "value doesn't match for key: #{k}"
       end
     end
   end

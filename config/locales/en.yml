@@ -43,6 +43,7 @@ en:
         docs: Documentation URL
         mail: Mailing List URL
         wiki: Wiki URL
+        funding: Funding URL
       session:
         password: Password
         who: Email or Username

@@ -35,6 +35,7 @@ pt-BR:
         docs: URL da Documentação
         mail: URL da Lista de Emails
         wiki: URL da Wiki
+        funding:
       session:
         password: Senha
         who: Email ou Usuário
