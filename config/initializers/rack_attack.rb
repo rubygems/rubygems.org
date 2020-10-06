@@ -57,6 +57,8 @@ class Rack::Attack
   def self.protected_route?(protected_actions, path, method)
     route_params = Rails.application.routes.recognize_path(path, method: method)
     protected_actions.any? { |hash| hash[:controller] == route_params[:controller] && hash[:action] == route_params[:action] }
+  rescue ActionController::RoutingError
+    false
   end
 
   safelist("assets path") do |req|
