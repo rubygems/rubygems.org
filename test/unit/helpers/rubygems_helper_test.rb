@@ -66,7 +66,7 @@ class RubygemsHelperTest < ActionView::TestCase
 
   should "link to report abuse" do
     rubygem = create(:rubygem, name: "my_gem")
-    url = "https://help.rubygems.org/discussion/new?discussion[private]=1&discussion[title]=Reporting+Abuse+on+my_gem"
+    url = "mailto:support@rubygems.org?subject=Reporting Abuse on my_gem"
 
     @virtual_path = "rubygems.show"
     assert_match url, report_abuse_link(rubygem)
