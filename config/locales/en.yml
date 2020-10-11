@@ -404,6 +404,7 @@ en:
       week_update: Updated last week (%{count})
       filter: "Filter:"
       yanked: Yanked (%{count})
+      suggestion: Did you mean
   sessions:
     new:
       forgot_password: Forgot password?

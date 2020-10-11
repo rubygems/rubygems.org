@@ -1,6 +1,6 @@
 <% if gems.respond_to?(:response) && aggregations = gems.response['aggregations'] %>
   <div class="aggregations">
-    <%= t('searches.show.filter')%>
+    <%= t('searches.show.filter') if not_empty?(gems.response) %>
     <%= aggregation_match_count aggregations['matched_field'], 'name' %>
     <%= aggregation_match_count aggregations['matched_field'], 'description' %>
     <%= aggregation_match_count aggregations['matched_field'], 'summary' %>

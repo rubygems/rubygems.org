@@ -34,7 +34,7 @@
     <% if suggestions %>
       <div class='search__suggestions'>
         <p>
-          Maybe you mean
+          <%= t(".suggestion") %>
           <%= suggestions.map do |term|
             link_to term, search_path(params: { query: term }), only_path: true
           end.to_sentence(last_word_connector: ' or ').html_safe %>?

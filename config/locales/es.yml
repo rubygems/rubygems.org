@@ -377,6 +377,7 @@ es:
       week_update: Actualizadas en la última semana (%{count})
       filter: "Filtro:"
       yanked:
+      suggestion:
   sessions:
     new:
       forgot_password: ¿Olvidaste tu contraseña?

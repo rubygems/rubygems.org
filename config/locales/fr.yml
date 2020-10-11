@@ -369,6 +369,7 @@ fr:
       week_update:
       filter:
       yanked:
+      suggestion:
   sessions:
     new:
       forgot_password: Mot de passe oublié ?

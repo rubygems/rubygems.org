@@ -33,4 +33,8 @@ module SearchesHelper
     path = search_path(params: { query: params[:query], yanked: true })
     link_to t("searches.show.yanked", count: 1), path, class: "t-link--black"
   end
+
+  def not_empty?(response)
+    response["hits"]["total"] != 0
+  end
 end
