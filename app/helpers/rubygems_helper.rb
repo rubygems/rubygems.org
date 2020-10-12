@@ -57,6 +57,15 @@ module RubygemsHelper
       method: :delete, remote: true
   end
 
+  def change_diff_link(rubygem, latest_version)
+    return if latest_version.yanked?
+
+    diff_url = "https://my.diffend.io/gems/#{rubygem.name}/prev/#{latest_version.slug}"
+
+    link_to t("rubygems.aside.links.review_changes"), diff_url,
+      class: "gem__link t-list__item"
+  end
+
   def atom_link(rubygem)
     link_to t(".links.rss"), rubygem_versions_path(rubygem, format: "atom"),
       class: "gem__link t-list__item", id: :rss

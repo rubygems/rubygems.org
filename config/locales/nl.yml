@@ -316,6 +316,7 @@ nl:
         mail: Mailing-list
         report_abuse:
         reverse_dependencies:
+        review_changes:
         rss: RSS
         subscribe:
         unsubscribe:
