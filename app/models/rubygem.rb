@@ -152,18 +152,22 @@ class Rubygem < ApplicationRecord
   end
 
   def to_s
-    versions.most_recent&.to_title || name
+    most_recent_version&.to_title || name
   end
 
   def downloads
     gem_download&.count || 0
   end
 
-  def links(version = versions.most_recent)
+  def most_recent_version
+    versions.most_recent
+  end
+
+  def links(version = most_recent_version)
     Links.new(self, version)
   end
 
-  def payload(version = versions.most_recent, protocol = Gemcutter::PROTOCOL, host_with_port = Gemcutter::HOST)
+  def payload(version = most_recent_version, protocol = Gemcutter::PROTOCOL, host_with_port = Gemcutter::HOST)
     versioned_links = links(version)
     deps = version.dependencies.to_a
     {
