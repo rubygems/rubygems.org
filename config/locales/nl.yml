@@ -106,7 +106,7 @@ nl:
       header:
         dashboard: Dashboard
         edit_profile:
-        edit_settings:
+        settings:
         search_gem_html: Gems Zoeken&hellip;
         sign_in: Inloggen
         sign_out: Uitloggen

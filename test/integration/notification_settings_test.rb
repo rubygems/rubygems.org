@@ -68,7 +68,7 @@ class NotificationSettingsTest < SystemTest
     yanked_rubygem = create(:rubygem, name: "yanked-gem", owners: [user])
     create(:version, rubygem: yanked_rubygem, indexed: false)
 
-    visit edit_profile_path(as: user)
+    visit edit_settings_path(as: user)
 
     click_link I18n.t("notifiers.show.title")
 

@@ -113,8 +113,8 @@ en:
         uptime: Uptime
       header:
         dashboard: Dashboard
+        settings: Settings
         edit_profile: Edit profile
-        edit_settings: Edit settings
         search_gem_html: Search Gems&hellip;
         sign_in: Sign in
         sign_out: Sign out

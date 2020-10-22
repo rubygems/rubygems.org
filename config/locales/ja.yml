@@ -106,7 +106,7 @@ ja:
       header:
         dashboard: ダッシュボード
         edit_profile:
-        edit_settings:
+        settings:
         search_gem_html: 検索…
         sign_in: ログイン
         sign_out: ログアウト

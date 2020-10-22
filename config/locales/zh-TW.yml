@@ -106,7 +106,7 @@ zh-TW:
       header:
         dashboard: 控制台
         edit_profile:
-        edit_settings:
+        settings:
         search_gem_html: 搜尋 Gems&hellip;
         sign_in: 登入
         sign_out: 登出

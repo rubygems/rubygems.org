@@ -105,7 +105,8 @@ pt-BR:
         uptime: Uptime
       header:
         dashboard: Painel de Controle
-        edit_settings:
+        edit_profile:
+        settings:
         search_gem_html: Buscar Gems&hellip;
         sign_in: Fazer Login
         sign_out: Sair

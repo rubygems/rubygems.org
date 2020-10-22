@@ -106,7 +106,7 @@ fr:
       header:
         dashboard: Dashboard
         edit_profile:
-        edit_settings:
+        settings:
         search_gem_html: Recherche de Gems&hellip;
         sign_in: Connexion
         sign_out: Déconnexion

@@ -104,6 +104,7 @@ class ProfileTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
+    click_link "Sign out"
     visit profile_path("nick1")
 
     assert page.has_link?("@nick1", href: "https://twitter.com/nick1")
@@ -120,5 +121,22 @@ class ProfileTest < SystemTest
 
     assert page.has_content? "Your account deletion request has been enqueued."\
       " We will send you a confirmation mail when your request has been processed."
+  end
+
+  test "deleting profile multiple times" do
+    sign_in
+    visit delete_profile_path
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Confirm"
+
+    sign_in
+    visit delete_profile_path
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Confirm"
+
+    Delayed::Worker.new.work_off
+    assert_empty Delayed::Job.all
   end
 end

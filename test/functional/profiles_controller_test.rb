@@ -8,6 +8,33 @@ class ProfilesControllerTest < ActionController::TestCase
     end
   end
 
+  context "when not logged in" do
+    setup { @user = create(:user) }
+
+    context "on GET to show with id" do
+      setup { get :show, params: { id: @user.id } }
+
+      should respond_with :success
+      should "render Email link" do
+        assert page.has_content?("Email Me")
+        assert page.has_selector?("a[href='mailto:#{@user.email}']")
+      end
+    end
+
+    context "on GET to show when hide email" do
+      setup do
+        @user.update(hide_email: true)
+        get :show, params: { id: @user.id }
+      end
+
+      should respond_with :success
+      should "not render Email link" do
+        refute page.has_content?("Email Me")
+        refute page.has_selector?("a[href='mailto:#{@user.email}']")
+      end
+    end
+  end
+
   context "when logged in" do
     setup do
       @user = create(:user)
@@ -40,29 +67,6 @@ class ProfilesControllerTest < ActionController::TestCase
       should respond_with :success
       should "render user show page" do
         assert page.has_content? @user.handle
-      end
-    end
-
-    context "on GET to show with id" do
-      setup { get :show, params: { id: @user.id } }
-
-      should respond_with :success
-      should "render Email link" do
-        assert page.has_content?("Email Me")
-        assert page.has_selector?("a[href='mailto:#{@user.email}']")
-      end
-    end
-
-    context "on GET to show when hide email" do
-      setup do
-        @user.update(hide_email: true)
-        get :show, params: { id: @user.id }
-      end
-
-      should respond_with :success
-      should "not render Email link" do
-        refute page.has_content?("Email Me")
-        refute page.has_selector?("a[href='mailto:#{@user.email}']")
       end
     end
 
