@@ -370,6 +370,7 @@ de:
       week_update:
       filter:
       yanked:
+      suggestion:
   sessions:
     new:
       forgot_password: Passwort vergessen?

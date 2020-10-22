@@ -78,7 +78,7 @@ class SearchesControllerTest < ActionController::TestCase
       page.assert_text("all 2 gems")
     end
     should "not see suggestions" do
-      page.assert_no_text("Maybe you mean")
+      page.assert_no_text("Did you mean")
       page.assert_no_selector(".search-suggestions")
     end
   end
@@ -108,7 +108,7 @@ class SearchesControllerTest < ActionController::TestCase
 
     should respond_with :success
     should "see sinatra on the page in the suggestions" do
-      page.assert_text("Maybe you mean")
+      page.assert_text("Did you mean")
       assert page.find(".search__suggestions").has_content?(@sinatra.name)
       assert page.has_selector?("a[href='#{search_path(query: @sinatra.name)}']")
     end
@@ -118,6 +118,9 @@ class SearchesControllerTest < ActionController::TestCase
     should "not see brando on the page in the results" do
       page.assert_no_text(@brando.name)
       page.assert_no_selector("a[href='#{rubygem_path(@brando)}']")
+    end
+    should "not see filters" do
+      page.assert_no_text("Filter")
     end
   end
 
