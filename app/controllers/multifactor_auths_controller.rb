@@ -17,7 +17,7 @@ class MultifactorAuthsController < ApplicationController
     current_user.verify_and_enable_mfa!(@seed, :ui_and_api, otp_param, @expire)
     if current_user.errors.any?
       flash[:error] = current_user.errors[:base].join
-      redirect_to edit_profile_url
+      redirect_to edit_settings_url
     else
       flash[:success] = t(".success")
       render :recovery
@@ -36,7 +36,7 @@ class MultifactorAuthsController < ApplicationController
     else
       flash[:error] = t("multifactor_auths.incorrect_otp")
     end
-    redirect_to edit_profile_url
+    redirect_to edit_settings_url
   end
 
   private
@@ -56,13 +56,13 @@ class MultifactorAuthsController < ApplicationController
   def require_mfa_disabled
     return unless current_user.mfa_enabled?
     flash[:error] = t("multifactor_auths.require_mfa_disabled")
-    redirect_to edit_profile_path
+    redirect_to edit_settings_path
   end
 
   def require_mfa_enabled
     return if current_user.mfa_enabled?
     flash[:error] = t("multifactor_auths.require_mfa_enabled")
-    redirect_to edit_profile_path
+    redirect_to edit_settings_path
   end
 
   def seed_and_expire

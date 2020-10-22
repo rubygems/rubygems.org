@@ -106,6 +106,7 @@ ja:
       header:
         dashboard: ダッシュボード
         edit_profile:
+        settings:
         search_gem_html: 検索…
         sign_in: ログイン
         sign_out: ログアウト
@@ -247,14 +248,9 @@ ja:
       update:
       push_heading:
       owner_heading:
-  profiles:
+  settings:
     edit:
-      change_avatar:
-      email_awaiting_confirmation: あなたの新しいメールアドレス%{unconfirmed_email}を確認してください。
-      enter_password: パスワードを入力してください。
-      hide_email: メールアドレスを公開しない
-      optional_twitter_username: Twitterのユーザー名(任意,公開)
-      title: プロフィールを編集する
+      title:
       api_access:
         confirm_reset: この操作は取り消せませんが、本当によろしいですか?
         credentials_html: 'もしコマンドラインから%{gem_commands_link}を使いたい場合、%{gem_credentials_file}ファイルが必要になります。このファイルは以下のコマンドで再生成することができます:'
@@ -266,10 +262,6 @@ ja:
         link_text: ここから新規に発行することができます。
         text_html: 新しいパスワードが必要ですか? %{link}
         title: パスワードのリセット
-      delete:
-        delete: アカウント削除
-        delete_profile: 削除
-        warning: アカウントの削除は不可逆的操作です。これはサポートに連絡しても取り消すことはできません。ご注意ください。
       mfa:
         multifactor_auth:
         disabled:
@@ -281,6 +273,18 @@ ja:
           disabled:
           ui_only:
           ui_and_api:
+  profiles:
+    edit:
+      change_avatar:
+      email_awaiting_confirmation: あなたの新しいメールアドレス%{unconfirmed_email}を確認してください。
+      enter_password: パスワードを入力してください。
+      hide_email: メールアドレスを公開しない
+      optional_twitter_username: Twitterのユーザー名(任意,公開)
+      title: プロフィールを編集する
+      delete:
+        delete: アカウント削除
+        delete_profile: 削除
+        warning: アカウントの削除は不可逆的操作です。これはサポートに連絡しても取り消すことはできません。ご注意ください。
     delete:
       title: アカウント削除
       confirm: 確認

@@ -106,6 +106,7 @@ de:
       header:
         dashboard: Dashboard
         edit_profile:
+        settings:
         search_gem_html: Suche Gems&hellip;
         sign_in: Anmelden
         sign_out: Abmelden
@@ -247,14 +248,9 @@ de:
       update:
       push_heading:
       owner_heading:
-  profiles:
+  settings:
     edit:
-      change_avatar:
-      email_awaiting_confirmation:
-      enter_password:
-      hide_email: Verberge E-Mails in öffentlichem Profil
-      optional_twitter_username:
-      title: Bearbeite Profil
+      title:
       api_access:
         confirm_reset: Sind Sie sicher? Das kann nicht rückgängig gemacht werden.
         credentials_html: 'Wenn du %{gem_commands_link} über das Terminal oder über die Kommandozeile verwenden möchtest, dann brauchst du die %{gem_credentials_file}-Datei, die du mit dem folgenden Befehl erzeugen kannst:'
@@ -266,10 +262,6 @@ de:
         link_text: Jetzt ein neues Passwort zuschicken lassen.
         text_html: Brauchst du ein neues Passwort? Kein Problem. %{link}
         title: Zurücksetzen des Passworts
-      delete:
-        delete:
-        delete_profile:
-        warning:
       mfa:
         multifactor_auth:
         disabled:
@@ -281,6 +273,18 @@ de:
           disabled:
           ui_only:
           ui_and_api:
+  profiles:
+    edit:
+      change_avatar:
+      email_awaiting_confirmation:
+      enter_password:
+      hide_email: Verberge E-Mails in öffentlichem Profil
+      optional_twitter_username:
+      title: Bearbeite Profil
+      delete:
+        delete:
+        delete_profile:
+        warning:
     delete:
       title:
       confirm:

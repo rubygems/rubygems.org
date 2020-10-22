@@ -2,7 +2,7 @@
   <header class="profile__header">
     <div class="profile__header__name-wrap">
       <div id="avatar-frame">
-        <%= 
+        <%=
           image_tag(
             @user.gravatar_url(size: 300, secure: request.ssl?).html_safe,
             id: "profile_gravatar",
@@ -14,7 +14,7 @@
       </div>
 
       <h1 id="profile-name" class="profile__header__name t-display">
-        <%= 
+        <%=
           link_to(
             @user.display_handle, profile_path(@user.display_id),
             class: "t-link--black"
@@ -22,49 +22,62 @@
         %>
       </h1>
 
-      <% unless @user.hide_email %>
-        <p id="profile-email">
-          <%= 
-            mail_to(
-              @user.email,
-              "Email Me",
-              encode: "hex",
+      <% if @user == current_user %>
+        <div id="profile-settings">
+          <%=
+            link_to(
+              t("layouts.application.header.settings"),
+              edit_settings_path,
+              id: "edit-settings",
               class: "profile__header__attribute t-link--black",
-              'data-icon' => '✉'
+              "data-icon": "★"
             )
           %>
-        </p>
-      <% end %>
+        </div>
 
-      <% if @user.twitter_username.present? %>
-        <%=
-          image_tag(
-            "/images/twitter_icon.png",
-            alt: 'Twitter icon',
-            class: 'profile__header__icon'
-          )
-        %>
-
-        <%=
-          link_to(
-            twitter_username(@user),
-            twitter_url(@user),
-            class: "profile__header__attribute t-link--black"
-          )
-        %>
-      <% end %>
-
-      <% if @user == current_user %>
         <div id="downloads-ego">
           <%=
             link_to(
               "Edit Profile",
               edit_profile_path,
               id: "edit-profile",
-              class: "profile__header__attribute t-link--black"
+              class: "profile__header__attribute t-link--black",
+              "data-icon": "☺"
             )
           %>
         </div>
+      <% else %>
+        <% unless @user.hide_email %>
+          <p id="profile-email">
+            <%=
+              mail_to(
+                @user.email,
+                "Email Me",
+                encode: "hex",
+                class: "profile__header__attribute t-link--black",
+                "data-icon" => "✉"
+              )
+            %>
+          </p>
+        <% end %>
+
+        <% if @user.twitter_username.present? %>
+          <%=
+            image_tag(
+              "/images/twitter_icon.png",
+              alt: "Twitter icon",
+              class: "profile__header__icon"
+            )
+          %>
+
+          <%=
+            link_to(
+              twitter_username(@user),
+              twitter_url(@user),
+              class: "profile__header__attribute t-link--black"
+            )
+          %>
+        <% end %>
       <% end %>
     </div>
 

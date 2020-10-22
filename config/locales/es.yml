@@ -114,6 +114,7 @@ es:
       header:
         dashboard: Dashboard
         edit_profile:
+        settings: Configuración
         search_gem_html: Buscar gemas&hellip;
         sign_in: Ingresar
         sign_out: Salir
@@ -255,14 +256,9 @@ es:
       update: Actualizar
       push_heading:
       owner_heading:
-  profiles:
+  settings:
     edit:
-      change_avatar:
-      email_awaiting_confirmation: Por favor confirma tu nueva dirección de correo %{unconfirmed_email}
-      enter_password: Por favor introduce tu contraseña
-      hide_email: Ocultar correo electrónico en perfil público
-      optional_twitter_username: Usuario de Twitter opcional. Será mostrado en tu perfil público
-      title: Editar perfil
+      title: Editar configuración
       api_access:
         confirm_reset: '¿Seguro? Este cambio no puede deshacerse.'
         credentials_html: 'Si quieres usar %{gem_commands_link} desde la línea de comandos, vas a necesitar un archivo llamado %{gem_credentials_file}, el cual puedes generar usando el siguiente comando:'
@@ -274,10 +270,6 @@ es:
         link_text: Solicitar aquí una nueva.
         text_html: '¿Necesitas una nueva contraseña? Sin problemas. %{link}'
         title: Reestablecer contraseña
-      delete:
-        delete: Eliminar
-        delete_profile: Eliminar Perfil
-        warning: Eliminar tu perfil es una acción irreversible. No puede deshacerse contactando a soporte. ¡Por favor hazlo solo si estás seguro!
       mfa:
         multifactor_auth: Autenticación de múltiples factores
         disabled: Todavía no activaste la Autenticación de Múltiples Factores.
@@ -289,6 +281,18 @@ es:
           disabled: Desactivada
           ui_only: Solo Interfaz de Usuario
           ui_and_api: Interfaz de Usuario y API
+  profiles:
+    edit:
+      change_avatar:
+      email_awaiting_confirmation: Por favor confirma tu nueva dirección de correo %{unconfirmed_email}
+      enter_password: Por favor introduce tu contraseña
+      hide_email: Ocultar correo electrónico en perfil público
+      optional_twitter_username: Usuario de Twitter opcional. Será mostrado en tu perfil público
+      title: Editar perfil
+      delete:
+        delete: Eliminar
+        delete_profile: Eliminar Perfil
+        warning: Eliminar tu perfil es una acción irreversible. No puede deshacerse contactando a soporte. ¡Por favor hazlo solo si estás seguro!
     delete:
       title: Eliminar perfil
       confirm: Confirmar

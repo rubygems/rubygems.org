@@ -19,7 +19,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         end
 
         should respond_with :redirect
-        should redirect_to("the profile edit page") { edit_profile_path }
+        should redirect_to("the settings page") { edit_settings_path }
       end
 
       context "on POST to create mfa" do
@@ -28,7 +28,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         end
 
         should respond_with :redirect
-        should redirect_to("the profile edit page") { edit_profile_path }
+        should redirect_to("the settings page") { edit_settings_path }
         should "keep mfa enabled" do
           assert @user.reload.mfa_enabled?
         end
@@ -42,7 +42,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             end
 
             should respond_with :redirect
-            should redirect_to("the profile edit page") { edit_profile_path }
+            should redirect_to("the settings page") { edit_settings_path }
             should "disable mfa" do
               refute @user.reload.mfa_enabled?
             end
@@ -54,7 +54,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             end
 
             should respond_with :redirect
-            should redirect_to("the profile edit page") { edit_profile_path }
+            should redirect_to("the settings page") { edit_settings_path }
             should "disable mfa" do
               refute @user.reload.mfa_enabled?
             end
@@ -67,7 +67,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             end
 
             should respond_with :redirect
-            should redirect_to("the profile edit page") { edit_profile_path }
+            should redirect_to("the settings page") { edit_settings_path }
             should set_flash.to("Your OTP code is incorrect.")
             should "keep mfa enabled" do
               assert @user.reload.mfa_enabled?
@@ -82,7 +82,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           end
 
           should respond_with :redirect
-          should redirect_to("the profile edit page") { edit_profile_path }
+          should redirect_to("the settings page") { edit_settings_path }
           should "update mfa level to mfa_ui_only now" do
             assert @user.reload.mfa_ui_only?
           end
@@ -94,7 +94,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           end
 
           should respond_with :redirect
-          should redirect_to("the profile edit page") { edit_profile_path }
+          should redirect_to("the settings page") { edit_settings_path }
           should "update make mfa level to mfa_ui_and_api now" do
             assert @user.reload.mfa_ui_and_api?
           end
@@ -137,7 +137,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           end
 
           should respond_with :redirect
-          should redirect_to("the profile edit page") { edit_profile_path }
+          should redirect_to("the settings page") { edit_settings_path }
           should "set error flash message" do
             refute_empty flash[:error]
           end
@@ -153,7 +153,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         end
 
         should respond_with :redirect
-        should redirect_to("the profile edit page") { edit_profile_path }
+        should redirect_to("the settings page") { edit_settings_path }
         should "keep mfa disabled" do
           refute @user.reload.mfa_enabled?
         end
