@@ -31,6 +31,23 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
     end
   end
 
+  # INVALID GEMS:
+  context "On GET to index --> with invalid gems --> JSON" do
+    setup do
+      rubygem = create(:rubygem, name: "testgem")
+      @version = create(:version, number: "1.0.0", rubygem_id: rubygem.id)
+      get :index, params: { gems: { 0 => "a", 1 => "b" } }, format: "json"
+    end
+
+    should "return 200" do
+      assert_response :success
+    end
+
+    should "return an empty body" do
+      assert_empty response.body
+    end
+  end
+
   # WITH GEMS:
   context "On GET to index --> with gems --> JSON" do
     setup do
@@ -130,6 +147,23 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
       rubygem = create(:rubygem, name: "testgem")
       @version = create(:version, number: "1.0.0", rubygem_id: rubygem.id)
       get :index, params: { gems: "" }, format: "marshal"
+    end
+
+    should "return 200" do
+      assert_response :success
+    end
+
+    should "return an empty body" do
+      assert_empty response.body
+    end
+  end
+
+  # INVALID GEMS:
+  context "On GET to index --> with invalid gems --> Marshal" do
+    setup do
+      rubygem = create(:rubygem, name: "testgem")
+      @version = create(:version, number: "1.0.0", rubygem_id: rubygem.id)
+      get :index, params: { gems: %w[a b] }, format: "marshal"
     end
 
     should "return 200" do

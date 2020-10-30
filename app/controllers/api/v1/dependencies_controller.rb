@@ -30,6 +30,10 @@ class Api::V1::DependenciesController < Api::BaseController
   end
 
   def gem_names
-    @gem_names ||= params[:gems].blank? ? [] : params[:gems].split(",".freeze)
+    @gem_names ||= gems_params[:gems].blank? ? [] : gems_params[:gems].split(",".freeze)
+  end
+
+  def gems_params
+    params.permit(:gems)
   end
 end
