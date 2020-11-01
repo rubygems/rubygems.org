@@ -32,10 +32,8 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
   end
 
   # INVALID GEMS:
-  context "On GET to index --> with invalid gems --> JSON" do
+  context "On GET to index --> with hash in gems params --> JSON" do
     setup do
-      rubygem = create(:rubygem, name: "testgem")
-      @version = create(:version, number: "1.0.0", rubygem_id: rubygem.id)
       get :index, params: { gems: { 0 => "a", 1 => "b" } }, format: "json"
     end
 
@@ -159,10 +157,8 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
   end
 
   # INVALID GEMS:
-  context "On GET to index --> with invalid gems --> Marshal" do
+  context "On GET to index --> with array in gems params --> Marshal" do
     setup do
-      rubygem = create(:rubygem, name: "testgem")
-      @version = create(:version, number: "1.0.0", rubygem_id: rubygem.id)
       get :index, params: { gems: %w[a b] }, format: "marshal"
     end
 
