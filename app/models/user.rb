@@ -25,6 +25,9 @@ class User < ApplicationRecord
   has_many :deletions, dependent: :nullify
   has_many :web_hooks, dependent: :destroy
 
+  # used for deleting unconfirmed ownerships as well on user destroy
+  has_many :unconfirmed_ownerships, -> { unconfirmed }, dependent: :destroy, inverse_of: :user, class_name: "Ownership"
+
   after_validation :set_unconfirmed_email, if: :email_changed?, on: :update
   before_create :generate_api_key, :generate_confirmation_token
 

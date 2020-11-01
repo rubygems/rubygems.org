@@ -177,6 +177,14 @@ class OwnerTest < SystemTest
     assert page.has_selector?("a[href='#{resend_confirmation_rubygem_owners_path(@rubygem)}']")
   end
 
+  test "deleting unconfirmed owner user" do
+    create(:ownership, :unconfirmed, user: @other_user, rubygem: @rubygem)
+    @other_user.destroy
+    visit_ownerships_page
+
+    refute page.has_content? @other_user.handle
+  end
+
   private
 
   def owner_row(owner)
