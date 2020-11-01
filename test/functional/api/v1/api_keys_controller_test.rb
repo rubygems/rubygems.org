@@ -35,6 +35,18 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to show with invalid credentials" do
+    setup do
+      @user = create(:user)
+      authorize_with("bad\0:creds")
+      get :show
+    end
+    should "deny access" do
+      assert_response 401
+      assert_match "HTTP Basic: Access denied.", @response.body
+    end
+  end
+
   context "when user has enabled MFA for API" do
     setup do
       @user = create(:user)

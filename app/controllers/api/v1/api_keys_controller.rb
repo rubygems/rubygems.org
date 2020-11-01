@@ -4,7 +4,8 @@ class Api::V1::ApiKeysController < Api::BaseController
 
   def show
     authenticate_or_request_with_http_basic do |username, password|
-      user = User.authenticate(username, password)
+      # strip username mainly to remove null bytes
+      user = User.authenticate(username.strip, password)
       otp = request.headers["HTTP_OTP"]
       if user&.mfa_api_authorized?(otp)
         respond_to do |format|
