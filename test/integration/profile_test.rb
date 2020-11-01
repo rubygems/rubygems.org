@@ -3,8 +3,6 @@ require "test_helper"
 class ProfileTest < SystemTest
   setup do
     @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "nick1", mail_fails: 1)
-
-    page.driver.browser.set_cookie("mfa_feature=true")
   end
 
   def sign_in

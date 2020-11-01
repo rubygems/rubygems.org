@@ -3,7 +3,7 @@ require "test_helper"
 class SessionsControllerTest < ActionController::TestCase
   context "when user has mfa enabled" do
     setup do
-      @user = User.new(email_confirmed: true)
+      @user = User.new(email_confirmed: true, handle: "test")
       @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
       @request.cookies[:mfa_feature] = "true"
     end
