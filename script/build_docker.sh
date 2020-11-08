@@ -14,7 +14,7 @@ fi
 
 echo "$TRAVIS_COMMIT" > REVISION
 
-docker build -t quay.io/$TRAVIS_REPO_SLUG:$TRAVIS_COMMIT .
+docker build -t quay.io/$TRAVIS_REPO_SLUG:$TRAVIS_COMMIT --build-arg RUBYGEMS_VERSION=$RUBYGEMS_VERSION .
 
 docker run -e RAILS_ENV=production -e SECRET_KEY_BASE=1234 -e DATABASE_URL=postgresql://localhost \
   --net host quay.io/$TRAVIS_REPO_SLUG:$TRAVIS_COMMIT \
@@ -29,6 +29,14 @@ curl -m 5 http://localhost:3000/internal/ping | grep PONG
 if [ $? -eq 1 ]; then
   echo "Internal ping api test didn't pass."
   docker ps -aqf "ancestor=quay.io/$TRAVIS_REPO_SLUG:$TRAVIS_COMMIT" | xargs -Iid docker logs id
+  exit 1
+fi
+
+rubygems_version_installed=$(docker run quay.io/$TRAVIS_REPO_SLUG:$TRAVIS_COMMIT -- gem -v)
+
+if [ $rubygems_version_installed != $RUBYGEMS_VERSION ]; then
+  echo "Installed gem version doesn't match"
+  echo "expected: $RUBYGEMS_VERSION, found: $rubygems_version_installed"
   exit 1
 fi
 
