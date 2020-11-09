@@ -8,6 +8,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   should have_many(:ownerships).dependent(:destroy)
+  should have_many(:unconfirmed_ownerships).dependent(:destroy)
   should have_many(:rubygems).through(:ownerships)
   should have_many(:subscribed_gems).through(:subscriptions)
   should have_many(:deletions)
