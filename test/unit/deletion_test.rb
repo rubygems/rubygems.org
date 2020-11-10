@@ -1,8 +1,6 @@
 require "test_helper"
 
 class DeletionTest < ActiveSupport::TestCase
-  should belong_to :user
-
   setup do
     @user = create(:user)
     Pusher.new(@user, gem_file).process
@@ -15,6 +13,12 @@ class DeletionTest < ActiveSupport::TestCase
     @version.indexed = false
     assert Deletion.new(version: @version, user: @user).invalid?,
       "Deletion should only work on indexed gems"
+  end
+
+  context "association" do
+    subject { Deletion.new(version: @version, user: @user) }
+
+    should belong_to :user
   end
 
   context "with deleted gem" do

@@ -1,8 +1,12 @@
 require "test_helper"
 
 class DependencyTest < ActiveSupport::TestCase
-  should belong_to(:rubygem).optional(true)
-  should belong_to :version
+  context "association" do
+    subject { build(:dependency, :unresolved) }
+
+    should belong_to(:rubygem).optional(true)
+    should belong_to :version
+  end
 
   context "with dependency" do
     setup do
