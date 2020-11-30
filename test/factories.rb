@@ -100,6 +100,7 @@ FactoryBot.define do
     indexed { true }
     metadata { { "foo" => "bar" } }
     number
+    canonical_number { Gem::Version.new(number).canonical_segments.join(".") }
     platform { "ruby" }
     required_rubygems_version { ">= 2.6.3" }
     required_ruby_version { ">= 2.0.0" }

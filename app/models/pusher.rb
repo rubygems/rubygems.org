@@ -76,6 +76,7 @@ class Pusher
     sha256 = Digest::SHA2.base64digest(body.string)
 
     @version = @rubygem.versions.new number: spec.version.to_s,
+                                     canonical_number: spec.version.canonical_segments.join("."),
                                      platform: spec.original_platform.to_s,
                                      size: size,
                                      sha256: sha256,

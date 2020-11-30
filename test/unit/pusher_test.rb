@@ -146,7 +146,7 @@ class PusherTest < ActiveSupport::TestCase
     setup do
       spec = mock
       spec.expects(:name).returns "some name"
-      spec.expects(:version).returns "1.3.3.7"
+      spec.expects(:version).times(2).returns Gem::Version.new("1.3.3.7")
       spec.expects(:original_platform).returns "ruby"
       @cutter.stubs(:spec).returns spec
       @cutter.stubs(:size).returns 5
@@ -178,7 +178,7 @@ class PusherTest < ActiveSupport::TestCase
       @rubygem = create(:rubygem)
       spec = mock
       spec.stubs(:name).returns @rubygem.name
-      spec.stubs(:version).returns "1.3.3.7"
+      spec.stubs(:version).returns Gem::Version.new("1.3.3.7")
       spec.stubs(:original_platform).returns "ruby"
       @cutter.stubs(:spec).returns spec
       @cutter.find
@@ -195,7 +195,7 @@ class PusherTest < ActiveSupport::TestCase
 
       spec = mock
       spec.expects(:name).returns @rubygem.name.upcase
-      spec.expects(:version).returns "1.3.3.7"
+      spec.expects(:version).returns Gem::Version.new("1.3.3.7")
       spec.expects(:original_platform).returns "ruby"
       @cutter.stubs(:spec).returns spec
       refute @cutter.find
@@ -209,7 +209,7 @@ class PusherTest < ActiveSupport::TestCase
 
       spec = mock
       spec.stubs(:name).returns @rubygem.name.upcase
-      spec.stubs(:version).returns "1.3.3.7"
+      spec.stubs(:version).returns Gem::Version.new("1.3.3.7")
       spec.stubs(:original_platform).returns "ruby"
       @cutter.stubs(:spec).returns spec
       @cutter.find

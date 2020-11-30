@@ -304,6 +304,38 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
+  context "with canonical number" do
+    setup { @rubygem = create(:rubygem, number: "1.0.0") }
+
+    should "be invalid with trailing zero in segments" do
+      version = build(:version, rubygem: @rubygem, number: "1.0.0.0")
+      refute version.valid?
+      assert_equal version.errors.messages[:canonical_number], ["has already been taken"]
+    end
+
+    should "be invalid with fewer zero in segments" do
+      version = build(:version, rubygem: @rubygem, number: "1.0")
+      refute version.valid?
+      assert_equal version.errors.messages[:canonical_number], ["has already been taken"]
+    end
+
+    should "be invalid with leading zero in significant segments" do
+      version = build(:version, rubygem: @rubygem, number: "01.0.0")
+      refute version.valid?
+      assert_equal version.errors.messages[:canonical_number], ["has already been taken"]
+    end
+
+    should "be valid in a different platform" do
+      version = build(:version, rubygem: @rubygem, number: "1.0.0", platform: "win32")
+      assert version.valid?
+    end
+
+    should "be valid with prerelease" do
+      version = build(:version, rubygem: @rubygem, number: "1.0.0.pre")
+      assert version.valid?
+    end
+  end
+
   context "with a version" do
     setup do
       @version = build(:version)

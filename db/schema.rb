@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_16_071636) do
+ActiveRecord::Schema.define(version: 2020_11_30_040817) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -204,6 +204,7 @@ ActiveRecord::Schema.define(version: 2020_05_16_071636) do
     t.string "info_checksum"
     t.string "yanked_info_checksum"
     t.bigint "pusher_id"
+    t.string "canonical_number"
     t.index "lower((full_name)::text)", name: "index_versions_on_lower_full_name"
     t.index ["built_at"], name: "index_versions_on_built_at"
     t.index ["created_at"], name: "index_versions_on_created_at"
