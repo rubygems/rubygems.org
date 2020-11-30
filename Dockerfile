@@ -1,5 +1,7 @@
 FROM ruby:2.6-alpine as build
 
+ARG RUBYGEMS_VERSION
+
 RUN apk add --no-cache \
   nodejs \
   postgresql-dev \
@@ -14,7 +16,7 @@ RUN apk add --no-cache \
 RUN mkdir -p /app /app/config /app/log/
 WORKDIR /app
 
-RUN gem update --system 2.6.10
+RUN gem update --system $RUBYGEMS_VERSION
 
 COPY . /app
 
@@ -23,7 +25,7 @@ ADD https://s3-us-west-2.amazonaws.com/oregon.production.s3.rubygems.org/version
 RUN mv /app/config/database.yml.example /app/config/database.yml
 
 
-RUN gem install bundler io-console --no-ri --no-rdoc && \
+RUN gem install bundler io-console --no-document && \
   bundle config set --local without 'development test' && \
   bundle install --jobs 20 --retry 5
 
@@ -35,6 +37,8 @@ RUN bundle config set --local without 'development test assets' && \
 
 FROM ruby:2.6-alpine
 
+ARG RUBYGEMS_VERSION
+
 RUN apk add --no-cache \
   libpq \
   ca-certificates \
@@ -43,10 +47,11 @@ RUN apk add --no-cache \
   xz-libs \
   && rm -rf /var/cache/apk/*
 
+RUN gem update --system $RUBYGEMS_VERSION
+
 RUN mkdir -p /app
 WORKDIR /app
 
-COPY --from=build /usr/local/bin/gem /usr/local/bin/gem
 COPY --from=build /usr/local/bundle/ /usr/local/bundle/
 COPY --from=build /app/ /app/
 
