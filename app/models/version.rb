@@ -17,13 +17,13 @@ class Version < ApplicationRecord
   serialize :requirements
 
   validates :number, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: /\A#{Gem::Version::VERSION_PATTERN}\z/ }
-  validates :canonical_number, uniqueness: { scope: %i[rubygem_id platform] }
   validates :platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Rubygem::NAME_PATTERN }
   validates :full_name, presence: true, uniqueness: { case_sensitive: false }
   validates :rubygem, presence: true
   validates :required_rubygems_version, :licenses, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, allow_blank: true
   validates :description, :summary, :authors, :requirements, length: { minimum: 0, maximum: MAX_TEXT_FIELD_LENGTH }, allow_blank: true
 
+  validate :unique_canonical_number, on: :create
   validate :platform_and_number_are_unique, on: :create
   validate :authors_format, on: :create
   validate :metadata_links_format
@@ -393,5 +393,10 @@ class Version < ApplicationRecord
       errors.add(:metadata, "metadata value ['#{value}'] is too large (maximum is #{max_value_size} bytes)") if value.size > max_value_size
       errors.add(:metadata, "metadata key is empty") if key.empty?
     end
+  end
+
+  def unique_canonical_number
+    version = Version.find_by(canonical_number: canonical_number, rubygem_id: rubygem_id, platform: platform)
+    errors.add(:canonical_number, "has already been taken. Existing version: #{version.number}") unless version.nil?
   end
 end

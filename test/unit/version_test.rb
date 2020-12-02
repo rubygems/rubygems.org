@@ -310,19 +310,19 @@ class VersionTest < ActiveSupport::TestCase
     should "be invalid with trailing zero in segments" do
       version = build(:version, rubygem: @rubygem, number: "1.0.0.0")
       refute version.valid?
-      assert_equal version.errors.messages[:canonical_number], ["has already been taken"]
+      assert_equal version.errors.messages[:canonical_number], ["has already been taken. Existing version: 1.0.0"]
     end
 
     should "be invalid with fewer zero in segments" do
       version = build(:version, rubygem: @rubygem, number: "1.0")
       refute version.valid?
-      assert_equal version.errors.messages[:canonical_number], ["has already been taken"]
+      assert_equal version.errors.messages[:canonical_number], ["has already been taken. Existing version: 1.0.0"]
     end
 
     should "be invalid with leading zero in significant segments" do
       version = build(:version, rubygem: @rubygem, number: "01.0.0")
       refute version.valid?
-      assert_equal version.errors.messages[:canonical_number], ["has already been taken"]
+      assert_equal version.errors.messages[:canonical_number], ["has already been taken. Existing version: 1.0.0"]
     end
 
     should "be valid in a different platform" do
