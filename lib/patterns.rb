@@ -12,22 +12,16 @@ module Patterns
     complex
     continuation
     coverage
-    digest
-    drb
     enumerator
     expect
     fiber
     mkmf
-    pathname
     profiler
     pty
     rational
     rbconfig
     socket
     thread
-    un
-    unicode_normalize
-    win32ole
     ubygems
 
     jruby
