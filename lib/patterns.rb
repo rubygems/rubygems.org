@@ -22,6 +22,7 @@ module Patterns
     rbconfig
     socket
     thread
+    unicode_normalize
     ubygems
 
     jruby
