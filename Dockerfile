@@ -1,4 +1,4 @@
-FROM ruby:2.6-alpine as build
+FROM ruby:2.7-alpine as build
 
 ARG RUBYGEMS_VERSION
 
@@ -35,7 +35,7 @@ RUN bundle config set --local without 'development test assets' && \
   bundle clean --force
 
 
-FROM ruby:2.6-alpine
+FROM ruby:2.7-alpine
 
 ARG RUBYGEMS_VERSION
 
