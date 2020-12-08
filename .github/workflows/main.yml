@@ -1,0 +1,101 @@
+name: Application Tests
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  linting:
+    name: Run Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+      - name: Download Cached Gems
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: bundler-cache-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            bundler-cache-
+      - name: Install Dependencies
+        run: bundle install
+      - name: Run Linting
+        run: |
+          bundle exec brakeman
+          bundle exec rubocop
+  build:
+    name: Test Application
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rubygems: [3.0.3, latest]
+    services:
+      database:
+        image: postgres:9.6
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+      cache:
+        image: memcached
+        ports:
+          - "11211:11211"
+      search:
+        image: elasticsearch:5
+        env:
+          http.host: 0.0.0.0
+          transport.host: 127.0.0.1
+          xpack.security.enabled: false
+          discovery.type: single-node
+        ports:
+          - "9200:9200"
+        options: >-
+          --health-cmd "curl --silent --fail localhost:9200/_cluster/health || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres@127.0.0.1/rubygems_development
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+      - name: Download Cached Gems
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: bundler-cache-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            bundler-cache-
+      - name: Install RubyGems
+        run: |
+          [[ ${{ matrix.rubygems }} == "latest" ]] && gem update --system || gem update --system ${{ matrix.rubygems }}
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get -yqq install libpq-dev chromium-chromedriver
+          bundle install
+          ./script/install_toxiproxy.sh
+      - name: Setup Application
+        run: |
+          cp config/database.yml.example config/database.yml
+          bundle exec rake db:setup
+      - name: Run Tests
+        run: bundle exec rake test
+  deploy:
+    runs-on: ubuntu-latest
+    name: Push Docker Image
+    needs: build
+    env:
+      RUBYGEMS_VERSION: ${{ matrix.rubygems }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v2
+      - name: Deploy Docker Image
+        run: ./script/build_docker.sh
