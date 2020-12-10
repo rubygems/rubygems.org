@@ -91,7 +91,7 @@ jobs:
     name: Push Docker Image
     needs: build
     env:
-      RUBYGEMS_VERSION: ${{ matrix.rubygems }}
+      RUBYGEMS_VERSION: 3.0.3
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     steps:
