@@ -22,10 +22,10 @@ jobs:
             bundler-cache-
       - name: Install Dependencies
         run: bundle install
-      - name: Run Linting
-        run: |
-          bundle exec brakeman
-          bundle exec rubocop
+      - name: Run Brakeman
+        run: bundle exec brakeman
+      - name: Run Rubocop
+        run: bundle exec rubocop
   build:
     name: Test Application
     runs-on: ubuntu-latest
