@@ -29,7 +29,7 @@ class User < ApplicationRecord
   has_many :unconfirmed_ownerships, -> { unconfirmed }, dependent: :destroy, inverse_of: :user, class_name: "Ownership"
   has_many :api_keys, dependent: :destroy
 
-  after_validation :set_unconfirmed_email, if: :email_changed?, on: :update
+  before_save :generate_confirmation_token, if: :will_save_change_to_unconfirmed_email?
   before_create :generate_confirmation_token
 
   validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true
@@ -130,11 +130,6 @@ class User < ApplicationRecord
     coder.tag = nil
     coder.implicit = true
     coder.map = payload
-  end
-
-  def set_unconfirmed_email
-    self.attributes = { unconfirmed_email: email, email: email_was }
-    generate_confirmation_token
   end
 
   def generate_api_key
@@ -263,7 +258,7 @@ class User < ApplicationRecord
   end
 
   def unconfirmed_email_exists?
-    User.where(unconfirmed_email: email).exists?
+    User.where(email: unconfirmed_email).exists?
   end
 
   def yank_gems
