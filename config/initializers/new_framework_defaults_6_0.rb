@@ -20,7 +20,7 @@
 # Rails.application.config.action_dispatch.return_only_media_type_on_content_type = false
 
 # Return false instead of self when enqueuing is aborted from a callback.
-# Rails.application.config.active_job.return_false_on_aborted_enqueue = true
+Rails.application.config.active_job.return_false_on_aborted_enqueue = true
 
 # Use ActionMailer::MailDeliveryJob for sending parameterized and normal mail.
 #
