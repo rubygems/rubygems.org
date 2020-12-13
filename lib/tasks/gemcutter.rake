@@ -136,4 +136,31 @@ namespace :gemcutter do
       puts "Done."
     end
   end
+
+  namespace :versions do
+    desc "Backfill canonical_number field of versions table"
+    task backfill_canonical_number: :environment do
+      versions = Version.order(:created_at).all
+
+      total = versions.count
+      processed = 0
+      puts "Total: #{total}"
+      versions.find_each do |version|
+        canonical_number = Gem::Version.new(version.number).canonical_segments.join(".")
+
+        loop do
+          conflicting_version = Version.find_by(canonical_number: canonical_number, rubygem_id: version.rubygem_id, platform: version.platform)
+          break unless conflicting_version
+
+          canonical_number += ".dedup"
+        end
+
+        version.update_attribute(:canonical_number, canonical_number)
+        processed += 1
+        print format("\r%.2f%% (%d/%d) complete", processed.to_f / total * 100.0, processed, total)
+      end
+      puts
+      puts "Done."
+    end
+  end
 end
