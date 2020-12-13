@@ -125,8 +125,8 @@ GEM
     css_parser (1.7.1)
       addressable
     dalli (2.7.11)
-    delayed_job (4.1.8)
-      activesupport (>= 3.0, < 6.1)
+    delayed_job (4.1.9)
+      activesupport (>= 3.0, < 6.2)
     delayed_job_active_record (4.1.5)
       activerecord (>= 3.0, < 6.2)
       delayed_job (>= 3.0, < 5)
