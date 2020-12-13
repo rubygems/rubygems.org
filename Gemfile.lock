@@ -59,7 +59,7 @@ GEM
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
     ast (2.4.1)
-    autoprefixer-rails (10.0.3.0)
+    autoprefixer-rails (10.1.0.0)
       execjs
     aws-eventstream (1.0.3)
     aws-sdk (2.11.473)
