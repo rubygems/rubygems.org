@@ -2,8 +2,8 @@ require "test_helper"
 
 class GemTypoTest < ActiveSupport::TestCase
   setup do
-    existing = create(:rubygem, name: "delayed_job_active_record")
-    create(:version, rubygem: existing, created_at: Time.now.utc)
+    @existing = create(:rubygem, name: "delayed_job_active_record")
+    create(:version, rubygem: @existing, created_at: Time.now.utc)
 
     deleted = create(:rubygem, name: "deleted_active_record_gem")
     create(:version, rubygem: deleted, created_at: Time.now.utc, indexed: false)
@@ -62,6 +62,25 @@ class GemTypoTest < ActiveSupport::TestCase
     should "return true for three -/_ missing" do
       gem_typo = GemTypo.new("delayedjobactiverecord")
       assert gem_typo.protected_typo?
+    end
+  end
+
+  context "gem has less than GemTypo::DOWNLOADS_THRESHOLD downloads" do
+    setup do
+      @existing.gem_download.update_attribute(:count, 9999)
+      @gem_typo = GemTypo.new("delayedjobactiverecord")
+    end
+
+    should "return false when most recent release was more than GemTypo::LAST_RELEASE_TIME ago" do
+      create(:version, rubygem: @existing, created_at: 6.years.ago)
+
+      refute @gem_typo.protected_typo?
+    end
+
+    should "return true when most recent release was less than GemTypo::LAST_RELEASE_TIME ago" do
+      create(:version, rubygem: @existing, created_at: 4.years.ago)
+
+      assert @gem_typo.protected_typo?
     end
   end
 end
