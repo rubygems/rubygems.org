@@ -344,7 +344,9 @@ pt-BR:
       downloads: Downloads
       title: Gems
     show:
-      licenses_header: Licença
+      licenses_header:
+        one: Licença
+        other: Licenças
       no_licenses: N/A
       requirements_header: Requisitos
       show_all_versions: Mostrar todas as versões (%{count})

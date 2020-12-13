@@ -369,7 +369,9 @@ zh-TW:
       downloads: 下載
       title: Gems
     show:
-      licenses_header: License
+      licenses_header:
+        one: License
+        other: License
       no_licenses: 無
       requirements_header: 必填
       show_all_versions: 顯示所有版本（共 %{count}）

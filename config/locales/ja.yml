@@ -344,7 +344,9 @@ ja:
       downloads: ダウンロード
       title: Gems
     show:
-      licenses_header: ライセンス
+      licenses_header:
+        one: ライセンス
+        other: ライセンス
       no_licenses: N/A
       requirements_header: 必須要件
       show_all_versions: 全てのバージョンを表示 (全%{count}項目)

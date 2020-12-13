@@ -344,7 +344,9 @@ de:
       downloads: Downloads
       title: Gems
     show:
-      licenses_header: Lizenz
+      licenses_header:
+        one: Lizenz
+        other: Lizenzen
       no_licenses: k.A.
       requirements_header: Anforderungen
       show_all_versions: Zeige alle Versionen (%{count} total)
