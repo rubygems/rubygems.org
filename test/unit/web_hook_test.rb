@@ -2,7 +2,7 @@ require "test_helper"
 
 class WebHookTest < ActiveSupport::TestCase
   should belong_to :user
-  should belong_to :rubygem
+  should belong_to(:rubygem).optional(true)
 
   should "be valid for normal hook" do
     hook = create(:web_hook)
