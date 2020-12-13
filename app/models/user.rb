@@ -227,7 +227,7 @@ class User < ApplicationRecord
 
   def block!
     transaction do
-      update_attribute(:email, "security+locked-#{SecureRandom.hex(4)}-#{id}-#{handle}@rubygems.org")
+      update_attribute(:email, "security+locked-#{SecureRandom.hex(4)}-#{display_handle.downcase}@rubygems.org")
       confirm_email!
       disable_mfa!
       update_attribute(:password, SecureRandom.alphanumeric)

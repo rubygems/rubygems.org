@@ -460,4 +460,14 @@ class UserTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "block when handle has uppercase" do
+    setup { @user = create(:user, handle: "MikeJudge") }
+
+    should "not raise ActiveRecord::RecordInvalid for email address already taken" do
+      assert_changed(@user, :email, :password, :api_key, :mfa_seed, :remember_token) do
+        @user.block!
+      end
+    end
+  end
 end
