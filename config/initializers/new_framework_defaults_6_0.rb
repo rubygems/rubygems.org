@@ -22,14 +22,6 @@
 # Return false instead of self when enqueuing is aborted from a callback.
 # Rails.application.config.active_job.return_false_on_aborted_enqueue = true
 
-# Send Active Storage analysis and purge jobs to dedicated queues.
-# Rails.application.config.active_storage.queues.analysis = :active_storage_analysis
-# Rails.application.config.active_storage.queues.purge    = :active_storage_purge
-
-# When assigning to a collection of attachments declared via `has_many_attached`, replace existing
-# attachments instead of appending. Use #attach to add new attachments without replacing existing ones.
-# Rails.application.config.active_storage.replace_on_assign_to_many = true
-
 # Use ActionMailer::MailDeliveryJob for sending parameterized and normal mail.
 #
 # The default delivery jobs (ActionMailer::Parameterized::DeliveryJob, ActionMailer::DeliveryJob),
