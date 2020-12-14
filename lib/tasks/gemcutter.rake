@@ -140,7 +140,7 @@ namespace :gemcutter do
   namespace :versions do
     desc "Backfill canonical_number field of versions table"
     task backfill_canonical_number: :environment do
-      versions = Version.where.not(canonical_number: nil).order(:created_at).all
+      versions = Version.where(canonical_number: nil).order(:created_at).all
 
       total = versions.count
       processed = 0
