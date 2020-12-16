@@ -22,6 +22,24 @@ ActiveRecord::Schema.define(version: 2020_11_30_040817) do
     t.datetime "updated_at"
   end
 
+  create_table "api_keys", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name", null: false
+    t.string "hashed_key", null: false
+    t.boolean "index_rubygems", default: false, null: false
+    t.boolean "push_rubygem", default: false, null: false
+    t.boolean "yank_rubygem", default: false, null: false
+    t.boolean "add_owner", default: false, null: false
+    t.boolean "remove_owner", default: false, null: false
+    t.boolean "access_webhooks", default: false, null: false
+    t.boolean "show_dashboard", default: false, null: false
+    t.datetime "last_accessed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["hashed_key"], name: "index_api_keys_on_hashed_key", unique: true
+    t.index ["user_id"], name: "index_api_keys_on_user_id"
+  end
+
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
     t.integer "priority", default: 0
     t.integer "attempts", default: 0
@@ -228,4 +246,5 @@ ActiveRecord::Schema.define(version: 2020_11_30_040817) do
     t.index ["user_id", "rubygem_id"], name: "index_web_hooks_on_user_id_and_rubygem_id"
   end
 
+  add_foreign_key "api_keys", "users"
 end

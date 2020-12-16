@@ -70,4 +70,9 @@ class MailerPreview < ActionMailer::Preview
     user = User.last
     OwnersMailer.owner_added(user.id, owner.id, authorizer.id, gem.id)
   end
+
+  def api_key_created
+    api_key = ApiKey.last
+    Mailer.api_key_created(api_key.id)
+  end
 end

@@ -72,7 +72,7 @@ class PasswordResetTest < SystemTest
 
     visit edit_settings_path
 
-    click_link "Request a new one here."
+    click_link "Reset password"
 
     fill_in "Email address", with: @user.email
     perform_enqueued_jobs { click_button "Reset password" }

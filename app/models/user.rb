@@ -27,9 +27,10 @@ class User < ApplicationRecord
 
   # used for deleting unconfirmed ownerships as well on user destroy
   has_many :unconfirmed_ownerships, -> { unconfirmed }, dependent: :destroy, inverse_of: :user, class_name: "Ownership"
+  has_many :api_keys, dependent: :destroy
 
   after_validation :set_unconfirmed_email, if: :email_changed?, on: :update
-  before_create :generate_api_key, :generate_confirmation_token
+  before_create :generate_confirmation_token
 
   validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true
 

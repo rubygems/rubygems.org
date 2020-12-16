@@ -3,8 +3,9 @@ require "test_helper"
 class PushTest < ActionDispatch::IntegrationTest
   setup do
     Dir.chdir(Dir.mktmpdir)
+    @key = "12345"
     @user = create(:user)
-    cookies[:remember_token] = @user.remember_token
+    create(:api_key, user: @user, key: @key, push_rubygem: true)
   end
 
   test "pushing a gem" do
@@ -99,7 +100,7 @@ class PushTest < ActionDispatch::IntegrationTest
     post api_v1_rubygems_path,
       env: { "RAW_POST_DATA" => File.read(path) },
       headers: { "CONTENT_TYPE" => "application/octet-stream",
-                 "HTTP_AUTHORIZATION" => @user.api_key }
+                 "HTTP_AUTHORIZATION" => @key }
   end
 
   teardown do

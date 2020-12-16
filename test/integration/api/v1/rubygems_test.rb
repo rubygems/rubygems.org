@@ -2,7 +2,8 @@ require "test_helper"
 
 class Api::V1::RubygemsTest < ActionDispatch::IntegrationTest
   setup do
-    @user = create(:user)
+    @key = "12345"
+    create(:api_key, key: @key, index_rubygems: true, push_rubygem: true)
   end
 
   test "request has remote addr present" do
@@ -11,7 +12,7 @@ class Api::V1::RubygemsTest < ActionDispatch::IntegrationTest
 
     post "/api/v1/gems",
           params: gem_file("test-1.0.0.gem").read,
-          headers: { REMOTE_ADDR: ip_address, HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
+          headers: { REMOTE_ADDR: ip_address, HTTP_AUTHORIZATION: @key, CONTENT_TYPE: "application/octet-stream" }
 
     assert_response :success
   end
@@ -21,7 +22,7 @@ class Api::V1::RubygemsTest < ActionDispatch::IntegrationTest
 
     post "/api/v1/gems",
           params: gem_file("test-1.0.0.gem").read,
-          headers: { REMOTE_ADDR: "", HTTP_AUTHORIZATION: @user.api_key, CONTENT_TYPE: "application/octet-stream" }
+          headers: { REMOTE_ADDR: "", HTTP_AUTHORIZATION: @key, CONTENT_TYPE: "application/octet-stream" }
 
     assert_response :success
   end

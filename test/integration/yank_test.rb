@@ -5,6 +5,9 @@ class YankTest < SystemTest
     @user = create(:user, password: PasswordHelpers::SECURE_TEST_PASSWORD)
     @rubygem = create(:rubygem, name: "sandworm")
     create(:ownership, user: @user, rubygem: @rubygem)
+
+    @user_api_key = "12345"
+    create(:api_key, user: @user, key: @user_api_key, yank_rubygem: true)
     Dir.chdir(Dir.mktmpdir)
 
     visit sign_in_path
@@ -17,7 +20,7 @@ class YankTest < SystemTest
     create(:version, rubygem: @rubygem, number: "1.1.1")
     create(:version, rubygem: @rubygem, number: "2.2.2")
 
-    page.driver.browser.header("Authorization", @user.api_key)
+    page.driver.browser.header("Authorization", @user_api_key)
     page.driver.delete yank_api_v1_rubygems_path(gem_name: @rubygem.name, version: "2.2.2")
 
     visit dashboard_path
@@ -47,24 +50,25 @@ class YankTest < SystemTest
     assert page.has_content? "sandworm"
     assert page.has_content? "0.0.0"
 
-    page.driver.browser.header("Authorization", @user.api_key)
+    page.driver.browser.header("Authorization", @user_api_key)
     page.driver.delete yank_api_v1_rubygems_path(gem_name: @rubygem.name, version: "0.0.0")
 
     visit rubygem_path(@rubygem)
     assert page.has_content? "sandworm"
     assert page.has_content? "This gem is not currently hosted on RubyGems.org"
 
-    other_user = create(:user)
+    other_user_key = "12323"
+    other_api_key = create(:api_key, key: other_user_key, push_rubygem: true)
 
     build_gem "sandworm", "1.0.0"
-    page.driver.browser.header("Authorization", other_user.api_key)
+    page.driver.browser.header("Authorization", other_user_key)
     page.driver.post api_v1_rubygems_path, File.read("sandworm-1.0.0.gem"),
       "CONTENT_TYPE" => "application/octet-stream"
 
     visit rubygem_path(@rubygem)
     assert page.has_content? "sandworm"
     assert page.has_content? "1.0.0"
-    assert page.has_selector?("a[alt='#{other_user.handle}']")
+    assert page.has_selector?("a[alt='#{other_api_key.user.handle}']")
     refute page.has_content?("0.0.0")
     refute page.has_selector?("a[alt='#{@user.handle}']")
   end

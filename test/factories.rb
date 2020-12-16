@@ -58,6 +58,18 @@ FactoryBot.define do
     user
   end
 
+  factory :api_key do
+    transient { key { "12345" } }
+
+    user
+    name { "ci-key" }
+
+    # enabled by default. disabled when show_dashboard is enabled.
+    index_rubygems { show_dashboard ? false : true }
+
+    hashed_key { Digest::SHA256.hexdigest(key) }
+  end
+
   sequence :name do |n|
     "RubyGem#{n}"
   end

@@ -10,13 +10,15 @@ class DashboardTest < ActionDispatch::IntegrationTest
 
   test "request with array of api keys does not pass autorization" do
     cookies[:remember_token] = nil
+    create(:api_key, user: @user, key: "1234", show_dashboard: true)
+
     rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
     create(:subscription, rubygem: rubygem, user: @user)
 
-    get "/dashboard.atom?api_key=#{@user.api_key}", as: :json
+    get "/dashboard.atom?api_key=1234", as: :json
     assert page.has_content? "sandworm"
 
-    get "/dashboard.atom?api_key[]=#{@user.api_key}&api_key[]=key1", as: :json
+    get "/dashboard.atom?api_key[]=1234&api_key[]=key1", as: :json
     refute page.has_content? "sandworm"
   end
 

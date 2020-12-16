@@ -181,16 +181,6 @@ class UserTest < ActiveSupport::TestCase
       assert_nil @user.hide_email
     end
 
-    should "have a 32 character hexadecimal api key" do
-      assert @user.api_key =~ /^[a-f0-9]{32}$/
-    end
-
-    should "reset api key" do
-      assert_changed(@user, :api_key) do
-        @user.reset_api_key!
-      end
-    end
-
     should "only return rubygems" do
       my_rubygem = create(:rubygem)
       create(:ownership, user: @user, rubygem: my_rubygem)

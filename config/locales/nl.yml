@@ -11,6 +11,7 @@ nl:
   locale_name: Nederlands
   none: Geen
   not_found: Niet gevonden
+  api_key_forbidden:
   please_sign_up: Toegang geweigerd. Schrijf je in voor een account op https://rubygems.org
   please_sign_in:
   otp_incorrect:
@@ -47,6 +48,39 @@ nl:
     errors:
       messages:
         unpwn:
+  api_keys:
+    create:
+      success:
+    destroy:
+      success:
+    index:
+      api_keys:
+      name:
+      scopes:
+      age:
+      last_access:
+      action:
+      delete:
+      confirm:
+      confirm_all:
+      new_key:
+      index_rubygems:
+      push_rubygem:
+      yank_rubygem:
+      add_owner:
+      remove_owner:
+      access_webhooks:
+      show_dashboard:
+      reset:
+      save_key:
+    new:
+      new_api_key:
+    reset:
+      success:
+    update:
+      success:
+    edit:
+      edit_api_key:
   clearance_mailer:
     change_password:
       title:
@@ -259,8 +293,6 @@ nl:
         reset: Reset mijn API key
         title: API toegang
       reset_password:
-        link_text: Vraag hier een nieuwe aan.
-        text_html: Nieuw wachtwoord nodig? Geen probleem. %{link}
         title: Reset wachtwoord
       mfa:
         multifactor_auth:
@@ -291,6 +323,7 @@ nl:
       instructions:
       list_only_owner_html:
       list_multi_owner:
+      warning:
     rubygem:
       owners_header:
     destroy:

@@ -56,10 +56,6 @@ class OwnersController < ApplicationController
     @rubygem.owned_by?(current_user)
   end
 
-  def password_session_active?
-    session[:verification] && session[:verification] > Time.current
-  end
-
   def redirect_to_verify
     session[:redirect_uri] = rubygem_owners_url(@rubygem)
     redirect_to verify_session_path

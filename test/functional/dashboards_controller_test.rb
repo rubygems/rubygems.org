@@ -2,20 +2,32 @@ require "test_helper"
 
 class DashboardsControllerTest < ActionController::TestCase
   context "When not logged in" do
-    setup do
-      user = create(:user)
-      @subscribed_version = create(:version, created_at: 1.hour.ago)
-      create(:subscription, rubygem: @subscribed_version.rubygem, user: user)
+    context "with show dashboard api key scope" do
+      setup do
+        api_key = create(:api_key, key: "12345", show_dashboard: true)
+        @subscribed_version = create(:version, created_at: 1.hour.ago)
+        create(:subscription, rubygem: @subscribed_version.rubygem, user: api_key.user)
 
-      get :show, params: { api_key: user.api_key }, format: "atom"
+        get :show, params: { api_key: "12345" }, format: "atom"
+      end
+
+      context "On GET to show as an atom feed with a working api_key" do
+        should respond_with :success
+
+        should "render an XML feed with subscribed items" do
+          assert_select "entry > title", text: /#{@subscribed_version.rubygem.name}/
+        end
+      end
     end
 
-    context "On GET to show as an atom feed with a working api_key" do
-      should respond_with :success
+    context "without show dashboard api key scope" do
+      setup do
+        create(:api_key, key: "12443")
 
-      should "render an XML feed with subscribed items" do
-        assert_select "entry > title", text: /#{@subscribed_version.rubygem.name}/
+        get :show, params: { api_key: "12443" }, format: "atom"
       end
+
+      should redirect_to("the sign in page") { sign_in_path }
     end
   end
 
@@ -62,7 +74,6 @@ class DashboardsControllerTest < ActionController::TestCase
           create(:version, created_at: n.hours.ago)
         end
 
-        @request.env["HTTP_AUTHORIZATION"] = @user.api_key
         get :show, format: "atom"
       end
 
