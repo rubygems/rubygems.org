@@ -60,7 +60,6 @@ class RubygemsHelperTest < ActionView::TestCase
     rubygem = create(:rubygem)
     url = "https://badge.fury.io/rb/#{rubygem.name}/install"
 
-    @virtual_path = "rubygems.show"
     assert_match url, badge_link(rubygem)
   end
 
@@ -68,7 +67,6 @@ class RubygemsHelperTest < ActionView::TestCase
     rubygem = create(:rubygem, name: "my_gem")
     url = "mailto:support@rubygems.org?subject=Reporting Abuse on my_gem"
 
-    @virtual_path = "rubygems.show"
     assert_match url, report_abuse_link(rubygem)
   end
 
@@ -77,7 +75,6 @@ class RubygemsHelperTest < ActionView::TestCase
       @linkset = build(:linkset)
       @linkset.wiki = nil
       @linkset.code = ""
-      @virtual_path = "rubygems.show"
     end
 
     should "create link for homepage" do
