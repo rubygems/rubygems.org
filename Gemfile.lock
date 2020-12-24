@@ -296,7 +296,7 @@ GEM
       ffi (>= 1.0.6)
       msgpack (>= 0.4.3)
       optimist (>= 3.0.0)
-    rdoc (6.2.1)
+    rdoc (6.3.0)
     regexp_parser (1.7.1)
     request_store (1.5.0)
       rack (>= 1.4)
