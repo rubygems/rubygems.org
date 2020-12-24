@@ -11,10 +11,19 @@ module ESHelper
   end
 
   def es_downloads(id)
+    response = get_response(id)
+    response["_source"]["downloads"]
+  end
+
+  def es_version_downloads(id)
+    response = get_response(id)
+    response["_source"]["version_downloads"]
+  end
+
+  def get_response(id)
     refresh_index
-    response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
+    Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
                                                     type: "rubygem",
                                                     id: id
-    response["_source"]["downloads"]
   end
 end
