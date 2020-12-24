@@ -1,4 +1,5 @@
 require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?
+require_relative "../../lib/middleware/redirector"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
