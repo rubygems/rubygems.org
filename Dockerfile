@@ -25,8 +25,7 @@ ADD https://s3-us-west-2.amazonaws.com/oregon.production.s3.rubygems.org/version
 RUN mv /app/config/database.yml.example /app/config/database.yml
 
 
-RUN gem install bundler io-console --no-document && \
-  bundle config set --local without 'development test' && \
+RUN bundle config set --local without 'development test' && \
   bundle install --jobs 20 --retry 5
 
 RUN RAILS_ENV=production RAILS_GROUPS=assets SECRET_KEY_BASE=1234 bin/rails assets:precompile
