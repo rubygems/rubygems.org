@@ -23,7 +23,6 @@ module ESHelper
   def get_response(id)
     refresh_index
     Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
-                                                    type: "rubygem",
                                                     id: id
   end
 end
