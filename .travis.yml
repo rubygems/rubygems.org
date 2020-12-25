@@ -13,7 +13,7 @@ rvm:
 addons:
   apt:
     sources:
-      - elasticsearch-5.x
+      - elasticsearch-6.x
     packages:
       - elasticsearch
       - openjdk-8-jre-headless
