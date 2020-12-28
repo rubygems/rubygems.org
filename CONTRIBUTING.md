@@ -86,7 +86,7 @@ Follow the instructions below on how to install Bundler and setup the database.
   * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
 * Use Rubygems 3.0.3
 * Install bundler: `gem install bundler`
-* Install Elastic Search:
+* Install Elastic Search (see the docker installation instructions above):
   * Pull ElasticSearch `5.6.16` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:5.6.16`
   * Running Elasticsearch from the command line:
   ```
