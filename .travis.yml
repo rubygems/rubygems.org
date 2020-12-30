@@ -34,6 +34,7 @@ before_install:
   - git submodule update --init
   - sh -c "if [ '$RUBYGEMS_VERSION' != 'latest' ]; then gem update --system $RUBYGEMS_VERSION; fi"
   - gem --version
+  - bundle -v
   - script/install_toxiproxy.sh
 
 before_script:
@@ -47,7 +48,7 @@ script:
   - script/build_docker.sh
 
 env:
-  - RUBYGEMS_VERSION=3.0.3
+  - RUBYGEMS_VERSION=3.1.5
   - RUBYGEMS_VERSION=latest
 
 matrix:
