@@ -161,6 +161,20 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         end
       end
     end
+
+    context "when user has old sha1 password" do
+      setup do
+        @user = create(:user, encrypted_password: "b35e3b6e1b3021e71645b4df8e0a3c7fd98a95fa")
+      end
+
+      should "deny access" do
+        authorize_with("#{@user.handle}:pass")
+        get :show
+
+        assert_response 401
+        assert_match "HTTP Basic: Access denied.", @response.body
+      end
+    end
   end
 
   context "on POST to create" do

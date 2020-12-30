@@ -59,6 +59,8 @@ class User < ApplicationRecord
   def self.authenticate(who, password)
     user = find_by(email: who.downcase) || find_by(handle: who)
     user if user&.authenticated?(password)
+  rescue BCrypt::Errors::InvalidHash
+    nil
   end
 
   def self.find_by_slug!(slug)
