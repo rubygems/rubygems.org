@@ -34,17 +34,8 @@ class PasswordsController < Clearance::PasswordsController
 
   private
 
-  def find_user_for_create
-    Clearance.configuration.user_model
-      .find_by_normalized_email password_params[:email]
-  end
-
   def url_after_update
     dashboard_path
-  end
-
-  def password_params
-    params.require(:password).permit(:email)
   end
 
   def reset_params

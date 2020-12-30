@@ -2,6 +2,13 @@ require "test_helper"
 
 class PasswordsControllerTest < ActionController::TestCase
   context "on POST to create" do
+    context "when missing email" do
+      should "alerts about missing email" do
+        post :create
+        assert_equal flash[:alert], "Email can't be blank."
+      end
+    end
+
     context "with valid params" do
       setup do
         @user = create(:user)
