@@ -7,7 +7,7 @@
 # Read the Guide for Upgrading Ruby on Rails for more info on each option.
 
 # Don't force requests from old versions of IE to be UTF-8 encoded.
-# Rails.application.config.action_view.default_enforce_utf8 = false
+Rails.application.config.action_view.default_enforce_utf8 = false
 
 # Embed purpose and expiry metadata inside signed and encrypted
 # cookies for increased security.
@@ -34,4 +34,4 @@ Rails.application.config.action_mailer.delivery_job = "ActionMailer::MailDeliver
 # Enable the same cache key to be reused when the object being cached of type
 # `ActiveRecord::Relation` changes by moving the volatile information (max updated at and count)
 # of the relation's cache key into the cache version to support recycling cache key.
-# Rails.application.config.active_record.collection_cache_versioning = true
+Rails.application.config.active_record.collection_cache_versioning = true
