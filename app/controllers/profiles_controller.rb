@@ -44,7 +44,9 @@ class ProfilesController < ApplicationController
   private
 
   def params_user
-    params.require(:user).permit(*User::PERMITTED_ATTRS)
+    params.require(:user).permit(:handle, :twitter_username, :unconfirmed_email, :hide_email).tap do |hash|
+      hash.delete(:unconfirmed_email) if hash[:unconfirmed_email] == current_user.email
+    end
   end
 
   def verify_password

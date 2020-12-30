@@ -1,12 +1,6 @@
 require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
-  def assert_resetting_email_changes(attr_name)
-    assert_changed(@user, attr_name) do
-      @user.update(email: "some@one.com")
-    end
-  end
-
   should have_many(:ownerships).dependent(:destroy)
   should have_many(:unconfirmed_ownerships).dependent(:destroy)
   should have_many(:rubygems).through(:ownerships)
@@ -187,17 +181,11 @@ class UserTest < ActiveSupport::TestCase
       assert_equal [my_rubygem], @user.rubygems
     end
 
-    context "email change" do
-      should "reset confirmation token" do
-        assert_resetting_email_changes :confirmation_token
-      end
-
-      should "store unconfirm email" do
-        assert_resetting_email_changes :unconfirmed_email
-      end
-
-      should "reset token_expires_at" do
-        assert_resetting_email_changes :token_expires_at
+    context "unconfirmed_email update" do
+      should "set confirmation token and token_expires_at" do
+        assert_changed(@user, :confirmation_token, :token_expires_at) do
+          @user.update(unconfirmed_email: "some@one.com")
+        end
       end
     end
 
@@ -469,6 +457,16 @@ class UserTest < ActiveSupport::TestCase
 
       should "return nil when not founded by handle" do
         refute User.find_by_slug("notfoundable")
+      end
+    end
+  end
+
+  context "block when handle has uppercase" do
+    setup { @user = create(:user, handle: "MikeJudge") }
+
+    should "not raise ActiveRecord::RecordInvalid for email address already taken" do
+      assert_changed(@user, :email, :password, :api_key, :mfa_seed, :remember_token) do
+        @user.block!
       end
     end
   end

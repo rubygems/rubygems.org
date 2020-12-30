@@ -149,7 +149,7 @@ class ProfilesControllerTest < ActionController::TestCase
       context "updating email with existing email" do
         setup do
           create(:user, email: "cannotchange@tothis.com")
-          put :update, params: { user: { email: "cannotchange@tothis.com", password: @user.password } }
+          put :update, params: { user: { unconfirmed_email: "cannotchange@tothis.com", password: @user.password } }
         end
 
         should "not set unconfirmed_email" do
@@ -161,12 +161,11 @@ class ProfilesControllerTest < ActionController::TestCase
       context "updating email with existing unconfirmed_email" do
         setup do
           create(:user, unconfirmed_email: "cannotchange@tothis.com")
-          put :update, params: { user: { email: "cannotchange@tothis.com", password: @user.password } }
+          put :update, params: { user: { unconfirmed_email: "cannotchange@tothis.com", password: @user.password } }
         end
 
-        should "not set unconfirmed_email" do
-          assert page.has_content? "Email address has already been taken"
-          refute_equal "cannotchange@tothis.com", @user.unconfirmed_email
+        should "set unconfirmed_email" do
+          assert_equal "cannotchange@tothis.com", @user.unconfirmed_email
         end
       end
 
@@ -180,13 +179,13 @@ class ProfilesControllerTest < ActionController::TestCase
           end
 
           should "set unconfirmed email and confirmation token" do
-            put :update, params: { user: { email: @new_email, password: @user.password } }
+            put :update, params: { user: { unconfirmed_email: @new_email, password: @user.password } }
             assert_equal @new_email, @user.unconfirmed_email
             assert @user.confirmation_token
           end
 
           should "not update the current email" do
-            put :update, params: { user: { email: @new_email, password: @user.password } }
+            put :update, params: { user: { unconfirmed_email: @new_email, password: @user.password } }
             assert_equal @current_email, @user.email
           end
 
@@ -196,7 +195,7 @@ class ProfilesControllerTest < ActionController::TestCase
 
             Mailer.expects(:email_reset).returns(mailer).times(1)
             Mailer.expects(:email_reset_update).returns(mailer).times(1)
-            put :update, params: { user: { email: @new_email, password: @user.password } }
+            put :update, params: { user: { unconfirmed_email: @new_email, password: @user.password } }
             Delayed::Worker.new.work_off
           end
         end

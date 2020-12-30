@@ -46,7 +46,7 @@
 
   <div class="text_field">
     <%= form.label :email, :class => 'form__label' %>
-    <%= form.email_field :email, :class => 'form__input' %>
+    <%= form.email_field :email, name: 'user[unconfirmed_email]', class: 'form__input' %>
   </div>
 
   <p class='form__field__instructions'>

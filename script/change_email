@@ -8,7 +8,6 @@ ENV["RAILS_ENV"] ||= "production"
 require_relative "../config/environment"
 
 from_user = User.find_by_email!(from_email)
-from_user.class.skip_callback(:validation, :after, :set_unconfirmed_email)
 from_user.email = to_email
 from_user.email_confirmed = false
 from_user.generate_confirmation_token
