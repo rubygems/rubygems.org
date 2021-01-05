@@ -238,8 +238,6 @@ GEM
     parallel (1.19.2)
     parser (2.7.1.4)
       ast (~> 2.4.1)
-    paul_revere (3.1.0)
-      rails (>= 5.0, < 6.1)
     pg (1.2.3)
     pry (0.13.0)
       coderay (~> 1.1)
@@ -442,7 +440,6 @@ DEPENDENCIES
   minitest
   mocha
   newrelic_rpm
-  paul_revere (~> 3.1.0)
   pg
   pry-byebug
   rack

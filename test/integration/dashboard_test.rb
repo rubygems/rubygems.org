@@ -57,10 +57,4 @@ class DashboardTest < ActionDispatch::IntegrationTest
     assert_equal "application/atom+xml", response.media_type
     assert page.has_content? "sandworm"
   end
-
-  test "shows announcements on dashboard" do
-    Announcement.create!(body: "hello w.")
-    get dashboard_path
-    assert page.has_content?("hello w.")
-  end
 end

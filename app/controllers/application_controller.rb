@@ -2,7 +2,6 @@ class ApplicationController < ActionController::Base
   include Clearance::Authentication
   include Clearance::Authorization
 
-  helper :announcements
   helper ActiveSupport::NumberHelper
 
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
