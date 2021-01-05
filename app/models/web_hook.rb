@@ -85,16 +85,16 @@ class WebHook < ApplicationRecord
       if WebHook.exists?(user_id: user.id,
                          rubygem_id: rubygem.id,
                          url: url)
-        errors[:base] << "A hook for #{url} has already been registered for #{rubygem.name}"
+        errors.add(:base, "A hook for #{url} has already been registered for #{rubygem.name}")
       end
     elsif user
       if WebHook.exists?(user_id: user.id,
                          rubygem_id: nil,
                          url: url)
-        errors[:base] << "A global hook for #{url} has already been registered"
+        errors.add(:base, "A global hook for #{url} has already been registered")
       end
     else
-      errors[:base] << "A user is required for this hook"
+      errors.add(:base, "A user is required for this hook")
     end
   end
 end
