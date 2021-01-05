@@ -5,10 +5,7 @@ class ApiKey < ApplicationRecord
   validates :user, :name, :hashed_key, presence: true
   validate :exclusive_show_dashboard_scope, if: :can_show_dashboard?
   validate :scope_presence
-  validates :name, format: {
-    with: /\A[a-zA-Z0-9_-]*\z/,
-    message: "can only contain letters, numbers, dash and underscores"
-  }, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
+  validates :name, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
 
   def enabled_scopes
     API_SCOPES.map { |scope| scope if send(scope) }.compact
