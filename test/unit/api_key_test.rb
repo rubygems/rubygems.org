@@ -22,12 +22,6 @@ class ApiKeyTest < ActiveSupport::TestCase
     assert_contains api_key.errors[:name], "is too long (maximum is 255 characters)"
   end
 
-  should "be invalid when name has invalid characters" do
-    api_key = build(:api_key, name: "aa'")
-    refute api_key.valid?
-    assert_contains api_key.errors[:name], "can only contain letters, numbers, dash and underscores"
-  end
-
   context "#scope" do
     setup do
       @api_key = create(:api_key, index_rubygems: true, push_rubygem: true)
