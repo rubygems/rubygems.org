@@ -8,6 +8,7 @@
       <%= label_tag :level, t(".mfa.level.title"), class: "form__label" %>
       <%= select_tag :level, options_for_select([
         [t(".mfa.level.ui_and_api"), "ui_and_api"],
+        [t(".mfa.level.ui_and_gem_signin"), "ui_and_gem_signin"],
         [t(".mfa.level.ui_only"), "ui_only"],
         [t(".mfa.level.disabled"), "disabled"]], @user.mfa_level), class: "form__input form__select" %>
       <div class="text_field">

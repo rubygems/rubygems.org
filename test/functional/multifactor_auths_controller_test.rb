@@ -99,6 +99,18 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             assert @user.reload.mfa_ui_and_api?
           end
         end
+
+        context "on updating to ui_and_gem_signin" do
+          setup do
+            put :update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now, level: "ui_and_gem_signin" }
+          end
+
+          should respond_with :redirect
+          should redirect_to("the settings page") { edit_settings_path }
+          should "update make mfa level to mfa_ui_and_gem_signin now" do
+            assert @user.reload.mfa_ui_and_gem_signin?
+          end
+        end
       end
     end
 
