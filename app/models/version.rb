@@ -354,7 +354,7 @@ class Version < ApplicationRecord
 
   def platform_and_number_are_unique
     return unless Version.exists?(rubygem_id: rubygem_id, number: number, platform: platform)
-    errors[:base] << "A version already exists with this number or platform."
+    errors.add(:base, "A version already exists with this number or platform.")
   end
 
   def authors_format
