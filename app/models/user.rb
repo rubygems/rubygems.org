@@ -213,6 +213,11 @@ class User < ApplicationRecord
     save!(validate: false)
   end
 
+  def mfa_gem_signin_authorized?(otp)
+    return true unless mfa_ui_and_gem_signin? || mfa_ui_and_api?
+    otp_verified?(otp)
+  end
+
   def mfa_api_authorized?(otp)
     return true unless mfa_ui_and_api?
     otp_verified?(otp)
