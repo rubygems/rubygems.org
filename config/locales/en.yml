@@ -57,6 +57,8 @@ en:
       messages:
         unpwn: has previously appeared in a data breach and should not be used
         blocked: "domain '%{domain}' has been blocked for spamming. Please use a valid personal email."
+    models:
+      user: User
   api_keys:
     create:
       success: "Created new API key"

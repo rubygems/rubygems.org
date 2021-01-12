@@ -47,8 +47,10 @@ pt-BR:
         password: Senha
     errors:
       messages:
-        unpwn:
+        unpwn: já apareceu anteriormente em um vazamento de dados e não deve ser utilizada
         blocked:
+    models:
+      user: Usuário
   api_keys:
     create:
       success:
