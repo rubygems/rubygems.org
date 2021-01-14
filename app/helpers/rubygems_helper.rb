@@ -12,7 +12,7 @@ module RubygemsHelper
   end
 
   def link_to_page(id, url)
-    link_to(t(".links.#{id}"), url, rel: "nofollow", class: %w[gem__link t-list__item], id: id) if url.present?
+    link_to(t("rubygems.aside.links.#{id}"), url, rel: "nofollow", class: %w[gem__link t-list__item], id: id) if url.present?
   end
 
   def link_to_directory
@@ -77,14 +77,14 @@ module RubygemsHelper
 
   def badge_link(rubygem)
     badge_url = "https://badge.fury.io/rb/#{rubygem.name}/install"
-    link_to t(".links.badge"), badge_url, class: "gem__link t-list__item", id: :badge
+    link_to t("rubygems.aside.links.badge"), badge_url, class: "gem__link t-list__item", id: :badge
   end
 
   def report_abuse_link(rubygem)
     subject = "Reporting Abuse on #{rubygem.name}"
     report_abuse_url = "mailto:support@rubygems.org" \
       "?subject=" + subject
-    link_to t(".links.report_abuse"), report_abuse_url.html_safe, class: "gem__link t-list__item"
+    link_to t("rubygems.aside.links.report_abuse"), report_abuse_url.html_safe, class: "gem__link t-list__item"
   end
 
   def ownership_link(rubygem)
