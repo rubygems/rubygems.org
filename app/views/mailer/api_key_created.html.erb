@@ -24,7 +24,7 @@
           <p>
             Note that we are in the process of migration from a single API key per account to multiple API keys with minimum scopes enabled.
             <strong>GET /api/v1/api_key</strong>, used in <strong>gem signin</strong> before rubygems 3.2.0 has been updated
-            to create a new API key on every request. Please update your rubygems with <strong>gem --update system</strong> to start using the
+            to create a new API key on every request. Please update your rubygems with <strong>gem update --system</strong> to start using the
             new <strong>POST /api/v1/api_key</strong> endpoint (<%= link_to("Read more", "https://guides.rubygems.org/api-key-scopes/", target: :_blank) %>).
           </p>
 
