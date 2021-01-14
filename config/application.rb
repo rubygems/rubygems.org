@@ -53,6 +53,7 @@ module Gemcutter
     config.plugins = [:dynamic_form]
 
     config.eager_load_paths << Rails.root.join("lib")
+    config.toxic_domains_filepath = Rails.root.join("vendor", "toxic_domains_whole.txt")
   end
 
   def self.config

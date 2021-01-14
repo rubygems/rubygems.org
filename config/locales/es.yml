@@ -56,6 +56,7 @@ es:
     errors:
       messages:
         unpwn:
+        blocked:
   api_keys:
     create:
       success:

@@ -66,6 +66,18 @@ class UserTest < ActiveSupport::TestCase
         refute user.valid?
         assert_contains user.errors[:email], "is invalid"
       end
+
+      should "be invalid with toxic domains in email" do
+        Tempfile.create("toxic_domains_whole.txt") do |f|
+          f.write "thing.com"
+          f.rewind
+          Gemcutter::Application.config.stubs(:toxic_domains_filepath).returns(f.path)
+
+          user = build(:user, email: "mail@thing.com")
+          refute user.valid?
+          assert_contains user.errors[:email], "domain 'thing.com' has been blocked for spamming. Please use a valid personal email."
+        end
+      end
     end
 
     context "twitter_username" do

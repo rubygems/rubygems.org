@@ -53,6 +53,7 @@ class User < ApplicationRecord
     allow_nil: true,
     unless: :skip_password_validation?
   validate :unconfirmed_email_uniqueness
+  validate :toxic_email_domain, on: :create
 
   enum mfa_level: { disabled: 0, ui_only: 1, ui_and_api: 2 }, _prefix: :mfa
 
@@ -268,5 +269,13 @@ class User < ApplicationRecord
     versions_to_yank.each do |v|
       deletions.create(version: v)
     end
+  end
+
+  def toxic_email_domain
+    domain             = email.split("@").last
+    toxic_domains_path = Pathname.new(Gemcutter::Application.config.toxic_domains_filepath)
+    toxic = toxic_domains_path.exist? && toxic_domains_path.readlines.grep(/^#{domain}$/).any?
+
+    errors.add(:email, I18n.t("activerecord.errors.messages.blocked", domain: domain)) if toxic
   end
 end
