@@ -139,7 +139,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
   test "/info has surrogate key header" do
     get info_path(gem_name: "gemA")
-    assert_equal "info/* gem/gemA", @response.headers["Surrogate-Key"]
+    assert_equal "info/* gem/gemA info/gemA", @response.headers["Surrogate-Key"]
   end
 
   test "/info partial response" do
