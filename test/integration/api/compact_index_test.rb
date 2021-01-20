@@ -115,6 +115,11 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     assert_equal expected, @response.body
   end
 
+  test "/version has surrogate key header" do
+    get versions_path
+    assert_equal "versions", @response.headers["Surrogate-Key"]
+  end
+
   test "/info with existing gem" do
     expected = <<~VERSIONS_FILE
       ---

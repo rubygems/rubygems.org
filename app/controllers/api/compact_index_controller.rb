@@ -8,6 +8,7 @@ class Api::CompactIndexController < Api::BaseController
   end
 
   def versions
+    set_surrogate_key "versions"
     versions_path = Rails.application.config.rubygems["versions_file_location"]
     versions_file = CompactIndex::VersionsFile.new(versions_path)
     from_date = versions_file.updated_at
