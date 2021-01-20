@@ -883,7 +883,7 @@ class VersionTest < ActiveSupport::TestCase
     g2 = Rubygem.create(name: "test-gem")
     v2 = Version.new(authors:  %w[arthurnn dwradcliffe], number: "733.t-0.0.1", platform: "ruby", rubygem: g2)
     refute v2.valid?
-    assert_equal [:full_name], v2.errors.keys
+    assert_equal [:full_name], v2.errors.attribute_names
   end
 
   context "checksums" do

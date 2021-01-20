@@ -49,7 +49,7 @@ class Version < ApplicationRecord
   def self.reverse_dependencies(name)
     joins(dependencies: :rubygem)
       .indexed
-      .where(rubygems: { name: name })
+      .where(rubygems_dependencies: { name: name })
   end
 
   def self.reverse_runtime_dependencies(name)
