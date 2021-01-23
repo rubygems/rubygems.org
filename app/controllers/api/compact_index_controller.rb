@@ -1,14 +1,15 @@
 class Api::CompactIndexController < Api::BaseController
   before_action :find_rubygem_by_name, only: [:info]
-  before_action :set_compact_index_cache_headers
 
   def names
+    set_compact_index_cache_headers
     names = GemInfo.ordered_names
     render_range CompactIndex.names(names)
   end
 
   def versions
     set_surrogate_key "versions"
+    set_compact_index_cache_headers(fastly_expiry: 30)
     versions_path = Rails.application.config.rubygems["versions_file_location"]
     versions_file = CompactIndex::VersionsFile.new(versions_path)
     from_date = versions_file.updated_at
@@ -18,6 +19,7 @@ class Api::CompactIndexController < Api::BaseController
 
   def info
     set_surrogate_key "info/* gem/#{@rubygem.name} info/#{@rubygem.name}"
+    set_compact_index_cache_headers
     return unless stale?(@rubygem)
     info_params = GemInfo.new(@rubygem.name).compact_index_info
     render_range CompactIndex.info(info_params)
@@ -25,9 +27,9 @@ class Api::CompactIndexController < Api::BaseController
 
   private
 
-  def set_compact_index_cache_headers
+  def set_compact_index_cache_headers(fastly_expiry: 3600)
     expires_in 60, public: true
-    fastly_expires_in 3600
+    fastly_expires_in fastly_expiry
   end
 
   def render_range(response_body)
