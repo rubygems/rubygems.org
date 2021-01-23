@@ -50,6 +50,31 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     end
   end
 
+  def should_return_api_key_successfully
+    should respond_with :success
+    should "return API key" do
+      hashed_key = @user.api_keys.first.hashed_key
+      assert_equal hashed_key, Digest::SHA256.hexdigest(@response.body)
+    end
+  end
+
+  def self.should_deliver_api_key_created_email
+    should "deliver api key created email" do
+      refute ActionMailer::Base.deliveries.empty?
+      email = ActionMailer::Base.deliveries.last
+      assert_equal [@user.email], email.to
+      assert_equal ["no-reply@mailer.rubygems.org"], email.from
+      assert_equal "New API key created for rubygems.org", email.subject
+      assert_match "legacy-key", email.body.to_s
+    end
+  end
+
+  def self.should_not_signin_user
+    should "not sign in user" do
+      refute @controller.request.env[:clearance].signed_in?
+    end
+  end
+
   def self.should_expect_otp_for_show
     context "without OTP" do
       setup { get :show }
@@ -72,24 +97,9 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         Delayed::Worker.new.work_off
       end
 
-      should respond_with :success
-      should "return API key" do
-        hashed_key = @user.api_keys.first.hashed_key
-        assert_equal hashed_key, Digest::SHA256.hexdigest(@response.body)
-      end
-
-      should "deliver api key created email" do
-        refute ActionMailer::Base.deliveries.empty?
-        email = ActionMailer::Base.deliveries.last
-        assert_equal [@user.email], email.to
-        assert_equal ["no-reply@mailer.rubygems.org"], email.from
-        assert_equal "New API key created for rubygems.org", email.subject
-        assert_match "legacy-key", email.body.to_s
-      end
-
-      should "not sign in user" do
-        refute @controller.request.env[:clearance].signed_in?
-      end
+      should_return_api_key_successfully
+      should_deliver_api_key_created_email
+      should_not_signin_user
     end
   end
 
@@ -114,11 +124,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         post :create, params: { name: "test", index_rubygems: "true" }
       end
 
-      should respond_with :success
-      should "return API key" do
-        hashed_key = @user.api_keys.first.hashed_key
-        assert_equal hashed_key, Digest::SHA256.hexdigest(@response.body)
-      end
+      should_return_api_key_successfully
     end
   end
 
@@ -197,24 +203,9 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         Delayed::Worker.new.work_off
       end
 
-      should respond_with :success
-      should "return API key" do
-        hashed_key = @user.api_keys.first.hashed_key
-        assert_equal hashed_key, Digest::SHA256.hexdigest(@response.body)
-      end
-
-      should "not sign in user" do
-        refute @controller.request.env[:clearance].signed_in?
-      end
-
-      should "deliver api key created email" do
-        refute ActionMailer::Base.deliveries.empty?
-        email = ActionMailer::Base.deliveries.last
-        assert_equal [@user.email], email.to
-        assert_equal ["no-reply@mailer.rubygems.org"], email.from
-        assert_equal "New API key created for rubygems.org", email.subject
-        assert_match "legacy-key", email.body.to_s
-      end
+      should_return_api_key_successfully
+      should_deliver_api_key_created_email
+      should_not_signin_user
     end
 
     context "when user has enabled MFA for UI and API" do
@@ -275,11 +266,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         Delayed::Worker.new.work_off
       end
 
-      should respond_with :success
-      should "return API key" do
-        hashed_key = @user.api_keys.first.hashed_key
-        assert_equal hashed_key, Digest::SHA256.hexdigest(@response.body)
-      end
+      should_return_api_key_successfully
 
       should "deliver api key created email" do
         refute ActionMailer::Base.deliveries.empty?
