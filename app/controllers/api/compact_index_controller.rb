@@ -8,6 +8,7 @@ class Api::CompactIndexController < Api::BaseController
   end
 
   def versions
+    set_surrogate_key "versions"
     versions_path = Rails.application.config.rubygems["versions_file_location"]
     versions_file = CompactIndex::VersionsFile.new(versions_path)
     from_date = versions_file.updated_at
@@ -16,7 +17,7 @@ class Api::CompactIndexController < Api::BaseController
   end
 
   def info
-    set_surrogate_key "info/* gem/#{@rubygem.name}"
+    set_surrogate_key "info/* gem/#{@rubygem.name} info/#{@rubygem.name}"
     return unless stale?(@rubygem)
     info_params = GemInfo.new(@rubygem.name).compact_index_info
     render_range CompactIndex.info(info_params)
