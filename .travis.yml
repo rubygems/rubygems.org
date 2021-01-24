@@ -7,7 +7,7 @@ cache:
     - vendor/cache
 
 rvm:
-  - 2.6.6
+  - 2.7.2
   - ruby-head
 
 addons:
