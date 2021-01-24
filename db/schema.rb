@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_24_105545) do
+ActiveRecord::Schema.define(version: 2021_01_24_062231) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -221,6 +221,7 @@ ActiveRecord::Schema.define(version: 2020_12_24_105545) do
     t.index ["built_at"], name: "index_versions_on_built_at"
     t.index ["created_at"], name: "index_versions_on_created_at"
     t.index ["full_name"], name: "index_versions_on_full_name"
+    t.index ["indexed", "yanked_at"], name: "index_versions_on_indexed_and_yanked_at"
     t.index ["indexed"], name: "index_versions_on_indexed"
     t.index ["number"], name: "index_versions_on_number"
     t.index ["position"], name: "index_versions_on_position"
