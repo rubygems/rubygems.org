@@ -201,8 +201,6 @@ spec:
             readOnly: true
           - name: nginxlog
             mountPath: /var/log/nginx
-          - name: nginxcache
-            mountPath: /var/lib/nginx/cache
           <% if environment == 'staging' %>
           - name: nginxbasicauth
             mountPath: /etc/nginxbasicauth
@@ -232,8 +230,6 @@ spec:
               - key: rubygems
                 path: sites-enabled/<%= environment %>.ruybgems.conf
         - name: nginxlog
-          emptyDir: {}
-        - name: nginxcache
           emptyDir: {}
         <% if environment == 'staging' %>
         - name: nginxbasicauth
