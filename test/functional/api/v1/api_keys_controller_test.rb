@@ -50,7 +50,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     end
   end
 
-  def should_return_api_key_successfully
+  def self.should_return_api_key_successfully
     should respond_with :success
     should "return API key" do
       hashed_key = @user.api_keys.first.hashed_key
