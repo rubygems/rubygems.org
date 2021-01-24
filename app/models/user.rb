@@ -55,7 +55,7 @@ class User < ApplicationRecord
   validate :unconfirmed_email_uniqueness
   validate :toxic_email_domain, on: :create
 
-  enum mfa_level: { disabled: 0, ui_only: 1, ui_and_api: 2 }, _prefix: :mfa
+  enum mfa_level: { disabled: 0, ui_only: 1, ui_and_api: 2, ui_and_gem_signin: 3 }, _prefix: :mfa
 
   def self.authenticate(who, password)
     user = find_by(email: who.downcase) || find_by(handle: who)
@@ -212,6 +212,11 @@ class User < ApplicationRecord
     self.mfa_seed = seed
     self.mfa_recovery_codes = Array.new(10).map { SecureRandom.hex(6) }
     save!(validate: false)
+  end
+
+  def mfa_gem_signin_authorized?(otp)
+    return true unless mfa_ui_and_gem_signin? || mfa_ui_and_api?
+    otp_verified?(otp)
   end
 
   def mfa_api_authorized?(otp)

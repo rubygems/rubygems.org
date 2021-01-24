@@ -235,6 +235,30 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
+    context "When mfa for UI and gem signin is enabled" do
+      setup do
+        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+      end
+
+      context "On POST to create for new gem" do
+        setup do
+          post :create, body: gem_file.read
+        end
+        should respond_with :success
+        should "register new gem" do
+          assert_equal 1, Rubygem.count
+          assert_equal @user, Rubygem.last.versions.first.pusher
+          assert_equal "Successfully registered gem: test (0.0.0)", @response.body
+        end
+        should "add user as confirmed owner" do
+          ownership = Rubygem.last.ownerships.first
+
+          assert_equal @user, ownership.user
+          assert ownership.confirmed?
+        end
+      end
+    end
+
     context "On POST to create for new gem" do
       setup do
         post :create, body: gem_file.read
@@ -300,13 +324,13 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
         @date = 1.year.ago
         @version = create(:version,
-          rubygem: rubygem,
-          number: "0.0.0",
-          updated_at: @date,
-          created_at: @date,
-          summary: "Freewill",
-          authors: ["Geddy Lee"],
-          built_at: @date)
+                          rubygem: rubygem,
+                          number: "0.0.0",
+                          updated_at: @date,
+                          created_at: @date,
+                          summary: "Freewill",
+                          authors: ["Geddy Lee"],
+                          built_at: @date)
 
         post :create, body: gem_file.read
       end
@@ -377,13 +401,13 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       setup do
         rubygem = create(:rubygem, name: "test")
         create(:ownership,
-          rubygem: rubygem,
-          user: @user)
+               rubygem: rubygem,
+               user: @user)
         create(:version,
-          rubygem: rubygem,
-          number: "0.0.0",
-          updated_at: 1.year.ago,
-          created_at: 1.year.ago)
+               rubygem: rubygem,
+               number: "0.0.0",
+               updated_at: 1.year.ago,
+               created_at: 1.year.ago)
       end
       should "POST to create for existing gem should not fail" do
         requires_toxiproxy
@@ -407,7 +431,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should "deny access" do
         assert_response 401
         assert_equal "Access Denied. Please sign up for an account at https://rubygems.org",
-          @response.body
+                     @response.body
       end
     end
 
@@ -450,12 +474,12 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
   context "on GET to reverse_dependencies" do
     setup do
-      @dependency   = create(:rubygem)
-      @gem_one      = create(:rubygem)
-      @gem_two      = create(:rubygem)
-      @gem_three    = create(:rubygem)
-      version_one   = create(:version, rubygem: @gem_one)
-      version_two   = create(:version, rubygem: @gem_two)
+      @dependency = create(:rubygem)
+      @gem_one = create(:rubygem)
+      @gem_two = create(:rubygem)
+      @gem_three = create(:rubygem)
+      version_one = create(:version, rubygem: @gem_one)
+      version_two = create(:version, rubygem: @gem_two)
       version_three = create(:version, rubygem: @gem_three)
 
       create(:dependency, :runtime, version: version_one, rubygem: @dependency)
@@ -477,9 +501,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "with only=development" do
       should "only return names of reverse development dependencies" do
         get :reverse_dependencies,
-          params: { id: @dependency.to_param,
-                    only: "development",
-                    format: "json" }
+            params: { id: @dependency.to_param,
+                      only: "development",
+                      format: "json" }
 
         gems = JSON.load(@response.body)
 
@@ -492,9 +516,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "with only=runtime" do
       should "only return names of reverse development dependencies" do
         get :reverse_dependencies,
-          params: { id: @dependency.to_param,
-                    only: "runtime",
-                    format: "json" }
+            params: { id: @dependency.to_param,
+                      only: "runtime",
+                      format: "json" }
 
         gems = JSON.load(@response.body)
 

@@ -306,6 +306,7 @@ ja:
           disabled:
           ui_only:
           ui_and_api:
+          ui_and_gem_signin:
   profiles:
     edit:
       change_avatar:

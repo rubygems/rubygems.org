@@ -314,6 +314,7 @@ es:
           disabled: Desactivada
           ui_only: Solo Interfaz de Usuario
           ui_and_api: Interfaz de Usuario y API
+          ui_and_gem_signin: Interfaz de Usario y gem signin
   profiles:
     edit:
       change_avatar:

@@ -50,6 +50,116 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     end
   end
 
+  def self.should_return_api_key_successfully
+    should respond_with :success
+    should "return API key" do
+      hashed_key = @user.api_keys.first.hashed_key
+      assert_equal hashed_key, Digest::SHA256.hexdigest(@response.body)
+    end
+  end
+
+  def self.should_deliver_api_key_created_email
+    should "deliver api key created email" do
+      refute ActionMailer::Base.deliveries.empty?
+      email = ActionMailer::Base.deliveries.last
+      assert_equal [@user.email], email.to
+      assert_equal ["no-reply@mailer.rubygems.org"], email.from
+      assert_equal "New API key created for rubygems.org", email.subject
+      assert_match "legacy-key", email.body.to_s
+    end
+  end
+
+  def self.should_not_signin_user
+    should "not sign in user" do
+      refute @controller.request.env[:clearance].signed_in?
+    end
+  end
+
+  def self.should_expect_otp_for_show
+    context "without OTP" do
+      setup { get :show }
+      should_deny_access_missing_otp
+    end
+
+    context "with incorrect OTP" do
+      setup do
+        @request.env["HTTP_OTP"] = "11111"
+        get :show
+      end
+
+      should_deny_access_incorrect_otp
+    end
+
+    context "with correct OTP" do
+      setup do
+        @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+        get :show
+        Delayed::Worker.new.work_off
+      end
+
+      should_return_api_key_successfully
+      should_deliver_api_key_created_email
+      should_not_signin_user
+    end
+  end
+
+  def self.should_expect_otp_for_create
+    context "without OTP" do
+      setup { post :create }
+      should_deny_access_missing_otp
+    end
+
+    context "with incorrect OTP" do
+      setup do
+        @request.env["HTTP_OTP"] = "11111"
+        post :create
+      end
+
+      should_deny_access_incorrect_otp
+    end
+
+    context "with correct OTP" do
+      setup do
+        @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+        post :create, params: { name: "test", index_rubygems: "true" }
+      end
+
+      should_return_api_key_successfully
+    end
+  end
+
+  def self.should_expect_otp_for_update
+    context "without OTP" do
+      setup { put :update }
+      should_deny_access_missing_otp
+    end
+
+    context "with incorrect OTP" do
+      setup do
+        @request.env["HTTP_OTP"] = "11111"
+        put :update
+      end
+
+      should_deny_access_incorrect_otp
+    end
+
+    context "with correct OTP" do
+      setup do
+        @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+        @api_key = create(:api_key, user: @user, key: "12345", push_rubygem: true)
+
+        put :update, params: { api_key: "12345", index_rubygems: "true" }
+        @api_key.reload
+      end
+
+      should respond_with :success
+      should "keep current scope enabled and update scope in params" do
+        assert @api_key.can_index_rubygems?
+        assert @api_key.can_push_rubygem?
+      end
+    end
+  end
+
   context "on GET to show with invalid credentials" do
     setup do
       @user = create(:user)
@@ -93,73 +203,29 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         Delayed::Worker.new.work_off
       end
 
-      should respond_with :success
-      should "return API key" do
-        hashed_key = @user.api_keys.first.hashed_key
-        assert_equal hashed_key, Digest::SHA256.hexdigest(@response.body)
-      end
-
-      should "not sign in user" do
-        refute @controller.request.env[:clearance].signed_in?
-      end
-
-      should "deliver api key created email" do
-        refute ActionMailer::Base.deliveries.empty?
-        email = ActionMailer::Base.deliveries.last
-        assert_equal [@user.email], email.to
-        assert_equal ["no-reply@mailer.rubygems.org"], email.from
-        assert_equal "New API key created for rubygems.org", email.subject
-        assert_match "legacy-key", email.body.to_s
-      end
+      should_return_api_key_successfully
+      should_deliver_api_key_created_email
+      should_not_signin_user
     end
 
-    context "when user has enabled MFA for API" do
+    context "when user has enabled MFA for UI and API" do
       setup do
         @user = create(:user)
         @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
         authorize_with("#{@user.email}:#{@user.password}")
       end
 
-      context "without OTP" do
-        setup { get :show }
-        should_deny_access_missing_otp
+      should_expect_otp_for_show
+    end
+
+    context "when user has enabled MFA for UI and gem signin" do
+      setup do
+        @user = create(:user)
+        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+        authorize_with("#{@user.email}:#{@user.password}")
       end
 
-      context "with incorrect OTP" do
-        setup do
-          @request.env["HTTP_OTP"] = "11111"
-          get :show
-        end
-
-        should_deny_access_incorrect_otp
-      end
-
-      context "with correct OTP" do
-        setup do
-          @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
-          get :show
-          Delayed::Worker.new.work_off
-        end
-
-        should respond_with :success
-        should "return API key" do
-          hashed_key = @user.api_keys.first.hashed_key
-          assert_equal hashed_key, Digest::SHA256.hexdigest(@response.body)
-        end
-
-        should "deliver api key created email" do
-          refute ActionMailer::Base.deliveries.empty?
-          email = ActionMailer::Base.deliveries.last
-          assert_equal [@user.email], email.to
-          assert_equal ["no-reply@mailer.rubygems.org"], email.from
-          assert_equal "New API key created for rubygems.org", email.subject
-          assert_match "legacy-key", email.body.to_s
-        end
-
-        should "not sign in user" do
-          refute @controller.request.env[:clearance].signed_in?
-        end
-      end
+      should_expect_otp_for_show
     end
 
     context "when user has old sha1 password" do
@@ -200,11 +266,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         Delayed::Worker.new.work_off
       end
 
-      should respond_with :success
-      should "return API key" do
-        hashed_key = @user.api_keys.first.hashed_key
-        assert_equal hashed_key, Digest::SHA256.hexdigest(@response.body)
-      end
+      should_return_api_key_successfully
 
       should "deliver api key created email" do
         refute ActionMailer::Base.deliveries.empty?
@@ -216,38 +278,22 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       end
     end
 
-    context "when user has enabled MFA for API" do
+    context "when user has enabled MFA for UI and API" do
       setup do
         @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
         authorize_with("#{@user.email}:#{@user.password}")
       end
 
-      context "without OTP" do
-        setup { post :create }
-        should_deny_access_missing_otp
+      should_expect_otp_for_create
+    end
+
+    context "when user has enabled MFA for UI and gem signin" do
+      setup do
+        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+        authorize_with("#{@user.email}:#{@user.password}")
       end
 
-      context "with incorrect OTP" do
-        setup do
-          @request.env["HTTP_OTP"] = "11111"
-          post :create
-        end
-
-        should_deny_access_incorrect_otp
-      end
-
-      context "with correct OTP" do
-        setup do
-          @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
-          post :create, params: { name: "test", index_rubygems: "true" }
-        end
-
-        should respond_with :success
-        should "return API key" do
-          hashed_key = @user.api_keys.first.hashed_key
-          assert_equal hashed_key, Digest::SHA256.hexdigest(@response.body)
-        end
-      end
+      should_expect_otp_for_create
     end
   end
 
@@ -282,41 +328,22 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       end
     end
 
-    context "when user has enabled MFA for API" do
+    context "when user has enabled MFA for UI and API" do
       setup do
         @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
         authorize_with("#{@user.email}:#{@user.password}")
       end
 
-      context "without OTP" do
-        setup { put :update }
-        should_deny_access_missing_otp
+      should_expect_otp_for_update
+    end
+
+    context "when user has enabled MFA for UI and gem signin" do
+      setup do
+        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+        authorize_with("#{@user.email}:#{@user.password}")
       end
 
-      context "with incorrect OTP" do
-        setup do
-          @request.env["HTTP_OTP"] = "11111"
-          put :update
-        end
-
-        should_deny_access_incorrect_otp
-      end
-
-      context "with correct OTP" do
-        setup do
-          @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
-          @api_key = create(:api_key, user: @user, key: "12345", push_rubygem: true)
-
-          put :update, params: { api_key: "12345", index_rubygems: "true" }
-          @api_key.reload
-        end
-
-        should respond_with :success
-        should "keep current scope enabled and update scope in params" do
-          assert @api_key.can_index_rubygems?
-          assert @api_key.can_push_rubygem?
-        end
-      end
+      should_expect_otp_for_update
     end
   end
 end

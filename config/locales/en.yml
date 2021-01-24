@@ -341,6 +341,7 @@ en:
           disabled: Disabled
           ui_only: UI Only
           ui_and_api: UI and API
+          ui_and_gem_signin: UI and gem signin
   profiles:
     edit:
       change_avatar: Change Avatar
