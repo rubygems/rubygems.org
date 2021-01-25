@@ -2,6 +2,7 @@ name: Application Tests
 
 on:
   pull_request:
+  push:
 
 jobs:
   linting:
