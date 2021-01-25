@@ -1,5 +1,8 @@
 name: Application Tests
 
+on:
+  pull_request:
+
 jobs:
   linting:
     name: Run Linting
