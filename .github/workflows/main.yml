@@ -90,7 +90,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Push Docker Image
-    needs: [build]
+    needs: [linting, build]
     env:
       RUBYGEMS_VERSION: 3.0.3
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
