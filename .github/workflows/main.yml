@@ -86,6 +86,9 @@ jobs:
           bundle exec rake db:setup
       - name: Run Tests
         run: bundle exec rake test
+      - name: Test Docker Image
+        if: ${{ matrix.rubygems != "latest" }}
+        run: ./script/build_docker.sh
   deploy:
     runs-on: ubuntu-latest
     name: Push Docker Image
@@ -98,4 +101,4 @@ jobs:
       - name: Checkout Project
         uses: actions/checkout@v2
       - name: Deploy Docker Image
-        run: ./script/build_docker.sh
+        run: ./script/deploy_docker.sh

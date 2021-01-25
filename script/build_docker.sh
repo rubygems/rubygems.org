@@ -2,11 +2,6 @@
 
 set -ex
 
-if [ -z "$RUBYGEMS_VERSION" ] || [ $RUBYGEMS_VERSION == 'latest' ]
-then
-  exit 0
-fi
-
 echo "$GITHUB_SHA" > REVISION
 
 docker build -t quay.io/$GITHUB_REPOSITORY:$GITHUB_SHA --build-arg RUBYGEMS_VERSION=$RUBYGEMS_VERSION .
@@ -39,7 +34,3 @@ if [ -z "$DOCKER_USERNAME" ] || [ -z "$DOCKER_PASSWORD" ]
 then
   exit 0
 fi
-
-echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin quay.io
-
-docker push quay.io/$GITHUB_REPOSITORY:$GITHUB_SHA
