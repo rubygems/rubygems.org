@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_24_062231) do
+ActiveRecord::Schema.define(version: 2021_01_25_153619) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -75,6 +75,7 @@ ActiveRecord::Schema.define(version: 2021_01_24_062231) do
     t.integer "rubygem_id", null: false
     t.integer "version_id", null: false
     t.bigint "count"
+    t.index ["count"], name: "index_gem_downloads_on_count", order: :desc
     t.index ["rubygem_id", "version_id"], name: "index_gem_downloads_on_rubygem_id_and_version_id", unique: true
     t.index ["version_id", "rubygem_id", "count"], name: "index_gem_downloads_on_version_id_and_rubygem_id_and_count"
   end
