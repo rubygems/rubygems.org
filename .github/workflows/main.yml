@@ -86,7 +86,7 @@ jobs:
       - name: Run Tests
         run: bundle exec rake test
       - name: Test Docker Image
-        if: ${{ matrix.rubygems != "latest" }}
+        if: ${{ matrix.rubygems != 'latest' }}
         run: ./script/build_docker.sh
   deploy:
     runs-on: ubuntu-latest
