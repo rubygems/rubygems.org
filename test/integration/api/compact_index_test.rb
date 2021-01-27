@@ -118,7 +118,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
   test "/version has surrogate key header" do
     get versions_path
     assert_equal "versions", @response.headers["Surrogate-Key"]
-    assert_equal "max-age=30", @response.headers["Surrogate-Control"]
+    assert_equal "max-age=3600", @response.headers["Surrogate-Control"]
   end
 
   test "/info with existing gem" do
