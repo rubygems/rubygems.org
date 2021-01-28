@@ -156,6 +156,8 @@ spec:
           <% if environment == 'staging' %>
           - name: DISABLE_SIGNUP
             value: "true"
+          - name: RAILS_LOG_LEVEL
+            value: "info"
           <% end %>
           - name: DATABASE_URL
             valueFrom:
