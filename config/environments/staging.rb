@@ -65,7 +65,7 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = ENV['RAILS_LOG_LEVEL'].to_sym
+  config.log_level = ENV['RAILS_LOG_LEVEL'].present? ? ENV['RAILS_LOG_LEVEL'].to_sym : :info
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :request_id ]
