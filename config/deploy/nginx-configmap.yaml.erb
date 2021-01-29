@@ -90,7 +90,7 @@ data:
           proxy_cache_key "/versions";
           proxy_cache_lock on;
           proxy_cache_use_stale updating;
-          proxy_cache_valid 200 60s;
+          proxy_cache_valid 200 10s;
           proxy_pass http://127.0.0.1:3000/versions;
         }
 
