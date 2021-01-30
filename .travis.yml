@@ -11,12 +11,6 @@ rvm:
   - ruby-head
 
 addons:
-  apt:
-    sources:
-      - elasticsearch-5.x
-    packages:
-      - elasticsearch
-      - openjdk-8-jre-headless
   postgresql: "9.6"
   chrome: stable
 
@@ -31,7 +25,10 @@ git:
   submodules: true
 
 before_install:
-  - git submodule update --init
+  - curl https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.8.13.deb -o elasticsearch.deb
+  - sudo dpkg -i --force-confnew elasticsearch.deb
+  - sudo chown -R elasticsearch:elasticsearch /etc/default/elasticsearch
+  - sudo service elasticsearch restart
   - sh -c "if [ '$RUBYGEMS_VERSION' != 'latest' ]; then gem update --system $RUBYGEMS_VERSION; fi"
   - gem --version
   - bundle -v
