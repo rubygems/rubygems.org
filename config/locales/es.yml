@@ -396,7 +396,7 @@ es:
       versions_header: Versiones
       yanked_notice: Esta versión fue borrada, y no está disponible para su descarga directa ni por otras gemas que puedan haber dependido de la misma.
     show_yanked:
-      not_hosted_notice: Esta gema no está alojada actualmente en RubyGems.org.
+      not_hosted_notice: Esta gema no está alojada actualmente en RubyGems.org. Es posible que ya exista alguna versión borrada de esta gema.
       reserved_namespace_html:
         one: Esta gema existió previamente, pero fue eliminada por sus propietarios. El equipo de RubyGems.org ha reservado este nombre por un día más. Luego cualquiera podrá solicitar este nombre de gema usando `gem push`. <br/> Si eres el anterior propietario, puedes cambiar la propiedad de esta gema usando el comando `gem owner`. También puedes crear nuevas versiones de esta gema usando `gem push`.
         other: Esta gema existió previamente, pero fue eliminada por sus propietarios. El equipo de RubyGems.org ha reservado este nombre por %{count} días más. Luego cualquiera podrá solicitar este nombre de gema usando `gem push`. <br/> Si eres el anterior propietario, puedes cambiar la propiedad de esta gema usando el comando `gem owner`. También puedes crear nuevas versiones de esta gema usando `gem push`.
