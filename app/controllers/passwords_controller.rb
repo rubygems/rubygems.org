@@ -46,4 +46,9 @@ class PasswordsController < Clearance::PasswordsController
     @user = find_user_for_edit
     redirect_to root_path, alert: t("failure_when_forbidden") unless @user&.valid_confirmation_token?
   end
+
+  def deliver_email(user)
+    mail = ::ClearanceMailer.change_password(user)
+    mail.deliver_later
+  end
 end
