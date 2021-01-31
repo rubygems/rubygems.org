@@ -52,11 +52,13 @@ end
 group :development, :test do
   gem "m", "~> 1.5", require: false
   gem "pry-byebug"
-  gem "rubocop", require: false
-  gem "rubocop-rails", require: false
-  gem "rubocop-performance", require: false
   gem "brakeman", require: false
   gem "toxiproxy", "~> 1.0.0"
+
+  # please update .github/workflows/lint.yml on versions update
+  gem "rubocop", "0.89.1", require: false
+  gem "rubocop-rails", "2.5.2", require: false
+  gem "rubocop-performance", "1.7.1", require: false
 end
 
 group :development do

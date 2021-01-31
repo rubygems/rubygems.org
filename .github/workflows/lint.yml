@@ -1,0 +1,16 @@
+name: Lint
+on: [pull_request]
+jobs:
+  rubocop:
+    name: Rubocop
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v1
+      - name: rubocop
+        uses: reviewdog/action-rubocop@v1
+        with:
+          rubocop_version: 0.89.1
+          rubocop_extensions: rubocop-performance:1.7.1 rubocop-rails:2.5.2
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-check
