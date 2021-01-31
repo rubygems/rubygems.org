@@ -2,8 +2,8 @@ name: Lint
 on: [pull_request]
 jobs:
   rubocop:
-    name: Rubocop
-    runs-on: ubuntu-latest
+    name: Rubocop (runner)
+    runs-on: ubuntu-18.04
     steps:
       - name: Check out code
         uses: actions/checkout@v1
@@ -14,3 +14,24 @@ jobs:
           rubocop_extensions: rubocop-performance:1.7.1 rubocop-rails:2.5.2
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-check
+  brakeman:
+    name: Brakeman
+    runs-on: ubuntu-18.04
+    # runs only in main repo, this check doesn't work in forks
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+    - uses: actions/checkout@v1
+    - uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: false
+    - name: Install gems
+      run: |
+        gem install brakeman -v 5.0.0
+    - name: brakeman report
+      run: |
+        brakeman || exit 0
+    - name: Brakeman
+      uses: devmasx/brakeman-linter-action@v1.0.0
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        REPORT_PATH: reports/brakeman/brakeman.json

@@ -419,7 +419,7 @@ DEPENDENCIES
   autoprefixer-rails
   aws-sdk (~> 2.2)
   bootsnap
-  brakeman
+  brakeman (= 5.0.0)
   capybara (~> 2.18)
   clearance
   compact_index (~> 0.13.0)
