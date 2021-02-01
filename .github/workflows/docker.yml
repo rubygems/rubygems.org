@@ -1,0 +1,17 @@
+name: Docker
+on: [pull_request]
+
+jobs:
+  build:
+    name: Docker build (and optional push)
+    runs-on: ubuntu-18.04
+    env:
+      RUBYGEMS_VERSION: 3.1.5
+      RUBY_VERSION: 2.7.2
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install and start services (needed for image test)
+      run: docker-compose up -d
+    - name: build, test and optionally push docker image
+      run: ./script/build_docker.sh
+
