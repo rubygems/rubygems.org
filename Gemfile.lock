@@ -66,7 +66,7 @@ GEM
       ffi (~> 1.14)
       ffi-compiler (~> 1.0)
     ast (2.4.1)
-    autoprefixer-rails (10.2.0.0)
+    autoprefixer-rails (10.2.4.0)
       execjs
     aws-eventstream (1.0.3)
     aws-sdk (2.11.473)
