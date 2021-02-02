@@ -5,6 +5,7 @@ module RubygemSearchable
     include Elasticsearch::Model
 
     index_name "rubygems-#{Rails.env}"
+    document_type "rubygems"
 
     delegate :index_document, to: :__elasticsearch__
     delegate :update_document, to: :__elasticsearch__
