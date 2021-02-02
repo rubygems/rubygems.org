@@ -277,7 +277,7 @@ class User < ApplicationRecord
   end
 
   def toxic_email_domain
-    domain             = email.split("@").last
+    return unless (domain = email.split("@").last)
     toxic_domains_path = Pathname.new(Gemcutter::Application.config.toxic_domains_filepath)
     toxic = toxic_domains_path.exist? && toxic_domains_path.readlines.grep(/^#{Regexp.escape(domain)}$/).any?
 
