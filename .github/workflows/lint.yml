@@ -6,36 +6,22 @@ on:
       - master
 jobs:
   rubocop:
-    name: Rubocop (runner)
+    name: Rubocop
     runs-on: ubuntu-18.04
     steps:
-      - name: Check out code
-        uses: actions/checkout@v1
-      - name: rubocop
-        uses: reviewdog/action-rubocop@v1
-        with:
-          rubocop_version: 0.89.1
-          rubocop_extensions: rubocop-performance:1.7.1 rubocop-rails:2.5.2
-          github_token: ${{ secrets.github_token }}
-          reporter: github-pr-check
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true
+    - name: Rubocop
+      run: bundle exec rubocop
   brakeman:
     name: Brakeman
     runs-on: ubuntu-18.04
-    # runs only in main repo, this check doesn't work in forks
-    if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
       with:
-        bundler-cache: false
-    - name: Install gems
-      run: |
-        gem install brakeman -v 5.0.0
-    - name: brakeman report
-      run: |
-        brakeman || exit 0
+        bundler-cache: true
     - name: Brakeman
-      uses: devmasx/brakeman-linter-action@v1.0.0
-      env:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        REPORT_PATH: reports/brakeman/brakeman.json
+      run: bundle exec brakeman
