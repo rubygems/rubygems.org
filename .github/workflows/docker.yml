@@ -17,4 +17,7 @@ jobs:
       run: docker-compose up -d
     - name: build, test and optionally push docker image
       run: ./script/build_docker.sh
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
