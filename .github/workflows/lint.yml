@@ -1,0 +1,27 @@
+name: Lint
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+jobs:
+  rubocop:
+    name: Rubocop
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true
+    - name: Rubocop
+      run: bundle exec rubocop
+  brakeman:
+    name: Brakeman
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true
+    - name: Brakeman
+      run: bundle exec brakeman
