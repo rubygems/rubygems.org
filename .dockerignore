@@ -1,4 +1,5 @@
 .git*
+.github*
 log/*
 tmp/*
 doc/*
@@ -8,7 +9,6 @@ config/deploy/*
 Dockerfile
 .gitignore
 .gitmodules
-.travis.yml
 CONDUCT.md
 CONTRIBUTING.md
 MIT-LICENSE
