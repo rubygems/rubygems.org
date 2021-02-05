@@ -4,6 +4,9 @@ require_relative "../../lib/middleware/redirector"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # Do not show stacktrace in console, it will be sent to Honeybadger
+  config.middleware.delete(ActionDispatch::DebugExceptions)
+
   # Code is not reloaded between requests.
   config.cache_classes = true
 
