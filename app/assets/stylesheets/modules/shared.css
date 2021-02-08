@@ -103,6 +103,16 @@ a.page__heading {
   margin-top: 3px;
 }
 
+@media (min-width: 930px) {
+  .page__subheading--block {
+    font-size: 23px;
+  }
+
+  h1.page__heading--small {
+    font-size: 40px;
+  }
+}
+
 .page__heading__info {
   font-weight: 200;
   font-size: 16px;
