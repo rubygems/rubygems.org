@@ -2,9 +2,10 @@ require "test_helper"
 
 class EmailConfirmationsControllerTest < ActionController::TestCase
   context "on GET to update" do
+    setup { @user = create(:user) }
+
     context "user exists and token has not expired" do
       setup do
-        @user = create(:user)
         get :update, params: { token: @user.confirmation_token }
       end
 
@@ -29,9 +30,8 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
     context "token has expired" do
       setup do
-        user = create(:user)
-        user.update_attribute("token_expires_at", 2.minutes.ago)
-        get :update, params: { token: user.confirmation_token }
+        @user.update_attribute("token_expires_at", 2.minutes.ago)
+        get :update, params: { token: @user.confirmation_token }
       end
 
       should "warn about invalid url" do
@@ -39,6 +39,52 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       end
       should "not sign in user" do
         refute cookies[:remember_token]
+      end
+    end
+
+    context "user has mfa enabled" do
+      setup do
+        @user.mfa_ui_only!
+        get :update, params: { token: @user.confirmation_token }
+      end
+
+      should respond_with :success
+      should "display otp form" do
+        assert page.has_content?("Multifactor authentication")
+      end
+    end
+  end
+
+  context "on POST to mfa_update" do
+    context "user has mfa enabled" do
+      setup do
+        @user = create(:user)
+        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+      end
+
+      context "when OTP is correct" do
+        setup do
+          post :mfa_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.mfa_seed).now }
+        end
+
+        should redirect_to("the homepage") { root_url }
+        should "should confirm user account" do
+          assert @user.email_confirmed
+        end
+        should "sign in user" do
+          assert cookies[:remember_token]
+        end
+      end
+
+      context "when OTP is incorrect" do
+        setup do
+          post :mfa_update, params: { token: @user.confirmation_token, otp: "incorrect" }
+        end
+
+        should respond_with :unauthorized
+        should "alert about otp being incorrect" do
+          assert_equal flash[:alert], "Your OTP code is incorrect."
+        end
       end
     end
   end

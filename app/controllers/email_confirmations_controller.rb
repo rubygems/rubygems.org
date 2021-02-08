@@ -17,7 +17,7 @@ class EmailConfirmationsController < ApplicationController
     else
       @form_url       = mfa_update_email_confirmations_url(token: @user.confirmation_token)
       flash.now.alert = t("multifactor_auths.incorrect_otp")
-      render template: "multifactor_auths/otp_prompt"
+      render template: "multifactor_auths/otp_prompt", status: :unauthorized
     end
   end
 
