@@ -27,6 +27,7 @@ ja:
   update: 更新
   try_again: エラーが発生しました。再試行してください。
   advanced_search: 高度な検索
+  authenticate:
   activerecord:
     attributes:
       linkset:
@@ -246,9 +247,7 @@ ja:
     new:
       submit: パスワードをリセットする
       title: パスワードを変更する
-      will_email_notice: パスワード変更のためのメールが送信されます。
-    otp_prompt:
-      authenticate:
+      will_email_notice: パスワード変更のためのメールが送信されます。\
   multifactor_auths:
     incorrect_otp:
     otp_code:

@@ -27,6 +27,7 @@ zh-CN:
   update: 更新
   try_again: 请重试
   advanced_search: 高级搜索
+  authenticate:
   activerecord:
     attributes:
       linkset:
@@ -247,8 +248,6 @@ zh-CN:
       submit: 重置密码
       title: 修改密码
       will_email_notice: 我们将会通过 Email 发送修改密码的链接给你。
-    otp_prompt:
-      authenticate:
   multifactor_auths:
     incorrect_otp:
     otp_code:

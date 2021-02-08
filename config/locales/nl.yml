@@ -27,6 +27,7 @@ nl:
   update: Wijzig
   try_again: Er is iets fout gegaan, probeer het opnieuw.
   advanced_search: Uitgebreid zoeken
+  authenticate:
   activerecord:
     attributes:
       linkset:
@@ -247,8 +248,6 @@ nl:
       submit: Wachtwoord wijzigen
       title: Wachtwoord wijzigen
       will_email_notice: We sturen een link om je wachtwoord te wijzigen.
-    otp_prompt:
-      authenticate:
   multifactor_auths:
     incorrect_otp:
     otp_code:
