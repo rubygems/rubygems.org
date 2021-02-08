@@ -110,10 +110,6 @@
               <% if @subtitle %>
                 <i class="page__subheading"><%= @subtitle.html_safe %></i>
               <% end %>
-
-              <% if @subtitle_block %>
-                <i class="page__subheading page__subheading--block"><%= @subtitle_block.html_safe %></i>
-              <% end %>
             </h1>
           <% end %>
           <%= yield :title %>
