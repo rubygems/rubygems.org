@@ -8,6 +8,13 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
     Gemcutter::Application.load_tasks
   end
 
+  def update_versions_file
+    freeze_time do
+      @frozen_time = Time.now.iso8601
+      Rake::Task["compact_index:update_versions_file"].invoke
+    end
+  end
+
   teardown do
     Rake::Task["compact_index:update_versions_file"].reenable
     @tmp_versions_file.unlink
@@ -15,11 +22,11 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
 
   context "file header" do
     setup do
-      Rake::Task["compact_index:update_versions_file"].invoke
+      update_versions_file
     end
 
     should "use today's timestamp as header" do
-      expected_header = "created_at: #{Time.now.iso8601}\n---\n"
+      expected_header = "created_at: #{@frozen_time}\n---\n"
       assert_equal expected_header, @tmp_versions_file.read
     end
   end
@@ -40,7 +47,8 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
           number:        "0.0.1",
           info_checksum: "qw212r",
           platform:      "jruby")
-        Rake::Task["compact_index:update_versions_file"].invoke
+
+        update_versions_file
       end
 
       should "include platform release" do
@@ -58,7 +66,8 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
             number:        "0.0.#{4 - i}",
             info_checksum: "13q4e#{i}")
         end
-        Rake::Task["compact_index:update_versions_file"].invoke
+
+        update_versions_file
       end
 
       should "order by created_at and use last released version's info_checksum" do
@@ -111,7 +120,8 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
           created_at:    3.seconds.ago,
           number:        "0.1.3",
           info_checksum: "zrt13y")
-        Rake::Task["compact_index:update_versions_file"].invoke
+
+        update_versions_file
       end
 
       should "not include yanked version" do
@@ -130,7 +140,8 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
           number:        "0.1.2",
           info_checksum: "zsd12q",
           yanked_info_checksum: "zab45d")
-        Rake::Task["compact_index:update_versions_file"].invoke
+
+        update_versions_file
       end
 
       should "not include yanked version" do
@@ -146,12 +157,13 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
           create(:version, rubygem: gem, number: "0.0.1", info_checksum: "13q4e#{i}")
         end
       end
-      Rake::Task["compact_index:update_versions_file"].invoke
+
+      update_versions_file
     end
 
     should "put each gem on new line" do
       expected_output = <<~VERSIONS_FILE
-        created_at: #{Time.now.iso8601}
+        created_at: #{@frozen_time}
         ---
         rubygem0 0.0.1 13q4e0
         rubygem1 0.0.1 13q4e1
