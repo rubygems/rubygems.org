@@ -21,6 +21,9 @@ jobs:
       run: |
         ./script/install_toxiproxy.sh
         docker-compose up -d
+    - name: Wait for ES to boot
+      run: |
+        timeout 300 bash -c "until curl --silent --output /dev/null http://localhost:9200/_cat/health?h=st; do printf '.'; sleep 5; done; printf '\n'"
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby_version }}
