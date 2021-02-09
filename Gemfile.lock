@@ -83,7 +83,7 @@ GEM
     bloomer (1.0.0)
       bitarray
       msgpack
-    bootsnap (1.7.1)
+    bootsnap (1.7.2)
       msgpack (~> 1.0)
     brakeman (5.0.0)
     builder (3.2.4)
