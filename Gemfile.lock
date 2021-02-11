@@ -176,7 +176,7 @@ GEM
     hashie (4.1.0)
     high_voltage (3.1.2)
     hitimes (1.2.5)
-    honeybadger (4.7.2)
+    honeybadger (4.7.3)
     http-accept (1.7.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
