@@ -370,6 +370,7 @@ fr:
       authors_header: Auteurs
       not_using_mfa_warning_show:
       not_using_mfa_warning_hide:
+      single_owner_not_using_mfa_warning_show:
       owners_header: Propriétaires
       pushed_by:
       using_mfa_info:
