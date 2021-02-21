@@ -18,7 +18,7 @@ module EmailHelpers
   end
 
   def confirmation_link
-    body = last_email.body.decoded.to_s
+    body = last_email.parts[1].body.decoded.to_s
     link = %r{http://localhost/email_confirmations([^";]*)}.match(body)
     link[0]
   end

@@ -10,7 +10,10 @@ class Mailer < ApplicationMailer
     @user = user
     mail to: @user.unconfirmed_email,
         subject: I18n.t("mailer.confirmation_subject",
-          default: "Please confirm your email address with RubyGems.org")
+        default: "Please confirm your email address with RubyGems.org") do |format|
+          format.html
+          format.text
+        end
   end
 
   def email_reset_update(user)
@@ -22,8 +25,11 @@ class Mailer < ApplicationMailer
   def email_confirmation(user)
     @user = user
     mail to: @user.email,
-        subject: I18n.t("mailer.confirmation_subject",
-          default: "Please confirm your email address with RubyGems.org")
+         subject: I18n.t("mailer.confirmation_subject",
+         default: "Please confirm your email address with RubyGems.org") do |format|
+           format.html
+           format.text
+         end
   end
 
   def deletion_complete(email)

@@ -162,7 +162,7 @@ en:
       title: EMAIL CONFIRMATION
       subtitle: Almost done!
       confirmation_link: Confirm email address
-      welcome_message: Welcome to RubyGems.org! Click the link below to verify your email.
+      welcome_message: Welcome to RubyGems.org! Visit the link below to verify your email.
     email_reset:
       title: EMAIL RESET
       subtitle: Hi %{handle}!
@@ -200,6 +200,7 @@ en:
       subject: Please confirm the ownership of %{gem} gem on RubyGems.org
       title: OWNERSHIP CONFIRMATION
       subtitle: Hi %{handle}!
+      body_text:  You were added as an owner to %{gem} gem by %{authorizer}. Please visit link below to confirm your ownership.
       body_html: You were added as an owner to <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem by <strong>%{authorizer}</strong>. Please click on the link below to confirm your ownership.
       link_expiration_explanation_html: Please note that this link is valid for only %{expiry_hours}. You can resend confirmation mail from the  <strong><a href="https://rubygems.org/gems/%{gem}">%{gem}</a></strong> gem page after sign in.
     owner_added:
