@@ -244,6 +244,7 @@ class User < ApplicationRecord
         remember_token_expires_at: nil,
         api_key: nil
       )
+      api_keys.update_all(hashed_key: "--locked--")
     end
   end
 
