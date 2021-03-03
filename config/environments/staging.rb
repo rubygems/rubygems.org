@@ -56,10 +56,7 @@ Rails.application.configure do
   config.ssl_options = {
     hsts: { expires: 365.days, subdomains: false },
     redirect: {
-      exclude: lambda do |request|
-        insecure_dependency_api = (request.host == "insecure.rubygems.org" && request.path =~ %r{^/(info|versions|api/v1/dependencies)})
-        request.path.start_with?('/internal') or insecure_dependency_api
-      end
+      exclude: ->(request) { request.path.start_with?('/internal') }
     }
   }
 
