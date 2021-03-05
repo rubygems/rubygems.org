@@ -98,7 +98,7 @@
   @media (min-width: 710px) {
     .stats__graph__gem__meter-wrap {
       margin-left: 3%;
-      margin-left: calc(30px);
+      margin-left: calc(28px);
       width: 97%;
       width: calc(100% - 30px); } }
 

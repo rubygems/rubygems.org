@@ -2,7 +2,7 @@ require "test_helper"
 
 class WebHookTest < ActiveSupport::TestCase
   should belong_to :user
-  should belong_to :rubygem
+  should belong_to(:rubygem).optional(true)
 
   should "be valid for normal hook" do
     hook = create(:web_hook)
@@ -17,6 +17,13 @@ class WebHookTest < ActiveSupport::TestCase
     assert hook.global?
     assert_equal [hook], WebHook.global
     assert WebHook.specific.empty?
+  end
+
+  should "be invalid with url longer than maximum field length" do
+    long_domain = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
+    hook = build(:web_hook, url: "https://#{long_domain}.com")
+    refute hook.valid?
+    assert_equal hook.errors.messages[:url], ["is too long (maximum is 255 characters)"]
   end
 
   should "require user" do
@@ -179,11 +186,11 @@ class WebHookTest < ActiveSupport::TestCase
       authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number + @hook.user.api_key)
       RestClient.expects(:post).with(anything, anything, has_entries("Authorization" => authorization))
 
-      @hook.fire("https", "rubygems.org", @rubygem, @version, false)
+      @hook.fire("https", "rubygems.org", @rubygem, @version, delayed: false)
     end
 
     should "not increment failure count for hook" do
-      @hook.fire("https", "rubygems.org", @rubygem, @version, false)
+      @hook.fire("https", "rubygems.org", @rubygem, @version, delayed: false)
 
       assert @hook.failure_count.zero?
     end
@@ -209,7 +216,7 @@ class WebHookTest < ActiveSupport::TestCase
        Net::ProtocolError].each_with_index do |exception, index|
         RestClient.stubs(:post).raises(exception)
 
-        @hook.fire("https", "rubygems.org", @rubygem, @version, false)
+        @hook.fire("https", "rubygems.org", @rubygem, @version, delayed: false)
 
         assert_equal index + 1, @hook.reload.failure_count
         assert @hook.global?

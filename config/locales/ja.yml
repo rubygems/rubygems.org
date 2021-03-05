@@ -7,11 +7,11 @@ ja:
   footer_sponsors_html:
   footer_join_rt_html:
   form_disable_with: お待ち下さい...
-  help_url: http://help.rubygems.org
   invalid_page:
   locale_name: 日本語
   none: なし
   not_found:
+  api_key_forbidden:
   please_sign_up: アクセスが拒否されました。https://rubygems.org でアカウント登録を行ってください。
   please_sign_in:
   otp_incorrect:
@@ -36,6 +36,7 @@ ja:
         docs: ドキュメントのURL
         mail: メーリングリストのURL
         wiki: WikiのURL
+        funding:
       session:
         password: パスワード
         who: Email又はユーザー名
@@ -47,6 +48,40 @@ ja:
     errors:
       messages:
         unpwn:
+        blocked:
+  api_keys:
+    create:
+      success:
+    destroy:
+      success:
+    index:
+      api_keys:
+      name:
+      scopes:
+      age:
+      last_access:
+      action:
+      delete:
+      confirm:
+      confirm_all:
+      new_key:
+      index_rubygems:
+      push_rubygem:
+      yank_rubygem:
+      add_owner:
+      remove_owner:
+      access_webhooks:
+      show_dashboard:
+      reset:
+      save_key:
+    new:
+      new_api_key:
+    reset:
+      success:
+    update:
+      success:
+    edit:
+      edit_api_key:
   clearance_mailer:
     change_password:
       title:
@@ -106,6 +141,7 @@ ja:
       header:
         dashboard: ダッシュボード
         edit_profile:
+        settings:
         search_gem_html: 検索…
         sign_in: ログイン
         sign_out: ログアウト
@@ -113,6 +149,7 @@ ja:
   mailer:
     confirm_your_email: あなたのメールアドレスに送信されたURLを確認してください。
     confirmation_subject: RubyGems.orgに登録されたあなたのメールアドレスを確認してください
+    link_expiration_explanation_html:
     email_confirmation:
       title:
       subtitle:
@@ -122,7 +159,6 @@ ja:
       title:
       subtitle:
       visit_link_instructions: RubyGems.orgでのあなたのメールアドレスが変更されました。以下のURLからメールアドレスを確認してください。
-      link_expiration_explanation: このリンクは15分間のみ有効です。
     deletion_complete:
       title:
       subtitle:
@@ -137,9 +173,39 @@ ja:
       subject:
       title:
       subtitle:
+      'on':
+      off_html:
     gem_pushed:
       subject:
       title:
+    gem_yanked:
+      subject:
+      title:
+    reset_api_key:
+      subject:
+      title:
+      subtitle:
+    email_reset_update:
+      subject:
+      title:
+    ownership_confirmation:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      link_expiration_explanation_html:
+    owner_added:
+      subject_self:
+      subject_others:
+      title:
+      subtitle:
+      body_self_html:
+      body_others_html:
+    owner_removed:
+      subject:
+      title:
+      subtitle:
+      body_html:
   news:
     show:
       title: 新しくリリースされたGem
@@ -210,19 +276,16 @@ ja:
       success:
     show:
       info:
-      on:
-      off:
+      'on':
+      'off':
       recommended:
       title:
       update:
-  profiles:
+      push_heading:
+      owner_heading:
+  settings:
     edit:
-      change_avatar:
-      email_awaiting_confirmation: あなたの新しいメールアドレス%{unconfirmed_email}を確認してください。
-      enter_password: パスワードを入力してください。
-      hide_email: メールアドレスを公開しない
-      optional_twitter_username: Twitterのユーザー名(任意,公開)
-      title: プロフィールを編集する
+      title:
       api_access:
         confirm_reset: この操作は取り消せませんが、本当によろしいですか?
         credentials_html: 'もしコマンドラインから%{gem_commands_link}を使いたい場合、%{gem_credentials_file}ファイルが必要になります。このファイルは以下のコマンドで再生成することができます:'
@@ -231,13 +294,7 @@ ja:
         reset: APIキーをリセットする
         title: APIアクセス
       reset_password:
-        link_text: ここから新規に発行することができます。
-        text_html: 新しいパスワードが必要ですか? %{link}
         title: パスワードのリセット
-      delete:
-        delete: アカウント削除
-        delete_profile: 削除
-        warning: アカウントの削除は不可逆的操作です。これはサポートに連絡しても取り消すことはできません。ご注意ください。
       mfa:
         multifactor_auth:
         disabled:
@@ -249,12 +306,26 @@ ja:
           disabled:
           ui_only:
           ui_and_api:
+          ui_and_gem_signin:
+  profiles:
+    edit:
+      change_avatar:
+      email_awaiting_confirmation: あなたの新しいメールアドレス%{unconfirmed_email}を確認してください。
+      enter_password: パスワードを入力してください。
+      hide_email: メールアドレスを公開しない
+      optional_twitter_username: Twitterのユーザー名(任意,公開)
+      title: プロフィールを編集する
+      delete:
+        delete: アカウント削除
+        delete_profile: 削除
+        warning: アカウントの削除は不可逆的操作です。これはサポートに連絡しても取り消すことはできません。ご注意ください。
     delete:
       title: アカウント削除
       confirm: 確認
       instructions: お別れをしなければならないことが残念です...。パスワードを入力して操作を確定してください。
       list_only_owner_html: これらのGemはyanked状態になります。もしアカウントの削除前に別のオーナーを追加したい場合は、%{command_link}コマンドを用いてください。
       list_multi_owner: あなたはこれらのGemへのアクセス権を喪失しますが、他のオーナーがアクセス権を継続します。
+      warning: アカウントの削除は不可逆的操作です。これはサポートに連絡しても取り消すことはできません。ご注意ください。
     rubygem:
       owners_header: オーナー
     destroy:
@@ -284,10 +355,13 @@ ja:
         mail: メーリングリスト
         report_abuse: 悪用報告
         reverse_dependencies: 被依存性
+        review_changes:
         rss: RSS
         subscribe: 購読
         unsubscribe: 購読を解除
         wiki: Wiki
+        ownership:
+        resend_ownership_confirmation:
     blacklisted:
       blacklisted_namespace: この名前はRubygems.orgにより保持されています。
     dependencies:
@@ -305,7 +379,9 @@ ja:
       downloads: ダウンロード
       title: Gems
     show:
-      licenses_header: ライセンス
+      licenses_header:
+        one: ライセンス
+        other: ライセンス
       no_licenses: N/A
       requirements_header: 必須要件
       show_all_versions: 全てのバージョンを表示 (全%{count}項目)
@@ -319,6 +395,7 @@ ja:
   reverse_dependencies:
     index:
       title: "%{name}の被依存性"
+      subtitle:
     search:
       search_reverse_dependencies_html: "被依存性の中から検索…"
   searches:
@@ -333,13 +410,19 @@ ja:
       month_update:
       week_update:
       filter:
+      yanked:
+      suggestion:
   sessions:
     new:
       forgot_password: パスワードをお忘れですか?
       resend_confirmation: 確認メールが見当たりませんか?
+    verify:
+      title:
+      confirm:
+      notice:
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded: 累計最多ダウンロード数
       total_downloads: 累計ダウンロード数
       total_gems: Gem総数
@@ -371,3 +454,28 @@ ja:
         one: <b>全1件</b>の%{model}を表示中
         other: <b>全 %{count}件</b>の%{model}を表示中
         zero: '%{model}は見つかりませんでした'
+  owners:
+    confirm:
+      confirmed_email:
+      token_expired:
+    index:
+      add_owner:
+      name:
+      mfa:
+      status:
+      confirmed_at:
+      added_by:
+      action:
+      info:
+      email_field:
+      submit_button:
+      confirmed:
+      pending:
+      confirm_remove:
+    resend_confirmation:
+      resent_notice:
+    create:
+      success_notice:
+    destroy:
+      removed_notice:
+      failed_notice:

@@ -2,12 +2,10 @@ require "test_helper"
 
 class SignInTest < SystemTest
   setup do
-    create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD)
-    create(:user, email: "john@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD,
+    create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: nil)
+    @mfa_user = create(:user, email: "john@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD,
                   mfa_level: :ui_only, mfa_seed: "thisisonemfaseed",
                   mfa_recovery_codes: %w[0123456789ab ba9876543210])
-
-    page.driver.browser.set_cookie("mfa_feature=true")
   end
 
   test "signing in" do
@@ -62,7 +60,7 @@ class SignInTest < SystemTest
     click_button "Sign in"
 
     assert page.has_content? "Sign in"
-    assert page.has_content? "Please confirm your email address with the link sent to you email."
+    assert page.has_content? "Please confirm your email address with the link sent to your email."
   end
 
   test "signing in with current valid otp when mfa enabled" do
@@ -119,6 +117,23 @@ class SignInTest < SystemTest
     click_button "Sign in"
 
     assert page.has_content? "Sign in"
+  end
+
+  test "siging in when user does not have handle" do
+    @mfa_user.update_attribute(:handle, nil)
+
+    visit sign_in_path
+    fill_in "Email or Username", with: "john@example.com"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign in"
+
+    assert page.has_content? "Multifactor authentication"
+
+    fill_in "OTP code", with: ROTP::TOTP.new("thisisonemfaseed").now
+    click_button "Sign in"
+
+    assert page.has_content? "john@example.com"
+    assert page.has_content? "Sign out"
   end
 
   test "signing out" do

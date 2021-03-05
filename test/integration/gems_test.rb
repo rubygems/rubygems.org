@@ -38,6 +38,11 @@ class GemsTest < ActionDispatch::IntegrationTest
     css = %(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.0.0"])
     assert page.has_css?(css, visible: false)
   end
+
+  test "letter param is not string" do
+    get rubygems_path(letter: ["S"])
+    assert_response :success
+  end
 end
 
 class GemsSystemTest < SystemTest
@@ -81,7 +86,8 @@ class GemsSystemTest < SystemTest
     @user.enable_mfa!("some-seed", "ui_and_api")
     user_without_mfa = create(:user, mfa_level: "disabled")
 
-    @rubygem.owners << [@user, user_without_mfa]
+    create(:ownership, rubygem: @rubygem, user: @user)
+    create(:ownership, rubygem: @rubygem, user: user_without_mfa)
 
     visit rubygem_path(@rubygem, as: @user.id)
 
@@ -93,7 +99,8 @@ class GemsSystemTest < SystemTest
     @user.enable_mfa!("some-seed", "ui_and_api")
     user_with_mfa = create(:user, mfa_level: "ui_only")
 
-    @rubygem.owners << [@user, user_with_mfa]
+    create(:ownership, rubygem: @rubygem, user: @user)
+    create(:ownership, rubygem: @rubygem, user: user_with_mfa)
 
     visit rubygem_path(@rubygem, as: @user.id)
 
@@ -105,12 +112,37 @@ class GemsSystemTest < SystemTest
     @user.enable_mfa!("some-seed", "ui_and_api")
     user_without_mfa = create(:user, mfa_level: "disabled")
 
-    @rubygem.owners << [@user, user_without_mfa]
+    create(:ownership, rubygem: @rubygem, user: @user)
+    create(:ownership, rubygem: @rubygem, user: user_without_mfa)
 
     visit rubygem_path(@rubygem)
 
     assert page.has_no_selector?(".gem__users__mfa-disabled .gem__users a")
     assert page.has_no_selector?(".gem__users__mfa-text.mfa-warn")
     assert page.has_no_selector?(".gem__users__mfa-text.mfa-info")
+  end
+
+  test "shows github link when source_code_uri is set" do
+    github_link = "http://github.com/user/project"
+    create(:version, number: "3.0.1", rubygem: @rubygem, metadata: { "source_code_uri" => github_link })
+
+    visit rubygem_path(@rubygem)
+    assert page.has_selector?(".github-btn")
+  end
+
+  test "shows github link when homepage_uri is set" do
+    github_link = "http://github.com/user/project"
+    create(:version, number: "3.0.1", rubygem: @rubygem, metadata: { "homepage_uri" => github_link })
+
+    visit rubygem_path(@rubygem)
+    assert page.has_selector?(".github-btn")
+  end
+
+  test "does not show github link when homepage_uri is not github" do
+    notgithub_link = "http://notgithub.com/user/project"
+    create(:version, number: "3.0.1", rubygem: @rubygem, metadata: { "homepage_uri" => notgithub_link })
+
+    visit rubygem_path(@rubygem)
+    assert page.has_no_selector?(".github-btn")
   end
 end

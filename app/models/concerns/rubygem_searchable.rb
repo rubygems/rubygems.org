@@ -5,6 +5,7 @@ module RubygemSearchable
     include Elasticsearch::Model
 
     index_name "rubygems-#{Rails.env}"
+    document_type "rubygem"
 
     delegate :index_document, to: :__elasticsearch__
     delegate :update_document, to: :__elasticsearch__
@@ -35,6 +36,7 @@ module RubygemSearchable
         source_code_uri:   versioned_links&.source_code_uri,
         bug_tracker_uri:   versioned_links&.bug_tracker_uri,
         changelog_uri:     versioned_links&.changelog_uri,
+        funding_uri:       versioned_links&.funding_uri,
         yanked:            versions.none?(&:indexed?),
         summary:           latest_version&.summary,
         description:       latest_version&.description,
@@ -60,6 +62,7 @@ module RubygemSearchable
     mapping do
       indexes :name, type: "text", analyzer: "rubygem" do
         indexes :suggest, analyzer: "simple"
+        indexes :unanalyzed, type: "keyword", index: "true"
       end
       indexes :summary, type: "text", analyzer: "english" do
         indexes :raw, analyzer: "simple"

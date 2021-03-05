@@ -1,0 +1,40 @@
+<% @title = t("mailer.owner_removed.title") %>
+<% @sub_title = t("mailer.owner_removed.subtitle", user_handle: @user.handle) %>
+
+<!-- Body -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+  <tr>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+    <td>
+      <div class="h3-1-center" style="color:#1e1e1e; font-family:Georgia, serif; min-width:auto !important; font-size:20px; line-height:26px;">
+        <br>
+        <p>
+          <%= t("mailer.owner_removed.body_html", gem: @rubygem.name, remover: @remover.display_handle) %>
+        </p>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+        <p>If this change is expected, you do not need to take further action.</p>
+        <p>
+          <strong>Only if this change is unexpected</strong>
+          please take immediate steps to secure your account and gems:
+        </p>
+
+        <%= render "mailer/compromised_instructions" do %>
+          <li>Look out for unexpected changes to your gems on RubyGems.org</li>
+        <% end %>
+
+        <p>
+          <em>
+            To stop receiving these messages, update your <%= link_to("email notification settings", notifier_url) %>.
+          </em>
+        </p>
+      </div>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="30" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+    </td>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+  </tr>
+</table>

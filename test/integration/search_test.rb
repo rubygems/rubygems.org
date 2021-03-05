@@ -29,6 +29,11 @@ class SearchTest < SystemTest
     click_button "search_submit"
 
     assert page.has_content? "No gems found"
+    assert page.has_content? "Yanked (1)"
+
+    click_link "Yanked (1)"
+    assert page.has_content? "LDAP"
+    assert page.has_selector? "a[href='#{rubygem_path('LDAP')}']"
   end
 
   test "searching for a gem with yanked versions" do
@@ -58,9 +63,31 @@ class SearchTest < SystemTest
     create(:rubygem, name: "ruby-gems", number: "1.0.0")
     import_and_refresh
 
-    visit "/search?query=ruby&script_name=javascript:alert(1)//"
+    visit "/search?query=ruby&original_script_name=javascript:alert(1)//&script_name=javascript:alert(1)//"
     assert page.has_content? "ruby-ruby"
     assert page.has_link?("Next", href: "/search?page=2&query=ruby")
     Kaminari.configure { |c| c.default_per_page = 30 }
+  end
+
+  test "total result count more than (max pages x default per page) shows max pages and accurate total count" do
+    silence_warnings do
+      Kaminari.configure { |c| c.default_per_page = 1 }
+      orignal_val = Gemcutter::SEARCH_MAX_PAGES
+      Gemcutter::SEARCH_MAX_PAGES = 2
+
+      create(:rubygem, name: "ruby-ruby", number: "1.0.0")
+      create(:rubygem, name: "ruby-gems", number: "1.0.0")
+      create(:rubygem, name: "ruby-thing", number: "1.0.0")
+      import_and_refresh
+
+      visit "/search?query=ruby"
+      assert page.has_content? "Displaying gem 1 - 1 of 3 in total"
+
+      click_link "Last"
+      assert page.has_content? "Displaying gem 2 - 2 of 3 in total"
+
+      Gemcutter::SEARCH_MAX_PAGES = orignal_val
+      Kaminari.configure { |c| c.default_per_page = 30 }
+    end
   end
 end

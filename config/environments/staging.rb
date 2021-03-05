@@ -1,4 +1,5 @@
 require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?
+require_relative "../../lib/middleware/redirector"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -53,7 +54,7 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
   config.ssl_options = {
-    hsts: { expires: 2.minutes, subdomains: false },
+    hsts: { expires: 365.days, subdomains: false },
     redirect: {
       exclude: ->(request) { request.path.start_with?('/internal') }
     }
@@ -61,7 +62,7 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = :info
+  config.log_level = ENV['RAILS_LOG_LEVEL'].present? ? ENV['RAILS_LOG_LEVEL'].to_sym : :info
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :request_id ]
@@ -97,13 +98,13 @@ Rails.application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
   # if ENV["RAILS_LOG_TO_STDOUT"].present?
-  #   logger           = ActiveSupport::Logger.new(STDOUT)
+  #   logger           = ActiveSupport::Logger.new($stdout)
   #   logger.formatter = config.log_formatter
   #   config.logger    = ActiveSupport::TaggedLogging.new(logger)
   # end
 
   # Custom logging config.
-  config.logger = ActiveSupport::Logger.new(STDOUT)
+  config.logger = ActiveSupport::Logger.new($stdout)
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false

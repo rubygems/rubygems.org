@@ -115,6 +115,12 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     assert_equal expected, @response.body
   end
 
+  test "/version has surrogate key header" do
+    get versions_path
+    assert_equal "versions", @response.headers["Surrogate-Key"]
+    assert_equal "max-age=30", @response.headers["Surrogate-Control"]
+  end
+
   test "/info with existing gem" do
     expected = <<~VERSIONS_FILE
       ---
@@ -134,7 +140,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
   test "/info has surrogate key header" do
     get info_path(gem_name: "gemA")
-    assert_equal "info/* gem/gemA", @response.headers["Surrogate-Key"]
+    assert_equal "info/* gem/gemA info/gemA", @response.headers["Surrogate-Key"]
   end
 
   test "/info partial response" do
@@ -149,7 +155,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     get info_path(gem_name: "gemA"), env: { range: "bytes=159-" }
 
     assert_response 206
-    assert_equal expected[159..-1], @response.body
+    assert_equal expected[159..], @response.body
   end
 
   test "/info with new gem" do
@@ -178,5 +184,24 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
     get info_path(gem_name: "gemA"), env: { "Accept-Encoding" => "gzip" }
     assert_response :success
     assert_equal("gzip", @response.headers["Content-Encoding"])
+  end
+
+  test "/info with version having multiple dependency orders by gem name and dependency id" do
+    same_dep = create(:rubygem, name: "aaab")
+    create(:dependency, scope: :runtime, version: @version, rubygem: same_dep, requirements: ">= 0")
+    create(:dependency, scope: :runtime, version: @version, rubygem: same_dep, requirements: "~> 0.2")
+
+    second_dep = create(:rubygem, name: "bbcc")
+    create(:dependency, version: @version, rubygem: second_dep)
+
+    expected = <<~VERSIONS_FILE
+      ---
+      1.0.0 aaab:>= 0,aaab:~> 0.2,bbcc:= 1.0.0|checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>= 2.6.3
+    VERSIONS_FILE
+
+    get info_path(gem_name: "gemB")
+    assert_response :success
+    assert_equal(expected, @response.body)
+    assert_equal etag(expected), @response.headers["ETag"]
   end
 end

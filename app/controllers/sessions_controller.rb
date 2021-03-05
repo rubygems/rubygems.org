@@ -1,9 +1,11 @@
 class SessionsController < Clearance::SessionsController
+  before_action :redirect_to_signin, unless: :signed_in?, only: %i[verify authenticate]
+
   def create
     @user = find_user(params.require(:session))
 
     if @user&.mfa_enabled?
-      session[:mfa_user] = @user.handle
+      session[:mfa_user] = @user.display_id
       render "sessions/otp_prompt"
     else
       do_login
@@ -11,7 +13,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def mfa_create
-    @user = User.find_by_name(session[:mfa_user])
+    @user = User.find_by_slug(session[:mfa_user])
     session.delete(:mfa_user)
 
     if @user&.mfa_enabled? && @user&.otp_verified?(params[:otp])
@@ -21,7 +23,28 @@ class SessionsController < Clearance::SessionsController
     end
   end
 
+  def verify
+  end
+
+  def authenticate
+    if verify_user
+      session[:verification] = Time.current + Gemcutter::PASSWORD_VERIFICATION_EXPIRY
+      redirect_to session.delete(:redirect_uri) || root_path
+    else
+      flash[:alert] = t("profiles.request_denied")
+      render :verify, status: :unauthorized
+    end
+  end
+
   private
+
+  def verify_user
+    current_user.authenticated? verify_password_params[:password]
+  end
+
+  def verify_password_params
+    params.require(:verify_password).permit(:password)
+  end
 
   def do_login
     sign_in(@user) do |status|

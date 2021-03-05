@@ -1,45 +1,40 @@
-require "rubygems/text"
-
 class GemTypo
+  DOWNLOADS_THRESHOLD = 10_000
+  LAST_RELEASE_TIME   = Time.zone.now - 5.years
+
   attr_reader :protected_gem
 
-  include Gem::Text
-
-  DOWNLOADS_THRESHOLD = 10_000_000
-  SIZE_THRESHOLD = 4
-
   def initialize(rubygem_name)
-    @rubygem_name       = rubygem_name.downcase
-    @distance_threshold = distance_threshold
+    @rubygem_name = rubygem_name
   end
 
   def protected_typo?
-    return false if @rubygem_name.size < GemTypo::SIZE_THRESHOLD
+    return false if GemTypoException.where("upper(name) = upper(?)", @rubygem_name).any?
 
-    gem_typo_exceptions = GemTypoException.all.pluck(:name)
-    return false if gem_typo_exceptions.include?(@rubygem_name)
+    return false if published_exact_name_matches.any?
 
-    protected_gems.each do |protected_gem|
-      distance = levenshtein_distance(@rubygem_name, protected_gem)
-      if distance <= @distance_threshold
-        @protected_gem = protected_gem
-        return true
-      end
-    end
+    match = matched_protected_gem_name
+    return false if not_protected?(match)
 
-    false
+    @protected_gem = match.name
+    true
   end
 
   private
 
-  def distance_threshold
-    @rubygem_name.size == GemTypo::SIZE_THRESHOLD ? 1 : 2
+  def published_exact_name_matches
+    Rubygem.with_versions.where("upper(name) = upper(?)", @rubygem_name)
   end
 
-  def protected_gems
-    Rubygem.joins(:gem_download)
-      .where("gem_downloads.count > ?", GemTypo::DOWNLOADS_THRESHOLD)
-      .where.not(name: @rubygem_name)
-      .pluck(:name)
+  def matched_protected_gem_name
+    Rubygem.with_versions.find_by(
+      "regexp_replace(upper(name), '[_-]', '', 'g') = regexp_replace(upper(?), '[_-]', '', 'g')",
+      @rubygem_name
+    )
+  end
+
+  def not_protected?(rubygem)
+    return true unless rubygem
+    rubygem.downloads < DOWNLOADS_THRESHOLD && rubygem.versions.most_recent.created_at < LAST_RELEASE_TIME
   end
 end

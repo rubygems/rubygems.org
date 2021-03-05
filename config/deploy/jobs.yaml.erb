@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jobs
@@ -27,18 +27,18 @@ spec:
         resources:
           <% if environment == 'production' %>
           requests:
-            cpu: 400m
-            memory: 1.25Gi
+            cpu: 500m
+            memory: 1.4Gi
           limits:
             cpu: 1000m
-            memory: 1.5Gi
+            memory: 1.6Gi
           <% else %>
           requests:
             cpu: 200m
             memory: 250Mi
           limits:
             cpu: 500m
-            memory: 300Mi
+            memory: 1.2Gi
           <% end %>
         env:
           - name: RAILS_ENV

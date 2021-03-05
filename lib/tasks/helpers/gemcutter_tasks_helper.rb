@@ -17,18 +17,26 @@ module GemcutterTaskshelper
     version.update(metadata: metadata || {})
   end
 
-  def assign_required_rubygems_version!(version)
-    required_rubygems_version = get_spec_attribute(version.full_name, "required_rubygems_version")
-    version.update_column(:required_rubygems_version, required_rubygems_version.to_s)
+  def assign_required_ruby_version!(version)
+    required_ruby_version = get_spec_attribute(version.full_name, "required_ruby_version")
+
+    return if required_ruby_version.nil? || required_ruby_version.to_s == ">= 0"
+    Rails.logger.info("[gemcutter:required_ruby_version:backfill] updating version: #{version.full_name} "\
+      " with required_ruby_version: #{required_ruby_version}")
+
+    version.update_column(:required_ruby_version, required_ruby_version.to_s)
+    CompactIndexTasksHelper.update_last_checksum(version.rubygem, "gemcutter:required_ruby_version:backfill")
   end
 
   def get_spec_attribute(version_full_name, attribute_name)
-    key = "gems/#{version_full_name}.gem"
+    key = "quick/Marshal.4.8/#{version_full_name}.gemspec.rz"
     file = RubygemFs.instance.get(key)
     return nil unless file
-    spec = Gem::Package.new(StringIO.new(file)).spec
+    spec = Marshal.load(Gem::Util.inflate(file))
     spec.send(attribute_name)
-  rescue Gem::Package::FormatError
+  rescue StandardError => e
+    Rails.logger.info("[gemcutter:required_ruby_version:backfill] could not get required_ruby_version for version: #{version.full_name}"\
+      " error: #{e.inspect}")
     nil
   end
 end

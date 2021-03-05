@@ -64,13 +64,13 @@ Follow the instructions below on how to install Bundler and setup the database.
 #### Environment (OS X)
 
 * Use Ruby 2.6.x (`.ruby-version` is present and can be used)
-* Use Rubygems 2.6.10
+* Use Rubygems 3.1.5
 * Install bundler: `gem install bundler`
 * Install Elastic Search:
-  * Pull ElasticSearch `5.1.2` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:5.1.2`
+  * Pull ElasticSearch `6.8.13` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:6.8.13`
   * Running Elasticsearch from the command line:
   ```
-  docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" -e "xpack.security.enabled=false" docker.elastic.co/elasticsearch/elasticsearch:5.1.2
+  docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" -e "xpack.security.enabled=false" docker.elastic.co/elasticsearch/elasticsearch:6.8.13
   ```
   * Note that `-e "xpack.security.enabled=false"` disables authentication.
 
@@ -78,23 +78,27 @@ Follow the instructions below on how to install Bundler and setup the database.
   * Setup information: `brew info postgresql`
 * Install memcached: `brew install memcached`
   * Show all memcached options: `memcached -h`
+* Install Google-Chrome: `brew cask install google-chrome`
 
 #### Environment (Linux - Debian/Ubuntu)
 
 * Use Ruby 2.6.x `apt-get install ruby2.6`
   * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
-* Use Rubygems 2.6.10
+* Use Rubygems 3.1.5
 * Install bundler: `gem install bundler`
-* Install Elastic Search:
-  * Pull ElasticSearch `5.1.2` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:5.1.2`
+* Install Elastic Search (see the docker installation instructions above):
+  * Pull ElasticSearch `6.8.13` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:6.8.13`
   * Running Elasticsearch from the command line:
   ```
-  docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" docker.elastic.co/elasticsearch/elasticsearch:5.1.2
+  docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" docker.elastic.co/elasticsearch/elasticsearch:6.8.13
   ```
 * Install PostgreSQL: `apt-get install postgresql postgresql-server-dev-all`
   * Help to setup database <https://wiki.debian.org/PostgreSql>
 * Install memcached: `apt-get install memcached`
   * Show all memcached options: `memcached -h`
+* Install Google-Chrome:
+  * Download latest stable: `wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb`
+  * Install chrome: sudo dpkg -i google-chrome-stable_current_amd64.deb
 
 #### Getting the code
 

@@ -7,7 +7,7 @@ if ARGV.empty?
 end
 
 gemname, version = *ARGV
-puts "Yanking #{gemname} #{' ' + version if version}"
+puts "Yanking #{gemname} #{version}"
 
 ENV["RAILS_ENV"] ||= "production"
 require_relative "../config/environment"

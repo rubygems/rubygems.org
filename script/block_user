@@ -14,7 +14,7 @@ require_relative "../config/environment"
 
 begin
   user = User.find_by!(handle: handle)
-  puts "Found user: #{user}"
+  puts "Found user: #{user.handle} #{user.email}"
   user.block!
   puts "Done."
 rescue ActiveRecord::RecordNotFound

@@ -60,7 +60,7 @@ class StatsControllerTest < ActionController::TestCase
     should "not have width greater than 100%" do
       assert_select ".stats__graph__gem__meter" do |element|
         element.map { |h| h[:style] }.each do |width|
-          width =~ /width\: (\d+[,.]\d+)%/
+          width =~ /width: (\d+[,.]\d+)%/
           assert Regexp.last_match(1).to_f <= 100, "#{Regexp.last_match(1)} is greater than 100"
         end
       end

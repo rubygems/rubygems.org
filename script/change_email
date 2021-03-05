@@ -9,6 +9,14 @@ require_relative "../config/environment"
 
 from_user = User.find_by_email!(from_email)
 from_user.email = to_email
-from_user.save!
+from_user.email_confirmed = false
+from_user.generate_confirmation_token
 
-puts "#{from_user.name}'s email is now: #{to_email}"
+if from_user.save
+  puts "#{from_user.name}'s email is now: #{to_email}"
+  Delayed::Job.enqueue(EmailConfirmationMailer.new(from_user.id))
+  puts "enqueued email confirmation mail."
+else
+  puts "could not save user"
+  puts from_user.errors.full_messages.to_sentence
+end

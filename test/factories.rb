@@ -46,11 +46,28 @@ FactoryBot.define do
   factory :ownership do
     rubygem
     user
+    confirmed_at { Time.current }
+    authorizer { user }
+    trait :unconfirmed do
+      confirmed_at { nil }
+    end
   end
 
   factory :subscription do
     rubygem
     user
+  end
+
+  factory :api_key do
+    transient { key { "12345" } }
+
+    user
+    name { "ci-key" }
+
+    # enabled by default. disabled when show_dashboard is enabled.
+    index_rubygems { show_dashboard ? false : true }
+
+    hashed_key { Digest::SHA256.hexdigest(key) }
   end
 
   sequence :name do |n|
@@ -95,6 +112,7 @@ FactoryBot.define do
     indexed { true }
     metadata { { "foo" => "bar" } }
     number
+    canonical_number { Gem::Version.new(number).canonical_segments.join(".") }
     platform { "ruby" }
     required_rubygems_version { ">= 2.6.3" }
     required_ruby_version { ">= 2.0.0" }

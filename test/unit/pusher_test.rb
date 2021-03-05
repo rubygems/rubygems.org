@@ -109,9 +109,8 @@ class PusherTest < ActiveSupport::TestCase
       @gem = gem_file("bad-date-1.0.0.gem")
       @cutter = Pusher.new(@user, @gem)
       @cutter.process
-      # TODO: switch regex to use `year too small` only when Ruby 2.6 is the default
-      assert_match(/There was a problem saving your gem. year too (big|small) to marshal: 1017 UTC/, @cutter.message)
-      assert_equal @cutter.code, 400
+      assert_match(/exception while verifying: mon out of range/, @cutter.message)
+      assert_equal @cutter.code, 422
     end
 
     should "not be able to pull spec with metadata containing bad ruby symbols" do
@@ -146,7 +145,7 @@ class PusherTest < ActiveSupport::TestCase
     setup do
       spec = mock
       spec.expects(:name).returns "some name"
-      spec.expects(:version).returns "1.3.3.7"
+      spec.expects(:version).times(2).returns Gem::Version.new("1.3.3.7")
       spec.expects(:original_platform).returns "ruby"
       @cutter.stubs(:spec).returns spec
       @cutter.stubs(:size).returns 5
@@ -178,7 +177,7 @@ class PusherTest < ActiveSupport::TestCase
       @rubygem = create(:rubygem)
       spec = mock
       spec.stubs(:name).returns @rubygem.name
-      spec.stubs(:version).returns "1.3.3.7"
+      spec.stubs(:version).returns Gem::Version.new("1.3.3.7")
       spec.stubs(:original_platform).returns "ruby"
       @cutter.stubs(:spec).returns spec
       @cutter.find
@@ -195,7 +194,7 @@ class PusherTest < ActiveSupport::TestCase
 
       spec = mock
       spec.expects(:name).returns @rubygem.name.upcase
-      spec.expects(:version).returns "1.3.3.7"
+      spec.expects(:version).returns Gem::Version.new("1.3.3.7")
       spec.expects(:original_platform).returns "ruby"
       @cutter.stubs(:spec).returns spec
       refute @cutter.find
@@ -209,7 +208,7 @@ class PusherTest < ActiveSupport::TestCase
 
       spec = mock
       spec.stubs(:name).returns @rubygem.name.upcase
-      spec.stubs(:version).returns "1.3.3.7"
+      spec.stubs(:version).returns Gem::Version.new("1.3.3.7")
       spec.stubs(:original_platform).returns "ruby"
       @cutter.stubs(:spec).returns spec
       @cutter.find
@@ -234,7 +233,7 @@ class PusherTest < ActiveSupport::TestCase
       end
 
       should "be true if owned by the user" do
-        @rubygem.ownerships.create(user: @user)
+        create(:ownership, rubygem: @rubygem, user: @user)
         assert @cutter.authorize
       end
 
@@ -286,11 +285,15 @@ class PusherTest < ActiveSupport::TestCase
         assert_not_nil @rubygem.versions.last.info_checksum
       end
 
+      should "indexe rubygem and version" do
+        assert @rubygem.indexed?
+        assert @rubygem.versions.last.indexed?
+      end
+
       should "create rubygem index" do
         @rubygem.update_column("updated_at", Date.new(2016, 07, 04))
         Delayed::Worker.new.work_off
         response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
-                                                        type:  "rubygem",
                                                         id:    @rubygem.id
         expected_response = {
           "name"              => "gemsgemsgems",
@@ -312,6 +315,7 @@ class PusherTest < ActiveSupport::TestCase
           "source_code_uri"   => "http://example.com",
           "bug_tracker_uri"   => "http://example.com",
           "changelog_uri"     => nil,
+          "funding_uri"       => nil,
           "yanked"            => false,
           "summary"           => "old summary",
           "description"       => "Some awesome gem",
@@ -357,7 +361,6 @@ class PusherTest < ActiveSupport::TestCase
     should "update rubygem index" do
       Delayed::Worker.new.work_off
       response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
-                                                      type:  "rubygem",
                                                       id:    @rubygem.id
       assert_equal "new summary", response["_source"]["summary"]
     end

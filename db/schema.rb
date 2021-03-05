@@ -2,24 +2,36 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `rails
-# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_31_172741) do
+ActiveRecord::Schema.define(version: 2021_01_25_153619) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "plpgsql"
 
-  create_table "announcements", id: :serial, force: :cascade do |t|
-    t.text "body"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "api_keys", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name", null: false
+    t.string "hashed_key", null: false
+    t.boolean "index_rubygems", default: false, null: false
+    t.boolean "push_rubygem", default: false, null: false
+    t.boolean "yank_rubygem", default: false, null: false
+    t.boolean "add_owner", default: false, null: false
+    t.boolean "remove_owner", default: false, null: false
+    t.boolean "access_webhooks", default: false, null: false
+    t.boolean "show_dashboard", default: false, null: false
+    t.datetime "last_accessed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["hashed_key"], name: "index_api_keys_on_hashed_key", unique: true
+    t.index ["user_id"], name: "index_api_keys_on_user_id"
   end
 
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
@@ -63,6 +75,7 @@ ActiveRecord::Schema.define(version: 2019_08_31_172741) do
     t.integer "rubygem_id", null: false
     t.integer "version_id", null: false
     t.bigint "count"
+    t.index ["count"], name: "index_gem_downloads_on_count", order: :desc
     t.index ["rubygem_id", "version_id"], name: "index_gem_downloads_on_rubygem_id_and_version_id", unique: true
     t.index ["version_id", "rubygem_id", "count"], name: "index_gem_downloads_on_version_id_and_rubygem_id_and_count"
   end
@@ -104,8 +117,13 @@ ActiveRecord::Schema.define(version: 2019_08_31_172741) do
     t.string "token"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean "notifier", default: true, null: false
+    t.boolean "push_notifier", default: true, null: false
+    t.datetime "confirmed_at"
+    t.datetime "token_expires_at"
+    t.boolean "owner_notifier", default: true, null: false
+    t.integer "authorizer_id"
     t.index ["rubygem_id"], name: "index_ownerships_on_rubygem_id"
+    t.index ["user_id", "rubygem_id"], name: "index_ownerships_on_user_id_and_rubygem_id", unique: true
     t.index ["user_id"], name: "index_ownerships_on_user_id"
   end
 
@@ -114,7 +132,10 @@ ActiveRecord::Schema.define(version: 2019_08_31_172741) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string "slug"
+    t.boolean "indexed", default: false, null: false
+    t.index "regexp_replace(upper((name)::text), '[_-]'::text, ''::text, 'g'::text)", name: "dashunderscore_typos_idx"
     t.index "upper((name)::text) varchar_pattern_ops", name: "index_rubygems_upcase"
+    t.index ["indexed"], name: "index_rubygems_on_indexed"
     t.index ["name"], name: "index_rubygems_on_name", unique: true
   end
 
@@ -192,14 +213,16 @@ ActiveRecord::Schema.define(version: 2019_08_31_172741) do
     t.string "sha256"
     t.hstore "metadata", default: {}, null: false
     t.datetime "yanked_at"
-    t.string "required_rubygems_version"
+    t.string "required_rubygems_version", limit: 255
     t.string "info_checksum"
     t.string "yanked_info_checksum"
     t.bigint "pusher_id"
+    t.string "canonical_number"
     t.index "lower((full_name)::text)", name: "index_versions_on_lower_full_name"
     t.index ["built_at"], name: "index_versions_on_built_at"
     t.index ["created_at"], name: "index_versions_on_created_at"
     t.index ["full_name"], name: "index_versions_on_full_name"
+    t.index ["indexed", "yanked_at"], name: "index_versions_on_indexed_and_yanked_at"
     t.index ["indexed"], name: "index_versions_on_indexed"
     t.index ["number"], name: "index_versions_on_number"
     t.index ["position"], name: "index_versions_on_position"
@@ -219,4 +242,5 @@ ActiveRecord::Schema.define(version: 2019_08_31_172741) do
     t.index ["user_id", "rubygem_id"], name: "index_web_hooks_on_user_id_and_rubygem_id"
   end
 
+  add_foreign_key "api_keys", "users"
 end

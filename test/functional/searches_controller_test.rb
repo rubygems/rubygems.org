@@ -62,7 +62,6 @@ class SearchesControllerTest < ActionController::TestCase
       create(:version, rubygem: @sinatra_redux)
       create(:version, rubygem: @brando)
       import_and_refresh
-      @request.cookies["new_search"] = "true"
       get :show, params: { query: "sinatra" }
     end
 
@@ -79,7 +78,7 @@ class SearchesControllerTest < ActionController::TestCase
       page.assert_text("all 2 gems")
     end
     should "not see suggestions" do
-      page.assert_no_text("Maybe you mean")
+      page.assert_no_text("Did you mean")
       page.assert_no_selector(".search-suggestions")
     end
   end
@@ -104,13 +103,12 @@ class SearchesControllerTest < ActionController::TestCase
       create(:version, rubygem: @sinatra_redux)
       create(:version, rubygem: @brando)
       import_and_refresh
-      @request.cookies["new_search"] = "true"
       get :show, params: { query: "sinatre" }
     end
 
     should respond_with :success
     should "see sinatra on the page in the suggestions" do
-      page.assert_text("Maybe you mean")
+      page.assert_text("Did you mean")
       assert page.find(".search__suggestions").has_content?(@sinatra.name)
       assert page.has_selector?("a[href='#{search_path(query: @sinatra.name)}']")
     end
@@ -120,6 +118,28 @@ class SearchesControllerTest < ActionController::TestCase
     should "not see brando on the page in the results" do
       page.assert_no_text(@brando.name)
       page.assert_no_selector("a[href='#{rubygem_path(@brando)}']")
+    end
+    should "not see filters" do
+      page.assert_no_text("Filter")
+    end
+  end
+
+  context "on GET to show with search parameters with yanked gems" do
+    setup do
+      @sinatra = create(:rubygem, name: "sinatra")
+      @sinatra_redux = create(:rubygem, name: "sinatra-redux")
+      create(:version, rubygem: @sinatra)
+      create(:version, :yanked, rubygem: @sinatra_redux)
+      import_and_refresh
+      get :show, params: { query: @sinatra_redux.name.to_s, yanked: true }
+    end
+
+    should respond_with :success
+    should "see sinatra_redux on the page in the results" do
+      page.assert_selector("a[href='#{rubygem_path(@sinatra_redux)}']")
+    end
+    should "not see sinatra on the page in the results" do
+      page.assert_no_selector("a[href='#{rubygem_path(@sinatra)}']")
     end
   end
 
@@ -133,7 +153,6 @@ class SearchesControllerTest < ActionController::TestCase
     should "fallback to legacy search" do
       requires_toxiproxy
       Toxiproxy[:elasticsearch].down do
-        @request.cookies["new_search"] = "true"
         get :show, params: { query: "sinatra" }
         assert_response :success
         assert page.has_content?("Advanced search is currently unavailable. Falling back to legacy search.")

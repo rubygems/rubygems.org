@@ -1,0 +1,36 @@
+name: Tests
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+jobs:
+  rails:
+    strategy:
+      fail-fast: false
+      matrix:
+        rubygems_version: ['3.1.5', 'latest']
+        ruby_version: ['2.7.2']
+    name: Rails tests (Ruby ${{ matrix.ruby_version }}, RubyGems ${{ matrix.rubygems_version }})
+    runs-on: ubuntu-18.04
+    env:
+      RUBYGEMS_VERSION: ${{ matrix.rubygems_version }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install and start services
+      run: |
+        ./script/install_toxiproxy.sh
+        docker-compose up -d
+    - name: Wait for ES to boot
+      run: |
+        timeout 300 bash -c "until curl --silent --output /dev/null http://localhost:9200/_cat/health?h=st; do printf '.'; sleep 5; done; printf '\n'"
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby_version }}
+        bundler-cache: true
+    - name: Prepare environment
+      run: |
+        cp config/database.yml.example config/database.yml
+        bundle exec rake db:setup
+    - name: Tests
+      run: bin/rails test

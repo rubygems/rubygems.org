@@ -1,7 +1,13 @@
 class Rack::Attack
   REQUEST_LIMIT = 100
+  EXP_BASE_REQUEST_LIMIT = 300
+  PUSH_LIMIT = 400
   REQUEST_LIMIT_PER_EMAIL = 10
   LIMIT_PERIOD = 10.minutes
+  PUSH_LIMIT_PERIOD = 60.minutes
+  EXP_BASE_LIMIT_PERIOD = 300.seconds
+  EXP_BACKOFF_LEVELS = [1, 2].freeze
+  PUSH_EXP_THROTTLE_KEY = "api/exp/push/ip".freeze
 
   ### Prevent Brute-Force Login Attacks ###
 
@@ -19,64 +25,78 @@ class Rack::Attack
 
   protected_ui_actions = [
     { controller: "sessions",            action: "create" },
-    { controller: "sessions",            action: "mfa_create" },
     { controller: "users",               action: "create" },
-    { controller: "passwords",           action: "mfa_edit" },
     { controller: "passwords",           action: "edit" },
+    { controller: "sessions",            action: "authenticate" },
     { controller: "passwords",           action: "create" },
     { controller: "profiles",            action: "update" },
     { controller: "profiles",            action: "destroy" },
     { controller: "email_confirmations", action: "create" }
   ]
 
-  protected_api_actions = [
+  protected_ui_mfa_actions = [
+    { controller: "sessions",            action: "mfa_create" },
+    { controller: "passwords",           action: "mfa_edit" },
+    { controller: "multifactor_auths",   action: "create" },
+    { controller: "multifactor_auths",   action: "update" }
+  ]
+
+  protected_api_mfa_actions = [
     { controller: "api/v1/deletions", action: "create" },
     { controller: "api/v1/owners",    action: "create" },
-    { controller: "api/v1/owners",    action: "destroy" }
+    { controller: "api/v1/owners",    action: "destroy" },
+    { controller: "api/v1/api_keys",  action: "show" }
+  ]
+
+  protected_ui_owners_actions = [
+    { controller: "owners", action: "resend_confirmation" },
+    { controller: "owners", action: "create" },
+    { controller: "owners", action: "destroy" }
   ]
 
   def self.protected_route?(protected_actions, path, method)
     route_params = Rails.application.routes.recognize_path(path, method: method)
     protected_actions.any? { |hash| hash[:controller] == route_params[:controller] && hash[:action] == route_params[:action] }
+  rescue ActionController::RoutingError
+    false
   end
 
   safelist("assets path") do |req|
     req.path.starts_with?("/assets") && req.request_method == "GET"
   end
 
-  # 100 req in 10 min
-  # 200 req in 100 min
-  # 300 req in 1000 min (0.7 days)
-  # 400 req in 10000 min (6.9 days)
-  (1..4).each do |level|
-    throttle("clearance/ip/#{level}", limit: REQUEST_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
-      req.ip if protected_route?(protected_ui_actions, req.path, req.request_method)
+  throttle("clearance/ip", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
+    req.ip if protected_route?(protected_ui_actions, req.path, req.request_method)
+  end
+
+  # 300 req in 300 seconds
+  # 600 req in 90000 seconds (25 hours)
+  EXP_BACKOFF_LEVELS.each do |level|
+    throttle("clearance/ip/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
+      req.ip if protected_route?(protected_ui_mfa_actions, req.path, req.request_method)
     end
   end
 
-  (1..4).each do |level|
-    throttle("api/ip/#{level}", limit: REQUEST_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
-      req.ip if protected_route?(protected_api_actions, req.path, req.request_method)
+  EXP_BACKOFF_LEVELS.each do |level|
+    throttle("api/ip/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
+      req.ip if protected_route?(protected_api_mfa_actions, req.path, req.request_method)
     end
   end
 
-  PUSH_LIMIT = 150
+  throttle("owners/ip", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
+    req.ip if protected_route?(protected_ui_owners_actions, req.path, req.request_method)
+  end
+
   protected_push_action = [{ controller: "api/v1/rubygems", action: "create" }]
 
-  # 150 push in 10 min
-  # 450 push in 1000 min
-  # 600 push in 10000 min
-  [1, 3, 4].each do |level|
-    throttle("api/push/ip/#{level}", limit: PUSH_LIMIT * level, period: (LIMIT_PERIOD**level).seconds) do |req|
+  EXP_BACKOFF_LEVELS.each do |level|
+    throttle("#{PUSH_EXP_THROTTLE_KEY}/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
       req.ip if protected_route?(protected_push_action, req.path, req.request_method)
     end
   end
 
-  # Throttle GET request for api_key by IP address
-  protected_api_key_action = [{ controller: "api/v1/api_keys", action: "show" }]
-
-  throttle("api_key/ip", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
-    req.ip if protected_route?(protected_api_key_action, req.path, req.request_method)
+  throttle("api/push/ip", limit: PUSH_LIMIT, period: PUSH_LIMIT_PERIOD) do |req|
+    req.ip if protected_route?(protected_push_action, req.path, req.request_method)
   end
 
   # Throttle yank requests
@@ -103,6 +123,8 @@ class Rack::Attack
     User.normalize_email(req.params['session']['who']).presence if protected_route && req.params['session']
   end
 
+  protected_api_key_action = [{ controller: "api/v1/api_keys", action: "show" }]
+
   throttle("api_key/basic_auth", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
     if protected_route?(protected_api_key_action, req.path, req.request_method)
       action_dispatch_req = ActionDispatch::Request.new(req.env)
@@ -125,6 +147,12 @@ class Rack::Attack
   throttle("email_confirmations/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
     if protected_route?(protected_confirmation_action, req.path, req.request_method) && req.params['email_confirmation']
       User.normalize_email(req.params['email_confirmation']['email']).presence
+    end
+  end
+
+  throttle("owners/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
+    if protected_route?(protected_ui_owners_actions, req.path, req.request_method)
+      User.find_by_remember_token(req.cookies["remember_token"])&.email.presence
     end
   end
 
@@ -171,4 +199,6 @@ class Rack::Attack
     }
     Rails.logger.info event.to_json
   end
+
+  self.throttled_response_retry_after_header = true
 end

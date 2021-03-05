@@ -3,9 +3,10 @@ class Api::V1::DeletionsController < Api::BaseController
   before_action :find_rubygem_by_name
   before_action :validate_gem_and_version
   before_action :verify_with_otp
+  before_action :render_api_key_forbidden, if: :api_key_unauthorized?
 
   def create
-    @deletion = @api_user.deletions.build(version: @version)
+    @deletion = @api_key.user.deletions.build(version: @version)
     if @deletion.save
       StatsD.increment "yank.success"
       enqueue_web_hook_jobs(@version)
@@ -23,7 +24,7 @@ class Api::V1::DeletionsController < Api::BaseController
     if !@rubygem.hosted?
       render plain: t(:this_rubygem_could_not_be_found),
              status: :not_found
-    elsif !@rubygem.owned_by?(@api_user)
+    elsif !@rubygem.owned_by?(@api_key.user)
       render plain: "You do not have permission to delete this gem.",
              status: :forbidden
     else
@@ -39,5 +40,9 @@ class Api::V1::DeletionsController < Api::BaseController
                status: :not_found
       end
     end
+  end
+
+  def api_key_unauthorized?
+    !@api_key.can_yank_rubygem?
   end
 end

@@ -1,51 +1,86 @@
 require "test_helper"
 
 class GemTypoTest < ActiveSupport::TestCase
-  context "with above downloads threshold gem" do
+  setup do
+    @existing = create(:rubygem, name: "delayed_job_active_record")
+    create(:version, rubygem: @existing, created_at: Time.now.utc)
+
+    deleted = create(:rubygem, name: "deleted_active_record_gem")
+    create(:version, rubygem: deleted, created_at: Time.now.utc, indexed: false)
+  end
+
+  should "return false for exact match" do
+    gem_typo = GemTypo.new("delayed_job_active_record")
+    refute gem_typo.protected_typo?
+  end
+
+  should "return false for any exact match so that owner of the delayed_job_active_record Gem can push an update with existing typosquat" do
+    existing_typo = build(:rubygem, name: "delayed-job-active-record")
+    existing_typo.save(validate: false)
+    create(:version, rubygem: existing_typo, created_at: Time.now.utc)
+
+    gem_typo = GemTypo.new("delayed_job_active_record")
+    refute gem_typo.protected_typo?
+  end
+
+  should "return false for an exact match of a yanked gem so a gem with an identical name can be published in the future" do
+    gem_typo = GemTypo.new("deleted_active_record_gem")
+    refute gem_typo.protected_typo?
+  end
+
+  should "return false for a underscore variation match of a yanked gem so a gem with a similar name can be published in the future" do
+    gem_typo = GemTypo.new("deleted-active_record-gem")
+    refute gem_typo.protected_typo?
+  end
+
+  context "typo squat on an existing Gem name" do
+    should "return true for one -/_ character change" do
+      gem_typo = GemTypo.new("delayed-job_active_record")
+      assert gem_typo.protected_typo?
+    end
+
+    should "return true for one -/_ missing" do
+      gem_typo = GemTypo.new("delayed_job_activerecord")
+      assert gem_typo.protected_typo?
+    end
+
+    should "return true for two -/_ change" do
+      gem_typo = GemTypo.new("delayed-job_active-record")
+      assert gem_typo.protected_typo?
+    end
+
+    should "return true for two -/_ changed/missing" do
+      gem_typo = GemTypo.new("delayed-jobactive-record")
+      assert gem_typo.protected_typo?
+    end
+
+    should "return true for three -/_ character change" do
+      gem_typo = GemTypo.new("delayed-job-active-record")
+      assert gem_typo.protected_typo?
+    end
+
+    should "return true for three -/_ missing" do
+      gem_typo = GemTypo.new("delayedjobactiverecord")
+      assert gem_typo.protected_typo?
+    end
+  end
+
+  context "gem has less than GemTypo::DOWNLOADS_THRESHOLD downloads" do
     setup do
-      above_downloads_thres = GemTypo::DOWNLOADS_THRESHOLD + 1
-      create(:rubygem, name: "four", downloads: above_downloads_thres)
+      @existing.gem_download.update_attribute(:count, 9999)
+      @gem_typo = GemTypo.new("delayedjobactiverecord")
     end
 
-    should "return false for exact match" do
-      gem_typo = GemTypo.new("four")
-      assert_equal false, gem_typo.protected_typo?
+    should "return false when most recent release was more than GemTypo::LAST_RELEASE_TIME ago" do
+      create(:version, rubygem: @existing, created_at: 6.years.ago)
+
+      refute @gem_typo.protected_typo?
     end
 
-    should "return false for gem name size below protected threshold" do
-      gem_typo = GemTypo.new("fou")
-      assert_equal false, gem_typo.protected_typo?
-    end
+    should "return true when most recent release was less than GemTypo::LAST_RELEASE_TIME ago" do
+      create(:version, rubygem: @existing, created_at: 4.years.ago)
 
-    context "size equals protected threshold" do
-      should "return true for one character distance" do
-        gem_typo = GemTypo.new("fous")
-        assert_equal true, gem_typo.protected_typo?
-      end
-
-      should "return false for two character distance" do
-        gem_typo = GemTypo.new("foss")
-        assert_equal false, gem_typo.protected_typo?
-      end
-    end
-
-    context "size above protected threshold" do
-      should "return true for two character distance" do
-        gem_typo = GemTypo.new("fourss")
-        assert_equal true, gem_typo.protected_typo?
-      end
-
-      should "return false for exceptions" do
-        create(:gem_typo_exception, name: "fourss")
-
-        gem_typo = GemTypo.new("fourss")
-        assert_equal false, gem_typo.protected_typo?
-      end
-
-      should "return false for three characher distance" do
-        gem_typo = GemTypo.new("foursss")
-        assert_equal false, gem_typo.protected_typo?
-      end
+      assert @gem_typo.protected_typo?
     end
   end
 end

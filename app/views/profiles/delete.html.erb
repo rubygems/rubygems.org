@@ -2,7 +2,7 @@
 
 <% if @only_owner_gems.any? %>
   <div class="t-body">
-    <p class="page__subheading"><%= (t '.list_only_owner_html', command_link: link_to('gem owner', 'http://guides.rubygems.org/command-reference/#gem-owner')) %></p>
+    <p class="page__subheading"><%= (t '.list_only_owner_html', command_link: link_to('gem owner', 'https://guides.rubygems.org/command-reference/#gem-owner')) %></p>
   </div>
   <div id="profile">
     <div class="profile-list">
@@ -27,7 +27,7 @@
 <% end %>
 
 <div class="t-body push--s">
-  <p class="page__subheading"><%= t '.instructions' %></p>
+  <p><%= t '.instructions' %></p>
   <%= form_for current_user, url: destroy_profile_path, method: :delete do |form| %>
     <div class="password_field">
       <%= form.label :password, "Password", class: 'form__label' %>

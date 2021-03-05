@@ -8,6 +8,33 @@ class ProfilesControllerTest < ActionController::TestCase
     end
   end
 
+  context "when not logged in" do
+    setup { @user = create(:user) }
+
+    context "on GET to show with id" do
+      setup { get :show, params: { id: @user.id } }
+
+      should respond_with :success
+      should "render Email link" do
+        assert page.has_content?("Email Me")
+        assert page.has_selector?("a[href='mailto:#{@user.email}']")
+      end
+    end
+
+    context "on GET to show when hide email" do
+      setup do
+        @user.update(hide_email: true)
+        get :show, params: { id: @user.id }
+      end
+
+      should respond_with :success
+      should "not render Email link" do
+        refute page.has_content?("Email Me")
+        refute page.has_selector?("a[href='mailto:#{@user.email}']")
+      end
+    end
+  end
+
   context "when logged in" do
     setup do
       @user = create(:user)
@@ -40,29 +67,6 @@ class ProfilesControllerTest < ActionController::TestCase
       should respond_with :success
       should "render user show page" do
         assert page.has_content? @user.handle
-      end
-    end
-
-    context "on GET to show with id" do
-      setup { get :show, params: { id: @user.id } }
-
-      should respond_with :success
-      should "render Email link" do
-        assert page.has_content?("Email Me")
-        assert page.has_selector?("a[href='mailto:#{@user.email}']")
-      end
-    end
-
-    context "on GET to show when hide email" do
-      setup do
-        @user.update(hide_email: true)
-        get :show, params: { id: @user.id }
-      end
-
-      should respond_with :success
-      should "not render Email link" do
-        refute page.has_content?("Email Me")
-        refute page.has_selector?("a[href='mailto:#{@user.email}']")
       end
     end
 
@@ -145,7 +149,7 @@ class ProfilesControllerTest < ActionController::TestCase
       context "updating email with existing email" do
         setup do
           create(:user, email: "cannotchange@tothis.com")
-          put :update, params: { user: { email: "cannotchange@tothis.com", password: @user.password } }
+          put :update, params: { user: { unconfirmed_email: "cannotchange@tothis.com", password: @user.password } }
         end
 
         should "not set unconfirmed_email" do
@@ -157,15 +161,47 @@ class ProfilesControllerTest < ActionController::TestCase
       context "updating email with existing unconfirmed_email" do
         setup do
           create(:user, unconfirmed_email: "cannotchange@tothis.com")
-          put :update, params: { user: { email: "cannotchange@tothis.com", password: @user.password } }
+          put :update, params: { user: { unconfirmed_email: "cannotchange@tothis.com", password: @user.password } }
         end
 
-        should "not set unconfirmed_email" do
-          assert page.has_content? "Email address has already been taken"
-          refute_equal "cannotchange@tothis.com", @user.unconfirmed_email
+        should "set unconfirmed_email" do
+          assert_equal "cannotchange@tothis.com", @user.unconfirmed_email
+        end
+      end
+
+      context "updating email" do
+        context "yet to verify the updated email" do
+          setup do
+            @current_email = "john@doe.com"
+            @user = create(:user, email: @current_email)
+            sign_in_as(@user)
+            @new_email = "change@tothis.com"
+          end
+
+          should "set unconfirmed email and confirmation token" do
+            put :update, params: { user: { unconfirmed_email: @new_email, password: @user.password } }
+            assert_equal @new_email, @user.unconfirmed_email
+            assert @user.confirmation_token
+          end
+
+          should "not update the current email" do
+            put :update, params: { user: { unconfirmed_email: @new_email, password: @user.password } }
+            assert_equal @current_email, @user.email
+          end
+
+          should "send email reset mails to new and current email addresses" do
+            mailer = mock
+            mailer.stubs(:deliver)
+
+            Mailer.expects(:email_reset).returns(mailer).times(1)
+            Mailer.expects(:email_reset_update).returns(mailer).times(1)
+            put :update, params: { user: { unconfirmed_email: @new_email, password: @user.password } }
+            Delayed::Worker.new.work_off
+          end
         end
       end
     end
+
     context "on DELETE to destroy" do
       context "correct password" do
         should "enqueue deletion request" do

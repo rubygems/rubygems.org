@@ -195,6 +195,12 @@ class VersionTest < ActiveSupport::TestCase
       new_version = Version.find(@version.id)
       assert_equal new_version.required_rubygems_version, @required_rubygems_version
     end
+
+    should "limit the character length" do
+      @version.required_rubygems_version = format(">=%s", "0" * 2 * 1024 * 1024 * 100)
+      @version.validate
+      assert_equal @version.errors.messages[:required_rubygems_version], ["is too long (maximum is 255 characters)"]
+    end
   end
 
   context "without a rubygems version" do
@@ -202,10 +208,70 @@ class VersionTest < ActiveSupport::TestCase
       @version = build(:version)
     end
 
+    should "allow empty value" do
+      @version.required_rubygems_version = ""
+      @version.validate
+
+      assert_equal @version.errors.messages[:required_rubygems_version], []
+    end
+
     should "not have a rubygems version" do
       @version.update(required_rubygems_version: nil)
       nil_version = Version.find(@version.id)
       assert_nil nil_version.required_rubygems_version
+    end
+  end
+
+  context "with authors" do
+    setup do
+      @version = build(:version)
+    end
+
+    should "validate maxiumum author field length" do
+      @version.authors = Array.new(6000) { "test author" }
+      @version.validate
+
+      assert_equal @version.errors.messages[:authors], ["is too long (maximum is 64000 characters)"]
+    end
+  end
+
+  context "with a description" do
+    setup do
+      @version = build(:version)
+    end
+
+    should "validate description length" do
+      @version.description = "test description" * 6000
+      @version.validate
+
+      assert_equal @version.errors.messages[:description], ["is too long (maximum is 64000 characters)"]
+    end
+
+    should "allow empty description" do
+      @version.description = ""
+      @version.validate
+
+      assert_equal @version.errors.messages[:description], []
+    end
+  end
+
+  context "with a summary" do
+    setup do
+      @version = build(:version)
+    end
+
+    should "validate summary length" do
+      @version.summary = "test description" * 6000
+      @version.validate
+
+      assert_equal @version.errors.messages[:summary], ["is too long (maximum is 64000 characters)"]
+    end
+
+    should "allow empty summary" do
+      @version.summary = ""
+      @version.validate
+
+      assert_equal @version.errors.messages[:summary], []
     end
   end
 
@@ -238,6 +304,38 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
+  context "with canonical number" do
+    setup { @rubygem = create(:rubygem, number: "1.0.0") }
+
+    should "be invalid with trailing zero in segments" do
+      version = build(:version, rubygem: @rubygem, number: "1.0.0.0")
+      refute version.valid?
+      assert_equal version.errors.messages[:canonical_number], ["has already been taken. Existing version: 1.0.0"]
+    end
+
+    should "be invalid with fewer zero in segments" do
+      version = build(:version, rubygem: @rubygem, number: "1.0")
+      refute version.valid?
+      assert_equal version.errors.messages[:canonical_number], ["has already been taken. Existing version: 1.0.0"]
+    end
+
+    should "be invalid with leading zero in significant segments" do
+      version = build(:version, rubygem: @rubygem, number: "01.0.0")
+      refute version.valid?
+      assert_equal version.errors.messages[:canonical_number], ["has already been taken. Existing version: 1.0.0"]
+    end
+
+    should "be valid in a different platform" do
+      version = build(:version, rubygem: @rubygem, number: "1.0.0", platform: "win32")
+      assert version.valid?
+    end
+
+    should "be valid with prerelease" do
+      version = build(:version, rubygem: @rubygem, number: "1.0.0.pre")
+      assert version.valid?
+    end
+  end
+
   context "with a version" do
     setup do
       @version = build(:version)
@@ -254,6 +352,24 @@ class VersionTest < ActiveSupport::TestCase
     should allow_value("mswin32").for(:platform)
     should allow_value("x86_64-linux").for(:platform)
     should_not allow_value("Gem::Platform::Ruby").for(:platform)
+
+    should "be invalid with platform longer than maximum field length" do
+      @version.platform = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
+      refute @version.valid?
+      assert_equal @version.errors.messages[:platform], ["is too long (maximum is 255 characters)"]
+    end
+
+    should "be invalid with number longer than maximum field length" do
+      long_number_suffix = ".1" * (Gemcutter::MAX_FIELD_LENGTH + 1)
+      @version.number = "1#{long_number_suffix}"
+      refute @version.valid?
+      assert_equal @version.errors.messages[:number], ["is too long (maximum is 255 characters)"]
+    end
+    should "be invalid with licenses longer than maximum field length" do
+      @version.licenses = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
+      refute @version.valid?
+      assert_equal @version.errors.messages[:licenses], ["is too long (maximum is 255 characters)"]
+    end
 
     should "give number for #to_s" do
       assert_equal @version.number, @version.to_s
@@ -654,6 +770,7 @@ class VersionTest < ActiveSupport::TestCase
     should "have attributes set properly from the specification" do
       @version.update_attributes_from_gem_specification!(@spec)
 
+      assert @version.rubygem.indexed
       assert @version.indexed
       assert_equal @spec.authors.join(", "),              @version.authors
       assert_equal @spec.description,                     @version.description
@@ -664,26 +781,43 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal @spec.required_rubygems_version.to_s,  @version.required_rubygems_version
     end
 
-    context "metadata" do
+    context "with metadata" do
       should "be invalid with empty string as link" do
-        assert_raise ActiveRecord::RecordInvalid do
-          @spec.metadata = { "home" => "" }
-          @version.update_attributes_from_gem_specification!(@spec)
-        end
+        @version.metadata = { "home" => "" }
+        @version.validate
+        assert_equal @version.errors.messages[:metadata], ["['home'] does not appear to be a valid URL"]
       end
 
       should "be invalid with invalid link" do
-        assert_raise ActiveRecord::RecordInvalid do
-          @spec.metadata = { "home" => "http:/github.com/bestgemever" }
-          @version.update_attributes_from_gem_specification!(@spec)
-        end
+        @version.metadata = { "home" => "http:/github.com/bestgemever" }
+        @version.validate
+        assert_equal @version.errors.messages[:metadata], ["['home'] does not appear to be a valid URL"]
       end
 
       should "be valid with valid link" do
-        assert_nothing_raised do
-          @spec.metadata = { "home" => "http://github.com/bestgemever" }
-          @version.update_attributes_from_gem_specification!(@spec)
-        end
+        @version.metadata = { "home" => "http://github.com/bestgemever" }
+        assert @version.validate
+        assert_equal @version.errors.messages[:metadata], []
+      end
+
+      should "be invalid with value larger than 1024 bytes" do
+        large_value = "v" * 1025
+        @version.metadata = { "key" => large_value }
+        @version.validate
+        assert_equal @version.errors.messages[:metadata], ["metadata value ['#{large_value}'] is too large (maximum is 1024 bytes)"]
+      end
+
+      should "be invalid with key larger than 251 bytes" do
+        large_key = "h" * 129
+        @version.metadata = { large_key => "value" }
+        @version.validate
+        assert_equal @version.errors.messages[:metadata], ["metadata key ['#{large_key}'] is too large (maximum is 128 bytes)"]
+      end
+
+      should "be invalid with empty key" do
+        @version.metadata = { "" => "value" }
+        @version.validate
+        assert_equal @version.errors.messages[:metadata], ["metadata key is empty"]
       end
     end
   end
@@ -749,7 +883,7 @@ class VersionTest < ActiveSupport::TestCase
     g2 = Rubygem.create(name: "test-gem")
     v2 = Version.new(authors:  %w[arthurnn dwradcliffe], number: "733.t-0.0.1", platform: "ruby", rubygem: g2)
     refute v2.valid?
-    assert_equal [:full_name], v2.errors.keys
+    assert_equal [:full_name], v2.errors.attribute_names
   end
 
   context "checksums" do

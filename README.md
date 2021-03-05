@@ -10,9 +10,9 @@ The Ruby community's gem host.
 ## Support
 
 <a href="https://rubytogether.org/"><img src="https://rubytogether.org/images/rubies.svg" width=200></a>
-<a href="https://rubycentral.org/"><img src="http://rubycentral.org/images/logo.png" width=200></a><br/>
+<a href="https://rubycentral.org/"><img src="doc/ruby_central_logo.png" height=110></a><br/>
 
-[RubyGems.org](https://rubygems.org) is managed by [Ruby Central](http://rubycentral.org), a community-funded organization supported by conference participation for [RailsConf](https://railsconf.org) and [RubyConf](https://rubyconf.org) through tickets and sponsorships.
+[RubyGems.org](https://rubygems.org) is managed by [Ruby Central](https://rubycentral.org), a community-funded organization supported by conference participation for [RailsConf](https://railsconf.org) and [RubyConf](https://rubyconf.org) through tickets and sponsorships.
 
 Hosting fees are paid by Ruby Central and CDN fees are generously donated by [Fastly](https://fastly.com).
 
@@ -25,15 +25,13 @@ Additionally, [RubyTogether](https://rubytogether.org) sponsors individuals to w
 * [Mailing List][]
 * [FAQ][]
 * [IRC][]: #rubygems on Freenode
-* [Travis][]: [![Build Status](https://img.shields.io/travis/rubygems/rubygems.org/master.svg)][travis]
 * [Code Climate][]: [![Maintainability](https://api.codeclimate.com/v1/badges/7110bb3f9b765042d604/maintainability)](https://codeclimate.com/github/rubygems/rubygems.org/maintainability)
 * [Code Climate][]: [![Test Coverage](https://api.codeclimate.com/v1/badges/7110bb3f9b765042d604/test_coverage)](https://codeclimate.com/github/rubygems/rubygems.org/test_coverage)
 * [Trello Board][]
 
 [mailing list]: https://groups.google.com/group/rubygems-org
-[faq]: http://help.rubygems.org/kb/gemcutter/faq
+[faq]: https://help.rubygems.org/kb/gemcutter/faq
 [irc]: https://webchat.freenode.net/?channels=rubygems
-[travis]: https://travis-ci.org/rubygems/rubygems.org
 [code climate]: https://codeclimate.com/github/rubygems/rubygems.org
 [trello board]: https://trello.com/board/rubygems-org/513f9634a7ed906115000755
 

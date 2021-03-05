@@ -60,15 +60,13 @@ class RubygemsHelperTest < ActionView::TestCase
     rubygem = create(:rubygem)
     url = "https://badge.fury.io/rb/#{rubygem.name}/install"
 
-    @virtual_path = "rubygems.show"
     assert_match url, badge_link(rubygem)
   end
 
   should "link to report abuse" do
     rubygem = create(:rubygem, name: "my_gem")
-    url = "http://help.rubygems.org/discussion/new?discussion[private]=1&discussion[title]=Reporting+Abuse+on+my_gem"
+    url = "mailto:support@rubygems.org?subject=Reporting Abuse on my_gem"
 
-    @virtual_path = "rubygems.show"
     assert_match url, report_abuse_link(rubygem)
   end
 
@@ -77,7 +75,6 @@ class RubygemsHelperTest < ActionView::TestCase
       @linkset = build(:linkset)
       @linkset.wiki = nil
       @linkset.code = ""
-      @virtual_path = "rubygems.show"
     end
 
     should "create link for homepage" do
@@ -159,7 +156,7 @@ class RubygemsHelperTest < ActionView::TestCase
     context "with invalid uri" do
       setup do
         linkset = build(:linkset, code: "http://github.com/\#{github_username}/\#{project_name}")
-        @rubygem = build(:rubygem, linkset: linkset)
+        @rubygem = create(:rubygem, linkset: linkset, number: "0.0.1")
       end
 
       should "not raise error" do
@@ -175,7 +172,7 @@ class RubygemsHelperTest < ActionView::TestCase
       setup do
         @github_link = "http://github.com/user/project"
         linkset = build(:linkset, code: @github_link)
-        @rubygem = build(:rubygem, linkset: linkset)
+        @rubygem = create(:rubygem, linkset: linkset, number: "0.0.1")
       end
 
       should "return parsed uri" do
@@ -187,11 +184,40 @@ class RubygemsHelperTest < ActionView::TestCase
       setup do
         @github_link = "http://github.com/user/project"
         linkset = build(:linkset, home: @github_link)
-        @rubygem = build(:rubygem, linkset: linkset)
+        @rubygem = create(:rubygem, linkset: linkset, number: "0.0.1")
       end
 
       should "return parsed uri" do
         assert_equal URI(@github_link), link_to_github(@rubygem)
+      end
+    end
+  end
+
+  context "change_diff_link" do
+    context "with yanked version" do
+      setup do
+        @version = create(:version, indexed: false)
+        @rubygem = @version.rubygem
+      end
+
+      should "return nil" do
+        assert_nil change_diff_link(@rubygem, @version)
+      end
+    end
+
+    context "with available version" do
+      setup do
+        @version = create(:version)
+        @rubygem = @version.rubygem
+      end
+
+      should "generate a correct link to the gem versions diff" do
+        diff_url = "https://my.diffend.io/gems/#{@rubygem.name}/prev/#{@version.slug}"
+
+        expected_link = link_to "Review changes", diff_url,
+                          class: "gem__link t-list__item"
+
+        assert_equal expected_link, change_diff_link(@rubygem, @version)
       end
     end
   end

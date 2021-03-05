@@ -7,11 +7,11 @@ zh-TW:
   footer_sponsors_html:
   footer_join_rt_html:
   form_disable_with: 請稍候...
-  help_url: http://help.rubygems.org
   invalid_page:
   locale_name: 正體中文
   none: 無
   not_found: 沒有找到
+  api_key_forbidden:
   please_sign_up: 無法存取，請先在 https://rubygems.org 上註冊帳號
   please_sign_in:
   otp_incorrect:
@@ -36,6 +36,7 @@ zh-TW:
         docs: 文件 URL
         mail: 郵件群組 URL
         wiki: Wiki URL
+        funding:
       session:
         password: 密碼
         who: Email / 帳號
@@ -47,6 +48,40 @@ zh-TW:
     errors:
       messages:
         unpwn:
+        blocked:
+  api_keys:
+    create:
+      success:
+    destroy:
+      success:
+    index:
+      api_keys:
+      name:
+      scopes:
+      age:
+      last_access:
+      action:
+      delete:
+      confirm:
+      confirm_all:
+      new_key:
+      index_rubygems:
+      push_rubygem:
+      yank_rubygem:
+      add_owner:
+      remove_owner:
+      access_webhooks:
+      show_dashboard:
+      reset:
+      save_key:
+    new:
+      new_api_key:
+    reset:
+      success:
+    update:
+      success:
+    edit:
+      edit_api_key:
   clearance_mailer:
     change_password:
       title:
@@ -106,6 +141,7 @@ zh-TW:
       header:
         dashboard: 控制台
         edit_profile:
+        settings:
         search_gem_html: 搜尋 Gems&hellip;
         sign_in: 登入
         sign_out: 登出
@@ -113,6 +149,7 @@ zh-TW:
   mailer:
     confirm_your_email:
     confirmation_subject:
+    link_expiration_explanation_html:
     email_confirmation:
       title:
       subtitle:
@@ -122,7 +159,6 @@ zh-TW:
       title:
       subtitle:
       visit_link_instructions:
-      link_expiration_explanation:
     deletion_complete:
       title:
       subtitle:
@@ -137,9 +173,39 @@ zh-TW:
       subject:
       title:
       subtitle:
+      'on':
+      off_html:
     gem_pushed:
       subject:
       title:
+    gem_yanked:
+      subject:
+      title:
+    reset_api_key:
+      subject:
+      title:
+      subtitle:
+    email_reset_update:
+      subject:
+      title:
+    ownership_confirmation:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      link_expiration_explanation_html:
+    owner_added:
+      subject_self:
+      subject_others:
+      title:
+      subtitle:
+      body_self_html:
+      body_others_html:
+    owner_removed:
+      subject:
+      title:
+      subtitle:
+      body_html:
   news:
     show:
       title: 最新發佈
@@ -210,19 +276,41 @@ zh-TW:
       success:
     show:
       info:
-      on:
-      off:
+      'on':
+      'off':
       recommended:
       title:
       update:
-  profiles:
+      push_heading:
+      owner_heading:
+  owners:
+    confirm:
+      confirmed_email:
+      token_expired:
+    index:
+      add_owner:
+      name:
+      mfa:
+      status:
+      confirmed_at:
+      added_by:
+      action:
+      info:
+      email_field:
+      submit_button:
+      confirmed:
+      pending:
+      confirm_remove:
+    resend_confirmation:
+      resent_notice:
+    create:
+      success_notice:
+    destroy:
+      removed_notice:
+      failed_notice:
+  settings:
     edit:
-      change_avatar:
-      email_awaiting_confirmation: 請驗證你的新 Email %{unconfirmed_email}
-      enter_password: 輸入密碼
-      hide_email: 在公開的個人頁面中隱藏 email
-      optional_twitter_username: Twitter 帳號（可選）
-      title: 編輯個人檔案
+      title:
       api_access:
         confirm_reset: 確定要重設嗎？此動作無法還原
         credentials_html: 如果你需要從 command line 中執行 %{gem_commands_link}，你需要先準備 %{gem_credentials_file} 這個檔案，用以下的指令可以產生：
@@ -231,13 +319,7 @@ zh-TW:
         reset: 重設 API key
         title: API 存取
       reset_password:
-        link_text: 從這裡設定新密碼
-        text_html: 需要重設密碼？沒問題。 %{link}
         title: 重設密碼
-      delete:
-        delete: 刪除
-        delete_profile: 刪除個人資料
-        warning: 警告
       mfa:
         multifactor_auth:
         disabled:
@@ -249,12 +331,26 @@ zh-TW:
           disabled:
           ui_only:
           ui_and_api:
+          ui_and_gem_signin:
+  profiles:
+    edit:
+      change_avatar:
+      email_awaiting_confirmation: 請驗證你的新 Email %{unconfirmed_email}
+      enter_password: 輸入密碼
+      hide_email: 在公開的個人頁面中隱藏 email
+      optional_twitter_username: Twitter 帳號（可選）
+      title: 編輯個人檔案
+      delete:
+        delete: 刪除
+        delete_profile: 刪除個人資料
+        warning: 警告
     delete:
       title:
       confirm:
       instructions:
       list_only_owner_html:
       list_multi_owner:
+      warning: 警告
     rubygem:
       owners_header:
     destroy:
@@ -284,10 +380,13 @@ zh-TW:
         mail: 郵件群組
         report_abuse: 舉報投訴
         reverse_dependencies: 反向依賴
+        review_changes:
         rss: RSS
         subscribe: 訂閱
         unsubscribe: 取消訂閱
         wiki: Wiki
+        ownership:
+        resend_ownership_confirmation:
     blacklisted:
       blacklisted_namespace:
     dependencies:
@@ -305,7 +404,9 @@ zh-TW:
       downloads: 下載
       title: Gems
     show:
-      licenses_header: License
+      licenses_header:
+        one: License
+        other: License
       no_licenses: 無
       requirements_header: 必填
       show_all_versions: 顯示所有版本（共 %{count}）
@@ -319,6 +420,7 @@ zh-TW:
   reverse_dependencies:
     index:
       title:
+      subtitle:
     search:
       search_reverse_dependencies_html:
   searches:
@@ -333,13 +435,19 @@ zh-TW:
       month_update:
       week_update:
       filter:
+      yanked:
+      suggestion:
   sessions:
     new:
       forgot_password: 忘記密碼？
       resend_confirmation: 沒收到確認信？
+    verify:
+      title:
+      confirm:
+      notice:
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded: 歷史下載次數排行
       total_downloads: 總下載次數
       total_gems: Gems 總數

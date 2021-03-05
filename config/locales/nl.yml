@@ -7,11 +7,11 @@ nl:
   footer_sponsors_html:
   footer_join_rt_html:
   form_disable_with: Een moment geduld...
-  help_url: http://help.rubygems.org
   invalid_page:
   locale_name: Nederlands
   none: Geen
   not_found: Niet gevonden
+  api_key_forbidden:
   please_sign_up: Toegang geweigerd. Schrijf je in voor een account op https://rubygems.org
   please_sign_in:
   otp_incorrect:
@@ -36,6 +36,7 @@ nl:
         docs: Documentatie-URL
         mail: Mailing-list-URL
         wiki: Wiki URL
+        funding:
       session:
         password: Wachtwoord
         who: E-mail of Gebruikersnaam
@@ -47,6 +48,40 @@ nl:
     errors:
       messages:
         unpwn:
+        blocked:
+  api_keys:
+    create:
+      success:
+    destroy:
+      success:
+    index:
+      api_keys:
+      name:
+      scopes:
+      age:
+      last_access:
+      action:
+      delete:
+      confirm:
+      confirm_all:
+      new_key:
+      index_rubygems:
+      push_rubygem:
+      yank_rubygem:
+      add_owner:
+      remove_owner:
+      access_webhooks:
+      show_dashboard:
+      reset:
+      save_key:
+    new:
+      new_api_key:
+    reset:
+      success:
+    update:
+      success:
+    edit:
+      edit_api_key:
   clearance_mailer:
     change_password:
       title:
@@ -106,6 +141,7 @@ nl:
       header:
         dashboard: Dashboard
         edit_profile:
+        settings:
         search_gem_html: Gems Zoeken&hellip;
         sign_in: Inloggen
         sign_out: Uitloggen
@@ -113,6 +149,7 @@ nl:
   mailer:
     confirm_your_email:
     confirmation_subject:
+    link_expiration_explanation_html:
     email_confirmation:
       title:
       subtitle:
@@ -122,7 +159,6 @@ nl:
       title:
       subtitle:
       visit_link_instructions:
-      link_expiration_explanation: Deze link is 3 uur geldig.
     deletion_complete:
       title:
       subtitle:
@@ -137,9 +173,39 @@ nl:
       subject:
       title:
       subtitle:
+      'on':
+      off_html:
     gem_pushed:
       subject:
       title:
+    gem_yanked:
+      subject:
+      title:
+    reset_api_key:
+      subject:
+      title:
+      subtitle:
+    email_reset_update:
+      subject:
+      title:
+    ownership_confirmation:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      link_expiration_explanation_html:
+    owner_added:
+      subject_self:
+      subject_others:
+      title:
+      subtitle:
+      body_self_html:
+      body_others_html:
+    owner_removed:
+      subject:
+      title:
+      subtitle:
+      body_html:
   news:
     show:
       title:
@@ -210,19 +276,16 @@ nl:
       success:
     show:
       info:
-      on:
-      off:
+      'on':
+      'off':
       recommended:
       title:
       update:
-  profiles:
+      push_heading:
+      owner_heading:
+  settings:
     edit:
-      change_avatar:
-      email_awaiting_confirmation:
-      enter_password:
-      hide_email:
-      optional_twitter_username:
-      title: Wijzig profiel
+      title:
       api_access:
         confirm_reset: Weet je het zeker? Dit kan niet ongedaan worden gemaakt.
         credentials_html: 'Als je de %{gem_commands_link} vanaf de command-line wilt gebruiken, heb je een %{gem_credentials_file} bestand nodig. Je kunt deze genereren met het volgende commando:'
@@ -231,13 +294,7 @@ nl:
         reset: Reset mijn API key
         title: API toegang
       reset_password:
-        link_text: Vraag hier een nieuwe aan.
-        text_html: Nieuw wachtwoord nodig? Geen probleem. %{link}
         title: Reset wachtwoord
-      delete:
-        delete:
-        delete_profile:
-        warning:
       mfa:
         multifactor_auth:
         disabled:
@@ -249,12 +306,26 @@ nl:
           disabled:
           ui_only:
           ui_and_api:
+          ui_and_gem_signin:
+  profiles:
+    edit:
+      change_avatar:
+      email_awaiting_confirmation:
+      enter_password:
+      hide_email:
+      optional_twitter_username:
+      title: Wijzig profiel
+      delete:
+        delete:
+        delete_profile:
+        warning:
     delete:
       title:
       confirm:
       instructions:
       list_only_owner_html:
       list_multi_owner:
+      warning:
     rubygem:
       owners_header:
     destroy:
@@ -284,10 +355,13 @@ nl:
         mail: Mailing-list
         report_abuse:
         reverse_dependencies:
+        review_changes:
         rss: RSS
         subscribe:
         unsubscribe:
         wiki: Wiki
+        ownership:
+        resend_ownership_confirmation:
     blacklisted:
       blacklisted_namespace:
     dependencies:
@@ -305,7 +379,9 @@ nl:
       downloads: Downloads
       title: alle gems
     show:
-      licenses_header: License
+      licenses_header:
+        one: Licentie
+        other: Licenties
       no_licenses: N/A
       requirements_header: Requirements
       show_all_versions: Toon alle versies (%{count} totaal)
@@ -319,6 +395,7 @@ nl:
   reverse_dependencies:
     index:
       title:
+      subtitle:
     search:
       search_reverse_dependencies_html:
   searches:
@@ -333,13 +410,19 @@ nl:
       month_update:
       week_update:
       filter:
+      yanked:
+      suggestion:
   sessions:
     new:
       forgot_password: Wachtwoord vergeten?
       resend_confirmation: Geen bevestigingsemail ontvangen?
+    verify:
+      title:
+      confirm:
+      notice:
   stats:
     index:
-      title: 
+      title:
       all_time_most_downloaded:
       total_downloads:
       total_gems:
@@ -371,3 +454,28 @@ nl:
         one:
         other:
         zero:
+  owners:
+    confirm:
+      confirmed_email:
+      token_expired:
+    index:
+      add_owner:
+      name:
+      mfa:
+      status:
+      confirmed_at:
+      added_by:
+      action:
+      info:
+      email_field:
+      submit_button:
+      confirmed:
+      pending:
+      confirm_remove:
+    resend_confirmation:
+      resent_notice:
+    create:
+      success_notice:
+    destroy:
+      removed_notice:
+      failed_notice:

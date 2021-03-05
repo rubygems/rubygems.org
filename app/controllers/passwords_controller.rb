@@ -12,7 +12,7 @@ class PasswordsController < Clearance::PasswordsController
   def update
     @user = find_user_for_update
 
-    if @user.update_password password_reset_params
+    if @user.update_password password_from_password_reset_params
       @user.reset_api_key! if reset_params[:reset_api_key] == "true"
       sign_in @user
       redirect_to url_after_update
@@ -34,17 +34,8 @@ class PasswordsController < Clearance::PasswordsController
 
   private
 
-  def find_user_for_create
-    Clearance.configuration.user_model
-      .find_by_normalized_email password_params[:email]
-  end
-
   def url_after_update
     dashboard_path
-  end
-
-  def password_params
-    params.require(:password).permit(:email)
   end
 
   def reset_params
@@ -54,5 +45,10 @@ class PasswordsController < Clearance::PasswordsController
   def validate_confirmation_token
     @user = find_user_for_edit
     redirect_to root_path, alert: t("failure_when_forbidden") unless @user&.valid_confirmation_token?
+  end
+
+  def deliver_email(user)
+    mail = ::ClearanceMailer.change_password(user)
+    mail.deliver_later
   end
 end

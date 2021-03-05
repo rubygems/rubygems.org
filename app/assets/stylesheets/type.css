@@ -191,15 +191,8 @@ a.t-list__item {
   border-bottom: 5px solid #c1c4ca; }
 .t-body th, .t-body td {
   padding-right: 16px; }
-.t-body th {
-  padding-bottom: 16px;
-  text-align: left;
-  text-transform: uppercase; }
 .t-body tbody tr {
   border-bottom: 1px solid #e5e6e9; }
-.t-body td {
-  padding-top: 16px;
-  padding-bottom: 28px; }
   .t-body td code {
     font-weight: normal;
     font-size: 13px; }
@@ -211,4 +204,8 @@ a.t-list__item {
 
 .t-item--hidden {
   display: none !important;
+}
+
+h1 + .t-body h2 {
+  border-top: none;
 }

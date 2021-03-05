@@ -1,13 +1,14 @@
 class Api::V1::RubygemsController < Api::BaseController
-  before_action :authenticate_with_api_key, only: %i[index create]
+  before_action :authenticate_with_api_key, except: %i[show reverse_dependencies]
   before_action :find_rubygem,              only: %i[show reverse_dependencies]
-
   before_action :cors_preflight_check, only: :show
   before_action :verify_with_otp, only: %i[create]
   after_action  :cors_set_access_control_headers, only: :show
 
   def index
-    @rubygems = @api_user.rubygems.with_versions
+    return render_forbidden unless @api_key.can_index_rubygems?
+
+    @rubygems = @api_key.user.rubygems.with_versions
     respond_to do |format|
       format.json { render json: @rubygems }
       format.yaml { render yaml: @rubygems }
@@ -26,9 +27,10 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   def create
-    gemcutter = Pusher.new(@api_user, request.body)
-    enqueue_web_hook_jobs(gemcutter.version) if gemcutter.process
+    return render_api_key_forbidden unless @api_key.can_push_rubygem?
 
+    gemcutter = Pusher.new(@api_key.user, request.body, request.remote_ip)
+    enqueue_web_hook_jobs(gemcutter.version) if gemcutter.process
     render plain: gemcutter.message, status: gemcutter.code
   rescue => e
     Honeybadger.notify(e)
@@ -37,9 +39,10 @@ class Api::V1::RubygemsController < Api::BaseController
 
   def reverse_dependencies
     names = begin
-      if params[:only] == "development"
+      case params[:only]
+      when "development"
         @rubygem.reverse_development_dependencies.pluck(:name)
-      elsif params[:only] == "runtime"
+      when "runtime"
         @rubygem.reverse_runtime_dependencies.pluck(:name)
       else
         @rubygem.reverse_dependencies.pluck(:name)

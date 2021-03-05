@@ -1,6 +1,7 @@
 <div class="gem__aside l-col--r--pad">
-  <% if @rubygem.linkset.present? && github_link = link_to_github(@rubygem) %>
-    <%= render partial: "rubygems/github_button", locals: { github_link: github_link } %>
+
+  <% if github_data_params = github_params(@rubygem) %>
+    <%= render partial: "rubygems/github_button", locals: { github_data_params: github_data_params } %>
   <% end %>
 
   <div class="gem__downloads-wrap" data-href="<%= api_v1_download_path(@latest_version.full_name, :format => 'json') %>">
@@ -65,10 +66,13 @@
     <%- @versioned_links.each do |name, link| %>
       <%= link_to_page name, link %>
     <%- end %>
+    <%= change_diff_link(@rubygem, @latest_version) %>
     <%= badge_link(@rubygem) %>
     <%= subscribe_link(@rubygem) if @latest_version.indexed %>
     <%= atom_link(@rubygem) %>
     <%= report_abuse_link(@rubygem) %>
     <%= reverse_dependencies_link(@rubygem) %>
+    <%= ownership_link(@rubygem) if @rubygem.owned_by?(current_user) %>
+    <%= resend_owner_confirmation_link(@rubygem) if @rubygem.unconfirmed_ownership?(current_user) %>
   </div>
 </div>

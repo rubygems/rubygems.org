@@ -4,12 +4,14 @@ services:
     image: postgres:9.6
     ports:
       - "5432:5432"
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
   cache:
-    image: memcached
+    image: memcached:1.4.24
     ports:
       - "11211:11211"
   search:
-    image: elasticsearch:5
+    image: elasticsearch:6.8.13
     environment:
       - http.host=0.0.0.0
       - transport.host=127.0.0.1

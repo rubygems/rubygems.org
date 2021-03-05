@@ -6,72 +6,32 @@ module Patterns
   ROUTE_PATTERN         = /#{ALLOWED_CHARACTERS}/.freeze
   LAZY_ROUTE_PATTERN    = /#{ALLOWED_CHARACTERS}?/.freeze
   NAME_PATTERN          = /\A#{ALLOWED_CHARACTERS}\Z/.freeze
-  URL_VALIDATION_REGEXP = %r{\Ahttps?:\/\/([^\s:@]+:[^\s:@]*@)?[A-Za-z\d\-]+(\.[A-Za-z\d\-]+)+\.?(:\d{1,5})?([\/?]\S*)?\z}.freeze
+  URL_VALIDATION_REGEXP = %r{\Ahttps?://([^\s:@]+:[^\s:@]*@)?[A-Za-z\d\-]+(\.[A-Za-z\d\-]+)+\.?(:\d{1,5})?([/?]\S*)?\z}.freeze
   GEM_NAME_BLACKLIST    = %w[
-    abbrev
-    base64
     cgi-session
     complex
     continuation
     coverage
-    digest
-    drb
-    english
     enumerator
-    erb
     expect
     fiber
-    find
-    install
-    io-nonblock
-    io-wait
-    jruby
     mkmf
-    monitor
-    mri
-    mruby
-    net-ftp
-    net-http
-    net-imap
-    net-protocol
-    nkf
-    observer
-    open-uri
-    optparse
-    pathname
-    pp
-    prettyprint
-    prime
-    profile
     profiler
     pty
     rational
     rbconfig
-    resolv
-    resolv-replace
-    rinda
+    socket
+    thread
+    unicode_normalize
+    ubygems
+
+    jruby
+    mri
+    mruby
     ruby
     rubygems
-    securerandom
-    set
-    shellwords
-    socket
-    syslog
-    tempfile
-    thread
-    time
-    timeout
-    tmpdir
-    tracer
-    tsort
-    un
-    unicode_normalize
+    install
     uninstall
-    uri
-    weakref
-    win32ole
-    yaml
-    ubygems
     sidekiq-pro
     graphql-pro
 

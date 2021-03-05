@@ -1,5 +1,11 @@
-<% @title = t('.title', name: @rubygem.name) %>
-<% @subtitle = @latest_version&.slug %>
+<% content_for :title do %>
+  <div class="l-wrap--b">
+    <h1 class="t-display page__heading page__heading--small">
+      <%= t('.title', name: @rubygem.name) %>
+      <i class="page__subheading page__subheading--block"><%= t(".subtitle", name: @rubygem.name) %></i>
+    </h1>
+  </div>
+<% end %>
 
 <div class="l-overflow">
   <div class="l-colspan--l colspan--l--has-border">

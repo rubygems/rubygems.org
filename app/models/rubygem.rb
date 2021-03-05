@@ -2,9 +2,12 @@ class Rubygem < ApplicationRecord
   include Patterns
   include RubygemSearchable
 
-  has_many :ownerships, dependent: :destroy
+  has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :rubygem
+  has_many :ownerships_including_unconfirmed, dependent: :destroy, class_name: "Ownership"
   has_many :owners, through: :ownerships, source: :user
-  has_many :notifiable_owners, ->(gem) { gem.owners.notifiable_owners }, through: :ownerships, source: :user
+  has_many :owners_including_unconfirmed, through: :ownerships_including_unconfirmed, source: :user
+  has_many :push_notifiable_owners, ->(gem) { gem.owners.push_notifiable_owners }, through: :ownerships, source: :user
+  has_many :ownership_notifiable_owners, ->(gem) { gem.owners.ownership_notifiable_owners }, through: :ownerships, source: :user
   has_many :subscriptions, dependent: :destroy
   has_many :subscribers, through: :subscriptions, source: :user
   has_many :versions, dependent: :destroy, validate: false
@@ -15,6 +18,7 @@ class Rubygem < ApplicationRecord
 
   validate :ensure_name_format, if: :needs_name_validation?
   validates :name,
+    length: { maximum: Gemcutter::MAX_FIELD_LENGTH },
     presence: true,
     uniqueness: { case_sensitive: false },
     if: :needs_name_validation?
@@ -31,7 +35,7 @@ class Rubygem < ApplicationRecord
   end
 
   def self.with_versions
-    where("rubygems.id IN (SELECT rubygem_id FROM versions where versions.indexed IS true)")
+    where(indexed: true)
   end
 
   def self.with_one_version
@@ -53,7 +57,7 @@ class Rubygem < ApplicationRecord
   end
 
   def self.total_count
-    count_by_sql "SELECT COUNT(*) from (SELECT DISTINCT rubygem_id FROM versions WHERE indexed = true) AS v"
+    Rubygem.with_versions.count
   end
 
   def self.latest(limit = 5)
@@ -69,7 +73,7 @@ class Rubygem < ApplicationRecord
   end
 
   def self.letterize(letter)
-    letter =~ /\A[A-Za-z]\z/ ? letter.upcase : "A"
+    /\A[A-Za-z]\z/.match?(letter) ? letter.upcase : "A"
   end
 
   def self.by_name
@@ -86,10 +90,14 @@ class Rubygem < ApplicationRecord
   end
 
   def self.news(days)
-    includes(:latest_version, :gem_download)
-      .with_versions
+    joins(:latest_version)
       .where("versions.created_at BETWEEN ? AND ?", days.ago.in_time_zone, Time.zone.now)
-      .order("versions.created_at DESC")
+      .group(:id)
+      .order("MAX(versions.created_at) DESC")
+  end
+
+  def self.popular(days)
+    joins(:gem_download).order("MAX(gem_downloads.count) DESC").news(days)
   end
 
   def all_errors(version = nil)
@@ -135,43 +143,57 @@ class Rubygem < ApplicationRecord
     ownerships.exists?(user_id: user.id)
   end
 
+  def unconfirmed_ownerships
+    ownerships_including_unconfirmed.unconfirmed
+  end
+
+  def unconfirmed_ownership?(user)
+    unconfirmed_ownerships.where(user: user).exists?
+  end
+
   def to_s
-    versions.most_recent&.to_title || name
+    most_recent_version&.to_title || name
   end
 
   def downloads
     gem_download&.count || 0
   end
 
-  def links(version = versions.most_recent)
+  def most_recent_version
+    versions.most_recent
+  end
+
+  def links(version = most_recent_version)
     Links.new(self, version)
   end
 
-  def payload(version = versions.most_recent, protocol = Gemcutter::PROTOCOL, host_with_port = Gemcutter::HOST)
+  def payload(version = most_recent_version, protocol = Gemcutter::PROTOCOL, host_with_port = Gemcutter::HOST)
     versioned_links = links(version)
     deps = version.dependencies.to_a
     {
-      "name"              => name,
-      "downloads"         => downloads,
-      "version"           => version.number,
-      "version_downloads" => version.downloads_count,
-      "platform"          => version.platform,
-      "authors"           => version.authors,
-      "info"              => version.info,
-      "licenses"          => version.licenses,
-      "metadata"          => version.metadata,
-      "yanked"            => version.yanked?,
-      "sha"               => version.sha256_hex,
-      "project_uri"       => "#{protocol}://#{host_with_port}/gems/#{name}",
-      "gem_uri"           => "#{protocol}://#{host_with_port}/gems/#{version.full_name}.gem",
-      "homepage_uri"      => versioned_links.homepage_uri,
-      "wiki_uri"          => versioned_links.wiki_uri,
-      "documentation_uri" => versioned_links.documentation_uri,
-      "mailing_list_uri"  => versioned_links.mailing_list_uri,
-      "source_code_uri"   => versioned_links.source_code_uri,
-      "bug_tracker_uri"   => versioned_links.bug_tracker_uri,
-      "changelog_uri"     => versioned_links.changelog_uri,
-      "dependencies"      => {
+      "name"               => name,
+      "downloads"          => downloads,
+      "version"            => version.number,
+      "version_created_at" => version.created_at,
+      "version_downloads"  => version.downloads_count,
+      "platform"           => version.platform,
+      "authors"            => version.authors,
+      "info"               => version.info,
+      "licenses"           => version.licenses,
+      "metadata"           => version.metadata,
+      "yanked"             => version.yanked?,
+      "sha"                => version.sha256_hex,
+      "project_uri"        => "#{protocol}://#{host_with_port}/gems/#{name}",
+      "gem_uri"            => "#{protocol}://#{host_with_port}/gems/#{version.full_name}.gem",
+      "homepage_uri"       => versioned_links.homepage_uri,
+      "wiki_uri"           => versioned_links.wiki_uri,
+      "documentation_uri"  => versioned_links.documentation_uri,
+      "mailing_list_uri"   => versioned_links.mailing_list_uri,
+      "source_code_uri"    => versioned_links.source_code_uri,
+      "bug_tracker_uri"    => versioned_links.bug_tracker_uri,
+      "changelog_uri"      => versioned_links.changelog_uri,
+      "funding_uri"        => versioned_links.funding_uri,
+      "dependencies"       => {
         "development" => deps.select { |r| r.rubygem && r.scope == "development" },
         "runtime"     => deps.select { |r| r.rubygem && r.scope == "runtime" }
       }
@@ -195,7 +217,7 @@ class Rubygem < ApplicationRecord
   end
 
   def create_ownership(user)
-    ownerships.create(user: user) if unowned?
+    Ownership.create_confirmed(self, user) if unowned?
   end
 
   def update_versions!(version, spec)
@@ -246,9 +268,13 @@ class Rubygem < ApplicationRecord
     end
   end
 
+  def refresh_indexed!
+    update!(indexed: versions.indexed.any?)
+  end
+
   def disown
-    ownerships.each(&:delete)
-    ownerships.clear
+    ownerships_including_unconfirmed.each(&:delete)
+    ownerships_including_unconfirmed.clear
   end
 
   def find_version_from_spec(spec)
@@ -260,10 +286,6 @@ class Rubygem < ApplicationRecord
                                              platform: spec.original_platform.to_s)
     version.rubygem = self
     version
-  end
-
-  def first_created_date
-    versions.by_earliest_created_at.first.created_at
   end
 
   # returns days left before the reserved namespace will be released
@@ -297,11 +319,11 @@ class Rubygem < ApplicationRecord
   def ensure_name_format
     if name.class != String
       errors.add :name, "must be a String"
-    elsif name !~ /[a-zA-Z]+/
+    elsif !/[a-zA-Z]+/.match?(name)
       errors.add :name, "must include at least one letter"
-    elsif name !~ NAME_PATTERN
+    elsif !NAME_PATTERN.match?(name)
       errors.add :name, "can only include letters, numbers, dashes, and underscores"
-    elsif name =~ /\A[#{Regexp.escape(Patterns::SPECIAL_CHARACTERS)}]+/
+    elsif /\A[#{Regexp.escape(Patterns::SPECIAL_CHARACTERS)}]+/.match?(name)
       errors.add :name, "can not begin with a period, dash, or underscore"
     end
   end
@@ -319,7 +341,7 @@ class Rubygem < ApplicationRecord
     gem_typo = GemTypo.new(name)
 
     return unless gem_typo.protected_typo?
-    errors.add :name, "'#{name}' is too close to typo-protected gem: #{gem_typo.protected_gem}"
+    errors.add :name, "'#{name}' is too similar to an existing gem named '#{gem_typo.protected_gem}'"
   end
 
   def update_unresolved

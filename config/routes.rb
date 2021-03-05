@@ -17,9 +17,7 @@ Rails.application.routes.draw do
     end
 
     namespace :v1 do
-      resource :api_key, only: :show do
-        put :reset
-      end
+      resource :api_key, only: %i[show create update]
       resource :multifactor_auth, only: :show
       resources :profiles, only: :show
       resources :downloads, only: :index do
@@ -111,6 +109,7 @@ Rails.application.routes.draw do
     get 'api_key'
     put 'api_key/reset'
     put 'api/v1/gems/unyank'
+    put 'api/v1/api_key/reset'
 
     post 'gems'
     get 'gems/:id.json'
@@ -118,9 +117,6 @@ Rails.application.routes.draw do
     scope path: 'gems/:rubygem_id' do
       put 'migrate'
       post 'migrate'
-      get 'owners(.:format)'
-      post 'owners(.:format)'
-      delete 'owners(.:format)'
     end
   end
 
@@ -133,14 +129,20 @@ Rails.application.routes.draw do
     resource :dashboard, only: :show, constraints: { format: /html|atom/ }
     resources :profiles, only: :show
     resource :multifactor_auth, only: %i[new create update]
+    resource :settings, only: :edit
     resource :profile, only: %i[edit update] do
       member do
         get :delete
         delete :destroy, as: :destroy
       end
+
+      resources :api_keys do
+        delete :reset, on: :collection
+      end
     end
     resources :stats, only: :index
-    resource :news, path: 'news', only: [:show] do
+    get "/news" => 'news#show', as: 'legacy_news_path'
+    resource :news, path: 'releases', only: [:show] do
       get :popular, on: :collection
     end
     resource :notifier, only: %i[update show]
@@ -157,6 +159,10 @@ Rails.application.routes.draw do
         get '/dependencies', to: 'dependencies#show', constraints: { format: /json|html/ }
       end
       resources :reverse_dependencies, only: %i[index]
+      resources :owners, only: %i[index destroy create], param: :handle do
+        get 'confirm', to: 'owners#confirm', as: :confirm, on: :collection
+        get 'resend_confirmation', to: 'owners#resend_confirmation', as: :resend_confirmation, on: :collection
+      end
     end
 
     ################################################################################
@@ -171,6 +177,8 @@ Rails.application.routes.draw do
 
     resource :session, only: %i[create destroy] do
       post 'mfa_create', to: 'sessions#mfa_create', as: :mfa_create
+      get 'verify', to: 'sessions#verify', as: :verify
+      post 'authenticate', to: 'sessions#authenticate', as: :authenticate
     end
 
     resources :users, only: %i[new create] do
@@ -182,8 +190,12 @@ Rails.application.routes.draw do
     get '/sign_in' => 'clearance/sessions#new', as: 'sign_in'
     delete '/sign_out' => 'clearance/sessions#destroy', as: 'sign_out'
 
-    get '/sign_up' => 'clearance/users#new', as: 'sign_up' if Clearance.configuration.allow_sign_up?
+    get '/sign_up' => 'users#new', as: 'sign_up' if Clearance.configuration.allow_sign_up?
   end
+
+  ################################################################################
+  # high_voltage static routes
+  get 'pages/*id' => 'high_voltage/pages#show', constraints: { id: /(#{HighVoltage.page_ids.join("|")})/ }, as: :page
 
   ################################################################################
   # Internal Routes

@@ -1,10 +1,11 @@
 require "test_helper"
 
 class Api::V1::DeletionsControllerTest < ActionController::TestCase
-  context "with a confirmed user authenticated" do
+  context "with yank rubygem api key scope" do
     setup do
-      @user = create(:user)
-      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
+      api_key = create(:api_key, key: "12345", yank_rubygem: true)
+      @user = api_key.user
+      @request.env["HTTP_AUTHORIZATION"] = "12345"
     end
 
     context "for a gem SomeGem with a version 0.1.0" do
@@ -166,5 +167,17 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         end
       end
     end
+  end
+
+  context "without yank rubygem api key scope" do
+    setup do
+      api_key = create(:api_key, key: "12342")
+      @request.env["HTTP_AUTHORIZATION"] = "12342"
+
+      rubygem = create(:rubygem, number: "1.0.0", owners: [api_key.user])
+      delete :create, params: { gem_name: rubygem.to_param, version: "1.0.0" }
+    end
+
+    should respond_with :forbidden
   end
 end

@@ -18,7 +18,7 @@ class ProfilesController < ApplicationController
     @user = current_user.clone
     if @user.update(params_user)
       if @user.unconfirmed_email
-        Mailer.delay.email_reset(current_user)
+        Delayed::Job.enqueue EmailResetMailer.new(current_user.id)
         flash[:notice] = t(".confirmation_mail_sent")
       else
         flash[:notice] = t(".updated")
@@ -44,18 +44,14 @@ class ProfilesController < ApplicationController
   private
 
   def params_user
-    params.require(:user).permit(*User::PERMITTED_ATTRS)
+    params.require(:user).permit(:handle, :twitter_username, :unconfirmed_email, :hide_email).tap do |hash|
+      hash.delete(:unconfirmed_email) if hash[:unconfirmed_email] == current_user.email
+    end
   end
 
   def verify_password
     return if current_user.authenticated?(params[:user].delete(:password))
     flash[:notice] = t("profiles.request_denied")
     redirect_to edit_profile_path
-  end
-
-  def set_cache_headers
-    response.headers["Cache-Control"] = "no-cache, no-store"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
   end
 end

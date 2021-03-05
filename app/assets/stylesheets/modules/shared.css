@@ -98,6 +98,21 @@ a.page__heading {
     .page__subheading {
       font-size: 30px; } }
 
+.page__subheading--block {
+  display: block;
+  margin-top: 3px;
+}
+
+@media (min-width: 930px) {
+  .page__subheading--block {
+    font-size: 23px;
+  }
+
+  h1.page__heading--small {
+    font-size: 40px;
+  }
+}
+
 .page__heading__info {
   font-weight: 200;
   font-size: 16px;
@@ -157,6 +172,9 @@ a.page__heading {
 
 .push--s {
   margin-top: 20px; }
+
+.push--top-s {
+  margin-top: 15px; }
 
 /* style used to be applied on iframe of github_buttons */
 span#github-btn {

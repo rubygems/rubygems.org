@@ -15,9 +15,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         @rubygem = create(:rubygem)
         @user = create(:user)
         @other_user = create(:user)
-        @rubygem.ownerships.create(user: @user)
+        create(:ownership, rubygem: @rubygem, user: @user)
 
-        @request.env["HTTP_AUTHORIZATION"] = @user.api_key
         get :show, params: { rubygem_id: @rubygem.to_param }, format: format
       end
 
@@ -57,6 +56,18 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     should respond_with :success
   end
 
+  context "on GET to owner gems with nonexistent handle" do
+    setup do
+      get :gems, params: { handle: "imaginary_handler" }, format: :json
+    end
+
+    should "return plaintext with error message" do
+      assert_equal @response.body, "Owner could not be found."
+    end
+
+    should respond_with :not_found
+  end
+
   context "on GET to owner gems with id" do
     setup do
       @user = create(:user)
@@ -64,6 +75,19 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
+  end
+
+  context "on GET to owner gems with nonexistent id" do
+    setup do
+      @user = create(:user)
+      get :gems, params: { handle: -9999 }, format: :json
+    end
+
+    should "return plain text with error message" do
+      assert_equal @response.body, "Owner could not be found."
+    end
+
+    should respond_with :not_found
   end
 
   should "route POST" do
@@ -75,66 +99,118 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
   end
 
   context "on POST to owner gem" do
-    setup do
-      @rubygem = create(:rubygem)
-      @user = create(:user)
-      @second_user = create(:user)
-      @third_user = create(:user)
-      @rubygem.ownerships.create(user: @user)
-      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
-    end
-
-    context "when mfa for UI and API is enabled" do
+    context "with add owner api key scope" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        @rubygem = create(:rubygem)
+        @user = create(:user)
+        @second_user = create(:user)
+        @third_user = create(:user)
+        create(:ownership, rubygem: @rubygem, user: @user)
+        create(:api_key, key: "12334", add_owner: true, user: @user)
+        @request.env["HTTP_AUTHORIZATION"] = "12334"
       end
 
-      context "on POST to add other user as gem owner without OTP" do
+      context "when mfa for UI and API is enabled" do
         setup do
-          post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
         end
 
-        should respond_with :unauthorized
-        should "fail to add new owner" do
-          refute @rubygem.owners.include?(@second_user)
+        context "adding other user as gem owner without OTP" do
+          setup do
+            post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+          end
+
+          should respond_with :unauthorized
+          should "fail to add new owner" do
+            refute @rubygem.owners_including_unconfirmed.include?(@second_user)
+          end
+        end
+
+        context "adding other user as gem owner with incorrect OTP" do
+          setup do
+            @request.env["HTTP_OTP"] = (ROTP::TOTP.new(@user.mfa_seed).now.to_i.succ % 1_000_000).to_s
+            post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+          end
+
+          should respond_with :unauthorized
+          should "fail to add new owner" do
+            refute @rubygem.owners_including_unconfirmed.include?(@second_user)
+          end
+        end
+
+        context "adding other user as gem owner with correct OTP" do
+          setup do
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+            post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+          end
+
+          should respond_with :success
+          should "succeed to add new owner" do
+            assert @rubygem.owners_including_unconfirmed.include?(@second_user)
+          end
         end
       end
 
-      context "on POST to add other user as gem owner with incorrect OTP" do
-        setup do
-          @request.env["HTTP_OTP"] = (ROTP::TOTP.new(@user.mfa_seed).now.to_i.succ % 1_000_000).to_s
-          post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+      context "when mfa for UI and API is disabled" do
+        context "add user with email" do
+          setup do
+            post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+            Delayed::Worker.new.work_off
+          end
+
+          should "add second user as unconfrimed owner" do
+            assert @rubygem.owners_including_unconfirmed.include?(@second_user)
+            assert_equal "#{@second_user.handle} was added as an unconfirmed owner. "\
+              "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email.", @response.body
+          end
+
+          should "send confirmation mail to second user" do
+            assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
+            assert_equal [@second_user.email], last_email.to
+          end
         end
 
-        should respond_with :unauthorized
-        should "fail to add new owner" do
-          refute @rubygem.owners.include?(@second_user)
+        context "add user with handler" do
+          setup do
+            post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.handle }, format: :json
+          end
+
+          should "add other user as gem owner" do
+            assert @rubygem.owners_including_unconfirmed.include?(@second_user)
+          end
         end
       end
 
-      context "on POST to add other user as gem owner with correct OTP" do
+      context "user is not found" do
         setup do
-          @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
-          post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+          post :create, params: { rubygem_id: @rubygem.to_param, email: "doesnot@exist.com" }
         end
 
-        should respond_with :success
-        should "succeed to add new owner" do
-          assert @rubygem.owners.include?(@second_user)
+        should respond_with :not_found
+      end
+
+      context "owner already exists" do
+        setup do
+          post :create, params: { rubygem_id: @rubygem.to_param, email: @user.email }
+        end
+
+        should respond_with :unprocessable_entity
+        should "respond with error message" do
+          assert_equal "User has already been taken", @response.body
         end
       end
     end
 
-    context "when mfa for UI and API is disabled" do
-      should "add other user as gem owner" do
-        post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
-        assert @rubygem.owners.include?(@second_user)
+    context "without add owner api key scope" do
+      setup do
+        api_key = create(:api_key, key: "12323")
+        rubygem = create(:rubygem, owners: [api_key.user])
+
+        @request.env["HTTP_AUTHORIZATION"] = "12323"
+        post :create, params: { rubygem_id: rubygem.to_param, email: "some@email.com" }, format: :json
       end
 
-      should "add other user as gem owner with handle" do
-        post :create, params: { rubygem_id: @rubygem.to_param, email: @third_user.handle }, format: :json
-        assert @rubygem.owners.include?(@third_user)
-      end
+      should respond_with :forbidden
     end
   end
 
@@ -147,69 +223,101 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
   end
 
   context "on DELETE to owner gem" do
-    setup do
-      @rubygem = create(:rubygem)
-      @user = create(:user)
-      @second_user = create(:user)
-      @rubygem.ownerships.create(user: @user)
-      @ownership = @rubygem.ownerships.create(user: @second_user)
-      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
-    end
-
-    context "when mfa for UI and API is enabled" do
+    context "with remove owner api key scope" do
       setup do
-        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        @rubygem = create(:rubygem)
+        @user = create(:user)
+        @second_user = create(:user)
+        create(:ownership, rubygem: @rubygem, user: @user)
+        @ownership = create(:ownership, rubygem: @rubygem, user: @second_user)
+
+        create(:api_key, key: "12223", remove_owner: true, user: @user)
+        @request.env["HTTP_AUTHORIZATION"] = "12223"
       end
 
-      context "on delete to remove gem owner without OTP" do
+      context "when mfa for UI and API is enabled" do
         setup do
-          delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @second_user.email, format: :json }
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
         end
 
-        should respond_with :unauthorized
-        should "fail to remove gem owner" do
-          assert @rubygem.owners.include?(@second_user)
+        context "removing gem owner without OTP" do
+          setup do
+            delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @second_user.email, format: :json }
+          end
+
+          should respond_with :unauthorized
+          should "fail to remove gem owner" do
+            assert @rubygem.owners.include?(@second_user)
+          end
+        end
+
+        context "removing gem owner with incorrect OTP" do
+          setup do
+            @request.env["HTTP_OTP"] = (ROTP::TOTP.new(@user.mfa_seed).now.to_i.succ % 1_000_000).to_s
+            delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @second_user.email, format: :json }
+          end
+
+          should respond_with :unauthorized
+          should "fail to remove gem owner" do
+            assert @rubygem.owners.include?(@second_user)
+          end
+        end
+
+        context "removing gem owner with correct OTP" do
+          setup do
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+            delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @second_user.email, format: :json }
+          end
+
+          should respond_with :success
+          should "succeed to remove gem owner" do
+            refute @rubygem.owners.include?(@second_user)
+          end
         end
       end
 
-      context "on delete to remove gem owner with incorrect OTP" do
-        setup do
-          @request.env["HTTP_OTP"] = (ROTP::TOTP.new(@user.mfa_seed).now.to_i.succ % 1_000_000).to_s
-          delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @second_user.email, format: :json }
+      context "when mfa for UI and API is disabled" do
+        context "user is not the only confirmed owner" do
+          setup do
+            delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @second_user.email, format: :json }
+            Delayed::Worker.new.work_off
+          end
+
+          should "remove user as gem owner" do
+            refute @rubygem.owners.include?(@second_user)
+            assert_equal "Owner removed successfully.", @response.body
+          end
+
+          should "send email notification to user being removed" do
+            assert_equal "You were removed as an owner from #{@rubygem.name} gem", last_email.subject
+            assert_equal [@second_user.email], last_email.to
+          end
         end
 
-        should respond_with :unauthorized
-        should "fail to remove gem owner" do
-          assert @rubygem.owners.include?(@second_user)
-        end
-      end
+        context "user is the only confirmed owner" do
+          setup do
+            @ownership.destroy
+            delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @user.email, format: :json }
+          end
 
-      context "on delete to remove gem owner with correct OTP" do
-        setup do
-          @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
-          delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @second_user.email, format: :json }
-        end
-
-        should respond_with :success
-        should "succeed to remove gem owner" do
-          refute @rubygem.owners.include?(@second_user)
+          should "not remove last gem owner" do
+            assert @rubygem.owners.include?(@user)
+            assert_equal "Unable to remove owner.", @response.body
+          end
         end
       end
     end
 
-    context "when mfa for UI and API is disabled" do
-      should "remove user as gem owner" do
-        delete :destroy,
-          params: { rubygem_id: @rubygem.to_param, email: @second_user.email, format: :json }
-        refute @rubygem.owners.include?(@second_user)
+    context "without remove owner api key scope" do
+      setup do
+        api_key = create(:api_key, key: "12342")
+        rubygem = create(:rubygem, owners: [api_key.user])
+
+        @request.env["HTTP_AUTHORIZATION"] = "12342"
+        delete :destroy, params: { rubygem_id: rubygem.to_param, email: "some@owner.com" }, format: :json
       end
 
-      should "not remove last gem owner" do
-        @ownership.destroy
-        delete :destroy, params: { rubygem_id: @rubygem.to_param, email: @user.email, format: :json }
-        assert @rubygem.owners.include?(@user)
-        assert_equal "Unable to remove owner.", @response.body
-      end
+      should respond_with :forbidden
     end
   end
 
@@ -222,8 +330,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
   end
 
   should "return plain text 404 error" do
-    @user = create(:user)
-    @request.env["HTTP_AUTHORIZATION"] = @user.api_key
+    create(:api_key, key: "12223", add_owner: true)
+    @request.env["HTTP_AUTHORIZATION"] = "12223"
     @request.accept = "*/*"
     post :create, params: { rubygem_id: "bananas" }
     assert_equal "This rubygem could not be found.", @response.body

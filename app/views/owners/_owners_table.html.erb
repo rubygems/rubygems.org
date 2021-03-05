@@ -1,0 +1,56 @@
+<table class="owners__table">
+  <tbody class="owners__tbody">
+  <tr class="owners__row owners__header">
+    <th class="owners__cell">
+      <%= t("owners.index.name") %>
+    </th>
+    <th class="owners__cell">
+      <%= t("owners.index.status") %>
+    </th>
+    <th class="owners__cell">
+      <%= t("owners.index.mfa") %>
+    </th>
+    <th class="owners__cell">
+      <%= t("owners.index.added_by") %>
+    </th>
+    <th class="owners__cell">
+      <%= t("owners.index.confirmed_at") %>
+    </th>
+    <th class="owners__cell">
+      <%= t("owners.index.action") %>
+    </th>
+  </tr>
+
+  <% @ownerships.each do |ownership| %>
+    <tr class="owners__row">
+      <td class="owners__cell" data-title="Name">
+        <%= link_to(ownership.owner_name, profile_path(ownership.user.display_id), class: "owner__profile") %>
+      </td>
+      <td class="owners__cell" data-title="Confirmed">
+        <span class="owners__icon">
+          <%= confirmation_status(ownership) %>
+        </span>
+      </td>
+      <td class="owners__cell" data-title="MFA">
+        <span class="owners__icon">
+          <%= mfa_status(ownership.user) %>
+          <%= t("profiles.edit.mfa.level." + ownership.user.mfa_level) %>
+        </span>
+      </td>
+      <td class="owners__cell" data-title="Added By">
+        <%= ownership.authorizer_name %>
+      </td>
+      <td class="owners__cell" data-title="Confirmed At">
+        <%= ownership.confirmed_at.strftime("%Y-%m-%d %H:%M %Z") if ownership.confirmed? %>
+      </td>
+      <td class="owners__cell" data-title="Action">
+        <%= button_to "Remove",
+          rubygem_owner_path(@rubygem, ownership.user.display_id),
+          method: "delete",
+          data: { confirm: t("owners.index.confirm_remove") },
+          class: "form__submit form__submit--small" %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

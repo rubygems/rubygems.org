@@ -8,7 +8,8 @@ class Links
     "wiki"      => "wiki_uri",
     "mail"      => "mailing_list_uri",
     "bugs"      => "bug_tracker_uri",
-    "download"  => "download_uri"
+    "download"  => "download_uri",
+    "funding"   => "funding_uri"
   }.freeze
 
   # Links available for non-indexed gems
@@ -44,7 +45,7 @@ class Links
   # else, generate one from gem name and version number
   def documentation_uri
     return version.metadata["documentation_uri"].presence if version.metadata_uri_set?
-    linkset&.docs&.presence || "http://www.rubydoc.info/gems/#{rubygem.name}/#{version.number}"
+    linkset&.docs&.presence || "https://www.rubydoc.info/gems/#{rubygem.name}/#{version.number}"
   end
 
   # technically this is a path

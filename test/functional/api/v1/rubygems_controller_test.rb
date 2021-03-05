@@ -184,10 +184,11 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
   end
 
-  context "with a confirmed user authenticated" do
+  context "with index and push rubygem api key scope" do
     setup do
-      @user = create(:user)
-      @request.env["HTTP_AUTHORIZATION"] = @user.api_key
+      @user = create(:api_key, key: "12345", push_rubygem: true, index_rubygems: true).user
+
+      @request.env["HTTP_AUTHORIZATION"] = "12345"
     end
 
     context "On GET to index" do
@@ -212,7 +213,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         should respond_with :unauthorized
       end
 
-      context "On post to creaete for new gem with incorrect OTP" do
+      context "On post to create for new gem with incorrect OTP" do
         setup do
           @request.env["HTTP_OTP"] = (ROTP::TOTP.new(@user.mfa_seed).now.to_i.succ % 1_000_000).to_s
           post :create, body: gem_file.read
@@ -234,6 +235,30 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
+    context "When mfa for UI and gem signin is enabled" do
+      setup do
+        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+      end
+
+      context "On POST to create for new gem" do
+        setup do
+          post :create, body: gem_file.read
+        end
+        should respond_with :success
+        should "register new gem" do
+          assert_equal 1, Rubygem.count
+          assert_equal @user, Rubygem.last.versions.first.pusher
+          assert_equal "Successfully registered gem: test (0.0.0)", @response.body
+        end
+        should "add user as confirmed owner" do
+          ownership = Rubygem.last.ownerships.first
+
+          assert_equal @user, ownership.user
+          assert ownership.confirmed?
+        end
+      end
+    end
+
     context "On POST to create for new gem" do
       setup do
         post :create, body: gem_file.read
@@ -241,34 +266,54 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should respond_with :success
       should "register new gem" do
         assert_equal 1, Rubygem.count
-        assert_equal @user, Rubygem.last.ownerships.first.user
         assert_equal @user, Rubygem.last.versions.first.pusher
         assert_equal "Successfully registered gem: test (0.0.0)", @response.body
+      end
+      should "add user as confirmed owner" do
+        ownership = Rubygem.last.ownerships.first
+
+        assert_equal @user, ownership.user
+        assert ownership.confirmed?
       end
     end
 
     context "On POST to create for existing gem" do
-      setup do
-        create(:global_web_hook, user: @user, url: "http://example.org")
-        rubygem = create(:rubygem, name: "test")
-        create(:ownership,
-          rubygem: rubygem,
-          user: @user)
-        create(:version,
-          rubygem: rubygem,
-          number: "0.0.0",
-          updated_at: 1.year.ago,
-          created_at: 1.year.ago)
-        assert_difference "Delayed::Job.count", 7 do
+      context "with confirmed ownership" do
+        setup do
+          create(:global_web_hook, user: @user, url: "http://example.org")
+          rubygem = create(:rubygem, name: "test")
+          create(:ownership, rubygem: rubygem, user: @user)
+          create(:version, rubygem: rubygem, number: "0.0.0", updated_at: 1.year.ago, created_at: 1.year.ago)
+        end
+        should "respond_with success" do
           post :create, body: gem_file("test-1.0.0.gem").read
+          assert_response :success
+        end
+        should "register new version" do
+          post :create, body: gem_file("test-1.0.0.gem").read
+          assert_equal @user, Rubygem.last.ownerships.first.user
+          assert_equal 1, Rubygem.last.ownerships.count
+          assert_equal 2, Rubygem.last.versions.count
+          assert_equal "Successfully registered gem: test (1.0.0)", @response.body
+        end
+        should "enqueue jobs" do
+          assert_difference "Delayed::Job.count", 7 do
+            post :create, body: gem_file("test-1.0.0.gem").read
+          end
         end
       end
-      should respond_with :success
-      should "register new version" do
-        assert_equal @user, Rubygem.last.ownerships.first.user
-        assert_equal 1, Rubygem.last.ownerships.count
-        assert_equal 2, Rubygem.last.versions.count
-        assert_equal "Successfully registered gem: test (1.0.0)", @response.body
+
+      context "with unconfirmed ownership" do
+        setup do
+          create(:global_web_hook, user: @user, url: "http://example.org")
+          rubygem = create(:rubygem, name: "test")
+          create(:ownership, :unconfirmed, rubygem: rubygem, user: @user)
+          create(:version, rubygem: rubygem, number: "0.0.0", updated_at: 1.year.ago, created_at: 1.year.ago)
+          assert_difference "Delayed::Job.count", 0 do
+            post :create, body: gem_file("test-1.0.0.gem").read
+          end
+        end
+        should respond_with :forbidden
       end
     end
 
@@ -279,13 +324,13 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
         @date = 1.year.ago
         @version = create(:version,
-          rubygem: rubygem,
-          number: "0.0.0",
-          updated_at: @date,
-          created_at: @date,
-          summary: "Freewill",
-          authors: ["Geddy Lee"],
-          built_at: @date)
+                          rubygem: rubygem,
+                          number: "0.0.0",
+                          updated_at: @date,
+                          created_at: @date,
+                          summary: "Freewill",
+                          authors: ["Geddy Lee"],
+                          built_at: @date)
 
         post :create, body: gem_file.read
       end
@@ -309,17 +354,17 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
-    context "On POST to create with a protected gem name" do
+    context "On POST to create with an underscore or dash variant of an existing gem" do
       setup do
-        above_downloads_thres = GemTypo::DOWNLOADS_THRESHOLD + 1
-        create(:rubygem, name: "best", downloads: above_downloads_thres)
+        existing = create(:rubygem, name: "t_es-t", downloads: 3002)
+        existing.versions.create(number: "1.0.0", platform: "ruby")
         post :create, body: gem_file("test-1.0.0.gem").read
       end
 
       should respond_with :forbidden
       should "not register new gem" do
         assert_equal 1, Rubygem.count
-        assert_equal "There was a problem saving your gem: Name 'test' is too close to typo-protected gem: best", @response.body
+        assert_equal "There was a problem saving your gem: Name 'test' is too similar to an existing gem named 't_es-t'", @response.body
       end
     end
 
@@ -356,13 +401,13 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       setup do
         rubygem = create(:rubygem, name: "test")
         create(:ownership,
-          rubygem: rubygem,
-          user: @user)
+               rubygem: rubygem,
+               user: @user)
         create(:version,
-          rubygem: rubygem,
-          number: "0.0.0",
-          updated_at: 1.year.ago,
-          created_at: 1.year.ago)
+               rubygem: rubygem,
+               number: "0.0.0",
+               updated_at: 1.year.ago,
+               created_at: 1.year.ago)
       end
       should "POST to create for existing gem should not fail" do
         requires_toxiproxy
@@ -378,43 +423,63 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
   end
 
-  context "No signed in-user" do
-    context "On GET to index with JSON for a list of gems" do
+  context "with incorrect api key" do
+    context "on GET to index with JSON for a list of gems without api key" do
       setup do
         get :index, format: "json"
       end
       should "deny access" do
         assert_response 401
         assert_equal "Access Denied. Please sign up for an account at https://rubygems.org",
-          @response.body
+                     @response.body
       end
     end
 
-    %w[json xml yaml].each do |format|
-      context "on GET to show for an unknown gem with #{format} format" do
-        setup do
-          get :show, params: { id: "rials" }, format: format
-        end
+    context "on GET to index without index rubygem scope" do
+      setup do
+        create(:api_key, key: "12345", index_rubygems: false, push_rubygem: true)
+        @request.env["HTTP_AUTHORIZATION"] = "12345"
+        get :index, format: :json
+      end
 
-        should "return a 404" do
-          assert_response :not_found
-        end
+      should respond_with :forbidden
+    end
 
-        should "say gem could not be found" do
-          assert_equal "This rubygem could not be found.", @response.body
-        end
+    context "on POST to create without push rubygem scope" do
+      setup do
+        create(:api_key, key: "12343")
+        @request.env["HTTP_AUTHORIZATION"] = "12343"
+
+        post :create, body: gem_file("test-1.0.0.gem").read
+      end
+      should respond_with :forbidden
+    end
+  end
+
+  %w[json xml yaml].each do |format|
+    context "on GET to show for an unknown gem with #{format} format" do
+      setup do
+        get :show, params: { id: "rials" }, format: format
+      end
+
+      should "return a 404" do
+        assert_response :not_found
+      end
+
+      should "say gem could not be found" do
+        assert_equal "This rubygem could not be found.", @response.body
       end
     end
   end
 
   context "on GET to reverse_dependencies" do
     setup do
-      @dependency   = create(:rubygem)
-      @gem_one      = create(:rubygem)
-      @gem_two      = create(:rubygem)
-      @gem_three    = create(:rubygem)
-      version_one   = create(:version, rubygem: @gem_one)
-      version_two   = create(:version, rubygem: @gem_two)
+      @dependency = create(:rubygem)
+      @gem_one = create(:rubygem)
+      @gem_two = create(:rubygem)
+      @gem_three = create(:rubygem)
+      version_one = create(:version, rubygem: @gem_one)
+      version_two = create(:version, rubygem: @gem_two)
       version_three = create(:version, rubygem: @gem_three)
 
       create(:dependency, :runtime, version: version_one, rubygem: @dependency)
@@ -436,9 +501,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "with only=development" do
       should "only return names of reverse development dependencies" do
         get :reverse_dependencies,
-          params: { id: @dependency.to_param,
-                    only: "development",
-                    format: "json" }
+            params: { id: @dependency.to_param,
+                      only: "development",
+                      format: "json" }
 
         gems = JSON.load(@response.body)
 
@@ -451,16 +516,16 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "with only=runtime" do
       should "only return names of reverse development dependencies" do
         get :reverse_dependencies,
-          params: { id: @dependency.to_param,
-                    only: "runtime",
-                    format: "json" }
+            params: { id: @dependency.to_param,
+                      only: "runtime",
+                      format: "json" }
 
         gems = JSON.load(@response.body)
 
         assert_equal 2, gems.size
 
         assert gems.include?(@gem_one.name)
-        assert gems.include?(@gem_three .name)
+        assert gems.include?(@gem_three.name)
       end
     end
   end

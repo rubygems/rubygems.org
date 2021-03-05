@@ -2,7 +2,6 @@ class ApplicationController < ActionController::Base
   include Clearance::Authentication
   include Clearance::Authorization
 
-  helper :announcements
   helper ActiveSupport::NumberHelper
 
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
@@ -68,6 +67,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_page(max_page = Gemcutter::MAX_PAGES)
+    sanitize_params
     @page = Gemcutter::DEFAULT_PAGE && return unless params.key?(:page)
     redirect_to_page_with_error && return unless valid_page_param?(max_page)
 
@@ -109,5 +109,19 @@ class ApplicationController < ActionController::Base
 
   def reject_null_char_param
     render plain: "bad request", status: :bad_request if params.to_s.include?("\\u0000")
+  end
+
+  def sanitize_params
+    params.delete(:params)
+  end
+
+  def set_cache_headers
+    response.headers["Cache-Control"] = "no-cache, no-store"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+  end
+
+  def password_session_active?
+    session[:verification] && session[:verification] > Time.current
   end
 end

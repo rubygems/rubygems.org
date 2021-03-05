@@ -1,0 +1,72 @@
+.owners__row {
+    background: #f6f6f6;
+}
+.owners__row:nth-of-type(odd) {
+    background: #e9e9e9;
+}
+.owners__row.owners__header {
+    font-weight: 900;
+    color: #ffffff;
+    background: #e9573f;
+}
+.owners__cell {
+    padding: 10px;
+    text-align: center;
+}
+.owners__cell[data-title="Confirmed"] {
+    white-space: nowrap;
+}
+.owners__icon {
+    display: inline-flex;
+}
+
+span.owners__icon img {
+    width: 1em;
+    height: 1em;
+    position: relative;
+    padding-right: 2px;
+}
+
+@media screen and (max-width: 640px) {
+    .owners__tbody {
+        display: block;
+    }
+    .owners__row {
+        padding: 14px 0 7px;
+        display: block;
+    }
+    .owners__row.owners__header {
+        display: none;
+    }
+    .owners__row.owners__header .owners__cell {
+        display: none;
+    }
+    .owners__row .owners__cell:before {
+        margin-bottom: 8px;
+        content: attr(data-title);
+        color: #969696;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    .owners__cell {
+        padding: 12px 10px;
+        display: block;
+        margin: auto;
+    }
+}
+
+.owner__profile:focus, .owner__profile:hover {
+    color: #e9573f; }
+
+table tr:first-child th:first-child {
+  border-top-left-radius: 4px;
+}
+
+table tr:first-child th:last-child {
+  border-top-right-radius: 4px;
+}
+
+.t-body ul.scopes__list {
+  margin: 3px 0px;
+}

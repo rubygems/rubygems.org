@@ -163,9 +163,9 @@
 
 .form__checkbox__label {
   position: relative;
+  vertical-align: top;
   top: 5px;
   font-size: 18px;
-  color: #a6aab2;
   cursor: pointer; }
 
 .form__checkbox__input {
@@ -173,7 +173,6 @@
   margin-right: 10px;
   height: 26px;
   width: 26px;
-  float: left;
   border: 1px solid #f2f3f4;
   border: 0 none #f2f3f4 \0;
   border-radius: 4px;
@@ -210,3 +209,11 @@
 .form__label + .t-link, .t-body .form__label + a {
   margin-bottom: 10px;
   display: inline-block; }
+
+.form__checkbox__item {
+  height: 35px;
+}
+
+.form__checkbox__item .field_with_errors {
+  display: contents;
+}

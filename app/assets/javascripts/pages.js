@@ -61,7 +61,7 @@ $(document).ready(function() {
 //stats page
 $('.stats__graph__gem__meter').each(function() {
   bar_width = $(this).data("bar_width");
-  $(this).animate({ width: bar_width + '%' }, 700).removeClass('t-item--hidden');
+  $(this).animate({ width: bar_width + '%' }, 700).removeClass('t-item--hidden').css("display", "block");
 });
 
 //gem page

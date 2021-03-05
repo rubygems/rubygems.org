@@ -7,11 +7,11 @@ pt-BR:
   footer_sponsors_html:
   footer_join_rt_html:
   form_disable_with: Atualizando...
-  help_url: http://help.rubygems.org
   invalid_page: Número da página está fora do limite. Redirecionado para página padrão.
   locale_name: Português do Brasil
   none: Nenhum
   not_found: Não encontrado
+  api_key_forbidden:
   please_sign_up: Accesso Negado. Por favor se registre em https://rubygems.org
   please_sign_in:
   otp_incorrect: Seu código OTP está incorreto. Por favor, verifique-o e tente novamente.
@@ -36,6 +36,7 @@ pt-BR:
         docs: URL da Documentação
         mail: URL da Lista de Emails
         wiki: URL da Wiki
+        funding:
       session:
         password: Senha
         who: Email ou Usuário
@@ -47,6 +48,40 @@ pt-BR:
     errors:
       messages:
         unpwn:
+        blocked:
+  api_keys:
+    create:
+      success:
+    destroy:
+      success:
+    index:
+      api_keys:
+      name:
+      scopes:
+      age:
+      last_access:
+      action:
+      delete:
+      confirm:
+      confirm_all:
+      new_key:
+      index_rubygems:
+      push_rubygem:
+      yank_rubygem:
+      add_owner:
+      remove_owner:
+      access_webhooks:
+      show_dashboard:
+      reset:
+      save_key:
+    new:
+      new_api_key:
+    reset:
+      success:
+    update:
+      success:
+    edit:
+      edit_api_key:
   clearance_mailer:
     change_password:
       title:
@@ -106,6 +141,7 @@ pt-BR:
       header:
         dashboard: Painel de Controle
         edit_profile:
+        settings:
         search_gem_html: Buscar Gems&hellip;
         sign_in: Fazer Login
         sign_out: Sair
@@ -113,6 +149,7 @@ pt-BR:
   mailer:
     confirm_your_email:
     confirmation_subject:
+    link_expiration_explanation_html:
     email_confirmation:
       title:
       subtitle:
@@ -122,7 +159,6 @@ pt-BR:
       title:
       subtitle:
       visit_link_instructions:
-      link_expiration_explanation:
     deletion_complete:
       title:
       subtitle:
@@ -137,9 +173,39 @@ pt-BR:
       subject:
       title:
       subtitle:
+      'on':
+      off_html:
     gem_pushed:
       subject:
       title:
+    gem_yanked:
+      subject:
+      title:
+    reset_api_key:
+      subject:
+      title:
+      subtitle:
+    email_reset_update:
+      subject:
+      title:
+    ownership_confirmation:
+      subject:
+      title:
+      subtitle:
+      body_html:
+      link_expiration_explanation_html:
+    owner_added:
+      subject_self:
+      subject_others:
+      title:
+      subtitle:
+      body_self_html:
+      body_others_html:
+    owner_removed:
+      subject:
+      title:
+      subtitle:
+      body_html:
   news:
     show:
       title: Novos Releases - Todas as Gems
@@ -210,19 +276,16 @@ pt-BR:
       success:
     show:
       info:
-      on:
-      off:
+      'on':
+      'off':
       recommended:
       title:
       update:
-  profiles:
+      push_heading:
+      owner_heading:
+  settings:
     edit:
-      change_avatar:
-      email_awaiting_confirmation:
-      enter_password:
-      hide_email: Não mostrar meu email
-      optional_twitter_username:
-      title: Editar Perfil
+      title:
       api_access:
         confirm_reset: Tem certeza?
         credentials_html: 'Se você quiser usar %{gem_commands_link} pela linha comando, você vai precisar de um arquivo %{gem_credentials_file}. Para gerar este arquivo rode o seguinte comando:'
@@ -231,13 +294,7 @@ pt-BR:
         reset: Resetar minha chave da API
         title: Acesso à API
       reset_password:
-        link_text: Solicitar uma nova senha.
-        text_html: Esqueceu sua senha? Sem problema. %{link}
         title: Resetar senha
-      delete:
-        delete:
-        delete_profile:
-        warning:
       mfa:
         multifactor_auth:
         disabled:
@@ -249,12 +306,26 @@ pt-BR:
           disabled:
           ui_only:
           ui_and_api:
+          ui_and_gem_signin:
+  profiles:
+    edit:
+      change_avatar:
+      email_awaiting_confirmation:
+      enter_password:
+      hide_email: Não mostrar meu email
+      optional_twitter_username:
+      title: Editar Perfil
+      delete:
+        delete:
+        delete_profile:
+        warning:
     delete:
       title:
       confirm:
       instructions:
       list_only_owner_html:
       list_multi_owner:
+      warning:
     rubygem:
       owners_header:
     destroy:
@@ -284,10 +355,13 @@ pt-BR:
         mail: Lista de Emails
         report_abuse: Denunciar Abuso
         reverse_dependencies: Dependências Reversas
+        review_changes:
         rss: RSS
         subscribe: Inscrever-se
         unsubscribe: Desinscrever-se
         wiki: Wiki
+        ownership:
+        resend_ownership_confirmation:
     blacklisted:
       blacklisted_namespace: This namespace is reserved by rubygems.org.
     dependencies:
@@ -305,7 +379,9 @@ pt-BR:
       downloads: Downloads
       title: Gems
     show:
-      licenses_header: Licença
+      licenses_header:
+        one: Licença
+        other: Licenças
       no_licenses: N/A
       requirements_header: Requisitos
       show_all_versions: Mostrar todas as versões (%{count})
@@ -319,6 +395,7 @@ pt-BR:
   reverse_dependencies:
     index:
       title: "Dependências Reversas para %{name}"
+      subtitle:
     search:
       search_reverse_dependencies_html: "Buscar Gems com dependências&hellip;"
   searches:
@@ -333,10 +410,16 @@ pt-BR:
       month_update:
       week_update:
       filter:
+      yanked:
+      suggestion:
   sessions:
     new:
       forgot_password: Esqueceu sua Senha?
       resend_confirmation: Não recebeu o email de confirmação?
+    verify:
+      title:
+      confirm:
+      notice:
   stats:
     index:
       title: Estatísticas
@@ -371,3 +454,28 @@ pt-BR:
         one:
         other:
         zero:
+  owners:
+    confirm:
+      confirmed_email:
+      token_expired:
+    index:
+      add_owner:
+      name:
+      mfa:
+      status:
+      confirmed_at:
+      added_by:
+      action:
+      info:
+      email_field:
+      submit_button:
+      confirmed:
+      pending:
+      confirm_remove:
+    resend_confirmation:
+      resent_notice:
+    create:
+      success_notice:
+    destroy:
+      removed_notice:
+      failed_notice:
