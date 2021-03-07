@@ -167,22 +167,21 @@ class UserTest < ActiveSupport::TestCase
       assert_nil User.authenticate(@user.email, "bad")
     end
 
-    should "have email and handle on JSON" do
+    should "have handle on JSON" do
       json = JSON.parse(@user.to_json)
-      hash = { "id" => @user.id, "email" => @user.email, "handle" => @user.handle }
+      hash = { "id" => @user.id, "handle" => @user.handle }
       assert_equal hash, json
     end
 
-    should "have email and handle on XML" do
+    should "have handle on XML" do
       xml = Nokogiri.parse(@user.to_xml)
       assert_equal "user", xml.root.name
-      assert_equal %w[id handle email], xml.root.children.select(&:element?).map(&:name)
-      assert_equal @user.email, xml.at_css("email").content
+      assert_equal %w[id handle], xml.root.children.select(&:element?).map(&:name)
     end
 
-    should "have email and handle on YAML" do
+    should "have handle on YAML" do
       yaml = YAML.safe_load(@user.to_yaml)
-      hash = { "id" => @user.id, "email" => @user.email, "handle" => @user.handle }
+      hash = { "id" => @user.id, "handle" => @user.handle }
       assert_equal hash, yaml
     end
 
@@ -207,8 +206,8 @@ class UserTest < ActiveSupport::TestCase
       assert_equal @user.handle, @user.name
     end
 
-    should "setup a field to toggle showing email" do
-      assert_nil @user.hide_email
+    should "setup a field to toggle showing email with default true" do
+      assert @user.hide_email
     end
 
     should "only return rubygems" do

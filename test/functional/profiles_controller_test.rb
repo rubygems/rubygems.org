@@ -15,9 +15,8 @@ class ProfilesControllerTest < ActionController::TestCase
       setup { get :show, params: { id: @user.id } }
 
       should respond_with :success
-      should "render Email link" do
-        assert page.has_content?("Email Me")
-        assert page.has_selector?("a[href='mailto:#{@user.email}']")
+      should "not render Email link by defaulr" do
+        refute page.has_selector?("a[href='mailto:#{@user.email}']")
       end
     end
 

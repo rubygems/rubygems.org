@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_25_153619) do
+ActiveRecord::Schema.define(version: 2021_03_07_101812) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -175,7 +175,7 @@ ActiveRecord::Schema.define(version: 2021_01_25_153619) do
     t.datetime "updated_at"
     t.boolean "email_reset"
     t.string "handle"
-    t.boolean "hide_email"
+    t.boolean "hide_email", default: true
     t.string "twitter_username"
     t.string "unconfirmed_email"
     t.datetime "remember_token_expires_at"
