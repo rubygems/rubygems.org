@@ -326,7 +326,7 @@ class UserTest < ActiveSupport::TestCase
           should "reset api key" do
             @user.block!
             assert @user.api_key.nil?
-            assert(@user.api_keys.pluck(:hashed_key).all? { |key| key == "--locked--" })
+            assert @user.api_keys.empty?
           end
         end
       end
