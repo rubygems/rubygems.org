@@ -1,0 +1,4 @@
+<%= t("mailer.ownership_confirmation.subtitle", handle: @user.handle) %>
+
+<%= t("mailer.ownership_confirmation.body_text", gem: @rubygem.name, authorizer: @ownership.authorizer.display_handle) %>
+<%= confirm_rubygem_owners_url(@rubygem, token: @ownership.token.html_safe) %>

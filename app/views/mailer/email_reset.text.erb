@@ -1,0 +1,4 @@
+<%= @sub_title = t(".subtitle", handle: @user.handle) %>
+
+<%= t('.visit_link_instructions') %>
+<%= update_email_confirmations_url(token: @user.confirmation_token.html_safe) %>

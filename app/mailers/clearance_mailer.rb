@@ -6,13 +6,11 @@ class ClearanceMailer < ApplicationMailer
 
   def change_password(user)
     @user = User.find(user["id"])
-    mail(
-      from: Clearance.configuration.mailer_sender,
-      to: @user.email,
-      subject: I18n.t(
-        :change_password,
-        scope: %i[clearance models clearance_mailer]
-      )
-    )
+    mail from: Clearance.configuration.mailer_sender,
+         to: @user.email,
+         subject: I18n.t(:change_password, scope: %i[clearance models clearance_mailer]) do |format|
+           format.html
+           format.text
+         end
   end
 end

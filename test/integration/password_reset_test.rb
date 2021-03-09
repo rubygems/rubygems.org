@@ -4,7 +4,7 @@ class PasswordResetTest < SystemTest
   include ActiveJob::TestHelper
 
   def password_reset_link
-    body = ActionMailer::Base.deliveries.last.body.decoded.to_s
+    body = ActionMailer::Base.deliveries.last.parts[1].body.decoded.to_s
     link = %r{http://localhost/users([^";]*)}.match(body)
     link[0]
   end
