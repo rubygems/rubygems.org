@@ -25,16 +25,12 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         assert_kind_of Array, response
       end
 
-      should "return correct owner email" do
-        assert_equal @user.email, yield(@response.body)[0]["email"]
-      end
-
       should "return correct owner handle" do
         assert_equal @user.handle, yield(@response.body)[0]["handle"]
       end
 
-      should "not return other owner email" do
-        assert yield(@response.body).map { |owner| owner["email"] }.exclude?(@other_user.email)
+      should "not return other owner handle" do
+        assert yield(@response.body).map { |owner| owner["handle"] }.exclude?(@other_user.handle)
       end
     end
   end

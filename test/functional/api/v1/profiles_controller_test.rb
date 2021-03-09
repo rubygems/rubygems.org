@@ -38,21 +38,22 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
         end
 
         should respond_with :success
-        should "include the user email" do
-          assert response_body.key?("email")
-          assert_equal @user.email, response_body["email"]
+        should "hide the user email by default" do
+          refute response_body.key?("email")
         end
       end
 
-      context "on GET to show when hide email" do
+      context "on GET to show when hide email is disabled" do
         setup do
-          @user.update(hide_email: true)
+          @user.update(hide_email: false)
           get :show, params: { id: @user.handle }, format: format
         end
 
         should respond_with :success
-        should "hide the user email" do
-          refute response_body.key?("email")
+
+        should "include the user email" do
+          assert response_body.key?("email")
+          assert_equal @user.email, response_body["email"]
         end
 
         should "shows the handle" do
