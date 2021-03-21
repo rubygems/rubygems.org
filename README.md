@@ -33,6 +33,7 @@ Additionally, [RubyTogether](https://rubytogether.org) sponsors individuals to w
 [mailing list]: https://groups.google.com/group/rubygems-org
 [faq]: https://help.rubygems.org/kb/gemcutter/faq
 [irc]: https://webchat.freenode.net/?channels=rubygems
+[github test workflow]: https://github.com/rubygems/rubygems.org/actions/
 [code climate]: https://codeclimate.com/github/rubygems/rubygems.org
 [trello board]: https://trello.com/board/rubygems-org/513f9634a7ed906115000755
 
