@@ -115,7 +115,7 @@ GEM
     childprocess (3.0.0)
     choice (0.2.0)
     chunky_png (1.3.15)
-    clearance (2.3.0)
+    clearance (2.3.1)
       actionmailer (>= 5.0)
       activemodel (>= 5.0)
       activerecord (>= 5.0)
@@ -166,7 +166,7 @@ GEM
     faraday_middleware-aws-sigv4 (0.2.5)
       aws-sigv4 (~> 1.0)
       faraday (>= 0.9, < 0.15)
-    ffi (1.14.2)
+    ffi (1.15.0)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
