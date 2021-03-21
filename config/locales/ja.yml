@@ -371,6 +371,7 @@ ja:
       authors_header: 作者
       not_using_mfa_warning_show:
       not_using_mfa_warning_hide:
+      self_no_mfa_warning_html:
       owners_header: オーナー
       pushed_by:
       using_mfa_info:

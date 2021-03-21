@@ -7,7 +7,13 @@
 
     <% if  rubygem.owned_by?(current_user) %>
       <% if rubygem.owners.without_mfa.present? %>
-        <span class="gem__users__mfa-text mfa-warn"><%= t '.not_using_mfa_warning_show' %></span>
+        <% if rubygem.owners.without_mfa.size > 1 %>
+          <span class="gem__users__mfa-text mfa-warn"><%= t '.not_using_mfa_warning_show' %></span>
+        <% else %>
+          <span class="gem__users__mfa-text mfa-warn">
+            <%= t '.self_no_mfa_warning_html'.html_safe %>
+          </span>
+        <% end %>
 
         <div class="gem__users__mfa-disabled t-item--hidden">
           <span class="gem__users__mfa-text mfa-warn t-item--hidden"><%= t '.not_using_mfa_warning_hide' %></span>

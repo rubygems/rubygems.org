@@ -371,6 +371,7 @@ de:
       authors_header: Autoren
       not_using_mfa_warning_show:
       not_using_mfa_warning_hide:
+      self_no_mfa_warning_html:
       owners_header: Besitzer
       pushed_by:
       using_mfa_info:
