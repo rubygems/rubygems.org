@@ -1,5 +1,5 @@
 require "test_helper"
-require_relative "../../lib/middleware/hostess"
+require_relative "../../lib/gemcutter/middleware/hostess"
 
 class HostessTest < ActiveSupport::TestCase
   include Rack::Test::Methods
@@ -9,7 +9,7 @@ class HostessTest < ActiveSupport::TestCase
   end
 
   def app
-    Hostess.new(-> { [200, {}, ""] })
+    Gemcutter::Middleware::Hostess.new(-> { [200, {}, ""] })
   end
 
   def touch(path)

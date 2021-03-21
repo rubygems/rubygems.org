@@ -1,5 +1,5 @@
 require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?
-require_relative "../../lib/middleware/redirector"
+require_relative "../../lib/gemcutter/middleware/redirector"
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
@@ -120,7 +120,7 @@ Rails.application.configure do
     compression_min_size: 524_288
   }
 
-  config.middleware.use Redirector
+  config.middleware.use Gemcutter::Middleware::Redirector
 
   # Inserts middleware to perform automatic connection switching.
   # The `database_selector` hash is used to pass options to the DatabaseSelector

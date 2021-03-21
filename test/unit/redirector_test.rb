@@ -5,7 +5,7 @@ class RedirectorTest < ActiveSupport::TestCase
 
   def app
     Rack::Builder.new do
-      use Redirector
+      use Gemcutter::Middleware::Redirector
       run ->(_) { [200, { "Content-Type" => "text/html" }, []] }
     end
   end

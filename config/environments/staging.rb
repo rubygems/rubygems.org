@@ -1,5 +1,5 @@
 require Rails.root.join("config", "secret") if Rails.root.join("config", "secret.rb").file?
-require_relative "../../lib/middleware/redirector"
+require_relative "../../lib/gemcutter/middleware/redirector"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -117,5 +117,5 @@ Rails.application.configure do
     compression_min_size: 524_288
   }
 
-  config.middleware.use Redirector
+  config.middleware.use Gemcutter::Middleware::Redirector
 end
