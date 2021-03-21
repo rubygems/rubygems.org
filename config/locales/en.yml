@@ -403,7 +403,7 @@ en:
       header: "%{title} Dependencies"
     gem_members:
       authors_header: Authors
-      single_owner_not_using_mfa_warning_show : "Please consider <a href="/settings/edit">enabling MFA</a> to keep your account secure."
+      self_no_mfa_warning_html: Please consider <a href="/settings/edit">enabling MFA</a> to keep your account secure.
       not_using_mfa_warning_show: "* Some owners are not using MFA. Click for the complete list."
       not_using_mfa_warning_hide: "* The following owners are not using MFA. Click to hide."
       owners_header: Owners

@@ -376,7 +376,7 @@ es:
       header: "dependencias de %{title}"
     gem_members:
       authors_header: Autores
-      single_owner_not_using_mfa_warning_show:
+      self_no_mfa_warning_html:
       not_using_mfa_warning_show: "* Algunos propietarios no están usando MFA. Haga click para ver la lista completa."
       not_using_mfa_warning_hide: "* Los siguientes propietarios no están usando MFA. Haga click para ocultar."
       owners_header: Propietarios
