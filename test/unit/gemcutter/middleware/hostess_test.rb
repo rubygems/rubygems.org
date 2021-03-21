@@ -1,7 +1,7 @@
 require "test_helper"
-require_relative "../../lib/gemcutter/middleware/hostess"
+require_relative "../../../../lib/gemcutter/middleware/hostess"
 
-class HostessTest < ActiveSupport::TestCase
+class Gemcutter::Middleware::HostessTest < ActiveSupport::TestCase
   include Rack::Test::Methods
 
   setup do

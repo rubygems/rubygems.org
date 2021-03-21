@@ -1,6 +1,6 @@
 require "test_helper"
 
-class RedirectorTest < ActiveSupport::TestCase
+class Gemcutter::Middleware::RedirectorTest < ActiveSupport::TestCase
   include Rack::Test::Methods
 
   def app
