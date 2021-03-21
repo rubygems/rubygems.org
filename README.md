@@ -25,6 +25,7 @@ Additionally, [RubyTogether](https://rubytogether.org) sponsors individuals to w
 * [Mailing List][]
 * [FAQ][]
 * [IRC][]: #rubygems on Freenode
+* [GitHub Test Workflow][]: [![example workflow](https://github.com/rubygems/rubygems.org/actions/workflows/main.yml/badge.svg)](https://github.com/rubygems/rubygems.org/actions/workflows/test.yml/badge.svg)
 * [Code Climate][]: [![Maintainability](https://api.codeclimate.com/v1/badges/7110bb3f9b765042d604/maintainability)](https://codeclimate.com/github/rubygems/rubygems.org/maintainability)
 * [Code Climate][]: [![Test Coverage](https://api.codeclimate.com/v1/badges/7110bb3f9b765042d604/test_coverage)](https://codeclimate.com/github/rubygems/rubygems.org/test_coverage)
 * [Trello Board][]
