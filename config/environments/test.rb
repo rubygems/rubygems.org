@@ -1,4 +1,4 @@
-require_relative "../../lib/middleware/redirector"
+require_relative "../../lib/gemcutter/middleware/redirector"
 require "active_support/core_ext/integer/time"
 
 # The test environment is used exclusively to run your application's

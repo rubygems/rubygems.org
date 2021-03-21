@@ -1,11 +1,11 @@
 require "test_helper"
 
-class RedirectorTest < ActiveSupport::TestCase
+class Gemcutter::Middleware::RedirectorTest < ActiveSupport::TestCase
   include Rack::Test::Methods
 
   def app
     Rack::Builder.new do
-      use Redirector
+      use Gemcutter::Middleware::Redirector
       run ->(_) { [200, { "Content-Type" => "text/html" }, []] }
     end
   end
