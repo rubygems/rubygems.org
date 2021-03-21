@@ -25,7 +25,9 @@ Additionally, [RubyTogether](https://rubytogether.org) sponsors individuals to w
 * [Mailing List][]
 * [FAQ][]
 * [IRC][]: #rubygems on Freenode
-* [GitHub Test Workflow][]: [![example workflow](https://github.com/rubygems/rubygems.org/actions/workflows/test.yml/badge.svg)](https://github.com/rubygems/rubygems.org/actions/workflows/test.yml)
+* [GitHub Workflow][]: [![test workflow](https://github.com/rubygems/rubygems.org/actions/workflows/test.yml/badge.svg)](https://github.com/rubygems/rubygems.org/actions/workflows/test.yml)
+* [GitHub Workflow][]: [![lint workflow](https://github.com/rubygems/rubygems.org/actions/workflows/lint.yml/badge.svg)](https://github.com/rubygems/rubygems.org/actions/workflows/lint.yml)
+* [GitHub Workflow][]: [![docker workflow](https://github.com/rubygems/rubygems.org/actions/workflows/docker.yml/badge.svg)](https://github.com/rubygems/rubygems.org/actions/workflows/docker.yml)
 * [Code Climate][]: [![Maintainability](https://api.codeclimate.com/v1/badges/7110bb3f9b765042d604/maintainability)](https://codeclimate.com/github/rubygems/rubygems.org/maintainability)
 * [Code Climate][]: [![Test Coverage](https://api.codeclimate.com/v1/badges/7110bb3f9b765042d604/test_coverage)](https://codeclimate.com/github/rubygems/rubygems.org/test_coverage)
 * [Trello Board][]
@@ -33,7 +35,7 @@ Additionally, [RubyTogether](https://rubytogether.org) sponsors individuals to w
 [mailing list]: https://groups.google.com/group/rubygems-org
 [faq]: https://help.rubygems.org/kb/gemcutter/faq
 [irc]: https://webchat.freenode.net/?channels=rubygems
-[github test workflow]: https://github.com/rubygems/rubygems.org/actions/
+[github workflow]: https://github.com/rubygems/rubygems.org/actions/
 [code climate]: https://codeclimate.com/github/rubygems/rubygems.org
 [trello board]: https://trello.com/board/rubygems-org/513f9634a7ed906115000755
 
