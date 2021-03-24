@@ -4,24 +4,29 @@ pt-BR:
   feed_latest: RubyGems.org | Últimas Gems
   feed_subscribed: RubyGems.org | Gems do seu Feed
   footer_about_html: RubyGems.org é o serviço de hospedagem de gems da comunidade Ruby. Publique e instale suas gems instantaneamente. Use a API para interagir e encontrar mais informações sobre gems disponíveis. Torne-se um contribuidor e melhore o site com suas mudanças.
-  footer_sponsors_html:
-  footer_join_rt_html:
-  form_disable_with: Atualizando...
-  invalid_page: Número da página está fora do limite. Redirecionado para página padrão.
+  footer_sponsors_html: O RubyGems.org só é possível através da nossa parceria com a grande comunidade Ruby.
+    <a href="https://www.fastly.com/">Fastly</a> fornece uma largura de banda e suporte a CDN,
+    <a href="https://www.rubycentral.org/">Ruby Central</a> cobre a infraestrutura e custos, e
+    <a href="https://rubytogether.org/?source=rubygems">Ruby Together</a> financia o desenvolvimento e o trabalho operacional.
+    <a href="%{sponsors_page}">Saiba mais sobre nossos parceiros e como eles trabalham juntos</a>.
+  footer_join_rt_html: Nós precisamos de sua ajuda para financiar os desenvolvedores que mantém o RubyGems.org funcionando sem problemas.
+    <a href="https://rubytogether.org/join?source=rubygems">Junte-se ao Ruby Together</a>.
+  form_disable_with: Por favor, aguarde...
+  invalid_page: Esta página está fora de alcance. Redirecionando para a página inicial...
   locale_name: Português do Brasil
   none: Nenhum
   not_found: Não encontrado
   api_key_forbidden:
-  please_sign_up: Accesso Negado. Por favor se registre em https://rubygems.org
-  please_sign_in:
+  please_sign_up: Acesso Negado. Por favor se registre em https://rubygems.org
+  please_sign_in: Por favor, faça login em sua conta para continuar.
   otp_incorrect: Seu código OTP está incorreto. Por favor, verifique-o e tente novamente.
   otp_missing: Você habilitou a autenticação multifator mas nenhum código OTP foi fornecido. Por favor, preencha-o e tente novamente.
   sign_in: Fazer Login
   sign_up: Cadastrar
-  dependency_list:
+  dependency_list: Mostrar todas as dependências
   multifactor_authentication: Autenticação Multifator
-  subtitle: o host de gems da sua comunidade
-  this_rubygem_could_not_be_found: A rubygem não foi encontrada.
+  subtitle: O host de gems da sua comunidade
+  this_rubygem_could_not_be_found: Não foi possível localizar esta rubygem
   time_ago: "%{duration} atrás"
   title: RubyGems.org
   update: Atualizar
@@ -88,11 +93,11 @@ pt-BR:
       subtitle:
   dashboards:
     show:
-      creating_link_text: criar
+      creating_link_text: Criar
       gem_link_text: Página da gem
       latest: Últimas Atualizações
       latest_title: Últimas Atualizações | Feed RSS
-      migrating_link_text: migrar
+      migrating_link_text: Migrar
       mine: Minhas Gems
       my_subscriptions: Observando
       no_owned_html: Você ainda não enviou nenhuma gem. Verifique os guias sobre %{creating_link} uma gem ou %{migrating_link} uma gem do RubyForge.
@@ -140,30 +145,30 @@ pt-BR:
         uptime: Uptime
       header:
         dashboard: Painel de Controle
-        edit_profile:
-        settings:
+        edit_profile: Editar Perfil
+        settings: Configurações da Conta
         search_gem_html: Buscar Gems&hellip;
         sign_in: Fazer Login
         sign_out: Sair
         sign_up: Cadastrar
   mailer:
-    confirm_your_email:
-    confirmation_subject:
-    link_expiration_explanation_html:
+    confirm_your_email: Por favor, confirme seu endereço de email através do link que enviamos para o seu endereço de email.
+    confirmation_subject: Por favor, confirme seu endereço de email para se cadastrar no RubyGems.org
+    link_expiration_explanation_html: Lembre-se de que este link é válido apenas por 3 horas. Você pode gerar um novo link atualizado na página <a href='https://rubygems.org/email_confirmations/new'>reenviar email de confirmação</a>.
     email_confirmation:
-      title:
-      subtitle:
-      confirmation_link:
-      welcome_message:
+      title: EMAIL DE CONFIRMAÇÃO
+      subtitle: Quase pronto!
+      confirmation_link: Confirme o endereço de email
+      welcome_message: Bem-vindo ao RubyGems.org! Visite o link abaixo para confirmar seu endereço de email.
     email_reset:
-      title:
-      subtitle:
-      visit_link_instructions:
+      title: RESETAR ENDEREÇO DE EMAIL
+      subtitle: Olá, %{handle}!
+      visit_link_instructions: Você alterou seu endereço de email do RubyGems.org. Por favor acesse a seguinte url para reativar sua conta.
     deletion_complete:
-      title:
-      subtitle:
-      subject:
-      body_html:
+      title: EXCLUSÃO COMPLETA
+      subtitle: Tchau!
+      subject: Sua conta do rubygems.org foi deletada com sucesso.
+      body_html: Sua solicitação de exclusão da sua conta do rubygems.org foi concluída. Você pode criar outra na página %{sign_up}.
     deletion_failed:
       title:
       subtitle:
@@ -217,8 +222,8 @@ pt-BR:
   pages:
     about:
       founding_html: Este projeto foi iniciado em Abril de 2009 por %{founder}, e desde então tem crescido para incluir as contribuições de %{contributors} e %{downloads}. A partir do lançamento do RubyGems 1.3.6 o site foi renomeado de Gemcutter para %{title} para solidificar o papel centra do site na comunidade Ruby.
-      support_html: Pelo Gemcutter não ser mantido por uma empresa específica, o projeto contou e conta com a contribuição de muitas pessoas. O design atual, ilustrações e o frontend do site foram criados pela %{dockyard}. Nós também contamos com ajuda do %{github} por nos ajudar a compartilhar código facilmente. Este site foi inicialmente hospedado no %{heroku}, que nos ajudaram a validar o Gemcutter como uma solução viável para toda a comunidade Ruby.  Our infrastructure is currently hosted on %{aws}.
-      technical_html: 'Alguns aspectos técnicos sobre este site: 100% Ruby. A parte principal é um aplicativo %{rails}. As gems são hospedadas no %{s3}, served by %{fastly}, e o tempo de espera entre publicar uma nova gem e disponibilidade para instalação é mínimo. Para mais informações, verifique o %{source_code}, com a licença %{license} no GitHub.'
+      support_html: Pelo Gemcutter não ser mantido por uma empresa específica, o projeto contou e conta com a contribuição de muitas pessoas. O design atual, ilustrações e o frontend do site foram criados pela %{dockyard}. Nós também contamos com ajuda do %{github} por nos ajudar a compartilhar código facilmente. Este site foi inicialmente hospedado no %{heroku}, que nos ajudaram a validar o Gemcutter como uma solução viável para toda a comunidade Ruby. Nossa infraestrutura é atualmente hospedada no %{aws}.
+      technical_html: 'Alguns aspectos técnicos sobre este site: 100% Ruby. A parte principal é um aplicativo %{rails}. As gems são hospedadas no %{s3}, servido por %{fastly}, e o tempo de espera entre publicar uma nova gem e disponibilidade para instalação é mínimo. Para mais informações, verifique o %{source_code}, com a licença %{license} no GitHub.'
       title: Sobre o Rubygems
       purpose:
         better_api: Prover uma API melhor para lidar com gems
@@ -244,7 +249,7 @@ pt-BR:
     new:
       submit: Resetar senha
       title: Alterar senha
-      will_email_notice: Você vai receber um email com o link para atualizar sua senha.
+      will_email_notice: Você irá receber um email com o link para atualizar sua senha.
     otp_prompt:
       authenticate:
   multifactor_auths:
@@ -310,7 +315,7 @@ pt-BR:
           ui_and_gem_signin:
   profiles:
     edit:
-      change_avatar:
+      change_avatar: Mudar foto de perfil
       email_awaiting_confirmation:
       enter_password:
       hide_email: Não mostrar meu email
