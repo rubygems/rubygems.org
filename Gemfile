@@ -12,7 +12,6 @@ gem "activemodel", rails_version
 gem "activerecord", rails_version
 gem "activesupport", rails_version
 gem "railties", rails_version
-gem "sprockets-rails"
 # END
 
 gem "rails-i18n"
