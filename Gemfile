@@ -1,6 +1,20 @@
 source "https://rubygems.org"
 
-gem "rails", "~> 6.1.0"
+rails_version = "6.1.3"
+# Once https://github.com/rails/rails/issues/41750 is solved
+# we can replace all these lines with: gem "rails", "~> 6.1.0"
+gem "actioncable", rails_version
+gem "actionmailer", rails_version
+gem "actionpack", rails_version
+gem "actionview", rails_version
+gem "activejob", rails_version
+gem "activemodel", rails_version
+gem "activerecord", rails_version
+gem "activesupport", rails_version
+gem "railties", rails_version
+gem "sprockets-rails"
+# END
+
 gem "rails-i18n"
 
 gem "aws-sdk", "~> 2.2"
