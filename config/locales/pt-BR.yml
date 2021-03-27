@@ -5,14 +5,14 @@ pt-BR:
   feed_subscribed: RubyGems.org | Gems do seu Feed
   footer_about_html: RubyGems.org é o serviço de hospedagem de gems da comunidade Ruby. Publique e instale suas gems instantaneamente. Use a API para interagir e encontrar mais informações sobre gems disponíveis. Torne-se um contribuidor e melhore o site com suas mudanças.
   footer_sponsors_html: O RubyGems.org só é possível através da nossa parceria com a grande comunidade Ruby.
-    <a href="https://www.fastly.com/">Fastly</a> fornece uma largura de banda e suporte a CDN,
+    <a href="https://www.fastly.com/">Fastly</a> fornece uma largura de banda (bandwidth) e suporte a CDN,
     <a href="https://www.rubycentral.org/">Ruby Central</a> cobre a infraestrutura e custos, e
     <a href="https://rubytogether.org/?source=rubygems">Ruby Together</a> financia o desenvolvimento e o trabalho operacional.
     <a href="%{sponsors_page}">Saiba mais sobre nossos parceiros e como eles trabalham juntos</a>.
   footer_join_rt_html: Nós precisamos de sua ajuda para financiar os desenvolvedores que mantém o RubyGems.org funcionando sem problemas.
     <a href="https://rubytogether.org/join?source=rubygems">Junte-se ao Ruby Together</a>.
   form_disable_with: Por favor, aguarde...
-  invalid_page: Esta página está fora de alcance. Redirecionando para a página inicial...
+  invalid_page: Esta página é inválida. Redirecionando para a página inicial...
   locale_name: Português do Brasil
   none: Nenhum
   not_found: Não encontrado
