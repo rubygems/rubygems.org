@@ -1,4 +1,4 @@
-<% @title = "Please enable MFA" %>
+<% @title = "Please enable multifactor authentication (MFA)" %>
 <% @sub_title = "Hi #{@user.handle}" %>
 
 <!-- Body -->
@@ -12,11 +12,11 @@
 
       <div class="h3-1-center" style="color:#1e1e1e; font-family:Georgia, serif; min-width:auto !important; font-size:20px; line-height:26px; text-align:center">
         We care about keeping your RubyGems.org account secure and recommend enabling multifactor authentication for <b>both UI and API</b>.
-        Setting up MFA only takes a few minutes and goes a long way towards protecting your account and the Ruby ecosystem.
+        Setting up multifactor authentication (MFA) only takes a few minutes and goes a long way towards protecting your account and the Ruby ecosystem.
         <br/>
         Once enabled, we will ask you for an OTP for actions like <b>sign in</b> and <b>gem push</b>.
         <br/>
-        Please click on the Enable MFA button below to register a new device. You may be asked to first log in to your account. You can also find the same link on your <%= link_to("Edit Profile", "https://rubygems.org/profile/edit") %> page.
+        Please click on the Enable Multifactor Authentication (MFA) button below to register a new device. You may be asked to first log in to your account. You can also find the same link on your <%= link_to("Edit Profile", "https://rubygems.org/profile/edit") %> page.
       </div>
 
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="30" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
@@ -34,7 +34,7 @@
 </td>
                       <td bgcolor="#e9573f">
                         <div class="text-btn" style="color:#ffffff; font-family:Arial, sans-serif; min-width:auto !important; font-size:16px; line-height:20px; text-align:center">
-                          <a href=<%= new_multifactor_auth_url %> target="_blank" class="link-white" style="color:#ffffff; text-decoration:none"><span class="link-white" style="color:#ffffff; text-decoration:none">ENABLE MFA</span></a>
+                          <a href=<%= new_multifactor_auth_url %> target="_blank" class="link-white" style="color:#ffffff; text-decoration:none"><span class="link-white" style="color:#ffffff; text-decoration:none">ENABLE MULTIFACTOR AUTHENTICATION (MFA)</span></a>
                         </div>
                       </td>
                       <td class="img" style="font-size:0pt; line-height:0pt; text-align:left" width="15"></td>
@@ -50,7 +50,7 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="40" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
 
       <div class="h3-1-center" style="color:#1e1e1e; font-family:Georgia, serif; min-width:auto !important; font-size:20px; line-height:26px; text-align:center">
-        Check our guides for more details on <%= link_to("setting up MFA", "https://guides.rubygems.org/setting-up-multifactor-authentication/") %>  and  <%= link_to("using MFA with command line", "https://guides.rubygems.org/using-mfa-in-command-line/") %>.
+        Check our guides for more details on <%= link_to("setting up multifactor authentication (MFA)", "https://guides.rubygems.org/setting-up-multifactor-authentication/") %>  and  <%= link_to("using multifactor authentication (MFA) with command line", "https://guides.rubygems.org/using-mfa-in-command-line/") %>.
       </div>
 
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
