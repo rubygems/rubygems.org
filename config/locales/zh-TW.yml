@@ -49,6 +49,8 @@ zh-TW:
       messages:
         unpwn:
         blocked:
+    models:
+      user:
   api_keys:
     create:
       success:
