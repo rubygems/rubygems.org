@@ -19,7 +19,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resource :api_key, only: %i[show create update] do
         collection do
-          post :revoke, to: "github_secret_scanning#revoke" # GithubSecretScanningAlertsController
+          post :revoke, to: "github_secret_scanning#revoke"
         end
       end
       resource :multifactor_auth, only: :show

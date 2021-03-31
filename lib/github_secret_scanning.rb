@@ -18,12 +18,12 @@ class GitHubSecretScanning
   def self.public_key(id)
     cache_key = ["GitHubSecretScanning", "public_keys", id]
     Rails.cache.fetch(cache_key) do
-      public_keys = JSON.parse(get_keys)["public_keys"]
+      public_keys = JSON.parse(secret_scanning_keys)["public_keys"]
       public_keys&.find { |v| v["key_identifier"] == id }&.fetch("key")
     end
   end
 
-  def self.get_keys
+  def self.secret_scanning_keys
     RestClient.get(KEYS_URI).body
   end
 end
