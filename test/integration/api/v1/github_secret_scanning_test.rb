@@ -104,8 +104,9 @@ class Api::V1::GithubSecretScanningTest < ActionDispatch::IntegrationTest
 
     context "with a valid token" do
       setup do
-        @api_key = create(:api_key)
-        @tokens << { "token" => @api_key.hashed_key, "type" => "rubygems", "url" => "some_url" }
+        key = "rubygems_#{SecureRandom.hex(24)}"
+        @api_key = create(:api_key, key: key)
+        @tokens << { "token" => key, "type" => "rubygems", "url" => "some_url" }
         signature = sign_body(JSON.dump(@tokens))
 
         post revoke_api_v1_api_key_path(@rubygem),

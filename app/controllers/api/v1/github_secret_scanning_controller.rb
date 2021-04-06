@@ -27,7 +27,7 @@ class Api::V1::GithubSecretScanningController < Api::BaseController
     tokens = params.require(:_json).map { |t| t.permit(:token, :type, :url) }
     resp = []
     tokens.each do |t|
-      api_key = ApiKey.find_by(hashed_key: t[:token])
+      api_key = ApiKey.find_by(hashed_key: hashed_key(t[:token]))
       label = if api_key&.destroy
                 Mailer.delay.api_key_revoked(api_key, t[:url])
                 "true_positive"
