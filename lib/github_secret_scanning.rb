@@ -1,4 +1,4 @@
-class GitHubSecretScanning
+class GithubSecretScanning
   KEYS_URI = "https://api.github.com/meta/public_keys/secret_scanning".freeze
 
   def initialize(key_identifier)
@@ -16,7 +16,7 @@ class GitHubSecretScanning
   end
 
   def self.public_key(id)
-    cache_key = ["GitHubSecretScanning", "public_keys", id]
+    cache_key = ["GithubSecretScanning", "public_keys", id]
     Rails.cache.fetch(cache_key) do
       public_keys = JSON.parse(secret_scanning_keys)["public_keys"]
       public_keys&.find { |v| v["key_identifier"] == id }&.fetch("key")

@@ -50,6 +50,6 @@ class Api::V1::GithubSecretScanningController < Api::BaseController
   private
 
   def secret_scanning_key(key_id)
-    GitHubSecretScanning.new(key_id)
+    GithubSecretScanning.new(key_id)
   end
 end
