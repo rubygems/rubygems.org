@@ -75,4 +75,9 @@ class MailerPreview < ActionMailer::Preview
     api_key = ApiKey.last
     Mailer.api_key_created(api_key.id)
   end
+
+  def api_key_revoked
+    api_key = ApiKey.last
+    Mailer.api_key_revoked(api_key, "https://example.com")
+  end
 end

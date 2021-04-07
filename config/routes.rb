@@ -17,7 +17,11 @@ Rails.application.routes.draw do
     end
 
     namespace :v1 do
-      resource :api_key, only: %i[show create update]
+      resource :api_key, only: %i[show create update] do
+        collection do
+          post :revoke, to: "github_secret_scanning#revoke"
+        end
+      end
       resource :multifactor_auth, only: :show
       resources :profiles, only: :show
       resources :downloads, only: :index do
