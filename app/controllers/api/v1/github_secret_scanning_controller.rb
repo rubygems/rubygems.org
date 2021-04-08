@@ -29,7 +29,7 @@ class Api::V1::GithubSecretScanningController < Api::BaseController
     tokens.each do |t|
       api_key = ApiKey.find_by(hashed_key: hashed_key(t[:token]))
       label = if api_key&.destroy
-                Mailer.delay.api_key_revoked(api_key, t[:url])
+                Mailer.delay.api_key_revoked(api_key.user_id, api_key.name, api_key.enabled_scopes.join(", "), t[:url])
                 "true_positive"
               else
                 "false_positive"

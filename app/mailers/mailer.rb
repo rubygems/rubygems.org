@@ -91,10 +91,12 @@ class Mailer < ApplicationMailer
       subject: I18n.t("mail.api_key_created.subject", default: "New API key created for rubygems.org")
   end
 
-  def api_key_revoked(api_key, commit_url)
-    @api_key = api_key
+  def api_key_revoked(user_id, api_key_name, enabled_scopes, commit_url)
     @commit_url = commit_url
-    mail to: @api_key.user.email,
+    @user = User.find(user_id)
+    @api_key_name = api_key_name
+    @enabled_scopes = enabled_scopes
+    mail to: @user.email,
       subject: I18n.t("mail.api_key_revoked.subject", default: "One of your API keys was revoked on rubygems.org")
   end
 end
