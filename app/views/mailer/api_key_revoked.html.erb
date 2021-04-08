@@ -19,12 +19,7 @@
         </p>
         <br/>
           <p>
-            This API key was compromised and revoked by <a href="https://docs.github.com/en/code-security/secret-security/about-secret-scanning">GitHub Secret Scanning</a>.
-            We automatically revoke API keys that are pushed to a public repository, as that can be accessed by anyone.
-            <br />
-            We have revoked that key right away.
-             <br/>
-            <a href="<%= @commit_url %>">Public commit url</a>
+            This API key was <a href="<%= @commit_url %>">detected in a public repository</a> by GitHub Secret Scanning. As a result we consider it compromised and have automatically revoked it to prevent any unauthorized access to your account.
           </p>
 
 
