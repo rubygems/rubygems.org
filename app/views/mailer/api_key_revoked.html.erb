@@ -1,5 +1,5 @@
 <% @title = "API KEY REVOKED" %>
-<% @sub_title = "Hi #{@api_key.user.handle}" %>
+<% @sub_title = "Hi #{@user.handle}" %>
 
 <!-- Body -->
 <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
@@ -13,9 +13,9 @@
           One of your API keys was revoked on rubygems.org.
         </p>
         <p>
-          Name: <strong><%= @api_key.name %></strong>
+          Name: <strong><%= @api_key_name %></strong>
           <br />
-          Scope: <strong><%= @api_key.enabled_scopes.join(", ") %></strong>
+          Scope: <strong><%= @enabled_scopes %></strong>
         </p>
         <br/>
           <p>

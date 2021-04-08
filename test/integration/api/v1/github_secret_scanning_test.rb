@@ -113,6 +113,8 @@ class Api::V1::GithubSecretScanningTest < ActionDispatch::IntegrationTest
           params: @tokens,
           headers: { HEADER_KEYID => "test_key_id", HEADER_SIGNATURE => Base64.encode64(signature) },
           as: :json
+
+        Delayed::Worker.new.work_off
       end
 
       should "returns success and remove the token" do
@@ -123,6 +125,15 @@ class Api::V1::GithubSecretScanningTest < ActionDispatch::IntegrationTest
         assert_equal @tokens.last["token"], json.last["token_raw"]
 
         assert_raises(ActiveRecord::RecordNotFound) { @api_key.reload }
+      end
+
+      should "delivers an email" do
+        refute ActionMailer::Base.deliveries.empty?
+        email = ActionMailer::Base.deliveries.last
+        assert_equal [@api_key.user.email], email.to
+        assert_equal ["no-reply@mailer.rubygems.org"], email.from
+        assert_equal "One of your API keys was revoked on rubygems.org", email.subject
+        assert_match "some_url", email.body.to_s
       end
     end
   end

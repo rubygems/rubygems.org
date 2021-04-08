@@ -29,7 +29,7 @@ class Api::V1::GithubSecretScanningController < Api::BaseController
     tokens.each do |t|
       api_key = ApiKey.find_by(hashed_key: hashed_key(t[:token]))
       label = if api_key&.destroy
-                Mailer.delay.api_key_revoked(api_key, t[:url])
+                schedule_revoke_email(api_key, t[:url])
                 "true_positive"
               else
                 "false_positive"
@@ -48,6 +48,10 @@ class Api::V1::GithubSecretScanningController < Api::BaseController
   end
 
   private
+
+  def schedule_revoke_email(api_key, url)
+    Mailer.delay.api_key_revoked(api_key.user_id, api_key.name, api_key.enabled_scopes.join(", "), url)
+  end
 
   def secret_scanning_key(key_id)
     GithubSecretScanning.new(key_id)
