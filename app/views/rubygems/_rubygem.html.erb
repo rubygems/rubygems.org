@@ -2,6 +2,15 @@
   <span class="gems__gem__info">
     <h2 class="gems__gem__name">
       <%= rubygem.name %>
+      <% if rubygem.owners.any?(&:verified) %>
+        <%=
+          image_tag(
+            "rubygems_logo_black.png",
+            title: 'Verified User',
+            width: 20
+          )
+        %>
+      <% end %>
       <span class="gems__gem__version"><%= latest_version_number(rubygem) %></span>
     </h2>
     <p class="gems__gem__desc t-text"><%= short_info(rubygem) %></p>
