@@ -104,6 +104,14 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
+    context "unconfirmed_email" do
+      should "be invalid when it doesn't match URI mail email regex" do
+        user = build(:user, unconfirmed_email: ">\"<script>alert(document.cookie)</script>@gmail.com")
+        refute user.valid?
+        assert_contains user.errors[:unconfirmed_email], "is invalid"
+      end
+    end
+
     context "twitter_username" do
       should validate_length_of(:twitter_username)
       should allow_value("user123_32").for(:twitter_username)
