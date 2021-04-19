@@ -281,7 +281,7 @@ en:
     destroy:
       success: You have successfully disabled multifactor authentication.
     update:
-      success: You have successfully updated your MFA level.
+      success: You have successfully updated your multifactor authentication level.
   notifiers:
     update:
       success: You have successfully updated your email notification settings.
@@ -406,12 +406,12 @@ en:
       header: "%{title} Dependencies"
     gem_members:
       authors_header: Authors
-      self_no_mfa_warning_html: Please consider <a href="/settings/edit">enabling MFA</a> to keep your account secure.
-      not_using_mfa_warning_show: "* Some owners are not using MFA. Click for the complete list."
-      not_using_mfa_warning_hide: "* The following owners are not using MFA. Click to hide."
+      self_no_mfa_warning_html: Please consider <a href="/settings/edit">enabling multifactor authentication (MFA)</a> to keep your account secure.
+      not_using_mfa_warning_show: "* Some owners are not using multifactor authentication (MFA). Click for the complete list."
+      not_using_mfa_warning_hide: "* The following owners are not using multifactor authentication (MFA). Click to hide."
       owners_header: Owners
       pushed_by: Pushed by
-      using_mfa_info: "* All owners are using MFA."
+      using_mfa_info: "* All owners are using multifactor authentication (MFA)."
       yanked_by: Yanked by
       sha_256_checksum: SHA 256 checksum
     index:
