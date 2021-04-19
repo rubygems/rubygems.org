@@ -9,8 +9,8 @@ class OwnersMailer < ApplicationMailer
   default_url_options[:host] = Gemcutter::HOST
   default_url_options[:protocol] = Gemcutter::PROTOCOL
 
-  def ownership_confirmation(ownership_id)
-    @ownership = Ownership.find(ownership_id)
+  def ownership_confirmation(ownership)
+    @ownership = ownership
     @user = @ownership.user
     @rubygem = @ownership.rubygem
     mail to: @user.email,

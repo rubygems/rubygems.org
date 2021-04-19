@@ -83,6 +83,17 @@ class OwnersControllerTest < ActionController::TestCase
             assert_equal "Please confirm the ownership of #{@rubygem.name} gem on RubyGems.org", last_email.subject
             assert_equal [@new_owner.email], last_email.to
           end
+
+          context "when ownership was deleted before running mailer job" do
+            setup { @rubygem.owners_including_unconfirmed.last.destroy }
+
+            should "not send confirmation email" do
+              ActionMailer::Base.deliveries.clear
+              Delayed::Worker.new.work_off
+              assert_equal 0, Delayed::Job.where("last_error is not null").count
+              assert_emails 0
+            end
+          end
         end
       end
 

@@ -17,7 +17,7 @@ class OwnersController < ApplicationController
   def resend_confirmation
     ownership = @rubygem.unconfirmed_ownerships.find_by!(user: current_user)
     if ownership.generate_confirmation_token && ownership.save
-      OwnersMailer.delay.ownership_confirmation(ownership.id)
+      Delayed::Job.enqueue(OwnershipConfirmationMailer.new(ownership.id))
       flash[:notice] = t(".resent_notice")
     else
       flash[:alert] = t("try_again")
@@ -33,7 +33,7 @@ class OwnersController < ApplicationController
     owner = User.find_by_name(handle_params)
     ownership = @rubygem.ownerships.new(user: owner, authorizer: current_user)
     if ownership.save
-      OwnersMailer.delay.ownership_confirmation(ownership.id)
+      Delayed::Job.enqueue(OwnershipConfirmationMailer.new(ownership.id))
       redirect_to rubygem_owners_path(@rubygem), notice: t(".success_notice", handle: owner.name)
     else
       index_with_error ownership.errors.full_messages.to_sentence, :unprocessable_entity
