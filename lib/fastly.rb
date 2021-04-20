@@ -12,6 +12,7 @@ class Fastly
     ENV["FASTLY_DOMAINS"].split(",").each do |domain|
       url = "https://#{domain}/#{path}"
       headers = soft ? { "Fastly-Soft-Purge" => 1 } : {}
+      headers["Fastly-Key"] = ENV["FASTLY_API_KEY"]
 
       response = RestClient::Request.execute(method: :purge,
                                              url: url,
