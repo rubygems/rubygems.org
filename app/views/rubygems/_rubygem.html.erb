@@ -2,7 +2,7 @@
   <span class="gems__gem__info">
     <h2 class="gems__gem__name">
       <%= rubygem.name %>
-      <% if rubygem.owners.any?(&:verified) %>
+      <% if rubygem.owners.all?(&:verified) %>
         <%=
           image_tag(
             "rubygems_logo_black.png",
