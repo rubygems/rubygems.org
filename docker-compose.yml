@@ -11,7 +11,7 @@ services:
     ports:
       - "11211:11211"
   search:
-    image: elasticsearch:6.8.13
+    image: elasticsearch:7.10.1
     environment:
       - http.host=0.0.0.0
       - transport.host=127.0.0.1
