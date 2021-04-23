@@ -355,7 +355,7 @@ ja:
         mail: メーリングリスト
         report_abuse: 悪用報告
         reverse_dependencies: 被依存性
-        review_changes: 変更点を確認
+        review_changes: 差分
         rss: RSS
         subscribe: 購読
         unsubscribe: 購読を解除
