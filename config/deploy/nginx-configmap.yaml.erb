@@ -25,7 +25,7 @@ data:
       }
 
       limit_req_status 429;
-      limit_req_zone  $binary_remote_addr  zone=abusers:10m  rate=40r/s;
+      limit_req_zone  $binary_remote_addr  zone=abusers:10m  rate=30r/s;
       limit_req_zone  $binary_remote_addr  zone=dependencyapi:10m  rate=100r/s;
       limit_req_zone  $binary_remote_addr  zone=minutely:10m  rate=100r/m;
 
