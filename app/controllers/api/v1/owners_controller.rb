@@ -18,7 +18,7 @@ class Api::V1::OwnersController < Api::BaseController
     if owner
       ownership = @rubygem.ownerships.new(user: owner, authorizer: @api_key.user)
       if ownership.save
-        OwnersMailer.delay.ownership_confirmation(ownership.id)
+        Delayed::Job.enqueue(OwnershipConfirmationMailer.new(ownership.id))
         render plain: "#{owner.display_handle} was added as an unconfirmed owner. "\
          "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
       else
