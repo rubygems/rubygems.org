@@ -33,6 +33,7 @@ class User < ApplicationRecord
   before_create :generate_confirmation_token
 
   validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true
+  validates :unconfirmed_email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
 
   validates :handle, uniqueness: true, allow_nil: true
   validates :handle, format: {
