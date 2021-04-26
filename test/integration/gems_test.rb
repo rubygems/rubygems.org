@@ -82,6 +82,15 @@ class GemsSystemTest < SystemTest
     assert_empty @user.subscribed_gems
   end
 
+  test "shows enable MFA instructions when logged in as owner with MFA disabled" do
+    create(:ownership, rubygem: @rubygem, user: @user)
+
+    visit rubygem_path(@rubygem, as: @user.id)
+
+    assert page.has_selector?(".gem__users__mfa-disabled .gem__users a")
+    assert page.has_content? "Please consider enabling multifactor"
+  end
+
   test "shows owners without mfa when logged in as owner" do
     @user.enable_mfa!("some-seed", "ui_and_api")
     user_without_mfa = create(:user, mfa_level: "disabled")
