@@ -11,7 +11,7 @@
           <span class="gem__users__mfa-text mfa-warn">
             <%= t '.self_no_mfa_warning_html'.html_safe %>
           </span>
-        <% elsif rubygem.owners.without_mfa.size > 1 %>
+        <% else %>
           <span class="gem__users__mfa-text mfa-warn"><%= t '.not_using_mfa_warning_show' %></span>
         <% end %>
 
