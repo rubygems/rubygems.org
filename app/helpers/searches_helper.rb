@@ -35,6 +35,6 @@ module SearchesHelper
   end
 
   def not_empty?(response)
-    response["hits"]["total"]["value"] != 0
+    response["hits"]["total"] != 0
   end
 end
