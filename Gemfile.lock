@@ -311,7 +311,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
-    rexml (3.2.4)
+    rexml (3.2.5)
     roadie (4.0.0)
       css_parser (~> 1.4)
       nokogiri (~> 1.8)
