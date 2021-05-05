@@ -3,7 +3,7 @@
 <div class="t-body">
   <h2><%= t ".mfa.multifactor_auth" %></h2>
   <% if @user.mfa_enabled? %>
-    <p><%= t ".mfa.enabled" %></p>
+    <p><%= t(".mfa.enabled").html_safe %></p>
     <%= form_tag multifactor_auth_path, method: :put, id: "mfa-edit" do %>
       <%= label_tag :level, t(".mfa.level.title"), class: "form__label" %>
       <%= select_tag :level, options_for_select([
@@ -19,7 +19,7 @@
     <% end %>
   <% else %>
     <p>
-      <%= t ".mfa.disabled" %>
+      <%= t(".mfa.disabled").html_safe %>
       <%= button_to t(".mfa.go_settings"), new_multifactor_auth_path, method: "get", class: "form__submit" %>
     </p>
   <% end %>
