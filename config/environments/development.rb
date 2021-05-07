@@ -72,7 +72,7 @@ Rails.application.configure do
 
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
-  config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+  config.file_watcher = ActiveSupport::FileUpdateChecker
 
   # Rubygems.org checks for the presence of an env variable called PROFILE that
   # switches several settings to a more "production-like" value for profiling
