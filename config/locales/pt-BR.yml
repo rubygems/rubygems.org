@@ -274,7 +274,9 @@ pt-BR:
     recovery:
       continue:
       title:
-      note:
+      copy:
+      saved:
+      note_html:
     destroy:
       success:
     update:

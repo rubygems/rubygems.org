@@ -269,7 +269,9 @@ zh-CN:
     recovery:
       continue:
       title:
-      note:
+      copy:
+      saved:
+      note_html:
     destroy:
       success:
     update:

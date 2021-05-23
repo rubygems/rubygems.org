@@ -64,6 +64,13 @@
   .form__submit:hover {
     opacity: .7; }
 
+.form__submit:disabled {
+  opacity: .7; }
+
+.form__submit--no-hover:enabled:hover {
+  opacity: 1;
+}
+
 .form__submit--small {
     margin: auto;
     padding: 4px 25px 4px 25px;

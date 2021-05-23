@@ -258,6 +258,7 @@ en:
     otp_prompt:
       authenticate: Authenticate
   multifactor_auths:
+    recovery_code: recovery code
     incorrect_otp: Your OTP code is incorrect.
     otp_code: OTP code
     require_mfa_disabled: Your multifactor authentication has been enabled. You have to disable it first.
@@ -277,7 +278,9 @@ en:
     recovery:
       continue: Continue
       title: Recovery codes
-      note: "You MUST keep the recovery codes safe to prevent losing your account. Each of the code can be used once if you lose your authenticator."
+      copy: "[ copy ]"
+      saved: I acknowledge that I have saved my recovery codes.
+      note_html: "Please <strong class='recovery__bold'>copy and save</strong> these recovery codes. You can use these codes to login and reset your MFA if your lose your authentication device. Each of the code can be used once."
     destroy:
       success: You have successfully disabled multifactor authentication.
     update:

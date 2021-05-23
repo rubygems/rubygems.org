@@ -269,7 +269,9 @@ fr:
     recovery:
       continue: Continuer
       title: Codes de récupération
-      note: "Vous DEVEZ garder les codes de récupération en sécurité pour ne pas perdre votre compte. Chacun des codes peut être utilisé une fois si vous perdez votre authentificateur"
+      copy:
+      saved:
+      note_html:
     destroy:
       success: Vous avez désactivé l'authentification multifacteur.
     update:

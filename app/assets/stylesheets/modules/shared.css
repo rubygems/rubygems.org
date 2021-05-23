@@ -187,7 +187,7 @@ span#github-btn {
   font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-.t-link--arrow {
+.t-link--arrow, .t-link--bold {
   font-weight: bold;
 }
 
@@ -202,4 +202,8 @@ span#github-btn {
 
 .t-link--arrow:hover:after {
   box-shadow: 3px -3px 0 0 rgba(233, 87, 63, 0.7) inset;
+}
+
+.t-body strong.recovery__bold {
+  font-weight: 800;
 }
