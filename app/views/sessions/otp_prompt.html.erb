@@ -1,5 +1,9 @@
 <% @title = t('multifactor_authentication') %>
 
+<div class="t-body">
+  <p><%= t("multifactor_auths.recovery_code_html") %></p>
+</div>
+
 <%= form_tag mfa_create_session_path, method: :post do %>
   <div class="text_field">
     <%= label_tag :otp, t('multifactor_auths.otp_code'), class: 'form__label' %>

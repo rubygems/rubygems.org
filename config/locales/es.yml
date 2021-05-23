@@ -258,6 +258,7 @@ es:
     otp_prompt:
       authenticate: Autenticar
   multifactor_auths:
+    recovery_code_html:
     incorrect_otp: Tu código OTP no es correcto.
     otp_code: código OTP
     require_mfa_disabled: Se ha activado la autenticación de múltiples factores. Primero tienes que desactivarla.

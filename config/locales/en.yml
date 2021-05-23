@@ -258,7 +258,7 @@ en:
     otp_prompt:
       authenticate: Authenticate
   multifactor_auths:
-    recovery_code: recovery code
+    recovery_code_html: 'You can use a valid  <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa", class="t-link">recovery code</a> if you have lost access to your MFA device.'
     incorrect_otp: Your OTP code is incorrect.
     otp_code: OTP code
     require_mfa_disabled: Your multifactor authentication has been enabled. You have to disable it first.
