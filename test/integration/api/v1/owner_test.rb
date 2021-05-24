@@ -7,7 +7,7 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
 
     @other_user_api_key = "12324"
     @other_user = create(:api_key, key: @other_user_api_key, add_owner: true, remove_owner: true).user
-    cookies[:remember_token] = @user.remember_token
+    post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
 
     @rubygem = create(:rubygem, number: "1.0.0")
     create(:ownership, user: @user, rubygem: @rubygem)
