@@ -34,7 +34,7 @@ jobs:
         cp config/database.yml.example config/database.yml
         bundle exec rake db:setup
     - name: Install cc-test-reporter and prebuild notification
-      if: matrix.rubygems_version == '3.1.5' && github.event_name != 'pull_request'
+      if: matrix.rubygems_version == '3.1.5'
       run: |
         curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         chmod +x ./cc-test-reporter
@@ -43,4 +43,4 @@ jobs:
       run: bin/rails test
     - name: CodeClimate Post-build upload
       run: ./cc-test-reporter -d -t simplecov after-build
-      if: matrix.rubygems_version == '3.1.5' && github.event_name != 'pull_request'
+      if: matrix.rubygems_version == '3.1.5'
