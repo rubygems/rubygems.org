@@ -15,7 +15,9 @@ jobs:
     runs-on: ubuntu-18.04
     env:
       RUBYGEMS_VERSION: ${{ matrix.rubygems_version }}
-      CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      # If we don't supply a CC_TEST_REPORTER_ID simplecov won't output coverage in a way that
+      # code climate understands
+      CC_TEST_REPORTER_ID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
     steps:
     - uses: actions/checkout@v2
     - name: Install and start services
@@ -33,14 +35,12 @@ jobs:
       run: |
         cp config/database.yml.example config/database.yml
         bundle exec rake db:setup
-    - name: Install cc-test-reporter and prebuild notification
-      if: matrix.rubygems_version == '3.1.5'
-      run: |
-        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-        chmod +x ./cc-test-reporter
-        ./cc-test-reporter before-build
     - name: Tests
       run: bin/rails test
-    - name: CodeClimate Post-build upload
-      run: ./cc-test-reporter -d -t simplecov after-build
+    - name: archive coverage
       if: matrix.rubygems_version == '3.1.5'
+      uses: actions/upload-artifact@v2
+      with:
+        name: coverage
+        path: |
+          coverage
