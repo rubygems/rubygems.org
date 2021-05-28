@@ -23,7 +23,7 @@ class ElasticSearcher
     end
     names
   rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Elasticsearch::Transport::Transport::Error
-    Rubygem.legacy_search(@query).page(@page)
+    Array(nil)
   end
 
   private

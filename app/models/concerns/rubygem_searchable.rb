@@ -40,18 +40,11 @@ module RubygemSearchable
         summary:           latest_version&.summary,
         description:       latest_version&.description,
         updated:           updated_at,
-        suggest: {
-          input: name,
-          weight: downloads,
-          contexts: {
-            yanked: versions.none?(&:indexed?)
-          }
-        },
         dependencies: {
           development: deps&.select { |r| r.rubygem && r.scope == "development" },
           runtime: deps&.select { |r| r.rubygem && r.scope == "runtime" }
         }
-      }
+      }.merge!(suggest_json)
     end
 
     settings number_of_shards: 1,
@@ -97,6 +90,20 @@ module RubygemSearchable
         .includes(:latest_version, :gem_download)
         .references(:versions)
         .by_downloads
+    end
+
+    private
+
+    def suggest_json
+      {
+        suggest: {
+          input: name,
+          weight: downloads,
+          contexts: {
+            yanked: versions.none?(&:indexed?)
+          }
+        }
+      }
     end
   end
 end

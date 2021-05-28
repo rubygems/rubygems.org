@@ -35,7 +35,8 @@
 
         <div class="header__nav-links-wrap">
           <%= form_tag search_path, class: search_form_class, method: :get do %>
-            <%= search_field_tag :query, params[:query], placeholder: t('.header.search_gem_html'), class: "header__search" %>
+            <%= search_field_tag :query, params[:query], placeholder: t(".header.search_gem_html"), class: "header__search", autocomplete: "off" %>
+            <ul id="suggest" class="suggest-list"></ul>
             <%= label_tag :query do %>
               <span class="t-hidden"><%= t(".header.search_gem_html") %></span>
             <% end %>

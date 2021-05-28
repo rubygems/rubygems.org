@@ -6,16 +6,18 @@
   list-style: none;
   color: #ffffff;
   background-color: rgba(20, 28, 34, 0.8);
-  border-radius: 5px;
 }
+
 .suggest-list > li{
   margin-bottom: 2px;
   padding: 4px;
 }
 .suggest-list > .selected{
   background-color: rgba(233, 87, 63, 0.8);
-  font-weight: bold;
-  border-radius: 4px;
+}
+
+.menu-item:hover {
+  cursor: pointer;
 }
 
 .mobile-nav-is-expanded .suggest-list {

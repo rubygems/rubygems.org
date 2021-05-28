@@ -5,12 +5,7 @@ class AutocompletesTest < SystemTest
   include ESHelper
 
   setup do
-    Capybara.server_port = 3000
-    Capybara.server_host = "localhost"
-    Capybara.app_host = "http://localhost:3000"
-    Capybara.current_driver = :selenium_chrome_headless
-    Capybara.default_max_wait_time = 10
-    Selenium::WebDriver.logger.level = :error # In this version of Capybara, 'deprecated' warn appeears. This line suppress them.
+    headless_chrome_driver
 
     rubygem = create(:rubygem, name: "rubocop")
     create(:version, rubygem: rubygem, indexed: true)
@@ -54,12 +49,12 @@ class AutocompletesTest < SystemTest
 
   test "suggest list doesn't appear with gem not existing" do
     @fill_field.set "ruxyz"
-    assert_all_of_selectors "#home_querySuggestList", visible: :hidden
+    assert_selector ".menu-item", count: 0
   end
 
   test "suggest list doesn't appear unless the search field is focused" do
     find("h1").click
-    assert_all_of_selectors "#home_querySuggestList", visible: :hidden
+    assert_selector ".menu-item", count: 0
   end
 
   test "down arrow key to choose suggestion" do
@@ -72,36 +67,14 @@ class AutocompletesTest < SystemTest
     assert page.has_no_field? "home_query", with: "rubo"
   end
 
-  test "ctrl + n key to choose suggestion" do
-    @fill_field.native.send_keys [:control, "n"]
-    assert page.has_no_field? "home_query", with: "rubo"
-  end
-
-  test "ctrl + p key to choose suggestion" do
-    @fill_field.native.send_keys [:control, "p"]
-    assert page.has_no_field? "home_query", with: "rubo"
-  end
-
-  test "search form should be focused when up from the top of suggestion list" do
-    @fill_field.native.send_keys :down, :up
-    assert page.has_field? "home_query", with: "rubo"
-    assert page.has_no_content? ".selected"
-  end
-
-  test "search form should be focused when down from the bottom of suggestion list" do
-    @fill_field.native.send_keys :up, :down
-    assert page.has_field? "home_query", with: "rubo"
-    assert page.has_no_content? ".selected"
-  end
-
   test "down arrow key should loop" do
     @fill_field.native.send_keys :down, :down, :down, :down
-    assert find(".menu-item", match: :first).matches_css?(".selected")
+    assert find("#suggest-home").all(".menu-item").last.matches_css?(".selected")
   end
 
   test "up arrow key should loop" do
     @fill_field.native.send_keys :up, :up, :up, :up
-    assert find("#home_querySuggestList").all(".menu-item").last.matches_css?(".selected")
+    assert find("#suggest-home").all(".menu-item").first.matches_css?(".selected")
   end
 
   test "mouse hover a suggest item to choose suggestion" do
@@ -116,9 +89,7 @@ class AutocompletesTest < SystemTest
   end
 
   teardown do
-    Capybara.default_max_wait_time = 2
+    Capybara.reset_sessions!
     Capybara.use_default_driver
-    Capybara.default_host
-    Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
   end
 end
