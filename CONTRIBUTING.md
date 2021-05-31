@@ -67,10 +67,10 @@ Follow the instructions below on how to install Bundler and setup the database.
 * Use Rubygems 3.1.5
 * Install bundler: `gem install bundler`
 * Install Elastic Search:
-  * Pull ElasticSearch `6.8.13` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:6.8.13`
+  * Pull ElasticSearch `7.10.1` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:7.10.1`
   * Running Elasticsearch from the command line:
   ```
-  docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" -e "xpack.security.enabled=false" docker.elastic.co/elasticsearch/elasticsearch:6.8.13
+  docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" -e "xpack.security.enabled=false" docker.elastic.co/elasticsearch/elasticsearch:7.10.1
   ```
   * Note that `-e "xpack.security.enabled=false"` disables authentication.
 
@@ -87,10 +87,10 @@ Follow the instructions below on how to install Bundler and setup the database.
 * Use Rubygems 3.1.5
 * Install bundler: `gem install bundler`
 * Install Elastic Search (see the docker installation instructions above):
-  * Pull ElasticSearch `6.8.13` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:6.8.13`
+  * Pull ElasticSearch `7.10.1` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:7.10.1`
   * Running Elasticsearch from the command line:
   ```
-  docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" docker.elastic.co/elasticsearch/elasticsearch:6.8.13
+  docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" docker.elastic.co/elasticsearch/elasticsearch:7.10.1
   ```
 * Install PostgreSQL: `apt-get install postgresql postgresql-server-dev-all`
   * Help to setup database <https://wiki.debian.org/PostgreSql>
