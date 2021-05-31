@@ -35,6 +35,7 @@ es:
   update: actualiza
   try_again: Algo salió mal. Por favor inténtalo nuevamente.
   advanced_search: Búsqueda avanzada
+  authenticate: Autenticar
   activerecord:
     attributes:
       linkset:
@@ -255,8 +256,6 @@ es:
       submit: Restablecer contraseña
       title: Cambiar tu contraseña
       will_email_notice: Te enviaremos el enlace para cambiar tu contraseña por correo electrónico.
-    otp_prompt:
-      authenticate: Autenticar
   multifactor_auths:
     recovery_code_html:
     incorrect_otp: Tu código OTP no es correcto.

@@ -27,6 +27,7 @@ de:
   update: Aktualisieren
   try_again:
   advanced_search:
+  authenticate:
   activerecord:
     attributes:
       linkset:
@@ -247,8 +248,6 @@ de:
       submit: Zurücksetzen des Passworts
       title: Ändere dein Passwort
       will_email_notice: Wir senden dir einen Link damit du dein Passwort ändern kannst.
-    otp_prompt:
-      authenticate:
   multifactor_auths:
     recovery_code_html:
     incorrect_otp:

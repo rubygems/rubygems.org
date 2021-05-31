@@ -27,6 +27,7 @@ zh-TW:
   update: 更新
   try_again: 請再試一次
   advanced_search: 進階搜尋
+  authenticate:
   activerecord:
     attributes:
       linkset:
@@ -247,8 +248,6 @@ zh-TW:
       submit: 更新密碼
       title: 修改密碼
       will_email_notice: 系統將會寄一封包含重設密碼連結的電子郵件給你
-    otp_prompt:
-      authenticate:
   multifactor_auths:
     recovery_code_html:
     incorrect_otp:

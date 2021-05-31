@@ -32,6 +32,7 @@ pt-BR:
   update: Atualizar
   try_again: Algo deu errado. Por favor, tente novamente.
   advanced_search: Busca avançada
+  authenticate:
   activerecord:
     attributes:
       linkset:
@@ -251,9 +252,7 @@ pt-BR:
     new:
       submit: Resetar senha
       title: Alterar senha
-      will_email_notice: Você irá receber um email com o link para atualizar sua senha.
-    otp_prompt:
-      authenticate:
+      will_email_notice: Você vai receber um email com o link para atualizar sua senha.
   multifactor_auths:
     recovery_code_html:
     incorrect_otp:

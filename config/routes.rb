@@ -173,7 +173,8 @@ Rails.application.routes.draw do
     # Clearance Overrides and Additions
 
     resource :email_confirmations, only: %i[new create] do
-      get 'confirm/:token', to: 'email_confirmations#update', as: :update
+      get 'confirm', to: 'email_confirmations#update', as: :update
+      post 'confirm', to: 'email_confirmations#mfa_update', as: :mfa_update
       patch 'unconfirmed'
     end
 

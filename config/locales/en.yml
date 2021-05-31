@@ -35,6 +35,7 @@ en:
   update: Update
   try_again: Something went wrong. Please try again.
   advanced_search: Advanced Search
+  authenticate: Authenticate
   activerecord:
     attributes:
       linkset:
@@ -255,8 +256,6 @@ en:
       submit: Reset password
       title: Change your password
       will_email_notice: We will email you a link to change your password.
-    otp_prompt:
-      authenticate: Authenticate
   multifactor_auths:
     recovery_code_html: 'You can use a valid  <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#using-recovery-codes-and-re-setup-a-previously-enabled-mfa", class="t-link">recovery code</a> if you have lost access to your MFA device.'
     incorrect_otp: Your OTP code is incorrect.

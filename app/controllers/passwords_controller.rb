@@ -3,7 +3,8 @@ class PasswordsController < Clearance::PasswordsController
 
   def edit
     if @user.mfa_enabled?
-      render template: "passwords/otp_prompt"
+      @form_url = mfa_edit_user_password_url(@user, token: @user.confirmation_token)
+      render template: "multifactor_auths/otp_prompt"
     else
       render template: "passwords/edit"
     end
@@ -27,8 +28,9 @@ class PasswordsController < Clearance::PasswordsController
     if @user.mfa_enabled? && @user.otp_verified?(params[:otp])
       render template: "passwords/edit"
     else
+      @form_url       = mfa_edit_user_password_url(@user, token: @user.confirmation_token)
       flash.now.alert = t("multifactor_auths.incorrect_otp")
-      render template: "passwords/otp_prompt", status: :unauthorized
+      render template: "multifactor_auths/otp_prompt", status: :unauthorized
     end
   end
 

@@ -53,4 +53,18 @@ class EmailConfirmationTest < SystemTest
     Delayed::Worker.new.work_off
     assert_empty Delayed::Job.all
   end
+
+  test "requesting confirmation mail with mfa enabled" do
+    @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+    request_confirmation_mail @user.email
+
+    link = last_email_link
+    assert_not_nil link
+    visit link
+
+    fill_in "otp", with: ROTP::TOTP.new(@user.mfa_seed).now
+    click_button "Authenticate"
+
+    assert page.has_content? "Sign out"
+  end
 end

@@ -27,6 +27,7 @@ fr:
   update: Mise à jour
   try_again: Une erreur est survenue. Veuillez réessayer.
   advanced_search: Recherche avancée
+  authenticate:
   activerecord:
     attributes:
       linkset:
@@ -247,8 +248,6 @@ fr:
       submit: Réinitialisez votre mot de passe
       title: Changement de mot de passe
       will_email_notice: Nous vous enverrons un email pour changer votre mot de passe.
-    otp_prompt:
-      authenticate:
   multifactor_auths:
     recovery_code_html:
     incorrect_otp: Votre clé OTP est incorrecte.
