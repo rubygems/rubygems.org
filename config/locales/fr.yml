@@ -250,6 +250,7 @@ fr:
     otp_prompt:
       authenticate:
   multifactor_auths:
+    recovery_code_html:
     incorrect_otp: Votre clé OTP est incorrecte.
     otp_code: clé OTP
     require_mfa_disabled: Votre authentification multifacteur a été activée. Vous devez d'abord la désactiver.
@@ -269,7 +270,9 @@ fr:
     recovery:
       continue: Continuer
       title: Codes de récupération
-      note: "Vous DEVEZ garder les codes de récupération en sécurité pour ne pas perdre votre compte. Chacun des codes peut être utilisé une fois si vous perdez votre authentificateur"
+      copy:
+      saved:
+      note_html:
     destroy:
       success: Vous avez désactivé l'authentification multifacteur.
     update:

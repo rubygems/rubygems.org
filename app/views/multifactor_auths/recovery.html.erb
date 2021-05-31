@@ -1,11 +1,18 @@
-<% @title = t('.title') %>
+<% @title = t(".title") %>
 
 <div class="t-body">
+  <p><%= t ".note_html" %></p>
+
   <ul id="recovery-code-list">
     <% current_user.mfa_recovery_codes.each do |code| %>
       <li class="recovery-code-list__item"><%= code %></li>
     <% end %>
   </ul>
-  <p><%= t '.note' %></p>
-  <p><%= link_to t('.continue'), edit_settings_path, class: "t-link--arrow" %></p>
+
+  <p><%= link_to t(".copy"), "#/", class: "t-link--bold recovery__copy__icon", data: { "clipboard-target": "#recovery-code-list" } %></p>
+  <div class = "form__checkbox__item">
+    <%= check_box_tag "ack", "ack", false, class: "form__checkbox__input" %>
+    <%= label_tag "checked", t(".saved"), class: "form__checkbox__label" %>
+  </div>
+  <%= button_to t(".continue"), edit_settings_path, method: "get", class: "form__submit form__submit--no-hover", disabled: true %>
 </div>

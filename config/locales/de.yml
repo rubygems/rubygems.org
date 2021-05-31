@@ -250,6 +250,7 @@ de:
     otp_prompt:
       authenticate:
   multifactor_auths:
+    recovery_code_html:
     incorrect_otp:
     otp_code:
     require_mfa_disabled:
@@ -269,7 +270,9 @@ de:
     recovery:
       continue:
       title:
-      note:
+      copy:
+      saved:
+      note_html:
     destroy:
       success:
     update:

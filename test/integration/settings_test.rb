@@ -3,8 +3,7 @@ require "test_helper"
 class SettingsTest < SystemTest
   setup do
     @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "nick1", mail_fails: 1)
-
-    page.driver.browser.set_cookie("mfa_feature=true")
+    headless_chrome_driver
   end
 
   def sign_in
@@ -42,7 +41,9 @@ class SettingsTest < SystemTest
 
     assert page.has_content? "Recovery codes"
 
-    click_link "Continue"
+    click_link "[ copy ]"
+    check "ack"
+    click_button "Continue"
 
     assert page.has_content? "You have enabled multifactor authentication."
   end
@@ -96,10 +97,18 @@ class SettingsTest < SystemTest
     assert page.has_content? "Recovery codes"
 
     recoveries = page.find_by_id("recovery-code-list").text.split
-    click_link "Continue"
+
+    click_link "[ copy ]"
+    check "ack"
+    click_button "Continue"
     page.fill_in "otp", with: recoveries.sample
     change_auth_level "Disabled"
 
     assert page.has_content? "You have not yet enabled multifactor authentication."
+  end
+
+  teardown do
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
   end
 end
