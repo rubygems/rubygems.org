@@ -302,9 +302,9 @@ de:
         title: Zurücksetzen des Passworts
       mfa:
         multifactor_auth:
-        disabled:
+        disabled_html:
         go_settings:
-        enabled:
+        enabled_html:
         update:
         level:
           title:

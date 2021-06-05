@@ -302,9 +302,9 @@ zh-CN:
         title: 重置密码
       mfa:
         multifactor_auth:
-        disabled:
+        disabled_html:
         go_settings:
-        enabled:
+        enabled_html:
         update:
         level:
           title:

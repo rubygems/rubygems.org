@@ -310,9 +310,9 @@ es:
         title: Reestablecer contraseña
       mfa:
         multifactor_auth: Autenticación de múltiples factores
-        disabled: Todavía no activaste la Autenticación de Múltiples Factores.
+        disabled_html:
         go_settings: Registrar un nuevo dispositivo
-        enabled: Has activado la Autenticación de Múltiples Factores. Por favor ingresa el código OTP desde tu autenticador o alguna de tus claves de recuperación para cambiar tu nivel de Autenticación de Múltiples Factores para desactivarla.
+        enabled_html:
         update: Actualizar
         level:
           title: Nivel de Autenticación de Múltiples Factores

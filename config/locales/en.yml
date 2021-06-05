@@ -337,15 +337,16 @@ en:
         title: Reset password
       mfa:
         multifactor_auth: Multifactor authentication
-        disabled: You have not yet enabled multifactor authentication.
+        disabled_html: You have not yet enabled multifactor authentication. Please refer to <a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems MFA guide</a> for more information on these levels.
         go_settings: Register a new device
-        enabled: You have enabled multifactor authentication. Please input your OTP from your authenticator or one of your active recovery codes to change your MFA level or disable it.
+        enabled_html: You have enabled multifactor authentication. Please input your OTP from your authenticator or one of your active recovery codes to change your MFA level or disable it.
+          Refer to <a target="_blank" href="https://guides.rubygems.org/setting-up-multifactor-authentication">RubyGems MFA guide</a> for more information on these levels.
         update: Update
         level:
           title: MFA Level
           disabled: Disabled
           ui_only: UI Only
-          ui_and_api: UI and API
+          ui_and_api: UI and API (Recommended)
           ui_and_gem_signin: UI and gem signin
   profiles:
     edit:

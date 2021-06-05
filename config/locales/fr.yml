@@ -302,9 +302,9 @@ fr:
         title: Renvoi de mot de passe
       mfa:
         multifactor_auth: Authentification Multifacteur
-        disabled: Vous n'avez pas encore activé l'authentification multifacteur.
+        disabled_html:
         go_settings: Enregistrer un nouvel appareil
-        enabled: Vous avez activé l'authentification multifacteur. Veuillez entrer l'OTP de votre authentificateur ou un de vos codes de récupération pour le désactiver.
+        enabled_html:
         update:
         level:
           title:
