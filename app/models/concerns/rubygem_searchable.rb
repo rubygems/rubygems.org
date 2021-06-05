@@ -44,7 +44,7 @@ module RubygemSearchable
           development: deps&.select { |r| r.rubygem && r.scope == "development" },
           runtime: deps&.select { |r| r.rubygem && r.scope == "runtime" }
         }
-      }
+      }.merge!(suggest_json)
     end
 
     settings number_of_shards: 1,
@@ -69,6 +69,10 @@ module RubygemSearchable
       indexes :description, type: "text", analyzer: "english" do
         indexes :raw, analyzer: "simple"
       end
+      instance_eval do
+        context = { name: "yanked", type: "category" }
+        @mapping[:suggest] = { type: "completion", contexts: context }
+      end
       indexes :yanked, type: "boolean"
       indexes :downloads, type: "integer"
       indexes :updated, type: "date"
@@ -86,6 +90,20 @@ module RubygemSearchable
         .includes(:latest_version, :gem_download)
         .references(:versions)
         .by_downloads
+    end
+
+    private
+
+    def suggest_json
+      {
+        suggest: {
+          input: name,
+          weight: downloads,
+          contexts: {
+            yanked: versions.none?(&:indexed?)
+          }
+        }
+      }
     end
   end
 end
