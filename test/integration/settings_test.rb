@@ -45,7 +45,8 @@ class SettingsTest < SystemTest
     click_link "Continue"
 
     assert page.has_content? "You have enabled multifactor authentication."
-    assert page.has_content? "https://guides.rubygems.org/setting-up-multifactor-authentication"
+    css = %(a[href="https://guides.rubygems.org/setting-up-multifactor-authentication"])
+    assert page.has_css?(css, visible: true)
   end
 
   test "enabling multifactor authentication with invalid otp" do
@@ -71,7 +72,8 @@ class SettingsTest < SystemTest
     change_auth_level "Disabled"
 
     assert page.has_content? "You have not yet enabled multifactor authentication."
-    assert page.has_content? "https://guides.rubygems.org/setting-up-multifactor-authentication"
+    css = %(a[href="https://guides.rubygems.org/setting-up-multifactor-authentication"])
+    assert page.has_css?(css)
   end
 
   test "disabling multifactor authentication with invalid otp" do

@@ -300,9 +300,9 @@ nl:
         title: Reset wachtwoord
       mfa:
         multifactor_auth:
-        disabled:
+        disabled_html:
         go_settings:
-        enabled:
+        enabled_html:
         update:
         level:
           title:
