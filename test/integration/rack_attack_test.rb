@@ -61,13 +61,13 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
     context "owners requests" do
       setup do
-        cookies[:remember_token] = @user.remember_token
+        post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
         @rubygem = create(:rubygem)
         create(:ownership, :unconfirmed, rubygem: @rubygem, user: @user)
       end
 
       teardown do
-        cookies[:remember_token] = nil
+        delete sign_out_path
       end
 
       should "allow resending ownership confirmation" do
@@ -260,7 +260,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     should "throttle profile update" do
-      cookies[:remember_token] = @user.remember_token
+      post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
 
       exceed_limit_for("clearance/ip")
       patch "/profile",
@@ -270,7 +270,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     should "throttle profile delete" do
-      cookies[:remember_token] = @user.remember_token
+      post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
 
       exceed_limit_for("clearance/ip")
       delete "/profile",
@@ -281,13 +281,13 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
     context "owners requests" do
       setup do
-        cookies[:remember_token] = @user.remember_token
+        post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
         @rubygem = create(:rubygem)
         create(:ownership, :unconfirmed, rubygem: @rubygem, user: @user)
       end
 
       teardown do
-        cookies[:remember_token] = nil
+        delete sign_out_path
       end
 
       should "throttle ownership confirmation resend" do
@@ -485,7 +485,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         end
 
         teardown do
-          cookies[:remember_token] = nil
+          delete sign_out_path
         end
 
         should "throttle resending ownership confirmation" do
@@ -519,7 +519,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
   end
 
   def set_owners_session(_rubygem, user)
-    cookies[:remember_token] = user.remember_token
+    post session_path(session: { who: user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
     post authenticate_session_path(verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD })
   end
 end

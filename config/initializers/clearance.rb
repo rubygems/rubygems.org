@@ -7,6 +7,7 @@ Clearance.configure do |config|
   config.rotate_csrf_on_sign_in = true
   config.cookie_expiration = ->(_cookies) { 2.weeks.from_now.utc }
   config.routes = false
+  config.signed_cookie = :migrate
 end
 
 class Clearance::Session

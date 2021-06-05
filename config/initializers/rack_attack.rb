@@ -152,7 +152,8 @@ class Rack::Attack
 
   throttle("owners/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
     if protected_route?(protected_ui_owners_actions, req.path, req.request_method)
-      User.find_by_remember_token(req.cookies["remember_token"])&.email.presence
+      action_dispatch_req = ActionDispatch::Request.new(req.env)
+      User.find_by_remember_token(action_dispatch_req.cookie_jar.signed["remember_token"])&.email.presence
     end
   end
 
