@@ -3,7 +3,7 @@ class Api::V1::SearchesController < Api::BaseController
   before_action :verify_query_string, only: %i[show autocomplete]
 
   def show
-    @rubygems = ElasticSearcher.new(query_params, page: @page).search(api: true)
+    @rubygems = ElasticSearcher.new(query_params, page: @page).api_search
     respond_to do |format|
       format.json { render json: @rubygems }
       format.yaml { render yaml: @rubygems }

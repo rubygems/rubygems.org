@@ -4,33 +4,35 @@ class ElasticSearcher
     @page   = page
   end
 
-  def search(api: false)
-    @api = api
+  def search
     result = Rubygem.__elasticsearch__.search(search_definition).page(@page)
     result.response # ES query is triggered here to allow fallback. avoids lazy loading done in the view
-    @api ? result.map(&:_source) : [nil, result]
+    [nil, result]
   rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Elasticsearch::Transport::Transport::Error => e
     result = Rubygem.legacy_search(@query).page(@page)
-    @api ? result : [error_msg(e), result]
+    [error_msg(e), result]
+  end
+
+  def api_search
+    result = Rubygem.__elasticsearch__.search(search_definition(for_api: true)).page(@page)
+    result.map(&:_source)
+  rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Elasticsearch::Transport::Transport::Error
+    Rubygem.legacy_search(@query).page(@page)
   end
 
   def suggestions
     result = Rubygem.__elasticsearch__.search(suggestions_definition).page(@page)
     result = result.response.suggest[:completion_suggestion][0][:options]
-    names = []
-    result.each do |gem|
-      names << gem[:_source].name
-    end
-    names
+    result.map { |gem| gem[:_source].name }
   rescue Faraday::ConnectionFailed, Faraday::TimeoutError, Elasticsearch::Transport::Transport::Error
     Array(nil)
   end
 
   private
 
-  def search_definition # rubocop:disable Metrics/MethodLength
+  def search_definition(for_api: false) # rubocop:disable Metrics/MethodLength
     query_str = @query
-    source_array = @api ? api_source : ui_source
+    source_array = for_api ? api_source : ui_source
 
     Elasticsearch::DSL::Search.search do
       query do
