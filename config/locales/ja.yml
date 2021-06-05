@@ -3,9 +3,17 @@ ja:
   failure_when_forbidden: URLを確認するか、再試行して下さい。
   feed_latest: RubyGems.org | 最新のGemの一覧
   feed_subscribed: RubyGems.org | 購読したGemの一覧
-  footer_about_html:
-  footer_sponsors_html:
-  footer_join_rt_html:
+  footer_about_html: RubyGems.orgはRubyコミュニティのGemのホスティングサービスです。
+    すぐに<a href="%{publish_docs}">あなたが実装したGemを公開したり</a><a href="%{install_docs}">インストールしたり</a>することができます。
+    <a href="%{api_docs}">API</a>を使用して<a href="%{gem_list}">利用可能なGem</a>についてさらに探すことができます。
+    <a href="%{contributing_docs}">コントリビューターとなって</a>あなたのサイトをよりよくしてください。
+  footer_sponsors_html: RubyGems.orgは大きなRubyコミュニティとのパートナーシップを通じて作られました。
+    <a href="https://www.fastly.com/">Fastly</a>が帯域を提供してくださり、CDNサポートをしてくださっています。
+    <a href="http://www.rubycentral.org/">Ruby Central</a>がインフラの費用を賄ってくださり、
+    <a href="https://rubytogether.org/?source=rubygems">Ruby Together</a>が開発や運用の費用を出資してくださっています。
+    <a href="%{sponsors_page}">スポンサーや一緒に働く方法について詳細を確認する</a>。
+  footer_join_rt_html: RubyGems.orgをすべての人がスムーズに使えるよう続けていくために、開発者の時間を賄うためのあなたの援助が必要です。
+    <a href="https://rubytogether.org/join?source=rubygems">Ruby Togetherに参加する</a>。
   form_disable_with: お待ち下さい...
   invalid_page:
   locale_name: 日本語
