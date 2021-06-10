@@ -14,8 +14,8 @@ zh-TW:
   api_key_forbidden:
   please_sign_up: 無法存取，請先在 https://rubygems.org 上註冊帳號
   please_sign_in:
-  otp_incorrect:
-  otp_missing:
+  otp_incorrect: 你的 OTP 碼 不正確。請檢查後再試一次。
+  otp_missing: 你已啟用多重要素驗證，但是沒有輸入 OTP 碼。請輸入後再試一次。
   sign_in: 登入
   sign_up: 註冊
   dependency_list:
@@ -250,32 +250,32 @@ zh-TW:
       will_email_notice: 系統將會寄一封包含重設密碼連結的電子郵件給你
   multifactor_auths:
     recovery_code_html:
-    incorrect_otp:
-    otp_code:
-    require_mfa_disabled:
-    require_mfa_enabled:
+    incorrect_otp: 你的 OTP 碼 不正確。
+    otp_code: OTP 碼
+    require_mfa_disabled: 你的多重要素驗證已啟用，請先停用。
+    require_mfa_enabled: 你的多重要素驗證已停用，請先啟用。
     new:
-      title:
-      scan_prompt:
-      otp_prompt:
-      confirm:
-      enable:
-      account:
-      key:
-      time_based:
+      title: 啟用多重要素驗證
+      scan_prompt: 請用你的驗證裝置掃描 QR-code。如果你沒辦法掃描，手動輸入下面的資料。
+      otp_prompt: 輸入驗證裝置上的數字來繼續。
+      confirm: 我已把復原碼收在安全的地方。
+      enable: 啟用
+      account: "帳號: %{account}"
+      key: "金鑰: %{key}"
+      time_based: "基於時間的: 是"
     create:
-      qrcode_expired:
-      success:
+      qrcode_expired: QR-code 和金鑰已過期。請再重新註冊裝置。
+      success: 你已成功啟用多重要素驗證。
     recovery:
-      continue:
-      title:
+      continue: 繼續
+      title: 復原碼
       copy:
       saved:
       note_html:
     destroy:
-      success:
+      success: 你已成功停用多重要素驗證。
     update:
-      success:
+      success: 你已成功修改多重驗證等級。
   notifiers:
     update:
       success:
@@ -326,16 +326,16 @@ zh-TW:
       reset_password:
         title: 重設密碼
       mfa:
-        multifactor_auth:
+        multifactor_auth: 多重要素驗證
         disabled_html:
-        go_settings:
+        go_settings: 註冊新裝置
         enabled_html:
-        update:
+        update: 更新
         level:
-          title:
-          disabled:
-          ui_only:
-          ui_and_api:
+          title: 多重驗證等級
+          disabled: 停用
+          ui_only: 只有使用者介面
+          ui_and_api: 使用者介面與API
           ui_and_gem_signin:
   profiles:
     edit:
