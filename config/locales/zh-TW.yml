@@ -262,7 +262,7 @@ zh-TW:
       enable: 啟用
       account: "帳號: %{account}"
       key: "金鑰: %{key}"
-      time_based: "Time based: 是"
+      time_based: "基於時間的: 是"
     create:
       qrcode_expired: QR-code 和金鑰已過期。請再重新註冊裝置。
       success: 你已成功啟用多重要素驗證。
