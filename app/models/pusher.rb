@@ -43,7 +43,14 @@ class Pusher
   end
 
   def pull_spec
-    @spec = Gem::Package.new(body).spec
+    # Verify that the gem signatures match the certificate chain (if present)
+    policy = Gem::Security::LowSecurity.dup
+    # Silence warnings from the verification
+    stream = StringIO.new
+    policy.ui = Gem::StreamUI.new(stream, stream, stream, false)
+
+    package = Gem::Package.new(body, policy)
+    @spec = package.spec
   rescue StandardError => e
     notify <<-MSG.strip_heredoc, 422
       RubyGems.org cannot process this gem.
@@ -80,7 +87,8 @@ class Pusher
                                      platform: spec.original_platform.to_s,
                                      size: size,
                                      sha256: sha256,
-                                     pusher: user
+                                     pusher: user,
+                                     cert_chain: spec.cert_chain
 
     true
   end
