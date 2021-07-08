@@ -20,6 +20,15 @@
             class: "t-link--black"
           )
         %>
+        <% if @user.verified %>
+          <%=
+            image_tag(
+              "rubygems_logo_black.png",
+              size: 40,
+              title: 'Verified User'
+            )
+          %>
+        <% end %>
       </h1>
 
       <% if @user == current_user %>

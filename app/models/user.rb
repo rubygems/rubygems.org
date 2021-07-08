@@ -249,6 +249,10 @@ class User < ApplicationRecord
     end
   end
 
+  def verify!
+    update!(verified: true)
+  end
+
   private
 
   def verify_digit_otp(seed, otp)
