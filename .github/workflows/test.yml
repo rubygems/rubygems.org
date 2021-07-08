@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         rubygems_version: ['3.1.5', 'latest']
-        ruby_version: ['2.7.2']
+        ruby_version: ['2.7.4']
     name: Rails tests (Ruby ${{ matrix.ruby_version }}, RubyGems ${{ matrix.rubygems_version }})
     runs-on: ubuntu-18.04
     env:

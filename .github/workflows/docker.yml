@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-18.04
     env:
       RUBYGEMS_VERSION: 3.1.5
-      RUBY_VERSION: 2.7.2
+      RUBY_VERSION: 2.7.4
     steps:
     - uses: actions/checkout@v2
     - name: Install and start services (needed for image test)
