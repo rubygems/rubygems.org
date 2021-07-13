@@ -84,9 +84,6 @@ class RubygemsControllerTest < ActionController::TestCase
         assert page.has_selector?("a[href='#{rubygem_path(g)}']")
       end
     end
-    should "display 'gems' in pagination summary" do
-      assert page.has_content?("all #{@gems.count} gems")
-    end
   end
 
   context "On GET to index as an atom feed" do
