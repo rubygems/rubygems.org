@@ -30,6 +30,7 @@ module Patterns
     mruby
     ruby
     rubygems
+    update_rubygems
     install
     uninstall
     sidekiq-pro
