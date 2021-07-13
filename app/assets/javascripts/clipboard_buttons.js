@@ -1,5 +1,5 @@
 $(function() {
-  var clipboard = new Clipboard('.gem__code__icon');
+  var clipboard = new ClipboardJS('.gem__code__icon');
   var copyTooltip = $('.gem__code__tooltip--copy');
   var copiedTooltip = $('.gem__code__tooltip--copied');
   var copyButtons = $('.gem__code__icon');

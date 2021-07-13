@@ -4,7 +4,7 @@ function popUp (e) {
 };
 
 if($("#recovery-code-list").length){
-  new Clipboard(".recovery__copy__icon");
+  new ClipboardJS(".recovery__copy__icon");
 
   $(".recovery__copy__icon").on("click", function(e){
     $(this).text("[ copied ]");
