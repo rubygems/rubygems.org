@@ -13,8 +13,6 @@ class OwnerTest < SystemTest
     ActionMailer::Base.deliveries.clear
   end
 
-  teardown { reset_session! }
-
   test "adding owner via UI with email" do
     visit_ownerships_page
 
