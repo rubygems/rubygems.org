@@ -10,7 +10,7 @@
 # Rails.application.config.active_record.has_many_inversing = true
 
 # Track Active Storage variants in the database.
-# Rails.application.config.active_storage.track_variants = true
+Rails.application.config.active_storage.track_variants = true
 
 # Apply random variation to the delay when retrying failed jobs.
 # Rails.application.config.active_job.retry_jitter = 0.15
@@ -48,10 +48,10 @@ Rails.application.config.action_dispatch.cookies_same_site_protection = :lax
 # Rails.application.config.action_view.form_with_generates_remote_forms = false
 
 # Set the default queue name for the analysis job to the queue adapter default.
-# Rails.application.config.active_storage.queues.analysis = nil
+Rails.application.config.active_storage.queues.analysis = nil
 
 # Set the default queue name for the purge job to the queue adapter default.
-# Rails.application.config.active_storage.queues.purge = nil
+Rails.application.config.active_storage.queues.purge = nil
 
 # Set the default queue name for the incineration job to the queue adapter default.
 # Rails.application.config.action_mailbox.queues.incineration = nil
