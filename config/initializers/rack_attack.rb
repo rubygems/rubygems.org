@@ -24,14 +24,15 @@ class Rack::Attack
   # Key: "rack::attack:#{Time.now.to_i/:period}:logins/ip:#{req.ip}"
 
   protected_ui_actions = [
-    { controller: "sessions",            action: "create" },
-    { controller: "users",               action: "create" },
-    { controller: "passwords",           action: "edit" },
-    { controller: "sessions",            action: "authenticate" },
-    { controller: "passwords",           action: "create" },
-    { controller: "profiles",            action: "update" },
-    { controller: "profiles",            action: "destroy" },
-    { controller: "email_confirmations", action: "create" }
+    { controller: "sessions",             action: "create" },
+    { controller: "users",                action: "create" },
+    { controller: "passwords",            action: "edit" },
+    { controller: "sessions",             action: "authenticate" },
+    { controller: "passwords",            action: "create" },
+    { controller: "profiles",             action: "update" },
+    { controller: "profiles",             action: "destroy" },
+    { controller: "email_confirmations",  action: "create" },
+    { controller: "reverse_dependencies", action: "index" }
   ]
 
   protected_ui_mfa_actions = [
