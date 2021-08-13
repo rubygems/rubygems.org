@@ -173,6 +173,14 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
           assert_response :ok
         end
+
+        should "allow reverse_dependencies index" do
+          rubygem = create(:rubygem, name: "test", number: "0.0.1")
+          get "/gems/#{rubygem.name}/reverse_dependencies",
+            headers: { REMOTE_ADDR: @ip_address }
+
+          assert_response :ok
+        end
       end
 
       context "api requests" do
@@ -274,6 +282,15 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
       exceed_limit_for("clearance/ip")
       delete "/profile",
+        headers: { REMOTE_ADDR: @ip_address }
+
+      assert_response :too_many_requests
+    end
+
+    should "throttle reverse_dependencies index" do
+      exceed_limit_for("clearance/ip")
+      rubygem = create(:rubygem, name: "test", number: "0.0.1")
+      get "/gems/#{rubygem.name}/reverse_dependencies",
         headers: { REMOTE_ADDR: @ip_address }
 
       assert_response :too_many_requests
