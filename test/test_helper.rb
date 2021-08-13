@@ -70,6 +70,8 @@ Capybara.always_include_port = true
 
 class SystemTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
+
+  teardown { reset_session! }
 end
 
 Shoulda::Matchers.configure do |config|

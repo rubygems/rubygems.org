@@ -15,6 +15,4 @@ class LocaleTest < SystemTest
     click_link "Deutsch"
     assert_equal "de", page.find("html")[:lang]
   end
-
-  teardown { reset_session! }
 end

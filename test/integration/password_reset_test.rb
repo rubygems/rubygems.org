@@ -13,9 +13,6 @@ class PasswordResetTest < SystemTest
     @user = create(:user, handle: nil)
   end
 
-  # clears session[:password_reset_token] set in edit action
-  teardown { reset_session! }
-
   def forgot_password_with(email)
     visit sign_in_path
 
