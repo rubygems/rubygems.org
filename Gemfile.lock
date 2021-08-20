@@ -144,9 +144,9 @@ GEM
     elasticsearch-api (7.5.0)
       multi_json
     elasticsearch-dsl (0.1.10)
-    elasticsearch-model (7.1.1)
+    elasticsearch-model (7.2.0)
       activesupport (> 3)
-      elasticsearch (> 1)
+      elasticsearch (~> 7)
       hashie
     elasticsearch-rails (7.2.0)
     elasticsearch-transport (7.5.0)
