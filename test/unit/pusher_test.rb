@@ -85,7 +85,12 @@ class PusherTest < ActiveSupport::TestCase
     should "not be able to pull spec with metadata containing bad ruby objects" do
       @gem = gem_file("exploit.gem")
       @cutter = Pusher.new(@user, @gem)
-      @cutter.pull_spec
+      out, err = capture_io do
+        @cutter.pull_spec
+      end
+
+      assert_equal "", out
+      assert_equal("Exception while verifying \n", err)
       assert_nil @cutter.spec
       assert_match(/RubyGems\.org cannot process this gem/, @cutter.message)
       assert_match(/ActionController::Routing::RouteSet::NamedRouteCollection/, @cutter.message)
@@ -108,8 +113,13 @@ class PusherTest < ActiveSupport::TestCase
     should "not be able to save a gem if the date is not valid" do
       @gem = gem_file("bad-date-1.0.0.gem")
       @cutter = Pusher.new(@user, @gem)
-      @cutter.process
-      assert_match(/exception while verifying: mon out of range/, @cutter.message)
+      out, err = capture_io do
+        @cutter.process
+      end
+
+      assert_equal "", out
+      assert_equal("Exception while verifying \n", err)
+      assert_match(/mon out of range/, @cutter.message)
       assert_equal @cutter.code, 422
     end
 
@@ -117,7 +127,12 @@ class PusherTest < ActiveSupport::TestCase
       ["1.0.0", "2.0.0", "3.0.0", "4.0.0"].each do |version|
         @gem = gem_file("dos-#{version}.gem")
         @cutter = Pusher.new(@user, @gem)
-        @cutter.pull_spec
+        out, err = capture_io do
+          @cutter.pull_spec
+        end
+
+        assert_equal "", out
+        assert_equal("Exception while verifying \n", err)
         assert_nil @cutter.spec
         assert_includes @cutter.message, %(RubyGems.org cannot process this gem)
         assert_includes @cutter.message, %(Tried to load unspecified class: Symbol)
