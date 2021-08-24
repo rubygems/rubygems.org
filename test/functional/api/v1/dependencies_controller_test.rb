@@ -120,7 +120,7 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
   # TOO MANY GEMS:
   context "On GET to index --> with gems --> JSON" do
     setup do
-      gems = Array.new(300) { create(:rubygem) }.join(",")
+      gems = Array.new(301) { create(:rubygem) }.join(",")
       get :index, params: { gems: gems }, format: "json"
     end
 
