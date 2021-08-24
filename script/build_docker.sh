@@ -18,7 +18,11 @@ echo "$GITHUB_SHA" > REVISION
 # and must be lowercase
 GITHUB_REPOSITORY=$(echo "$GITHUB_REPOSITORY" | tr '[:upper:]' '[:lower:]')
 
-docker build -t quay.io/$GITHUB_REPOSITORY:$GITHUB_SHA --build-arg RUBYGEMS_VERSION=$RUBYGEMS_VERSION .
+docker buildx build --cache-from=type=local,src=/tmp/.buildx-cache \
+  --cache-to=mode=max,type=local,dest=/tmp/.buildx-cache-new \
+  --output type=docker \
+  -t quay.io/$GITHUB_REPOSITORY:$GITHUB_SHA \
+  --build-arg RUBYGEMS_VERSION=$RUBYGEMS_VERSION .
 
 docker run -e RAILS_ENV=production -e SECRET_KEY_BASE=1234 -e DATABASE_URL=postgresql://localhost \
   --net host quay.io/$GITHUB_REPOSITORY:$GITHUB_SHA \
