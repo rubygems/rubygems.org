@@ -22,7 +22,7 @@ class SendgridEvent < ApplicationRecord
   end
 
   def self.process_later(payload)
-    return if where(sendgrid_id: payload[:sg_event_id]).exists?
+    return if exists?(sendgrid_id: payload[:sg_event_id])
 
     transaction do
       event = create!(

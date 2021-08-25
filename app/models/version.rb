@@ -6,17 +6,19 @@ class Version < ApplicationRecord
   belongs_to :rubygem, touch: true
   has_many :dependencies, -> { order("rubygems.name ASC").includes(:rubygem) }, dependent: :destroy, inverse_of: "version"
   has_one :gem_download, inverse_of: :version, dependent: :destroy
-  belongs_to :pusher, class_name: "User", foreign_key: "pusher_id", inverse_of: false, optional: true
+  belongs_to :pusher, class_name: "User", inverse_of: false, optional: true
 
-  before_save :update_prerelease, if: :number_changed?
   before_validation :full_nameify!
+  before_save :update_prerelease, if: :number_changed?
+  # TODO: Remove this once we move to GemDownload only
+  after_create :create_gem_download
   after_save :reorder_versions, if: -> { saved_change_to_indexed? || saved_change_to_id? }
   after_save :refresh_rubygem_indexed, if: -> { saved_change_to_indexed? || saved_change_to_id? }
 
   serialize :licenses
   serialize :requirements
 
-  validates :number, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: /\A#{Gem::Version::VERSION_PATTERN}\z/ }
+  validates :number, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: /\A#{Gem::Version::VERSION_PATTERN}\z/o }
   validates :platform, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: Rubygem::NAME_PATTERN }
   validates :full_name, presence: true, uniqueness: { case_sensitive: false }
   validates :rubygem, presence: true
@@ -40,8 +42,6 @@ class Version < ApplicationRecord
   end
   attribute :authors, AuthorType.new
 
-  # TODO: Remove this once we move to GemDownload only
-  after_create :create_gem_download
   def create_gem_download
     GemDownload.create!(count: 0, rubygem_id: rubygem_id, version_id: id)
   end
@@ -129,7 +129,7 @@ class Version < ApplicationRecord
 
   # This method returns the new versions for brand new rubygems
   def self.new_pushed_versions(limit = 5)
-    subquery = <<-SQL
+    subquery = <<-SQL.squish
       versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions
         GROUP BY versions.rubygem_id HAVING COUNT(versions.rubygem_id) = 1
         ORDER BY versions.rubygem_id DESC LIMIT :limit)
@@ -139,7 +139,7 @@ class Version < ApplicationRecord
   end
 
   def self.just_updated(limit = 5)
-    subquery = <<-SQL
+    subquery = <<-SQL.squish
       versions.rubygem_id IN (SELECT versions.rubygem_id
                                 FROM versions
                             WHERE versions.indexed = 'true'

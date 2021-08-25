@@ -79,7 +79,7 @@ module RubygemSearchable
     end
 
     def self.legacy_search(query)
-      conditions = <<-SQL
+      conditions = <<-SQL.squish
         versions.indexed and
           (UPPER(name) LIKE UPPER(:query) OR
            UPPER(TRANSLATE(name, :match, :replace)) LIKE UPPER(:query))
