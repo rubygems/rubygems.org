@@ -55,9 +55,9 @@ group :development, :test do
   gem "toxiproxy", "~> 1.0.0"
 
   gem "brakeman", require: false
-  gem "rubocop", "0.89.1", require: false
-  gem "rubocop-rails", "2.5.2", require: false
-  gem "rubocop-performance", "1.7.1", require: false
+  gem "rubocop", "0.93.1", require: false
+  gem "rubocop-rails", "2.9.1", require: false
+  gem "rubocop-performance", "1.10.2", require: false
 end
 
 group :development do
