@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gem "rails", "~> 6.1.0"
 gem "rails-i18n"
 
-gem "aws-sdk", "~> 2.2"
+gem "aws-sdk-s3", "~> 1"
 gem "bootsnap"
 gem "clearance"
 gem "dalli"
