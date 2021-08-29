@@ -82,6 +82,9 @@ GEM
       aws-sdk-core (~> 3, >= 3.119.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.1)
+    aws-sdk-sqs (1.42.0)
+      aws-sdk-core (~> 3, >= 3.119.0)
+      aws-sigv4 (~> 1.1)
     aws-sigv4 (1.2.4)
       aws-eventstream (~> 1, >= 1.0.2)
     bcrypt (3.1.16)
@@ -403,7 +406,8 @@ PLATFORMS
 
 DEPENDENCIES
   autoprefixer-rails
-  aws-sdk-s3 (~> 1)
+  aws-sdk-s3
+  aws-sdk-sqs
   bootsnap
   brakeman
   capybara (~> 2.18)
