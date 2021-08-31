@@ -30,7 +30,7 @@
 
     <%= render partial: 'aggregations', locals: { gems: @gems } %>
 
-    <% suggestions = es_suggestions(@gems) %>
+    <% suggestions = search_suggestions(@gems) %>
     <% if suggestions %>
       <div class='search__suggestions'>
         <p>
