@@ -29,6 +29,8 @@ class Version < ApplicationRecord
   validate :metadata_links_format
   validate :metadata_attribute_length
 
+  validates :cert_chain, length: { maximum: MAX_TEXT_FIELD_LENGTH }, allow_blank: true
+
   class AuthorType < ActiveModel::Type::String
     def cast_value(value)
       if value.is_a?(Array)
