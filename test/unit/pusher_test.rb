@@ -117,7 +117,7 @@ class PusherTest < ActiveSupport::TestCase
       @gem = gem_file("valid_signature_tampered-0.0.1.gem")
       @cutter = Pusher.new(@user, @gem)
       @cutter.process
-      assert_includes @cutter.message, %(RubyGems.org cannot process this gem)
+      assert_includes @cutter.message, %(missing signing certificate)
       assert_equal @cutter.code, 422
     end
 
