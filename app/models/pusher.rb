@@ -43,13 +43,7 @@ class Pusher
   end
 
   def pull_spec
-    # Verify that the gem signatures match the certificate chain (if present)
-    policy = Gem::Security::LowSecurity.dup
-    # Silence warnings from the verification
-    stream = StringIO.new
-    policy.ui = Gem::StreamUI.new(stream, stream, stream, false)
-
-    package = Gem::Package.new(body, policy)
+    package = Gem::Package.new(body, gem_security_policy)
     @spec = package.spec
   rescue StandardError => e
     notify <<-MSG.strip_heredoc, 422
@@ -156,4 +150,16 @@ class Pusher
       notify("You do not have permission to push to this gem. Ask an owner to add you with: gem owner #{rubygem.name} --add #{user.email}", 403)
     end
   end
+
+  def gem_security_policy
+    @gem_security_policy ||= begin
+      # Verify that the gem signatures match the certificate chain (if present)
+      policy = Gem::Security::LowSecurity.dup
+      # Silence warnings from the verification
+      stream = StringIO.new
+      policy.ui = Gem::StreamUI.new(stream, stream, stream, false)
+      policy
+    end
+  end
+  private :gem_security_policy
 end
