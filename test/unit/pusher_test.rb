@@ -121,6 +121,14 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal @cutter.code, 422
     end
 
+    should "not be able to save a gem if it is signed with an expired certificate" do
+      @gem = gem_file("expired_signature-0.0.0.gem")
+      @cutter = Pusher.new(@user, @gem)
+      @cutter.process
+      assert_includes @cutter.message, %(not valid after 2021-07-08 08:21:01 UTC)
+      assert_equal @cutter.code, 422
+    end
+
     should "not be able to pull spec with metadata containing bad ruby symbols" do
       ["1.0.0", "2.0.0", "3.0.0", "4.0.0"].each do |version|
         @gem = gem_file("dos-#{version}.gem")
