@@ -414,6 +414,8 @@ class PusherTest < ActiveSupport::TestCase
     end
 
     should "extracts the certificate chain to the version" do
+      assert_equal 200, @cutter.code
+      assert_not_nil @cutter.version
       assert_not_nil @cutter.version.cert_chain
     end
 
