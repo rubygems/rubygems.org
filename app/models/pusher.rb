@@ -82,7 +82,7 @@ class Pusher
                                      size: size,
                                      sha256: sha256,
                                      pusher: user,
-                                     cert_chain: spec.cert_chain
+                                     cert_chain: spec.cert_chain&.map(&:strip)&.join("\n")
 
     true
   end
