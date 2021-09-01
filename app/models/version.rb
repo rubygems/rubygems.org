@@ -129,7 +129,7 @@ class Version < ApplicationRecord
 
   # This method returns the new versions for brand new rubygems
   def self.new_pushed_versions(limit = 5)
-    subquery = <<-SQL.squish
+    subquery = <<~SQL.squish
       versions.rubygem_id IN (SELECT versions.rubygem_id FROM versions
         GROUP BY versions.rubygem_id HAVING COUNT(versions.rubygem_id) = 1
         ORDER BY versions.rubygem_id DESC LIMIT :limit)
@@ -139,7 +139,7 @@ class Version < ApplicationRecord
   end
 
   def self.just_updated(limit = 5)
-    subquery = <<-SQL.squish
+    subquery = <<~SQL.squish
       versions.rubygem_id IN (SELECT versions.rubygem_id
                                 FROM versions
                             WHERE versions.indexed = 'true'
