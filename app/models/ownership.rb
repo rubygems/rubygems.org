@@ -10,8 +10,8 @@ class Ownership < ApplicationRecord
 
   before_create :generate_confirmation_token
 
-  scope :confirmed, -> { where("confirmed_at IS NOT NULL") }
-  scope :unconfirmed, -> { where("confirmed_at IS NULL") }
+  scope :confirmed, -> { where.not(confirmed_at: nil) }
+  scope :unconfirmed, -> { where(confirmed_at: nil) }
 
   def self.by_indexed_gem_name
     select("ownerships.*, rubygems.name")

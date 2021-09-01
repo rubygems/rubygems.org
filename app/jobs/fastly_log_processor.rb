@@ -53,7 +53,9 @@ class FastlyLogProcessor
       path, response_code = log_line.split[10, 2]
       # Only count successful downloads
       # NB: we consider a 304 response a download attempt
-      if [200, 304].include?(response_code.to_i) && (match = path.match %r{/gems/(?<path>.+)\.gem})
+      ok_status           = Rack::Utils::SYMBOL_TO_STATUS_CODE[:ok]
+      not_modified_status = Rack::Utils::SYMBOL_TO_STATUS_CODE[:not_modified]
+      if [ok_status, not_modified_status].include?(response_code.to_i) && (match = path.match %r{/gems/(?<path>.+)\.gem})
         accum[match[:path]] += 1
       end
 

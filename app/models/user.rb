@@ -14,6 +14,8 @@ class User < ApplicationRecord
     twitter_username
   ].freeze
 
+  before_save :generate_confirmation_token, if: :will_save_change_to_unconfirmed_email?
+  before_create :generate_confirmation_token
   before_destroy :yank_gems
 
   has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :user
@@ -28,9 +30,6 @@ class User < ApplicationRecord
   # used for deleting unconfirmed ownerships as well on user destroy
   has_many :unconfirmed_ownerships, -> { unconfirmed }, dependent: :destroy, inverse_of: :user, class_name: "Ownership"
   has_many :api_keys, dependent: :destroy
-
-  before_save :generate_confirmation_token, if: :will_save_change_to_unconfirmed_email?
-  before_create :generate_confirmation_token
 
   validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true
   validates :unconfirmed_email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
@@ -268,7 +267,7 @@ class User < ApplicationRecord
   end
 
   def unconfirmed_email_exists?
-    User.where(email: unconfirmed_email).exists?
+    User.exists?(email: unconfirmed_email)
   end
 
   def yank_gems

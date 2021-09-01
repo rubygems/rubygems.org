@@ -90,7 +90,7 @@ class OwnersControllerTest < ActionController::TestCase
             should "not send confirmation email" do
               ActionMailer::Base.deliveries.clear
               Delayed::Worker.new.work_off
-              assert_equal 0, Delayed::Job.where("last_error is not null").count
+              assert_equal 0, Delayed::Job.where.not(last_error: nil).count
               assert_emails 0
             end
           end

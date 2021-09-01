@@ -81,7 +81,7 @@ class GemDownloadTest < ActiveSupport::TestCase
         requires_toxiproxy
         Toxiproxy[:elasticsearch].down do
           GemDownload.bulk_update(@data)
-          total_count = @counts.inject(0, :+)
+          total_count = @counts.sum
           assert_equal total_count, GemDownload.total_count
         end
       end

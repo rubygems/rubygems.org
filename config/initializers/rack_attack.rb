@@ -76,9 +76,7 @@ class Rack::Attack
     throttle("clearance/ip/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
       req.ip if protected_route?(protected_ui_mfa_actions, req.path, req.request_method)
     end
-  end
 
-  EXP_BACKOFF_LEVELS.each do |level|
     throttle("api/ip/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
       req.ip if protected_route?(protected_api_mfa_actions, req.path, req.request_method)
     end

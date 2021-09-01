@@ -26,10 +26,10 @@ class Rubygem < ApplicationRecord
   validate :protected_gem_typo, on: :create, unless: -> { Array(validation_context).include?(:typo_exception) }
 
   after_create :update_unresolved
-  before_destroy :mark_unresolved
-
   # TODO: Remove this once we move to GemDownload only
   after_create :create_gem_download
+  before_destroy :mark_unresolved
+
   def create_gem_download
     GemDownload.create!(count: 0, rubygem_id: id, version_id: 0)
   end
@@ -148,7 +148,7 @@ class Rubygem < ApplicationRecord
   end
 
   def unconfirmed_ownership?(user)
-    unconfirmed_ownerships.where(user: user).exists?
+    unconfirmed_ownerships.exists?(user: user)
   end
 
   def to_s
@@ -209,7 +209,7 @@ class Rubygem < ApplicationRecord
   end
 
   def to_param
-    name.remove(/[^#{Patterns::ALLOWED_CHARACTERS}]/)
+    name.remove(/[^#{Patterns::ALLOWED_CHARACTERS}]/o)
   end
 
   def pushable?
@@ -323,7 +323,7 @@ class Rubygem < ApplicationRecord
       errors.add :name, "must include at least one letter"
     elsif !NAME_PATTERN.match?(name)
       errors.add :name, "can only include letters, numbers, dashes, and underscores"
-    elsif /\A[#{Regexp.escape(Patterns::SPECIAL_CHARACTERS)}]+/.match?(name)
+    elsif /\A[#{Regexp.escape(Patterns::SPECIAL_CHARACTERS)}]+/o.match?(name)
       errors.add :name, "can not begin with a period, dash, or underscore"
     end
   end

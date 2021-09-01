@@ -12,6 +12,7 @@ AllCops:
   DisplayCopNames: true
   DisplayStyleGuide: true
   TargetRubyVersion: 2.7
+  NewCops: enable
 
 Rails:
   Enabled: true
