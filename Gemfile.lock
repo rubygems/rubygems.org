@@ -182,7 +182,7 @@ GEM
       activerecord
       kaminari-core (= 1.2.1)
     kaminari-core (1.2.1)
-    kgio (2.11.2)
+    kgio (2.11.4)
     launchy (2.5.0)
       addressable (~> 2.7)
     listen (3.7.0)
@@ -275,7 +275,7 @@ GEM
       rake (>= 0.13)
       thor (~> 1.0)
     rainbow (3.0.0)
-    raindrops (0.19.0)
+    raindrops (0.19.2)
     rake (13.0.6)
     rb-fsevent (0.11.0)
     rb-inotify (0.10.1)
@@ -373,7 +373,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.6)
     unicode-display_width (1.7.0)
-    unicorn (5.5.0.1.g6836)
+    unicorn (5.8.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
     unpwn (0.3.0)
@@ -453,7 +453,7 @@ DEPENDENCIES
   statsd-instrument (~> 2.3.0)
   toxiproxy (~> 1.0.0)
   uglifier (>= 1.0.3)
-  unicorn (~> 5.5.0.1.g6836)
+  unicorn (~> 5.8.0)
   unpwn (~> 0.3.0)
   validates_formatting_of
   webdrivers

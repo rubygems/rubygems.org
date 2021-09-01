@@ -26,7 +26,7 @@ gem "rest-client", require: "rest_client"
 gem "roadie-rails"
 gem "shoryuken", "~> 3.3.0", require: false
 gem "statsd-instrument", "~> 2.3.0"
-gem "unicorn", "~> 5.5.0.1.g6836"
+gem "unicorn", "~> 5.8.0"
 gem "validates_formatting_of"
 gem "elasticsearch-model", "~> 7.0"
 gem "elasticsearch-rails", "~> 7.0"
