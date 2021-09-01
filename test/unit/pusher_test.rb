@@ -425,6 +425,8 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal 200, @cutter.code
       assert_not_nil @cutter.version
       assert_not_nil @cutter.version.cert_chain
+      assert_equal 1, @cutter.version.cert_chain.size
+      assert_equal "/CN=snakeoil/DC=example/DC=invalid", @cutter.version.cert_chain.first.subject.to_s
     end
 
     teardown { RubygemFs.mock! }
