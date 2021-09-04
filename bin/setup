@@ -17,7 +17,7 @@ FileUtils.chdir APP_ROOT do
   system! 'gem install bundler --conservative'
   system('bundle check') || system!('bundle install')
 
-  # puts "\n== Copying sample files =="
+  puts "\n== Copying sample files =="
   unless File.exist?('config/database.yml')
     FileUtils.cp 'config/database.yml.example', 'config/database.yml'
   end
