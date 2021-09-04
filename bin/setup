@@ -18,9 +18,9 @@ FileUtils.chdir APP_ROOT do
   system('bundle check') || system!('bundle install')
 
   # puts "\n== Copying sample files =="
-  # unless File.exist?('config/database.yml')
-  #   FileUtils.cp 'config/database.yml.sample', 'config/database.yml'
-  # end
+  unless File.exist?('config/database.yml')
+    FileUtils.cp 'config/database.yml.example', 'config/database.yml'
+  end
 
   puts "\n== Preparing database =="
   system! 'bin/rails db:prepare'
