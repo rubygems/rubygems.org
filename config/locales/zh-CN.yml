@@ -141,6 +141,7 @@ zh-CN:
         tested_by: 测试
         tracking_by: 追踪
         uptime: 服务状况
+        verified_by:
       header:
         dashboard: 控制台
         edit_profile:

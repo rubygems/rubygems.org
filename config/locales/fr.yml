@@ -141,6 +141,7 @@ fr:
         tested_by: Testé par
         tracking_by: Tracking par
         uptime: Uptime
+        verified_by:
       header:
         dashboard: Dashboard
         edit_profile:

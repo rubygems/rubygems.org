@@ -149,6 +149,7 @@ en:
         tested_by: Tested by
         tracking_by: Tracking by
         uptime: Uptime
+        verified_by: Verified by
       header:
         dashboard: Dashboard
         settings: Settings
