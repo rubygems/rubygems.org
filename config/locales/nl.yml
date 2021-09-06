@@ -141,6 +141,7 @@ nl:
         tested_by: Getest door
         tracking_by: Tracking
         uptime: Uptime
+        verified_by:
       header:
         dashboard: Dashboard
         edit_profile:
