@@ -68,16 +68,25 @@ GEM
     ast (2.4.2)
     autoprefixer-rails (10.3.3.0)
       execjs (~> 2)
-    aws-eventstream (1.0.3)
-    aws-sdk (2.11.473)
-      aws-sdk-resources (= 2.11.473)
-    aws-sdk-core (2.11.473)
-      aws-sigv4 (~> 1.0)
+    aws-eventstream (1.1.1)
+    aws-partitions (1.492.0)
+    aws-sdk-core (3.119.1)
+      aws-eventstream (~> 1, >= 1.0.2)
+      aws-partitions (~> 1, >= 1.239.0)
+      aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
-    aws-sdk-resources (2.11.473)
-      aws-sdk-core (= 2.11.473)
-    aws-sigv4 (1.1.1)
-      aws-eventstream (~> 1.0, >= 1.0.2)
+    aws-sdk-kms (1.46.0)
+      aws-sdk-core (~> 3, >= 3.119.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-s3 (1.100.0)
+      aws-sdk-core (~> 3, >= 3.119.0)
+      aws-sdk-kms (~> 1)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-sqs (1.42.0)
+      aws-sdk-core (~> 3, >= 3.119.0)
+      aws-sigv4 (~> 1.1)
+    aws-sigv4 (1.2.4)
+      aws-eventstream (~> 1, >= 1.0.2)
     bcrypt (3.1.16)
     bitarray (1.2.0)
     bloomer (1.0.0)
@@ -398,7 +407,8 @@ PLATFORMS
 
 DEPENDENCIES
   autoprefixer-rails
-  aws-sdk (~> 2.2)
+  aws-sdk-s3
+  aws-sdk-sqs
   bootsnap
   brakeman
   capybara (~> 2.18)
