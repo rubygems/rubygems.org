@@ -65,8 +65,10 @@ end
 class ActionDispatch::IntegrationTest
   setup { host! Gemcutter::HOST }
 end
+
 Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
 Capybara.always_include_port = true
+Capybara.server = :webrick
 
 class SystemTest < ActionDispatch::IntegrationTest
   include Capybara::DSL

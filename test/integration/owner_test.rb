@@ -77,10 +77,7 @@ class OwnerTest < SystemTest
       click_button "Remove"
     end
 
-    owners_table = page.find(:css, ".owners__table")
-    within_element owners_table do
-      refute_selector(:css, "a[href='#{profile_path(@other_user)}']")
-    end
+    refute page.has_selector? ".owners__table a[href='#{profile_path(@other_user)}']"
 
     ActionMailer::Base.deliveries.clear
     Delayed::Worker.new.work_off
