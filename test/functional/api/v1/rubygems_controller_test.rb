@@ -297,7 +297,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           assert_equal "Successfully registered gem: test (1.0.0)", @response.body
         end
         should "enqueue jobs" do
-          assert_difference "Delayed::Job.count", 7 do
+          assert_difference "Delayed::Job.count", 8 do
             post :create, body: gem_file("test-1.0.0.gem").read
           end
         end

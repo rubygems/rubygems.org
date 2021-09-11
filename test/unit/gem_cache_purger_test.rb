@@ -16,6 +16,7 @@ class GemCachePurgerTest < ActiveSupport::TestCase
 
     should "purge cdn cache" do
       Fastly.expects(:purge).with("info/#{@gem_name}", soft: true)
+      Fastly.expects(:purge).with("gem/#{@gem_name}", soft: true)
       Fastly.expects(:purge).with("names", soft: true)
       Fastly.expects(:purge).with("versions", soft: true)
 
