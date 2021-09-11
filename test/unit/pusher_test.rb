@@ -339,7 +339,7 @@ class PusherTest < ActiveSupport::TestCase
     end
 
     should "enqueue job for email, updating ES index, spec index and purging cdn" do
-      assert_difference "Delayed::Job.count", 6 do
+      assert_difference "Delayed::Job.count", 7 do
         @cutter.save
       end
     end
