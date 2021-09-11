@@ -1,9 +1,9 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: users-veirfy-daily
+  name: users-verify-daily
   labels:
-    name: users-veirfy-daily
+    name: users-verify-daily
 spec:
   concurrencyPolicy: Forbid
   schedule: "0 12 * * *"
@@ -12,11 +12,11 @@ spec:
       template:
         metadata:
           labels:
-            name: users-veirfy-daily
+            name: users-verify-daily
         spec:
           restartPolicy: "OnFailure"
           containers:
-          - name: users-veirfy-daily
+          - name: users-verify-daily
             image: quay.io/rubygems/rubygems.org:<%= current_sha %>
             args: ["rake", "users:verify"]
             resources:
