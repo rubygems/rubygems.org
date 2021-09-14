@@ -69,7 +69,7 @@ GEM
     autoprefixer-rails (10.3.3.0)
       execjs (~> 2)
     aws-eventstream (1.2.0)
-    aws-partitions (1.499.0)
+    aws-partitions (1.501.0)
     aws-sdk-core (3.121.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
@@ -348,7 +348,7 @@ GEM
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
-    shoryuken (3.3.1)
+    shoryuken (4.0.3)
       aws-sdk-core (>= 2)
       concurrent-ruby
       thor
@@ -459,7 +459,7 @@ DEPENDENCIES
   rubocop-rails (= 2.9.1)
   sassc-rails
   selenium-webdriver
-  shoryuken (~> 3.3.0)
+  shoryuken (~> 4.0)
   shoulda
   simplecov
   sprockets-rails
@@ -474,4 +474,4 @@ DEPENDENCIES
   xml-simple
 
 BUNDLED WITH
-   2.1.4
+   2.2.3
