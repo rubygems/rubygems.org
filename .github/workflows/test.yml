@@ -31,6 +31,15 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby_version }}
         bundler-cache: true
+    - name: set rubygems version
+      run: |
+        if [ "$RUBYGEMS_VERSION" != "latest" ]; then
+          gem update --system $RUBYGEMS_VERSION;
+        else
+          gem update --system
+        fi
+        gem --version
+        bundle --version
     - name: Prepare environment
       run: |
         cp config/database.yml.example config/database.yml
