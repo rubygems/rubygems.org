@@ -64,7 +64,7 @@ Follow the instructions below on how to install Bundler and setup the database.
 #### Environment (OS X)
 
 * Use Ruby 2.6.x (`.ruby-version` is present and can be used)
-* Use Rubygems 3.1.5
+* Use Rubygems 3.2.3
 * Install bundler: `gem install bundler`
 * Install Elastic Search:
   * Pull ElasticSearch `7.10.1` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:7.10.1`
@@ -84,7 +84,7 @@ Follow the instructions below on how to install Bundler and setup the database.
 
 * Use Ruby 2.6.x `apt-get install ruby2.6`
   * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
-* Use Rubygems 3.1.5
+* Use Rubygems 3.2.3
 * Install bundler: `gem install bundler`
 * Install Elastic Search (see the docker installation instructions above):
   * Pull ElasticSearch `7.10.1` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:7.10.1`
