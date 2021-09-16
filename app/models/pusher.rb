@@ -20,6 +20,9 @@ class Pusher
   end
 
   def validate
+    signature_missing = "There was a problem saving your gem: \nYou have added cert_chain in gemspec but signature was empty"
+
+    return notify(signature_missing, 403) unless validate_signature_exists?
     (rubygem.valid? && version.valid?) || notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403)
   end
 
@@ -43,7 +46,9 @@ class Pusher
   end
 
   def pull_spec
-    @spec = Gem::Package.new(body).spec
+    package = Gem::Package.new(body, gem_security_policy)
+    @spec = package.spec
+    @files = package.files
   rescue StandardError => e
     notify <<-MSG.strip_heredoc, 422
       RubyGems.org cannot process this gem.
@@ -80,7 +85,8 @@ class Pusher
                                      platform: spec.original_platform.to_s,
                                      size: size,
                                      sha256: sha256,
-                                     pusher: user
+                                     pusher: user,
+                                     cert_chain: spec.cert_chain
 
     true
   end
@@ -147,5 +153,25 @@ class Pusher
     else
       notify("You do not have permission to push to this gem. Ask an owner to add you with: gem owner #{rubygem.name} --add #{user.email}", 403)
     end
+  end
+
+  def gem_security_policy
+    @gem_security_policy ||= begin
+      # Verify that the gem signatures match the certificate chain (if present)
+      policy = Gem::Security::LowSecurity.dup
+      # Silence warnings from the verification
+      stream = StringIO.new
+      policy.ui = Gem::StreamUI.new(stream, stream, stream, false)
+      policy
+    end
+  end
+
+  def validate_signature_exists?
+    return true if @spec.cert_chain.empty?
+
+    signatures = @files.select { |file| file[/\.sig$/] }
+
+    expected_signatures = %w[metadata.gz.sig data.tar.gz.sig checksums.yaml.gz.sig]
+    expected_signatures.difference(signatures).empty?
   end
 end

@@ -96,6 +96,16 @@ class PushTest < ActionDispatch::IntegrationTest
     assert_match(/A yanked version pushed by a previous owner of this gem already exists \(sandworm-1.0.0\)/, response.body)
   end
 
+  test "publishing a gem with ceritifcate but not signatures" do
+    build_gem "sandworm", "2.0.0" do |gemspec|
+      gemspec.cert_chain = [File.read(File.expand_path("../certs/chain.pem", __dir__))]
+    end
+
+    push_gem "sandworm-2.0.0.gem"
+    assert_response :forbidden
+    assert_match(/You have added cert_chain in gemspec but signature was empty/, response.body)
+  end
+
   def push_gem(path)
     post api_v1_rubygems_path,
       env: { "RAW_POST_DATA" => File.read(path) },
