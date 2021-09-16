@@ -23,16 +23,16 @@ class ApplicationController < ActionController::Base
     render plain: "Request is missing param '#{e.param}'", status: :bad_request
   end
 
-  def self.http_basic_authenticate_with(options = {})
+  def self.http_basic_authenticate_with(**options)
     before_action(options.except(:name, :password, :realm)) do
-      raise "Invalid authentication options" unless http_basic_authentication_options_valid?(options)
+      raise "Invalid authentication options" unless http_basic_authentication_options_valid?(**options)
     end
     super
   end
 
   protected
 
-  def http_basic_authentication_options_valid?(options)
+  def http_basic_authentication_options_valid?(**options)
     options[:password].present? && options[:name].present?
   end
 

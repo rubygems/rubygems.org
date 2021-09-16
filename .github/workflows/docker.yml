@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-18.04
     env:
       RUBYGEMS_VERSION: 3.2.3
-      RUBY_VERSION: 2.7.4
+      RUBY_VERSION: 3.0.2
     steps:
     - uses: actions/checkout@v2
     - name: Set up Docker Buildx
