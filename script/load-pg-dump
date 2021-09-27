@@ -23,6 +23,7 @@ pg_database=rubygems
 pg_user=postgres
 download=false
 host=
+port=
 
 ## For downloading
 base_url="https://s3-us-west-2.amazonaws.com/rubygems-dumps/"
@@ -40,13 +41,14 @@ Load a rubygems.org postgresql dump into a datatbase.
     -d DATABASE load the data into this database (default: rubygems)
     -u USER     connect to postgresql using this username (default: postgres)
     -H HOSTNAME connect to postgresql using this hostname (default: Unix-domain socket)
+    -p PORT     connect to postgresql using this port (default: 5432)
 
 Example: ./load-pg-dump -d rubygems_development ~/Downloads/public_postgresql.tar
 EOF
 }
 
 OPTIND=1
-while getopts "hcd:u:H:" opt; do
+while getopts "hcd:u:H:p:" opt; do
     case "$opt" in
         h)
             show_help
@@ -60,6 +62,8 @@ while getopts "hcd:u:H:" opt; do
             ;;
         H)  host=$OPTARG
             ;;
+        p)  port=$OPTARG
+            ;;
         '?')
             show_help >&2
             exit 1
@@ -72,7 +76,9 @@ pg_host=
 if [ -n "$host" ]; then
   pg_host="-h $host"
 fi
-
+if [ -n "$port" ]; then
+  pg_host="${pg_host} -p $port"
+fi
 
 public_tar=$1
 if [ -z "$public_tar" ]; then
