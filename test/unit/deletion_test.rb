@@ -120,8 +120,8 @@ class DeletionTest < ActiveSupport::TestCase
       end
 
       should "purge fastly" do
-        Fastly.expects(:purge).with("gems/#{@version.full_name}.gem").times(2)
-        Fastly.expects(:purge).with("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz").times(2)
+        Fastly.expects(:purge).with(path: "gems/#{@version.full_name}.gem").times(2)
+        Fastly.expects(:purge).with(path: "quick/Marshal.4.8/#{@version.full_name}.gemspec.rz").times(2)
 
         Delayed::Worker.new.work_off
       end
