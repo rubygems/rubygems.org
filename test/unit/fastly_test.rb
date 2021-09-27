@@ -12,7 +12,7 @@ class FastlyTest < ActiveSupport::TestCase
   context ".purge" do
     should "purge for each domain" do
       RestClient::Request.expects(:execute).times(2).returns("{}")
-      Fastly.purge("some-url")
+      Fastly.purge(path: "some-url")
     end
   end
 end

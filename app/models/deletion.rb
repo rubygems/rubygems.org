@@ -62,8 +62,8 @@ class Deletion < ApplicationRecord
   end
 
   def purge_fastly
-    Fastly.delay.purge("gems/#{@version.full_name}.gem")
-    Fastly.delay.purge("quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
+    Fastly.delay.purge(path: "gems/#{@version.full_name}.gem")
+    Fastly.delay.purge(path: "quick/Marshal.4.8/#{@version.full_name}.gemspec.rz")
   end
 
   def update_search_index
