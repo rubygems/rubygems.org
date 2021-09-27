@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rubygems_version: ['3.2.3', 'latest']
+        rubygems_version: ['3.2.22', 'latest']
         ruby_version: ['3.0.2']
     name: Rails tests (Ruby ${{ matrix.ruby_version }}, RubyGems ${{ matrix.rubygems_version }})
     runs-on: ubuntu-18.04
@@ -47,7 +47,7 @@ jobs:
     - name: Tests
       run: bin/rails test
     - name: archive coverage
-      if: matrix.rubygems_version == '3.2.3'
+      if: matrix.rubygems_version == '3.2.22'
       uses: actions/upload-artifact@v2
       with:
         name: coverage
