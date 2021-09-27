@@ -9,7 +9,7 @@ jobs:
     name: Docker build (and optional push)
     runs-on: ubuntu-18.04
     env:
-      RUBYGEMS_VERSION: 3.2.3
+      RUBYGEMS_VERSION: 3.2.22
       RUBY_VERSION: 3.0.2
     steps:
     - uses: actions/checkout@v2
