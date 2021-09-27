@@ -32,8 +32,7 @@ class ActiveSupport::TestCase
     Rails.cache.clear
     Rack::Attack.cache.store.clear
 
-    # Don't connect to the Pwned Passwords API in tests
-    Pwned.stubs(:pwned?).returns(false)
+    Unpwn.offline = true
   end
 
   def page
