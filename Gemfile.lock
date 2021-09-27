@@ -241,7 +241,7 @@ GEM
       byebug (~> 11.0)
       pry (~> 0.13.0)
     public_suffix (4.0.6)
-    pwned (1.2.1)
+    pwned (2.3.0)
     racc (1.5.2)
     rack (2.2.3)
     rack-attack (6.5.0)
@@ -386,9 +386,9 @@ GEM
     unicorn (5.8.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
-    unpwn (0.3.0)
+    unpwn (1.0.0)
       bloomer (~> 1.0)
-      pwned (~> 1.2)
+      pwned (~> 2.0)
     validates_formatting_of (0.9.0)
       activemodel
     webdrivers (4.6.1)
@@ -467,7 +467,7 @@ DEPENDENCIES
   toxiproxy (~> 1.0.0)
   uglifier (>= 1.0.3)
   unicorn (~> 5.8.0)
-  unpwn (~> 0.3.0)
+  unpwn
   validates_formatting_of
   webdrivers
   webrick
