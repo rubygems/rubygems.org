@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - ruby-2.7
 jobs:
   build:
     name: Docker build (and optional push)
