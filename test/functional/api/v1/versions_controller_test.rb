@@ -9,8 +9,8 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     get :latest, params: { id: rubygem.name, format: format }
   end
 
-  def get_reverse_dependencies(rubygem, format: "json")
-    get :reverse_dependencies, params: { id: rubygem.name, format: format }
+  def get_reverse_dependencies(rubygem, options = { format: "json" })
+    get :reverse_dependencies, options.merge(params: { id: rubygem.name })
   end
 
   def set_cache_header
