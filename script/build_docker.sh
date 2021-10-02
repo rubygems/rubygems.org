@@ -27,12 +27,15 @@ docker buildx build --cache-from=type=local,src=/tmp/.buildx-cache \
 docker run -e RAILS_ENV=production -e SECRET_KEY_BASE=1234 -e DATABASE_URL=postgresql://localhost \
   --net host quay.io/$GITHUB_REPOSITORY:$GITHUB_SHA \
   -- rake db:create db:migrate
-docker run -d -e RAILS_ENV=production -e SECRET_KEY_BASE=1234 -e DATABASE_URL=postgresql://localhost \
+docker run -d --name evil_pony -e RAILS_ENV=production -e SECRET_KEY_BASE=1234 -e DATABASE_URL=postgresql://localhost \
   --net host quay.io/$GITHUB_REPOSITORY:$GITHUB_SHA \
   -- unicorn_rails -E production -c /app/config/unicorn.conf
 
+docker logs evil_pony
 sleep 5
+docker logs evil_pony
 curl -m 5 http://localhost:3000/internal/ping | grep PONG
+docker logs evil_pony
 
 if [ $? -eq 1 ]; then
   echo "Internal ping api test didn't pass."

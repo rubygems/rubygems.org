@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - migrate-image
 jobs:
   build:
     name: Docker build (and optional push)
