@@ -32,7 +32,7 @@ docker run -d --name evil_pony -e RAILS_ENV=production -e SECRET_KEY_BASE=1234 -
   -- unicorn_rails -E production -c /app/config/unicorn.conf
 
 docker logs evil_pony
-sleep 5
+sleep 20
 docker logs evil_pony
 curl -m 5 http://localhost:3000/internal/ping | grep PONG
 docker logs evil_pony
