@@ -1,29 +1,28 @@
-FROM ruby:3.0-alpine as build
+FROM bitnami/ruby:3.0-prod as build
 
 ARG RUBYGEMS_VERSION
 
-RUN apk add --no-cache \
+RUN apt update && apt install -y \
   nodejs \
-  postgresql-dev \
+  libpq-dev \
   ca-certificates \
-  build-base \
-  bash \
-  linux-headers \
-  zlib-dev \
+  build-essential \
+  zlib1g-dev \
   tzdata \
-  && rm -rf /var/cache/apk/*
+  && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /app /app/config /app/log/
 WORKDIR /app
 
-RUN gem update --system $RUBYGEMS_VERSION
+RUN gem update --system $RUBYGEMS_VERSION --no-document
 
-COPY Gemfile* /app
+COPY Gemfile* /app/
 
 RUN bundle config set --local without 'development test' && \
+  bundle config set --local path 'vendor/bundle' && \
   bundle install --jobs 20 --retry 5
 
-COPY . /app
+COPY . /app/
 
 ADD https://s3-us-west-2.amazonaws.com/oregon.production.s3.rubygems.org/versions/versions.list /app/config/versions.list
 ADD https://s3-us-west-2.amazonaws.com/oregon.production.s3.rubygems.org/stopforumspam/toxic_domains_whole.txt /app/vendor/toxic_domains_whole.txt
@@ -36,25 +35,24 @@ RUN bundle config set --local without 'development test assets' && \
   bundle clean --force
 
 
-FROM ruby:3.0-alpine
+FROM bitnami/ruby:3.0-prod
 
 ARG RUBYGEMS_VERSION
 
-RUN apk add --no-cache \
-  libpq \
+RUN apt update && apt install -y \
+  libpq-dev \
   ca-certificates \
-  bash \
   tzdata \
-  xz-libs \
-  && rm -rf /var/cache/apk/*
+  xz-utils \
+  && rm -rf /var/lib/apt/lists/*
 
-RUN gem update --system $RUBYGEMS_VERSION
+RUN gem update --system $RUBYGEMS_VERSION --no-document
 
 RUN mkdir -p /app
 WORKDIR /app
 
-COPY --from=build /usr/local/bundle/ /usr/local/bundle/
 COPY --from=build /app/ /app/
+COPY --from=build /app/vendor/bundle/ /app/vendor/bundle/
 
 EXPOSE 3000
 
