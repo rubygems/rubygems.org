@@ -150,6 +150,7 @@ en:
         tracking_by: Tracking by
         uptime: Uptime
         verified_by: Verified by
+        secured_by: Secured by
       header:
         dashboard: Dashboard
         settings: Settings

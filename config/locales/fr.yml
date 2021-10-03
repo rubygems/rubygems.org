@@ -142,6 +142,7 @@ fr:
         tracking_by: Tracking par
         uptime: Uptime
         verified_by:
+        secured_by:
       header:
         dashboard: Dashboard
         edit_profile:

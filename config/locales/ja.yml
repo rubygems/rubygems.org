@@ -150,6 +150,7 @@ ja:
         tracking_by:
         uptime: 可用性
         verified_by:
+        secured_by:
       header:
         dashboard: ダッシュボード
         edit_profile:
