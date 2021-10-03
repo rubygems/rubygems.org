@@ -49,13 +49,14 @@ class GemInfo
     map_gem_versions(execute_raw_sql(query).map { |v| [v["name"], [v]] })
   end
 
-  def self.compact_index_public_versions
+  def self.compact_index_public_versions(updated_at)
     query = ["SELECT r.name, v.indexed, COALESCE(v.yanked_at, v.created_at) as stamp,
                      v.sha256, COALESCE(v.yanked_info_checksum, v.info_checksum) as info_checksum,
                      v.number, v.platform
               FROM rubygems AS r, versions AS v
-              WHERE v.rubygem_id = r.id
-              ORDER BY r.name, stamp, v.number, v.platform"]
+              WHERE v.rubygem_id = r.id AND
+                    (v.created_at <= ? OR v.yanked_at <= ?)
+              ORDER BY r.name, stamp, v.number, v.platform", updated_at, updated_at]
 
     versions_by_gem = execute_raw_sql(query).group_by { |v| v["name"] }
     versions_by_gem.each do |_, versions|

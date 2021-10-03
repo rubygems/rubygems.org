@@ -9,10 +9,8 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
   end
 
   def update_versions_file
-    freeze_time do
-      @frozen_time = Time.now.iso8601
-      Rake::Task["compact_index:update_versions_file"].invoke
-    end
+    @created_at = Time.now.iso8601
+    Rake::Task["compact_index:update_versions_file"].invoke
   end
 
   teardown do
@@ -26,7 +24,7 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
     end
 
     should "use today's timestamp as header" do
-      expected_header = "created_at: #{@frozen_time}\n---\n"
+      expected_header = "created_at: #{@created_at}\n---\n"
       assert_equal expected_header, @tmp_versions_file.read
     end
   end
@@ -154,7 +152,7 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
     setup do
       3.times do |i|
         create(:rubygem, name: "rubygem#{i}").tap do |gem|
-          create(:version, rubygem: gem, number: "0.0.1", info_checksum: "13q4e#{i}")
+          create(:version, rubygem: gem, created_at: 4.seconds.ago, number: "0.0.1", info_checksum: "13q4e#{i}")
         end
       end
 
@@ -163,7 +161,7 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
 
     should "put each gem on new line" do
       expected_output = <<~VERSIONS_FILE
-        created_at: #{@frozen_time}
+        created_at: #{@created_at}
         ---
         rubygem0 0.0.1 13q4e0
         rubygem1 0.0.1 13q4e1
