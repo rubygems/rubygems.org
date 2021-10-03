@@ -63,11 +63,11 @@ Follow the instructions below on how to install Bundler and setup the database.
 
 #### Environment (OS X)
 
-* Use R Ruby 3.0.x (`.ruby-version` is present and can be used)
+* Use Ruby 3.0.x (`.ruby-version` is present and can be used)
 * Use Rubygems 3.2.22
 * Install bundler: `gem install bundler`
-* Install Elastic Search:
-  * Pull ElasticSearch `7.10.1` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:7.10.1`
+* Install Elasticsearch:
+  * Pull Elasticsearch `7.10.1` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:7.10.1`
   * Running Elasticsearch from the command line:
   ```
   docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" -e "xpack.security.enabled=false" docker.elastic.co/elasticsearch/elasticsearch:7.10.1
@@ -86,8 +86,8 @@ Follow the instructions below on how to install Bundler and setup the database.
   * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
 * Use Rubygems 3.2.22
 * Install bundler: `gem install bundler`
-* Install Elastic Search (see the docker installation instructions above):
-  * Pull ElasticSearch `7.10.1` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:7.10.1`
+* Install Elasticsearch (see the docker installation instructions above):
+  * Pull Elasticsearch `7.10.1` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:7.10.1`
   * Running Elasticsearch from the command line:
   ```
   docker run -p 9200:9200 -e "http.host=0.0.0.0" -e "transport.host=127.0.0.1" docker.elastic.co/elasticsearch/elasticsearch:7.10.1
@@ -98,7 +98,7 @@ Follow the instructions below on how to install Bundler and setup the database.
   * Show all memcached options: `memcached -h`
 * Install Google-Chrome:
   * Download latest stable: `wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb`
-  * Install chrome: sudo dpkg -i google-chrome-stable_current_amd64.deb
+  * Install chrome: `sudo dpkg -i google-chrome-stable_current_amd64.deb`
 
 #### Getting the code
 
@@ -118,7 +118,7 @@ Follow the instructions below on how to install Bundler and setup the database.
 
 #### Running tests
 
-* Start elastic search: `elasticsearch`
+* Start elasticsearch: `elasticsearch`
 * Start memcached: `memcached`
 * Run the tests: `bundle exec rake`
 
