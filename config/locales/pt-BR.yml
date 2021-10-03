@@ -147,6 +147,7 @@ pt-BR:
         tracking_by: Coleta de Dados
         uptime: Uptime
         verified_by:
+        secured_by:
       header:
         dashboard: Painel de Controle
         edit_profile: Editar Perfil

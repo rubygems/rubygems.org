@@ -142,6 +142,7 @@ zh-TW:
         tracking_by: 追蹤
         uptime: 上線時間
         verified_by:
+        secured_by:
       header:
         dashboard: 控制台
         edit_profile:

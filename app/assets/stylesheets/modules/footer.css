@@ -118,6 +118,8 @@
       background-position: 0 -804px; }
     .footer__sponsor:nth-child(10) {
       background-position: 0 -892px; }
+    .footer__sponsor:nth-child(11) {
+      background-position: 0 -983px; }
     }
   @media (min-width: 1040px) {
     .footer__sponsor {
@@ -140,6 +142,8 @@
       background-position: 0 -717px; }
     .footer__sponsor:nth-child(10) {
       background-position: 0 -804px; }
+    .footer__sponsor:nth-child(11) {
+      background-position: 0 -885px; }
     }
   @media (max-width: 579px) {
     .footer__sponsor:nth-child(odd) {

@@ -142,6 +142,7 @@ nl:
         tracking_by: Tracking
         uptime: Uptime
         verified_by:
+        secured_by:
       header:
         dashboard: Dashboard
         edit_profile:
