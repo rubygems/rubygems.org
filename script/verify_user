@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+if ARGV.empty?
+  puts "Verify user account to have an official status and also avoid some limitations."
+  puts "USAGE: script/verify_user USERNAME"
+  exit
+end
+
+handle = ARGV.first
+puts "Verifying user #{handle}..."
+
+ENV["RAILS_ENV"] ||= "production"
+require_relative "../config/environment"
+
+begin
+  user = User.find_by!(handle: handle)
+  puts "Found user: #{user.handle}"
+  user.verify!
+  puts "Done."
+rescue ActiveRecord::RecordNotFound
+  puts "User #{handle} not found."
+  exit 1 # return non-zero on fail
+end
