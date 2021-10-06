@@ -446,6 +446,7 @@ nl:
       title: Alle versies van %{name}
       versions_since: "%{count} versies sinds %{since}"
     version:
+      signed:
       yanked: verwijderd
   will_paginate:
     next_label: Volgende

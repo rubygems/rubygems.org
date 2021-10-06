@@ -67,6 +67,15 @@ class PushTest < ActionDispatch::IntegrationTest
     assert page.has_content?("> 1")
   end
 
+  test "pushing a signed gem" do
+    push_gem gem_file("valid_signature-0.0.0.gem")
+
+    get rubygem_path("valid_signature")
+    assert_response :success
+    assert page.find("li.gem__version-wrap").has_content?("0.0.0")
+    assert page.find("li.gem__version-wrap").has_content?("signed")
+  end
+
   test "push errors bubble out" do
     push_gem Rails.root.join("test", "gems", "bad-characters-1.0.0.gem")
 

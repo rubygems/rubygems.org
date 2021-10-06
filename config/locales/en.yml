@@ -482,6 +482,7 @@ en:
       title: All versions of %{name}
       versions_since: "%{count} versions since %{since}"
     version:
+      signed: signed
       yanked: yanked
   will_paginate:
     next_label: Next
