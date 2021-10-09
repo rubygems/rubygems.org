@@ -464,6 +464,8 @@ en:
       title: Confirm Password
       confirm: Confirm
       notice: Please confirm your password to continue.
+    create:
+      account_blocked: Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account.
   stats:
     index:
       title: Stats

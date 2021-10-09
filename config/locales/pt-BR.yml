@@ -433,6 +433,8 @@ pt-BR:
       title:
       confirm:
       notice:
+    create:
+      account_blocked:
   stats:
     index:
       title: Estatísticas

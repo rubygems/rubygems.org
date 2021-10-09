@@ -1,8 +1,9 @@
 class SessionsController < Clearance::SessionsController
   before_action :redirect_to_signin, unless: :signed_in?, only: %i[verify authenticate]
+  before_action :ensure_not_blocked, only: :create
 
   def create
-    @user = find_user(params.require(:session))
+    @user = find_user
 
     if @user&.mfa_enabled?
       session[:mfa_user] = @user.display_id
@@ -63,14 +64,29 @@ class SessionsController < Clearance::SessionsController
     render template: "sessions/new", status: :unauthorized
   end
 
-  def find_user(session)
-    who = session[:who].is_a?(String) && session.fetch(:who)
-    password = session[:password].is_a?(String) && session.fetch(:password)
+  def session_params
+    params.require(:session)
+  end
+
+  def find_user
+    password = session_params[:password].is_a?(String) && session_params.fetch(:password)
 
     User.authenticate(who, password) if who && password
   end
 
+  def who
+    session_params[:who].is_a?(String) && session_params.fetch(:who)
+  end
+
   def url_after_create
     dashboard_path
+  end
+
+  def ensure_not_blocked
+    user = User.find_by_blocked(who)
+    return unless user&.blocked_email
+
+    flash.now.alert = t(".account_blocked")
+    render template: "sessions/new", status: :unauthorized
   end
 end
