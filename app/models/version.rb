@@ -195,6 +195,10 @@ class Version < ApplicationRecord
     !indexed
   end
 
+  def signed?
+    cert_chain.present?
+  end
+
   def size
     self[:size] || "N/A"
   end

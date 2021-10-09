@@ -446,6 +446,7 @@ zh-CN:
       title: "%{name} 的所有版本"
       versions_since: 自 %{since} 以来有 %{count} 个版本
     version:
+      signed:
       yanked: 已废弃
   will_paginate:
     next_label: 下一页

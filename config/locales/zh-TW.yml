@@ -471,6 +471,7 @@ zh-TW:
       title: "%{name} 的所有版本"
       versions_since: 自從 %{since} 以來，有 %{count} 個版本
     version:
+      signed:
       yanked: 已被移除
   will_paginate:
     next_label: 下一頁
