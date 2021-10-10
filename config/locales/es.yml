@@ -109,6 +109,9 @@ es:
       no_owned_html: Todavía no publicaste ninguna gema. Prueba a ver las guías sobre cómo %{creating_link} o %{migrating_link} una gema en rubygems.org.
       no_subscriptions_html: Aún no te suscribiste a ninguna gema. ¡Visita la %{gem_link} para suscribirte!
       title: Dashboard
+  dependencies:
+    show:
+      click_to_expand:
   email_confirmations:
     create:
       promise_resend: Te enviaremos un correo con el enlace de confirmación para activar tu cuenta si esta existe.

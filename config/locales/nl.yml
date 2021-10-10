@@ -101,6 +101,9 @@ nl:
       no_owned_html: Je hebt nog geen gems gepubliceerd. Bekijk de instructies voor het %{creating_link} van een gem of het  %{migrating_link} van een gem vanaf RubyForge.
       no_subscriptions_html: Je bent nog niet geabonneerd op een of meerdere gems. Bezoek een %{gem_link} en abonneer je erop.
       title: Dashboard
+  dependencies:
+    show:
+      click_to_expand:
   email_confirmations:
     create:
       promise_resend: Als het opgegeven account bestaat, wordt er een activatielink naar je e-mail gestuurd.

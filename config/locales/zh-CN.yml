@@ -101,6 +101,9 @@ zh-CN:
       no_owned_html: 你没有发布过任何一个 Gem。可以尝试阅读 %{creating_link} 教程，或看看 %{migrating_link} 教程。
       no_subscriptions_html: 你目前没有订阅任何 Gem，访问 %{gem_link} 可以订阅一个！
       title: 控制台
+  dependencies:
+    show:
+      click_to_expand:
   email_confirmations:
     create:
       promise_resend:

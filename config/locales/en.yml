@@ -109,6 +109,9 @@ en:
       no_owned_html: You haven't pushed any gems yet. Perhaps check out the guides on %{creating_link} a gem or %{migrating_link} a gem from RubyForge.
       no_subscriptions_html: You're not subscribed to any gems yet. Visit a %{gem_link} to subscribe to one!
       title: Dashboard
+  dependencies:
+    show:
+      click_to_expand: Click on the arrow icon (▶) to expand
   email_confirmations:
     create:
       promise_resend: We will email you confirmation link to activate your account if one exists.

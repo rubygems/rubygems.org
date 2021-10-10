@@ -101,6 +101,9 @@ zh-TW:
       no_owned_html: 你尚未發佈任何 Gem。可以閱讀 %{creating_link} 教學，或參考 %{migrating_link} 教學來將你的 Gem 從 RubyForge 遷移過來。
       no_subscriptions_html: 你還沒有訂閱過 Gem，前往 %{gem_link} 來訂閱！
       title: 控制台
+  dependencies:
+    show:
+      click_to_expand:
   email_confirmations:
     create:
       promise_resend:

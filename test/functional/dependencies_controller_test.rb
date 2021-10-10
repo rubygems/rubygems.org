@@ -71,7 +71,7 @@ class DependenciesControllerTest < ActionController::TestCase
         rubygem: @dep_rubygem_two,
         version: @version)
 
-      request_endpoint(@rubygem.name, @version.number, "json")
+      request_endpoint(@rubygem.name, @version.slug, "json")
       @response = JSON.parse(@response.body)
     end
 
@@ -83,8 +83,8 @@ class DependenciesControllerTest < ActionController::TestCase
       }
       run = render_str_call("runtime", dependencies)
       dev = render_str_call("development", dependencies)
-      assert_equal @response["run_html"], run
-      assert_equal @response["dev_html"], dev
+      assert_equal run, @response["run_html"]
+      assert_equal dev, @response["dev_html"]
     end
   end
 end
