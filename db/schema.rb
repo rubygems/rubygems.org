@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_07_101812) do
+ActiveRecord::Schema.define(version: 2021_10_09_134738) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -183,6 +183,7 @@ ActiveRecord::Schema.define(version: 2021_03_07_101812) do
     t.integer "mfa_level", default: 0
     t.string "mfa_recovery_codes", default: [], array: true
     t.integer "mail_fails", default: 0
+    t.string "blocked_email"
     t.index ["email"], name: "index_users_on_email"
     t.index ["handle"], name: "index_users_on_handle"
     t.index ["id", "confirmation_token"], name: "index_users_on_id_and_confirmation_token"
@@ -217,8 +218,8 @@ ActiveRecord::Schema.define(version: 2021_03_07_101812) do
     t.string "info_checksum"
     t.string "yanked_info_checksum"
     t.bigint "pusher_id"
-    t.string "canonical_number"
     t.text "cert_chain"
+    t.string "canonical_number"
     t.index "lower((full_name)::text)", name: "index_versions_on_lower_full_name"
     t.index ["built_at"], name: "index_versions_on_built_at"
     t.index ["created_at"], name: "index_versions_on_created_at"

@@ -76,6 +76,10 @@ class User < ApplicationRecord
     find_by(email: name) || find_by(handle: name)
   end
 
+  def self.find_by_blocked(slug)
+    find_by(blocked_email: slug) || find_by(handle: slug)
+  end
+
   def self.push_notifiable_owners
     where(ownerships: { push_notifier: true })
   end
@@ -234,6 +238,7 @@ class User < ApplicationRecord
   end
 
   def block!
+    original_email = email
     transaction do
       update_attribute(:email, "security+locked-#{SecureRandom.hex(4)}-#{display_handle.downcase}@rubygems.org")
       confirm_email!
@@ -242,7 +247,8 @@ class User < ApplicationRecord
       update!(
         remember_token: nil,
         remember_token_expires_at: nil,
-        api_key: nil
+        api_key: nil,
+        blocked_email: original_email
       )
       api_keys.delete_all
     end

@@ -168,5 +168,6 @@ class SignInTest < SystemTest
     click_button "Sign in"
 
     assert page.has_content? "Sign in"
+    assert page.has_content? "Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account."
   end
 end
