@@ -109,6 +109,9 @@ ja:
       no_owned_html: あなたはまだGemを公開していません。よろしければGemの%{creating_link}又はRubyForgeからの%{migrating_link}ガイドをご覧ください。
       no_subscriptions_html: あなたはまだGemを購読していません。%{gem_link}から購読を行なってみてください。
       title:
+  dependencies:
+    show:
+      click_to_expand:
   email_confirmations:
     create:
       promise_resend: メールアドレスが登録されている場合には、アカウント有効化のための確認メールを送信しました。

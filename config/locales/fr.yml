@@ -101,6 +101,9 @@ fr:
       no_owned_html: Vous n'avez pas encore publié de gem. Vous pouvez vérifier les guides de %{creating_link} ou de %{migrating_link} de gems depuis RubyForge.
       no_subscriptions_html: Vous n'avez pas encore d'abonnements. Visitez %{gem_link} pour vous y abonner !
       title: Dashboard
+  dependencies:
+    show:
+      click_to_expand:
   email_confirmations:
     create:
       promise_resend: Si ce compte existe, vous recevrez un email avec un lien de confirmation pour l'activer.

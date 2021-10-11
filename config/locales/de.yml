@@ -101,6 +101,9 @@ de:
       no_owned_html: Du hast noch keine Gems gepusht. Schau doch vielleicht die Dokumentation auf %{creating_link} an und %{migrating_link} ein Gem from RubyForge.
       no_subscriptions_html: Du hast noch keine Gems abonniert. Besuche %{gem_link} um das Gem zu abonnieren!
       title: Dashboard
+  dependencies:
+    show:
+      click_to_expand:
   email_confirmations:
     create:
       promise_resend:

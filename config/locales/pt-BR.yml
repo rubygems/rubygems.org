@@ -106,6 +106,9 @@ pt-BR:
       no_owned_html: Você ainda não enviou nenhuma gem. Verifique os guias sobre %{creating_link} uma gem ou %{migrating_link} uma gem do RubyForge.
       no_subscriptions_html: Você ainda não está observando nenhuma gem. Visite uma %{gem_link} para poder observá-la!
       title: Painel de Controle
+  dependencies:
+    show:
+      click_to_expand:
   email_confirmations:
     create:
       promise_resend:
