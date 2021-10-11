@@ -117,7 +117,7 @@ GEM
       email_validator (~> 2.0)
       railties (>= 5.0)
     coderay (1.1.2)
-    compact_index (0.13.0)
+    compact_index (0.14.0)
     concurrent-ruby (1.1.9)
     crass (1.0.6)
     css_parser (1.7.1)
@@ -416,7 +416,7 @@ DEPENDENCIES
   brakeman
   capybara (~> 3.35)
   clearance
-  compact_index (~> 0.13.0)
+  compact_index (~> 0.14.0)
   dalli
   delayed_job
   delayed_job_active_record

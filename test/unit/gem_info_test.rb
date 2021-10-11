@@ -87,4 +87,23 @@ class GemInfoTest < ActiveSupport::TestCase
       assert_equal @expected_versions, versions
     end
   end
+
+  context ".compact_index_public_versions" do
+    setup do
+      @ts               = 5.minutes.ago
+      @version          = create(:version, number: "0.0.1", created_at: @ts, info_checksum: "qw2dwe")
+
+      _updated_after_ts = create(:version, number: "2.0.0", created_at: @ts + 1.second)
+    end
+
+    should "not return version updated after ts" do
+      versions = GemInfo.compact_index_public_versions(@ts)
+
+      expected_versions = [CompactIndex::Gem.new(
+        @version.rubygem.name,
+        [CompactIndex::GemVersion.new(@version.number, @version.platform, @version.sha256, @version.info_checksum)]
+      )]
+      assert_equal expected_versions, versions
+    end
+  end
 end
