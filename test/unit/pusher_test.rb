@@ -294,12 +294,6 @@ class PusherTest < ActiveSupport::TestCase
         assert @cutter.authorize
       end
 
-      should "be false if mfa required and user has no mfa setup" do
-        metadata = { "rubygems_mfa_required" => "true" }
-        create(:version, rubygem: @rubygem, number: "0.1.1", metadata: metadata)
-        refute @cutter.verify_mfa_requirement
-      end
-
       should "be false if not owned by user and an indexed version exists" do
         create(:version, rubygem: @rubygem, number: "0.1.1")
         refute @cutter.authorize
@@ -311,6 +305,21 @@ class PusherTest < ActiveSupport::TestCase
       should "be true if not owned by user but no indexed versions exist" do
         create(:version, rubygem: @rubygem, number: "0.1.1", indexed: false)
         assert @cutter.authorize
+      end
+
+      context "version metadata has rubygems_mfa_required set" do
+        setup do
+          spec = mock
+          spec.expects(:metadata).returns({ "rubygems_mfa_required" => true })
+          @cutter.stubs(:spec).returns spec
+
+          metadata = { "rubygems_mfa_required" => "true" }
+          create(:version, rubygem: @rubygem, number: "0.1.1", metadata: metadata)
+        end
+
+        should "be false if user has no mfa setup" do
+          refute @cutter.verify_mfa_requirement
+        end
       end
     end
   end

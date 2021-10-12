@@ -196,7 +196,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         end
       end
 
-      context "when mfa is required by gem version" do
+      context "when mfa is required by gem" do
         setup do
           metadata = { "rubygems_mfa_required" => "true" }
           create(:version, rubygem: @rubygem, number: "1.0.0", metadata: metadata)
@@ -215,7 +215,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
             should "add other user as gem owner" do
               post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
-              assert @rubygem.owners.include?(@second_user)
+              assert @rubygem.owners_including_unconfirmed.include?(@second_user)
             end
           end
 
@@ -226,7 +226,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
             should respond_with :forbidden
             should "refuse to add other user as gem owner" do
-              refute @rubygem.owners.include?(@second_user)
+              refute @rubygem.owners_including_unconfirmed.include?(@second_user)
             end
           end
         end
@@ -238,8 +238,23 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should respond_with :forbidden
           should "refuse to add other user as gem owner" do
-            refute @rubygem.owners.include?(@second_user)
+            refute @rubygem.owners_including_unconfirmed.include?(@second_user)
           end
+        end
+      end
+
+      context "when mfa is required by yanked gem" do
+        setup do
+          metadata = { "rubygems_mfa_required" => "true" }
+          create(:version, rubygem: @rubygem, number: "1.0.0", indexed: false, metadata: metadata)
+
+          post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+        end
+
+        should respond_with :success
+
+        should "add other user as gem owner" do
+          assert @rubygem.owners_including_unconfirmed.include?(@second_user)
         end
       end
     end
