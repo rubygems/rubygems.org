@@ -9,8 +9,10 @@ class UpdateVersionsFileTest < ActiveSupport::TestCase
   end
 
   def update_versions_file
-    @created_at = Time.now.iso8601
-    Rake::Task["compact_index:update_versions_file"].invoke
+    freeze_time do
+      @created_at = Time.now.iso8601
+      Rake::Task["compact_index:update_versions_file"].invoke
+    end
   end
 
   teardown do
