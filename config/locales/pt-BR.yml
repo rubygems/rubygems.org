@@ -500,3 +500,4 @@ pt-BR:
     destroy:
       removed_notice:
       failed_notice:
+    mfa_required:

@@ -318,6 +318,7 @@ zh-TW:
     destroy:
       removed_notice:
       failed_notice:
+    mfa_required:
   settings:
     edit:
       title:

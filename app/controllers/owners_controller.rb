@@ -2,6 +2,7 @@ class OwnersController < ApplicationController
   before_action :find_rubygem, except: :confirm
   before_action :render_forbidden, unless: :owner?, except: %i[confirm resend_confirmation]
   before_action :redirect_to_verify, unless: :password_session_active?, only: %i[index create destroy]
+  before_action :verify_mfa_requirement, only: %i[create destroy]
 
   def confirm
     ownership = Ownership.find_by!(token: token_params)
@@ -82,5 +83,10 @@ class OwnersController < ApplicationController
     @ownerships = @rubygem.ownerships_including_unconfirmed.includes(:user, :authorizer)
     flash[:alert] = msg
     render :index, status: status
+  end
+
+  def verify_mfa_requirement
+    return if @rubygem.mfa_requirement_satisfied_for?(current_user)
+    index_with_error t("owners.mfa_required"), :forbidden
   end
 end

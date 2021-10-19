@@ -328,6 +328,7 @@ en:
     destroy:
       removed_notice: "%{owner_name} was removed from the owners successfully"
       failed_notice: Can't remove the only owner of the gem
+    mfa_required: The gem has MFA requirement enabled, please setup MFA on your account.
   settings:
     edit:
       title: Edit settings
