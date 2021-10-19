@@ -312,8 +312,8 @@ class Rubygem < ApplicationRecord
     latest_version&.rubygems_mfa_required?
   end
 
-  def mfa_requirement_satisfied_for?(user, version_mfa_required: false)
-    user.mfa_enabled? || !(ActiveRecord::Type::Boolean.new.cast(version_mfa_required) || mfa_required?)
+  def mfa_requirement_satisfied_for?(user)
+    user.mfa_enabled? || !mfa_required?
   end
 
   def mfa_required_since_version

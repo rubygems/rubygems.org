@@ -423,49 +423,96 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
   end
 
-  context "push to create with mfa" do
+  context "push to create with mfa required" do
     setup do
       @user = create(:api_key, key: "12345", push_rubygem: true).user
       @request.env["HTTP_AUTHORIZATION"] = "12345"
     end
 
-    context "required by rubygem" do
-      context "On post to create for new gem without MFA enabled" do
-        setup do
-          post :create, body: gem_file("mfa-required-1.0.0.gem").read
-        end
-        should respond_with :forbidden
+    context "new gem without MFA enabled" do
+      setup do
+        post :create, body: gem_file("mfa-required-1.0.0.gem").read
       end
+      should respond_with :forbidden
+    end
 
-      context "On post to create for new gem with correct OTP" do
-        setup do
-          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
-          @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
-          post :create, body: gem_file("mfa-required-1.0.0.gem").read
-        end
-        should respond_with :success
-        should "register new gem" do
-          assert_equal 1, Rubygem.count
-          assert_equal @user, Rubygem.last.ownerships.first.user
-          assert_equal "Successfully registered gem: mfa_required (1.0.0)", @response.body
-        end
+    context "new gem with correct OTP" do
+      setup do
+        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+        post :create, body: gem_file("mfa-required-1.0.0.gem").read
+      end
+      should respond_with :success
+      should "register new gem" do
+        assert_equal 1, Rubygem.count
+        assert_equal @user, Rubygem.last.ownerships.first.user
+        assert_equal "Successfully registered gem: mfa_required (1.0.0)", @response.body
       end
     end
 
-    context "required by rubygem version being pushed" do
-      context "On POST to create for existing gem by user without mfa" do
+    context "for existing gem" do
+      setup do
+        rubygem = create(:rubygem, name: "mfa_required")
+        create(:ownership, rubygem: rubygem, user: @user)
+        create(:version, rubygem: rubygem, number: "0.0.0")
+      end
+
+      context "by user without mfa" do
         setup do
-          rubygem = create(:rubygem, name: "mfa_required")
-          create(:ownership, rubygem: rubygem, user: @user)
-          create(:version, rubygem: rubygem, number: "0.0.0", updated_at: 1.year.ago, created_at: 1.year.ago)
+          post :create, body: gem_file("mfa-required-1.0.0.gem").read
+        end
+
+        should respond_with :forbidden
+      end
+
+      context "by user with mfa" do
+        setup do
           @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
           @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
           post :create, body: gem_file("mfa-required-1.0.0.gem").read
         end
+
         should respond_with :success
         should "register new version" do
           assert_equal 1, Rubygem.count
           assert_equal 2, Rubygem.last.versions.count
+        end
+      end
+    end
+
+    context "rubygems_mfa_required already enabled" do
+      setup do
+        @rubygem = create(:rubygem, name: "test")
+        create(:ownership, rubygem: @rubygem, user: @user)
+        create(:version, rubygem: @rubygem, number: "0.0.0", metadata: { "rubygems_mfa_required" => "true" })
+      end
+
+      context "by user without mfa" do
+        setup do
+          post :create, body: gem_file("test-1.0.0.gem").read
+        end
+
+        should respond_with :forbidden
+
+        should "show error message" do
+          assert_equal "Rubygem requires owners to enable MFA. You must enable MFA before pushing new version.", @response.body
+        end
+      end
+
+      context "by user with mfa" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+          post :create, body: gem_file("test-1.0.0.gem").read
+        end
+
+        should respond_with :success
+        should "register new version" do
+          assert_equal 1, Rubygem.count
+          assert_equal 2, Rubygem.last.versions.count
+        end
+        should "disable mfa requirement" do
+          refute @rubygem.mfa_required?
         end
       end
     end

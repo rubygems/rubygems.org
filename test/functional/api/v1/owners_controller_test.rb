@@ -208,26 +208,9 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
             @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
           end
 
-          context "when other user has enabled MFA" do
-            setup do
-              @second_user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
-            end
-
-            should "add other user as gem owner" do
-              post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
-              assert @rubygem.owners_including_unconfirmed.include?(@second_user)
-            end
-          end
-
-          context "when other user has not enabled MFA" do
-            setup do
-              post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
-            end
-
-            should respond_with :forbidden
-            should "refuse to add other user as gem owner" do
-              refute @rubygem.owners_including_unconfirmed.include?(@second_user)
-            end
+          should "add other user as gem owner" do
+            post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+            assert @rubygem.owners_including_unconfirmed.include?(@second_user)
           end
         end
 

@@ -195,7 +195,6 @@ class PusherTest < ActiveSupport::TestCase
       spec.expects(:version).times(2).returns Gem::Version.new("1.3.3.7")
       spec.expects(:original_platform).returns "ruby"
       spec.expects(:cert_chain).returns nil
-      spec.expects(:metadata).returns({})
       @cutter.stubs(:spec).returns spec
       @cutter.stubs(:size).returns 5
       @cutter.stubs(:body).returns StringIO.new("dummy body")
