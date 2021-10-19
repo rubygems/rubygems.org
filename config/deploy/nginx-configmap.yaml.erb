@@ -25,6 +25,7 @@ data:
       }
 
       limit_req_status 429;
+      limit_req_zone  $binary_remote_addr  zone=ui:10m  rate=10r/s;
       limit_req_zone  $binary_remote_addr  zone=abusers:10m  rate=30r/s;
       limit_req_zone  $binary_remote_addr  zone=dependencyapi:10m  rate=100r/s;
       limit_req_zone  $binary_remote_addr  zone=minutely:10m  rate=100r/m;
@@ -101,12 +102,17 @@ data:
           proxy_pass http://127.0.0.1:3000;
         }
 
+        location /api {
+          limit_req zone=abusers  burst=10 nodelay;
+          proxy_pass http://127.0.0.1:3000;
+        }
+
         location /info {
           proxy_pass http://127.0.0.1:3000;
         }
 
          <% if environment == 'staging' %>
-        location ~ ^/(api|internal) {
+        location /internal {
           limit_req zone=abusers burst=10;
           proxy_pass http://127.0.0.1:3000;
         }
@@ -119,7 +125,7 @@ data:
         }
         <% else %>
         location / {
-          limit_req zone=abusers burst=10;
+          limit_req zone=ui burst=5;
           proxy_pass http://127.0.0.1:3000;
         }
         <% end %>
