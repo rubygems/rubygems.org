@@ -131,11 +131,19 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal @cutter.code, 422
     end
 
-    should "not be able to save a gem if it is signed with an expired certificate" do
+    should "not be able to save a gem if it is signed with an expired signing certificate" do
       @gem = gem_file("expired_signature-0.0.0.gem")
       @cutter = Pusher.new(@user, @gem)
       @cutter.process
       assert_includes @cutter.message, %(not valid after 2021-07-08 08:21:01 UTC)
+      assert_equal @cutter.code, 422
+    end
+
+    should "not be able to save a gem if it is signed with an expired root or intermediate certificate" do
+      @gem = gem_file("expired_root_cert-0.0.0.gem")
+      @cutter = Pusher.new(@user, @gem)
+      @cutter.process
+      assert_includes @cutter.message, %(not valid after 1970-01-01 00:00:00 UTC)
       assert_equal @cutter.code, 422
     end
 
