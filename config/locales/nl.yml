@@ -388,6 +388,8 @@ nl:
       using_mfa_info:
       yanked_by:
       sha_256_checksum: SHA 256 checksum
+      signature_period:
+      expired:
     index:
       downloads: Downloads
       title: alle gems

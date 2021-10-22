@@ -425,6 +425,8 @@ en:
       using_mfa_info: "* All owners are using multifactor authentication (MFA)."
       yanked_by: Yanked by
       sha_256_checksum: SHA 256 checksum
+      signature_period: Signature validity period
+      expired: expired
     index:
       downloads: Downloads
       title: Gems

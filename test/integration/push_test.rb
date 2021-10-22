@@ -74,6 +74,15 @@ class PushTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert page.find("li.gem__version-wrap").has_content?("0.0.0")
     assert page.find("li.gem__version-wrap").has_content?("signed")
+
+    assert page.has_content?("Signature validity period")
+    assert page.has_content?("August 31, 2021")
+    assert page.has_content?("August 07, 2121")
+    refute page.has_content?("(expired)")
+
+    travel_to Time.zone.local(2121, 8, 8)
+    get rubygem_path("valid_signature")
+    assert page.has_content?("(expired)")
   end
 
   test "push errors bubble out" do

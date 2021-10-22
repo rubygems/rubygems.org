@@ -388,6 +388,8 @@ fr:
       using_mfa_info:
       yanked_by:
       sha_256_checksum: Total de contrôle SHA 256
+      signature_period:
+      expired:
     index:
       downloads: Téléchargements
       title: Gems
