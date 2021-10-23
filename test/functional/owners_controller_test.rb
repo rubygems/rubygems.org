@@ -5,10 +5,10 @@ class OwnersControllerTest < ActionController::TestCase
 
   context "When logged in and verified" do
     setup do
-      user = create(:user)
+      @user = create(:user)
       @rubygem = create(:rubygem)
-      create(:ownership, user: user, rubygem: @rubygem)
-      sign_in_as(user)
+      create(:ownership, user: @user, rubygem: @rubygem)
+      sign_in_as(@user)
       session[:verification] = 10.minutes.from_now
     end
 
@@ -95,6 +95,43 @@ class OwnersControllerTest < ActionController::TestCase
             end
           end
         end
+
+        context "when the gem has mfa requirement" do
+          setup do
+            metadata = { "rubygems_mfa_required" => "true" }
+            create(:version, rubygem: @rubygem, number: "0.1.0", metadata: metadata)
+
+            @new_owner = create(:user)
+          end
+
+          context "owner has not enabled mfa" do
+            setup do
+              post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name }
+            end
+
+            should respond_with :forbidden
+
+            should "show error message" do
+              expected_alert = "The gem has MFA requirement enabled, please setup MFA on your account."
+              assert_equal expected_alert, flash[:alert]
+            end
+          end
+
+          context "owner has enabled mfa" do
+            setup do
+              @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+              post :create, params: { handle: @new_owner.display_id, rubygem_id: @rubygem.name }
+            end
+
+            should redirect_to("ownerships index") { rubygem_owners_path(@rubygem) }
+
+            should "set success notice flash" do
+              expected_notice = "#{@new_owner.handle} was added as an unconfirmed owner. "\
+                "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
+              assert_equal expected_notice, flash[:notice]
+            end
+          end
+        end
       end
 
       context "when user does not own the gem" do
@@ -176,6 +213,43 @@ class OwnersControllerTest < ActionController::TestCase
             ActionMailer::Base.deliveries.clear
             Delayed::Worker.new.work_off
             assert_emails 0
+          end
+        end
+
+        context "when the gem has mfa requirement" do
+          setup do
+            @second_user = create(:user)
+            create(:ownership, :unconfirmed, rubygem: @rubygem, user: @second_user)
+
+            metadata = { "rubygems_mfa_required" => "true" }
+            create(:version, rubygem: @rubygem, number: "0.1.0", metadata: metadata)
+          end
+
+          context "owner has not enabled mfa" do
+            setup do
+              delete :destroy, params: { handle: @second_user.display_id, rubygem_id: @rubygem.name }
+            end
+
+            should respond_with :forbidden
+
+            should "show error message" do
+              expected_alert = "The gem has MFA requirement enabled, please setup MFA on your account."
+              assert_equal expected_alert, flash[:alert]
+            end
+          end
+
+          context "owner has enabled mfa" do
+            setup do
+              @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+              delete :destroy, params: { handle: @second_user.display_id, rubygem_id: @rubygem.name }
+            end
+
+            should redirect_to("ownerships index") { rubygem_owners_path(@rubygem) }
+
+            should "set success notice flash" do
+              expected_notice = "#{@second_user.handle} was removed from the owners successfully"
+              assert_equal expected_notice, flash[:notice]
+            end
           end
         end
       end

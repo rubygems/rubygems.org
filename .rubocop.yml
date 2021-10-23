@@ -59,6 +59,10 @@ Metrics/AbcSize:
   Exclude:
     - test/functional/api/v1/owners_controller_test.rb
 
+Metrics/BlockLength:
+  Exclude:
+    - test/**/*.rb
+
 Metrics/ClassLength:
   Max: 350 # TODO: Lower to 100
   Exclude:

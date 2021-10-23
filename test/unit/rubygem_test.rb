@@ -872,4 +872,84 @@ class RubygemTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "#mfa_requirement_satisfied_for?" do
+    setup do
+      @rubygem = create(:rubygem)
+      @owner   = create(:user)
+      create(:ownership, user: @owner, rubygem: @rubygem)
+    end
+
+    context "rubygems_mfa_required is set" do
+      setup do
+        metadata = { "rubygems_mfa_required" => "true" }
+        create(:version, rubygem: @rubygem, number: "1.0.0", metadata: metadata)
+      end
+
+      should "not be satisfied if owner has not enabled mfa" do
+        refute @rubygem.mfa_requirement_satisfied_for?(@owner)
+      end
+
+      should "be satisfied if owner has enabled mfa" do
+        @owner.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        assert @rubygem.mfa_requirement_satisfied_for?(@owner)
+      end
+    end
+
+    context "rubygems_mfa_required is unset for latest version" do
+      setup do
+        create(:version, rubygem: @rubygem, number: "1.0.0")
+      end
+
+      should "be satisfied" do
+        assert @rubygem.mfa_requirement_satisfied_for?(@owner)
+      end
+
+      context "rubygems_mfa_required was set for older version" do
+        setup do
+          metadata = { "rubygems_mfa_required" => "true" }
+          create(:version, rubygem: @rubygem, number: "0.0.9", metadata: metadata)
+        end
+
+        should "be satisfied" do
+          assert @rubygem.mfa_requirement_satisfied_for?(@owner)
+        end
+      end
+    end
+  end
+
+  context "#mfa_required_since_version" do
+    setup do
+      @rubygem = create(:rubygem)
+      metadata = { "rubygems_mfa_required" => "true" }
+      @version = create(:version, number: "1.0.0", rubygem: @rubygem, metadata: metadata)
+    end
+
+    context "rubygems_mfa_required is set on the latest version" do
+      should "return latest version number" do
+        assert_equal @version.number, @rubygem.mfa_required_since_version
+      end
+    end
+
+    context "rubygems_mfa_required was unset and set" do
+      setup do
+        create(:version, number: "1.0.1", rubygem: @rubygem)
+        create(:version, number: "1.0.2", rubygem: @rubygem, metadata: { "rubygems_mfa_required" => "true" })
+      end
+
+      should "return latest version number with mfa required" do
+        assert_equal "1.0.2", @rubygem.mfa_required_since_version
+      end
+    end
+
+    context "rubygems_mfa_required is not set on the latest version" do
+      setup do
+        create(:version, number: "1.0.1", rubygem: @rubygem)
+      end
+
+      should "return nil" do
+        assert_nil @rubygem.mfa_required_since_version
+      end
+    end
+  end
 end

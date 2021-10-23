@@ -49,7 +49,7 @@ class GemsSystemTest < SystemTest
   setup do
     @user = create(:user)
     @rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
-    create(:version, rubygem: @rubygem, number: "1.1.1")
+    @version = create(:version, rubygem: @rubygem, number: "1.1.1")
   end
 
   test "version navigation" do
@@ -153,5 +153,24 @@ class GemsSystemTest < SystemTest
 
     visit rubygem_path(@rubygem)
     assert page.has_no_selector?(".github-btn")
+  end
+
+  test "does show version that introduced mfa requirement" do
+    @version.update_attribute :metadata, { "rubygems_mfa_required" => "true" }
+
+    visit rubygem_path(@rubygem)
+
+    assert page.has_content? "Since 1.1.1"
+  end
+
+  test "does show correct version that introduced mfa requirement" do
+    @version.update_attribute :metadata, { "rubygems_mfa_required" => "true" }
+    create(:version, rubygem: @rubygem, number: "2.2.2")
+    create(:version, :mfa_required, rubygem: @rubygem, number: "3.3.3")
+    create(:version, :mfa_required, rubygem: @rubygem, number: "4.4.4")
+
+    visit rubygem_path(@rubygem)
+
+    assert page.has_content? "Since 3.3.3"
   end
 end

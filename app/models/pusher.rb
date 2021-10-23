@@ -12,11 +12,16 @@ class Pusher
   end
 
   def process
-    pull_spec && find && authorize && validate && save
+    pull_spec && find && authorize && verify_mfa_requirement && validate && save
   end
 
   def authorize
     rubygem.pushable? || rubygem.owned_by?(user) || notify_unauthorized
+  end
+
+  def verify_mfa_requirement
+    user.mfa_enabled? || !(version_mfa_required? || rubygem.mfa_required?) ||
+      notify("Rubygem requires owners to enable MFA. You must enable MFA before pushing new version.", 403)
   end
 
   def validate
@@ -173,5 +178,9 @@ class Pusher
 
     expected_signatures = %w[metadata.gz.sig data.tar.gz.sig checksums.yaml.gz.sig]
     expected_signatures.difference(signatures).empty?
+  end
+
+  def version_mfa_required?
+    ActiveRecord::Type::Boolean.new.cast(spec.metadata["rubygems_mfa_required"])
   end
 end

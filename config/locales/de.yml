@@ -353,6 +353,8 @@ de:
       install: installieren
       required_ruby_version: Erforderliche Ruby-Version
       required_rubygems_version:
+      requires_mfa:
+      since: "%{version}"
       links:
         badge: Abzeichen
         bugs: Bug Tracker
@@ -493,3 +495,4 @@ de:
     destroy:
       removed_notice:
       failed_notice:
+    mfa_required:
