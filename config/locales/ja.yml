@@ -463,7 +463,6 @@ ja:
       title: '%{name}の全バージョン履歴'
       versions_since: "%{since}からの%{count}項目"
     version:
-      signed:
       yanked: yanked
   will_paginate:
     next_label: 次

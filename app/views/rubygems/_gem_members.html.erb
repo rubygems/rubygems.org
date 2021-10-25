@@ -57,7 +57,7 @@
     </div>
   <% end %>
 
-  <% if latest_version.signed? %>
+  <% if latest_version.cert_chain.present? %>
     <h3 class="t-list__heading"><%= t '.signature_period' %>:</h3>
     <div class="gem__expiry">
       <%= nice_date_for(latest_version.cert_chain_valid_not_before) %> - 

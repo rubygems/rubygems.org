@@ -72,8 +72,6 @@ class PushTest < ActionDispatch::IntegrationTest
 
     get rubygem_path("valid_signature")
     assert_response :success
-    assert page.find("li.gem__version-wrap").has_content?("0.0.0")
-    assert page.find("li.gem__version-wrap").has_content?("signed")
 
     assert page.has_content?("Signature validity period")
     assert page.has_content?("August 31, 2021")

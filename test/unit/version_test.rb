@@ -908,10 +908,6 @@ class VersionTest < ActiveSupport::TestCase
       @version = build(:version, cert_chain: CertificateChainSerializer.load(cert_chain))
     end
 
-    should "be signed" do
-      assert @version.signed?
-    end
-
     should "return latest not before time" do
       latest_not_before = Time.new(2020, 4, 17).utc
       @version.cert_chain.first.not_before = latest_not_before

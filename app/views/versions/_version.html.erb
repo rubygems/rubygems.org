@@ -6,11 +6,6 @@
   <% end %>
 
   <span class="gem__version__date">(<%= number_to_human_size(version.size) %>)</span>
-
-  <% if version.signed? %>
-    <span class="gem__version__date"><%= t '.signed' %></span>
-  <% end %>
-
   <% if version.yanked? -%>
     <span class="gem__version__date"><%= t '.yanked' %></span>
   <% end -%>

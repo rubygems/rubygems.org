@@ -455,7 +455,6 @@ fr:
       title: Toutes les versions de %{name}
       versions_since: "%{count} versions depuis %{since}"
     version:
-      signed:
       yanked: retiré
   will_paginate:
     next_label: Suivant

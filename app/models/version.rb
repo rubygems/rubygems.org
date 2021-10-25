@@ -195,10 +195,6 @@ class Version < ApplicationRecord
     !indexed
   end
 
-  def signed?
-    cert_chain.present?
-  end
-
   def cert_chain_valid_not_before
     cert_chain.map(&:not_before).max
   end
