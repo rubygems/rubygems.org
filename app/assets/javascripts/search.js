@@ -18,5 +18,9 @@ if($("#advanced-search").length){
       var updated     = $updated.val().length > 0 ? 'updated: ' + $updated.val() : '';
 
       $main.val($.trim(name + ' ' + summary + ' ' + description + ' ' + downloads + ' ' + updated));
+  }).on('keypress', function(e) {
+    if (e.key === 'Enter') {
+      $("input#advanced_search_submit").click();
+    }
   });
 }
