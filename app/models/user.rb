@@ -119,7 +119,7 @@ class User < ApplicationRecord
     attrs = {
       "id" => id,
       "handle" => handle,
-      "mfa" => I18n.t("settings.mfa.level.#{mfa_label}")
+      "mfa" => I18n.t("settings.mfa.level.#{mfa_level}")
     }
 
     attrs["email"] = email unless hide_email
