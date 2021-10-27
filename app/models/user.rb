@@ -116,7 +116,12 @@ class User < ApplicationRecord
   end
 
   def payload
-    attrs = { "id" => id, "handle" => handle }
+    attrs = {
+      "id" => id,
+      "handle" => handle,
+      "mfa" => I18n.t("settings.mfa.level.#{mfa_label}")
+    }
+
     attrs["email"] = email unless hide_email
     attrs
   end

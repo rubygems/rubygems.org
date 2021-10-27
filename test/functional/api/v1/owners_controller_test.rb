@@ -29,6 +29,10 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         assert_equal @user.handle, yield(@response.body)[0]["handle"]
       end
 
+      should "return owner mfa information" do
+        assert_equal I18n.t("settings.mfa.level.disabled"), yield(@response.body)[0]["mfa"]
+      end
+
       should "not return other owner handle" do
         assert yield(@response.body).map { |owner| owner["handle"] }.exclude?(@other_user.handle)
       end
