@@ -414,6 +414,8 @@ zh-TW:
       using_mfa_info:
       yanked_by:
       sha_256_checksum: SHA 256 checksum
+      signature_period:
+      expired:
     index:
       downloads: 下載
       title: Gems
@@ -479,7 +481,6 @@ zh-TW:
       title: "%{name} 的所有版本"
       versions_since: 自從 %{since} 以來，有 %{count} 個版本
     version:
-      signed:
       yanked: 已被移除
   will_paginate:
     next_label: 下一頁

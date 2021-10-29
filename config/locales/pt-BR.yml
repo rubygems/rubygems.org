@@ -393,6 +393,8 @@ pt-BR:
       using_mfa_info: "* Todos os donos estão usando MFA."
       yanked_by:
       sha_256_checksum: SHA 256 checksum
+      signature_period:
+      expired:
     index:
       downloads: Downloads
       title: Gems
@@ -458,7 +460,6 @@ pt-BR:
       title: Todas as versões para %{name}
       versions_since: "%{count} versões desde %{since}"
     version:
-      signed:
       yanked: removida
   will_paginate:
     next_label:

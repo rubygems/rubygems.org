@@ -388,6 +388,8 @@ fr:
       using_mfa_info:
       yanked_by:
       sha_256_checksum: Total de contrôle SHA 256
+      signature_period:
+      expired:
     index:
       downloads: Téléchargements
       title: Gems
@@ -453,7 +455,6 @@ fr:
       title: Toutes les versions de %{name}
       versions_since: "%{count} versions depuis %{since}"
     version:
-      signed:
       yanked: retiré
   will_paginate:
     next_label: Suivant

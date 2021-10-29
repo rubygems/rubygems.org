@@ -902,6 +902,40 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
+  context "with cert_chain" do
+    setup do
+      cert_chain = File.read(File.expand_path("../certs/chain.pem", __dir__))
+      @version = build(:version, cert_chain: CertificateChainSerializer.load(cert_chain))
+    end
+
+    should "return latest not before time" do
+      latest_not_before = Time.new(2020, 4, 17).utc
+      @version.cert_chain.first.not_before = latest_not_before
+      @version.cert_chain.last.not_before = Time.new(2000, 4, 17).utc
+
+      assert_equal latest_not_before, @version.cert_chain_valid_not_before
+    end
+
+    should "return earliest not after time" do
+      earliest_not_after = Time.new(2022, 4, 17).utc
+      @version.cert_chain.first.not_after = Time.new(2100, 4, 17).utc
+      @version.cert_chain.last.not_after = earliest_not_after
+
+      assert_equal earliest_not_after, @version.cert_chain_valid_not_after
+    end
+
+    should "return true if signature is expired" do
+      @version.cert_chain.last.not_after = 1.year.ago
+      assert @version.signature_expired?
+    end
+
+    should "return false if signature is not expired" do
+      @version.cert_chain.last.not_after = 1.year.from_now
+      @version.cert_chain.first.not_after = 1.year.from_now
+      refute @version.signature_expired?
+    end
+  end
+
   context "created_between" do
     setup do
       @version = build(:version)

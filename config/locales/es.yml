@@ -396,6 +396,8 @@ es:
       using_mfa_info: "* Todos los propietarios están usando MFA."
       yanked_by: Borrada por
       sha_256_checksum: SHA 256 checksum
+      signature_period:
+      expired:
     index:
       downloads: Descargas
       title: Gemas
@@ -461,7 +463,6 @@ es:
       title: Todas las versiones de %{name}
       versions_since: "%{count} versiones desde %{since}"
     version:
-      signed:
       yanked: borrada
   will_paginate:
     next_label: Siguiente

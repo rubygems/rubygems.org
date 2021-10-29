@@ -195,8 +195,17 @@ class Version < ApplicationRecord
     !indexed
   end
 
-  def signed?
-    cert_chain.present?
+  def cert_chain_valid_not_before
+    cert_chain.map(&:not_before).max
+  end
+
+  def cert_chain_valid_not_after
+    cert_chain.map(&:not_after).min
+  end
+
+  def signature_expired?
+    return false unless (expiration_time = cert_chain_valid_not_after)
+    expiration_time < Time.now.utc
   end
 
   def size
