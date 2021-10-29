@@ -139,12 +139,58 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal @cutter.code, 422
     end
 
-    should "not be able to save a gem if it is signed with an expired root or intermediate certificate" do
-      @gem = gem_file("expired_root_cert-0.0.0.gem")
-      @cutter = Pusher.new(@user, @gem)
-      @cutter.process
-      assert_includes @cutter.message, %(not valid after 1970-01-01 00:00:00 UTC)
-      assert_equal @cutter.code, 422
+    context "for a signed gem having an expired root or intermediate certificate" do
+      setup do
+        Dir.chdir(Dir.mktmpdir)
+      end
+
+      should "not be able to save the gem" do
+        root_key = OpenSSL::PKey::RSA.new(1024)
+        root_subject = "/C=FI/O=Test/OU=Test/CN=Root"
+
+        root_cert = OpenSSL::X509::Certificate.new
+        root_cert.subject = root_cert.issuer = OpenSSL::X509::Name.parse(root_subject)
+        root_cert.not_before = 1.year.ago
+        root_cert.not_after = 1.day.ago
+        root_cert.public_key = root_key.public_key
+        root_cert.serial = 0x0
+        root_cert.version = 2
+        root_cert.sign(root_key, OpenSSL::Digest.new("SHA256"))
+
+        signing_key = OpenSSL::PKey::RSA.new(1024)
+        subject = "/C=FI/O=Test/OU=Test/CN=Test"
+
+        cert = OpenSSL::X509::Certificate.new
+        cert.issuer = OpenSSL::X509::Name.parse(root_subject)
+        cert.subject = OpenSSL::X509::Name.parse(subject)
+        cert.not_before = Time.current
+        cert.not_after = 1.year.from_now
+        cert.public_key = signing_key.public_key
+        cert.serial = 0x0
+        cert.version = 2
+        cert.sign(root_key, OpenSSL::Digest.new("SHA256"))
+
+        begin
+          old_verify_root_policy = Gem::Security::SigningPolicy.verify_root
+          Gem::Security::SigningPolicy.verify_root = false
+
+          gem_file = build_gem("expired_root_cert", "0.0.0") do |spec|
+            spec.signing_key = signing_key
+            spec.cert_chain = [root_cert, cert]
+          end
+        ensure
+          Gem::Security::SigningPolicy.verify_root = old_verify_root_policy
+        end
+
+        @cutter = Pusher.new(@user, File.open(gem_file))
+        @cutter.process
+        assert_includes @cutter.message, %(CN=Root not valid after)
+        assert_equal @cutter.code, 422
+      end
+
+      teardown do
+        Dir.chdir(Rails.root)
+      end
     end
 
     should "not be able to pull spec with metadata containing bad ruby symbols" do
