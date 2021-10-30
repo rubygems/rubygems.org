@@ -2,7 +2,7 @@
  * clipboard.js v2.0.8
  * https://clipboardjs.com/
  *
- * Licensed MIT © Zeno Rocha
+ * Licensed MIT © guanlong huang
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
