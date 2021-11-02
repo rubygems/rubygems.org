@@ -38,7 +38,7 @@ class AdvancedSearchTest < SystemTest
     fill_in "downloads", with: ">69"
     fill_in "updated", with: ">2021-05-05"
 
-    has_field? "Search Gems…", with: "name: hello summary: world description: foo downloads: >69 updated: >2021-05-05"
+    assert has_field? "Search Gems…", with: "name: hello summary: world description: foo downloads: >69 updated: >2021-05-05"
   end
 
   teardown do
