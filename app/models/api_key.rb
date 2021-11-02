@@ -19,6 +19,16 @@ class ApiKey < ApplicationRecord
     end
   end
 
+  def mfa_authorized?(otp)
+    return true unless mfa_enabled?
+    user.otp_verified?(otp)
+  end
+
+  def mfa_enabled?
+    return false unless user.mfa_enabled?
+    user.mfa_ui_and_api? || mfa
+  end
+
   private
 
   def exclusive_show_dashboard_scope

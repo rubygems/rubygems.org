@@ -102,7 +102,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         @second_user = create(:user)
         @third_user = create(:user)
         create(:ownership, rubygem: @rubygem, user: @user)
-        create(:api_key, key: "12334", add_owner: true, user: @user)
+        @api_key = create(:api_key, key: "12334", add_owner: true, user: @user)
         @request.env["HTTP_AUTHORIZATION"] = "12334"
       end
 
@@ -144,6 +144,28 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           should "succeed to add new owner" do
             assert_includes @rubygem.owners_including_unconfirmed, @second_user
           end
+        end
+      end
+
+      context "when mfa for UI only is enabled" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+        end
+
+        context "api key has mfa enabled" do
+          setup do
+            @api_key.mfa = true
+            @api_key.save!
+            post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+          end
+          should respond_with :unauthorized
+        end
+
+        context "api key does not have mfa enabled" do
+          setup do
+            post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+          end
+          should respond_with :success
         end
       end
 

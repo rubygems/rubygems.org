@@ -3,8 +3,8 @@ require "test_helper"
 class Api::V1::DeletionsControllerTest < ActionController::TestCase
   context "with yank rubygem api key scope" do
     setup do
-      api_key = create(:api_key, key: "12345", yank_rubygem: true)
-      @user = api_key.user
+      @api_key = create(:api_key, key: "12345", yank_rubygem: true)
+      @user = @api_key.user
       @request.env["HTTP_AUTHORIZATION"] = "12345"
     end
 
@@ -51,6 +51,28 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
                                           rubygem: @rubygem.name,
                                           number: @v1.number).first
           end
+        end
+      end
+
+      context "when mfa for UI only is enabled" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+        end
+
+        context "api key has mfa enabled" do
+          setup do
+            @api_key.mfa = true
+            @api_key.save!
+            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          end
+          should respond_with :unauthorized
+        end
+
+        context "api key does not have mfa enabled" do
+          setup do
+            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          end
+          should respond_with :success
         end
       end
 

@@ -27,7 +27,7 @@ class Api::BaseController < ApplicationController
 
   def verify_with_otp
     otp = request.headers["HTTP_OTP"]
-    return if @api_key.user.mfa_api_authorized?(otp)
+    return if @api_key.mfa_authorized?(otp)
     prompt_text = otp.present? ? t(:otp_incorrect) : t(:otp_missing)
     render plain: prompt_text, status: :unauthorized
   end
