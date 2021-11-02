@@ -5,11 +5,23 @@
     <%= label_tag :name, t("api_keys.index.name"), class: "form__label" %>
     <%= f.text_field :name, class: "form__input", autocomplete: :off %>
 
-    <%= label_tag :scope, t("api_keys.index.scope"), class: "form__label" %>
-    <% ApiKey::API_SCOPES.each do |api_scope| %>
-      <div class = "form__checkbox__item">
-        <%= f.check_box "#{api_scope}", { class: "form__checkbox__input", id: "#{api_scope}" } , "true", "false" %>
-        <%= label_tag api_scope, t("api_keys.index.#{api_scope}"), class: "form__checkbox__label" %>
+    <div class="form__group">
+      <%= label_tag :scope, t("api_keys.index.scope"), class: "form__label" %>
+      <% ApiKey::API_SCOPES.each do |api_scope| %>
+        <div class = "form__checkbox__item">
+          <%= f.check_box "#{api_scope}", { class: "form__checkbox__input", id: "#{api_scope}" } , "true", "false" %>
+          <%= label_tag api_scope, t("api_keys.index.#{api_scope}"), class: "form__checkbox__label" %>
+        </div>
+      <% end %>
+    </div>
+
+    <% unless current_user.mfa_disabled? || current_user.mfa_ui_and_api? %>
+      <div class="form__group">
+        <%= label_tag :mfa, t(".multifactor_auth"), class: "form__label" %>
+        <div class="form__checkbox__item">
+          <%= f.check_box :mfa, { class: "form__checkbox__input", id: :mfa } , "true", "false" %>
+          <%= label_tag :mfa, t(".enable_mfa"), class: "form__checkbox__label" %>
+        </div>
       </div>
     <% end %>
 

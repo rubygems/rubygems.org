@@ -85,14 +85,20 @@ en:
       show_dashboard: Show dashboard
       reset: Reset
       save_key: "Note that we won't be able to show the key to you again. New API key:"
+      mfa: MFA
     new:
       new_api_key: New API key
+      mfa_api_enabled: Your new key will have multifactor authentication turned on because you have enabled the UI and API MFA level.
+      multifactor_auth: Multifactor authentication
+      enable_mfa: Enable MFA
     reset:
       success: "Deleted all API keys"
     update:
       success: "Successfully updated API key"
     edit:
       edit_api_key: "Edit API key"
+      multifactor_auth: Multifactor authentication
+      enable_mfa: Enable MFA
   clearance_mailer:
     change_password:
       title: CHANGE PASSWORD

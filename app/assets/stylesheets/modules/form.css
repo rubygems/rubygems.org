@@ -41,7 +41,7 @@
 .form__input__addon-left .form__input {
   padding-left: 45px; }
 
-.form__input, .form__textarea, .form__select {
+.form__input, .form__textarea, .form__select, .form__group {
   margin-bottom: 30px; }
 
 .form__input, .form__textarea {
