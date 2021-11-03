@@ -139,44 +139,32 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal @cutter.code, 422
     end
 
-    context "for a signed gem having an expired root or intermediate certificate" do
+    context "for a signed gem having two certificates in the chain" do
       setup do
         Dir.chdir(Dir.mktmpdir)
       end
 
-      should "not be able to save the gem" do
-        root_key = OpenSSL::PKey::RSA.new(1024)
-        root_subject = "/C=FI/O=Test/OU=Test/CN=Root"
+      should "be able to save the gem if the chain is valid" do
+        gem_file = build_gem("valid_cert_chain", "0.0.0") do |spec|
+          signing_key = OpenSSL::PKey::RSA.new(1024)
+          spec.signing_key = signing_key
+          spec.cert_chain = two_cert_chain(signing_key: signing_key)
+        end
 
-        root_cert = OpenSSL::X509::Certificate.new
-        root_cert.subject = root_cert.issuer = OpenSSL::X509::Name.parse(root_subject)
-        root_cert.not_before = 1.year.ago
-        root_cert.not_after = 1.day.ago
-        root_cert.public_key = root_key.public_key
-        root_cert.serial = 0x0
-        root_cert.version = 2
-        root_cert.sign(root_key, OpenSSL::Digest.new("SHA256"))
+        @cutter = Pusher.new(@user, File.open(gem_file))
+        @cutter.process
+        assert_equal 200, @cutter.code
+      end
 
-        signing_key = OpenSSL::PKey::RSA.new(1024)
-        subject = "/C=FI/O=Test/OU=Test/CN=Test"
-
-        cert = OpenSSL::X509::Certificate.new
-        cert.issuer = OpenSSL::X509::Name.parse(root_subject)
-        cert.subject = OpenSSL::X509::Name.parse(subject)
-        cert.not_before = Time.current
-        cert.not_after = 1.year.from_now
-        cert.public_key = signing_key.public_key
-        cert.serial = 0x0
-        cert.version = 2
-        cert.sign(root_key, OpenSSL::Digest.new("SHA256"))
-
+      should "not be able to save the gem if the root certificate has expired" do
         begin
           old_verify_root_policy = Gem::Security::SigningPolicy.verify_root
           Gem::Security::SigningPolicy.verify_root = false
+          signing_key = OpenSSL::PKey::RSA.new(1024)
 
           gem_file = build_gem("expired_root_cert", "0.0.0") do |spec|
             spec.signing_key = signing_key
-            spec.cert_chain = [root_cert, cert]
+            spec.cert_chain = two_cert_chain(signing_key: signing_key, root_not_before: 2.years.ago)
           end
         ensure
           Gem::Security::SigningPolicy.verify_root = old_verify_root_policy
@@ -224,6 +212,34 @@ class PusherTest < ActiveSupport::TestCase
       @cutter.pull_spec
       assert_includes @cutter.message, %{package content (data.tar.gz) is missing}
     end
+  end
+
+  def two_cert_chain(signing_key:, root_not_before: Time.current, cert_not_before: Time.current)
+    root_key = OpenSSL::PKey::RSA.new(1024)
+    root_subject = "/C=FI/O=Test/OU=Test/CN=Root"
+
+    root_cert = OpenSSL::X509::Certificate.new
+    root_cert.subject = root_cert.issuer = OpenSSL::X509::Name.parse(root_subject)
+    root_cert.not_before = root_not_before
+    root_cert.not_after = root_not_before + 1.year
+    root_cert.public_key = root_key.public_key
+    root_cert.serial = 0x0
+    root_cert.version = 2
+    root_cert.sign(root_key, OpenSSL::Digest.new("SHA256"))
+
+    subject = "/C=FI/O=Test/OU=Test/CN=Test"
+
+    cert = OpenSSL::X509::Certificate.new
+    cert.issuer = OpenSSL::X509::Name.parse(root_subject)
+    cert.subject = OpenSSL::X509::Name.parse(subject)
+    cert.not_before = cert_not_before
+    cert.not_after = cert_not_before + 1.year
+    cert.public_key = signing_key.public_key
+    cert.serial = 0x0
+    cert.version = 2
+    cert.sign(root_key, OpenSSL::Digest.new("SHA256"))
+
+    [root_cert, cert]
   end
 
   context "initialize new gem with find if one does not exist" do
