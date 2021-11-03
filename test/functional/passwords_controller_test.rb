@@ -5,7 +5,7 @@ class PasswordsControllerTest < ActionController::TestCase
     context "when missing email" do
       should "alerts about missing email" do
         post :create
-        assert_equal flash[:alert], "Email can't be blank."
+        assert_equal "Email can't be blank.", flash[:alert]
       end
     end
 
@@ -46,7 +46,7 @@ class PasswordsControllerTest < ActionController::TestCase
 
       should redirect_to("the home page") { root_path }
       should "warn about invalid url" do
-        assert_equal flash[:alert], "Please double check the URL or try submitting it again."
+        assert_equal "Please double check the URL or try submitting it again.", flash[:alert]
       end
     end
 
@@ -90,7 +90,7 @@ class PasswordsControllerTest < ActionController::TestCase
 
         should respond_with :unauthorized
         should "alert about otp being incorrect" do
-          assert_equal flash[:alert], "Your OTP code is incorrect."
+          assert_equal "Your OTP code is incorrect.", flash[:alert]
         end
       end
     end

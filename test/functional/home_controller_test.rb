@@ -23,6 +23,6 @@ class HomeControllerTest < ActionController::TestCase
 
   should "use default locale on GET using invalid one" do
     get :index, params: { locale: "foobar" }
-    assert_equal I18n.locale, I18n.default_locale
+    assert_equal I18n.default_locale, I18n.locale
   end
 end

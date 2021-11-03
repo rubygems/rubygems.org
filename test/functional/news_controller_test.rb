@@ -78,7 +78,7 @@ class NewsControllerTest < ActionController::TestCase
 
     should "display correct number of entries" do
       entries = assert_select("h2.gems__gem__name")
-      assert_equal(entries.size, 2)
+      assert_equal(2, entries.size)
     end
   end
 end

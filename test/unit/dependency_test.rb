@@ -22,7 +22,7 @@ class DependencyTest < ActiveSupport::TestCase
       long_requirement_suffix = ".0" * (Gemcutter::MAX_FIELD_LENGTH + 1)
       @dependency.gem_dependency = Gem::Dependency.new("holla", ["= 0#{long_requirement_suffix}"])
       refute @dependency.valid?
-      assert_equal @dependency.errors.messages[:requirements], ["is too long (maximum is 255 characters)"]
+      assert_equal ["is too long (maximum is 255 characters)"], @dependency.errors.messages[:requirements]
     end
 
     should "be invalid with unresolved_name longer than maximum field length" do
@@ -30,7 +30,7 @@ class DependencyTest < ActiveSupport::TestCase
       gem_dependency = Gem::Dependency.new(long_unresolved_name, ["= 0.0.0"])
       dependency = Dependency.create(gem_dependency: gem_dependency)
       refute dependency.valid?
-      assert_equal dependency.errors.messages[:unresolved_name], ["is too long (maximum is 255 characters)"]
+      assert_equal ["is too long (maximum is 255 characters)"], dependency.errors.messages[:unresolved_name]
     end
 
     should "return JSON" do
