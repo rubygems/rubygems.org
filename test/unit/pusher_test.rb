@@ -95,7 +95,7 @@ class PusherTest < ActiveSupport::TestCase
       @cutter.pull_spec
       assert_nil @cutter.spec
       assert_match(/RubyGems\.org cannot process this gem/, @cutter.message)
-      assert_equal @cutter.code, 422
+      assert_equal 422, @cutter.code
     end
 
     should "not be able to pull spec with metadata containing bad ruby objects" do
@@ -110,7 +110,7 @@ class PusherTest < ActiveSupport::TestCase
       assert_nil @cutter.spec
       assert_match(/RubyGems\.org cannot process this gem/, @cutter.message)
       assert_match(/ActionController::Routing::RouteSet::NamedRouteCollection/, @cutter.message)
-      assert_equal @cutter.code, 422
+      assert_equal 422, @cutter.code
     end
 
     should "not be able to save a gem if it is not valid" do
@@ -123,7 +123,7 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal @cutter.rubygem.name, "legit"
       assert_equal @cutter.version.number, "gem-0.0.1"
       assert_match(/There was a problem saving your gem: Number is invalid/, @cutter.message)
-      assert_equal @cutter.code, 403
+      assert_equal 403, @cutter.code
     end
 
     should "not be able to save a gem if the date is not valid" do
@@ -136,7 +136,7 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal "", out
       assert_equal("Exception while verifying \n", err)
       assert_match(/mon out of range/, @cutter.message)
-      assert_equal @cutter.code, 422
+      assert_equal 422, @cutter.code
     end
 
     should "not be able to save a gem if it is signed and has been tampered with" do
@@ -144,7 +144,7 @@ class PusherTest < ActiveSupport::TestCase
       @cutter = Pusher.new(@user, @gem)
       @cutter.process
       assert_includes @cutter.message, %(missing signing certificate)
-      assert_equal @cutter.code, 422
+      assert_equal 422, @cutter.code
     end
 
     should "not be able to save a gem if it is signed with an expired certificate" do
@@ -152,7 +152,7 @@ class PusherTest < ActiveSupport::TestCase
       @cutter = Pusher.new(@user, @gem)
       @cutter.process
       assert_includes @cutter.message, %(not valid after 2021-07-08 08:21:01 UTC)
-      assert_equal @cutter.code, 422
+      assert_equal 422, @cutter.code
     end
 
     should "not be able to pull spec with metadata containing bad ruby symbols" do
@@ -168,7 +168,7 @@ class PusherTest < ActiveSupport::TestCase
         assert_nil @cutter.spec
         assert_includes @cutter.message, %(RubyGems.org cannot process this gem)
         assert_includes @cutter.message, %(Tried to load unspecified class: Symbol)
-        assert_equal @cutter.code, 422
+        assert_equal 422, @cutter.code
       end
     end
 
@@ -268,7 +268,7 @@ class PusherTest < ActiveSupport::TestCase
       @cutter.rubygem.save
       @rubygem.reload
 
-      assert_equal @rubygem.name, @rubygem.name.upcase
+      assert_equal @rubygem.name.upcase, @rubygem.name
     end
   end
 
