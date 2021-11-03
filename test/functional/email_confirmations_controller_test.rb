@@ -21,7 +21,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       setup { get :update, params: { token: Clearance::Token.new } }
 
       should "warn about invalid url" do
-        assert_equal flash[:alert], "Please double check the URL or try submitting it again."
+        assert_equal "Please double check the URL or try submitting it again.", flash[:alert]
       end
       should "not sign in user" do
         refute cookies[:remember_token]
@@ -35,7 +35,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       end
 
       should "warn about invalid url" do
-        assert_equal flash[:alert], "Please double check the URL or try submitting it again."
+        assert_equal "Please double check the URL or try submitting it again.", flash[:alert]
       end
       should "not sign in user" do
         refute cookies[:remember_token]
@@ -83,7 +83,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
         should respond_with :unauthorized
         should "alert about otp being incorrect" do
-          assert_equal flash[:alert], "Your OTP code is incorrect."
+          assert_equal "Your OTP code is incorrect.", flash[:alert]
         end
       end
     end
@@ -121,7 +121,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       end
 
       should "promise to send email if account exists" do
-        assert_equal flash[:notice], "We will email you confirmation link to activate your account if one exists."
+        assert_equal "We will email you confirmation link to activate your account if one exists.", flash[:notice]
       end
     end
 
