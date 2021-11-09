@@ -163,7 +163,7 @@ class Pusher
   def gem_security_policy
     @gem_security_policy ||= begin
       # Verify that the gem signatures match the certificate chain (if present)
-      policy = Gem::Security::LowSecurity.dup
+      policy = PushPolicy.dup
       # Silence warnings from the verification
       stream = StringIO.new
       policy.ui = Gem::StreamUI.new(stream, stream, stream, false)
