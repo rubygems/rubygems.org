@@ -11,7 +11,7 @@ How To Contribute
 * Commit your changes
 * Keep up to date: `git fetch && git rebase origin/master`
 
-Once you’re ready:
+Once you’re ready: 
 
 * Fork the project on GitHub
 * Add your repository as a remote: `git remote add your_remote your_repo`
@@ -19,8 +19,8 @@ Once you’re ready:
 * Create a Pull Request for the topic branch, asking for review.
 
 If you’re looking for things to hack on, please check
-[GitHub Issues](https://github.com/rubygems/rubygems.org/issues). If you’ve
-found bugs or have feature ideas don’t be afraid to pipe up and ask the
+[GitHub Issues] (https://github.com/rubygems/rubygems.org/issues). If you’ve
+found bugs or have feature ideas don’t be afraid to pipe up and ask the 
 [mailing list](https://groups.google.com/group/rubygems-org) or IRC channel
 (`#rubygems` on `irc.freenode.net`) about them.
 
