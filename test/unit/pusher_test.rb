@@ -9,14 +9,14 @@ class PusherTest < ActiveSupport::TestCase
 
   context "creating a new gemcutter" do
     should "have some state" do
-      assert @cutter.respond_to?(:user)
-      assert @cutter.respond_to?(:version)
-      assert @cutter.respond_to?(:version_id)
-      assert @cutter.respond_to?(:spec)
-      assert @cutter.respond_to?(:message)
-      assert @cutter.respond_to?(:code)
-      assert @cutter.respond_to?(:rubygem)
-      assert @cutter.respond_to?(:body)
+      assert_respond_to @cutter, :user
+      assert_respond_to @cutter, :version
+      assert_respond_to @cutter, :version_id
+      assert_respond_to @cutter, :spec
+      assert_respond_to @cutter, :message
+      assert_respond_to @cutter, :code
+      assert_respond_to @cutter, :rubygem
+      assert_respond_to @cutter, :body
 
       assert_equal @user, @cutter.user
     end
@@ -120,8 +120,8 @@ class PusherTest < ActiveSupport::TestCase
       @cutter = Pusher.new(@user, @gem)
       @cutter.stubs(:save).never
       @cutter.process
-      assert_equal @cutter.rubygem.name, "legit"
-      assert_equal @cutter.version.number, "gem-0.0.1"
+      assert_equal("legit", @cutter.rubygem.name)
+      assert_equal("gem-0.0.1", @cutter.version.number)
       assert_match(/There was a problem saving your gem: Number is invalid/, @cutter.message)
       assert_equal 403, @cutter.code
     end
@@ -189,7 +189,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter = Pusher.new(@user, File.open(gem_file))
         @cutter.process
         assert_includes @cutter.message, %(CN=Root not valid after)
-        assert_equal @cutter.code, 422
+        assert_equal(422, @cutter.code)
       end
 
       teardown do
@@ -407,7 +407,7 @@ class PusherTest < ActiveSupport::TestCase
 
     context "when cutter is saved" do
       setup do
-        assert_equal true, @cutter.save
+        assert @cutter.save
       end
 
       should "set gem file size" do

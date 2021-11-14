@@ -24,8 +24,7 @@ FactoryBot.define do
     rubygem
     version
 
-    trait :runtime do
-    end
+    trait :runtime
 
     trait :development do
       gem_dependency do

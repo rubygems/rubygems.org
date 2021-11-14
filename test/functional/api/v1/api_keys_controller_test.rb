@@ -60,7 +60,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
   def self.should_deliver_api_key_created_email
     should "deliver api key created email" do
-      refute ActionMailer::Base.deliveries.empty?
+      refute_empty ActionMailer::Base.deliveries
       email = ActionMailer::Base.deliveries.last
       assert_equal [@user.email], email.to
       assert_equal ["no-reply@mailer.rubygems.org"], email.from
@@ -269,7 +269,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       should_return_api_key_successfully
 
       should "deliver api key created email" do
-        refute ActionMailer::Base.deliveries.empty?
+        refute_empty ActionMailer::Base.deliveries
         email = ActionMailer::Base.deliveries.last
         assert_equal [@user.email], email.to
         assert_equal ["no-reply@mailer.rubygems.org"], email.from

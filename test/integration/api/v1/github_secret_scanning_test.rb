@@ -128,7 +128,7 @@ class Api::V1::GithubSecretScanningTest < ActionDispatch::IntegrationTest
       end
 
       should "delivers an email" do
-        refute ActionMailer::Base.deliveries.empty?
+        refute_empty ActionMailer::Base.deliveries
         email = ActionMailer::Base.deliveries.last
         assert_equal [@api_key.user.email], email.to
         assert_equal ["no-reply@mailer.rubygems.org"], email.from

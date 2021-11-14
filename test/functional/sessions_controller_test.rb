@@ -16,7 +16,7 @@ class SessionsControllerTest < ActionController::TestCase
 
       should respond_with :success
       should "save user name in session" do
-        assert @controller.session[:mfa_user] == @user.handle
+        assert_equal @controller.session[:mfa_user], @user.handle
         assert page.has_content? "Multifactor authentication"
       end
     end
@@ -31,7 +31,7 @@ class SessionsControllerTest < ActionController::TestCase
         should respond_with :redirect
         should redirect_to("the dashboard") { dashboard_path }
         should "clear user name in session" do
-          assert @controller.session[:mfa_user].nil?
+          assert_nil @controller.session[:mfa_user]
         end
 
         should "make user logged in" do
@@ -48,7 +48,7 @@ class SessionsControllerTest < ActionController::TestCase
         should respond_with :redirect
         should redirect_to("the dashboard") { dashboard_path }
         should "clear user name in session" do
-          assert @controller.session[:mfa_user].nil?
+          assert_nil @controller.session[:mfa_user]
         end
 
         should "make user logged in" do

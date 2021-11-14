@@ -38,7 +38,7 @@ class DeletionTest < ActiveSupport::TestCase
       end
 
       should "be considered deleted" do
-        assert Version.yanked.include?(@version)
+        assert_includes Version.yanked, @version
       end
 
       should "no longer be latest" do
@@ -82,7 +82,7 @@ class DeletionTest < ActiveSupport::TestCase
 
     response = Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
                                                     id: @version.rubygem_id
-    assert_equal true, response["_source"]["yanked"]
+    assert response["_source"]["yanked"]
   end
 
   should "record version metadata" do

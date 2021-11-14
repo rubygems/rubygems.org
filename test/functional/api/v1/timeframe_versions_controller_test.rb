@@ -35,7 +35,7 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
         }
 
         gems = JSON.parse @response.body
-        assert_equal [], gems
+        assert_empty gems
       end
     end
 
@@ -47,7 +47,7 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
         }
 
         assert_equal 400, response.status
-        assert response.body.include?("iso8601")
+        assert_includes response.body, "iso8601"
       end
 
       should 'return a bad request with message when "from" is invalid' do
@@ -57,7 +57,7 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
         }
 
         assert_equal 400, response.status
-        assert response.body.include?("iso8601")
+        assert_includes response.body, "iso8601"
       end
 
       should "return a bad request with message when the range exceeds the max allowed" do
@@ -67,7 +67,7 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
         }
 
         assert_equal 400, response.status
-        assert response.body.include?("query time range cannot exceed")
+        assert_includes response.body, "query time range cannot exceed"
       end
 
       should "return a bad request with message if from is after to" do
@@ -77,7 +77,7 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
         }
 
         assert_equal 400, response.status
-        assert response.body.include?("must be before the ending time parameter")
+        assert_includes response.body, "must be before the ending time parameter"
       end
     end
 
@@ -86,7 +86,7 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
         get :index, format: :json, params: { to: Time.zone.parse("2017-11-12").iso8601 }
 
         assert_equal 400, response.status
-        assert response.body.include?("missing")
+        assert_includes response.body, "missing"
       end
 
       should 'default to the current time if "to" is missing' do

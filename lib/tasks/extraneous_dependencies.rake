@@ -13,13 +13,13 @@ namespace :extraneous_dependencies do
 
     spec_obj = Marshal.load(Gem::Util.inflate(res.body))
 
-    spec_run_deps = spec_obj.dependencies.map do |s|
+    spec_run_deps = spec_obj.dependencies.filter_map do |s|
       s.name.to_s.downcase if s.type == :runtime && Rubygem.where(name: s.name.to_s).present?
-    end.compact.sort
+    end.sort
 
-    spec_dev_deps = spec_obj.dependencies.map do |s|
+    spec_dev_deps = spec_obj.dependencies.filter_map do |s|
       s.name.to_s.downcase if s.type == :development && Rubygem.where(name: s.name.to_s).present?
-    end.compact.sort
+    end.sort
 
     [spec_run_deps, spec_dev_deps]
   end
@@ -70,7 +70,7 @@ namespace :extraneous_dependencies do
 
         run_mis_match += 1
         Rails.logger.info("[extraneous_dependencies:clean] spec and db run deps don't match "\
-          "for: #{version.full_name} spec: #{spec_run_deps} db: #{db_run_deps}")
+                          "for: #{version.full_name} spec: #{spec_run_deps} db: #{db_run_deps}")
       end
 
       if spec_dev_deps != db_dev_deps.values.sort
@@ -85,7 +85,7 @@ namespace :extraneous_dependencies do
 
         dev_mis_match += 1
         Rails.logger.info("[extraneous_dependencies:clean] spec and db dev deps don't match "\
-          "for: #{version.full_name} spec: #{spec_dev_deps} db: #{db_dev_deps}")
+                          "for: #{version.full_name} spec: #{spec_dev_deps} db: #{db_dev_deps}")
       end
 
       if deps_to_delete.present?
@@ -106,6 +106,6 @@ namespace :extraneous_dependencies do
     Rails.logger.info("[extraneous_dependencies:clean] #{total_deleted_deps} dependencies deleted")
     Rails.logger.info("[extraneous_dependencies:clean] #{errored}/#{processed} errors")
     Rails.logger.info("[extraneous_dependencies:clean] #{mis_match_versions}/#{processed} version mismatches " \
-      "(run_deps: #{run_mis_match}, dev_deps: #{dev_mis_match})")
+                      "(run_deps: #{run_mis_match}, dev_deps: #{dev_mis_match})")
   end
 end

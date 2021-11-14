@@ -41,7 +41,7 @@ class RubygemTest < ActiveSupport::TestCase
     should "be invalid with name longer than maximum field length" do
       @rubygem.name = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
       refute @rubygem.valid?
-      assert_equal @rubygem.errors.messages[:name], ["is too long (maximum is 255 characters)"]
+      assert_equal(["is too long (maximum is 255 characters)"], @rubygem.errors.messages[:name])
     end
 
     should "reorder versions with platforms properly" do
@@ -58,8 +58,8 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal 2, version1_linux.reload.position
 
       latest_versions = Version.latest
-      assert latest_versions.include?(version3_ruby)
-      assert latest_versions.include?(version3_mswin)
+      assert_includes latest_versions, version3_ruby
+      assert_includes latest_versions, version3_mswin
 
       assert_equal version3_ruby, @rubygem.versions.most_recent
     end
@@ -174,10 +174,10 @@ class RubygemTest < ActiveSupport::TestCase
           position: 2)
       end
       should "include public versions" do
-        assert @rubygem.public_versions_with_extra_version(@extra_version).include?(@first_version)
+        assert_includes @rubygem.public_versions_with_extra_version(@extra_version), @first_version
       end
       should "include extra version" do
-        assert @rubygem.public_versions_with_extra_version(@extra_version).include?(@extra_version)
+        assert_includes @rubygem.public_versions_with_extra_version(@extra_version), @extra_version
       end
       should "maintain proper ordering" do
         versions = @rubygem.public_versions_with_extra_version(@extra_version)
@@ -226,10 +226,10 @@ class RubygemTest < ActiveSupport::TestCase
 
         assert_equal 2, gem_list.size
 
-        assert gem_list.include?(@gem_one)
-        assert gem_list.include?(@gem_two)
-        refute gem_list.include?(@gem_three)
-        refute gem_list.include?(@gem_four)
+        assert_includes gem_list, @gem_one
+        assert_includes gem_list, @gem_two
+        refute_includes gem_list, @gem_three
+        refute_includes gem_list, @gem_four
       end
     end
 
@@ -238,8 +238,8 @@ class RubygemTest < ActiveSupport::TestCase
         gem_list = @dependency.reverse_runtime_dependencies
         assert_equal 1, gem_list.size
 
-        assert gem_list.include?(@gem_one)
-        refute gem_list.include?(@gem_two)
+        assert_includes gem_list, @gem_one
+        refute_includes gem_list, @gem_two
       end
     end
 
@@ -248,8 +248,8 @@ class RubygemTest < ActiveSupport::TestCase
         gem_list = @dependency.reverse_development_dependencies
         assert_equal 1, gem_list.size
 
-        assert gem_list.include?(@gem_two)
-        refute gem_list.include?(@gem_one)
+        assert_includes gem_list, @gem_two
+        refute_includes gem_list, @gem_one
       end
     end
   end
@@ -346,13 +346,13 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "be not owned if no ownerships" do
-        assert @rubygem.ownerships.empty?
+        assert_empty @rubygem.ownerships
         refute @rubygem.owned_by?(@user)
         assert @rubygem.unowned?
       end
 
       should "be not owned if no user" do
-        assert_equal false, @rubygem.owned_by?(nil)
+        refute @rubygem.owned_by?(nil)
         assert @rubygem.unowned?
       end
     end
@@ -404,7 +404,7 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}/gems/#{@rubygem.name}",
         hash["project_uri"]
       assert_equal "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}/gems/"\
-        "#{@rubygem.versions.most_recent.full_name}.gem", hash["gem_uri"]
+                   "#{@rubygem.versions.most_recent.full_name}.gem", hash["gem_uri"]
 
       assert_equal JSON.load(dev_dep.to_json), hash["dependencies"]["development"].first
       assert_equal JSON.load(run_dep.to_json), hash["dependencies"]["runtime"].first
@@ -438,7 +438,7 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}/gems/#{@rubygem.name}",
         doc.at_css("project-uri").content
       assert_equal "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}/gems/"\
-        "#{@rubygem.versions.most_recent.full_name}.gem", doc.at_css("gem-uri").content
+                   "#{@rubygem.versions.most_recent.full_name}.gem", doc.at_css("gem-uri").content
 
       assert_equal dev_dep.name, doc.at_css("dependencies development dependency name").content
       assert_equal run_dep.name, doc.at_css("dependencies runtime dependency name").content
@@ -538,15 +538,15 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "return only gems with one version" do
-      refute Rubygem.with_one_version.include?(@rubygem_without_version)
-      assert Rubygem.with_one_version.include?(@rubygem_with_version)
-      refute Rubygem.with_one_version.include?(@rubygem_with_versions)
+      refute_includes Rubygem.with_one_version, @rubygem_without_version
+      assert_includes Rubygem.with_one_version, @rubygem_with_version
+      refute_includes Rubygem.with_one_version, @rubygem_with_versions
     end
 
     should "return only gems with versions for #with_versions" do
-      refute Rubygem.with_versions.include?(@rubygem_without_version)
-      assert Rubygem.with_versions.include?(@rubygem_with_version)
-      assert Rubygem.with_versions.include?(@rubygem_with_versions)
+      refute_includes Rubygem.with_versions, @rubygem_without_version
+      assert_includes Rubygem.with_versions, @rubygem_with_version
+      assert_includes Rubygem.with_versions, @rubygem_with_versions
     end
 
     should "be hosted or not" do
@@ -653,29 +653,29 @@ class RubygemTest < ActiveSupport::TestCase
 
     context "#legacy_search" do
       should "find rubygems by name" do
-        assert Rubygem.legacy_search("apple").include?(@apple_pie)
-        assert Rubygem.legacy_search("orange").include?(@orange_julius)
+        assert_includes Rubygem.legacy_search("apple"), @apple_pie
+        assert_includes Rubygem.legacy_search("orange"), @orange_julius
 
-        refute Rubygem.legacy_search("apple").include?(@orange_julius)
-        refute Rubygem.legacy_search("orange").include?(@apple_pie)
+        refute_includes Rubygem.legacy_search("apple"), @orange_julius
+        refute_includes Rubygem.legacy_search("orange"), @apple_pie
       end
 
       should "find rubygems by name with extra spaces" do
-        assert Rubygem.legacy_search("apple  ").include?(@apple_pie)
-        assert Rubygem.legacy_search("orange   ").include?(@orange_julius)
+        assert_includes Rubygem.legacy_search("apple  "), @apple_pie
+        assert_includes Rubygem.legacy_search("orange   "), @orange_julius
         assert_equal Rubygem.legacy_search("apple"), Rubygem.legacy_search("apple ")
 
-        refute Rubygem.legacy_search("apple  ").include?(@orange_julius)
-        refute Rubygem.legacy_search("orange   ").include?(@apple_pie)
+        refute_includes Rubygem.legacy_search("apple  "), @orange_julius
+        refute_includes Rubygem.legacy_search("orange   "), @apple_pie
       end
 
       should "find rubygems case insensitively" do
-        assert Rubygem.legacy_search("APPLE").include?(@apple_pie)
+        assert_includes Rubygem.legacy_search("APPLE"), @apple_pie
       end
 
       should "find rubygems with missing punctuation" do
-        assert Rubygem.legacy_search("apple crisp").include?(@apple_crisp)
-        refute Rubygem.legacy_search("apple crisp").include?(@apple_pie)
+        assert_includes Rubygem.legacy_search("apple crisp"), @apple_crisp
+        refute_includes Rubygem.legacy_search("apple crisp"), @apple_pie
       end
 
       should "sort results by number of downloads, descending" do

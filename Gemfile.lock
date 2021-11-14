@@ -232,7 +232,7 @@ GEM
       mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
     optimist (3.0.1)
-    parallel (1.20.1)
+    parallel (1.21.0)
     parser (3.0.2.0)
       ast (~> 2.4.1)
     pg (1.2.3)
@@ -317,24 +317,26 @@ GEM
       chunky_png (~> 1.0)
       rqrcode_core (~> 1.0)
     rqrcode_core (1.2.0)
-    rubocop (0.93.1)
+    rubocop (1.23.0)
       parallel (~> 1.10)
-      parser (>= 2.7.1.5)
+      parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
-      regexp_parser (>= 1.8)
+      regexp_parser (>= 1.8, < 3.0)
       rexml
-      rubocop-ast (>= 0.6.0)
+      rubocop-ast (>= 1.12.0, < 2.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 1.4.0, < 2.0)
-    rubocop-ast (1.11.0)
+      unicode-display_width (>= 1.4.0, < 3.0)
+    rubocop-ast (1.13.0)
       parser (>= 3.0.1.1)
-    rubocop-performance (1.10.2)
-      rubocop (>= 0.90.0, < 2.0)
+    rubocop-minitest (0.16.0)
+      rubocop (>= 0.90, < 2.0)
+    rubocop-performance (1.12.0)
+      rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
-    rubocop-rails (2.9.1)
+    rubocop-rails (2.12.4)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
-      rubocop (>= 0.90.0, < 2.0)
+      rubocop (>= 1.7.0, < 2.0)
     ruby-graphviz (1.2.5)
       rexml
     ruby-progressbar (1.11.0)
@@ -385,7 +387,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.6)
-    unicode-display_width (1.7.0)
+    unicode-display_width (2.1.0)
     unicorn (5.8.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
@@ -457,9 +459,10 @@ DEPENDENCIES
   roadie-rails
   rotp
   rqrcode
-  rubocop (= 0.93.1)
-  rubocop-performance (= 1.10.2)
-  rubocop-rails (= 2.9.1)
+  rubocop
+  rubocop-minitest
+  rubocop-performance
+  rubocop-rails
   sassc-rails
   selenium-webdriver
   shoryuken (~> 4.0)

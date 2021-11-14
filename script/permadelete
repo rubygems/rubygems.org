@@ -9,13 +9,11 @@ abort "Usage: #{$PROGRAM_NAME} [GEM_NAME=hola] [VERSION=all] [AS=email]" if [nam
 
 rubygem = Rubygem.find_by_name!(name)
 
-versions = begin
-  if number == "all"
-    rubygem.versions
-  else
-    [rubygem.versions.find_by_number!(number)]
-  end
-end
+versions = if number == "all"
+             rubygem.versions
+           else
+             [rubygem.versions.find_by_number!(number)]
+           end
 
 owner = User.find_by_email!(email)
 

@@ -8,7 +8,7 @@ class ApiKey < ApplicationRecord
   validates :name, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
 
   def enabled_scopes
-    API_SCOPES.map { |scope| scope if send(scope) }.compact
+    API_SCOPES.filter_map { |scope| scope if send(scope) }
   end
 
   API_SCOPES.each do |scope|

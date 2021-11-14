@@ -83,7 +83,7 @@ class LinksTest < ActiveSupport::TestCase
     end
 
     should "not create method for non whitelisted key" do
-      refute @links.respond_to?("non_whitelisted_uri")
+      refute_respond_to @links, "non_whitelisted_uri"
     end
   end
 end

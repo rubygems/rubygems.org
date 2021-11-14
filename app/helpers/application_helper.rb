@@ -5,10 +5,10 @@ module ApplicationHelper
   end
 
   def atom_feed_link(title, url)
-    tag "link", rel: "alternate",
+    tag.link(rel: "alternate",
                 type: "application/atom+xml",
                 href: url,
-                title: title
+                title: title)
   end
 
   def short_info(rubygem)

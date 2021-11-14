@@ -126,3 +126,11 @@ Style/RescueStandardError:
     - 'app/controllers/api/v1/rubygems_controller.rb'
     - 'app/jobs/fastly_log_processor.rb'
     - 'lib/tasks/linkset.rake'
+
+Rails/HasManyOrHasOneDependent:
+  Exclude:
+    - 'app/models/rubygem.rb'
+
+Rails/I18nLocaleAssignment:
+  Exclude:
+    - 'test/test_helper.rb'

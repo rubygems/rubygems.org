@@ -68,12 +68,12 @@ class OwnersControllerTest < ActionController::TestCase
 
           should redirect_to("ownerships index") { rubygem_owners_path(@rubygem) }
           should "add unconfirmed ownership record" do
-            assert @rubygem.owners_including_unconfirmed.include?(@new_owner)
+            assert_includes @rubygem.owners_including_unconfirmed, @new_owner
             assert_nil @rubygem.ownerships_including_unconfirmed.find_by(user: @new_owner).confirmed_at
           end
           should "set success notice flash" do
             expected_notice = "#{@new_owner.handle} was added as an unconfirmed owner. "\
-              "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
+                              "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
             assert_equal expected_notice, flash[:notice]
           end
           should "send confirmation email" do
@@ -127,7 +127,7 @@ class OwnersControllerTest < ActionController::TestCase
 
             should "set success notice flash" do
               expected_notice = "#{@new_owner.handle} was added as an unconfirmed owner. "\
-                "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
+                                "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
               assert_equal expected_notice, flash[:notice]
             end
           end
@@ -143,7 +143,7 @@ class OwnersControllerTest < ActionController::TestCase
 
         should respond_with :forbidden
         should "not add other user as owner" do
-          refute @rubygem.owners_including_unconfirmed.include? @other_user
+          refute_includes @rubygem.owners_including_unconfirmed, @other_user
         end
       end
     end
@@ -165,7 +165,7 @@ class OwnersControllerTest < ActionController::TestCase
           end
           should redirect_to("ownership index") { rubygem_owners_path(@rubygem) }
           should "remove the ownership record" do
-            refute @rubygem.owners_including_unconfirmed.include?(@second_user)
+            refute_includes @rubygem.owners_including_unconfirmed, @second_user
           end
           should "send email notifications about owner removal" do
             ActionMailer::Base.deliveries.clear
@@ -185,7 +185,7 @@ class OwnersControllerTest < ActionController::TestCase
           end
           should redirect_to("ownership index") { rubygem_owners_path(@rubygem) }
           should "remove the ownership record" do
-            refute @rubygem.owners_including_unconfirmed.include?(@second_user)
+            refute_includes @rubygem.owners_including_unconfirmed, @second_user
           end
           should "send email notifications about owner removal" do
             ActionMailer::Base.deliveries.clear
@@ -204,7 +204,7 @@ class OwnersControllerTest < ActionController::TestCase
           end
           should respond_with :forbidden
           should "not remove the ownership record" do
-            assert @rubygem.owners_including_unconfirmed.include?(@last_owner)
+            assert_includes @rubygem.owners_including_unconfirmed, @last_owner
           end
           should "should flash error" do
             assert_equal "Can't remove the only owner of the gem", flash[:alert]
@@ -265,7 +265,7 @@ class OwnersControllerTest < ActionController::TestCase
 
         should respond_with :forbidden
         should "not remove user as owner" do
-          assert @rubygem.owners.include? @last_owner
+          assert_includes @rubygem.owners, @last_owner
         end
       end
     end
@@ -351,7 +351,7 @@ class OwnersControllerTest < ActionController::TestCase
       should redirect_to("sessions#verify") { verify_session_path }
       should use_before_action(:redirect_to_verify)
       should "not add unconfirmed ownership record" do
-        refute @rubygem.owners_including_unconfirmed.include?(@new_owner)
+        refute_includes @rubygem.owners_including_unconfirmed, @new_owner
       end
     end
 
@@ -364,7 +364,7 @@ class OwnersControllerTest < ActionController::TestCase
       should redirect_to("sessions#verify") { verify_session_path }
       should use_before_action(:redirect_to_verify)
       should "remove the ownership record" do
-        assert @rubygem.owners_including_unconfirmed.include?(@second_user)
+        assert_includes @rubygem.owners_including_unconfirmed, @second_user
       end
     end
   end
