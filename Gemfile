@@ -55,6 +55,7 @@ group :development, :test do
   gem "pry-byebug"
   gem "toxiproxy", "~> 1.0.0"
   gem "webrick"
+  gem "factory_bot_rails"
 
   gem "brakeman", require: false
   gem "rubocop", "0.93.1", require: false
@@ -70,7 +71,6 @@ end
 group :test do
   gem "minitest", require: false
   gem "capybara", "~> 3.35"
-  gem "factory_bot_rails"
   gem "launchy"
   gem "rack-test", require: "rack/test"
   gem "mocha", require: false

@@ -16,7 +16,11 @@ FactoryBot.define do
   end
 
   factory :dependency do
-    gem_dependency { Gem::Dependency.new(Rubygem.last.name, "1.0.0") }
+    gem_dependency do
+      rubygem = Rubygem.last || create(:rubygem)
+      Gem::Dependency.new(rubygem.name, "1.0.0")
+    end
+
     rubygem
     version
 
@@ -24,7 +28,10 @@ FactoryBot.define do
     end
 
     trait :development do
-      gem_dependency { Gem::Dependency.new(Rubygem.last.name, "1.0.0", :development) }
+      gem_dependency do
+        rubygem = Rubygem.last || create(:rubygem)
+        Gem::Dependency.new(rubygem.name, "1.0.0", :development)
+      end
     end
 
     trait :unresolved do
