@@ -459,10 +459,10 @@ DEPENDENCIES
   roadie-rails
   rotp
   rqrcode
-  rubocop
-  rubocop-minitest
-  rubocop-performance
-  rubocop-rails
+  rubocop (~> 1.23)
+  rubocop-minitest (~> 0.16)
+  rubocop-performance (~> 1.12)
+  rubocop-rails (~> 2.12)
   sassc-rails
   selenium-webdriver
   shoryuken (~> 4.0)
