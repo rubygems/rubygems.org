@@ -143,18 +143,18 @@ class Pusher
   def republish_notification(version)
     if version.indexed?
       notify("Repushing of gem versions is not allowed.\n" \
-            "Please use `gem yank` to remove bad gem releases.", 409)
+             "Please use `gem yank` to remove bad gem releases.", 409)
     else
       different_owner = "pushed by a previous owner of this gem " unless version.rubygem.owners.include?(@user)
       notify("A yanked version #{different_owner}already exists (#{version.full_name}).\n" \
-            "Repushing of gem versions is not allowed. Please use a new version and retry", 409)
+             "Repushing of gem versions is not allowed. Please use a new version and retry", 409)
     end
   end
 
   def notify_unauthorized
     if rubygem.unconfirmed_ownership?(user)
       notify("You do not have permission to push to this gem. "\
-        "Please confirm the ownership by clicking on the confirmation link sent your email #{user.email}", 403)
+             "Please confirm the ownership by clicking on the confirmation link sent your email #{user.email}", 403)
     else
       notify("You do not have permission to push to this gem. Ask an owner to add you with: gem owner #{rubygem.name} --add #{user.email}", 403)
     end

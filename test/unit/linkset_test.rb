@@ -13,14 +13,14 @@ class LinksetTest < ActiveSupport::TestCase
     end
 
     should "not be empty with some links filled out" do
-      refute @linkset.empty?
+      refute_empty @linkset
     end
 
     should "be empty with no links filled out" do
       Linkset::LINKS.each do |link|
         @linkset.send("#{link}=", nil)
       end
-      assert @linkset.empty?
+      assert_empty @linkset
     end
   end
 

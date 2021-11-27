@@ -7,8 +7,8 @@ class CertificateChainSerializerTest < ActiveSupport::TestCase
     end
 
     should "return an empty array when no certificates are present" do
-      assert_equal [], CertificateChainSerializer.load("")
-      assert_equal [], CertificateChainSerializer.load(nil)
+      assert_empty CertificateChainSerializer.load("")
+      assert_empty CertificateChainSerializer.load(nil)
     end
 
     should "return an array of certificates when certificates are present" do

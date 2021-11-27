@@ -105,7 +105,7 @@ class ApiKeysControllerTest < ActionController::TestCase
           assert api_key.can_add_owner?
         end
         should "deliver api key created email" do
-          refute ActionMailer::Base.deliveries.empty?
+          refute_empty ActionMailer::Base.deliveries
           email = ActionMailer::Base.deliveries.last
           assert_equal [@user.email], email.to
           assert_equal ["no-reply@mailer.rubygems.org"], email.from
@@ -121,7 +121,7 @@ class ApiKeysControllerTest < ActionController::TestCase
         end
 
         should "not create new key for user" do
-          assert @user.reload.api_keys.empty?
+          assert_empty @user.reload.api_keys
         end
       end
     end
@@ -179,7 +179,7 @@ class ApiKeysControllerTest < ActionController::TestCase
 
           should redirect_to("the index api key page") { profile_api_keys_path }
           should "delete api key of user" do
-            assert @user.api_keys.empty?
+            assert_empty @user.api_keys
           end
         end
 
@@ -191,7 +191,7 @@ class ApiKeysControllerTest < ActionController::TestCase
 
           should redirect_to("the index api key page") { profile_api_keys_path }
           should "not delete api key of user" do
-            refute @user.api_keys.empty?
+            refute_empty @user.api_keys
           end
         end
       end
@@ -219,7 +219,7 @@ class ApiKeysControllerTest < ActionController::TestCase
 
       should redirect_to("the index api key page") { profile_api_keys_path }
       should "delete all api key of user" do
-        assert @user.api_keys.empty?
+        assert_empty @user.api_keys
       end
     end
   end

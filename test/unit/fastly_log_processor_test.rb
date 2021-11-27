@@ -99,7 +99,7 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
 
       should "not mark as processed if anything fails" do
         @job.stubs(:download_counts).raises("woops")
-        assert_raises { @job.perform }
+        assert_raises(RuntimeError) { @job.perform }
 
         refute_equal "processed", @log_ticket.reload.status
         assert_equal "failed", @log_ticket.reload.status
@@ -107,7 +107,7 @@ class FastlyLogProcessorTest < ActiveSupport::TestCase
 
       should "not re-process if it failed" do
         @job.stubs(:download_counts).raises("woops")
-        assert_raises { @job.perform }
+        assert_raises(RuntimeError) { @job.perform }
 
         @job = FastlyLogProcessor.new("test-bucket", "fastly-fake.log")
         @job.perform

@@ -107,11 +107,11 @@ class VersionTest < ActiveSupport::TestCase
 
       assert_equal 3, version_list.size
 
-      assert version_list.include?(@version_one_latest)
-      assert version_list.include?(@version_two_earlier)
-      assert version_list.include?(@version_three)
-      refute version_list.include?(@version_one_earlier)
-      refute version_list.include?(@version_two_latest)
+      assert_includes version_list, @version_one_latest
+      assert_includes version_list, @version_two_earlier
+      assert_includes version_list, @version_three
+      refute_includes version_list, @version_one_earlier
+      refute_includes version_list, @version_two_latest
     end
   end
 
@@ -158,7 +158,7 @@ class VersionTest < ActiveSupport::TestCase
       @dependency = create(:rubygem)
       @version = build(:version, rubygem: @rubygem, number: "1.0.0", platform: "ruby")
       @version.dependencies << create(:dependency, version: @version, rubygem: @dependency)
-      refute Version.first.dependencies.empty?
+      refute_empty Version.first.dependencies
     end
 
     should "sort dependencies alphabetically" do
@@ -178,9 +178,9 @@ class VersionTest < ActiveSupport::TestCase
         version: @version,
         rubygem: @first_dependency_by_alpha)
 
-      assert @first_dependency_by_alpha.name, @version.dependencies.first.name
-      assert @second_dependency_by_alpha.name, @version.dependencies[1].name
-      assert @third_dependency_by_alpha.name, @version.dependencies.last.name
+      assert_equal @first_dependency_by_alpha.name, @version.dependencies.first.name
+      assert_equal @second_dependency_by_alpha.name, @version.dependencies[1].name
+      assert_equal @third_dependency_by_alpha.name, @version.dependencies.last.name
     end
   end
 
@@ -199,7 +199,7 @@ class VersionTest < ActiveSupport::TestCase
     should "limit the character length" do
       @version.required_rubygems_version = format(">=%s", "0" * 2 * 1024 * 1024 * 100)
       @version.validate
-      assert_equal @version.errors.messages[:required_rubygems_version], ["is too long (maximum is 255 characters)"]
+      assert_equal(["is too long (maximum is 255 characters)"], @version.errors.messages[:required_rubygems_version])
     end
   end
 
@@ -212,7 +212,7 @@ class VersionTest < ActiveSupport::TestCase
       @version.required_rubygems_version = ""
       @version.validate
 
-      assert_equal @version.errors.messages[:required_rubygems_version], []
+      assert_empty(@version.errors.messages[:required_rubygems_version])
     end
 
     should "not have a rubygems version" do
@@ -231,7 +231,7 @@ class VersionTest < ActiveSupport::TestCase
       @version.authors = Array.new(6000) { "test author" }
       @version.validate
 
-      assert_equal @version.errors.messages[:authors], ["is too long (maximum is 64000 characters)"]
+      assert_equal(["is too long (maximum is 64000 characters)"], @version.errors.messages[:authors])
     end
   end
 
@@ -244,14 +244,14 @@ class VersionTest < ActiveSupport::TestCase
       @version.description = "test description" * 6000
       @version.validate
 
-      assert_equal @version.errors.messages[:description], ["is too long (maximum is 64000 characters)"]
+      assert_equal(["is too long (maximum is 64000 characters)"], @version.errors.messages[:description])
     end
 
     should "allow empty description" do
       @version.description = ""
       @version.validate
 
-      assert_equal @version.errors.messages[:description], []
+      assert_empty(@version.errors.messages[:description])
     end
   end
 
@@ -264,14 +264,14 @@ class VersionTest < ActiveSupport::TestCase
       @version.summary = "test description" * 6000
       @version.validate
 
-      assert_equal @version.errors.messages[:summary], ["is too long (maximum is 64000 characters)"]
+      assert_equal(["is too long (maximum is 64000 characters)"], @version.errors.messages[:summary])
     end
 
     should "allow empty summary" do
       @version.summary = ""
       @version.validate
 
-      assert_equal @version.errors.messages[:summary], []
+      assert_empty(@version.errors.messages[:summary])
     end
   end
 
@@ -310,19 +310,19 @@ class VersionTest < ActiveSupport::TestCase
     should "be invalid with trailing zero in segments" do
       version = build(:version, rubygem: @rubygem, number: "1.0.0.0")
       refute version.valid?
-      assert_equal version.errors.messages[:canonical_number], ["has already been taken. Existing version: 1.0.0"]
+      assert_equal(["has already been taken. Existing version: 1.0.0"], version.errors.messages[:canonical_number])
     end
 
     should "be invalid with fewer zero in segments" do
       version = build(:version, rubygem: @rubygem, number: "1.0")
       refute version.valid?
-      assert_equal version.errors.messages[:canonical_number], ["has already been taken. Existing version: 1.0.0"]
+      assert_equal(["has already been taken. Existing version: 1.0.0"], version.errors.messages[:canonical_number])
     end
 
     should "be invalid with leading zero in significant segments" do
       version = build(:version, rubygem: @rubygem, number: "01.0.0")
       refute version.valid?
-      assert_equal version.errors.messages[:canonical_number], ["has already been taken. Existing version: 1.0.0"]
+      assert_equal(["has already been taken. Existing version: 1.0.0"], version.errors.messages[:canonical_number])
     end
 
     should "be valid in a different platform" do
@@ -356,19 +356,19 @@ class VersionTest < ActiveSupport::TestCase
     should "be invalid with platform longer than maximum field length" do
       @version.platform = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
       refute @version.valid?
-      assert_equal @version.errors.messages[:platform], ["is too long (maximum is 255 characters)"]
+      assert_equal(["is too long (maximum is 255 characters)"], @version.errors.messages[:platform])
     end
 
     should "be invalid with number longer than maximum field length" do
       long_number_suffix = ".1" * (Gemcutter::MAX_FIELD_LENGTH + 1)
       @version.number = "1#{long_number_suffix}"
       refute @version.valid?
-      assert_equal @version.errors.messages[:number], ["is too long (maximum is 255 characters)"]
+      assert_equal(["is too long (maximum is 255 characters)"], @version.errors.messages[:number])
     end
     should "be invalid with licenses longer than maximum field length" do
       @version.licenses = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
       refute @version.valid?
-      assert_equal @version.errors.messages[:licenses], ["is too long (maximum is 255 characters)"]
+      assert_equal(["is too long (maximum is 255 characters)"], @version.errors.messages[:licenses])
     end
 
     should "give number for #to_s" do
@@ -785,19 +785,19 @@ class VersionTest < ActiveSupport::TestCase
       should "be invalid with empty string as link" do
         @version.metadata = { "home" => "" }
         @version.validate
-        assert_equal @version.errors.messages[:metadata], ["['home'] does not appear to be a valid URL"]
+        assert_equal(["['home'] does not appear to be a valid URL"], @version.errors.messages[:metadata])
       end
 
       should "be invalid with invalid link" do
         @version.metadata = { "home" => "http:/github.com/bestgemever" }
         @version.validate
-        assert_equal @version.errors.messages[:metadata], ["['home'] does not appear to be a valid URL"]
+        assert_equal(["['home'] does not appear to be a valid URL"], @version.errors.messages[:metadata])
       end
 
       should "be valid with valid link" do
         @version.metadata = { "home" => "http://github.com/bestgemever" }
         assert @version.validate
-        assert_equal @version.errors.messages[:metadata], []
+        assert_empty(@version.errors.messages[:metadata])
       end
 
       should "be invalid with value larger than 1024 bytes" do
@@ -817,7 +817,7 @@ class VersionTest < ActiveSupport::TestCase
       should "be invalid with empty key" do
         @version.metadata = { "" => "value" }
         @version.validate
-        assert_equal @version.errors.messages[:metadata], ["metadata key is empty"]
+        assert_equal(["metadata key is empty"], @version.errors.messages[:metadata])
       end
     end
   end

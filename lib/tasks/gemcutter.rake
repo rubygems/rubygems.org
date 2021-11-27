@@ -53,7 +53,7 @@ namespace :gemcutter do
         actual_sha256 = GemcutterTaskshelper.recalculate_sha256(version.full_name)
         if actual_sha256 && version.sha256 != actual_sha256
           puts "#{version.full_name}.gem has sha256 '#{actual_sha256}', " \
-            "but '#{version.sha256}' was expected."
+               "but '#{version.sha256}' was expected."
           failed = true
         end
         i += 1
@@ -128,7 +128,7 @@ namespace :gemcutter do
         total_downloads = GemDownload.where(rubygem_id: rubygem.id).sum(:count)
         GemDownload.create!(count: total_downloads, rubygem_id: rubygem.id, version_id: 0)
         Rails.logger.info "[gemcutter:gem_downloads:add_rubygems_record] added GemDownloads for rubygem_id: #{rubygem.id} with "\
-          "total downloads: #{total_downloads}"
+                          "total downloads: #{total_downloads}"
         processed += 1
         print format("\r%.2f%% (%d/%d) complete", processed.to_f / total * 100.0, processed, total)
       end

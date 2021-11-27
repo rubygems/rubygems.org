@@ -51,7 +51,7 @@ class UsersControllerTest < ActionController::TestCase
       end
 
       should "deliver confirmation mail" do
-        refute ActionMailer::Base.deliveries.empty?
+        refute_empty ActionMailer::Base.deliveries
         email = ActionMailer::Base.deliveries.last
         assert_equal ["foo@bar.com"], email.to
         assert_equal ["no-reply@mailer.rubygems.org"], email.from

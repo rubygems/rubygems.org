@@ -3,6 +3,7 @@ require:
   - ./test/safe_navigation_cop.rb
   - rubocop-performance
   - rubocop-rails
+  - rubocop-minitest
 
 AllCops:
   Exclude:
@@ -280,3 +281,9 @@ Style/RedundantAssignment:
 
 Style/RedundantFileExtensionInRequire:
   Enabled: true
+
+Minitest/MultipleAssertions:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false

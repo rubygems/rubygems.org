@@ -22,7 +22,7 @@ module GemcutterTaskshelper
 
     return if required_ruby_version.nil? || required_ruby_version.to_s == ">= 0"
     Rails.logger.info("[gemcutter:required_ruby_version:backfill] updating version: #{version.full_name} "\
-      " with required_ruby_version: #{required_ruby_version}")
+                      " with required_ruby_version: #{required_ruby_version}")
 
     version.update_column(:required_ruby_version, required_ruby_version.to_s)
     CompactIndexTasksHelper.update_last_checksum(version.rubygem, "gemcutter:required_ruby_version:backfill")
@@ -36,7 +36,7 @@ module GemcutterTaskshelper
     spec.send(attribute_name)
   rescue StandardError => e
     Rails.logger.info("[gemcutter:required_ruby_version:backfill] could not get required_ruby_version for version: #{version.full_name}"\
-      " error: #{e.inspect}")
+                      " error: #{e.inspect}")
     nil
   end
 end

@@ -114,10 +114,10 @@ class PasswordsControllerTest < ActionController::TestCase
 
       should respond_with :success
       should "not change api_key" do
-        assert(@user.reload.api_key == @api_key)
+        assert_equal(@user.reload.api_key, @api_key)
       end
       should "not change password" do
-        assert(@user.reload.encrypted_password == @old_encrypted_password)
+        assert_equal(@user.reload.encrypted_password, @old_encrypted_password)
       end
     end
 
@@ -132,10 +132,10 @@ class PasswordsControllerTest < ActionController::TestCase
 
       should respond_with :found
       should "not change api_key" do
-        assert(@user.reload.api_key == @api_key)
+        assert_equal(@user.reload.api_key, @api_key)
       end
       should "change password" do
-        assert(@user.reload.encrypted_password != @old_encrypted_password)
+        refute_equal(@user.reload.encrypted_password, @old_encrypted_password)
       end
     end
 
@@ -150,10 +150,10 @@ class PasswordsControllerTest < ActionController::TestCase
 
       should respond_with :found
       should "not change api_key" do
-        assert(@user.reload.api_key == @api_key)
+        assert_equal(@user.reload.api_key, @api_key)
       end
       should "change password" do
-        assert(@user.reload.encrypted_password != @old_encrypted_password)
+        refute_equal(@user.reload.encrypted_password, @old_encrypted_password)
       end
     end
 
@@ -168,10 +168,10 @@ class PasswordsControllerTest < ActionController::TestCase
 
       should respond_with :found
       should "change api_key" do
-        assert(@user.reload.api_key != @api_key)
+        refute_equal(@user.reload.api_key, @api_key)
       end
       should "change password" do
-        assert(@user.reload.encrypted_password != @old_encrypted_password)
+        refute_equal(@user.reload.encrypted_password, @old_encrypted_password)
       end
     end
   end

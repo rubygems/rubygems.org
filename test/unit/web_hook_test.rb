@@ -7,7 +7,7 @@ class WebHookTest < ActiveSupport::TestCase
   should "be valid for normal hook" do
     hook = create(:web_hook)
     refute hook.global?
-    assert WebHook.global.empty?
+    assert_empty WebHook.global
     assert_equal [hook], WebHook.specific
   end
 
@@ -16,14 +16,14 @@ class WebHookTest < ActiveSupport::TestCase
     assert_nil hook.rubygem
     assert hook.global?
     assert_equal [hook], WebHook.global
-    assert WebHook.specific.empty?
+    assert_empty WebHook.specific
   end
 
   should "be invalid with url longer than maximum field length" do
     long_domain = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
     hook = build(:web_hook, url: "https://#{long_domain}.com")
     refute hook.valid?
-    assert_equal hook.errors.messages[:url], ["is too long (maximum is 255 characters)"]
+    assert_equal(["is too long (maximum is 255 characters)"], hook.errors.messages[:url])
   end
 
   should "require user" do

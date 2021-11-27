@@ -8,7 +8,7 @@ class GemDependentTest < ActiveSupport::TestCase
     end
 
     should "have some state" do
-      assert @gem_dependent.respond_to?(:gem_names)
+      assert_respond_to @gem_dependent, :gem_names
     end
   end
 
@@ -108,7 +108,7 @@ class GemDependentTest < ActiveSupport::TestCase
 
   context "with gem_names which do not exist" do
     should "return empty array" do
-      assert_equal [], GemDependent.new(["does_not_exist"]).to_a
+      assert_empty GemDependent.new(["does_not_exist"]).to_a
     end
   end
 end

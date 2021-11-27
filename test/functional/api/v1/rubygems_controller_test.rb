@@ -588,9 +588,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       assert_equal 3, gems.size
 
-      assert gems.include?(@gem_one.name)
-      assert gems.include?(@gem_two.name)
-      assert gems.include?(@gem_three.name)
+      assert_includes gems, @gem_one.name
+      assert_includes gems, @gem_two.name
+      assert_includes gems, @gem_three.name
     end
 
     context "with only=development" do
@@ -604,7 +604,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
         assert_equal 1, gems.size
 
-        assert gems.include?(@gem_two.name)
+        assert_includes gems, @gem_two.name
       end
     end
 
@@ -619,8 +619,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
         assert_equal 2, gems.size
 
-        assert gems.include?(@gem_one.name)
-        assert gems.include?(@gem_three.name)
+        assert_includes gems, @gem_one.name
+        assert_includes gems, @gem_three.name
       end
     end
   end

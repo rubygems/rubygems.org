@@ -83,7 +83,7 @@ module RubygemsHelper
   def report_abuse_link(rubygem)
     subject = "Reporting Abuse on #{rubygem.name}"
     report_abuse_url = "mailto:support@rubygems.org" \
-      "?subject=" + subject
+                       "?subject=" + subject
     link_to t("rubygems.aside.links.report_abuse"), report_abuse_url.html_safe, class: "gem__link t-list__item"
   end
 

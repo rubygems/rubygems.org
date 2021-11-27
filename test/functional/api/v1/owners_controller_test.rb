@@ -58,7 +58,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     end
 
     should "return plaintext with error message" do
-      assert_equal @response.body, "Owner could not be found."
+      assert_equal("Owner could not be found.", @response.body)
     end
 
     should respond_with :not_found
@@ -80,7 +80,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     end
 
     should "return plain text with error message" do
-      assert_equal @response.body, "Owner could not be found."
+      assert_equal("Owner could not be found.", @response.body)
     end
 
     should respond_with :not_found
@@ -118,7 +118,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should respond_with :unauthorized
           should "fail to add new owner" do
-            refute @rubygem.owners_including_unconfirmed.include?(@second_user)
+            refute_includes @rubygem.owners_including_unconfirmed, @second_user
           end
         end
 
@@ -130,7 +130,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should respond_with :unauthorized
           should "fail to add new owner" do
-            refute @rubygem.owners_including_unconfirmed.include?(@second_user)
+            refute_includes @rubygem.owners_including_unconfirmed, @second_user
           end
         end
 
@@ -142,7 +142,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should respond_with :success
           should "succeed to add new owner" do
-            assert @rubygem.owners_including_unconfirmed.include?(@second_user)
+            assert_includes @rubygem.owners_including_unconfirmed, @second_user
           end
         end
       end
@@ -155,9 +155,9 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should "add second user as unconfrimed owner" do
-            assert @rubygem.owners_including_unconfirmed.include?(@second_user)
+            assert_includes @rubygem.owners_including_unconfirmed, @second_user
             assert_equal "#{@second_user.handle} was added as an unconfirmed owner. "\
-              "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email.", @response.body
+                         "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email.", @response.body
           end
 
           should "send confirmation mail to second user" do
@@ -172,7 +172,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should "add other user as gem owner" do
-            assert @rubygem.owners_including_unconfirmed.include?(@second_user)
+            assert_includes @rubygem.owners_including_unconfirmed, @second_user
           end
         end
       end
@@ -210,7 +210,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should "add other user as gem owner" do
             post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
-            assert @rubygem.owners_including_unconfirmed.include?(@second_user)
+            assert_includes @rubygem.owners_including_unconfirmed, @second_user
           end
         end
 
@@ -221,7 +221,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should respond_with :forbidden
           should "refuse to add other user as gem owner" do
-            refute @rubygem.owners_including_unconfirmed.include?(@second_user)
+            refute_includes @rubygem.owners_including_unconfirmed, @second_user
           end
         end
       end
@@ -237,7 +237,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         should respond_with :success
 
         should "add other user as gem owner" do
-          assert @rubygem.owners_including_unconfirmed.include?(@second_user)
+          assert_includes @rubygem.owners_including_unconfirmed, @second_user
         end
       end
     end
@@ -288,7 +288,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should respond_with :unauthorized
           should "fail to remove gem owner" do
-            assert @rubygem.owners.include?(@second_user)
+            assert_includes @rubygem.owners, @second_user
           end
         end
 
@@ -300,7 +300,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should respond_with :unauthorized
           should "fail to remove gem owner" do
-            assert @rubygem.owners.include?(@second_user)
+            assert_includes @rubygem.owners, @second_user
           end
         end
 
@@ -312,7 +312,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should respond_with :success
           should "succeed to remove gem owner" do
-            refute @rubygem.owners.include?(@second_user)
+            refute_includes @rubygem.owners, @second_user
           end
         end
       end
@@ -325,7 +325,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should "remove user as gem owner" do
-            refute @rubygem.owners.include?(@second_user)
+            refute_includes @rubygem.owners, @second_user
             assert_equal "Owner removed successfully.", @response.body
           end
 
@@ -342,7 +342,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
 
           should "not remove last gem owner" do
-            assert @rubygem.owners.include?(@user)
+            assert_includes @rubygem.owners, @user
             assert_equal "Unable to remove owner.", @response.body
           end
         end
@@ -361,7 +361,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should respond_with :forbidden
           should "fail to remove gem owner" do
-            assert @rubygem.owners.include?(@second_user)
+            assert_includes @rubygem.owners, @second_user
           end
         end
 
@@ -379,7 +379,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
             should respond_with :success
             should "succeed to remove gem owner" do
-              refute @rubygem.owners.include?(@second_user)
+              refute_includes @rubygem.owners, @second_user
             end
           end
         end

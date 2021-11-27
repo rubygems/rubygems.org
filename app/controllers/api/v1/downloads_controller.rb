@@ -28,10 +28,10 @@ class Api::V1::DownloadsController < Api::BaseController
 
   def all
     gems = GemDownload.most_downloaded_gems.limit(50)
-    gems = gems.map do |gem|
+    gems = gems.filter_map do |gem|
       next unless gem.version
       [gem.version.attributes, gem.count]
-    end.compact
+    end
     respond_with_data(gems: gems)
   end
 

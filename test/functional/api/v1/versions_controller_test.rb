@@ -287,11 +287,11 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
 
       assert_equal 3, ret_versions.size
 
-      assert ret_versions.include?(@version_one_latest.full_name)
-      assert ret_versions.include?(@version_two_earlier.full_name)
-      assert ret_versions.include?(@version_three.full_name)
-      refute ret_versions.include?(@version_one_earlier.full_name)
-      refute ret_versions.include?(@version_two_latest.full_name)
+      assert_includes ret_versions, @version_one_latest.full_name
+      assert_includes ret_versions, @version_two_earlier.full_name
+      assert_includes ret_versions, @version_three.full_name
+      refute_includes ret_versions, @version_one_earlier.full_name
+      refute_includes ret_versions, @version_two_latest.full_name
     end
   end
 end

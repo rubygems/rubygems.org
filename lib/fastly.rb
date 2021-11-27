@@ -19,7 +19,7 @@ class Fastly
                                              timeout: 10,
                                              headers: headers)
       json = JSON.parse(response)
-      Rails.logger.debug "Fastly purge url=#{url} status=#{json['status']} id=#{json['id']}"
+      Rails.logger.debug { "Fastly purge url=#{url} status=#{json['status']} id=#{json['id']}" }
     end
   end
 
@@ -32,7 +32,7 @@ class Fastly
                                            timeout: 10,
                                            headers: headers)
     json = JSON.parse(response)
-    Rails.logger.debug "Fastly purge url=#{url} status=#{json['status']} id=#{json['id']}"
+    Rails.logger.debug { "Fastly purge url=#{url} status=#{json['status']} id=#{json['id']}" }
     json
   end
 end

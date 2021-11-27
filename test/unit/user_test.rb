@@ -327,14 +327,14 @@ class UserTest < ActiveSupport::TestCase
 
             assert @user.email.start_with?("security+locked-")
             assert @user.email.end_with?("@rubygems.org")
-            assert @user.mfa_recovery_codes.empty?
+            assert_empty @user.mfa_recovery_codes
             assert @user.mfa_disabled?
           end
 
           should "reset api key" do
             @user.block!
-            assert @user.api_key.nil?
-            assert @user.api_keys.empty?
+            assert_nil @user.api_key
+            assert_empty @user.api_keys
           end
         end
       end
@@ -392,7 +392,7 @@ class UserTest < ActiveSupport::TestCase
 
     should "total their number of pushed rubygems except yanked gems" do
       @rubygems.first.versions.first.update! indexed: false
-      assert_equal @user.total_rubygems_count, 2
+      assert_equal(2, @user.total_rubygems_count)
     end
 
     should "not include gems with more than one owner" do
