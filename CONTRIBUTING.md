@@ -53,6 +53,7 @@ provide pass-through caching for RubyGems.org, as well as host private
 gems for your organization..**
 
 #### Environment (Docker)
+
 There is a `docker-compose.yml` file inside the project that easily lets you spin up
 services that the application depends on such as: postgresql, memcached & elasticsearch.
 
