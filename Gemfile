@@ -56,6 +56,7 @@ group :development, :test do
   gem "toxiproxy", "~> 1.0.0"
   gem "webrick"
   gem "factory_bot_rails"
+  gem "foreman"
 
   gem "brakeman", require: false
   gem "rubocop", "~> 1.23", require: false

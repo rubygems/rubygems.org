@@ -164,6 +164,7 @@ GEM
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
+    foreman (0.87.2)
     globalid (0.5.2)
       activesupport (>= 5.0)
     gravtastic (3.2.6)
@@ -430,6 +431,7 @@ DEPENDENCIES
   elasticsearch-rails (~> 7.0)
   factory_bot_rails
   faraday_middleware-aws-sigv4 (~> 0.3)
+  foreman
   gravtastic
   high_voltage
   honeybadger
