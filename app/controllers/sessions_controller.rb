@@ -9,6 +9,7 @@ class SessionsController < Clearance::SessionsController
       session[:mfa_user] = @user.display_id
       render "sessions/otp_prompt"
     else
+
       do_login
     end
   end
@@ -31,6 +32,7 @@ class SessionsController < Clearance::SessionsController
     if verify_user
       session[:verification] = Time.current + Gemcutter::PASSWORD_VERIFICATION_EXPIRY
       redirect_to session.delete(:redirect_uri) || root_path
+      # redirect_to new_multifactor_auth_path
     else
       flash[:alert] = t("profiles.request_denied")
       render :verify, status: :unauthorized
@@ -51,7 +53,8 @@ class SessionsController < Clearance::SessionsController
     sign_in(@user) do |status|
       if status.success?
         StatsD.increment "login.success"
-        redirect_back_or(url_after_create)
+        redirect_to new_multifactor_auth_path
+        # redirect_back_or(url_after_create)
       else
         login_failure(status.failure_message)
       end
