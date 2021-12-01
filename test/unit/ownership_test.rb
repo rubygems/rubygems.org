@@ -124,7 +124,7 @@ class OwnershipTest < ActiveSupport::TestCase
     setup do
       rubygem = create(:rubygem)
       user = create(:user)
-      Ownership.create_confirmed(rubygem, user)
+      Ownership.create_confirmed(rubygem, user, user)
     end
 
     should "create confirmed ownership" do

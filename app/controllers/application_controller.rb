@@ -62,6 +62,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def owner?
+    @rubygem.owned_by?(current_user)
+  end
+
   def find_versioned_links
     @versioned_links = @rubygem.links(@latest_version)
   end

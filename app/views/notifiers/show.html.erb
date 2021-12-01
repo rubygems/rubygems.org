@@ -32,6 +32,19 @@
             <%= t('.off') %>
           <% end %>
         </p>
+
+        <h4 class="t-list__heading"><%= t('.owner_request_heading') %></h3>
+        <div class="push--s">
+          <%= label_tag do %>
+            <%= radio_button_tag "ownerships[#{ownership.id}][ownership_request]", :on, ownership.ownership_request_notifier? %>
+            <%= t('.on') %> <em>(<%= t('.recommended') %>)</em>
+          <% end %>
+          <br>
+          <%= label_tag do %>
+            <%= radio_button_tag "ownerships[#{ownership.id}][ownership_request]", :off, !ownership.ownership_request_notifier? %>
+            <%= t('.off') %>
+          <% end %>
+        </p>
       <% end %>
       <%= submit_tag t('.update'), class: 'form__submit' %>
     <% end %>

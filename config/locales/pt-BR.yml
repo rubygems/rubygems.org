@@ -220,6 +220,17 @@ pt-BR:
       title:
       subtitle:
       body_html:
+    ownerhip_request_closed:
+      title:
+      subtitle:
+      body_html:
+    ownerhip_request_approved:
+      body_html:
+    new_opwnership_requests:
+      body_html:
+      button:
+      disable_notifications:
+      owners_page:
   news:
     show:
       title: Novos Releases - Todas as Gems
@@ -323,6 +334,9 @@ pt-BR:
           ui_and_api:
           ui_and_gem_signin:
   profiles:
+    adoptions:
+      no_ownership_calls:
+      no_ownership_requests:
     edit:
       change_avatar: Mudar foto de perfil
       email_awaiting_confirmation:
@@ -502,3 +516,34 @@ pt-BR:
       removed_notice:
       failed_notice:
     mfa_required:
+  adoptions:
+    index:
+      title:
+      ownership_calls:
+      no_ownership_calls:
+  ownership_calls:
+    update:
+      success_notice:
+    create:
+      success_notice:
+    created_by:
+    details:
+    apply:
+    close:
+    markdown_supported:
+    create_btn:
+  ownership_requests:
+    create:
+      success_notice:
+    update:
+      approved_notice:
+      closed_notice:
+    close:
+      success_notice:
+    ownership_requests:
+    your_ownership_requests:
+    close_all:
+    approve:
+    gems_published:
+    created_at:
+    no_ownership_requests:

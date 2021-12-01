@@ -1,0 +1,25 @@
+<% @title = "Adoptions" %>
+
+<h3 class="t-list__heading"><%= t("adoptions.index.ownership_calls") %>:</h3>
+<% if @ownership_calls.empty? %>
+  <div class="t-list__item">
+    <%= t(".no_ownership_calls") %>
+  </div>
+<% else %>
+  <%= render partial: "ownership_calls/close", layout: "ownership_calls/ownership_call", collection: @ownership_calls, as: :ownership_call %>
+<% end %>
+
+<br />
+<h3 class="t-list__heading"><%= t("ownership_requests.ownership_requests") %>:</h3>
+
+<% if @ownership_requests.empty? %>
+  <div class="t-list__item">
+    <%= t(".no_ownership_requests") %>
+  </div>
+<% else %>
+  <% @ownership_requests.each do |ownership_request| %>
+    <%= render "ownership_requests/ownership_request", ownership_request: ownership_request, show_user: false, show_gem: true  do %>
+      <%= button_to "Close", rubygem_ownership_request_path(ownership_request.rubygem, ownership_request), params: { status: "close" }, method: :patch, class: "form__submit form__submit--medium" %>
+    <% end %>
+  <% end %>
+<% end %>

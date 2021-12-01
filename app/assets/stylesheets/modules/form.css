@@ -73,6 +73,7 @@
   max-width: 320px; }
 
 .form__textarea {
+  margin-top: 5px;
   max-width: 640px;
   resize: none; }
 

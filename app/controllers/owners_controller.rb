@@ -53,10 +53,6 @@ class OwnersController < ApplicationController
 
   private
 
-  def owner?
-    @rubygem.owned_by?(current_user)
-  end
-
   def redirect_to_verify
     session[:redirect_uri] = rubygem_owners_url(@rubygem)
     redirect_to verify_session_path

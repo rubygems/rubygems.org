@@ -1,0 +1,13 @@
+<% @title = "Ownership Calls" %>
+
+<header class="gems__header">
+  <p class="gems__meter">
+    <%= page_entries_info @ownership_calls, entry_name: 'ownership calls' %>
+  </p>
+</header>
+
+<div class="t-list__items">
+  <%= render partial: "apply", layout: "ownership_call", collection: @ownership_calls, as: :ownership_call %>
+</div>
+
+<%= paginate @ownership_calls %>

@@ -96,6 +96,11 @@ module RubygemsHelper
             resend_confirmation_rubygem_owners_path(rubygem), class: "gem__link t-list__item"
   end
 
+  def rubygem_adoptions_link(rubygem)
+    link_to "Adoption",
+      rubygem_adoptions_path(rubygem), class: "gem__link t-list__item"
+  end
+
   def links_to_owners(rubygem)
     rubygem.owners.sort_by(&:id).inject("") { |link, owner| link << link_to_user(owner) }.html_safe
   end

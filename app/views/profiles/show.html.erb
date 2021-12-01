@@ -35,6 +35,18 @@
           %>
         </div>
 
+        <div id="ownership-requests">
+          <%=
+            link_to(
+                "Adoptions",
+                adoptions_profile_path,
+                id: "ownership-requests",
+                class: "profile__header__attribute t-link--black",
+                "data-icon": "⟡"
+            )
+          %>
+        </div>
+
         <div id="downloads-ego">
           <%=
             link_to(

@@ -26,9 +26,14 @@ class NotificationSettingsTest < SystemTest
       assert_unchecked_field notifier_off_radio(ownership1, "owner")
       assert_checked_field notifier_on_radio(ownership2, "owner")
       assert_unchecked_field notifier_off_radio(ownership2, "owner")
+      assert_checked_field notifier_on_radio(ownership1, "ownership_request")
+      assert_unchecked_field notifier_off_radio(ownership1, "ownership_request")
+      assert_checked_field notifier_on_radio(ownership2, "ownership_request")
+      assert_unchecked_field notifier_off_radio(ownership2, "ownership_request")
 
       choose notifier_off_radio(ownership1, "push")
       choose notifier_off_radio(ownership2, "owner")
+      choose notifier_off_radio(ownership2, "ownership_request")
 
       click_button I18n.t("notifiers.show.update")
     end
@@ -50,6 +55,10 @@ class NotificationSettingsTest < SystemTest
       assert_unchecked_field notifier_off_radio(ownership1, "owner")
       assert_unchecked_field notifier_on_radio(ownership2, "owner")
       assert_checked_field notifier_off_radio(ownership2, "owner")
+      assert_checked_field notifier_on_radio(ownership1, "ownership_request")
+      assert_unchecked_field notifier_off_radio(ownership1, "ownership_request")
+      assert_unchecked_field notifier_on_radio(ownership2, "ownership_request")
+      assert_checked_field notifier_off_radio(ownership2, "ownership_request")
     end
   end
 

@@ -60,6 +60,10 @@ module RateLimitHelpers
     update_limit_for("#{scope}:#{@user.email}", under_email_limit)
   end
 
+  def stay_under_ownership_request_limit_for(scope)
+    update_limit_for("#{scope}:#{@user.email}", under_email_limit, Rack::Attack::REQUEST_LIMIT_PERIOD)
+  end
+
   def stay_under_push_limit_for(scope)
     under_push_limit = (Rack::Attack::PUSH_LIMIT * 0.5).to_i
     update_limit_for("#{scope}:#{@user.email}", under_push_limit)
@@ -92,6 +96,10 @@ module RateLimitHelpers
     now = Time.now.to_i
     period = Rack::Attack::EXP_BASE_LIMIT_PERIOD**level
     (period - (now % period)).to_s
+  end
+
+  def exceed_ownership_request_limit_for(scope)
+    update_limit_for("#{scope}:#{@user.email}", exceeding_email_limit, Rack::Attack::REQUEST_LIMIT_PERIOD)
   end
 
   def assert_throttle_at(level)

@@ -1,0 +1,53 @@
+<% @title = t("mailer.ownerhip_request_closed.title") %>
+<% @sub_title = t("mailer.ownerhip_request_closed.subtitle", handle: @user.display_handle) %>
+
+<!-- Body -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+  <tr>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+    <td>
+      <div class="h3-1-center" style="color:#1e1e1e; font-family:Georgia, serif; min-width:auto !important; font-size:20px; line-height:26px;">
+        <br>
+        <p>
+          <%= t("mailer.ownerhip_request_approved.body_html", gem: @rubygem.name) %>
+        </p>
+
+        <br/>
+        <!-- Button -->
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="center">
+              <table width="250" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td align="center" bgcolor="#e9573f">
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="img" style="font-size:0pt; line-height:0pt; text-align:left" width="15"><table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="50" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+                        </td>
+                        <td bgcolor="#e9573f">
+                          <div class="text-btn" style="color:#ffffff; font-family:Arial, sans-serif; min-width:auto !important; font-size:16px; line-height:20px; text-align:center">
+                            <a href=<%= rubygem_owners_url(@rubygem) %> target="_blank" class="link-white" style="color:#ffffff; text-decoration:none"><span class="link-white" style="color:#ffffff; text-decoration:none"><%= t("mailer.new_opwnership_requests.owners_page") %></span></a>
+                          </div>
+                        </td>
+                        <td class="img" style="font-size:0pt; line-height:0pt; text-align:left" width="15"></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <!-- END Button -->
+
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+      </div>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="30" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+    </td>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+  </tr>
+</table>

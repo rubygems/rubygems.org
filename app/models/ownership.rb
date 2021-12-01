@@ -25,9 +25,26 @@ class Ownership < ApplicationRecord
     joins(:user).find_by(users: { handle: handle }) || joins(:user).find_by!(users: { id: handle })
   end
 
-  def self.create_confirmed(rubygem, user)
-    ownership = rubygem.ownerships.create(user: user, authorizer: user)
+  def self.create_confirmed(rubygem, user, approver)
+    ownership = rubygem.ownerships.create(user: user, authorizer: approver)
     ownership.confirm!
+  end
+
+  def self.update_notifier(to_enable, to_disable, notifer_attr)
+    where(id: to_enable).update_all(notifer_attr => true) if to_enable.any?
+    where(id: to_disable).update_all(notifer_attr => false) if to_disable.any?
+  end
+
+  def self.update_push_notifier(to_enable_push, to_disable_push)
+    update_notifier(to_enable_push, to_disable_push, "push_notifier")
+  end
+
+  def self.update_owner_notifier(to_enable_owner, to_disable_owner)
+    update_notifier(to_enable_owner, to_disable_owner, "owner_notifier")
+  end
+
+  def self.update_ownership_request_notifier(to_enable_ownership_request, to_disable_ownership_request)
+    update_notifier(to_enable_ownership_request, to_disable_ownership_request, "ownership_request_notifier")
   end
 
   def valid_confirmation_token?

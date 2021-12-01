@@ -8,6 +8,7 @@ class Rubygem < ApplicationRecord
   has_many :owners_including_unconfirmed, through: :ownerships_including_unconfirmed, source: :user
   has_many :push_notifiable_owners, ->(gem) { gem.owners.push_notifiable_owners }, through: :ownerships, source: :user
   has_many :ownership_notifiable_owners, ->(gem) { gem.owners.ownership_notifiable_owners }, through: :ownerships, source: :user
+  has_many :ownership_request_notifiable_owners, ->(gem) { gem.owners.ownership_request_notifiable_owners }, through: :ownerships, source: :user
   has_many :subscriptions, dependent: :destroy
   has_many :subscribers, through: :subscriptions, source: :user
   has_many :versions, dependent: :destroy, validate: false
@@ -15,6 +16,8 @@ class Rubygem < ApplicationRecord
   has_many :web_hooks, dependent: :destroy
   has_one :linkset, dependent: :destroy
   has_one :gem_download, -> { where(version_id: 0) }, inverse_of: :rubygem
+  has_many :ownership_calls, -> { opened }, dependent: :destroy, inverse_of: :rubygem
+  has_many :ownership_requests, -> { opened }, dependent: :destroy, inverse_of: :rubygem
 
   validate :ensure_name_format, if: :needs_name_validation?
   validates :name,
@@ -217,7 +220,17 @@ class Rubygem < ApplicationRecord
   end
 
   def create_ownership(user)
-    Ownership.create_confirmed(self, user) if unowned?
+    Ownership.create_confirmed(self, user, user) if unowned?
+  end
+
+  def ownership_call
+    ownership_calls.find_by(status: "opened")
+  end
+
+  def ownership_requestable?
+    abandoned_release_threshold   = 1.year.ago
+    abandoned_downloads_threshold = 10_000
+    ownership_calls.any? || (updated_at > abandoned_release_threshold && downloads < abandoned_downloads_threshold)
   end
 
   def update_versions!(version, spec)

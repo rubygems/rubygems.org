@@ -18,4 +18,10 @@ module OwnersHelper
       image_tag("/images/check.svg")
     end
   end
+
+  def sanitize_note(text)
+    options = RDoc::Options.new
+    options.pipe = true
+    simple_format RDoc::Markup.new.convert(text, RDoc::Markup::ToHtml.new(options))
+  end
 end
