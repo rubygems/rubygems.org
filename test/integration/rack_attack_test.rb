@@ -227,7 +227,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     context "ownership requests" do
       setup do
         sign_in_as(@user)
-        @rubygem = create(:rubygem, name: "test", number: "0.0.1")
+        @rubygem = create(:rubygem, name: "test", downloads: 2_000)
+        create(:version, rubygem: @rubygem, created_at: 2.years.ago)
         stay_under_ownership_request_limit_for("ownership_requests/email")
         post "/gems/#{@rubygem.name}/ownership_requests", params: { rubygem_id: @rubygem.name, note: "small note" }
       end
@@ -551,7 +552,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     context "ownership requests" do
       setup do
         sign_in_as(@user)
-        @rubygem = create(:rubygem, name: "test", number: "0.0.1")
+        @rubygem = create(:rubygem, name: "test", downloads: 2_000)
+        create(:version, rubygem: @rubygem, created_at: 2.years.ago)
         exceed_ownership_request_limit_for("ownership_requests/email")
         post "/gems/#{@rubygem.name}/ownership_requests", params: { rubygem_id: @rubygem.name, note: "small note" }
       end

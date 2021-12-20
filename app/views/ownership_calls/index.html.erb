@@ -1,4 +1,9 @@
-<% @title = "Ownership Calls" %>
+<% content_for :title do %>
+  <h1 class="t-display page__heading page__heading--small">
+    <%= t('.title') %>
+    <i class="page__subheading page__subheading--block"><%= t(".subtitle_html") %></i>
+  </h1>
+<% end %>
 
 <header class="gems__header">
   <p class="gems__meter">

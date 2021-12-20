@@ -146,6 +146,7 @@ zh-TW:
         uptime: 上線時間
         verified_by:
         secured_by:
+        looking_for_maintainers:
       header:
         dashboard: 控制台
         edit_profile:
@@ -358,6 +359,8 @@ zh-TW:
     adoptions:
       no_ownership_calls:
       no_ownership_requests:
+      title:
+      subtitle_html:
     edit:
       change_avatar:
       email_awaiting_confirmation: 請驗證你的新 Email %{unconfirmed_email}
@@ -514,6 +517,8 @@ zh-TW:
   adoptions:
     index:
       title:
+      subtitle_owner_html:
+      subtitle_user_html:
       ownership_calls:
       no_ownership_calls:
   ownership_calls:
@@ -521,12 +526,17 @@ zh-TW:
       success_notice:
     create:
       success_notice:
+    index:
+      title:
+      subtitle_html:
+    share_requirements:
+    note_for_applicants:
     created_by:
     details:
     apply:
     close:
-    markdown_supported:
-    create_btn:
+    markup_supported_html:
+    create_call:
   ownership_requests:
     create:
       success_notice:
@@ -536,9 +546,11 @@ zh-TW:
     close:
       success_notice:
     ownership_requests:
+    note_for_owners:
     your_ownership_requests:
     close_all:
     approve:
     gems_published:
     created_at:
     no_ownership_requests:
+    create_req:

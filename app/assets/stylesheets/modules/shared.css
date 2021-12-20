@@ -227,3 +227,23 @@ span#github-btn {
   color: white;
   background-color: #e9573f;
 }
+
+.adoption__heading {
+  color: #e9573f;
+}
+
+.t-body h2.adoption__heading--no-padding {
+  padding-top: 0px;
+}
+
+.adoption__blog__link {
+  color: #e9573f;
+  text-decoration: underline;
+  font-size: 0.6em;
+  font-weight: bold;
+}
+
+.adoption__rdoc__link {
+  text-decoration: underline;
+  font-weight: bold;
+}
