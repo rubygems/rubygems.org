@@ -1,0 +1,91 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: ownership-requests-notify-daily
+  labels:
+    name: ownership-requests-notify-daily
+spec:
+  concurrencyPolicy: Forbid
+  schedule: "0 2 * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            name: ownership-requests-notify-daily
+        spec:
+          restartPolicy: "OnFailure"
+          containers:
+          - name: ownership-requests-notify-daily
+            image: quay.io/rubygems/rubygems.org:<%= current_sha %>
+            args: ["rake", "ownership_request_notification:send"]
+            resources:
+              <% if environment == 'production' %>
+              requests:
+                cpu: 500m
+                memory: 1Gi
+              limits:
+                cpu: 2000m
+                memory: 3Gi
+              <% else %>
+              requests:
+                cpu: 200m
+                memory: 1Gi
+              limits:
+                cpu: 500m
+                memory: 2Gi
+              <% end %>
+            env:
+            - name: RAILS_ENV
+              value: "<%= environment %>"
+            - name: ENV
+              value: "<%= environment %>"
+            - name: STATSD_IMPLEMENTATION
+              value: "datadog"
+            - name: STATSD_HOST
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.hostIP
+            - name: STATSD_ADDR
+              value: $(STATSD_HOST):8125
+            - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: <%= environment %>
+                  key: secret_key_base
+            - name: CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: <%= environment %>
+                  key: client_id
+            - name: SLACK_HOOK
+              valueFrom:
+                secretKeyRef:
+                  name: <%= environment %>
+                  key: slack_hook
+            - name: NEW_RELIC_LICENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: <%= environment %>
+                  key: new_relic_license_key
+            - name: HONEYBADGER_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: <%= environment %>
+                  key: honeybadger_api_key
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: <%= environment %>
+                  key: database_url
+            volumeMounts:
+            - mountPath: /app/lib/tasks/users_verify.rake
+              name: users-verify-rake-volume
+              subPath: users_verify.rake
+            securityContext:
+              privileged: false
+          volumes:
+          - name: users-verify-rake-volume
+            configMap:
+              name: users-verify-rake-file
