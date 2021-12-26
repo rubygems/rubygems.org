@@ -140,10 +140,12 @@ class Version < ApplicationRecord
   end
 
   def self.just_updated(limit = 5)
+    six_months_ago_ts = 6.months.ago
     subquery = <<~SQL.squish
       versions.rubygem_id IN (SELECT versions.rubygem_id
                                 FROM versions
-                            WHERE versions.indexed = 'true'
+                            WHERE versions.indexed = 'true' AND
+                                  versions.created_at > '#{six_months_ago_ts}'
                             GROUP BY versions.rubygem_id
                               HAVING COUNT(versions.id) > 1
                               ORDER BY MAX(created_at) DESC LIMIT :limit)
