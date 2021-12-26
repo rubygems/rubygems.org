@@ -247,3 +247,23 @@ span#github-btn {
   text-decoration: underline;
   font-weight: bold;
 }
+
+.tooltip__text {
+  color: #e9573f;
+  font-size: 0.7em;
+  vertical-align: text-bottom;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip__text:hover::after {
+  position: absolute;
+  content: attr(data-tooltip);
+  bottom: 2.1em;
+  right: -1em;
+  background-color: #333;
+  color: white;
+  padding: .25em .5em;
+  font-size: .8em;
+}

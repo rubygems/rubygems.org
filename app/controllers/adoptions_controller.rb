@@ -11,6 +11,6 @@ class AdoptionsController < ApplicationController
   private
 
   def verify_ownership_requestable
-    render_forbidden unless @rubygem.ownership_requestable?
+    render_forbidden unless @rubygem.owned_by?(current_user) || @rubygem.ownership_requestable?
   end
 end

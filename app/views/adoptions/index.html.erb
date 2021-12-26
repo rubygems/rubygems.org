@@ -10,8 +10,10 @@
 <% end %>
 
 <div class="t-body">
-    <h2 class="adoption__heading adoption__heading--no-padding"><%= t(".ownership_calls") %></h2>
-  </div>
+  <h2 class="adoption__heading adoption__heading--no-padding"><%= t(".ownership_calls") %>
+    <span class="tooltip__text" data-tooltip="Looking for maintainers">[?]</span>
+  </h2>
+</div>
 
 <% if @ownership_call %>
   <div class="ownership__details">

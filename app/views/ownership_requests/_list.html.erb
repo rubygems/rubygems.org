@@ -1,5 +1,7 @@
 <div class="t-body">
-  <h2 class="adoption__heading"><%= t("ownership_requests.ownership_requests") %></h2>
+  <h2 class="adoption__heading"><%= t("ownership_requests.ownership_requests") %>
+    <span class="tooltip__text" data-tooltip="Intrested in becoming maintainer">[?]</span>
+  </h2>
 </div>
 
 <% if @rubygem.owned_by?(current_user) %>
@@ -15,4 +17,8 @@
 
 <% elsif current_user %>
   <%= render "ownership_requests/form" %>
+<% else %>
+  <div class="t-body">
+    <%= t("ownership_requests.signin_to_create_html") %>
+  </div>
 <% end %>
