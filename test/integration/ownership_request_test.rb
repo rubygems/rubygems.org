@@ -1,7 +1,9 @@
 require "test_helper"
+require "helpers/adoption_helpers"
 
 class OwnershipRequestsTest < SystemTest
   include ActionMailer::TestHelper
+  include AdoptionHelpers
 
   setup do
     @owner = create(:user)
@@ -31,7 +33,7 @@ class OwnershipRequestsTest < SystemTest
     create(:ownership_call, rubygem: rubygem)
     create(:ownership_request, user: user, rubygem: rubygem)
 
-    visit rubygem_adoptions_path(rubygem, as: @owner.id)
+    visit_rubygem_adoptions_path(rubygem, @owner)
 
     click_button "Approve"
 
@@ -60,7 +62,7 @@ class OwnershipRequestsTest < SystemTest
     create(:ownership_call, rubygem: rubygem)
     create(:ownership_request, user: user, rubygem: rubygem)
 
-    visit rubygem_adoptions_path(rubygem, as: @owner.id)
+    visit_rubygem_adoptions_path(rubygem, @owner)
 
     page.find("#owner_close_request").click
 
@@ -86,7 +88,7 @@ class OwnershipRequestsTest < SystemTest
     create(:version, rubygem: rubygem, created_at: 2.years.ago)
     create_list(:ownership_request, 3, rubygem: rubygem)
 
-    visit rubygem_adoptions_path(rubygem, as: @owner.id)
+    visit_rubygem_adoptions_path(rubygem, @owner)
 
     click_button "Close all"
     Delayed::Worker.new.work_off

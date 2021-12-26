@@ -10,6 +10,11 @@ class AdoptionsControllerTest < ActionController::TestCase
         @rubygem = create(:rubygem, owners: [@user], downloads: 2_000)
         create(:version, rubygem: @rubygem, created_at: 2.years.ago)
         sign_in_as @user
+        session[:verification] = 10.minutes.from_now
+      end
+
+      teardown do
+        session[:verification] = nil
       end
 
       context "ownership call exists" do

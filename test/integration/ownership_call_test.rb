@@ -1,7 +1,9 @@
 require "test_helper"
+require "helpers/adoption_helpers"
 
 class OwnershipCallsTest < SystemTest
   include ActionMailer::TestHelper
+  include AdoptionHelpers
 
   setup do
     @owner = create(:user)
@@ -30,11 +32,7 @@ class OwnershipCallsTest < SystemTest
   test "create ownership call as owner" do
     rubygem = create(:rubygem, owners: [@owner], downloads: 2_000)
     create(:version, rubygem: rubygem, created_at: 2.years.ago)
-    visit rubygem_path(rubygem, as: @owner)
-
-    within ".gem__aside > div.t-list__items" do
-      click_link "Adoption"
-    end
+    visit_rubygem_adoptions_path(rubygem, @owner)
 
     assert page.has_field? "Note"
     create_call("call about _note_ by *owner*.")
@@ -104,7 +102,7 @@ class OwnershipCallsTest < SystemTest
     ownership_call = create(:ownership_call, rubygem: rubygem, user: @owner)
     create_list(:ownership_request, 3, :with_ownership_call, rubygem: rubygem, ownership_call: ownership_call)
 
-    visit rubygem_adoptions_path(rubygem, as: @owner)
+    visit_rubygem_adoptions_path(rubygem, @owner)
     within first("form.button_to") do
       click_button "Close"
     end
