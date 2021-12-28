@@ -18,14 +18,10 @@
     <% if current_user.mfa_enabled? %>
       <div class="form__group">
         <%= label_tag :mfa, t(".multifactor_auth"), class: "form__label" %>
-        <% if current_user.mfa_ui_and_api? %>
-          <p><%= t(".mfa_api_enabled") %></p>
-        <% else %>
-          <div class="form__checkbox__item">
-            <%= f.check_box :mfa, { class: "form__checkbox__input", id: :mfa, checked: true } , "true", "false" %>
-            <%= label_tag :mfa, t(".enable_mfa"), class: "form__checkbox__label" %>
-          </div>
-        <% end %>
+        <div class="form__checkbox__item">
+          <%= f.check_box :mfa, { class: "form__checkbox__input", id: :mfa, checked: true } , "true", "false" %>
+          <%= label_tag :mfa, t(".enable_mfa"), class: "form__checkbox__label" %>
+        </div>
       </div>
     <% end %>
 

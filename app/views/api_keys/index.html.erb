@@ -48,7 +48,7 @@
         </td>
         <% if current_user.mfa_enabled? %>
           <td class="owners__cell" data-title="MFA">
-            <%= image_tag("/images/check.svg") if api_key.mfa_enabled? %>
+            <%= image_tag("/images/check.svg") if api_key.mfa? %>
           </td>
         <% end %>
         <td class="owners__cell" data-title="Last access">

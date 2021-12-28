@@ -88,7 +88,6 @@ en:
       mfa: MFA
     new:
       new_api_key: New API key
-      mfa_api_enabled: Your new key will have multifactor authentication turned on because you have enabled the UI and API MFA level.
       multifactor_auth: Multifactor authentication
       enable_mfa: Enable MFA
     reset:
