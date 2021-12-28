@@ -7,7 +7,7 @@
 # Read the Guide for Upgrading Ruby on Rails for more info on each option.
 
 # Support for inversing belongs_to -> has_many Active Record associations.
-# Rails.application.config.active_record.has_many_inversing = true
+Rails.application.config.active_record.has_many_inversing = true
 
 # Apply random variation to the delay when retrying failed jobs.
 Rails.application.config.active_job.retry_jitter = 0.15
@@ -30,7 +30,7 @@ Rails.application.config.action_dispatch.cookies_same_site_protection = :lax
 
 # Specify whether `ActiveSupport::TimeZone.utc_to_local` returns a time with an
 # UTC offset or a UTC time.
-# ActiveSupport.utc_to_local_returns_utc_offset_times = true
+ActiveSupport.utc_to_local_returns_utc_offset_times = true
 
 # Change the default HTTP status code to `308` when redirecting non-GET/HEAD
 # requests to HTTPS in `ActionDispatch::SSL` middleware.
@@ -39,7 +39,7 @@ Rails.application.config.action_dispatch.cookies_same_site_protection = :lax
 # Use new connection handling API. For most applications this won't have any
 # effect. For applications using multiple databases, this new API provides
 # support for granular connection swapping.
-# Rails.application.config.active_record.legacy_connection_handling = false
+Rails.application.config.active_record.legacy_connection_handling = false
 
 # Make `form_with` generate non-remote forms by default.
 # Rails.application.config.action_view.form_with_generates_remote_forms = false
