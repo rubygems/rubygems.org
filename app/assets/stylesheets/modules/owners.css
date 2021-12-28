@@ -27,6 +27,13 @@ span.owners__icon img {
     padding-right: 2px;
 }
 
+.owners__cell[data-title="MFA"] img {
+    margin: auto 0;
+    height: 23px;
+    width: 23px;
+    border-radius: 50%;
+}
+
 @media screen and (max-width: 640px) {
     .owners__tbody {
         display: block;

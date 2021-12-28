@@ -230,11 +230,6 @@ class User < ApplicationRecord
     otp_verified?(otp)
   end
 
-  def mfa_api_authorized?(otp)
-    return true unless mfa_ui_and_api?
-    otp_verified?(otp)
-  end
-
   def otp_verified?(otp)
     otp = otp.to_s
     return true if verify_digit_otp(mfa_seed, otp)

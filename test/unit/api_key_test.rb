@@ -41,4 +41,33 @@ class ApiKeyTest < ActiveSupport::TestCase
       refute build(:api_key, show_dashboard: true, push_rubygem: true).valid?
     end
   end
+
+  context "#mfa_enabled?" do
+    setup do
+      @api_key = create(:api_key, index_rubygems: true)
+    end
+
+    should "return false with MFA disabled user" do
+      refute @api_key.mfa_enabled?
+
+      @api_key.update(mfa: true)
+      refute @api_key.mfa_enabled?
+    end
+
+    should "return mfa with MFA UI enabled user" do
+      @api_key.user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+      refute @api_key.mfa_enabled?
+
+      @api_key.update(mfa: true)
+      assert @api_key.mfa_enabled?
+    end
+
+    should "return true with MFA UI and API enabled user" do
+      @api_key.user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+      assert @api_key.mfa_enabled?
+
+      @api_key.update(mfa: true)
+      assert @api_key.mfa_enabled?
+    end
+  end
 end

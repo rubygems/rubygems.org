@@ -186,7 +186,8 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
   context "with index and push rubygem api key scope" do
     setup do
-      @user = create(:api_key, key: "12345", push_rubygem: true, index_rubygems: true).user
+      @api_key = create(:api_key, key: "12345", push_rubygem: true, index_rubygems: true)
+      @user = @api_key.user
 
       @request.env["HTTP_AUTHORIZATION"] = "12345"
     end
@@ -238,6 +239,15 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "When mfa for UI and gem signin is enabled" do
       setup do
         @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+      end
+
+      context "Api key has mfa enabled" do
+        setup do
+          @api_key.mfa = true
+          @api_key.save!
+          post :create, body: gem_file.read
+        end
+        should respond_with :unauthorized
       end
 
       context "On POST to create for new gem" do

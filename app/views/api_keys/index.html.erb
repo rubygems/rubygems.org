@@ -21,6 +21,11 @@
       <th class="owners__cell">
         <%= t(".age") %>
       </th>
+      <% if current_user.mfa_enabled? %>
+        <th class="owners__cell">
+          <%= t(".mfa") %>
+        </th>
+      <% end %>
       <th class="owners__cell">
         <%= t(".last_access") %>
       </th>
@@ -41,6 +46,11 @@
         <td class="owners__cell" data-title="Age">
           <%= time_ago_in_words(api_key.created_at) %>
         </td>
+        <% if current_user.mfa_enabled? %>
+          <td class="owners__cell" data-title="MFA">
+            <%= image_tag("/images/check.svg") if api_key.mfa? %>
+          </td>
+        <% end %>
         <td class="owners__cell" data-title="Last access">
           <%= api_key.last_accessed_at&.strftime("%Y-%m-%d %H:%M %Z") %>
         </td>
@@ -70,6 +80,10 @@
       </td>
       <td class="owners__cell">
       </td>
+      <% if current_user.mfa_enabled? %>
+        <td class="owners__cell">
+        </td>
+      <% end %>
       <td class="owners__cell">
         <%= button_to t(".reset"),
                     reset_profile_api_keys_path,

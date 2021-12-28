@@ -66,7 +66,7 @@ class ApiKeysController < ApplicationController
   private
 
   def api_key_params
-    params.require(:api_key).permit(:name, *ApiKey::API_SCOPES)
+    params.require(:api_key).permit(:name, *ApiKey::API_SCOPES, :mfa)
   end
 
   def redirect_to_verify

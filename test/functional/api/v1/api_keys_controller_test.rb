@@ -276,6 +276,17 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         assert_equal "New API key created for rubygems.org", email.subject
         assert_match "test-key", email.body.to_s
       end
+
+      context "with MFA param set" do
+        setup do
+          post :create, params: { name: "mfa", index_rubygems: "true", mfa: "true" }, format: "text"
+        end
+
+        should "have MFA" do
+          created_key = @user.api_keys.find_by(name: "mfa")
+          assert created_key.mfa
+        end
+      end
     end
 
     context "when user has enabled MFA for UI and API" do
@@ -317,7 +328,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       setup do
         @api_key = create(:api_key, user: @user, key: "12345", push_rubygem: true)
         authorize_with("#{@user.email}:#{@user.password}")
-        put :update, params: { api_key: "12345", index_rubygems: "true" }
+        put :update, params: { api_key: "12345", index_rubygems: "true", mfa: "true" }
         @api_key.reload
       end
 
@@ -325,6 +336,10 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       should "keep current scope enabled and update scope in params" do
         assert @api_key.can_index_rubygems?
         assert @api_key.can_push_rubygem?
+      end
+
+      should "update MFA" do
+        assert @api_key.mfa
       end
     end
 

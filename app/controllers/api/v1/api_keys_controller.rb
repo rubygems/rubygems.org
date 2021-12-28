@@ -79,10 +79,10 @@ class Api::V1::ApiKeysController < Api::BaseController
   end
 
   def api_key_create_params
-    params.permit(:name, *ApiKey::API_SCOPES)
+    params.permit(:name, *ApiKey::API_SCOPES, :mfa)
   end
 
   def api_key_update_params
-    params.permit(*ApiKey::API_SCOPES)
+    params.permit(*ApiKey::API_SCOPES, :mfa)
   end
 end

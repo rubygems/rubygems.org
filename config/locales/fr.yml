@@ -77,14 +77,19 @@ fr:
       show_dashboard:
       reset:
       save_key:
+      mfa:
     new:
       new_api_key:
+      multifactor_auth:
+      enable_mfa:
     reset:
       success:
     update:
       success:
     edit:
       edit_api_key:
+      multifactor_auth:
+      enable_mfa:
   clearance_mailer:
     change_password:
       title:
