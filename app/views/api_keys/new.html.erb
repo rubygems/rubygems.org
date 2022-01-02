@@ -15,7 +15,7 @@
       <% end %>
     </div>
 
-    <% if current_user.mfa_enabled? %>
+    <% unless current_user.mfa_disabled? || current_user.mfa_ui_and_api? %>
       <div class="form__group">
         <%= label_tag :mfa, t(".multifactor_auth"), class: "form__label" %>
         <div class="form__checkbox__item">
