@@ -128,6 +128,10 @@ class User < ApplicationRecord
     attrs
   end
 
+  def private_payload
+    payload.merge("mfa" => mfa_level)
+  end
+
   def as_json(*)
     payload
   end

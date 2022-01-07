@@ -24,6 +24,7 @@ Rails.application.routes.draw do
       end
       resource :multifactor_auth, only: :show
       resources :profiles, only: :show
+      resource :profile, only: :show
       resources :downloads, only: :index do
         get :top, on: :collection
         get :all, on: :collection
