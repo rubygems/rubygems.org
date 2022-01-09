@@ -1,7 +1,9 @@
 require "test_helper"
+require "helpers/adoption_helpers"
 
 class OwnershipCallsTest < SystemTest
   include ActionMailer::TestHelper
+  include AdoptionHelpers
 
   setup do
     @owner = create(:user)
@@ -14,13 +16,13 @@ class OwnershipCallsTest < SystemTest
     end
     visit ownership_calls_path
 
-    assert_title "Ownership Calls"
     assert_selector :css, ".gems__meter", text: "Displaying ownership calls 1 - 10 of 15 in total"
     assert_selector :css, ".gems__gem", count: 10
   end
 
   test "shows no calls notice if call doesn't exist" do
-    rubygem = create(:rubygem, owners: [@owner], number: "1.0.0")
+    rubygem = create(:rubygem, owners: [@owner], downloads: 2_000)
+    create(:version, rubygem: rubygem, created_at: 2.years.ago)
     user = create(:user)
     visit rubygem_adoptions_path(rubygem, as: user)
 
@@ -28,17 +30,13 @@ class OwnershipCallsTest < SystemTest
   end
 
   test "create ownership call as owner" do
-    rubygem = create(:rubygem, owners: [@owner], number: "1.0.0")
-    visit rubygem_path(rubygem, as: @owner)
-
-    within ".gem__aside > div.t-list__items" do
-      click_link "Adoption"
-    end
+    rubygem = create(:rubygem, owners: [@owner], downloads: 2_000)
+    create(:version, rubygem: rubygem, created_at: 2.years.ago)
+    visit_rubygem_adoptions_path(rubygem, @owner)
 
     assert page.has_field? "Note"
     create_call("call about _note_ by *owner*.")
 
-    assert_selector :css, "div.gems__gem__info > a.gems__gem__name", text: rubygem.name
     assert_selector :css, "div.ownership__details > p", text: "call about note by owner."
   end
 
@@ -48,17 +46,16 @@ class OwnershipCallsTest < SystemTest
     user = create(:user)
     visit rubygem_adoptions_path(rubygem, as: user)
 
-    assert page.has_link? rubygem.name, href: rubygem_path(rubygem)
     assert page.has_link? @owner.handle, href: profile_path(@owner)
     within "div.ownership__details" do
       assert page.has_css? "em", text: "italics"
       assert page.has_css? "strong", text: "bold"
     end
-    assert_selector :css, "p.gems__gem__downloads__count", text: "2,000 Downloads"
   end
 
   test "ownership call of less popular gem as user" do
-    rubygem = create(:rubygem, owners: [@owner], number: "1.0.0")
+    rubygem = create(:rubygem, owners: [@owner], downloads: 2_000)
+    create(:version, rubygem: rubygem, created_at: 2.years.ago)
     user = create(:user)
     visit rubygem_path(rubygem, as: user)
 
@@ -67,8 +64,8 @@ class OwnershipCallsTest < SystemTest
     end
 
     assert page.has_content? "There are no ownership calls for #{rubygem.name}"
-    assert page.has_field? "Ownership Request"
-    assert page.has_button? "Create"
+    assert page.has_field? "Note"
+    assert page.has_button? "Create ownership request"
   end
 
   test "hide adoptions link if popular gem" do
@@ -105,7 +102,7 @@ class OwnershipCallsTest < SystemTest
     ownership_call = create(:ownership_call, rubygem: rubygem, user: @owner)
     create_list(:ownership_request, 3, :with_ownership_call, rubygem: rubygem, ownership_call: ownership_call)
 
-    visit rubygem_adoptions_path(rubygem, as: @owner)
+    visit_rubygem_adoptions_path(rubygem, @owner)
     within first("form.button_to") do
       click_button "Close"
     end
@@ -118,6 +115,6 @@ class OwnershipCallsTest < SystemTest
 
   def create_call(note)
     fill_in "Note", with: note
-    click_button "Create"
+    click_button "Create ownership call"
   end
 end

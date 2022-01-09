@@ -159,6 +159,7 @@ en:
         uptime: Uptime
         verified_by: Verified by
         secured_by: Secured by
+        looking_for_maintainers: maintainers wanted
       header:
         dashboard: Dashboard
         settings: Settings
@@ -374,6 +375,8 @@ en:
     adoptions:
       no_ownership_calls: You have not created any ownership call for any of your gems.
       no_ownership_requests: You have not created any ownership request.
+      title: Adoption
+      subtitle_html: Ask for new maintainers or request ownership <a class="adoption__blog__link" href="https://blog.rubygems.org/2021/12/01/rubygems-adoptions.html">(read more)</a>
     edit:
       change_avatar: Change Avatar
       email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
@@ -530,19 +533,26 @@ en:
   adoptions:
     index:
       title: Adoptions
-      ownership_calls: Ownership Calls
-      no_ownership_calls: There are no ownership calls for %{gem}
+      subtitle_owner_html: Ask new maintainers to join %{gem} <a class="adoption__blog__link" href="https://blog.rubygems.org/2021/12/01/rubygems-adoptions.html">(read more)</a>
+      subtitle_user_html: Request ownership of %{gem} <a class="adoption__blog__link" href="https://blog.rubygems.org/2021/12/01/rubygems-adoptions.html">(read more)</a>
+      ownership_calls: Ownership Call
+      no_ownership_calls: There are no ownership calls for %{gem}. The gem owners are not looking new maintainers.
   ownership_calls:
     update:
       success_notice: The ownership call for %{gem} was closed.
     create:
       success_notice: Created ownership call for %{gem}.
+    index:
+      title: Maintainers wanted
+      subtitle_html: RubyGems looking for new maintainers to join <a class="adoption__blog__link" href="https://blog.rubygems.org/2021/12/01/rubygems-adoptions.html">(read more)</a>
+    share_requirements: Please share in what areas do you need help
+    note_for_applicants: "Note for applicants:"
     created_by: Created by
     details: Details
     apply: Apply
     close: Close
-    markdown_supported: Markdown supported
-    create_btn: Create
+    markup_supported_html: <a class="adoption__rdoc__link" href="https://ruby.github.io/rdoc/RDoc/Markup.html#class-RDoc::Markup-label-RDoc+Markup+Reference">Rdoc markup</a> supported
+    create_call: Create ownership call
   ownership_requests:
     create:
       success_notice: Your ownership request was submitted.
@@ -552,9 +562,12 @@ en:
     close:
       success_notice: All open ownership requests for %{gem} were closed.
     ownership_requests: Ownership Requests
+    note_for_owners: "Note for owners:"
     your_ownership_requests: Your ownership requests
     close_all: Close all
     approve: Approve
     gems_published: Gems published
     created_at: Created at
-    no_ownership_requests: No ownership requests for %{gem}
+    no_ownership_requests: Requests to join your project will show up here. No ownership requests for %{gem} yet.
+    create_req: Create ownership request
+    signin_to_create_html: Please <a href="https://rubygems.org/sign_in">sign in</a> to create request ownership.

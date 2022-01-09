@@ -7,8 +7,14 @@ class AdoptionsControllerTest < ActionController::TestCase
     end
     context "signed user is owner of rubygem" do
       setup do
-        @rubygem = create(:rubygem, owners: [@user], number: "1.0.0")
+        @rubygem = create(:rubygem, owners: [@user], downloads: 2_000)
+        create(:version, rubygem: @rubygem, created_at: 2.years.ago)
         sign_in_as @user
+        session[:verification] = 10.minutes.from_now
+      end
+
+      teardown do
+        session[:verification] = nil
       end
 
       context "ownership call exists" do
@@ -51,7 +57,7 @@ class AdoptionsControllerTest < ActionController::TestCase
           end
           should respond_with :success
           should "have button to create ownership call" do
-            assert page.has_selector?("input[value='Create']")
+            assert page.has_selector?("input[value='Create ownership call']")
           end
         end
 
@@ -69,7 +75,8 @@ class AdoptionsControllerTest < ActionController::TestCase
 
     context "signed in user is not owner of rubygem" do
       setup do
-        @rubygem = create(:rubygem, number: "1.0.0")
+        @rubygem = create(:rubygem, downloads: 2_000)
+        create(:version, rubygem: @rubygem, created_at: 2.years.ago)
         sign_in_as @user
       end
       context "ownership call exists" do
@@ -95,7 +102,7 @@ class AdoptionsControllerTest < ActionController::TestCase
           end
           should respond_with :success
           should "have button to create ownership request" do
-            assert page.has_selector?("input[value='Create']")
+            assert page.has_selector?("input[value='Create ownership request']")
           end
         end
       end
@@ -114,7 +121,8 @@ class AdoptionsControllerTest < ActionController::TestCase
     context "user is not signed in" do
       context "ownership call and request exits" do
         setup do
-          @rubygem = create(:rubygem, number: "1.0.0")
+          @rubygem = create(:rubygem, downloads: 2_000)
+          create(:version, rubygem: @rubygem, created_at: 2.years.ago)
           @ownership_call = create(:ownership_call, rubygem: @rubygem, note: "example call")
           @ownership_request = create(:ownership_request, rubygem: @rubygem, ownership_call: @ownership_call, user: @user, note: "example request")
           get :index, params: { rubygem_id: @rubygem.name }

@@ -151,6 +151,7 @@ nl:
         uptime: Uptime
         verified_by:
         secured_by:
+        looking_for_maintainers:
       header:
         dashboard: Dashboard
         edit_profile:
@@ -337,6 +338,8 @@ nl:
     adoptions:
       no_ownership_calls:
       no_ownership_requests:
+      title:
+      subtitle_html:
     edit:
       change_avatar:
       email_awaiting_confirmation:
@@ -519,6 +522,8 @@ nl:
   adoptions:
     index:
       title:
+      subtitle_owner_html:
+      subtitle_user_html:
       ownership_calls:
       no_ownership_calls:
   ownership_calls:
@@ -526,12 +531,17 @@ nl:
       success_notice:
     create:
       success_notice:
+    index:
+      title:
+      subtitle_html:
+    share_requirements:
+    note_for_applicants:
     created_by:
     details:
     apply:
     close:
-    markdown_supported:
-    create_btn:
+    markup_supported_html:
+    create_call:
   ownership_requests:
     create:
       success_notice:
@@ -541,9 +551,12 @@ nl:
     close:
       success_notice:
     ownership_requests:
+    note_for_owners:
     your_ownership_requests:
     close_all:
     approve:
     gems_published:
     created_at:
     no_ownership_requests:
+    create_req:
+    signin_to_create_html: 

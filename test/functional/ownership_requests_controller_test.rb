@@ -12,7 +12,8 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
     context "on POST to create" do
       context "for popular gem" do
         setup do
-          @rubygem = create(:rubygem, number: "1.0.0", downloads: 2_000_000)
+          @rubygem = create(:rubygem, downloads: 2_000_000)
+          create(:version, rubygem: @rubygem, created_at: 2.years.ago, number: "1.0.0")
         end
         context "when user is owner" do
           setup do
@@ -51,7 +52,8 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
 
       context "for less popular gem" do
         setup do
-          @rubygem = create(:rubygem, number: "1.0.0", downloads: 2_000)
+          @rubygem = create(:rubygem, downloads: 2_000)
+          create(:version, rubygem: @rubygem, created_at: 2.years.ago, number: "1.0.0")
         end
         context "when user is owner" do
           setup do
@@ -108,7 +110,8 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
 
     context "on PATCH to update" do
       setup do
-        @rubygem = create(:rubygem, number: "1.0.0", downloads: 2_000_000)
+        @rubygem = create(:rubygem, downloads: 2_000_000)
+        create(:version, rubygem: @rubygem, created_at: 2.years.ago, number: "1.0.0")
       end
       context "when user is owner" do
         setup do
@@ -193,7 +196,8 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
 
     context "on PATCH to close_all" do
       setup do
-        @rubygem = create(:rubygem, number: "1.0.0", downloads: 2_000_000)
+        @rubygem = create(:rubygem, downloads: 2_000_000)
+        create(:version, rubygem: @rubygem, created_at: 2.years.ago, number: "1.0.0")
       end
       context "when user is owner" do
         setup do
@@ -243,9 +247,13 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
   end
 
   context "when not logged in" do
+    setup do
+      @rubygem = create(:rubygem, downloads: 2_000)
+      create(:version, rubygem: @rubygem, created_at: 2.years.ago, number: "1.0.0")
+    end
+
     context "on POST to create" do
       setup do
-        @rubygem = create(:rubygem, number: "1.0.0")
         post :create, params: { rubygem_id: @rubygem.name, note: "small note" }
       end
       should redirect_to("sign in") { sign_in_path }
@@ -261,7 +269,6 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
 
     context "on PATCH to close_all" do
       setup do
-        @rubygem = create(:rubygem, number: "1.0.0")
         create_list(:ownership_request, 3, rubygem: @rubygem)
         patch :close_all, params: { rubygem_id: @rubygem.name }
       end

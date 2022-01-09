@@ -74,7 +74,8 @@
 
 .form__textarea {
   margin-top: 5px;
-  max-width: 640px;
+  max-width: 920px;
+  height: 300px;
   resize: none; }
 
 .form__select-wrap {

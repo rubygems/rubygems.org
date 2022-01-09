@@ -1,22 +1,38 @@
-<% @title = t(".title") %>
-<% @subtitle = @rubygem.name %>
+<% content_for :title do %>
+  <h1 class="t-display page__heading page__heading--small">
+    <%= t('.title') %>
+    <% if @rubygem.owned_by?(current_user) %>
+      <i class="page__subheading page__subheading--block"><%= t(".subtitle_owner_html", gem: @rubygem.name) %></i>
+    <% else %>
+      <i class="page__subheading page__subheading--block"><%= t(".subtitle_user_html", gem: @rubygem.name) %></i>
+    <% end %>
+  </h1>
+<% end %>
 
-<h3 class="t-list__heading"><%= t(".ownership_calls") %></h3>
+<div class="t-body">
+  <h2 class="adoption__heading adoption__heading--no-padding"><%= t(".ownership_calls") %>
+    <span class="tooltip__text" data-tooltip="Looking for maintainers">[?]</span>
+  </h2>
+</div>
+
 <% if @ownership_call %>
-  <%= render "ownership_calls/ownership_call", ownership_call: @ownership_call do %>
+  <div class="ownership__details">
+    <%= sanitize_note(@ownership_call.note) %>
+    <p class="t-text">
+      <strong><%= t("ownership_calls.created_by") %>:</strong>
+      <%= link_to @ownership_call.user_display_handle, profile_path(@ownership_call.user), class: "t-text t-link" %>
+    </p>
     <% if @ownership_call.rubygem.owned_by?(current_user) %>
       <%= button_to t("ownership_calls.close"), close_rubygem_ownership_calls_path(@ownership_call.rubygem), method: :patch, class: "form__submit form__submit--medium" %>
     <% end %>
-  <% end %>
+  </div>
 
 <% elsif @rubygem.owned_by?(current_user) %>
-  <br />
-  <%= render partial: "ownership_calls/form" %>
+  <%= render partial: "ownership_calls/form", locals: { gem: @rubygem.name } %>
 <% else %>
   <div class="t-list__item">
     <p><%= t(".no_ownership_calls", gem: @rubygem.name) %></p>
   </div>
-
 <% end %>
 
 <%= render "ownership_requests/list" %>
