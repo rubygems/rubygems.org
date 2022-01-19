@@ -376,7 +376,7 @@ en:
       no_ownership_calls: You have not created any ownership call for any of your gems.
       no_ownership_requests: You have not created any ownership request.
       title: Adoption
-      subtitle_html: Ask for new maintainers or request ownership <a class="adoption__blog__link" href="https://blog.rubygems.org/2021/12/01/rubygems-adoptions.html">(read more)</a>
+      subtitle_html: Ask for new maintainers or request ownership <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(read more)</a>
     edit:
       change_avatar: Change Avatar
       email_awaiting_confirmation: Please confirm your new email address %{unconfirmed_email}
@@ -533,8 +533,8 @@ en:
   adoptions:
     index:
       title: Adoptions
-      subtitle_owner_html: Ask new maintainers to join %{gem} <a class="adoption__blog__link" href="https://blog.rubygems.org/2021/12/01/rubygems-adoptions.html">(read more)</a>
-      subtitle_user_html: Request ownership of %{gem} <a class="adoption__blog__link" href="https://blog.rubygems.org/2021/12/01/rubygems-adoptions.html">(read more)</a>
+      subtitle_owner_html: Ask new maintainers to join %{gem} <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(read more)</a>
+      subtitle_user_html: Request ownership of %{gem} <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(read more)</a>
       ownership_calls: Ownership Call
       no_ownership_calls: There are no ownership calls for %{gem}. The gem owners are not looking new maintainers.
   ownership_calls:
@@ -544,7 +544,7 @@ en:
       success_notice: Created ownership call for %{gem}.
     index:
       title: Maintainers wanted
-      subtitle_html: RubyGems looking for new maintainers to join <a class="adoption__blog__link" href="https://blog.rubygems.org/2021/12/01/rubygems-adoptions.html">(read more)</a>
+      subtitle_html: RubyGems looking for new maintainers to join <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(read more)</a>
     share_requirements: Please share in what areas do you need help
     note_for_applicants: "Note for applicants:"
     created_by: Created by
