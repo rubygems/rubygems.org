@@ -1,4 +1,6 @@
 if Rails.env.production? || Rails.env.staging?
+  require_relative "../../lib/lograge/formatters/datadog"
+
   Rails.application.configure do
     # Enable lograge
     config.lograge.enabled = true
