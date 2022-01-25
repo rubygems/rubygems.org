@@ -3,8 +3,8 @@ class Api::V1::ProfilesController < Api::BaseController
 
   def show
     respond_to do |format|
-      format.json { render json: @user }
-      format.yaml { render yaml: @user }
+      format.json { render json: @user, sensitive_fields: @show_sensitive_fields }
+      format.yaml { render yaml: @user, sensitive_fields: @show_sensitive_fields }
     end
   end
 
@@ -17,7 +17,7 @@ class Api::V1::ProfilesController < Api::BaseController
       authenticate_or_request_with_http_basic do |username, password|
         @user = User.authenticate(username.strip, password)
       end
-      @user&.hide_mfa = false
+      @show_sensitive_fields = true
     end
   end
 end

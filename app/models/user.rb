@@ -60,8 +60,6 @@ class User < ApplicationRecord
 
   enum mfa_level: { disabled: 0, ui_only: 1, ui_and_api: 2, ui_and_gem_signin: 3 }, _prefix: :mfa
 
-  attr_writer :hide_mfa
-
   def self.authenticate(who, password)
     user = find_by(email: who.downcase) || find_by(handle: who)
     user if user&.authenticated?(password)
@@ -124,23 +122,19 @@ class User < ApplicationRecord
     all
   end
 
-  def hide_mfa
-    @hide_mfa.nil? ? true : @hide_mfa
-  end
-
-  def payload
+  def payload(options)
     attrs = { "id" => id, "handle" => handle }
     attrs["email"] = email unless hide_email
-    attrs["mfa"] = mfa_level unless hide_mfa
+    attrs["mfa"] = mfa_level if options[:sensitive_fields]
     attrs
   end
 
-  def as_json(*)
-    payload
+  def as_json(options = {})
+    payload(options)
   end
 
   def to_xml(options = {})
-    payload.to_xml(options.merge(root: "user"))
+    payload(options).to_xml(options.merge(root: "user"))
   end
 
   def to_yaml(*args)
