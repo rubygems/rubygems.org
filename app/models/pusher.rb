@@ -143,7 +143,8 @@ class Pusher
   def republish_notification(version)
     if version.indexed?
       notify("Repushing of gem versions is not allowed.\n" \
-             "Please use `gem yank` to remove bad gem releases.", 409)
+             "Please bump the version number and push a new different release.\n" \
+             "See also `gem yank` if you want to unpublish the bad release.", 409)
     else
       different_owner = "pushed by a previous owner of this gem " unless version.rubygem.owners.include?(@user)
       notify("A yanked version #{different_owner}already exists (#{version.full_name}).\n" \
