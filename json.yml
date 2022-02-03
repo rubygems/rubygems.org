@@ -1,0 +1,3 @@
+$ curl -H 'Authorization:rubygems_6817bccdde8a6093f7e25f4816d063e64e989b6fb8f92f0d' \
+       -H 'OTP:209341' \
+  https://rubygems.org/api/v1/some_api_call.json
