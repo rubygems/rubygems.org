@@ -1,4 +1,4 @@
-ActionController::Renderers.add :yaml do |obj, options|
-  data = JSON.load(obj.to_json(options)).to_yaml
+ActionController::Renderers.add :yaml do |obj, _|
+  data = JSON.load(obj.to_json).to_yaml
   send_data data, type: 'text/yaml'
 end

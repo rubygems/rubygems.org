@@ -54,11 +54,11 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
         end
       end
 
-      context "on GET to show with authentication" do
+      context "on GET to me with authentication" do
         setup do
           @user = create(:user)
           authorize_with("#{@user.email}:#{@user.password}")
-          get :show, format: format
+          get :me, format: format
         end
 
         should respond_with :success
@@ -67,22 +67,11 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
         end
       end
 
-      context "on GET to show with bad creds" do
+      context "on GET to me with bad creds" do
         setup do
           @user = create(:user)
           authorize_with("bad:creds")
-          get :show, format: format
-        end
-
-        should "deny access" do
-          assert_response 401
-          assert_match "HTTP Basic: Access denied.", @response.body
-        end
-      end
-
-      context "on GET to show with no params and no creds" do
-        setup do
-          get :show, format: format
+          get :me, format: format
         end
 
         should "deny access" do

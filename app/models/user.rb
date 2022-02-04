@@ -122,19 +122,18 @@ class User < ApplicationRecord
     all
   end
 
-  def payload(options)
+  def payload
     attrs = { "id" => id, "handle" => handle }
     attrs["email"] = email unless hide_email
-    attrs["mfa"] = mfa_level if options[:sensitive_fields]
     attrs
   end
 
-  def as_json(options = {})
-    payload(options)
+  def as_json(*)
+    payload
   end
 
   def to_xml(options = {})
-    payload(options).to_xml(options.merge(root: "user"))
+    payload.to_xml(options.merge(root: "user"))
   end
 
   def to_yaml(*args)
