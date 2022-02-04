@@ -3,6 +3,6 @@
 # being exposed to all users in their public profile
 class AuthenticatedUser < User
   def payload
-    super.merge({"mfa" => mfa_level})
+    super.merge({ "mfa" => mfa_level })
   end
 end

@@ -22,6 +22,16 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
     @request.env["HTTP_AUTHORIZATION"] = "Basic #{Base64.encode64(str)}"
   end
 
+  def assert_mfa_info_included(mfa_level)
+    assert response_body.key?("mfa")
+    assert_match mfa_level, @response.body
+  end
+
+  def refute_mfa_info_included(mfa_level)
+    refute response_body.key?("mfa")
+    refute_match mfa_level, @response.body
+  end
+
   %i[json yaml].each do |format|
     context "when using #{format}" do
       setup do
@@ -35,7 +45,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
 
         should respond_with :success
         should "not return owner mfa information by default" do
-          refute_match "disabled", @response.body
+          refute_mfa_info_included @user.mfa_level
         end
       end
 
@@ -50,7 +60,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
         end
 
         should "not return owner mfa information by default" do
-          refute_match "disabled", @response.body
+          refute_mfa_info_included @user.mfa_level
         end
       end
 
@@ -63,7 +73,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
 
         should respond_with :success
         should "return owner mfa information" do
-          assert_match "disabled", @response.body
+          assert_mfa_info_included @user.mfa_level
         end
       end
 
