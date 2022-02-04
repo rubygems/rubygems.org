@@ -14,6 +14,12 @@ class Api::V1::ProfilesController < Api::BaseController
           format.json { render json: user }
           format.yaml { render yaml: user }
         end
+      else
+        respond_to do |format|
+          message = { error: "Invalid credentials", code: 401 }
+          format.json { render json: message, status: :unauthorized }
+          format.yaml { render yaml: message, status: :unauthorized }
+        end
       end
     end
   end

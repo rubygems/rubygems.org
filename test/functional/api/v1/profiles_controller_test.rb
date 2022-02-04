@@ -76,7 +76,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
 
         should "deny access" do
           assert_response 401
-          assert_match "HTTP Basic: Access denied.", @response.body
+          assert_match "Invalid credentials", @response.body
         end
       end
 
