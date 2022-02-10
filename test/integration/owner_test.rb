@@ -140,7 +140,7 @@ class OwnerTest < SystemTest
     confirmation_link = confirm_rubygem_owners_url(@rubygem, token: SecureRandom.hex(20).encode("UTF-8"))
     visit confirmation_link
 
-    assert page.has_content? "Page not found."
+    assert_text "Page not found."
 
     assert_no_emails
   end

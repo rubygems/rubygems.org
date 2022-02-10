@@ -10,7 +10,7 @@ class Internal::PingControllerTest < ActionController::TestCase
     should respond_with :success
 
     should "PONG" do
-      assert page.has_content?("PONG")
+      assert_text("PONG")
     end
   end
 

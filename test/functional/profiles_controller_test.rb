@@ -54,7 +54,7 @@ class ProfilesControllerTest < ActionController::TestCase
 
       should respond_with :success
       should "display all gems of user" do
-        11.times { |i| assert page.has_content? @rubygems[i].name }
+        11.times { |i| assert_text @rubygems[i].name }
       end
     end
 
@@ -65,7 +65,7 @@ class ProfilesControllerTest < ActionController::TestCase
 
       should respond_with :success
       should "render user show page" do
-        assert page.has_content? @user.handle
+        assert_text @user.handle
       end
     end
 
@@ -74,7 +74,7 @@ class ProfilesControllerTest < ActionController::TestCase
 
       should respond_with :success
       should "render user edit page" do
-        assert page.has_content? "Edit profile"
+        assert_text "Edit profile"
       end
     end
 
@@ -152,7 +152,7 @@ class ProfilesControllerTest < ActionController::TestCase
         end
 
         should "not set unconfirmed_email" do
-          assert page.has_content? "Email address has already been taken"
+          assert_text "Email address has already been taken"
           refute_equal "cannotchange@tothis.com", @user.unconfirmed_email
         end
       end

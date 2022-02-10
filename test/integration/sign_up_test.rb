@@ -19,7 +19,7 @@ class SignUpTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign up"
 
-    assert page.has_content? "errors prohibited"
+    assert_text "errors prohibited"
   end
 
   test "sign up with bad handle" do
@@ -30,7 +30,7 @@ class SignUpTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign up"
 
-    assert page.has_content? "error prohibited"
+    assert_text "error prohibited"
   end
 
   test "sign up with someone else's handle" do
@@ -42,7 +42,7 @@ class SignUpTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign up"
 
-    assert page.has_content? "error prohibited"
+    assert_text "error prohibited"
   end
 
   test "sign up when sign up is disabled" do
@@ -74,7 +74,7 @@ class SignUpTest < SystemTest
     assert_not_nil link
     visit link
 
-    assert page.has_content? "Sign out"
+    assert_text "Sign out"
     assert page.has_selector? "#flash_notice", text: "Your email address has been verified"
   end
 

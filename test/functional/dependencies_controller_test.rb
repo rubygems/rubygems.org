@@ -34,14 +34,14 @@ class DependenciesControllerTest < ActionController::TestCase
 
     should respond_with :success
     should "render gem name" do
-      assert page.has_content?(@rubygem.name)
+      assert_text(@rubygem.name)
     end
     should "render the specified version" do
-      assert page.has_content?(@version.number)
+      assert_text(@version.number)
     end
     should "render dependencies of gem" do
       @version.dependencies.each do |dependency|
-        assert page.has_content?(dependency.rubygem.name)
+        assert_text(dependency.rubygem.name)
       end
     end
 
@@ -52,7 +52,7 @@ class DependenciesControllerTest < ActionController::TestCase
       end
       should respond_with :success
       should "render gem name" do
-        assert page.has_content?(@rubygem.name)
+        assert_text(@rubygem.name)
       end
       should "render dependencies of gem" do
         refute page.has_content?(@dependency.name)

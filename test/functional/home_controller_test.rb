@@ -10,7 +10,7 @@ class HomeControllerTest < ActionController::TestCase
     should respond_with :success
 
     should "display counts" do
-      assert page.has_content?("11,000,000")
+      assert_text("11,000,000")
     end
   end
 

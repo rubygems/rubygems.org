@@ -23,7 +23,7 @@ class OwnersControllerTest < ActionController::TestCase
         should respond_with :success
         should "render gem owners including unconfirmed in owners table" do
           @rubygem.ownerships_including_unconfirmed.each do |o|
-            assert page.has_content?(o.owner_name)
+            assert_text(o.owner_name)
           end
         end
       end

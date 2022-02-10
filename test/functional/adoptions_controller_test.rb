@@ -30,7 +30,7 @@ class AdoptionsControllerTest < ActionController::TestCase
           should respond_with :success
 
           should "have button for approve and close all ownership requests" do
-            assert page.has_content?("example request")
+            assert_text("example request")
             assert page.has_selector?("input[value='Close']")
             assert page.has_selector?("input[value='Close all']")
           end
@@ -43,7 +43,7 @@ class AdoptionsControllerTest < ActionController::TestCase
           should respond_with :success
 
           should "have button to close ownership call" do
-            assert page.has_content?("example call")
+            assert_text("example call")
             assert page.has_selector?("input[value='Close']")
           end
         end
@@ -67,7 +67,7 @@ class AdoptionsControllerTest < ActionController::TestCase
           end
           should respond_with :success
           should "not show any ownership request" do
-            assert page.has_content?("No ownership requests for #{@rubygem.name}")
+            assert_text("No ownership requests for #{@rubygem.name}")
           end
         end
       end
@@ -91,7 +91,7 @@ class AdoptionsControllerTest < ActionController::TestCase
           end
           should respond_with :success
           should "have button to close ownership request" do
-            assert page.has_content?("example request")
+            assert_text("example request")
             assert page.has_selector?("input[value='Close']")
           end
         end
@@ -113,7 +113,7 @@ class AdoptionsControllerTest < ActionController::TestCase
         end
         should respond_with :success
         should "not show any ownership request" do
-          assert page.has_content?("There are no ownership calls for #{@rubygem.name}")
+          assert_text("There are no ownership calls for #{@rubygem.name}")
         end
       end
     end
@@ -134,7 +134,7 @@ class AdoptionsControllerTest < ActionController::TestCase
           refute page.has_selector?("input[value='Create']")
         end
         should "show ownership call" do
-          assert page.has_content?("example call")
+          assert_text("example call")
         end
       end
     end

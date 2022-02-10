@@ -23,7 +23,7 @@ class UsersControllerTest < ActionController::TestCase
           post :create
         end
         assert_response :ok
-        assert page.has_content?("Email address is not a valid email")
+        assert_text("Email address is not a valid email")
       end
     end
 

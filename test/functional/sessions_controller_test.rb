@@ -17,7 +17,7 @@ class SessionsControllerTest < ActionController::TestCase
       should respond_with :success
       should "save user name in session" do
         assert_equal @controller.session[:mfa_user], @user.handle
-        assert page.has_content? "Multifactor authentication"
+        assert_text "Multifactor authentication"
       end
     end
 
@@ -66,7 +66,7 @@ class SessionsControllerTest < ActionController::TestCase
         should respond_with :unauthorized
 
         should "render sign in page" do
-          assert page.has_content? "Sign in"
+          assert_text "Sign in"
         end
 
         should "not sign in the user" do
@@ -106,7 +106,7 @@ class SessionsControllerTest < ActionController::TestCase
       should set_flash.now[:notice]
 
       should "render sign in page" do
-        assert page.has_content? "Sign in"
+        assert_text "Sign in"
       end
 
       should "not sign in the user" do

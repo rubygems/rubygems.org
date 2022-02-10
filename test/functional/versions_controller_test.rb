@@ -15,7 +15,7 @@ class VersionsControllerTest < ActionController::TestCase
 
     should "show all related versions" do
       @versions.each do |version|
-        assert page.has_content?(version.number)
+        assert_text(version.number)
       end
     end
   end
@@ -56,7 +56,7 @@ class VersionsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should "show not hosted notice" do
-      assert page.has_content?("This gem is not currently hosted")
+      assert_text("This gem is not currently hosted")
     end
     should "not show checksum" do
       assert page.has_no_content?("Sha 256 checksum")
@@ -75,18 +75,18 @@ class VersionsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should "render info about the gem" do
-      assert page.has_content?(@rubygem.name)
+      assert_text(@rubygem.name)
     end
     should "render the specified version" do
-      assert page.has_content?(@latest_version.number)
+      assert_text(@latest_version.number)
     end
     should "render other related versions" do
       @versions.each do |version|
-        assert page.has_content?(version.number)
+        assert_text(version.number)
       end
     end
     should "render the checksum version" do
-      assert page.has_content?(@latest_version.sha256_hex)
+      assert_text(@latest_version.sha256_hex)
     end
   end
 
@@ -100,11 +100,11 @@ class VersionsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should "show yanked notice" do
-      assert page.has_content?("This version has been yanked")
+      assert_text("This version has been yanked")
     end
     should "render other versions" do
-      assert page.has_content?("Versions")
-      assert page.has_content?(@version.number)
+      assert_text("Versions")
+      assert_text(@version.number)
       css = "small:contains('#{@version.created_at.to_date.to_formatted_s(:long)}')"
       assert page.has_css?(css)
     end

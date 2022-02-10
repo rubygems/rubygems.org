@@ -18,7 +18,7 @@ class ApiKeysTest < SystemTest
     refute page.has_content? "Enable MFA"
     click_button "Create"
 
-    assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
+    assert_text "Note that we won't be able to show the key to you again. New API key:"
     assert @user.api_keys.last.can_index_rubygems?
     refute @user.api_keys.last.mfa_enabled?
   end
@@ -33,7 +33,7 @@ class ApiKeysTest < SystemTest
     check "mfa"
     click_button "Create"
 
-    assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
+    assert_text "Note that we won't be able to show the key to you again. New API key:"
     assert @user.api_keys.last.mfa_enabled?
   end
 
@@ -46,7 +46,7 @@ class ApiKeysTest < SystemTest
     check "api_key[index_rubygems]"
     click_button "Create"
 
-    assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
+    assert_text "Note that we won't be able to show the key to you again. New API key:"
     assert @user.api_keys.last.mfa_enabled?
   end
 
@@ -56,7 +56,7 @@ class ApiKeysTest < SystemTest
     visit_profile_api_keys_path
     click_button "Edit"
 
-    assert page.has_content? "Edit API key"
+    assert_text "Edit API key"
     check "api_key[add_owner]"
     refute page.has_content? "Enable MFA"
     click_button "Update"
@@ -72,7 +72,7 @@ class ApiKeysTest < SystemTest
     visit_profile_api_keys_path
     click_button "Edit"
 
-    assert page.has_content? "Edit API key"
+    assert_text "Edit API key"
     check "api_key[add_owner]"
     check "mfa"
     click_button "Update"
@@ -89,7 +89,7 @@ class ApiKeysTest < SystemTest
     visit_profile_api_keys_path
     click_button "Edit"
 
-    assert page.has_content? "Edit API key"
+    assert_text "Edit API key"
     check "api_key[add_owner]"
     refute page.has_content? "Enable MFA"
     click_button "Update"
@@ -104,7 +104,7 @@ class ApiKeysTest < SystemTest
     visit_profile_api_keys_path
     click_button "Delete"
 
-    assert page.has_content? "New API key"
+    assert_text "New API key"
   end
 
   test "deleting all api key" do
@@ -113,7 +113,7 @@ class ApiKeysTest < SystemTest
     visit_profile_api_keys_path
     click_button "Reset"
 
-    assert page.has_content? "New API key"
+    assert_text "New API key"
   end
 
   def visit_profile_api_keys_path

@@ -26,7 +26,7 @@ class OwnershipCallsTest < SystemTest
     user = create(:user)
     visit rubygem_adoptions_path(rubygem, as: user)
 
-    assert page.has_content? "There are no ownership calls for #{rubygem.name}"
+    assert_text "There are no ownership calls for #{rubygem.name}"
   end
 
   test "create ownership call as owner" do
@@ -63,7 +63,7 @@ class OwnershipCallsTest < SystemTest
       click_link "Adoption"
     end
 
-    assert page.has_content? "There are no ownership calls for #{rubygem.name}"
+    assert_text "There are no ownership calls for #{rubygem.name}"
     assert page.has_field? "Note"
     assert page.has_button? "Create ownership request"
   end

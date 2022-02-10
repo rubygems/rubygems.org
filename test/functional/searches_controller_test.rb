@@ -41,7 +41,7 @@ class SearchesControllerTest < ActionController::TestCase
 
     should respond_with :success
     should "see sinatra on the page in the results" do
-      assert page.has_content?(@sinatra.name)
+      assert_text(@sinatra.name)
       assert page.has_selector?("a[href='#{rubygem_path(@sinatra)}']")
     end
     should "not see brando on the page in the results" do
@@ -49,7 +49,7 @@ class SearchesControllerTest < ActionController::TestCase
       refute page.has_selector?("a[href='#{rubygem_path(@brando)}']")
     end
     should "display 'gems' in pagination summary" do
-      assert page.has_content?("all 2 gems")
+      assert_text("all 2 gems")
     end
   end
 
@@ -155,8 +155,8 @@ class SearchesControllerTest < ActionController::TestCase
       Toxiproxy[:elasticsearch].down do
         get :show, params: { query: "sinatra" }
         assert_response :success
-        assert page.has_content?("Advanced search is currently unavailable. Falling back to legacy search.")
-        assert page.has_content?("Displaying")
+        assert_text("Advanced search is currently unavailable. Falling back to legacy search.")
+        assert_text("Displaying")
       end
     end
   end

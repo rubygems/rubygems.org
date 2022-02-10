@@ -8,21 +8,21 @@ class GemsTest < ActionDispatch::IntegrationTest
 
   test "gem page with a non valid HTTP_ACCEPT header" do
     get rubygem_path(@rubygem), headers: { "HTTP_ACCEPT" => "application/mercurial-0.1" }
-    assert page.has_content? "1.0.0"
+    assert_text "1.0.0"
   end
 
   test "gems page with atom format" do
     get rubygems_path(format: :atom)
     assert_response :success
     assert_equal "application/atom+xml", response.media_type
-    assert page.has_content? "sandworm"
+    assert_text "sandworm"
   end
 
   test "versions with atom format" do
     create(:version, rubygem: @rubygem)
     get rubygem_versions_path(@rubygem, format: :atom)
     assert_equal "application/atom+xml", response.media_type
-    assert page.has_content? "sandworm"
+    assert_text "sandworm"
   end
 
   test "canonical url for gem points to most recent version" do
@@ -66,7 +66,7 @@ class GemsSystemTest < SystemTest
 
     click_link "Subscribe"
 
-    assert page.has_content? "Unsubscribe"
+    assert_text "Unsubscribe"
     assert_equal @user.subscribed_gems.first, @rubygem
   end
 
@@ -78,7 +78,7 @@ class GemsSystemTest < SystemTest
 
     click_link "Unsubscribe"
 
-    assert page.has_content? "Subscribe"
+    assert_text "Subscribe"
     assert_empty @user.subscribed_gems
   end
 
@@ -88,7 +88,7 @@ class GemsSystemTest < SystemTest
     visit rubygem_path(@rubygem, as: @user.id)
 
     assert page.has_selector?(".gem__users__mfa-disabled .gem__users a")
-    assert page.has_content? "Please consider enabling multifactor"
+    assert_text "Please consider enabling multifactor"
   end
 
   test "shows owners without mfa when logged in as owner" do
@@ -160,7 +160,7 @@ class GemsSystemTest < SystemTest
 
     visit rubygem_path(@rubygem)
 
-    assert page.has_content? "Since 1.1.1"
+    assert_text "Since 1.1.1"
   end
 
   test "does show correct version that introduced mfa requirement" do
@@ -171,6 +171,6 @@ class GemsSystemTest < SystemTest
 
     visit rubygem_path(@rubygem)
 
-    assert page.has_content? "Since 3.3.3"
+    assert_text "Since 3.3.3"
   end
 end

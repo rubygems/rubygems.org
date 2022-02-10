@@ -13,9 +13,9 @@ class SearchTest < SystemTest
     fill_in "query", with: "LDAP"
     click_button "search_submit"
 
-    assert page.has_content? "LDAP"
+    assert_text "LDAP"
 
-    assert page.has_content? "LDAP-PLUS"
+    assert_text "LDAP-PLUS"
   end
 
   test "searching for a yanked gem" do
@@ -28,11 +28,11 @@ class SearchTest < SystemTest
     fill_in "query", with: "LDAP"
     click_button "search_submit"
 
-    assert page.has_content? "No gems found"
-    assert page.has_content? "Yanked (1)"
+    assert_text "No gems found"
+    assert_text "Yanked (1)"
 
     click_link "Yanked (1)"
-    assert page.has_content? "LDAP"
+    assert_text "LDAP"
     assert page.has_selector? "a[href='#{rubygem_path('LDAP')}']"
   end
 
@@ -47,7 +47,7 @@ class SearchTest < SystemTest
     fill_in "query", with: "LDAP"
     click_button "search_submit"
 
-    assert page.has_content?("1.1.1")
+    assert_text("1.1.1")
     refute page.has_content?("2.2.2")
   end
 
@@ -64,7 +64,7 @@ class SearchTest < SystemTest
     import_and_refresh
 
     visit "/search?query=ruby&original_script_name=javascript:alert(1)//&script_name=javascript:alert(1)//"
-    assert page.has_content? "ruby-ruby"
+    assert_text "ruby-ruby"
     assert page.has_link?("Next", href: "/search?page=2&query=ruby")
     Kaminari.configure { |c| c.default_per_page = 30 }
   end
@@ -81,10 +81,10 @@ class SearchTest < SystemTest
       import_and_refresh
 
       visit "/search?query=ruby"
-      assert page.has_content? "Displaying gem 1 - 1 of 3 in total"
+      assert_text "Displaying gem 1 - 1 of 3 in total"
 
       click_link "Last"
-      assert page.has_content? "Displaying gem 2 - 2 of 3 in total"
+      assert_text "Displaying gem 2 - 2 of 3 in total"
 
       Gemcutter::SEARCH_MAX_PAGES = orignal_val
       Kaminari.configure { |c| c.default_per_page = 30 }

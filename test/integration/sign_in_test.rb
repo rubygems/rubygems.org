@@ -14,7 +14,7 @@ class SignInTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Sign out"
+    assert_text "Sign out"
   end
 
   test "signing in with uppercase email" do
@@ -23,7 +23,7 @@ class SignInTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Sign out"
+    assert_text "Sign out"
   end
 
   test "signing in with wrong password" do
@@ -32,8 +32,8 @@ class SignInTest < SystemTest
     fill_in "Password", with: "wordcrimes12345"
     click_button "Sign in"
 
-    assert page.has_content? "Sign in"
-    assert page.has_content? "Bad email or password"
+    assert_text "Sign in"
+    assert_text "Bad email or password"
   end
 
   test "signing in with wrong email" do
@@ -42,8 +42,8 @@ class SignInTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Sign in"
-    assert page.has_content? "Bad email or password"
+    assert_text "Sign in"
+    assert_text "Bad email or password"
   end
 
   test "signing in with unconfirmed email" do
@@ -59,8 +59,8 @@ class SignInTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Sign in"
-    assert page.has_content? "Please confirm your email address with the link sent to your email."
+    assert_text "Sign in"
+    assert_text "Please confirm your email address with the link sent to your email."
   end
 
   test "signing in with current valid otp when mfa enabled" do
@@ -69,12 +69,12 @@ class SignInTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Multifactor authentication"
+    assert_text "Multifactor authentication"
 
     fill_in "OTP code", with: ROTP::TOTP.new("thisisonemfaseed").now
     click_button "Sign in"
 
-    assert page.has_content? "Sign out"
+    assert_text "Sign out"
   end
 
   test "signing in with invalid otp when mfa enabled" do
@@ -83,12 +83,12 @@ class SignInTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Multifactor authentication"
+    assert_text "Multifactor authentication"
 
     fill_in "OTP code", with: "11111"
     click_button "Sign in"
 
-    assert page.has_content? "Sign in"
+    assert_text "Sign in"
   end
 
   test "signing in with valid recovery code when mfa enabled" do
@@ -97,12 +97,12 @@ class SignInTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Multifactor authentication"
+    assert_text "Multifactor authentication"
 
     fill_in "OTP code", with: "0123456789ab"
     click_button "Sign in"
 
-    assert page.has_content? "Sign out"
+    assert_text "Sign out"
   end
 
   test "signing in with invalid recovery code when mfa enabled" do
@@ -111,12 +111,12 @@ class SignInTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Multifactor authentication"
+    assert_text "Multifactor authentication"
 
     fill_in "OTP code", with: "ab0123456789"
     click_button "Sign in"
 
-    assert page.has_content? "Sign in"
+    assert_text "Sign in"
   end
 
   test "siging in when user does not have handle" do
@@ -127,13 +127,13 @@ class SignInTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Multifactor authentication"
+    assert_text "Multifactor authentication"
 
     fill_in "OTP code", with: ROTP::TOTP.new("thisisonemfaseed").now
     click_button "Sign in"
 
-    assert page.has_content? "john@example.com"
-    assert page.has_content? "Sign out"
+    assert_text "john@example.com"
+    assert_text "Sign out"
   end
 
   test "signing out" do
@@ -144,7 +144,7 @@ class SignInTest < SystemTest
 
     click_link "Sign out"
 
-    assert page.has_content? "Sign in"
+    assert_text "Sign in"
   end
 
   test "session expires in two weeks" do
@@ -155,7 +155,7 @@ class SignInTest < SystemTest
 
     travel 15.days do
       visit edit_profile_path
-      assert page.has_content? "Sign in"
+      assert_text "Sign in"
     end
   end
 
@@ -167,7 +167,7 @@ class SignInTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Sign in"
-    assert page.has_content? "Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account."
+    assert_text "Sign in"
+    assert_text "Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account."
   end
 end

@@ -16,14 +16,14 @@ class ProfileTest < SystemTest
     sign_in
 
     visit profile_path("nick1")
-    assert page.has_content? "nick1"
+    assert_text "nick1"
 
     click_link "Edit Profile"
     fill_in "Username", with: "nick2"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
-    assert page.has_content? "nick2"
+    assert_text "nick2"
   end
 
   test "changing to an existing handle" do
@@ -37,7 +37,7 @@ class ProfileTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
-    assert page.has_content? "Username has already been taken"
+    assert_text "Username has already been taken"
   end
 
   test "changing to invalid handle does not affect rendering" do
@@ -49,7 +49,7 @@ class ProfileTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Update"
 
-    assert page.has_content? "Username is too long (maximum is 40 characters)"
+    assert_text "Username is too long (maximum is 40 characters)"
     assert page.has_link?("nick1", href: "/profiles/nick1")
   end
 
@@ -117,7 +117,7 @@ class ProfileTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Confirm"
 
-    assert page.has_content? "Your account deletion request has been enqueued."\
+    assert_text "Your account deletion request has been enqueued."\
                              " We will send you a confirmation mail when your request has been processed."
   end
 
@@ -148,7 +148,7 @@ class ProfileTest < SystemTest
     click_link "Adoptions"
 
     assert page.has_link?(rubygem.name, href: "/gems/#{rubygem.name}")
-    assert page.has_content? "special note"
-    assert page.has_content? "request note"
+    assert_text "special note"
+    assert_text "request note"
   end
 end

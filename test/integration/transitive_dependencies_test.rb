@@ -23,15 +23,15 @@ class TransitiveDependenciesTest < SystemTest
     end
 
     visit rubygem_version_dependencies_path(rubygem_id: rubygem_one.name, version_id: version_one.number)
-    assert page.has_content?(rubygem_one.name)
-    assert page.has_content?(version_one.number)
-    assert page.has_content?(rubygem_two.name)
-    assert page.has_content?(version_two[2].number)
+    assert_text(rubygem_one.name)
+    assert_text(version_one.number)
+    assert_text(rubygem_two.name)
+    assert_text(version_two[2].number)
     find("span.deps_expanded-link").click
-    assert page.has_content?(version_four.rubygem.name)
-    assert page.has_content?(version_three.number)
-    assert page.has_content?(version_four.rubygem.name)
-    assert page.has_content?(version_four.number)
+    assert_text(version_four.rubygem.name)
+    assert_text(version_three.number)
+    assert_text(version_four.rubygem.name)
+    assert_text(version_four.number)
   end
 
   test "loading transitive dependencies for jruby platform" do
@@ -45,11 +45,11 @@ class TransitiveDependenciesTest < SystemTest
 
     visit rubygem_path(version.rubygem)
     click_on "Show all transitive dependencies"
-    assert page.has_content?(dep_version.rubygem.name)
-    assert page.has_content?(dep_version.slug)
+    assert_text(dep_version.rubygem.name)
+    assert_text(dep_version.slug)
     find("span.deps_expanded-link").click
-    assert page.has_content?(dep_dep_version.rubygem.name)
-    assert page.has_content?(dep_dep_version.slug)
+    assert_text(dep_dep_version.rubygem.name)
+    assert_text(dep_dep_version.slug)
   end
 
   # Reset sessions and driver between tests

@@ -5,7 +5,7 @@ class AboutPageTest < ActionDispatch::IntegrationTest
     get page_url("about"), params: { locale: local }
 
     assert_response :success
-    assert page.has_content? I18n.t("pages.about.title")
+    assert_text I18n.t("pages.about.title")
   end
 
   test "about page i18n for all supported languages" do

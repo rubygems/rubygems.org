@@ -16,7 +16,7 @@ class DashboardTest < ActionDispatch::IntegrationTest
     create(:subscription, rubygem: rubygem, user: @user)
 
     get "/dashboard.atom?api_key=1234", as: :json
-    assert page.has_content? "sandworm"
+    assert_text "sandworm"
 
     get "/dashboard.atom?api_key[]=1234&api_key[]=key1", as: :json
     refute page.has_content? "sandworm"
@@ -28,7 +28,7 @@ class DashboardTest < ActionDispatch::IntegrationTest
 
     get dashboard_path
 
-    assert page.has_content? "sandworm"
+    assert_text "sandworm"
     refute page.has_content?("arrakis")
   end
 
@@ -38,7 +38,7 @@ class DashboardTest < ActionDispatch::IntegrationTest
 
     get dashboard_path
 
-    assert page.has_content? "sandworm"
+    assert_text "sandworm"
     refute page.has_content?("arrakis")
   end
 
@@ -55,6 +55,6 @@ class DashboardTest < ActionDispatch::IntegrationTest
     get dashboard_path(format: :atom)
     assert_response :success
     assert_equal "application/atom+xml", response.media_type
-    assert page.has_content? "sandworm"
+    assert_text "sandworm"
   end
 end

@@ -80,7 +80,7 @@ class RubygemsControllerTest < ActionController::TestCase
     should respond_with :success
     should "render links" do
       @gems.each do |g|
-        assert page.has_content?(g.name)
+        assert_text(g.name)
         assert page.has_selector?("a[href='#{rubygem_path(g)}']")
       end
     end
@@ -127,7 +127,7 @@ class RubygemsControllerTest < ActionController::TestCase
     end
     should respond_with :success
     should "render links" do
-      assert page.has_content?(@zgem.name)
+      assert_text(@zgem.name)
       assert page.has_selector?("a[href='#{rubygem_path(@zgem)}']")
     end
   end
@@ -146,7 +146,7 @@ class RubygemsControllerTest < ActionController::TestCase
     should respond_with :success
     should "render links" do
       @gems.each do |g|
-        assert page.has_content?(g.name)
+        assert_text(g.name)
         assert page.has_selector?("a[href='#{rubygem_path(g)}']")
       end
     end
@@ -161,11 +161,11 @@ class RubygemsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should "render info about the gem" do
-      assert page.has_content?(@rubygem.name)
-      assert page.has_content?(@latest_version.number)
+      assert_text(@rubygem.name)
+      assert_text(@latest_version.number)
       css = "small:contains('#{@latest_version.created_at.to_date.to_formatted_s(:long)}')"
       assert page.has_css?(css)
-      assert page.has_content?("Links")
+      assert_text("Links")
     end
   end
 
@@ -177,17 +177,17 @@ class RubygemsControllerTest < ActionController::TestCase
     should "render plural licenses header for other than one license" do
       @latest_version.update(licenses: nil)
       get :show, params: { id: @rubygem.to_param }
-      assert page.has_content?("Licenses")
+      assert_text("Licenses")
 
       @latest_version.update(licenses: %w[MIT GPL-2])
       get :show, params: { id: @rubygem.to_param }
-      assert page.has_content?("Licenses")
+      assert_text("Licenses")
     end
 
     should "render singular license header for one line license" do
       @latest_version.update(licenses: ["MIT"])
       get :show, params: { id: @rubygem.to_param }
-      assert page.has_content?("License")
+      assert_text("License")
       assert page.has_no_content?("Licenses")
     end
   end
@@ -205,13 +205,13 @@ class RubygemsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should "render info about the gem" do
-      assert page.has_content?(@rubygem.name)
-      assert page.has_content?(@versions[0].number)
+      assert_text(@rubygem.name)
+      assert_text(@versions[0].number)
       css = "small:contains('#{@versions[0].built_at.to_date.to_formatted_s(:long)}')"
       assert page.has_css?(css)
 
-      assert page.has_content?("Versions")
-      assert page.has_content?(@versions[2].number)
+      assert_text("Versions")
+      assert_text(@versions[2].number)
       css = "small:contains('#{@versions[2].built_at.to_date.to_formatted_s(:long)}')"
       assert page.has_css?(css)
     end
@@ -234,7 +234,7 @@ class RubygemsControllerTest < ActionController::TestCase
       setup { get :show, params: { id: @rubygem.to_param } }
       should respond_with :success
       should "render info about the gem" do
-        assert page.has_content?("This gem is not currently hosted on RubyGems.org")
+        assert_text("This gem is not currently hosted on RubyGems.org")
         assert page.has_no_content?("Versions")
       end
     end
@@ -259,7 +259,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
       should respond_with :success
       should "render info about the gem" do
-        assert page.has_content?("The RubyGems.org team has reserved this gem name for 1 more day.")
+        assert_text("The RubyGems.org team has reserved this gem name for 1 more day.")
         assert page.has_no_content?("Versions")
       end
       should "renders owner gems overview link" do
@@ -275,7 +275,7 @@ class RubygemsControllerTest < ActionController::TestCase
     end
     should respond_with :success
     should "render info about the gem" do
-      assert page.has_content?("This gem is not currently hosted on RubyGems.org.")
+      assert_text("This gem is not currently hosted on RubyGems.org.")
     end
   end
 
@@ -291,12 +291,12 @@ class RubygemsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should "show runtime dependencies and development dependencies" do
-      assert page.has_content?(@runtime.rubygem.name)
-      assert page.has_content?(@development.rubygem.name)
+      assert_text(@runtime.rubygem.name)
+      assert_text(@development.rubygem.name)
     end
     should "show runtime and development dependencies count" do
-      assert page.has_content?(@version.dependencies.runtime.count)
-      assert page.has_content?(@version.dependencies.development.count)
+      assert_text(@version.dependencies.runtime.count)
+      assert_text(@version.dependencies.development.count)
     end
   end
 
@@ -311,7 +311,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should "show unresolved dependencies" do
-      assert page.has_content?(@unresolved.name)
+      assert_text(@unresolved.name)
     end
   end
 
@@ -333,7 +333,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should "show only dependencies that have rubygem" do
-      assert page.has_content?(@runtime.rubygem.name)
+      assert_text(@runtime.rubygem.name)
       assert page.has_no_content?("1.2.0")
     end
   end
@@ -348,7 +348,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should "show runtime dependencies and development dependencies" do
-      assert page.has_content?(@runtime.rubygem.name)
+      assert_text(@runtime.rubygem.name)
     end
   end
 
@@ -367,7 +367,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
     should respond_with :success
     should "render blacklisted page" do
-      assert page.has_content? "This namespace is reserved by rubygems.org."
+      assert_text "This namespace is reserved by rubygems.org."
     end
   end
 

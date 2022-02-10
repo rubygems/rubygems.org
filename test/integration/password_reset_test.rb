@@ -24,7 +24,7 @@ class PasswordResetTest < SystemTest
   test "reset password form does not tell if a user exists" do
     forgot_password_with "someone@example.com"
 
-    assert page.has_content? "instructions for changing your password"
+    assert_text "instructions for changing your password"
   end
 
   test "resetting password without handle" do
@@ -45,7 +45,7 @@ class PasswordResetTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    assert page.has_content? "Sign out"
+    assert_text "Sign out"
   end
 
   test "resetting a password with a blank password" do
@@ -56,8 +56,8 @@ class PasswordResetTest < SystemTest
     fill_in "Password", with: ""
     click_button "Save this password"
 
-    assert page.has_content? "Password can't be blank."
-    assert page.has_content? "Sign in"
+    assert_text "Password can't be blank."
+    assert_text "Sign in"
   end
 
   test "resetting a password when signed in" do
@@ -94,6 +94,6 @@ class PasswordResetTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
 
-    assert page.has_content?("Sign out")
+    assert_text("Sign out")
   end
 end

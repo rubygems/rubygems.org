@@ -74,7 +74,7 @@ class ApiKeysControllerTest < ActionController::TestCase
         should respond_with :success
 
         should "render api key of user" do
-          assert page.has_content? @api_key.name
+          assert_text @api_key.name
         end
       end
     end
@@ -85,7 +85,7 @@ class ApiKeysControllerTest < ActionController::TestCase
       should respond_with :success
 
       should "render new api key form" do
-        assert page.has_content? "New API key"
+        assert_text "New API key"
       end
     end
 
@@ -117,7 +117,7 @@ class ApiKeysControllerTest < ActionController::TestCase
         setup { post :create, params: { api_key: { add_owner: true } } }
 
         should "show error to user" do
-          assert page.has_content? "Name can't be blank"
+          assert_text "Name can't be blank"
         end
 
         should "not create new key for user" do
@@ -135,7 +135,7 @@ class ApiKeysControllerTest < ActionController::TestCase
       should respond_with :success
 
       should "render edit api key form" do
-        assert page.has_content? "Edit API key"
+        assert_text "Edit API key"
         assert_select "form > input.form__input", value: "ci-key"
       end
     end
@@ -161,7 +161,7 @@ class ApiKeysControllerTest < ActionController::TestCase
         end
 
         should "show error to user" do
-          assert page.has_content? "Name can't be blank"
+          assert_text "Name can't be blank"
         end
 
         should "not update scope of test key" do

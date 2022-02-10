@@ -20,19 +20,19 @@ class StatsControllerTest < ActionController::TestCase
     should respond_with :success
 
     should "display number of gems" do
-      assert page.has_content?("1,337")
+      assert_text("1,337")
     end
 
     should "display number of users" do
-      assert page.has_content?("101")
+      assert_text("101")
     end
 
     should "display number of downloads" do
-      assert page.has_content?("42")
+      assert_text("42")
     end
 
     should "display the top gem" do
-      assert page.has_content?("rails_cinco")
+      assert_text("rails_cinco")
     end
   end
 

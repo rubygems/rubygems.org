@@ -16,9 +16,9 @@ class PushTest < ActionDispatch::IntegrationTest
 
     get rubygem_path("sandworm")
     assert_response :success
-    assert page.has_content?("sandworm")
-    assert page.has_content?("1.0.0")
-    assert page.has_content?("Pushed by")
+    assert_text("sandworm")
+    assert_text("1.0.0")
+    assert_text("Pushed by")
 
     css = %(div.gem__users a[alt=#{@user.handle}])
     assert page.has_css?(css, count: 2)
@@ -35,8 +35,8 @@ class PushTest < ActionDispatch::IntegrationTest
 
     get rubygem_path("sandworm")
     assert_response :success
-    assert page.has_content?("sandworm")
-    assert page.has_content?("2.0.0")
+    assert_text("sandworm")
+    assert_text("2.0.0")
   end
 
   test "pushing a gem with a known dependency" do
@@ -50,8 +50,8 @@ class PushTest < ActionDispatch::IntegrationTest
 
     get rubygem_path("sandworm")
     assert_response :success
-    assert page.has_content?("crysknife")
-    assert page.has_content?("> 0")
+    assert_text("crysknife")
+    assert_text("> 0")
   end
 
   test "pushing a gem with an unknown dependency" do
@@ -63,8 +63,8 @@ class PushTest < ActionDispatch::IntegrationTest
 
     get rubygem_path("sandworm")
     assert_response :success
-    assert page.has_content?("mauddib")
-    assert page.has_content?("> 1")
+    assert_text("mauddib")
+    assert_text("> 1")
   end
 
   test "pushing a signed gem" do
@@ -73,14 +73,14 @@ class PushTest < ActionDispatch::IntegrationTest
     get rubygem_path("valid_signature")
     assert_response :success
 
-    assert page.has_content?("Signature validity period")
-    assert page.has_content?("August 31, 2021")
-    assert page.has_content?("August 07, 2121")
+    assert_text("Signature validity period")
+    assert_text("August 31, 2021")
+    assert_text("August 07, 2121")
     refute page.has_content?("(expired)")
 
     travel_to Time.zone.local(2121, 8, 8)
     get rubygem_path("valid_signature")
-    assert page.has_content?("(expired)")
+    assert_text("(expired)")
   end
 
   test "push errors bubble out" do

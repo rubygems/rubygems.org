@@ -31,8 +31,8 @@ class AutocompletesTest < SystemTest
   test "search field" do
     @fill_field.set "rubocop"
     click_on class: "home__search__icon"
-    assert page.has_content? "search"
-    assert page.has_content? "rubocop"
+    assert_text "search"
+    assert_text "rubocop"
   end
 
   test "selected field is only one with cursor selecting" do
@@ -85,7 +85,7 @@ class AutocompletesTest < SystemTest
   test "mouse click a suggestion item to submit" do
     find("li", text: "rubocop", match: :first).click
     assert_equal current_path, search_path || "/gems/"
-    assert page.has_content? "rubocop"
+    assert_text "rubocop"
   end
 
   teardown do

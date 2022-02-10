@@ -6,29 +6,29 @@ class PageParamsTest < SystemTest
   test "stats with page param more than 10" do
     visit stats_path(page: "11")
     assert redirect_to(stats_path(page: "1"))
-    assert page.has_content? "Stats"
-    assert page.has_content? "Page number is out of range. Redirected to default page."
+    assert_text "Stats"
+    assert_text "Page number is out of range. Redirected to default page."
   end
 
   test "search with page more than 100" do
     visit search_path(page: "102")
     assert redirect_to(search_path(page: "1"))
-    assert page.has_content? "search"
-    assert page.has_content? "Page number is out of range. Redirected to default page."
+    assert_text "search"
+    assert_text "Page number is out of range. Redirected to default page."
   end
 
   test "news with page more than 10" do
     visit news_path(page: "12")
     assert redirect_to(news_path(page: "1"))
-    assert page.has_content? "New Releases — All Gems"
-    assert page.has_content? "Page number is out of range. Redirected to default page."
+    assert_text "New Releases — All Gems"
+    assert_text "Page number is out of range. Redirected to default page."
   end
 
   test "popular news with page more than 10" do
     visit popular_news_path(page: "12")
     assert redirect_to(popular_news_path(page: "1"))
-    assert page.has_content? "New Releases — Popular Gems"
-    assert page.has_content? "Page number is out of range. Redirected to default page."
+    assert_text "New Releases — Popular Gems"
+    assert_text "Page number is out of range. Redirected to default page."
   end
 
   test "api search with page smaller than 1" do

@@ -50,7 +50,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
       should respond_with :success
       should "display otp form" do
-        assert page.has_content?("Multifactor authentication")
+        assert_text("Multifactor authentication")
       end
     end
   end
@@ -97,7 +97,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
     should respond_with :success
 
     should "display resend instructions" do
-      assert page.has_content?("We will email you confirmation link to activate your account.")
+      assert_text("We will email you confirmation link to activate your account.")
     end
   end
 

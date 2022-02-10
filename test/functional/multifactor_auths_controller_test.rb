@@ -134,7 +134,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           should respond_with :success
           should "show recovery codes" do
             @user.reload.mfa_recovery_codes.each do |code|
-              assert page.has_content?(code)
+              assert_text(code)
             end
           end
           should "enable mfa" do
