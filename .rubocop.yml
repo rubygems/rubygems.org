@@ -128,11 +128,6 @@ Style/CustomSafeNavigationCop:
   Exclude:
     - app/models/links.rb
 
-Style/ClassAndModuleChildren:
-  EnforcedStyle: compact
-  Exclude:
-    - lib/lograge/formatters/datadog.rb
-
 Style/Documentation:
   Enabled: false
 
@@ -286,4 +281,8 @@ Minitest/MultipleAssertions:
   Enabled: false
 
 Style/ClassAndModuleChildren:
-  Enabled: false
+  EnforcedStyle: compact
+  Exclude:
+    - lib/lograge/formatters/datadog.rb
+    - lib/gemcutter/middleware/hostess.rb
+    - lib/gemcutter/middleware/redirector.rb
