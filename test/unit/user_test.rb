@@ -514,6 +514,40 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context ".find_by_slug!" do
+    setup do
+      @dorian = create(:user, handle: "dorianmariefr")
+      @nohandle = create(:user, handle: nil)
+    end
+
+    should "return an user if the slug matches" do
+      assert_equal @dorian, User.find_by_slug!("dorianmariefr")
+    end
+
+    should "raise error if not found" do
+      assert_raises ActiveRecord::RecordNotFound do
+        User.find_by_slug!(SecureRandom.hex)
+      end
+    end
+
+    should "be able to find by id" do
+      assert_equal @dorian, User.find_by_slug!(@dorian.id)
+      assert_equal @nohandle, User.find_by_slug!(@nohandle.id)
+    end
+
+    should "not return an user with nil handle if searching for nil" do
+      assert_raises ActiveRecord::RecordNotFound do
+        User.find_by_slug!(nil)
+      end
+    end
+
+    should "not return an user with nil handle if searching for blank" do
+      assert_raises ActiveRecord::RecordNotFound do
+        User.find_by_slug!("")
+      end
+    end
+  end
+
   context "block when handle has uppercase" do
     setup { @user = create(:user, handle: "MikeJudge") }
 

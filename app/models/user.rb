@@ -68,6 +68,7 @@ class User < ApplicationRecord
   end
 
   def self.find_by_slug!(slug)
+    raise ActiveRecord::RecordNotFound if slug.blank?
     find_by(id: slug) || find_by!(handle: slug)
   end
 
