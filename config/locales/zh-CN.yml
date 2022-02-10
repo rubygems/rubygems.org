@@ -1,9 +1,11 @@
+---
 zh-CN:
   edit: 编辑
   failure_when_forbidden: 请确认 URL 或再次提交
   feed_latest: RubyGems.org | 最新 Gems
   feed_subscribed: RubyGems.org | 订阅 Gems
-  footer_about_html: RubyGems.org 是 Ruby 社区的 Gem 托管服务。<br />让你能便捷、快速的发布、管理你的 Gem 以及安装它们。提供 API 查阅可用 Gem 的详细资料。<br />参与进来成为一个贡献者，用你的能力推动社区进步。
+  footer_about_html: RubyGems.org 是 Ruby 社区的 Gem 托管服务。<br />让你能便捷、快速的发布、管理你的 Gem 以及安装它们。提供
+    API 查阅可用 Gem 的详细资料。<br />参与进来成为一个贡献者，用你的能力推动社区进步。
   footer_sponsors_html:
   footer_join_rt_html:
   form_disable_with: 请稍后...
@@ -103,7 +105,8 @@ zh-CN:
       migrating_link_text: 迁移
       mine: 我的 Gems
       my_subscriptions: 我的订阅
-      no_owned_html: 你没有发布过任何一个 Gem。可以尝试阅读 %{creating_link} 教程，或看看 %{migrating_link} 教程。
+      no_owned_html: 你没有发布过任何一个 Gem。可以尝试阅读 %{creating_link} 教程，或看看 %{migrating_link}
+        教程。
       no_subscriptions_html: 你目前没有订阅任何 Gem，访问 %{gem_link} 可以订阅一个！
       title: 控制台
   dependencies:
@@ -154,8 +157,8 @@ zh-CN:
         looking_for_maintainers:
       header:
         dashboard: 控制台
-        edit_profile:
         settings:
+        edit_profile:
         search_gem_html: 搜索 Gems&hellip;
         sign_in: 登录
         sign_out: 退出
@@ -241,9 +244,14 @@ zh-CN:
       title: 热门新发布 Gems
   pages:
     about:
-      founding_html: 此项目创立由 %{founder} 于2009年4月，发展过程中有超过 %{contributors} 贡献者以及 %{downloads}。自从 RubyGems 1.3.6 发布以后，本站名称由 Gemcutter 改名为 %{title}，从而巩固在 Ruby 社区网站中和核心作用。
-      support_html: 虽然 Gemcutter 不是由一个具体的公司来运作，但也有很多的帮助让我们走出了这么远。目前的设计、插画、以及网站的前端开发都是由 %{dockyard} 提供支持。%{github} 帮助我们轻松的协助和共享代码。本站最初部署在 %{heroku}，其一流的服务，有助于证明 Gemcutter 是可以依赖、可行的解决方案。Our infrastructure is currently hosted on %{aws}.
-      technical_html: 关于本站的一些技术方案：100% Ruby。主站基于 %{rails}。Gems 文件放在 %{s3}, served by %{fastly}, 上面，它能缩短在 Gem 提交到可以下载之间的耗时。更多的信息可以在 GitHub 上阅读 %{source_code}，基于 %{license} 协议。
+      founding_html: 此项目创立由 %{founder} 于2009年4月，发展过程中有超过 %{contributors} 贡献者以及 %{downloads}。自从
+        RubyGems 1.3.6 发布以后，本站名称由 Gemcutter 改名为 %{title}，从而巩固在 Ruby 社区网站中和核心作用。
+      support_html: 虽然 Gemcutter 不是由一个具体的公司来运作，但也有很多的帮助让我们走出了这么远。目前的设计、插画、以及网站的前端开发都是由
+        %{dockyard} 提供支持。%{github} 帮助我们轻松的协助和共享代码。本站最初部署在 %{heroku}，其一流的服务，有助于证明 Gemcutter
+        是可以依赖、可行的解决方案。Our infrastructure is currently hosted on %{aws}.
+      technical_html: 关于本站的一些技术方案：100% Ruby。主站基于 %{rails}。Gems 文件放在 %{s3}, served
+        by %{fastly}, 上面，它能缩短在 Gem 提交到可以下载之间的耗时。更多的信息可以在 GitHub 上阅读 %{source_code}，基于
+        %{license} 协议。
       title: 关于
       purpose:
         better_api: 提供更好的 API 来为 Gems 服务
@@ -282,9 +290,9 @@ zh-CN:
       otp_prompt: 输入验证装置上的数字来继续。
       confirm: 我已把复原码收在安全的地方。
       enable: 启用
-      account: "帐号: %{account}"
-      key: "金钥: %{key}"
-      time_based: "基于时间的: 是"
+      account: '帐号: %{account}'
+      key: '金钥: %{key}'
+      time_based: '基于时间的: 是'
     create:
       qrcode_expired: 二维码和密钥已过期。请再重新注册装置。
       success: 你已成功启用多重要素验证。
@@ -308,14 +316,41 @@ zh-CN:
       recommended:
       title:
       update:
-      push_heading:
       owner_heading:
+      push_heading:
+  owners:
+    confirm:
+      confirmed_email:
+      token_expired:
+    index:
+      add_owner:
+      name:
+      mfa:
+      status:
+      confirmed_at:
+      added_by:
+      action:
+      email_field:
+      submit_button:
+      info:
+      confirmed:
+      pending:
+      confirm_remove:
+    resend_confirmation:
+      resent_notice:
+    create:
+      success_notice:
+    destroy:
+      removed_notice:
+      failed_notice:
+    mfa_required:
   settings:
     edit:
       title:
       api_access:
         confirm_reset: 确定要重置吗？此动作执行后将无法撤销
-        credentials_html: 如果你希望在命令行中使用 %{gem_commands_link}，你需要一个 %{gem_credentials_file} 文件，可用下面的命令生成：
+        credentials_html: 如果你希望在命令行中使用 %{gem_commands_link}，你需要一个 %{gem_credentials_file}
+          文件，可用下面的命令生成：
         key_is_html: 你的 API Key：%{key}。
         link_text: Gem 命令
         reset: 重置 API Key
@@ -402,9 +437,9 @@ zh-CN:
       header: "%{title} 依赖关系"
     gem_members:
       authors_header: 作者
+      self_no_mfa_warning_html:
       not_using_mfa_warning_show:
       not_using_mfa_warning_hide:
-      self_no_mfa_warning_html:
       owners_header: 所有者
       pushed_by:
       using_mfa_info:
@@ -484,7 +519,8 @@ zh-CN:
     previous_label: 上一页
     page_entries_info:
       multi_page: 显示所有 %{count} %{model}中的%{from}-%{to} 条
-      multi_page_html: 显示所有 <b>%{count}</b> %{model}中的<b>%{from}&nbsp;-&nbsp;%{to}</b> 条
+      multi_page_html: 显示所有 <b>%{count}</b> %{model}中的<b>%{from}&nbsp;-&nbsp;%{to}</b>
+        条
       single_page:
         one: 显示 1 %{model}
         other: 显示所有 %{count} %{model}
@@ -493,32 +529,6 @@ zh-CN:
         one: 显示 <b>1</b> %{model}
         other: 显示 <b>所有 %{count}</b> %{model}
         zero: 暂时没有 %{model}
-  owners:
-    confirm:
-      confirmed_email:
-      token_expired:
-    index:
-      add_owner:
-      name:
-      mfa:
-      status:
-      confirmed_at:
-      added_by:
-      action:
-      info:
-      email_field:
-      submit_button:
-      confirmed:
-      pending:
-      confirm_remove:
-    resend_confirmation:
-      resent_notice:
-    create:
-      success_notice:
-    destroy:
-      removed_notice:
-      failed_notice:
-    mfa_required:
   adoptions:
     index:
       title:
@@ -559,4 +569,4 @@ zh-CN:
     created_at:
     no_ownership_requests:
     create_req:
-    signin_to_create_html: 
+    signin_to_create_html:

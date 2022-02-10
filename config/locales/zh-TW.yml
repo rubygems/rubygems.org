@@ -1,9 +1,11 @@
+---
 zh-TW:
   edit: 編輯
   failure_when_forbidden: 請確認 URL 或再次提交
   feed_latest: RubyGems.org | 最新 Gems
   feed_subscribed: RubyGems.org | 訂閱 Gems
-  footer_about_html: RubyGems.org 是 Ruby 社群的 Gem 套件管理服務，讓你能立即地發佈及安裝你的 Gem 套件，並且利用 API 查詢及操作可用 Gem 的詳細資訊。<br />現在就成為貢獻者，貢獻一己之力來改善本站。
+  footer_about_html: RubyGems.org 是 Ruby 社群的 Gem 套件管理服務，讓你能立即地發佈及安裝你的 Gem 套件，並且利用
+    API 查詢及操作可用 Gem 的詳細資訊。<br />現在就成為貢獻者，貢獻一己之力來改善本站。
   footer_sponsors_html:
   footer_join_rt_html:
   form_disable_with: 請稍候...
@@ -103,7 +105,8 @@ zh-TW:
       migrating_link_text: Gem 轉移
       mine: 我的 Gems
       my_subscriptions: 我的訂閱
-      no_owned_html: 你尚未發佈任何 Gem。可以閱讀 %{creating_link} 教學，或參考 %{migrating_link} 教學來將你的 Gem 從 RubyForge 遷移過來。
+      no_owned_html: 你尚未發佈任何 Gem。可以閱讀 %{creating_link} 教學，或參考 %{migrating_link} 教學來將你的
+        Gem 從 RubyForge 遷移過來。
       no_subscriptions_html: 你還沒有訂閱過 Gem，前往 %{gem_link} 來訂閱！
       title: 控制台
   dependencies:
@@ -154,8 +157,8 @@ zh-TW:
         looking_for_maintainers:
       header:
         dashboard: 控制台
-        edit_profile:
         settings:
+        edit_profile:
         search_gem_html: 搜尋 Gems&hellip;
         sign_in: 登入
         sign_out: 登出
@@ -241,9 +244,15 @@ zh-TW:
       title: 熱門新發佈
   pages:
     about:
-      founding_html: 本專案由 %{founder} 於 2009 年 4 月創立，發展過程中有超過 %{contributors} 貢獻者以及 %{downloads}。自 RubyGems 1.3.6 發佈以來，本站名稱由 Gemcutter 更名為 %{title}，本站自此之後成為 Ruby 社群的核心網站。
-      support_html: 雖然 Gemcutter 並不是由一個特定的公司運作，但在發展過程中接受了許多來源的幫助。目前的設計、圖像以及網站的前端開發是由 %{dockyard} 提供。%{github} 也幫助我們能更容易地協作和分享原始碼。本站部署在 %{heroku} 上，其一流的服務，更有助於證明 Gemcutter 是一個可以穩定、可行的解決方案。Our infrastructure is currently hosted on %{aws}.
-      technical_html: 關於本站的技術資訊：100% Ruby。主站是一個 %{rails} 應用程式。Gems 架設在 %{s3} 上, served by %{fastly}, 使得 Gem 從發佈到提供下載的時間大幅縮短。詳細資訊可從 GitHub 上的 %{source_code} 查看（遵守 %{license} 協議）。
+      founding_html: 本專案由 %{founder} 於 2009 年 4 月創立，發展過程中有超過 %{contributors} 貢獻者以及
+        %{downloads}。自 RubyGems 1.3.6 發佈以來，本站名稱由 Gemcutter 更名為 %{title}，本站自此之後成為 Ruby
+        社群的核心網站。
+      support_html: 雖然 Gemcutter 並不是由一個特定的公司運作，但在發展過程中接受了許多來源的幫助。目前的設計、圖像以及網站的前端開發是由
+        %{dockyard} 提供。%{github} 也幫助我們能更容易地協作和分享原始碼。本站部署在 %{heroku} 上，其一流的服務，更有助於證明
+        Gemcutter 是一個可以穩定、可行的解決方案。Our infrastructure is currently hosted on %{aws}.
+      technical_html: 關於本站的技術資訊：100% Ruby。主站是一個 %{rails} 應用程式。Gems 架設在 %{s3} 上, served
+        by %{fastly}, 使得 Gem 從發佈到提供下載的時間大幅縮短。詳細資訊可從 GitHub 上的 %{source_code} 查看（遵守
+        %{license} 協議）。
       title: 關於
       purpose:
         better_api: 提供更好的 Gem API
@@ -282,9 +291,9 @@ zh-TW:
       otp_prompt: 輸入驗證裝置上的數字來繼續。
       confirm: 我已把復原碼收在安全的地方。
       enable: 啟用
-      account: "帳號: %{account}"
-      key: "金鑰: %{key}"
-      time_based: "基於時間的: 是"
+      account: '帳號: %{account}'
+      key: '金鑰: %{key}'
+      time_based: '基於時間的: 是'
     create:
       qrcode_expired: QR-code 和金鑰已過期。請再重新註冊裝置。
       success: 你已成功啟用多重要素驗證。
@@ -308,8 +317,8 @@ zh-TW:
       recommended:
       title:
       update:
-      push_heading:
       owner_heading:
+      push_heading:
   owners:
     confirm:
       confirmed_email:
@@ -322,9 +331,9 @@ zh-TW:
       confirmed_at:
       added_by:
       action:
-      info:
       email_field:
       submit_button:
+      info:
       confirmed:
       pending:
       confirm_remove:
@@ -341,7 +350,8 @@ zh-TW:
       title:
       api_access:
         confirm_reset: 確定要重設嗎？此動作無法還原
-        credentials_html: 如果你需要從 command line 中執行 %{gem_commands_link}，你需要先準備 %{gem_credentials_file} 這個檔案，用以下的指令可以產生：
+        credentials_html: 如果你需要從 command line 中執行 %{gem_commands_link}，你需要先準備 %{gem_credentials_file}
+          這個檔案，用以下的指令可以產生：
         key_is_html: 你的 API key 是 %{key}。
         link_text: Gem 指令
         reset: 重設 API key
@@ -420,17 +430,17 @@ zh-TW:
         subscribe: 訂閱
         unsubscribe: 取消訂閱
         wiki: Wiki
-        ownership:
         resend_ownership_confirmation:
+        ownership:
     blacklisted:
       blacklisted_namespace:
     dependencies:
       header: "%{title} 相依性套件"
     gem_members:
       authors_header: 作者
+      self_no_mfa_warning_html:
       not_using_mfa_warning_show:
       not_using_mfa_warning_hide:
-      self_no_mfa_warning_html:
       owners_header: 擁有者
       pushed_by:
       using_mfa_info:
@@ -510,7 +520,8 @@ zh-TW:
     previous_label: 上一頁
     page_entries_info:
       multi_page: 顯示所有 %{count} %{model}中的%{from}-%{to} 條
-      multi_page_html: 顯示所有 <b>%{count}</b> %{model}中的<b>%{from}&nbsp;-&nbsp;%{to}</b> 條
+      multi_page_html: 顯示所有 <b>%{count}</b> %{model}中的<b>%{from}&nbsp;-&nbsp;%{to}</b>
+        條
       single_page:
         one: 顯示 1 %{model}
         other: 顯示所有 %{count} %{model}

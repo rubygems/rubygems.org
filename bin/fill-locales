@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+require "yaml"
+
+EN_PATH = "config/locales/en.yml"
+OTHER_PATHS = Dir["config/locales/*"] - [EN_PATH]
+
+EN = YAML.safe_load_file(EN_PATH)
+
+def fill(en, other)
+  if en.is_a?(Hash)
+    en.map do |key, _|
+      [key, fill(en[key], other&.dig(key))]
+    end.to_h
+  elsif en.is_a?(String)
+    other
+  else
+    raise "#{en.class} not handled"
+  end
+end
+
+OTHER_PATHS.each do |path|
+  locale = path.split("/").last.split(".").first
+
+  File.write(
+    path,
+    { locale => fill(EN["en"], YAML.safe_load_file(path)[locale]) }.to_yaml
+  )
+end
