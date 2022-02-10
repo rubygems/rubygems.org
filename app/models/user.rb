@@ -73,14 +73,17 @@ class User < ApplicationRecord
   end
 
   def self.find_by_slug(slug)
+    return if slug.blank?
     find_by(id: slug) || find_by(handle: slug)
   end
 
   def self.find_by_name(name)
+    return if name.blank?
     find_by(email: name) || find_by(handle: name)
   end
 
   def self.find_by_blocked(slug)
+    return if slug.blank?
     find_by(blocked_email: slug) || find_by(handle: slug)
   end
 
