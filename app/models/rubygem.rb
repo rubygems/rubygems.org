@@ -329,6 +329,7 @@ class Rubygem < ApplicationRecord
     user.mfa_enabled? || !mfa_required?
   end
 
+  # TODO: broken. don't use until #2964 is resolved.
   def mfa_required_since_version
     return unless mfa_required?
     non_mfa_version = public_versions.find { |v| !v.rubygems_mfa_required? }

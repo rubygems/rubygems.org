@@ -160,7 +160,7 @@ class GemsSystemTest < SystemTest
 
     visit rubygem_path(@rubygem)
 
-    assert page.has_content? "Since 1.1.1"
+    assert page.has_content? "true"
   end
 
   test "does show correct version that introduced mfa requirement" do
@@ -171,6 +171,6 @@ class GemsSystemTest < SystemTest
 
     visit rubygem_path(@rubygem)
 
-    assert page.has_content? "Since 3.3.3"
+    assert page.has_content? "true"
   end
 end
