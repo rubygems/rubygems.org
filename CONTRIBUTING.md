@@ -188,3 +188,8 @@ Database Layout
 Courtesy of [Rails ERD](https://voormedia.github.io/rails-erd/)
 
 ![Rubygems.org Domain Model](https://cdn.rawgit.com/rubygems/rubygems.org/master/doc/erd.svg)
+
+Locales
+-------
+
+You can add the translations in `config/locales/en.yml` then use `bin/fill-locales` to fill the other locales with `nil` values for your translations.
