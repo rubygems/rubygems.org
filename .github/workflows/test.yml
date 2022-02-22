@@ -42,7 +42,7 @@ jobs:
         bundle --version
     - name: Prepare environment
       run: |
-        cp config/database.yml.example config/database.yml
+        cp config/database.yml.sample config/database.yml
         bundle exec rake db:setup
     - name: Tests
       run: bin/rails test

@@ -28,7 +28,7 @@ COPY . /app/
 ADD https://s3-us-west-2.amazonaws.com/oregon.production.s3.rubygems.org/versions/versions.list /app/config/versions.list
 ADD https://s3-us-west-2.amazonaws.com/oregon.production.s3.rubygems.org/stopforumspam/toxic_domains_whole.txt /app/vendor/toxic_domains_whole.txt
 
-RUN mv /app/config/database.yml.example /app/config/database.yml
+RUN mv /app/config/database.yml.sample /app/config/database.yml
 
 RUN RAILS_ENV=production RAILS_GROUPS=assets SECRET_KEY_BASE=1234 bin/rails assets:precompile
 
