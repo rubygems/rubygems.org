@@ -9,8 +9,8 @@ else
 fi
 
 if [ ! -f config/database.yml ]; then
-  echo "$0: Copying database.yml.example over"
-  cp config/database.yml.example config/database.yml
+  echo "$0: Copying database.yml.sample over"
+  cp config/database.yml.sample config/database.yml
 fi
 
 # Wipe out logs and scss cache.
