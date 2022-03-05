@@ -24,7 +24,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:yaml) do |body|
-      YAML.safe_load(body, [Symbol])[:total]
+      YAML.safe_load(body, permitted_classes: [Symbol])[:total]
     end
 
     should_respond_to(:text, &:to_i)
@@ -72,7 +72,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:yaml, :to_sym) do |body|
-      YAML.safe_load(body, [Symbol])
+      YAML.safe_load(body, permitted_classes: [Symbol])
     end
   end
 

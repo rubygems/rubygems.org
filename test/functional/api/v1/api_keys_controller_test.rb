@@ -178,7 +178,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
     end
 
     should_respond_to(:yaml, :to_sym) do |body|
-      YAML.safe_load(body, [Symbol])
+      YAML.safe_load(body, permitted_classes: [Symbol])
     end
 
     context "with no credentials" do
