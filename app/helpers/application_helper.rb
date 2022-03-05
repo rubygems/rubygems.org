@@ -64,6 +64,6 @@ module ApplicationHelper
   end
 
   def i18n_api_scopes(api_key)
-    api_key.enabled_scopes.sum { |scope| tag.ul(t(".#{scope}"), class: "scopes__list") }
+    api_key.enabled_scopes.sum("") { |scope| tag.ul(t(scope, scope: %i[api_keys index]), class: "scopes__list") }
   end
 end
