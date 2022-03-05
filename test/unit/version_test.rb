@@ -742,10 +742,10 @@ class VersionTest < ActiveSupport::TestCase
       # Even though gem two was build before gem one, it was pushed to gemcutter first
       # Thus, we should have from newest to oldest, gem one, then gem two
       expected = [@subscribed_one, @subscribed_two].map do |s|
-        s.created_at.to_s(:db)
+        s.created_at.to_formatted_s(:db)
       end
       actual = Version.subscribed_to_by(@user).map do |s|
-        s.created_at.to_s(:db)
+        s.created_at.to_formatted_s(:db)
       end
       assert_equal expected, actual
     end
