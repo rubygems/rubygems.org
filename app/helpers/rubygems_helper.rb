@@ -128,10 +128,10 @@ module RubygemsHelper
   end
 
   def link_to_github(rubygem)
-    if rubygem.links.source_code_uri.present? && URI(rubygem.links.source_code_uri).host == "github.com"
-      URI(rubygem.links.source_code_uri)
-    elsif rubygem.links.homepage_uri.present? && URI(rubygem.links.homepage_uri).host == "github.com"
-      URI(rubygem.links.homepage_uri)
+    candidates = [rubygem.links.source_code_uri, rubygem.links.homepage_uri].compact
+
+    candidates.lazy.filter_map { |link| URI(link) }.find do |link_uri|
+      link_uri.host == "github.com"
     end
   rescue URI::InvalidURIError
     nil
