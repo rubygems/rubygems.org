@@ -18,6 +18,8 @@ jobs:
       # If we don't supply a CC_TEST_REPORTER_ID simplecov won't output coverage in a way that
       # code climate understands
       CC_TEST_REPORTER_ID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
+      REQUIRE_TOXIPROXY: true
     steps:
     - uses: actions/checkout@v2
     - name: Install and start services

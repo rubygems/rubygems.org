@@ -40,7 +40,9 @@ class ActiveSupport::TestCase
   end
 
   def requires_toxiproxy
-    skip("Toxiproxy is not running, but was required for this test.") unless Toxiproxy.running?
+    return if Toxiproxy.running?
+    raise "Toxiproxy not running, but REQUIRE_TOXIPROXY was set." if ENV["REQUIRE_TOXIPROXY"]
+    skip("Toxiproxy is not running, but was required for this test.")
   end
 
   def assert_changed(object, *attributes)
