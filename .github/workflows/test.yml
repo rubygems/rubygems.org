@@ -22,7 +22,6 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install and start services
       run: |
-        ./script/install_toxiproxy.sh
         docker-compose up -d
     - name: Wait for ES to boot
       run: |
