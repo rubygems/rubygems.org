@@ -16,7 +16,7 @@ end
 
 url = ENV['ELASTICSEARCH_URL'] || "http://localhost:#{port}"
 
-params = {url: url}
+params = { url: url }
 
 if Rails.env.development?
   tracer = ActiveSupport::Logger.new('log/elasticsearch.log')
