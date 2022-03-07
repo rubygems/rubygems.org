@@ -32,7 +32,7 @@
 
 # Don't override ActiveSupport::TimeWithZone.name and use the default Ruby
 # implementation.
-# Rails.application.config.active_support.remove_deprecated_time_with_zone_name = true
+Rails.application.config.active_support.remove_deprecated_time_with_zone_name = true
 
 # Change the format of the cache entry.
 # Changing this default means that all new cache entries added to the cache
