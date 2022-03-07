@@ -166,7 +166,7 @@ GEM
       multipart-post (>= 1.2, < 3)
     faraday_middleware-aws-sigv4 (0.5.0)
       aws-sigv4 (~> 1.0)
-      faraday (>= 1.8, < 2)
+      faraday (>= 0.15)
     ffi (1.15.5)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
