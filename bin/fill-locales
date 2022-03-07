@@ -21,9 +21,8 @@ end
 
 OTHER_PATHS.each do |path|
   locale = path.split("/").last.split(".").first
+  yaml = { locale => fill(EN["en"], YAML.safe_load_file(path)[locale]) }.to_yaml
+  yaml.gsub!(/ +$/, "")
 
-  File.write(
-    path,
-    { locale => fill(EN["en"], YAML.safe_load_file(path)[locale]) }.to_yaml
-  )
+  File.write(path, yaml)
 end
