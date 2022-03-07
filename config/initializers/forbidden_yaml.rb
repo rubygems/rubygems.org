@@ -28,7 +28,12 @@ module Gem
 
     def self.from_yaml(input)
       input = normalize_yaml_input input
-      spec = Psych.safe_load(input, WHITELISTED_CLASSES, WHITELISTED_SYMBOLS, true)
+      spec = Psych.safe_load(
+        input,
+        permitted_classes: WHITELISTED_CLASSES,
+        permitted_symbols: WHITELISTED_SYMBOLS,
+        aliases: true
+      )
 
       fail Gem::EndOfYAMLException if spec && spec.class == FalseClass
 
@@ -48,7 +53,12 @@ module Gem
 
       @checksums = gem.seek 'checksums.yaml.gz' do |entry|
         Zlib::GzipReader.wrap entry do |gz_io|
-          Psych.safe_load(gz_io.read, Gem::Specification::WHITELISTED_CLASSES, Gem::Specification::WHITELISTED_SYMBOLS, true)
+          Psych.safe_load(
+            gz_io.read,
+            permitted_classes: Gem::Specification::WHITELISTED_CLASSES,
+            permitted_symbols: Gem::Specification::WHITELISTED_SYMBOLS,
+            aliases: true
+          )
         end
       end
     end
