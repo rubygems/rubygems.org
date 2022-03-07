@@ -16,15 +16,7 @@ end
 
 url = ENV['ELASTICSEARCH_URL'] || "http://localhost:#{port}"
 
-params = { url: url }
-
-if Rails.env.development?
-  tracer = ActiveSupport::Logger.new('log/elasticsearch.log')
-  tracer.level = Logger::DEBUG
-  params.merge!(logger: tracer)
-end
-
-Elasticsearch::Model.client = Elasticsearch::Client.new(**params) do |f|
+Elasticsearch::Model.client = Elasticsearch::Client.new(url: url) do |f|
   if Rails.env.staging? || Rails.env.production?
     f.request :aws_sigv4,
       service: 'es',
@@ -32,4 +24,10 @@ Elasticsearch::Model.client = Elasticsearch::Client.new(**params) do |f|
       access_key_id: ENV['AWS_ACCESS_KEY_ID'],
       secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
   end
+end
+
+if Rails.env.development?
+  tracer = ActiveSupport::Logger.new('log/elasticsearch.log')
+  tracer.level = Logger::DEBUG
+  Elasticsearch::Model.client.transport.tracer = tracer
 end
