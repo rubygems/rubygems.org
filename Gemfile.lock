@@ -98,7 +98,7 @@ GEM
     bloomer (1.0.0)
       bitarray
       msgpack
-    bootsnap (1.10.3)
+    bootsnap (1.11.1)
       msgpack (~> 1.2)
     brakeman (5.2.1)
     builder (3.2.4)
@@ -230,7 +230,7 @@ GEM
     mini_portile2 (2.8.0)
     minitest (5.15.0)
     mocha (1.13.0)
-    msgpack (1.4.4)
+    msgpack (1.4.5)
     multi_json (1.15.0)
     multipart-post (2.1.1)
     net-imap (0.2.3)
