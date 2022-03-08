@@ -1,3 +1,4 @@
+---
 de:
   edit: Bearbeiten
   failure_when_forbidden:
@@ -12,7 +13,8 @@ de:
   none:
   not_found:
   api_key_forbidden:
-  please_sign_up: Zugriff verweigert. Bitte melden Sie sich unter https://rubygems.org mit einem Konto an
+  please_sign_up: Zugriff verweigert. Bitte melden Sie sich unter https://rubygems.org
+    mit einem Konto an
   please_sign_in:
   otp_incorrect:
   otp_missing:
@@ -103,8 +105,10 @@ de:
       migrating_link_text: Migrieren
       mine: Meine Gems
       my_subscriptions: Abonnements
-      no_owned_html: Du hast noch keine Gems gepusht. Schau doch vielleicht die Dokumentation auf %{creating_link} an und %{migrating_link} ein Gem from RubyForge.
-      no_subscriptions_html: Du hast noch keine Gems abonniert. Besuche %{gem_link} um das Gem zu abonnieren!
+      no_owned_html: Du hast noch keine Gems gepusht. Schau doch vielleicht die Dokumentation
+        auf %{creating_link} an und %{migrating_link} ein Gem from RubyForge.
+      no_subscriptions_html: Du hast noch keine Gems abonniert. Besuche %{gem_link}
+        um das Gem zu abonnieren!
       title: Dashboard
   dependencies:
     show:
@@ -154,8 +158,8 @@ de:
         looking_for_maintainers:
       header:
         dashboard: Dashboard
-        edit_profile:
         settings:
+        edit_profile:
         search_gem_html: Suche Gems&hellip;
         sign_in: Anmelden
         sign_out: Abmelden
@@ -192,14 +196,14 @@ de:
     gem_pushed:
       subject:
       title:
+    gem_yanked:
+      subject:
+      title:
     reset_api_key:
       subject:
       title:
       subtitle:
     email_reset_update:
-      subject:
-      title:
-    gem_yanked:
       subject:
       title:
     ownership_confirmation:
@@ -241,14 +245,31 @@ de:
       title:
   pages:
     about:
-      founding_html: Das Projekt wurde im April 2009 von %{founder} gestartet und hat seitdem über %{contributors} und %{downloads}. Ab dem Release von RubyGems 1.3.6 wurde die Website von Gemcutter zu %{title} umbenannt, um eine zentrale Rolle in der Ruby-Community zu verfestigen.
-      support_html: Obwohl RubyGems.org nicht von einem bestimmten Unternehmen ausgeführt wird, haben viele Unternehmen uns bereits unterstützt. Das aktuelle Design, die Illustrationen und die Front-End-Entwicklung für dieser Webseite wurden von %{dockyard} erstellt. %{github} hat auch von unschätzbarem Wert uns geholfen den Code mit anderen Entwicklern zuteilen, um an dem Code leichter zusammenarbeiten. Die Website wurde mit %{heroku} gestartet, dessen großen Dienst uns geholfen, RubyGems als eine praktikable Lösung zu erweisen, wo die ganze Gemeinschaft darauf verlassen kann. Our infrastructure is currently hosted on %{aws}.
-      technical_html: 'Einige Einblicke in die technischen Aspekte dieser Webseite: Es ist 100% in Ruby geschrieben. Die Hauptseite ist verwendet die %{rails}-Software. Die Gems werden in %{s3}, served by %{fastly}, gehostet und die Zeit zwischen der Veröffentlichung eines neuen Gems und nachdem er bereit zur Installation freigegeben ist, ist minimal. Für mehr Informationen siehe %{source_code} (%{license}) auf GitHub.'
+      founding_html: Das Projekt wurde im April 2009 von %{founder} gestartet und
+        hat seitdem über %{contributors} und %{downloads}. Ab dem Release von RubyGems
+        1.3.6 wurde die Website von Gemcutter zu %{title} umbenannt, um eine zentrale
+        Rolle in der Ruby-Community zu verfestigen.
+      support_html: Obwohl RubyGems.org nicht von einem bestimmten Unternehmen ausgeführt
+        wird, haben viele Unternehmen uns bereits unterstützt. Das aktuelle Design,
+        die Illustrationen und die Front-End-Entwicklung für dieser Webseite wurden
+        von %{dockyard} erstellt. %{github} hat auch von unschätzbarem Wert uns geholfen
+        den Code mit anderen Entwicklern zuteilen, um an dem Code leichter zusammenarbeiten.
+        Die Website wurde mit %{heroku} gestartet, dessen großen Dienst uns geholfen,
+        RubyGems als eine praktikable Lösung zu erweisen, wo die ganze Gemeinschaft
+        darauf verlassen kann. Our infrastructure is currently hosted on %{aws}.
+      technical_html: 'Einige Einblicke in die technischen Aspekte dieser Webseite:
+        Es ist 100% in Ruby geschrieben. Die Hauptseite ist verwendet die %{rails}-Software.
+        Die Gems werden in %{s3}, served by %{fastly}, gehostet und die Zeit zwischen
+        der Veröffentlichung eines neuen Gems und nachdem er bereit zur Installation
+        freigegeben ist, ist minimal. Für mehr Informationen siehe %{source_code}
+        (%{license}) auf GitHub.'
       title: Über uns
       purpose:
         better_api: Bereitstellen eines besseren APIs für den Umgang mit Gems
-        enable_community: Der Gemeinschaft ermöglichen, die Webseite zu verbessern und zu erweitern
-        header: 'Willkommen in %{site}, die Community für Ruby Gem-Hostingservice. Die Gründe sind vielfältig:'
+        enable_community: Der Gemeinschaft ermöglichen, die Webseite zu verbessern
+          und zu erweitern
+        header: 'Willkommen in %{site}, die Community für Ruby Gem-Hostingservice.
+          Die Gründe sind vielfältig:'
         transparent_pages: Erstellen transparenter und zugänglicher Projektseiten
     data:
       title:
@@ -308,14 +329,42 @@ de:
       recommended:
       title:
       update:
-      push_heading:
       owner_heading:
+      push_heading:
+  owners:
+    confirm:
+      confirmed_email:
+      token_expired:
+    index:
+      add_owner:
+      name:
+      mfa:
+      status:
+      confirmed_at:
+      added_by:
+      action:
+      email_field:
+      submit_button:
+      info:
+      confirmed:
+      pending:
+      confirm_remove:
+    resend_confirmation:
+      resent_notice:
+    create:
+      success_notice:
+    destroy:
+      removed_notice:
+      failed_notice:
+    mfa_required:
   settings:
     edit:
       title:
       api_access:
         confirm_reset: Sind Sie sicher? Das kann nicht rückgängig gemacht werden.
-        credentials_html: 'Wenn du %{gem_commands_link} über das Terminal oder über die Kommandozeile verwenden möchtest, dann brauchst du die %{gem_credentials_file}-Datei, die du mit dem folgenden Befehl erzeugen kannst:'
+        credentials_html: 'Wenn du %{gem_commands_link} über das Terminal oder über
+          die Kommandozeile verwenden möchtest, dann brauchst du die %{gem_credentials_file}-Datei,
+          die du mit dem folgenden Befehl erzeugen kannst:'
         key_is_html: Dein API-Schlüssel ist %{key}.
         link_text: Gem-Befehle
         reset: Zurücksetzen meines API-Schlüssels
@@ -394,17 +443,17 @@ de:
         subscribe: Abonniere
         unsubscribe: Storniere
         wiki: Wiki
-        ownership:
         resend_ownership_confirmation:
+        ownership:
     blacklisted:
       blacklisted_namespace:
     dependencies:
       header: "%{title} Abhängigkeiten"
     gem_members:
       authors_header: Autoren
+      self_no_mfa_warning_html:
       not_using_mfa_warning_show:
       not_using_mfa_warning_hide:
-      self_no_mfa_warning_html:
       owners_header: Besitzer
       pushed_by:
       using_mfa_info:
@@ -484,7 +533,8 @@ de:
     previous_label: Zurück
     page_entries_info:
       multi_page: Zeige %{model} %{from} - %{to} von %{count} insgesamt
-      multi_page_html: Zeige %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> von <b>%{count}</b> insgesamt
+      multi_page_html: Zeige %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> von <b>%{count}</b>
+        insgesamt
       single_page:
         one: Zeige 1 %{model}
         other: Zeige alle %{count} %{model}
@@ -493,32 +543,6 @@ de:
         one: Zeige <b>1</b> %{model}
         other: Zeige <b>alle&nbsp;%{count}</b> %{model}
         zero: Kein %{model} gefunden
-  owners:
-    confirm:
-      confirmed_email:
-      token_expired:
-    index:
-      add_owner:
-      name:
-      mfa:
-      status:
-      confirmed_at:
-      added_by:
-      action:
-      info:
-      email_field:
-      submit_button:
-      confirmed:
-      pending:
-      confirm_remove:
-    resend_confirmation:
-      resent_notice:
-    create:
-      success_notice:
-    destroy:
-      removed_notice:
-      failed_notice:
-    mfa_required:
   adoptions:
     index:
       title:
@@ -559,4 +583,4 @@ de:
     created_at:
     no_ownership_requests:
     create_req:
-    signin_to_create_html: 
+    signin_to_create_html:

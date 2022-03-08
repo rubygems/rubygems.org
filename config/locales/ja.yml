@@ -1,17 +1,15 @@
+---
 ja:
   edit: 編集
   failure_when_forbidden: URLを確認するか、再試行して下さい。
   feed_latest: RubyGems.org | 最新のGemの一覧
   feed_subscribed: RubyGems.org | 購読したGemの一覧
-  footer_about_html: RubyGems.orgはRubyコミュニティのGemのホスティングサービスです。
-    すぐに<a href="%{publish_docs}">あなたが実装したGemを公開したり</a><a href="%{install_docs}">インストールしたり</a>することができます。
-    <a href="%{api_docs}">API</a>を使用して<a href="%{gem_list}">利用可能なGem</a>についてさらに探すことができます。
-    <a href="%{contributing_docs}">コントリビューターとなって</a>あなたのサイトをよりよくしてください。
-  footer_sponsors_html: RubyGems.orgは大きなRubyコミュニティとのパートナーシップを通じて作られました。
-    <a href="https://www.fastly.com/">Fastly</a>が帯域を提供してくださり、CDNサポートをしてくださっています。
-    <a href="http://www.rubycentral.org/">Ruby Central</a>がインフラの費用を賄ってくださり、
-    <a href="https://rubytogether.org/?source=rubygems">Ruby Together</a>が開発や運用の費用を出資してくださっています。
-    <a href="%{sponsors_page}">スポンサーや一緒に働く方法について詳細を確認する</a>。
+  footer_about_html: RubyGems.orgはRubyコミュニティのGemのホスティングサービスです。 すぐに<a href="%{publish_docs}">あなたが実装したGemを公開したり</a><a
+    href="%{install_docs}">インストールしたり</a>することができます。 <a href="%{api_docs}">API</a>を使用して<a
+    href="%{gem_list}">利用可能なGem</a>についてさらに探すことができます。 <a href="%{contributing_docs}">コントリビューターとなって</a>あなたのサイトをよりよくしてください。
+  footer_sponsors_html: RubyGems.orgは大きなRubyコミュニティとのパートナーシップを通じて作られました。 <a href="https://www.fastly.com/">Fastly</a>が帯域を提供してくださり、CDNサポートをしてくださっています。
+    <a href="http://www.rubycentral.org/">Ruby Central</a>がインフラの費用を賄ってくださり、 <a href="https://rubytogether.org/?source=rubygems">Ruby
+    Together</a>が開発や運用の費用を出資してくださっています。 <a href="%{sponsors_page}">スポンサーや一緒に働く方法について詳細を確認する</a>。
   footer_join_rt_html: RubyGems.orgをすべての人がスムーズに使えるよう続けていくために、開発者の時間を賄うためのあなたの援助が必要です。
     <a href="https://rubytogether.org/join?source=rubygems">Ruby Togetherに参加する</a>。
   form_disable_with: お待ち下さい...
@@ -162,8 +160,8 @@ ja:
         looking_for_maintainers:
       header:
         dashboard: ダッシュボード
-        edit_profile:
         settings:
+        edit_profile:
         search_gem_html: 検索…
         sign_in: ログイン
         sign_out: ログアウト
@@ -249,9 +247,11 @@ ja:
       title: 新しくリリースされた人気のGem
   pages:
     about:
-      founding_html: 2009年4月に%{founder}の手によって発足したプロジェクトは、現在%{contributors}の貢献を得て%{downloads}に到るまで成長を遂げました。RubyGems 1.3.6 リリースからは、サイト名称をGemcutterから%{title}に変更し、Rubyコミュニティの中におけるサイトの役割を明確化しました。
+      founding_html: 2009年4月に%{founder}の手によって発足したプロジェクトは、現在%{contributors}の貢献を得て%{downloads}に到るまで成長を遂げました。RubyGems
+        1.3.6 リリースからは、サイト名称をGemcutterから%{title}に変更し、Rubyコミュニティの中におけるサイトの役割を明確化しました。
       support_html: Rubygems.orgは特定の企業によって運営されていないにも関わらず、私たちに多大な利益をもたらしています。現行のサイトのデザイン、イラストレーション、そしてフロントエンド開発は%{dockyard}により為されました。%{github}は私たちがコードを共有し協力するために必要不可欠なツールです。当初のサービスが稼働していた%{heroku}のサービスは、プロジェクトをコミュニティ全体が信頼できる持続性のあるものとしました。現在のサービスは%{aws}によりホストされています。
-      technical_html: このサイトの一つの特徴、それは100% Rubyで構成されているということです。主要部分は%{rails}アプリケーションで、Gemは%{s3}上にホストされ%{fastly}によりサーブされており、 新しく公開したGemがインストール可能になるまでほんの数秒しか要しません。詳細はGitHub上の%{license}の%{source_code}をご確認ください。
+      technical_html: このサイトの一つの特徴、それは100% Rubyで構成されているということです。主要部分は%{rails}アプリケーションで、Gemは%{s3}上にホストされ%{fastly}によりサーブされており、
+        新しく公開したGemがインストール可能になるまでほんの数秒しか要しません。詳細はGitHub上の%{license}の%{source_code}をご確認ください。
       title: 概要
       purpose:
         better_api: Gemを取り扱うより良いAPIを提供すること
@@ -316,8 +316,34 @@ ja:
       recommended:
       title:
       update:
-      push_heading:
       owner_heading:
+      push_heading:
+  owners:
+    confirm:
+      confirmed_email:
+      token_expired:
+    index:
+      add_owner:
+      name:
+      mfa:
+      status:
+      confirmed_at:
+      added_by:
+      action:
+      email_field:
+      submit_button:
+      info:
+      confirmed:
+      pending:
+      confirm_remove:
+    resend_confirmation:
+      resent_notice:
+    create:
+      success_notice:
+    destroy:
+      removed_notice:
+      failed_notice:
+    mfa_required:
   settings:
     edit:
       title:
@@ -402,17 +428,17 @@ ja:
         subscribe: 購読
         unsubscribe: 購読を解除
         wiki: Wiki
-        ownership:
         resend_ownership_confirmation:
+        ownership:
     blacklisted:
       blacklisted_namespace: この名前はRubygems.orgにより保持されています。
     dependencies:
       header: "%{title}依存性"
     gem_members:
       authors_header: 作者
+      self_no_mfa_warning_html:
       not_using_mfa_warning_show:
       not_using_mfa_warning_hide:
-      self_no_mfa_warning_html:
       owners_header: オーナー
       pushed_by:
       using_mfa_info:
@@ -435,14 +461,18 @@ ja:
     show_yanked:
       not_hosted_notice: このGemはRubyGems.org上ではホストされていません。
       reserved_namespace_html:
-        one: このGemは以前存在していましたが、オーナーが削除しました。RubyGems.orgチームはこの名前を1日間だけ確保しています。期間終了後、誰でもgem pushによりこの名前は利用可能となります。<br/>もしあなたが以前のオーナーならば、gem ownerコマンドを用いてオーナーを変更することができる他、新しいバージョンをgem pushを用いて公開することができます。
-        other: このGemは以前存在していましたが、オーナーが削除しました。RubyGems.orgチームはこの名前を%{count}日間確保しています。期間終了後、誰でもgem pushによりこの名前は利用可能となります。<br/>もしあなたが以前のオーナーならば、gem ownerコマンドを用いてオーナーを変更することができる他、新しいバージョンをgem pushを用いて公開することができます。
+        one: このGemは以前存在していましたが、オーナーが削除しました。RubyGems.orgチームはこの名前を1日間だけ確保しています。期間終了後、誰でもgem
+          pushによりこの名前は利用可能となります。<br/>もしあなたが以前のオーナーならば、gem ownerコマンドを用いてオーナーを変更することができる他、新しいバージョンをgem
+          pushを用いて公開することができます。
+        other: このGemは以前存在していましたが、オーナーが削除しました。RubyGems.orgチームはこの名前を%{count}日間確保しています。期間終了後、誰でもgem
+          pushによりこの名前は利用可能となります。<br/>もしあなたが以前のオーナーならば、gem ownerコマンドを用いてオーナーを変更することができる他、新しいバージョンをgem
+          pushを用いて公開することができます。
   reverse_dependencies:
     index:
       title: "%{name}の被依存性"
       subtitle:
     search:
-      search_reverse_dependencies_html: "被依存性の中から検索…"
+      search_reverse_dependencies_html: 被依存性の中から検索…
   searches:
     advanced:
       name: 名前
@@ -451,7 +481,7 @@ ja:
       downloads: ダウンロード数
       updated: 更新日
     show:
-      subtitle: '%{query}の検索結果'
+      subtitle: "%{query}の検索結果"
       month_update:
       week_update:
       filter:
@@ -482,7 +512,7 @@ ja:
   versions:
     index:
       not_hosted_notice: このGemはRubyGems.org上ではホストされていません。
-      title: '%{name}の全バージョン履歴'
+      title: "%{name}の全バージョン履歴"
       versions_since: "%{since}からの%{count}項目"
     version:
       yanked: yanked
@@ -496,37 +526,11 @@ ja:
       single_page:
         one: 全1件の%{model}を表示中
         other: 全%{count}件の%{model}を表示中
-        zero: '%{model}は見つかりませんでした'
+        zero: "%{model}は見つかりませんでした"
       single_page_html:
-        one: <b>全1件</b>の%{model}を表示中
-        other: <b>全 %{count}件</b>の%{model}を表示中
-        zero: '%{model}は見つかりませんでした'
-  owners:
-    confirm:
-      confirmed_email:
-      token_expired:
-    index:
-      add_owner:
-      name:
-      mfa:
-      status:
-      confirmed_at:
-      added_by:
-      action:
-      info:
-      email_field:
-      submit_button:
-      confirmed:
-      pending:
-      confirm_remove:
-    resend_confirmation:
-      resent_notice:
-    create:
-      success_notice:
-    destroy:
-      removed_notice:
-      failed_notice:
-    mfa_required:
+        one: "<b>全1件</b>の%{model}を表示中"
+        other: "<b>全 %{count}件</b>の%{model}を表示中"
+        zero: "%{model}は見つかりませんでした"
   adoptions:
     index:
       title:
@@ -567,4 +571,4 @@ ja:
     created_at:
     no_ownership_requests:
     create_req:
-    signin_to_create_html: 
+    signin_to_create_html:
