@@ -33,6 +33,8 @@ class Rubygem < ApplicationRecord
   after_create :create_gem_download
   before_destroy :mark_unresolved
 
+  MFA_RECOMMENDED_THRESHOLD = 175_000_000
+
   def create_gem_download
     GemDownload.create!(count: 0, rubygem_id: id, version_id: 0)
   end
@@ -323,6 +325,10 @@ class Rubygem < ApplicationRecord
 
   def mfa_required?
     latest_version&.rubygems_mfa_required?
+  end
+
+  def mfa_recommended?
+    downloads > MFA_RECOMMENDED_THRESHOLD
   end
 
   def mfa_requirement_satisfied_for?(user)

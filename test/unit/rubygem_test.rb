@@ -873,6 +873,28 @@ class RubygemTest < ActiveSupport::TestCase
     end
   end
 
+  context "#mfa_recommended?" do
+    should "be false if gem has fewer downloads than the recommended threshold" do
+      rubygem = create(:rubygem)
+      GemDownload.increment(
+        Rubygem::MFA_RECOMMENDED_THRESHOLD,
+        rubygem_id: rubygem.id
+      )
+
+      refute rubygem.mfa_recommended?
+    end
+
+    should "be true if gem has more downloads than the recommended threshold" do
+      rubygem = create(:rubygem)
+      GemDownload.increment(
+        Rubygem::MFA_RECOMMENDED_THRESHOLD + 1,
+        rubygem_id: rubygem.id
+      )
+
+      assert rubygem.mfa_recommended?
+    end
+  end
+
   context "#mfa_requirement_satisfied_for?" do
     setup do
       @rubygem = create(:rubygem)
