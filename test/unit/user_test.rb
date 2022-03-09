@@ -354,6 +354,50 @@ class UserTest < ActiveSupport::TestCase
         end
       end
     end
+
+    context "mfa_recommended?" do
+      should "be false when a user doesn't own a gem with more downloads than the recommended threshold" do
+        user = create(:user)
+        my_rubygem = create(:rubygem)
+        create(:ownership, user: user, rubygem: my_rubygem)
+        assert_equal [my_rubygem], user.rubygems
+
+        GemDownload.increment(
+          Rubygem::MFA_RECOMMENDED_THRESHOLD,
+          rubygem_id: my_rubygem.id
+        )
+
+        refute user.mfa_recommended?
+      end
+
+      should "be true when user owns a gem with more downloads than the recommended threshold" do
+        user = create(:user)
+        my_rubygem = create(:rubygem)
+        create(:ownership, user: user, rubygem: my_rubygem)
+        assert_equal [my_rubygem], user.rubygems
+
+        GemDownload.increment(
+          Rubygem::MFA_RECOMMENDED_THRESHOLD + 1,
+          rubygem_id: my_rubygem.id
+        )
+
+        assert user.mfa_recommended?
+      end
+
+      should "be false if a user already has a strong mfa level set" do
+        user = create(:user, mfa_level: "ui_and_api")
+        my_rubygem = create(:rubygem)
+        create(:ownership, user: user, rubygem: my_rubygem)
+        assert_equal [my_rubygem], user.rubygems
+
+        GemDownload.increment(
+          Rubygem::MFA_RECOMMENDED_THRESHOLD + 1,
+          rubygem_id: my_rubygem.id
+        )
+
+        refute user.mfa_recommended?
+      end
+    end
   end
 
   context ".without_mfa" do
