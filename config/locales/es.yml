@@ -315,6 +315,8 @@ es:
       tienes que desactivarla.
     require_mfa_enabled: No se ha activado la autenticación de múltiples factores.
       Primero tienes que activarla.
+    setup_recommended:
+    strong_mfa_level_recommended:
     new:
       title: Activando autenticación de múltiples factores
       scan_prompt: Por favor escanea el código QR con tu aplicación de Autenticación.

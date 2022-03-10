@@ -2,7 +2,7 @@ require "test_helper"
 
 class SignInTest < SystemTest
   setup do
-    create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: nil)
+    @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: nil)
     @mfa_user = create(:user, email: "john@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD,
                   mfa_level: :ui_only, mfa_seed: "thisisonemfaseed",
                   mfa_recovery_codes: %w[0123456789ab ba9876543210])
@@ -117,6 +117,98 @@ class SignInTest < SystemTest
     click_button "Sign in"
 
     assert page.has_content? "Sign in"
+  end
+
+  test "signing in with mfa disabled with gem ownership that exceeds the recommended download threshold" do
+    rubygem = create(:rubygem)
+    create(:ownership, user: @user, rubygem: rubygem)
+    GemDownload.increment(
+      Rubygem::MFA_RECOMMENDED_THRESHOLD + 1,
+      rubygem_id: rubygem.id
+    )
+
+    visit sign_in_path
+    fill_in "Email or Username", with: "nick@example.com"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign in"
+
+    expected_notice = "For protection of your account and your gems, we encourage you to set up multifactor authentication."
+    assert page.has_selector? "#flash_notice", text: expected_notice
+    assert_current_path(new_multifactor_auth_path)
+    assert page.has_content? "Sign out"
+  end
+
+  test "signing in with mfa enabled on `ui_only` with gem ownership that exceeds the recommended download threshold" do
+    rubygem = create(:rubygem)
+    create(:ownership, user: @mfa_user, rubygem: rubygem)
+    GemDownload.increment(
+      Rubygem::MFA_RECOMMENDED_THRESHOLD + 1,
+      rubygem_id: rubygem.id
+    )
+
+    visit sign_in_path
+    fill_in "Email or Username", with: "john@example.com"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign in"
+
+    assert page.has_content? "Multifactor authentication"
+
+    fill_in "OTP code", with: "0123456789ab"
+    click_button "Sign in"
+
+    expected_notice = "For protection of your account and your gems, we encourage you to change your MFA level " \
+                      "to \"UI and gem signin\" or \"UI and API\"."
+    assert page.has_selector? "#flash_notice", text: expected_notice
+    assert_current_path(edit_settings_path)
+    assert page.has_content? "Sign out"
+  end
+
+  test "signing in with mfa enabled on `ui_and_gem_signin` with gem ownership that exceeds the recommended download threshold" do
+    @mfa_user.update!(mfa_level: :ui_and_gem_signin)
+    rubygem = create(:rubygem)
+    create(:ownership, user: @mfa_user, rubygem: rubygem)
+    GemDownload.increment(
+      Rubygem::MFA_RECOMMENDED_THRESHOLD + 1,
+      rubygem_id: rubygem.id
+    )
+
+    visit sign_in_path
+    fill_in "Email or Username", with: "john@example.com"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign in"
+
+    assert page.has_content? "Multifactor authentication"
+
+    fill_in "OTP code", with: "0123456789ab"
+    click_button "Sign in"
+
+    assert_current_path(dashboard_path)
+    refute page.has_selector? "#flash_notice"
+    assert page.has_content? "Sign out"
+  end
+
+  test "signing in with mfa enabled on `ui_and_api` with gem ownership that exceeds the recommended download threshold" do
+    @mfa_user.update!(mfa_level: :ui_and_api)
+    rubygem = create(:rubygem)
+    create(:ownership, user: @mfa_user, rubygem: rubygem)
+    GemDownload.increment(
+      Rubygem::MFA_RECOMMENDED_THRESHOLD + 1,
+      rubygem_id: rubygem.id
+    )
+
+    visit sign_in_path
+    fill_in "Email or Username", with: "john@example.com"
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Sign in"
+
+    assert page.has_content? "Multifactor authentication"
+
+    fill_in "OTP code", with: "0123456789ab"
+    click_button "Sign in"
+
+    assert_current_path(dashboard_path)
+    refute page.has_selector? "#flash_notice"
+    assert page.has_content? "Sign out"
   end
 
   test "siging in when user does not have handle" do

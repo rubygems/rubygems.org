@@ -284,6 +284,8 @@ ja:
     otp_code:
     require_mfa_disabled:
     require_mfa_enabled:
+    setup_recommended:
+    strong_mfa_level_recommended:
     new:
       title:
       scan_prompt:

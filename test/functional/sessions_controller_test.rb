@@ -94,6 +94,73 @@ class SessionsControllerTest < ActionController::TestCase
       should "sign in the user" do
         assert_predicate @controller.request.env[:clearance], :signed_in?
       end
+
+      context "when mfa is recommended" do
+        setup do
+          @user = User.new(email_confirmed: true, handle: "test")
+          @user.stubs(:mfa_recommended?).returns true
+        end
+
+        context "when mfa is disabled" do
+          setup do
+            User.expects(:authenticate).with("login", "pass").returns @user
+            post :create, params: { session: { who: "login", password: "pass" } }
+          end
+
+          should respond_with :redirect
+          should redirect_to("the mfa setup page") { new_multifactor_auth_path }
+
+          should "set notice flash" do
+            expected_notice = "For protection of your account and your gems, we encourage you to set up multifactor authentication."
+            assert_equal expected_notice, flash[:notice]
+          end
+        end
+
+        context "when mfa is enabled" do
+          setup do
+            @request.cookies[:mfa_feature] = "true"
+            @controller.session[:mfa_user] = @user.handle
+            User.expects(:find_by_slug).with(@user.handle).returns @user
+          end
+
+          context "on `ui_only` level" do
+            setup do
+              @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+              post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+            end
+
+            should respond_with :redirect
+            should redirect_to("the settings page") { edit_settings_path }
+
+            should "set notice flash" do
+              expected_notice = "For protection of your account and your gems, we encourage you to change your MFA level " \
+                                "to \"UI and gem signin\" or \"UI and API\"."
+
+              assert_equal expected_notice, flash[:notice]
+            end
+          end
+
+          context "on `ui_and_gem_signin` level" do
+            setup do
+              @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+              post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+            end
+
+            should respond_with :redirect
+            should redirect_to("the dashboard") { dashboard_path }
+          end
+
+          context "on `ui_and_api` level" do
+            setup do
+              @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+              post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+            end
+
+            should respond_with :redirect
+            should redirect_to("the dashboard") { dashboard_path }
+          end
+        end
+      end
     end
 
     context "when login and password are incorrect" do

@@ -244,6 +244,14 @@ class User < ApplicationRecord
     rubygems.mfa_recommended.any?
   end
 
+  def mfa_recommended_not_yet_enabled?
+    mfa_recommended? && mfa_disabled?
+  end
+
+  def mfa_recommended_weak_level_enabled?
+    mfa_recommended? && mfa_ui_only?
+  end
+
   def otp_verified?(otp)
     otp = otp.to_s
     return true if verify_digit_otp(mfa_seed, otp)

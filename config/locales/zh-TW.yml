@@ -285,6 +285,8 @@ zh-TW:
     otp_code: OTP 碼
     require_mfa_disabled: 你的多重要素驗證已啟用，請先停用。
     require_mfa_enabled: 你的多重要素驗證已停用，請先啟用。
+    setup_recommended:
+    strong_mfa_level_recommended:
     new:
       title: 啟用多重要素驗證
       scan_prompt: 請用你的驗證裝置掃描 QR-code。如果你沒辦法掃描，手動輸入下面的資料。
