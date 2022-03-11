@@ -33,7 +33,7 @@ class Rubygem < ApplicationRecord
   after_create :create_gem_download
   before_destroy :mark_unresolved
 
-  MFA_RECOMMENDED_THRESHOLD = 175_000_000
+  MFA_RECOMMENDED_THRESHOLD = 165_000_000
 
   def create_gem_download
     GemDownload.create!(count: 0, rubygem_id: id, version_id: 0)
