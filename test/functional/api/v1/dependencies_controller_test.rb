@@ -120,7 +120,8 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
   # TOO MANY GEMS:
   context "On GET to index --> with gems --> JSON" do
     setup do
-      gems = Array.new(301) { create(:rubygem) }.join(",")
+      exceed_request_limit = Gemcutter::GEM_REQUEST_LIMIT + 1
+      gems = Array.new(exceed_request_limit) { create(:rubygem) }.join(",")
       get :index, params: { gems: gems }, format: "json"
     end
 
@@ -198,7 +199,8 @@ class Api::V1::DependenciesControllerTest < ActionController::TestCase
   # TOO MANY GEMS:
   context "On GET to index --> with gems --> Marshal" do
     setup do
-      gems = Array.new(301) { create(:rubygem) }.join(",")
+      exceed_request_limit = Gemcutter::GEM_REQUEST_LIMIT + 1
+      gems = Array.new(exceed_request_limit) { create(:rubygem) }.join(",")
       get :index, params: { gems: gems }, format: "marshal"
     end
 
