@@ -1,6 +1,5 @@
 class Api::V1::DependenciesController < Api::BaseController
   before_action :check_gem_count
-  GEM_REQUEST_LIMIT = 300
 
   def index
     deps = GemDependent.new(gem_names).to_a
@@ -19,7 +18,7 @@ class Api::V1::DependenciesController < Api::BaseController
 
   def check_gem_count
     return render plain: "" if gem_names.empty?
-    return if gem_names.size <= GEM_REQUEST_LIMIT
+    return if gem_names.size <= Gemcutter::GEM_REQUEST_LIMIT
 
     case request.format.symbol
     when :marshal
