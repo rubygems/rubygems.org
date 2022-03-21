@@ -51,9 +51,6 @@ class SessionsController < Clearance::SessionsController
     sign_in(@user) do |status|
       if status.success?
         StatsD.increment "login.success"
-        return redirect_to_mfa_setup(notice: t("multifactor_auths.setup_recommended")) if current_user.mfa_recommended_not_yet_enabled?
-        return redirect_to_settings(notice: t("multifactor_auths.strong_mfa_level_recommended")) if current_user.mfa_recommended_weak_level_enabled?
-
         redirect_back_or(url_after_create)
       else
         login_failure(status.failure_message)
@@ -82,7 +79,15 @@ class SessionsController < Clearance::SessionsController
   end
 
   def url_after_create
-    dashboard_path
+    if current_user.mfa_recommended_not_yet_enabled?
+      flash[:notice] = t("multifactor_auths.setup_recommended")
+      new_multifactor_auth_path
+    elsif current_user.mfa_recommended_weak_level_enabled?
+      flash[:notice] = t("multifactor_auths.strong_mfa_level_recommended")
+      edit_settings_path
+    else
+      dashboard_path
+    end
   end
 
   def ensure_not_blocked

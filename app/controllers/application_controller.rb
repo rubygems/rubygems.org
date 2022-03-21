@@ -49,14 +49,6 @@ class ApplicationController < ActionController::Base
     redirect_to sign_in_path, alert: t("please_sign_in")
   end
 
-  def redirect_to_mfa_setup(**options)
-    redirect_to new_multifactor_auth_path, options
-  end
-
-  def redirect_to_settings(**options)
-    redirect_to edit_settings_path, options
-  end
-
   def find_rubygem
     @rubygem = Rubygem.find_by_name(params[:rubygem_id] || params[:id])
     return if @rubygem
