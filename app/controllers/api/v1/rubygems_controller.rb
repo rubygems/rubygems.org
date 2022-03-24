@@ -31,7 +31,7 @@ class Api::V1::RubygemsController < Api::BaseController
 
     gemcutter = Pusher.new(@api_key.user, request.body, request.remote_ip, @api_key.rubygem)
     enqueue_web_hook_jobs(gemcutter.version) if gemcutter.process
-    render plain: gemcutter.message, status: gemcutter.code
+    render plain: response_with_warnings(gemcutter.message), status: gemcutter.code
   rescue StandardError => e
     Honeybadger.notify(e)
     render plain: "Server error. Please try again.", status: :internal_server_error
