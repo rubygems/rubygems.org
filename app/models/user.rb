@@ -236,7 +236,8 @@ class User < ApplicationRecord
 
   def mfa_recommended?
     return false if strong_mfa_level?
-    rubygems.any?(&:mfa_recommended?)
+
+    rubygems.mfa_recommended.any?
   end
 
   def otp_verified?(otp)

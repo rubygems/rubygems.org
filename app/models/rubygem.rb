@@ -35,6 +35,8 @@ class Rubygem < ApplicationRecord
 
   MFA_RECOMMENDED_THRESHOLD = 165_000_000
 
+  scope :mfa_recommended, -> { joins(:gem_download).where("gem_downloads.count > ?", MFA_RECOMMENDED_THRESHOLD) }
+
   def create_gem_download
     GemDownload.create!(count: 0, rubygem_id: id, version_id: 0)
   end
@@ -325,10 +327,6 @@ class Rubygem < ApplicationRecord
 
   def mfa_required?
     latest_version&.rubygems_mfa_required?
-  end
-
-  def mfa_recommended?
-    downloads > MFA_RECOMMENDED_THRESHOLD
   end
 
   def mfa_requirement_satisfied_for?(user)
