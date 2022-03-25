@@ -734,10 +734,10 @@ class VersionTest < ActiveSupport::TestCase
       #     jumping around the place
       #  b) people can't hijack the latest gem spot by building in the far
       #     future, but pushing today
-      @subscribed_one.update(built_at: Time.zone.now - 3.days,
-                             created_at: Time.zone.now - 1.day)
-      @subscribed_two.update(built_at: Time.zone.now - 2.days,
-                             created_at: Time.zone.now - 2.days)
+      @subscribed_one.update(built_at: 3.days.ago,
+                             created_at: 1.day.ago)
+      @subscribed_two.update(built_at: 2.days.ago,
+                             created_at: 2.days.ago)
 
       # Even though gem two was build before gem one, it was pushed to gemcutter first
       # Thus, we should have from newest to oldest, gem one, then gem two

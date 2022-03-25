@@ -412,7 +412,7 @@ class OwnersControllerTest < ActionController::TestCase
 
       context "when token has expired" do
         setup do
-          travel_to Time.current + 3.days
+          travel_to 3.days.from_now
           get :confirm, params: { rubygem_id: @rubygem.name, token: @ownership.token }
         end
 

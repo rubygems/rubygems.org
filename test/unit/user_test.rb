@@ -276,7 +276,7 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should "reutrn true when email confirmation token has not expired" do
-        two_minutes_in_future = Time.zone.now + 2.minutes
+        two_minutes_in_future = 2.minutes.from_now
         @user.update_attribute(:token_expires_at, two_minutes_in_future)
         assert_predicate @user, :valid_confirmation_token?
       end
