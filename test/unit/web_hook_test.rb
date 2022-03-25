@@ -6,7 +6,7 @@ class WebHookTest < ActiveSupport::TestCase
 
   should "be valid for normal hook" do
     hook = create(:web_hook)
-    refute hook.global?
+    refute_predicate hook, :global?
     assert_empty WebHook.global
     assert_equal [hook], WebHook.specific
   end
@@ -14,7 +14,7 @@ class WebHookTest < ActiveSupport::TestCase
   should "be valid for global hook" do
     hook = create(:global_web_hook)
     assert_nil hook.rubygem
-    assert hook.global?
+    assert_predicate hook, :global?
     assert_equal [hook], WebHook.global
     assert_empty WebHook.specific
   end
@@ -22,19 +22,19 @@ class WebHookTest < ActiveSupport::TestCase
   should "be invalid with url longer than maximum field length" do
     long_domain = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
     hook = build(:web_hook, url: "https://#{long_domain}.com")
-    refute hook.valid?
+    refute_predicate hook, :valid?
     assert_equal(["is too long (maximum is 255 characters)"], hook.errors.messages[:url])
   end
 
   should "require user" do
     hook = build(:web_hook, user: nil)
-    refute hook.valid?
+    refute_predicate hook, :valid?
   end
 
   ["badurl", "", nil].each do |url|
     should "invalidate with #{url.inspect} as the url" do
       hook = build(:web_hook, url: url)
-      refute hook.valid?
+      refute_predicate hook, :valid?
     end
   end
 
@@ -48,20 +48,20 @@ class WebHookTest < ActiveSupport::TestCase
     should "not be able to create a webhook under this user, gem, and url" do
       webhook = WebHook.new(user: @user,
                             url: @url)
-      refute webhook.valid?
+      refute_predicate webhook, :valid?
     end
 
     should "be able to create a webhook for a url under this user and gem" do
       webhook = WebHook.new(user: @user,
                             url: "http://example.net")
-      assert webhook.valid?
+      assert_predicate webhook, :valid?
     end
 
     should "be able to create a webhook for another user under this url" do
       other_user = create(:user)
       webhook = WebHook.new(user: other_user,
                             url: @url)
-      assert webhook.valid?
+      assert_predicate webhook, :valid?
     end
   end
 
@@ -104,14 +104,14 @@ class WebHookTest < ActiveSupport::TestCase
       webhook = WebHook.new(user: @user,
                             rubygem: @rubygem,
                             url: @url)
-      refute webhook.valid?
+      refute_predicate webhook, :valid?
     end
 
     should "be able to create a webhook for a url under this user and gem" do
       webhook = WebHook.new(user: @user,
                             rubygem: @rubygem,
                             url: "http://example.net")
-      assert webhook.valid?
+      assert_predicate webhook, :valid?
     end
 
     should "be able to create a webhook for another rubygem under this user and url" do
@@ -119,7 +119,7 @@ class WebHookTest < ActiveSupport::TestCase
       webhook = WebHook.new(user: @user,
                             rubygem: other_rubygem,
                             url: @url)
-      assert webhook.valid?
+      assert_predicate webhook, :valid?
     end
 
     should "be able to create a webhook for another user under this rubygem and url" do
@@ -127,13 +127,13 @@ class WebHookTest < ActiveSupport::TestCase
       webhook = WebHook.new(user: other_user,
                             rubygem: @rubygem,
                             url: @url)
-      assert webhook.valid?
+      assert_predicate webhook, :valid?
     end
 
     should "be able to create a global webhook under this user and url" do
       webhook = WebHook.new(user: @user,
                             url: @url)
-      assert webhook.valid?
+      assert_predicate webhook, :valid?
     end
   end
 
@@ -192,7 +192,7 @@ class WebHookTest < ActiveSupport::TestCase
     should "not increment failure count for hook" do
       @hook.fire("https", "rubygems.org", @rubygem, @version, delayed: false)
 
-      assert @hook.failure_count.zero?
+      assert_predicate @hook.failure_count, :zero?
     end
   end
 
@@ -219,7 +219,7 @@ class WebHookTest < ActiveSupport::TestCase
         @hook.fire("https", "rubygems.org", @rubygem, @version, delayed: false)
 
         assert_equal index + 1, @hook.reload.failure_count
-        assert @hook.global?
+        assert_predicate @hook, :global?
       end
     end
   end

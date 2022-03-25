@@ -16,7 +16,7 @@ class PasswordsControllerTest < ActionController::TestCase
       end
 
       should "set a valid confirmation_token" do
-        assert @user.valid_confirmation_token?
+        assert_predicate @user, :valid_confirmation_token?
       end
     end
   end

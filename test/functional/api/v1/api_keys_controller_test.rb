@@ -71,7 +71,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
   def self.should_not_signin_user
     should "not sign in user" do
-      refute @controller.request.env[:clearance].signed_in?
+      refute_predicate @controller.request.env[:clearance], :signed_in?
     end
   end
 
@@ -154,8 +154,8 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
       should respond_with :success
       should "keep current scope enabled and update scope in params" do
-        assert @api_key.can_index_rubygems?
-        assert @api_key.can_push_rubygem?
+        assert_predicate @api_key, :can_index_rubygems?
+        assert_predicate @api_key, :can_push_rubygem?
       end
     end
   end
@@ -334,8 +334,8 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
       should respond_with :success
       should "keep current scope enabled and update scope in params" do
-        assert @api_key.can_index_rubygems?
-        assert @api_key.can_push_rubygem?
+        assert_predicate @api_key, :can_index_rubygems?
+        assert_predicate @api_key, :can_push_rubygem?
       end
 
       should "update MFA" do

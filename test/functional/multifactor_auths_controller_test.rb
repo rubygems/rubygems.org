@@ -30,7 +30,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         should respond_with :redirect
         should redirect_to("the settings page") { edit_settings_path }
         should "keep mfa enabled" do
-          assert @user.reload.mfa_enabled?
+          assert_predicate @user.reload, :mfa_enabled?
         end
       end
 
@@ -44,7 +44,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             should respond_with :redirect
             should redirect_to("the settings page") { edit_settings_path }
             should "disable mfa" do
-              refute @user.reload.mfa_enabled?
+              refute_predicate @user.reload, :mfa_enabled?
             end
           end
 
@@ -56,7 +56,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             should respond_with :redirect
             should redirect_to("the settings page") { edit_settings_path }
             should "disable mfa" do
-              refute @user.reload.mfa_enabled?
+              refute_predicate @user.reload, :mfa_enabled?
             end
           end
 
@@ -70,7 +70,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             should redirect_to("the settings page") { edit_settings_path }
             should set_flash.to("Your OTP code is incorrect.")
             should "keep mfa enabled" do
-              assert @user.reload.mfa_enabled?
+              assert_predicate @user.reload, :mfa_enabled?
             end
           end
         end
@@ -84,7 +84,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           should respond_with :redirect
           should redirect_to("the settings page") { edit_settings_path }
           should "update mfa level to mfa_ui_only now" do
-            assert @user.reload.mfa_ui_only?
+            assert_predicate @user.reload, :mfa_ui_only?
           end
         end
 
@@ -96,7 +96,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           should respond_with :redirect
           should redirect_to("the settings page") { edit_settings_path }
           should "update make mfa level to mfa_ui_and_api now" do
-            assert @user.reload.mfa_ui_and_api?
+            assert_predicate @user.reload, :mfa_ui_and_api?
           end
         end
 
@@ -108,7 +108,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           should respond_with :redirect
           should redirect_to("the settings page") { edit_settings_path }
           should "update make mfa level to mfa_ui_and_gem_signin now" do
-            assert @user.reload.mfa_ui_and_gem_signin?
+            assert_predicate @user.reload, :mfa_ui_and_gem_signin?
           end
         end
       end
@@ -138,7 +138,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             end
           end
           should "enable mfa" do
-            assert @user.reload.mfa_enabled?
+            assert_predicate @user.reload, :mfa_enabled?
           end
         end
 
@@ -154,7 +154,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
             refute_empty flash[:error]
           end
           should "keep mfa disabled" do
-            refute @user.reload.mfa_enabled?
+            refute_predicate @user.reload, :mfa_enabled?
           end
         end
       end
@@ -167,7 +167,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         should respond_with :redirect
         should redirect_to("the settings page") { edit_settings_path }
         should "keep mfa disabled" do
-          refute @user.reload.mfa_enabled?
+          refute_predicate @user.reload, :mfa_enabled?
         end
       end
     end

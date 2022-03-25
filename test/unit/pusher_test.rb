@@ -423,8 +423,8 @@ class PusherTest < ActiveSupport::TestCase
       end
 
       should "indexe rubygem and version" do
-        assert @rubygem.indexed?
-        assert @rubygem.versions.last.indexed?
+        assert_predicate @rubygem, :indexed?
+        assert_predicate @rubygem.versions.last, :indexed?
       end
 
       should "create rubygem index" do

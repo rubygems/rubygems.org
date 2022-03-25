@@ -8,6 +8,6 @@ class SubscriptionTest < ActiveSupport::TestCase
   should validate_presence_of(:user)
 
   should "be valid with factory" do
-    assert build(:ownership).valid?
+    assert_predicate build(:ownership), :valid?
   end
 end

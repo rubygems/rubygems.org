@@ -34,13 +34,13 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "consider the gem valid" do
-        assert subject.valid?
+        assert_predicate subject, :valid?
       end
     end
 
     should "be invalid with name longer than maximum field length" do
       @rubygem.name = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
-      refute @rubygem.valid?
+      refute_predicate @rubygem, :valid?
       assert_equal(["is too long (maximum is 255 characters)"], @rubygem.errors.messages[:name])
     end
 
@@ -262,14 +262,14 @@ class RubygemTest < ActiveSupport::TestCase
     ["1337", "Snakes!"].each do |bad_name|
       should "not accept #{bad_name.inspect} as a name" do
         @rubygem.name = bad_name
-        refute @rubygem.valid?
+        refute_predicate @rubygem, :valid?
         assert_match(/Name/, @rubygem.all_errors)
       end
     end
 
     should "not accept an Array as name" do
       @rubygem.name = ["zomg"]
-      refute @rubygem.valid?
+      refute_predicate @rubygem, :valid?
     end
 
     should "return linkset errors in #all_errors" do
@@ -305,7 +305,7 @@ class RubygemTest < ActiveSupport::TestCase
       @specification.homepage = "badurl.com"
       @rubygem.name = "1337"
 
-      refute @rubygem.valid?
+      refute_predicate @rubygem, :valid?
       assert_raise ActiveRecord::RecordInvalid do
         @rubygem.update_linkset!(@specification)
       end
@@ -342,18 +342,18 @@ class RubygemTest < ActiveSupport::TestCase
       should "be owned by a user in ownership" do
         create(:ownership, user: @user, rubygem: @rubygem)
         assert @rubygem.owned_by?(@user)
-        refute @rubygem.unowned?
+        refute_predicate @rubygem, :unowned?
       end
 
       should "be not owned if no ownerships" do
         assert_empty @rubygem.ownerships
         refute @rubygem.owned_by?(@user)
-        assert @rubygem.unowned?
+        assert_predicate @rubygem, :unowned?
       end
 
       should "be not owned if no user" do
         refute @rubygem.owned_by?(nil)
-        assert @rubygem.unowned?
+        assert_predicate @rubygem, :unowned?
       end
     end
 
@@ -550,8 +550,8 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "be hosted or not" do
-      refute @rubygem_without_version.hosted?
-      assert @rubygem_with_version.hosted?
+      refute_predicate @rubygem_without_version, :hosted?
+      assert_predicate @rubygem_with_version, :hosted?
     end
 
     context "when yanking the last version of a gem with an owner" do
@@ -564,7 +564,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "no longer be indexed" do
-        assert @rubygem_with_version.versions.indexed.count.zero?
+        assert_predicate @rubygem_with_version.versions.indexed.count, :zero?
       end
     end
 
@@ -573,10 +573,10 @@ class RubygemTest < ActiveSupport::TestCase
         @rubygem_with_versions.versions.first.update! indexed: false
       end
       should "remain owned" do
-        refute @rubygem_with_versions.reload.unowned?
+        refute_predicate @rubygem_with_versions.reload, :unowned?
       end
       should "then know there is a yanked version" do
-        assert @rubygem_with_versions.yanked_versions?
+        assert_predicate @rubygem_with_versions, :yanked_versions?
       end
     end
   end
@@ -597,27 +597,27 @@ class RubygemTest < ActiveSupport::TestCase
     end
 
     should "be pushable if gem is a new record" do
-      assert @new.pushable?
+      assert_predicate @new, :pushable?
     end
 
     context "gem has no versions" do
       should "be pushable if gem is less than one month old" do
-        assert @haml.pushable?
+        assert_predicate @haml, :pushable?
       end
 
       should "be pushable if gem was yanked more than 100 days ago" do
         @haml.update(created_at: 101.days.ago, updated_at: 101.days.ago)
-        assert @haml.pushable?
+        assert_predicate @haml, :pushable?
       end
 
       should "not be pushable if gem is older than a month and yanked less than 100 days ago" do
         @haml.update(created_at: 99.days.ago, updated_at: 99.days.ago)
-        refute @haml.pushable?
+        refute_predicate @haml, :pushable?
       end
     end
 
     should "not be pushable if it has versions" do
-      refute @thin.pushable?
+      refute_predicate @thin, :pushable?
     end
 
     should "only return the latest gems with versions" do
@@ -703,8 +703,8 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "create a rubygem and associated records" do
-        refute @rubygem.new_record?
-        assert @rubygem.versions.present?
+        refute_predicate @rubygem, :new_record?
+        assert_predicate @rubygem.versions, :present?
       end
 
       should "have the homepage set properly" do
@@ -769,8 +769,8 @@ class RubygemTest < ActiveSupport::TestCase
           @rubygem.update_attributes_from_gem_specification!(@version, @specification)
         end
 
-        refute @rubygem.new_record?
-        refute @version.new_record?
+        refute_predicate @rubygem, :new_record?
+        refute_predicate @version, :new_record?
         assert_equal 1, @rubygem.versions.count
         assert_equal 1, @rubygem.versions_count
         assert_equal 2, @version.dependencies.count

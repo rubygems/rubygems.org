@@ -74,7 +74,7 @@ class SendgridEventTest < ActiveSupport::TestCase
       assert_equal("t61hI0Xpmk8XSR1YX4s0Kg==", event.sendgrid_id)
       assert_equal("bounce", event.event_type)
       assert_equal(occurred_at, event.occurred_at)
-      assert event.pending?
+      assert_predicate event, :pending?
       assert_equal(
         {
           "email" => "user@example.com",
@@ -151,12 +151,12 @@ class SendgridEventTest < ActiveSupport::TestCase
   context "#pending?" do
     should "be true for pending event" do
       event = SendgridEvent.new(status: "pending")
-      assert event.pending?
+      assert_predicate event, :pending?
     end
 
     should "be false for processed event" do
       event = SendgridEvent.new(status: "processed")
-      refute event.pending?
+      refute_predicate event, :pending?
     end
   end
 end

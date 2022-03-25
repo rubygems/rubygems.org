@@ -14,7 +14,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         rubygem = create(:rubygem)
         post :create, params: { gem_name: rubygem.name, url: "http://example.com" }
         assert_includes @response.body, "Access Denied"
-        assert WebHook.count.zero?
+        assert_predicate WebHook.count, :zero?
       end
 
       should "forbid access when listing hooks" do
@@ -85,7 +85,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         should "say successfully deployed" do
           content = "Successfully deployed webhook for #{@gemcutter.name} to #{@url}"
           assert page.has_content?(content)
-          assert WebHook.count.zero?
+          assert_predicate WebHook.count, :zero?
         end
       end
 
@@ -99,7 +99,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         should "say there was a problem" do
           content = "There was a problem deploying webhook for #{@gemcutter.name} to #{@url}"
           assert page.has_content?(content)
-          assert WebHook.count.zero?
+          assert_predicate WebHook.count, :zero?
         end
       end
 
@@ -130,7 +130,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         should respond_with :success
         should "say successfully deployed" do
           assert page.has_content?("Successfully deployed webhook for #{@rubygem.name} to #{@url}")
-          assert WebHook.count.zero?
+          assert_predicate WebHook.count, :zero?
         end
       end
 
@@ -144,7 +144,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
         should "say there was a problem" do
           content = "There was a problem deploying webhook for #{@rubygem.name} to #{@url}"
           assert page.has_content?(content)
-          assert WebHook.count.zero?
+          assert_predicate WebHook.count, :zero?
         end
       end
 

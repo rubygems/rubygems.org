@@ -13,39 +13,39 @@ class OwnershipCallTest < ActiveSupport::TestCase
 
   context "factory" do
     should "be valid with plain factory" do
-      assert build(:ownership_call, user: @user, rubygem: @rubygem).valid?
+      assert_predicate build(:ownership_call, user: @user, rubygem: @rubygem), :valid?
     end
 
     should "be valid with closed trait" do
       ownership_call = build(:ownership_call, :closed, user: @user, rubygem: @rubygem)
-      assert ownership_call.valid?
-      assert ownership_call.closed?
+      assert_predicate ownership_call, :valid?
+      assert_predicate ownership_call, :closed?
     end
   end
 
   context "#create" do
     should "create a call with open status" do
       ownership_call = @rubygem.ownership_calls.create(user: @user, note: "valid note")
-      assert ownership_call.opened?
+      assert_predicate ownership_call, :opened?
     end
 
     should "not create a call with note longer than 64000 chars" do
       ownership_call = build(:ownership_call, user: @user, rubygem: @rubygem,
                              note: "r" * (Gemcutter::MAX_TEXT_FIELD_LENGTH + 1))
-      refute ownership_call.valid?
+      refute_predicate ownership_call, :valid?
       assert_contains ownership_call.errors[:note], "is too long (maximum is 64000 characters)"
     end
 
     should "not create a call without note" do
       ownership_call = build(:ownership_call, user: @user, rubygem: @rubygem, note: nil)
-      refute ownership_call.valid?
+      refute_predicate ownership_call, :valid?
       assert_contains ownership_call.errors[:note], "can't be blank"
     end
 
     should "not create multiple open calls for a rubygem" do
       create(:ownership_call, user: @user, rubygem: @rubygem)
       ownership_call = build(:ownership_call, user: create(:user), rubygem: @rubygem)
-      refute ownership_call.valid?
+      refute_predicate ownership_call, :valid?
       assert_contains ownership_call.errors[:rubygem_id], "can have only one open ownership call"
     end
   end
@@ -58,7 +58,7 @@ class OwnershipCallTest < ActiveSupport::TestCase
     should "close all associated open requests and then call" do
       create_list(:ownership_request, 2, rubygem: @rubygem, ownership_call: @ownership_call)
       @ownership_call.close
-      assert @ownership_call.closed?
+      assert_predicate @ownership_call, :closed?
       assert_empty @ownership_call.ownership_requests.opened
     end
 
@@ -71,7 +71,7 @@ class OwnershipCallTest < ActiveSupport::TestCase
 
     should "close call if no requests exist" do
       @ownership_call.close
-      assert @ownership_call.closed?
+      assert_predicate @ownership_call, :closed?
       assert_empty @ownership_call.ownership_requests.opened
     end
   end
