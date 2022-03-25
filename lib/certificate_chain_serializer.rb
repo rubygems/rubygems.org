@@ -1,5 +1,5 @@
 class CertificateChainSerializer
-  PATTERN = /-----BEGIN CERTIFICATE-----(?:.|\n)+?-----END CERTIFICATE-----/.freeze
+  PATTERN = /-----BEGIN CERTIFICATE-----(?:.|\n)+?-----END CERTIFICATE-----/
 
   def self.load(chain)
     return [] unless chain
