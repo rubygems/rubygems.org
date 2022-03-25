@@ -74,7 +74,7 @@ class CompactIndexTest < ActionDispatch::IntegrationTest
 
   test "/versions includes pre-built file and new gems" do
     versions_file_location = Rails.application.config.rubygems["versions_file_location"]
-    file_contents = File.open(versions_file_location).read
+    file_contents = File.read(versions_file_location)
     gem_a_match = "gemA 1.0.0 013we2\ngemA 2.0.0 1cf94r\ngemA 1.2.0 13q4es\ngemA 2.1.0 e217fz\n"
     gem_b_match = "gemB 1.0.0 qw2dwe\n"
 

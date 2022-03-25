@@ -32,9 +32,7 @@ module RubygemFs
 
     def store(key, body, _metadata = {})
       FileUtils.mkdir_p File.dirname("#{base_dir}/#{key}")
-      File.open("#{base_dir}/#{key}", "wb") do |f|
-        f.write(body)
-      end
+      File.binwrite("#{base_dir}/#{key}", body)
     end
 
     def get(key)
