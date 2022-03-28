@@ -355,6 +355,32 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
+    context "strong_mfa_level?" do
+      should "be true if the users mfa level is ui_and_api" do
+        user = create(:user, mfa_level: "ui_and_api")
+
+        assert user.strong_mfa_level?
+      end
+
+      should "be true if the users mfa level is ui_and_gem_signin" do
+        user = create(:user, mfa_level: "ui_and_gem_signin")
+
+        assert user.strong_mfa_level?
+      end
+
+      should "be false if users mfa level is ui_only" do
+        user = create(:user, mfa_level: "ui_only")
+
+        refute user.strong_mfa_level?
+      end
+
+      should "be false if users has mfa disabled" do
+        user = create(:user, mfa_level: "disabled")
+
+        refute user.strong_mfa_level?
+      end
+    end
+
     context "mfa_recommended?" do
       should "be false when a user doesn't own a gem with more downloads than the recommended threshold" do
         user = create(:user)
