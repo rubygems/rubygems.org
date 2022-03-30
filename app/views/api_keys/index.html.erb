@@ -41,7 +41,9 @@
           <%= api_key.name %>
         </td>
         <td class="owners__cell" data-title="Scopes">
-          <%= i18n_api_scopes api_key %>
+          <% api_key.enabled_scopes.each do |scope| %>
+            <ul class="scopes__list"><%= t(".#{scope}") %></ul>
+          <% end %>
         </td>
         <td class="owners__cell" data-title="Age">
           <%= time_ago_in_words(api_key.created_at) %>
