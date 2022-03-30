@@ -51,6 +51,7 @@ class ApplicationHelperTest < ActionView::TestCase
     should "return concat of ul tags for enabled scopes" do
       assert_equal '<ul class="scopes__list">Index rubygems</ul><ul class="scopes__list">Push rubygem</ul>',
         i18n_api_scopes(@api_key)
+      assert_instance_of ActiveSupport::SafeBuffer, i18n_api_scopes(@api_key)
     end
   end
 end
