@@ -64,6 +64,6 @@ class EmailConfirmationsController < ApplicationController
   end
 
   def email_params
-    params.require(:email_confirmation).permit(:email).fetch(:email, "")
+    params.permit(email_confirmation: :email).require(:email_confirmation).require(:email)
   end
 end
