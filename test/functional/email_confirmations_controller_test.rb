@@ -125,6 +125,13 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       end
     end
 
+    context "invalid params" do
+      should "fail friendly" do
+        post :create, params: { email_confirmation: "ABC" }
+        assert_response 400 # bad status raised by strong params
+      end
+    end
+
     context "user does not exist" do
       should "not deliver confirmation email" do
         Mailer.expects(:email_confirmation).times(0)
