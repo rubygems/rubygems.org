@@ -225,9 +225,19 @@ class User < ApplicationRecord
     save!(validate: false)
   end
 
+  def strong_mfa_level?
+    mfa_ui_and_gem_signin? || mfa_ui_and_api?
+  end
+
   def mfa_gem_signin_authorized?(otp)
-    return true unless mfa_ui_and_gem_signin? || mfa_ui_and_api?
+    return true unless strong_mfa_level?
     otp_verified?(otp)
+  end
+
+  def mfa_recommended?
+    return false if strong_mfa_level?
+
+    rubygems.mfa_recommended.any?
   end
 
   def otp_verified?(otp)

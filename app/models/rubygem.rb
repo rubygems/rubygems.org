@@ -33,6 +33,10 @@ class Rubygem < ApplicationRecord
   after_create :create_gem_download
   before_destroy :mark_unresolved
 
+  MFA_RECOMMENDED_THRESHOLD = 165_000_000
+
+  scope :mfa_recommended, -> { joins(:gem_download).where("gem_downloads.count > ?", MFA_RECOMMENDED_THRESHOLD) }
+
   def create_gem_download
     GemDownload.create!(count: 0, rubygem_id: id, version_id: 0)
   end
