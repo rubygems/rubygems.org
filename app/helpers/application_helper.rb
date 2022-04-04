@@ -62,8 +62,4 @@ module ApplicationHelper
     return title unless title_url
     link_to title, title_url, class: "t-link--black"
   end
-
-  def i18n_api_scopes(api_key)
-    api_key.enabled_scopes.sum("") { |scope| tag.ul(t(scope, scope: %i[api_keys index]), class: "scopes__list") }
-  end
 end
