@@ -57,6 +57,7 @@ zh-CN:
   api_keys:
     create:
       success:
+      invalid_gem:
     destroy:
       success:
     index:
@@ -84,6 +85,9 @@ zh-CN:
       new_api_key:
       multifactor_auth:
       enable_mfa:
+      rubygem_scope:
+      rubygem_scope_info:
+      all_gems:
     reset:
       success:
     update:

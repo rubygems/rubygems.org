@@ -195,4 +195,9 @@ FactoryBot.define do
   factory :gem_typo_exception do
     name
   end
+
+  factory :api_key_rubygem_scope do
+    ownership
+    api_key { create(:api_key, key: SecureRandom.hex(24)) }
+  end
 end

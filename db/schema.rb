@@ -10,11 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_30_050124) do
+ActiveRecord::Schema[7.0].define(version: 2022_03_29_203956) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "plpgsql"
+
+  create_table "api_key_rubygem_scopes", force: :cascade do |t|
+    t.bigint "api_key_id", null: false
+    t.bigint "ownership_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["api_key_id"], name: "index_api_key_rubygem_scopes_on_api_key_id"
+  end
 
   create_table "api_keys", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -31,6 +39,7 @@ ActiveRecord::Schema.define(version: 2021_11_30_050124) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "mfa", default: false, null: false
+    t.datetime "soft_deleted_at"
     t.index ["hashed_key"], name: "index_api_keys_on_hashed_key", unique: true
     t.index ["user_id"], name: "index_api_keys_on_user_id"
   end

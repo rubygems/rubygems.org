@@ -124,6 +124,28 @@ class ApiKeysControllerTest < ActionController::TestCase
           assert_empty @user.reload.api_keys
         end
       end
+
+      context "with a gem scope" do
+        setup do
+          @ownership = create(:ownership, user: @user, rubygem: create(:rubygem))
+        end
+
+        should "have a gem scope with valid id" do
+          post :create, params: { api_key: { name: "gem scope", add_owner: true, rubygem_id: @ownership.rubygem.id } }
+          Delayed::Worker.new.work_off
+
+          created_key = @user.reload.api_keys.find_by(name: "gem scope")
+          assert_equal @ownership.rubygem, created_key.rubygem
+        end
+
+        should "display error with invalid id" do
+          post :create, params: { api_key: { name: "gem scope", add_owner: true, rubygem_id: -1 } }
+          Delayed::Worker.new.work_off
+
+          assert_equal "Selected gem cannot be scoped to this key", flash[:error]
+          assert_empty @user.reload.api_keys
+        end
+      end
     end
 
     context "on GET to edit" do

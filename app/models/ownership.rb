@@ -2,6 +2,7 @@ class Ownership < ApplicationRecord
   belongs_to :rubygem
   belongs_to :user
   belongs_to :authorizer, class_name: "User"
+  has_many :api_key_rubygem_scopes, dependent: :destroy
 
   validates :user_id, uniqueness: { scope: :rubygem_id }
 
