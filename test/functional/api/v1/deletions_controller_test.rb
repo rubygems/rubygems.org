@@ -108,6 +108,32 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         end
       end
 
+      context "with api key gem scoped" do
+        setup do
+          @api_key = create(:api_key, name: "gem-scoped-delete-key", key: "123456", yank_rubygem: true, user: @user, rubygem_id: @rubygem.id)
+          @request.env["HTTP_AUTHORIZATION"] = "123456"
+        end
+
+        context "to the same gem to be deleted" do
+          setup do
+            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          end
+
+          should respond_with :success
+        end
+
+        context "to another gem" do
+          setup do
+            ownership = create(:ownership, user: @user, rubygem: create(:rubygem, name: "another_gem"))
+            @api_key.update(ownership: ownership)
+
+            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          end
+
+          should respond_with :forbidden
+        end
+      end
+
       context "ON DELETE to create for existing gem version" do
         setup do
           create(:global_web_hook, user: @user, url: "http://example.org")
