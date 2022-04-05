@@ -160,6 +160,14 @@ class ApiKeysControllerTest < ActionController::TestCase
         assert page.has_content? "Edit API key"
         assert_select "form > input.form__input", value: "ci-key"
       end
+
+      should "redirect to index with soft deleted key" do
+        @api_key.soft_delete!
+        get :edit, params: { id: @api_key.id }
+
+        assert_redirected_to profile_api_keys_path
+        assert_equal "An invalid API key cannot be edited. Please delete it and create a new one.", flash[:error]
+      end
     end
 
     context "on PATCH to update" do
@@ -188,6 +196,34 @@ class ApiKeysControllerTest < ActionController::TestCase
 
         should "not update scope of test key" do
           refute_predicate @api_key, :can_add_owner?
+        end
+      end
+
+      context "gem scope" do
+        setup do
+          @ownership = create(:ownership, user: @user, rubygem: create(:rubygem))
+          @api_key.update(rubygem_id: @ownership.rubygem.id)
+        end
+
+        should "to all gems" do
+          patch :update, params: { api_key: { rubygem_id: nil }, id: @api_key.id }
+
+          assert_nil @api_key.reload.rubygem
+        end
+
+        should "to another gem" do
+          another_ownership = create(:ownership, user: @user, rubygem: create(:rubygem))
+          patch :update, params: { api_key: { rubygem_id: another_ownership.rubygem.id }, id: @api_key.id }
+
+          assert_equal another_ownership.rubygem, @api_key.reload.rubygem
+        end
+
+        should "displays error with invalid id" do
+          assert_no_changes @api_key do
+            patch :update, params: { api_key: { rubygem_id: -1 }, id: @api_key.id }
+
+            assert_equal "Selected gem cannot be scoped to this key", flash[:error]
+          end
         end
       end
     end

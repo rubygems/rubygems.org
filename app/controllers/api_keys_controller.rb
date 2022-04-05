@@ -35,6 +35,10 @@ class ApiKeysController < ApplicationController
 
   def edit
     @api_key = current_user.api_keys.find(params.require(:id))
+    return unless @api_key.soft_deleted?
+
+    redirect_to profile_api_keys_path
+    flash[:error] = t(".invalid_key")
   end
 
   def update
@@ -46,6 +50,9 @@ class ApiKeysController < ApplicationController
       flash[:error] = @api_key.errors.full_messages.to_sentence
       render :edit
     end
+  rescue ActiveRecord::RecordNotFound
+    flash[:error] = t(".invalid_gem")
+    render :edit
   end
 
   def destroy

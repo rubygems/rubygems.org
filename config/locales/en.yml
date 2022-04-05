@@ -98,10 +98,15 @@ en:
       success: "Deleted all API keys"
     update:
       success: "Successfully updated API key"
+      invalid_gem: Selected gem cannot be scoped to this key
     edit:
       edit_api_key: "Edit API key"
       multifactor_auth: Multifactor authentication
       enable_mfa: Enable MFA
+      rubygem_scope: Gem Scope
+      rubygem_scope_info: This scope restricts gem push/yank and owner add/remove commands to a specific gem.
+      all_gems: All Gems
+      invalid_key: An invalid API key cannot be edited. Please delete it and create a new one.
   clearance_mailer:
     change_password:
       title: CHANGE PASSWORD
