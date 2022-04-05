@@ -181,6 +181,17 @@ class ApiKeysTest < SystemTest
   end
 
   test "gem ownership removed displays api key as invalid" do
+    api_key = create(:api_key, user: @user, ownership: @ownership)
+    visit_profile_api_keys_path
+    refute page.has_css? ".owners__row__invalid"
+
+    @ownership.destroy!
+
+    visit_profile_api_keys_path
+    assert page.has_css? ".owners__row__invalid"
+    assert api_key.reload.soft_deleted?
+
+    refute page.has_button? "Edit"
     visit_edit_profile_api_key_path(api_key)
     assert page.has_content? "An invalid API key cannot be edited. Please delete it and create a new one."
     assert_equal profile_api_keys_path, page.current_path

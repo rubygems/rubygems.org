@@ -1,6 +1,9 @@
 .owners__row {
     background: #f6f6f6;
 }
+.owners__row__invalid {
+    color: #9A9A9A;
+}
 .owners__row:nth-of-type(odd) {
     background: #e9e9e9;
 }

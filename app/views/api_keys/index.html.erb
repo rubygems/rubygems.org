@@ -19,6 +19,9 @@
         <%= t(".scopes") %>
       </th>
       <th class="owners__cell">
+        <%= t(".gem") %>
+      </th>
+      <th class="owners__cell">
         <%= t(".age") %>
       </th>
       <% if current_user.mfa_enabled? %>
@@ -36,7 +39,7 @@
     </tr>
 
     <% for api_key in @api_keys do %>
-      <tr class="owners__row">
+      <tr class="owners__row <%= 'owners__row__invalid' if api_key.soft_deleted? %>">
         <td class="owners__cell" data-title="Name">
           <%= api_key.name %>
         </td>
@@ -44,6 +47,9 @@
           <% api_key.enabled_scopes.each do |scope| %>
             <ul class="scopes__list"><%= t(".#{scope}") %></ul>
           <% end %>
+        </td>
+        <td class="owners__cell" data-title="Gem">
+          <%= api_key.rubygem&.name %>
         </td>
         <td class="owners__cell" data-title="Age">
           <%= time_ago_in_words(api_key.created_at) %>
@@ -57,10 +63,12 @@
           <%= api_key.last_accessed_at&.strftime("%Y-%m-%d %H:%M %Z") %>
         </td>
         <td class="owners__cell">
-          <%= button_to t("edit"),
-                      edit_profile_api_key_path(id: api_key.id),
-                      method: :get,
-                      class: "form__submit form__submit--small" %>
+          <% unless api_key.soft_deleted? %>
+            <%= button_to t("edit"),
+                        edit_profile_api_key_path(id: api_key.id),
+                        method: :get,
+                        class: "form__submit form__submit--small" %>
+          <% end %>
         </td>
         <td class="owners__cell">
           <%= button_to t(".delete"),
@@ -72,6 +80,8 @@
       </tr>
     <% end %>
     <tr class="owners__row">
+      <td class="owners__cell">
+      </td>
       <td class="owners__cell">
       </td>
       <td class="owners__cell">

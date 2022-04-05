@@ -70,6 +70,7 @@ en:
       api_keys: API keys
       name: Name
       scopes: Scopes
+      gem: Gem
       age: Age
       last_access: Last access
       action: Action

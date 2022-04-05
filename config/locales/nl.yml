@@ -68,6 +68,7 @@ nl:
       name:
       scopes:
       age:
+      gem:
       last_access:
       action:
       delete:
