@@ -41,7 +41,8 @@ class Api::BaseController < ApplicationController
     params_key = request.headers["Authorization"] || ""
     hashed_key = Digest::SHA256.hexdigest(params_key)
     @api_key   = ApiKey.find_by_hashed_key(hashed_key)
-    render_unauthorized unless @api_key
+    return render_unauthorized unless @api_key
+    render_soft_deleted_api_key if @api_key.soft_deleted?
   end
 
   def render_unauthorized
@@ -54,5 +55,9 @@ class Api::BaseController < ApplicationController
       format.json { render json: { error: t(:api_key_forbidden) }, status: :forbidden }
       format.yaml { render yaml: { error: t(:api_key_forbidden) }, status: :forbidden }
     end
+  end
+
+  def render_soft_deleted_api_key
+    render plain: "An invalid API key cannot be used. Please delete it and create a new one.", status: :forbidden
   end
 end

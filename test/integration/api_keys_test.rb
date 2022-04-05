@@ -189,7 +189,7 @@ class ApiKeysTest < SystemTest
 
     visit_profile_api_keys_path
     assert page.has_css? ".owners__row__invalid"
-    assert api_key.reload.soft_deleted?
+    assert_predicate api_key.reload, :soft_deleted?
 
     refute page.has_button? "Edit"
     visit_edit_profile_api_key_path(api_key)
