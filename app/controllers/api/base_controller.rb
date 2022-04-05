@@ -25,6 +25,12 @@ class Api::BaseController < ApplicationController
     end
   end
 
+  def verify_api_key_gem_scope
+    return unless @api_key.rubygem && @api_key.rubygem != @rubygem
+
+    render plain: "This API key cannot perform the specified action on this gem.", status: :forbidden
+  end
+
   def verify_with_otp
     otp = request.headers["HTTP_OTP"]
     return if @api_key.mfa_authorized?(otp)
