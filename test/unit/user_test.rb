@@ -557,30 +557,111 @@ class UserTest < ActiveSupport::TestCase
   end
 
   context ".find_by_slug" do
+    setup do
+      @user = create(:user, handle: "findable")
+      @nohandle = create(:user, handle: nil)
+    end
+
     should "return nil if using a falsy value" do
       refute User.find_by_slug(nil)
+      refute User.find_by_slug("")
+      refute User.find_by_slug(" ")
     end
 
-    context "foundable" do
-      setup { @user = create(:user, handle: "findable") }
+    should "return an user when founded by id" do
+      assert_equal User.find_by_slug(@user.id), @user
+    end
 
-      should "return an AR when founded by id" do
-        assert_equal User.find_by_slug(@user.id), @user
-      end
+    should "return an user when founded by handle" do
+      assert_equal User.find_by_slug(@user.handle), @user
+    end
 
-      should "return an AR when founded by handle" do
-        assert_equal User.find_by_slug(@user.handle), @user
+    should "return nil when using id" do
+      refute User.find_by_slug(-9999)
+    end
+
+    should "return nil when not founded by handle" do
+      refute User.find_by_slug("notfoundable")
+    end
+  end
+
+  context ".find_by_slug!" do
+    setup do
+      @dorian = create(:user, handle: "dorianmariefr")
+      @nohandle = create(:user, handle: nil)
+    end
+
+    should "return an user if the slug matches" do
+      assert_equal @dorian, User.find_by_slug!("dorianmariefr")
+    end
+
+    should "raise error if not found" do
+      assert_raises ActiveRecord::RecordNotFound do
+        User.find_by_slug!(SecureRandom.hex)
       end
     end
 
-    context "not founded" do
-      should "return nil when using id" do
-        refute User.find_by_slug(-9999)
-      end
+    should "be able to find by id" do
+      assert_equal @dorian, User.find_by_slug!(@dorian.id)
+      assert_equal @nohandle, User.find_by_slug!(@nohandle.id)
+    end
 
-      should "return nil when not founded by handle" do
-        refute User.find_by_slug("notfoundable")
+    should "not return an user with nil handle if searching for nil" do
+      assert_raises ActiveRecord::RecordNotFound do
+        User.find_by_slug!(nil)
       end
+    end
+
+    should "not return an user with nil handle if searching for blank" do
+      assert_raises ActiveRecord::RecordNotFound do
+        User.find_by_slug!("")
+      end
+    end
+  end
+
+  context ".find_by_name" do
+    setup do
+      @dorian = create(:user, handle: "dorianmariefr")
+      @nohandle = create(:user, handle: nil)
+    end
+
+    should "return an user if the slug matches" do
+      assert_equal @dorian, User.find_by_name("dorianmariefr")
+    end
+
+    should "raise error if not found" do
+      assert_nil User.find_by_name(SecureRandom.hex)
+    end
+
+    should "not return an user with nil handle if searching for nil" do
+      assert_nil User.find_by_name(nil)
+    end
+
+    should "not return an user with nil handle if searching for blank" do
+      assert_nil User.find_by_name("")
+    end
+  end
+
+  context ".find_by_blocked" do
+    setup do
+      @dorian = create(:user, handle: "dorianmariefr")
+      @nohandle = create(:user, handle: nil)
+    end
+
+    should "return an user if the slug matches" do
+      assert_equal @dorian, User.find_by_blocked("dorianmariefr")
+    end
+
+    should "raise error if not found" do
+      assert_nil User.find_by_blocked(SecureRandom.hex)
+    end
+
+    should "not return an user with nil handle if searching for nil" do
+      assert_nil User.find_by_blocked(nil)
+    end
+
+    should "not return an user with nil handle if searching for blank" do
+      assert_nil User.find_by_blocked("")
     end
   end
 
