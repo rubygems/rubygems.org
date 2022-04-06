@@ -359,25 +359,25 @@ class UserTest < ActiveSupport::TestCase
       should "be true if the users mfa level is ui_and_api" do
         user = create(:user, mfa_level: "ui_and_api")
 
-        assert user.strong_mfa_level?
+        assert_predicate user, :strong_mfa_level?
       end
 
       should "be true if the users mfa level is ui_and_gem_signin" do
         user = create(:user, mfa_level: "ui_and_gem_signin")
 
-        assert user.strong_mfa_level?
+        assert_predicate user, :strong_mfa_level?
       end
 
       should "be false if users mfa level is ui_only" do
         user = create(:user, mfa_level: "ui_only")
 
-        refute user.strong_mfa_level?
+        refute_predicate user, :strong_mfa_level?
       end
 
       should "be false if users has mfa disabled" do
         user = create(:user, mfa_level: "disabled")
 
-        refute user.strong_mfa_level?
+        refute_predicate user, :strong_mfa_level?
       end
     end
 
@@ -393,7 +393,7 @@ class UserTest < ActiveSupport::TestCase
           rubygem_id: my_rubygem.id
         )
 
-        refute user.mfa_recommended?
+        refute_predicate user, :mfa_recommended?
       end
 
       should "be true when user owns a gem with more downloads than the recommended threshold" do
@@ -407,7 +407,7 @@ class UserTest < ActiveSupport::TestCase
           rubygem_id: my_rubygem.id
         )
 
-        assert user.mfa_recommended?
+        assert_predicate user, :mfa_recommended?
       end
 
       should "be false if a user already has a strong mfa level set" do
@@ -421,7 +421,7 @@ class UserTest < ActiveSupport::TestCase
           rubygem_id: my_rubygem.id
         )
 
-        refute user.mfa_recommended?
+        refute_predicate user, :mfa_recommended?
       end
     end
   end
