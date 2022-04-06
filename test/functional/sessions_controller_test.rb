@@ -35,7 +35,7 @@ class SessionsControllerTest < ActionController::TestCase
         end
 
         should "make user logged in" do
-          assert @controller.request.env[:clearance].signed_in?
+          assert_predicate @controller.request.env[:clearance], :signed_in?
         end
       end
 
@@ -52,7 +52,7 @@ class SessionsControllerTest < ActionController::TestCase
         end
 
         should "make user logged in" do
-          assert @controller.request.env[:clearance].signed_in?
+          assert_predicate @controller.request.env[:clearance], :signed_in?
         end
       end
 
@@ -70,7 +70,7 @@ class SessionsControllerTest < ActionController::TestCase
         end
 
         should "not sign in the user" do
-          refute @controller.request.env[:clearance].signed_in?
+          refute_predicate @controller.request.env[:clearance], :signed_in?
         end
 
         should "clear user name in session" do
@@ -92,7 +92,7 @@ class SessionsControllerTest < ActionController::TestCase
       should redirect_to("the dashboard") { dashboard_path }
 
       should "sign in the user" do
-        assert @controller.request.env[:clearance].signed_in?
+        assert_predicate @controller.request.env[:clearance], :signed_in?
       end
     end
 
@@ -110,7 +110,7 @@ class SessionsControllerTest < ActionController::TestCase
       end
 
       should "not sign in the user" do
-        refute @controller.request.env[:clearance].signed_in?
+        refute_predicate @controller.request.env[:clearance], :signed_in?
       end
     end
 
@@ -121,7 +121,7 @@ class SessionsControllerTest < ActionController::TestCase
 
       should respond_with :unauthorized
       should "not sign in the user" do
-        refute @controller.request.env[:clearance].signed_in?
+        refute_predicate @controller.request.env[:clearance], :signed_in?
       end
     end
 
@@ -144,7 +144,7 @@ class SessionsControllerTest < ActionController::TestCase
     should redirect_to("login page") { sign_in_path }
 
     should "sign out the user" do
-      refute @controller.request.env[:clearance].signed_in?
+      refute_predicate @controller.request.env[:clearance], :signed_in?
     end
   end
 

@@ -151,7 +151,7 @@ class VersionTest < ActiveSupport::TestCase
       assert @version.save
       assert @number_version.save
       assert @platform_version.save
-      refute @dup_version.valid?
+      refute_predicate @dup_version, :valid?
     end
 
     should "be able to find dependencies" do
@@ -309,30 +309,30 @@ class VersionTest < ActiveSupport::TestCase
 
     should "be invalid with trailing zero in segments" do
       version = build(:version, rubygem: @rubygem, number: "1.0.0.0")
-      refute version.valid?
+      refute_predicate version, :valid?
       assert_equal(["has already been taken. Existing version: 1.0.0"], version.errors.messages[:canonical_number])
     end
 
     should "be invalid with fewer zero in segments" do
       version = build(:version, rubygem: @rubygem, number: "1.0")
-      refute version.valid?
+      refute_predicate version, :valid?
       assert_equal(["has already been taken. Existing version: 1.0.0"], version.errors.messages[:canonical_number])
     end
 
     should "be invalid with leading zero in significant segments" do
       version = build(:version, rubygem: @rubygem, number: "01.0.0")
-      refute version.valid?
+      refute_predicate version, :valid?
       assert_equal(["has already been taken. Existing version: 1.0.0"], version.errors.messages[:canonical_number])
     end
 
     should "be valid in a different platform" do
       version = build(:version, rubygem: @rubygem, number: "1.0.0", platform: "win32")
-      assert version.valid?
+      assert_predicate version, :valid?
     end
 
     should "be valid with prerelease" do
       version = build(:version, rubygem: @rubygem, number: "1.0.0.pre")
-      assert version.valid?
+      assert_predicate version, :valid?
     end
   end
 
@@ -355,19 +355,19 @@ class VersionTest < ActiveSupport::TestCase
 
     should "be invalid with platform longer than maximum field length" do
       @version.platform = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
-      refute @version.valid?
+      refute_predicate @version, :valid?
       assert_equal(["is too long (maximum is 255 characters)"], @version.errors.messages[:platform])
     end
 
     should "be invalid with number longer than maximum field length" do
       long_number_suffix = ".1" * (Gemcutter::MAX_FIELD_LENGTH + 1)
       @version.number = "1#{long_number_suffix}"
-      refute @version.valid?
+      refute_predicate @version, :valid?
       assert_equal(["is too long (maximum is 255 characters)"], @version.errors.messages[:number])
     end
     should "be invalid with licenses longer than maximum field length" do
       @version.licenses = "r" * (Gemcutter::MAX_FIELD_LENGTH + 1)
-      refute @version.valid?
+      refute_predicate @version, :valid?
       assert_equal(["is too long (maximum is 255 characters)"], @version.errors.messages[:licenses])
     end
 
@@ -376,7 +376,7 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "not be platformed" do
-      refute @version.platformed?
+      refute_predicate @version, :platformed?
     end
 
     should "save full name" do
@@ -396,14 +396,14 @@ class VersionTest < ActiveSupport::TestCase
         version = create(:version, platform: platform)
         slug = "#{version.number}-#{platform}"
 
-        assert version.platformed?
+        assert_predicate version, :platformed?
         assert_equal version.reload, Version.find_from_slug!(version.rubygem_id, slug)
         assert_equal slug, version.slug
       end
     end
 
     should "have a default download count" do
-      assert @version.downloads_count.zero?
+      assert_predicate @version.downloads_count, :zero?
     end
 
     should "give no version flag for the latest version" do
@@ -605,8 +605,8 @@ class VersionTest < ActiveSupport::TestCase
     end
 
     should "know if it is a prelease version" do
-      assert @prerelease.prerelease?
-      refute @release.prerelease?
+      assert_predicate @prerelease, :prerelease?
+      refute_predicate @release, :prerelease?
     end
 
     should "return prerelease gems from the prerelease named scope" do
@@ -734,10 +734,10 @@ class VersionTest < ActiveSupport::TestCase
       #     jumping around the place
       #  b) people can't hijack the latest gem spot by building in the far
       #     future, but pushing today
-      @subscribed_one.update(built_at: Time.zone.now - 3.days,
-                             created_at: Time.zone.now - 1.day)
-      @subscribed_two.update(built_at: Time.zone.now - 2.days,
-                             created_at: Time.zone.now - 2.days)
+      @subscribed_one.update(built_at: 3.days.ago,
+                             created_at: 1.day.ago)
+      @subscribed_two.update(built_at: 2.days.ago,
+                             created_at: 2.days.ago)
 
       # Even though gem two was build before gem one, it was pushed to gemcutter first
       # Thus, we should have from newest to oldest, gem one, then gem two
@@ -872,9 +872,9 @@ class VersionTest < ActiveSupport::TestCase
     g = Rubygem.new(name: "test-gem")
     v = Version.new(authors: %w[arthurnn dwradcliffe], number: 1, platform: "ruby", rubygem: g)
     assert_equal "arthurnn, dwradcliffe", v.authors
-    assert v.valid?
+    assert_predicate v, :valid?
     assert_equal "arthurnn, dwradcliffe", v.authors
-    assert v.valid?
+    assert_predicate v, :valid?
   end
 
   should "not allow full name collision" do
@@ -882,7 +882,7 @@ class VersionTest < ActiveSupport::TestCase
     Version.create(authors: %w[arthurnn dwradcliffe], number: "0.0.1", platform: "ruby", rubygem: g1)
     g2 = Rubygem.create(name: "test-gem")
     v2 = Version.new(authors: %w[arthurnn dwradcliffe], number: "733.t-0.0.1", platform: "ruby", rubygem: g2)
-    refute v2.valid?
+    refute_predicate v2, :valid?
     assert_equal [:full_name], v2.errors.attribute_names
   end
 
@@ -926,13 +926,13 @@ class VersionTest < ActiveSupport::TestCase
 
     should "return true if signature is expired" do
       @version.cert_chain.last.not_after = 1.year.ago
-      assert @version.signature_expired?
+      assert_predicate @version, :signature_expired?
     end
 
     should "return false if signature is not expired" do
       @version.cert_chain.last.not_after = 1.year.from_now
       @version.cert_chain.first.not_after = 1.year.from_now
-      refute @version.signature_expired?
+      refute_predicate @version, :signature_expired?
     end
   end
 

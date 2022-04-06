@@ -29,7 +29,7 @@ class S3Utils
       body = @s3.get_object(key: vs3.key, bucket: @bucket, version_id: vs3.version_id).body.read
       md5 = Digest::MD5.hexdigest(body)
       filename = "#{version_full_name}-#{md5[0..5]}.gem"
-      File.open(filename, "w") { |file| file.write(body) }
+      File.write(filename, body)
       filename
     end
   end

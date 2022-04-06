@@ -1,6 +1,6 @@
 class GemTypo
   DOWNLOADS_THRESHOLD = 10_000
-  LAST_RELEASE_TIME   = Time.zone.now - 5.years
+  LAST_RELEASE_TIME   = 5.years.ago
 
   attr_reader :protected_gem
 

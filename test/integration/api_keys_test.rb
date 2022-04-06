@@ -19,8 +19,8 @@ class ApiKeysTest < SystemTest
     click_button "Create"
 
     assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
-    assert @user.api_keys.last.can_index_rubygems?
-    refute @user.api_keys.last.mfa_enabled?
+    assert_predicate @user.api_keys.last, :can_index_rubygems?
+    refute_predicate @user.api_keys.last, :mfa_enabled?
   end
 
   test "creating new api key with MFA UI enabled" do
@@ -34,7 +34,7 @@ class ApiKeysTest < SystemTest
     click_button "Create"
 
     assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
-    assert @user.api_keys.last.mfa_enabled?
+    assert_predicate @user.api_keys.last, :mfa_enabled?
   end
 
   test "creating new api key with MFA UI and API enabled" do
@@ -47,7 +47,7 @@ class ApiKeysTest < SystemTest
     click_button "Create"
 
     assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
-    assert @user.api_keys.last.mfa_enabled?
+    assert_predicate @user.api_keys.last, :mfa_enabled?
   end
 
   test "update api key" do
@@ -61,7 +61,7 @@ class ApiKeysTest < SystemTest
     refute page.has_content? "Enable MFA"
     click_button "Update"
 
-    assert api_key.reload.can_add_owner?
+    assert_predicate api_key.reload, :can_add_owner?
   end
 
   test "update api key with MFA UI enabled" do
@@ -77,8 +77,8 @@ class ApiKeysTest < SystemTest
     check "mfa"
     click_button "Update"
 
-    assert api_key.reload.can_add_owner?
-    assert @user.api_keys.last.mfa_enabled?
+    assert_predicate api_key.reload, :can_add_owner?
+    assert_predicate @user.api_keys.last, :mfa_enabled?
   end
 
   test "update api key with MFA UI and API enabled" do
@@ -94,8 +94,8 @@ class ApiKeysTest < SystemTest
     refute page.has_content? "Enable MFA"
     click_button "Update"
 
-    assert api_key.reload.can_add_owner?
-    assert @user.api_keys.last.mfa_enabled?
+    assert_predicate api_key.reload, :can_add_owner?
+    assert_predicate @user.api_keys.last, :mfa_enabled?
   end
 
   test "deleting api key" do

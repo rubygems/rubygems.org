@@ -112,7 +112,7 @@ class RubygemsHelperTest < ActionView::TestCase
           title: u.display_handle
       end.join
       assert_equal expected_links, links_to_owners(@rubygem)
-      assert links_to_owners(@rubygem).html_safe?
+      assert_predicate links_to_owners(@rubygem), :html_safe?
     end
 
     should "create links to gem owners without mfa" do
@@ -127,7 +127,7 @@ class RubygemsHelperTest < ActionView::TestCase
           title: u.display_handle
       end.join
       assert_equal expected_links, links_to_owners_without_mfa(rubygem)
-      assert links_to_owners_without_mfa(rubygem).html_safe?
+      assert_predicate links_to_owners_without_mfa(rubygem), :html_safe?
     end
   end
 
@@ -135,20 +135,20 @@ class RubygemsHelperTest < ActionView::TestCase
     should "sanitize copy" do
       text = '<script>alert("foo");</script>Rails authentication & authorization'
       assert_equal "<p>alert(&quot;foo&quot;);Rails authentication &amp; authorization</p>", simple_markup(text)
-      assert simple_markup(text).html_safe?
+      assert_predicate simple_markup(text), :html_safe?
     end
 
     should "work on rdoc strings" do
       text = "== FOO"
       assert_equal "\n<h2>FOO</h2>\n", simple_markup(text)
-      assert simple_markup(text).html_safe?
+      assert_predicate simple_markup(text), :html_safe?
     end
 
     should "sanitize rdoc strings" do
       text = "== FOO\nclick[javascript:alert('foo')]"
       assert_equal "\n<h2>FOO</h2>\n\n<p><a>click</a></p>\n", simple_markup(text)
 
-      assert simple_markup(text).html_safe?
+      assert_predicate simple_markup(text), :html_safe?
     end
   end
 

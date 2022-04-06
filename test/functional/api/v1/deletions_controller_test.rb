@@ -44,7 +44,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           should respond_with :success
           should "keep the gem, deindex, keep owner" do
             assert_equal 1, @rubygem.versions.count
-            assert @rubygem.versions.indexed.count.zero?
+            assert_predicate @rubygem.versions.indexed.count, :zero?
           end
           should "record the deletion" do
             assert_not_nil Deletion.where(user: @user,
@@ -91,7 +91,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           should respond_with :success
           should "keep the gem, deindex, keep owner" do
             assert_equal 1, @rubygem.versions.count
-            assert @rubygem.versions.indexed.count.zero?
+            assert_predicate @rubygem.versions.indexed.count, :zero?
           end
           should "record the deletion" do
             assert_not_nil Deletion.where(user: @user,
@@ -116,7 +116,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         should respond_with :success
         should "keep the gem, deindex, keep owner" do
           assert_equal 1, @rubygem.versions.count
-          assert @rubygem.versions.indexed.count.zero?
+          assert_predicate @rubygem.versions.indexed.count, :zero?
         end
         should "record the deletion" do
           assert_not_nil Deletion.where(user: @user,

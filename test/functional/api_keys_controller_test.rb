@@ -102,7 +102,7 @@ class ApiKeysControllerTest < ActionController::TestCase
 
           assert_equal "test", api_key.name
           assert @controller.session[:api_key]
-          assert api_key.can_add_owner?
+          assert_predicate api_key, :can_add_owner?
         end
         should "deliver api key created email" do
           refute_empty ActionMailer::Base.deliveries
@@ -151,7 +151,7 @@ class ApiKeysControllerTest < ActionController::TestCase
 
         should redirect_to("the key index page") { profile_api_keys_path }
         should "update test key scope" do
-          assert @api_key.can_add_owner?
+          assert_predicate @api_key, :can_add_owner?
         end
       end
 
@@ -165,7 +165,7 @@ class ApiKeysControllerTest < ActionController::TestCase
         end
 
         should "not update scope of test key" do
-          refute @api_key.can_add_owner?
+          refute_predicate @api_key, :can_add_owner?
         end
       end
     end

@@ -11,7 +11,7 @@ class DeletionTest < ActiveSupport::TestCase
 
   should "be indexed" do
     @version.indexed = false
-    assert Deletion.new(version: @version, user: @user).invalid?,
+    assert_predicate Deletion.new(version: @version, user: @user), :invalid?,
       "Deletion should only work on indexed gems"
   end
 
@@ -33,8 +33,8 @@ class DeletionTest < ActiveSupport::TestCase
       end
 
       should "unindexes" do
-        refute @version.indexed?
-        refute @version.rubygem.indexed?
+        refute_predicate @version, :indexed?
+        refute_predicate @version.rubygem, :indexed?
       end
 
       should "be considered deleted" do
@@ -42,7 +42,7 @@ class DeletionTest < ActiveSupport::TestCase
       end
 
       should "no longer be latest" do
-        refute @version.reload.latest?
+        refute_predicate @version.reload, :latest?
       end
 
       should "keep the yanked time" do
@@ -106,12 +106,12 @@ class DeletionTest < ActiveSupport::TestCase
       end
 
       should "index rubygem and version" do
-        assert @version.rubygem.indexed?
-        assert @version.indexed?
+        assert_predicate @version.rubygem, :indexed?
+        assert_predicate @version, :indexed?
       end
 
       should "reorder versions" do
-        assert @version.reload.latest?
+        assert_predicate @version.reload, :latest?
       end
 
       should "remove the yanked time and yanked_info_checksum" do
@@ -127,7 +127,7 @@ class DeletionTest < ActiveSupport::TestCase
       end
 
       should "remove deletion record" do
-        assert @deletion.destroyed?
+        assert_predicate @deletion, :destroyed?
       end
     end
 

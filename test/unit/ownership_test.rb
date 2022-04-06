@@ -2,7 +2,7 @@ require "test_helper"
 
 class OwnershipTest < ActiveSupport::TestCase
   should "be valid with factory" do
-    assert build(:ownership).valid?
+    assert_predicate build(:ownership), :valid?
   end
 
   should belong_to :rubygem
@@ -92,13 +92,13 @@ class OwnershipTest < ActiveSupport::TestCase
 
     should "not create without a user" do
       ownership = build(:ownership, user: nil)
-      refute ownership.valid?
+      refute_predicate ownership, :valid?
       assert_contains ownership.errors[:user], "must exist"
     end
 
     should "not create without a rubygem" do
       ownership = build(:ownership, rubygem: nil)
-      refute ownership.valid?
+      refute_predicate ownership, :valid?
       assert_contains ownership.errors[:rubygem], "must exist"
     end
   end
@@ -110,13 +110,13 @@ class OwnershipTest < ActiveSupport::TestCase
 
     should "return false when email confirmation token has expired" do
       @ownership.update_attribute(:token_expires_at, 2.minutes.ago)
-      refute @ownership.valid_confirmation_token?
+      refute_predicate @ownership, :valid_confirmation_token?
     end
 
     should "return true when email confirmation token has not expired" do
-      two_minutes_in_future = Time.zone.now + 2.minutes
+      two_minutes_in_future = 2.minutes.from_now
       @ownership.update_attribute(:token_expires_at, two_minutes_in_future)
-      assert @ownership.valid_confirmation_token?
+      assert_predicate @ownership, :valid_confirmation_token?
     end
   end
 
@@ -130,7 +130,7 @@ class OwnershipTest < ActiveSupport::TestCase
     should "create confirmed ownership" do
       ownership = Ownership.last
       assert_nil ownership.token
-      assert ownership.confirmed?
+      assert_predicate ownership, :confirmed?
     end
   end
 
@@ -197,12 +197,12 @@ class OwnershipTest < ActiveSupport::TestCase
     end
 
     should "return false if not confirmed" do
-      refute @ownership.confirmed?
+      refute_predicate @ownership, :confirmed?
     end
 
     should "return true if confirmed" do
       @ownership.confirm!
-      assert @ownership.confirmed?
+      assert_predicate @ownership, :confirmed?
     end
   end
 
@@ -214,12 +214,12 @@ class OwnershipTest < ActiveSupport::TestCase
     end
 
     should "return false if not confirmed" do
-      assert @ownership.unconfirmed?
+      assert_predicate @ownership, :unconfirmed?
     end
 
     should "return true if confirmed" do
       @ownership.confirm!
-      refute @ownership.unconfirmed?
+      refute_predicate @ownership, :unconfirmed?
     end
   end
 end

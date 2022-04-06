@@ -69,7 +69,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     context "On GET to show for a gem that not hosted" do
       setup do
         @rubygem = create(:rubygem)
-        assert @rubygem.versions.count.zero?
+        assert_predicate @rubygem.versions.count, :zero?
         get :show, params: { id: @rubygem.to_param }, format: "json"
       end
 
@@ -264,7 +264,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           ownership = Rubygem.last.ownerships.first
 
           assert_equal @user, ownership.user
-          assert ownership.confirmed?
+          assert_predicate ownership, :confirmed?
         end
       end
     end
@@ -283,7 +283,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         ownership = Rubygem.last.ownerships.first
 
         assert_equal @user, ownership.user
-        assert ownership.confirmed?
+        assert_predicate ownership, :confirmed?
       end
     end
 
@@ -359,7 +359,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
       should respond_with :unprocessable_entity
       should "not register gem" do
-        assert Rubygem.count.zero?
+        assert_predicate Rubygem.count, :zero?
         assert_match(/RubyGems\.org cannot process this gem/, @response.body)
       end
     end
@@ -402,7 +402,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
       should respond_with 403
       should "not register gem" do
-        assert Rubygem.count.zero?
+        assert_predicate Rubygem.count, :zero?
         assert_match(/There was a problem saving your gem: Name 'rubygems' is a reserved gem name./, @response.body)
       end
     end
@@ -522,7 +522,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           assert_equal 2, Rubygem.last.versions.count
         end
         should "disable mfa requirement" do
-          refute @rubygem.mfa_required?
+          refute_predicate @rubygem, :mfa_required?
         end
       end
     end

@@ -26,7 +26,7 @@ class ApplicationHelperTest < ActionView::TestCase
 
     assert_equal "alert(&quot;foo&quot;);Rails authentication &amp; authorization",
       short_info(rubygem.versions.most_recent)
-    assert short_info(rubygem.versions.most_recent).html_safe?
+    assert_predicate short_info(rubygem.versions.most_recent), :html_safe?
   end
 
   context "rubygem" do

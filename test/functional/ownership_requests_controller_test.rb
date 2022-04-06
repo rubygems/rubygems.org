@@ -151,7 +151,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           should "add ownership record" do
             ownership = Ownership.find_by(rubygem: @rubygem, user: @requester)
             refute_nil ownership
-            assert ownership.confirmed?
+            assert_predicate ownership, :confirmed?
           end
           should "send email notification" do
             ActionMailer::Base.deliveries.clear

@@ -18,11 +18,11 @@ class UserTest < ActiveSupport::TestCase
 
       should "be between 2 and 40 characters" do
         user = build(:user, handle: "a")
-        refute user.valid?
+        refute_predicate user, :valid?
         assert_contains user.errors[:handle], "is too short (minimum is 2 characters)"
 
         user.handle = "a" * 41
-        refute user.valid?
+        refute_predicate user, :valid?
         assert_contains user.errors[:handle], "is too long (maximum is 40 characters)"
 
         user.handle = "abcdef"
@@ -32,12 +32,12 @@ class UserTest < ActiveSupport::TestCase
 
       should "be invalid when an empty string" do
         user = build(:user, handle: "")
-        refute user.valid?
+        refute_predicate user, :valid?
       end
 
       should "be valid when nil and other users have a nil handle" do
-        assert build(:user, handle: nil).valid?
-        assert build(:user, handle: nil).valid?
+        assert_predicate build(:user, handle: nil), :valid?
+        assert_predicate build(:user, handle: nil), :valid?
       end
 
       should "show user id if no handle set" do
@@ -52,18 +52,18 @@ class UserTest < ActiveSupport::TestCase
     context "email" do
       should "be less than 255 characters" do
         user = build(:user, email: format("%s@example.com", "a" * 255))
-        refute user.valid?
+        refute_predicate user, :valid?
         assert_contains user.errors[:email], "is too long (maximum is 255 characters)"
       end
 
       should "be valid when it matches URI mail email regex" do
         user = build(:user, email: "mail@example.com")
-        assert user.valid?
+        assert_predicate user, :valid?
       end
 
       should "be invalid when it doesn't match URI mail email regex" do
         user = build(:user, email: "random[a..z]mdhlwqui@163.com")
-        refute user.valid?
+        refute_predicate user, :valid?
         assert_contains user.errors[:email], "is invalid"
       end
 
@@ -74,7 +74,7 @@ class UserTest < ActiveSupport::TestCase
           Gemcutter::Application.config.stubs(:toxic_domains_filepath).returns(f.path)
 
           user = build(:user, email: "mail@thing.com")
-          refute user.valid?
+          refute_predicate user, :valid?
           assert_contains user.errors[:email], "domain 'thing.com' has been blocked for spamming. Please use a valid personal email."
         end
       end
@@ -86,7 +86,7 @@ class UserTest < ActiveSupport::TestCase
           Gemcutter::Application.config.stubs(:toxic_domains_filepath).returns(f.path)
 
           user = build(:user, email: "${10000263+9999729}")
-          refute user.valid?
+          refute_predicate user, :valid?
           assert_contains user.errors[:email], "is not a valid email"
         end
       end
@@ -98,7 +98,7 @@ class UserTest < ActiveSupport::TestCase
           Gemcutter::Application.config.stubs(:toxic_domains_filepath).returns(f.path)
 
           user = build(:user, email: "")
-          refute user.valid?
+          refute_predicate user, :valid?
           assert_contains user.errors[:email], "is not a valid email"
         end
       end
@@ -107,7 +107,7 @@ class UserTest < ActiveSupport::TestCase
     context "unconfirmed_email" do
       should "be invalid when it doesn't match URI mail email regex" do
         user = build(:user, unconfirmed_email: ">\"<script>alert(document.cookie)</script>@gmail.com")
-        refute user.valid?
+        refute_predicate user, :valid?
         assert_contains user.errors[:unconfirmed_email], "is invalid"
       end
     end
@@ -125,11 +125,11 @@ class UserTest < ActiveSupport::TestCase
     context "password" do
       should "be between 10 and 200 characters" do
         user = build(:user, password: "%5a&12ed/")
-        refute user.valid?
+        refute_predicate user, :valid?
         assert_contains user.errors[:password], "is too short (minimum is 10 characters)"
 
         user.password = "#{'a8b5d2d451' * 20}a"
-        refute user.valid?
+        refute_predicate user, :valid?
         assert_contains user.errors[:password], "is too long (maximum is 200 characters)"
 
         user.password = "633!cdf7b3426c9%f6dd1a0b62d4ce44c4f544e%"
@@ -139,12 +139,12 @@ class UserTest < ActiveSupport::TestCase
 
       should "be invalid when an empty string" do
         user = build(:user, password: "")
-        refute user.valid?
+        refute_predicate user, :valid?
       end
 
       should "be invalid when it's found in a data breach" do
         user = build(:user, password: "1234567890")
-        refute user.valid?
+        refute_predicate user, :valid?
         assert_contains user.errors[:password], "has previously appeared in a data breach and should not be used"
       end
     end
@@ -272,19 +272,19 @@ class UserTest < ActiveSupport::TestCase
     context "#valid_confirmation_token?" do
       should "return false when email confirmation token has expired" do
         @user.update_attribute(:token_expires_at, 2.minutes.ago)
-        refute @user.valid_confirmation_token?
+        refute_predicate @user, :valid_confirmation_token?
       end
 
       should "reutrn true when email confirmation token has not expired" do
-        two_minutes_in_future = Time.zone.now + 2.minutes
+        two_minutes_in_future = 2.minutes.from_now
         @user.update_attribute(:token_expires_at, two_minutes_in_future)
-        assert @user.valid_confirmation_token?
+        assert_predicate @user, :valid_confirmation_token?
       end
     end
 
     context "two factor authentication" do
       should "disable mfa by default" do
-        refute @user.mfa_enabled?
+        refute_predicate @user, :mfa_enabled?
       end
 
       context "when enabled" do
@@ -303,8 +303,8 @@ class UserTest < ActiveSupport::TestCase
         end
 
         should "return true for mfa status check" do
-          assert @user.mfa_enabled?
-          refute @user.mfa_disabled?
+          assert_predicate @user, :mfa_enabled?
+          refute_predicate @user, :mfa_disabled?
         end
 
         should "return true for otp in last interval" do
@@ -328,7 +328,7 @@ class UserTest < ActiveSupport::TestCase
             assert @user.email.start_with?("security+locked-")
             assert @user.email.end_with?("@rubygems.org")
             assert_empty @user.mfa_recovery_codes
-            assert @user.mfa_disabled?
+            assert_predicate @user, :mfa_disabled?
           end
 
           should "reset api key" do
@@ -349,8 +349,8 @@ class UserTest < ActiveSupport::TestCase
         end
 
         should "return false for mfa status check" do
-          refute @user.mfa_enabled?
-          assert @user.mfa_disabled?
+          refute_predicate @user, :mfa_enabled?
+          assert_predicate @user, :mfa_disabled?
         end
       end
     end
@@ -501,7 +501,7 @@ class UserTest < ActiveSupport::TestCase
       end
       should "mark rubygem unowned" do
         @user.destroy
-        assert @rubygem.unowned?
+        assert_predicate @rubygem, :unowned?
       end
     end
 
@@ -517,7 +517,7 @@ class UserTest < ActiveSupport::TestCase
       end
       should "not mark rubygem unowned" do
         @user.destroy
-        refute @rubygem.unowned?
+        refute_predicate @rubygem, :unowned?
       end
     end
   end
@@ -542,17 +542,17 @@ class UserTest < ActiveSupport::TestCase
     setup { @user = create(:user) }
 
     should "return false when remember_token_expires_at is not set" do
-      refute @user.remember_me?
+      refute_predicate @user, :remember_me?
     end
 
     should "return false when remember_token has expired" do
       @user.update_attribute(:remember_token_expires_at, 1.second.ago)
-      refute @user.remember_me?
+      refute_predicate @user, :remember_me?
     end
 
     should "return true when remember_token has not expired" do
       @user.update_attribute(:remember_token_expires_at, 1.second.from_now)
-      assert @user.remember_me?
+      assert_predicate @user, :remember_me?
     end
   end
 
