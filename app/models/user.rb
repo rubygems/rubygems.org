@@ -163,7 +163,7 @@ class User < ApplicationRecord
   end
 
   def confirm_email!
-    update_email! if unconfirmed_email
+    return false if unconfirmed_email && !update_email
     update!(email_confirmed: true, confirmation_token: nil)
   end
 
@@ -279,9 +279,9 @@ class User < ApplicationRecord
     save!(validate: false)
   end
 
-  def update_email!
+  def update_email
     self.attributes = { email: unconfirmed_email, unconfirmed_email: nil, mail_fails: 0 }
-    save!(validate: false)
+    save
   end
 
   def unconfirmed_email_uniqueness

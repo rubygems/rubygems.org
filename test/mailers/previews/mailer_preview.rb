@@ -1,6 +1,6 @@
 class MailerPreview < ActionMailer::Preview
   def email_reset
-    Mailer.email_reset(User.last)
+    Mailer.email_reset(User.first)
   end
 
   def email_reset_update

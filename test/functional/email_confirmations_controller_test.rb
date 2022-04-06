@@ -42,6 +42,36 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       end
     end
 
+    context "mutliple user has same unconfirmed email" do
+      setup do
+        @email = "some@email.com"
+        @user.update_attribute(:unconfirmed_email, @email)
+        @second_user = create(:user, unconfirmed_email: @email)
+        get :update, params: { token: @user.confirmation_token }
+      end
+
+      should redirect_to("the homepage") { root_url }
+
+      should "confirm email for first user" do
+        assert_equal @email, @user.reload.email
+      end
+
+      context "second user sends confirmation request" do
+        setup do
+          get :update, params: { token: @second_user.confirmation_token }
+        end
+
+        should "show error to second user on confirmation request and not " do
+          assert_equal "Email address has already been taken", flash[:alert]
+        end
+
+        should "not confirm email for first user" do
+          assert_predicate @second_user, :unconfirmed_email?
+          refute_equal @email, @second_user.reload.email
+        end
+      end
+    end
+
     context "user has mfa enabled" do
       setup do
         @user.mfa_ui_only!
