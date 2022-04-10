@@ -31,7 +31,7 @@ class FastlyLogProcessor
       log_ticket.update(status: "processed", processed_count: processed_count)
     end
     StatsD.gauge("fastly_log_processor.processed_count", processed_count)
-  rescue
+  rescue StandardError
     log_ticket&.update(status: "failed")
     raise
   end
