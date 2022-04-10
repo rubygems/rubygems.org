@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+
+if ARGV.empty?
+  puts "Disables MFA and resets password of the user account."
+  puts "USAGE: script/disable_mfa USERNAME|EMAIL"
+  exit
+end
+
+name = ARGV.first
+puts "Disabling MFA for user #{name}..."
+
+ENV["RAILS_ENV"] ||= "production"
+require_relative "../config/environment"
+
+begin
+  user = User.find_by_name(name)
+  puts "Found user: #{user.handle} #{user.email}"
+  user.disable_mfa!
+  user.password = SecureRandom.hex(20).encode("UTF-8")
+  user.save!
+  puts "Done."
+rescue ActiveRecord::RecordNotFound
+  puts "User #{name} not found."
+  exit 1 # return non-zero on fail
+end
