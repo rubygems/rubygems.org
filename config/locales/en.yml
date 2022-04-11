@@ -284,8 +284,8 @@ en:
     otp_code: OTP code
     require_mfa_disabled: Your multifactor authentication has been enabled. You have to disable it first.
     require_mfa_enabled: Your multifactor authentication has not been enabled. You have to enable it first.
-    setup_recommended: For protection of your account and your gems, we encourage you to set up multifactor authentication.
-    strong_mfa_level_recommended: For protection of your account and your gems, we encourage you to change your MFA level to "UI and gem signin" or "UI and API".
+    setup_recommended: For protection of your account and your gems, we encourage you to set up multifactor authentication. Your account will be required to have MFA enabled in the future.
+    strong_mfa_level_recommended: For protection of your account and your gems, we encourage you to change your MFA level to "UI and gem signin" or "UI and API". Your account will be required to have MFA enabled on one of these levels in the future.
     new:
       title: Enabling multifactor auth
       scan_prompt: Please scan the qr-code with your authenticator app. If you cannot scan the code, add information below into your app manually.

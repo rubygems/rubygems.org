@@ -111,7 +111,8 @@ class SessionsControllerTest < ActionController::TestCase
           should redirect_to("the mfa setup page") { new_multifactor_auth_path }
 
           should "set notice flash" do
-            expected_notice = "For protection of your account and your gems, we encourage you to set up multifactor authentication."
+            expected_notice = "For protection of your account and your gems, we encourage you to set up multifactor authentication. " \
+                              "Your account will be required to have MFA enabled in the future."
             assert_equal expected_notice, flash[:notice]
           end
         end
@@ -134,7 +135,8 @@ class SessionsControllerTest < ActionController::TestCase
 
             should "set notice flash" do
               expected_notice = "For protection of your account and your gems, we encourage you to change your MFA level " \
-                                "to \"UI and gem signin\" or \"UI and API\"."
+                                "to \"UI and gem signin\" or \"UI and API\". Your account will be required to have MFA enabled " \
+                                "on one of these levels in the future."
 
               assert_equal expected_notice, flash[:notice]
             end

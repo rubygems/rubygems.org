@@ -132,7 +132,8 @@ class SignInTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Sign in"
 
-    expected_notice = "For protection of your account and your gems, we encourage you to set up multifactor authentication."
+    expected_notice = "For protection of your account and your gems, we encourage you to set up multifactor authentication. " \
+                      "Your account will be required to have MFA enabled in the future."
     assert page.has_selector? "#flash_notice", text: expected_notice
     assert_current_path(new_multifactor_auth_path)
     assert page.has_content? "Sign out"
@@ -157,7 +158,8 @@ class SignInTest < SystemTest
     click_button "Sign in"
 
     expected_notice = "For protection of your account and your gems, we encourage you to change your MFA level " \
-                      "to \"UI and gem signin\" or \"UI and API\"."
+                      "to \"UI and gem signin\" or \"UI and API\". Your account will be required to have MFA enabled " \
+                      "on one of these levels in the future."
     assert page.has_selector? "#flash_notice", text: expected_notice
     assert_current_path(edit_settings_path)
     assert page.has_content? "Sign out"
