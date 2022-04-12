@@ -14,7 +14,7 @@ namespace :linkset do
       affected = invalid_links.update_all(["home = ?", nil])
       puts "Successfully removed #{affected} urls in home"
     end
-  rescue
+  rescue StandardError
     puts "Error: Couldn't update urls"
   end
 end

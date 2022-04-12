@@ -158,13 +158,3 @@ Style/NumericPredicate:
   Exclude:
     - 'app/helpers/searches_helper.rb'
     - 'app/models/rubygem.rb'
-
-# Offense count: 3
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: implicit, explicit
-Style/RescueStandardError:
-  Exclude:
-    - 'app/controllers/api/v1/rubygems_controller.rb'
-    - 'app/jobs/fastly_log_processor.rb'
-    - 'lib/tasks/linkset.rake'
