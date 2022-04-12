@@ -1,4 +1,4 @@
-FROM ruby:3.0-alpine as build
+FROM git as build
 
 ARG RUBYGEMS_VERSION
 
