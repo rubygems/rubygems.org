@@ -53,7 +53,7 @@ class EmailConfirmationsController < ApplicationController
   end
 
   def validate_confirmation_token
-    @user = User.find_by(confirmation_token: params[:token])
+    @user = User.find_by(confirmation_token: token_params)
     redirect_to root_path, alert: t("failure_when_forbidden") unless @user&.valid_confirmation_token?
   end
 
@@ -68,5 +68,9 @@ class EmailConfirmationsController < ApplicationController
 
   def email_params
     params.permit(email_confirmation: :email).require(:email_confirmation).require(:email)
+  end
+
+  def token_params
+    params.permit(:token).require(:token)
   end
 end
