@@ -71,6 +71,6 @@ class EmailConfirmationsController < ApplicationController
   end
 
   def token_params
-    params.permit(:token).fetch(:token, "")
+    params.permit(:token).require(:token)
   end
 end

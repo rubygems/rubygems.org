@@ -33,9 +33,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         get :update, params: { token: [@user.confirmation_token, Clearance::Token.new, Clearance::Token.new] }
       end
 
-      should "warn about invalid url" do
-        assert_equal "Please double check the URL or try submitting it again.", flash[:alert]
-      end
+      should respond_with :bad_request
       should "not sign in user" do
         refute cookies[:remember_token]
       end
