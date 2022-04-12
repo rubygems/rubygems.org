@@ -28,6 +28,19 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       end
     end
 
+    context "array of tokens" do
+      setup do
+        get :update, params: { token: [@user.confirmation_token, Clearance::Token.new, Clearance::Token.new] }
+      end
+
+      should "warn about invalid url" do
+        assert_equal "Please double check the URL or try submitting it again.", flash[:alert]
+      end
+      should "not sign in user" do
+        refute cookies[:remember_token]
+      end
+    end
+
     context "token has expired" do
       setup do
         @user.update_attribute("token_expires_at", 2.minutes.ago)
