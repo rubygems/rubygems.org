@@ -8,15 +8,15 @@ dependencies:
 
 deploy:
   override:
-    - kubernetes-deploy rubygems-$ENVIRONMENT rubygems --template-dir config/deploy/$ENVIRONMENT --bindings=environment=$ENVIRONMENT
+    - krane render -f config/deploy/$ENVIRONMENT --bindings=environment=$ENVIRONMENT --current-sha=$REVISION | krane deploy rubygems-$ENVIRONMENT rubygems --stdin -f config/deploy/$ENVIRONMENT/secrets.ejson
 
 rollback:
   override:
-    - kubernetes-deploy rubygems-$ENVIRONMENT rubygems --template-dir config/deploy/$ENVIRONMENT --bindings=environment=$ENVIRONMENT
+    - krane render -f config/deploy/$ENVIRONMENT --bindings=environment=$ENVIRONMENT --current-sha=$REVISION | krane deploy rubygems-$ENVIRONMENT rubygems  --stdin -f config/deploy/$ENVIRONMENT/secrets.ejson
 
 tasks:
   restart:
     action: Restart application
     description: Trigger the restart of both unicorn and background workers
     steps:
-      - kubernetes-restart rubygems-$ENVIRONMENT rubygems
+      - krane restart rubygems-$ENVIRONMENT rubygems
