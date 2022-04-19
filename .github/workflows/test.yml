@@ -49,7 +49,7 @@ jobs:
       run: bin/rails test
     - name: archive coverage
       if: matrix.rubygems_version == '3.2.31'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: coverage
         path: |
