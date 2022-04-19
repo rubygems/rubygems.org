@@ -11,3 +11,8 @@ updates:
     versions:
     - "> 2.11.473, < 2.12"
   - dependency-name: "rubocop*"
+- package-ecosystem: github-actions
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 99
