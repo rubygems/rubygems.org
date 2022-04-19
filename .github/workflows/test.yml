@@ -21,7 +21,7 @@ jobs:
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
       REQUIRE_TOXIPROXY: true
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Install and start services
       run: |
         docker-compose up -d
@@ -49,7 +49,7 @@ jobs:
       run: bin/rails test
     - name: archive coverage
       if: matrix.rubygems_version == '3.3.11'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: coverage
         path: |
