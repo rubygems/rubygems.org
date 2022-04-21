@@ -476,8 +476,8 @@ es:
         wiki: Wiki
         resend_ownership_confirmation:
         ownership:
-    blacklisted:
-      blacklisted_namespace: Este namespace está reservado por rubygems.org.
+    reserved:
+      reserved_namespace: Este namespace está reservado por rubygems.org.
     dependencies:
       header: dependencias de %{title}
     gem_members:

@@ -56,7 +56,7 @@ class LinksTest < ActiveSupport::TestCase
     assert links.homepage_uri
   end
 
-  context "metadata includes non whitelisted uri key" do
+  context "metadata includes unknown uri key" do
     setup do
       metadata = {
         "homepage_uri"        => "https://example.com",
@@ -67,7 +67,7 @@ class LinksTest < ActiveSupport::TestCase
         "funding_uri"         => "https://example.com",
         "documentation_uri"   => "https://example.com",
         "changelog_uri"       => "https://example.com",
-        "non_whitelisted_uri" => "https://example.com"
+        "unknown_uri"         => "https://example.com"
       }
 
       version = build(:version, metadata: metadata)
@@ -75,15 +75,15 @@ class LinksTest < ActiveSupport::TestCase
       @links = rubygem.links(version)
     end
 
-    should "create method for whitelisted keys" do
-      whitelisted_keys = Links::LINKS.values.reject! { |k| k == "download_uri" }
-      whitelisted_keys.each do |key|
+    should "create method for known keys" do
+      known_keys = Links::LINKS.values.reject! { |k| k == "download_uri" }
+      known_keys.each do |key|
         assert_equal "https://example.com", @links.send(key), "value doesn't match for method: #{key}"
       end
     end
 
-    should "not create method for non whitelisted key" do
-      refute_respond_to @links, "non_whitelisted_uri"
+    should "not create method for unknown key" do
+      refute_respond_to @links, "unknown_uri"
     end
   end
 end

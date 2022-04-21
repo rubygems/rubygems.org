@@ -9,7 +9,7 @@ abort "Use Psych for YAML, install libyaml and reinstall ruby" unless YAML == Ps
 
 module Gem
   class Specification
-    WHITELISTED_CLASSES = %w(
+    ALLOWED_CLASSES = %w(
       Symbol
       Time
       Date
@@ -21,7 +21,7 @@ module Gem
       Gem::Version::Requirement
     )
 
-    WHITELISTED_SYMBOLS = %w(
+    ALLOWED_SYMBOLS = %w(
       development
       runtime
     )
@@ -30,8 +30,8 @@ module Gem
       input = normalize_yaml_input input
       spec = Psych.safe_load(
         input,
-        permitted_classes: WHITELISTED_CLASSES,
-        permitted_symbols: WHITELISTED_SYMBOLS,
+        permitted_classes: ALLOWED_CLASSES,
+        permitted_symbols: ALLOWED_SYMBOLS,
         aliases: true
       )
 
@@ -55,8 +55,8 @@ module Gem
         Zlib::GzipReader.wrap entry do |gz_io|
           Psych.safe_load(
             gz_io.read,
-            permitted_classes: Gem::Specification::WHITELISTED_CLASSES,
-            permitted_symbols: Gem::Specification::WHITELISTED_SYMBOLS,
+            permitted_classes: Gem::Specification::ALLOWED_CLASSES,
+            permitted_symbols: Gem::Specification::ALLOWED_SYMBOLS,
             aliases: true
           )
         end

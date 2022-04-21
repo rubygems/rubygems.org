@@ -360,13 +360,13 @@ class RubygemsControllerTest < ActionController::TestCase
     should respond_with :not_found
   end
 
-  context "On GET to show for a blacklisted gem" do
+  context "On GET to show for a reserved gem" do
     setup do
-      get :show, params: { id: Patterns::GEM_NAME_BLACKLIST.sample }
+      get :show, params: { id: Patterns::GEM_NAME_RESERVED_LIST.sample }
     end
 
     should respond_with :success
-    should "render blacklisted page" do
+    should "render reserved page" do
       assert page.has_content? "This namespace is reserved by rubygems.org."
     end
   end

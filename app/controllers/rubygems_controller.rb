@@ -1,9 +1,9 @@
 class RubygemsController < ApplicationController
   include LatestVersion
-  before_action :set_blacklisted_gem, only: :show, if: :blacklisted?
-  before_action :find_rubygem, only: :show, unless: :blacklisted?
-  before_action :latest_version, only: :show, unless: :blacklisted?
-  before_action :find_versioned_links, only: :show, unless: :blacklisted?
+  before_action :set_reserved_gem, only: :show, if: :reserved?
+  before_action :find_rubygem, only: :show, unless: :reserved?
+  before_action :latest_version, only: :show, unless: :reserved?
+  before_action :find_versioned_links, only: :show, unless: :reserved?
   before_action :set_page, only: :index
 
   def index
@@ -20,8 +20,8 @@ class RubygemsController < ApplicationController
   end
 
   def show
-    if @blacklisted_gem
-      render "blacklisted"
+    if @reserved_gem
+      render "reserved"
     else
       @versions = @rubygem.public_versions(5)
       @adoption = @rubygem.ownership_call
@@ -35,12 +35,12 @@ class RubygemsController < ApplicationController
 
   private
 
-  def blacklisted?
-    (Patterns::GEM_NAME_BLACKLIST.include? params[:id].downcase)
+  def reserved?
+    (Patterns::GEM_NAME_RESERVED_LIST.include? params[:id].downcase)
   end
 
-  def set_blacklisted_gem
-    @blacklisted_gem = params[:id].downcase
+  def set_reserved_gem
+    @reserved_gem = params[:id].downcase
   end
 
   def gem_params
