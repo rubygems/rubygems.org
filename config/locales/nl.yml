@@ -449,8 +449,8 @@ nl:
         wiki: Wiki
         resend_ownership_confirmation:
         ownership:
-    blocklisted:
-      blocklisted_namespace:
+    reserved:
+      reserved_namespace:
     dependencies:
       header: "%{title} afhankelijkheden"
     gem_members:

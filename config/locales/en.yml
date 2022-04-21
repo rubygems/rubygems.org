@@ -433,8 +433,8 @@ en:
         wiki: Wiki
         resend_ownership_confirmation: Resend confirmation
         ownership: Ownership
-    blocklisted:
-      blocklisted_namespace: This namespace is reserved by rubygems.org.
+    reserved:
+      reserved_namespace: This namespace is reserved by rubygems.org.
     dependencies:
       header: "%{title} Dependencies"
     gem_members:

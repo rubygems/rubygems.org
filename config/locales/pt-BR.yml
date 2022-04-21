@@ -460,8 +460,8 @@ pt-BR:
         wiki: Wiki
         resend_ownership_confirmation:
         ownership:
-    blocklisted:
-      blocklisted_namespace: This namespace is reserved by rubygems.org.
+    reserved:
+      reserved_namespace: This namespace is reserved by rubygems.org.
     dependencies:
       header:
     gem_members:
