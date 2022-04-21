@@ -126,14 +126,18 @@ class Pusher
 
   def update
     Rubygem.transaction do
-      rubygem.disown if rubygem.versions.indexed.count.zero?
-      rubygem.update_attributes_from_gem_specification!(version, spec)
-      raise ActiveRecord::Rollback unless rubygem.create_ownership(user)
+      update_gem
       set_info_checksum
       true
     rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback, ActiveRecord::RecordNotUnique
       false
     end
+  end
+
+  def update_gem
+    rubygem.disown if rubygem.versions.indexed.count.zero?
+    rubygem.update_attributes_from_gem_specification!(version, spec)
+    raise ActiveRecord::Rollback unless rubygem.create_ownership(user)
   end
 
   def set_info_checksum
