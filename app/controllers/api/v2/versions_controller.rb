@@ -4,7 +4,7 @@ class Api::V2::VersionsController < Api::BaseController
   def show
     return unless stale?(@rubygem)
 
-    version = @rubygem.public_version_payload(params[:number], params[:platform])
+    version = @rubygem.public_version_payload(version_params[:number], version_params[:platform])
     if version
       respond_to do |format|
         format.json { render json: version }
@@ -13,5 +13,11 @@ class Api::V2::VersionsController < Api::BaseController
     else
       render plain: "This version could not be found.", status: :not_found
     end
+  end
+
+  protected
+
+  def version_params
+    params.permit(:platform, :number)
   end
 end
