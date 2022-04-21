@@ -474,8 +474,8 @@ fr:
         wiki: Wiki
         resend_ownership_confirmation:
         ownership:
-    blacklisted:
-      blacklisted_namespace: Ce nom est réservé par rubygems.org.
+    blocklisted:
+      blocklisted_namespace: Ce nom est réservé par rubygems.org.
     dependencies:
       header: Dépendances de %{title}
     gem_members:

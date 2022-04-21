@@ -431,8 +431,8 @@ zh-CN:
         wiki: Wiki
         resend_ownership_confirmation:
         ownership:
-    blacklisted:
-      blacklisted_namespace:
+    blocklisted:
+      blocklisted_namespace:
     dependencies:
       header: "%{title} 依赖关系"
     gem_members:

@@ -7,7 +7,7 @@ module Patterns
   LAZY_ROUTE_PATTERN    = /#{ALLOWED_CHARACTERS}?/
   NAME_PATTERN          = /\A#{ALLOWED_CHARACTERS}\Z/
   URL_VALIDATION_REGEXP = %r{\Ahttps?://([^\s:@]+:[^\s:@]*@)?[A-Za-z\d\-]+(\.[A-Za-z\d\-]+)+\.?(:\d{1,5})?([/?]\S*)?\z}
-  GEM_NAME_BLACKLIST    = %w[
+  GEM_NAME_BLOCKLIST    = %w[
     cgi-session
     complex
     continuation
