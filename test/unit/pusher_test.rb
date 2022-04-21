@@ -512,6 +512,22 @@ class PusherTest < ActiveSupport::TestCase
     end
   end
 
+  context "pushing a new version fails" do
+    setup do
+      @rubygem = create(:rubygem)
+      @gem = gem_file("valid_signature-0.0.0.gem")
+      @cutter = Pusher.new(@user, @gem)
+      @rubygem.stubs(:create_ownership).returns false
+      @cutter.stubs(:rubygem).returns @rubygem
+      @cutter.process
+    end
+
+    should "not save version if creating ownership fails" do
+      assert_match(/There was a problem saving your gem/, @cutter.message)
+      assert_equal 403, @cutter.code
+    end
+  end
+
   context "pushing to s3 fails" do
     setup do
       @gem = gem_file("test-1.0.0.gem")

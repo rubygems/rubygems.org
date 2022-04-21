@@ -122,15 +122,29 @@ class OwnershipTest < ActiveSupport::TestCase
 
   context "#create_confirmed" do
     setup do
-      rubygem = create(:rubygem)
-      user = create(:user)
-      Ownership.create_confirmed(rubygem, user, user)
+      @rubygem = create(:rubygem)
+      @user = create(:user)
+    end
+
+    should "return true" do
+      assert Ownership.create_confirmed(@rubygem, @user, @user)
     end
 
     should "create confirmed ownership" do
+      Ownership.create_confirmed(@rubygem, @user, @user)
       ownership = Ownership.last
       assert_nil ownership.token
       assert_predicate ownership, :confirmed?
+    end
+
+    context "when ownership has errors" do
+      setup do
+        create(:ownership, rubygem: @rubygem, user: @user)
+      end
+
+      should "return false" do
+        refute Ownership.create_confirmed(@rubygem, @user, @user)
+      end
     end
   end
 
