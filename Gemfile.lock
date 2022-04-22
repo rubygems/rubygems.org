@@ -145,11 +145,11 @@ GEM
     elasticsearch-api (7.10.1)
       multi_json
     elasticsearch-dsl (0.1.10)
-    elasticsearch-model (7.2.1)
+    elasticsearch-model (7.1.1)
       activesupport (> 3)
-      elasticsearch (~> 7)
+      elasticsearch (> 1)
       hashie
-    elasticsearch-rails (7.2.1)
+    elasticsearch-rails (7.1.1)
     elasticsearch-transport (7.10.1)
       faraday (~> 1)
       multi_json
@@ -195,7 +195,7 @@ GEM
     globalid (1.0.0)
       activesupport (>= 5.0)
     gravtastic (3.2.6)
-    hashie (5.0.0)
+    hashie (4.1.0)
     high_voltage (3.1.2)
     honeybadger (4.12.1)
     http-accept (1.7.0)
@@ -479,8 +479,8 @@ DEPENDENCIES
   elasticsearch (~> 7.10.1)
   elasticsearch-api (~> 7.10.1)
   elasticsearch-dsl (~> 0.1.2)
-  elasticsearch-model (~> 7.2.1)
-  elasticsearch-rails (~> 7.2.1)
+  elasticsearch-model (~> 7.0)
+  elasticsearch-rails (~> 7.0)
   elasticsearch-transport (~> 7.10.1)
   factory_bot_rails
   faraday_middleware-aws-sigv4 (~> 0.3)
