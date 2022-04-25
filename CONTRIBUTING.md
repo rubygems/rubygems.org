@@ -123,6 +123,18 @@ Follow the instructions below on how to install Bundler and setup the database.
 * Start memcached: `memcached`
 * Run the tests: `bundle exec rake`
 
+You can run all the tests in a particular file via `bin/rails test`, e.g.,
+
+```sh
+bin/rails test test/functional/api/v2/versions_controller_test.rb
+```
+
+To run an individual test, for example, specify the line number of the `should` block:
+
+```sh
+bin/rails test test/functional/api/v2/versions_controller_test.rb:49
+```
+
 #### Confirmation emails links
 
 * [Account confirmation email](http://localhost:3000/rails/mailers/mailer/email_confirmation)
