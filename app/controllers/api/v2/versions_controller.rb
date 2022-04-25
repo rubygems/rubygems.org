@@ -4,7 +4,7 @@ class Api::V2::VersionsController < Api::BaseController
   def show
     return unless stale?(@rubygem)
 
-    fields = (params[:fields] || "").split(",").map(&:strip).compact_blank
+    fields = (params[:fields] || "").split(",").compact_blank
     version = @rubygem.public_version_payload(params[:number], platform: params[:platform], fields: fields)
     if version
       respond_to do |format|
