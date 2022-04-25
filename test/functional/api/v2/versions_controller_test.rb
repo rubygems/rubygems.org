@@ -78,6 +78,46 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
       assert_response :not_found
     end
 
+    should "allow limiting returned fields via JSON" do
+      get :show, params: {
+        rubygem_name: @rubygem.name, number: "2.0.0", format: "json",
+        fields: "version_created_at,version,documentation_uri"
+      }
+
+      assert_response :success
+      json = JSON.parse(response.body)
+      assert_equal %w[documentation_uri version version_created_at], json.keys.sort
+      assert_equal "2.0.0", json["version"]
+      assert_predicate json["version_created_at"], :present?
+      assert_predicate json["documentation_uri"], :present?
+    end
+
+    should "discard invalid field selections" do
+      get :show, params: {
+        rubygem_name: @rubygem.name, number: "2.0.0", format: "json",
+        fields: "name,,   ,invalid field"
+      }
+
+      assert_response :success
+      json = JSON.parse(response.body)
+      assert_equal %w[name], json.keys.sort
+      assert_equal @rubygem.name, json["name"]
+    end
+
+    should "allow limiting returned fields via YAML" do
+      get :show, params: {
+        rubygem_name: @rubygem.name, number: "2.0.0", format: "yaml",
+        fields: "name,project_uri,licenses,metadata"
+      }
+
+      assert_response :success
+      yaml = YAML.safe_load(response.body)
+      assert_equal %w[licenses metadata name project_uri], yaml.keys.sort
+      assert_equal @rubygem.name, yaml["name"]
+      assert_predicate yaml["project_uri"], :present?
+      assert_predicate yaml["metadata"], :present?
+    end
+
     context "same version with mulitple platform" do
       setup do
         create(:version, rubygem: @rubygem, number: "2.0.0", platform: "jruby")

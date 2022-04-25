@@ -123,14 +123,18 @@ class Rubygem < ApplicationRecord
     versions.uniq.sort_by(&:position)
   end
 
-  def public_version_payload(number, platform = nil)
+  def public_version_payload(number, platform: nil, fields: [])
     version =
       if platform
         public_versions.find_by(number: number, platform: platform)
       else
         public_versions.find_by(number: number)
       end
-    payload(version).merge!(version.as_json) if version
+    return unless version
+
+    result = payload(version).merge!(version.as_json)
+    result = result.slice(*fields) if fields.present?
+    result
   end
 
   def hosted?
