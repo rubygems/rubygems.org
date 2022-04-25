@@ -1,0 +1,32 @@
+name: ERD
+on:
+  pull_request:
+    paths:
+      - "db/schema.rb"
+      - "doc/erd.svg"
+  push:
+    branches:
+      - master
+    paths:
+      - "db/schema.rb"
+      - "doc/erd.svg"
+jobs:
+  erd:
+    name: Verify ERD up-to-date
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: install Graphviz
+        run: sudo apt-get install graphviz
+      - name: generate ERD
+        run: rake gen_erd
+      - name: check diff
+        run: git diff -s --exit-code doc/erd.svg
+      - name: print error
+        if: ${{ failure() }}
+        run: |
+          echo "::error file=doc/erd.svg::ERD is out of date."
+          echo "::error Please install Graphviz (\`brew install graphviz\`) and run \`rake gen_erd\`"
