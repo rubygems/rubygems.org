@@ -30,8 +30,8 @@ class ApiKeysTest < SystemTest
     visit_profile_api_keys_path
 
     fill_in "api_key[name]", with: "test"
-    check "api_key[index_rubygems]"
-    assert page.has_select? "api_key_rubygem_id", selected: nil
+    check "api_key[push_rubygem]"
+    assert page.has_select? "api_key_rubygem_id", selected: "All Gems"
     page.select @ownership.rubygem.name
     click_button "Create"
 
@@ -39,12 +39,35 @@ class ApiKeysTest < SystemTest
     assert_equal @ownership.rubygem, @user.api_keys.last.rubygem
   end
 
+  (ApiKey::API_SCOPES - ApiKey::APPLICABLE_GEM_API_SCOPES).each do |scope|
+    test "creating new api key cannot set gem scope with #{scope} scope selected" do
+      visit_profile_api_keys_path
+      check "api_key[#{scope}]"
+      assert page.has_select? "api_key_rubygem_id", selected: "All Gems", disabled: true
+    end
+  end
+
+  ApiKey::APPLICABLE_GEM_API_SCOPES.each do |scope|
+    test "creating new api key scoped to a gem with #{scope} scope" do
+      visit_profile_api_keys_path
+      fill_in "api_key[name]", with: "test"
+      check "api_key[#{scope}]"
+
+      assert page.has_select? "api_key_rubygem_id", selected: "All Gems"
+      page.select @ownership.rubygem.name
+      click_button "Create"
+
+      assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
+      assert_equal @ownership.rubygem, @user.api_keys.last.rubygem
+    end
+  end
+
   test "creating new api key scoped to gem that the user does not own" do
     visit_profile_api_keys_path
 
     fill_in "api_key[name]", with: "test"
-    check "api_key[index_rubygems]"
-    assert page.has_select? "api_key_rubygem_id", selected: nil
+    check "api_key[push_rubygem]"
+    assert page.has_select? "api_key_rubygem_id", selected: "All Gems"
     page.select @ownership.rubygem.name
 
     @ownership.destroy!
@@ -97,7 +120,7 @@ class ApiKeysTest < SystemTest
   end
 
   test "update api key gem scope" do
-    api_key = create(:api_key, user: @user, ownership: @ownership)
+    api_key = create(:api_key, push_rubygem: true, user: @user, ownership: @ownership)
 
     visit_profile_api_keys_path
     click_button "Edit"
@@ -110,8 +133,40 @@ class ApiKeysTest < SystemTest
     assert_nil api_key.reload.rubygem
   end
 
+  test "update gem scoped api key with applicable scopes removed" do
+    api_key = create(:api_key, push_rubygem: true, user: @user, ownership: @ownership)
+
+    visit_profile_api_keys_path
+    click_button "Edit"
+
+    assert page.has_content? "Edit API key"
+    page.check "api_key[index_rubygems]"
+    page.uncheck "api_key[push_rubygem]"
+    assert page.has_select? "api_key_rubygem_id", selected: "All Gems", disabled: true
+    click_button "Update"
+
+    assert_nil api_key.reload.rubygem
+  end
+
+  test "update gem scoped api key to another applicable scope" do
+    api_key = create(:api_key, push_rubygem: true, user: @user, ownership: @ownership)
+
+    visit_profile_api_keys_path
+    click_button "Edit"
+
+    assert page.has_content? "Edit API key"
+    page.uncheck "api_key[push_rubygem]"
+    assert page.has_select? "api_key_rubygem_id", selected: "All Gems", disabled: true
+
+    page.check "api_key[yank_rubygem]"
+    page.select @ownership.rubygem.name
+    click_button "Update"
+
+    assert_equal api_key.reload.rubygem, @ownership.rubygem
+  end
+
   test "update api key gem scope to a gem the user does not own" do
-    api_key = create(:api_key, user: @user, ownership: @ownership)
+    api_key = create(:api_key, push_rubygem: true, user: @user, ownership: @ownership)
     @another_ownership = create(:ownership, user: @user, rubygem: create(:rubygem, name: "another_gem"))
 
     visit_profile_api_keys_path
@@ -184,7 +239,7 @@ class ApiKeysTest < SystemTest
   end
 
   test "gem ownership removed displays api key as invalid" do
-    api_key = create(:api_key, user: @user, ownership: @ownership)
+    api_key = create(:api_key, push_rubygem: true, user: @user, ownership: @ownership)
     visit_profile_api_keys_path
     refute page.has_css? ".owners__row__invalid"
 
