@@ -2,6 +2,7 @@ require "test_helper"
 
 class ApiKeysTest < SystemTest
   setup do
+    headless_chrome_driver
     @user = create(:user)
     @ownership = create(:ownership, user: @user, rubygem: create(:rubygem))
 
@@ -168,6 +169,7 @@ class ApiKeysTest < SystemTest
     visit_profile_api_keys_path
     click_button "Delete"
 
+    page.accept_alert
     assert page.has_content? "New API key"
   end
 
@@ -177,6 +179,7 @@ class ApiKeysTest < SystemTest
     visit_profile_api_keys_path
     click_button "Reset"
 
+    page.accept_alert
     assert page.has_content? "New API key"
   end
 
@@ -212,5 +215,10 @@ class ApiKeysTest < SystemTest
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Confirm"
+  end
+
+  teardown do
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
   end
 end
