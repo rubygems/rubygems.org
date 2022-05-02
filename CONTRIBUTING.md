@@ -161,12 +161,12 @@ can try running:
 directory. The proper directory will be full of .gem files.
 
 #### Getting the data dumps
-* You can use rubygems.org data [dumps](https://rubygems.org/pages/data) to test
-application in development environment especially for performance related issues.
-* To load the main database dump into Postgres, use `script/load-pg-dump`. e.g.
+* You can use rubygems.org data [dumps](https://rubygems.org/pages/data) to test the
+application in a development environment, especially for performance-related issues.
+* To load the main database dump into Postgres, use the `script/load-pg-dump` script. e.g.
 
     ``` bash
-    $ ./script/load-pg-dump -d rubygems_development
+    $ ./script/load-pg-dump -d rubygems_development ~/Downloads/public_postgresql.tar
     ```
 
 #### Pushing gems
