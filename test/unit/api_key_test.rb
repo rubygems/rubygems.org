@@ -46,8 +46,21 @@ class ApiKeyTest < ActiveSupport::TestCase
   context "gem scope" do
     setup do
       @ownership = create(:ownership)
-      @api_key = create(:api_key, index_rubygems: true, user: @ownership.user, ownership: @ownership)
+      @api_key = create(:api_key, push_rubygem: true, user: @ownership.user, ownership: @ownership)
       @api_key_no_gem_scope = create(:api_key, key: SecureRandom.hex(24), index_rubygems: true, user: @ownership.user)
+    end
+
+    should "be invalid if non applicable API scope is enabled" do
+      api_key = build(:api_key, index_rubygems: true, user: @ownership.user, ownership: @ownership)
+      refute_predicate api_key, :valid?
+      assert_contains api_key.errors[:rubygem], "scope can only be set for push/yank rubygem, and add/remove owner scopes"
+    end
+
+    should "be valid if applicable API scope is enabled" do
+      %i[push_rubygem yank_rubygem add_owner remove_owner].each do |scope|
+        api_key = build(:api_key, scope => true, user: @ownership.user, ownership: @ownership)
+        assert_predicate api_key, :valid?
+      end
     end
 
     context "#rubygem" do
@@ -72,7 +85,7 @@ class ApiKeyTest < ActiveSupport::TestCase
 
     context "#rubygem_id=" do
       should "set ownership to a gem" do
-        api_key = create(:api_key, key: SecureRandom.hex(24), index_rubygems: true, user: @ownership.user, rubygem_id: @ownership.rubygem_id)
+        api_key = create(:api_key, key: SecureRandom.hex(24), push_rubygem: true, user: @ownership.user, rubygem_id: @ownership.rubygem_id)
         assert_equal @ownership.rubygem_id, api_key.rubygem_id
       end
 
@@ -83,7 +96,7 @@ class ApiKeyTest < ActiveSupport::TestCase
 
       should "raise error when id is not associated with the user" do
         assert_raise ActiveRecord::RecordNotFound do
-          create(:api_key, key: SecureRandom.hex(24), index_rubygems: true, user: @ownership.user, rubygem_id: -1)
+          create(:api_key, key: SecureRandom.hex(24), push_rubygem: true, user: @ownership.user, rubygem_id: -1)
         end
       end
     end

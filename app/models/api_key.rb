@@ -9,6 +9,7 @@ class ApiKey < ApplicationRecord
   validate :exclusive_show_dashboard_scope, if: :can_show_dashboard?
   validate :scope_presence
   validates :name, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
+  validate :rubygem_scope_definition, if: :ownership
   validate :not_soft_deleted?
 
   delegate :rubygem_id, :rubygem, to: :ownership, allow_nil: true
@@ -59,6 +60,11 @@ class ApiKey < ApplicationRecord
 
   def scope_presence
     errors.add :base, "Please enable at least one scope" unless enabled_scopes.any?
+  end
+
+  def rubygem_scope_definition
+    return if (APPLICABLE_GEM_API_SCOPES & enabled_scopes).any?
+    errors.add :rubygem, "scope can only be set for push/yank rubygem, and add/remove owner scopes"
   end
 
   def not_soft_deleted?

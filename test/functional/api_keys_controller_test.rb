@@ -143,6 +143,13 @@ class ApiKeysControllerTest < ActionController::TestCase
           assert_equal "Selected gem cannot be scoped to this key", flash[:error]
           assert_empty @user.reload.api_keys
         end
+
+        should "displays error with gem scope without applicable scope enabled" do
+          post :create, params: { api_key: { name: "gem scope", index_rubygems: true, rubygem_id: @ownership.rubygem.id } }
+
+          assert_equal "Rubygem scope can only be set for push/yank rubygem, and add/remove owner scopes", flash[:error]
+          assert_empty @user.reload.api_keys
+        end
       end
     end
 
@@ -200,7 +207,7 @@ class ApiKeysControllerTest < ActionController::TestCase
       context "gem scope" do
         setup do
           @ownership = create(:ownership, user: @user, rubygem: create(:rubygem))
-          @api_key.update(rubygem_id: @ownership.rubygem.id)
+          @api_key.update(rubygem_id: @ownership.rubygem.id, push_rubygem: true)
         end
 
         should "to all gems" do
@@ -221,6 +228,14 @@ class ApiKeysControllerTest < ActionController::TestCase
             patch :update, params: { api_key: { rubygem_id: -1 }, id: @api_key.id }
 
             assert_equal "Selected gem cannot be scoped to this key", flash[:error]
+          end
+        end
+
+        should "displays error with gem scope without applicable scope enabled" do
+          assert_no_changes @api_key do
+            patch :update, params: { api_key: { push_rubygem: false }, id: @api_key.id }
+
+            assert_equal "Rubygem scope can only be set for push/yank rubygem, and add/remove owner scopes", flash[:error]
           end
         end
       end
