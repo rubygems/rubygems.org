@@ -58,6 +58,16 @@ class DependenciesControllerTest < ActionController::TestCase
         refute page.has_content?(@dependency.name)
       end
     end
+
+    context "with an invalid version that makes a valid gem full name" do
+      setup do
+        prefix = create(:version, rubygem: build(:rubygem, name: "foo"), number: "0.1.0", platform: "ruby")
+        create(:version, rubygem: build(:rubygem, name: "foo-bar"), number: "0.1.0", platform: "ruby")
+        request_endpoint(prefix.rubygem.name, "bar-0.1.0")
+      end
+
+      should respond_with :not_found
+    end
   end
 
   context "GET to show in json" do

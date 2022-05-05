@@ -6,7 +6,7 @@ class VersionsController < ApplicationController
   end
 
   def show
-    @latest_version  = Version.find_from_slug!(@rubygem.id, params[:id])
+    @latest_version  = @rubygem.find_version_by_slug!(params.require(:id))
     @versions        = @rubygem.public_versions_with_extra_version(@latest_version)
     @versioned_links = @rubygem.links(@latest_version)
     @adoption        = @rubygem.ownership_call
