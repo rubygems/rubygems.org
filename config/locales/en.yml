@@ -536,7 +536,7 @@ en:
       subtitle_owner_html: Ask new maintainers to join %{gem} <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(read more)</a>
       subtitle_user_html: Request ownership of %{gem} <a class="adoption__blog__link" href="https://blog.rubygems.org/2022/01/19/rubygems-adoptions.html">(read more)</a>
       ownership_calls: Ownership Call
-      no_ownership_calls: There are no ownership calls for %{gem}. The gem owners are not looking new maintainers.
+      no_ownership_calls: There are no ownership calls for %{gem}. The gem owners are not looking for new maintainers.
   ownership_calls:
     update:
       success_notice: The ownership call for %{gem} was closed.
@@ -570,4 +570,4 @@ en:
     created_at: Created at
     no_ownership_requests: Requests to join your project will show up here. No ownership requests for %{gem} yet.
     create_req: Create ownership request
-    signin_to_create_html: Please <a href="https://rubygems.org/sign_in">sign in</a> to create request ownership.
+    signin_to_create_html: Please <a href="https://rubygems.org/sign_in">sign in</a> to create a request for ownership.
