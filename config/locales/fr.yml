@@ -48,6 +48,7 @@ fr:
       user:
         avatar: Avatar
         email: Adresse e-mail
+        full_name: Nom complet
         handle: Pseudonyme
         password: Mot de passe
     errors:

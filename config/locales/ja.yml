@@ -50,6 +50,7 @@ ja:
       user:
         avatar: アバター
         email: Emailアドレス
+        full_name: フルネーム
         handle: ユーザー名
         password: パスワード
     errors:

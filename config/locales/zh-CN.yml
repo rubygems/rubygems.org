@@ -46,6 +46,7 @@ zh-CN:
       user:
         avatar: 头像
         email: Email
+        full_name: 全名
         handle: 账号
         password: 密码
     errors:

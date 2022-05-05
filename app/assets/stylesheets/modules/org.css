@@ -145,6 +145,11 @@
     .profile__header__name {
       padding-top: 16px; } }
 
+.profile__header__username {
+  overflow-x: auto; }
+@media (min-width: 780px) {
+  .profile__header__username {
+    padding-top: 4px; } }
 
 @media (max-width: 779px) {
   .profile__header__avatar {

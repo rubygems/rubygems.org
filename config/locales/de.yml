@@ -46,6 +46,7 @@ de:
       user:
         avatar: Avatar
         email: E-Mail-Adresse
+        full_name: Vollständiger Name
         handle: Benutzername
         password: Passwort
     errors:

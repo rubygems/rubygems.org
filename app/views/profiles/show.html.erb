@@ -16,14 +16,24 @@
         %>
       </div>
 
-      <h1 id="profile-name" class="profile__header__name t-display">
-        <%=
-          link_to(
-            @user.display_handle, profile_path(@user.display_id),
-            class: "t-link--black"
-          )
-        %>
-      </h1>
+      <% if @user.full_name.present? %>
+        <h1 id="profile-name" class="profile__header__name t-display-full-name">
+          <%= link_to(@user.full_name, profile_path(@user.display_id), class: "t-link--black") %>
+        </h1>
+
+        <h1 id="profile-name" class="profile__header__username t-display-username">
+          <%= link_to(@user.display_handle, profile_path(@user.display_id), class: "t-link--black") %>
+        </h1>
+      <% else %>
+        <h1 id="profile-name" class="profile__header__name t-display">
+          <%=
+            link_to(
+              @user.display_handle, profile_path(@user.display_id),
+              class: "t-link--black"
+            )
+          %>
+        </h1>
+      <% end %>
 
       <% if @user == current_user %>
         <div id="profile-settings">

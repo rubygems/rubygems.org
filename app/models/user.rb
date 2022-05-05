@@ -12,6 +12,7 @@ class User < ApplicationRecord
     password
     website
     twitter_username
+    full_name
   ].freeze
 
   before_save :generate_confirmation_token, if: :will_save_change_to_unconfirmed_email?
@@ -55,6 +56,9 @@ class User < ApplicationRecord
     unpwn: true,
     allow_nil: true,
     unless: :skip_password_validation?
+
+  validates :full_name, length: { within: 0..40 }, allow_nil: true
+
   validate :unconfirmed_email_uniqueness
   validate :toxic_email_domain, on: :create
 

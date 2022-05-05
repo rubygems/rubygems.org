@@ -52,6 +52,7 @@ en:
       user:
         avatar: Avatar
         email: Email address
+        full_name: Full name
         handle: Username
         password: Password
     errors:

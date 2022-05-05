@@ -49,6 +49,11 @@
     <%= form.email_field :email, name: 'user[unconfirmed_email]', class: 'form__input' %>
   </div>
 
+  <div class="text_field">
+    <%= form.label :full_name, :class => 'form__label' %>
+    <%= form.text_field :full_name, :class => 'form__input' %>
+  </div>
+
   <p class='form__field__instructions'>
     <%= t('.enter_password') %>
   </p>

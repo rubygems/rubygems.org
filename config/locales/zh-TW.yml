@@ -46,6 +46,7 @@ zh-TW:
       user:
         avatar: 頭像
         email: Email
+        full_name: 全名
         handle: 帳號
         password: 密碼
     errors:

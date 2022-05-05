@@ -49,6 +49,7 @@ nl:
       user:
         avatar: Avatar
         email: E-mailadres
+        full_name: Voor-en achternaam
         handle: Gebruikersnaam
         password: Wachtwoord
     errors:
