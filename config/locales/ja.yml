@@ -400,6 +400,8 @@ ja:
       confirmation_mail_sent: 新しいメールアドレスを確認する手順を記載したメールを送信しました。
       updated: あなたのプロフィールはアップデートされました。
     request_denied: このリクエストは拒否されました。あなたのパスワードを認証することができませんでした。
+    show:
+      title: のプロファイル %{username}
   rubygems:
     aside:
       bundler_header: Gemfile

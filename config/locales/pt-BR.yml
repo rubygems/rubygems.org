@@ -430,6 +430,8 @@ pt-BR:
       confirmation_mail_sent:
       updated:
     request_denied:
+    show:
+      title: Perfil de %{username}
   rubygems:
     aside:
       bundler_header: Gemfile

@@ -419,6 +419,8 @@ nl:
       confirmation_mail_sent:
       updated:
     request_denied:
+    show:
+      title: Profiel van %{username}
   rubygems:
     aside:
       bundler_header: Gemfile

@@ -403,6 +403,8 @@ en:
       confirmation_mail_sent: You will receive an email within the next few minutes. It contains instructions for confirming your new email address.
       updated: Your profile was updated.
     request_denied: This request was denied. We could not verify your password.
+    show:
+      title: Profile of %{username}
   rubygems:
     aside:
       bundler_header: Gemfile

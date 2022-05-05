@@ -402,6 +402,8 @@ zh-TW:
       confirmation_mail_sent:
       updated:
     request_denied:
+    show:
+      title: 简介 %{username}
   rubygems:
     aside:
       bundler_header: Gemfile

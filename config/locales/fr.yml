@@ -444,6 +444,8 @@ fr:
       updated: Votre profil a été mis à jour.
     request_denied: Cette demande a été refusée. Nous n'avons pas pu vérifier votre
       mot de passe.
+    show:
+      title: Profil de %{username}
   rubygems:
     aside:
       bundler_header: Gemfile
