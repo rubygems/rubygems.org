@@ -8,6 +8,26 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
       @request.env["HTTP_AUTHORIZATION"] = "12345"
     end
 
+    context "with a gem version that is the suffix of another gem name" do
+      setup do
+        @owner     = create(:user)
+        @rubygem   = create(:rubygem, name: "some-gem")
+        @v1        = create(:version, rubygem: @rubygem, number: "0.1.0", platform: "ruby")
+        @ownership = create(:ownership, user: @owner, rubygem: @rubygem)
+        @user_gem  = create(:rubygem, name: "some")
+        @user_v1   = create(:version, rubygem: @user_gem, number: "0.1.0", platform: "ruby")
+        @user_own  = create(:ownership, user: @user, rubygem: @user_gem)
+        RubygemFs.instance.store("gems/#{@v1.full_name}.gem", "")
+      end
+
+      context "ON DELETE" do
+        setup do
+          delete :create, params: { gem_name: "some", version: "gem-0.1.0" }
+        end
+        should respond_with :not_found
+      end
+    end
+
     context "for a gem SomeGem with a version 0.1.0" do
       setup do
         @rubygem   = create(:rubygem, name: "SomeGem")

@@ -164,7 +164,9 @@ class Version < ApplicationRecord
 
   def self.find_from_slug!(rubygem_id, slug)
     rubygem = rubygem_id.is_a?(Rubygem) ? rubygem_id : Rubygem.find(rubygem_id)
-    find_by!(full_name: "#{rubygem.name}-#{slug}")
+    find_by!(full_name: "#{rubygem.name}-#{slug}").tap do |version|
+      raise ActiveRecord::RecordNotFound unless version.rubygem == rubygem
+    end
   end
 
   def self.rubygem_name_for(full_name)
