@@ -49,6 +49,21 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
+    context "full_name" do
+      should "be between 0 and 20 characters" do
+        user = build(:user, full_name: "")
+        assert_predicate user, :valid?
+
+        user.full_name = "a" * 21
+        refute_predicate user, :valid?
+        assert_contains user.errors[:full_name], "is too long (maximum is 20 characters)"
+
+        user.full_name = "Name Last name"
+        user.valid?
+        assert_nil user.errors[:handle].first
+      end
+    end
+
     context "email" do
       should "be less than 255 characters" do
         user = build(:user, email: format("%s@example.com", "a" * 255))

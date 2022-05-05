@@ -57,7 +57,7 @@ class User < ApplicationRecord
     allow_nil: true,
     unless: :skip_password_validation?
 
-  validates :full_name, length: { within: 0..40 }, allow_nil: true
+  validates :full_name, length: { within: 0..20 }, allow_nil: true
 
   validate :unconfirmed_email_uniqueness
   validate :toxic_email_domain, on: :create
