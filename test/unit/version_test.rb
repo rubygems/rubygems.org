@@ -391,6 +391,14 @@ class VersionTest < ActiveSupport::TestCase
       end
     end
 
+    should "raise an ActiveRecord::RecordNotFound if the full name belongs to a different gem" do
+      prefix = create(:version, rubygem: build(:rubygem, name: "foo"), number: "0.1.0", platform: "ruby")
+      create(:version, rubygem: build(:rubygem, name: "foo-bar"), number: "0.1.0", platform: "ruby")
+      assert_raise ActiveRecord::RecordNotFound do
+        Version.find_from_slug!(prefix.rubygem_id, "bar-0.1.0")
+      end
+    end
+
     %w[x86_64-linux java mswin x86-mswin32-60].each do |platform|
       should "be able to find with platform of #{platform}" do
         version = create(:version, platform: platform)
