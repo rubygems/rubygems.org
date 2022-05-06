@@ -50,6 +50,10 @@ class ApiKey < ApplicationRecord
     soft_deleted_at?
   end
 
+  def soft_deleted_by_ownership?
+    soft_deleted?
+  end
+
   private
 
   def exclusive_show_dashboard_scope
