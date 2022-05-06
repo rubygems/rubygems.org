@@ -101,7 +101,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         @user = create(:user)
         @second_user = create(:user)
         @third_user = create(:user)
-        create(:ownership, rubygem: @rubygem, user: @user)
+        @ownership = create(:ownership, rubygem: @rubygem, user: @user)
         @api_key = create(:api_key, key: "12334", add_owner: true, user: @user)
         @request.env["HTTP_AUTHORIZATION"] = "12334"
       end
@@ -289,6 +289,33 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
             assert_includes @rubygem.owners_including_unconfirmed, @second_user
           end
         end
+
+        context "to a gem with ownership removed" do
+          setup do
+            @api_key.update(ownership: @ownership)
+            @ownership.destroy!
+
+            post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+          end
+
+          should respond_with :forbidden
+          should "#render_soft_deleted_api_key and display an error" do
+            assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
+          end
+        end
+      end
+
+      context "with a soft deleted api key" do
+        setup do
+          @api_key.soft_delete!
+
+          post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+        end
+
+        should respond_with :forbidden
+        should "#render_soft_deleted_api_key and display an error" do
+          assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
+        end
       end
     end
 
@@ -319,7 +346,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         @rubygem = create(:rubygem)
         @user = create(:user)
         @second_user = create(:user)
-        create(:ownership, rubygem: @rubygem, user: @user)
+        @ownership = create(:ownership, rubygem: @rubygem, user: @user)
         @ownership = create(:ownership, rubygem: @rubygem, user: @second_user)
 
         @api_key = create(:api_key, key: "12223", remove_owner: true, user: @user)
@@ -461,6 +488,33 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           should "removes other user as gem owner" do
             refute_includes @rubygem.owners, @second_user
           end
+        end
+
+        context "to a gem with ownership removed" do
+          setup do
+            @api_key.update(ownership: @ownership)
+            @ownership.destroy!
+
+            post :destroy, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+          end
+
+          should respond_with :forbidden
+          should "#render_soft_deleted_api_key and display an error" do
+            assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
+          end
+        end
+      end
+
+      context "with a soft deleted api key" do
+        setup do
+          @api_key.soft_delete!
+
+          post :destroy, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+        end
+
+        should respond_with :forbidden
+        should "#render_soft_deleted_api_key and display an error" do
+          assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
         end
       end
     end

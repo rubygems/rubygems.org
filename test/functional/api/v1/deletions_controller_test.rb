@@ -132,6 +132,34 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
           should respond_with :forbidden
         end
+
+        context "to a gem with ownership removed" do
+          setup do
+            ownership = create(:ownership, user: create(:user), rubygem: create(:rubygem, name: "test-gem123"))
+            @api_key.update(ownership: ownership)
+            ownership.destroy!
+
+            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          end
+
+          should respond_with :forbidden
+          should "#render_soft_deleted_api_key and display an error" do
+            assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
+          end
+        end
+      end
+
+      context "with a soft deleted api key" do
+        setup do
+          @api_key.soft_delete!
+
+          delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+        end
+
+        should respond_with :forbidden
+        should "#render_soft_deleted_api_key and display an error" do
+          assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
+        end
       end
 
       context "ON DELETE to create for existing gem version" do

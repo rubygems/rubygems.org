@@ -573,6 +573,21 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  context "create with a soft deleted api key" do
+    setup do
+      create(:ownership, user: create(:user), rubygem: create(:rubygem, name: "test"))
+      create(:api_key, key: "12343", push_rubygem: true).soft_delete!
+      @request.env["HTTP_AUTHORIZATION"] = "12343"
+
+      post :create, body: gem_file("test-1.0.0.gem").read
+    end
+
+    should respond_with :forbidden
+    should "#render_soft_deleted_api_key and display an error" do
+      assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
+    end
+  end
+
   context "with incorrect api key" do
     context "on GET to index with JSON for a list of gems without api key" do
       setup do
