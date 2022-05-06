@@ -126,10 +126,10 @@ class ApiKeyTest < ActiveSupport::TestCase
   end
 
   context "#soft_deleted_by_ownership?" do
-    should "return true if key soft deleted" do
+    should "return true if soft deleted gem name is present" do
       ownership = create(:ownership)
       api_key = create(:api_key, push_rubygem: true, user: ownership.user, ownership: ownership)
-      api_key.soft_delete!
+      api_key.soft_delete!(ownership: ownership)
 
       assert_predicate api_key, :soft_deleted_by_ownership?
     end

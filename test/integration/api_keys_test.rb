@@ -252,7 +252,7 @@ class ApiKeysTest < SystemTest
     assert_predicate api_key.reload, :soft_deleted?
 
     refute page.has_button? "Edit"
-    assert_equal "[?]", page.find('.owners__cell[data-title="Gem"]').text
+    assert_equal "#{@ownership.rubygem.name} [?]", page.find('.owners__cell[data-title="Gem"]').text
     visit_edit_profile_api_key_path(api_key)
     assert page.has_content? "An invalid API key cannot be edited. Please delete it and create a new one."
     assert_equal profile_api_keys_path, page.current_path

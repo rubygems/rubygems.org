@@ -42,8 +42,9 @@ class ApiKey < ApplicationRecord
     errors.add :rubygem, "that is selected cannot be scoped to this key"
   end
 
-  def soft_delete!
+  def soft_delete!(ownership: nil)
     update_attribute(:soft_deleted_at, Time.now.utc)
+    update_attribute(:soft_deleted_rubygem_name, ownership.rubygem.name) if ownership
   end
 
   def soft_deleted?
@@ -51,7 +52,7 @@ class ApiKey < ApplicationRecord
   end
 
   def soft_deleted_by_ownership?
-    soft_deleted?
+    soft_deleted? && soft_deleted_rubygem_name.present?
   end
 
   private

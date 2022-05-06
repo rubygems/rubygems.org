@@ -40,6 +40,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_29_203956) do
     t.datetime "updated_at", null: false
     t.boolean "mfa", default: false, null: false
     t.datetime "soft_deleted_at"
+    t.string "soft_deleted_rubygem_name"
     t.index ["hashed_key"], name: "index_api_keys_on_hashed_key", unique: true
     t.index ["user_id"], name: "index_api_keys_on_user_id"
   end

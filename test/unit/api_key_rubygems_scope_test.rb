@@ -24,6 +24,8 @@ class ApiKeyRubygemScopeTest < ActiveSupport::TestCase
 
       assert_nil @api_key.reload.api_key_rubygem_scope
       assert_predicate @api_key, :soft_deleted?
+      assert_predicate @api_key, :soft_deleted_by_ownership?
+      assert_equal @rubygem.name, @api_key.reload.soft_deleted_rubygem_name
     end
 
     should "call #soft_delete_api_key! if not destroyed by association" do
@@ -31,6 +33,8 @@ class ApiKeyRubygemScopeTest < ActiveSupport::TestCase
 
       assert_nil @api_key.reload.api_key_rubygem_scope
       refute_predicate @api_key, :soft_deleted?
+      refute_predicate @api_key, :soft_deleted_by_ownership?
+      assert_nil @api_key.reload.soft_deleted_rubygem_name
     end
   end
 end

@@ -8,6 +8,6 @@ class ApiKeyRubygemScope < ApplicationRecord
   private
 
   def soft_delete_api_key!
-    api_key.soft_delete!
+    api_key.soft_delete!(ownership: ownership)
   end
 end

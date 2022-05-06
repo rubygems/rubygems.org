@@ -17,13 +17,14 @@ class ApiKeysHelperTest < ActionView::TestCase
       @ownership = create(:ownership)
       @api_key = create(:api_key, push_rubygem: true, user: @ownership.user, ownership: @ownership)
       @ownership.destroy!
+      rubygem_name = @ownership.rubygem.name
 
       expected_dom = <<~HTML.squish.gsub(/>\s+</, "><")
-        <span#{' '}
-          class="tooltip__text"#{' '}
+        <span
+          class="tooltip__text"
           style="font-size:1em"
-          data-tooltip="Ownership of the gem has been removed after being scoped to this key."\
-        >[?]</span>
+          data-tooltip="Ownership of #{rubygem_name} has been removed after being scoped to this key."\
+        >#{rubygem_name} [?]</span>
       HTML
 
       assert_equal expected_dom, gem_scope(@api_key.reload)

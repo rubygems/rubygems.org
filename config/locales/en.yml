@@ -107,7 +107,7 @@ en:
       rubygem_scope_info: This scope restricts gem push/yank and owner add/remove commands to a specific gem.
       invalid_key: An invalid API key cannot be edited. Please delete it and create a new one.
     all_gems: All Gems
-    gem_ownership_removed: Ownership of the gem has been removed after being scoped to this key.
+    gem_ownership_removed: Ownership of %{rubygem_name} has been removed after being scoped to this key.
   clearance_mailer:
     change_password:
       title: CHANGE PASSWORD
