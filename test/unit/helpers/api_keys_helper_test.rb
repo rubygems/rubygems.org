@@ -13,12 +13,20 @@ class ApiKeysHelperTest < ActionView::TestCase
       assert_equal "All Gems", gem_scope(create(:api_key))
     end
 
-    should "return if key if gem ownership is removed" do
+    should "return error tooltip if key if gem ownership is removed" do
       @ownership = create(:ownership)
       @api_key = create(:api_key, push_rubygem: true, user: @ownership.user, ownership: @ownership)
       @ownership.destroy!
 
-      assert_nil gem_scope(@api_key.reload)
+      expected_dom = <<~HTML.squish.gsub(/>\s+</, "><")
+        <span#{' '}
+          class="tooltip__text"#{' '}
+          style="font-size:1em"
+          data-tooltip="Ownership of the gem has been removed after being scoped to this key."\
+        >[?]</span>
+      HTML
+
+      assert_equal expected_dom, gem_scope(@api_key.reload)
     end
   end
 end

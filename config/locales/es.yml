@@ -112,6 +112,7 @@ es:
       rubygem_scope_info:
       invalid_key:
     all_gems:
+    gem_ownership_removed:
   clearance_mailer:
     change_password:
       title: CAMBIAR CONTRASEÑA
