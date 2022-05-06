@@ -140,7 +140,7 @@ class ApiKeysControllerTest < ActionController::TestCase
         should "display error with invalid id" do
           post :create, params: { api_key: { name: "gem scope", add_owner: true, rubygem_id: -1 } }
 
-          assert_equal "Selected gem cannot be scoped to this key", flash[:error]
+          assert_equal "Rubygem that is selected cannot be scoped to this key", flash[:error]
           assert_empty @user.reload.api_keys
         end
 
@@ -227,7 +227,7 @@ class ApiKeysControllerTest < ActionController::TestCase
           assert_no_changes @api_key do
             patch :update, params: { api_key: { rubygem_id: -1 }, id: @api_key.id }
 
-            assert_equal "Selected gem cannot be scoped to this key", flash[:error]
+            assert_equal "Rubygem that is selected cannot be scoped to this key", flash[:error]
           end
         end
 

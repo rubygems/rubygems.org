@@ -75,7 +75,7 @@ class ApiKeysTest < SystemTest
     click_button "Create"
 
     assert page.has_css? ".flash"
-    assert page.has_content? "Selected gem cannot be scoped to this key"
+    assert page.has_content? "Rubygem that is selected cannot be scoped to this key"
     assert_empty @user.api_keys
   end
 
@@ -182,7 +182,7 @@ class ApiKeysTest < SystemTest
     click_button "Update"
 
     assert page.has_css? ".flash"
-    assert page.has_content? "Selected gem cannot be scoped to this key"
+    assert page.has_content? "Rubygem that is selected cannot be scoped to this key"
     assert_equal @ownership.rubygem, api_key.reload.rubygem
   end
 

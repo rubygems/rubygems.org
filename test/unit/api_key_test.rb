@@ -94,10 +94,9 @@ class ApiKeyTest < ActiveSupport::TestCase
         assert_nil @api_key.rubygem_id
       end
 
-      should "raise error when id is not associated with the user" do
-        assert_raise ActiveRecord::RecordNotFound do
-          create(:api_key, key: SecureRandom.hex(24), push_rubygem: true, user: @ownership.user, rubygem_id: -1)
-        end
+      should "add error when id is not associated with the user" do
+        api_key = ApiKey.new(hashed_key: SecureRandom.hex(24), push_rubygem: true, user: @ownership.user, rubygem_id: -1)
+        assert_contains api_key.errors[:rubygem], "that is selected cannot be scoped to this key"
       end
     end
   end

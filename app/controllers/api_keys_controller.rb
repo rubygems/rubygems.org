@@ -18,6 +18,12 @@ class ApiKeysController < ApplicationController
     build_params = { user: current_user, hashed_key: hashed_key(key), **api_key_params }
     @api_key = ApiKey.new(build_params)
 
+    if @api_key.errors.present?
+      flash[:error] = @api_key.errors.full_messages.to_sentence
+      @api_key = current_user.api_keys.build(api_key_params.merge(rubygem_id: nil))
+      return render :new
+    end
+
     if @api_key.save
       Mailer.delay.api_key_created(@api_key.id)
 
@@ -27,10 +33,6 @@ class ApiKeysController < ApplicationController
       flash[:error] = @api_key.errors.full_messages.to_sentence
       render :new
     end
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t(".invalid_gem")
-    @api_key = current_user.api_keys.build(api_key_params.merge(rubygem_id: nil))
-    render :new
   end
 
   def edit
@@ -43,16 +45,19 @@ class ApiKeysController < ApplicationController
 
   def update
     @api_key = current_user.api_keys.find(params.require(:id))
+    @api_key.assign_attributes(api_key_params)
 
-    if @api_key.update(api_key_params)
+    if @api_key.errors.present?
+      flash[:error] = @api_key.errors.full_messages.to_sentence
+      return render :edit
+    end
+
+    if @api_key.save
       redirect_to profile_api_keys_path, flash: { notice: t(".success") }
     else
       flash[:error] = @api_key.errors.full_messages.to_sentence
       render :edit
     end
-  rescue ActiveRecord::RecordNotFound
-    flash[:error] = t(".invalid_gem")
-    render :edit
   end
 
   def destroy
