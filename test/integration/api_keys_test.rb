@@ -36,6 +36,7 @@ class ApiKeysTest < SystemTest
     click_button "Create"
 
     assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
+    assert_equal @ownership.rubygem.name, page.find('.owners__cell[data-title="Gem"]').text
     assert_equal @ownership.rubygem, @user.api_keys.last.rubygem
   end
 
@@ -130,6 +131,7 @@ class ApiKeysTest < SystemTest
     page.select "All Gems"
     click_button "Update"
 
+    assert_equal "All Gems", page.find('.owners__cell[data-title="Gem"]').text
     assert_nil api_key.reload.rubygem
   end
 
@@ -250,6 +252,7 @@ class ApiKeysTest < SystemTest
     assert_predicate api_key.reload, :soft_deleted?
 
     refute page.has_button? "Edit"
+    assert_nil page.find('.owners__cell[data-title="Gem"]').text
     visit_edit_profile_api_key_path(api_key)
     assert page.has_content? "An invalid API key cannot be edited. Please delete it and create a new one."
     assert_equal profile_api_keys_path, page.current_path

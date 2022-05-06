@@ -88,7 +88,6 @@ de:
       enable_mfa:
       rubygem_scope:
       rubygem_scope_info:
-      all_gems:
     reset:
       success:
     update:
@@ -100,8 +99,8 @@ de:
       enable_mfa:
       rubygem_scope:
       rubygem_scope_info:
-      all_gems:
       invalid_key:
+    all_gems:
   clearance_mailer:
     change_password:
       title:

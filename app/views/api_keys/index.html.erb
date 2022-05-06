@@ -49,7 +49,7 @@
           <% end %>
         </td>
         <td class="owners__cell" data-title="Gem">
-          <%= api_key.rubygem&.name %>
+          <%= gem_scope(api_key) %>
         </td>
         <td class="owners__cell" data-title="Age">
           <%= time_ago_in_words(api_key.created_at) %>
