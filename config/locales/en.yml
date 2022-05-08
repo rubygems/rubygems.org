@@ -116,7 +116,7 @@ en:
       title: Dashboard
   dependencies:
     show:
-      click_to_expand: Click on the arrow icon (▶) to expand
+      click_to_expand: Click on the arrow icon to expand.
   email_confirmations:
     create:
       promise_resend: We will email you confirmation link to activate your account if one exists.
