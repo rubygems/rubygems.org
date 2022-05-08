@@ -30,14 +30,11 @@ class Api::V1::DeletionsController < Api::BaseController
              status: :forbidden
     else
       begin
-        slug = if params[:platform].blank?
-                 params[:version]
-               else
-                 "#{params[:version]}-#{params[:platform]}"
-               end
-        @version = Version.find_from_slug!(@rubygem, slug)
+        version = params.require(:version)
+        platform = params.permit(:platform).fetch(:platform, nil)
+        @version = @rubygem.find_version!(number: version, platform: platform)
       rescue ActiveRecord::RecordNotFound
-        render plain: "The version #{params[:version]} does not exist.",
+        render plain: "The version #{version}#{" (#{platform})" if platform.present?} does not exist.",
                status: :not_found
       end
     end

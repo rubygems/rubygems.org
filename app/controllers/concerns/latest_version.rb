@@ -7,7 +7,7 @@ module LatestVersion
     end
 
     def latest_version_by_slug
-      @latest_version = Version.find_by!(full_name: "#{params[:rubygem_id]}-#{params[:version_id]}")
+      @latest_version = @rubygem.find_version_by_slug!(params.require(:version_id))
     end
   end
 end
