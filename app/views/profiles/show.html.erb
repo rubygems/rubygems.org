@@ -17,7 +17,7 @@
       </div>
 
       <% if @user.full_name.present? %>
-        <h1 id="profile-name" class="profile__header__name t-display-full-name">
+        <h1 id="profile-full-name" class="profile__header__name t-display-full-name">
           <%= link_to(@user.full_name, profile_path(@user.display_id), class: "t-link--black") %>
         </h1>
 
