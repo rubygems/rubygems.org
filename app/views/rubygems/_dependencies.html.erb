@@ -1,23 +1,21 @@
 <% if dependencies.present? && @latest_version.indexed %>
-  <div class="t-list__items">
-    <div class="dependencies" id="<%= dependencies.first.scope %>_dependencies">
-      <h3 class="t-list__heading"><%= t '.header', :title => dependencies.first.scope.titleize %> (<%= dependencies.size %>):</h3>
-      <div class="t-list__items">
-        <% dependencies.each do |dependency| %>
-          <% if rubygem = dependency.rubygem %>
-            <li class="gem__requirement-wrap">
-              <%= link_to rubygem_path(rubygem), :class => 't-list__item push--top-s' do %>
-                <strong><%= rubygem.name %></strong>
-              <% end %>
-              <%= dependency.clean_requirements %>
-            </li>
-          <% elsif dependency&.name %>
-            <p class="t-list__item gem__unregistered" title="unregistered gem">
-              <strong><%= dependency.name %></strong> <%= dependency.clean_requirements %>
-            </p>
-          <% end %>
+  <div class="dependencies gem__dependencies" id="<%= dependencies.first.scope %>_dependencies">
+    <h3 class="t-list__heading"><%= t '.header', :title => dependencies.first.scope.titleize %> (<%= dependencies.size %>):</h3>
+    <div class="t-list__items">
+      <% dependencies.each do |dependency| %>
+        <% if rubygem = dependency.rubygem %>
+          <li class="gem__requirement-wrap">
+            <%= link_to rubygem_path(rubygem), :class => 't-list__item' do %>
+              <strong><%= rubygem.name %></strong>
+            <% end %>
+            <%= dependency.clean_requirements %>
+          </li>
+        <% elsif dependency&.name %>
+          <p class="t-list__item gem__unregistered" title="unregistered gem">
+            <strong><%= dependency.name %></strong> <%= dependency.clean_requirements %>
+          </p>
         <% end %>
-      </div>
+      <% end %>
     </div>
   </div>
 <% end %>
