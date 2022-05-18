@@ -94,7 +94,7 @@ class PushTest < ActionDispatch::IntegrationTest
 
   test "push errors don't save files" do
     build_gem "sandworm", "1.0.0" do |spec|
-       spec.instance_variable_set :@authors, 'string'
+      spec.instance_variable_set :@authors, "string"
     end
     assert_nil Rubygem.find_by(name: "sandworm")
     push_gem "sandworm-1.0.0.gem"
