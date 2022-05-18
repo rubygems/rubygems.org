@@ -35,7 +35,7 @@ module GemcutterTaskshelper
     spec = Marshal.load(Gem::Util.inflate(file))
     spec.send(attribute_name)
   rescue StandardError => e
-    Rails.logger.info("[gemcutter:required_ruby_version:backfill] could not get required_ruby_version for version: #{version.full_name}"\
+    Rails.logger.info("[gemcutter:required_ruby_version:backfill] could not get required_ruby_version for version: #{version_full_name}"\
                       " error: #{e.inspect}")
     nil
   end
