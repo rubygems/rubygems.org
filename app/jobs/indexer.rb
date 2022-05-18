@@ -23,7 +23,7 @@ class Indexer
 
     # do all processing _before_ we upload anything to S3, so we lower the chances of orphaned files
     RubygemFs.instance.store(gem_path, gem_contents)
-    RubygemFs.instance.store(spec_path,spec_contents)
+    RubygemFs.instance.store(spec_path, spec_contents)
 
     Fastly.purge(path: gem_path)
     Fastly.purge(path: spec_path)
