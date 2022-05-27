@@ -5,7 +5,6 @@ class SessionsControllerTest < ActionController::TestCase
     setup do
       @user = User.new(email_confirmed: true, handle: "test")
       @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
-      @request.cookies[:mfa_feature] = "true"
     end
 
     context "on POST to create" do
@@ -99,6 +98,7 @@ class SessionsControllerTest < ActionController::TestCase
         setup do
           @user = User.new(email_confirmed: true, handle: "test")
           @user.stubs(:mfa_recommended?).returns true
+          @request.cookies[:mfa_warnings] = "true"
         end
 
         context "when mfa is disabled" do
@@ -119,7 +119,6 @@ class SessionsControllerTest < ActionController::TestCase
 
         context "when mfa is enabled" do
           setup do
-            @request.cookies[:mfa_feature] = "true"
             @controller.session[:mfa_user] = @user.handle
             User.expects(:find_by_slug).with(@user.handle).returns @user
           end
