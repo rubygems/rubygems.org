@@ -15,7 +15,7 @@ class SessionsControllerTest < ActionController::TestCase
 
       should respond_with :success
       should "save user name in session" do
-        assert_equal @controller.session[:mfa_user], @user.handle
+        assert_equal @controller.session[:mfa_user], @user.id
         assert page.has_content? "Multifactor authentication"
       end
     end
@@ -23,7 +23,7 @@ class SessionsControllerTest < ActionController::TestCase
     context "on POST to mfa_create" do
       context "when OTP is correct" do
         setup do
-          @controller.session[:mfa_user] = @user.handle
+          @controller.session[:mfa_user] = @user.id
           post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
         end
 
@@ -40,7 +40,7 @@ class SessionsControllerTest < ActionController::TestCase
 
       context "when OTP is recovery code" do
         setup do
-          @controller.session[:mfa_user] = @user.handle
+          @controller.session[:mfa_user] = @user.id
           post :mfa_create, params: { otp: @user.mfa_recovery_codes.first }
         end
 
@@ -57,6 +57,7 @@ class SessionsControllerTest < ActionController::TestCase
 
       context "when OTP is incorrect" do
         setup do
+          @controller.session[:mfa_user] = @user.id
           wrong_otp = (ROTP::TOTP.new(@user.mfa_seed).now.to_i.succ % 1_000_000).to_s
           post :mfa_create, params: { otp: wrong_otp }
         end
@@ -119,8 +120,8 @@ class SessionsControllerTest < ActionController::TestCase
 
         context "when mfa is enabled" do
           setup do
-            @controller.session[:mfa_user] = @user.handle
-            User.expects(:find_by_slug).with(@user.handle).returns @user
+            @controller.session[:mfa_user] = @user.id
+            User.expects(:find).with(@user.id).returns @user
           end
 
           context "on `ui_only` level" do
