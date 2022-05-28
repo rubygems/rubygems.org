@@ -35,9 +35,12 @@ class Rack::Attack
     { controller: "reverse_dependencies", action: "index" }
   ]
 
+  mfa_create_action        = { controller: "sessions", action: "mfa_create" }
+  mfa_password_edit_action = { controller: "passwords", action: "mfa_edit" }
+
   protected_ui_mfa_actions = [
-    { controller: "sessions",            action: "mfa_create" },
-    { controller: "passwords",           action: "mfa_edit" },
+    mfa_create_action,
+    mfa_password_edit_action,
     { controller: "multifactor_auths",   action: "create" },
     { controller: "multifactor_auths",   action: "update" }
   ]
@@ -79,6 +82,28 @@ class Rack::Attack
 
     throttle("api/ip/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
       req.ip if protected_route?(protected_api_mfa_actions, req.path, req.request_method)
+    end
+
+    ########################### rate limit per user ###########################
+    throttle("clearance/user/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
+      if protected_route?(protected_ui_mfa_actions, req.path, req.request_method)
+        action_dispatch_req = ActionDispatch::Request.new(req.env)
+
+        # mfa_create doesn't have remember_token set. use session[:mfa_user]
+        if protected_route?([mfa_create_action], req.path, req.request_method)
+          action_dispatch_req.session.fetch("mfa_user", "").presence
+        # password#mfa_edit has unique confirmation token
+        elsif protected_route?([mfa_password_edit_action], req.path, req.request_method)
+          req.params.fetch("token", "").presence
+        else
+          User.find_by_remember_token(action_dispatch_req.cookie_jar.signed["remember_token"])&.email.presence
+        end
+      end
+    end
+
+    ########################### rate limit per api key ###########################
+    throttle("api/key/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
+      req.get_header("HTTP_AUTHORIZATION") if protected_route?(protected_api_mfa_actions, req.path, req.request_method)
     end
   end
 

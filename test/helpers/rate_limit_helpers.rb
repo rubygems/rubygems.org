@@ -87,6 +87,18 @@ module RateLimitHelpers
     expo_exceeding_limit.times { Rack::Attack.cache.count("#{scope}:#{@ip_address}", expo_limit_period) }
   end
 
+  def exceed_exponential_user_limit_for(scope, id, level)
+    expo_exceeding_limit = exceeding_exp_base_limit * level
+    expo_limit_period = exp_base_limit_period**level
+    expo_exceeding_limit.times { Rack::Attack.cache.count("#{scope}:#{id}", expo_limit_period) }
+  end
+
+  def exceed_exponential_api_key_limit_for(scope, api_key, level)
+    expo_exceeding_limit = exceeding_exp_base_limit * level
+    expo_limit_period = exp_base_limit_period**level
+    expo_exceeding_limit.times { Rack::Attack.cache.count("#{scope}:#{api_key}", expo_limit_period) }
+  end
+
   def encode(username, password)
     ActionController::HttpAuthentication::Basic
       .encode_credentials(username, password)
