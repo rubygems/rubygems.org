@@ -292,12 +292,28 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       assert_response :too_many_requests
     end
 
+    should "throttle profile update per user" do
+      sign_in_as @user
+      update_limit_for("password/user:#{@user.email}", exceeding_limit)
+      patch "/profile"
+
+      assert_response :too_many_requests
+    end
+
     should "throttle profile delete" do
       post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
 
       exceed_limit_for("clearance/ip")
       delete "/profile",
         headers: { REMOTE_ADDR: @ip_address }
+
+      assert_response :too_many_requests
+    end
+
+    should "throttle profile delete per user" do
+      sign_in_as @user
+      update_limit_for("password/user:#{@user.email}", exceeding_limit)
+      delete "/profile"
 
       assert_response :too_many_requests
     end

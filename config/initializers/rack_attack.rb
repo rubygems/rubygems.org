@@ -58,6 +58,12 @@ class Rack::Attack
     { controller: "owners", action: "destroy" }
   ]
 
+  protected_password_actions = [
+    { controller: "profiles", action: "update" },
+    { controller: "profiles", action: "destroy" },
+    { controller: "sessions", action: "authenticate" }
+  ]
+
   def self.protected_route?(protected_actions, path, method)
     route_params = Rails.application.routes.recognize_path(path, method: method)
     protected_actions.any? { |hash| hash[:controller] == route_params[:controller] && hash[:action] == route_params[:action] }
@@ -154,6 +160,13 @@ class Rack::Attack
       action_dispatch_req = ActionDispatch::Request.new(req.env)
       who = ActionController::HttpAuthentication::Basic.user_name_and_password(action_dispatch_req).first
       User.normalize_email(who).presence
+    end
+  end
+
+  throttle("password/user", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
+    if protected_route?(protected_password_actions, req.path, req.request_method)
+      action_dispatch_req = ActionDispatch::Request.new(req.env)
+      User.find_by_remember_token(action_dispatch_req.cookie_jar.signed["remember_token"])&.email.presence
     end
   end
 
