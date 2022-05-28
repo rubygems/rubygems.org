@@ -308,6 +308,8 @@ fr:
       devez d'abord la désactiver.
     require_mfa_enabled: Votre authentification multifacteur n'a pas été activée.
       Vous devez d'abord l'activer.
+    setup_recommended:
+    strong_mfa_level_recommended:
     new:
       title: Activer l'authentification multifacteur
       scan_prompt: Veuillez scanner le QR code avec votre app d'authentification.
