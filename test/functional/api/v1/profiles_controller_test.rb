@@ -27,6 +27,15 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
     assert_match mfa_level, @response.body
   end
 
+  def assert_warning_included(expected_warning)
+    assert response_body.key?("warnings")
+    assert_match expected_warning, response_body["warnings"].to_s
+  end
+
+  def refute_warning_included(expected_warning)
+    refute_match expected_warning, response_body["warnings"].to_s
+  end
+
   def refute_mfa_info_included(mfa_level)
     refute response_body.key?("mfa")
     refute_match mfa_level, @response.body
@@ -74,6 +83,74 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
         should respond_with :success
         should "return owner mfa information" do
           assert_mfa_info_included @user.mfa_level
+        end
+
+        context "when mfa is recommended" do
+          setup do
+            rubygem = create(:rubygem)
+            create(:ownership, user: @user, rubygem: rubygem)
+            GemDownload.increment(
+              Rubygem::MFA_RECOMMENDED_THRESHOLD + 1,
+              rubygem_id: rubygem.id
+            )
+            get :me, format: format
+          end
+
+          context "when mfa is disabled" do
+            should "include warnings" do
+              expected_warning =
+                "For protection of your account and gems, we encourage you to set up multifactor authentication"\
+                " at https://rubygems.org/multifactor_auth/new. Your account will be required to have MFA enabled in the future."
+
+              assert_warning_included(expected_warning)
+            end
+          end
+
+          context "when mfa is enabled" do
+            context "on `ui_only` level" do
+              setup do
+                @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+                get :me, format: format
+              end
+
+              should "include warnings" do
+                expected_warning =
+                  "For protection of your account and gems, we encourage you to change your multifactor authentication"\
+                  " level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit."\
+                  " Your account will be required to have MFA enabled on one of these levels in the future."
+
+                assert_warning_included(expected_warning)
+              end
+            end
+
+            context "on `ui_and_gem_signin` level" do
+              setup do
+                @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+                get :me, format: format
+              end
+
+              should "not include warnings in user json" do
+                unexpected_warning =
+                  "For protection of your account and gems"
+
+                refute_warning_included(unexpected_warning)
+              end
+            end
+
+            context "on `ui_and_api` level" do
+              setup do
+                @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+                get :me, format: format
+              end
+
+              should "not include warnings" do
+                unexpected_warning =
+                  "For protection of your account and gems"
+
+                refute_warning_included(unexpected_warning)
+              end
+            end
+          end
         end
       end
 
