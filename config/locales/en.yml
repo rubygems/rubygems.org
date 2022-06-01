@@ -63,12 +63,14 @@ en:
   api_keys:
     create:
       success: "Created new API key"
+      invalid_gem: Selected gem cannot be scoped to this key
     destroy:
       success: "Successfully deleted API key: %{name}"
     index:
       api_keys: API keys
       name: Name
       scopes: Scopes
+      gem: Gem
       age: Age
       last_access: Last access
       action: Action
@@ -90,14 +92,22 @@ en:
       new_api_key: New API key
       multifactor_auth: Multifactor authentication
       enable_mfa: Enable MFA
+      rubygem_scope: Gem Scope
+      rubygem_scope_info: This scope restricts gem push/yank and owner add/remove commands to a specific gem.
     reset:
       success: "Deleted all API keys"
     update:
       success: "Successfully updated API key"
+      invalid_gem: Selected gem cannot be scoped to this key
     edit:
       edit_api_key: "Edit API key"
       multifactor_auth: Multifactor authentication
       enable_mfa: Enable MFA
+      rubygem_scope: Gem Scope
+      rubygem_scope_info: This scope restricts gem push/yank and owner add/remove commands to a specific gem.
+      invalid_key: An invalid API key cannot be edited. Please delete it and create a new one.
+    all_gems: All Gems
+    gem_ownership_removed: Ownership of %{rubygem_name} has been removed after being scoped to this key.
   clearance_mailer:
     change_password:
       title: CHANGE PASSWORD

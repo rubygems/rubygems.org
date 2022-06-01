@@ -31,6 +31,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns true
         @cutter.stubs(:verify_mfa_requirement).returns true
+        @cutter.stubs(:verify_gem_scope).returns true
         @cutter.stubs(:validate).returns true
         @cutter.stubs(:save)
 
@@ -41,6 +42,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:pull_spec).returns false
         @cutter.stubs(:find).never
         @cutter.stubs(:authorize).never
+        @cutter.stubs(:verify_gem_scope).never
         @cutter.stubs(:verify_mfa_requirement).never
         @cutter.stubs(:save).never
         @cutter.process
@@ -50,16 +52,30 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find)
         @cutter.stubs(:authorize).never
+        @cutter.stubs(:verify_gem_scope).never
         @cutter.stubs(:verify_mfa_requirement).never
         @cutter.stubs(:save).never
 
         @cutter.process
       end
 
-      should "not attempt to check mfa requirement if not authorized" do
+      should "not attempt to check gem scope if not authorized" do
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns false
+        @cutter.stubs(:verify_gem_scope).never
+        @cutter.stubs(:verify_mfa_requirement).never
+        @cutter.stubs(:validate).never
+        @cutter.stubs(:save).never
+
+        @cutter.process
+      end
+
+      should "not attempt to check mfa requirement if scoped to another gem" do
+        @cutter.stubs(:pull_spec).returns true
+        @cutter.stubs(:find).returns true
+        @cutter.stubs(:authorize).returns true
+        @cutter.stubs(:verify_gem_scope).returns false
         @cutter.stubs(:verify_mfa_requirement).never
         @cutter.stubs(:validate).never
         @cutter.stubs(:save).never
@@ -71,6 +87,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns true
+        @cutter.stubs(:verify_gem_scope).returns true
         @cutter.stubs(:verify_mfa_requirement).returns false
         @cutter.stubs(:validate).never
         @cutter.stubs(:save).never
@@ -82,6 +99,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns true
+        @cutter.stubs(:verify_gem_scope).returns true
         @cutter.stubs(:verify_mfa_requirement).returns true
         @cutter.stubs(:validate).returns false
         @cutter.stubs(:save).never
@@ -530,6 +548,26 @@ class PusherTest < ActiveSupport::TestCase
     end
 
     teardown { RubygemFs.mock! }
+  end
+
+  context "has a scoped gem" do
+    setup do
+      @rubygem = create(:rubygem)
+    end
+
+    should "pushes gem if scoped to the same gem" do
+      create(:version, rubygem: @rubygem, number: "0.1.1", indexed: false)
+      cutter = Pusher.new(@user, @gem, "", @rubygem)
+      cutter.stubs(:rubygem).returns @rubygem
+      assert cutter.verify_gem_scope
+    end
+
+    should "does not push gem if scoped to another gem" do
+      create(:version, rubygem: @rubygem, number: "0.1.1", indexed: false)
+      cutter = Pusher.new(@user, @gem, "", create(:rubygem))
+      cutter.stubs(:rubygem).returns @rubygem
+      refute cutter.verify_gem_scope
+    end
   end
 
   context "the gem has been signed and not tampered with" do

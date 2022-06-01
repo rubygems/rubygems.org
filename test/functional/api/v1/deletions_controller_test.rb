@@ -128,6 +128,60 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         end
       end
 
+      context "with api key gem scoped" do
+        setup do
+          @api_key = create(:api_key, name: "gem-scoped-delete-key", key: "123456", yank_rubygem: true, user: @user, rubygem_id: @rubygem.id)
+          @request.env["HTTP_AUTHORIZATION"] = "123456"
+        end
+
+        context "to the same gem to be deleted" do
+          setup do
+            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          end
+
+          should respond_with :success
+        end
+
+        context "to another gem" do
+          setup do
+            ownership = create(:ownership, user: @user, rubygem: create(:rubygem, name: "another_gem"))
+            @api_key.update(ownership: ownership)
+
+            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          end
+
+          should respond_with :forbidden
+        end
+
+        context "to a gem with ownership removed" do
+          setup do
+            ownership = create(:ownership, user: create(:user), rubygem: create(:rubygem, name: "test-gem123"))
+            @api_key.update(ownership: ownership)
+            ownership.destroy!
+
+            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          end
+
+          should respond_with :forbidden
+          should "#render_soft_deleted_api_key and display an error" do
+            assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
+          end
+        end
+      end
+
+      context "with a soft deleted api key" do
+        setup do
+          @api_key.soft_delete!
+
+          delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+        end
+
+        should respond_with :forbidden
+        should "#render_soft_deleted_api_key and display an error" do
+          assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
+        end
+      end
+
       context "ON DELETE to create for existing gem version" do
         setup do
           create(:global_web_hook, user: @user, url: "http://example.org")

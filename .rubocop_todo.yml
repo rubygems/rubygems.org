@@ -107,11 +107,12 @@ Rails/OutputSafety:
     - 'app/helpers/application_helper.rb'
     - 'app/helpers/rubygems_helper.rb'
 
-# Offense count: 6
+# Offense count: 7
 # This cop supports safe auto-correction (--auto-correct).
 Rails/RedundantPresenceValidationOnBelongsTo:
   Exclude:
     - 'app/models/api_key.rb'
+    - 'app/models/api_key_rubygem_scope.rb'
     - 'app/models/deletion.rb'
     - 'app/models/ownership_call.rb'
     - 'app/models/ownership_request.rb'

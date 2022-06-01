@@ -1,6 +1,7 @@
 class Api::V1::DeletionsController < Api::BaseController
   before_action :authenticate_with_api_key
   before_action :find_rubygem_by_name
+  before_action :verify_api_key_gem_scope
   before_action :validate_gem_and_version
   before_action :verify_with_otp
   before_action :render_api_key_forbidden, if: :api_key_unauthorized?
