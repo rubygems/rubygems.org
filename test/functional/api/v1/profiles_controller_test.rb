@@ -28,12 +28,12 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
   end
 
   def assert_warning_included(expected_warning)
-    assert response_body.key?("warnings")
-    assert_match expected_warning, response_body["warnings"].to_s
+    assert response_body.key?("warning")
+    assert_match expected_warning, response_body["warning"].to_s
   end
 
   def refute_warning_included(expected_warning)
-    refute_match expected_warning, response_body["warnings"].to_s
+    refute_match expected_warning, response_body["warning"].to_s
   end
 
   def refute_mfa_info_included(mfa_level)
@@ -97,7 +97,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
           end
 
           context "when mfa is disabled" do
-            should "include warnings" do
+            should "include warning" do
               expected_warning =
                 "For protection of your account and gems, we encourage you to set up multifactor authentication"\
                 " at https://rubygems.org/multifactor_auth/new. Your account will be required to have MFA enabled in the future."
@@ -113,7 +113,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
                 get :me, format: format
               end
 
-              should "include warnings" do
+              should "include warning" do
                 expected_warning =
                   "For protection of your account and gems, we encourage you to change your multifactor authentication"\
                   " level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit."\
@@ -129,7 +129,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
                 get :me, format: format
               end
 
-              should "not include warnings in user json" do
+              should "not include warning in user json" do
                 unexpected_warning =
                   "For protection of your account and gems"
 
@@ -143,7 +143,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
                 get :me, format: format
               end
 
-              should "not include warnings" do
+              should "not include warning" do
                 unexpected_warning =
                   "For protection of your account and gems"
 

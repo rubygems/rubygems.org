@@ -5,7 +5,7 @@ class User::WithPrivateFieldsTest < ActiveSupport::TestCase
     @user = create(:user)
   end
 
-  context "#mfa_warnings" do
+  context "#mfa_warning" do
     context "when mfa is recommended" do
       setup do
         @user = User::WithPrivateFields.new(email_confirmed: true, handle: "test")
@@ -13,7 +13,7 @@ class User::WithPrivateFieldsTest < ActiveSupport::TestCase
       end
 
       context "when mfa is disabled" do
-        should "include warnings in user json" do
+        should "include warning in user json" do
           expected_notice =
             "For protection of your account and gems, we encourage you to set up multifactor authentication"\
             " at https://rubygems.org/multifactor_auth/new. Your account will be required to have MFA enabled in the future."
@@ -28,7 +28,7 @@ class User::WithPrivateFieldsTest < ActiveSupport::TestCase
             @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
           end
 
-          should "include warnings in user json" do
+          should "include warning in user json" do
             expected_notice =
               "For protection of your account and gems, we encourage you to change your multifactor authentication"\
               " level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit."\
@@ -43,7 +43,7 @@ class User::WithPrivateFieldsTest < ActiveSupport::TestCase
             @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
           end
 
-          should "not include warnings in user json" do
+          should "not include warning in user json" do
             unexpected_notice =
               "For protection of your account and gems"
 
@@ -56,7 +56,7 @@ class User::WithPrivateFieldsTest < ActiveSupport::TestCase
             @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
           end
 
-          should "not include warnings in user json" do
+          should "not include warning in user json" do
             unexpected_notice =
               "For protection of your account and gems"
 

@@ -3,14 +3,10 @@
 # being exposed to all users in their public profile
 class User::WithPrivateFields < User
   def payload
-    super.merge({ "mfa" => mfa_level, "warnings" => warnings })
+    super.merge({ "mfa" => mfa_level, "warning" => mfa_warning })
   end
 
   private
-
-  def warnings
-    [mfa_warning]
-  end
 
   def mfa_warning
     if mfa_recommended_not_yet_enabled?

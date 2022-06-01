@@ -43,7 +43,7 @@ class Api::BaseController < ApplicationController
     render plain: "Gem requires MFA enabled; You do not have MFA enabled yet.", status: :forbidden
   end
 
-  def response_with_warnings(response)
+  def response_with_warning(response)
     response_with_mfa_warning(response)
   end
 

@@ -576,7 +576,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         end
 
         should respond_with :success
-        should "not include mfa warnings" do
+        should "not include mfa warning" do
           mfa_warning = "[WARNING] For protection of your account and gems"
 
           refute_includes @response.body, mfa_warning
@@ -591,7 +591,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         end
 
         should respond_with :success
-        should "not include mfa warnings" do
+        should "not include mfa warning" do
           mfa_warning = "[WARNING] For protection of your account and gems"
 
           refute_includes @response.body, mfa_warning
