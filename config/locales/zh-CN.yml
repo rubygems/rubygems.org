@@ -423,7 +423,7 @@ zh-CN:
       required_ruby_version: 需要的 Ruby 版本
       required_rubygems_version: 需要的 RubyGems 版本
       requires_mfa:
-      since: "%{version}"
+      released_with_mfa:
       links:
         badge: 徽章
         bugs: Bug 追踪

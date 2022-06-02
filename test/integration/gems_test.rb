@@ -174,11 +174,11 @@ class GemsSystemTest < SystemTest
     assert page.has_content? "true"
   end
 
-  test "does versions published without mfa requirement hide mfa block" do
+  test "does not show mfa block if version is published without mfa requirement" do
     @version.update_attribute :metadata, { "rubygems_mfa_required" => "false" }
 
     visit rubygem_path(@rubygem)
 
-    assert !(page.has_content? "test")
+    refute page.has_content? "true"
   end
 end

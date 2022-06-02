@@ -468,7 +468,7 @@ es:
       required_ruby_version: Versión de Ruby requerida
       required_rubygems_version: Versión de Rubygems requerida
       requires_mfa:
-      since: "%{version}"
+      released_with_mfa:
       links:
         badge: Badge
         bugs: Seguimiento de Bugs
