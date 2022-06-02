@@ -12,10 +12,10 @@ class Api::V1::DeletionsController < Api::BaseController
     if @deletion.save
       StatsD.increment "yank.success"
       enqueue_web_hook_jobs(@version)
-      render plain: response_with_warning("Successfully deleted gem: #{@version.to_title}")
+      render plain: response_with_mfa_warning("Successfully deleted gem: #{@version.to_title}")
     else
       StatsD.increment "yank.failure"
-      render plain: response_with_warning(@deletion.errors.full_messages.to_sentence),
+      render plain: response_with_mfa_warning(@deletion.errors.full_messages.to_sentence),
              status: :unprocessable_entity
     end
   end
@@ -24,10 +24,10 @@ class Api::V1::DeletionsController < Api::BaseController
 
   def validate_gem_and_version
     if !@rubygem.hosted?
-      render plain: response_with_warning(t(:this_rubygem_could_not_be_found)),
+      render plain: response_with_mfa_warning(t(:this_rubygem_could_not_be_found)),
              status: :not_found
     elsif !@rubygem.owned_by?(@api_key.user)
-      render plain: response_with_warning("You do not have permission to delete this gem."),
+      render plain: response_with_mfa_warning("You do not have permission to delete this gem."),
              status: :forbidden
     else
       begin
@@ -35,7 +35,7 @@ class Api::V1::DeletionsController < Api::BaseController
         platform = params.permit(:platform).fetch(:platform, nil)
         @version = @rubygem.find_version!(number: version, platform: platform)
       rescue ActiveRecord::RecordNotFound
-        render plain: response_with_warning("The version #{version}#{" (#{platform})" if platform.present?} does not exist."),
+        render plain: response_with_mfa_warning("The version #{version}#{" (#{platform})" if platform.present?} does not exist."),
                status: :not_found
       end
     end
