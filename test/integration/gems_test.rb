@@ -155,7 +155,7 @@ class GemsSystemTest < SystemTest
     assert page.has_no_selector?(".github-btn")
   end
 
-  test "shows both blocks if latest AND viewed version require MFA" do
+  test "shows both mfa headers if latest AND viewed version require MFA" do
     @version.update_attribute :metadata, { "rubygems_mfa_required" => "true" }
     create(:version, :mfa_required, rubygem: @rubygem, number: "0.1.1")
 
@@ -165,7 +165,7 @@ class GemsSystemTest < SystemTest
     assert page.has_content? "Version published with MFA"
   end
 
-  test "shows 'new' block only if latest requires MFA but viewed version doesn't" do
+  test "shows 'new' mfa header only if latest requires MFA but viewed version doesn't" do
     @version.update_attribute :metadata, { "rubygems_mfa_required" => "true" }
     create(:version, rubygem: @rubygem, number: "0.1.1")
 
@@ -175,7 +175,7 @@ class GemsSystemTest < SystemTest
     refute page.has_content? "Version published with MFA"
   end
 
-  test "shows 'version' block only if latest does not require MFA but viewed version does" do
+  test "shows 'version' mfa header only if latest does not require MFA but viewed version does" do
     @version.update_attribute :metadata, { "rubygems_mfa_required" => "false" }
     create(:version, :mfa_required, rubygem: @rubygem, number: "0.1.1")
 
@@ -185,7 +185,7 @@ class GemsSystemTest < SystemTest
     assert page.has_content? "Version published with MFA"
   end
 
-  test "does not show either block if neither latest or viewed version require MFA" do
+  test "does not show either mfa header if neither latest or viewed version require MFA" do
     @version.update_attribute :metadata, { "rubygems_mfa_required" => "false" }
     create(:version, rubygem: @rubygem, number: "0.1.1")
 
@@ -195,7 +195,7 @@ class GemsSystemTest < SystemTest
     refute page.has_content? "Version published with MFA"
   end
 
-  test "shows both blocks if MFA enabled for latest version and viewing latest version" do
+  test "shows both mfa headers if MFA enabled for latest version and viewing latest version" do
     @version.update_attribute :metadata, { "rubygems_mfa_required" => "true" }
     
     visit rubygem_path(@rubygem)
@@ -204,7 +204,7 @@ class GemsSystemTest < SystemTest
     assert page.has_content? "Version published with MFA"
   end
 
-  test "shows neither block if MFA disabled for latest version and viewing latest version" do
+  test "shows neither mfa header if MFA disabled for latest version and viewing latest version" do
     @version.update_attribute :metadata, { "rubygems_mfa_required" => "false" }
     
     visit rubygem_path(@rubygem)
