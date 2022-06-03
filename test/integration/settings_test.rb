@@ -111,6 +111,48 @@ class SettingsTest < SystemTest
     assert page.has_content? "You have not yet enabled multi-factor authentication."
   end
 
+  test "Clicking MFA continue button without copying recovery codes creates confirm popup" do
+    sign_in
+    visit edit_settings_path
+    click_button "Register a new device"
+
+    totp = ROTP::TOTP.new(mfa_key)
+    page.fill_in "otp", with: totp.now
+    click_button "Enable"
+    check "ack"
+    confirm_text = page.dismiss_confirm do
+      click_button "Continue"
+    end
+    assert_equal "Leave without copying recovery codes?", confirm_text
+    assert_equal page.current_path, multifactor_auth_path
+    page.accept_confirm do
+      click_button "Continue"
+    end
+    assert_equal page.current_path, edit_settings_path
+  end
+
+  test "Navigating away another way without copying recovery codes creates default leave warning popup" do
+    sign_in
+    visit edit_settings_path
+    click_button "Register a new device"
+
+    totp = ROTP::TOTP.new(mfa_key)
+    page.fill_in "otp", with: totp.now
+    click_button "Enable"
+
+    check "ack"
+    confirm_text = dismiss_confirm do
+      visit root_path
+    end
+    assert_equal("", confirm_text)
+    assert_equal page.current_path, multifactor_auth_path
+
+    accept_confirm do
+      visit root_path
+    end
+    assert_equal page.current_path, root_path
+  end
+
   teardown do
     Capybara.reset_sessions!
     Capybara.use_default_driver
