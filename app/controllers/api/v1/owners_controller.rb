@@ -21,13 +21,14 @@ class Api::V1::OwnersController < Api::BaseController
       ownership = @rubygem.ownerships.new(user: owner, authorizer: @api_key.user)
       if ownership.save
         Delayed::Job.enqueue(OwnershipConfirmationMailer.new(ownership.id))
-        render plain: "#{owner.display_handle} was added as an unconfirmed owner. "\
-                      "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
+        render plain: response_with_mfa_warning("#{owner.display_handle} was added as an unconfirmed owner. "\
+                                                "Ownership access will be enabled after the user clicks on the "\
+                                                "confirmation mail sent to their email.")
       else
-        render plain: ownership.errors.full_messages.to_sentence, status: :unprocessable_entity
+        render plain: response_with_mfa_warning(ownership.errors.full_messages.to_sentence), status: :unprocessable_entity
       end
     else
-      render plain: "Owner could not be found.", status: :not_found
+      render plain: response_with_mfa_warning("Owner could not be found."), status: :not_found
     end
   end
 
@@ -39,12 +40,12 @@ class Api::V1::OwnersController < Api::BaseController
       ownership = @rubygem.ownerships_including_unconfirmed.find_by(user_id: owner.id)
       if ownership.safe_destroy
         OwnersMailer.delay.owner_removed(ownership.user_id, @api_key.user.id, ownership.rubygem_id)
-        render plain: "Owner removed successfully."
+        render plain: response_with_mfa_warning("Owner removed successfully.")
       else
-        render plain: "Unable to remove owner.", status: :forbidden
+        render plain: response_with_mfa_warning("Unable to remove owner."), status: :forbidden
       end
     else
-      render plain: "Owner could not be found.", status: :not_found
+      render plain: response_with_mfa_warning("Owner could not be found."), status: :not_found
     end
   end
 
@@ -65,6 +66,6 @@ class Api::V1::OwnersController < Api::BaseController
 
   def verify_gem_ownership
     return if @api_key.user.rubygems.find_by_name(params[:rubygem_id])
-    render plain: "You do not have permission to manage this gem.", status: :unauthorized
+    render plain: response_with_mfa_warning("You do not have permission to manage this gem."), status: :unauthorized
   end
 end
