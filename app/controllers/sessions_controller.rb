@@ -79,19 +79,15 @@ class SessionsController < Clearance::SessionsController
   end
 
   def url_after_create
-    if mfa_warnings_enabled? && current_user.mfa_recommended_not_yet_enabled?
+    if current_user.mfa_recommended_not_yet_enabled?
       flash[:notice] = t("multifactor_auths.setup_recommended")
       new_multifactor_auth_path
-    elsif mfa_warnings_enabled? && current_user.mfa_recommended_weak_level_enabled?
+    elsif current_user.mfa_recommended_weak_level_enabled?
       flash[:notice] = t("multifactor_auths.strong_mfa_level_recommended")
       edit_settings_path
     else
       dashboard_path
     end
-  end
-
-  def mfa_warnings_enabled?
-    cookies[:mfa_warnings] == "true"
   end
 
   def ensure_not_blocked
