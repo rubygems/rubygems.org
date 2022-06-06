@@ -26,13 +26,7 @@ class MultifactorAuthsController < ApplicationController
 
   def update
     if current_user.otp_verified?(otp_param)
-      if level_param == "disabled"
-        flash[:success] = t("multifactor_auths.destroy.success")
-        current_user.disable_mfa!
-      else
-        flash[:error] = t(".success")
-        current_user.update!(mfa_level: level_param)
-      end
+      handle_new_level_param
     else
       flash[:error] = t("multifactor_auths.incorrect_otp")
     end
@@ -70,6 +64,19 @@ class MultifactorAuthsController < ApplicationController
     @expire = Time.at(session[:mfa_seed_expire] || 0).utc
     %i[mfa_seed mfa_seed_expire].each do |key|
       session.delete(key)
+    end
+  end
+
+  def handle_new_level_param
+    case level_param
+    when "disabled"
+      flash[:success] = t("multifactor_auths.destroy.success")
+      current_user.disable_mfa!
+    when "ui_only"
+      flash[:error] = t("multifactor_auths.ui_only_warning")
+    else
+      flash[:error] = t(".success")
+      current_user.update!(mfa_level: level_param)
     end
   end
 end

@@ -297,6 +297,7 @@ zh-TW:
     require_mfa_enabled: 你的多重要素驗證已停用，請先啟用。
     setup_recommended:
     strong_mfa_level_recommended:
+    ui_only_warning: 
     new:
       title: 啟用多重要素驗證
       scan_prompt: 請用你的驗證裝置掃描 QR-code。如果你沒辦法掃描，手動輸入下面的資料。

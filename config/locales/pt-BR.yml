@@ -324,6 +324,7 @@ pt-BR:
     require_mfa_enabled:
     setup_recommended:
     strong_mfa_level_recommended:
+    ui_only_warning: 
     new:
       title:
       scan_prompt:
