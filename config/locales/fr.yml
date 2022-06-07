@@ -314,7 +314,7 @@ fr:
     recovery_code_html:
     incorrect_otp: Votre clé OTP est incorrecte.
     otp_code: clé OTP
-    require_mfa_disabled: Votre authentification multifacteur a été activée. Vous
+    require_mfa_disabled: Votre authentification multi-facteur a été activée. Si vous voulez la reconfigurer, vous
       devez d'abord la désactiver.
     require_mfa_enabled: Votre authentification multifacteur n'a pas été activée.
       Vous devez d'abord l'activer.
