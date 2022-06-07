@@ -122,6 +122,7 @@ Follow the instructions below on how to install Bundler and setup the database.
 * Start elasticsearch: `elasticsearch`
 * Start memcached: `memcached`
 * Run the tests: `bundle exec rake`
+* Run just one file's tests: `bundle exec rake TEST=path/to/some_test.rb`
 
 #### Confirmation emails links
 
