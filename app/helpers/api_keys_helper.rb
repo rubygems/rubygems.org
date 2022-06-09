@@ -12,7 +12,6 @@ module ApiKeysHelper
       :span,
       "#{name} [?]",
       class: "tooltip__text",
-      style: "font-size:1em",
       data: { tooltip: t("api_keys.gem_ownership_removed", rubygem_name: name) }
     )
   end

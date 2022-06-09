@@ -22,7 +22,6 @@ class ApiKeysHelperTest < ActionView::TestCase
       expected_dom = <<~HTML.squish.gsub(/>\s+</, "><")
         <span
           class="tooltip__text"
-          style="font-size:1em"
           data-tooltip="Ownership of #{rubygem_name} has been removed after being scoped to this key."\
         >#{rubygem_name} [?]</span>
       HTML
