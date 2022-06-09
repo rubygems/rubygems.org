@@ -14,7 +14,9 @@ rescue StandardError => e
 end
 
 namespace :mfa_policy do
-  # To be sent on launch day (June 13, 2022)
+  # This task is meant to be run on MFA Phase 2 launch day - June 13, 2022
+  # For more information on the MFA Phase 2 rollout, refer to this RFC:
+  # https://github.com/rubygems/rfcs/pull/36/files#diff-3d5cc3acc06fe7e9150fdbfc43399c5ad42572c122187774bfc3a4857df524f1R46-R67
   # rake mfa_policy:announce_recommendation
   desc "Send email notification to all users about MFA Phase 2 rollout (MFA Recommendation for popular gems)"
   task announce_recommendation: :environment do
