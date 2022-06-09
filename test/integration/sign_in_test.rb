@@ -6,7 +6,6 @@ class SignInTest < SystemTest
     @mfa_user = create(:user, email: "john@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD,
                   mfa_level: :ui_only, mfa_seed: "thisisonemfaseed",
                   mfa_recovery_codes: %w[0123456789ab ba9876543210])
-    page.driver.browser.set_cookie("mfa_warnings=true")
   end
 
   test "signing in" do

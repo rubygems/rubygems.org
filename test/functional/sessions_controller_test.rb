@@ -99,7 +99,6 @@ class SessionsControllerTest < ActionController::TestCase
         setup do
           @user = User.new(email_confirmed: true, handle: "test")
           @user.stubs(:mfa_recommended?).returns true
-          @request.cookies[:mfa_warnings] = "true"
         end
 
         context "when mfa is disabled" do
