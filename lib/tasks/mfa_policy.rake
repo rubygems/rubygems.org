@@ -20,12 +20,13 @@ namespace :mfa_policy do
   # rake mfa_policy:announce_recommendation
   desc "Send email notification to all users about MFA Phase 2 rollout (MFA Recommendation for popular gems)"
   task announce_recommendation: :environment do
-    users = User.all
+    # users who own at least one gem with a minimum of 165,000,000 downloads or more
+    users = User.joins(rubygems: :gem_download).where("gem_downloads.count >= 165000000").uniq
     total_users = users.count
     puts "Sending #{total_users} MFA announcement email"
 
     i = 0
-    users.find_each do |user|
+    users.each do |user|
       Mailer.delay.mfa_recommendation_announcement(user.id) if mx_exists?(user.email)
       i += 1
       print format("\r%.2f%% (%d/%d) complete", i.to_f / total_users * 100.0, i, total_users)

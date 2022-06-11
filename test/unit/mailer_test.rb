@@ -1,9 +1,13 @@
 require "test_helper"
 
 class MailerTest < ActiveSupport::TestCase
+  MIN_DOWNLOADS_FOR_MFA_RECOMMENDATION_POLICY = 165_000_000
+
   context "sending mail for mfa recommendation announcement" do
     setup do
       @user = create(:user)
+      create(:rubygem, owners: [@user], downloads: MIN_DOWNLOADS_FOR_MFA_RECOMMENDATION_POLICY)
+
       Gemcutter::Application.load_tasks
       Rake::Task["mfa_policy:announce_recommendation"].invoke
       Delayed::Worker.new.work_off
