@@ -15,7 +15,7 @@
       <% end %>
     </div>
 
-    <div class="form__group">
+    <div class="form__group api_key_rubygem_id_form">
       <%= label_tag :rubygem_id, t(".rubygem_scope"), class: "form__label" %>
       <p><%= t(".rubygem_scope_info") %></p>
       <%= f.collection_select :rubygem_id, current_user.rubygems.by_name, :id, :name, { include_blank: t(".all_gems") }, selected: :rubygem_id, class: "form__input form__select" %>

@@ -14,6 +14,25 @@ class ApiKeysTest < SystemTest
 
   test "creating new api key" do
     visit_profile_api_keys_path
+    assert_nil URI.parse(page.current_url).query
+
+    fill_in "api_key[name]", with: "test"
+    check "api_key[index_rubygems]"
+    refute page.has_content? "Enable MFA"
+    click_button "Create"
+
+    assert page.has_content? "Note that we won't be able to show the key to you again. New API key:"
+    assert_predicate @user.api_keys.last, :can_index_rubygems?
+    refute_predicate @user.api_keys.last, :mfa_enabled?
+    assert_nil @user.api_keys.last.rubygem
+  end
+
+  test "creating new api key from index" do
+    create(:api_key, user: @user)
+
+    visit_profile_api_keys_path
+    click_button "New API key"
+    assert_empty URI.parse(page.current_url).query
 
     fill_in "api_key[name]", with: "test"
     check "api_key[index_rubygems]"
@@ -112,6 +131,7 @@ class ApiKeysTest < SystemTest
     visit_profile_api_keys_path
     click_button "Edit"
 
+    assert_empty URI.parse(page.current_url).query
     assert page.has_content? "Edit API key"
     check "api_key[add_owner]"
     refute page.has_content? "Enable MFA"
