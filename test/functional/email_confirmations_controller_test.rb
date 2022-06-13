@@ -91,7 +91,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
       should respond_with :success
       should "display otp form" do
-        assert page.has_content?("Multifactor authentication")
+        assert page.has_content?("Multi-factor authentication")
       end
     end
   end

@@ -88,7 +88,7 @@ class GemsSystemTest < SystemTest
     visit rubygem_path(@rubygem, as: @user.id)
 
     assert page.has_selector?(".gem__users__mfa-disabled .gem__users a")
-    assert page.has_content? "Please consider enabling multifactor"
+    assert page.has_content? "Please consider enabling multi-factor"
   end
 
   test "shows owners without mfa when logged in as owner" do
