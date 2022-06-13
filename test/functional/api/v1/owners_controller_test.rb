@@ -331,7 +331,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
               mfa_warning = <<~WARN.chomp
 
 
-                [WARNING] For protection of your account and gems, we encourage you to set up multifactor authentication \
+                [WARNING] For protection of your account and gems, we encourage you to set up multi-factor authentication \
                 at https://rubygems.org/multifactor_auth/new. Your account will be required to have MFA enabled in the future.
               WARN
 
@@ -351,7 +351,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
               mfa_warning = <<~WARN.chomp
 
 
-                [WARNING] For protection of your account and gems, we encourage you to change your multifactor authentication \
+                [WARNING] For protection of your account and gems, we encourage you to change your multi-factor authentication \
                 level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit. \
                 Your account will be required to have MFA enabled on one of these levels in the future.
               WARN
@@ -606,7 +606,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
               mfa_warning = <<~WARN.chomp
 
 
-                [WARNING] For protection of your account and gems, we encourage you to set up multifactor authentication \
+                [WARNING] For protection of your account and gems, we encourage you to set up multi-factor authentication \
                 at https://rubygems.org/multifactor_auth/new. Your account will be required to have MFA enabled in the future.
               WARN
 
@@ -626,7 +626,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
               mfa_warning = <<~WARN.chomp
 
 
-                [WARNING] For protection of your account and gems, we encourage you to change your multifactor authentication \
+                [WARNING] For protection of your account and gems, we encourage you to change your multi-factor authentication \
                 level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit. \
                 Your account will be required to have MFA enabled on one of these levels in the future.
               WARN

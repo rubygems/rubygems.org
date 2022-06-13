@@ -16,7 +16,7 @@ class SessionsControllerTest < ActionController::TestCase
       should respond_with :success
       should "save user name in session" do
         assert_equal @controller.session[:mfa_user], @user.id
-        assert page.has_content? "Multifactor authentication"
+        assert page.has_content? "Multi-factor authentication"
       end
     end
 
@@ -111,7 +111,7 @@ class SessionsControllerTest < ActionController::TestCase
           should redirect_to("the mfa setup page") { new_multifactor_auth_path }
 
           should "set notice flash" do
-            expected_notice = "For protection of your account and your gems, we encourage you to set up multifactor authentication. " \
+            expected_notice = "For protection of your account and your gems, we encourage you to set up multi-factor authentication. " \
                               "Your account will be required to have MFA enabled in the future."
             assert_equal expected_notice, flash[:notice]
           end
