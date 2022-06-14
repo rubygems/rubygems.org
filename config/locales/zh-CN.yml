@@ -292,7 +292,7 @@ zh-CN:
     recovery_code_html:
     incorrect_otp: 你的 OTP 码 不正确。
     otp_code: OTP 码
-    require_mfa_disabled: 你的多重要素验证已启用，请先停用。
+    require_mfa_disabled:
     require_mfa_enabled: 你的多重要素验证已停用，请先启用。
     setup_recommended:
     strong_mfa_level_recommended:
