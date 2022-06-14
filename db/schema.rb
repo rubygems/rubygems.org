@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_03_29_203956) do
-
+ActiveRecord::Schema[7.0].define(version: 2022_06_14_221414) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "plpgsql"
@@ -127,8 +126,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_29_203956) do
     t.bigint "user_id"
     t.text "note"
     t.boolean "status", default: true, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["rubygem_id"], name: "index_ownership_calls_on_rubygem_id"
     t.index ["user_id"], name: "index_ownership_calls_on_user_id"
   end
@@ -140,8 +139,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_29_203956) do
     t.text "note"
     t.integer "status", limit: 2, default: 0, null: false
     t.integer "approver_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["ownership_call_id"], name: "index_ownership_requests_on_ownership_call_id"
     t.index ["rubygem_id"], name: "index_ownership_requests_on_rubygem_id"
     t.index ["user_id"], name: "index_ownership_requests_on_user_id"
@@ -282,4 +281,5 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_29_203956) do
   end
 
   add_foreign_key "api_keys", "users"
+  add_foreign_key "ownerships", "users", on_delete: :cascade
 end
