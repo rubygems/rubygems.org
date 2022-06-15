@@ -212,6 +212,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           post :create, body: gem_file.read
         end
         should respond_with :unauthorized
+        should "return body that starts with MFA enabled message" do
+          assert @response.body.start_with?("You have enabled multifactor authentication")
+        end
       end
 
       context "On post to create for new gem with incorrect OTP" do

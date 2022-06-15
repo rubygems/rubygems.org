@@ -46,6 +46,9 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
             delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
           end
           should respond_with :unauthorized
+          should "return body that starts with MFA enabled message" do
+            assert @response.body.start_with?("You have enabled multifactor authentication")
+          end
         end
 
         context "ON DELETE to create for existing gem version with incorrect OTP" do

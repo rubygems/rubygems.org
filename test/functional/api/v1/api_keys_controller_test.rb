@@ -48,6 +48,10 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       assert_response 401
       assert_match I18n.t("otp_missing"), @response.body
     end
+
+    should "return body that starts with MFA enabled message" do
+      assert @response.body.start_with?("You have enabled multifactor authentication")
+    end
   end
 
   def self.should_return_api_key_successfully

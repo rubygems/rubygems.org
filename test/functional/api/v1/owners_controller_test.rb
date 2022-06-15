@@ -120,6 +120,9 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           should "fail to add new owner" do
             refute_includes @rubygem.owners_including_unconfirmed, @second_user
           end
+          should "return body that starts with MFA enabled message" do
+            assert @response.body.start_with?("You have enabled multifactor authentication")
+          end
         end
 
         context "adding other user as gem owner with incorrect OTP" do
@@ -441,6 +444,9 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           should respond_with :unauthorized
           should "fail to remove gem owner" do
             assert_includes @rubygem.owners, @second_user
+          end
+          should "return body that starts with MFA enabled message" do
+            assert @response.body.start_with?("You have enabled multifactor authentication")
           end
         end
 
