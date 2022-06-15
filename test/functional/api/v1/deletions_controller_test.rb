@@ -426,5 +426,8 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
     end
 
     should respond_with :forbidden
+    should "return body that starts with denied access message" do
+      assert @response.body.start_with?("The API key doesn't have access")
+    end
   end
 end

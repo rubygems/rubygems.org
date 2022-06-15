@@ -403,10 +403,13 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         rubygem = create(:rubygem, owners: [api_key.user])
 
         @request.env["HTTP_AUTHORIZATION"] = "12323"
-        post :create, params: { rubygem_id: rubygem.to_param, email: "some@email.com" }, format: :json
+        post :create, params: { rubygem_id: rubygem.to_param, email: "some@email.com" }
       end
 
       should respond_with :forbidden
+      should "return body that starts with denied access message" do
+        assert @response.body.start_with?("The API key doesn't have access")
+      end
     end
   end
 
@@ -681,10 +684,13 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         rubygem = create(:rubygem, owners: [api_key.user])
 
         @request.env["HTTP_AUTHORIZATION"] = "12342"
-        delete :destroy, params: { rubygem_id: rubygem.to_param, email: "some@owner.com" }, format: :json
+        delete :destroy, params: { rubygem_id: rubygem.to_param, email: "some@owner.com" }
       end
 
       should respond_with :forbidden
+      should "return body that starts with denied access message" do
+        assert @response.body.start_with?("The API key doesn't have access")
+      end
     end
   end
 

@@ -693,6 +693,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         post :create, body: gem_file("test-1.0.0.gem").read
       end
       should respond_with :forbidden
+      should "return body that starts with denied access message" do
+        assert @response.body.start_with?("The API key doesn't have access")
+      end
     end
   end
 
