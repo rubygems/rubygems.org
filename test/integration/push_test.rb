@@ -88,6 +88,26 @@ class PushTest < ActionDispatch::IntegrationTest
 
     assert_response :unprocessable_entity
     assert_match(/cannot process this gem/, response.body)
+    assert_nil RubygemFs.instance.get("gems/bad-characters-1.0.0.gem")
+    assert_nil RubygemFs.instance.get("quick/Marshal.4.8/bad-characters-1.0.0.gemspec.rz")
+  end
+
+  test "push errors don't save files" do
+    build_gem "sandworm", "1.0.0" do |spec|
+      spec.instance_variable_set :@authors, "string"
+    end
+    assert_nil Rubygem.find_by(name: "sandworm")
+    push_gem "sandworm-1.0.0.gem"
+
+    assert_response :internal_server_error
+    assert_match(/problem saving your gem. Please try again./, response.body)
+
+    rubygem = Rubygem.find_by(name: "sandworm")
+    # assert_nil rubygem
+    assert_empty rubygem.versions
+    assert_nil Version.find_by(full_name: "sandworm-1.0.0")
+    assert_nil RubygemFs.instance.get("gems/sandworm-1.0.0.gem")
+    assert_nil RubygemFs.instance.get("quick/Marshal.4.8/sandworm-1.0.0.gemspec.rz")
   end
 
   test "republish a yanked version" do
@@ -130,6 +150,7 @@ class PushTest < ActionDispatch::IntegrationTest
   end
 
   teardown do
+    RubygemFs.mock!
     Dir.chdir(Rails.root)
   end
 end

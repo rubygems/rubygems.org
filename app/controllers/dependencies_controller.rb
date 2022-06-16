@@ -1,8 +1,9 @@
 class DependenciesController < ApplicationController
   include LatestVersion
+  before_action :find_rubygem, only: [:show]
+  before_action :latest_version_by_slug, only: [:show]
 
   def show
-    latest_version_by_slug
     @dependencies = Hash.new { |h, k| h[k] = [] }
     resolvable_dependencies = @latest_version.dependencies.where(unresolved_name: nil)
 

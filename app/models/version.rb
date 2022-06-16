@@ -162,11 +162,6 @@ class Version < ApplicationRecord
     indexed.by_created_at.limit(limit)
   end
 
-  def self.find_from_slug!(rubygem_id, slug)
-    rubygem = rubygem_id.is_a?(Rubygem) ? rubygem_id : Rubygem.find(rubygem_id)
-    find_by!(full_name: "#{rubygem.name}-#{slug}")
-  end
-
   def self.rubygem_name_for(full_name)
     find_by(full_name: full_name)&.rubygem&.name
   end

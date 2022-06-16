@@ -212,6 +212,8 @@
   .gem__version-wrap .gem__version__date {
     font-weight: 400; }
 
+.gem__requirement-wrap {
+    line-height: inherit; }
 .gem__requirement-wrap a.t-list__item {
     display: inline-block; }
 
@@ -249,4 +251,8 @@
 
 .gem__previous__version {
   float: left;
+}
+
+.gem__dependencies:not(:first-of-type) {
+  margin-top: 36px;
 }

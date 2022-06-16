@@ -3,20 +3,27 @@ require "digest/sha2"
 class Pusher
   attr_reader :user, :spec, :message, :code, :rubygem, :body, :version, :version_id, :size
 
-  def initialize(user, body, remote_ip = "")
+  def initialize(user, body, remote_ip = "", scoped_rubygem = nil)
     @user = user
     @body = StringIO.new(body.read)
     @size = @body.size
     @indexer = Indexer.new
     @remote_ip = remote_ip
+    @scoped_rubygem = scoped_rubygem
   end
 
   def process
-    pull_spec && find && authorize && verify_mfa_requirement && validate && save
+    pull_spec && find && authorize && verify_gem_scope && verify_mfa_requirement && validate && save
   end
 
   def authorize
     rubygem.pushable? || rubygem.owned_by?(user) || notify_unauthorized
+  end
+
+  def verify_gem_scope
+    return true unless @scoped_rubygem && rubygem != @scoped_rubygem
+
+    notify("This API key cannot perform the specified action on this gem.", 403)
   end
 
   def verify_mfa_requirement

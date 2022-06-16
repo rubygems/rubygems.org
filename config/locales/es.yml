@@ -69,6 +69,7 @@ es:
   api_keys:
     create:
       success:
+      invalid_gem:
     destroy:
       success:
     index:
@@ -76,6 +77,7 @@ es:
       name:
       scopes:
       age:
+      gem:
       last_access:
       action:
       delete:
@@ -96,14 +98,22 @@ es:
       new_api_key:
       multifactor_auth:
       enable_mfa:
+      rubygem_scope:
+      rubygem_scope_info:
     reset:
       success:
     update:
       success:
+      invalid_gem:
     edit:
       edit_api_key:
       multifactor_auth:
       enable_mfa:
+      rubygem_scope:
+      rubygem_scope_info:
+      invalid_key:
+    all_gems:
+    gem_ownership_removed:
   clearance_mailer:
     change_password:
       title: CAMBIAR CONTRASEÑA
@@ -312,10 +322,11 @@ es:
     recovery_code_html:
     incorrect_otp: Tu código OTP no es correcto.
     otp_code: código OTP
-    require_mfa_disabled: Se ha activado la autenticación de múltiples factores. Primero
-      tienes que desactivarla.
+    require_mfa_disabled: Se ha activado la autenticación de múltiples factores. Para reconfigurarla, primero tendrás que desactivarla.
     require_mfa_enabled: No se ha activado la autenticación de múltiples factores.
       Primero tienes que activarla.
+    setup_recommended:
+    strong_mfa_level_recommended:
     new:
       title: Activando autenticación de múltiples factores
       scan_prompt: Por favor escanea el código QR con tu aplicación de Autenticación.

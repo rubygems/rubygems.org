@@ -5,7 +5,6 @@ class SessionsControllerTest < ActionController::TestCase
     setup do
       @user = User.new(email_confirmed: true, handle: "test")
       @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
-      @request.cookies[:mfa_feature] = "true"
     end
 
     context "on POST to create" do
@@ -16,15 +15,15 @@ class SessionsControllerTest < ActionController::TestCase
 
       should respond_with :success
       should "save user name in session" do
-        assert_equal @controller.session[:mfa_user], @user.handle
-        assert page.has_content? "Multifactor authentication"
+        assert_equal @controller.session[:mfa_user], @user.id
+        assert page.has_content? "Multi-factor authentication"
       end
     end
 
     context "on POST to mfa_create" do
       context "when OTP is correct" do
         setup do
-          @controller.session[:mfa_user] = @user.handle
+          @controller.session[:mfa_user] = @user.id
           post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
         end
 
@@ -41,7 +40,7 @@ class SessionsControllerTest < ActionController::TestCase
 
       context "when OTP is recovery code" do
         setup do
-          @controller.session[:mfa_user] = @user.handle
+          @controller.session[:mfa_user] = @user.id
           post :mfa_create, params: { otp: @user.mfa_recovery_codes.first }
         end
 
@@ -58,6 +57,7 @@ class SessionsControllerTest < ActionController::TestCase
 
       context "when OTP is incorrect" do
         setup do
+          @controller.session[:mfa_user] = @user.id
           wrong_otp = (ROTP::TOTP.new(@user.mfa_seed).now.to_i.succ % 1_000_000).to_s
           post :mfa_create, params: { otp: wrong_otp }
         end
@@ -93,6 +93,74 @@ class SessionsControllerTest < ActionController::TestCase
 
       should "sign in the user" do
         assert_predicate @controller.request.env[:clearance], :signed_in?
+      end
+
+      context "when mfa is recommended" do
+        setup do
+          @user = User.new(email_confirmed: true, handle: "test")
+          @user.stubs(:mfa_recommended?).returns true
+        end
+
+        context "when mfa is disabled" do
+          setup do
+            User.expects(:authenticate).with("login", "pass").returns @user
+            post :create, params: { session: { who: "login", password: "pass" } }
+          end
+
+          should respond_with :redirect
+          should redirect_to("the mfa setup page") { new_multifactor_auth_path }
+
+          should "set notice flash" do
+            expected_notice = "For protection of your account and your gems, we encourage you to set up multi-factor authentication. " \
+                              "Your account will be required to have MFA enabled in the future."
+            assert_equal expected_notice, flash[:notice]
+          end
+        end
+
+        context "when mfa is enabled" do
+          setup do
+            @controller.session[:mfa_user] = @user.id
+            User.expects(:find).with(@user.id).returns @user
+          end
+
+          context "on `ui_only` level" do
+            setup do
+              @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+              post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+            end
+
+            should respond_with :redirect
+            should redirect_to("the settings page") { edit_settings_path }
+
+            should "set notice flash" do
+              expected_notice = "For protection of your account and your gems, we encourage you to change your MFA level " \
+                                "to \"UI and gem signin\" or \"UI and API\". Your account will be required to have MFA enabled " \
+                                "on one of these levels in the future."
+
+              assert_equal expected_notice, flash[:notice]
+            end
+          end
+
+          context "on `ui_and_gem_signin` level" do
+            setup do
+              @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+              post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+            end
+
+            should respond_with :redirect
+            should redirect_to("the dashboard") { dashboard_path }
+          end
+
+          context "on `ui_and_api` level" do
+            setup do
+              @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+              post :mfa_create, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now }
+            end
+
+            should respond_with :redirect
+            should redirect_to("the dashboard") { dashboard_path }
+          end
+        end
       end
     end
 

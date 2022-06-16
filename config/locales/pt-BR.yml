@@ -68,6 +68,7 @@ pt-BR:
   api_keys:
     create:
       success:
+      invalid_gem:
     destroy:
       success:
     index:
@@ -75,6 +76,7 @@ pt-BR:
       name:
       scopes:
       age:
+      gem:
       last_access:
       action:
       delete:
@@ -95,14 +97,22 @@ pt-BR:
       new_api_key:
       multifactor_auth:
       enable_mfa:
+      rubygem_scope:
+      rubygem_scope_info:
     reset:
       success:
     update:
       success:
+      invalid_gem:
     edit:
       edit_api_key:
       multifactor_auth:
       enable_mfa:
+      rubygem_scope:
+      rubygem_scope_info:
+      invalid_key:
+    all_gems:
+    gem_ownership_removed:
   clearance_mailer:
     change_password:
       title:
@@ -313,6 +323,8 @@ pt-BR:
     otp_code:
     require_mfa_disabled:
     require_mfa_enabled:
+    setup_recommended:
+    strong_mfa_level_recommended:
     new:
       title:
       scan_prompt:

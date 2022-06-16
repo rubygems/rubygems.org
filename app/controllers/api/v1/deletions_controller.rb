@@ -1,6 +1,7 @@
 class Api::V1::DeletionsController < Api::BaseController
   before_action :authenticate_with_api_key
   before_action :find_rubygem_by_name
+  before_action :verify_api_key_gem_scope
   before_action :validate_gem_and_version
   before_action :verify_with_otp
   before_action :render_api_key_forbidden, if: :api_key_unauthorized?
@@ -11,10 +12,10 @@ class Api::V1::DeletionsController < Api::BaseController
     if @deletion.save
       StatsD.increment "yank.success"
       enqueue_web_hook_jobs(@version)
-      render plain: "Successfully deleted gem: #{@version.to_title}"
+      render plain: response_with_mfa_warning("Successfully deleted gem: #{@version.to_title}")
     else
       StatsD.increment "yank.failure"
-      render plain: @deletion.errors.full_messages.to_sentence,
+      render plain: response_with_mfa_warning(@deletion.errors.full_messages.to_sentence),
              status: :unprocessable_entity
     end
   end
@@ -23,21 +24,18 @@ class Api::V1::DeletionsController < Api::BaseController
 
   def validate_gem_and_version
     if !@rubygem.hosted?
-      render plain: t(:this_rubygem_could_not_be_found),
+      render plain: response_with_mfa_warning(t(:this_rubygem_could_not_be_found)),
              status: :not_found
     elsif !@rubygem.owned_by?(@api_key.user)
-      render plain: "You do not have permission to delete this gem.",
+      render plain: response_with_mfa_warning("You do not have permission to delete this gem."),
              status: :forbidden
     else
       begin
-        slug = if params[:platform].blank?
-                 params[:version]
-               else
-                 "#{params[:version]}-#{params[:platform]}"
-               end
-        @version = Version.find_from_slug!(@rubygem, slug)
+        version = params.require(:version)
+        platform = params.permit(:platform).fetch(:platform, nil)
+        @version = @rubygem.find_version!(number: version, platform: platform)
       rescue ActiveRecord::RecordNotFound
-        render plain: "The version #{params[:version]} does not exist.",
+        render plain: response_with_mfa_warning("The version #{version}#{" (#{platform})" if platform.present?} does not exist."),
                status: :not_found
       end
     end

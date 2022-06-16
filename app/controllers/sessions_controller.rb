@@ -6,7 +6,7 @@ class SessionsController < Clearance::SessionsController
     @user = find_user
 
     if @user&.mfa_enabled?
-      session[:mfa_user] = @user.display_id
+      session[:mfa_user] = @user.id
       render "sessions/otp_prompt"
     else
       do_login
@@ -14,7 +14,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def mfa_create
-    @user = User.find_by_slug(session[:mfa_user])
+    @user = User.find(session[:mfa_user])
     session.delete(:mfa_user)
 
     if @user&.mfa_enabled? && @user&.otp_verified?(params[:otp])
@@ -79,7 +79,15 @@ class SessionsController < Clearance::SessionsController
   end
 
   def url_after_create
-    dashboard_path
+    if current_user.mfa_recommended_not_yet_enabled?
+      flash[:notice] = t("multifactor_auths.setup_recommended")
+      new_multifactor_auth_path
+    elsif current_user.mfa_recommended_weak_level_enabled?
+      flash[:notice] = t("multifactor_auths.strong_mfa_level_recommended")
+      edit_settings_path
+    else
+      dashboard_path
+    end
   end
 
   def ensure_not_blocked

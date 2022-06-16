@@ -11,15 +11,22 @@ class Indexer
   statsd_measure :perform, "Indexer.perform"
 
   def write_gem(body, spec)
-    RubygemFs.instance.store("gems/#{spec.original_name}.gem", body.string)
+    original_name = spec.original_name
+
+    gem_path = "gems/#{original_name}.gem"
+    gem_contents = body.string
 
     spec.abbreviate
     spec.sanitize
+    spec_path = "quick/Marshal.4.8/#{original_name}.gemspec.rz"
+    spec_contents = Gem.deflate(Marshal.dump(spec))
 
-    RubygemFs.instance.store(
-      "quick/Marshal.4.8/#{spec.original_name}.gemspec.rz",
-      Gem.deflate(Marshal.dump(spec))
-    )
+    # do all processing _before_ we upload anything to S3, so we lower the chances of orphaned files
+    RubygemFs.instance.store(gem_path, gem_contents)
+    RubygemFs.instance.store(spec_path, spec_contents)
+
+    Fastly.purge(path: gem_path)
+    Fastly.purge(path: spec_path)
   end
 
   private

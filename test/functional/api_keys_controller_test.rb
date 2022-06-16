@@ -124,6 +124,33 @@ class ApiKeysControllerTest < ActionController::TestCase
           assert_empty @user.reload.api_keys
         end
       end
+
+      context "with a gem scope" do
+        setup do
+          @ownership = create(:ownership, user: @user, rubygem: create(:rubygem))
+        end
+
+        should "have a gem scope with valid id" do
+          post :create, params: { api_key: { name: "gem scope", add_owner: true, rubygem_id: @ownership.rubygem.id } }
+
+          created_key = @user.reload.api_keys.find_by(name: "gem scope")
+          assert_equal @ownership.rubygem, created_key.rubygem
+        end
+
+        should "display error with invalid id" do
+          post :create, params: { api_key: { name: "gem scope", add_owner: true, rubygem_id: -1 } }
+
+          assert_equal "Rubygem that is selected cannot be scoped to this key", flash[:error]
+          assert_empty @user.reload.api_keys
+        end
+
+        should "displays error with gem scope without applicable scope enabled" do
+          post :create, params: { api_key: { name: "gem scope", index_rubygems: true, rubygem_id: @ownership.rubygem.id } }
+
+          assert_equal "Rubygem scope can only be set for push/yank rubygem, and add/remove owner scopes", flash[:error]
+          assert_empty @user.reload.api_keys
+        end
+      end
     end
 
     context "on GET to edit" do
@@ -137,6 +164,14 @@ class ApiKeysControllerTest < ActionController::TestCase
       should "render edit api key form" do
         assert page.has_content? "Edit API key"
         assert_select "form > input.form__input", value: "ci-key"
+      end
+
+      should "redirect to index with soft deleted key" do
+        @api_key.soft_delete!
+        get :edit, params: { id: @api_key.id }
+
+        assert_redirected_to profile_api_keys_path
+        assert_equal "An invalid API key cannot be edited. Please delete it and create a new one.", flash[:error]
       end
     end
 
@@ -166,6 +201,42 @@ class ApiKeysControllerTest < ActionController::TestCase
 
         should "not update scope of test key" do
           refute_predicate @api_key, :can_add_owner?
+        end
+      end
+
+      context "gem scope" do
+        setup do
+          @ownership = create(:ownership, user: @user, rubygem: create(:rubygem))
+          @api_key.update(rubygem_id: @ownership.rubygem.id, push_rubygem: true)
+        end
+
+        should "to all gems" do
+          patch :update, params: { api_key: { rubygem_id: nil }, id: @api_key.id }
+
+          assert_nil @api_key.reload.rubygem
+        end
+
+        should "to another gem" do
+          another_ownership = create(:ownership, user: @user, rubygem: create(:rubygem))
+          patch :update, params: { api_key: { rubygem_id: another_ownership.rubygem.id }, id: @api_key.id }
+
+          assert_equal another_ownership.rubygem, @api_key.reload.rubygem
+        end
+
+        should "displays error with invalid id" do
+          assert_no_changes @api_key do
+            patch :update, params: { api_key: { rubygem_id: -1 }, id: @api_key.id }
+
+            assert_equal "Rubygem that is selected cannot be scoped to this key", flash[:error]
+          end
+        end
+
+        should "displays error with gem scope without applicable scope enabled" do
+          assert_no_changes @api_key do
+            patch :update, params: { api_key: { push_rubygem: false }, id: @api_key.id }
+
+            assert_equal "Rubygem scope can only be set for push/yank rubygem, and add/remove owner scopes", flash[:error]
+          end
         end
       end
     end

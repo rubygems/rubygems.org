@@ -15,6 +15,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_05_191606) do
   enable_extension "hstore"
   enable_extension "plpgsql"
 
+  create_table "api_key_rubygem_scopes", force: :cascade do |t|
+    t.bigint "api_key_id", null: false
+    t.bigint "ownership_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["api_key_id"], name: "index_api_key_rubygem_scopes_on_api_key_id"
+  end
+
   create_table "api_keys", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "name", null: false
@@ -30,6 +38,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_05_191606) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "mfa", default: false, null: false
+    t.datetime "soft_deleted_at"
+    t.string "soft_deleted_rubygem_name"
     t.index ["hashed_key"], name: "index_api_keys_on_hashed_key", unique: true
     t.index ["user_id"], name: "index_api_keys_on_user_id"
   end
@@ -116,8 +126,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_05_191606) do
     t.bigint "user_id"
     t.text "note"
     t.boolean "status", default: true, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["rubygem_id"], name: "index_ownership_calls_on_rubygem_id"
     t.index ["user_id"], name: "index_ownership_calls_on_user_id"
   end
@@ -129,8 +139,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_05_191606) do
     t.text "note"
     t.integer "status", limit: 2, default: 0, null: false
     t.integer "approver_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["ownership_call_id"], name: "index_ownership_requests_on_ownership_call_id"
     t.index ["rubygem_id"], name: "index_ownership_requests_on_rubygem_id"
     t.index ["user_id"], name: "index_ownership_requests_on_user_id"
@@ -210,7 +220,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_05_191606) do
     t.string "mfa_recovery_codes", default: [], array: true
     t.integer "mail_fails", default: 0
     t.string "blocked_email"
-    t.string "full_name"
     t.index ["email"], name: "index_users_on_email"
     t.index ["handle"], name: "index_users_on_handle"
     t.index ["id", "confirmation_token"], name: "index_users_on_id_and_confirmation_token"

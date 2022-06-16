@@ -58,6 +58,7 @@ zh-TW:
   api_keys:
     create:
       success:
+      invalid_gem:
     destroy:
       success:
     index:
@@ -65,6 +66,7 @@ zh-TW:
       name:
       scopes:
       age:
+      gem:
       last_access:
       action:
       delete:
@@ -85,14 +87,22 @@ zh-TW:
       new_api_key:
       multifactor_auth:
       enable_mfa:
+      rubygem_scope:
+      rubygem_scope_info:
     reset:
       success:
     update:
       success:
+      invalid_gem:
     edit:
       edit_api_key:
       multifactor_auth:
       enable_mfa:
+      rubygem_scope:
+      rubygem_scope_info:
+      invalid_key:
+    all_gems:
+    gem_ownership_removed:
   clearance_mailer:
     change_password:
       title:
@@ -284,8 +294,10 @@ zh-TW:
     recovery_code_html:
     incorrect_otp: 你的 OTP 碼 不正確。
     otp_code: OTP 碼
-    require_mfa_disabled: 你的多重要素驗證已啟用，請先停用。
+    require_mfa_disabled:
     require_mfa_enabled: 你的多重要素驗證已停用，請先啟用。
+    setup_recommended:
+    strong_mfa_level_recommended:
     new:
       title: 啟用多重要素驗證
       scan_prompt: 請用你的驗證裝置掃描 QR-code。如果你沒辦法掃描，手動輸入下面的資料。

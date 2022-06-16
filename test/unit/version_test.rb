@@ -387,7 +387,15 @@ class VersionTest < ActiveSupport::TestCase
 
     should "raise an ActiveRecord::RecordNotFound if an invalid slug is given" do
       assert_raise ActiveRecord::RecordNotFound do
-        Version.find_from_slug!(@version.rubygem_id, "some stupid version 399")
+        @version.rubygem.find_version!(number: "some stupid version 399", platform: @version.platform)
+      end
+    end
+
+    should "raise an ActiveRecord::RecordNotFound if the full name belongs to a different gem" do
+      prefix = create(:version, rubygem: build(:rubygem, name: "foo"), number: "0.1.0", platform: "ruby")
+      create(:version, rubygem: build(:rubygem, name: "foo-bar"), number: "0.1.0", platform: "ruby")
+      assert_raise ActiveRecord::RecordNotFound do
+        prefix.rubygem.find_version!(number: "bar-0.1.0", platform: prefix.platform)
       end
     end
 
@@ -397,7 +405,7 @@ class VersionTest < ActiveSupport::TestCase
         slug = "#{version.number}-#{platform}"
 
         assert_predicate version, :platformed?
-        assert_equal version.reload, Version.find_from_slug!(version.rubygem_id, slug)
+        assert_equal version.reload, version.rubygem.find_version!(number: version.number, platform: platform)
         assert_equal slug, version.slug
       end
     end

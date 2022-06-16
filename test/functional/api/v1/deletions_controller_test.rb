@@ -8,6 +8,26 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
       @request.env["HTTP_AUTHORIZATION"] = "12345"
     end
 
+    context "with a gem version that is the suffix of another gem name" do
+      setup do
+        @owner     = create(:user)
+        @rubygem   = create(:rubygem, name: "some-gem")
+        @v1        = create(:version, rubygem: @rubygem, number: "0.1.0", platform: "ruby")
+        @ownership = create(:ownership, user: @owner, rubygem: @rubygem)
+        @user_gem  = create(:rubygem, name: "some")
+        @user_v1   = create(:version, rubygem: @user_gem, number: "0.1.0", platform: "ruby")
+        @user_own  = create(:ownership, user: @user, rubygem: @user_gem)
+        RubygemFs.instance.store("gems/#{@v1.full_name}.gem", "")
+      end
+
+      context "ON DELETE" do
+        setup do
+          delete :create, params: { gem_name: "some", version: "gem-0.1.0" }
+        end
+        should respond_with :not_found
+      end
+    end
+
     context "for a gem SomeGem with a version 0.1.0" do
       setup do
         @rubygem   = create(:rubygem, name: "SomeGem")
@@ -105,6 +125,156 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
             delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
           end
           should respond_with :forbidden
+        end
+      end
+
+      context "with api key gem scoped" do
+        setup do
+          @api_key = create(:api_key, name: "gem-scoped-delete-key", key: "123456", yank_rubygem: true, user: @user, rubygem_id: @rubygem.id)
+          @request.env["HTTP_AUTHORIZATION"] = "123456"
+        end
+
+        context "to the same gem to be deleted" do
+          setup do
+            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          end
+
+          should respond_with :success
+        end
+
+        context "to another gem" do
+          setup do
+            ownership = create(:ownership, user: @user, rubygem: create(:rubygem, name: "another_gem"))
+            @api_key.update(ownership: ownership)
+
+            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          end
+
+          should respond_with :forbidden
+        end
+
+        context "to a gem with ownership removed" do
+          setup do
+            ownership = create(:ownership, user: create(:user), rubygem: create(:rubygem, name: "test-gem123"))
+            @api_key.update(ownership: ownership)
+            ownership.destroy!
+
+            delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+          end
+
+          should respond_with :forbidden
+          should "#render_soft_deleted_api_key and display an error" do
+            assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
+          end
+        end
+      end
+
+      context "when mfa is recommended" do
+        setup do
+          User.any_instance.stubs(:mfa_recommended?).returns true
+
+          another_gem = create(:rubygem, name: "gem_owned_by_someone_else")
+          create(:version, rubygem: another_gem, number: "0.1.1", platform: "ruby")
+
+          v2 = create(:version, rubygem: @rubygem, number: "0.1.1", platform: "ruby")
+          Deletion.create!(user: @user, version: v2)
+
+          @gems = {
+            success: { name: @rubygem.to_param, version: @v1.number, deletion_status: :success },
+            already_deleted: { name: @rubygem.to_param, version: v2.number, deletion_status: :unprocessable_entity },
+            not_owned_gem: { name: another_gem.to_param, version: @v1.number, deletion_status: :forbidden },
+            without_version: { name: create(:rubygem).name, deletion_status: :not_found }
+          }
+        end
+
+        context "by user with mfa disabled" do
+          should "include mfa setup warning" do
+            @gems.each do |_, gem|
+              delete :create, params: { gem_name: gem[:name], version: gem[:version] }
+
+              assert_response gem[:deletion_status]
+              mfa_warning = <<~WARN.chomp
+
+
+                [WARNING] For protection of your account and gems, we encourage you to set up multi-factor authentication \
+                at https://rubygems.org/multifactor_auth/new. Your account will be required to have MFA enabled in the future.
+              WARN
+
+              assert_includes @response.body, mfa_warning
+            end
+          end
+        end
+
+        context "by user on `ui_only` mfa level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          end
+
+          should "include change mfa level warning" do
+            @gems.each do |_, gem|
+              delete :create, params: { gem_name: gem[:name], version: gem[:version] }
+
+              assert_response gem[:deletion_status]
+              mfa_warning = <<~WARN.chomp
+
+
+                [WARNING] For protection of your account and gems, we encourage you to change your multi-factor authentication \
+                level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit. \
+                Your account will be required to have MFA enabled on one of these levels in the future.
+              WARN
+
+              assert_includes @response.body, mfa_warning
+            end
+          end
+        end
+
+        context "by user on `ui_and_gem_signin` mfa level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+          end
+
+          should "not include mfa warnings" do
+            @gems.each do |_, gem|
+              @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+              delete :create, params: { gem_name: gem[:name], version: gem[:version] }
+
+              assert_response gem[:deletion_status]
+              mfa_warning = "[WARNING] For protection of your account and gems"
+
+              refute_includes @response.body, mfa_warning
+            end
+          end
+        end
+
+        context "by user on `ui_and_api` mfa level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          end
+
+          should "not include mfa warnings" do
+            @gems.each do |_, gem|
+              @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+              delete :create, params: { gem_name: gem[:name], version: gem[:version] }
+
+              assert_response gem[:deletion_status]
+              mfa_warning = "[WARNING] For protection of your account and gems"
+
+              refute_includes @response.body, mfa_warning
+            end
+          end
+        end
+      end
+
+      context "with a soft deleted api key" do
+        setup do
+          @api_key.soft_delete!
+
+          delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
+        end
+
+        should respond_with :forbidden
+        should "#render_soft_deleted_api_key and display an error" do
+          assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
         end
       end
 
@@ -218,6 +388,26 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           assert_equal 1, Deletion.where(user: @user,
                                          rubygem: @rubygem.name,
                                          number: @v1.number).count
+        end
+      end
+    end
+
+    context "rubygem with no versions" do
+      setup do
+        @rubygem   = create(:rubygem, name: "no_versions")
+        @ownership = create(:ownership, user: @user, rubygem: @rubygem)
+      end
+
+      context "ON DELETE to create for non existent version" do
+        setup do
+          delete :create, params: { gem_name: @rubygem.to_param, version: "0.1.0" }
+        end
+        should respond_with :not_found
+        should "not respond with not found message" do
+          assert_equal "This rubygem could not be found.", @response.body
+        end
+        should "not record the deletion" do
+          assert_empty Deletion.where(user: @user, rubygem: @rubygem.name, number: "0.1.0")
         end
       end
     end

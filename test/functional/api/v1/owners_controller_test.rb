@@ -101,7 +101,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         @user = create(:user)
         @second_user = create(:user)
         @third_user = create(:user)
-        create(:ownership, rubygem: @rubygem, user: @user)
+        @ownership = create(:ownership, rubygem: @rubygem, user: @user)
         @api_key = create(:api_key, key: "12334", add_owner: true, user: @user)
         @request.env["HTTP_AUTHORIZATION"] = "12334"
       end
@@ -262,6 +262,136 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           assert_includes @rubygem.owners_including_unconfirmed, @second_user
         end
       end
+
+      context "with api key gem scoped" do
+        context "to another gem" do
+          setup do
+            another_rubygem_ownership = create(:ownership, user: @user, rubygem: create(:rubygem, name: "test"))
+
+            @api_key.update(ownership: another_rubygem_ownership)
+            post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+          end
+
+          should respond_with :forbidden
+          should "not add other user as gem owner" do
+            refute_includes @rubygem.owners, @second_user
+          end
+        end
+
+        context "to the same gem" do
+          setup do
+            @api_key.update(rubygem_id: @rubygem.id)
+            post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+          end
+
+          should respond_with :success
+          should "adds other user as gem owner" do
+            assert_includes @rubygem.owners_including_unconfirmed, @second_user
+          end
+        end
+
+        context "to a gem with ownership removed" do
+          setup do
+            @api_key.update(ownership: @ownership)
+            @ownership.destroy!
+
+            post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+          end
+
+          should respond_with :forbidden
+          should "#render_soft_deleted_api_key and display an error" do
+            assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
+          end
+        end
+      end
+
+      context "with a soft deleted api key" do
+        setup do
+          @api_key.soft_delete!
+
+          post :create, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+        end
+
+        should respond_with :forbidden
+        should "#render_soft_deleted_api_key and display an error" do
+          assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
+        end
+      end
+
+      context "when mfa is recommended" do
+        setup do
+          User.any_instance.stubs(:mfa_recommended?).returns true
+          @emails = [@second_user.email, "doesnot@exist.com", @user.email]
+        end
+
+        context "by user with mfa disabled" do
+          should "include mfa setup warning" do
+            @emails.each do |email|
+              post :create, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
+              mfa_warning = <<~WARN.chomp
+
+
+                [WARNING] For protection of your account and gems, we encourage you to set up multi-factor authentication \
+                at https://rubygems.org/multifactor_auth/new. Your account will be required to have MFA enabled in the future.
+              WARN
+
+              assert_includes @response.body, mfa_warning
+            end
+          end
+        end
+
+        context "by user on `ui_only` level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          end
+
+          should "include change mfa level warning" do
+            @emails.each do |email|
+              post :create, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
+              mfa_warning = <<~WARN.chomp
+
+
+                [WARNING] For protection of your account and gems, we encourage you to change your multi-factor authentication \
+                level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit. \
+                Your account will be required to have MFA enabled on one of these levels in the future.
+              WARN
+
+              assert_includes @response.body, mfa_warning
+            end
+          end
+        end
+
+        context "by user on `ui_and_gem_signin` level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+          end
+
+          should "not include MFA warnings" do
+            @emails.each do |email|
+              post :create, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
+              mfa_warning = "[WARNING] For protection of your account and gems"
+
+              refute_includes @response.body, mfa_warning
+            end
+          end
+        end
+
+        context "by user on `ui_and_api` level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+          end
+
+          should "not include mfa warnings" do
+            @emails.each do |email|
+              post :create, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
+              mfa_warning = "[WARNING] For protection of your account and gems"
+
+              refute_includes @response.body, mfa_warning
+            end
+          end
+        end
+      end
     end
 
     context "without add owner api key scope" do
@@ -291,10 +421,10 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         @rubygem = create(:rubygem)
         @user = create(:user)
         @second_user = create(:user)
-        create(:ownership, rubygem: @rubygem, user: @user)
+        @ownership = create(:ownership, rubygem: @rubygem, user: @user)
         @ownership = create(:ownership, rubygem: @rubygem, user: @second_user)
 
-        create(:api_key, key: "12223", remove_owner: true, user: @user)
+        @api_key = create(:api_key, key: "12223", remove_owner: true, user: @user)
         @request.env["HTTP_AUTHORIZATION"] = "12223"
       end
 
@@ -402,6 +532,137 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
             should respond_with :success
             should "succeed to remove gem owner" do
               refute_includes @rubygem.owners, @second_user
+            end
+          end
+        end
+      end
+
+      context "with api key gem scoped" do
+        context "to another gem" do
+          setup do
+            another_rubygem_ownership = create(:ownership, user: @user, rubygem: create(:rubygem, name: "test"))
+
+            @api_key.update(ownership: another_rubygem_ownership)
+            post :destroy, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+          end
+
+          should respond_with :forbidden
+          should "not remove other user as gem owner" do
+            assert_includes @rubygem.owners, @second_user
+            assert_equal "This API key cannot perform the specified action on this gem.", @response.body
+          end
+        end
+
+        context "to the same gem" do
+          setup do
+            @api_key.update(rubygem_id: @rubygem.id)
+            post :destroy, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+          end
+
+          should respond_with :success
+          should "removes other user as gem owner" do
+            refute_includes @rubygem.owners, @second_user
+          end
+        end
+
+        context "to a gem with ownership removed" do
+          setup do
+            @api_key.update(ownership: @ownership)
+            @ownership.destroy!
+
+            post :destroy, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+          end
+
+          should respond_with :forbidden
+          should "#render_soft_deleted_api_key and display an error" do
+            assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
+          end
+        end
+      end
+
+      context "with a soft deleted api key" do
+        setup do
+          @api_key.soft_delete!
+
+          post :destroy, params: { rubygem_id: @rubygem.to_param, email: @second_user.email }, format: :json
+        end
+
+        should respond_with :forbidden
+        should "#render_soft_deleted_api_key and display an error" do
+          assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
+        end
+      end
+
+      context "when mfa is recommended" do
+        setup do
+          User.any_instance.stubs(:mfa_recommended?).returns true
+          @emails = [@second_user.email, "doesnot@exist.com", @user.email, "no@permission.com"]
+        end
+
+        context "by user with mfa disabled" do
+          should "include mfa setup warning" do
+            @emails.each do |email|
+              delete :destroy, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
+              mfa_warning = <<~WARN.chomp
+
+
+                [WARNING] For protection of your account and gems, we encourage you to set up multi-factor authentication \
+                at https://rubygems.org/multifactor_auth/new. Your account will be required to have MFA enabled in the future.
+              WARN
+
+              assert_includes @response.body, mfa_warning
+            end
+          end
+        end
+
+        context "by user on `ui_only` level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          end
+
+          should "include change mfa level warning" do
+            @emails.each do |email|
+              delete :destroy, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
+              mfa_warning = <<~WARN.chomp
+
+
+                [WARNING] For protection of your account and gems, we encourage you to change your multi-factor authentication \
+                level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit. \
+                Your account will be required to have MFA enabled on one of these levels in the future.
+              WARN
+
+              assert_includes @response.body, mfa_warning
+            end
+          end
+        end
+
+        context "by user on `ui_and_gem_signin` level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+          end
+
+          should "not include mfa warnings" do
+            @emails.each do |email|
+              delete :destroy, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
+              mfa_warning = "[WARNING] For protection of your account and gems"
+
+              refute_includes @response.body, mfa_warning
+            end
+          end
+        end
+
+        context "by user on `ui_and_api` level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+          end
+
+          should "not include mfa warnings" do
+            @emails.each do |email|
+              delete :destroy, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
+              mfa_warning = "[WARNING] For protection of your account and gems"
+
+              refute_includes @response.body, mfa_warning
             end
           end
         end

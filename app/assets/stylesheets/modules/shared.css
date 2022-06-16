@@ -250,7 +250,6 @@ span#github-btn {
 
 .tooltip__text {
   color: #e9573f;
-  font-size: 0.7em;
   vertical-align: text-bottom;
   cursor: pointer;
   position: relative;
@@ -266,4 +265,8 @@ span#github-btn {
   color: white;
   padding: .25em .5em;
   font-size: .8em;
+}
+
+.tooltip__text--reduced-font-size {
+  font-size: 0.7em;
 }

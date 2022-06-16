@@ -121,7 +121,8 @@ Follow the instructions below on how to install Bundler and setup the database.
 
 * Start elasticsearch: `elasticsearch`
 * Start memcached: `memcached`
-* Run the tests: `bundle exec rake`
+* Run the tests: `bin/rails test`
+* See the [rails documentation](https://guides.rubyonrails.org/testing.html) for more testing options.
 
 #### Confirmation emails links
 

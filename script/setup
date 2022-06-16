@@ -22,13 +22,12 @@ echo "$0: Cleaning out old logs"
 echo "$0: Installing libraries and plugins"
 { gem list -i bundler || gem install bundler
   bundle
-  script/install_toxiproxy.sh
 } >&3 2>&1
 
 # Wipe and load the database unless KEEPDB=1 env var is set.
 if [ -z "$KEEPDB" ]; then
   echo "$0: Reloading the database"
-  { rake db:create:all db:drop:all db:setup --trace
+  { rake db:drop db:create db:setup --trace
     rake db:test:prepare --trace
   } >&3 2>&1
 fi

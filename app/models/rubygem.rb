@@ -133,6 +133,16 @@ class Rubygem < ApplicationRecord
     payload(version).merge!(version.as_json) if version
   end
 
+  def find_version!(number:, platform:)
+    platform = platform.presence || "ruby"
+    versions.find_by!(number: number, platform: platform)
+  end
+
+  def find_version_by_slug!(slug)
+    full_name = "#{name}-#{slug}"
+    versions.find_by!(full_name: full_name)
+  end
+
   def hosted?
     versions.count.nonzero?
   end
