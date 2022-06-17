@@ -153,6 +153,27 @@ class SettingsTest < SystemTest
     assert_equal page.current_path, root_path
   end
 
+  test "shows 'ui only' if user's level is ui_only" do
+    sign_in
+    enable_mfa
+    visit edit_settings_path
+
+    assert page.has_selector?("#level > option:nth-child(4)")
+    assert page.has_content? "UI Only"
+  end
+
+  test "does not shows 'ui only' if user's level is not ui_only" do
+    sign_in
+    enable_mfa
+    visit edit_settings_path
+
+    page.fill_in "otp", with: ROTP::TOTP.new(@user.mfa_seed).now
+    change_auth_level "Disabled"
+
+    refute page.has_selector?("#level > option:nth-child(4)")
+    refute page.has_content? "UI Only"
+  end
+
   teardown do
     Capybara.reset_sessions!
     Capybara.use_default_driver
