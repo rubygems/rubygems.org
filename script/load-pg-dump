@@ -43,7 +43,9 @@ Load a rubygems.org postgresql dump into a datatbase.
     -H HOSTNAME connect to postgresql using this hostname (default: Unix-domain socket)
     -p PORT     connect to postgresql using this port (default: 5432)
 
-Example: ./load-pg-dump -d rubygems_development ~/Downloads/public_postgresql.tar
+Examples:
+Load already downloaded tar: ./load-pg-dump -d rubygems_development ~/Downloads/public_postgresql.tar
+Download and then load most recent dump: ./load-pg-dump -d rubygems_development -c ~/Downloads/public_postgresql.tar
 EOF
 }
 
@@ -95,7 +97,7 @@ fi
 
 printf 'Loading "%s" into database "%s" as user "%s"\n', "$public_tar", "$pg_database", "$pg_user"
 
-echo "Droppping database $pg_database"
+echo "Dropping database $pg_database"
 dropdb $pg_host -U $pg_user $pg_database
 
 echo "Creating database $pg_database"
@@ -107,7 +109,7 @@ psql -q $pg_host -U $pg_user -d $pg_database -c "CREATE EXTENSION IF NOT EXISTS 
 echo "Running migrations"
 rake db:migrate
 
-echo "Droppping tables in $pg_database that we're going to load in"
+echo "Dropping tables in $pg_database that we're going to load in"
 psql -q $pg_host -U $pg_user -d $pg_database -c "DROP TABLE IF EXISTS dependencies, gem_downloads, linksets, rubygems, versions CASCADE;"
 
 # Extract the single PostgresSQL.sql.gz file from the tar file, pass it through gunzip
