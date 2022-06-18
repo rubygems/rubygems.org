@@ -10,6 +10,12 @@ class OwnersControllerTest < ActionController::TestCase
       create(:ownership, user: @user, rubygem: @rubygem)
       sign_in_as(@user)
       session[:verification] = 10.minutes.from_now
+      session[:verified_user] = @user.id
+    end
+
+    teardown do
+      session[:verification] = nil
+      session[:verified_user] = nil
     end
 
     context "on GET to index" do

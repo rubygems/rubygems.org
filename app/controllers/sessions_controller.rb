@@ -29,7 +29,8 @@ class SessionsController < Clearance::SessionsController
 
   def authenticate
     if verify_user
-      session[:verification] = Time.current + Gemcutter::PASSWORD_VERIFICATION_EXPIRY
+      session[:verified_user] = current_user.id
+      session[:verification]  = Time.current + Gemcutter::PASSWORD_VERIFICATION_EXPIRY
       redirect_to session.delete(:redirect_uri) || root_path
     else
       flash[:alert] = t("profiles.request_denied")

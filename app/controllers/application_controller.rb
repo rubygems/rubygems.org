@@ -126,6 +126,6 @@ class ApplicationController < ActionController::Base
   end
 
   def password_session_active?
-    session[:verification] && session[:verification] > Time.current
+    session[:verification] && session[:verification] > Time.current && session.fetch(:verified_user, "") == current_user.id
   end
 end

@@ -50,10 +50,12 @@ class ApiKeysControllerTest < ActionController::TestCase
       @user = create(:user)
       sign_in_as(@user)
       session[:verification] = 10.minutes.from_now
+      session[:verified_user] = @user.id
     end
 
     teardown do
       session[:verification] = nil
+      session[:verified_user] = nil
     end
 
     context "on GET to index" do
