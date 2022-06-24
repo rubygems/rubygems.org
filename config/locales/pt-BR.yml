@@ -565,6 +565,7 @@ pt-BR:
       not_hosted_notice: Esta gem não está hospdada no Gemcutter.
       title: Todas as versões para %{name}
       versions_since: "%{count} versões desde %{since}"
+      imported_gem_version_notice:
     version:
       yanked: removida
   will_paginate:

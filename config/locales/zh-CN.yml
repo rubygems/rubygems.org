@@ -524,6 +524,7 @@ zh-CN:
       not_hosted_notice: 此 Gem 目前没有托管在 Gemcutter。
       title: "%{name} 的所有版本"
       versions_since: 自 %{since} 以来有 %{count} 个版本
+      imported_gem_version_notice:
     version:
       yanked: 已废弃
   will_paginate:

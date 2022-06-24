@@ -4,7 +4,7 @@
     <p><%= t('.not_hosted_notice') %></p>
   </div>
 <% else %>
-  <h3 class="t-list__heading"><%= t('.versions_since', :count => @versions.size, :since => nice_date_for(@versions.map(&:created_at).min)) %>:</h3>
+  <h3 class="t-list__heading"><%= t('.versions_since', :count => @versions.size, :since => nice_date_for(@versions.map(&:authored_at).min)) %>:</h3>
   <div class="versions">
     <ul class="t-list__items">
       <%= render @versions %>

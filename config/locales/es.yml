@@ -583,6 +583,7 @@ es:
       not_hosted_notice: Esta gema no está alojada actualmente en RubyGems.org.
       title: Todas las versiones de %{name}
       versions_since: "%{count} versiones desde %{since}"
+      imported_gem_version_notice:
     version:
       yanked: borrada
   will_paginate:

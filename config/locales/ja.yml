@@ -527,6 +527,7 @@ ja:
       not_hosted_notice: このGemはRubyGems.org上ではホストされていません。
       title: "%{name}の全バージョン履歴"
       versions_since: "%{since}からの%{count}項目"
+      imported_gem_version_notice:
     version:
       yanked: yanked
   will_paginate:

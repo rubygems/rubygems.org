@@ -542,6 +542,7 @@ nl:
       not_hosted_notice: Deze gem wordt momenteel niet gehost op rubygems.org
       title: Alle versies van %{name}
       versions_since: "%{count} versies sinds %{since}"
+      imported_gem_version_notice:
     version:
       yanked: verwijderd
   will_paginate:
