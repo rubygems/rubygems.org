@@ -425,8 +425,8 @@ en:
       install: install
       required_ruby_version: Required Ruby Version
       required_rubygems_version: Required Rubygems Version
-      requires_mfa: Requires MFA accounts
-      since: "Since %{version}"
+      requires_mfa: New versions require MFA
+      released_with_mfa: Version published with MFA
       links:
         badge: Badge
         bugs: Bug Tracker

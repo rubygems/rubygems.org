@@ -442,7 +442,7 @@ nl:
       required_ruby_version: Required Ruby Version
       required_rubygems_version: Required Rubygems Version
       requires_mfa:
-      since: "%{version}"
+      released_with_mfa:
       links:
         badge: Badge
         bugs: Bug-tracker
