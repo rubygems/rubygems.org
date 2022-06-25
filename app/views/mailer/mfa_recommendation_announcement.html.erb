@@ -26,8 +26,8 @@
 
         <% if @user.mfa_disabled? %> 
           <p>
-            While this policy impacts specific RubyGems users, everyone can do their part to help combat account takeovers. 
-            <b>Please enable multi-factor authentication on your RubyGems account 🙏.</b>
+            We're notifying you of this policy because you maintain at least one gem that has more than 165 million downloads.
+            So, we'd like to ask you to <b>please enable multi-factor authentication on your RubyGems account 🙏.</b>
           </p>
           <br/>
 
@@ -39,7 +39,7 @@
           <br />
         <% elsif @user.mfa_ui_only? %>
           <p>
-            While this policy impacts specific RubyGems users, everyone can do their part to help combat account takeovers.
+            We're notifying you of this policy because you maintain at least one gem that has more than 165 million downloads.
             Fortunately, you've already taken the first step! But, there's opportunity to improve.
             <b>Please upgrade your RubyGems account to a stronger MFA level 🙏.</b>
           </p>
@@ -53,8 +53,8 @@
           <br />
         <% else %>
           <p>
-            While this policy impacts specific RubyGems users, everyone can do their part to help combat account takeovers by enabling MFA on their accounts. 
-            Fortunately, you've already done that. Kudos to you 🥳 🙌!
+            We're notifying you of this policy because you maintain at least one gem that has more than 165 million downloads.
+            Fortunately, you've already enabled MFA. Kudos to you 🥳 🙌!
           </p>
           <br/>
         <% end %>
