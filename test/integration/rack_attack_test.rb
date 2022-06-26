@@ -120,6 +120,9 @@ class RackAttackTest < ActionDispatch::IntegrationTest
             under_backoff_limit = (Rack::Attack::EXP_BASE_REQUEST_LIMIT * level) - 1
             @push_exp_throttle_level_key = "#{Rack::Attack::PUSH_EXP_THROTTLE_KEY}/#{level}:#{@ip_address}"
             under_backoff_limit.times { Rack::Attack.cache.count(@push_exp_throttle_level_key, exp_base_limit_period**level) }
+
+            @push_throttle_per_user_key = "#{Rack::Attack::PUSH_THROTTLE_PER_USER_KEY}/#{level}:#{@user.display_id}"
+            under_backoff_limit.times { Rack::Attack.cache.count(@push_throttle_per_user_key, exp_base_limit_period**level) }
           end
 
           create(:api_key, key: "12334", push_rubygem: true, user: @user)
@@ -137,6 +140,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
             assert_nil Rack::Attack.cache.read("#{time_counter}:#{@push_exp_throttle_level_key}")
             assert_nil Rack::Attack.cache.read("#{prev_time_counter}:#{@push_exp_throttle_level_key}")
+            assert_nil Rack::Attack.cache.read("#{time_counter}:#{@push_throttle_per_user_key}")
+            assert_nil Rack::Attack.cache.read("#{prev_time_counter}:#{@push_throttle_per_user_key}")
           end
         end
 
@@ -507,7 +512,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         should "throttle api key show by api key #{level}" do
           freeze_time do
-            exceed_exponential_api_key_limit_for("api/key/#{level}", @api_key, level)
+            exceed_exponential_api_key_limit_for("api/key/#{level}", @user.display_id, level)
             get "/api/v1/api_key.json", headers: { HTTP_AUTHORIZATION: @api_key }
 
             assert_throttle_at(level)
@@ -546,7 +551,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         should "throttle gem yank by api key #{level}" do
           freeze_time do
-            exceed_exponential_api_key_limit_for("api/key/#{level}", @api_key, level)
+            exceed_exponential_api_key_limit_for("api/key/#{level}", @user.display_id, level)
             delete "/api/v1/gems/yank", headers: { HTTP_AUTHORIZATION: @api_key }
 
             assert_throttle_at(level)
@@ -564,7 +569,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         should "throttle owner add by api key #{level}" do
           freeze_time do
-            exceed_exponential_api_key_limit_for("api/key/#{level}", @api_key, level)
+            exceed_exponential_api_key_limit_for("api/key/#{level}", @user.display_id, level)
             post "/api/v1/gems/somegem/owners", headers: { HTTP_AUTHORIZATION: @api_key }
 
             assert_throttle_at(level)
@@ -582,7 +587,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         should "throttle owner remove by api key #{level}" do
           freeze_time do
-            exceed_exponential_api_key_limit_for("api/key/#{level}", @api_key, level)
+            exceed_exponential_api_key_limit_for("api/key/#{level}", @user.display_id, level)
             delete "/api/v1/gems/somegem/owners", headers: { HTTP_AUTHORIZATION: @api_key }
 
             assert_throttle_at(level)
