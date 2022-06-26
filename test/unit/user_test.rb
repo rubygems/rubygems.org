@@ -35,6 +35,21 @@ class UserTest < ActiveSupport::TestCase
         refute_predicate user, :valid?
       end
 
+      should "be invalid with duplicate handle on create" do
+        create(:user, handle: "test")
+        user = build(:user, handle: "Test")
+        refute_predicate user, :valid?
+      end
+
+      should "be invalid with duplicate handle on update" do
+        create(:user, handle: "test")
+        user = create(:user, handle: "test2")
+        user.update(handle: "Test")
+
+        assert_contains user.errors[:handle], "has already been taken"
+        refute_predicate user, :valid?
+      end
+
       should "be valid when nil and other users have a nil handle" do
         assert_predicate build(:user, handle: nil), :valid?
         assert_predicate build(:user, handle: nil), :valid?
