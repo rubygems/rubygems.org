@@ -418,10 +418,10 @@ ja:
       bundler_header: Gemfile
       copied: コピー完了!
       copy_to_clipboard: クリップボードにコピー
-      downloads_for_this_version: 現行バージョン
+      downloads_for_this_version: このバージョンのみ
       install: インストール
       required_ruby_version: 必要Rubyバージョン
-      required_rubygems_version: 必要Gemバージョン
+      required_rubygems_version: 必要RubyGemsバージョン
       requires_mfa:
       released_with_mfa:
       links:
@@ -431,7 +431,7 @@ ja:
         code: ソースコード
         docs: ドキュメント
         download: ダウンロード
-        header: リンク集
+        header: リンク
         home: ホームページ
         mail: メーリングリスト
         report_abuse: 悪用報告
