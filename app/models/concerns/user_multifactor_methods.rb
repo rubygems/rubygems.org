@@ -45,6 +45,14 @@ module UserMultifactorMethods
       mfa_recommended? && mfa_ui_only?
     end
 
+    def mfa_required_not_yet_enabled?
+      mfa_required? && mfa_disabled?
+    end
+
+    def mfa_required_weak_level_enabled?
+      mfa_required? && mfa_ui_only?
+    end
+
     def otp_verified?(otp)
       otp = otp.to_s
       return true if verify_digit_otp(mfa_seed, otp)
@@ -61,9 +69,15 @@ module UserMultifactorMethods
     end
 
     def mfa_recommended?
-      return false if strong_mfa_level?
+      return false if strong_mfa_level? || mfa_required?
 
       rubygems.mfa_recommended.any?
+    end
+
+    def mfa_required?
+      return false if strong_mfa_level?
+
+      rubygems.mfa_required.any?
     end
 
     def verify_digit_otp(seed, otp)

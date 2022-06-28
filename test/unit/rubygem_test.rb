@@ -873,7 +873,7 @@ class RubygemTest < ActiveSupport::TestCase
     end
   end
 
-  context ".mfa_recommended" do
+  context ".mfa_recommended scope" do
     should "not return gems with fewer downloads than the recommended threshold" do
       rubygem = create(:rubygem)
       GemDownload.increment(
@@ -892,6 +892,28 @@ class RubygemTest < ActiveSupport::TestCase
       )
 
       refute_empty Rubygem.mfa_recommended
+    end
+  end
+
+  context ".mfa_required scope" do
+    should "not return gems with fewer downloads than the required threshold" do
+      rubygem = create(:rubygem)
+      GemDownload.increment(
+        Rubygem::MFA_REQUIRED_THRESHOLD,
+        rubygem_id: rubygem.id
+      )
+
+      assert_empty Rubygem.mfa_required
+    end
+
+    should "return gems with more downloads than the required threshold" do
+      rubygem = create(:rubygem)
+      GemDownload.increment(
+        Rubygem::MFA_REQUIRED_THRESHOLD + 1,
+        rubygem_id: rubygem.id
+      )
+
+      assert_includes Rubygem.mfa_required, rubygem
     end
   end
 

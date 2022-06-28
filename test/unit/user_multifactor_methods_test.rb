@@ -176,6 +176,65 @@ class UserMultifactorMethodsTest < ActiveSupport::TestCase
     end
   end
 
+  context "#mfa_required_not_yet_enabled?" do
+    setup do
+      @popular_rubygem = create(:rubygem)
+      GemDownload.increment(
+        Rubygem::MFA_REQUIRED_THRESHOLD + 1,
+        rubygem_id: @popular_rubygem.id
+      )
+    end
+
+    should "return true if instance owns a gem that exceeds required threshold and has mfa disabled" do
+      create(:ownership, user: @user, rubygem: @popular_rubygem)
+
+      assert_predicate @user, :mfa_required_not_yet_enabled?
+    end
+
+    should "return false if instance owns a gem that exceeds required threshold and has mfa enabled" do
+      create(:ownership, user: @user, rubygem: @popular_rubygem)
+      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+
+      refute_predicate @user, :mfa_required_not_yet_enabled?
+    end
+
+    should "return false if instance does not own a gem that exceeds required threshold and has mfa disabled" do
+      create(:ownership, user: @user, rubygem: create(:rubygem))
+
+      refute_predicate @user, :mfa_required_not_yet_enabled?
+    end
+  end
+
+  context "#mfa_required_weak_level_enabled?" do
+    setup do
+      @popular_rubygem = create(:rubygem)
+      GemDownload.increment(
+        Rubygem::MFA_REQUIRED_THRESHOLD + 1,
+        rubygem_id: @popular_rubygem.id
+      )
+      @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+    end
+
+    should "return true if instance owns a gem that exceeds required threshold and has mfa ui_only" do
+      create(:ownership, user: @user, rubygem: @popular_rubygem)
+
+      assert_predicate @user, :mfa_required_weak_level_enabled?
+    end
+
+    should "return false if instance owns a gem that exceeds required threshold and has mfa disabled" do
+      create(:ownership, user: @user, rubygem: @popular_rubygem)
+      @user.disable_mfa!
+
+      refute_predicate @user, :mfa_required_weak_level_enabled?
+    end
+
+    should "return false if instance does not own a gem that exceeds required threshold and has mfa disabled" do
+      create(:ownership, user: @user, rubygem: create(:rubygem))
+
+      refute_predicate @user, :mfa_required_weak_level_enabled?
+    end
+  end
+
   context "#otp_verified?" do
     setup do
       @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)

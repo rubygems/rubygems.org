@@ -522,7 +522,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           assert_equal 2, Rubygem.last.versions.count
         end
         should "disable mfa requirement" do
-          refute_predicate @rubygem, :mfa_required?
+          refute_predicate @rubygem, :metadata_mfa_required?
         end
       end
     end
