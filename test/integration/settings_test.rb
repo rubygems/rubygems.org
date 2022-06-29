@@ -128,6 +128,7 @@ class SettingsTest < SystemTest
     page.accept_confirm do
       click_button "Continue"
     end
+    page.find("h1", text: "Edit settings")
     assert_equal page.current_path, edit_settings_path
   end
 
