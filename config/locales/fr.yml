@@ -8,7 +8,7 @@ fr:
     Ruby. Publiez vos gems instantanément et utilisez-les. Utilisez l'API pour interagir
     et trouver des informations sur les gems disponibles. Contribuez et améliorez
     ce site avec nous !
-  footer_sponsors_html: RubyGems.org est rendu possible grâce à un partenariat la communauté Ruby.
+  footer_sponsors_html: RubyGems.org est rendu possible grâce à un partenariat avec la communauté Ruby au sens large.
     <a href="https://www.fastly.com/">Fastly</a> fournisseur de bande passante et du support CDN,
     <a href="https://www.rubycentral.org/">Ruby Central</a> qui couvre les frais d'infrastructure, et
     <a href="https://rubytogether.org/?source=rubygems">Ruby Together</a> qui finance le développement et l'administration des serveurs.
