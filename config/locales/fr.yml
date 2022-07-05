@@ -12,7 +12,7 @@ fr:
     <a href="https://www.fastly.com/">Fastly</a> fournisseur de bande passante et du support CDN,
     <a href="https://www.rubycentral.org/">Ruby Central</a> qui couvre les frais d'infrastructure, et
     <a href="https://rubytogether.org/?source=rubygems">Ruby Together</a> qui finance le développement et l'administration des serveurs.
-    <a href="%{sponsors_page}">Apprenez en plus sur nos sponsors et comment ils travaillent entre eux.</a>.
+    <a href="%{sponsors_page}">Apprenez en plus sur nos sponsors et comment ils travaillent entre eux.</a>
   footer_join_rt_html: Nous avons besoin de votre aide pour financer le travail des développeurs/développeuses qui font que RubyGems.org fonctionne de manière fluide pour tout le monde.
     <a href="https://rubytogether.org/join?source=rubygems">Join Ruby Together today</a>.
   form_disable_with: Veuillez patienter...
