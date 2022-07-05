@@ -74,8 +74,8 @@ pt-BR:
       api_keys:
       name:
       scopes:
-      age:
       gem:
+      age:
       last_access:
       action:
       delete:
@@ -324,7 +324,7 @@ pt-BR:
     require_mfa_enabled:
     setup_recommended:
     strong_mfa_level_recommended:
-    ui_only_warning: 
+    ui_only_warning:
     new:
       title:
       scan_prompt:

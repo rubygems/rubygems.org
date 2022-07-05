@@ -75,8 +75,8 @@ es:
       api_keys:
       name:
       scopes:
-      age:
       gem:
+      age:
       last_access:
       action:
       delete:
@@ -321,12 +321,13 @@ es:
     recovery_code_html:
     incorrect_otp: Tu código OTP no es correcto.
     otp_code: código OTP
-    require_mfa_disabled: Se ha activado la autenticación de múltiples factores. Para reconfigurarla, primero tendrás que desactivarla.
+    require_mfa_disabled: Se ha activado la autenticación de múltiples factores. Para
+      reconfigurarla, primero tendrás que desactivarla.
     require_mfa_enabled: No se ha activado la autenticación de múltiples factores.
       Primero tienes que activarla.
     setup_recommended:
     strong_mfa_level_recommended:
-    ui_only_warning: 
+    ui_only_warning:
     new:
       title: Activando autenticación de múltiples factores
       scan_prompt: Por favor escanea el código QR con tu aplicación de Autenticación.
