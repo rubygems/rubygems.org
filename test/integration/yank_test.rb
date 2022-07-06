@@ -74,6 +74,7 @@ class YankTest < SystemTest
   end
 
   teardown do
+    RubygemFs.mock!
     Dir.chdir(Rails.root)
   end
 end
