@@ -20,7 +20,8 @@ class Api::V1::ApiKeysController < Api::BaseController
 
       check_mfa(user) do
         key = generate_unique_rubygems_key
-        api_key = user.api_keys.build(api_key_create_params.merge(hashed_key: hashed_key(key)))
+        build_params = { user: user, hashed_key: hashed_key(key), **api_key_create_params }
+        api_key = ApiKey.new(build_params)
 
         save_and_respond(api_key, key)
       end
@@ -61,7 +62,7 @@ class Api::V1::ApiKeysController < Api::BaseController
   end
 
   def save_and_respond(api_key, key)
-    if api_key.save
+    if api_key.errors.blank? && api_key.save
       Mailer.api_key_created(api_key.id).deliver_later
       respond_with key
     else
@@ -86,7 +87,7 @@ class Api::V1::ApiKeysController < Api::BaseController
   end
 
   def api_key_create_params
-    params.permit(:name, *ApiKey::API_SCOPES, :mfa)
+    params.permit(:name, *ApiKey::API_SCOPES, :mfa, :rubygem_name)
   end
 
   def api_key_update_params
