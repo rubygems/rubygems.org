@@ -106,6 +106,49 @@ class ApiKeyTest < ActiveSupport::TestCase
         assert_contains api_key.errors[:rubygem], "that is selected cannot be scoped to this key"
       end
     end
+
+    context "#rubygem_name=" do
+      should "set ownership to a gem" do
+        api_key = create(
+          :api_key,
+          key: SecureRandom.hex(24),
+          push_rubygem: true,
+          user: @ownership.user,
+          rubygem_name: @ownership.rubygem.name
+        )
+
+        assert_equal @ownership.rubygem, api_key.rubygem
+      end
+
+      should "set ownership to nil when name is blank" do
+        @api_key.rubygem_name = nil
+
+        assert_nil @api_key.ownership
+      end
+
+      should "add error when gem is not associated with the user" do
+        rubygem = create(:rubygem, name: "another-gem")
+        api_key = ApiKey.new(
+          hashed_key: SecureRandom.hex(24),
+          push_rubygem: true,
+          user: @ownership.user,
+          rubygem_name: rubygem.name
+        )
+
+        assert_contains api_key.errors[:rubygem], "that is selected cannot be scoped to this key"
+      end
+
+      should "add error when name is not a valid gem name" do
+        api_key = ApiKey.new(
+          hashed_key: SecureRandom.hex(24),
+          push_rubygem: true,
+          user: @ownership.user,
+          rubygem_name: "invalid-gem-name"
+        )
+
+        assert_contains api_key.errors[:rubygem], "that is selected cannot be scoped to this key"
+      end
+    end
   end
 
   context "#soft_deleted?" do

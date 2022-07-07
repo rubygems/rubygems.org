@@ -42,6 +42,12 @@ class ApiKey < ApplicationRecord
     errors.add :rubygem, "that is selected cannot be scoped to this key"
   end
 
+  def rubygem_name=(name)
+    self.rubygem_id = name.blank? ? nil : Rubygem.find_by_name!(name).id
+  rescue ActiveRecord::RecordNotFound
+    errors.add :rubygem, "that is selected cannot be scoped to this key"
+  end
+
   def soft_delete!(ownership: nil)
     update_attribute(:soft_deleted_at, Time.now.utc)
     update_attribute(:soft_deleted_rubygem_name, ownership.rubygem.name) if ownership
