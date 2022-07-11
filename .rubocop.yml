@@ -12,7 +12,7 @@ AllCops:
     - !ruby/regexp /(vendor|bundle|bin|db|tmp)\/.*/
   DisplayCopNames: true
   DisplayStyleGuide: true
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.1
   NewCops: enable
 
 Rails:
@@ -270,6 +270,9 @@ Style/HashAsLastArrayItem:
 
 Style/HashLikeCase:
   Enabled: true
+
+Style/HashSyntax:
+  EnforcedShorthandSyntax: either
 
 Style/RedundantAssignment:
   Enabled: true

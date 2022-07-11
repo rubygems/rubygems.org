@@ -18,7 +18,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
   end
 
-  def self.should_respond_to(format, &block)
+  def self.should_respond_to(format, &)
     context "with #{format.to_s.upcase} for a hosted gem" do
       setup do
         @rubygem = create(:rubygem)
@@ -26,7 +26,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         get :show, params: { id: @rubygem.to_param }, format: format
       end
 
-      should_respond_to_show(&block)
+      should_respond_to_show(&)
     end
 
     context "with #{format.to_s.upcase} for a hosted gem with a period in its name" do
@@ -36,7 +36,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         get :show, params: { id: @rubygem.to_param }, format: format
       end
 
-      should_respond_to_show(&block)
+      should_respond_to_show(&)
     end
 
     context "with #{format.to_s.upcase} for a gem that doesn't match the slug" do
@@ -46,7 +46,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         get :show, params: { id: "ZenTest" }, format: format
       end
 
-      should_respond_to_show(&block)
+      should_respond_to_show(&)
     end
   end
 

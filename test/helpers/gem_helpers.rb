@@ -13,8 +13,8 @@ module GemHelpers
     end
   end
 
-  def build_gem(name, version, summary = "Gemcutter", platform = "ruby", &block)
-    build_gemspec(new_gemspec(name, version, summary, platform, &block))
+  def build_gem(name, version, summary = "Gemcutter", platform = "ruby", &)
+    build_gemspec(new_gemspec(name, version, summary, platform, &))
   end
 
   def new_gemspec(name, version, summary, platform, extra_args = {})
