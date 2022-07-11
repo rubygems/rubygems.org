@@ -42,11 +42,19 @@ if ($(".github-btn").length) {
   }
 
   function jsonp(path) {
-    var head = document.head;
-    var script = document.createElement('script');
-
-    script.src = path + '?callback=callback';
-    head.insertBefore(script, head.firstChild);
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', path, true);
+    xhr.responseType = 'json';
+    xhr.onload = function() {
+      var status = xhr.status;
+      if (status === 200) {
+        var res = { data: { stargazers_count: xhr.response.stargazers_count } };
+        callback(res);
+      } else {
+        console.log("Request to github failed with status:", status)
+      }
+    };
+    xhr.send();
   }
 
   var parameters = getUrlParameters();
