@@ -14,6 +14,7 @@
  * Source: https://github.com/mdo/github-buttons/blob/7c1da76484288ce76fa061362fc1c1f0db1f6553/src/js.js
  * Modification: Changed params to read attributes from data-params
  *               Execute only when .github-btn exists
+ *               Remove title update (mdo/github-buttons@cbf5395b)
  */
 
 if ($(".github-btn").length) {
@@ -166,7 +167,6 @@ if ($(".github-btn").length) {
   }
 
   button.setAttribute('aria-label', title + LABEL_SUFFIX);
-  document.title = title + LABEL_SUFFIX;
 
   // Change the size if requested
   if (size === 'large') {
