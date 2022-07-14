@@ -14,6 +14,11 @@
   font-style: italic;
   color: #141c22; }
 
+.flash a {
+  color: #141c22;
+  text-decoration: underline;
+  font-weight: bold;
+}
 /* Announcement Styles */
 
 #announcement {

@@ -250,22 +250,22 @@ class SessionsControllerTest < ActionController::TestCase
     end
 
     context "when signed in" do
+      setup do
+        @user = create(:user)
+        @rubygem = create(:rubygem)
+        sign_in_as(@user)
+        session[:redirect_uri] = rubygem_owners_url(@rubygem)
+      end
+
       context "on correct password" do
         setup do
-          user = create(:user)
-          @rubygem = create(:rubygem)
-          sign_in_as(user)
-          session[:redirect_uri] = rubygem_owners_url(@rubygem)
-          post :authenticate, params: { user_id: user.id, verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+          post :authenticate, params: { user_id: @user.id, verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD } }
         end
         should redirect_to("redirect uri") { rubygem_owners_path(@rubygem) }
       end
+
       context "on incorrect password" do
         setup do
-          @user = create(:user)
-          @rubygem = create(:rubygem)
-          sign_in_as(@user)
-          session[:redirect_uri] = rubygem_owners_url(@rubygem)
           post :authenticate, params: { user_id: @user.id, verify_password: { password: "wrong password" } }
         end
         should respond_with :unauthorized
@@ -281,6 +281,74 @@ class SessionsControllerTest < ActionController::TestCase
         post :authenticate, params: { user_id: user.id, verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD } }
       end
       should redirect_to("sign in") { sign_in_path }
+    end
+  end
+
+  context "when user owns a gem with more than MFA_REQUIRED_THRESHOLD downloads" do
+    setup do
+      @user = create(:user)
+      sign_in_as(@user)
+      @rubygem = create(:rubygem)
+      session[:redirect_uri] = rubygem_owners_url(@rubygem)
+      create(:ownership, rubygem: @rubygem, user: @user)
+      GemDownload.increment(
+        Rubygem::MFA_REQUIRED_THRESHOLD + 1,
+        rubygem_id: @rubygem.id
+      )
+      @request.cookies[:mfa_required] = "true"
+    end
+
+    context "user has mfa disabled" do
+      context "on GET to verify" do
+        setup { get :verify, params: { user_id: @user.id } }
+
+        should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+      end
+
+      context "on POST to authenticate" do
+        setup { post :authenticate, params: { user_id: @user.id, verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD } } }
+
+        should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+      end
+    end
+
+    context "user has mfa set to weak level" do
+      setup do
+        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+      end
+
+      context "on GET to verify" do
+        setup { get :verify, params: { user_id: @user.id } }
+
+        should redirect_to("the settings page") { edit_settings_path }
+      end
+
+      context "on POST to authenticate" do
+        setup { post :authenticate, params: { user_id: @user.id, verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD } } }
+
+        should redirect_to("the settings page") { edit_settings_path }
+      end
+    end
+
+    context "user has MFA set to strong level, expect normal behaviour" do
+      setup do
+        @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+      end
+
+      context "on GET to verify" do
+        setup { get :verify, params: { user_id: @user.id } }
+
+        should respond_with :success
+        should "render password verification form" do
+          assert page.has_css? "#verify_password_password"
+        end
+      end
+
+      context "on POST to authenticate" do
+        setup { post :authenticate, params: { user_id: @user.id, verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD } } }
+
+        should redirect_to("redirect uri") { rubygem_owners_path(@rubygem) }
+      end
     end
   end
 end

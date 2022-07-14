@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   include Clearance::Authentication
   include Clearance::Authorization
+  include ApplicationMultifactorMethods
 
   helper ActiveSupport::NumberHelper
 
@@ -10,6 +11,8 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
   before_action :reject_null_char_param
   before_action :reject_null_char_cookie
+
+  add_flash_types :notice_html
 
   def set_locale
     I18n.locale = user_locale

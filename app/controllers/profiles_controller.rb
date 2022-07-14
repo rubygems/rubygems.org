@@ -1,5 +1,7 @@
 class ProfilesController < ApplicationController
   before_action :redirect_to_signin, unless: :signed_in?, except: :show
+  before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, except: :show
+  before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, except: :show
   before_action :verify_password, only: %i[update destroy]
   before_action :set_cache_headers, only: :edit
 

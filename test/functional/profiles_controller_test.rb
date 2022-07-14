@@ -237,6 +237,93 @@ class ProfilesControllerTest < ActionController::TestCase
         end
       end
     end
+
+    context "when user owns a gem with more than MFA_REQUIRED_THRESHOLD downloads" do
+      setup do
+        @rubygem = create(:rubygem)
+        create(:ownership, rubygem: @rubygem, user: @user)
+        GemDownload.increment(
+          Rubygem::MFA_REQUIRED_THRESHOLD + 1,
+          rubygem_id: @rubygem.id
+        )
+        @request.cookies[:mfa_required] = "true"
+      end
+
+      redirect_scenarios = {
+        "GET to adoptions" => [:adoptions, { method: "GET", params: { id: 1 } }],
+        "GET to delete" => [:delete, { method: "GET", params: { id: 1 } }],
+        "DELETE to destroy" => [:destroy, { method: "DELETE", params: { id: 1 } }],
+        "GET to edit" => [:edit, { method: "GET", params: { id: 1 } }],
+        "PATCH to update" => [:update, { method: "PATCH", params: { id: 1 } }],
+        "PUT to update" => [:update, { method: "PUT", params: { id: 1 } }]
+      }
+
+      context "user has mfa disabled" do
+        context "on GET to show" do
+          setup { get :show, params: { id: @user.id } }
+
+          should "not redirect to mfa" do
+            assert_response :success
+            assert page.has_content? "Edit Profile"
+          end
+        end
+
+        redirect_scenarios.each do |label, request_params|
+          context "on #{label}" do
+            setup { process(request_params.first, **request_params.last) }
+
+            should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+          end
+        end
+      end
+
+      context "user has mfa set to weak level" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+        end
+
+        context "on GET to show" do
+          setup { get :show, params: { id: @user.id } }
+
+          should "not redirect to mfa" do
+            assert_response :success
+            assert page.has_content? "Edit Profile"
+          end
+        end
+
+        redirect_scenarios.each do |label, request_params|
+          context "on #{label}" do
+            setup { process(request_params.first, **request_params.last) }
+
+            should redirect_to("the settings page") { edit_settings_path }
+          end
+        end
+      end
+
+      context "user has MFA set to strong level, expect normal behaviour" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        end
+
+        context "on GET to show" do
+          setup { get :show, params: { id: @user.id } }
+
+          should "not redirect to mfa" do
+            assert_response :success
+            assert page.has_content? "Edit Profile"
+          end
+        end
+
+        context "on GET to adoptions" do
+          setup { get :adoptions, params: { id: @user.id } }
+
+          should "not redirect to mfa" do
+            assert_response :success
+            refute page.has_content? "multi-factor"
+          end
+        end
+      end
+    end
   end
 
   context "On GET to edit without being signed in" do

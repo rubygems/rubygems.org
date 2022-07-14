@@ -244,6 +244,122 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
         end
       end
     end
+
+    context "when user owns a gem with more than MFA_REQUIRED_THRESHOLD downloads" do
+      setup do
+        @mfa_rubygem = create(:rubygem)
+        create(:ownership, rubygem: @mfa_rubygem, user: @user)
+        GemDownload.increment(
+          Rubygem::MFA_REQUIRED_THRESHOLD + 1,
+          rubygem_id: @mfa_rubygem.id
+        )
+        @request.cookies[:mfa_required] = "true"
+        @rubygem = create(:rubygem)
+        create(:ownership_call, rubygem: @rubygem)
+        @ownership_request = create(:ownership_request)
+      end
+
+      context "user has mfa disabled" do
+        context "POST to create" do
+          setup { post :create, params: { rubygem_id: @rubygem.name, note: "small note" } }
+
+          should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+        end
+
+        context "PATCH to close_all" do
+          setup { patch :close_all, params: { rubygem_id: @rubygem.name } }
+
+          should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+        end
+
+        context "PATCH to update" do
+          setup { patch :update, params: { rubygem_id: @rubygem.name, id: @ownership_request.id, status: "closed" } }
+
+          should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+        end
+
+        context "PUT to update" do
+          setup { put :update, params: { rubygem_id: @rubygem.name, id: @ownership_request.id, status: "closed" } }
+
+          should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+        end
+      end
+
+      context "user has mfa set to weak level" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+        end
+
+        context "POST to create" do
+          setup { post :create, params: { rubygem_id: @rubygem.name, note: "small note" } }
+
+          should redirect_to("the edit settings page") { edit_settings_path }
+        end
+
+        context "PATCH to close_all" do
+          setup do
+            patch :close_all, params: { rubygem_id: @rubygem.name }
+          end
+
+          should redirect_to("the edit settings page") { edit_settings_path }
+        end
+
+        context "PATCH to update" do
+          setup { patch :update, params: { rubygem_id: @rubygem.name, id: @ownership_request.id, status: "closed" } }
+
+          should redirect_to("the edit settings page") { edit_settings_path }
+        end
+
+        context "PUT to update" do
+          setup { put :update, params: { rubygem_id: @rubygem.name, id: @ownership_request.id, status: "closed" } }
+
+          should redirect_to("the edit settings page") { edit_settings_path }
+        end
+      end
+
+      context "user has MFA set to strong level, expect normal behaviour" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        end
+        context "POST to create" do
+          setup { post :create, params: { rubygem_id: @rubygem.name, note: "small note" } }
+
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+        end
+
+        context "PATCH to close_all" do
+          setup do
+            create(:version, rubygem: @rubygem, created_at: 2.years.ago, number: "1.0.0")
+            create(:ownership, rubygem: @rubygem, user: @user)
+            create_list(:ownership_request, 3, rubygem: @rubygem)
+
+            patch :close_all, params: { rubygem_id: @rubygem.name }
+          end
+
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+        end
+
+        context "PATCH to update" do
+          setup do
+            @requester = create(:user)
+            create(:ownership_request, rubygem: @rubygem, user: @requester)
+            patch :update, params: { rubygem_id: @rubygem.name, id: @ownership_request.id, status: "closed" }
+          end
+
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+        end
+
+        context "PUT to update" do
+          setup do
+            @requester = create(:user)
+            create(:ownership_request, rubygem: @rubygem, user: @requester)
+            put :update, params: { rubygem_id: @rubygem.name, id: @ownership_request.id, status: "closed" }
+          end
+
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+        end
+      end
+    end
   end
 
   context "when not logged in" do
@@ -262,7 +378,7 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
     context "on PATCH to update" do
       setup do
         ownership_request = create(:ownership_request)
-        patch :update, params: { rubygem_id: ownership_request.rubygem_name, id: ownership_request.id, status: "closased" }
+        patch :update, params: { rubygem_id: ownership_request.rubygem_name, id: ownership_request.id, status: "closed" }
       end
       should redirect_to("sign in") { sign_in_path }
     end
