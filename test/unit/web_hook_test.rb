@@ -189,6 +189,23 @@ class WebHookTest < ActiveSupport::TestCase
       @hook.fire("https", "rubygems.org", @rubygem, @version, delayed: false)
     end
 
+    should "include an Authorization header for a user with no API key" do
+      @hook.user.update(api_key: nil)
+      authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number)
+      RestClient.expects(:post).with(anything, anything, has_entries("Authorization" => authorization))
+
+      @hook.fire("https", "rubygems.org", @rubygem, @version, delayed: false)
+    end
+
+    should "include an Authorization header for a user with many API keys" do
+      @hook.user.update(api_key: nil)
+      create(:api_key, user: @hook.user)
+      authorization = Digest::SHA2.hexdigest(@rubygem.name + @version.number + @hook.user.api_keys.first.hashed_key)
+      RestClient.expects(:post).with(anything, anything, has_entries("Authorization" => authorization))
+
+      @hook.fire("https", "rubygems.org", @rubygem, @version, delayed: false)
+    end
+
     should "not increment failure count for hook" do
       @hook.fire("https", "rubygems.org", @rubygem, @version, delayed: false)
 
