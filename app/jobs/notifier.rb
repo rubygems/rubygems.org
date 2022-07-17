@@ -8,7 +8,7 @@ Notifier = Struct.new(:url, :protocol, :host_with_port, :rubygem, :version, :api
   end
 
   def authorization
-    Digest::SHA2.hexdigest(rubygem.name + version.number + api_key)
+    Digest::SHA2.hexdigest([rubygem.name, version.number, api_key].compact.join)
   end
 
   def perform

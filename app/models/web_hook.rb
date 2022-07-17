@@ -17,12 +17,17 @@ class WebHook < ApplicationRecord
   end
 
   def fire(protocol, host_with_port, deploy_gem, version, delayed: true)
-    job = Notifier.new(url, protocol, host_with_port, deploy_gem, version, user.api_key)
+    job = Notifier.new(url, protocol, host_with_port, deploy_gem, version, api_key)
+
     if delayed
       Delayed::Job.enqueue job, priority: PRIORITIES[:web_hook]
     else
       job.perform
     end
+  end
+
+  def api_key
+    user.api_key || user.api_keys.first&.hashed_key
   end
 
   def global?
