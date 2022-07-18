@@ -200,7 +200,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
     context "user is signed in" do
       setup do
-        @user = create(:user, confirmation_token: "something")
+        @user = create(:user, confirmation_token: "something", unconfirmed_email: "new@example.com")
         sign_in_as(@user)
       end
 

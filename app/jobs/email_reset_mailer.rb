@@ -6,11 +6,7 @@ EmailResetMailer = Struct.new(:user_id) do
       return Rails.logger.info("[jobs:email_reset_mailer] confirmation token not found. skipping sending mail for #{user.handle}")
     end
 
-    if user.unconfirmed_email.blank?
-      return Rails.logger.info("[jobs:email_reset_mailer] unconfirmed email not found. skipping sending mail for #{user.handle}")
-    end
-
-    Mailer.email_reset_update(user).deliver
-    Mailer.email_reset(user).deliver
+    Mailer.email_reset_update(user).deliver if user.email
+    Mailer.email_reset(user).deliver if user.unconfirmed_email
   end
 end
