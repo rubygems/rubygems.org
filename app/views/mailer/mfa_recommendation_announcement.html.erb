@@ -20,13 +20,13 @@
         <p>
           On August 15, 2022, we will begin requiring maintainers of packages with more than 180 million downloads to have multi-factor authentication (MFA) enabled.
           If maintainers don't have MFA enabled by this date, a number of operations will be restricted.
-          These restrictions include <a href=”https://guides.rubygems.org/mfa-requirement-opt-in/#privileged-operations” target=”_blank”>privileged operations</a> (ie. push, yank, add/remove owners).
+          These restrictions include <a href="https://guides.rubygems.org/mfa-requirement-opt-in/#privileged-operations" target="_blank">privileged operations</a> (ie. push, yank, add/remove owners).
           Furthermore, we are officially recommending that maintainers of packages with more than 165 million downloads enable MFA.
           This recommendation will also be shown by the gem CLI.
         </p>
         <br/>
 
-        <% if @user.mfa_disabled? %> 
+        <% if @user.mfa_disabled? %>
           <p>
             We're notifying you of this policy because you maintain at least one gem that has more than 165 million downloads.
             So, we'd like to ask you to <b>please enable multi-factor authentication on your RubyGems account 🙏.</b>
@@ -34,7 +34,7 @@
           <br/>
 
           <p>
-            We recommend setting the 
+            We recommend setting the
             <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#authentication-levels" target="_blank">MFA level</a>
             to <b><i>UI and API</i></b>. However, <b><i>UI and gem signin</i></b> is acceptable too.
           </p>
@@ -48,7 +48,7 @@
           <br/>
 
           <p>
-            We recommend setting the 
+            We recommend setting the
             <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#authentication-levels" target="_blank">MFA level</a>
             to <b><i>UI and API</i></b>. However, <b><i>UI and gem signin</i></b> is acceptable too.
           </p>
@@ -65,13 +65,13 @@
           For more information, check out our <a href="https://blog.rubygems.org/2022/06/13/making-packages-more-secure.html" target="_blank">announcement</a>.
         </p>
         <br/>
-       
+
         <p>Thank you for making the RubyGems ecosystem more secure.</p>
       </div>
 
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="30" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
 
-      <% if @user.mfa_disabled? || @user.mfa_ui_only? %> 
+      <% if @user.mfa_disabled? || @user.mfa_ui_only? %>
 
         <!-- Button -->
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
