@@ -96,7 +96,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         end
       end
 
-      context "when mfa is required" do
+      context "when mfa is required in metadata" do
         setup do
           @v1.metadata = { "rubygems_mfa_required" => "true" }
           @v1.save!
@@ -168,6 +168,74 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           end
         end
       end
+
+      context "when mfa is required" do
+        setup do
+          User.any_instance.stubs(:mfa_required?).returns true
+        end
+
+        context "by user with mfa disabled" do
+          setup do
+            delete :create, params: { gem_name: @rubygem.name, version: @v1.number }
+          end
+
+          should respond_with :forbidden
+
+          should "show error message" do
+            mfa_error = <<~ERROR.chomp
+            [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
+            at https://rubygems.org/multifactor_auth/new.
+            ERROR
+
+            assert_equal mfa_error, @response.body
+          end
+        end
+
+        context "by user on `ui_only` level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+            delete :create, params: { gem_name: @rubygem.name, version: @v1.number }
+          end
+
+          should respond_with :forbidden
+
+          should "show error message" do
+            mfa_error = <<~ERROR.chomp
+            [ERROR] For protection of your account and your gems, you are required to change your MFA level to \"UI and gem signin\" or \"UI and API\" \
+            at https://rubygems.org/settings/edit.
+            ERROR
+
+            assert_equal mfa_error, @response.body
+          end
+        end
+
+
+        context "by user on `ui_and_gem_signin` level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+            delete :create, params: { gem_name: @rubygem.name, version: @v1.number }
+          end
+
+          should respond_with :success
+          should "not show error message" do
+            refute_includes @response.body, "[ERROR] For protection of your account and your gems"
+          end
+        end
+
+        context "by user on `ui_and_api` level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+            delete :create, params: { gem_name: @rubygem.name, version: @v1.number }
+          end
+
+          should respond_with :success
+          should "not show error message" do
+            refute_includes @response.body, "[ERROR] For protection of your account and your gems"
+          end
+        end
+      end
+
 
       context "when mfa is recommended" do
         setup do

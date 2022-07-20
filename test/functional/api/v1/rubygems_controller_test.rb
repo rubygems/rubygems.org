@@ -527,6 +527,72 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
+    context "when mfa is required" do
+      setup do
+        User.any_instance.stubs(:mfa_required?).returns true
+      end
+
+      context "by user with mfa disabled" do
+        setup do
+          post :create, body: gem_file("test-1.0.0.gem").read
+        end
+
+        should respond_with :forbidden
+
+        should "show error message" do
+          mfa_error = <<~ERROR.chomp
+          [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
+          at https://rubygems.org/multifactor_auth/new.
+          ERROR
+
+          assert_equal mfa_error, @response.body
+        end
+      end
+
+      context "by user on `ui_only` level" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          post :create, body: gem_file("test-1.0.0.gem").read
+        end
+
+        should respond_with :forbidden
+
+        should "show error message" do
+          mfa_error = <<~ERROR.chomp
+          [ERROR] For protection of your account and your gems, you are required to change your MFA level to \"UI and gem signin\" or \"UI and API\" \
+          at https://rubygems.org/settings/edit.
+          ERROR
+
+          assert_equal mfa_error, @response.body
+        end
+      end
+
+      context "by user on `ui_and_gem_signin` level" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+          post :create, body: gem_file("test-1.0.0.gem").read
+        end
+
+        should respond_with :success
+        should "not show error message" do
+          refute_includes @response.body, "[ERROR] For protection of your account and your gems"
+        end
+      end
+
+      context "by user on `ui_and_api` level" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+          post :create, body: gem_file("test-1.0.0.gem").read
+        end
+
+        should respond_with :success
+        should "not show error message" do
+            refute_includes @response.body, "[ERROR] For protection of your account and your gems"
+        end
+      end
+    end
+
     context "when mfa is recommended" do
       setup do
         User.any_instance.stubs(:mfa_recommended?).returns true

@@ -39,8 +39,16 @@ class Api::BaseController < ApplicationController
   end
 
   def verify_mfa_requirement
-    return if @rubygem.mfa_requirement_satisfied_for?(@api_key.user)
-    render plain: "Gem requires MFA enabled; You do not have MFA enabled yet.", status: :forbidden
+    unless @rubygem.mfa_requirement_satisfied_for?(@api_key.user)
+      return render plain: "Gem requires MFA enabled; You do not have MFA enabled yet.", status: :forbidden
+    end
+    if @api_key.user.mfa_required_not_yet_enabled?
+      render plain: "[ERROR] For protection of your account and your gems, you are required to set up multi-factor " \
+                    "authentication at https://rubygems.org/multifactor_auth/new.", status: :forbidden
+    elsif @api_key.user.mfa_required_weak_level_enabled?
+      render plain: "[ERROR] For protection of your account and your gems, you are required to change your MFA level to" \
+                    " \"UI and gem signin\" or \"UI and API\" at https://rubygems.org/settings/edit.", status: :forbidden
+    end
   end
 
   def response_with_mfa_warning(response)

@@ -318,6 +318,76 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         end
       end
 
+      context "when mfa is required" do
+        setup do
+          User.any_instance.stubs(:mfa_required?).returns true
+          @emails = [@second_user.email, "doesnot@exist.com", @user.email]
+        end
+
+        context "by user with mfa disabled" do
+          should "block adding the owner" do
+            @emails.each do |email|
+              post :create, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
+
+              assert_equal 403, @response.status
+              mfa_error = <<~ERROR.chomp
+              [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
+              at https://rubygems.org/multifactor_auth/new.
+              ERROR
+              assert_equal mfa_error, @response.body
+            end
+          end
+        end
+
+        context "by user on `ui_only` level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          end
+
+          should "block adding the owner" do
+            @emails.each do |email|
+              post :create, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
+
+              assert_equal 403, @response.status
+              mfa_error = <<~ERROR.chomp
+              [ERROR] For protection of your account and your gems, you are required to change your MFA level to \"UI and gem signin\" or \"UI and API\" \
+              at https://rubygems.org/settings/edit.
+              ERROR
+              assert_equal mfa_error, @response.body
+            end
+          end
+        end
+
+        context "by user on `ui_and_gem_signin` level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+          end
+
+          should "not show error message" do
+            @emails.each do |email|
+              post :create, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
+
+              refute_includes @response.body, "[ERROR] For protection of your account and your gems"
+            end
+          end
+        end
+
+        context "by user on `ui_and_api` level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+          end
+
+          should "not show error message" do
+            @emails.each do |email|
+              post :create, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
+
+              refute_includes @response.body, "[ERROR] For protection of your account and your gems"
+            end
+          end
+        end
+      end
+
       context "when mfa is recommended" do
         setup do
           User.any_instance.stubs(:mfa_recommended?).returns true
@@ -591,6 +661,77 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         should "#render_soft_deleted_api_key and display an error" do
           assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
         end
+      end
+
+      context "when mfa is required" do
+        setup do
+          User.any_instance.stubs(:mfa_required?).returns true
+          @emails = [@second_user.email, "doesnot@exist.com", @user.email, "no@permission.com"]
+        end
+
+        context "by user with mfa disabled" do
+          should "block adding the owner" do
+            @emails.each do |email|
+              delete :destroy, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
+
+              assert_equal 403, response.status
+              mfa_error = <<~ERROR.chomp
+              [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
+              at https://rubygems.org/multifactor_auth/new.
+              ERROR
+              assert_equal mfa_error, @response.body
+            end
+          end
+        end
+
+        context "by user on `ui_only` level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          end
+
+          should "block adding the owner" do
+            @emails.each do |email|
+              delete :destroy, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
+
+              assert_equal 403, @response.status
+              mfa_error = <<~ERROR.chomp
+              [ERROR] For protection of your account and your gems, you are required to change your MFA level to \"UI and gem signin\" or \"UI and API\" \
+              at https://rubygems.org/settings/edit.
+              ERROR
+              assert_equal mfa_error, @response.body
+            end
+          end
+        end
+
+        context "by user on `ui_and_gem_signin` level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+          end
+
+          should "not show error message" do
+            @emails.each do |email|
+              delete :destroy, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
+
+              refute_includes @response.body, "[ERROR] For protection of your account and your gems"
+            end
+          end
+        end
+
+        context "by user on `ui_and_api` level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+          end
+
+          should "not show error message" do
+            @emails.each do |email|
+              delete :destroy, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
+
+              refute_includes @response.body, "[ERROR] For protection of your account and your gems"
+            end
+          end
+        end
+
       end
 
       context "when mfa is recommended" do
