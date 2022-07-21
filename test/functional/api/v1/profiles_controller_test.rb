@@ -32,17 +32,8 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
     assert_match expected_warning, response_body["warning"].to_s
   end
 
-  def assert_error_included(expected_error)
-    assert response_body.key?("error")
-    assert_match expected_error, response_body["error"].to_s
-  end
-
   def refute_warning_included(expected_warning)
     refute_match expected_warning, response_body["warning"].to_s
-  end
-
-  def refute_error_included(expected_error)
-    refute_match expected_error, response_body["error"].to_s
   end
 
   def refute_mfa_info_included(mfa_level)
@@ -108,7 +99,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
           context "when mfa is disabled" do
             should "include warning" do
               expected_warning =
-                "[WARNING] For protection of your account and gems, we encourage you to set up multi-factor authentication"\
+                "For protection of your account and gems, we encourage you to set up multi-factor authentication"\
                 " at https://rubygems.org/multifactor_auth/new. Your account will be required to have MFA enabled in the future."
 
               assert_warning_included(expected_warning)
@@ -124,7 +115,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
 
               should "include warning" do
                 expected_warning =
-                  "[WARNING] For protection of your account and gems, we encourage you to change your multi-factor authentication"\
+                  "For protection of your account and gems, we encourage you to change your multi-factor authentication"\
                   " level to 'UI and gem signin' or 'UI and API' at https://rubygems.org/settings/edit."\
                   " Your account will be required to have MFA enabled on one of these levels in the future."
 
@@ -140,7 +131,7 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
 
               should "not include warning in user json" do
                 unexpected_warning =
-                  "[WARNING] For protection of your account and gems"
+                  "For protection of your account and gems"
 
                 refute_warning_included(unexpected_warning)
               end
@@ -154,72 +145,9 @@ class Api::V1::ProfilesControllerTest < ActionController::TestCase
 
               should "not include warning" do
                 unexpected_warning =
-                  "[WARNING] For protection of your account and gems"
+                  "For protection of your account and gems"
 
                 refute_warning_included(unexpected_warning)
-              end
-            end
-          end
-        end
-
-        context "when mfa is required" do
-          setup do
-            rubygem = create(:rubygem)
-            create(:ownership, user: @user, rubygem: rubygem)
-            GemDownload.increment(
-              Rubygem::MFA_REQUIRED_THRESHOLD + 1,
-              rubygem_id: rubygem.id
-            )
-            get :me, format: format
-          end
-
-          context "when mfa is disabled" do
-            should "include error" do
-              expected_error = "[ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication."
-
-              assert_error_included(expected_error)
-            end
-          end
-
-          context "when mfa is enabled" do
-            context "on `ui_only` level" do
-              setup do
-                @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
-                get :me, format: format
-              end
-
-              should "include error" do
-                expected_error = "[ERROR] For protection of your account and your gems, you are required to change your MFA level to \"UI and gem signin\" or \"UI and API\"."
-
-                assert_error_included(expected_error)
-              end
-            end
-
-            context "on `ui_and_gem_signin` level" do
-              setup do
-                @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
-                get :me, format: format
-              end
-
-              should "not include error in user json" do
-                unexpected_error =
-                  "[ERROR] For protection of your account and gems"
-
-                refute_error_included(unexpected_error)
-              end
-            end
-
-            context "on `ui_and_api` level" do
-              setup do
-                @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
-                get :me, format: format
-              end
-
-              should "not include error" do
-                unexpected_error =
-                  "[ERROR] For protection of your account and gems"
-
-                refute_error_included(unexpected_error)
               end
             end
           end

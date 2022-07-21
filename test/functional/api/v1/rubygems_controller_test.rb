@@ -545,7 +545,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           at https://rubygems.org/multifactor_auth/new.
           ERROR
 
-          assert_equal mfa_error, @response.body
+          assert_includes @response.body, mfa_error
         end
       end
 
@@ -563,7 +563,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           at https://rubygems.org/settings/edit.
           ERROR
 
-          assert_equal mfa_error, @response.body
+          assert_includes @response.body, mfa_error
         end
       end
 

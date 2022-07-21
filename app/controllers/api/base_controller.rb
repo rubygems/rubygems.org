@@ -42,13 +42,7 @@ class Api::BaseController < ApplicationController
     unless @rubygem.mfa_requirement_satisfied_for?(@api_key.user)
       return render plain: "Gem requires MFA enabled; You do not have MFA enabled yet.", status: :forbidden
     end
-    if @api_key.user.mfa_required_not_yet_enabled?
-      render plain: "[ERROR] For protection of your account and your gems, you are required to set up multi-factor " \
-                    "authentication at https://rubygems.org/multifactor_auth/new.", status: :forbidden
-    elsif @api_key.user.mfa_required_weak_level_enabled?
-      render plain: "[ERROR] For protection of your account and your gems, you are required to change your MFA level to" \
-                    " \"UI and gem signin\" or \"UI and API\" at https://rubygems.org/settings/edit.", status: :forbidden
-    end
+    render_forbidden_for_mfa_requirement
   end
 
   def response_with_mfa_warning(response)
@@ -71,6 +65,29 @@ class Api::BaseController < ApplicationController
     end
 
     message
+  end
+
+  def render_forbidden_for_mfa_requirement(user = nil)
+    user ||= @api_key.user
+    if user.mfa_required_not_yet_enabled?
+      message = <<~ERROR.chomp
+      [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
+      at https://rubygems.org/multifactor_auth/new.
+      ERROR
+    elsif user.mfa_required_weak_level_enabled?
+      message = <<~ERROR.chomp
+      [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
+      at https://rubygems.org/settings/edit.
+      ERROR
+    else
+      return true
+    end
+
+    respond_to do |format|
+      format.any(:all) { render plain: message, status: :forbidden }
+      format.json { render json: { error: message }, status: :forbidden }
+      format.yaml { render yaml: { error: message }, status: :forbidden }
+    end
   end
 
   def authenticate_with_api_key
