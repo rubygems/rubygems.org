@@ -33,8 +33,8 @@ class Pusher
       error = "[ERROR] For protection of your account and your gems, you are required to set up multi-factor " \
               "authentication at https://rubygems.org/multifactor_auth/new."
     elsif user.mfa_required_weak_level_enabled?
-      error = "[ERROR] For protection of your account and your gems, you are required to change your MFA level to \"UI" \
-              " and gem signin\" or \"UI and API\" at https://rubygems.org/settings/edit."
+      error = "[ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI" \
+              " and gem signin' or 'UI and API' at https://rubygems.org/settings/edit."
 
     end
     error ? notify(error, 403) : true

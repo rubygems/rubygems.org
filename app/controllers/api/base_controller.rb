@@ -71,13 +71,13 @@ class Api::BaseController < ApplicationController
     user ||= @api_key.user
     if user.mfa_required_not_yet_enabled?
       message = <<~ERROR.chomp
-      [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
-      at https://rubygems.org/multifactor_auth/new.
+        [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
+        at https://rubygems.org/multifactor_auth/new.
       ERROR
     elsif user.mfa_required_weak_level_enabled?
       message = <<~ERROR.chomp
-      [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
-      at https://rubygems.org/settings/edit.
+        [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
+        at https://rubygems.org/settings/edit.
       ERROR
     else
       return true

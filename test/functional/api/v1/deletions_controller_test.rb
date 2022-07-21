@@ -183,8 +183,8 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
           should "show error message" do
             mfa_error = <<~ERROR.chomp
-            [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
-            at https://rubygems.org/multifactor_auth/new.
+              [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
+              at https://rubygems.org/multifactor_auth/new.
             ERROR
 
             assert_includes @response.body, mfa_error
@@ -201,14 +201,13 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
 
           should "show error message" do
             mfa_error = <<~ERROR.chomp
-            [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
-            at https://rubygems.org/settings/edit.
+              [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
+              at https://rubygems.org/settings/edit.
             ERROR
 
             assert_includes @response.body, mfa_error
           end
         end
-
 
         context "by user on `ui_and_gem_signin` level" do
           setup do
@@ -235,7 +234,6 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           end
         end
       end
-
 
       context "when mfa is recommended" do
         setup do

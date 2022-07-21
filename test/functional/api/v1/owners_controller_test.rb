@@ -331,8 +331,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
               assert_equal 403, @response.status
               mfa_error = <<~ERROR.chomp
-              [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
-              at https://rubygems.org/multifactor_auth/new.
+                [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
+                at https://rubygems.org/multifactor_auth/new.
               ERROR
               assert_includes @response.body, mfa_error
             end
@@ -350,8 +350,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
               assert_equal 403, @response.status
               mfa_error = <<~ERROR.chomp
-              [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
-              at https://rubygems.org/settings/edit.
+                [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
+                at https://rubygems.org/settings/edit.
               ERROR
               assert_includes @response.body, mfa_error
             end
@@ -676,8 +676,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
               assert_equal 403, response.status
               mfa_error = <<~ERROR.chomp
-              [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
-              at https://rubygems.org/multifactor_auth/new.
+                [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
+                at https://rubygems.org/multifactor_auth/new.
               ERROR
               assert_includes @response.body, mfa_error
             end
@@ -695,8 +695,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
               assert_equal 403, @response.status
               mfa_error = <<~ERROR.chomp
-              [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
-              at https://rubygems.org/settings/edit.
+                [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
+                at https://rubygems.org/settings/edit.
               ERROR
               assert_includes @response.body, mfa_error
             end
@@ -731,7 +731,6 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
             end
           end
         end
-
       end
 
       context "when mfa is recommended" do
