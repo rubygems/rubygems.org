@@ -39,10 +39,8 @@ class Api::BaseController < ApplicationController
   end
 
   def verify_mfa_requirement
-    unless @rubygem.mfa_requirement_satisfied_for?(@api_key.user)
-      return render plain: "Gem requires MFA enabled; You do not have MFA enabled yet.", status: :forbidden
-    end
-    render_forbidden_for_mfa_requirement
+    render_error_if_gem_metadata_mfa_requirement_unmet
+    render_error_if_user_mfa_requirement_unmet(@api_key.user)
   end
 
   def response_with_mfa_warning(response)
@@ -67,8 +65,7 @@ class Api::BaseController < ApplicationController
     message
   end
 
-  def render_forbidden_for_mfa_requirement(user = nil)
-    user ||= @api_key.user
+  def render_error_if_user_mfa_requirement_unmet(user)
     if user.mfa_required_not_yet_enabled?
       message = <<~ERROR.chomp
         [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
@@ -87,6 +84,13 @@ class Api::BaseController < ApplicationController
       format.any(:all) { render plain: message, status: :forbidden }
       format.json { render json: { error: message }, status: :forbidden }
       format.yaml { render yaml: { error: message }, status: :forbidden }
+    end
+  end
+
+  def render_error_if_gem_metadata_mfa_requirement_unmet
+    return unless @rubygem
+    unless @rubygem.mfa_requirement_satisfied_for?(@api_key.user)
+      return render plain: "Gem requires MFA enabled; You do not have MFA enabled yet.", status: :forbidden
     end
   end
 

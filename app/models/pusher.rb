@@ -27,16 +27,8 @@ class Pusher
   end
 
   def verify_mfa_requirement
-    if user.mfa_disabled? && gem_requires_mfa
+    user.mfa_enabled? || !(version_mfa_required? || rubygem.metadata_mfa_required?) ||
       notify("Rubygem requires owners to enable MFA. You must enable MFA before pushing new version.", 403)
-    elsif user.mfa_required_not_yet_enabled?
-      notify("[ERROR] For protection of your account and your gems, you are required to set up multi-factor " \
-             "authentication at https://rubygems.org/multifactor_auth/new.", 403)
-    elsif user.mfa_required_weak_level_enabled?
-      notify("[ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI" \
-             " and gem signin' or 'UI and API' at https://rubygems.org/settings/edit.", 403)
-    end
-    true
   end
 
   def validate
@@ -153,10 +145,6 @@ class Pusher
   def set_info_checksum
     checksum = GemInfo.new(rubygem.name).info_checksum
     version.update_attribute :info_checksum, checksum
-  end
-
-  def gem_requires_mfa
-    version_mfa_required? || rubygem.metadata_mfa_required?
   end
 
   def republish_notification(version)
