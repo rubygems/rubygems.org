@@ -235,6 +235,24 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         end
       end
 
+      context "when mfa is required by metadata and user downloads" do
+        setup do
+          User.any_instance.stubs(:mfa_required?).returns true
+          @v1.metadata = { "rubygems_mfa_required" => "true" }
+          @v1.save!
+        end
+
+        context "by user with mfa disabled" do
+          setup do
+            delete :create, params: { gem_name: @rubygem.name, version: @v1.number }
+          end
+
+          should "only render one forbidden response" do
+            assert_equal 403, @response.status
+          end
+        end
+      end
+
       context "when mfa is recommended" do
         setup do
           User.any_instance.stubs(:mfa_recommended?).returns true

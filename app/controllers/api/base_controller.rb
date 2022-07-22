@@ -39,7 +39,9 @@ class Api::BaseController < ApplicationController
   end
 
   def verify_mfa_requirement
-    render_error_if_gem_metadata_mfa_requirement_unmet
+    if @rubygem && !@rubygem.mfa_requirement_satisfied_for?(@api_key.user)
+      return render plain: "Gem requires MFA enabled; You do not have MFA enabled yet.", status: :forbidden
+    end
     render_error_if_user_mfa_requirement_unmet(@api_key.user)
   end
 
@@ -84,13 +86,6 @@ class Api::BaseController < ApplicationController
       format.any(:all) { render plain: message, status: :forbidden }
       format.json { render json: { error: message }, status: :forbidden }
       format.yaml { render yaml: { error: message }, status: :forbidden }
-    end
-  end
-
-  def render_error_if_gem_metadata_mfa_requirement_unmet
-    return unless @rubygem
-    unless @rubygem.mfa_requirement_satisfied_for?(@api_key.user)
-      return render plain: "Gem requires MFA enabled; You do not have MFA enabled yet.", status: :forbidden
     end
   end
 
