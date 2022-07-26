@@ -103,7 +103,7 @@ class ApiKeyTest < ActiveSupport::TestCase
       should "add error when id is not associated with the user" do
         api_key = ApiKey.new(hashed_key: SecureRandom.hex(24), push_rubygem: true, user: @ownership.user, rubygem_id: -1)
 
-        assert_contains api_key.errors[:rubygem], "that is selected cannot be scoped to this key"
+        assert_contains api_key.errors[:rubygem], "must be a gem that you are an owner of"
       end
     end
 
@@ -135,7 +135,7 @@ class ApiKeyTest < ActiveSupport::TestCase
           rubygem_name: rubygem.name
         )
 
-        assert_contains api_key.errors[:rubygem], "that is selected cannot be scoped to this key"
+        assert_contains api_key.errors[:rubygem], "must be a gem that you are an owner of"
       end
 
       should "add error when name is not a valid gem name" do

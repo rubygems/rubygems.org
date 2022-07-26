@@ -100,7 +100,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     click_button "Create"
 
     assert page.has_css? ".flash"
-    assert page.has_content? "Rubygem that is selected cannot be scoped to this key"
+    assert page.has_content? "Rubygem must be a gem that you are an owner of"
     assert_empty @user.api_keys
   end
 
@@ -211,7 +211,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     click_button "Update"
 
     assert page.has_css? ".flash"
-    assert page.has_content? "Rubygem that is selected cannot be scoped to this key"
+    assert page.has_content? "Rubygem must be a gem that you are an owner of"
     assert_equal @ownership.rubygem, api_key.reload.rubygem
   end
 

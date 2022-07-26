@@ -39,7 +39,7 @@ class ApiKey < ApplicationRecord
   def rubygem_id=(id)
     self.ownership = id.blank? ? nil : user.ownerships.find_by!(rubygem_id: id)
   rescue ActiveRecord::RecordNotFound
-    errors.add :rubygem, "that is selected cannot be scoped to this key"
+    errors.add :rubygem, "must be a gem that you are an owner of"
   end
 
   def rubygem_name=(name)
