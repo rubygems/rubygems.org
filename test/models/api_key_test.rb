@@ -146,7 +146,7 @@ class ApiKeyTest < ActiveSupport::TestCase
           rubygem_name: "invalid-gem-name"
         )
 
-        assert_contains api_key.errors[:rubygem], "that is selected cannot be scoped to this key"
+        assert_contains api_key.errors[:rubygem], "could not be found"
       end
     end
   end

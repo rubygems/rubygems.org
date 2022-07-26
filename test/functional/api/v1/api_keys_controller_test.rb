@@ -374,7 +374,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
           should respond_with :unprocessable_entity
 
           should "respond with an error" do
-            assert_equal "Rubygem that is selected cannot be scoped to this key", response.body
+            assert_equal "Rubygem could not be found", response.body
           end
         end
       end

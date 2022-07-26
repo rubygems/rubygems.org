@@ -45,7 +45,7 @@ class ApiKey < ApplicationRecord
   def rubygem_name=(name)
     self.rubygem_id = name.blank? ? nil : Rubygem.find_by_name!(name).id
   rescue ActiveRecord::RecordNotFound
-    errors.add :rubygem, "that is selected cannot be scoped to this key"
+    errors.add :rubygem, "could not be found"
   end
 
   def soft_delete!(ownership: nil)
