@@ -1,6 +1,6 @@
 <li class="gem__version-wrap">
   <%= link_to version.number, rubygem_version_path(version.rubygem, version.slug), :class => 't-list__item' %>
-  <small class="gem__version__date">- <%= nice_date_for(version.created_at) %></small>
+  <%= version_date_tag(version) %>
   <% if version.platformed? %>
     <span class="gem__version__date platform"><%= version.platform %></span>
   <% end %>

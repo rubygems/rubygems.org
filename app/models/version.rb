@@ -1,6 +1,8 @@
 require "digest/sha2"
 
 class Version < ApplicationRecord
+  RUBYGEMS_IMPORT_DATE = Date.parse("2009-07-25")
+
   belongs_to :rubygem, touch: true
   has_many :dependencies, -> { order("rubygems.name ASC").includes(:rubygem) }, dependent: :destroy, inverse_of: "version"
   has_one :gem_download, inverse_of: :version, dependent: :destroy
@@ -175,6 +177,18 @@ class Version < ApplicationRecord
   end
 
   delegate :reorder_versions, to: :rubygem
+
+  def authored_at
+    return built_at if rely_on_built_at?
+
+    created_at
+  end
+
+  def rely_on_built_at?
+    return false if created_at.to_date != RUBYGEMS_IMPORT_DATE
+
+    built_at && built_at <= RUBYGEMS_IMPORT_DATE
+  end
 
   def refresh_rubygem_indexed
     rubygem.refresh_indexed!

@@ -1,6 +1,10 @@
+:root {
+  --gem-version-color: #a6aab2;
+}
+
 .gem__version {
   position: relative;
-  color: #a6aab2; }
+  color: var(--gem-version-color); }
   @media (max-width: 929px) {
     .gem__version {
       top: 5px;
@@ -197,7 +201,10 @@
   margin-bottom: 12px; }
 
 .gem__version__date {
-  color: #a6aab2; }
+  color: var(--gem-version-color); }
+
+.gem__version__date.tooltip__text {
+  color: var(--gem-version-color); }
 
 .gem__versions-wrap {
   overflow: auto; }
@@ -218,7 +225,7 @@
     display: inline-block; }
 
 .gem__unregistered {
-  color: #a6aab2;
+  color: var(--gem-version-color);
   cursor: help;
 }
 
