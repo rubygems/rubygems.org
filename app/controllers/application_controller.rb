@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
 
   before_action :set_locale
   before_action :reject_null_char_param
+  before_action :reject_null_char_cookie
 
   def set_locale
     I18n.locale = user_locale
@@ -113,6 +114,11 @@ class ApplicationController < ActionController::Base
 
   def reject_null_char_param
     render plain: "bad request", status: :bad_request if params.to_s.include?("\\u0000")
+  end
+
+  def reject_null_char_cookie
+    contains_null_char = cookies.map { |cookie| cookie.join("=") }.join(";").include?("\u0000")
+    render plain: "bad request", status: :bad_request if contains_null_char
   end
 
   def sanitize_params
