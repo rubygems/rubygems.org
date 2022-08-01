@@ -321,7 +321,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         should "deny access" do
           assert_response 403
           mfa_error = <<~ERROR.chomp
-            [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
+            For protection of your account and your gems, you are required to set up multi-factor authentication \
             at https://rubygems.org/multifactor_auth/new.
           ERROR
 
@@ -338,7 +338,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         should "deny access" do
           assert_response 403
           mfa_error = <<~ERROR.chomp
-            [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
+            For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
             at https://rubygems.org/settings/edit.
           ERROR
 
@@ -354,7 +354,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
         should_expect_otp_for_create
         should "not show error message" do
-          refute_includes @response.body, "[ERROR] For protection of your account and your gems"
+          refute_includes @response.body, "For protection of your account and your gems"
         end
       end
 
@@ -366,7 +366,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
         should_expect_otp_for_create
         should "not show error message" do
-          refute_includes @response.body, "[ERROR] For protection of your account and your gems"
+          refute_includes @response.body, "For protection of your account and your gems"
         end
       end
     end

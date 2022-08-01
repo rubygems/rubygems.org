@@ -331,7 +331,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
               assert_equal 403, @response.status
               mfa_error = <<~ERROR.chomp
-                [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
+                For protection of your account and your gems, you are required to set up multi-factor authentication \
                 at https://rubygems.org/multifactor_auth/new.
               ERROR
               assert_includes @response.body, mfa_error
@@ -350,7 +350,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
               assert_equal 403, @response.status
               mfa_error = <<~ERROR.chomp
-                [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
+                For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
                 at https://rubygems.org/settings/edit.
               ERROR
               assert_includes @response.body, mfa_error
@@ -367,7 +367,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
             @emails.each do |email|
               post :create, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
 
-              refute_includes @response.body, "[ERROR] For protection of your account and your gems"
+              refute_includes @response.body, "For protection of your account and your gems"
             end
           end
         end
@@ -382,7 +382,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
             @emails.each do |email|
               post :create, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
 
-              refute_includes @response.body, "[ERROR] For protection of your account and your gems"
+              refute_includes @response.body, "For protection of your account and your gems"
             end
           end
         end
@@ -676,7 +676,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
               assert_equal 403, response.status
               mfa_error = <<~ERROR.chomp
-                [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
+                For protection of your account and your gems, you are required to set up multi-factor authentication \
                 at https://rubygems.org/multifactor_auth/new.
               ERROR
               assert_includes @response.body, mfa_error
@@ -695,7 +695,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
               assert_equal 403, @response.status
               mfa_error = <<~ERROR.chomp
-                [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
+                For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
                 at https://rubygems.org/settings/edit.
               ERROR
               assert_includes @response.body, mfa_error
@@ -712,7 +712,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
             @emails.each do |email|
               delete :destroy, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
 
-              refute_includes @response.body, "[ERROR] For protection of your account and your gems"
+              refute_includes @response.body, "For protection of your account and your gems"
             end
           end
         end
@@ -727,7 +727,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
             @emails.each do |email|
               delete :destroy, params: { rubygem_id: @rubygem.to_param, email: email }, format: :json
 
-              refute_includes @response.body, "[ERROR] For protection of your account and your gems"
+              refute_includes @response.body, "For protection of your account and your gems"
             end
           end
         end
