@@ -68,32 +68,30 @@ class Api::BaseController < ApplicationController
   end
 
   def render_error_if_user_mfa_requirement_unmet(user)
-    if user.mfa_required_not_yet_enabled?
-      render_mfa_setup_required_error
-    elsif user.mfa_required_weak_level_enabled?
-      render_mfa_strong_level_required_error
-    end
+    error = if user.mfa_required_not_yet_enabled?
+              mfa_setup_required_error
+            elsif user.mfa_required_weak_level_enabled?
+              mfa_strong_level_required_error
+            end
+
+    render_mfa_forbidden(error) if error
   end
 
-  def render_mfa_setup_required_error
-    error = <<~ERROR.chomp
+  def mfa_setup_required_error
+    <<~ERROR.chomp
       For protection of your account and your gems, you are required to set up multi-factor authentication \
       at https://rubygems.org/multifactor_auth/new.
     ERROR
-
-    respond_to do |format|
-      format.any(:all) { render plain: error, status: :forbidden }
-      format.json { render json: { error: error }, status: :forbidden }
-      format.yaml { render yaml: { error: error }, status: :forbidden }
-    end
   end
 
-  def render_mfa_strong_level_required_error
-    error = <<~ERROR.chomp
+  def mfa_strong_level_required_error
+    <<~ERROR.chomp
       For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
       at https://rubygems.org/settings/edit.
     ERROR
+  end
 
+  def render_mfa_forbidden(error)
     respond_to do |format|
       format.any(:all) { render plain: error, status: :forbidden }
       format.json { render json: { error: error }, status: :forbidden }
