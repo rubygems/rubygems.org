@@ -12,3 +12,6 @@ exclude_patterns:
 - "**/vendor/"
 - "**/*.d.ts"
 - "app/models/user.rb"
+method-count:
+    config:
+      threshold: 25
