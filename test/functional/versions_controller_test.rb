@@ -67,22 +67,24 @@ class VersionsControllerTest < ActionController::TestCase
     setup do
       @built_at = Date.parse("2000-01-01")
       rubygem = create(:rubygem)
-      create(:version, rubygem: rubygem, created_at: Version::RUBYGEMS_IMPORT_DATE, built_at: @built_at)
+      create(:version, number: "1.1.2", rubygem: rubygem, created_at: Version::RUBYGEMS_IMPORT_DATE, built_at: @built_at)
       get :index, params: { rubygem_id: rubygem.name }
     end
 
     should respond_with :success
 
-    should "show imported versions authored_at dates with an asterisk" do
+    should "show imported version number with an superscript asterisk and a tooltip" do
       tooltip_text = <<~NOTICE.squish
         This gem version was imported to RubyGems.org on July 25, 2009.
         The date displayed was specified by the author in the gemspec.
       NOTICE
 
-      assert_select ".gem__version__date", text: "- January 01, 2000 [?]", count: 1 do |elements|
+      assert_select ".gem__version__date", text: "- January 01, 2000*", count: 1 do |elements|
         version = elements.first
         assert_equal(tooltip_text, version["data-tooltip"])
       end
+
+      assert_select ".gem__version__date sup", text: "*", count: 1
     end
   end
 
