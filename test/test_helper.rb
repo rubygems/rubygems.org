@@ -72,6 +72,8 @@ Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
 Capybara.always_include_port = true
 Capybara.server = :webrick
 
+Gemcutter::Application.load_tasks
+
 class SystemTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
 
