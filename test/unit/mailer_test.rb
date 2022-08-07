@@ -9,7 +9,6 @@ class MailerTest < ActionMailer::TestCase
       @user = create(:user)
       create(:rubygem, owners: [@user], downloads: MIN_DOWNLOADS_FOR_MFA_RECOMMENDATION_POLICY)
 
-      Gemcutter::Application.load_tasks
       Rake::Task["mfa_policy:announce_recommendation"].invoke
       Delayed::Worker.new.work_off
     end
@@ -29,7 +28,6 @@ class MailerTest < ActionMailer::TestCase
       user = create(:user, mfa_level: "disabled")
       create(:rubygem, owners: [user], downloads: MIN_DOWNLOADS_FOR_MFA_REQUIRED_POLICY)
 
-      Gemcutter::Application.load_tasks
       Rake::Task["mfa_policy:reminder_enable_mfa"].invoke
       Delayed::Worker.new.work_off
 
