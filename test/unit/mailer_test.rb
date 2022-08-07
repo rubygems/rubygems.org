@@ -9,7 +9,7 @@ class MailerTest < ActionMailer::TestCase
       @user = create(:user)
       create(:rubygem, owners: [@user], downloads: MIN_DOWNLOADS_FOR_MFA_RECOMMENDATION_POLICY)
 
-      Rake::Task["mfa_policy:announce_recommendation"].invoke
+      @io_output, _error = capture_io { Rake::Task["mfa_policy:announce_recommendation"].execute }
       Delayed::Worker.new.work_off
     end
 
@@ -20,6 +20,7 @@ class MailerTest < ActionMailer::TestCase
       assert_equal ["no-reply@mailer.rubygems.org"], email.from
       assert_equal "Please enable multi-factor authentication on your RubyGems account", email.subject
       assert_match "Thank you for making the RubyGems ecosystem more secure", email.text_part.body.to_s
+      assert_match "Sending 1 MFA announcement email", @io_output
     end
   end
 
@@ -28,7 +29,8 @@ class MailerTest < ActionMailer::TestCase
       user = create(:user, mfa_level: "disabled")
       create(:rubygem, owners: [user], downloads: MIN_DOWNLOADS_FOR_MFA_REQUIRED_POLICY)
 
-      Rake::Task["mfa_policy:reminder_enable_mfa"].invoke
+      @io_output, _error = capture_io { Rake::Task["mfa_policy:reminder_enable_mfa"].execute }
+
       Delayed::Worker.new.work_off
 
       refute_empty ActionMailer::Base.deliveries
@@ -37,6 +39,7 @@ class MailerTest < ActionMailer::TestCase
       assert_equal ["no-reply@mailer.rubygems.org"], email.from
       assert_equal "[Action Required] Enable multi-factor authentication on your RubyGems account by August 15", email.subject
       assert_match "Thank you for making the RubyGems ecosystem more secure", email.text_part.body.to_s
+      assert_match "Sending 1 MFA reminder email", @io_output
     end
   end
 
