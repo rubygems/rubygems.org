@@ -1,6 +1,6 @@
 require "test_helper"
 
-class MailerTest < ActiveSupport::TestCase
+class MailerTest < ActionMailer::TestCase
   MIN_DOWNLOADS_FOR_MFA_RECOMMENDATION_POLICY = 165_000_000
   MIN_DOWNLOADS_FOR_MFA_REQUIRED_POLICY = 180_000_000
 
