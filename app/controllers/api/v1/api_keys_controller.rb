@@ -48,8 +48,8 @@ class Api::V1::ApiKeysController < Api::BaseController
 
   def check_mfa(user)
     if user&.mfa_gem_signin_authorized?(otp)
-      return render_mfa_forbidden(mfa_setup_required_error) if user.mfa_required_not_yet_enabled?
-      return render_mfa_forbidden(mfa_strong_level_required_error) if user.mfa_required_weak_level_enabled?
+      return render_mfa_setup_required_error if user.mfa_required_not_yet_enabled?
+      return render_mfa_strong_level_required_error if user.mfa_required_weak_level_enabled?
 
       yield
     elsif user&.mfa_enabled?
