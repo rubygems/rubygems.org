@@ -40,9 +40,12 @@ class Api::BaseController < ApplicationController
 
   def verify_mfa_requirement
     if @rubygem && !@rubygem.mfa_requirement_satisfied_for?(@api_key.user)
-      return render plain: "Gem requires MFA enabled; You do not have MFA enabled yet.", status: :forbidden
+      render plain: "Gem requires MFA enabled; You do not have MFA enabled yet.", status: :forbidden
+    elsif @api_key.user.mfa_required_not_yet_enabled?
+      render_mfa_setup_required_error
+    elsif @api_key.user.mfa_required_weak_level_enabled?
+      render_mfa_strong_level_required_error
     end
-    render_error_if_user_mfa_requirement_unmet(@api_key.user)
   end
 
   def response_with_mfa_warning(response)
@@ -65,14 +68,6 @@ class Api::BaseController < ApplicationController
     end
 
     message
-  end
-
-  def render_error_if_user_mfa_requirement_unmet(user)
-    if user.mfa_required_not_yet_enabled?
-      render_mfa_setup_required_error
-    elsif user.mfa_required_weak_level_enabled?
-      render_mfa_strong_level_required_error
-    end
   end
 
   def render_mfa_setup_required_error
