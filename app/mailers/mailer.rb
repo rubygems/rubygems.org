@@ -77,9 +77,17 @@ class Mailer < ApplicationMailer
 
   def mfa_required_soon_announcement(user_id)
     @user = User.find(user_id)
+    case @user.mfa_level
+    when "disabled"
+      subject = "[Action Required] Enable multi-factor authentication on your RubyGems account by August 15"
+      @heading = "Enable multi-factor authentication on your RubyGems account"
+    when "ui_only"
+      subject = "[Action Required] Upgrade the multi-factor authentication level on your RubyGems account by August 15"
+      @heading = "Upgrade the multi-factor authentication level on your RubyGems account"
+    end
 
     mail to: @user.email,
-      subject: "[Action Required] Enable multi-factor authentication on your RubyGems account by August 15"
+      subject: subject
   end
 
   def gem_yanked(yanked_by_user_id, version_id, notified_user_id)

@@ -52,7 +52,7 @@ class MailerTest < ActionMailer::TestCase
       email = ActionMailer::Base.deliveries.last
       assert_equal [user.email], email.to
       assert_equal ["no-reply@mailer.rubygems.org"], email.from
-      assert_equal "[Action Required] Enable multi-factor authentication on your RubyGems account by August 15", email.subject
+      assert_equal "[Action Required] Upgrade the multi-factor authentication level on your RubyGems account by August 15", email.subject
       assert_match "Recently, we've announced our security-focused ambitions to the community", email.text_part.body.to_s
       assert_match "Sending 1 MFA reminder email", @io_output
     end
