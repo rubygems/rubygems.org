@@ -253,7 +253,6 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           Rubygem::MFA_REQUIRED_THRESHOLD + 1,
           rubygem_id: @mfa_rubygem.id
         )
-        @request.cookies[:mfa_required] = "true"
         @rubygem = create(:rubygem)
         create(:ownership_call, rubygem: @rubygem)
         @ownership_request = create(:ownership_request)
