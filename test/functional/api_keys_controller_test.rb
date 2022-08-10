@@ -33,12 +33,12 @@ class ApiKeysControllerTest < ActionController::TestCase
     end
 
     context "on DELETE to destroy" do
-      setup { post :create, params: { id: 1 } }
+      setup { delete :destroy, params: { id: 1 } }
 
       should redirect_to("the sign in page") { sign_in_path }
     end
 
-    context "on DELETE to destroy" do
+    context "on DELETE to reset" do
       setup { delete :reset }
 
       should redirect_to("the sign in page") { sign_in_path }
