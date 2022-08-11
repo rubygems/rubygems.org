@@ -63,11 +63,20 @@ namespace :mfa_policy do
     total_users = users.count
     puts "Sending #{total_users} MFA required for popular gems email"
 
-    i = 0
+    mailers_sent = 0
+    mailers_not_sent = 0
+    unsent_mailer_emails = []
     users.each do |user|
-      Mailer.delay.mfa_required_popular_gems_announcement(user.id) if mx_exists?(user.email)
-      i += 1
-      print format("\r%.2f%% (%d/%d) complete", i.to_f / total_users * 100.0, i, total_users)
+      if mx_exists?(user.email)
+        Mailer.delay.mfa_required_popular_gems_announcement(user.id)
+        mailers_sent += 1
+        print format("\r%.2f%% (%d/%d) complete", mailers_sent.to_f / total_users * 100.0, mailers_sent, total_users)
+      else
+        mailers_not_sent += 1
+        unsent_mailer_emails << user.email
+      end
     end
+
+    puts "Mailer was not sent to #{mailers_not_sent} account(s):\n#{unsent_mailer_emails.join(", \n")}" if unsent_mailer_emails.any?
   end
 end
