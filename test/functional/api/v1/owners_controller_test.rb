@@ -333,6 +333,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
               mfa_error = <<~ERROR.chomp
                 For protection of your account and your gems, you are required to set up multi-factor authentication \
                 at https://rubygems.org/multifactor_auth/new.
+
+                Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
               ERROR
               assert_includes @response.body, mfa_error
             end
@@ -352,6 +354,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
               mfa_error = <<~ERROR.chomp
                 For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
                 at https://rubygems.org/settings/edit.
+
+                Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
               ERROR
               assert_includes @response.body, mfa_error
             end
@@ -678,6 +682,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
               mfa_error = <<~ERROR.chomp
                 For protection of your account and your gems, you are required to set up multi-factor authentication \
                 at https://rubygems.org/multifactor_auth/new.
+
+                Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
               ERROR
               assert_includes @response.body, mfa_error
             end
@@ -697,6 +703,8 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
               mfa_error = <<~ERROR.chomp
                 For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
                 at https://rubygems.org/settings/edit.
+
+                Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
               ERROR
               assert_includes @response.body, mfa_error
             end
