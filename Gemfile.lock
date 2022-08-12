@@ -100,7 +100,7 @@ GEM
       msgpack
     bootsnap (1.13.0)
       msgpack (~> 1.2)
-    brakeman (5.2.3)
+    brakeman (5.3.1)
     builder (3.2.4)
     byebug (11.1.1)
     capybara (3.37.1)
