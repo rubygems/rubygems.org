@@ -99,8 +99,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def render_forbidden
-    render plain: "forbidden", status: :forbidden
+  def render_forbidden(error = "forbidden")
+    render plain: error, status: :forbidden
   end
 
   def redirect_to_page_with_error
