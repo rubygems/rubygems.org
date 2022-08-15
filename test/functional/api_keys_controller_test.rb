@@ -295,5 +295,122 @@ class ApiKeysControllerTest < ActionController::TestCase
         assert_empty @user.api_keys
       end
     end
+
+    context "when user owns a gem with more than MFA_REQUIRED_THRESHOLD downloads" do
+      setup do
+        @rubygem = create(:rubygem)
+        create(:ownership, rubygem: @rubygem, user: @user)
+        GemDownload.increment(
+          Rubygem::MFA_REQUIRED_THRESHOLD + 1,
+          rubygem_id: @rubygem.id
+        )
+        @request.cookies[:mfa_required] = "true"
+      end
+
+      redirect_scenarios = {
+        "DELETE to reset" => [:reset, { method: "DELETE" }],
+        "GET to index" => [:index, { method: "GET" }],
+        "GET to new" => [:new, { method: "GET" }],
+        "POST to create" => [:create, { method: "POST", params: { api_key: { name: "test", add_owner: true } } }],
+        "GET to edit" => [:edit, { method: "GET", params: { id: 1 } }],
+        "PATCH to update" => [:update, { method: "PATCH", params: { api_key: { name: "test", add_owner: true }, id: 1 } }],
+        "DELETE to destroy" => [:destroy, { method: "DELETE", params: { id: 1 } }]
+      }
+
+      context "user has mfa disabled" do
+        redirect_scenarios.each do |label, request_params|
+          context "on #{label}" do
+            setup { process(request_params.first, **request_params.last) }
+
+            should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+          end
+        end
+      end
+
+      context "user has mfa set to weak level" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+        end
+
+        redirect_scenarios.each do |label, request_params|
+          context "on #{label}" do
+            setup { process(request_params.first, **request_params.last) }
+
+            should redirect_to("the settings page") { edit_settings_path }
+          end
+        end
+      end
+
+      context "user has MFA set to strong level, expect normal behaviour" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        end
+
+        context "on DELETE to reset" do
+          setup do
+            create(:api_key, key: "1234", user: @user)
+            delete :reset
+          end
+
+          should redirect_to("the index api key page") { profile_api_keys_path }
+        end
+
+        context "on GET to index" do
+          setup { get :index }
+
+          should redirect_to("the new api key page") { new_profile_api_key_path }
+        end
+
+        context "on GET to new" do
+          setup { get :new }
+
+          should respond_with :success
+          should "render new api key form" do
+            assert page.has_content? "New API key"
+          end
+        end
+
+        context "on POST to create" do
+          setup do
+            post :create, params: { api_key: { name: "test", add_owner: true } }
+            Delayed::Worker.new.work_off
+          end
+
+          should redirect_to("the key index page") { profile_api_keys_path }
+        end
+
+        context "on GET to edit" do
+          setup do
+            @api_key = create(:api_key, user: @user)
+            get :edit, params: { id: @api_key.id }
+          end
+
+          should respond_with :success
+
+          should "render edit api key form" do
+            assert page.has_content? "Edit API key"
+          end
+        end
+
+        context "on PATCH to update" do
+          setup do
+            @api_key = create(:api_key, user: @user)
+            patch :update, params: { api_key: { name: "test", add_owner: true }, id: @api_key.id }
+            @api_key.reload
+          end
+
+          should redirect_to("the index api key page") { profile_api_keys_path }
+        end
+
+        context "on DELETE to destroy" do
+          setup do
+            @api_key = create(:api_key, user: @user)
+            delete :destroy, params: { id: @api_key.id }
+          end
+
+          should redirect_to("the index api key page") { profile_api_keys_path }
+        end
+      end
+    end
   end
 end

@@ -294,7 +294,9 @@ zh-CN:
     otp_code: OTP 码
     require_mfa_disabled:
     require_mfa_enabled: 你的多重要素验证已停用，请先启用。
+    setup_required_html:
     setup_recommended:
+    strong_mfa_level_required_html:
     strong_mfa_level_recommended:
     ui_only_warning:
     new:

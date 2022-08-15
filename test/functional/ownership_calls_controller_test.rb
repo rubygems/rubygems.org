@@ -120,6 +120,105 @@ class OwnershipCallsControllerTest < ActionController::TestCase
         end
       end
     end
+
+    context "when user owns a gem with more than MFA_REQUIRED_THRESHOLD downloads" do
+      setup do
+        @rubygem = create(:rubygem)
+        create(:ownership, rubygem: @rubygem, user: @user)
+        GemDownload.increment(
+          Rubygem::MFA_REQUIRED_THRESHOLD + 1,
+          rubygem_id: @rubygem.id
+        )
+        @request.cookies[:mfa_required] = "true"
+      end
+
+      context "user has mfa disabled" do
+        context "on GET to index" do
+          setup do
+            get :index, params: { rubygem_id: @rubygem.name }
+          end
+          should respond_with :success
+          should "not redirect to mfa" do
+            assert page.has_content? "Maintainers wanted"
+          end
+        end
+
+        context "on PATCH to close" do
+          setup do
+            patch :close, params: { rubygem_id: @rubygem.name }
+          end
+          should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+        end
+
+        context "on POST to create" do
+          setup do
+            post :create, params: { rubygem_id: @rubygem.name, note: "short note" }
+          end
+          should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+        end
+      end
+
+      context "user has mfa set to weak level" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+        end
+
+        context "on GET to index" do
+          setup do
+            get :index, params: { rubygem_id: @rubygem.name }
+          end
+          should respond_with :success
+          should "not redirect to mfa" do
+            assert page.has_content? "Maintainers wanted"
+          end
+        end
+
+        context "on PATCH to close" do
+          setup do
+            patch :close, params: { rubygem_id: @rubygem.name }
+          end
+          should redirect_to("edit settings page") { edit_settings_path }
+        end
+
+        context "on POST to create" do
+          setup do
+            post :create, params: { rubygem_id: @rubygem.name, note: "short note" }
+          end
+          should redirect_to("edit settings page") { edit_settings_path }
+        end
+      end
+
+      context "user has MFA set to strong level, expect normal behaviour" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+        end
+
+        context "on GET to index" do
+          setup do
+            get :index, params: { rubygem_id: @rubygem.name }
+          end
+          should respond_with :success
+          should "not redirect to mfa" do
+            assert page.has_content? "Maintainers wanted"
+          end
+        end
+
+        context "on PATCH to close" do
+          setup do
+            create(:ownership_call, rubygem: @rubygem, user: @user, status: "opened")
+            patch :close, params: { rubygem_id: @rubygem.name }
+          end
+          should redirect_to("rubygems show") { rubygem_path(@rubygem) }
+        end
+
+        context "on POST to create" do
+          setup do
+            post :create, params: { rubygem_id: @rubygem.name, note: "short note" }
+          end
+          should redirect_to("adoptions index") { rubygem_adoptions_path(@rubygem) }
+        end
+      end
+    end
   end
 
   context "When user not logged in" do
