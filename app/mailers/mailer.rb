@@ -92,17 +92,12 @@ class Mailer < ApplicationMailer
 
   def mfa_required_popular_gems_announcement(user_id)
     @user = User.find(user_id)
-    case @user.mfa_level
-    when "disabled"
-      subject = "[Action Required] Enabling multi-factor authentication is required on your RubyGems account"
-      @heading = "Enable multi-factor authentication on your RubyGems account"
-    when "ui_only"
-      subject = "[Action Required] Upgrading the multi-factor authentication level is required on your RubyGems account"
-      @heading = "Upgrade the multi-factor authentication level on your RubyGems account"
-    end
+    heading_cta = @user.mfa_ui_only? ? "Upgrade the" : "Enable"
+    subject_cta = @user.mfa_ui_only? ? "Upgrading the" : "Enabling"
+    @heading = "#{heading_cta} multi-factor authentication#{' level' if @user.mfa_ui_only?} on your RubyGems account"
 
     mail to: @user.email,
-      subject: subject
+      subject: "[Action Required] #{subject_cta} multi-factor authentication#{' level' if @user.mfa_ui_only?} is required on your RubyGems account"
   end
 
   def gem_yanked(yanked_by_user_id, version_id, notified_user_id)
