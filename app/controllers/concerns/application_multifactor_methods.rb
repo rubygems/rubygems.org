@@ -2,10 +2,6 @@ module ApplicationMultifactorMethods
   extend ActiveSupport::Concern
 
   included do
-    def mfa_required_cookie?
-      cookies[:mfa_required] == "true"
-    end
-
     def redirect_to_new_mfa
       message = t("multifactor_auths.setup_required_html")
       redirect_to new_multifactor_auth_path, notice_html: message
@@ -13,7 +9,7 @@ module ApplicationMultifactorMethods
 
     def mfa_required_not_yet_enabled?
       return false if current_user.nil?
-      current_user.mfa_required_not_yet_enabled? && mfa_required_cookie?
+      current_user.mfa_required_not_yet_enabled?
     end
 
     def redirect_to_settings_strong_mfa_required
@@ -23,7 +19,7 @@ module ApplicationMultifactorMethods
 
     def mfa_required_weak_level_enabled?
       return false if current_user.nil?
-      current_user.mfa_required_weak_level_enabled? && mfa_required_cookie?
+      current_user.mfa_required_weak_level_enabled?
     end
   end
 end

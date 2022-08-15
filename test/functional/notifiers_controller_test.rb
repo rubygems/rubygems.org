@@ -23,7 +23,6 @@ class NotifiersControllerTest < ActionController::TestCase
           Rubygem::MFA_REQUIRED_THRESHOLD + 1,
           rubygem_id: @rubygem.id
         )
-        @request.cookies[:mfa_required] = "true"
       end
 
       redirect_scenarios = {

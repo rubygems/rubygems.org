@@ -116,7 +116,6 @@ class DashboardsControllerTest < ActionController::TestCase
           Rubygem::MFA_REQUIRED_THRESHOLD + 1,
           rubygem_id: @rubygem.id
         )
-        @request.cookies[:mfa_required] = "true"
       end
 
       context "user has mfa disabled" do
