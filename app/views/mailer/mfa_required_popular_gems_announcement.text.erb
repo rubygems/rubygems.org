@@ -1,0 +1,24 @@
+👋 Hi <%= @user.handle %>,
+
+Effective today, multi-factor authentication (MFA) is required on your RubyGems account.
+
+<% if @user.mfa_disabled? %> 
+A number of operations are now restricted until you enable MFA.
+
+These restrictions include editing profile pages on the web, signing in on the command line, and performing privileged actions (ie. push, yank, add/remove owners) (https://guides.rubygems.org/mfa-requirement-opt-in/#privileged-operations).
+
+To re-enable these operations for your account, please enable multi-factor authentication 🙏.
+<% elsif @user.mfa_ui_only? %>
+Your current MFA level is no longer recommended. In fact, it's deprecated.
+You need to upgrade your RubyGems account to a stronger MFA level 🙏.
+
+We recommend setting the MFA level to "UI and API". However, "UI and gem signin" is acceptable too (https://guides.rubygems.org/setting-up-multifactor-authentication/#authentication-levels).
+
+A number of operations are restricted until you upgrade your MFA setting.
+
+These restrictions include editing profile pages on the web, signing in on the command line, and performing privileged actions (ie. push, yank, add/remove owners) (https://guides.rubygems.org/mfa-requirement-opt-in/#privileged-operations).
+<% end %>
+
+For more information, check out our announcement (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
+
+❤️ Thank you for making the RubyGems ecosystem more secure

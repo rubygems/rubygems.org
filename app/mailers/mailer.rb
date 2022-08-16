@@ -1,5 +1,6 @@
 class Mailer < ApplicationMailer
   include Roadie::Rails::Automatic
+  include MailerHelper
 
   default from: Clearance.configuration.mailer_sender
 
@@ -77,17 +78,18 @@ class Mailer < ApplicationMailer
 
   def mfa_required_soon_announcement(user_id)
     @user = User.find(user_id)
-    case @user.mfa_level
-    when "disabled"
-      subject = "[Action Required] Enable multi-factor authentication on your RubyGems account by August 15"
-      @heading = "Enable multi-factor authentication on your RubyGems account"
-    when "ui_only"
-      subject = "[Action Required] Upgrade the multi-factor authentication level on your RubyGems account by August 15"
-      @heading = "Upgrade the multi-factor authentication level on your RubyGems account"
-    end
+    @heading = mfa_required_soon_heading(@user.mfa_level)
 
     mail to: @user.email,
-      subject: subject
+      subject: mfa_required_soon_subject(@user.mfa_level)
+  end
+
+  def mfa_required_popular_gems_announcement(user_id)
+    @user = User.find(user_id)
+    @heading = mfa_required_popular_gems_heading(@user.mfa_level)
+
+    mail to: @user.email,
+      subject: mfa_required_popular_gems_subject(@user.mfa_level)
   end
 
   def gem_yanked(yanked_by_user_id, version_id, notified_user_id)
