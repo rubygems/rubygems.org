@@ -4,6 +4,7 @@ module ApplicationMultifactorMethods
   included do
     def redirect_to_new_mfa
       message = t("multifactor_auths.setup_required_html")
+      session["mfa_redirect_uri"] = request.path_info
       redirect_to new_multifactor_auth_path, notice_html: message
     end
 
@@ -14,6 +15,7 @@ module ApplicationMultifactorMethods
 
     def redirect_to_settings_strong_mfa_required
       message = t("multifactor_auths.strong_mfa_level_required_html")
+      session["mfa_redirect_uri"] = request.path_info
       redirect_to edit_settings_path, notice_html: message
     end
 

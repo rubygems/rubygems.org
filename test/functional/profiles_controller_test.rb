@@ -249,12 +249,12 @@ class ProfilesControllerTest < ActionController::TestCase
       end
 
       redirect_scenarios = {
-        "GET to adoptions" => [:adoptions, { method: "GET", params: { id: 1 } }],
-        "GET to delete" => [:delete, { method: "GET", params: { id: 1 } }],
-        "DELETE to destroy" => [:destroy, { method: "DELETE", params: { id: 1 } }],
-        "GET to edit" => [:edit, { method: "GET", params: { id: 1 } }],
-        "PATCH to update" => [:update, { method: "PATCH", params: { id: 1 } }],
-        "PUT to update" => [:update, { method: "PUT", params: { id: 1 } }]
+        "GET to adoptions" => { action: :adoptions, request: { method: "GET", params: { id: 1 } }, path: "/profile/adoptions" },
+        "GET to delete" => { action: :delete, request: { method: "GET", params: { id: 1 } }, path: "/profile/delete" },
+        "DELETE to destroy" => { action: :destroy, request: { method: "DELETE", params: { id: 1 } }, path: "/profile" },
+        "GET to edit" => { action: :edit, request: { method: "GET", params: { id: 1 } }, path: "/profile/edit" },
+        "PATCH to update" => { action: :update, request: { method: "PATCH", params: { id: 1 } }, path: "/profile" },
+        "PUT to update" => { action: :update, request: { method: "PUT", params: { id: 1 } }, path: "/profile" }
       }
 
       context "user has mfa disabled" do
@@ -269,9 +269,12 @@ class ProfilesControllerTest < ActionController::TestCase
 
         redirect_scenarios.each do |label, request_params|
           context "on #{label}" do
-            setup { process(request_params.first, **request_params.last) }
+            setup { process(request_params[:action], **request_params[:request]) }
 
             should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+            should "set mfa_redirect_uri" do
+              assert_equal request_params[:path], @controller.session[:mfa_redirect_uri]
+            end
           end
         end
       end
@@ -292,9 +295,12 @@ class ProfilesControllerTest < ActionController::TestCase
 
         redirect_scenarios.each do |label, request_params|
           context "on #{label}" do
-            setup { process(request_params.first, **request_params.last) }
+            setup { process(request_params[:action], **request_params[:request]) }
 
             should redirect_to("the settings page") { edit_settings_path }
+            should "set mfa_redirect_uri" do
+              assert_equal request_params[:path], @controller.session[:mfa_redirect_uri]
+            end
           end
         end
       end

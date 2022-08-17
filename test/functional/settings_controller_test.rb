@@ -28,6 +28,9 @@ class SettingsControllerTest < ActionController::TestCase
       context "user has mfa disabled" do
         setup { get :edit }
         should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+        should "set mfa_redirect_uri" do
+          assert_equal edit_settings_path, session[:mfa_redirect_uri]
+        end
       end
 
       context "user has mfa set to weak level" do

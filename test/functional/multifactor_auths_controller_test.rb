@@ -176,5 +176,60 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         end
       end
     end
+
+    context "when user owns a gem with more than MFA_REQUIRED_THRESHOLD downloads" do
+      setup do
+        @rubygem = create(:rubygem)
+        create(:ownership, rubygem: @rubygem, user: @user)
+        GemDownload.increment(
+          Rubygem::MFA_REQUIRED_THRESHOLD + 1,
+          rubygem_id: @rubygem.id
+        )
+        @redirect_paths = [adoptions_profile_path,
+                           dashboard_path,
+                           delete_profile_path,
+                           edit_profile_path,
+                           new_profile_api_key_path,
+                           notifier_path,
+                           profile_api_keys_path,
+                           verify_session_path]
+      end
+
+      context "user has mfa set to weak level" do
+        setup do
+          @seed = ROTP::Base32.random_base32
+          @user.enable_mfa!(@seed, :ui_only)
+        end
+
+        should "redirect user back to mfa_redirect_uri after successful mfa setup" do
+          @redirect_paths.each do |path|
+            session[:mfa_redirect_uri] = path
+            post :update, params: { otp: ROTP::TOTP.new(@seed).now, level: "ui_and_api" }
+            assert_redirected_to path
+            assert_nil session[:mfa_redirect_uri]
+          end
+        end
+
+        should "not redirect user back to mfa_redirect_uri after failed mfa setup, but mfa_redirect_uri unchanged" do
+          @redirect_paths.each do |path|
+            session[:mfa_redirect_uri] = path
+            post :update, params: { otp: "12345", level: "ui_and_api" }
+            assert_redirected_to edit_settings_path
+            assert_equal path, session[:mfa_redirect_uri]
+          end
+        end
+
+        should "redirect user back to mfa_redirect_uri after a failed setup + successful setup" do
+          @redirect_paths.each do |path|
+            session[:mfa_redirect_uri] = path
+            post :update, params: { otp: "12345", level: "ui_and_api" }
+            assert_redirected_to edit_settings_path
+            post :update, params: { otp: ROTP::TOTP.new(@seed).now, level: "ui_and_api" }
+            assert_redirected_to path
+            assert_nil session[:mfa_redirect_uri]
+          end
+        end
+      end
+    end
   end
 end

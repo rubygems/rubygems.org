@@ -307,21 +307,26 @@ class ApiKeysControllerTest < ActionController::TestCase
       end
 
       redirect_scenarios = {
-        "DELETE to reset" => [:reset, { method: "DELETE" }],
-        "GET to index" => [:index, { method: "GET" }],
-        "GET to new" => [:new, { method: "GET" }],
-        "POST to create" => [:create, { method: "POST", params: { api_key: { name: "test", add_owner: true } } }],
-        "GET to edit" => [:edit, { method: "GET", params: { id: 1 } }],
-        "PATCH to update" => [:update, { method: "PATCH", params: { api_key: { name: "test", add_owner: true }, id: 1 } }],
-        "DELETE to destroy" => [:destroy, { method: "DELETE", params: { id: 1 } }]
+        "DELETE to reset" => { action: :reset, request: { method: "DELETE" }, path: "/profile/api_keys/reset" },
+        "GET to index" => { action: :index, request: { method: "GET" }, path: "/profile/api_keys" },
+        "GET to new" => { action: :new, request: { method: "GET" }, path: "/profile/api_keys/new" },
+        "POST to create" => { action: :create, request: { method: "POST", params: { api_key: { name: "test", add_owner: true } } },
+path: "/profile/api_keys" },
+        "GET to edit" => { action: :edit, request: { method: "GET", params: { id: 1 } }, path: "/profile/api_keys/1/edit" },
+        "PATCH to update" => { action: :update, request: { method: "PATCH", params: { id: 1, api_key: { name: "test", add_owner: true } } },
+path: "/profile/api_keys/1" },
+        "DELETE to destroy" => { action: :destroy, request: { method: "DELETE", params: { id: 1 } }, path: "/profile/api_keys/1" }
       }
 
       context "user has mfa disabled" do
         redirect_scenarios.each do |label, request_params|
           context "on #{label}" do
-            setup { process(request_params.first, **request_params.last) }
+            setup { process(request_params[:action], **request_params[:request]) }
 
             should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+            should "set mfa_redirect_uri" do
+              assert_equal request_params[:path], @controller.session[:mfa_redirect_uri]
+            end
           end
         end
       end
@@ -333,9 +338,12 @@ class ApiKeysControllerTest < ActionController::TestCase
 
         redirect_scenarios.each do |label, request_params|
           context "on #{label}" do
-            setup { process(request_params.first, **request_params.last) }
+            setup { process(request_params[:action], **request_params[:request]) }
 
             should redirect_to("the settings page") { edit_settings_path }
+            should "set mfa_redirect_uri" do
+              assert_equal request_params[:path], @controller.session[:mfa_redirect_uri]
+            end
           end
         end
       end
