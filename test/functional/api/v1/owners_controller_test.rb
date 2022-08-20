@@ -120,6 +120,9 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           should "fail to add new owner" do
             refute_includes @rubygem.owners_including_unconfirmed, @second_user
           end
+          should "return body that starts with MFA enabled message" do
+            assert @response.body.start_with?("You have enabled multifactor authentication")
+          end
         end
 
         context "adding other user as gem owner with incorrect OTP" do
@@ -474,10 +477,13 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         rubygem = create(:rubygem, owners: [api_key.user])
 
         @request.env["HTTP_AUTHORIZATION"] = "12323"
-        post :create, params: { rubygem_id: rubygem.to_param, email: "some@email.com" }, format: :json
+        post :create, params: { rubygem_id: rubygem.to_param, email: "some@email.com" }
       end
 
       should respond_with :forbidden
+      should "return body that starts with denied access message" do
+        assert @response.body.start_with?("The API key doesn't have access")
+      end
     end
   end
 
@@ -515,6 +521,9 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           should respond_with :unauthorized
           should "fail to remove gem owner" do
             assert_includes @rubygem.owners, @second_user
+          end
+          should "return body that starts with MFA enabled message" do
+            assert @response.body.start_with?("You have enabled multifactor authentication")
           end
         end
 
@@ -823,10 +832,13 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         rubygem = create(:rubygem, owners: [api_key.user])
 
         @request.env["HTTP_AUTHORIZATION"] = "12342"
-        delete :destroy, params: { rubygem_id: rubygem.to_param, email: "some@owner.com" }, format: :json
+        delete :destroy, params: { rubygem_id: rubygem.to_param, email: "some@owner.com" }
       end
 
       should respond_with :forbidden
+      should "return body that starts with denied access message" do
+        assert @response.body.start_with?("The API key doesn't have access")
+      end
     end
   end
 
