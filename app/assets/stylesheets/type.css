@@ -158,7 +158,8 @@ a.t-list__item {
     word-break: normal; }
 .t-body code {
   font-weight: bold;
-  font-family: "courier", monospace; }
+  font-family: "courier", monospace;
+  word-spacing: -0.3em; }
 .t-body ul, .t-body ol {
   margin-top: 18px; }
   .t-body ul li, .t-body ol li {
