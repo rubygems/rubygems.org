@@ -18,7 +18,7 @@
   <div class="text_field">
     <%= label_tag :otp, 'OTP code', class: 'form__label' %>
     <p class='form__field__instructions'><%= t '.otp_prompt' %></p>
-    <%= text_field_tag :otp, '', class: 'form__input', autocomplete: :off %>
+    <%= text_field_tag :otp, '', class: 'form__input', autocomplete: 'one-time-code' %>
   </div>
   <%= submit_tag t('.enable'), class: 'form__submit' %>
 <% end %>
