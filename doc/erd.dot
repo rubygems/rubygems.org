@@ -266,28 +266,28 @@ m_WebHook [label = <<table border="0" align="center" cellspacing="0.5" cellpaddi
   <tr><td align="left" width="130" port="url">url <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
 </table>
 >];
-  m_Rubygem -> m_Ownership [arrowhead = "normal", arrowtail = "none", weight = "3"];
-  m_User -> m_Ownership [arrowhead = "normal", arrowtail = "none", weight = "6"];
-  m_Ownership -> m_ApiKeyRubygemScope [arrowhead = "normal", arrowtail = "none", weight = "2"];
-  m_Rubygem -> m_Subscription [arrowhead = "normal", arrowtail = "none", weight = "2"];
-  m_User -> m_Subscription [arrowhead = "normal", arrowtail = "none", weight = "3"];
-  m_ApiKey -> m_ApiKeyRubygemScope [arrowhead = "none", arrowtail = "none", weight = "2"];
+  m_User -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_Rubygem -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_Version -> m_Dependency [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Version -> m_GemDownload [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_User -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "1"];
-  m_Rubygem -> m_User [style = "dotted", arrowhead = "normal", arrowtail = "none", weight = "10", constraint = "false"];
-  m_Rubygem -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_User -> m_Ownership [arrowhead = "normal", arrowtail = "none", weight = "6"];
+  m_User -> m_Rubygem [style = "dotted", arrowhead = "normal", arrowtail = "none", weight = "10", constraint = "false"];
+  m_User -> m_Subscription [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_User -> m_Deletion [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_User -> m_ApiKey [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_User -> m_OwnershipCall [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_User -> m_OwnershipRequest [arrowhead = "normal", arrowtail = "none", weight = "4"];
+  m_Rubygem -> m_Subscription [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Rubygem -> m_Ownership [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_Rubygem -> m_Linkset [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_GemDownload [arrowhead = "none", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_OwnershipCall [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_OwnershipRequest [arrowhead = "normal", arrowtail = "none", weight = "2"];
-  m_User -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "3"];
-  m_User -> m_OwnershipRequest [arrowhead = "normal", arrowtail = "none", weight = "4"];
   m_OwnershipCall -> m_OwnershipRequest [arrowhead = "normal", arrowtail = "none", weight = "2"];
-  m_User -> m_OwnershipCall [arrowhead = "normal", arrowtail = "none", weight = "3"];
-  m_User -> m_Deletion [arrowhead = "normal", arrowtail = "none", weight = "3"];
-  m_User -> m_ApiKey [arrowhead = "normal", arrowtail = "none", weight = "3"];
-  m_ApiKey -> m_Ownership [style = "dotted", arrowhead = "none", arrowtail = "none", weight = "1", constraint = "false"];
+  m_Ownership -> m_ApiKeyRubygemScope [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_Dependency [arrowhead = "normal", arrowtail = "none", weight = "1"];
+  m_ApiKey -> m_ApiKeyRubygemScope [arrowhead = "none", arrowtail = "none", weight = "2"];
+  m_ApiKey -> m_Ownership [style = "dotted", arrowhead = "none", arrowtail = "none", weight = "1", constraint = "false"];
 }
