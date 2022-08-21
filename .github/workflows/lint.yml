@@ -10,7 +10,7 @@ permissions:
 jobs:
   rubocop:
     name: Rubocop
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v3
     - uses: ruby/setup-ruby@v1
@@ -20,7 +20,7 @@ jobs:
       run: bundle exec rubocop
   brakeman:
     name: Brakeman
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v3
     - uses: ruby/setup-ruby@v1
