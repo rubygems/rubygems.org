@@ -2,6 +2,11 @@ require "simplecov"
 SimpleCov.start "rails" do
   add_filter "lib/tasks"
   add_filter "lib/lograge"
+
+  if ENV["CI"]
+    require "simplecov_json_formatter"
+    formatter SimpleCov::Formatter::JSONFormatter
+  end
 end
 
 ENV["RAILS_ENV"] ||= "test"
