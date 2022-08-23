@@ -4,8 +4,8 @@ SimpleCov.start "rails" do
   add_filter "lib/lograge"
 
   if ENV["CI"]
-    require "simplecov_json_formatter"
-    formatter SimpleCov::Formatter::JSONFormatter
+    require "simplecov-cobertura"
+    formatter SimpleCov::Formatter::CoberturaFormatter
   end
 end
 
