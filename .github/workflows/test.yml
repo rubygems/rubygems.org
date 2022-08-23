@@ -15,7 +15,7 @@ jobs:
         rubygems_version: ['3.3.11', 'latest']
         ruby_version: ['3.1.2']
     name: Rails tests (Ruby ${{ matrix.ruby_version }}, RubyGems ${{ matrix.rubygems_version }})
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     env:
       RUBYGEMS_VERSION: ${{ matrix.rubygems_version }}
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing

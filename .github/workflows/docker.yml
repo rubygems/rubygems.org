@@ -10,7 +10,7 @@ permissions:
 jobs:
   build:
     name: Docker build (and optional push)
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     env:
       RUBYGEMS_VERSION: 3.3.11
       RUBY_VERSION: 3.1.2
