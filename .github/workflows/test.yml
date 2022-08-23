@@ -47,8 +47,3 @@ jobs:
         bundle exec rake db:setup
     - name: Tests
       run: bin/rails test
-    - name: Publish code coverage
-      if: matrix.rubygems_version == '3.3.11' && (success() || failure())
-      uses: paambaati/codeclimate-action@v3.0.0
-      env:
-        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
