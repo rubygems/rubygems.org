@@ -14,11 +14,9 @@ class Api::V1::GithubSecretScanningTest < ActionDispatch::IntegrationTest
 
   context "on POST to revoke" do
     setup do
-      key = OpenSSL::PKey::EC.new("secp256k1").generate_key
+      key = OpenSSL::PKey::EC.generate("secp256k1")
       @private_key_pem = key.to_pem
-      pkey = OpenSSL::PKey::EC.new(key.public_key.group)
-      pkey.public_key = key.public_key
-      @public_key_pem = pkey.to_pem
+      @public_key_pem = key.public_to_pem
 
       h = KEYS_RESPONSE_BODY.dup
       h["public_keys"][0]["key"] = @public_key_pem
