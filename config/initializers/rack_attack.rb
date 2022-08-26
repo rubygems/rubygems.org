@@ -8,6 +8,7 @@ class Rack::Attack
   EXP_BASE_LIMIT_PERIOD = 300.seconds
   EXP_BACKOFF_LEVELS = [1, 2].freeze
   PUSH_EXP_THROTTLE_KEY = "api/exp/push/ip".freeze
+  PUSH_THROTTLE_PER_USER_KEY = "api/exp/push/user".freeze
 
   ### Prevent Brute-Force Login Attacks ###
 
@@ -109,7 +110,9 @@ class Rack::Attack
 
     ########################### rate limit per api key ###########################
     throttle("api/key/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
-      req.get_header("HTTP_AUTHORIZATION") if protected_route?(protected_api_mfa_actions, req.path, req.request_method)
+      hashed_key = Digest::SHA256.hexdigest(req.get_header("HTTP_AUTHORIZATION") || "")
+      api_key    = ApiKey.find_by_hashed_key(hashed_key)
+      api_key&.user&.display_id.presence if protected_route?(protected_api_mfa_actions, req.path, req.request_method)
     end
   end
 
@@ -122,6 +125,12 @@ class Rack::Attack
   EXP_BACKOFF_LEVELS.each do |level|
     throttle("#{PUSH_EXP_THROTTLE_KEY}/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
       req.ip if protected_route?(protected_push_action, req.path, req.request_method)
+    end
+
+    throttle("#{PUSH_THROTTLE_PER_USER_KEY}/#{level}", limit: EXP_BASE_REQUEST_LIMIT * level, period: (EXP_BASE_LIMIT_PERIOD**level).seconds) do |req|
+      hashed_key = Digest::SHA256.hexdigest(req.get_header("HTTP_AUTHORIZATION") || "")
+      api_key    = ApiKey.find_by_hashed_key(hashed_key)
+      api_key&.user&.display_id.presence if protected_route?(protected_push_action, req.path, req.request_method)
     end
   end
 

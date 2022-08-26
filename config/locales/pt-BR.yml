@@ -75,8 +75,8 @@ pt-BR:
       api_keys:
       name:
       scopes:
-      age:
       gem:
+      age:
       last_access:
       action:
       delete:
@@ -323,8 +323,11 @@ pt-BR:
     otp_code:
     require_mfa_disabled:
     require_mfa_enabled:
+    setup_required_html:
     setup_recommended:
+    strong_mfa_level_required_html:
     strong_mfa_level_recommended:
+    ui_only_warning:
     new:
       title:
       scan_prompt:
@@ -455,7 +458,7 @@ pt-BR:
       required_ruby_version: Versão Requerida do Ruby
       required_rubygems_version: Versão Requerida do RubyGems
       requires_mfa:
-      since: "%{version}"
+      released_with_mfa:
       links:
         badge: Badge
         bugs:
@@ -567,6 +570,7 @@ pt-BR:
       not_hosted_notice: Esta gem não está hospdada no Gemcutter.
       title: Todas as versões para %{name}
       versions_since: "%{count} versões desde %{since}"
+      imported_gem_version_notice:
     version:
       yanked: removida
   will_paginate:

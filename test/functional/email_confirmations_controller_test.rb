@@ -200,7 +200,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
     context "user is signed in" do
       setup do
-        @user = create(:user, confirmation_token: "something")
+        @user = create(:user, confirmation_token: "something", unconfirmed_email: "new@example.com")
         sign_in_as(@user)
       end
 
@@ -220,6 +220,157 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         assert_redirected_to edit_profile_path
         expected_notice = "You will receive an email within the next few minutes. It contains instructions for confirming your new email address."
         assert_equal expected_notice, flash[:notice]
+      end
+
+      context "when user owns a gem with more than MFA_REQUIRED_THRESHOLD downloads" do
+        setup do
+          @rubygem = create(:rubygem)
+          create(:ownership, rubygem: @rubygem, user: @user)
+          GemDownload.increment(
+            Rubygem::MFA_REQUIRED_THRESHOLD + 1,
+            rubygem_id: @rubygem.id
+          )
+        end
+
+        context "user has mfa disabled" do
+          context "on GET to update" do
+            setup do
+              get :update, params: { token: @user.confirmation_token }
+            end
+
+            should "should confirm user account" do
+              assert @user.email_confirmed
+            end
+          end
+
+          context "on POST to mfa_update" do
+            setup do
+              post :mfa_update, params: { token: @user.confirmation_token, otp: "incorrect" }
+            end
+
+            should respond_with :unauthorized
+          end
+
+          context "on PATCH to unconfirmed" do
+            setup { patch :unconfirmed }
+            should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+          end
+
+          context "on GET to new" do
+            setup { get :new }
+            should "not redirect to mfa" do
+              assert_response :success
+              assert page.has_content? "Resend confirmation email"
+            end
+          end
+
+          context "on POST to create" do
+            setup do
+              create(:user, email: "foo@bar.com")
+              post :create, params: { email_confirmation: { email: "foo@bar.com" } }
+              Delayed::Worker.new.work_off
+            end
+
+            should respond_with :redirect
+            should redirect_to("the homepage") { root_url }
+          end
+        end
+
+        context "user has mfa set to weak level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          end
+
+          context "on GET to update" do
+            setup do
+              get :update, params: { token: @user.confirmation_token }
+            end
+
+            should "should confirm user account" do
+              assert @user.email_confirmed
+            end
+          end
+
+          context "on POST to mfa_update" do
+            setup do
+              post :mfa_update, params: { token: @user.confirmation_token, otp: "incorrect" }
+            end
+
+            should respond_with :unauthorized
+          end
+
+          context "on PATCH to unconfirmed" do
+            setup { patch :unconfirmed }
+            should redirect_to("the edit settings page") { edit_settings_path }
+          end
+
+          context "on GET to new" do
+            setup { get :new }
+            should "not redirect to mfa" do
+              assert_response :success
+              assert page.has_content? "Resend confirmation email"
+            end
+          end
+
+          context "on POST to create" do
+            setup do
+              create(:user, email: "foo@bar.com")
+              post :create, params: { email_confirmation: { email: "foo@bar.com" } }
+              Delayed::Worker.new.work_off
+            end
+
+            should respond_with :redirect
+            should redirect_to("the homepage") { root_url }
+          end
+        end
+
+        context "user has MFA set to strong level, expect normal behaviour" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          end
+
+          context "on GET to update" do
+            setup do
+              get :update, params: { token: @user.confirmation_token }
+            end
+
+            should "should confirm user account" do
+              assert @user.email_confirmed
+            end
+          end
+
+          context "on POST to mfa_update" do
+            setup do
+              post :mfa_update, params: { token: @user.confirmation_token, otp: "incorrect" }
+            end
+
+            should respond_with :unauthorized
+          end
+
+          context "on PATCH to unconfirmed" do
+            setup { patch :unconfirmed }
+            should redirect_to("edit profile page") { edit_profile_path }
+          end
+
+          context "on GET to new" do
+            setup { get :new }
+            should "not redirect to mfa" do
+              assert_response :success
+              assert page.has_content? "Resend confirmation email"
+            end
+          end
+
+          context "on POST to create" do
+            setup do
+              create(:user, email: "foo@bar.com")
+              post :create, params: { email_confirmation: { email: "foo@bar.com" } }
+              Delayed::Worker.new.work_off
+            end
+
+            should respond_with :redirect
+            should redirect_to("the homepage") { root_url }
+          end
+        end
       end
     end
   end

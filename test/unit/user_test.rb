@@ -35,6 +35,21 @@ class UserTest < ActiveSupport::TestCase
         refute_predicate user, :valid?
       end
 
+      should "be invalid with duplicate handle on create" do
+        create(:user, handle: "test")
+        user = build(:user, handle: "Test")
+        refute_predicate user, :valid?
+      end
+
+      should "be invalid with duplicate handle on update" do
+        create(:user, handle: "test")
+        user = create(:user, handle: "test2")
+        user.update(handle: "Test")
+
+        assert_contains user.errors[:handle], "has already been taken"
+        refute_predicate user, :valid?
+      end
+
       should "be valid when nil and other users have a nil handle" do
         assert_predicate build(:user, handle: nil), :valid?
         assert_predicate build(:user, handle: nil), :valid?
@@ -370,33 +385,7 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
-    context "strong_mfa_level?" do
-      should "be true if the users mfa level is ui_and_api" do
-        user = create(:user, mfa_level: "ui_and_api")
-
-        assert_predicate user, :strong_mfa_level?
-      end
-
-      should "be true if the users mfa level is ui_and_gem_signin" do
-        user = create(:user, mfa_level: "ui_and_gem_signin")
-
-        assert_predicate user, :strong_mfa_level?
-      end
-
-      should "be false if users mfa level is ui_only" do
-        user = create(:user, mfa_level: "ui_only")
-
-        refute_predicate user, :strong_mfa_level?
-      end
-
-      should "be false if users has mfa disabled" do
-        user = create(:user, mfa_level: "disabled")
-
-        refute_predicate user, :strong_mfa_level?
-      end
-    end
-
-    context "recommend mfa" do
+    context "recommend or require mfa from downloads" do
       setup do
         @rubygem = create(:rubygem)
         create(:ownership, user: @user, rubygem: @rubygem)
@@ -411,10 +400,6 @@ class UserTest < ActiveSupport::TestCase
           )
         end
 
-        should "return false for mfa_recommended?" do
-          refute_predicate @user, :mfa_recommended?
-        end
-
         should "return false for mfa_recommended_not_yet_enabled?" do
           refute_predicate @user, :mfa_recommended_not_yet_enabled?
         end
@@ -422,18 +407,18 @@ class UserTest < ActiveSupport::TestCase
         should "return false for mfa_recommended_weak_level_enabled?" do
           refute_predicate @user, :mfa_recommended_weak_level_enabled?
         end
+
+        should "return false for mfa_required?" do
+          refute_predicate @user, :mfa_required?
+        end
       end
 
-      context "when mfa disabled user owns a gem with more downloads than the recommended threshold" do
+      context "when mfa disabled user owns a gem with more downloads than the recommended threshold but less than the required threshold" do
         setup do
           GemDownload.increment(
             Rubygem::MFA_RECOMMENDED_THRESHOLD + 1,
             rubygem_id: @rubygem.id
           )
-        end
-
-        should "return true for mfa_recommended?" do
-          assert_predicate @user, :mfa_recommended?
         end
 
         should "return true for mfa_recommended_not_yet_enabled?" do
@@ -443,9 +428,30 @@ class UserTest < ActiveSupport::TestCase
         should "return false for mfa_recommended_weak_level_enabled?" do
           refute_predicate @user, :mfa_recommended_weak_level_enabled?
         end
+
+        should "return false for mfa_required?" do
+          refute_predicate @user, :mfa_required?
+        end
       end
 
-      context "when mfa `ui_only` user owns a gem with more downloads than the recommended threshold" do
+      context "when mfa disabled user owns a gem with more downloads than the required threshold" do
+        setup do
+          GemDownload.increment(
+            Rubygem::MFA_REQUIRED_THRESHOLD + 1,
+            rubygem_id: @rubygem.id
+          )
+        end
+
+        should "return false for mfa_recommended?" do
+          refute_predicate @user, :mfa_recommended?
+        end
+
+        should "return true for mfa_required?" do
+          assert_predicate @user, :mfa_required?
+        end
+      end
+
+      context "when mfa `ui_only` user owns a gem with more downloads than the recommended threshold but less than the required threshold" do
         setup do
           @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
 
@@ -455,10 +461,6 @@ class UserTest < ActiveSupport::TestCase
           )
         end
 
-        should "return true for mfa_recommended?" do
-          assert_predicate @user, :mfa_recommended?
-        end
-
         should "return false for mfa_recommended_not_yet_enabled?" do
           refute_predicate @user, :mfa_recommended_not_yet_enabled?
         end
@@ -466,9 +468,32 @@ class UserTest < ActiveSupport::TestCase
         should "return true for mfa_recommended_weak_level_enabled?" do
           assert_predicate @user, :mfa_recommended_weak_level_enabled?
         end
+
+        should "return false for mfa_required?" do
+          refute_predicate @user, :mfa_required?
+        end
       end
 
-      context "when strong user owns a gem with more downloads than the recommended threshold" do
+      context "when mfa `ui_only` user owns a gem with more downloads than the required threshold" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+
+          GemDownload.increment(
+            Rubygem::MFA_REQUIRED_THRESHOLD + 1,
+            rubygem_id: @rubygem.id
+          )
+        end
+
+        should "return false for mfa_recommended?" do
+          refute_predicate @user, :mfa_recommended?
+        end
+
+        should "return true for mfa_required?" do
+          assert_predicate @user, :mfa_required?
+        end
+      end
+
+      context "when strong user owns a gem with more downloads than the recommended threshold but less than the required threshold" do
         setup do
           @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
 
@@ -478,16 +503,35 @@ class UserTest < ActiveSupport::TestCase
           )
         end
 
-        should "return false for mfa_recommended?" do
-          refute_predicate @user, :mfa_recommended?
-        end
-
         should "return false for mfa_recommended_not_yet_enabled?" do
           refute_predicate @user, :mfa_recommended_not_yet_enabled?
         end
 
         should "return false for mfa_recommended_weak_level_enabled?" do
           refute_predicate @user, :mfa_recommended_weak_level_enabled?
+        end
+
+        should "return false for mfa_required?" do
+          refute_predicate @user, :mfa_required?
+        end
+      end
+
+      context "when strong user owns a gem with more downloads than the required threshold" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+
+          GemDownload.increment(
+            Rubygem::MFA_REQUIRED_THRESHOLD + 1,
+            rubygem_id: @rubygem.id
+          )
+        end
+
+        should "return false for mfa_recommended?" do
+          refute_predicate @user, :mfa_recommended?
+        end
+
+        should "return false for mfa_required?" do
+          refute_predicate @user, :mfa_required?
         end
       end
     end

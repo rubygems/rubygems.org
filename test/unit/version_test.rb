@@ -190,6 +190,50 @@ class VersionTest < ActiveSupport::TestCase
       @version = build(:version)
     end
 
+    context "#rely_on_built_at?" do
+      setup do
+        created_at = Date.parse("2009-07-25")
+        built_at = created_at - 30.days
+        @version.update(created_at: created_at, built_at: built_at)
+      end
+
+      should "return true created_at date is equal 2009-07-25 and built_at is present and not higher than created_at" do
+        assert_predicate @version, :rely_on_built_at?
+      end
+
+      should "return false if built_at is not set" do
+        @version.update(built_at: nil)
+        refute_predicate @version, :rely_on_built_at?
+      end
+
+      should "return false if created_at is not 2009-07-25" do
+        @version.update(created_at: Date.parse("2020-01-01"))
+        refute_predicate @version, :rely_on_built_at?
+      end
+
+      should "return false if built_at is higher than 2009-07-25" do
+        @version.update(built_at: Date.parse("2020-01-01"))
+        refute_predicate @version, :rely_on_built_at?
+      end
+    end
+
+    context "#authored_at" do
+      setup do
+        @built_at = Version::RUBYGEMS_IMPORT_DATE - 60.days
+        @version.update(built_at: @built_at, created_at: Version::RUBYGEMS_IMPORT_DATE)
+      end
+
+      should "return built_at as if #rely_on_built_at? returns true" do
+        assert_equal @built_at, @version.authored_at
+      end
+
+      should "return created_at if #rely_on_built_at? returns false" do
+        created_at = Version::RUBYGEMS_IMPORT_DATE + 1.day
+        @version.update(created_at: created_at)
+        assert_equal created_at, @version.authored_at
+      end
+    end
+
     should "have a rubygems version" do
       @version.update(required_rubygems_version: @required_rubygems_version)
       new_version = Version.find(@version.id)

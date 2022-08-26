@@ -46,6 +46,9 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
             delete :create, params: { gem_name: @rubygem.to_param, version: @v1.number }
           end
           should respond_with :unauthorized
+          should "return body that starts with MFA enabled message" do
+            assert @response.body.start_with?("You have enabled multifactor authentication")
+          end
         end
 
         context "ON DELETE to create for existing gem version with incorrect OTP" do
@@ -96,7 +99,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         end
       end
 
-      context "when mfa is required" do
+      context "when mfa is required in metadata" do
         setup do
           @v1.metadata = { "rubygems_mfa_required" => "true" }
           @v1.save!
@@ -165,6 +168,94 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           should respond_with :forbidden
           should "#render_soft_deleted_api_key and display an error" do
             assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
+          end
+        end
+      end
+
+      context "when mfa is required" do
+        setup do
+          User.any_instance.stubs(:mfa_required?).returns true
+        end
+
+        context "by user with mfa disabled" do
+          setup do
+            delete :create, params: { gem_name: @rubygem.name, version: @v1.number }
+          end
+
+          should respond_with :forbidden
+
+          should "show error message" do
+            mfa_error = <<~ERROR.chomp
+              [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
+              at https://rubygems.org/multifactor_auth/new.
+
+              Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
+            ERROR
+
+            assert_includes @response.body, mfa_error
+          end
+        end
+
+        context "by user on `ui_only` level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+            delete :create, params: { gem_name: @rubygem.name, version: @v1.number }
+          end
+
+          should respond_with :forbidden
+
+          should "show error message" do
+            mfa_error = <<~ERROR.chomp
+              [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
+              at https://rubygems.org/settings/edit.
+
+              Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
+            ERROR
+
+            assert_includes @response.body, mfa_error
+          end
+        end
+
+        context "by user on `ui_and_gem_signin` level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+            delete :create, params: { gem_name: @rubygem.name, version: @v1.number }
+          end
+
+          should respond_with :success
+          should "not show error message" do
+            refute_includes @response.body, "For protection of your account and your gems"
+          end
+        end
+
+        context "by user on `ui_and_api` level" do
+          setup do
+            @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+            @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.mfa_seed).now
+            delete :create, params: { gem_name: @rubygem.name, version: @v1.number }
+          end
+
+          should respond_with :success
+          should "not show error message" do
+            refute_includes @response.body, "For protection of your account and your gems"
+          end
+        end
+      end
+
+      context "when mfa is required by metadata and user downloads" do
+        setup do
+          User.any_instance.stubs(:mfa_required?).returns true
+          @v1.metadata = { "rubygems_mfa_required" => "true" }
+          @v1.save!
+        end
+
+        context "by user with mfa disabled" do
+          setup do
+            delete :create, params: { gem_name: @rubygem.name, version: @v1.number }
+          end
+
+          should "only render one forbidden response" do
+            assert_equal 403, @response.status
           end
         end
       end
@@ -423,5 +514,8 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
     end
 
     should respond_with :forbidden
+    should "return body that starts with denied access message" do
+      assert @response.body.start_with?("The API key doesn't have access")
+    end
   end
 end

@@ -75,7 +75,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           end
         end
 
-        context "on updating to ui_only" do
+        context "on updating to ui_only, flash banner is set and mfa level is unchanged" do
           setup do
             @user.mfa_ui_and_api!
             put :update, params: { otp: ROTP::TOTP.new(@user.mfa_seed).now, level: "ui_only" }
@@ -83,8 +83,13 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
 
           should respond_with :redirect
           should redirect_to("the settings page") { edit_settings_path }
-          should "update mfa level to mfa_ui_only now" do
-            assert_predicate @user.reload, :mfa_ui_only?
+          expected = "Updating multi-factor authentication to \"UI Only\" is no longer supported. Please use \"UI and gem signin\" or \"UI and API\"."
+          should "set flash" do
+            assert_equal(expected, flash[:error])
+          end
+
+          should "mfa level should be same as before" do
+            assert_predicate @user.reload, :mfa_ui_and_api?
           end
         end
 

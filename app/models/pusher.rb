@@ -27,7 +27,7 @@ class Pusher
   end
 
   def verify_mfa_requirement
-    user.mfa_enabled? || !(version_mfa_required? || rubygem.mfa_required?) ||
+    user.mfa_enabled? || !(version_mfa_required? || rubygem.metadata_mfa_required?) ||
       notify("Rubygem requires owners to enable MFA. You must enable MFA before pushing new version.", 403)
   end
 
@@ -121,7 +121,7 @@ class Pusher
     Delayed::Job.enqueue Indexer.new, priority: PRIORITIES[:push]
     rubygem.delay.index_document
     GemCachePurger.call(rubygem.name)
-    RackAttackReset.gem_push_backoff(@remote_ip) if @remote_ip.present?
+    RackAttackReset.gem_push_backoff(@remote_ip, @user.display_id) if @remote_ip.present?
     StatsD.increment "push.success"
   end
 

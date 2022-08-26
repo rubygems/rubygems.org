@@ -62,4 +62,9 @@ module ApplicationHelper
     return title unless title_url
     link_to title, title_url, class: "t-link--black"
   end
+
+  def flash_message(name, msg)
+    return sanitize(msg) if name.end_with? "html"
+    msg
+  end
 end

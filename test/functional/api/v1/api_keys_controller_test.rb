@@ -48,6 +48,10 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       assert_response 401
       assert_match I18n.t("otp_missing"), @response.body
     end
+
+    should "return body that starts with MFA enabled message" do
+      assert @response.body.start_with?("You have enabled multifactor authentication")
+    end
   end
 
   def self.should_return_api_key_successfully
@@ -305,6 +309,74 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       end
 
       should_expect_otp_for_create
+    end
+
+    context "when mfa is required" do
+      setup do
+        User.any_instance.stubs(:mfa_required?).returns true
+        authorize_with("#{@user.email}:#{@user.password}")
+      end
+
+      context "by user with mfa disabled" do
+        setup do
+          post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
+        end
+
+        should "deny access" do
+          assert_response 403
+          mfa_error = <<~ERROR.chomp
+            [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
+            at https://rubygems.org/multifactor_auth/new.
+
+            Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
+          ERROR
+
+          assert_match mfa_error, @response.body
+        end
+      end
+
+      context "by user on `ui_only` level" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
+        end
+
+        should "deny access" do
+          assert_response 403
+          mfa_error = <<~ERROR.chomp
+            [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
+            at https://rubygems.org/settings/edit.
+
+            Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
+          ERROR
+
+          assert_match mfa_error, @response.body
+        end
+      end
+
+      context "by user on `ui_and_gem_signin` level" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_gem_signin)
+          post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
+        end
+
+        should_expect_otp_for_create
+        should "not show error message" do
+          refute_includes @response.body, "For protection of your account and your gems"
+        end
+      end
+
+      context "by user on `ui_and_api` level" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
+        end
+
+        should_expect_otp_for_create
+        should "not show error message" do
+          refute_includes @response.body, "For protection of your account and your gems"
+        end
+      end
     end
   end
 

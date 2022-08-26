@@ -76,8 +76,8 @@ es:
       api_keys:
       name:
       scopes:
-      age:
       gem:
+      age:
       last_access:
       action:
       delete:
@@ -322,11 +322,15 @@ es:
     recovery_code_html:
     incorrect_otp: Tu código OTP no es correcto.
     otp_code: código OTP
-    require_mfa_disabled: Se ha activado la autenticación de múltiples factores. Para reconfigurarla, primero tendrás que desactivarla.
+    require_mfa_disabled: Se ha activado la autenticación de múltiples factores. Para
+      reconfigurarla, primero tendrás que desactivarla.
     require_mfa_enabled: No se ha activado la autenticación de múltiples factores.
       Primero tienes que activarla.
+    setup_required_html:
     setup_recommended:
+    strong_mfa_level_required_html:
     strong_mfa_level_recommended:
+    ui_only_warning:
     new:
       title: Activando autenticación de múltiples factores
       scan_prompt: Por favor escanea el código QR con tu aplicación de Autenticación.
@@ -470,7 +474,7 @@ es:
       required_ruby_version: Versión de Ruby requerida
       required_rubygems_version: Versión de Rubygems requerida
       requires_mfa:
-      since: "%{version}"
+      released_with_mfa:
       links:
         badge: Badge
         bugs: Seguimiento de Bugs
@@ -584,6 +588,7 @@ es:
       not_hosted_notice: Esta gema no está alojada actualmente en RubyGems.org.
       title: Todas las versiones de %{name}
       versions_since: "%{count} versiones desde %{since}"
+      imported_gem_version_notice:
     version:
       yanked: borrada
   will_paginate:

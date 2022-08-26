@@ -39,8 +39,13 @@ class Api::BaseController < ApplicationController
   end
 
   def verify_mfa_requirement
-    return if @rubygem.mfa_requirement_satisfied_for?(@api_key.user)
-    render plain: "Gem requires MFA enabled; You do not have MFA enabled yet.", status: :forbidden
+    if @rubygem && !@rubygem.mfa_requirement_satisfied_for?(@api_key.user)
+      render plain: "Gem requires MFA enabled; You do not have MFA enabled yet.", status: :forbidden
+    elsif @api_key.user.mfa_required_not_yet_enabled?
+      render_mfa_setup_required_error
+    elsif @api_key.user.mfa_required_weak_level_enabled?
+      render_mfa_strong_level_required_error
+    end
   end
 
   def response_with_mfa_warning(response)
@@ -63,6 +68,26 @@ class Api::BaseController < ApplicationController
     end
 
     message
+  end
+
+  def render_mfa_setup_required_error
+    error = <<~ERROR.chomp
+      [ERROR] For protection of your account and your gems, you are required to set up multi-factor authentication \
+      at https://rubygems.org/multifactor_auth/new.
+
+      Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
+    ERROR
+    render_forbidden(error)
+  end
+
+  def render_mfa_strong_level_required_error
+    error = <<~ERROR.chomp
+      [ERROR] For protection of your account and your gems, you are required to change your MFA level to 'UI and gem signin' or 'UI and API' \
+      at https://rubygems.org/settings/edit.
+
+      Please read our blog post for more details (https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html).
+    ERROR
+    render_forbidden(error)
   end
 
   def authenticate_with_api_key

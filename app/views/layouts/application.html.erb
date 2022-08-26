@@ -90,7 +90,7 @@
     <% flash.each do |name, msg| %>
       <div id="flash-border" class="flash">
         <div class="flash-wrap">
-          <div id="flash_<%= name %>" class="l-wrap--b"><span><b><%= msg %></b></span></div>
+          <div id="flash_<%= name %>" class="l-wrap--b"><span><b><%= flash_message(name, msg) %></b></span></div>
         </div>
       </div>
     <% end %>

@@ -1,0 +1,137 @@
+<% @title = "Enable multi-factor authentication (MFA) on your RubyGems account" %>
+<% @sub_title = "👋 Hi #{@user.handle}" %>
+
+<!-- Body -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+  <tr>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+    <td>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="40" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+      <div class="h3-1-center" style="color:#1e1e1e; font-family:Georgia, serif; min-width:auto !important; font-size:20px; line-height:26px;">
+        <p>
+          Recently, we've announced our security-focused ambitions to the community.
+          Attacks on the software supply chain are increasing and the second most common attack is account takeovers.
+        </p>
+        <br/>
+
+        <p>
+          On August 15, 2022, we will begin requiring maintainers of packages with more than 180 million downloads to have multi-factor authentication (MFA) enabled.
+          If maintainers don't have MFA enabled by this date, a number of operations will be restricted.
+          These restrictions include <a href="https://guides.rubygems.org/mfa-requirement-opt-in/#privileged-operations" target="_blank">privileged operations</a> (ie. push, yank, add/remove owners).
+          Furthermore, we are officially recommending that maintainers of packages with more than 165 million downloads enable MFA.
+          This recommendation will also be shown by the gem CLI.
+        </p>
+        <br/>
+
+        <% if @user.mfa_disabled? %>
+          <p>
+            We're notifying you of this policy because you maintain at least one gem that has more than 165 million downloads.
+            So, we'd like to ask you to <b>please enable multi-factor authentication on your RubyGems account 🙏.</b>
+          </p>
+          <br/>
+
+          <p>
+            We recommend setting the
+            <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#authentication-levels" target="_blank">MFA level</a>
+            to <b><i>UI and API</i></b>. However, <b><i>UI and gem signin</i></b> is acceptable too.
+          </p>
+          <br />
+        <% elsif @user.mfa_ui_only? %>
+          <p>
+            We're notifying you of this policy because you maintain at least one gem that has more than 165 million downloads.
+            Fortunately, you've already taken the first step! But, there's opportunity to improve.
+            <b>Please upgrade your RubyGems account to a stronger MFA level 🙏.</b>
+          </p>
+          <br/>
+
+          <p>
+            We recommend setting the
+            <a href="https://guides.rubygems.org/setting-up-multifactor-authentication/#authentication-levels" target="_blank">MFA level</a>
+            to <b><i>UI and API</i></b>. However, <b><i>UI and gem signin</i></b> is acceptable too.
+          </p>
+          <br />
+        <% else %>
+          <p>
+            We're notifying you of this policy because you maintain at least one gem that has more than 165 million downloads.
+            Fortunately, you've already enabled MFA. Kudos to you 🥳 🙌!
+          </p>
+          <br/>
+        <% end %>
+
+        <p>
+          For more information, check out our <a href="https://blog.rubygems.org/2022/06/13/making-packages-more-secure.html" target="_blank">announcement</a>.
+        </p>
+        <br/>
+
+        <p>Thank you for making the RubyGems ecosystem more secure.</p>
+      </div>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="30" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+      <% if @user.mfa_disabled? || @user.mfa_ui_only? %>
+
+        <!-- Button -->
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="center">
+              <table width="210" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td align="center" bgcolor="#e9573f">
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="img" style="font-size:0pt; line-height:0pt; text-align:left" width="15">
+                          <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">
+                            <tr>
+                              <td height="50" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td bgcolor="#e9573f">
+                          <div class="text-btn" style="color:#ffffff; font-family:Arial, sans-serif; min-width:auto !important; font-size:16px; line-height:20px; text-align:center">
+                            <a href=<%= new_multifactor_auth_url %> target="_blank" class="link-white" style="color:#ffffff; text-decoration:none">
+                              <span class="link-white" style="color:#ffffff; text-decoration:none">
+                                <%= "ENABLE MFA" if @user.mfa_disabled? %>
+                                <%= "STRENGTHEN MFA LEVEL" if @user.mfa_ui_only? %>
+                              </span>
+                            </a>
+                          </div>
+                        </td>
+                        <td class="img" style="font-size:0pt; line-height:0pt; text-align:left" width="15"></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <!-- END Button -->
+      <% end %>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="40" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+      <!-- Adding a horizontal rule -->
+      <table width="100%">
+        <tr>
+          <td width="100%" bgcolor="#cccccc" height="1" style="font-size: 1px; line-height: 1px;">&nbsp;</td>
+        </tr>
+      </table>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="40" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+      <div class="h3-1-center" style="color:#1e1e1e; font-family:Georgia, serif; min-width:auto !important; font-size:20px; line-height:26px; text-align:center">
+        Check our guides for more details on <%= link_to("setting up multi-factor authentication (MFA)", "https://guides.rubygems.org/setting-up-multifactor-authentication/") %>  and  <%= link_to("using multi-factor authentication (MFA) with command line", "https://guides.rubygems.org/using-mfa-in-command-line/") %>.
+      </div>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+    </td>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+  </tr>
+</table>
+<!-- END Body -->

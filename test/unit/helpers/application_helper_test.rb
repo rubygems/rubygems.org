@@ -43,4 +43,18 @@ class ApplicationHelperTest < ActionView::TestCase
       assert_in_delta(stats_graph_meter(@rubygem, most_downloaded_count), 12.5)
     end
   end
+
+  context "flash_message string with html" do
+    setup do
+      @message = "This is a <strong>test</strong>"
+    end
+
+    should "sanitize with :notice_html" do
+      assert_instance_of ActiveSupport::SafeBuffer, flash_message(:notice_html, @message)
+    end
+
+    should "not sanitize with :notice" do
+      assert_instance_of String, flash_message(:notice, @message)
+    end
+  end
 end

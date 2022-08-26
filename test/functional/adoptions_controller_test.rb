@@ -11,10 +11,12 @@ class AdoptionsControllerTest < ActionController::TestCase
         create(:version, rubygem: @rubygem, created_at: 2.years.ago)
         sign_in_as @user
         session[:verification] = 10.minutes.from_now
+        session[:verified_user] = @user.id
       end
 
       teardown do
         session[:verification] = nil
+        session[:verified_user] = nil
       end
 
       context "ownership call exists" do

@@ -4,29 +4,43 @@ on:
     paths:
       - "db/schema.rb"
       - "doc/erd.svg"
+      - "doc/erd.dot"
   push:
     branches:
       - master
     paths:
       - "db/schema.rb"
       - "doc/erd.svg"
+      - "doc/erd.dot"
 jobs:
   erd:
     name: Verify ERD up-to-date
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
+      - name: Install and start database service
+        run: |
+          docker-compose up -d db
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - name: install Graphviz
+      - name: Install Graphviz
         run: sudo apt-get install graphviz
-      - name: generate ERD
-        run: rake gen_erd
-      - name: check diff
-        run: git diff -s --exit-code doc/erd.svg
-      - name: print error
+      - name: Prepare environment
+        run: |
+          cp config/database.yml.sample config/database.yml
+          bundle exec rake db:setup
+      - name: Generate ERD
+        run: |
+          bundle exec rake erd filetype=dot filename=doc/erd-ci orientation=vertical title="RubyGems.org domain model"
+      - name: Check diff
+        # `tr -d "[:blank:]"`: remove horizontal whitespace to account for machine differences (works better than diff's --ignore-all-space)
+        # `sort`: sorts line since Graphviz instruction order is non-deterministic
+        # diff to check the source controlled-file against CI-generated file
+        # Inspired by: https://github.com/voormedia/rails-erd/issues/281#issuecomment-1048721398
+        run: diff <(tr -d "[:blank:]" < doc/erd-ci.dot | sort) <(tr -d "[:blank:]" < doc/erd.dot | sort)
+      - name: Print error
         if: ${{ failure() }}
         run: |
-          echo "::error file=doc/erd.svg::ERD is out of date."
-          echo "::error Please install Graphviz (\`brew install graphviz\`) and run \`rake gen_erd\`"
+          echo "::error file=doc/erd.dot::ERD is out of date."
+          echo "Please install Graphviz (\`brew install graphviz\`) and run \`rake gen_erd\`"

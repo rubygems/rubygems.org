@@ -63,6 +63,31 @@ class VersionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to index with imported versions" do
+    setup do
+      @built_at = Date.parse("2000-01-01")
+      rubygem = create(:rubygem)
+      create(:version, number: "1.1.2", rubygem: rubygem, created_at: Version::RUBYGEMS_IMPORT_DATE, built_at: @built_at)
+      get :index, params: { rubygem_id: rubygem.name }
+    end
+
+    should respond_with :success
+
+    should "show imported version number with an superscript asterisk and a tooltip" do
+      tooltip_text = <<~NOTICE.squish
+        This gem version was imported to RubyGems.org on July 25, 2009.
+        The date displayed was specified by the author in the gemspec.
+      NOTICE
+
+      assert_select ".gem__version__date", text: "- January 01, 2000*", count: 1 do |elements|
+        version = elements.first
+        assert_equal(tooltip_text, version["data-tooltip"])
+      end
+
+      assert_select ".gem__version__date sup", text: "*", count: 1
+    end
+  end
+
   context "On GET to show" do
     setup do
       @latest_version = create(:version, built_at: 1.week.ago, created_at: 1.day.ago)
@@ -105,7 +130,7 @@ class VersionsControllerTest < ActionController::TestCase
     should "render other versions" do
       assert page.has_content?("Versions")
       assert page.has_content?(@version.number)
-      css = "small:contains('#{@version.created_at.to_date.to_formatted_s(:long)}')"
+      css = "small:contains('#{@version.authored_at.to_date.to_formatted_s(:long)}')"
       assert page.has_css?(css)
     end
     should "renders owner gems overview link" do

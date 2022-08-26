@@ -9,7 +9,7 @@ module PagesHelper
 
   def subtitle
     subtitle = "v#{version_number}"
-    subtitle += " - #{nice_date_for(version.created_at)}"
+    subtitle += " - #{nice_date_for(version.authored_at)}"
     subtitle
   end
 end

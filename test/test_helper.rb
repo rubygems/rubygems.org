@@ -2,6 +2,11 @@ require "simplecov"
 SimpleCov.start "rails" do
   add_filter "lib/tasks"
   add_filter "lib/lograge"
+
+  if ENV["CI"]
+    require "simplecov-cobertura"
+    formatter SimpleCov::Formatter::CoberturaFormatter
+  end
 end
 
 ENV["RAILS_ENV"] ||= "test"
@@ -71,6 +76,8 @@ end
 Capybara.app_host = "#{Gemcutter::PROTOCOL}://#{Gemcutter::HOST}"
 Capybara.always_include_port = true
 Capybara.server = :webrick
+
+Gemcutter::Application.load_tasks
 
 class SystemTest < ActionDispatch::IntegrationTest
   include Capybara::DSL

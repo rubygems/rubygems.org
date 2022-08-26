@@ -1,18 +1,18 @@
 ---
 ja:
   edit: 編集
-  failure_when_forbidden: URLを確認するか、再試行して下さい。
+  failure_when_forbidden: URLを確認するか、再試行してください。
   feed_latest: RubyGems.org | 最新のGemの一覧
   feed_subscribed: RubyGems.org | 購読したGemの一覧
-  footer_about_html: RubyGems.orgはRubyコミュニティのGemのホスティングサービスです。 すぐに<a href="%{publish_docs}">あなたが実装したGemを公開したり</a><a
-    href="%{install_docs}">インストールしたり</a>することができます。 <a href="%{api_docs}">API</a>を使用して<a
-    href="%{gem_list}">利用可能なGem</a>についてさらに探すことができます。 <a href="%{contributing_docs}">コントリビューターとなって</a>あなたのサイトをよりよくしてください。
+  footer_about_html: RubyGems.orgはRubyコミュニティのGemのホスティングサービスです。 すぐに<a href="%{publish_docs}">Gemを公開</a>し<a
+    href="%{install_docs}">インストール</a>できます。 <a href="%{api_docs}">API</a>を使用して<a
+    href="%{gem_list}">利用可能なGem</a>を発見できます。 あなた自身が<a href="%{contributing_docs}">コントリビューターとなって</a>サイトをよりよくしてください。
   footer_sponsors_html: RubyGems.orgは大きなRubyコミュニティとのパートナーシップを通じて作られました。 <a href="https://www.fastly.com/">Fastly</a>が帯域を提供してくださり、CDNサポートをしてくださっています。
-    <a href="http://www.rubycentral.org/">Ruby Central</a>がインフラの費用を賄ってくださり、 <a href="https://rubytogether.org/?source=rubygems">Ruby
+    <a href="https://www.rubycentral.org/">Ruby Central</a>がインフラの費用を賄ってくださり、 <a href="https://rubytogether.org/?source=rubygems">Ruby
     Together</a>が開発や運用の費用を出資してくださっています。 <a href="%{sponsors_page}">スポンサーや一緒に働く方法について詳細を確認する</a>。
   footer_join_rt_html: RubyGems.orgをすべての人がスムーズに使えるよう続けていくために、開発者の時間を賄うためのあなたの援助が必要です。
     <a href="https://rubytogether.org/join?source=rubygems">Ruby Togetherに参加する</a>。
-  form_disable_with: お待ち下さい...
+  form_disable_with: お待ちください...
   invalid_page:
   locale_name: 日本語
   none: なし
@@ -46,7 +46,7 @@ ja:
         funding:
       session:
         password: パスワード
-        who: Email又はユーザー名
+        who: Emailまたはユーザー名
       user:
         avatar: アバター
         email: Emailアドレス
@@ -69,8 +69,8 @@ ja:
       api_keys:
       name:
       scopes:
-      age:
       gem:
+      age:
       last_access:
       action:
       delete:
@@ -120,7 +120,7 @@ ja:
       migrating_link_text: 統合
       mine: あなたのGem
       my_subscriptions: 購読
-      no_owned_html: あなたはまだGemを公開していません。よろしければGemの%{creating_link}又はRubyForgeからの%{migrating_link}ガイドをご覧ください。
+      no_owned_html: あなたはまだGemを公開していません。よろしければGemの%{creating_link}またはRubyForgeからの%{migrating_link}ガイドをご覧ください。
       no_subscriptions_html: あなたはまだGemを購読していません。%{gem_link}から購読を行なってみてください。
       title:
   dependencies:
@@ -199,7 +199,7 @@ ja:
       title:
       subtitle:
       subject: あなたのアカウントはrubygems.orgから削除されませんでした
-      body_html: あなたのrubygems.orgにおけるアカウント削除申請は処理されませんでした。申し訳ありませんが、現在アカウントを削除することができません。しばらく待ってから再度お試し頂くか、問題が継続するようならば%{contact}をお願いいたします。
+      body_html: あなたのrubygems.orgにおけるアカウント削除申請は処理されませんでした。申し訳ありませんが、現在アカウントを削除することができません。しばらく待ってから再度お試しいただくか、問題が継続するようならば%{contact}をお願いいたします。
     notifiers_changed:
       subject:
       title:
@@ -288,15 +288,18 @@ ja:
     new:
       submit: パスワードをリセットする
       title: パスワードを変更する
-      will_email_notice: パスワード変更のためのメールが送信されます。\
+      will_email_notice: パスワード変更のためのメールが送信されます。
   multifactor_auths:
     recovery_code_html:
     incorrect_otp:
     otp_code:
     require_mfa_disabled:
     require_mfa_enabled:
+    setup_required_html:
     setup_recommended:
+    strong_mfa_level_required_html:
     strong_mfa_level_recommended:
+    ui_only_warning:
     new:
       title:
       scan_prompt:
@@ -420,12 +423,12 @@ ja:
       bundler_header: Gemfile
       copied: コピー完了!
       copy_to_clipboard: クリップボードにコピー
-      downloads_for_this_version: 現行バージョン
+      downloads_for_this_version: このバージョンのみ
       install: インストール
       required_ruby_version: 必要Rubyバージョン
-      required_rubygems_version: 必要Gemバージョン
+      required_rubygems_version: 必要RubyGemsバージョン
       requires_mfa:
-      since: "%{version}"
+      released_with_mfa:
       links:
         badge: バッジ
         bugs: バグトラッカー
@@ -433,7 +436,7 @@ ja:
         code: ソースコード
         docs: ドキュメント
         download: ダウンロード
-        header: リンク集
+        header: リンク
         home: ホームページ
         mail: メーリングリスト
         report_abuse: 悪用報告
@@ -529,6 +532,7 @@ ja:
       not_hosted_notice: このGemはRubyGems.org上ではホストされていません。
       title: "%{name}の全バージョン履歴"
       versions_since: "%{since}からの%{count}項目"
+      imported_gem_version_notice:
     version:
       yanked: yanked
   will_paginate:

@@ -1,6 +1,8 @@
 class OwnershipCallsController < ApplicationController
   before_action :find_rubygem, except: :index
   before_action :redirect_to_signin, unless: :signed_in?, except: :index
+  before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, except: :index
+  before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, except: :index
   before_action :render_forbidden, unless: :owner?, only: %i[create close]
 
   def index

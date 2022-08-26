@@ -4,7 +4,7 @@ OwnershipConfirmationMailer = Struct.new(:ownership_id) do
     if ownership
       OwnersMailer.ownership_confirmation(ownership).deliver
     else
-      Rails.logger.info("[jobs:ownership_confirmation_mailer] owernship not found. skipping sending mail for #{ownership_id}")
+      Rails.logger.info("[jobs:ownership_confirmation_mailer] ownership not found. skipping sending mail for #{ownership_id}")
     end
   end
 end

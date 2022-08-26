@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   include Clearance::Authentication
   include Clearance::Authorization
+  include ApplicationMultifactorMethods
 
   helper ActiveSupport::NumberHelper
 
@@ -9,6 +10,9 @@ class ApplicationController < ActionController::Base
 
   before_action :set_locale
   before_action :reject_null_char_param
+  before_action :reject_null_char_cookie
+
+  add_flash_types :notice_html
 
   def set_locale
     I18n.locale = user_locale
@@ -95,8 +99,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def render_forbidden
-    render plain: "forbidden", status: :forbidden
+  def render_forbidden(error = "forbidden")
+    render plain: error, status: :forbidden
   end
 
   def redirect_to_page_with_error
@@ -115,6 +119,11 @@ class ApplicationController < ActionController::Base
     render plain: "bad request", status: :bad_request if params.to_s.include?("\\u0000")
   end
 
+  def reject_null_char_cookie
+    contains_null_char = cookies.map { |cookie| cookie.join("=") }.join(";").include?("\u0000")
+    render plain: "bad request", status: :bad_request if contains_null_char
+  end
+
   def sanitize_params
     params.delete(:params)
   end
@@ -126,6 +135,6 @@ class ApplicationController < ActionController::Base
   end
 
   def password_session_active?
-    session[:verification] && session[:verification] > Time.current
+    session[:verification] && session[:verification] > Time.current && session.fetch(:verified_user, "") == current_user.id
   end
 end

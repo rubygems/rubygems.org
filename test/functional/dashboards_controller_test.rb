@@ -107,6 +107,43 @@ class DashboardsControllerTest < ActionController::TestCase
         end
       end
     end
+
+    context "when user owns a gem with more than MFA_REQUIRED_THRESHOLD downloads" do
+      setup do
+        @rubygem = create(:rubygem)
+        create(:ownership, rubygem: @rubygem, user: @user)
+        GemDownload.increment(
+          Rubygem::MFA_REQUIRED_THRESHOLD + 1,
+          rubygem_id: @rubygem.id
+        )
+      end
+
+      context "user has mfa disabled" do
+        setup { get :show }
+        should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+      end
+
+      context "user has mfa set to weak level" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_only)
+          get :show
+        end
+
+        should redirect_to("the settings page") { edit_settings_path }
+      end
+
+      context "user has MFA set to strong level, expect normal behaviour" do
+        setup do
+          @user.enable_mfa!(ROTP::Base32.random_base32, :ui_and_api)
+          get :show
+        end
+
+        should "stay on dashboard page without redirecting" do
+          assert_response :success
+          assert page.has_content? "Dashboard"
+        end
+      end
+    end
   end
 
   context "On GET to show without being signed in" do

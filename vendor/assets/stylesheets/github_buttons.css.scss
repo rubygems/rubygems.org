@@ -11,14 +11,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Source repo: https://github.com/mdo/github-buttons
- * Modification - Removed style on body tag
- *              - increase z-index of gh-count:before and :after
- *              - change data:image/.. to url with file
+ * Source: https://github.com/mdo/github-buttons/blob/7c1da76484288ce76fa061362fc1c1f0db1f6553/src/styles.css
+ * Modification - Remove style on body tag
+ *              - Add font from body to .github-btn
+ *              - Remove `position: relative` from .gh-count (see https://github.com/rubygems/rubygems.org/issues/3117)
  */
 
 .github-btn {
-  font: bold 11px/14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font: 700 11px/14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   height: 20px;
   overflow: hidden;
 }
@@ -38,13 +38,9 @@
 }
 .gh-btn {
   background-color: #eee;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fcfcfc), color-stop(100%, #eee));
-  background-image: -webkit-linear-gradient(top, #fcfcfc 0, #eee 100%);
-  background-image: -moz-linear-gradient(top, #fcfcfc 0, #eee 100%);
-  background-image: -ms-linear-gradient(top, #fcfcfc 0, #eee 100%);
-  background-image: -o-linear-gradient(top, #fcfcfc 0, #eee 100%);
+  /* stylelint-disable-next-line function-no-unknown */
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fcfcfc), to(#eee));
   background-image: linear-gradient(to bottom, #fcfcfc 0, #eee 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfcfc', endColorstr='#eeeeee', GradientType=0);
   background-repeat: no-repeat;
   border: 1px solid #d5d5d5;
 }
@@ -52,31 +48,26 @@
 .gh-btn:focus {
   text-decoration: none;
   background-color: #ddd;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #eee), color-stop(100%, #ddd));
-  background-image: -webkit-linear-gradient(top, #eee 0, #ddd 100%);
-  background-image: -moz-linear-gradient(top, #eee 0, #ddd 100%);
-  background-image: -ms-linear-gradient(top, #eee 0, #ddd 100%);
-  background-image: -o-linear-gradient(top, #eee 0, #ddd 100%);
+  /* stylelint-disable-next-line function-no-unknown */
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #eee), to(#ddd));
   background-image: linear-gradient(to bottom, #eee 0, #ddd 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#dddddd', GradientType=0);
   border-color: #ccc;
 }
 .gh-btn:active {
-  background-image: none;
   background-color: #dcdcdc;
+  background-image: none;
   border-color: #b5b5b5;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, .15);
 }
 .gh-ico {
   width: 14px;
   height: 14px;
   margin-right: 4px;
-  background-image: image-url('github_icon.png');
+  background: image-url('github_icon.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
 .gh-count {
-  position: relative;
   display: none; /* hidden to start */
   margin-left: 4px;
   background-color: #fafafa;
@@ -84,30 +75,29 @@
 }
 .gh-count:hover,
 .gh-count:focus {
-  color: #4183C4;
+  color: #0366d6;
 }
-.gh-count:before,
-.gh-count:after {
-  content: '';
+.gh-count::before,
+.gh-count::after {
   position: absolute;
   display: inline-block;
   width: 0;
   height: 0;
+  content: "";
   border-color: transparent;
   border-style: solid;
 }
-.gh-count:before {
+.gh-count::before {
   top: 50%;
   left: -3px;
-  z-index: 1;
   margin-top: -4px;
   border-width: 4px 4px 4px 0;
   border-right-color: #fafafa;
 }
-.gh-count:after {
+.gh-count::after {
   top: 50%;
   left: -4px;
-  z-index: 0;
+  z-index: -1;
   margin-top: -5px;
   border-width: 5px 5px 5px 0;
   border-right-color: #d4d4d4;
@@ -129,12 +119,12 @@
 .github-btn-large .gh-count {
   margin-left: 6px;
 }
-.github-btn-large .gh-count:before {
+.github-btn-large .gh-count::before {
   left: -5px;
   margin-top: -6px;
   border-width: 6px 6px 6px 0;
 }
-.github-btn-large .gh-count:after {
+.github-btn-large .gh-count::after {
   left: -6px;
   margin-top: -7px;
   border-width: 7px 7px 7px 0;

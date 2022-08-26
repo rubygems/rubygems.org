@@ -65,8 +65,8 @@ de:
       api_keys:
       name:
       scopes:
-      age:
       gem:
+      age:
       last_access:
       action:
       delete:
@@ -308,8 +308,11 @@ de:
     otp_code:
     require_mfa_disabled:
     require_mfa_enabled:
+    setup_required_html:
     setup_recommended:
+    strong_mfa_level_required_html:
     strong_mfa_level_recommended:
+    ui_only_warning:
     new:
       title:
       scan_prompt:
@@ -440,7 +443,7 @@ de:
       required_ruby_version: Erforderliche Ruby-Version
       required_rubygems_version:
       requires_mfa:
-      since: "%{version}"
+      released_with_mfa:
       links:
         badge: Abzeichen
         bugs: Bug Tracker
@@ -540,6 +543,7 @@ de:
       not_hosted_notice: Dieses Gem wird nicht gerade von RubyGems.org gehostet.
       title: Alle Versionen von %{name}
       versions_since: "%{count} Versionen seit %{since}"
+      imported_gem_version_notice:
     version:
       yanked:
   will_paginate:

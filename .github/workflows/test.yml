@@ -13,14 +13,12 @@ jobs:
       fail-fast: false
       matrix:
         rubygems_version: ['3.3.11', 'latest']
+        coverage_rubygems_version: ['3.3.11']
         ruby_version: ['3.1.2']
     name: Rails tests (Ruby ${{ matrix.ruby_version }}, RubyGems ${{ matrix.rubygems_version }})
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     env:
       RUBYGEMS_VERSION: ${{ matrix.rubygems_version }}
-      # If we don't supply a CC_TEST_REPORTER_ID simplecov won't output coverage in a way that
-      # code climate understands
-      CC_TEST_REPORTER_ID: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
       # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
       REQUIRE_TOXIPROXY: true
     steps:
@@ -50,10 +48,6 @@ jobs:
         bundle exec rake db:setup
     - name: Tests
       run: bin/rails test
-    - name: archive coverage
-      if: matrix.rubygems_version == '3.3.11'
-      uses: actions/upload-artifact@v3
-      with:
-        name: coverage
-        path: |
-          coverage
+    - name: Upload coverage to Codecov
+      if: matrix.rubygems_version ==  matrix.coverage_rubygems_version && (success() || failure())
+      uses: codecov/codecov-action@v3

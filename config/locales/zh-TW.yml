@@ -65,8 +65,8 @@ zh-TW:
       api_keys:
       name:
       scopes:
-      age:
       gem:
+      age:
       last_access:
       action:
       delete:
@@ -296,8 +296,11 @@ zh-TW:
     otp_code: OTP 碼
     require_mfa_disabled:
     require_mfa_enabled: 你的多重要素驗證已停用，請先啟用。
+    setup_required_html:
     setup_recommended:
+    strong_mfa_level_required_html:
     strong_mfa_level_recommended:
+    ui_only_warning:
     new:
       title: 啟用多重要素驗證
       scan_prompt: 請用你的驗證裝置掃描 QR-code。如果你沒辦法掃描，手動輸入下面的資料。
@@ -427,7 +430,7 @@ zh-TW:
       required_ruby_version: Ruby 版本需求
       required_rubygems_version: RubyGems 版本需求
       requires_mfa:
-      since: "%{version}"
+      released_with_mfa:
       links:
         badge: 徽章
         bugs: Bug 追蹤
@@ -527,6 +530,7 @@ zh-TW:
       not_hosted_notice: 這個 Gem 目前沒有在 Gemcutter 上
       title: "%{name} 的所有版本"
       versions_since: 自從 %{since} 以來，有 %{count} 個版本
+      imported_gem_version_notice:
     version:
       yanked: 已被移除
   will_paginate:

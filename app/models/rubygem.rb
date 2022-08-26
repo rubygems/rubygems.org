@@ -34,8 +34,10 @@ class Rubygem < ApplicationRecord
   before_destroy :mark_unresolved
 
   MFA_RECOMMENDED_THRESHOLD = 165_000_000
+  MFA_REQUIRED_THRESHOLD = 180_000_000
 
   scope :mfa_recommended, -> { joins(:gem_download).where("gem_downloads.count > ?", MFA_RECOMMENDED_THRESHOLD) }
+  scope :mfa_required, -> { joins(:gem_download).where("gem_downloads.count > ?", MFA_REQUIRED_THRESHOLD) }
 
   def create_gem_download
     GemDownload.create!(count: 0, rubygem_id: id, version_id: 0)
@@ -335,18 +337,18 @@ class Rubygem < ApplicationRecord
     reverse_dependencies.where("d.scope ='runtime'")
   end
 
-  def mfa_required?
-    latest_version&.rubygems_mfa_required?
+  def metadata_mfa_required?
+    latest_version&.rubygems_metadata_mfa_required?
   end
 
   def mfa_requirement_satisfied_for?(user)
-    user.mfa_enabled? || !mfa_required?
+    user.mfa_enabled? || !metadata_mfa_required?
   end
 
   # TODO: broken. don't use until #2964 is resolved.
   def mfa_required_since_version
-    return unless mfa_required?
-    non_mfa_version = public_versions.find { |v| !v.rubygems_mfa_required? }
+    return unless metadata_mfa_required?
+    non_mfa_version = public_versions.find { |v| !v.rubygems_metadata_mfa_required? }
     if non_mfa_version
       non_mfa_version.next.number
     else

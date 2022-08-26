@@ -1,0 +1,293 @@
+digraph Gemcutter {
+rankdir = "LR";
+ranksep = "0.5";
+nodesep = "0.4";
+pad = "0.4,0.4";
+margin = "0,0";
+concentrate = "true";
+labelloc = "t";
+fontsize = "13";
+fontname = "Arial Bold";
+splines = "spline";
+node[ shape  =  "Mrecord" , fontsize  =  "10" , fontname  =  "Arial" , margin  =  "0.07,0.05" , penwidth  =  "1.0"];
+edge[ fontname  =  "Arial" , fontsize  =  "7" , dir  =  "both" , arrowsize  =  "0.9" , penwidth  =  "1.0" , labelangle  =  "32" , labeldistance  =  "1.8"];
+rankdir = "TB";
+label = "RubyGems.org domain model\n\n";
+m_ApiKey [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">ApiKey</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="access_webhooks">access_webhooks <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
+  <tr><td align="left" width="130" port="add_owner">add_owner <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
+  <tr><td align="left" width="130" port="hashed_key">hashed_key <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+  <tr><td align="left" width="130" port="index_rubygems">index_rubygems <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
+  <tr><td align="left" width="130" port="last_accessed_at">last_accessed_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="mfa">mfa <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
+  <tr><td align="left" width="130" port="name">name <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+  <tr><td align="left" width="130" port="push_rubygem">push_rubygem <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
+  <tr><td align="left" width="130" port="remove_owner">remove_owner <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
+  <tr><td align="left" width="130" port="show_dashboard">show_dashboard <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
+  <tr><td align="left" width="130" port="soft_deleted_at">soft_deleted_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="soft_deleted_rubygem_name">soft_deleted_rubygem_name <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="yank_rubygem">yank_rubygem <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
+</table>
+>];
+m_ApiKeyRubygemScope [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">ApiKeyRubygemScope</font></td></tr>
+</table>
+>];
+"m_Delayed::Backend::ActiveRecord::Job" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Delayed::Backend::ActiveRecord::Job</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="attempts">attempts <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="failed_at">failed_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="handler">handler <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="last_error">last_error <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="locked_at">locked_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="locked_by">locked_by <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="priority">priority <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="queue">queue <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="run_at">run_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+</table>
+>];
+m_Deletion [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Deletion</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="number">number <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+  <tr><td align="left" width="130" port="platform">platform <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="rubygem">rubygem <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+</table>
+>];
+m_Dependency [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Dependency</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="requirements">requirements <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+  <tr><td align="left" width="130" port="scope">scope <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="unresolved_name">unresolved_name <font face="Arial Italic" color="grey60">string</font></td></tr>
+</table>
+>];
+m_GemDownload [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">GemDownload</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="count">count <font face="Arial Italic" color="grey60">integer (8)</font></td></tr>
+</table>
+>];
+m_GemTypoException [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">GemTypoException</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="info">info <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="name">name <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
+</table>
+>];
+m_Linkset [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Linkset</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="bugs">bugs <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="code">code <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="docs">docs <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="home">home <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="mail">mail <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="wiki">wiki <font face="Arial Italic" color="grey60">string</font></td></tr>
+</table>
+>];
+m_LogTicket [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">LogTicket</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="backend">backend <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="directory">directory <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="key">key <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="processed_count">processed_count <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="status">status <font face="Arial Italic" color="grey60">string</font></td></tr>
+</table>
+>];
+m_Ownership [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Ownership</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="confirmed_at">confirmed_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="owner_notifier">owner_notifier <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
+  <tr><td align="left" width="130" port="ownership_request_notifier">ownership_request_notifier <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
+  <tr><td align="left" width="130" port="push_notifier">push_notifier <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
+  <tr><td align="left" width="130" port="token">token <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="token_expires_at">token_expires_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+</table>
+>];
+m_OwnershipCall [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">OwnershipCall</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="note">note <font face="Arial Italic" color="grey60">text ∗</font></td></tr>
+  <tr><td align="left" width="130" port="status">status <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
+</table>
+>];
+m_OwnershipRequest [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">OwnershipRequest</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="note">note <font face="Arial Italic" color="grey60">text ∗</font></td></tr>
+  <tr><td align="left" width="130" port="status">status <font face="Arial Italic" color="grey60">integer (2) ∗</font></td></tr>
+</table>
+>];
+m_Rubygem [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Rubygem</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="indexed">indexed <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
+  <tr><td align="left" width="130" port="name">name <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
+  <tr><td align="left" width="130" port="slug">slug <font face="Arial Italic" color="grey60">string</font></td></tr>
+</table>
+>];
+m_SendgridEvent [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">SendgridEvent</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="email">email <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="event_type">event_type <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="occurred_at">occurred_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="payload">payload <font face="Arial Italic" color="grey60">jsonb ∗</font></td></tr>
+  <tr><td align="left" width="130" port="sendgrid_id">sendgrid_id <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+  <tr><td align="left" width="130" port="status">status <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+</table>
+>];
+m_Subscription [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Subscription</font></td></tr>
+</table>
+>];
+m_User [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">User</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="api_key">api_key <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="blocked_email">blocked_email <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="confirmation_token">confirmation_token <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
+  <tr><td align="left" width="130" port="email">email <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
+  <tr><td align="left" width="130" port="email_confirmed">email_confirmed <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
+  <tr><td align="left" width="130" port="email_reset">email_reset <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="encrypted_password">encrypted_password <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
+  <tr><td align="left" width="130" port="handle">handle <font face="Arial Italic" color="grey60">string U</font></td></tr>
+  <tr><td align="left" width="130" port="hide_email">hide_email <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="mail_fails">mail_fails <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="mfa_level">mfa_level <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="mfa_recovery_codes">mfa_recovery_codes <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="mfa_seed">mfa_seed <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="remember_token">remember_token <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
+  <tr><td align="left" width="130" port="remember_token_expires_at">remember_token_expires_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="salt">salt <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
+  <tr><td align="left" width="130" port="token">token <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
+  <tr><td align="left" width="130" port="token_expires_at">token_expires_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="twitter_username">twitter_username <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="unconfirmed_email">unconfirmed_email <font face="Arial Italic" color="grey60">string</font></td></tr>
+</table>
+>];
+"m_User::WithPrivateFields" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">User::WithPrivateFields</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="api_key">api_key <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="blocked_email">blocked_email <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="confirmation_token">confirmation_token <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
+  <tr><td align="left" width="130" port="email">email <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
+  <tr><td align="left" width="130" port="email_confirmed">email_confirmed <font face="Arial Italic" color="grey60">boolean ∗</font></td></tr>
+  <tr><td align="left" width="130" port="email_reset">email_reset <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="encrypted_password">encrypted_password <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
+  <tr><td align="left" width="130" port="handle">handle <font face="Arial Italic" color="grey60">string U</font></td></tr>
+  <tr><td align="left" width="130" port="hide_email">hide_email <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="mail_fails">mail_fails <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="mfa_level">mfa_level <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="mfa_recovery_codes">mfa_recovery_codes <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="mfa_seed">mfa_seed <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="remember_token">remember_token <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
+  <tr><td align="left" width="130" port="remember_token_expires_at">remember_token_expires_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="salt">salt <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
+  <tr><td align="left" width="130" port="token">token <font face="Arial Italic" color="grey60">string (128)</font></td></tr>
+  <tr><td align="left" width="130" port="token_expires_at">token_expires_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="twitter_username">twitter_username <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="unconfirmed_email">unconfirmed_email <font face="Arial Italic" color="grey60">string</font></td></tr>
+</table>
+>];
+m_Version [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">Version</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="authors">authors <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="built_at">built_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="canonical_number">canonical_number <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="cert_chain">cert_chain <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="description">description <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="full_name">full_name <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
+  <tr><td align="left" width="130" port="indexed">indexed <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="info_checksum">info_checksum <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="latest">latest <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="licenses">licenses <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="metadata">metadata <font face="Arial Italic" color="grey60">hstore ∗</font></td></tr>
+  <tr><td align="left" width="130" port="number">number <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="platform">platform <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="position">position <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="prerelease">prerelease <font face="Arial Italic" color="grey60">boolean</font></td></tr>
+  <tr><td align="left" width="130" port="required_ruby_version">required_ruby_version <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="required_rubygems_version">required_rubygems_version <font face="Arial Italic" color="grey60">string (255)</font></td></tr>
+  <tr><td align="left" width="130" port="requirements">requirements <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="sha256">sha256 <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="size">size <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="summary">summary <font face="Arial Italic" color="grey60">text</font></td></tr>
+  <tr><td align="left" width="130" port="yanked_at">yanked_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
+  <tr><td align="left" width="130" port="yanked_info_checksum">yanked_info_checksum <font face="Arial Italic" color="grey60">string</font></td></tr>
+</table>
+>];
+m_WebHook [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">WebHook</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="failure_count">failure_count <font face="Arial Italic" color="grey60">integer</font></td></tr>
+  <tr><td align="left" width="130" port="url">url <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+</table>
+>];
+  m_User -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_Rubygem -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Rubygem -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_Version -> m_Dependency [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Version -> m_GemDownload [arrowhead = "none", arrowtail = "none", weight = "2"];
+  m_User -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "1"];
+  m_User -> m_Ownership [arrowhead = "normal", arrowtail = "none", weight = "6"];
+  m_User -> m_Rubygem [style = "dotted", arrowhead = "normal", arrowtail = "none", weight = "10", constraint = "false"];
+  m_User -> m_Subscription [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_User -> m_Deletion [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_User -> m_ApiKey [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_User -> m_OwnershipCall [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_User -> m_OwnershipRequest [arrowhead = "normal", arrowtail = "none", weight = "4"];
+  m_Rubygem -> m_Subscription [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Rubygem -> m_Ownership [arrowhead = "normal", arrowtail = "none", weight = "3"];
+  m_Rubygem -> m_Linkset [arrowhead = "none", arrowtail = "none", weight = "2"];
+  m_Rubygem -> m_GemDownload [arrowhead = "none", arrowtail = "none", weight = "2"];
+  m_Rubygem -> m_OwnershipCall [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Rubygem -> m_OwnershipRequest [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_OwnershipCall -> m_OwnershipRequest [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Ownership -> m_ApiKeyRubygemScope [arrowhead = "normal", arrowtail = "none", weight = "2"];
+  m_Rubygem -> m_Dependency [arrowhead = "normal", arrowtail = "none", weight = "1"];
+  m_ApiKey -> m_ApiKeyRubygemScope [arrowhead = "none", arrowtail = "none", weight = "2"];
+  m_ApiKey -> m_Ownership [style = "dotted", arrowhead = "none", arrowtail = "none", weight = "1", constraint = "false"];
+}
