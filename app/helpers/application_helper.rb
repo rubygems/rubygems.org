@@ -1,6 +1,8 @@
 module ApplicationHelper
   def page_title
     combo = "#{t :title} | #{t :subtitle}"
+    # If instance variable @title_for_header_only is present then it is added to combo title string
+    combo = "#{@title_for_header_only} | #{combo}" if @title_for_header_only.present?
     @title.present? ? "#{@title} | #{combo}" : combo
   end
 

@@ -104,7 +104,7 @@
     <main class="<%= 'main--interior' if request.path_info != '/' %>">
       <% if request.path_info != '/' %>
         <div class="l-wrap--b">
-          <% if @title && @page_title_only.nil? %>
+          <% if @title %>
             <h1 class="t-display page__heading">
               <%= content_for_title @title, @title_url %>
 
