@@ -120,6 +120,19 @@ class OwnerTest < SystemTest
     assert page.has_selector? "#flash_alert", text: "This request was denied. We could not verify your password."
   end
 
+  test "incorrect password error does not persist after correct password" do
+    visit rubygem_path(@rubygem)
+    click_link "Ownership"
+    assert page.has_css? "#verify_password_password"
+    fill_in "Password", with: "wrong password"
+    click_button "Confirm"
+    assert page.has_selector? "#flash_alert", text: "This request was denied. We could not verify your password."
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Confirm"
+    assert page.has_no_selector? "#flash_alert"
+  end
+
   test "clicking on confirmation link confirms the account" do
     @unconfirmed_ownership = create(:ownership, :unconfirmed, rubygem: @rubygem)
     confirmation_link = confirm_rubygem_owners_url(@rubygem, token: @unconfirmed_ownership.token)
