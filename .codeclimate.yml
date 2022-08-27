@@ -1,17 +1,4 @@
-version: "2"
-exclude_patterns:
-- "config/"
-- "db/"
-- "dist/"
-- "features/"
-- "**/node_modules/"
-- "script/"
-- "**/spec/"
-- "**/test/"
-- "**/tests/"
-- "**/vendor/"
-- "**/*.d.ts"
-- "app/models/user.rb"
-method-count:
-    config:
-      threshold: 25
+plugins:
+  rubocop:
+    enabled: true
+    channel: "rubocop-1-23-0"
