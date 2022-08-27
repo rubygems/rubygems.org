@@ -2,14 +2,34 @@ module RubygemSearchable
   extend ActiveSupport::Concern
 
   included do
-    include Elasticsearch::Model
+    searchkick index_name: "rubygems-#{Rails.env}",
+      callbacks: false,
+      settings: {
+        number_of_shards: 1,
+        number_of_replicas: 1,
+        analysis: {
+          analyzer: {
+            rubygem: {
+              type: "pattern",
+              pattern: "[\s#{Regexp.escape(Patterns::SPECIAL_CHARACTERS)}]+"
+            }
+          }
+        }
+      },
+      mappings:  {
+        properties: {
+          name: { type: "text", analyzer: "rubygem",
+                  fields: { suggest: { analyzer: "simple", type: "text" }, unanalyzed: { type: "keyword", index: "true" } } },
+          summary: { type: "text", analyzer: "english", fields: { raw: { analyzer: "simple", type: "text" } } },
+          description: { type: "text", analyzer: "english", fields: { raw: { analyzer: "simple", type: "text" } } },
+          suggest: { type: "completion", contexts: { name: "yanked", type: "category" } },
+          yanked: { type: "boolean" },
+          downloads: { type: "integer" },
+          updated: { type: "date" }
+        }
+      }
 
-    index_name "rubygems-#{Rails.env}"
-
-    delegate :index_document, to: :__elasticsearch__
-    delegate :update_document, to: :__elasticsearch__
-
-    def as_indexed_json(_options = {}) # rubocop:disable Metrics/MethodLength
+    def search_data # rubocop:disable Metrics/MethodLength
       if (latest_version = versions.most_recent)
         deps = latest_version.dependencies.to_a
         versioned_links = links(latest_version)
@@ -45,37 +65,6 @@ module RubygemSearchable
           runtime: deps&.select { |r| r.rubygem && r.scope == "runtime" }
         }
       }.merge!(suggest_json)
-    end
-
-    settings number_of_shards: 1,
-             number_of_replicas: 1,
-             analysis: {
-               analyzer: {
-                 rubygem: {
-                   type: "pattern",
-                   pattern: "[\s#{Regexp.escape(Patterns::SPECIAL_CHARACTERS)}]+"
-                 }
-               }
-             }
-
-    mapping do
-      indexes :name, type: "text", analyzer: "rubygem" do
-        indexes :suggest, analyzer: "simple"
-        indexes :unanalyzed, type: "keyword", index: "true"
-      end
-      indexes :summary, type: "text", analyzer: "english" do
-        indexes :raw, analyzer: "simple"
-      end
-      indexes :description, type: "text", analyzer: "english" do
-        indexes :raw, analyzer: "simple"
-      end
-      instance_eval do
-        context = { name: "yanked", type: "category" }
-        @mapping[:suggest] = { type: "completion", contexts: context }
-      end
-      indexes :yanked, type: "boolean"
-      indexes :downloads, type: "integer"
-      indexes :updated, type: "date"
     end
 
     def self.legacy_search(query)

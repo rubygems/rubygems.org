@@ -1,7 +1,7 @@
 require "test_helper"
 
 class SearchTest < SystemTest
-  include ESHelper
+  include SearchKickHelper
 
   test "searching for a gem" do
     create(:rubygem, name: "LDAP", number: "1.0.0")

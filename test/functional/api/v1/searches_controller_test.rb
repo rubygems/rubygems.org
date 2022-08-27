@@ -1,7 +1,7 @@
 require "test_helper"
 
 class Api::V1::SearchesControllerTest < ActionController::TestCase
-  include ESHelper
+  include SearchKickHelper
 
   def self.should_respond_to(format)
     context "with query=match and with #{format.to_s.upcase}" do

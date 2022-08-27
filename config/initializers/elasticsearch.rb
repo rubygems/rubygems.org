@@ -16,7 +16,7 @@ end
 
 url = ENV['ELASTICSEARCH_URL'] || "http://localhost:#{port}"
 
-Elasticsearch::Model.client = Elasticsearch::Client.new(url: url) do |f|
+Searchkick.client = Elasticsearch::Client.new(url: url) do |f|
   if Rails.env.staging? || Rails.env.production?
     f.request :aws_sigv4,
       service: 'es',
@@ -29,5 +29,5 @@ end
 if Rails.env.development?
   tracer = ActiveSupport::Logger.new('log/elasticsearch.log')
   tracer.level = Logger::DEBUG
-  Elasticsearch::Model.client.transport.tracer = tracer
+  Searchkick.client.transport.tracer = tracer
 end

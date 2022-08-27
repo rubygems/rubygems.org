@@ -1,13 +1,9 @@
-module ESHelper
+module SearchKickHelper
   def import_and_refresh
-    Rubygem.import force: true
-    refresh_index
-  end
+    Rubygem.searchkick_reindex
 
-  def refresh_index
-    Rubygem.__elasticsearch__.refresh_index!
     # wait for indexing to finish
-    Rubygem.__elasticsearch__.client.cluster.health wait_for_status: "yellow"
+    Searchkick.client.cluster.health wait_for_status: "yellow"
   end
 
   def es_downloads(id)
@@ -21,8 +17,7 @@ module ESHelper
   end
 
   def get_response(id)
-    refresh_index
-    Rubygem.__elasticsearch__.client.get index: "rubygems-#{Rails.env}",
-                                                    id: id
+    Rubygem.searchkick_index.refresh
+    Searchkick.client.get index: "rubygems-#{Rails.env}", id: id
   end
 end
