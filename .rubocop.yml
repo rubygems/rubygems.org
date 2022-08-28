@@ -4,6 +4,7 @@ require:
   - rubocop-performance
   - rubocop-rails
   - rubocop-minitest
+  - ./lib/custom_cops/action_controller_flash_before_render.rb
 
 AllCops:
   Exclude:
