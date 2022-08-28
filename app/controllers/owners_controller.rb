@@ -77,7 +77,7 @@ class OwnersController < ApplicationController
 
   def index_with_error(msg, status)
     @ownerships = @rubygem.ownerships_including_unconfirmed.includes(:user, :authorizer)
-    flash[:alert] = msg
+    flash.now[:alert] = msg
     render :index, status: status
   end
 

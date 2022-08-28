@@ -19,7 +19,7 @@ class MultifactorAuthsController < ApplicationController
       flash[:error] = current_user.errors[:base].join
       redirect_to edit_settings_url
     else
-      flash[:success] = t(".success")
+      flash.now[:success] = t(".success")
       render :recovery
     end
   end
