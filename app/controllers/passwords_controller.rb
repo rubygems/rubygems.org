@@ -15,6 +15,7 @@ class PasswordsController < Clearance::PasswordsController
 
     if @user.update_password password_from_password_reset_params
       @user.reset_api_key! if reset_params[:reset_api_key] == "true"
+      @user.api_keys.delete_all if reset_params[:reset_api_keys] == "true"
       sign_in @user
       redirect_to url_after_update
       session[:password_reset_token] = nil
@@ -41,7 +42,7 @@ class PasswordsController < Clearance::PasswordsController
   end
 
   def reset_params
-    params.fetch(:password_reset, {}).permit(:reset_api_key)
+    params.fetch(:password_reset, {}).permit(:reset_api_key, :reset_api_keys)
   end
 
   def validate_confirmation_token
