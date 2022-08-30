@@ -15,7 +15,7 @@ class User < ApplicationRecord
     twitter_username
   ].freeze
 
-  before_save :generate_confirmation_token, if: :will_save_change_to_unconfirmed_email?
+  before_save :_generate_confirmation_token_no_reset_unconfirmed_email, if: :will_save_change_to_unconfirmed_email?
   before_create :generate_confirmation_token
   before_destroy :yank_gems
 
@@ -172,6 +172,11 @@ class User < ApplicationRecord
   end
 
   def generate_confirmation_token
+    self.unconfirmed_email = nil
+    _generate_confirmation_token_no_reset_unconfirmed_email
+  end
+
+  def _generate_confirmation_token_no_reset_unconfirmed_email
     self.confirmation_token = Clearance::Token.new
     self.token_expires_at = Time.zone.now + Gemcutter::EMAIL_TOKEN_EXPRIES_AFTER
   end
