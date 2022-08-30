@@ -175,7 +175,7 @@ class PasswordsControllerTest < ActionController::TestCase
         refute_equal(@user.reload.encrypted_password, @old_encrypted_password)
       end
       should "not delete new api key" do
-        refute @new_api_key.reload.destroyed?
+        refute_predicate @new_api_key.reload, :destroyed?
         refute_empty @user.reload.api_keys
       end
     end
