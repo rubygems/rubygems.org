@@ -16,7 +16,7 @@ class User < ApplicationRecord
   ].freeze
 
   before_save :_generate_confirmation_token_no_reset_unconfirmed_email, if: :will_save_change_to_unconfirmed_email?
-  before_create :generate_confirmation_token
+  before_create :_generate_confirmation_token_no_reset_unconfirmed_email
   before_destroy :yank_gems
 
   has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :user
@@ -171,14 +171,14 @@ class User < ApplicationRecord
     token_expires_at > Time.zone.now
   end
 
-  def generate_confirmation_token
-    self.unconfirmed_email = nil
-    _generate_confirmation_token_no_reset_unconfirmed_email
+  def generate_confirmation_token(reset_unconfirmed_email: true)
+    self.unconfirmed_email = nil if reset_unconfirmed_email
+    self.confirmation_token = Clearance::Token.new
+    self.token_expires_at = Time.zone.now + Gemcutter::EMAIL_TOKEN_EXPRIES_AFTER
   end
 
   def _generate_confirmation_token_no_reset_unconfirmed_email
-    self.confirmation_token = Clearance::Token.new
-    self.token_expires_at = Time.zone.now + Gemcutter::EMAIL_TOKEN_EXPRIES_AFTER
+    generate_confirmation_token(reset_unconfirmed_email: false)
   end
 
   def unconfirmed?

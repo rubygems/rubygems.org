@@ -31,7 +31,7 @@ class EmailConfirmationsController < ApplicationController
     user = find_user_for_create
 
     if user
-      user.generate_confirmation_token
+      user.generate_confirmation_token(reset_unconfirmed_email: false)
       Delayed::Job.enqueue(EmailConfirmationMailer.new(user.id)) if user.save
     end
     redirect_to root_path, notice: t(".promise_resend")
@@ -39,7 +39,7 @@ class EmailConfirmationsController < ApplicationController
 
   # used to resend confirmation mail for unconfirmed_email validation
   def unconfirmed
-    if current_user.generate_confirmation_token && current_user.save
+    if current_user.generate_confirmation_token(reset_unconfirmed_email: false) && current_user.save
       Delayed::Job.enqueue EmailResetMailer.new(current_user.id)
       flash[:notice] = t("profiles.update.confirmation_mail_sent")
     else
