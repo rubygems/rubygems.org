@@ -96,4 +96,36 @@ class PasswordResetTest < SystemTest
 
     assert page.has_content?("Sign out")
   end
+
+  test "resetting password with pending email change" do
+    visit sign_in_path
+
+    email = @user.email
+    new_email = "hijack@example.com"
+
+    fill_in "Email or Username", with: email
+    fill_in "Password", with: @user.password
+    click_button "Sign in"
+
+    visit edit_profile_path
+
+    fill_in "Username", with: "username"
+    fill_in "Email address", with: new_email
+    fill_in "Password", with: @user.password
+    perform_enqueued_jobs { click_button "Update" }
+
+    assert_equal new_email, @user.reload.unconfirmed_email
+
+    click_link "Sign out"
+
+    forgot_password_with email
+
+    assert_nil @user.reload.unconfirmed_email
+
+    token = /edit\?token=(.+)$/.match(password_reset_link)[1]
+    visit update_email_confirmations_path(token: token)
+
+    assert @user.reload.authenticated? PasswordHelpers::SECURE_TEST_PASSWORD
+    assert_equal email, @user.email
+  end
 end
