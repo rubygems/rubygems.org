@@ -163,7 +163,7 @@ class RubygemsControllerTest < ActionController::TestCase
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
       assert page.has_content?(@latest_version.number)
-      css = "small:contains('#{@latest_version.authored_at.to_date.to_formatted_s(:long)}')"
+      css = "small:contains('#{@latest_version.authored_at.to_date.to_fs(:long)}')"
       assert page.has_css?(css)
       assert page.has_content?("Links")
     end
@@ -207,12 +207,12 @@ class RubygemsControllerTest < ActionController::TestCase
     should "render info about the gem" do
       assert page.has_content?(@rubygem.name)
       assert page.has_content?(@versions[0].number)
-      css = "small:contains('#{@versions[0].built_at.to_date.to_formatted_s(:long)}')"
+      css = "small:contains('#{@versions[0].built_at.to_date.to_fs(:long)}')"
       assert page.has_css?(css)
 
       assert page.has_content?("Versions")
       assert page.has_content?(@versions[2].number)
-      css = "small:contains('#{@versions[2].built_at.to_date.to_formatted_s(:long)}')"
+      css = "small:contains('#{@versions[2].built_at.to_date.to_fs(:long)}')"
       assert page.has_css?(css)
     end
 
