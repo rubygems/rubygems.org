@@ -398,6 +398,7 @@ pt-BR:
         key_is_html: A chave da sua API é %{key}.
         link_text: gems
         reset: Resetar minha chave da API
+        reset_all:
         title: Acesso à API
       reset_password:
         title: Resetar senha

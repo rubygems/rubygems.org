@@ -405,6 +405,7 @@ es:
         key_is_html: Tu clave de API es %{key}.
         link_text: Comandos de la gema
         reset: Reestablecer mi clave de API
+        reset_all:
         title: Acceso por API
       reset_password:
         title: Reestablecer contraseña

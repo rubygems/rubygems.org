@@ -8,15 +8,20 @@ fr:
     Ruby. Publiez vos gems instantanément et utilisez-les. Utilisez l'API pour interagir
     et trouver des informations sur les gems disponibles. Contribuez et améliorez
     ce site avec nous !
-  footer_sponsors_html: RubyGems.org est rendu possible grâce à un partenariat avec la communauté Ruby au sens large.
-    <a href="https://www.fastly.com/">Fastly</a> fournisseur de bande passante et du support CDN,
-    <a href="https://www.rubycentral.org/">Ruby Central</a> qui couvre les frais d'infrastructure, et
-    <a href="https://rubytogether.org/?source=rubygems">Ruby Together</a> qui finance le développement et l'administration des serveurs.
-    <a href="%{sponsors_page}">Apprenez en plus sur nos sponsors et comment ils travaillent entre eux.</a>
-  footer_join_rt_html: Nous avons besoin de votre aide pour financer le travail des développeurs/développeuses qui font que RubyGems.org fonctionne de manière fluide pour tout le monde.
-    <a href="https://rubytogether.org/join?source=rubygems">Join Ruby Together today</a>.
+  footer_sponsors_html: RubyGems.org est rendu possible grâce à un partenariat avec
+    la communauté Ruby au sens large. <a href="https://www.fastly.com/">Fastly</a>
+    fournisseur de bande passante et du support CDN, <a href="https://www.rubycentral.org/">Ruby
+    Central</a> qui couvre les frais d'infrastructure, et <a href="https://rubytogether.org/?source=rubygems">Ruby
+    Together</a> qui finance le développement et l'administration des serveurs. <a
+    href="%{sponsors_page}">Apprenez en plus sur nos sponsors et comment ils travaillent
+    entre eux.</a>
+  footer_join_rt_html: Nous avons besoin de votre aide pour financer le travail des
+    développeurs/développeuses qui font que RubyGems.org fonctionne de manière fluide
+    pour tout le monde. <a href="https://rubytogether.org/join?source=rubygems">Join
+    Ruby Together today</a>.
   form_disable_with: Veuillez patienter...
-  invalid_page: Le numéro de page est hors de portée. Redirection vers la page par défaut.
+  invalid_page: Le numéro de page est hors de portée. Redirection vers la page par
+    défaut.
   locale_name: Français
   none:
   not_found: Introuvable
@@ -403,6 +408,7 @@ fr:
         key_is_html: Votre clé API est %{key}.
         link_text: des commandes gems
         reset: Remise à zéro de votre clé API
+        reset_all:
         title: Accès API
       reset_password:
         title: Renvoi de mot de passe
