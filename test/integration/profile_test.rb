@@ -117,8 +117,8 @@ class ProfileTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Confirm"
 
-    assert page.has_content? "Your account deletion request has been enqueued." \
-                             " We will send you a confirmation mail when your request has been processed."
+    assert page.has_content? "Your account deletion request has been enqueued. " \
+                             "We will send you a confirmation mail when your request has been processed."
   end
 
   test "deleting profile multiple times" do
