@@ -62,7 +62,7 @@ class Pusher
     @spec = package.spec
     @files = package.files
   rescue StandardError => e
-    notify <<-MSG.strip_heredoc, 422
+    notify <<~MSG, 422
       RubyGems.org cannot process this gem.
       Please try rebuilding it and installing it locally to make sure it's valid.
       Error:
