@@ -127,7 +127,7 @@ namespace :gemcutter do
       rubygems_without_total_downloads.each do |rubygem|
         total_downloads = GemDownload.where(rubygem_id: rubygem.id).sum(:count)
         GemDownload.create!(count: total_downloads, rubygem_id: rubygem.id, version_id: 0)
-        Rails.logger.info "[gemcutter:gem_downloads:add_rubygems_record] added GemDownloads for rubygem_id: #{rubygem.id} with "\
+        Rails.logger.info "[gemcutter:gem_downloads:add_rubygems_record] added GemDownloads for rubygem_id: #{rubygem.id} with " \
                           "total downloads: #{total_downloads}"
         processed += 1
         print format("\r%.2f%% (%d/%d) complete", processed.to_f / total * 100.0, processed, total)

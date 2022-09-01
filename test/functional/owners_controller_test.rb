@@ -78,7 +78,7 @@ class OwnersControllerTest < ActionController::TestCase
             assert_nil @rubygem.ownerships_including_unconfirmed.find_by(user: @new_owner).confirmed_at
           end
           should "set success notice flash" do
-            expected_notice = "#{@new_owner.handle} was added as an unconfirmed owner. "\
+            expected_notice = "#{@new_owner.handle} was added as an unconfirmed owner. " \
                               "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
             assert_equal expected_notice, flash[:notice]
           end
@@ -132,7 +132,7 @@ class OwnersControllerTest < ActionController::TestCase
             should redirect_to("ownerships index") { rubygem_owners_path(@rubygem) }
 
             should "set success notice flash" do
-              expected_notice = "#{@new_owner.handle} was added as an unconfirmed owner. "\
+              expected_notice = "#{@new_owner.handle} was added as an unconfirmed owner. " \
                                 "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email."
               assert_equal expected_notice, flash[:notice]
             end

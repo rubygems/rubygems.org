@@ -215,7 +215,7 @@ class ProfilesControllerTest < ActionController::TestCase
           end
 
           should redirect_to("the homepage") { root_url }
-          should set_flash.to("Your account deletion request has been enqueued."\
+          should set_flash.to("Your account deletion request has been enqueued." \
                               " We will send you a confirmation mail when your request has been processed.")
         end
       end
