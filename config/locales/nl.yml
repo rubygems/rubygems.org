@@ -387,6 +387,7 @@ nl:
         key_is_html: Je API key is %{key}
         link_text: gem commando’s
         reset: Reset mijn API key
+        reset_all:
         title: API toegang
       reset_password:
         title: Reset wachtwoord

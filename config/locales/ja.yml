@@ -5,8 +5,8 @@ ja:
   feed_latest: RubyGems.org | 最新のGemの一覧
   feed_subscribed: RubyGems.org | 購読したGemの一覧
   footer_about_html: RubyGems.orgはRubyコミュニティのGemのホスティングサービスです。 すぐに<a href="%{publish_docs}">Gemを公開</a>し<a
-    href="%{install_docs}">インストール</a>できます。 <a href="%{api_docs}">API</a>を使用して<a
-    href="%{gem_list}">利用可能なGem</a>を発見できます。 あなた自身が<a href="%{contributing_docs}">コントリビューターとなって</a>サイトをよりよくしてください。
+    href="%{install_docs}">インストール</a>できます。 <a href="%{api_docs}">API</a>を使用して<a href="%{gem_list}">利用可能なGem</a>を発見できます。
+    あなた自身が<a href="%{contributing_docs}">コントリビューターとなって</a>サイトをよりよくしてください。
   footer_sponsors_html: RubyGems.orgは大きなRubyコミュニティとのパートナーシップを通じて作られました。 <a href="https://www.fastly.com/">Fastly</a>が帯域を提供してくださり、CDNサポートをしてくださっています。
     <a href="https://www.rubycentral.org/">Ruby Central</a>がインフラの費用を賄ってくださり、 <a href="https://rubytogether.org/?source=rubygems">Ruby
     Together</a>が開発や運用の費用を出資してくださっています。 <a href="%{sponsors_page}">スポンサーや一緒に働く方法について詳細を確認する</a>。
@@ -368,6 +368,7 @@ ja:
         key_is_html: あなたのAPIキーは%{key}です。
         link_text: Gemコマンド
         reset: APIキーをリセットする
+        reset_all:
         title: APIアクセス
       reset_password:
         title: パスワードのリセット

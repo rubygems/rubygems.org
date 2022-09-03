@@ -370,6 +370,7 @@ en:
         key_is_html: Your API key is %{key}.
         link_text: gem commands
         reset: Reset my API key
+        reset_all: Delete all scoped API keys
         title: API Access
       reset_password:
         title: Reset password

@@ -369,6 +369,7 @@ zh-CN:
         key_is_html: 你的 API Key：%{key}。
         link_text: Gem 命令
         reset: 重置 API Key
+        reset_all:
         title: API 访问
       reset_password:
         title: 重置密码

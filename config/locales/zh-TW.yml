@@ -370,6 +370,7 @@ zh-TW:
         key_is_html: 你的 API key 是 %{key}。
         link_text: Gem 指令
         reset: 重設 API key
+        reset_all:
         title: API 存取
       reset_password:
         title: 重設密碼

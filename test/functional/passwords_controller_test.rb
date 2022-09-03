@@ -100,6 +100,7 @@ class PasswordsControllerTest < ActionController::TestCase
     setup do
       @user = create(:user)
       @api_key = @user.api_key
+      @new_api_key = create(:api_key, user: @user)
       @old_encrypted_password = @user.encrypted_password
     end
 
@@ -172,6 +173,31 @@ class PasswordsControllerTest < ActionController::TestCase
       end
       should "change password" do
         refute_equal(@user.reload.encrypted_password, @old_encrypted_password)
+      end
+      should "not delete new api key" do
+        refute_predicate @new_api_key.reload, :destroyed?
+        refute_empty @user.reload.api_keys
+      end
+    end
+
+    context "with reset_api_key and reset_api_keys and valid password" do
+      setup do
+        put :update, params: {
+          user_id: @user.id,
+          token: @user.confirmation_token,
+          password_reset: { reset_api_key: "true", reset_api_keys: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
+        }
+      end
+
+      should respond_with :found
+      should "change api_key" do
+        refute_equal(@user.reload.api_key, @api_key)
+      end
+      should "change password" do
+        refute_equal(@user.reload.encrypted_password, @old_encrypted_password)
+      end
+      should "delete new api key" do
+        assert_empty @user.reload.api_keys
       end
     end
   end

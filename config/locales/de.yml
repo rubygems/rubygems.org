@@ -383,6 +383,7 @@ de:
         key_is_html: Dein API-Schlüssel ist %{key}.
         link_text: Gem-Befehle
         reset: Zurücksetzen meines API-Schlüssels
+        reset_all:
         title: API-Zugang
       reset_password:
         title: Zurücksetzen des Passworts
