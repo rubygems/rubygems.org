@@ -519,6 +519,24 @@ class RackAttackTest < ActionDispatch::IntegrationTest
           end
         end
 
+        should "throttle api key create at level #{level}" do
+          freeze_time do
+            exceed_exponential_limit_for("api/ip/#{level}", level)
+            get "/api/v1/api_key.json", headers: { REMOTE_ADDR: @ip_address }
+
+            assert_throttle_at(level)
+          end
+        end
+
+        should "throttle api key create by api key #{level}" do
+          freeze_time do
+            exceed_exponential_api_key_limit_for("api/key/#{level}", @user.display_id, level)
+            post "/api/v1/api_key.json", headers: { HTTP_AUTHORIZATION: @api_key }
+
+            assert_throttle_at(level)
+          end
+        end
+
         should "throttle mfa forgot password at level #{level}" do
           freeze_time do
             exceed_exponential_limit_for("clearance/ip/#{level}", level)
