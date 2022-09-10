@@ -332,6 +332,7 @@ ja:
       title:
       update:
       owner_heading:
+      owner_request_heading:
       push_heading:
   owners:
     confirm:
@@ -496,6 +497,7 @@ ja:
       description: 説明
       downloads: ダウンロード数
       updated: 更新日
+      yanked:
     show:
       subtitle: "%{query}の検索結果"
       month_update:

@@ -52,7 +52,7 @@ module RubygemsHelper
     return unless signed_in?
     style = "t-item--hidden" unless rubygem.subscribers.find_by_id(current_user.id)
 
-    link_to t(".links.unsubscribe"), rubygem_subscription_path(rubygem),
+    link_to t("rubygems.aside.links.unsubscribe"), rubygem_subscription_path(rubygem),
       class: [:toggler, "gem__link", "t-list__item", style], id: "unsubscribe",
       method: :delete, remote: true
   end

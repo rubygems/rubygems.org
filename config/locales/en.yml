@@ -334,6 +334,7 @@ en:
       title: Email notifications
       update: Update
       owner_heading: Ownership Notifications
+      owner_request_heading: Ownership Request Notifications
       push_heading: Push Notifications
   owners:
     confirm:
@@ -495,6 +496,7 @@ en:
       description: Description
       downloads: Downloads
       updated: Updated
+      yanked: Yanked
     show:
       subtitle: for %{query}
       month_update: Updated last month (%{count})

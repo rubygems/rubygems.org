@@ -345,6 +345,7 @@ de:
       title:
       update:
       owner_heading:
+      owner_request_heading:
       push_heading:
   owners:
     confirm:
@@ -507,6 +508,7 @@ de:
       description:
       downloads:
       updated:
+      yanked:
     show:
       subtitle: für %{query}
       month_update:
