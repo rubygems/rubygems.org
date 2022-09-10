@@ -147,6 +147,9 @@ class OwnershipCallsControllerTest < ActionController::TestCase
             patch :close, params: { rubygem_id: @rubygem.name }
           end
           should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+          should "set mfa_redirect_uri" do
+            assert_equal close_rubygem_ownership_calls_path, session[:mfa_redirect_uri]
+          end
         end
 
         context "on POST to create" do
@@ -154,6 +157,9 @@ class OwnershipCallsControllerTest < ActionController::TestCase
             post :create, params: { rubygem_id: @rubygem.name, note: "short note" }
           end
           should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+          should "set mfa_redirect_uri" do
+            assert_equal rubygem_ownership_calls_path, session[:mfa_redirect_uri]
+          end
         end
       end
 
@@ -177,6 +183,9 @@ class OwnershipCallsControllerTest < ActionController::TestCase
             patch :close, params: { rubygem_id: @rubygem.name }
           end
           should redirect_to("edit settings page") { edit_settings_path }
+          should "set mfa_redirect_uri" do
+            assert_equal close_rubygem_ownership_calls_path, session[:mfa_redirect_uri]
+          end
         end
 
         context "on POST to create" do
@@ -184,6 +193,9 @@ class OwnershipCallsControllerTest < ActionController::TestCase
             post :create, params: { rubygem_id: @rubygem.name, note: "short note" }
           end
           should redirect_to("edit settings page") { edit_settings_path }
+          should "set mfa_redirect_uri" do
+            assert_equal rubygem_ownership_calls_path, session[:mfa_redirect_uri]
+          end
         end
       end
 

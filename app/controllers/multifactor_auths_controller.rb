@@ -20,6 +20,8 @@ class MultifactorAuthsController < ApplicationController
       redirect_to edit_settings_url
     else
       flash[:success] = t(".success")
+      @continue_path = session.fetch("mfa_redirect_uri", edit_settings_path)
+      session.delete("mfa_redirect_uri")
       render :recovery
     end
   end
@@ -27,10 +29,12 @@ class MultifactorAuthsController < ApplicationController
   def update
     if current_user.otp_verified?(otp_param)
       handle_new_level_param
+      redirect_to session.fetch("mfa_redirect_uri", edit_settings_path)
+      session.delete("mfa_redirect_uri")
     else
       flash[:error] = t("multifactor_auths.incorrect_otp")
+      redirect_to edit_settings_path
     end
-    redirect_to edit_settings_url
   end
 
   private

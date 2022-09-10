@@ -263,24 +263,36 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           setup { post :create, params: { rubygem_id: @rubygem.name, note: "small note" } }
 
           should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+          should "set mfa_redirect_uri" do
+            assert_equal rubygem_ownership_requests_path, session[:mfa_redirect_uri]
+          end
         end
 
         context "PATCH to close_all" do
           setup { patch :close_all, params: { rubygem_id: @rubygem.name } }
 
           should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+          should "set mfa_redirect_uri" do
+            assert_equal close_all_rubygem_ownership_requests_path, session[:mfa_redirect_uri]
+          end
         end
 
         context "PATCH to update" do
           setup { patch :update, params: { rubygem_id: @rubygem.name, id: @ownership_request.id, status: "closed" } }
 
           should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+          should "set mfa_redirect_uri" do
+            assert_equal rubygem_ownership_request_path, session[:mfa_redirect_uri]
+          end
         end
 
         context "PUT to update" do
           setup { put :update, params: { rubygem_id: @rubygem.name, id: @ownership_request.id, status: "closed" } }
 
           should redirect_to("the setup mfa page") { new_multifactor_auth_path }
+          should "set mfa_redirect_uri" do
+            assert_equal rubygem_ownership_request_path, session[:mfa_redirect_uri]
+          end
         end
       end
 
@@ -293,6 +305,9 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           setup { post :create, params: { rubygem_id: @rubygem.name, note: "small note" } }
 
           should redirect_to("the edit settings page") { edit_settings_path }
+          should "set mfa_redirect_uri" do
+            assert_equal rubygem_ownership_requests_path, session[:mfa_redirect_uri]
+          end
         end
 
         context "PATCH to close_all" do
@@ -301,18 +316,27 @@ class OwnershipRequestsControllerTest < ActionController::TestCase
           end
 
           should redirect_to("the edit settings page") { edit_settings_path }
+          should "set mfa_redirect_uri" do
+            assert_equal close_all_rubygem_ownership_requests_path, session[:mfa_redirect_uri]
+          end
         end
 
         context "PATCH to update" do
           setup { patch :update, params: { rubygem_id: @rubygem.name, id: @ownership_request.id, status: "closed" } }
 
           should redirect_to("the edit settings page") { edit_settings_path }
+          should "set mfa_redirect_uri" do
+            assert_equal rubygem_ownership_request_path, session[:mfa_redirect_uri]
+          end
         end
 
         context "PUT to update" do
           setup { put :update, params: { rubygem_id: @rubygem.name, id: @ownership_request.id, status: "closed" } }
 
           should redirect_to("the edit settings page") { edit_settings_path }
+          should "set mfa_redirect_uri" do
+            assert_equal rubygem_ownership_request_path, session[:mfa_redirect_uri]
+          end
         end
       end
 
