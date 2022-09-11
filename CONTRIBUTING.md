@@ -64,8 +64,8 @@ Follow the instructions below on how to install Bundler and setup the database.
 
 #### Environment (OS X)
 
-* Use Ruby 3.0.x (`.ruby-version` is present and can be used)
-* Use Rubygems 3.2.31
+* Use Ruby 3.1.x (`.ruby-version` is present and can be used)
+* Use Rubygems 3.3.x
 * Install bundler: `gem install bundler`
 * Install Elasticsearch:
   * Pull Elasticsearch `7.10.1` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:7.10.1`
@@ -83,9 +83,8 @@ Follow the instructions below on how to install Bundler and setup the database.
 
 #### Environment (Linux - Debian/Ubuntu)
 
-* Use Ruby 3.0.x `apt-get install ruby3.0`
-  * Or install via [alternate methods](https://www.ruby-lang.org/en/downloads/)
-* Use Rubygems 3.2.31
+* Use Ruby 3.1.x ([how to install](https://www.ruby-lang.org/en/downloads/))
+* Use Rubygems 3.3.x
 * Install bundler: `gem install bundler`
 * Install Elasticsearch (see the docker installation instructions above):
   * Pull Elasticsearch `7.10.1` : `docker pull docker.elastic.co/elasticsearch/elasticsearch:7.10.1`
@@ -145,7 +144,7 @@ can try running:
 #### Importing gems into the database
 
 * Import gems into the database with Rake task.
-    `bundle exec rake gemcutter:import:process vendor/cache`
+    `bundle exec rake "gemcutter:import:process[vendor/cache]"`
     * _To import a small set of gems you can point the import process to any
         gems cache directory, like a very small `rvm` gemset for instance, or
 	specifying `GEM_PATH/cache` instead of `vendor/cache`._
@@ -156,7 +155,7 @@ can try running:
 
 * A good way to get some test data is to import from a local gem directory.
 `gem env` will tell you where rubygems stores your gems. Run
-`bundle exec rake gemcutter:import:process #{INSTALLATION_DIRECTORY}/cache`
+`bundle exec rake "gemcutter:import:process[#{INSTALLATION_DIRECTORY}/cache'"`
 
 * If you see "Processing 0 gems" you’ve probably specified the wrong
 directory. The proper directory will be full of .gem files.
@@ -181,7 +180,7 @@ application in a development environment, especially for performance-related iss
 ---
 
 When everything is set up, start the web server with `rails server` and browse to
-[localhost:3000](http://localhost:3000) or use [Pow](http://pow.cx)!
+[localhost:3000](http://localhost:3000)!
 
 Database Layout
 ---------------
