@@ -32,7 +32,7 @@ if [ -z "$KEEPDB" ]; then
   } >&3 2>&1
 fi
 
-echo "$0: Restarting Pow/Passenger"
+echo "$0: Restarting Unicorn"
 mkdir -p tmp
 touch tmp/restart.txt
 
