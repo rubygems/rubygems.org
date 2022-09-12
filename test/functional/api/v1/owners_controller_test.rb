@@ -181,7 +181,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should "add second user as unconfrimed owner" do
             assert_includes @rubygem.owners_including_unconfirmed, @second_user
-            assert_equal "#{@second_user.handle} was added as an unconfirmed owner. "\
+            assert_equal "#{@second_user.handle} was added as an unconfirmed owner. " \
                          "Ownership access will be enabled after the user clicks on the confirmation mail sent to their email.", @response.body
           end
 

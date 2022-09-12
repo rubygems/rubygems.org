@@ -115,7 +115,7 @@ module RubygemsHelper
   end
 
   def nice_date_for(time)
-    time.to_date.to_formatted_s(:long)
+    time.to_date.to_fs(:long)
   end
 
   def show_all_versions_link?(rubygem)

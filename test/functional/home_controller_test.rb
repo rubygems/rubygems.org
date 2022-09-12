@@ -15,8 +15,9 @@ class HomeControllerTest < ActionController::TestCase
   end
 
   should "on GET to index with non html accept header" do
+    @request.env["HTTP_ACCEPT"] = "image/gif, image/x-bitmap, image/jpeg, image/pjpeg"
+
     assert_raises(ActionController::UnknownFormat) do
-      @request.env["HTTP_ACCEPT"] = "image/gif, image/x-bitmap, image/jpeg, image/pjpeg"
       get :index
     end
   end

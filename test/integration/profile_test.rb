@@ -64,8 +64,8 @@ class ProfileTest < SystemTest
     click_button "Update"
 
     assert page.has_selector? "input[value='nick@example.com']"
-    assert page.has_selector? "#flash_notice", text: "You will receive "\
-                                                     "an email within the next few minutes. It contains instructions "\
+    assert page.has_selector? "#flash_notice", text: "You will receive " \
+                                                     "an email within the next few minutes. It contains instructions " \
                                                      "for confirming your new email address."
 
     link = last_email_link
@@ -117,8 +117,8 @@ class ProfileTest < SystemTest
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Confirm"
 
-    assert page.has_content? "Your account deletion request has been enqueued."\
-                             " We will send you a confirmation mail when your request has been processed."
+    assert page.has_content? "Your account deletion request has been enqueued. " \
+                             "We will send you a confirmation mail when your request has been processed."
   end
 
   test "deleting profile multiple times" do

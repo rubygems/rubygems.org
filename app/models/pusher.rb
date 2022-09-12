@@ -62,7 +62,7 @@ class Pusher
     @spec = package.spec
     @files = package.files
   rescue StandardError => e
-    notify <<-MSG.strip_heredoc, 422
+    notify <<~MSG, 422
       RubyGems.org cannot process this gem.
       Please try rebuilding it and installing it locally to make sure it's valid.
       Error:
@@ -161,7 +161,7 @@ class Pusher
 
   def notify_unauthorized
     if rubygem.unconfirmed_ownership?(user)
-      notify("You do not have permission to push to this gem. "\
+      notify("You do not have permission to push to this gem. " \
              "Please confirm the ownership by clicking on the confirmation link sent your email #{user.email}", 403)
     else
       notify("You do not have permission to push to this gem. Ask an owner to add you with: gem owner #{rubygem.name} --add #{user.email}", 403)

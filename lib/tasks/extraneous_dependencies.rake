@@ -69,7 +69,7 @@ namespace :extraneous_dependencies do
         end
 
         run_mis_match += 1
-        Rails.logger.info("[extraneous_dependencies:clean] spec and db run deps don't match "\
+        Rails.logger.info("[extraneous_dependencies:clean] spec and db run deps don't match " \
                           "for: #{version.full_name} spec: #{spec_run_deps} db: #{db_run_deps}")
       end
 
@@ -84,7 +84,7 @@ namespace :extraneous_dependencies do
         end
 
         dev_mis_match += 1
-        Rails.logger.info("[extraneous_dependencies:clean] spec and db dev deps don't match "\
+        Rails.logger.info("[extraneous_dependencies:clean] spec and db dev deps don't match " \
                           "for: #{version.full_name} spec: #{spec_dev_deps} db: #{db_dev_deps}")
       end
 
