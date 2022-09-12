@@ -131,6 +131,9 @@ Style/CustomSafeNavigationCop:
 Style/Documentation:
   Enabled: false
 
+Style/FetchEnvVar:
+  Enabled: false
+
 Style/StringLiterals:
   EnforcedStyle: double_quotes
   Exclude:
