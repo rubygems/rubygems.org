@@ -349,6 +349,7 @@ nl:
       title:
       update:
       owner_heading:
+      owner_request_heading:
       push_heading:
   owners:
     confirm:
@@ -511,6 +512,7 @@ nl:
       description:
       downloads:
       updated:
+      yanked:
     show:
       subtitle: voor %{query}
       month_update:
