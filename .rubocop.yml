@@ -18,10 +18,6 @@ AllCops:
 Rails:
   Enabled: true
 
-# TODO: Enable on rubocop 0.67.3
-Rails/ActiveRecordOverride:
-  Enabled: false
-
 Rails/SkipsModelValidations:
   Enabled: false
 
@@ -86,11 +82,6 @@ Metrics/ModuleLength:
 
 Metrics/PerceivedComplexity:
   Max: 10 # TODO: Lower to 7
-
-# TODO: Enable on rubocop 0.67.3
-Naming/RescuedExceptionsVariableName:
-  Exclude:
-    - app/jobs/notifier.rb
 
 Performance/RedundantMerge:
   Enabled: false
