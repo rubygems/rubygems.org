@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Secure ShellFish link</title>
+    <link rel="icon" href="/img/appicon.png">
+    <link rel="apple-touch-icon" href="/img/appicon.png">
+    <link href="/fonts/font.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <meta name="author" content="Anders Borum">
+    <meta name="apple-itunes-app" content="app-id=1336634154">
+</head>
+<body>
+<header>
+     <h2 style="word-wrap: break-word"><span id="title" >Secure ShellFish link</span> 
+	 <a id="copyToClipboard" title="Copy to clipboard" style="display: none;" href="javascript:copyToClipboard();"><img alt="clipboard" src="/img/clipboard.png" /></a></h2>
+</header>
+
+<section style="margin-left: 10px">
+    <div style="clear: left"></div>
+    <div class="frame wide-only" onclick="this.getElementsByTagName('video')[0].play()">
+        <video itemprop="video" muted="true" controls=""
+               webkit-playsinline="true" playsinline="true" poster="/img/ssh-link-poster.jpg">
+            <source src="/video/tmux-link.mp4" type="video/mp4">
+        </video>
+        <img src="/img/iPhone-frame.png" />
+    </div>
+    <p>
+        If you have Secure ShellFish
+        <a target="appstore" href="https://apps.apple.com/us/app/secure-shellfish/id1336634154?ls=1">installed</a>
+        and configured, this page can open a SSH terminal to <em id="server">SSH server</em><span id="extra"></span>, 
+        but link doesn't contain any authentication information.
+    </p>
+
+    <p>  <a id="deep" href="shellfish://">Open</a> terminal.</p>
+    
+    <p>  <a href="/">Secure ShellFish</a> is a SSH &amp; SFTP client for iPhone &amp; iPad.</p>
+        
+    <div class="frame narrow-only" onclick="this.getElementsByTagName('video')[0].play()">
+        <video itemprop="video" muted="true" controls=""
+               webkit-playsinline="true" playsinline="true" poster="/img/ssh-link-poster.jpg">
+            <source src="/video/tmux-link.mp4" type="video/mp4">
+        </video>
+        <img src="/img/iPhone-frame.png" />
+    </div>
+
+</section>
+
+<script>
+	function refresh() {
+	    var link = document.location.hash
+	    if(link.length >= 1) link = link.substr(1)
+		
+	    var anchor = document.getElementById("deep")
+	    if(anchor) anchor.href = "shellfish-terminal://" + link
+
+	    // grab tmux data if available
+	    var tmux = ""
+	    var match = /;[^@]+@/.exec(link)
+	    if(match) {
+	        var header = match[0];
+	        match = /;tmux=([^@;]*)/.exec(header)
+	        if(match) tmux = match[1]
+	    }
+
+	    // remove name and fingerprint from shown part of url as it 
+	    // distracts too much, and this is everything from ; to @
+	    link = link.replace(/;[^@]+@/, '@')
+
+	    var title = document.getElementById("title")
+	    if(title && link) {
+	        if(tmux.length == 0) {
+	            title.textContent = "ssh://" + link
+	        } else {
+	            var withoutDir = link.replace(/[/].*/, '')
+	            title.textContent = "ssh -t " + withoutDir + " tmux attach-session -t '" + tmux + "'"
+	        }
+
+			document.getElementById("copyToClipboard").style.display = ""
+	    }
+	    document.title = link
+
+	    var index = link.indexOf("/")
+	    if(index >= 0) {
+	        var server = document.getElementById("server")
+	        if(server) {
+	            server.textContent = link.substr(0, index)
+	            var extra = document.getElementById("extra")
+	            if(tmux.length > 0) {
+	                extra.textContent = " attaching to tmux session " + tmux
+	            }            
+	        }
+
+	        // show relative directories nicer
+	        var p = link.substr(index)
+	        if(p == "/~/") p = "home directory";
+			if(p.indexOf("/~/") == 0) {
+				p = p.substr(3)
+			}
+
+	        var path = document.getElementById("path")
+	        if(path) path.textContent = p
+	    }
+	}
+	
+    function copyToClipboard() {
+		const el = document.createElement('textarea')
+		el.value = document.getElementById("title").textContent
+		el.setAttribute('readonly', '')
+		el.style.position = 'absolute'
+		el.style.left = '-9999px'
+		document.body.appendChild(el)
+		el.select()
+		document.execCommand('copy')
+		document.body.removeChild(el)
+
+		document.getElementById("copyToClipboard").childNodes[0].style.transform = "scale(1.2)"
+		setTimeout(() => {
+			document.getElementById("copyToClipboard").childNodes[0].style.transform = "scale(1)"
+		}, 300);
+	};
+
+	refresh();
+	window.onhashchange = refresh;
+
+</script>
+<footer style="clear: both">
+    <div id="support">
+        <a class="contact" rel="me" href="https://twitter.com/ShellFishApp" target="twitter"><img src="/img/twitter.png" alt="Twitter"/></a>
+        <a class="contact" rel="me" href="/enable-js.html" id="email" title="email"><img src="/img/envelope.png" alt="Email"/></a>
+    </div>
+</footer>
+<script>
+    function rev(s) { return s.length <= 1 ? s : rev(s.substr(1)) + s.substr(0,1); }
+    var email = document.getElementById("email");
+    email.href = "mailto:" + rev("ppa.hsifllehseruces@sredna");
+</script>
+</body>
+</html>

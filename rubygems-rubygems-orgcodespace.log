@@ -1,0 +1,69 @@
+Oct 05 07:13:18: Testing with directory '/workspaces/rubygems.org'
+Oct 05 07:13:24: Read /workspaces/rubygems.org/.ruby-version to verify file downloads
+Oct 05 07:13:25: Connection test succeeded.
+Oct 05 07:14:23: Making rubygems-rubygems-org codespace available offline.
+Currently Zero KB of 22.6 MB downloaded.
+Oct 05 07:14:33: Pausing download at 28 KB of 22.6 MB as background time expired.
+Oct 05 07:15:05: Connected to ::1 to establish shell
+Oct 05 07:24:25: Terminal disconnected
+Oct 05 07:24:27: Connected to ::1 to establish shell
+Oct 05 07:26:35: Connected to ::1 to establish shell
+Oct 05 07:54:08: Connected to ::1 to establish shell
+Oct 05 07:55:11: Read /workspaces/rubygems.org/.ruby-version to verify file downloads
+Oct 05 07:57:35: Terminal disconnected
+Oct 05 07:58:00: Connected to ::1 to establish shell
+Oct 05 08:06:21 Error: Downloading sftp://rubygems-rubygems-org codespace/README.md failed: Error Domain=NSPOSIXErrorDomain Code=60 "Operation timed out" UserInfo={connection-error=true, NSLocalizedDescription=Unable to establish Secure Shell connection. Ensure a SSH server is running at port 61905.}
+Oct 05 08:06:21 Error: Unable to establish Secure Shell connection. Ensure a SSH server is running at port 61905.
+Oct 05 08:06:28 Error: Downloading sftp://rubygems-rubygems-org codespace/docker-compose.yml failed: Error Domain=NSPOSIXErrorDomain Code=60 "Operation timed out" UserInfo={connection-error=true, NSLocalizedDescription=Unable to establish Secure Shell connection. Ensure a SSH server is running at port 61908.}
+Oct 05 08:06:28 Error: Unable to establish Secure Shell connection. Ensure a SSH server is running at port 61908.
+Oct 05 08:06:35 Error: Downloading sftp://rubygems-rubygems-org codespace/CONTRIBUTING.md failed: Error Domain=NSPOSIXErrorDomain Code=60 "Operation timed out" UserInfo={NSLocalizedDescription=Unable to establish Secure Shell connection. Ensure a SSH server is running at port 61912., connection-error=true}
+Oct 05 08:06:35 Error: Unable to establish Secure Shell connection. Ensure a SSH server is running at port 61912.
+Oct 05 08:06:48 Error: Downloading sftp://rubygems-rubygems-org codespace/CODE_OF_CONDUCT.md failed: Error Domain=NSCocoaErrorDomain Code=3072 "Unable to download /workspaces/rubygems.org/CODE_OF_CONDUCT.md
+
+The operation was cancelled." UserInfo={NSUnderlyingError=0x105bce9c0 {Error Domain=NSCocoaErrorDomain Code=3072 "The operation was cancelled."}, NSLocalizedDescription=Unable to download /workspaces/rubygems.org/CODE_OF_CONDUCT.md
+
+The operation was cancelled.}
+Oct 05 08:06:48 Error: Unable to download /workspaces/rubygems.org/CODE_OF_CONDUCT.md
+
+The operation was cancelled.
+Oct 05 08:06:48 Error: Downloading sftp://rubygems-rubygems-org codespace/Gemfile.lock failed: Error Domain=NSCocoaErrorDomain Code=3072 "Unable to download /workspaces/rubygems.org/Gemfile.lock
+
+The operation was cancelled." UserInfo={NSLocalizedDescription=Unable to download /workspaces/rubygems.org/Gemfile.lock
+
+The operation was cancelled., NSUnderlyingError=0x105cc2ca0 {Error Domain=NSCocoaErrorDomain Code=3072 "The operation was cancelled."}}
+Oct 05 08:06:48 Error: Unable to download /workspaces/rubygems.org/Gemfile.lock
+
+The operation was cancelled.
+Oct 05 08:06:49 Error: Downloading sftp://rubygems-rubygems-org codespace/shipit.yml failed: Error Domain=SSH Code=0 "Unable to download /workspaces/rubygems.org/shipit.yml
+
+SFTP error 0" UserInfo={NSLocalizedDescription=Unable to download /workspaces/rubygems.org/shipit.yml
+
+SFTP error 0, NSUnderlyingError=0x105bd65d0 {Error Domain=SSH Code=0 "SFTP error 0" UserInfo={NSLocalizedDescription=SFTP error 0}}}
+Oct 05 08:06:49 Error: Unable to download /workspaces/rubygems.org/shipit.yml
+
+SFTP error 0
+Oct 05 08:06:49 Error: Downloading sftp://rubygems-rubygems-org codespace/SECURITY.md failed: Error Domain=SSH Code=0 "Unable to download /workspaces/rubygems.org/SECURITY.md
+
+SFTP error 0" UserInfo={NSUnderlyingError=0x105d8d150 {Error Domain=SSH Code=0 "SFTP error 0" UserInfo={NSLocalizedDescription=SFTP error 0}}, NSLocalizedDescription=Unable to download /workspaces/rubygems.org/SECURITY.md
+
+SFTP error 0}
+Oct 05 08:06:49 Error: Unable to download /workspaces/rubygems.org/SECURITY.md
+
+SFTP error 0
+Oct 05 08:10:07: Testing with directory '/workspaces/rubygems.org'
+Oct 05 08:10:12: Read /workspaces/rubygems.org/.ruby-version to verify file downloads
+Oct 05 08:10:13: Connection test succeeded.
+Oct 05 08:10:22 Error: Downloading sftp://rubygems-rubygems-org codespace/docker-compose.yml failed: Error Domain=NSPOSIXErrorDomain Code=60 "Operation timed out" UserInfo={connection-error=true, NSLocalizedDescription=Unable to establish Secure Shell connection. Ensure a SSH server is running at port 61930.}
+Oct 05 08:10:22 Error: Unable to establish Secure Shell connection. Ensure a SSH server is running at port 61930.
+Oct 05 08:10:28 Error: Downloading sftp://rubygems-rubygems-org codespace/shipit.yml failed: Error Domain=NSPOSIXErrorDomain Code=60 "Operation timed out" UserInfo={connection-error=true, NSLocalizedDescription=Unable to establish Secure Shell connection. Ensure a SSH server is running at port 61932.}
+Oct 05 08:10:28 Error: Unable to establish Secure Shell connection. Ensure a SSH server is running at port 61932.
+Oct 05 08:10:35 Error: Downloading sftp://rubygems-rubygems-org codespace/Gemfile.lock failed: Error Domain=NSPOSIXErrorDomain Code=60 "Operation timed out" UserInfo={NSLocalizedDescription=Unable to establish Secure Shell connection. Ensure a SSH server is running at port 61934., connection-error=true}
+Oct 05 08:10:35 Error: Unable to establish Secure Shell connection. Ensure a SSH server is running at port 61934.
+Oct 05 08:10:35 Error: startProvidingItem: file:///var/mobile/Containers/Shared/AppGroup/B60AE22F-6091-4AF7-82FF-BF5B9C7995A0/File%20Provider%20Storage/ShellFish/rubygems-rubygems-org%20codespace/Gemfile.lock failed: Error Domain=NSPOSIXErrorDomain Code=60 "Operation timed out" UserInfo={NSLocalizedDescription=Unable to establish Secure Shell connection. Ensure a SSH server is running at port 61934., connection-error=true}
+Oct 05 08:11:23 Error: Downloading sftp://rubygems-rubygems-org codespace/Gemfile.lock failed: Error Domain=NSPOSIXErrorDomain Code=60 "Operation timed out" UserInfo={connection-error=true, NSLocalizedDescription=Unable to establish Secure Shell connection. Ensure a SSH server is running at port 61942.}
+Oct 05 08:11:23 Error: Unable to establish Secure Shell connection. Ensure a SSH server is running at port 61942.
+Oct 05 08:11:23 Error: startProvidingItem: file:///var/mobile/Containers/Shared/AppGroup/B60AE22F-6091-4AF7-82FF-BF5B9C7995A0/File%20Provider%20Storage/ShellFish/rubygems-rubygems-org%20codespace/Gemfile.lock failed: Error Domain=NSPOSIXErrorDomain Code=60 "Operation timed out" UserInfo={connection-error=true, NSLocalizedDescription=Unable to establish Secure Shell connection. Ensure a SSH server is running at port 61942.}
+Oct 05 08:11:30 Error: Downloading sftp://rubygems-rubygems-org codespace/docker-compose.yml failed: Error Domain=NSPOSIXErrorDomain Code=60 "Operation timed out" UserInfo={NSLocalizedDescription=Unable to establish Secure Shell connection. Ensure a SSH server is running at port 61944., connection-error=true}
+Oct 05 08:11:30 Error: Unable to establish Secure Shell connection. Ensure a SSH server is running at port 61944.
+Oct 05 08:17:36: Terminal disconnected
+Oct 05 08:17:38: Connected to ::1 to establish shell
