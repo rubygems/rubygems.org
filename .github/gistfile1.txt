@@ -1,0 +1,2 @@
+- name: Get Gist
+  uses: andymckay/get-gist-action@0.1
