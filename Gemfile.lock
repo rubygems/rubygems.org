@@ -332,7 +332,7 @@ GEM
       thor (~> 1.0)
       zeitwerk (~> 2.5)
     rainbow (3.1.1)
-    raindrops (0.19.2)
+    raindrops (0.20.0)
     rake (13.0.6)
     rb-fsevent (0.11.0)
     rb-inotify (0.10.1)
@@ -443,7 +443,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.6)
     unicode-display_width (2.2.0)
-    unicorn (5.8.0)
+    unicorn (6.1.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
     unpwn (1.0.0)
