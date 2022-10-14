@@ -428,7 +428,7 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    statsd-instrument (2.3.5)
+    statsd-instrument (3.5.0)
     stringio (3.0.1)
     strscan (3.0.4)
     thor (1.2.1)
