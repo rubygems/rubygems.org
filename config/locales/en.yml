@@ -590,3 +590,6 @@ en:
     no_ownership_requests: Requests to join your project will show up here. No ownership requests for %{gem} yet.
     create_req: Create ownership request
     signin_to_create_html: Please <a href="https://rubygems.org/sign_in">sign in</a> to create an ownership request.
+  vulnerability:
+    one: "%{count} vulnerability"
+    other: "%{count} vulnerabilities"

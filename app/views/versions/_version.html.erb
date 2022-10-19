@@ -9,4 +9,8 @@
   <% if version.yanked? -%>
     <span class="gem__version__date"><%= t '.yanked' %></span>
   <% end -%>
+
+  <% if version.cve_count %>
+    <span style="color: red"><%= I18n.t(:vulnerability, count: version.cve_count) %></span>
+  <% end %>
 </li>
