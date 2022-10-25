@@ -11,13 +11,19 @@ vulnerabilities.each do |gem_name, cves|
 
   gem.versions.update_all(cve_count: 0, cves: '')
 
-  cves.each do |cve|
-    yaml = YAML.load_file("#{PATH}/gems/#{gem_name}/#{cve}")
-    patched_versions = yaml.dig("patched_versions") || []
-    unaffected_versions = yaml.dig("unaffected_versions")
+  gem.versions.find_each do |version|
+    gem_version = Gem::Version.new(version.number)
 
-    gem.versions.find_each do |version|
-      gem_version = Gem::Version.new(version.number)
+    cves_cache = {}
+
+    cves.each do |cve|
+      cve_file_path = "#{PATH}/gems/#{gem_name}/#{cve}"
+      yaml = cves_cache.fetch(cve_file_path) do
+        cves_cache[cve_file_path] = YAML.load_file(cve_file_path)
+      end
+
+      patched_versions = yaml.dig("patched_versions") || []
+      unaffected_versions = yaml.dig("unaffected_versions")
 
       unaffected = unaffected_versions&.any? do |unaffected_version|
         Gem::Requirement.new(unaffected_version.split(',')).satisfied_by?(gem_version)
@@ -34,9 +40,8 @@ vulnerabilities.each do |gem_name, cves|
       end
 
       version.cves = (version.cves.split(' / ') + [cve.gsub('.yml', '')]).join(' / ')
-
-      version.save(validate: false)
     end
+    version.save(validate: false)
   rescue Gem::Requirement::BadRequirementError => e
     puts "Error #{e.class} #{e.message}"
   end
