@@ -38,9 +38,8 @@ vulnerabilities.each do |gem_name, cves|
 
         if vulnerable
           version.cve_count += 1
+          version.cves = (version.cves.split(' / ') + [cve.gsub('.yml', '')]).join(' / ')
         end
-
-        version.cves = (version.cves.split(' / ') + [cve.gsub('.yml', '')]).join(' / ')
       end
       version.save(touch: false, validate: false)
     rescue Gem::Requirement::BadRequirementError => e
