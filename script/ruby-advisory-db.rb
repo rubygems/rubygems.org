@@ -12,12 +12,26 @@ vulnerabilities.each do |gem_name, cves|
   gem.versions.update_all(cve_count: 0)
 
   cves.each do |cve|
-    patched_versions = YAML.load_file("#{PATH}/gems/#{gem_name}/#{cve}").dig("patched_versions", -1)&.split(',')
+    yaml = YAML.load_file("#{PATH}/gems/#{gem_name}/#{cve}")
+    patched_versions = yaml.dig("patched_versions") || []
+    unaffected_versions = yaml.dig("unaffected_versions")
 
     gem.versions.each do |version|
-      version.cve_count += 1 if patched_versions.nil? || !Gem::Requirement.new(patched_versions).satisfied_by?(Gem::Version.new(version.number))
+      vulnerable = patched_versions.none? do |patched_version|
+        Gem::Requirement.new(patched_version.split(',')).satisfied_by?(Gem::Version.new(version.number))
+      end
 
-      version.save!(validate: false)
+      unaffected = unaffected_versions&.any? do |unaffected_version|
+        Gem::Requirement.new(unaffected_version.split(',')).satisfied_by?(Gem::Version.new(version.number))
+      end
+
+      if unaffected
+        next
+      elsif vulnerable
+        version.cve_count += 1
+      end
+
+      version.save(validate: false)
     end
   rescue Gem::Requirement::BadRequirementError => e
     puts "Error #{e.class} #{e.message}"
