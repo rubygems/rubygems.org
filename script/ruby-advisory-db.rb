@@ -11,38 +11,40 @@ vulnerabilities.each do |gem_name, cves|
 
   gem.versions.update_all(cve_count: 0, cves: '')
 
-  gem.versions.find_each do |version|
-    gem_version = Gem::Version.new(version.number)
+  Version.transaction do
+    gem.versions.find_each do |version|
+      gem_version = Gem::Version.new(version.number)
 
-    cves_cache = {}
+      cves_cache = {}
 
-    cves.each do |cve|
-      cve_file_path = "#{PATH}/gems/#{gem_name}/#{cve}"
-      yaml = cves_cache.fetch(cve_file_path) do
-        cves_cache[cve_file_path] = YAML.load_file(cve_file_path)
+      cves.each do |cve|
+        cve_file_path = "#{PATH}/gems/#{gem_name}/#{cve}"
+        yaml = cves_cache.fetch(cve_file_path) do
+          cves_cache[cve_file_path] = YAML.load_file(cve_file_path)
+        end
+
+        patched_versions = yaml.dig("patched_versions") || []
+        unaffected_versions = yaml.dig("unaffected_versions")
+
+        unaffected = unaffected_versions&.any? do |unaffected_version|
+          Gem::Requirement.new(unaffected_version.split(',')).satisfied_by?(gem_version)
+        end
+
+        next if unaffected
+
+        vulnerable = patched_versions.none? do |patched_version|
+          Gem::Requirement.new(patched_version.split(',')).satisfied_by?(gem_version)
+        end
+
+        if vulnerable
+          version.cve_count += 1
+        end
+
+        version.cves = (version.cves.split(' / ') + [cve.gsub('.yml', '')]).join(' / ')
       end
-
-      patched_versions = yaml.dig("patched_versions") || []
-      unaffected_versions = yaml.dig("unaffected_versions")
-
-      unaffected = unaffected_versions&.any? do |unaffected_version|
-        Gem::Requirement.new(unaffected_version.split(',')).satisfied_by?(gem_version)
-      end
-
-      next if unaffected
-
-      vulnerable = patched_versions.none? do |patched_version|
-        Gem::Requirement.new(patched_version.split(',')).satisfied_by?(gem_version)
-      end
-
-      if vulnerable
-        version.cve_count += 1
-      end
-
-      version.cves = (version.cves.split(' / ') + [cve.gsub('.yml', '')]).join(' / ')
+      version.save(touch: false, validate: false)
+    rescue Gem::Requirement::BadRequirementError => e
+      puts "Error #{e.class} #{e.message}"
     end
-    version.save(validate: false)
-  rescue Gem::Requirement::BadRequirementError => e
-    puts "Error #{e.class} #{e.message}"
   end
 end
