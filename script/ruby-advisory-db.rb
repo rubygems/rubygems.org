@@ -6,30 +6,34 @@ vulnerabilities = Dir['/home/ylecuyer/Projects/ruby-advisory-db/gems/**/*.yml']
 
 vulnerabilities.each do |gem_name, cves|
   puts gem_name
-  gem = Rubygem.where(name: gem_name).first
+  gem = Rubygem.includes(:versions).where(name: gem_name).first
   next unless gem
 
-  gem.versions.update_all(cve_count: 0)
+  gem.versions.update_all(cve_count: 0, cves: '')
 
   cves.each do |cve|
     yaml = YAML.load_file("#{PATH}/gems/#{gem_name}/#{cve}")
     patched_versions = yaml.dig("patched_versions") || []
     unaffected_versions = yaml.dig("unaffected_versions")
 
-    gem.versions.each do |version|
-      vulnerable = patched_versions.none? do |patched_version|
-        Gem::Requirement.new(patched_version.split(',')).satisfied_by?(Gem::Version.new(version.number))
-      end
+    gem.versions.find_each do |version|
+      gem_version = Gem::Version.new(version.number)
 
       unaffected = unaffected_versions&.any? do |unaffected_version|
-        Gem::Requirement.new(unaffected_version.split(',')).satisfied_by?(Gem::Version.new(version.number))
+        Gem::Requirement.new(unaffected_version.split(',')).satisfied_by?(gem_version)
       end
 
-      if unaffected
-        next
-      elsif vulnerable
+      next if unaffected
+
+      vulnerable = patched_versions.none? do |patched_version|
+        Gem::Requirement.new(patched_version.split(',')).satisfied_by?(gem_version)
+      end
+
+      if vulnerable
         version.cve_count += 1
       end
+
+      version.cves = (version.cves.split(' / ') + [cve.gsub('.yml', '')]).join(' / ')
 
       version.save(validate: false)
     end
