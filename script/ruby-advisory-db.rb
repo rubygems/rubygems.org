@@ -1,6 +1,15 @@
-PATH=File.expand_path("~/Projects/ruby-advisory-db")
+RUBY_ADVISORY_GIT = 'https://github.com/rubysec/ruby-advisory-db.git'
+CLONE_PATH = "/tmp/ruby-advisory-db/"
 
-vulnerabilities = Dir['/home/ylecuyer/Projects/ruby-advisory-db/gems/**/*.yml']
+if Dir.exists?(CLONE_PATH)
+  Dir.chdir(CLONE_PATH) do
+    system "git pull --quiet origin master"
+  end
+else
+  system "git clone --quiet #{RUBY_ADVISORY_GIT} #{CLONE_PATH}"
+end
+
+vulnerabilities = Dir["#{CLONE_PATH}/gems/**/*.yml"]
   .map { _1.split('/')[-2..] }
   .each_with_object({}) { |elt, hash| hash[elt[0]] ||= []; hash[elt[0]] << elt[1] }
 
@@ -16,7 +25,7 @@ vulnerabilities.each do |gem_name, cves|
       cves_cache = {}
 
       cves.each do |cve|
-        cve_file_path = "#{PATH}/gems/#{gem_name}/#{cve}"
+        cve_file_path = "#{CLONE_PATH}/gems/#{gem_name}/#{cve}"
         yaml = cves_cache.fetch(cve_file_path) do
           cves_cache[cve_file_path] = YAML.load_file(cve_file_path)
         end
