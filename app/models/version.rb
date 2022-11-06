@@ -7,6 +7,7 @@ class Version < ApplicationRecord
   has_many :dependencies, -> { order("rubygems.name ASC").includes(:rubygem) }, dependent: :destroy, inverse_of: "version"
   has_one :gem_download, inverse_of: :version, dependent: :destroy
   belongs_to :pusher, class_name: "User", inverse_of: false, optional: true
+  has_and_belongs_to_many :vulnerabilities
 
   before_validation :full_nameify!
   before_save :update_prerelease, if: :number_changed?

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_06_141755) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_06_141938) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "plpgsql"
@@ -268,6 +268,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_06_141755) do
     t.index ["pusher_id"], name: "index_versions_on_pusher_id"
     t.index ["rubygem_id", "number", "platform"], name: "index_versions_on_rubygem_id_and_number_and_platform", unique: true
     t.index ["rubygem_id"], name: "index_versions_on_rubygem_id"
+  end
+
+  create_table "versions_vulnerabilities", id: false, force: :cascade do |t|
+    t.bigint "version_id", null: false
+    t.bigint "vulnerability_id", null: false
+    t.index ["version_id", "vulnerability_id"], name: "index_versions_vulnerabilities"
   end
 
   create_table "vulnerabilities", force: :cascade do |t|
