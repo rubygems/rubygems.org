@@ -3,7 +3,7 @@ class CreateVulnerabilities < ActiveRecord::Migration[7.0]
     create_table :vulnerabilities do |t|
       t.string :identifier
       t.string :url
-      t.string :level
+      t.string :severity
       t.string :title
     end
   end

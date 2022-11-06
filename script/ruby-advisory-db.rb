@@ -38,7 +38,7 @@ vulnerabilities.each do |gem_name, cves|
           vulnerability = Vulnerability.where(identifier: cve.gsub('.yml', '')).first_or_create! do |vuln|
             vuln.url = yaml.dig('url')
             vuln.title = yaml.dig('title')
-            vuln.level = if cvss_v3 = yaml.dig('cvss_v3')
+            vuln.severity = if cvss_v3 = yaml.dig('cvss_v3')
               case cvss_v3
               when 0.1..3.9
                 :low

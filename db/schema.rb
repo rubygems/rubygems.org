@@ -279,7 +279,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_06_141938) do
   create_table "vulnerabilities", force: :cascade do |t|
     t.string "identifier"
     t.string "url"
-    t.string "level"
+    t.string "severity"
     t.string "title"
   end
 
