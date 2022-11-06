@@ -1,3 +1,27 @@
 .vulnerability a {
   color: red;
 }
+
+.cvss {
+  text-align: center;
+  min-height: 17px;
+  background-color: #b6b6b6;
+  color: white;
+  padding: 2px;
+}
+
+.cvss-low {
+  background-color: #21b803;
+}
+
+.cvss-medium {
+  background-color: #fbbc04;
+}
+
+.cvss-high {
+  background-color: #f66e0b;
+}
+
+.cvss-critical {
+  background-color: #f41907;
+}
