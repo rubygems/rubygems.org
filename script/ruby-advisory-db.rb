@@ -13,6 +13,8 @@ vulnerabilities = Dir["#{CLONE_PATH}/gems/**/*.yml"]
   .map { _1.split('/')[-2..] }
   .each_with_object({}) { |elt, hash| hash[elt[0]] ||= []; hash[elt[0]] << elt[1] }
 
+cves_cache = {}
+
 vulnerabilities.each do |gem_name, cves|
   puts gem_name
   gem = Rubygem.includes(:versions).where(name: gem_name).first
@@ -20,9 +22,9 @@ vulnerabilities.each do |gem_name, cves|
 
   Version.transaction do
     gem.versions.find_each do |version|
-      gem_version = Gem::Version.new(version.number)
+      version.vulnerabilities.clear
 
-      cves_cache = {}
+      gem_version = Gem::Version.new(version.number)
 
       cves.each do |cve|
         cve_file_path = "#{CLONE_PATH}/gems/#{gem_name}/#{cve}"
