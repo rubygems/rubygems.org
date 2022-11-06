@@ -12,4 +12,8 @@ class VersionsController < ApplicationController
     @adoption        = @rubygem.ownership_call
     render "rubygems/show"
   end
+
+  def vulnerabilities
+    @version = Version.joins(:rubygem).where(rubygems: { name: params[:rubygem_id] }, number: params[:version_id]).first
+  end
 end

@@ -1,0 +1,7 @@
+<% @title = t('.title', gem_name: @version.rubygem.name, gem_version: @version.number) %>
+<h3 class="t-list__heading"><%= t(:vulnerability, count: @version.vulnerabilities.count) %>:</h3>
+<div class="versions">
+  <ul class="t-list__items">
+    <%= render @version.vulnerabilities %>
+  </ul>
+</div>

@@ -11,6 +11,8 @@
   <% end -%>
 
   <% if version.vulnerabilities.count > 0 %>
-    <span style="color: red" title="<%= version.vulnerabilities.pluck(:identifier).join(' / ') %>"><%= I18n.t(:vulnerability, count: version.vulnerabilities.count) %></span>
+    <span class="vulnerability" title="<%= version.vulnerabilities.pluck(:identifier).join(' / ') %>">
+      <%= link_to I18n.t(:vulnerability, count: version.vulnerabilities.count), rubygem_version_vulnerabilities_path(version.rubygem.name, version.number) %>
+    </span>
   <% end %>
 </li>

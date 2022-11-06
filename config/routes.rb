@@ -164,6 +164,7 @@ Rails.application.routes.draw do
         constraints: { format: :js },
         defaults: { format: :js }
       resources :versions, only: %i[show index] do
+        get :vulnerabilities
         get '/dependencies', to: 'dependencies#show', constraints: { format: /json|html/ }
       end
       resources :reverse_dependencies, only: %i[index]

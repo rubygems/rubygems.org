@@ -534,6 +534,9 @@ en:
       imported_gem_version_notice: "This gem version was imported to RubyGems.org on %{import_date}. The date displayed was specified by the author in the gemspec."
     version:
       yanked: yanked
+    vulnerabilities:
+      title:
+        All vulnerabilities of %{gem_name} %{gem_version}
   will_paginate:
     next_label: Next
     page_gap: "…"
