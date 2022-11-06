@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_25_202151) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_06_141755) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "plpgsql"
@@ -256,8 +256,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_25_202151) do
     t.bigint "pusher_id"
     t.string "canonical_number"
     t.text "cert_chain"
-    t.integer "cve_count"
-    t.string "cves"
     t.index "lower((full_name)::text)", name: "index_versions_on_lower_full_name"
     t.index ["built_at"], name: "index_versions_on_built_at"
     t.index ["created_at"], name: "index_versions_on_created_at"
@@ -270,6 +268,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_25_202151) do
     t.index ["pusher_id"], name: "index_versions_on_pusher_id"
     t.index ["rubygem_id", "number", "platform"], name: "index_versions_on_rubygem_id_and_number_and_platform", unique: true
     t.index ["rubygem_id"], name: "index_versions_on_rubygem_id"
+  end
+
+  create_table "vulnerabilities", force: :cascade do |t|
+    t.string "identifier"
+    t.string "url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "web_hooks", id: :serial, force: :cascade do |t|
