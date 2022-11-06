@@ -30,7 +30,7 @@
         <div class="versions">
           <h3 class="t-list__heading"><%= t '.versions_header' %>:</h3>
           <ol class="gem__versions t-list__items">
-            <%= render @versions %>
+            <%= render @versions, vulnerabilities: :summary %>
           </ol>
           <% if show_all_versions_link?(@rubygem) %>
             <%= link_to t('.show_all_versions', :count => @rubygem.versions.count), rubygem_versions_url(@rubygem), :class => "gem__see-all-versions t-link--gray t-link--has-arrow" %>

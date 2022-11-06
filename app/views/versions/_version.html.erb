@@ -10,9 +10,16 @@
     <span class="gem__version__date"><%= t '.yanked' %></span>
   <% end -%>
 
+  <% vulnerabilities ||= :detailed %>
   <% if version.vulnerabilities.count > 0 %>
-    <span class="vulnerability" title="<%= version.vulnerabilities.pluck(:identifier).join(' / ') %>">
-      <%= link_to I18n.t(:vulnerability, count: version.vulnerabilities.count), rubygem_version_vulnerabilities_path(version.rubygem.name, version.number) %>
-    </span>
+      <% if vulnerabilities == :summary %>
+        <span class="vulnerability" title="<%= t(:vulnerability, count: version.vulnerabilities.count) %>">
+          <%= link_to '', rubygem_version_vulnerabilities_path(version.rubygem.name, version.number), data: { icon: '⚠'} %>
+        </span>
+      <% else %>
+        <span class="vulnerability" title="<%= version.vulnerabilities.pluck(:identifier).join(' / ') %>">
+          <%= link_to I18n.t(:vulnerability, count: version.vulnerabilities.count), rubygem_version_vulnerabilities_path(version.rubygem.name, version.number) %>
+        </span>
+      <% end %>
   <% end %>
 </li>
