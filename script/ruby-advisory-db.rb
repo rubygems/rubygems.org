@@ -9,8 +9,6 @@ vulnerabilities.each do |gem_name, cves|
   gem = Rubygem.includes(:versions).where(name: gem_name).first
   next unless gem
 
-  gem.versions.update_all(cve_count: 0, cves: '')
-
   Version.transaction do
     gem.versions.find_each do |version|
       gem_version = Gem::Version.new(version.number)
@@ -37,11 +35,12 @@ vulnerabilities.each do |gem_name, cves|
         end
 
         if vulnerable
-          version.cve_count += 1
-          version.cves = (version.cves.split(' / ') + [cve.gsub('.yml', '')]).join(' / ')
+          vulnerability = Vulnerability.where(identifier: cve.gsub('.yml', '')).first_or_create! do |vuln|
+            vuln.url = yaml.dig('url')
+          end
+          version.vulnerabilities << vulnerability
         end
       end
-      version.save(touch: false, validate: false)
     rescue Gem::Requirement::BadRequirementError => e
       puts "Error #{e.class} #{e.message}"
     end
