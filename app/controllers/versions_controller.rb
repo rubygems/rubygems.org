@@ -2,7 +2,7 @@ class VersionsController < ApplicationController
   before_action :find_rubygem
 
   def index
-    @versions = @rubygem.versions.by_position
+    @versions = @rubygem.versions.with_cve_count.by_position
   end
 
   def show

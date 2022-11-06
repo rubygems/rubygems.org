@@ -23,7 +23,7 @@ class RubygemsController < ApplicationController
     if @reserved_gem
       render "reserved"
     else
-      @versions = @rubygem.public_versions(5)
+      @versions = @rubygem.public_versions(5).with_cve_count
       @adoption = @rubygem.ownership_call
       if @versions.to_a.any?
         render "show"
