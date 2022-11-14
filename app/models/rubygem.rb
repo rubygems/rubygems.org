@@ -120,7 +120,7 @@ class Rubygem < ApplicationRecord
   end
 
   def public_versions_with_extra_version(extra_version)
-    versions = public_versions(5).to_a
+    versions = public_versions(5).with_cve_count.to_a
     versions << extra_version
     versions.uniq.sort_by(&:position)
   end

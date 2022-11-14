@@ -103,6 +103,12 @@ class Version < ApplicationRecord
     select('COUNT(vulnerabilities.identifier) AS cve_count, versions.*').left_joins(:vulnerabilities).group('versions.id')
   end
 
+  def cve_count
+    attributes.fetch("cve_count") do
+      vulnerabilities.count
+    end
+  end
+
   def self.by_created_at
     order(created_at: :desc)
   end
