@@ -10,6 +10,7 @@ gem "clearance"
 gem "dalli"
 gem "delayed_job"
 gem "delayed_job_active_record"
+gem 'delayed_cron_job'
 gem "gravtastic"
 gem "high_voltage"
 gem "honeybadger"

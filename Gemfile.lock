@@ -130,6 +130,8 @@ GEM
     css_parser (1.11.0)
       addressable
     dalli (3.2.3)
+    delayed_cron_job (0.9.0)
+      fugit (>= 1.5)
     delayed_job (4.1.11)
       activesupport (>= 3.0, < 8.0)
     delayed_job_active_record (4.1.7)
@@ -156,6 +158,8 @@ GEM
     email_validator (2.2.3)
       activemodel
     erubi (1.11.0)
+    et-orbi (1.2.7)
+      tzinfo
     execjs (2.8.1)
     factory_bot (6.2.0)
       activesupport (>= 5.0.0)
@@ -192,6 +196,9 @@ GEM
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
+    fugit (1.7.2)
+      et-orbi (~> 1, >= 1.2.7)
+      raabro (~> 1.4)
     globalid (1.0.0)
       activesupport (>= 5.0)
     gravtastic (3.2.6)
@@ -290,6 +297,7 @@ GEM
       stringio
     public_suffix (5.0.0)
     pwned (2.3.0)
+    raabro (1.4.0)
     racc (1.6.0)
     rack (2.2.4)
     rack-attack (6.6.1)
@@ -480,6 +488,7 @@ DEPENDENCIES
   clearance
   compact_index (~> 0.14.0)
   dalli
+  delayed_cron_job
   delayed_job
   delayed_job_active_record
   elasticsearch (~> 7.10.1)

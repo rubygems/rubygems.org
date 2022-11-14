@@ -5,6 +5,11 @@ class CveUpdater
   def initialize
   end
 
+
+  def max_run_time
+    0 # no timeout
+  end
+
   def perform
     pull_ruby_avisory_db
 
