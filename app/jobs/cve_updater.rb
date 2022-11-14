@@ -14,7 +14,7 @@ class CveUpdater
     pull_ruby_avisory_db
 
     vulnerabilities_from_ruby_advisory_db.each do |gem_name, cve_names|
-      puts gem_name
+      Delayed::Worker.logger.debug "Processing cves for #{gem_name}"
       gem = Rubygem.includes(:versions).where(name: gem_name).first
       next unless gem
 
@@ -72,7 +72,7 @@ class CveUpdater
             end
           end
         rescue Gem::Requirement::BadRequirementError => e
-          puts "Error #{e.class} #{e.message}"
+          Delayed::Worker.logger.error "Error #{e.class} #{e.message}"
         end
       end
     end
@@ -82,10 +82,12 @@ class CveUpdater
 
   def pull_ruby_avisory_db
     if Dir.exists?(CLONE_PATH)
+      Delayed::Worker.logger.info "Pulling ruby advisory-db"
       Dir.chdir(CLONE_PATH) do
         system "git pull --quiet origin master"
       end
     else
+      Delayed::Worker.logger.info "Cloning ruby advisory-db"
       system "git clone --quiet #{RUBY_ADVISORY_GIT} #{CLONE_PATH}"
     end
   end
