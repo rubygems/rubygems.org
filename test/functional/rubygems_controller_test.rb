@@ -332,9 +332,9 @@ class RubygemsControllerTest < ActionController::TestCase
     end
 
     should respond_with :success
-    should "show only dependencies that have rubygem" do
+    should "show dependencies that have rubygem with version" do
       assert page.has_content?(@runtime.rubygem.name)
-      assert page.has_no_content?("1.2.0")
+      assert page.has_content?("1.2.0")
     end
   end
 
