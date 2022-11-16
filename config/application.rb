@@ -53,6 +53,8 @@ module Gemcutter
 
     config.eager_load_paths << Rails.root.join("lib")
     config.toxic_domains_filepath = Rails.root.join("vendor", "toxic_domains_whole.txt")
+
+    config.active_job.queue_adapter = :delayed_job
   end
 
   def self.config
