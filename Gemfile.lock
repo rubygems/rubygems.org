@@ -236,7 +236,7 @@ GEM
     loofah (2.19.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
-    m (1.6.0)
+    m (1.6.1)
       method_source (>= 0.6.7)
       rake (>= 0.9.2.2)
     mail (2.7.1)
