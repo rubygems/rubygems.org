@@ -7,12 +7,44 @@ class SessionsController < Clearance::SessionsController
   def create
     @user = find_user
 
-    if @user&.mfa_enabled?
-      session[:mfa_user] = @user.id
-      render "sessions/otp_prompt"
+    if @user && (@user.mfa_enabled? || @user.webauthn_credentials.any?)
+      setup_webauthn_authentication
+      setup_mfa_authentication
+
+      render "sessions/prompt"
     else
       do_login
     end
+  end
+
+  def webauthn_create
+    @user = User.find(session.dig(:webauthn_authentication, "user"))
+    @challenge = session.dig(:webauthn_authentication, "challenge")
+
+    if params[:credentials].blank?
+      login_failure("Credentials required")
+      return
+    end
+
+    @credential = WebAuthn::Credential.from_get(params[:credentials])
+
+    @webauthn_credential = @user.webauthn_credentials.find_by(
+      external_id: @credential.id
+    )
+
+    @credential.verify(
+      @challenge,
+      public_key: @webauthn_credential.public_key,
+      sign_count: @webauthn_credential.sign_count
+    )
+
+    @webauthn_credential.update!(sign_count: @credential.sign_count)
+
+    do_login
+  rescue WebAuthn::Error => e
+    login_failure(e.message)
+  ensure
+    session.delete(:webauthn_authentication)
   end
 
   def mfa_create
@@ -63,8 +95,15 @@ class SessionsController < Clearance::SessionsController
 
   def login_failure(message)
     StatsD.increment "login.failure"
-    flash.now.notice = message
-    render template: "sessions/new", status: :unauthorized
+    respond_to do |format|
+      format.json do
+        render json: { message: message }, status: :unauthorized
+      end
+      format.html do
+        flash.now.notice = message
+        render template: "sessions/new", status: :unauthorized
+      end
+    end
   end
 
   def session_params
@@ -99,5 +138,21 @@ class SessionsController < Clearance::SessionsController
 
     flash.now.alert = t(".account_blocked")
     render template: "sessions/new", status: :unauthorized
+  end
+
+  def setup_webauthn_authentication
+    return if @user.webauthn_credentials.none?
+
+    @webauthn_options = @user.webauthn_options_for_get
+
+    session[:webauthn_authentication] = {
+      "challenge" => @webauthn_options.challenge,
+      "user" => @user.id
+    }
+  end
+
+  def setup_mfa_authentication
+    return if @user.mfa_disabled?
+    session[:mfa_user] = @user.id
   end
 end

@@ -71,8 +71,10 @@ class SignInTest < SystemTest
 
     assert page.has_content? "Multi-factor authentication"
 
-    fill_in "OTP code", with: ROTP::TOTP.new("thisisonemfaseed").now
-    click_button "Sign in"
+    within(".mfa-form") do
+      fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonemfaseed").now
+      click_button "Verify code"
+    end
 
     assert page.has_content? "Sign out"
   end
@@ -85,8 +87,10 @@ class SignInTest < SystemTest
 
     assert page.has_content? "Multi-factor authentication"
 
-    fill_in "OTP code", with: "11111"
-    click_button "Sign in"
+    within(".mfa-form") do
+      fill_in "OTP or recovery code", with: "11111"
+      click_button "Verify code"
+    end
 
     assert page.has_content? "Sign in"
   end
@@ -99,8 +103,10 @@ class SignInTest < SystemTest
 
     assert page.has_content? "Multi-factor authentication"
 
-    fill_in "OTP code", with: "0123456789ab"
-    click_button "Sign in"
+    within(".mfa-form") do
+      fill_in "OTP or recovery code", with: "0123456789ab"
+      click_button "Verify code"
+    end
 
     assert page.has_content? "Sign out"
   end
@@ -113,8 +119,10 @@ class SignInTest < SystemTest
 
     assert page.has_content? "Multi-factor authentication"
 
-    fill_in "OTP code", with: "ab0123456789"
-    click_button "Sign in"
+    within(".mfa-form") do
+      fill_in "OTP or recovery code", with: "ab0123456789"
+      click_button "Verify code"
+    end
 
     assert page.has_content? "Sign in"
   end
@@ -154,8 +162,10 @@ class SignInTest < SystemTest
 
     assert page.has_content? "Multi-factor authentication"
 
-    fill_in "OTP code", with: "0123456789ab"
-    click_button "Sign in"
+    within(".mfa-form") do
+      fill_in "OTP or recovery code", with: "0123456789ab"
+      click_button "Verify code"
+    end
 
     expected_notice = "For protection of your account and your gems, we encourage you to change your MFA level " \
                       "to \"UI and gem signin\" or \"UI and API\". Your account will be required to have MFA enabled " \
@@ -180,9 +190,10 @@ class SignInTest < SystemTest
     click_button "Sign in"
 
     assert page.has_content? "Multi-factor authentication"
-
-    fill_in "OTP code", with: "0123456789ab"
-    click_button "Sign in"
+    within(".mfa-form") do
+      fill_in "OTP or recovery code", with: "0123456789ab"
+      click_button "Verify code"
+    end
 
     assert_current_path(dashboard_path)
     refute page.has_selector? "#flash_notice"
@@ -204,9 +215,10 @@ class SignInTest < SystemTest
     click_button "Sign in"
 
     assert page.has_content? "Multi-factor authentication"
-
-    fill_in "OTP code", with: "0123456789ab"
-    click_button "Sign in"
+    within(".mfa-form") do
+      fill_in "OTP or recovery code", with: "0123456789ab"
+      click_button "Verify code"
+    end
 
     assert_current_path(dashboard_path)
     refute page.has_selector? "#flash_notice"
@@ -223,11 +235,35 @@ class SignInTest < SystemTest
 
     assert page.has_content? "Multi-factor authentication"
 
-    fill_in "OTP code", with: ROTP::TOTP.new("thisisonemfaseed").now
-    click_button "Sign in"
+    within(".mfa-form") do
+      fill_in "OTP or recovery code", with: ROTP::TOTP.new("thisisonemfaseed").now
+      click_button "Verify code"
+    end
 
     assert page.has_content? "john@example.com"
     assert page.has_content? "Sign out"
+  end
+
+  test "sign in with webauthn" do
+    create_webauthn_credential
+
+    visit sign_in_path
+
+    fill_in "Email or Username", with: @user.email
+    fill_in "Password", with: @user.password
+    click_button "Sign in"
+
+    assert page.has_content? "Multi-factor authentication"
+    assert page.has_content? "Security Device"
+
+    WebAuthn::AuthenticatorAssertionResponse.any_instance.stubs(:verify).returns true
+
+    click_on "Authenticate with security device"
+
+    assert page.has_content? "Dashboard"
+
+    # Cleanup test data
+    @authenticator.remove!
   end
 
   test "signing out" do
@@ -263,5 +299,33 @@ class SignInTest < SystemTest
 
     assert page.has_content? "Sign in"
     assert page.has_content? "Your account was blocked by rubygems team. Please email support@rubygems.org to recover your account."
+  end
+
+  def create_webauthn_credential
+    fullscreen_headless_chrome_driver
+
+    visit sign_in_path
+    fill_in "Email or Username", with: @user.reload.email
+    fill_in "Password", with: @user.password
+    click_button "Sign in"
+    visit edit_settings_path
+
+    options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new
+    @authenticator = page.driver.browser.add_virtual_authenticator(options)
+    WebAuthn::PublicKeyCredentialWithAttestation.any_instance.stubs(:verify).returns true
+
+    credential_nickname = "new cred"
+    fill_in "Nickname", with: credential_nickname
+    click_on "Register device"
+
+    find("div", text: credential_nickname, match: :first)
+
+    find(:css, ".header__popup-link").click
+    click_on "Sign out"
+  end
+
+  teardown do
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
   end
 end

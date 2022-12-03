@@ -325,6 +325,7 @@ de:
       qrcode_expired:
       success:
     recovery:
+      copied:
       continue:
       title:
       copy:
@@ -376,6 +377,11 @@ de:
   settings:
     edit:
       title:
+      webauthn_credentials:
+      no_webauthn_credentials:
+      webauthn_credential_note:
+      webauthn_warning:
+      otp_code:
       api_access:
         confirm_reset: Sind Sie sicher? Das kann nicht rückgängig gemacht werden.
         credentials_html: 'Wenn du %{gem_commands_link} über das Terminal oder über
@@ -390,6 +396,7 @@ de:
         title: Zurücksetzen des Passworts
       mfa:
         multifactor_auth:
+        otp:
         disabled_html:
         go_settings:
         enabled_html:
@@ -526,6 +533,13 @@ de:
       notice:
     create:
       account_blocked:
+    prompt:
+      webauthn_credential_note:
+      sign_in_with_webauthn_credential:
+      otp_code:
+      otp_or_recovery:
+      security_device:
+      verify_code:
   stats:
     index:
       title:
@@ -603,3 +617,20 @@ de:
     no_ownership_requests:
     create_req:
     signin_to_create_html:
+  webauthn_credentials:
+    recovery:
+      continue:
+      title:
+      notice_html:
+      copied:
+      copy:
+      saved:
+    webauthn_credential:
+      confirm_delete:
+      delete_failed:
+      delete:
+      saved:
+    form:
+      new_device:
+      nickname:
+      submit:

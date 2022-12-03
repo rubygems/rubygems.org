@@ -329,6 +329,7 @@ nl:
       qrcode_expired:
       success:
     recovery:
+      copied:
       continue:
       title:
       copy:
@@ -380,6 +381,11 @@ nl:
   settings:
     edit:
       title:
+      webauthn_credentials:
+      no_webauthn_credentials:
+      webauthn_credential_note:
+      webauthn_warning:
+      otp_code:
       api_access:
         confirm_reset: Weet je het zeker? Dit kan niet ongedaan worden gemaakt.
         credentials_html: 'Als je de %{gem_commands_link} vanaf de command-line wilt
@@ -394,6 +400,7 @@ nl:
         title: Reset wachtwoord
       mfa:
         multifactor_auth:
+        otp:
         disabled_html:
         go_settings:
         enabled_html:
@@ -530,6 +537,13 @@ nl:
       notice:
     create:
       account_blocked:
+    prompt:
+      webauthn_credential_note:
+      sign_in_with_webauthn_credential:
+      otp_code:
+      otp_or_recovery:
+      security_device:
+      verify_code:
   stats:
     index:
       title:
@@ -606,3 +620,20 @@ nl:
     no_ownership_requests:
     create_req:
     signin_to_create_html:
+  webauthn_credentials:
+    recovery:
+      continue:
+      title:
+      notice_html:
+      copied:
+      copy:
+      saved:
+    webauthn_credential:
+      confirm_delete:
+      delete_failed:
+      delete:
+      saved:
+    form:
+      new_device:
+      nickname:
+      submit:

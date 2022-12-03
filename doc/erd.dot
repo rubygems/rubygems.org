@@ -198,6 +198,7 @@ m_User [label = <<table border="0" align="center" cellspacing="0.5" cellpadding=
   <tr><td align="left" width="130" port="token_expires_at">token_expires_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="twitter_username">twitter_username <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="unconfirmed_email">unconfirmed_email <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="webauthn_id">webauthn_id <font face="Arial Italic" color="grey60">string</font></td></tr>
 </table>
 >];
 "m_User::WithPrivateFields" [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
@@ -225,6 +226,7 @@ m_User [label = <<table border="0" align="center" cellspacing="0.5" cellpadding=
   <tr><td align="left" width="130" port="token_expires_at">token_expires_at <font face="Arial Italic" color="grey60">datetime (6,0)</font></td></tr>
   <tr><td align="left" width="130" port="twitter_username">twitter_username <font face="Arial Italic" color="grey60">string</font></td></tr>
   <tr><td align="left" width="130" port="unconfirmed_email">unconfirmed_email <font face="Arial Italic" color="grey60">string</font></td></tr>
+  <tr><td align="left" width="130" port="webauthn_id">webauthn_id <font face="Arial Italic" color="grey60">string</font></td></tr>
 </table>
 >];
 m_Version [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
@@ -266,6 +268,18 @@ m_WebHook [label = <<table border="0" align="center" cellspacing="0.5" cellpaddi
   <tr><td align="left" width="130" port="url">url <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
 </table>
 >];
+m_WebauthnCredential [label = <<table border="0" align="center" cellspacing="0.5" cellpadding="0" width="134">
+  <tr><td align="center" valign="bottom" width="130"><font face="Arial Bold" point-size="11">WebauthnCredential</font></td></tr>
+</table>
+|
+<table border="0" align="left" cellspacing="2" cellpadding="0" width="134">
+  <tr><td align="left" width="130" port="external_id">external_id <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
+  <tr><td align="left" width="130" port="nickname">nickname <font face="Arial Italic" color="grey60">string ∗ U</font></td></tr>
+  <tr><td align="left" width="130" port="public_key">public_key <font face="Arial Italic" color="grey60">string ∗</font></td></tr>
+  <tr><td align="left" width="130" port="sign_count">sign_count <font face="Arial Italic" color="grey60">integer (8) ∗</font></td></tr>
+</table>
+>];
+  m_User -> m_WebauthnCredential [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_User -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "3"];
   m_Rubygem -> m_WebHook [arrowhead = "normal", arrowtail = "none", weight = "2"];
   m_Rubygem -> m_Version [arrowhead = "normal", arrowtail = "none", weight = "3"];

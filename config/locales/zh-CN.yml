@@ -312,6 +312,7 @@ zh-CN:
       qrcode_expired: 二维码和密钥已过期。请再重新注册装置。
       success: 你已成功启用多重要素验证。
     recovery:
+      copied:
       continue: 继续
       title: 复原码
       copy:
@@ -363,6 +364,11 @@ zh-CN:
   settings:
     edit:
       title:
+      webauthn_credentials:
+      no_webauthn_credentials:
+      webauthn_credential_note:
+      webauthn_warning:
+      otp_code:
       api_access:
         confirm_reset: 确定要重置吗？此动作执行后将无法撤销
         credentials_html: 如果你希望在命令行中使用 %{gem_commands_link}，你需要一个 %{gem_credentials_file}
@@ -376,6 +382,7 @@ zh-CN:
         title: 重置密码
       mfa:
         multifactor_auth: 多重要素验证
+        otp:
         disabled_html:
         go_settings: 注册新装置
         enabled_html:
@@ -512,6 +519,13 @@ zh-CN:
       notice:
     create:
       account_blocked:
+    prompt:
+      webauthn_credential_note:
+      sign_in_with_webauthn_credential:
+      otp_code:
+      otp_or_recovery:
+      security_device:
+      verify_code:
   stats:
     index:
       title:
@@ -589,3 +603,20 @@ zh-CN:
     no_ownership_requests:
     create_req:
     signin_to_create_html:
+  webauthn_credentials:
+    recovery:
+      continue:
+      title:
+      notice_html:
+      copied:
+      copy:
+      saved:
+    webauthn_credential:
+      confirm_delete:
+      delete_failed:
+      delete:
+      saved:
+    form:
+      new_device:
+      nickname:
+      submit:
