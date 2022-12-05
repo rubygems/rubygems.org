@@ -400,18 +400,40 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       setup do
         @api_key = create(:api_key, user: @user, key: "12345", push_rubygem: true)
         authorize_with("#{@user.email}:#{@user.password}")
-        put :update, params: { api_key: "12345", index_rubygems: "true", mfa: "true" }
-        @api_key.reload
       end
 
-      should respond_with :success
-      should "keep current scope enabled and update scope in params" do
-        assert_predicate @api_key, :can_index_rubygems?
-        assert_predicate @api_key, :can_push_rubygem?
+      context "on successful save" do
+        setup do
+          put :update, params: { api_key: "12345", index_rubygems: "true", mfa: "true" }
+          @api_key.reload
+        end
+
+        should respond_with :success
+        should "keep current scope enabled and update scope in params" do
+          assert_predicate @api_key, :can_index_rubygems?
+          assert_predicate @api_key, :can_push_rubygem?
+        end
+
+        should "update MFA" do
+          assert @api_key.mfa
+        end
       end
 
-      should "update MFA" do
-        assert @api_key.mfa
+      context "on unsucessful save" do
+        setup do
+          put :update, params: { api_key: "12345", push_rubygem: "true", show_dashboard: "true" }
+          @api_key.reload
+        end
+
+        should respond_with :unprocessable_entity
+        should "not update api key" do
+          refute_predicate @api_key, :can_show_dashboard?
+        end
+
+        should "respond with error message" do
+          error = "Failed to update scopes for the API key ci-key: [\"Show dashboard scope must be enabled exclusively\"]"
+          assert_equal @response.body, error
+        end
       end
     end
 
