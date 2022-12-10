@@ -193,7 +193,6 @@ GEM
       rake
     globalid (1.0.0)
       activesupport (>= 5.0)
-    gravtastic (3.2.6)
     hashie (4.1.0)
     high_voltage (3.1.2)
     honeybadger (5.0.2)
@@ -491,7 +490,6 @@ DEPENDENCIES
   elasticsearch-transport (~> 7.10.1)
   factory_bot_rails
   faraday_middleware-aws-sigv4 (~> 0.3)
-  gravtastic
   high_voltage
   honeybadger
   http_accept_language

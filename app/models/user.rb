@@ -1,8 +1,6 @@
 class User < ApplicationRecord
   include UserMultifactorMethods
   include Clearance::User
-  include Gravtastic
-  is_gravtastic default: "retro"
 
   PERMITTED_ATTRS = %i[
     bio
