@@ -1,6 +1,12 @@
 class Gravatar
   GRAVATAR_ENDPOINT = 'https://www.gravatar.com/avatar/'.freeze
 
+  # A bogus Gravatar ID we can use to avoid leaking the email hash
+  # of users that prefer to not have their emails disclosed.
+  #
+  # @see https://en.gravatar.com/site/implement/images/#default-image
+  GRAVATAR_DEFAULT_ID = "00000000000000000000000000000000"
+
   # Default pixel demensions of a Gravatar image when none is specified
   DEFAULT_SIZE = 160
 
@@ -14,6 +20,7 @@ class Gravatar
   #
   # @return [String]
   def gravatar_id
+    return GRAVATAR_DEFAULT_ID if @user.hide_email
     Digest::MD5.hexdigest(@user.email.to_s.downcase)
   end
 
