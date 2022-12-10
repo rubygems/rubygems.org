@@ -106,7 +106,7 @@ class RubygemsHelperTest < ActionView::TestCase
       @rubygem = create(:rubygem, owners: users)
 
       expected_links = users.sort_by(&:id).map do |u|
-        link_to gravatar(48, "gravatar-#{u.id}", u),
+        link_to gravatar_image_tag(user: u, size: 48, id: "gravatar-#{u.id}"),
           profile_path(u.display_id),
           alt: u.display_handle,
           title: u.display_handle
@@ -121,7 +121,7 @@ class RubygemsHelperTest < ActionView::TestCase
       rubygem = create(:rubygem, owners: [*without_mfa, with_mfa])
 
       expected_links = without_mfa.sort_by(&:id).map do |u|
-        link_to gravatar(48, "gravatar-#{u.id}", u),
+        link_to gravatar_image_tag(user: u, size: 48, id: "gravatar-#{u.id}"),
           profile_path(u.display_id),
           alt: u.display_handle,
           title: u.display_handle

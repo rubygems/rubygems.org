@@ -25,11 +25,34 @@ module ApplicationHelper
     end
   end
 
-  def gravatar(size, id = "gravatar", user = current_user)
-    image_tag user.gravatar_url(size: size, secure: request.ssl?).html_safe,
-      id: id,
-      width: size,
-      height: size
+  # Generate an appropriate profile image URL for a user.
+  #
+  # @param user [User] A user to generate a Gravatar URL for
+  # @param options [Hash]
+  # @option options [Integer] :size ({Gravatar::DEFAULT_SIZE}) Desired pixel to request for the referenced Gravatar image
+  # @return [ActiveSupport::SafeBuffer] A profile image URL
+  def gravatar_url(user:, **options)
+    size = options.fetch(:size, Gravatar::DEFAULT_SIZE)
+    Gravatar.new(user, size: size).url.html_safe
+  end
+
+  # Generate an appropriate profile image markup for a user.
+  #
+  # @param user [User] A user to generate a Gravatar image for
+  # @param size [Integer] ({Gravatar::DEFAULT_SIZE}) Desired dimensions of the generated Gravatar image
+  # @param html_options [Hash] HTML options, see {https://api.rubyonrails.org/classes/ActionView/Helpers/TagHelper.html#method-i-content_tag ActionView::Helpers::TagHelper#content_tag}
+  # @option html_options [String] :id ('gravatar') HTML 'id' attribute
+  # @return [ActiveSupport::SafeBuffer] Profile image markup
+  def gravatar_image_tag(user:, size:, **html_options)
+    gravatar = Gravatar.new(user, size: size)
+    size ||= Gravatar::DEFAULT_SIZE
+
+    # Set a default ID if one hasn't been provided
+    id = html_options.fetch(:id, "gravatar")
+
+    image_tag(
+      gravatar.url.html_safe,
+      html_options.merge(id: id, width: size, height: size))
   end
 
   def download_count(rubygem)

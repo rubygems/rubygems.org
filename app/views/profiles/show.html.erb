@@ -4,7 +4,7 @@
       <div id="avatar-frame">
         <%=
           image_tag(
-            @user.gravatar_url(size: 300, secure: request.ssl?).html_safe,
+            gravatar_url(user: @user, size: 300),
             id: "profile_gravatar",
             width: 300,
             height: 300,

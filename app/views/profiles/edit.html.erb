@@ -6,7 +6,7 @@
   <div class="avatar_field">
     <%= form.label :avatar, :class => 'form__label'  %>
     <div class="l-overflow">
-      <%= gravatar(160) %>
+      <%= gravatar_image_tag(user: @user, size: 160) %>
       <%= link_to t('.change_avatar'), 'https://www.gravatar.com', :class => 't-text t-link' %>
     </div>
   </div>

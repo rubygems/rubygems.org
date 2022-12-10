@@ -110,7 +110,7 @@ module RubygemsHelper
   end
 
   def link_to_user(user)
-    link_to gravatar(48, "gravatar-#{user.id}", user), profile_path(user.display_id),
+    link_to gravatar_image_tag(user: user, size: 48, id: "gravatar-#{user.id}"), profile_path(user.display_id),
       alt: user.display_handle, title: user.display_handle
   end
 

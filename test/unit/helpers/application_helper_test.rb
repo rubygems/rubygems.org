@@ -57,4 +57,51 @@ class ApplicationHelperTest < ActionView::TestCase
       assert_instance_of String, flash_message(:notice, @message)
     end
   end
+
+  context "#gravatar_url" do
+    setup do
+      @user = build(:user, email: "mail@example.com")
+    end
+
+    should "generate a Gravatar profile image URL" do
+      actual = gravatar_url(user: @user)
+      expected = Gravatar::GRAVATAR_ENDPOINT
+      assert_match(expected, actual)
+    end
+
+    should "generate a HTML safe string" do
+      assert_instance_of(ActiveSupport::SafeBuffer, gravatar_url(user: @user))
+    end
+  end
+
+  context "#gravatar_image_tag" do
+    setup do
+      @user = build(:user, email: "mail@example.com")
+    end
+
+    should "generate image HTML with the correct ID" do
+      id = "gravatar-test"
+      actual = gravatar_image_tag(user: @user, size: 48, id: id)
+      expected = %Q|id="#{id}"|
+      assert_match(expected, actual)
+    end
+
+    should "generate image HTML with the correct profile image source" do
+      actual = gravatar_image_tag(user: @user, size: 48, id: "gravatar-test")
+      expected = %Q|src="#{Gravatar::GRAVATAR_ENDPOINT}|
+      assert_match(expected, actual)
+    end
+
+    should "generate image HTML with the correct height and width" do
+      size = 48
+      actual = gravatar_image_tag(user: @user, size: size, id: "gravatar-test")
+      expected = %Q|width="#{size}" height="#{size}"|
+      assert_match(expected, actual)
+    end
+
+    should "generate a HTML safe string" do
+      actual = gravatar_image_tag(user: @user, size: 48, id: "gravatar-test")
+      assert_instance_of(ActiveSupport::SafeBuffer, actual)
+    end
+  end
 end
